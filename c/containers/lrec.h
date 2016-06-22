@@ -122,6 +122,7 @@ lrec_t* lrec_copy(lrec_t* pinrec);
 //   o The respective free_flag(s) should not be set and the caller should
 //     free the memory (else, there will be a memory leak).
 void  lrec_put(lrec_t* prec, char* key, char* value, char free_flags);
+void  lrec_put_ext(lrec_t* prec, char* key, char* value, char free_flags, char quote_flags);
 // Like lrec_put: if key is present, modify value. But if not, add new field at start of record, not at end.
 void  lrec_prepend(lrec_t* prec, char* key, char* value, char free_flags);
 // Like lrec_put: if key is present, modify value. But if not, add new field after specified entry, not at end.

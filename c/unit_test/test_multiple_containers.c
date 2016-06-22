@@ -73,9 +73,9 @@ static char* test_slls() {
 static char* test_rslls() {
 
 	rslls_t* pa = rslls_alloc();
-	rslls_append_no_free(pa, "a");
-	rslls_append_no_free(pa, "b");
-	rslls_append_no_free(pa, "c");
+	rslls_append(pa, "a", NO_FREE, 0);
+	rslls_append(pa, "b", NO_FREE, 0);
+	rslls_append(pa, "c", NO_FREE, 0);
 
 	rslls_print(pa); printf("\n");
 	mu_assert_lf(pa->length == 3);
@@ -95,7 +95,7 @@ static char* test_rslls() {
 	mu_assert_lf(pe != NULL); mu_assert_lf(pe->value == NULL); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
-	rslls_append_no_free(pa, "d");
+	rslls_append(pa, "d", NO_FREE, 0);
 
 	rslls_print(pa); printf("\n");
 	mu_assert_lf(pa->length == 1);
@@ -105,7 +105,7 @@ static char* test_rslls() {
 	mu_assert_lf(pe != NULL); mu_assert_lf(pe->value == NULL); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
-	rslls_append_no_free(pa, "e");
+	rslls_append(pa, "e", NO_FREE, 0);
 
 	rslls_print(pa); printf("\n");
 	mu_assert_lf(pa->length == 2);
@@ -115,7 +115,7 @@ static char* test_rslls() {
 	mu_assert_lf(pe != NULL); mu_assert_lf(pe->value == NULL); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
-	rslls_append_no_free(pa, "f");
+	rslls_append(pa, "f", NO_FREE, 0);
 
 	rslls_print(pa); printf("\n");
 	mu_assert_lf(pa->length == 3);
@@ -125,7 +125,7 @@ static char* test_rslls() {
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "f")); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
 
-	rslls_append_no_free(pa, "g");
+	rslls_append(pa, "g", NO_FREE, 0);
 
 	rslls_print(pa); printf("\n");
 	mu_assert_lf(pa->length == 4);

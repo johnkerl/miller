@@ -123,9 +123,46 @@ void lrec_put(lrec_t* prec, char* key, char* value, char free_flags) {
 			pe->free_flags &= ~FREE_ENTRY_VALUE;
 	} else {
 		pe = mlr_malloc_or_die(sizeof(lrece_t));
-		pe->key        = key;
-		pe->value      = value;
-		pe->free_flags = free_flags;
+		pe->key         = key;
+		pe->value       = value;
+		pe->free_flags  = free_flags;
+		pe->quote_flags = 0;
+
+		if (prec->phead == NULL) {
+			pe->pprev   = NULL;
+			pe->pnext   = NULL;
+			prec->phead = pe;
+			prec->ptail = pe;
+		} else {
+			pe->pprev   = prec->ptail;
+			pe->pnext   = NULL;
+			prec->ptail->pnext = pe;
+			prec->ptail = pe;
+		}
+		prec->field_count++;
+	}
+}
+
+void lrec_put_ext(lrec_t* prec, char* key, char* value, char free_flags, char quote_flags) {
+	lrece_t* pe = lrec_find_entry(prec, key);
+
+	if (pe != NULL) {
+		if (pe->free_flags & FREE_ENTRY_VALUE) {
+			free(pe->value);
+		}
+		if (free_flags & FREE_ENTRY_KEY)
+			free(key);
+		pe->value = value;
+		if (free_flags & FREE_ENTRY_VALUE)
+			pe->free_flags |= FREE_ENTRY_VALUE;
+		else
+			pe->free_flags &= ~FREE_ENTRY_VALUE;
+	} else {
+		pe = mlr_malloc_or_die(sizeof(lrece_t));
+		pe->key         = key;
+		pe->value       = value;
+		pe->free_flags  = free_flags;
+		pe->quote_flags = quote_flags;
 
 		if (prec->phead == NULL) {
 			pe->pprev   = NULL;
@@ -158,6 +195,7 @@ void lrec_prepend(lrec_t* prec, char* key, char* value, char free_flags) {
 		pe->key         = key;
 		pe->value       = value;
 		pe->free_flags  = free_flags;
+		pe->quote_flags = 0;
 
 		if (prec->phead == NULL) {
 			pe->pprev   = NULL;
@@ -190,6 +228,7 @@ lrece_t* lrec_put_after(lrec_t* prec, lrece_t* pd, char* key, char* value, char 
 		pe->key         = key;
 		pe->value       = value;
 		pe->free_flags  = free_flags;
+		pe->quote_flags = 0;
 
 		if (pd->pnext == NULL) { // Append at end of list
 			pd->pnext = pe;

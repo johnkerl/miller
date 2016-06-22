@@ -242,7 +242,7 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 #endif
 					switch(stridx) {
 					case EOF_STRIDX: // end of record
-						rslls_append_with_free(pfields, sb_finish(psb));
+						rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, 0);
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
@@ -252,11 +252,11 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 						exit(1);
 						break;
 					case IFS_STRIDX: // end of field
-						rslls_append_with_free(pfields, sb_finish(psb));
+						rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, 0);
 						field_done  = TRUE;
 						break;
 					case IRS_STRIDX: // end of record
-						rslls_append_with_free(pfields, sb_finish(psb));
+						rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, 0);
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
@@ -303,16 +303,16 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 						exit(1);
 						break;
 					case DQUOTE_EOF_STRIDX: // end of record
-						rslls_append_with_free(pfields, sb_finish(psb));
+						rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, 0);
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
 					case DQUOTE_IFS_STRIDX: // end of field
-						rslls_append_with_free(pfields, sb_finish(psb));
+						rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, 0);
 						field_done  = TRUE;
 						break;
 					case DQUOTE_IRS_STRIDX: // end of record
-						rslls_append_with_free(pfields, sb_finish(psb));
+						rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, 0);
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;

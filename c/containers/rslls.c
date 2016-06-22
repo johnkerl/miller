@@ -48,12 +48,13 @@ void rslls_free(rslls_t* plist) {
 }
 
 // ----------------------------------------------------------------
-static inline void rslls_append(rslls_t* plist, char* value, char free_flag) {
+void rslls_append(rslls_t* plist, char* value, char free_flag, char quote_flag) {
 	if (plist->ptail == NULL) {
 		// First add on new list
 		rsllse_t* pnode = mlr_malloc_or_die(sizeof(rsllse_t));
 		pnode->value = value;
 		pnode->free_flag = free_flag;
+		pnode->quote_flag = quote_flag;
 		pnode->pnext = NULL;
 		plist->phead = pnode;
 		plist->ptail = pnode;
@@ -61,6 +62,7 @@ static inline void rslls_append(rslls_t* plist, char* value, char free_flag) {
 		// Subsequent add on reused list
 		plist->ptail->value = value;
 		plist->ptail->free_flag = free_flag;
+		plist->ptail->quote_flag = quote_flag;
 		if (plist->ptail->pnext != NULL)
 			plist->ptail = plist->ptail->pnext;
 	} else {
@@ -68,18 +70,12 @@ static inline void rslls_append(rslls_t* plist, char* value, char free_flag) {
 		rsllse_t* pnode = mlr_malloc_or_die(sizeof(rsllse_t));
 		pnode->value = value;
 		pnode->free_flag = free_flag;
+		pnode->quote_flag = quote_flag;
 		pnode->pnext = NULL;
 		plist->ptail->pnext = pnode;
 		plist->ptail = pnode;
 	}
 	plist->length++;
-}
-
-void rslls_append_with_free(rslls_t* plist, char* value) {
-	rslls_append(plist, value, FREE_ENTRY_VALUE);
-}
-void rslls_append_no_free(rslls_t* plist, char* value) {
-	rslls_append(plist, value, 0);
 }
 
 void rslls_print(rslls_t* plist) {

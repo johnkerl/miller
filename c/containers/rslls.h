@@ -48,8 +48,7 @@ typedef struct _rslls_t {
 rslls_t* rslls_alloc();
 void    rslls_reset(rslls_t* plist);
 void    rslls_free(rslls_t* plist);
-void    rslls_append_with_free(rslls_t* plist, char* value);
-void    rslls_append_no_free(rslls_t* plist, char* value);
+void    rslls_append(rslls_t* plist, char* value, char free_flag, char quote_flag);
 
 void    rslls_print(rslls_t* plist);
 

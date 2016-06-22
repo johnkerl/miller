@@ -225,13 +225,13 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 					switch(stridx) {
 					case IFS_STRIDX: // end of field
 						*e = 0;
-						rslls_append_no_free(pfields, p);
+						rslls_append(pfields, p, NO_FREE, 0);
 						p = e + matchlen;
 						field_done  = TRUE;
 						break;
 					case IRS_STRIDX: // end of record
 						*e = 0;
-						rslls_append_no_free(pfields, p);
+						rslls_append(pfields, p, NO_FREE, 0);
 						p = e + matchlen;
 						field_done  = TRUE;
 						record_done = TRUE;
@@ -254,7 +254,7 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 					// our copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking
 					// at EOF is one byte past the page and that will segv us.
 				    char* copy = mlr_alloc_string_from_char_range(p, phandle->eof - p);
-					rslls_append_with_free(pfields, copy);
+					rslls_append(pfields, copy, FREE_ENTRY_VALUE, 0);
 					p = e + matchlen;
 					field_done  = TRUE;
 					record_done = TRUE;
@@ -291,18 +291,18 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 					case DQUOTE_IFS_STRIDX: // end of field
 						*e = 0;
 						if (contiguous)
-							rslls_append_no_free(pfields, p);
+							rslls_append(pfields, p, NO_FREE, 0);
 						else
-							rslls_append_with_free(pfields, sb_finish(psb));
+							rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, 0);
 						p = e + matchlen;
 						field_done  = TRUE;
 						break;
 					case DQUOTE_IRS_STRIDX: // end of record
 						*e = 0;
 						if (contiguous)
-							rslls_append_no_free(pfields, p);
+							rslls_append(pfields, p, NO_FREE, 0);
 						else
-							rslls_append_with_free(pfields, sb_finish(psb));
+							rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, 0);
 						p = e + matchlen;
 						field_done  = TRUE;
 						record_done = TRUE;
