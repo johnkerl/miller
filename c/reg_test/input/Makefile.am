@@ -105,6 +105,7 @@ EXTRA_DIST=	\
 		page-aligned-no-final-irs.dkvp \
 		page-aligned-no-final-irs.nidx \
 		put-example.dsl \
+		quote-original.csv \
 		regex.dkvp \
 		regularize.dkvp \
 		repeat-input.dat \

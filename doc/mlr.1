@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-06-21
+.\"      Date: 2016-06-22
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-06-21" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-06-22" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -312,6 +312,11 @@ Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
                      in them (default)
   --quote-numeric    Wrap fields in double quotes only if they have numbers
                      in them
+  --quote-original   Wrap fields in double quotes if and only if they were
+                     quoted on input. This isn't sticky for computed fields:
+                     e.g. if fields a and b were quoted on input and you do
+                     "put '$c = $a . $b'" then field c won't inherit a or b's
+                     was-quoted-on-input flag.
 .fi
 .if n \{\
 .RE

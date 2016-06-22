@@ -518,6 +518,11 @@ Double-quoting for CSV output:
                      in them (default)
   --quote-numeric    Wrap fields in double quotes only if they have numbers
                      in them
+  --quote-original   Wrap fields in double quotes if and only if they were
+                     quoted on input. This isn't sticky for computed fields:
+                     e.g. if fields a and b were quoted on input and you do
+                     "put '$c = $a . $b'" then field c won't inherit a or b's
+                     was-quoted-on-input flag.
 
 Numerical formatting:
   --ofmt {format}    E.g. %.18lf, %.0lf. Please use sprintf-style codes for

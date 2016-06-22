@@ -25966,6 +25966,18 @@ a|c
 4|6
 
 
+mlr --no-mmap --csv --rs lf --quote-original cut -o -f c,b,a ./reg_test/input/quote-original.csv
+c,b,a
+3,2,1
+6,"5",4
+"9",8,"7"
+
+mlr --mmap --csv --rs lf --quote-original cut -o -f c,b,a ./reg_test/input/quote-original.csv
+c,b,a
+3,2,1
+6,"5",4
+"9",8,"7"
+
 
 ================================================================
 MULTI-CHARACTER IRS/IFS/IPS FOR DKVP
