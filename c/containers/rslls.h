@@ -35,6 +35,7 @@
 typedef struct _rsllse_t {
 	char* value;
 	char  free_flag;
+	char  quote_flag;
 	struct _rsllse_t *pnext;
 } rsllse_t;
 

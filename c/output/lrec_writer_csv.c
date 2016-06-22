@@ -5,11 +5,12 @@
 #include "containers/mixutil.h"
 #include "output/lrec_writers.h"
 
-typedef void     quoted_output_func_t(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
-static void     quote_all_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
-static void    quote_none_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
-static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
-static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
+typedef void       quoted_output_func_t(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags);
+static  void      quote_all_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags);
+static  void     quote_none_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags);
+static  void  quote_minimal_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags);
+static  void  quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags);
+static  void quote_original_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags);
 
 typedef struct _lrec_writer_csv_state_t {
 	int   onr;
@@ -26,10 +27,6 @@ typedef struct _lrec_writer_csv_state_t {
 // ----------------------------------------------------------------
 static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvstate);
 static void lrec_writer_csv_free(lrec_writer_t* pwriter);
-static void quote_all_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
-static void quote_none_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
-static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
-static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen);
 
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, quoting_t oquoting, int headerless_csv_output) {
@@ -44,10 +41,11 @@ lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, quoting_t oquoting, i
 	pstate->headerless_csv_output = headerless_csv_output;
 
 	switch(oquoting) {
-	case QUOTE_ALL:     pstate->pquoted_output_func = quote_all_output_func;     break;
-	case QUOTE_NONE:    pstate->pquoted_output_func = quote_none_output_func;    break;
-	case QUOTE_MINIMAL: pstate->pquoted_output_func = quote_minimal_output_func; break;
-	case QUOTE_NUMERIC: pstate->pquoted_output_func = quote_numeric_output_func; break;
+	case QUOTE_ALL:      pstate->pquoted_output_func = quote_all_output_func;      break;
+	case QUOTE_NONE:     pstate->pquoted_output_func = quote_none_output_func;     break;
+	case QUOTE_MINIMAL:  pstate->pquoted_output_func = quote_minimal_output_func;  break;
+	case QUOTE_NUMERIC:  pstate->pquoted_output_func = quote_numeric_output_func;  break;
+	case QUOTE_ORIGINAL: pstate->pquoted_output_func = quote_original_output_func; break;
 	default:
 		fprintf(stderr, "%s: internal coding error: output-quoting style 0x%x unrecognized.\n",
 			MLR_GLOBALS.bargv0, oquoting);
@@ -95,7 +93,7 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 				if (nf > 0)
 					fputs(ofs, output_stream);
 				pstate->pquoted_output_func(output_stream, pe->key, pstate->ors, pstate->ofs,
-					pstate->orslen, pstate->ofslen);
+					pstate->orslen, pstate->ofslen, pe->quote_flags);
 				nf++;
 			}
 			fputs(ors, output_stream);
@@ -109,7 +107,7 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 		if (nf > 0)
 			fputs(ofs, output_stream);
 		pstate->pquoted_output_func(output_stream, pe->value, pstate->ors, pstate->ofs,
-			pstate->orslen, pstate->ofslen);
+			pstate->orslen, pstate->ofslen, pe->quote_flags);
 		nf++;
 	}
 	fputs(ors, output_stream);
@@ -120,17 +118,17 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 }
 
 // ----------------------------------------------------------------
-static void quote_all_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen) {
+static void quote_all_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags) {
 	fputc('"', fp);
 	fputs(string, fp);
 	fputc('"', fp);
 }
 
-static void quote_none_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen) {
+static void quote_none_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags) {
 	fputs(string, fp);
 }
 
-static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen) {
+static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags) {
 	int output_quotes = FALSE;
 	for (char* p = string; *p; p++) {
 		if (streqn(p, ors, orslen) || streqn(p, ofs, ofslen)) {
@@ -147,9 +145,19 @@ static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* o
 	}
 }
 
-static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen) {
+static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags) {
 	double temp;
 	if (mlr_try_float_from_string(string, &temp)) {
+		fputc('"', fp);
+		fputs(string, fp);
+		fputc('"', fp);
+	} else {
+		fputs(string, fp);
+	}
+}
+
+static void quote_original_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags) {
+	if (quote_flags & FIELD_QUOTED_ON_INPUT) {
 		fputc('"', fp);
 		fputs(string, fp);
 		fputc('"', fp);

@@ -456,6 +456,11 @@ static void main_usage_double_quoting(FILE* o, char* argv0) {
 	fprintf(o, "                     in them (default)\n");
 	fprintf(o, "  --quote-numeric    Wrap fields in double quotes only if they have numbers\n");
 	fprintf(o, "                     in them\n");
+	fprintf(o, "  --quote-original   Wrap fields in double quotes if and only if they were\n");
+	fprintf(o, "                     quoted on input. This isn't sticky for computed fields:\n");
+	fprintf(o, "                     e.g. if fields a and b were quoted on input and you do\n");
+	fprintf(o, "                     \"put '$c = $a . $b'\" then field c won't inherit a or b's\n");
+	fprintf(o, "                     was-quoted-on-input flag.\n");
 }
 
 static void main_usage_numerical_formatting(FILE* o, char* argv0) {
@@ -904,10 +909,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			}
 			argi++;
 
-		} else if (streq(argv[argi], "--quote-all"))     { popts->oquoting = QUOTE_ALL;
-		} else if (streq(argv[argi], "--quote-none"))    { popts->oquoting = QUOTE_NONE;
-		} else if (streq(argv[argi], "--quote-minimal")) { popts->oquoting = QUOTE_MINIMAL;
-		} else if (streq(argv[argi], "--quote-numeric")) { popts->oquoting = QUOTE_NUMERIC;
+		} else if (streq(argv[argi], "--quote-all"))      { popts->oquoting = QUOTE_ALL;
+		} else if (streq(argv[argi], "--quote-none"))     { popts->oquoting = QUOTE_NONE;
+		} else if (streq(argv[argi], "--quote-minimal"))  { popts->oquoting = QUOTE_MINIMAL;
+		} else if (streq(argv[argi], "--quote-numeric"))  { popts->oquoting = QUOTE_NUMERIC;
+		} else if (streq(argv[argi], "--quote-original")) { popts->oquoting = QUOTE_ORIGINAL;
 
 		} else if (streq(argv[argi], "--mmap")) {
 			popts->use_mmap_for_read = TRUE;

@@ -47,6 +47,8 @@
 #include "containers/sllv.h"
 #include "containers/header_keeper.h"
 
+#define FIELD_QUOTED_ON_INPUT 0x02
+
 struct _lrec_t; // forward reference
 typedef struct _lrec_t lrec_t;
 
@@ -62,6 +64,7 @@ typedef struct _lrece_t {
 	// management of which is separately managed.
 	// Another negative example: key/value is a string literal, e.g. "".
 	char free_flags;
+	char quote_flags;
 
 	struct _lrece_t *pprev;
 	struct _lrece_t *pnext;
