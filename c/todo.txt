@@ -6,8 +6,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-! output-quoting task !
-
 * cookbook:
   - neaten-valgrind
   - headerless csv (i/o) choices
@@ -26,6 +24,7 @@ TOP OF LIST:
 
 * 4.3.0:
   - --quote-original; xref to possible sticky/derived feature (or not).
+  - output-quoting bugfix
   - strptime message
   - uniq-assert on boundvars w/in each for
   - new/modified cookbook entries
