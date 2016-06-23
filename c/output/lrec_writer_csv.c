@@ -11,6 +11,7 @@ static  void     quote_none_output_func(FILE* fp, char* string, char* ors, char*
 static  void  quote_minimal_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags);
 static  void  quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags);
 static  void quote_original_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags);
+static void quote_string(FILE* fp, char* string);
 
 typedef struct _lrec_writer_csv_state_t {
 	int   onr;
@@ -119,9 +120,7 @@ static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvs
 
 // ----------------------------------------------------------------
 static void quote_all_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags) {
-	fputc('"', fp);
-	fputs(string, fp);
-	fputc('"', fp);
+	quote_string(fp, string);
 }
 
 static void quote_none_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags) {
@@ -137,9 +136,7 @@ static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* o
 		}
 	}
 	if (output_quotes) {
-		fputc('"', fp);
-		fputs(string, fp);
-		fputc('"', fp);
+		quote_string(fp, string);
 	} else {
 		fputs(string, fp);
 	}
@@ -148,9 +145,7 @@ static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* o
 static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags) {
 	double temp;
 	if (mlr_try_float_from_string(string, &temp)) {
-		fputc('"', fp);
-		fputs(string, fp);
-		fputc('"', fp);
+		quote_string(fp, string);
 	} else {
 		fputs(string, fp);
 	}
@@ -158,10 +153,20 @@ static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* o
 
 static void quote_original_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags) {
 	if (quote_flags & FIELD_QUOTED_ON_INPUT) {
-		fputc('"', fp);
-		fputs(string, fp);
-		fputc('"', fp);
+		quote_string(fp, string);
 	} else {
 		fputs(string, fp);
 	}
+}
+
+// ----------------------------------------------------------------
+static void quote_string(FILE* fp, char* string) {
+	fputc('"', fp);
+	for (char* p = string; *p; p++) {
+		if (*p == '"')
+			fputs("\"\"", fp);
+		else
+			fputc(*p, fp);
+	}
+	fputc('"', fp);
 }

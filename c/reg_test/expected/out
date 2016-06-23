@@ -26133,6 +26133,18 @@ c,b,a
 6,"5",4
 "9",8,"7"
 
+mlr --csv --quote-all cat ./reg_test/input/rfc-csv/simple.csv
+"a","b","c"
+"1","x","3"
+"4","5","6"
+"x","y""yy","z"
+
+mlr --csv --quote-original cat ./reg_test/input/rfc-csv/simple.csv
+a,b,c
+1,x,3
+4,5,6
+"x","y""yy","z"
+
 
 ================================================================
 MULTI-CHARACTER IRS/IFS/IPS FOR DKVP
