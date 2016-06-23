@@ -13,14 +13,14 @@ TOP OF LIST:
   - missing-timestamp check
   - two-pass linreg example w/ oosvars? @@vars?!?
 
+* interpolated-percentile option
+
 ! rh/fedora/centos
 ! process inquire gentoo 4.1 (or wait and see)
 
 ! call for use-cases? (go first.)
 
 ! go through lmag article & clarify all unclears
-
-* interpolated-percentile option
 
 * 4.3.0:
   - --quote-original; xref to possible sticky/derived feature (or not).
@@ -31,7 +31,6 @@ TOP OF LIST:
 
 ----------------------------------------------------------------
 ? double-quote-aware (non-lite) nidx & dkvp options?
-
 ? comma-number -- using locale?
 
 ? triple-for with boundvars?
