@@ -29,8 +29,8 @@ def main
 on integer-indexed fields: if the natural data structure for the latter is the
 array, then Miller's natural data structure is the insertion-ordered hash map.
 This encompasses a variety of data formats, including but not limited to the
-familiar CSV and JSON.  (Miller can handle positionally-indexed data as a special
-case.) This manpage documents #{`mlr --version`.chomp}."""
+familiar CSV, TSV, and JSON.  (Miller can handle positionally-indexed data as
+a special case.) This manpage documents #{`mlr --version`.chomp}."""
   ])
 
   print make_section('EXAMPLES', [

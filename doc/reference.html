@@ -486,6 +486,7 @@ Separator options, for input, output, or both:
   * CSV is intended to handle RFC-4180-compliant data. In particular, this means
     it uses CRLF line-terminators by default. You can use "--csv --rs lf" for
     Linux-native CSV files.
+  * TSV is simply CSV using tab as field separator ("--fs tab").
   * All RS/FS/PS options are ignored for JSON format: JSON doesn't allow
     changing these.
   * You can specify separators in any of the following ways, shown by example:

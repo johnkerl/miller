@@ -414,6 +414,7 @@ static void main_usage_separator_options(FILE* o, char* argv0) {
 	fprintf(o, "  * CSV is intended to handle RFC-4180-compliant data. In particular, this means\n");
 	fprintf(o, "    it uses CRLF line-terminators by default. You can use \"--csv --rs lf\" for\n");
 	fprintf(o, "    Linux-native CSV files.\n");
+	fprintf(o, "  * TSV is simply CSV using tab as field separator (\"--fs tab\").\n");
 	fprintf(o, "  * All RS/FS/PS options are ignored for JSON format: JSON doesn't allow\n");
 	fprintf(o, "    changing these.\n");
 	fprintf(o, "  * You can specify separators in any of the following ways, shown by example:\n");
