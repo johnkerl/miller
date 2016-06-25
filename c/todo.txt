@@ -6,12 +6,9 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-! rfp
-
 * cookbook:
   - neaten-valgrind
   - headerless csv (i/o) choices
-  - quantiles example
   - missing-timestamp check
   - two-pass linreg example w/ oosvars? @@vars?!?
 
@@ -25,6 +22,8 @@ TOP OF LIST:
 ! go through lmag article & clarify all unclears
 
 * 4.3.0:
+  > interpolated percentiles
+  > env var for default csv rs lf
   - --quote-original; xref to possible sticky/derived feature (or not).
   - output-quoting bugfix
   - strptime message
