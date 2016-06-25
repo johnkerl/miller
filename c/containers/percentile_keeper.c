@@ -49,6 +49,17 @@ static int compute_index(int n, double p) {
 	return index;
 }
 
+// https://en.wikipedia.org/wiki/Percentile
+/*static*/ int compute_index_nearest_rank(int n, double p) {
+	int index = (int)(ceil((p/100.0)*n)) - 1;
+	if (index < 0)
+		index = 0;
+	else if (index >= n)
+		index = n-1;
+	return index;
+}
+
+// ----------------------------------------------------------------
 // See also https://github.com/johnkerl/miller/issues/14 which requests an interpolation option.
 mv_t percentile_keeper_emit(percentile_keeper_t* ppercentile_keeper, double percentile) {
 	if (!ppercentile_keeper->sorted) {
