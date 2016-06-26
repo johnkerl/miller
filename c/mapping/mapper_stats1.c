@@ -163,6 +163,8 @@ static void mapper_stats1_free(mapper_t* pmapper) {
 }
 
 // ================================================================
+// xxx add note about multiple references for percentiles
+
 // Given: accumulate count,sum on values x,y group by a,b.
 // Example input:       Example output:
 //   a b x y            a b x_count x_sum y_count y_sum
