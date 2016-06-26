@@ -256,7 +256,7 @@ static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_
 	for (sllse_t* pa = pstate->paccumulator_names->phead; pa != NULL; pa = pa->pnext) {
 		char* acc_name = pa->value;
 		stats1_acc_t* pacc = make_stats1_acc(pstate->output_field_basename, acc_name,
-			pstate->allow_int_float);
+			pstate->allow_int_float, FALSE/*xxx interp_foo*/);
 		lhmsv_put(paccs, acc_name, pacc, NO_FREE);
 	}
 
@@ -326,7 +326,7 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 	for (sllse_t* pa = pstate->paccumulator_names->phead; pa != NULL; pa = pa->pnext) {
 		char* acc_name = pa->value;
 		stats1_acc_t* pacc = make_stats1_acc(pstate->output_field_basename, acc_name,
-			pstate->allow_int_float);
+			pstate->allow_int_float, FALSE/*xxx interp_foo*/);
 		lhmsv_put(paccs, acc_name, pacc, NO_FREE);
 	}
 
@@ -424,7 +424,8 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 					acc_map_for_short_name = lhmsv_alloc();
 					for (sllse_t* pc = pstate->paccumulator_names->phead; pc != NULL; pc = pc->pnext) {
 						char* acc_name = pc->value;
-						stats1_acc_t* pacc = make_stats1_acc(short_name, acc_name, pstate->allow_int_float);
+						stats1_acc_t* pacc = make_stats1_acc(short_name, acc_name, pstate->allow_int_float,
+							FALSE/*xxx interp_foo*/);
 						lhmsv_put(acc_map_for_short_name, acc_name, pacc, NO_FREE);
 					}
 					lhmsv_put(short_names_to_acc_maps, mlr_strdup_or_die(short_name), acc_map_for_short_name,

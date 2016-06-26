@@ -26,12 +26,13 @@ typedef struct _mapper_stats1_state_t {
 	lhmslv_t*       groups;
 	int             do_iterative_stats;
 	int             allow_int_float;
+	int             interp_foo;
 } mapper_stats1_state_t;
 
 static void      mapper_stats1_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_names, string_array_t* pvalue_field_names,
-	slls_t* pgroup_by_field_names, int do_iterative_stats, int allow_int_float);
+	slls_t* pgroup_by_field_names, int do_iterative_stats, int allow_int_float, int interp_foo);
 static void      mapper_stats1_free(mapper_t* pmapper);
 static sllv_t*   mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
@@ -81,6 +82,7 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
 	slls_t*         pgroup_by_field_names = slls_alloc();
 	int             do_iterative_stats    = FALSE;
 	int             allow_int_float       = TRUE;
+	int             interp_foo            = FALSE;
 
 	char* verb = argv[(*pargi)++];
 
@@ -90,6 +92,7 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_string_list_flag(pstate,  "-g", &pgroup_by_field_names);
 	ap_define_true_flag(pstate,         "-s", &do_iterative_stats);
 	ap_define_false_flag(pstate,        "-F", &allow_int_float);
+	ap_define_true_flag(pstate,         "-i", &interp_foo);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_stats1_usage(stderr, argv[0], verb);
@@ -102,12 +105,12 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
 	}
 
 	return mapper_stats1_alloc(pstate, paccumulator_names, pvalue_field_names, pgroup_by_field_names,
-		do_iterative_stats, allow_int_float);
+		do_iterative_stats, allow_int_float, interp_foo);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_names, string_array_t* pvalue_field_names,
-	slls_t* pgroup_by_field_names, int do_iterative_stats, int allow_int_float)
+	slls_t* pgroup_by_field_names, int do_iterative_stats, int allow_int_float, int interp_foo)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
@@ -121,6 +124,7 @@ static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_nam
 	pstate->groups                = lhmslv_alloc();
 	pstate->do_iterative_stats    = do_iterative_stats;
 	pstate->allow_int_float       = allow_int_float;
+	pstate->interp_foo            = interp_foo;
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_stats1_process;
@@ -259,7 +263,8 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		// Look up presence of all accumulators at this level's hashmap.
 		char* presence = lhmsv_get(acc_field_to_acc_state, fake_acc_name_for_setups);
 		if (presence == NULL) {
-			make_stats1_accs(value_field_name, pstate->paccumulator_names, pstate->allow_int_float, acc_field_to_acc_state);
+			make_stats1_accs(value_field_name, pstate->paccumulator_names, pstate->allow_int_float,
+				pstate->interp_foo, acc_field_to_acc_state);
 			lhmsv_put(acc_field_to_acc_state, fake_acc_name_for_setups, fake_acc_name_for_setups, NO_FREE);
 		}
 
