@@ -169,9 +169,9 @@ static inline mv_t mv_from_string(char* s, char free_flags) {
 	return (mv_t) {.type = MT_STRING, .free_flags = free_flags, .u.strv = s};
 }
 
-static inline mv_t mv_absent() { return (mv_t) {.type = MT_ABSENT, .free_flags = NO_FREE, .u.intv = 0}; }
-static inline mv_t mv_empty()   { return (mv_t) {.type = MT_EMPTY,   .free_flags = NO_FREE, .u.strv = ""}; }
-static inline mv_t mv_error()  { return (mv_t) {.type = MT_ERROR,  .free_flags = NO_FREE, .u.intv = 0}; }
+static inline mv_t mv_absent() { return (mv_t) {.type = MT_ABSENT, .free_flags = NO_FREE, .u.intv = 0};  }
+static inline mv_t mv_empty()  { return (mv_t) {.type = MT_EMPTY,  .free_flags = NO_FREE, .u.strv = ""}; }
+static inline mv_t mv_error()  { return (mv_t) {.type = MT_ERROR,  .free_flags = NO_FREE, .u.intv = 0};  }
 
 static inline mv_t mv_copy(mv_t* pval) {
 	if (pval->type == MT_STRING) {

@@ -40,6 +40,8 @@ void percentile_keeper_ingest(percentile_keeper_t* ppercentile_keeper, mv_t valu
 }
 
 // ----------------------------------------------------------------
+// https://en.wikipedia.org/wiki/Percentile
+
 static int compute_index(int n, double p) {
 	int index = p*n/100.0;
 	if (index < 0)
@@ -49,8 +51,7 @@ static int compute_index(int n, double p) {
 	return index;
 }
 
-// https://en.wikipedia.org/wiki/Percentile
-/*static*/ int compute_index_nearest_rank(int n, double p) {
+static int compute_index_nearest_rank(int n, double p) {
 	int index = (int)(ceil((p/100.0)*n)) - 1;
 	if (index < 0)
 		index = 0;
@@ -59,14 +60,52 @@ static int compute_index(int n, double p) {
 	return index;
 }
 
+static mv_t get_percentile_linearly_interpolated(mv_t* array, int n, double p) {
+	double findex = (p/100.0)*n - 1.0;
+	int iindex = (int)floor(findex);
+	// xxx make corner-case UTs
+	if (iindex < 0)
+		iindex = 0;
+	else if (iindex >= n)
+		iindex = n-1;
+	if (iindex >= n-1) {
+		return array[iindex];
+	} else {
+		// array[iindex] + frac * (array[iindex+1] - array[iindex]);
+		mv_t frac = mv_from_float(findex - iindex);
+		printf("n=%d findex=%lf iiindex=%d frac=%lf\n", n, findex, iindex, findex-iindex);
+		mv_t* pa = &array[iindex];
+		mv_t* pb = &array[iindex+1];
+		mv_t diff = x_xx_minus_func(pa, pb);
+		mv_t prod = x_xx_times_func(&frac, &diff);
+		mv_t rv = x_xx_plus_func(pa, &prod);
+		return rv;
+	}
+}
+
 // ----------------------------------------------------------------
-// See also https://github.com/johnkerl/miller/issues/14 which requests an interpolation option.
 mv_t percentile_keeper_emit(percentile_keeper_t* ppercentile_keeper, double percentile) {
 	if (!ppercentile_keeper->sorted) {
 		qsort(ppercentile_keeper->data, ppercentile_keeper->size, sizeof(mv_t), mv_nn_comparator);
 		ppercentile_keeper->sorted = TRUE;
 	}
 	return ppercentile_keeper->data[compute_index(ppercentile_keeper->size, percentile)];
+}
+
+mv_t percentile_keeper_emit_nearest_rank(percentile_keeper_t* ppercentile_keeper, double percentile) {
+	if (!ppercentile_keeper->sorted) {
+		qsort(ppercentile_keeper->data, ppercentile_keeper->size, sizeof(mv_t), mv_nn_comparator);
+		ppercentile_keeper->sorted = TRUE;
+	}
+	return ppercentile_keeper->data[compute_index_nearest_rank(ppercentile_keeper->size, percentile)];
+}
+
+mv_t percentile_keeper_emit_linearly_interpolated(percentile_keeper_t* ppercentile_keeper, double percentile) {
+	if (!ppercentile_keeper->sorted) {
+		qsort(ppercentile_keeper->data, ppercentile_keeper->size, sizeof(mv_t), mv_nn_comparator);
+		ppercentile_keeper->sorted = TRUE;
+	}
+	return get_percentile_linearly_interpolated(ppercentile_keeper->data, ppercentile_keeper->size, percentile);
 }
 
 // ----------------------------------------------------------------
