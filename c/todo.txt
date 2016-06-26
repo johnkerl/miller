@@ -6,13 +6,14 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
+* interpolated-percentile option
+  - single ingest!
+
 * cookbook:
   - neaten-valgrind
   - headerless csv (i/o) choices
   - missing-timestamp check
   - two-pass linreg example w/ oosvars? @@vars?!?
-
-* interpolated-percentile option
 
 ! rh/fedora/centos
 ! process inquire gentoo 4.1 (or wait and see)
