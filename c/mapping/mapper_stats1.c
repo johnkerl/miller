@@ -287,6 +287,7 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		// 10th percentile & once for the 90th.
 		for (lhmsve_t* pc = acc_field_to_acc_state->phead; pc != NULL; pc = pc->pnext) {
 			char* stats1_acc_name = pc->key;
+			// xxx printf("-- %s\n", stats1_acc_name);
 			if (streq(stats1_acc_name, fake_acc_name_for_setups))
 				continue;
 			stats1_acc_t* pstats1_acc = pc->pvvalue;
