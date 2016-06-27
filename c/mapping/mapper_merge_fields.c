@@ -252,12 +252,17 @@ static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_
 		return NULL;
 
 	mapper_merge_fields_state_t* pstate = pvstate;
-	lhmsv_t* paccs = lhmsv_alloc();
+	// For percentiles there is one unique accumulator given e.g. five distinct names p0,p25,p50,p75,p100.  The input
+	// accumulators are unique: only one percentile-keeper. There are multiple output accumulators: each references the
+	// same underlying percentile-keeper but with distinct parameters.
+	lhmsv_t* pinaccs = lhmsv_alloc();
+	lhmsv_t* poutaccs = lhmsv_alloc();
 	for (sllse_t* pa = pstate->paccumulator_names->phead; pa != NULL; pa = pa->pnext) {
 		char* acc_name = pa->value;
 		stats1_acc_t* pacc = make_stats1_acc(pstate->output_field_basename, acc_name,
 			pstate->allow_int_float, FALSE/*xxx interp_foo*/);
-		lhmsv_put(paccs, acc_name, pacc, NO_FREE);
+		lhmsv_put(pinaccs, acc_name, pacc, NO_FREE);
+		lhmsv_put(poutaccs, acc_name, pacc, NO_FREE);
 	}
 
 	for (sllse_t* pb = pstate->pvalue_field_names->phead; pb != NULL; pb = pb->pnext) {
@@ -277,7 +282,7 @@ static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_
 		double value_field_dval = -999.0;
 		mv_t   value_field_nval = mv_absent();
 
-		for (lhmsve_t* pc = paccs->phead; pc != NULL; pc = pc->pnext) {
+		for (lhmsve_t* pc = pinaccs->phead; pc != NULL; pc = pc->pnext) {
 			stats1_acc_t* pacc = pc->pvvalue;
 
 			if (pacc->pdingest_func != NULL) {
@@ -305,13 +310,14 @@ static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_
 			lrec_remove(pinrec, field_name);
 	}
 
-	for (lhmsve_t* pz = paccs->phead; pz != NULL; pz = pz->pnext) {
+	for (lhmsve_t* pz = poutaccs->phead; pz != NULL; pz = pz->pnext) {
 		char* acc_name = pz->key;
 		stats1_acc_t* pacc = pz->pvvalue;
 		pacc->pemit_func(pacc->pvstate, pstate->output_field_basename, acc_name, TRUE, pinrec);
 		pacc->pfree_func(pacc);
 	}
-	lhmsv_free(paccs);
+	lhmsv_free(pinaccs);
+	lhmsv_free(poutaccs);
 
 	return sllv_single(pinrec);
 }
