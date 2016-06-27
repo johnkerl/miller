@@ -14,6 +14,9 @@ TOP OF LIST:
   - headerless csv (i/o) choices
   - missing-timestamp check
   - two-pass linreg example w/ oosvars? @@vars?!?
+  - hold-and-emit k/n:
+    mlr --from s put -q '@r[NR]=$*;end{for((i,k),v in @r) {@r[i]["i"]=i; @r[i]["n"]=NR} ; emit @r,"i"}'
+? emitx option to completely suppress the indexed-over keys?
 
 ! rh/fedora/centos
 ! process inquire gentoo 4.1 (or wait and see)
