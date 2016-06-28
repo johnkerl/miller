@@ -30,9 +30,9 @@ void make_stats1_accs(
 		// xxx comment
 		if (is_percentile_acc_name(stats1_acc_name)) {
 			if (ppercentile_acc == NULL) {
-				lhmsv_put(acc_field_to_acc_state_in, stats1_acc_name, ppercentile_acc, NO_FREE);
 				ppercentile_acc = stats1_percentile_alloc(value_field_name, stats1_acc_name, allow_int_float,
 					interp_foo);
+				lhmsv_put(acc_field_to_acc_state_in, stats1_acc_name, ppercentile_acc, NO_FREE);
 			} else {
 				stats1_percentile_reuse(ppercentile_acc);
 			}

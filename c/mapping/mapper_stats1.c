@@ -38,7 +38,12 @@ static sllv_t*   mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pv
 static void      mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
 static sllv_t*   mapper_stats1_emit_all(mapper_stats1_state_t* pstate);
 static lrec_t*   mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec,
-	char* value_field_name, char* stats1_acc_name, lhmsv_t* acc_field_to_acc_state_out);
+	char* value_field_name, lhmsv_t* acc_field_to_acc_state_out);
+
+typedef struct _acc_map_pair_t {
+	lhmsv_t* pin;
+	lhmsv_t* pout;
+} acc_map_pair_t;
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_stats1_setup = {
@@ -145,14 +150,18 @@ static void mapper_stats1_free(mapper_t* pmapper) {
 	for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
 		lhmsv_t* pgroup_to_acc_field = pa->pvvalue;
 		for (lhmsve_t* pb = pgroup_to_acc_field->phead; pb != NULL; pb = pb->pnext) {
-			lhmsv_t* pacc_field_to_acc_state = pb->pvvalue;
-			for (lhmsve_t* pc = pacc_field_to_acc_state->phead; pc != NULL; pc = pc->pnext) {
+			acc_map_pair_t* pacc_field_to_acc_states = pb->pvvalue;
+			lhmsv_t* pacc_field_to_acc_state_in  = pacc_field_to_acc_states->pin;
+			lhmsv_t* pacc_field_to_acc_state_out = pacc_field_to_acc_states->pout;
+			for (lhmsve_t* pc = pacc_field_to_acc_state_out->phead; pc != NULL; pc = pc->pnext) {
 				if (streq(pc->key, fake_acc_name_for_setups))
 					continue;
 				stats1_acc_t* pstats1_acc = pc->pvvalue;
 				pstats1_acc->pfree_func(pstats1_acc);
 			}
-			lhmsv_free(pacc_field_to_acc_state);
+			lhmsv_free(pacc_field_to_acc_state_in);
+			lhmsv_free(pacc_field_to_acc_state_out);
+			free(pacc_field_to_acc_states);
 		}
 		lhmsv_free(pgroup_to_acc_field);
 	}
@@ -256,21 +265,24 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		char* value_field_name = pstate->pvalue_field_names->strings[i];
 		char* value_field_sval = pstate->pvalue_field_values->strings[i];
 
-		lhmsv_t* acc_field_to_acc_state_in = lhmsv_alloc(); // xxx temp
-		lhmsv_t* acc_field_to_acc_state_out = lhmsv_get(pgroup_to_acc_field, value_field_name);
-		if (acc_field_to_acc_state_out == NULL) {
-			acc_field_to_acc_state_out = lhmsv_alloc();
-			lhmsv_put(pgroup_to_acc_field, value_field_name, acc_field_to_acc_state_out, NO_FREE);
+		// xxx comment
+		acc_map_pair_t* pacc_field_to_acc_states = lhmsv_get(pgroup_to_acc_field, value_field_name);
+		if (pacc_field_to_acc_states == NULL) {
+			pacc_field_to_acc_states = mlr_malloc_or_die(sizeof(acc_map_pair_t));
+			pacc_field_to_acc_states->pin  = lhmsv_alloc();
+			pacc_field_to_acc_states->pout = lhmsv_alloc();
+			lhmsv_put(pgroup_to_acc_field, value_field_name, pacc_field_to_acc_states, NO_FREE);
 		}
+		lhmsv_t* acc_field_to_acc_state_in  = pacc_field_to_acc_states->pin;
+		lhmsv_t* acc_field_to_acc_state_out = pacc_field_to_acc_states->pout;
 
 		// Look up presence of all accumulators at this level's hashmap.
-		char* presence = lhmsv_get(acc_field_to_acc_state_out, fake_acc_name_for_setups);
+		char* presence = lhmsv_get(acc_field_to_acc_state_in, fake_acc_name_for_setups);
 		if (presence == NULL) {
 			make_stats1_accs(value_field_name, pstate->paccumulator_names, pstate->allow_int_float,
 				pstate->interp_foo, acc_field_to_acc_state_in, acc_field_to_acc_state_out);
-			lhmsv_put(acc_field_to_acc_state_out, fake_acc_name_for_setups, fake_acc_name_for_setups, NO_FREE);
+			lhmsv_put(acc_field_to_acc_state_in, fake_acc_name_for_setups, fake_acc_name_for_setups, NO_FREE);
 		}
-		lhmsv_free(acc_field_to_acc_state_in); // xxx temp
 
 		if (value_field_sval == NULL) // Key not present
 			continue;
@@ -289,9 +301,8 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		// is only one percentiles accumulator to be told about each point. In
 		// the emitter it will be asked to produce output twice: once for the
 		// 10th percentile & once for the 90th.
-		for (lhmsve_t* pc = acc_field_to_acc_state_out->phead; pc != NULL; pc = pc->pnext) {
+		for (lhmsve_t* pc = acc_field_to_acc_state_in->phead; pc != NULL; pc = pc->pnext) {
 			char* stats1_acc_name = pc->key;
-			// xxx printf("-- %s\n", stats1_acc_name);
 			if (streq(stats1_acc_name, fake_acc_name_for_setups))
 				continue;
 			stats1_acc_t* pstats1_acc = pc->pvvalue;
@@ -316,9 +327,9 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 				pstats1_acc->psingest_func(pstats1_acc->pvstate, value_field_sval);
 			}
 
-			if (pstate->do_iterative_stats) {
-				mapper_stats1_emit(pstate, pinrec, value_field_name, stats1_acc_name, acc_field_to_acc_state_out);
-			}
+		}
+		if (pstate->do_iterative_stats) {
+			mapper_stats1_emit(pstate, pinrec, value_field_name, acc_field_to_acc_state_out);
 		}
 	}
 	slls_free(pgroup_by_field_values);
@@ -344,12 +355,9 @@ static sllv_t* mapper_stats1_emit_all(mapper_stats1_state_t* pstate) {
 		// for "x", "y"
 		for (lhmsve_t* pd = pgroup_to_acc_field->phead; pd != NULL; pd = pd->pnext) {
 			char* value_field_name = pd->key;
-			lhmsv_t* acc_field_to_acc_state_out = pd->pvvalue;
-
-			for (sllse_t* pe = pstate->paccumulator_names->phead; pe != NULL; pe = pe->pnext) {
-				char* stats1_acc_name = pe->value;
-				mapper_stats1_emit(pstate, poutrec, value_field_name, stats1_acc_name, acc_field_to_acc_state_out);
-			}
+			acc_map_pair_t* pacc_field_to_acc_states = pd->pvvalue;
+			lhmsv_t* acc_field_to_acc_state_out = pacc_field_to_acc_states->pout;
+			mapper_stats1_emit(pstate, poutrec, value_field_name, acc_field_to_acc_state_out);
 		}
 		sllv_append(poutrecs, poutrec);
 	}
@@ -359,7 +367,7 @@ static sllv_t* mapper_stats1_emit_all(mapper_stats1_state_t* pstate) {
 
 // ----------------------------------------------------------------
 static lrec_t* mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec,
-	char* value_field_name, char* stats1_acc_name, lhmsv_t* acc_field_to_acc_state_out)
+	char* value_field_name, lhmsv_t* acc_field_to_acc_state_out)
 {
 	// Add in fields such as x_sum=#, y_count=#, etc.:
 	for (sllse_t* pe = pstate->paccumulator_names->phead; pe != NULL; pe = pe->pnext) {
