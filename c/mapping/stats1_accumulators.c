@@ -14,22 +14,6 @@
 #include "mapping/stats1_accumulators.h"
 
 // ----------------------------------------------------------------
-static int is_percentile_acc_name(char* stats1_acc_name) {
-	double percentile;
-	// sscanf(stats1_acc_name, "p%lf", &percentile) allows "p74x" et al. which isn't ok.
-	if (stats1_acc_name[0] != 'p')
-		return FALSE;
-	if (!mlr_try_float_from_string(&stats1_acc_name[1], &percentile))
-		return FALSE;
-	if (percentile < 0.0 || percentile > 100.0) {
-		fprintf(stderr, "%s stats1: percentile \"%s\" outside range [0,100].\n",
-			MLR_GLOBALS.bargv0, stats1_acc_name);
-		exit(1);
-	}
-	return TRUE;
-}
-
-// ----------------------------------------------------------------
 void make_stats1_accs(
 	char*      value_field_name,       // input
 	slls_t*    paccumulator_names,     // input
@@ -70,6 +54,21 @@ stats1_acc_t* make_stats1_acc(char* value_field_name, char* stats1_acc_name, int
 			return stats1_acc_lookup_table[i].palloc_func(value_field_name, stats1_acc_name, allow_int_float,
 				interp_foo);
 	return NULL;
+}
+
+int is_percentile_acc_name(char* stats1_acc_name) {
+	double percentile;
+	// sscanf(stats1_acc_name, "p%lf", &percentile) allows "p74x" et al. which isn't ok.
+	if (stats1_acc_name[0] != 'p')
+		return FALSE;
+	if (!mlr_try_float_from_string(&stats1_acc_name[1], &percentile))
+		return FALSE;
+	if (percentile < 0.0 || percentile > 100.0) {
+		fprintf(stderr, "%s stats1: percentile \"%s\" outside range [0,100].\n",
+			MLR_GLOBALS.bargv0, stats1_acc_name);
+		exit(1);
+	}
+	return TRUE;
 }
 
 // ----------------------------------------------------------------

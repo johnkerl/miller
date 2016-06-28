@@ -252,16 +252,24 @@ static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_
 		return NULL;
 
 	mapper_merge_fields_state_t* pstate = pvstate;
-	// For percentiles there is one unique accumulator given e.g. five distinct names p0,p25,p50,p75,p100.  The input
-	// accumulators are unique: only one percentile-keeper. There are multiple output accumulators: each references the
-	// same underlying percentile-keeper but with distinct parameters.
+	// For percentiles there is one unique accumulator given (for example) five distinct
+	// names p0,p25,p50,p75,p100.  The input accumulators are unique: only one
+	// percentile-keeper. There are multiple output accumulators: each references the same
+	// underlying percentile-keeper but with distinct parameters.
 	lhmsv_t* pinaccs = lhmsv_alloc();
 	lhmsv_t* poutaccs = lhmsv_alloc();
+	int have_percentile_acc = FALSE;
 	for (sllse_t* pa = pstate->paccumulator_names->phead; pa != NULL; pa = pa->pnext) {
 		char* acc_name = pa->value;
 		stats1_acc_t* pacc = make_stats1_acc(pstate->output_field_basename, acc_name,
 			pstate->allow_int_float, FALSE/*xxx interp_foo*/);
-		lhmsv_put(pinaccs, acc_name, pacc, NO_FREE);
+		if (is_percentile_acc_name(acc_name)) {
+			if (!have_percentile_acc)
+				lhmsv_put(pinaccs, acc_name, pacc, NO_FREE);
+			have_percentile_acc = TRUE;
+		} else {
+			lhmsv_put(pinaccs, acc_name, pacc, NO_FREE);
+		}
 		lhmsv_put(poutaccs, acc_name, pacc, NO_FREE);
 	}
 
