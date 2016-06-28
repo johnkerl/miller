@@ -61,9 +61,20 @@ stats1_acc_t* stats1_max_alloc               (char* value_field_name, char* stat
 stats1_acc_t* stats1_percentile_alloc        (char* value_field_name, char* stats1_acc_name, int aif, int inf);
 void          stats1_percentile_reuse        (stats1_acc_t* pstats1_acc);
 
-void make_stats1_accs(char* value_field_name, slls_t* paccumulator_names, int allow_int_float, int interp_foo,
-	lhmsv_t* acc_field_to_acc_state);
-stats1_acc_t* make_stats1_acc(char* value_field_name, char* stats1_acc_name, int allow_int_float, int interp_foo);
+void make_stats1_accs(
+	char*    value_field_name,
+	slls_t*  paccumulator_names,
+	int      allow_int_float,
+	int      interp_foo,
+	lhmsv_t* acc_field_to_acc_state_in, // xxx comment
+	lhmsv_t* acc_field_to_acc_state_out);
+
+stats1_acc_t* make_stats1_acc(
+	char* value_field_name,
+	char* stats1_acc_name,
+	int   allow_int_float,
+	int   interp_foo);
+
 int is_percentile_acc_name(char* stats1_acc_name);
 
 // ----------------------------------------------------------------

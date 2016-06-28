@@ -19,7 +19,8 @@ void make_stats1_accs(
 	slls_t*    paccumulator_names,     // input
 	int        allow_int_float,        // input
 	int        interp_foo,             // input
-	lhmsv_t*   acc_field_to_acc_state) // output
+	lhmsv_t*   acc_field_to_acc_state_in, // output
+	lhmsv_t*   acc_field_to_acc_state_out) // output
 {
 	stats1_acc_t* ppercentile_acc = NULL;
 	for (sllse_t* pc = paccumulator_names->phead; pc != NULL; pc = pc->pnext) {
@@ -34,7 +35,7 @@ void make_stats1_accs(
 				stats1_percentile_reuse(ppercentile_acc);
 			}
 			// xxx printf("PUT %s\n", stats1_acc_name);
-			lhmsv_put(acc_field_to_acc_state, stats1_acc_name, ppercentile_acc, NO_FREE);
+			lhmsv_put(acc_field_to_acc_state_out, stats1_acc_name, ppercentile_acc, NO_FREE);
 		} else {
 			stats1_acc_t* pstats1_acc = make_stats1_acc(value_field_name, stats1_acc_name, allow_int_float,
 				interp_foo);
@@ -43,7 +44,7 @@ void make_stats1_accs(
 					MLR_GLOBALS.bargv0, stats1_acc_name);
 				exit(1);
 			}
-			lhmsv_put(acc_field_to_acc_state, stats1_acc_name, pstats1_acc, NO_FREE);
+			lhmsv_put(acc_field_to_acc_state_out, stats1_acc_name, pstats1_acc, NO_FREE);
 		}
 	}
 }
