@@ -27,14 +27,15 @@ void make_stats1_accs(
 		// for "sum", "count"
 		char* stats1_acc_name = pc->value;
 
+		// xxx comment
 		if (is_percentile_acc_name(stats1_acc_name)) {
 			if (ppercentile_acc == NULL) {
+				lhmsv_put(acc_field_to_acc_state_in, stats1_acc_name, ppercentile_acc, NO_FREE);
 				ppercentile_acc = stats1_percentile_alloc(value_field_name, stats1_acc_name, allow_int_float,
 					interp_foo);
 			} else {
 				stats1_percentile_reuse(ppercentile_acc);
 			}
-			// xxx printf("PUT %s\n", stats1_acc_name);
 			lhmsv_put(acc_field_to_acc_state_out, stats1_acc_name, ppercentile_acc, NO_FREE);
 		} else {
 			stats1_acc_t* pstats1_acc = make_stats1_acc(value_field_name, stats1_acc_name, allow_int_float,
@@ -44,6 +45,7 @@ void make_stats1_accs(
 					MLR_GLOBALS.bargv0, stats1_acc_name);
 				exit(1);
 			}
+			lhmsv_put(acc_field_to_acc_state_in, stats1_acc_name, pstats1_acc, NO_FREE);
 			lhmsv_put(acc_field_to_acc_state_out, stats1_acc_name, pstats1_acc, NO_FREE);
 		}
 	}
