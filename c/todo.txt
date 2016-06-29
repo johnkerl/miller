@@ -12,6 +12,8 @@ TOP OF LIST:
   - xxxes
   - valgrinds
 
+! print w/ no trailing LF option ! and/or printf w/ %x
+
 * markdown format
   - output
   - input
