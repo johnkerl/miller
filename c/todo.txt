@@ -12,9 +12,6 @@ TOP OF LIST:
   - xxxes
   - valgrinds
 
-??? emitx option to completely suppress the indexed-over keys?
- - boolean pair to enum pair
-
 * markdown format
   - output
   - input
@@ -36,7 +33,6 @@ TOP OF LIST:
 
 * 4.3.0:
   > --omd; maybe --imd
-  > emitx & jackman example
   > interpolated percentiles
   - MLR_CSV_DEFAULT_RS
   - printn
