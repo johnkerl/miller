@@ -3754,6 +3754,21 @@ run_mlr --csv --quote-all      cat $indir/rfc-csv/simple.csv
 run_mlr --csv --quote-original cat $indir/rfc-csv/simple.csv
 
 # ----------------------------------------------------------------
+announce CSV/RS ENVIRONMENT DEFAULTS
+
+run_mlr --csv cut -f a reg_test/input/rfc-csv/simple.csv 
+run_mlr --csv --rs crlf cut -f a reg_test/input/rfc-csv/simple.csv 
+mlr_expect_fail --csv --rs lf cut -f a reg_test/input/rfc-csv/simple.csv 
+
+MLR_CSV_DEFAULT_RS=lf mlr_expect_fail --csv cut -f a reg_test/input/rfc-csv/simple.csv 
+MLR_CSV_DEFAULT_RS=lf run_mlr --csv --rs crlf cut -f a reg_test/input/rfc-csv/simple.csv 
+MLR_CSV_DEFAULT_RS=lf mlr_expect_fail --csv --rs lf cut -f a reg_test/input/rfc-csv/simple.csv 
+
+MLR_CSV_DEFAULT_RS=crlf run_mlr --csv cut -f a reg_test/input/rfc-csv/simple.csv 
+MLR_CSV_DEFAULT_RS=crlf run_mlr --csv --rs crlf cut -f a reg_test/input/rfc-csv/simple.csv 
+MLR_CSV_DEFAULT_RS=crlf mlr_expect_fail --csv --rs lf cut -f a reg_test/input/rfc-csv/simple.csv 
+
+# ----------------------------------------------------------------
 announce MULTI-CHARACTER IRS/IFS/IPS FOR DKVP
 
 run_mlr --oxtab --idkvp --mmap    --irs lf   --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp

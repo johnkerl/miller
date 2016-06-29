@@ -5,6 +5,9 @@ POKI_PUT_TOC_HERE
 obtained from <a href="https://support.spatialkey.com/spatialkey-sample-csv-data">https://support.spatialkey.com/spatialkey-sample-csv-data</a>.
 
 <p/><b>Note: please use "mlr --csv --rs lf" for for native Un*x (linefeed-terminated) CSV files.</b>
+(You can also have <tt>MLR_CSV_DEFAULT_RS=lf</tt> in your shell environment, e.g.
+<tt>export MLR_CSV_DEFAULT_RS=lf</tt> or <tt>setenv MLR_CSV_DEFAULT_RS lf</tt> depending on
+which shell you use.)
 
 <p/>Vertical-tabular format is good for a quick look at CSV data layout &mdash; seeing what columns you have to work with:
 POKI_RUN_COMMAND{{head -n 2 data/flins.csv | mlr --icsv --oxtab cat}}HERE

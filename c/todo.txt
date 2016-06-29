@@ -34,9 +34,10 @@ TOP OF LIST:
 ! go through lmag article & clarify all unclears
 
 * 4.3.0:
+  > --omd; maybe --imd
   > emitx & jackman example
   > interpolated percentiles
-  > env var for default csv rs lf
+  - MLR_CSV_DEFAULT_RS
   - printn
   - --quote-original; xref to possible sticky/derived feature (or not).
   - output-quoting bugfix

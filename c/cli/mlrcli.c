@@ -87,7 +87,7 @@ static lhmss_t* get_desc_to_chars_map() {
 	return singleton_pdesc_to_chars_map;
 }
 // Always strdup so the caller can unconditionally free our return value
-char* cli_sep_from_arg(char* arg, char* argv0) {
+char* cli_sep_from_arg(char* arg) {
 	char* chars = lhmss_get(get_desc_to_chars_map(), arg);
 	if (chars != NULL) // E.g. crlf
 		return mlr_strdup_or_die(chars);
@@ -109,6 +109,15 @@ lhmss_t* get_default_rses() {
 		lhmss_put(singleton_default_rses, "json",    "(N/A)", NO_FREE);
 		lhmss_put(singleton_default_rses, "nidx",    "\n",    NO_FREE);
 		lhmss_put(singleton_default_rses, "csv",     "\r\n",  NO_FREE);
+
+		char* csv_rs = "\r\n";
+		char* env_default = getenv("MLR_CSV_DEFAULT_RS");
+		if (env_default != NULL)
+			csv_rs = cli_sep_from_arg(env_default);
+		else
+			lhmss_put(singleton_default_rses, "csv", "\r\n", NO_FREE);
+		lhmss_put(singleton_default_rses, "csv", csv_rs, NO_FREE);
+
 		lhmss_put(singleton_default_rses, "csvlite", "\n",    NO_FREE);
 		lhmss_put(singleton_default_rses, "pprint",  "\n",    NO_FREE);
 		lhmss_put(singleton_default_rses, "xtab",    "(N/A)", NO_FREE);
@@ -368,8 +377,10 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for\n");
 	fprintf(o, "  DKVP-formatted input and pretty-printed output.\n");
 	fprintf(o, "\n");
-	fprintf(o, "  PLEASE USE \"%s --csv --rs lf\" FOR NATIVE UN*X (LINEFEED-TERMINATED) CSV FILES.\n",
-		argv0);
+	fprintf(o, "  PLEASE USE \"%s --csv --rs lf\" FOR NATIVE UN*X (LINEFEED-TERMINATED) CSV FILES.\n", argv0);
+	fprintf(o, "  You can also have MLR_CSV_DEFAULT_RS=lf in your shell environment, e.g.\n");
+	fprintf(o, "  \"export MLR_CSV_DEFAULT_RS=lf\" or \"setenv MLR_CSV_DEFAULT_RS lf\" depending on\n");
+	fprintf(o, "  which shell you use.\n");
 }
 
 static void main_usage_compressed_data_options(FILE* o, char* argv0) {
@@ -782,30 +793,30 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		} else if (streq(argv[argi], "--rs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ors = cli_sep_from_arg(argv[argi+1], argv[0]);
-			popts->irs = cli_sep_from_arg(argv[argi+1], argv[0]);
+			popts->ors = cli_sep_from_arg(argv[argi+1]);
+			popts->irs = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 		} else if (streq(argv[argi], "--irs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->irs = cli_sep_from_arg(argv[argi+1], argv[0]);
+			popts->irs = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 		} else if (streq(argv[argi], "--ors")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ors = cli_sep_from_arg(argv[argi+1], argv[0]);
+			popts->ors = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 
 		} else if (streq(argv[argi], "--fs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ofs = cli_sep_from_arg(argv[argi+1], argv[0]);
-			popts->ifs = cli_sep_from_arg(argv[argi+1], argv[0]);
+			popts->ofs = cli_sep_from_arg(argv[argi+1]);
+			popts->ifs = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 		} else if (streq(argv[argi], "--ifs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ifs = cli_sep_from_arg(argv[argi+1], argv[0]);
+			popts->ifs = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 		} else if (streq(argv[argi], "--ofs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ofs = cli_sep_from_arg(argv[argi+1], argv[0]);
+			popts->ofs = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 		} else if (streq(argv[argi], "--repifs")) {
 			popts->allow_repeat_ifs = TRUE;
@@ -823,16 +834,16 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		} else if (streq(argv[argi], "--ps")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ops = cli_sep_from_arg(argv[argi+1], argv[0]);
-			popts->ips = cli_sep_from_arg(argv[argi+1], argv[0]);
+			popts->ops = cli_sep_from_arg(argv[argi+1]);
+			popts->ips = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 		} else if (streq(argv[argi], "--ips")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ips = cli_sep_from_arg(argv[argi+1], argv[0]);
+			popts->ips = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 		} else if (streq(argv[argi], "--ops")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ops = cli_sep_from_arg(argv[argi+1], argv[0]);
+			popts->ops = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 
 		} else if (streq(argv[argi], "--xvright")) {
@@ -846,12 +857,12 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			popts->quote_json_values_always = TRUE;
 		} else if (streq(argv[argi], "--jflatsep")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->json_flatten_separator = cli_sep_from_arg(argv[argi+1], argv[0]);
+			popts->json_flatten_separator = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 
 		} else if (streq(argv[argi], "--vflatsep")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->oosvar_flatten_separator = cli_sep_from_arg(argv[argi+1], argv[0]);
+			popts->oosvar_flatten_separator = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 
 		} else if (streq(argv[argi], "--csv"))      { popts->ifile_fmt = popts->ofile_fmt = "csv";

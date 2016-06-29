@@ -26159,6 +26159,64 @@ a,b,c
 
 
 ================================================================
+CSV/RS ENVIRONMENT DEFAULTS
+
+mlr --csv cut -f a reg_test/input/rfc-csv/simple.csv
+a
+1
+4
+x
+
+mlr --csv --rs crlf cut -f a reg_test/input/rfc-csv/simple.csv
+a
+1
+4
+x
+
+mlr --csv --rs lf cut -f a reg_test/input/rfc-csv/simple.csv
+mlr: unmatched double quote at line  3.
+a
+1
+4
+
+mlr --csv cut -f a reg_test/input/rfc-csv/simple.csv
+mlr: unmatched double quote at line  3.
+a
+1
+4
+
+mlr --csv --rs crlf cut -f a reg_test/input/rfc-csv/simple.csv
+a
+1
+4
+x
+
+mlr --csv --rs lf cut -f a reg_test/input/rfc-csv/simple.csv
+mlr: unmatched double quote at line  3.
+a
+1
+4
+
+mlr --csv cut -f a reg_test/input/rfc-csv/simple.csv
+a
+1
+4
+x
+
+mlr --csv --rs crlf cut -f a reg_test/input/rfc-csv/simple.csv
+a
+1
+4
+x
+
+mlr --csv --rs lf cut -f a reg_test/input/rfc-csv/simple.csv
+mlr: unmatched double quote at line  3.
+a
+1
+4
+
+
+================================================================
 MULTI-CHARACTER IRS/IFS/IPS FOR DKVP
 
 mlr --oxtab --idkvp --mmap --irs lf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp

@@ -171,8 +171,8 @@ static mapper_t* mapper_nest_alloc(ap_state_t* pargp, char* argv0,
 
 	pstate->pargp      = pargp;
 	pstate->field_name = field_name;
-	pstate->nested_fs  = cli_sep_from_arg(nested_fs, argv0);
-	pstate->nested_ps  = cli_sep_from_arg(nested_ps, argv0);
+	pstate->nested_fs  = cli_sep_from_arg(nested_fs);
+	pstate->nested_ps  = cli_sep_from_arg(nested_ps);
 	pstate->nested_ps_length = strlen(pstate->nested_ps);
 
 	if (do_explode) {

@@ -395,7 +395,9 @@ of platform.
 <p/>
 <b>
 Please use <tt>mlr --csv --rs lf</tt> for native Un*x (linefeed-terminated) CSV files.
-</b>
+</b> (You can also have <tt>MLR_CSV_DEFAULT_RS=lf</tt> in your shell environment, e.g.
+<tt>export MLR_CSV_DEFAULT_RS=lf</tt> or <tt>setenv MLR_CSV_DEFAULT_RS lf</tt> depending on
+which shell you use.)
 
 <p/>The RFC says, somewhat briefly, that &ldquo;there may be a header
 line&rdquo;. Miller&rsquo;s <tt>--implicit-csv-header</tt> option allows you to

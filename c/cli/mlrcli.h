@@ -67,6 +67,6 @@ lhmss_t* get_default_pses();
 lhmss_t* get_default_rses();
 
 // The caller can unconditionally free the return value
-char* cli_sep_from_arg(char* arg, char* argv0);
+char* cli_sep_from_arg(char* arg);
 
 #endif // MLRCLI_H
