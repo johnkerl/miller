@@ -112,7 +112,7 @@ lhmss_t* get_default_rses() {
 
 		char* csv_rs = "\r\n";
 		char* env_default = getenv("MLR_CSV_DEFAULT_RS");
-		if (env_default != NULL)
+		if (env_default != NULL && !streq(env_default, ""))
 			csv_rs = cli_sep_from_arg(env_default);
 		else
 			lhmss_put(singleton_default_rses, "csv", "\r\n", NO_FREE);
