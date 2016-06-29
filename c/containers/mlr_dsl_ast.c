@@ -169,10 +169,8 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FILTER:                           return "filter";                           break;
 	case MD_AST_NODE_TYPE_UNSET:                            return "unset";                            break;
 	case MD_AST_NODE_TYPE_EMITF:                            return "emitf";                            break;
-	case MD_AST_NODE_TYPE_EMITX:                            return "emitx";                            break;
 	case MD_AST_NODE_TYPE_EMITP:                            return "emitp";                            break;
 	case MD_AST_NODE_TYPE_EMIT:                             return "emit";                             break;
-	case MD_AST_NODE_TYPE_EMITX_LASHED:                     return "emitx_lashed";                     break;
 	case MD_AST_NODE_TYPE_EMITP_LASHED:                     return "emitp_lashed";                     break;
 	case MD_AST_NODE_TYPE_EMIT_LASHED:                      return "emit_lashed";                      break;
 	case MD_AST_NODE_TYPE_DUMP:                             return "dump";                             break;

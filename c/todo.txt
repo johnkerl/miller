@@ -13,6 +13,7 @@ TOP OF LIST:
   - valgrinds
 
 ??? emitx option to completely suppress the indexed-over keys?
+ - boolean pair to enum pair
 
 * markdown format
   - output
