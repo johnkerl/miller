@@ -7,7 +7,8 @@ BUGFIXES
 TOP OF LIST:
 
 * interpolated-percentile option
-  - single ingest!
+  k single ingest!
+  - direct compute_index UTs
   - xxxes
   - valgrinds
 
@@ -28,6 +29,7 @@ TOP OF LIST:
 ! go through lmag article & clarify all unclears
 
 * 4.3.0:
+  > emitx & jackman example
   > interpolated percentiles
   > env var for default csv rs lf
   - --quote-original; xref to possible sticky/derived feature (or not).

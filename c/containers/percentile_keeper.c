@@ -42,12 +42,15 @@ void percentile_keeper_ingest(percentile_keeper_t* ppercentile_keeper, mv_t valu
 // ----------------------------------------------------------------
 // https://en.wikipedia.org/wiki/Percentile
 
+// The 20th percentile is the value below which 20% of the observations may be found.
+
 static int compute_index(int n, double p) {
 	int index = p*n/100.0;
 	if (index < 0)
 		index = 0;
 	else if (index >= n)
 		index = n-1;
+	////printf("n=%d p=%lf index=%d\n", n, p, index);
 	return index;
 }
 
@@ -61,22 +64,21 @@ static int compute_index_nearest_rank(int n, double p) {
 }
 
 static mv_t get_percentile_linearly_interpolated(mv_t* array, int n, double p) {
-	double findex = (p/100.0)*n - 1.0;
-	int iindex = (int)floor(findex);
+	double findex = (p/100.0)*n;
 	// xxx make corner-case UTs
-	if (iindex < 0)
-		iindex = 0;
-	else if (iindex >= n)
-		iindex = n-1;
+	if (findex < 0)
+		findex = 0;
+	int iindex = (int)floor(findex);
 	if (iindex >= n-1) {
+		////printf("n=%d p=%lf findex=%lf iindex=%d\n", n, p, findex, iindex);
 		return array[iindex];
 	} else {
 		// array[iindex] + frac * (array[iindex+1] - array[iindex]);
 		mv_t frac = mv_from_float(findex - iindex);
-		printf("n=%d findex=%lf iiindex=%d frac=%lf\n", n, findex, iindex, findex-iindex);
+		////printf("n=%d p=%lf findex=%lf iindex=%d frac=%lf\n", n, p, findex, iindex, findex-iindex);
 		mv_t* pa = &array[iindex];
 		mv_t* pb = &array[iindex+1];
-		mv_t diff = x_xx_minus_func(pa, pb);
+		mv_t diff = x_xx_minus_func(pb, pa);
 		mv_t prod = x_xx_times_func(&frac, &diff);
 		mv_t rv = x_xx_plus_func(pa, &prod);
 		return rv;

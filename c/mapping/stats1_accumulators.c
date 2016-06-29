@@ -590,6 +590,7 @@ stats1_acc_t* stats1_percentile_alloc(char* value_field_name, char* stats1_acc_n
 	pstate->ppercentile_keeper_emitter = (interp_foo)
 		? percentile_keeper_emit_linearly_interpolated
 		: percentile_keeper_emit;
+		//: percentile_keeper_emit_nearest_rank;
 
 	pstats1_acc->pvstate        = (void*)pstate;
 	pstats1_acc->pdingest_func  = NULL;

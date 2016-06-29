@@ -139,8 +139,10 @@ md_statement_not_braced_end ::= md_oosvar_assignment.
 md_statement_not_braced_end ::= md_filter.
 md_statement_not_braced_end ::= md_unset.
 md_statement_not_braced_end ::= md_emitf.
+md_statement_not_braced_end ::= md_emitx.
 md_statement_not_braced_end ::= md_emitp.
 md_statement_not_braced_end ::= md_emit.
+md_statement_not_braced_end ::= md_emitx_lashed.
 md_statement_not_braced_end ::= md_emitp_lashed.
 md_statement_not_braced_end ::= md_emit_lashed.
 md_statement_not_braced_end ::= md_dump.
@@ -594,6 +596,35 @@ md_emitf_args(A) ::= md_emitf_args(B) MD_TOKEN_COMMA md_oosvar_keylist(C). {
 }
 
 // ----------------------------------------------------------------
+md_emitx(A) ::= MD_TOKEN_EMITX(O) MD_TOKEN_ALL(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITX, B);
+}
+md_emitx(A) ::= MD_TOKEN_EMITX(O) MD_TOKEN_ALL(B) MD_TOKEN_COMMA md_emitx_namelist(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITX, B, C);
+}
+
+md_emitx(A) ::= MD_TOKEN_EMITX(O) MD_TOKEN_FULL_OOSVAR(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITX, B);
+}
+md_emitx(A) ::= MD_TOKEN_EMITX(O) MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_COMMA md_emitx_namelist(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITX, B, C);
+}
+
+md_emitx(A) ::= MD_TOKEN_EMITX(O) md_oosvar_keylist(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITX, B);
+}
+md_emitx(A) ::= MD_TOKEN_EMITX(O) md_oosvar_keylist(B) MD_TOKEN_COMMA md_emitx_namelist(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITX, B, C);
+}
+
+md_emitx_namelist(A) ::= md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_unary("emitx_namelist", MD_AST_NODE_TYPE_EMITX, B);
+}
+md_emitx_namelist(A) ::= md_emitx_namelist(B) MD_TOKEN_COMMA md_rhs(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+
+// ----------------------------------------------------------------
 md_emitp(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_ALL(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITP, B);
 }
@@ -648,6 +679,35 @@ md_emit_namelist(A) ::= md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary("emit_namelist", MD_AST_NODE_TYPE_EMIT, B);
 }
 md_emit_namelist(A) ::= md_emit_namelist(B) MD_TOKEN_COMMA md_rhs(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+
+// ----------------------------------------------------------------
+md_emitx_lashed(A) ::= MD_TOKEN_EMITX(O)
+	MD_TOKEN_LPAREN md_emitx_lashed_keylists(B) MD_TOKEN_RPAREN.
+{
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITX_LASHED, B);
+}
+
+md_emitx_lashed(A) ::= MD_TOKEN_EMITX(O)
+	MD_TOKEN_LPAREN md_emitx_lashed_keylists(B) MD_TOKEN_RPAREN
+	MD_TOKEN_COMMA md_emitx_lashed_namelist(C).
+{
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITX_LASHED, B, C);
+}
+
+
+md_emitx_lashed_keylists(A) ::= md_oosvar_keylist(B). {
+	A = mlr_dsl_ast_node_alloc_unary("lashed_keylists", MD_AST_NODE_TYPE_EMITX_LASHED, B);
+}
+md_emitx_lashed_keylists(A) ::= md_emitx_lashed_keylists(B) MD_TOKEN_COMMA md_oosvar_keylist(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+
+md_emitx_lashed_namelist(A) ::= md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_unary("lashed_namelist", MD_AST_NODE_TYPE_EMITX_LASHED, B);
+}
+md_emitx_lashed_namelist(A) ::= md_emitx_lashed_namelist(B) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
