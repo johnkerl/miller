@@ -67,9 +67,17 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_PRINT);
 	return MD_TOKEN_PRINT;
 }
+"printn" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_PRINTN);
+	return MD_TOKEN_PRINTN;
+}
 "eprint" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_EPRINT);
 	return MD_TOKEN_EPRINT;
+}
+"eprintn" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_EPRINTN);
+	return MD_TOKEN_EPRINTN;
 }
 "begin" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);

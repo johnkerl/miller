@@ -20532,6 +20532,18 @@ false
 y is 0.952618
 
 
+mlr put -q printn 1; printn "two"; printn $a; printn $i < 4; printn "y is ".string($y); print "" ./reg_test/input/abixy
+1twopantruey is 0.726803
+1twoekstruey is 0.522151
+1twowyetruey is 0.338319
+1twoeksfalsey is 0.134189
+1twowyefalsey is 0.863624
+1twozeefalsey is 0.493221
+1twoeksfalsey is 0.187885
+1twozeefalsey is 0.976181
+1twohatfalsey is 0.749551
+1twopanfalsey is 0.952618
+
 
 ================================================================
 ABSENT/EMPTY

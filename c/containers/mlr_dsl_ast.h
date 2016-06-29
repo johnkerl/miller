@@ -43,7 +43,9 @@ typedef enum _mlr_dsl_ast_node_type_t {
 	MD_AST_NODE_TYPE_DUMP,
 	MD_AST_NODE_TYPE_EDUMP,
 	MD_AST_NODE_TYPE_PRINT,
+	MD_AST_NODE_TYPE_PRINTN,
 	MD_AST_NODE_TYPE_EPRINT,
+	MD_AST_NODE_TYPE_EPRINTN,
 	MD_AST_NODE_TYPE_ALL,
 	MD_AST_NODE_TYPE_NOP, // only for parser internals; should not be in the AST returned by the parser
 	MD_AST_NODE_TYPE_WHILE,

@@ -45,7 +45,9 @@ static mlr_dsl_cst_statement_t*                           alloc_filter(mlr_dsl_a
 static mlr_dsl_cst_statement_t*                             alloc_dump(mlr_dsl_ast_node_t* pnode, int ti, int cf);
 static mlr_dsl_cst_statement_t*                            alloc_edump(mlr_dsl_ast_node_t* pnode, int ti, int cf);
 static mlr_dsl_cst_statement_t*                            alloc_print(mlr_dsl_ast_node_t* pnode, int ti, int cf);
+static mlr_dsl_cst_statement_t*                           alloc_printn(mlr_dsl_ast_node_t* pnode, int ti, int cf);
 static mlr_dsl_cst_statement_t*                           alloc_eprint(mlr_dsl_ast_node_t* pnode, int ti, int cf);
+static mlr_dsl_cst_statement_t*                          alloc_eprintn(mlr_dsl_ast_node_t* pnode, int ti, int cf);
 static mlr_dsl_cst_statement_t*                     alloc_bare_boolean(mlr_dsl_ast_node_t* pnode, int ti, int cf);
 
 static mlr_dsl_cst_statement_t* alloc_if_item(
@@ -89,7 +91,9 @@ static void                         handle_emit_all(mlr_dsl_cst_statement_t* s, 
 static void                             handle_dump(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_edump(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_print(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                           handle_printn(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                           handle_eprint(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                          handle_eprintn(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                           handle_filter(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                handle_conditional_block(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_while(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -434,8 +438,14 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_PRINT:
 		return alloc_print(pnode, type_inferencing, context_flags);
 		break;
+	case MD_AST_NODE_TYPE_PRINTN:
+		return alloc_printn(pnode, type_inferencing, context_flags);
+		break;
 	case MD_AST_NODE_TYPE_EPRINT:
 		return alloc_eprint(pnode, type_inferencing, context_flags);
+		break;
+	case MD_AST_NODE_TYPE_EPRINTN:
+		return alloc_eprintn(pnode, type_inferencing, context_flags);
 		break;
 	default:
 		return alloc_bare_boolean(pnode, type_inferencing, context_flags);
@@ -1248,6 +1258,22 @@ static mlr_dsl_cst_statement_t* alloc_print(mlr_dsl_ast_node_t* pnode, int type_
 }
 
 // ----------------------------------------------------------------
+static mlr_dsl_cst_statement_t* alloc_printn(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags)
+{
+	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 1)) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+	mlr_dsl_ast_node_t* pchild = pnode->pchildren->phead->pvvalue;
+	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pchild, type_inferencing, context_flags);
+	pstatement->pnode_handler = handle_printn;
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_eprint(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
 {
@@ -1260,6 +1286,22 @@ static mlr_dsl_cst_statement_t* alloc_eprint(mlr_dsl_ast_node_t* pnode, int type
 	mlr_dsl_ast_node_t* pchild = pnode->pchildren->phead->pvvalue;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pchild, type_inferencing, context_flags);
 	pstatement->pnode_handler = handle_eprint;
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
+static mlr_dsl_cst_statement_t* alloc_eprintn(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags)
+{
+	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 1)) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+	mlr_dsl_ast_node_t* pchild = pnode->pchildren->phead->pvvalue;
+	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pchild, type_inferencing, context_flags);
+	pstatement->pnode_handler = handle_eprintn;
 	return pstatement;
 }
 
@@ -1870,6 +1912,22 @@ static void handle_print(
 }
 
 // ----------------------------------------------------------------
+static void handle_printn(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	char free_flags;
+	char* sval = mv_format_val(&val, &free_flags);
+	printf("%s", sval);
+	if (free_flags)
+		free(sval);
+	mv_free(&val);
+}
+
+// ----------------------------------------------------------------
 static void handle_eprint(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
@@ -1880,6 +1938,22 @@ static void handle_eprint(
 	char free_flags;
 	char* sval = mv_format_val(&val, &free_flags);
 	fprintf(stderr, "%s\n", sval);
+	if (free_flags)
+		free(sval);
+	mv_free(&val);
+}
+
+// ----------------------------------------------------------------
+static void handle_eprintn(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	char free_flags;
+	char* sval = mv_format_val(&val, &free_flags);
+	fprintf(stderr, "%s", sval);
 	if (free_flags)
 		free(sval);
 	mv_free(&val);
