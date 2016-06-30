@@ -105,22 +105,23 @@ static lhmsi_t* singleton_default_repeat_ipses = NULL;
 lhmss_t* get_default_rses() {
 	if (singleton_default_rses == NULL) {
 		singleton_default_rses = lhmss_alloc();
-		lhmss_put(singleton_default_rses, "dkvp",    "\n",    NO_FREE);
-		lhmss_put(singleton_default_rses, "json",    "(N/A)", NO_FREE);
-		lhmss_put(singleton_default_rses, "nidx",    "\n",    NO_FREE);
-		lhmss_put(singleton_default_rses, "csv",     "\r\n",  NO_FREE);
+		lhmss_put(singleton_default_rses, "dkvp",     "\n",    NO_FREE);
+		lhmss_put(singleton_default_rses, "json",     "(N/A)", NO_FREE);
+		lhmss_put(singleton_default_rses, "nidx",     "\n",    NO_FREE);
+		lhmss_put(singleton_default_rses, "csv",      "\r\n",  NO_FREE);
 
 		char* csv_rs = "\r\n";
 		char* env_default = getenv("MLR_CSV_DEFAULT_RS");
 		if (env_default != NULL && !streq(env_default, ""))
 			csv_rs = cli_sep_from_arg(env_default);
 		else
-			lhmss_put(singleton_default_rses, "csv", "\r\n", NO_FREE);
+			lhmss_put(singleton_default_rses, "csv",  "\r\n", NO_FREE);
 		lhmss_put(singleton_default_rses, "csv", csv_rs, NO_FREE);
 
-		lhmss_put(singleton_default_rses, "csvlite", "\n",    NO_FREE);
-		lhmss_put(singleton_default_rses, "pprint",  "\n",    NO_FREE);
-		lhmss_put(singleton_default_rses, "xtab",    "(N/A)", NO_FREE);
+		lhmss_put(singleton_default_rses, "csvlite",  "\n",    NO_FREE);
+		lhmss_put(singleton_default_rses, "markdown", "\n",    NO_FREE);
+		lhmss_put(singleton_default_rses, "pprint",   "\n",    NO_FREE);
+		lhmss_put(singleton_default_rses, "xtab",     "(N/A)", NO_FREE);
 	}
 	return singleton_default_rses;
 }
@@ -128,13 +129,14 @@ lhmss_t* get_default_rses() {
 lhmss_t* get_default_fses() {
 	if (singleton_default_fses == NULL) {
 		singleton_default_fses = lhmss_alloc();
-		lhmss_put(singleton_default_fses, "dkvp",    ",",     NO_FREE);
-		lhmss_put(singleton_default_fses, "json",    "(N/A)", NO_FREE);
-		lhmss_put(singleton_default_fses, "nidx",    " ",     NO_FREE);
-		lhmss_put(singleton_default_fses, "csv",     ",",     NO_FREE);
-		lhmss_put(singleton_default_fses, "csvlite", ",",     NO_FREE);
-		lhmss_put(singleton_default_fses, "pprint",  " ",     NO_FREE);
-		lhmss_put(singleton_default_fses, "xtab",    "\n",    NO_FREE);
+		lhmss_put(singleton_default_fses, "dkvp",     ",",      NO_FREE);
+		lhmss_put(singleton_default_fses, "json",     "(N/A)",  NO_FREE);
+		lhmss_put(singleton_default_fses, "nidx",     " ",      NO_FREE);
+		lhmss_put(singleton_default_fses, "csv",      ",",      NO_FREE);
+		lhmss_put(singleton_default_fses, "csvlite",  ",",      NO_FREE);
+		lhmss_put(singleton_default_fses, "markdown", "(N/A)",  NO_FREE);
+		lhmss_put(singleton_default_fses, "pprint",   " ",      NO_FREE);
+		lhmss_put(singleton_default_fses, "xtab",     "\n",     NO_FREE);
 	}
 	return singleton_default_fses;
 }
@@ -142,13 +144,14 @@ lhmss_t* get_default_fses() {
 lhmss_t* get_default_pses() {
 	if (singleton_default_pses == NULL) {
 		singleton_default_pses = lhmss_alloc();
-		lhmss_put(singleton_default_pses, "dkvp",    "=",     NO_FREE);
-		lhmss_put(singleton_default_pses, "json",    "(N/A)", NO_FREE);
-		lhmss_put(singleton_default_pses, "nidx",    "(N/A)", NO_FREE);
-		lhmss_put(singleton_default_pses, "csv",     "(N/A)", NO_FREE);
-		lhmss_put(singleton_default_pses, "csvlite", "(N/A)", NO_FREE);
-		lhmss_put(singleton_default_pses, "pprint",  "(N/A)", NO_FREE);
-		lhmss_put(singleton_default_pses, "xtab",    " ",     NO_FREE);
+		lhmss_put(singleton_default_pses, "dkvp",     "=",     NO_FREE);
+		lhmss_put(singleton_default_pses, "json",     "(N/A)", NO_FREE);
+		lhmss_put(singleton_default_pses, "nidx",     "(N/A)", NO_FREE);
+		lhmss_put(singleton_default_pses, "csv",      "(N/A)", NO_FREE);
+		lhmss_put(singleton_default_pses, "csvlite",  "(N/A)", NO_FREE);
+		lhmss_put(singleton_default_pses, "markdown", "(N/A)", NO_FREE);
+		lhmss_put(singleton_default_pses, "pprint",   "(N/A)", NO_FREE);
+		lhmss_put(singleton_default_pses, "xtab",     " ",     NO_FREE);
 	}
 	return singleton_default_pses;
 }
@@ -156,13 +159,14 @@ lhmss_t* get_default_pses() {
 lhmsi_t* get_default_repeat_ifses() {
 	if (singleton_default_repeat_ifses == NULL) {
 		singleton_default_repeat_ifses = lhmsi_alloc();
-		lhmsi_put(singleton_default_repeat_ifses, "dkvp",    FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ifses, "json",    FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ifses, "csv",     FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ifses, "csvlite", FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ifses, "nidx",    FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ifses, "xtab",    FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ifses, "pprint",  TRUE,  NO_FREE);
+		lhmsi_put(singleton_default_repeat_ifses, "dkvp",     FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ifses, "json",     FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ifses, "csv",      FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ifses, "csvlite",  FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ifses, "markdown", FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ifses, "nidx",     FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ifses, "xtab",     FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ifses, "pprint",   TRUE,  NO_FREE);
 	}
 	return singleton_default_repeat_ifses;
 }
@@ -170,13 +174,14 @@ lhmsi_t* get_default_repeat_ifses() {
 lhmsi_t* get_default_repeat_ipses() {
 	if (singleton_default_repeat_ipses == NULL) {
 		singleton_default_repeat_ipses = lhmsi_alloc();
-		lhmsi_put(singleton_default_repeat_ipses, "dkvp",    FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ipses, "json",    FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ipses, "csv",     FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ipses, "csvlite", FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ipses, "nidx",    FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ipses, "xtab",    TRUE,  NO_FREE);
-		lhmsi_put(singleton_default_repeat_ipses, "pprint",  FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ipses, "dkvp",     FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ipses, "json",     FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ipses, "csv",      FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ipses, "csvlite",  FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ipses, "markdown", FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ipses, "nidx",     FALSE, NO_FREE);
+		lhmsi_put(singleton_default_repeat_ipses, "xtab",     TRUE,  NO_FREE);
+		lhmsi_put(singleton_default_repeat_ipses, "pprint",   FALSE, NO_FREE);
 	}
 	return singleton_default_repeat_ipses;
 }
@@ -873,6 +878,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--icsvlite")) { popts->ifile_fmt = "csvlite";
 		} else if (streq(argv[argi], "--ocsvlite")) { popts->ofile_fmt = "csvlite";
 
+		} else if (streq(argv[argi], "--omd"))      { popts->ofile_fmt = "markdown";
+
 		} else if (streq(argv[argi], "--dkvp"))     { popts->ifile_fmt = popts->ofile_fmt = "dkvp";
 		} else if (streq(argv[argi], "--idkvp"))    { popts->ifile_fmt = "dkvp";
 		} else if (streq(argv[argi], "--odkvp"))    { popts->ofile_fmt = "dkvp";
@@ -1030,6 +1037,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			popts->headerless_csv_output);
 	else if (streq(popts->ofile_fmt, "csvlite"))
 		popts->plrec_writer = lrec_writer_csvlite_alloc(popts->ors, popts->ofs, popts->headerless_csv_output);
+	else if (streq(popts->ofile_fmt, "markdown"))
+		popts->plrec_writer = lrec_writer_markdown_alloc(popts->ors);
 	else if (streq(popts->ofile_fmt, "nidx"))
 		popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
 	else if (streq(popts->ofile_fmt, "xtab"))
