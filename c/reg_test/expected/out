@@ -26157,59 +26157,90 @@ a,b,c
 4,5,6
 "x","y""yy","z"
 
+mlr --itsv --rs lf --oxtab cat ./reg_test/input/simple.tsv
+a pan
+b pan
+i 1
+x 2
+y 0.989945
+
+a eks
+b pan
+i 2
+x 1
+y 0.775159
+
+a wye
+b wye
+i 3
+x 1
+y 0.761642
+
+a eks
+b wye
+i 4
+x 5
+y 0.322934
+
+a wye
+b pan
+i 5
+x 5
+y 0.448283
+
 
 ================================================================
 CSV/RS ENVIRONMENT DEFAULTS
 
-mlr --csv cut -f a reg_test/input/rfc-csv/simple.csv
+mlr --csv cut -f a ./reg_test/input/rfc-csv/simple.csv
 a
 1
 4
 x
 
-mlr --csv --rs crlf cut -f a reg_test/input/rfc-csv/simple.csv
+mlr --csv --rs crlf cut -f a ./reg_test/input/rfc-csv/simple.csv
 a
 1
 4
 x
 
-mlr --csv --rs lf cut -f a reg_test/input/rfc-csv/simple.csv
+mlr --csv --rs lf cut -f a ./reg_test/input/rfc-csv/simple.csv
 mlr: unmatched double quote at line  3.
 a
 1
 4
 
-mlr --csv cut -f a reg_test/input/rfc-csv/simple.csv
+mlr --csv cut -f a ./reg_test/input/rfc-csv/simple.csv
 mlr: unmatched double quote at line  3.
 a
 1
 4
 
-mlr --csv --rs crlf cut -f a reg_test/input/rfc-csv/simple.csv
+mlr --csv --rs crlf cut -f a ./reg_test/input/rfc-csv/simple.csv
 a
 1
 4
 x
 
-mlr --csv --rs lf cut -f a reg_test/input/rfc-csv/simple.csv
+mlr --csv --rs lf cut -f a ./reg_test/input/rfc-csv/simple.csv
 mlr: unmatched double quote at line  3.
 a
 1
 4
 
-mlr --csv cut -f a reg_test/input/rfc-csv/simple.csv
+mlr --csv cut -f a ./reg_test/input/rfc-csv/simple.csv
 a
 1
 4
 x
 
-mlr --csv --rs crlf cut -f a reg_test/input/rfc-csv/simple.csv
+mlr --csv --rs crlf cut -f a ./reg_test/input/rfc-csv/simple.csv
 a
 1
 4
 x
 
-mlr --csv --rs lf cut -f a reg_test/input/rfc-csv/simple.csv
+mlr --csv --rs lf cut -f a ./reg_test/input/rfc-csv/simple.csv
 mlr: unmatched double quote at line  3.
 a
 1

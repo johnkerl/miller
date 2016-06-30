@@ -3753,6 +3753,8 @@ run_mlr --mmap    --csv --rs lf --quote-original cut -o -f c,b,a $indir/quote-or
 run_mlr --csv --quote-all      cat $indir/rfc-csv/simple.csv
 run_mlr --csv --quote-original cat $indir/rfc-csv/simple.csv
 
+run_mlr --itsv --rs lf --oxtab cat $indir/simple.tsv
+
 # ----------------------------------------------------------------
 announce CSV/RS ENVIRONMENT DEFAULTS
 

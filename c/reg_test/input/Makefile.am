@@ -120,6 +120,7 @@ EXTRA_DIST=	\
 		sec2xhms \
 		short \
 		short-circuit.dkvp \
+		simple.tsv \
 		small \
 		small-nested.json \
 		small-non-nested-wrapped.json \

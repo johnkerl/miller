@@ -231,7 +231,7 @@ static void main_usage_synopsis(FILE* o, char* argv0) {
 static void main_usage_examples(FILE* o, char* argv0, char* leader) {
 
 	fprintf(o, "%s%s --csv cut -f hostname,uptime mydata.csv\n", leader, argv0);
-	fprintf(o, "%s%s --csv --rs lf filter '$status != \"down\" && $upsec >= 10000' *.csv\n", leader, argv0);
+	fprintf(o, "%s%s --tsv --rs lf filter '$status != \"down\" && $upsec >= 10000' *.tsv\n", leader, argv0);
 	fprintf(o, "%s%s --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat\n", leader, argv0);
 	fprintf(o, "%sgrep -v '^#' /etc/group | %s --ifs : --nidx --opprint label group,pass,gid,member then sort -f group\n", leader, argv0);
 	fprintf(o, "%s%s join -j account_id -f accounts.dat then group-by account_name balances.dat\n", leader, argv0);
@@ -358,9 +358,13 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "  --icsv    --ocsv    --csv       Comma-separated value (or tab-separated\n");
 	fprintf(o, "                                  with --fs tab, etc.)\n");
 	fprintf(o, "\n");
+	fprintf(o, "  --itsv    --otsv    --tsv       Keystroke-savers for \"--icsv --ifs tab\",\n");
+	fprintf(o, "                                  \"--ocsv --ofs tab\", \"--csv --fs tab\".\n");
+	fprintf(o, "\n");
 	fprintf(o, "  --ipprint --opprint --pprint    Pretty-printed tabular (produces no\n");
 	fprintf(o, "                                  output until all input is in).\n");
 	fprintf(o, "                      --right     Right-justifies all fields for PPRINT output.\n");
+	fprintf(o, "\n");
 	fprintf(o, "            --omd                 Markdown-tabular (only available for output).\n");
 	fprintf(o, "\n");
 	fprintf(o, "  --ixtab   --oxtab   --xtab      Pretty-printed vertical-tabular.\n");
@@ -430,8 +434,11 @@ static void main_usage_separator_options(FILE* o, char* argv0) {
 	fprintf(o, "    CRLF-terminated DKVP files, and so on.\n");
 	fprintf(o, "  * CSV is intended to handle RFC-4180-compliant data. In particular, this means\n");
 	fprintf(o, "    it uses CRLF line-terminators by default. You can use \"--csv --rs lf\" for\n");
-	fprintf(o, "    Linux-native CSV files.\n");
+	fprintf(o, "    Linux-native CSV files.  You can also have \"MLR_CSV_DEFAULT_RS=lf\" in your\n");
+	fprintf(o, "    shell environment, e.g.  \"export MLR_CSV_DEFAULT_RS=lf\" or \"setenv\n");
+	fprintf(o, "    MLR_CSV_DEFAULT_RS lf\" depending on which shell you use.\n");
 	fprintf(o, "  * TSV is simply CSV using tab as field separator (\"--fs tab\").\n");
+	fprintf(o, "  * FS/PS are ignored for markdown format; RS is used.\n");
 	fprintf(o, "  * All RS/FS/PS options are ignored for JSON format: JSON doesn't allow\n");
 	fprintf(o, "    changing these.\n");
 	fprintf(o, "  * You can specify separators in any of the following ways, shown by example:\n");
@@ -878,6 +885,28 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--csvlite"))  { popts->ifile_fmt = popts->ofile_fmt = "csvlite";
 		} else if (streq(argv[argi], "--icsvlite")) { popts->ifile_fmt = "csvlite";
 		} else if (streq(argv[argi], "--ocsvlite")) { popts->ofile_fmt = "csvlite";
+
+		} else if (streq(argv[argi], "--tsv"))      {
+			popts->ifile_fmt = popts->ofile_fmt = "csv";
+			popts->ifs = "\t";
+			popts->ofs = "\t";
+		} else if (streq(argv[argi], "--itsv"))     {
+			popts->ifile_fmt = "csv";
+			popts->ifs = "\t";
+		} else if (streq(argv[argi], "--otsv"))     {
+			popts->ofile_fmt = "csv";
+			popts->ofs = "\t";
+
+		} else if (streq(argv[argi], "--tsvlite"))  {
+			popts->ifile_fmt = popts->ofile_fmt = "csvlite";
+			popts->ifs = "\t";
+			popts->ofs = "\t";
+		} else if (streq(argv[argi], "--itsvlite")) {
+			popts->ifile_fmt = "csvlite";
+			popts->ifs = "\t";
+		} else if (streq(argv[argi], "--otsvlite")) {
+			popts->ofile_fmt = "csvlite";
+			popts->ofs = "\t";
 
 		} else if (streq(argv[argi], "--omd"))      { popts->ofile_fmt = "markdown";
 

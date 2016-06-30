@@ -315,7 +315,7 @@ Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or more file 
 
 Command-line-syntax examples:
   mlr --csv cut -f hostname,uptime mydata.csv
-  mlr --csv --rs lf filter '$status != "down" &amp;&amp; $upsec &gt;= 10000' *.csv
+  mlr --tsv --rs lf filter '$status != "down" &amp;&amp; $upsec &gt;= 10000' *.tsv
   mlr --nidx put '$sum = $7 &lt; 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
   grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
   mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
@@ -421,9 +421,13 @@ Data-format options, for input, output, or both:
   --icsv    --ocsv    --csv       Comma-separated value (or tab-separated
                                   with --fs tab, etc.)
 
+  --itsv    --otsv    --tsv       Keystroke-savers for "--icsv --ifs tab",
+                                  "--ocsv --ofs tab", "--csv --fs tab".
+
   --ipprint --opprint --pprint    Pretty-printed tabular (produces no
                                   output until all input is in).
                       --right     Right-justifies all fields for PPRINT output.
+
             --omd                 Markdown-tabular (only available for output).
 
   --ixtab   --oxtab   --xtab      Pretty-printed vertical-tabular.
@@ -489,8 +493,11 @@ Separator options, for input, output, or both:
     CRLF-terminated DKVP files, and so on.
   * CSV is intended to handle RFC-4180-compliant data. In particular, this means
     it uses CRLF line-terminators by default. You can use "--csv --rs lf" for
-    Linux-native CSV files.
+    Linux-native CSV files.  You can also have "MLR_CSV_DEFAULT_RS=lf" in your
+    shell environment, e.g.  "export MLR_CSV_DEFAULT_RS=lf" or "setenv
+    MLR_CSV_DEFAULT_RS lf" depending on which shell you use.
   * TSV is simply CSV using tab as field separator ("--fs tab").
+  * FS/PS are ignored for markdown format; RS is used.
   * All RS/FS/PS options are ignored for JSON format: JSON doesn't allow
     changing these.
   * You can specify separators in any of the following ways, shown by example:
