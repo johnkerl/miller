@@ -13,8 +13,10 @@ TOP OF LIST:
   - valgrinds
 
 * markdown format
-  - output
-  - input
+  k output
+  ? input
+  - UT
+  - mld
 
 * cookbook:
   - neaten-valgrind
@@ -23,6 +25,7 @@ TOP OF LIST:
   - two-pass linreg example w/ oosvars? @@vars?!?
   - hold-and-emit k/n:
     mlr --from s put -q '@r[NR]=$*;end{for((i,k),v in @r) {@r[i]["i"]=i; @r[i]["n"]=NR} ; emit @r,"i"}'
+  - two-pass maxrows example
 
 ! rh/fedora/centos
 ! process inquire gentoo 4.1 (or wait and see)
@@ -32,8 +35,9 @@ TOP OF LIST:
 ! go through lmag article & clarify all unclears
 
 * 4.3.0:
-  > --omd; maybe --imd
   > interpolated percentiles
+  > --imd?
+  - --omd
   - MLR_CSV_DEFAULT_RS
   - printn
   - --quote-original; xref to possible sticky/derived feature (or not).

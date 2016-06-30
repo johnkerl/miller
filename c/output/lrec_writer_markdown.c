@@ -54,21 +54,17 @@ static void lrec_writer_markdown_process(FILE* output_stream, lrec_t* prec, void
 	}
 
 	if (pstate->plast_header_output == NULL) {
-		int nf = 0;
-
-		fputs("| ", output_stream);
+		fputc('|', output_stream);
 		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+			fputc(' ', output_stream);
 			fputs(pe->key, output_stream);
 			fputs(" |", output_stream);
-			nf++;
 		}
 		fputs(ors, output_stream);
 
-		fputs("| ", output_stream);
+		fputc('|', output_stream);
 		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
-			fputs("---", output_stream);
-			fputs(" |", output_stream);
-			nf++;
+			fputs(" --- |", output_stream);
 		}
 		fputs(ors, output_stream);
 
@@ -76,12 +72,11 @@ static void lrec_writer_markdown_process(FILE* output_stream, lrec_t* prec, void
 		pstate->num_header_lines_output++;
 	}
 
-	int nf = 0;
-	fputs("| ", output_stream);
+	fputc('|', output_stream);
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+		fputc(' ', output_stream);
 		fputs(pe->value, output_stream);
 		fputs(" |", output_stream);
-		nf++;
 	}
 	fputs(ors, output_stream);
 	pstate->onr++;
