@@ -17,15 +17,15 @@ TOP OF LIST:
   - clear @ top of regtest
 
 * --tsv
-  - mlh
   - mld
-  - UT
+  k mlh
+  k UT
 
 * markdown format
-  k output
-  ? input
-  - UT
   - mld
+  ? input
+  k output
+  k UT
 
 * cookbook:
   - neaten-valgrind
