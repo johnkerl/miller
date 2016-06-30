@@ -12,6 +12,15 @@ TOP OF LIST:
   - xxxes
   - valgrinds
 
+* default rs:
+  - my bashrc x 2
+  - clear @ top of regtest
+
+* --tsv
+  - mlh
+  - mld
+  - UT
+
 * markdown format
   k output
   ? input
