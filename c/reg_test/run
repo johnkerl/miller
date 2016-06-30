@@ -3756,6 +3756,11 @@ run_mlr --csv --quote-original cat $indir/rfc-csv/simple.csv
 run_mlr --itsv --rs lf --oxtab cat $indir/simple.tsv
 
 # ----------------------------------------------------------------
+announce MARKDOWN OUTPUT
+
+run_mlr --itsv --rs lf --omd cat $indir/simple.tsv
+
+# ----------------------------------------------------------------
 announce CSV/RS ENVIRONMENT DEFAULTS
 
 run_mlr --csv cut -f a $indir/rfc-csv/simple.csv 
