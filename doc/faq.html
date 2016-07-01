@@ -159,9 +159,11 @@ Miller commands were run with pretty-print-tabular output format.
 Please use <tt>mlr --csv --rs lf</tt> for native Un*x (linefeed-terminated) CSV files.
 </b>
 
-<p/>You can also have <tt>MLR_CSV_DEFAULT_RS=lf</tt> in your shell environment, e.g.
-<tt>export MLR_CSV_DEFAULT_RS=lf</tt> or <tt>setenv MLR_CSV_DEFAULT_RS lf</tt> depending on
-which shell you use.
+<p/>Instead of specifying <tt>--rs lf</tt> on each invocation, you can instead
+have <tt>MLR_CSV_DEFAULT_RS=lf</tt> in your shell environment: e.g. put
+<tt>export MLR_CSV_DEFAULT_RS=lf</tt> in your <tt>~/.bashrc</tt> or
+<tt>~/.zshrc</tt>, or <tt>setenv MLR_CSV_DEFAULT_RS lf</tt> in your
+<tt>~/.cshrc</tt>, as a one-time setup step.
 
 <a id="No_output_at_all"/><h1>No output at all</h1>
 

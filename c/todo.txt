@@ -16,10 +16,6 @@ TOP OF LIST:
   - my bashrc x 2
   - clear @ top of regtest
 
-* --tsv
-  k mlh
-  k UT
-
 * markdown format
   - mld
   ? input

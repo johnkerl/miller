@@ -102,9 +102,13 @@ of platform.
 <p/>
 <b>
 Please use <tt>mlr --csv --rs lf</tt> for native Un*x (linefeed-terminated) CSV files.
-</b> (You can also have <tt>MLR_CSV_DEFAULT_RS=lf</tt> in your shell environment, e.g.
-<tt>export MLR_CSV_DEFAULT_RS=lf</tt> or <tt>setenv MLR_CSV_DEFAULT_RS lf</tt> depending on
-which shell you use.)
+</b>
+
+<p/>Instead of specifying <tt>--rs lf</tt> on each invocation, you can instead
+have <tt>MLR_CSV_DEFAULT_RS=lf</tt> in your shell environment: e.g. put
+<tt>export MLR_CSV_DEFAULT_RS=lf</tt> in your <tt>~/.bashrc</tt> or
+<tt>~/.zshrc</tt>, or <tt>setenv MLR_CSV_DEFAULT_RS lf</tt> in your
+<tt>~/.cshrc</tt>, as a one-time setup step.
 
 <p/>The RFC says, somewhat briefly, that &ldquo;there may be a header
 line&rdquo;. Miller&rsquo;s <tt>--implicit-csv-header</tt> option allows you to
@@ -243,3 +247,15 @@ POKI_INCLUDE_ESCAPED(data/system-file-oxtab-example.txt)HERE
 POKI_INCLUDE_ESCAPED(data/system-file-ojson-example.txt)HERE
 </td> </tr></table>
 
+<h1>Markdown tabular</h1>
+
+<p/>Markdown format looks like this:
+
+POKI_RUN_COMMAND{{mlr --omd cat data/small}}HERE
+
+which renders like this when dropped into various web tools (e.g. github comments):
+
+<p/>
+<img src="pix/omd.png"/>
+
+<p/> As of Miller 4.3.0, markdown format is supported only for output, not input.
