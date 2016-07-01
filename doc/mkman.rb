@@ -14,6 +14,7 @@
 # ----------------------------------------------------------------
 def main
 
+  ENV['MLR_CSV_DEFAULT_RS'] = "" # In case set in user's shell
   print make_top
 
   print make_section('NAME', [
