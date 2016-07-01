@@ -12,10 +12,6 @@ TOP OF LIST:
   - xxxes
   - valgrinds
 
-* default rs:
-  - my bashrc x 2
-  - clear @ top of regtest
-
 * cookbook:
   - neaten-valgrind
   - headerless csv (i/o) choices
