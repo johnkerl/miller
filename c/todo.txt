@@ -16,12 +16,6 @@ TOP OF LIST:
   - my bashrc x 2
   - clear @ top of regtest
 
-* markdown format
-  - mld
-  ? input
-  k output
-  k UT
-
 * cookbook:
   - neaten-valgrind
   - headerless csv (i/o) choices
@@ -51,6 +45,7 @@ TOP OF LIST:
   - new/modified cookbook entries
 
 ----------------------------------------------------------------
+? --imd?
 ? double-quote-aware (non-lite) nidx & dkvp options?
 ? comma-number -- using locale?
 

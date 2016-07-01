@@ -114,8 +114,6 @@ lhmss_t* get_default_rses() {
 		char* env_default = getenv("MLR_CSV_DEFAULT_RS");
 		if (env_default != NULL && !streq(env_default, ""))
 			csv_rs = cli_sep_from_arg(env_default);
-		else
-			lhmss_put(singleton_default_rses, "csv",  "\r\n", NO_FREE);
 		lhmss_put(singleton_default_rses, "csv", csv_rs, NO_FREE);
 
 		lhmss_put(singleton_default_rses, "csvlite",  "\n",    NO_FREE);
@@ -297,8 +295,8 @@ static void main_usage_data_format_examples(FILE* o, char* argv0) {
 	fprintf(o,
 		"  DKVP: delimited key-value pairs (Miller default format)\n"
 		"  +---------------------+\n"
-		"  | apple=1,bat=2,cog=3 |  Record 1: \"apple\" => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
-		"  | dish=7,egg=8,flint  |  Record 2: \"dish\" => \"7\", \"egg\" => \"8\", \"3\" => \"flint\"\n"
+		"  | apple=1,bat=2,cog=3 | Record 1: \"apple\" => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
+		"  | dish=7,egg=8,flint  | Record 2: \"dish\" => \"7\", \"egg\" => \"8\", \"3\" => \"flint\"\n"
 		"  +---------------------+\n"
 		"\n"
 		"  NIDX: implicitly numerically indexed (Unix-toolkit style)\n"
@@ -345,7 +343,15 @@ static void main_usage_data_format_examples(FILE* o, char* argv0) {
 		"  |                     |\n"
 		"  | dish 7              | Record 2: \"dish\" => \"7\", \"egg\" => \"8\"\n"
 		"  | egg  8              |\n"
-		"  +---------------------+\n");
+		"  +---------------------+\n"
+		"\n"
+		"  Markdown tabular (supported for output only):\n"
+		"  +-----------------------+\n"
+		"  | | apple | bat | cog | |\n"
+		"  | | ---   | --- | --- | |\n"
+		"  | | 1     | 2   | 3   | | Record 1: \"apple => \"1\", \"bat\" => \"2\", \"cog\" => \"3\"\n"
+		"  | | 4     | 5   | 6   | | Record 2: \"apple\" => \"4\", \"bat\" => \"5\", \"cog\" => \"6\"\n"
+		"  +-----------------------+\n");
 }
 
 static void main_usage_data_format_options(FILE* o, char* argv0) {

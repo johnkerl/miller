@@ -2,6 +2,7 @@
 
 # ================================================================
 set -e
+export MLR_CSV_DEFAULT_RS= # In case set in user's shell
 
 # For building with autoconf:
 # * in-directory build:

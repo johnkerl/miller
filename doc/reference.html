@@ -335,8 +335,8 @@ Command-line-syntax examples:
 Data-format examples:
   DKVP: delimited key-value pairs (Miller default format)
   +---------------------+
-  | apple=1,bat=2,cog=3 |  Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
-  | dish=7,egg=8,flint  |  Record 2: "dish" =&gt; "7", "egg" =&gt; "8", "3" =&gt; "flint"
+  | apple=1,bat=2,cog=3 | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
+  | dish=7,egg=8,flint  | Record 2: "dish" =&gt; "7", "egg" =&gt; "8", "3" =&gt; "flint"
   +---------------------+
 
   NIDX: implicitly numerically indexed (Unix-toolkit style)
@@ -384,6 +384,14 @@ Data-format examples:
   | dish 7              | Record 2: "dish" =&gt; "7", "egg" =&gt; "8"
   | egg  8              |
   +---------------------+
+
+  Markdown tabular (supported for output only):
+  +-----------------------+
+  | | apple | bat | cog | |
+  | | ---   | --- | --- | |
+  | | 1     | 2   | 3   | | Record 1: "apple =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
+  | | 4     | 5   | 6   | | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
+  +-----------------------+
 
 Help options:
   -h or --help Show this message.
