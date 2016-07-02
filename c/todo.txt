@@ -6,11 +6,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-* interpolated-percentile option
-  - mld re rtype1/7; mlh also
-  - xxxes
-  - valgrinds
-
 ! improve fmtnum mlh: which arg which
 
 * cookbook:
@@ -30,8 +25,10 @@ TOP OF LIST:
 ! go through lmag article & clarify all unclears
 
 * 4.3.0:
-  > interpolated percentiles
+  ! xxxes
+  ! valgrinds
   > --imd?
+  - interpolated-percentile option
   - --omd
   - MLR_CSV_DEFAULT_RS
   - printn

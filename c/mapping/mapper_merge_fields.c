@@ -86,6 +86,7 @@ static void mapper_merge_fields_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-c {a,b,c}  Substrings for collapse mode. All fields which have the same names\n");
 	fprintf(o, "            after removing substrings will be accumulated together. Please see\n");
 	fprintf(o, "            examples below.\n");
+	fprintf(o, "-i          Use interpolated percentiles, like R's type=7; default like type=1.\n");
 	fprintf(o, "-o {name}   Output field basename for -f/-r.\n");
 	fprintf(o, "-k          Keep the input fields which contributed to the output statistics;\n");
 	fprintf(o, "            the default is to omit them.\n");

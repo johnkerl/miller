@@ -65,6 +65,7 @@ static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
 	}
 	fprintf(o, "-f {a,b,c}  Value-field names on which to compute statistics\n");
 	fprintf(o, "-g {d,e,f}  Optional group-by-field names\n");
+	fprintf(o, "-i          Use interpolated percentiles, like R's type=7; default like type=1.\n");
 	fprintf(o, "-s          Print iterative stats. Useful in tail -f contexts (in which\n");
 	fprintf(o, "            case please avoid pprint-format output since end of input\n");
 	fprintf(o, "            stream will never be seen).\n");
