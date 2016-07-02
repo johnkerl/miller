@@ -214,10 +214,10 @@ static int compute_index(int n, double p) {
 	//int index = p*(n-1)/100.0;
 	//int index = (int)ceil(p*(n-1)/100.0);
 	//int index = (int)ceil(-0.5 + p*(n-1)/100.0);
+	if (index >= n)
+		index = n-1;
 	if (index < 0)
 		index = 0;
-	else if (index >= n)
-		index = n-1;
 	return index;
 }
 

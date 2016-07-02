@@ -7,8 +7,7 @@ BUGFIXES
 TOP OF LIST:
 
 * interpolated-percentile option
-  k single ingest!
-  - direct compute_index UTs
+  - mld re rtype1/7; mlh also
   - xxxes
   - valgrinds
 

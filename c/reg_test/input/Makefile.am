@@ -148,4 +148,5 @@ EXTRA_DIST=	\
 		utf8-2.csv \
 		utf8-align.dkvp \
 		utf8-align.nidx \
-		xy40.dkvp
+		xy40.dkvp \
+		x0to10.dat
