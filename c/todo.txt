@@ -6,8 +6,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-! improve fmtnum mlh: which arg which
-
 * cookbook:
   - neaten-valgrind
   - headerless csv (i/o) choices
@@ -36,7 +34,7 @@ TOP OF LIST:
   - output-quoting bugfix
   - strptime message
   - uniq-assert on boundvars w/in each for
-  - new/modified cookbook entries
+  ! new/modified cookbook entries
 
 ----------------------------------------------------------------
 ? --imd?

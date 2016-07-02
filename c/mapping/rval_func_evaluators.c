@@ -74,7 +74,7 @@ function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_CONVERSION, "float",       1, "Convert int/float/bool/string to float."},
 	{FUNC_CLASS_CONVERSION, "fmtnum",    2,
 		"Convert int/float/bool to string using\n"
-		"printf-style format string, e.g. \"%06lld\"."},
+		"printf-style format string, e.g. '$s = fmtnum($n, \"%06lld\")'."},
 	{FUNC_CLASS_CONVERSION, "hexfmt",    1, "Convert int to string, e.g. 255 to \"0xff\"."},
 	{FUNC_CLASS_CONVERSION, "int",       1, "Convert int/float/bool/string to int."},
 	{FUNC_CLASS_CONVERSION, "string",    1, "Convert int/float/bool/string to string."},
