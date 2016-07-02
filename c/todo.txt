@@ -12,6 +12,8 @@ TOP OF LIST:
   - xxxes
   - valgrinds
 
+! improve fmtnum mlh: which arg which
+
 * cookbook:
   - neaten-valgrind
   - headerless csv (i/o) choices
