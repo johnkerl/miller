@@ -451,7 +451,7 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 					in_acc_map_for_short_name = lhmsv_alloc();
 					out_acc_map_for_short_name = lhmsv_alloc();
 
-					make_stats1_accs(mlr_strdup_or_die(short_name), pstate->paccumulator_names,
+					make_stats1_accs(short_name, pstate->paccumulator_names,
 						pstate->allow_int_float, pstate->do_interpolated_percentiles,
 						in_acc_map_for_short_name, out_acc_map_for_short_name);
 
@@ -525,12 +525,17 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 	}
 
 	for (lhmsve_t* pe = short_names_to_out_acc_maps->phead; pe != NULL; pe = pe->pnext) {
-		lhmsv_t* acc_map_for_short_name = pe->pvvalue;
-		for (lhmsve_t* pf = acc_map_for_short_name->phead; pf != NULL; pf = pf->pnext) {
+		lhmsv_t* out_acc_map_for_short_name = pe->pvvalue;
+		for (lhmsve_t* pf = out_acc_map_for_short_name->phead; pf != NULL; pf = pf->pnext) {
 			stats1_acc_t* pacc = pf->pvvalue;
 			pacc->pfree_func(pacc);
 		}
-		lhmsv_free(acc_map_for_short_name);
+		lhmsv_free(out_acc_map_for_short_name);
+	}
+
+	for (lhmsve_t* pe = short_names_to_in_acc_maps->phead; pe != NULL; pe = pe->pnext) {
+		lhmsv_t* in_acc_map_for_short_name = pe->pvvalue;
+		lhmsv_free(in_acc_map_for_short_name);
 	}
 
 	lhmsv_free(short_names_to_in_acc_maps);
