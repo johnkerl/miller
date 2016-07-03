@@ -8,7 +8,6 @@ TOP OF LIST:
 
 * cookbook:
   - neaten-valgrind
-  - headerless csv (i/o) choices
   - missing-timestamp check
 
 ! rh/fedora/centos
