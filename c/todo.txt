@@ -19,7 +19,6 @@ TOP OF LIST:
   - two-pass maxrows example
 
 ! interp @ merge-fields !
-  - het UT
 
 ! rh/fedora/centos
 ! process inquire gentoo 4.1 (or wait and see)
