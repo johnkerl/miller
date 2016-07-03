@@ -49,6 +49,7 @@ typedef struct _mapper_merge_fields_state_t {
 	sllv_t*  pvalue_field_regexes;
 	char*    output_field_basename;
 	int      allow_int_float;
+	int      do_interpolated_percentiles;
 	int      keep_input_fields;
 	string_builder_t* psb;
 } mapper_merge_fields_state_t;
@@ -104,12 +105,13 @@ static void mapper_merge_fields_usage(FILE* o, char* argv0, char* verb) {
 }
 
 static mapper_t* mapper_merge_fields_parse_cli(int* pargi, int argc, char** argv) {
-	slls_t*    paccumulator_names    = NULL;
-	slls_t*    pvalue_field_names    = NULL;
-	char*      output_field_basename = NULL;
-	int        allow_int_float       = TRUE;
-	int        keep_input_fields     = FALSE;
-	merge_by_t do_which              = MERGE_UNSPECIFIED;
+	slls_t*    paccumulator_names          = NULL;
+	slls_t*    pvalue_field_names          = NULL;
+	char*      output_field_basename       = NULL;
+	int        allow_int_float             = TRUE;
+	int        do_interpolated_percentiles = FALSE;
+	int        keep_input_fields           = FALSE;
+	merge_by_t do_which                    = MERGE_UNSPECIFIED;
 
 	char* verb = argv[(*pargi)++];
 
@@ -173,6 +175,9 @@ static mapper_t* mapper_merge_fields_parse_cli(int* pargi, int argc, char** argv
 			argi += 1;
 		} else if (streq(argv[argi], "-F")) {
 			allow_int_float = FALSE;
+			argi += 1;
+		} else if (streq(argv[argi], "-i")) {
+			do_interpolated_percentiles = TRUE;
 			argi += 1;
 		} else {
 			mapper_merge_fields_usage(stderr, argv[0], verb);
@@ -266,7 +271,7 @@ static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_
 
 		if (is_percentile_acc_name(acc_name)) {
 			ppercentile_acc = stats1_percentile_alloc(pstate->output_field_basename, acc_name,
-				pstate->allow_int_float, FALSE/*xxx interp_foo*/);
+				pstate->allow_int_float, pstate->do_interpolated_percentiles);
 			if (ppercentile_acc == NULL) {
 				fprintf(stderr, "%s: merge_fields accumulator \"%s\" not found.\n",
 					MLR_GLOBALS.bargv0, acc_name);
@@ -278,7 +283,7 @@ static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_
 			have_percentile_acc = TRUE;
 		} else {
 			stats1_acc_t* pacc = make_stats1_acc(pstate->output_field_basename, acc_name,
-				pstate->allow_int_float, FALSE/*xxx interp_foo*/);
+				pstate->allow_int_float, pstate->do_interpolated_percentiles);
 			if (pacc == NULL) {
 				fprintf(stderr, "%s: merge_fields accumulator \"%s\" not found.\n",
 					MLR_GLOBALS.bargv0, acc_name);
@@ -356,7 +361,7 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 	for (sllse_t* pa = pstate->paccumulator_names->phead; pa != NULL; pa = pa->pnext) {
 		char* acc_name = pa->value;
 		stats1_acc_t* pacc = make_stats1_acc(pstate->output_field_basename, acc_name,
-			pstate->allow_int_float, FALSE/*xxx interp_foo*/);
+			pstate->allow_int_float, pstate->do_interpolated_percentiles);
 		lhmsv_put(paccs, acc_name, pacc, NO_FREE);
 	}
 
@@ -455,7 +460,7 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 					for (sllse_t* pc = pstate->paccumulator_names->phead; pc != NULL; pc = pc->pnext) {
 						char* acc_name = pc->value;
 						stats1_acc_t* pacc = make_stats1_acc(short_name, acc_name, pstate->allow_int_float,
-							FALSE/*xxx interp_foo*/);
+							pstate->do_interpolated_percentiles);
 						lhmsv_put(acc_map_for_short_name, acc_name, pacc, NO_FREE);
 					}
 					lhmsv_put(short_names_to_acc_maps, mlr_strdup_or_die(short_name), acc_map_for_short_name,
