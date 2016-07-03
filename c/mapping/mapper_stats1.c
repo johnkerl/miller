@@ -173,8 +173,6 @@ static void mapper_stats1_free(mapper_t* pmapper) {
 }
 
 // ================================================================
-// xxx add note about multiple references for percentiles
-
 // Given: accumulate count,sum on values x,y group by a,b.
 // Example input:       Example output:
 //   a b x y            a b x_count x_sum y_count y_sum
@@ -266,7 +264,10 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		char* value_field_name = pstate->pvalue_field_names->strings[i];
 		char* value_field_sval = pstate->pvalue_field_values->strings[i];
 
-		// xxx comment
+		// For percentiles there is one unique accumulator given (for example) five distinct
+		// names p0,p25,p50,p75,p100.  The input accumulators are unique: only one
+		// percentile-keeper. There are multiple output accumulators: each references the same
+		// underlying percentile-keeper but with distinct parameters.  Hence the ->pin and ->pout maps.
 		acc_map_pair_t* pacc_field_to_acc_states = lhmsv_get(pgroup_to_acc_field, value_field_name);
 		if (pacc_field_to_acc_states == NULL) {
 			pacc_field_to_acc_states = mlr_malloc_or_die(sizeof(acc_map_pair_t));

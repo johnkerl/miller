@@ -5437,25 +5437,38 @@ bin_lo   bin_hi   x_count y_count
 7.000000 8.000000 2       4
 8.000000 9.000000 2       7
 
-mlr --csvlite --opprint merge-fields -a p0,min,max,p100,sum -c _in,_out ./reg_test/input/merge-fields-in-out.csv
-a_p0 a_min a_max a_p100 a_sum b_p0 b_min b_max b_p100 b_sum
-436  436   490   490    926   195  195   446   446    641
-320  320   526   526    846   780  780   963   963    1743
-220  220   888   888    1108  705  705   831   831    1536
+mlr --csvlite --opprint merge-fields -a p0,min,p29,max,p100,sum -c _in,_out ./reg_test/input/merge-fields-in-out.csv
+a_p0 a_min a_p29 a_max a_p100 a_sum b_p0 b_min b_p29 b_max b_p100 b_sum
+436  436   436   490   490    926   195  195   195   446   446    641
+320  320   320   526   526    846   780  780   780   963   963    1743
+220  220   220   888   888    1108  705  705   705   831   831    1536
 
-mlr --csvlite --opprint merge-fields -k -a p0,min,max,p100,sum -c _in,_out ./reg_test/input/merge-fields-in-out.csv
-a_in a_out b_in b_out a_p0 a_min a_max a_p100 a_sum b_p0 b_min b_max b_p100 b_sum
-436  490   446  195   436  436   490   490    926   195  195   446   446    641
-526  320   963  780   320  320   526   526    846   780  780   963   963    1743
-220  888   705  831   220  220   888   888    1108  705  705   831   831    1536
+mlr --csvlite --opprint merge-fields -k -a p0,min,p29,max,p100,sum -c _in,_out ./reg_test/input/merge-fields-in-out.csv
+a_in a_out b_in b_out a_p0 a_min a_p29 a_max a_p100 a_sum b_p0 b_min b_p29 b_max b_p100 b_sum
+436  490   446  195   436  436   436   490   490    926   195  195   195   446   446    641
+526  320   963  780   320  320   320   526   526    846   780  780   780   963   963    1743
+220  888   705  831   220  220   220   888   888    1108  705  705   705   831   831    1536
 
-mlr --oxtab merge-fields -k -a p0,min,max,p100,sum,count -f a_in_x,a_out_x -o foo ./reg_test/input/merge-fields-abxy.dkvp
+mlr --csvlite --opprint merge-fields -i -a p0,min,p29,max,p100,sum -c _in,_out ./reg_test/input/merge-fields-in-out.csv
+a_p0       a_min a_p29      a_max a_p100 a_sum b_p0       b_min b_p29      b_max b_p100 b_sum
+436.000000 436   451.660000 490   490    926   195.000000 195   267.790000 446   446    641
+320.000000 320   379.740000 526   526    846   780.000000 780   833.070000 963   963    1743
+220.000000 220   413.720000 888   888    1108  705.000000 705   741.540000 831   831    1536
+
+mlr --csvlite --opprint merge-fields -i -k -a p0,min,p29,max,p100,sum -c _in,_out ./reg_test/input/merge-fields-in-out.csv
+a_in a_out b_in b_out a_p0       a_min a_p29      a_max a_p100 a_sum b_p0       b_min b_p29      b_max b_p100 b_sum
+436  490   446  195   436.000000 436   451.660000 490   490    926   195.000000 195   267.790000 446   446    641
+526  320   963  780   320.000000 320   379.740000 526   526    846   780.000000 780   833.070000 963   963    1743
+220  888   705  831   220.000000 220   413.720000 888   888    1108  705.000000 705   741.540000 831   831    1536
+
+mlr --oxtab merge-fields -k -a p0,min,p29,max,p100,sum,count -f a_in_x,a_out_x -o foo ./reg_test/input/merge-fields-abxy.dkvp
 a_in_x    1
 a_out_x   2
 b_in_y    4
 b_out_x   8
 foo_p0    1
 foo_min   1
+foo_p29   1
 foo_max   2
 foo_p100  2
 foo_sum   3
@@ -5464,6 +5477,7 @@ foo_count 2
 z         1
 foo_p0    
 foo_min   
+foo_p29   
 foo_max   
 foo_p100  
 foo_sum   0
@@ -5475,6 +5489,7 @@ b_in_y    4
 b_out_x   8
 foo_p0    2
 foo_min   2
+foo_p29   2
 foo_max   2
 foo_p100  2
 foo_sum   2
@@ -5486,6 +5501,7 @@ b_in_y    4
 b_out_x   8
 foo_p0    1
 foo_min   1
+foo_p29   1
 foo_max   1
 foo_p100  1
 foo_sum   1
@@ -5497,6 +5513,7 @@ b_on_y    4
 b_out_x   8
 foo_p0    1
 foo_min   1
+foo_p29   1
 foo_max   2
 foo_p100  2
 foo_sum   3
@@ -5508,6 +5525,7 @@ b_in_y    4
 b_oot_x   8
 foo_p0    1
 foo_min   1
+foo_p29   1
 foo_max   2
 foo_p100  2
 foo_sum   3
@@ -5516,6 +5534,7 @@ foo_count 2
 z         2
 foo_p0    
 foo_min   
+foo_p29   
 foo_max   
 foo_p100  
 foo_sum   0
@@ -5527,6 +5546,7 @@ b_in_y    4
 b_out_x   8
 foo_p0    
 foo_min   
+foo_p29   
 foo_max   
 foo_p100  
 foo_sum   0
@@ -5538,6 +5558,7 @@ b_on_y    4
 b_out_x   8
 foo_p0    2
 foo_min   2
+foo_p29   2
 foo_max   2
 foo_p100  2
 foo_sum   2
@@ -5549,6 +5570,7 @@ b_in_y    4
 b_oot_x   8
 foo_p0    2
 foo_min   2
+foo_p29   2
 foo_max   2
 foo_p100  2
 foo_sum   2
@@ -5560,6 +5582,7 @@ b_on_y    4
 b_out_x   8
 foo_p0    1
 foo_min   1
+foo_p29   1
 foo_max   1
 foo_p100  1
 foo_sum   1
@@ -5571,6 +5594,7 @@ b_in_y    4
 b_oot_x   8
 foo_p0    1
 foo_min   1
+foo_p29   1
 foo_max   1
 foo_p100  1
 foo_sum   1
@@ -5582,6 +5606,7 @@ b_on_y    4
 b_oot_x   8
 foo_p0    1
 foo_min   1
+foo_p29   1
 foo_max   2
 foo_p100  2
 foo_sum   3
@@ -5590,6 +5615,7 @@ foo_count 2
 z         3
 foo_p0    
 foo_min   
+foo_p29   
 foo_max   
 foo_p100  
 foo_sum   0
@@ -5601,6 +5627,7 @@ b_on_y    4
 b_oot_x   8
 foo_p0    1
 foo_min   1
+foo_p29   1
 foo_max   1
 foo_p100  1
 foo_sum   1
@@ -5612,6 +5639,7 @@ b_on_y    4
 b_oot_x   8
 foo_p0    2
 foo_min   2
+foo_p29   2
 foo_max   2
 foo_p100  2
 foo_sum   2
@@ -5623,6 +5651,7 @@ b_in_y    4
 b_oot_x   8
 foo_p0    
 foo_min   
+foo_p29   
 foo_max   
 foo_p100  
 foo_sum   0
@@ -5634,6 +5663,7 @@ b_on_y    4
 b_out_x   8
 foo_p0    
 foo_min   
+foo_p29   
 foo_max   
 foo_p100  
 foo_sum   0
@@ -5642,6 +5672,7 @@ foo_count 0
 z         4
 foo_p0    
 foo_min   
+foo_p29   
 foo_max   
 foo_p100  
 foo_sum   0
@@ -5653,18 +5684,20 @@ b_on_y    4
 b_oot_x   8
 foo_p0    
 foo_min   
+foo_p29   
 foo_max   
 foo_p100  
 foo_sum   0
 foo_count 0
 
-mlr --oxtab merge-fields -k -a p0,min,max,p100,sum,count -r in_,out_ -o bar ./reg_test/input/merge-fields-abxy.dkvp
+mlr --oxtab merge-fields -k -a p0,min,p29,max,p100,sum,count -r in_,out_ -o bar ./reg_test/input/merge-fields-abxy.dkvp
 a_in_x    1
 a_out_x   2
 b_in_y    4
 b_out_x   8
 bar_p0    1
 bar_min   1
+bar_p29   2
 bar_max   8
 bar_p100  8
 bar_sum   15
@@ -5673,6 +5706,7 @@ bar_count 4
 z         1
 bar_p0    
 bar_min   
+bar_p29   
 bar_max   
 bar_p100  
 bar_sum   0
@@ -5684,6 +5718,7 @@ b_in_y    4
 b_out_x   8
 bar_p0    2
 bar_min   2
+bar_p29   2
 bar_max   8
 bar_p100  8
 bar_sum   14
@@ -5695,6 +5730,7 @@ b_in_y    4
 b_out_x   8
 bar_p0    1
 bar_min   1
+bar_p29   1
 bar_max   8
 bar_p100  8
 bar_sum   13
@@ -5706,6 +5742,7 @@ b_on_y    4
 b_out_x   8
 bar_p0    1
 bar_min   1
+bar_p29   1
 bar_max   8
 bar_p100  8
 bar_sum   11
@@ -5717,6 +5754,7 @@ b_in_y    4
 b_oot_x   8
 bar_p0    1
 bar_min   1
+bar_p29   1
 bar_max   4
 bar_p100  4
 bar_sum   7
@@ -5725,6 +5763,7 @@ bar_count 3
 z         2
 bar_p0    
 bar_min   
+bar_p29   
 bar_max   
 bar_p100  
 bar_sum   0
@@ -5736,6 +5775,7 @@ b_in_y    4
 b_out_x   8
 bar_p0    4
 bar_min   4
+bar_p29   4
 bar_max   8
 bar_p100  8
 bar_sum   12
@@ -5747,6 +5787,7 @@ b_on_y    4
 b_out_x   8
 bar_p0    2
 bar_min   2
+bar_p29   2
 bar_max   8
 bar_p100  8
 bar_sum   10
@@ -5758,6 +5799,7 @@ b_in_y    4
 b_oot_x   8
 bar_p0    2
 bar_min   2
+bar_p29   2
 bar_max   4
 bar_p100  4
 bar_sum   6
@@ -5769,6 +5811,7 @@ b_on_y    4
 b_out_x   8
 bar_p0    1
 bar_min   1
+bar_p29   1
 bar_max   8
 bar_p100  8
 bar_sum   9
@@ -5780,6 +5823,7 @@ b_in_y    4
 b_oot_x   8
 bar_p0    1
 bar_min   1
+bar_p29   1
 bar_max   4
 bar_p100  4
 bar_sum   5
@@ -5791,6 +5835,7 @@ b_on_y    4
 b_oot_x   8
 bar_p0    1
 bar_min   1
+bar_p29   1
 bar_max   2
 bar_p100  2
 bar_sum   3
@@ -5799,6 +5844,7 @@ bar_count 2
 z         3
 bar_p0    
 bar_min   
+bar_p29   
 bar_max   
 bar_p100  
 bar_sum   0
@@ -5810,6 +5856,7 @@ b_on_y    4
 b_oot_x   8
 bar_p0    1
 bar_min   1
+bar_p29   1
 bar_max   1
 bar_p100  1
 bar_sum   1
@@ -5821,6 +5868,7 @@ b_on_y    4
 b_oot_x   8
 bar_p0    2
 bar_min   2
+bar_p29   2
 bar_max   2
 bar_p100  2
 bar_sum   2
@@ -5832,6 +5880,7 @@ b_in_y    4
 b_oot_x   8
 bar_p0    4
 bar_min   4
+bar_p29   4
 bar_max   4
 bar_p100  4
 bar_sum   4
@@ -5843,6 +5892,7 @@ b_on_y    4
 b_out_x   8
 bar_p0    8
 bar_min   8
+bar_p29   8
 bar_max   8
 bar_p100  8
 bar_sum   8
@@ -5851,6 +5901,7 @@ bar_count 1
 z         4
 bar_p0    
 bar_min   
+bar_p29   
 bar_max   
 bar_p100  
 bar_sum   0
@@ -5862,30 +5913,34 @@ b_on_y    4
 b_oot_x   8
 bar_p0    
 bar_min   
+bar_p29   
 bar_max   
 bar_p100  
 bar_sum   0
 bar_count 0
 
-mlr --oxtab merge-fields -k -a p0,min,max,p100,sum,count -c in_,out_ ./reg_test/input/merge-fields-abxy.dkvp
+mlr --oxtab merge-fields -k -a p0,min,p29,max,p100,sum,count -c in_,out_ ./reg_test/input/merge-fields-abxy.dkvp
 a_in_x    1
 a_out_x   2
 b_in_y    4
 b_out_x   8
 a_x_p0    1
 a_x_min   1
+a_x_p29   1
 a_x_max   2
 a_x_p100  2
 a_x_sum   3
 a_x_count 2
 b_y_p0    4
 b_y_min   4
+b_y_p29   4
 b_y_max   4
 b_y_p100  4
 b_y_sum   4
 b_y_count 1
 b_x_p0    8
 b_x_min   8
+b_x_p29   8
 b_x_max   8
 b_x_p100  8
 b_x_sum   8
@@ -5899,18 +5954,21 @@ b_in_y    4
 b_out_x   8
 a_x_p0    2
 a_x_min   2
+a_x_p29   2
 a_x_max   2
 a_x_p100  2
 a_x_sum   2
 a_x_count 1
 b_y_p0    4
 b_y_min   4
+b_y_p29   4
 b_y_max   4
 b_y_p100  4
 b_y_sum   4
 b_y_count 1
 b_x_p0    8
 b_x_min   8
+b_x_p29   8
 b_x_max   8
 b_x_p100  8
 b_x_sum   8
@@ -5922,18 +5980,21 @@ b_in_y    4
 b_out_x   8
 a_x_p0    1
 a_x_min   1
+a_x_p29   1
 a_x_max   1
 a_x_p100  1
 a_x_sum   1
 a_x_count 1
 b_y_p0    4
 b_y_min   4
+b_y_p29   4
 b_y_max   4
 b_y_p100  4
 b_y_sum   4
 b_y_count 1
 b_x_p0    8
 b_x_min   8
+b_x_p29   8
 b_x_max   8
 b_x_p100  8
 b_x_sum   8
@@ -5945,12 +6006,14 @@ b_on_y    4
 b_out_x   8
 a_x_p0    1
 a_x_min   1
+a_x_p29   1
 a_x_max   2
 a_x_p100  2
 a_x_sum   3
 a_x_count 2
 b_x_p0    8
 b_x_min   8
+b_x_p29   8
 b_x_max   8
 b_x_p100  8
 b_x_sum   8
@@ -5962,12 +6025,14 @@ b_in_y    4
 b_oot_x   8
 a_x_p0    1
 a_x_min   1
+a_x_p29   1
 a_x_max   2
 a_x_p100  2
 a_x_sum   3
 a_x_count 2
 b_y_p0    4
 b_y_min   4
+b_y_p29   4
 b_y_max   4
 b_y_p100  4
 b_y_sum   4
@@ -5981,12 +6046,14 @@ b_in_y    4
 b_out_x   8
 b_y_p0    4
 b_y_min   4
+b_y_p29   4
 b_y_max   4
 b_y_p100  4
 b_y_sum   4
 b_y_count 1
 b_x_p0    8
 b_x_min   8
+b_x_p29   8
 b_x_max   8
 b_x_p100  8
 b_x_sum   8
@@ -5998,12 +6065,14 @@ b_on_y    4
 b_out_x   8
 a_x_p0    2
 a_x_min   2
+a_x_p29   2
 a_x_max   2
 a_x_p100  2
 a_x_sum   2
 a_x_count 1
 b_x_p0    8
 b_x_min   8
+b_x_p29   8
 b_x_max   8
 b_x_p100  8
 b_x_sum   8
@@ -6015,12 +6084,14 @@ b_in_y    4
 b_oot_x   8
 a_x_p0    2
 a_x_min   2
+a_x_p29   2
 a_x_max   2
 a_x_p100  2
 a_x_sum   2
 a_x_count 1
 b_y_p0    4
 b_y_min   4
+b_y_p29   4
 b_y_max   4
 b_y_p100  4
 b_y_sum   4
@@ -6032,12 +6103,14 @@ b_on_y    4
 b_out_x   8
 a_x_p0    1
 a_x_min   1
+a_x_p29   1
 a_x_max   1
 a_x_p100  1
 a_x_sum   1
 a_x_count 1
 b_x_p0    8
 b_x_min   8
+b_x_p29   8
 b_x_max   8
 b_x_p100  8
 b_x_sum   8
@@ -6049,12 +6122,14 @@ b_in_y    4
 b_oot_x   8
 a_x_p0    1
 a_x_min   1
+a_x_p29   1
 a_x_max   1
 a_x_p100  1
 a_x_sum   1
 a_x_count 1
 b_y_p0    4
 b_y_min   4
+b_y_p29   4
 b_y_max   4
 b_y_p100  4
 b_y_sum   4
@@ -6066,6 +6141,7 @@ b_on_y    4
 b_oot_x   8
 a_x_p0    1
 a_x_min   1
+a_x_p29   1
 a_x_max   2
 a_x_p100  2
 a_x_sum   3
@@ -6079,6 +6155,7 @@ b_on_y    4
 b_oot_x   8
 a_x_p0    1
 a_x_min   1
+a_x_p29   1
 a_x_max   1
 a_x_p100  1
 a_x_sum   1
@@ -6090,6 +6167,7 @@ b_on_y    4
 b_oot_x   8
 a_x_p0    2
 a_x_min   2
+a_x_p29   2
 a_x_max   2
 a_x_p100  2
 a_x_sum   2
@@ -6101,6 +6179,7 @@ b_in_y    4
 b_oot_x   8
 b_y_p0    4
 b_y_min   4
+b_y_p29   4
 b_y_max   4
 b_y_p100  4
 b_y_sum   4
@@ -6112,6 +6191,750 @@ b_on_y    4
 b_out_x   8
 b_x_p0    8
 b_x_min   8
+b_x_p29   8
+b_x_max   8
+b_x_p100  8
+b_x_sum   8
+b_x_count 1
+
+z 4
+
+a_on_x  1
+a_oot_x 2
+b_on_y  4
+b_oot_x 8
+
+mlr --oxtab merge-fields -i -k -a p0,min,p29,max,p100,sum,count -f a_in_x,a_out_x -o foo ./reg_test/input/merge-fields-abxy.dkvp
+a_in_x    1
+a_out_x   2
+b_in_y    4
+b_out_x   8
+foo_p0    1.000000
+foo_min   1
+foo_p29   1.290000
+foo_max   2
+foo_p100  2
+foo_sum   3
+foo_count 2
+
+z         1
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0
+
+a_on_x    1
+a_out_x   2
+b_in_y    4
+b_out_x   8
+foo_p0    2
+foo_min   2
+foo_p29   2
+foo_max   2
+foo_p100  2
+foo_sum   2
+foo_count 1
+
+a_in_x    1
+a_oot_x   2
+b_in_y    4
+b_out_x   8
+foo_p0    1
+foo_min   1
+foo_p29   1
+foo_max   1
+foo_p100  1
+foo_sum   1
+foo_count 1
+
+a_in_x    1
+a_out_x   2
+b_on_y    4
+b_out_x   8
+foo_p0    1.000000
+foo_min   1
+foo_p29   1.290000
+foo_max   2
+foo_p100  2
+foo_sum   3
+foo_count 2
+
+a_in_x    1
+a_out_x   2
+b_in_y    4
+b_oot_x   8
+foo_p0    1.000000
+foo_min   1
+foo_p29   1.290000
+foo_max   2
+foo_p100  2
+foo_sum   3
+foo_count 2
+
+z         2
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0
+
+a_on_x    1
+a_oot_x   2
+b_in_y    4
+b_out_x   8
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0
+
+a_on_x    1
+a_out_x   2
+b_on_y    4
+b_out_x   8
+foo_p0    2
+foo_min   2
+foo_p29   2
+foo_max   2
+foo_p100  2
+foo_sum   2
+foo_count 1
+
+a_on_x    1
+a_out_x   2
+b_in_y    4
+b_oot_x   8
+foo_p0    2
+foo_min   2
+foo_p29   2
+foo_max   2
+foo_p100  2
+foo_sum   2
+foo_count 1
+
+a_in_x    1
+a_oot_x   2
+b_on_y    4
+b_out_x   8
+foo_p0    1
+foo_min   1
+foo_p29   1
+foo_max   1
+foo_p100  1
+foo_sum   1
+foo_count 1
+
+a_in_x    1
+a_oot_x   2
+b_in_y    4
+b_oot_x   8
+foo_p0    1
+foo_min   1
+foo_p29   1
+foo_max   1
+foo_p100  1
+foo_sum   1
+foo_count 1
+
+a_in_x    1
+a_out_x   2
+b_on_y    4
+b_oot_x   8
+foo_p0    1.000000
+foo_min   1
+foo_p29   1.290000
+foo_max   2
+foo_p100  2
+foo_sum   3
+foo_count 2
+
+z         3
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0
+
+a_in_x    1
+a_oot_x   2
+b_on_y    4
+b_oot_x   8
+foo_p0    1
+foo_min   1
+foo_p29   1
+foo_max   1
+foo_p100  1
+foo_sum   1
+foo_count 1
+
+a_on_x    1
+a_out_x   2
+b_on_y    4
+b_oot_x   8
+foo_p0    2
+foo_min   2
+foo_p29   2
+foo_max   2
+foo_p100  2
+foo_sum   2
+foo_count 1
+
+a_on_x    1
+a_oot_x   2
+b_in_y    4
+b_oot_x   8
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0
+
+a_on_x    1
+a_oot_x   2
+b_on_y    4
+b_out_x   8
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0
+
+z         4
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0
+
+a_on_x    1
+a_oot_x   2
+b_on_y    4
+b_oot_x   8
+foo_p0    
+foo_min   
+foo_p29   
+foo_max   
+foo_p100  
+foo_sum   0
+foo_count 0
+
+mlr --oxtab merge-fields -i -k -a p0,min,p29,max,p100,sum,count -r in_,out_ -o bar ./reg_test/input/merge-fields-abxy.dkvp
+a_in_x    1
+a_out_x   2
+b_in_y    4
+b_out_x   8
+bar_p0    1.000000
+bar_min   1
+bar_p29   1.870000
+bar_max   8
+bar_p100  8
+bar_sum   15
+bar_count 4
+
+z         1
+bar_p0    
+bar_min   
+bar_p29   
+bar_max   
+bar_p100  
+bar_sum   0
+bar_count 0
+
+a_on_x    1
+a_out_x   2
+b_in_y    4
+b_out_x   8
+bar_p0    2.000000
+bar_min   2
+bar_p29   3.160000
+bar_max   8
+bar_p100  8
+bar_sum   14
+bar_count 3
+
+a_in_x    1
+a_oot_x   2
+b_in_y    4
+b_out_x   8
+bar_p0    1.000000
+bar_min   1
+bar_p29   2.740000
+bar_max   8
+bar_p100  8
+bar_sum   13
+bar_count 3
+
+a_in_x    1
+a_out_x   2
+b_on_y    4
+b_out_x   8
+bar_p0    1.000000
+bar_min   1
+bar_p29   1.580000
+bar_max   8
+bar_p100  8
+bar_sum   11
+bar_count 3
+
+a_in_x    1
+a_out_x   2
+b_in_y    4
+b_oot_x   8
+bar_p0    1.000000
+bar_min   1
+bar_p29   1.580000
+bar_max   4
+bar_p100  4
+bar_sum   7
+bar_count 3
+
+z         2
+bar_p0    
+bar_min   
+bar_p29   
+bar_max   
+bar_p100  
+bar_sum   0
+bar_count 0
+
+a_on_x    1
+a_oot_x   2
+b_in_y    4
+b_out_x   8
+bar_p0    4.000000
+bar_min   4
+bar_p29   5.160000
+bar_max   8
+bar_p100  8
+bar_sum   12
+bar_count 2
+
+a_on_x    1
+a_out_x   2
+b_on_y    4
+b_out_x   8
+bar_p0    2.000000
+bar_min   2
+bar_p29   3.740000
+bar_max   8
+bar_p100  8
+bar_sum   10
+bar_count 2
+
+a_on_x    1
+a_out_x   2
+b_in_y    4
+b_oot_x   8
+bar_p0    2.000000
+bar_min   2
+bar_p29   2.580000
+bar_max   4
+bar_p100  4
+bar_sum   6
+bar_count 2
+
+a_in_x    1
+a_oot_x   2
+b_on_y    4
+b_out_x   8
+bar_p0    1.000000
+bar_min   1
+bar_p29   3.030000
+bar_max   8
+bar_p100  8
+bar_sum   9
+bar_count 2
+
+a_in_x    1
+a_oot_x   2
+b_in_y    4
+b_oot_x   8
+bar_p0    1.000000
+bar_min   1
+bar_p29   1.870000
+bar_max   4
+bar_p100  4
+bar_sum   5
+bar_count 2
+
+a_in_x    1
+a_out_x   2
+b_on_y    4
+b_oot_x   8
+bar_p0    1.000000
+bar_min   1
+bar_p29   1.290000
+bar_max   2
+bar_p100  2
+bar_sum   3
+bar_count 2
+
+z         3
+bar_p0    
+bar_min   
+bar_p29   
+bar_max   
+bar_p100  
+bar_sum   0
+bar_count 0
+
+a_in_x    1
+a_oot_x   2
+b_on_y    4
+b_oot_x   8
+bar_p0    1
+bar_min   1
+bar_p29   1
+bar_max   1
+bar_p100  1
+bar_sum   1
+bar_count 1
+
+a_on_x    1
+a_out_x   2
+b_on_y    4
+b_oot_x   8
+bar_p0    2
+bar_min   2
+bar_p29   2
+bar_max   2
+bar_p100  2
+bar_sum   2
+bar_count 1
+
+a_on_x    1
+a_oot_x   2
+b_in_y    4
+b_oot_x   8
+bar_p0    4
+bar_min   4
+bar_p29   4
+bar_max   4
+bar_p100  4
+bar_sum   4
+bar_count 1
+
+a_on_x    1
+a_oot_x   2
+b_on_y    4
+b_out_x   8
+bar_p0    8
+bar_min   8
+bar_p29   8
+bar_max   8
+bar_p100  8
+bar_sum   8
+bar_count 1
+
+z         4
+bar_p0    
+bar_min   
+bar_p29   
+bar_max   
+bar_p100  
+bar_sum   0
+bar_count 0
+
+a_on_x    1
+a_oot_x   2
+b_on_y    4
+b_oot_x   8
+bar_p0    
+bar_min   
+bar_p29   
+bar_max   
+bar_p100  
+bar_sum   0
+bar_count 0
+
+mlr --oxtab merge-fields -i -k -a p0,min,p29,max,p100,sum,count -c in_,out_ ./reg_test/input/merge-fields-abxy.dkvp
+a_in_x    1
+a_out_x   2
+b_in_y    4
+b_out_x   8
+a_x_p0    1.000000
+a_x_min   1
+a_x_p29   1.290000
+a_x_max   2
+a_x_p100  2
+a_x_sum   3
+a_x_count 2
+b_y_p0    4
+b_y_min   4
+b_y_p29   4
+b_y_max   4
+b_y_p100  4
+b_y_sum   4
+b_y_count 1
+b_x_p0    8
+b_x_min   8
+b_x_p29   8
+b_x_max   8
+b_x_p100  8
+b_x_sum   8
+b_x_count 1
+
+z 1
+
+a_on_x    1
+a_out_x   2
+b_in_y    4
+b_out_x   8
+a_x_p0    2
+a_x_min   2
+a_x_p29   2
+a_x_max   2
+a_x_p100  2
+a_x_sum   2
+a_x_count 1
+b_y_p0    4
+b_y_min   4
+b_y_p29   4
+b_y_max   4
+b_y_p100  4
+b_y_sum   4
+b_y_count 1
+b_x_p0    8
+b_x_min   8
+b_x_p29   8
+b_x_max   8
+b_x_p100  8
+b_x_sum   8
+b_x_count 1
+
+a_in_x    1
+a_oot_x   2
+b_in_y    4
+b_out_x   8
+a_x_p0    1
+a_x_min   1
+a_x_p29   1
+a_x_max   1
+a_x_p100  1
+a_x_sum   1
+a_x_count 1
+b_y_p0    4
+b_y_min   4
+b_y_p29   4
+b_y_max   4
+b_y_p100  4
+b_y_sum   4
+b_y_count 1
+b_x_p0    8
+b_x_min   8
+b_x_p29   8
+b_x_max   8
+b_x_p100  8
+b_x_sum   8
+b_x_count 1
+
+a_in_x    1
+a_out_x   2
+b_on_y    4
+b_out_x   8
+a_x_p0    1.000000
+a_x_min   1
+a_x_p29   1.290000
+a_x_max   2
+a_x_p100  2
+a_x_sum   3
+a_x_count 2
+b_x_p0    8
+b_x_min   8
+b_x_p29   8
+b_x_max   8
+b_x_p100  8
+b_x_sum   8
+b_x_count 1
+
+a_in_x    1
+a_out_x   2
+b_in_y    4
+b_oot_x   8
+a_x_p0    1.000000
+a_x_min   1
+a_x_p29   1.290000
+a_x_max   2
+a_x_p100  2
+a_x_sum   3
+a_x_count 2
+b_y_p0    4
+b_y_min   4
+b_y_p29   4
+b_y_max   4
+b_y_p100  4
+b_y_sum   4
+b_y_count 1
+
+z 2
+
+a_on_x    1
+a_oot_x   2
+b_in_y    4
+b_out_x   8
+b_y_p0    4
+b_y_min   4
+b_y_p29   4
+b_y_max   4
+b_y_p100  4
+b_y_sum   4
+b_y_count 1
+b_x_p0    8
+b_x_min   8
+b_x_p29   8
+b_x_max   8
+b_x_p100  8
+b_x_sum   8
+b_x_count 1
+
+a_on_x    1
+a_out_x   2
+b_on_y    4
+b_out_x   8
+a_x_p0    2
+a_x_min   2
+a_x_p29   2
+a_x_max   2
+a_x_p100  2
+a_x_sum   2
+a_x_count 1
+b_x_p0    8
+b_x_min   8
+b_x_p29   8
+b_x_max   8
+b_x_p100  8
+b_x_sum   8
+b_x_count 1
+
+a_on_x    1
+a_out_x   2
+b_in_y    4
+b_oot_x   8
+a_x_p0    2
+a_x_min   2
+a_x_p29   2
+a_x_max   2
+a_x_p100  2
+a_x_sum   2
+a_x_count 1
+b_y_p0    4
+b_y_min   4
+b_y_p29   4
+b_y_max   4
+b_y_p100  4
+b_y_sum   4
+b_y_count 1
+
+a_in_x    1
+a_oot_x   2
+b_on_y    4
+b_out_x   8
+a_x_p0    1
+a_x_min   1
+a_x_p29   1
+a_x_max   1
+a_x_p100  1
+a_x_sum   1
+a_x_count 1
+b_x_p0    8
+b_x_min   8
+b_x_p29   8
+b_x_max   8
+b_x_p100  8
+b_x_sum   8
+b_x_count 1
+
+a_in_x    1
+a_oot_x   2
+b_in_y    4
+b_oot_x   8
+a_x_p0    1
+a_x_min   1
+a_x_p29   1
+a_x_max   1
+a_x_p100  1
+a_x_sum   1
+a_x_count 1
+b_y_p0    4
+b_y_min   4
+b_y_p29   4
+b_y_max   4
+b_y_p100  4
+b_y_sum   4
+b_y_count 1
+
+a_in_x    1
+a_out_x   2
+b_on_y    4
+b_oot_x   8
+a_x_p0    1.000000
+a_x_min   1
+a_x_p29   1.290000
+a_x_max   2
+a_x_p100  2
+a_x_sum   3
+a_x_count 2
+
+z 3
+
+a_in_x    1
+a_oot_x   2
+b_on_y    4
+b_oot_x   8
+a_x_p0    1
+a_x_min   1
+a_x_p29   1
+a_x_max   1
+a_x_p100  1
+a_x_sum   1
+a_x_count 1
+
+a_on_x    1
+a_out_x   2
+b_on_y    4
+b_oot_x   8
+a_x_p0    2
+a_x_min   2
+a_x_p29   2
+a_x_max   2
+a_x_p100  2
+a_x_sum   2
+a_x_count 1
+
+a_on_x    1
+a_oot_x   2
+b_in_y    4
+b_oot_x   8
+b_y_p0    4
+b_y_min   4
+b_y_p29   4
+b_y_max   4
+b_y_p100  4
+b_y_sum   4
+b_y_count 1
+
+a_on_x    1
+a_oot_x   2
+b_on_y    4
+b_out_x   8
+b_x_p0    8
+b_x_min   8
+b_x_p29   8
 b_x_max   8
 b_x_p100  8
 b_x_sum   8

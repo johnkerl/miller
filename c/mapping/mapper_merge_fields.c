@@ -335,6 +335,12 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 		return NULL;
 
 	mapper_merge_fields_state_t* pstate = pvstate;
+
+	// For percentiles there is one unique accumulator given (for example) five distinct
+	// names p0,p25,p50,p75,p100.  The input accumulators are unique: only one
+	// percentile-keeper. There are multiple output accumulators: each references the same
+	// underlying percentile-keeper but with distinct parameters.
+
 	lhmsv_t* pinaccs = lhmsv_alloc();
 	lhmsv_t* poutaccs = lhmsv_alloc();
 
@@ -421,9 +427,13 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 	if (pinrec == NULL) // end of input stream
 		return NULL;
 
-	// xxx interpo?!?
 	mapper_merge_fields_state_t* pstate = pvstate;
-	// xxx comment
+
+	// For percentiles there is one unique accumulator given (for example) five distinct
+	// names p0,p25,p50,p75,p100.  The input accumulators are unique: only one
+	// percentile-keeper. There are multiple output accumulators: each references the same
+	// underlying percentile-keeper but with distinct parameters.
+
 	lhmsv_t* short_names_to_in_acc_maps = lhmsv_alloc();
 	lhmsv_t* short_names_to_out_acc_maps = lhmsv_alloc();
 

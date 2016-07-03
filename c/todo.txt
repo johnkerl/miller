@@ -1,10 +1,7 @@
 ================================================================
 BUGFIXES
 
-* segv:
-  mlr --opprint merge-fields -a p0,p50,p100 -f x,y,z -o foo < s
-  mlr --opprint merge-fields -a p0,p50,p100 -c x,y,z -o foo < s
-  -> no UT coverage!
+:D
 
 ================================================================
 TOP OF LIST:
@@ -18,8 +15,6 @@ TOP OF LIST:
     mlr --from s put -q '@r[NR]=$*;end{for((i,k),v in @r) {@r[i]["i"]=i; @r[i]["n"]=NR} ; emit @r,"i"}'
   - two-pass maxrows example
 
-! interp @ merge-fields !
-
 ! rh/fedora/centos
 ! process inquire gentoo 4.1 (or wait and see)
 
@@ -32,6 +27,7 @@ TOP OF LIST:
   ! valgrinds
   > --imd?
   - interpolated-percentile option
+  - bugfixed percentiles @ merge-fields; also interp there
   - --omd
   - MLR_CSV_DEFAULT_RS
   - printn

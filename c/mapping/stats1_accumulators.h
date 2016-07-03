@@ -43,7 +43,6 @@ typedef struct _stats1_acc_t {
 typedef stats1_acc_t* stats1_alloc_func_t(char* value_field_name, char* stats1_acc_name, int allow_int_float,
 	int do_interpolated_percentiles);
 
-// xxx
 // aif = allow_int_float
 // dip = do_interpolated_percentiles
 stats1_acc_t* stats1_count_alloc             (char* value_field_name, char* stats1_acc_name, int aif, int dip);
@@ -61,12 +60,17 @@ stats1_acc_t* stats1_max_alloc               (char* value_field_name, char* stat
 stats1_acc_t* stats1_percentile_alloc        (char* value_field_name, char* stats1_acc_name, int aif, int dip);
 void          stats1_percentile_reuse        (stats1_acc_t* pstats1_acc);
 
+
+// For percentiles there is one unique accumulator given (for example) five distinct
+// names p0,p25,p50,p75,p100.  The input accumulators are unique: only one
+// percentile-keeper. There are multiple output accumulators: each references the same
+// underlying percentile-keeper but with distinct parameters.  Hence the "_in" and "_out" maps.
 void make_stats1_accs(
 	char*    value_field_name,
 	slls_t*  paccumulator_names,
 	int      allow_int_float,
 	int      do_interpolated_percentiles,
-	lhmsv_t* acc_field_to_acc_state_in, // xxx comment
+	lhmsv_t* acc_field_to_acc_state_in,
 	lhmsv_t* acc_field_to_acc_state_out);
 
 stats1_acc_t* make_stats1_acc(

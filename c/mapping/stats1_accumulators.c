@@ -27,7 +27,10 @@ void make_stats1_accs(
 		// for "sum", "count"
 		char* stats1_acc_name = pc->value;
 
-		// xxx comment
+		// For percentiles there is one unique accumulator given (for example) five distinct
+		// names p0,p25,p50,p75,p100.  The input accumulators are unique: only one
+		// percentile-keeper. There are multiple output accumulators: each references the same
+		// underlying percentile-keeper but with distinct parameters.  Hence the "_in" and "_out" maps.
 		if (is_percentile_acc_name(stats1_acc_name)) {
 			if (ppercentile_acc == NULL) {
 				ppercentile_acc = stats1_percentile_alloc(value_field_name, stats1_acc_name, allow_int_float,
