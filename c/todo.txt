@@ -10,7 +10,6 @@ TOP OF LIST:
 
 * cookbook:
   - neaten-valgrind
-  - missing-timestamp check
 
 ! rh/fedora/centos
 
