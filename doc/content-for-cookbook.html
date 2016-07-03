@@ -49,7 +49,32 @@ POKI_RUN_COMMAND{{mlr --csv --irs lf --opprint rename -r -g ' ,_'  data/spaces.c
 
 <p/>You can also do this with a for-loop but it puts the modified fields after the unmodified fields:
 
+POKI_RUN_COMMAND{{cat data/bulk-rename-for-loop.mlr}}HERE
+
 POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv}}HERE
+
+<h1>Headerless CSV on input or output</h1>
+
+<p/>Sometimes we get CSV files which lack a header. For example:
+
+POKI_RUN_COMMAND{{cat data/headerless.csv}}HERE
+
+<p/> You can use Miller to add a header: the <tt>--implicit-csv-header</tt> applies positionally indexed labels:
+
+POKI_RUN_COMMAND{{mlr --csv --rs lf --implicit-csv-header cat data/headerless.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --implicit-csv-header --opprint cat data/headerless.csv}}HERE
+
+<p/> Following that, you can rename the positionally indexed labels to names with meaning for your context.
+For example:
+
+POKI_RUN_COMMAND{{mlr --csv --rs lf --implicit-csv-header label name,age,status data/headerless.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --rs lf --implicit-csv-header --opprint label name,age,status data/headerless.csv}}HERE
+
+<p/> Likewise, if you need to produce CSV which is lacking its header, you can pipe Miller&rsquo;s output
+to the system command <tt>sed 1d</tt>, or you can use Miller&rsquo;s <tt>--headerless-csv-output</tt> option:
+
+POKI_RUN_COMMAND{{head -5 data/colored-shapes.dkvp | mlr --ocsv cat}}HERE
+POKI_RUN_COMMAND{{head -5 data/colored-shapes.dkvp | mlr --ocsv --headerless-csv-output cat}}HERE
 
 <h1>Regularizing ragged CSV</h1>
 
@@ -65,8 +90,6 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv.sh)HERE
 
 or, more simply,
 
-POKI_RUN_COMMAND{{cat data/small}}HERE
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv-2.sh)HERE
 
 <h1>Two-pass algorithms</h1>
@@ -77,7 +100,8 @@ allowing many of its verbs to process files that are (much) larger than the
 amount of RAM present in your system. (Of course, Miller verbs such as
 <tt>sort</tt>, </tt>tac</tt>, etc. all must ingest and retain all input records
 before emitting any output records.) You can also use out-of-stream variables
-to perform multi-pass computations.
+to perform multi-pass computations, at the price of retaining all input records
+in memory.
 
 <h2>Two-pass algorithms: computation of percentages</h2>
 

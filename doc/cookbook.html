@@ -142,6 +142,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Parsing_log-file_output">Parsing log-file output</a><br/>
 &bull;&nbsp;<a href="#Rectangularizing_data">Rectangularizing data</a><br/>
 &bull;&nbsp;<a href="#Bulk_rename_of_field_names">Bulk rename of field names</a><br/>
+&bull;&nbsp;<a href="#Headerless_CSV_on_input_or_output">Headerless CSV on input or output</a><br/>
 &bull;&nbsp;<a href="#Regularizing_ragged_CSV">Regularizing ragged CSV</a><br/>
 &bull;&nbsp;<a href="#Two-pass_algorithms">Two-pass algorithms</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Two-pass_algorithms:_computation_of_percentages">Two-pass algorithms: computation of percentages</a><br/>
@@ -332,11 +333,126 @@ a_b_c def  g_h_i
 <p/>
 <div class="pokipanel">
 <pre>
+$ cat data/bulk-rename-for-loop.mlr
+for (oldk,v in $*) {
+    @newk = gsub(oldk, " ", "_");
+    if (@newk != oldk) {
+        unset $[oldk];
+        $[@newk] = v
+    }
+}
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
 $ mlr --icsv --irs lf --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv
 def  a_b_c g_h_i
 4567 123   890
 1357 2468  3579
 3312 9987  4543
+</pre>
+</div>
+<p/>
+
+<a id="Headerless_CSV_on_input_or_output"/><h1>Headerless CSV on input or output</h1>
+
+<p/>Sometimes we get CSV files which lack a header. For example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/headerless.csv
+John,23,present
+Fred,34,present
+Alice,56,missing
+Carol,45,present
+</pre>
+</div>
+<p/>
+
+<p/> You can use Miller to add a header: the <tt>--implicit-csv-header</tt> applies positionally indexed labels:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv --rs lf --implicit-csv-header cat data/headerless.csv
+1,2,3
+John,23,present
+Fred,34,present
+Alice,56,missing
+Carol,45,present
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --irs lf --implicit-csv-header --opprint cat data/headerless.csv
+1     2  3
+John  23 present
+Fred  34 present
+Alice 56 missing
+Carol 45 present
+</pre>
+</div>
+<p/>
+
+<p/> Following that, you can rename the positionally indexed labels to names with meaning for your context.
+For example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv --rs lf --implicit-csv-header label name,age,status data/headerless.csv
+name,age,status
+John,23,present
+Fred,34,present
+Alice,56,missing
+Carol,45,present
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --rs lf --implicit-csv-header --opprint label name,age,status data/headerless.csv
+name  age status
+John  23  present
+Fred  34  present
+Alice 56  missing
+Carol 45  present
+</pre>
+</div>
+<p/>
+
+<p/> Likewise, if you need to produce CSV which is lacking its header, you can pipe Miller&rsquo;s output
+to the system command <tt>sed 1d</tt>, or you can use Miller&rsquo;s <tt>--headerless-csv-output</tt> option:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ head -5 data/colored-shapes.dkvp | mlr --ocsv cat
+color,shape,flag,i,u,v,w,x
+yellow,triangle,1,11,0.6321695890307647,0.9887207810889004,0.4364983936735774,5.7981881667050565
+red,square,1,15,0.21966833570651523,0.001257332190235938,0.7927778364718627,2.944117399716207
+red,circle,1,16,0.20901671281497636,0.29005231936593445,0.13810280912907674,5.065034003400998
+red,square,0,48,0.9562743938458542,0.7467203085342884,0.7755423050923582,7.117831369597269
+purple,triangle,0,51,0.4355354501763202,0.8591292672156728,0.8122903963006748,5.753094629505863
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ head -5 data/colored-shapes.dkvp | mlr --ocsv --headerless-csv-output cat
+yellow,triangle,1,11,0.6321695890307647,0.9887207810889004,0.4364983936735774,5.7981881667050565
+red,square,1,15,0.21966833570651523,0.001257332190235938,0.7927778364718627,2.944117399716207
+red,circle,1,16,0.20901671281497636,0.29005231936593445,0.13810280912907674,5.065034003400998
+red,square,0,48,0.9562743938458542,0.7467203085342884,0.7755423050923582,7.117831369597269
+purple,triangle,0,51,0.4355354501763202,0.8591292672156728,0.8122903963006748,5.753094629505863
 </pre>
 </div>
 <p/>
@@ -387,19 +503,6 @@ or, more simply,
 <p/>
 <div class="pokipanel">
 <pre>
-$ cat data/small
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-</pre>
-</div>
-<p/>
-
-<p/>
-<div class="pokipanel">
-<pre>
 $ mlr --from data/ragged.csv --fs comma --nidx put '
   @maxnf = max(@maxnf, NF);
   while(NF &lt; @maxnf) {
@@ -423,7 +526,8 @@ allowing many of its verbs to process files that are (much) larger than the
 amount of RAM present in your system. (Of course, Miller verbs such as
 <tt>sort</tt>, </tt>tac</tt>, etc. all must ingest and retain all input records
 before emitting any output records.) You can also use out-of-stream variables
-to perform multi-pass computations.
+to perform multi-pass computations, at the price of retaining all input records
+in memory.
 
 <a id="Two-pass_algorithms:_computation_of_percentages"/><h2>Two-pass algorithms: computation of percentages</h2>
 
