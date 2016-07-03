@@ -92,6 +92,27 @@ or, more simply,
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv-2.sh)HERE
 
+<h1>Finding missing dates</h1>
+
+<p/>Suppose you have some date-stamped data which may (or may not) be missing entries for one or more dates:
+
+POKI_RUN_COMMAND{{head -n 10 data/miss-date.csv}}HERE
+POKI_RUN_COMMAND{{wc -l data/miss-date.csv}}HERE
+
+<p/>To find these, you can convert the dates to seconds since the epoch using <tt>strptime</tt>, then
+compute adjacent differences (the <tt>cat -n</tt> simply inserts record-counters):
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/miss-date-1.sh)HERE
+
+<p/>Then, filter for adjacent difference not being 86400 (the number of seconds in a day):
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/miss-date-2.sh)HERE
+
+<p/> Given this, it&rsquo;s now easy to see where the gaps are:
+
+POKI_RUN_COMMAND{{mlr cat -n then filter '$n >= 770 && $n <= 780' data/miss-date.csv}}HERE
+POKI_RUN_COMMAND{{mlr cat -n then filter '$n >= 1115 && $n <= 1125' data/miss-date.csv}}HERE
+
 <h1>Two-pass algorithms</h1>
 
 <p/>Miller is a streaming record processor; commands are performed once per
