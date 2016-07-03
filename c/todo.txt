@@ -16,7 +16,6 @@ TOP OF LIST:
   - two-pass maxrows example
 
 ! rh/fedora/centos
-! process inquire gentoo 4.1 (or wait and see)
 
 ! call for use-cases? (go first.)
 
@@ -24,7 +23,6 @@ TOP OF LIST:
 
 * 4.3.0:
   ! valgrinds
-  > --imd?
   - interpolated-percentile option
   - bugfixed percentiles @ merge-fields; also interp there
   - --omd
@@ -40,6 +38,7 @@ TOP OF LIST:
   ! output to multiple files by key
     - particular verb; needs -a
     - inside put (like awk's print > $1.txt}
+  ? imd ?
 
 ----------------------------------------------------------------
 ? --imd?
