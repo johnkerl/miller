@@ -423,7 +423,9 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 
 	// xxx interpo?!?
 	mapper_merge_fields_state_t* pstate = pvstate;
-	lhmsv_t* short_names_to_acc_maps = lhmsv_alloc();
+	// xxx comment
+	lhmsv_t* short_names_to_in_acc_maps = lhmsv_alloc();
+	lhmsv_t* short_names_to_out_acc_maps = lhmsv_alloc();
 
 	for (lrece_t* pa = pinrec->phead; pa != NULL; /* increment inside loop */ ) {
 		char* field_name = pa->key;
@@ -432,24 +434,29 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 			regex_t* pvalue_field_regex = pb->pvvalue;
 			char* short_name = regex_sub(field_name, pvalue_field_regex, pstate->psb, "", &matched, NULL);
 			if (matched) {
-				lhmsv_t* acc_map_for_short_name = lhmsv_get(short_names_to_acc_maps, short_name);
-				if (acc_map_for_short_name == NULL) { // First such
-					acc_map_for_short_name = lhmsv_alloc();
-					for (sllse_t* pc = pstate->paccumulator_names->phead; pc != NULL; pc = pc->pnext) {
-						char* acc_name = pc->value;
-						stats1_acc_t* pacc = make_stats1_acc(short_name, acc_name, pstate->allow_int_float,
-							pstate->do_interpolated_percentiles);
-						lhmsv_put(acc_map_for_short_name, acc_name, pacc, NO_FREE);
-					}
-					lhmsv_put(short_names_to_acc_maps, mlr_strdup_or_die(short_name), acc_map_for_short_name,
+				lhmsv_t* in_acc_map_for_short_name = lhmsv_get(short_names_to_in_acc_maps, short_name);
+				lhmsv_t* out_acc_map_for_short_name = lhmsv_get(short_names_to_out_acc_maps, short_name);
+				if (out_acc_map_for_short_name == NULL) { // First such
+
+					in_acc_map_for_short_name = lhmsv_alloc();
+					out_acc_map_for_short_name = lhmsv_alloc();
+
+					make_stats1_accs(mlr_strdup_or_die(short_name), pstate->paccumulator_names,
+						pstate->allow_int_float, pstate->do_interpolated_percentiles,
+						in_acc_map_for_short_name, out_acc_map_for_short_name);
+
+					lhmsv_put(short_names_to_in_acc_maps, mlr_strdup_or_die(short_name), in_acc_map_for_short_name,
 						FREE_ENTRY_KEY);
+					lhmsv_put(short_names_to_out_acc_maps, mlr_strdup_or_die(short_name), out_acc_map_for_short_name,
+						FREE_ENTRY_KEY);
+
 				}
 
 				char* value_field_sval = lrec_get(pinrec, field_name);
 				if (value_field_sval != NULL) { // Key present
 
 					if (*value_field_sval != 0) { // Key present with non-null value
-						for (lhmsve_t* pd = acc_map_for_short_name->phead; pd != NULL; pd = pd->pnext) {
+						for (lhmsve_t* pd = in_acc_map_for_short_name->phead; pd != NULL; pd = pd->pnext) {
 							stats1_acc_t* pacc = pd->pvvalue;
 
 							int have_dval = FALSE;
@@ -497,17 +504,17 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 			pa = pa->pnext;
 	}
 
-	for (lhmsve_t* pe = short_names_to_acc_maps->phead; pe != NULL; pe = pe->pnext) {
+	for (lhmsve_t* pe = short_names_to_out_acc_maps->phead; pe != NULL; pe = pe->pnext) {
 		char* short_name = pe->key;
-		lhmsv_t* acc_map_for_short_name = pe->pvvalue;
-		for (lhmsve_t* pf = acc_map_for_short_name->phead; pf != NULL; pf = pf->pnext) {
+		lhmsv_t* out_acc_map_for_short_name = pe->pvvalue;
+		for (lhmsve_t* pf = out_acc_map_for_short_name->phead; pf != NULL; pf = pf->pnext) {
 			char* acc_name = pf->key;
 			stats1_acc_t* pacc = pf->pvvalue;
 			pacc->pemit_func(pacc->pvstate, short_name, acc_name, TRUE, pinrec);
 		}
 	}
 
-	for (lhmsve_t* pe = short_names_to_acc_maps->phead; pe != NULL; pe = pe->pnext) {
+	for (lhmsve_t* pe = short_names_to_out_acc_maps->phead; pe != NULL; pe = pe->pnext) {
 		lhmsv_t* acc_map_for_short_name = pe->pvvalue;
 		for (lhmsve_t* pf = acc_map_for_short_name->phead; pf != NULL; pf = pf->pnext) {
 			stats1_acc_t* pacc = pf->pvvalue;
@@ -516,6 +523,7 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 		lhmsv_free(acc_map_for_short_name);
 	}
 
-	lhmsv_free(short_names_to_acc_maps);
+	lhmsv_free(short_names_to_in_acc_maps);
+	lhmsv_free(short_names_to_out_acc_maps);
 	return sllv_single(pinrec);
 }
