@@ -209,7 +209,7 @@ void percentile_keeper_ingest(percentile_keeper_t* ppercentile_keeper, mv_t valu
 // * (Note that Miller's interpolated percentiles match match R's quantile with type=7)
 // ----------------------------------------------------------------
 
-static int compute_index(int n, double p) {
+static int compute_index_non_interpolated(int n, double p) {
 	int index = p*n/100.0;
 	//int index = p*(n-1)/100.0;
 	//int index = (int)ceil(p*(n-1)/100.0);
@@ -242,14 +242,20 @@ static mv_t get_percentile_linearly_interpolated(mv_t* array, int n, double p) {
 
 // ----------------------------------------------------------------
 mv_t percentile_keeper_emit_non_interpolated(percentile_keeper_t* ppercentile_keeper, double percentile) {
+	if (ppercentile_keeper->size == 0) {
+		return mv_absent();
+	}
 	if (!ppercentile_keeper->sorted) {
 		qsort(ppercentile_keeper->data, ppercentile_keeper->size, sizeof(mv_t), mv_nn_comparator);
 		ppercentile_keeper->sorted = TRUE;
 	}
-	return ppercentile_keeper->data[compute_index(ppercentile_keeper->size, percentile)];
+	return ppercentile_keeper->data[compute_index_non_interpolated(ppercentile_keeper->size, percentile)];
 }
 
 mv_t percentile_keeper_emit_linearly_interpolated(percentile_keeper_t* ppercentile_keeper, double percentile) {
+	if (ppercentile_keeper->size == 0) {
+		return mv_absent();
+	}
 	if (!ppercentile_keeper->sorted) {
 		qsort(ppercentile_keeper->data, ppercentile_keeper->size, sizeof(mv_t), mv_nn_comparator);
 		ppercentile_keeper->sorted = TRUE;
