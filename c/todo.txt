@@ -13,7 +13,6 @@ TOP OF LIST:
 ! go through lmag article & clarify all unclears
 
 * 4.3.0:
-  ! valgrinds 1st !
   - interpolated-percentile option
   - bugfixed percentiles @ merge-fields; also interp there
   - --omd
