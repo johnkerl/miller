@@ -527,8 +527,8 @@ run_mlr --opprint histogram -f x,y --lo 0 --hi 1 --nbins 20 $indir/small
 run_mlr --opprint histogram --nbins 9 --auto -f x,y $indir/ints.dkvp
 
 run_mlr --csvlite --opprint merge-fields    -a min,max,sum -c _in,_out $indir/merge-fields-in-out.csv
-run_mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out $indir/merge-fields-in-out.csv
- 
+run_mlr --csvlite --opprint merge-fields -k -a min,max,sum -c _in,_out $indir/merge-fields-in-out.csv
+
 run_mlr --oxtab merge-fields -k -a sum,count -f a_in_x,a_out_x -o foo $indir/merge-fields-abxy.dkvp
 run_mlr --oxtab merge-fields -k -a sum,count -r in_,out_       -o bar $indir/merge-fields-abxy.dkvp
 run_mlr --oxtab merge-fields -k -a sum,count -c in_,out_              $indir/merge-fields-abxy.dkvp
@@ -3387,7 +3387,7 @@ run_mlr -n put 'end {
 }'
 
 # ----------------------------------------------------------------
-announce CANONICAL LASHED EMIT 
+announce CANONICAL LASHED EMIT
 
 run_mlr --from $indir/abixy-wide --opprint put -q '
   @count[$a] += 1;
@@ -3784,17 +3784,17 @@ run_mlr --itsv --rs lf --omd cat $indir/simple.tsv
 # ----------------------------------------------------------------
 announce CSV/RS ENVIRONMENT DEFAULTS
 
-run_mlr --csv cut -f a $indir/rfc-csv/simple.csv 
-run_mlr --csv --rs crlf cut -f a $indir/rfc-csv/simple.csv 
-mlr_expect_fail --csv --rs lf cut -f a $indir/rfc-csv/simple.csv 
+run_mlr --csv cut -f a $indir/rfc-csv/simple.csv
+run_mlr --csv --rs crlf cut -f a $indir/rfc-csv/simple.csv
+mlr_expect_fail --csv --rs lf cut -f a $indir/rfc-csv/simple.csv
 
-export MLR_CSV_DEFAULT_RS=lf; mlr_expect_fail --csv cut -f a $indir/rfc-csv/simple.csv 
-export MLR_CSV_DEFAULT_RS=lf; run_mlr --csv --rs crlf cut -f a $indir/rfc-csv/simple.csv 
-export MLR_CSV_DEFAULT_RS=lf; mlr_expect_fail --csv --rs lf cut -f a $indir/rfc-csv/simple.csv 
+export MLR_CSV_DEFAULT_RS=lf; mlr_expect_fail --csv cut -f a $indir/rfc-csv/simple.csv
+export MLR_CSV_DEFAULT_RS=lf; run_mlr --csv --rs crlf cut -f a $indir/rfc-csv/simple.csv
+export MLR_CSV_DEFAULT_RS=lf; mlr_expect_fail --csv --rs lf cut -f a $indir/rfc-csv/simple.csv
 
-export MLR_CSV_DEFAULT_RS=crlf; run_mlr --csv cut -f a $indir/rfc-csv/simple.csv 
-export MLR_CSV_DEFAULT_RS=crlf; run_mlr --csv --rs crlf cut -f a $indir/rfc-csv/simple.csv 
-export MLR_CSV_DEFAULT_RS=crlf; mlr_expect_fail --csv --rs lf cut -f a $indir/rfc-csv/simple.csv 
+export MLR_CSV_DEFAULT_RS=crlf; run_mlr --csv cut -f a $indir/rfc-csv/simple.csv
+export MLR_CSV_DEFAULT_RS=crlf; run_mlr --csv --rs crlf cut -f a $indir/rfc-csv/simple.csv
+export MLR_CSV_DEFAULT_RS=crlf; mlr_expect_fail --csv --rs lf cut -f a $indir/rfc-csv/simple.csv
 
 export MLR_CSV_DEFAULT_RS=
 

@@ -5443,11 +5443,11 @@ a_min a_max a_sum b_min b_max b_sum
 320   526   846   780   963   1743
 220   888   1108  705   831   1536
 
-mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out ./reg_test/input/merge-fields-in-out.csv
-a_in a_out b_in b_out a_sum b_sum
-436  490   446  195   926   641
-526  320   963  780   846   1743
-220  888   705  831   1108  1536
+mlr --csvlite --opprint merge-fields -k -a min,max,sum -c _in,_out ./reg_test/input/merge-fields-in-out.csv
+a_in a_out b_in b_out a_min a_max a_sum b_min b_max b_sum
+436  490   446  195   436   490   926   195   446   641
+526  320   963  780   320   526   846   780   963   1743
+220  888   705  831   220   888   1108  705   831   1536
 
 mlr --oxtab merge-fields -k -a sum,count -f a_in_x,a_out_x -o foo ./reg_test/input/merge-fields-abxy.dkvp
 a_in_x    1
