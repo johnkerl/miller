@@ -41,31 +41,31 @@ typedef struct _stats1_acc_t {
 } stats1_acc_t;
 
 typedef stats1_acc_t* stats1_alloc_func_t(char* value_field_name, char* stats1_acc_name, int allow_int_float,
-	int interp_foo);
+	int do_interpolated_percentiles);
 
 // xxx
 // aif = allow_int_float
-// inf = interp_foo
-stats1_acc_t* stats1_count_alloc             (char* value_field_name, char* stats1_acc_name, int aif, int inf);
-stats1_acc_t* stats1_mode_alloc              (char* value_field_name, char* stats1_acc_name, int aif, int inf);
-stats1_acc_t* stats1_sum_alloc               (char* value_field_name, char* stats1_acc_name, int aif, int inf);
-stats1_acc_t* stats1_mean_alloc              (char* value_field_name, char* stats1_acc_name, int aif, int inf);
+// dip = do_interpolated_percentiles
+stats1_acc_t* stats1_count_alloc             (char* value_field_name, char* stats1_acc_name, int aif, int dip);
+stats1_acc_t* stats1_mode_alloc              (char* value_field_name, char* stats1_acc_name, int aif, int dip);
+stats1_acc_t* stats1_sum_alloc               (char* value_field_name, char* stats1_acc_name, int aif, int dip);
+stats1_acc_t* stats1_mean_alloc              (char* value_field_name, char* stats1_acc_name, int aif, int dip);
 stats1_acc_t* stats1_stddev_var_meaneb_alloc (char* value_field_name, char* stats1_acc_name, cumulant2o_t do_which);
-stats1_acc_t* stats1_stddev_alloc            (char* value_field_name, char* stats1_acc_name, int aif, int inf);
-stats1_acc_t* stats1_var_alloc               (char* value_field_name, char* stats1_acc_name, int aif, int inf);
-stats1_acc_t* stats1_meaneb_alloc            (char* value_field_name, char* stats1_acc_name, int aif, int inf);
-stats1_acc_t* stats1_skewness_alloc          (char* value_field_name, char* stats1_acc_name, int aif, int inf);
-stats1_acc_t* stats1_kurtosis_alloc          (char* value_field_name, char* stats1_acc_name, int aif, int inf);
-stats1_acc_t* stats1_min_alloc               (char* value_field_name, char* stats1_acc_name, int aif, int inf);
-stats1_acc_t* stats1_max_alloc               (char* value_field_name, char* stats1_acc_name, int aif, int inf);
-stats1_acc_t* stats1_percentile_alloc        (char* value_field_name, char* stats1_acc_name, int aif, int inf);
+stats1_acc_t* stats1_stddev_alloc            (char* value_field_name, char* stats1_acc_name, int aif, int dip);
+stats1_acc_t* stats1_var_alloc               (char* value_field_name, char* stats1_acc_name, int aif, int dip);
+stats1_acc_t* stats1_meaneb_alloc            (char* value_field_name, char* stats1_acc_name, int aif, int dip);
+stats1_acc_t* stats1_skewness_alloc          (char* value_field_name, char* stats1_acc_name, int aif, int dip);
+stats1_acc_t* stats1_kurtosis_alloc          (char* value_field_name, char* stats1_acc_name, int aif, int dip);
+stats1_acc_t* stats1_min_alloc               (char* value_field_name, char* stats1_acc_name, int aif, int dip);
+stats1_acc_t* stats1_max_alloc               (char* value_field_name, char* stats1_acc_name, int aif, int dip);
+stats1_acc_t* stats1_percentile_alloc        (char* value_field_name, char* stats1_acc_name, int aif, int dip);
 void          stats1_percentile_reuse        (stats1_acc_t* pstats1_acc);
 
 void make_stats1_accs(
 	char*    value_field_name,
 	slls_t*  paccumulator_names,
 	int      allow_int_float,
-	int      interp_foo,
+	int      do_interpolated_percentiles,
 	lhmsv_t* acc_field_to_acc_state_in, // xxx comment
 	lhmsv_t* acc_field_to_acc_state_out);
 
@@ -73,7 +73,7 @@ stats1_acc_t* make_stats1_acc(
 	char* value_field_name,
 	char* stats1_acc_name,
 	int   allow_int_float,
-	int   interp_foo);
+	int   do_interpolated_percentiles);
 
 int is_percentile_acc_name(char* stats1_acc_name);
 

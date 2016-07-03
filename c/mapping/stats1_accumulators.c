@@ -15,12 +15,12 @@
 
 // ----------------------------------------------------------------
 void make_stats1_accs(
-	char*      value_field_name,       // input
-	slls_t*    paccumulator_names,     // input
-	int        allow_int_float,        // input
-	int        interp_foo,             // input
-	lhmsv_t*   acc_field_to_acc_state_in, // output
-	lhmsv_t*   acc_field_to_acc_state_out) // output
+	char*    value_field_name,            // input
+	slls_t*  paccumulator_names,          // input
+	int      allow_int_float,             // input
+	int      do_interpolated_percentiles, // input
+	lhmsv_t* acc_field_to_acc_state_in,   // output
+	lhmsv_t* acc_field_to_acc_state_out)  // output
 {
 	stats1_acc_t* ppercentile_acc = NULL;
 	for (sllse_t* pc = paccumulator_names->phead; pc != NULL; pc = pc->pnext) {
@@ -31,7 +31,7 @@ void make_stats1_accs(
 		if (is_percentile_acc_name(stats1_acc_name)) {
 			if (ppercentile_acc == NULL) {
 				ppercentile_acc = stats1_percentile_alloc(value_field_name, stats1_acc_name, allow_int_float,
-					interp_foo);
+					do_interpolated_percentiles);
 				if (ppercentile_acc == NULL) {
 					fprintf(stderr, "%s stats1: accumulator \"%s\" not found.\n",
 						MLR_GLOBALS.bargv0, stats1_acc_name);
@@ -44,7 +44,7 @@ void make_stats1_accs(
 			lhmsv_put(acc_field_to_acc_state_out, stats1_acc_name, ppercentile_acc, NO_FREE);
 		} else {
 			stats1_acc_t* pstats1_acc = make_stats1_acc(value_field_name, stats1_acc_name, allow_int_float,
-				interp_foo);
+				do_interpolated_percentiles);
 			if (pstats1_acc == NULL) {
 				fprintf(stderr, "%s stats1: accumulator \"%s\" not found.\n",
 					MLR_GLOBALS.bargv0, stats1_acc_name);
@@ -56,11 +56,13 @@ void make_stats1_accs(
 	}
 }
 
-stats1_acc_t* make_stats1_acc(char* value_field_name, char* stats1_acc_name, int allow_int_float, int interp_foo) {
+stats1_acc_t* make_stats1_acc(char* value_field_name, char* stats1_acc_name, int allow_int_float,
+	int do_interpolated_percentiles)
+{
 	for (int i = 0; i < stats1_acc_lookup_table_length; i++)
 		if (streq(stats1_acc_name, stats1_acc_lookup_table[i].name))
 			return stats1_acc_lookup_table[i].palloc_func(value_field_name, stats1_acc_name, allow_int_float,
-				interp_foo);
+				do_interpolated_percentiles);
 	return NULL;
 }
 
@@ -106,7 +108,9 @@ static void stats1_count_free(stats1_acc_t* pstats1_acc) {
 	free(pstate);
 	free(pstats1_acc);
 }
-stats1_acc_t* stats1_count_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float, int interp_foo) {
+stats1_acc_t* stats1_count_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float,
+	int do_interpolated_percentiles)
+{
 	stats1_acc_t* pstats1_acc    = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_count_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_count_state_t));
 	pstate->counter              = allow_int_float ? mv_from_int(0LL) : mv_from_float(0.0);
@@ -161,7 +165,9 @@ static void stats1_mode_free(stats1_acc_t* pstats1_acc) {
 	free(pstate);
 	free(pstats1_acc);
 }
-stats1_acc_t* stats1_mode_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float, int interp_foo) {
+stats1_acc_t* stats1_mode_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float,
+	int do_interpolated_percentiles)
+{
 	stats1_acc_t* pstats1_acc   = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_mode_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_mode_state_t));
 	pstate->pcounts_for_value   = lhmsi_alloc();
@@ -201,7 +207,9 @@ static void stats1_sum_free(stats1_acc_t* pstats1_acc) {
 	free(pstate);
 	free(pstats1_acc);
 }
-stats1_acc_t* stats1_sum_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float, int interp_foo) {
+stats1_acc_t* stats1_sum_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float,
+	int do_interpolated_percentiles)
+{
 	stats1_acc_t* pstats1_acc  = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_sum_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_sum_state_t));
 	pstate->allow_int_float    = allow_int_float;
@@ -250,7 +258,9 @@ static void stats1_mean_free(stats1_acc_t* pstats1_acc) {
 	free(pstate);
 	free(pstats1_acc);
 }
-stats1_acc_t* stats1_mean_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float, int interp_foo) {
+stats1_acc_t* stats1_mean_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float,
+	int do_interpolated_percentiles)
+{
 	stats1_acc_t* pstats1_acc   = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_mean_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_mean_state_t));
 	pstate->sum                 = 0.0;
@@ -325,13 +335,19 @@ stats1_acc_t* stats1_stddev_var_meaneb_alloc(char* value_field_name, char* stats
 	pstats1_acc->pfree_func    = stats1_stddev_var_meaneb_free;
 	return pstats1_acc;
 }
-stats1_acc_t* stats1_stddev_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float, int interp_foo) {
+stats1_acc_t* stats1_stddev_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float,
+	int do_interpolated_percentiles)
+{
 	return stats1_stddev_var_meaneb_alloc(value_field_name, stats1_acc_name, DO_STDDEV);
 }
-stats1_acc_t* stats1_var_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float, int interp_foo) {
+stats1_acc_t* stats1_var_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float,
+	int do_interpolated_percentiles)
+{
 	return stats1_stddev_var_meaneb_alloc(value_field_name, stats1_acc_name, DO_VAR);
 }
-stats1_acc_t* stats1_meaneb_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float, int interp_foo) {
+stats1_acc_t* stats1_meaneb_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float,
+	int do_interpolated_percentiles)
+{
 	return stats1_stddev_var_meaneb_alloc(value_field_name, stats1_acc_name, DO_MEANEB);
 }
 
@@ -375,7 +391,7 @@ static void stats1_skewness_free(stats1_acc_t* pstats1_acc) {
 }
 
 stats1_acc_t* stats1_skewness_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float,
-	int interp_foo)
+	int do_interpolated_percentiles)
 {
 	stats1_acc_t* pstats1_acc = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_skewness_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_skewness_state_t));
@@ -435,7 +451,7 @@ static void stats1_kurtosis_free(stats1_acc_t* pstats1_acc) {
 	free(pstats1_acc);
 }
 stats1_acc_t* stats1_kurtosis_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float,
-	int interp_foo)
+	int do_interpolated_percentiles)
 {
 	stats1_acc_t* pstats1_acc = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_kurtosis_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_kurtosis_state_t));
@@ -485,7 +501,9 @@ static void stats1_min_free(stats1_acc_t* pstats1_acc) {
 	free(pstate);
 	free(pstats1_acc);
 }
-stats1_acc_t* stats1_min_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float, int interp_foo) {
+stats1_acc_t* stats1_min_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float,
+	int do_interpolated_percentiles)
+{
 	stats1_acc_t* pstats1_acc  = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_min_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_min_state_t));
 	pstate->min                = mv_absent();
@@ -531,7 +549,9 @@ static void stats1_max_free(stats1_acc_t* pstats1_acc) {
 	free(pstate);
 	free(pstats1_acc);
 }
-stats1_acc_t* stats1_max_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float, int interp_foo) {
+stats1_acc_t* stats1_max_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float,
+	int do_interpolated_percentiles)
+{
 	stats1_acc_t* pstats1_acc  = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_max_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_max_state_t));
 	pstate->max                = mv_absent();
@@ -584,15 +604,14 @@ static void stats1_percentile_free(stats1_acc_t* pstats1_acc) {
 	}
 }
 stats1_acc_t* stats1_percentile_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float,
-	int interp_foo)
+	int do_interpolated_percentiles)
 {
 	stats1_acc_t* pstats1_acc   = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_percentile_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_percentile_state_t));
 	pstate->ppercentile_keeper  = percentile_keeper_alloc();
 	pstate->poutput_field_names = lhmss_alloc();
 	pstate->reference_count     = 1;
-	// xxx temp -- move to factory method inside percentile_keeper
-	pstate->ppercentile_keeper_emitter = (interp_foo)
+	pstate->ppercentile_keeper_emitter = (do_interpolated_percentiles)
 		? percentile_keeper_emit_linearly_interpolated
 		: percentile_keeper_emit_non_interpolated;
 
