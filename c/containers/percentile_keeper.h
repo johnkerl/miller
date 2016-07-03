@@ -17,10 +17,8 @@ percentile_keeper_t* percentile_keeper_alloc();
 void percentile_keeper_free(percentile_keeper_t* ppercentile_keeper);
 void percentile_keeper_ingest(percentile_keeper_t* ppercentile_keeper, mv_t value);
 
-// xxx need a factory method
 typedef mv_t percentile_keeper_emitter_t(percentile_keeper_t* ppercentile_keeper, double percentile);
-mv_t percentile_keeper_emit(percentile_keeper_t* ppercentile_keeper, double percentile);
-mv_t percentile_keeper_emit_nearest_rank(percentile_keeper_t* ppercentile_keeper, double percentile);
+mv_t percentile_keeper_emit_non_interpolated(percentile_keeper_t* ppercentile_keeper, double percentile);
 mv_t percentile_keeper_emit_linearly_interpolated(percentile_keeper_t* ppercentile_keeper, double percentile);
 
 // For debug/test

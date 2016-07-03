@@ -221,15 +221,6 @@ static int compute_index(int n, double p) {
 	return index;
 }
 
-static int compute_index_nearest_rank(int n, double p) {
-	int index = (int)(ceil((p/100.0)*n)) - 1;
-	if (index < 0)
-		index = 0;
-	else if (index >= n)
-		index = n-1;
-	return index;
-}
-
 static mv_t get_percentile_linearly_interpolated(mv_t* array, int n, double p) {
 	double findex = (p/100.0)*(n-1);
 	if (findex < 0)
@@ -250,20 +241,12 @@ static mv_t get_percentile_linearly_interpolated(mv_t* array, int n, double p) {
 }
 
 // ----------------------------------------------------------------
-mv_t percentile_keeper_emit(percentile_keeper_t* ppercentile_keeper, double percentile) {
+mv_t percentile_keeper_emit_non_interpolated(percentile_keeper_t* ppercentile_keeper, double percentile) {
 	if (!ppercentile_keeper->sorted) {
 		qsort(ppercentile_keeper->data, ppercentile_keeper->size, sizeof(mv_t), mv_nn_comparator);
 		ppercentile_keeper->sorted = TRUE;
 	}
 	return ppercentile_keeper->data[compute_index(ppercentile_keeper->size, percentile)];
-}
-
-mv_t percentile_keeper_emit_nearest_rank(percentile_keeper_t* ppercentile_keeper, double percentile) {
-	if (!ppercentile_keeper->sorted) {
-		qsort(ppercentile_keeper->data, ppercentile_keeper->size, sizeof(mv_t), mv_nn_comparator);
-		ppercentile_keeper->sorted = TRUE;
-	}
-	return ppercentile_keeper->data[compute_index_nearest_rank(ppercentile_keeper->size, percentile)];
 }
 
 mv_t percentile_keeper_emit_linearly_interpolated(percentile_keeper_t* ppercentile_keeper, double percentile) {

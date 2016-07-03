@@ -260,18 +260,33 @@ static sllv_t* mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_
 	lhmsv_t* pinaccs = lhmsv_alloc();
 	lhmsv_t* poutaccs = lhmsv_alloc();
 	int have_percentile_acc = FALSE;
+    stats1_acc_t* ppercentile_acc = NULL;
 	for (sllse_t* pa = pstate->paccumulator_names->phead; pa != NULL; pa = pa->pnext) {
 		char* acc_name = pa->value;
-		stats1_acc_t* pacc = make_stats1_acc(pstate->output_field_basename, acc_name,
-			pstate->allow_int_float, FALSE/*xxx interp_foo*/);
+
 		if (is_percentile_acc_name(acc_name)) {
+			ppercentile_acc = stats1_percentile_alloc(pstate->output_field_basename, acc_name,
+				pstate->allow_int_float, FALSE/*xxx interp_foo*/);
+			if (ppercentile_acc == NULL) {
+				fprintf(stderr, "%s: merge_fields accumulator \"%s\" not found.\n",
+					MLR_GLOBALS.bargv0, acc_name);
+				exit(1);
+			}
 			if (!have_percentile_acc)
-				lhmsv_put(pinaccs, acc_name, pacc, NO_FREE);
+				lhmsv_put(pinaccs, acc_name, ppercentile_acc, NO_FREE);
+			lhmsv_put(poutaccs, acc_name, ppercentile_acc, NO_FREE);
 			have_percentile_acc = TRUE;
 		} else {
+			stats1_acc_t* pacc = make_stats1_acc(pstate->output_field_basename, acc_name,
+				pstate->allow_int_float, FALSE/*xxx interp_foo*/);
+			if (pacc == NULL) {
+				fprintf(stderr, "%s: merge_fields accumulator \"%s\" not found.\n",
+					MLR_GLOBALS.bargv0, acc_name);
+				exit(1);
+			}
 			lhmsv_put(pinaccs, acc_name, pacc, NO_FREE);
+			lhmsv_put(poutaccs, acc_name, pacc, NO_FREE);
 		}
-		lhmsv_put(poutaccs, acc_name, pacc, NO_FREE);
 	}
 
 	for (sllse_t* pb = pstate->pvalue_field_names->phead; pb != NULL; pb = pb->pnext) {

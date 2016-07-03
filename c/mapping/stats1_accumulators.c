@@ -32,6 +32,11 @@ void make_stats1_accs(
 			if (ppercentile_acc == NULL) {
 				ppercentile_acc = stats1_percentile_alloc(value_field_name, stats1_acc_name, allow_int_float,
 					interp_foo);
+				if (ppercentile_acc == NULL) {
+					fprintf(stderr, "%s stats1: accumulator \"%s\" not found.\n",
+						MLR_GLOBALS.bargv0, stats1_acc_name);
+					exit(1);
+				}
 				lhmsv_put(acc_field_to_acc_state_in, stats1_acc_name, ppercentile_acc, NO_FREE);
 			} else {
 				stats1_percentile_reuse(ppercentile_acc);
@@ -589,8 +594,7 @@ stats1_acc_t* stats1_percentile_alloc(char* value_field_name, char* stats1_acc_n
 	// xxx temp -- move to factory method inside percentile_keeper
 	pstate->ppercentile_keeper_emitter = (interp_foo)
 		? percentile_keeper_emit_linearly_interpolated
-		: percentile_keeper_emit;
-		//: percentile_keeper_emit_nearest_rank;
+		: percentile_keeper_emit_non_interpolated;
 
 	pstats1_acc->pvstate        = (void*)pstate;
 	pstats1_acc->pdingest_func  = NULL;

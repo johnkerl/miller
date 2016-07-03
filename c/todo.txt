@@ -1,7 +1,10 @@
 ================================================================
 BUGFIXES
 
-:D
+* segv:
+  mlr --opprint merge-fields -a p0,p50,p100 -f x,y,z -o foo < s
+  mlr --opprint merge-fields -a p0,p50,p100 -c x,y,z -o foo < s
+  -> no UT coverage!
 
 ================================================================
 TOP OF LIST:
@@ -14,6 +17,8 @@ TOP OF LIST:
   - hold-and-emit k/n:
     mlr --from s put -q '@r[NR]=$*;end{for((i,k),v in @r) {@r[i]["i"]=i; @r[i]["n"]=NR} ; emit @r,"i"}'
   - two-pass maxrows example
+
+! interp @ merge-fields !
 
 ! rh/fedora/centos
 ! process inquire gentoo 4.1 (or wait and see)

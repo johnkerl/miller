@@ -662,31 +662,31 @@ static char* test_percentile_keeper() {
 	double p;
 	mv_t q;
 	p = 0.0;
-	q = percentile_keeper_emit(ppercentile_keeper, p);
+	q = percentile_keeper_emit_non_interpolated(ppercentile_keeper, p);
 	printf("%4.2lf -> %7.4lf\n", p, q.u.fltv);
 	mu_assert_lf(q.type == MT_FLOAT);
 	mu_assert_lf(q.u.fltv == 1.0);
 
 	p = 10.0;
-	q = percentile_keeper_emit(ppercentile_keeper, p);
+	q = percentile_keeper_emit_non_interpolated(ppercentile_keeper, p);
 	printf("%4.2lf -> %7.4lf\n", p, q.u.fltv);
 	mu_assert_lf(q.type == MT_FLOAT);
 	mu_assert_lf(q.u.fltv == 1.0);
 
 	p = 50.0;
-	q = percentile_keeper_emit(ppercentile_keeper, p);
+	q = percentile_keeper_emit_non_interpolated(ppercentile_keeper, p);
 	printf("%4.2lf -> %lld\n", p, q.u.intv);
 	mu_assert_lf(q.type == MT_INT);
 	mu_assert_lf(q.u.intv == 3LL);
 
 	p = 90.0;
-	q = percentile_keeper_emit(ppercentile_keeper, p);
+	q = percentile_keeper_emit_non_interpolated(ppercentile_keeper, p);
 	printf("%4.2lf -> %7.4lf\n", p, q.u.fltv);
 	mu_assert_lf(q.type == MT_FLOAT);
 	mu_assert_lf(q.u.fltv == 5.0);
 
 	p = 100.0;
-	q = percentile_keeper_emit(ppercentile_keeper, p);
+	q = percentile_keeper_emit_non_interpolated(ppercentile_keeper, p);
 	printf("%4.2lf -> %7.4lf\n", p, q.u.fltv);
 	mu_assert_lf(q.type == MT_FLOAT);
 	mu_assert_lf(q.u.fltv == 5.0);
