@@ -6,10 +6,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-* cookbook:
-  - asv example
-  - neaten-valgrind
-
 ! rh/fedora/centos
 
 ! call for use-cases? (go first.)
@@ -32,7 +28,7 @@ TOP OF LIST:
 * for 4.4.0:
   ! output to multiple files by key
     - particular verb; needs -a
-    - inside put (like awk's print > $1.txt}
+    - inside put, like awk's print > $1.txt: print,printn,emit.
   ? imd ?
 
 ----------------------------------------------------------------
