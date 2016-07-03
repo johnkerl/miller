@@ -584,8 +584,23 @@ simply use <b>mlr join -u</b>. This loads the left file entirely into memory
 (while the right file is still streamed one line at a time) and does all
 possible joins without requiring sorted input:
 
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint join -u -j ipaddr -f
-data/join-u-left.csv data/join-u-right.csv}}HERE
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsvlite --opprint join -u -j ipaddr -f data/join-u-left.csv data/join-u-right.csv
+ipaddr    hostname              timestamp  bytes
+10.3.1.27 zenith.west.our.org   1448762579 4568
+10.3.1.18 nadir.east.our.org    1448762578 8729
+10.4.5.94 apoapsis.east.our.org 1448762579 17445
+10.3.1.27 zenith.west.our.org   1448762589 12
+10.3.1.18 nadir.east.our.org    1448762588 44558
+10.4.5.94 apoapsis.east.our.org 1448762589 8899
+10.3.1.27 zenith.west.our.org   1448762599 0
+10.3.1.18 nadir.east.our.org    1448762598 73425
+10.4.5.94 apoapsis.east.our.org 1448762599 12200
+</pre>
+</div>
+<p/>
 
 <p/>General advice is to make sure the left-file is relatively small, e.g.
 containing name-to-number mappings, while saving large amounts of data for the
