@@ -10,10 +10,6 @@ TOP OF LIST:
   - neaten-valgrind
   - headerless csv (i/o) choices
   - missing-timestamp check
-  - two-pass linreg example w/ oosvars? @@vars?!?
-  - hold-and-emit k/n:
-    mlr --from s put -q '@r[NR]=$*;end{for((i,k),v in @r) {@r[i]["i"]=i; @r[i]["n"]=NR} ; emit @r,"i"}'
-  - two-pass maxrows example
 
 ! rh/fedora/centos
 

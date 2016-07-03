@@ -69,21 +69,46 @@ POKI_RUN_COMMAND(cat data/small)HERE
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv-2.sh)HERE
 
-<h1>Two-pass computation of percentages</h1>
+<h1>Two-pass algorithms</h1>
 
 <p/>Miller is a streaming record processor; commands are performed once per
 record. This makes Miller particularly suitable for single-pass algorithms,
 allowing many of its verbs to process files that are (much) larger than the
 amount of RAM present in your system. (Of course, Miller verbs such as
 <tt>sort</tt>, </tt>tac</tt>, etc. all must ingest and retain all input records
-before emitting any output records.)
+before emitting any output records.) You can also use out-of-stream variables
+to perform multi-pass computations.
 
-<p/>You can also use out-of-stream variables to perform multi-pass computations.
-For example, mapping numeric values down a column to the percentage between
-their min and max values is two-pass: on the first pass you find the min and
-max values, then on the second, map each record&rsquo;s value to a percentage.
+<h2>Two-pass algorithms: computation of percentages</h2>
+
+<p/> For example, mapping numeric values down a column to the percentage
+between their min and max values is two-pass: on the first pass you find the
+min and max values, then on the second, map each record&rsquo;s value to a
+percentage.
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/two-pass-percentage.sh)HERE
+
+<h2>Two-pass algorithms: line-number ratios</h2>
+
+<p/>Similarly, finding the total record count requires first reading through
+all the data:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/two-pass-record-numbers.sh)HERE
+
+<h2>Two-pass algorithms: records having max value</h2>
+
+<p/>The idea is to retain records having the largest value of <tt>n</tt> in the
+following data:
+
+POKI_RUN_COMMAND{{mlr --itsv --irs lf --opprint cat data/maxrows.tsv}}HERE
+
+<p/>Of course, the largest value of <tt>n</tt> isn&rsquo;t known until after
+all data have been read. Using an out-of-stream variable we can retain all
+records as they are read, then filter them at the end:
+
+POKI_RUN_COMMAND{{cat data/maxrows.mlr}}HERE
+
+POKI_RUN_COMMAND{{mlr --itsv --irs lf --opprint put -q -f data/maxrows.mlr data/maxrows.tsv}}HERE
 
 <h1>Filtering paragraphs of text</h1>
 
