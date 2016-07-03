@@ -23,7 +23,6 @@ TOP OF LIST:
 ! go through lmag article & clarify all unclears
 
 * 4.3.0:
-  ! xxxes
   ! valgrinds
   > --imd?
   - interpolated-percentile option
