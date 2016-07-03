@@ -58,7 +58,8 @@ typedef struct _mapper_merge_fields_state_t {
 static void      mapper_merge_fields_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_merge_fields_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names, merge_by_t do_which,
-	slls_t* pvalue_field_names, char* output_field_basename, int allow_int_float, int keep_input_fields);
+	slls_t* pvalue_field_names, char* output_field_basename, int allow_int_float, int do_interpolated_percentiles,
+	int keep_input_fields);
 static void      mapper_merge_fields_free(mapper_t* pmapper);
 static sllv_t*   mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -203,12 +204,14 @@ static mapper_t* mapper_merge_fields_parse_cli(int* pargi, int argc, char** argv
 
 	*pargi = argi;
 	return mapper_merge_fields_alloc(paccumulator_names, do_which,
-		pvalue_field_names, output_field_basename, allow_int_float, keep_input_fields);
+		pvalue_field_names, output_field_basename, allow_int_float, do_interpolated_percentiles,
+		keep_input_fields);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names, merge_by_t do_which,
-	slls_t* pvalue_field_names, char* output_field_basename, int allow_int_float, int keep_input_fields)
+	slls_t* pvalue_field_names, char* output_field_basename, int allow_int_float, int do_interpolated_percentiles,
+	int keep_input_fields)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
@@ -223,10 +226,11 @@ static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names, merge_by_
 		regcomp_or_die(pvalue_field_regex, value_field_name, 0);
 		sllv_append(pstate->pvalue_field_regexes, pvalue_field_regex);
 	}
-	pstate->output_field_basename = output_field_basename;
-	pstate->allow_int_float       = allow_int_float;
-	pstate->keep_input_fields     = keep_input_fields;
-	pstate->psb                   = sb_alloc(SB_ALLOC_LENGTH);
+	pstate->output_field_basename       = output_field_basename;
+	pstate->allow_int_float             = allow_int_float;
+	pstate->do_interpolated_percentiles = do_interpolated_percentiles;
+	pstate->keep_input_fields           = keep_input_fields;
+	pstate->psb                         = sb_alloc(SB_ALLOC_LENGTH);
 
 	pmapper->pvstate = pstate;
 	pmapper->pprocess_func = (do_which == MERGE_BY_NAME_LIST) ? mapper_merge_fields_process_by_name_list :
@@ -331,13 +335,11 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 		return NULL;
 
 	mapper_merge_fields_state_t* pstate = pvstate;
-	lhmsv_t* paccs = lhmsv_alloc();
-	for (sllse_t* pa = pstate->paccumulator_names->phead; pa != NULL; pa = pa->pnext) {
-		char* acc_name = pa->value;
-		stats1_acc_t* pacc = make_stats1_acc(pstate->output_field_basename, acc_name,
-			pstate->allow_int_float, pstate->do_interpolated_percentiles);
-		lhmsv_put(paccs, acc_name, pacc, NO_FREE);
-	}
+	lhmsv_t* pinaccs = lhmsv_alloc();
+	lhmsv_t* poutaccs = lhmsv_alloc();
+
+	make_stats1_accs(pstate->output_field_basename, pstate->paccumulator_names,
+	    pstate->allow_int_float, pstate->do_interpolated_percentiles, pinaccs, poutaccs);
 
 	for (lrece_t* pb = pinrec->phead; pb != NULL; /* increment inside loop */ ) {
 		char* field_name = pb->key;
@@ -354,7 +356,7 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 					mv_t   value_field_nval = mv_absent();
 
 					if (*value_field_sval != 0) { // Key present with null value
-						for (lhmsve_t* pd = paccs->phead; pd != NULL; pd = pd->pnext) {
+						for (lhmsve_t* pd = pinaccs->phead; pd != NULL; pd = pd->pnext) {
 							stats1_acc_t* pacc = pd->pvvalue;
 
 							if (pacc->pdingest_func != NULL) {
@@ -396,13 +398,14 @@ static sllv_t* mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context
 			pb = pb->pnext;
 	}
 
-	for (lhmsve_t* pz = paccs->phead; pz != NULL; pz = pz->pnext) {
+	for (lhmsve_t* pz = poutaccs->phead; pz != NULL; pz = pz->pnext) {
 		char* acc_name = pz->key;
 		stats1_acc_t* pacc = pz->pvvalue;
 		pacc->pemit_func(pacc->pvstate, pstate->output_field_basename, acc_name, TRUE, pinrec);
 		pacc->pfree_func(pacc);
 	}
-	lhmsv_free(paccs);
+	lhmsv_free(pinaccs);
+	lhmsv_free(poutaccs);
 
 	return sllv_single(pinrec);
 }
@@ -418,6 +421,7 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 	if (pinrec == NULL) // end of input stream
 		return NULL;
 
+	// xxx interpo?!?
 	mapper_merge_fields_state_t* pstate = pvstate;
 	lhmsv_t* short_names_to_acc_maps = lhmsv_alloc();
 
