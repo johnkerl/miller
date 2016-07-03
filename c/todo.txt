@@ -9,6 +9,7 @@ TOP OF LIST:
 ! --asv?
 
 * cookbook:
+  - asv example
   - neaten-valgrind
 
 ! rh/fedora/centos
