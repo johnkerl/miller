@@ -204,6 +204,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#top">top</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#uniq">uniq</a><br/>
 &bull;&nbsp;<a href="#then-chaining">then-chaining</a><br/>
+&bull;&nbsp;<a href="#Keywords_for_put">Keywords for put</a><br/>
 &bull;&nbsp;<a href="#Functions_for_filter_and_put">Functions for filter and put</a><br/>
 &bull;&nbsp;<a href="#Data_types">Data types</a><br/>
 &bull;&nbsp;<a href="#Null_data:_empty_and_absent">Null data: empty and absent</a><br/>
@@ -5198,6 +5199,66 @@ assured you get the same results either way.
 <p/>The other reason to use then-chaining is for simplicity: you don&rsquo;t
 have re-type formatting flags (e.g. <tt>--csv --rs lf --fs tab</tt>) at every
 pipeline stage.
+
+<!-- ================================================================ -->
+<a id="Keywords_for_put"/><h1>Keywords for put</h1>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help-all-keywords
+filter: includes/excludes the record in the output record
+  stream.
+  Example: mlr put 'filter (NR == 2 || $x &gt; 5.4)'.
+  Instead of put with 'filter false' you can simply use put -q.  The following
+  uses the input record to accumulate data but only prints the running sum:
+  mlr put -q '@running_sum += $x * $y; emit @running_sum'.
+
+unset: clears field(s) from the current record, or an out-of-stream variable.
+  Example: mlr put 'unset $x'
+  Example: mlr put 'unset $*'
+  Example: mlr put 'for (k, v in $*) { if (k =~ "a.*") { unset $[k] } }'
+  Example: mlr put '...; unset @sums'
+  Example: mlr put '...; unset @sums["green"]'
+  Example: mlr put '...; unset @*'
+
+emit: inserts an out-of-stream variable into the output record stream. Hashmap
+  indices present in the data but not slotted by emit arguments are not output.
+  Example: mlr put '... ; emit @sums'
+  Example: mlr put '... ; emit @sums, "index1", "index2"'
+  Example: mlr put '... ; emit @*, "index1", "index2"'
+  Please see http://johnkerl.org/miller/doc for more information.
+
+emitp: inserts an out-of-stream variable into the output record stream. Hashmap
+  indices present in the data but not slotted by emitp arguments are output
+  concatenated with ":".
+  Example: mlr put '... ; emitp @sums'
+  Example: mlr put '... ; emitp @sums, "index1", "index2"'
+  Example: mlr put '... ; emitp @*, "index1", "index2"'
+  Please see http://johnkerl.org/miller/doc for more information.
+
+emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
+  output record stream.
+  Example: mlr put '... ; emit @a'
+  Example: mlr put '... ; emit @a, @b, @c'
+  Please see http://johnkerl.org/miller/doc for more information.
+
+dump: prints all currently defined out-of-stream variables immediately
+  to stdout as JSON.
+
+edump: prints all currently defined out-of-stream variables immediately
+  to stderr as JSON.
+
+print: prints expression immediately to stdout.
+  Example: mlr put -q 'print "The sum of x and y is ".string($x+$y)'.
+  Example: mlr put -q 'for (k, v in $*) { print string(k) . " =&gt; " . string(v) }'.
+
+eprint: prints expression immediately to stderr.
+  Example: mlr put -q 'eprint "The sum of x and y is ".string($x+$y)'.
+  Example: mlr put -q 'for (k, v in $*) { eprint string(k) . " =&gt; " . string(v) }'.
+</pre>
+</div>
+<p/>
 
 <!-- ================================================================ -->
 <a id="Functions_for_filter_and_put"/><h1>Functions for filter and put</h1>

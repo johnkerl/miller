@@ -13,13 +13,20 @@ TOP OF LIST:
 ! go through lmag article & clarify all unclears
 
 * for 4.4.0:
+
+  o tee
+    - v1 dkvp-only lrec-writer
+    - fold in various oargs, as join does for iargs
+    - or have it use same flags as main output ...
+
   ! output to multiple files by key
-    - particular verb; needs -a
-    - inside put, like awk's print > $1.txt: print,printn,emit.
-  ? imd ?
+    - pass-through (multi-tee?) or terminal
+    - particular verb; needs -a; some eval expression for filenames; maybe better off as put keyword. what abt emit?
+    - inside put, like awk's print > $1.txt: print,printn,dump.
+
+  ? --imd ?
 
 ----------------------------------------------------------------
-? --imd?
 ? double-quote-aware (non-lite) nidx & dkvp options?
 ? comma-number -- using locale?
 
