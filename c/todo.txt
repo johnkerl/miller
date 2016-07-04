@@ -12,6 +12,36 @@ TOP OF LIST:
 
 ! go through lmag article & clarify all unclears
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+TEE/MULTIFILE PLACEMENT:
+* how to specify filename as fcn of context (easier within put)
+* how to connect srec/emitoosvars to filename (easier within a verb)
+* whether to tee downstream or not
+-> just unkeyed tee verb as keystroke-saver
+-> do all keying within put
+
+OPTIONS:
+* print $*?
+* in addition to > and >>, support | to popen'ed process?
+* multifile within a single emit?? e.g. 'emit @u, "nr" > "u#{nr}"' something? no, instead suggest emit within for-loop.
+* also some interp("abc%{def}") something? strcats get tedious.
+
+SYNTAXES:
+* mlr ... cat -n then tee -a s1.tap then filter '$x>0' then tee s2.tap ...
+
+* mlr ... cat -n then tee -a s1.tap -g x,y ?? -- if so then how to compute field name -- a DSL expr?
+
+* mlr put '
+      print "here i am" >> s1.tap
+      dump  >> s1.tap
+      emit @u >> s2.tap
+      end {
+          emit @v >> s3.tap
+      }
+      print $* > "data_for_".$a.".csv"
+  '
+
+----------------------------------------------------------------
 * for 4.4.0:
 
   o tee
