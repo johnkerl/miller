@@ -9,6 +9,7 @@ liboutput_la_SOURCES=	\
 			lrec_writer_nidx.c \
 			lrec_writer_pprint.c \
 			lrec_writer_xtab.c \
+			lrec_writers.c \
 			lrec_writers.h
 liboutput_la_LIBADD=	../lib/libmlr.la
 liboutput_la_CPPFLAGS=	-I${srcdir}/../
