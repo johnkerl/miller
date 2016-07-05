@@ -57,6 +57,7 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_step_setup,
 	&mapper_tac_setup,
 	&mapper_tail_setup,
+	&mapper_tee_setup,
 	&mapper_top_setup,
 	&mapper_uniq_setup,
 };
@@ -1063,25 +1064,14 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			argv[0], popts->ofs);
 		return NULL;
 	}
-	if      (streq(popts->ofile_fmt, "dkvp"))
-		popts->plrec_writer = lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
-	else if (streq(popts->ofile_fmt, "json"))
-		popts->plrec_writer = lrec_writer_json_alloc(popts->stack_json_output_vertically,
-			popts->wrap_json_output_in_outer_list, popts->quote_json_values_always, popts->json_flatten_separator);
-	else if (streq(popts->ofile_fmt, "csv"))
-		popts->plrec_writer = lrec_writer_csv_alloc(popts->ors, popts->ofs, popts->oquoting,
-			popts->headerless_csv_output);
-	else if (streq(popts->ofile_fmt, "csvlite"))
-		popts->plrec_writer = lrec_writer_csvlite_alloc(popts->ors, popts->ofs, popts->headerless_csv_output);
-	else if (streq(popts->ofile_fmt, "markdown"))
-		popts->plrec_writer = lrec_writer_markdown_alloc(popts->ors);
-	else if (streq(popts->ofile_fmt, "nidx"))
-		popts->plrec_writer = lrec_writer_nidx_alloc(popts->ors, popts->ofs);
-	else if (streq(popts->ofile_fmt, "xtab"))
-		popts->plrec_writer = lrec_writer_xtab_alloc(popts->ofs, popts->ops, popts->right_justify_xtab_value);
-	else if (streq(popts->ofile_fmt, "pprint"))
-		popts->plrec_writer = lrec_writer_pprint_alloc(popts->ors, popts->ofs[0], left_align_pprint);
-	else {
+
+
+	popts->plrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
+		popts->headerless_csv_output, popts->oquoting, left_align_pprint, popts->right_justify_xtab_value,
+		popts->json_flatten_separator, popts->quote_json_values_always, popts->stack_json_output_vertically,
+		popts->wrap_json_output_in_outer_list);
+
+	if (popts->plrec_writer == NULL) {
 		main_usage(stderr, argv[0]);
 		exit(1);
 	}

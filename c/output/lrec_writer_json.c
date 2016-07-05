@@ -80,9 +80,9 @@ static void lrec_writer_json_process(FILE* output_stream, lrec_t* prec, void* pv
 		}
 
 		if (pstate->stack_vertically)
-			mlhmmv_print_json_stacked(pmap, pstate->quote_json_values_always, stdout);
+			mlhmmv_print_json_stacked(pmap, pstate->quote_json_values_always, output_stream);
 		else
-			mlhmmv_print_json_single_line(pmap, pstate->quote_json_values_always, stdout);
+			mlhmmv_print_json_single_line(pmap, pstate->quote_json_values_always, output_stream);
 
 		mlhmmv_free(pmap);
 

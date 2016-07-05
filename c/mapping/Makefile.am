@@ -38,6 +38,7 @@ libmapping_la_SOURCES=	\
 			mapper_step.c \
 			mapper_tac.c \
 			mapper_tail.c \
+			mapper_tee.c \
 			mapper_top.c \
 			mapper_uniq.c \
 			mappers.h \
