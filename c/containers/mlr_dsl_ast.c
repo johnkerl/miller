@@ -174,9 +174,15 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_EMITP_LASHED:                     return "emitp_lashed";                     break;
 	case MD_AST_NODE_TYPE_EMIT_LASHED:                      return "emit_lashed";                      break;
 	case MD_AST_NODE_TYPE_DUMP:                             return "dump";                             break;
+	case MD_AST_NODE_TYPE_DUMP_WRITE:                       return "dump_write";                       break;
+	case MD_AST_NODE_TYPE_DUMP_APPEND:                      return "dump_append";                      break;
 	case MD_AST_NODE_TYPE_EDUMP:                            return "edump";                            break;
 	case MD_AST_NODE_TYPE_PRINT:                            return "print";                            break;
+	case MD_AST_NODE_TYPE_PRINT_WRITE:                      return "print_write";                      break;
+	case MD_AST_NODE_TYPE_PRINT_APPEND:                     return "print_append";                     break;
 	case MD_AST_NODE_TYPE_PRINTN:                           return "printn";                           break;
+	case MD_AST_NODE_TYPE_PRINTN_WRITE:                     return "printn_write";                     break;
+	case MD_AST_NODE_TYPE_PRINTN_APPEND:                    return "printn_append";                    break;
 	case MD_AST_NODE_TYPE_EPRINT:                           return "eprint";                           break;
 	case MD_AST_NODE_TYPE_EPRINTN:                          return "eprintn";                          break;
 	case MD_AST_NODE_TYPE_ALL:                              return "all";                              break;
