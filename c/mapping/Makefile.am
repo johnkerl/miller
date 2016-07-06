@@ -23,6 +23,7 @@ libmapping_la_SOURCES=	\
 			mapper_label.c \
 			mapper_merge_fields.c \
 			mapper_nest.c \
+			mapper_nothing.c \
 			mapper_put.c \
 			mapper_regularize.c \
 			mapper_rename.c \

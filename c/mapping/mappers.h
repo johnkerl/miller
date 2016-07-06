@@ -22,6 +22,7 @@ extern mapper_setup_t mapper_join_setup;
 extern mapper_setup_t mapper_label_setup;
 extern mapper_setup_t mapper_merge_fields_setup;
 extern mapper_setup_t mapper_nest_setup;
+extern mapper_setup_t mapper_nothing_setup;
 extern mapper_setup_t mapper_put_setup;
 extern mapper_setup_t mapper_regularize_setup;
 extern mapper_setup_t mapper_rename_setup;

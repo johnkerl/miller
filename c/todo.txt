@@ -13,6 +13,11 @@ TOP OF LIST:
 ! go through lmag article & clarify all unclears
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+CONCRETE FOR TEE:
+* --oflags overlays, w/ substruct data & federated substruct fcns
+* UTs
+* mapper nothing
+
 TEE/MULTIFILE PLACEMENT:
 * how to specify filename as fcn of context (easier within put)
 * how to connect srec/emitoosvars to filename (easier within a verb)

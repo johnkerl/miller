@@ -42,6 +42,7 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_label_setup,
 	&mapper_merge_fields_setup,
 	&mapper_nest_setup,
+	&mapper_nothing_setup,
 	&mapper_put_setup,
 	&mapper_regularize_setup,
 	&mapper_rename_setup,

@@ -70,7 +70,7 @@ static void mapper_tee_usage(FILE* o, char* argv0, char* verb) {
 static mapper_t* mapper_tee_alloc(ap_state_t* pargp, int do_append, int flush_every_record,
 	char* output_file_name)
 {
-	FILE* fp = fopen(output_file_name, do_append ? "wa" : "w");
+	FILE* fp = fopen(output_file_name, do_append ? "a" : "w");
 	if (fp == NULL) {
 		perror("fopen");
 		fprintf(stderr, "%s: fopen error on \"%s\".\n", MLR_GLOBALS.bargv0, output_file_name);
