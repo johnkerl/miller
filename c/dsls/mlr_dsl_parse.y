@@ -144,11 +144,17 @@ md_statement_not_braced_end ::= md_emit.
 md_statement_not_braced_end ::= md_emitp_lashed.
 md_statement_not_braced_end ::= md_emit_lashed.
 md_statement_not_braced_end ::= md_dump.
+md_statement_not_braced_end ::= md_dump_write.
+md_statement_not_braced_end ::= md_dump_append.
 md_statement_not_braced_end ::= md_edump.
 md_statement_not_braced_end ::= md_print.
-md_statement_not_braced_end ::= md_printn.
 md_statement_not_braced_end ::= md_eprint.
+md_statement_not_braced_end ::= md_fprint_write.
+md_statement_not_braced_end ::= md_fprint_append.
+md_statement_not_braced_end ::= md_printn.
 md_statement_not_braced_end ::= md_eprintn.
+md_statement_not_braced_end ::= md_fprintn_write.
+md_statement_not_braced_end ::= md_fprintn_append.
 
 // Valid only within for/while, but we accept them here syntactically and reject them in the AST-to-CST
 // conversion, where we can produce much more informative error messages:
@@ -714,20 +720,40 @@ md_emit_lashed_namelist(A) ::= md_emit_lashed_namelist(B) MD_TOKEN_COMMA md_rhs(
 md_dump(A) ::= MD_TOKEN_DUMP(O). {
 	A = mlr_dsl_ast_node_alloc_zary(O->text, MD_AST_NODE_TYPE_DUMP);
 }
+md_dump_write(A) ::= MD_TOKEN_DUMP(O) MD_TOKEN_GT md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_DUMP_WRITE, B);
+}
+md_dump_append(A) ::= MD_TOKEN_DUMP(O) MD_TOKEN_BITWISE_RSH md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_DUMP_APPEND, B);
+}
 md_edump(A) ::= MD_TOKEN_EDUMP(O). {
 	A = mlr_dsl_ast_node_alloc_zary(O->text, MD_AST_NODE_TYPE_EDUMP);
 }
+
 md_print(A) ::= MD_TOKEN_PRINT(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_PRINT, B);
-}
-md_printn(A) ::= MD_TOKEN_PRINTN(O) md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_PRINTN, B);
 }
 md_eprint(A) ::= MD_TOKEN_EPRINT(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EPRINT, B);
 }
+md_fprint_write(A) ::= MD_TOKEN_FPRINT(O) MD_TOKEN_GT md_rhs(B) MD_TOKEN_COMMA md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FPRINT_WRITE, B, C);
+}
+md_fprint_append(A) ::= MD_TOKEN_FPRINT(O) MD_TOKEN_BITWISE_RSH MD_TOKEN_COMMA md_rhs(B) md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FPRINT_APPEND, B, C);
+}
+
+md_printn(A) ::= MD_TOKEN_PRINTN(O) md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_PRINTN, B);
+}
 md_eprintn(A) ::= MD_TOKEN_EPRINTN(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EPRINTN, B);
+}
+md_fprintn_write(A) ::= MD_TOKEN_FPRINTN(O) MD_TOKEN_GT md_rhs(B) MD_TOKEN_COMMA md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FPRINTN_WRITE, B, C);
+}
+md_fprintn_append(A) ::= MD_TOKEN_FPRINTN(O) MD_TOKEN_BITWISE_RSH md_rhs(B) MD_TOKEN_COMMA md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FPRINTN_APPEND, B, C);
 }
 
 // ================================================================
