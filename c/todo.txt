@@ -12,6 +12,8 @@ TOP OF LIST:
 
 ! go through lmag article & clarify all unclears
 
+! shorthand for sec2gmtdate
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 CONCRETE FOR TEE:
 * --oflags overlays, w/ substruct data & federated substruct fcns

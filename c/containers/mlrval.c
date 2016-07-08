@@ -576,6 +576,9 @@ mv_t time_string_from_seconds(mv_t* psec, char* format) {
 mv_t s_n_sec2gmt_func(mv_t* pval1) {
 	return time_string_from_seconds(pval1, ISO8601_TIME_FORMAT);
 }
+mv_t s_n_sec2gmtdate_func(mv_t* pval1) {
+	return time_string_from_seconds(pval1, ISO8601_DATE_FORMAT);
+}
 
 mv_t s_ns_strftime_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = time_string_from_seconds(pval1, pval2->u.strv);

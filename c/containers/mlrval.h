@@ -110,6 +110,7 @@
 #define MV_SB_ALLOC_LENGTH 32
 
 #define ISO8601_TIME_FORMAT "%Y-%m-%dT%H:%M:%SZ"
+#define ISO8601_DATE_FORMAT "%Y-%m-%d"
 
 typedef struct _mv_t {
 	union {
@@ -431,6 +432,7 @@ mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t
 
 // ----------------------------------------------------------------
 mv_t s_n_sec2gmt_func(mv_t* pval1);
+mv_t s_n_sec2gmtdate_func(mv_t* pval1);
 mv_t i_s_gmt2sec_func(mv_t* pval1);
 mv_t s_ns_strftime_func(mv_t* pval1, mv_t* pval2);
 mv_t i_ss_strptime_func(mv_t* pval1, mv_t* pval2);
