@@ -1266,11 +1266,27 @@ static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_ast_node_t* pnode, int type_i
 	return pstatement;
 }
 
+static mlr_dsl_cst_statement_t* alloc_edump(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+	pstatement->pnode_handler = handle_edump;
+	return pstatement;
+}
+
 // xxx temp
 static mlr_dsl_cst_statement_t* alloc_dump_write(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
 {
+	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 1)) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+	mlr_dsl_ast_node_t* pfilename_node = pnode->pchildren->phead->pvvalue;
+	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
+		type_inferencing, context_flags);
 	pstatement->pnode_handler = handle_dump_write;
 	return pstatement;
 }
@@ -1278,17 +1294,16 @@ static mlr_dsl_cst_statement_t* alloc_dump_write(mlr_dsl_ast_node_t* pnode, int 
 static mlr_dsl_cst_statement_t* alloc_dump_append(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
 {
+	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 1)) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+	mlr_dsl_ast_node_t* pfilename_node = pnode->pchildren->phead->pvvalue;
+	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
+		type_inferencing, context_flags);
 	pstatement->pnode_handler = handle_dump_append;
-	return pstatement;
-}
-
-static mlr_dsl_cst_statement_t* alloc_edump(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-
-	pstatement->pnode_handler = handle_edump;
 	return pstatement;
 }
 
@@ -2016,13 +2031,18 @@ static void handle_edump(
 	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, stderr);
 }
 
-// xxx temp
 static void handle_dump_write(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	// xxx open-files manager
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+
 	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, stdout);
+
+	mv_free(&filename);
 }
 
 static void handle_dump_append(
@@ -2030,7 +2050,13 @@ static void handle_dump_append(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	// xxx open-files manager
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+
 	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, stdout);
+
+	mv_free(&filename);
 }
 
 // ----------------------------------------------------------------
@@ -2075,7 +2101,6 @@ static void handle_print_write(
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	// xxx to do:
-	// filename evaluator
 	// open-files manager
 	char free_flags;
 	char* sval = mv_format_val(&val, &free_flags);
