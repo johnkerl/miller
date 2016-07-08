@@ -62,9 +62,6 @@ SYNTAXES:
 ----------------------------------------------------------------
 * for 4.4.0:
 
-  o sec2gmtdate:
-    - mld
-
   o tee
     - v1 dkvp-only lrec-writer
     - fold in various oargs, as join does for iargs
@@ -74,6 +71,8 @@ SYNTAXES:
     - pass-through (multi-tee?) or terminal
     - particular verb; needs -a; some eval expression for filenames; maybe better off as put keyword. what abt emit?
     - inside put, like awk's print > $1.txt: print,printn,dump.
+
+  k sec2gmtdate
 
   ? --imd ?
 
