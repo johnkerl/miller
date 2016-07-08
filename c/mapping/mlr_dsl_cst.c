@@ -2048,6 +2048,9 @@ static void handle_print_write(
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	// xxx to do:
+	// filename evaluator
+	// open-files manager
 	char free_flags;
 	char* sval = mv_format_val(&val, &free_flags);
 	printf("%s\n", sval);
