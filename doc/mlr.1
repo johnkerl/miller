@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-07-03
+.\"      Date: 2016-07-08
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-07-03" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-07-08" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -160,9 +160,9 @@ output separator to the given value.
 .\}
 .nf
  bar bootstrap cat check count-distinct cut decimate filter grep group-by
- group-like having-fields head histogram join label merge-fields nest put
- regularize rename reorder repeat reshape sample shuffle sec2gmt sort stats1
- stats2 step tac tail top uniq
+ group-like having-fields head histogram join label merge-fields nest nothing
+ put regularize rename reorder repeat reshape sample shuffle sec2gmt
+ sec2gmtdate sort stats1 stats2 step tac tail tee top uniq
 .fi
 .if n \{\
 .RE
@@ -178,7 +178,7 @@ output separator to the given value.
  erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd max mexp min
  mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand urand32
  urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec hms2sec
- sec2dhms sec2gmt sec2hms strftime strptime systime
+ sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -801,6 +801,16 @@ See also mlr reshape.
 .fi
 .if n \{\
 .RE
+.SS "nothing"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr nothing [options]
+xxx write this up please.
+.fi
+.if n \{\
+.RE
 .SS "put"
 .if n \{\
 .RS 0
@@ -1056,6 +1066,21 @@ is the same as
 .fi
 .if n \{\
 .RE
+.SS "sec2gmtdate"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr sec2gmtdate {comma-separated list of field names}
+Replaces a numeric field representing seconds since the epoch with the
+corresponding GMT year-month-day timestamp. This is nothing more than
+a keystroke-saver for the sec2gmtdate function:
+  mlr sec2gmtdate time1,time2
+is the same as
+  mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+.fi
+.if n \{\
+.RE
 .SS "sort"
 .if n \{\
 .RS 0
@@ -1216,6 +1241,16 @@ Usage: mlr tail [options]
 -n {count}    Tail count to print; default 10
 -g {a,b,c}    Optional group-by-field names for tail counts
 Passes through the last n records, optionally by category.
+.fi
+.if n \{\
+.RE
+.SS "tee"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr tee [options]
+xxx write this up please.
 .fi
 .if n \{\
 .RE
@@ -2184,6 +2219,16 @@ hms2sec("01:23:20") = 5000
 .nf
 (class=time #args=1): Formats seconds since epoch (integer part)
 as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
+.fi
+.if n \{\
+.RE
+.SS "sec2gmtdate"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=time #args=1): Formats seconds since epoch (integer part)
+as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
 .fi
 .if n \{\
 .RE

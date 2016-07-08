@@ -194,6 +194,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reshape">reshape</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sample">sample</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sec2gmt">sec2gmt</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sec2gmtdate">sec2gmtdate</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#shuffle">shuffle</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sort">sort</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#stats1">stats1</a><br/>
@@ -403,9 +404,9 @@ Help options:
 
 Verbs:
    bar bootstrap cat check count-distinct cut decimate filter grep group-by
-   group-like having-fields head histogram join label merge-fields nest put
-   regularize rename reorder repeat reshape sample shuffle sec2gmt sort stats1
-   stats2 step tac tail top uniq
+   group-like having-fields head histogram join label merge-fields nest nothing
+   put regularize rename reorder repeat reshape sample shuffle sec2gmt
+   sec2gmtdate sort stats1 stats2 step tac tail tee top uniq
 
 Functions for the filter and put verbs:
    + + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! ? :
@@ -415,7 +416,8 @@ Functions for the filter and put verbs:
    ceil cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd
    max mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh
    urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec
-   hms2fsec hms2sec sec2dhms sec2gmt sec2hms strftime strptime systime
+   hms2fsec hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime
+   systime
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -4273,6 +4275,24 @@ is the same as
 <p/>
 
 <!-- ================================================================ -->
+<a id="sec2gmtdate"/><h2>sec2gmtdate</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr sec2gmtdate -h
+Usage: mlr sec2gmtdate {comma-separated list of field names}
+Replaces a numeric field representing seconds since the epoch with the
+corresponding GMT year-month-day timestamp. This is nothing more than
+a keystroke-saver for the sec2gmtdate function:
+  mlr sec2gmtdate time1,time2
+is the same as
+  mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
 <a id="shuffle"/><h2>shuffle</h2>
 
 <p/>
@@ -5500,6 +5520,9 @@ sec2dhms (class=time #args=1): Formats integer seconds as in sec2dhms(500000)
 
 sec2gmt (class=time #args=1): Formats seconds since epoch (integer part)
 as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
+
+sec2gmtdate (class=time #args=1): Formats seconds since epoch (integer part)
+as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
 
 sec2hms (class=time #args=1): Formats integer seconds as in
 sec2hms(5000) = "01:23:20"

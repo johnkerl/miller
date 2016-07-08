@@ -62,6 +62,9 @@ SYNTAXES:
 ----------------------------------------------------------------
 * for 4.4.0:
 
+  o sec2gmtdate:
+    - mld
+
   o tee
     - v1 dkvp-only lrec-writer
     - fold in various oargs, as join does for iargs
