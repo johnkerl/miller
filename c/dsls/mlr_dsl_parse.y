@@ -736,11 +736,11 @@ md_print(A) ::= MD_TOKEN_PRINT(O) md_rhs(B). {
 md_eprint(A) ::= MD_TOKEN_EPRINT(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EPRINT, B);
 }
-md_print_write(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_GT md_rhs(B) MD_TOKEN_COMMA md_rhs(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT_WRITE, B, C);
+md_print_write(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT_WRITE, C, F);
 }
-md_print_append(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_BITWISE_RSH md_rhs(B) MD_TOKEN_COMMA md_rhs(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT_APPEND, B, C);
+md_print_append(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_BITWISE_RSH md_rhs(F) MD_TOKEN_COMMA md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT_APPEND, C, F);
 }
 
 md_printn(A) ::= MD_TOKEN_PRINTN(O) md_rhs(B). {
@@ -749,11 +749,11 @@ md_printn(A) ::= MD_TOKEN_PRINTN(O) md_rhs(B). {
 md_eprintn(A) ::= MD_TOKEN_EPRINTN(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EPRINTN, B);
 }
-md_printn_write(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_GT md_rhs(B) MD_TOKEN_COMMA md_rhs(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN_WRITE, B, C);
+md_printn_write(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN_WRITE, C, F);
 }
-md_printn_append(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_BITWISE_RSH md_rhs(B) MD_TOKEN_COMMA md_rhs(C). {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN_APPEND, B, C);
+md_printn_append(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_BITWISE_RSH md_rhs(F) MD_TOKEN_COMMA md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN_APPEND, C, F);
 }
 
 // ================================================================

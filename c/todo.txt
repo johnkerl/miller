@@ -26,6 +26,7 @@ CONCRETE FOR PRINT:
 * mk cmt xrefs mlr -k <-> parse.l.
 * undocument eprint.
 * edump/eprint reworked to >/>> stderr in the parser. remove elsewhere from the code.
+* universalize the dot operator. all this "a".string(b) is going to get really old.
 
 TEE/MULTIFILE PLACEMENT:
 * how to specify filename as fcn of context (easier within put)
