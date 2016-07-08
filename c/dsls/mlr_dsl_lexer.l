@@ -75,14 +75,6 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_EPRINTN);
 	return MD_TOKEN_EPRINTN;
 }
-"fprint" {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FPRINT);
-	return MD_TOKEN_FPRINT;
-}
-"fprintn" {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FPRINTN);
-	return MD_TOKEN_FPRINTN;
-}
 "begin" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
 	return MD_TOKEN_BEGIN;
