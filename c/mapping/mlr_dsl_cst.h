@@ -119,9 +119,8 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Assignments to srec or oosvar, as well as the boolean expression in filter, cond, and bare-boolean
 	rval_evaluator_t* prhs_evaluator;
 
-	// xxx to do
 	// For 'print > filename_expression, value_expression'
-	// rval_evaluator_t* poutput_filename_evaluator;
+	rval_evaluator_t* poutput_filename_evaluator;
 	// xxx open-files manager object (w/ LRU for someday; keep-open-with-fflush for now).
 
 	// Assigning full srec from oosvar:
