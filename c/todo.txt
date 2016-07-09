@@ -8,12 +8,23 @@ TOP OF LIST:
 
 ! rh/fedora/centos
 
+! mlr head early out
+
 ! call for use-cases? (go first.)
 
 ! go through lmag article & clarify all unclears
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-! universalize the dot operator. all this string(a).string(b) is going to get really old.
+* xxxes
+* valgrinds
+* check mlh's
+
+* universalize the dot operator. all this string(a).string(b) is going to get really old.
+  - valgrind
+
+CONCRETE FOR KEYED SREC OUTPUT:
+* figure out what to do ...
+? setemitdest or some such??
 
 CONCRETE FOR TEE:
 * --oflags overlays, w/ substruct data & federated substruct fcns
@@ -21,6 +32,7 @@ CONCRETE FOR TEE:
 * flush default on or off?
 * mapper nothing
   - UTs, in various then-chains
+  - mlh
   - mld
 
 CONCRETE FOR PRINT:
@@ -59,6 +71,8 @@ SYNTAXES:
       print $* > "data_for_".$a.".csv"
   '
 
+* write to popen? print | "some program", $x + $y -- ?
+
 ----------------------------------------------------------------
 * for 4.4.0:
 
@@ -73,6 +87,7 @@ SYNTAXES:
     - inside put, like awk's print > $1.txt: print,printn,dump.
 
   k sec2gmtdate
+  k mapper nothing to mld
 
   ? --imd ?
 

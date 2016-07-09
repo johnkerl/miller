@@ -373,7 +373,7 @@ static mv_t _err1(mv_t* pa) {
 }
 
 // ----------------------------------------------------------------
-mv_t dot_strings(char* string1, char* string2) {
+static mv_t dot_strings(char* string1, char* string2) {
 	int len1 = strlen(string1);
 	int len2 = strlen(string2);
 	int len3 = len1 + len2 + 1; // for the null-terminator byte
@@ -390,14 +390,16 @@ mv_t dot_s_ss(mv_t* pval1, mv_t* pval2) {
 mv_t dot_s_xs(mv_t* pval1, mv_t* pval2) {
 	mv_t sval1 = s_x_string_func(pval1);
 	mv_t rv = dot_strings(sval1.u.strv, pval2->u.strv);
-	// xxx freeing ...
+	mv_free(&sval1);
+	mv_free(pval2);
 	return rv;
 }
 
 mv_t dot_s_sx(mv_t* pval1, mv_t* pval2) {
 	mv_t sval2 = s_x_string_func(pval2);
 	mv_t rv = dot_strings(pval1->u.strv, sval2.u.strv);
-	// xxx freeing ...
+	mv_free(pval1);
+	mv_free(&sval2);
 	return rv;
 }
 
@@ -405,7 +407,8 @@ mv_t dot_s_xx(mv_t* pval1, mv_t* pval2) {
 	mv_t sval1 = s_x_string_func(pval1);
 	mv_t sval2 = s_x_string_func(pval2);
 	mv_t rv = dot_strings(sval1.u.strv, sval2.u.strv);
-	// xxx freeing ...
+	mv_free(&sval1);
+	mv_free(&sval2);
 	return rv;
 }
 
