@@ -423,7 +423,7 @@ mv_t s_s_toupper_func(mv_t* pval1);
 mv_t i_s_strlen_func(mv_t* pval1);
 mv_t s_x_typeof_func(mv_t* pval1);
 
-mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2);
+mv_t s_xx_dot_func(mv_t* pval1, mv_t* pval2);
 
 mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3);

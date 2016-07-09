@@ -335,19 +335,92 @@ mv_t mv_scan_number_or_die(char* string) {
 }
 
 // ----------------------------------------------------------------
-mv_t s_ss_dot_func(mv_t* pval1, mv_t* pval2) {
-	int len1 = strlen(pval1->u.strv);
-	int len2 = strlen(pval2->u.strv);
+static mv_t _a(mv_t* pa, mv_t* pb) {
+	return mv_absent();
+}
+static mv_t _emt(mv_t* pa, mv_t* pb) {
+	return mv_empty();
+}
+static mv_t _err(mv_t* pa, mv_t* pb) {
+	return mv_error();
+}
+static mv_t _1(mv_t* pa, mv_t* pb) {
+	return *pa;
+}
+static mv_t _2(mv_t* pa, mv_t* pb) {
+	return *pb;
+}
+static mv_t _s1(mv_t* pa, mv_t* pb) {
+	return s_x_string_func(pa);
+}
+static mv_t _s2(mv_t* pa, mv_t* pb) {
+	return s_x_string_func(pb);
+}
+static mv_t _f0(mv_t* pa, mv_t* pb) {
+	return mv_from_float(0.0);
+}
+static mv_t _i0(mv_t* pa, mv_t* pb) {
+	return mv_from_int(0LL);
+}
+static mv_t _a1(mv_t* pa) {
+	return mv_absent();
+}
+static mv_t _emt1(mv_t* pa) {
+	return mv_empty();
+}
+static mv_t _err1(mv_t* pa) {
+	return mv_error();
+}
+
+// ----------------------------------------------------------------
+mv_t dot_strings(char* string1, char* string2) {
+	int len1 = strlen(string1);
+	int len2 = strlen(string2);
 	int len3 = len1 + len2 + 1; // for the null-terminator byte
 	char* string3 = mlr_malloc_or_die(len3);
-	strcpy(&string3[0], pval1->u.strv);
-	strcpy(&string3[len1], pval2->u.strv);
-
-	mv_free(pval1);
-	mv_free(pval2);
-
+	strcpy(&string3[0], string1);
+	strcpy(&string3[len1], string2);
 	return mv_from_string_with_free(string3);
 }
+
+mv_t dot_s_ss(mv_t* pval1, mv_t* pval2) {
+	return dot_strings(pval1->u.strv, pval2->u.strv);
+}
+
+mv_t dot_s_xs(mv_t* pval1, mv_t* pval2) {
+	mv_t sval1 = s_x_string_func(pval1);
+	mv_t rv = dot_strings(sval1.u.strv, pval2->u.strv);
+	// xxx freeing ...
+	return rv;
+}
+
+mv_t dot_s_sx(mv_t* pval1, mv_t* pval2) {
+	mv_t sval2 = s_x_string_func(pval2);
+	mv_t rv = dot_strings(pval1->u.strv, sval2.u.strv);
+	// xxx freeing ...
+	return rv;
+}
+
+mv_t dot_s_xx(mv_t* pval1, mv_t* pval2) {
+	mv_t sval1 = s_x_string_func(pval1);
+	mv_t sval2 = s_x_string_func(pval2);
+	mv_t rv = dot_strings(sval1.u.strv, sval2.u.strv);
+	// xxx freeing ...
+	return rv;
+}
+
+static mv_binary_func_t* dot_dispositions[MT_DIM][MT_DIM] = {
+	//         ERROR  ABSENT EMPTY STRING     INT        FLOAT      BOOL
+	/*ERROR*/  {_err, _err,  _err, _err,      _err,      _err,      _err},
+	/*ABSENT*/ {_err, _a,    _emt, _2,        _s2,       _s2,       _s2},
+	/*EMPTY*/  {_err, _emt,  _emt, _2,        _s2,       _s2,       _s2},
+	/*STRING*/ {_err, _1,    _1,   dot_s_ss,  dot_s_sx,  dot_s_sx,  dot_s_sx},
+	/*INT*/    {_err, _s1,   _s1,  dot_s_xs,  dot_s_xx,  dot_s_xx,  dot_s_xx},
+	/*FLOAT*/  {_err, _s1,   _s1,  dot_s_xs,  dot_s_xx,  dot_s_xx,  dot_s_xx},
+	/*BOOL*/   {_err, _s1,   _s1,  dot_s_xs,  dot_s_xx,  dot_s_xx,  dot_s_xx},
+};
+
+mv_t s_xx_dot_func(mv_t* pval1, mv_t* pval2) { return (dot_dispositions[pval1->type][pval2->type])(pval1,pval2); }
 
 // ----------------------------------------------------------------
 mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
@@ -884,38 +957,6 @@ mv_t f_s_dhms2fsec_func(mv_t* pval1) {
 	}
 	mv_free(pval1);
 	return mv_from_float(sec * sign);
-}
-
-// ----------------------------------------------------------------
-static mv_t _a(mv_t* pa, mv_t* pb) {
-	return mv_absent();
-}
-static mv_t _emt(mv_t* pa, mv_t* pb) {
-	return mv_empty();
-}
-static mv_t _err(mv_t* pa, mv_t* pb) {
-	return mv_error();
-}
-static mv_t _1(mv_t* pa, mv_t* pb) {
-	return *pa;
-}
-static mv_t _2(mv_t* pa, mv_t* pb) {
-	return *pb;
-}
-static mv_t _f0(mv_t* pa, mv_t* pb) {
-	return mv_from_float(0.0);
-}
-static mv_t _i0(mv_t* pa, mv_t* pb) {
-	return mv_from_int(0LL);
-}
-static mv_t _a1(mv_t* pa) {
-	return mv_absent();
-}
-static mv_t _emt1(mv_t* pa) {
-	return mv_empty();
-}
-static mv_t _err1(mv_t* pa) {
-	return mv_error();
 }
 
 // ----------------------------------------------------------------

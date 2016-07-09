@@ -70,7 +70,7 @@ static char * test_strings() {
 
 	rval_evaluator_t* ps       = rval_evaluator_alloc_from_field_name("s", TYPE_INFER_STRING_FLOAT_INT);
 	rval_evaluator_t* pdef     = rval_evaluator_alloc_from_strnum_literal("def", TYPE_INFER_STRING_FLOAT_INT);
-	rval_evaluator_t* pdot     = rval_evaluator_alloc_from_x_ss_func(s_ss_dot_func, ps, pdef);
+	rval_evaluator_t* pdot     = rval_evaluator_alloc_from_x_ss_func(s_xx_dot_func, ps, pdef);
 	rval_evaluator_t* ptolower = rval_evaluator_alloc_from_s_s_func(s_s_tolower_func, pdot);
 	rval_evaluator_t* ptoupper = rval_evaluator_alloc_from_s_s_func(s_s_toupper_func, pdot);
 

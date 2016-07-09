@@ -398,7 +398,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, ">="))   { return rval_evaluator_alloc_from_x_xx_func(ge_op_func,             parg1, parg2);
 	} else if (streq(fnnm, "<"))    { return rval_evaluator_alloc_from_x_xx_func(lt_op_func,             parg1, parg2);
 	} else if (streq(fnnm, "<="))   { return rval_evaluator_alloc_from_x_xx_func(le_op_func,             parg1, parg2);
-	} else if (streq(fnnm, "."))    { return rval_evaluator_alloc_from_x_ss_func(s_ss_dot_func,          parg1, parg2);
+	} else if (streq(fnnm, "."))    { return rval_evaluator_alloc_from_x_xx_func(s_xx_dot_func,          parg1, parg2);
 	} else if (streq(fnnm, "+"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_plus_func,         parg1, parg2);
 	} else if (streq(fnnm, "-"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_minus_func,        parg1, parg2);
 	} else if (streq(fnnm, "*"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_times_func,        parg1, parg2);
