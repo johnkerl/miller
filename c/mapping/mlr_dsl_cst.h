@@ -6,6 +6,7 @@
 #include "containers/lhmsmv.h"
 #include "containers/bind_stack.h"
 #include "containers/loop_stack.h"
+#include "containers/multi_out.h"
 
 // ================================================================
 // Concrete syntax tree (CST) derived from an abstract syntax tree (AST).
@@ -121,7 +122,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 
 	// For 'print > filename_expression, value_expression'
 	rval_evaluator_t* poutput_filename_evaluator;
-	// xxx open-files manager object (w/ LRU for someday; keep-open-with-fflush for now).
+	multi_out_t* pmulti_out;
 
 	// Assigning full srec from oosvar:
 	sllv_t* poosvar_rhs_keylist_evaluators;

@@ -12,12 +12,13 @@ TOP OF LIST:
 
 ! go through lmag article & clarify all unclears
 
-! shorthand for sec2gmtdate
-
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+! universalize the dot operator. all this string(a).string(b) is going to get really old.
+
 CONCRETE FOR TEE:
 * --oflags overlays, w/ substruct data & federated substruct fcns
 * UTs
+* flush default on or off?
 * mapper nothing
   - UTs, in various then-chains
   - mld
@@ -28,7 +29,6 @@ CONCRETE FOR PRINT:
 * mk cmt xrefs mlr -k <-> parse.l.
 * undocument eprint.
 * edump/eprint reworked to >/>> stderr in the parser. remove elsewhere from the code.
-* universalize the dot operator. all this "a".string(b) is going to get really old.
 * fflush option for print and dump? tee has one.
 
 TEE/MULTIFILE PLACEMENT:

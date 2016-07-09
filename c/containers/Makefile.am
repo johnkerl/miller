@@ -37,6 +37,8 @@ libcontainers_la_SOURCES=	\
 			mlr_dsl_ast.h \
 			mlrval.c \
 			mlrval.h \
+			multi_out.c \
+			multi_out.h \
 			parse_trie.c \
 			parse_trie.h \
 			percentile_keeper.c \

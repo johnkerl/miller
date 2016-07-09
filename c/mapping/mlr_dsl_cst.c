@@ -501,6 +501,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->psrec_lhs_evaluator                  = NULL;
 	pstatement->prhs_evaluator                       = NULL;
 	pstatement->poutput_filename_evaluator           = NULL;
+	pstatement->pmulti_out                           = NULL;
 	pstatement->poosvar_rhs_keylist_evaluators       = NULL;
 	pstatement->pemit_oosvar_namelist_evaluators     = NULL;
 	pstatement->pvarargs                             = NULL;
@@ -1274,7 +1275,6 @@ static mlr_dsl_cst_statement_t* alloc_edump(mlr_dsl_ast_node_t* pnode, int type_
 	return pstatement;
 }
 
-// xxx temp
 static mlr_dsl_cst_statement_t* alloc_dump_write(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
 {
@@ -1287,6 +1287,7 @@ static mlr_dsl_cst_statement_t* alloc_dump_write(mlr_dsl_ast_node_t* pnode, int 
 	mlr_dsl_ast_node_t* pfilename_node = pnode->pchildren->phead->pvvalue;
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->pmulti_out = multi_out_alloc();
 	pstatement->pnode_handler = handle_dump_write;
 	return pstatement;
 }
@@ -1303,6 +1304,7 @@ static mlr_dsl_cst_statement_t* alloc_dump_append(mlr_dsl_ast_node_t* pnode, int
 	mlr_dsl_ast_node_t* pfilename_node = pnode->pchildren->phead->pvvalue;
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->pmulti_out = multi_out_alloc();
 	pstatement->pnode_handler = handle_dump_append;
 	return pstatement;
 }
@@ -1352,6 +1354,7 @@ static mlr_dsl_cst_statement_t* alloc_print_write(mlr_dsl_ast_node_t* pnode, int
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, type_inferencing, context_flags);
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->pmulti_out = multi_out_alloc();
 	pstatement->pnode_handler = handle_print_write;
 	return pstatement;
 }
@@ -1370,6 +1373,7 @@ static mlr_dsl_cst_statement_t* alloc_print_append(mlr_dsl_ast_node_t* pnode, in
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, type_inferencing, context_flags);
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->pmulti_out = multi_out_alloc();
 	pstatement->pnode_handler = handle_print_append;
 	return pstatement;
 }
@@ -1419,6 +1423,7 @@ static mlr_dsl_cst_statement_t* alloc_printn_write(mlr_dsl_ast_node_t* pnode, in
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, type_inferencing, context_flags);
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->pmulti_out = multi_out_alloc();
 	pstatement->pnode_handler = handle_printn_write;
 	return pstatement;
 }
@@ -1437,6 +1442,7 @@ static mlr_dsl_cst_statement_t* alloc_printn_append(mlr_dsl_ast_node_t* pnode, i
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, type_inferencing, context_flags);
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->pmulti_out = multi_out_alloc();
 	pstatement->pnode_handler = handle_printn_append;
 	return pstatement;
 }
@@ -1490,6 +1496,12 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 	if (pstatement->prhs_evaluator != NULL) {
 		pstatement->prhs_evaluator->pfree_func(pstatement->prhs_evaluator);
 	}
+
+	if (pstatement->poutput_filename_evaluator != NULL) {
+		pstatement->poutput_filename_evaluator->pfree_func(pstatement->poutput_filename_evaluator);
+	}
+
+	multi_out_free(pstatement->pmulti_out);
 
 	if (pstatement->poosvar_rhs_keylist_evaluators != NULL) {
 		for (sllve_t* pe = pstatement->poosvar_rhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
@@ -2090,7 +2102,6 @@ static void handle_eprint(
 	mv_free(&val);
 }
 
-// xxx temp
 static void handle_print_write(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
@@ -2100,13 +2111,20 @@ static void handle_print_write(
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
-	// xxx to do:
-	// open-files manager
-	char free_flags;
-	char* sval = mv_format_val(&val, &free_flags);
-	printf("%s\n", sval);
-	if (free_flags)
+	char sfree_flags;
+	char* sval = mv_format_val(&val, &sfree_flags);
+	char ffree_flags;
+	char* fval = mv_format_val(&filename, &ffree_flags);
+
+	FILE* outfp = multi_out_get_for_write(pnode->pmulti_out, fval);
+	fprintf(outfp, "%s\n", sval);
+	if (TRUE) // xxx temp
+		fflush(outfp);
+
+	if (sfree_flags)
 		free(sval);
+	if (ffree_flags)
+		free(fval);
 	mv_free(&filename);
 	mv_free(&val);
 }
@@ -2120,11 +2138,20 @@ static void handle_print_append(
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
-	char free_flags;
-	char* sval = mv_format_val(&val, &free_flags);
-	printf("%s\n", sval);
-	if (free_flags)
+	char sfree_flags;
+	char* sval = mv_format_val(&val, &sfree_flags);
+	char ffree_flags;
+	char* fval = mv_format_val(&filename, &ffree_flags);
+
+	FILE* outfp = multi_out_get_for_append(pnode->pmulti_out, fval);
+	fprintf(outfp, "%s\n", sval);
+	if (TRUE) // xxx temp
+		fflush(outfp);
+
+	if (sfree_flags)
 		free(sval);
+	if (ffree_flags)
+		free(fval);
 	mv_free(&filename);
 	mv_free(&val);
 }
@@ -2160,7 +2187,6 @@ static void handle_eprintn(
 	mv_free(&val);
 }
 
-// xxx temp
 static void handle_printn_write(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
@@ -2170,6 +2196,7 @@ static void handle_printn_write(
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+	// xxx open-files manager
 	char free_flags;
 	char* sval = mv_format_val(&val, &free_flags);
 	printf("%s", sval);
