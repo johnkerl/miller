@@ -18,6 +18,8 @@ TOP OF LIST:
 * xxxes
 * valgrinds
 * check mlh's
+* fix left_align_pprint -> cli_opts_t
+* also sub-bag cli_opts by in/out/etc
 
 * universalize the dot operator. all this string(a).string(b) is going to get really old.
   - valgrind

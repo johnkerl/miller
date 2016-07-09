@@ -10,7 +10,9 @@ liboutput_la_SOURCES=	\
 			lrec_writer_pprint.c \
 			lrec_writer_xtab.c \
 			lrec_writers.c \
-			lrec_writers.h
+			lrec_writers.h \
+			multi_out.c \
+			multi_out.h
 liboutput_la_LIBADD=	../lib/libmlr.la
 liboutput_la_CPPFLAGS=	-I${srcdir}/../
 liboutput_la_CFLAGS=	-std=gnu99

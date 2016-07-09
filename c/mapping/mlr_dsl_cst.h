@@ -6,7 +6,7 @@
 #include "containers/lhmsmv.h"
 #include "containers/bind_stack.h"
 #include "containers/loop_stack.h"
-#include "containers/multi_out.h"
+#include "output/multi_out.h"
 
 // ================================================================
 // Concrete syntax tree (CST) derived from an abstract syntax tree (AST).
