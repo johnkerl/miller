@@ -2,6 +2,7 @@
 
 ARGV.shift
 cmd = "valgrind --leak-check=full mlrg"
+#cmd = "valgrind --leak-check=full --track-origins=yes mlrg"
 ARGV.each do |arg|
     cmd += " '#{arg}'"
 end

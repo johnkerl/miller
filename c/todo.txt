@@ -1,7 +1,10 @@
 ================================================================
 BUGFIXES
 
-:D
+* vgrun mlr put -v '$x = 1 || 2 || 3' /dev/null
+
+* mlr --from ../data/small put -v -q 'emit >> "out", @a'
+  mlr DSL: syntax error.
 
 ================================================================
 TOP OF LIST:
