@@ -138,11 +138,23 @@ md_statement_not_braced_end ::= md_bare_boolean.
 md_statement_not_braced_end ::= md_oosvar_assignment.
 md_statement_not_braced_end ::= md_filter.
 md_statement_not_braced_end ::= md_unset.
+
 md_statement_not_braced_end ::= md_emitf.
+md_statement_not_braced_end ::= md_emitf_write.
+md_statement_not_braced_end ::= md_emitf_append.
 md_statement_not_braced_end ::= md_emitp.
+//md_statement_not_braced_end ::= md_emitp_write.
+//md_statement_not_braced_end ::= md_emitp_append.
 md_statement_not_braced_end ::= md_emit.
+//md_statement_not_braced_end ::= md_emit_write.
+//md_statement_not_braced_end ::= md_emit_append.
 md_statement_not_braced_end ::= md_emitp_lashed.
+//md_statement_not_braced_end ::= md_emitp_lashed_write.
+//md_statement_not_braced_end ::= md_emitp_lashed_append.
 md_statement_not_braced_end ::= md_emit_lashed.
+//md_statement_not_braced_end ::= md_emit_lashed_write.
+//md_statement_not_braced_end ::= md_emit_lashed_append.
+
 md_statement_not_braced_end ::= md_dump.
 md_statement_not_braced_end ::= md_dump_write.
 md_statement_not_braced_end ::= md_dump_append.
@@ -599,6 +611,15 @@ md_emitf_args(A) ::= md_oosvar_keylist(B). {
 }
 md_emitf_args(A) ::= md_emitf_args(B) MD_TOKEN_COMMA md_oosvar_keylist(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+
+md_emitf_write(A) ::= MD_TOKEN_EMITF(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA md_emitf_args(B). {
+	B = mlr_dsl_ast_node_set_function_name(B, O->text);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITF_WRITE, B, F);
+}
+md_emitf_append(A) ::= MD_TOKEN_EMITF(O) MD_TOKEN_BITWISE_RSH md_rhs(F) MD_TOKEN_COMMA md_emitf_args(B). {
+	B = mlr_dsl_ast_node_set_function_name(B, O->text);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITF_APPEND, B, F);
 }
 
 // ----------------------------------------------------------------

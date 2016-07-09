@@ -1948,6 +1948,12 @@ static void handle_emit(
 	sllmv_free(pmvkeys);
 }
 
+// xxx if to file:
+// * mlhmmv_to_lrecs not to pcsv_outputs->poutrecs but to local list
+// * hand those off to multi_lrec_writer keyed by filename.
+// * multi_lrec_writer needs to have open fp (from write/append) as well as lrec_writer object.
+// * multi_lrec_writer needs drain-all on its close method, invokved from mapper_put.
+
 // ----------------------------------------------------------------
 static void handle_emitp_lashed(
 	mlr_dsl_cst_statement_t* pnode,
