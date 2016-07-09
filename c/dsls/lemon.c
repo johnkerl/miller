@@ -25,7 +25,7 @@
 #ifdef TEST
 #define MAXRHS 5       /* Set low to exercise exception code */
 #else
-#define MAXRHS 1000
+#define MAXRHS 2000
 #endif
 
 char *msort();
@@ -3345,11 +3345,11 @@ void ReportTable(struct lemon *lemp, int mhflag) /* Output in makeheaders format
 "Illegal stack size: [%s].  The stack size should be an integer constant.",
 				lemp->stacksize);
 			lemp->errorcnt++;
-			lemp->stacksize = "100";
+			lemp->stacksize = "800";
 		}
 		fprintf(out,"#define YYSTACKDEPTH %s\n",lemp->stacksize);  lineno++;
 	} else {
-		fprintf(out,"#define YYSTACKDEPTH 100\n");  lineno++;
+		fprintf(out,"#define YYSTACKDEPTH 800\n");  lineno++;
 	}
 	if (mhflag) {
 		fprintf(out,"#if INTERFACE\n"); lineno++;
