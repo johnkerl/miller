@@ -22,6 +22,9 @@ void mlr_dsl_lemon_parser_free(
 	void *pvparser,             /* The parser to be deleted */
 	void (*freeProc)(void*));   /* Function used to reclaim memory */
 
+// xxx temp
+void mlr_dsl_ParseTrace(FILE *TraceFILE, char *zTracePrompt);
+
 // ----------------------------------------------------------------
 // http://flex.sourceforge.net/manual/Init-and-Destroy-Functions.html
 // http://flex.sourceforge.net/manual/Extra-Data.html
@@ -31,6 +34,7 @@ static mlr_dsl_ast_t* mlr_dsl_parse_inner(yyscan_t scanner, void* pvparser, mlr_
 	int lex_code;
 	int parse_code;
 	mlr_dsl_ast_t* past = mlr_dsl_ast_alloc();
+	//////mlr_dsl_ParseTrace(stdout, "[DSLTRACE]");
 	do {
 		lex_code = mlr_dsl_lexer_lex(scanner);
 		mlr_dsl_ast_node_t* plexed_node = *ppnode;

@@ -17,7 +17,17 @@ TOP OF LIST:
 
 ! go through lmag article & clarify all unclears
 
+! undo dsls/M*g gcc -g
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+! lemon boundary issue:
+  - bisect on #rules
+  - put #ifdef in .y file
+  - NDEBUG
+  - asan (any 2nd opinion from valgrind)
+  - https://github.com/martinmroz/lemon
+  - hook in ParseTrace from cliopt
+
 * xxxes
 * valgrinds
 * check mlh's

@@ -26,8 +26,11 @@ LFLAGS=-lm
 INSTALLDIR=/usr/local/bin
 
 CCOPT=$(CC) $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
+#CCOPT=clang -fsanitize=address $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
+
 #CCDEBUG=$(CC) -g -O1 $(CFLAGS) $(IFLAGS) $(WFLAGS)
 CCDEBUG=$(CC) -g $(CFLAGS) $(IFLAGS) $(WFLAGS)
+#CCDEBUG=clang -g -fsanitize=address $(CFLAGS) $(IFLAGS) $(WFLAGS)
 
 # ----------------------------------------------------------------
 # Miller source except DSL

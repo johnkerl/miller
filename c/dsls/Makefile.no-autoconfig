@@ -6,9 +6,16 @@
 # ================================================================
 
 CC=gcc
-
 CFLAGS=-I.. -O3
+#CFLAGS=-I.. -O3 -g
+#CFLAGS=-I.. -O2
+#CFLAGS=-I.. -O1 -g
+#CFLAGS=-I.. -O1
+#CFLAGS=-I.. -O0
 #CFLAGS=-I.. -g
+
+#CC=clang
+#CFLAGS=-I.. -O1 -g -fsanitize=address
 
 # ----------------------------------------------------------------
 top: mlr_dsl_lexer.o mlr_dsl_parse.o mlr_dsl_wrapper.o
