@@ -22,11 +22,12 @@ TOP OF LIST:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! lemon boundary issue:
   - bisect on #rules
-  - put #ifdef in .y file
-  - NDEBUG
   - asan (any 2nd opinion from valgrind)
   - https://github.com/martinmroz/lemon
-  - hook in ParseTrace from cliopt
+  - how to do ifdef in .y file?
+  k put #ifdef in .y file
+  k NDEBUG
+  k hook in ParseTrace from cliopt
 
 * xxxes
 * valgrinds
