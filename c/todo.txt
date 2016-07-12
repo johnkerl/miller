@@ -21,6 +21,11 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! lemon boundary issue:
+  - debug:
+    > doesn't happen with clang -fsanitize=address
+    > doesn't happen with gcc -g
+    > nothing revealed with clang -Wall
+    > DSLCCOPT DSLCCDEBUG CCOPT CCDEBUG make -e
   - bisect on #rules
   - asan (any 2nd opinion from valgrind)
   - https://github.com/martinmroz/lemon
