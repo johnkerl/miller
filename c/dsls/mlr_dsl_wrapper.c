@@ -22,7 +22,6 @@ void mlr_dsl_lemon_parser_free(
 	void *pvparser,             /* The parser to be deleted */
 	void (*freeProc)(void*));   /* Function used to reclaim memory */
 
-// xxx temp
 void mlr_dsl_ParseTrace(FILE *TraceFILE, char *zTracePrompt);
 
 // ----------------------------------------------------------------
@@ -30,11 +29,14 @@ void mlr_dsl_ParseTrace(FILE *TraceFILE, char *zTracePrompt);
 // http://flex.sourceforge.net/manual/Extra-Data.html
 
 // Returns linked list of mlr_dsl_ast_node_t*.
-static mlr_dsl_ast_t* mlr_dsl_parse_inner(yyscan_t scanner, void* pvparser, mlr_dsl_ast_node_t** ppnode) {
+static mlr_dsl_ast_t* mlr_dsl_parse_inner(yyscan_t scanner, void* pvparser, mlr_dsl_ast_node_t** ppnode,
+	int trace_parse)
+{
 	int lex_code;
 	int parse_code;
 	mlr_dsl_ast_t* past = mlr_dsl_ast_alloc();
-	//////mlr_dsl_ParseTrace(stdout, "[DSLTRACE]");
+	if (trace_parse)
+		mlr_dsl_ParseTrace(stderr, "[DSLTRACE] ");
 	do {
 		lex_code = mlr_dsl_lexer_lex(scanner);
 		mlr_dsl_ast_node_t* plexed_node = *ppnode;
@@ -55,7 +57,7 @@ static mlr_dsl_ast_t* mlr_dsl_parse_inner(yyscan_t scanner, void* pvparser, mlr_
 
 // ----------------------------------------------------------------
 // Returns linked list of mlr_dsl_ast_node_t*.
-mlr_dsl_ast_t* mlr_dsl_parse(char* string) {
+mlr_dsl_ast_t* mlr_dsl_parse(char* string, int trace_parse) {
 	mlr_dsl_ast_node_t* pnode = NULL;
 	yyscan_t scanner;
 	mlr_dsl_lexer_lex_init_extra(&pnode, &scanner);
@@ -69,7 +71,7 @@ mlr_dsl_ast_t* mlr_dsl_parse(char* string) {
 		mlr_dsl_lexer__switch_to_buffer (buf, scanner);
 	}
 
-	mlr_dsl_ast_t* past = mlr_dsl_parse_inner(scanner, pvparser, &pnode);
+	mlr_dsl_ast_t* past = mlr_dsl_parse_inner(scanner, pvparser, &pnode, trace_parse);
 
 	if (buf != NULL)
 		mlr_dsl_lexer__delete_buffer(buf, scanner);

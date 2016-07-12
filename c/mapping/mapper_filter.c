@@ -42,6 +42,7 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
 	fprintf(o, "    full transparency on the precedence and associativity rules of Miller's\n");
 	fprintf(o, "    grammar.\n");
+	fprintf(o, "-t: Print low-level parser-trace to stderr.\n");
 	fprintf(o, "-S: Keeps field values, or literals in the expression, as strings with no type \n");
 	fprintf(o, "    inference to int or float.\n");
 	fprintf(o, "-F: Keeps field values, or literals in the expression, as strings or floats\n");
@@ -79,17 +80,19 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
-	char* verb = argv[(*pargi)++];
-	char* mlr_dsl_expression = NULL;
+	char* verb                                = argv[(*pargi)++];
+	char* mlr_dsl_expression                  = NULL;
 	char* comment_stripped_mlr_dsl_expression = NULL;
-	char* expression_filename = NULL;
-	int   print_ast = FALSE;
-	int   type_inferencing = TYPE_INFER_STRING_FLOAT_INT;
-	int   do_exclude = FALSE;
+	char* expression_filename                 = NULL;
+	int   print_ast                           = FALSE;
+	int   trace_parse                         = FALSE;
+	int   type_inferencing                    = TYPE_INFER_STRING_FLOAT_INT;
+	int   do_exclude                          = FALSE;
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_flag(pstate,    "-f", &expression_filename);
 	ap_define_true_flag(pstate,      "-v", &print_ast);
+	ap_define_true_flag(pstate,      "-t", &trace_parse);
 	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
 	ap_define_int_value_flag(pstate, "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
 	ap_define_true_flag(pstate,      "-x", &do_exclude);
@@ -113,7 +116,7 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
 	}
 	comment_stripped_mlr_dsl_expression = alloc_comment_strip(mlr_dsl_expression);
 
-	mlr_dsl_ast_t* past = mlr_dsl_parse(comment_stripped_mlr_dsl_expression);
+	mlr_dsl_ast_t* past = mlr_dsl_parse(comment_stripped_mlr_dsl_expression, trace_parse);
 	if (past == NULL) {
 		fprintf(stderr, "%s %s: syntax error on DSL parse of '%s'\n",
 			argv[0], verb, comment_stripped_mlr_dsl_expression);

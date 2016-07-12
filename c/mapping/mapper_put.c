@@ -55,6 +55,7 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
 	fprintf(o, "    full transparency on the precedence and associativity rules of Miller's\n");
 	fprintf(o, "    grammar.\n");
+	fprintf(o, "-t: Print low-level parser-trace to stderr.\n");
 	fprintf(o, "-q: Does not include the modified record in the output stream. Useful for when\n");
 	fprintf(o, "    all desired output is in begin and/or end blocks.\n");
 	fprintf(o, "-S: Keeps field values, or literals in the expression, as strings with no type \n");
@@ -104,18 +105,20 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
-	char* verb                = argv[(*pargi)++];
-	char* mlr_dsl_expression  = NULL;
-	char* comment_stripped_mlr_dsl_expression  = NULL;
-	char* expression_filename = NULL;
-	int   outer_filter        = TRUE;
-	int   type_inferencing    = TYPE_INFER_STRING_FLOAT_INT;
-	int   print_ast           = FALSE;
-	char* oosvar_flatten_separator = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
+	char* verb                                = argv[(*pargi)++];
+	char* mlr_dsl_expression                  = NULL;
+	char* comment_stripped_mlr_dsl_expression = NULL;
+	char* expression_filename                 = NULL;
+	int   outer_filter                        = TRUE;
+	int   type_inferencing                    = TYPE_INFER_STRING_FLOAT_INT;
+	int   print_ast                           = FALSE;
+	int   trace_parse                         = FALSE;
+	char* oosvar_flatten_separator            = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_flag(pstate,    "-f", &expression_filename);
 	ap_define_true_flag(pstate,      "-v", &print_ast);
+	ap_define_true_flag(pstate,      "-t", &trace_parse);
 	ap_define_false_flag(pstate,     "-q", &outer_filter);
 	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
 	ap_define_int_value_flag(pstate, "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
@@ -138,7 +141,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	comment_stripped_mlr_dsl_expression = alloc_comment_strip(mlr_dsl_expression);
 
 	// Linked list of mlr_dsl_ast_node_t*.
-	mlr_dsl_ast_t* past = mlr_dsl_parse(comment_stripped_mlr_dsl_expression);
+	mlr_dsl_ast_t* past = mlr_dsl_parse(comment_stripped_mlr_dsl_expression, trace_parse);
 	if (past == NULL) {
 		fprintf(stderr, "%s %s: syntax error on DSL parse of '%s'\n",
 			argv[0], verb, comment_stripped_mlr_dsl_expression);
