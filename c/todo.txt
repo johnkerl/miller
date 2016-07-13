@@ -21,6 +21,8 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! lemon boundary issue:
+  ! try out 2nd toy grammar
+  ! try memset on semicolon grammar (locate the diff)
   - debug:
     > doesn't happen with clang -fsanitize=address
     > doesn't happen with gcc -g
@@ -28,9 +30,10 @@ TOP OF LIST:
     > DSLCCOPT DSLCCDEBUG CCOPT CCDEBUG make -e
   - bisect on #rules
   - asan (any 2nd opinion from valgrind)
-  - https://github.com/martinmroz/lemon
-  - how to do ifdef in .y file?
-  k put #ifdef in .y file
+  - lemon refactor
+  - how to do #define in .y file?
+  - retrieve and locally store the lemon manual
+  k put %ifdef in .y file
   k NDEBUG
   k hook in ParseTrace from cliopt
 

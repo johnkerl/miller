@@ -55,6 +55,31 @@ mlr_dsl_lexer.c mlr_dsl_lexer.h: mlr_dsl_lexer.l ../containers/mlr_dsl_ast.h
 	flex --prefix=mlr_dsl_lexer_ --outfile=mlr_dsl_lexer.c --header-file=mlr_dsl_lexer.h mlr_dsl_lexer.l
 
 # ----------------------------------------------------------------
+ex1: ex1_wrapper.c ex1_wrapper.h ex1_parse.h ex1_lexer.o ex1_parse.o ../lib/mlrutil.c ../lib/mlrutil.h ../lib/mlr_globals.c ../lib/mlr_globals.h ./ex_ast.h \
+../lib/mlrutil.c ../containers/sllv.c ./ex_ast.h ./ex_ast.c
+	$(DSLCC) -Wall $(DSLCFLAGS) -std=gnu99 ex1_wrapper.c ex1_lexer.o ex1_parse.o ../lib/mlrutil.c ../lib/mlr_globals.c ../containers/sllv.c ./ex_ast.c -o ex1
+
+ex1_parse.o: ex1_parse.c ex1_parse.h
+	$(DSLCC) $(DSLCFLAGS) -c -std=gnu99 ex1_parse.c
+ex1_parse.c ex1_parse.h: ex1_parse.y lemon ./ex_ast.h ../containers/sllv.h
+	./lemon ex1_parse.y
+	mv ex1_parse.c ex1_parse.c.tmp
+	sed \
+			-e 's/ParseTrace/ex1_ParseTrace/g' \
+			-e 's/ParseTokenName/ex1_ParseTokenName/g' \
+			-e 's/lemon_parser_alloc/ex1_lemon_parser_alloc/g' \
+			-e 's/lemon_parser_free/ex1_lemon_parser_free/g' \
+			-e 's/lemon_parser_parse_token/ex1_lemon_parser_parse_token/g' \
+			-e 's/yy_destructor/ex1_yy_destructor/g' \
+		ex1_parse.c.tmp > ex1_parse.c
+	rm -f ex1_parse.c.tmp
+
+ex1_lexer.o: ex1_lexer.c ex1_lexer.h ex1_parse.h
+	$(DSLCC) $(DSLCFLAGS) -c -std=gnu99 ex1_lexer.c
+ex1_lexer.c ex1_lexer.h: ex1_lexer.l ./ex_ast.h
+	flex --prefix=ex1_lexer_ --outfile=ex1_lexer.c --header-file=ex1_lexer.h ex1_lexer.l
+
+# ----------------------------------------------------------------
 lemon: lemon.c lempar.c
 	$(DSLCC) -o lemon lemon.c
 
@@ -63,6 +88,8 @@ clean:
 	rm -f *.o
 	rm -f mlr_dsl_parse.c mlr_dsl_parse.h mlr_dsl_parse.out
 	rm -f mlr_dsl_lexer.c mlr_dsl_lexer.h
+	rm -f ex1_parse.c ex1_parse.h ex1_parse.out
+	rm -f ex1_lexer.c ex1_lexer.h
 	rm -f lemon
 
 .always:
