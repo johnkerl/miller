@@ -455,8 +455,11 @@ static void yy_reduce(
 	// xxx
 	//printf("PRE MEMSET\n");
 	//memset(&yygotominor, 0, sizeof(yygotominor));
+	//printf("yygotominor tokentype %p pnode %p yy %d\n", yygotominor.yy0, yygotominor.yy21, yygotominor.yy27);
 	//printf("POST MEMSET\n");
+	//yyStackEntry *yymsp = NULL;            /* The top of the parser's stack */
 	yyStackEntry *yymsp;            /* The top of the parser's stack */
+	//int yysize = -999;                     /* Amount to pop the stack */
 	int yysize;                     /* Amount to pop the stack */
 	// xxx remove x all
 	//printf("-- %s %d\n", __FILE__, __LINE__);

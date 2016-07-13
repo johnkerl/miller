@@ -100,7 +100,11 @@ int main(int argc, char** argv) {
 	}
 
 	ex_ast_t* past = ex1_parse(argv[argi], trace_parse);
-	ex_ast_print(past);
+	if (past == NULL) {
+		printf("syntax error\n");
+	} else {
+		ex_ast_print(past);
+	}
 
 	return 0;
 }

@@ -103,7 +103,7 @@ md_statement_list(A) ::= md_statement_not_braced_end(B) MD_TOKEN_SEMICOLON md_st
 	}
 }
 
-md_statement_list(A) ::= md_statement_braced_end(B) md_statement_list(C). {
+md_statement_list(A) ::= md_statement_braced_end(B) MD_SEMICOLON md_statement_list(C). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
 		A = C;
 	} else {
