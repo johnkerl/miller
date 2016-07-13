@@ -90,6 +90,7 @@ clean:
 	rm -f mlr_dsl_lexer.c mlr_dsl_lexer.h
 	rm -f ex1_parse.c ex1_parse.h ex1_parse.out
 	rm -f ex1_lexer.c ex1_lexer.h
+	rm -f ex1
 	rm -f lemon
 
 .always:
