@@ -10,19 +10,12 @@
 #include <unistd.h>
 
 #include "lemon_dims.h"
-//#include "lemon_assert.h"
-//#include "lemon_error.h"
-//#include "lemon_memory.h"
-//#include "lemon_msort.h"
 #include "lemon_option.h"
 #include "lemon_structs.h"
-//#include "lemon_action.h"
 #include "lemon_string.h"
 #include "lemon_set.h"
 #include "lemon_report.h"
 #include "lemon_symbol.h"
-//#include "lemon_plink.h"
-//#include "lemon_config_list.h"
 #include "lemon_state_table.h"
 #include "lemon_fsm.h"
 #include "lemon_parse.h"
@@ -183,6 +176,6 @@ int main(int argc, char **argv) {
 	// JRK 2016-05-23
 	// According to the manual, these conflicts are resolved by taking the first match.
 	// This is OK for my purposes.
-	exit(lem.errorcnt);
-	return (lem.errorcnt + lem.nconflict);
+	//return (lem.errorcnt + lem.nconflict);
+	return (lem.errorcnt);
 }

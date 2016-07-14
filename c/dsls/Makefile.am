@@ -2,7 +2,7 @@ AM_CPPFLAGS=	-I${srcdir}
 AM_CFLAGS=	-std=gnu99
 
 noinst_PROGRAMS=	lemon
-			lemon_action.c \
+lemon_SOURCES=		lemon_action.c \
 			lemon_action.h \
 			lemon_assert.c \
 			lemon_assert.h \
