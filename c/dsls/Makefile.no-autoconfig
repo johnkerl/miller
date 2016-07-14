@@ -105,7 +105,7 @@ ex2_lexer.c ex2_lexer.h: ex2_lexer.l ./ex_ast.h
 	flex --prefix=ex2_lexer_ --outfile=ex2_lexer.c --header-file=ex2_lexer.h ex2_lexer.l
 
 # ----------------------------------------------------------------
-lemon: lemon.c \
+lemon: \
   lemon_assert.h \
   lemon_assert.c \
   lemon_error.h \
@@ -133,9 +133,15 @@ lemon: lemon.c \
   lemon_plink.c \
   lemon_parse.h \
   lemon_parse.c \
+  lemon_fsm.h \
+  lemon_fsm.c \
   lemon_report.h \
-  lemon_report.c
-	$(DSLCC) -o lemon lemon.c lemon_assert.c lemon_error.c lemon_string.c lemon_msort.c lemon_set.c lemon_memory.c lemon_option.c lemon_action.c lemon_symbol.c lemon_config_list.c lemon_state_table.c lemon_plink.c lemon_parse.c lemon_report.c
+  lemon_report.c \
+  lemon_main.c
+	$(DSLCC) -o lemon lemon_assert.c lemon_error.c lemon_string.c \
+		lemon_msort.c lemon_set.c lemon_memory.c lemon_option.c lemon_action.c \
+		lemon_symbol.c lemon_config_list.c lemon_state_table.c lemon_plink.c \
+		lemon_parse.c lemon_fsm.c lemon_report.c lemon_main.c \
 
 # ----------------------------------------------------------------
 clean:
