@@ -7,6 +7,7 @@ lemon_SOURCES=		lemon.c \
 			lemon_action.h \
 			lemon_assert.c \
 			lemon_assert.h \
+			lemon_dims.c \
 			lemon_error.c \
 			lemon_error.h \
 			lemon_memory.c \
@@ -15,9 +16,9 @@ lemon_SOURCES=		lemon.c \
 			lemon_option.h \
 			lemon_report.c \
 			lemon_report.h \
-			lemon_structs.h
 			lemon_string.c \
 			lemon_string.h \
+			lemon_structs.h \
 			lemon_symbol.c \
 			lemon_symbol.h
 
