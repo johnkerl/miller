@@ -95,8 +95,7 @@ static char *merge(
 **   The "next" pointers for elements in list are changed.
 */
 #define LISTSIZE 30
-char *msort(char *list, char **next, int (*cmp)())
-{
+char *msort(char *list, char **next, int (*cmp)()) {
 	unsigned long offset;
 	char *ep;
 	char *set[LISTSIZE];

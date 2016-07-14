@@ -1,6 +1,8 @@
 ================================================================
 BUGFIXES
 
+! sec2gmt("NULL") -> leave as is
+
 ! mlr filter '$a == ""' vs. mlr filter 'isempty($a)'
 
 * vgrun mlr put -v '$x = 1 || 2 || 3' /dev/null
@@ -10,6 +12,9 @@ BUGFIXES
 
 ================================================================
 TOP OF LIST:
+
+! ubuntu 16.04 LTS link:
+  http://installion.co.uk/ubuntu/xenial/universe/m/miller/install/index.html
 
 ! rh/fedora/centos
 

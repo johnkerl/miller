@@ -5,7 +5,7 @@
 
 struct symbol *Symbol_new(char *x);
 void Symbol_init();
-int Symbol_insert(struct symbol *data, char *key);
+int  Symbol_insert(struct symbol *data, char *key);
 struct symbol *Symbol_find(char *key);
 struct symbol *Symbol_Nth(int n);
 int Symbol_count();

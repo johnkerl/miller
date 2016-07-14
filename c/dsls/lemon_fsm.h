@@ -4,11 +4,11 @@
 #include "lemon_structs.h"
 
 // xxx protoize
-void FindRulePrecedences();
-void FindFirstSets();
-void FindStates();
-void FindLinks();
-void FindFollowSets();
-void FindActions();
+void FindRulePrecedences(struct lemon*);
+void FindFirstSets(struct lemon*);
+void FindStates(struct lemon*);
+void FindLinks(struct lemon*);
+void FindFollowSets(struct lemon*);
+void FindActions(struct lemon*);
 
 #endif // LEMON_FSM_H
