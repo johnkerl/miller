@@ -10,12 +10,10 @@ static FILE *errstream;
 
 #define ISOPT(X) ((X)[0]=='-'||(X)[0]=='+'||strchr((X),'=')!=0)
 
-/*
-** Print the command line with a carrot pointing to the k-th character
-** of the n-th field.
-*/
-static void errline(int n, int k, FILE *err)
-{
+// ----------------------------------------------------------------
+// Print the command line with a caret pointing to the k-th character
+// of the nth field.
+static void errline(int n, int k, FILE *err) {
 	int spcnt, i;
 	spcnt = 0;
 	if (argv[0])  fprintf(err,"%s",argv[0]);
@@ -33,12 +31,10 @@ static void errline(int n, int k, FILE *err)
 	}
 }
 
-/*
-** Return the index of the N-th non-switch argument.  Return -1
-** if N is out of range.
-*/
-static int argindex(int n)
-{
+// ----------------------------------------------------------------
+// Return the index of the N-th non-switch argument.  Return -1
+// if N is out of range.
+static int argindex(int n) {
 	int i;
 	int dashdash = 0;
 	if (argv!=0 && *argv!=0) {
@@ -55,11 +51,9 @@ static int argindex(int n)
 
 static char emsg[] = "Command line syntax error: ";
 
-/*
-** Process a flag command line argument.
-*/
-static int handleflags(int i, FILE *err)
-{
+// ----------------------------------------------------------------
+// Process a flag command-line argument.
+static int handleflags(int i, FILE *err) {
 	int v;
 	int errcnt = 0;
 	int j;
@@ -89,11 +83,9 @@ static int handleflags(int i, FILE *err)
 	return errcnt;
 }
 
-/*
-** Process a command line switch which has an argument.
-*/
-static int handleswitch(int i, FILE *err)
-{
+// ----------------------------------------------------------------
+// Process a command-line switch which has an argument.
+static int handleswitch(int i, FILE *err) {
 	int lv = 0;
 	double dv = 0.0;
 	char *sv = 0, *end;
@@ -177,8 +169,8 @@ static int handleswitch(int i, FILE *err)
 	return errcnt;
 }
 
-int OptInit(char **a, struct s_options *o, FILE *err)
-{
+// ----------------------------------------------------------------
+int OptInit(char **a, struct s_options *o, FILE *err) {
 	int errcnt = 0;
 	argv = a;
 	op = o;
@@ -201,6 +193,7 @@ int OptInit(char **a, struct s_options *o, FILE *err)
 	return 0;
 }
 
+// ----------------------------------------------------------------
 int OptNArgs() {
 	int cnt = 0;
 	int dashdash = 0;
@@ -214,21 +207,22 @@ int OptNArgs() {
 	return cnt;
 }
 
-char *OptArg(int n)
-{
+// ----------------------------------------------------------------
+char *OptArg(int n) {
 	int i;
 	i = argindex(n);
 	return i>=0 ? argv[i] : 0;
 }
 
-void OptErr(int n)
-{
+// ----------------------------------------------------------------
+void OptErr(int n) {
 	int i;
 	i = argindex(n);
 	if (i>=0)  errline(i,0,errstream);
 }
 
-void OptPrint(){
+// ----------------------------------------------------------------
+void OptPrint() {
 	int i;
 	int max, len;
 	max = 0;
@@ -277,4 +271,3 @@ void OptPrint(){
 		}
 	}
 }
-

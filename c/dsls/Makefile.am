@@ -3,6 +3,10 @@ AM_CFLAGS=	-std=gnu99
 
 noinst_PROGRAMS=	lemon
 lemon_SOURCES=		lemon.c \
+			lemon_assert.c \
+			lemon_assert.h \
+			lemon_error.c \
+			lemon_error.h \
 			lemon_option.c \
 			lemon_option.h 
 
