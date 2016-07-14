@@ -7,11 +7,15 @@ lemon_SOURCES=		lemon.c \
 			lemon_action.h \
 			lemon_assert.c \
 			lemon_assert.h \
+			lemon_config_list.c \
+			lemon_config_list.h \
 			lemon_dims.h \
 			lemon_error.c \
 			lemon_error.h \
 			lemon_memory.c \
 			lemon_memory.h \
+			lemon_msort.c \
+			lemon_msort.h \
 			lemon_option.c \
 			lemon_option.h \
 			lemon_parse.c \
