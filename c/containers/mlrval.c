@@ -1981,69 +1981,69 @@ static mv_t le_b_ss(mv_t*pa, mv_t*pb) {
 }
 
 static mv_binary_func_t* eq_dispositions[MT_DIM][MT_DIM] = {
-	//         ERROR  ABSENT EMPTY STRING   INT      FLOAT    BOOL
-	/*ERROR*/  {_err, _err,  _err, _err,    _err,    _err,    _err},
-	/*ABSENT*/ {_err, _a,    _a,   _a,      _a,      _a,      _err},
-	/*EMPTY*/  {_err, _a,    _emt, _emt,    _emt,    _emt,    _err},
-	/*STRING*/ {_err, _a,    _emt, eq_b_ss, eq_b_sx, eq_b_sx, _err},
-	/*INT*/    {_err, _a,    _emt, eq_b_xs, eq_b_ii, eq_b_if, _err},
-	/*FLOAT*/  {_err, _a,    _emt, eq_b_xs, eq_b_fi, eq_b_ff, _err},
-	/*BOOL*/   {_err, _err,  _err, _err,    _err,    _err,    _err},
-	};
+	//         ERROR  ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+	/*ERROR*/  {_err, _err,  _err,    _err,    _err,    _err,    _err},
+	/*ABSENT*/ {_err, _a,    _a,      _a,      _a,      _a,      _err},
+	/*EMPTY*/  {_err, _a,    eq_b_ss, eq_b_ss, eq_b_sx, eq_b_sx, _err},
+	/*STRING*/ {_err, _a,    eq_b_ss, eq_b_ss, eq_b_sx, eq_b_sx, _err},
+	/*INT*/    {_err, _a,    eq_b_xs, eq_b_xs, eq_b_ii, eq_b_if, _err},
+	/*FLOAT*/  {_err, _a,    eq_b_xs, eq_b_xs, eq_b_fi, eq_b_ff, _err},
+	/*BOOL*/   {_err, _err,  _err,    _err,    _err,    _err,    _err},
+};
 
 static mv_binary_func_t* ne_dispositions[MT_DIM][MT_DIM] = {
-	//         ERROR  ABSENT EMPTY STRING   INT      FLOAT    BOOL
-	/*ERROR*/  {_err, _err,  _err, _err,    _err,    _err,    _err},
-	/*ABSENT*/ {_err, _a,    _a,   _a,      _a,      _a,      _err},
-	/*EMPTY*/  {_err, _a,    _emt, _emt,    _emt,    _emt,    _err},
-	/*STRING*/ {_err, _a,    _emt, ne_b_ss, ne_b_sx, ne_b_sx, _err},
-	/*INT*/    {_err, _a,    _emt, ne_b_xs, ne_b_ii, ne_b_if, _err},
-	/*FLOAT*/  {_err, _a,    _emt, ne_b_xs, ne_b_fi, ne_b_ff, _err},
-	/*BOOL*/   {_err, _err,  _err, _err,    _err,    _err,    _err},
+	//         ERROR  ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+	/*ERROR*/  {_err, _err,  _err,    _err,    _err,    _err,    _err},
+	/*ABSENT*/ {_err, _a,    _a,      _a,      _a,      _a,      _err},
+	/*EMPTY*/  {_err, _a,    ne_b_ss, ne_b_ss, ne_b_sx, ne_b_sx, _err},
+	/*STRING*/ {_err, _a,    ne_b_ss, ne_b_ss, ne_b_sx, ne_b_sx, _err},
+	/*INT*/    {_err, _a,    ne_b_xs, ne_b_xs, ne_b_ii, ne_b_if, _err},
+	/*FLOAT*/  {_err, _a,    ne_b_xs, ne_b_xs, ne_b_fi, ne_b_ff, _err},
+	/*BOOL*/   {_err, _err,  _err,    _err,    _err,    _err,    _err},
 };
 
 static mv_binary_func_t* gt_dispositions[MT_DIM][MT_DIM] = {
-	//         ERROR  ABSENT EMPTY STRING   INT      FLOAT    BOOL
-	/*ERROR*/  {_err, _err,  _err, _err,    _err,    _err,    _err},
-	/*ABSENT*/ {_err, _a,    _a,   _a,      _a,      _a,      _err},
-	/*EMPTY*/  {_err, _a,    _emt, _emt,    _emt,    _emt,    _err},
-	/*STRING*/ {_err, _a,    _err, gt_b_ss, gt_b_sx, gt_b_sx, _err},
-	/*INT*/    {_err, _a,    _err, gt_b_xs, gt_b_ii, gt_b_if, _err},
-	/*FLOAT*/  {_err, _a,    _err, gt_b_xs, gt_b_fi, gt_b_ff, _err},
-	/*BOOL*/   {_err, _err,  _err, _err,    _err,    _err,    _err},
+	//         ERROR  ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+	/*ERROR*/  {_err, _err,  _err,    _err,    _err,    _err,    _err},
+	/*ABSENT*/ {_err, _a,    _a,      _a,      _a,      _a,      _err},
+	/*EMPTY*/  {_err, _a,    gt_b_ss, gt_b_ss, gt_b_sx, gt_b_sx, _err},
+	/*STRING*/ {_err, _a,    gt_b_ss, gt_b_ss, gt_b_sx, gt_b_sx, _err},
+	/*INT*/    {_err, _a,    gt_b_xs, gt_b_xs, gt_b_ii, gt_b_if, _err},
+	/*FLOAT*/  {_err, _a,    gt_b_xs, gt_b_xs, gt_b_fi, gt_b_ff, _err},
+	/*BOOL*/   {_err, _err,  _err,    _err,    _err,    _err,    _err},
 };
 
 static mv_binary_func_t* ge_dispositions[MT_DIM][MT_DIM] = {
-	//         ERROR  ABSENT EMPTY STRING   INT      FLOAT    BOOL
-	/*ERROR*/  {_err, _err,  _err, _err,    _err,    _err,    _err},
-	/*ABSENT*/ {_err, _a,    _a,   _a,      _a,      _a,      _err},
-	/*EMPTY*/  {_err, _a,    _emt, _emt,    _emt,    _emt,    _err},
-	/*STRING*/ {_err, _a,    _emt, ge_b_ss, ge_b_sx, ge_b_sx, _err},
-	/*INT*/    {_err, _a,    _emt, ge_b_xs, ge_b_ii, ge_b_if, _err},
-	/*FLOAT*/  {_err, _a,    _emt, ge_b_xs, ge_b_fi, ge_b_ff, _err},
-	/*BOOL*/   {_err, _err,  _err, _err,    _err,    _err,    _err},
+	//         ERROR  ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+	/*ERROR*/  {_err, _err,  _err,    _err,    _err,    _err,    _err},
+	/*ABSENT*/ {_err, _a,    _a,      _a,      _a,      _a,      _err},
+	/*EMPTY*/  {_err, _a,    ge_b_ss, ge_b_ss, ge_b_sx, ge_b_sx, _err},
+	/*STRING*/ {_err, _a,    ge_b_ss, ge_b_ss, ge_b_sx, ge_b_sx, _err},
+	/*INT*/    {_err, _a,    ge_b_xs, ge_b_xs, ge_b_ii, ge_b_if, _err},
+	/*FLOAT*/  {_err, _a,    ge_b_xs, ge_b_xs, ge_b_fi, ge_b_ff, _err},
+	/*BOOL*/   {_err, _err,  _err,    _err,    _err,    _err,    _err},
 };
 
 static mv_binary_func_t* lt_dispositions[MT_DIM][MT_DIM] = {
-	//         ERROR  ABSENT EMPTY STRING   INT      FLOAT    BOOL
-	/*ERROR*/  {_err, _err,  _err, _err,    _err,    _err,    _err},
-	/*ABSENT*/ {_err, _a,    _a,   _a,      _a,      _a,      _err},
-	/*EMPTY*/  {_err, _a,    _emt, _emt,    _emt,    _emt,    _err},
-	/*STRING*/ {_err, _a,    _emt, lt_b_ss, lt_b_sx, lt_b_sx, _err},
-	/*INT*/    {_err, _a,    _emt, lt_b_xs, lt_b_ii, lt_b_if, _err},
-	/*FLOAT*/  {_err, _a,    _emt, lt_b_xs, lt_b_fi, lt_b_ff, _err},
-	/*BOOL*/   {_err, _err,  _err, _err,    _err,    _err,    _err},
+	//         ERROR  ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+	/*ERROR*/  {_err, _err,  _err,    _err,    _err,    _err,    _err},
+	/*ABSENT*/ {_err, _a,    _a,      _a,      _a,      _a,      _err},
+	/*EMPTY*/  {_err, _a,    lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _err},
+	/*STRING*/ {_err, _a,    lt_b_ss, lt_b_ss, lt_b_sx, lt_b_sx, _err},
+	/*INT*/    {_err, _a,    lt_b_xs, lt_b_xs, lt_b_ii, lt_b_if, _err},
+	/*FLOAT*/  {_err, _a,    lt_b_xs, lt_b_xs, lt_b_fi, lt_b_ff, _err},
+	/*BOOL*/   {_err, _err,  _err,    _err,    _err,    _err,    _err},
 };
 
 static mv_binary_func_t* le_dispositions[MT_DIM][MT_DIM] = {
-	//         ERROR  ABSENT EMPTY STRING   INT      FLOAT    BOOL
-	/*ERROR*/  {_err, _err,  _err, _err,    _err,    _err,    _err},
-	/*ABSENT*/ {_err, _a,    _a,   _a,      _a,      _a,      _err},
-	/*EMPTY*/  {_err, _a,    _emt, _emt,    _emt,    _emt,    _err},
-	/*STRING*/ {_err, _a,    _emt, le_b_ss, le_b_sx, le_b_sx, _err},
-	/*INT*/    {_err, _a,    _emt, le_b_xs, le_b_ii, le_b_if, _err},
-	/*FLOAT*/  {_err, _a,    _emt, le_b_xs, le_b_fi, le_b_ff, _err},
-	/*BOOL*/   {_err, _err,  _err, _err,    _err,    _err,    _err},
+	//         ERROR  ABSENT EMPTY    STRING   INT      FLOAT    BOOL
+	/*ERROR*/  {_err, _err,  _err,    _err,    _err,    _err,    _err},
+	/*ABSENT*/ {_err, _a,    _a,      _a,      _a,      _a,      _err},
+	/*EMPTY*/  {_err, _a,    le_b_ss, le_b_ss, le_b_sx, le_b_sx, _err},
+	/*STRING*/ {_err, _a,    le_b_ss, le_b_ss, le_b_sx, le_b_sx, _err},
+	/*INT*/    {_err, _a,    le_b_xs, le_b_xs, le_b_ii, le_b_if, _err},
+	/*FLOAT*/  {_err, _a,    le_b_xs, le_b_xs, le_b_fi, le_b_ff, _err},
+	/*BOOL*/   {_err, _err,  _err,    _err,    _err,    _err,    _err},
 };
 
 mv_t eq_op_func(mv_t* pval1, mv_t* pval2) { return (eq_dispositions[pval1->type][pval2->type])(pval1, pval2); }

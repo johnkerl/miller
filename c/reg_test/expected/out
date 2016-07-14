@@ -12879,6 +12879,26 @@ x=,y=6
 ================================================================
 DSL NULL/EMPTY HANDLING
 
+mlr put $z = $s . $s ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,z=hellohello
+x=1,y=,s=,z=
+x=,y=,s=hurrah,z=hurrahhurrah
+
+mlr put $z = $s == "" ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,z=false
+x=1,y=,s=,z=true
+x=,y=,s=hurrah,z=false
+
+mlr put $z = $s == $s ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,z=true
+x=1,y=,s=,z=true
+x=,y=,s=hurrah,z=true
+
+mlr put $z = isempty($s) ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,z=false
+x=1,y=,s=,z=true
+x=,y=,s=hurrah,z=false
+
 mlr put $z = $x + $y ./reg_test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,z=3
 x=1,y=,s=,z=

@@ -1006,6 +1006,11 @@ run_mlr put '$x = ENV["X"]; $y = ENV[$name]' $indir/env-var.dkvp
 # ----------------------------------------------------------------
 announce DSL NULL/EMPTY HANDLING
 
+run_mlr put '$z = $s . $s'     $indir/null-vs-empty.dkvp
+run_mlr put '$z = $s == ""'    $indir/null-vs-empty.dkvp
+run_mlr put '$z = $s == $s'    $indir/null-vs-empty.dkvp
+run_mlr put '$z = isempty($s)' $indir/null-vs-empty.dkvp
+
 run_mlr put '$z = $x + $y'      $indir/null-vs-empty.dkvp
 run_mlr put '$z = $y + $y'      $indir/null-vs-empty.dkvp
 run_mlr put '$z = $x + $nosuch' $indir/null-vs-empty.dkvp
