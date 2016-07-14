@@ -14,6 +14,8 @@ lemon_SOURCES=		lemon.c \
 			lemon_memory.h \
 			lemon_option.c \
 			lemon_option.h \
+			lemon_parse.c \
+			lemon_parse.h \
 			lemon_plink.c \
 			lemon_plink.h \
 			lemon_report.c \
