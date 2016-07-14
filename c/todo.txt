@@ -112,6 +112,7 @@ SYNTAXES:
     - particular verb; needs -a; some eval expression for filenames; maybe better off as put keyword. what abt emit?
     - inside put, like awk's print > $1.txt: print,printn,dump.
 
+  k $x=="" vs isempty($x) nonsense
   k sec2gmtdate
   k mapper nothing to mld
 
