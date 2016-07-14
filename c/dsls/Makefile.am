@@ -20,6 +20,8 @@ lemon_SOURCES=		lemon.c \
 			lemon_plink.h \
 			lemon_report.c \
 			lemon_report.h \
+			lemon_set.c \
+			lemon_set.h \
 			lemon_string.c \
 			lemon_string.h \
 			lemon_structs.h \

@@ -21,6 +21,7 @@
 #include "lemon_structs.h"
 #include "lemon_action.h"
 #include "lemon_string.h"
+#include "lemon_set.h"
 #include "lemon_report.h"
 #include "lemon_symbol.h"
 #include "lemon_plink.h"
@@ -47,21 +48,6 @@ struct config *Configlist_return(/* void */);
 struct config *Configlist_basis(/* void */);
 void Configlist_eat(/* struct config * */);
 void Configlist_reset(/* void */);
-
-/********** From the file "set.h" ****************************************/
-void  SetSize(/* int N */);             /* All sets will be of size N */
-char *SetNew(/* void */);               /* A new set for element 0..N */
-void  SetFree(/* char* */);             /* Deallocate a set */
-
-int SetAdd(/* char*,int */);            /* Add element to a set */
-int SetUnion(/* char *A,char *B */);    /* A <- A U B, thru element N */
-
-#define SetFind(X,Y) (X[Y])       /* True if Y is in set X */
-
-/********** From the file "struct.h" *************************************/
-/*
-** Principal data structures for the LEMON parser generator.
-*/
 
 /**************** From the file "table.h" *********************************/
 /*
@@ -1039,66 +1025,6 @@ char *msort(char *list, char **next, int (*cmp)())
 	ep = 0;
 	for(i=0; i<LISTSIZE; i++) if (set[i])  ep = merge(ep,set[i],cmp,offset);
 	return ep;
-}
-
-/***************** From the file "set.c" ************************************/
-
-/*
-** Set manipulation routines for the LEMON parser generator.
-*/
-
-static int size = 0;
-
-/* Set the set size */
-void SetSize(n)
-int n;
-{
-	size = n+1;
-}
-
-/* Allocate a new set */
-char *SetNew(){
-	char *s;
-	int i;
-	s = (char*)malloc (size) ;
-	if (s==0) {
-		extern void memory_error();
-		memory_error();
-	}
-	for(i=0; i<size; i++) s[i] = 0;
-	return s;
-}
-
-/* Deallocate a set */
-void SetFree(s)
-char *s;
-{
-	free(s);
-}
-
-/* Add a new element to the set.  Return TRUE if the element was added
-** and FALSE if it was already there. */
-int SetAdd(char *s, int e)
-{
-	int rv;
-	rv = s[e];
-	s[e] = 1;
-	return !rv;
-}
-
-/* Add every element of s2 to s1.  Return TRUE if s1 changes. */
-int SetUnion(char *s1, char *s2)
-{
-	int i, progress;
-	progress = 0;
-	for(i=0; i<size; i++){
-		if (s2[i]==0)  continue;
-		if (s1[i]==0) {
-			progress = 1;
-			s1[i] = 1;
-		}
-	}
-	return progress;
 }
 
 /********************** From the file "table.c" ****************************/
