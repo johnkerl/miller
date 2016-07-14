@@ -13,7 +13,13 @@ lemon_SOURCES=		lemon.c \
 			lemon_memory.h \
 			lemon_option.c \
 			lemon_option.h \
-			lemon_structs.h 
+			lemon_report.c \
+			lemon_report.h \
+			lemon_structs.h
+			lemon_string.c \
+			lemon_string.h \
+			lemon_symbol.c \
+			lemon_symbol.h
 
 noinst_LTLIBRARIES=	libdsl.la
 # if we don't want to distribute the generated sources, move them to a nodist_libfoo_la_SOURCES variable
