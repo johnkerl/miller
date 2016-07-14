@@ -2,7 +2,9 @@ AM_CPPFLAGS=	-I${srcdir}
 AM_CFLAGS=	-std=gnu99
 
 noinst_PROGRAMS=	lemon
-lemon_SOURCES=		lemon.c
+lemon_SOURCES=		lemon.c \
+			lemon_option.c \
+			lemon_option.h 
 
 noinst_LTLIBRARIES=	libdsl.la
 # if we don't want to distribute the generated sources, move them to a nodist_libfoo_la_SOURCES variable

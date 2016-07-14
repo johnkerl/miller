@@ -105,8 +105,8 @@ ex2_lexer.c ex2_lexer.h: ex2_lexer.l ./ex_ast.h
 	flex --prefix=ex2_lexer_ --outfile=ex2_lexer.c --header-file=ex2_lexer.h ex2_lexer.l
 
 # ----------------------------------------------------------------
-lemon: lemon.c lempar.c
-	$(DSLCC) -o lemon lemon.c
+lemon: lemon.c lemon_option.c
+	$(DSLCC) -o lemon lemon.c lemon_option.c
 
 # ----------------------------------------------------------------
 clean:
