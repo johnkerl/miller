@@ -121,9 +121,11 @@ lemon: lemon.c \
   lemon_action.c \
   lemon_symbol.h \
   lemon_symbol.c \
+  lemon_plink.h \
+  lemon_plink.c \
   lemon_report.h \
   lemon_report.c
-	$(DSLCC) -o lemon lemon.c lemon_assert.c lemon_error.c lemon_string.c lemon_memory.c lemon_option.c lemon_action.c lemon_symbol.c lemon_report.c
+	$(DSLCC) -o lemon lemon.c lemon_assert.c lemon_error.c lemon_string.c lemon_memory.c lemon_option.c lemon_action.c lemon_symbol.c lemon_plink.c lemon_report.c
 
 # ----------------------------------------------------------------
 clean:
