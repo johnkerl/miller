@@ -15,13 +15,8 @@
 
 #include "lemon_assert.h"
 #include "lemon_error.h"
+#include "lemon_memory.h"
 #include "lemon_option.h"
-
-#ifndef __WIN32__
-#   if defined(_WIN32) || defined(WIN32)
-#	define __WIN32__
-#   endif
-#endif
 
 /* #define PRIVATE static */
 #define PRIVATE
@@ -247,11 +242,6 @@ struct lemon {
 	int   has_fallback;      /* True if any %fallback is seen in the grammer */
 	char *argv0;             /* Name of the program */
 };
-
-#define MemoryCheck(X) if((X)==0){ \
-	extern void memory_error(); \
-	memory_error(); \
-}
 
 /**************** From the file "table.h" *********************************/
 /*
@@ -1188,14 +1178,6 @@ void Configlist_eat(struct config *cfp)
 /*
 ** Main program file for the LEMON parser generator.
 */
-
-/* Report an out-of-memory condition and abort.  This function
-** is used mostly by the "MemoryCheck" macro in struct.h
-*/
-void memory_error(){
-	fprintf(stderr, "Out of memory.  Aborting...\n");
-	exit(1);
-}
 
 static int nDefine = 0;      /* Number of -D options on the command line */
 static char **azDefine = 0;  /* Name of the -D macros */
