@@ -28,6 +28,8 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 ! lemon refactor
+  - ex1/2/etc -> better names. SVNE grammar. numexpreval grammar. mlr w&w/o write/append; mlr w&w/o bracing conflict.
+  - clopt for no #line directives
   - compile w/ as pedantic as possible but not for flex (unused input/yyunput)
   - proto all
   - objify all

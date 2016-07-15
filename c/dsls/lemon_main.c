@@ -56,6 +56,7 @@ int main(int argc, char **argv) {
 	static int quiet      = 0;
 	static int statistics = 0;
 	static int mhflag     = 0;
+	static int suppress_line_directives = 0;
 
 	static struct s_options options[] = {
 		{OPT_FLAG, "b", (char*)&basisflag,      "Print only the basis in report."},
@@ -65,6 +66,7 @@ int main(int argc, char **argv) {
 		{OPT_FLAG, "m", (char*)&mhflag,         "Output a makeheaders compatible file"},
 		{OPT_FLAG, "q", (char*)&quiet,          "(Quiet) Don't print the report file."},
 		{OPT_FLAG, "s", (char*)&statistics,     "Print parser stats to standard output."},
+		{OPT_FLAG, "l", (char*)&suppress_line_directives,     "Don't put #line directives in autogenned code."},
 		{OPT_FLAG, "x", (char*)&version,        "Print the version number."},
 		{OPT_FLAG,0,0,0}
 	};
@@ -161,7 +163,7 @@ int main(int argc, char **argv) {
 			ReportOutput(&lem);
 
 		/* Generate the source code for the parser */
-		ReportTable(&lem, mhflag);
+		ReportTable(&lem, mhflag, suppress_line_directives);
 
 		/* Produce a header file for use by the scanner.  (This step is
 		** omitted if the "-m" option is used because makeheaders will

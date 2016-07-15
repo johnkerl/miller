@@ -6,14 +6,14 @@
 # ================================================================
 
 DSLCC=gcc
-DSLCFLAGS=-I.. -O3
+#DSLCFLAGS=-I.. -O3
 #DSLCFLAGS=-I.. -O3 -Wextra -Wpedantic
 #DSLCFLAGS=-I.. -O3 -g
 #DSLCFLAGS=-I.. -O2
 #DSLCFLAGS=-I.. -O1 -g
 #DSLCFLAGS=-I.. -O1
 #DSLCFLAGS=-I.. -O0
-#DSLCFLAGS=-I.. -g
+DSLCFLAGS=-I.. -g
 
 #DSLCC=clang
 #DSLCFLAGS=-I.. -Wall -O2 -fsanitize=address
@@ -29,7 +29,7 @@ mlr_dsl_wrapper.o: mlr_dsl_wrapper.c mlr_dsl_wrapper.h mlr_dsl_parse.h \
 mlr_dsl_parse.o: mlr_dsl_parse.c mlr_dsl_parse.h
 	$(DSLCC) $(DSLCFLAGS) -c -std=gnu99 mlr_dsl_parse.c
 mlr_dsl_parse.c mlr_dsl_parse.h: mlr_dsl_parse.y lemon ../containers/mlr_dsl_ast.h ../containers/sllv.h
-	./lemon -s mlr_dsl_parse.y
+	./lemon -l -s mlr_dsl_parse.y
 	mv mlr_dsl_parse.c mlr_dsl_parse.c.tmp
 	sed \
 			-e 's/ParseTrace/mlr_dsl_ParseTrace/g' \

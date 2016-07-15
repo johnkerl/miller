@@ -362,16 +362,22 @@ static void tplt_print(
 	struct lemon *lemp,
 	char *str,
 	int strln,
-	int *lineno)
+	int *lineno,
+	int suppress_line_directives)
 {
-	if (str==0)  return;
-	fprintf(out,"#line %d \"%s\"\n",strln,lemp->filename); (*lineno)++;
+	if (str == 0)
+		return;
+	if (!suppress_line_directives) {
+		fprintf(out,"#line %d \"%s\"\n",strln,lemp->filename); (*lineno)++;
+	}
 	while (*str) {
 		if (*str=='\n')  (*lineno)++;
 		putc(*str,out);
 		str++;
 	}
-	fprintf(out,"\n#line %d \"%s\"\n",*lineno+2,lemp->outname); (*lineno)+=2;
+	if (!suppress_line_directives) {
+		fprintf(out,"\n#line %d \"%s\"\n",*lineno+2,lemp->outname); (*lineno)+=2;
+	}
 	return;
 }
 
@@ -383,7 +389,8 @@ void emit_destructor_code(
 	FILE *out,
 	struct symbol *sp,
 	struct lemon *lemp,
-	int *lineno)
+	int *lineno,
+	int suppress_line_directives)
 {
 	char *cp = 0;
 
@@ -391,14 +398,21 @@ void emit_destructor_code(
 	if (sp->type==TERMINAL) {
 		cp = lemp->tokendest;
 		if (cp==0)  return;
-		fprintf(out,"#line %d \"%s\"\n{",lemp->tokendestln,lemp->filename);
+		if (!suppress_line_directives) {
+			fprintf(out,"#line %d \"%s\"\n{",lemp->tokendestln,lemp->filename);
+		}
 	} else if (sp->destructor) {
 		cp = sp->destructor;
-		fprintf(out,"#line %d \"%s\"\n{",sp->destructorln,lemp->filename);
+		if (!suppress_line_directives) {
+			fprintf(out,"#line %d \"%s\"\n{",sp->destructorln,lemp->filename);
+		}
 	} else if (lemp->vardest) {
 		cp = lemp->vardest;
 		if (cp==0)  return;
-		fprintf(out,"#line %d \"%s\"\n{",lemp->vardestln,lemp->filename);
+		if (!suppress_line_directives) {
+			fprintf(out,"#line %d \"%s\"\n",lemp->vardestln,lemp->filename);
+		}
+		fprintf(out, "{");
 	} else {
 		assert (0) ;  /* Cannot happen */
 	}
@@ -412,7 +426,10 @@ void emit_destructor_code(
 		fputc(*cp,out);
 	}
 	(*lineno) += 3 + linecnt;
-	fprintf(out,"}\n#line %d \"%s\"\n",*lineno,lemp->outname);
+	fprintf(out,"}\n");
+	if (!suppress_line_directives) {
+		fprintf(out,"#line %d \"%s\"\n",*lineno,lemp->outname);
+	}
 	return;
 }
 
@@ -566,20 +583,27 @@ static void emit_code(
 	FILE *out,
 	struct rule *rp,
 	struct lemon *lemp,
-	int *lineno)
+	int *lineno,
+	int suppress_line_directives)
 {
 	char *cp;
 	int linecnt = 0;
 
 	/* Generate code to do the reduce action */
 	if (rp->code) {
-		fprintf(out,"#line %d \"%s\"\n{",rp->line,lemp->filename);
+		if (!suppress_line_directives) {
+			fprintf(out,"#line %d \"%s\"\n",rp->line,lemp->filename);
+		}
+		fprintf(out,"{");
 		fprintf(out,"%s",rp->code);
 		for(cp=rp->code; *cp; cp++){
 			if (*cp=='\n')  linecnt++;
 		} /* End loop */
 		(*lineno) += 3 + linecnt;
-		fprintf(out,"}\n#line %d \"%s\"\n",*lineno,lemp->outname);
+		fprintf(out,"}\n");
+		if (!suppress_line_directives) {
+			fprintf(out,"#line %d \"%s\"\n",*lineno,lemp->outname);
+		}
 	} /* End if (rp->code)  */
 
 	return;
@@ -741,7 +765,8 @@ static int axset_compare(const void *a, const void *b){
 }
 
 /* Generate C source code for the parser */
-void ReportTable(struct lemon *lemp, int mhflag) /* Output in makeheaders format if mhflag==true */
+/* Output in makeheaders format if mhflag==true */
+void ReportTable(struct lemon *lemp, int mhflag, int suppress_line_directives)
 {
 	FILE *out, *in;
 	char line[LINESIZE];
@@ -767,7 +792,7 @@ void ReportTable(struct lemon *lemp, int mhflag) /* Output in makeheaders format
 	tplt_xfer(lemp->name,in,out,&lineno);
 
 	/* Generate the include code, if any */
-	tplt_print(out,lemp,lemp->include,lemp->includeln,&lineno);
+	tplt_print(out,lemp,lemp->include,lemp->includeln,&lineno, suppress_line_directives);
 	if (mhflag) {
 		char *name = file_makename(lemp, ".h");
 		fprintf(out,"#include \"%s\"\n", name); lineno++;
@@ -1063,7 +1088,7 @@ void ReportTable(struct lemon *lemp, int mhflag) /* Output in makeheaders format
 		}
 		for(i=0; i<lemp->nsymbol && lemp->symbols[i]->type!=TERMINAL; i++);
 		if (i<lemp->nsymbol) {
-			emit_destructor_code(out,lemp->symbols[i],lemp,&lineno);
+			emit_destructor_code(out,lemp->symbols[i],lemp,&lineno, suppress_line_directives);
 			fprintf(out,"      break;\n"); lineno++;
 		}
 	}
@@ -1083,7 +1108,7 @@ void ReportTable(struct lemon *lemp, int mhflag) /* Output in makeheaders format
 			}
 		}
 
-		emit_destructor_code(out,lemp->symbols[i],lemp,&lineno);
+		emit_destructor_code(out,lemp->symbols[i],lemp,&lineno, suppress_line_directives);
 		fprintf(out,"      break;\n"); lineno++;
 	}
 	if (lemp->vardest) {
@@ -1096,14 +1121,14 @@ void ReportTable(struct lemon *lemp, int mhflag) /* Output in makeheaders format
 			dflt_sp = sp;
 		}
 		if (dflt_sp!=0) {
-			emit_destructor_code(out,dflt_sp,lemp,&lineno);
+			emit_destructor_code(out,dflt_sp,lemp,&lineno, suppress_line_directives);
 			fprintf(out,"      break;\n"); lineno++;
 		}
 	}
 	tplt_xfer(lemp->name,in,out,&lineno);
 
 	/* Generate code which executes whenever the parser stack overflows */
-	tplt_print(out,lemp,lemp->overflow,lemp->overflowln,&lineno);
+	tplt_print(out,lemp,lemp->overflow,lemp->overflowln,&lineno, suppress_line_directives);
 	tplt_xfer(lemp->name,in,out,&lineno);
 
 	/* Generate the table of rule information
@@ -1130,25 +1155,25 @@ void ReportTable(struct lemon *lemp, int mhflag) /* Output in makeheaders format
 				rp2->code = 0;
 			}
 		}
-		emit_code(out,rp,lemp,&lineno);
+		emit_code(out,rp,lemp,&lineno, suppress_line_directives);
 		fprintf(out,"        break;\n"); lineno++;
 	}
 	tplt_xfer(lemp->name,in,out,&lineno);
 
 	/* Generate code which executes if a parse fails */
-	tplt_print(out,lemp,lemp->failure,lemp->failureln,&lineno);
+	tplt_print(out,lemp,lemp->failure,lemp->failureln,&lineno, suppress_line_directives);
 	tplt_xfer(lemp->name,in,out,&lineno);
 
 	/* Generate code which executes when a syntax error occurs */
-	tplt_print(out,lemp,lemp->error,lemp->errorln,&lineno);
+	tplt_print(out,lemp,lemp->error,lemp->errorln,&lineno, suppress_line_directives);
 	tplt_xfer(lemp->name,in,out,&lineno);
 
 	/* Generate code which executes when the parser accepts its input */
-	tplt_print(out,lemp,lemp->accept,lemp->acceptln,&lineno);
+	tplt_print(out,lemp,lemp->accept,lemp->acceptln,&lineno, suppress_line_directives);
 	tplt_xfer(lemp->name,in,out,&lineno);
 
 	/* Append any addition code the user desires */
-	tplt_print(out,lemp,lemp->extracode,lemp->extracodeln,&lineno);
+	tplt_print(out,lemp,lemp->extracode,lemp->extracodeln,&lineno, suppress_line_directives);
 
 	fclose(in);
 	fclose(out);

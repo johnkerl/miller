@@ -5,7 +5,7 @@
 
 void Reprint(struct lemon *);
 void ReportOutput(struct lemon *);
-void ReportTable(struct lemon *, int mhflag);
+void ReportTable(struct lemon *, int mhflag, int suppress_line_directives);
 void ReportHeader(struct lemon *);
 void CompressTables(struct lemon *);
 
