@@ -29,7 +29,7 @@ mlr_dsl_wrapper.o: mlr_dsl_wrapper.c mlr_dsl_wrapper.h mlr_dsl_parse.h \
 mlr_dsl_parse.o: mlr_dsl_parse.c mlr_dsl_parse.h
 	$(DSLCC) $(DSLCFLAGS) -c -std=gnu99 mlr_dsl_parse.c
 mlr_dsl_parse.c mlr_dsl_parse.h: mlr_dsl_parse.y lemon ../containers/mlr_dsl_ast.h ../containers/sllv.h
-	./lemon mlr_dsl_parse.y
+	./lemon -s mlr_dsl_parse.y
 	mv mlr_dsl_parse.c mlr_dsl_parse.c.tmp
 	sed \
 			-e 's/ParseTrace/mlr_dsl_ParseTrace/g' \
@@ -62,7 +62,7 @@ ex1: ex1_wrapper.c ex1_wrapper.h ex1_parse.h ex1_lexer.o ex1_parse.o ../lib/mlru
 ex1_parse.o: ex1_parse.c ex1_parse.h
 	$(DSLCC) $(DSLCFLAGS) -c -std=gnu99 ex1_parse.c
 ex1_parse.c ex1_parse.h: ex1_parse.y lemon ./ex_ast.h ../containers/sllv.h
-	./lemon ex1_parse.y
+	./lemon -s ex1_parse.y
 	mv ex1_parse.c ex1_parse.c.tmp
 	sed \
 			-e 's/ParseTrace/ex1_ParseTrace/g' \
@@ -87,7 +87,7 @@ ex2: ex2_wrapper.c ex2_wrapper.h ex2_parse.h ex2_lexer.o ex2_parse.o ../lib/mlru
 ex2_parse.o: ex2_parse.c ex2_parse.h
 	$(DSLCC) $(DSLCFLAGS) -c -std=gnu99 ex2_parse.c
 ex2_parse.c ex2_parse.h: ex2_parse.y lemon ./ex_ast.h ../containers/sllv.h
-	./lemon -c ex2_parse.y
+	./lemon -s -c ex2_parse.y
 	mv ex2_parse.c ex2_parse.c.tmp
 	sed \
 			-e 's/ParseTrace/ex2_ParseTrace/g' \

@@ -27,6 +27,19 @@ TOP OF LIST:
 ! undo dsls/M*g gcc -g
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+! lemon refactor
+  - compile w/ as pedantic as possible but not for flex (unused input/yyunput)
+  - proto all
+  - objify all
+  - libify malloc_or_die etc.
+  - name demangles (e.g. paz wtf)
+  - style: typedef struct _foo_t { ... } foo_t; rid of camelcase
+  - substructify lemp; glorified globals at this point
+  - more dump routines for each stage through parser-gen & parser-operate
+  - replace the makefile-sedding with template names inside lempar et al.
+  - all this to clear the weeds & increase visibility around the memory issue
+  - suspect the char/int switch
+
 ! lemon boundary issue:
   ! try out 2nd toy grammar
   ! try memset on semicolon grammar (locate the diff)

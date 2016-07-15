@@ -71,9 +71,9 @@ int main(int argc, char **argv) {
 	int i;
 	struct lemon lem;
 
-	OptInit(argv,options,stderr);
+	OptInit(argv, options, stderr);
 	if (version) {
-		 printf("Lemon version 1.0\n");
+		 printf("Lemon version 1.0.1\n");
 		 exit(0);
 	}
 	if (OptNArgs()!=1) {
@@ -103,9 +103,10 @@ int main(int argc, char **argv) {
 
 	/* Parse the input file */
 	Parse(&lem, nDefine, azDefine);
-	if (lem.errorcnt)  exit(lem.errorcnt);
+	if (lem.errorcnt)
+		exit(lem.errorcnt);
 	if (lem.rule==0) {
-		fprintf(stderr,"Empty grammar.\n");
+		fprintf(stderr, "Empty grammar.\n");
 		exit(1);
 	}
 
@@ -113,11 +114,13 @@ int main(int argc, char **argv) {
 	lem.nsymbol = Symbol_count();
 	Symbol_new("{default}");
 	lem.symbols = Symbol_arrayof();
-	for(i=0; i<=lem.nsymbol; i++) lem.symbols[i]->index = i;
-	qsort(lem.symbols,lem.nsymbol+1,sizeof(struct symbol*),
-				(int(*)())Symbolcmpp);
-	for(i=0; i<=lem.nsymbol; i++) lem.symbols[i]->index = i;
-	for(i=1; isupper(lem.symbols[i]->name[0]); i++);
+	for (i = 0; i <= lem.nsymbol; i++)
+		lem.symbols[i]->index = i;
+	qsort(lem.symbols,lem.nsymbol+1,sizeof(struct symbol*), (int(*)())Symbolcmpp);
+	for (i = 0; i <= lem.nsymbol; i++)
+		lem.symbols[i]->index = i;
+	for (i = 1; isupper(lem.symbols[i]->name[0]); i++)
+		;
 	lem.nterminal = i;
 
 	/* Generate a reprint of the grammar, if requested on the command line */
