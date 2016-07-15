@@ -10,8 +10,7 @@
 /* Find a good place to break "msg" so that its length is at least "min"
 ** but no more than "max".  Make the point as close to max as possible.
 */
-static int findbreak(char *msg, int min, int max)
-{
+static int findbreak(char *msg, int min, int max) {
 	int i,spot;
 	char c;
 	for(i=spot=min; i<=max; i++){

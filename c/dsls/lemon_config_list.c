@@ -28,11 +28,11 @@ struct config *b;
 }
 
 // ----------------------------------------------------------------
-static struct config *freelist = 0;      /* List of free configurations */
-static struct config *current = 0;       /* Top of list of configurations */
-static struct config **currentend = 0;   /* Last on list of configs */
-static struct config *basis = 0;         /* Top of list of basis configs */
-static struct config **basisend = 0;     /* End of list of basis configs */
+static struct config *freelist    = 0;  /* List of free configurations */
+static struct config *current     = 0;  /* Top of list of configurations */
+static struct config **currentend = 0;  /* Last on list of configs */
+static struct config *basis       = 0;  /* Top of list of basis configs */
+static struct config **basisend   = 0;  /* End of list of basis configs */
 
 /* Return a pointer to a new configuration */
 static struct config *newconfig() {
@@ -54,14 +54,13 @@ static struct config *newconfig() {
 }
 
 /* The configuration "old" is no longer used */
-static void deleteconfig(struct config *old)
-{
+static void deleteconfig(struct config *old) {
 	old->next = freelist;
 	freelist = old;
 }
 
 /* Initialized the configuration list builder */
-void Configlist_init(){
+void Configlist_init() {
 	current = 0;
 	currentend = &current;
 	basis = 0;
@@ -71,7 +70,7 @@ void Configlist_init(){
 }
 
 /* Initialized the configuration list builder */
-void Configlist_reset(){
+void Configlist_reset() {
 	current = 0;
 	currentend = &current;
 	basis = 0;
@@ -108,8 +107,7 @@ struct config *Configlist_add(
 }
 
 /* Add a basis configuration to the configuration list */
-struct config *Configlist_addbasis(struct rule *rp, int dot)
-{
+struct config *Configlist_addbasis(struct rule *rp, int dot) {
 	struct config *cfp, model;
 
 	assert (basisend!=0);
@@ -136,8 +134,7 @@ struct config *Configlist_addbasis(struct rule *rp, int dot)
 }
 
 /* Compute the closure of the configuration list */
-void Configlist_closure(struct lemon *lemp)
-{
+void Configlist_closure(struct lemon *lemp) {
 	struct config *cfp, *newcfp;
 	struct rule *rp, *newrp;
 	struct symbol *sp, *xsp;
@@ -224,9 +221,7 @@ void Configlist_eat(struct config *cfp)
 
 // ================================================================
 /* Hash a configuration */
-static int confighash(a)
-struct config *a;
-{
+static int confighash(struct config *a) {
 	int h=0;
 	h = h*571 + a->rp->index*37 + a->dot;
 	return h;
@@ -331,8 +326,7 @@ int Configtable_insert(struct config *data) {
 
 /* Return a pointer to data assigned to the given key.  Return NULL
 ** if no such key. */
-struct config *Configtable_find(struct config *key)
-{
+struct config *Configtable_find(struct config *key) {
 	int h;
 	x4node *np;
 
@@ -348,8 +342,7 @@ struct config *Configtable_find(struct config *key)
 
 /* Remove all data from the table.  Pass each data to the function "f"
 ** as it is removed.  ("f" may be null to avoid this step.) */
-void Configtable_clear(int(*f)(/* struct config * */))
-{
+void Configtable_clear(int(*f)(struct config *)) {
 	int i;
 	if (x4a==0 || x4a->count==0)  return;
 	if (f)  for(i=0; i<x4a->count; i++) (*f)(x4a->tbl[i].data);

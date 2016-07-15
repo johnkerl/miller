@@ -1,12 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "lemon_assert.h"
+
 #include "lemon_action.h"
 
-// xxx move:
-char *msort(char *list, char **next, int (*cmp)());
-
+#include "lemon_assert.h"
+#include "lemon_msort.h"
 
 /*
 ** Routines processing parser actions in the LEMON parser generator.
@@ -25,7 +24,8 @@ struct action *Action_new() {
 			fprintf(stderr,"Unable to allocate memory for a new parser action.");
 			exit(1);
 		}
-		for(i=0; i<amt-1; i++) freelist[i].next = &freelist[i+1];
+		for (i=0; i<amt-1; i++)
+			freelist[i].next = &freelist[i+1];
 		freelist[amt-1].next = 0;
 	}
 	new = freelist;
@@ -40,16 +40,15 @@ static int actioncmp(struct action *ap1, struct action *ap2)
 	rc = ap1->sp->index - ap2->sp->index;
 	if (rc==0)  rc = (int)ap1->type - (int)ap2->type;
 	if (rc==0) {
-		assert (ap1->type==REDUCE || ap1->type==RD_RESOLVED || ap1->type==CONFLICT);
-		assert (ap2->type==REDUCE || ap2->type==RD_RESOLVED || ap2->type==CONFLICT);
+		assert(ap1->type==REDUCE || ap1->type==RD_RESOLVED || ap1->type==CONFLICT);
+		assert(ap2->type==REDUCE || ap2->type==RD_RESOLVED || ap2->type==CONFLICT);
 		rc = ap1->x.rp->index - ap2->x.rp->index;
 	}
 	return rc;
 }
 
 /* Sort parser actions */
-struct action *Action_sort(struct action *ap)
-{
+struct action *Action_sort(struct action *ap) {
 	ap = (struct action *)msort((char *)ap,(char **)&ap->next,actioncmp);
 	return ap;
 }

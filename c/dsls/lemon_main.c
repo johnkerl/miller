@@ -31,14 +31,14 @@ static void handle_D_option(char *z) {
 	char **paz;
 	nDefine++;
 	azDefine = realloc(azDefine, sizeof(azDefine[0])*nDefine);
-	if (azDefine==0) {
+	if (azDefine == 0) {
 		fprintf(stderr,"out of memory\n");
 		exit(1);
 	}
 	paz = &azDefine[nDefine-1];
 	*paz = malloc (strlen(z)+1) ;
-	if (*paz==0) {
-		fprintf(stderr,"out of memory\n");
+	if (*paz == 0) {
+		fprintf(stderr, "out of memory\n");
 		exit(1);
 	}
 	strcpy(*paz, z);
@@ -150,10 +150,12 @@ int main(int argc, char **argv) {
 		FindActions(&lem);
 
 		/* Compress the action tables */
-		if (compress==0)  CompressTables(&lem);
+		if (compress==0)
+			CompressTables(&lem);
 
-		/* Generate a report of the parser generated.  (the "y.output" file) */
-		if (!quiet)  ReportOutput(&lem);
+		/* Generate a report of the parser generated (the "y.output" file) */
+		if (!quiet)
+			ReportOutput(&lem);
 
 		/* Generate the source code for the parser */
 		ReportTable(&lem, mhflag);
@@ -161,7 +163,8 @@ int main(int argc, char **argv) {
 		/* Produce a header file for use by the scanner.  (This step is
 		** omitted if the "-m" option is used because makeheaders will
 		** generate the file for us.) */
-		if (!mhflag)  ReportHeader(&lem);
+		if (!mhflag)
+			ReportHeader(&lem);
 	}
 	if (statistics) {
 		printf("Parser statistics: %d terminals, %d nonterminals, %d rules\n",
