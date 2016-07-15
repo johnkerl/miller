@@ -38,6 +38,7 @@ TOP OF LIST:
   - more dump routines for each stage through parser-gen & parser-operate
   - replace the makefile-sedding with template names inside lempar et al.
   - all this to clear the weeds & increase visibility around the memory issue
+  - cliopt for memset
   - suspect the char/int switch
 
 ! lemon boundary issue:
