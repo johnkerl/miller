@@ -58,12 +58,6 @@ md_body ::= md_statement_list(B). {
 	past->proot = B;
 }
 
-// ================================================================
-// ================================================================
-// NEW GRAMMAR
-// ================================================================
-// ================================================================
-
 // ----------------------------------------------------------------
 // Given "$a=1;$b=2;$c=3": since this is a bottom-up parser, we get first the "$a=1", then
 // "$a=1;$b=2", then "$a=1;$b=2;$c=3", then finally realize that's the top level, or it's embedded
@@ -117,16 +111,16 @@ md_statement_not_braced_end(A) ::= . {
 }
 
 // Begin/end (non-nestable)
-md_statement_braced_end ::= md_begin_block.
-md_statement_braced_end ::= md_end_block.
+md_statement_braced_end(A) ::= md_begin_block(B) .{ A = B; }
+md_statement_braced_end(A) ::= md_end_block(B). { A = B; }
 
 // Nested control structures:
-md_statement_braced_end ::= md_cond_block.
-md_statement_braced_end ::= md_while_block.
-md_statement_braced_end ::= md_for_loop_full_srec.
-md_statement_braced_end ::= md_for_loop_full_oosvar.
-md_statement_braced_end ::= md_for_loop_oosvar.
-md_statement_braced_end ::= md_if_chain.
+md_statement_braced_end(A) ::= md_cond_block(B).
+md_statement_braced_end(A) ::= md_while_block(B).
+md_statement_braced_end(A) ::= md_for_loop_full_srec(B).
+md_statement_braced_end(A) ::= md_for_loop_full_oosvar(B).
+md_statement_braced_end(A) ::= md_for_loop_oosvar(B).
+md_statement_braced_end(A) ::= md_if_chain(B).
 
 // Not valid in begin/end since they refer to srecs:
 md_statement_not_braced_end ::= md_srec_assignment.
