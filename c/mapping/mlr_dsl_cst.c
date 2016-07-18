@@ -22,39 +22,44 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 // ti = type_inferencing
 // cf = context_flags
-static mlr_dsl_cst_statement_t*                  alloc_srec_assignment(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*         alloc_indirect_srec_assignment(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                alloc_oosvar_assignment(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                            alloc_unset(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                            alloc_emitf(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                    alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, int ti, int cf,
-	int do_full_prefixing);
-static mlr_dsl_cst_statement_t*             alloc_emit_or_emitp_lashed(mlr_dsl_ast_node_t* pnode, int ti, int cf,
-	int do_full_prefixing);
-static mlr_dsl_cst_statement_t*                alloc_conditional_block(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                          alloc_if_head(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                            alloc_while(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                         alloc_do_while(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                         alloc_for_srec(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                       alloc_for_oosvar(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                            alloc_break(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                         alloc_continue(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                           alloc_filter(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                             alloc_dump(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                            alloc_edump(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                       alloc_dump_write(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                      alloc_dump_append(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                            alloc_print(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                           alloc_eprint(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                      alloc_print_write(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                     alloc_print_append(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                           alloc_printn(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                          alloc_eprintn(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                     alloc_printn_write(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                    alloc_printn_append(mlr_dsl_ast_node_t* pnode, int ti, int cf);
-static mlr_dsl_cst_statement_t*                     alloc_bare_boolean(mlr_dsl_ast_node_t* pnode, int ti, int cf);
+// dfp = do_full_prefixing
+static mlr_dsl_cst_statement_t*                  alloc_srec_assignment(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*         alloc_indirect_srec_assignment(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                alloc_oosvar_assignment(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                            alloc_unset(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                            alloc_emitf(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                      alloc_emitf_write(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                     alloc_emitf_append(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                    alloc_emit_or_emitp(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
+static mlr_dsl_cst_statement_t*              alloc_emit_or_emitp_write(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
+static mlr_dsl_cst_statement_t*             alloc_emit_or_emitp_append(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
+static mlr_dsl_cst_statement_t*             alloc_emit_or_emitp_lashed(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
+static mlr_dsl_cst_statement_t*       alloc_emit_or_emitp_lashed_write(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
+static mlr_dsl_cst_statement_t*      alloc_emit_or_emitp_lashed_append(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
+static mlr_dsl_cst_statement_t*                alloc_conditional_block(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                          alloc_if_head(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                            alloc_while(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                         alloc_do_while(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                         alloc_for_srec(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                       alloc_for_oosvar(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                            alloc_break(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                         alloc_continue(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                           alloc_filter(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                             alloc_dump(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                            alloc_edump(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                       alloc_dump_write(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                      alloc_dump_append(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                            alloc_print(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                           alloc_eprint(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                      alloc_print_write(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                     alloc_print_append(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                           alloc_printn(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                          alloc_eprintn(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                     alloc_printn_write(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                    alloc_printn_append(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                     alloc_bare_boolean(mlr_dsl_ast_node_t* p, int ti, int cf);
 
 static mlr_dsl_cst_statement_t* alloc_if_item(
 	mlr_dsl_ast_node_t* pexprnode,
@@ -88,19 +93,33 @@ static void                handle_oosvar_assignment(mlr_dsl_cst_statement_t* s, 
 static void                            handle_unset(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                        handle_unset_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_emitf(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                      handle_emitf_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                     handle_emitf_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_emitp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                      handle_emitp_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                     handle_emitp_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                             handle_emit(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                       handle_emit_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                      handle_emit_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_emitp_lashed(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void               handle_emitp_lashed_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void              handle_emitp_lashed_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                      handle_emit_lashed(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                handle_emit_lashed_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void               handle_emit_lashed_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                        handle_emitp_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                  handle_emitp_all_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                 handle_emitp_all_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                         handle_emit_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                   handle_emit_all_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                  handle_emit_all_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                             handle_dump(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                       handle_dump_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                      handle_dump_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_edump(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_print(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                      handle_print_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                    handle_print_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                     handle_print_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                           handle_printn(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_printn_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                    handle_printn_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -426,17 +445,47 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_EMITF:
 		return alloc_emitf(pnode, type_inferencing, context_flags);
 		break;
+	case MD_AST_NODE_TYPE_EMITF_WRITE:
+		return alloc_emitf_write(pnode, type_inferencing, context_flags);
+		break;
+	case MD_AST_NODE_TYPE_EMITF_APPEND:
+		return alloc_emitf_append(pnode, type_inferencing, context_flags);
+		break;
 	case MD_AST_NODE_TYPE_EMITP:
 		return alloc_emit_or_emitp(pnode, type_inferencing, context_flags, TRUE);
+		break;
+	case MD_AST_NODE_TYPE_EMITP_WRITE:
+		return alloc_emit_or_emitp_write(pnode, type_inferencing, context_flags, TRUE);
+		break;
+	case MD_AST_NODE_TYPE_EMITP_APPEND:
+		return alloc_emit_or_emitp_append(pnode, type_inferencing, context_flags, TRUE);
 		break;
 	case MD_AST_NODE_TYPE_EMIT:
 		return alloc_emit_or_emitp(pnode, type_inferencing, context_flags, FALSE);
 		break;
+	case MD_AST_NODE_TYPE_EMIT_WRITE:
+		return alloc_emit_or_emitp_write(pnode, type_inferencing, context_flags, FALSE);
+		break;
+	case MD_AST_NODE_TYPE_EMIT_APPEND:
+		return alloc_emit_or_emitp_append(pnode, type_inferencing, context_flags, FALSE);
+		break;
 	case MD_AST_NODE_TYPE_EMITP_LASHED:
 		return alloc_emit_or_emitp_lashed(pnode, type_inferencing, context_flags, TRUE);
 		break;
+	case MD_AST_NODE_TYPE_EMITP_LASHED_WRITE:
+		return alloc_emit_or_emitp_lashed_write(pnode, type_inferencing, context_flags, TRUE);
+		break;
+	case MD_AST_NODE_TYPE_EMITP_LASHED_APPEND:
+		return alloc_emit_or_emitp_lashed_append(pnode, type_inferencing, context_flags, TRUE);
+		break;
 	case MD_AST_NODE_TYPE_EMIT_LASHED:
 		return alloc_emit_or_emitp_lashed(pnode, type_inferencing, context_flags, FALSE);
+		break;
+	case MD_AST_NODE_TYPE_EMIT_LASHED_WRITE:
+		return alloc_emit_or_emitp_lashed_write(pnode, type_inferencing, context_flags, FALSE);
+		break;
+	case MD_AST_NODE_TYPE_EMIT_LASHED_APPEND:
+		return alloc_emit_or_emitp_lashed_append(pnode, type_inferencing, context_flags, FALSE);
 		break;
 	case MD_AST_NODE_TYPE_FILTER:
 		return alloc_filter(pnode, type_inferencing, context_flags);
@@ -772,6 +821,70 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_
 	return pstatement;
 }
 
+// 'emitf >  "out", @a'
+//   text="emitf", type=emitf_write:
+//       text="emitf", type=emitf:
+//           text="oosvar_keylist", type=oosvar_keylist:
+//               text="a", type=string_literal.
+//       text="out", type=strnum_literal.
+
+// xxx code-dedupe opportunities here
+static mlr_dsl_cst_statement_t* alloc_emitf_write(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	mlr_dsl_ast_node_t* pnamesnode = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pfilenode = pnode->pchildren->phead->pnext->pvvalue;
+
+	// Loop over oosvar names to emit in e.g. 'emitf @a, @b, @c'.
+	pstatement->pvarargs = sllv_alloc();
+	for (sllve_t* pe = pnamesnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pwalker = pe->pvvalue;
+		mlr_dsl_ast_node_t* pchild = pwalker->pchildren->phead->pvvalue;
+		// This could be enforced in the lemon parser but it's easier to do it here.
+		sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
+			pchild->text,
+			NULL,
+			rval_evaluator_alloc_from_ast(pwalker, type_inferencing, context_flags),
+			NULL));
+	}
+
+	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilenode,
+		type_inferencing, context_flags);
+
+	pstatement->pnode_handler = handle_emitf_write;
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_emitf_append(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	mlr_dsl_ast_node_t* pnamesnode = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pfilenode = pnode->pchildren->phead->pnext->pvvalue;
+
+	// Loop over oosvar names to emit in e.g. 'emitf @a, @b, @c'.
+	pstatement->pvarargs = sllv_alloc();
+	for (sllve_t* pe = pnamesnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pwalker = pe->pvvalue;
+		mlr_dsl_ast_node_t* pchild = pwalker->pchildren->phead->pvvalue;
+		// This could be enforced in the lemon parser but it's easier to do it here.
+		sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
+			pchild->text,
+			NULL,
+			rval_evaluator_alloc_from_ast(pwalker, type_inferencing, context_flags),
+			NULL));
+	}
+
+	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilenode,
+		type_inferencing, context_flags);
+
+	pstatement->pnode_handler = handle_emitf_append;
+	return pstatement;
+}
+
 // ----------------------------------------------------------------
 // $ mlr -n put -v 'emit @a[2][3], "x", "y", "z"'
 // AST ROOT:
@@ -850,6 +963,114 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, i
 	return pstatement;
 }
 
+static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_write(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags, int do_full_prefixing)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	mlr_dsl_ast_node_t* pkeylist_node  = pnode->pchildren->phead->pvvalue;
+
+	// The grammar allows only 'emit all', not 'emit @x, all, $y'.
+	// So if 'all' appears at all, it's the only name.
+	if (pkeylist_node->type == MD_AST_NODE_TYPE_ALL || pkeylist_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
+
+		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
+		if (pnode->pchildren->length == 2) {
+			mlr_dsl_ast_node_t* pnamelist_node = pnode->pchildren->phead->pnext->pvvalue;
+			for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+				sllv_append(pemit_oosvar_namelist_evaluators,
+					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+			}
+		}
+		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+
+		pstatement->pnode_handler = do_full_prefixing
+			? handle_emit_all_write
+			: handle_emitp_all_write;
+
+	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
+
+		pstatement->pemit_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
+			type_inferencing, context_flags);
+
+		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
+		if (pnode->pchildren->length == 2) {
+			mlr_dsl_ast_node_t* pnamelist_node = pnode->pchildren->phead->pnext->pvvalue;
+			for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+				sllv_append(pemit_oosvar_namelist_evaluators,
+					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+			}
+		}
+		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+
+		pstatement->pnode_handler = do_full_prefixing
+			? handle_emit_write
+			: handle_emitp_write;
+
+	} else {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_append(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags, int do_full_prefixing)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	mlr_dsl_ast_node_t* pkeylist_node  = pnode->pchildren->phead->pvvalue;
+
+	// The grammar allows only 'emit all', not 'emit @x, all, $y'.
+	// So if 'all' appears at all, it's the only name.
+	if (pkeylist_node->type == MD_AST_NODE_TYPE_ALL || pkeylist_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
+
+		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
+		if (pnode->pchildren->length == 2) {
+			mlr_dsl_ast_node_t* pnamelist_node = pnode->pchildren->phead->pnext->pvvalue;
+			for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+				sllv_append(pemit_oosvar_namelist_evaluators,
+					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+			}
+		}
+		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+
+		pstatement->pnode_handler = do_full_prefixing
+			? handle_emit_all_append
+			: handle_emitp_all_append;
+
+	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
+
+		pstatement->pemit_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
+			type_inferencing, context_flags);
+
+		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
+		if (pnode->pchildren->length == 2) {
+			mlr_dsl_ast_node_t* pnamelist_node = pnode->pchildren->phead->pnext->pvvalue;
+			for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+				sllv_append(pemit_oosvar_namelist_evaluators,
+					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+			}
+		}
+		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+
+		pstatement->pnode_handler = do_full_prefixing
+			? handle_emit_append
+			: handle_emitp_append;
+
+	} else {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	return pstatement;
+}
+
 // ----------------------------------------------------------------
 // $ mlr -n put -v 'emit (@a[2][3], @b[4][5]), "x", "y", "z"'
 // text="list", type=statement_list:
@@ -899,6 +1120,76 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_lashed(mlr_dsl_ast_node_t* p
 	pstatement->pnode_handler = do_full_prefixing
 		? handle_emit_lashed
 		: handle_emitp_lashed;
+
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_lashed_write(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags, int do_full_prefixing)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	mlr_dsl_ast_node_t* pkeylists_node  = pnode->pchildren->phead->pvvalue;
+
+	pstatement->num_emit_keylist_evaluators = pkeylists_node->pchildren->length;
+	pstatement->ppemit_keylist_evaluators = mlr_malloc_or_die(pstatement->num_emit_keylist_evaluators
+		* sizeof(sllv_t*));
+	int i = 0;
+	for (sllve_t* pe = pkeylists_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+		mlr_dsl_ast_node_t* pkeylist_node = pe->pvvalue;
+		pstatement->ppemit_keylist_evaluators[i] = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
+			type_inferencing, context_flags);
+	}
+
+	sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
+	if (pnode->pchildren->length == 2) {
+		mlr_dsl_ast_node_t* pnamelist_node = pnode->pchildren->phead->pnext->pvvalue;
+		for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+			sllv_append(pemit_oosvar_namelist_evaluators,
+				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+		}
+	}
+	pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+
+	pstatement->pnode_handler = do_full_prefixing
+		? handle_emit_lashed_write
+		: handle_emitp_lashed_write;
+
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_lashed_append(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags, int do_full_prefixing)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	mlr_dsl_ast_node_t* pkeylists_node  = pnode->pchildren->phead->pvvalue;
+
+	pstatement->num_emit_keylist_evaluators = pkeylists_node->pchildren->length;
+	pstatement->ppemit_keylist_evaluators = mlr_malloc_or_die(pstatement->num_emit_keylist_evaluators
+		* sizeof(sllv_t*));
+	int i = 0;
+	for (sllve_t* pe = pkeylists_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+		mlr_dsl_ast_node_t* pkeylist_node = pe->pvvalue;
+		pstatement->ppemit_keylist_evaluators[i] = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
+			type_inferencing, context_flags);
+	}
+
+	sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
+	if (pnode->pchildren->length == 2) {
+		mlr_dsl_ast_node_t* pnamelist_node = pnode->pchildren->phead->pnext->pvvalue;
+		for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+			sllv_append(pemit_oosvar_namelist_evaluators,
+				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+		}
+	}
+	pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+
+	pstatement->pnode_handler = do_full_prefixing
+		? handle_emit_lashed_append
+		: handle_emitp_lashed_append;
 
 	return pstatement;
 }
@@ -1908,6 +2199,72 @@ static void handle_emitf(
 	sllv_append(pcst_outputs->poutrecs, prec_to_emit);
 }
 
+static void handle_emitf_write(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+
+	lrec_t* prec_to_emit = lrec_unbacked_alloc();
+	for (sllve_t* pf = pnode->pvarargs->phead; pf != NULL; pf = pf->pnext) {
+		mlr_dsl_cst_statement_vararg_t* pvararg = pf->pvvalue;
+		char* emitf_or_unset_srec_field_name = pvararg->emitf_or_unset_srec_field_name;
+		rval_evaluator_t* pemitf_arg_evaluator = pvararg->pemitf_arg_evaluator;
+
+		// This is overkill ... the grammar allows only for oosvar names as args to emit.  So we could bypass
+		// that and just hashmap-get keyed by emitf_or_unset_srec_field_name here.
+		mv_t val = pemitf_arg_evaluator->pprocess_func(pemitf_arg_evaluator->pvstate, pvars);
+
+		if (val.type == MT_STRING) {
+			// Ownership transfer from (newly created) mlrval to (newly created) lrec.
+			lrec_put(prec_to_emit, emitf_or_unset_srec_field_name, val.u.strv, val.free_flags);
+		} else {
+			char free_flags = NO_FREE;
+			char* string = mv_format_val(&val, &free_flags);
+			lrec_put(prec_to_emit, emitf_or_unset_srec_field_name, string, free_flags);
+		}
+
+	}
+	sllv_append(pcst_outputs->poutrecs, prec_to_emit);
+
+	mv_free(&filename);
+}
+
+static void handle_emitf_append(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+
+	lrec_t* prec_to_emit = lrec_unbacked_alloc();
+	for (sllve_t* pf = pnode->pvarargs->phead; pf != NULL; pf = pf->pnext) {
+		mlr_dsl_cst_statement_vararg_t* pvararg = pf->pvvalue;
+		char* emitf_or_unset_srec_field_name = pvararg->emitf_or_unset_srec_field_name;
+		rval_evaluator_t* pemitf_arg_evaluator = pvararg->pemitf_arg_evaluator;
+
+		// This is overkill ... the grammar allows only for oosvar names as args to emit.  So we could bypass
+		// that and just hashmap-get keyed by emitf_or_unset_srec_field_name here.
+		mv_t val = pemitf_arg_evaluator->pprocess_func(pemitf_arg_evaluator->pvstate, pvars);
+
+		if (val.type == MT_STRING) {
+			// Ownership transfer from (newly created) mlrval to (newly created) lrec.
+			lrec_put(prec_to_emit, emitf_or_unset_srec_field_name, val.u.strv, val.free_flags);
+		} else {
+			char free_flags = NO_FREE;
+			char* string = mv_format_val(&val, &free_flags);
+			lrec_put(prec_to_emit, emitf_or_unset_srec_field_name, string, free_flags);
+		}
+
+	}
+	sllv_append(pcst_outputs->poutrecs, prec_to_emit);
+
+	mv_free(&filename);
+}
+
 // ----------------------------------------------------------------
 static void handle_emitp(
 	mlr_dsl_cst_statement_t* pnode,
@@ -1928,8 +2285,84 @@ static void handle_emitp(
 	sllmv_free(pmvkeys);
 }
 
+static void handle_emitp_write(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	int keys_all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pnode->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, pcst_outputs->poutrecs,
+				FALSE, pcst_outputs->oosvar_flatten_separator);
+		}
+		sllmv_free(pmvnames);
+	}
+	sllmv_free(pmvkeys);
+}
+
+static void handle_emitp_append(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	int keys_all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pnode->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, pcst_outputs->poutrecs,
+				FALSE, pcst_outputs->oosvar_flatten_separator);
+		}
+		sllmv_free(pmvnames);
+	}
+	sllmv_free(pmvkeys);
+}
+
 // ----------------------------------------------------------------
 static void handle_emit(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	int keys_all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pnode->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, pcst_outputs->poutrecs,
+				TRUE, pcst_outputs->oosvar_flatten_separator);
+		}
+		sllmv_free(pmvnames);
+	}
+	sllmv_free(pmvkeys);
+}
+
+static void handle_emit_write(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	int keys_all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pnode->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, pcst_outputs->poutrecs,
+				TRUE, pcst_outputs->oosvar_flatten_separator);
+		}
+		sllmv_free(pmvnames);
+	}
+	sllmv_free(pmvkeys);
+}
+
+static void handle_emit_append(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -1978,8 +2411,100 @@ static void handle_emitp_lashed(
 	free(ppmvkeys);
 }
 
+static void handle_emitp_lashed_write(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	int keys_all_non_null_or_error = TRUE;
+	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
+		pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs_lashed(pvars->poosvars, ppmvkeys, pnode->num_emit_keylist_evaluators, pmvnames,
+				pcst_outputs->poutrecs, FALSE, pcst_outputs->oosvar_flatten_separator);
+		}
+		sllmv_free(pmvnames);
+	}
+	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
+		sllmv_free(ppmvkeys[i]);
+	}
+	free(ppmvkeys);
+}
+
+static void handle_emitp_lashed_append(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	int keys_all_non_null_or_error = TRUE;
+	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
+		pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs_lashed(pvars->poosvars, ppmvkeys, pnode->num_emit_keylist_evaluators, pmvnames,
+				pcst_outputs->poutrecs, FALSE, pcst_outputs->oosvar_flatten_separator);
+		}
+		sllmv_free(pmvnames);
+	}
+	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
+		sllmv_free(ppmvkeys[i]);
+	}
+	free(ppmvkeys);
+}
+
 // ----------------------------------------------------------------
 static void handle_emit_lashed(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	int keys_all_non_null_or_error = TRUE;
+	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
+		pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs_lashed(pvars->poosvars, ppmvkeys, pnode->num_emit_keylist_evaluators, pmvnames,
+				pcst_outputs->poutrecs, TRUE, pcst_outputs->oosvar_flatten_separator);
+		}
+		sllmv_free(pmvnames);
+	}
+	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
+		sllmv_free(ppmvkeys[i]);
+	}
+	free(ppmvkeys);
+}
+
+static void handle_emit_lashed_write(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	int keys_all_non_null_or_error = TRUE;
+	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
+		pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs_lashed(pvars->poosvars, ppmvkeys, pnode->num_emit_keylist_evaluators, pmvnames,
+				pcst_outputs->poutrecs, TRUE, pcst_outputs->oosvar_flatten_separator);
+		}
+		sllmv_free(pmvnames);
+	}
+	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
+		sllmv_free(ppmvkeys[i]);
+	}
+	free(ppmvkeys);
+}
+
+static void handle_emit_lashed_append(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -2017,8 +2542,64 @@ static void handle_emitp_all(
 	sllmv_free(pmvnames);
 }
 
+static void handle_emitp_all_write(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
+	if (all_non_null_or_error) {
+		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, pcst_outputs->poutrecs,
+			FALSE, pcst_outputs->oosvar_flatten_separator);
+	}
+	sllmv_free(pmvnames);
+}
+
+static void handle_emitp_all_append(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
+	if (all_non_null_or_error) {
+		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, pcst_outputs->poutrecs,
+			FALSE, pcst_outputs->oosvar_flatten_separator);
+	}
+	sllmv_free(pmvnames);
+}
+
 // ----------------------------------------------------------------
 static void handle_emit_all(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
+	if (all_non_null_or_error) {
+		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, pcst_outputs->poutrecs,
+			TRUE, pcst_outputs->oosvar_flatten_separator);
+	}
+	sllmv_free(pmvnames);
+}
+
+static void handle_emit_all_write(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
+	if (all_non_null_or_error) {
+		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, pcst_outputs->poutrecs,
+			TRUE, pcst_outputs->oosvar_flatten_separator);
+	}
+	sllmv_free(pmvnames);
+}
+
+static void handle_emit_all_append(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)

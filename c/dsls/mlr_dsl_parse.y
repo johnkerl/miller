@@ -112,57 +112,57 @@ md_statement_not_braced_end(A) ::= . {
 
 // Begin/end
 md_statement_braced_end(A) ::= md_begin_block(B). { A = B; }
-md_statement_braced_end(A) ::= md_end_block(B). { A = B; }
+md_statement_braced_end(A) ::= md_end_block(B).   { A = B; }
 
 // Nested control structures:
-md_statement_braced_end(A) ::= md_cond_block(B). { A = B; }
-md_statement_braced_end(A) ::= md_while_block(B). { A = B; }
-md_statement_braced_end(A) ::= md_for_loop_full_srec(B). { A = B; }
+md_statement_braced_end(A) ::= md_cond_block(B).           { A = B; }
+md_statement_braced_end(A) ::= md_while_block(B).          { A = B; }
+md_statement_braced_end(A) ::= md_for_loop_full_srec(B).   { A = B; }
 md_statement_braced_end(A) ::= md_for_loop_full_oosvar(B). { A = B; }
-md_statement_braced_end(A) ::= md_for_loop_oosvar(B). { A = B; }
-md_statement_braced_end(A) ::= md_if_chain(B). { A = B; }
+md_statement_braced_end(A) ::= md_for_loop_oosvar(B).      { A = B; }
+md_statement_braced_end(A) ::= md_if_chain(B).             { A = B; }
 
 // Not valid in begin/end since they refer to srecs:
-md_statement_not_braced_end(A) ::= md_srec_assignment(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_srec_indirect_assignment(B). { A = B; }
+md_statement_not_braced_end(A) ::= md_srec_assignment(B).                  { A = B; }
+md_statement_not_braced_end(A) ::= md_srec_indirect_assignment(B).         { A = B; }
 md_statement_not_braced_end(A) ::= md_oosvar_from_full_srec_assignment(B). { A = B; }
 md_statement_not_braced_end(A) ::= md_full_srec_from_oosvar_assignment(B). { A = B; }
 
 // Valid in begin/end since they don't refer to srecs (although the RHSs might):
-md_statement_not_braced_end(A) ::= md_do_while_block(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_bare_boolean(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_oosvar_assignment(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_filter(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_unset(B). { A = B; }
+md_statement_not_braced_end(A) ::= md_do_while_block(B).      { A = B; }
+md_statement_not_braced_end(A) ::= md_bare_boolean(B).        { A = B; }
+md_statement_not_braced_end(A) ::= md_oosvar_assignment(B).   { A = B; }
+md_statement_not_braced_end(A) ::= md_filter(B).              { A = B; }
+md_statement_not_braced_end(A) ::= md_unset(B).               { A = B; }
 
-md_statement_not_braced_end(A) ::= md_emitf(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_emitf_write(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_emitf_append(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_emitp(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_emitp_write(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_emitp_append(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_emit(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_emit_write(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_emit_append(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_emitp_lashed(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_emitp_lashed_write(B). { A = B; }
+md_statement_not_braced_end(A) ::= md_emitf(B).               { A = B; }
+md_statement_not_braced_end(A) ::= md_emitf_write(B).         { A = B; }
+md_statement_not_braced_end(A) ::= md_emitf_append(B).        { A = B; }
+md_statement_not_braced_end(A) ::= md_emitp(B).               { A = B; }
+md_statement_not_braced_end(A) ::= md_emitp_write(B).         { A = B; }
+md_statement_not_braced_end(A) ::= md_emitp_append(B).        { A = B; }
+md_statement_not_braced_end(A) ::= md_emit(B).                { A = B; }
+md_statement_not_braced_end(A) ::= md_emit_write(B).          { A = B; }
+md_statement_not_braced_end(A) ::= md_emit_append(B).         { A = B; }
+md_statement_not_braced_end(A) ::= md_emitp_lashed(B).        { A = B; }
+md_statement_not_braced_end(A) ::= md_emitp_lashed_write(B).  { A = B; }
 md_statement_not_braced_end(A) ::= md_emitp_lashed_append(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_emit_lashed(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_emit_lashed_write(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_emit_lashed_append(B). { A = B; }
+md_statement_not_braced_end(A) ::= md_emit_lashed(B).         { A = B; }
+md_statement_not_braced_end(A) ::= md_emit_lashed_write(B).   { A = B; }
+md_statement_not_braced_end(A) ::= md_emit_lashed_append(B).  { A = B; }
 
-md_statement_not_braced_end(A) ::= md_dump(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_dump_write(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_dump_append(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_edump(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_print(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_eprint(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_print_write(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_print_append(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_printn(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_eprintn(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_printn_write(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_printn_append(B). { A = B; }
+md_statement_not_braced_end(A) ::= md_dump(B).                { A = B; }
+md_statement_not_braced_end(A) ::= md_dump_write(B).          { A = B; }
+md_statement_not_braced_end(A) ::= md_dump_append(B).         { A = B; }
+md_statement_not_braced_end(A) ::= md_edump(B).               { A = B; }
+md_statement_not_braced_end(A) ::= md_print(B).               { A = B; }
+md_statement_not_braced_end(A) ::= md_eprint(B).              { A = B; }
+md_statement_not_braced_end(A) ::= md_print_write(B).         { A = B; }
+md_statement_not_braced_end(A) ::= md_print_append(B).        { A = B; }
+md_statement_not_braced_end(A) ::= md_printn(B).              { A = B; }
+md_statement_not_braced_end(A) ::= md_eprintn(B).             { A = B; }
+md_statement_not_braced_end(A) ::= md_printn_write(B).        { A = B; }
+md_statement_not_braced_end(A) ::= md_printn_append(B).       { A = B; }
 
 // Valid only within for/while, but we accept them here syntactically and reject them in the AST-to-CST
 // conversion, where we can produce much more informative error messages:
@@ -774,12 +774,12 @@ md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RHS md_rhs(F) MD_TOKEN_C
 md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RHS md_rhs(F) MD_TOKEN_COMMA
 	MD_TOKEN_FULL_OOSVAR(B).
 {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_WRITE, B, F);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_APPEND, B, F);
 }
 md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RHS md_rhs(F) MD_TOKEN_COMMA
 	MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_COMMA md_emit_namelist(C).
 {
-	A = mlr_dsl_ast_node_alloc_ternary(O->text, MD_AST_NODE_TYPE_EMIT_WRITE, B, C, F);
+	A = mlr_dsl_ast_node_alloc_ternary(O->text, MD_AST_NODE_TYPE_EMIT_APPEND, B, C, F);
 }
 md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_IF md_rhs(F) MD_TOKEN_COMMA
 	md_oosvar_keylist(B).
