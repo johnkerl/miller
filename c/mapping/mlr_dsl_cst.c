@@ -968,6 +968,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_write(mlr_dsl_ast_node_t* pn
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
+	// xxx need some shape-assertion utilities
 	mlr_dsl_ast_node_t* pkeylist_node  = pnode->pchildren->phead->pvvalue;
 
 	// The grammar allows only 'emit all', not 'emit @x, all, $y'.
