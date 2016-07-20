@@ -11,6 +11,8 @@ liboutput_la_SOURCES=	\
 			lrec_writer_xtab.c \
 			lrec_writers.c \
 			lrec_writers.h \
+			multi_lrec_writer.c \
+			multi_lrec_writer.h \
 			multi_out.c \
 			multi_out.h
 liboutput_la_LIBADD=	../lib/libmlr.la
