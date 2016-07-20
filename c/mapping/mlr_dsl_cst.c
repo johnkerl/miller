@@ -551,6 +551,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->prhs_evaluator                       = NULL;
 	pstatement->poutput_filename_evaluator           = NULL;
 	pstatement->pmulti_out                           = NULL;
+	pstatement->pmulti_lrec_writer                   = NULL;
 	pstatement->poosvar_rhs_keylist_evaluators       = NULL;
 	pstatement->pemit_oosvar_namelist_evaluators     = NULL;
 	pstatement->pvarargs                             = NULL;
@@ -852,6 +853,7 @@ static mlr_dsl_cst_statement_t* alloc_emitf_write(mlr_dsl_ast_node_t* pnode, int
 
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilenode,
 		type_inferencing, context_flags);
+	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 
 	pstatement->pnode_handler = handle_emitf_write;
 	return pstatement;
@@ -1830,6 +1832,10 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 	}
 
 	multi_out_free(pstatement->pmulti_out);
+	if (pstatement->pmulti_lrec_writer != NULL) {
+		// xxx drain all
+		multi_lrec_writer_free(pstatement->pmulti_lrec_writer);
+	}
 
 	if (pstatement->poosvar_rhs_keylist_evaluators != NULL) {
 		for (sllve_t* pe = pstatement->poosvar_rhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
@@ -2245,6 +2251,7 @@ static void handle_emitf_write(
 	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 
 	lrec_t* prec_to_emit = lrec_unbacked_alloc();
+	sllv_t* poutrecs = sllv_alloc();
 	for (sllve_t* pf = pnode->pvarargs->phead; pf != NULL; pf = pf->pnext) {
 		mlr_dsl_cst_statement_vararg_t* pvararg = pf->pvvalue;
 		char* emitf_or_unset_srec_field_name = pvararg->emitf_or_unset_srec_field_name;
@@ -2264,7 +2271,13 @@ static void handle_emitf_write(
 		}
 
 	}
-	sllv_append(pcst_outputs->poutrecs, prec_to_emit);
+	sllv_append(poutrecs, prec_to_emit);
+
+	// xxx to-string ...
+	// xxx flush param ...
+	multi_lrec_writer_write(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+
+	sllv_free(poutrecs);
 
 	mv_free(&filename);
 }

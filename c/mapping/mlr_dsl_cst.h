@@ -7,6 +7,7 @@
 #include "containers/bind_stack.h"
 #include "containers/loop_stack.h"
 #include "output/multi_out.h"
+#include "output/multi_lrec_writer.h"
 
 // ================================================================
 // Concrete syntax tree (CST) derived from an abstract syntax tree (AST).
@@ -120,9 +121,10 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Assignments to srec or oosvar, as well as the boolean expression in filter, cond, and bare-boolean
 	rval_evaluator_t* prhs_evaluator;
 
-	// For 'print > filename_expression, value_expression'
+	// For print-to-file and dump-to-file, and emit-to-file
 	rval_evaluator_t* poutput_filename_evaluator;
-	multi_out_t* pmulti_out;
+	multi_out_t* pmulti_out; // print-to-file and dump-to-file
+	multi_lrec_writer_t* pmulti_lrec_writer; // emit-to-file
 
 	// Assigning full srec from oosvar:
 	sllv_t* poosvar_rhs_keylist_evaluators;
