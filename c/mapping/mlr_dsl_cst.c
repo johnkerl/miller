@@ -963,21 +963,43 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp(mlr_dsl_ast_node_t* pnode, i
 	return pstatement;
 }
 
+// ================================================================
+// mlr --from ../data/small put -v -q emit  >  "out", @a, "x", "y"
+// * text="emit", type=emit_write:
+//       text="emit", type=emit:
+//           text="oosvar_keylist", type=oosvar_keylist:
+//               text="a", type=string_literal.
+//           text="emit_namelist", type=emit:
+//               text="x", type=strnum_literal.
+//               text="y", type=strnum_literal.
+//       text="out", type=strnum_literal.
+
 static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_write(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags, int do_full_prefixing)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
+	//printf("TOPBGN\n");
+	//mlr_dsl_ast_node_print(pnode);
+	//printf("TOPEND\n");
+
 	// xxx need some shape-assertion utilities
-	mlr_dsl_ast_node_t* pkeylist_node  = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pemit_node  = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pfilename_node = pnode->pchildren->phead->pnext->pvvalue;
+
+	mlr_dsl_ast_node_t* pkeylist_node = pemit_node->pchildren->phead->pvvalue;
+
+	// xxx move
+	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
+		type_inferencing, context_flags);
 
 	// The grammar allows only 'emit all', not 'emit @x, all, $y'.
 	// So if 'all' appears at all, it's the only name.
 	if (pkeylist_node->type == MD_AST_NODE_TYPE_ALL || pkeylist_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
 
 		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
-		if (pnode->pchildren->length == 2) {
-			mlr_dsl_ast_node_t* pnamelist_node = pnode->pchildren->phead->pnext->pvvalue;
+		if (pemit_node->pchildren->length == 2) {
+			mlr_dsl_ast_node_t* pnamelist_node = pemit_node->pchildren->phead->pnext->pvvalue;
 			for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
 				sllv_append(pemit_oosvar_namelist_evaluators,
@@ -996,8 +1018,8 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_write(mlr_dsl_ast_node_t* pn
 			type_inferencing, context_flags);
 
 		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
-		if (pnode->pchildren->length == 2) {
-			mlr_dsl_ast_node_t* pnamelist_node = pnode->pchildren->phead->pnext->pvvalue;
+		if (pemit_node->pchildren->length == 2) {
+			mlr_dsl_ast_node_t* pnamelist_node = pemit_node->pchildren->phead->pnext->pvvalue;
 			for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
 				sllv_append(pemit_oosvar_namelist_evaluators,
