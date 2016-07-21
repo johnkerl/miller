@@ -9,9 +9,6 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-! ubuntu 16.04 LTS link:
-  http://installion.co.uk/ubuntu/xenial/universe/m/miller/install/index.html
-
 ! rh/fedora/centos
 
 ! mlr head early out
