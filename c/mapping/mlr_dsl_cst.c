@@ -2948,9 +2948,18 @@ static void handle_printn_write(
 	// xxx open-files manager
 	char free_flags;
 	char* sval = mv_format_val(&val, &free_flags);
-	printf("%s", sval);
+	char ffree_flags;
+	char* fval = mv_format_val(&filename, &ffree_flags);
+
+	FILE* outfp = multi_out_get_for_write(pnode->pmulti_out, fval);
+	fprintf(outfp, "%s\n", sval);
+	if (TRUE) // xxx temp
+		fflush(outfp);
+
 	if (free_flags)
 		free(sval);
+	if (ffree_flags)
+		free(fval);
 	mv_free(&filename);
 	mv_free(&val);
 }
@@ -2966,9 +2975,18 @@ static void handle_printn_append(
 	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	char free_flags;
 	char* sval = mv_format_val(&val, &free_flags);
-	printf("%s", sval);
+	char ffree_flags;
+	char* fval = mv_format_val(&filename, &ffree_flags);
+
+	FILE* outfp = multi_out_get_for_append(pnode->pmulti_out, fval);
+	fprintf(outfp, "%s\n", sval);
+	if (TRUE) // xxx temp
+		fflush(outfp);
+
 	if (free_flags)
 		free(sval);
+	if (ffree_flags)
+		free(fval);
 	mv_free(&filename);
 	mv_free(&val);
 }
