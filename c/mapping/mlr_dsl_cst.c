@@ -2800,9 +2800,16 @@ static void handle_dump_write(
 	// xxx open-files manager
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+	char ffree_flags;
+	char* fval = mv_format_val(&filename, &ffree_flags);
 
-	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, stdout);
+	FILE* outfp = multi_out_get_for_write(pnode->pmulti_out, fval);
+	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, outfp);
+	if (TRUE) // xxx temp
+		fflush(outfp);
 
+	if (ffree_flags)
+		free(fval);
 	mv_free(&filename);
 }
 
@@ -2814,9 +2821,16 @@ static void handle_dump_append(
 	// xxx open-files manager
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+	char ffree_flags;
+	char* fval = mv_format_val(&filename, &ffree_flags);
 
-	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, stdout);
+	FILE* outfp = multi_out_get_for_append(pnode->pmulti_out, fval);
+	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, outfp);
+	if (TRUE) // xxx temp
+		fflush(outfp);
 
+	if (ffree_flags)
+		free(fval);
 	mv_free(&filename);
 }
 
@@ -2857,8 +2871,8 @@ static void handle_print_write(
 	cst_outputs_t*           pcst_outputs)
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
-	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	char sfree_flags;
 	char* sval = mv_format_val(&val, &sfree_flags);
@@ -2945,7 +2959,7 @@ static void handle_printn_write(
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
-	// xxx open-files manager
+
 	char free_flags;
 	char* sval = mv_format_val(&val, &free_flags);
 	char ffree_flags;
