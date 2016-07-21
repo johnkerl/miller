@@ -1034,6 +1034,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_write(mlr_dsl_ast_node_t* pn
 
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 
 	return pstatement;
 }
@@ -1095,6 +1096,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_append(mlr_dsl_ast_node_t* p
 
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 
 	return pstatement;
 }
@@ -1185,6 +1187,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_lashed_write(mlr_dsl_ast_nod
 
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 
 	pstatement->pnode_handler = do_full_prefixing
 		? handle_emit_lashed_write
@@ -1226,6 +1229,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_lashed_append(mlr_dsl_ast_no
 
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 
 	pstatement->pnode_handler = do_full_prefixing
 		? handle_emit_lashed_append
@@ -2346,18 +2350,28 @@ static void handle_emitp_write(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int keys_all_non_null_or_error = TRUE;
 	sllmv_t* pmvkeys = evaluate_list(pnode->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
+	sllv_t* poutrecs = sllv_alloc();
 	if (keys_all_non_null_or_error) {
 		int names_all_non_null_or_error = TRUE;
 		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, pcst_outputs->poutrecs,
+			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, poutrecs,
 				FALSE, pcst_outputs->oosvar_flatten_separator);
 		}
 		sllmv_free(pmvnames);
 	}
+
+	// xxx to-string ...
+	// xxx flush param ...
+	multi_lrec_writer_write(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	sllv_free(poutrecs);
+
 	sllmv_free(pmvkeys);
+	mv_free(&filename);
 }
 
 static void handle_emitp_append(
@@ -2365,18 +2379,28 @@ static void handle_emitp_append(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int keys_all_non_null_or_error = TRUE;
 	sllmv_t* pmvkeys = evaluate_list(pnode->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
+	sllv_t* poutrecs = sllv_alloc();
 	if (keys_all_non_null_or_error) {
 		int names_all_non_null_or_error = TRUE;
 		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, pcst_outputs->poutrecs,
+			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, poutrecs,
 				FALSE, pcst_outputs->oosvar_flatten_separator);
 		}
 		sllmv_free(pmvnames);
 	}
+
+	// xxx to-string ...
+	// xxx flush param ...
+	multi_lrec_writer_append(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	sllv_free(poutrecs);
+
 	sllmv_free(pmvkeys);
+	mv_free(&filename);
 }
 
 // ----------------------------------------------------------------
@@ -2404,13 +2428,14 @@ static void handle_emit_write(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	sllv_t* poutrecs = sllv_alloc();
 	int keys_all_non_null_or_error = TRUE;
 	sllmv_t* pmvkeys = evaluate_list(pnode->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
 		int names_all_non_null_or_error = TRUE;
 		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, pcst_outputs->poutrecs,
+			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, poutrecs,
 				TRUE, pcst_outputs->oosvar_flatten_separator);
 		}
 		sllmv_free(pmvnames);
@@ -2423,13 +2448,14 @@ static void handle_emit_append(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	sllv_t* poutrecs = sllv_alloc();
 	int keys_all_non_null_or_error = TRUE;
 	sllmv_t* pmvkeys = evaluate_list(pnode->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
 		int names_all_non_null_or_error = TRUE;
 		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, pcst_outputs->poutrecs,
+			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, poutrecs,
 				TRUE, pcst_outputs->oosvar_flatten_separator);
 		}
 		sllmv_free(pmvnames);
@@ -2472,6 +2498,9 @@ static void handle_emitp_lashed_write(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	sllv_t* poutrecs = sllv_alloc();
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int keys_all_non_null_or_error = TRUE;
 	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
 		pvars, &keys_all_non_null_or_error);
@@ -2480,10 +2509,17 @@ static void handle_emitp_lashed_write(
 		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
 			mlhmmv_to_lrecs_lashed(pvars->poosvars, ppmvkeys, pnode->num_emit_keylist_evaluators, pmvnames,
-				pcst_outputs->poutrecs, FALSE, pcst_outputs->oosvar_flatten_separator);
+				poutrecs, FALSE, pcst_outputs->oosvar_flatten_separator);
 		}
 		sllmv_free(pmvnames);
 	}
+
+	// xxx to-string ...
+	// xxx flush param ...
+	multi_lrec_writer_write(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	sllv_free(poutrecs);
+	mv_free(&filename);
+
 	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
 		sllmv_free(ppmvkeys[i]);
 	}
@@ -2495,6 +2531,9 @@ static void handle_emitp_lashed_append(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	sllv_t* poutrecs = sllv_alloc();
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int keys_all_non_null_or_error = TRUE;
 	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
 		pvars, &keys_all_non_null_or_error);
@@ -2503,10 +2542,17 @@ static void handle_emitp_lashed_append(
 		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
 			mlhmmv_to_lrecs_lashed(pvars->poosvars, ppmvkeys, pnode->num_emit_keylist_evaluators, pmvnames,
-				pcst_outputs->poutrecs, FALSE, pcst_outputs->oosvar_flatten_separator);
+				poutrecs, FALSE, pcst_outputs->oosvar_flatten_separator);
 		}
 		sllmv_free(pmvnames);
 	}
+
+	// xxx to-string ...
+	// xxx flush param ...
+	multi_lrec_writer_append(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	sllv_free(poutrecs);
+	mv_free(&filename);
+
 	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
 		sllmv_free(ppmvkeys[i]);
 	}
@@ -2542,6 +2588,9 @@ static void handle_emit_lashed_write(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	sllv_t* poutrecs = sllv_alloc();
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int keys_all_non_null_or_error = TRUE;
 	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
 		pvars, &keys_all_non_null_or_error);
@@ -2550,10 +2599,17 @@ static void handle_emit_lashed_write(
 		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
 			mlhmmv_to_lrecs_lashed(pvars->poosvars, ppmvkeys, pnode->num_emit_keylist_evaluators, pmvnames,
-				pcst_outputs->poutrecs, TRUE, pcst_outputs->oosvar_flatten_separator);
+				poutrecs, TRUE, pcst_outputs->oosvar_flatten_separator);
 		}
 		sllmv_free(pmvnames);
 	}
+
+	// xxx to-string ...
+	// xxx flush param ...
+	multi_lrec_writer_write(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	sllv_free(poutrecs);
+	mv_free(&filename);
+
 	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
 		sllmv_free(ppmvkeys[i]);
 	}
@@ -2565,6 +2621,9 @@ static void handle_emit_lashed_append(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	sllv_t* poutrecs = sllv_alloc();
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int keys_all_non_null_or_error = TRUE;
 	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
 		pvars, &keys_all_non_null_or_error);
@@ -2573,10 +2632,17 @@ static void handle_emit_lashed_append(
 		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
 			mlhmmv_to_lrecs_lashed(pvars->poosvars, ppmvkeys, pnode->num_emit_keylist_evaluators, pmvnames,
-				pcst_outputs->poutrecs, TRUE, pcst_outputs->oosvar_flatten_separator);
+				poutrecs, TRUE, pcst_outputs->oosvar_flatten_separator);
 		}
 		sllmv_free(pmvnames);
 	}
+
+	// xxx to-string ...
+	// xxx flush param ...
+	multi_lrec_writer_append(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	sllv_free(poutrecs);
+	mv_free(&filename);
+
 	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
 		sllmv_free(ppmvkeys[i]);
 	}
@@ -2603,12 +2669,22 @@ static void handle_emitp_all_write(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	sllv_t* poutrecs = sllv_alloc();
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, pcst_outputs->poutrecs,
+		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, poutrecs,
 			FALSE, pcst_outputs->oosvar_flatten_separator);
 	}
+
+	// xxx to-string ...
+	// xxx flush param ...
+	multi_lrec_writer_write(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	sllv_free(poutrecs);
+	mv_free(&filename);
+
 	sllmv_free(pmvnames);
 }
 
@@ -2617,12 +2693,22 @@ static void handle_emitp_all_append(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	sllv_t* poutrecs = sllv_alloc();
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, pcst_outputs->poutrecs,
+		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, poutrecs,
 			FALSE, pcst_outputs->oosvar_flatten_separator);
 	}
+
+	// xxx to-string ...
+	// xxx flush param ...
+	multi_lrec_writer_append(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	sllv_free(poutrecs);
+	mv_free(&filename);
+
 	sllmv_free(pmvnames);
 }
 
@@ -2646,12 +2732,22 @@ static void handle_emit_all_write(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	sllv_t* poutrecs = sllv_alloc();
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, pcst_outputs->poutrecs,
+		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, poutrecs,
 			TRUE, pcst_outputs->oosvar_flatten_separator);
 	}
+
+	// xxx to-string ...
+	// xxx flush param ...
+	multi_lrec_writer_write(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	sllv_free(poutrecs);
+	mv_free(&filename);
+
 	sllmv_free(pmvnames);
 }
 
@@ -2660,12 +2756,22 @@ static void handle_emit_all_append(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	sllv_t* poutrecs = sllv_alloc();
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, pcst_outputs->poutrecs,
+		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, poutrecs,
 			TRUE, pcst_outputs->oosvar_flatten_separator);
 	}
+
+	// xxx to-string ...
+	// xxx flush param ...
+	multi_lrec_writer_append(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	sllv_free(poutrecs);
+	mv_free(&filename);
+
 	sllmv_free(pmvnames);
 }
 
