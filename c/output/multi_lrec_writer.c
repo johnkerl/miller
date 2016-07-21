@@ -101,3 +101,18 @@ void multi_lrec_writer_write(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* 
 void multi_lrec_writer_append(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* filename, int flush_every_record) {
 	common_handler(pmlw, poutrecs, filename, flush_every_record, "a", "append");
 }
+
+// xxx hook into cst
+void multi_lrec_writer_drain(multi_lrec_writer_t* pmlw) {
+	for (lhmsve_t* pe = pmlw->pnames_to_lrec_writers_and_fps->phead; pe != NULL; pe = pe->pnext) {
+		lrec_writer_and_fp_t* pstate = pe->pvvalue;
+		pstate->plrec_writer->pprocess_func(pstate->output_stream, NULL, pstate->plrec_writer->pvstate);
+		fflush(pstate->output_stream);
+		if (fclose(pstate->output_stream) != 0) {
+			perror("fclose");
+			// xxx need strduped filename in the pstate
+			fprintf(stderr, "%s: fclose error on \"%s\".\n", MLR_GLOBALS.bargv0, "xxx fix me"/*filename*/);
+			exit(1);
+		}
+	}
+}
