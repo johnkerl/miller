@@ -882,6 +882,7 @@ static mlr_dsl_cst_statement_t* alloc_emitf_append(mlr_dsl_ast_node_t* pnode, in
 
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilenode,
 		type_inferencing, context_flags);
+	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 
 	pstatement->pnode_handler = handle_emitf_append;
 	return pstatement;
@@ -2278,7 +2279,6 @@ static void handle_emitf_write(
 	multi_lrec_writer_write(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
 
 	sllv_free(poutrecs);
-
 	mv_free(&filename);
 }
 
@@ -2291,6 +2291,7 @@ static void handle_emitf_append(
 	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 
 	lrec_t* prec_to_emit = lrec_unbacked_alloc();
+	sllv_t* poutrecs = sllv_alloc();
 	for (sllve_t* pf = pnode->pvarargs->phead; pf != NULL; pf = pf->pnext) {
 		mlr_dsl_cst_statement_vararg_t* pvararg = pf->pvvalue;
 		char* emitf_or_unset_srec_field_name = pvararg->emitf_or_unset_srec_field_name;
@@ -2310,8 +2311,13 @@ static void handle_emitf_append(
 		}
 
 	}
-	sllv_append(pcst_outputs->poutrecs, prec_to_emit);
+	sllv_append(poutrecs, prec_to_emit);
 
+	// xxx to-string ...
+	// xxx flush param ...
+	multi_lrec_writer_append(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+
+	sllv_free(poutrecs);
 	mv_free(&filename);
 }
 
