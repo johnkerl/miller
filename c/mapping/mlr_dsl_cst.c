@@ -3453,6 +3453,15 @@ static void mlr_dsl_unset_usage(FILE* ostream) {
 	fprintf(ostream, "  Example: %s put '...; unset @*'\n", MLR_GLOBALS.bargv0);
 }
 
+static void mlr_dsl_tee_usage(FILE* ostream) {
+	fprintf(ostream, "emit: inserts an out-of-stream variable into the output record stream. Hashmap\n");
+	fprintf(ostream, "  indices present in the data but not slotted by emit arguments are not output.\n");
+	fprintf(ostream, "  Example: %s put '... ; emit @sums'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put '... ; emit @sums, \"index1\", \"index2\"'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put '... ; emit @*, \"index1\", \"index2\"'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Please see http://johnkerl.org/miller/doc for more information.\n");
+}
+
 static void mlr_dsl_emit_usage(FILE* ostream) {
 	fprintf(ostream, "emit: inserts an out-of-stream variable into the output record stream. Hashmap\n");
 	fprintf(ostream, "  indices present in the data but not slotted by emit arguments are not output.\n");
@@ -3498,8 +3507,40 @@ static void mlr_dsl_print_usage(FILE* ostream) {
 		MLR_GLOBALS.bargv0);
 }
 
+static void mlr_dsl_printn_usage(FILE* ostream) {
+	fprintf(ostream, "xxx fix me print: prints expression immediately to stdout.\n");
+	fprintf(ostream, "  Example: %s put -q 'print \"The sum of x and y is \".string($x+$y)'.\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { print string(k) . \" => \" . string(v) }'.\n",
+		MLR_GLOBALS.bargv0);
+}
+
 static void mlr_dsl_eprint_usage(FILE* ostream) {
 	fprintf(ostream, "eprint: prints expression immediately to stderr.\n");
+	fprintf(ostream, "  Example: %s put -q 'eprint \"The sum of x and y is \".string($x+$y)'.\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { eprint string(k) . \" => \" . string(v) }'.\n",
+		MLR_GLOBALS.bargv0);
+}
+
+static void mlr_dsl_eprintn_usage(FILE* ostream) {
+	fprintf(ostream, "xxx fix me eprint: prints expression immediately to stderr.\n");
+	fprintf(ostream, "  Example: %s put -q 'eprint \"The sum of x and y is \".string($x+$y)'.\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { eprint string(k) . \" => \" . string(v) }'.\n",
+		MLR_GLOBALS.bargv0);
+}
+
+static void mlr_dsl_stdout_usage(FILE* ostream) {
+	fprintf(ostream, "xxx fix me eprint: prints expression immediately to stderr.\n");
+	fprintf(ostream, "  Example: %s put -q 'eprint \"The sum of x and y is \".string($x+$y)'.\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { eprint string(k) . \" => \" . string(v) }'.\n",
+		MLR_GLOBALS.bargv0);
+}
+
+static void mlr_dsl_stderr_usage(FILE* ostream) {
+	fprintf(ostream, "xxx fix me eprint: prints expression immediately to stderr.\n");
 	fprintf(ostream, "  Example: %s put -q 'eprint \"The sum of x and y is \".string($x+$y)'.\n",
 		MLR_GLOBALS.bargv0);
 	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { eprint string(k) . \" => \" . string(v) }'.\n",
@@ -3509,15 +3550,20 @@ static void mlr_dsl_eprint_usage(FILE* ostream) {
 // Pass function_name == NULL to get usage for all functions.
 void mlr_dsl_keyword_usage(FILE* ostream, char* keyword) {
 	if (keyword == NULL) {
-		mlr_dsl_filter_usage(ostream); fprintf(ostream, "\n");
-		mlr_dsl_unset_usage(ostream);  fprintf(ostream, "\n");
-		mlr_dsl_emit_usage(ostream);   fprintf(ostream, "\n");
-		mlr_dsl_emitp_usage(ostream);  fprintf(ostream, "\n");
-		mlr_dsl_emitf_usage(ostream);  fprintf(ostream, "\n");
-		mlr_dsl_dump_usage(ostream);   fprintf(ostream, "\n");
-		mlr_dsl_edump_usage(ostream);  fprintf(ostream, "\n");
-		mlr_dsl_print_usage(ostream);  fprintf(ostream, "\n");
-		mlr_dsl_eprint_usage(ostream);
+		mlr_dsl_filter_usage(ostream);  fprintf(ostream, "\n");
+		mlr_dsl_unset_usage(ostream);   fprintf(ostream, "\n");
+		mlr_dsl_tee_usage(ostream);     fprintf(ostream, "\n");
+		mlr_dsl_emit_usage(ostream);    fprintf(ostream, "\n");
+		mlr_dsl_emitp_usage(ostream);   fprintf(ostream, "\n");
+		mlr_dsl_emitf_usage(ostream);   fprintf(ostream, "\n");
+		mlr_dsl_dump_usage(ostream);    fprintf(ostream, "\n");
+		mlr_dsl_edump_usage(ostream);   fprintf(ostream, "\n");
+		mlr_dsl_print_usage(ostream);   fprintf(ostream, "\n");
+		mlr_dsl_printn_usage(ostream);  fprintf(ostream, "\n");
+		mlr_dsl_eprint_usage(ostream);  fprintf(ostream, "\n");
+		mlr_dsl_eprintn_usage(ostream); fprintf(ostream, "\n");
+		mlr_dsl_stdout_usage(ostream);  fprintf(ostream, "\n");
+		mlr_dsl_stderr_usage(ostream);
 		return;
 	}
 
@@ -3537,8 +3583,16 @@ void mlr_dsl_keyword_usage(FILE* ostream, char* keyword) {
 		mlr_dsl_edump_usage(ostream);
 	} else if (streq(keyword, "print")) {
 		mlr_dsl_print_usage(ostream);
+	} else if (streq(keyword, "printn")) {
+		mlr_dsl_print_usage(ostream);
 	} else if (streq(keyword, "eprint")) {
 		mlr_dsl_eprint_usage(ostream);
+	} else if (streq(keyword, "eprintn")) {
+		mlr_dsl_eprint_usage(ostream);
+	} else if (streq(keyword, "stdout")) {
+		mlr_dsl_stdout_usage(ostream);
+	} else if (streq(keyword, "stderr")) {
+		mlr_dsl_stderr_usage(ostream);
 	} else {
 		fprintf(ostream, "%s: unrecognized keyword \"%s\".\n", MLR_GLOBALS.bargv0, keyword);
 	}

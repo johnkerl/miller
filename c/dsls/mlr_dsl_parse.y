@@ -590,10 +590,11 @@ md_unset_args(A) ::= md_unset_args(B) MD_TOKEN_COMMA md_oosvar_keylist(C). {
 }
 
 // ----------------------------------------------------------------
-md_tee_write(A) ::= MD_TOKEN_TEE(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC. {
+md_tee_write(A) ::= MD_TOKEN_TEE(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC. {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_TEE_WRITE, F);
 }
-md_tee_append(A) ::= MD_TOKEN_TEE(O) MD_TOKEN_BITWISE_RSH md_rhs(F) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC. {
+
+md_tee_append(A) ::= MD_TOKEN_TEE(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC. {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_TEE_APPEND, F);
 }
 
@@ -619,11 +620,11 @@ md_emitf_args(A) ::= md_emitf_args(B) MD_TOKEN_COMMA md_oosvar_keylist(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
-md_emitf_write(A) ::= MD_TOKEN_EMITF(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA md_emitf_args(B). {
+md_emitf_write(A) ::= MD_TOKEN_EMITF(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA md_emitf_args(B). {
 	B = mlr_dsl_ast_node_set_function_name(B, O->text);
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITF_WRITE, B, F);
 }
-md_emitf_append(A) ::= MD_TOKEN_EMITF(O) MD_TOKEN_BITWISE_RSH md_rhs(F) MD_TOKEN_COMMA md_emitf_args(B). {
+md_emitf_append(A) ::= MD_TOKEN_EMITF(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_TOKEN_COMMA md_emitf_args(B). {
 	B = mlr_dsl_ast_node_set_function_name(B, O->text);
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITF_APPEND, B, F);
 }
@@ -648,63 +649,63 @@ md_emitp(A) ::= MD_TOKEN_EMITP(O) md_oosvar_keylist(B) MD_TOKEN_COMMA md_emitp_n
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP, B, C);
 }
 
-md_emitp_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emitp_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_ALL(B).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP_WRITE, B, F);
 }
-md_emitp_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emitp_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_ALL(B) MD_TOKEN_COMMA md_emitp_namelist(C).
 {
 	A = mlr_dsl_ast_node_alloc_ternary(O->text, MD_AST_NODE_TYPE_EMITP_WRITE, B, C, F);
 }
-md_emitp_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emitp_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_FULL_OOSVAR(B).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP_WRITE, B, F);
 }
-md_emitp_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emitp_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_COMMA md_emitp_namelist(C).
 {
 	A = mlr_dsl_ast_node_alloc_ternary(O->text, MD_AST_NODE_TYPE_EMITP_WRITE, B, C, F);
 }
-md_emitp_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emitp_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	md_oosvar_keylist(B).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP_WRITE, B, F);
 }
-md_emitp_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emitp_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	md_oosvar_keylist(B) MD_TOKEN_COMMA md_emitp_namelist(C).
 {
 	A = mlr_dsl_ast_node_alloc_ternary(O->text, MD_AST_NODE_TYPE_EMITP_WRITE, B, C, F);
 }
 
-md_emitp_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RHS md_rhs(F) MD_TOKEN_COMMA
+md_emitp_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RHS md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_ALL(B).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP_APPEND, B, F);
 }
-md_emitp_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RHS md_rhs(F) MD_TOKEN_COMMA
+md_emitp_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RHS md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_ALL(B) MD_TOKEN_COMMA md_emitp_namelist(C).
 {
 	A = mlr_dsl_ast_node_alloc_ternary(O->text, MD_AST_NODE_TYPE_EMITP_APPEND, B, C, F);
 }
-md_emitp_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RHS md_rhs(F) MD_TOKEN_COMMA
+md_emitp_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RHS md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_FULL_OOSVAR(B).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP_WRITE, B, F);
 }
-md_emitp_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RHS md_rhs(F) MD_TOKEN_COMMA
+md_emitp_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RHS md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_COMMA md_emitp_namelist(C).
 {
 	A = mlr_dsl_ast_node_alloc_ternary(O->text, MD_AST_NODE_TYPE_EMITP_WRITE, B, C, F);
 }
-md_emitp_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RHS md_rhs(F) MD_TOKEN_COMMA
+md_emitp_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RHS md_output_file(F) MD_TOKEN_COMMA
 	md_oosvar_keylist(B).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP_APPEND, B, F);
 }
-md_emitp_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RHS md_rhs(F) MD_TOKEN_COMMA
+md_emitp_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RHS md_output_file(F) MD_TOKEN_COMMA
 	md_oosvar_keylist(B) MD_TOKEN_COMMA md_emitp_namelist(C).
 {
 	A = mlr_dsl_ast_node_alloc_ternary(O->text, MD_AST_NODE_TYPE_EMITP_APPEND, B, C, F);
@@ -740,42 +741,42 @@ md_emit(A) ::= MD_TOKEN_EMIT(O) md_oosvar_keylist(B) MD_TOKEN_COMMA md_emit_name
 }
 
 // ----------------------------------------------------------------
-md_emit_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emit_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_ALL(B).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_WRITE,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT, B),
 		F);
 }
-md_emit_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emit_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_ALL(B) MD_TOKEN_COMMA md_emit_namelist(C).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_WRITE,
 		mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT, B, C),
 		F);
 }
-md_emit_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emit_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_FULL_OOSVAR(B).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_WRITE,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT, B),
 		F);
 }
-md_emit_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emit_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_COMMA md_emit_namelist(C).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_WRITE,
 		mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT, B, C),
 		F);
 }
-md_emit_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emit_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	md_oosvar_keylist(B).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_WRITE,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT, B),
 		F);
 }
-md_emit_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emit_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	md_oosvar_keylist(B) MD_TOKEN_COMMA md_emit_namelist(C).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_WRITE,
@@ -784,42 +785,42 @@ md_emit_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
 }
 
 // ----------------------------------------------------------------
-md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RHS md_rhs(F) MD_TOKEN_COMMA
+md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RHS md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_ALL(B).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_APPEND,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT, B),
 		F);
 }
-md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RHS md_rhs(F) MD_TOKEN_COMMA
+md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RHS md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_ALL(B) MD_TOKEN_COMMA md_emit_namelist(C).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_APPEND,
 		mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT, B, C),
 		F);
 }
-md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RHS md_rhs(F) MD_TOKEN_COMMA
+md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RHS md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_FULL_OOSVAR(B).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_APPEND,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT, B),
 		F);
 }
-md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RHS md_rhs(F) MD_TOKEN_COMMA
+md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RHS md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_COMMA md_emit_namelist(C).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_APPEND,
 		mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT, B, C),
 		F);
 }
-md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RHS md_rhs(F) MD_TOKEN_COMMA
+md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RHS md_output_file(F) MD_TOKEN_COMMA
 	md_oosvar_keylist(B).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_APPEND,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT, B),
 		F);
 }
-md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RHS md_rhs(F) MD_TOKEN_COMMA
+md_emit_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RHS md_output_file(F) MD_TOKEN_COMMA
 	md_oosvar_keylist(B) MD_TOKEN_COMMA md_emit_namelist(C).
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_APPEND,
@@ -848,14 +849,14 @@ md_emitp_lashed(A) ::= MD_TOKEN_EMITP(O)
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP_LASHED, B, C);
 }
 
-md_emitp_lashed_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emitp_lashed_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_LPAREN md_emitp_lashed_keylists(B) MD_TOKEN_RPAREN.
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP_LASHED_APPEND,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITP_LASHED, B),
 		F);
 }
-md_emitp_lashed_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emitp_lashed_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_LPAREN md_emitp_lashed_keylists(B) MD_TOKEN_RPAREN
 	MD_TOKEN_COMMA md_emitp_lashed_namelist(C).
 {
@@ -864,14 +865,14 @@ md_emitp_lashed_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_CO
 		F);
 }
 
-md_emitp_lashed_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RSH md_rhs(F) MD_TOKEN_COMMA
+md_emitp_lashed_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_LPAREN md_emitp_lashed_keylists(B) MD_TOKEN_RPAREN.
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP_LASHED_APPEND,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITP_LASHED, B),
 		F);
 }
-md_emitp_lashed_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RSH md_rhs(F) MD_TOKEN_COMMA
+md_emitp_lashed_append(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_LPAREN md_emitp_lashed_keylists(B) MD_TOKEN_RPAREN
 	MD_TOKEN_COMMA md_emitp_lashed_namelist(C).
 {
@@ -907,14 +908,14 @@ md_emit_lashed(A) ::= MD_TOKEN_EMIT(O)
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_LASHED, B, C);
 }
 
-md_emit_lashed_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emit_lashed_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_LPAREN md_emit_lashed_keylists(B) MD_TOKEN_RPAREN.
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_LASHED_WRITE,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT_LASHED, B),
 		F);
 }
-md_emit_lashed_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA
+md_emit_lashed_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_LPAREN md_emit_lashed_keylists(B) MD_TOKEN_RPAREN
 	MD_TOKEN_COMMA md_emit_lashed_namelist(C).
 {
@@ -923,14 +924,14 @@ md_emit_lashed_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMM
 		F);
 }
 
-md_emit_lashed_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RSH md_rhs(F) MD_TOKEN_COMMA
+md_emit_lashed_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_LPAREN md_emit_lashed_keylists(B) MD_TOKEN_RPAREN.
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_LASHED_APPEND,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT_LASHED, B),
 		F);
 }
-md_emit_lashed_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RSH md_rhs(F) MD_TOKEN_COMMA
+md_emit_lashed_append(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_TOKEN_COMMA
 	MD_TOKEN_LPAREN md_emit_lashed_keylists(B) MD_TOKEN_RPAREN
 	MD_TOKEN_COMMA md_emit_lashed_namelist(C).
 {
@@ -973,10 +974,10 @@ md_print(A) ::= MD_TOKEN_PRINT(O) md_rhs(B). {
 md_eprint(A) ::= MD_TOKEN_EPRINT(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EPRINT, B);
 }
-md_print_write(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA md_rhs(C). {
+md_print_write(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT_WRITE, C, F);
 }
-md_print_append(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_BITWISE_RSH md_rhs(F) MD_TOKEN_COMMA md_rhs(C). {
+md_print_append(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT_APPEND, C, F);
 }
 
@@ -986,12 +987,17 @@ md_printn(A) ::= MD_TOKEN_PRINTN(O) md_rhs(B). {
 md_eprintn(A) ::= MD_TOKEN_EPRINTN(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EPRINTN, B);
 }
-md_printn_write(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA md_rhs(C). {
+md_printn_write(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN_WRITE, C, F);
 }
-md_printn_append(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_BITWISE_RSH md_rhs(F) MD_TOKEN_COMMA md_rhs(C). {
+md_printn_append(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN_APPEND, C, F);
 }
+
+// ----------------------------------------------------------------
+md_output_file(A) ::= md_rhs(F).          { A = F; }
+md_output_file(A) ::= MD_TOKEN_STDOUT(F). { A = F; }
+md_output_file(A) ::= MD_TOKEN_STDERR(F). { A = F; }
 
 // ================================================================
 // Begin RHS precedence chain

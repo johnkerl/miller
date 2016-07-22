@@ -17,8 +17,6 @@ TOP OF LIST:
 
 ! go through lmag article & clarify all unclears
 
-! undo dsls/M*g gcc -g
-
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PRE-RELEASE:
 * xxxes
@@ -34,6 +32,7 @@ COOKBOOK:
 COMMON:
 * lrec_reader/writer take sub-bagged cliopts pstructs
 * put/tee --output flags
+* put/tee --no-flush flags
 
 CONCRETE FOR EMIT-WRITE:
 * ut-cases 1-1 with m*y exprs

@@ -198,6 +198,8 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_PRINTN_APPEND:                    return "printn_append";                    break;
 	case MD_AST_NODE_TYPE_EPRINT:                           return "eprint";                           break;
 	case MD_AST_NODE_TYPE_EPRINTN:                          return "eprintn";                          break;
+	case MD_AST_NODE_TYPE_STDOUT:                           return "stdout";                           break;
+	case MD_AST_NODE_TYPE_STDERR:                           return "stderr";                           break;
 	case MD_AST_NODE_TYPE_ALL:                              return "all";                              break;
 	case MD_AST_NODE_TYPE_ENV:                              return "env";                              break;
 	case MD_AST_NODE_TYPE_WHILE:                            return "while";                            break;
