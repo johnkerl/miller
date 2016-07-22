@@ -54,6 +54,7 @@ CONCRETE FOR TEE:
   - UTs, in various then-chains
   - mlh
   - mld
+? tee --terminal? or just 'then nothing'.
 
 CONCRETE FOR PRINT:
 * impl > stdout/stderr
