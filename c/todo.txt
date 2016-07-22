@@ -26,9 +26,14 @@ PRE-RELEASE:
 * check mlh's
 * fix left_align_pprint -> cli_opts_t
 * also sub-bag cli_opts by in/out/etc
+* printn to mlr -k.
+
+COOKBOOK:
+* mlr --from ../data/small put -q '@v=$*; emit > "foo".$a.".dat", @v'; etc.
 
 COMMON:
 * lrec_reader/writer take sub-bagged cliopts pstructs
+* put/tee --output flags
 
 CONCRETE FOR EMIT-WRITE:
 * ut-cases 1-1 with m*y exprs

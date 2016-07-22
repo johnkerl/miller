@@ -39,6 +39,10 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_UNSET);
 	return MD_TOKEN_UNSET;
 }
+"tee" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_TEE);
+	return MD_TOKEN_TEE;
+}
 "emitf" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_EMITF);
 	return MD_TOKEN_EMITF;

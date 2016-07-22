@@ -168,6 +168,9 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK:                return "conditional_block";                break;
 	case MD_AST_NODE_TYPE_FILTER:                           return "filter";                           break;
 	case MD_AST_NODE_TYPE_UNSET:                            return "unset";                            break;
+	case MD_AST_NODE_TYPE_TEE:                              return "tee";                              break;
+	case MD_AST_NODE_TYPE_TEE_WRITE:                        return "tee_write";                        break;
+	case MD_AST_NODE_TYPE_TEE_APPEND:                       return "tee_append";                       break;
 	case MD_AST_NODE_TYPE_EMITF:                            return "emitf";                            break;
 	case MD_AST_NODE_TYPE_EMITF_WRITE:                      return "emitf_write";                      break;
 	case MD_AST_NODE_TYPE_EMITF_APPEND:                     return "emitf_append";                     break;

@@ -30,6 +30,8 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_a
 static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*                            alloc_unset(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*                            alloc_emitf(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                        alloc_tee_write(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                       alloc_tee_append(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*                      alloc_emitf_write(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*                     alloc_emitf_append(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*                    alloc_emit_or_emitp(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
@@ -92,6 +94,8 @@ static void handle_full_srec_from_oosvar_assignment(mlr_dsl_cst_statement_t* s, 
 static void                handle_oosvar_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_unset(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                        handle_unset_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                        handle_tee_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                       handle_tee_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_emitf(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                      handle_emitf_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_emitf_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -442,6 +446,12 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_UNSET:
 		return alloc_unset(pnode, type_inferencing, context_flags);
 		break;
+	case MD_AST_NODE_TYPE_TEE_WRITE:
+		return alloc_tee_write(pnode, type_inferencing, context_flags);
+		break;
+	case MD_AST_NODE_TYPE_TEE_APPEND:
+		return alloc_tee_append(pnode, type_inferencing, context_flags);
+		break;
 	case MD_AST_NODE_TYPE_EMITF:
 		return alloc_emitf(pnode, type_inferencing, context_flags);
 		break;
@@ -771,6 +781,37 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_ast_node_t* pnode, int type_
 			exit(1);
 		}
 	}
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
+static mlr_dsl_cst_statement_t* alloc_tee_write(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	mlr_dsl_ast_node_t* pfilenode = pnode->pchildren->phead->pvvalue;
+
+	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilenode,
+		type_inferencing, context_flags);
+	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
+
+	pstatement->pnode_handler = handle_tee_write;
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_tee_append(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	mlr_dsl_ast_node_t* pfilenode = pnode->pchildren->phead->pvvalue;
+
+	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilenode,
+		type_inferencing, context_flags);
+	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
+
+	pstatement->pnode_handler = handle_tee_append;
 	return pstatement;
 }
 
@@ -1838,7 +1879,7 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
 	multi_out_free(pstatement->pmulti_out);
 	if (pstatement->pmulti_lrec_writer != NULL) {
-		// xxx drain all
+		multi_lrec_writer_drain(pstatement->pmulti_lrec_writer);
 		multi_lrec_writer_free(pstatement->pmulti_lrec_writer);
 	}
 
@@ -2216,6 +2257,53 @@ static void handle_unset_all(
 	sllmv_t* pempty = sllmv_alloc();
 	mlhmmv_remove(pvars->poosvars, pempty);
 	sllmv_free(pempty);
+}
+
+// ----------------------------------------------------------------
+static void handle_tee_write(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+
+	// xxx to-string ...
+	// xxx flush param ...
+	// xxx put in the overlay ...
+	lrec_t* pcopy = lrec_copy(pvars->pinrec);
+
+	// xxx make a list-free API w/ refactor
+	sllv_t* poutrecs = sllv_single(pcopy);
+	// the writer frees the lrec
+	// xxx do pop-off drain in lrec-writers
+	multi_lrec_writer_write(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+
+	sllv_free(poutrecs);
+	mv_free(&filename);
+}
+
+static void handle_tee_append(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+
+	// xxx to-string ...
+	// xxx flush param ...
+	// xxx put in the overlay ...
+	lrec_t* pcopy = lrec_copy(pvars->pinrec);
+
+	// xxx make a list-free API w/ refactor
+	sllv_t* poutrecs = sllv_single(pcopy);
+	multi_lrec_writer_append(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	// the writer frees the lrec
+	// xxx do pop-off drain in lrec-writers
+
+	sllv_free(poutrecs);
+	mv_free(&filename);
 }
 
 // ----------------------------------------------------------------

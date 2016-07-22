@@ -23,5 +23,6 @@ void multi_lrec_writer_free(multi_lrec_writer_t* pmlw);
 
 void multi_lrec_writer_write(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* filename, int flush_every_record);
 void multi_lrec_writer_append(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* filename, int flush_every_record);
+void multi_lrec_writer_drain(multi_lrec_writer_t* pmlw);
 
 #endif // MULTI_LREC_WRITER_H

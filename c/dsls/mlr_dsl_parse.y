@@ -135,6 +135,8 @@ md_statement_not_braced_end(A) ::= md_oosvar_assignment(B).   { A = B; }
 md_statement_not_braced_end(A) ::= md_filter(B).              { A = B; }
 md_statement_not_braced_end(A) ::= md_unset(B).               { A = B; }
 
+md_statement_not_braced_end(A) ::= md_tee_write(B).           { A = B; }
+md_statement_not_braced_end(A) ::= md_tee_append(B).          { A = B; }
 md_statement_not_braced_end(A) ::= md_emitf(B).               { A = B; }
 md_statement_not_braced_end(A) ::= md_emitf_write(B).         { A = B; }
 md_statement_not_braced_end(A) ::= md_emitf_append(B).        { A = B; }
@@ -585,6 +587,14 @@ md_unset_args(A) ::= md_unset_args(B) MD_TOKEN_COMMA md_field_name(C). {
 }
 md_unset_args(A) ::= md_unset_args(B) MD_TOKEN_COMMA md_oosvar_keylist(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+
+// ----------------------------------------------------------------
+md_tee_write(A) ::= MD_TOKEN_TEE(O) MD_TOKEN_GT md_rhs(F) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC. {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_TEE_WRITE, F);
+}
+md_tee_append(A) ::= MD_TOKEN_TEE(O) MD_TOKEN_BITWISE_RSH md_rhs(F) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC. {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_TEE_APPEND, F);
 }
 
 // ----------------------------------------------------------------
