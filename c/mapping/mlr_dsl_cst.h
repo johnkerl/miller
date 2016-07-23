@@ -123,6 +123,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 
 	// For print-to-file and dump-to-file, and emit-to-file
 	rval_evaluator_t* poutput_filename_evaluator;
+	file_output_mode_t file_output_mode;
 	multi_out_t* pmulti_out; // print-to-file and dump-to-file
 	multi_lrec_writer_t* pmulti_lrec_writer; // emit-to-file
 

@@ -20,6 +20,8 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 static mlr_dsl_cst_statement_t* alloc_blank();
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
+// xxx code-dedupe opportunities throughout write/append/tee/emit/print/dump
+
 // ti = type_inferencing
 // cf = context_flags
 // dfp = do_full_prefixing
@@ -30,10 +32,8 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_a
 static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*                            alloc_unset(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*                            alloc_emitf(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*                        alloc_tee_write(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*                       alloc_tee_append(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*                      alloc_emitf_write(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*                     alloc_emitf_append(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*           alloc_tee(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
+static mlr_dsl_cst_statement_t* alloc_emitf_to_file(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
 static mlr_dsl_cst_statement_t*                    alloc_emit_or_emitp(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
 static mlr_dsl_cst_statement_t*              alloc_emit_or_emitp_write(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
 static mlr_dsl_cst_statement_t*             alloc_emit_or_emitp_append(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
@@ -93,11 +93,9 @@ static void handle_full_srec_from_oosvar_assignment(mlr_dsl_cst_statement_t* s, 
 static void                handle_oosvar_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_unset(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                        handle_unset_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                        handle_tee_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                       handle_tee_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                              handle_tee(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_emitf(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                      handle_emitf_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                     handle_emitf_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                    handle_emitf_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_emitp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                      handle_emitp_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_emitp_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -445,20 +443,21 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_UNSET:
 		return alloc_unset(pnode, type_inferencing, context_flags);
 		break;
+	// xxx work the mode into the AST too
 	case MD_AST_NODE_TYPE_TEE_WRITE:
-		return alloc_tee_write(pnode, type_inferencing, context_flags);
+		return alloc_tee(pnode, type_inferencing, context_flags, MODE_WRITE);
 		break;
 	case MD_AST_NODE_TYPE_TEE_APPEND:
-		return alloc_tee_append(pnode, type_inferencing, context_flags);
+		return alloc_tee(pnode, type_inferencing, context_flags, MODE_APPEND);
 		break;
 	case MD_AST_NODE_TYPE_EMITF:
 		return alloc_emitf(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_EMITF_WRITE:
-		return alloc_emitf_write(pnode, type_inferencing, context_flags);
+		return alloc_emitf_to_file(pnode, type_inferencing, context_flags, MODE_WRITE);
 		break;
 	case MD_AST_NODE_TYPE_EMITF_APPEND:
-		return alloc_emitf_append(pnode, type_inferencing, context_flags);
+		return alloc_emitf_to_file(pnode, type_inferencing, context_flags, MODE_APPEND);
 		break;
 	case MD_AST_NODE_TYPE_EMITP:
 		return alloc_emit_or_emitp(pnode, type_inferencing, context_flags, TRUE);
@@ -556,6 +555,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->psrec_lhs_evaluator                  = NULL;
 	pstatement->prhs_evaluator                       = NULL;
 	pstatement->poutput_filename_evaluator           = NULL;
+	pstatement->file_output_mode                     = MODE_WRITE;
 	pstatement->pmulti_out                           = NULL;
 	pstatement->pmulti_lrec_writer                   = NULL;
 	pstatement->poosvar_rhs_keylist_evaluators       = NULL;
@@ -781,8 +781,8 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_ast_node_t* pnode, int type_
 }
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_tee_write(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags)
+static mlr_dsl_cst_statement_t* alloc_tee(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags, file_output_mode_t file_output_mode)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
@@ -790,24 +790,10 @@ static mlr_dsl_cst_statement_t* alloc_tee_write(mlr_dsl_ast_node_t* pnode, int t
 
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilenode,
 		type_inferencing, context_flags);
+	pstatement->file_output_mode = file_output_mode;
 	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 
-	pstatement->pnode_handler = handle_tee_write;
-	return pstatement;
-}
-
-static mlr_dsl_cst_statement_t* alloc_tee_append(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-
-	mlr_dsl_ast_node_t* pfilenode = pnode->pchildren->phead->pvvalue;
-
-	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilenode,
-		type_inferencing, context_flags);
-	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
-
-	pstatement->pnode_handler = handle_tee_append;
+	pstatement->pnode_handler = handle_tee;
 	return pstatement;
 }
 
@@ -866,9 +852,8 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_
 //               text="a", type=string_literal.
 //       text="out", type=strnum_literal.
 
-// xxx code-dedupe opportunities here
-static mlr_dsl_cst_statement_t* alloc_emitf_write(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags)
+static mlr_dsl_cst_statement_t* alloc_emitf_to_file(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags, file_output_mode_t file_output_mode)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
@@ -890,38 +875,10 @@ static mlr_dsl_cst_statement_t* alloc_emitf_write(mlr_dsl_ast_node_t* pnode, int
 
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilenode,
 		type_inferencing, context_flags);
+	pstatement->file_output_mode = file_output_mode;
 	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 
-	pstatement->pnode_handler = handle_emitf_write;
-	return pstatement;
-}
-
-static mlr_dsl_cst_statement_t* alloc_emitf_append(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-
-	mlr_dsl_ast_node_t* pnamesnode = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pfilenode = pnode->pchildren->phead->pnext->pvvalue;
-
-	// Loop over oosvar names to emit in e.g. 'emitf @a, @b, @c'.
-	pstatement->pvarargs = sllv_alloc();
-	for (sllve_t* pe = pnamesnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pwalker = pe->pvvalue;
-		mlr_dsl_ast_node_t* pchild = pwalker->pchildren->phead->pvvalue;
-		// This could be enforced in the lemon parser but it's easier to do it here.
-		sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
-			pchild->text,
-			NULL,
-			rval_evaluator_alloc_from_ast(pwalker, type_inferencing, context_flags),
-			NULL));
-	}
-
-	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilenode,
-		type_inferencing, context_flags);
-	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
-
-	pstatement->pnode_handler = handle_emitf_append;
+	pstatement->pnode_handler = handle_emitf_to_file;
 	return pstatement;
 }
 
@@ -1071,6 +1028,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_write(mlr_dsl_ast_node_t* pn
 
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->file_output_mode = MODE_WRITE;
 	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 
 	return pstatement;
@@ -1133,6 +1091,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_append(mlr_dsl_ast_node_t* p
 
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->file_output_mode = MODE_APPEND;
 	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 
 	return pstatement;
@@ -1224,6 +1183,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_lashed_write(mlr_dsl_ast_nod
 
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->file_output_mode = MODE_WRITE;
 	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 
 	pstatement->pnode_handler = do_full_prefixing
@@ -1266,6 +1226,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_or_emitp_lashed_append(mlr_dsl_ast_no
 
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->file_output_mode = MODE_APPEND;
 	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 
 	pstatement->pnode_handler = do_full_prefixing
@@ -1659,6 +1620,7 @@ static mlr_dsl_cst_statement_t* alloc_dump_write(mlr_dsl_ast_node_t* pnode, int 
 	mlr_dsl_ast_node_t* pfilename_node = pnode->pchildren->phead->pvvalue;
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->file_output_mode = MODE_WRITE;
 	pstatement->pmulti_out = multi_out_alloc();
 	pstatement->pnode_handler = handle_dump_write;
 	return pstatement;
@@ -1676,6 +1638,7 @@ static mlr_dsl_cst_statement_t* alloc_dump_append(mlr_dsl_ast_node_t* pnode, int
 	mlr_dsl_ast_node_t* pfilename_node = pnode->pchildren->phead->pvvalue;
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->file_output_mode = MODE_APPEND;
 	pstatement->pmulti_out = multi_out_alloc();
 	pstatement->pnode_handler = handle_dump_append;
 	return pstatement;
@@ -1718,6 +1681,7 @@ static mlr_dsl_cst_statement_t* alloc_print_write(mlr_dsl_ast_node_t* pnode, int
 	} else {
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
+		pstatement->file_output_mode = MODE_WRITE;
 		pstatement->pmulti_out = multi_out_alloc();
 		pstatement->pnode_handler = handle_print_write;
 	}
@@ -1739,6 +1703,7 @@ static mlr_dsl_cst_statement_t* alloc_print_append(mlr_dsl_ast_node_t* pnode, in
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, type_inferencing, context_flags);
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->file_output_mode = MODE_APPEND;
 	pstatement->pmulti_out = multi_out_alloc();
 	pstatement->pnode_handler = handle_print_append;
 	return pstatement;
@@ -1789,6 +1754,7 @@ static mlr_dsl_cst_statement_t* alloc_printn_write(mlr_dsl_ast_node_t* pnode, in
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, type_inferencing, context_flags);
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->file_output_mode = MODE_WRITE;
 	pstatement->pmulti_out = multi_out_alloc();
 	pstatement->pnode_handler = handle_printn_write;
 	return pstatement;
@@ -1808,6 +1774,7 @@ static mlr_dsl_cst_statement_t* alloc_printn_append(mlr_dsl_ast_node_t* pnode, i
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, type_inferencing, context_flags);
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
+	pstatement->file_output_mode = MODE_APPEND;
 	pstatement->pmulti_out = multi_out_alloc();
 	pstatement->pnode_handler = handle_printn_append;
 	return pstatement;
@@ -2250,7 +2217,7 @@ static void handle_unset_all(
 }
 
 // ----------------------------------------------------------------
-static void handle_tee_write(
+static void handle_tee(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -2268,31 +2235,7 @@ static void handle_tee_write(
 	// the writer frees the lrec
 	// xxx do pop-off drain in lrec-writers
 	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
-		MODE_WRITE, TRUE/*flush_every_record*/);
-
-	sllv_free(poutrecs);
-	mv_free(&filename);
-}
-
-static void handle_tee_append(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
-
-	// xxx to-string ...
-	// xxx flush param ...
-	// xxx put in the overlay ...
-	lrec_t* pcopy = lrec_copy(pvars->pinrec);
-
-	// xxx make a list-free API w/ refactor
-	sllv_t* poutrecs = sllv_single(pcopy);
-	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
-		MODE_APPEND, TRUE/*flush_every_record*/);
-	// the writer frees the lrec
-	// xxx do pop-off drain in lrec-writers
+		pnode->file_output_mode, TRUE/*flush_every_record*/);
 
 	sllv_free(poutrecs);
 	mv_free(&filename);
@@ -2327,7 +2270,7 @@ static void handle_emitf(
 	sllv_append(pcst_outputs->poutrecs, prec_to_emit);
 }
 
-static void handle_emitf_write(
+static void handle_emitf_to_file(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -2361,47 +2304,7 @@ static void handle_emitf_write(
 	// xxx to-string ...
 	// xxx flush param ...
 	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
-		MODE_WRITE, TRUE/*flush_every_record*/);
-
-	sllv_free(poutrecs);
-	mv_free(&filename);
-}
-
-static void handle_emitf_append(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
-
-	lrec_t* prec_to_emit = lrec_unbacked_alloc();
-	sllv_t* poutrecs = sllv_alloc();
-	for (sllve_t* pf = pnode->pvarargs->phead; pf != NULL; pf = pf->pnext) {
-		mlr_dsl_cst_statement_vararg_t* pvararg = pf->pvvalue;
-		char* emitf_or_unset_srec_field_name = pvararg->emitf_or_unset_srec_field_name;
-		rval_evaluator_t* pemitf_arg_evaluator = pvararg->pemitf_arg_evaluator;
-
-		// This is overkill ... the grammar allows only for oosvar names as args to emit.  So we could bypass
-		// that and just hashmap-get keyed by emitf_or_unset_srec_field_name here.
-		mv_t val = pemitf_arg_evaluator->pprocess_func(pemitf_arg_evaluator->pvstate, pvars);
-
-		if (val.type == MT_STRING) {
-			// Ownership transfer from (newly created) mlrval to (newly created) lrec.
-			lrec_put(prec_to_emit, emitf_or_unset_srec_field_name, val.u.strv, val.free_flags);
-		} else {
-			char free_flags = NO_FREE;
-			char* string = mv_format_val(&val, &free_flags);
-			lrec_put(prec_to_emit, emitf_or_unset_srec_field_name, string, free_flags);
-		}
-
-	}
-	sllv_append(poutrecs, prec_to_emit);
-
-	// xxx to-string ...
-	// xxx flush param ...
-	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
-		MODE_APPEND, TRUE/*flush_every_record*/);
+		pnode->file_output_mode, TRUE/*flush_every_record*/);
 
 	sllv_free(poutrecs);
 	mv_free(&filename);
@@ -2894,7 +2797,7 @@ static void handle_dump_write(
 	char ffree_flags;
 	char* fval = mv_format_val(&filename, &ffree_flags);
 
-	FILE* outfp = multi_out_get_for_write(pnode->pmulti_out, fval);
+	FILE* outfp = multi_out_get(pnode->pmulti_out, fval, MODE_WRITE);
 	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, outfp);
 	if (TRUE) // xxx temp
 		fflush(outfp);
@@ -2914,7 +2817,7 @@ static void handle_dump_append(
 	char ffree_flags;
 	char* fval = mv_format_val(&filename, &ffree_flags);
 
-	FILE* outfp = multi_out_get_for_append(pnode->pmulti_out, fval);
+	FILE* outfp = multi_out_get(pnode->pmulti_out, fval, MODE_APPEND);
 	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, outfp);
 	if (TRUE) // xxx temp
 		fflush(outfp);
@@ -2969,7 +2872,7 @@ static void handle_print_write(
 	char ffree_flags;
 	char* fval = mv_format_val(&filename, &ffree_flags);
 
-	FILE* outfp = multi_out_get_for_write(pnode->pmulti_out, fval);
+	FILE* outfp = multi_out_get(pnode->pmulti_out, fval, MODE_WRITE);
 	fprintf(outfp, "%s\n", sval);
 	if (TRUE) // xxx temp
 		fflush(outfp);
@@ -2996,7 +2899,7 @@ static void handle_print_append(
 	char ffree_flags;
 	char* fval = mv_format_val(&filename, &ffree_flags);
 
-	FILE* outfp = multi_out_get_for_append(pnode->pmulti_out, fval);
+	FILE* outfp = multi_out_get(pnode->pmulti_out, fval, MODE_APPEND);
 	fprintf(outfp, "%s\n", sval);
 	if (TRUE) // xxx temp
 		fflush(outfp);
@@ -3055,7 +2958,7 @@ static void handle_printn_write(
 	char ffree_flags;
 	char* fval = mv_format_val(&filename, &ffree_flags);
 
-	FILE* outfp = multi_out_get_for_write(pnode->pmulti_out, fval);
+	FILE* outfp = multi_out_get(pnode->pmulti_out, fval, MODE_WRITE);
 	fprintf(outfp, "%s\n", sval);
 	if (TRUE) // xxx temp
 		fflush(outfp);
@@ -3082,7 +2985,7 @@ static void handle_printn_append(
 	char ffree_flags;
 	char* fval = mv_format_val(&filename, &ffree_flags);
 
-	FILE* outfp = multi_out_get_for_append(pnode->pmulti_out, fval);
+	FILE* outfp = multi_out_get(pnode->pmulti_out, fval, MODE_APPEND);
 	fprintf(outfp, "%s\n", sval);
 	if (TRUE) // xxx temp
 		fflush(outfp);

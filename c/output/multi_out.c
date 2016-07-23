@@ -19,12 +19,12 @@ void multi_out_free(multi_out_t* pmo) {
 }
 
 // ----------------------------------------------------------------
-static inline FILE* multi_out_get(multi_out_t* pmo, char* filename,
-	char* mode, char* mode_desc)
-{
+FILE* multi_out_get(multi_out_t* pmo, char* filename, file_output_mode_t file_output_mode) {
 	FILE* outfp = lhmsv_get(pmo->pnames_to_fps, filename);
 	if (outfp == NULL) {
-		outfp = fopen(filename, mode);
+		char* mode_string = get_mode_string(file_output_mode);
+		char* mode_desc = get_mode_desc(file_output_mode);
+		outfp = fopen(filename, mode_string);
 		if (outfp == NULL) {
 			perror("fopen");
 			fprintf(stderr, "%s: failed fopen for %s of \"%s\".\n",
@@ -34,14 +34,4 @@ static inline FILE* multi_out_get(multi_out_t* pmo, char* filename,
 		lhmsv_put(pmo->pnames_to_fps, mlr_strdup_or_die(filename), outfp, FREE_ENTRY_KEY);
 	}
 	return outfp;
-}
-
-// ----------------------------------------------------------------
-FILE* multi_out_get_for_write(multi_out_t* pmo, char* filename) {
-	return multi_out_get(pmo, filename, "w", "write");
-}
-
-// ----------------------------------------------------------------
-FILE* multi_out_get_for_append(multi_out_t* pmo, char* filename) {
-	return multi_out_get(pmo, filename, "a", "append");
 }

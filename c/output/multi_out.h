@@ -13,8 +13,7 @@ typedef struct _multi_out_t {
 
 // ----------------------------------------------------------------
 multi_out_t* multi_out_alloc();
-void multi_out_free(multi_out_t* pmo);
-FILE* multi_out_get_for_write(multi_out_t* pmo, char* filename);
-FILE* multi_out_get_for_append(multi_out_t* pmo, char* filename);
+void  multi_out_free(multi_out_t* pmo);
+FILE* multi_out_get(multi_out_t* pmo, char* filename, file_output_mode_t file_output_mode);
 
 #endif // MULTI_OUT_H
