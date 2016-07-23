@@ -10,6 +10,7 @@
 // ----------------------------------------------------------------
 typedef struct _lrec_writer_and_fp_t {
 	lrec_writer_t* plrec_writer;
+	char* filename;
 	FILE* output_stream;
 } lrec_writer_and_fp_t;
 

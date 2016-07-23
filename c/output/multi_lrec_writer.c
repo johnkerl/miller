@@ -15,6 +15,13 @@ void multi_lrec_writer_free(multi_lrec_writer_t* pmlw) {
 	if (pmlw == NULL)
 		return;
 
+	// xxx in loop: free writers and filenames
+	for (lhmsve_t* pe = pmlw->pnames_to_lrec_writers_and_fps->phead; pe != NULL; pe = pe->pnext) {
+		lrec_writer_and_fp_t* pstate = pe->pvvalue;
+		pstate->plrec_writer->pfree_func(pstate->plrec_writer);
+		free(pstate->filename);
+	}
+
 	lhmsv_free(pmlw->pnames_to_lrec_writers_and_fps);
 	free(pmlw);
 }
@@ -36,6 +43,7 @@ void multi_lrec_writer_output_srec(multi_lrec_writer_t* pmlw, lrec_t* poutrec, c
 				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 			exit(1);
 		}
+		pstate->filename = mlr_strdup_or_die(filename);
 		char* mode_string = get_mode_string(file_output_mode);
 		char* mode_desc = get_mode_desc(file_output_mode);
 		pstate->output_stream = fopen(filename, mode_string);
@@ -82,8 +90,7 @@ void multi_lrec_writer_drain(multi_lrec_writer_t* pmlw) {
 		fflush(pstate->output_stream);
 		if (fclose(pstate->output_stream) != 0) {
 			perror("fclose");
-			// xxx need strduped filename in the pstate
-			fprintf(stderr, "%s: fclose error on \"%s\".\n", MLR_GLOBALS.bargv0, "xxx fix me"/*filename*/);
+			fprintf(stderr, "%s: fclose error on \"%s\".\n", MLR_GLOBALS.bargv0, pstate->filename);
 			exit(1);
 		}
 	}
