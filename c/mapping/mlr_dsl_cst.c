@@ -58,8 +58,8 @@ static mlr_dsl_cst_statement_t*                    alloc_print_to_file(mlr_dsl_a
 	file_output_mode_t file_output_mode);
 static mlr_dsl_cst_statement_t*                           alloc_printn(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*                          alloc_eprintn(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*                     alloc_printn_write(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*                    alloc_printn_append(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*                   alloc_printn_to_file(mlr_dsl_ast_node_t* p, int ti, int cf,
+	file_output_mode_t file_output_mode);
 static mlr_dsl_cst_statement_t*                     alloc_bare_boolean(mlr_dsl_ast_node_t* p, int ti, int cf);
 
 static mlr_dsl_cst_statement_t* alloc_if_item(
@@ -116,8 +116,7 @@ static void                            handle_edump(mlr_dsl_cst_statement_t* s, 
 static void                            handle_print(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                    handle_print_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                           handle_printn(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                     handle_printn_write(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                    handle_printn_append(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                   handle_printn_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                           handle_eprint(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                          handle_eprintn(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                           handle_filter(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -523,10 +522,10 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		return alloc_eprintn(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_PRINTN_WRITE:
-		return alloc_printn_write(pnode, type_inferencing, context_flags);
+		return alloc_printn_to_file(pnode, type_inferencing, context_flags, MODE_WRITE);
 		break;
 	case MD_AST_NODE_TYPE_PRINTN_APPEND:
-		return alloc_printn_append(pnode, type_inferencing, context_flags);
+		return alloc_printn_to_file(pnode, type_inferencing, context_flags, MODE_APPEND);
 		break;
 
 	default:
@@ -1633,8 +1632,8 @@ static mlr_dsl_cst_statement_t* alloc_eprintn(mlr_dsl_ast_node_t* pnode, int typ
 	return pstatement;
 }
 
-static mlr_dsl_cst_statement_t* alloc_printn_write(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags)
+static mlr_dsl_cst_statement_t* alloc_printn_to_file(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags, file_output_mode_t file_output_mode)
 {
 	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 2)) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -1647,29 +1646,9 @@ static mlr_dsl_cst_statement_t* alloc_printn_write(mlr_dsl_ast_node_t* pnode, in
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, type_inferencing, context_flags);
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 		type_inferencing, context_flags);
-	pstatement->file_output_mode = MODE_WRITE;
+	pstatement->file_output_mode = file_output_mode;
 	pstatement->pmulti_out = multi_out_alloc();
-	pstatement->pnode_handler = handle_printn_write;
-	return pstatement;
-}
-
-static mlr_dsl_cst_statement_t* alloc_printn_append(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags)
-{
-	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 2)) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-	mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pfilename_node = pnode->pchildren->phead->pnext->pvvalue;
-	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, type_inferencing, context_flags);
-	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
-		type_inferencing, context_flags);
-	pstatement->file_output_mode = MODE_APPEND;
-	pstatement->pmulti_out = multi_out_alloc();
-	pstatement->pnode_handler = handle_printn_append;
+	pstatement->pnode_handler = handle_printn_to_file;
 	return pstatement;
 }
 
@@ -2699,7 +2678,7 @@ static void handle_eprintn(
 	mv_free(&val);
 }
 
-static void handle_printn_write(
+static void handle_printn_to_file(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -2714,34 +2693,7 @@ static void handle_printn_write(
 	char ffree_flags;
 	char* fval = mv_format_val(&filename, &ffree_flags);
 
-	FILE* outfp = multi_out_get(pnode->pmulti_out, fval, MODE_WRITE);
-	fprintf(outfp, "%s\n", sval);
-	if (TRUE) // xxx temp
-		fflush(outfp);
-
-	if (free_flags)
-		free(sval);
-	if (ffree_flags)
-		free(fval);
-	mv_free(&filename);
-	mv_free(&val);
-}
-
-static void handle_printn_append(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
-	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
-	char free_flags;
-	char* sval = mv_format_val(&val, &free_flags);
-	char ffree_flags;
-	char* fval = mv_format_val(&filename, &ffree_flags);
-
-	FILE* outfp = multi_out_get(pnode->pmulti_out, fval, MODE_APPEND);
+	FILE* outfp = multi_out_get(pnode->pmulti_out, fval, pnode->file_output_mode);
 	fprintf(outfp, "%s\n", sval);
 	if (TRUE) // xxx temp
 		fflush(outfp);
