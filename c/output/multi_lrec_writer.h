@@ -22,7 +22,9 @@ typedef struct _multi_lrec_writer_t {
 multi_lrec_writer_t* multi_lrec_writer_alloc();
 void multi_lrec_writer_free(multi_lrec_writer_t* pmlw);
 
-void multi_lrec_writer_output(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* filename,
+void multi_lrec_writer_output_srec(multi_lrec_writer_t* pmlw, lrec_t* poutrec, char* filename,
+	file_output_mode_t file_output_mode, int flush_every_record);
+void multi_lrec_writer_output_list(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* filename,
 	file_output_mode_t file_output_mode, int flush_every_record);
 void multi_lrec_writer_drain(multi_lrec_writer_t* pmlw);
 

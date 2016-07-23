@@ -20,11 +20,9 @@ void multi_lrec_writer_free(multi_lrec_writer_t* pmlw) {
 }
 
 // ----------------------------------------------------------------
-void multi_lrec_writer_output(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* filename,
+void multi_lrec_writer_output_srec(multi_lrec_writer_t* pmlw, lrec_t* poutrec, char* filename,
 	file_output_mode_t file_output_mode, int flush_every_record)
 {
-	if (poutrecs == NULL) // synonym for empty record-list
-		return;
 	lrec_writer_and_fp_t* pstate = lhmsv_get(pmlw->pnames_to_lrec_writers_and_fps, filename);
 	if (pstate == NULL) {
 		pstate = mlr_malloc_or_die(sizeof(lrec_writer_and_fp_t)); // xxx free at destruct
@@ -50,23 +48,30 @@ void multi_lrec_writer_output(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char*
 		lhmsv_put(pmlw->pnames_to_lrec_writers_and_fps, mlr_strdup_or_die(filename), pstate, FREE_ENTRY_KEY);
 	}
 
-	// xxx use destructive pop-off logic for the sllv
+	pstate->plrec_writer->pprocess_func(pstate->output_stream, poutrec, pstate->plrec_writer->pvstate);
+
+	if (poutrec != NULL) {
+		if (flush_every_record)
+			fflush(pstate->output_stream);
+	} else {
+		if (fclose(pstate->output_stream) != 0) {
+			perror("fclose");
+			fprintf(stderr, "%s: fclose error on \"%s\".\n", MLR_GLOBALS.bargv0, filename);
+			exit(1);
+		}
+		pstate->output_stream = NULL;
+	}
+}
+
+void multi_lrec_writer_output_list(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* filename,
+	file_output_mode_t file_output_mode, int flush_every_record)
+{
+	if (poutrecs == NULL) // synonym for empty record-list
+		return;
+
 	while (poutrecs->phead) {
 		lrec_t* poutrec = sllv_pop(poutrecs);
-
-		pstate->plrec_writer->pprocess_func(pstate->output_stream, poutrec, pstate->plrec_writer->pvstate);
-
-		if (poutrec != NULL) {
-			if (flush_every_record)
-				fflush(pstate->output_stream);
-		} else {
-			if (fclose(pstate->output_stream) != 0) {
-				perror("fclose");
-				fprintf(stderr, "%s: fclose error on \"%s\".\n", MLR_GLOBALS.bargv0, filename);
-				exit(1);
-			}
-			pstate->output_stream = NULL;
-		}
+		multi_lrec_writer_output_srec(pmlw, poutrec, filename, file_output_mode, flush_every_record);
 	}
 }
 
