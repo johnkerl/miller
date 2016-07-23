@@ -3422,18 +3422,6 @@ static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* 
 }
 
 // ----------------------------------------------------------------
-void mlr_dsl_list_all_keywords_raw(FILE* ostream) {
-  printf("filter\n");
-  printf("unset\n");
-  printf("emit\n");
-  printf("emitp\n");
-  printf("emitf\n");
-  printf("dump\n");
-  printf("edump\n");
-  printf("print\n");
-  printf("eprint\n");
-}
-
 static void mlr_dsl_filter_usage(FILE* ostream) {
 	fprintf(ostream, "filter: includes/excludes the record in the output record\n");
 	fprintf(ostream, "  stream.\n");
@@ -3454,12 +3442,13 @@ static void mlr_dsl_unset_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_tee_usage(FILE* ostream) {
-	fprintf(ostream, "emit: inserts an out-of-stream variable into the output record stream. Hashmap\n");
-	fprintf(ostream, "  indices present in the data but not slotted by emit arguments are not output.\n");
-	fprintf(ostream, "  Example: %s put '... ; emit @sums'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put '... ; emit @sums, \"index1\", \"index2\"'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put '... ; emit @*, \"index1\", \"index2\"'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Please see http://johnkerl.org/miller/doc for more information.\n");
+	fprintf(ostream, "tee: prints the current record to specified file.\n");
+	fprintf(ostream, "  This is an immediate print to the specified file (except for pprint format\n");
+	fprintf(ostream, "  which of course waits until the end of the input stream to format all output).\n");
+	fprintf(ostream, "  The > and >> are for write and append, as in the shell, but (as with awk)\n");
+	fprintf(ostream, "  the file-overwrite for > is on first write, not per record.\n");
+	fprintf(ostream, "  Example: %s put 'tee >  \"/tmp/data-\".$a, $*'\n", MLR_GLOBALS.bargv0);
+	fprintf(ostream, "  Example: %s put 'tee >> \"/tmp/data-\".$a.$b, $*'\n", MLR_GLOBALS.bargv0);
 }
 
 static void mlr_dsl_emit_usage(FILE* ostream) {
@@ -3508,10 +3497,8 @@ static void mlr_dsl_print_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_printn_usage(FILE* ostream) {
-	fprintf(ostream, "xxx fix me print: prints expression immediately to stdout.\n");
-	fprintf(ostream, "  Example: %s put -q 'print \"The sum of x and y is \".string($x+$y)'.\n",
-		MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { print string(k) . \" => \" . string(v) }'.\n",
+	fprintf(ostream, "printn: prints expression immediately to stdout, without trailing newline.\n");
+	fprintf(ostream, "  Example: %s put -q 'printn \"The sum of x and y is \".string($x+$y); print \"\"'.\n",
 		MLR_GLOBALS.bargv0);
 }
 
@@ -3524,27 +3511,34 @@ static void mlr_dsl_eprint_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_eprintn_usage(FILE* ostream) {
-	fprintf(ostream, "xxx fix me eprint: prints expression immediately to stderr.\n");
-	fprintf(ostream, "  Example: %s put -q 'eprint \"The sum of x and y is \".string($x+$y)'.\n",
-		MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { eprint string(k) . \" => \" . string(v) }'.\n",
+	fprintf(ostream, "eprintn: prints expression immediately to stderr, without trailing newline.\n");
+	fprintf(ostream, "  Example: %s put -q 'eprintn \"The sum of x and y is \".string($x+$y)'; eprint \"\".\n",
 		MLR_GLOBALS.bargv0);
 }
 
 static void mlr_dsl_stdout_usage(FILE* ostream) {
-	fprintf(ostream, "xxx fix me eprint: prints expression immediately to stderr.\n");
-	fprintf(ostream, "  Example: %s put -q 'eprint \"The sum of x and y is \".string($x+$y)'.\n",
-		MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { eprint string(k) . \" => \" . string(v) }'.\n",
-		MLR_GLOBALS.bargv0);
+	fprintf(ostream, "Used for tee, emit, emitf, emitp, and dump in place of filename to print to stdout.\n");
 }
 
 static void mlr_dsl_stderr_usage(FILE* ostream) {
-	fprintf(ostream, "xxx fix me eprint: prints expression immediately to stderr.\n");
-	fprintf(ostream, "  Example: %s put -q 'eprint \"The sum of x and y is \".string($x+$y)'.\n",
-		MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { eprint string(k) . \" => \" . string(v) }'.\n",
-		MLR_GLOBALS.bargv0);
+	fprintf(ostream, "Used for tee, emit, emitf, emitp, and dump in place of filename to print to stderr.\n");
+}
+
+void mlr_dsl_list_all_keywords_raw(FILE* ostream) {
+  printf("filter\n");
+  printf("unset\n");
+  printf("tee\n");
+  printf("emit\n");
+  printf("emitp\n");
+  printf("emitf\n");
+  printf("dump\n");
+  printf("edump\n");
+  printf("print\n");
+  printf("printn\n");
+  printf("eprint\n");
+  printf("eprintn\n");
+  printf("stdout\n");
+  printf("stderr\n");
 }
 
 // Pass function_name == NULL to get usage for all functions.

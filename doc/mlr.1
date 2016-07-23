@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-07-22
+.\"      Date: 2016-07-23
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-07-22" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-07-23" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2307,6 +2307,15 @@ unset: clears field(s) from the current record, or an out-of-stream variable.
 .fi
 .if n \{\
 .RE
+.SS "tee"
+.if n \{\
+.RS 0
+.\}
+.nf
+mlr: unrecognized keyword "tee".
+.fi
+.if n \{\
+.RE
 .SS "emit"
 .if n \{\
 .RS 0
@@ -2380,6 +2389,17 @@ print: prints expression immediately to stdout.
 .fi
 .if n \{\
 .RE
+.SS "printn"
+.if n \{\
+.RS 0
+.\}
+.nf
+print: prints expression immediately to stdout.
+  Example: mlr put -q 'print "The sum of x and y is ".string($x+$y)'.
+  Example: mlr put -q 'for (k, v in $*) { print string(k) . " => " . string(v) }'.
+.fi
+.if n \{\
+.RE
 .SS "eprint"
 .if n \{\
 .RS 0
@@ -2388,6 +2408,35 @@ print: prints expression immediately to stdout.
 eprint: prints expression immediately to stderr.
   Example: mlr put -q 'eprint "The sum of x and y is ".string($x+$y)'.
   Example: mlr put -q 'for (k, v in $*) { eprint string(k) . " => " . string(v) }'.
+.fi
+.if n \{\
+.RE
+.SS "eprintn"
+.if n \{\
+.RS 0
+.\}
+.nf
+eprint: prints expression immediately to stderr.
+  Example: mlr put -q 'eprint "The sum of x and y is ".string($x+$y)'.
+  Example: mlr put -q 'for (k, v in $*) { eprint string(k) . " => " . string(v) }'.
+.fi
+.if n \{\
+.RE
+.SS "stdout"
+.if n \{\
+.RS 0
+.\}
+.nf
+Used for tee, emit, emitf, emitp, and dump in place of filename to print to stdout.
+.fi
+.if n \{\
+.RE
+.SS "stderr"
+.if n \{\
+.RS 0
+.\}
+.nf
+Used for tee, emit, emitf, emitp, and dump in place of filename to print to stderr.
 .fi
 .if n \{\
 .RE

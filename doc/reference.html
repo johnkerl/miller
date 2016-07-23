@@ -5244,6 +5244,14 @@ unset: clears field(s) from the current record, or an out-of-stream variable.
   Example: mlr put '...; unset @sums["green"]'
   Example: mlr put '...; unset @*'
 
+tee: prints the current record to specified file.
+  This is an immediate print to the specified file (except for pprint format
+  which of course waits until the end of the input stream to format all output).
+  The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk)
+  the file-overwrite for &gt; is on first write, not per record.
+  Example: mlr put 'tee &gt;  "/tmp/data-".$a, $*'
+  Example: mlr put 'tee &gt;&gt; "/tmp/data-".$a.$b, $*'
+
 emit: inserts an out-of-stream variable into the output record stream. Hashmap
   indices present in the data but not slotted by emit arguments are not output.
   Example: mlr put '... ; emit @sums'
@@ -5275,9 +5283,19 @@ print: prints expression immediately to stdout.
   Example: mlr put -q 'print "The sum of x and y is ".string($x+$y)'.
   Example: mlr put -q 'for (k, v in $*) { print string(k) . " =&gt; " . string(v) }'.
 
+printn: prints expression immediately to stdout, without trailing newline.
+  Example: mlr put -q 'printn "The sum of x and y is ".string($x+$y); print ""'.
+
 eprint: prints expression immediately to stderr.
   Example: mlr put -q 'eprint "The sum of x and y is ".string($x+$y)'.
   Example: mlr put -q 'for (k, v in $*) { eprint string(k) . " =&gt; " . string(v) }'.
+
+eprintn: prints expression immediately to stderr, without trailing newline.
+  Example: mlr put -q 'eprintn "The sum of x and y is ".string($x+$y)'; eprint "".
+
+Used for tee, emit, emitf, emitp, and dump in place of filename to print to stdout.
+
+Used for tee, emit, emitf, emitp, and dump in place of filename to print to stderr.
 </pre>
 </div>
 <p/>
