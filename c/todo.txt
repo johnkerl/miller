@@ -19,18 +19,8 @@ TOP OF LIST:
   - UTs x verbs x 2; fcns x 2
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PRE-RELEASE:
-* xxxes
-* valgrinds
-* check mlh's
-* fix left_align_pprint -> cli_opts_t
-* also sub-bag cli_opts by in/out/etc
-* printn to mlr -k.
-
-COOKBOOK:
-* mlr --from ../data/small put -q '@v=$*; emit > "foo".$a.".dat", @v'; etc.
-
 COMMON:
+!! merge overlay @ srec-print !!
 * coalesce write & append @ cst; rm non-write/append
 * lrec_reader/writer take sub-bagged cliopts pstructs
 * put/tee --output flags
@@ -71,6 +61,17 @@ TEE/MULTIFILE PLACEMENT:
 * whether to tee downstream or not
 -> just unkeyed tee verb as keystroke-saver
 -> do all keying within put
+
+PRE-RELEASE:
+* xxxes
+* valgrinds
+* check mlh's
+* fix left_align_pprint -> cli_opts_t
+* also sub-bag cli_opts by in/out/etc
+* printn to mlr -k.
+
+COOKBOOK:
+* mlr --from ../data/small put -q '@v=$*; emit > "foo".$a.".dat", @v'; etc.
 
 OPTIONS:
 * print $*?

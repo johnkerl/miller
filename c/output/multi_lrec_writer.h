@@ -5,6 +5,7 @@
 #include "containers/lhmsv.h"
 #include "containers/sllv.h"
 #include "output/lrec_writers.h"
+#include "output/file_output_mode.h"
 
 // ----------------------------------------------------------------
 typedef struct _lrec_writer_and_fp_t {
@@ -21,8 +22,8 @@ typedef struct _multi_lrec_writer_t {
 multi_lrec_writer_t* multi_lrec_writer_alloc();
 void multi_lrec_writer_free(multi_lrec_writer_t* pmlw);
 
-void multi_lrec_writer_write(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* filename, int flush_every_record);
-void multi_lrec_writer_append(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* filename, int flush_every_record);
+void multi_lrec_writer_output(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* filename,
+	file_output_mode_t file_output_mode, int flush_every_record);
 void multi_lrec_writer_drain(multi_lrec_writer_t* pmlw);
 
 #endif // MULTI_LREC_WRITER_H

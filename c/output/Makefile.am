@@ -1,5 +1,6 @@
 noinst_LTLIBRARIES=	liboutput.la
 liboutput_la_SOURCES=	\
+			file_output_mode.h \
 			lrec_writer.h \
 			lrec_writer_csv.c \
 			lrec_writer_csvlite.c \

@@ -19,36 +19,10 @@ void multi_lrec_writer_free(multi_lrec_writer_t* pmlw) {
 	free(pmlw);
 }
 
-//// ----------------------------------------------------------------
-//static inline FILE* multi_lrec_writer_get(multi_lrec_writer_t* pmlw, char* filename,
-//	char* mode, char* mode_desc)
-//{
-//	FILE* outfp = lhmsv_get(pmlw->pnames_to_fps, filename);
-//	if (outfp == NULL) {
-//		outfp = fopen(filename, mode);
-//		if (outfp == NULL) {
-//			perror("fopen");
-//			fprintf(stderr, "%s: failed fopen for %s of \"%s\".\n",
-//				MLR_GLOBALS.bargv0, mode_desc, filename);
-//			exit(1);
-//		}
-//		lhmsv_put(pmlw->pnames_to_fps, mlr_strdup_or_die(filename), outfp, FREE_ENTRY_KEY);
-//	}
-//	return outfp;
-//}
-//
-//// ----------------------------------------------------------------
-//FILE* multi_lrec_writer_get_for_write(multi_lrec_writer_t* pmlw, char* filename) {
-//	return multi_lrec_writer_get(pmlw, filename, "w", "write");
-//}
-//
-//// ----------------------------------------------------------------
-//FILE* multi_lrec_writer_get_for_append(multi_lrec_writer_t* pmlw, char* filename) {
-//	return multi_lrec_writer_get(pmlw, filename, "a", "append");
-//}
-
-static void common_handler(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* filename, int flush_every_record,
-	char* mode, char* mode_desc) {
+// ----------------------------------------------------------------
+void multi_lrec_writer_output(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* filename,
+	file_output_mode_t file_output_mode, int flush_every_record)
+{
 	if (poutrecs == NULL) // synonym for empty record-list
 		return;
 	lrec_writer_and_fp_t* pstate = lhmsv_get(pmlw->pnames_to_lrec_writers_and_fps, filename);
@@ -64,10 +38,12 @@ static void common_handler(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* fi
 				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 			exit(1);
 		}
-		pstate->output_stream = fopen(filename, mode);
+		char* mode_string = get_mode_string(file_output_mode);
+		char* mode_desc = get_mode_desc(file_output_mode);
+		pstate->output_stream = fopen(filename, mode_string);
 		if (pstate->output_stream == NULL) {
 			perror("fopen");
-			fprintf(stderr, "%s: fopen error on \"%s\".\n", MLR_GLOBALS.bargv0, filename);
+			fprintf(stderr, "%s: failed fopen for %s on \"%s\".\n", MLR_GLOBALS.bargv0, mode_desc, filename);
 			exit(1);
 		}
 
@@ -94,15 +70,6 @@ static void common_handler(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* fi
 	}
 }
 
-void multi_lrec_writer_write(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* filename, int flush_every_record) {
-	common_handler(pmlw, poutrecs, filename, flush_every_record, "w", "write");
-}
-
-void multi_lrec_writer_append(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* filename, int flush_every_record) {
-	common_handler(pmlw, poutrecs, filename, flush_every_record, "a", "append");
-}
-
-// xxx hook into cst
 void multi_lrec_writer_drain(multi_lrec_writer_t* pmlw) {
 	for (lhmsve_t* pe = pmlw->pnames_to_lrec_writers_and_fps->phead; pe != NULL; pe = pe->pnext) {
 		lrec_writer_and_fp_t* pstate = pe->pvvalue;

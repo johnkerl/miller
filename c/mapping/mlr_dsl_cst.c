@@ -2267,7 +2267,8 @@ static void handle_tee_write(
 	sllv_t* poutrecs = sllv_single(pcopy);
 	// the writer frees the lrec
 	// xxx do pop-off drain in lrec-writers
-	multi_lrec_writer_write(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+		MODE_WRITE, TRUE/*flush_every_record*/);
 
 	sllv_free(poutrecs);
 	mv_free(&filename);
@@ -2288,7 +2289,8 @@ static void handle_tee_append(
 
 	// xxx make a list-free API w/ refactor
 	sllv_t* poutrecs = sllv_single(pcopy);
-	multi_lrec_writer_append(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+		MODE_APPEND, TRUE/*flush_every_record*/);
 	// the writer frees the lrec
 	// xxx do pop-off drain in lrec-writers
 
@@ -2358,7 +2360,8 @@ static void handle_emitf_write(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_write(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+		MODE_WRITE, TRUE/*flush_every_record*/);
 
 	sllv_free(poutrecs);
 	mv_free(&filename);
@@ -2397,7 +2400,8 @@ static void handle_emitf_append(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_append(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+		MODE_APPEND, TRUE/*flush_every_record*/);
 
 	sllv_free(poutrecs);
 	mv_free(&filename);
@@ -2445,7 +2449,8 @@ static void handle_emitp_write(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_write(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+		MODE_WRITE, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
 
 	sllmv_free(pmvkeys);
@@ -2474,7 +2479,8 @@ static void handle_emitp_append(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_append(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+		MODE_APPEND, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
 
 	sllmv_free(pmvkeys);
@@ -2594,7 +2600,8 @@ static void handle_emitp_lashed_write(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_write(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+		MODE_WRITE, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
 	mv_free(&filename);
 
@@ -2627,7 +2634,8 @@ static void handle_emitp_lashed_append(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_append(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+		MODE_APPEND, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
 	mv_free(&filename);
 
@@ -2684,7 +2692,8 @@ static void handle_emit_lashed_write(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_write(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+		MODE_WRITE, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
 	mv_free(&filename);
 
@@ -2717,7 +2726,8 @@ static void handle_emit_lashed_append(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_append(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+		MODE_APPEND, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
 	mv_free(&filename);
 
@@ -2759,7 +2769,8 @@ static void handle_emitp_all_write(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_write(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+		MODE_WRITE, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
 	mv_free(&filename);
 
@@ -2783,7 +2794,8 @@ static void handle_emitp_all_append(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_append(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+		MODE_APPEND, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
 	mv_free(&filename);
 
@@ -2822,7 +2834,8 @@ static void handle_emit_all_write(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_write(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+		MODE_WRITE, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
 	mv_free(&filename);
 
@@ -2846,7 +2859,8 @@ static void handle_emit_all_append(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_append(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv, TRUE/*flush_every_record*/);
+	multi_lrec_writer_output(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+		MODE_APPEND, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
 	mv_free(&filename);
 

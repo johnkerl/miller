@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include "containers/lhmsv.h"
+#include "output/file_output_mode.h"
 
 // ----------------------------------------------------------------
 typedef struct _multi_out_t {
