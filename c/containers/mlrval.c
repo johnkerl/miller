@@ -330,6 +330,7 @@ mv_t mv_scan_number_or_die(char* string) {
 	if (!mv_is_numeric(&rv)) {
 		fprintf(stderr, "%s: couldn't parse \"%s\" as number.\n",
 			MLR_GLOBALS.bargv0, string);
+		exit(1);
 	}
 	return rv;
 }

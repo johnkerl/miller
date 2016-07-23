@@ -85,10 +85,11 @@ static sllv_t* mapper_sec2gmtdate_process(lrec_t* pinrec, context_t* pctx, void*
 		if (*sval == 0) {
 			lrec_put(pinrec, name, "", NO_FREE);
 		} else {
-			mv_t mval = mv_scan_number_or_die(sval);
-			mv_t stamp = time_string_from_seconds(&mval, ISO8601_DATE_FORMAT);
-
-			lrec_put(pinrec, name, stamp.u.strv, FREE_ENTRY_VALUE);
+			mv_t mval = mv_scan_number_nullable(sval);
+			if (!mv_is_error(&mval)) {
+				mv_t stamp = time_string_from_seconds(&mval, ISO8601_DATE_FORMAT);
+				lrec_put(pinrec, name, stamp.u.strv, FREE_ENTRY_VALUE);
+			}
 		}
 	}
 	return sllv_single(pinrec);

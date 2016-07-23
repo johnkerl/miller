@@ -1,8 +1,6 @@
 ================================================================
 BUGFIXES
 
-! sec2gmt("NULL") -> leave as is
-
 * mlr --from ../data/small put -v -q 'emit >> "out", @a'
   mlr DSL: syntax error.
 
@@ -16,6 +14,9 @@ TOP OF LIST:
 ! call for use-cases? (go first.)
 
 ! go through lmag article & clarify all unclears
+
+* sec2gmt/sec2gmtdate("NULL") -> leave as is
+  - UTs x verbs x 2; fcns x 2
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 PRE-RELEASE:
