@@ -969,10 +969,12 @@ md_dump_append(A) ::= MD_TOKEN_DUMP(O) MD_TOKEN_BITWISE_RSH md_rhs(B). {
 }
 
 md_print(A) ::= MD_TOKEN_PRINT(O) md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_PRINT, B);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT_WRITE, B,
+		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
 }
 md_eprint(A) ::= MD_TOKEN_EPRINT(O) md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EPRINT, B);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT_WRITE, B,
+		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDERR));
 }
 md_print_write(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT_WRITE, C, F);

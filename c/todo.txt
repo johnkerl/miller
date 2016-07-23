@@ -31,6 +31,7 @@ COOKBOOK:
 * mlr --from ../data/small put -q '@v=$*; emit > "foo".$a.".dat", @v'; etc.
 
 COMMON:
+* coalesce write & append @ cst; rm non-write/append
 * lrec_reader/writer take sub-bagged cliopts pstructs
 * put/tee --output flags
 * put/tee --no-flush flags
