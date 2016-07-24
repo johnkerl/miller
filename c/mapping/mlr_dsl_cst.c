@@ -2056,10 +2056,26 @@ static void handle_tee(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	// xxx put in the overlay ...
+
 	lrec_t* pcopy = lrec_copy(pvars->pinrec);
 
-	// the writer frees the lrec
+	// xxx need an lrec/mixutil method for this.
+	// Write the output fields from the typed overlay back to the lrec.
+	for (lhmsmve_t* pe = pvars->ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
+		char* output_field_name = pe->key;
+		mv_t* pval = &pe->value;
+
+		// Ownership transfer from mv_t to lrec.
+		if (pval->type == MT_STRING || pval->type == MT_EMPTY) {
+			lrec_put(pcopy, output_field_name, mlr_strdup_or_die(pval->u.strv), FREE_ENTRY_VALUE);
+		} else {
+			char free_flags = NO_FREE;
+			char* string = mv_format_val(pval, &free_flags);
+			lrec_put(pcopy, output_field_name, string, free_flags);
+		}
+	}
+
+	// The writer frees the lrec
 	multi_lrec_writer_output_srec(pnode->pmulti_lrec_writer, pcopy, filename.u.strv,
 		pnode->file_output_mode, TRUE/*flush_every_record*/);
 
