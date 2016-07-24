@@ -20,7 +20,6 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 COMMON:
-!! merge overlay @ srec-print !!
 * coalesce write & append @ cst; rm non-write/append
 * lrec_reader/writer take sub-bagged cliopts pstructs
 * put/tee --output flags
