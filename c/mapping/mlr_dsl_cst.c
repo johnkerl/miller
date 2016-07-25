@@ -2047,9 +2047,6 @@ static void handle_tee(
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 
-	// xxx to-string ...
-	// xxx flush param ...
-
 	lrec_t* pcopy = lrec_copy(pvars->pinrec);
 
 	// xxx need an lrec/mixutil method for this.
@@ -2072,7 +2069,7 @@ static void handle_tee(
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 	// The writer frees the lrec
 	multi_lrec_writer_output_srec(pnode->pmulti_lrec_writer, pcopy, filename,
-		pnode->file_output_mode, TRUE/*flush_every_record*/);
+		pnode->file_output_mode, pcst_outputs->flush_every_record);
 
 	if (fn_free_flags)
 		free(filename);
@@ -2139,12 +2136,10 @@ static void handle_emitf_to_file(
 	}
 	sllv_append(poutrecs, prec_to_emit);
 
-	// xxx to-string ...
-	// xxx flush param ...
 	char fn_free_flags = 0;
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
-		pnode->file_output_mode, TRUE/*flush_every_record*/);
+		pnode->file_output_mode, pcst_outputs->flush_every_record);
 
 	sllv_free(poutrecs);
 	if (fn_free_flags)
@@ -2192,12 +2187,10 @@ static void handle_emit_to_file(
 		sllmv_free(pmvnames);
 	}
 
-	// xxx to-string ...
-	// xxx flush param ...
 	char fn_free_flags = 0;
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
-		pnode->file_output_mode, TRUE/*flush_every_record*/);
+		pnode->file_output_mode, pcst_outputs->flush_every_record);
 	sllv_free(poutrecs);
 
 	sllmv_free(pmvkeys);
@@ -2206,12 +2199,6 @@ static void handle_emit_to_file(
 		free(filename);
 	mv_free(&filename_mv);
 }
-
-// xxx if to file:
-// * mlhmmv_to_lrecs not to pcsv_outputs->poutrecs but to local list
-// * hand those off to multi_lrec_writer keyed by filename.
-// * multi_lrec_writer needs to have open fp (from write/append) as well as lrec_writer object.
-// * multi_lrec_writer needs drain-all on its close method, invokved from mapper_put.
 
 // ----------------------------------------------------------------
 static void handle_emitp_lashed(
@@ -2258,12 +2245,10 @@ static void handle_emitp_lashed_to_file(
 		sllmv_free(pmvnames);
 	}
 
-	// xxx to-string ...
-	// xxx flush param ...
 	char fn_free_flags = 0;
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
-		pnode->file_output_mode, TRUE/*flush_every_record*/);
+		pnode->file_output_mode, pcst_outputs->flush_every_record);
 	sllv_free(poutrecs);
 
 	if (fn_free_flags)
@@ -2321,12 +2306,10 @@ static void handle_emit_lashed_to_file(
 		sllmv_free(pmvnames);
 	}
 
-	// xxx to-string ...
-	// xxx flush param ...
 	char fn_free_flags = 0;
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
-		pnode->file_output_mode, TRUE/*flush_every_record*/);
+		pnode->file_output_mode, pcst_outputs->flush_every_record);
 	sllv_free(poutrecs);
 
 	if (fn_free_flags)
@@ -2355,12 +2338,10 @@ static void handle_emitp_all_to_file(
 			FALSE, pcst_outputs->oosvar_flatten_separator);
 	}
 
-	// xxx to-string ...
-	// xxx flush param ...
 	char fn_free_flags = 0;
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
-		MODE_WRITE, TRUE/*flush_every_record*/);
+		MODE_WRITE, pcst_outputs->flush_every_record);
 	sllv_free(poutrecs);
 
 	if (fn_free_flags)
@@ -2399,12 +2380,10 @@ static void handle_emit_all_to_file(
 			TRUE, pcst_outputs->oosvar_flatten_separator);
 	}
 
-	// xxx to-string ...
-	// xxx flush param ...
 	char fn_free_flags = 0;
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
-		pnode->file_output_mode, TRUE/*flush_every_record*/);
+		pnode->file_output_mode, pcst_outputs->flush_every_record);
 	sllv_free(poutrecs);
 
 	if (fn_free_flags)
@@ -2442,7 +2421,7 @@ static void handle_dump_to_file(
 
 	FILE* outfp = multi_out_get(pnode->pmulti_out, filename, pnode->file_output_mode);
 	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, outfp);
-	if (TRUE) // xxx temp
+	if (pcst_outputs->flush_every_record)
 		fflush(outfp);
 
 	if (fn_free_flags)
@@ -2497,7 +2476,7 @@ static void handle_print_to_file(
 
 	FILE* outfp = multi_out_get(pnode->pmulti_out, filename, pnode->file_output_mode);
 	fprintf(outfp, "%s\n", sval);
-	if (TRUE) // xxx temp
+	if (pcst_outputs->flush_every_record)
 		fflush(outfp);
 
 	if (sfree_flags)
@@ -2556,7 +2535,7 @@ static void handle_printn_to_file(
 
 	FILE* outfp = multi_out_get(pnode->pmulti_out, filename, pnode->file_output_mode);
 	fprintf(outfp, "%s\n", sval);
-	if (TRUE) // xxx temp
+	if (pcst_outputs->flush_every_record)
 		fflush(outfp);
 
 	if (free_flags)

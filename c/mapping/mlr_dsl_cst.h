@@ -57,6 +57,7 @@ typedef struct _cst_outputs_t {
 	int*    pshould_emit_rec;
 	sllv_t* poutrecs;
 	char*   oosvar_flatten_separator;
+	int     flush_every_record; // fflush on emit/tee/print/dump
 } cst_outputs_t;
 
 // Generic handler for a statement.

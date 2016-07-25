@@ -22,6 +22,7 @@ typedef struct _mapper_put_state_t {
 	int            at_begin;
 	mlhmmv_t*      poosvars;
 	char*          oosvar_flatten_separator;
+	int            flush_every_record;
 	bind_stack_t*  pbind_stack;
 	loop_stack_t*  ploop_stack;
 	int            outer_filter;
@@ -31,7 +32,7 @@ static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_put_alloc(ap_state_t* pargp, char* mlr_dsl_expression,
 	char* comment_stripped_mlr_dsl_expression, mlr_dsl_ast_t* past,
-	int outer_filter, int type_inferencing, char* oosvar_flatten_separator);
+	int outer_filter, int type_inferencing, char* oosvar_flatten_separator, int flush_every_record);
 static void      mapper_put_free(mapper_t* pmapper);
 static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -95,7 +96,7 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "   #$y = 2;\n");
 	fprintf(o, "    $z = 3\n");
 	fprintf(o, "  '\n");
-
+// xxx doc --no-flush
 	fprintf(o, "\n");
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
 	fprintf(o, "including function list. Or \"%s -f\".\n", argv0);
@@ -114,6 +115,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	int   print_ast                           = FALSE;
 	int   trace_parse                         = FALSE;
 	char* oosvar_flatten_separator            = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
+	int   flush_every_record                  = FALSE;
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_flag(pstate,    "-f", &expression_filename);
@@ -123,6 +125,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
 	ap_define_int_value_flag(pstate, "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
 	ap_define_string_flag(pstate,    "--oflatsep", &oosvar_flatten_separator);
+	ap_define_false_flag(pstate,     "--no-flush", &flush_every_record);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_put_usage(stderr, argv[0], verb);
@@ -154,13 +157,13 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 		mlr_dsl_ast_print(past);
 
 	return mapper_put_alloc(pstate, mlr_dsl_expression, comment_stripped_mlr_dsl_expression,
-		past, outer_filter, type_inferencing, oosvar_flatten_separator);
+		past, outer_filter, type_inferencing, oosvar_flatten_separator, flush_every_record);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_put_alloc(ap_state_t* pargp, char* mlr_dsl_expression,
 	char* comment_stripped_mlr_dsl_expression, mlr_dsl_ast_t* past,
-	int outer_filter, int type_inferencing, char* oosvar_flatten_separator)
+	int outer_filter, int type_inferencing, char* oosvar_flatten_separator, int flush_every_record)
 {
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	pstate->pargp        = pargp;
@@ -173,6 +176,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, char* mlr_dsl_expression,
 	pstate->outer_filter = outer_filter;
 	pstate->poosvars     = mlhmmv_alloc();
 	pstate->oosvar_flatten_separator = oosvar_flatten_separator;
+	pstate->flush_every_record = flush_every_record;
 	pstate->pbind_stack  = bind_stack_alloc();
 	pstate->ploop_stack  = loop_stack_alloc();
 
@@ -271,6 +275,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			.pshould_emit_rec         = &should_emit_rec,
 			.poutrecs                 = poutrecs,
 			.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
+			.flush_every_record       = pstate->flush_every_record,
 		};
 
 		mlr_dsl_cst_handle_statement_list(pstate->pcst->pbegin_statements, &variables, &cst_outputs);
@@ -291,6 +296,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			.pshould_emit_rec         = &should_emit_rec,
 			.poutrecs                 = poutrecs,
 			.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
+			.flush_every_record       = pstate->flush_every_record,
 		};
 
 		mlr_dsl_cst_handle_statement_list(pstate->pcst->pend_statements, &variables, &cst_outputs);
@@ -317,6 +323,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		.pshould_emit_rec         = &should_emit_rec,
 		.poutrecs                 = poutrecs,
 		.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
+		.flush_every_record       = pstate->flush_every_record,
 	};
 
 	mlr_dsl_cst_handle_statement_list(pstate->pcst->pmain_statements, &variables, &cst_outputs);
