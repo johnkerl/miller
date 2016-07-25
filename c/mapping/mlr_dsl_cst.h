@@ -136,6 +136,9 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Vararg stuff for emit and unset
 	sllv_t* pvarargs;
 
+	// emit vs. emitp
+	int do_full_prefixing;
+
 	// Pattern-action blocks, while, for, etc.
 	sllv_t* pblock_statements;
 
