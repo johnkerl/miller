@@ -2046,7 +2046,7 @@ static void handle_tee(
 	cst_outputs_t*           pcst_outputs)
 {
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 
 	// xxx to-string ...
 	// xxx flush param ...
@@ -2069,11 +2069,15 @@ static void handle_tee(
 		}
 	}
 
+	char fn_free_flags = 0;
+	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 	// The writer frees the lrec
-	multi_lrec_writer_output_srec(pnode->pmulti_lrec_writer, pcopy, filename.u.strv,
+	multi_lrec_writer_output_srec(pnode->pmulti_lrec_writer, pcopy, filename,
 		pnode->file_output_mode, TRUE/*flush_every_record*/);
 
-	mv_free(&filename);
+	if (fn_free_flags)
+		free(filename);
+	mv_free(&filename_mv);
 }
 
 // ----------------------------------------------------------------
@@ -2111,7 +2115,7 @@ static void handle_emitf_to_file(
 	cst_outputs_t*           pcst_outputs)
 {
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 
 	lrec_t* prec_to_emit = lrec_unbacked_alloc();
 	sllv_t* poutrecs = sllv_alloc();
@@ -2138,11 +2142,15 @@ static void handle_emitf_to_file(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+	char fn_free_flags = 0;
+	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
+	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
 		pnode->file_output_mode, TRUE/*flush_every_record*/);
 
 	sllv_free(poutrecs);
-	mv_free(&filename);
+	if (fn_free_flags)
+		free(filename);
+	mv_free(&filename_mv);
 }
 
 // ----------------------------------------------------------------
@@ -2171,7 +2179,7 @@ static void handle_emitp_to_file(
 	cst_outputs_t*           pcst_outputs)
 {
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int keys_all_non_null_or_error = TRUE;
 	sllmv_t* pmvkeys = evaluate_list(pnode->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
 	sllv_t* poutrecs = sllv_alloc();
@@ -2187,12 +2195,17 @@ static void handle_emitp_to_file(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+	char fn_free_flags = 0;
+	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
+	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
 		pnode->file_output_mode, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
 
 	sllmv_free(pmvkeys);
-	mv_free(&filename);
+
+	if (fn_free_flags)
+		free(filename);
+	mv_free(&filename_mv);
 }
 
 // ----------------------------------------------------------------
@@ -2221,7 +2234,7 @@ static void handle_emit_to_file(
 	cst_outputs_t*           pcst_outputs)
 {
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	sllv_t* poutrecs = sllv_alloc();
 	int keys_all_non_null_or_error = TRUE;
 	sllmv_t* pmvkeys = evaluate_list(pnode->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
@@ -2237,12 +2250,17 @@ static void handle_emit_to_file(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+	char fn_free_flags = 0;
+	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
+	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
 		pnode->file_output_mode, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
 
 	sllmv_free(pmvkeys);
-	mv_free(&filename);
+
+	if (fn_free_flags)
+		free(filename);
+	mv_free(&filename_mv);
 }
 
 // xxx if to file:
@@ -2282,7 +2300,7 @@ static void handle_emitp_lashed_to_file(
 {
 	sllv_t* poutrecs = sllv_alloc();
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int keys_all_non_null_or_error = TRUE;
 	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
 		pvars, &keys_all_non_null_or_error);
@@ -2298,10 +2316,15 @@ static void handle_emitp_lashed_to_file(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+	char fn_free_flags = 0;
+	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
+	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
 		pnode->file_output_mode, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
-	mv_free(&filename);
+
+	if (fn_free_flags)
+		free(filename);
+	mv_free(&filename_mv);
 
 	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
 		sllmv_free(ppmvkeys[i]);
@@ -2340,7 +2363,7 @@ static void handle_emit_lashed_to_file(
 {
 	sllv_t* poutrecs = sllv_alloc();
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int keys_all_non_null_or_error = TRUE;
 	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
 		pvars, &keys_all_non_null_or_error);
@@ -2356,10 +2379,15 @@ static void handle_emit_lashed_to_file(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+	char fn_free_flags = 0;
+	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
+	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
 		pnode->file_output_mode, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
-	mv_free(&filename);
+
+	if (fn_free_flags)
+		free(filename);
+	mv_free(&filename_mv);
 
 	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
 		sllmv_free(ppmvkeys[i]);
@@ -2389,7 +2417,7 @@ static void handle_emitp_all_to_file(
 {
 	sllv_t* poutrecs = sllv_alloc();
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
@@ -2399,11 +2427,15 @@ static void handle_emitp_all_to_file(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+	char fn_free_flags = 0;
+	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
+	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
 		MODE_WRITE, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
-	mv_free(&filename);
 
+	if (fn_free_flags)
+		free(filename);
+	mv_free(&filename_mv);
 	sllmv_free(pmvnames);
 }
 
@@ -2429,7 +2461,7 @@ static void handle_emit_all_to_file(
 {
 	sllv_t* poutrecs = sllv_alloc();
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
@@ -2439,11 +2471,15 @@ static void handle_emit_all_to_file(
 
 	// xxx to-string ...
 	// xxx flush param ...
-	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename.u.strv,
+	char fn_free_flags = 0;
+	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
+	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
 		pnode->file_output_mode, TRUE/*flush_every_record*/);
 	sllv_free(poutrecs);
-	mv_free(&filename);
 
+	if (fn_free_flags)
+		free(filename);
+	mv_free(&filename_mv);
 	sllmv_free(pmvnames);
 }
 
@@ -2470,18 +2506,18 @@ static void handle_dump_to_file(
 	cst_outputs_t*           pcst_outputs)
 {
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
-	char ffree_flags;
-	char* fval = mv_format_val(&filename, &ffree_flags);
+	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+	char fn_free_flags;
+	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 
-	FILE* outfp = multi_out_get(pnode->pmulti_out, fval, pnode->file_output_mode);
+	FILE* outfp = multi_out_get(pnode->pmulti_out, filename, pnode->file_output_mode);
 	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, outfp);
 	if (TRUE) // xxx temp
 		fflush(outfp);
 
-	if (ffree_flags)
-		free(fval);
-	mv_free(&filename);
+	if (fn_free_flags)
+		free(filename);
+	mv_free(&filename_mv);
 }
 
 // ----------------------------------------------------------------
@@ -2523,22 +2559,22 @@ static void handle_print_to_file(
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	char sfree_flags;
 	char* sval = mv_format_val(&val, &sfree_flags);
-	char ffree_flags;
-	char* fval = mv_format_val(&filename, &ffree_flags);
+	char fn_free_flags;
+	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 
-	FILE* outfp = multi_out_get(pnode->pmulti_out, fval, pnode->file_output_mode);
+	FILE* outfp = multi_out_get(pnode->pmulti_out, filename, pnode->file_output_mode);
 	fprintf(outfp, "%s\n", sval);
 	if (TRUE) // xxx temp
 		fflush(outfp);
 
 	if (sfree_flags)
 		free(sval);
-	if (ffree_flags)
-		free(fval);
-	mv_free(&filename);
+	if (fn_free_flags)
+		free(filename);
+	mv_free(&filename_mv);
 	mv_free(&val);
 }
 
@@ -2581,23 +2617,23 @@ static void handle_printn_to_file(
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	mv_t filename = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 
 	char free_flags;
 	char* sval = mv_format_val(&val, &free_flags);
-	char ffree_flags;
-	char* fval = mv_format_val(&filename, &ffree_flags);
+	char fn_free_flags;
+	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 
-	FILE* outfp = multi_out_get(pnode->pmulti_out, fval, pnode->file_output_mode);
+	FILE* outfp = multi_out_get(pnode->pmulti_out, filename, pnode->file_output_mode);
 	fprintf(outfp, "%s\n", sval);
 	if (TRUE) // xxx temp
 		fflush(outfp);
 
 	if (free_flags)
 		free(sval);
-	if (ffree_flags)
-		free(fval);
-	mv_free(&filename);
+	if (fn_free_flags)
+		free(filename);
+	mv_free(&filename_mv);
 	mv_free(&val);
 }
 

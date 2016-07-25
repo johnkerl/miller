@@ -22,15 +22,13 @@ TOP OF LIST:
 COMMON:
 * coalesce write & append @ cst; rm non-write/append
 * lrec_reader/writer take sub-bagged cliopts pstructs
-* put/tee --output flags
+* put/tee --oxxx flags
 * put/tee --no-flush flags
 
 CONCRETE FOR EMIT-WRITE:
 * ut-cases 1-1 with m*y exprs
 * kw stdout/stderr & to mlr -k; also to release notes (not avail as boundvars & what happens if tried)
 * stdout/stderr to ast-builds in m*y & code-dedupe @ cst
-! output object w/ map from filename to tuple of fp and lrec_writer_t*
-  - make sure to drain all @ eof (test w/ opprint)
 
 CONCRETE FOR KEYED SREC OUTPUT:
 * figure out what to do ...
