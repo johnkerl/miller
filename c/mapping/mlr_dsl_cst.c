@@ -100,7 +100,6 @@ static void                     handle_emitp_lashed(mlr_dsl_cst_statement_t* s, 
 static void             handle_emitp_lashed_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                      handle_emit_lashed(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void              handle_emit_lashed_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                        handle_emitp_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                handle_emitp_all_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                         handle_emit_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                 handle_emit_all_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -917,9 +916,8 @@ static mlr_dsl_cst_statement_t* alloc_emit(mlr_dsl_ast_node_t* pnode, int type_i
 		}
 		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
 
-		pstatement->pnode_handler = do_full_prefixing
-			? handle_emit_all
-			: handle_emitp_all;
+		pstatement->do_full_prefixing = do_full_prefixing;
+		pstatement->pnode_handler = handle_emit_all;
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 
@@ -2342,20 +2340,6 @@ static void handle_emit_lashed_to_file(
 }
 
 // ----------------------------------------------------------------
-static void handle_emitp_all(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	int all_non_null_or_error = TRUE;
-	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
-	if (all_non_null_or_error) {
-		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, pcst_outputs->poutrecs,
-			FALSE, pcst_outputs->oosvar_flatten_separator);
-	}
-	sllmv_free(pmvnames);
-}
-
 static void handle_emitp_all_to_file(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
@@ -2395,7 +2379,7 @@ static void handle_emit_all(
 	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
 		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, pcst_outputs->poutrecs,
-			TRUE, pcst_outputs->oosvar_flatten_separator);
+			pnode->do_full_prefixing, pcst_outputs->oosvar_flatten_separator);
 	}
 	sllmv_free(pmvnames);
 }
