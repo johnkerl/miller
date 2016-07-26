@@ -122,6 +122,10 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Assignments to srec or oosvar, as well as the boolean expression in filter, cond, and bare-boolean
 	rval_evaluator_t* prhs_evaluator;
 
+	// For print/printn/eprint/eprintn
+	FILE* stdfp;
+	char* print_terminator;
+
 	// For print-to-file and dump-to-file, and emit-to-file
 	rval_evaluator_t* poutput_filename_evaluator;
 	file_output_mode_t file_output_mode;

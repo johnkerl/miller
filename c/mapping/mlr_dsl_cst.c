@@ -51,11 +51,8 @@ static mlr_dsl_cst_statement_t*            alloc_filter(mlr_dsl_ast_node_t* p, i
 static mlr_dsl_cst_statement_t*              alloc_dump(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*             alloc_edump(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*      alloc_dump_to_file(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
-static mlr_dsl_cst_statement_t*            alloc_eprint(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*     alloc_print_to_file(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
-static mlr_dsl_cst_statement_t*            alloc_printn(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*           alloc_eprintn(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*    alloc_printn_to_file(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
+static mlr_dsl_cst_statement_t*         alloc_print(mlr_dsl_ast_node_t* p, int ti, int cf,
+	file_output_mode_t m, FILE* stdfp, char* print_terminator);
 
 static mlr_dsl_cst_statement_t*      alloc_bare_boolean(mlr_dsl_ast_node_t* p, int ti, int cf);
 
@@ -108,10 +105,6 @@ static void                            handle_edump(mlr_dsl_cst_statement_t* s, 
 static void                     handle_dump_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_print(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                    handle_print_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                           handle_printn(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                   handle_printn_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                           handle_eprint(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                          handle_eprintn(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 
 static void                           handle_filter(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                handle_conditional_block(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -500,26 +493,26 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		break;
 
 	case MD_AST_NODE_TYPE_EPRINT:
-		return alloc_eprint(pnode, type_inferencing, context_flags);
+		return alloc_print(pnode, type_inferencing, context_flags, MODE_APPEND, stderr, "\n");
 		break;
 	case MD_AST_NODE_TYPE_PRINT_WRITE:
-		return alloc_print_to_file(pnode, type_inferencing, context_flags, MODE_WRITE);
+		return alloc_print(pnode, type_inferencing, context_flags, MODE_WRITE, NULL, "\n");
 		break;
 	case MD_AST_NODE_TYPE_PRINT_APPEND:
-		return alloc_print_to_file(pnode, type_inferencing, context_flags, MODE_APPEND);
+		return alloc_print(pnode, type_inferencing, context_flags, MODE_APPEND, NULL, "\n");
 		break;
 
 	case MD_AST_NODE_TYPE_PRINTN:
-		return alloc_printn(pnode, type_inferencing, context_flags);
+		return alloc_print(pnode, type_inferencing, context_flags, MODE_APPEND, stdout, "");
 		break;
 	case MD_AST_NODE_TYPE_EPRINTN:
-		return alloc_eprintn(pnode, type_inferencing, context_flags);
+		return alloc_print(pnode, type_inferencing, context_flags, MODE_APPEND, stderr, "");
 		break;
 	case MD_AST_NODE_TYPE_PRINTN_WRITE:
-		return alloc_printn_to_file(pnode, type_inferencing, context_flags, MODE_WRITE);
+		return alloc_print(pnode, type_inferencing, context_flags, MODE_WRITE, NULL, "");
 		break;
 	case MD_AST_NODE_TYPE_PRINTN_APPEND:
-		return alloc_printn_to_file(pnode, type_inferencing, context_flags, MODE_APPEND);
+		return alloc_print(pnode, type_inferencing, context_flags, MODE_APPEND, NULL, "");
 		break;
 
 	default:
@@ -541,6 +534,8 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->srec_lhs_field_name                  = NULL;
 	pstatement->psrec_lhs_evaluator                  = NULL;
 	pstatement->prhs_evaluator                       = NULL;
+	pstatement->stdfp                                = NULL;
+	pstatement->print_terminator                     = "\n";
 	pstatement->poutput_filename_evaluator           = NULL;
 	pstatement->file_output_mode                     = MODE_WRITE;
 	pstatement->pmulti_out                           = NULL;
@@ -1507,23 +1502,8 @@ static mlr_dsl_cst_statement_t* alloc_dump_to_file(mlr_dsl_ast_node_t* pnode, in
 }
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_eprint(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags)
-{
-	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 1)) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-	mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pvvalue;
-	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, type_inferencing, context_flags);
-	pstatement->pnode_handler = handle_eprint;
-	return pstatement;
-}
-
-static mlr_dsl_cst_statement_t* alloc_print_to_file(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags, file_output_mode_t file_output_mode)
+static mlr_dsl_cst_statement_t* alloc_print(mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags,
+	file_output_mode_t file_output_mode, /*xxx rid of */ FILE* stdfp, char* print_terminator)
 {
 	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 2)) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
@@ -1533,13 +1513,16 @@ static mlr_dsl_cst_statement_t* alloc_print_to_file(mlr_dsl_ast_node_t* pnode, i
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 	mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pvvalue;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, type_inferencing, context_flags);
+	pstatement->print_terminator = print_terminator;
 
 	// xxx replicate x all
 	mlr_dsl_ast_node_t* pfilename_node = pnode->pchildren->phead->pnext->pvvalue;
 	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) {
 		pstatement->pnode_handler = handle_print;
+		pstatement->stdfp = stdout;
 	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstatement->pnode_handler = handle_eprint;
+		pstatement->pnode_handler = handle_print;
+		pstatement->stdfp = stderr;
 	} else {
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
@@ -1548,57 +1531,6 @@ static mlr_dsl_cst_statement_t* alloc_print_to_file(mlr_dsl_ast_node_t* pnode, i
 		pstatement->pnode_handler = handle_print_to_file;
 	}
 
-	return pstatement;
-}
-
-// ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_printn(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags)
-{
-	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 1)) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-	mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pvvalue;
-	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, type_inferencing, context_flags);
-	pstatement->pnode_handler = handle_printn;
-	return pstatement;
-}
-
-static mlr_dsl_cst_statement_t* alloc_eprintn(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags)
-{
-	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 1)) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-	mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pvvalue;
-	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, type_inferencing, context_flags);
-	pstatement->pnode_handler = handle_eprintn;
-	return pstatement;
-}
-
-static mlr_dsl_cst_statement_t* alloc_printn_to_file(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags, file_output_mode_t file_output_mode)
-{
-	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 2)) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-	mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pfilename_node = pnode->pchildren->phead->pnext->pvvalue;
-	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, type_inferencing, context_flags);
-	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
-		type_inferencing, context_flags);
-	pstatement->file_output_mode = file_output_mode;
-	pstatement->pmulti_out = multi_out_alloc();
-	pstatement->pnode_handler = handle_printn_to_file;
 	return pstatement;
 }
 
@@ -2439,22 +2371,7 @@ static void handle_print(
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	char free_flags;
 	char* sval = mv_format_val(&val, &free_flags);
-	printf("%s\n", sval);
-	if (free_flags)
-		free(sval);
-	mv_free(&val);
-}
-
-static void handle_eprint(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	char free_flags;
-	char* sval = mv_format_val(&val, &free_flags);
-	fprintf(stderr, "%s\n", sval);
+	fprintf(pnode->stdfp, "%s%s", sval, pnode->print_terminator);
 	if (free_flags)
 		free(sval);
 	mv_free(&val);
@@ -2475,70 +2392,11 @@ static void handle_print_to_file(
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 
 	FILE* outfp = multi_out_get(pnode->pmulti_out, filename, pnode->file_output_mode);
-	fprintf(outfp, "%s\n", sval);
+	fprintf(outfp, "%s%s", sval, pnode->print_terminator);
 	if (pcst_outputs->flush_every_record)
 		fflush(outfp);
 
 	if (sfree_flags)
-		free(sval);
-	if (fn_free_flags)
-		free(filename);
-	mv_free(&filename_mv);
-	mv_free(&val);
-}
-
-// ----------------------------------------------------------------
-static void handle_printn(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	char free_flags;
-	char* sval = mv_format_val(&val, &free_flags);
-	printf("%s", sval);
-	if (free_flags)
-		free(sval);
-	mv_free(&val);
-}
-
-static void handle_eprintn(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	char free_flags;
-	char* sval = mv_format_val(&val, &free_flags);
-	fprintf(stderr, "%s", sval);
-	if (free_flags)
-		free(sval);
-	mv_free(&val);
-}
-
-static void handle_printn_to_file(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
-	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
-
-	char free_flags;
-	char* sval = mv_format_val(&val, &free_flags);
-	char fn_free_flags;
-	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
-
-	FILE* outfp = multi_out_get(pnode->pmulti_out, filename, pnode->file_output_mode);
-	fprintf(outfp, "%s\n", sval);
-	if (pcst_outputs->flush_every_record)
-		fflush(outfp);
-
-	if (free_flags)
 		free(sval);
 	if (fn_free_flags)
 		free(filename);
