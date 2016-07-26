@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-07-24
+.\"      Date: 2016-07-26
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-07-24" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-07-26" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -840,12 +840,15 @@ Options:
 -f {filename}: the DSL expression is taken from the specified file rather
     than from the command line. Outer single quotes wrapping the expression
     should not be placed in the file.
+--no-fflush: for emit, tee, print, and dump, don't call fflush() after every
+    record.
 
 Please use a dollar sign for field names and double-quotes for string
 literals. If field names have special characters such as "." then you might
 use braces, e.g. '${field.name}'. Miller built-in variables are
 NF NR FNR FILENUM FILENAME PI E, and ENV["namegoeshere"] to access environment
-variables. The environment-variable name may be an expression, e.g. a field value.
+variables. The environment-variable name may be an expression, e.g. a field
+value.
 
 Use # to comment to end of line.
 Examples:

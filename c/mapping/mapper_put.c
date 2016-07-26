@@ -68,12 +68,15 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-f {filename}: the DSL expression is taken from the specified file rather\n");
 	fprintf(o, "    than from the command line. Outer single quotes wrapping the expression\n");
 	fprintf(o, "    should not be placed in the file.\n");
+	fprintf(o, "--no-fflush: for emit, tee, print, and dump, don't call fflush() after every\n");
+	fprintf(o, "    record.\n");
 	fprintf(o, "\n");
 	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");
 	fprintf(o, "use braces, e.g. '${field.name}'. Miller built-in variables are\n");
 	fprintf(o, "NF NR FNR FILENUM FILENAME PI E, and ENV[\"namegoeshere\"] to access environment\n");
-	fprintf(o, "variables. The environment-variable name may be an expression, e.g. a field value.\n");
+	fprintf(o, "variables. The environment-variable name may be an expression, e.g. a field\n");
+	fprintf(o, "value.\n");
 	fprintf(o, "\n");
 	fprintf(o, "Use # to comment to end of line.\n");
 	fprintf(o, "Examples:\n");

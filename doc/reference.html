@@ -2128,12 +2128,15 @@ Options:
 -f {filename}: the DSL expression is taken from the specified file rather
     than from the command line. Outer single quotes wrapping the expression
     should not be placed in the file.
+--no-fflush: for emit, tee, print, and dump, don't call fflush() after every
+    record.
 
 Please use a dollar sign for field names and double-quotes for string
 literals. If field names have special characters such as "." then you might
 use braces, e.g. '${field.name}'. Miller built-in variables are
 NF NR FNR FILENUM FILENAME PI E, and ENV["namegoeshere"] to access environment
-variables. The environment-variable name may be an expression, e.g. a field value.
+variables. The environment-variable name may be an expression, e.g. a field
+value.
 
 Use # to comment to end of line.
 Examples:
