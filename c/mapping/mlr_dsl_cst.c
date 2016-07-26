@@ -423,6 +423,7 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_UNSET:
 		return alloc_unset(pnode, type_inferencing, context_flags);
 		break;
+
 	// xxx work the mode into the AST too?
 	case MD_AST_NODE_TYPE_TEE_WRITE:
 		return alloc_tee(pnode, type_inferencing, context_flags, MODE_WRITE);
@@ -492,9 +493,6 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		return alloc_dump_to_file(pnode, type_inferencing, context_flags, MODE_APPEND);
 		break;
 
-	case MD_AST_NODE_TYPE_EPRINT:
-		return alloc_print(pnode, type_inferencing, context_flags, MODE_APPEND, stderr, "\n");
-		break;
 	case MD_AST_NODE_TYPE_PRINT_WRITE:
 		return alloc_print(pnode, type_inferencing, context_flags, MODE_WRITE, NULL, "\n");
 		break;
@@ -502,12 +500,6 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		return alloc_print(pnode, type_inferencing, context_flags, MODE_APPEND, NULL, "\n");
 		break;
 
-	case MD_AST_NODE_TYPE_PRINTN:
-		return alloc_print(pnode, type_inferencing, context_flags, MODE_APPEND, stdout, "");
-		break;
-	case MD_AST_NODE_TYPE_EPRINTN:
-		return alloc_print(pnode, type_inferencing, context_flags, MODE_APPEND, stderr, "");
-		break;
 	case MD_AST_NODE_TYPE_PRINTN_WRITE:
 		return alloc_print(pnode, type_inferencing, context_flags, MODE_WRITE, NULL, "");
 		break;
