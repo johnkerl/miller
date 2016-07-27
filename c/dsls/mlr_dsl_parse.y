@@ -956,10 +956,12 @@ md_emit_lashed_namelist(A) ::= md_emit_lashed_namelist(B) MD_TOKEN_COMMA md_rhs(
 
 // ----------------------------------------------------------------
 md_dump(A) ::= MD_TOKEN_DUMP(O). {
-	A = mlr_dsl_ast_node_alloc_zary(O->text, MD_AST_NODE_TYPE_DUMP);
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_DUMP,
+		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
 }
 md_edump(A) ::= MD_TOKEN_EDUMP(O). {
-	A = mlr_dsl_ast_node_alloc_zary(O->text, MD_AST_NODE_TYPE_EDUMP);
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_DUMP,
+		mlr_dsl_ast_node_alloc_zary("stderr", MD_AST_NODE_TYPE_STDERR));
 }
 md_dump_write(A) ::= MD_TOKEN_DUMP(O) MD_TOKEN_GT md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_DUMP_WRITE, B);

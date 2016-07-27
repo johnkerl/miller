@@ -48,9 +48,7 @@ static mlr_dsl_cst_statement_t*        alloc_for_oosvar(mlr_dsl_ast_node_t* p, i
 static mlr_dsl_cst_statement_t*             alloc_break(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*          alloc_continue(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*            alloc_filter(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*              alloc_dump(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*             alloc_edump(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*      alloc_dump_to_file(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
+static mlr_dsl_cst_statement_t*              alloc_dump(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
 static mlr_dsl_cst_statement_t*         alloc_print(mlr_dsl_ast_node_t* p, int ti, int cf,
 	file_output_mode_t m, FILE* stdfp, char* print_terminator);
 
@@ -431,6 +429,7 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_TEE_APPEND:
 		return alloc_tee(pnode, type_inferencing, context_flags, MODE_APPEND);
 		break;
+
 	case MD_AST_NODE_TYPE_EMITF:
 		return alloc_emitf(pnode, type_inferencing, context_flags);
 		break;
@@ -458,6 +457,7 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_EMIT_APPEND:
 		return alloc_emit_to_file(pnode, type_inferencing, context_flags, FALSE, MODE_APPEND);
 		break;
+
 	case MD_AST_NODE_TYPE_EMITP_LASHED:
 		return alloc_emit_lashed(pnode, type_inferencing, context_flags, TRUE);
 		break;
@@ -481,16 +481,16 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		break;
 
 	case MD_AST_NODE_TYPE_DUMP:
-		return alloc_dump(pnode, type_inferencing, context_flags);
+		return alloc_dump(pnode, type_inferencing, context_flags, MODE_WRITE);
 		break;
 	case MD_AST_NODE_TYPE_EDUMP:
-		return alloc_edump(pnode, type_inferencing, context_flags);
+		return alloc_dump(pnode, type_inferencing, context_flags, MODE_WRITE);
 		break;
 	case MD_AST_NODE_TYPE_DUMP_WRITE:
-		return alloc_dump_to_file(pnode, type_inferencing, context_flags, MODE_WRITE);
+		return alloc_dump(pnode, type_inferencing, context_flags, MODE_WRITE);
 		break;
 	case MD_AST_NODE_TYPE_DUMP_APPEND:
-		return alloc_dump_to_file(pnode, type_inferencing, context_flags, MODE_APPEND);
+		return alloc_dump(pnode, type_inferencing, context_flags, MODE_APPEND);
 		break;
 
 	case MD_AST_NODE_TYPE_PRINT_WRITE:
@@ -1460,36 +1460,25 @@ static mlr_dsl_cst_statement_t* alloc_filter(mlr_dsl_ast_node_t* pnode, int type
 
 // ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-	pstatement->pnode_handler = handle_dump;
-	return pstatement;
-}
-
-static mlr_dsl_cst_statement_t* alloc_edump(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-	pstatement->pnode_handler = handle_edump;
-	return pstatement;
-}
-
-static mlr_dsl_cst_statement_t* alloc_dump_to_file(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags, file_output_mode_t file_output_mode)
 {
-	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 1)) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
 	mlr_dsl_ast_node_t* pfilename_node = pnode->pchildren->phead->pvvalue;
-	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
-		type_inferencing, context_flags);
-	pstatement->file_output_mode = file_output_mode;
-	pstatement->pmulti_out = multi_out_alloc();
-	pstatement->pnode_handler = handle_dump_to_file;
+	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) {
+		pstatement->pnode_handler = handle_dump;
+		pstatement->stdfp = stdout;
+	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
+		pstatement->pnode_handler = handle_edump;
+		pstatement->stdfp = stderr;
+	} else {
+		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
+			type_inferencing, context_flags);
+		pstatement->file_output_mode = file_output_mode;
+		pstatement->pmulti_out = multi_out_alloc();
+		pstatement->pnode_handler = handle_dump_to_file;
+	}
+
 	return pstatement;
 }
 

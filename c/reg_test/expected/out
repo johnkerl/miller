@@ -18355,6 +18355,7 @@ text="list", type=statement_list:
                 text="oosvar_keylist", type=oosvar_keylist:
                     text="w", type=string_literal.
             text="dump", type=dump:
+                text="stdout", type=stdout:
     text="=", type=srec_assignment:
         text="x", type=field_name.
         text="6", type=strnum_literal.
