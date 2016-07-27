@@ -1,7 +1,8 @@
 ================================================================
 BUGFIXES
 
-* mlr --from ../data/small put -v -q 'emit >> "out", @a'
+*
+  mlr --from ../data/small put -v -q 'emit >> "out", @a'
   mlr DSL: syntax error.
 
 ================================================================
@@ -20,10 +21,9 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 COMMON:
-* coalesce write & append @ cst; rm non-write/append
-* lrec_reader/writer take sub-bagged cliopts pstructs
 * put/tee --oxxx flags
 * put/tee --no-flush flags
+* lrec_reader/writer take sub-bagged cliopts pstructs
 * rm stale ast-dumps @ cst.c
 
 CONCRETE FOR EMIT-WRITE:

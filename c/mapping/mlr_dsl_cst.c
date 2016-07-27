@@ -187,29 +187,33 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* pnode, int type_
 //
 // $ mlr -n put -v '#begin{@a=1;@b=2};$m=2;$n=4;end{@y=5;@z=6}'
 // AST ROOT:
-// list (statement_list):
-//     begin (begin):
-//         list (statement_list):
-//             = (oosvar_assignment):
-//                 a (oosvar_name).
-//                 1 (strnum_literal).
-//             = (oosvar_assignment):
-//                 b (oosvar_name).
-//                 2 (strnum_literal).
-//     = (srec_assignment):
-//         m (field_name).
-//         2 (strnum_literal).
-//     = (srec_assignment):
-//         n (field_name).
-//         4 (strnum_literal).
-//     end (end):
-//         list (statement_list):
-//             = (oosvar_assignment):
-//                 y (oosvar_name).
-//                 5 (strnum_literal).
-//             = (oosvar_assignment):
-//                 z (oosvar_name).
-//                 6 (strnum_literal).
+// text="list", type=statement_list:
+//     text="begin", type=begin:
+//         text="list", type=statement_list:
+//             text="=", type=oosvar_assignment:
+//                 text="oosvar_keylist", type=oosvar_keylist:
+//                     text="a", type=string_literal.
+//                 text="1", type=strnum_literal.
+//             text="=", type=oosvar_assignment:
+//                 text="oosvar_keylist", type=oosvar_keylist:
+//                     text="b", type=string_literal.
+//                 text="2", type=strnum_literal.
+//     text="=", type=srec_assignment:
+//         text="m", type=field_name.
+//         text="2", type=strnum_literal.
+//     text="=", type=srec_assignment:
+//         text="n", type=field_name.
+//         text="4", type=strnum_literal.
+//     text="end", type=end:
+//         text="list", type=statement_list:
+//             text="=", type=oosvar_assignment:
+//                 text="oosvar_keylist", type=oosvar_keylist:
+//                     text="y", type=string_literal.
+//                 text="5", type=strnum_literal.
+//             text="=", type=oosvar_assignment:
+//                 text="oosvar_keylist", type=oosvar_keylist:
+//                     text="z", type=string_literal.
+//                 text="6", type=strnum_literal.
 
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 	int context_flags = 0;
@@ -523,10 +527,12 @@ static mlr_dsl_cst_statement_t* alloc_srec_assignment(mlr_dsl_ast_node_t* pnode,
 
 // ----------------------------------------------------------------
 // $ mlr --from ../data/small put -v '$[@x] = 1'
-// list (statement_list):
-//     = (indirect_srec_assignment):
-//         x (oosvar_name).
-//         1 (strnum_literal).
+// AST ROOT:
+// text="list", type=statement_list:
+//     text="=", type=indirect_srec_assignment:
+//         text="oosvar_keylist", type=oosvar_keylist:
+//             text="x", type=string_literal.
+//         text="1", type=strnum_literal.
 
 static mlr_dsl_cst_statement_t* alloc_indirect_srec_assignment(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
@@ -758,24 +764,28 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_
 // AST ROOT:
 // text="list", type=statement_list:
 //     text="emit", type=emit:
-//         text="oosvar_keylist", type=oosvar_keylist:
-//             text="a", type=string_literal.
-//             text="2", type=strnum_literal.
-//             text="3", type=strnum_literal.
-//         text="emit_namelist", type=emit:
-//             text="x", type=strnum_literal.
-//             text="y", type=strnum_literal.
-//             text="z", type=strnum_literal.
+//         text="emit", type=emit:
+//             text="oosvar_keylist", type=oosvar_keylist:
+//                 text="a", type=string_literal.
+//                 text="2", type=strnum_literal.
+//                 text="3", type=strnum_literal.
+//             text="emit_namelist", type=emit:
+//                 text="x", type=strnum_literal.
+//                 text="y", type=strnum_literal.
+//                 text="z", type=strnum_literal.
+//         text="stream", type=stream:
 //
 // $ mlr -n put -v 'emit all, "x", "y", "z"'
 // AST ROOT:
 // text="list", type=statement_list:
 //     text="emit", type=emit:
-//         text="all", type=all.
-//         text="emit_namelist", type=emit:
-//             text="x", type=strnum_literal.
-//             text="y", type=strnum_literal.
-//             text="z", type=strnum_literal.
+//         text="emit", type=emit:
+//             text="all", type=all.
+//             text="emit_namelist", type=emit:
+//                 text="x", type=strnum_literal.
+//                 text="y", type=strnum_literal.
+//                 text="z", type=strnum_literal.
+//         text="stream", type=stream:
 
 static mlr_dsl_cst_statement_t* alloc_emit(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags, int do_full_prefixing)
@@ -948,18 +958,19 @@ static mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_ast_node_t* pnode, int ty
 
 // ----------------------------------------------------------------
 // $ mlr -n put -v 'for (k,v in $*) { $x=1; $y=2 }'
-// list (statement_list):
-//     for (for-srec):
-//         variables (for-variables):
-//             k (non_sigil_name).
-//             v (non_sigil_name).
-//         list (statement_list):
-//             = (srec_assignment):
-//                 x (field_name).
-//                 1 (strnum_literal).
-//             = (srec_assignment):
-//                 y (field_name).
-//                 2 (strnum_literal).
+// AST ROOT:
+// text="list", type=statement_list:
+//     text="for", type=for_srec:
+//         text="variables", type=for_variables:
+//             text="k", type=non_sigil_name.
+//             text="v", type=non_sigil_name.
+//         text="list", type=statement_list:
+//             text="=", type=srec_assignment:
+//                 text="x", type=field_name.
+//                 text="1", type=strnum_literal.
+//             text="=", type=srec_assignment:
+//                 text="y", type=field_name.
+//                 text="2", type=strnum_literal.
 
 static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
@@ -1009,25 +1020,25 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* pnode, int ty
 // ----------------------------------------------------------------
 // $ mlr -n put -v 'for((k1,k2,k3),v in @a["4"][$5]) { $6 = 7; $8 = 9}'
 // AST ROOT:
-// list (statement_list):
-//     for (for_oosvar):
-//         key_and_value_variables (for_variables):
-//             key_variables (for_variables):
-//                 k1 (non_sigil_name).
-//                 k2 (non_sigil_name).
-//                 k3 (non_sigil_name).
-//             v (non_sigil_name).
-//         oosvar_keylist (oosvar_keylist):
-//             a (string_literal).
-//             4 (strnum_literal).
-//             5 (field_name).
-//         list (statement_list):
-//             = (srec_assignment):
-//                 6 (field_name).
-//                 7 (strnum_literal).
-//             = (srec_assignment):
-//                 8 (field_name).
-//                 9 (strnum_literal).
+// text="list", type=statement_list:
+//     text="for", type=for_oosvar:
+//         text="key_and_value_variables", type=for_variables:
+//             text="key_variables", type=for_variables:
+//                 text="k1", type=non_sigil_name.
+//                 text="k2", type=non_sigil_name.
+//                 text="k3", type=non_sigil_name.
+//             text="v", type=non_sigil_name.
+//         text="oosvar_keylist", type=oosvar_keylist:
+//             text="a", type=string_literal.
+//             text="4", type=strnum_literal.
+//             text="5", type=field_name.
+//         text="list", type=statement_list:
+//             text="=", type=srec_assignment:
+//                 text="6", type=field_name.
+//                 text="7", type=strnum_literal.
+//             text="=", type=srec_assignment:
+//                 text="8", type=field_name.
+//                 text="9", type=strnum_literal.
 
 static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
@@ -2410,45 +2421,55 @@ static void handle_bare_boolean(
 
 // ----------------------------------------------------------------
 // Example ASTs, with and without indexing on the left-hand-side oosvar name:
+
+// $ mlr -n put -v '@x[1]["2"][$3][@4]=5'
+// AST ROOT:
+// text="list", type=statement_list:
+//     text="=", type=oosvar_assignment:
+//         text="oosvar_keylist", type=oosvar_keylist:
+//             text="x", type=string_literal.
+//             text="1", type=strnum_literal.
+//             text="2", type=strnum_literal.
+//             text="3", type=field_name.
+//             text="oosvar_keylist", type=oosvar_keylist:
+//                 text="4", type=string_literal.
+//         text="5", type=strnum_literal.
 //
-// $ mlr put -v '@x[1]["2"][$3][@4]=5' /dev/null
-// list (statement_list):
-//     = (oosvar_assignment):
-//         oosvar_keylist (oosvar_keylist):
-//             x (string_literal).
-//             1 (strnum_literal).
-//             2 (strnum_literal).
-//             3 (field_name).
-//             oosvar_keylist (oosvar_keylist):
-//                 4 (string_literal).
-//         5 (strnum_literal).
+// $ mlr -n put -v '@x = $y'
+// AST ROOT:
+// text="list", type=statement_list:
+//     text="=", type=oosvar_assignment:
+//         text="oosvar_keylist", type=oosvar_keylist:
+//             text="x", type=string_literal.
+//         text="y", type=field_name.
 //
-// $ mlr put -v '@x = $y'
-// list (statement_list):
-//     = (oosvar_assignment):
-//         oosvar_keylist (oosvar_keylist):
-//             x (string_literal).
-//         y (field_name).
+// $ mlr -n put -q -v 'emit @v, "a", "b", "c"'
+// AST ROOT:
+// text="list", type=statement_list:
+//     text="emit", type=emit:
+//         text="emit", type=emit:
+//             text="oosvar_keylist", type=oosvar_keylist:
+//                 text="v", type=string_literal.
+//             text="emit_namelist", type=emit:
+//                 text="a", type=strnum_literal.
+//                 text="b", type=strnum_literal.
+//                 text="c", type=strnum_literal.
+//         text="stream", type=stream:
 //
-// $ mlr put -q -v 'emit @v, "a", "b", "c"'
-// list (statement_list):
-//     emit (emit):
-//         oosvar_keylist (oosvar_keylist):
-//             v (string_literal).
-//         a (strnum_literal).
-//         b (strnum_literal).
-//         c (strnum_literal).
-//
-// $ mlr put -q -v 'emit @v[1][2], "a", "b","c"'
-// list (statement_list):
-//     emit (emit):
-//         oosvar_keylist (oosvar_keylist):
-//             v (string_literal).
-//             1 (strnum_literal).
-//             2 (strnum_literal).
-//         a (strnum_literal).
-//         b (strnum_literal).
-//         c (strnum_literal).
+// $ mlr -n put -q -v 'emit @v[1][2], "a", "b","c"'
+// AST ROOT:
+// text="list", type=statement_list:
+//     text="emit", type=emit:
+//         text="emit", type=emit:
+//             text="oosvar_keylist", type=oosvar_keylist:
+//                 text="v", type=string_literal.
+//                 text="1", type=strnum_literal.
+//                 text="2", type=strnum_literal.
+//             text="emit_namelist", type=emit:
+//                 text="a", type=strnum_literal.
+//                 text="b", type=strnum_literal.
+//                 text="c", type=strnum_literal.
+//         text="stream", type=stream:
 
 // pnode is input; pkeylist_evaluators is appended to.
 static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, int type_inferencing,
