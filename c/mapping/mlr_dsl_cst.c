@@ -97,7 +97,6 @@ static void                 handle_emit_all_to_file(mlr_dsl_cst_statement_t* s, 
 static void                             handle_dump(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_dump_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_print(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                    handle_print_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 
 static void                           handle_filter(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                handle_conditional_block(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -1300,10 +1299,8 @@ static mlr_dsl_cst_statement_t* alloc_print(mlr_dsl_ast_node_t* pnode, int type_
 	// xxx replicate x all
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
 	if (poutput_node->type == MD_AST_NODE_TYPE_STDOUT) {
-		pstatement->pnode_handler = handle_print;
 		pstatement->stdfp = stdout;
 	} else if (poutput_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstatement->pnode_handler = handle_print;
 		pstatement->stdfp = stderr;
 	} else {
 		mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
@@ -1312,8 +1309,8 @@ static mlr_dsl_cst_statement_t* alloc_print(mlr_dsl_ast_node_t* pnode, int type_
 		pstatement->file_output_mode = poutput_node->type == MD_AST_NODE_TYPE_FILE_APPEND
 			? MODE_APPEND : MODE_WRITE;
 		pstatement->pmulti_out = multi_out_alloc();
-		pstatement->pnode_handler = handle_print_to_file;
 	}
+	pstatement->pnode_handler = handle_print;
 
 	return pstatement;
 }
@@ -2117,38 +2114,30 @@ static void handle_print(
 {
 	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	char free_flags;
-	char* sval = mv_format_val(&val, &free_flags);
-	fprintf(pnode->stdfp, "%s%s", sval, pnode->print_terminator);
-	if (free_flags)
-		free(sval);
-	mv_free(&val);
-}
-
-static void handle_print_to_file(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	char sfree_flags;
 	char* sval = mv_format_val(&val, &sfree_flags);
-	char fn_free_flags;
-	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 
-	FILE* outfp = multi_out_get(pnode->pmulti_out, filename, pnode->file_output_mode);
-	fprintf(outfp, "%s%s", sval, pnode->print_terminator);
-	if (pcst_outputs->flush_every_record)
-		fflush(outfp);
+	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
+	if (poutput_filename_evaluator == NULL) {
+		fprintf(pnode->stdfp, "%s%s", sval, pnode->print_terminator);
+	} else {
+		mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
+
+		char fn_free_flags;
+		char* filename = mv_format_val(&filename_mv, &fn_free_flags);
+
+		FILE* outfp = multi_out_get(pnode->pmulti_out, filename, pnode->file_output_mode);
+		fprintf(outfp, "%s%s", sval, pnode->print_terminator);
+		if (pcst_outputs->flush_every_record)
+			fflush(outfp);
+
+		if (fn_free_flags)
+			free(filename);
+		mv_free(&filename_mv);
+	}
 
 	if (sfree_flags)
 		free(sval);
-	if (fn_free_flags)
-		free(filename);
-	mv_free(&filename_mv);
 	mv_free(&val);
 }
 
