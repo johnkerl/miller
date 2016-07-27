@@ -607,7 +607,9 @@ md_tee_append(A) ::= MD_TOKEN_TEE(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_T
 // * On the "emit" we change the name to get "emit @a,@b,@c".
 
 md_emitf(A) ::= MD_TOKEN_EMITF(O) md_emitf_args(B). {
-	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+	B = mlr_dsl_ast_node_set_function_name(B, O->text);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITF_WRITE, B,
+		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
 }
 // Need to invalidate "emit @a," -- use some non-empty-args expr.
 md_emitf_args(A) ::= . {

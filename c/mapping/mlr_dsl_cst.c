@@ -34,8 +34,7 @@ static mlr_dsl_cst_statement_t*         alloc_unset(mlr_dsl_ast_node_t* p, int t
 
 static mlr_dsl_cst_statement_t*           alloc_tee(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
 
-static mlr_dsl_cst_statement_t*         alloc_emitf(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t* alloc_emitf_to_file(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
+static mlr_dsl_cst_statement_t*         alloc_emitf(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
 static mlr_dsl_cst_statement_t*          alloc_emit(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
 static mlr_dsl_cst_statement_t*  alloc_emit_to_file(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp, file_output_mode_t m);
 static mlr_dsl_cst_statement_t*         alloc_emit_lashed(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
@@ -432,13 +431,13 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		break;
 
 	case MD_AST_NODE_TYPE_EMITF:
-		return alloc_emitf(pnode, type_inferencing, context_flags);
+		return alloc_emitf(pnode, type_inferencing, context_flags, MODE_WRITE);
 		break;
 	case MD_AST_NODE_TYPE_EMITF_WRITE:
-		return alloc_emitf_to_file(pnode, type_inferencing, context_flags, MODE_WRITE);
+		return alloc_emitf(pnode, type_inferencing, context_flags, MODE_WRITE);
 		break;
 	case MD_AST_NODE_TYPE_EMITF_APPEND:
-		return alloc_emitf_to_file(pnode, type_inferencing, context_flags, MODE_APPEND);
+		return alloc_emitf(pnode, type_inferencing, context_flags, MODE_APPEND);
 		break;
 	case MD_AST_NODE_TYPE_EMITP:
 		return alloc_emit(pnode, type_inferencing, context_flags, TRUE);
@@ -774,67 +773,12 @@ static mlr_dsl_cst_statement_t* alloc_tee(mlr_dsl_ast_node_t* pnode, int type_in
 }
 
 // ----------------------------------------------------------------
-// Example AST:
-// $ mlr -n put -v '@a=$x; @b=$y; emitf @a,@b'
-// list (statement_list):
-//     = (oosvar_assignment):
-//         oosvar_keylist (oosvar_keylist):
-//             a (string_literal).
-//         x (field_name).
-//     = (oosvar_assignment):
-//         oosvar_keylist (oosvar_keylist):
-//             b (string_literal).
-//         y (field_name).
-//     emitf (emitf):
-//         oosvar_keylist (oosvar_keylist):
-//             a (string_literal).
-//         oosvar_keylist (oosvar_keylist):
-//             b (string_literal).
-
 static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-
-	// Loop over oosvar names to emit in e.g. 'emitf @a, @b, @c'.
-	pstatement->pvarargs = sllv_alloc();
-	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pwalker = pe->pvvalue;
-		mlr_dsl_ast_node_t* pchild = pwalker->pchildren->phead->pvvalue;
-		// This could be enforced in the lemon parser but it's easier to do it here.
-		if (pwalker->pchildren->length != 1 || pchild->type != MD_AST_NODE_TYPE_STRING_LITERAL) {
-			fprintf(stderr,
-				"%s: emitf arguments must be all non-indexed, e.g. @a but not @[\"a\"] or @a[2].\n",
-				MLR_GLOBALS.bargv0);
-			fprintf(stderr, "Abstract syntax tree for the statement:\n");
-			mlr_dsl_ast_node_fprint(pnode, stderr);
-			exit(1);
-		}
-		sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
-			pchild->text,
-			NULL,
-			rval_evaluator_alloc_from_ast(pwalker, type_inferencing, context_flags),
-			NULL));
-	}
-
-	pstatement->pnode_handler = handle_emitf;
-	return pstatement;
-}
-
-// 'emitf >  "out", @a'
-//   text="emitf", type=emitf_write:
-//       text="emitf", type=emitf:
-//           text="oosvar_keylist", type=oosvar_keylist:
-//               text="a", type=string_literal.
-//       text="out", type=strnum_literal.
-
-static mlr_dsl_cst_statement_t* alloc_emitf_to_file(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags, file_output_mode_t file_output_mode)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	mlr_dsl_ast_node_t* pnamesnode = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pfilenode = pnode->pchildren->phead->pnext->pvvalue;
 
 	// Loop over oosvar names to emit in e.g. 'emitf @a, @b, @c'.
 	pstatement->pvarargs = sllv_alloc();
@@ -849,12 +793,23 @@ static mlr_dsl_cst_statement_t* alloc_emitf_to_file(mlr_dsl_ast_node_t* pnode, i
 			NULL));
 	}
 
-	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilenode,
-		type_inferencing, context_flags);
-	pstatement->file_output_mode = file_output_mode;
-	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
+	mlr_dsl_ast_node_t* pfilename_node = pnode->pchildren->phead->pnext->pvvalue;
+	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) {
+		pstatement->pnode_handler = handle_emitf;
+		pstatement->stdfp = stdout;
+	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
+		pstatement->pnode_handler = handle_emitf;
+		pstatement->stdfp = stderr;
+	} else {
+		pstatement->pnode_handler = handle_dump_to_file;
 
-	pstatement->pnode_handler = handle_emitf_to_file;
+		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
+			type_inferencing, context_flags);
+		pstatement->file_output_mode = file_output_mode;
+		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
+		pstatement->pnode_handler = handle_emitf_to_file;
+	}
+
 	return pstatement;
 }
 
