@@ -17476,17 +17476,17 @@ text="list", type=statement_list:
         text="x", type=field_name.
     text="end", type=end:
         text="list", type=statement_list:
-            text="emitf", type=emitf_write:
+            text="emitf", type=emitf:
                 text="emitf", type=emitf:
                     text="oosvar_keylist", type=oosvar_keylist:
                         text="a", type=string_literal.
                 text="stdout", type=stdout:
-            text="emitf", type=emitf_write:
+            text="emitf", type=emitf:
                 text="emitf", type=emitf:
                     text="oosvar_keylist", type=oosvar_keylist:
                         text="b", type=string_literal.
                 text="stdout", type=stdout:
-            text="emitf", type=emitf_write:
+            text="emitf", type=emitf:
                 text="emitf", type=emitf:
                     text="oosvar_keylist", type=oosvar_keylist:
                         text="c", type=string_literal.
@@ -17522,7 +17522,7 @@ text="list", type=statement_list:
         text="x", type=field_name.
     text="end", type=end:
         text="list", type=statement_list:
-            text="emitf", type=emitf_write:
+            text="emitf", type=emitf:
                 text="emitf", type=emitf:
                     text="oosvar_keylist", type=oosvar_keylist:
                         text="a", type=string_literal.
@@ -17580,7 +17580,7 @@ text="list", type=statement_list:
                         text="sum", type=string_literal.
                     text="oosvar_keylist", type=oosvar_keylist:
                         text="count", type=string_literal.
-            text="emitf", type=emitf_write:
+            text="emitf", type=emitf:
                 text="emitf", type=emitf:
                     text="oosvar_keylist", type=oosvar_keylist:
                         text="mean", type=string_literal.
@@ -17613,7 +17613,7 @@ text="list", type=statement_list:
                         text="sum", type=string_literal.
                     text="oosvar_keylist", type=oosvar_keylist:
                         text="count", type=string_literal.
-            text="emitf", type=emitf_write:
+            text="emitf", type=emitf:
                 text="emitf", type=emitf:
                     text="oosvar_keylist", type=oosvar_keylist:
                         text="mean", type=string_literal.
@@ -18361,7 +18361,7 @@ text="list", type=statement_list:
                         text="u", type=strnum_literal.
                         text="5", type=field_name.
                 text="2", type=strnum_literal.
-            text="emitf", type=emitf_write:
+            text="emitf", type=emitf:
                 text="emitf", type=emitf:
                     text="oosvar_keylist", type=oosvar_keylist:
                         text="v", type=string_literal.
@@ -19259,7 +19259,9 @@ text="list", type=statement_list:
             text="t", type=strnum_literal.
             text="u", type=strnum_literal.
     text="emitp", type=emitp:
-        text="all", type=all.
+        text="emitp", type=emitp:
+            text="all", type=all.
+        text="stdout", type=stdout:
 t:u=1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,tu=1
 t:u=2
@@ -19295,7 +19297,9 @@ text="list", type=statement_list:
             text="t", type=strnum_literal.
             text="u", type=strnum_literal.
     text="emitp", type=emitp:
-        text="@*", type=full_oosvar.
+        text="emitp", type=emitp:
+            text="@*", type=full_oosvar.
+        text="stdout", type=stdout:
 t:u=1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,tu=1
 t:u=2
@@ -19325,7 +19329,9 @@ text="list", type=statement_list:
             text="s", type=strnum_literal.
         text="x", type=field_name.
     text="emitp", type=emitp:
-        text="all", type=all.
+        text="emitp", type=emitp:
+            text="all", type=all.
+        text="stdout", type=stdout:
 s=0.346790
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 s=0.758680
@@ -19356,7 +19362,9 @@ text="list", type=statement_list:
             text="u", type=strnum_literal.
         text="y", type=field_name.
     text="emitp", type=emitp:
-        text="all", type=all.
+        text="emitp", type=emitp:
+            text="all", type=all.
+        text="stdout", type=stdout:
 t:u=0.726803
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 t:u=0.522151
@@ -19734,13 +19742,15 @@ text="list", type=statement_list:
     text="end", type=end:
         text="list", type=statement_list:
             text="emit", type=emit:
-                text="oosvar_keylist", type=oosvar_keylist:
-                    text="n", type=string_literal.
-                text="emit_namelist", type=emit:
-                    text="a", type=strnum_literal.
-                    text="b", type=strnum_literal.
-                    text="c", type=strnum_literal.
-                    text="d", type=strnum_literal.
+                text="emit", type=emit:
+                    text="oosvar_keylist", type=oosvar_keylist:
+                        text="n", type=string_literal.
+                    text="emit_namelist", type=emit:
+                        text="a", type=strnum_literal.
+                        text="b", type=strnum_literal.
+                        text="c", type=strnum_literal.
+                        text="d", type=strnum_literal.
+                text="stdout", type=stdout:
 
 mlr --opprint --from ./reg_test/input/abixy put -q 
   @o[1][1]["text1"][NR] = $a;
