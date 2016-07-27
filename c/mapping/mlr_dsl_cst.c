@@ -31,14 +31,19 @@ static mlr_dsl_cst_statement_t*                alloc_oosvar_assignment(mlr_dsl_a
 static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*         alloc_unset(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*         alloc_emitf(mlr_dsl_ast_node_t* p, int ti, int cf);
 
 static mlr_dsl_cst_statement_t*           alloc_tee(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
+
+static mlr_dsl_cst_statement_t*         alloc_emitf(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t* alloc_emitf_to_file(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
 static mlr_dsl_cst_statement_t*          alloc_emit(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
 static mlr_dsl_cst_statement_t*  alloc_emit_to_file(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp, file_output_mode_t m);
 static mlr_dsl_cst_statement_t*         alloc_emit_lashed(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
 static mlr_dsl_cst_statement_t* alloc_emit_lashed_to_file(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp, file_output_mode_t m);
+static mlr_dsl_cst_statement_t*              alloc_dump(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
+static mlr_dsl_cst_statement_t*         alloc_print(mlr_dsl_ast_node_t* p, int ti, int cf,
+	file_output_mode_t m, FILE* stdfp, char* print_terminator);
+
 static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*           alloc_if_head(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*             alloc_while(mlr_dsl_ast_node_t* p, int ti, int cf);
@@ -48,9 +53,6 @@ static mlr_dsl_cst_statement_t*        alloc_for_oosvar(mlr_dsl_ast_node_t* p, i
 static mlr_dsl_cst_statement_t*             alloc_break(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*          alloc_continue(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*            alloc_filter(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*              alloc_dump(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
-static mlr_dsl_cst_statement_t*         alloc_print(mlr_dsl_ast_node_t* p, int ti, int cf,
-	file_output_mode_t m, FILE* stdfp, char* print_terminator);
 
 static mlr_dsl_cst_statement_t*      alloc_bare_boolean(mlr_dsl_ast_node_t* p, int ti, int cf);
 
@@ -99,7 +101,6 @@ static void                handle_emitp_all_to_file(mlr_dsl_cst_statement_t* s, 
 static void                         handle_emit_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                 handle_emit_all_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                             handle_dump(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                            handle_edump(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_dump_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_print(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                    handle_print_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -1469,7 +1470,7 @@ static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_ast_node_t* pnode, int type_i
 		pstatement->pnode_handler = handle_dump;
 		pstatement->stdfp = stdout;
 	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstatement->pnode_handler = handle_edump;
+		pstatement->pnode_handler = handle_dump;
 		pstatement->stdfp = stderr;
 	} else {
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
@@ -2311,15 +2312,7 @@ static void handle_dump(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, stdout);
-}
-
-static void handle_edump(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, stderr);
+	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, pnode->stdfp);
 }
 
 static void handle_dump_to_file(
