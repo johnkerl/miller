@@ -9,8 +9,6 @@
 #include "../containers/mlr_dsl_ast.h"
 #include "../containers/sllv.h"
 
-//#define DO_WRITE_APPEND // transitional pending lemon-memory issue
-
 // ================================================================
 // AST:
 // * parens, commas, semis, line endings, whitespace are all stripped away
@@ -610,7 +608,7 @@ md_tee_append(A) ::= MD_TOKEN_TEE(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_T
 
 md_emitf(A) ::= MD_TOKEN_EMITF(O) md_emitf_args(B). {
 	B = mlr_dsl_ast_node_set_function_name(B, O->text);
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITF_WRITE, B,
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITF, B,
 		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
 }
 // Need to invalidate "emit @a," -- use some non-empty-args expr.
@@ -626,11 +624,13 @@ md_emitf_args(A) ::= md_emitf_args(B) MD_TOKEN_COMMA md_oosvar_keylist(C). {
 
 md_emitf_write(A) ::= MD_TOKEN_EMITF(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA md_emitf_args(B). {
 	B = mlr_dsl_ast_node_set_function_name(B, O->text);
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITF_WRITE, B, F);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITF, B,
+		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILE_WRITE, F));
 }
 md_emitf_append(A) ::= MD_TOKEN_EMITF(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_TOKEN_COMMA md_emitf_args(B). {
 	B = mlr_dsl_ast_node_set_function_name(B, O->text);
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITF_APPEND, B, F);
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITF, B,
+		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILE_APPEND, F));
 }
 
 // ----------------------------------------------------------------

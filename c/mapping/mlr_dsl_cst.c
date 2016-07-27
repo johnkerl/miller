@@ -33,7 +33,7 @@ static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_a
 static mlr_dsl_cst_statement_t*         alloc_unset(mlr_dsl_ast_node_t* p, int ti, int cf);
 
 static mlr_dsl_cst_statement_t*           alloc_tee(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*         alloc_emitf(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
+static mlr_dsl_cst_statement_t*         alloc_emitf(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*          alloc_emit(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
 static mlr_dsl_cst_statement_t*  alloc_emit_to_file(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp, file_output_mode_t m);
 static mlr_dsl_cst_statement_t*         alloc_emit_lashed(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
@@ -425,13 +425,7 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		break;
 
 	case MD_AST_NODE_TYPE_EMITF:
-		return alloc_emitf(pnode, type_inferencing, context_flags, MODE_WRITE);
-		break;
-	case MD_AST_NODE_TYPE_EMITF_WRITE:
-		return alloc_emitf(pnode, type_inferencing, context_flags, MODE_WRITE);
-		break;
-	case MD_AST_NODE_TYPE_EMITF_APPEND:
-		return alloc_emitf(pnode, type_inferencing, context_flags, MODE_APPEND);
+		return alloc_emitf(pnode, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_EMITP:
 		return alloc_emit(pnode, type_inferencing, context_flags, TRUE);
@@ -754,9 +748,7 @@ static mlr_dsl_cst_statement_t* alloc_tee(mlr_dsl_ast_node_t* pnode, int type_in
 }
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags, file_output_mode_t file_output_mode)
-{
+static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags) {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	mlr_dsl_ast_node_t* pnamesnode = pnode->pchildren->phead->pvvalue;
@@ -774,19 +766,19 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_
 			NULL));
 	}
 
-	mlr_dsl_ast_node_t* pfilename_node = pnode->pchildren->phead->pnext->pvvalue;
-	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) {
+	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
+	if (poutput_node->type == MD_AST_NODE_TYPE_STDOUT) {
 		pstatement->pnode_handler = handle_emitf;
 		pstatement->stdfp = stdout;
-	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
+	} else if (poutput_node->type == MD_AST_NODE_TYPE_STDERR) {
 		pstatement->pnode_handler = handle_emitf;
 		pstatement->stdfp = stderr;
 	} else {
-		pstatement->pnode_handler = handle_dump_to_file;
-
+		mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
-		pstatement->file_output_mode = file_output_mode;
+		pstatement->file_output_mode = poutput_node->type == MD_AST_NODE_TYPE_FILE_APPEND
+			? MODE_APPEND : MODE_WRITE;
 		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 		pstatement->pnode_handler = handle_emitf_to_file;
 	}
