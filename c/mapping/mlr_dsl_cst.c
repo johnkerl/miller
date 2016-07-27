@@ -30,14 +30,14 @@ static mlr_dsl_cst_statement_t*         alloc_indirect_srec_assignment(mlr_dsl_a
 static mlr_dsl_cst_statement_t*                alloc_oosvar_assignment(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*         alloc_unset(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*             alloc_unset(mlr_dsl_ast_node_t* p, int ti, int cf);
 
-static mlr_dsl_cst_statement_t*           alloc_tee(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*         alloc_emitf(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*          alloc_emit(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
-static mlr_dsl_cst_statement_t*   alloc_emit_lashed(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
+static mlr_dsl_cst_statement_t*               alloc_tee(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*             alloc_emitf(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*              alloc_emit(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
+static mlr_dsl_cst_statement_t*       alloc_emit_lashed(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
 static mlr_dsl_cst_statement_t*              alloc_dump(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*         alloc_print(mlr_dsl_ast_node_t* p, int ti, int cf, char* print_terminator);
+static mlr_dsl_cst_statement_t*             alloc_print(mlr_dsl_ast_node_t* p, int ti, int cf, char* print_terminator);
 
 static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*           alloc_if_head(mlr_dsl_ast_node_t* p, int ti, int cf);
@@ -741,12 +741,8 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_
 	}
 
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
-	if (poutput_node->type == MD_AST_NODE_TYPE_STDOUT) {
+	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
 		pstatement->pnode_handler = handle_emitf;
-		pstatement->stdfp = stdout;
-	} else if (poutput_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstatement->pnode_handler = handle_emitf;
-		pstatement->stdfp = stderr;
 	} else {
 		mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
@@ -837,14 +833,9 @@ static mlr_dsl_cst_statement_t* alloc_emit(mlr_dsl_ast_node_t* pnode, int type_i
 	}
 
 	pstatement->do_full_prefixing = do_full_prefixing;
-	if (poutput_node->type == MD_AST_NODE_TYPE_STDOUT) {
+	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
 		pstatement->pnode_handler = output_all ? handle_emit_all : handle_emit;
-		pstatement->stdfp = stdout;
-	} else if (poutput_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstatement->pnode_handler = output_all ? handle_emit_all : handle_emit;
-		pstatement->stdfp = stderr;
 	} else {
-		// xxx replicate x all & rid of {VARIOUS}_WRITE/APPEND node types
 		mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
@@ -889,16 +880,10 @@ static mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_ast_node_t* pnode, int
 	}
 	pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
 
-	if (poutput_node->type == MD_AST_NODE_TYPE_STDOUT) {
+	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
 		pstatement->pnode_handler = do_full_prefixing
 			? handle_emit_lashed
 			: handle_emitp_lashed;
-		pstatement->stdfp = stdout;
-	} else if (poutput_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstatement->pnode_handler = do_full_prefixing
-			? handle_emit_lashed
-			: handle_emitp_lashed;
-		pstatement->stdfp = stderr;
 	} else {
 		mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,

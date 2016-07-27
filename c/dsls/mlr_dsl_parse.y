@@ -609,7 +609,7 @@ md_tee_append(A) ::= MD_TOKEN_TEE(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_T
 md_emitf(A) ::= MD_TOKEN_EMITF(O) md_emitf_args(B). {
 	B = mlr_dsl_ast_node_set_function_name(B, O->text);
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITF, B,
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 // Need to invalidate "emit @a," -- use some non-empty-args expr.
 md_emitf_args(A) ::= . {
@@ -637,34 +637,34 @@ md_emitf_append(A) ::= MD_TOKEN_EMITF(O) MD_TOKEN_BITWISE_RSH md_output_file(F) 
 md_emitp(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_ALL(B). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITP, B),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 md_emitp(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_FULL_OOSVAR(B). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITP, B),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 
 md_emitp(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_ALL(B) MD_TOKEN_COMMA md_emitp_namelist(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP,
 		mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP, B, C),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 md_emitp(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_COMMA md_emitp_namelist(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP,
 		mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP, B, C),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 
 md_emitp(A) ::= MD_TOKEN_EMITP(O) md_oosvar_keylist(B). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITP, B),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 md_emitp(A) ::= MD_TOKEN_EMITP(O) md_oosvar_keylist(B) MD_TOKEN_COMMA md_emitp_namelist(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP,
 		mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP, B, C),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 
 md_emitp_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
@@ -765,34 +765,34 @@ md_emitp_namelist(A) ::= md_emitp_namelist(B) MD_TOKEN_COMMA md_rhs(C). {
 md_emit(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_ALL(B). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT, B),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 md_emit(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_FULL_OOSVAR(B). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT, B),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 
 md_emit(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_ALL(B) MD_TOKEN_COMMA md_emit_namelist(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT,
 		mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT, B, C),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 md_emit(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_COMMA md_emit_namelist(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT,
 		mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT, B, C),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 
 md_emit(A) ::= MD_TOKEN_EMIT(O) md_oosvar_keylist(B). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT, B),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 md_emit(A) ::= MD_TOKEN_EMIT(O) md_oosvar_keylist(B) MD_TOKEN_COMMA md_emit_namelist(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT,
 		mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT, B, C),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 
 // ----------------------------------------------------------------
@@ -909,7 +909,7 @@ md_emitp_lashed(A) ::= MD_TOKEN_EMITP(O)
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP_LASHED,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMITP_LASHED, B),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 md_emitp_lashed(A) ::= MD_TOKEN_EMITP(O)
 	MD_TOKEN_LPAREN md_emitp_lashed_keylists(B) MD_TOKEN_RPAREN
@@ -917,7 +917,7 @@ md_emitp_lashed(A) ::= MD_TOKEN_EMITP(O)
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP_LASHED,
 		mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMITP_LASHED, B, C),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 
 md_emitp_lashed_write(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
@@ -972,7 +972,7 @@ md_emit_lashed(A) ::= MD_TOKEN_EMIT(O)
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_LASHED,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_EMIT_LASHED, B),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 md_emit_lashed(A) ::= MD_TOKEN_EMIT(O)
 	MD_TOKEN_LPAREN md_emit_lashed_keylists(B) MD_TOKEN_RPAREN
@@ -980,7 +980,7 @@ md_emit_lashed(A) ::= MD_TOKEN_EMIT(O)
 {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_LASHED,
 		mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_EMIT_LASHED, B, C),
-		mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT));
+		mlr_dsl_ast_node_alloc_zary("stream", MD_AST_NODE_TYPE_STREAM));
 }
 
 md_emit_lashed_write(A) ::= MD_TOKEN_EMIT(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA
