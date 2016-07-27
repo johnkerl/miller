@@ -483,9 +483,6 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_DUMP:
 		return alloc_dump(pnode, type_inferencing, context_flags, MODE_WRITE);
 		break;
-	case MD_AST_NODE_TYPE_EDUMP:
-		return alloc_dump(pnode, type_inferencing, context_flags, MODE_WRITE);
-		break;
 	case MD_AST_NODE_TYPE_DUMP_WRITE:
 		return alloc_dump(pnode, type_inferencing, context_flags, MODE_WRITE);
 		break;
