@@ -20,8 +20,6 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 static mlr_dsl_cst_statement_t* alloc_blank();
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
-// xxx code-dedupe opportunities throughout write/append/tee/emit/print/dump
-
 // ti = type_inferencing
 // cf = context_flags
 // dfp = do_full_prefixing
@@ -1269,7 +1267,6 @@ static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_ast_node_t* pnode, int type_i
 		pstatement->pnode_handler = handle_dump;
 		pstatement->stdfp = stderr;
 	} else {
-		// xxx replicate x all & rid of {VARIOUS}_WRITE/APPEND node types
 		mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
@@ -1296,7 +1293,6 @@ static mlr_dsl_cst_statement_t* alloc_print(mlr_dsl_ast_node_t* pnode, int type_
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, type_inferencing, context_flags);
 	pstatement->print_terminator = print_terminator;
 
-	// xxx replicate x all
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
 	if (poutput_node->type == MD_AST_NODE_TYPE_STDOUT) {
 		pstatement->stdfp = stdout;
