@@ -24,6 +24,7 @@ COMMON:
 * lrec_reader/writer take sub-bagged cliopts pstructs
 * put/tee --oxxx flags
 * put/tee --no-flush flags
+* rm stale ast-dumps @ cst.c
 
 CONCRETE FOR EMIT-WRITE:
 * ut-cases 1-1 with m*y exprs

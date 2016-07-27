@@ -35,8 +35,7 @@ static mlr_dsl_cst_statement_t*         alloc_unset(mlr_dsl_ast_node_t* p, int t
 static mlr_dsl_cst_statement_t*           alloc_tee(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*         alloc_emitf(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*          alloc_emit(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
-static mlr_dsl_cst_statement_t*         alloc_emit_lashed(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
-static mlr_dsl_cst_statement_t* alloc_emit_lashed_to_file(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp, file_output_mode_t m);
+static mlr_dsl_cst_statement_t*   alloc_emit_lashed(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
 static mlr_dsl_cst_statement_t*              alloc_dump(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*         alloc_print(mlr_dsl_ast_node_t* p, int ti, int cf, char* print_terminator);
 
@@ -435,21 +434,10 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 	case MD_AST_NODE_TYPE_EMITP_LASHED:
 		return alloc_emit_lashed(pnode, type_inferencing, context_flags, TRUE);
 		break;
-	case MD_AST_NODE_TYPE_EMITP_LASHED_WRITE:
-		return alloc_emit_lashed_to_file(pnode, type_inferencing, context_flags, TRUE, MODE_WRITE);
-		break;
-	case MD_AST_NODE_TYPE_EMITP_LASHED_APPEND:
-		return alloc_emit_lashed_to_file(pnode, type_inferencing, context_flags, TRUE, MODE_APPEND);
-		break;
 	case MD_AST_NODE_TYPE_EMIT_LASHED:
 		return alloc_emit_lashed(pnode, type_inferencing, context_flags, FALSE);
 		break;
-	case MD_AST_NODE_TYPE_EMIT_LASHED_WRITE:
-		return alloc_emit_lashed_to_file(pnode, type_inferencing, context_flags, FALSE, MODE_WRITE);
-		break;
-	case MD_AST_NODE_TYPE_EMIT_LASHED_APPEND:
-		return alloc_emit_lashed_to_file(pnode, type_inferencing, context_flags, FALSE, MODE_APPEND);
-		break;
+
 	case MD_AST_NODE_TYPE_FILTER:
 		return alloc_filter(pnode, type_inferencing, context_flags);
 		break;
@@ -870,65 +858,13 @@ static mlr_dsl_cst_statement_t* alloc_emit(mlr_dsl_ast_node_t* pnode, int type_i
 }
 
 // ----------------------------------------------------------------
-// $ mlr -n put -v 'emit (@a[2][3], @b[4][5]), "x", "y", "z"'
-// text="list", type=statement_list:
-//     text="emit", type=emit_lashed:
-//         text="lashed_keylists", type=emit_lashed:
-//             text="oosvar_keylist", type=oosvar_keylist:
-//                 text="a", type=string_literal.
-//                 text="2", type=strnum_literal.
-//                 text="3", type=strnum_literal.
-//             text="oosvar_keylist", type=oosvar_keylist:
-//                 text="b", type=string_literal.
-//                 text="4", type=strnum_literal.
-//                 text="5", type=strnum_literal.
-//         text="lashed_namelist", type=emit_lashed:
-//             text="x", type=strnum_literal.
-//             text="y", type=strnum_literal.
-//             text="z", type=strnum_literal.
-
 static mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags, int do_full_prefixing)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
-	mlr_dsl_ast_node_t* pkeylists_node  = pnode->pchildren->phead->pvvalue;
-
-	pstatement->num_emit_keylist_evaluators = pkeylists_node->pchildren->length;
-	pstatement->ppemit_keylist_evaluators = mlr_malloc_or_die(pstatement->num_emit_keylist_evaluators
-		* sizeof(sllv_t*));
-	int i = 0;
-	for (sllve_t* pe = pkeylists_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
-		mlr_dsl_ast_node_t* pkeylist_node = pe->pvvalue;
-		pstatement->ppemit_keylist_evaluators[i] = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
-			type_inferencing, context_flags);
-	}
-
-	sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
-	if (pnode->pchildren->length == 2) {
-		mlr_dsl_ast_node_t* pnamelist_node = pnode->pchildren->phead->pnext->pvvalue;
-		for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-			sllv_append(pemit_oosvar_namelist_evaluators,
-				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
-		}
-	}
-	pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
-
-	pstatement->pnode_handler = do_full_prefixing
-		? handle_emit_lashed
-		: handle_emitp_lashed;
-
-	return pstatement;
-}
-
-static mlr_dsl_cst_statement_t* alloc_emit_lashed_to_file(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags, int do_full_prefixing, file_output_mode_t file_output_mode)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-
 	mlr_dsl_ast_node_t* pemit_node = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pfilename_node = pnode->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
 
 	mlr_dsl_ast_node_t* pkeylists_node = pemit_node->pchildren->phead->pvvalue;
 
@@ -953,14 +889,28 @@ static mlr_dsl_cst_statement_t* alloc_emit_lashed_to_file(mlr_dsl_ast_node_t* pn
 	}
 	pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
 
-	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
-		type_inferencing, context_flags);
-	pstatement->file_output_mode = file_output_mode;
-	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
-
-	pstatement->pnode_handler = do_full_prefixing
-		? handle_emit_lashed_to_file
-		: handle_emitp_lashed_to_file;
+	if (poutput_node->type == MD_AST_NODE_TYPE_STDOUT) {
+		pstatement->pnode_handler = do_full_prefixing
+			? handle_emit_lashed
+			: handle_emitp_lashed;
+		pstatement->stdfp = stdout;
+	} else if (poutput_node->type == MD_AST_NODE_TYPE_STDERR) {
+		pstatement->pnode_handler = do_full_prefixing
+			? handle_emit_lashed
+			: handle_emitp_lashed;
+		pstatement->stdfp = stderr;
+	} else {
+		mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
+		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
+			type_inferencing, context_flags);
+		pstatement->file_output_mode = poutput_node->type == MD_AST_NODE_TYPE_FILE_APPEND
+			? MODE_APPEND : MODE_WRITE;
+		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
+		pstatement->pnode_handler = handle_emitf_to_file;
+		pstatement->pnode_handler = do_full_prefixing
+			? handle_emit_lashed_to_file
+			: handle_emitp_lashed_to_file;
+	}
 
 	return pstatement;
 }
