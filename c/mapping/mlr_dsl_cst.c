@@ -32,8 +32,7 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_a
 static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*         alloc_unset(mlr_dsl_ast_node_t* p, int ti, int cf);
 
-static mlr_dsl_cst_statement_t*           alloc_tee(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
-
+static mlr_dsl_cst_statement_t*           alloc_tee(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*         alloc_emitf(mlr_dsl_ast_node_t* p, int ti, int cf, file_output_mode_t m);
 static mlr_dsl_cst_statement_t*          alloc_emit(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
 static mlr_dsl_cst_statement_t*  alloc_emit_to_file(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp, file_output_mode_t m);
@@ -421,12 +420,8 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, i
 		return alloc_unset(pnode, type_inferencing, context_flags);
 		break;
 
-	// xxx work the mode into the AST too?
-	case MD_AST_NODE_TYPE_TEE_WRITE:
-		return alloc_tee(pnode, type_inferencing, context_flags, MODE_WRITE);
-		break;
-	case MD_AST_NODE_TYPE_TEE_APPEND:
-		return alloc_tee(pnode, type_inferencing, context_flags, MODE_APPEND);
+	case MD_AST_NODE_TYPE_TEE:
+		return alloc_tee(pnode, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_EMITF:
@@ -741,15 +736,17 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_ast_node_t* pnode, int type_
 
 // ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_tee(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags, file_output_mode_t file_output_mode)
+	int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
-	mlr_dsl_ast_node_t* pfilenode = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pfilenode = poutput_node->pchildren->phead->pvvalue;
 
 	pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilenode,
 		type_inferencing, context_flags);
-	pstatement->file_output_mode = file_output_mode;
+	pstatement->file_output_mode = poutput_node->type == MD_AST_NODE_TYPE_FILE_APPEND
+		? MODE_APPEND : MODE_WRITE;
 	pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 
 	pstatement->pnode_handler = handle_tee;
