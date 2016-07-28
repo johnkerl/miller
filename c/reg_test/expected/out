@@ -18369,7 +18369,8 @@ text="list", type=statement_list:
                         text="w", type=string_literal.
                 text="stream", type=stream:
             text="dump", type=dump:
-                text="stdout", type=stdout:
+                text=">", type=file_write:
+                    text="stdout", type=stdout:
     text="=", type=srec_assignment:
         text="x", type=field_name.
         text="6", type=strnum_literal.

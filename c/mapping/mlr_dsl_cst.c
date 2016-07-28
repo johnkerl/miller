@@ -1271,17 +1271,17 @@ static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_ast_node_t* pnode, int type_i
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pvvalue;
-	if (poutput_node->type == MD_AST_NODE_TYPE_STDOUT) {
+	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
+	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) {
 		pstatement->pnode_handler = handle_dump;
 		pstatement->stdfp = stdout;
-	} else if (poutput_node->type == MD_AST_NODE_TYPE_STDERR) {
+	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
 		pstatement->pnode_handler = handle_dump;
 		pstatement->stdfp = stderr;
 	} else {
-		mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
-		pstatement->file_output_mode = poutput_node->type == MD_AST_NODE_TYPE_FILE_APPEND
+		pstatement->file_output_mode = pfilename_node->type == MD_AST_NODE_TYPE_FILE_APPEND
 			? MODE_APPEND : MODE_WRITE;
 		pstatement->pmulti_out = multi_out_alloc();
 		pstatement->pnode_handler = handle_dump_to_file;
@@ -1305,15 +1305,15 @@ static mlr_dsl_cst_statement_t* alloc_print(mlr_dsl_ast_node_t* pnode, int type_
 	pstatement->print_terminator = print_terminator;
 
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
-	if (poutput_node->type == MD_AST_NODE_TYPE_STDOUT) {
+	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
+	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) {
 		pstatement->stdfp = stdout;
-	} else if (poutput_node->type == MD_AST_NODE_TYPE_STDERR) {
+	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
 		pstatement->stdfp = stderr;
 	} else {
-		mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
-		pstatement->file_output_mode = poutput_node->type == MD_AST_NODE_TYPE_FILE_APPEND
+		pstatement->file_output_mode = pfilename_node->type == MD_AST_NODE_TYPE_FILE_APPEND
 			? MODE_APPEND : MODE_WRITE;
 		pstatement->pmulti_out = multi_out_alloc();
 	}
