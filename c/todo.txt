@@ -1,9 +1,7 @@
 ================================================================
 BUGFIXES
 
-*
-  mlr --from ../data/small put -v -q 'emit >> "out", @a'
-  mlr DSL: syntax error.
+:D
 
 ================================================================
 TOP OF LIST:
@@ -23,6 +21,7 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 COMMON:
+! AST: FILE_WRITE --> stdout/stderr x all
 * put/tee --oxxx flags
 * put/tee --no-flush flags
 * mlr -k needs >/>> examples incl. stdout/stderr/file. also some subset at mlr put -h.
@@ -39,14 +38,16 @@ CONCRETE FOR TEE:
   - UTs, in various then-chains
   - mlh
   - mld
-? tee --terminal? or just 'then nothing'. to olh.
 
 CONCRETE FOR PRINT:
-* impl > stdout/stderr
+* impl. print > stdout/stderr
 * > stdout/stderr to mlr -k & mlh & mld
 * mk cmt xrefs mlr -k <-> parse.l.
-* undocument eprint.
 * edump/eprint reworked to >/>> stderr in the parser. remove elsewhere from the code.
+* undocument eprint/dump.
+
+DUMP:
+* > stdout, > stderr
 
 PRE-RELEASE:
 * xxxes
@@ -56,7 +57,14 @@ PRE-RELEASE:
 * also sub-bag cli_opts by in/out/etc
 
 COOKBOOK:
-* mlr --from ../data/small put -q '@v=$*; emit > "foo".$a.".dat", @v'; etc.
+* mlr --from ../data/big.dkvp put -q 'tee > $a.$b.".txt", $*'
+  wc -l ??????.txt
+     40005 ekseks.txt
+     40116 ekshat.txt
+     40105 ekspan.txt
+     40257 ekswye.txt
+
+* ... then put -q '' or ... then nothing
 
 OTHER:
 ? in addition to > and >>, support | to popen'ed process?
