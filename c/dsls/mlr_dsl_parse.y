@@ -1038,12 +1038,12 @@ md_edump(A) ::= MD_TOKEN_EDUMP(O). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_DUMP,
 		mlr_dsl_ast_node_alloc_zary("stderr", MD_AST_NODE_TYPE_STDERR));
 }
-md_dump_write(A) ::= MD_TOKEN_DUMP(O) MD_TOKEN_GT md_rhs(F). {
+md_dump_write(A) ::= MD_TOKEN_DUMP(O) MD_TOKEN_GT md_output_file(F). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_DUMP,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILE_WRITE,
 		F));
 }
-md_dump_append(A) ::= MD_TOKEN_DUMP(O) MD_TOKEN_BITWISE_RSH md_rhs(F). {
+md_dump_append(A) ::= MD_TOKEN_DUMP(O) MD_TOKEN_BITWISE_RSH md_output_file(F). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_DUMP,
 		mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILE_APPEND,
 		F));
