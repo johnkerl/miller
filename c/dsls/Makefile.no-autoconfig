@@ -5,12 +5,14 @@
 # http://johnkerl.org/miller/doc/build.html#Without_using_autoconfig
 # ================================================================
 
-DSLCC=gcc
+CC=gcc
 
+# We cannot use the same flags as the parent-directory makefile since
+# lex emits a couple of unused static functions which don't pass gcc -Wall -Werror.
 #DSLCFLAGS=-I.. -O3 -Wextra -Wpedantic
 DSLCFLAGS=-I.. -O3 -g
 
-#DSLCC=clang
+#CC=clang
 #DSLCFLAGS=-I.. -Wall -O2 -fsanitize=address
 
 # ----------------------------------------------------------------
@@ -19,10 +21,10 @@ top: mlr_dsl_lexer.o mlr_dsl_parse.o mlr_dsl_wrapper.o
 # ----------------------------------------------------------------
 mlr_dsl_wrapper.o: mlr_dsl_wrapper.c mlr_dsl_wrapper.h mlr_dsl_parse.h \
 ../lib/mlrutil.h ../containers/mlr_dsl_ast.h ../containers/sllv.h
-	$(DSLCC) -Wall $(DSLCFLAGS) -c -std=gnu99 mlr_dsl_wrapper.c
+	$(CC) -Wall $(DSLCFLAGS) -c -std=gnu99 mlr_dsl_wrapper.c
 
 mlr_dsl_parse.o: mlr_dsl_parse.c mlr_dsl_parse.h
-	$(DSLCC) $(DSLCFLAGS) -c -std=gnu99 mlr_dsl_parse.c
+	$(CC) $(DSLCFLAGS) -c -std=gnu99 mlr_dsl_parse.c
 mlr_dsl_parse.c mlr_dsl_parse.h: mlr_dsl_parse.y lemon ../containers/mlr_dsl_ast.h ../containers/sllv.h
 	./lemon -s mlr_dsl_parse.y
 	mv mlr_dsl_parse.c mlr_dsl_parse.c.tmp
@@ -45,21 +47,21 @@ mlr_dsl_parse.c mlr_dsl_parse.h: mlr_dsl_parse.y lemon ../containers/mlr_dsl_ast
 #   yy_destructor
 
 mlr_dsl_lexer.o: mlr_dsl_lexer.c mlr_dsl_lexer.h mlr_dsl_parse.h
-	$(DSLCC) $(DSLCFLAGS) -c -std=gnu99 mlr_dsl_lexer.c
+	$(CC) $(DSLCFLAGS) -c -std=gnu99 mlr_dsl_lexer.c
 mlr_dsl_lexer.c mlr_dsl_lexer.h: mlr_dsl_lexer.l ../containers/mlr_dsl_ast.h
 	flex --prefix=mlr_dsl_lexer_ --outfile=mlr_dsl_lexer.c --header-file=mlr_dsl_lexer.h mlr_dsl_lexer.l
 
 mlr_dsl: mlr_dsl_wrapper_main.c mlr_dsl_wrapper.c mlr_dsl_wrapper.h mlr_dsl_parse.h mlr_dsl_lexer.o mlr_dsl_parse.o ../lib/mlrutil.c ../lib/mlrutil.h ../lib/mlr_globals.c ../lib/mlr_globals.h ./../containers/mlr_dsl_ast.h \
 ../lib/mlrutil.c ../containers/sllv.c ./../containers/mlr_dsl_ast.c
-	$(DSLCC) -Wall $(DSLCFLAGS) -std=gnu99 mlr_dsl_wrapper_main.c mlr_dsl_wrapper.c mlr_dsl_lexer.o mlr_dsl_parse.o ../lib/mlrutil.c ../lib/mlr_globals.c ../containers/sllv.c ./../containers/mlr_dsl_ast.c -o mlr_dsl
+	$(CC) -Wall $(DSLCFLAGS) -std=gnu99 mlr_dsl_wrapper_main.c mlr_dsl_wrapper.c mlr_dsl_lexer.o mlr_dsl_parse.o ../lib/mlrutil.c ../lib/mlr_globals.c ../containers/sllv.c ./../containers/mlr_dsl_ast.c -o mlr_dsl
 
 # ----------------------------------------------------------------
 ex0: ex0_wrapper.c ex0_wrapper.h ex0_parse.h ex0_lexer.o ex0_parse.o ../lib/mlrutil.c ../lib/mlrutil.h ../lib/mlr_globals.c ../lib/mlr_globals.h ./ex_ast.h \
 ../lib/mlrutil.c ../containers/sllv.c ./ex_ast.h ./ex_ast.c
-	$(DSLCC) -Wall $(DSLCFLAGS) -std=gnu99 ex0_wrapper.c ex0_lexer.o ex0_parse.o ../lib/mlrutil.c ../lib/mlr_globals.c ../containers/sllv.c ./ex_ast.c -o ex0
+	$(CC) -Wall $(DSLCFLAGS) -std=gnu99 ex0_wrapper.c ex0_lexer.o ex0_parse.o ../lib/mlrutil.c ../lib/mlr_globals.c ../containers/sllv.c ./ex_ast.c -o ex0
 
 ex0_parse.o: ex0_parse.c ex0_parse.h
-	$(DSLCC) $(DSLCFLAGS) -c -std=gnu99 ex0_parse.c
+	$(CC) $(DSLCFLAGS) -c -std=gnu99 ex0_parse.c
 ex0_parse.c ex0_parse.h: ex0_parse.y lemon ./ex_ast.h ../containers/sllv.h
 	./lemon -s ex0_parse.y
 	mv ex0_parse.c ex0_parse.c.tmp
@@ -74,17 +76,17 @@ ex0_parse.c ex0_parse.h: ex0_parse.y lemon ./ex_ast.h ../containers/sllv.h
 	rm -f ex0_parse.c.tmp
 
 ex0_lexer.o: ex0_lexer.c ex0_lexer.h ex0_parse.h
-	$(DSLCC) $(DSLCFLAGS) -c -std=gnu99 ex0_lexer.c
+	$(CC) $(DSLCFLAGS) -c -std=gnu99 ex0_lexer.c
 ex0_lexer.c ex0_lexer.h: ex0_lexer.l ./ex_ast.h
 	flex --prefix=ex0_lexer_ --outfile=ex0_lexer.c --header-file=ex0_lexer.h ex0_lexer.l
 
 # ----------------------------------------------------------------
 ex1: ex1_wrapper.c ex1_wrapper.h ex1_parse.h ex1_lexer.o ex1_parse.o ../lib/mlrutil.c ../lib/mlrutil.h ../lib/mlr_globals.c ../lib/mlr_globals.h ./ex_ast.h \
 ../lib/mlrutil.c ../containers/sllv.c ./ex_ast.h ./ex_ast.c
-	$(DSLCC) -Wall $(DSLCFLAGS) -std=gnu99 ex1_wrapper.c ex1_lexer.o ex1_parse.o ../lib/mlrutil.c ../lib/mlr_globals.c ../containers/sllv.c ./ex_ast.c -o ex1
+	$(CC) -Wall $(DSLCFLAGS) -std=gnu99 ex1_wrapper.c ex1_lexer.o ex1_parse.o ../lib/mlrutil.c ../lib/mlr_globals.c ../containers/sllv.c ./ex_ast.c -o ex1
 
 ex1_parse.o: ex1_parse.c ex1_parse.h
-	$(DSLCC) $(DSLCFLAGS) -c -std=gnu99 ex1_parse.c
+	$(CC) $(DSLCFLAGS) -c -std=gnu99 ex1_parse.c
 ex1_parse.c ex1_parse.h: ex1_parse.y lemon ./ex_ast.h ../containers/sllv.h
 	./lemon -s ex1_parse.y
 	mv ex1_parse.c ex1_parse.c.tmp
@@ -99,17 +101,17 @@ ex1_parse.c ex1_parse.h: ex1_parse.y lemon ./ex_ast.h ../containers/sllv.h
 	rm -f ex1_parse.c.tmp
 
 ex1_lexer.o: ex1_lexer.c ex1_lexer.h ex1_parse.h
-	$(DSLCC) $(DSLCFLAGS) -c -std=gnu99 ex1_lexer.c
+	$(CC) $(DSLCFLAGS) -c -std=gnu99 ex1_lexer.c
 ex1_lexer.c ex1_lexer.h: ex1_lexer.l ./ex_ast.h
 	flex --prefix=ex1_lexer_ --outfile=ex1_lexer.c --header-file=ex1_lexer.h ex1_lexer.l
 
 # ----------------------------------------------------------------
 ex2: ex2_wrapper.c ex2_wrapper.h ex2_parse.h ex2_lexer.o ex2_parse.o ../lib/mlrutil.c ../lib/mlrutil.h ../lib/mlr_globals.c ../lib/mlr_globals.h ./ex_ast.h \
 ../lib/mlrutil.c ../containers/sllv.c ./ex_ast.h ./ex_ast.c
-	$(DSLCC) -Wall $(DSLCFLAGS) -std=gnu99 ex2_wrapper.c ex2_lexer.o ex2_parse.o ../lib/mlrutil.c ../lib/mlr_globals.c ../containers/sllv.c ./ex_ast.c -o ex2
+	$(CC) -Wall $(DSLCFLAGS) -std=gnu99 ex2_wrapper.c ex2_lexer.o ex2_parse.o ../lib/mlrutil.c ../lib/mlr_globals.c ../containers/sllv.c ./ex_ast.c -o ex2
 
 ex2_parse.o: ex2_parse.c ex2_parse.h
-	$(DSLCC) $(DSLCFLAGS) -c -std=gnu99 ex2_parse.c
+	$(CC) $(DSLCFLAGS) -c -std=gnu99 ex2_parse.c
 ex2_parse.c ex2_parse.h: ex2_parse.y lemon ./ex_ast.h ../containers/sllv.h
 	./lemon -s -c ex2_parse.y
 	mv ex2_parse.c ex2_parse.c.tmp
@@ -124,7 +126,7 @@ ex2_parse.c ex2_parse.h: ex2_parse.y lemon ./ex_ast.h ../containers/sllv.h
 	rm -f ex2_parse.c.tmp
 
 ex2_lexer.o: ex2_lexer.c ex2_lexer.h ex2_parse.h
-	$(DSLCC) $(DSLCFLAGS) -c -std=gnu99 ex2_lexer.c
+	$(CC) $(DSLCFLAGS) -c -std=gnu99 ex2_lexer.c
 ex2_lexer.c ex2_lexer.h: ex2_lexer.l ./ex_ast.h
 	flex --prefix=ex2_lexer_ --outfile=ex2_lexer.c --header-file=ex2_lexer.h ex2_lexer.l
 
@@ -162,7 +164,7 @@ lemon: \
   lemon_report.h \
   lemon_report.c \
   lemon_main.c
-	$(DSLCC) -o lemon lemon_assert.c lemon_error.c lemon_string.c \
+	$(CC) -o lemon lemon_assert.c lemon_error.c lemon_string.c \
 		lemon_msort.c lemon_set.c lemon_memory.c lemon_option.c lemon_action.c \
 		lemon_symbol.c lemon_config_list.c lemon_state_table.c lemon_plink.c \
 		lemon_parse.c lemon_fsm.c lemon_report.c lemon_main.c \

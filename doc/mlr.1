@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-07-26
+.\"      Date: 2016-07-28
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-07-26" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-07-28" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2387,8 +2387,8 @@ edump: prints all currently defined out-of-stream variables immediately
 .\}
 .nf
 print: prints expression immediately to stdout.
-  Example: mlr put -q 'print "The sum of x and y is ".string($x+$y)'.
-  Example: mlr put -q 'for (k, v in $*) { print string(k) . " => " . string(v) }'.
+  Example: mlr put -q 'print "The sum of x and y is ".($x+$y)'.
+  Example: mlr put -q 'for (k, v in $*) { print k . " => " . v }'.
 .fi
 .if n \{\
 .RE
@@ -2398,8 +2398,8 @@ print: prints expression immediately to stdout.
 .\}
 .nf
 print: prints expression immediately to stdout.
-  Example: mlr put -q 'print "The sum of x and y is ".string($x+$y)'.
-  Example: mlr put -q 'for (k, v in $*) { print string(k) . " => " . string(v) }'.
+  Example: mlr put -q 'print "The sum of x and y is ".($x+$y)'.
+  Example: mlr put -q 'for (k, v in $*) { print k . " => " . v }'.
 .fi
 .if n \{\
 .RE
@@ -2409,8 +2409,8 @@ print: prints expression immediately to stdout.
 .\}
 .nf
 eprint: prints expression immediately to stderr.
-  Example: mlr put -q 'eprint "The sum of x and y is ".string($x+$y)'.
-  Example: mlr put -q 'for (k, v in $*) { eprint string(k) . " => " . string(v) }'.
+  Example: mlr put -q 'eprint "The sum of x and y is ".($x+$y)'.
+  Example: mlr put -q 'for (k, v in $*) { eprint k . " => " . v }'.
 .fi
 .if n \{\
 .RE
@@ -2420,8 +2420,8 @@ eprint: prints expression immediately to stderr.
 .\}
 .nf
 eprint: prints expression immediately to stderr.
-  Example: mlr put -q 'eprint "The sum of x and y is ".string($x+$y)'.
-  Example: mlr put -q 'for (k, v in $*) { eprint string(k) . " => " . string(v) }'.
+  Example: mlr put -q 'eprint "The sum of x and y is ".($x+$y)'.
+  Example: mlr put -q 'for (k, v in $*) { eprint k . " => " . v }'.
 .fi
 .if n \{\
 .RE

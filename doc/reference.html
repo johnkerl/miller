@@ -5283,18 +5283,18 @@ edump: prints all currently defined out-of-stream variables immediately
   to stderr as JSON.
 
 print: prints expression immediately to stdout.
-  Example: mlr put -q 'print "The sum of x and y is ".string($x+$y)'.
-  Example: mlr put -q 'for (k, v in $*) { print string(k) . " =&gt; " . string(v) }'.
+  Example: mlr put -q 'print "The sum of x and y is ".($x+$y)'.
+  Example: mlr put -q 'for (k, v in $*) { print k . " =&gt; " . v }'.
 
 printn: prints expression immediately to stdout, without trailing newline.
-  Example: mlr put -q 'printn "The sum of x and y is ".string($x+$y); print ""'.
+  Example: mlr put -q 'printn "The sum of x and y is ".($x+$y); print ""'.
 
 eprint: prints expression immediately to stderr.
-  Example: mlr put -q 'eprint "The sum of x and y is ".string($x+$y)'.
-  Example: mlr put -q 'for (k, v in $*) { eprint string(k) . " =&gt; " . string(v) }'.
+  Example: mlr put -q 'eprint "The sum of x and y is ".($x+$y)'.
+  Example: mlr put -q 'for (k, v in $*) { eprint k . " =&gt; " . v }'.
 
 eprintn: prints expression immediately to stderr, without trailing newline.
-  Example: mlr put -q 'eprintn "The sum of x and y is ".string($x+$y)'; eprint "".
+  Example: mlr put -q 'eprintn "The sum of x and y is ".($x+$y)'; eprint "".
 
 Used for tee, emit, emitf, emitp, and dump in place of filename to print to stdout.
 

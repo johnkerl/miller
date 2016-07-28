@@ -2557,29 +2557,29 @@ static void mlr_dsl_edump_usage(FILE* ostream) {
 
 static void mlr_dsl_print_usage(FILE* ostream) {
 	fprintf(ostream, "print: prints expression immediately to stdout.\n");
-	fprintf(ostream, "  Example: %s put -q 'print \"The sum of x and y is \".string($x+$y)'.\n",
+	fprintf(ostream, "  Example: %s put -q 'print \"The sum of x and y is \".($x+$y)'.\n",
 		MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { print string(k) . \" => \" . string(v) }'.\n",
+	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { print k . \" => \" . v }'.\n",
 		MLR_GLOBALS.bargv0);
 }
 
 static void mlr_dsl_printn_usage(FILE* ostream) {
 	fprintf(ostream, "printn: prints expression immediately to stdout, without trailing newline.\n");
-	fprintf(ostream, "  Example: %s put -q 'printn \"The sum of x and y is \".string($x+$y); print \"\"'.\n",
+	fprintf(ostream, "  Example: %s put -q 'printn \"The sum of x and y is \".($x+$y); print \"\"'.\n",
 		MLR_GLOBALS.bargv0);
 }
 
 static void mlr_dsl_eprint_usage(FILE* ostream) {
 	fprintf(ostream, "eprint: prints expression immediately to stderr.\n");
-	fprintf(ostream, "  Example: %s put -q 'eprint \"The sum of x and y is \".string($x+$y)'.\n",
+	fprintf(ostream, "  Example: %s put -q 'eprint \"The sum of x and y is \".($x+$y)'.\n",
 		MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { eprint string(k) . \" => \" . string(v) }'.\n",
+	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { eprint k . \" => \" . v }'.\n",
 		MLR_GLOBALS.bargv0);
 }
 
 static void mlr_dsl_eprintn_usage(FILE* ostream) {
 	fprintf(ostream, "eprintn: prints expression immediately to stderr, without trailing newline.\n");
-	fprintf(ostream, "  Example: %s put -q 'eprintn \"The sum of x and y is \".string($x+$y)'; eprint \"\".\n",
+	fprintf(ostream, "  Example: %s put -q 'eprintn \"The sum of x and y is \".($x+$y)'; eprint \"\".\n",
 		MLR_GLOBALS.bargv0);
 }
 

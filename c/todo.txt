@@ -19,31 +19,27 @@ TOP OF LIST:
 * sec2gmt/sec2gmtdate("NULL") -> leave as is
   - UTs x verbs x 2; fcns x 2
 
+! think hard and long about tee/emit/>/>> etc before release
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 COMMON:
 * put/tee --oxxx flags
 * put/tee --no-flush flags
+* mlr -k needs >/>> examples incl. stdout/stderr/file. also some subset at mlr put -h.
 * lrec_reader/writer take sub-bagged cliopts pstructs
-* rm stale ast-dumps @ cst.c
 
 CONCRETE FOR EMIT-WRITE:
 * ut-cases 1-1 with m*y exprs
 * kw stdout/stderr & to mlr -k; also to release notes (not avail as boundvars & what happens if tried)
-* stdout/stderr to ast-builds in m*y & code-dedupe @ cst
-
-CONCRETE FOR KEYED SREC OUTPUT:
-* figure out what to do ...
-? setemitdest or some such??
 
 CONCRETE FOR TEE:
 * --oflags overlays, w/ substruct data & federated substruct fcns
 * UTs
-* flush default on or off?
 * mapper nothing
   - UTs, in various then-chains
   - mlh
   - mld
-? tee --terminal? or just 'then nothing'.
+? tee --terminal? or just 'then nothing'. to olh.
 
 CONCRETE FOR PRINT:
 * impl > stdout/stderr
@@ -51,14 +47,6 @@ CONCRETE FOR PRINT:
 * mk cmt xrefs mlr -k <-> parse.l.
 * undocument eprint.
 * edump/eprint reworked to >/>> stderr in the parser. remove elsewhere from the code.
-* fflush option for print and dump? tee has one.
-
-TEE/MULTIFILE PLACEMENT:
-* how to specify filename as fcn of context (easier within put)
-* how to connect srec/emitoosvars to filename (easier within a verb)
-* whether to tee downstream or not
--> just unkeyed tee verb as keystroke-saver
--> do all keying within put
 
 PRE-RELEASE:
 * xxxes
@@ -66,33 +54,12 @@ PRE-RELEASE:
 * check mlh's
 * fix left_align_pprint -> cli_opts_t
 * also sub-bag cli_opts by in/out/etc
-* printn to mlr -k.
 
 COOKBOOK:
 * mlr --from ../data/small put -q '@v=$*; emit > "foo".$a.".dat", @v'; etc.
 
-OPTIONS:
-* print $*?
-* in addition to > and >>, support | to popen'ed process?
-* multifile within a single emit?? e.g. 'emit @u, "nr" > "u#{nr}"' something? no, instead suggest emit within for-loop.
-* also some interp("abc%{def}") something? strcats get tedious.
-
-SYNTAXES:
-* mlr ... cat -n then tee -a s1.tap then filter '$x>0' then tee s2.tap ...
-
-* mlr ... cat -n then tee -a s1.tap -g x,y ?? -- if so then how to compute field name -- a DSL expr?
-
-* mlr put '
-      print "here i am" >> s1.tap
-      dump  >> s1.tap
-      emit @u >> s2.tap
-      end {
-          emit @v >> s3.tap
-      }
-      print $* > "data_for_".$a.".csv"
-  '
-
-* write to popen? print | "some program", $x + $y -- ?
+OTHER:
+? in addition to > and >>, support | to popen'ed process?
 
 ----------------------------------------------------------------
 ! lemon refactor
