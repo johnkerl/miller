@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-07-28
+.\"      Date: 2016-07-30
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-07-28" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-07-30" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1254,8 +1254,12 @@ Passes through the last n records, optionally by category.
 .RS 0
 .\}
 .nf
-Usage: mlr tee [options]
-xxx write this up please.
+Usage: mlr tee [options] {filename}
+Passes through input records (like mlr cat) but also writes to specified output
+file, using output-format flags from the command line (e.g. --ocsv). See also
+the "tee" keyword within mlr put, which allows data-dependent filenames.
+Options:
+--no-fflush: don't call fflush() after every record.
 .fi
 .if n \{\
 .RE

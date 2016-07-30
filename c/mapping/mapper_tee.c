@@ -62,8 +62,14 @@ static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv) {
 }
 
 static void mapper_tee_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "xxx write this up please.\n");
+	fprintf(o, "Usage: %s %s [options] {filename}\n", argv0, verb);
+	fprintf(o, "Passes through input records (like %s cat) but also writes to specified output\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(o, "file, using output-format flags from the command line (e.g. --ocsv). See also\n");
+	fprintf(o, "the \"tee\" keyword within %s put, which allows data-dependent filenames.\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(o, "Options:\n");
+	fprintf(o, "--no-fflush: don't call fflush() after every record.\n");
 }
 
 // ----------------------------------------------------------------
