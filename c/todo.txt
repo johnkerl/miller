@@ -39,15 +39,10 @@ CONCRETE FOR TEE:
   - mlh
   - mld
 
-CONCRETE FOR PRINT:
-* impl. print > stdout/stderr
+CONCRETE FOR PRINT/DUMP:
 * > stdout/stderr to mlr -k & mlh & mld
 * mk cmt xrefs mlr -k <-> parse.l.
-* edump/eprint reworked to >/>> stderr in the parser. remove elsewhere from the code.
 * undocument eprint/dump.
-
-DUMP:
-* > stdout, > stderr
 
 PRE-RELEASE:
 * xxxes
