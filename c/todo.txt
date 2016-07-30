@@ -33,10 +33,6 @@ CONCRETE FOR EMIT-WRITE:
 CONCRETE FOR TEE:
 * --oflags overlays, w/ substruct data & federated substruct fcns
 * UTs
-* mapper nothing
-  - UTs, in various then-chains
-  - mlh
-  - mld
 
 CONCRETE FOR PRINT/DUMP:
 * > stdout/stderr to mlr -k & mlh & mld
@@ -61,6 +57,7 @@ COOKBOOK:
 * ... then put -q '' or ... then nothing
 
 OTHER:
+* mapper nothing: UTs, in various then-chains; mlh; mld
 ? in addition to > and >>, support | to popen'ed process?
 
 ----------------------------------------------------------------
