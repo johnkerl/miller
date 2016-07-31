@@ -554,7 +554,13 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 		pstate->popts->left_file_name);
 	plrec_reader->psof_func(plrec_reader->pvstate, pvhandle);
 
-	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 1, .filename = pstate->popts->left_file_name };
+	context_t ctx = {
+		.nr        = 0,
+		.fnr       = 0,
+		.filenum   = 1,
+		.filename  = pstate->popts->left_file_name,
+		.force_eof = FALSE
+	};
 	context_t* pctx = &ctx;
 
 	pstate->pleft_buckets_by_join_field_values = lhmslv_alloc();

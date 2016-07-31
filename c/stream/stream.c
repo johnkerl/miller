@@ -35,7 +35,7 @@ int do_stream_chained(char* prepipe, slls_t* filenames, lrec_reader_t* plrec_rea
 		exit(1);
 	}
 
-	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 0, .filename = NULL };
+	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 0, .filename = NULL, .force_eof = FALSE };
 	int ok = 1;
 	if (filenames == NULL) {
 		// No input at all
@@ -82,6 +82,8 @@ static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
 	while (1) {
 		lrec_t* pinrec = plrec_reader->pprocess_func(plrec_reader->pvstate, pvhandle, pctx);
 		if (pinrec == NULL)
+			break;
+		if (pctx->force_eof == TRUE) // e.g. mlr head
 			break;
 		pctx->nr++;
 		pctx->fnr++;

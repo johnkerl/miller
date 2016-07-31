@@ -8,6 +8,7 @@ typedef struct _context_t {
 	long long fnr;
 	int       filenum;
 	char*     filename;
+	int       force_eof; // e.g. mlr head
 } context_t;
 
 void context_init(context_t* pctx, char* first_file_name);

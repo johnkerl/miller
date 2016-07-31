@@ -12,7 +12,7 @@ int assertions_failed = 0;
 static char * test_caps() {
 	printf("\n");
 	printf("-- TEST_RVAL_EVALUATORS test_caps ENTER\n");
-	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
+	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here", .force_eof = FALSE};
 	context_t* pctx = &ctx;
 
 	rval_evaluator_t* pnr       = rval_evaluator_alloc_from_NR();
@@ -65,7 +65,7 @@ static char * test_caps() {
 static char * test_strings() {
 	printf("\n");
 	printf("-- TEST_RVAL_EVALUATORS test_strings ENTER\n");
-	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
+	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here", .force_eof = FALSE};
 	context_t* pctx = &ctx;
 
 	rval_evaluator_t* ps       = rval_evaluator_alloc_from_field_name("s", TYPE_INFER_STRING_FLOAT_INT);
@@ -131,7 +131,7 @@ static char * test_strings() {
 static char * test_numbers() {
 	printf("\n");
 	printf("-- TEST_RVAL_EVALUATORS test_numbers ENTER\n");
-	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
+	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here", .force_eof = FALSE};
 	context_t* pctx = &ctx;
 
 	rval_evaluator_t* p2     = rval_evaluator_alloc_from_strnum_literal("2.0", TYPE_INFER_STRING_FLOAT_INT);
@@ -238,7 +238,7 @@ static char * test_numbers() {
 static char * test_logical_and() {
 	printf("\n");
 	printf("-- TEST_RVAL_EVALUATORS test4 ENTER\n");
-	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
+	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here", .force_eof = FALSE};
 	context_t* pctx = &ctx;
 
 	lrec_t* prec = NULL;
@@ -303,7 +303,7 @@ static char * test_logical_and() {
 static char * test_logical_or() {
 	printf("\n");
 	printf("-- TEST_RVAL_EVALUATORS test4 ENTER\n");
-	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
+	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here", .force_eof = FALSE};
 	context_t* pctx = &ctx;
 
 	lrec_t* prec = NULL;
@@ -368,7 +368,7 @@ static char * test_logical_or() {
 static char * test_logical_xor() {
 	printf("\n");
 	printf("-- TEST_RVAL_EVALUATORS test4 ENTER\n");
-	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here"};
+	context_t ctx = {.nr = 888, .fnr = 999, .filenum = 123, .filename = "filename-goes-here", .force_eof = FALSE};
 	context_t* pctx = &ctx;
 
 	lrec_t* prec = NULL;

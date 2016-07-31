@@ -14,6 +14,7 @@ typedef struct _mapper_head_state_t {
 	ap_state_t* pargp;
 	slls_t* pgroup_by_field_names;
 	unsigned long long head_count;
+	unsigned long long unkeyed_record_count;
 	lhmslv_t* precord_lists_by_group;
 } mapper_head_state_t;
 
@@ -21,7 +22,8 @@ static void      mapper_head_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_head_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names, unsigned long long head_count);
 static void      mapper_head_free(mapper_t* pmapper);
-static sllv_t*   mapper_head_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_head_process_unkeyed(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_head_process_keyed(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_head_setup = {
@@ -65,10 +67,13 @@ static mapper_t* mapper_head_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_na
 	pstate->pargp                  = pargp;
 	pstate->pgroup_by_field_names  = pgroup_by_field_names;
 	pstate->head_count             = head_count;
+	pstate->unkeyed_record_count   = 0LL;
 	pstate->precord_lists_by_group = lhmslv_alloc();
 
 	pmapper->pvstate        = pstate;
-	pmapper->pprocess_func  = mapper_head_process;
+	pmapper->pprocess_func  = pgroup_by_field_names->length == 0
+		? mapper_head_process_unkeyed
+		: mapper_head_process_keyed;
 	pmapper->pfree_func     = mapper_head_free;
 
 	return pmapper;
@@ -90,20 +95,39 @@ static void mapper_head_free(mapper_t* pmapper) {
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_head_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_head_process_unkeyed(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_head_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(pinrec, pstate->pgroup_by_field_names);
+		pstate->unkeyed_record_count++;
+		if (pstate->unkeyed_record_count <= pstate->head_count) {
+			return sllv_single(pinrec);
+		} else {
+			pctx->force_eof = TRUE;
+			lrec_free(pinrec);
+			return NULL;
+		}
+	} else {
+		return sllv_single(NULL);
+	}
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_head_process_keyed(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_head_state_t* pstate = pvstate;
+	if (pinrec != NULL) {
+		slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(pinrec,
+			pstate->pgroup_by_field_names);
 		if (pgroup_by_field_values == NULL) {
 			lrec_free(pinrec);
 			return NULL;
 		} else {
-			unsigned long long* pcount_for_group = lhmslv_get(pstate->precord_lists_by_group, pgroup_by_field_values);
+			unsigned long long* pcount_for_group = lhmslv_get(pstate->precord_lists_by_group,
+				pgroup_by_field_values);
 			if (pcount_for_group == NULL) {
 				pcount_for_group = mlr_malloc_or_die(sizeof(unsigned long long));
 				*pcount_for_group = 0LL;
-				lhmslv_put(pstate->precord_lists_by_group, slls_copy(pgroup_by_field_values), pcount_for_group,
-					FREE_ENTRY_KEY);
+				lhmslv_put(pstate->precord_lists_by_group, slls_copy(pgroup_by_field_values),
+					pcount_for_group, FREE_ENTRY_KEY);
 			}
 			slls_free(pgroup_by_field_values);
 			(*pcount_for_group)++;

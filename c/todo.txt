@@ -21,6 +21,8 @@ TOP OF LIST:
 
 ! shift-by-1 (shift-by-n) at cookbook. also at mapper step.
 
+!! mapper head UT inside various then-chains at various positions
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 COMMON:
 * mlr -k needs >/>> examples incl. stdout/stderr/file. also some subset at mlr put -h.
