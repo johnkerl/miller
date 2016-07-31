@@ -19,23 +19,20 @@ TOP OF LIST:
 
 ! think hard and long about tee/emit/>/>> etc before release
 
+! shift-by-1 (shift-by-n) at cookbook. also at mapper step.
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 COMMON:
-* put/tee --oxxx flags
 * mlr -k needs >/>> examples incl. stdout/stderr/file. also some subset at mlr put -h.
-* lrec_reader/writer take sub-bagged cliopts pstructs
 * keywords: mk cmt xrefs mlr -k <-> parse.l.
-
-CONCRETE FOR EMIT-WRITE:
+* kw stdout/stderr & to mlr -k / mlh / mld; also to release notes (not avail as boundvars & what happens if tried:
+  "syntax error")
+* lrec_reader/writer take sub-bagged cliopts pstructs
+* put/tee --oxxx flags overlays, w/ substruct data & federated substruct fcns
 * ut-cases 1-1 with parser rules
-* kw stdout/stderr & to mlr -k; also to release notes (not avail as boundvars & what happens if tried: "syntax error")
-
-CONCRETE FOR TEE:
-* --oflags overlays, w/ substruct data & federated substruct fcns
-* UTs
+* UTs incl. mapper tee
 
 CONCRETE FOR PRINT/DUMP:
-* > stdout/stderr to mlr -k & mlh & mld
 * undocument eprint/dump.
 
 PRE-RELEASE:
