@@ -54,7 +54,7 @@ COOKBOOK:
 
 OTHER:
 * mapper nothing: UTs, in various then-chains; mlh; mld
-? in addition to > and >>, support | to popen'ed process?
+? in addition to > and >>, support | to popen'ed process? esp. gzip et al.
 
 ----------------------------------------------------------------
 ! lemon refactor
