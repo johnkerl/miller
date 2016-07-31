@@ -522,7 +522,7 @@ Separator options, for input, output, or both:
       dkvp         \n       ,        =
       json         (N/A)    (N/A)    (N/A)
       nidx         \n       space    (N/A)
-      csv          \n       ,        (N/A)
+      csv          \r\n     ,        (N/A)
       csvlite      \n       ,        (N/A)
       markdown     \n       (N/A)    (N/A)
       pprint       \n       space    (N/A)
@@ -1007,17 +1007,17 @@ a,b,c
 <div class="pokipanel">
 <pre>
 $ mlr --icsv --oxtab cat data/a.csv data/b.csv
-a  1
-b  2
-c 3
+a 1
+b 2
+c 3
 
-a  4
-b  5
-c 6
+a 4
+b 5
+c 6
 
-a  7
-b  8
-c 9
+a 7
+b 8
+c 9
 </pre>
 </div>
 <p/>
@@ -2358,9 +2358,9 @@ or <tt>put</tt> statement. Their values are assigned by the input-record reader:
 <div class="pokipanel">
 <pre>
 $ mlr --csv put '$nr = NR' data/a.csv
-a,b,c,nr
-1,2,3,1
-4,5,6,2
+a,b,c,nr
+1,2,3,1
+4,5,6,2
 </pre>
 </div>
 <p/>
@@ -2368,13 +2368,13 @@ a,b,c,nr
 <div class="pokipanel">
 <pre>
 $ mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv
-a,b,c,nr
-1,2,3,1
-1,2,3,1
-1,2,3,1
-4,5,6,2
-4,5,6,2
-4,5,6,2
+a,b,c,nr
+1,2,3,1
+1,2,3,1
+1,2,3,1
+4,5,6,2
+4,5,6,2
+4,5,6,2
 </pre>
 </div>
 <p/>
@@ -4955,10 +4955,10 @@ a b c
 <div class="pokipanel">
 <pre>
 $ mlr --icsv --opprint put '$filename=FILENAME' then tac data/a.csv data/b.csv
-a b c filename
-7 8 9 data/b.csv
-4 5 6 data/a.csv
-1 2 3 data/a.csv
+a b c filename
+7 8 9 data/b.csv
+4 5 6 data/a.csv
+1 2 3 data/a.csv
 </pre>
 </div>
 <p/>
