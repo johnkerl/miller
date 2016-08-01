@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-07-30
+.\"      Date: 2016-08-01
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-07-30" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-08-01" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -621,6 +621,8 @@ Usage: mlr head [options]
 -n {count}    Head count to print; default 10
 -g {a,b,c}    Optional group-by-field names for head counts
 Passes through the first n records, optionally by category.
+Without -g, ceases consuming more input (i.e. is fast) when n
+records have been read.
 .fi
 .if n \{\
 .RE

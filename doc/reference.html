@@ -1560,6 +1560,8 @@ Usage: mlr head [options]
 -n {count}    Head count to print; default 10
 -g {a,b,c}    Optional group-by-field names for head counts
 Passes through the first n records, optionally by category.
+Without -g, ceases consuming more input (i.e. is fast) when n
+records have been read.
 </pre>
 </div>
 <p/>

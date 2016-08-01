@@ -38,6 +38,8 @@ static void mapper_head_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-n {count}    Head count to print; default 10\n");
 	fprintf(o, "-g {a,b,c}    Optional group-by-field names for head counts\n");
 	fprintf(o, "Passes through the first n records, optionally by category.\n");
+	fprintf(o, "Without -g, ceases consuming more input (i.e. is fast) when n\n");
+	fprintf(o, "records have been read.\n");
 }
 
 static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv) {
