@@ -55,6 +55,8 @@ int do_stream_chained(char* prepipe, slls_t* filenames, lrec_reader_t* plrec_rea
 			ctx.fnr = 0;
 			ok = do_file_chained(prepipe, filename, &ctx, plrec_reader, pmapper_list,
 				plrec_writer, output_stream, nr_progress_mod) && ok;
+			if (ctx.force_eof == TRUE) // e.g. mlr head
+				break;
 		}
 	}
 

@@ -22,6 +22,7 @@ TOP OF LIST:
 ! shift-by-1 (shift-by-n) at cookbook. also at mapper step.
 
 !! mapper head UT inside various then-chains at various positions
+  - cat then head; vice versa; tac/sort; multi-file; print NR at end
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 COMMON:
