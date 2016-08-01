@@ -516,13 +516,13 @@ run_mlr --opprint stats2    -a logireg -f x,y -g g $indir/logi.dkvp
 run_mlr --oxtab   stats2 -a cov -f x,y      $indir/abixy-het
 run_mlr --oxtab   stats2 -a cov -f x,y -g a $indir/abixy-het
 
-run_mlr --opprint step -a rsum,delta,counter -f x,y $indir/abixy
-run_mlr --opprint step -a rsum,delta,counter -f x,y -g a $indir/abixy
+run_mlr --opprint step -a rsum,shift,delta,counter -f x,y $indir/abixy
+run_mlr --opprint step -a rsum,shift,delta,counter -f x,y -g a $indir/abixy
 run_mlr --opprint step -a ewma -d 0.1,0.9 -f x,y -g a $indir/abixy
 run_mlr --opprint step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g a $indir/abixy
 
-run_mlr --odkvp   step -a rsum,delta,counter -f x,y      $indir/abixy-het
-run_mlr --odkvp   step -a rsum,delta,counter -f x,y -g a $indir/abixy-het
+run_mlr --odkvp   step -a rsum,shift,delta,counter -f x,y      $indir/abixy-het
+run_mlr --odkvp   step -a rsum,shift,delta,counter -f x,y -g a $indir/abixy-het
 run_mlr --opprint step -a ewma -d 0.1,0.9 -f x,y -g a $indir/abixy-het
 run_mlr --opprint step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g a $indir/abixy-het
 

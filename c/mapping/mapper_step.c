@@ -80,6 +80,7 @@ static void      mapper_step_free(mapper_t* pmapper);
 static sllv_t*   mapper_step_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 static step_t* step_delta_alloc      (char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2);
+static step_t* step_shift_alloc      (char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2);
 static step_t* step_from_first_alloc (char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2);
 static step_t* step_ratio_alloc      (char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2);
 static step_t* step_rsum_alloc       (char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2);
@@ -97,6 +98,7 @@ typedef struct _step_lookup_t {
 } step_lookup_t;
 static step_lookup_t step_lookup_table[] = {
 	{"delta",      step_delta_alloc,      "Compute differences in field(s) between successive records"},
+	{"shift",      step_shift_alloc,      "Include value(s) in field(s) from previous record, if any"},
 	{"from-first", step_from_first_alloc, "Compute differences in field(s) from first record"},
 	{"ratio",      step_ratio_alloc,      "Compute ratios in field(s) between successive records"},
 	{"rsum",       step_rsum_alloc,       "Compute running sums of field(s) between successive records"},
@@ -378,6 +380,42 @@ static step_t* step_delta_alloc(char* input_field_name, int allow_int_float, sll
 	pstep->psprocess_func = NULL;
 	pstep->pzprocess_func = step_delta_zprocess;
 	pstep->pfree_func     = step_delta_free;
+	return pstep;
+}
+
+// ----------------------------------------------------------------
+typedef struct _step_shift_state_t {
+	char* prev;
+	char* output_field_name;
+	int   allow_int_float;
+} step_shift_state_t;
+static void step_shift_sprocess(void* pvstate, char* strv, lrec_t* prec) {
+	step_shift_state_t* pstate = pvstate;
+	lrec_put(prec, pstate->output_field_name, pstate->prev, FREE_ENTRY_VALUE);
+	pstate->prev = mlr_strdup_or_die(strv);
+}
+static void step_shift_zprocess(void* pvstate, lrec_t* prec) {
+	step_shift_state_t* pstate = pvstate;
+	lrec_put(prec, pstate->output_field_name, "", NO_FREE);
+}
+static void step_shift_free(step_t* pstep) {
+	step_shift_state_t* pstate = pstep->pvstate;
+	free(pstate->output_field_name);
+	free(pstate);
+	free(pstep);
+}
+static step_t* step_shift_alloc(char* input_field_name, int allow_int_float, slls_t* unused1, slls_t* unused2) {
+	step_t* pstep = mlr_malloc_or_die(sizeof(step_t));
+	step_shift_state_t* pstate = mlr_malloc_or_die(sizeof(step_shift_state_t));
+	pstate->prev = mlr_strdup_or_die("");
+	pstate->allow_int_float = allow_int_float;
+	pstate->output_field_name = mlr_paste_2_strings(input_field_name, "_shift");
+	pstep->pvstate        = (void*)pstate;
+	pstep->pdprocess_func = NULL;
+	pstep->pnprocess_func = NULL;
+	pstep->psprocess_func = step_shift_sprocess;
+	pstep->pzprocess_func = step_shift_zprocess;
+	pstep->pfree_func     = step_shift_free;
 	return pstep;
 }
 

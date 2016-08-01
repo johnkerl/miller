@@ -21,9 +21,6 @@ TOP OF LIST:
 
 ! shift-by-1 (shift-by-n) at cookbook. also at mapper step.
 
-!! mapper head UT inside various then-chains at various positions
-  - cat then head; vice versa; tac/sort; multi-file; print NR at end
-
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 COMMON:
 * mlr -k needs >/>> examples incl. stdout/stderr/file. also some subset at mlr put -h.
@@ -60,6 +57,28 @@ OTHER:
 ? in addition to > and >>, support | to popen'ed process? esp. gzip et al.
 
 ----------------------------------------------------------------
+* for 4.4.0:
+
+  o early out for unkeyed head
+
+  o tee
+    - v1 dkvp-only lrec-writer
+    - fold in various oargs, as join does for iargs
+    - or have it use same flags as main output ...
+
+  ! output to multiple files by key
+    - pass-through (multi-tee?) or terminal
+    - particular verb; needs -a; some eval expression for filenames; maybe better off as put keyword. what abt emit?
+    - inside put, like awk's print > $1.txt: print,printn,dump.
+
+  k universalize the dot operator. all this string(a).string(b) is going to get really old.
+  k $x=="" vs isempty($x) nonsense
+  k sec2gmtdate
+  k mapper nothing to mld
+
+  ? --imd ?
+
+----------------------------------------------------------------
 ! lemon refactor
   - mdwmain w/ ifdef
   - ex1/2/etc -> better names. SVNE grammar. numexpreval grammar. mlr w&w/o write/append; mlr w&w/o bracing conflict.
@@ -93,26 +112,6 @@ OTHER:
   k put %ifdef in .y file
   k NDEBUG
   k hook in ParseTrace from cliopt
-
-----------------------------------------------------------------
-* for 4.4.0:
-
-  o tee
-    - v1 dkvp-only lrec-writer
-    - fold in various oargs, as join does for iargs
-    - or have it use same flags as main output ...
-
-  ! output to multiple files by key
-    - pass-through (multi-tee?) or terminal
-    - particular verb; needs -a; some eval expression for filenames; maybe better off as put keyword. what abt emit?
-    - inside put, like awk's print > $1.txt: print,printn,dump.
-
-  k universalize the dot operator. all this string(a).string(b) is going to get really old.
-  k $x=="" vs isempty($x) nonsense
-  k sec2gmtdate
-  k mapper nothing to mld
-
-  ? --imd ?
 
 ----------------------------------------------------------------
 ? double-quote-aware (non-lite) nidx & dkvp options?
