@@ -15,7 +15,6 @@ void multi_lrec_writer_free(multi_lrec_writer_t* pmlw) {
 	if (pmlw == NULL)
 		return;
 
-	// xxx in loop: free writers and filenames
 	for (lhmsve_t* pe = pmlw->pnames_to_lrec_writers_and_fps->phead; pe != NULL; pe = pe->pnext) {
 		lrec_writer_and_fp_t* pstate = pe->pvvalue;
 		pstate->plrec_writer->pfree_func(pstate->plrec_writer);
@@ -32,7 +31,7 @@ void multi_lrec_writer_output_srec(multi_lrec_writer_t* pmlw, lrec_t* poutrec, c
 {
 	lrec_writer_and_fp_t* pstate = lhmsv_get(pmlw->pnames_to_lrec_writers_and_fps, filename);
 	if (pstate == NULL) {
-		pstate = mlr_malloc_or_die(sizeof(lrec_writer_and_fp_t)); // xxx free at destruct
+		pstate = mlr_malloc_or_die(sizeof(lrec_writer_and_fp_t));
 		cli_opts_t* popts = MLR_GLOBALS.popts;
 		pstate->plrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
 			popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
