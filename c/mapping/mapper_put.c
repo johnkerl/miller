@@ -99,7 +99,6 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "   #$y = 2;\n");
 	fprintf(o, "    $z = 3\n");
 	fprintf(o, "  '\n");
-// xxx doc --no-flush
 	fprintf(o, "\n");
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
 	fprintf(o, "including function list. Or \"%s -f\".\n", argv0);
@@ -128,7 +127,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
 	ap_define_int_value_flag(pstate, "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
 	ap_define_string_flag(pstate,    "--oflatsep", &oosvar_flatten_separator);
-	ap_define_false_flag(pstate,     "--no-flush", &flush_every_record);
+	ap_define_false_flag(pstate,     "--no-fflush", &flush_every_record);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_put_usage(stderr, argv[0], verb);
