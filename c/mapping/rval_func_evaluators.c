@@ -152,10 +152,12 @@ function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_TIME, "sec2dhms",  1, "Formats integer seconds as in sec2dhms(500000)\n= \"5d18h53m20s\""},
 	{FUNC_CLASS_TIME, "sec2gmt",   1,
 		"Formats seconds since epoch (integer part)\n"
-		"as GMT timestamp, e.g. sec2gmt(1440768801.7) = \"2015-08-28T13:33:21Z\"."},
+		"as GMT timestamp, e.g. sec2gmt(1440768801.7) = \"2015-08-28T13:33:21Z\".\n"
+		"Leaves non-numbers as-is."},
 	{FUNC_CLASS_TIME, "sec2gmtdate",   1,
 		"Formats seconds since epoch (integer part)\n"
-		"as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = \"2015-08-28\"."},
+		"as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = \"2015-08-28\".\n"
+		"Leaves non-numbers as-is."},
 	{FUNC_CLASS_TIME, "sec2hms",   1,
 		"Formats integer seconds as in\n"
 		"sec2hms(5000) = \"01:23:20\""},
@@ -363,8 +365,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_unary_func_name(char* fnnm, rval_eva
 	} else if (streq(fnnm, "qnorm"))       { return rval_evaluator_alloc_from_f_f_func(f_f_qnorm_func,       parg1);
 	} else if (streq(fnnm, "round"))       { return rval_evaluator_alloc_from_x_x_func(x_x_round_func,       parg1);
 	} else if (streq(fnnm, "sec2dhms"))    { return rval_evaluator_alloc_from_s_i_func(s_i_sec2dhms_func,    parg1);
-	} else if (streq(fnnm, "sec2gmt"))     { return rval_evaluator_alloc_from_x_n_func(s_n_sec2gmt_func,     parg1);
-	} else if (streq(fnnm, "sec2gmtdate")) { return rval_evaluator_alloc_from_x_n_func(s_n_sec2gmtdate_func, parg1);
+	} else if (streq(fnnm, "sec2gmt"))     { return rval_evaluator_alloc_from_x_x_func(s_x_sec2gmt_func,     parg1);
+	} else if (streq(fnnm, "sec2gmtdate")) { return rval_evaluator_alloc_from_x_x_func(s_x_sec2gmtdate_func, parg1);
 	} else if (streq(fnnm, "sec2hms"))     { return rval_evaluator_alloc_from_s_i_func(s_i_sec2hms_func,     parg1);
 	} else if (streq(fnnm, "sgn"))         { return rval_evaluator_alloc_from_x_x_func(x_x_sgn_func,         parg1);
 	} else if (streq(fnnm, "sin"))         { return rval_evaluator_alloc_from_f_f_func(f_f_sin_func,         parg1);

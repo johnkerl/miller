@@ -8,8 +8,6 @@ TOP OF LIST:
 
 ! rh/fedora/centos
 
-! mlr head early out
-
 ! call for use-cases? (go first.)
 
 ! go through lmag article & clarify all unclears
@@ -33,13 +31,6 @@ COMMON:
 CONCRETE FOR PRINT/DUMP:
 * undocument eprint/dump.
 
-PRE-RELEASE:
-* xxxes
-* valgrinds
-* check mlh's
-* fix left_align_pprint -> cli_opts_t
-* also sub-bag cli_opts by in/out/etc
-
 COOKBOOK:
 * mlr --from ../data/big.dkvp put -q 'tee > $a.$b.".txt", $*'
   wc -l ??????.txt
@@ -55,28 +46,30 @@ OTHER:
 ? in addition to > and >>, support | to popen'ed process? esp. gzip et al.
 
 ----------------------------------------------------------------
-* for 4.4.0:
+FOR 4.4.0:
 
-  o tee
-    - v1 dkvp-only lrec-writer
-    - fold in various oargs, as join does for iargs
-    - or have it use same flags as main output ...
+* pre-release:
+  o xxxes
+  o valgrinds
+  o check mlh's
+  o fix left_align_pprint -> cli_opts_t
+  o also sub-bag cli_opts by in/out/etc
 
-  o mlr step -a shift
+* tee and put print/dump/tee/emit >/>>
 
-  o early out for unkeyed head
+* mlr step -a shift
 
-  ! output to multiple files by key
-    - pass-through (multi-tee?) or terminal
-    - particular verb; needs -a; some eval expression for filenames; maybe better off as put keyword. what abt emit?
-    - inside put, like awk's print > $1.txt: print,printn,dump.
+* early out for unkeyed head
 
-  k universalize the dot operator. all this string(a).string(b) is going to get really old.
-  k $x=="" vs isempty($x) nonsense
-  k sec2gmtdate
-  k mapper nothing to mld
+* universalize the dot operator. all this string(a).string(b) is going to get really old.
+* $x=="" vs isempty($x) nonsense
+* sec2gmtdate
+* mapper nothing to mld
 
-  ? --imd ?
+----------------------------------------------------------------
+POST-4.4.0:
+
+? --imd ?
 
 ----------------------------------------------------------------
 ! lemon refactor

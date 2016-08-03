@@ -345,6 +345,9 @@ static mv_t _emt(mv_t* pa, mv_t* pb) {
 static mv_t _err(mv_t* pa, mv_t* pb) {
 	return mv_error();
 }
+static mv_t _0(mv_t* pa) {
+	return *pa;
+}
 static mv_t _1(mv_t* pa, mv_t* pb) {
 	return *pa;
 }
@@ -650,13 +653,37 @@ mv_t time_string_from_seconds(mv_t* psec, char* format) {
 	return mv_from_string_with_free(string);
 }
 
-mv_t s_n_sec2gmt_func(mv_t* pval1) {
-	return time_string_from_seconds(pval1, ISO8601_TIME_FORMAT);
-}
-mv_t s_n_sec2gmtdate_func(mv_t* pval1) {
-	return time_string_from_seconds(pval1, ISO8601_DATE_FORMAT);
-}
+// ----------------------------------------------------------------
+static mv_t sec2gmt_s_n(mv_t* pa) { return time_string_from_seconds(pa, ISO8601_TIME_FORMAT); }
 
+static mv_unary_func_t* sec2gmt_dispositions[MT_DIM] = {
+	/*ERROR*/  _err1,
+	/*ABSENT*/ _a1,
+	/*EMPTY*/  _emt1,
+	/*STRING*/ _0,
+	/*INT*/    sec2gmt_s_n,
+	/*FLOAT*/  sec2gmt_s_n,
+	/*BOOL*/   _0,
+};
+
+mv_t s_x_sec2gmt_func(mv_t* pval1) { return (sec2gmt_dispositions[pval1->type])(pval1); }
+
+// ----------------------------------------------------------------
+static mv_t sec2gmtdate_s_n(mv_t* pa) { return time_string_from_seconds(pa, ISO8601_DATE_FORMAT); }
+
+static mv_unary_func_t* sec2gmtdate_dispositions[MT_DIM] = {
+	/*ERROR*/  _err1,
+	/*ABSENT*/ _a1,
+	/*EMPTY*/  _emt1,
+	/*STRING*/ _0,
+	/*INT*/    sec2gmtdate_s_n,
+	/*FLOAT*/  sec2gmtdate_s_n,
+	/*BOOL*/   _0,
+};
+
+mv_t s_x_sec2gmtdate_func(mv_t* pval1) { return (sec2gmtdate_dispositions[pval1->type])(pval1); }
+
+// ----------------------------------------------------------------
 mv_t s_ns_strftime_func(mv_t* pval1, mv_t* pval2) {
 	mv_t rv = time_string_from_seconds(pval1, pval2->u.strv);
 	mv_free(pval2);

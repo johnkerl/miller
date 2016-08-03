@@ -26,8 +26,8 @@ mapper_setup_t mapper_sec2gmt_setup = {
 static void mapper_sec2gmt_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s {comma-separated list of field names}\n", argv0, verb);
 	fprintf(o, "Replaces a numeric field representing seconds since the epoch with the\n");
-	fprintf(o, "corresponding GMT timestamp. This is nothing more than a keystroke-saver for\n");
-	fprintf(o, "the sec2gmt function:\n");
+	fprintf(o, "corresponding GMT timestamp; leaves non-numbers as-is. This is nothing\n");
+	fprintf(o, "more than a keystroke-saver for the sec2gmt function:\n");
 	fprintf(o, "  %s %s time1,time2\n", argv0, verb);
 	fprintf(o, "is the same as\n");
 	fprintf(o, "  %s put '$time1=sec2gmt($time1);$time2=sec2gmt($time2)'\n", argv0);

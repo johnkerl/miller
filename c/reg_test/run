@@ -1478,6 +1478,7 @@ announce DSL DATETIME FUNCTIONS
 
 run_mlr --csvlite put '$gmt = sec2gmt($sec)' $indir/sec2gmt
 run_mlr --csvlite put '$sec = gmt2sec($gmt)' $indir/gmt2sec
+run_mlr --csvlite put '$gmtdate = sec2gmtdate($sec)' $indir/sec2gmt
 
 run_mlr --csvlite put '$gmt = strftime($sec, "%Y-%m-%dT%H:%M:%SZ")' $indir/sec2gmt
 run_mlr --csvlite put '$sec = strptime($gmt, "%Y-%m-%dT%H:%M:%SZ")' $indir/gmt2sec
@@ -1488,6 +1489,9 @@ run_mlr --opprint put '$hms=sec2hms($sec);   $resec=hms2sec($hms);   $diff=$rese
 run_mlr --opprint put '$hms=fsec2hms($sec);  $resec=hms2fsec($hms);  $diff=$resec-$sec' $indir/fsec2xhms
 run_mlr --opprint put '$hms=sec2dhms($sec);  $resec=dhms2sec($hms);  $diff=$resec-$sec' $indir/sec2xhms
 run_mlr --opprint put '$hms=fsec2dhms($sec); $resec=dhms2fsec($hms); $diff=$resec-$sec' $indir/fsec2xhms
+
+run_mlr --csvlite sec2gmt     sec $indir/sec2gmt
+run_mlr --csvlite sec2gmtdate sec $indir/sec2gmt
 
 # ----------------------------------------------------------------
 announce DSL SUB/GSUB

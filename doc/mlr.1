@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-08-01
+.\"      Date: 2016-08-03
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-08-01" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-08-03" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1065,8 +1065,8 @@ See also mlr bootstrap and mlr sample.
 .nf
 Usage: mlr sec2gmt {comma-separated list of field names}
 Replaces a numeric field representing seconds since the epoch with the
-corresponding GMT timestamp. This is nothing more than a keystroke-saver for
-the sec2gmt function:
+corresponding GMT timestamp; leaves non-numbers as-is. This is nothing
+more than a keystroke-saver for the sec2gmt function:
   mlr sec2gmt time1,time2
 is the same as
   mlr put '$time1=sec2gmt($time1);$time2=sec2gmt($time2)'
@@ -1080,8 +1080,8 @@ is the same as
 .nf
 Usage: mlr sec2gmtdate {comma-separated list of field names}
 Replaces a numeric field representing seconds since the epoch with the
-corresponding GMT year-month-day timestamp. This is nothing more than
-a keystroke-saver for the sec2gmtdate function:
+corresponding GMT year-month-day timestamp; leaves non-numbers as-is.
+This is nothing more than a keystroke-saver for the sec2gmtdate function:
   mlr sec2gmtdate time1,time2
 is the same as
   mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
@@ -2231,6 +2231,7 @@ hms2sec("01:23:20") = 5000
 .nf
 (class=time #args=1): Formats seconds since epoch (integer part)
 as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
+Leaves non-numbers as-is.
 .fi
 .if n \{\
 .RE
@@ -2241,6 +2242,7 @@ as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
 .nf
 (class=time #args=1): Formats seconds since epoch (integer part)
 as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
+Leaves non-numbers as-is.
 .fi
 .if n \{\
 .RE

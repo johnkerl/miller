@@ -4272,8 +4272,8 @@ sampling, which works in the streaming case, is <tt>mlr filter 'urand() &amp;
 $ mlr sec2gmt -h
 Usage: mlr sec2gmt {comma-separated list of field names}
 Replaces a numeric field representing seconds since the epoch with the
-corresponding GMT timestamp. This is nothing more than a keystroke-saver for
-the sec2gmt function:
+corresponding GMT timestamp; leaves non-numbers as-is. This is nothing
+more than a keystroke-saver for the sec2gmt function:
   mlr sec2gmt time1,time2
 is the same as
   mlr put '$time1=sec2gmt($time1);$time2=sec2gmt($time2)'
@@ -4290,8 +4290,8 @@ is the same as
 $ mlr sec2gmtdate -h
 Usage: mlr sec2gmtdate {comma-separated list of field names}
 Replaces a numeric field representing seconds since the epoch with the
-corresponding GMT year-month-day timestamp. This is nothing more than
-a keystroke-saver for the sec2gmtdate function:
+corresponding GMT year-month-day timestamp; leaves non-numbers as-is.
+This is nothing more than a keystroke-saver for the sec2gmtdate function:
   mlr sec2gmtdate time1,time2
 is the same as
   mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
@@ -5546,9 +5546,11 @@ sec2dhms (class=time #args=1): Formats integer seconds as in sec2dhms(500000)
 
 sec2gmt (class=time #args=1): Formats seconds since epoch (integer part)
 as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
+Leaves non-numbers as-is.
 
 sec2gmtdate (class=time #args=1): Formats seconds since epoch (integer part)
 as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
+Leaves non-numbers as-is.
 
 sec2hms (class=time #args=1): Formats integer seconds as in
 sec2hms(5000) = "01:23:20"
