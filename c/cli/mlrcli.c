@@ -698,7 +698,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->ofile_fmt         = "dkvp";
 
 	popts->use_mmap_for_read = TRUE;
-	int left_align_pprint    = TRUE;
+	popts->left_align_pprint = TRUE;
 
 	int no_input             = FALSE;
 	int have_rand_seed       = FALSE;
@@ -948,7 +948,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			popts->allow_repeat_ifs = TRUE;
 			popts->ofile_fmt        = "pprint";
 		} else if (streq(argv[argi], "--right"))   {
-			left_align_pprint = FALSE;
+			popts->left_align_pprint = FALSE;
 
 		} else if (streq(argv[argi], "--ofmt")) {
 			check_arg_count(argv, argi, argc, 2);
@@ -1068,7 +1068,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	}
 
 	popts->plrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
-		popts->headerless_csv_output, popts->oquoting, left_align_pprint, popts->right_justify_xtab_value,
+		popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint, popts->right_justify_xtab_value,
 		popts->json_flatten_separator, popts->quote_json_values_always, popts->stack_json_output_vertically,
 		popts->wrap_json_output_in_outer_list);
 

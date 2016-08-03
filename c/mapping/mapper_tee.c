@@ -111,7 +111,7 @@ static sllv_t* mapper_tee_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	if (pstate->plrec_writer == NULL) {
 		cli_opts_t* popts = MLR_GLOBALS.popts;
 		pstate->plrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
-			popts->headerless_csv_output, popts->oquoting, FALSE /* xxx left_align_pprint*/,
+			popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
 			popts->right_justify_xtab_value, popts->json_flatten_separator, popts->quote_json_values_always,
 			popts->stack_json_output_vertically, popts->wrap_json_output_in_outer_list);
 		if (pstate->plrec_writer == NULL) {
