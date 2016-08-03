@@ -448,25 +448,13 @@ static void yy_reduce(
 	lemon_parser_t *pparser,         /* The parser */
 	int yyruleno)                /* Number of the rule by which to reduce */
 {
-	//printf("-- %s %d\n", __FILE__, __LINE__);
 	int yygoto = -999 ;                     /* The next state */
 	int yyact = -999;                      /* The next action */
 	YYMINORTYPE yygotominor;        /* The LHS of the rule reduced */
-	// xxx
-	//printf("PRE MEMSET\n");
-	//memset(&yygotominor, 0, sizeof(yygotominor));
-	//printf("yygotominor tokentype %p pnode %p yy %d\n", yygotominor.yy0, yygotominor.yy21, yygotominor.yy27);
-	//printf("POST MEMSET\n");
-	//yyStackEntry *yymsp = NULL;            /* The top of the parser's stack */
 	yyStackEntry *yymsp;            /* The top of the parser's stack */
-	//int yysize = -999;                     /* Amount to pop the stack */
 	int yysize;                     /* Amount to pop the stack */
-	// xxx remove x all
-	//printf("-- %s %d\n", __FILE__, __LINE__);
 	ParseARG_FETCH;
-	//printf("-- %s %d\n", __FILE__, __LINE__);
 	yymsp = &pparser->yystack[pparser->yyidx];
-	//printf("-- %s %d\n", __FILE__, __LINE__);
 #ifndef NDEBUG
 	if (yyTraceFILE && yyruleno>=0
 				&& yyruleno<sizeof(yyRuleName)/sizeof(yyRuleName[0])) {
@@ -475,9 +463,7 @@ static void yy_reduce(
 	}
 #endif /* NDEBUG */
 
-	//printf("-- %s %d (%d)\n", __FILE__, __LINE__, yyruleno);
 	switch (yyruleno) {
-	//printf("-- %s %d\n", __FILE__, __LINE__);
 	/* Beginning here are the reduction cases.  A typical example
 	** follows:
 	**   case 0:
@@ -487,24 +473,16 @@ static void yy_reduce(
 	**     break;
 	*/
 %%
-	//printf("-- %s %d\n", __FILE__, __LINE__);
 	};
-	//printf("-- %s %d\n", __FILE__, __LINE__);
 	yygoto = yyRuleInfo[yyruleno].lhs;
-	//printf("-- %s %d\n", __FILE__, __LINE__);
 	yysize = yyRuleInfo[yyruleno].nrhs;
-	//printf("-- %s %d\n", __FILE__, __LINE__);
 	pparser->yyidx -= yysize;
-	//printf("-- %s %d\n", __FILE__, __LINE__);
 	yyact = yy_find_reduce_action(pparser,yygoto);
 	if (yyact < YYNSTATE) {
-	//printf("-- %s %d\n", __FILE__, __LINE__);
 		yy_shift(pparser,yyact,yygoto,&yygotominor);
 	} else if (yyact == YYNSTATE + YYNRULE + 1) {
-	//printf("-- %s %d\n", __FILE__, __LINE__);
 		yy_accept(pparser);
 	}
-	//printf("-- %s %d\n", __FILE__, __LINE__);
 }
 
 /*
