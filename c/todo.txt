@@ -12,12 +12,12 @@ TOP OF LIST:
 
 ! go through lmag article & clarify all unclears
 
-* sec2gmt/sec2gmtdate("NULL") -> leave as is
-  - UTs x verbs x 2; fcns x 2
-
 ! think hard and long about tee/emit/>/>> etc before release
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+POPEN:
+* in addition to > and >>, support | to popen'ed process. esp. gzip et al.
+
 COMMON:
 * mlr -k needs >/>> examples incl. stdout/stderr/file. also some subset at mlr put -h.
 * keywords: mk cmt xrefs mlr -k <-> parse.l.
@@ -27,9 +27,6 @@ COMMON:
 * put/tee --oxxx flags overlays, w/ substruct data & federated substruct fcns
 * ut-cases 1-1 with parser rules
 * UTs incl. mapper tee
-
-CONCRETE FOR PRINT/DUMP:
-* undocument eprint/dump.
 
 COOKBOOK:
 * mlr --from ../data/big.dkvp put -q 'tee > $a.$b.".txt", $*'
@@ -43,7 +40,6 @@ COOKBOOK:
 
 OTHER:
 * mapper nothing: UTs, in various then-chains; mlh; mld
-? in addition to > and >>, support | to popen'ed process? esp. gzip et al.
 
 ----------------------------------------------------------------
 FOR 4.4.0:
@@ -61,9 +57,11 @@ FOR 4.4.0:
 
 * early out for unkeyed head
 
+* sec2gmtdate is new
+* sec2gmt and sec2gmtdate both leae non-numbers as-is.
+
 * universalize the dot operator. all this string(a).string(b) is going to get really old.
 * $x=="" vs isempty($x) nonsense
-* sec2gmtdate
 * mapper nothing to mld
 
 ----------------------------------------------------------------
