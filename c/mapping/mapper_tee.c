@@ -122,7 +122,8 @@ static sllv_t* mapper_tee_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	}
 
 	if (pinrec != NULL) {
-		// xxx comment lrec-copy
+		// Copy the record since the lrec-writer will free it, and we need the original
+		// to return as stream output.
 		lrec_t* pcopy = lrec_copy(pinrec);
 		pstate->plrec_writer->pprocess_func(pstate->output_stream, pcopy, pstate->plrec_writer->pvstate);
 		if (pstate->flush_every_record)

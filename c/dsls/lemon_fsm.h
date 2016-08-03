@@ -3,7 +3,6 @@
 
 #include "lemon_structs.h"
 
-// xxx protoize
 void FindRulePrecedences(struct lemon*);
 void FindFirstSets(struct lemon*);
 void FindStates(struct lemon*);

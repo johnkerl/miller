@@ -48,7 +48,6 @@ static char* capitalize(char* string) {
 /* Open a file with a name based on the name of the input file,
 ** but with a different (specified) suffix, and return a pointer
 ** to the stream */
-// xxx rename
 static FILE *file_open(struct lemon *lemp, char *suffix, char *mode)
 {
 	FILE *fp;
