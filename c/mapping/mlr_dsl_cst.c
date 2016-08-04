@@ -82,9 +82,12 @@ static void                            handle_unset(mlr_dsl_cst_statement_t* s, 
 static void                        handle_unset_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 
 static void                              handle_tee(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+
 static void                            handle_emitf(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                    handle_emitf_to_pipe(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                    handle_emitf_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                     handle_emitf_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* poutrecs);
+
 static void                             handle_emit(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_emit_to_pipe(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_emit_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -1818,30 +1821,10 @@ static void handle_emitf(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	lrec_t* prec_to_emit = lrec_unbacked_alloc();
-	for (sllve_t* pf = pnode->pvarargs->phead; pf != NULL; pf = pf->pnext) {
-		mlr_dsl_cst_statement_vararg_t* pvararg = pf->pvvalue;
-		char* emitf_or_unset_srec_field_name = pvararg->emitf_or_unset_srec_field_name;
-		rval_evaluator_t* pemitf_arg_evaluator = pvararg->pemitf_arg_evaluator;
-
-		// This is overkill ... the grammar allows only for oosvar names as args to emit.  So we could bypass
-		// that and just hashmap-get keyed by emitf_or_unset_srec_field_name here.
-		mv_t val = pemitf_arg_evaluator->pprocess_func(pemitf_arg_evaluator->pvstate, pvars);
-
-		if (val.type == MT_STRING) {
-			// Ownership transfer from (newly created) mlrval to (newly created) lrec.
-			lrec_put(prec_to_emit, emitf_or_unset_srec_field_name, val.u.strv, val.free_flags);
-		} else {
-			char free_flags = NO_FREE;
-			char* string = mv_format_val(&val, &free_flags);
-			lrec_put(prec_to_emit, emitf_or_unset_srec_field_name, string, free_flags);
-		}
-
-	}
-	sllv_append(pcst_outputs->poutrecs, prec_to_emit);
+	handle_emitf_common(pnode, pvars, pcst_outputs->poutrecs);
 }
 
-// xxx code de-dupe
+// xxx code de-dupe x several
 static void handle_emitf_to_pipe(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
@@ -1850,28 +1833,9 @@ static void handle_emitf_to_pipe(
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 
-	lrec_t* prec_to_emit = lrec_unbacked_alloc();
 	sllv_t* poutrecs = sllv_alloc();
-	for (sllve_t* pf = pnode->pvarargs->phead; pf != NULL; pf = pf->pnext) {
-		mlr_dsl_cst_statement_vararg_t* pvararg = pf->pvvalue;
-		char* emitf_or_unset_srec_field_name = pvararg->emitf_or_unset_srec_field_name;
-		rval_evaluator_t* pemitf_arg_evaluator = pvararg->pemitf_arg_evaluator;
 
-		// This is overkill ... the grammar allows only for oosvar names as args to emit.  So we could bypass
-		// that and just hashmap-get keyed by emitf_or_unset_srec_field_name here.
-		mv_t val = pemitf_arg_evaluator->pprocess_func(pemitf_arg_evaluator->pvstate, pvars);
-
-		if (val.type == MT_STRING) {
-			// Ownership transfer from (newly created) mlrval to (newly created) lrec.
-			lrec_put(prec_to_emit, emitf_or_unset_srec_field_name, val.u.strv, val.free_flags);
-		} else {
-			char free_flags = NO_FREE;
-			char* string = mv_format_val(&val, &free_flags);
-			lrec_put(prec_to_emit, emitf_or_unset_srec_field_name, string, free_flags);
-		}
-
-	}
-	sllv_append(poutrecs, prec_to_emit);
+	handle_emitf_common(pnode, pvars, poutrecs);
 
 	char fn_free_flags = 0;
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
@@ -1892,8 +1856,28 @@ static void handle_emitf_to_file(
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 
-	lrec_t* prec_to_emit = lrec_unbacked_alloc();
 	sllv_t* poutrecs = sllv_alloc();
+
+	handle_emitf_common(pnode, pvars, poutrecs);
+
+	char fn_free_flags = 0;
+	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
+	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
+		pnode->file_output_mode, pcst_outputs->flush_every_record);
+
+	sllv_free(poutrecs);
+	if (fn_free_flags)
+		free(filename);
+	mv_free(&filename_mv);
+}
+
+// ----------------------------------------------------------------
+static void handle_emitf_common(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	sllv_t*                  poutrecs)
+{
+	lrec_t* prec_to_emit = lrec_unbacked_alloc();
 	for (sllve_t* pf = pnode->pvarargs->phead; pf != NULL; pf = pf->pnext) {
 		mlr_dsl_cst_statement_vararg_t* pvararg = pf->pvvalue;
 		char* emitf_or_unset_srec_field_name = pvararg->emitf_or_unset_srec_field_name;
@@ -1914,16 +1898,6 @@ static void handle_emitf_to_file(
 
 	}
 	sllv_append(poutrecs, prec_to_emit);
-
-	char fn_free_flags = 0;
-	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
-	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
-		pnode->file_output_mode, pcst_outputs->flush_every_record);
-
-	sllv_free(poutrecs);
-	if (fn_free_flags)
-		free(filename);
-	mv_free(&filename_mv);
 }
 
 // ----------------------------------------------------------------
