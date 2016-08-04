@@ -2,8 +2,9 @@
 #define FILE_OUTPUT_MODE_H
 
 typedef enum _file_output_mode_t {
-	MODE_WRITE,
-	MODE_APPEND,
+	MODE_WRITE,  // fopen/fclose
+	MODE_APPEND, // fopen/fclose
+	MODE_PIPE,   // popen/pclose
 } file_output_mode_t;
 
 static inline char* get_mode_string(file_output_mode_t file_output_mode) {
