@@ -47,6 +47,7 @@ echo Using mlr executable $path_to_mlr
 indir=$ourdir/input
 expdir=$ourdir/expected
 outdir=$pwd/output
+reloutdir=./output
 outfile=$outdir/out
 expfile=$expdir/out
 mkdir -p $outdir
@@ -3424,6 +3425,19 @@ run_mlr --from $indir/abixy-wide --opprint put -q '
       emit (@sum, @count, @mean), "a", "b"
   }
 '
+
+# ----------------------------------------------------------------
+announce DSL TEE
+
+tee1=$reloutdir/tee1
+mkdir -p $tee1
+run_mlr put -q 'tee > "'$tee1'/out.".$a, $*' $indir/abixy
+
+run_mlr cat -n  $tee1/out.eks
+run_mlr cat -n  $tee1/out.hat
+run_mlr cat -n  $tee1/out.pan
+run_mlr cat -n  $tee1/out.wye
+run_mlr cat -n  $tee1/out.zee
 
 # ----------------------------------------------------------------
 announce OOSVAR-FROM-SREC ASSIGNMENT

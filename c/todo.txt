@@ -24,14 +24,11 @@ TOP OF LIST:
 
 ! go through lmag article & clarify all unclears
 
-! think hard and long about tee/emit/>/>> etc before release
+! think hard and long about tee/emit/>/>>/| etc before release
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-POPEN:
-* in addition to > and >>, support | to popen'ed process. esp. gzip et al.
-
 COMMON:
-* mlr -k needs >/>> examples incl. stdout/stderr/file. also some subset at mlr put -h.
+* mlr -k needs >/>>/| examples incl. stdout/stderr/file/cmd. also some subset at mlr put -h.
 * keywords: mk cmt xrefs mlr -k <-> parse.l.
 * kw stdout/stderr & to mlr -k / mlh / mld; also to release notes (not avail as boundvars & what happens if tried:
   "syntax error")
@@ -63,7 +60,7 @@ FOR 4.4.0:
   o fix left_align_pprint -> cli_opts_t
   o also sub-bag cli_opts by in/out/etc
 
-* tee and put print/dump/tee/emit >/>>
+* tee and put print/dump/tee/emit >/>>/|; latter mention gzip et al.
 
 * mlr step -a shift
 
