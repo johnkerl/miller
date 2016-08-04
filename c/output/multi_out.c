@@ -10,10 +10,17 @@ multi_out_t* multi_out_alloc() {
 }
 
 // ----------------------------------------------------------------
+void multi_out_close(multi_out_t* pmo) {
+	for (lhmsve_t* pe = pmo->pnames_to_fps->phead; pe != NULL; pe = pe->pnext) {
+		FILE* fp = pe->pvvalue;
+		fclose(fp);
+	}
+}
+
+// ----------------------------------------------------------------
 void multi_out_free(multi_out_t* pmo) {
 	if (pmo == NULL)
 		return;
-
 	lhmsv_free(pmo->pnames_to_fps);
 	free(pmo);
 }
@@ -35,3 +42,5 @@ FILE* multi_out_get(multi_out_t* pmo, char* filename, file_output_mode_t file_ou
 	}
 	return outfp;
 }
+
+// xxx fcloses !

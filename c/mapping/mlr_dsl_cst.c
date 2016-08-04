@@ -1395,7 +1395,11 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 		pstatement->poutput_filename_evaluator->pfree_func(pstatement->poutput_filename_evaluator);
 	}
 
-	multi_out_free(pstatement->pmulti_out);
+	if (pstatement->pmulti_out != NULL) {
+		multi_out_close(pstatement->pmulti_out);
+		multi_out_free(pstatement->pmulti_out);
+	}
+
 	if (pstatement->pmulti_lrec_writer != NULL) {
 		multi_lrec_writer_drain(pstatement->pmulti_lrec_writer);
 		multi_lrec_writer_free(pstatement->pmulti_lrec_writer);
@@ -1871,7 +1875,6 @@ static void handle_emitf_to_file(
 	mv_free(&filename_mv);
 }
 
-// ----------------------------------------------------------------
 static void handle_emitf_common(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
