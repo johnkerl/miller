@@ -27387,6 +27387,32 @@ n=2,a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 
 
 ================================================================
+DSL PRINT
+
+mlr put -q print > "./output/print1/out.".$a, "abi:".$a.$b.$i ./reg_test/input/abixy
+
+mlr cat -n ./output/print1/out.eks
+n=1,1=abi:ekspan2
+n=2,1=abi:ekswye4
+n=3,1=abi:ekszee7
+
+mlr cat -n ./output/print1/out.hat
+n=1,1=abi:hatwye9
+
+mlr cat -n ./output/print1/out.pan
+n=1,1=abi:panpan1
+n=2,1=abi:panwye10
+
+mlr cat -n ./output/print1/out.wye
+n=1,1=abi:wyewye3
+n=2,1=abi:wyepan5
+
+mlr cat -n ./output/print1/out.zee
+n=1,1=abi:zeepan6
+n=2,1=abi:zeewye8
+
+
+================================================================
 OOSVAR-FROM-SREC ASSIGNMENT
 
 mlr put -v @v     = $* /dev/null
