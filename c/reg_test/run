@@ -3466,6 +3466,19 @@ run_mlr cat -n  $print1/out.wye
 run_mlr cat -n  $print1/out.zee
 
 # ----------------------------------------------------------------
+announce DSL PRINT
+
+dump1=$reloutdir/dump1
+mkdir -p $dump1
+run_mlr put -q '@v=$*; dump > "'$dump1'/out.".$a' $indir/abixy
+
+run_mlr cat -n  $dump1/out.eks
+run_mlr cat -n  $dump1/out.hat
+run_mlr cat -n  $dump1/out.pan
+run_mlr cat -n  $dump1/out.wye
+run_mlr cat -n  $dump1/out.zee
+
+# ----------------------------------------------------------------
 announce OOSVAR-FROM-SREC ASSIGNMENT
 
 run_mlr put -v '@v     = $*' /dev/null
