@@ -84,19 +84,16 @@ static void                        handle_unset_all(mlr_dsl_cst_statement_t* s, 
 static void                              handle_tee(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 
 static void                            handle_emitf(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                    handle_emitf_to_pipe(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                    handle_emitf_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_emitf_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* poutrecs);
 
 static void                             handle_emit(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                     handle_emit_to_pipe(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_emit_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_emitp_lashed(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void             handle_emitp_lashed_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                      handle_emit_lashed(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void              handle_emit_lashed_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                         handle_emit_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                 handle_emit_all_to_pipe(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                 handle_emit_all_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                             handle_dump(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_dump_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -759,16 +756,12 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_
 		mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
-		if (poutput_node->type == MD_AST_NODE_TYPE_PIPE) {
-			pstatement->file_output_mode = MODE_WRITE; // xxx temp
-			pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc(); // xxx temp
-			pstatement->pnode_handler = handle_emitf_to_pipe;
-		} else {
-			pstatement->file_output_mode = poutput_node->type == MD_AST_NODE_TYPE_FILE_APPEND
-				? MODE_APPEND : MODE_WRITE;
-			pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
-			pstatement->pnode_handler = handle_emitf_to_file;
-		}
+		pstatement->file_output_mode =
+			poutput_node->type == MD_AST_NODE_TYPE_FILE_APPEND ? MODE_APPEND
+			: poutput_node->type == MD_AST_NODE_TYPE_PIPE ? MODE_PIPE
+			: MODE_WRITE;
+		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
+		pstatement->pnode_handler = handle_emitf_to_file;
 	}
 
 	return pstatement;
@@ -857,14 +850,14 @@ static mlr_dsl_cst_statement_t* alloc_emit(mlr_dsl_ast_node_t* pnode, int type_i
 	pstatement->do_full_prefixing = do_full_prefixing;
 	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
 		pstatement->pnode_handler = output_all ? handle_emit_all : handle_emit;
-	} else if (poutput_node->type == MD_AST_NODE_TYPE_PIPE) {
-		pstatement->pnode_handler = output_all ? handle_emit_all_to_pipe : handle_emit_to_pipe;
 	} else {
 		mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
-		pstatement->file_output_mode = poutput_node->type == MD_AST_NODE_TYPE_FILE_APPEND
-			? MODE_APPEND : MODE_WRITE;
+		pstatement->file_output_mode =
+			poutput_node->type == MD_AST_NODE_TYPE_FILE_APPEND ? MODE_APPEND
+			: poutput_node->type == MD_AST_NODE_TYPE_PIPE ? MODE_PIPE
+			: MODE_WRITE;
 		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 		pstatement->pnode_handler = output_all ? handle_emit_all_to_file : handle_emit_to_file;
 	}
@@ -908,14 +901,14 @@ static mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_ast_node_t* pnode, int
 		pstatement->pnode_handler = do_full_prefixing
 			? handle_emit_lashed
 			: handle_emitp_lashed;
-	} else if (poutput_node->type == MD_AST_NODE_TYPE_PIPE) {
-		pstatement->pnode_handler = NULL; // xxx temp
 	} else {
 		mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
-		pstatement->file_output_mode = poutput_node->type == MD_AST_NODE_TYPE_FILE_APPEND
-			? MODE_APPEND : MODE_WRITE;
+		pstatement->file_output_mode =
+			poutput_node->type == MD_AST_NODE_TYPE_FILE_APPEND ? MODE_APPEND
+			: poutput_node->type == MD_AST_NODE_TYPE_PIPE ? MODE_PIPE
+			: MODE_WRITE;
 		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 		pstatement->pnode_handler = handle_emitf_to_file;
 		pstatement->pnode_handler = do_full_prefixing
@@ -1301,8 +1294,10 @@ static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_ast_node_t* pnode, int type_i
 	} else {
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
-		pstatement->file_output_mode = pfilename_node->type == MD_AST_NODE_TYPE_FILE_APPEND
-			? MODE_APPEND : MODE_WRITE;
+		pstatement->file_output_mode =
+			poutput_node->type == MD_AST_NODE_TYPE_FILE_APPEND ? MODE_APPEND
+			: poutput_node->type == MD_AST_NODE_TYPE_PIPE ? MODE_PIPE
+			: MODE_WRITE;
 		pstatement->pmulti_out = multi_out_alloc();
 		pstatement->pnode_handler = handle_dump_to_file;
 	}
@@ -1833,30 +1828,6 @@ static void handle_emitf(
 	handle_emitf_common(pnode, pvars, pcst_outputs->poutrecs);
 }
 
-// xxx code de-dupe x several
-static void handle_emitf_to_pipe(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
-
-	sllv_t* poutrecs = sllv_alloc();
-
-	handle_emitf_common(pnode, pvars, poutrecs);
-
-	char fn_free_flags = 0;
-	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
-	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
-		pnode->file_output_mode, pcst_outputs->flush_every_record);
-
-	sllv_free(poutrecs);
-	if (fn_free_flags)
-		free(filename);
-	mv_free(&filename_mv);
-}
-
 static void handle_emitf_to_file(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
@@ -1926,40 +1897,6 @@ static void handle_emit(
 		sllmv_free(pmvnames);
 	}
 	sllmv_free(pmvkeys);
-}
-
-// xxx code de-dupe
-static void handle_emit_to_pipe(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
-	sllv_t* poutrecs = sllv_alloc();
-	int keys_all_non_null_or_error = TRUE;
-	sllmv_t* pmvkeys = evaluate_list(pnode->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
-	if (keys_all_non_null_or_error) {
-		int names_all_non_null_or_error = TRUE;
-		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
-		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, poutrecs,
-				pnode->do_full_prefixing, pcst_outputs->oosvar_flatten_separator);
-		}
-		sllmv_free(pmvnames);
-	}
-
-	char fn_free_flags = 0;
-	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
-	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
-		pnode->file_output_mode, pcst_outputs->flush_every_record);
-	sllv_free(poutrecs);
-
-	sllmv_free(pmvkeys);
-
-	if (fn_free_flags)
-		free(filename);
-	mv_free(&filename_mv);
 }
 
 static void handle_emit_to_file(
@@ -2129,34 +2066,6 @@ static void handle_emit_all(
 		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, pcst_outputs->poutrecs,
 			pnode->do_full_prefixing, pcst_outputs->oosvar_flatten_separator);
 	}
-	sllmv_free(pmvnames);
-}
-
-// xxx code de-dupe
-static void handle_emit_all_to_pipe(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	sllv_t* poutrecs = sllv_alloc();
-	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
-	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
-	int all_non_null_or_error = TRUE;
-	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
-	if (all_non_null_or_error) {
-		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, poutrecs,
-			pnode->do_full_prefixing, pcst_outputs->oosvar_flatten_separator);
-	}
-
-	char fn_free_flags = 0;
-	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
-	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
-		pnode->file_output_mode, pcst_outputs->flush_every_record);
-	sllv_free(poutrecs);
-
-	if (fn_free_flags)
-		free(filename);
-	mv_free(&filename_mv);
 	sllmv_free(pmvnames);
 }
 
