@@ -1,19 +1,7 @@
 ================================================================
 BUGFIXES
 
-$ mlr --from s put -v '@v=$*; emitp | "hex", @v' 
-  mlr: internal coding error detected in file mapping/mlr_dsl_cst.c at line 846.
-  AST ROOT:
-  text="list", type=statement_list:
-      text="=", type=oosvar_from_full_srec_assignment:
-          text="oosvar_keylist", type=oosvar_keylist:
-              text="v", type=string_literal.
-          text="$*", type=full_srec.
-      text="emitp", type=emitp:
-          text="oosvar_keylist", type=oosvar_keylist:
-              text="v", type=string_literal.
-          text="|", type=pipe:
-              text="hex", type=strnum_literal.
+:D
 
 ================================================================
 TOP OF LIST:
@@ -27,9 +15,6 @@ TOP OF LIST:
 ! think hard and long about tee/emit/>/>>/| etc before release
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-UT:
-? cat -> logcat in regtest/run
-
 COMMON:
 * mlr -k needs >/>>/| examples incl. stdout/stderr/file/cmd. also some subset at mlr put -h.
 * keywords: mk cmt xrefs mlr -k <-> parse.l.
@@ -37,8 +22,6 @@ COMMON:
   "syntax error")
 * lrec_reader/writer take sub-bagged cliopts pstructs
 * put/tee --oxxx flags overlays, w/ substruct data & federated substruct fcns
-* ut-cases 1-1 with parser rules
-* UTs incl. mapper tee
 
 COOKBOOK:
 * mlr --from ../data/big.dkvp put -q 'tee > $a.$b.".txt", $*'
