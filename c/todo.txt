@@ -28,13 +28,7 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 UT:
-* cat -> logcat in regtest/run
-* output dir move data off from code !!
-* complete:
-  - no-namelist
-  - pipes
-  - non-lashed cases
-* check m*y for any more cases
+? cat -> logcat in regtest/run
 
 COMMON:
 * mlr -k needs >/>>/| examples incl. stdout/stderr/file/cmd. also some subset at mlr put -h.
