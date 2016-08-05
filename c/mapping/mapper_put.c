@@ -117,7 +117,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	int   print_ast                           = FALSE;
 	int   trace_parse                         = FALSE;
 	char* oosvar_flatten_separator            = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
-	int   flush_every_record                  = FALSE;
+	int   flush_every_record                  = TRUE;
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_flag(pstate,    "-f", &expression_filename);
@@ -172,15 +172,15 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, char* mlr_dsl_expression,
 	// Retain the string contents along with any in-pointers from the AST/CST
 	pstate->mlr_dsl_expression = mlr_dsl_expression;
 	pstate->comment_stripped_mlr_dsl_expression = comment_stripped_mlr_dsl_expression;
-	pstate->past         = past;
-	pstate->pcst         = mlr_dsl_cst_alloc(past, type_inferencing);
-	pstate->at_begin     = TRUE;
-	pstate->outer_filter = outer_filter;
-	pstate->poosvars     = mlhmmv_alloc();
+	pstate->past                     = past;
+	pstate->pcst                     = mlr_dsl_cst_alloc(past,   type_inferencing);
+	pstate->at_begin                 = TRUE;
+	pstate->outer_filter             = outer_filter;
+	pstate->poosvars                 = mlhmmv_alloc();
 	pstate->oosvar_flatten_separator = oosvar_flatten_separator;
-	pstate->flush_every_record = flush_every_record;
-	pstate->pbind_stack  = bind_stack_alloc();
-	pstate->ploop_stack  = loop_stack_alloc();
+	pstate->flush_every_record       = flush_every_record;
+	pstate->pbind_stack              = bind_stack_alloc();
+	pstate->ploop_stack              = loop_stack_alloc();
 
 	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate       = (void*)pstate;
