@@ -3605,6 +3605,52 @@ run_mlr put -q '@a=$a; @b=$b; emitf | "tr \[a-z\] \[A-Z\]", @a, @b' $indir/abixy
 # ----------------------------------------------------------------
 announce DSL EMITP REDIRECTS
 
+emitp1a=$reloutdir/emitp1a
+mkdir -p $emitp1a
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp1a'/out.".$a.$b, @a' $indir/abixy
+run_mlr cat -n $emitp1a/out.ekspan
+run_mlr cat -n $emitp1a/out.ekswye
+run_mlr cat -n $emitp1a/out.panpan
+run_mlr cat -n $emitp1a/out.wyewye
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp1a'/out.".$a.$b, @a' $indir/abixy
+run_mlr cat -n $emitp1a/out.ekspan
+run_mlr cat -n $emitp1a/out.ekswye
+run_mlr cat -n $emitp1a/out.panpan
+run_mlr cat -n $emitp1a/out.wyewye
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp >> "'$emitp1a'/out.".$a.$b, @a' $indir/abixy
+run_mlr cat -n $emitp1a/out.ekspan
+run_mlr cat -n $emitp1a/out.ekswye
+run_mlr cat -n $emitp1a/out.panpan
+run_mlr cat -n $emitp1a/out.wyewye
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", @a' $indir/abixy
+
+emitp2a=$reloutdir/emitp2a
+mkdir -p $emitp2a
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp2a'/out.".$a.$b, @a, "NR"' $indir/abixy
+run_mlr cat -n $emitp2a/out.ekspan
+run_mlr cat -n $emitp2a/out.ekswye
+run_mlr cat -n $emitp2a/out.panpan
+run_mlr cat -n $emitp2a/out.wyewye
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp2a'/out.".$a.$b, @a, "NR"' $indir/abixy
+run_mlr cat -n $emitp2a/out.ekspan
+run_mlr cat -n $emitp2a/out.ekswye
+run_mlr cat -n $emitp2a/out.panpan
+run_mlr cat -n $emitp2a/out.wyewye
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp >> "'$emitp2a'/out.".$a.$b, @a, "NR"' $indir/abixy
+run_mlr cat -n $emitp2a/out.ekspan
+run_mlr cat -n $emitp2a/out.ekswye
+run_mlr cat -n $emitp2a/out.panpan
+run_mlr cat -n $emitp2a/out.wyewye
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", @a, "NR"' $indir/abixy
+
 emitp1=$reloutdir/emitp1
 mkdir -p $emitp1
 
