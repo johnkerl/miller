@@ -27335,7 +27335,7 @@ hat dog 37.114244 78    0.475824
 
 
 ================================================================
-MAPPER TEE
+MAPPER TEE REDIRECTS
 
 mlr --from ./reg_test/input/abixy tee ./output/tee1/out then nothing
 
@@ -27391,7 +27391,7 @@ n=20,a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 
 ================================================================
-DSL TEE
+DSL TEE REDIRECTS
 
 mlr put -q tee > "./output/tee2/out.".$a, $* ./reg_test/input/abixy
 
@@ -27471,7 +27471,7 @@ n=4,a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 
 
 ================================================================
-DSL PRINT
+DSL PRINT REDIRECTS
 
 mlr put -q print > "./output/print1/out.".$a, "abi:".$a.$b.$i ./reg_test/input/abixy
 
@@ -27549,6 +27549,10 @@ n=2,1=abi:zeewye8
 n=3,1=abi:zeepan6
 n=4,1=abi:zeewye8
 
+
+================================================================
+DSL PRINTN REDIRECTS
+
 mlr put -q printn > "./output/printn1/out.".$a, "abi:".$a.$b.$i ./reg_test/input/abixy
 
 mlr cat -n ./output/printn1/out.eks
@@ -27602,7 +27606,7 @@ n=1,1=abi:zeepan6abi:zeewye8abi:zeepan6abi:zeewye8
 
 
 ================================================================
-DSL DUMP
+DSL DUMP REDIRECTS
 
 mlr put -q @v=$*; dump > "./output/dump1/out.".$a ./reg_test/input/abixy
 
@@ -27682,7 +27686,7 @@ mlr --json cat -n ./output/dump1/out.zee
 
 
 ================================================================
-DSL EMITF
+DSL EMITF REDIRECTS
 
 mlr put -q @a=$a; @b=$b; emitf > "./output/emitf1/out.".$a.$b, @a, @b ./reg_test/input/abixy
 
@@ -27792,7 +27796,7 @@ n=2,a=zee,b=wye
 
 
 ================================================================
-DSL EMITP
+DSL EMITP REDIRECTS
 
 mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > "./output/emitp1/out.".$a.$b, (@a, @b) ./reg_test/input/abixy
 
@@ -27910,9 +27914,69 @@ n=4,NR=1,a=pan,b=pan
 n=5,NR=2,a=eks,b=pan
 n=6,NR=3,a=wye,b=wye
 
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > "./output/emitp3/out.".$a.$b, @*, "NR" ./reg_test/input/abixy
+
+mlr cat -n ./output/emitp3/out.ekspan
+n=1,NR=1,a=pan
+n=2,NR=2,a=eks
+n=3,NR=1,b=pan
+n=4,NR=2,b=pan
+
+mlr cat -n ./output/emitp3/out.ekswye
+n=1,NR=1,a=pan
+n=2,NR=2,a=eks
+n=3,NR=3,a=wye
+n=4,NR=4,a=eks
+n=5,NR=1,b=pan
+n=6,NR=2,b=pan
+n=7,NR=3,b=wye
+n=8,NR=4,b=wye
+
+mlr cat -n ./output/emitp3/out.panpan
+n=1,NR=1,a=pan
+n=2,NR=1,b=pan
+
+mlr cat -n ./output/emitp3/out.wyewye
+n=1,NR=1,a=pan
+n=2,NR=2,a=eks
+n=3,NR=3,a=wye
+n=4,NR=1,b=pan
+n=5,NR=2,b=pan
+n=6,NR=3,b=wye
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > "./output/emitp4/out.".$a.$b, all, "NR" ./reg_test/input/abixy
+
+mlr cat -n ./output/emitp4/out.ekspan
+n=1,NR=1,a=pan
+n=2,NR=2,a=eks
+n=3,NR=1,b=pan
+n=4,NR=2,b=pan
+
+mlr cat -n ./output/emitp4/out.ekswye
+n=1,NR=1,a=pan
+n=2,NR=2,a=eks
+n=3,NR=3,a=wye
+n=4,NR=4,a=eks
+n=5,NR=1,b=pan
+n=6,NR=2,b=pan
+n=7,NR=3,b=wye
+n=8,NR=4,b=wye
+
+mlr cat -n ./output/emitp4/out.panpan
+n=1,NR=1,a=pan
+n=2,NR=1,b=pan
+
+mlr cat -n ./output/emitp4/out.wyewye
+n=1,NR=1,a=pan
+n=2,NR=2,a=eks
+n=3,NR=3,a=wye
+n=4,NR=1,b=pan
+n=5,NR=2,b=pan
+n=6,NR=3,b=wye
+
 
 ================================================================
-DSL EMIT
+DSL EMIT REDIRECTS
 
 mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit > "./output/emit1/out.".$a.$b, (@a, @b) ./reg_test/input/abixy
 

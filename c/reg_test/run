@@ -3427,7 +3427,7 @@ run_mlr --from $indir/abixy-wide --opprint put -q '
 '
 
 # ----------------------------------------------------------------
-announce MAPPER TEE
+announce MAPPER TEE REDIRECTS
 
 tee1=$reloutdir/tee1
 mkdir -p $tee1
@@ -3442,7 +3442,7 @@ run_mlr --from $indir/abixy tee -a $tee1/out then nothing
 run_mlr cat -n $tee1/out
 
 # ----------------------------------------------------------------
-announce DSL TEE
+announce DSL TEE REDIRECTS
 
 tee2=$reloutdir/tee2
 mkdir -p $tee2
@@ -3469,7 +3469,7 @@ run_mlr cat -n $tee2/out.wye
 run_mlr cat -n $tee2/out.zee
 
 # ----------------------------------------------------------------
-announce DSL PRINT
+announce DSL PRINT REDIRECTS
 
 print1=$reloutdir/print1
 mkdir -p $print1
@@ -3496,7 +3496,7 @@ run_mlr cat -n $print1/out.wye
 run_mlr cat -n $print1/out.zee
 
 # ----------------------------------------------------------------
-announce DSL PRINTN
+announce DSL PRINTN REDIRECTS
 
 printn1=$reloutdir/printn1
 mkdir -p $printn1
@@ -3523,7 +3523,7 @@ run_mlr cat -n $printn1/out.wye
 run_mlr cat -n $printn1/out.zee
 
 # ----------------------------------------------------------------
-announce DSL DUMP
+announce DSL DUMP REDIRECTS
 
 dump1=$reloutdir/dump1
 mkdir -p $dump1
@@ -3550,7 +3550,7 @@ run_mlr --json cat -n $dump1/out.wye
 run_mlr --json cat -n $dump1/out.zee
 
 # ----------------------------------------------------------------
-announce DSL EMITF
+announce DSL EMITF REDIRECTS
 
 emitf1=$reloutdir/emitf1
 mkdir -p $emitf1
@@ -3592,7 +3592,7 @@ run_mlr cat -n $emitf1/out.zeepan
 run_mlr cat -n $emitf1/out.zeewye
 
 # ----------------------------------------------------------------
-announce DSL EMITP
+announce DSL EMITP REDIRECTS
 
 emitp1=$reloutdir/emitp1
 mkdir -p $emitp1
@@ -3636,8 +3636,26 @@ run_mlr cat -n $emitp2/out.ekswye
 run_mlr cat -n $emitp2/out.panpan
 run_mlr cat -n $emitp2/out.wyewye
 
+emitp3=$reloutdir/emitp3
+mkdir -p $emitp3
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp3'/out.".$a.$b, @*, "NR"' $indir/abixy
+run_mlr cat -n $emitp3/out.ekspan
+run_mlr cat -n $emitp3/out.ekswye
+run_mlr cat -n $emitp3/out.panpan
+run_mlr cat -n $emitp3/out.wyewye
+
+emitp4=$reloutdir/emitp4
+mkdir -p $emitp4
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp4'/out.".$a.$b, all, "NR"' $indir/abixy
+run_mlr cat -n $emitp4/out.ekspan
+run_mlr cat -n $emitp4/out.ekswye
+run_mlr cat -n $emitp4/out.panpan
+run_mlr cat -n $emitp4/out.wyewye
+
 # ----------------------------------------------------------------
-announce DSL EMIT
+announce DSL EMIT REDIRECTS
 
 emit1=$reloutdir/emit1
 mkdir -p $emit1
