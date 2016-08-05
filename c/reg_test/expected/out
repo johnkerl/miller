@@ -28272,6 +28272,12 @@ mlr cat -n ./output-regtest/emit1/out.wyewye
 n=1,1=pan,2=pan,3=wye
 n=2,1=pan,2=pan,3=wye
 
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit | "tr \[a-z\] \[A-Z\]", (@a, @b) ./reg_test/input/abixy
+1=PAN
+1=PAN,2=PAN
+1=PAN,2=PAN,3=WYE
+1=PAN,2=PAN,3=WYE,4=WYE
+
 mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit > "./output-regtest/emit2/out.".$a.$b, (@a, @b), "NR" ./reg_test/input/abixy
 
 mlr cat -n ./output-regtest/emit2/out.ekspan
@@ -28342,6 +28348,18 @@ n=4,NR=1,a=pan,b=pan
 n=5,NR=2,a=eks,b=pan
 n=6,NR=3,a=wye,b=wye
 
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit | "tr \[a-z\] \[A-Z\]", (@a, @b), "NR" ./reg_test/input/abixy
+NR=1,A=PAN,B=PAN
+NR=1,A=PAN,B=PAN
+NR=2,A=EKS,B=PAN
+NR=1,A=PAN,B=PAN
+NR=2,A=EKS,B=PAN
+NR=3,A=WYE,B=WYE
+NR=1,A=PAN,B=PAN
+NR=2,A=EKS,B=PAN
+NR=3,A=WYE,B=WYE
+NR=4,A=EKS,B=WYE
+
 mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit > "./output-regtest/emit3/out.".$a.$b, @* ./reg_test/input/abixy
 
 mlr cat -n ./output-regtest/emit3/out.ekspan
@@ -28360,6 +28378,16 @@ mlr cat -n ./output-regtest/emit3/out.wyewye
 n=1,1=pan,2=eks,3=wye
 n=2,1=pan,2=pan,3=wye
 
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit | "tr \[a-z\] \[A-Z\]", @* ./reg_test/input/abixy
+1=PAN
+1=PAN
+1=PAN,2=EKS
+1=PAN,2=PAN
+1=PAN,2=EKS,3=WYE
+1=PAN,2=PAN,3=WYE
+1=PAN,2=EKS,3=WYE,4=EKS
+1=PAN,2=PAN,3=WYE,4=WYE
+
 mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit > "./output-regtest/emit4/out.".$a.$b, all ./reg_test/input/abixy
 
 mlr cat -n ./output-regtest/emit4/out.ekspan
@@ -28377,6 +28405,16 @@ n=2,1=pan
 mlr cat -n ./output-regtest/emit4/out.wyewye
 n=1,1=pan,2=eks,3=wye
 n=2,1=pan,2=pan,3=wye
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit | "tr \[a-z\] \[A-Z\]", all ./reg_test/input/abixy
+1=PAN
+1=PAN
+1=PAN,2=EKS
+1=PAN,2=PAN
+1=PAN,2=EKS,3=WYE
+1=PAN,2=PAN,3=WYE
+1=PAN,2=EKS,3=WYE,4=EKS
+1=PAN,2=PAN,3=WYE,4=WYE
 
 mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit > "./output-regtest/emit5/out.".$a.$b, @*, "NR" ./reg_test/input/abixy
 
@@ -28408,6 +28446,28 @@ n=4,NR=1,b=pan
 n=5,NR=2,b=pan
 n=6,NR=3,b=wye
 
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit | "tr \[a-z\] \[A-Z\]", @*, "NR" ./reg_test/input/abixy
+NR=1,A=PAN
+NR=1,B=PAN
+NR=1,A=PAN
+NR=2,A=EKS
+NR=1,B=PAN
+NR=2,B=PAN
+NR=1,A=PAN
+NR=2,A=EKS
+NR=3,A=WYE
+NR=1,B=PAN
+NR=2,B=PAN
+NR=3,B=WYE
+NR=1,A=PAN
+NR=2,A=EKS
+NR=3,A=WYE
+NR=4,A=EKS
+NR=1,B=PAN
+NR=2,B=PAN
+NR=3,B=WYE
+NR=4,B=WYE
+
 mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit > "./output-regtest/emit6/out.".$a.$b, all, "NR" ./reg_test/input/abixy
 
 mlr cat -n ./output-regtest/emit6/out.ekspan
@@ -28437,6 +28497,28 @@ n=3,NR=3,a=wye
 n=4,NR=1,b=pan
 n=5,NR=2,b=pan
 n=6,NR=3,b=wye
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit | "tr \[a-z\] \[A-Z\]", all, "NR" ./reg_test/input/abixy
+NR=1,A=PAN
+NR=1,B=PAN
+NR=1,A=PAN
+NR=2,A=EKS
+NR=1,B=PAN
+NR=2,B=PAN
+NR=1,A=PAN
+NR=2,A=EKS
+NR=3,A=WYE
+NR=1,B=PAN
+NR=2,B=PAN
+NR=3,B=WYE
+NR=1,A=PAN
+NR=2,A=EKS
+NR=3,A=WYE
+NR=4,A=EKS
+NR=1,B=PAN
+NR=2,B=PAN
+NR=3,B=WYE
+NR=4,B=WYE
 
 
 ================================================================
