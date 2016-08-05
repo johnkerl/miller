@@ -27628,6 +27628,8 @@ n=1,1=abi:wyewye3abi:wyepan5abi:wyewye3abi:wyepan5
 mlr cat -n ./output-regtest/printn1/out.zee
 n=1,1=abi:zeepan6abi:zeewye8abi:zeepan6abi:zeewye8
 
+mlr put -q printn | "tr \[a-z\] \[A-Z\]",  "abi:".$a.$b.$i ./reg_test/input/abixy
+ABI:PANPAN1ABI:EKSPAN2ABI:WYEWYE3ABI:EKSWYE4ABI:WYEPAN5ABI:ZEEPAN6ABI:EKSZEE7ABI:ZEEWYE8ABI:HATWYE9ABI:PANWYE10
 
 ================================================================
 DSL DUMP REDIRECTS

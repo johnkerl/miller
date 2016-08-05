@@ -3527,6 +3527,8 @@ run_mlr cat -n $printn1/out.pan
 run_mlr cat -n $printn1/out.wye
 run_mlr cat -n $printn1/out.zee
 
+run_mlr put -q 'printn | "tr \[a-z\] \[A-Z\]",  "abi:".$a.$b.$i' $indir/abixy
+
 # ----------------------------------------------------------------
 announce DSL DUMP REDIRECTS
 
