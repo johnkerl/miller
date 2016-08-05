@@ -27,6 +27,10 @@ TOP OF LIST:
 ! think hard and long about tee/emit/>/>>/| etc before release
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+UT:
+* cat -> logcat in regtest/run
+* output dir move data off from code !!
+
 COMMON:
 * mlr -k needs >/>>/| examples incl. stdout/stderr/file/cmd. also some subset at mlr put -h.
 * keywords: mk cmt xrefs mlr -k <-> parse.l.
