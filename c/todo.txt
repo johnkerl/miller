@@ -34,9 +34,6 @@ COOKBOOK:
 * ... then put -q '' or ... then nothing
 * asv et al.
 
-OTHER:
-* mapper nothing: UTs, in various then-chains; mlh; mld
-
 ----------------------------------------------------------------
 FOR 4.4.0:
 

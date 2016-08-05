@@ -168,6 +168,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#label">label</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#merge-fields">merge-fields</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#nest">nest</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#nothing">nothing</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#put">put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names_for_put">Field names for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables_for_put">Built-in variables for put</a><br/>
@@ -2096,6 +2097,20 @@ Notes:
 * It's up to you to ensure that the nested-fs is distinct from your data's IFS:
   e.g. by default the former is semicolon and the latter is comma.
 See also mlr reshape.
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="nothing"/><h2>nothing</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr nothing -h
+Usage: mlr nothing [options]
+Drops all input records. Useful for testing, or after tee/print/etc. have
+produced other output.
 </pre>
 </div>
 <p/>

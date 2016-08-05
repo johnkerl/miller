@@ -3436,6 +3436,15 @@ run_mlr --from $indir/abixy-wide --opprint put -q '
 '
 
 # ----------------------------------------------------------------
+announce MAPPER NOTHING
+
+run_mlr cat then nothing < $indir/abixy
+run_mlr cat then nothing   $indir/abixy
+run_mlr tac then nothing   $indir/abixy
+run_mlr cat then nothing   $indir/abixy $indir/abixy
+run_mlr cat then nothing then cat $indir/abixy
+
+# ----------------------------------------------------------------
 announce MAPPER TEE REDIRECTS
 
 tee1=$reloutdir/tee1
