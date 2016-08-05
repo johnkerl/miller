@@ -28,6 +28,7 @@ test_multiple_containers
 test_parse_trie
 test_peek_file_reader
 test_string_builder
+output-regtest
 termcvt
 a.out
 *.dSYM
