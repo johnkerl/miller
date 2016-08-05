@@ -3699,6 +3699,24 @@ run_mlr cat -n $emit2/out.ekswye
 run_mlr cat -n $emit2/out.panpan
 run_mlr cat -n $emit2/out.wyewye
 
+emit3=$reloutdir/emit3
+mkdir -p $emit3
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit3'/out.".$a.$b, @*, "NR"' $indir/abixy
+run_mlr cat -n $emit3/out.ekspan
+run_mlr cat -n $emit3/out.ekswye
+run_mlr cat -n $emit3/out.panpan
+run_mlr cat -n $emit3/out.wyewye
+
+emit4=$reloutdir/emit4
+mkdir -p $emit4
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit4'/out.".$a.$b, all, "NR"' $indir/abixy
+run_mlr cat -n $emit4/out.ekspan
+run_mlr cat -n $emit4/out.ekswye
+run_mlr cat -n $emit4/out.panpan
+run_mlr cat -n $emit4/out.wyewye
+
 # ----------------------------------------------------------------
 announce OOSVAR-FROM-SREC ASSIGNMENT
 

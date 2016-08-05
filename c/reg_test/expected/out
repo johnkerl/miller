@@ -28094,6 +28094,66 @@ n=4,NR=1,a=pan,b=pan
 n=5,NR=2,a=eks,b=pan
 n=6,NR=3,a=wye,b=wye
 
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit > "./output/emit3/out.".$a.$b, @*, "NR" ./reg_test/input/abixy
+
+mlr cat -n ./output/emit3/out.ekspan
+n=1,NR=1,a=pan
+n=2,NR=2,a=eks
+n=3,NR=1,b=pan
+n=4,NR=2,b=pan
+
+mlr cat -n ./output/emit3/out.ekswye
+n=1,NR=1,a=pan
+n=2,NR=2,a=eks
+n=3,NR=3,a=wye
+n=4,NR=4,a=eks
+n=5,NR=1,b=pan
+n=6,NR=2,b=pan
+n=7,NR=3,b=wye
+n=8,NR=4,b=wye
+
+mlr cat -n ./output/emit3/out.panpan
+n=1,NR=1,a=pan
+n=2,NR=1,b=pan
+
+mlr cat -n ./output/emit3/out.wyewye
+n=1,NR=1,a=pan
+n=2,NR=2,a=eks
+n=3,NR=3,a=wye
+n=4,NR=1,b=pan
+n=5,NR=2,b=pan
+n=6,NR=3,b=wye
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit > "./output/emit4/out.".$a.$b, all, "NR" ./reg_test/input/abixy
+
+mlr cat -n ./output/emit4/out.ekspan
+n=1,NR=1,a=pan
+n=2,NR=2,a=eks
+n=3,NR=1,b=pan
+n=4,NR=2,b=pan
+
+mlr cat -n ./output/emit4/out.ekswye
+n=1,NR=1,a=pan
+n=2,NR=2,a=eks
+n=3,NR=3,a=wye
+n=4,NR=4,a=eks
+n=5,NR=1,b=pan
+n=6,NR=2,b=pan
+n=7,NR=3,b=wye
+n=8,NR=4,b=wye
+
+mlr cat -n ./output/emit4/out.panpan
+n=1,NR=1,a=pan
+n=2,NR=1,b=pan
+
+mlr cat -n ./output/emit4/out.wyewye
+n=1,NR=1,a=pan
+n=2,NR=2,a=eks
+n=3,NR=3,a=wye
+n=4,NR=1,b=pan
+n=5,NR=2,b=pan
+n=6,NR=3,b=wye
+
 
 ================================================================
 OOSVAR-FROM-SREC ASSIGNMENT
