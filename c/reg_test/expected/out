@@ -27631,6 +27631,116 @@ mlr --json cat -n ./output/dump1/out.zee
 
 
 ================================================================
+DSL EMITF
+
+mlr put -q @a=$a; @b=$b; emitf > "./output/emitf1/out.".$a.$b, @a, @b ./reg_test/input/abixy
+
+mlr cat -n ./output/emitf1/out.ekspan
+n=1,a=eks,b=pan
+
+mlr cat -n ./output/emitf1/out.ekswye
+n=1,a=eks,b=wye
+
+mlr cat -n ./output/emitf1/out.ekszee
+n=1,a=eks,b=zee
+
+mlr cat -n ./output/emitf1/out.hatwye
+n=1,a=hat,b=wye
+
+mlr cat -n ./output/emitf1/out.panpan
+n=1,a=pan,b=pan
+
+mlr cat -n ./output/emitf1/out.panwye
+n=1,a=pan,b=wye
+
+mlr cat -n ./output/emitf1/out.wyepan
+n=1,a=wye,b=pan
+
+mlr cat -n ./output/emitf1/out.wyewye
+n=1,a=wye,b=wye
+
+mlr cat -n ./output/emitf1/out.zeepan
+n=1,a=zee,b=pan
+
+mlr cat -n ./output/emitf1/out.zeewye
+n=1,a=zee,b=wye
+
+mlr put -q @a=$a; @b=$b; emitf > "./output/emitf1/out.".$a.$b, @a, @b ./reg_test/input/abixy
+
+mlr cat -n ./output/emitf1/out.ekspan
+n=1,a=eks,b=pan
+
+mlr cat -n ./output/emitf1/out.ekswye
+n=1,a=eks,b=wye
+
+mlr cat -n ./output/emitf1/out.ekszee
+n=1,a=eks,b=zee
+
+mlr cat -n ./output/emitf1/out.hatwye
+n=1,a=hat,b=wye
+
+mlr cat -n ./output/emitf1/out.panpan
+n=1,a=pan,b=pan
+
+mlr cat -n ./output/emitf1/out.panwye
+n=1,a=pan,b=wye
+
+mlr cat -n ./output/emitf1/out.wyepan
+n=1,a=wye,b=pan
+
+mlr cat -n ./output/emitf1/out.wyewye
+n=1,a=wye,b=wye
+
+mlr cat -n ./output/emitf1/out.zeepan
+n=1,a=zee,b=pan
+
+mlr cat -n ./output/emitf1/out.zeewye
+n=1,a=zee,b=wye
+
+mlr put -q @a=$a; @b=$b; emitf >> "./output/emitf1/out.".$a.$b, @a, @b ./reg_test/input/abixy
+
+mlr cat -n ./output/emitf1/out.ekspan
+n=1,a=eks,b=pan
+n=2,a=eks,b=pan
+
+mlr cat -n ./output/emitf1/out.ekswye
+n=1,a=eks,b=wye
+n=2,a=eks,b=wye
+
+mlr cat -n ./output/emitf1/out.ekszee
+n=1,a=eks,b=zee
+n=2,a=eks,b=zee
+
+mlr cat -n ./output/emitf1/out.hatwye
+n=1,a=hat,b=wye
+n=2,a=hat,b=wye
+
+mlr cat -n ./output/emitf1/out.panpan
+n=1,a=pan,b=pan
+n=2,a=pan,b=pan
+
+mlr cat -n ./output/emitf1/out.panwye
+n=1,a=pan,b=wye
+n=2,a=pan,b=wye
+
+mlr cat -n ./output/emitf1/out.wyepan
+n=1,a=wye,b=pan
+n=2,a=wye,b=pan
+
+mlr cat -n ./output/emitf1/out.wyewye
+n=1,a=wye,b=wye
+n=2,a=wye,b=wye
+
+mlr cat -n ./output/emitf1/out.zeepan
+n=1,a=zee,b=pan
+n=2,a=zee,b=pan
+
+mlr cat -n ./output/emitf1/out.zeewye
+n=1,a=zee,b=wye
+n=2,a=zee,b=wye
+
+
+================================================================
 OOSVAR-FROM-SREC ASSIGNMENT
 
 mlr put -v @v     = $* /dev/null

@@ -3522,48 +3522,48 @@ run_mlr --json cat -n $dump1/out.pan
 run_mlr --json cat -n $dump1/out.wye
 run_mlr --json cat -n $dump1/out.zee
 
-## ----------------------------------------------------------------
-#announce DSL EMITF
-#
-#emitf1=$reloutdir/emitf1
-#mkdir -p $emitf1
-#
-#run_mlr put -q '@a=$a; @b=$b; emitf > "'$emitf1'/out.".$a.$b, @a, @b' $indir/abixy
-#run_mlr cat -n $emitf1/out.ekspan
-#run_mlr cat -n $emitf1/out.ekswye
-#run_mlr cat -n $emitf1/out.ekszee
-#run_mlr cat -n $emitf1/out.hatwye
-#run_mlr cat -n $emitf1/out.panpan
-#run_mlr cat -n $emitf1/out.panwye
-#run_mlr cat -n $emitf1/out.wyepan
-#run_mlr cat -n $emitf1/out.wyewye
-#run_mlr cat -n $emitf1/out.zeepan
-#run_mlr cat -n $emitf1/out.zeewye
-#
-#run_mlr put -q '@a=$a; @b=$b; emitf > "'$emitf1'/out.".$a.$b, @a, @b' $indir/abixy
-#run_mlr cat -n $emitf1/out.ekspan
-#run_mlr cat -n $emitf1/out.ekswye
-#run_mlr cat -n $emitf1/out.ekszee
-#run_mlr cat -n $emitf1/out.hatwye
-#run_mlr cat -n $emitf1/out.panpan
-#run_mlr cat -n $emitf1/out.panwye
-#run_mlr cat -n $emitf1/out.wyepan
-#run_mlr cat -n $emitf1/out.wyewye
-#run_mlr cat -n $emitf1/out.zeepan
-#run_mlr cat -n $emitf1/out.zeewye
-#
-#run_mlr put -q '@a=$a; @b=$b; emitf >> "'$emitf1'/out.".$a.$b, @a, @b' $indir/abixy
-#run_mlr cat -n $emitf1/out.ekspan
-#run_mlr cat -n $emitf1/out.ekswye
-#run_mlr cat -n $emitf1/out.ekszee
-#run_mlr cat -n $emitf1/out.hatwye
-#run_mlr cat -n $emitf1/out.panpan
-#run_mlr cat -n $emitf1/out.panwye
-#run_mlr cat -n $emitf1/out.wyepan
-#run_mlr cat -n $emitf1/out.wyewye
-#run_mlr cat -n $emitf1/out.zeepan
-#run_mlr cat -n $emitf1/out.zeewye
-#
+# ----------------------------------------------------------------
+announce DSL EMITF
+
+emitf1=$reloutdir/emitf1
+mkdir -p $emitf1
+
+run_mlr put -q '@a=$a; @b=$b; emitf > "'$emitf1'/out.".$a.$b, @a, @b' $indir/abixy
+run_mlr cat -n $emitf1/out.ekspan
+run_mlr cat -n $emitf1/out.ekswye
+run_mlr cat -n $emitf1/out.ekszee
+run_mlr cat -n $emitf1/out.hatwye
+run_mlr cat -n $emitf1/out.panpan
+run_mlr cat -n $emitf1/out.panwye
+run_mlr cat -n $emitf1/out.wyepan
+run_mlr cat -n $emitf1/out.wyewye
+run_mlr cat -n $emitf1/out.zeepan
+run_mlr cat -n $emitf1/out.zeewye
+
+run_mlr put -q '@a=$a; @b=$b; emitf > "'$emitf1'/out.".$a.$b, @a, @b' $indir/abixy
+run_mlr cat -n $emitf1/out.ekspan
+run_mlr cat -n $emitf1/out.ekswye
+run_mlr cat -n $emitf1/out.ekszee
+run_mlr cat -n $emitf1/out.hatwye
+run_mlr cat -n $emitf1/out.panpan
+run_mlr cat -n $emitf1/out.panwye
+run_mlr cat -n $emitf1/out.wyepan
+run_mlr cat -n $emitf1/out.wyewye
+run_mlr cat -n $emitf1/out.zeepan
+run_mlr cat -n $emitf1/out.zeewye
+
+run_mlr put -q '@a=$a; @b=$b; emitf >> "'$emitf1'/out.".$a.$b, @a, @b' $indir/abixy
+run_mlr cat -n $emitf1/out.ekspan
+run_mlr cat -n $emitf1/out.ekswye
+run_mlr cat -n $emitf1/out.ekszee
+run_mlr cat -n $emitf1/out.hatwye
+run_mlr cat -n $emitf1/out.panpan
+run_mlr cat -n $emitf1/out.panwye
+run_mlr cat -n $emitf1/out.wyepan
+run_mlr cat -n $emitf1/out.wyewye
+run_mlr cat -n $emitf1/out.zeepan
+run_mlr cat -n $emitf1/out.zeewye
+
 ## ----------------------------------------------------------------
 #announce DSL EMITP
 #
