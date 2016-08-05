@@ -69,6 +69,7 @@ static void mapper_tee_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "the \"tee\" keyword within %s put, which allows data-dependent filenames.\n",
 		MLR_GLOBALS.bargv0);
 	fprintf(o, "Options:\n");
+	fprintf(o, "-a:          append to existing file, if any, rather than overwriting.\n");
 	fprintf(o, "--no-fflush: don't call fflush() after every record.\n");
 }
 
