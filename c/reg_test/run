@@ -3600,6 +3600,8 @@ run_mlr cat -n $emitf1/out.wyewye
 run_mlr cat -n $emitf1/out.zeepan
 run_mlr cat -n $emitf1/out.zeewye
 
+run_mlr put -q '@a=$a; @b=$b; emitf | "tr \[a-z\] \[A-Z\]", @a, @b' $indir/abixy
+
 # ----------------------------------------------------------------
 announce DSL EMITP REDIRECTS
 
