@@ -3556,6 +3556,8 @@ run_mlr --json cat -n $dump1/out.pan
 run_mlr --json cat -n $dump1/out.wye
 run_mlr --json cat -n $dump1/out.zee
 
+run_mlr put -q '@v=$*; dump | "tr \[a-z\] \[A-Z\]"' $indir/abixy
+
 # ----------------------------------------------------------------
 announce DSL EMITF REDIRECTS
 
