@@ -3626,6 +3626,8 @@ run_mlr cat -n $emitp1/out.ekswye
 run_mlr cat -n $emitp1/out.panpan
 run_mlr cat -n $emitp1/out.wyewye
 
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", (@a, @b)' $indir/abixy
+
 emitp2=$reloutdir/emitp2
 mkdir -p $emitp2
 
@@ -3647,41 +3649,43 @@ run_mlr cat -n $emitp2/out.ekswye
 run_mlr cat -n $emitp2/out.panpan
 run_mlr cat -n $emitp2/out.wyewye
 
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", (@a, @b), "NR"' $indir/abixy
+
 emitp3=$reloutdir/emitp3
 mkdir -p $emitp3
-
 run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp3'/out.".$a.$b, @*' $indir/abixy
 run_mlr cat -n $emitp3/out.ekspan
 run_mlr cat -n $emitp3/out.ekswye
 run_mlr cat -n $emitp3/out.panpan
 run_mlr cat -n $emitp3/out.wyewye
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", @*' $indir/abixy
 
 emitp4=$reloutdir/emitp4
 mkdir -p $emitp4
-
 run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp4'/out.".$a.$b, all' $indir/abixy
 run_mlr cat -n $emitp4/out.ekspan
 run_mlr cat -n $emitp4/out.ekswye
 run_mlr cat -n $emitp4/out.panpan
 run_mlr cat -n $emitp4/out.wyewye
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", all' $indir/abixy
 
 emitp5=$reloutdir/emitp5
 mkdir -p $emitp5
-
 run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp5'/out.".$a.$b, @*, "NR"' $indir/abixy
 run_mlr cat -n $emitp5/out.ekspan
 run_mlr cat -n $emitp5/out.ekswye
 run_mlr cat -n $emitp5/out.panpan
 run_mlr cat -n $emitp5/out.wyewye
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", @*, "NR"' $indir/abixy
 
 emitp6=$reloutdir/emitp6
 mkdir -p $emitp6
-
 run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp6'/out.".$a.$b, all, "NR"' $indir/abixy
 run_mlr cat -n $emitp6/out.ekspan
 run_mlr cat -n $emitp6/out.ekswye
 run_mlr cat -n $emitp6/out.panpan
 run_mlr cat -n $emitp6/out.wyewye
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", all, "NR"' $indir/abixy
 
 # ----------------------------------------------------------------
 announce DSL EMIT REDIRECTS
