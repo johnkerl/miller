@@ -3441,32 +3441,32 @@ run_mlr cat -n $tee1/out
 run_mlr --from $indir/abixy tee -a $tee1/out then nothing
 run_mlr cat -n $tee1/out
 
-## ----------------------------------------------------------------
-#announce DSL TEE
-#
-#tee2=$reloutdir/tee2
-#mkdir -p $tee2
-#
-#run_mlr put -q 'tee > "'$tee2'/out.".$a, $*' $indir/abixy
-#run_mlr cat -n $tee2/out.eks
-#run_mlr cat -n $tee2/out.hat
-#run_mlr cat -n $tee2/out.pan
-#run_mlr cat -n $tee2/out.wye
-#run_mlr cat -n $tee2/out.zee
-#
-#run_mlr put -q 'tee > "'$tee2'/out.".$a, $*' $indir/abixy
-#run_mlr cat -n $tee2/out.eks
-#run_mlr cat -n $tee2/out.hat
-#run_mlr cat -n $tee2/out.pan
-#run_mlr cat -n $tee2/out.wye
-#run_mlr cat -n $tee2/out.zee
-#
-#run_mlr put -q 'tee >> "'$tee2'/out.".$a, $*' $indir/abixy
-#run_mlr cat -n $tee2/out.eks
-#run_mlr cat -n $tee2/out.hat
-#run_mlr cat -n $tee2/out.pan
-#run_mlr cat -n $tee2/out.wye
-#run_mlr cat -n $tee2/out.zee
+# ----------------------------------------------------------------
+announce DSL TEE
+
+tee2=$reloutdir/tee2
+mkdir -p $tee2
+
+run_mlr put -q 'tee > "'$tee2'/out.".$a, $*' $indir/abixy
+run_mlr cat -n $tee2/out.eks
+run_mlr cat -n $tee2/out.hat
+run_mlr cat -n $tee2/out.pan
+run_mlr cat -n $tee2/out.wye
+run_mlr cat -n $tee2/out.zee
+
+run_mlr put -q --no-fflush 'tee > "'$tee2'/out.".$a, $*' $indir/abixy
+run_mlr cat -n $tee2/out.eks
+run_mlr cat -n $tee2/out.hat
+run_mlr cat -n $tee2/out.pan
+run_mlr cat -n $tee2/out.wye
+run_mlr cat -n $tee2/out.zee
+
+run_mlr put -q 'tee >> "'$tee2'/out.".$a, $*' $indir/abixy
+run_mlr cat -n $tee2/out.eks
+run_mlr cat -n $tee2/out.hat
+run_mlr cat -n $tee2/out.pan
+run_mlr cat -n $tee2/out.wye
+run_mlr cat -n $tee2/out.zee
 
 ## ----------------------------------------------------------------
 #announce DSL PRINT
