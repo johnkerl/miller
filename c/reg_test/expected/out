@@ -27549,6 +27549,57 @@ n=2,1=abi:zeewye8
 n=3,1=abi:zeepan6
 n=4,1=abi:zeewye8
 
+mlr put -q printn > "./output/printn1/out.".$a, "abi:".$a.$b.$i ./reg_test/input/abixy
+
+mlr cat -n ./output/printn1/out.eks
+n=1,1=abi:ekspan2abi:ekswye4abi:ekszee7
+
+mlr cat -n ./output/printn1/out.hat
+n=1,1=abi:hatwye9
+
+mlr cat -n ./output/printn1/out.pan
+n=1,1=abi:panpan1abi:panwye10
+
+mlr cat -n ./output/printn1/out.wye
+n=1,1=abi:wyewye3abi:wyepan5
+
+mlr cat -n ./output/printn1/out.zee
+n=1,1=abi:zeepan6abi:zeewye8
+
+mlr put -q printn > "./output/printn1/out.".$a, "abi:".$a.$b.$i ./reg_test/input/abixy
+
+mlr cat -n ./output/printn1/out.eks
+n=1,1=abi:ekspan2abi:ekswye4abi:ekszee7
+
+mlr cat -n ./output/printn1/out.hat
+n=1,1=abi:hatwye9
+
+mlr cat -n ./output/printn1/out.pan
+n=1,1=abi:panpan1abi:panwye10
+
+mlr cat -n ./output/printn1/out.wye
+n=1,1=abi:wyewye3abi:wyepan5
+
+mlr cat -n ./output/printn1/out.zee
+n=1,1=abi:zeepan6abi:zeewye8
+
+mlr put -q printn >> "./output/printn1/out.".$a, "abi:".$a.$b.$i ./reg_test/input/abixy
+
+mlr cat -n ./output/printn1/out.eks
+n=1,1=abi:ekspan2abi:ekswye4abi:ekszee7abi:ekspan2abi:ekswye4abi:ekszee7
+
+mlr cat -n ./output/printn1/out.hat
+n=1,1=abi:hatwye9abi:hatwye9
+
+mlr cat -n ./output/printn1/out.pan
+n=1,1=abi:panpan1abi:panwye10abi:panpan1abi:panwye10
+
+mlr cat -n ./output/printn1/out.wye
+n=1,1=abi:wyewye3abi:wyepan5abi:wyewye3abi:wyepan5
+
+mlr cat -n ./output/printn1/out.zee
+n=1,1=abi:zeepan6abi:zeewye8abi:zeepan6abi:zeewye8
+
 
 ================================================================
 DSL DUMP

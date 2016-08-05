@@ -30,6 +30,9 @@ TOP OF LIST:
 UT:
 * cat -> logcat in regtest/run
 * output dir move data off from code !!
+* popen cases
+* non-lashed cases
+* check m*y for any more cases
 
 COMMON:
 * mlr -k needs >/>>/| examples incl. stdout/stderr/file/cmd. also some subset at mlr put -h.

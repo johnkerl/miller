@@ -3496,6 +3496,33 @@ run_mlr cat -n $print1/out.wye
 run_mlr cat -n $print1/out.zee
 
 # ----------------------------------------------------------------
+announce DSL PRINTN
+
+printn1=$reloutdir/printn1
+mkdir -p $printn1
+
+run_mlr put -q 'printn > "'$printn1'/out.".$a, "abi:".$a.$b.$i' $indir/abixy
+run_mlr cat -n $printn1/out.eks
+run_mlr cat -n $printn1/out.hat
+run_mlr cat -n $printn1/out.pan
+run_mlr cat -n $printn1/out.wye
+run_mlr cat -n $printn1/out.zee
+
+run_mlr put -q 'printn > "'$printn1'/out.".$a, "abi:".$a.$b.$i' $indir/abixy
+run_mlr cat -n $printn1/out.eks
+run_mlr cat -n $printn1/out.hat
+run_mlr cat -n $printn1/out.pan
+run_mlr cat -n $printn1/out.wye
+run_mlr cat -n $printn1/out.zee
+
+run_mlr put -q 'printn >> "'$printn1'/out.".$a, "abi:".$a.$b.$i' $indir/abixy
+run_mlr cat -n $printn1/out.eks
+run_mlr cat -n $printn1/out.hat
+run_mlr cat -n $printn1/out.pan
+run_mlr cat -n $printn1/out.wye
+run_mlr cat -n $printn1/out.zee
+
+# ----------------------------------------------------------------
 announce DSL DUMP
 
 dump1=$reloutdir/dump1
