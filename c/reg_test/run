@@ -46,13 +46,14 @@ echo Using mlr executable $path_to_mlr
 
 indir=$ourdir/input
 expdir=$ourdir/expected
-outdir=$pwd/output
-reloutdir=./output
+outdir=$pwd/output-regtest
+reloutdir=./output-regtest
 outfile=$outdir/out
 expfile=$expdir/out
 mkdir -p $outdir
 
-rm -f $outfile
+rm -rvf $outdir
+mkdir -p $outdir
 touch $outfile
 echo
 

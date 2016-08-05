@@ -30,8 +30,10 @@ TOP OF LIST:
 UT:
 * cat -> logcat in regtest/run
 * output dir move data off from code !!
-* popen cases
-* non-lashed cases
+* complete:
+  - no-namelist
+  - pipes
+  - non-lashed cases
 * check m*y for any more cases
 
 COMMON:
