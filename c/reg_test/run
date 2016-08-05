@@ -3426,21 +3426,21 @@ run_mlr --from $indir/abixy-wide --opprint put -q '
   }
 '
 
-## ----------------------------------------------------------------
-#announce MAPPER TEE
-#
-#tee1=$reloutdir/tee1
-#mkdir -p $tee1
-#
-#run_mlr --from $indir/abixy tee $tee1/out then nothing
-#run_mlr cat -n $tee1/out
-#
-#run_mlr --from $indir/abixy tee $tee1/out then nothing
-#run_mlr cat -n $tee1/out
-#
-#run_mlr --from $indir/abixy tee -a $tee1/out then nothing
-#run_mlr cat -n $tee1/out
-#
+# ----------------------------------------------------------------
+announce MAPPER TEE
+
+tee1=$reloutdir/tee1
+mkdir -p $tee1
+
+run_mlr --from $indir/abixy tee $tee1/out then nothing
+run_mlr cat -n $tee1/out
+
+run_mlr --from $indir/abixy tee --no-fflush $tee1/out then nothing
+run_mlr cat -n $tee1/out
+
+run_mlr --from $indir/abixy tee -a $tee1/out then nothing
+run_mlr cat -n $tee1/out
+
 ## ----------------------------------------------------------------
 #announce DSL TEE
 #

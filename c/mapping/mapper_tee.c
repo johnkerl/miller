@@ -32,7 +32,7 @@ mapper_setup_t mapper_tee_setup = {
 // ----------------------------------------------------------------
 static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv) {
 	int   do_append = FALSE;
-	int   flush_every_record = FALSE;
+	int   flush_every_record = TRUE;
 
 	if ((argc - *pargi) < 1) {
 		mapper_tee_usage(stderr, argv[0], argv[*pargi]);
@@ -42,8 +42,8 @@ static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv) {
 	*pargi += 1;
 
 	ap_state_t* pstate = ap_alloc();
-	ap_define_true_flag(pstate, "-a",   &do_append);
-	ap_define_true_flag(pstate, "-f",   &flush_every_record);
+	ap_define_true_flag(pstate,  "-a",          &do_append);
+	ap_define_false_flag(pstate, "--no-fflush", &flush_every_record);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_tee_usage(stderr, argv[0], verb);
