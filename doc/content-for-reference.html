@@ -327,11 +327,6 @@ POKI_RUN_COMMAND{{mlr --csv cat -n data/a.csv data/b.csv}}HERE
 POKI_RUN_COMMAND{{mlr check --help}}HERE
 
 <!-- ================================================================ -->
-<h2>decimate</h2>
-
-POKI_RUN_COMMAND{{mlr decimate --help}}HERE
-
-<!-- ================================================================ -->
 <h2>count-distinct</h2>
 
 POKI_RUN_COMMAND{{mlr count-distinct --help}}HERE
@@ -354,6 +349,11 @@ POKI_RUN_COMMAND{{echo 'a=1,b=2,c=3' | mlr cut -f b,c,a}}HERE
 </td><td>
 POKI_RUN_COMMAND{{echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a}}HERE
 </td></tr></table>
+
+<!-- ================================================================ -->
+<h2>decimate</h2>
+
+POKI_RUN_COMMAND{{mlr decimate --help}}HERE
 
 <p/>
 <!-- ================================================================ -->
@@ -1382,6 +1382,11 @@ POKI_RUN_COMMAND{{mlr --opprint tail -n 4 data/colored-shapes.dkvp}}HERE
 </td></tr><tr><td>
 POKI_RUN_COMMAND{{mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp}}HERE
 </td></tr></table>
+
+<!-- ================================================================ -->
+<h2>tee</h2>
+
+POKI_RUN_COMMAND{{mlr tee --help}}HERE
 
 <!-- ================================================================ -->
 <h2>top</h2>

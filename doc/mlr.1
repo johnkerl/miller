@@ -161,8 +161,8 @@ output separator to the given value.
 .nf
  bar bootstrap cat check count-distinct cut decimate filter grep group-by
  group-like having-fields head histogram join label merge-fields nest nothing
- put regularize rename reorder repeat reshape sample shuffle sec2gmt
- sec2gmtdate sort stats1 stats2 step tac tail tee top uniq
+ put regularize rename reorder repeat reshape sample sec2gmt sec2gmtdate
+ shuffle sort stats1 stats2 step tac tail tee top uniq
 .fi
 .if n \{\
 .RE
@@ -1047,18 +1047,6 @@ See also mlr bootstrap and mlr shuffle.
 .fi
 .if n \{\
 .RE
-.SS "shuffle"
-.if n \{\
-.RS 0
-.\}
-.nf
-Usage: mlr shuffle {no options}
-Outputs records randomly permuted. No output records are produced until
-all input records are read.
-See also mlr bootstrap and mlr sample.
-.fi
-.if n \{\
-.RE
 .SS "sec2gmt"
 .if n \{\
 .RS 0
@@ -1086,6 +1074,18 @@ This is nothing more than a keystroke-saver for the sec2gmtdate function:
   mlr sec2gmtdate time1,time2
 is the same as
   mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+.fi
+.if n \{\
+.RE
+.SS "shuffle"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr shuffle {no options}
+Outputs records randomly permuted. No output records are produced until
+all input records are read.
+See also mlr bootstrap and mlr sample.
 .fi
 .if n \{\
 .RE
