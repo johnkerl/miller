@@ -3564,107 +3564,137 @@ run_mlr cat -n $emitf1/out.wyewye
 run_mlr cat -n $emitf1/out.zeepan
 run_mlr cat -n $emitf1/out.zeewye
 
-## ----------------------------------------------------------------
-#announce DSL EMITP
-#
-#emitp1=$reloutdir/emitp1
-#mkdir -p $emitp1
-#
-#run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp1'/out.".$a.$b, (@a, @b)' $indir/abixy
-##run_mlr cat -n $emitp1/out.ekspan
-##run_mlr cat -n $emitp1/out.ekswye
-##run_mlr cat -n $emitp1/out.ekszee
-##run_mlr cat -n $emitp1/out.hatwye
-##run_mlr cat -n $emitp1/out.panpan
-##run_mlr cat -n $emitp1/out.panwye
-##run_mlr cat -n $emitp1/out.wyepan
-##run_mlr cat -n $emitp1/out.wyewye
-##run_mlr cat -n $emitp1/out.zeepan
-##run_mlr cat -n $emitp1/out.zeewye
-#
-#run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp1'/out.".$a.$b, (@a, @b)' $indir/abixy
-##run_mlr cat -n $emitp1/out.ekspan
-##run_mlr cat -n $emitp1/out.ekswye
-##run_mlr cat -n $emitp1/out.ekszee
-##run_mlr cat -n $emitp1/out.hatwye
-##run_mlr cat -n $emitp1/out.panpan
-##run_mlr cat -n $emitp1/out.panwye
-##run_mlr cat -n $emitp1/out.wyepan
-##run_mlr cat -n $emitp1/out.wyewye
-##run_mlr cat -n $emitp1/out.zeepan
-##run_mlr cat -n $emitp1/out.zeewye
-#
-#run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emitp >> "'$emitp1'/out.".$a.$b, (@a, @b)' $indir/abixy
-##run_mlr cat -n $emitp1/out.ekspan
-##run_mlr cat -n $emitp1/out.ekswye
-##run_mlr cat -n $emitp1/out.ekszee
-##run_mlr cat -n $emitp1/out.hatwye
-##run_mlr cat -n $emitp1/out.panpan
-##run_mlr cat -n $emitp1/out.panwye
-##run_mlr cat -n $emitp1/out.wyepan
-##run_mlr cat -n $emitp1/out.wyewye
-##run_mlr cat -n $emitp1/out.zeepan
-##run_mlr cat -n $emitp1/out.zeewye
-#
-#emitp2=$reloutdir/emitp2
-#mkdir -p $emitp2
-#
-#run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp2'/out.".$a.$b, (@a, @b), "NR"' $indir/abixy
-#
-#run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp2'/out.".$a.$b, (@a, @b), "NR"' $indir/abixy
-#
-#run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emitp >> "'$emitp2'/out.".$a.$b, (@a, @b), "NR"' $indir/abixy
-#
-## ----------------------------------------------------------------
-#announce DSL EMIT
-#
-#emit1=$reloutdir/emit1
-#mkdir -p $emit1
-#
-#run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit1'/out.".$a.$b, (@a, @b)' $indir/abixy
-##run_mlr cat -n $emit1/out.ekspan
-##run_mlr cat -n $emit1/out.ekswye
-##run_mlr cat -n $emit1/out.ekszee
-##run_mlr cat -n $emit1/out.hatwye
-##run_mlr cat -n $emit1/out.panpan
-##run_mlr cat -n $emit1/out.panwye
-##run_mlr cat -n $emit1/out.wyepan
-##run_mlr cat -n $emit1/out.wyewye
-##run_mlr cat -n $emit1/out.zeepan
-##run_mlr cat -n $emit1/out.zeewye
-#
-#run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit1'/out.".$a.$b, (@a, @b)' $indir/abixy
-##run_mlr cat -n $emit1/out.ekspan
-##run_mlr cat -n $emit1/out.ekswye
-##run_mlr cat -n $emit1/out.ekszee
-##run_mlr cat -n $emit1/out.hatwye
-##run_mlr cat -n $emit1/out.panpan
-##run_mlr cat -n $emit1/out.panwye
-##run_mlr cat -n $emit1/out.wyepan
-##run_mlr cat -n $emit1/out.wyewye
-##run_mlr cat -n $emit1/out.zeepan
-##run_mlr cat -n $emit1/out.zeewye
-#
-#run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emit >> "'$emit1'/out.".$a.$b, (@a, @b)' $indir/abixy
-##run_mlr cat -n $emit1/out.ekspan
-##run_mlr cat -n $emit1/out.ekswye
-##run_mlr cat -n $emit1/out.ekszee
-##run_mlr cat -n $emit1/out.hatwye
-##run_mlr cat -n $emit1/out.panpan
-##run_mlr cat -n $emit1/out.panwye
-##run_mlr cat -n $emit1/out.wyepan
-##run_mlr cat -n $emit1/out.wyewye
-##run_mlr cat -n $emit1/out.zeepan
-##run_mlr cat -n $emit1/out.zeewye
-#
-#emit2=$reloutdir/emit2
-#mkdir -p $emit2
-#
-#run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit2'/out.".$a.$b, (@a, @b), "NR"' $indir/abixy
-#
-#run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit2'/out.".$a.$b, (@a, @b), "NR"' $indir/abixy
-#
-#run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emit >> "'$emit2'/out.".$a.$b, (@a, @b), "NR"' $indir/abixy
+# ----------------------------------------------------------------
+announce DSL EMITP
+
+emitp1=$reloutdir/emitp1
+mkdir -p $emitp1
+
+run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp1'/out.".$a.$b, (@a, @b)' $indir/abixy
+run_mlr cat -n $emitp1/out.ekspan
+run_mlr cat -n $emitp1/out.ekswye
+run_mlr cat -n $emitp1/out.ekszee
+run_mlr cat -n $emitp1/out.hatwye
+run_mlr cat -n $emitp1/out.panpan
+run_mlr cat -n $emitp1/out.panwye
+run_mlr cat -n $emitp1/out.wyepan
+run_mlr cat -n $emitp1/out.wyewye
+run_mlr cat -n $emitp1/out.zeepan
+run_mlr cat -n $emitp1/out.zeewye
+
+run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp1'/out.".$a.$b, (@a, @b)' $indir/abixy
+run_mlr cat -n $emitp1/out.ekspan
+run_mlr cat -n $emitp1/out.ekswye
+run_mlr cat -n $emitp1/out.ekszee
+run_mlr cat -n $emitp1/out.hatwye
+run_mlr cat -n $emitp1/out.panpan
+run_mlr cat -n $emitp1/out.panwye
+run_mlr cat -n $emitp1/out.wyepan
+run_mlr cat -n $emitp1/out.wyewye
+run_mlr cat -n $emitp1/out.zeepan
+run_mlr cat -n $emitp1/out.zeewye
+
+run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emitp >> "'$emitp1'/out.".$a.$b, (@a, @b)' $indir/abixy
+run_mlr cat -n $emitp1/out.ekspan
+run_mlr cat -n $emitp1/out.ekswye
+run_mlr cat -n $emitp1/out.ekszee
+run_mlr cat -n $emitp1/out.hatwye
+run_mlr cat -n $emitp1/out.panpan
+run_mlr cat -n $emitp1/out.panwye
+run_mlr cat -n $emitp1/out.wyepan
+run_mlr cat -n $emitp1/out.wyewye
+run_mlr cat -n $emitp1/out.zeepan
+run_mlr cat -n $emitp1/out.zeewye
+
+emitp2=$reloutdir/emitp2
+mkdir -p $emitp2
+
+run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp2'/out.".$a.$b, (@a, @b), "NR"' $indir/abixy
+run_mlr cat -n $emitp2/out.ekspan
+run_mlr cat -n $emitp2/out.ekswye
+run_mlr cat -n $emitp2/out.ekszee
+run_mlr cat -n $emitp2/out.hatwye
+run_mlr cat -n $emitp2/out.panpan
+run_mlr cat -n $emitp2/out.panwye
+run_mlr cat -n $emitp2/out.wyepan
+run_mlr cat -n $emitp2/out.wyewye
+run_mlr cat -n $emitp2/out.zeepan
+run_mlr cat -n $emitp2/out.zeewye
+
+run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp2'/out.".$a.$b, (@a, @b), "NR"' $indir/abixy
+run_mlr cat -n $emitp2/out.ekspan
+run_mlr cat -n $emitp2/out.ekswye
+run_mlr cat -n $emitp2/out.ekszee
+run_mlr cat -n $emitp2/out.hatwye
+run_mlr cat -n $emitp2/out.panpan
+run_mlr cat -n $emitp2/out.panwye
+run_mlr cat -n $emitp2/out.wyepan
+run_mlr cat -n $emitp2/out.wyewye
+run_mlr cat -n $emitp2/out.zeepan
+run_mlr cat -n $emitp2/out.zeewye
+
+run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emitp >> "'$emitp2'/out.".$a.$b, (@a, @b), "NR"' $indir/abixy
+run_mlr cat -n $emitp2/out.ekspan
+run_mlr cat -n $emitp2/out.ekswye
+run_mlr cat -n $emitp2/out.ekszee
+run_mlr cat -n $emitp2/out.hatwye
+run_mlr cat -n $emitp2/out.panpan
+run_mlr cat -n $emitp2/out.panwye
+run_mlr cat -n $emitp2/out.wyepan
+run_mlr cat -n $emitp2/out.wyewye
+run_mlr cat -n $emitp2/out.zeepan
+run_mlr cat -n $emitp2/out.zeewye
+
+# ----------------------------------------------------------------
+announce DSL EMIT
+
+emit1=$reloutdir/emit1
+mkdir -p $emit1
+
+run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit1'/out.".$a.$b, (@a, @b)' $indir/abixy
+#run_mlr cat -n $emit1/out.ekspan
+#run_mlr cat -n $emit1/out.ekswye
+#run_mlr cat -n $emit1/out.ekszee
+#run_mlr cat -n $emit1/out.hatwye
+#run_mlr cat -n $emit1/out.panpan
+#run_mlr cat -n $emit1/out.panwye
+#run_mlr cat -n $emit1/out.wyepan
+#run_mlr cat -n $emit1/out.wyewye
+#run_mlr cat -n $emit1/out.zeepan
+#run_mlr cat -n $emit1/out.zeewye
+
+run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit1'/out.".$a.$b, (@a, @b)' $indir/abixy
+#run_mlr cat -n $emit1/out.ekspan
+#run_mlr cat -n $emit1/out.ekswye
+#run_mlr cat -n $emit1/out.ekszee
+#run_mlr cat -n $emit1/out.hatwye
+#run_mlr cat -n $emit1/out.panpan
+#run_mlr cat -n $emit1/out.panwye
+#run_mlr cat -n $emit1/out.wyepan
+#run_mlr cat -n $emit1/out.wyewye
+#run_mlr cat -n $emit1/out.zeepan
+#run_mlr cat -n $emit1/out.zeewye
+
+run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emit >> "'$emit1'/out.".$a.$b, (@a, @b)' $indir/abixy
+#run_mlr cat -n $emit1/out.ekspan
+#run_mlr cat -n $emit1/out.ekswye
+#run_mlr cat -n $emit1/out.ekszee
+#run_mlr cat -n $emit1/out.hatwye
+#run_mlr cat -n $emit1/out.panpan
+#run_mlr cat -n $emit1/out.panwye
+#run_mlr cat -n $emit1/out.wyepan
+#run_mlr cat -n $emit1/out.wyewye
+#run_mlr cat -n $emit1/out.zeepan
+#run_mlr cat -n $emit1/out.zeewye
+
+emit2=$reloutdir/emit2
+mkdir -p $emit2
+
+run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit2'/out.".$a.$b, (@a, @b), "NR"' $indir/abixy
+
+run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit2'/out.".$a.$b, (@a, @b), "NR"' $indir/abixy
+
+run_mlr put -q '@a[NR]=$a; @b[NR]=$b; emit >> "'$emit2'/out.".$a.$b, (@a, @b), "NR"' $indir/abixy
 
 # ----------------------------------------------------------------
 announce OOSVAR-FROM-SREC ASSIGNMENT
