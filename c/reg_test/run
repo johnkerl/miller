@@ -3639,7 +3639,7 @@ run_mlr cat -n $emitp2/out.wyewye
 emitp3=$reloutdir/emitp3
 mkdir -p $emitp3
 
-run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp3'/out.".$a.$b, @*, "NR"' $indir/abixy
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp3'/out.".$a.$b, @*' $indir/abixy
 run_mlr cat -n $emitp3/out.ekspan
 run_mlr cat -n $emitp3/out.ekswye
 run_mlr cat -n $emitp3/out.panpan
@@ -3648,11 +3648,29 @@ run_mlr cat -n $emitp3/out.wyewye
 emitp4=$reloutdir/emitp4
 mkdir -p $emitp4
 
-run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp4'/out.".$a.$b, all, "NR"' $indir/abixy
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp4'/out.".$a.$b, all' $indir/abixy
 run_mlr cat -n $emitp4/out.ekspan
 run_mlr cat -n $emitp4/out.ekswye
 run_mlr cat -n $emitp4/out.panpan
 run_mlr cat -n $emitp4/out.wyewye
+
+emitp5=$reloutdir/emitp5
+mkdir -p $emitp5
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp5'/out.".$a.$b, @*, "NR"' $indir/abixy
+run_mlr cat -n $emitp5/out.ekspan
+run_mlr cat -n $emitp5/out.ekswye
+run_mlr cat -n $emitp5/out.panpan
+run_mlr cat -n $emitp5/out.wyewye
+
+emitp6=$reloutdir/emitp6
+mkdir -p $emitp6
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp6'/out.".$a.$b, all, "NR"' $indir/abixy
+run_mlr cat -n $emitp6/out.ekspan
+run_mlr cat -n $emitp6/out.ekswye
+run_mlr cat -n $emitp6/out.panpan
+run_mlr cat -n $emitp6/out.wyewye
 
 # ----------------------------------------------------------------
 announce DSL EMIT REDIRECTS
@@ -3702,7 +3720,7 @@ run_mlr cat -n $emit2/out.wyewye
 emit3=$reloutdir/emit3
 mkdir -p $emit3
 
-run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit3'/out.".$a.$b, @*, "NR"' $indir/abixy
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit3'/out.".$a.$b, @*' $indir/abixy
 run_mlr cat -n $emit3/out.ekspan
 run_mlr cat -n $emit3/out.ekswye
 run_mlr cat -n $emit3/out.panpan
@@ -3711,11 +3729,29 @@ run_mlr cat -n $emit3/out.wyewye
 emit4=$reloutdir/emit4
 mkdir -p $emit4
 
-run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit4'/out.".$a.$b, all, "NR"' $indir/abixy
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit4'/out.".$a.$b, all' $indir/abixy
 run_mlr cat -n $emit4/out.ekspan
 run_mlr cat -n $emit4/out.ekswye
 run_mlr cat -n $emit4/out.panpan
 run_mlr cat -n $emit4/out.wyewye
+
+emit5=$reloutdir/emit5
+mkdir -p $emit5
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit5'/out.".$a.$b, @*, "NR"' $indir/abixy
+run_mlr cat -n $emit5/out.ekspan
+run_mlr cat -n $emit5/out.ekswye
+run_mlr cat -n $emit5/out.panpan
+run_mlr cat -n $emit5/out.wyewye
+
+emit6=$reloutdir/emit6
+mkdir -p $emit6
+
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit > "'$emit6'/out.".$a.$b, all, "NR"' $indir/abixy
+run_mlr cat -n $emit6/out.ekspan
+run_mlr cat -n $emit6/out.ekswye
+run_mlr cat -n $emit6/out.panpan
+run_mlr cat -n $emit6/out.wyewye
 
 # ----------------------------------------------------------------
 announce OOSVAR-FROM-SREC ASSIGNMENT
