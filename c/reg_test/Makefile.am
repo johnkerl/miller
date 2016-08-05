@@ -5,4 +5,4 @@ TESTS=		run
 
 # created by 'run'
 clean-local:
-	rm -rf output
+	rm -rf output-regtest
