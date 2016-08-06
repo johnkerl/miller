@@ -2299,13 +2299,13 @@ e.g. 1440768801.748936.
 .nf
 filter: includes/excludes the record in the output record stream.
 
-  Example: mlr put 'filter (NR == 2 || $x > 5.4)'.
+  Example: mlr --from myfile.dat put 'filter (NR == 2 || $x > 5.4)'
 
   Instead of put with 'filter false' you can simply use put -q.  The following
   uses the input record to accumulate data but only prints the running sum
   without printing the input record:
 
-  Example: mlr put -q '@running_sum += $x * $y; emit @running_sum'.
+  Example: mlr --from myfile.dat put -q '@running_sum += $x * $y; emit @running_sum'
 .fi
 .if n \{\
 .RE
@@ -2316,12 +2316,12 @@ filter: includes/excludes the record in the output record stream.
 .nf
 unset: clears field(s) from the current record, or an out-of-stream variable.
 
-  Example: mlr put 'unset $x'
-  Example: mlr put 'unset $*'
-  Example: mlr put 'for (k, v in $*) { if (k =~ "a.*") { unset $[k] } }'
-  Example: mlr put '...; unset @sums'
-  Example: mlr put '...; unset @sums["green"]'
-  Example: mlr put '...; unset @*'
+  Example: mlr --from myfile.dat put 'unset $x'
+  Example: mlr --from myfile.dat put 'unset $*'
+  Example: mlr --from myfile.dat put 'for (k, v in $*) { if (k =~ "a.*") { unset $[k] } }'
+  Example: mlr --from myfile.dat put '...; unset @sums'
+  Example: mlr --from myfile.dat put '...; unset @sums["green"]'
+  Example: mlr --from myfile.dat put '...; unset @*'
 .fi
 .if n \{\
 .RE
@@ -2338,10 +2338,11 @@ tee: prints the current record to specified file.
   process which will process the data. There will be one subordinate process for
   each distinct value of the piped-to command.
 
-  Example: mlr put 'tee >  "/tmp/data-".$a, $*'
-  Example: mlr put 'tee >> "/tmp/data-".$a.$b, $*'
-  Example: mlr put -q 'tee | "tr [a-z\e] [A-Z\e]", $*'
-  Example: mlr put -q 'tee | "tr [a-z\e] [A-Z\e] > /tmp/data-".$a, $*'
+  Example: mlr --from myfile.dat put 'tee >  "/tmp/data-".$a, $*'
+  Example: mlr --from myfile.dat put 'tee >> "/tmp/data-".$a.$b, $*'
+  Example: mlr --from myfile.dat put 'tee >  stderr, $*'
+  Example: mlr --from myfile.dat put -q 'tee | "tr [a-z\e] [A-Z\e]", $*'
+  Example: mlr --from myfile.dat put -q 'tee | "tr [a-z\e] [A-Z\e] > /tmp/data-".$a, $*'
 .fi
 .if n \{\
 .RE
@@ -2359,12 +2360,13 @@ emit: inserts an out-of-stream variable into the output record stream. Hashmap
   record. The | is for pipe to a process which will process the data. There will
   be one subordinate process for each distinct value of the piped-to command.
 
-  Example: mlr put '... ; emit @sums'
-  Example: mlr put '... ; emit @sums, "index1", "index2"'
-  Example: mlr put '... ; emit @*, "index1", "index2"'
-  Example: mlr put '... ; emit >  "mytap.dat", @*, "index1", "index2"'
-  Example: mlr put '... ; emit >> "mytap.dat", @*, "index1", "index2"'
-  Example: mlr put '... ; emit | "grep somepattern", @*, "index1", "index2"'
+  Example: mlr --from myfile.dat put '... ; emit @sums'
+  Example: mlr --from myfile.dat put '... ; emit @sums, "index1", "index2"'
+  Example: mlr --from myfile.dat put '... ; emit @*, "index1", "index2"'
+  Example: mlr --from myfile.dat put '... ; emit >  "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from myfile.dat put '... ; emit >> "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from myfile.dat put '... ; emit > stderr, @*, "index1", "index2"'
+  Example: mlr --from myfile.dat put '... ; emit | "grep somepattern", @*, "index1", "index2"'
 
   Please see http://johnkerl.org/miller/doc for more information.
 .fi
@@ -2385,12 +2387,13 @@ emitp: inserts an out-of-stream variable into the output record stream.
   record. The | is for pipe to a process which will process the data. There will
   be one subordinate process for each distinct value of the piped-to command.
 
-  Example: mlr put '... ; emitp @sums'
-  Example: mlr put '... ; emitp @sums, "index1", "index2"'
-  Example: mlr put '... ; emitp @*, "index1", "index2"'
-  Example: mlr put '... ; emitp >  "mytap.dat", @*, "index1", "index2"'
-  Example: mlr put '... ; emitp >> "mytap.dat", @*, "index1", "index2"'
-  Example: mlr put '... ; emitp | "grep somepattern", @*, "index1", "index2"'
+  Example: mlr --from myfile.dat put '... ; emitp @sums'
+  Example: mlr --from myfile.dat put '... ; emitp @sums, "index1", "index2"'
+  Example: mlr --from myfile.dat put '... ; emitp @*, "index1", "index2"'
+  Example: mlr --from myfile.dat put '... ; emitp >  "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from myfile.dat put '... ; emitp >> "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from myfile.dat put '... ; emitp > stderr, @*, "index1", "index2"'
+  Example: mlr --from myfile.dat put '... ; emitp | "grep somepattern", @*, "index1", "index2"'
 
   Please see http://johnkerl.org/miller/doc for more information.
 .fi
@@ -2410,12 +2413,13 @@ emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
   record. The | is for pipe to a process which will process the data. There will
   be one subordinate process for each distinct value of the piped-to command.
 
-  Example: mlr put '... ; emitf @a'
-  Example: mlr put '... ; emitf @a, @b, @c'
-  Example: mlr put '... ; emitf > "mytap.dat", @a, @b, @c'
-  Example: mlr put '... ; emitf >> "mytap.dat", @a, @b, @c'
-  Example: mlr put '... ; emitf | "grep somepattern", @a, @b, @c'
-  Example: mlr put '... ; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
+  Example: mlr --from myfile.dat put '... ; emitf @a'
+  Example: mlr --from myfile.dat put '... ; emitf @a, @b, @c'
+  Example: mlr --from myfile.dat put '... ; emitf > "mytap.dat", @a, @b, @c'
+  Example: mlr --from myfile.dat put '... ; emitf >> "mytap.dat", @a, @b, @c'
+  Example: mlr --from myfile.dat put '... ; emitf > stderr, @a, @b, @c'
+  Example: mlr --from myfile.dat put '... ; emitf | "grep somepattern", @a, @b, @c'
+  Example: mlr --from myfile.dat put '... ; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
 
   Please see http://johnkerl.org/miller/doc for more information.
 .fi
@@ -2428,6 +2432,17 @@ emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
 .nf
 dump: prints all currently defined out-of-stream variables immediately
   to stdout as JSON.
+
+  With >, >>, or |, the data do not become part of the output record stream but
+  are instead redirected.  The > and >> are for write and append, as in the
+  shell, but (as with awk) the file-overwrite for > is on first write, not per
+  record. The | is for pipe to a process which will process the data. There will
+  be one subordinate process for each distinct value of the piped-to command.
+
+  Example: mlr --from myfile.dat put -q '@v[NR]=$*; end { dump }'
+  Example: mlr --from myfile.dat put -q '@v[NR]=$*; end { dump >  "mytap.dat"}'
+  Example: mlr --from myfile.dat put -q '@v[NR]=$*; end { dump >> "mytap.dat"}'
+  Example: mlr --from myfile.dat put -q '@v[NR]=$*; end { dump | "jq .[]"}'
 .fi
 .if n \{\
 .RE
@@ -2438,6 +2453,8 @@ dump: prints all currently defined out-of-stream variables immediately
 .nf
 edump: prints all currently defined out-of-stream variables immediately
   to stderr as JSON.
+
+  Example: mlr --from myfile.dat put -q '@v[NR]=$*; end { edump }'
 .fi
 .if n \{\
 .RE
@@ -2447,8 +2464,9 @@ edump: prints all currently defined out-of-stream variables immediately
 .\}
 .nf
 print: prints expression immediately to stdout.
-  Example: mlr put -q 'print "The sum of x and y is ".($x+$y)'.
-  Example: mlr put -q 'for (k, v in $*) { print k . " => " . v }'.
+  Example: mlr --from myfile.dat put -q 'print "The sum of x and y is ".($x+$y)'
+  Example: mlr --from myfile.dat put -q 'for (k, v in $*) { print k . " => " . v }'
+  Example: mlr --from myfile.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
 .fi
 .if n \{\
 .RE
@@ -2458,8 +2476,9 @@ print: prints expression immediately to stdout.
 .\}
 .nf
 print: prints expression immediately to stdout.
-  Example: mlr put -q 'print "The sum of x and y is ".($x+$y)'.
-  Example: mlr put -q 'for (k, v in $*) { print k . " => " . v }'.
+  Example: mlr --from myfile.dat put -q 'print "The sum of x and y is ".($x+$y)'
+  Example: mlr --from myfile.dat put -q 'for (k, v in $*) { print k . " => " . v }'
+  Example: mlr --from myfile.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
 .fi
 .if n \{\
 .RE
@@ -2469,8 +2488,9 @@ print: prints expression immediately to stdout.
 .\}
 .nf
 eprint: prints expression immediately to stderr.
-  Example: mlr put -q 'eprint "The sum of x and y is ".($x+$y)'.
-  Example: mlr put -q 'for (k, v in $*) { eprint k . " => " . v }'.
+  Example: mlr --from myfile.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
+  Example: mlr --from myfile.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
+  Example: mlr --from myfile.dat put  '(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
 .fi
 .if n \{\
 .RE
@@ -2480,8 +2500,9 @@ eprint: prints expression immediately to stderr.
 .\}
 .nf
 eprint: prints expression immediately to stderr.
-  Example: mlr put -q 'eprint "The sum of x and y is ".($x+$y)'.
-  Example: mlr put -q 'for (k, v in $*) { eprint k . " => " . v }'.
+  Example: mlr --from myfile.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
+  Example: mlr --from myfile.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
+  Example: mlr --from myfile.dat put  '(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
 .fi
 .if n \{\
 .RE
@@ -2490,8 +2511,8 @@ eprint: prints expression immediately to stderr.
 .RS 0
 .\}
 .nf
-stdout: Used for tee, emit, emitf, emitp, and dump in place of filename to
-  print to standard output.
+stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
+  to print to standard output.
 .fi
 .if n \{\
 .RE
@@ -2500,8 +2521,8 @@ stdout: Used for tee, emit, emitf, emitp, and dump in place of filename to
 .RS 0
 .\}
 .nf
-stderr: Used for tee, emit, emitf, emitp, and dump in place of filename to
-  print to standard error.
+stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
+  to print to standard error.
 .fi
 .if n \{\
 .RE
