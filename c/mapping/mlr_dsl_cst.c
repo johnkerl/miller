@@ -137,6 +137,21 @@ static void handle_unset_vararg_indirect_srec_field_name(
 	variables_t*                    pvars,
 	cst_outputs_t*                  pcst_outputs);
 
+static void mlr_dsl_filter_keyword_usage  (FILE* ostream);
+static void mlr_dsl_unset_keyword_usage   (FILE* ostream);
+static void mlr_dsl_tee_keyword_usage     (FILE* ostream);
+static void mlr_dsl_emit_keyword_usage    (FILE* ostream);
+static void mlr_dsl_emitp_keyword_usage   (FILE* ostream);
+static void mlr_dsl_emitf_keyword_usage   (FILE* ostream);
+static void mlr_dsl_dump_keyword_usage    (FILE* ostream);
+static void mlr_dsl_edump_keyword_usage   (FILE* ostream);
+static void mlr_dsl_print_keyword_usage   (FILE* ostream);
+static void mlr_dsl_printn_keyword_usage  (FILE* ostream);
+static void mlr_dsl_eprint_keyword_usage  (FILE* ostream);
+static void mlr_dsl_eprintn_keyword_usage (FILE* ostream);
+static void mlr_dsl_stdout_keyword_usage  (FILE* ostream);
+static void mlr_dsl_stderr_keyword_usage  (FILE* ostream);
+
 // ----------------------------------------------------------------
 // For mlr filter, which takes a reduced subset of mlr-put syntax:
 // * The root node of the AST must be a statement list (as for put).
@@ -2500,107 +2515,59 @@ static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* 
 	return pkeylist_evaluators;
 }
 
-// ----------------------------------------------------------------
-static void mlr_dsl_filter_usage(FILE* ostream) {
-	fprintf(ostream, "filter: includes/excludes the record in the output record\n");
-	fprintf(ostream, "  stream.\n");
-	fprintf(ostream, "  Example: %s put 'filter (NR == 2 || $x > 5.4)'.\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Instead of put with 'filter false' you can simply use put -q.  The following\n");
-	fprintf(ostream, "  uses the input record to accumulate data but only prints the running sum:\n");
-	fprintf(ostream, "  %s put -q '@running_sum += $x * $y; emit @running_sum'.\n", MLR_GLOBALS.bargv0);
-}
+// ================================================================
+// Pass function_name == NULL to get usage for all keywords.
+// Note keywords are defined in dsls/mlr_dsl_lexer.l.
+void mlr_dsl_keyword_usage(FILE* ostream, char* keyword) {
+	if (keyword == NULL) {
+		mlr_dsl_filter_keyword_usage(ostream);  fprintf(ostream, "\n");
+		mlr_dsl_unset_keyword_usage(ostream);   fprintf(ostream, "\n");
+		mlr_dsl_tee_keyword_usage(ostream);     fprintf(ostream, "\n");
+		mlr_dsl_emit_keyword_usage(ostream);    fprintf(ostream, "\n");
+		mlr_dsl_emitp_keyword_usage(ostream);   fprintf(ostream, "\n");
+		mlr_dsl_emitf_keyword_usage(ostream);   fprintf(ostream, "\n");
+		mlr_dsl_dump_keyword_usage(ostream);    fprintf(ostream, "\n");
+		mlr_dsl_edump_keyword_usage(ostream);   fprintf(ostream, "\n");
+		mlr_dsl_print_keyword_usage(ostream);   fprintf(ostream, "\n");
+		mlr_dsl_printn_keyword_usage(ostream);  fprintf(ostream, "\n");
+		mlr_dsl_eprint_keyword_usage(ostream);  fprintf(ostream, "\n");
+		mlr_dsl_eprintn_keyword_usage(ostream); fprintf(ostream, "\n");
+		mlr_dsl_stdout_keyword_usage(ostream);  fprintf(ostream, "\n");
+		mlr_dsl_stderr_keyword_usage(ostream);
+		return;
+	}
 
-static void mlr_dsl_unset_usage(FILE* ostream) {
-	fprintf(ostream, "unset: clears field(s) from the current record, or an out-of-stream variable.\n");
-	fprintf(ostream, "  Example: %s put 'unset $x'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put 'unset $*'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put 'for (k, v in $*) { if (k =~ \"a.*\") { unset $[k] } }'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put '...; unset @sums'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put '...; unset @sums[\"green\"]'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put '...; unset @*'\n", MLR_GLOBALS.bargv0);
-}
-
-static void mlr_dsl_tee_usage(FILE* ostream) {
-	fprintf(ostream, "tee: prints the current record to specified file.\n");
-	fprintf(ostream, "  This is an immediate print to the specified file (except for pprint format\n");
-	fprintf(ostream, "  which of course waits until the end of the input stream to format all output).\n");
-	fprintf(ostream, "  The > and >> are for write and append, as in the shell, but (as with awk)\n");
-	fprintf(ostream, "  the file-overwrite for > is on first write, not per record.\n");
-	fprintf(ostream, "  Example: %s put 'tee >  \"/tmp/data-\".$a, $*'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put 'tee >> \"/tmp/data-\".$a.$b, $*'\n", MLR_GLOBALS.bargv0);
-}
-
-static void mlr_dsl_emit_usage(FILE* ostream) {
-	fprintf(ostream, "emit: inserts an out-of-stream variable into the output record stream. Hashmap\n");
-	fprintf(ostream, "  indices present in the data but not slotted by emit arguments are not output.\n");
-	fprintf(ostream, "  Example: %s put '... ; emit @sums'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put '... ; emit @sums, \"index1\", \"index2\"'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put '... ; emit @*, \"index1\", \"index2\"'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Please see http://johnkerl.org/miller/doc for more information.\n");
-}
-
-static void mlr_dsl_emitp_usage(FILE* ostream) {
-	fprintf(ostream, "emitp: inserts an out-of-stream variable into the output record stream. Hashmap\n");
-	fprintf(ostream, "  indices present in the data but not slotted by emitp arguments are output\n");
-	fprintf(ostream, "  concatenated with \":\".\n");
-	fprintf(ostream, "  Example: %s put '... ; emitp @sums'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put '... ; emitp @sums, \"index1\", \"index2\"'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put '... ; emitp @*, \"index1\", \"index2\"'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Please see http://johnkerl.org/miller/doc for more information.\n");
-}
-
-static void mlr_dsl_emitf_usage(FILE* ostream) {
-	fprintf(ostream, "emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the\n");
-	fprintf(ostream, "  output record stream.\n");
-	fprintf(ostream, "  Example: %s put '... ; emit @a'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put '... ; emit @a, @b, @c'\n", MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Please see http://johnkerl.org/miller/doc for more information.\n");
-}
-
-static void mlr_dsl_dump_usage(FILE* ostream) {
-	fprintf(ostream, "dump: prints all currently defined out-of-stream variables immediately\n");
-	fprintf(ostream, "  to stdout as JSON.\n");
-}
-
-static void mlr_dsl_edump_usage(FILE* ostream) {
-	fprintf(ostream, "edump: prints all currently defined out-of-stream variables immediately\n");
-	fprintf(ostream, "  to stderr as JSON.\n");
-}
-
-static void mlr_dsl_print_usage(FILE* ostream) {
-	fprintf(ostream, "print: prints expression immediately to stdout.\n");
-	fprintf(ostream, "  Example: %s put -q 'print \"The sum of x and y is \".($x+$y)'.\n",
-		MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { print k . \" => \" . v }'.\n",
-		MLR_GLOBALS.bargv0);
-}
-
-static void mlr_dsl_printn_usage(FILE* ostream) {
-	fprintf(ostream, "printn: prints expression immediately to stdout, without trailing newline.\n");
-	fprintf(ostream, "  Example: %s put -q 'printn \"The sum of x and y is \".($x+$y); print \"\"'.\n",
-		MLR_GLOBALS.bargv0);
-}
-
-static void mlr_dsl_eprint_usage(FILE* ostream) {
-	fprintf(ostream, "eprint: prints expression immediately to stderr.\n");
-	fprintf(ostream, "  Example: %s put -q 'eprint \"The sum of x and y is \".($x+$y)'.\n",
-		MLR_GLOBALS.bargv0);
-	fprintf(ostream, "  Example: %s put -q 'for (k, v in $*) { eprint k . \" => \" . v }'.\n",
-		MLR_GLOBALS.bargv0);
-}
-
-static void mlr_dsl_eprintn_usage(FILE* ostream) {
-	fprintf(ostream, "eprintn: prints expression immediately to stderr, without trailing newline.\n");
-	fprintf(ostream, "  Example: %s put -q 'eprintn \"The sum of x and y is \".($x+$y)'; eprint \"\".\n",
-		MLR_GLOBALS.bargv0);
-}
-
-static void mlr_dsl_stdout_usage(FILE* ostream) {
-	fprintf(ostream, "Used for tee, emit, emitf, emitp, and dump in place of filename to print to stdout.\n");
-}
-
-static void mlr_dsl_stderr_usage(FILE* ostream) {
-	fprintf(ostream, "Used for tee, emit, emitf, emitp, and dump in place of filename to print to stderr.\n");
+	if (streq(keyword, "filter")) {
+		mlr_dsl_filter_keyword_usage(ostream);
+	} else if (streq(keyword, "unset")) {
+		mlr_dsl_unset_keyword_usage(ostream);
+	} else if (streq(keyword, "tee")) {
+		mlr_dsl_tee_keyword_usage(ostream);
+	} else if (streq(keyword, "emit")) {
+		mlr_dsl_emit_keyword_usage(ostream);
+	} else if (streq(keyword, "emitp")) {
+		mlr_dsl_emitp_keyword_usage(ostream);
+	} else if (streq(keyword, "emitf")) {
+		mlr_dsl_emitf_keyword_usage(ostream);
+	} else if (streq(keyword, "dump")) {
+		mlr_dsl_dump_keyword_usage(ostream);
+	} else if (streq(keyword, "edump")) {
+		mlr_dsl_edump_keyword_usage(ostream);
+	} else if (streq(keyword, "print")) {
+		mlr_dsl_print_keyword_usage(ostream);
+	} else if (streq(keyword, "printn")) {
+		mlr_dsl_print_keyword_usage(ostream);
+	} else if (streq(keyword, "eprint")) {
+		mlr_dsl_eprint_keyword_usage(ostream);
+	} else if (streq(keyword, "eprintn")) {
+		mlr_dsl_eprint_keyword_usage(ostream);
+	} else if (streq(keyword, "stdout")) {
+		mlr_dsl_stdout_keyword_usage(ostream);
+	} else if (streq(keyword, "stderr")) {
+		mlr_dsl_stderr_keyword_usage(ostream);
+	} else {
+		fprintf(ostream, "%s: unrecognized keyword \"%s\".\n", MLR_GLOBALS.bargv0, keyword);
+	}
 }
 
 void mlr_dsl_list_all_keywords_raw(FILE* ostream) {
@@ -2620,54 +2587,158 @@ void mlr_dsl_list_all_keywords_raw(FILE* ostream) {
   printf("stderr\n");
 }
 
-// Pass function_name == NULL to get usage for all keywords.
-// Note keywords are defined in dsls/mlr_dsl_lexer.l.
-void mlr_dsl_keyword_usage(FILE* ostream, char* keyword) {
-	if (keyword == NULL) {
-		mlr_dsl_filter_usage(ostream);  fprintf(ostream, "\n");
-		mlr_dsl_unset_usage(ostream);   fprintf(ostream, "\n");
-		mlr_dsl_tee_usage(ostream);     fprintf(ostream, "\n");
-		mlr_dsl_emit_usage(ostream);    fprintf(ostream, "\n");
-		mlr_dsl_emitp_usage(ostream);   fprintf(ostream, "\n");
-		mlr_dsl_emitf_usage(ostream);   fprintf(ostream, "\n");
-		mlr_dsl_dump_usage(ostream);    fprintf(ostream, "\n");
-		mlr_dsl_edump_usage(ostream);   fprintf(ostream, "\n");
-		mlr_dsl_print_usage(ostream);   fprintf(ostream, "\n");
-		mlr_dsl_printn_usage(ostream);  fprintf(ostream, "\n");
-		mlr_dsl_eprint_usage(ostream);  fprintf(ostream, "\n");
-		mlr_dsl_eprintn_usage(ostream); fprintf(ostream, "\n");
-		mlr_dsl_stdout_usage(ostream);  fprintf(ostream, "\n");
-		mlr_dsl_stderr_usage(ostream);
-		return;
-	}
+// ----------------------------------------------------------------
+static void mlr_dsl_filter_keyword_usage(FILE* ostream) {
+    fprintf(ostream,
+		"filter: includes/excludes the record in the output record stream.\n"
+		"\n"
+		"  Example: mlr put 'filter (NR == 2 || $x > 5.4)'.\n"
+		"\n"
+		"  Instead of put with 'filter false' you can simply use put -q.  The following\n"
+		"  uses the input record to accumulate data but only prints the running sum\n"
+		"  without printing the input record:\n"
+		"\n"
+		"  Example: mlr put -q '@running_sum += $x * $y; emit @running_sum'.\n");
+}
 
-	if (streq(keyword, "filter")) {
-		mlr_dsl_filter_usage(ostream);
-	} else if (streq(keyword, "unset")) {
-		mlr_dsl_unset_usage(ostream);
-	} else if (streq(keyword, "emit")) {
-		mlr_dsl_emit_usage(ostream);
-	} else if (streq(keyword, "emitp")) {
-		mlr_dsl_emitp_usage(ostream);
-	} else if (streq(keyword, "emitf")) {
-		mlr_dsl_emitf_usage(ostream);
-	} else if (streq(keyword, "dump")) {
-		mlr_dsl_dump_usage(ostream);
-	} else if (streq(keyword, "edump")) {
-		mlr_dsl_edump_usage(ostream);
-	} else if (streq(keyword, "print")) {
-		mlr_dsl_print_usage(ostream);
-	} else if (streq(keyword, "printn")) {
-		mlr_dsl_print_usage(ostream);
-	} else if (streq(keyword, "eprint")) {
-		mlr_dsl_eprint_usage(ostream);
-	} else if (streq(keyword, "eprintn")) {
-		mlr_dsl_eprint_usage(ostream);
-	} else if (streq(keyword, "stdout")) {
-		mlr_dsl_stdout_usage(ostream);
-	} else if (streq(keyword, "stderr")) {
-		mlr_dsl_stderr_usage(ostream);
-	} else {
-		fprintf(ostream, "%s: unrecognized keyword \"%s\".\n", MLR_GLOBALS.bargv0, keyword);
-	}
+static void mlr_dsl_unset_keyword_usage(FILE* ostream) {
+    fprintf(ostream,
+		"unset: clears field(s) from the current record, or an out-of-stream variable.\n"
+		"\n"
+		"  Example: mlr put 'unset $x'\n"
+		"  Example: mlr put 'unset $*'\n"
+		"  Example: mlr put 'for (k, v in $*) { if (k =~ \"a.*\") { unset $[k] } }'\n"
+		"  Example: mlr put '...; unset @sums'\n"
+		"  Example: mlr put '...; unset @sums[\"green\"]'\n"
+		"  Example: mlr put '...; unset @*'\n");
+}
+
+static void mlr_dsl_tee_keyword_usage(FILE* ostream) {
+    fprintf(ostream,
+		"tee: prints the current record to specified file.\n"
+		"  This is an immediate print to the specified file (except for pprint format\n"
+		"  which of course waits until the end of the input stream to format all output).\n"
+		"  The > and >> are for write and append, as in the shell, but (as with awk) the\n"
+		"  file-overwrite for > is on first write, not per record. The | is for pipe to a\n"
+		"  process which will process the data. There will be one subordinate process for\n"
+		"  each distinct value of the piped-to command.\n"
+		"\n"
+		"  Example: mlr put 'tee >  \"/tmp/data-\".$a, $*'\n"
+		"  Example: mlr put 'tee >> \"/tmp/data-\".$a.$b, $*'\n"
+		"  Example: mlr put -q 'tee | \"tr \[a-z\\] \[A-Z\\]\", $*'\n"
+		"  Example: mlr put -q 'tee | \"tr \[a-z\\] \[A-Z\\] > /tmp/data-\".$a, $*'\n");
+}
+
+static void mlr_dsl_emit_keyword_usage(FILE* ostream) {
+    fprintf(ostream,
+		"emit: inserts an out-of-stream variable into the output record stream. Hashmap\n"
+		"  indices present in the data but not slotted by emit arguments are not output.\n"
+		"\n"
+		"  With >, >>, or |, the data do not become part of the output record stream but\n"
+		"  are instead redirected.  The > and >> are for write and append, as in the\n"
+		"  shell, but (as with awk) the file-overwrite for > is on first write, not per\n"
+		"  record. The | is for pipe to a process which will process the data. There will\n"
+		"  be one subordinate process for each distinct value of the piped-to command.\n"
+		"\n"
+		"  Example: mlr put '... ; emit @sums'\n"
+		"  Example: mlr put '... ; emit @sums, \"index1\", \"index2\"'\n"
+		"  Example: mlr put '... ; emit @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr put '... ; emit >  \"mytap.dat\", @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr put '... ; emit >> \"mytap.dat\", @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr put '... ; emit | \"grep somepattern\", @*, \"index1\", \"index2\"'\n"
+		"\n"
+		"  Please see http://johnkerl.org/miller/doc for more information.\n");
+}
+
+static void mlr_dsl_emitp_keyword_usage(FILE* ostream) {
+    fprintf(ostream,
+		"emitp: inserts an out-of-stream variable into the output record stream.\n"
+		"  Hashmap indices present in the data but not slotted by emitp arguments are\n"
+		"  output concatenated with \":\".\n"
+		"\n"
+		"  With >, >>, or |, the data do not become part of the output record stream but\n"
+		"  are instead redirected.  The > and >> are for write and append, as in the\n"
+		"  shell, but (as with awk) the file-overwrite for > is on first write, not per\n"
+		"  record. The | is for pipe to a process which will process the data. There will\n"
+		"  be one subordinate process for each distinct value of the piped-to command.\n"
+		"\n"
+		"  Example: mlr put '... ; emitp @sums'\n"
+		"  Example: mlr put '... ; emitp @sums, \"index1\", \"index2\"'\n"
+		"  Example: mlr put '... ; emitp @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr put '... ; emitp >  \"mytap.dat\", @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr put '... ; emitp >> \"mytap.dat\", @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr put '... ; emitp | \"grep somepattern\", @*, \"index1\", \"index2\"'\n"
+		"\n"
+		"  Please see http://johnkerl.org/miller/doc for more information.\n");
+}
+
+static void mlr_dsl_emitf_keyword_usage(FILE* ostream) {
+    fprintf(ostream,
+		"emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the\n"
+		"  output record stream.\n"
+		"\n"
+		"  With >, >>, or |, the data do not become part of the output record stream but\n"
+		"  are instead redirected.  The > and >> are for write and append, as in the\n"
+		"  shell, but (as with awk) the file-overwrite for > is on first write, not per\n"
+		"  record. The | is for pipe to a process which will process the data. There will\n"
+		"  be one subordinate process for each distinct value of the piped-to command.\n"
+		"\n"
+		"  Example: mlr put '... ; emitf @a'\n"
+		"  Example: mlr put '... ; emitf @a, @b, @c'\n"
+		"  Example: mlr put '... ; emitf > \"mytap.dat\", @a, @b, @c'\n"
+		"  Example: mlr put '... ; emitf >> \"mytap.dat\", @a, @b, @c'\n"
+		"  Example: mlr put '... ; emitf | \"grep somepattern\", @a, @b, @c'\n"
+		"  Example: mlr put '... ; emitf | \"grep somepattern > mytap.dat\", @a, @b, @c'\n"
+		"\n"
+		"  Please see http://johnkerl.org/miller/doc for more information.\n");
+}
+
+static void mlr_dsl_dump_keyword_usage(FILE* ostream) {
+    fprintf(ostream,
+		"dump: prints all currently defined out-of-stream variables immediately\n"
+		"  to stdout as JSON.\n");
+}
+
+static void mlr_dsl_edump_keyword_usage(FILE* ostream) {
+    fprintf(ostream,
+		"edump: prints all currently defined out-of-stream variables immediately\n"
+		"  to stderr as JSON.\n");
+}
+
+static void mlr_dsl_print_keyword_usage(FILE* ostream) {
+    fprintf(ostream,
+		"print: prints expression immediately to stdout.\n"
+		"  Example: mlr put -q 'print \"The sum of x and y is \".($x+$y)'.\n"
+		"  Example: mlr put -q 'for (k, v in $*) { print k . \" => \" . v }'.\n");
+}
+
+static void mlr_dsl_printn_keyword_usage(FILE* ostream) {
+    fprintf(ostream,
+		"printn: prints expression immediately to stdout, without trailing newline.\n"
+		"  Example: mlr put -q 'printn \"The sum of x and y is \".($x+$y); print \"\"'.\n");
+}
+
+static void mlr_dsl_eprint_keyword_usage(FILE* ostream) {
+    fprintf(ostream,
+		"eprint: prints expression immediately to stderr.\n"
+		"  Example: mlr put -q 'eprint \"The sum of x and y is \".($x+$y)'.\n"
+		"  Example: mlr put -q 'for (k, v in $*) { eprint k . \" => \" . v }'.\n");
+}
+
+static void mlr_dsl_eprintn_keyword_usage(FILE* ostream) {
+    fprintf(ostream,
+		"eprintn: prints expression immediately to stderr, without trailing newline.\n"
+		"  Example: mlr put -q 'eprintn \"The sum of x and y is \".($x+$y)'; eprint \"\".\n");
+}
+
+static void mlr_dsl_stdout_keyword_usage(FILE* ostream) {
+    fprintf(ostream,
+		"stdout: Used for tee, emit, emitf, emitp, and dump in place of filename to\n"
+		"  print to standard output.\n");
+}
+
+static void mlr_dsl_stderr_keyword_usage(FILE* ostream) {
+    fprintf(ostream,
+		"stderr: Used for tee, emit, emitf, emitp, and dump in place of filename to\n"
+		"  print to standard error.\n");
 }

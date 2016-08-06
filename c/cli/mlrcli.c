@@ -731,7 +731,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--list-all-verbs") || streq(argv[argi], "-l")) {
 			list_all_verbs(stdout, "");
 			exit(0);
-		} else if (streq(argv[argi], "--list-all-verbs-raw")) {
+		} else if (streq(argv[argi], "--list-all-verbs-raw") || streq(argv[argi], "-L")) {
 			list_all_verbs_raw(stdout);
 			exit(0);
 

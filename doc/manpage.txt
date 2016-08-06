@@ -1330,15 +1330,19 @@ FUNCTIONS FOR FILTER/PUT
 
 KEYWORDS FOR PUT
    filter
-       filter: includes/excludes the record in the output record
-	 stream.
+       filter: includes/excludes the record in the output record stream.
+
 	 Example: mlr put 'filter (NR == 2 || $x > 5.4)'.
+
 	 Instead of put with 'filter false' you can simply use put -q.	The following
-	 uses the input record to accumulate data but only prints the running sum:
-	 mlr put -q '@running_sum += $x * $y; emit @running_sum'.
+	 uses the input record to accumulate data but only prints the running sum
+	 without printing the input record:
+
+	 Example: mlr put -q '@running_sum += $x * $y; emit @running_sum'.
 
    unset
        unset: clears field(s) from the current record, or an out-of-stream variable.
+
 	 Example: mlr put 'unset $x'
 	 Example: mlr put 'unset $*'
 	 Example: mlr put 'for (k, v in $*) { if (k =~ "a.*") { unset $[k] } }'
@@ -1347,30 +1351,75 @@ KEYWORDS FOR PUT
 	 Example: mlr put '...; unset @*'
 
    tee
-       mlr: unrecognized keyword "tee".
+       tee: prints the current record to specified file.
+	 This is an immediate print to the specified file (except for pprint format
+	 which of course waits until the end of the input stream to format all output).
+	 The > and >> are for write and append, as in the shell, but (as with awk) the
+	 file-overwrite for > is on first write, not per record. The | is for pipe to a
+	 process which will process the data. There will be one subordinate process for
+	 each distinct value of the piped-to command.
+
+	 Example: mlr put 'tee >  "/tmp/data-".$a, $*'
+	 Example: mlr put 'tee >> "/tmp/data-".$a.$b, $*'
+	 Example: mlr put -q 'tee | "tr [a-z\] [A-Z\]", $*'
+	 Example: mlr put -q 'tee | "tr [a-z\] [A-Z\] > /tmp/data-".$a, $*'
 
    emit
        emit: inserts an out-of-stream variable into the output record stream. Hashmap
 	 indices present in the data but not slotted by emit arguments are not output.
+
+	 With >, >>, or |, the data do not become part of the output record stream but
+	 are instead redirected.  The > and >> are for write and append, as in the
+	 shell, but (as with awk) the file-overwrite for > is on first write, not per
+	 record. The | is for pipe to a process which will process the data. There will
+	 be one subordinate process for each distinct value of the piped-to command.
+
 	 Example: mlr put '... ; emit @sums'
 	 Example: mlr put '... ; emit @sums, "index1", "index2"'
 	 Example: mlr put '... ; emit @*, "index1", "index2"'
+	 Example: mlr put '... ; emit >  "mytap.dat", @*, "index1", "index2"'
+	 Example: mlr put '... ; emit >> "mytap.dat", @*, "index1", "index2"'
+	 Example: mlr put '... ; emit | "grep somepattern", @*, "index1", "index2"'
+
 	 Please see http://johnkerl.org/miller/doc for more information.
 
    emitp
-       emitp: inserts an out-of-stream variable into the output record stream. Hashmap
-	 indices present in the data but not slotted by emitp arguments are output
-	 concatenated with ":".
+       emitp: inserts an out-of-stream variable into the output record stream.
+	 Hashmap indices present in the data but not slotted by emitp arguments are
+	 output concatenated with ":".
+
+	 With >, >>, or |, the data do not become part of the output record stream but
+	 are instead redirected.  The > and >> are for write and append, as in the
+	 shell, but (as with awk) the file-overwrite for > is on first write, not per
+	 record. The | is for pipe to a process which will process the data. There will
+	 be one subordinate process for each distinct value of the piped-to command.
+
 	 Example: mlr put '... ; emitp @sums'
 	 Example: mlr put '... ; emitp @sums, "index1", "index2"'
 	 Example: mlr put '... ; emitp @*, "index1", "index2"'
+	 Example: mlr put '... ; emitp >  "mytap.dat", @*, "index1", "index2"'
+	 Example: mlr put '... ; emitp >> "mytap.dat", @*, "index1", "index2"'
+	 Example: mlr put '... ; emitp | "grep somepattern", @*, "index1", "index2"'
+
 	 Please see http://johnkerl.org/miller/doc for more information.
 
    emitf
        emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
 	 output record stream.
-	 Example: mlr put '... ; emit @a'
-	 Example: mlr put '... ; emit @a, @b, @c'
+
+	 With >, >>, or |, the data do not become part of the output record stream but
+	 are instead redirected.  The > and >> are for write and append, as in the
+	 shell, but (as with awk) the file-overwrite for > is on first write, not per
+	 record. The | is for pipe to a process which will process the data. There will
+	 be one subordinate process for each distinct value of the piped-to command.
+
+	 Example: mlr put '... ; emitf @a'
+	 Example: mlr put '... ; emitf @a, @b, @c'
+	 Example: mlr put '... ; emitf > "mytap.dat", @a, @b, @c'
+	 Example: mlr put '... ; emitf >> "mytap.dat", @a, @b, @c'
+	 Example: mlr put '... ; emitf | "grep somepattern", @a, @b, @c'
+	 Example: mlr put '... ; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
+
 	 Please see http://johnkerl.org/miller/doc for more information.
 
    dump
@@ -1402,10 +1451,12 @@ KEYWORDS FOR PUT
 	 Example: mlr put -q 'for (k, v in $*) { eprint k . " => " . v }'.
 
    stdout
-       Used for tee, emit, emitf, emitp, and dump in place of filename to print to stdout.
+       stdout: Used for tee, emit, emitf, emitp, and dump in place of filename to
+	 print to standard output.
 
    stderr
-       Used for tee, emit, emitf, emitp, and dump in place of filename to print to stderr.
+       stderr: Used for tee, emit, emitf, emitp, and dump in place of filename to
+	 print to standard error.
 
 AUTHOR
        Miller is written by John Kerl <kerl.john.r@gmail.com>.
