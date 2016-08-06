@@ -2199,6 +2199,7 @@ static void handle_emit_all_to_stdfp(
 	// xxx handle better, maybe in a class. the opts aren't complete at alloc time so we need to handle them here.
 	if (pnode->psingle_lrec_writer == NULL) {
 		cli_opts_t* popts = MLR_GLOBALS.popts;
+		// xxx bag up as popts per se 1st.
 		pnode->psingle_lrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
 			popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
 			popts->right_justify_xtab_value, popts->json_flatten_separator, popts->quote_json_values_always,
@@ -2220,6 +2221,7 @@ static void handle_emit_all_to_stdfp(
 	}
 	sllmv_free(pmvnames);
 
+	// xxx make method
 	while (poutrecs->phead != NULL) {
 		lrec_t* poutrec = sllv_pop(poutrecs);
 		pnode->psingle_lrec_writer->pprocess_func(pnode->stdfp, poutrec, pnode->psingle_lrec_writer->pvstate);

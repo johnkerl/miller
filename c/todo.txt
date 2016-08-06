@@ -1,11 +1,7 @@
 ================================================================
 BUGFIXES
 
-*
-  mlr --from myfile.dat put '@v[NR][NR]=$* ; emit > stderr, @*, "index1", "index2"'
-  mlr: internal coding error detected in file mapping/rval_expr_evaluators.c at line 66.
-
-* need to ignore subproc abend ?!?
+* need to ignore subproc abend (e.g. grep nonesuch) ?!?
 
   mlr --from myfile.dat put '@v[NR][NR]=$*; emit | "grep somepattern", @*, "index1", "index2"'
   ...
