@@ -5,6 +5,8 @@
 #include "../containers/mlr_dsl_ast.h"
 // http://flex.sourceforge.net/manual/Extra-Data.html
 
+// NOTE: any new keywords defined here should also be documented
+// in mapping/mlr_dsl_cst.c's mlr_dsl_keyword_usage() et al.
 %}
 
 %option reentrant
@@ -30,7 +32,6 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_SREC_ASSIGNMENT);
 	return MD_TOKEN_ASSIGN;
 }
-
 "filter" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FILTER);
 	return MD_TOKEN_FILTER;

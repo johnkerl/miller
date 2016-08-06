@@ -2620,7 +2620,8 @@ void mlr_dsl_list_all_keywords_raw(FILE* ostream) {
   printf("stderr\n");
 }
 
-// Pass function_name == NULL to get usage for all functions.
+// Pass function_name == NULL to get usage for all keywords.
+// Note keywords are defined in dsls/mlr_dsl_lexer.l.
 void mlr_dsl_keyword_usage(FILE* ostream, char* keyword) {
 	if (keyword == NULL) {
 		mlr_dsl_filter_usage(ostream);  fprintf(ostream, "\n");
