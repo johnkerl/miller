@@ -2,11 +2,10 @@
 BUGFIXES
 
 *
-  mlr --from myfile.dat put 'tee >  stderr, $*'
-  mlr: internal coding error detected in file mapping/rval_expr_evaluators.c at line 66.
-
   mlr --from myfile.dat put '@v[NR][NR]=$* ; emit > stderr, @*, "index1", "index2"'
   mlr: internal coding error detected in file mapping/rval_expr_evaluators.c at line 66.
+
+* need to ignore subproc abend ?!?
 
   mlr --from myfile.dat put '@v[NR][NR]=$*; emit | "grep somepattern", @*, "index1", "index2"'
   ...
@@ -39,6 +38,9 @@ COMMON:
 ~ lrec_reader/writer take sub-bagged cliopts pstructs
 ~ put/tee --oxxx flags overlays, w/ substruct data & federated substruct fcns
 
+! xxxes
+! valgrinds
+
 COOKBOOK:
 * mlr --from ../data/big.dkvp put -q 'tee > $a.$b.".txt", $*'
   wc -l ??????.txt
@@ -52,12 +54,12 @@ COOKBOOK:
 * asv et al.
 
 awk manpage:
-> The  print  statement prints its arguments on the standard output (or on a file if >file or >>file is
+> The print statement prints its arguments on the standard output (or on a file if >file or >>file is
 > present or on a pipe if |cmd is present), separated by the current output field separator, and termi-
-> nated  by  the  output  record separator.  file and cmd may be literal names or parenthesized expres-
-> sions; identical string values in different statements denote the same open file.  The printf  state-
-> ment  formats  its  expression  list  according to the format (see printf(3)).  The built-in function
-> close(expr) closes the file or pipe expr.  The built-in function fflush(expr)  flushes  any  buffered
+> nated by the output record separator. file and cmd may be literal names or parenthesized expres-
+> sions; identical string values in different statements denote the same open file. The printf state-
+> ment formats its expression list according to the format (see printf(3)). The built-in function
+> close(expr) closes the file or pipe expr. The built-in function fflush(expr) flushes any buffered
 > output for the file or pipe expr.
 
 ----------------------------------------------------------------
@@ -67,7 +69,6 @@ FOR 4.4.0:
   o xxxes
   o valgrinds
   o check mlh's
-  o fix left_align_pprint -> cli_opts_t
   o also sub-bag cli_opts by in/out/etc
 
 * tee and put print/dump/tee/emit >/>>/|; latter mention gzip et al.

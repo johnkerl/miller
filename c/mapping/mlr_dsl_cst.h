@@ -130,6 +130,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 	rval_evaluator_t* poutput_filename_evaluator;
 	file_output_mode_t file_output_mode;
 	multi_out_t* pmulti_out; // print-to-file and dump-to-file
+	lrec_writer_t* psingle_lrec_writer; // emit/tee to stdout/stderr
 	multi_lrec_writer_t* pmulti_lrec_writer; // emit-to-file
 
 	// Assigning full srec from oosvar:
