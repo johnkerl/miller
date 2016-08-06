@@ -23,8 +23,9 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 COMMON:
+* mlr -k|grep mlr|sed 's/Example: //' | sh 1>1 2>2
 ! flesh out ...'s in mlr -k's
-? print/dump end with OFS !
+? print/dump end with OFS ?
 ! clean up all mlr -k's
 ! --oflags note to mlr -k's
 ! stderr UTs !

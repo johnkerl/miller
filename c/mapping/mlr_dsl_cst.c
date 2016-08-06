@@ -85,6 +85,7 @@ static void                     handle_tee_to_stdfp(mlr_dsl_cst_statement_t* s, 
 static void                      handle_tee_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 
 static void                            handle_emitf(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                   handle_emitf_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                    handle_emitf_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_emitf_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* poutrecs);
 
@@ -779,10 +780,17 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_
 	}
 
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren == NULL
+		? NULL
+		: poutput_node->pchildren->phead == NULL
+		? NULL
+		: poutput_node->pchildren->phead->pvvalue;
 	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
 		pstatement->pnode_handler = handle_emitf;
+	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
+		pstatement->pnode_handler = handle_emitf_to_stdfp;
+		pstatement->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
 	} else {
-		mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
 		pstatement->file_output_mode =
@@ -1907,6 +1915,39 @@ static void handle_emitf(
 	handle_emitf_common(pnode, pvars, pcst_outputs->poutrecs);
 }
 
+static void handle_emitf_to_stdfp(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	// xxx handle better, maybe in a class. the opts aren't complete at alloc time so we need to handle them here.
+	if (pnode->psingle_lrec_writer == NULL) {
+		cli_opts_t* popts = MLR_GLOBALS.popts;
+		pnode->psingle_lrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
+			popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
+			popts->right_justify_xtab_value, popts->json_flatten_separator, popts->quote_json_values_always,
+			popts->stack_json_output_vertically, popts->wrap_json_output_in_outer_list);
+		if (pnode->psingle_lrec_writer == NULL) {
+			fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
+				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+			exit(1);
+		}
+	}
+
+	sllv_t* poutrecs = sllv_alloc();
+
+	handle_emitf_common(pnode, pvars, poutrecs);
+
+	// xxx make method
+	while (poutrecs->phead != NULL) {
+		lrec_t* poutrec = sllv_pop(poutrecs);
+		pnode->psingle_lrec_writer->pprocess_func(pnode->stdfp, poutrec, pnode->psingle_lrec_writer->pvstate);
+		if (pcst_outputs->flush_every_record)
+			fflush(pnode->stdfp);
+	}
+	sllv_free(poutrecs);
+}
+
 static void handle_emitf_to_file(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
@@ -2739,25 +2780,25 @@ static void mlr_dsl_filter_keyword_usage(FILE* ostream) {
     fprintf(ostream,
 		"filter: includes/excludes the record in the output record stream.\n"
 		"\n"
-		"  Example: mlr --from myfile.dat put 'filter (NR == 2 || $x > 5.4)'\n"
+		"  Example: mlr --from f.dat put 'filter (NR == 2 || $x > 5.4)'\n"
 		"\n"
 		"  Instead of put with 'filter false' you can simply use put -q.  The following\n"
 		"  uses the input record to accumulate data but only prints the running sum\n"
 		"  without printing the input record:\n"
 		"\n"
-		"  Example: mlr --from myfile.dat put -q '@running_sum += $x * $y; emit @running_sum'\n");
+		"  Example: mlr --from f.dat put -q '@running_sum += $x * $y; emit @running_sum'\n");
 }
 
 static void mlr_dsl_unset_keyword_usage(FILE* ostream) {
     fprintf(ostream,
 		"unset: clears field(s) from the current record, or an out-of-stream variable.\n"
 		"\n"
-		"  Example: mlr --from myfile.dat put 'unset $x'\n"
-		"  Example: mlr --from myfile.dat put 'unset $*'\n"
-		"  Example: mlr --from myfile.dat put 'for (k, v in $*) { if (k =~ \"a.*\") { unset $[k] } }'\n"
-		"  Example: mlr --from myfile.dat put '...; unset @sums'\n"
-		"  Example: mlr --from myfile.dat put '...; unset @sums[\"green\"]'\n"
-		"  Example: mlr --from myfile.dat put '...; unset @*'\n");
+		"  Example: mlr --from f.dat put 'unset $x'\n"
+		"  Example: mlr --from f.dat put 'unset $*'\n"
+		"  Example: mlr --from f.dat put 'for (k, v in $*) { if (k =~ \"a.*\") { unset $[k] } }'\n"
+		"  Example: mlr --from f.dat put '...; unset @sums'\n"
+		"  Example: mlr --from f.dat put '...; unset @sums[\"green\"]'\n"
+		"  Example: mlr --from f.dat put '...; unset @*'\n");
 }
 
 static void mlr_dsl_tee_keyword_usage(FILE* ostream) {
@@ -2770,11 +2811,11 @@ static void mlr_dsl_tee_keyword_usage(FILE* ostream) {
 		"  process which will process the data. There will be one subordinate process for\n"
 		"  each distinct value of the piped-to command.\n"
 		"\n"
-		"  Example: mlr --from myfile.dat put 'tee >  \"/tmp/data-\".$a, $*'\n"
-		"  Example: mlr --from myfile.dat put 'tee >> \"/tmp/data-\".$a.$b, $*'\n"
-		"  Example: mlr --from myfile.dat put 'tee >  stderr, $*'\n"
-		"  Example: mlr --from myfile.dat put -q 'tee | \"tr \[a-z\\] \[A-Z\\]\", $*'\n"
-		"  Example: mlr --from myfile.dat put -q 'tee | \"tr \[a-z\\] \[A-Z\\] > /tmp/data-\".$a, $*'\n");
+		"  Example: mlr --from f.dat put 'tee >  \"/tmp/data-\".$a, $*'\n"
+		"  Example: mlr --from f.dat put 'tee >> \"/tmp/data-\".$a.$b, $*'\n"
+		"  Example: mlr --from f.dat put 'tee >  stderr, $*'\n"
+		"  Example: mlr --from f.dat put -q 'tee | \"tr \[a-z\\] \[A-Z\\]\", $*'\n"
+		"  Example: mlr --from f.dat put -q 'tee | \"tr \[a-z\\] \[A-Z\\] > /tmp/data-\".$a, $*'\n");
 }
 
 static void mlr_dsl_emit_keyword_usage(FILE* ostream) {
@@ -2788,13 +2829,13 @@ static void mlr_dsl_emit_keyword_usage(FILE* ostream) {
 		"  record. The | is for pipe to a process which will process the data. There will\n"
 		"  be one subordinate process for each distinct value of the piped-to command.\n"
 		"\n"
-		"  Example: mlr --from myfile.dat put '... ; emit @sums'\n"
-		"  Example: mlr --from myfile.dat put '... ; emit @sums, \"index1\", \"index2\"'\n"
-		"  Example: mlr --from myfile.dat put '... ; emit @*, \"index1\", \"index2\"'\n"
-		"  Example: mlr --from myfile.dat put '... ; emit >  \"mytap.dat\", @*, \"index1\", \"index2\"'\n"
-		"  Example: mlr --from myfile.dat put '... ; emit >> \"mytap.dat\", @*, \"index1\", \"index2\"'\n"
-		"  Example: mlr --from myfile.dat put '... ; emit > stderr, @*, \"index1\", \"index2\"'\n"
-		"  Example: mlr --from myfile.dat put '... ; emit | \"grep somepattern\", @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'\n"
+		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, \"index1\", \"index2\"'\n"
+		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >  \"mytap.dat\", @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >> \"mytap.dat\", @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit > stderr, @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | \"grep somepattern\", @*, \"index1\", \"index2\"'\n"
 		"\n"
 		"  Please see http://johnkerl.org/miller/doc for more information.\n");
 }
@@ -2811,13 +2852,13 @@ static void mlr_dsl_emitp_keyword_usage(FILE* ostream) {
 		"  record. The | is for pipe to a process which will process the data. There will\n"
 		"  be one subordinate process for each distinct value of the piped-to command.\n"
 		"\n"
-		"  Example: mlr --from myfile.dat put '... ; emitp @sums'\n"
-		"  Example: mlr --from myfile.dat put '... ; emitp @sums, \"index1\", \"index2\"'\n"
-		"  Example: mlr --from myfile.dat put '... ; emitp @*, \"index1\", \"index2\"'\n"
-		"  Example: mlr --from myfile.dat put '... ; emitp >  \"mytap.dat\", @*, \"index1\", \"index2\"'\n"
-		"  Example: mlr --from myfile.dat put '... ; emitp >> \"mytap.dat\", @*, \"index1\", \"index2\"'\n"
-		"  Example: mlr --from myfile.dat put '... ; emitp > stderr, @*, \"index1\", \"index2\"'\n"
-		"  Example: mlr --from myfile.dat put '... ; emitp | \"grep somepattern\", @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'\n"
+		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, \"index1\", \"index2\"'\n"
+		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >  \"mytap.dat\", @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >> \"mytap.dat\", @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp > stderr, @*, \"index1\", \"index2\"'\n"
+		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | \"grep somepattern\", @*, \"index1\", \"index2\"'\n"
 		"\n"
 		"  Please see http://johnkerl.org/miller/doc for more information.\n");
 }
@@ -2833,13 +2874,13 @@ static void mlr_dsl_emitf_keyword_usage(FILE* ostream) {
 		"  record. The | is for pipe to a process which will process the data. There will\n"
 		"  be one subordinate process for each distinct value of the piped-to command.\n"
 		"\n"
-		"  Example: mlr --from myfile.dat put '... ; emitf @a'\n"
-		"  Example: mlr --from myfile.dat put '... ; emitf @a, @b, @c'\n"
-		"  Example: mlr --from myfile.dat put '... ; emitf > \"mytap.dat\", @a, @b, @c'\n"
-		"  Example: mlr --from myfile.dat put '... ; emitf >> \"mytap.dat\", @a, @b, @c'\n"
-		"  Example: mlr --from myfile.dat put '... ; emitf > stderr, @a, @b, @c'\n"
-		"  Example: mlr --from myfile.dat put '... ; emitf | \"grep somepattern\", @a, @b, @c'\n"
-		"  Example: mlr --from myfile.dat put '... ; emitf | \"grep somepattern > mytap.dat\", @a, @b, @c'\n"
+		"  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'\n"
+		"  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'\n"
+		"  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > \"mytap.dat\", @a, @b, @c'\n"
+		"  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf >> \"mytap.dat\", @a, @b, @c'\n"
+		"  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > stderr, @a, @b, @c'\n"
+		"  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | \"grep somepattern\", @a, @b, @c'\n"
+		"  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | \"grep somepattern > mytap.dat\", @a, @b, @c'\n"
 		"\n"
 		"  Please see http://johnkerl.org/miller/doc for more information.\n");
 }
@@ -2855,10 +2896,10 @@ static void mlr_dsl_dump_keyword_usage(FILE* ostream) {
 		"  record. The | is for pipe to a process which will process the data. There will\n"
 		"  be one subordinate process for each distinct value of the piped-to command.\n"
 		"\n"
-		"  Example: mlr --from myfile.dat put -q '@v[NR]=$*; end { dump }'\n"
-		"  Example: mlr --from myfile.dat put -q '@v[NR]=$*; end { dump >  \"mytap.dat\"}'\n"
-		"  Example: mlr --from myfile.dat put -q '@v[NR]=$*; end { dump >> \"mytap.dat\"}'\n"
-		"  Example: mlr --from myfile.dat put -q '@v[NR]=$*; end { dump | \"jq .[]\"}'\n");
+		"  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump }'\n"
+		"  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >  \"mytap.dat\"}'\n"
+		"  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >> \"mytap.dat\"}'\n"
+		"  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump | \"jq .[]\"}'\n");
 }
 
 static void mlr_dsl_edump_keyword_usage(FILE* ostream) {
@@ -2866,35 +2907,35 @@ static void mlr_dsl_edump_keyword_usage(FILE* ostream) {
 		"edump: prints all currently defined out-of-stream variables immediately\n"
 		"  to stderr as JSON.\n"
 		"\n"
-		"  Example: mlr --from myfile.dat put -q '@v[NR]=$*; end { edump }'\n");
+		"  Example: mlr --from f.dat put -q '@v[NR]=$*; end { edump }'\n");
 }
 
 static void mlr_dsl_print_keyword_usage(FILE* ostream) {
     fprintf(ostream,
 		"print: prints expression immediately to stdout.\n"
-		"  Example: mlr --from myfile.dat put -q 'print \"The sum of x and y is \".($x+$y)'\n"
-		"  Example: mlr --from myfile.dat put -q 'for (k, v in $*) { print k . \" => \" . v }'\n"
-		"  Example: mlr --from myfile.dat put  '(NR %% 1000 == 0) { print > stderr, \"Checkpoint \".NR}'\n");
+		"  Example: mlr --from f.dat put -q 'print \"The sum of x and y is \".($x+$y)'\n"
+		"  Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . \" => \" . v }'\n"
+		"  Example: mlr --from f.dat put  '(NR %% 1000 == 0) { print > stderr, \"Checkpoint \".NR}'\n");
 }
 
 static void mlr_dsl_printn_keyword_usage(FILE* ostream) {
     fprintf(ostream,
 		"printn: prints expression immediately to stdout, without trailing newline.\n"
-		"  Example: mlr --from myfile.dat put -q 'printn \".\"; end { print \"\" }'\n");
+		"  Example: mlr --from f.dat put -q 'printn \".\"; end { print \"\" }'\n");
 }
 
 static void mlr_dsl_eprint_keyword_usage(FILE* ostream) {
     fprintf(ostream,
 		"eprint: prints expression immediately to stderr.\n"
-		"  Example: mlr --from myfile.dat put -q 'eprint \"The sum of x and y is \".($x+$y)'\n"
-		"  Example: mlr --from myfile.dat put -q 'for (k, v in $*) { eprint k . \" => \" . v }'\n"
-		"  Example: mlr --from myfile.dat put  '(NR %% 1000 == 0) { eprint \"Checkpoint \".NR}'\n");
+		"  Example: mlr --from f.dat put -q 'eprint \"The sum of x and y is \".($x+$y)'\n"
+		"  Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . \" => \" . v }'\n"
+		"  Example: mlr --from f.dat put  '(NR %% 1000 == 0) { eprint \"Checkpoint \".NR}'\n");
 }
 
 static void mlr_dsl_eprintn_keyword_usage(FILE* ostream) {
     fprintf(ostream,
 		"eprintn: prints expression immediately to stderr, without trailing newline.\n"
-		"  Example: mlr --from myfile.dat put -q 'eprintn \"The sum of x and y is \".($x+$y)'; eprint \"\"\n");
+		"  Example: mlr --from f.dat put -q 'eprintn \"The sum of x and y is \".($x+$y); eprint \"\"'\n");
 }
 
 static void mlr_dsl_stdout_keyword_usage(FILE* ostream) {

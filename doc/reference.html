@@ -5394,7 +5394,7 @@ eprint: prints expression immediately to stderr.
   Example: mlr --from myfile.dat put  '(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
 
 eprintn: prints expression immediately to stderr, without trailing newline.
-  Example: mlr --from myfile.dat put -q 'eprintn "The sum of x and y is ".($x+$y)'; eprint ""
+  Example: mlr --from myfile.dat put -q 'eprintn "The sum of x and y is ".($x+$y); eprint ""'
 
 stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
   to print to standard output.
