@@ -28435,6 +28435,22 @@ A:1=PAN,A:2=EKS
 A:1=PAN,A:2=EKS,A:3=WYE
 A:1=PAN,A:2=EKS,A:3=WYE,A:4=EKS
 
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > stdout, @a ./reg_test/input/abixy
+a:1=pan
+a:1=pan,a:2=eks
+a:1=pan,a:2=eks,a:3=wye
+a:1=pan,a:2=eks,a:3=wye,a:4=eks
+
+cat ./output-regtest/emitp1/err1
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > stderr, @a ./reg_test/input/abixy
+
+cat ./output-regtest/emitp1/err2
+a:1=pan
+a:1=pan,a:2=eks
+a:1=pan,a:2=eks,a:3=wye
+a:1=pan,a:2=eks,a:3=wye,a:4=eks
+
 mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > "./output-regtest/emitp2/out.".$a.$b, @a, "NR" ./reg_test/input/abixy
 
 cat ./output-regtest/emitp2/out.ekspan
@@ -28516,6 +28532,34 @@ NR=1,A=PAN
 NR=2,A=EKS
 NR=3,A=WYE
 NR=4,A=EKS
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > stdout, @a, "NR" ./reg_test/input/abixy
+NR=1,a=pan
+NR=1,a=pan
+NR=2,a=eks
+NR=1,a=pan
+NR=2,a=eks
+NR=3,a=wye
+NR=1,a=pan
+NR=2,a=eks
+NR=3,a=wye
+NR=4,a=eks
+
+cat ./output-regtest/emitp2/err1
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > stderr, @a, "NR" ./reg_test/input/abixy
+
+cat ./output-regtest/emitp2/err2
+NR=1,a=pan
+NR=1,a=pan
+NR=2,a=eks
+NR=1,a=pan
+NR=2,a=eks
+NR=3,a=wye
+NR=1,a=pan
+NR=2,a=eks
+NR=3,a=wye
+NR=4,a=eks
 
 mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > "./output-regtest/emitp3/out.".$a.$b, (@a, @b) ./reg_test/input/abixy
 

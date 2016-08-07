@@ -3685,6 +3685,15 @@ run_cat $emitp1/out.wyewye
 
 run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", @a' $indir/abixy
 
+touch $emitp1/err1
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > stdout, @a' $indir/abixy 2> $emitp1/err1
+run_cat $emitp1/err1
+
+touch $emitp1/err2
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > stderr, @a' $indir/abixy 2> $emitp1/err2
+run_cat $emitp1/err2
+
+
 emitp2=$reloutdir/emitp2
 mkdir -p $emitp2
 
@@ -3707,6 +3716,15 @@ run_cat $emitp2/out.panpan
 run_cat $emitp2/out.wyewye
 
 run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", @a, "NR"' $indir/abixy
+
+touch $emitp2/err1
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > stdout, @a, "NR"' $indir/abixy 2> $emitp2/err1
+run_cat $emitp2/err1
+
+touch $emitp2/err2
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > stderr, @a, "NR"' $indir/abixy 2> $emitp2/err2
+run_cat $emitp2/err2
+
 
 emitp3=$reloutdir/emitp3
 mkdir -p $emitp3
