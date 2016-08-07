@@ -30,15 +30,6 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_a
 static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*             alloc_unset(mlr_dsl_ast_node_t* p, int ti, int cf);
 
-static mlr_dsl_cst_statement_t*               alloc_tee(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*             alloc_emitf(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*              alloc_emit(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
-static mlr_dsl_cst_statement_t*       alloc_emit_lashed(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
-static mlr_dsl_cst_statement_t*              alloc_dump(mlr_dsl_ast_node_t* p, int ti, int cf);
-static mlr_dsl_cst_statement_t*             alloc_print(mlr_dsl_ast_node_t* p, int ti, int cf, char* print_terminator);
-
-static file_output_mode_t file_output_mode_from_ast_node_type(mlr_dsl_ast_node_type_t mlr_dsl_ast_node_type);
-
 static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*           alloc_if_head(mlr_dsl_ast_node_t* p, int ti, int cf);
 static mlr_dsl_cst_statement_t*             alloc_while(mlr_dsl_ast_node_t* p, int ti, int cf);
@@ -50,6 +41,14 @@ static mlr_dsl_cst_statement_t*          alloc_continue(mlr_dsl_ast_node_t* p, i
 static mlr_dsl_cst_statement_t*            alloc_filter(mlr_dsl_ast_node_t* p, int ti, int cf);
 
 static mlr_dsl_cst_statement_t*      alloc_bare_boolean(mlr_dsl_ast_node_t* p, int ti, int cf);
+
+static mlr_dsl_cst_statement_t*               alloc_tee(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*             alloc_emitf(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*              alloc_emit(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
+static mlr_dsl_cst_statement_t*       alloc_emit_lashed(mlr_dsl_ast_node_t* p, int ti, int cf, int dfp);
+static mlr_dsl_cst_statement_t*              alloc_dump(mlr_dsl_ast_node_t* p, int ti, int cf);
+static mlr_dsl_cst_statement_t*             alloc_print(mlr_dsl_ast_node_t* p, int ti, int cf, char* print_terminator);
+static file_output_mode_t file_output_mode_from_ast_node_type(mlr_dsl_ast_node_type_t mlr_dsl_ast_node_type);
 
 static mlr_dsl_cst_statement_t* alloc_if_item(
 	mlr_dsl_ast_node_t* pexprnode,
@@ -82,31 +81,6 @@ static void handle_full_srec_from_oosvar_assignment(mlr_dsl_cst_statement_t* s, 
 static void                handle_oosvar_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_unset(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                        handle_unset_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-
-static void                     handle_tee_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                      handle_tee_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-
-static void                            handle_emitf(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                   handle_emitf_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                    handle_emitf_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                     handle_emitf_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* poutrecs);
-
-static void                             handle_emit(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                    handle_emit_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                     handle_emit_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                      handle_emit_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* poutrecs, char* f);
-
-static void                      handle_emit_lashed(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void             handle_emit_lashed_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void              handle_emit_lashed_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void               handle_emit_lashed_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* poutrecs, char* f);
-
-static void                         handle_emit_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                handle_emit_all_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                 handle_emit_all_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                             handle_dump(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                     handle_dump_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                            handle_print(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 
 static void                           handle_filter(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                handle_conditional_block(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -145,6 +119,31 @@ static void handle_unset_vararg_indirect_srec_field_name(
 	mlr_dsl_cst_statement_vararg_t* pvararg,
 	variables_t*                    pvars,
 	cst_outputs_t*                  pcst_outputs);
+
+static void                     handle_tee_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                      handle_tee_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+
+static void                            handle_emitf(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                   handle_emitf_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                    handle_emitf_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                     handle_emitf_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* poutrecs);
+
+static void                             handle_emit(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                    handle_emit_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                     handle_emit_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                      handle_emit_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* poutrecs, char* f);
+
+static void                      handle_emit_lashed(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void             handle_emit_lashed_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void              handle_emit_lashed_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void               handle_emit_lashed_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* poutrecs, char* f);
+
+static void                         handle_emit_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                handle_emit_all_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                 handle_emit_all_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                             handle_dump(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                     handle_dump_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                            handle_print(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 
 static void mlr_dsl_filter_keyword_usage  (FILE* ostream);
 static void mlr_dsl_unset_keyword_usage   (FILE* ostream);
@@ -734,224 +733,6 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_ast_node_t* pnode, int type_
 }
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_tee(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-
-	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
-
-	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstatement->pnode_handler = handle_tee_to_stdfp;
-		pstatement->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
-	} else {
-		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
-			type_inferencing, context_flags);
-		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
-		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
-		pstatement->pmulti_out = multi_out_alloc();
-		pstatement->pnode_handler = handle_tee_to_file;
-	}
-
-	return pstatement;
-}
-
-// ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags) {
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-
-	mlr_dsl_ast_node_t* pnamesnode = pnode->pchildren->phead->pvvalue;
-
-	// Loop over oosvar names to emit in e.g. 'emitf @a, @b, @c'.
-	pstatement->pvarargs = sllv_alloc();
-	for (sllve_t* pe = pnamesnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pwalker = pe->pvvalue;
-		mlr_dsl_ast_node_t* pchild = pwalker->pchildren->phead->pvvalue;
-		// This could be enforced in the lemon parser but it's easier to do it here.
-		sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
-			pchild->text,
-			NULL,
-			rval_evaluator_alloc_from_ast(pwalker, type_inferencing, context_flags),
-			NULL));
-	}
-
-	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
-	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren == NULL
-		? NULL
-		: poutput_node->pchildren->phead == NULL
-		? NULL
-		: poutput_node->pchildren->phead->pvvalue;
-	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
-		pstatement->pnode_handler = handle_emitf;
-	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstatement->pnode_handler = handle_emitf_to_stdfp;
-		pstatement->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
-	} else {
-		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
-			type_inferencing, context_flags);
-		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
-		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
-		pstatement->pnode_handler = handle_emitf_to_file;
-	}
-
-	return pstatement;
-}
-
-// ----------------------------------------------------------------
-// $ mlr -n put -v 'emit @a[2][3], "x", "y", "z"'
-// AST ROOT:
-// text="list", type=statement_list:
-//     text="emit", type=emit:
-//         text="emit", type=emit:
-//             text="oosvar_keylist", type=oosvar_keylist:
-//                 text="a", type=string_literal.
-//                 text="2", type=strnum_literal.
-//                 text="3", type=strnum_literal.
-//             text="emit_namelist", type=emit:
-//                 text="x", type=strnum_literal.
-//                 text="y", type=strnum_literal.
-//                 text="z", type=strnum_literal.
-//         text="stream", type=stream:
-//
-// $ mlr -n put -v 'emit all, "x", "y", "z"'
-// AST ROOT:
-// text="list", type=statement_list:
-//     text="emit", type=emit:
-//         text="emit", type=emit:
-//             text="all", type=all.
-//             text="emit_namelist", type=emit:
-//                 text="x", type=strnum_literal.
-//                 text="y", type=strnum_literal.
-//                 text="z", type=strnum_literal.
-//         text="stream", type=stream:
-
-static mlr_dsl_cst_statement_t* alloc_emit(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags, int do_full_prefixing)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-
-	mlr_dsl_ast_node_t* pemit_node = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
-
-	mlr_dsl_ast_node_t* pkeylist_node = pemit_node->pchildren->phead->pvvalue;
-
-	int output_all = FALSE;
-	// The grammar allows only 'emit all', not 'emit @x, all, $y'.
-	// So if 'all' appears at all, it's the only name.
-	if (pkeylist_node->type == MD_AST_NODE_TYPE_ALL || pkeylist_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
-		output_all = TRUE;
-
-		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
-		if (pemit_node->pchildren->length == 2) {
-			mlr_dsl_ast_node_t* pnamelist_node = pemit_node->pchildren->phead->pnext->pvvalue;
-			for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
-				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-				sllv_append(pemit_oosvar_namelist_evaluators,
-					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
-			}
-		}
-		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
-
-	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
-
-		pstatement->pemit_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
-			type_inferencing, context_flags);
-
-		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
-		if (pemit_node->pchildren->length == 2) {
-			mlr_dsl_ast_node_t* pnamelist_node = pemit_node->pchildren->phead->pnext->pvvalue;
-			for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
-				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-				sllv_append(pemit_oosvar_namelist_evaluators,
-					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
-			}
-		}
-		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
-
-	} else {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
-
-	pstatement->do_full_prefixing = do_full_prefixing;
-	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren == NULL
-		? NULL
-		: poutput_node->pchildren->phead == NULL
-		? NULL
-		: poutput_node->pchildren->phead->pvvalue;
-	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
-		pstatement->pnode_handler = output_all ? handle_emit_all : handle_emit;
-	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstatement->pnode_handler = output_all ? handle_emit_all_to_stdfp : handle_emit_to_stdfp;
-		pstatement->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
-	} else {
-		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
-			type_inferencing, context_flags);
-		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
-		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
-		pstatement->pnode_handler = output_all ? handle_emit_all_to_file : handle_emit_to_file;
-	}
-
-	return pstatement;
-}
-
-// ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags, int do_full_prefixing)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-
-	mlr_dsl_ast_node_t* pemit_node = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
-
-	mlr_dsl_ast_node_t* pkeylists_node = pemit_node->pchildren->phead->pvvalue;
-
-	pstatement->num_emit_keylist_evaluators = pkeylists_node->pchildren->length;
-	pstatement->ppemit_keylist_evaluators = mlr_malloc_or_die(pstatement->num_emit_keylist_evaluators
-		* sizeof(sllv_t*));
-	int i = 0;
-	for (sllve_t* pe = pkeylists_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
-		mlr_dsl_ast_node_t* pkeylist_node = pe->pvvalue;
-		pstatement->ppemit_keylist_evaluators[i] = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
-			type_inferencing, context_flags);
-	}
-
-	sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
-	if (pemit_node->pchildren->length == 2) {
-		mlr_dsl_ast_node_t* pnamelist_node = pemit_node->pchildren->phead->pnext->pvvalue;
-		for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-			sllv_append(pemit_oosvar_namelist_evaluators,
-				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
-		}
-	}
-	pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
-
-	pstatement->do_full_prefixing = do_full_prefixing;
-	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren == NULL
-		? NULL
-		: poutput_node->pchildren->phead == NULL
-		? NULL
-		: poutput_node->pchildren->phead->pvvalue;
-	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
-		pstatement->pnode_handler = handle_emit_lashed;
-	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstatement->pnode_handler = handle_emit_lashed_to_stdfp;
-		pstatement->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
-	} else {
-		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
-			type_inferencing, context_flags);
-		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
-		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
-		pstatement->pnode_handler = handle_emit_lashed_to_file;
-	}
-
-	return pstatement;
-}
-
-// ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_while(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
 {
@@ -1309,6 +1090,235 @@ static mlr_dsl_cst_statement_t* alloc_filter(mlr_dsl_ast_node_t* pnode, int type
 }
 
 // ----------------------------------------------------------------
+static mlr_dsl_cst_statement_t* alloc_bare_boolean(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	pstatement->pnode_handler = handle_bare_boolean;
+	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pnode, type_inferencing, context_flags);
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
+static mlr_dsl_cst_statement_t* alloc_tee(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
+
+	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
+		pstatement->pnode_handler = handle_tee_to_stdfp;
+		pstatement->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
+	} else {
+		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
+			type_inferencing, context_flags);
+		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
+		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
+		pstatement->pmulti_out = multi_out_alloc();
+		pstatement->pnode_handler = handle_tee_to_file;
+	}
+
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
+static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags) {
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	mlr_dsl_ast_node_t* pnamesnode = pnode->pchildren->phead->pvvalue;
+
+	// Loop over oosvar names to emit in e.g. 'emitf @a, @b, @c'.
+	pstatement->pvarargs = sllv_alloc();
+	for (sllve_t* pe = pnamesnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pwalker = pe->pvvalue;
+		mlr_dsl_ast_node_t* pchild = pwalker->pchildren->phead->pvvalue;
+		// This could be enforced in the lemon parser but it's easier to do it here.
+		sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
+			pchild->text,
+			NULL,
+			rval_evaluator_alloc_from_ast(pwalker, type_inferencing, context_flags),
+			NULL));
+	}
+
+	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren == NULL
+		? NULL
+		: poutput_node->pchildren->phead == NULL
+		? NULL
+		: poutput_node->pchildren->phead->pvvalue;
+	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
+		pstatement->pnode_handler = handle_emitf;
+	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
+		pstatement->pnode_handler = handle_emitf_to_stdfp;
+		pstatement->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
+	} else {
+		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
+			type_inferencing, context_flags);
+		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
+		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
+		pstatement->pnode_handler = handle_emitf_to_file;
+	}
+
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
+// $ mlr -n put -v 'emit @a[2][3], "x", "y", "z"'
+// AST ROOT:
+// text="list", type=statement_list:
+//     text="emit", type=emit:
+//         text="emit", type=emit:
+//             text="oosvar_keylist", type=oosvar_keylist:
+//                 text="a", type=string_literal.
+//                 text="2", type=strnum_literal.
+//                 text="3", type=strnum_literal.
+//             text="emit_namelist", type=emit:
+//                 text="x", type=strnum_literal.
+//                 text="y", type=strnum_literal.
+//                 text="z", type=strnum_literal.
+//         text="stream", type=stream:
+//
+// $ mlr -n put -v 'emit all, "x", "y", "z"'
+// AST ROOT:
+// text="list", type=statement_list:
+//     text="emit", type=emit:
+//         text="emit", type=emit:
+//             text="all", type=all.
+//             text="emit_namelist", type=emit:
+//                 text="x", type=strnum_literal.
+//                 text="y", type=strnum_literal.
+//                 text="z", type=strnum_literal.
+//         text="stream", type=stream:
+
+static mlr_dsl_cst_statement_t* alloc_emit(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags, int do_full_prefixing)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	mlr_dsl_ast_node_t* pemit_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
+
+	mlr_dsl_ast_node_t* pkeylist_node = pemit_node->pchildren->phead->pvvalue;
+
+	int output_all = FALSE;
+	// The grammar allows only 'emit all', not 'emit @x, all, $y'.
+	// So if 'all' appears at all, it's the only name.
+	if (pkeylist_node->type == MD_AST_NODE_TYPE_ALL || pkeylist_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
+		output_all = TRUE;
+
+		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
+		if (pemit_node->pchildren->length == 2) {
+			mlr_dsl_ast_node_t* pnamelist_node = pemit_node->pchildren->phead->pnext->pvvalue;
+			for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+				sllv_append(pemit_oosvar_namelist_evaluators,
+					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+			}
+		}
+		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+
+	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
+
+		pstatement->pemit_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
+			type_inferencing, context_flags);
+
+		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
+		if (pemit_node->pchildren->length == 2) {
+			mlr_dsl_ast_node_t* pnamelist_node = pemit_node->pchildren->phead->pnext->pvvalue;
+			for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+				sllv_append(pemit_oosvar_namelist_evaluators,
+					rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+			}
+		}
+		pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+
+	} else {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+
+	pstatement->do_full_prefixing = do_full_prefixing;
+	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren == NULL
+		? NULL
+		: poutput_node->pchildren->phead == NULL
+		? NULL
+		: poutput_node->pchildren->phead->pvvalue;
+	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
+		pstatement->pnode_handler = output_all ? handle_emit_all : handle_emit;
+	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
+		pstatement->pnode_handler = output_all ? handle_emit_all_to_stdfp : handle_emit_to_stdfp;
+		pstatement->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
+	} else {
+		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
+			type_inferencing, context_flags);
+		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
+		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
+		pstatement->pnode_handler = output_all ? handle_emit_all_to_file : handle_emit_to_file;
+	}
+
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
+static mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_ast_node_t* pnode, int type_inferencing,
+	int context_flags, int do_full_prefixing)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	mlr_dsl_ast_node_t* pemit_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
+
+	mlr_dsl_ast_node_t* pkeylists_node = pemit_node->pchildren->phead->pvvalue;
+
+	pstatement->num_emit_keylist_evaluators = pkeylists_node->pchildren->length;
+	pstatement->ppemit_keylist_evaluators = mlr_malloc_or_die(pstatement->num_emit_keylist_evaluators
+		* sizeof(sllv_t*));
+	int i = 0;
+	for (sllve_t* pe = pkeylists_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+		mlr_dsl_ast_node_t* pkeylist_node = pe->pvvalue;
+		pstatement->ppemit_keylist_evaluators[i] = allocate_keylist_evaluators_from_oosvar_node(pkeylist_node,
+			type_inferencing, context_flags);
+	}
+
+	sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
+	if (pemit_node->pchildren->length == 2) {
+		mlr_dsl_ast_node_t* pnamelist_node = pemit_node->pchildren->phead->pnext->pvvalue;
+		for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+			sllv_append(pemit_oosvar_namelist_evaluators,
+				rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+		}
+	}
+	pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+
+	pstatement->do_full_prefixing = do_full_prefixing;
+	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren == NULL
+		? NULL
+		: poutput_node->pchildren->phead == NULL
+		? NULL
+		: poutput_node->pchildren->phead->pvvalue;
+	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
+		pstatement->pnode_handler = handle_emit_lashed;
+	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
+		pstatement->pnode_handler = handle_emit_lashed_to_stdfp;
+		pstatement->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
+	} else {
+		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
+			type_inferencing, context_flags);
+		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
+		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
+		pstatement->pnode_handler = handle_emit_lashed_to_file;
+	}
+
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_ast_node_t* pnode, int type_inferencing,
 	int context_flags)
 {
@@ -1378,17 +1388,6 @@ static file_output_mode_t file_output_mode_from_ast_node_type(mlr_dsl_ast_node_t
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
-}
-
-// ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_bare_boolean(mlr_dsl_ast_node_t* pnode, int type_inferencing,
-	int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-
-	pstatement->pnode_handler = handle_bare_boolean;
-	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pnode, type_inferencing, context_flags);
-	return pstatement;
 }
 
 // ----------------------------------------------------------------
@@ -1821,6 +1820,277 @@ static void handle_unset_all(
 }
 
 // ----------------------------------------------------------------
+static void handle_filter(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
+
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	if (mv_is_non_null(&val)) {
+		mv_set_boolean_strict(&val);
+		*pcst_outputs->pshould_emit_rec = val.u.boolv;
+	} else {
+		*pcst_outputs->pshould_emit_rec = FALSE;
+	}
+}
+
+// ----------------------------------------------------------------
+static void handle_conditional_block(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
+
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	if (mv_is_non_null(&val)) {
+		mv_set_boolean_strict(&val);
+		if (val.u.boolv) {
+			pnode->pblock_handler(pnode->pblock_statements, pvars, pcst_outputs);
+		}
+	}
+}
+
+// ----------------------------------------------------------------
+static void handle_if_head(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	for (sllve_t* pe = pnode->pif_chain_statements->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_cst_statement_t* pitemnode = pe->pvvalue;
+		rval_evaluator_t* prhs_evaluator = pitemnode->prhs_evaluator;
+
+		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+		if (mv_is_non_null(&val)) {
+			mv_set_boolean_strict(&val);
+			if (val.u.boolv) {
+				pnode->pblock_handler(pitemnode->pblock_statements, pvars, pcst_outputs);
+				break;
+			}
+		}
+	}
+}
+
+// ----------------------------------------------------------------
+static void handle_while(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
+
+	loop_stack_push(pvars->ploop_stack);
+	while (TRUE) {
+		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+		if (mv_is_non_null(&val)) {
+			mv_set_boolean_strict(&val);
+			if (val.u.boolv) {
+				pnode->pblock_handler(pnode->pblock_statements, pvars, pcst_outputs);
+				if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
+					loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
+					break;
+				} else if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
+					loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
+				}
+			} else {
+				break;
+			}
+		} else {
+			break;
+		}
+	}
+	loop_stack_pop(pvars->ploop_stack);
+}
+
+// ----------------------------------------------------------------
+static void handle_do_while(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
+
+	loop_stack_push(pvars->ploop_stack);
+	while (TRUE) {
+		pnode->pblock_handler(pnode->pblock_statements, pvars, pcst_outputs);
+		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
+			loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
+			break;
+		} else if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
+			loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
+			// don't skip the boolean test
+		}
+
+		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+		if (mv_is_non_null(&val)) {
+			mv_set_boolean_strict(&val);
+			if (!val.u.boolv) {
+				break;
+			}
+		} else {
+			break;
+		}
+	}
+	loop_stack_pop(pvars->ploop_stack);
+}
+
+// ----------------------------------------------------------------
+static void handle_for_srec(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	bind_stack_push(pvars->pbind_stack, pnode->pbound_variables);
+	loop_stack_push(pvars->ploop_stack);
+	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
+	lrec_t* pcopyrec = lrec_copy(pvars->pinrec);
+	lhmsmv_t* pcopyoverlay = lhmsmv_copy(pvars->ptyped_overlay);
+
+	for (lrece_t* pe = pcopyrec->phead; pe != NULL; pe = pe->pnext) {
+
+		mv_t mvval = pnode->ptype_infererenced_srec_field_getter(pe, pcopyoverlay);
+
+		mv_t mvkey = mv_from_string_no_free(pe->key);
+		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
+		lhmsmv_put(pnode->pbound_variables, pnode->for_v_name, &mvval, FREE_ENTRY_VALUE);
+
+		pnode->pblock_handler(pnode->pblock_statements, pvars, pcst_outputs);
+		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
+			loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
+			break;
+		} else if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
+			loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
+		}
+	}
+	lhmsmv_free(pcopyoverlay);
+	lrec_free(pcopyrec);
+	loop_stack_pop(pvars->ploop_stack);
+	bind_stack_pop(pvars->pbind_stack);
+}
+
+// ----------------------------------------------------------------
+static void handle_for_oosvar(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	bind_stack_push(pvars->pbind_stack, pnode->pbound_variables);
+	loop_stack_push(pvars->ploop_stack);
+
+	// Evaluate the keylist: e.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', find the value of $4 for
+	// the current record.
+
+	int keys_all_non_null_or_error = FALSE;
+	sllmv_t* plhskeylist = evaluate_list(pnode->poosvar_lhs_keylist_evaluators, pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+
+		// Locate and copy the submap indexed by the keylist. E.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', the
+		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
+		// for-loop.
+		mlhmmv_value_t submap = mlhmmv_copy_submap(pvars->poosvars, plhskeylist);
+
+		if (!submap.is_terminal && submap.u.pnext_level != NULL) {
+			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level
+			// deeper into the submap.  Note there must be at least one k-name so we are assuming
+			// the for-loop within handle_for_oosvar_aux was gone through once & thus
+			// handle_statement_list_with_break_continue was called through there.
+
+			handle_for_oosvar_aux(pnode, pvars, pcst_outputs, submap, pnode->pfor_oosvar_k_names->phead);
+
+			if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
+				loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
+			}
+			if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
+				loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
+			}
+		}
+
+		mlhmmv_free_submap(submap);
+	}
+	sllmv_free(plhskeylist);
+
+	loop_stack_pop(pvars->ploop_stack);
+	bind_stack_pop(pvars->pbind_stack);
+}
+
+static void handle_for_oosvar_aux(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs,
+	mlhmmv_value_t           submap,
+	sllse_t*                 prest_for_k_names)
+{
+	if (prest_for_k_names != NULL) { // Keep recursing over remaining k-names
+
+		if (submap.is_terminal) {
+			// The submap was too shallow for the user-specified k-names; there are no terminals here.
+		} else {
+			// Loop over keys at this submap level:
+			for (mlhmmv_level_entry_t* pe = submap.u.pnext_level->phead; pe != NULL; pe = pe->pnext) {
+				// Bind the k-name to the entry-key mlrval:
+				lhmsmv_put(pnode->pbound_variables, prest_for_k_names->value, &pe->level_key, NO_FREE);
+				// Recurse into the next-level submap:
+				handle_for_oosvar_aux(pnode, pvars, pcst_outputs, pe->level_value, prest_for_k_names->pnext);
+
+				if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
+					// Bit cleared in recursive caller
+					return;
+				} else if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
+					loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
+				}
+
+			}
+		}
+
+	} else { // End of recursion: k-names have all been used up
+
+		if (!submap.is_terminal) {
+			// The submap was too deep for the user-specified k-names; there are no terminals here.
+		} else {
+			// Bind the v-name to the terminal mlrval:
+			lhmsmv_put(pnode->pbound_variables, pnode->for_v_name, &submap.u.mlrval, NO_FREE);
+			// Execute the loop-body statements:
+			pnode->pblock_handler(pnode->pblock_statements, pvars, pcst_outputs);
+		}
+
+	}
+}
+
+// ----------------------------------------------------------------
+static void handle_break(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	loop_stack_set(pvars->ploop_stack, LOOP_BROKEN);
+}
+
+// ----------------------------------------------------------------
+static void handle_continue(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	loop_stack_set(pvars->ploop_stack, LOOP_CONTINUED);
+}
+
+// ----------------------------------------------------------------
+static void handle_bare_boolean(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
+
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	if (mv_is_non_null(&val))
+		mv_set_boolean_strict(&val);
+}
+
+// ----------------------------------------------------------------
 static void handle_tee_to_stdfp(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
@@ -2248,277 +2518,6 @@ static void handle_print(
 	if (sfree_flags)
 		free(sval);
 	mv_free(&val);
-}
-
-// ----------------------------------------------------------------
-static void handle_filter(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
-
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	if (mv_is_non_null(&val)) {
-		mv_set_boolean_strict(&val);
-		*pcst_outputs->pshould_emit_rec = val.u.boolv;
-	} else {
-		*pcst_outputs->pshould_emit_rec = FALSE;
-	}
-}
-
-// ----------------------------------------------------------------
-static void handle_conditional_block(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
-
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	if (mv_is_non_null(&val)) {
-		mv_set_boolean_strict(&val);
-		if (val.u.boolv) {
-			pnode->pblock_handler(pnode->pblock_statements, pvars, pcst_outputs);
-		}
-	}
-}
-
-// ----------------------------------------------------------------
-static void handle_if_head(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	for (sllve_t* pe = pnode->pif_chain_statements->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_t* pitemnode = pe->pvvalue;
-		rval_evaluator_t* prhs_evaluator = pitemnode->prhs_evaluator;
-
-		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-		if (mv_is_non_null(&val)) {
-			mv_set_boolean_strict(&val);
-			if (val.u.boolv) {
-				pnode->pblock_handler(pitemnode->pblock_statements, pvars, pcst_outputs);
-				break;
-			}
-		}
-	}
-}
-
-// ----------------------------------------------------------------
-static void handle_while(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
-
-	loop_stack_push(pvars->ploop_stack);
-	while (TRUE) {
-		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-		if (mv_is_non_null(&val)) {
-			mv_set_boolean_strict(&val);
-			if (val.u.boolv) {
-				pnode->pblock_handler(pnode->pblock_statements, pvars, pcst_outputs);
-				if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
-					loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
-					break;
-				} else if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
-					loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
-				}
-			} else {
-				break;
-			}
-		} else {
-			break;
-		}
-	}
-	loop_stack_pop(pvars->ploop_stack);
-}
-
-// ----------------------------------------------------------------
-static void handle_do_while(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
-
-	loop_stack_push(pvars->ploop_stack);
-	while (TRUE) {
-		pnode->pblock_handler(pnode->pblock_statements, pvars, pcst_outputs);
-		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
-			loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
-			break;
-		} else if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
-			loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
-			// don't skip the boolean test
-		}
-
-		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-		if (mv_is_non_null(&val)) {
-			mv_set_boolean_strict(&val);
-			if (!val.u.boolv) {
-				break;
-			}
-		} else {
-			break;
-		}
-	}
-	loop_stack_pop(pvars->ploop_stack);
-}
-
-// ----------------------------------------------------------------
-static void handle_for_srec(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	bind_stack_push(pvars->pbind_stack, pnode->pbound_variables);
-	loop_stack_push(pvars->ploop_stack);
-	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
-	lrec_t* pcopyrec = lrec_copy(pvars->pinrec);
-	lhmsmv_t* pcopyoverlay = lhmsmv_copy(pvars->ptyped_overlay);
-
-	for (lrece_t* pe = pcopyrec->phead; pe != NULL; pe = pe->pnext) {
-
-		mv_t mvval = pnode->ptype_infererenced_srec_field_getter(pe, pcopyoverlay);
-
-		mv_t mvkey = mv_from_string_no_free(pe->key);
-		lhmsmv_put(pnode->pbound_variables, pnode->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
-		lhmsmv_put(pnode->pbound_variables, pnode->for_v_name, &mvval, FREE_ENTRY_VALUE);
-
-		pnode->pblock_handler(pnode->pblock_statements, pvars, pcst_outputs);
-		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
-			loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
-			break;
-		} else if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
-			loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
-		}
-	}
-	lhmsmv_free(pcopyoverlay);
-	lrec_free(pcopyrec);
-	loop_stack_pop(pvars->ploop_stack);
-	bind_stack_pop(pvars->pbind_stack);
-}
-
-// ----------------------------------------------------------------
-static void handle_for_oosvar(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	bind_stack_push(pvars->pbind_stack, pnode->pbound_variables);
-	loop_stack_push(pvars->ploop_stack);
-
-	// Evaluate the keylist: e.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', find the value of $4 for
-	// the current record.
-
-	int keys_all_non_null_or_error = FALSE;
-	sllmv_t* plhskeylist = evaluate_list(pnode->poosvar_lhs_keylist_evaluators, pvars, &keys_all_non_null_or_error);
-	if (keys_all_non_null_or_error) {
-
-		// Locate and copy the submap indexed by the keylist. E.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', the
-		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
-		// for-loop.
-		mlhmmv_value_t submap = mlhmmv_copy_submap(pvars->poosvars, plhskeylist);
-
-		if (!submap.is_terminal && submap.u.pnext_level != NULL) {
-			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level
-			// deeper into the submap.  Note there must be at least one k-name so we are assuming
-			// the for-loop within handle_for_oosvar_aux was gone through once & thus
-			// handle_statement_list_with_break_continue was called through there.
-
-			handle_for_oosvar_aux(pnode, pvars, pcst_outputs, submap, pnode->pfor_oosvar_k_names->phead);
-
-			if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
-				loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
-			}
-			if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
-				loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
-			}
-		}
-
-		mlhmmv_free_submap(submap);
-	}
-	sllmv_free(plhskeylist);
-
-	loop_stack_pop(pvars->ploop_stack);
-	bind_stack_pop(pvars->pbind_stack);
-}
-
-static void handle_for_oosvar_aux(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs,
-	mlhmmv_value_t           submap,
-	sllse_t*                 prest_for_k_names)
-{
-	if (prest_for_k_names != NULL) { // Keep recursing over remaining k-names
-
-		if (submap.is_terminal) {
-			// The submap was too shallow for the user-specified k-names; there are no terminals here.
-		} else {
-			// Loop over keys at this submap level:
-			for (mlhmmv_level_entry_t* pe = submap.u.pnext_level->phead; pe != NULL; pe = pe->pnext) {
-				// Bind the k-name to the entry-key mlrval:
-				lhmsmv_put(pnode->pbound_variables, prest_for_k_names->value, &pe->level_key, NO_FREE);
-				// Recurse into the next-level submap:
-				handle_for_oosvar_aux(pnode, pvars, pcst_outputs, pe->level_value, prest_for_k_names->pnext);
-
-				if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
-					// Bit cleared in recursive caller
-					return;
-				} else if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
-					loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
-				}
-
-			}
-		}
-
-	} else { // End of recursion: k-names have all been used up
-
-		if (!submap.is_terminal) {
-			// The submap was too deep for the user-specified k-names; there are no terminals here.
-		} else {
-			// Bind the v-name to the terminal mlrval:
-			lhmsmv_put(pnode->pbound_variables, pnode->for_v_name, &submap.u.mlrval, NO_FREE);
-			// Execute the loop-body statements:
-			pnode->pblock_handler(pnode->pblock_statements, pvars, pcst_outputs);
-		}
-
-	}
-}
-
-// ----------------------------------------------------------------
-static void handle_break(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	loop_stack_set(pvars->ploop_stack, LOOP_BROKEN);
-}
-
-// ----------------------------------------------------------------
-static void handle_continue(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	loop_stack_set(pvars->ploop_stack, LOOP_CONTINUED);
-}
-
-// ----------------------------------------------------------------
-static void handle_bare_boolean(
-	mlr_dsl_cst_statement_t* pnode,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pnode->prhs_evaluator;
-
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	if (mv_is_non_null(&val))
-		mv_set_boolean_strict(&val);
 }
 
 // ----------------------------------------------------------------
