@@ -104,6 +104,8 @@ static void                             handle_dump(mlr_dsl_cst_statement_t* s, 
 static void                     handle_dump_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_print(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 
+static lrec_writer_t* alloc_single_lrec_writer_or_die(cli_opts_t* popts);
+
 static void                           handle_filter(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                handle_conditional_block(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_while(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -1312,7 +1314,6 @@ static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_ast_node_t* pnode, int type_i
 
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
-	// xxx pipe
 	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) {
 		pstatement->pnode_handler = handle_dump;
 		pstatement->stdfp = stdout;
@@ -1346,7 +1347,6 @@ static mlr_dsl_cst_statement_t* alloc_print(mlr_dsl_ast_node_t* pnode, int type_
 
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
 	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
-	// xxx pipe
 	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) {
 		pstatement->stdfp = stdout;
 	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
@@ -1824,19 +1824,9 @@ static void handle_tee_to_stdfp(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	// xxx handle better, maybe in a class. the opts aren't complete at alloc time so we need to handle them here.
-	if (pnode->psingle_lrec_writer == NULL) {
-		cli_opts_t* popts = MLR_GLOBALS.popts;
-		pnode->psingle_lrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
-			popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
-			popts->right_justify_xtab_value, popts->json_flatten_separator, popts->quote_json_values_always,
-			popts->stack_json_output_vertically, popts->wrap_json_output_in_outer_list);
-		if (pnode->psingle_lrec_writer == NULL) {
-			fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
-		}
-	}
+	// The opts aren't complete at alloc time so we need to handle them on first use.
+	if (pnode->psingle_lrec_writer == NULL)
+		pnode->psingle_lrec_writer = alloc_single_lrec_writer_or_die(MLR_GLOBALS.popts);
 
 	lrec_t* pcopy = lrec_copy(pvars->pinrec);
 
@@ -1914,19 +1904,9 @@ static void handle_emitf_to_stdfp(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	// xxx handle better, maybe in a class. the opts aren't complete at alloc time so we need to handle them here.
-	if (pnode->psingle_lrec_writer == NULL) {
-		cli_opts_t* popts = MLR_GLOBALS.popts;
-		pnode->psingle_lrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
-			popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
-			popts->right_justify_xtab_value, popts->json_flatten_separator, popts->quote_json_values_always,
-			popts->stack_json_output_vertically, popts->wrap_json_output_in_outer_list);
-		if (pnode->psingle_lrec_writer == NULL) {
-			fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
-		}
-	}
+	// The opts aren't complete at alloc time so we need to handle them on first use.
+	if (pnode->psingle_lrec_writer == NULL)
+		pnode->psingle_lrec_writer = alloc_single_lrec_writer_or_die(MLR_GLOBALS.popts);
 
 	sllv_t* poutrecs = sllv_alloc();
 
@@ -2019,19 +1999,9 @@ static void handle_emit_to_stdfp(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	// xxx handle better, maybe in a class. the opts aren't complete at alloc time so we need to handle them here.
-	if (pnode->psingle_lrec_writer == NULL) {
-		cli_opts_t* popts = MLR_GLOBALS.popts;
-		pnode->psingle_lrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
-			popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
-			popts->right_justify_xtab_value, popts->json_flatten_separator, popts->quote_json_values_always,
-			popts->stack_json_output_vertically, popts->wrap_json_output_in_outer_list);
-		if (pnode->psingle_lrec_writer == NULL) {
-			fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
-		}
-	}
+	// The opts aren't complete at alloc time so we need to handle them on first use.
+	if (pnode->psingle_lrec_writer == NULL)
+		pnode->psingle_lrec_writer = alloc_single_lrec_writer_or_die(MLR_GLOBALS.popts);
 
 	sllv_t* poutrecs = sllv_alloc();
 	int keys_all_non_null_or_error = TRUE;
@@ -2119,19 +2089,9 @@ static void handle_emit_lashed_to_stdfp(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	// xxx handle better, maybe in a class. the opts aren't complete at alloc time so we need to handle them here.
-	if (pnode->psingle_lrec_writer == NULL) {
-		cli_opts_t* popts = MLR_GLOBALS.popts;
-		pnode->psingle_lrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
-			popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
-			popts->right_justify_xtab_value, popts->json_flatten_separator, popts->quote_json_values_always,
-			popts->stack_json_output_vertically, popts->wrap_json_output_in_outer_list);
-		if (pnode->psingle_lrec_writer == NULL) {
-			fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
-		}
-	}
+	// The opts aren't complete at alloc time so we need to handle them on first use.
+	if (pnode->psingle_lrec_writer == NULL)
+		pnode->psingle_lrec_writer = alloc_single_lrec_writer_or_die(MLR_GLOBALS.popts);
 
 	sllv_t* poutrecs = sllv_alloc();
 	int keys_all_non_null_or_error = TRUE;
@@ -2218,20 +2178,9 @@ static void handle_emit_all_to_stdfp(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	// xxx handle better, maybe in a class. the opts aren't complete at alloc time so we need to handle them here.
-	if (pnode->psingle_lrec_writer == NULL) {
-		cli_opts_t* popts = MLR_GLOBALS.popts;
-		// xxx bag up as popts per se 1st.
-		pnode->psingle_lrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
-			popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
-			popts->right_justify_xtab_value, popts->json_flatten_separator, popts->quote_json_values_always,
-			popts->stack_json_output_vertically, popts->wrap_json_output_in_outer_list);
-		if (pnode->psingle_lrec_writer == NULL) {
-			fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
-		}
-	}
+	// The opts aren't complete at alloc time so we need to handle them on first use.
+	if (pnode->psingle_lrec_writer == NULL)
+		pnode->psingle_lrec_writer = alloc_single_lrec_writer_or_die(MLR_GLOBALS.popts);
 
 	// xxx code-dedupe
 	sllv_t* poutrecs = sllv_alloc();
@@ -2342,6 +2291,20 @@ static void handle_print(
 	if (sfree_flags)
 		free(sval);
 	mv_free(&val);
+}
+
+// ----------------------------------------------------------------
+static lrec_writer_t* alloc_single_lrec_writer_or_die(cli_opts_t* popts) {
+	lrec_writer_t* plrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
+		popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
+		popts->right_justify_xtab_value, popts->json_flatten_separator, popts->quote_json_values_always,
+		popts->stack_json_output_vertically, popts->wrap_json_output_in_outer_list);
+	if (plrec_writer == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	return plrec_writer;
 }
 
 // ----------------------------------------------------------------
