@@ -33,10 +33,7 @@ void multi_lrec_writer_output_srec(multi_lrec_writer_t* pmlw, lrec_t* poutrec, c
 	if (pstate == NULL) {
 		pstate = mlr_malloc_or_die(sizeof(lrec_writer_and_fp_t));
 		cli_opts_t* popts = MLR_GLOBALS.popts;
-		pstate->plrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
-			popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
-			popts->right_justify_xtab_value, popts->json_flatten_separator, popts->quote_json_values_always,
-			popts->stack_json_output_vertically, popts->wrap_json_output_in_outer_list);
+		pstate->plrec_writer = lrec_writer_alloc(popts);
 		if (pstate->plrec_writer == NULL) {
 			fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
 				MLR_GLOBALS.bargv0, __FILE__, __LINE__);

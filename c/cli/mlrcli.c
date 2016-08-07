@@ -1067,10 +1067,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		return NULL;
 	}
 
-	popts->plrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
-		popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint, popts->right_justify_xtab_value,
-		popts->json_flatten_separator, popts->quote_json_values_always, popts->stack_json_output_vertically,
-		popts->wrap_json_output_in_outer_list);
+	popts->plrec_writer = lrec_writer_alloc(popts);
 
 	if (popts->plrec_writer == NULL) {
 		main_usage(stderr, argv[0]);

@@ -110,16 +110,7 @@ static sllv_t* mapper_tee_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	// mapper_tee_alloc is called from the CLI-parser and cli_opts isn't finalized until that
 	// returns. So we cannot do this in mapper_tee_alloc.
 	if (pstate->plrec_writer == NULL) {
-		cli_opts_t* popts = MLR_GLOBALS.popts;
-		pstate->plrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
-			popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
-			popts->right_justify_xtab_value, popts->json_flatten_separator, popts->quote_json_values_always,
-			popts->stack_json_output_vertically, popts->wrap_json_output_in_outer_list);
-		if (pstate->plrec_writer == NULL) {
-			fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
-		}
+		pstate->plrec_writer = lrec_writer_alloc_or_die(MLR_GLOBALS.popts);
 	}
 
 	if (pinrec != NULL) {
