@@ -2077,8 +2077,6 @@ static void handle_bare_boolean(
 }
 
 // ----------------------------------------------------------------
-// xxx code-dedupe
-
 static void handle_tee_to_stdfp(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
