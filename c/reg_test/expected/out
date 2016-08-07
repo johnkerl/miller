@@ -28185,6 +28185,50 @@ mlr put -q @v=$*; dump | "tr \[a-z\] \[A-Z\]" ./reg_test/input/abixy
   }
 }
 
+mlr put -q @v[NR] = $*; NR == 2 { dump > stdout } ./reg_test/input/abixy
+{
+  "v": {
+    "1": {
+      "a": "pan",
+      "b": "pan",
+      "i": 1,
+      "x": 0.3467901443380824,
+      "y": 0.7268028627434533
+    },
+    "2": {
+      "a": "eks",
+      "b": "pan",
+      "i": 2,
+      "x": 0.7586799647899636,
+      "y": 0.5221511083334797
+    }
+  }
+}
+
+cat ./output-regtest/dump1/err1
+
+mlr put -q @v[NR] = $*; NR == 2 { dump > stderr } ./reg_test/input/abixy
+
+cat ./output-regtest/dump1/err2
+{
+  "v": {
+    "1": {
+      "a": "pan",
+      "b": "pan",
+      "i": 1,
+      "x": 0.3467901443380824,
+      "y": 0.7268028627434533
+    },
+    "2": {
+      "a": "eks",
+      "b": "pan",
+      "i": 2,
+      "x": 0.7586799647899636,
+      "y": 0.5221511083334797
+    }
+  }
+}
+
 
 ================================================================
 DSL EMITF REDIRECTS

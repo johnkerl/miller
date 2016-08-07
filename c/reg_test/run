@@ -3599,6 +3599,14 @@ run_cat $dump1/out.zee
 
 run_mlr put -q '@v=$*; dump | "tr \[a-z\] \[A-Z\]"' $indir/abixy
 
+touch $dump1/err1
+run_mlr put -q '@v[NR] = $*; NR == 2 { dump > stdout }' $indir/abixy 2> $dump1/err1
+run_cat $dump1/err1
+
+touch $dump1/err2
+run_mlr put -q '@v[NR] = $*; NR == 2 { dump > stderr }' $indir/abixy 2> $dump1/err2
+run_cat $dump1/err2
+
 # ----------------------------------------------------------------
 announce DSL EMITF REDIRECTS
 
