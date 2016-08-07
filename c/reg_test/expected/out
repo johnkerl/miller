@@ -27685,6 +27685,14 @@ cat ./output-regtest/printn1/out.zee
 abi:zeepan6abi:zeewye8abi:zeepan6abi:zeewye8
 mlr put -q printn | "tr \[a-z\] \[A-Z\]",  "abi:".$a.$b.$i ./reg_test/input/abixy
 ABI:PANPAN1ABI:EKSPAN2ABI:WYEWYE3ABI:EKSWYE4ABI:WYEPAN5ABI:ZEEPAN6ABI:EKSZEE7ABI:ZEEWYE8ABI:HATWYE9ABI:PANWYE10
+mlr put -q printn > stdout, "abi:".$a.$b.$i ./reg_test/input/abixy
+abi:panpan1abi:ekspan2abi:wyewye3abi:ekswye4abi:wyepan5abi:zeepan6abi:ekszee7abi:zeewye8abi:hatwye9abi:panwye10
+cat ./output-regtest/printn1/err1
+
+mlr put -q printn > stderr, "abi:".$a.$b.$i ./reg_test/input/abixy
+
+cat ./output-regtest/printn1/err2
+abi:panpan1abi:ekspan2abi:wyewye3abi:ekswye4abi:wyepan5abi:zeepan6abi:ekszee7abi:zeewye8abi:hatwye9abi:panwye10
 
 ================================================================
 DSL DUMP REDIRECTS

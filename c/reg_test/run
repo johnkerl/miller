@@ -3562,6 +3562,14 @@ run_cat $printn1/out.zee
 
 run_mlr put -q 'printn | "tr \[a-z\] \[A-Z\]",  "abi:".$a.$b.$i' $indir/abixy
 
+touch $printn1/err1
+run_mlr put -q 'printn > stdout, "abi:".$a.$b.$i' $indir/abixy 2> $printn1/err1
+run_cat $printn1/err1
+
+touch $printn1/err2
+run_mlr put -q 'printn > stderr, "abi:".$a.$b.$i' $indir/abixy 2> $printn1/err2
+run_cat $printn1/err2
+
 # ----------------------------------------------------------------
 announce DSL DUMP REDIRECTS
 
