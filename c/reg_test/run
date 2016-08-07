@@ -3799,6 +3799,15 @@ run_cat $emitp5/out.panpan
 run_cat $emitp5/out.wyewye
 run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", @*' $indir/abixy
 
+touch $emitp5/err1
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > stdout, @*' $indir/abixy 2> $emitp5/err1
+run_cat $emitp5/err1
+
+touch $emitp5/err2
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > stderr, @*' $indir/abixy 2> $emitp5/err2
+run_cat $emitp5/err2
+
+
 emitp6=$reloutdir/emitp6
 mkdir -p $emitp6
 run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp6'/out.".$a.$b, all' $indir/abixy
@@ -3807,6 +3816,15 @@ run_cat $emitp6/out.ekswye
 run_cat $emitp6/out.panpan
 run_cat $emitp6/out.wyewye
 run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", all' $indir/abixy
+
+touch $emitp6/err1
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > stdout, all' $indir/abixy 2> $emitp6/err1
+run_cat $emitp6/err1
+
+touch $emitp6/err2
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > stderr, all' $indir/abixy 2> $emitp6/err2
+run_cat $emitp6/err2
+
 
 emitp7=$reloutdir/emitp7
 mkdir -p $emitp7
@@ -3817,6 +3835,15 @@ run_cat $emitp7/out.panpan
 run_cat $emitp7/out.wyewye
 run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", @*, "NR"' $indir/abixy
 
+touch $emitp7/err1
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > stdout, @*, "NR"' $indir/abixy 2> $emitp7/err1
+run_cat $emitp7/err1
+
+touch $emitp7/err2
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > stderr, @*, "NR"' $indir/abixy 2> $emitp7/err2
+run_cat $emitp7/err2
+
+
 emitp8=$reloutdir/emitp8
 mkdir -p $emitp8
 run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > "'$emitp8'/out.".$a.$b, all, "NR"' $indir/abixy
@@ -3825,6 +3852,15 @@ run_cat $emitp8/out.ekswye
 run_cat $emitp8/out.panpan
 run_cat $emitp8/out.wyewye
 run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", all, "NR"' $indir/abixy
+
+touch $emitp8/err1
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > stdout, all, "NR"' $indir/abixy 2> $emitp8/err1
+run_cat $emitp8/err1
+
+touch $emitp8/err2
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > stderr, all, "NR"' $indir/abixy 2> $emitp8/err2
+run_cat $emitp8/err2
+
 
 # ----------------------------------------------------------------
 announce DSL EMIT REDIRECTS

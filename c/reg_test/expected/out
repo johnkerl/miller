@@ -28767,6 +28767,30 @@ B:1=PAN,B:2=PAN,B:3=WYE
 A:1=PAN,A:2=EKS,A:3=WYE,A:4=EKS
 B:1=PAN,B:2=PAN,B:3=WYE,B:4=WYE
 
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > stdout, @* ./reg_test/input/abixy
+a:1=pan
+b:1=pan
+a:1=pan,a:2=eks
+b:1=pan,b:2=pan
+a:1=pan,a:2=eks,a:3=wye
+b:1=pan,b:2=pan,b:3=wye
+a:1=pan,a:2=eks,a:3=wye,a:4=eks
+b:1=pan,b:2=pan,b:3=wye,b:4=wye
+
+cat ./output-regtest/emitp5/err1
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > stderr, @* ./reg_test/input/abixy
+
+cat ./output-regtest/emitp5/err2
+a:1=pan
+b:1=pan
+a:1=pan,a:2=eks
+b:1=pan,b:2=pan
+a:1=pan,a:2=eks,a:3=wye
+b:1=pan,b:2=pan,b:3=wye
+a:1=pan,a:2=eks,a:3=wye,a:4=eks
+b:1=pan,b:2=pan,b:3=wye,b:4=wye
+
 mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > "./output-regtest/emitp6/out.".$a.$b, all ./reg_test/input/abixy
 
 cat ./output-regtest/emitp6/out.ekspan
@@ -28794,6 +28818,30 @@ A:1=PAN,A:2=EKS,A:3=WYE
 B:1=PAN,B:2=PAN,B:3=WYE
 A:1=PAN,A:2=EKS,A:3=WYE,A:4=EKS
 B:1=PAN,B:2=PAN,B:3=WYE,B:4=WYE
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > stdout, all ./reg_test/input/abixy
+a:1=pan
+b:1=pan
+a:1=pan,a:2=eks
+b:1=pan,b:2=pan
+a:1=pan,a:2=eks,a:3=wye
+b:1=pan,b:2=pan,b:3=wye
+a:1=pan,a:2=eks,a:3=wye,a:4=eks
+b:1=pan,b:2=pan,b:3=wye,b:4=wye
+
+cat ./output-regtest/emitp6/err1
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > stderr, all ./reg_test/input/abixy
+
+cat ./output-regtest/emitp6/err2
+a:1=pan
+b:1=pan
+a:1=pan,a:2=eks
+b:1=pan,b:2=pan
+a:1=pan,a:2=eks,a:3=wye
+b:1=pan,b:2=pan,b:3=wye
+a:1=pan,a:2=eks,a:3=wye,a:4=eks
+b:1=pan,b:2=pan,b:3=wye,b:4=wye
 
 mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > "./output-regtest/emitp7/out.".$a.$b, @*, "NR" ./reg_test/input/abixy
 
@@ -28847,6 +28895,54 @@ NR=2,B=PAN
 NR=3,B=WYE
 NR=4,B=WYE
 
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > stdout, @*, "NR" ./reg_test/input/abixy
+NR=1,a=pan
+NR=1,b=pan
+NR=1,a=pan
+NR=2,a=eks
+NR=1,b=pan
+NR=2,b=pan
+NR=1,a=pan
+NR=2,a=eks
+NR=3,a=wye
+NR=1,b=pan
+NR=2,b=pan
+NR=3,b=wye
+NR=1,a=pan
+NR=2,a=eks
+NR=3,a=wye
+NR=4,a=eks
+NR=1,b=pan
+NR=2,b=pan
+NR=3,b=wye
+NR=4,b=wye
+
+cat ./output-regtest/emitp7/err1
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > stderr, @*, "NR" ./reg_test/input/abixy
+
+cat ./output-regtest/emitp7/err2
+NR=1,a=pan
+NR=1,b=pan
+NR=1,a=pan
+NR=2,a=eks
+NR=1,b=pan
+NR=2,b=pan
+NR=1,a=pan
+NR=2,a=eks
+NR=3,a=wye
+NR=1,b=pan
+NR=2,b=pan
+NR=3,b=wye
+NR=1,a=pan
+NR=2,a=eks
+NR=3,a=wye
+NR=4,a=eks
+NR=1,b=pan
+NR=2,b=pan
+NR=3,b=wye
+NR=4,b=wye
+
 mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > "./output-regtest/emitp8/out.".$a.$b, all, "NR" ./reg_test/input/abixy
 
 cat ./output-regtest/emitp8/out.ekspan
@@ -28898,6 +28994,54 @@ NR=1,B=PAN
 NR=2,B=PAN
 NR=3,B=WYE
 NR=4,B=WYE
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > stdout, all, "NR" ./reg_test/input/abixy
+NR=1,a=pan
+NR=1,b=pan
+NR=1,a=pan
+NR=2,a=eks
+NR=1,b=pan
+NR=2,b=pan
+NR=1,a=pan
+NR=2,a=eks
+NR=3,a=wye
+NR=1,b=pan
+NR=2,b=pan
+NR=3,b=wye
+NR=1,a=pan
+NR=2,a=eks
+NR=3,a=wye
+NR=4,a=eks
+NR=1,b=pan
+NR=2,b=pan
+NR=3,b=wye
+NR=4,b=wye
+
+cat ./output-regtest/emitp8/err1
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > stderr, all, "NR" ./reg_test/input/abixy
+
+cat ./output-regtest/emitp8/err2
+NR=1,a=pan
+NR=1,b=pan
+NR=1,a=pan
+NR=2,a=eks
+NR=1,b=pan
+NR=2,b=pan
+NR=1,a=pan
+NR=2,a=eks
+NR=3,a=wye
+NR=1,b=pan
+NR=2,b=pan
+NR=3,b=wye
+NR=1,a=pan
+NR=2,a=eks
+NR=3,a=wye
+NR=4,a=eks
+NR=1,b=pan
+NR=2,b=pan
+NR=3,b=wye
+NR=4,b=wye
 
 
 ================================================================
