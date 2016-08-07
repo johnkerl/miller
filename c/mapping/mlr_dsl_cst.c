@@ -93,8 +93,10 @@ static void                             handle_emit(mlr_dsl_cst_statement_t* s, 
 static void                    handle_emit_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_emit_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_emitp_lashed(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void            handle_emitp_lashed_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void             handle_emitp_lashed_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                      handle_emit_lashed(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void             handle_emit_lashed_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void              handle_emit_lashed_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                         handle_emit_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                handle_emit_all_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -940,12 +942,19 @@ static mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_ast_node_t* pnode, int
 	}
 	pstatement->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
 
+	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren == NULL
+		? NULL
+		: poutput_node->pchildren->phead == NULL
+		? NULL
+		: poutput_node->pchildren->phead->pvvalue;
 	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
 		pstatement->pnode_handler = do_full_prefixing
-			? handle_emit_lashed
-			: handle_emitp_lashed;
+			? handle_emitp_lashed
+			: handle_emit_lashed;
+	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
+		pstatement->pnode_handler = do_full_prefixing ? handle_emitp_lashed_to_stdfp : handle_emit_lashed_to_stdfp;
+		pstatement->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
 	} else {
-		mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
 		pstatement->file_output_mode =
@@ -953,10 +962,9 @@ static mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_ast_node_t* pnode, int
 			: poutput_node->type == MD_AST_NODE_TYPE_PIPE ? MODE_PIPE
 			: MODE_WRITE;
 		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
-		pstatement->pnode_handler = handle_emitf_to_file;
 		pstatement->pnode_handler = do_full_prefixing
-			? handle_emit_lashed_to_file
-			: handle_emitp_lashed_to_file;
+			? handle_emitp_lashed_to_file
+			: handle_emit_lashed_to_file;
 	}
 
 	return pstatement;
@@ -2119,6 +2127,56 @@ static void handle_emitp_lashed(
 	free(ppmvkeys);
 }
 
+// xxx code dedupe between stream/stdfp/file
+// xxx code dedupe between emitp/emit lashed
+
+static void handle_emitp_lashed_to_stdfp(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	// xxx handle better, maybe in a class. the opts aren't complete at alloc time so we need to handle them here.
+	if (pnode->psingle_lrec_writer == NULL) {
+		cli_opts_t* popts = MLR_GLOBALS.popts;
+		pnode->psingle_lrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
+			popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
+			popts->right_justify_xtab_value, popts->json_flatten_separator, popts->quote_json_values_always,
+			popts->stack_json_output_vertically, popts->wrap_json_output_in_outer_list);
+		if (pnode->psingle_lrec_writer == NULL) {
+			fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
+				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+			exit(1);
+		}
+	}
+
+	sllv_t* poutrecs = sllv_alloc();
+	int keys_all_non_null_or_error = TRUE;
+	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
+		pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs_lashed(pvars->poosvars, ppmvkeys, pnode->num_emit_keylist_evaluators, pmvnames,
+				poutrecs, FALSE, pcst_outputs->oosvar_flatten_separator);
+		}
+		sllmv_free(pmvnames);
+	}
+
+	while (poutrecs->phead != NULL) {
+		lrec_t* poutrec = sllv_pop(poutrecs);
+		pnode->psingle_lrec_writer->pprocess_func(pnode->stdfp, poutrec, pnode->psingle_lrec_writer->pvstate);
+		if (pcst_outputs->flush_every_record)
+			fflush(pnode->stdfp);
+	}
+	sllv_free(poutrecs);
+
+	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
+		sllmv_free(ppmvkeys[i]);
+	}
+	free(ppmvkeys);
+}
+
 static void handle_emitp_lashed_to_file(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
@@ -2174,6 +2232,53 @@ static void handle_emit_lashed(
 		}
 		sllmv_free(pmvnames);
 	}
+	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
+		sllmv_free(ppmvkeys[i]);
+	}
+	free(ppmvkeys);
+}
+
+static void handle_emit_lashed_to_stdfp(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	// xxx handle better, maybe in a class. the opts aren't complete at alloc time so we need to handle them here.
+	if (pnode->psingle_lrec_writer == NULL) {
+		cli_opts_t* popts = MLR_GLOBALS.popts;
+		pnode->psingle_lrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
+			popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
+			popts->right_justify_xtab_value, popts->json_flatten_separator, popts->quote_json_values_always,
+			popts->stack_json_output_vertically, popts->wrap_json_output_in_outer_list);
+		if (pnode->psingle_lrec_writer == NULL) {
+			fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
+				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+			exit(1);
+		}
+	}
+
+	sllv_t* poutrecs = sllv_alloc();
+	int keys_all_non_null_or_error = TRUE;
+	sllmv_t** ppmvkeys = evaluate_lists(pnode->ppemit_keylist_evaluators, pnode->num_emit_keylist_evaluators,
+		pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs_lashed(pvars->poosvars, ppmvkeys, pnode->num_emit_keylist_evaluators, pmvnames,
+				poutrecs, TRUE, pcst_outputs->oosvar_flatten_separator);
+		}
+		sllmv_free(pmvnames);
+	}
+
+	while (poutrecs->phead != NULL) {
+		lrec_t* poutrec = sllv_pop(poutrecs);
+		pnode->psingle_lrec_writer->pprocess_func(pnode->stdfp, poutrec, pnode->psingle_lrec_writer->pvstate);
+		if (pcst_outputs->flush_every_record)
+			fflush(pnode->stdfp);
+	}
+	sllv_free(poutrecs);
+
 	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
 		sllmv_free(ppmvkeys[i]);
 	}

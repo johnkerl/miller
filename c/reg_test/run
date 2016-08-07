@@ -3749,6 +3749,15 @@ run_cat $emitp3/out.wyewye
 
 run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp | "tr \[a-z\] \[A-Z\]", (@a, @b)' $indir/abixy
 
+touch $emitp3/err1
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > stdout, (@a, @b)' $indir/abixy 2> $emitp3/err1
+run_cat $emitp3/err1
+
+touch $emitp3/err2
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emitp > stderr, (@a, @b)' $indir/abixy 2> $emitp3/err2
+run_cat $emitp3/err2
+
+
 emitp4=$reloutdir/emitp4
 mkdir -p $emitp4
 
