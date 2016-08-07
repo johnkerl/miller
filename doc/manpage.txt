@@ -1332,23 +1332,23 @@ KEYWORDS FOR PUT
    filter
        filter: includes/excludes the record in the output record stream.
 
-	 Example: mlr --from myfile.dat put 'filter (NR == 2 || $x > 5.4)'
+	 Example: mlr --from f.dat put 'filter (NR == 2 || $x > 5.4)'
 
 	 Instead of put with 'filter false' you can simply use put -q.	The following
 	 uses the input record to accumulate data but only prints the running sum
 	 without printing the input record:
 
-	 Example: mlr --from myfile.dat put -q '@running_sum += $x * $y; emit @running_sum'
+	 Example: mlr --from f.dat put -q '@running_sum += $x * $y; emit @running_sum'
 
    unset
        unset: clears field(s) from the current record, or an out-of-stream variable.
 
-	 Example: mlr --from myfile.dat put 'unset $x'
-	 Example: mlr --from myfile.dat put 'unset $*'
-	 Example: mlr --from myfile.dat put 'for (k, v in $*) { if (k =~ "a.*") { unset $[k] } }'
-	 Example: mlr --from myfile.dat put '...; unset @sums'
-	 Example: mlr --from myfile.dat put '...; unset @sums["green"]'
-	 Example: mlr --from myfile.dat put '...; unset @*'
+	 Example: mlr --from f.dat put 'unset $x'
+	 Example: mlr --from f.dat put 'unset $*'
+	 Example: mlr --from f.dat put 'for (k, v in $*) { if (k =~ "a.*") { unset $[k] } }'
+	 Example: mlr --from f.dat put '...; unset @sums'
+	 Example: mlr --from f.dat put '...; unset @sums["green"]'
+	 Example: mlr --from f.dat put '...; unset @*'
 
    tee
        tee: prints the current record to specified file.
@@ -1359,11 +1359,11 @@ KEYWORDS FOR PUT
 	 process which will process the data. There will be one subordinate process for
 	 each distinct value of the piped-to command.
 
-	 Example: mlr --from myfile.dat put 'tee >  "/tmp/data-".$a, $*'
-	 Example: mlr --from myfile.dat put 'tee >> "/tmp/data-".$a.$b, $*'
-	 Example: mlr --from myfile.dat put 'tee >  stderr, $*'
-	 Example: mlr --from myfile.dat put -q 'tee | "tr [a-z\] [A-Z\]", $*'
-	 Example: mlr --from myfile.dat put -q 'tee | "tr [a-z\] [A-Z\] > /tmp/data-".$a, $*'
+	 Example: mlr --from f.dat put 'tee >  "/tmp/data-".$a, $*'
+	 Example: mlr --from f.dat put 'tee >> "/tmp/data-".$a.$b, $*'
+	 Example: mlr --from f.dat put 'tee >  stderr, $*'
+	 Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\]", $*'
+	 Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\] > /tmp/data-".$a, $*'
 
    emit
        emit: inserts an out-of-stream variable into the output record stream. Hashmap
@@ -1375,13 +1375,13 @@ KEYWORDS FOR PUT
 	 record. The | is for pipe to a process which will process the data. There will
 	 be one subordinate process for each distinct value of the piped-to command.
 
-	 Example: mlr --from myfile.dat put '... ; emit @sums'
-	 Example: mlr --from myfile.dat put '... ; emit @sums, "index1", "index2"'
-	 Example: mlr --from myfile.dat put '... ; emit @*, "index1", "index2"'
-	 Example: mlr --from myfile.dat put '... ; emit >  "mytap.dat", @*, "index1", "index2"'
-	 Example: mlr --from myfile.dat put '... ; emit >> "mytap.dat", @*, "index1", "index2"'
-	 Example: mlr --from myfile.dat put '... ; emit > stderr, @*, "index1", "index2"'
-	 Example: mlr --from myfile.dat put '... ; emit | "grep somepattern", @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >  "mytap.dat", @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >> "mytap.dat", @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit > stderr, @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
 
 	 Please see http://johnkerl.org/miller/doc for more information.
 
@@ -1396,13 +1396,13 @@ KEYWORDS FOR PUT
 	 record. The | is for pipe to a process which will process the data. There will
 	 be one subordinate process for each distinct value of the piped-to command.
 
-	 Example: mlr --from myfile.dat put '... ; emitp @sums'
-	 Example: mlr --from myfile.dat put '... ; emitp @sums, "index1", "index2"'
-	 Example: mlr --from myfile.dat put '... ; emitp @*, "index1", "index2"'
-	 Example: mlr --from myfile.dat put '... ; emitp >  "mytap.dat", @*, "index1", "index2"'
-	 Example: mlr --from myfile.dat put '... ; emitp >> "mytap.dat", @*, "index1", "index2"'
-	 Example: mlr --from myfile.dat put '... ; emitp > stderr, @*, "index1", "index2"'
-	 Example: mlr --from myfile.dat put '... ; emitp | "grep somepattern", @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >  "mytap.dat", @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >> "mytap.dat", @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp > stderr, @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
 
 	 Please see http://johnkerl.org/miller/doc for more information.
 
@@ -1416,13 +1416,13 @@ KEYWORDS FOR PUT
 	 record. The | is for pipe to a process which will process the data. There will
 	 be one subordinate process for each distinct value of the piped-to command.
 
-	 Example: mlr --from myfile.dat put '... ; emitf @a'
-	 Example: mlr --from myfile.dat put '... ; emitf @a, @b, @c'
-	 Example: mlr --from myfile.dat put '... ; emitf > "mytap.dat", @a, @b, @c'
-	 Example: mlr --from myfile.dat put '... ; emitf >> "mytap.dat", @a, @b, @c'
-	 Example: mlr --from myfile.dat put '... ; emitf > stderr, @a, @b, @c'
-	 Example: mlr --from myfile.dat put '... ; emitf | "grep somepattern", @a, @b, @c'
-	 Example: mlr --from myfile.dat put '... ; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
+	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
+	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
+	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > "mytap.dat", @a, @b, @c'
+	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf >> "mytap.dat", @a, @b, @c'
+	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > stderr, @a, @b, @c'
+	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
+	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
 
 	 Please see http://johnkerl.org/miller/doc for more information.
 
@@ -1436,40 +1436,40 @@ KEYWORDS FOR PUT
 	 record. The | is for pipe to a process which will process the data. There will
 	 be one subordinate process for each distinct value of the piped-to command.
 
-	 Example: mlr --from myfile.dat put -q '@v[NR]=$*; end { dump }'
-	 Example: mlr --from myfile.dat put -q '@v[NR]=$*; end { dump >  "mytap.dat"}'
-	 Example: mlr --from myfile.dat put -q '@v[NR]=$*; end { dump >> "mytap.dat"}'
-	 Example: mlr --from myfile.dat put -q '@v[NR]=$*; end { dump | "jq .[]"}'
+	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump }'
+	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >  "mytap.dat"}'
+	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >> "mytap.dat"}'
+	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump | "jq .[]"}'
 
    edump
        edump: prints all currently defined out-of-stream variables immediately
 	 to stderr as JSON.
 
-	 Example: mlr --from myfile.dat put -q '@v[NR]=$*; end { edump }'
+	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { edump }'
 
    print
        print: prints expression immediately to stdout.
-	 Example: mlr --from myfile.dat put -q 'print "The sum of x and y is ".($x+$y)'
-	 Example: mlr --from myfile.dat put -q 'for (k, v in $*) { print k . " => " . v }'
-	 Example: mlr --from myfile.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
+	 Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
+	 Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " => " . v }'
+	 Example: mlr --from f.dat put	'(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
 
    printn
        print: prints expression immediately to stdout.
-	 Example: mlr --from myfile.dat put -q 'print "The sum of x and y is ".($x+$y)'
-	 Example: mlr --from myfile.dat put -q 'for (k, v in $*) { print k . " => " . v }'
-	 Example: mlr --from myfile.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
+	 Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
+	 Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " => " . v }'
+	 Example: mlr --from f.dat put	'(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
 
    eprint
        eprint: prints expression immediately to stderr.
-	 Example: mlr --from myfile.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
-	 Example: mlr --from myfile.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
-	 Example: mlr --from myfile.dat put  '(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
+	 Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
+	 Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
+	 Example: mlr --from f.dat put	'(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
 
    eprintn
        eprint: prints expression immediately to stderr.
-	 Example: mlr --from myfile.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
-	 Example: mlr --from myfile.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
-	 Example: mlr --from myfile.dat put  '(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
+	 Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
+	 Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
+	 Example: mlr --from f.dat put	'(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
 
    stdout
        stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
@@ -1492,4 +1492,4 @@ SEE ALSO
 
 
 
-				  2016-08-06			     MILLER(1)
+				  2016-08-07			     MILLER(1)
