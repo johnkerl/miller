@@ -23,6 +23,8 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 COMMON:
+! emitp/emit prefixing check thruout!
+! lashed et al. code-dedupe!
 * mlr -k|grep mlr|sed 's/Example: //' | sh 1>1 2>2
 ! flesh out ...'s in mlr -k's
 ? print/dump end with OFS ?
