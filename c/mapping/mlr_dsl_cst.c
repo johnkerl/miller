@@ -94,6 +94,7 @@ static void                     handle_emitf_common(mlr_dsl_cst_statement_t* s, 
 static void                             handle_emit(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                    handle_emit_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                     handle_emit_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                      handle_emit_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* poutrecs, char* f);
 
 static void                      handle_emit_lashed(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void             handle_emit_lashed_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -1975,19 +1976,7 @@ static void handle_emit(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	// xxx code-dup
-	int keys_all_non_null_or_error = TRUE;
-	sllmv_t* pmvkeys = evaluate_list(pnode->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
-	if (keys_all_non_null_or_error) {
-		int names_all_non_null_or_error = TRUE;
-		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
-		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, pcst_outputs->poutrecs,
-				pnode->do_full_prefixing, pcst_outputs->oosvar_flatten_separator);
-		}
-		sllmv_free(pmvnames);
-	}
-	sllmv_free(pmvkeys);
+	handle_emit_common(pnode, pvars, pcst_outputs->poutrecs, pcst_outputs->oosvar_flatten_separator);
 }
 
 static void handle_emit_to_stdfp(
@@ -1995,27 +1984,18 @@ static void handle_emit_to_stdfp(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	sllv_t* poutrecs = sllv_alloc();
+
+	handle_emit_common(pnode, pvars, poutrecs, pcst_outputs->oosvar_flatten_separator);
+
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
 		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(MLR_GLOBALS.popts);
 
-	sllv_t* poutrecs = sllv_alloc();
-	int keys_all_non_null_or_error = TRUE;
-	sllmv_t* pmvkeys = evaluate_list(pnode->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
-	if (keys_all_non_null_or_error) {
-		int names_all_non_null_or_error = TRUE;
-		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
-		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, poutrecs,
-				pnode->do_full_prefixing, pcst_outputs->oosvar_flatten_separator);
-		}
-		sllmv_free(pmvnames);
-	}
-	sllmv_free(pmvkeys);
-
 	lrec_writer_print_all(pnode->psingle_lrec_writer, pnode->stdfp, poutrecs);
 	if (pcst_outputs->flush_every_record)
 		fflush(pnode->stdfp);
+
 	sllv_free(poutrecs);
 }
 
@@ -2024,28 +2004,18 @@ static void handle_emit_to_file(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	sllv_t* poutrecs = sllv_alloc();
+
+	handle_emit_common(pnode, pvars, poutrecs, pcst_outputs->oosvar_flatten_separator);
+
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
-	sllv_t* poutrecs = sllv_alloc();
-	int keys_all_non_null_or_error = TRUE;
-	sllmv_t* pmvkeys = evaluate_list(pnode->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
-	if (keys_all_non_null_or_error) {
-		int names_all_non_null_or_error = TRUE;
-		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
-		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, poutrecs,
-				pnode->do_full_prefixing, pcst_outputs->oosvar_flatten_separator);
-		}
-		sllmv_free(pmvnames);
-	}
-
 	char fn_free_flags = 0;
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
+
 	multi_lrec_writer_output_list(pnode->pmulti_lrec_writer, poutrecs, filename,
 		pnode->file_output_mode, pcst_outputs->flush_every_record);
 	sllv_free(poutrecs);
-
-	sllmv_free(pmvkeys);
 
 	if (fn_free_flags)
 		free(filename);
@@ -2053,8 +2023,27 @@ static void handle_emit_to_file(
 }
 
 // ----------------------------------------------------------------
-// xxx code dedupe between stream/stdfp/file
+static void handle_emit_common(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	sllv_t*                  poutrecs,
+	char*                    oosvar_flatten_separator)
+{
+	int keys_all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pnode->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, poutrecs,
+				pnode->do_full_prefixing, oosvar_flatten_separator);
+		}
+		sllmv_free(pmvnames);
+	}
+	sllmv_free(pmvkeys);
+}
 
+// ----------------------------------------------------------------
 static void handle_emit_lashed(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
