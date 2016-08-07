@@ -6,7 +6,7 @@
 
 struct _lrec_writer_t; // forward reference for method declarations
 
-typedef void lrec_writer_process_func_t(FILE* fp, lrec_t* prec, void* pvstate);
+typedef void lrec_writer_process_func_t(void* pvstate, FILE* fp, lrec_t* prec);
 typedef void lrec_writer_free_func_t(struct _lrec_writer_t* pwriter);
 
 typedef struct _lrec_writer_t {

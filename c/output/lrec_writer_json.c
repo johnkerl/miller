@@ -17,7 +17,7 @@ typedef struct _lrec_writer_json_state_t {
 } lrec_writer_json_state_t;
 
 static void lrec_writer_json_free(lrec_writer_t* pwriter);
-static void lrec_writer_json_process(FILE* output_stream, lrec_t* prec, void* pvstate);
+static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t* prec);
 
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_json_alloc(int stack_vertically, int wrap_json_output_in_outer_list,
@@ -48,7 +48,7 @@ static void lrec_writer_json_free(lrec_writer_t* pwriter) {
 }
 
 // ----------------------------------------------------------------
-static void lrec_writer_json_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
+static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t* prec) {
 	lrec_writer_json_state_t* pstate = pvstate;
 	if (prec != NULL) { // not end of record stream
 		if (pstate->counter++ == 0)

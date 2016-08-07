@@ -65,7 +65,7 @@ int do_stream_chained(char* prepipe, slls_t* filenames, lrec_reader_t* plrec_rea
 	drive_lrec(NULL, &ctx, pmapper_list->phead, plrec_writer, output_stream);
 
 	// Drain the pretty-printer.
-	plrec_writer->pprocess_func(output_stream, NULL, plrec_writer->pvstate);
+	plrec_writer->pprocess_func(plrec_writer->pvstate, output_stream, NULL);
 
 	return ok;
 }
@@ -108,7 +108,7 @@ static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_he
 		for (sllve_t* pe = outrecs->phead; pe != NULL; pe = pe->pnext) {
 			lrec_t* poutrec = pe->pvvalue;
 			if (poutrec != NULL) // writer frees records (sllv void-star payload)
-				plrec_writer->pprocess_func(output_stream, poutrec, plrec_writer->pvstate);
+				plrec_writer->pprocess_func(plrec_writer->pvstate, output_stream, poutrec);
 		}
 		sllv_free(outrecs); // we free the list
 	}

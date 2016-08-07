@@ -26,7 +26,7 @@ typedef struct _lrec_writer_csv_state_t {
 } lrec_writer_csv_state_t;
 
 // ----------------------------------------------------------------
-static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvstate);
+static void lrec_writer_csv_process(void* pvstate, FILE* output_stream, lrec_t* prec);
 static void lrec_writer_csv_free(lrec_writer_t* pwriter);
 
 // ----------------------------------------------------------------
@@ -71,7 +71,7 @@ static void lrec_writer_csv_free(lrec_writer_t* pwriter) {
 }
 
 // ----------------------------------------------------------------
-static void lrec_writer_csv_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
+static void lrec_writer_csv_process(void* pvstate, FILE* output_stream, lrec_t* prec) {
 	if (prec == NULL)
 		return;
 	lrec_writer_csv_state_t* pstate = pvstate;

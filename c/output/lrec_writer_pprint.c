@@ -16,7 +16,7 @@ typedef struct _lrec_writer_pprint_state_t {
 } lrec_writer_pprint_state_t;
 
 static void lrec_writer_pprint_free(lrec_writer_t* pwriter);
-static void lrec_writer_pprint_process(FILE* output_stream, lrec_t* prec, void* pvstate);
+static void lrec_writer_pprint_process(void* pvstate, FILE* output_stream, lrec_t* prec);
 static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, char* ors, char ofs, int left_align);
 
 // ----------------------------------------------------------------
@@ -53,7 +53,7 @@ static void lrec_writer_pprint_free(lrec_writer_t* pwriter) {
 }
 
 // ----------------------------------------------------------------
-static void lrec_writer_pprint_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
+static void lrec_writer_pprint_process(void* pvstate, FILE* output_stream, lrec_t* prec) {
 	lrec_writer_pprint_state_t* pstate = pvstate;
 
 	int drain = FALSE;

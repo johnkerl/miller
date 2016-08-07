@@ -126,12 +126,12 @@ static sllv_t* mapper_tee_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		// Copy the record since the lrec-writer will free it, and we need the original
 		// to return as stream output.
 		lrec_t* pcopy = lrec_copy(pinrec);
-		pstate->plrec_writer->pprocess_func(pstate->output_stream, pcopy, pstate->plrec_writer->pvstate);
+		pstate->plrec_writer->pprocess_func(pstate->plrec_writer->pvstate, pstate->output_stream, pcopy);
 		if (pstate->flush_every_record)
 			fflush(pstate->output_stream);
 		return sllv_single(pinrec);
 	} else {
-		pstate->plrec_writer->pprocess_func(pstate->output_stream, NULL, pstate->plrec_writer->pvstate);
+		pstate->plrec_writer->pprocess_func(pstate->plrec_writer->pvstate, pstate->output_stream, NULL);
 		if (fclose(pstate->output_stream) != 0) {
 			perror("fclose");
 			fprintf(stderr, "%s: fclose error on \"%s\".\n", MLR_GLOBALS.bargv0, pstate->output_file_name);

@@ -1847,7 +1847,7 @@ static void handle_tee_to_stdfp(
 	}
 
 	// xxx rework API(s) to move this-ptr to 1st arg
-	pnode->psingle_lrec_writer->pprocess_func(pnode->stdfp, pcopy, pnode->psingle_lrec_writer->pvstate);
+	pnode->psingle_lrec_writer->pprocess_func(pnode->psingle_lrec_writer->pvstate, pnode->stdfp, pcopy);
 	if (pcst_outputs->flush_every_record)
 		fflush(pnode->stdfp);
 }
@@ -1915,7 +1915,7 @@ static void handle_emitf_to_stdfp(
 	// xxx make method
 	while (poutrecs->phead != NULL) {
 		lrec_t* poutrec = sllv_pop(poutrecs);
-		pnode->psingle_lrec_writer->pprocess_func(pnode->stdfp, poutrec, pnode->psingle_lrec_writer->pvstate);
+		pnode->psingle_lrec_writer->pprocess_func(pnode->psingle_lrec_writer->pvstate, pnode->stdfp, poutrec);
 		if (pcst_outputs->flush_every_record)
 			fflush(pnode->stdfp);
 	}
@@ -2019,7 +2019,7 @@ static void handle_emit_to_stdfp(
 
 	while (poutrecs->phead != NULL) {
 		lrec_t* poutrec = sllv_pop(poutrecs);
-		pnode->psingle_lrec_writer->pprocess_func(pnode->stdfp, poutrec, pnode->psingle_lrec_writer->pvstate);
+		pnode->psingle_lrec_writer->pprocess_func(pnode->psingle_lrec_writer->pvstate, pnode->stdfp, poutrec);
 		if (pcst_outputs->flush_every_record)
 			fflush(pnode->stdfp);
 	}
@@ -2109,7 +2109,7 @@ static void handle_emit_lashed_to_stdfp(
 
 	while (poutrecs->phead != NULL) {
 		lrec_t* poutrec = sllv_pop(poutrecs);
-		pnode->psingle_lrec_writer->pprocess_func(pnode->stdfp, poutrec, pnode->psingle_lrec_writer->pvstate);
+		pnode->psingle_lrec_writer->pprocess_func(pnode->psingle_lrec_writer->pvstate, pnode->stdfp, poutrec);
 		if (pcst_outputs->flush_every_record)
 			fflush(pnode->stdfp);
 	}
@@ -2182,7 +2182,6 @@ static void handle_emit_all_to_stdfp(
 	if (pnode->psingle_lrec_writer == NULL)
 		pnode->psingle_lrec_writer = alloc_single_lrec_writer_or_die(MLR_GLOBALS.popts);
 
-	// xxx code-dedupe
 	sllv_t* poutrecs = sllv_alloc();
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvnames = evaluate_list(pnode->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
@@ -2195,7 +2194,7 @@ static void handle_emit_all_to_stdfp(
 	// xxx make method
 	while (poutrecs->phead != NULL) {
 		lrec_t* poutrec = sllv_pop(poutrecs);
-		pnode->psingle_lrec_writer->pprocess_func(pnode->stdfp, poutrec, pnode->psingle_lrec_writer->pvstate);
+		pnode->psingle_lrec_writer->pprocess_func(pnode->psingle_lrec_writer->pvstate, pnode->stdfp, poutrec);
 		if (pcst_outputs->flush_every_record)
 			fflush(pnode->stdfp);
 	}
@@ -2294,6 +2293,7 @@ static void handle_print(
 }
 
 // ----------------------------------------------------------------
+// xxx move to output/lrec_writers.h
 static lrec_writer_t* alloc_single_lrec_writer_or_die(cli_opts_t* popts) {
 	lrec_writer_t* plrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
 		popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,

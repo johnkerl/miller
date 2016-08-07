@@ -68,7 +68,7 @@ void multi_lrec_writer_output_srec(multi_lrec_writer_t* pmlw, lrec_t* poutrec, c
 		lhmsv_put(pmlw->pnames_to_lrec_writers_and_fps, mlr_strdup_or_die(filename_or_command), pstate, FREE_ENTRY_KEY);
 	}
 
-	pstate->plrec_writer->pprocess_func(pstate->output_stream, poutrec, pstate->plrec_writer->pvstate);
+	pstate->plrec_writer->pprocess_func(pstate->plrec_writer->pvstate, pstate->output_stream, poutrec);
 
 	if (poutrec != NULL) {
 		if (flush_every_record)
@@ -106,7 +106,7 @@ void multi_lrec_writer_output_list(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, 
 void multi_lrec_writer_drain(multi_lrec_writer_t* pmlw) {
 	for (lhmsve_t* pe = pmlw->pnames_to_lrec_writers_and_fps->phead; pe != NULL; pe = pe->pnext) {
 		lrec_writer_and_fp_t* pstate = pe->pvvalue;
-		pstate->plrec_writer->pprocess_func(pstate->output_stream, NULL, pstate->plrec_writer->pvstate);
+		pstate->plrec_writer->pprocess_func(pstate->plrec_writer->pvstate, pstate->output_stream, NULL);
 		fflush(pstate->output_stream);
 		if (pstate->is_popen) {
 			if (pclose(pstate->output_stream) != 0) {

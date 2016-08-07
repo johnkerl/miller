@@ -9,7 +9,7 @@ typedef struct _lrec_writer_dkvp_state_t {
 } lrec_writer_dkvp_state_t;
 
 static void lrec_writer_dkvp_free(lrec_writer_t* pwriter);
-static void lrec_writer_dkvp_process(FILE* output_stream, lrec_t* prec, void* pvstate);
+static void lrec_writer_dkvp_process(void* pvstate, FILE* output_stream, lrec_t* prec);
 
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_dkvp_alloc(char* ors, char* ofs, char* ops) {
@@ -33,7 +33,7 @@ static void lrec_writer_dkvp_free(lrec_writer_t* pwriter) {
 }
 
 // ----------------------------------------------------------------
-static void lrec_writer_dkvp_process(FILE* output_stream, lrec_t* prec, void* pvstate) {
+static void lrec_writer_dkvp_process(void* pvstate, FILE* output_stream, lrec_t* prec) {
 	if (prec == NULL)
 		return;
 	lrec_writer_dkvp_state_t* pstate = pvstate;
