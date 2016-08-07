@@ -1846,7 +1846,6 @@ static void handle_tee_to_stdfp(
 		}
 	}
 
-	// xxx rework API(s) to move this-ptr to 1st arg
 	pnode->psingle_lrec_writer->pprocess_func(pnode->psingle_lrec_writer->pvstate, pnode->stdfp, pcopy);
 	if (pcst_outputs->flush_every_record)
 		fflush(pnode->stdfp);
@@ -1912,13 +1911,9 @@ static void handle_emitf_to_stdfp(
 
 	handle_emitf_common(pnode, pvars, poutrecs);
 
-	// xxx make method
-	while (poutrecs->phead != NULL) {
-		lrec_t* poutrec = sllv_pop(poutrecs);
-		pnode->psingle_lrec_writer->pprocess_func(pnode->psingle_lrec_writer->pvstate, pnode->stdfp, poutrec);
-		if (pcst_outputs->flush_every_record)
-			fflush(pnode->stdfp);
-	}
+	lrec_writer_print_all(pnode->psingle_lrec_writer, pnode->stdfp, poutrecs);
+	if (pcst_outputs->flush_every_record)
+		fflush(pnode->stdfp);
 	sllv_free(poutrecs);
 }
 
@@ -2017,12 +2012,9 @@ static void handle_emit_to_stdfp(
 	}
 	sllmv_free(pmvkeys);
 
-	while (poutrecs->phead != NULL) {
-		lrec_t* poutrec = sllv_pop(poutrecs);
-		pnode->psingle_lrec_writer->pprocess_func(pnode->psingle_lrec_writer->pvstate, pnode->stdfp, poutrec);
-		if (pcst_outputs->flush_every_record)
-			fflush(pnode->stdfp);
-	}
+	lrec_writer_print_all(pnode->psingle_lrec_writer, pnode->stdfp, poutrecs);
+	if (pcst_outputs->flush_every_record)
+		fflush(pnode->stdfp);
 	sllv_free(poutrecs);
 }
 
@@ -2107,12 +2099,9 @@ static void handle_emit_lashed_to_stdfp(
 		sllmv_free(pmvnames);
 	}
 
-	while (poutrecs->phead != NULL) {
-		lrec_t* poutrec = sllv_pop(poutrecs);
-		pnode->psingle_lrec_writer->pprocess_func(pnode->psingle_lrec_writer->pvstate, pnode->stdfp, poutrec);
-		if (pcst_outputs->flush_every_record)
-			fflush(pnode->stdfp);
-	}
+	lrec_writer_print_all(pnode->psingle_lrec_writer, pnode->stdfp, poutrecs);
+	if (pcst_outputs->flush_every_record)
+		fflush(pnode->stdfp);
 	sllv_free(poutrecs);
 
 	for (int i = 0; i < pnode->num_emit_keylist_evaluators; i++) {
@@ -2191,13 +2180,9 @@ static void handle_emit_all_to_stdfp(
 	}
 	sllmv_free(pmvnames);
 
-	// xxx make method
-	while (poutrecs->phead != NULL) {
-		lrec_t* poutrec = sllv_pop(poutrecs);
-		pnode->psingle_lrec_writer->pprocess_func(pnode->psingle_lrec_writer->pvstate, pnode->stdfp, poutrec);
-		if (pcst_outputs->flush_every_record)
-			fflush(pnode->stdfp);
-	}
+	lrec_writer_print_all(pnode->psingle_lrec_writer, pnode->stdfp, poutrecs);
+	if (pcst_outputs->flush_every_record)
+		fflush(pnode->stdfp);
 	sllv_free(poutrecs);
 }
 

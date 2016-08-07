@@ -48,3 +48,10 @@ lrec_writer_t*  lrec_writer_alloc(char* fmtdesc, char* ors, char* ofs, char* ops
 		return NULL;
 	}
 }
+
+void lrec_writer_print_all(lrec_writer_t* pwriter, FILE* fp, sllv_t* poutrecs) {
+	while (poutrecs->phead != NULL) {
+		lrec_t* poutrec = sllv_pop(poutrecs);
+		pwriter->pprocess_func(pwriter->pvstate, fp, poutrec);
+	}
+}
