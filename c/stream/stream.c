@@ -85,8 +85,10 @@ static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
 		lrec_t* pinrec = plrec_reader->pprocess_func(plrec_reader->pvstate, pvhandle, pctx);
 		if (pinrec == NULL)
 			break;
-		if (pctx->force_eof == TRUE) // e.g. mlr head
+		if (pctx->force_eof == TRUE) { // e.g. mlr head
+			lrec_free(pinrec);
 			break;
+		}
 		pctx->nr++;
 		pctx->fnr++;
 

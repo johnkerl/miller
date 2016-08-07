@@ -23,6 +23,7 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 COMMON:
+? head last trickle wtfc
 * mlr -k | grep mlr | sed 's/Example: //' | sh 1>1 2>2
 ! flesh out ...'s in mlr -k's
 ? print/dump end with OFS ?
