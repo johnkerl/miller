@@ -28711,6 +28711,34 @@ NR=2,A=EKS,B=PAN
 NR=3,A=WYE,B=WYE
 NR=4,A=EKS,B=WYE
 
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > stdout, (@a, @b), "NR" ./reg_test/input/abixy
+NR=1,a=pan,b=pan
+NR=1,a=pan,b=pan
+NR=2,a=eks,b=pan
+NR=1,a=pan,b=pan
+NR=2,a=eks,b=pan
+NR=3,a=wye,b=wye
+NR=1,a=pan,b=pan
+NR=2,a=eks,b=pan
+NR=3,a=wye,b=wye
+NR=4,a=eks,b=wye
+
+cat ./output-regtest/emitp4/err1
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > stderr, (@a, @b), "NR" ./reg_test/input/abixy
+
+cat ./output-regtest/emitp4/err2
+NR=1,a=pan,b=pan
+NR=1,a=pan,b=pan
+NR=2,a=eks,b=pan
+NR=1,a=pan,b=pan
+NR=2,a=eks,b=pan
+NR=3,a=wye,b=wye
+NR=1,a=pan,b=pan
+NR=2,a=eks,b=pan
+NR=3,a=wye,b=wye
+NR=4,a=eks,b=wye
+
 mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emitp > "./output-regtest/emitp5/out.".$a.$b, @* ./reg_test/input/abixy
 
 cat ./output-regtest/emitp5/out.ekspan
