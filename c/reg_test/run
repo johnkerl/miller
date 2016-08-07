@@ -3651,6 +3651,14 @@ run_cat $emitf1/out.zeewye
 
 run_mlr put -q '@a=$a; @b=$b; emitf | "tr \[a-z\] \[A-Z\]", @a, @b' $indir/abixy
 
+touch $emitf1/err1
+run_mlr put -q '@a=$a; @b=$b; emitf > stdout, @a, @b' $indir/abixy 2> $emitf1/err1
+run_cat $emitf1/err1
+
+touch $emitf1/err2
+run_mlr put -q '@a=$a; @b=$b; emitf > stderr, @a, @b' $indir/abixy 2> $emitf1/err2
+run_cat $emitf1/err2
+
 # ----------------------------------------------------------------
 announce DSL EMITP REDIRECTS
 

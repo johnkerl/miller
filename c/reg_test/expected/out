@@ -28351,6 +28351,34 @@ A=ZEE,B=WYE
 A=HAT,B=WYE
 A=PAN,B=WYE
 
+mlr put -q @a=$a; @b=$b; emitf > stdout, @a, @b ./reg_test/input/abixy
+a=pan,b=pan
+a=eks,b=pan
+a=wye,b=wye
+a=eks,b=wye
+a=wye,b=pan
+a=zee,b=pan
+a=eks,b=zee
+a=zee,b=wye
+a=hat,b=wye
+a=pan,b=wye
+
+cat ./output-regtest/emitf1/err1
+
+mlr put -q @a=$a; @b=$b; emitf > stderr, @a, @b ./reg_test/input/abixy
+
+cat ./output-regtest/emitf1/err2
+a=pan,b=pan
+a=eks,b=pan
+a=wye,b=wye
+a=eks,b=wye
+a=wye,b=pan
+a=zee,b=pan
+a=eks,b=zee
+a=zee,b=wye
+a=hat,b=wye
+a=pan,b=wye
+
 
 ================================================================
 DSL EMITP REDIRECTS
