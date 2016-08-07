@@ -49,6 +49,21 @@ lrec_writer_t*  lrec_writer_alloc(char* fmtdesc, char* ors, char* ofs, char* ops
 	}
 }
 
+// ----------------------------------------------------------------
+lrec_writer_t* lrec_writer_alloc_or_die(cli_opts_t* popts) {
+	lrec_writer_t* plrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
+		popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
+		popts->right_justify_xtab_value, popts->json_flatten_separator, popts->quote_json_values_always,
+		popts->stack_json_output_vertically, popts->wrap_json_output_in_outer_list);
+	if (plrec_writer == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	return plrec_writer;
+}
+
+// ----------------------------------------------------------------
 void lrec_writer_print_all(lrec_writer_t* pwriter, FILE* fp, sllv_t* poutrecs) {
 	while (poutrecs->phead != NULL) {
 		lrec_t* poutrec = sllv_pop(poutrecs);

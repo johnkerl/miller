@@ -104,8 +104,6 @@ static void                             handle_dump(mlr_dsl_cst_statement_t* s, 
 static void                     handle_dump_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_print(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 
-static lrec_writer_t* alloc_single_lrec_writer_or_die(cli_opts_t* popts);
-
 static void                           handle_filter(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                handle_conditional_block(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                            handle_while(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -1826,7 +1824,7 @@ static void handle_tee_to_stdfp(
 {
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
-		pnode->psingle_lrec_writer = alloc_single_lrec_writer_or_die(MLR_GLOBALS.popts);
+		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(MLR_GLOBALS.popts);
 
 	lrec_t* pcopy = lrec_copy(pvars->pinrec);
 
@@ -1905,7 +1903,7 @@ static void handle_emitf_to_stdfp(
 {
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
-		pnode->psingle_lrec_writer = alloc_single_lrec_writer_or_die(MLR_GLOBALS.popts);
+		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(MLR_GLOBALS.popts);
 
 	sllv_t* poutrecs = sllv_alloc();
 
@@ -1996,7 +1994,7 @@ static void handle_emit_to_stdfp(
 {
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
-		pnode->psingle_lrec_writer = alloc_single_lrec_writer_or_die(MLR_GLOBALS.popts);
+		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(MLR_GLOBALS.popts);
 
 	sllv_t* poutrecs = sllv_alloc();
 	int keys_all_non_null_or_error = TRUE;
@@ -2083,7 +2081,7 @@ static void handle_emit_lashed_to_stdfp(
 {
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
-		pnode->psingle_lrec_writer = alloc_single_lrec_writer_or_die(MLR_GLOBALS.popts);
+		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(MLR_GLOBALS.popts);
 
 	sllv_t* poutrecs = sllv_alloc();
 	int keys_all_non_null_or_error = TRUE;
@@ -2169,7 +2167,7 @@ static void handle_emit_all_to_stdfp(
 {
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
-		pnode->psingle_lrec_writer = alloc_single_lrec_writer_or_die(MLR_GLOBALS.popts);
+		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(MLR_GLOBALS.popts);
 
 	sllv_t* poutrecs = sllv_alloc();
 	int all_non_null_or_error = TRUE;
@@ -2275,21 +2273,6 @@ static void handle_print(
 	if (sfree_flags)
 		free(sval);
 	mv_free(&val);
-}
-
-// ----------------------------------------------------------------
-// xxx move to output/lrec_writers.h
-static lrec_writer_t* alloc_single_lrec_writer_or_die(cli_opts_t* popts) {
-	lrec_writer_t* plrec_writer = lrec_writer_alloc(popts->ofile_fmt, popts->ors, popts->ofs, popts->ops,
-		popts->headerless_csv_output, popts->oquoting, popts->left_align_pprint,
-		popts->right_justify_xtab_value, popts->json_flatten_separator, popts->quote_json_values_always,
-		popts->stack_json_output_vertically, popts->wrap_json_output_in_outer_list);
-	if (plrec_writer == NULL) {
-		fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
-	return plrec_writer;
 }
 
 // ----------------------------------------------------------------

@@ -2,6 +2,7 @@
 #define LREC_WRITERS_H
 #include <stdio.h>
 #include "cli/quoting.h"
+#include "cli/mlrcli.h"
 #include "containers/sllv.h"
 #include "output/lrec_writer.h"
 
@@ -13,6 +14,8 @@ lrec_writer_t*  lrec_writer_alloc(char* fmtdesc, char* ors, char* ofs, char* ops
 	int quote_json_values_always,
 	int stack_json_output_vertically,
 	int wrap_json_output_in_outer_list);
+
+lrec_writer_t*  lrec_writer_alloc_or_die(cli_opts_t* popts);
 
 lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, quoting_t oquoting, int headerless_csv_output);
 lrec_writer_t* lrec_writer_csvlite_alloc(char* ors, char* ofs, int headerless_csv_output);
