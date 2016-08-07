@@ -400,6 +400,7 @@ static void step_shift_zprocess(void* pvstate, lrec_t* prec) {
 }
 static void step_shift_free(step_t* pstep) {
 	step_shift_state_t* pstate = pstep->pvstate;
+	free(pstate->prev);
 	free(pstate->output_field_name);
 	free(pstate);
 	free(pstep);

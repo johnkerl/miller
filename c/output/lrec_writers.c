@@ -2,7 +2,6 @@
 #include "lib/mlr_globals.h"
 #include "output/lrec_writers.h"
 
-// xxx bag up in popts->writer_opts
 lrec_writer_t*  lrec_writer_alloc(cli_opts_t* popts) {
 	if (streq(popts->ofile_fmt, "dkvp")) {
 		return lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
