@@ -100,25 +100,10 @@ static void handle_for_oosvar_aux(
 	mlhmmv_value_t           submap,
 	sllse_t*                 prest_for_k_names);
 
-static void handle_unset_vararg_oosvar(
-	mlr_dsl_cst_statement_vararg_t* pvararg,
-	variables_t*                    pvars,
-	cst_outputs_t*                  pcst_outputs);
-
-static void handle_unset_vararg_full_srec(
-	mlr_dsl_cst_statement_vararg_t* pvararg,
-	variables_t*                    pvars,
-	cst_outputs_t*                  pcst_outputs);
-
-static void handle_unset_vararg_srec_field_name(
-	mlr_dsl_cst_statement_vararg_t* pvararg,
-	variables_t*                    pvars,
-	cst_outputs_t*                  pcst_outputs);
-
-static void handle_unset_vararg_indirect_srec_field_name(
-	mlr_dsl_cst_statement_vararg_t* pvararg,
-	variables_t*                    pvars,
-	cst_outputs_t*                  pcst_outputs);
+static void                   handle_unset_vararg_oosvar (mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
+static void                handle_unset_vararg_full_srec (mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
+static void          handle_unset_vararg_srec_field_name (mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
+static void handle_unset_vararg_indirect_srec_field_name (mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
 
 static void                     handle_tee_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                      handle_tee_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
