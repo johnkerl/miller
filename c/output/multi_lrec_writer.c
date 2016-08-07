@@ -19,6 +19,7 @@ void multi_lrec_writer_free(multi_lrec_writer_t* pmlw) {
 		lrec_writer_and_fp_t* pstate = pe->pvvalue;
 		pstate->plrec_writer->pfree_func(pstate->plrec_writer);
 		free(pstate->filename_or_command);
+		free(pstate);
 	}
 
 	lhmsv_free(pmlw->pnames_to_lrec_writers_and_fps);

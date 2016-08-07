@@ -99,6 +99,7 @@ static mapper_t* mapper_tee_alloc(ap_state_t* pargp, int do_append, int flush_ev
 static void mapper_tee_free(mapper_t* pmapper) {
 	mapper_tee_state_t* pstate = pmapper->pvstate;
 	ap_free(pstate->pargp);
+	pstate->plrec_writer->pfree_func(pstate->plrec_writer);
 	free(pstate);
 	free(pmapper);
 }

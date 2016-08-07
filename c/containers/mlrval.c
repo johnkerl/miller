@@ -388,7 +388,10 @@ static mv_t dot_strings(char* string1, char* string2) {
 }
 
 mv_t dot_s_ss(mv_t* pval1, mv_t* pval2) {
-	return dot_strings(pval1->u.strv, pval2->u.strv);
+	mv_t rv = dot_strings(pval1->u.strv, pval2->u.strv);
+	mv_free(pval1);
+	mv_free(pval2);
+	return rv;
 }
 
 mv_t dot_s_xs(mv_t* pval1, mv_t* pval2) {
