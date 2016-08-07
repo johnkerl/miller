@@ -3488,6 +3488,14 @@ run_cat $tee2/out.zee
 
 run_mlr put -q 'tee | "tr \[a-z\] \[A-Z\]", $*' $indir/abixy
 
+touch $tee2/err1
+run_mlr put -q 'tee > stdout, $*' $indir/abixy 2> $tee2/err1
+run_cat $tee2/err1
+
+touch $tee2/err2
+run_mlr put -q 'tee > stderr, $*' $indir/abixy 2> $tee2/err2
+run_cat $tee2/err2
+
 # ----------------------------------------------------------------
 announce DSL PRINT REDIRECTS
 
