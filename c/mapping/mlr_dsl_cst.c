@@ -122,6 +122,7 @@ static void handle_unset_vararg_indirect_srec_field_name(
 
 static void                     handle_tee_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                      handle_tee_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static lrec_t*                    handle_tee_common(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 
 static void                            handle_emitf(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void                   handle_emitf_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -2091,6 +2092,8 @@ static void handle_bare_boolean(
 }
 
 // ----------------------------------------------------------------
+// xxx code-dedupe
+
 static void handle_tee_to_stdfp(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
@@ -2100,30 +2103,14 @@ static void handle_tee_to_stdfp(
 	if (pnode->psingle_lrec_writer == NULL)
 		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(MLR_GLOBALS.popts);
 
-	lrec_t* pcopy = lrec_copy(pvars->pinrec);
+	lrec_t* pcopy = handle_tee_common(pnode, pvars, pcst_outputs);
 
-	// xxx need an lrec/mixutil method for this.
-	// Write the output fields from the typed overlay back to the lrec.
-	for (lhmsmve_t* pe = pvars->ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
-		char* output_field_name = pe->key;
-		mv_t* pval = &pe->value;
-
-		// Ownership transfer from mv_t to lrec.
-		if (pval->type == MT_STRING || pval->type == MT_EMPTY) {
-			lrec_put(pcopy, output_field_name, mlr_strdup_or_die(pval->u.strv), FREE_ENTRY_VALUE);
-		} else {
-			char free_flags = NO_FREE;
-			char* string = mv_format_val(pval, &free_flags);
-			lrec_put(pcopy, output_field_name, string, free_flags);
-		}
-	}
-
+	// The writer frees the lrec
 	pnode->psingle_lrec_writer->pprocess_func(pnode->psingle_lrec_writer->pvstate, pnode->stdfp, pcopy);
 	if (pcst_outputs->flush_every_record)
 		fflush(pnode->stdfp);
 }
 
-// ----------------------------------------------------------------
 static void handle_tee_to_file(
 	mlr_dsl_cst_statement_t* pnode,
 	variables_t*             pvars,
@@ -2132,23 +2119,7 @@ static void handle_tee_to_file(
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 
-	lrec_t* pcopy = lrec_copy(pvars->pinrec);
-
-	// xxx need an lrec/mixutil method for this.
-	// Write the output fields from the typed overlay back to the lrec.
-	for (lhmsmve_t* pe = pvars->ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
-		char* output_field_name = pe->key;
-		mv_t* pval = &pe->value;
-
-		// Ownership transfer from mv_t to lrec.
-		if (pval->type == MT_STRING || pval->type == MT_EMPTY) {
-			lrec_put(pcopy, output_field_name, mlr_strdup_or_die(pval->u.strv), FREE_ENTRY_VALUE);
-		} else {
-			char free_flags = NO_FREE;
-			char* string = mv_format_val(pval, &free_flags);
-			lrec_put(pcopy, output_field_name, string, free_flags);
-		}
-	}
+	lrec_t* pcopy = handle_tee_common(pnode, pvars, pcst_outputs);
 
 	char fn_free_flags = 0;
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
@@ -2159,6 +2130,30 @@ static void handle_tee_to_file(
 	if (fn_free_flags)
 		free(filename);
 	mv_free(&filename_mv);
+}
+
+static lrec_t* handle_tee_common(
+	mlr_dsl_cst_statement_t* pnode,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	lrec_t* pcopy = lrec_copy(pvars->pinrec);
+
+	// Write the output fields from the typed overlay back to the lrec.
+	for (lhmsmve_t* pe = pvars->ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
+		char* output_field_name = pe->key;
+		mv_t* pval = &pe->value;
+
+		// Ownership transfer from mv_t to lrec.
+		if (pval->type == MT_STRING || pval->type == MT_EMPTY) {
+			lrec_put(pcopy, output_field_name, mlr_strdup_or_die(pval->u.strv), FREE_ENTRY_VALUE);
+		} else {
+			char free_flags = NO_FREE;
+			char* string = mv_format_val(pval, &free_flags);
+			lrec_put(pcopy, output_field_name, string, free_flags);
+		}
+	}
+	return pcopy;
 }
 
 // ----------------------------------------------------------------
