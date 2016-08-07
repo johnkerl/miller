@@ -3525,6 +3525,14 @@ run_cat $print1/out.zee
 
 run_mlr put -q 'print | "tr \[a-z\] \[A-Z\]",  "abi:".$a.$b.$i' $indir/abixy
 
+touch $print1/err1
+run_mlr put -q 'print > stdout, "abi:".$a.$b.$i' $indir/abixy 2> $print1/err1
+run_cat $print1/err1
+
+touch $print1/err2
+run_mlr put -q 'print > stderr, "abi:".$a.$b.$i' $indir/abixy 2> $print1/err2
+run_cat $print1/err2
+
 # ----------------------------------------------------------------
 announce DSL PRINTN REDIRECTS
 

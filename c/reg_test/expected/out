@@ -27615,6 +27615,34 @@ ABI:ZEEWYE8
 ABI:HATWYE9
 ABI:PANWYE10
 
+mlr put -q print > stdout, "abi:".$a.$b.$i ./reg_test/input/abixy
+abi:panpan1
+abi:ekspan2
+abi:wyewye3
+abi:ekswye4
+abi:wyepan5
+abi:zeepan6
+abi:ekszee7
+abi:zeewye8
+abi:hatwye9
+abi:panwye10
+
+cat ./output-regtest/print1/err1
+
+mlr put -q print > stderr, "abi:".$a.$b.$i ./reg_test/input/abixy
+
+cat ./output-regtest/print1/err2
+abi:panpan1
+abi:ekspan2
+abi:wyewye3
+abi:ekswye4
+abi:wyepan5
+abi:zeepan6
+abi:ekszee7
+abi:zeewye8
+abi:hatwye9
+abi:panwye10
+
 
 ================================================================
 DSL PRINTN REDIRECTS
