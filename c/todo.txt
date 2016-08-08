@@ -23,6 +23,7 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 COMMON:
+! fix head reader/mapper foo
 ! mld for all redirected I/O
 ? head last trickle wtfc
 * mlr -k | grep mlr | sed 's/Example: //' | sh 1>1 2>2
@@ -50,15 +51,6 @@ COOKBOOK:
 * mlr step -a shift
 * ... then put -q '' or ... then nothing
 * asv et al.
-
-awk manpage:
-> The print statement prints its arguments on the standard output (or on a file if >file or >>file is
-> present or on a pipe if |cmd is present), separated by the current output field separator, and termi-
-> nated by the output record separator. file and cmd may be literal names or parenthesized expres-
-> sions; identical string values in different statements denote the same open file. The printf state-
-> ment formats its expression list according to the format (see printf(3)). The built-in function
-> close(expr) closes the file or pipe expr. The built-in function fflush(expr) flushes any buffered
-> output for the file or pipe expr.
 
 ----------------------------------------------------------------
 FOR 4.4.0:
