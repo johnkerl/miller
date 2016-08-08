@@ -46,6 +46,7 @@ void* file_ingestor_stdio_vopen(void* pvstate, char* prepipe, char* filename) {
 			fprintf(stderr, "%s: Couldn't open popen for read: \"%s\".\n", MLR_GLOBALS.bargv0, command);
 			exit(1);
 		}
+		pclose(input_stream);
 		free(command);
 	}
 	file_ingestor_stdio_state_t* pstate = mlr_malloc_or_die(sizeof(file_ingestor_stdio_state_t));

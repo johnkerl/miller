@@ -21,6 +21,8 @@ TOP OF LIST:
 
 ! windows port?
 
+* -f/-r field-name-spec opportunities throughout
+
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 COMMON:
 ! mld for all redirected I/O
