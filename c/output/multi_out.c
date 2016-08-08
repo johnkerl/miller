@@ -25,6 +25,10 @@ void multi_out_close(multi_out_t* pmo) {
 void multi_out_free(multi_out_t* pmo) {
 	if (pmo == NULL)
 		return;
+	for (lhmsve_t* pe = pmo->pnames_to_fps->phead; pe != NULL; pe = pe->pnext) {
+		fp_and_flag_t* pstate = pe->pvvalue;
+		free(pstate);
+	}
 	lhmsv_free(pmo->pnames_to_fps);
 	free(pmo);
 }

@@ -23,6 +23,7 @@ TOP OF LIST:
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 COMMON:
+! mld for all redirected I/O
 ? head last trickle wtfc
 * mlr -k | grep mlr | sed 's/Example: //' | sh 1>1 2>2
 ! flesh out ...'s in mlr -k's
