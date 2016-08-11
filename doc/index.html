@@ -170,6 +170,7 @@ positional indices. For example:
 '
 % mlr --from infile.dat put -f analyze.mlr
 % mlr --from infile.dat put 'tee &gt;  "./taps/data-".$a."-".$b, $*'
+% mlr --from infile.dat put 'tee |  "gzip &gt; ./taps/data-".$a."-".$b.".gz", $*'
 % mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'
 % mlr --from infile.dat put  '(NR % 1000 == 0) { print &gt; stderr, "Checkpoint ".NR}'
 </pre>
