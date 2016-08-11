@@ -29,16 +29,7 @@ typedef struct _mapper_join_opts_t {
 
 	// These allow the joiner to have its own different format/delimiter for
 	// the left-file:
-	char*    input_file_format;
-	char*    irs;
-	char*    ifs;
-	char*    ips;
-	int      allow_repeat_ifs;
-	int      allow_repeat_ips;
-	int      use_implicit_csv_header;
-	char*    ifile_fmt;
-	int      use_mmap_for_read;
-	char*    json_flatten_separator;
+	cli_opts_t cli_opts;
 } mapper_join_opts_t;
 
 typedef struct _mapper_join_state_t {
@@ -63,7 +54,7 @@ static void mapper_join_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_join_alloc(ap_state_t* pargp, mapper_join_opts_t* popts);
 static void mapper_join_free(mapper_t* pmapper);
-static void merge_options(mapper_join_opts_t* popts);
+static void merge_options(cli_opts_t* popts);
 static void ingest_left_file(mapper_join_state_t* pstate);
 static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, mapper_join_state_t* pstate,
 	sllv_t* pout_recs);
@@ -137,15 +128,15 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	popts->emit_left_unpairables    = FALSE;
 	popts->emit_right_unpairables   = FALSE;
 
-	popts->input_file_format = NULL;
-	popts->irs               = NULL;
-	popts->ifs               = NULL;
-	popts->ips               = NULL;
-	popts->allow_repeat_ifs  = OPTION_UNSPECIFIED;
-	popts->allow_repeat_ips  = OPTION_UNSPECIFIED;
-	popts->use_implicit_csv_header = OPTION_UNSPECIFIED;
-	popts->use_mmap_for_read = OPTION_UNSPECIFIED;
-	popts->json_flatten_separator = NULL;
+	popts->cli_opts.ifile_fmt         = NULL;
+	popts->cli_opts.irs               = NULL;
+	popts->cli_opts.ifs               = NULL;
+	popts->cli_opts.ips               = NULL;
+	popts->cli_opts.allow_repeat_ifs  = OPTION_UNSPECIFIED;
+	popts->cli_opts.allow_repeat_ips  = OPTION_UNSPECIFIED;
+	popts->cli_opts.use_implicit_csv_header = OPTION_UNSPECIFIED;
+	popts->cli_opts.use_mmap_for_read = OPTION_UNSPECIFIED;
+	popts->cli_opts.json_flatten_separator = NULL;
 
 	char* verb = argv[(*pargi)++];
 
@@ -162,16 +153,16 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_true_flag(pstate,        "--ur",       &popts->emit_right_unpairables);
 	ap_define_true_flag(pstate,        "-u",         &popts->allow_unsorted_input);
 
-	ap_define_string_flag(pstate,      "-i",         &popts->input_file_format);
-	ap_define_string_flag(pstate,      "--irs",      &popts->irs);
-	ap_define_string_flag(pstate,      "--ifs",      &popts->ifs);
-	ap_define_string_flag(pstate,      "--ips",      &popts->ips);
-	ap_define_true_flag(pstate,        "--repifs",   &popts->allow_repeat_ifs);
-	ap_define_true_flag(pstate,        "--repips",   &popts->allow_repeat_ips);
-	ap_define_true_flag(pstate,        "--implicit-csv-header", &popts->use_implicit_csv_header);
-	ap_define_true_flag(pstate,        "--use-mmap", &popts->use_mmap_for_read);
-	ap_define_false_flag(pstate,       "--no-mmap",  &popts->use_mmap_for_read);
-	ap_define_string_flag(pstate,      "--jflatsep", &popts->json_flatten_separator);
+	ap_define_string_flag(pstate,      "-i",         &popts->cli_opts.ifile_fmt);
+	ap_define_string_flag(pstate,      "--irs",      &popts->cli_opts.irs);
+	ap_define_string_flag(pstate,      "--ifs",      &popts->cli_opts.ifs);
+	ap_define_string_flag(pstate,      "--ips",      &popts->cli_opts.ips);
+	ap_define_true_flag(pstate,        "--repifs",   &popts->cli_opts.allow_repeat_ifs);
+	ap_define_true_flag(pstate,        "--repips",   &popts->cli_opts.allow_repeat_ips);
+	ap_define_true_flag(pstate,        "--implicit-csv-header", &popts->cli_opts.use_implicit_csv_header);
+	ap_define_true_flag(pstate,        "--use-mmap", &popts->cli_opts.use_mmap_for_read);
+	ap_define_false_flag(pstate,       "--no-mmap",  &popts->cli_opts.use_mmap_for_read);
+	ap_define_string_flag(pstate,      "--jflatsep", &popts->cli_opts.json_flatten_separator);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_join_usage(stderr, argv[0], verb);
@@ -180,7 +171,7 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 
 	// popen is a stdio construct, not an mmap construct, and it can't be supported here.
 	if (popts->prepipe != NULL)
-		popts->use_mmap_for_read = FALSE;
+		popts->cli_opts.use_mmap_for_read = FALSE;
 
 	if (popts->left_file_name == NULL) {
 		fprintf(stderr, "%s %s: need left file name\n", MLR_GLOBALS.bargv0, verb);
@@ -284,19 +275,11 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 	// isn't known until after the CLI-parser is called.
 	if (pstate->pjoin_bucket_keeper == NULL) {
 		mapper_join_opts_t* popts = pstate->popts;
-		merge_options(pstate->popts);
+		merge_options(&pstate->popts->cli_opts);
 		pstate->pjoin_bucket_keeper = join_bucket_keeper_alloc(
 			popts->prepipe,
 			popts->left_file_name,
-			popts->input_file_format,
-			popts->use_mmap_for_read,
-			popts->irs,
-			popts->ifs,
-			popts->allow_repeat_ifs,
-			popts->ips,
-			popts->allow_repeat_ips,
-			popts->use_implicit_csv_header,
-			popts->json_flatten_separator,
+			&popts->cli_opts,
 			popts->pleft_join_field_names);
 	}
 	join_bucket_keeper_t* pkeeper = pstate->pjoin_bucket_keeper; // keystroke-saver
@@ -500,12 +483,12 @@ static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, ma
 // * If the join input format was specified and is not the same as main input
 //   format, take unspecified values from defaults for the join input format.
 
-static void merge_options(mapper_join_opts_t* popts) {
-	if (popts->input_file_format == NULL) {
-		popts->input_file_format = MLR_GLOBALS.popts->ifile_fmt;
+static void merge_options(cli_opts_t* popts) {
+	if (popts->ifile_fmt == NULL) {
+		popts->ifile_fmt = MLR_GLOBALS.popts->ifile_fmt;
 	}
 
-	if (streq(popts->input_file_format, MLR_GLOBALS.popts->ifile_fmt)) {
+	if (streq(popts->ifile_fmt, MLR_GLOBALS.popts->ifile_fmt)) {
 
 		if (popts->irs == NULL)
 			popts->irs = MLR_GLOBALS.popts->irs;
@@ -521,15 +504,15 @@ static void merge_options(mapper_join_opts_t* popts) {
 	} else {
 
 		if (popts->irs == NULL)
-			popts->irs = lhmss_get(get_default_rses(), popts->input_file_format);
+			popts->irs = lhmss_get(get_default_rses(), popts->ifile_fmt);
 		if (popts->ifs == NULL)
-			popts->ifs = lhmss_get(get_default_fses(), popts->input_file_format);
+			popts->ifs = lhmss_get(get_default_fses(), popts->ifile_fmt);
 		if (popts->ips == NULL)
-			popts->ips = lhmss_get(get_default_pses(), popts->input_file_format);
+			popts->ips = lhmss_get(get_default_pses(), popts->ifile_fmt);
 		if (popts->allow_repeat_ifs  == OPTION_UNSPECIFIED)
-			popts->allow_repeat_ifs = lhmsi_get(get_default_repeat_ifses(), popts->input_file_format);
+			popts->allow_repeat_ifs = lhmsi_get(get_default_repeat_ifses(), popts->ifile_fmt);
 		if (popts->allow_repeat_ips  == OPTION_UNSPECIFIED)
-			popts->allow_repeat_ips = lhmsi_get(get_default_repeat_ipses(), popts->input_file_format);
+			popts->allow_repeat_ips = lhmsi_get(get_default_repeat_ipses(), popts->ifile_fmt);
 
 	}
 
@@ -544,11 +527,9 @@ static void merge_options(mapper_join_opts_t* popts) {
 // ----------------------------------------------------------------
 static void ingest_left_file(mapper_join_state_t* pstate) {
 	mapper_join_opts_t* popts = pstate->popts;
-	merge_options(popts);
+	merge_options(&popts->cli_opts);
 
-	lrec_reader_t* plrec_reader = lrec_reader_alloc(popts->input_file_format, popts->use_mmap_for_read,
-		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips,
-		popts->use_implicit_csv_header, popts->json_flatten_separator);
+	lrec_reader_t* plrec_reader = lrec_reader_alloc(&popts->cli_opts);
 
 	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, pstate->popts->prepipe,
 		pstate->popts->left_file_name);

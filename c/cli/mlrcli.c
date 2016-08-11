@@ -1126,9 +1126,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		popts->use_mmap_for_read = FALSE;
 	}
 
-	popts->plrec_reader = lrec_reader_alloc(popts->ifile_fmt, popts->use_mmap_for_read,
-		popts->irs, popts->ifs, popts->allow_repeat_ifs, popts->ips, popts->allow_repeat_ips,
-		popts->use_implicit_csv_header, popts->json_flatten_separator);
+	popts->plrec_reader = lrec_reader_alloc(popts);
 	if (popts->plrec_reader == NULL) {
 		main_usage(stderr, argv[0]);
 		exit(1);

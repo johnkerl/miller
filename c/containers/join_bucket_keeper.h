@@ -7,6 +7,7 @@
 #define JOIN_BUCKET_KEEPER_H
 
 #include "lib/context.h"
+#include "cli/mlrcli.h"
 #include "containers/lrec.h"
 #include "containers/slls.h"
 #include "containers/sllv.h"
@@ -37,15 +38,7 @@ typedef struct _join_bucket_keeper_t {
 join_bucket_keeper_t* join_bucket_keeper_alloc(
 	char* prepipe,
 	char* left_file_name,
-	char* input_file_format,
-	int   use_mmap_for_read,
-	char* irs,
-	char* ifs,
-	int   allow_repeat_ifs,
-	char* ips,
-	int   allow_repeat_ips,
-	int   use_implicit_csv_header,
-	char* json_flatten_separator,
+	cli_opts_t* popts,
 	slls_t* pleft_field_names);
 
 join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(

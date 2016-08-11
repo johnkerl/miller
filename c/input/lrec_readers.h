@@ -1,13 +1,12 @@
 #ifndef LREC_READERS_H
 #define LREC_READERS_H
+#include "cli/mlrcli.h"
 #include "input/lrec_reader.h"
 
 // ----------------------------------------------------------------
 // Primary entry points
 
-// Factory method.  fmtdesc: "dkvp", "nidx", "csv", "csvlite", "nidx", "xtab".
-lrec_reader_t*  lrec_reader_alloc(char* fmtdesc, int use_mmap, char* irs, char* ifs, int allow_repeat_ifs,
-	char* ips, int allow_repeat_ips, int use_implicit_csv_header, char* json_flatten_separator);
+lrec_reader_t*  lrec_reader_alloc(cli_opts_t* popts);
 
 lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs, int use_implicit_header);
 lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implicit_header);
