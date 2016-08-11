@@ -2,6 +2,7 @@
 BUGFIXES
 
 * need to ignore subproc abend (e.g. grep nonesuch) ?!?
+  -> + UT cases
 
   mlr --from myfile.dat put '@v[NR][NR]=$*; emit | "grep somepattern", @*, "index1", "index2"'
   ...
@@ -17,26 +18,18 @@ TOP OF LIST:
 
 ! go through lmag article & clarify all unclears
 
-! think hard and long about tee/emit/>/>>/| etc before release
-
 ! windows port?
 
 * -f/-r field-name-spec opportunities throughout
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-COMMON:
+PRE-RELEASE 4.4.0:
+
+* ignore subproc abend (e.g. grep nonesuch) + UT cases
 ! mld for all redirected I/O
 * mld: kws not avail as boundvars & what happens if tried: "syntax error"
 
-* mlr -k | grep mlr | sed 's/Example: //' | sh 1>1 2>2
-! flesh out ...'s in mlr -k's
-
-~ put/tee --oxxx flags overlays, w/ substruct data & federated substruct fcns
-
-! xxxes
-! valgrinds
-
-COOKBOOK:
+cookbook:
 * mlr --from ../data/big.dkvp put -q 'tee > $a.$b.".txt", $*'
   wc -l ??????.txt
      40005 ekseks.txt
@@ -51,11 +44,6 @@ COOKBOOK:
 ----------------------------------------------------------------
 FOR 4.4.0:
 
-* pre-release:
-  o xxxes
-  o valgrinds
-  o check mlh's
-
 * tee and put print/dump/tee/emit >/>>/|; latter mention gzip et al.
 
 * mlr step -a shift
@@ -63,7 +51,7 @@ FOR 4.4.0:
 * early out for unkeyed head
 
 * sec2gmtdate is new
-* sec2gmt and sec2gmtdate both leae non-numbers as-is.
+* sec2gmt and sec2gmtdate both leave non-numbers as-is (esp. 'NULL').
 
 * universalize the dot operator. all this string(a).string(b) is going to get really old.
 * $x=="" vs isempty($x) nonsense
@@ -75,6 +63,7 @@ FOR 4.4.0:
 POST-4.4.0:
 
 ? --imd ?
+? put/tee --oxxx flags overlays ?
 
 ----------------------------------------------------------------
 ! lemon refactor
