@@ -142,7 +142,7 @@ static char* describe_state(int state);
 join_bucket_keeper_t* join_bucket_keeper_alloc(
 	char* prepipe,
 	char* left_file_name,
-	cli_opts_t* popts,
+	cli_reader_opts_t* popts,
 	slls_t* pleft_field_names
 ) {
 	lrec_reader_t* plrec_reader = lrec_reader_alloc(popts);

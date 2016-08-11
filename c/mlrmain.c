@@ -18,7 +18,7 @@ int main(int argc, char** argv) {
 	cli_opts_t* popts = parse_command_line(argc, argv);
 	mlr_global_init(argv[0], popts->ofmt, popts);
 
-	char*          prepipe      = popts->prepipe;
+	char*          prepipe      = popts->reader_opts.prepipe;
 	lrec_reader_t* plrec_reader = popts->plrec_reader;
 	sllv_t*        pmapper_list = popts->pmapper_list;
 	lrec_writer_t* plrec_writer = popts->plrec_writer;

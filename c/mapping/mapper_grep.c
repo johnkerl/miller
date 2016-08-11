@@ -109,9 +109,9 @@ static sllv_t* mapper_grep_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 	mapper_grep_state_t* pstate = (mapper_grep_state_t*)pvstate;
 
 	char* line = lrec_sprint(pinrec,
-		MLR_GLOBALS.popts->ors,
-		MLR_GLOBALS.popts->ofs,
-		MLR_GLOBALS.popts->ops);
+		MLR_GLOBALS.popts->writer_opts.ors,
+		MLR_GLOBALS.popts->writer_opts.ofs,
+		MLR_GLOBALS.popts->writer_opts.ops);
 
 	int matches = regmatch_or_die(&pstate->regex, line, 0, NULL);
 	sllv_t* poutrecs = NULL;

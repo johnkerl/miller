@@ -34,7 +34,7 @@ void multi_lrec_writer_output_srec(multi_lrec_writer_t* pmlw, lrec_t* poutrec, c
 	if (pstate == NULL) {
 		pstate = mlr_malloc_or_die(sizeof(lrec_writer_and_fp_t));
 		cli_opts_t* popts = MLR_GLOBALS.popts;
-		pstate->plrec_writer = lrec_writer_alloc(popts);
+		pstate->plrec_writer = lrec_writer_alloc(&popts->writer_opts);
 		if (pstate->plrec_writer == NULL) {
 			fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
 				MLR_GLOBALS.bargv0, __FILE__, __LINE__);

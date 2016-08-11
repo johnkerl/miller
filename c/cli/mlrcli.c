@@ -663,50 +663,55 @@ static mapper_setup_t* look_up_mapper_setup(char* verb) {
 }
 
 // ----------------------------------------------------------------
-cli_opts_t* parse_command_line(int argc, char** argv) {
+cli_opts_t* parse_command_line(int argc, char** argv)
+{
 	cli_opts_t* popts = mlr_malloc_or_die(sizeof(cli_opts_t));
 	memset(popts, 0, sizeof(*popts));
 
-	popts->irs               = NULL;
-	popts->ifs               = NULL;
-	popts->ips               = NULL;
-	popts->allow_repeat_ifs  = NEITHER_TRUE_NOR_FALSE;
-	popts->allow_repeat_ips  = NEITHER_TRUE_NOR_FALSE;
-	popts->use_implicit_csv_header = FALSE;
-	popts->headerless_csv_output   = FALSE;
+	popts->reader_opts.ifile_fmt                      = "dkvp";
+	popts->reader_opts.irs                            = NULL;
+	popts->reader_opts.ifs                            = NULL;
+	popts->reader_opts.ips                            = NULL;
+	popts->reader_opts.input_json_flatten_separator   = DEFAULT_JSON_FLATTEN_SEPARATOR;
 
-	popts->ors               = NULL;
-	popts->ofs               = NULL;
-	popts->ops               = NULL;
+	popts->reader_opts.allow_repeat_ifs               = NEITHER_TRUE_NOR_FALSE;
+	popts->reader_opts.allow_repeat_ips               = NEITHER_TRUE_NOR_FALSE;
+	popts->reader_opts.use_implicit_csv_header        = FALSE;
+	popts->reader_opts.use_mmap_for_read              = TRUE;
 
-	popts->right_justify_xtab_value       = FALSE;
-	popts->stack_json_output_vertically   = FALSE;
-	popts->wrap_json_output_in_outer_list = FALSE;
-	popts->quote_json_values_always       = FALSE;
-	popts->json_flatten_separator         = DEFAULT_JSON_FLATTEN_SEPARATOR;
+	popts->reader_opts.prepipe                        = NULL;
 
-	popts->oosvar_flatten_separator       = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
 
-	popts->ofmt              = DEFAULT_OFMT;
-	popts->oquoting          = DEFAULT_OQUOTING;
+	popts->writer_opts.ofile_fmt                      = "dkvp";
+	popts->writer_opts.ors                            = NULL;
+	popts->writer_opts.ofs                            = NULL;
+	popts->writer_opts.ops                            = NULL;
 
-	popts->nr_progress_mod   = 0LL;
+	popts->writer_opts.headerless_csv_output          = FALSE;
+	popts->writer_opts.right_justify_xtab_value       = FALSE;
+	popts->writer_opts.left_align_pprint              = TRUE;
+	popts->writer_opts.stack_json_output_vertically   = FALSE;
+	popts->writer_opts.wrap_json_output_in_outer_list = FALSE;
+	popts->writer_opts.quote_json_values_always       = FALSE;
+	popts->writer_opts.output_json_flatten_separator  = DEFAULT_JSON_FLATTEN_SEPARATOR;
+	popts->writer_opts.oosvar_flatten_separator       = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
+
+	popts->writer_opts.oquoting                       = DEFAULT_OQUOTING;
+
 
 	popts->plrec_reader      = NULL;
+	popts->pmapper_list      = sllv_alloc();
 	popts->plrec_writer      = NULL;
-
-	popts->prepipe           = NULL;
 	popts->filenames         = slls_alloc();
 
-	popts->ifile_fmt         = "dkvp";
-	popts->ofile_fmt         = "dkvp";
+	popts->ofmt              = DEFAULT_OFMT;
+	popts->nr_progress_mod   = 0LL;
 
-	popts->use_mmap_for_read = TRUE;
-	popts->left_align_pprint = TRUE;
 
 	int no_input             = FALSE;
 	int have_rand_seed       = FALSE;
 	unsigned rand_seed       = 0;
+
 
 	int argi = 1;
 	for (; argi < argc; argi++) {
@@ -819,140 +824,166 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		} else if (streq(argv[argi], "--rs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ors = cli_sep_from_arg(argv[argi+1]);
-			popts->irs = cli_sep_from_arg(argv[argi+1]);
+			popts->writer_opts.ors = cli_sep_from_arg(argv[argi+1]);
+			popts->reader_opts.irs = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 		} else if (streq(argv[argi], "--irs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->irs = cli_sep_from_arg(argv[argi+1]);
+			popts->reader_opts.irs = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 		} else if (streq(argv[argi], "--ors")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ors = cli_sep_from_arg(argv[argi+1]);
+			popts->writer_opts.ors = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 
 		} else if (streq(argv[argi], "--fs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ofs = cli_sep_from_arg(argv[argi+1]);
-			popts->ifs = cli_sep_from_arg(argv[argi+1]);
+			popts->writer_opts.ofs = cli_sep_from_arg(argv[argi+1]);
+			popts->reader_opts.ifs = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 		} else if (streq(argv[argi], "--ifs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ifs = cli_sep_from_arg(argv[argi+1]);
+			popts->reader_opts.ifs = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 		} else if (streq(argv[argi], "--ofs")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ofs = cli_sep_from_arg(argv[argi+1]);
+			popts->writer_opts.ofs = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 		} else if (streq(argv[argi], "--repifs")) {
-			popts->allow_repeat_ifs = TRUE;
+			popts->reader_opts.allow_repeat_ifs = TRUE;
 		} else if (streq(argv[argi], "--implicit-csv-header")) {
-			popts->use_implicit_csv_header = TRUE;
+			popts->reader_opts.use_implicit_csv_header = TRUE;
 		} else if (streq(argv[argi], "--headerless-csv-output")) {
-			popts->headerless_csv_output = TRUE;
+			popts->writer_opts.headerless_csv_output = TRUE;
 
 		} else if (streq(argv[argi], "-p")) {
-			popts->ifile_fmt = "nidx";
-			popts->ofile_fmt = "nidx";
-			popts->ifs = " ";
-			popts->ofs = " ";
-			popts->allow_repeat_ifs = TRUE;
+			popts->reader_opts.ifile_fmt = "nidx";
+			popts->writer_opts.ofile_fmt = "nidx";
+			popts->reader_opts.ifs = " ";
+			popts->writer_opts.ofs = " ";
+			popts->reader_opts.allow_repeat_ifs = TRUE;
 
 		} else if (streq(argv[argi], "--ps")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ops = cli_sep_from_arg(argv[argi+1]);
-			popts->ips = cli_sep_from_arg(argv[argi+1]);
+			popts->writer_opts.ops = cli_sep_from_arg(argv[argi+1]);
+			popts->reader_opts.ips = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 		} else if (streq(argv[argi], "--ips")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ips = cli_sep_from_arg(argv[argi+1]);
+			popts->reader_opts.ips = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 		} else if (streq(argv[argi], "--ops")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->ops = cli_sep_from_arg(argv[argi+1]);
+			popts->writer_opts.ops = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 
 		} else if (streq(argv[argi], "--xvright")) {
-			popts->right_justify_xtab_value = TRUE;
+			popts->writer_opts.right_justify_xtab_value = TRUE;
 
 		} else if (streq(argv[argi], "--jvstack")) {
-			popts->stack_json_output_vertically = TRUE;
+			popts->writer_opts.stack_json_output_vertically = TRUE;
 		} else if (streq(argv[argi], "--jlistwrap")) {
-			popts->wrap_json_output_in_outer_list = TRUE;
+			popts->writer_opts.wrap_json_output_in_outer_list = TRUE;
 		} else if (streq(argv[argi], "--jquoteall")) {
-			popts->quote_json_values_always = TRUE;
+			popts->writer_opts.quote_json_values_always = TRUE;
 		} else if (streq(argv[argi], "--jflatsep")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->json_flatten_separator = cli_sep_from_arg(argv[argi+1]);
+			popts->reader_opts.input_json_flatten_separator  = cli_sep_from_arg(argv[argi+1]);
+			popts->writer_opts.output_json_flatten_separator = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 
 		} else if (streq(argv[argi], "--vflatsep")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->oosvar_flatten_separator = cli_sep_from_arg(argv[argi+1]);
+			popts->writer_opts.oosvar_flatten_separator = cli_sep_from_arg(argv[argi+1]);
 			argi++;
 
-		} else if (streq(argv[argi], "--csv"))      { popts->ifile_fmt = popts->ofile_fmt = "csv";
-		} else if (streq(argv[argi], "--icsv"))     { popts->ifile_fmt = "csv";
-		} else if (streq(argv[argi], "--ocsv"))     { popts->ofile_fmt = "csv";
+		} else if (streq(argv[argi], "--csv")) {
+			popts->reader_opts.ifile_fmt = "csv";
+			popts->writer_opts.ofile_fmt = "csv";
+		} else if (streq(argv[argi], "--icsv")) {
+			popts->reader_opts.ifile_fmt = "csv";
+		} else if (streq(argv[argi], "--ocsv")) {
+			popts->writer_opts.ofile_fmt = "csv";
 
-		} else if (streq(argv[argi], "--csvlite"))  { popts->ifile_fmt = popts->ofile_fmt = "csvlite";
-		} else if (streq(argv[argi], "--icsvlite")) { popts->ifile_fmt = "csvlite";
-		} else if (streq(argv[argi], "--ocsvlite")) { popts->ofile_fmt = "csvlite";
+		} else if (streq(argv[argi], "--csvlite")) {
+			popts->reader_opts.ifile_fmt = "csvlite";
+			popts->writer_opts.ofile_fmt = "csvlite";
+		} else if (streq(argv[argi], "--icsvlite")) {
+			popts->reader_opts.ifile_fmt = "csvlite";
+		} else if (streq(argv[argi], "--ocsvlite")) {
+			popts->writer_opts.ofile_fmt = "csvlite";
 
-		} else if (streq(argv[argi], "--tsv"))      {
-			popts->ifile_fmt = popts->ofile_fmt = "csv";
-			popts->ifs = "\t";
-			popts->ofs = "\t";
-		} else if (streq(argv[argi], "--itsv"))     {
-			popts->ifile_fmt = "csv";
-			popts->ifs = "\t";
-		} else if (streq(argv[argi], "--otsv"))     {
-			popts->ofile_fmt = "csv";
-			popts->ofs = "\t";
+		} else if (streq(argv[argi], "--tsv")) {
+			popts->reader_opts.ifile_fmt = popts->writer_opts.ofile_fmt = "csv";
+			popts->reader_opts.ifs = "\t";
+			popts->writer_opts.ofs = "\t";
+		} else if (streq(argv[argi], "--itsv")) {
+			popts->reader_opts.ifile_fmt = "csv";
+			popts->reader_opts.ifs = "\t";
+		} else if (streq(argv[argi], "--otsv")) {
+			popts->writer_opts.ofile_fmt = "csv";
+			popts->writer_opts.ofs = "\t";
 
-		} else if (streq(argv[argi], "--tsvlite"))  {
-			popts->ifile_fmt = popts->ofile_fmt = "csvlite";
-			popts->ifs = "\t";
-			popts->ofs = "\t";
+		} else if (streq(argv[argi], "--tsvlite")) {
+			popts->reader_opts.ifile_fmt = popts->writer_opts.ofile_fmt = "csvlite";
+			popts->reader_opts.ifs = "\t";
+			popts->writer_opts.ofs = "\t";
 		} else if (streq(argv[argi], "--itsvlite")) {
-			popts->ifile_fmt = "csvlite";
-			popts->ifs = "\t";
+			popts->reader_opts.ifile_fmt = "csvlite";
+			popts->reader_opts.ifs = "\t";
 		} else if (streq(argv[argi], "--otsvlite")) {
-			popts->ofile_fmt = "csvlite";
-			popts->ofs = "\t";
+			popts->writer_opts.ofile_fmt = "csvlite";
+			popts->writer_opts.ofs = "\t";
 
-		} else if (streq(argv[argi], "--omd"))      { popts->ofile_fmt = "markdown";
+		} else if (streq(argv[argi], "--omd")) {
+			popts->writer_opts.ofile_fmt = "markdown";
 
-		} else if (streq(argv[argi], "--dkvp"))     { popts->ifile_fmt = popts->ofile_fmt = "dkvp";
-		} else if (streq(argv[argi], "--idkvp"))    { popts->ifile_fmt = "dkvp";
-		} else if (streq(argv[argi], "--odkvp"))    { popts->ofile_fmt = "dkvp";
+		} else if (streq(argv[argi], "--dkvp")) {
+			popts->reader_opts.ifile_fmt = "dkvp";
+			popts->writer_opts.ofile_fmt = "dkvp";
+		} else if (streq(argv[argi], "--idkvp")) {
+			popts->reader_opts.ifile_fmt = "dkvp";
+		} else if (streq(argv[argi], "--odkvp")) {
+			popts->writer_opts.ofile_fmt = "dkvp";
 
-		} else if (streq(argv[argi], "--json"))     { popts->ifile_fmt = popts->ofile_fmt = "json";
-		} else if (streq(argv[argi], "--ijson"))    { popts->ifile_fmt = "json";
-		} else if (streq(argv[argi], "--ojson"))    { popts->ofile_fmt = "json";
+		} else if (streq(argv[argi], "--json")) {
+			popts->reader_opts.ifile_fmt = "json";
+			popts->writer_opts.ofile_fmt = "json";
+		} else if (streq(argv[argi], "--ijson")) {
+			popts->reader_opts.ifile_fmt = "json";
+		} else if (streq(argv[argi], "--ojson")) {
+			popts->writer_opts.ofile_fmt = "json";
 
-		} else if (streq(argv[argi], "--nidx"))     { popts->ifile_fmt = popts->ofile_fmt = "nidx";
-		} else if (streq(argv[argi], "--inidx"))    { popts->ifile_fmt = "nidx";
-		} else if (streq(argv[argi], "--onidx"))    { popts->ofile_fmt = "nidx";
+		} else if (streq(argv[argi], "--nidx")) {
+			popts->reader_opts.ifile_fmt = "nidx";
+			popts->writer_opts.ofile_fmt = "nidx";
+		} else if (streq(argv[argi], "--inidx")) {
+			popts->reader_opts.ifile_fmt = "nidx";
+		} else if (streq(argv[argi], "--onidx")) {
+			popts->writer_opts.ofile_fmt = "nidx";
 
-		} else if (streq(argv[argi], "--xtab"))     { popts->ifile_fmt = popts->ofile_fmt = "xtab";
-		} else if (streq(argv[argi], "--ixtab"))    { popts->ifile_fmt = "xtab";
-		} else if (streq(argv[argi], "--oxtab"))    { popts->ofile_fmt = "xtab";
+		} else if (streq(argv[argi], "--xtab")) {
+			popts->reader_opts.ifile_fmt = "xtab";
+			popts->writer_opts.ofile_fmt = "xtab";
+		} else if (streq(argv[argi], "--ixtab")) {
+			popts->reader_opts.ifile_fmt = "xtab";
+		} else if (streq(argv[argi], "--oxtab")) {
+			popts->writer_opts.ofile_fmt = "xtab";
 
 		} else if (streq(argv[argi], "--ipprint")) {
-			popts->ifile_fmt        = "csvlite";
-			popts->ifs              = " ";
-			popts->allow_repeat_ifs = TRUE;
+			popts->reader_opts.ifile_fmt        = "csvlite";
+			popts->reader_opts.ifs              = " ";
+			popts->reader_opts.allow_repeat_ifs = TRUE;
 
 		} else if (streq(argv[argi], "--opprint")) {
-			popts->ofile_fmt = "pprint";
+			popts->writer_opts.ofile_fmt = "pprint";
 		} else if (streq(argv[argi], "--pprint")) {
-			popts->ifile_fmt        = "csvlite";
-			popts->ifs              = " ";
-			popts->allow_repeat_ifs = TRUE;
-			popts->ofile_fmt        = "pprint";
-		} else if (streq(argv[argi], "--right"))   {
-			popts->left_align_pprint = FALSE;
+			popts->reader_opts.ifile_fmt        = "csvlite";
+			popts->reader_opts.ifs              = " ";
+			popts->reader_opts.allow_repeat_ifs = TRUE;
+			popts->writer_opts.ofile_fmt        = "pprint";
+		} else if (streq(argv[argi], "--right")) {
+			popts->writer_opts.left_align_pprint = FALSE;
 
 		} else if (streq(argv[argi], "--ofmt")) {
 			check_arg_count(argv, argi, argc, 2);
@@ -971,16 +1002,16 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			}
 			argi++;
 
-		} else if (streq(argv[argi], "--quote-all"))      { popts->oquoting = QUOTE_ALL;
-		} else if (streq(argv[argi], "--quote-none"))     { popts->oquoting = QUOTE_NONE;
-		} else if (streq(argv[argi], "--quote-minimal"))  { popts->oquoting = QUOTE_MINIMAL;
-		} else if (streq(argv[argi], "--quote-numeric"))  { popts->oquoting = QUOTE_NUMERIC;
-		} else if (streq(argv[argi], "--quote-original")) { popts->oquoting = QUOTE_ORIGINAL;
+		} else if (streq(argv[argi], "--quote-all"))      { popts->writer_opts.oquoting = QUOTE_ALL;
+		} else if (streq(argv[argi], "--quote-none"))     { popts->writer_opts.oquoting = QUOTE_NONE;
+		} else if (streq(argv[argi], "--quote-minimal"))  { popts->writer_opts.oquoting = QUOTE_MINIMAL;
+		} else if (streq(argv[argi], "--quote-numeric"))  { popts->writer_opts.oquoting = QUOTE_NUMERIC;
+		} else if (streq(argv[argi], "--quote-original")) { popts->writer_opts.oquoting = QUOTE_ORIGINAL;
 
 		} else if (streq(argv[argi], "--mmap")) {
-			popts->use_mmap_for_read = TRUE;
+			popts->reader_opts.use_mmap_for_read = TRUE;
 		} else if (streq(argv[argi], "--no-mmap")) {
-			popts->use_mmap_for_read = FALSE;
+			popts->reader_opts.use_mmap_for_read = FALSE;
 
 		} else if (streq(argv[argi], "--seed")) {
 			check_arg_count(argv, argi, argc, 2);
@@ -996,8 +1027,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 		} else if (streq(argv[argi], "--prepipe")) {
 			check_arg_count(argv, argi, argc, 2);
-			popts->prepipe = argv[argi+1];
-			popts->use_mmap_for_read = FALSE;
+			popts->reader_opts.prepipe = argv[argi+1];
+			popts->reader_opts.use_mmap_for_read = FALSE;
 			argi++;
 
 		} else {
@@ -1011,67 +1042,67 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	lhmsi_t* default_repeat_ifses = get_default_repeat_ifses();
 	lhmsi_t* default_repeat_ipses = get_default_repeat_ipses();
 
-	if (popts->irs == NULL)
-		popts->irs = lhmss_get(default_rses, popts->ifile_fmt);
-	if (popts->ifs == NULL)
-		popts->ifs = lhmss_get(default_fses, popts->ifile_fmt);
-	if (popts->ips == NULL)
-		popts->ips = lhmss_get(default_pses, popts->ifile_fmt);
+	if (popts->reader_opts.irs == NULL)
+		popts->reader_opts.irs = lhmss_get(default_rses, popts->reader_opts.ifile_fmt);
+	if (popts->reader_opts.ifs == NULL)
+		popts->reader_opts.ifs = lhmss_get(default_fses, popts->reader_opts.ifile_fmt);
+	if (popts->reader_opts.ips == NULL)
+		popts->reader_opts.ips = lhmss_get(default_pses, popts->reader_opts.ifile_fmt);
 
-	if (popts->allow_repeat_ifs == NEITHER_TRUE_NOR_FALSE)
-		popts->allow_repeat_ifs = lhmsi_get(default_repeat_ifses, popts->ifile_fmt);
-	if (popts->allow_repeat_ips == NEITHER_TRUE_NOR_FALSE)
-		popts->allow_repeat_ips = lhmsi_get(default_repeat_ipses, popts->ifile_fmt);
+	if (popts->reader_opts.allow_repeat_ifs == NEITHER_TRUE_NOR_FALSE)
+		popts->reader_opts.allow_repeat_ifs = lhmsi_get(default_repeat_ifses, popts->reader_opts.ifile_fmt);
+	if (popts->reader_opts.allow_repeat_ips == NEITHER_TRUE_NOR_FALSE)
+		popts->reader_opts.allow_repeat_ips = lhmsi_get(default_repeat_ipses, popts->reader_opts.ifile_fmt);
 
-	if (popts->ors == NULL)
-		popts->ors = lhmss_get(default_rses, popts->ofile_fmt);
-	if (popts->ofs == NULL)
-		popts->ofs = lhmss_get(default_fses, popts->ofile_fmt);
-	if (popts->ops == NULL)
-		popts->ops = lhmss_get(default_pses, popts->ofile_fmt);
+	if (popts->writer_opts.ors == NULL)
+		popts->writer_opts.ors = lhmss_get(default_rses, popts->writer_opts.ofile_fmt);
+	if (popts->writer_opts.ofs == NULL)
+		popts->writer_opts.ofs = lhmss_get(default_fses, popts->writer_opts.ofile_fmt);
+	if (popts->writer_opts.ops == NULL)
+		popts->writer_opts.ops = lhmss_get(default_pses, popts->writer_opts.ofile_fmt);
 
-	if (popts->irs == NULL) {
+	if (popts->reader_opts.irs == NULL) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
 		exit(1);
 	}
-	if (popts->ifs == NULL) {
+	if (popts->reader_opts.ifs == NULL) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
 		exit(1);
 	}
-	if (popts->ips == NULL) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
-		exit(1);
-	}
-
-	if (popts->allow_repeat_ifs == NEITHER_TRUE_NOR_FALSE) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
-		exit(1);
-	}
-	if (popts->allow_repeat_ips == NEITHER_TRUE_NOR_FALSE) {
+	if (popts->reader_opts.ips == NULL) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
 		exit(1);
 	}
 
-	if (popts->ors == NULL) {
+	if (popts->reader_opts.allow_repeat_ifs == NEITHER_TRUE_NOR_FALSE) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
 		exit(1);
 	}
-	if (popts->ofs == NULL) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
-		exit(1);
-	}
-	if (popts->ops == NULL) {
+	if (popts->reader_opts.allow_repeat_ips == NEITHER_TRUE_NOR_FALSE) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
 		exit(1);
 	}
 
-	if (streq(popts->ofile_fmt, "pprint") && strlen(popts->ofs) != 1) {
+	if (popts->writer_opts.ors == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+	if (popts->writer_opts.ofs == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+	if (popts->writer_opts.ops == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
+		exit(1);
+	}
+
+	if (streq(popts->writer_opts.ofile_fmt, "pprint") && strlen(popts->writer_opts.ofs) != 1) {
 		fprintf(stderr, "%s: OFS for PPRINT format must be single-character; got \"%s\".\n",
-			argv[0], popts->ofs);
+			argv[0], popts->writer_opts.ofs);
 		return NULL;
 	}
 
-	popts->plrec_writer = lrec_writer_alloc(popts);
+	popts->plrec_writer = lrec_writer_alloc(&popts->writer_opts);
 
 	if (popts->plrec_writer == NULL) {
 		main_usage(stderr, argv[0]);
@@ -1083,7 +1114,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		exit(1);
 	}
 
-	popts->pmapper_list = sllv_alloc();
 	while (TRUE) {
 		check_arg_count(argv, argi, argc, 1);
 		char* verb = argv[argi];
@@ -1123,10 +1153,10 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		popts->filenames = NULL;
 	} else if (popts->filenames->length == 0) {
 	// No filenames means read from standard input, and standard input cannot be mmapped.
-		popts->use_mmap_for_read = FALSE;
+		popts->reader_opts.use_mmap_for_read = FALSE;
 	}
 
-	popts->plrec_reader = lrec_reader_alloc(popts);
+	popts->plrec_reader = lrec_reader_alloc(&popts->reader_opts);
 	if (popts->plrec_reader == NULL) {
 		main_usage(stderr, argv[0]);
 		exit(1);

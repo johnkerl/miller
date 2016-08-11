@@ -6,7 +6,7 @@
 
 typedef struct _lrec_writer_json_state_t {
 	unsigned long long counter;
-	char* json_flatten_separator;
+	char* output_json_flatten_separator;
 
 	int quote_json_values_always;
 	char* before_records_at_start_of_stream;
@@ -21,14 +21,14 @@ static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t*
 
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_json_alloc(int stack_vertically, int wrap_json_output_in_outer_list,
-	int quote_json_values_always, char* json_flatten_separator)
+	int quote_json_values_always, char* output_json_flatten_separator)
 {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
 	lrec_writer_json_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_json_state_t));
 	pstate->quote_json_values_always = quote_json_values_always;
 	pstate->counter = 0;
-	pstate->json_flatten_separator = json_flatten_separator;
+	pstate->output_json_flatten_separator = output_json_flatten_separator;
 
 	pstate->before_records_at_start_of_stream     = wrap_json_output_in_outer_list ? "[\n" : "";
 	pstate->between_records_after_start_of_stream = wrap_json_output_in_outer_list ? ","   : "";
@@ -60,7 +60,7 @@ static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t*
 		// e.g. 'a:x=1,a:y=2' maps to '{"a":{"x":1,"y":2}}'.
 		mlhmmv_t* pmap = mlhmmv_alloc();
 
-		char* sep = pstate->json_flatten_separator;
+		char* sep = pstate->output_json_flatten_separator;
 
 		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
 			// strdup since strtok is destructive and CSV/PPRINT header fields

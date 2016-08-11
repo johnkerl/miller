@@ -24,7 +24,7 @@ typedef struct _lrec_reader_mmap_json_state_t {
 	// into the parsed JSON may still be in use -- e.g. mlr sort.
 	sllv_t* ptop_level_json_objects;
 	sllv_t* precords;
-	char* json_flatten_separator;
+	char* input_json_flatten_separator;
 } lrec_reader_mmap_json_state_t;
 
 static void    lrec_reader_mmap_json_free(lrec_reader_t* preader);
@@ -32,13 +32,13 @@ static void    lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle);
 static lrec_t* lrec_reader_mmap_json_process(void* pvstate, void* pvhandle, context_t* pctx);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_mmap_json_alloc(char* json_flatten_separator) {
+lrec_reader_t* lrec_reader_mmap_json_alloc(char* input_json_flatten_separator) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_json_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_json_state_t));
-	pstate->ptop_level_json_objects = sllv_alloc();
-	pstate->precords                = sllv_alloc();
-	pstate->json_flatten_separator  = json_flatten_separator;
+	pstate->ptop_level_json_objects      = sllv_alloc();
+	pstate->precords                     = sllv_alloc();
+	pstate->input_json_flatten_separator = input_json_flatten_separator;
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
@@ -118,7 +118,9 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 
 		// The lrecs have their string pointers pointing into the parsed-JSON objects (for
 		// efficiency) so it's important we not free the latter until our free method.
-		if (!reference_json_objects_as_lrecs(pstate->precords, parsed_top_level_json, pstate->json_flatten_separator)) {
+		if (!reference_json_objects_as_lrecs(pstate->precords, parsed_top_level_json,
+			pstate->input_json_flatten_separator))
+		{
 			fprintf(stderr, "%s: Unable to parse JSON data.\n", MLR_GLOBALS.bargv0);
 			exit(1);
 		}

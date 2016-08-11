@@ -111,7 +111,7 @@ static sllv_t* mapper_tee_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	// mapper_tee_alloc is called from the CLI-parser and cli_opts isn't finalized until that
 	// returns. So we cannot do this in mapper_tee_alloc.
 	if (pstate->plrec_writer == NULL) {
-		pstate->plrec_writer = lrec_writer_alloc_or_die(MLR_GLOBALS.popts);
+		pstate->plrec_writer = lrec_writer_alloc_or_die(&MLR_GLOBALS.popts->writer_opts);
 	}
 
 	if (pinrec != NULL) {

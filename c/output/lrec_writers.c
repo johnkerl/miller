@@ -2,13 +2,14 @@
 #include "lib/mlr_globals.h"
 #include "output/lrec_writers.h"
 
-lrec_writer_t*  lrec_writer_alloc(cli_opts_t* popts) {
+lrec_writer_t*  lrec_writer_alloc(cli_writer_opts_t* popts) {
 	if (streq(popts->ofile_fmt, "dkvp")) {
 		return lrec_writer_dkvp_alloc(popts->ors, popts->ofs, popts->ops);
 
 	} else if (streq(popts->ofile_fmt, "json")) {
 		return lrec_writer_json_alloc(popts->stack_json_output_vertically,
-			popts->wrap_json_output_in_outer_list, popts->quote_json_values_always, popts->json_flatten_separator);
+			popts->wrap_json_output_in_outer_list, popts->quote_json_values_always,
+			popts->output_json_flatten_separator);
 
 	} else if (streq(popts->ofile_fmt, "csv")) {
 		return lrec_writer_csv_alloc(popts->ors, popts->ofs, popts->oquoting,
@@ -41,7 +42,7 @@ lrec_writer_t*  lrec_writer_alloc(cli_opts_t* popts) {
 }
 
 // ----------------------------------------------------------------
-lrec_writer_t* lrec_writer_alloc_or_die(cli_opts_t* popts) {
+lrec_writer_t* lrec_writer_alloc_or_die(cli_writer_opts_t* popts) {
 	lrec_writer_t* plrec_writer = lrec_writer_alloc(popts);
 	if (plrec_writer == NULL) {
 		fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",

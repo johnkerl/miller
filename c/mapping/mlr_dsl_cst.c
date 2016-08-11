@@ -2084,7 +2084,7 @@ static void handle_tee_to_stdfp(
 {
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
-		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(MLR_GLOBALS.popts);
+		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(&MLR_GLOBALS.popts->writer_opts);
 
 	lrec_t* pcopy = handle_tee_common(pnode, pvars, pcst_outputs);
 
@@ -2155,7 +2155,7 @@ static void handle_emitf_to_stdfp(
 {
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
-		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(MLR_GLOBALS.popts);
+		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(&MLR_GLOBALS.popts->writer_opts);
 
 	sllv_t* poutrecs = sllv_alloc();
 
@@ -2238,7 +2238,7 @@ static void handle_emit_to_stdfp(
 
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
-		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(MLR_GLOBALS.popts);
+		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(&MLR_GLOBALS.popts->writer_opts);
 
 	lrec_writer_print_all(pnode->psingle_lrec_writer, pnode->stdfp, poutrecs);
 	if (pcst_outputs->flush_every_record)
@@ -2307,7 +2307,7 @@ static void handle_emit_lashed_to_stdfp(
 {
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
-		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(MLR_GLOBALS.popts);
+		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(&MLR_GLOBALS.popts->writer_opts);
 
 	sllv_t* poutrecs = sllv_alloc();
 
@@ -2390,7 +2390,7 @@ static void handle_emit_all_to_stdfp(
 {
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
-		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(MLR_GLOBALS.popts);
+		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(&MLR_GLOBALS.popts->writer_opts);
 
 	sllv_t* poutrecs = sllv_alloc();
 	int all_non_null_or_error = TRUE;

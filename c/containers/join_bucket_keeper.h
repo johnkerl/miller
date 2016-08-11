@@ -38,7 +38,7 @@ typedef struct _join_bucket_keeper_t {
 join_bucket_keeper_t* join_bucket_keeper_alloc(
 	char* prepipe,
 	char* left_file_name,
-	cli_opts_t* popts,
+	cli_reader_opts_t* popts,
 	slls_t* pleft_field_names);
 
 join_bucket_keeper_t* join_bucket_keeper_alloc_from_reader(

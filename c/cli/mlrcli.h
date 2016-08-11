@@ -14,46 +14,59 @@
 #include "mapping/mapper.h"
 #include "output/lrec_writer.h"
 
-typedef struct _cli_opts_t {
+// ----------------------------------------------------------------
+typedef struct _cli_reader_opts_t {
+
+	char* ifile_fmt;
 	char* irs;
 	char* ifs;
 	char* ips;
+	char* input_json_flatten_separator;
+
 	int   allow_repeat_ifs;
 	int   allow_repeat_ips;
 	int   use_implicit_csv_header;
-	int   headerless_csv_output;
 	int   use_mmap_for_read;
-	char* ifile_fmt;
-	char* ofile_fmt;
-
-	char* ors;
-	char* ofs;
-	char* ops;
-
-	int   right_justify_xtab_value;
-
-	int   left_align_pprint;
-	int   stack_json_output_vertically;
-	int   wrap_json_output_in_outer_list;
-	int   quote_json_values_always;
-	char* json_flatten_separator;
-
-	char* oosvar_flatten_separator;
-
-	char* ofmt;
-	quoting_t oquoting;
-
-	long long nr_progress_mod;
-
-	lrec_reader_t* plrec_reader;
-	sllv_t*        pmapper_list;
-	lrec_writer_t* plrec_writer;
 
 	// Command for popen on input, e.g. "zcat -cf <". Can be null in which case
 	// files are read directly rather than through a pipe.
 	char*  prepipe;
 
+} cli_reader_opts_t;
+
+// ----------------------------------------------------------------
+typedef struct _cli_writer_opts_t {
+
+	char* ofile_fmt;
+	char* ors;
+	char* ofs;
+	char* ops;
+
+	int   headerless_csv_output;
+	int   right_justify_xtab_value;
+	int   left_align_pprint;
+	int   stack_json_output_vertically;
+	int   wrap_json_output_in_outer_list;
+	int   quote_json_values_always;
+	char* output_json_flatten_separator;
+	char* oosvar_flatten_separator;
+
+	quoting_t oquoting;
+
+} cli_writer_opts_t;
+
+// ----------------------------------------------------------------
+typedef struct _cli_opts_t {
+	cli_reader_opts_t reader_opts;
+	cli_writer_opts_t writer_opts;
+
+	lrec_reader_t* plrec_reader;
+	sllv_t*        pmapper_list;
+	lrec_writer_t* plrec_writer;
 	slls_t* filenames;
+
+	char* ofmt;
+	long long nr_progress_mod;
 
 } cli_opts_t;
 
