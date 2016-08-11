@@ -31,8 +31,6 @@ COMMON:
 * mlr -k | grep mlr | sed 's/Example: //' | sh 1>1 2>2
 ! flesh out ...'s in mlr -k's
 
-* some >/>>/| at cover x 3
-
 * lrec_reader factor take popts as well
 ~ lrec_reader/writer take sub-bagged cliopts pstructs
 ~ put/tee --oxxx flags overlays, w/ substruct data & federated substruct fcns

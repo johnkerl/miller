@@ -34,6 +34,9 @@ indices.  Examples:
   $mean = $sum / $count # no assignment if count unset
 '
 % mlr --from infile.dat put -f analyze.mlr
+% mlr --from infile.dat put 'tee >  "./taps/data-".$a."-".$b, $*'
+% mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'
+% mlr --from infile.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
 ```
 
 This is something the Unix toolkit always could have done, and arguably always

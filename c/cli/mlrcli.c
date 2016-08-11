@@ -248,6 +248,10 @@ static void main_usage_examples(FILE* o, char* argv0, char* leader) {
 	fprintf(o, "  }\n");
 	fprintf(o, "  $mean = $sum / $count # no assignment if count unset'\n");
 	fprintf(o, "%s%s --from infile.dat put -f analyze.mlr\n", leader, argv0);
+	fprintf(o, "%s%s --from infile.dat put 'tee >  \"./taps/data-\".$a.\"-\".$b, $*'\n", leader, argv0);
+	fprintf(o, "%s%s --from infile.dat put -q '@v=$*; dump | \"jq .[]\"'\n", leader, argv0);
+	fprintf(o, "%s%s --from infile.dat put  '(NR %% 1000 == 0) { print > stderr, \"Checkpoint \".NR}'\n",
+		leader, argv0);
 }
 
 static void list_all_verbs_raw(FILE* o) {
