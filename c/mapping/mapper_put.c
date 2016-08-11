@@ -100,6 +100,8 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "    $z = 3\n");
 	fprintf(o, "  '\n");
 	fprintf(o, "\n");
+	fprintf(o, "Please see also '%s -k' for examples using redirected output.\n", argv0);
+	fprintf(o, "\n");
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
 	fprintf(o, "including function list. Or \"%s -f\".\n", argv0);
 	fprintf(o, "Please see in particular:\n");

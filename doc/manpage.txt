@@ -656,6 +656,8 @@ VERBS
 	   $z = 3
 	 '
 
+       Please see also 'mlr -k' for examples using redirected output.
+
        Please see http://johnkerl.org/miller/doc/reference.html for more information
        including function list. Or "mlr -f".
        Please see in particular:
@@ -1357,7 +1359,8 @@ KEYWORDS FOR PUT
 	 The > and >> are for write and append, as in the shell, but (as with awk) the
 	 file-overwrite for > is on first write, not per record. The | is for pipe to a
 	 process which will process the data. There will be one subordinate process for
-	 each distinct value of the piped-to command.
+	 each distinct value of the piped-to command. Output-formatting flags are taken
+	 from the main command line.
 
 	 Example: mlr --from f.dat put 'tee >  "/tmp/data-".$a, $*'
 	 Example: mlr --from f.dat put 'tee >> "/tmp/data-".$a.$b, $*'
@@ -1374,6 +1377,7 @@ KEYWORDS FOR PUT
 	 shell, but (as with awk) the file-overwrite for > is on first write, not per
 	 record. The | is for pipe to a process which will process the data. There will
 	 be one subordinate process for each distinct value of the piped-to command.
+	 Output-formatting flags are taken from the main command line.
 
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
@@ -1395,6 +1399,7 @@ KEYWORDS FOR PUT
 	 shell, but (as with awk) the file-overwrite for > is on first write, not per
 	 record. The | is for pipe to a process which will process the data. There will
 	 be one subordinate process for each distinct value of the piped-to command.
+	 Output-formatting flags are taken from the main command line.
 
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
@@ -1415,6 +1420,7 @@ KEYWORDS FOR PUT
 	 shell, but (as with awk) the file-overwrite for > is on first write, not per
 	 record. The | is for pipe to a process which will process the data. There will
 	 be one subordinate process for each distinct value of the piped-to command.
+	 Output-formatting flags are taken from the main command line.
 
 	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
 	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
@@ -1492,4 +1498,4 @@ SEE ALSO
 
 
 
-				  2016-08-07			     MILLER(1)
+				  2016-08-11			     MILLER(1)

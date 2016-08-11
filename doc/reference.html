@@ -2179,6 +2179,8 @@ Examples:
     $z = 3
   '
 
+Please see also 'mlr -k' for examples using redirected output.
+
 Please see http://johnkerl.org/miller/doc/reference.html for more information
 including function list. Or "mlr -f".
 Please see in particular:
@@ -5295,7 +5297,8 @@ tee: prints the current record to specified file.
   The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
   file-overwrite for &gt; is on first write, not per record. The | is for pipe to a
   process which will process the data. There will be one subordinate process for
-  each distinct value of the piped-to command.
+  each distinct value of the piped-to command. Output-formatting flags are taken
+  from the main command line.
 
   Example: mlr --from f.dat put 'tee &gt;  "/tmp/data-".$a, $*'
   Example: mlr --from f.dat put 'tee &gt;&gt; "/tmp/data-".$a.$b, $*'
@@ -5311,6 +5314,7 @@ emit: inserts an out-of-stream variable into the output record stream. Hashmap
   shell, but (as with awk) the file-overwrite for &gt; is on first write, not per
   record. The | is for pipe to a process which will process the data. There will
   be one subordinate process for each distinct value of the piped-to command.
+  Output-formatting flags are taken from the main command line.
 
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
@@ -5331,6 +5335,7 @@ emitp: inserts an out-of-stream variable into the output record stream.
   shell, but (as with awk) the file-overwrite for &gt; is on first write, not per
   record. The | is for pipe to a process which will process the data. There will
   be one subordinate process for each distinct value of the piped-to command.
+  Output-formatting flags are taken from the main command line.
 
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
@@ -5350,6 +5355,7 @@ emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
   shell, but (as with awk) the file-overwrite for &gt; is on first write, not per
   record. The | is for pipe to a process which will process the data. There will
   be one subordinate process for each distinct value of the piped-to command.
+  Output-formatting flags are taken from the main command line.
 
   Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
   Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
