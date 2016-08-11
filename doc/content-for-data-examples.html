@@ -12,16 +12,16 @@ which shell you use.)
 <p/>Vertical-tabular format is good for a quick look at CSV data layout &mdash; seeing what columns you have to work with:
 POKI_RUN_COMMAND{{head -n 2 data/flins.csv | mlr --icsv --oxtab cat}}HERE
 <p/> A few simple queries:
-POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint count-distinct -f county | head}}HERE
-POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint count-distinct -f construction,line}}HERE
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint count-distinct -f county | head}}HERE
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint count-distinct -f construction,line}}HERE
 <p/> Categorization of total insured value:
-POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint stats1 -a min,mean,max -f tiv_2012}}HERE
-POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line}}HERE
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012}}HERE
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line}}HERE
 
-POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --oxtab stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible}}HERE
-POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint stats1 -a p95,p99,p100 -f hu_site_deductible -g county then sort -f county | head}}HERE
-POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --oxtab stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012}}HERE
-POKI_RUN_COMMAND{{cat data/flins.csv | mlr --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county}}HERE
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --oxtab stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible}}HERE
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint stats1 -a p95,p99,p100 -f hu_site_deductible -g county then sort -f county | head}}HERE
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --oxtab stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012}}HERE
+POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county}}HERE
 
 <h1>Color/shape data</h1>
 

@@ -184,7 +184,7 @@ point_granularity  1
 <p/>
 <div class="pokipanel">
 <pre>
-$ cat data/flins.csv | mlr --icsv --opprint count-distinct -f county | head
+$ mlr --from data/flins.csv --icsv --opprint count-distinct -f county | head
 county              count
 CLAY COUNTY         363
 SUWANNEE COUNTY     154
@@ -201,7 +201,7 @@ UNION COUNTY        15
 <p/>
 <div class="pokipanel">
 <pre>
-$ cat data/flins.csv | mlr --icsv --opprint count-distinct -f construction,line
+$ mlr --from data/flins.csv --icsv --opprint count-distinct -f construction,line
 construction        line        count
 Masonry             Residential 9257
 Wood                Residential 21581
@@ -215,7 +215,7 @@ Steel Frame         Commercial  272
 <p/>
 <div class="pokipanel">
 <pre>
-$ cat data/flins.csv | mlr --icsv --opprint stats1 -a min,mean,max -f tiv_2012
+$ mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012
 tiv_2012_min tiv_2012_mean  tiv_2012_max
 73.370000    2571004.097342 1701000000.000000
 </pre>
@@ -224,7 +224,7 @@ tiv_2012_min tiv_2012_mean  tiv_2012_max
 <p/>
 <div class="pokipanel">
 <pre>
-$ cat data/flins.csv | mlr --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line
+$ mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line
 construction        line        tiv_2012_min   tiv_2012_mean    tiv_2012_max
 Masonry             Residential 261168.070000  1041986.129217   3234970.920000
 Wood                Residential 73.370000      113493.017049    649046.120000
@@ -238,7 +238,7 @@ Steel Frame         Commercial  29790000       133492500.000000 1701000000
 <p/>
 <div class="pokipanel">
 <pre>
-$ cat data/flins.csv | mlr --icsv --oxtab stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible
+$ mlr --from data/flins.csv --icsv --oxtab stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible
 hu_site_deductible_p0   0
 hu_site_deductible_p10  0
 hu_site_deductible_p50  0
@@ -252,7 +252,7 @@ hu_site_deductible_p100 7380000
 <p/>
 <div class="pokipanel">
 <pre>
-$ cat data/flins.csv | mlr --icsv --opprint stats1 -a p95,p99,p100 -f hu_site_deductible -g county then sort -f county | head
+$ mlr --from data/flins.csv --icsv --opprint stats1 -a p95,p99,p100 -f hu_site_deductible -g county then sort -f county | head
 county              hu_site_deductible_p95 hu_site_deductible_p99 hu_site_deductible_p100
 ALACHUA COUNTY      30630.600000           107312.400000          1641375
 BAKER COUNTY        0                      0                      0
@@ -269,7 +269,7 @@ CITRUS COUNTY       1332.900000            79974.900000           483785.100000
 <p/>
 <div class="pokipanel">
 <pre>
-$ cat data/flins.csv | mlr --icsv --oxtab stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012
+$ mlr --from data/flins.csv --icsv --oxtab stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012
 tiv_2011_tiv_2012_corr  0.973050
 tiv_2011_tiv_2012_ols_m 0.983558
 tiv_2011_tiv_2012_ols_b 433854.642897
@@ -281,7 +281,7 @@ tiv_2011_tiv_2012_r2    0.946826
 <p/>
 <div class="pokipanel">
 <pre>
-$ cat data/flins.csv | mlr --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county
+$ mlr --from data/flins.csv --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county
 county              tiv_2011_tiv_2012_corr tiv_2011_tiv_2012_ols_m tiv_2011_tiv_2012_ols_b tiv_2011_tiv_2012_ols_n tiv_2011_tiv_2012_r2
 CLAY COUNTY         0.962716               1.090115                46450.531268            363                     0.926822
 SUWANNEE COUNTY     0.989208               1.074658                36253.003174            154                     0.978533
