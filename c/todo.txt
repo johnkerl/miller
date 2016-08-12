@@ -26,20 +26,6 @@ TOP OF LIST:
 PRE-RELEASE 4.4.0:
 
 * ignore subproc abend (e.g. grep nonesuch) + UT cases
-! mld for all redirected I/O
-* mld: kws not avail as boundvars & what happens if tried: "syntax error"
-
-cookbook:
-* mlr --from ../data/big.dkvp put -q 'tee > $a.$b.".txt", $*'
-  wc -l ??????.txt
-     40005 ekseks.txt
-     40116 ekshat.txt
-     40105 ekspan.txt
-     40257 ekswye.txt
-     ...
-* mlr step -a shift
-* ... then put -q '' or ... then nothing
-* asv et al.
 
 ----------------------------------------------------------------
 FOR 4.4.0:
@@ -64,6 +50,7 @@ POST-4.4.0:
 
 ? --imd ?
 ? put/tee --oxxx flags overlays ?
+? mlr step -a shift --by {n}
 
 ----------------------------------------------------------------
 ! lemon refactor

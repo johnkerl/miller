@@ -73,11 +73,13 @@ void multi_lrec_writer_output_srec(multi_lrec_writer_t* pmlw, lrec_t* poutrec, c
 			fflush(pstate->output_stream);
 	} else {
 		if (pstate->is_popen) {
-			if (pclose(pstate->output_stream) != 0) {
-				perror("pclose");
-				fprintf(stderr, "%s: pclose error on \"%s\".\n", MLR_GLOBALS.bargv0, filename_or_command);
-				exit(1);
-			}
+			// Sadly, pclose returns an error even on well-formed commands. For example, if the popened
+			// command was "grep nonesuch" and the string "nonesuch" was not encountered, grep returns
+			// non-zero and popen flags it as an error. We cannot differentiate these from genuine
+			// failure cases so the best choice is to simply call pclose and ignore error codes.
+			// If a piped-to command does fail then it should have some output to stderr which the
+			// user can take advantage of.
+			(void)pclose(pstate->output_stream);
 		} else {
 			if (fclose(pstate->output_stream) != 0) {
 				perror("fclose");
@@ -107,11 +109,13 @@ void multi_lrec_writer_drain(multi_lrec_writer_t* pmlw) {
 		pstate->plrec_writer->pprocess_func(pstate->plrec_writer->pvstate, pstate->output_stream, NULL);
 		fflush(pstate->output_stream);
 		if (pstate->is_popen) {
-			if (pclose(pstate->output_stream) != 0) {
-				perror("pclose");
-				fprintf(stderr, "%s: pclose error on \"%s\".\n", MLR_GLOBALS.bargv0, pstate->filename_or_command);
-				exit(1);
-			}
+			// Sadly, pclose returns an error even on well-formed commands. For example, if the popened
+			// command was "grep nonesuch" and the string "nonesuch" was not encountered, grep returns
+			// non-zero and popen flags it as an error. We cannot differentiate these from genuine
+			// failure cases so the best choice is to simply call pclose and ignore error codes.
+			// If a piped-to command does fail then it should have some output to stderr which the
+			// user can take advantage of.
+			(void)pclose(pstate->output_stream);
 		} else {
 			if (fclose(pstate->output_stream) != 0) {
 				perror("fclose");

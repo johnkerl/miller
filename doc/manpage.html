@@ -185,8 +185,8 @@ EXAMPLES
 	 }
 	 $mean = $sum / $count # no assignment if count unset'
        mlr --from infile.dat put -f analyze.mlr
-       mlr --from infile.dat put 'tee &gt;  "./taps/data-".$a."-".$b, $*'
-       mlr --from infile.dat put 'tee |  "gzip &gt; ./taps/data-".$a."-".$b.".gz", $*'
+       mlr --from infile.dat put 'tee &gt; "./taps/data-".$a."-".$b, $*'
+       mlr --from infile.dat put 'tee | "gzip &gt; ./taps/data-".$a."-".$b.".gz", $*'
        mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'
        mlr --from infile.dat put  '(NR % 1000 == 0) { print &gt; stderr, "Checkpoint ".NR}'
 
@@ -1506,34 +1506,41 @@ KEYWORDS FOR PUT
        tee: prints the current record to specified file.
 	 This is an immediate print to the specified file (except for pprint format
 	 which of course waits until the end of the input stream to format all output).
+
 	 The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
-	 file-overwrite for &gt; is on first write, not per record. The | is for pipe to a
-	 process which will process the data. There will be one subordinate process for
-	 each distinct value of the piped-to command. Output-formatting flags are taken
-	 from the main command line.
+	 file-overwrite for &gt; is on first write, not per record. The | is for piping to
+	 a process which will process the data. There will be one open file for each
+	 distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
+	 value of the piped-to command (for |). Output-formatting flags are taken from
+	 the main command line.
 
 	 Example: mlr --from f.dat put 'tee &gt;  "/tmp/data-".$a, $*'
 	 Example: mlr --from f.dat put 'tee &gt;&gt; "/tmp/data-".$a.$b, $*'
 	 Example: mlr --from f.dat put 'tee &gt;  stderr, $*'
 	 Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\]", $*'
 	 Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\] &gt; /tmp/data-".$a, $*'
+	 Example: mlr --from f.dat put -q 'tee | "gzip &gt; /tmp/data-".$a.".gz", $*'
 
    emit
        emit: inserts an out-of-stream variable into the output record stream. Hashmap
 	 indices present in the data but not slotted by emit arguments are not output.
 
 	 With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
-	 are instead redirected.  The &gt; and &gt;&gt; are for write and append, as in the
-	 shell, but (as with awk) the file-overwrite for &gt; is on first write, not per
-	 record. The | is for pipe to a process which will process the data. There will
-	 be one subordinate process for each distinct value of the piped-to command.
-	 Output-formatting flags are taken from the main command line.
+	 are instead redirected.
+
+	 The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+	 file-overwrite for &gt; is on first write, not per record. The | is for piping to
+	 a process which will process the data. There will be one open file for each
+	 distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
+	 value of the piped-to command (for |). Output-formatting flags are taken from
+	 the main command line.
 
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt;  "mytap.dat", @*, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt;&gt; "mytap.dat", @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "gzip &gt; mytap.dat.gz", @*, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt; stderr, @*, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
 
@@ -1545,17 +1552,21 @@ KEYWORDS FOR PUT
 	 output concatenated with ":".
 
 	 With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
-	 are instead redirected.  The &gt; and &gt;&gt; are for write and append, as in the
-	 shell, but (as with awk) the file-overwrite for &gt; is on first write, not per
-	 record. The | is for pipe to a process which will process the data. There will
-	 be one subordinate process for each distinct value of the piped-to command.
-	 Output-formatting flags are taken from the main command line.
+	 are instead redirected.
+
+	 The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+	 file-overwrite for &gt; is on first write, not per record. The | is for piping to
+	 a process which will process the data. There will be one open file for each
+	 distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
+	 value of the piped-to command (for |). Output-formatting flags are taken from
+	 the main command line.
 
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt;  "mytap.dat", @*, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt;&gt; "mytap.dat", @*, "index1", "index2"'
+	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "gzip &gt; mytap.dat.gz", @*, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt; stderr, @*, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
 
@@ -1566,11 +1577,14 @@ KEYWORDS FOR PUT
 	 output record stream.
 
 	 With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
-	 are instead redirected.  The &gt; and &gt;&gt; are for write and append, as in the
-	 shell, but (as with awk) the file-overwrite for &gt; is on first write, not per
-	 record. The | is for pipe to a process which will process the data. There will
-	 be one subordinate process for each distinct value of the piped-to command.
-	 Output-formatting flags are taken from the main command line.
+	 are instead redirected.
+
+	 The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+	 file-overwrite for &gt; is on first write, not per record. The | is for piping to
+	 a process which will process the data. There will be one open file for each
+	 distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
+	 value of the piped-to command (for |). Output-formatting flags are taken from
+	 the main command line.
 
 	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
 	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
@@ -1587,10 +1601,14 @@ KEYWORDS FOR PUT
 	 to stdout as JSON.
 
 	 With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
-	 are instead redirected.  The &gt; and &gt;&gt; are for write and append, as in the
-	 shell, but (as with awk) the file-overwrite for &gt; is on first write, not per
-	 record. The | is for pipe to a process which will process the data. There will
-	 be one subordinate process for each distinct value of the piped-to command.
+	 are instead redirected.
+
+	 The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+	 file-overwrite for &gt; is on first write, not per record. The | is for piping to
+	 a process which will process the data. There will be one open file for each
+	 distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
+	 value of the piped-to command (for |). Output-formatting flags are taken from
+	 the main command line.
 
 	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump }'
 	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump &gt;  "mytap.dat"}'
@@ -1648,7 +1666,7 @@ SEE ALSO
 
 
 
-				  2016-08-11			     MILLER(1)
+				  2016-08-12			     MILLER(1)
 </pre>
 </div>
 <p/>
