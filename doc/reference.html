@@ -181,6 +181,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit_statements_for_put">Emit statements for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Multi-emit_statements_for_put">Multi-emit statements for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit-all_statements_for_put">Emit-all statements for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Redirected_output_statements_for_put">Redirected output statements for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Unset_statements_for_put">Unset statements for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#More_variable_assignments_for_put">More variable assignments for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Pattern-action_blocks_for_put">Pattern-action blocks for put</a><br/>
@@ -3135,6 +3136,172 @@ wye pan 0.573289 1
 </pre>
 </div>
 <p/>
+
+<a id="Redirected_output_statements_for_put"/><h3>Redirected output statements for put</h3>
+
+The <b>tee</b>, <b>emitf</b>, <b>emitp</b>, <b>emit</b>, <b>print</b>, and
+<b>dump</b> keyword all allow you to redirect output to one or more files or
+pipe-to commands.
+
+
+<p/> Note the following:
+
+<ul>
+
+<li/> <tt>mlr put</tt> sends the current record (possibly modified by the
+<tt>put</tt> expression) to the output record stream. Records are then input to
+the following verb in a <tt>then</tt>-chain (if any), else printed to standard
+output. The <b>tee</b> keyword <i>additionally</i> writes the output record to
+specified file(s) or pipe-to command, or immediately to
+<tt>stdout</tt>/<tt>stderr</tt>.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help-keyword tee
+tee: prints the current record to specified file.
+  This is an immediate print to the specified file (except for pprint format
+  which of course waits until the end of the input stream to format all output).
+  The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+  file-overwrite for &gt; is on first write, not per record. The | is for pipe to a
+  process which will process the data. There will be one subordinate process for
+  each distinct value of the piped-to command. Output-formatting flags are taken
+  from the main command line.
+
+  Example: mlr --from f.dat put 'tee &gt;  "/tmp/data-".$a, $*'
+  Example: mlr --from f.dat put 'tee &gt;&gt; "/tmp/data-".$a.$b, $*'
+  Example: mlr --from f.dat put 'tee &gt;  stderr, $*'
+  Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\]", $*'
+  Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\] &gt; /tmp/data-".$a, $*'
+</pre>
+</div>
+<p/>
+
+
+<li/> <tt>mlr put</tt>&rsquo; <tt>emitf</tt>, <tt>emitp</tt>, and <tt>emit</tt>
+send out-of-stream variables to the output record stream. These are then input
+to the following verb in a <tt>then</tt>-chain (if any), else printed to
+standard output. When redirected with <tt>&gt;</tt>, <tt>&gt;&gt;</tt>, or
+<tt>|</tt>, they <i>instead</i> write the out-of-stream variable(s) to
+specified file(s) or pipe-to command, or immediately to
+<tt>stdout</tt>/<tt>stderr</tt>.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help-keyword emitf
+emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
+  output record stream.
+
+  With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
+  are instead redirected.  The &gt; and &gt;&gt; are for write and append, as in the
+  shell, but (as with awk) the file-overwrite for &gt; is on first write, not per
+  record. The | is for pipe to a process which will process the data. There will
+  be one subordinate process for each distinct value of the piped-to command.
+  Output-formatting flags are taken from the main command line.
+
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt; "mytap.dat", @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt;&gt; "mytap.dat", @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt; stderr, @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern &gt; mytap.dat", @a, @b, @c'
+
+  Please see http://johnkerl.org/miller/doc for more information.
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help-keyword emitp
+emitp: inserts an out-of-stream variable into the output record stream.
+  Hashmap indices present in the data but not slotted by emitp arguments are
+  output concatenated with ":".
+
+  With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
+  are instead redirected.  The &gt; and &gt;&gt; are for write and append, as in the
+  shell, but (as with awk) the file-overwrite for &gt; is on first write, not per
+  record. The | is for pipe to a process which will process the data. There will
+  be one subordinate process for each distinct value of the piped-to command.
+  Output-formatting flags are taken from the main command line.
+
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt;  "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt;&gt; "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt; stderr, @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
+
+  Please see http://johnkerl.org/miller/doc for more information.
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help-keyword emit
+emit: inserts an out-of-stream variable into the output record stream. Hashmap
+  indices present in the data but not slotted by emit arguments are not output.
+
+  With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
+  are instead redirected.  The &gt; and &gt;&gt; are for write and append, as in the
+  shell, but (as with awk) the file-overwrite for &gt; is on first write, not per
+  record. The | is for pipe to a process which will process the data. There will
+  be one subordinate process for each distinct value of the piped-to command.
+  Output-formatting flags are taken from the main command line.
+
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt;  "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt;&gt; "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt; stderr, @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
+
+  Please see http://johnkerl.org/miller/doc for more information.
+</pre>
+</div>
+<p/>
+
+<li/> The <tt>print</tt> and <tt>dump</tt> keywords produce output immediately
+to standard output, or to specified file(s) or pipe-to command if present.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help-keyword print
+print: prints expression immediately to stdout.
+  Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
+  Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " =&gt; " . v }'
+  Example: mlr --from f.dat put  '(NR % 1000 == 0) { print &gt; stderr, "Checkpoint ".NR}'
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help-keyword dump
+dump: prints all currently defined out-of-stream variables immediately
+  to stdout as JSON.
+
+  With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
+  are instead redirected.  The &gt; and &gt;&gt; are for write and append, as in the
+  shell, but (as with awk) the file-overwrite for &gt; is on first write, not per
+  record. The | is for pipe to a process which will process the data. There will
+  be one subordinate process for each distinct value of the piped-to command.
+
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump }'
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump &gt;  "mytap.dat"}'
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump &gt;&gt; "mytap.dat"}'
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump | "jq .[]"}'
+</pre>
+</div>
+<p/>
+
+</ul>
 
 <a id="Unset_statements_for_put"/><h3>Unset statements for put</h3>
 
