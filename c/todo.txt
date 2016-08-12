@@ -1,13 +1,7 @@
 ================================================================
 BUGFIXES
 
-* need to ignore subproc abend (e.g. grep nonesuch) ?!?
-  -> + UT cases
-
-  mlr --from myfile.dat put '@v[NR][NR]=$*; emit | "grep somepattern", @*, "index1", "index2"'
-  ...
-  pclose: Undefined error: 0
-  mlr: pclose error on "grep somepattern".
+:D
 
 ================================================================
 TOP OF LIST:
@@ -20,67 +14,13 @@ TOP OF LIST:
 
 ! windows port?
 
-* -f/-r field-name-spec opportunities throughout
-
-----------------------------------------------------------------
-4.4.0:
-
-* tee and put print/dump/tee/emit >/>>/|; latter mention gzip et al.
-
-* mlr step -a shift
-
-* early out for unkeyed head
-
-* sec2gmtdate is new
-* sec2gmt and sec2gmtdate both leave non-numbers as-is (esp. 'NULL').
-
-* universalize the dot operator. all this string(a).string(b) is going to get really old.
-* $x=="" vs isempty($x) nonsense
-* mapper nothing to mld
-
-* copy of manpage @ web docs
-
 ----------------------------------------------------------------
 POST-4.4.0:
 
-? --imd ?
+! -f/-r field-name-spec opportunities throughout
 ? put/tee --oxxx flags overlays ?
 ? mlr step -a shift --by {n}
-
-----------------------------------------------------------------
-! lemon refactor
-  - mdwmain w/ ifdef
-  - ex1/2/etc -> better names. SVNE grammar. numexpreval grammar. mlr w&w/o write/append; mlr w&w/o bracing conflict.
-  - clopt for no #line directives
-  - compile w/ as pedantic as possible but not for flex (unused input/yyunput)
-  - proto all
-  - objify all
-  - libify malloc_or_die etc.
-  - name demangles (e.g. paz wtf)
-  - style: typedef struct _foo_t { ... } foo_t; rid of camelcase
-  - substructify lemp; glorified globals at this point
-  - more dump routines for each stage through parser-gen & parser-operate
-  - replace the makefile-sedding with template names inside lempar et al.
-  - all this to clear the weeds & increase visibility around the memory issue
-  - cliopt for memset
-  - suspect the char/int switch
-
-! lemon boundary issue:
-  ! try out 2nd toy grammar
-  ! try memset on semicolon grammar (locate the diff)
-  - debug:
-    > doesn't happen with clang -fsanitize=address
-    > doesn't happen with gcc -g
-    > nothing revealed with clang -Wall
-    > DSLCCOPT DSLCCDEBUG CCOPT CCDEBUG make -e
-  - bisect on #rules
-  - asan (any 2nd opinion from valgrind)
-  - lemon refactor
-  - how to do #define in .y file?
-  - retrieve and locally store the lemon manual
-  k put %ifdef in .y file
-  k NDEBUG
-  k hook in ParseTrace from cliopt
+? --imd ?
 
 ----------------------------------------------------------------
 ? double-quote-aware (non-lite) nidx & dkvp options?
