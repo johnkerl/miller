@@ -1,6 +1,6 @@
 Summary: Name-indexed data processing tool
 Name: mlr
-Version: 4.3.0
+Version: 4.4.0
 Release: 1%{?dist}
 License: BSD2
 Group: Applications/Text

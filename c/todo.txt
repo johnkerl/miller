@@ -22,13 +22,8 @@ TOP OF LIST:
 
 * -f/-r field-name-spec opportunities throughout
 
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-PRE-RELEASE 4.4.0:
-
-* ignore subproc abend (e.g. grep nonesuch) + UT cases
-
 ----------------------------------------------------------------
-FOR 4.4.0:
+4.4.0:
 
 * tee and put print/dump/tee/emit >/>>/|; latter mention gzip et al.
 
