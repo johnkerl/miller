@@ -50,7 +50,7 @@ TOP OF LIST:
   double-searching.
 * 64-bit lengths for containers. test with 5-billion-integer-seq data.
 
-================================================================
+----------------------------------------------------------------
 MORE
 
 * look into 'perf'
@@ -249,14 +249,6 @@ https://docs.fedoraproject.org/ro/Fedora_Draft_Documentation/0.1/html/RPM_Guide/
 http://wiki.networksecuritytoolkit.org/nstwiki/index.php/HowTo_Create_A_Patch_File_For_A_RPM
 
 ================================================================
-git remote add upstream https://github.com/Homebrew/homebrew
-git fetch upstream
-git rebase upstream/master
-shasum -a 256 ../mlr-3.2.2.tar.gz
-git diff HEAD^  HEAD
-git diff HEAD^2 HEAD
-
-----------------------------------------------------------------
 git remote add upstream https://github.com/Homebrew/homebrew
 git fetch upstream
 git rebase upstream/master
