@@ -664,41 +664,44 @@ static mapper_setup_t* look_up_mapper_setup(char* verb) {
 }
 
 // ----------------------------------------------------------------
-cli_opts_t* parse_command_line(int argc, char** argv)
-{
-	cli_opts_t* popts = mlr_malloc_or_die(sizeof(cli_opts_t));
+static void cli_set_reader_defaults(cli_reader_opts_t* preader_opts) {
+	preader_opts->ifile_fmt                      = "dkvp";
+	preader_opts->irs                            = NULL;
+	preader_opts->ifs                            = NULL;
+	preader_opts->ips                            = NULL;
+	preader_opts->input_json_flatten_separator   = DEFAULT_JSON_FLATTEN_SEPARATOR;
+
+	preader_opts->allow_repeat_ifs               = NEITHER_TRUE_NOR_FALSE;
+	preader_opts->allow_repeat_ips               = NEITHER_TRUE_NOR_FALSE;
+	preader_opts->use_implicit_csv_header        = FALSE;
+	preader_opts->use_mmap_for_read              = TRUE;
+
+	preader_opts->prepipe                        = NULL;
+}
+
+static void cli_set_writer_defaults(cli_writer_opts_t* pwriter_opts) {
+	pwriter_opts->ofile_fmt                      = "dkvp";
+	pwriter_opts->ors                            = NULL;
+	pwriter_opts->ofs                            = NULL;
+	pwriter_opts->ops                            = NULL;
+
+	pwriter_opts->headerless_csv_output          = FALSE;
+	pwriter_opts->right_justify_xtab_value       = FALSE;
+	pwriter_opts->left_align_pprint              = TRUE;
+	pwriter_opts->stack_json_output_vertically   = FALSE;
+	pwriter_opts->wrap_json_output_in_outer_list = FALSE;
+	pwriter_opts->quote_json_values_always       = FALSE;
+	pwriter_opts->output_json_flatten_separator  = DEFAULT_JSON_FLATTEN_SEPARATOR;
+	pwriter_opts->oosvar_flatten_separator       = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
+
+	pwriter_opts->oquoting                       = DEFAULT_OQUOTING;
+}
+
+static void cli_set_defaults(cli_opts_t* popts) {
 	memset(popts, 0, sizeof(*popts));
 
-	popts->reader_opts.ifile_fmt                      = "dkvp";
-	popts->reader_opts.irs                            = NULL;
-	popts->reader_opts.ifs                            = NULL;
-	popts->reader_opts.ips                            = NULL;
-	popts->reader_opts.input_json_flatten_separator   = DEFAULT_JSON_FLATTEN_SEPARATOR;
-
-	popts->reader_opts.allow_repeat_ifs               = NEITHER_TRUE_NOR_FALSE;
-	popts->reader_opts.allow_repeat_ips               = NEITHER_TRUE_NOR_FALSE;
-	popts->reader_opts.use_implicit_csv_header        = FALSE;
-	popts->reader_opts.use_mmap_for_read              = TRUE;
-
-	popts->reader_opts.prepipe                        = NULL;
-
-
-	popts->writer_opts.ofile_fmt                      = "dkvp";
-	popts->writer_opts.ors                            = NULL;
-	popts->writer_opts.ofs                            = NULL;
-	popts->writer_opts.ops                            = NULL;
-
-	popts->writer_opts.headerless_csv_output          = FALSE;
-	popts->writer_opts.right_justify_xtab_value       = FALSE;
-	popts->writer_opts.left_align_pprint              = TRUE;
-	popts->writer_opts.stack_json_output_vertically   = FALSE;
-	popts->writer_opts.wrap_json_output_in_outer_list = FALSE;
-	popts->writer_opts.quote_json_values_always       = FALSE;
-	popts->writer_opts.output_json_flatten_separator  = DEFAULT_JSON_FLATTEN_SEPARATOR;
-	popts->writer_opts.oosvar_flatten_separator       = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
-
-	popts->writer_opts.oquoting                       = DEFAULT_OQUOTING;
-
+	cli_set_reader_defaults(&popts->reader_opts);
+	cli_set_writer_defaults(&popts->writer_opts);
 
 	popts->plrec_reader      = NULL;
 	popts->pmapper_list      = sllv_alloc();
@@ -707,7 +710,14 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 
 	popts->ofmt              = DEFAULT_OFMT;
 	popts->nr_progress_mod   = 0LL;
+}
 
+// ----------------------------------------------------------------
+cli_opts_t* parse_command_line(int argc, char** argv)
+{
+	cli_opts_t* popts = mlr_malloc_or_die(sizeof(cli_opts_t));
+
+	cli_set_defaults(popts);
 
 	int no_input             = FALSE;
 	int have_rand_seed       = FALSE;
