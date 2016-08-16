@@ -23,6 +23,12 @@
 #endif
 
 // ----------------------------------------------------------------
+#define DEFAULT_OFMT                     "%lf"
+#define DEFAULT_OQUOTING                 QUOTE_MINIMAL
+#define DEFAULT_JSON_FLATTEN_SEPARATOR   ":"
+#define DEFAULT_OOSVAR_FLATTEN_SEPARATOR ":"
+
+// ----------------------------------------------------------------
 static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_bar_setup,
 	&mapper_bootstrap_setup,
@@ -211,15 +217,6 @@ static char* rebackslash(char* sep) {
 	else
 		return sep;
 }
-
-// ----------------------------------------------------------------
-#define DEFAULT_OFMT "%lf"
-
-#define DEFAULT_OQUOTING QUOTE_MINIMAL
-
-#define DEFAULT_JSON_FLATTEN_SEPARATOR ":"
-
-#define DEFAULT_OOSVAR_FLATTEN_SEPARATOR ":"
 
 // ----------------------------------------------------------------
 // The main_usage() function is split out into subroutines in support of the
@@ -729,6 +726,7 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 		if (argv[argi][0] != '-') {
 			break;
 
+		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		} else if (streq(argv[argi], "--version")) {
 #ifdef HAVE_CONFIG_H
 			printf("Miller %s\n", PACKAGE_VERSION);
@@ -825,6 +823,7 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 			main_usage_see_also(stdout, argv[0]);
 			exit(0);
 
+		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		} else if (streq(argv[argi], "-n")) {
 			no_input = TRUE;
 
@@ -833,6 +832,7 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 			slls_append(popts->filenames, argv[argi+1], NO_FREE);
 			argi++;
 
+		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		} else if (streq(argv[argi], "--rs")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->writer_opts.ors = cli_sep_from_arg(argv[argi+1]);
@@ -996,6 +996,24 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 		} else if (streq(argv[argi], "--right")) {
 			popts->writer_opts.left_align_pprint = FALSE;
 
+		} else if (streq(argv[argi], "--mmap")) {
+			popts->reader_opts.use_mmap_for_read = TRUE;
+		} else if (streq(argv[argi], "--no-mmap")) {
+			popts->reader_opts.use_mmap_for_read = FALSE;
+
+		} else if (streq(argv[argi], "--prepipe")) {
+			check_arg_count(argv, argi, argc, 2);
+			popts->reader_opts.prepipe = argv[argi+1];
+			popts->reader_opts.use_mmap_for_read = FALSE;
+			argi++;
+
+		} else if (streq(argv[argi], "--quote-all"))      { popts->writer_opts.oquoting = QUOTE_ALL;
+		} else if (streq(argv[argi], "--quote-none"))     { popts->writer_opts.oquoting = QUOTE_NONE;
+		} else if (streq(argv[argi], "--quote-minimal"))  { popts->writer_opts.oquoting = QUOTE_MINIMAL;
+		} else if (streq(argv[argi], "--quote-numeric"))  { popts->writer_opts.oquoting = QUOTE_NUMERIC;
+		} else if (streq(argv[argi], "--quote-original")) { popts->writer_opts.oquoting = QUOTE_ORIGINAL;
+
+		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		} else if (streq(argv[argi], "--ofmt")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->ofmt = argv[argi+1];
@@ -1013,17 +1031,6 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 			}
 			argi++;
 
-		} else if (streq(argv[argi], "--quote-all"))      { popts->writer_opts.oquoting = QUOTE_ALL;
-		} else if (streq(argv[argi], "--quote-none"))     { popts->writer_opts.oquoting = QUOTE_NONE;
-		} else if (streq(argv[argi], "--quote-minimal"))  { popts->writer_opts.oquoting = QUOTE_MINIMAL;
-		} else if (streq(argv[argi], "--quote-numeric"))  { popts->writer_opts.oquoting = QUOTE_NUMERIC;
-		} else if (streq(argv[argi], "--quote-original")) { popts->writer_opts.oquoting = QUOTE_ORIGINAL;
-
-		} else if (streq(argv[argi], "--mmap")) {
-			popts->reader_opts.use_mmap_for_read = TRUE;
-		} else if (streq(argv[argi], "--no-mmap")) {
-			popts->reader_opts.use_mmap_for_read = FALSE;
-
 		} else if (streq(argv[argi], "--seed")) {
 			check_arg_count(argv, argi, argc, 2);
 			if (sscanf(argv[argi+1], "0x%x", &rand_seed) == 1) {
@@ -1036,12 +1043,7 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 			}
 			argi++;
 
-		} else if (streq(argv[argi], "--prepipe")) {
-			check_arg_count(argv, argi, argc, 2);
-			popts->reader_opts.prepipe = argv[argi+1];
-			popts->reader_opts.use_mmap_for_read = FALSE;
-			argi++;
-
+		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		} else {
 			usage_unrecognized_verb(argv[0], argv[argi]);
 		}
