@@ -18,8 +18,10 @@
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
+#define VERSION_STRING PACKAGE_VERSION
 #else
 #include "mlrvers.h"
+#define VERSION_STRING MLR_VERSION
 #endif
 
 // ----------------------------------------------------------------
@@ -530,11 +532,7 @@ static void main_usage_then_chaining(FILE* o, char* argv0) {
 static void main_usage_see_also(FILE* o, char* argv0) {
 	fprintf(o, "For more information please see http://johnkerl.org/miller/doc and/or\n");
 	fprintf(o, "http://github.com/johnkerl/miller.");
-#ifdef HAVE_CONFIG_H
-	fprintf(o, " This is Miller version %s.\n", PACKAGE_VERSION);
-#else
-	fprintf(o, " This is Miller version %s.\n", MLR_VERSION);
-#endif // HAVE_CONFIG_H
+	fprintf(o, " This is Miller version %s.\n", VERSION_STRING);
 }
 
 static void print_type_arithmetic_info(FILE* o, char* argv0) {
