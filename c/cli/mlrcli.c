@@ -810,6 +810,84 @@ static int handle_reader_options(char** argv, int argc, int *pargi, cli_reader_o
 	int argi = *pargi;
 	int oargi = argi;
 
+	if (streq(argv[argi], "--irs")) {
+		check_arg_count(argv, argi, argc, 2);
+		preader_opts->irs = cli_sep_from_arg(argv[argi+1]);
+		argi += 2;
+
+	} else if (streq(argv[argi], "--ifs")) {
+		check_arg_count(argv, argi, argc, 2);
+		preader_opts->ifs = cli_sep_from_arg(argv[argi+1]);
+		argi += 2;
+
+	} else if (streq(argv[argi], "--repifs")) {
+		preader_opts->allow_repeat_ifs = TRUE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--implicit-csv-header")) {
+		preader_opts->use_implicit_csv_header = TRUE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--ips")) {
+		check_arg_count(argv, argi, argc, 2);
+		preader_opts->ips = cli_sep_from_arg(argv[argi+1]);
+		argi += 2;
+
+	} else if (streq(argv[argi], "--icsv")) {
+		preader_opts->ifile_fmt = "csv";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--icsvlite")) {
+		preader_opts->ifile_fmt = "csvlite";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--itsv")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->ifs = "\t";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--itsvlite")) {
+		preader_opts->ifile_fmt = "csvlite";
+		preader_opts->ifs = "\t";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--idkvp")) {
+		preader_opts->ifile_fmt = "dkvp";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--ijson")) {
+		preader_opts->ifile_fmt = "json";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--inidx")) {
+		preader_opts->ifile_fmt = "nidx";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--ixtab")) {
+		preader_opts->ifile_fmt = "xtab";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--ipprint")) {
+		preader_opts->ifile_fmt        = "csvlite";
+		preader_opts->ifs              = " ";
+		preader_opts->allow_repeat_ifs = TRUE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--mmap")) {
+		preader_opts->use_mmap_for_read = TRUE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--no-mmap")) {
+		preader_opts->use_mmap_for_read = FALSE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--prepipe")) {
+		check_arg_count(argv, argi, argc, 2);
+		preader_opts->prepipe = argv[argi+1];
+		preader_opts->use_mmap_for_read = FALSE;
+		argi += 2;
+
+	}
 	*pargi = argi;
 	return argi != oargi;
 }
@@ -820,6 +898,113 @@ static int handle_writer_options(char** argv, int argc, int *pargi, cli_writer_o
 	int argi = *pargi;
 	int oargi = argi;
 
+	if (streq(argv[argi], "--ors")) {
+		check_arg_count(argv, argi, argc, 2);
+		pwriter_opts->ors = cli_sep_from_arg(argv[argi+1]);
+		argi += 2;
+
+	} else if (streq(argv[argi], "--ofs")) {
+		check_arg_count(argv, argi, argc, 2);
+		pwriter_opts->ofs = cli_sep_from_arg(argv[argi+1]);
+		argi += 2;
+
+	} else if (streq(argv[argi], "--headerless-csv-output")) {
+		pwriter_opts->headerless_csv_output = TRUE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--ops")) {
+		check_arg_count(argv, argi, argc, 2);
+		pwriter_opts->ops = cli_sep_from_arg(argv[argi+1]);
+		argi += 2;
+
+	} else if (streq(argv[argi], "--xvright")) {
+		pwriter_opts->right_justify_xtab_value = TRUE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--jvstack")) {
+		pwriter_opts->stack_json_output_vertically = TRUE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--jlistwrap")) {
+		pwriter_opts->wrap_json_output_in_outer_list = TRUE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--jquoteall")) {
+		pwriter_opts->quote_json_values_always = TRUE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--vflatsep")) {
+		check_arg_count(argv, argi, argc, 2);
+		pwriter_opts->oosvar_flatten_separator = cli_sep_from_arg(argv[argi+1]);
+		argi += 2;
+
+	} else if (streq(argv[argi], "--ocsv")) {
+		pwriter_opts->ofile_fmt = "csv";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--ocsvlite")) {
+		pwriter_opts->ofile_fmt = "csvlite";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--otsv")) {
+		pwriter_opts->ofile_fmt = "csv";
+		pwriter_opts->ofs = "\t";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--otsvlite")) {
+		pwriter_opts->ofile_fmt = "csvlite";
+		pwriter_opts->ofs = "\t";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--omd")) {
+		pwriter_opts->ofile_fmt = "markdown";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--odkvp")) {
+		pwriter_opts->ofile_fmt = "dkvp";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--ojson")) {
+		pwriter_opts->ofile_fmt = "json";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--onidx")) {
+		pwriter_opts->ofile_fmt = "nidx";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--oxtab")) {
+		pwriter_opts->ofile_fmt = "xtab";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--opprint")) {
+		pwriter_opts->ofile_fmt = "pprint";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--right")) {
+		pwriter_opts->left_align_pprint = FALSE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--quote-all")) {
+		pwriter_opts->oquoting = QUOTE_ALL;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--quote-none")) {
+		pwriter_opts->oquoting = QUOTE_NONE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--quote-minimal")) {
+		pwriter_opts->oquoting = QUOTE_MINIMAL;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--quote-numeric")) {
+		pwriter_opts->oquoting = QUOTE_NUMERIC;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--quote-original")) {
+		pwriter_opts->oquoting = QUOTE_ORIGINAL;
+		argi += 1;
+
+	}
 	*pargi = argi;
 	return argi != oargi;
 }
@@ -833,40 +1018,15 @@ static int handle_reader_writer_options(char** argv, int argc, int *pargi,
 
 	if (streq(argv[argi], "--rs")) {
 		check_arg_count(argv, argi, argc, 2);
-		pwriter_opts->ors = cli_sep_from_arg(argv[argi+1]);
 		preader_opts->irs = cli_sep_from_arg(argv[argi+1]);
-		argi += 2;
-	} else if (streq(argv[argi], "--irs")) {
-		check_arg_count(argv, argi, argc, 2);
-		preader_opts->irs = cli_sep_from_arg(argv[argi+1]);
-		argi += 2;
-	} else if (streq(argv[argi], "--ors")) {
-		check_arg_count(argv, argi, argc, 2);
 		pwriter_opts->ors = cli_sep_from_arg(argv[argi+1]);
 		argi += 2;
 
 	} else if (streq(argv[argi], "--fs")) {
 		check_arg_count(argv, argi, argc, 2);
-		pwriter_opts->ofs = cli_sep_from_arg(argv[argi+1]);
 		preader_opts->ifs = cli_sep_from_arg(argv[argi+1]);
-		argi += 2;
-	} else if (streq(argv[argi], "--ifs")) {
-		check_arg_count(argv, argi, argc, 2);
-		preader_opts->ifs = cli_sep_from_arg(argv[argi+1]);
-		argi += 2;
-	} else if (streq(argv[argi], "--ofs")) {
-		check_arg_count(argv, argi, argc, 2);
 		pwriter_opts->ofs = cli_sep_from_arg(argv[argi+1]);
 		argi += 2;
-	} else if (streq(argv[argi], "--repifs")) {
-		preader_opts->allow_repeat_ifs = TRUE;
-		argi += 1;
-	} else if (streq(argv[argi], "--implicit-csv-header")) {
-		preader_opts->use_implicit_csv_header = TRUE;
-		argi += 1;
-	} else if (streq(argv[argi], "--headerless-csv-output")) {
-		pwriter_opts->headerless_csv_output = TRUE;
-		argi += 1;
 
 	} else if (streq(argv[argi], "-p")) {
 		preader_opts->ifile_fmt = "nidx";
@@ -878,61 +1038,23 @@ static int handle_reader_writer_options(char** argv, int argc, int *pargi,
 
 	} else if (streq(argv[argi], "--ps")) {
 		check_arg_count(argv, argi, argc, 2);
-		pwriter_opts->ops = cli_sep_from_arg(argv[argi+1]);
 		preader_opts->ips = cli_sep_from_arg(argv[argi+1]);
-		argi += 2;
-	} else if (streq(argv[argi], "--ips")) {
-		check_arg_count(argv, argi, argc, 2);
-		preader_opts->ips = cli_sep_from_arg(argv[argi+1]);
-		argi += 2;
-	} else if (streq(argv[argi], "--ops")) {
-		check_arg_count(argv, argi, argc, 2);
 		pwriter_opts->ops = cli_sep_from_arg(argv[argi+1]);
 		argi += 2;
 
-	} else if (streq(argv[argi], "--xvright")) {
-		pwriter_opts->right_justify_xtab_value = TRUE;
-		argi += 1;
-
-	} else if (streq(argv[argi], "--jvstack")) {
-		pwriter_opts->stack_json_output_vertically = TRUE;
-		argi += 1;
-	} else if (streq(argv[argi], "--jlistwrap")) {
-		pwriter_opts->wrap_json_output_in_outer_list = TRUE;
-		argi += 1;
-	} else if (streq(argv[argi], "--jquoteall")) {
-		pwriter_opts->quote_json_values_always = TRUE;
-		argi += 1;
 	} else if (streq(argv[argi], "--jflatsep")) {
 		check_arg_count(argv, argi, argc, 2);
 		preader_opts->input_json_flatten_separator  = cli_sep_from_arg(argv[argi+1]);
 		pwriter_opts->output_json_flatten_separator = cli_sep_from_arg(argv[argi+1]);
 		argi += 2;
 
-	} else if (streq(argv[argi], "--vflatsep")) {
-		check_arg_count(argv, argi, argc, 2);
-		pwriter_opts->oosvar_flatten_separator = cli_sep_from_arg(argv[argi+1]);
-		argi += 2;
-
 	} else if (streq(argv[argi], "--csv")) {
 		preader_opts->ifile_fmt = "csv";
-		pwriter_opts->ofile_fmt = "csv";
-		argi += 1;
-	} else if (streq(argv[argi], "--icsv")) {
-		preader_opts->ifile_fmt = "csv";
-		argi += 1;
-	} else if (streq(argv[argi], "--ocsv")) {
 		pwriter_opts->ofile_fmt = "csv";
 		argi += 1;
 
 	} else if (streq(argv[argi], "--csvlite")) {
 		preader_opts->ifile_fmt = "csvlite";
-		pwriter_opts->ofile_fmt = "csvlite";
-		argi += 1;
-	} else if (streq(argv[argi], "--icsvlite")) {
-		preader_opts->ifile_fmt = "csvlite";
-		argi += 1;
-	} else if (streq(argv[argi], "--ocsvlite")) {
 		pwriter_opts->ofile_fmt = "csvlite";
 		argi += 1;
 
@@ -941,41 +1063,15 @@ static int handle_reader_writer_options(char** argv, int argc, int *pargi,
 		preader_opts->ifs = "\t";
 		pwriter_opts->ofs = "\t";
 		argi += 1;
-	} else if (streq(argv[argi], "--itsv")) {
-		preader_opts->ifile_fmt = "csv";
-		preader_opts->ifs = "\t";
-		argi += 1;
-	} else if (streq(argv[argi], "--otsv")) {
-		pwriter_opts->ofile_fmt = "csv";
-		pwriter_opts->ofs = "\t";
-		argi += 1;
 
 	} else if (streq(argv[argi], "--tsvlite")) {
 		preader_opts->ifile_fmt = pwriter_opts->ofile_fmt = "csvlite";
 		preader_opts->ifs = "\t";
 		pwriter_opts->ofs = "\t";
 		argi += 1;
-	} else if (streq(argv[argi], "--itsvlite")) {
-		preader_opts->ifile_fmt = "csvlite";
-		preader_opts->ifs = "\t";
-		argi += 1;
-	} else if (streq(argv[argi], "--otsvlite")) {
-		pwriter_opts->ofile_fmt = "csvlite";
-		pwriter_opts->ofs = "\t";
-		argi += 1;
-
-	} else if (streq(argv[argi], "--omd")) {
-		pwriter_opts->ofile_fmt = "markdown";
-		argi += 1;
 
 	} else if (streq(argv[argi], "--dkvp")) {
 		preader_opts->ifile_fmt = "dkvp";
-		pwriter_opts->ofile_fmt = "dkvp";
-		argi += 1;
-	} else if (streq(argv[argi], "--idkvp")) {
-		preader_opts->ifile_fmt = "dkvp";
-		argi += 1;
-	} else if (streq(argv[argi], "--odkvp")) {
 		pwriter_opts->ofile_fmt = "dkvp";
 		argi += 1;
 
@@ -983,21 +1079,9 @@ static int handle_reader_writer_options(char** argv, int argc, int *pargi,
 		preader_opts->ifile_fmt = "json";
 		pwriter_opts->ofile_fmt = "json";
 		argi += 1;
-	} else if (streq(argv[argi], "--ijson")) {
-		preader_opts->ifile_fmt = "json";
-		argi += 1;
-	} else if (streq(argv[argi], "--ojson")) {
-		pwriter_opts->ofile_fmt = "json";
-		argi += 1;
 
 	} else if (streq(argv[argi], "--nidx")) {
 		preader_opts->ifile_fmt = "nidx";
-		pwriter_opts->ofile_fmt = "nidx";
-		argi += 1;
-	} else if (streq(argv[argi], "--inidx")) {
-		preader_opts->ifile_fmt = "nidx";
-		argi += 1;
-	} else if (streq(argv[argi], "--onidx")) {
 		pwriter_opts->ofile_fmt = "nidx";
 		argi += 1;
 
@@ -1005,62 +1089,15 @@ static int handle_reader_writer_options(char** argv, int argc, int *pargi,
 		preader_opts->ifile_fmt = "xtab";
 		pwriter_opts->ofile_fmt = "xtab";
 		argi += 1;
-	} else if (streq(argv[argi], "--ixtab")) {
-		preader_opts->ifile_fmt = "xtab";
-		argi += 1;
-	} else if (streq(argv[argi], "--oxtab")) {
-		pwriter_opts->ofile_fmt = "xtab";
-		argi += 1;
 
-	} else if (streq(argv[argi], "--ipprint")) {
-		preader_opts->ifile_fmt        = "csvlite";
-		preader_opts->ifs              = " ";
-		preader_opts->allow_repeat_ifs = TRUE;
-		argi += 1;
-
-	} else if (streq(argv[argi], "--opprint")) {
-		pwriter_opts->ofile_fmt = "pprint";
-		argi += 1;
 	} else if (streq(argv[argi], "--pprint")) {
 		preader_opts->ifile_fmt        = "csvlite";
 		preader_opts->ifs              = " ";
 		preader_opts->allow_repeat_ifs = TRUE;
 		pwriter_opts->ofile_fmt        = "pprint";
 		argi += 1;
-	} else if (streq(argv[argi], "--right")) {
-		pwriter_opts->left_align_pprint = FALSE;
-		argi += 1;
 
-	} else if (streq(argv[argi], "--mmap")) {
-		preader_opts->use_mmap_for_read = TRUE;
-		argi += 1;
-	} else if (streq(argv[argi], "--no-mmap")) {
-		preader_opts->use_mmap_for_read = FALSE;
-		argi += 1;
-
-	} else if (streq(argv[argi], "--prepipe")) {
-		check_arg_count(argv, argi, argc, 2);
-		preader_opts->prepipe = argv[argi+1];
-		preader_opts->use_mmap_for_read = FALSE;
-		argi += 2;
-
-	} else if (streq(argv[argi], "--quote-all")) {
-		pwriter_opts->oquoting = QUOTE_ALL;
-		argi += 1;
-	} else if (streq(argv[argi], "--quote-none")) {
-		pwriter_opts->oquoting = QUOTE_NONE;
-		argi += 1;
-	} else if (streq(argv[argi], "--quote-minimal")) {
-		pwriter_opts->oquoting = QUOTE_MINIMAL;
-		argi += 1;
-	} else if (streq(argv[argi], "--quote-numeric")) {
-		pwriter_opts->oquoting = QUOTE_NUMERIC;
-		argi += 1;
-	} else if (streq(argv[argi], "--quote-original")) {
-		pwriter_opts->oquoting = QUOTE_ORIGINAL;
-		argi += 1;
 	}
-
 	*pargi = argi;
 	return argi != oargi;
 }
