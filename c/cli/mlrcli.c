@@ -726,11 +726,7 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 
 		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		} else if (streq(argv[argi], "--version")) {
-#ifdef HAVE_CONFIG_H
-			printf("Miller %s\n", PACKAGE_VERSION);
-#else
-			printf("Miller %s\n", MLR_VERSION);
-#endif // HAVE_CONFIG_H
+			printf("Miller %s\n", VERSION_STRING);
 			exit(0);
 		} else if (streq(argv[argi], "-h")) {
 			main_usage(stdout, argv[0]);
