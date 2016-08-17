@@ -1119,12 +1119,8 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 
 		if (argv[argi][0] != '-') {
 			break; // No more flag options to process
-
-		// Command-line flags handled here will result in a print-and-exit; the
-		// handling function will not return.
 		} else if (handle_terminal_usage(argv, argc, argi)) {
 			exit(0);
-
 		} else if (handle_reader_options(argv, argc, &argi, &popts->reader_opts)) {
 			// handled
 		} else if (handle_writer_options(argv, argc, &argi, &popts->writer_opts)) {
@@ -1141,7 +1137,6 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 			slls_append(popts->filenames, argv[argi+1], NO_FREE);
 			argi += 2;
 
-		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		} else if (streq(argv[argi], "--ofmt")) {
 			check_arg_count(argv, argi, argc, 2);
 			popts->ofmt = argv[argi+1];
@@ -1202,6 +1197,7 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 	if (popts->writer_opts.ops == NULL)
 		popts->writer_opts.ops = lhmss_get(default_pses, popts->writer_opts.ofile_fmt);
 
+	// xxx fold into get-default-or-die methods
 	if (popts->reader_opts.irs == NULL) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
 		exit(1);
@@ -1243,6 +1239,7 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 		return NULL;
 	}
 
+	// xxx fold into alloc-or-die methods
 	popts->plrec_writer = lrec_writer_alloc(&popts->writer_opts);
 
 	if (popts->plrec_writer == NULL) {
@@ -1259,6 +1256,7 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 		check_arg_count(argv, argi, argc, 1);
 		char* verb = argv[argi];
 
+		// xxx fold into look-up-or-die methods
 		mapper_setup_t* pmapper_setup = look_up_mapper_setup(verb);
 		if (pmapper_setup == NULL) {
 			fprintf(stderr, "%s: verb \"%s\" not found. Please use \"%s --help\" for a list.\n",
