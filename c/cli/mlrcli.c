@@ -1241,17 +1241,16 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 
 	// xxx fold into alloc-or-die methods
 	popts->plrec_writer = lrec_writer_alloc(&popts->writer_opts);
-
 	if (popts->plrec_writer == NULL) {
 		main_usage(stderr, argv[0]);
 		exit(1);
 	}
 
+	// xxx make method
 	if ((argc - argi) < 1) {
 		main_usage(stderr, argv[0]);
 		exit(1);
 	}
-
 	while (TRUE) {
 		check_arg_count(argv, argi, argc, 1);
 		char* verb = argv[argi];
@@ -1291,7 +1290,7 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 		slls_free(popts->filenames);
 		popts->filenames = NULL;
 	} else if (popts->filenames->length == 0) {
-	// No filenames means read from standard input, and standard input cannot be mmapped.
+		// No filenames means read from standard input, and standard input cannot be mmapped.
 		popts->reader_opts.use_mmap_for_read = FALSE;
 	}
 
