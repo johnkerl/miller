@@ -77,6 +77,8 @@ static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(map
 static lhmss_t* get_desc_to_chars_map();
 static void free_opt_singletons();
 static char* rebackslash(char* sep);
+
+static void main_usage(FILE* o, char* argv0);
 static void main_usage_synopsis(FILE* o, char* argv0);
 static void main_usage_examples(FILE* o, char* argv0, char* leader);
 static void list_all_verbs_raw(FILE* o);
@@ -94,19 +96,22 @@ static void main_usage_other_options(FILE* o, char* argv0);
 static void main_usage_then_chaining(FILE* o, char* argv0);
 static void main_usage_see_also(FILE* o, char* argv0);
 static void print_type_arithmetic_info(FILE* o, char* argv0);
-static void main_usage(FILE* o, char* argv0);
 static void usage_all_verbs(char* argv0);
 static void usage_unrecognized_verb(char* argv0, char* arg);
+
 static void check_arg_count(char** argv, int argi, int argc, int n);
 static mapper_setup_t* look_up_mapper_setup(char* verb);
+
+static void cli_set_defaults(cli_opts_t* popts);
 static void cli_set_reader_defaults(cli_reader_opts_t* preader_opts);
 static void cli_set_writer_defaults(cli_writer_opts_t* pwriter_opts);
-static void cli_set_defaults(cli_opts_t* popts);
+
 static int handle_terminal_usage(char** argv, int argc, int argi);
 static int handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts_t* preader_opts);
 static int handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts_t* pwriter_opts);
 static int handle_reader_writer_options(char** argv, int argc, int *pargi,
 	cli_reader_opts_t* preader_opts, cli_writer_opts_t* pwriter_opts);
+
 static char* lhmss_get_or_die(lhmss_t* pmap, char* key, char* argv0);
 static int lhmsi_get_or_die(lhmsi_t* pmap, char* key, char* argv0);
 
@@ -448,6 +453,65 @@ static char* rebackslash(char* sep) {
 // The main_usage() function is split out into subroutines in support of the
 // manpage autogenerator.
 
+static void main_usage(FILE* o, char* argv0) {
+	main_usage_synopsis(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Command-line-syntax examples:\n");
+	main_usage_examples(o, argv0, "  ");
+	fprintf(o, "\n");
+
+	fprintf(o, "Data-format examples:\n");
+	main_usage_data_format_examples(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Help options:\n");
+	main_usage_help_options(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Verbs:\n");
+	list_all_verbs(o, "  ");
+	fprintf(o, "\n");
+
+	fprintf(o, "Functions for the filter and put verbs:\n");
+	main_usage_functions(o, argv0, "  ");
+	fprintf(o, "\n");
+
+	fprintf(o, "Data-format options, for input, output, or both:\n");
+	main_usage_data_format_options(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Compressed-data options:\n");
+	main_usage_compressed_data_options(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Separator options, for input, output, or both:\n");
+	main_usage_separator_options(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Relevant to CSV/CSV-lite input only:\n");
+	main_usage_csv_options(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Double-quoting for CSV output:\n");
+	main_usage_double_quoting(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Numerical formatting:\n");
+	main_usage_numerical_formatting(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Other options:\n");
+	main_usage_other_options(o, argv0);
+	fprintf(o, "\n");
+
+	fprintf(o, "Then-chaining:\n");
+	main_usage_then_chaining(o, argv0);
+	fprintf(o, "\n");
+
+	main_usage_see_also(o, argv0);
+}
+
 static void main_usage_synopsis(FILE* o, char* argv0) {
 	fprintf(o, "Usage: %s [I/O options] {verb} [verb-dependent options ...] {zero or more file names}\n", argv0);
 }
@@ -786,66 +850,6 @@ static void print_type_arithmetic_info(FILE* o, char* argv0) {
 }
 
 // ----------------------------------------------------------------
-static void main_usage(FILE* o, char* argv0) {
-	main_usage_synopsis(o, argv0);
-	fprintf(o, "\n");
-
-	fprintf(o, "Command-line-syntax examples:\n");
-	main_usage_examples(o, argv0, "  ");
-	fprintf(o, "\n");
-
-	fprintf(o, "Data-format examples:\n");
-	main_usage_data_format_examples(o, argv0);
-	fprintf(o, "\n");
-
-	fprintf(o, "Help options:\n");
-	main_usage_help_options(o, argv0);
-	fprintf(o, "\n");
-
-	fprintf(o, "Verbs:\n");
-	list_all_verbs(o, "  ");
-	fprintf(o, "\n");
-
-	fprintf(o, "Functions for the filter and put verbs:\n");
-	main_usage_functions(o, argv0, "  ");
-	fprintf(o, "\n");
-
-	fprintf(o, "Data-format options, for input, output, or both:\n");
-	main_usage_data_format_options(o, argv0);
-	fprintf(o, "\n");
-
-	fprintf(o, "Compressed-data options:\n");
-	main_usage_compressed_data_options(o, argv0);
-	fprintf(o, "\n");
-
-	fprintf(o, "Separator options, for input, output, or both:\n");
-	main_usage_separator_options(o, argv0);
-	fprintf(o, "\n");
-
-	fprintf(o, "Relevant to CSV/CSV-lite input only:\n");
-	main_usage_csv_options(o, argv0);
-	fprintf(o, "\n");
-
-	fprintf(o, "Double-quoting for CSV output:\n");
-	main_usage_double_quoting(o, argv0);
-	fprintf(o, "\n");
-
-	fprintf(o, "Numerical formatting:\n");
-	main_usage_numerical_formatting(o, argv0);
-	fprintf(o, "\n");
-
-	fprintf(o, "Other options:\n");
-	main_usage_other_options(o, argv0);
-	fprintf(o, "\n");
-
-	fprintf(o, "Then-chaining:\n");
-	main_usage_then_chaining(o, argv0);
-	fprintf(o, "\n");
-
-	main_usage_see_also(o, argv0);
-}
-
-// ----------------------------------------------------------------
 static void usage_all_verbs(char* argv0) {
 	char* separator = "================================================================";
 
@@ -882,6 +886,21 @@ static mapper_setup_t* look_up_mapper_setup(char* verb) {
 }
 
 // ----------------------------------------------------------------
+static void cli_set_defaults(cli_opts_t* popts) {
+	memset(popts, 0, sizeof(*popts));
+
+	cli_set_reader_defaults(&popts->reader_opts);
+	cli_set_writer_defaults(&popts->writer_opts);
+
+	popts->plrec_reader      = NULL;
+	popts->pmapper_list      = sllv_alloc();
+	popts->plrec_writer      = NULL;
+	popts->filenames         = slls_alloc();
+
+	popts->ofmt              = DEFAULT_OFMT;
+	popts->nr_progress_mod   = 0LL;
+}
+
 static void cli_set_reader_defaults(cli_reader_opts_t* preader_opts) {
 	preader_opts->ifile_fmt                      = "dkvp";
 	preader_opts->irs                            = NULL;
@@ -913,21 +932,6 @@ static void cli_set_writer_defaults(cli_writer_opts_t* pwriter_opts) {
 	pwriter_opts->oosvar_flatten_separator       = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
 
 	pwriter_opts->oquoting                       = DEFAULT_OQUOTING;
-}
-
-static void cli_set_defaults(cli_opts_t* popts) {
-	memset(popts, 0, sizeof(*popts));
-
-	cli_set_reader_defaults(&popts->reader_opts);
-	cli_set_writer_defaults(&popts->writer_opts);
-
-	popts->plrec_reader      = NULL;
-	popts->pmapper_list      = sllv_alloc();
-	popts->plrec_writer      = NULL;
-	popts->filenames         = slls_alloc();
-
-	popts->ofmt              = DEFAULT_OFMT;
-	popts->nr_progress_mod   = 0LL;
 }
 
 // ----------------------------------------------------------------
