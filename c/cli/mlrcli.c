@@ -75,6 +75,11 @@ static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(map
 
 // ----------------------------------------------------------------
 static lhmss_t* get_desc_to_chars_map();
+static lhmsi_t* get_default_repeat_ifses();
+static lhmsi_t* get_default_repeat_ipses();
+static lhmss_t* get_default_fses();
+static lhmss_t* get_default_pses();
+static lhmss_t* get_default_rses();
 static void free_opt_singletons();
 static char* rebackslash(char* sep);
 
@@ -345,7 +350,7 @@ static lhmss_t* singleton_default_pses = NULL;
 static lhmsi_t* singleton_default_repeat_ifses = NULL;
 static lhmsi_t* singleton_default_repeat_ipses = NULL;
 
-lhmss_t* get_default_rses() {
+static lhmss_t* get_default_rses() {
 	if (singleton_default_rses == NULL) {
 		singleton_default_rses = lhmss_alloc();
 		lhmss_put(singleton_default_rses, "dkvp",     "\n",    NO_FREE);
@@ -367,7 +372,7 @@ lhmss_t* get_default_rses() {
 	return singleton_default_rses;
 }
 
-lhmss_t* get_default_fses() {
+static lhmss_t* get_default_fses() {
 	if (singleton_default_fses == NULL) {
 		singleton_default_fses = lhmss_alloc();
 		lhmss_put(singleton_default_fses, "dkvp",     ",",      NO_FREE);
@@ -382,7 +387,7 @@ lhmss_t* get_default_fses() {
 	return singleton_default_fses;
 }
 
-lhmss_t* get_default_pses() {
+static lhmss_t* get_default_pses() {
 	if (singleton_default_pses == NULL) {
 		singleton_default_pses = lhmss_alloc();
 		lhmss_put(singleton_default_pses, "dkvp",     "=",     NO_FREE);
@@ -397,7 +402,7 @@ lhmss_t* get_default_pses() {
 	return singleton_default_pses;
 }
 
-lhmsi_t* get_default_repeat_ifses() {
+static lhmsi_t* get_default_repeat_ifses() {
 	if (singleton_default_repeat_ifses == NULL) {
 		singleton_default_repeat_ifses = lhmsi_alloc();
 		lhmsi_put(singleton_default_repeat_ifses, "dkvp",     FALSE, NO_FREE);
@@ -412,7 +417,7 @@ lhmsi_t* get_default_repeat_ifses() {
 	return singleton_default_repeat_ifses;
 }
 
-lhmsi_t* get_default_repeat_ipses() {
+static lhmsi_t* get_default_repeat_ipses() {
 	if (singleton_default_repeat_ipses == NULL) {
 		singleton_default_repeat_ipses = lhmsi_alloc();
 		lhmsi_put(singleton_default_repeat_ipses, "dkvp",     FALSE, NO_FREE);
@@ -1014,6 +1019,7 @@ static void cli_apply_writer_defaults(cli_writer_opts_t* pwriter_opts) {
 //
 // * If the join input format was specified and is not the same as main input
 //   format, take unspecified values from defaults for the join input format.
+
 void cli_merge_reader_opts(cli_reader_opts_t* pfunc_opts, cli_reader_opts_t* pmain_opts) {
 
 	if (pfunc_opts->ifile_fmt == NULL) {
@@ -1050,8 +1056,10 @@ void cli_merge_reader_opts(cli_reader_opts_t* pfunc_opts, cli_reader_opts_t* pma
 
 	if (pfunc_opts->use_implicit_csv_header == NEITHER_TRUE_NOR_FALSE)
 		pfunc_opts->use_implicit_csv_header = pmain_opts->use_implicit_csv_header;
+
 	if (pfunc_opts->use_mmap_for_read == NEITHER_TRUE_NOR_FALSE)
 		pfunc_opts->use_mmap_for_read = pmain_opts->use_mmap_for_read;
+
 	if (pfunc_opts->input_json_flatten_separator == NULL)
 		pfunc_opts->input_json_flatten_separator = pmain_opts->input_json_flatten_separator;
 }

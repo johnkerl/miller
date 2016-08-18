@@ -78,14 +78,6 @@ void cli_merge_reader_opts(cli_reader_opts_t* pfunc_opts, cli_reader_opts_t* pma
 
 void cli_opts_free(cli_opts_t* popts);
 
-// xxx reprivatize:
-// Needed by mapper_join:
-lhmsi_t* get_default_repeat_ifses();
-lhmsi_t* get_default_repeat_ipses();
-lhmss_t* get_default_fses();
-lhmss_t* get_default_pses();
-lhmss_t* get_default_rses();
-
 // The caller can unconditionally free the return value
 char* cli_sep_from_arg(char* arg);
 

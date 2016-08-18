@@ -149,6 +149,7 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_true_flag(pstate,        "--ur",       &popts->emit_right_unpairables);
 	ap_define_true_flag(pstate,        "-u",         &popts->allow_unsorted_input);
 
+	// xxx use mlrcli funcs. and not ap_parse here, alas. :^/
 	ap_define_string_flag(pstate,      "-i",         &popts->reader_opts.ifile_fmt);
 	ap_define_string_flag(pstate,      "--irs",      &popts->reader_opts.irs);
 	ap_define_string_flag(pstate,      "--ifs",      &popts->reader_opts.ifs);
