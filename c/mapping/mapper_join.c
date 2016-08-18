@@ -126,7 +126,8 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 
 	cli_reader_opts_init(&popts->reader_opts);
 
-	char* verb = argv[(*pargi)++];
+	int argi = *pargi;
+	char* verb = argv[argi++];
 
 //	for (; argi < argc; /* variable increment: 1 or 2 depending on flag */) {
 //
@@ -168,7 +169,7 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	ap_define_false_flag(pstate,       "--no-mmap",  &popts->reader_opts.use_mmap_for_read);
 	ap_define_string_flag(pstate,      "--jflatsep", &popts->reader_opts.input_json_flatten_separator);
 
-	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
+	if (!ap_parse(pstate, verb, &argi, argc, argv)) {
 		mapper_join_usage(stderr, argv[0], verb);
 		return NULL;
 	}
@@ -209,6 +210,8 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 			MLR_GLOBALS.bargv0, verb, llen, rlen, olen);
 		exit(1);
 	}
+
+	*pargi = argi;
 
 	return mapper_join_alloc(pstate, popts);
 }

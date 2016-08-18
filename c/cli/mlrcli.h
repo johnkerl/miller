@@ -73,8 +73,10 @@ typedef struct _cli_opts_t {
 // ----------------------------------------------------------------
 cli_opts_t* parse_command_line(int argc, char** argv);
 
-int handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts_t* preader_opts);
-int handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts_t* pwriter_opts);
+int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts_t* preader_opts);
+int cli_handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts_t* pwriter_opts);
+int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
+	cli_reader_opts_t* preader_opts, cli_writer_opts_t* pwriter_opts);
 
 void cli_opts_init(cli_opts_t* popts);
 void cli_reader_opts_init(cli_reader_opts_t* preader_opts);

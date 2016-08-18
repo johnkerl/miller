@@ -108,8 +108,6 @@ static void check_arg_count(char** argv, int argi, int argc, int n);
 static mapper_setup_t* look_up_mapper_setup(char* verb);
 
 static int handle_terminal_usage(char** argv, int argc, int argi);
-static int handle_reader_writer_options(char** argv, int argc, int *pargi,
-	cli_reader_opts_t* preader_opts, cli_writer_opts_t* pwriter_opts);
 
 static char* lhmss_get_or_die(lhmss_t* pmap, char* key, char* argv0);
 static int lhmsi_get_or_die(lhmsi_t* pmap, char* key, char* argv0);
@@ -131,11 +129,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			break; // No more flag options to process
 		} else if (handle_terminal_usage(argv, argc, argi)) {
 			exit(0);
-		} else if (handle_reader_options(argv, argc, &argi, &popts->reader_opts)) {
+		} else if (cli_handle_reader_options(argv, argc, &argi, &popts->reader_opts)) {
 			// handled
-		} else if (handle_writer_options(argv, argc, &argi, &popts->writer_opts)) {
+		} else if (cli_handle_writer_options(argv, argc, &argi, &popts->writer_opts)) {
 			// handled
-		} else if (handle_reader_writer_options(argv, argc, &argi, &popts->reader_opts, &popts->writer_opts)) {
+		} else if (cli_handle_reader_writer_options(argv, argc, &argi, &popts->reader_opts, &popts->writer_opts)) {
 			// handled
 
 		} else if (streq(argv[argi], "-n")) {
@@ -1152,7 +1150,7 @@ static int handle_terminal_usage(char** argv, int argc, int argi) {
 }
 
 // Returns TRUE if the current flag was handled.
-int handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts_t* preader_opts) {
+int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts_t* preader_opts) {
 	int argi = *pargi;
 	int oargi = argi;
 
@@ -1239,7 +1237,7 @@ int handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts_t* 
 }
 
 // Returns TRUE if the current flag was handled.
-int handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts_t* pwriter_opts) {
+int cli_handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts_t* pwriter_opts) {
 	int argi = *pargi;
 	int oargi = argi;
 
@@ -1355,7 +1353,7 @@ int handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts_t* 
 }
 
 // Returns TRUE if the current flag was handled.
-static int handle_reader_writer_options(char** argv, int argc, int *pargi,
+int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 	cli_reader_opts_t* preader_opts, cli_writer_opts_t* pwriter_opts)
 {
 	int argi = *pargi;
