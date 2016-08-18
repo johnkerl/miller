@@ -7,6 +7,7 @@ typedef enum _quoting_t {
 	QUOTE_MINIMAL,
 	QUOTE_NUMERIC,
 	QUOTE_ORIGINAL,
+	QUOTE_UNSPECIFIED,
 } quoting_t;
 
 #endif // QUOTING_H

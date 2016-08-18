@@ -9,7 +9,7 @@
 typedef struct _lrec_writer_pprint_state_t {
 	sllv_t*    precords;
 	slls_t*    pprev_keys;
-	int        left_align;
+	int        right_align;
 	long long  num_blocks_written;
 	char*      ors;
 	char       ofs;
@@ -17,10 +17,10 @@ typedef struct _lrec_writer_pprint_state_t {
 
 static void lrec_writer_pprint_free(lrec_writer_t* pwriter);
 static void lrec_writer_pprint_process(void* pvstate, FILE* output_stream, lrec_t* prec);
-static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, char* ors, char ofs, int left_align);
+static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, char* ors, char ofs, int right_align);
 
 // ----------------------------------------------------------------
-lrec_writer_t* lrec_writer_pprint_alloc(char* ors, char ofs, int left_align) {
+lrec_writer_t* lrec_writer_pprint_alloc(char* ors, char ofs, int right_align) {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
 	lrec_writer_pprint_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_pprint_state_t));
@@ -28,7 +28,7 @@ lrec_writer_t* lrec_writer_pprint_alloc(char* ors, char ofs, int left_align) {
 	pstate->pprev_keys         = NULL;
 	pstate->ors                = ors;
 	pstate->ofs                = ofs;
-	pstate->left_align         = left_align;
+	pstate->right_align        = right_align;
 	pstate->num_blocks_written = 0LL;
 
 	plrec_writer->pvstate       = pstate;
@@ -69,7 +69,7 @@ static void lrec_writer_pprint_process(void* pvstate, FILE* output_stream, lrec_
 	if (drain) {
 		if (pstate->num_blocks_written > 0LL) // separate blocks with empty line
 			fputs(pstate->ors, output_stream);
-		print_and_free_record_list(pstate->precords, output_stream, pstate->ors, pstate->ofs, pstate->left_align);
+		print_and_free_record_list(pstate->precords, output_stream, pstate->ors, pstate->ofs, pstate->right_align);
 		if (pstate->pprev_keys != NULL) {
 			slls_free(pstate->pprev_keys);
 			pstate->pprev_keys = NULL;
@@ -85,7 +85,7 @@ static void lrec_writer_pprint_process(void* pvstate, FILE* output_stream, lrec_
 }
 
 // ----------------------------------------------------------------
-static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, char* ors, char ofs, int left_align) {
+static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, char* ors, char ofs, int right_align) {
 	if (precords->length == 0) {
 		sllv_free(precords);
 		return;
@@ -117,7 +117,7 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, ch
 				if (j > 0) {
 					fputc(ofs, output_stream);
 				}
-				if (left_align) {
+				if (!right_align) {
 					if (pe->pnext == NULL) {
 						fprintf(output_stream, "%s", pe->key);
 					} else {
@@ -145,7 +145,7 @@ static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, ch
 			char* value = pe->value;
 			if (*value == 0) // empty string
 				value = "-";
-			if (left_align) {
+			if (!right_align) {
 				if (pe->pnext == NULL) {
 					fprintf(output_stream, "%s", value);
 				} else {

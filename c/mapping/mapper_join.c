@@ -10,9 +10,6 @@
 #include "cli/argparse.h"
 
 // ----------------------------------------------------------------
-// Join options, if unspecified, default to respective main options.
-#define OPTION_UNSPECIFIED ((char)0xff)
-
 typedef struct _mapper_join_opts_t {
 	char*    left_prefix;
 	char*    right_prefix;
@@ -132,10 +129,10 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	popts->reader_opts.irs               = NULL;
 	popts->reader_opts.ifs               = NULL;
 	popts->reader_opts.ips               = NULL;
-	popts->reader_opts.allow_repeat_ifs  = OPTION_UNSPECIFIED;
-	popts->reader_opts.allow_repeat_ips  = OPTION_UNSPECIFIED;
-	popts->reader_opts.use_implicit_csv_header = OPTION_UNSPECIFIED;
-	popts->reader_opts.use_mmap_for_read = OPTION_UNSPECIFIED;
+	popts->reader_opts.allow_repeat_ifs  = NEITHER_TRUE_NOR_FALSE;
+	popts->reader_opts.allow_repeat_ips  = NEITHER_TRUE_NOR_FALSE;
+	popts->reader_opts.use_implicit_csv_header = NEITHER_TRUE_NOR_FALSE;
+	popts->reader_opts.use_mmap_for_read = NEITHER_TRUE_NOR_FALSE;
 	popts->reader_opts.input_json_flatten_separator = NULL;
 
 	char* verb = argv[(*pargi)++];
@@ -484,6 +481,9 @@ static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, ma
 //   format, take unspecified values from defaults for the join input format.
 
 static void merge_options(cli_reader_opts_t* popts) {
+
+	// xxx move to mlrcli.c
+
 	if (popts->ifile_fmt == NULL) {
 		popts->ifile_fmt = MLR_GLOBALS.popts->reader_opts.ifile_fmt;
 	}
@@ -496,9 +496,9 @@ static void merge_options(cli_reader_opts_t* popts) {
 			popts->ifs = MLR_GLOBALS.popts->reader_opts.ifs;
 		if (popts->ips == NULL)
 			popts->ips = MLR_GLOBALS.popts->reader_opts.ips;
-		if (popts->allow_repeat_ifs  == OPTION_UNSPECIFIED)
+		if (popts->allow_repeat_ifs  == NEITHER_TRUE_NOR_FALSE)
 			popts->allow_repeat_ifs = MLR_GLOBALS.popts->reader_opts.allow_repeat_ifs;
-		if (popts->allow_repeat_ips  == OPTION_UNSPECIFIED)
+		if (popts->allow_repeat_ips  == NEITHER_TRUE_NOR_FALSE)
 			popts->allow_repeat_ips = MLR_GLOBALS.popts->reader_opts.allow_repeat_ips;
 
 	} else {
@@ -509,16 +509,16 @@ static void merge_options(cli_reader_opts_t* popts) {
 			popts->ifs = lhmss_get(get_default_fses(), popts->ifile_fmt);
 		if (popts->ips == NULL)
 			popts->ips = lhmss_get(get_default_pses(), popts->ifile_fmt);
-		if (popts->allow_repeat_ifs  == OPTION_UNSPECIFIED)
+		if (popts->allow_repeat_ifs  == NEITHER_TRUE_NOR_FALSE)
 			popts->allow_repeat_ifs = lhmsi_get(get_default_repeat_ifses(), popts->ifile_fmt);
-		if (popts->allow_repeat_ips  == OPTION_UNSPECIFIED)
+		if (popts->allow_repeat_ips  == NEITHER_TRUE_NOR_FALSE)
 			popts->allow_repeat_ips = lhmsi_get(get_default_repeat_ipses(), popts->ifile_fmt);
 
 	}
 
-	if (popts->use_implicit_csv_header == OPTION_UNSPECIFIED)
+	if (popts->use_implicit_csv_header == NEITHER_TRUE_NOR_FALSE)
 		popts->use_implicit_csv_header = MLR_GLOBALS.popts->reader_opts.use_implicit_csv_header;
-	if (popts->use_mmap_for_read == OPTION_UNSPECIFIED)
+	if (popts->use_mmap_for_read == NEITHER_TRUE_NOR_FALSE)
 		popts->use_mmap_for_read = MLR_GLOBALS.popts->reader_opts.use_mmap_for_read;
 	if (popts->input_json_flatten_separator == NULL)
 		popts->input_json_flatten_separator = MLR_GLOBALS.popts->reader_opts.input_json_flatten_separator;

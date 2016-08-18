@@ -102,9 +102,13 @@ static void usage_unrecognized_verb(char* argv0, char* arg);
 static void check_arg_count(char** argv, int argi, int argc, int n);
 static mapper_setup_t* look_up_mapper_setup(char* verb);
 
-static void cli_set_defaults(cli_opts_t* popts);
-static void cli_set_reader_defaults(cli_reader_opts_t* preader_opts);
-static void cli_set_writer_defaults(cli_writer_opts_t* pwriter_opts);
+static void cli_opts_init(cli_opts_t* popts);
+static void cli_reader_opts_init(cli_reader_opts_t* preader_opts);
+static void cli_writer_opts_init(cli_writer_opts_t* pwriter_opts);
+
+static void cli_apply_defaults(cli_opts_t* popts);
+static void cli_apply_reader_defaults(cli_reader_opts_t* preader_opts);
+static void cli_apply_writer_defaults(cli_writer_opts_t* pwriter_opts);
 
 static int handle_terminal_usage(char** argv, int argc, int argi);
 static int handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts_t* preader_opts);
@@ -119,7 +123,7 @@ static int lhmsi_get_or_die(lhmsi_t* pmap, char* key, char* argv0);
 cli_opts_t* parse_command_line(int argc, char** argv) {
 	cli_opts_t* popts = mlr_malloc_or_die(sizeof(cli_opts_t));
 
-	cli_set_defaults(popts);
+	cli_opts_init(popts);
 
 	int no_input       = FALSE;
 	int have_rand_seed = FALSE;
@@ -183,6 +187,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		}
 	}
 
+	cli_apply_defaults(popts);
+
 	lhmss_t* default_rses = get_default_rses();
 	lhmss_t* default_fses = get_default_fses();
 	lhmss_t* default_pses = get_default_pses();
@@ -208,7 +214,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	if (popts->writer_opts.ops == NULL)
 		popts->writer_opts.ops = lhmss_get_or_die(default_pses, popts->writer_opts.ofile_fmt, argv[0]);
 
-	// xxx fold into get-default-or-die methods
 	if (streq(popts->writer_opts.ofile_fmt, "pprint") && strlen(popts->writer_opts.ofs) != 1) {
 		fprintf(stderr, "%s: OFS for PPRINT format must be single-character; got \"%s\".\n",
 			argv[0], popts->writer_opts.ofs);
@@ -217,7 +222,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 	popts->plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
 
-	// xxx make method
 	if ((argc - argi) < 1) {
 		main_usage(stderr, argv[0]);
 		exit(1);
@@ -226,7 +230,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		check_arg_count(argv, argi, argc, 1);
 		char* verb = argv[argi];
 
-		// xxx fold into look-up-or-die methods
 		mapper_setup_t* pmapper_setup = look_up_mapper_setup(verb);
 		if (pmapper_setup == NULL) {
 			fprintf(stderr, "%s: verb \"%s\" not found. Please use \"%s --help\" for a list.\n",
@@ -886,52 +889,109 @@ static mapper_setup_t* look_up_mapper_setup(char* verb) {
 }
 
 // ----------------------------------------------------------------
-static void cli_set_defaults(cli_opts_t* popts) {
+static void cli_opts_init(cli_opts_t* popts) {
 	memset(popts, 0, sizeof(*popts));
 
-	cli_set_reader_defaults(&popts->reader_opts);
-	cli_set_writer_defaults(&popts->writer_opts);
+	cli_reader_opts_init(&popts->reader_opts);
+	cli_writer_opts_init(&popts->writer_opts);
 
 	popts->plrec_reader      = NULL;
 	popts->pmapper_list      = sllv_alloc();
 	popts->plrec_writer      = NULL;
 	popts->filenames         = slls_alloc();
 
-	popts->ofmt              = DEFAULT_OFMT;
+	popts->ofmt              = NULL;
 	popts->nr_progress_mod   = 0LL;
 }
 
-static void cli_set_reader_defaults(cli_reader_opts_t* preader_opts) {
-	preader_opts->ifile_fmt                      = "dkvp";
+static void cli_reader_opts_init(cli_reader_opts_t* preader_opts) {
+	preader_opts->ifile_fmt                      = NULL;
 	preader_opts->irs                            = NULL;
 	preader_opts->ifs                            = NULL;
 	preader_opts->ips                            = NULL;
-	preader_opts->input_json_flatten_separator   = DEFAULT_JSON_FLATTEN_SEPARATOR;
+	preader_opts->input_json_flatten_separator   = NULL;
 
 	preader_opts->allow_repeat_ifs               = NEITHER_TRUE_NOR_FALSE;
 	preader_opts->allow_repeat_ips               = NEITHER_TRUE_NOR_FALSE;
-	preader_opts->use_implicit_csv_header        = FALSE;
-	preader_opts->use_mmap_for_read              = TRUE;
+	preader_opts->use_implicit_csv_header        = NEITHER_TRUE_NOR_FALSE;
+	preader_opts->use_mmap_for_read              = NEITHER_TRUE_NOR_FALSE;
 
 	preader_opts->prepipe                        = NULL;
 }
 
-static void cli_set_writer_defaults(cli_writer_opts_t* pwriter_opts) {
-	pwriter_opts->ofile_fmt                      = "dkvp";
+static void cli_writer_opts_init(cli_writer_opts_t* pwriter_opts) {
+	pwriter_opts->ofile_fmt                      = NULL;
 	pwriter_opts->ors                            = NULL;
 	pwriter_opts->ofs                            = NULL;
 	pwriter_opts->ops                            = NULL;
 
-	pwriter_opts->headerless_csv_output          = FALSE;
-	pwriter_opts->right_justify_xtab_value       = FALSE;
-	pwriter_opts->left_align_pprint              = TRUE;
-	pwriter_opts->stack_json_output_vertically   = FALSE;
-	pwriter_opts->wrap_json_output_in_outer_list = FALSE;
-	pwriter_opts->quote_json_values_always       = FALSE;
-	pwriter_opts->output_json_flatten_separator  = DEFAULT_JSON_FLATTEN_SEPARATOR;
-	pwriter_opts->oosvar_flatten_separator       = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
+	pwriter_opts->headerless_csv_output          = NEITHER_TRUE_NOR_FALSE;
+	pwriter_opts->right_justify_xtab_value       = NEITHER_TRUE_NOR_FALSE;
+	pwriter_opts->right_align_pprint             = NEITHER_TRUE_NOR_FALSE;
+	pwriter_opts->stack_json_output_vertically   = NEITHER_TRUE_NOR_FALSE;
+	pwriter_opts->wrap_json_output_in_outer_list = NEITHER_TRUE_NOR_FALSE;
+	pwriter_opts->quote_json_values_always       = NEITHER_TRUE_NOR_FALSE;
 
-	pwriter_opts->oquoting                       = DEFAULT_OQUOTING;
+	pwriter_opts->output_json_flatten_separator  = NULL;
+	pwriter_opts->oosvar_flatten_separator       = NULL;
+
+	pwriter_opts->oquoting                       = QUOTE_UNSPECIFIED;
+}
+
+static void cli_apply_defaults(cli_opts_t* popts) {
+
+	cli_apply_reader_defaults(&popts->reader_opts);
+
+	cli_apply_writer_defaults(&popts->writer_opts);
+
+	if (popts->ofmt == NULL)
+		popts->ofmt = DEFAULT_OFMT;
+}
+
+static void cli_apply_reader_defaults(cli_reader_opts_t* preader_opts) {
+	if (preader_opts->ifile_fmt == NULL)
+		preader_opts->ifile_fmt = "dkvp";
+
+	if (preader_opts->use_implicit_csv_header == NEITHER_TRUE_NOR_FALSE)
+		preader_opts->use_implicit_csv_header = FALSE;
+
+	if (preader_opts->use_mmap_for_read == NEITHER_TRUE_NOR_FALSE)
+		preader_opts->use_mmap_for_read = TRUE;
+
+	if (preader_opts->input_json_flatten_separator == NULL)
+		preader_opts->input_json_flatten_separator = DEFAULT_JSON_FLATTEN_SEPARATOR;
+}
+
+static void cli_apply_writer_defaults(cli_writer_opts_t* pwriter_opts) {
+	if (pwriter_opts->ofile_fmt == NULL)
+		pwriter_opts->ofile_fmt = "dkvp";
+
+	if (pwriter_opts->headerless_csv_output == NEITHER_TRUE_NOR_FALSE)
+		pwriter_opts->headerless_csv_output = FALSE;
+
+	if (pwriter_opts->right_justify_xtab_value == NEITHER_TRUE_NOR_FALSE)
+		pwriter_opts->right_justify_xtab_value = FALSE;
+
+	if (pwriter_opts->right_align_pprint == NEITHER_TRUE_NOR_FALSE)
+		pwriter_opts->right_align_pprint = FALSE;
+
+	if (pwriter_opts->stack_json_output_vertically == NEITHER_TRUE_NOR_FALSE)
+		pwriter_opts->stack_json_output_vertically = FALSE;
+
+	if (pwriter_opts->wrap_json_output_in_outer_list == NEITHER_TRUE_NOR_FALSE)
+		pwriter_opts->wrap_json_output_in_outer_list = FALSE;
+
+	if (pwriter_opts->quote_json_values_always == NEITHER_TRUE_NOR_FALSE)
+		pwriter_opts->quote_json_values_always = FALSE;
+
+	if (pwriter_opts->output_json_flatten_separator == NULL)
+		pwriter_opts->output_json_flatten_separator = DEFAULT_JSON_FLATTEN_SEPARATOR;
+
+	if (pwriter_opts->oosvar_flatten_separator == NULL)
+		pwriter_opts->oosvar_flatten_separator = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
+
+	if (pwriter_opts->oquoting == QUOTE_UNSPECIFIED)
+		pwriter_opts->oquoting = DEFAULT_OQUOTING;
 }
 
 // ----------------------------------------------------------------
@@ -1209,7 +1269,7 @@ static int handle_writer_options(char** argv, int argc, int *pargi, cli_writer_o
 		argi += 1;
 
 	} else if (streq(argv[argi], "--right")) {
-		pwriter_opts->left_align_pprint = FALSE;
+		pwriter_opts->right_align_pprint = TRUE;
 		argi += 1;
 
 	} else if (streq(argv[argi], "--quote-all")) {

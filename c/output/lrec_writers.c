@@ -33,7 +33,7 @@ lrec_writer_t*  lrec_writer_alloc(cli_writer_opts_t* popts) {
 				MLR_GLOBALS.bargv0, popts->ofs);
 			return NULL;
 		} else {
-			return lrec_writer_pprint_alloc(popts->ors, popts->ofs[0], popts->left_align_pprint);
+			return lrec_writer_pprint_alloc(popts->ors, popts->ofs[0], popts->right_align_pprint);
 		}
 
 	} else {
