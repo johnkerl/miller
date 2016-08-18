@@ -1103,16 +1103,37 @@ static int handle_reader_writer_options(char** argv, int argc, int *pargi,
 }
 
 // ----------------------------------------------------------------
+static char* lhmss_get_or_die(lhmss_t* pmap, char* key, char* argv0) {
+	char* value = lhmss_get(pmap, key);
+	if (value == NULL) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			argv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	return value;
+}
+
+// ----------------------------------------------------------------
+static int lhmsi_get_or_die(lhmsi_t* pmap, char* key, char* argv0) {
+	if (!lhmsi_has_key(pmap, key)) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			argv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	return lhmsi_get(pmap, key);
+}
+
+// ----------------------------------------------------------------
+// xxx protoize statics & put this at top
 cli_opts_t* parse_command_line(int argc, char** argv)
 {
 	cli_opts_t* popts = mlr_malloc_or_die(sizeof(cli_opts_t));
 
 	cli_set_defaults(popts);
 
-	int no_input             = FALSE;
-	int have_rand_seed       = FALSE;
-	unsigned rand_seed       = 0;
-
+	int no_input       = FALSE;
+	int have_rand_seed = FALSE;
+	unsigned rand_seed = 0;
 
 	int argi = 1;
 	for (; argi < argc; /* variable increment: 1 or 2 depending on flag */) {
@@ -1179,72 +1200,32 @@ cli_opts_t* parse_command_line(int argc, char** argv)
 	lhmsi_t* default_repeat_ipses = get_default_repeat_ipses();
 
 	if (popts->reader_opts.irs == NULL)
-		popts->reader_opts.irs = lhmss_get(default_rses, popts->reader_opts.ifile_fmt);
+		popts->reader_opts.irs = lhmss_get_or_die(default_rses, popts->reader_opts.ifile_fmt, argv[0]);
 	if (popts->reader_opts.ifs == NULL)
-		popts->reader_opts.ifs = lhmss_get(default_fses, popts->reader_opts.ifile_fmt);
+		popts->reader_opts.ifs = lhmss_get_or_die(default_fses, popts->reader_opts.ifile_fmt, argv[0]);
 	if (popts->reader_opts.ips == NULL)
-		popts->reader_opts.ips = lhmss_get(default_pses, popts->reader_opts.ifile_fmt);
+		popts->reader_opts.ips = lhmss_get_or_die(default_pses, popts->reader_opts.ifile_fmt, argv[0]);
 
 	if (popts->reader_opts.allow_repeat_ifs == NEITHER_TRUE_NOR_FALSE)
-		popts->reader_opts.allow_repeat_ifs = lhmsi_get(default_repeat_ifses, popts->reader_opts.ifile_fmt);
+		popts->reader_opts.allow_repeat_ifs = lhmsi_get_or_die(default_repeat_ifses, popts->reader_opts.ifile_fmt, argv[0]);
 	if (popts->reader_opts.allow_repeat_ips == NEITHER_TRUE_NOR_FALSE)
-		popts->reader_opts.allow_repeat_ips = lhmsi_get(default_repeat_ipses, popts->reader_opts.ifile_fmt);
+		popts->reader_opts.allow_repeat_ips = lhmsi_get_or_die(default_repeat_ipses, popts->reader_opts.ifile_fmt, argv[0]);
 
 	if (popts->writer_opts.ors == NULL)
-		popts->writer_opts.ors = lhmss_get(default_rses, popts->writer_opts.ofile_fmt);
+		popts->writer_opts.ors = lhmss_get_or_die(default_rses, popts->writer_opts.ofile_fmt, argv[0]);
 	if (popts->writer_opts.ofs == NULL)
-		popts->writer_opts.ofs = lhmss_get(default_fses, popts->writer_opts.ofile_fmt);
+		popts->writer_opts.ofs = lhmss_get_or_die(default_fses, popts->writer_opts.ofile_fmt, argv[0]);
 	if (popts->writer_opts.ops == NULL)
-		popts->writer_opts.ops = lhmss_get(default_pses, popts->writer_opts.ofile_fmt);
+		popts->writer_opts.ops = lhmss_get_or_die(default_pses, popts->writer_opts.ofile_fmt, argv[0]);
 
 	// xxx fold into get-default-or-die methods
-	if (popts->reader_opts.irs == NULL) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
-		exit(1);
-	}
-	if (popts->reader_opts.ifs == NULL) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
-		exit(1);
-	}
-	if (popts->reader_opts.ips == NULL) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
-		exit(1);
-	}
-
-	if (popts->reader_opts.allow_repeat_ifs == NEITHER_TRUE_NOR_FALSE) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
-		exit(1);
-	}
-	if (popts->reader_opts.allow_repeat_ips == NEITHER_TRUE_NOR_FALSE) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
-		exit(1);
-	}
-
-	if (popts->writer_opts.ors == NULL) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
-		exit(1);
-	}
-	if (popts->writer_opts.ofs == NULL) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
-		exit(1);
-	}
-	if (popts->writer_opts.ops == NULL) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", argv[0], __FILE__, __LINE__);
-		exit(1);
-	}
-
 	if (streq(popts->writer_opts.ofile_fmt, "pprint") && strlen(popts->writer_opts.ofs) != 1) {
 		fprintf(stderr, "%s: OFS for PPRINT format must be single-character; got \"%s\".\n",
 			argv[0], popts->writer_opts.ofs);
 		return NULL;
 	}
 
-	// xxx fold into alloc-or-die methods
-	popts->plrec_writer = lrec_writer_alloc(&popts->writer_opts);
-	if (popts->plrec_writer == NULL) {
-		main_usage(stderr, argv[0]);
-		exit(1);
-	}
+	popts->plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
 
 	// xxx make method
 	if ((argc - argi) < 1) {
