@@ -73,6 +73,17 @@ typedef struct _cli_opts_t {
 // ----------------------------------------------------------------
 cli_opts_t* parse_command_line(int argc, char** argv);
 
+int handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts_t* preader_opts);
+int handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts_t* pwriter_opts);
+
+void cli_opts_init(cli_opts_t* popts);
+void cli_reader_opts_init(cli_reader_opts_t* preader_opts);
+void cli_writer_opts_init(cli_writer_opts_t* pwriter_opts);
+
+void cli_apply_defaults(cli_opts_t* popts);
+void cli_apply_reader_defaults(cli_reader_opts_t* preader_opts);
+void cli_apply_writer_defaults(cli_writer_opts_t* pwriter_opts);
+
 // For mapper join which has its separate input-format overrides:
 void cli_merge_reader_opts(cli_reader_opts_t* pfunc_opts, cli_reader_opts_t* pmain_opts);
 

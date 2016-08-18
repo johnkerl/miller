@@ -124,17 +124,24 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	popts->emit_left_unpairables    = FALSE;
 	popts->emit_right_unpairables   = FALSE;
 
-	popts->reader_opts.ifile_fmt         = NULL;
-	popts->reader_opts.irs               = NULL;
-	popts->reader_opts.ifs               = NULL;
-	popts->reader_opts.ips               = NULL;
-	popts->reader_opts.allow_repeat_ifs  = NEITHER_TRUE_NOR_FALSE;
-	popts->reader_opts.allow_repeat_ips  = NEITHER_TRUE_NOR_FALSE;
-	popts->reader_opts.use_implicit_csv_header = NEITHER_TRUE_NOR_FALSE;
-	popts->reader_opts.use_mmap_for_read = NEITHER_TRUE_NOR_FALSE;
-	popts->reader_opts.input_json_flatten_separator = NULL;
+	cli_reader_opts_init(&popts->reader_opts);
 
 	char* verb = argv[(*pargi)++];
+
+//	for (; argi < argc; /* variable increment: 1 or 2 depending on flag */) {
+//
+//		if (argv[argi][0] != '-') {
+//			break; // No more flag options to process
+//		} else if (handle_reader_options(argv, argc, &argi, &popts->reader_opts)) {
+//			// handled
+//		} else if (...) {
+//			// handled
+//		} else {
+//			...
+//		}
+
+			// xxx
+			//*pplist = slls_from_line(argv[argi+1], ',', FALSE);
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_flag(pstate,      "--prepipe",  &popts->prepipe);

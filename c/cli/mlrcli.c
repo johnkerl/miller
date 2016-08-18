@@ -107,17 +107,7 @@ static void usage_unrecognized_verb(char* argv0, char* arg);
 static void check_arg_count(char** argv, int argi, int argc, int n);
 static mapper_setup_t* look_up_mapper_setup(char* verb);
 
-static void cli_opts_init(cli_opts_t* popts);
-static void cli_reader_opts_init(cli_reader_opts_t* preader_opts);
-static void cli_writer_opts_init(cli_writer_opts_t* pwriter_opts);
-
-static void cli_apply_defaults(cli_opts_t* popts);
-static void cli_apply_reader_defaults(cli_reader_opts_t* preader_opts);
-static void cli_apply_writer_defaults(cli_writer_opts_t* pwriter_opts);
-
 static int handle_terminal_usage(char** argv, int argc, int argi);
-static int handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts_t* preader_opts);
-static int handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts_t* pwriter_opts);
 static int handle_reader_writer_options(char** argv, int argc, int *pargi,
 	cli_reader_opts_t* preader_opts, cli_writer_opts_t* pwriter_opts);
 
@@ -894,7 +884,7 @@ static mapper_setup_t* look_up_mapper_setup(char* verb) {
 }
 
 // ----------------------------------------------------------------
-static void cli_opts_init(cli_opts_t* popts) {
+void cli_opts_init(cli_opts_t* popts) {
 	memset(popts, 0, sizeof(*popts));
 
 	cli_reader_opts_init(&popts->reader_opts);
@@ -909,7 +899,7 @@ static void cli_opts_init(cli_opts_t* popts) {
 	popts->nr_progress_mod   = 0LL;
 }
 
-static void cli_reader_opts_init(cli_reader_opts_t* preader_opts) {
+void cli_reader_opts_init(cli_reader_opts_t* preader_opts) {
 	preader_opts->ifile_fmt                      = NULL;
 	preader_opts->irs                            = NULL;
 	preader_opts->ifs                            = NULL;
@@ -924,7 +914,7 @@ static void cli_reader_opts_init(cli_reader_opts_t* preader_opts) {
 	preader_opts->prepipe                        = NULL;
 }
 
-static void cli_writer_opts_init(cli_writer_opts_t* pwriter_opts) {
+void cli_writer_opts_init(cli_writer_opts_t* pwriter_opts) {
 	pwriter_opts->ofile_fmt                      = NULL;
 	pwriter_opts->ors                            = NULL;
 	pwriter_opts->ofs                            = NULL;
@@ -943,7 +933,7 @@ static void cli_writer_opts_init(cli_writer_opts_t* pwriter_opts) {
 	pwriter_opts->oquoting                       = QUOTE_UNSPECIFIED;
 }
 
-static void cli_apply_defaults(cli_opts_t* popts) {
+void cli_apply_defaults(cli_opts_t* popts) {
 
 	cli_apply_reader_defaults(&popts->reader_opts);
 
@@ -953,7 +943,7 @@ static void cli_apply_defaults(cli_opts_t* popts) {
 		popts->ofmt = DEFAULT_OFMT;
 }
 
-static void cli_apply_reader_defaults(cli_reader_opts_t* preader_opts) {
+void cli_apply_reader_defaults(cli_reader_opts_t* preader_opts) {
 	if (preader_opts->ifile_fmt == NULL)
 		preader_opts->ifile_fmt = "dkvp";
 
@@ -967,7 +957,7 @@ static void cli_apply_reader_defaults(cli_reader_opts_t* preader_opts) {
 		preader_opts->input_json_flatten_separator = DEFAULT_JSON_FLATTEN_SEPARATOR;
 }
 
-static void cli_apply_writer_defaults(cli_writer_opts_t* pwriter_opts) {
+void cli_apply_writer_defaults(cli_writer_opts_t* pwriter_opts) {
 	if (pwriter_opts->ofile_fmt == NULL)
 		pwriter_opts->ofile_fmt = "dkvp";
 
@@ -1065,8 +1055,7 @@ void cli_merge_reader_opts(cli_reader_opts_t* pfunc_opts, cli_reader_opts_t* pma
 }
 
 // ----------------------------------------------------------------
-static int handle_terminal_usage(char** argv, int argc, int argi)
-{
+static int handle_terminal_usage(char** argv, int argc, int argi) {
 	if (streq(argv[argi], "--version")) {
 		printf("Miller %s\n", VERSION_STRING);
 		return TRUE;
@@ -1163,8 +1152,7 @@ static int handle_terminal_usage(char** argv, int argc, int argi)
 }
 
 // Returns TRUE if the current flag was handled.
-static int handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts_t* preader_opts)
-{
+int handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts_t* preader_opts) {
 	int argi = *pargi;
 	int oargi = argi;
 
@@ -1251,8 +1239,7 @@ static int handle_reader_options(char** argv, int argc, int *pargi, cli_reader_o
 }
 
 // Returns TRUE if the current flag was handled.
-static int handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts_t* pwriter_opts)
-{
+int handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts_t* pwriter_opts) {
 	int argi = *pargi;
 	int oargi = argi;
 
