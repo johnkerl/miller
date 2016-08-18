@@ -995,6 +995,68 @@ static void cli_apply_writer_defaults(cli_writer_opts_t* pwriter_opts) {
 }
 
 // ----------------------------------------------------------------
+// For mapper join which has its own input-format overrides.
+//
+// Mainly this just takes the main-opts flag whenever the join-opts flag was not
+// specified by the user. But it's a bit more complex when main and join input
+// formats are different. Example: main input format is CSV, for which IPS is
+// "(N/A)", and join input format is DKVP. Then we should not use "(N/A)"
+// for DKVP IPS. However if main input format were DKVP with IPS set to ":",
+// then we should take that.
+//
+// The logic is:
+//
+// * If the join input format was unspecified, take all unspecified values from
+//   main opts.
+//
+// * If the join input format was specified and is the same as main input
+//   format, take unspecified values from main opts.
+//
+// * If the join input format was specified and is not the same as main input
+//   format, take unspecified values from defaults for the join input format.
+void cli_merge_reader_opts(cli_reader_opts_t* pfunc_opts, cli_reader_opts_t* pmain_opts) {
+
+	if (pfunc_opts->ifile_fmt == NULL) {
+		pfunc_opts->ifile_fmt = pmain_opts->ifile_fmt;
+	}
+
+	if (streq(pfunc_opts->ifile_fmt, pmain_opts->ifile_fmt)) {
+
+		if (pfunc_opts->irs == NULL)
+			pfunc_opts->irs = pmain_opts->irs;
+		if (pfunc_opts->ifs == NULL)
+			pfunc_opts->ifs = pmain_opts->ifs;
+		if (pfunc_opts->ips == NULL)
+			pfunc_opts->ips = pmain_opts->ips;
+		if (pfunc_opts->allow_repeat_ifs  == NEITHER_TRUE_NOR_FALSE)
+			pfunc_opts->allow_repeat_ifs = pmain_opts->allow_repeat_ifs;
+		if (pfunc_opts->allow_repeat_ips  == NEITHER_TRUE_NOR_FALSE)
+			pfunc_opts->allow_repeat_ips = pmain_opts->allow_repeat_ips;
+
+	} else {
+
+		if (pfunc_opts->irs == NULL)
+			pfunc_opts->irs = lhmss_get_or_die(get_default_rses(), pfunc_opts->ifile_fmt, "mlr");
+		if (pfunc_opts->ifs == NULL)
+			pfunc_opts->ifs = lhmss_get_or_die(get_default_fses(), pfunc_opts->ifile_fmt, "mlr");
+		if (pfunc_opts->ips == NULL)
+			pfunc_opts->ips = lhmss_get_or_die(get_default_pses(), pfunc_opts->ifile_fmt, "mlr");
+		if (pfunc_opts->allow_repeat_ifs  == NEITHER_TRUE_NOR_FALSE)
+			pfunc_opts->allow_repeat_ifs = lhmsi_get_or_die(get_default_repeat_ifses(), pfunc_opts->ifile_fmt, "mlr");
+		if (pfunc_opts->allow_repeat_ips  == NEITHER_TRUE_NOR_FALSE)
+			pfunc_opts->allow_repeat_ips = lhmsi_get_or_die(get_default_repeat_ipses(), pfunc_opts->ifile_fmt, "mlr");
+
+	}
+
+	if (pfunc_opts->use_implicit_csv_header == NEITHER_TRUE_NOR_FALSE)
+		pfunc_opts->use_implicit_csv_header = pmain_opts->use_implicit_csv_header;
+	if (pfunc_opts->use_mmap_for_read == NEITHER_TRUE_NOR_FALSE)
+		pfunc_opts->use_mmap_for_read = pmain_opts->use_mmap_for_read;
+	if (pfunc_opts->input_json_flatten_separator == NULL)
+		pfunc_opts->input_json_flatten_separator = pmain_opts->input_json_flatten_separator;
+}
+
+// ----------------------------------------------------------------
 static int handle_terminal_usage(char** argv, int argc, int argi)
 {
 	if (streq(argv[argi], "--version")) {

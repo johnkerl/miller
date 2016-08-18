@@ -51,7 +51,6 @@ static void mapper_join_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv);
 static mapper_t* mapper_join_alloc(ap_state_t* pargp, mapper_join_opts_t* popts);
 static void mapper_join_free(mapper_t* pmapper);
-static void merge_options(cli_reader_opts_t* popts);
 static void ingest_left_file(mapper_join_state_t* pstate);
 static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, mapper_join_state_t* pstate,
 	sllv_t* pout_recs);
@@ -270,9 +269,18 @@ static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, v
 
 	// This can't be done in the CLI-parser since it requires information which
 	// isn't known until after the CLI-parser is called.
+	//
+	// Format and separator flags are passed to mapper_join in MLR_GLOBALS rather
+	// than on the stack, since the latter would require complicating the interface
+	// for all the other mappers which don't do their own file I/O.  (Also, while
+	// some of the information needed to construct an lrec_reader is available on
+	// the command line before the mapper-allocators are called, some is not
+	// available until after.  Hence our obtaining these flags after mapper-alloc.)
 	if (pstate->pjoin_bucket_keeper == NULL) {
 		mapper_join_opts_t* popts = pstate->popts;
-		merge_options(&pstate->popts->reader_opts);
+
+		cli_merge_reader_opts(&pstate->popts->reader_opts, &MLR_GLOBALS.popts->reader_opts);
+
 		pstate->pjoin_bucket_keeper = join_bucket_keeper_alloc(
 			popts->prepipe,
 			popts->left_file_name,
@@ -455,79 +463,9 @@ static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, ma
 }
 
 // ----------------------------------------------------------------
-// Format and separator flags are passed to mapper_join in MLR_GLOBALS rather
-// than on the stack, since the latter would require complicating the interface
-// for all the other mappers which don't do their own file I/O.  (Also, while
-// some of the information needed to construct an lrec_reader is available on
-// the command line before the mapper-allocators are called, some is not
-// available until after.  Hence our obtaining these flags after mapper-alloc.)
-//
-// Mainly this just takes the main-opts flag whenever the join-opts flag was not
-// specified by the user. But it's a bit more complex when main and join input
-// formats are different. Example: main input format is CSV, for which IPS is
-// "(N/A)", and join input format is DKVP. Then we should not use "(N/A)"
-// for DKVP IPS. However if main input format were DKVP with IPS set to ":",
-// then we should take that.
-//
-// The logic is:
-//
-// * If the join input format was unspecified, take all unspecified values from
-//   main opts.
-//
-// * If the join input format was specified and is the same as main input
-//   format, take unspecified values from main opts.
-//
-// * If the join input format was specified and is not the same as main input
-//   format, take unspecified values from defaults for the join input format.
-
-static void merge_options(cli_reader_opts_t* popts) {
-
-	// xxx move to mlrcli.c
-
-	if (popts->ifile_fmt == NULL) {
-		popts->ifile_fmt = MLR_GLOBALS.popts->reader_opts.ifile_fmt;
-	}
-
-	if (streq(popts->ifile_fmt, MLR_GLOBALS.popts->reader_opts.ifile_fmt)) {
-
-		if (popts->irs == NULL)
-			popts->irs = MLR_GLOBALS.popts->reader_opts.irs;
-		if (popts->ifs == NULL)
-			popts->ifs = MLR_GLOBALS.popts->reader_opts.ifs;
-		if (popts->ips == NULL)
-			popts->ips = MLR_GLOBALS.popts->reader_opts.ips;
-		if (popts->allow_repeat_ifs  == NEITHER_TRUE_NOR_FALSE)
-			popts->allow_repeat_ifs = MLR_GLOBALS.popts->reader_opts.allow_repeat_ifs;
-		if (popts->allow_repeat_ips  == NEITHER_TRUE_NOR_FALSE)
-			popts->allow_repeat_ips = MLR_GLOBALS.popts->reader_opts.allow_repeat_ips;
-
-	} else {
-
-		if (popts->irs == NULL)
-			popts->irs = lhmss_get(get_default_rses(), popts->ifile_fmt);
-		if (popts->ifs == NULL)
-			popts->ifs = lhmss_get(get_default_fses(), popts->ifile_fmt);
-		if (popts->ips == NULL)
-			popts->ips = lhmss_get(get_default_pses(), popts->ifile_fmt);
-		if (popts->allow_repeat_ifs  == NEITHER_TRUE_NOR_FALSE)
-			popts->allow_repeat_ifs = lhmsi_get(get_default_repeat_ifses(), popts->ifile_fmt);
-		if (popts->allow_repeat_ips  == NEITHER_TRUE_NOR_FALSE)
-			popts->allow_repeat_ips = lhmsi_get(get_default_repeat_ipses(), popts->ifile_fmt);
-
-	}
-
-	if (popts->use_implicit_csv_header == NEITHER_TRUE_NOR_FALSE)
-		popts->use_implicit_csv_header = MLR_GLOBALS.popts->reader_opts.use_implicit_csv_header;
-	if (popts->use_mmap_for_read == NEITHER_TRUE_NOR_FALSE)
-		popts->use_mmap_for_read = MLR_GLOBALS.popts->reader_opts.use_mmap_for_read;
-	if (popts->input_json_flatten_separator == NULL)
-		popts->input_json_flatten_separator = MLR_GLOBALS.popts->reader_opts.input_json_flatten_separator;
-}
-
-// ----------------------------------------------------------------
 static void ingest_left_file(mapper_join_state_t* pstate) {
 	mapper_join_opts_t* popts = pstate->popts;
-	merge_options(&popts->reader_opts);
+	cli_merge_reader_opts(&popts->reader_opts, &MLR_GLOBALS.popts->reader_opts);
 
 	lrec_reader_t* plrec_reader = lrec_reader_alloc(&popts->reader_opts);
 

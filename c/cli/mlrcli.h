@@ -70,9 +70,15 @@ typedef struct _cli_opts_t {
 
 } cli_opts_t;
 
+// ----------------------------------------------------------------
 cli_opts_t* parse_command_line(int argc, char** argv);
+
+// For mapper join which has its separate input-format overrides:
+void cli_merge_reader_opts(cli_reader_opts_t* pfunc_opts, cli_reader_opts_t* pmain_opts);
+
 void cli_opts_free(cli_opts_t* popts);
 
+// xxx reprivatize:
 // Needed by mapper_join:
 lhmsi_t* get_default_repeat_ifses();
 lhmsi_t* get_default_repeat_ipses();
