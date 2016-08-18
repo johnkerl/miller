@@ -74,6 +74,230 @@ static mapper_setup_t* mapper_lookup_table[] = {
 static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(mapper_lookup_table[0]);
 
 // ----------------------------------------------------------------
+static lhmss_t* get_desc_to_chars_map();
+static void free_opt_singletons();
+static char* rebackslash(char* sep);
+static void main_usage_synopsis(FILE* o, char* argv0);
+static void main_usage_examples(FILE* o, char* argv0, char* leader);
+static void list_all_verbs_raw(FILE* o);
+static void list_all_verbs(FILE* o, char* leader);
+static void main_usage_help_options(FILE* o, char* argv0);
+static void main_usage_functions(FILE* o, char* argv0, char* leader);
+static void main_usage_data_format_examples(FILE* o, char* argv0);
+static void main_usage_data_format_options(FILE* o, char* argv0);
+static void main_usage_compressed_data_options(FILE* o, char* argv0);
+static void main_usage_separator_options(FILE* o, char* argv0);
+static void main_usage_csv_options(FILE* o, char* argv0);
+static void main_usage_double_quoting(FILE* o, char* argv0);
+static void main_usage_numerical_formatting(FILE* o, char* argv0);
+static void main_usage_other_options(FILE* o, char* argv0);
+static void main_usage_then_chaining(FILE* o, char* argv0);
+static void main_usage_see_also(FILE* o, char* argv0);
+static void print_type_arithmetic_info(FILE* o, char* argv0);
+static void main_usage(FILE* o, char* argv0);
+static void usage_all_verbs(char* argv0);
+static void usage_unrecognized_verb(char* argv0, char* arg);
+static void check_arg_count(char** argv, int argi, int argc, int n);
+static mapper_setup_t* look_up_mapper_setup(char* verb);
+static void cli_set_reader_defaults(cli_reader_opts_t* preader_opts);
+static void cli_set_writer_defaults(cli_writer_opts_t* pwriter_opts);
+static void cli_set_defaults(cli_opts_t* popts);
+static int handle_terminal_usage(char** argv, int argc, int argi);
+static int handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts_t* preader_opts);
+static int handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts_t* pwriter_opts);
+static int handle_reader_writer_options(char** argv, int argc, int *pargi,
+	cli_reader_opts_t* preader_opts, cli_writer_opts_t* pwriter_opts);
+static char* lhmss_get_or_die(lhmss_t* pmap, char* key, char* argv0);
+static int lhmsi_get_or_die(lhmsi_t* pmap, char* key, char* argv0);
+
+// ----------------------------------------------------------------
+cli_opts_t* parse_command_line(int argc, char** argv) {
+	cli_opts_t* popts = mlr_malloc_or_die(sizeof(cli_opts_t));
+
+	cli_set_defaults(popts);
+
+	int no_input       = FALSE;
+	int have_rand_seed = FALSE;
+	unsigned rand_seed = 0;
+
+	int argi = 1;
+	for (; argi < argc; /* variable increment: 1 or 2 depending on flag */) {
+
+		if (argv[argi][0] != '-') {
+			break; // No more flag options to process
+		} else if (handle_terminal_usage(argv, argc, argi)) {
+			exit(0);
+		} else if (handle_reader_options(argv, argc, &argi, &popts->reader_opts)) {
+			// handled
+		} else if (handle_writer_options(argv, argc, &argi, &popts->writer_opts)) {
+			// handled
+		} else if (handle_reader_writer_options(argv, argc, &argi, &popts->reader_opts, &popts->writer_opts)) {
+			// handled
+
+		} else if (streq(argv[argi], "-n")) {
+			no_input = TRUE;
+			argi += 1;
+
+		} else if (streq(argv[argi], "--from")) {
+			check_arg_count(argv, argi, argc, 2);
+			slls_append(popts->filenames, argv[argi+1], NO_FREE);
+			argi += 2;
+
+		} else if (streq(argv[argi], "--ofmt")) {
+			check_arg_count(argv, argi, argc, 2);
+			popts->ofmt = argv[argi+1];
+			argi += 2;
+
+		} else if (streq(argv[argi], "--nr-progress-mod")) {
+			check_arg_count(argv, argi, argc, 2);
+			if (sscanf(argv[argi+1], "%lld", &popts->nr_progress_mod) != 1) {
+				main_usage(stderr, argv[0]);
+				exit(1);
+			}
+			if (popts->nr_progress_mod <= 0) {
+				main_usage(stderr, argv[0]);
+				exit(1);
+			}
+			argi += 2;
+
+		} else if (streq(argv[argi], "--seed")) {
+			check_arg_count(argv, argi, argc, 2);
+			if (sscanf(argv[argi+1], "0x%x", &rand_seed) == 1) {
+				have_rand_seed = TRUE;
+			} else if (sscanf(argv[argi+1], "%u", &rand_seed) == 1) {
+				have_rand_seed = TRUE;
+			} else {
+				main_usage(stderr, argv[0]);
+				exit(1);
+			}
+			argi += 2;
+
+		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+		} else {
+			usage_unrecognized_verb(argv[0], argv[argi]);
+		}
+	}
+
+	lhmss_t* default_rses = get_default_rses();
+	lhmss_t* default_fses = get_default_fses();
+	lhmss_t* default_pses = get_default_pses();
+	lhmsi_t* default_repeat_ifses = get_default_repeat_ifses();
+	lhmsi_t* default_repeat_ipses = get_default_repeat_ipses();
+
+	if (popts->reader_opts.irs == NULL)
+		popts->reader_opts.irs = lhmss_get_or_die(default_rses, popts->reader_opts.ifile_fmt, argv[0]);
+	if (popts->reader_opts.ifs == NULL)
+		popts->reader_opts.ifs = lhmss_get_or_die(default_fses, popts->reader_opts.ifile_fmt, argv[0]);
+	if (popts->reader_opts.ips == NULL)
+		popts->reader_opts.ips = lhmss_get_or_die(default_pses, popts->reader_opts.ifile_fmt, argv[0]);
+
+	if (popts->reader_opts.allow_repeat_ifs == NEITHER_TRUE_NOR_FALSE)
+		popts->reader_opts.allow_repeat_ifs = lhmsi_get_or_die(default_repeat_ifses, popts->reader_opts.ifile_fmt, argv[0]);
+	if (popts->reader_opts.allow_repeat_ips == NEITHER_TRUE_NOR_FALSE)
+		popts->reader_opts.allow_repeat_ips = lhmsi_get_or_die(default_repeat_ipses, popts->reader_opts.ifile_fmt, argv[0]);
+
+	if (popts->writer_opts.ors == NULL)
+		popts->writer_opts.ors = lhmss_get_or_die(default_rses, popts->writer_opts.ofile_fmt, argv[0]);
+	if (popts->writer_opts.ofs == NULL)
+		popts->writer_opts.ofs = lhmss_get_or_die(default_fses, popts->writer_opts.ofile_fmt, argv[0]);
+	if (popts->writer_opts.ops == NULL)
+		popts->writer_opts.ops = lhmss_get_or_die(default_pses, popts->writer_opts.ofile_fmt, argv[0]);
+
+	// xxx fold into get-default-or-die methods
+	if (streq(popts->writer_opts.ofile_fmt, "pprint") && strlen(popts->writer_opts.ofs) != 1) {
+		fprintf(stderr, "%s: OFS for PPRINT format must be single-character; got \"%s\".\n",
+			argv[0], popts->writer_opts.ofs);
+		return NULL;
+	}
+
+	popts->plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
+
+	// xxx make method
+	if ((argc - argi) < 1) {
+		main_usage(stderr, argv[0]);
+		exit(1);
+	}
+	while (TRUE) {
+		check_arg_count(argv, argi, argc, 1);
+		char* verb = argv[argi];
+
+		// xxx fold into look-up-or-die methods
+		mapper_setup_t* pmapper_setup = look_up_mapper_setup(verb);
+		if (pmapper_setup == NULL) {
+			fprintf(stderr, "%s: verb \"%s\" not found. Please use \"%s --help\" for a list.\n",
+				argv[0], verb, argv[0]);
+			exit(1);
+		}
+
+		if ((argc - argi) >= 2) {
+			if (streq(argv[argi+1], "-h") || streq(argv[argi+1], "--help")) {
+				pmapper_setup->pusage_func(stdout, argv[0], verb);
+				exit(0);
+			}
+		}
+
+		// It's up to the parse func to print its usage on CLI-parse failure.
+		mapper_t* pmapper = pmapper_setup->pparse_func(&argi, argc, argv);
+		if (pmapper == NULL) {
+			exit(1);
+		}
+		sllv_append(popts->pmapper_list, pmapper);
+
+		if (argi >= argc || !streq(argv[argi], "then"))
+			break;
+		argi++;
+	}
+
+	for ( ; argi < argc; argi++) {
+		slls_append(popts->filenames, argv[argi], NO_FREE);
+	}
+
+	if (no_input) {
+		slls_free(popts->filenames);
+		popts->filenames = NULL;
+	} else if (popts->filenames->length == 0) {
+		// No filenames means read from standard input, and standard input cannot be mmapped.
+		popts->reader_opts.use_mmap_for_read = FALSE;
+	}
+
+	popts->plrec_reader = lrec_reader_alloc(&popts->reader_opts);
+	if (popts->plrec_reader == NULL) {
+		main_usage(stderr, argv[0]);
+		exit(1);
+	}
+
+	if (have_rand_seed) {
+		mtrand_init(rand_seed);
+	} else {
+		mtrand_init_default();
+	}
+
+	return popts;
+}
+
+// ----------------------------------------------------------------
+void cli_opts_free(cli_opts_t* popts) {
+	if (popts == NULL)
+		return;
+
+	popts->plrec_reader->pfree_func(popts->plrec_reader);
+
+	for (sllve_t* pe = popts->pmapper_list->phead; pe != NULL; pe = pe->pnext) {
+		mapper_t* pmapper = pe->pvvalue;
+		pmapper->pfree_func(pmapper);
+	}
+	sllv_free(popts->pmapper_list);
+
+	popts->plrec_writer->pfree_func(popts->plrec_writer);
+
+	slls_free(popts->filenames);
+
+	free(popts);
+
+	free_opt_singletons();
+}
+
+// ----------------------------------------------------------------
 static lhmss_t* singleton_pdesc_to_chars_map = NULL;
 static lhmss_t* get_desc_to_chars_map() {
 	if (singleton_pdesc_to_chars_map == NULL) {
@@ -1121,193 +1345,4 @@ static int lhmsi_get_or_die(lhmsi_t* pmap, char* key, char* argv0) {
 		exit(1);
 	}
 	return lhmsi_get(pmap, key);
-}
-
-// ----------------------------------------------------------------
-// xxx protoize statics & put this at top
-cli_opts_t* parse_command_line(int argc, char** argv)
-{
-	cli_opts_t* popts = mlr_malloc_or_die(sizeof(cli_opts_t));
-
-	cli_set_defaults(popts);
-
-	int no_input       = FALSE;
-	int have_rand_seed = FALSE;
-	unsigned rand_seed = 0;
-
-	int argi = 1;
-	for (; argi < argc; /* variable increment: 1 or 2 depending on flag */) {
-
-		if (argv[argi][0] != '-') {
-			break; // No more flag options to process
-		} else if (handle_terminal_usage(argv, argc, argi)) {
-			exit(0);
-		} else if (handle_reader_options(argv, argc, &argi, &popts->reader_opts)) {
-			// handled
-		} else if (handle_writer_options(argv, argc, &argi, &popts->writer_opts)) {
-			// handled
-		} else if (handle_reader_writer_options(argv, argc, &argi, &popts->reader_opts, &popts->writer_opts)) {
-			// handled
-
-		} else if (streq(argv[argi], "-n")) {
-			no_input = TRUE;
-			argi += 1;
-
-		} else if (streq(argv[argi], "--from")) {
-			check_arg_count(argv, argi, argc, 2);
-			slls_append(popts->filenames, argv[argi+1], NO_FREE);
-			argi += 2;
-
-		} else if (streq(argv[argi], "--ofmt")) {
-			check_arg_count(argv, argi, argc, 2);
-			popts->ofmt = argv[argi+1];
-			argi += 2;
-
-		} else if (streq(argv[argi], "--nr-progress-mod")) {
-			check_arg_count(argv, argi, argc, 2);
-			if (sscanf(argv[argi+1], "%lld", &popts->nr_progress_mod) != 1) {
-				main_usage(stderr, argv[0]);
-				exit(1);
-			}
-			if (popts->nr_progress_mod <= 0) {
-				main_usage(stderr, argv[0]);
-				exit(1);
-			}
-			argi += 2;
-
-		} else if (streq(argv[argi], "--seed")) {
-			check_arg_count(argv, argi, argc, 2);
-			if (sscanf(argv[argi+1], "0x%x", &rand_seed) == 1) {
-				have_rand_seed = TRUE;
-			} else if (sscanf(argv[argi+1], "%u", &rand_seed) == 1) {
-				have_rand_seed = TRUE;
-			} else {
-				main_usage(stderr, argv[0]);
-				exit(1);
-			}
-			argi += 2;
-
-		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		} else {
-			usage_unrecognized_verb(argv[0], argv[argi]);
-		}
-	}
-
-	lhmss_t* default_rses = get_default_rses();
-	lhmss_t* default_fses = get_default_fses();
-	lhmss_t* default_pses = get_default_pses();
-	lhmsi_t* default_repeat_ifses = get_default_repeat_ifses();
-	lhmsi_t* default_repeat_ipses = get_default_repeat_ipses();
-
-	if (popts->reader_opts.irs == NULL)
-		popts->reader_opts.irs = lhmss_get_or_die(default_rses, popts->reader_opts.ifile_fmt, argv[0]);
-	if (popts->reader_opts.ifs == NULL)
-		popts->reader_opts.ifs = lhmss_get_or_die(default_fses, popts->reader_opts.ifile_fmt, argv[0]);
-	if (popts->reader_opts.ips == NULL)
-		popts->reader_opts.ips = lhmss_get_or_die(default_pses, popts->reader_opts.ifile_fmt, argv[0]);
-
-	if (popts->reader_opts.allow_repeat_ifs == NEITHER_TRUE_NOR_FALSE)
-		popts->reader_opts.allow_repeat_ifs = lhmsi_get_or_die(default_repeat_ifses, popts->reader_opts.ifile_fmt, argv[0]);
-	if (popts->reader_opts.allow_repeat_ips == NEITHER_TRUE_NOR_FALSE)
-		popts->reader_opts.allow_repeat_ips = lhmsi_get_or_die(default_repeat_ipses, popts->reader_opts.ifile_fmt, argv[0]);
-
-	if (popts->writer_opts.ors == NULL)
-		popts->writer_opts.ors = lhmss_get_or_die(default_rses, popts->writer_opts.ofile_fmt, argv[0]);
-	if (popts->writer_opts.ofs == NULL)
-		popts->writer_opts.ofs = lhmss_get_or_die(default_fses, popts->writer_opts.ofile_fmt, argv[0]);
-	if (popts->writer_opts.ops == NULL)
-		popts->writer_opts.ops = lhmss_get_or_die(default_pses, popts->writer_opts.ofile_fmt, argv[0]);
-
-	// xxx fold into get-default-or-die methods
-	if (streq(popts->writer_opts.ofile_fmt, "pprint") && strlen(popts->writer_opts.ofs) != 1) {
-		fprintf(stderr, "%s: OFS for PPRINT format must be single-character; got \"%s\".\n",
-			argv[0], popts->writer_opts.ofs);
-		return NULL;
-	}
-
-	popts->plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
-
-	// xxx make method
-	if ((argc - argi) < 1) {
-		main_usage(stderr, argv[0]);
-		exit(1);
-	}
-	while (TRUE) {
-		check_arg_count(argv, argi, argc, 1);
-		char* verb = argv[argi];
-
-		// xxx fold into look-up-or-die methods
-		mapper_setup_t* pmapper_setup = look_up_mapper_setup(verb);
-		if (pmapper_setup == NULL) {
-			fprintf(stderr, "%s: verb \"%s\" not found. Please use \"%s --help\" for a list.\n",
-				argv[0], verb, argv[0]);
-			exit(1);
-		}
-
-		if ((argc - argi) >= 2) {
-			if (streq(argv[argi+1], "-h") || streq(argv[argi+1], "--help")) {
-				pmapper_setup->pusage_func(stdout, argv[0], verb);
-				exit(0);
-			}
-		}
-
-		// It's up to the parse func to print its usage on CLI-parse failure.
-		mapper_t* pmapper = pmapper_setup->pparse_func(&argi, argc, argv);
-		if (pmapper == NULL) {
-			exit(1);
-		}
-		sllv_append(popts->pmapper_list, pmapper);
-
-		if (argi >= argc || !streq(argv[argi], "then"))
-			break;
-		argi++;
-	}
-
-	for ( ; argi < argc; argi++) {
-		slls_append(popts->filenames, argv[argi], NO_FREE);
-	}
-
-	if (no_input) {
-		slls_free(popts->filenames);
-		popts->filenames = NULL;
-	} else if (popts->filenames->length == 0) {
-		// No filenames means read from standard input, and standard input cannot be mmapped.
-		popts->reader_opts.use_mmap_for_read = FALSE;
-	}
-
-	popts->plrec_reader = lrec_reader_alloc(&popts->reader_opts);
-	if (popts->plrec_reader == NULL) {
-		main_usage(stderr, argv[0]);
-		exit(1);
-	}
-
-	if (have_rand_seed) {
-		mtrand_init(rand_seed);
-	} else {
-		mtrand_init_default();
-	}
-
-	return popts;
-}
-
-// ----------------------------------------------------------------
-void cli_opts_free(cli_opts_t* popts) {
-	if (popts == NULL)
-		return;
-
-	popts->plrec_reader->pfree_func(popts->plrec_reader);
-
-	for (sllve_t* pe = popts->pmapper_list->phead; pe != NULL; pe = pe->pnext) {
-		mapper_t* pmapper = pe->pvvalue;
-		pmapper->pfree_func(pmapper);
-	}
-	sllv_free(popts->pmapper_list);
-
-	popts->plrec_writer->pfree_func(popts->plrec_writer);
-
-	slls_free(popts->filenames);
-
-	free(popts);
-
-	free_opt_singletons();
 }
