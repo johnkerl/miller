@@ -1177,6 +1177,16 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 		preader_opts->ips = cli_sep_from_arg(argv[argi+1]);
 		argi += 2;
 
+	} else if (streq(argv[argi], "-i")) {
+		check_arg_count(argv, argi, argc, 2);
+		if (!lhmss_has_key(get_default_rses(), argv[argi+1])) {
+			fprintf(stderr, "%s: unrecognized input format \"%s\".\n",
+				argv[0], argv[argi+1]);
+			exit(1);
+		}
+		preader_opts->ifile_fmt = argv[argi+1];
+		argi += 2;
+
 	} else if (streq(argv[argi], "--icsv")) {
 		preader_opts->ifile_fmt = "csv";
 		argi += 1;
@@ -1279,6 +1289,16 @@ int cli_handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts
 	} else if (streq(argv[argi], "--vflatsep")) {
 		check_arg_count(argv, argi, argc, 2);
 		pwriter_opts->oosvar_flatten_separator = cli_sep_from_arg(argv[argi+1]);
+		argi += 2;
+
+	} else if (streq(argv[argi], "-o")) {
+		check_arg_count(argv, argi, argc, 2);
+		if (!lhmss_has_key(get_default_rses(), argv[argi+1])) {
+			fprintf(stderr, "%s: unrecognized output format \"%s\".\n",
+				argv[0], argv[argi+1]);
+			exit(1);
+		}
+		pwriter_opts->ofile_fmt = argv[argi+1];
 		argi += 2;
 
 	} else if (streq(argv[argi], "--ocsv")) {
@@ -1389,6 +1409,17 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 		check_arg_count(argv, argi, argc, 2);
 		preader_opts->input_json_flatten_separator  = cli_sep_from_arg(argv[argi+1]);
 		pwriter_opts->output_json_flatten_separator = cli_sep_from_arg(argv[argi+1]);
+		argi += 2;
+
+	} else if (streq(argv[argi], "--io")) {
+		check_arg_count(argv, argi, argc, 2);
+		if (!lhmss_has_key(get_default_rses(), argv[argi+1])) {
+			fprintf(stderr, "%s: unrecognized I/O format \"%s\".\n",
+				argv[0], argv[argi+1]);
+			exit(1);
+		}
+		preader_opts->ifile_fmt = argv[argi+1];
+		pwriter_opts->ofile_fmt = argv[argi+1];
 		argi += 2;
 
 	} else if (streq(argv[argi], "--csv")) {

@@ -21,6 +21,8 @@ TOP OF LIST:
 * put/tee --oxxx flags overlays
 * simplify mapper_join
 
+k -i, -o, --io
+
 * xxxes
 * valgrinds
 

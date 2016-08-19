@@ -1,4 +1,4 @@
-#include "lib/mlr_globals.h"
+	#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
@@ -7,15 +7,17 @@
 #include "containers/join_bucket_keeper.h"
 #include "mapping/mappers.h"
 #include "input/lrec_readers.h"
-#include "cli/argparse.h"
 
 // ----------------------------------------------------------------
 typedef struct _mapper_join_opts_t {
 	char*    left_prefix;
 	char*    right_prefix;
+	slls_t*  poutput_join_field_names;
 	slls_t*  pleft_join_field_names;
 	slls_t*  pright_join_field_names;
-	slls_t*  poutput_join_field_names;
+	char*    output_join_field_names_cli_backing;
+	char*    left_join_field_names_cli_backing;
+	char*    right_join_field_names_cli_backing;
 	int      allow_unsorted_input;
 	int      emit_pairables;
 	int      emit_left_unpairables;
@@ -30,7 +32,6 @@ typedef struct _mapper_join_opts_t {
 } mapper_join_opts_t;
 
 typedef struct _mapper_join_state_t {
-	ap_state_t* pargp;
 
 	mapper_join_opts_t* popts;
 
@@ -49,7 +50,7 @@ typedef struct _mapper_join_state_t {
 // ----------------------------------------------------------------
 static void mapper_join_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_join_alloc(ap_state_t* pargp, mapper_join_opts_t* popts);
+static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts);
 static void mapper_join_free(mapper_t* pmapper);
 static void ingest_left_file(mapper_join_state_t* pstate);
 static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, mapper_join_state_t* pstate,
@@ -112,66 +113,87 @@ static void mapper_join_usage(FILE* o, char* argv0, char* verb) {
 // ----------------------------------------------------------------
 static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 	mapper_join_opts_t* popts = mlr_malloc_or_die(sizeof(mapper_join_opts_t));
-	popts->left_prefix              = NULL;
-	popts->right_prefix             = NULL;
-	popts->prepipe                  = NULL;
-	popts->left_file_name           = NULL;
-	popts->poutput_join_field_names = NULL;
-	popts->pleft_join_field_names   = NULL;
-	popts->pright_join_field_names  = NULL;
-	popts->allow_unsorted_input     = FALSE;
-	popts->emit_pairables           = TRUE;
-	popts->emit_left_unpairables    = FALSE;
-	popts->emit_right_unpairables   = FALSE;
 
 	cli_reader_opts_init(&popts->reader_opts);
+
+	popts->left_prefix                         = NULL;
+	popts->right_prefix                        = NULL;
+	popts->prepipe                             = NULL;
+	popts->left_file_name                      = NULL;
+	popts->poutput_join_field_names            = NULL;
+	popts->pleft_join_field_names              = NULL;
+	popts->pright_join_field_names             = NULL;
+	popts->output_join_field_names_cli_backing = NULL;
+	popts->left_join_field_names_cli_backing   = NULL;
+	popts->right_join_field_names_cli_backing  = NULL;
+	popts->emit_pairables                      = TRUE;
+	popts->emit_left_unpairables               = FALSE;
+	popts->emit_right_unpairables              = FALSE;
+	popts->allow_unsorted_input                = FALSE;
 
 	int argi = *pargi;
 	char* verb = argv[argi++];
 
-//	for (; argi < argc; /* variable increment: 1 or 2 depending on flag */) {
-//
-//		if (argv[argi][0] != '-') {
-//			break; // No more flag options to process
-//		} else if (handle_reader_options(argv, argc, &argi, &popts->reader_opts)) {
-//			// handled
-//		} else if (...) {
-//			// handled
-//		} else {
-//			...
-//		}
+	for (; argi < argc; /* variable increment: 1 or 2 depending on flag */) {
 
-			// xxx
-			//*pplist = slls_from_line(argv[argi+1], ',', FALSE);
+		if (argv[argi][0] != '-') {
+			break; // No more flag options to process
 
-	ap_state_t* pstate = ap_alloc();
-	ap_define_string_flag(pstate,      "--prepipe",  &popts->prepipe);
-	ap_define_string_flag(pstate,      "-f",         &popts->left_file_name);
-	ap_define_string_list_flag(pstate, "-j",         &popts->poutput_join_field_names);
-	ap_define_string_list_flag(pstate, "-l",         &popts->pleft_join_field_names);
-	ap_define_string_list_flag(pstate, "-r",         &popts->pright_join_field_names);
-	ap_define_string_flag(pstate,      "--lp",       &popts->left_prefix);
-	ap_define_string_flag(pstate,      "--rp",       &popts->right_prefix);
-	ap_define_false_flag(pstate,       "--np",       &popts->emit_pairables);
-	ap_define_true_flag(pstate,        "--ul",       &popts->emit_left_unpairables);
-	ap_define_true_flag(pstate,        "--ur",       &popts->emit_right_unpairables);
-	ap_define_true_flag(pstate,        "-u",         &popts->allow_unsorted_input);
+		} else if (cli_handle_reader_options(argv, argc, &argi, &popts->reader_opts)) {
+			// handled
 
-	// xxx use mlrcli funcs. and not ap_parse here, alas. :^/
-	ap_define_string_flag(pstate,      "-i",         &popts->reader_opts.ifile_fmt);
-	ap_define_string_flag(pstate,      "--irs",      &popts->reader_opts.irs);
-	ap_define_string_flag(pstate,      "--ifs",      &popts->reader_opts.ifs);
-	ap_define_string_flag(pstate,      "--ips",      &popts->reader_opts.ips);
-	ap_define_true_flag(pstate,        "--repifs",   &popts->reader_opts.allow_repeat_ifs);
-	ap_define_true_flag(pstate,        "--repips",   &popts->reader_opts.allow_repeat_ips);
-	ap_define_true_flag(pstate,        "--implicit-csv-header", &popts->reader_opts.use_implicit_csv_header);
-	ap_define_true_flag(pstate,        "--use-mmap", &popts->reader_opts.use_mmap_for_read);
-	ap_define_false_flag(pstate,       "--no-mmap",  &popts->reader_opts.use_mmap_for_read);
-	ap_define_string_flag(pstate,      "--jflatsep", &popts->reader_opts.input_json_flatten_separator);
+		} else if (streq(argv[argi], "--prepipe")) {
+			popts->prepipe = argv[argi+1];
+			argi += 2;
 
-	if (!ap_parse(pstate, verb, &argi, argc, argv)) {
-		mapper_join_usage(stderr, argv[0], verb);
-		return NULL;
+		} else if (streq(argv[argi], "-f")) {
+			popts->left_file_name = argv[argi+1];
+			argi += 2;
+
+		} else if (streq(argv[argi], "-j")) {
+			popts->output_join_field_names_cli_backing = mlr_strdup_or_die(argv[argi+1]);
+			popts->poutput_join_field_names = slls_from_line(popts->output_join_field_names_cli_backing, ',', FALSE);
+			argi += 2;
+
+		} else if (streq(argv[argi], "-l")) {
+			popts->left_join_field_names_cli_backing   = mlr_strdup_or_die(argv[argi+1]);
+			popts->pleft_join_field_names = slls_from_line(popts->left_join_field_names_cli_backing, ',', FALSE);
+			argi += 2;
+
+		} else if (streq(argv[argi], "-r")) {
+			popts->right_join_field_names_cli_backing  = mlr_strdup_or_die(argv[argi+1]);
+			popts->pright_join_field_names = slls_from_line(popts->right_join_field_names_cli_backing, ',', FALSE);
+			argi += 2;
+
+		} else if (streq(argv[argi], "--lp")) {
+			popts->left_prefix = argv[argi+1];
+			argi += 2;
+
+		} else if (streq(argv[argi], "--rp")) {
+			popts->right_prefix = argv[argi+1];
+			argi += 2;
+
+		} else if (streq(argv[argi], "--np")) {
+			popts->emit_pairables = FALSE;
+			argi += 1;
+
+		} else if (streq(argv[argi], "--ul")) {
+			popts->emit_left_unpairables = TRUE;
+			argi += 1;
+
+		} else if (streq(argv[argi], "--ur")) {
+			popts->emit_right_unpairables = TRUE;
+			argi += 1;
+
+		} else if (streq(argv[argi], "-u")) {
+			popts->allow_unsorted_input = TRUE;
+			argi += 1;
+
+		} else {
+			mapper_join_usage(stderr, argv[0], verb);
+			return NULL;
+		}
+
 	}
 
 	// popen is a stdio construct, not an mmap construct, and it can't be supported here.
@@ -213,16 +235,14 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
 
 	*pargi = argi;
 
-	return mapper_join_alloc(pstate, popts);
+	return mapper_join_alloc(popts);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_join_alloc(ap_state_t* pargp, mapper_join_opts_t* popts)
-{
+static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_join_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_join_state_t));
-	pstate->pargp                              = pargp;
 	pstate->popts                              = popts;
 	pstate->pleft_field_name_set               = hss_from_slls(popts->pleft_join_field_names);
 	pstate->pright_field_name_set              = hss_from_slls(popts->pright_join_field_names);
@@ -244,11 +264,6 @@ static mapper_t* mapper_join_alloc(ap_state_t* pargp, mapper_join_opts_t* popts)
 // ----------------------------------------------------------------
 static void mapper_join_free(mapper_t* pmapper) {
 	mapper_join_state_t* pstate = pmapper->pvstate;
-	slls_free(pstate->popts->pleft_join_field_names);
-	slls_free(pstate->popts->pright_join_field_names);
-	slls_free(pstate->popts->poutput_join_field_names);
-	hss_free(pstate->pleft_field_name_set);
-	hss_free(pstate->pright_field_name_set);
 
 	if (pstate->pleft_buckets_by_join_field_values != NULL) {
 		for (lhmslve_t* pe = pstate->pleft_buckets_by_join_field_values->phead; pe != NULL; pe = pe->pnext) {
@@ -268,8 +283,20 @@ static void mapper_join_free(mapper_t* pmapper) {
 	sllv_free(pstate->pleft_unpaired_records);
 
 	join_bucket_keeper_free(pstate->pjoin_bucket_keeper, pstate->popts->prepipe);
-	ap_free(pstate->pargp);
+
 	free(pstate->popts);
+
+	slls_free(pstate->popts->poutput_join_field_names);
+	slls_free(pstate->popts->pleft_join_field_names);
+	slls_free(pstate->popts->pright_join_field_names);
+
+	free(pstate->popts->output_join_field_names_cli_backing);
+	free(pstate->popts->left_join_field_names_cli_backing);
+	free(pstate->popts->right_join_field_names_cli_backing);
+
+	hss_free(pstate->pleft_field_name_set);
+	hss_free(pstate->pright_field_name_set);
+
 	free(pstate);
 	free(pmapper);
 }
