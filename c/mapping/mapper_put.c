@@ -1,6 +1,6 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
-#include "cli/argparse.h"
+#include "cli/mlrcli.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
 #include "containers/lhmsv.h"
@@ -14,15 +14,19 @@
 #define DEFAULT_OOSVAR_FLATTEN_SEPARATOR ":"
 
 typedef struct _mapper_put_state_t {
-	ap_state_t*    pargp;
 	char*          mlr_dsl_expression;
 	char*          comment_stripped_mlr_dsl_expression;
+
 	mlr_dsl_ast_t* past;
 	mlr_dsl_cst_t* pcst;
+
 	int            at_begin;
 	mlhmmv_t*      poosvars;
+
 	char*          oosvar_flatten_separator;
 	int            flush_every_record;
+	cli_writer_opts_t* pwriter_opts;
+
 	bind_stack_t*  pbind_stack;
 	loop_stack_t*  ploop_stack;
 	int            outer_filter;
@@ -30,9 +34,9 @@ typedef struct _mapper_put_state_t {
 
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_put_alloc(ap_state_t* pargp, char* mlr_dsl_expression,
-	char* comment_stripped_mlr_dsl_expression, mlr_dsl_ast_t* past,
-	int outer_filter, int type_inferencing, char* oosvar_flatten_separator, int flush_every_record);
+static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
+	mlr_dsl_ast_t* past, int outer_filter, int type_inferencing, char* oosvar_flatten_separator,
+	int flush_every_record, cli_writer_opts_t* pwriter_opts);
 static void      mapper_put_free(mapper_t* pmapper);
 static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -110,7 +114,6 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
-	char* verb                                = argv[(*pargi)++];
 	char* mlr_dsl_expression                  = NULL;
 	char* comment_stripped_mlr_dsl_expression = NULL;
 	char* expression_filename                 = NULL;
@@ -121,27 +124,64 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	char* oosvar_flatten_separator            = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
 	int   flush_every_record                  = TRUE;
 
-	ap_state_t* pstate = ap_alloc();
-	ap_define_string_flag(pstate,    "-f", &expression_filename);
-	ap_define_true_flag(pstate,      "-v", &print_ast);
-	ap_define_true_flag(pstate,      "-t", &trace_parse);
-	ap_define_false_flag(pstate,     "-q", &outer_filter);
-	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
-	ap_define_int_value_flag(pstate, "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
-	ap_define_string_flag(pstate,    "--oflatsep", &oosvar_flatten_separator);
-	ap_define_false_flag(pstate,     "--no-fflush", &flush_every_record);
+	cli_writer_opts_t* pwriter_opts = mlr_malloc_or_die(sizeof(cli_writer_opts_t));
+    cli_writer_opts_init(pwriter_opts);
 
-	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_put_usage(stderr, argv[0], verb);
+	int argi = *pargi;
+	if ((argc - argi) < 1) {
+		mapper_put_usage(stderr, argv[0], argv[argi]);
 		return NULL;
 	}
+	char* verb = argv[argi++];
 
-	if (expression_filename == NULL) {
-		if ((argc - *pargi) < 1) {
+	cli_writer_opts_init(pwriter_opts);
+	for (; argi < argc; /* variable increment: 1 or 2 depending on flag */) {
+
+		if (argv[argi][0] != '-') {
+			break; // No more flag options to process
+
+		} else if (cli_handle_writer_options(argv, argc, &argi, pwriter_opts)) {
+			// handled
+
+		} else if (streq(argv[argi], "-f")) {
+			expression_filename = argv[argi+1];
+			argi += 2;
+		} else if (streq(argv[argi], "-v")) {
+			print_ast = TRUE;
+			argi += 1;
+		} else if (streq(argv[argi], "-t")) {
+			trace_parse = TRUE;
+			argi += 1;
+		} else if (streq(argv[argi], "-q")) {
+			outer_filter = FALSE;
+			argi += 1;
+		} else if (streq(argv[argi], "-S")) {
+			type_inferencing = TYPE_INFER_STRING_ONLY;
+			argi += 1;
+		} else if (streq(argv[argi], "-F")) {
+			type_inferencing = TYPE_INFER_STRING_FLOAT;
+			argi += 1;
+		} else if (streq(argv[argi], "--oflatsep")) {
+			// xxx has-2nd-arg asserts for join, put, tee
+			oosvar_flatten_separator = argv[argi+1];
+			argi += 2;
+		} else if (streq(argv[argi], "--no-fflush")) {
+			// xxx alias --no-flush thruout as well
+			flush_every_record = FALSE;
+			argi += 1;
+
+		} else {
 			mapper_put_usage(stderr, argv[0], verb);
 			return NULL;
 		}
-		mlr_dsl_expression = mlr_strdup_or_die(argv[(*pargi)++]);
+	}
+
+	if (expression_filename == NULL) {
+		if ((argc - argi) < 1) {
+			mapper_put_usage(stderr, argv[0], verb);
+			return NULL;
+		}
+		mlr_dsl_expression = mlr_strdup_or_die(argv[argi++]);
 	} else {
 		mlr_dsl_expression = read_file_into_memory(expression_filename, NULL);
 	}
@@ -160,17 +200,18 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
 	if (print_ast)
 		mlr_dsl_ast_print(past);
 
-	return mapper_put_alloc(pstate, mlr_dsl_expression, comment_stripped_mlr_dsl_expression,
-		past, outer_filter, type_inferencing, oosvar_flatten_separator, flush_every_record);
+	*pargi = argi;
+	return mapper_put_alloc(mlr_dsl_expression, comment_stripped_mlr_dsl_expression,
+		past, outer_filter, type_inferencing, oosvar_flatten_separator, flush_every_record,
+		pwriter_opts);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_put_alloc(ap_state_t* pargp, char* mlr_dsl_expression,
-	char* comment_stripped_mlr_dsl_expression, mlr_dsl_ast_t* past,
-	int outer_filter, int type_inferencing, char* oosvar_flatten_separator, int flush_every_record)
+static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
+	mlr_dsl_ast_t* past, int outer_filter, int type_inferencing, char* oosvar_flatten_separator,
+	int flush_every_record, cli_writer_opts_t* pwriter_opts)
 {
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
-	pstate->pargp        = pargp;
 	// Retain the string contents along with any in-pointers from the AST/CST
 	pstate->mlr_dsl_expression = mlr_dsl_expression;
 	pstate->comment_stripped_mlr_dsl_expression = comment_stripped_mlr_dsl_expression;
@@ -183,6 +224,7 @@ static mapper_t* mapper_put_alloc(ap_state_t* pargp, char* mlr_dsl_expression,
 	pstate->flush_every_record       = flush_every_record;
 	pstate->pbind_stack              = bind_stack_alloc();
 	pstate->ploop_stack              = loop_stack_alloc();
+	pstate->pwriter_opts       = pwriter_opts;
 
 	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate       = (void*)pstate;
@@ -203,7 +245,7 @@ static void mapper_put_free(mapper_t* pmapper) {
 	mlr_dsl_cst_free(pstate->pcst);
 	mlr_dsl_ast_free(pstate->past);
 
-	ap_free(pstate->pargp);
+	free(pstate->pwriter_opts);
 	free(pstate);
 	free(pmapper);
 }

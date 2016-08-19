@@ -34,6 +34,7 @@ static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv) {
 	int   do_append = FALSE;
 	int   flush_every_record = TRUE;
 	cli_writer_opts_t* pwriter_opts = mlr_malloc_or_die(sizeof(cli_writer_opts_t));
+	cli_writer_opts_init(pwriter_opts);
 
 	int argi = *pargi;
 	if ((argc - argi) < 1) {
@@ -42,7 +43,6 @@ static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv) {
 	}
 	char* verb = argv[argi++];
 
-	cli_writer_opts_init(pwriter_opts);
 	for (; argi < argc; /* variable increment: 1 or 2 depending on flag */) {
 
 		if (argv[argi][0] != '-') {
