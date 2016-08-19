@@ -89,6 +89,9 @@ void cli_apply_writer_defaults(cli_writer_opts_t* pwriter_opts);
 // For mapper join which has its separate input-format overrides:
 void cli_merge_reader_opts(cli_reader_opts_t* pfunc_opts, cli_reader_opts_t* pmain_opts);
 
+// For mapper tee & mapper put which have their separate output-format overrides:
+void cli_merge_writer_opts(cli_writer_opts_t* pfunc_opts, cli_writer_opts_t* pmain_opts);
+
 void cli_opts_free(cli_opts_t* popts);
 
 // The caller can unconditionally free the return value

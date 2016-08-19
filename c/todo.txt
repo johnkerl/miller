@@ -17,14 +17,14 @@ TOP OF LIST:
 ----------------------------------------------------------------
 4.5.0 for sure:
 
-* mlrcli functionize
 * put/tee --oxxx flags overlays
-* simplify mapper_join
-
-k -i, -o, --io
 
 * xxxes
 * valgrinds
+
+k mlrcli functionize
+k simplify mapper_join
+k -i, -o, --io
 
 ----------------------------------------------------------------
 4.5.0 ideas:

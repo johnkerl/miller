@@ -1052,6 +1052,58 @@ void cli_merge_reader_opts(cli_reader_opts_t* pfunc_opts, cli_reader_opts_t* pma
 		pfunc_opts->input_json_flatten_separator = pmain_opts->input_json_flatten_separator;
 }
 
+// Similar to cli_merge_reader_opts but for mapper tee & mapper put which have their
+// own output-format overrides.
+void cli_merge_writer_opts(cli_writer_opts_t* pfunc_opts, cli_writer_opts_t* pmain_opts) {
+
+	if (pfunc_opts->ofile_fmt == NULL) {
+		pfunc_opts->ofile_fmt = pmain_opts->ofile_fmt;
+	}
+
+	if (streq(pfunc_opts->ofile_fmt, pmain_opts->ofile_fmt)) {
+		if (pfunc_opts->ors == NULL)
+			pfunc_opts->ors = pmain_opts->ors;
+		if (pfunc_opts->ofs == NULL)
+			pfunc_opts->ofs = pmain_opts->ofs;
+		if (pfunc_opts->ops == NULL)
+			pfunc_opts->ops = pmain_opts->ops;
+	} else {
+		if (pfunc_opts->ors == NULL)
+			pfunc_opts->ors = lhmss_get_or_die(get_default_rses(), pfunc_opts->ofile_fmt, "mlr");
+		if (pfunc_opts->ofs == NULL)
+			pfunc_opts->ofs = lhmss_get_or_die(get_default_fses(), pfunc_opts->ofile_fmt, "mlr");
+		if (pfunc_opts->ops == NULL)
+			pfunc_opts->ops = lhmss_get_or_die(get_default_pses(), pfunc_opts->ofile_fmt, "mlr");
+	}
+
+	if (pfunc_opts->headerless_csv_output == NEITHER_TRUE_NOR_FALSE)
+		pfunc_opts->headerless_csv_output = pmain_opts->headerless_csv_output;
+
+	if (pfunc_opts->right_justify_xtab_value == NEITHER_TRUE_NOR_FALSE)
+		pfunc_opts->right_justify_xtab_value = pmain_opts->right_justify_xtab_value;
+
+	if (pfunc_opts->right_align_pprint == NEITHER_TRUE_NOR_FALSE)
+		pfunc_opts->right_align_pprint = pmain_opts->right_align_pprint;
+
+	if (pfunc_opts->stack_json_output_vertically == NEITHER_TRUE_NOR_FALSE)
+		pfunc_opts->stack_json_output_vertically = pmain_opts->stack_json_output_vertically;
+
+	if (pfunc_opts->wrap_json_output_in_outer_list == NEITHER_TRUE_NOR_FALSE)
+		pfunc_opts->wrap_json_output_in_outer_list = pmain_opts->wrap_json_output_in_outer_list;
+
+	if (pfunc_opts->quote_json_values_always == NEITHER_TRUE_NOR_FALSE)
+		pfunc_opts->quote_json_values_always = pmain_opts->quote_json_values_always;
+
+	if (pfunc_opts->output_json_flatten_separator == NULL)
+		pfunc_opts->output_json_flatten_separator = pmain_opts->output_json_flatten_separator;
+
+	if (pfunc_opts->oosvar_flatten_separator == NULL)
+		pfunc_opts->oosvar_flatten_separator = pmain_opts->oosvar_flatten_separator;
+
+	if (pfunc_opts->oquoting == QUOTE_UNSPECIFIED)
+		pfunc_opts->oquoting = pmain_opts->oquoting;
+}
+
 // ----------------------------------------------------------------
 static int handle_terminal_usage(char** argv, int argc, int argi) {
 	if (streq(argv[argi], "--version")) {

@@ -1,4 +1,4 @@
-#include "cli/argparse.h"
+#include "cli/mlrcli.h"
 #include "containers/sllv.h"
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
@@ -6,19 +6,19 @@
 #include "output/lrec_writers.h"
 
 typedef struct _mapper_tee_state_t {
-	ap_state_t* pargp;
 	char* output_file_name;
 	FILE* output_stream;
 	int flush_every_record;
 	lrec_writer_t* plrec_writer;
+	cli_writer_opts_t* pwriter_opts;
 } mapper_tee_state_t;
 
 #define DEFAULT_COUNTER_FIELD_NAME "n"
 
 static void      mapper_tee_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv);
-static mapper_t* mapper_tee_alloc(ap_state_t* pargp, int do_append, int flush_every_record,
-	char* output_file_name);
+static mapper_t* mapper_tee_alloc(int do_append, int flush_every_record,
+	char* output_file_name, cli_writer_opts_t* pwriter_opts);
 static void      mapper_tee_free(mapper_t* pmapper);
 static sllv_t*   mapper_tee_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -33,31 +33,49 @@ mapper_setup_t mapper_tee_setup = {
 static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv) {
 	int   do_append = FALSE;
 	int   flush_every_record = TRUE;
+	cli_writer_opts_t* pwriter_opts = mlr_malloc_or_die(sizeof(cli_writer_opts_t));
 
-	if ((argc - *pargi) < 1) {
-		mapper_tee_usage(stderr, argv[0], argv[*pargi]);
+	int argi = *pargi;
+	if ((argc - argi) < 1) {
+		mapper_tee_usage(stderr, argv[0], argv[argi]);
 		return NULL;
 	}
-	char* verb = argv[*pargi];
-	*pargi += 1;
+	char* verb = argv[argi++];
 
-	ap_state_t* pstate = ap_alloc();
-	ap_define_true_flag(pstate,  "-a",          &do_append);
-	ap_define_false_flag(pstate, "--no-fflush", &flush_every_record);
+	cli_writer_opts_init(pwriter_opts);
+	for (; argi < argc; /* variable increment: 1 or 2 depending on flag */) {
 
-	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
+		if (argv[argi][0] != '-') {
+			break; // No more flag options to process
+
+		} else if (cli_handle_writer_options(argv, argc, &argi, pwriter_opts)) {
+			// handled
+
+		} else if (streq(argv[argi], "-a")) {
+			do_append = TRUE;
+			argi++;
+
+		} else if (streq(argv[argi], "--no-fflush")) {
+			flush_every_record = FALSE;
+			argi++;
+
+		} else {
+			mapper_tee_usage(stderr, argv[0], verb);
+			return NULL;
+		}
+
+	}
+
+	if ((argc - argi) < 1) {
 		mapper_tee_usage(stderr, argv[0], verb);
 		return NULL;
 	}
+	char* output_file_name = argv[argi++];
 
-	if ((argc - *pargi) < 1) {
-		mapper_tee_usage(stderr, argv[0], verb);
-		return NULL;
-	}
-	char* output_file_name = argv[*pargi];
-	*pargi += 1;
+	*pargi = argi;
 
-	mapper_t* pmapper = mapper_tee_alloc(pstate, do_append, flush_every_record, output_file_name);
+	mapper_t* pmapper = mapper_tee_alloc(do_append, flush_every_record, output_file_name,
+		pwriter_opts);
 	return pmapper;
 }
 
@@ -74,8 +92,8 @@ static void mapper_tee_usage(FILE* o, char* argv0, char* verb) {
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_tee_alloc(ap_state_t* pargp, int do_append, int flush_every_record,
-	char* output_file_name)
+static mapper_t* mapper_tee_alloc(int do_append, int flush_every_record,
+	char* output_file_name, cli_writer_opts_t* pwriter_opts)
 {
 	FILE* fp = fopen(output_file_name, do_append ? "a" : "w");
 	if (fp == NULL) {
@@ -86,10 +104,10 @@ static mapper_t* mapper_tee_alloc(ap_state_t* pargp, int do_append, int flush_ev
 
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 	mapper_tee_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_tee_state_t));
-	pstate->pargp              = pargp;
 	pstate->output_file_name   = output_file_name;
 	pstate->output_stream      = fp;
 	pstate->flush_every_record = flush_every_record;
+	pstate->pwriter_opts       = pwriter_opts;
 	pstate->plrec_writer       = NULL;
 	pmapper->pvstate           = pstate;
 	pmapper->pprocess_func     = mapper_tee_process;
@@ -98,8 +116,8 @@ static mapper_t* mapper_tee_alloc(ap_state_t* pargp, int do_append, int flush_ev
 }
 static void mapper_tee_free(mapper_t* pmapper) {
 	mapper_tee_state_t* pstate = pmapper->pvstate;
-	ap_free(pstate->pargp);
 	pstate->plrec_writer->pfree_func(pstate->plrec_writer);
+	free(pstate->pwriter_opts);
 	free(pstate);
 	free(pmapper);
 }
@@ -111,7 +129,8 @@ static sllv_t* mapper_tee_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	// mapper_tee_alloc is called from the CLI-parser and cli_opts isn't finalized until that
 	// returns. So we cannot do this in mapper_tee_alloc.
 	if (pstate->plrec_writer == NULL) {
-		pstate->plrec_writer = lrec_writer_alloc_or_die(&MLR_GLOBALS.popts->writer_opts);
+		cli_merge_writer_opts(pstate->pwriter_opts, &MLR_GLOBALS.popts->writer_opts);
+		pstate->plrec_writer = lrec_writer_alloc_or_die(pstate->pwriter_opts);
 	}
 
 	if (pinrec != NULL) {
