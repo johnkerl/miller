@@ -1,6 +1,7 @@
 #ifndef MLR_DSL_CST_H
 #define MLR_DSL_CST_H
 
+#include "cli/mlrcli.h"
 #include "containers/mlr_dsl_ast.h"
 #include "rval_evaluators.h"
 #include "containers/lhmsmv.h"
@@ -58,6 +59,7 @@ typedef struct _cst_outputs_t {
 	sllv_t* poutrecs;
 	char*   oosvar_flatten_separator;
 	int     flush_every_record; // fflush on emit/tee/print/dump
+	cli_writer_opts_t* pwriter_opts;
 } cst_outputs_t;
 
 // Generic handler for a statement.
@@ -175,6 +177,7 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* past, int type_i
 
 // ----------------------------------------------------------------
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing);
+
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
 
 void mlr_dsl_cst_handle_statement_list(

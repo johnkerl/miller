@@ -2,6 +2,7 @@
 #define MULTI_LREC_WRITER_H
 
 #include <stdio.h>
+#include "cli/mlrcli.h"
 #include "containers/lhmsv.h"
 #include "containers/sllv.h"
 #include "output/lrec_writers.h"
@@ -18,10 +19,11 @@ typedef struct _lrec_writer_and_fp_t {
 
 typedef struct _multi_lrec_writer_t {
 	lhmsv_t* pnames_to_lrec_writers_and_fps;
+	cli_writer_opts_t* pwriter_opts;
 } multi_lrec_writer_t;
 
 // ----------------------------------------------------------------
-multi_lrec_writer_t* multi_lrec_writer_alloc();
+multi_lrec_writer_t* multi_lrec_writer_alloc(cli_writer_opts_t* pwriter_opts);
 
 void multi_lrec_writer_free(multi_lrec_writer_t* pmlw);
 

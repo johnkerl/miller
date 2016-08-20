@@ -227,6 +227,7 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* pnode, int type_
 //                     text="z", type=string_literal.
 //                 text="6", type=strnum_literal.
 
+// xxx past / pnode cleanups
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 	int context_flags = 0;
 	// The root node is not populated on empty-string input to the parser.
@@ -1102,8 +1103,6 @@ static mlr_dsl_cst_statement_t* alloc_tee(mlr_dsl_ast_node_t* pnode, int type_in
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
 		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
-		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
-		pstatement->pmulti_out = multi_out_alloc();
 		pstatement->pnode_handler = handle_tee_to_file;
 	}
 
@@ -1144,7 +1143,6 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_ast_node_t* pnode, int type_
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
 		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
-		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 		pstatement->pnode_handler = handle_emitf_to_file;
 	}
 
@@ -1243,7 +1241,6 @@ static mlr_dsl_cst_statement_t* alloc_emit(mlr_dsl_ast_node_t* pnode, int type_i
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
 		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
-		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 		pstatement->pnode_handler = output_all ? handle_emit_all_to_file : handle_emit_to_file;
 	}
 
@@ -1297,7 +1294,6 @@ static mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_ast_node_t* pnode, int
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node,
 			type_inferencing, context_flags);
 		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
-		pstatement->pmulti_lrec_writer = multi_lrec_writer_alloc();
 		pstatement->pnode_handler = handle_emit_lashed_to_file;
 	}
 
@@ -2084,7 +2080,7 @@ static void handle_tee_to_stdfp(
 {
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
-		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(&MLR_GLOBALS.popts->writer_opts);
+		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(pcst_outputs->pwriter_opts);
 
 	lrec_t* pcopy = handle_tee_common(pnode, pvars, pcst_outputs);
 
@@ -2099,6 +2095,10 @@ static void handle_tee_to_file(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	// The opts aren't complete at alloc time so we need to handle them on first use.
+	if (pnode->pmulti_lrec_writer == NULL)
+		pnode->pmulti_lrec_writer = multi_lrec_writer_alloc(pcst_outputs->pwriter_opts);
+
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 
@@ -2155,7 +2155,7 @@ static void handle_emitf_to_stdfp(
 {
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
-		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(&MLR_GLOBALS.popts->writer_opts);
+		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(pcst_outputs->pwriter_opts);
 
 	sllv_t* poutrecs = sllv_alloc();
 
@@ -2172,6 +2172,10 @@ static void handle_emitf_to_file(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	// The opts aren't complete at alloc time so we need to handle them on first use.
+	if (pnode->pmulti_lrec_writer == NULL)
+		pnode->pmulti_lrec_writer = multi_lrec_writer_alloc(pcst_outputs->pwriter_opts);
+
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 
@@ -2238,7 +2242,7 @@ static void handle_emit_to_stdfp(
 
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
-		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(&MLR_GLOBALS.popts->writer_opts);
+		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(pcst_outputs->pwriter_opts);
 
 	lrec_writer_print_all(pnode->psingle_lrec_writer, pnode->stdfp, poutrecs);
 	if (pcst_outputs->flush_every_record)
@@ -2252,6 +2256,10 @@ static void handle_emit_to_file(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	// The opts aren't complete at alloc time so we need to handle them on first use.
+	if (pnode->pmulti_lrec_writer == NULL)
+		pnode->pmulti_lrec_writer = multi_lrec_writer_alloc(pcst_outputs->pwriter_opts);
+
 	sllv_t* poutrecs = sllv_alloc();
 
 	handle_emit_common(pnode, pvars, poutrecs, pcst_outputs->oosvar_flatten_separator);
@@ -2307,7 +2315,7 @@ static void handle_emit_lashed_to_stdfp(
 {
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
-		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(&MLR_GLOBALS.popts->writer_opts);
+		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(pcst_outputs->pwriter_opts);
 
 	sllv_t* poutrecs = sllv_alloc();
 
@@ -2325,6 +2333,10 @@ static void handle_emit_lashed_to_file(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	// The opts aren't complete at alloc time so we need to handle them on first use.
+	if (pnode->pmulti_lrec_writer == NULL)
+		pnode->pmulti_lrec_writer = multi_lrec_writer_alloc(pcst_outputs->pwriter_opts);
+
 	sllv_t* poutrecs = sllv_alloc();
 
 	handle_emit_lashed_common(pnode, pvars, poutrecs, pcst_outputs->oosvar_flatten_separator);
@@ -2390,7 +2402,7 @@ static void handle_emit_all_to_stdfp(
 {
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pnode->psingle_lrec_writer == NULL)
-		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(&MLR_GLOBALS.popts->writer_opts);
+		pnode->psingle_lrec_writer = lrec_writer_alloc_or_die(pcst_outputs->pwriter_opts);
 
 	sllv_t* poutrecs = sllv_alloc();
 	int all_non_null_or_error = TRUE;
@@ -2412,6 +2424,10 @@ static void handle_emit_all_to_file(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	// The opts aren't complete at alloc time so we need to handle them on first use.
+	if (pnode->pmulti_lrec_writer == NULL)
+		pnode->pmulti_lrec_writer = multi_lrec_writer_alloc(pcst_outputs->pwriter_opts);
+
 	sllv_t* poutrecs = sllv_alloc();
 	rval_evaluator_t* poutput_filename_evaluator = pnode->poutput_filename_evaluator;
 	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);

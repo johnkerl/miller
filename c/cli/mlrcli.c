@@ -196,9 +196,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		popts->reader_opts.ips = lhmss_get_or_die(default_pses, popts->reader_opts.ifile_fmt, argv[0]);
 
 	if (popts->reader_opts.allow_repeat_ifs == NEITHER_TRUE_NOR_FALSE)
-		popts->reader_opts.allow_repeat_ifs = lhmsi_get_or_die(default_repeat_ifses, popts->reader_opts.ifile_fmt, argv[0]);
+		popts->reader_opts.allow_repeat_ifs = lhmsi_get_or_die(default_repeat_ifses,
+			popts->reader_opts.ifile_fmt, argv[0]);
 	if (popts->reader_opts.allow_repeat_ips == NEITHER_TRUE_NOR_FALSE)
-		popts->reader_opts.allow_repeat_ips = lhmsi_get_or_die(default_repeat_ipses, popts->reader_opts.ifile_fmt, argv[0]);
+		popts->reader_opts.allow_repeat_ips = lhmsi_get_or_die(default_repeat_ipses,
+			popts->reader_opts.ifile_fmt, argv[0]);
 
 	if (popts->writer_opts.ors == NULL)
 		popts->writer_opts.ors = lhmss_get_or_die(default_rses, popts->writer_opts.ofile_fmt, argv[0]);
@@ -214,6 +216,9 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	}
 
 	popts->plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
+
+	// xxx finalize MLR_GLOBALS.opts sooner & clean up the annoyances in various files.
+	// With of course a caveat about population order.
 
 	if ((argc - argi) < 1) {
 		main_usage(stderr, argv[0]);

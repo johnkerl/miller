@@ -216,7 +216,7 @@ static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripp
 	pstate->mlr_dsl_expression = mlr_dsl_expression;
 	pstate->comment_stripped_mlr_dsl_expression = comment_stripped_mlr_dsl_expression;
 	pstate->past                     = past;
-	pstate->pcst                     = mlr_dsl_cst_alloc(past,   type_inferencing);
+	pstate->pcst                     = mlr_dsl_cst_alloc(past, type_inferencing);
 	pstate->at_begin                 = TRUE;
 	pstate->outer_filter             = outer_filter;
 	pstate->poosvars                 = mlhmmv_alloc();
@@ -224,7 +224,7 @@ static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripp
 	pstate->flush_every_record       = flush_every_record;
 	pstate->pbind_stack              = bind_stack_alloc();
 	pstate->ploop_stack              = loop_stack_alloc();
-	pstate->pwriter_opts       = pwriter_opts;
+	pstate->pwriter_opts             = pwriter_opts;
 
 	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate       = (void*)pstate;
@@ -308,6 +308,11 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	int should_emit_rec = TRUE;
 
 	if (pstate->at_begin) {
+
+		// mapper_put_alloc is called from the CLI-parser and cli_opts isn't finalized until that
+		// returns. So we cannot do this in mapper_put_alloc.
+		cli_merge_writer_opts(pstate->pwriter_opts, &MLR_GLOBALS.popts->writer_opts);
+
 		variables_t variables = (variables_t) {
 			.pinrec           = NULL,
 			.ptyped_overlay   = NULL,
@@ -322,6 +327,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			.poutrecs                 = poutrecs,
 			.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
 			.flush_every_record       = pstate->flush_every_record,
+			.pwriter_opts             = pstate->pwriter_opts,
 		};
 
 		mlr_dsl_cst_handle_statement_list(pstate->pcst->pbegin_statements, &variables, &cst_outputs);
@@ -343,6 +349,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			.poutrecs                 = poutrecs,
 			.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
 			.flush_every_record       = pstate->flush_every_record,
+			.pwriter_opts             = pstate->pwriter_opts,
 		};
 
 		mlr_dsl_cst_handle_statement_list(pstate->pcst->pend_statements, &variables, &cst_outputs);
@@ -370,6 +377,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		.poutrecs                 = poutrecs,
 		.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
 		.flush_every_record       = pstate->flush_every_record,
+		.pwriter_opts             = pstate->pwriter_opts,
 	};
 
 	mlr_dsl_cst_handle_statement_list(pstate->pcst->pmain_statements, &variables, &cst_outputs);

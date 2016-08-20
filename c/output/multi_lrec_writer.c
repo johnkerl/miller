@@ -4,9 +4,10 @@
 #include "output/multi_lrec_writer.h"
 
 // ----------------------------------------------------------------
-multi_lrec_writer_t* multi_lrec_writer_alloc() {
+multi_lrec_writer_t* multi_lrec_writer_alloc(cli_writer_opts_t* pwriter_opts) {
 	multi_lrec_writer_t* pmlw = mlr_malloc_or_die(sizeof(multi_lrec_writer_t));
 	pmlw->pnames_to_lrec_writers_and_fps = lhmsv_alloc();
+	pmlw->pwriter_opts = pwriter_opts;
 	return pmlw;
 }
 
@@ -33,8 +34,7 @@ void multi_lrec_writer_output_srec(multi_lrec_writer_t* pmlw, lrec_t* poutrec, c
 	lrec_writer_and_fp_t* pstate = lhmsv_get(pmlw->pnames_to_lrec_writers_and_fps, filename_or_command);
 	if (pstate == NULL) {
 		pstate = mlr_malloc_or_die(sizeof(lrec_writer_and_fp_t));
-		cli_opts_t* popts = MLR_GLOBALS.popts;
-		pstate->plrec_writer = lrec_writer_alloc(&popts->writer_opts);
+		pstate->plrec_writer = lrec_writer_alloc(pmlw->pwriter_opts);
 		if (pstate->plrec_writer == NULL) {
 			fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
 				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
