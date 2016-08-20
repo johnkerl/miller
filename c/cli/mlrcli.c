@@ -243,7 +243,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		}
 
 		// It's up to the parse func to print its usage on CLI-parse failure.
-		mapper_t* pmapper = pmapper_setup->pparse_func(&argi, argc, argv);
+		mapper_t* pmapper = pmapper_setup->pparse_func(&argi, argc, argv,
+			&popts->reader_opts, &popts->writer_opts);
 		if (pmapper == NULL) {
 			exit(1);
 		}

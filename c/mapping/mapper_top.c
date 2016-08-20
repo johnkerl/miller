@@ -28,7 +28,8 @@ typedef struct _mapper_top_state_t {
 } mapper_top_state_t;
 
 static void      mapper_top_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_top_alloc(ap_state_t* pargp, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
 	int top_count, int do_max, int show_full_records, int allow_int_float);
 static void      mapper_top_free(mapper_t* pmapper);
@@ -59,7 +60,9 @@ static void mapper_top_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "optionally by category.\n");
 }
 
-static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	int     top_count             = 1;
 	slls_t* pvalue_field_names    = NULL;
 	slls_t* pgroup_by_field_names = slls_alloc();

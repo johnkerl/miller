@@ -17,11 +17,13 @@ TOP OF LIST:
 ----------------------------------------------------------------
 4.5.0 for sure:
 
-* put/tee --oxxx flags overlays
+! rid entirely of MLR_GLOBALS.popts; all on the stack w/ population-order caveat.
+* mlh/mld for put/tee --oxxx flags overlays
 
 * xxxes
 * valgrinds
 
+k put/tee --oxxx flags overlays
 k mlrcli functionize
 k simplify mapper_join
 k -i, -o, --io

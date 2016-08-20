@@ -19,7 +19,8 @@ typedef struct _mapper_decimate_state_t {
 } mapper_decimate_state_t;
 
 static void      mapper_decimate_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_decimate_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_decimate_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_decimate_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
 	unsigned long long decimate_count, int keep_last);
 static void      mapper_decimate_free(mapper_t* pmapper);
@@ -42,7 +43,9 @@ static void mapper_decimate_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Passes through one of every n records, optionally by category.\n");
 }
 
-static mapper_t* mapper_decimate_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_decimate_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	int     decimate_count = 10;
 	int     keep_last      = TRUE;
 	slls_t* pgroup_by_field_names = slls_alloc();

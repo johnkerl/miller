@@ -22,7 +22,8 @@ typedef struct _mapper_repeat_state_t {
 } mapper_repeat_state_t;
 
 static void      mapper_repeat_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_repeat_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_repeat_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_repeat_alloc(ap_state_t* pargp, long long repeat_count, char* repeat_count_field_name);
 static void      mapper_repeat_free(mapper_t* pmapper);
 static sllv_t*   mapper_repeat_process_nop(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -65,7 +66,9 @@ static void mapper_repeat_usage(FILE* o, char* argv0, char* verb) {
 }
 
 static const long long UNINIT_REPEAT_COUNT = -123457689LL;
-static mapper_t* mapper_repeat_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_repeat_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	long long repeat_count = UNINIT_REPEAT_COUNT;
 	char* repeat_count_field_name = NULL;
 

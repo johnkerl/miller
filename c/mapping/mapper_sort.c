@@ -79,9 +79,11 @@ typedef struct _sort_bucket_t {
 
 // ----------------------------------------------------------------
 static void      mapper_sort_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static void      mapper_group_by_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_sort_alloc(slls_t* pkey_field_names, int* sort_params, int do_sort);
 static void      mapper_sort_free(mapper_t* pmapper);
 static sllv_t*   mapper_sort_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -129,7 +131,9 @@ static void mapper_sort_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  %s %s -f a -f b -nr x -nr y -nr z\n", argv0, verb);
 }
 
-static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_sort_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	if ((argc - *pargi) < 3) {
 		mapper_sort_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;
@@ -192,7 +196,9 @@ static void mapper_group_by_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Outputs records in batches having identical values at specified field names.\n");
 }
 
-static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_group_by_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	if ((argc - *pargi) < 2) {
 		mapper_group_by_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;

@@ -9,7 +9,8 @@ typedef struct _mapper_regularize_state_t {
 } mapper_regularize_state_t;
 
 static void      mapper_regularize_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_regularize_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_regularize_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_regularize_alloc();
 static void      mapper_regularize_free(mapper_t* pmapper);
 static sllv_t*   mapper_regularize_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -31,7 +32,9 @@ static void mapper_regularize_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "output as              a=1,c=2,b=3, then e=4,d=5, then a=6,c=7,b=8\n");
 }
 
-static mapper_t* mapper_regularize_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_regularize_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	*pargi += 1;
 	return mapper_regularize_alloc();
 }

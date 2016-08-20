@@ -18,7 +18,8 @@ typedef struct _mapper_cut_state_t {
 } mapper_cut_state_t;
 
 static void      mapper_cut_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_cut_alloc(ap_state_t* pargp, slls_t* pfield_name_list,
 	int do_arg_order, int do_complement, int do_regexes);
 static void      mapper_cut_free(mapper_t* pmapper);
@@ -53,7 +54,9 @@ static void mapper_cut_usage(FILE* o, char* argv0, char* verb) {
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	slls_t* pfield_name_list  = NULL;
 	int     do_arg_order  = FALSE;
 	int     do_complement = FALSE;

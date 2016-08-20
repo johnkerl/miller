@@ -16,7 +16,8 @@ typedef struct _mapper_tee_state_t {
 #define DEFAULT_COUNTER_FIELD_NAME "n"
 
 static void      mapper_tee_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_tee_alloc(int do_append, int flush_every_record,
 	char* output_file_name, cli_writer_opts_t* pwriter_opts);
 static void      mapper_tee_free(mapper_t* pmapper);
@@ -30,7 +31,9 @@ mapper_setup_t mapper_tee_setup = {
 };
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	int   do_append = FALSE;
 	int   flush_every_record = TRUE;
 	cli_writer_opts_t* pwriter_opts = mlr_malloc_or_die(sizeof(cli_writer_opts_t));

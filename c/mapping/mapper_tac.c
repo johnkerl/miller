@@ -8,7 +8,8 @@ typedef struct _mapper_tac_state_t {
 } mapper_tac_state_t;
 
 static void      mapper_tac_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_tac_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_tac_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_tac_alloc();
 static void      mapper_tac_free(mapper_t* pmapper);
 static sllv_t*   mapper_tac_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -26,7 +27,9 @@ static void mapper_tac_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Prints records in reverse order from the order in which they were encountered.\n");
 }
 
-static mapper_t* mapper_tac_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_tac_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	if ((argc - *pargi) < 1) {
 		mapper_tac_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;

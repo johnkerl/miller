@@ -32,7 +32,8 @@ typedef struct _mapper_sample_state_t {
 } mapper_sample_state_t;
 
 static void      mapper_sample_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_sample_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_sample_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_sample_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
 	unsigned long long sample_count);
 static void      mapper_sample_free(mapper_t* pmapper);
@@ -54,7 +55,9 @@ static void mapper_sample_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "See also %s bootstrap and %s shuffle.\n", argv0, argv0);
 }
 
-static mapper_t* mapper_sample_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_sample_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	int     sample_count          = -1;
 	slls_t* pgroup_by_field_names = slls_alloc();
 

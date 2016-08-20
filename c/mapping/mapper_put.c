@@ -33,7 +33,8 @@ typedef struct _mapper_put_state_t {
 } mapper_put_state_t;
 
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
 	mlr_dsl_ast_t* past, int outer_filter, int type_inferencing, char* oosvar_flatten_separator,
 	int flush_every_record, cli_writer_opts_t* pwriter_opts);
@@ -113,7 +114,9 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	char* mlr_dsl_expression                  = NULL;
 	char* comment_stripped_mlr_dsl_expression = NULL;
 	char* expression_filename                 = NULL;

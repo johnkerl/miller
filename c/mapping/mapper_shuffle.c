@@ -19,7 +19,8 @@ typedef struct _mapper_shuffle_state_t {
 } mapper_shuffle_state_t;
 
 static void      mapper_shuffle_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_shuffle_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_shuffle_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_shuffle_alloc(ap_state_t* pargp);
 static void      mapper_shuffle_free(mapper_t* pmapper);
 static sllv_t*   mapper_shuffle_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -39,7 +40,9 @@ static void mapper_shuffle_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "See also %s bootstrap and %s sample.\n", argv0, argv0);
 }
 
-static mapper_t* mapper_shuffle_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_shuffle_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();

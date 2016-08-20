@@ -13,7 +13,8 @@ typedef struct _mapper_grep_state_t {
 } mapper_grep_state_t;
 
 static void      mapper_grep_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_grep_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_grep_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_grep_alloc(ap_state_t* pargp, char* regex_string, int exclude, int ignore_case);
 static void      mapper_grep_free(mapper_t* pmapper);
 static sllv_t*   mapper_grep_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -26,7 +27,9 @@ mapper_setup_t mapper_grep_setup = {
 };
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_grep_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_grep_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	char* regex_string = NULL;
 	int   exclude = FALSE;
 	int   ignore_case = FALSE;

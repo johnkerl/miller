@@ -26,7 +26,8 @@ typedef struct _mapper_histogram_state_t {
 } mapper_histogram_state_t;
 
 static void      mapper_histogram_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_histogram_alloc(ap_state_t* pargp, slls_t* value_field_names, double lo, int nbins, double hi,
 	int do_auto);
 static void      mapper_histogram_free(mapper_t* pmapper);
@@ -58,7 +59,9 @@ static void mapper_histogram_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Just a histogram. Input values < lo or > hi are not counted.\n");
 }
 
-static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	slls_t* value_field_names = NULL;
 	double lo = 0.0;
 	double hi = 0.0;

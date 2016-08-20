@@ -4,7 +4,8 @@
 #include "containers/sllv.h"
 
 static void      mapper_nothing_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_nothing_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_nothing_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_nothing_alloc();
 static void      mapper_nothing_free(mapper_t* pmapper);
 static sllv_t*   mapper_nothing_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -17,7 +18,9 @@ mapper_setup_t mapper_nothing_setup = {
 };
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_nothing_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_nothing_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	if ((argc - *pargi) < 1) {
 		mapper_nothing_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;

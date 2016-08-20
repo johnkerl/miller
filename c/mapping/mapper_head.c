@@ -19,7 +19,8 @@ typedef struct _mapper_head_state_t {
 } mapper_head_state_t;
 
 static void      mapper_head_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_head_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names, unsigned long long head_count);
 static void      mapper_head_free(mapper_t* pmapper);
 static sllv_t*   mapper_head_process_unkeyed(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -42,7 +43,9 @@ static void mapper_head_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "records have been read.\n");
 }
 
-static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	int     head_count            = 10;
 	slls_t* pgroup_by_field_names = slls_alloc();
 

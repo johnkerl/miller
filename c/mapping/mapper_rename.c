@@ -22,7 +22,8 @@ typedef struct _mapper_rename_state_t {
 } mapper_rename_state_t;
 
 static void      mapper_rename_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_rename_alloc(ap_state_t* pargp, lhmss_t* pold_to_new, int do_regexes, int do_gsub);
 static void      mapper_rename_free(mapper_t* pmapper);
 static sllv_t*   mapper_rename_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -59,7 +60,9 @@ static void mapper_rename_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "%s %s -r '\"name\"i,Name'       Rename \"name\", \"Name\", \"NAME\", etc. to \"Name\"\n", argv0, verb);
 }
 
-static mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	int do_regexes = FALSE;
 	int do_gsub = FALSE;
 

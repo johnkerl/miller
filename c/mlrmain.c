@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "cli/mlrcli.h"
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
+#include "cli/mlrcli.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
 #include "input/lrec_readers.h"

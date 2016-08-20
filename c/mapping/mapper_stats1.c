@@ -30,7 +30,8 @@ typedef struct _mapper_stats1_state_t {
 } mapper_stats1_state_t;
 
 static void      mapper_stats1_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_names, string_array_t* pvalue_field_names,
 	slls_t* pgroup_by_field_names, int do_iterative_stats, int allow_int_float, int do_interpolated_percentiles);
 static void      mapper_stats1_free(mapper_t* pmapper);
@@ -82,7 +83,9 @@ static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "* When there are mode ties, the first-encountered datum wins.\n");
 }
 
-static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	slls_t*         paccumulator_names          = NULL;
 	string_array_t* pvalue_field_names          = NULL;
 	slls_t*         pgroup_by_field_names       = slls_alloc();

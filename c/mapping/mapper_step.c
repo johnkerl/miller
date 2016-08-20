@@ -73,7 +73,8 @@ typedef struct _mapper_step_state_t {
 
 // ----------------------------------------------------------------
 static void      mapper_step_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_step_alloc(ap_state_t* pargp, slls_t* pstepper_names, string_array_t* pvalue_field_names,
 	slls_t* pgroup_by_field_names, int allow_int_float, slls_t* pstring_alphas, slls_t* pewma_suffixes);
 static void      mapper_step_free(mapper_t* pmapper);
@@ -149,7 +150,9 @@ static void mapper_step_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "for more information on EWMA.\n");
 }
 
-static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_step_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	slls_t*         pstepper_names        = NULL;
 	string_array_t* pvalue_field_names    = NULL;
 	slls_t*         pgroup_by_field_names = slls_alloc();

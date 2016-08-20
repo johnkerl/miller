@@ -31,7 +31,8 @@ typedef struct _nest_bucket_t {
 } nest_bucket_t;
 
 static void      mapper_nest_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_nest_alloc(ap_state_t* pargp, char* argv0,
 	char* field_name, char* nested_fs, char* nested_ps,
 	int do_explode, int do_pairs, int do_across_fields);
@@ -110,7 +111,9 @@ static void mapper_nest_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "See also %s reshape.\n", argv0);
 }
 
-static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	char* field_name = NULL;
 	char* nested_fs = ";";
 	char* nested_ps = ":";

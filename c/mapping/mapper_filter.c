@@ -20,7 +20,8 @@ typedef struct _mapper_filter_state_t {
 } mapper_filter_state_t;
 
 static void      mapper_filter_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_filter_alloc(ap_state_t* pargp, char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
 	mlr_dsl_ast_node_t* past, int type_inferencing, int do_exclude);
 static void      mapper_filter_free(mapper_t* pmapper);
@@ -79,7 +80,9 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	char* verb                                = argv[(*pargi)++];
 	char* mlr_dsl_expression                  = NULL;
 	char* comment_stripped_mlr_dsl_expression = NULL;

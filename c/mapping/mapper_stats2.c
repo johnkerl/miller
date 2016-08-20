@@ -55,7 +55,8 @@ typedef stats2_acc_t* stats2_alloc_func_t(char* value_field_name_1, char* value_
 
 // ----------------------------------------------------------------
 static void      mapper_stats2_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_stats2_alloc(ap_state_t* pargp, slls_t* paccumulator_names,
 	string_array_t* pvalue_field_name_pairs, slls_t* pgroup_by_field_names,
 	int do_verbose, int do_iterative_stats, int do_hold_and_fit);
@@ -127,7 +128,9 @@ static void mapper_stats2_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Example: %s %s -a corr -f x,y\n", argv0, verb);
 }
 
-static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_stats2_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	slls_t*         paccumulator_names    = NULL;
 	string_array_t* pvalue_field_names    = NULL;
 	slls_t*         pgroup_by_field_names = slls_alloc();

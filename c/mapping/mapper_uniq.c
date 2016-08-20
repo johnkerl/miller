@@ -19,9 +19,11 @@ typedef struct _mapper_uniq_state_t {
 } mapper_uniq_state_t;
 
 static void      mapper_uniq_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static void      mapper_count_distinct_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_uniq_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
 	int show_counts, int show_num_distinct_only);
 static void      mapper_uniq_free(mapper_t* pmapper);
@@ -53,7 +55,9 @@ static void mapper_count_distinct_usage(FILE* o, char* argv0, char* verb) {
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	slls_t* pfield_names = NULL;
 	int     show_num_distinct_only = FALSE;
 
@@ -86,7 +90,9 @@ static void mapper_uniq_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "count-distinct. For uniq, -f is a synonym for -g.\n");
 }
 
-static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	slls_t* pgroup_by_field_names = NULL;
 	int     show_counts = FALSE;
 	int     show_num_distinct_only = FALSE;

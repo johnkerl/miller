@@ -3,7 +3,8 @@
 #include "containers/sllv.h"
 
 static void      mapper_check_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_check_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_check_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_check_alloc();
 static void      mapper_check_free(mapper_t* pmapper);
 static sllv_t*   mapper_check_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -22,7 +23,9 @@ static void mapper_check_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Useful for doing a well-formatted check on input data.\n");
 }
 
-static mapper_t* mapper_check_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_check_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	if ((argc - *pargi) < 1) {
 		mapper_check_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;

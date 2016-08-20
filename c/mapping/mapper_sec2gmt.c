@@ -10,7 +10,8 @@ typedef struct _mapper_sec2gmt_state_t {
 } mapper_sec2gmt_state_t;
 
 static void      mapper_sec2gmt_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_sec2gmt_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_sec2gmt_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_sec2gmt_alloc(slls_t* pfield_names);
 static void      mapper_sec2gmt_free(mapper_t* pmapper);
 static sllv_t*   mapper_sec2gmt_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -34,7 +35,9 @@ static void mapper_sec2gmt_usage(FILE* o, char* argv0, char* verb) {
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_sec2gmt_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_sec2gmt_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	if ((argc - *pargi) < 2) {
 		mapper_sec2gmt_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;

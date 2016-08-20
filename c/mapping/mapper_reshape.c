@@ -57,7 +57,8 @@ typedef struct _reshape_bucket_t {
 } reshape_bucket_t;
 
 static void      mapper_reshape_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_reshape_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_reshape_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_reshape_alloc(
 	ap_state_t* pargp,
 	slls_t* input_field_names,
@@ -140,7 +141,9 @@ static void mapper_reshape_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "See also %s nest.\n", argv0);
 }
 
-static mapper_t* mapper_reshape_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_reshape_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	slls_t* input_field_names         = NULL;
 	slls_t* input_field_regex_strings = NULL;
 	slls_t* output_field_names        = NULL;

@@ -49,7 +49,8 @@ typedef struct _mapper_join_state_t {
 
 // ----------------------------------------------------------------
 static void mapper_join_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts);
 static void mapper_join_free(mapper_t* pmapper);
 static void ingest_left_file(mapper_join_state_t* pstate);
@@ -111,7 +112,9 @@ static void mapper_join_usage(FILE* o, char* argv0, char* verb) {
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	mapper_join_opts_t* popts = mlr_malloc_or_die(sizeof(mapper_join_opts_t));
 
 	cli_reader_opts_init(&popts->reader_opts);

@@ -11,7 +11,6 @@
 #include "containers/lhmsi.h"
 #include "containers/lhmss.h"
 #include "input/lrec_reader.h"
-#include "mapping/mapper.h"
 #include "output/lrec_writer.h"
 
 // ----------------------------------------------------------------

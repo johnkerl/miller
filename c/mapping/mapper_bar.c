@@ -20,7 +20,8 @@ typedef struct _mapper_bar_state_t {
 } mapper_bar_state_t;
 
 static void      mapper_bar_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_bar_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_bar_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_bar_alloc(ap_state_t* pargp, string_array_t* pfield_names,
 	char fill_char, char oob_char, char blank_char, double lo, double hi,
 	int width, int do_auto);
@@ -62,7 +63,9 @@ static void mapper_bar_usage(FILE* o, char* argv0, char* verb) {
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_bar_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_bar_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	string_array_t*  pfield_names = NULL;
 	char*  fill_string  = NULL;
 	char*  oob_string   = NULL;

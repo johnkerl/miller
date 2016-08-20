@@ -19,7 +19,8 @@ typedef struct _mapper_tail_state_t {
 } mapper_tail_state_t;
 
 static void      mapper_tail_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_tail_parse_cli(int* pargi, int argc, char** argv);
+static mapper_t* mapper_tail_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_tail_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names, unsigned long long tail_count);
 static void      mapper_tail_free(mapper_t* pmapper);
 static sllv_t*   mapper_tail_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -39,7 +40,9 @@ static void mapper_tail_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Passes through the last n records, optionally by category.\n");
 }
 
-static mapper_t* mapper_tail_parse_cli(int* pargi, int argc, char** argv) {
+static mapper_t* mapper_tail_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
 	int     tail_count            = 10;
 	slls_t* pgroup_by_field_names = slls_alloc();
 
