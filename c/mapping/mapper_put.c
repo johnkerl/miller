@@ -37,7 +37,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
 	mlr_dsl_ast_t* past, int outer_filter, int type_inferencing, char* oosvar_flatten_separator,
-	int flush_every_record, cli_writer_opts_t* pwriter_opts);
+	int flush_every_record, cli_writer_opts_t* pwriter_opts, cli_writer_opts_t* pmain_writer_opts);
 static void      mapper_put_free(mapper_t* pmapper);
 static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -115,7 +115,7 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
-	cli_reader_opts_t* _, cli_writer_opts_t* __)
+	cli_reader_opts_t* _, cli_writer_opts_t* pmain_writer_opts)
 {
 	char* mlr_dsl_expression                  = NULL;
 	char* comment_stripped_mlr_dsl_expression = NULL;
@@ -206,13 +206,13 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 	*pargi = argi;
 	return mapper_put_alloc(mlr_dsl_expression, comment_stripped_mlr_dsl_expression,
 		past, outer_filter, type_inferencing, oosvar_flatten_separator, flush_every_record,
-		pwriter_opts);
+		pwriter_opts, pmain_writer_opts);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
 	mlr_dsl_ast_t* past, int outer_filter, int type_inferencing, char* oosvar_flatten_separator,
-	int flush_every_record, cli_writer_opts_t* pwriter_opts)
+	int flush_every_record, cli_writer_opts_t* pwriter_opts, cli_writer_opts_t* pmain_writer_opts)
 {
 	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
 	// Retain the string contents along with any in-pointers from the AST/CST
@@ -228,6 +228,8 @@ static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripp
 	pstate->pbind_stack              = bind_stack_alloc();
 	pstate->ploop_stack              = loop_stack_alloc();
 	pstate->pwriter_opts             = pwriter_opts;
+
+	cli_merge_writer_opts(pstate->pwriter_opts, pmain_writer_opts);
 
 	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate       = (void*)pstate;
@@ -311,10 +313,6 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	int should_emit_rec = TRUE;
 
 	if (pstate->at_begin) {
-
-		// mapper_put_alloc is called from the CLI-parser and cli_opts isn't finalized until that
-		// returns. So we cannot do this in mapper_put_alloc.
-		cli_merge_writer_opts(pstate->pwriter_opts, &MLR_GLOBALS.popts->writer_opts);
 
 		variables_t variables = (variables_t) {
 			.pinrec           = NULL,

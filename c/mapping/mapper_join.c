@@ -308,6 +308,8 @@ static void mapper_join_free(mapper_t* pmapper) {
 static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, void* pvstate) {
 	mapper_join_state_t* pstate = (mapper_join_state_t*)pvstate;
 
+	// xxx fix
+
 	// This can't be done in the CLI-parser since it requires information which
 	// isn't known until after the CLI-parser is called.
 	//

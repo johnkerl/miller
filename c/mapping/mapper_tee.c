@@ -19,7 +19,7 @@ static void      mapper_tee_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_tee_alloc(int do_append, int flush_every_record,
-	char* output_file_name, cli_writer_opts_t* pwriter_opts);
+	char* output_file_name, cli_writer_opts_t* pwriter_opts, cli_writer_opts_t* pmain_writer_opts);
 static void      mapper_tee_free(mapper_t* pmapper);
 static sllv_t*   mapper_tee_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -32,7 +32,7 @@ mapper_setup_t mapper_tee_setup = {
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv,
-	cli_reader_opts_t* _, cli_writer_opts_t* __)
+	cli_reader_opts_t* _, cli_writer_opts_t* pmain_writer_opts)
 {
 	int   do_append = FALSE;
 	int   flush_every_record = TRUE;
@@ -78,7 +78,7 @@ static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv,
 	*pargi = argi;
 
 	mapper_t* pmapper = mapper_tee_alloc(do_append, flush_every_record, output_file_name,
-		pwriter_opts);
+		pwriter_opts, pmain_writer_opts);
 	return pmapper;
 }
 
@@ -96,7 +96,7 @@ static void mapper_tee_usage(FILE* o, char* argv0, char* verb) {
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_tee_alloc(int do_append, int flush_every_record,
-	char* output_file_name, cli_writer_opts_t* pwriter_opts)
+	char* output_file_name, cli_writer_opts_t* pwriter_opts, cli_writer_opts_t* pmain_writer_opts)
 {
 	FILE* fp = fopen(output_file_name, do_append ? "a" : "w");
 	if (fp == NULL) {
@@ -111,7 +111,10 @@ static mapper_t* mapper_tee_alloc(int do_append, int flush_every_record,
 	pstate->output_stream      = fp;
 	pstate->flush_every_record = flush_every_record;
 	pstate->pwriter_opts       = pwriter_opts;
-	pstate->plrec_writer       = NULL;
+
+	cli_merge_writer_opts(pstate->pwriter_opts, pmain_writer_opts);
+	pstate->plrec_writer = lrec_writer_alloc_or_die(pstate->pwriter_opts);
+
 	pmapper->pvstate           = pstate;
 	pmapper->pprocess_func     = mapper_tee_process;
 	pmapper->pfree_func        = mapper_tee_free;
@@ -128,13 +131,6 @@ static void mapper_tee_free(mapper_t* pmapper) {
 // ----------------------------------------------------------------
 static sllv_t* mapper_tee_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_tee_state_t* pstate = (mapper_tee_state_t*)pvstate;
-
-	// mapper_tee_alloc is called from the CLI-parser and cli_opts isn't finalized until that
-	// returns. So we cannot do this in mapper_tee_alloc.
-	if (pstate->plrec_writer == NULL) {
-		cli_merge_writer_opts(pstate->pwriter_opts, &MLR_GLOBALS.popts->writer_opts);
-		pstate->plrec_writer = lrec_writer_alloc_or_die(pstate->pwriter_opts);
-	}
 
 	if (pinrec != NULL) {
 		// Copy the record since the lrec-writer will free it, and we need the original
