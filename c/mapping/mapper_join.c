@@ -295,8 +295,6 @@ static void mapper_join_free(mapper_t* pmapper) {
 
 	join_bucket_keeper_free(pstate->pjoin_bucket_keeper, pstate->popts->prepipe);
 
-	free(pstate->popts);
-
 	slls_free(pstate->popts->poutput_join_field_names);
 	slls_free(pstate->popts->pleft_join_field_names);
 	slls_free(pstate->popts->pright_join_field_names);
@@ -308,6 +306,7 @@ static void mapper_join_free(mapper_t* pmapper) {
 	hss_free(pstate->pleft_field_name_set);
 	hss_free(pstate->pright_field_name_set);
 
+	free(pstate->popts);
 	free(pstate);
 	free(pmapper);
 }
