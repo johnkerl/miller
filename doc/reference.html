@@ -2155,7 +2155,7 @@ Options:
 --no-fflush: for emit, tee, print, and dump, don't call fflush() after every
     record.
 Any of the output-format command-line flags (see mlr -h). Example: using
-  mlr --icsv --opprint ... then put --ojson 'tee &gt; "mytap-".$a.".dat" then ...
+  mlr --icsv --opprint ... then put --ojson 'tee &gt; "mytap-".$a.".dat", $*' then ...
 the input is CSV, the output is pretty-print tabular, but the tee-file output
 is written in JSON format.
 
