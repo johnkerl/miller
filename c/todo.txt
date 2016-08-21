@@ -17,8 +17,6 @@ TOP OF LIST:
 ----------------------------------------------------------------
 4.5.0 for sure:
 
-* mlh/mld for put/tee --oxxx flags overlays
-
 * xxxes
 * valgrinds
 
