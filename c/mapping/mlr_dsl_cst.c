@@ -2787,7 +2787,7 @@ static void mlr_dsl_emitf_keyword_usage(FILE* ostream) {
 		"  value of the piped-to command (for |). Output-formatting flags are taken from\n"
 		"  the main command line.\n"
 		"\n"
-		"  You may use any of the output-format command-line flags, e.g. --ocsv, --ofs,\n"
+		"  You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,\n"
 		"  etc., to control the format of the output if the output is redirected. See also %s -h.\n"
 		"\n"
 		"  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'\n"
