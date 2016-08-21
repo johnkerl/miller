@@ -7,24 +7,12 @@ BUGFIXES
 TOP OF LIST:
 
 ! rh/fedora/centos
-
 ! call for use-cases? (go first.)
-
 ! go through lmag article & clarify all unclears
-
 ! 10min vers
-
 ! windows port?
-
 ? msort.o wt?
 
-----------------------------------------------------------------
-4.5.0 for sure:
-
-k put/tee --oxxx flags overlays
-k -i, -o, --io
-
-----------------------------------------------------------------
 4.6.0 ideas:
 
 ! -f/-r field-name-spec opportunities throughout
