@@ -443,7 +443,7 @@ static char * all_tests() {
 
 // ----------------------------------------------------------------
 int main(int argc, char **argv) {
-	mlr_global_init(argv[0], "%lf", NULL);
+	mlr_global_init(argv[0], "%lf");
 
 	printf("TEST_RVAL_EVALUATORS ENTER\n");
 	char *result = all_tests();

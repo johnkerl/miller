@@ -1,6 +1,7 @@
 #ifndef STATS1_ACCUMULATORS_H
 #define STATS1_ACCUMULATORS_H
 
+#include "containers/lrec.h"
 #include "containers/slls.h"
 #include "containers/lhmsv.h"
 

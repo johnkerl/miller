@@ -5,6 +5,7 @@
 #include <sys/time.h>
 #include "lib/mlrregex.h"
 #include "lib/mlr_globals.h"
+#include "containers/free_flags.h"
 
 // ----------------------------------------------------------------
 // Succeeds or aborts the process. cflag REG_EXTENDED is already included.

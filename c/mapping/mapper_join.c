@@ -113,7 +113,7 @@ static void mapper_join_usage(FILE* o, char* argv0, char* verb) {
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv,
-	cli_reader_opts_t* _, cli_writer_opts_t* __)
+	cli_reader_opts_t* pmain_reader_opts, cli_writer_opts_t* __)
 {
 	mapper_join_opts_t* popts = mlr_malloc_or_die(sizeof(mapper_join_opts_t));
 
@@ -199,6 +199,8 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv,
 
 	}
 
+	cli_merge_reader_opts(&popts->reader_opts, pmain_reader_opts);
+
 	// popen is a stdio construct, not an mmap construct, and it can't be supported here.
 	if (popts->prepipe != NULL)
 		popts->reader_opts.use_mmap_for_read = FALSE;
@@ -249,7 +251,13 @@ static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts) {
 	pstate->popts                              = popts;
 	pstate->pleft_field_name_set               = hss_from_slls(popts->pleft_join_field_names);
 	pstate->pright_field_name_set              = hss_from_slls(popts->pright_join_field_names);
-	pstate->pjoin_bucket_keeper                = NULL;
+
+	pstate->pjoin_bucket_keeper = join_bucket_keeper_alloc(
+		popts->prepipe,
+		popts->left_file_name,
+		&popts->reader_opts,
+		popts->pleft_join_field_names);
+
 	pstate->pleft_buckets_by_join_field_values = NULL;
 	pstate->pleft_unpaired_records             = NULL;
 
@@ -308,28 +316,6 @@ static void mapper_join_free(mapper_t* pmapper) {
 static sllv_t* mapper_join_process_sorted(lrec_t* pright_rec, context_t* pctx, void* pvstate) {
 	mapper_join_state_t* pstate = (mapper_join_state_t*)pvstate;
 
-	// xxx fix
-
-	// This can't be done in the CLI-parser since it requires information which
-	// isn't known until after the CLI-parser is called.
-	//
-	// Format and separator flags are passed to mapper_join in MLR_GLOBALS rather
-	// than on the stack, since the latter would require complicating the interface
-	// for all the other mappers which don't do their own file I/O.  (Also, while
-	// some of the information needed to construct an lrec_reader is available on
-	// the command line before the mapper-allocators are called, some is not
-	// available until after.  Hence our obtaining these flags after mapper-alloc.)
-	if (pstate->pjoin_bucket_keeper == NULL) {
-		mapper_join_opts_t* popts = pstate->popts;
-
-		cli_merge_reader_opts(&pstate->popts->reader_opts, &MLR_GLOBALS.popts->reader_opts);
-
-		pstate->pjoin_bucket_keeper = join_bucket_keeper_alloc(
-			popts->prepipe,
-			popts->left_file_name,
-			&popts->reader_opts,
-			popts->pleft_join_field_names);
-	}
 	join_bucket_keeper_t* pkeeper = pstate->pjoin_bucket_keeper; // keystroke-saver
 
 	sllv_t* pleft_records = NULL;
@@ -508,7 +494,6 @@ static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, ma
 // ----------------------------------------------------------------
 static void ingest_left_file(mapper_join_state_t* pstate) {
 	mapper_join_opts_t* popts = pstate->popts;
-	cli_merge_reader_opts(&popts->reader_opts, &MLR_GLOBALS.popts->reader_opts);
 
 	lrec_reader_t* plrec_reader = lrec_reader_alloc(&popts->reader_opts);
 
