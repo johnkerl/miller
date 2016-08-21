@@ -20,13 +20,10 @@ TOP OF LIST:
 4.5.0 for sure:
 
 k put/tee --oxxx flags overlays
-k mlrcli functionize
-k simplify mapper_join
 k -i, -o, --io
-k valgrinds
-* xxxes
 
-4.5.0 ideas:
+----------------------------------------------------------------
+4.6.0 ideas:
 
 ! -f/-r field-name-spec opportunities throughout
 ? mlr step -a shift --by {n}
