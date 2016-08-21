@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-08-19
+.\"      Date: 2016-08-21
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-08-19" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-08-21" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -849,6 +849,10 @@ Options:
     should not be placed in the file.
 --no-fflush: for emit, tee, print, and dump, don't call fflush() after every
     record.
+Any of of the output-format command-line flags (see mlr -h). Example: using
+  mlr --icsv --opprint ... then put --ojson 'tee > "mytap-".$a.".dat" then ...
+the input is CSV, the output is pretty-print tabular, but the tee-file output
+is written in JSON format.
 
 Please use a dollar sign for field names and double-quotes for string
 literals. If field names have special characters such as "." then you might
@@ -1271,6 +1275,10 @@ the "tee" keyword within mlr put, which allows data-dependent filenames.
 Options:
 -a:          append to existing file, if any, rather than overwriting.
 --no-fflush: don't call fflush() after every record.
+Any of of the output-format command-line flags (see mlr -h). Example: using
+  mlr --icsv --opprint put '...' then tee --ojson ./mytap.dat then stats1 ...
+the input is CSV, the output is pretty-print tabular, but the tee-file output
+is written in JSON format.
 .fi
 .if n \{\
 .RE
@@ -2347,12 +2355,16 @@ tee: prints the current record to specified file.
   value of the piped-to command (for |). Output-formatting flags are taken from
   the main command line.
 
+  You can use any of of the output-format command-line flags, e.g. --ocsv, --ofs,
+  etc., to control the format of the output. See also mlr -h.
+
   Example: mlr --from f.dat put 'tee >  "/tmp/data-".$a, $*'
   Example: mlr --from f.dat put 'tee >> "/tmp/data-".$a.$b, $*'
   Example: mlr --from f.dat put 'tee >  stderr, $*'
   Example: mlr --from f.dat put -q 'tee | "tr [a-z\e] [A-Z\e]", $*'
   Example: mlr --from f.dat put -q 'tee | "tr [a-z\e] [A-Z\e] > /tmp/data-".$a, $*'
   Example: mlr --from f.dat put -q 'tee | "gzip > /tmp/data-".$a.".gz", $*'
+  Example: mlr --from f.dat put -q --ojson 'tee | "gzip > /tmp/data-".$a.".gz", $*'
 .fi
 .if n \{\
 .RE
@@ -2374,7 +2386,11 @@ emit: inserts an out-of-stream variable into the output record stream. Hashmap
   value of the piped-to command (for |). Output-formatting flags are taken from
   the main command line.
 
+  You can use any of of the output-format command-line flags, e.g. --ocsv, --ofs,
+  etc., to control the format of the output if the output is redirected. See also mlr -h.
+
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
+  Example: mlr --from f.dat put --ojson '@sums[$a][$b]+=$x; emit > "tap-".$a.$b.".dat", @sums'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, "index1", "index2"'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >  "mytap.dat", @*, "index1", "index2"'
@@ -2406,7 +2422,11 @@ emitp: inserts an out-of-stream variable into the output record stream.
   value of the piped-to command (for |). Output-formatting flags are taken from
   the main command line.
 
+  You can use any of of the output-format command-line flags, e.g. --ocsv, --ofs,
+  etc., to control the format of the output if the output is redirected. See also mlr -h.
+
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
+  Example: mlr --from f.dat put --opprint '@sums[$a][$b]+=$x; emitp > "tap-".$a.$b.".dat", @sums'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, "index1", "index2"'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >  "mytap.dat", @*, "index1", "index2"'
@@ -2437,7 +2457,11 @@ emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
   value of the piped-to command (for |). Output-formatting flags are taken from
   the main command line.
 
+  You may use any of of the output-format command-line flags, e.g. --ocsv, --ofs,
+  etc., to control the format of the output if the output is redirected. See also mlr -h.
+
   Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
+  Example: mlr --from f.dat put --oxtab '@a=$i;@b+=$x;@c+=$y; emitf > "tap-".$i.".dat", @a'
   Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
   Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > "mytap.dat", @a, @b, @c'
   Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf >> "mytap.dat", @a, @b, @c'

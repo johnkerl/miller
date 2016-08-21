@@ -92,6 +92,12 @@ static void mapper_tee_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Options:\n");
 	fprintf(o, "-a:          append to existing file, if any, rather than overwriting.\n");
 	fprintf(o, "--no-fflush: don't call fflush() after every record.\n");
+	fprintf(o, "Any of of the output-format command-line flags (see %s -h). Example: using\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(o, "  %s --icsv --opprint put '...' then tee --ojson ./mytap.dat then stats1 ...\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(o, "the input is CSV, the output is pretty-print tabular, but the tee-file output\n");
+	fprintf(o, "is written in JSON format.\n");
 }
 
 // ----------------------------------------------------------------

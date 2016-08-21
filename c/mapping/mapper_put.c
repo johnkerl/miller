@@ -75,6 +75,12 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "    should not be placed in the file.\n");
 	fprintf(o, "--no-fflush: for emit, tee, print, and dump, don't call fflush() after every\n");
 	fprintf(o, "    record.\n");
+	fprintf(o, "Any of of the output-format command-line flags (see %s -h). Example: using\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(o, "  %s --icsv --opprint ... then put --ojson 'tee > \"mytap-\".$a.\".dat\" then ...\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(o, "the input is CSV, the output is pretty-print tabular, but the tee-file output\n");
+	fprintf(o, "is written in JSON format.\n");
 	fprintf(o, "\n");
 	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");

@@ -2694,12 +2694,17 @@ static void mlr_dsl_tee_keyword_usage(FILE* ostream) {
 		"  value of the piped-to command (for |). Output-formatting flags are taken from\n"
 		"  the main command line.\n"
 		"\n"
+		"  You can use any of of the output-format command-line flags, e.g. --ocsv, --ofs,\n"
+		"  etc., to control the format of the output. See also %s -h.\n"
+		"\n"
 		"  Example: mlr --from f.dat put 'tee >  \"/tmp/data-\".$a, $*'\n"
 		"  Example: mlr --from f.dat put 'tee >> \"/tmp/data-\".$a.$b, $*'\n"
 		"  Example: mlr --from f.dat put 'tee >  stderr, $*'\n"
 		"  Example: mlr --from f.dat put -q 'tee | \"tr \[a-z\\] \[A-Z\\]\", $*'\n"
 		"  Example: mlr --from f.dat put -q 'tee | \"tr \[a-z\\] \[A-Z\\] > /tmp/data-\".$a, $*'\n"
-		"  Example: mlr --from f.dat put -q 'tee | \"gzip > /tmp/data-\".$a.\".gz\", $*'\n");
+		"  Example: mlr --from f.dat put -q 'tee | \"gzip > /tmp/data-\".$a.\".gz\", $*'\n"
+		"  Example: mlr --from f.dat put -q --ojson 'tee | \"gzip > /tmp/data-\".$a.\".gz\", $*'\n",
+		MLR_GLOBALS.bargv0);
 }
 
 static void mlr_dsl_emit_keyword_usage(FILE* ostream) {
@@ -2717,7 +2722,11 @@ static void mlr_dsl_emit_keyword_usage(FILE* ostream) {
 		"  value of the piped-to command (for |). Output-formatting flags are taken from\n"
 		"  the main command line.\n"
 		"\n"
+		"  You can use any of of the output-format command-line flags, e.g. --ocsv, --ofs,\n"
+		"  etc., to control the format of the output if the output is redirected. See also %s -h.\n"
+		"\n"
 		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'\n"
+		"  Example: mlr --from f.dat put --ojson '@sums[$a][$b]+=$x; emit > \"tap-\".$a.$b.\".dat\", @sums'\n"
 		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, \"index1\", \"index2\"'\n"
 		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, \"index1\", \"index2\"'\n"
 		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit >  \"mytap.dat\", @*, \"index1\", \"index2\"'\n"
@@ -2726,7 +2735,8 @@ static void mlr_dsl_emit_keyword_usage(FILE* ostream) {
 		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit > stderr, @*, \"index1\", \"index2\"'\n"
 		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | \"grep somepattern\", @*, \"index1\", \"index2\"'\n"
 		"\n"
-		"  Please see http://johnkerl.org/miller/doc for more information.\n");
+		"  Please see http://johnkerl.org/miller/doc for more information.\n",
+		MLR_GLOBALS.bargv0);
 }
 
 static void mlr_dsl_emitp_keyword_usage(FILE* ostream) {
@@ -2745,7 +2755,11 @@ static void mlr_dsl_emitp_keyword_usage(FILE* ostream) {
 		"  value of the piped-to command (for |). Output-formatting flags are taken from\n"
 		"  the main command line.\n"
 		"\n"
+		"  You can use any of of the output-format command-line flags, e.g. --ocsv, --ofs,\n"
+		"  etc., to control the format of the output if the output is redirected. See also %s -h.\n"
+		"\n"
 		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'\n"
+		"  Example: mlr --from f.dat put --opprint '@sums[$a][$b]+=$x; emitp > \"tap-\".$a.$b.\".dat\", @sums'\n"
 		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, \"index1\", \"index2\"'\n"
 		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, \"index1\", \"index2\"'\n"
 		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp >  \"mytap.dat\", @*, \"index1\", \"index2\"'\n"
@@ -2754,7 +2768,8 @@ static void mlr_dsl_emitp_keyword_usage(FILE* ostream) {
 		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp > stderr, @*, \"index1\", \"index2\"'\n"
 		"  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | \"grep somepattern\", @*, \"index1\", \"index2\"'\n"
 		"\n"
-		"  Please see http://johnkerl.org/miller/doc for more information.\n");
+		"  Please see http://johnkerl.org/miller/doc for more information.\n",
+		MLR_GLOBALS.bargv0);
 }
 
 static void mlr_dsl_emitf_keyword_usage(FILE* ostream) {
@@ -2772,7 +2787,11 @@ static void mlr_dsl_emitf_keyword_usage(FILE* ostream) {
 		"  value of the piped-to command (for |). Output-formatting flags are taken from\n"
 		"  the main command line.\n"
 		"\n"
+		"  You may use any of of the output-format command-line flags, e.g. --ocsv, --ofs,\n"
+		"  etc., to control the format of the output if the output is redirected. See also %s -h.\n"
+		"\n"
 		"  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'\n"
+		"  Example: mlr --from f.dat put --oxtab '@a=$i;@b+=$x;@c+=$y; emitf > \"tap-\".$i.\".dat\", @a'\n"
 		"  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'\n"
 		"  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > \"mytap.dat\", @a, @b, @c'\n"
 		"  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf >> \"mytap.dat\", @a, @b, @c'\n"
@@ -2780,7 +2799,8 @@ static void mlr_dsl_emitf_keyword_usage(FILE* ostream) {
 		"  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | \"grep somepattern\", @a, @b, @c'\n"
 		"  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | \"grep somepattern > mytap.dat\", @a, @b, @c'\n"
 		"\n"
-		"  Please see http://johnkerl.org/miller/doc for more information.\n");
+		"  Please see http://johnkerl.org/miller/doc for more information.\n",
+		MLR_GLOBALS.bargv0);
 }
 
 static void mlr_dsl_dump_keyword_usage(FILE* ostream) {

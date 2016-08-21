@@ -776,6 +776,10 @@ VERBS
 	   should not be placed in the file.
        --no-fflush: for emit, tee, print, and dump, don't call fflush() after every
 	   record.
+       Any of of the output-format command-line flags (see mlr -h). Example: using
+	 mlr --icsv --opprint ... then put --ojson 'tee &gt; "mytap-".$a.".dat" then ...
+       the input is CSV, the output is pretty-print tabular, but the tee-file output
+       is written in JSON format.
 
        Please use a dollar sign for field names and double-quotes for string
        literals. If field names have special characters such as "." then you might
@@ -1102,6 +1106,10 @@ VERBS
        Options:
        -a:	    append to existing file, if any, rather than overwriting.
        --no-fflush: don't call fflush() after every record.
+       Any of of the output-format command-line flags (see mlr -h). Example: using
+	 mlr --icsv --opprint put '...' then tee --ojson ./mytap.dat then stats1 ...
+       the input is CSV, the output is pretty-print tabular, but the tee-file output
+       is written in JSON format.
 
    top
        Usage: mlr top [options]
@@ -1514,12 +1522,16 @@ KEYWORDS FOR PUT
 	 value of the piped-to command (for |). Output-formatting flags are taken from
 	 the main command line.
 
+	 You can use any of of the output-format command-line flags, e.g. --ocsv, --ofs,
+	 etc., to control the format of the output. See also mlr -h.
+
 	 Example: mlr --from f.dat put 'tee &gt;  "/tmp/data-".$a, $*'
 	 Example: mlr --from f.dat put 'tee &gt;&gt; "/tmp/data-".$a.$b, $*'
 	 Example: mlr --from f.dat put 'tee &gt;  stderr, $*'
 	 Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\]", $*'
 	 Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\] &gt; /tmp/data-".$a, $*'
 	 Example: mlr --from f.dat put -q 'tee | "gzip &gt; /tmp/data-".$a.".gz", $*'
+	 Example: mlr --from f.dat put -q --ojson 'tee | "gzip &gt; /tmp/data-".$a.".gz", $*'
 
    emit
        emit: inserts an out-of-stream variable into the output record stream. Hashmap
@@ -1535,7 +1547,11 @@ KEYWORDS FOR PUT
 	 value of the piped-to command (for |). Output-formatting flags are taken from
 	 the main command line.
 
+	 You can use any of of the output-format command-line flags, e.g. --ocsv, --ofs,
+	 etc., to control the format of the output if the output is redirected. See also mlr -h.
+
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
+	 Example: mlr --from f.dat put --ojson '@sums[$a][$b]+=$x; emit &gt; "tap-".$a.$b.".dat", @sums'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt;  "mytap.dat", @*, "index1", "index2"'
@@ -1561,7 +1577,11 @@ KEYWORDS FOR PUT
 	 value of the piped-to command (for |). Output-formatting flags are taken from
 	 the main command line.
 
+	 You can use any of of the output-format command-line flags, e.g. --ocsv, --ofs,
+	 etc., to control the format of the output if the output is redirected. See also mlr -h.
+
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
+	 Example: mlr --from f.dat put --opprint '@sums[$a][$b]+=$x; emitp &gt; "tap-".$a.$b.".dat", @sums'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, "index1", "index2"'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt;  "mytap.dat", @*, "index1", "index2"'
@@ -1586,7 +1606,11 @@ KEYWORDS FOR PUT
 	 value of the piped-to command (for |). Output-formatting flags are taken from
 	 the main command line.
 
+	 You may use any of of the output-format command-line flags, e.g. --ocsv, --ofs,
+	 etc., to control the format of the output if the output is redirected. See also mlr -h.
+
 	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
+	 Example: mlr --from f.dat put --oxtab '@a=$i;@b+=$x;@c+=$y; emitf &gt; "tap-".$i.".dat", @a'
 	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
 	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt; "mytap.dat", @a, @b, @c'
 	 Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt;&gt; "mytap.dat", @a, @b, @c'
@@ -1666,7 +1690,7 @@ SEE ALSO
 
 
 
-				  2016-08-19			     MILLER(1)
+				  2016-08-21			     MILLER(1)
 </pre>
 </div>
 <p/>

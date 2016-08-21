@@ -17,7 +17,6 @@ TOP OF LIST:
 ----------------------------------------------------------------
 4.5.0 for sure:
 
-! rid entirely of MLR_GLOBALS.popts; all on the stack w/ population-order caveat.
 * mlh/mld for put/tee --oxxx flags overlays
 
 * xxxes
