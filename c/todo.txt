@@ -13,7 +13,16 @@ TOP OF LIST:
 ! windows port?
 ? msort.o wt?
 
+----------------------------------------------------------------
 4.6.0 ideas:
+
+* emph override wording: from rel notes.
+  "Likewise --ofs, --ors, --ops, --jvstack, and all other output-formatting
+  options from the main help at mlr -h and/or man mlr default to the main
+  command-line options, and may be overridden with flags supplied to mlr put and
+  mlr tee."
+
+* bargv0 throughout, replacing "mlr" and argv[0] both. (former against name-changes; latter against /usr/bin/mlr.)
 
 ! -f/-r field-name-spec opportunities throughout
 ? mlr step -a shift --by {n}
