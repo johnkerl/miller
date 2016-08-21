@@ -217,9 +217,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 	popts->plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
 
-	// xxx finalize MLR_GLOBALS.opts sooner & clean up the annoyances in various files.
-	// With of course a caveat about population order.
-
 	if ((argc - argi) < 1) {
 		main_usage(stderr, argv[0]);
 		exit(1);
@@ -243,6 +240,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		}
 
 		// It's up to the parse func to print its usage on CLI-parse failure.
+		// Also note: this assumes main reader/writer opts are all parsed
+		// *before* mapper parse-CLI methods are invoked.
 		mapper_t* pmapper = pmapper_setup->pparse_func(&argi, argc, argv,
 			&popts->reader_opts, &popts->writer_opts);
 		if (pmapper == NULL) {
