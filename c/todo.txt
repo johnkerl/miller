@@ -12,18 +12,20 @@ TOP OF LIST:
 
 ! go through lmag article & clarify all unclears
 
+! 10min vers
+
 ! windows port?
 
 ----------------------------------------------------------------
 4.5.0 for sure:
 
 * xxxes
-* valgrinds
 
 k put/tee --oxxx flags overlays
 k mlrcli functionize
 k simplify mapper_join
 k -i, -o, --io
+k valgrinds
 
 ----------------------------------------------------------------
 4.5.0 ideas:

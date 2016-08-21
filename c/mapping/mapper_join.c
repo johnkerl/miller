@@ -146,33 +146,61 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv,
 			// handled
 
 		} else if (streq(argv[argi], "--prepipe")) {
+			if ((argc - argi) < 2) {
+				mapper_join_usage(stderr, argv[0], verb);
+				return NULL;
+			}
 			popts->prepipe = argv[argi+1];
 			argi += 2;
 
 		} else if (streq(argv[argi], "-f")) {
+			if ((argc - argi) < 2) {
+				mapper_join_usage(stderr, argv[0], verb);
+				return NULL;
+			}
 			popts->left_file_name = argv[argi+1];
 			argi += 2;
 
 		} else if (streq(argv[argi], "-j")) {
+			if ((argc - argi) < 2) {
+				mapper_join_usage(stderr, argv[0], verb);
+				return NULL;
+			}
 			popts->output_join_field_names_cli_backing = mlr_strdup_or_die(argv[argi+1]);
 			popts->poutput_join_field_names = slls_from_line(popts->output_join_field_names_cli_backing, ',', FALSE);
 			argi += 2;
 
 		} else if (streq(argv[argi], "-l")) {
+			if ((argc - argi) < 2) {
+				mapper_join_usage(stderr, argv[0], verb);
+				return NULL;
+			}
 			popts->left_join_field_names_cli_backing   = mlr_strdup_or_die(argv[argi+1]);
 			popts->pleft_join_field_names = slls_from_line(popts->left_join_field_names_cli_backing, ',', FALSE);
 			argi += 2;
 
 		} else if (streq(argv[argi], "-r")) {
+			if ((argc - argi) < 2) {
+				mapper_join_usage(stderr, argv[0], verb);
+				return NULL;
+			}
 			popts->right_join_field_names_cli_backing  = mlr_strdup_or_die(argv[argi+1]);
 			popts->pright_join_field_names = slls_from_line(popts->right_join_field_names_cli_backing, ',', FALSE);
 			argi += 2;
 
 		} else if (streq(argv[argi], "--lp")) {
+			if ((argc - argi) < 2) {
+				mapper_join_usage(stderr, argv[0], verb);
+				return NULL;
+			}
 			popts->left_prefix = argv[argi+1];
 			argi += 2;
 
 		} else if (streq(argv[argi], "--rp")) {
+			if ((argc - argi) < 2) {
+				mapper_join_usage(stderr, argv[0], verb);
+				return NULL;
+			}
 			popts->right_prefix = argv[argi+1];
 			argi += 2;
 

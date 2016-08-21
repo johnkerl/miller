@@ -153,6 +153,10 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 			// handled
 
 		} else if (streq(argv[argi], "-f")) {
+			if ((argc - argi) < 2) {
+				mapper_put_usage(stderr, argv[0], verb);
+				return NULL;
+			}
 			expression_filename = argv[argi+1];
 			argi += 2;
 		} else if (streq(argv[argi], "-v")) {
@@ -171,7 +175,10 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 			type_inferencing = TYPE_INFER_STRING_FLOAT;
 			argi += 1;
 		} else if (streq(argv[argi], "--oflatsep")) {
-			// xxx has-2nd-arg asserts for join, put, tee
+			if ((argc - argi) < 2) {
+				mapper_put_usage(stderr, argv[0], verb);
+				return NULL;
+			}
 			oosvar_flatten_separator = argv[argi+1];
 			argi += 2;
 		} else if (streq(argv[argi], "--no-fflush") || streq(argv[argi], "--no-flush")) {
