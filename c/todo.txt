@@ -12,6 +12,7 @@ TOP OF LIST:
 ! 10min vers
 ! windows port?
 ? msort.o wt?
+* mld section styling (bgr + font size)
 
 ----------------------------------------------------------------
 4.6.0 ideas:

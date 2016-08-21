@@ -35,15 +35,21 @@ titleinbody {
 h1 {
   font-weight: bold;
   color: maroon;
-  font-size: 110%;
-  border-bottom: 1px solid #aaaaaa;
+  font-size: 120%;
+  border: 1px solid #aaaaaa;
+  background: #e8d9bc;
+  padding: 3px;
 }
+
 h2 {
   font-weight: bold;
   color: maroon;
   font-size: 105%;
-  border-bottom: 1px solid #aaaaaa;
+  border: 1px solid #aaaaaa;
+  background: #ffffff;
+  padding: 3px;
 }
+
 h3 {
   font-weight: bold;
   color: maroon;
