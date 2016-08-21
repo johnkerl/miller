@@ -174,8 +174,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 			// xxx has-2nd-arg asserts for join, put, tee
 			oosvar_flatten_separator = argv[argi+1];
 			argi += 2;
-		} else if (streq(argv[argi], "--no-fflush")) {
-			// xxx alias --no-flush thruout as well
+		} else if (streq(argv[argi], "--no-fflush") || streq(argv[argi], "--no-flush")) {
 			flush_every_record = FALSE;
 			argi += 1;
 

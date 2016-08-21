@@ -58,7 +58,7 @@ static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv,
 			do_append = TRUE;
 			argi++;
 
-		} else if (streq(argv[argi], "--no-fflush")) {
+		} else if (streq(argv[argi], "--no-fflush") || streq(argv[argi], "--no-flush")) {
 			flush_every_record = FALSE;
 			argi++;
 
