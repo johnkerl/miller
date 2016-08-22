@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 #include "lib/mtrand.h"
 #include "containers/slls.h"
 #include "containers/lhmss.h"
@@ -1035,15 +1036,20 @@ void cli_merge_reader_opts(cli_reader_opts_t* pfunc_opts, cli_reader_opts_t* pma
 	} else {
 
 		if (pfunc_opts->irs == NULL)
-			pfunc_opts->irs = lhmss_get_or_die(get_default_rses(), pfunc_opts->ifile_fmt, "mlr");
+			pfunc_opts->irs = lhmss_get_or_die(get_default_rses(), pfunc_opts->ifile_fmt,
+				MLR_GLOBALS.bargv0);
 		if (pfunc_opts->ifs == NULL)
-			pfunc_opts->ifs = lhmss_get_or_die(get_default_fses(), pfunc_opts->ifile_fmt, "mlr");
+			pfunc_opts->ifs = lhmss_get_or_die(get_default_fses(), pfunc_opts->ifile_fmt,
+				MLR_GLOBALS.bargv0);
 		if (pfunc_opts->ips == NULL)
-			pfunc_opts->ips = lhmss_get_or_die(get_default_pses(), pfunc_opts->ifile_fmt, "mlr");
+			pfunc_opts->ips = lhmss_get_or_die(get_default_pses(), pfunc_opts->ifile_fmt,
+				MLR_GLOBALS.bargv0);
 		if (pfunc_opts->allow_repeat_ifs  == NEITHER_TRUE_NOR_FALSE)
-			pfunc_opts->allow_repeat_ifs = lhmsi_get_or_die(get_default_repeat_ifses(), pfunc_opts->ifile_fmt, "mlr");
+			pfunc_opts->allow_repeat_ifs = lhmsi_get_or_die(get_default_repeat_ifses(), pfunc_opts->ifile_fmt,
+				MLR_GLOBALS.bargv0);
 		if (pfunc_opts->allow_repeat_ips  == NEITHER_TRUE_NOR_FALSE)
-			pfunc_opts->allow_repeat_ips = lhmsi_get_or_die(get_default_repeat_ipses(), pfunc_opts->ifile_fmt, "mlr");
+			pfunc_opts->allow_repeat_ips = lhmsi_get_or_die(get_default_repeat_ipses(), pfunc_opts->ifile_fmt,
+				MLR_GLOBALS.bargv0);
 
 	}
 
@@ -1074,11 +1080,14 @@ void cli_merge_writer_opts(cli_writer_opts_t* pfunc_opts, cli_writer_opts_t* pma
 			pfunc_opts->ops = pmain_opts->ops;
 	} else {
 		if (pfunc_opts->ors == NULL)
-			pfunc_opts->ors = lhmss_get_or_die(get_default_rses(), pfunc_opts->ofile_fmt, "mlr");
+			pfunc_opts->ors = lhmss_get_or_die(get_default_rses(), pfunc_opts->ofile_fmt,
+				MLR_GLOBALS.bargv0);
 		if (pfunc_opts->ofs == NULL)
-			pfunc_opts->ofs = lhmss_get_or_die(get_default_fses(), pfunc_opts->ofile_fmt, "mlr");
+			pfunc_opts->ofs = lhmss_get_or_die(get_default_fses(), pfunc_opts->ofile_fmt,
+				MLR_GLOBALS.bargv0);
 		if (pfunc_opts->ops == NULL)
-			pfunc_opts->ops = lhmss_get_or_die(get_default_pses(), pfunc_opts->ofile_fmt, "mlr");
+			pfunc_opts->ops = lhmss_get_or_die(get_default_pses(), pfunc_opts->ofile_fmt,
+				MLR_GLOBALS.bargv0);
 	}
 
 	if (pfunc_opts->headerless_csv_output == NEITHER_TRUE_NOR_FALSE)
