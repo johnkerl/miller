@@ -17,6 +17,27 @@ TOP OF LIST:
 ----------------------------------------------------------------
 4.6.0 ideas:
 
+! -f/-r field-name-spec opportunities throughout
+  - bar
+  - count-distinct
+  - decimate -g
+  - head -g
+  - histogram
+  - join
+  - label
+  - merge-fields -x
+  - nest
+  - reorder
+  - sample -g
+  - sec2gmt/seg2gmtdate
+  - sort
+  * stats1
+  * stats2
+  - step
+  - tail -g
+  - top
+  - uniq -g
+
 * emph override wording: from rel notes.
   "Likewise --ofs, --ors, --ops, --jvstack, and all other output-formatting
   options from the main help at mlr -h and/or man mlr default to the main
@@ -25,7 +46,6 @@ TOP OF LIST:
 
 * bargv0 throughout, replacing "mlr" and argv[0] both. (former against name-changes; latter against /usr/bin/mlr.)
 
-! -f/-r field-name-spec opportunities throughout
 ? mlr step -a shift --by {n}
 ? --imd ?
 
