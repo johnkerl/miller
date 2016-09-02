@@ -242,7 +242,8 @@ purple,square,0,91,72.3735,8.2430
 </div>
 <p/>
 
-<p/><boldmaroon> Sort primarily alphabetically on one field, then secondarily numerically descending on another field: </boldmaroon>
+<p/><boldmaroon> Sort primarily alphabetically on one field, then secondarily
+numerically descending on another field: </boldmaroon>
 
 <p/>
 <div class="pokipanel">
@@ -545,7 +546,7 @@ square,0,36
 </pre>
 </div>
 
-<p/>then that&rsquo;s a way of writing
+<p/>then that&rsquo;s a way of saying
 
 <div class="pokipanel">
 <pre>
@@ -690,7 +691,8 @@ the system <tt>grep</tt> command, or Miller&rsquo;s <tt>having-fields</tt>, or
 <p/>
 <div class="pokipanel">
 <pre>
-$ grep op=cache log.txt | mlr --idkvp --opprint stats1 -a mean -f hit -g type then sort -f type
+$ grep op=cache log.txt \
+  | mlr --idkvp --opprint stats1 -a mean -f hit -g type then sort -f type
 type hit_mean
 A1   0.857143
 A4   0.714286
@@ -698,11 +700,13 @@ A9   0.090909
 </pre>
 </div>
 <p/>
-
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --from log.txt --opprint filter 'ispresent($batch_size)' then step -a delta -f time,num_filtered then sec2gmt time
+$ mlr --from log.txt --opprint \
+  filter 'ispresent($batch_size)' \
+  then step -a delta -f time,num_filtered \
+  then sec2gmt time
 time                 batch_size num_filtered time_delta num_filtered_delta
 2016-09-02T12:34:50Z 100        237          0          0
 2016-09-02T12:35:05Z 100        348          15         111
@@ -716,21 +720,9 @@ time                 batch_size num_filtered time_delta num_filtered_delta
 
 <a id="More"/><h1>More</h1>
 
-<p/>Please see <a href="reference.html">the reference</a> for complete information.
-<!--
-<pre>
-
-!!!! filter example !!!!!
-
-nidx output!
-
-backslashes
--f foo.mlr
-
-xxx
-
-</pre>
--->
+<p/>Please see the <a href="reference.html">reference</a> for complete
+information, as well as the <a href="faq.html">FAQ</a> and the <a
+href="cookbook.html">cookbook</a> for more tips.
     </div>
   </td>
 

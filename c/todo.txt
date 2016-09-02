@@ -7,12 +7,14 @@ BUGFIXES
 TOP OF LIST:
 
 !!! 10min vers
+  - there or at cookbook, compare all headerless options
 !! sidebar reorg
 ! cookbook disclaimer: these are corner-case things
 
 * dquoting for other formats.
 * indent by two more for jvstack
 ? rework comma placement for jvstack?
+* --c2p, --c2j etc ...
 
 ! rh/fedora/centos
 ! multi-field x many verbs

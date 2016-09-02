@@ -20,7 +20,8 @@ header is included either way:</boldmaroon>
 POKI_RUN_COMMAND{{mlr --csv --rs lf head -n 4 example.csv}}HERE
 POKI_RUN_COMMAND{{mlr --csv --rs lf tail -n 4 example.csv}}HERE
 
-<p/><boldmaroon> Sort primarily alphabetically on one field, then secondarily numerically descending on another field: </boldmaroon>
+<p/><boldmaroon> Sort primarily alphabetically on one field, then secondarily
+numerically descending on another field: </boldmaroon>
 
 POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint sort -f shape -nr index example.csv}}HERE
 
@@ -94,7 +95,7 @@ square,0,36
 </pre>
 </div>
 
-<p/>then that&rsquo;s a way of writing
+<p/>then that&rsquo;s a way of saying
 
 <div class="pokipanel">
 <pre>
@@ -187,24 +188,11 @@ timestamp, whether a particular cache was hit or not, etc. Then using either
 the system <tt>grep</tt> command, or Miller&rsquo;s <tt>having-fields</tt>, or
 <tt>ispresent</tt>, we can pick out the parts we want and analyze them:
 
-POKI_RUN_COMMAND{{grep op=cache log.txt | mlr --idkvp --opprint stats1 -a mean -f hit -g type then sort -f type}}HERE
-
-POKI_RUN_COMMAND{{mlr --from log.txt --opprint filter 'ispresent($batch_size)' then step -a delta -f time,num_filtered then sec2gmt time }}HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(10-1.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(10-2.sh)HERE
 
 <h1>More</h1>
 
-<p/>Please see <a href="reference.html">the reference</a> for complete information.
-<!--
-<pre>
-
-!!!! filter example !!!!!
-
-nidx output!
-
-backslashes
--f foo.mlr
-
-xxx
-
-</pre>
--->
+<p/>Please see the <a href="reference.html">reference</a> for complete
+information, as well as the <a href="faq.html">FAQ</a> and the <a
+href="cookbook.html">cookbook</a> for more tips.
