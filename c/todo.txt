@@ -6,13 +6,24 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
+!!! 10min vers
+!! sidebar reorg
+! cookbook disclaimer: these are corner-case things
+
+* dquoting for other formats.
+* indent by two more for jvstack
+? rework comma placement for jvstack?
+
 ! rh/fedora/centos
-! call for use-cases? (go first.)
-! go through lmag article & clarify all unclears
-! 10min vers
-! windows port?
+! multi-field x many verbs
+
+* call for use-cases? (go first.)
+* go through lmag article & clarify all unclears
+* windows port?
 ? msort.o wt?
-* mld section styling (bgr + font size)
+
+? UDFs ?
+? triple-fors?
 
 ----------------------------------------------------------------
 4.6.0 ideas:
@@ -20,22 +31,22 @@ TOP OF LIST:
 ! -f/-r field-name-spec opportunities throughout
   - bar
   - count-distinct
-  - decimate -g
-  - head -g
   - histogram
-  - join
   - label
   - merge-fields -x
   - nest
   - reorder
-  - sample -g
   - sec2gmt/seg2gmtdate
   - sort
   * stats1
   * stats2
   - step
-  - tail -g
   - top
+  ? join
+  ? decimate -g
+  ? head -g
+  ? sample -g
+  ? tail -g
   - uniq -g
 
 * emph override wording: from rel notes.

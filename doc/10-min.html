@@ -1,0 +1,739 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+
+<!-- PAGE GENERATED FROM template.html and content-for-10-min.html BY poki. -->
+<!-- PLEASE MAKE CHANGES THERE AND THEN RE-RUN poki. -->
+<head>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+  <meta name="description" content="Miller documentation"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- mobile-friendly -->
+  <meta name="keywords"
+	content="John Kerl, Kerl, Miller, miller, mlr, OLAP, data analysis software, regression, correlation, variance, data tools, " />
+
+  <title> Miller in 10 minutes </title>
+  <link rel="stylesheet" type="text/css" href="css/miller.css"/>
+  <link rel="stylesheet" type="text/css" href="css/poki-callbacks.css"/>
+</head>
+
+<!-- ================================================================ -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-15651652-1");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
+
+<script type="text/javascript">
+	function toggle(divName) {
+		var eleDiv = document.getElementById(divName);
+		if (eleDiv != null) {
+			if (eleDiv.style.display == "block") {
+				eleDiv.style.display = "none";
+			} else {
+				eleDiv.style.display = "block";
+			}
+		}
+	}
+</script>
+
+<!--
+The background image is from a screenshot of a Google search for "data analysis
+tools", lightened and sepia-toned. Over this was placed a Mac Terminal app with
+very light-grey font and translucent background, in which a few statistical
+Miller commands were run with pretty-print-tabular output format.
+-->
+<body background="pix/sepia-overlay.jpg">
+
+<!-- ================================================================ -->
+<table width="100%">
+<tr>
+
+  <!-- navbar -->
+  <td width="15%">
+    <!--
+    <img src="pix/mlr.jpg" />
+    <img style="border-width:1px; color:black;" src="pix/mlr.jpg" />
+    -->
+
+    <div class="pokinav">
+      <center><titleinbody>Miller</titleinbody></center>
+      
+<!-- PAGE LIST GENERATED FROM template.html BY poki -->
+<br/><b>Overview:</b>
+<br/>&bull;&nbsp;<a href="index.html">About Miller</a>
+<br/>&bull;&nbsp;<a href="file-formats.html">File formats</a>
+<br/>&bull;&nbsp;<a href="feature-comparison.html">Miller features in the context of the Unix toolkit</a>
+<br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
+<br/>&bull;&nbsp;<a href="internationalization.html">Internationalization</a>
+<br/><b>Using Miller:</b>
+<br/>&bull;&nbsp;<a href="10-min.html"><b>Miller in 10 minutes</b></a>
+<br/>&bull;&nbsp;<a href="faq.html">FAQ</a>
+<br/>&bull;&nbsp;<a href="reference.html">Reference</a>
+<br/>&bull;&nbsp;<a href="manpage.html">Manpage</a>
+<br/>&bull;&nbsp;<a href="data-examples.html">Data-diving examples</a>
+<br/>&bull;&nbsp;<a href="cookbook.html">Cookbook</a>
+<br/>&bull;&nbsp;<a href="release-docs.html">Documents by release</a>
+<br/>&bull;&nbsp;<a href="build.html">Installation, portability, dependencies, and testing</a>
+<br/><b>Background:</b>
+<br/>&bull;&nbsp;<a href="whyc.html">Why C?</a>
+<br/>&bull;&nbsp;<a href="etymology.html">Why call it Miller?</a>
+<br/>&bull;&nbsp;<a href="originality.html">How original is Miller?</a>
+<br/>&bull;&nbsp;<a href="performance.html">Performance</a>
+<br/><b>Repository:</b>
+<br/>&bull;&nbsp;<a href="to-do.html">Things to do</a>
+<br/>&bull;&nbsp;<a href="contact.html">Contact information</a>
+<br/>&bull;&nbsp;<a href="https://github.com/johnkerl/miller">GitHub repo</a>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
+      <br/> <br/> <br/> <br/> <br/> <br/>
+    </div>
+  </td>
+
+  <!-- page body -->
+  <td>
+    <!--
+      This is a visually gorgeous feature (here & in the CSS): it allows for
+      independent scroll of the nav and body panels. In particular the nav
+      stays on-screen as you scroll the body.
+
+      However, two problems:
+
+      (1) In Firefox & Chrome both I get janky end-of-body scrolls: there is
+      more content but I can't scroll down to it unless I repeatedly retry the
+      scrolldown. Which is weird.
+
+      (2) Worse, only the first page renders in PDF (again, Firefox & Chrome).
+
+      For now I'm disabling this separate-scroll feature. A frontender, I am
+      not ... maybe someday I'll find a config which gets *all* the features
+      I want; for now, it's a tradeoff.
+    -->
+
+    <!-- Implementation details: one bit is right here:
+
+    div style="overflow-y:scroll;height:1500px"
+
+    and the other bit is in css/poki-callbacks.css:
+
+    .pokinav {
+      display:        inline-block;
+      background:     #e8d9bc;
+      border:         1;
+      box-shadow:     0px 0px 3px 3px #C9C9C9;
+      margin:         10px;
+      padding-top:    10px;
+      padding-bottom: 10px;
+      padding-left:   10px;
+      padding-right:  10px;
+      overflow-y:     scroll;  < - - - - - - here
+      height: 1500px;
+    }
+
+    -->
+    <div>
+    <center> <titleinbody> Miller in 10 minutes </titleinbody> </center>
+    <p/>
+    
+<!-- BODY COPIED FROM content-for-10-min.html BY poki -->
+<div class="pokitoc">
+<center><b>Contents:</b></center>
+&bull;&nbsp;<a href="#CSV-file_examples">CSV-file examples</a><br/>
+&bull;&nbsp;<a href="#Other-format_examples">Other-format examples</a><br/>
+&bull;&nbsp;<a href="#SQL-output_examples">SQL-output examples</a><br/>
+&bull;&nbsp;<a href="#Log-processing_examples">Log-processing examples</a><br/>
+&bull;&nbsp;<a href="#More">More</a><br/>
+</div>
+<p/>
+
+<a id="CSV-file_examples"/><h1>CSV-file examples</h1>
+
+<p/><boldmaroon> Sample CSV data file: </boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat example.csv
+color,shape,flag,index,quantity,rate
+yellow,triangle,1,11,43.6498,9.8870
+red,square,1,15,79.2778,0.0130
+red,circle,1,16,13.8103,2.9010
+red,square,0,48,77.5542,7.4670
+purple,triangle,0,51,81.2290,8.5910
+red,square,0,64,77.1991,9.5310
+purple,triangle,0,65,80.1405,5.8240
+yellow,circle,1,73,63.9785,4.2370
+yellow,circle,1,87,63.5058,8.3350
+purple,square,0,91,72.3735,8.2430
+</pre>
+</div>
+<p/>
+
+<p/><boldmaroon> <tt>mlr cat</tt> is like cat ...</boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv --rs lf cat example.csv
+color,shape,flag,index,quantity,rate
+yellow,triangle,1,11,43.6498,9.8870
+red,square,1,15,79.2778,0.0130
+red,circle,1,16,13.8103,2.9010
+red,square,0,48,77.5542,7.4670
+purple,triangle,0,51,81.2290,8.5910
+red,square,0,64,77.1991,9.5310
+purple,triangle,0,65,80.1405,5.8240
+yellow,circle,1,73,63.9785,4.2370
+yellow,circle,1,87,63.5058,8.3350
+purple,square,0,91,72.3735,8.2430
+</pre>
+</div>
+<p/>
+
+<p/><boldmaroon>... but it can also do format conversion (here, to pretty-printed tabular format): </boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --irs lf --opprint cat example.csv
+color  shape    flag index quantity rate
+yellow triangle 1    11    43.6498  9.8870
+red    square   1    15    79.2778  0.0130
+red    circle   1    16    13.8103  2.9010
+red    square   0    48    77.5542  7.4670
+purple triangle 0    51    81.2290  8.5910
+red    square   0    64    77.1991  9.5310
+purple triangle 0    65    80.1405  5.8240
+yellow circle   1    73    63.9785  4.2370
+yellow circle   1    87    63.5058  8.3350
+purple square   0    91    72.3735  8.2430
+</pre>
+</div>
+<p/>
+
+<p/><boldmaroon> <tt>mlr head</tt> and <tt>mlr tail</tt> count records. The CSV
+header is included either way:</boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv --rs lf head -n 4 example.csv
+color,shape,flag,index,quantity,rate
+yellow,triangle,1,11,43.6498,9.8870
+red,square,1,15,79.2778,0.0130
+red,circle,1,16,13.8103,2.9010
+red,square,0,48,77.5542,7.4670
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv --rs lf tail -n 4 example.csv
+color,shape,flag,index,quantity,rate
+purple,triangle,0,65,80.1405,5.8240
+yellow,circle,1,73,63.9785,4.2370
+yellow,circle,1,87,63.5058,8.3350
+purple,square,0,91,72.3735,8.2430
+</pre>
+</div>
+<p/>
+
+<p/><boldmaroon> Sort primarily alphabetically on one field, then secondarily numerically descending on another field: </boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --irs lf --opprint sort -f shape -nr index example.csv
+color  shape    flag index quantity rate
+yellow circle   1    87    63.5058  8.3350
+yellow circle   1    73    63.9785  4.2370
+red    circle   1    16    13.8103  2.9010
+purple square   0    91    72.3735  8.2430
+red    square   0    64    77.1991  9.5310
+red    square   0    48    77.5542  7.4670
+red    square   1    15    79.2778  0.0130
+purple triangle 0    65    80.1405  5.8240
+purple triangle 0    51    81.2290  8.5910
+yellow triangle 1    11    43.6498  9.8870
+</pre>
+</div>
+<p/>
+
+<p/><boldmaroon> Use <tt>cut</tt> to retain only specified fields, in input-data order:</boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --irs lf --opprint cut -f flag,shape example.csv
+shape    flag
+triangle 1
+square   1
+circle   1
+square   0
+triangle 0
+square   0
+triangle 0
+circle   1
+circle   1
+square   0
+</pre>
+</div>
+<p/>
+
+<p/><boldmaroon> Use <tt>cut -o</tt> to retain only specified fields, in your specified order:</boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --irs lf --opprint cut -o -f flag,shape example.csv
+flag shape
+1    triangle
+1    square
+1    circle
+0    square
+0    triangle
+0    square
+0    triangle
+1    circle
+1    circle
+0    square
+</pre>
+</div>
+<p/>
+
+<p/><boldmaroon> Use <tt>cut -x</tt> to omit specified fields:</boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --irs lf --opprint cut -x -f flag,shape example.csv
+color  index quantity rate
+yellow 11    43.6498  9.8870
+red    15    79.2778  0.0130
+red    16    13.8103  2.9010
+red    48    77.5542  7.4670
+purple 51    81.2290  8.5910
+red    64    77.1991  9.5310
+purple 65    80.1405  5.8240
+yellow 73    63.9785  4.2370
+yellow 87    63.5058  8.3350
+purple 91    72.3735  8.2430
+</pre>
+</div>
+<p/>
+
+<p/><boldmaroon> Use <tt>filter</tt> to retain specified records:</boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --irs lf --opprint filter '$color == "red"' example.csv
+color shape  flag index quantity rate
+red   square 1    15    79.2778  0.0130
+red   circle 1    16    13.8103  2.9010
+red   square 0    48    77.5542  7.4670
+red   square 0    64    77.1991  9.5310
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --irs lf --opprint filter '$color == "red" &amp;&amp; $flag == 1' example.csv
+color shape  flag index quantity rate
+red   square 1    15    79.2778  0.0130
+red   circle 1    16    13.8103  2.9010
+</pre>
+</div>
+<p/>
+
+<p/><boldmaroon> Use <tt>put</tt> to add/replace fields which are computed from other fields:</boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --irs lf --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv
+color  shape    flag index quantity rate   ratio       color_shape
+yellow triangle 1    11    43.6498  9.8870 4.414868    yellow_triangle
+red    square   1    15    79.2778  0.0130 6098.292308 red_square
+red    circle   1    16    13.8103  2.9010 4.760531    red_circle
+red    square   0    48    77.5542  7.4670 10.386260   red_square
+purple triangle 0    51    81.2290  8.5910 9.455127    purple_triangle
+red    square   0    64    77.1991  9.5310 8.099790    red_square
+purple triangle 0    65    80.1405  5.8240 13.760388   purple_triangle
+yellow circle   1    73    63.9785  4.2370 15.099953   yellow_circle
+yellow circle   1    87    63.5058  8.3350 7.619172    yellow_circle
+purple square   0    91    72.3735  8.2430 8.779995    purple_square
+</pre>
+</div>
+<p/>
+
+<p/><boldmaroon> JSON output:</boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --irs lf --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' example.csv
+{ "color": "yellow", "shape": "TRIANGLE", "flag": 1, "index": 11, "quantity": 43.6498, "rate": 9.8870, "ratio": 4.414868 }
+{ "color": "red", "shape": "SQUARE", "flag": 1, "index": 15, "quantity": 79.2778, "rate": 0.0130, "ratio": 6098.292308 }
+{ "color": "red", "shape": "CIRCLE", "flag": 1, "index": 16, "quantity": 13.8103, "rate": 2.9010, "ratio": 4.760531 }
+{ "color": "red", "shape": "SQUARE", "flag": 0, "index": 48, "quantity": 77.5542, "rate": 7.4670, "ratio": 10.386260 }
+{ "color": "purple", "shape": "TRIANGLE", "flag": 0, "index": 51, "quantity": 81.2290, "rate": 8.5910, "ratio": 9.455127 }
+{ "color": "red", "shape": "SQUARE", "flag": 0, "index": 64, "quantity": 77.1991, "rate": 9.5310, "ratio": 8.099790 }
+{ "color": "purple", "shape": "TRIANGLE", "flag": 0, "index": 65, "quantity": 80.1405, "rate": 5.8240, "ratio": 13.760388 }
+{ "color": "yellow", "shape": "CIRCLE", "flag": 1, "index": 73, "quantity": 63.9785, "rate": 4.2370, "ratio": 15.099953 }
+{ "color": "yellow", "shape": "CIRCLE", "flag": 1, "index": 87, "quantity": 63.5058, "rate": 8.3350, "ratio": 7.619172 }
+{ "color": "purple", "shape": "SQUARE", "flag": 0, "index": 91, "quantity": 72.3735, "rate": 8.2430, "ratio": 8.779995 }
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --irs lf --ojson --jvstack --jlistwrap tail -n 2 example.csv
+[
+{
+  "color": "yellow",
+  "shape": "circle",
+  "flag": 1,
+  "index": 87,
+  "quantity": 63.5058,
+  "rate": 8.3350
+}
+,{
+  "color": "purple",
+  "shape": "square",
+  "flag": 0,
+  "index": 91,
+  "quantity": 72.3735,
+  "rate": 8.2430
+}
+]
+</pre>
+</div>
+<p/>
+
+<p/><boldmaroon> Use <tt>then</tt> to pipe commands together. Also, the
+<tt>-g</tt> option for many Miller commands is for group-by: here,
+<tt>head -n 1 -g shape</tt> outputs the first record for each distinct
+value of the <tt>shape</tt> field.</boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --irs lf --opprint sort -f shape -nr index then head -n 1 -g shape example.csv
+color  shape    flag index quantity rate
+yellow circle   1    87    63.5058  8.3350
+purple square   0    91    72.3735  8.2430
+purple triangle 0    65    80.1405  5.8240
+</pre>
+</div>
+<p/>
+
+<p/><boldmaroon> Statistics can be computed with or without group-by field(s). Also, the first of these two
+examples uses <tt>--oxtab</tt> output format which is a nice alternative to <tt>--opprint</tt> when you
+have lots of columns:</boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --irs lf --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
+rate_p0   0.013000
+rate_p10  2.901000
+rate_p25  4.237000
+rate_p50  8.243000
+rate_p75  8.591000
+rate_p90  9.887000
+rate_p99  9.887000
+rate_p100 9.887000
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --irs lf --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape
+shape    quantity_count quantity_min quantity_mean quantity_max
+triangle 3              43.649800    68.339767     81.229000
+square   4              72.373500    76.601150     79.277800
+circle   3              13.810300    47.098200     63.978500
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --irs lf --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color
+shape    color  quantity_count quantity_min quantity_mean quantity_max
+triangle yellow 1              43.649800    43.649800     43.649800
+square   red    3              77.199100    78.010367     79.277800
+circle   red    1              13.810300    13.810300     13.810300
+triangle purple 2              80.140500    80.684750     81.229000
+circle   yellow 2              63.505800    63.742150     63.978500
+square   purple 1              72.373500    72.373500     72.373500
+</pre>
+</div>
+<p/>
+
+<p/><boldmaroon> Using <tt>tee</tt> within <tt>put</tt>, you can split your input data into separate files
+per one or more field names:</boldmaroon>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv --rs lf --from example.csv put -q 'tee &gt; $shape.".csv", $*'
+</pre>
+</div>
+<p/>
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat circle.csv
+color,shape,flag,index,quantity,rate
+red,circle,1,16,13.8103,2.9010
+yellow,circle,1,73,63.9785,4.2370
+yellow,circle,1,87,63.5058,8.3350
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat square.csv
+color,shape,flag,index,quantity,rate
+red,square,1,15,79.2778,0.0130
+red,square,0,48,77.5542,7.4670
+red,square,0,64,77.1991,9.5310
+purple,square,0,91,72.3735,8.2430
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat triangle.csv
+color,shape,flag,index,quantity,rate
+yellow,triangle,1,11,43.6498,9.8870
+purple,triangle,0,51,81.2290,8.5910
+purple,triangle,0,65,80.1405,5.8240
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
+<a id="Other-format_examples"/><h1>Other-format examples</h1>
+
+<p/>What&rsquo;s a CSV file, really? It&rsquo;s an array of rows, or
+<i>records</i>, each being a list of key-value pairs, or <i>fields</i>: for CSV
+it so happens that all the keys are shared in the header line and the values
+vary data line by data line.
+
+<p/>For example, if you have
+
+<div class="pokipanel">
+<pre>
+shape,flag,index
+circle,1,24
+square,0,36
+</pre>
+</div>
+
+<p/>then that&rsquo;s a way of writing
+
+<div class="pokipanel">
+<pre>
+shape=circle,flag=1,index=24
+shape=square,flag=0,index=36
+</pre>
+</div>
+
+<p/>Data written this way are called <boldmaroon>DKVP</boldmaroon>, for <i>delimited key-value pairs</i>.
+
+<p/>We&rsquo;ve also already seen other ways to write the same data:
+
+<div class="pokipanel">
+<pre>
+CSV                               PPRINT                 JSON
+shape,flag,index                  shape  flag index      [
+circle,1,24                       circle 1    24           {
+square,0,36                       square 0    36             "shape": "circle",
+                                                             "flag": 1,
+                                                             "index": 24
+                                                           },
+DKVP                              XTAB                     {
+shape=circle,flag=1,index=24      shape circle               "shape": "square",
+shape=square,flag=0,index=36      flag  1                    "flag": 0,
+                                  index 24                   "index": 36
+                                                           }
+                                  shape square           ]
+                                  flag  0
+                                  index 36
+</pre>
+</div>
+
+<p/><boldmaroon>Anything we can do with CSV input data, we can do with any
+other format input data.</boldmaroon>  And you can read from one format, do any
+record-processing, and output to the same format as the input, or to a
+different output format.
+
+<a id="SQL-output_examples"/><h1>SQL-output examples</h1>
+
+<p/>I like to take SQL-query output with header-column and tab delimiter: this is CSV but with a tab
+instead of a comma &mdash; also known as TSV. Then I post-process with <tt>mlr --tsv --rs lf</tt>
+or <tt>mlr --tsvlite</tt>.
+
+<div class="pokipanel">
+<pre>
+$ sql-query ... 'SELECT * from TABLE' > mydata.tsv
+
+$ cat mydata.tsv
+account_id category overhead
+10045976   standard 29876
+10082384   special  3334
+10090116   standard 9712
+...
+
+$ mlr --itsvlite --opprint stats1 -a sum -f overhead -g category mydata.tsv
+
+category overhead_sum
+standard 3079588
+special  632984
+...
+</pre>
+</div>
+
+<p/>Again, all the examples in the CSV section apply here &mdash; just change the input-format
+flags.
+
+<a id="Log-processing_examples"/><h1>Log-processing examples</h1>
+
+<p/>Another of my favorite use-cases for Miller is doing ad-hoc processing of
+log-file data.  Here&rsquo;s where DKVP format really shines: one, since the
+field names and field values are present on every line, every line stands on
+its own. That means you can <tt>grep</tt> or what have you. Also it means not
+every line needs to have the same list of field names (&ldquo;schema &rdquo;).
+
+<p/>Again, all the examples in the CSV section apply here &mdash; just change
+the input-format flags. But there&rsquo;s more you can do when not all the
+records have the same shape.
+
+<p/>Writing a program &mdash; in any language whatsoever &mdash; you can have
+it print out log lines as it goes along, with items for various events jumbled
+together. After the program has finished running you can sort it all out,
+filter it, analyze it, and learn from it.
+
+<p/> Suppose your program has printed something like this:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat log.txt
+op=enter,time=1472819681
+op=cache,type=A9,hit=0
+op=cache,type=A4,hit=1
+time=1472819690,batch_size=100,num_filtered=237
+op=cache,type=A1,hit=1
+op=cache,type=A9,hit=0
+op=cache,type=A1,hit=1
+op=cache,type=A9,hit=0
+op=cache,type=A9,hit=0
+op=cache,type=A1,hit=1
+time=1472819705,batch_size=100,num_filtered=348
+op=cache,type=A4,hit=1
+op=cache,type=A9,hit=0
+op=cache,type=A9,hit=0
+op=cache,type=A9,hit=0
+op=cache,type=A9,hit=0
+op=cache,type=A4,hit=1
+time=1472819713,batch_size=100,num_filtered=493
+op=cache,type=A9,hit=1
+op=cache,type=A1,hit=1
+op=cache,type=A9,hit=0
+op=cache,type=A9,hit=0
+op=cache,type=A9,hit=1
+time=1472819720,batch_size=100,num_filtered=554
+op=cache,type=A1,hit=0
+op=cache,type=A4,hit=1
+op=cache,type=A9,hit=0
+op=cache,type=A9,hit=0
+op=cache,type=A9,hit=0
+op=cache,type=A4,hit=0
+op=cache,type=A4,hit=0
+op=cache,type=A9,hit=0
+time=1472819736,batch_size=100,num_filtered=612
+op=cache,type=A1,hit=1
+op=cache,type=A9,hit=0
+op=cache,type=A9,hit=0
+op=cache,type=A9,hit=0
+op=cache,type=A9,hit=0
+op=cache,type=A4,hit=1
+op=cache,type=A1,hit=1
+op=cache,type=A9,hit=0
+op=cache,type=A9,hit=0
+time=1472819742,batch_size=100,num_filtered=728
+</pre>
+</div>
+<p/>
+
+<p/> Each print statement simply contains local information: the current
+timestamp, whether a particular cache was hit or not, etc. Then using either
+the system <tt>grep</tt> command, or Miller&rsquo;s <tt>having-fields</tt>, or
+<tt>ispresent</tt>, we can pick out the parts we want and analyze them:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ grep op=cache log.txt | mlr --idkvp --opprint stats1 -a mean -f hit -g type then sort -f type
+type hit_mean
+A1   0.857143
+A4   0.714286
+A9   0.090909
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from log.txt --opprint filter 'ispresent($batch_size)' then step -a delta -f time,num_filtered then sec2gmt time
+time                 batch_size num_filtered time_delta num_filtered_delta
+2016-09-02T12:34:50Z 100        237          0          0
+2016-09-02T12:35:05Z 100        348          15         111
+2016-09-02T12:35:13Z 100        493          8          145
+2016-09-02T12:35:20Z 100        554          7          61
+2016-09-02T12:35:36Z 100        612          16         58
+2016-09-02T12:35:42Z 100        728          6          116
+</pre>
+</div>
+<p/>
+
+<a id="More"/><h1>More</h1>
+
+<p/>Please see <a href="reference.html">the reference</a> for complete information.
+<!--
+<pre>
+
+!!!! filter example !!!!!
+
+nidx output!
+
+backslashes
+-f foo.mlr
+
+xxx
+
+</pre>
+-->
+    </div>
+  </td>
+
+</table>
+</body>
+</html>

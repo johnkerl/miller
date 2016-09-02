@@ -1,6 +1,6 @@
 // ================================================================
-// Array-only (open addressing) string-to-string hash set with linear probing
-// for collisions.
+// Array-only (open addressing) string-valued hash set with linear probing for
+// collisions.
 //
 // John Kerl 2012-08-13
 //

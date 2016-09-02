@@ -1,0 +1,210 @@
+POKI_PUT_TOC_HERE
+
+<h1>CSV-file examples</h1>
+
+<p/><boldmaroon> Sample CSV data file: </boldmaroon>
+
+POKI_RUN_COMMAND{{cat example.csv}}HERE
+
+<p/><boldmaroon> <tt>mlr cat</tt> is like cat ...</boldmaroon>
+
+POKI_RUN_COMMAND{{mlr --csv --rs lf cat example.csv}}HERE
+
+<p/><boldmaroon>... but it can also do format conversion (here, to pretty-printed tabular format): </boldmaroon>
+
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint cat example.csv}}HERE
+
+<p/><boldmaroon> <tt>mlr head</tt> and <tt>mlr tail</tt> count records. The CSV
+header is included either way:</boldmaroon>
+
+POKI_RUN_COMMAND{{mlr --csv --rs lf head -n 4 example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv --rs lf tail -n 4 example.csv}}HERE
+
+<p/><boldmaroon> Sort primarily alphabetically on one field, then secondarily numerically descending on another field: </boldmaroon>
+
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint sort -f shape -nr index example.csv}}HERE
+
+<p/><boldmaroon> Use <tt>cut</tt> to retain only specified fields, in input-data order:</boldmaroon>
+
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint cut -f flag,shape example.csv}}HERE
+
+<p/><boldmaroon> Use <tt>cut -o</tt> to retain only specified fields, in your specified order:</boldmaroon>
+
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint cut -o -f flag,shape example.csv}}HERE
+
+<p/><boldmaroon> Use <tt>cut -x</tt> to omit specified fields:</boldmaroon>
+
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint cut -x -f flag,shape example.csv}}HERE
+
+<p/><boldmaroon> Use <tt>filter</tt> to retain specified records:</boldmaroon>
+
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint filter '$color == "red"' example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint filter '$color == "red" && $flag == 1' example.csv}}HERE
+
+<p/><boldmaroon> Use <tt>put</tt> to add/replace fields which are computed from other fields:</boldmaroon>
+
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv}}HERE
+
+<p/><boldmaroon> JSON output:</boldmaroon>
+
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --ojson --jvstack --jlistwrap tail -n 2 example.csv}}HERE
+
+<p/><boldmaroon> Use <tt>then</tt> to pipe commands together. Also, the
+<tt>-g</tt> option for many Miller commands is for group-by: here,
+<tt>head -n 1 -g shape</tt> outputs the first record for each distinct
+value of the <tt>shape</tt> field.</boldmaroon>
+
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint sort -f shape -nr index then head -n 1 -g shape example.csv}}HERE
+
+<p/><boldmaroon> Statistics can be computed with or without group-by field(s). Also, the first of these two
+examples uses <tt>--oxtab</tt> output format which is a nice alternative to <tt>--opprint</tt> when you
+have lots of columns:</boldmaroon>
+
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color}}HERE
+
+<p/><boldmaroon> Using <tt>tee</tt> within <tt>put</tt>, you can split your input data into separate files
+per one or more field names:</boldmaroon>
+
+POKI_RUN_COMMAND{{mlr --csv --rs lf --from example.csv put -q 'tee > $shape.".csv", $*'}}HERE
+<table><tr><td>
+POKI_RUN_COMMAND{{cat circle.csv}}HERE
+</td><td>
+POKI_RUN_COMMAND{{cat square.csv}}HERE
+</td><td>
+POKI_RUN_COMMAND{{cat triangle.csv}}HERE
+</td></tr></table>
+
+<h1>Other-format examples</h1>
+
+<p/>What&rsquo;s a CSV file, really? It&rsquo;s an array of rows, or
+<i>records</i>, each being a list of key-value pairs, or <i>fields</i>: for CSV
+it so happens that all the keys are shared in the header line and the values
+vary data line by data line.
+
+<p/>For example, if you have
+
+<div class="pokipanel">
+<pre>
+shape,flag,index
+circle,1,24
+square,0,36
+</pre>
+</div>
+
+<p/>then that&rsquo;s a way of writing
+
+<div class="pokipanel">
+<pre>
+shape=circle,flag=1,index=24
+shape=square,flag=0,index=36
+</pre>
+</div>
+
+<p/>Data written this way are called <boldmaroon>DKVP</boldmaroon>, for <i>delimited key-value pairs</i>.
+
+<p/>We&rsquo;ve also already seen other ways to write the same data:
+
+<div class="pokipanel">
+<pre>
+CSV                               PPRINT                 JSON
+shape,flag,index                  shape  flag index      [
+circle,1,24                       circle 1    24           {
+square,0,36                       square 0    36             "shape": "circle",
+                                                             "flag": 1,
+                                                             "index": 24
+                                                           },
+DKVP                              XTAB                     {
+shape=circle,flag=1,index=24      shape circle               "shape": "square",
+shape=square,flag=0,index=36      flag  1                    "flag": 0,
+                                  index 24                   "index": 36
+                                                           }
+                                  shape square           ]
+                                  flag  0
+                                  index 36
+</pre>
+</div>
+
+<p/><boldmaroon>Anything we can do with CSV input data, we can do with any
+other format input data.</boldmaroon>  And you can read from one format, do any
+record-processing, and output to the same format as the input, or to a
+different output format.
+
+<h1>SQL-output examples</h1>
+
+<p/>I like to take SQL-query output with header-column and tab delimiter: this is CSV but with a tab
+instead of a comma &mdash; also known as TSV. Then I post-process with <tt>mlr --tsv --rs lf</tt>
+or <tt>mlr --tsvlite</tt>.
+
+<div class="pokipanel">
+<pre>
+$ sql-query ... 'SELECT * from TABLE' > mydata.tsv
+
+$ cat mydata.tsv
+account_id category overhead
+10045976   standard 29876
+10082384   special  3334
+10090116   standard 9712
+...
+
+$ mlr --itsvlite --opprint stats1 -a sum -f overhead -g category mydata.tsv
+
+category overhead_sum
+standard 3079588
+special  632984
+...
+</pre>
+</div>
+
+<p/>Again, all the examples in the CSV section apply here &mdash; just change the input-format
+flags.
+
+<h1>Log-processing examples</h1>
+
+<p/>Another of my favorite use-cases for Miller is doing ad-hoc processing of
+log-file data.  Here&rsquo;s where DKVP format really shines: one, since the
+field names and field values are present on every line, every line stands on
+its own. That means you can <tt>grep</tt> or what have you. Also it means not
+every line needs to have the same list of field names (&ldquo;schema &rdquo;).
+
+<p/>Again, all the examples in the CSV section apply here &mdash; just change
+the input-format flags. But there&rsquo;s more you can do when not all the
+records have the same shape.
+
+<p/>Writing a program &mdash; in any language whatsoever &mdash; you can have
+it print out log lines as it goes along, with items for various events jumbled
+together. After the program has finished running you can sort it all out,
+filter it, analyze it, and learn from it.
+
+<p/> Suppose your program has printed something like this:
+
+POKI_RUN_COMMAND{{cat log.txt}}HERE
+
+<p/> Each print statement simply contains local information: the current
+timestamp, whether a particular cache was hit or not, etc. Then using either
+the system <tt>grep</tt> command, or Miller&rsquo;s <tt>having-fields</tt>, or
+<tt>ispresent</tt>, we can pick out the parts we want and analyze them:
+
+POKI_RUN_COMMAND{{grep op=cache log.txt | mlr --idkvp --opprint stats1 -a mean -f hit -g type then sort -f type}}HERE
+
+POKI_RUN_COMMAND{{mlr --from log.txt --opprint filter 'ispresent($batch_size)' then step -a delta -f time,num_filtered then sec2gmt time }}HERE
+
+<h1>More</h1>
+
+<p/>Please see <a href="reference.html">the reference</a> for complete information.
+<!--
+<pre>
+
+!!!! filter example !!!!!
+
+nidx output!
+
+backslashes
+-f foo.mlr
+
+xxx
+
+</pre>
+-->
