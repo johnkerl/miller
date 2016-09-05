@@ -62,6 +62,8 @@ extern function_lookup_t FUNCTION_LOOKUP_TABLE[];
 
 // Topmost function:
 rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* past, int type_inferencing, int context_flags);
+rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags,
+	function_lookup_t* fcn_lookup_table);
 
 // Next level:
 rval_evaluator_t* rval_evaluator_alloc_from_field_name(char* field_name, int type_inferencing);
@@ -108,20 +110,10 @@ void rval_evaluator_function_usage(FILE* output_stream, char* function_name);
 void rval_evaluator_list_all_functions_raw(FILE* output_stream);
 void check_arity_with_report(function_lookup_t fcn_lookup_table[], char* function_name,
 	int user_provided_arity);
-
-rval_evaluator_t* rval_evaluator_alloc_from_zary_func_name(char* function_name);
-rval_evaluator_t* rval_evaluator_alloc_from_unary_func_name(char* fnnm, rval_evaluator_t* parg1);
-rval_evaluator_t* rval_evaluator_alloc_from_binary_func_name(char* fnnm,
-	rval_evaluator_t* parg1, rval_evaluator_t* parg2);
-rval_evaluator_t* rval_evaluator_alloc_from_binary_regex_arg2_func_name(char* fnnm,
-	rval_evaluator_t* parg1, char* regex_string, int ignore_case);
-rval_evaluator_t* rval_evaluator_alloc_from_ternary_func_name(char* fnnm,
-	rval_evaluator_t* parg1, rval_evaluator_t* parg2, rval_evaluator_t* parg3);
-rval_evaluator_t* rval_evaluator_alloc_from_ternary_regex_arg2_func_name(char* fnnm,
-	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3);
+rval_evaluator_t* rval_evaluator_alloc_from_operator_or_function(mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags, function_lookup_t* fcn_lookup_table);
 
 // These have some shared code that would otherwise be duplicated per-function in containers/mlrval.c.
-
 rval_evaluator_t* rval_evaluator_alloc_from_b_b_func(mv_unary_func_t* pfunc, rval_evaluator_t* parg1);
 rval_evaluator_t* rval_evaluator_alloc_from_b_bb_and_func(rval_evaluator_t* parg1, rval_evaluator_t* parg2);
 rval_evaluator_t* rval_evaluator_alloc_from_b_bb_or_func(rval_evaluator_t* parg1, rval_evaluator_t* parg2);

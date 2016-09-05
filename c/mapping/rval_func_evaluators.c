@@ -7,11 +7,32 @@
 #include "lib/mlrregex.h"
 #include "lib/mtrand.h"
 #include "mapping/mapper.h"
+#include "mapping/context_flags.h"
 #include "mapping/rval_evaluators.h"
 
 // ================================================================
 // See comments in rval_evaluators.h
 // ================================================================
+
+static rval_evaluator_t* rval_evaluator_alloc_from_zary_func_name(char* function_name);
+
+static rval_evaluator_t* rval_evaluator_alloc_from_unary_func_name(char* fnnm, rval_evaluator_t* parg1);
+
+static rval_evaluator_t* rval_evaluator_alloc_from_binary_func_name(char* fnnm,
+
+	rval_evaluator_t* parg1, rval_evaluator_t* parg2);
+
+static rval_evaluator_t* rval_evaluator_alloc_from_binary_regex_arg2_func_name(char* fnnm,
+
+	rval_evaluator_t* parg1, char* regex_string, int ignore_case);
+
+static rval_evaluator_t* rval_evaluator_alloc_from_ternary_func_name(char* fnnm,
+
+	rval_evaluator_t* parg1, rval_evaluator_t* parg2, rval_evaluator_t* parg3);
+
+static rval_evaluator_t* rval_evaluator_alloc_from_ternary_regex_arg2_func_name(char* fnnm,
+
+	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3);
 
 // ================================================================
 function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
@@ -302,7 +323,113 @@ void rval_evaluator_list_all_functions_raw(FILE* output_stream) {
 }
 
 // ================================================================
-rval_evaluator_t* rval_evaluator_alloc_from_zary_func_name(char* function_name) {
+rval_evaluator_t* rval_evaluator_alloc_from_operator_or_function(mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags, function_lookup_t* fcn_lookup_table)
+{
+
+	if ((pnode->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME) && (pnode->type != MD_AST_NODE_TYPE_OPERATOR)) {
+
+        // xxx use error code & let the caller fatal it
+		if (context_flags & IN_MLR_FILTER) {
+			fprintf(stderr,
+				"%s: statements in %s filter should only be single expressions evaluating to boolean.\n",
+				MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
+			exit(1);
+		}
+
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d (node type %s).\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__, mlr_dsl_ast_node_describe_type(pnode->type));
+		exit(1);
+	}
+	char* func_name = pnode->text;
+
+	int user_provided_arity = pnode->pchildren->length;
+
+	check_arity_with_report(fcn_lookup_table, func_name, user_provided_arity);
+
+	rval_evaluator_t* pevaluator = NULL;
+	if (user_provided_arity == 0) {
+		pevaluator = rval_evaluator_alloc_from_zary_func_name(func_name);
+	} else if (user_provided_arity == 1) {
+		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
+		rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
+			context_flags, fcn_lookup_table);
+		pevaluator = rval_evaluator_alloc_from_unary_func_name(func_name, parg1);
+	} else if (user_provided_arity == 2) {
+		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
+		mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
+		int type2 = parg2_node->type;
+
+		if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MD_AST_NODE_TYPE_STRNUM_LITERAL) {
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
+				context_flags, fcn_lookup_table);
+			pevaluator = rval_evaluator_alloc_from_binary_regex_arg2_func_name(func_name,
+				parg1, parg2_node->text, FALSE);
+		} else if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MD_AST_NODE_TYPE_REGEXI) {
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
+				context_flags, fcn_lookup_table);
+			pevaluator = rval_evaluator_alloc_from_binary_regex_arg2_func_name(func_name, parg1, parg2_node->text,
+				TYPE_INFER_STRING_FLOAT_INT);
+		} else {
+			// regexes can still be applied here, e.g. if the 2nd argument is a non-terminal AST: however
+			// the regexes will be compiled record-by-record rather than once at alloc time, which will
+			// be slower.
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
+				context_flags, fcn_lookup_table);
+			rval_evaluator_t* parg2 = rval_evaluator_alloc_from_ast_aux(parg2_node, type_inferencing,
+				context_flags, fcn_lookup_table);
+			pevaluator = rval_evaluator_alloc_from_binary_func_name(func_name, parg1, parg2);
+		}
+
+	} else if (user_provided_arity == 3) {
+		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
+		mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
+		mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvvalue;
+		int type2 = parg2_node->type;
+
+		if ((streq(func_name, "sub") || streq(func_name, "gsub")) && type2 == MD_AST_NODE_TYPE_STRNUM_LITERAL) {
+			// sub/gsub-regex special case:
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
+				context_flags, fcn_lookup_table);
+			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing,
+				context_flags, fcn_lookup_table);
+			pevaluator = rval_evaluator_alloc_from_ternary_regex_arg2_func_name(func_name, parg1, parg2_node->text,
+				FALSE, parg3);
+
+		} else if ((streq(func_name, "sub") || streq(func_name, "gsub")) && type2 == MD_AST_NODE_TYPE_REGEXI) {
+			// sub/gsub-regex special case:
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
+				context_flags, fcn_lookup_table);
+			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing,
+				context_flags, fcn_lookup_table);
+			pevaluator = rval_evaluator_alloc_from_ternary_regex_arg2_func_name(func_name, parg1, parg2_node->text,
+				TYPE_INFER_STRING_FLOAT_INT, parg3);
+
+		} else {
+			// regexes can still be applied here, e.g. if the 2nd argument is a non-terminal AST: however
+			// the regexes will be compiled record-by-record rather than once at alloc time, which will
+			// be slower.
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
+				context_flags, fcn_lookup_table);
+			rval_evaluator_t* parg2 = rval_evaluator_alloc_from_ast_aux(parg2_node, type_inferencing,
+				context_flags, fcn_lookup_table);
+			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing,
+				context_flags, fcn_lookup_table);
+			pevaluator = rval_evaluator_alloc_from_ternary_func_name(func_name, parg1, parg2, parg3);
+		}
+	} else {
+		fprintf(stderr, "Miller: internal coding error:  arity for function name \"%s\" misdetected.\n",
+			func_name);
+		exit(1);
+	}
+	if (pevaluator == NULL) {
+		fprintf(stderr, "Miller: unrecognized function name \"%s\".\n", func_name);
+		exit(1);
+	}
+	return pevaluator;
+}
+// ================================================================
+static rval_evaluator_t* rval_evaluator_alloc_from_zary_func_name(char* function_name) {
 	if        (streq(function_name, "urand")) {
 		return rval_evaluator_alloc_from_x_z_func(f_z_urand_func);
 	} else if (streq(function_name, "urand32")) {
@@ -315,7 +442,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_zary_func_name(char* function_name) 
 }
 
 // ================================================================
-rval_evaluator_t* rval_evaluator_alloc_from_unary_func_name(char* fnnm, rval_evaluator_t* parg1)  {
+static rval_evaluator_t* rval_evaluator_alloc_from_unary_func_name(char* fnnm, rval_evaluator_t* parg1)  {
 	if        (streq(fnnm, "!"))           { return rval_evaluator_alloc_from_b_b_func(b_b_not_func,         parg1);
 	} else if (streq(fnnm, "+"))           { return rval_evaluator_alloc_from_x_x_func(x_x_upos_func,        parg1);
 	} else if (streq(fnnm, "-"))           { return rval_evaluator_alloc_from_x_x_func(x_x_uneg_func,        parg1);
@@ -385,7 +512,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_unary_func_name(char* fnnm, rval_eva
 }
 
 // ================================================================
-rval_evaluator_t* rval_evaluator_alloc_from_binary_func_name(char* fnnm,
+static rval_evaluator_t* rval_evaluator_alloc_from_binary_func_name(char* fnnm,
 	rval_evaluator_t* parg1, rval_evaluator_t* parg2)
 {
 	if        (streq(fnnm, "&&"))   { return rval_evaluator_alloc_from_b_bb_and_func(parg1, parg2);
@@ -425,7 +552,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_binary_func_name(char* fnnm,
 	} else  { return NULL; }
 }
 
-rval_evaluator_t* rval_evaluator_alloc_from_binary_regex_arg2_func_name(char* fnnm,
+static rval_evaluator_t* rval_evaluator_alloc_from_binary_regex_arg2_func_name(char* fnnm,
 	rval_evaluator_t* parg1, char* regex_string, int ignore_case)
 {
 	if        (streq(fnnm, "=~"))  {
@@ -436,7 +563,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_binary_regex_arg2_func_name(char* fn
 }
 
 // ================================================================
-rval_evaluator_t* rval_evaluator_alloc_from_ternary_func_name(char* fnnm,
+static rval_evaluator_t* rval_evaluator_alloc_from_ternary_func_name(char* fnnm,
 	rval_evaluator_t* parg1, rval_evaluator_t* parg2, rval_evaluator_t* parg3)
 {
 	if (streq(fnnm, "sub")) {
@@ -458,7 +585,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ternary_func_name(char* fnnm,
 	} else  { return NULL; }
 }
 
-rval_evaluator_t* rval_evaluator_alloc_from_ternary_regex_arg2_func_name(char* fnnm,
+static rval_evaluator_t* rval_evaluator_alloc_from_ternary_regex_arg2_func_name(char* fnnm,
 	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3)
 {
 	if (streq(fnnm, "sub"))  {

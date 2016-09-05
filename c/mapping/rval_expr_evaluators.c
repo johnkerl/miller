@@ -14,9 +14,6 @@
 // See comments in rval_evaluators.h
 // ================================================================
 
-static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags, function_lookup_t* fcn_lookup_table);
-
 // ================================================================
 // The grammar permits certain statements which are syntactically invalid, (a) because it's awkward to handle
 // there, and (b) because we get far better control over error messages here (vs. 'syntax error').
@@ -26,10 +23,9 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, int t
 	return rval_evaluator_alloc_from_ast_aux(pnode, type_inferencing, context_flags, FUNCTION_LOOKUP_TABLE);
 }
 
-static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode,
+rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags, function_lookup_t* fcn_lookup_table)
 {
-
 	if (pnode->pchildren == NULL) { // leaf node
 		if (pnode->type == MD_AST_NODE_TYPE_FIELD_NAME) {
 			if (context_flags & IN_BEGIN_OR_END) {
@@ -87,109 +83,10 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 	} else if (pnode->type == MD_AST_NODE_TYPE_ENV) {
 		return rval_evaluator_alloc_from_environment(pnode, type_inferencing, context_flags);
 
-	} else { // operator/function
+	} else {
 
-		if ((pnode->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME)
-		&& (pnode->type != MD_AST_NODE_TYPE_OPERATOR)) {
+		return rval_evaluator_alloc_from_operator_or_function(pnode, type_inferencing, context_flags, fcn_lookup_table);
 
-			if (context_flags & IN_MLR_FILTER) {
-				fprintf(stderr,
-					"%s: statements in %s filter should only be single expressions evaluating to boolean.\n",
-					MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
-				exit(1);
-			}
-
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d (node type %s).\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__, mlr_dsl_ast_node_describe_type(pnode->type));
-			exit(1);
-		}
-		char* func_name = pnode->text;
-
-		int user_provided_arity = pnode->pchildren->length;
-
-		check_arity_with_report(fcn_lookup_table, func_name, user_provided_arity);
-
-		// xxx move all to rval_func_evaluators.c
-		rval_evaluator_t* pevaluator = NULL;
-		if (user_provided_arity == 0) {
-			pevaluator = rval_evaluator_alloc_from_zary_func_name(func_name);
-		} else if (user_provided_arity == 1) {
-			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
-			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
-				context_flags, fcn_lookup_table);
-			pevaluator = rval_evaluator_alloc_from_unary_func_name(func_name, parg1);
-		} else if (user_provided_arity == 2) {
-			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
-			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
-			int type2 = parg2_node->type;
-
-			if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MD_AST_NODE_TYPE_STRNUM_LITERAL) {
-				rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
-					context_flags, fcn_lookup_table);
-				pevaluator = rval_evaluator_alloc_from_binary_regex_arg2_func_name(func_name,
-					parg1, parg2_node->text, FALSE);
-			} else if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MD_AST_NODE_TYPE_REGEXI) {
-				rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
-					context_flags, fcn_lookup_table);
-				pevaluator = rval_evaluator_alloc_from_binary_regex_arg2_func_name(func_name, parg1, parg2_node->text,
-					TYPE_INFER_STRING_FLOAT_INT);
-			} else {
-				// regexes can still be applied here, e.g. if the 2nd argument is a non-terminal AST: however
-				// the regexes will be compiled record-by-record rather than once at alloc time, which will
-				// be slower.
-				rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
-					context_flags, fcn_lookup_table);
-				rval_evaluator_t* parg2 = rval_evaluator_alloc_from_ast_aux(parg2_node, type_inferencing,
-					context_flags, fcn_lookup_table);
-				pevaluator = rval_evaluator_alloc_from_binary_func_name(func_name, parg1, parg2);
-			}
-
-		} else if (user_provided_arity == 3) {
-			mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
-			mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
-			mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvvalue;
-			int type2 = parg2_node->type;
-
-			if ((streq(func_name, "sub") || streq(func_name, "gsub")) && type2 == MD_AST_NODE_TYPE_STRNUM_LITERAL) {
-				// sub/gsub-regex special case:
-				rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
-					context_flags, fcn_lookup_table);
-				rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing,
-					context_flags, fcn_lookup_table);
-				pevaluator = rval_evaluator_alloc_from_ternary_regex_arg2_func_name(func_name, parg1, parg2_node->text,
-					FALSE, parg3);
-
-			} else if ((streq(func_name, "sub") || streq(func_name, "gsub")) && type2 == MD_AST_NODE_TYPE_REGEXI) {
-				// sub/gsub-regex special case:
-				rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
-					context_flags, fcn_lookup_table);
-				rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing,
-					context_flags, fcn_lookup_table);
-				pevaluator = rval_evaluator_alloc_from_ternary_regex_arg2_func_name(func_name, parg1, parg2_node->text,
-					TYPE_INFER_STRING_FLOAT_INT, parg3);
-
-			} else {
-				// regexes can still be applied here, e.g. if the 2nd argument is a non-terminal AST: however
-				// the regexes will be compiled record-by-record rather than once at alloc time, which will
-				// be slower.
-				rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
-					context_flags, fcn_lookup_table);
-				rval_evaluator_t* parg2 = rval_evaluator_alloc_from_ast_aux(parg2_node, type_inferencing,
-					context_flags, fcn_lookup_table);
-				rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing,
-					context_flags, fcn_lookup_table);
-				pevaluator = rval_evaluator_alloc_from_ternary_func_name(func_name, parg1, parg2, parg3);
-			}
-		} else {
-			fprintf(stderr, "Miller: internal coding error:  arity for function name \"%s\" misdetected.\n",
-				func_name);
-			exit(1);
-		}
-		if (pevaluator == NULL) {
-			fprintf(stderr, "Miller: unrecognized function name \"%s\".\n", func_name);
-			exit(1);
-		}
-		return pevaluator;
 	}
 }
 
