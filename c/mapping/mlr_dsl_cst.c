@@ -252,6 +252,19 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 	pcst->pmain_statements  = sllv_alloc();
 	pcst->pend_statements   = sllv_alloc();
 	pcst->pfmgr = fmgr_alloc();
+
+	// ----------------------------------------------------------------
+	// xxx temp
+	mlr_dsl_ast_node_t* pxnode     = mlr_dsl_ast_node_alloc("x",  MD_AST_NODE_TYPE_FIELD_NAME);
+	mlr_dsl_ast_node_t* plognode   = mlr_dsl_ast_node_alloc_zary("log", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
+	mlr_dsl_ast_node_t* plogxnode  = mlr_dsl_ast_node_append_arg(plognode, pxnode);
+	mlr_dsl_ast_node_t* p2node     = mlr_dsl_ast_node_alloc("2",   MD_AST_NODE_TYPE_STRNUM_LITERAL);
+	mlr_dsl_ast_node_t* p2logxnode = mlr_dsl_ast_node_alloc_binary("*", MD_AST_NODE_TYPE_OPERATOR,
+		p2node, plogxnode);
+	rval_evaluator_t*  pastr = rval_evaluator_alloc_from_ast(p2logxnode, pcst->pfmgr, TYPE_INFER_STRING_FLOAT_INT, 0);
+	fmgr_install_UDF(pcst->pfmgr, "tempfoofunc", pastr);
+	// ----------------------------------------------------------------
+
 	mlr_dsl_ast_node_t* plistnode = NULL;
 	for (sllve_t* pe = pnode->proot->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;

@@ -76,8 +76,12 @@ void fmgr_free(fmgr_t* pfmgr) {
 }
 
 // ----------------------------------------------------------------
-// xxx disallow redefine ?
+// xxx pass in the arity
 void fmgr_install_UDF(fmgr_t* pfmgr, char* name, rval_evaluator_t* pevaluator) {
+	// xxx disallow redefine ?
+	// xxx check built-in fcn tbl?
+	// xxx mem leak @ overwrite
+	lhmsv_put(pfmgr->pUDF_names_to_evaluators, mlr_strdup_or_die(name), pevaluator, FREE_ENTRY_KEY);
 	// xxx stub
 }
 
@@ -393,6 +397,11 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function(fmgr_t* pfmgr, mlr_dsl_as
 	char* func_name = pnode->text;
 
 	int user_provided_arity = pnode->pchildren->length;
+
+	// xxx needs arity check
+	rval_evaluator_t* pUDF_evaluator = lhmsv_get(pfmgr->pUDF_names_to_evaluators, func_name);
+	if (pUDF_evaluator != NULL)
+		return pUDF_evaluator;
 
 	fmgr_check_arity_with_report(pfmgr, func_name, user_provided_arity);
 
