@@ -434,6 +434,8 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ternary_regex_arg2_func_name(
 	} else  { return NULL; }
 }
 
+// xxx split-line
+
 // ================================================================
 typedef struct _rval_evaluator_b_b_state_t {
 	mv_unary_func_t*  pfunc;

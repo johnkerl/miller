@@ -8,6 +8,7 @@
 #include "lib/mtrand.h"
 #include "mapping/mapper.h"
 #include "mapping/rval_evaluators.h"
+#include "mapping/function_manager.h"
 #include "mapping/context_flags.h"
 
 // ================================================================

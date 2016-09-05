@@ -10,7 +10,7 @@
 #include "containers/lhmsi.h"
 #include "input/lrec_readers.h"
 #include "mapping/mappers.h"
-#include "mapping/rval_evaluators.h"
+#include "mapping/function_manager.h"
 #include "mapping/mlr_dsl_cst.h"
 #include "output/lrec_writers.h"
 #include "cli/mlrcli.h"
