@@ -20,7 +20,6 @@ typedef enum _arity_check_t {
 	ARITY_CHECK_NO_SUCH
 } arity_check_t;
 
-// xxx move to fcn manager, along with move functions -> methods there
 typedef struct _function_lookup_t {
 	func_class_t function_class;
 	char*        function_name;
@@ -32,23 +31,10 @@ typedef struct _function_lookup_t {
 static function_lookup_t FUNCTION_LOOKUP_TABLE[];
 
 // ----------------------------------------------------------------
-//typedef struct _function_lookup_t {
-//	func_class_t function_class;
-//	char*        function_name;
-//	int          arity;
-//	char*        usage_string;
-//} function_lookup_t;
-
-//typedef struct _fmgr_t {
-//	function_lookup_t * function_lookup_table;
-//	lhmsv_t* pUDF_names_to_evaluators;
-//} fmgr_t;
-
-// xxx rework:
-// See comments in rval_evaluators.h
+// See also comments in rval_evaluators.h
 
 // xxx morph these into methods:
-static void check_arity_with_report(function_lookup_t fcn_lookup_table[], char* function_name,
+static void fmgr_check_arity_with_report(fmgr_t* pfmgr, char* function_name,
 	int user_provided_arity);
 
 // xxx rename:
@@ -285,11 +271,11 @@ static arity_check_t check_arity(function_lookup_t lookup_table[], char* functio
 	}
 }
 
-static void check_arity_with_report(function_lookup_t fcn_lookup_table[], char* function_name,
+static void fmgr_check_arity_with_report(fmgr_t* pfmgr, char* function_name,
 	int user_provided_arity)
 {
 	int arity = -1;
-	arity_check_t result = check_arity(fcn_lookup_table, function_name, user_provided_arity, &arity);
+	arity_check_t result = check_arity(pfmgr->function_lookup_table, function_name, user_provided_arity, &arity);
 	if (result == ARITY_CHECK_NO_SUCH) {
 		fprintf(stderr, "Function name \"%s\" not found.\n", function_name);
 		exit(1);
@@ -410,7 +396,7 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function(fmgr_t* pfmgr, mlr_dsl_as
 
 	int user_provided_arity = pnode->pchildren->length;
 
-	check_arity_with_report(pfmgr->function_lookup_table, func_name, user_provided_arity);
+	fmgr_check_arity_with_report(pfmgr, func_name, user_provided_arity);
 
 	rval_evaluator_t* pevaluator = NULL;
 	if (user_provided_arity == 0) {
