@@ -22,12 +22,6 @@
 
 // xxx elim aux
 rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags) {
-	return rval_evaluator_alloc_from_ast_aux(pnode, pfmgr, type_inferencing, context_flags, FUNCTION_LOOKUP_TABLE);
-}
-
-rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
-	int type_inferencing, int context_flags, function_lookup_t* fcn_lookup_table)
-{
 	if (pnode->pchildren == NULL) { // leaf node
 		if (pnode->type == MD_AST_NODE_TYPE_FIELD_NAME) {
 			if (context_flags & IN_BEGIN_OR_END) {
@@ -86,9 +80,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode, f
 		return rval_evaluator_alloc_from_environment(pnode, pfmgr, type_inferencing, context_flags);
 
 	} else {
-
-		return fmgr_alloc_from_operator_or_function(pfmgr, pnode, type_inferencing, context_flags,
-			fcn_lookup_table); // xxx elim tbl arg
+		return fmgr_alloc_from_operator_or_function(pfmgr, pnode, type_inferencing, context_flags);
 
 	}
 }

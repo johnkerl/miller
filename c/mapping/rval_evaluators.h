@@ -36,8 +36,6 @@
 
 // Topmost function:
 rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
-rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags,
-	function_lookup_t* fcn_lookup_table);
 
 // Next level:
 rval_evaluator_t* rval_evaluator_alloc_from_field_name(char* field_name, int type_inferencing);

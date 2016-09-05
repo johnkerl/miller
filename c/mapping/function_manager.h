@@ -32,7 +32,7 @@ typedef struct _function_lookup_t {
 	char*        usage_string;
 } function_lookup_t;
 
-extern function_lookup_t FUNCTION_LOOKUP_TABLE[];
+extern function_lookup_t FUNCTION_LOOKUP_TABLE[]; // xxx rm
 
 // ----------------------------------------------------------------
 
@@ -53,6 +53,6 @@ void fmgr_function_usage(fmgr_t* pfmgr, FILE* output_stream, char* function_name
 void fmgr_list_all_functions_raw(fmgr_t* pfmgr, FILE* output_stream);
 
 rval_evaluator_t* fmgr_alloc_from_operator_or_function(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags, function_lookup_t* fcn_lookup_table); // xxx elim tbl arg
+	int type_inferencing, int context_flags);
 
 #endif // FUNCTION_MANAGER_H

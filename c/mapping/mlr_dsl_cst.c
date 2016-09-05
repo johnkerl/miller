@@ -256,6 +256,11 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 	for (sllve_t* pe = pnode->proot->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 		switch (pnode->type) {
+
+		// xxx
+		//case MD_AST_NODE_TYPE_DEF:
+		//	break;
+
 		case MD_AST_NODE_TYPE_BEGIN:
 			plistnode = get_list_for_block(pnode);
 			for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -264,6 +269,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 					context_flags | IN_BEGIN_OR_END));
 			}
 			break;
+
 		case MD_AST_NODE_TYPE_END:
 			plistnode = get_list_for_block(pnode);
 			for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -272,6 +278,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 					context_flags | IN_BEGIN_OR_END));
 			}
 			break;
+
 		default:
 			sllv_append(pcst->pmain_statements, alloc_cst_statement(pnode, pcst->pfmgr, type_inferencing,
 				context_flags));
