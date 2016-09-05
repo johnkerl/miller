@@ -582,7 +582,9 @@ static void main_usage_help_options(FILE* o, char* argv0) {
 }
 
 static void main_usage_functions(FILE* o, char* argv0, char* leader) {
-	rval_evaluator_list_functions(o, leader);
+	fmgr_t* pfmgr = fmgr_alloc();
+	fmgr_list_functions(pfmgr, o, leader);
+	fmgr_free(pfmgr);
 	fprintf(o, "Please use \"%s --help-function {function name}\" for function-specific help.\n", argv0);
 	fprintf(o, "Please use \"%s --help-all-functions\" or \"%s -f\" for help on all functions.\n", argv0, argv0);
 	fprintf(o, "Please use \"%s --help-all-keywords\" or \"%s -k\" for help on all keywords.\n", argv0, argv0);
@@ -1143,14 +1145,20 @@ static int handle_terminal_usage(char** argv, int argc, int argi) {
 		return TRUE;
 
 	} else if (streq(argv[argi], "--list-all-functions-raw")) {
-		rval_evaluator_list_all_functions_raw(stdout);
+		fmgr_t* pfmgr = fmgr_alloc();
+		fmgr_list_all_functions_raw(pfmgr, stdout);
+		fmgr_free(pfmgr);
 		return TRUE;
 	} else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "-f")) {
-		rval_evaluator_function_usage(stdout, NULL);
+		fmgr_t* pfmgr = fmgr_alloc();
+		fmgr_function_usage(pfmgr, stdout, NULL);
+		fmgr_free(pfmgr);
 		return TRUE;
 	} else if (streq(argv[argi], "--help-function") || streq(argv[argi], "--hf")) {
 		check_arg_count(argv, argi, argc, 2);
-		rval_evaluator_function_usage(stdout, argv[argi+1]);
+		fmgr_t* pfmgr = fmgr_alloc();
+		fmgr_function_usage(pfmgr, stdout, argv[argi+1]);
+		fmgr_free(pfmgr);
 		return TRUE;
 
 	} else if (streq(argv[argi], "--list-all-keywords-raw")) {

@@ -48,10 +48,10 @@ void fmgr_install_UDF(fmgr_t* pfmgr, char* name, rval_evaluator_t* pevaluator);
 rval_evaluator_t* fmgr_alloc_evaluator(fmgr_t* pfmgr, char* name);
 
 // xxx morph these into methods:
-void rval_evaluator_list_functions(FILE* output_stream, char* leader);
+void fmgr_list_functions(fmgr_t* pfmgr, FILE* output_stream, char* leader);
 // Pass function_name == NULL to get usage for all functions:
-void rval_evaluator_function_usage(FILE* output_stream, char* function_name);
-void rval_evaluator_list_all_functions_raw(FILE* output_stream);
+void fmgr_function_usage(fmgr_t* pfmgr, FILE* output_stream, char* function_name);
+void fmgr_list_all_functions_raw(fmgr_t* pfmgr, FILE* output_stream);
 void check_arity_with_report(function_lookup_t fcn_lookup_table[], char* function_name,
 	int user_provided_arity);
 rval_evaluator_t* rval_evaluator_alloc_from_operator_or_function(mlr_dsl_ast_node_t* pnode,

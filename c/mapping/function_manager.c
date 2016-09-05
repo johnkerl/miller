@@ -25,19 +25,15 @@ static rval_evaluator_t* rval_evaluator_alloc_from_zary_func_name(char* function
 static rval_evaluator_t* rval_evaluator_alloc_from_unary_func_name(char* fnnm, rval_evaluator_t* parg1);
 
 static rval_evaluator_t* rval_evaluator_alloc_from_binary_func_name(char* fnnm,
-
 	rval_evaluator_t* parg1, rval_evaluator_t* parg2);
 
 static rval_evaluator_t* rval_evaluator_alloc_from_binary_regex_arg2_func_name(char* fnnm,
-
 	rval_evaluator_t* parg1, char* regex_string, int ignore_case);
 
 static rval_evaluator_t* rval_evaluator_alloc_from_ternary_func_name(char* fnnm,
-
 	rval_evaluator_t* parg1, rval_evaluator_t* parg2, rval_evaluator_t* parg3);
 
 static rval_evaluator_t* rval_evaluator_alloc_from_ternary_regex_arg2_func_name(char* fnnm,
-
 	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3);
 
 // ----------------------------------------------------------------
@@ -298,7 +294,7 @@ static char* function_class_to_desc(func_class_t function_class) {
 	}
 }
 
-void rval_evaluator_list_functions(FILE* o, char* leader) {
+void fmgr_list_functions(fmgr_t* pfmgr, FILE* output_stream, char* leader) {
 	char* separator = " ";
 	int leaderlen = strlen(leader);
 	int separatorlen = strlen(separator);
@@ -306,28 +302,28 @@ void rval_evaluator_list_functions(FILE* o, char* leader) {
 	int j = 0;
 
 	for (int i = 0; ; i++) {
-		function_lookup_t* plookup = &FUNCTION_LOOKUP_TABLE[i];
+		function_lookup_t* plookup = &FUNCTION_LOOKUP_TABLE[i]; // xxx rm global eveywhere
 		char* fname = plookup->function_name;
 		if (fname == NULL)
 			break;
 		int fnamelen = strlen(fname);
 		linelen += separatorlen + fnamelen;
 		if (linelen >= 80) {
-			fprintf(o, "\n");
+			fprintf(output_stream, "\n");
 			linelen = 0;
 			linelen = leaderlen + separatorlen + fnamelen;
 			j = 0;
 		}
 		if (j == 0)
-			fprintf(o, "%s", leader);
-		fprintf(o, "%s%s", separator, fname);
+			fprintf(output_stream, "%s", leader);
+		fprintf(output_stream, "%s%s", separator, fname);
 		j++;
 	}
-	fprintf(o, "\n");
+	fprintf(output_stream, "\n");
 }
 
 // Pass function_name == NULL to get usage for all functions.
-void rval_evaluator_function_usage(FILE* output_stream, char* function_name) {
+void fmgr_function_usage(fmgr_t* pfmgr, FILE* output_stream, char* function_name) {
 	int found = FALSE;
 	char* fmt = "%s (class=%s #args=%d): %s\n";
 
@@ -355,7 +351,7 @@ void rval_evaluator_function_usage(FILE* output_stream, char* function_name) {
 	}
 }
 
-void rval_evaluator_list_all_functions_raw(FILE* output_stream) {
+void fmgr_list_all_functions_raw(fmgr_t* pfmgr, FILE* output_stream) {
 	for (int i = 0; ; i++) {
 		function_lookup_t* plookup = &FUNCTION_LOOKUP_TABLE[i];
 		if (plookup->function_name == NULL) // end of table
