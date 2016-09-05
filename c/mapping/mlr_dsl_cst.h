@@ -3,10 +3,11 @@
 
 #include "cli/mlrcli.h"
 #include "containers/mlr_dsl_ast.h"
-#include "rval_evaluators.h"
 #include "containers/lhmsmv.h"
 #include "containers/bind_stack.h"
 #include "containers/loop_stack.h"
+#include "mapping/rval_evaluators.h"
+#include "mapping/function_manager.h"
 #include "output/multi_out.h"
 #include "output/multi_lrec_writer.h"
 
@@ -168,6 +169,9 @@ typedef struct _mlr_dsl_cst_t {
 	sllv_t* pbegin_statements;
 	sllv_t* pmain_statements;
 	sllv_t* pend_statements;
+
+	// Function manager for built-in functions as well as user-defined functions (which are CST-specific).
+	fmgr_t* pfmgr;
 } mlr_dsl_cst_t;
 
 // ----------------------------------------------------------------

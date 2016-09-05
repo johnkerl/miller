@@ -366,7 +366,7 @@ void fmgr_list_all_functions_raw(fmgr_t* pfmgr, FILE* output_stream) {
 
 // ================================================================
 rval_evaluator_t* fmgr_alloc_from_operator_or_function(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags, function_lookup_t* fcn_lookup_table)
+	int type_inferencing, int context_flags, function_lookup_t* fcn_lookup_table) // xxx elim tbl arg
 {
 
 	if ((pnode->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME) && (pnode->type != MD_AST_NODE_TYPE_OPERATOR)) {
@@ -394,7 +394,7 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function(fmgr_t* pfmgr, mlr_dsl_as
 		pevaluator = rval_evaluator_alloc_from_zary_func_name(func_name);
 	} else if (user_provided_arity == 1) {
 		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
-		rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
+		rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, pfmgr, type_inferencing,
 			context_flags, fcn_lookup_table);
 		pevaluator = rval_evaluator_alloc_from_unary_func_name(func_name, parg1);
 	} else if (user_provided_arity == 2) {
@@ -403,12 +403,12 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function(fmgr_t* pfmgr, mlr_dsl_as
 		int type2 = parg2_node->type;
 
 		if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MD_AST_NODE_TYPE_STRNUM_LITERAL) {
-			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, pfmgr, type_inferencing,
 				context_flags, fcn_lookup_table);
 			pevaluator = rval_evaluator_alloc_from_binary_regex_arg2_func_name(func_name,
 				parg1, parg2_node->text, FALSE);
 		} else if ((streq(func_name, "=~") || streq(func_name, "!=~")) && type2 == MD_AST_NODE_TYPE_REGEXI) {
-			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, pfmgr, type_inferencing,
 				context_flags, fcn_lookup_table);
 			pevaluator = rval_evaluator_alloc_from_binary_regex_arg2_func_name(func_name, parg1, parg2_node->text,
 				TYPE_INFER_STRING_FLOAT_INT);
@@ -416,9 +416,9 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function(fmgr_t* pfmgr, mlr_dsl_as
 			// regexes can still be applied here, e.g. if the 2nd argument is a non-terminal AST: however
 			// the regexes will be compiled record-by-record rather than once at alloc time, which will
 			// be slower.
-			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, pfmgr, type_inferencing,
 				context_flags, fcn_lookup_table);
-			rval_evaluator_t* parg2 = rval_evaluator_alloc_from_ast_aux(parg2_node, type_inferencing,
+			rval_evaluator_t* parg2 = rval_evaluator_alloc_from_ast_aux(parg2_node, pfmgr, type_inferencing,
 				context_flags, fcn_lookup_table);
 			pevaluator = rval_evaluator_alloc_from_binary_func_name(func_name, parg1, parg2);
 		}
@@ -431,18 +431,18 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function(fmgr_t* pfmgr, mlr_dsl_as
 
 		if ((streq(func_name, "sub") || streq(func_name, "gsub")) && type2 == MD_AST_NODE_TYPE_STRNUM_LITERAL) {
 			// sub/gsub-regex special case:
-			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, pfmgr, type_inferencing,
 				context_flags, fcn_lookup_table);
-			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing,
+			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast_aux(parg3_node, pfmgr, type_inferencing,
 				context_flags, fcn_lookup_table);
 			pevaluator = rval_evaluator_alloc_from_ternary_regex_arg2_func_name(func_name, parg1, parg2_node->text,
 				FALSE, parg3);
 
 		} else if ((streq(func_name, "sub") || streq(func_name, "gsub")) && type2 == MD_AST_NODE_TYPE_REGEXI) {
 			// sub/gsub-regex special case:
-			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, pfmgr, type_inferencing,
 				context_flags, fcn_lookup_table);
-			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing,
+			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast_aux(parg3_node, pfmgr, type_inferencing,
 				context_flags, fcn_lookup_table);
 			pevaluator = rval_evaluator_alloc_from_ternary_regex_arg2_func_name(func_name, parg1, parg2_node->text,
 				TYPE_INFER_STRING_FLOAT_INT, parg3);
@@ -451,11 +451,11 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function(fmgr_t* pfmgr, mlr_dsl_as
 			// regexes can still be applied here, e.g. if the 2nd argument is a non-terminal AST: however
 			// the regexes will be compiled record-by-record rather than once at alloc time, which will
 			// be slower.
-			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, type_inferencing,
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast_aux(parg1_node, pfmgr, type_inferencing,
 				context_flags, fcn_lookup_table);
-			rval_evaluator_t* parg2 = rval_evaluator_alloc_from_ast_aux(parg2_node, type_inferencing,
+			rval_evaluator_t* parg2 = rval_evaluator_alloc_from_ast_aux(parg2_node, pfmgr, type_inferencing,
 				context_flags, fcn_lookup_table);
-			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast_aux(parg3_node, type_inferencing,
+			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast_aux(parg3_node, pfmgr, type_inferencing,
 				context_flags, fcn_lookup_table);
 			pevaluator = rval_evaluator_alloc_from_ternary_func_name(func_name, parg1, parg2, parg3);
 		}

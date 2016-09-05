@@ -1,6 +1,7 @@
 #include "lib/mlr_globals.h"
 #include "lib/minunit.h"
 #include "mapping/rval_evaluators.h"
+#include "mapping/function_manager.h"
 
 // ----------------------------------------------------------------
 int tests_run         = 0;
@@ -148,7 +149,9 @@ static char * test_numbers() {
 	mlr_dsl_ast_node_t* p2logxnode = mlr_dsl_ast_node_alloc_binary("*", MD_AST_NODE_TYPE_OPERATOR,
 		p2node, plogxnode);
 
-	rval_evaluator_t*  pastr = rval_evaluator_alloc_from_ast(p2logxnode, TYPE_INFER_STRING_FLOAT_INT, 0);
+	fmgr_t* pfmgr = fmgr_alloc();
+	rval_evaluator_t*  pastr = rval_evaluator_alloc_from_ast(p2logxnode, pfmgr, TYPE_INFER_STRING_FLOAT_INT, 0);
+	fmgr_free(pfmgr);
 
 	lrec_t* prec = lrec_unbacked_alloc();
 	lhmsmv_t* ptyped_overlay = lhmsmv_alloc();

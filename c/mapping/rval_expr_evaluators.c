@@ -20,11 +20,12 @@
 // there, and (b) because we get far better control over error messages here (vs. 'syntax error').
 // The context flags are used as the CST is built from the AST, for CST-build-time validation.
 
-rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags) {
-	return rval_evaluator_alloc_from_ast_aux(pnode, type_inferencing, context_flags, FUNCTION_LOOKUP_TABLE);
+// xxx elim aux
+rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags) {
+	return rval_evaluator_alloc_from_ast_aux(pnode, pfmgr, type_inferencing, context_flags, FUNCTION_LOOKUP_TABLE);
 }
 
-rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode,
+rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags, function_lookup_t* fcn_lookup_table)
 {
 	if (pnode->pchildren == NULL) { // leaf node
@@ -70,7 +71,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode,
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		return rval_evaluator_alloc_from_indirect_field_name(pnode->pchildren->phead->pvvalue,
+		return rval_evaluator_alloc_from_indirect_field_name(pnode->pchildren->phead->pvvalue, pfmgr,
 			type_inferencing, context_flags);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
@@ -79,15 +80,15 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode,
 				MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		return rval_evaluator_alloc_from_oosvar_keylist(pnode, type_inferencing, context_flags);
+		return rval_evaluator_alloc_from_oosvar_keylist(pnode, pfmgr, type_inferencing, context_flags);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_ENV) {
-		return rval_evaluator_alloc_from_environment(pnode, type_inferencing, context_flags);
+		return rval_evaluator_alloc_from_environment(pnode, pfmgr, type_inferencing, context_flags);
 
 	} else {
 
-		return fmgr_alloc_from_operator_or_function(NULL, pnode, type_inferencing, context_flags,
-			fcn_lookup_table); // xxx rework ptr args
+		return fmgr_alloc_from_operator_or_function(pfmgr, pnode, type_inferencing, context_flags,
+			fcn_lookup_table); // xxx elim tbl arg
 
 	}
 }
@@ -215,13 +216,13 @@ static void rval_evaluator_indirect_field_name_free(rval_evaluator_t* pevaluator
 	free(pevaluator);
 }
 
-rval_evaluator_t* rval_evaluator_alloc_from_indirect_field_name(mlr_dsl_ast_node_t* pnamenode,
+rval_evaluator_t* rval_evaluator_alloc_from_indirect_field_name(mlr_dsl_ast_node_t* pnamenode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
 	rval_evaluator_indirect_field_name_state_t* pstate = mlr_malloc_or_die(
 		sizeof(rval_evaluator_indirect_field_name_state_t));
 
-	pstate->pname_evaluator = rval_evaluator_alloc_from_ast(pnamenode, type_inferencing, context_flags);
+	pstate->pname_evaluator = rval_evaluator_alloc_from_ast(pnamenode, pfmgr, type_inferencing, context_flags);
 
 	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 	pevaluator->pvstate = pstate;
@@ -301,7 +302,7 @@ static void rval_evaluator_oosvar_keylist_free(rval_evaluator_t* pevaluator) {
 //             oosvar_keylist (oosvar_keylist):
 //                 5 (string_literal).
 
-rval_evaluator_t* rval_evaluator_alloc_from_oosvar_keylist(mlr_dsl_ast_node_t* pnode,
+rval_evaluator_t* rval_evaluator_alloc_from_oosvar_keylist(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
 	rval_evaluator_oosvar_keylist_state_t* pstate = mlr_malloc_or_die(
@@ -314,7 +315,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_oosvar_keylist(mlr_dsl_ast_node_t* p
 		if (pkeynode->type == MD_AST_NODE_TYPE_STRING_LITERAL) {
 			sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_string(pkeynode->text));
 		} else {
-			sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, type_inferencing, context_flags));
+			sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, pfmgr,
+				type_inferencing, context_flags));
 		}
 	}
 	pstate->poosvar_rhs_keylist_evaluators = pkeylist_evaluators;
@@ -547,7 +549,7 @@ static void rval_evaluator_environment_free(rval_evaluator_t* pevaluator) {
 	free(pevaluator);
 }
 
-rval_evaluator_t* rval_evaluator_alloc_from_environment(mlr_dsl_ast_node_t* pnode,
+rval_evaluator_t* rval_evaluator_alloc_from_environment(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
 	rval_evaluator_environment_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_environment_state_t));
@@ -555,7 +557,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_environment(mlr_dsl_ast_node_t* pnod
 
 	mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pnext->pvvalue;
 
-	pstate->pname_evaluator = rval_evaluator_alloc_from_ast(pnamenode, type_inferencing, context_flags);
+	pstate->pname_evaluator = rval_evaluator_alloc_from_ast(pnamenode, pfmgr, type_inferencing, context_flags);
 	pevaluator->pprocess_func = rval_evaluator_environment_func;
 	pevaluator->pfree_func = rval_evaluator_environment_free;
 

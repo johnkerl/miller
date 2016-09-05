@@ -5,6 +5,7 @@
 #include "mapping/context_flags.h"
 #include "mapping/mlr_dsl_cst.h"
 #include "mapping/rval_evaluators.h"
+#include "mapping/function_manager.h"
 #include "mapping/mappers.h"
 #include "dsls/mlr_dsl_wrapper.h"
 #include "cli/argparse.h"
@@ -14,6 +15,7 @@ typedef struct _mapper_filter_state_t {
 	char* mlr_dsl_expression;
 	char* comment_stripped_mlr_dsl_expression;
 	mlr_dsl_ast_node_t* past;
+	fmgr_t* pfmgr;
 	mlhmmv_t* poosvars;
 	rval_evaluator_t* pevaluator;
 	int do_exclude;
@@ -155,7 +157,8 @@ static mapper_t* mapper_filter_alloc(ap_state_t* pargp, char* mlr_dsl_expression
 	pstate->mlr_dsl_expression = mlr_dsl_expression;
 	pstate->comment_stripped_mlr_dsl_expression = comment_stripped_mlr_dsl_expression;
 	pstate->past       = past;
-	pstate->pevaluator = rval_evaluator_alloc_from_ast(past, type_inferencing, context_flags);
+	pstate->pfmgr      = fmgr_alloc();
+	pstate->pevaluator = rval_evaluator_alloc_from_ast(past, pstate->pfmgr, type_inferencing, context_flags);
 	pstate->poosvars   = mlhmmv_alloc();
 	pstate->do_exclude = do_exclude;
 
@@ -173,6 +176,7 @@ static void mapper_filter_free(mapper_t* pmapper) {
 	pstate->pevaluator->pfree_func(pstate->pevaluator);
 	ap_free(pstate->pargp);
 	mlr_dsl_ast_node_free(pstate->past);
+	fmgr_free(pstate->pfmgr);
 	mlhmmv_free(pstate->poosvars);
 	free(pstate->mlr_dsl_expression);
 	free(pstate->comment_stripped_mlr_dsl_expression);
