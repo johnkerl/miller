@@ -4,6 +4,34 @@
 #include "mapping/context_flags.h"
 #include "mapping/rval_evaluators.h"
 
+// ----------------------------------------------------------------
+typedef enum _func_class_t {
+	FUNC_CLASS_ARITHMETIC,
+	FUNC_CLASS_MATH,
+	FUNC_CLASS_BOOLEAN,
+	FUNC_CLASS_STRING,
+	FUNC_CLASS_CONVERSION,
+	FUNC_CLASS_TIME
+} func_class_t;
+
+typedef enum _arity_check_t {
+	ARITY_CHECK_PASS,
+	ARITY_CHECK_FAIL,
+	ARITY_CHECK_NO_SUCH
+} arity_check_t;
+
+// xxx move to fcn manager, along with move functions -> methods there
+typedef struct _function_lookup_t {
+	func_class_t function_class;
+	char*        function_name;
+	int          arity;
+	char*        usage_string;
+} function_lookup_t;
+
+// xxx rm
+extern function_lookup_t FUNCTION_LOOKUP_TABLE[];
+
+// ----------------------------------------------------------------
 //typedef struct _function_lookup_t {
 //	func_class_t function_class;
 //	char*        function_name;
@@ -41,6 +69,7 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ternary_regex_arg2_func_name(
 	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3);
 
 // ----------------------------------------------------------------
+// ----------------------------------------------------------------
 fmgr_t* fmgr_alloc() {
 	fmgr_t* pfmgr = mlr_malloc_or_die(sizeof(fmgr_t));
 
@@ -67,11 +96,6 @@ void fmgr_free(fmgr_t* pfmgr) {
 // xxx disallow redefine ?
 void fmgr_install_UDF(fmgr_t* pfmgr, char* name, rval_evaluator_t* pevaluator) {
 	// xxx stub
-}
-
-// ----------------------------------------------------------------
-rval_evaluator_t* fmgr_alloc_evaluator(fmgr_t* pfmgr, char* name) {
-	return NULL; // xxx stub
 }
 
 // ================================================================
