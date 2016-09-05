@@ -20,7 +20,6 @@
 // there, and (b) because we get far better control over error messages here (vs. 'syntax error').
 // The context flags are used as the CST is built from the AST, for CST-build-time validation.
 
-// xxx elim aux
 rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags) {
 	if (pnode->pchildren == NULL) { // leaf node
 		if (pnode->type == MD_AST_NODE_TYPE_FIELD_NAME) {

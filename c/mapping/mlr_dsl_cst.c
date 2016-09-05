@@ -257,7 +257,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 		switch (pnode->type) {
 
-		// xxx
+		// xxx to do re def:
 		//case MD_AST_NODE_TYPE_DEF:
 		//	break;
 
