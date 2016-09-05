@@ -49,7 +49,8 @@ libmapping_la_SOURCES=	\
 			mlr_dsl_cst.h \
 			mlr_dsl_cst.c \
 			stats1_accumulators.c \
-			stats1_accumulators.h
+			stats1_accumulators.h \
+			type_inference.h
 libmapping_la_LIBADD=	../lib/libmlr.la ../cli/libcli.la ../input/libinput.la
 
 # TODO: replace the interesting content with unit tests; jettison the rest
