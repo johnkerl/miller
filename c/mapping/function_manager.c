@@ -28,8 +28,8 @@ typedef struct _function_lookup_t {
 	char*        usage_string;
 } function_lookup_t;
 
-// xxx rm
-extern function_lookup_t FUNCTION_LOOKUP_TABLE[];
+// This is shared between all instances
+static function_lookup_t FUNCTION_LOOKUP_TABLE[];
 
 // ----------------------------------------------------------------
 //typedef struct _function_lookup_t {
@@ -73,7 +73,7 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ternary_regex_arg2_func_name(
 fmgr_t* fmgr_alloc() {
 	fmgr_t* pfmgr = mlr_malloc_or_die(sizeof(fmgr_t));
 
-	pfmgr->function_lookup_table = &FUNCTION_LOOKUP_TABLE[0]; // xxx stub
+	pfmgr->function_lookup_table = &FUNCTION_LOOKUP_TABLE[0];
 	pfmgr->pUDF_names_to_evaluators = lhmsv_alloc();
 
 	return pfmgr;
@@ -99,8 +99,7 @@ void fmgr_install_UDF(fmgr_t* pfmgr, char* name, rval_evaluator_t* pevaluator) {
 }
 
 // ================================================================
-// xxx make static
-function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
+static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 
 	{FUNC_CLASS_ARITHMETIC, "+",  2, "Addition."},
 	{FUNC_CLASS_ARITHMETIC, "+",  1, "Unary plus."},
