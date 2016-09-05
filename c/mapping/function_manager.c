@@ -19,6 +19,10 @@
 // xxx rework:
 // See comments in rval_evaluators.h
 
+// xxx morph these into methods:
+static void check_arity_with_report(function_lookup_t fcn_lookup_table[], char* function_name,
+	int user_provided_arity);
+
 // xxx rename:
 static rval_evaluator_t* rval_evaluator_alloc_from_zary_func_name(char* function_name);
 
@@ -258,7 +262,7 @@ static arity_check_t check_arity(function_lookup_t lookup_table[], char* functio
 	}
 }
 
-void check_arity_with_report(function_lookup_t fcn_lookup_table[], char* function_name,
+static void check_arity_with_report(function_lookup_t fcn_lookup_table[], char* function_name,
 	int user_provided_arity)
 {
 	int arity = -1;
@@ -361,7 +365,7 @@ void fmgr_list_all_functions_raw(fmgr_t* pfmgr, FILE* output_stream) {
 }
 
 // ================================================================
-rval_evaluator_t* rval_evaluator_alloc_from_operator_or_function(mlr_dsl_ast_node_t* pnode,
+rval_evaluator_t* fmgr_alloc_from_operator_or_function(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags, function_lookup_t* fcn_lookup_table)
 {
 

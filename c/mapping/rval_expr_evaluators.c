@@ -86,7 +86,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* pnode,
 
 	} else {
 
-		return rval_evaluator_alloc_from_operator_or_function(pnode, type_inferencing, context_flags, fcn_lookup_table);
+		return fmgr_alloc_from_operator_or_function(NULL, pnode, type_inferencing, context_flags,
+			fcn_lookup_table); // xxx rework ptr args
 
 	}
 }
