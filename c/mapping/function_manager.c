@@ -16,6 +16,30 @@
 //	lhmsv_t* pUDF_names_to_evaluators;
 //} fmgr_t;
 
+// xxx rework:
+// See comments in rval_evaluators.h
+
+// xxx rename:
+static rval_evaluator_t* rval_evaluator_alloc_from_zary_func_name(char* function_name);
+
+static rval_evaluator_t* rval_evaluator_alloc_from_unary_func_name(char* fnnm, rval_evaluator_t* parg1);
+
+static rval_evaluator_t* rval_evaluator_alloc_from_binary_func_name(char* fnnm,
+
+	rval_evaluator_t* parg1, rval_evaluator_t* parg2);
+
+static rval_evaluator_t* rval_evaluator_alloc_from_binary_regex_arg2_func_name(char* fnnm,
+
+	rval_evaluator_t* parg1, char* regex_string, int ignore_case);
+
+static rval_evaluator_t* rval_evaluator_alloc_from_ternary_func_name(char* fnnm,
+
+	rval_evaluator_t* parg1, rval_evaluator_t* parg2, rval_evaluator_t* parg3);
+
+static rval_evaluator_t* rval_evaluator_alloc_from_ternary_regex_arg2_func_name(char* fnnm,
+
+	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3);
+
 // ----------------------------------------------------------------
 fmgr_t* fmgr_alloc() {
 	fmgr_t* pfmgr = mlr_malloc_or_die(sizeof(fmgr_t));
@@ -212,34 +236,6 @@ function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 
 	{0, NULL,      -1 , NULL}, // table terminator
 };
-
-
-// ================================================================
-// xxx rework:
-// See comments in rval_evaluators.h
-// ================================================================
-
-// xxx rename:
-// xxx protos to top:
-static rval_evaluator_t* rval_evaluator_alloc_from_zary_func_name(char* function_name);
-
-static rval_evaluator_t* rval_evaluator_alloc_from_unary_func_name(char* fnnm, rval_evaluator_t* parg1);
-
-static rval_evaluator_t* rval_evaluator_alloc_from_binary_func_name(char* fnnm,
-
-	rval_evaluator_t* parg1, rval_evaluator_t* parg2);
-
-static rval_evaluator_t* rval_evaluator_alloc_from_binary_regex_arg2_func_name(char* fnnm,
-
-	rval_evaluator_t* parg1, char* regex_string, int ignore_case);
-
-static rval_evaluator_t* rval_evaluator_alloc_from_ternary_func_name(char* fnnm,
-
-	rval_evaluator_t* parg1, rval_evaluator_t* parg2, rval_evaluator_t* parg3);
-
-static rval_evaluator_t* rval_evaluator_alloc_from_ternary_regex_arg2_func_name(char* fnnm,
-
-	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3);
 
 // ----------------------------------------------------------------
 static arity_check_t check_arity(function_lookup_t lookup_table[], char* function_name,
