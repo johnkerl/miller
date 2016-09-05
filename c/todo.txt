@@ -6,7 +6,10 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-* 10min vers: sql-schema example
+* 10min vers:
+  - sql-schema example
+  - publish
+  - to 4.n.0 release notes as well
 
 UDFs:
 k move arity switch from r_e.c to r_f_e.c
