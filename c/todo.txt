@@ -11,6 +11,15 @@ TOP OF LIST:
 !! sidebar reorg
 ! cookbook disclaimer: these are corner-case things
 
+UDFs:
+1 move arity switch from r_e.c to r_f_e.c
+2 fcn table -> make a class with methods: install, look up, etc.
+3 hard-coded cst foo -> invoke installer func
+4 ast work w/o $/@ prohibits
+5 ast work w $/@ prohibits
+* multiple put -f
+? def @ filter?
+
 * dquoting for other formats.
 * indent by two more for jvstack
 ? rework comma placement for jvstack?
@@ -24,7 +33,6 @@ TOP OF LIST:
 * windows port?
 ? msort.o wt?
 
-? UDFs ?
 ? triple-fors?
 
 ----------------------------------------------------------------

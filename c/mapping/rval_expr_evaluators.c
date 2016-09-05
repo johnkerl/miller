@@ -109,6 +109,7 @@ static rval_evaluator_t* rval_evaluator_alloc_from_ast_aux(mlr_dsl_ast_node_t* p
 
 		check_arity_with_report(fcn_lookup_table, func_name, user_provided_arity);
 
+		// xxx move all to rval_func_evaluators.c
 		rval_evaluator_t* pevaluator = NULL;
 		if (user_provided_arity == 0) {
 			pevaluator = rval_evaluator_alloc_from_zary_func_name(func_name);
