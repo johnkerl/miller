@@ -135,9 +135,12 @@ different output format.
 
 <h1>SQL-output examples</h1>
 
-<p/>I like to take SQL-query output with header-column and tab delimiter: this is CSV but with a tab
-instead of a comma &mdash; also known as TSV. Then I post-process with <tt>mlr --tsv --rs lf</tt>
-or <tt>mlr --tsvlite</tt>.
+<p/>I like to produce SQL-query output with header-column and tab delimiter:
+this is CSV but with a tab instead of a comma, also known as TSV. Then I
+post-process with <tt>mlr --tsv --rs lf</tt> or <tt>mlr --tsvlite</tt>.  This
+means I can do some (or all, or none) of my data processing within SQL queries,
+and some (or none, or all) of my data processing using Miller &mdash; whichever
+is most convenient for my needs at the moment.
 
 <div class="pokipanel">
 <pre>
@@ -190,6 +193,11 @@ the system <tt>grep</tt> command, or Miller&rsquo;s <tt>having-fields</tt>, or
 
 POKI_INCLUDE_AND_RUN_ESCAPED(10-1.sh)HERE
 POKI_INCLUDE_AND_RUN_ESCAPED(10-2.sh)HERE
+
+<p/>Alternatively, we can simply group the similar data for a better look:
+
+POKI_RUN_COMMAND{{mlr --opprint group-like log.txt}}HERE
+POKI_RUN_COMMAND{{mlr --opprint group-like then sec2gmt time log.txt}}HERE
 
 <h1>More</h1>
 
