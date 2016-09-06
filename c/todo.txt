@@ -14,10 +14,11 @@ TOP OF LIST:
 UDFs:
 k move arity switch from r_e.c to r_f_e.c
 k fcn table -> make a class with methods
-3 impl fmgr::install, and propagate the lhmsv throughout
-4 hard-coded cst foo -> invoke installer func
-5 ast work w/o $/@ prohibits
-6 ast work w $/@ prohibits
+* impl fmgr::install, and propagate the lhmsv throughout
+* hard-coded cst foo -> invoke installer func
+* boundvar assigment @ ast/cst
+* ast work w/o $/@ prohibits
+* ast work w $/@ prohibits
 * multiple put -f
 ? def @ filter?
 

@@ -294,6 +294,25 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 	return pcst;
 }
 
+//typedef mv_t rval_evaluator_process_func_t(void* pvstate, variables_t* pvars);
+//
+//typedef void rval_evaluator_free_func_t(struct _rval_evaluator_t*);
+//
+//typedef struct _rval_evaluator_t {
+//	void* pvstate;
+//	rval_evaluator_process_func_t* pprocess_func;
+//	rval_evaluator_free_func_t*    pfree_func;
+//} rval_evaluator_t;
+
+// ----------------------------------------------------------------
+static mv_t ep_process_foo3(void* pvstate, variables_t* pvars) {
+	//return mv_absent();
+	return mv_from_int(999);
+	//pstatement->pblock_handler(pstatement->pblock_statements, pvars, pcst_outputs);
+}
+static void ep_free_foo3(rval_evaluator_t* pevaluator) {
+}
+
 // ----------------------------------------------------------------
 static void populate_foo_UDFs(mlr_dsl_cst_t* pcst) { // xxx temp
 
@@ -311,6 +330,16 @@ static void populate_foo_UDFs(mlr_dsl_cst_t* pcst) { // xxx temp
 	rval_evaluator_t* pastr2 = rval_evaluator_alloc_from_ast(psumnode, pcst->pfmgr, TYPE_INFER_STRING_FLOAT_INT, 0);
 	fmgr_install_UDF(pcst->pfmgr, "tempfoo2", pastr2);
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	rval_evaluator_t* pevfoo3 = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pevfoo3->pvstate = NULL;
+	pevfoo3->pprocess_func = ep_process_foo3;
+	pevfoo3->pfree_func = ep_free_foo3;
+	//pstatement->pblock_handler = handle_statement_list_with_break_continue;
+	//pstatement->pblock_handler = (context_flags & IN_BREAKABLE)
+	//	?  handle_statement_list_with_break_continue
+	//	: mlr_dsl_cst_handle_statement_list;
+	fmgr_install_UDF(pcst->pfmgr, "tempfoo3", pevfoo3);
 }
 
 // ----------------------------------------------------------------
@@ -1000,7 +1029,7 @@ static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_ast_node_t* pnod
 
 	pstatement->pnode_handler = handle_conditional_block;
 	pstatement->pblock_handler = (context_flags & IN_BREAKABLE)
-		?  handle_statement_list_with_break_continue
+		? handle_statement_list_with_break_continue
 		: mlr_dsl_cst_handle_statement_list;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pleft, pfmgr, type_inferencing, context_flags);
 	pstatement->pblock_statements = pblock_statements;
