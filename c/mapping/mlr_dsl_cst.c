@@ -21,14 +21,16 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, f
 static mlr_dsl_cst_statement_t* alloc_blank();
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
+static void populate_foo_UDFs(mlr_dsl_cst_t* pcst); // xxx temp
+
 // ti = type_inferencing
 // cf = context_flags
 // dfp = do_full_prefixing
-static mlr_dsl_cst_statement_t*                  alloc_srec_assignment(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
-static mlr_dsl_cst_statement_t*         alloc_indirect_srec_assignment(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
-static mlr_dsl_cst_statement_t*                alloc_oosvar_assignment(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
-static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
-static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
+static mlr_dsl_cst_statement_t*                  alloc_srec_assignment(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
+static mlr_dsl_cst_statement_t*         alloc_indirect_srec_assignment(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
+static mlr_dsl_cst_statement_t*                alloc_oosvar_assignment(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
+static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
+static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
 static mlr_dsl_cst_statement_t*             alloc_unset(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
 
 static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
@@ -253,17 +255,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 	pcst->pend_statements   = sllv_alloc();
 	pcst->pfmgr = fmgr_alloc();
 
-	// ----------------------------------------------------------------
-	// xxx temp
-	mlr_dsl_ast_node_t* pxnode     = mlr_dsl_ast_node_alloc("x",  MD_AST_NODE_TYPE_FIELD_NAME);
-	mlr_dsl_ast_node_t* plognode   = mlr_dsl_ast_node_alloc_zary("log", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
-	mlr_dsl_ast_node_t* plogxnode  = mlr_dsl_ast_node_append_arg(plognode, pxnode);
-	mlr_dsl_ast_node_t* p2node     = mlr_dsl_ast_node_alloc("2",   MD_AST_NODE_TYPE_STRNUM_LITERAL);
-	mlr_dsl_ast_node_t* p2logxnode = mlr_dsl_ast_node_alloc_binary("*", MD_AST_NODE_TYPE_OPERATOR,
-		p2node, plogxnode);
-	rval_evaluator_t*  pastr = rval_evaluator_alloc_from_ast(p2logxnode, pcst->pfmgr, TYPE_INFER_STRING_FLOAT_INT, 0);
-	fmgr_install_UDF(pcst->pfmgr, "tempfoofunc", pastr);
-	// ----------------------------------------------------------------
+	populate_foo_UDFs(pcst);
 
 	mlr_dsl_ast_node_t* plistnode = NULL;
 	for (sllve_t* pe = pnode->proot->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -299,6 +291,25 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 		}
 	}
 	return pcst;
+}
+
+// ----------------------------------------------------------------
+static void populate_foo_UDFs(mlr_dsl_cst_t* pcst) { // xxx temp
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	mlr_dsl_ast_node_t* pxnode    = mlr_dsl_ast_node_alloc("x",  MD_AST_NODE_TYPE_FIELD_NAME);
+	mlr_dsl_ast_node_t* pprodnode = mlr_dsl_ast_node_alloc_binary("*", MD_AST_NODE_TYPE_OPERATOR,
+		pxnode, pxnode);
+	rval_evaluator_t* pastr = rval_evaluator_alloc_from_ast(pprodnode, pcst->pfmgr, TYPE_INFER_STRING_FLOAT_INT, 0);
+	fmgr_install_UDF(pcst->pfmgr, "tempfoo1", pastr);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	mlr_dsl_ast_node_t* pynode   = mlr_dsl_ast_node_alloc("y",  MD_AST_NODE_TYPE_FIELD_NAME);
+	mlr_dsl_ast_node_t* psumnode = mlr_dsl_ast_node_alloc_binary("+", MD_AST_NODE_TYPE_OPERATOR,
+		pxnode, pynode);
+	rval_evaluator_t* pastr2 = rval_evaluator_alloc_from_ast(psumnode, pcst->pfmgr, TYPE_INFER_STRING_FLOAT_INT, 0);
+	fmgr_install_UDF(pcst->pfmgr, "tempfoo2", pastr2);
+
 }
 
 // ----------------------------------------------------------------

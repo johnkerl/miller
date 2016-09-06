@@ -109,6 +109,7 @@ md_statement_not_braced_end(A) ::= . {
 }
 
 // Begin/end
+md_statement_braced_end(A) ::= md_def_block(B).   { A = B; }
 md_statement_braced_end(A) ::= md_begin_block(B). { A = B; }
 md_statement_braced_end(A) ::= md_end_block(B).   { A = B; }
 
@@ -180,6 +181,33 @@ md_statement_not_braced_end(A) ::= MD_TOKEN_BREAK(O). {
 }
 md_statement_not_braced_end(A) ::= MD_TOKEN_CONTINUE(O). {
 	A = mlr_dsl_ast_node_alloc(O->text, MD_AST_NODE_TYPE_CONTINUE);
+}
+
+// ================================================================
+// Given "f(a,b,c)": since this is a bottom-up parser, we get first the "a",
+// then "a,b", then "a,b,c", then finally "f(a,b,c)". So:
+// * On the "a" we make a function sub-AST called "anon(a)".
+// * On the "b" we append the next argument to get "anon(a,b)".
+// * On the "c" we append the next argument to get "anon(a,b,c)".
+// * On the "f" we change the function name to get "f(a,b,c)".
+
+md_def_block(C) ::= MD_TOKEN_DEF
+	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_def_args(A) MD_TOKEN_RPAREN
+	MD_TOKEN_LBRACE md_statement_list(B) MD_TOKEN_RBRACE.
+{
+	A = mlr_dsl_ast_node_set_function_name(A, F->text);
+	C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_DEF, A, B);
+}
+
+// Need to invalidate "f(10,)" -- use some non-empty-args expr.
+md_def_args(A) ::= . {
+	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
+}
+md_def_args(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
+	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
+}
+md_def_args(A) ::= md_def_args(B) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
 // ================================================================
