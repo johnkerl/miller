@@ -380,6 +380,10 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, f
 {
 	switch(pnode->type) {
 
+	case MD_AST_NODE_TYPE_DEF:
+		fprintf(stderr, "%s: def statements are only valid at top level.\n", MLR_GLOBALS.bargv0);
+		exit(1);
+		break;
 	case MD_AST_NODE_TYPE_BEGIN:
 		fprintf(stderr, "%s: begin statements are only valid at top level.\n", MLR_GLOBALS.bargv0);
 		exit(1);
@@ -408,6 +412,11 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, f
 	case MD_AST_NODE_TYPE_FOR_OOSVAR:
 		return alloc_for_oosvar(pnode, pfmgr, type_inferencing, context_flags | IN_BREAKABLE | IN_BINDABLE);
 		break;
+
+
+	// xxx
+	// case MD_AST_NODE_TYPE_RETURN:
+	//	break;
 
 	case MD_AST_NODE_TYPE_BREAK:
 		if (!(context_flags & IN_BREAKABLE)) {
