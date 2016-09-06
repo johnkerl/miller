@@ -20,6 +20,7 @@
 // * begin{end{}} -- begin/end not at top level
 // * begin{$x=1} -- references to stream records at begin/end
 // * break/continue outside of for/while/do-while
+// * return outside of a function definition
 // * $x=x -- boundvars outside of for-loop variable bindings
 // All of the above are enforced by the CST builder, which takes this parser's output AST as input.
 // This is done (a) to keep this grammar from being overly complex, and (b) so we can get much more
@@ -109,6 +110,9 @@ md_statement_not_braced_end(A) ::= . {
 }
 
 // Only valid in def blocks
+md_statement_not_braced_end(A) ::= MD_TOKEN_LOCAL MD_TOKEN_NON_SIGIL_NAME(N) MD_TOKEN_ASSIGN md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_RETURN, N, B);
+}
 md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary("return", MD_AST_NODE_TYPE_RETURN, B);
 }
