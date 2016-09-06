@@ -108,6 +108,11 @@ md_statement_not_braced_end(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
 }
 
+// Only valid in def blocks
+md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_unary("return", MD_AST_NODE_TYPE_RETURN, B);
+}
+
 // Begin/end
 md_statement_braced_end(A) ::= md_def_block(B).   { A = B; }
 md_statement_braced_end(A) ::= md_begin_block(B). { A = B; }
@@ -191,6 +196,7 @@ md_statement_not_braced_end(A) ::= MD_TOKEN_CONTINUE(O). {
 // * On the "c" we append the next argument to get "anon(a,b,c)".
 // * On the "f" we change the function name to get "f(a,b,c)".
 
+// xxx return ...
 md_def_block(C) ::= MD_TOKEN_DEF
 	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_def_args(A) MD_TOKEN_RPAREN
 	MD_TOKEN_LBRACE md_statement_list(B) MD_TOKEN_RBRACE.

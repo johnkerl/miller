@@ -93,6 +93,10 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
 	return MD_TOKEN_DEF;
 }
+"return" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
+	return MD_TOKEN_RETURN;
+}
 "begin" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
 	return MD_TOKEN_BEGIN;
