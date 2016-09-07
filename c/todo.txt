@@ -20,7 +20,9 @@ k fcn table -> make a class with methods
 * ast work w/o $/@ prohibits
 * ast work w $/@ prohibits
 * multiple put -f
+* allow locals in if/for/while as well
 ? def @ filter?
+? separate sub & def ?
 
 * indent by two more for jvstack
 ? rework comma placement for jvstack?

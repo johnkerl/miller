@@ -22,6 +22,7 @@ static mlr_dsl_cst_statement_t* alloc_blank();
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 static void populate_foo_UDFs(mlr_dsl_cst_t* pcst); // xxx temp
+static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst, int type_inferencing, int context_flags);
 
 // ti = type_inferencing
 // cf = context_flags
@@ -264,7 +265,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 
 		// xxx to do
 		case MD_AST_NODE_TYPE_DEF:
-			printf("DEF ALLOC STUB\n");
+			cst_install_UDF(pnode, pcst, type_inferencing, context_flags);
 			break;
 
 		case MD_AST_NODE_TYPE_BEGIN:
@@ -294,6 +295,94 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 	return pcst;
 }
 
+// ----------------------------------------------------------------
+// xxx move up to top
+typedef struct _UDF_evaluator_state_t {
+	sllv_t*   pblock_statements;
+	int       arity;
+	slls_t*   pparameters; // xxx maybe make array
+    lhmsmv_t* pbound_variables;
+	//cst_outputs_t* pcst_outputs;
+} UDF_evaluator_state_t;
+
+// ----------------------------------------------------------------
+// $ cat def
+//mlr --from s put -v '
+//  def f(x,y,z) {
+//    local a = 1;
+//    $x = 2;
+//    return a + y * 2;
+//  }
+//'
+
+// $ def
+// AST ROOT:
+// text="list", type=statement_list:
+//     text="f", type=def:
+//         text="f", type=non_sigil_name:
+//             text="x", type=non_sigil_name.
+//             text="y", type=non_sigil_name.
+//             text="z", type=non_sigil_name.
+//         text="list", type=statement_list:
+//             text="local", type=return:
+//                 text="a", type=non_sigil_name.
+//                 text="1", type=strnum_literal.
+//             text="=", type=srec_assignment:
+//                 text="x", type=field_name.
+//                 text="2", type=strnum_literal.
+//             text="return", type=return:
+//                 text="+", type=operator:
+//                     text="a", type=bound_variable.
+//                     text="*", type=operator:
+//                         text="y", type=bound_variable.
+//                         text="2", type=strnum_literal.
+
+static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
+	int type_inferencing, int context_flags)
+{
+	mlr_dsl_ast_node_t* pparameters_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pbody_node = pnode->pchildren->phead->pnext->pvvalue;
+
+	// xxx arrange for this to be freed
+	UDF_evaluator_state_t* pUDF_evaluator_state = mlr_malloc_or_die(sizeof(UDF_evaluator_state_t));
+
+	pUDF_evaluator_state->pparameters = slls_alloc();
+	// xxx dup check ...
+	for (sllve_t* pe = pparameters_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
+		slls_append(pUDF_evaluator_state->pparameters, pparameter_node->text, NO_FREE);
+	}
+	pUDF_evaluator_state->arity = pparameters_node->pchildren->length;
+
+	pUDF_evaluator_state->pblock_statements = sllv_alloc();
+
+	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+		sllv_append(pUDF_evaluator_state->pblock_statements,
+			alloc_cst_statement(pbody_ast_node, pcst->pfmgr, type_inferencing, context_flags));
+	}
+
+	pUDF_evaluator_state->pbound_variables = lhmsmv_alloc();
+
+	// xxx stash the parameters list
+	// xxx arrange for it to be freed
+
+	// xxx stash the body statements
+	// xxx arrange for them to be freed
+}
+
+//static mv_t ep_process_UDF(void* pvstate, variables_t* pvars) {
+//	// xxx unpack from pvstate:
+//	//	sllv_t*        pcst_statements,
+//	//	variables_t*   pvars,
+//	//	cst_outputs_t* pcst_outputs)
+//	//return mv_absent();
+//	return mv_from_int(999);
+//	//pstatement->pblock_handler(pstatement->pblock_statements, pvars, pcst_outputs);
+//}
+//static void ep_free_UDF(rval_evaluator_t* pevaluator) {
+//}
+
 //typedef mv_t rval_evaluator_process_func_t(void* pvstate, variables_t* pvars);
 //
 //typedef void rval_evaluator_free_func_t(struct _rval_evaluator_t*);
@@ -306,12 +395,37 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 
 // ----------------------------------------------------------------
 static mv_t ep_process_foo3(void* pvstate, variables_t* pvars) {
+	// xxx unpack from pvstate:
+	//	sllv_t*        pcst_statements,
+	//	variables_t*   pvars,
+	//	cst_outputs_t* pcst_outputs)
 	//return mv_absent();
 	return mv_from_int(999);
 	//pstatement->pblock_handler(pstatement->pblock_statements, pvars, pcst_outputs);
 }
 static void ep_free_foo3(rval_evaluator_t* pevaluator) {
 }
+
+// xxx
+//static mv_t handle_UDF(
+//	sllv_t*        pcst_statements,
+//	variables_t*   pvars,
+//	cst_outputs_t* pcst_outputs)
+//{
+//	mv_t retval = mv_absent();
+//	xxx push boundvars
+//	for (sllve_t* pe = pcst_statements->phead; pe != NULL; pe = pe->pnext) {
+//		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+//		xxx check if is 'local';
+//		xxx check if is 'return';
+//		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+//		if (loop_stack_get(pvars->ploop_stack) != 0) {
+//			break;
+//		}
+//	}
+//	xxx pop boundvars
+//	return retval;
+//}
 
 // ----------------------------------------------------------------
 static void populate_foo_UDFs(mlr_dsl_cst_t* pcst) { // xxx temp
@@ -321,14 +435,14 @@ static void populate_foo_UDFs(mlr_dsl_cst_t* pcst) { // xxx temp
 	mlr_dsl_ast_node_t* pprodnode = mlr_dsl_ast_node_alloc_binary("*", MD_AST_NODE_TYPE_OPERATOR,
 		pxnode, pxnode);
 	rval_evaluator_t* pastr = rval_evaluator_alloc_from_ast(pprodnode, pcst->pfmgr, TYPE_INFER_STRING_FLOAT_INT, 0);
-	fmgr_install_UDF(pcst->pfmgr, "tempfoo1", pastr);
+	fmgr_install_UDF(pcst->pfmgr, "tempfoo1", 0, pastr);
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	mlr_dsl_ast_node_t* pynode   = mlr_dsl_ast_node_alloc("y",  MD_AST_NODE_TYPE_FIELD_NAME);
 	mlr_dsl_ast_node_t* psumnode = mlr_dsl_ast_node_alloc_binary("+", MD_AST_NODE_TYPE_OPERATOR,
 		pxnode, pynode);
 	rval_evaluator_t* pastr2 = rval_evaluator_alloc_from_ast(psumnode, pcst->pfmgr, TYPE_INFER_STRING_FLOAT_INT, 0);
-	fmgr_install_UDF(pcst->pfmgr, "tempfoo2", pastr2);
+	fmgr_install_UDF(pcst->pfmgr, "tempfoo2", 0, pastr2);
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	rval_evaluator_t* pevfoo3 = mlr_malloc_or_die(sizeof(rval_evaluator_t));
@@ -339,7 +453,7 @@ static void populate_foo_UDFs(mlr_dsl_cst_t* pcst) { // xxx temp
 	//pstatement->pblock_handler = (context_flags & IN_BREAKABLE)
 	//	?  handle_statement_list_with_break_continue
 	//	: mlr_dsl_cst_handle_statement_list;
-	fmgr_install_UDF(pcst->pfmgr, "tempfoo3", pevfoo3);
+	fmgr_install_UDF(pcst->pfmgr, "tempfoo3", 1, pevfoo3);
 }
 
 // ----------------------------------------------------------------
