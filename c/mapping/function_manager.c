@@ -63,7 +63,6 @@ fmgr_t* fmgr_alloc() {
 }
 
 // ----------------------------------------------------------------
-// xxx who calls this?
 void fmgr_free(fmgr_t* pfmgr) {
 	if (pfmgr == NULL)
 		return;
@@ -389,12 +388,8 @@ mv_t rval_evaluator_UDF_callsite_process(void* pvstate, variables_t* pvars) {
 		pstate->args[i] = pstate->pevals[i]->pprocess_func(pstate->pevals[i]->pvstate, pvars);
 	}
 
-	// xxx temp
-	// defsite evaluator needs:
-	// * arity
-	// * pargs
-	// * pvstate
-	return x_xx_plus_func(&pstate->args[0], &pstate->args[1]);
+	return pstate->pdefsite_state->pprocess_func(pstate->pdefsite_state->pvstate,
+		pstate->arity, pstate->args, pvars);
 }
 
 static void rval_evaluator_UDF_callsite_free(rval_evaluator_t* pevaluator) {
@@ -429,6 +424,8 @@ static rval_evaluator_t* fmgr_alloc_from_UDF_callsite(fmgr_t* pfmgr, UDF_defsite
 		pstate->args[i] = mv_absent();
 	}
 
+	pstate->pdefsite_state = pdefsite_state;
+
 	pUDF_callsite_evaluator->pvstate = pstate;
 	pUDF_callsite_evaluator->pprocess_func = rval_evaluator_UDF_callsite_process;
 	pUDF_callsite_evaluator->pfree_func = rval_evaluator_UDF_callsite_free;
@@ -458,7 +455,6 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_d
 
 	int user_provided_arity = pnode->pchildren->length;
 
-	// xxx temp
 	UDF_defsite_state_t* pUDF_defsite_state = lhmsv_get(pfmgr->pUDF_names_to_defsite_states, function_name);
 	if (pUDF_defsite_state != NULL) {
 		int UDF_arity = pUDF_defsite_state->arity;

@@ -14,7 +14,7 @@
 
 struct _UDF_defsite_state_t; // Forward reference
 
-typedef mv_t UDF_defsite_process_func_t(int arity, mv_t* pargs, void* pvstate);
+typedef mv_t UDF_defsite_process_func_t(void* pvstate, int arity, mv_t* pargs, variables_t* pvars);
 typedef void UDF_defsite_free_func_t(struct _UDF_defsite_state_t* pdefsite_state);
 
 typedef struct _UDF_defsite_state_t {

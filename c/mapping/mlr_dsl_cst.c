@@ -197,6 +197,47 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* pnode, int type_
 }
 
 // ----------------------------------------------------------------
+// xxx move up to top
+typedef struct _cst_udf_state_t {
+	int       arity;
+	char**    parameter_names;
+    lhmsmv_t* pbound_variables;
+	sllv_t*   pblock_statements;
+} cst_udf_state_t;
+
+static mv_t cst_udf_process(void* pvstate, int arity, mv_t* args, variables_t* pvars) {
+	cst_udf_state_t* pstate = pvstate;
+	mv_t retval = mv_absent();
+
+	// Bind parameters to arguments
+	bind_stack_push(pvars->pbind_stack, pstate->pbound_variables);
+	// xxx mem-free on replace
+	for (int i = 0; i < arity; i++) {
+		lhmsmv_put(pstate->pbound_variables, pstate->parameter_names[i], &args[i], NO_FREE); // xxx free-flags
+	}
+
+	// Compute
+	// xxx stub
+	retval = mv_from_int(0);
+	for (int i = 0; i < arity; i++) {
+		retval = x_xx_plus_func(&retval, &args[i]);
+	}
+
+	bind_stack_pop(pvars->pbind_stack);
+
+	return retval;
+}
+
+static void cst_udf_free(struct _UDF_defsite_state_t* pdefsite_state) {
+	cst_udf_state_t* pstate = pdefsite_state->pvstate;
+	// xxx more
+	free(pstate->parameter_names);
+	lhmsmv_free(pstate->pbound_variables);
+	sllv_free(pstate->pblock_statements);
+	free(pdefsite_state);
+}
+
+// ----------------------------------------------------------------
 // Main entry point for AST-to-CST for mlr put.
 //
 // Example AST (using put -v):
@@ -292,15 +333,6 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 }
 
 // ----------------------------------------------------------------
-// xxx move up to top
-typedef struct _UDF_evaluator_state_t {
-	sllv_t*   pblock_statements;
-	int       arity;
-	char**    parameter_names;
-    lhmsmv_t* pbound_variables;
-} UDF_evaluator_state_t;
-
-// ----------------------------------------------------------------
 // $ cat def
 //mlr --from s put -v '
 //  def f(x,y,z) {
@@ -338,30 +370,31 @@ static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 	mlr_dsl_ast_node_t* pparameters_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pbody_node = pnode->pchildren->phead->pnext->pvvalue;
 
-	// xxx make UDF_evaluator_state_t ctor/dtor per se
+	// xxx make cst_udf_state_t ctor/dtor per se
 
 	int arity = pparameters_node->pchildren->length;
 	// xxx arrange for this to be freed
-	UDF_evaluator_state_t* pUDF_evaluator_state = mlr_malloc_or_die(sizeof(UDF_evaluator_state_t));
+	cst_udf_state_t* pcst_udf_state = mlr_malloc_or_die(sizeof(cst_udf_state_t));
 
-	pUDF_evaluator_state->parameter_names = mlr_malloc_or_die(arity * sizeof(char*));
+	pcst_udf_state->arity = arity;
+
+	pcst_udf_state->parameter_names = mlr_malloc_or_die(arity * sizeof(char*));
 	int i = 0;
 	// xxx dup check ...
 	for (sllve_t* pe = pparameters_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
-		pUDF_evaluator_state->parameter_names[i] = pparameter_node->text;
+		pcst_udf_state->parameter_names[i] = pparameter_node->text;
 	}
-	pUDF_evaluator_state->arity = arity;
 
-	pUDF_evaluator_state->pblock_statements = sllv_alloc();
+	pcst_udf_state->pbound_variables = lhmsmv_alloc();
+
+	pcst_udf_state->pblock_statements = sllv_alloc();
 
 	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		sllv_append(pUDF_evaluator_state->pblock_statements,
+		sllv_append(pcst_udf_state->pblock_statements,
 			alloc_cst_statement(pbody_ast_node, pcst->pfmgr, type_inferencing, context_flags));
 	}
-
-	pUDF_evaluator_state->pbound_variables = lhmsmv_alloc();
 
 	// xxx stash the parameters list
 	// xxx arrange for it to be freed
@@ -370,12 +403,12 @@ static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 	// xxx arrange for them to be freed
 
 	UDF_defsite_state_t* pdefsite_state = mlr_malloc_or_die(sizeof(UDF_defsite_state_t));
-	pdefsite_state->pvstate = pUDF_evaluator_state;
+	pdefsite_state->pvstate = pcst_udf_state;
 	pdefsite_state->arity = arity;
-	pdefsite_state->pprocess_func = NULL; // xxx temp
-	pdefsite_state->pfree_func = NULL; // xxx temp
+	pdefsite_state->pprocess_func = cst_udf_process;
+	pdefsite_state->pfree_func = cst_udf_free;
 
-	fmgr_install_UDF(pcst->pfmgr, pnode->text, pUDF_evaluator_state->arity, pdefsite_state);
+	fmgr_install_UDF(pcst->pfmgr, pnode->text, pcst_udf_state->arity, pdefsite_state);
 }
 
 // xxx
@@ -442,6 +475,7 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	sllv_free(pcst->pbegin_statements);
 	sllv_free(pcst->pmain_statements);
 	sllv_free(pcst->pend_statements);
+	fmgr_free(pcst->pfmgr);
 
 	free(pcst);
 }
