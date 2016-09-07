@@ -296,9 +296,8 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 typedef struct _UDF_evaluator_state_t {
 	sllv_t*   pblock_statements;
 	int       arity;
-	slls_t*   pparameters; // xxx maybe make array
+	char**    parameter_names;
     lhmsmv_t* pbound_variables;
-	//cst_outputs_t* pcst_outputs;
 } UDF_evaluator_state_t;
 
 // ----------------------------------------------------------------
@@ -341,16 +340,18 @@ static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 
 	// xxx make UDF_evaluator_state_t ctor/dtor per se
 
+	int arity = pparameters_node->pchildren->length;
 	// xxx arrange for this to be freed
 	UDF_evaluator_state_t* pUDF_evaluator_state = mlr_malloc_or_die(sizeof(UDF_evaluator_state_t));
 
-	pUDF_evaluator_state->pparameters = slls_alloc();
+	pUDF_evaluator_state->parameter_names = mlr_malloc_or_die(arity * sizeof(char*));
+	int i = 0;
 	// xxx dup check ...
-	for (sllve_t* pe = pparameters_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+	for (sllve_t* pe = pparameters_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
-		slls_append(pUDF_evaluator_state->pparameters, pparameter_node->text, NO_FREE);
+		pUDF_evaluator_state->parameter_names[i] = pparameter_node->text;
 	}
-	pUDF_evaluator_state->arity = pparameters_node->pchildren->length;
+	pUDF_evaluator_state->arity = arity;
 
 	pUDF_evaluator_state->pblock_statements = sllv_alloc();
 
@@ -368,36 +369,14 @@ static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 	// xxx stash the body statements
 	// xxx arrange for them to be freed
 
-	// xxx temp
-	rval_evaluator_t* pfoo = mlr_malloc_or_die(sizeof(rval_evaluator_t));
-	pfoo->pvstate = NULL;
-	pfoo->pprocess_func = NULL;
-	pfoo->pfree_func = NULL;
+	UDF_defsite_state_t* pdefsite_state = mlr_malloc_or_die(sizeof(UDF_defsite_state_t));
+	pdefsite_state->pvstate = pUDF_evaluator_state;
+	pdefsite_state->arity = arity;
+	pdefsite_state->pprocess_func = NULL; // xxx temp
+	pdefsite_state->pfree_func = NULL; // xxx temp
 
-	fmgr_install_UDF(pcst->pfmgr, pnode->text, pUDF_evaluator_state->arity, pfoo);
+	fmgr_install_UDF(pcst->pfmgr, pnode->text, pUDF_evaluator_state->arity, pdefsite_state);
 }
-
-//static mv_t ep_process_UDF(void* pvstate, variables_t* pvars) {
-//	// xxx unpack from pvstate:
-//	//	sllv_t*        pcst_statements,
-//	//	variables_t*   pvars,
-//	//	cst_outputs_t* pcst_outputs)
-//	//return mv_absent();
-//	return mv_from_int(999);
-//	//pstatement->pblock_handler(pstatement->pblock_statements, pvars, pcst_outputs);
-//}
-//static void ep_free_UDF(rval_evaluator_t* pevaluator) {
-//}
-
-//typedef mv_t rval_evaluator_process_func_t(void* pvstate, variables_t* pvars);
-//
-//typedef void rval_evaluator_free_func_t(struct _rval_evaluator_t*);
-//
-//typedef struct _rval_evaluator_t {
-//	void* pvstate;
-//	rval_evaluator_process_func_t* pprocess_func;
-//	rval_evaluator_free_func_t*    pfree_func;
-//} rval_evaluator_t;
 
 // xxx
 //static mv_t handle_UDF(
