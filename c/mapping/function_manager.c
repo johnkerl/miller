@@ -78,7 +78,6 @@ void fmgr_free(fmgr_t* pfmgr) {
 }
 
 // ----------------------------------------------------------------
-// xxx pass in the arity
 void fmgr_install_UDF(fmgr_t* pfmgr, char* name, int arity, rval_evaluator_t* pevaluator) {
 	// xxx disallow redefine ?
 	// xxx check built-in fcn tbl?
@@ -378,6 +377,60 @@ void fmgr_list_all_functions_raw(fmgr_t* pfmgr, FILE* output_stream) {
 }
 
 // ================================================================
+// xxx move to other file?
+typedef struct _rval_evaluator_UDF_callsite_state_t {
+	int arity;
+	rval_evaluator_t** pargument_evaluators;
+	// xxx UDF_defsite_evaluator
+} rval_evaluator_UDF_callsite_state_t;
+
+//mv_t rval_evaluator_x_xx_func(void* pvstate, variables_t* pvars) {
+//	rval_evaluator_x_xx_state_t* pstate = pvstate;
+//	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
+//	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
+//
+//	// nullities handled by full disposition matrices
+//	return pstate->pfunc(&val1, &val2);
+//}
+//static void rval_evaluator_x_xx_free(rval_evaluator_t* pevaluator) {
+//	rval_evaluator_x_xx_state_t* pstate = pevaluator->pvstate;
+//	pstate->parg1->pfree_func(pstate->parg1);
+//	pstate->parg2->pfree_func(pstate->parg2);
+//	free(pstate);
+//	free(pevaluator);
+//}
+
+static rval_evaluator_t* fmgr_alloc_from_UDF_callsite(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
+	rval_evaluator_t* pUDF_callsite_evaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	rval_evaluator_UDF_callsite_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_UDF_callsite_state_t));
+
+	pstate->arity = pnode->pchildren->length;
+	pstate->pargument_evaluators = mlr_malloc_or_die(pstate->arity * sizeof(rval_evaluator_t*));
+	int i = 0;
+	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+		mlr_dsl_ast_node_t* parg_node = pe->pvvalue;
+		pstate->pargument_evaluators[i] = rval_evaluator_alloc_from_ast(parg_node,
+			pfmgr, type_inferencing, context_flags);
+	}
+
+	pUDF_callsite_evaluator->pvstate = pstate;
+	pUDF_callsite_evaluator->pprocess_func = NULL; // xxx temp
+	pUDF_callsite_evaluator->pfree_func = NULL; // xxx temp
+
+	return pUDF_callsite_evaluator;
+}
+
+//	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+//	pevaluator->pvstate = pstate;
+//	pevaluator->pprocess_func = rval_evaluator_x_xx_func;
+//	pevaluator->pfree_func = rval_evaluator_x_xx_free;
+//
+//	return pevaluator;
+//}
+
+// ================================================================
 rval_evaluator_t* fmgr_alloc_from_operator_or_function(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
@@ -399,7 +452,6 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function(fmgr_t* pfmgr, mlr_dsl_as
 
 	int user_provided_arity = pnode->pchildren->length;
 
-	// xxx needs arity check
 	rval_evaluator_t* pUDF_evaluator = lhmsv_get(pfmgr->pUDF_names_to_evaluators, function_name);
 	if (pUDF_evaluator != NULL) {
 		int UDF_arity = lhmsi_get(pfmgr->pUDF_names_to_arities, function_name);
@@ -408,6 +460,19 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function(fmgr_t* pfmgr, mlr_dsl_as
 				function_name, UDF_arity, (UDF_arity == 1) ? "" : "s", user_provided_arity);
 			exit(1);
 		}
+
+		// xxx
+		(void) fmgr_alloc_from_UDF_callsite(pfmgr, pnode, type_inferencing, context_flags);
+
+		// xxx make arg-evaluators array out of the AST arg nodes
+		// xxx make a UDF_callsite wrapper here
+
+		//int UDF_arity;
+		//rval_evaluator_t* pargument_evaluators;
+		//mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
+		//rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+		//pevaluator = fmgr_alloc_evaluator_from_unary_func_name(function_name, parg1);
+
 		return pUDF_evaluator;
 	}
 

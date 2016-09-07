@@ -343,6 +343,8 @@ static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 	mlr_dsl_ast_node_t* pparameters_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pbody_node = pnode->pchildren->phead->pnext->pvvalue;
 
+	// xxx make UDF_evaluator_state_t ctor/dtor per se
+
 	// xxx arrange for this to be freed
 	UDF_evaluator_state_t* pUDF_evaluator_state = mlr_malloc_or_die(sizeof(UDF_evaluator_state_t));
 
@@ -369,6 +371,12 @@ static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 
 	// xxx stash the body statements
 	// xxx arrange for them to be freed
+
+	// xxx install @ fmgr
+	//rval_evaluator_t* pevfoo3 = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	//pevfoo3->pvstate = NULL;
+	//pevfoo3->pprocess_func = ep_process_foo3;
+	//pevfoo3->pfree_func = ep_free_foo3;
 }
 
 //static mv_t ep_process_UDF(void* pvstate, variables_t* pvars) {
