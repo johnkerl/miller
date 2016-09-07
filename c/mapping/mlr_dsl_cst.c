@@ -21,7 +21,6 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, f
 static mlr_dsl_cst_statement_t* alloc_blank();
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
-static void populate_foo_UDFs(mlr_dsl_cst_t* pcst); // xxx temp
 static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst, int type_inferencing, int context_flags);
 
 // ti = type_inferencing
@@ -256,14 +255,11 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 	pcst->pend_statements   = sllv_alloc();
 	pcst->pfmgr = fmgr_alloc();
 
-	populate_foo_UDFs(pcst);
-
 	mlr_dsl_ast_node_t* plistnode = NULL;
 	for (sllve_t* pe = pnode->proot->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 		switch (pnode->type) {
 
-		// xxx to do
 		case MD_AST_NODE_TYPE_DEF:
 			cst_install_UDF(pnode, pcst, type_inferencing, context_flags);
 			break;
@@ -372,11 +368,13 @@ static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 	// xxx stash the body statements
 	// xxx arrange for them to be freed
 
-	// xxx install @ fmgr
-	//rval_evaluator_t* pevfoo3 = mlr_malloc_or_die(sizeof(rval_evaluator_t));
-	//pevfoo3->pvstate = NULL;
-	//pevfoo3->pprocess_func = ep_process_foo3;
-	//pevfoo3->pfree_func = ep_free_foo3;
+	// xxx temp
+	rval_evaluator_t* pfoo = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pfoo->pvstate = NULL;
+	pfoo->pprocess_func = NULL;
+	pfoo->pfree_func = NULL;
+
+	fmgr_install_UDF(pcst->pfmgr, pnode->text, pUDF_evaluator_state->arity, pfoo);
 }
 
 //static mv_t ep_process_UDF(void* pvstate, variables_t* pvars) {
@@ -401,19 +399,6 @@ static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 //	rval_evaluator_free_func_t*    pfree_func;
 //} rval_evaluator_t;
 
-// ----------------------------------------------------------------
-static mv_t ep_process_foo3(void* pvstate, variables_t* pvars) {
-	// xxx unpack from pvstate:
-	//	sllv_t*        pcst_statements,
-	//	variables_t*   pvars,
-	//	cst_outputs_t* pcst_outputs)
-	//return mv_absent();
-	return mv_from_int(999);
-	//pstatement->pblock_handler(pstatement->pblock_statements, pvars, pcst_outputs);
-}
-static void ep_free_foo3(rval_evaluator_t* pevaluator) {
-}
-
 // xxx
 //static mv_t handle_UDF(
 //	sllv_t*        pcst_statements,
@@ -434,35 +419,6 @@ static void ep_free_foo3(rval_evaluator_t* pevaluator) {
 //	xxx pop boundvars
 //	return retval;
 //}
-
-// ----------------------------------------------------------------
-static void populate_foo_UDFs(mlr_dsl_cst_t* pcst) { // xxx temp
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	mlr_dsl_ast_node_t* pxnode    = mlr_dsl_ast_node_alloc("x",  MD_AST_NODE_TYPE_FIELD_NAME);
-	mlr_dsl_ast_node_t* pprodnode = mlr_dsl_ast_node_alloc_binary("*", MD_AST_NODE_TYPE_OPERATOR,
-		pxnode, pxnode);
-	rval_evaluator_t* pastr = rval_evaluator_alloc_from_ast(pprodnode, pcst->pfmgr, TYPE_INFER_STRING_FLOAT_INT, 0);
-	fmgr_install_UDF(pcst->pfmgr, "tempfoo1", 0, pastr);
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	mlr_dsl_ast_node_t* pynode   = mlr_dsl_ast_node_alloc("y",  MD_AST_NODE_TYPE_FIELD_NAME);
-	mlr_dsl_ast_node_t* psumnode = mlr_dsl_ast_node_alloc_binary("+", MD_AST_NODE_TYPE_OPERATOR,
-		pxnode, pynode);
-	rval_evaluator_t* pastr2 = rval_evaluator_alloc_from_ast(psumnode, pcst->pfmgr, TYPE_INFER_STRING_FLOAT_INT, 0);
-	fmgr_install_UDF(pcst->pfmgr, "tempfoo2", 0, pastr2);
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	rval_evaluator_t* pevfoo3 = mlr_malloc_or_die(sizeof(rval_evaluator_t));
-	pevfoo3->pvstate = NULL;
-	pevfoo3->pprocess_func = ep_process_foo3;
-	pevfoo3->pfree_func = ep_free_foo3;
-	//pstatement->pblock_handler = handle_statement_list_with_break_continue;
-	//pstatement->pblock_handler = (context_flags & IN_BREAKABLE)
-	//	?  handle_statement_list_with_break_continue
-	//	: mlr_dsl_cst_handle_statement_list;
-	fmgr_install_UDF(pcst->pfmgr, "tempfoo3", 1, pevfoo3);
-}
 
 // ----------------------------------------------------------------
 // For begin, end, cond: there must be one child node, of type list.
