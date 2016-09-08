@@ -88,6 +88,7 @@ static void mapper_seqgen_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Start, stop, and/or step may be floating-point. Output is integer if start,\n");
 	fprintf(o, "stop, and step are all integers. Step may be negative. It may not be zero\n");
 	fprintf(o, "unless start == stop (in which case zero records are emitted).\n");
+	fprintf(o, "Most useful as '%s -n %s ... then ...'\n", MLR_GLOBALS.bargv0, verb);
 }
 
 // ----------------------------------------------------------------
