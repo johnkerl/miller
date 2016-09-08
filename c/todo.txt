@@ -22,7 +22,7 @@ k fcn table -> make a class with methods
 * multiple put -f
 * allow locals in if/for/while as well
 ? def @ filter?
-? separate sub & def ?
+? separate sub & func ?
 
 * indent by two more for jvstack
 ? rework comma placement for jvstack?

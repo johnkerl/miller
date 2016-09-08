@@ -198,6 +198,7 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* pnode, int type_
 
 // ----------------------------------------------------------------
 // xxx move up to top
+// xxx make consistent UDF <-> udf here & in other files
 typedef struct _cst_udf_state_t {
 	int       arity;
 	char**    parameter_names;
@@ -205,10 +206,12 @@ typedef struct _cst_udf_state_t {
 	sllv_t*   pblock_statements;
 } cst_udf_state_t;
 
+// ----------------------------------------------------------------
 static mv_t cst_udf_process(void* pvstate, int arity, mv_t* args, variables_t* pvars) {
 	cst_udf_state_t* pstate = pvstate;
 	mv_t retval = mv_absent();
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Bind parameters to arguments
 	bind_stack_push(pvars->pbind_stack, pstate->pbound_variables);
 	// xxx mem-free on replace
@@ -216,18 +219,34 @@ static mv_t cst_udf_process(void* pvstate, int arity, mv_t* args, variables_t* p
 		lhmsmv_put(pstate->pbound_variables, pstate->parameter_names[i], &args[i], NO_FREE); // xxx free-flags
 	}
 
-	// Compute
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Compute the function value
 	// xxx stub
 	retval = mv_from_int(0);
 	for (int i = 0; i < arity; i++) {
 		retval = x_xx_plus_func(&retval, &args[i]);
 	}
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	cst_outputs_t* pcst_outputs = NULL; // xxx
+
+	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+	//		xxx check if is 'local';
+	//		xxx check if is 'return';
+		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+		if (loop_stack_get(pvars->ploop_stack) != 0) {
+			break;
+		}
+	}
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	bind_stack_pop(pvars->pbind_stack);
 
 	return retval;
 }
 
+// ----------------------------------------------------------------
 static void cst_udf_free(struct _UDF_defsite_state_t* pdefsite_state) {
 	cst_udf_state_t* pstate = pdefsite_state->pvstate;
 	// xxx more
@@ -396,12 +415,6 @@ static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 			alloc_cst_statement(pbody_ast_node, pcst->pfmgr, type_inferencing, context_flags));
 	}
 
-	// xxx stash the parameters list
-	// xxx arrange for it to be freed
-
-	// xxx stash the body statements
-	// xxx arrange for them to be freed
-
 	UDF_defsite_state_t* pdefsite_state = mlr_malloc_or_die(sizeof(UDF_defsite_state_t));
 	pdefsite_state->pvstate = pcst_udf_state;
 	pdefsite_state->arity = arity;
@@ -410,27 +423,6 @@ static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 
 	fmgr_install_UDF(pcst->pfmgr, pnode->text, pcst_udf_state->arity, pdefsite_state);
 }
-
-// xxx
-//static mv_t handle_UDF(
-//	sllv_t*        pcst_statements,
-//	variables_t*   pvars,
-//	cst_outputs_t* pcst_outputs)
-//{
-//	mv_t retval = mv_absent();
-//	xxx push boundvars
-//	for (sllve_t* pe = pcst_statements->phead; pe != NULL; pe = pe->pnext) {
-//		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-//		xxx check if is 'local';
-//		xxx check if is 'return';
-//		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
-//		if (loop_stack_get(pvars->ploop_stack) != 0) {
-//			break;
-//		}
-//	}
-//	xxx pop boundvars
-//	return retval;
-//}
 
 // ----------------------------------------------------------------
 // For begin, end, cond: there must be one child node, of type list.
