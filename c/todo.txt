@@ -18,7 +18,7 @@ k impl fmgr::install, and propagate the lhmsv throughout
 k hard-coded cst foo -> invoke installer func
 k boundvar assigment @ ast/cst
 k ast work w/o $/@ prohibits
-* split out sub now
+* split out subr now
 ! ast work w $/@ prohibits
 * multiple put -f
 * allow locals in if/for/while as well
@@ -26,8 +26,7 @@ k ast work w/o $/@ prohibits
 ? separate sub & func ?
 ! disallow reads of unset boundvars
 
-l seqgen verb
-  ! have it ignore all input (like head -n 0)
+* cookbook:
   $ mlr --oxtab -n seqgen --stop 100000 then put 'func f(u) {return -log(1-u)} $o=f(urand())' then stats1 -a p0,p50,p100,mean,count -f o
   o_p0    0.000009
   o_p50   0.692503
@@ -50,6 +49,12 @@ l seqgen verb
 * go through lmag article & clarify all unclears
 * windows port?
 ? msort.o wt?
+
+----------------------------------------------------------------
+4.6.0:
+
+* func & subr
+* seqgen
 
 ----------------------------------------------------------------
 4.6.0 ideas:
