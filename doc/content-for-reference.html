@@ -1277,6 +1277,15 @@ POKI_RUN_COMMAND{{mlr sec2gmt -h}}HERE
 POKI_RUN_COMMAND{{mlr sec2gmtdate -h}}HERE
 
 <!-- ================================================================ -->
+<h2>seqgen</h2>
+
+POKI_RUN_COMMAND{{mlr seqgen -h}}HERE
+
+POKI_RUN_COMMAND{{mlr -n seqgen --stop 10}}HERE
+POKI_RUN_COMMAND{{mlr -n seqgen --start 20 --stop 40 --step 4}}HERE
+POKI_RUN_COMMAND{{mlr -n seqgen --start 40 --stop 20 --step -4}}HERE
+
+<!-- ================================================================ -->
 <h2>shuffle</h2>
 
 POKI_RUN_COMMAND{{mlr shuffle -h}}HERE

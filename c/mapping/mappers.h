@@ -32,6 +32,7 @@ extern mapper_setup_t mapper_reshape_setup;
 extern mapper_setup_t mapper_sample_setup;
 extern mapper_setup_t mapper_sec2gmt_setup;
 extern mapper_setup_t mapper_sec2gmtdate_setup;
+extern mapper_setup_t mapper_seqgen_setup;
 extern mapper_setup_t mapper_shuffle_setup;
 extern mapper_setup_t mapper_sort_setup;
 extern mapper_setup_t mapper_stats1_setup;

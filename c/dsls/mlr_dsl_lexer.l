@@ -89,9 +89,13 @@
 	return MD_TOKEN_STDERR;
 }
 
-"def" {
+"func" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-	return MD_TOKEN_DEF;
+	return MD_TOKEN_FUNC;
+}
+"subr" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
+	return MD_TOKEN_SUBR;
 }
 "local" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);

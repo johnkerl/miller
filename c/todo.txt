@@ -26,7 +26,14 @@ k ast work w/o $/@ prohibits
 ? separate sub & func ?
 ! disallow reads of unset boundvars
 
-* seqgen verb
+l seqgen verb
+  ! have it ignore all input (like head -n 0)
+  $ mlr --oxtab -n seqgen --stop 100000 then put 'func f(u) {return -log(1-u)} $o=f(urand())' then stats1 -a p0,p50,p100,mean,count -f o
+  o_p0    0.000009
+  o_p50   0.692503
+  o_p100  11.026828
+  o_mean  0.999363
+  o_count 100001
 
 * indent by two more for jvstack
 ? rework comma placement for jvstack?

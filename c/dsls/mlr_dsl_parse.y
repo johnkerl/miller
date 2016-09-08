@@ -109,7 +109,7 @@ md_statement_not_braced_end(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
 }
 
-// Only valid in def blocks
+// Only valid in func/subr blocks
 md_statement_not_braced_end(A) ::= MD_TOKEN_LOCAL MD_TOKEN_NON_SIGIL_NAME(N) MD_TOKEN_ASSIGN md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_LOCAL, N, B);
 }
@@ -118,7 +118,8 @@ md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN md_rhs(B). {
 }
 
 // Begin/end
-md_statement_braced_end(A) ::= md_def_block(B).   { A = B; }
+md_statement_braced_end(A) ::= md_func_block(B).  { A = B; }
+md_statement_braced_end(A) ::= md_subr_block(B).  { A = B; }
 md_statement_braced_end(A) ::= md_begin_block(B). { A = B; }
 md_statement_braced_end(A) ::= md_end_block(B).   { A = B; }
 
@@ -200,22 +201,39 @@ md_statement_not_braced_end(A) ::= MD_TOKEN_CONTINUE(O). {
 // * On the "c" we append the next argument to get "anon(a,b,c)".
 // * On the "f" we change the function name to get "f(a,b,c)".
 
-md_def_block(C) ::= MD_TOKEN_DEF
-	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_def_args(A) MD_TOKEN_RPAREN
+md_func_block(C) ::= MD_TOKEN_FUNC
+	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_func_args(A) MD_TOKEN_RPAREN
 	MD_TOKEN_LBRACE md_statement_list(B) MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_set_function_name(A, F->text);
-	C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_DEF, A, B);
+	C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_FUNC, A, B);
 }
-
 // Need to invalidate "f(10,)" -- use some non-empty-args expr.
-md_def_args(A) ::= . {
+md_func_args(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
 }
-md_def_args(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
+md_func_args(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
 	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
 }
-md_def_args(A) ::= md_def_args(B) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(C). {
+md_func_args(A) ::= md_func_args(B) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+
+md_subr_block(C) ::= MD_TOKEN_SUBR
+	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_subr_args(A) MD_TOKEN_RPAREN
+	MD_TOKEN_LBRACE md_statement_list(B) MD_TOKEN_RBRACE.
+{
+	A = mlr_dsl_ast_node_set_function_name(A, F->text);
+	C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_SUBR, A, B);
+}
+// Need to invalidate "f(10,)" -- use some non-empty-args expr.
+md_subr_args(A) ::= . {
+	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
+}
+md_subr_args(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
+	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
+}
+md_subr_args(A) ::= md_subr_args(B) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 

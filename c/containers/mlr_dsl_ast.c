@@ -145,7 +145,8 @@ void mlr_dsl_ast_node_fprint(mlr_dsl_ast_node_t* pnode, FILE* o) {
 char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	switch(type) {
 	case MD_AST_NODE_TYPE_STATEMENT_LIST:                   return "statement_list";                   break;
-	case MD_AST_NODE_TYPE_DEF:                              return "def";                              break;
+	case MD_AST_NODE_TYPE_FUNC:                             return "func";                             break;
+	case MD_AST_NODE_TYPE_SUBR:                             return "subr";                             break;
 	case MD_AST_NODE_TYPE_LOCAL:                            return "local";                            break;
 	case MD_AST_NODE_TYPE_RETURN:                           return "return";                           break;
 	case MD_AST_NODE_TYPE_BEGIN:                            return "begin";                            break;

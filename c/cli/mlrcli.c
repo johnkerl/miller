@@ -61,6 +61,7 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_sample_setup,
 	&mapper_sec2gmt_setup,
 	&mapper_sec2gmtdate_setup,
+	&mapper_seqgen_setup,
 	&mapper_shuffle_setup,
 	&mapper_sort_setup,
 	&mapper_stats1_setup,

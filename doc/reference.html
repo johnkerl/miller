@@ -199,6 +199,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sample">sample</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sec2gmt">sec2gmt</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sec2gmtdate">sec2gmtdate</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#seqgen">seqgen</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#shuffle">shuffle</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#sort">sort</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#stats1">stats1</a><br/>
@@ -415,7 +416,7 @@ Verbs:
    bar bootstrap cat check count-distinct cut decimate filter grep group-by
    group-like having-fields head histogram join label merge-fields nest nothing
    put regularize rename reorder repeat reshape sample sec2gmt sec2gmtdate
-   shuffle sort stats1 stats2 step tac tail tee top uniq
+   seqgen shuffle sort stats1 stats2 step tac tail tee top uniq
 
 Functions for the filter and put verbs:
    + + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! ? :
@@ -4524,6 +4525,69 @@ This is nothing more than a keystroke-saver for the sec2gmtdate function:
   mlr sec2gmtdate time1,time2
 is the same as
   mlr put '$time1=sec2gmtdate($time1);$time2=sec2gmtdate($time2)'
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="seqgen"/><h2>seqgen</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr seqgen -h
+Usage: mlr seqgen [options]
+Produces a sequence of counters.  Discards the input record stream. Produces
+output as specified by the following options:
+-f {name} Field name for counters; default "i".
+--start {number} Inclusive start value; default "0".
+--stop  {number} Exclusive stop value; default "100".
+--step  {number} Step value; default "1".
+Start, stop, and/or step may be floating-point. Output is integer if start,
+stop, and step are all integers. Step may be negative. It may not be zero
+unless start == stop (in which case zero records are emitted).
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr -n seqgen --stop 10
+i=0
+i=1
+i=2
+i=3
+i=4
+i=5
+i=6
+i=7
+i=8
+i=9
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr -n seqgen --start 20 --stop 40 --step 4
+i=20
+i=24
+i=28
+i=32
+i=36
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr -n seqgen --start 40 --stop 20 --step -4
+i=40
+i=36
+i=32
+i=28
+i=24
 </pre>
 </div>
 <p/>

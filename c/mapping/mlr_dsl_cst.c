@@ -22,6 +22,8 @@ static mlr_dsl_cst_statement_t* alloc_blank();
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst, int type_inferencing, int context_flags);
+static void cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
+	int type_inferencing, int context_flags);
 
 static mlr_dsl_cst_statement_t*        alloc_local_variable_definition(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
 static mlr_dsl_cst_statement_t*                           alloc_return(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
@@ -209,6 +211,13 @@ typedef struct _cst_udf_state_t {
 	sllv_t*   pblock_statements;
 } cst_udf_state_t;
 
+typedef struct _cst_subroutine_state_t {
+	int       arity;
+	char**    parameter_names;
+    lhmsmv_t* pbound_variables;
+	sllv_t*   pblock_statements;
+} cst_subroutine_state_t;
+
 // ----------------------------------------------------------------
 static mv_t cst_udf_process(void* pvstate, int arity, mv_t* args, variables_t* pvars) {
 	cst_udf_state_t* pstate = pvstate;
@@ -297,22 +306,22 @@ static void cst_udf_free(struct _UDF_defsite_state_t* pdefsite_state) {
 //                     text="z", type=string_literal.
 //                 text="6", type=strnum_literal.
 
-mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
+mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	int context_flags = 0;
 	// The root node is not populated on empty-string input to the parser.
-	if (pnode->proot == NULL) {
-		pnode->proot = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
+	if (ptop->proot == NULL) {
+		ptop->proot = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
 	}
 
 	mlr_dsl_cst_t* pcst = mlr_malloc_or_die(sizeof(mlr_dsl_cst_t));
 
-	if (pnode->proot->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
+	if (ptop->proot->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d:\n",
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		fprintf(stderr,
 			"expected root node type %s but found %s.\n",
 			mlr_dsl_ast_node_describe_type(MD_AST_NODE_TYPE_STATEMENT_LIST),
-			mlr_dsl_ast_node_describe_type(pnode->proot->type));
+			mlr_dsl_ast_node_describe_type(ptop->proot->type));
 		exit(1);
 	}
 
@@ -322,12 +331,16 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* pnode, int type_inferencing) {
 	pcst->pfmgr = fmgr_alloc();
 
 	mlr_dsl_ast_node_t* plistnode = NULL;
-	for (sllve_t* pe = pnode->proot->pchildren->phead; pe != NULL; pe = pe->pnext) {
+	for (sllve_t* pe = ptop->proot->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 		switch (pnode->type) {
 
-		case MD_AST_NODE_TYPE_DEF:
+		case MD_AST_NODE_TYPE_FUNC:
 			cst_install_UDF(pnode, pcst, type_inferencing, context_flags);
+			break;
+
+		case MD_AST_NODE_TYPE_SUBR:
+			cst_install_subroutine(pnode, pcst, type_inferencing, context_flags);
 			break;
 
 		case MD_AST_NODE_TYPE_BEGIN:
@@ -431,6 +444,48 @@ static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 }
 
 // ----------------------------------------------------------------
+static void cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
+	int type_inferencing, int context_flags)
+{
+	mlr_dsl_ast_node_t* pparameters_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pbody_node = pnode->pchildren->phead->pnext->pvvalue;
+
+	// xxx make cst_subroutine_state_t ctor/dtor per se
+
+	int arity = pparameters_node->pchildren->length;
+	// xxx arrange for this to be freed
+	cst_subroutine_state_t* pcst_subroutine_state = mlr_malloc_or_die(sizeof(cst_subroutine_state_t));
+
+	pcst_subroutine_state->arity = arity;
+
+	pcst_subroutine_state->parameter_names = mlr_malloc_or_die(arity * sizeof(char*));
+	int i = 0;
+	// xxx dup check ...
+	for (sllve_t* pe = pparameters_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
+		pcst_subroutine_state->parameter_names[i] = pparameter_node->text;
+	}
+
+	pcst_subroutine_state->pbound_variables = lhmsmv_alloc();
+
+	pcst_subroutine_state->pblock_statements = sllv_alloc();
+
+// xxx
+	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+//		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+//		sllv_append(pcst_subroutine_state->pblock_statements,
+//			alloc_cst_statement(pbody_ast_node, pcst->pfmgr, type_inferencing, context_flags | IN_BINDABLE));
+	}
+
+	// xxx temp
+	//UDF_defsite_state_t* pdefsite_state = mlr_malloc_or_die(sizeof(UDF_defsite_state_t));
+	//pdefsite_state->pvstate = pcst_subroutine_state;
+	//pdefsite_state->arity = arity;
+	//pdefsite_state->pprocess_func = cst_udf_process;
+	//pdefsite_state->pfree_func = cst_udf_free;
+}
+
+// ----------------------------------------------------------------
 // For begin, end, cond: there must be one child node, of type list.
 static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode) {
 	if (pnode->pchildren->phead == NULL) {
@@ -498,8 +553,12 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, f
 {
 	switch(pnode->type) {
 
-	case MD_AST_NODE_TYPE_DEF:
-		fprintf(stderr, "%s: def statements are only valid at top level.\n", MLR_GLOBALS.bargv0);
+	case MD_AST_NODE_TYPE_FUNC:
+		fprintf(stderr, "%s: func statements are only valid at top level.\n", MLR_GLOBALS.bargv0);
+		exit(1);
+		break;
+	case MD_AST_NODE_TYPE_SUBR:
+		fprintf(stderr, "%s: subr statements are only valid at top level.\n", MLR_GLOBALS.bargv0);
 		exit(1);
 		break;
 	case MD_AST_NODE_TYPE_BEGIN:
