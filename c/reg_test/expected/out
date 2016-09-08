@@ -12345,7 +12345,7 @@ text="list", type=statement_list:
 
 ---------------------------------------------------------------- boundvars outside for
 mlr put -v $x=x
-mlr: statements involving bound variables are not valid outside for-loops.
+mlr: statements involving bound variables are not valid outside for-loops or user-defined functions.
 AST ROOT:
 text="list", type=statement_list:
     text="=", type=srec_assignment:
