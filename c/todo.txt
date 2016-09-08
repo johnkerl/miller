@@ -18,12 +18,15 @@ k impl fmgr::install, and propagate the lhmsv throughout
 k hard-coded cst foo -> invoke installer func
 k boundvar assigment @ ast/cst
 k ast work w/o $/@ prohibits
+* split out sub now
 ! ast work w $/@ prohibits
 * multiple put -f
 * allow locals in if/for/while as well
 ? def @ filter?
 ? separate sub & func ?
 ! disallow reads of unset boundvars
+
+* seqgen verb
 
 * indent by two more for jvstack
 ? rework comma placement for jvstack?
