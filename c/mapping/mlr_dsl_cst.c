@@ -23,6 +23,9 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst, int type_inferencing, int context_flags);
 
+static mlr_dsl_cst_statement_t*        alloc_local_variable_definition(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
+static mlr_dsl_cst_statement_t*                           alloc_return(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
+
 // ti = type_inferencing
 // cf = context_flags
 // dfp = do_full_prefixing
@@ -221,22 +224,25 @@ static mv_t cst_udf_process(void* pvstate, int arity, mv_t* args, variables_t* p
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Compute the function value
-	// xxx stub
-	retval = mv_from_int(0);
-	for (int i = 0; i < arity; i++) {
-		retval = x_xx_plus_func(&retval, &args[i]);
-	}
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	cst_outputs_t* pcst_outputs = NULL; // xxx
 
 	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-	//		xxx check if is 'local';
-	//		xxx check if is 'return';
-		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
-		if (loop_stack_get(pvars->ploop_stack) != 0) {
+		if (pstatement->local_variable_name != NULL) {
+			// local statement
+			rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
+			mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+			lhmsmv_put(pstate->pbound_variables, pstatement->local_variable_name, &val, FREE_ENTRY_VALUE);
+		} else if (pstatement->preturn_evaluator != NULL) {
+			// return statement
+			retval = pstatement->preturn_evaluator->pprocess_func(pstatement->preturn_evaluator->pvstate, pvars);
 			break;
+		} else {
+			// anything else
+			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			if (loop_stack_get(pvars->ploop_stack) != 0) {
+				break;
+			}
 		}
 	}
 
@@ -412,7 +418,7 @@ static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
 		sllv_append(pcst_udf_state->pblock_statements,
-			alloc_cst_statement(pbody_ast_node, pcst->pfmgr, type_inferencing, context_flags));
+			alloc_cst_statement(pbody_ast_node, pcst->pfmgr, type_inferencing, context_flags | IN_BINDABLE));
 	}
 
 	UDF_defsite_state_t* pdefsite_state = mlr_malloc_or_die(sizeof(UDF_defsite_state_t));
@@ -505,6 +511,13 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, f
 		exit(1);
 		break;
 
+	case MD_AST_NODE_TYPE_LOCAL:
+		return alloc_local_variable_definition(pnode, pfmgr, type_inferencing, context_flags);
+		break;
+	case MD_AST_NODE_TYPE_RETURN:
+		return alloc_return(pnode, pfmgr, type_inferencing, context_flags);
+		break;
+
 	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK:
 		return alloc_conditional_block(pnode, pfmgr, type_inferencing, context_flags);
 		break;
@@ -524,11 +537,6 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, f
 	case MD_AST_NODE_TYPE_FOR_OOSVAR:
 		return alloc_for_oosvar(pnode, pfmgr, type_inferencing, context_flags | IN_BREAKABLE | IN_BINDABLE);
 		break;
-
-
-	// xxx
-	// case MD_AST_NODE_TYPE_RETURN:
-	//	break;
 
 	case MD_AST_NODE_TYPE_BREAK:
 		if (!(context_flags & IN_BREAKABLE)) {
@@ -634,6 +642,8 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
 
 	pstatement->pnode_handler                        = NULL;
+	pstatement->local_variable_name                  = NULL;
+	pstatement->preturn_evaluator                    = NULL;
 	pstatement->pblock_handler                       = NULL;
 	pstatement->poosvar_lhs_keylist_evaluators       = NULL;
 	pstatement->pemit_keylist_evaluators             = NULL;
@@ -660,6 +670,29 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->ptype_infererenced_srec_field_getter = NULL;
 	pstatement->pbound_variables                     = NULL;
 
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
+static mlr_dsl_cst_statement_t* alloc_local_variable_definition(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+	int type_inferencing, int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pnext->pvvalue;
+	pstatement->local_variable_name = pname_node->text;
+	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, pfmgr,
+		type_inferencing, context_flags | IN_BINDABLE);
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_return(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+	int type_inferencing, int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
+	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pfmgr,
+		type_inferencing, context_flags | IN_BINDABLE);
 	return pstatement;
 }
 
@@ -1537,6 +1570,10 @@ static file_output_mode_t file_output_mode_from_ast_node_type(mlr_dsl_ast_node_t
 
 // ----------------------------------------------------------------
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
+
+	if (pstatement->preturn_evaluator != NULL) {
+		pstatement->preturn_evaluator->pfree_func(pstatement->preturn_evaluator);
+	}
 
 	if (pstatement->poosvar_lhs_keylist_evaluators != NULL) {
 		for (sllve_t* pe = pstatement->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {

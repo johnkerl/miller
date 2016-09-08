@@ -45,7 +45,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 					MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
 				exit(1);
 			} else if (!(context_flags & IN_BINDABLE)) {
-				fprintf(stderr, "%s: statements involving bound variables are not valid outside for-loops.\n",
+				fprintf(stderr, "%s: statements involving bound variables are not valid outside for-loops or user-defined functions.\n",
 					MLR_GLOBALS.bargv0);
 				exit(1);
 			}

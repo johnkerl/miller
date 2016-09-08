@@ -23,6 +23,7 @@ k fcn table -> make a class with methods
 * allow locals in if/for/while as well
 ? def @ filter?
 ? separate sub & func ?
+! disallow reads of unset boundvars
 
 * indent by two more for jvstack
 ? rework comma placement for jvstack?

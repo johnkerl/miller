@@ -101,6 +101,12 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.
 	mlr_dsl_cst_node_handler_func_t* pnode_handler;
 
+	// Definition of local variable within user-defined function. Uses prhs_evaluator for value.
+	char* local_variable_name;
+
+	// Return statement within user-defined function
+	rval_evaluator_t* preturn_evaluator;
+
 	// There are two variants of statement-list handlers: one for inside loop bodies which has to check break/continue
 	// flags after each statement, and another for outside loop bodies which doesn't need to check those. (This is a
 	// micro-optimization.) For bodyless statements (e.g. assignment) this is null.

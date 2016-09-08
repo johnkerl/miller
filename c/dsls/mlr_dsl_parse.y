@@ -111,7 +111,7 @@ md_statement_not_braced_end(A) ::= . {
 
 // Only valid in def blocks
 md_statement_not_braced_end(A) ::= MD_TOKEN_LOCAL MD_TOKEN_NON_SIGIL_NAME(N) MD_TOKEN_ASSIGN md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_RETURN, N, B);
+	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_LOCAL, N, B);
 }
 md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary("return", MD_AST_NODE_TYPE_RETURN, B);
