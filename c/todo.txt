@@ -24,7 +24,8 @@ k ast work w/o $/@ prohibits
 ! subr callsite @ .y
 * multiple put -f
 * allow locals in if/for/while as well
-? def @ filter?
+? func @ filter?
+* func/subr -> func_def/subr_def in the grammar? or, subr_call -> call ?
 ? separate sub & func ?
 ! disallow reads of unset boundvars
 
