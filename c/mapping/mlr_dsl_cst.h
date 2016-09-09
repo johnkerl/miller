@@ -183,6 +183,9 @@ typedef struct _mlr_dsl_cst_t {
 
 	// Function manager for built-in functions as well as user-defined functions (which are CST-specific).
 	fmgr_t* pfmgr;
+
+	// Subroutine bodies
+	lhmsv_t* pcst_subroutine_states;
 } mlr_dsl_cst_t;
 
 // ----------------------------------------------------------------

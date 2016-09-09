@@ -333,6 +333,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	pcst->pmain_statements  = sllv_alloc();
 	pcst->pend_statements   = sllv_alloc();
 	pcst->pfmgr = fmgr_alloc();
+	pcst->pcst_subroutine_states = lhmsv_alloc();
 
 	mlr_dsl_ast_node_t* plistnode = NULL;
 	for (sllve_t* pe = ptop->proot->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -343,7 +344,9 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 			cst_install_UDF(pnode, pcst, type_inferencing, context_flags);
 			break;
 
+		// xxx MD_AST_NODE_TYPE_SUBR_DEFSITE et al.?
 		case MD_AST_NODE_TYPE_SUBR:
+			// xxx factor out the struct and lhmsv_put it here ?
 			cst_install_subroutine(pnode, pcst, type_inferencing, context_flags);
 			break;
 
@@ -475,19 +478,13 @@ static void cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcs
 
 	pcst_subroutine_state->pblock_statements = sllv_alloc();
 
-// xxx
 	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
-//		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-//		sllv_append(pcst_subroutine_state->pblock_statements,
-//			alloc_cst_statement(pbody_ast_node, pcst->pfmgr, type_inferencing, context_flags | IN_BINDABLE));
+		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+		sllv_append(pcst_subroutine_state->pblock_statements,
+			alloc_cst_statement(pbody_ast_node, pcst->pfmgr, type_inferencing, context_flags | IN_BINDABLE));
 	}
 
-	// xxx temp
-	//UDF_defsite_state_t* pdefsite_state = mlr_malloc_or_die(sizeof(UDF_defsite_state_t));
-	//pdefsite_state->pvstate = pcst_subroutine_state;
-	//pdefsite_state->arity = arity;
-	//pdefsite_state->pprocess_func = cst_udf_process;
-	//pdefsite_state->pfree_func = cst_udf_free;
+	lhmsv_put(pcst->pcst_subroutine_states, pparameters_node->text, pcst_subroutine_state, NO_FREE);
 }
 
 // ----------------------------------------------------------------
@@ -570,6 +567,7 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	sllv_free(pcst->pmain_statements);
 	sllv_free(pcst->pend_statements);
 	fmgr_free(pcst->pfmgr);
+	lhmsv_free(pcst->pcst_subroutine_states); // xxx free void-star payloads as well
 
 	free(pcst);
 }
@@ -809,6 +807,8 @@ static mlr_dsl_cst_statement_t* alloc_return(mlr_dsl_ast_node_t* pnode, fmgr_t* 
 //     text="s", type=non_sigil_name:
 //         text="W", type=strnum_literal.
 //         text="999", type=strnum_literal.
+
+// xxx need to pass subrstates in here too
 static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
@@ -816,11 +816,23 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t* pnode, f
 
 	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
 
-	int arity = pname_node->pchildren->length;
-	pstatement->subr_callsite_arity = arity;
+	int callsite_arity = pname_node->pchildren->length;
+	pstatement->subr_callsite_arity = callsite_arity;
 
-	pstatement->subr_callsite_argument_evaluators = mlr_malloc_or_die(arity * sizeof(rval_evaluator_t*));
-	pstatement->subr_callsite_arguments = mlr_malloc_or_die(arity * sizeof(mv_t));
+	cst_subroutine_state_t* pcst_subroutine_state = lhmsv_get(NULL /* xxx temp pcst->pcst_subroutine_states*/,
+		pname_node->text);
+	if (pcst_subroutine_state == NULL) {
+		fprintf(stderr, "%s: subroutine \"%s\" not found.\n", MLR_GLOBALS.bargv0, pname_node->text);
+		exit(1);
+	}
+	if (pcst_subroutine_state->arity != callsite_arity) {
+		fprintf(stderr, "%s: subroutine \"%s\" expects argument count %d but argument count %d was provied.\n",
+			MLR_GLOBALS.bargv0, pname_node->text, pcst_subroutine_state->arity, callsite_arity);
+		exit(1);
+	}
+
+	pstatement->subr_callsite_argument_evaluators = mlr_malloc_or_die(callsite_arity * sizeof(rval_evaluator_t*));
+	pstatement->subr_callsite_arguments = mlr_malloc_or_die(callsite_arity * sizeof(mv_t));
 
 	int i = 0;
 	// xxx dup check ...
