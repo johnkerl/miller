@@ -54,6 +54,20 @@
 struct _mlr_dsl_cst_statement_t;
 struct _mlr_dsl_cst_statement_vararg_t;
 
+typedef struct _cst_udf_state_t {
+	int       arity;
+	char**    parameter_names;
+    lhmsmv_t* pbound_variables;
+	sllv_t*   pblock_statements;
+} cst_udf_state_t;
+
+typedef struct _cst_subroutine_state_t {
+	int       arity;
+	char**    parameter_names;
+    lhmsmv_t* pbound_variables;
+	sllv_t*   pblock_statements;
+} cst_subroutine_state_t;
+
 // Parameter bag to reduce parameter-marshaling
 typedef struct _cst_outputs_t {
 	int*    pshould_emit_rec;
@@ -102,9 +116,10 @@ typedef struct _mlr_dsl_cst_statement_t {
 	mlr_dsl_cst_node_handler_func_t* pnode_handler;
 
 	// For subroutines
-	int    subr_callsite_arity;
+	int   subr_callsite_arity;
 	rval_evaluator_t** subr_callsite_argument_evaluators;
 	mv_t* subr_callsite_arguments;
+	cst_subroutine_state_t *psubr_defsite;
 
 	// Definition of local variable within user-defined function. Uses prhs_evaluator for value.
 	char* local_variable_name;

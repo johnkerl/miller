@@ -221,19 +221,6 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* pnode, int type_
 // ----------------------------------------------------------------
 // xxx move up to top
 // xxx make consistent UDF <-> udf here & in other files
-typedef struct _cst_udf_state_t {
-	int       arity;
-	char**    parameter_names;
-    lhmsmv_t* pbound_variables;
-	sllv_t*   pblock_statements;
-} cst_udf_state_t;
-
-typedef struct _cst_subroutine_state_t {
-	int       arity;
-	char**    parameter_names;
-    lhmsmv_t* pbound_variables;
-	sllv_t*   pblock_statements;
-} cst_subroutine_state_t;
 
 // ----------------------------------------------------------------
 // xxx move code around to more reasonable places
@@ -505,9 +492,10 @@ static void cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcs
 }
 
 // ----------------------------------------------------------------
-// xxx subr def site
-// xxx
-//	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// xxx maybe just have a new bindstack rather than placing a fence
+
+static void cst_invoke_subroutine(cst_subroutine_state_t* pstate, variables_t* pvars, int callsite_arity, mv_t* args) {
+
 //	// Bind parameters to arguments
 //	bind_stack_push(pvars->pbind_stack, pstatement->pbound_variables);
 //	// xxx temp
@@ -539,6 +527,8 @@ static void cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcs
 //
 //	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //	bind_stack_pop(pvars->pbind_stack);
+
+}
 
 // ----------------------------------------------------------------
 // For begin, end, cond: there must be one child node, of type list.
@@ -768,6 +758,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->subr_callsite_arity                  = 0;
 	pstatement->subr_callsite_argument_evaluators    = NULL;
 	pstatement->subr_callsite_arguments              = NULL;
+	pstatement->psubr_defsite                        = NULL;
 	pstatement->local_variable_name                  = NULL;
 	pstatement->preturn_evaluator                    = NULL;
 	pstatement->pblock_handler                       = NULL;
@@ -863,6 +854,8 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t* pnode,
 		pstatement->subr_callsite_argument_evaluators[i] = rval_evaluator_alloc_from_ast(pargument_node,
 			pfmgr, type_inferencing, context_flags);
 	}
+
+	pstatement->psubr_defsite = pcst_subroutine_state;
 
 	pstatement->pnode_handler = handle_subr_callsite;
 	return pstatement;
@@ -1951,7 +1944,8 @@ static void handle_subr_callsite(
 		pstatement->subr_callsite_arguments[i] = pev->pprocess_func(pev->pvstate, pvars);
 	}
 
-	// xxx invoke the body
+	cst_invoke_subroutine(pstatement->psubr_defsite, pvars, pstatement->subr_callsite_arity,
+		pstatement->subr_callsite_arguments);
 }
 
 // ----------------------------------------------------------------
