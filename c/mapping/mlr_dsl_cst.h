@@ -101,6 +101,10 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.
 	mlr_dsl_cst_node_handler_func_t* pnode_handler;
 
+	// For subroutines
+	int    subr_arity;
+	char** subr_parameter_names;
+
 	// Definition of local variable within user-defined function. Uses prhs_evaluator for value.
 	char* local_variable_name;
 
