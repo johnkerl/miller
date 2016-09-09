@@ -27,7 +27,10 @@ static void cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcs
 
 static mlr_dsl_cst_statement_t*        alloc_local_variable_definition(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
 static mlr_dsl_cst_statement_t*                           alloc_return(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
-static mlr_dsl_cst_statement_t*                    alloc_subr_callsite(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
+
+//static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t*p, lhmsv_t* pcst_subroutine_states,
+	//fmgr_t*m, int ti, int cf);
+static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
 
 // ti = type_inferencing
 // cf = context_flags
@@ -347,6 +350,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 		// xxx MD_AST_NODE_TYPE_SUBR_DEFSITE et al.?
 		case MD_AST_NODE_TYPE_SUBR:
 			// xxx factor out the struct and lhmsv_put it here ?
+			// xxx swap order of 1st two args & et als
 			cst_install_subroutine(pnode, pcst, type_inferencing, context_flags);
 			break;
 
@@ -617,6 +621,7 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, f
 		break;
 
 	case MD_AST_NODE_TYPE_SUBR_CALLSITE:
+		//return alloc_subr_callsite(pnode, pfmgr, pcst->pcst_subroutine_states, type_inferencing, context_flags);
 		return alloc_subr_callsite(pnode, pfmgr, type_inferencing, context_flags);
 		break;
 
@@ -809,6 +814,8 @@ static mlr_dsl_cst_statement_t* alloc_return(mlr_dsl_ast_node_t* pnode, fmgr_t* 
 //         text="999", type=strnum_literal.
 
 // xxx need to pass subrstates in here too
+//static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t*p, lhmsv_t* pcst_subroutine_states,
+	//fmgr_t* pfmgr, int type_inferencing, int context_flags)
 static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
