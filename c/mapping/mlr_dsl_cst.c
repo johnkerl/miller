@@ -491,6 +491,42 @@ static void cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcs
 }
 
 // ----------------------------------------------------------------
+// xxx subr def site
+// xxx
+//	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//	// Bind parameters to arguments
+//	bind_stack_push(pvars->pbind_stack, pstatement->pbound_variables);
+//	// xxx temp
+//	mv_t* args = NULL;
+//	// xxx mem-free on replace
+//	for (int i = 0; i < pstatement->subr_arity; i++) {
+//		lhmsmv_put(pstatement->pbound_variables, pstatement->subr_parameter_names[i], &args[i], NO_FREE); // xxx free-flags
+//	}
+//
+//	for (sllve_t* pe = pstatement->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
+//		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+//		if (pstatement->local_variable_name != NULL) {
+//			// local statement
+//			rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
+//			mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+//			lhmsmv_put(pstatement->pbound_variables, pstatement->local_variable_name, &val, FREE_ENTRY_VALUE);
+//		} else if (pstatement->preturn_evaluator != NULL) {
+//			// return statement
+//			// xxx separate return-void from return-value
+//			break;
+//		} else {
+//			// anything else
+//			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+//			if (loop_stack_get(pvars->ploop_stack) != 0) {
+//				break;
+//			}
+//		}
+//	}
+//
+//	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+//	bind_stack_pop(pvars->pbind_stack);
+
+// ----------------------------------------------------------------
 // For begin, end, cond: there must be one child node, of type list.
 static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode) {
 	if (pnode->pchildren->phead == NULL) {
@@ -710,8 +746,9 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
 
 	pstatement->pnode_handler                        = NULL;
-	//pstatement->subr_arity                           = 0; // xxx
-	//pstatement->subr_parameter_names                 = NULL; // xxx
+	pstatement->subr_call_arity                      = 0;
+	pstatement->subr_call_argument_evaluators        = NULL;
+	pstatement->subr_call_arguments                  = NULL;
 	pstatement->local_variable_name                  = NULL;
 	pstatement->preturn_evaluator                    = NULL;
 	pstatement->pblock_handler                       = NULL;
@@ -766,37 +803,32 @@ static mlr_dsl_cst_statement_t* alloc_return(mlr_dsl_ast_node_t* pnode, fmgr_t* 
 	return pstatement;
 }
 
+// AST:
+//
+// text="subr_call", type=subr_call:
+//     text="s", type=non_sigil_name:
+//         text="W", type=strnum_literal.
+//         text="999", type=strnum_literal.
 static mlr_dsl_cst_statement_t* alloc_subr_call(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
-//	mlr_dsl_ast_node_t* pparameters_node = pnode->pchildren->phead->pvvalue;
-//	mlr_dsl_ast_node_t* pbody_node = pnode->pchildren->phead->pnext->pvvalue;
-//
-//	int arity = pparameters_node->pchildren->length;
-//
-//	pstatement->subr_arity = arity;
+	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
 
-//	rval_evaluator_t** subr_call_argument_evaluators;
+	int arity = pname_node->pchildren->length;
+	pstatement->subr_call_arity = arity;
 
-//	pstatement->subr_parameter_names = mlr_malloc_or_die(arity * sizeof(char*));
-//	int i = 0;
-//	// xxx dup check ...
-//	for (sllve_t* pe = pparameters_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
-//		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
-//		pstatement->subr_parameter_names[i] = pparameter_node->text;
-//	}
-//
-//	pstatement->pbound_variables = lhmsmv_alloc();
-//
-//	pstatement->pblock_statements = sllv_alloc();
-//
-//	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
-//		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-//		sllv_append(pstatement->pblock_statements,
-//			alloc_cst_statement(pbody_ast_node, pfmgr, type_inferencing, context_flags | IN_BINDABLE));
-//	}
+	pstatement->subr_call_argument_evaluators = mlr_malloc_or_die(arity * sizeof(rval_evaluator_t*));
+	pstatement->subr_call_arguments = mlr_malloc_or_die(arity * sizeof(mv_t));
+
+	int i = 0;
+	// xxx dup check ...
+	for (sllve_t* pe = pname_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+		mlr_dsl_ast_node_t* pargument_node = pe->pvvalue;
+		pstatement->subr_call_argument_evaluators[i] = rval_evaluator_alloc_from_ast(pargument_node,
+			pfmgr, type_inferencing, context_flags);
+	}
 
 	pstatement->pnode_handler = handle_subr_call;
 	return pstatement;
@@ -1676,10 +1708,19 @@ static file_output_mode_t file_output_mode_from_ast_node_type(mlr_dsl_ast_node_t
 
 // ----------------------------------------------------------------
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
-// xxx
-//	if (pstatement->subr_parameter_names != NULL) {
-//		free(pstatement->subr_parameter_names);
-//	}
+
+	if (pstatement->subr_call_argument_evaluators != NULL) {
+		for (int i = 0; i < pstatement->subr_call_arity; i++) {
+			rval_evaluator_t* phandler = pstatement->subr_call_argument_evaluators[i];
+			phandler->pfree_func(phandler);
+		}
+	}
+
+	if (pstatement->subr_call_arguments != NULL) {
+		for (int i = 0; i < pstatement->subr_call_arity; i++) {
+			mv_free(&pstatement->subr_call_arguments[i]);
+		}
+	}
 
 	if (pstatement->preturn_evaluator != NULL) {
 		pstatement->preturn_evaluator->pfree_func(pstatement->preturn_evaluator);
@@ -1868,39 +1909,13 @@ static void handle_subr_call(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-// xxx
-//	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//	// Bind parameters to arguments
-//	bind_stack_push(pvars->pbind_stack, pstatement->pbound_variables);
-//	// xxx temp
-//	mv_t* args = NULL;
-//	// xxx mem-free on replace
-//	for (int i = 0; i < pstatement->subr_arity; i++) {
-//		lhmsmv_put(pstatement->pbound_variables, pstatement->subr_parameter_names[i], &args[i], NO_FREE); // xxx free-flags
-//	}
-//
-//	for (sllve_t* pe = pstatement->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
-//		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-//		if (pstatement->local_variable_name != NULL) {
-//			// local statement
-//			rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-//			mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-//			lhmsmv_put(pstatement->pbound_variables, pstatement->local_variable_name, &val, FREE_ENTRY_VALUE);
-//		} else if (pstatement->preturn_evaluator != NULL) {
-//			// return statement
-//			// xxx separate return-void from return-value
-//			break;
-//		} else {
-//			// anything else
-//			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
-//			if (loop_stack_get(pvars->ploop_stack) != 0) {
-//				break;
-//			}
-//		}
-//	}
-//
-//	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//	bind_stack_pop(pvars->pbind_stack);
+	// xxx subr_call -> subr_callsite throughout?
+	for (int i = 0; i < pstatement->subr_call_arity; i++) {
+		rval_evaluator_t* pev = pstatement->subr_call_argument_evaluators[i];
+		pstatement->subr_call_arguments[i] = pev->pprocess_func(pev->pvstate, pvars);
+	}
+
+	// xxx invoke the body
 }
 
 // ----------------------------------------------------------------
