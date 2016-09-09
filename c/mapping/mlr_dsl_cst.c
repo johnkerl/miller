@@ -14,6 +14,12 @@
 // * Do "mlr -n put -v 'your expression goes here'"
 // ================================================================
 
+// ----------------------------------------------------------------
+// xxx expand names here
+typedef mlr_dsl_cst_statement_t* cst_statement_allocator_t(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
+typedef void cst_statement_handler_t(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+
+// ----------------------------------------------------------------
 static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode);
 
 static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
@@ -25,41 +31,40 @@ static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst, int 
 static void cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 	int type_inferencing, int context_flags);
 
-static mlr_dsl_cst_statement_t*        alloc_local_variable_definition(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
-static mlr_dsl_cst_statement_t*                           alloc_return(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
-
-//static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t*p, lhmsv_t* pcst_subroutine_states,
-	//fmgr_t*m, int ti, int cf);
-static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
-
 // ti = type_inferencing
 // cf = context_flags
 // dfp = do_full_prefixing
-static mlr_dsl_cst_statement_t*                  alloc_srec_assignment(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
-static mlr_dsl_cst_statement_t*         alloc_indirect_srec_assignment(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
-static mlr_dsl_cst_statement_t*                alloc_oosvar_assignment(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
-static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
-static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
-static mlr_dsl_cst_statement_t*             alloc_unset(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
 
-static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
-static mlr_dsl_cst_statement_t*           alloc_if_head(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
-static mlr_dsl_cst_statement_t*             alloc_while(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
-static mlr_dsl_cst_statement_t*          alloc_do_while(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
-static mlr_dsl_cst_statement_t*          alloc_for_srec(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
-static mlr_dsl_cst_statement_t*        alloc_for_oosvar(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
-static mlr_dsl_cst_statement_t*             alloc_break(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
-static mlr_dsl_cst_statement_t*          alloc_continue(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
-static mlr_dsl_cst_statement_t*            alloc_filter(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
+static cst_statement_allocator_t alloc_local_variable_definition;
+static cst_statement_allocator_t alloc_return;
+static cst_statement_allocator_t alloc_subr_callsite;
 
-static mlr_dsl_cst_statement_t*      alloc_bare_boolean(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
+static cst_statement_allocator_t alloc_srec_assignment;
+static cst_statement_allocator_t alloc_indirect_srec_assignment;
+static cst_statement_allocator_t alloc_oosvar_assignment;
+static cst_statement_allocator_t alloc_oosvar_from_full_srec_assignment;
+static cst_statement_allocator_t alloc_full_srec_from_oosvar_assignment;
+static cst_statement_allocator_t alloc_unset;
 
-static mlr_dsl_cst_statement_t*               alloc_tee(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
-static mlr_dsl_cst_statement_t*             alloc_emitf(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
-static mlr_dsl_cst_statement_t*              alloc_emit(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf, int dfp);
-static mlr_dsl_cst_statement_t*       alloc_emit_lashed(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf, int dfp);
-static mlr_dsl_cst_statement_t*              alloc_dump(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
-static mlr_dsl_cst_statement_t*             alloc_print(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf, char* print_terminator);
+static cst_statement_allocator_t alloc_conditional_block;
+static cst_statement_allocator_t alloc_if_head;
+static cst_statement_allocator_t alloc_while;
+static cst_statement_allocator_t alloc_do_while;
+static cst_statement_allocator_t alloc_for_srec;
+static cst_statement_allocator_t alloc_for_oosvar;
+static cst_statement_allocator_t alloc_break;
+static cst_statement_allocator_t alloc_continue;
+static cst_statement_allocator_t alloc_filter;
+
+static cst_statement_allocator_t alloc_bare_boolean;
+
+static cst_statement_allocator_t alloc_tee;
+static cst_statement_allocator_t alloc_emitf;
+
+static mlr_dsl_cst_statement_t*        alloc_emit(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf, int dfp);
+static mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf, int dfp);
+static mlr_dsl_cst_statement_t*        alloc_dump(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf);
+static mlr_dsl_cst_statement_t*       alloc_print(mlr_dsl_ast_node_t* p, fmgr_t* m, int ti, int cf, char* print_terminator);
 static file_output_mode_t file_output_mode_from_ast_node_type(mlr_dsl_ast_node_type_t mlr_dsl_ast_node_type);
 
 static mlr_dsl_cst_statement_t* alloc_if_item(
@@ -85,28 +90,28 @@ static void handle_statement_list_with_break_continue(
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs);
 
-static void                    handle_subr_callsite(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static cst_statement_handler_t handle_subr_callsite;
 
-static void                  handle_srec_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void         handle_indirect_srec_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                handle_oosvar_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void      handle_oosvar_to_oosvar_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void handle_oosvar_from_full_srec_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void handle_full_srec_from_oosvar_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                handle_oosvar_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                            handle_unset(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                        handle_unset_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static cst_statement_handler_t handle_srec_assignment;
+static cst_statement_handler_t handle_indirect_srec_assignment;
+static cst_statement_handler_t handle_oosvar_assignment;
+static cst_statement_handler_t handle_oosvar_to_oosvar_assignment;
+static cst_statement_handler_t handle_oosvar_from_full_srec_assignment;
+static cst_statement_handler_t handle_full_srec_from_oosvar_assignment;
+static cst_statement_handler_t handle_oosvar_assignment;
+static cst_statement_handler_t handle_unset;
+static cst_statement_handler_t handle_unset_all;
 
-static void                           handle_filter(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                handle_conditional_block(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                            handle_while(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                         handle_do_while(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                         handle_for_srec(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                       handle_for_oosvar(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                            handle_break(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                         handle_continue(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                          handle_if_head(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                     handle_bare_boolean(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static cst_statement_handler_t handle_filter;
+static cst_statement_handler_t handle_conditional_block;
+static cst_statement_handler_t handle_while;
+static cst_statement_handler_t handle_do_while;
+static cst_statement_handler_t handle_for_srec;
+static cst_statement_handler_t handle_for_oosvar;
+static cst_statement_handler_t handle_break;
+static cst_statement_handler_t handle_continue;
+static cst_statement_handler_t handle_if_head;
+static cst_statement_handler_t handle_bare_boolean;
 
 static void handle_for_oosvar_aux(
 	mlr_dsl_cst_statement_t* pstatement,
@@ -115,36 +120,36 @@ static void handle_for_oosvar_aux(
 	mlhmmv_value_t           submap,
 	sllse_t*                 prest_for_k_names);
 
-static void                   handle_unset_vararg_oosvar (mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
-static void                handle_unset_vararg_full_srec (mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
-static void          handle_unset_vararg_srec_field_name (mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
-static void handle_unset_vararg_indirect_srec_field_name (mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
+static void handle_unset_vararg_oosvar(mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
+static void handle_unset_vararg_full_srec(mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
+static void handle_unset_vararg_srec_field_name(mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
+static void handle_unset_vararg_indirect_srec_field_name(mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
 
-static void                     handle_tee_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                      handle_tee_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static lrec_t*                    handle_tee_common(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static cst_statement_handler_t handle_tee_to_stdfp;
+static cst_statement_handler_t handle_tee_to_file;
+static lrec_t*                 handle_tee_common(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 
-static void                            handle_emitf(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                   handle_emitf_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                    handle_emitf_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                     handle_emitf_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* poutrecs);
+static cst_statement_handler_t handle_emitf;
+static cst_statement_handler_t handle_emitf_to_stdfp;
+static cst_statement_handler_t handle_emitf_to_file;
+static void handle_emitf_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* poutrecs);
 
-static void                             handle_emit(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                    handle_emit_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                     handle_emit_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                      handle_emit_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* poutrecs, char* f);
+static cst_statement_handler_t handle_emit;
+static cst_statement_handler_t handle_emit_to_stdfp;
+static cst_statement_handler_t handle_emit_to_file;
+static void handle_emit_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* o, char* f);
 
-static void                      handle_emit_lashed(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void             handle_emit_lashed_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void              handle_emit_lashed_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void               handle_emit_lashed_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* poutrecs, char* f);
+static cst_statement_handler_t handle_emit_lashed;
+static cst_statement_handler_t handle_emit_lashed_to_stdfp;
+static cst_statement_handler_t handle_emit_lashed_to_file;
+static void handle_emit_lashed_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* o, char* f);
 
-static void                         handle_emit_all(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                handle_emit_all_to_stdfp(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                 handle_emit_all_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                             handle_dump(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                     handle_dump_to_file(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
-static void                            handle_print(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static cst_statement_handler_t handle_emit_all;
+static cst_statement_handler_t handle_emit_all_to_stdfp;
+static cst_statement_handler_t handle_emit_all_to_file;
+static cst_statement_handler_t handle_dump;
+static cst_statement_handler_t handle_dump_to_file;
+static cst_statement_handler_t handle_print;
 
 static void mlr_dsl_filter_keyword_usage  (FILE* ostream);
 static void mlr_dsl_unset_keyword_usage   (FILE* ostream);
