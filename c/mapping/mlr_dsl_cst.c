@@ -27,6 +27,7 @@ static void cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcs
 
 static mlr_dsl_cst_statement_t*        alloc_local_variable_definition(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
 static mlr_dsl_cst_statement_t*                           alloc_return(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
+static mlr_dsl_cst_statement_t*                        alloc_subr_call(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
 
 // ti = type_inferencing
 // cf = context_flags
@@ -577,6 +578,10 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, f
 		return alloc_return(pnode, pfmgr, type_inferencing, context_flags);
 		break;
 
+	case MD_AST_NODE_TYPE_SUBR_CALL:
+		return alloc_subr_call(pnode, pfmgr, type_inferencing, context_flags);
+		break;
+
 	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK:
 		return alloc_conditional_block(pnode, pfmgr, type_inferencing, context_flags);
 		break;
@@ -752,6 +757,14 @@ static mlr_dsl_cst_statement_t* alloc_return(mlr_dsl_ast_node_t* pnode, fmgr_t* 
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
 	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pfmgr,
 		type_inferencing, context_flags | IN_BINDABLE);
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_subr_call(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+	int type_inferencing, int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+	// xxx temp
 	return pstatement;
 }
 

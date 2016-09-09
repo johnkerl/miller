@@ -20,6 +20,8 @@ k boundvar assigment @ ast/cst
 k ast work w/o $/@ prohibits
 * split out subr now
 ! ast work w $/@ prohibits
+! return_value vs. return_void
+! subr callsite @ .y
 * multiple put -f
 * allow locals in if/for/while as well
 ? def @ filter?

@@ -131,6 +131,10 @@ md_statement_braced_end(A) ::= md_for_loop_full_oosvar(B). { A = B; }
 md_statement_braced_end(A) ::= md_for_loop_oosvar(B).      { A = B; }
 md_statement_braced_end(A) ::= md_if_chain(B).             { A = B; }
 
+md_statement_not_braced_end(A) ::= MD_TOKEN_SUBR_CALL md_fcn_or_subr_call(B). {
+	A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALL, B);
+}
+
 // Not valid in begin/end since they refer to srecs:
 md_statement_not_braced_end(A) ::= md_srec_assignment(B).                  { A = B; }
 md_statement_not_braced_end(A) ::= md_srec_indirect_assignment(B).         { A = B; }
@@ -1619,6 +1623,10 @@ md_atom_or_fcn(A) ::= MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN. {
 	A = B;
 }
 
+md_atom_or_fcn(A) ::= md_fcn_or_subr_call(B). {
+	A = B;
+}
+
 // Given "f(a,b,c)": since this is a bottom-up parser, we get first the "a",
 // then "a,b", then "a,b,c", then finally "f(a,b,c)". So:
 // * On the "a" we make a function sub-AST called "anon(a)".
@@ -1626,7 +1634,7 @@ md_atom_or_fcn(A) ::= MD_TOKEN_LPAREN md_rhs(B) MD_TOKEN_RPAREN. {
 // * On the "c" we append the next argument to get "anon(a,b,c)".
 // * On the "f" we change the function name to get "f(a,b,c)".
 
-md_atom_or_fcn(A) ::= MD_TOKEN_NON_SIGIL_NAME(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
+md_fcn_or_subr_call(A) ::= MD_TOKEN_NON_SIGIL_NAME(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
 // Need to invalidate "f(10,)" -- use some non-empty-args expr.

@@ -97,6 +97,10 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
 	return MD_TOKEN_SUBR;
 }
+"call" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
+	return MD_TOKEN_SUBR_CALL;
+}
 "local" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
 	return MD_TOKEN_LOCAL;
