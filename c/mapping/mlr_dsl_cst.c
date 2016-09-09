@@ -27,7 +27,7 @@ static void cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcs
 
 static mlr_dsl_cst_statement_t*        alloc_local_variable_definition(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
 static mlr_dsl_cst_statement_t*                           alloc_return(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
-static mlr_dsl_cst_statement_t*                        alloc_subr_call(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
+static mlr_dsl_cst_statement_t*                    alloc_subr_callsite(mlr_dsl_ast_node_t*p, fmgr_t*m, int ti, int cf);
 
 // ti = type_inferencing
 // cf = context_flags
@@ -82,7 +82,7 @@ static void handle_statement_list_with_break_continue(
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs);
 
-static void                        handle_subr_call(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static void                    handle_subr_callsite(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 
 static void                  handle_srec_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
 static void         handle_indirect_srec_assignment(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
@@ -618,8 +618,8 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode, f
 		return alloc_return(pnode, pfmgr, type_inferencing, context_flags);
 		break;
 
-	case MD_AST_NODE_TYPE_SUBR_CALL:
-		return alloc_subr_call(pnode, pfmgr, type_inferencing, context_flags);
+	case MD_AST_NODE_TYPE_SUBR_CALLSITE:
+		return alloc_subr_callsite(pnode, pfmgr, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK:
@@ -746,9 +746,9 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
 
 	pstatement->pnode_handler                        = NULL;
-	pstatement->subr_call_arity                      = 0;
-	pstatement->subr_call_argument_evaluators        = NULL;
-	pstatement->subr_call_arguments                  = NULL;
+	pstatement->subr_callsite_arity                  = 0;
+	pstatement->subr_callsite_argument_evaluators    = NULL;
+	pstatement->subr_callsite_arguments              = NULL;
 	pstatement->local_variable_name                  = NULL;
 	pstatement->preturn_evaluator                    = NULL;
 	pstatement->pblock_handler                       = NULL;
@@ -805,11 +805,11 @@ static mlr_dsl_cst_statement_t* alloc_return(mlr_dsl_ast_node_t* pnode, fmgr_t* 
 
 // AST:
 //
-// text="subr_call", type=subr_call:
+// text="subr_callsite", type=subr_callsite:
 //     text="s", type=non_sigil_name:
 //         text="W", type=strnum_literal.
 //         text="999", type=strnum_literal.
-static mlr_dsl_cst_statement_t* alloc_subr_call(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
@@ -817,20 +817,20 @@ static mlr_dsl_cst_statement_t* alloc_subr_call(mlr_dsl_ast_node_t* pnode, fmgr_
 	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
 
 	int arity = pname_node->pchildren->length;
-	pstatement->subr_call_arity = arity;
+	pstatement->subr_callsite_arity = arity;
 
-	pstatement->subr_call_argument_evaluators = mlr_malloc_or_die(arity * sizeof(rval_evaluator_t*));
-	pstatement->subr_call_arguments = mlr_malloc_or_die(arity * sizeof(mv_t));
+	pstatement->subr_callsite_argument_evaluators = mlr_malloc_or_die(arity * sizeof(rval_evaluator_t*));
+	pstatement->subr_callsite_arguments = mlr_malloc_or_die(arity * sizeof(mv_t));
 
 	int i = 0;
 	// xxx dup check ...
 	for (sllve_t* pe = pname_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* pargument_node = pe->pvvalue;
-		pstatement->subr_call_argument_evaluators[i] = rval_evaluator_alloc_from_ast(pargument_node,
+		pstatement->subr_callsite_argument_evaluators[i] = rval_evaluator_alloc_from_ast(pargument_node,
 			pfmgr, type_inferencing, context_flags);
 	}
 
-	pstatement->pnode_handler = handle_subr_call;
+	pstatement->pnode_handler = handle_subr_callsite;
 	return pstatement;
 }
 
@@ -1709,16 +1709,16 @@ static file_output_mode_t file_output_mode_from_ast_node_type(mlr_dsl_ast_node_t
 // ----------------------------------------------------------------
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
-	if (pstatement->subr_call_argument_evaluators != NULL) {
-		for (int i = 0; i < pstatement->subr_call_arity; i++) {
-			rval_evaluator_t* phandler = pstatement->subr_call_argument_evaluators[i];
+	if (pstatement->subr_callsite_argument_evaluators != NULL) {
+		for (int i = 0; i < pstatement->subr_callsite_arity; i++) {
+			rval_evaluator_t* phandler = pstatement->subr_callsite_argument_evaluators[i];
 			phandler->pfree_func(phandler);
 		}
 	}
 
-	if (pstatement->subr_call_arguments != NULL) {
-		for (int i = 0; i < pstatement->subr_call_arity; i++) {
-			mv_free(&pstatement->subr_call_arguments[i]);
+	if (pstatement->subr_callsite_arguments != NULL) {
+		for (int i = 0; i < pstatement->subr_callsite_arity; i++) {
+			mv_free(&pstatement->subr_callsite_arguments[i]);
 		}
 	}
 
@@ -1904,15 +1904,14 @@ static void handle_statement_list_with_break_continue(
 }
 
 // ----------------------------------------------------------------
-static void handle_subr_call(
+static void handle_subr_callsite(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	// xxx subr_call -> subr_callsite throughout?
-	for (int i = 0; i < pstatement->subr_call_arity; i++) {
-		rval_evaluator_t* pev = pstatement->subr_call_argument_evaluators[i];
-		pstatement->subr_call_arguments[i] = pev->pprocess_func(pev->pvstate, pvars);
+	for (int i = 0; i < pstatement->subr_callsite_arity; i++) {
+		rval_evaluator_t* pev = pstatement->subr_callsite_argument_evaluators[i];
+		pstatement->subr_callsite_arguments[i] = pev->pprocess_func(pev->pvstate, pvars);
 	}
 
 	// xxx invoke the body

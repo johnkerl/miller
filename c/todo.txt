@@ -28,6 +28,7 @@ k ast work w/o $/@ prohibits
 * func/subr -> func_def/subr_def in the grammar? or, subr_call -> call ?
 ? separate sub & func ?
 ! disallow reads of unset boundvars
+* kw autodoc mods
 
 * cookbook:
   $ mlr --oxtab -n seqgen --stop 100000 then put 'func f(u) {return -log(1-u)} $o=f(urand())' then stats1 -a p0,p50,p100,mean,count -f o

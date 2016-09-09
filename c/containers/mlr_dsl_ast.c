@@ -147,7 +147,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_STATEMENT_LIST:                   return "statement_list";                   break;
 	case MD_AST_NODE_TYPE_FUNC:                             return "func";                             break;
 	case MD_AST_NODE_TYPE_SUBR:                             return "subr";                             break;
-	case MD_AST_NODE_TYPE_SUBR_CALL:                        return "subr_call";                        break;
+	case MD_AST_NODE_TYPE_SUBR_CALLSITE:                    return "subr_callsite";                    break;
 	case MD_AST_NODE_TYPE_LOCAL:                            return "local";                            break;
 	case MD_AST_NODE_TYPE_RETURN:                           return "return";                           break;
 	case MD_AST_NODE_TYPE_BEGIN:                            return "begin";                            break;

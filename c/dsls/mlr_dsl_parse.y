@@ -132,7 +132,7 @@ md_statement_braced_end(A) ::= md_for_loop_oosvar(B).      { A = B; }
 md_statement_braced_end(A) ::= md_if_chain(B).             { A = B; }
 
 md_statement_not_braced_end(A) ::= MD_TOKEN_SUBR_CALL md_fcn_or_subr_call(B). {
-	A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALL, B);
+	A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALLSITE, B);
 }
 
 // Not valid in begin/end since they refer to srecs:
