@@ -102,8 +102,8 @@ typedef struct _mlr_dsl_cst_statement_t {
 	mlr_dsl_cst_node_handler_func_t* pnode_handler;
 
 	// For subroutines
-	int    subr_arity;
-	char** subr_parameter_names;
+	int    subr_call_arity;
+	rval_evaluator_t** subr_call_argument_evaluators;
 
 	// Definition of local variable within user-defined function. Uses prhs_evaluator for value.
 	char* local_variable_name;
