@@ -185,7 +185,7 @@ typedef struct _mlr_dsl_cst_t {
 	fmgr_t* pfmgr;
 
 	// Subroutine bodies
-	lhmsv_t* pcst_subroutine_states;
+	lhmsv_t* psubroutine_states;
 } mlr_dsl_cst_t;
 
 // ----------------------------------------------------------------
