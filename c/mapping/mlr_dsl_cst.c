@@ -494,39 +494,41 @@ static void cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcs
 // ----------------------------------------------------------------
 // xxx maybe just have a new bindstack rather than placing a fence
 
-static void cst_invoke_subroutine(cst_subroutine_state_t* pstate, variables_t* pvars, int callsite_arity, mv_t* args) {
+static void cst_execute_subroutine(cst_subroutine_state_t* pstate, variables_t* pvars,
+	cst_outputs_t* pcst_outputs, int callsite_arity, mv_t* args)
+{
 
-//	// Bind parameters to arguments
-//	bind_stack_push(pvars->pbind_stack, pstatement->pbound_variables);
-//	// xxx temp
-//	mv_t* args = NULL;
-//	// xxx mem-free on replace
-//	for (int i = 0; i < pstatement->subr_arity; i++) {
-//		lhmsmv_put(pstatement->pbound_variables, pstatement->subr_parameter_names[i], &args[i], NO_FREE); // xxx free-flags
-//	}
-//
-//	for (sllve_t* pe = pstatement->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
-//		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-//		if (pstatement->local_variable_name != NULL) {
-//			// local statement
-//			rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-//			mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-//			lhmsmv_put(pstatement->pbound_variables, pstatement->local_variable_name, &val, FREE_ENTRY_VALUE);
-//		} else if (pstatement->preturn_evaluator != NULL) {
-//			// return statement
-//			// xxx separate return-void from return-value
-//			break;
-//		} else {
-//			// anything else
-//			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
-//			if (loop_stack_get(pvars->ploop_stack) != 0) {
-//				break;
-//			}
-//		}
-//	}
-//
-//	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-//	bind_stack_pop(pvars->pbind_stack);
+	// Bind parameters to arguments
+	bind_stack_push(pvars->pbind_stack, pstate->pbound_variables); // xxx wtf
+
+	// xxx mem-free on replace
+	for (int i = 0; i < pstate->arity; i++) {
+		lhmsmv_put(pstate->pbound_variables, pstate->parameter_names[i], &args[i], NO_FREE);
+			// xxx free-flags
+	}
+
+	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+		if (pstatement->local_variable_name != NULL) {
+			// local statement
+			rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
+			mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+			lhmsmv_put(pstatement->pbound_variables, pstatement->local_variable_name, &val, FREE_ENTRY_VALUE);
+		} else if (pstatement->preturn_evaluator != NULL) {
+			// return statement
+			// xxx separate return-void from return-value
+			break;
+		} else {
+			// anything else
+			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			if (loop_stack_get(pvars->ploop_stack) != 0) {
+				break;
+			}
+		}
+	}
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	bind_stack_pop(pvars->pbind_stack);
 
 }
 
@@ -1944,7 +1946,7 @@ static void handle_subr_callsite(
 		pstatement->subr_callsite_arguments[i] = pev->pprocess_func(pev->pvstate, pvars);
 	}
 
-	cst_invoke_subroutine(pstatement->psubr_defsite, pvars, pstatement->subr_callsite_arity,
+	cst_execute_subroutine(pstatement->psubr_defsite, pvars, pcst_outputs, pstatement->subr_callsite_arity,
 		pstatement->subr_callsite_arguments);
 }
 
