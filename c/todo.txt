@@ -20,6 +20,7 @@ UDFs:
 * xxx's
 * UT/doc: multiple filter/put -f (new mld section)
 * UT: bind-stack fences
+* UT/doc: note UDFs may overwrite built-in functions; & test that
 ? allow locals in if/for/while as well
 ? func @ filter?
 ? disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?

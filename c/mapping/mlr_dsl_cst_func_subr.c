@@ -39,7 +39,7 @@ static void cst_udf_free(struct _udf_defsite_state_t* pdefsite_state);
 //                         text="y", type=bound_variable.
 //                         text="2", type=strnum_literal.
 
-void mlr_dsl_cst_install_udf(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
+void mlr_dsl_cst_install_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
 	mlr_dsl_ast_node_t* pparameters_node = pnode->pchildren->phead->pvvalue;
@@ -88,7 +88,7 @@ void mlr_dsl_cst_install_udf(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 }
 
 // ----------------------------------------------------------------
-void mlr_dsl_cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
+void mlr_dsl_cst_install_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
 	mlr_dsl_ast_node_t* pparameters_node = pnode->pchildren->phead->pvvalue;

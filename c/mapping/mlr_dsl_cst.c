@@ -323,14 +323,11 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 		switch (pnode->type) {
 
 		case MD_AST_NODE_TYPE_FUNC_DEF:
-			mlr_dsl_cst_install_udf(pnode, pcst, type_inferencing, context_flags);
+			mlr_dsl_cst_install_udf(pcst, pnode, type_inferencing, context_flags);
 			break;
 
-		// xxx MD_AST_NODE_TYPE_SUBR_DEFSITE et al.?
 		case MD_AST_NODE_TYPE_SUBR_DEF:
-			// xxx factor out the struct and lhmsv_put it here ?
-			// xxx swap order of 1st two args & et als
-			mlr_dsl_cst_install_subroutine(pnode, pcst, type_inferencing, context_flags);
+			mlr_dsl_cst_install_subroutine(pcst, pnode, type_inferencing, context_flags);
 			break;
 
 		case MD_AST_NODE_TYPE_BEGIN:

@@ -240,15 +240,15 @@ typedef struct _cst_subroutine_state_t {
 
 // Installs into the CST's function-manager object
 void mlr_dsl_cst_install_udf(
-	mlr_dsl_ast_node_t* pnode,
 	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
 	int                 type_inferencing,
 	int                 context_flags);
 
 // Installs into the CST's subroutine-states map
 void mlr_dsl_cst_install_subroutine(
-	mlr_dsl_ast_node_t* pnode,
 	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
 	int                 type_inferencing,
 	int                 context_flags);
 
