@@ -4546,7 +4546,6 @@ output as specified by the following options:
 Start, stop, and/or step may be floating-point. Output is integer if start,
 stop, and step are all integers. Step may be negative. It may not be zero
 unless start == stop (in which case zero records are emitted).
-Most useful as 'mlr -n seqgen ... then ...'
 </pre>
 </div>
 <p/>
@@ -4554,7 +4553,7 @@ Most useful as 'mlr -n seqgen ... then ...'
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr -n seqgen --stop 10
+$ mlr seqgen --stop 10
 i=0
 i=1
 i=2
@@ -4571,7 +4570,7 @@ i=9
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr -n seqgen --start 20 --stop 40 --step 4
+$ mlr seqgen --start 20 --stop 40 --step 4
 i=20
 i=24
 i=28
@@ -4583,7 +4582,7 @@ i=36
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr -n seqgen --start 40 --stop 20 --step -4
+$ mlr seqgen --start 40 --stop 20 --step -4
 i=40
 i=36
 i=32
