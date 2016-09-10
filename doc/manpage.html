@@ -521,7 +521,8 @@ VERBS
        -x: Prints records for which {expression} evaluates to false.
        -f {filename}: the DSL expression is taken from the specified file rather
 	   than from the command line. Outer single quotes wrapping the expression
-	   should not be placed in the file.
+	   should not be placed in the file. If -f is specified more than once,
+	   all input files specified using -f are concatenated to produce the expression.
 
        Please use a dollar sign for field names and double-quotes for string
        literals. If field names have special characters such as "." then you might
@@ -774,7 +775,10 @@ VERBS
 	   to output records for emit. Default ":".
        -f {filename}: the DSL expression is taken from the specified file rather
 	   than from the command line. Outer single quotes wrapping the expression
-	   should not be placed in the file.
+	   should not be placed in the file. If -f is specified more than once,
+	   all input files specified using -f are concatenated to produce the expression.
+	   (For example, you can define functions in one file and call them from another.)
+
        --no-fflush: for emit, tee, print, and dump, don't call fflush() after every
 	   record.
        Any of the output-format command-line flags (see mlr -h). Example: using
