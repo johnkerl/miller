@@ -53,7 +53,9 @@ UDFs:
 * func & subr. acknowledge awk yet again.
 * seqgen
 * mlr -F and -K. Note -l -L -f -F -k -K.
+
 * inverse-transform-sampling example at cookbook.
+* 10-min
 
 ----------------------------------------------------------------
 4.6.0 ideas:

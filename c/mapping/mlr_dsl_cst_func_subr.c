@@ -143,9 +143,8 @@ void mlr_dsl_cst_execute_subroutine(cst_subroutine_state_t* pstate, variables_t*
 			rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 			mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 			lhmsmv_put(pstatement->pbound_variables, pstatement->local_variable_name, &val, FREE_ENTRY_VALUE);
-		} else if (pstatement->preturn_evaluator != NULL) {
+		} else if (pstatement->is_return_void) {
 			// return statement
-			// xxx separate return-void from return-value
 			break;
 		} else {
 			// anything else

@@ -38,7 +38,8 @@ static mlr_dsl_cst_statement_t* alloc_blank();
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 static cst_statement_allocator_t alloc_local_variable_definition;
-static cst_statement_allocator_t alloc_return;
+static cst_statement_allocator_t alloc_return_value; // UDF
+static cst_statement_allocator_t alloc_return_void;  // Subroutine
 static cst_statement_allocator_t alloc_subr_callsite;
 
 static cst_statement_allocator_t alloc_srec_assignment;
@@ -448,8 +449,15 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_ast_node_t* pnode,
 	case MD_AST_NODE_TYPE_LOCAL:
 		return alloc_local_variable_definition(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
-	case MD_AST_NODE_TYPE_RETURN:
-		return alloc_return(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
+
+	// xxx disallow @ subr def
+	case MD_AST_NODE_TYPE_RETURN_VALUE:
+		return alloc_return_value(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
+		break;
+
+	// xxx disallow @ func def
+	case MD_AST_NODE_TYPE_RETURN_VOID:
+		return alloc_return_void(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_SUBR_CALLSITE:
@@ -590,6 +598,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->psubr_defsite                        = NULL;
 	pstatement->local_variable_name                  = NULL;
 	pstatement->preturn_evaluator                    = NULL;
+	pstatement->is_return_void                       = FALSE;
 	pstatement->pblock_handler                       = NULL;
 	pstatement->poosvar_lhs_keylist_evaluators       = NULL;
 	pstatement->pemit_keylist_evaluators             = NULL;
@@ -632,13 +641,21 @@ static mlr_dsl_cst_statement_t* alloc_local_variable_definition(mlr_dsl_ast_node
 	return pstatement;
 }
 
-static mlr_dsl_cst_statement_t* alloc_return(mlr_dsl_ast_node_t* pnode,
+static mlr_dsl_cst_statement_t* alloc_return_value(mlr_dsl_ast_node_t* pnode,
 	fmgr_t* pfmgr, lhmsv_t* pcst_subroutine_states, int type_inferencing, int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
 	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pfmgr,
 		type_inferencing, context_flags | IN_BINDABLE);
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_return_void(mlr_dsl_ast_node_t* pnode,
+	fmgr_t* pfmgr, lhmsv_t* pcst_subroutine_states, int type_inferencing, int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+	pstatement->is_return_void = TRUE;
 	return pstatement;
 }
 
