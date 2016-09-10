@@ -69,6 +69,12 @@ void mlr_dsl_cst_install_udf(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 
 	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+		if (pbody_ast_node->type == MD_AST_NODE_TYPE_RETURN_VOID) {
+			fprintf(stderr,
+				"%s: return statements within user-defined functions must return a value.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		sllv_append(pcst_udf_state->pblock_statements,
 			mlr_dsl_cst_alloc_statement(pbody_ast_node, pcst->pfmgr, pcst->psubroutine_states,
 				type_inferencing, context_flags | IN_BINDABLE));
@@ -113,6 +119,12 @@ void mlr_dsl_cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pc
 
 	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+		if (pbody_ast_node->type == MD_AST_NODE_TYPE_RETURN_VALUE) {
+			fprintf(stderr,
+				"%s: return statements within user-defined subroutines must not return a value.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		sllv_append(pcst_subroutine_state->pblock_statements,
 			mlr_dsl_cst_alloc_statement(pbody_ast_node, pcst->pfmgr, pcst->psubroutine_states,
 				type_inferencing, context_flags | IN_BINDABLE));

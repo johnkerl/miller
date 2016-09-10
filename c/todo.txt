@@ -12,7 +12,7 @@ TOP OF LIST:
   - to 4.n.0 release notes as well
 
 UDFs:
-! return_value vs. return_void
+* prohibit return-value @ subr; prohibit return-void @ UDF
 * multiple put -f
 ! ast work w $/@ prohibits
 * allow locals in if/for/while as well
