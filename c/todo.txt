@@ -11,33 +11,31 @@ TOP OF LIST:
   - publish
 
 UDFs:
-* multiple put -f
+* multiple filter/put -f: UT; new mld section
 ! ast work w $/@ prohibits
 * allow locals in if/for/while as well
 ? func @ filter?
 ? disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
 * kw autodoc mods
 
-! try to get seqgen to force eof sooner. in particular, try to get 'mlr seqgen' w/o -n. if so, fix cookbook etc.
-
-* some help for keyword clashes? e.g. 'func E(x) { ... }' ?
-* NR PI E etc. to keyword help ...
-
 * indent by two more for jvstack
 ? rework comma placement for jvstack?
+
 * --c2p, --c2j etc ...
 
-! rh/fedora/centos
-! multi-field x many verbs
+? some help for keyword clashes? e.g. 'func E(x) { ... }' ?
+* NR PI E etc. to keyword help ...
 
 ? triple-fors?
-
-* dquoting for other formats.
 
 * call for use-cases? (go first.)
 * go through lmag article & clarify all unclears
 * windows port?
 ? msort.o wt?
+
+* dquoting for other formats.
+! rh/fedora/centos
+! multi-field x many verbs
 
 ----------------------------------------------------------------
 4.6.0:
@@ -45,6 +43,7 @@ UDFs:
 * func & subr. acknowledge awk yet again.
 * seqgen
 * mlr -F and -K. Note -l -L -f -F -k -K.
+* multiple filter/put -f with examples @ new mld section.
 
 * inverse-transform-sampling example at cookbook.
 * 10-min
