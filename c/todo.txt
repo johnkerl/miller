@@ -15,7 +15,9 @@ JSON formatting:
 * publish
 
 UDFs:
-* multiple filter/put -f: UT; new mld section
+!! scrutinize for reallocs missing n*sizeof(..)
+* multiple filter/put -f: UTs & new mld section
+* bind-stack fences
 ! ast work w $/@ prohibits
 * allow locals in if/for/while as well
 ? func @ filter?

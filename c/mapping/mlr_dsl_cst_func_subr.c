@@ -134,13 +134,11 @@ void mlr_dsl_cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pc
 }
 
 // ----------------------------------------------------------------
-// xxx maybe just have a new bindstack rather than placing a fence
-
 void mlr_dsl_cst_execute_subroutine(cst_subroutine_state_t* pstate, variables_t* pvars,
 	cst_outputs_t* pcst_outputs, int callsite_arity, mv_t* args)
 {
 	// Bind parameters to arguments
-	bind_stack_push(pvars->pbind_stack, pstate->pbound_variables); // xxx wtf
+	bind_stack_push_fenced(pvars->pbind_stack, pstate->pbound_variables);
 
 	// xxx mem-free on replace
 	for (int i = 0; i < pstate->arity; i++) {
@@ -180,7 +178,7 @@ static mv_t cst_udf_process(void* pvstate, int arity, mv_t* args, variables_t* p
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Bind parameters to arguments
-	bind_stack_push(pvars->pbind_stack, pstate->pbound_variables);
+	bind_stack_push_fenced(pvars->pbind_stack, pstate->pbound_variables);
 	// xxx mem-free on replace
 	for (int i = 0; i < arity; i++) {
 		lhmsmv_put(pstate->pbound_variables, pstate->parameter_names[i], &args[i], NO_FREE); // xxx free-flags

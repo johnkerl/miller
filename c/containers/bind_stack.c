@@ -12,8 +12,8 @@ bind_stack_t* bind_stack_alloc() {
 	pstack->num_used = 0;
 	pstack->num_allocated = INITIAL_SIZE;
 
-	pstack->pframes = mlr_malloc_or_die(pstack->num_allocated * sizeof(lhmsmv_t*));
-	memset(pstack->pframes, 0, pstack->num_allocated * sizeof(lhmsmv_t*));
+	pstack->pframes = mlr_malloc_or_die(pstack->num_allocated * sizeof(bind_stack_frame_t));
+	memset(pstack->pframes, 0, pstack->num_allocated * sizeof(bind_stack_frame_t));
 
 	return pstack;
 }
@@ -28,12 +28,26 @@ void bind_stack_free(bind_stack_t* pstack) {
 }
 
 // ----------------------------------------------------------------
-void bind_stack_push(bind_stack_t* pstack, lhmsmv_t* pframe) {
+void bind_stack_push(bind_stack_t* pstack, lhmsmv_t* bindings) {
 	if (pstack->num_used >= pstack->num_allocated) {
 		pstack->num_allocated += INITIAL_SIZE;
-		pstack->pframes = mlr_realloc_or_die(pstack->pframes, pstack->num_allocated);
+		pstack->pframes = mlr_realloc_or_die(pstack->pframes,
+			pstack->num_allocated * sizeof(bind_stack_frame_t));
 	}
-	pstack->pframes[pstack->num_used] = pframe;
+	pstack->pframes[pstack->num_used].bindings = bindings;
+	pstack->pframes[pstack->num_used].fenced = FALSE;
+	pstack->num_used++;
+}
+
+// ----------------------------------------------------------------
+void bind_stack_push_fenced(bind_stack_t* pstack, lhmsmv_t* bindings) {
+	if (pstack->num_used >= pstack->num_allocated) {
+		pstack->num_allocated += INITIAL_SIZE;
+		pstack->pframes = mlr_realloc_or_die(pstack->pframes,
+			pstack->num_allocated * sizeof(bind_stack_frame_t));
+	}
+	pstack->pframes[pstack->num_used].bindings = bindings;
+	pstack->pframes[pstack->num_used].fenced = FALSE;
 	pstack->num_used++;
 }
 
@@ -49,10 +63,12 @@ void bind_stack_pop(bind_stack_t* pstack) {
 
 // ----------------------------------------------------------------
 mv_t* bind_stack_resolve(bind_stack_t* pstack, char* key) {
-	for(int i = pstack->num_used - 1; i >= 0; i--) {
-		mv_t* pval = lhmsmv_get(pstack->pframes[i], key);
+	for (int i = pstack->num_used - 1; i >= 0; i--) {
+		mv_t* pval = lhmsmv_get(pstack->pframes[i].bindings, key);
 		if (pval != NULL)
 			return pval;
+		if (pstack->pframes[i].fenced)
+			break;
 	}
 	return NULL;
 }
@@ -61,8 +77,8 @@ mv_t* bind_stack_resolve(bind_stack_t* pstack, char* key) {
 void bind_stack_print(bind_stack_t* pstack) {
 	printf("BIND STACK BEGIN (#frames %d):\n", pstack->num_used);
 	for (int i = pstack->num_used - 1; i >= 0; i--) {
-		printf("-- FRAME %d:\n", i);
-		lhmsmv_dump(pstack->pframes[i]);
+		printf("-- FRAME %d (fenced:%d):\n", i, pstack->pframes[i].fenced);
+		lhmsmv_dump(pstack->pframes[i].bindings);
 	}
 	printf("BIND STACK END\n");
 }
