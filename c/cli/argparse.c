@@ -9,6 +9,7 @@ typedef enum _ap_flag_t {
 	AP_LONG_LONG_FLAG,
 	AP_DOUBLE_FLAG,
 	AP_STRING_FLAG,
+	AP_STRING_BUILD_LIST_FLAG,
 	AP_STRING_LIST_FLAG,
 	AP_STRING_ARRAY_FLAG
 } ap_flag_t;
@@ -99,6 +100,10 @@ void ap_define_string_flag(ap_state_t* pstate, char* flag_name, char** pstring) 
 	sllv_append(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_STRING_FLAG, 0, pstring, 2));
 }
 
+void ap_define_string_build_list_flag(ap_state_t* pstate, char* flag_name, slls_t** pplist) {
+	sllv_append(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_STRING_BUILD_LIST_FLAG, 0, pplist, 2));
+}
+
 void ap_define_string_list_flag(ap_state_t* pstate, char* flag_name, slls_t** pplist) {
 	sllv_append(pstate->pflag_defs, ap_flag_def_alloc(flag_name, AP_STRING_LIST_FLAG, 0, pplist, 2));
 }
@@ -165,22 +170,34 @@ int ap_parse_aux(ap_state_t* pstate, char* verb, int* pargi, int argc, char** ar
 					argv[0], verb, argv[argi+1], argv[argi]);
 				fprintf(stderr, "\n");
 			}
+
 		} else if (pdef->type == AP_STRING_FLAG) {
 			char** pstring = pdef->pval;
 			*pstring = argv[argi+1];
 			pdef->pval = pstring;
+
+		} else if (pdef->type == AP_STRING_BUILD_LIST_FLAG) {
+			slls_t** pplist = pdef->pval;
+			if (*pplist == NULL) {
+				*pplist = slls_alloc();
+			}
+			slls_append_no_free(*pplist, argv[argi+1]);
+			pdef->pval = pplist;
+
 		} else if (pdef->type == AP_STRING_LIST_FLAG) {
 			slls_t** pplist = pdef->pval;
 			if (*pplist != NULL)
 				slls_free(*pplist);
 			*pplist = slls_from_line(argv[argi+1], ',', FALSE);
 			pdef->pval = pplist;
+
 		} else if (pdef->type == AP_STRING_ARRAY_FLAG) {
 			string_array_t** pparray = pdef->pval;
 			if (*pparray != NULL)
 				string_array_free(*pparray);
 			*pparray = string_array_from_line(argv[argi+1], ',');
 			pdef->pval = pparray;
+
 		} else {
 			ok = FALSE;
 			fprintf(stderr, "argparse.c: internal coding error: flag-def type %x not recognized.\n", pdef->type);

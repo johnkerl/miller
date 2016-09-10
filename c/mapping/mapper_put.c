@@ -1,5 +1,6 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
+#include "lib/string_builder.h"
 #include "cli/mlrcli.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
@@ -73,7 +74,10 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "    to output records for emit. Default \"%s\".\n", DEFAULT_OOSVAR_FLATTEN_SEPARATOR);
 	fprintf(o, "-f {filename}: the DSL expression is taken from the specified file rather\n");
 	fprintf(o, "    than from the command line. Outer single quotes wrapping the expression\n");
-	fprintf(o, "    should not be placed in the file.\n");
+	fprintf(o, "    should not be placed in the file. If -f is specified more than once,\n");
+	fprintf(o, "    all input files specified using -f are concatenated to produce the expression.\n");
+	fprintf(o, "    (For example, you can define functions in one file and call them from another.)\n");
+	fprintf(o, "\n");
 	fprintf(o, "--no-fflush: for emit, tee, print, and dump, don't call fflush() after every\n");
 	fprintf(o, "    record.\n");
 	fprintf(o, "Any of the output-format command-line flags (see %s -h). Example: using\n",
@@ -126,7 +130,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 {
 	char* mlr_dsl_expression                  = NULL;
 	char* comment_stripped_mlr_dsl_expression = NULL;
-	char* expression_filename                 = NULL;
+	slls_t* expression_filenames              = slls_alloc();
 	int   outer_filter                        = TRUE;
 	int   type_inferencing                    = TYPE_INFER_STRING_FLOAT_INT;
 	int   print_ast                           = FALSE;
@@ -158,7 +162,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 				mapper_put_usage(stderr, argv[0], verb);
 				return NULL;
 			}
-			expression_filename = argv[argi+1];
+			slls_append_no_free(expression_filenames, argv[argi+1]);
 			argi += 2;
 		} else if (streq(argv[argi], "-v")) {
 			print_ast = TRUE;
@@ -192,14 +196,21 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 		}
 	}
 
-	if (expression_filename == NULL) {
+	if (expression_filenames->length == 0) {
 		if ((argc - argi) < 1) {
 			mapper_put_usage(stderr, argv[0], verb);
 			return NULL;
 		}
 		mlr_dsl_expression = mlr_strdup_or_die(argv[argi++]);
 	} else {
-		mlr_dsl_expression = read_file_into_memory(expression_filename, NULL);
+		string_builder_t *psb = sb_alloc(1024);
+		for (sllse_t* pe = expression_filenames->phead; pe != NULL; pe = pe->pnext) {
+			char* expression_filename = pe->value;
+			char* mlr_dsl_expression_piece = read_file_into_memory(expression_filename, NULL);
+			sb_append_string(psb, mlr_dsl_expression_piece);
+		}
+		mlr_dsl_expression = sb_finish(psb);
+		sb_free(psb);
 	}
 	comment_stripped_mlr_dsl_expression = alloc_comment_strip(mlr_dsl_expression);
 

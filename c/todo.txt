@@ -9,7 +9,6 @@ TOP OF LIST:
 * 10min vers:
   - sql-schema example
   - publish
-  - to 4.n.0 release notes as well
 
 UDFs:
 * multiple put -f
@@ -22,6 +21,8 @@ UDFs:
 ! try to get seqgen to force eof sooner. in particular, try to get 'mlr seqgen' w/o -n. if so, fix cookbook etc.
 
 * some help for keyword clashes? e.g. 'func E(x) { ... }' ?
+* NR PI E etc. to keyword help ...
+
 * indent by two more for jvstack
 ? rework comma placement for jvstack?
 * --c2p, --c2j etc ...

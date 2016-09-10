@@ -1,5 +1,6 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
+#include "lib/string_builder.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
 #include "mapping/context_flags.h"
@@ -54,7 +55,8 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-x: Prints records for which {expression} evaluates to false.\n");
 	fprintf(o, "-f {filename}: the DSL expression is taken from the specified file rather\n");
 	fprintf(o, "    than from the command line. Outer single quotes wrapping the expression\n");
-	fprintf(o, "    should not be placed in the file.\n");
+	fprintf(o, "    should not be placed in the file. If -f is specified more than once,\n");
+	fprintf(o, "    all input files specified using -f are concatenated to produce the expression.\n");
 	fprintf(o, "\n");
 	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");
@@ -89,19 +91,19 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv,
 	char* verb                                = argv[(*pargi)++];
 	char* mlr_dsl_expression                  = NULL;
 	char* comment_stripped_mlr_dsl_expression = NULL;
-	char* expression_filename                 = NULL;
+	slls_t* expression_filenames              = NULL;
 	int   print_ast                           = FALSE;
 	int   trace_parse                         = FALSE;
 	int   type_inferencing                    = TYPE_INFER_STRING_FLOAT_INT;
 	int   do_exclude                          = FALSE;
 
 	ap_state_t* pstate = ap_alloc();
-	ap_define_string_flag(pstate,    "-f", &expression_filename);
-	ap_define_true_flag(pstate,      "-v", &print_ast);
-	ap_define_true_flag(pstate,      "-t", &trace_parse);
-	ap_define_int_value_flag(pstate, "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
-	ap_define_int_value_flag(pstate, "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
-	ap_define_true_flag(pstate,      "-x", &do_exclude);
+	ap_define_string_build_list_flag(pstate, "-f", &expression_filenames);
+	ap_define_true_flag(pstate,              "-v", &print_ast);
+	ap_define_true_flag(pstate,              "-t", &trace_parse);
+	ap_define_int_value_flag(pstate,         "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
+	ap_define_int_value_flag(pstate,         "-F", TYPE_INFER_STRING_FLOAT, &type_inferencing);
+	ap_define_true_flag(pstate,              "-x", &do_exclude);
 
 	// Pass error_on_unrecognized == FALSE to ap_parse so expressions starting
 	// with a minus sign aren't treated as errors. Example: "mlr filter '-$x ==
@@ -111,14 +113,21 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv,
 		return NULL;
 	}
 
-	if (expression_filename == NULL) {
+	if (expression_filenames == NULL) {
 		if ((argc - *pargi) < 1) {
 			mapper_filter_usage(stderr, argv[0], verb);
 			return NULL;
 		}
 		mlr_dsl_expression = mlr_strdup_or_die(argv[(*pargi)++]);
 	} else {
-		mlr_dsl_expression = read_file_into_memory(expression_filename, NULL);
+		string_builder_t *psb = sb_alloc(1024);
+		for (sllse_t* pe = expression_filenames->phead; pe != NULL; pe = pe->pnext) {
+			char* expression_filename = pe->value;
+			char* mlr_dsl_expression_piece = read_file_into_memory(expression_filename, NULL);
+			sb_append_string(psb, mlr_dsl_expression_piece);
+		}
+		mlr_dsl_expression = sb_finish(psb);
+		sb_free(psb);
 	}
 	comment_stripped_mlr_dsl_expression = alloc_comment_strip(mlr_dsl_expression);
 

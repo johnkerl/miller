@@ -17,7 +17,7 @@ string_builder_t* sb_alloc(int alloc_length) {
 }
 
 // ----------------------------------------------------------------
-void  sb_free(string_builder_t* psb) {
+void sb_free(string_builder_t* psb) {
 	if (psb == NULL)
 		return;
 	free(psb->buffer);
