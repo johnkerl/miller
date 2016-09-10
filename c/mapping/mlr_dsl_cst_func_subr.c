@@ -80,7 +80,7 @@ void mlr_dsl_cst_install_udf(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 	pdefsite_state->pprocess_func = cst_udf_process;
 	pdefsite_state->pfree_func = cst_udf_free;
 
-	fmgr_install_UDF(pcst->pfmgr, pnode->text, pcst_udf_state->arity, pdefsite_state);
+	fmgr_install_udf(pcst->pfmgr, pnode->text, pcst_udf_state->arity, pdefsite_state);
 }
 
 // ----------------------------------------------------------------

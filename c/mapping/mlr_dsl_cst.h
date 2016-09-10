@@ -53,20 +53,7 @@
 // Forward references for virtual-function prototypes
 struct _mlr_dsl_cst_statement_t;
 struct _mlr_dsl_cst_statement_vararg_t;
-
-typedef struct _cst_udf_state_t {
-	int       arity;
-	char**    parameter_names;
-    lhmsmv_t* pbound_variables;
-	sllv_t*   pblock_statements;
-} cst_udf_state_t;
-
-typedef struct _cst_subroutine_state_t {
-	int       arity;
-	char**    parameter_names;
-    lhmsmv_t* pbound_variables;
-	sllv_t*   pblock_statements;
-} cst_subroutine_state_t;
+struct _cst_subroutine_state_t;
 
 // Parameter bag to reduce parameter-marshaling
 typedef struct _cst_outputs_t {
@@ -104,12 +91,16 @@ typedef void mlr_dsl_cst_statement_list_handler_t(
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);
 
+// ----------------------------------------------------------------
+// MLR_DSL_CST_STATEMENT OBJECT
+
 // These hold all the member data needed to evaluate any CST statement. No one kind of statement
 // uses all of them. They aren't expressed as a union since their count is small: there's one CST
 // per mlr-put invocation, independent of the number of stream records processed.
 //
 // Difference between keylist and namelist: in emit @a[$b]["c"], "d", @e, the keylist is ["a", $b, "c"]
 // and the namelist is ["d", @e].
+
 typedef struct _mlr_dsl_cst_statement_t {
 
 	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.
@@ -119,7 +110,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 	int   subr_callsite_arity;
 	rval_evaluator_t** subr_callsite_argument_evaluators;
 	mv_t* subr_callsite_arguments;
-	cst_subroutine_state_t *psubr_defsite;
+	struct _cst_subroutine_state_t *psubr_defsite;
 
 	// Definition of local variable within user-defined function. Uses prhs_evaluator for value.
 	char* local_variable_name;
@@ -191,6 +182,9 @@ typedef struct _mlr_dsl_cst_statement_t {
 
 } mlr_dsl_cst_statement_t;
 
+// ----------------------------------------------------------------
+// MLR_DSL_CST OBJECT
+
 typedef struct _mlr_dsl_cst_t {
 	sllv_t* pbegin_statements;
 	sllv_t* pmain_statements;
@@ -204,11 +198,13 @@ typedef struct _mlr_dsl_cst_t {
 } mlr_dsl_cst_t;
 
 // ----------------------------------------------------------------
+// CONSTRUCTORS/DESTRUCTORS/METHODS
+
 // For mlr filter, which takes a subset of the syntax of mlr put. Namely, a single top-level
 // bare-boolean statement.
+
 mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* past, int type_inferencing);
 
-// ----------------------------------------------------------------
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing);
 
 mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_ast_node_t* pnode,
@@ -224,18 +220,39 @@ void mlr_dsl_cst_handle_statement_list(
 // ================================================================
 // mapping/mlr_dsl_cst_func_subr.c
 
+// Data needed for the body of a user-defined function
+typedef struct _cst_udf_state_t {
+	int       arity;
+	char**    parameter_names;
+    lhmsmv_t* pbound_variables;
+	sllv_t*   pblock_statements;
+} cst_udf_state_t;
+
+// Data needed for the body of a subroutine
+typedef struct _cst_subroutine_state_t {
+	int       arity;
+	char**    parameter_names;
+    lhmsmv_t* pbound_variables;
+	sllv_t*   pblock_statements;
+} cst_subroutine_state_t;
+
+// Installs into the CST's function-manager object
 void mlr_dsl_cst_install_udf(
 	mlr_dsl_ast_node_t* pnode,
 	mlr_dsl_cst_t*      pcst,
 	int                 type_inferencing,
 	int                 context_flags);
 
+// Installs into the CST's subroutine-states map
 void mlr_dsl_cst_install_subroutine(
 	mlr_dsl_ast_node_t* pnode,
 	mlr_dsl_cst_t*      pcst,
 	int                 type_inferencing,
 	int                 context_flags);
 
+// Invoked directly from the CST statement handler for a subroutine callsite.
+// (Functions, by contrast, are invoked by callback from the right-hand-site-evaluator logic
+// -- hence no execute-function method here.)
 void mlr_dsl_cst_execute_subroutine(cst_subroutine_state_t* pstate, variables_t* pvars,
 	cst_outputs_t* pcst_outputs, int callsite_arity, mv_t* args);
 

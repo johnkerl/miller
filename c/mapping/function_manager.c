@@ -76,7 +76,7 @@ void fmgr_free(fmgr_t* pfmgr) {
 }
 
 // ----------------------------------------------------------------
-void fmgr_install_UDF(fmgr_t* pfmgr, char* name, int arity, UDF_defsite_state_t* pdefsite_state) {
+void fmgr_install_udf(fmgr_t* pfmgr, char* name, int arity, UDF_defsite_state_t* pdefsite_state) {
 	// xxx disallow redefine ?
 	// xxx check built-in fcn tbl?
 	// xxx mem leak @ overwrite

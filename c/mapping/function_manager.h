@@ -39,7 +39,7 @@ fmgr_t* fmgr_alloc();
 void fmgr_free(fmgr_t* pfmgr);
 
 // xxx disallow redefine ?
-void fmgr_install_UDF(fmgr_t* pfmgr, char* name, int arity, UDF_defsite_state_t* pdefsitate_state);
+void fmgr_install_udf(fmgr_t* pfmgr, char* name, int arity, UDF_defsite_state_t* pdefsitate_state);
 
 // Callsites as defined by AST nodes
 rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
