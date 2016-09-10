@@ -218,8 +218,9 @@ void mlr_dsl_cst_handle_statement_list(
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);
 
-// ----------------------------------------------------------------
+// ================================================================
 // For on-line help / manpage
+// mapping/mlr_dsl_cst_keywords.c
 
 void mlr_dsl_list_all_keywords_raw(FILE* output_stream);
 
