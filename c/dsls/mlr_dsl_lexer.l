@@ -91,11 +91,11 @@
 
 "func" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-	return MD_TOKEN_FUNC;
+	return MD_TOKEN_FUNC_DEF;
 }
 "subr" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-	return MD_TOKEN_SUBR;
+	return MD_TOKEN_SUBR_DEF;
 }
 "call" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);

@@ -341,12 +341,12 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 		switch (pnode->type) {
 
-		case MD_AST_NODE_TYPE_FUNC:
+		case MD_AST_NODE_TYPE_FUNC_DEF:
 			cst_install_UDF(pnode, pcst, type_inferencing, context_flags);
 			break;
 
 		// xxx MD_AST_NODE_TYPE_SUBR_DEFSITE et al.?
-		case MD_AST_NODE_TYPE_SUBR:
+		case MD_AST_NODE_TYPE_SUBR_DEF:
 			// xxx factor out the struct and lhmsv_put it here ?
 			// xxx swap order of 1st two args & et als
 			cst_install_subroutine(pnode, pcst, type_inferencing, context_flags);
@@ -601,11 +601,11 @@ static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode,
 {
 	switch(pnode->type) {
 
-	case MD_AST_NODE_TYPE_FUNC:
+	case MD_AST_NODE_TYPE_FUNC_DEF:
 		fprintf(stderr, "%s: func statements are only valid at top level.\n", MLR_GLOBALS.bargv0);
 		exit(1);
 		break;
-	case MD_AST_NODE_TYPE_SUBR:
+	case MD_AST_NODE_TYPE_SUBR_DEF:
 		fprintf(stderr, "%s: subr statements are only valid at top level.\n", MLR_GLOBALS.bargv0);
 		exit(1);
 		break;

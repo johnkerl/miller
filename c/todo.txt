@@ -18,16 +18,16 @@ k impl fmgr::install, and propagate the lhmsv throughout
 k hard-coded cst foo -> invoke installer func
 k boundvar assigment @ ast/cst
 k ast work w/o $/@ prohibits
-* split out subr now
+k split out subr now
 ! ast work w $/@ prohibits
 ! return_value vs. return_void
-! subr callsite @ .y
+k subr callsite @ .y
+* ast-node-type renames
 * multiple put -f
 * allow locals in if/for/while as well
 ? func @ filter?
 * func/subr -> func_def/subr_def in the grammar? or, subr_call -> call ?
-? separate sub & func ?
-! disallow reads of unset boundvars
+? disallow reads of unset boundvars ?
 * kw autodoc mods
 
 * cookbook:
