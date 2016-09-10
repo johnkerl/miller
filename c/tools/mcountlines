@@ -9,8 +9,8 @@ wc -l \
   output/*.[ch] \
   stream/*.[ch] \
   unit_test/*.[ch] \
-  dsls/*.[ly] \
-  dsls/*wrapper*.[ch] \
+  dsls/mlr*.[ly] \
+  dsls/mlr*wrapper*.[ch] \
   | sort -n
 
 echo
@@ -23,7 +23,7 @@ wc -c \
   output/*.[ch] \
   stream/*.[ch] \
   unit_test/*.[ch] \
-  dsls/*.[ly] \
-  dsls/*wrapper*.[ch] \
+  dsls/mlr*.[ly] \
+  dsls/mlr*wrapper*.[ch] \
   | sort -n | tail -n 5
 
