@@ -15,10 +15,17 @@
 // ================================================================
 
 // ----------------------------------------------------------------
-// xxx expand names here
-typedef mlr_dsl_cst_statement_t* cst_statement_allocator_t(mlr_dsl_ast_node_t* pnode,
-	fmgr_t* pfmgr, lhmsv_t* pcst_subroutine_states, int type_inferencing, int context_flags);
-typedef void cst_statement_handler_t(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* pcst_outputs);
+typedef mlr_dsl_cst_statement_t* cst_statement_allocator_t(
+	mlr_dsl_ast_node_t* pnode,
+	fmgr_t*             pfmgr,
+	lhmsv_t*            pcst_subroutine_states,
+	int                 type_inferencing,
+	int                 context_flags);
+
+typedef void cst_statement_handler_t(
+	mlr_dsl_cst_statement_t* s,
+	variables_t*             v,
+	cst_outputs_t*           pcst_outputs);
 
 // ----------------------------------------------------------------
 static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode);
@@ -27,13 +34,17 @@ static cst_statement_allocator_t alloc_cst_statement;
 static mlr_dsl_cst_statement_t* alloc_blank();
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
-static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst, int type_inferencing, int context_flags);
-static void cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
-	int type_inferencing, int context_flags);
+static void cst_install_UDF(
+	mlr_dsl_ast_node_t* pnode,
+	mlr_dsl_cst_t*      pcst,
+	int                 type_inferencing,
+	int                 context_flags);
 
-// ti = type_inferencing
-// cf = context_flags
-// dfp = do_full_prefixing
+static void cst_install_subroutine(
+	mlr_dsl_ast_node_t* pnode,
+	mlr_dsl_cst_t*      pcst,
+	int                 type_inferencing,
+	int                 context_flags);
 
 static cst_statement_allocator_t alloc_local_variable_definition;
 static cst_statement_allocator_t alloc_return;
@@ -61,14 +72,31 @@ static cst_statement_allocator_t alloc_bare_boolean;
 static cst_statement_allocator_t alloc_tee;
 static cst_statement_allocator_t alloc_emitf;
 
-static mlr_dsl_cst_statement_t* alloc_emit(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
-	lhmsv_t* pcst_subroutine_states, int type_inferencing, int context_flags, int do_full_prefixing);
-static mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
-	lhmsv_t* pcst_subroutine_states, int type_inferencing, int context_flags, int do_full_prefixing);
+static mlr_dsl_cst_statement_t* alloc_emit(
+	mlr_dsl_ast_node_t* pnode,
+	fmgr_t*             pfmgr,
+	lhmsv_t*            pcst_subroutine_states,
+	int                 type_inferencing,
+	int                 context_flags,
+	int                 do_full_prefixing);
+
+static mlr_dsl_cst_statement_t* alloc_emit_lashed(
+	mlr_dsl_ast_node_t* pnode,
+	fmgr_t*             pfmgr,
+	lhmsv_t*            pcst_subroutine_states,
+	int                 type_inferencing,
+	int                 context_flags,
+	int                 do_full_prefixing);
+
 static cst_statement_allocator_t alloc_dump;
 
-static mlr_dsl_cst_statement_t* alloc_print(mlr_dsl_ast_node_t* p, fmgr_t* m, lhmsv_t* pcst_subroutine_states,
-	int type_inferencing, int context_flags, char* print_terminator);
+static mlr_dsl_cst_statement_t* alloc_print(
+	mlr_dsl_ast_node_t* p,
+	fmgr_t*             m,
+	lhmsv_t*            pcst_subroutine_states,
+	int                 type_inferencing,
+	int                 context_flags,
+	char*               print_terminator);
 
 static file_output_mode_t file_output_mode_from_ast_node_type(mlr_dsl_ast_node_type_t mlr_dsl_ast_node_type);
 
@@ -86,8 +114,11 @@ static mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc(
 	rval_evaluator_t* pemitf_arg_evaluator,
 	sllv_t*           punset_oosvar_keylist_evaluators);
 
-static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
-	int type_inferencing, int context_flags);
+static sllv_t* allocate_keylist_evaluators_from_oosvar_node(
+	mlr_dsl_ast_node_t* pnode,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags);
 
 static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg);
 
@@ -126,29 +157,60 @@ static void handle_for_oosvar_aux(
 	mlhmmv_value_t           submap,
 	sllse_t*                 prest_for_k_names);
 
-static void handle_unset_vararg_oosvar(mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
-static void handle_unset_vararg_full_srec(mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
-static void handle_unset_vararg_srec_field_name(mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
-static void handle_unset_vararg_indirect_srec_field_name(mlr_dsl_cst_statement_vararg_t* a, variables_t* v, cst_outputs_t* o);
+// xxx expand names throughout
+static void handle_unset_vararg_oosvar(
+	mlr_dsl_cst_statement_vararg_t* a,
+	variables_t*                    v,
+	cst_outputs_t*                  o);
+
+static void handle_unset_vararg_full_srec(
+	mlr_dsl_cst_statement_vararg_t* a,
+	variables_t*                    v,
+	cst_outputs_t*                  o);
+
+static void handle_unset_vararg_srec_field_name(
+	mlr_dsl_cst_statement_vararg_t* a,
+	variables_t*                    v,
+	cst_outputs_t*                  o);
+
+static void handle_unset_vararg_indirect_srec_field_name(
+	mlr_dsl_cst_statement_vararg_t* a,
+	variables_t*                    v,
+	cst_outputs_t*                  o);
+
 
 static cst_statement_handler_t handle_tee_to_stdfp;
 static cst_statement_handler_t handle_tee_to_file;
-static lrec_t*                 handle_tee_common(mlr_dsl_cst_statement_t* s, variables_t* v, cst_outputs_t* o);
+static lrec_t*                 handle_tee_common(
+	mlr_dsl_cst_statement_t* s,
+	variables_t*             v,
+	cst_outputs_t*           o);
 
 static cst_statement_handler_t handle_emitf;
 static cst_statement_handler_t handle_emitf_to_stdfp;
 static cst_statement_handler_t handle_emitf_to_file;
-static void handle_emitf_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* poutrecs);
+static void handle_emitf_common(
+	mlr_dsl_cst_statement_t* s,
+	variables_t*             v,
+	sllv_t*                  poutrecs);
 
 static cst_statement_handler_t handle_emit;
 static cst_statement_handler_t handle_emit_to_stdfp;
 static cst_statement_handler_t handle_emit_to_file;
-static void handle_emit_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* o, char* f);
+static void handle_emit_common(
+	mlr_dsl_cst_statement_t* s,
+	variables_t*             v,
+	sllv_t*                  o,
+	char*                    f);
 
 static cst_statement_handler_t handle_emit_lashed;
 static cst_statement_handler_t handle_emit_lashed_to_stdfp;
 static cst_statement_handler_t handle_emit_lashed_to_file;
-static void handle_emit_lashed_common(mlr_dsl_cst_statement_t* s, variables_t* v, sllv_t* o, char* f);
+static void handle_emit_lashed_common(
+	mlr_dsl_cst_statement_t* s,
+	variables_t*             v,
+	sllv_t*                  o,
+	char*                    f);
 
 static cst_statement_handler_t handle_emit_all;
 static cst_statement_handler_t handle_emit_all_to_stdfp;
