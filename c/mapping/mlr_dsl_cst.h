@@ -211,12 +211,33 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* past, int type_i
 // ----------------------------------------------------------------
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing);
 
+mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_ast_node_t* pnode,
+	fmgr_t* pfmgr, lhmsv_t* pcst_subroutine_states, int type_inferencing, int context_flags);
+
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
 
 void mlr_dsl_cst_handle_statement_list(
 	sllv_t*      pcst_statements, // block bodies for begin, main, end; cond, if, for, while
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);
+
+// ================================================================
+// mapping/mlr_dsl_cst_func_subr.c
+
+void mlr_dsl_cst_install_udf(
+	mlr_dsl_ast_node_t* pnode,
+	mlr_dsl_cst_t*      pcst,
+	int                 type_inferencing,
+	int                 context_flags);
+
+void mlr_dsl_cst_install_subroutine(
+	mlr_dsl_ast_node_t* pnode,
+	mlr_dsl_cst_t*      pcst,
+	int                 type_inferencing,
+	int                 context_flags);
+
+void mlr_dsl_cst_execute_subroutine(cst_subroutine_state_t* pstate, variables_t* pvars,
+	cst_outputs_t* pcst_outputs, int callsite_arity, mv_t* args);
 
 // ================================================================
 // For on-line help / manpage

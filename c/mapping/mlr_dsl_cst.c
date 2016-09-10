@@ -15,6 +15,10 @@
 // ================================================================
 
 // ----------------------------------------------------------------
+// Normally I use function typedefs only to simplify function-pointer usage.
+// Here, though, they're used to reduce keystrokes in the (very large) number
+// of static-function prototypes here at the top of this file.
+
 typedef mlr_dsl_cst_statement_t* cst_statement_allocator_t(
 	mlr_dsl_ast_node_t* pnode,
 	fmgr_t*             pfmgr,
@@ -30,21 +34,8 @@ typedef void cst_statement_handler_t(
 // ----------------------------------------------------------------
 static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode);
 
-static cst_statement_allocator_t alloc_cst_statement;
 static mlr_dsl_cst_statement_t* alloc_blank();
 static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
-
-static void cst_install_UDF(
-	mlr_dsl_ast_node_t* pnode,
-	mlr_dsl_cst_t*      pcst,
-	int                 type_inferencing,
-	int                 context_flags);
-
-static void cst_install_subroutine(
-	mlr_dsl_ast_node_t* pnode,
-	mlr_dsl_cst_t*      pcst,
-	int                 type_inferencing,
-	int                 context_flags);
 
 static cst_statement_allocator_t alloc_local_variable_definition;
 static cst_statement_allocator_t alloc_return;
@@ -266,61 +257,6 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* pnode, int type_
 }
 
 // ----------------------------------------------------------------
-// xxx make consistent UDF <-> udf here & in other files
-// xxx move code around to more reasonable places
-static mv_t cst_udf_process(void* pvstate, int arity, mv_t* args, variables_t* pvars) {
-	cst_udf_state_t* pstate = pvstate;
-	mv_t retval = mv_absent();
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// Bind parameters to arguments
-	bind_stack_push(pvars->pbind_stack, pstate->pbound_variables);
-	// xxx mem-free on replace
-	for (int i = 0; i < arity; i++) {
-		lhmsmv_put(pstate->pbound_variables, pstate->parameter_names[i], &args[i], NO_FREE); // xxx free-flags
-	}
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// Compute the function value
-	cst_outputs_t* pcst_outputs = NULL; // xxx
-
-	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		if (pstatement->local_variable_name != NULL) {
-			// local statement
-			rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-			mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-			lhmsmv_put(pstate->pbound_variables, pstatement->local_variable_name, &val, FREE_ENTRY_VALUE);
-		} else if (pstatement->preturn_evaluator != NULL) {
-			// return statement
-			retval = pstatement->preturn_evaluator->pprocess_func(pstatement->preturn_evaluator->pvstate, pvars);
-			break;
-		} else {
-			// anything else
-			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
-			if (loop_stack_get(pvars->ploop_stack) != 0) {
-				break;
-			}
-		}
-	}
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	bind_stack_pop(pvars->pbind_stack);
-
-	return retval;
-}
-
-// ----------------------------------------------------------------
-static void cst_udf_free(struct _UDF_defsite_state_t* pdefsite_state) {
-	cst_udf_state_t* pstate = pdefsite_state->pvstate;
-	// xxx more
-	free(pstate->parameter_names);
-	lhmsmv_free(pstate->pbound_variables);
-	sllv_free(pstate->pblock_statements);
-	free(pdefsite_state);
-}
-
-// ----------------------------------------------------------------
 // Main entry point for AST-to-CST for mlr put.
 //
 // Example AST (using put -v):
@@ -386,21 +322,21 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 		switch (pnode->type) {
 
 		case MD_AST_NODE_TYPE_FUNC_DEF:
-			cst_install_UDF(pnode, pcst, type_inferencing, context_flags);
+			mlr_dsl_cst_install_udf(pnode, pcst, type_inferencing, context_flags);
 			break;
 
 		// xxx MD_AST_NODE_TYPE_SUBR_DEFSITE et al.?
 		case MD_AST_NODE_TYPE_SUBR_DEF:
 			// xxx factor out the struct and lhmsv_put it here ?
 			// xxx swap order of 1st two args & et als
-			cst_install_subroutine(pnode, pcst, type_inferencing, context_flags);
+			mlr_dsl_cst_install_subroutine(pnode, pcst, type_inferencing, context_flags);
 			break;
 
 		case MD_AST_NODE_TYPE_BEGIN:
 			plistnode = get_list_for_block(pnode);
 			for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 				mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-				sllv_append(pcst->pbegin_statements, alloc_cst_statement(pchild,
+				sllv_append(pcst->pbegin_statements, mlr_dsl_cst_alloc_statement(pchild,
 					pcst->pfmgr, pcst->psubroutine_states, type_inferencing, context_flags | IN_BEGIN_OR_END));
 			}
 			break;
@@ -409,13 +345,13 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 			plistnode = get_list_for_block(pnode);
 			for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 				mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-				sllv_append(pcst->pend_statements, alloc_cst_statement(pchild,
+				sllv_append(pcst->pend_statements, mlr_dsl_cst_alloc_statement(pchild,
 					pcst->pfmgr, pcst->psubroutine_states, type_inferencing, context_flags | IN_BEGIN_OR_END));
 			}
 			break;
 
 		default:
-			sllv_append(pcst->pmain_statements, alloc_cst_statement(pnode, pcst->pfmgr,
+			sllv_append(pcst->pmain_statements, mlr_dsl_cst_alloc_statement(pnode, pcst->pfmgr,
 				pcst->psubroutine_states, type_inferencing, context_flags));
 			break;
 		}
@@ -423,160 +359,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	return pcst;
 }
 
-// ----------------------------------------------------------------
-// $ cat def
-//mlr --from s put -v '
-//  def f(x,y,z) {
-//    local a = 1;
-//    $x = 2;
-//    return a + y * 2;
-//  }
-//'
-
-// $ def
-// AST ROOT:
-// text="list", type=statement_list:
-//     text="f", type=def:
-//         text="f", type=non_sigil_name:
-//             text="x", type=non_sigil_name.
-//             text="y", type=non_sigil_name.
-//             text="z", type=non_sigil_name.
-//         text="list", type=statement_list:
-//             text="local", type=return:
-//                 text="a", type=non_sigil_name.
-//                 text="1", type=strnum_literal.
-//             text="=", type=srec_assignment:
-//                 text="x", type=field_name.
-//                 text="2", type=strnum_literal.
-//             text="return", type=return:
-//                 text="+", type=operator:
-//                     text="a", type=bound_variable.
-//                     text="*", type=operator:
-//                         text="y", type=bound_variable.
-//                         text="2", type=strnum_literal.
-
-static void cst_install_UDF(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_ast_node_t* pparameters_node = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pbody_node = pnode->pchildren->phead->pnext->pvvalue;
-
-	// xxx make cst_udf_state_t ctor/dtor per se
-
-	int arity = pparameters_node->pchildren->length;
-	// xxx arrange for this to be freed
-	cst_udf_state_t* pcst_udf_state = mlr_malloc_or_die(sizeof(cst_udf_state_t));
-
-	pcst_udf_state->arity = arity;
-
-	pcst_udf_state->parameter_names = mlr_malloc_or_die(arity * sizeof(char*));
-	int i = 0;
-	// xxx dup check ...
-	for (sllve_t* pe = pparameters_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
-		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
-		pcst_udf_state->parameter_names[i] = pparameter_node->text;
-	}
-
-	pcst_udf_state->pbound_variables = lhmsmv_alloc();
-
-	pcst_udf_state->pblock_statements = sllv_alloc();
-
-	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		sllv_append(pcst_udf_state->pblock_statements,
-			alloc_cst_statement(pbody_ast_node, pcst->pfmgr, pcst->psubroutine_states,
-				type_inferencing, context_flags | IN_BINDABLE));
-	}
-
-	UDF_defsite_state_t* pdefsite_state = mlr_malloc_or_die(sizeof(UDF_defsite_state_t));
-	pdefsite_state->pvstate = pcst_udf_state;
-	pdefsite_state->arity = arity;
-	pdefsite_state->pprocess_func = cst_udf_process;
-	pdefsite_state->pfree_func = cst_udf_free;
-
-	fmgr_install_UDF(pcst->pfmgr, pnode->text, pcst_udf_state->arity, pdefsite_state);
-}
-
-// ----------------------------------------------------------------
-static void cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_ast_node_t* pparameters_node = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pbody_node = pnode->pchildren->phead->pnext->pvvalue;
-
-	// xxx make cst_subroutine_state_t ctor/dtor per se
-
-	int arity = pparameters_node->pchildren->length;
-	// xxx arrange for this to be freed
-	// xxx fix
-	cst_subroutine_state_t* pcst_subroutine_state = mlr_malloc_or_die(sizeof(cst_subroutine_state_t));
-
-	pcst_subroutine_state->arity = arity;
-
-	pcst_subroutine_state->parameter_names = mlr_malloc_or_die(arity * sizeof(char*));
-	int i = 0;
-	// xxx dup check ...
-	for (sllve_t* pe = pparameters_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
-		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
-		pcst_subroutine_state->parameter_names[i] = pparameter_node->text;
-	}
-
-	pcst_subroutine_state->pbound_variables = lhmsmv_alloc();
-
-	pcst_subroutine_state->pblock_statements = sllv_alloc();
-
-	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		sllv_append(pcst_subroutine_state->pblock_statements,
-			alloc_cst_statement(pbody_ast_node, pcst->pfmgr, pcst->psubroutine_states,
-				type_inferencing, context_flags | IN_BINDABLE));
-	}
-
-	lhmsv_put(pcst->psubroutine_states, pparameters_node->text, pcst_subroutine_state, NO_FREE);
-}
-
-// ----------------------------------------------------------------
-// xxx maybe just have a new bindstack rather than placing a fence
-
-static void cst_execute_subroutine(cst_subroutine_state_t* pstate, variables_t* pvars,
-	cst_outputs_t* pcst_outputs, int callsite_arity, mv_t* args)
-{
-
-	// Bind parameters to arguments
-	bind_stack_push(pvars->pbind_stack, pstate->pbound_variables); // xxx wtf
-
-	// xxx mem-free on replace
-	for (int i = 0; i < pstate->arity; i++) {
-		lhmsmv_put(pstate->pbound_variables, pstate->parameter_names[i], &args[i], NO_FREE);
-			// xxx free-flags
-	}
-
-	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		if (pstatement->local_variable_name != NULL) {
-			// local statement
-			rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-			mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-			lhmsmv_put(pstatement->pbound_variables, pstatement->local_variable_name, &val, FREE_ENTRY_VALUE);
-		} else if (pstatement->preturn_evaluator != NULL) {
-			// return statement
-			// xxx separate return-void from return-value
-			break;
-		} else {
-			// anything else
-			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
-			if (loop_stack_get(pvars->ploop_stack) != 0) {
-				break;
-			}
-		}
-	}
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	bind_stack_pop(pvars->pbind_stack);
-
-}
-
-// ----------------------------------------------------------------
+// ================================================================
 // For begin, end, cond: there must be one child node, of type list.
 static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode) {
 	if (pnode->pchildren->phead == NULL) {
@@ -640,7 +423,7 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 // unset.  Most right-hand sides are set up in rval_expr_evaluators.c so the context_flags are
 // passed through to there as well.
 
-static mlr_dsl_cst_statement_t* alloc_cst_statement(mlr_dsl_ast_node_t* pnode,
+mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_ast_node_t* pnode,
 	fmgr_t* pfmgr, lhmsv_t* pcst_subroutine_states, int type_inferencing, int context_flags)
 {
 	switch(pnode->type) {
@@ -1133,7 +916,7 @@ static mlr_dsl_cst_statement_t* alloc_while(mlr_dsl_ast_node_t* pnode, fmgr_t* p
 
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		mlr_dsl_cst_statement_t *pstatement = alloc_cst_statement(pbody_ast_node, pfmgr, pcst_subroutine_states,
+		mlr_dsl_cst_statement_t *pstatement = mlr_dsl_cst_alloc_statement(pbody_ast_node, pfmgr, pcst_subroutine_states,
 			type_inferencing, context_flags);
 		sllv_append(pblock_statements, pstatement);
 	}
@@ -1158,7 +941,7 @@ static mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_ast_node_t* pnode, fmgr_t
 
 	for (sllve_t* pe = pleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		mlr_dsl_cst_statement_t *pstatement = alloc_cst_statement(pbody_ast_node, pfmgr, pcst_subroutine_states,
+		mlr_dsl_cst_statement_t *pstatement = mlr_dsl_cst_alloc_statement(pbody_ast_node, pfmgr, pcst_subroutine_states,
 			type_inferencing, context_flags);
 		sllv_append(pblock_statements, pstatement);
 	}
@@ -1210,7 +993,7 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* pnode, fmgr_t
 	sllv_t* pblock_statements = sllv_alloc();
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		sllv_append(pblock_statements, alloc_cst_statement(pbody_ast_node, pfmgr, pcst_subroutine_states,
+		sllv_append(pblock_statements, mlr_dsl_cst_alloc_statement(pbody_ast_node, pfmgr, pcst_subroutine_states,
 			type_inferencing, context_flags));
 	}
 
@@ -1309,7 +1092,7 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* pnode, fmgr
 	sllv_t* pblock_statements = sllv_alloc();
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		sllv_append(pblock_statements, alloc_cst_statement(pbody_ast_node, pfmgr, pcst_subroutine_states,
+		sllv_append(pblock_statements, mlr_dsl_cst_alloc_statement(pbody_ast_node, pfmgr, pcst_subroutine_states,
 			type_inferencing, context_flags));
 	}
 	pstatement->pblock_statements = pblock_statements;
@@ -1351,7 +1134,7 @@ static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_ast_node_t* pnod
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		mlr_dsl_cst_statement_t *pstatement = alloc_cst_statement(pbody_ast_node, pfmgr, pcst_subroutine_states,
+		mlr_dsl_cst_statement_t *pstatement = mlr_dsl_cst_alloc_statement(pbody_ast_node, pfmgr, pcst_subroutine_states,
 			type_inferencing, context_flags);
 		sllv_append(pblock_statements, pstatement);
 	}
@@ -1457,7 +1240,7 @@ static mlr_dsl_cst_statement_t* alloc_if_item(mlr_dsl_ast_node_t* pexprnode,
 
 	for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		mlr_dsl_cst_statement_t *pstatement = alloc_cst_statement(pbody_ast_node, pfmgr, pcst_subroutine_states,
+		mlr_dsl_cst_statement_t *pstatement = mlr_dsl_cst_alloc_statement(pbody_ast_node, pfmgr, pcst_subroutine_states,
 			type_inferencing, context_flags);
 		sllv_append(pblock_statements, pstatement);
 	}
@@ -1967,7 +1750,7 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 	free(pstatement);
 }
 
-// ----------------------------------------------------------------
+// ================================================================
 static mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc(
 	char*             emitf_or_unset_srec_field_name,
 	rval_evaluator_t* punset_srec_field_name_evaluator,
@@ -2060,7 +1843,7 @@ static void handle_subr_callsite(
 		pstatement->subr_callsite_arguments[i] = pev->pprocess_func(pev->pvstate, pvars);
 	}
 
-	cst_execute_subroutine(pstatement->psubr_defsite, pvars, pcst_outputs, pstatement->subr_callsite_arity,
+	mlr_dsl_cst_execute_subroutine(pstatement->psubr_defsite, pvars, pcst_outputs, pstatement->subr_callsite_arity,
 		pstatement->subr_callsite_arguments);
 }
 

@@ -49,6 +49,7 @@ libmapping_la_SOURCES=	\
 			mappers.h \
 			mlr_dsl_cst.h \
 			mlr_dsl_cst.c \
+			mlr_dsl_cst_func_subr.c \
 			mlr_dsl_cst_keywords.c \
 			stats1_accumulators.c \
 			stats1_accumulators.h \
