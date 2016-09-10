@@ -117,6 +117,30 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/miss-date-2.sh)HERE
 POKI_RUN_COMMAND{{mlr cat -n then filter '$n >= 770 && $n <= 780' data/miss-date.csv}}HERE
 POKI_RUN_COMMAND{{mlr cat -n then filter '$n >= 1115 && $n <= 1125' data/miss-date.csv}}HERE
 
+<h1>Generating random variables</h1>
+
+<p/>Here can chain together a few simple building blocks:
+
+POKI_RUN_COMMAND{{cat expo-sample.sh}}HERE
+
+<p/>Namely:
+
+<ul>
+<li/> Set the Miller random-number seed so this webdoc looks the same every time I regenerate it.
+<li/> Use pretty-printed tabular output.
+<li/> Use pretty-printed tabular output.
+<li/> Use <tt>-n</tt> so Miller won&rsquo;t read any input files, and <tt>seqgen</tt> to produce 100,000
+  records <tt>i=0</tt>, <tt>i=1</tt>, etc.
+<li/> Send those to a <tt>put</tt> step which defines an inverse-transform-sampling function and
+  calls it twice, then computes the sum and product of samples.
+<li>/ Send those to a histogram, and from there to a bar-plotter. This is just for visualization; you
+  could just as well output CSV and send that off to your own plotting tool, etc.
+</ul>
+
+The output is as follows:
+
+POKI_RUN_COMMAND{{sh expo-sample.sh}}HERE
+
 <h1>Two-pass algorithms</h1>
 
 <p/>Miller is a streaming record processor; commands are performed once per

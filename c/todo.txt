@@ -38,6 +38,9 @@ k subr callsite @ .y
   o_mean  0.999363
   o_count 100001
 
+! try to get seqgen to force eof sooner. in particular, try to get 'mlr seqgen' w/o -n. if so, fix cookbook etc.
+
+* some help for keyword clashes? e.g. 'func E(x) { ... }' ?
 * indent by two more for jvstack
 ? rework comma placement for jvstack?
 * --c2p, --c2j etc ...
@@ -59,6 +62,7 @@ k subr callsite @ .y
 
 * func & subr
 * seqgen
+* mlr -F and -K. Note -l -L -f -F -k -K.
 
 ----------------------------------------------------------------
 4.6.0 ideas:

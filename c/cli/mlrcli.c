@@ -1145,7 +1145,7 @@ static int handle_terminal_usage(char** argv, int argc, int argi) {
 		list_all_verbs_raw(stdout);
 		return TRUE;
 
-	} else if (streq(argv[argi], "--list-all-functions-raw")) {
+	} else if (streq(argv[argi], "--list-all-functions-raw") || streq(argv[argi], "-F")) {
 		fmgr_t* pfmgr = fmgr_alloc();
 		fmgr_list_all_functions_raw(pfmgr, stdout);
 		fmgr_free(pfmgr);
@@ -1162,7 +1162,7 @@ static int handle_terminal_usage(char** argv, int argc, int argi) {
 		fmgr_free(pfmgr);
 		return TRUE;
 
-	} else if (streq(argv[argi], "--list-all-keywords-raw")) {
+	} else if (streq(argv[argi], "--list-all-keywords-raw") || streq(argv[argi], "-K")) {
 		mlr_dsl_list_all_keywords_raw(stdout);
 		return TRUE;
 	} else if (streq(argv[argi], "--help-all-keywords") || streq(argv[argi], "-k")) {
