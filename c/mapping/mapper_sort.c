@@ -102,13 +102,15 @@ static int pbucket_comparator(const void* pva, const void* pvb);
 mapper_setup_t mapper_sort_setup = {
 	.verb = "sort",
 	.pusage_func = mapper_sort_usage,
-	.pparse_func = mapper_sort_parse_cli
+	.pparse_func = mapper_sort_parse_cli,
+	.ignores_input = FALSE,
 };
 
 mapper_setup_t mapper_group_by_setup = {
 	.verb = "group-by",
 	.pusage_func = mapper_group_by_usage,
-	.pparse_func = mapper_group_by_parse_cli
+	.pparse_func = mapper_group_by_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

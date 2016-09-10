@@ -23,7 +23,8 @@ static sllv_t*   mapper_catn_process(lrec_t* pinrec, context_t* pctx, void* pvst
 mapper_setup_t mapper_cat_setup = {
 	.verb = "cat",
 	.pusage_func = mapper_cat_usage,
-	.pparse_func = mapper_cat_parse_cli
+	.pparse_func = mapper_cat_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

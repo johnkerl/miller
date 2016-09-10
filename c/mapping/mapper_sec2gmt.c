@@ -21,6 +21,7 @@ mapper_setup_t mapper_sec2gmt_setup = {
 	.verb = "sec2gmt",
 	.pusage_func = mapper_sec2gmt_usage,
 	.pparse_func = mapper_sec2gmt_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

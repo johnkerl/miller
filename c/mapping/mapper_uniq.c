@@ -37,12 +37,14 @@ mapper_setup_t mapper_count_distinct_setup = {
 	.verb = "count-distinct",
 	.pusage_func = mapper_count_distinct_usage,
 	.pparse_func = mapper_count_distinct_parse_cli,
+	.ignores_input = FALSE,
 };
 
 mapper_setup_t mapper_uniq_setup = {
 	.verb = "uniq",
 	.pusage_func = mapper_uniq_usage,
-	.pparse_func = mapper_uniq_parse_cli
+	.pparse_func = mapper_uniq_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

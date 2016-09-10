@@ -50,7 +50,8 @@ typedef struct _acc_map_pair_t {
 mapper_setup_t mapper_stats1_setup = {
 	.verb        = "stats1",
 	.pusage_func = mapper_stats1_usage,
-	.pparse_func = mapper_stats1_parse_cli
+	.pparse_func = mapper_stats1_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

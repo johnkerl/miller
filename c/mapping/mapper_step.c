@@ -112,7 +112,8 @@ static int step_lookup_table_length = sizeof(step_lookup_table) / sizeof(step_lo
 mapper_setup_t mapper_step_setup = {
 	.verb = "step",
 	.pusage_func = mapper_step_usage,
-	.pparse_func = mapper_step_parse_cli
+	.pparse_func = mapper_step_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

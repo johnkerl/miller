@@ -99,7 +99,8 @@ static int stats2_acc_lookup_table_length = sizeof(stats2_acc_lookup_table) / si
 mapper_setup_t mapper_stats2_setup = {
 	.verb = "stats2",
 	.pusage_func = mapper_stats2_usage,
-	.pparse_func = mapper_stats2_parse_cli
+	.pparse_func = mapper_stats2_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

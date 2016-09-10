@@ -63,6 +63,7 @@ mapper_setup_t mapper_join_setup = {
 	.verb = "join",
 	.pusage_func = mapper_join_usage,
 	.pparse_func = mapper_join_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

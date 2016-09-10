@@ -25,6 +25,7 @@ mapper_setup_t mapper_group_like_setup = {
 	.verb = "group-like",
 	.pusage_func = mapper_group_like_usage,
 	.pparse_func = mapper_group_like_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

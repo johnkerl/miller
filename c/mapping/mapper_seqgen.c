@@ -30,7 +30,8 @@ static sllv_t*   mapper_seqgen_process(lrec_t* pinrec, context_t* pctx, void* pv
 mapper_setup_t mapper_seqgen_setup = {
 	.verb = "seqgen",
 	.pusage_func = mapper_seqgen_usage,
-	.pparse_func = mapper_seqgen_parse_cli
+	.pparse_func = mapper_seqgen_parse_cli,
+	.ignores_input = TRUE,
 };
 
 // ----------------------------------------------------------------

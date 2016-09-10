@@ -23,7 +23,8 @@ static sllv_t*   mapper_bootstrap_process(lrec_t* pinrec, context_t* pctx, void*
 mapper_setup_t mapper_bootstrap_setup = {
 	.verb = "bootstrap",
 	.pusage_func = mapper_bootstrap_usage,
-	.pparse_func = mapper_bootstrap_parse_cli
+	.pparse_func = mapper_bootstrap_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

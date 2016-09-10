@@ -79,7 +79,8 @@ static void reshape_bucket_free(reshape_bucket_t* pbucket);
 mapper_setup_t mapper_reshape_setup = {
 	.verb = "reshape",
 	.pusage_func = mapper_reshape_usage,
-	.pparse_func = mapper_reshape_parse_cli
+	.pparse_func = mapper_reshape_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

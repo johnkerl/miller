@@ -249,6 +249,12 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		if (pmapper == NULL) {
 			exit(1);
 		}
+
+		if (pmapper_setup->ignores_input && popts->pmapper_list->length == 0) {
+			// e.g. then-chain starts with seqgen
+			no_input = TRUE;
+		}
+
 		sllv_append(popts->pmapper_list, pmapper);
 
 		if (argi >= argc || !streq(argv[argi], "then"))
@@ -260,6 +266,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		slls_append(popts->filenames, argv[argi], NO_FREE);
 	}
 
+	// xxx if seqgen ...................
 	if (no_input) {
 		slls_free(popts->filenames);
 		popts->filenames = NULL;

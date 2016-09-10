@@ -43,7 +43,8 @@ static sllv_t*   mapper_sample_process(lrec_t* pinrec, context_t* pctx, void* pv
 mapper_setup_t mapper_sample_setup = {
 	.verb = "sample",
 	.pusage_func = mapper_sample_usage,
-	.pparse_func = mapper_sample_parse_cli
+	.pparse_func = mapper_sample_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

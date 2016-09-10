@@ -13,7 +13,8 @@ static sllv_t*   mapper_check_process(lrec_t* pinrec, context_t* pctx, void* pvs
 mapper_setup_t mapper_check_setup = {
 	.verb = "check",
 	.pusage_func = mapper_check_usage,
-	.pparse_func = mapper_check_parse_cli
+	.pparse_func = mapper_check_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

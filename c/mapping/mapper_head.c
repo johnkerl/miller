@@ -31,6 +31,7 @@ mapper_setup_t mapper_head_setup = {
 	.verb = "head",
 	.pusage_func = mapper_head_usage,
 	.pparse_func = mapper_head_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

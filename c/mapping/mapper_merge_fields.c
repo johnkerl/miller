@@ -70,7 +70,8 @@ static sllv_t*   mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, conte
 mapper_setup_t mapper_merge_fields_setup = {
 	.verb        = "merge-fields",
 	.pusage_func = mapper_merge_fields_usage,
-	.pparse_func = mapper_merge_fields_parse_cli
+	.pparse_func = mapper_merge_fields_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

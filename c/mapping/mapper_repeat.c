@@ -35,6 +35,7 @@ mapper_setup_t mapper_repeat_setup = {
 	.verb = "repeat",
 	.pusage_func = mapper_repeat_usage,
 	.pparse_func = mapper_repeat_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

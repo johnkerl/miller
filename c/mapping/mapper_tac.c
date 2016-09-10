@@ -18,7 +18,8 @@ static sllv_t*   mapper_tac_process(lrec_t* pinrec, context_t* pctx, void* pvsta
 mapper_setup_t mapper_tac_setup = {
 	.verb = "tac",
 	.pusage_func = mapper_tac_usage,
-	.pparse_func = mapper_tac_parse_cli
+	.pparse_func = mapper_tac_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

@@ -23,6 +23,7 @@ mapper_setup_t mapper_reorder_setup = {
 	.verb = "reorder",
 	.pusage_func = mapper_reorder_usage,
 	.pparse_func = mapper_reorder_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

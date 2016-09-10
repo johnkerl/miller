@@ -52,7 +52,8 @@ static void nest_bucket_free(nest_bucket_t* pbucket);
 mapper_setup_t mapper_nest_setup = {
 	.verb = "nest",
 	.pusage_func = mapper_nest_usage,
-	.pparse_func = mapper_nest_parse_cli
+	.pparse_func = mapper_nest_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

@@ -43,6 +43,7 @@ mapper_setup_t mapper_bar_setup = {
 	.verb = "bar",
 	.pusage_func = mapper_bar_usage,
 	.pparse_func = mapper_bar_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

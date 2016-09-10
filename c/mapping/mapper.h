@@ -36,6 +36,7 @@ typedef struct _mapper_setup_t {
 	char*                    verb;
 	mapper_usage_func_t*     pusage_func;
 	mapper_parse_cli_func_t* pparse_func;
+	int                      ignores_input; // most don't; data-generators like seqgen do
 } mapper_setup_t;
 
 #endif // MAPPER_H

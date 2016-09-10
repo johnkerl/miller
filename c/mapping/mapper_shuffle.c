@@ -29,7 +29,8 @@ static sllv_t*   mapper_shuffle_process(lrec_t* pinrec, context_t* pctx, void* p
 mapper_setup_t mapper_shuffle_setup = {
 	.verb = "shuffle",
 	.pusage_func = mapper_shuffle_usage,
-	.pparse_func = mapper_shuffle_parse_cli
+	.pparse_func = mapper_shuffle_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

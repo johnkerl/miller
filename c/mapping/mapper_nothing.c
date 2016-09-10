@@ -14,7 +14,8 @@ static sllv_t*   mapper_nothing_process(lrec_t* pinrec, context_t* pctx, void* p
 mapper_setup_t mapper_nothing_setup = {
 	.verb = "nothing",
 	.pusage_func = mapper_nothing_usage,
-	.pparse_func = mapper_nothing_parse_cli
+	.pparse_func = mapper_nothing_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

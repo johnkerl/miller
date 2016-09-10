@@ -33,7 +33,8 @@ static sllv_t*   mapper_rename_regex_process(lrec_t* pinrec, context_t* pctx, vo
 mapper_setup_t mapper_rename_setup = {
 	.verb = "rename",
 	.pusage_func = mapper_rename_usage,
-	.pparse_func = mapper_rename_parse_cli
+	.pparse_func = mapper_rename_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

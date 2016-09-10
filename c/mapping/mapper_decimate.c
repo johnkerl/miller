@@ -31,6 +31,7 @@ mapper_setup_t mapper_decimate_setup = {
 	.verb = "decimate",
 	.pusage_func = mapper_decimate_usage,
 	.pparse_func = mapper_decimate_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

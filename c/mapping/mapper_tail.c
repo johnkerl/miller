@@ -29,7 +29,8 @@ static sllv_t*   mapper_tail_process(lrec_t* pinrec, context_t* pctx, void* pvst
 mapper_setup_t mapper_tail_setup = {
 	.verb = "tail",
 	.pusage_func = mapper_tail_usage,
-	.pparse_func = mapper_tail_parse_cli
+	.pparse_func = mapper_tail_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

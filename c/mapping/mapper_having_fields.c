@@ -44,6 +44,7 @@ mapper_setup_t mapper_having_fields_setup = {
 	.verb = "having-fields",
 	.pusage_func = mapper_having_fields_usage,
 	.pparse_func = mapper_having_fields_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

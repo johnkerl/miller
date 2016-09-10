@@ -45,7 +45,8 @@ static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvsta
 mapper_setup_t mapper_put_setup = {
 	.verb = "put",
 	.pusage_func = mapper_put_usage,
-	.pparse_func = mapper_put_parse_cli
+	.pparse_func = mapper_put_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

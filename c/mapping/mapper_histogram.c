@@ -45,6 +45,7 @@ mapper_setup_t mapper_histogram_setup = {
 	.verb = "histogram",
 	.pusage_func = mapper_histogram_usage,
 	.pparse_func = mapper_histogram_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

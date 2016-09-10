@@ -31,6 +31,7 @@ mapper_setup_t mapper_cut_setup = {
 	.verb = "cut",
 	.pusage_func = mapper_cut_usage,
 	.pparse_func = mapper_cut_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

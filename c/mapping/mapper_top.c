@@ -41,7 +41,8 @@ static sllv_t*   mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx);
 mapper_setup_t mapper_top_setup = {
 	.verb = "top",
 	.pusage_func = mapper_top_usage,
-	.pparse_func = mapper_top_parse_cli
+	.pparse_func = mapper_top_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

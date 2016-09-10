@@ -34,6 +34,7 @@ mapper_setup_t mapper_filter_setup = {
 	.verb = "filter",
 	.pusage_func = mapper_filter_usage,
 	.pparse_func = mapper_filter_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

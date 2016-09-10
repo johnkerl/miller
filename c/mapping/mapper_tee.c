@@ -27,7 +27,8 @@ static sllv_t*   mapper_tee_process(lrec_t* pinrec, context_t* pctx, void* pvsta
 mapper_setup_t mapper_tee_setup = {
 	.verb = "tee",
 	.pusage_func = mapper_tee_usage,
-	.pparse_func = mapper_tee_parse_cli
+	.pparse_func = mapper_tee_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

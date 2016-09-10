@@ -19,7 +19,8 @@ static sllv_t*   mapper_regularize_process(lrec_t* pinrec, context_t* pctx, void
 mapper_setup_t mapper_regularize_setup = {
 	.verb = "regularize",
 	.pusage_func = mapper_regularize_usage,
-	.pparse_func = mapper_regularize_parse_cli
+	.pparse_func = mapper_regularize_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

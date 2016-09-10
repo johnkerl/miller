@@ -18,7 +18,8 @@ static sllv_t*   mapper_label_process(lrec_t* pinrec, context_t* pctx, void* pvs
 mapper_setup_t mapper_label_setup = {
 	.verb = "label",
 	.pusage_func = mapper_label_usage,
-	.pparse_func = mapper_label_parse_cli
+	.pparse_func = mapper_label_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------

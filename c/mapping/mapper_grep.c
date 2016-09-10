@@ -26,7 +26,8 @@ static sllv_t*   mapper_grep_process(lrec_t* pinrec, context_t* pctx, void* pvst
 mapper_setup_t mapper_grep_setup = {
 	.verb = "grep",
 	.pusage_func = mapper_grep_usage,
-	.pparse_func = mapper_grep_parse_cli
+	.pparse_func = mapper_grep_parse_cli,
+	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------
