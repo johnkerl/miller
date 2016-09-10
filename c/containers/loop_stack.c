@@ -47,7 +47,7 @@ void loop_stack_free(loop_stack_t* pstack) {
 void loop_stack_push(loop_stack_t* pstack) {
 	if (pstack->num_used_minus_one >= pstack->num_allocated - 1) {
 		pstack->num_allocated += INITIAL_SIZE;
-		pstack->pframes = mlr_realloc_or_die(pstack->pframes, pstack->num_allocated);
+		pstack->pframes = mlr_realloc_or_die(pstack->pframes, pstack->num_allocated * sizeof(int));
 	}
 	pstack->num_used_minus_one++;
 	pstack->pframes[pstack->num_used_minus_one] = 0;
