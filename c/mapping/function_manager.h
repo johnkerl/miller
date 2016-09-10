@@ -12,17 +12,17 @@
 // be called: pvstate it its own state (whatever that is), and it defines its
 // own process and free functions implementing this interface.
 
-struct _UDF_defsite_state_t; // Forward reference
+struct _udf_defsite_state_t; // Forward reference
 
-typedef mv_t UDF_defsite_process_func_t(void* pvstate, int arity, mv_t* pargs, variables_t* pvars);
-typedef void UDF_defsite_free_func_t(struct _UDF_defsite_state_t* pdefsite_state);
+typedef mv_t udf_defsite_process_func_t(void* pvstate, int arity, mv_t* pargs, variables_t* pvars);
+typedef void udf_defsite_free_func_t(struct _udf_defsite_state_t* pdefsite_state);
 
-typedef struct _UDF_defsite_state_t {
+typedef struct _udf_defsite_state_t {
 	void* pvstate;
 	int   arity;
-	UDF_defsite_process_func_t* pprocess_func;
-	UDF_defsite_free_func_t* pfree_func;
-} UDF_defsite_state_t;
+	udf_defsite_process_func_t* pprocess_func;
+	udf_defsite_free_func_t* pfree_func;
+} udf_defsite_state_t;
 
 // ----------------------------------------------------------------
 // Holds built-in functions as well as user-defined functions
@@ -30,7 +30,7 @@ typedef struct _UDF_defsite_state_t {
 struct _function_lookup_t; // Private to the .c file
 typedef struct _fmgr_t {
 	struct _function_lookup_t * function_lookup_table; // Built-ins
-	lhmsv_t* pUDF_names_to_defsite_states;             // UDFs
+	lhmsv_t* pudf_names_to_defsite_states;             // UDFs
 } fmgr_t;
 
 // ----------------------------------------------------------------
@@ -39,7 +39,7 @@ fmgr_t* fmgr_alloc();
 void fmgr_free(fmgr_t* pfmgr);
 
 // xxx disallow redefine ?
-void fmgr_install_udf(fmgr_t* pfmgr, char* name, int arity, UDF_defsite_state_t* pdefsitate_state);
+void fmgr_install_udf(fmgr_t* pfmgr, char* name, int arity, udf_defsite_state_t* pdefsitate_state);
 
 // Callsites as defined by AST nodes
 rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,

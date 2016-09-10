@@ -4,10 +4,8 @@
 #include "mlr_dsl_cst.h"
 #include "context_flags.h"
 
-// xxx reorg plz
-
 static mv_t cst_udf_process(void* pvstate, int arity, mv_t* args, variables_t* pvars);
-static void cst_udf_free(struct _UDF_defsite_state_t* pdefsite_state);
+static void cst_udf_free(struct _udf_defsite_state_t* pdefsite_state);
 
 // ----------------------------------------------------------------
 // $ cat def
@@ -80,7 +78,7 @@ void mlr_dsl_cst_install_udf(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pcst,
 				type_inferencing, context_flags | IN_BINDABLE));
 	}
 
-	UDF_defsite_state_t* pdefsite_state = mlr_malloc_or_die(sizeof(UDF_defsite_state_t));
+	udf_defsite_state_t* pdefsite_state = mlr_malloc_or_die(sizeof(udf_defsite_state_t));
 	pdefsite_state->pvstate = pcst_udf_state;
 	pdefsite_state->arity = arity;
 	pdefsite_state->pprocess_func = cst_udf_process;
@@ -100,7 +98,6 @@ void mlr_dsl_cst_install_subroutine(mlr_dsl_ast_node_t* pnode, mlr_dsl_cst_t* pc
 
 	int arity = pparameters_node->pchildren->length;
 	// xxx arrange for this to be freed
-	// xxx fix
 	cst_subroutine_state_t* pcst_subroutine_state = mlr_malloc_or_die(sizeof(cst_subroutine_state_t));
 
 	pcst_subroutine_state->arity = arity;
@@ -170,8 +167,6 @@ void mlr_dsl_cst_execute_subroutine(cst_subroutine_state_t* pstate, variables_t*
 }
 
 // ----------------------------------------------------------------
-// xxx make consistent UDF <-> udf here & in other files
-// xxx move code around to more reasonable places
 static mv_t cst_udf_process(void* pvstate, int arity, mv_t* args, variables_t* pvars) {
 	cst_udf_state_t* pstate = pvstate;
 	mv_t retval = mv_absent();
@@ -186,7 +181,7 @@ static mv_t cst_udf_process(void* pvstate, int arity, mv_t* args, variables_t* p
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Compute the function value
-	cst_outputs_t* pcst_outputs = NULL; // xxx
+	cst_outputs_t* pcst_outputs = NULL; // Functions only produce output via their return values
 
 	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
@@ -215,7 +210,7 @@ static mv_t cst_udf_process(void* pvstate, int arity, mv_t* args, variables_t* p
 }
 
 // ----------------------------------------------------------------
-static void cst_udf_free(struct _UDF_defsite_state_t* pdefsite_state) {
+static void cst_udf_free(struct _udf_defsite_state_t* pdefsite_state) {
 	cst_udf_state_t* pstate = pdefsite_state->pvstate;
 	// xxx more
 	free(pstate->parameter_names);

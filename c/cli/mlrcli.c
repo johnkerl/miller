@@ -266,7 +266,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		slls_append(popts->filenames, argv[argi], NO_FREE);
 	}
 
-	// xxx if seqgen ...................
 	if (no_input) {
 		slls_free(popts->filenames);
 		popts->filenames = NULL;

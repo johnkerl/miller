@@ -450,12 +450,10 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_ast_node_t* pnode,
 		return alloc_local_variable_definition(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
 
-	// xxx disallow @ subr def
 	case MD_AST_NODE_TYPE_RETURN_VALUE:
 		return alloc_return_value(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
 
-	// xxx disallow @ func def
 	case MD_AST_NODE_TYPE_RETURN_VOID:
 		return alloc_return_void(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;

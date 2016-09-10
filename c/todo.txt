@@ -15,12 +15,11 @@ JSON formatting:
 * publish
 
 UDFs:
-!! scrutinize for reallocs missing n*sizeof(..)
-* multiple filter/put -f: UTs & new mld section
-* UT bind-stack fences
 ! ast work w $/@ prohibits
 * kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
 * xxx's
+* UT/doc: multiple filter/put -f (new mld section)
+* UT: bind-stack fences
 ? allow locals in if/for/while as well
 ? func @ filter?
 ? disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?

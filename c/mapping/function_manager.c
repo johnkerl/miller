@@ -57,7 +57,7 @@ fmgr_t* fmgr_alloc() {
 	fmgr_t* pfmgr = mlr_malloc_or_die(sizeof(fmgr_t));
 
 	pfmgr->function_lookup_table = &FUNCTION_LOOKUP_TABLE[0];
-	pfmgr->pUDF_names_to_defsite_states = lhmsv_alloc();
+	pfmgr->pudf_names_to_defsite_states = lhmsv_alloc();
 
 	return pfmgr;
 }
@@ -67,20 +67,20 @@ void fmgr_free(fmgr_t* pfmgr) {
 	if (pfmgr == NULL)
 		return;
 
-	for (lhmsve_t* pe = pfmgr->pUDF_names_to_defsite_states->phead; pe != NULL; pe = pe->pnext) {
-		UDF_defsite_state_t * pdefsite_state = pe->pvvalue;
+	for (lhmsve_t* pe = pfmgr->pudf_names_to_defsite_states->phead; pe != NULL; pe = pe->pnext) {
+		udf_defsite_state_t * pdefsite_state = pe->pvvalue;
 		pdefsite_state->pfree_func(pdefsite_state);
 	}
-	lhmsv_free(pfmgr->pUDF_names_to_defsite_states);
+	lhmsv_free(pfmgr->pudf_names_to_defsite_states);
 	free(pfmgr);
 }
 
 // ----------------------------------------------------------------
-void fmgr_install_udf(fmgr_t* pfmgr, char* name, int arity, UDF_defsite_state_t* pdefsite_state) {
+void fmgr_install_udf(fmgr_t* pfmgr, char* name, int arity, udf_defsite_state_t* pdefsite_state) {
 	// xxx disallow redefine ?
 	// xxx check built-in fcn tbl?
 	// xxx mem leak @ overwrite
-	lhmsv_put(pfmgr->pUDF_names_to_defsite_states, mlr_strdup_or_die(name), pdefsite_state, FREE_ENTRY_KEY);
+	lhmsv_put(pfmgr->pudf_names_to_defsite_states, mlr_strdup_or_die(name), pdefsite_state, FREE_ENTRY_KEY);
 }
 
 // ================================================================
@@ -374,15 +374,15 @@ void fmgr_list_all_functions_raw(fmgr_t* pfmgr, FILE* output_stream) {
 
 // ================================================================
 // xxx move to other file?
-typedef struct _rval_evaluator_UDF_callsite_state_t {
+typedef struct _rval_evaluator_udf_callsite_state_t {
 	int arity;
 	rval_evaluator_t** pevals;
 	mv_t* args;
-	UDF_defsite_state_t* pdefsite_state;
-} rval_evaluator_UDF_callsite_state_t;
+	udf_defsite_state_t* pdefsite_state;
+} rval_evaluator_udf_callsite_state_t;
 
-mv_t rval_evaluator_UDF_callsite_process(void* pvstate, variables_t* pvars) {
-	rval_evaluator_UDF_callsite_state_t* pstate = pvstate;
+mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvars) {
+	rval_evaluator_udf_callsite_state_t* pstate = pvstate;
 
 	for (int i = 0; i < pstate->arity; i++) {
 		pstate->args[i] = pstate->pevals[i]->pprocess_func(pstate->pevals[i]->pvstate, pvars);
@@ -392,8 +392,8 @@ mv_t rval_evaluator_UDF_callsite_process(void* pvstate, variables_t* pvars) {
 		pstate->arity, pstate->args, pvars);
 }
 
-static void rval_evaluator_UDF_callsite_free(rval_evaluator_t* pevaluator) {
-	rval_evaluator_UDF_callsite_state_t* pstate = pevaluator->pvstate;
+static void rval_evaluator_udf_callsite_free(rval_evaluator_t* pevaluator) {
+	rval_evaluator_udf_callsite_state_t* pstate = pevaluator->pvstate;
 	for (int i = 0; i < pstate->arity; i++) {
 		rval_evaluator_t* peval = pstate->pevals[i];
 		peval->pfree_func(peval);
@@ -404,11 +404,11 @@ static void rval_evaluator_UDF_callsite_free(rval_evaluator_t* pevaluator) {
 	free(pevaluator);
 }
 
-static rval_evaluator_t* fmgr_alloc_from_UDF_callsite(fmgr_t* pfmgr, UDF_defsite_state_t* pdefsite_state,
+static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite_state_t* pdefsite_state,
 	mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags)
 {
-	rval_evaluator_t* pUDF_callsite_evaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
-	rval_evaluator_UDF_callsite_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_UDF_callsite_state_t));
+	rval_evaluator_t* pudf_callsite_evaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	rval_evaluator_udf_callsite_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_udf_callsite_state_t));
 
 	pstate->arity = pnode->pchildren->length;
 	pstate->pevals = mlr_malloc_or_die(pstate->arity * sizeof(rval_evaluator_t*));
@@ -426,11 +426,11 @@ static rval_evaluator_t* fmgr_alloc_from_UDF_callsite(fmgr_t* pfmgr, UDF_defsite
 
 	pstate->pdefsite_state = pdefsite_state;
 
-	pUDF_callsite_evaluator->pvstate = pstate;
-	pUDF_callsite_evaluator->pprocess_func = rval_evaluator_UDF_callsite_process;
-	pUDF_callsite_evaluator->pfree_func = rval_evaluator_UDF_callsite_free;
+	pudf_callsite_evaluator->pvstate = pstate;
+	pudf_callsite_evaluator->pprocess_func = rval_evaluator_udf_callsite_process;
+	pudf_callsite_evaluator->pfree_func = rval_evaluator_udf_callsite_free;
 
-	return pUDF_callsite_evaluator;
+	return pudf_callsite_evaluator;
 }
 
 // ================================================================
@@ -455,16 +455,16 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_d
 
 	int user_provided_arity = pnode->pchildren->length;
 
-	UDF_defsite_state_t* pUDF_defsite_state = lhmsv_get(pfmgr->pUDF_names_to_defsite_states, function_name);
-	if (pUDF_defsite_state != NULL) {
-		int UDF_arity = pUDF_defsite_state->arity;
-		if (user_provided_arity != UDF_arity) {
+	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states, function_name);
+	if (pudf_defsite_state != NULL) {
+		int udf_arity = pudf_defsite_state->arity;
+		if (user_provided_arity != udf_arity) {
 			fprintf(stderr, "Function named \"%s\" takes %d argument%s; got %d.\n",
-				function_name, UDF_arity, (UDF_arity == 1) ? "" : "s", user_provided_arity);
+				function_name, udf_arity, (udf_arity == 1) ? "" : "s", user_provided_arity);
 			exit(1);
 		}
 
-		rval_evaluator_t* pcallsite_evaluator = fmgr_alloc_from_UDF_callsite(pfmgr, pUDF_defsite_state,
+		rval_evaluator_t* pcallsite_evaluator = fmgr_alloc_from_udf_callsite(pfmgr, pudf_defsite_state,
 			pnode, type_inferencing, context_flags);
 
 		// xxx who frees this?
