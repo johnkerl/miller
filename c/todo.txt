@@ -12,21 +12,12 @@ TOP OF LIST:
   - to 4.n.0 release notes as well
 
 UDFs:
-* prohibit return-value @ subr; prohibit return-void @ UDF
 * multiple put -f
 ! ast work w $/@ prohibits
 * allow locals in if/for/while as well
 ? func @ filter?
 ? disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
 * kw autodoc mods
-
-* cookbook:
-  $ mlr --oxtab -n seqgen --stop 100000 then put 'func f(u) {return -log(1-u)} $o=f(urand())' then stats1 -a p0,p50,p100,mean,count -f o
-  o_p0    0.000009
-  o_p50   0.692503
-  o_p100  11.026828
-  o_mean  0.999363
-  o_count 100001
 
 ! try to get seqgen to force eof sooner. in particular, try to get 'mlr seqgen' w/o -n. if so, fix cookbook etc.
 
