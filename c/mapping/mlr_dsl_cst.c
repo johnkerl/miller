@@ -1653,12 +1653,14 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 			rval_evaluator_t* phandler = pstatement->subr_callsite_argument_evaluators[i];
 			phandler->pfree_func(phandler);
 		}
+		free(pstatement->subr_callsite_argument_evaluators);
 	}
 
 	if (pstatement->subr_callsite_arguments != NULL) {
 		for (int i = 0; i < pstatement->subr_callsite_arity; i++) {
 			mv_free(&pstatement->subr_callsite_arguments[i]);
 		}
+		free(pstatement->subr_callsite_arguments);
 	}
 
 	if (pstatement->preturn_evaluator != NULL) {
