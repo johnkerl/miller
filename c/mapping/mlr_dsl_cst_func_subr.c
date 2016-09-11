@@ -62,7 +62,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 		}
 		hss_add(pnameset, pparameter_node->text);
 
-		pcst_udf_state->parameter_names[i] = pparameter_node->text;
+		pcst_udf_state->parameter_names[i] = mlr_strdup_or_die(pparameter_node->text);
 	}
 
 	if (!ok) {
