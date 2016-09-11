@@ -54,11 +54,32 @@ void mlr_dsl_cst_install_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	pcst_udf_state->arity = arity;
 
 	pcst_udf_state->parameter_names = mlr_malloc_or_die(arity * sizeof(char*));
+	int ok = TRUE;
+	hss_t* pnameset = hss_alloc();
 	int i = 0;
-	// xxx dup check ...
 	for (sllve_t* pe = pparameters_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
+
+		if (hss_has(pnameset, pparameter_node->text)) {
+			fprintf(stderr, "%s: duplicate parameter name \"%s\" in function \"%s\".\n",
+				MLR_GLOBALS.bargv0, pparameter_node->text, pnode->text);
+			ok = FALSE;
+		}
+		hss_add(pnameset, pparameter_node->text);
+
 		pcst_udf_state->parameter_names[i] = pparameter_node->text;
+	}
+
+	if (!ok) {
+		fprintf(stderr, "Parameter names: ");
+		for (sllve_t* pe = pparameters_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+			mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
+			fprintf(stderr, "\"%s\"", pparameter_node->text);
+			if (pe->pnext != NULL)
+				fprintf(stderr, ", ");
+		}
+		fprintf(stderr, ".\n");
+		exit(1);
 	}
 
 	pcst_udf_state->pbound_variables = lhmsmv_alloc();
@@ -88,6 +109,7 @@ void mlr_dsl_cst_install_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 }
 
 // ----------------------------------------------------------------
+// xxx factor out ctor from installer?
 void mlr_dsl_cst_install_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
@@ -103,11 +125,32 @@ void mlr_dsl_cst_install_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 	pcst_subroutine_state->arity = arity;
 
 	pcst_subroutine_state->parameter_names = mlr_malloc_or_die(arity * sizeof(char*));
+	int ok = TRUE;
+	hss_t* pnameset = hss_alloc();
 	int i = 0;
-	// xxx dup check ...
 	for (sllve_t* pe = pparameters_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
+
+		if (hss_has(pnameset, pparameter_node->text)) {
+			fprintf(stderr, "%s: duplicate parameter name \"%s\" in subroutine \"%s\".\n",
+				MLR_GLOBALS.bargv0, pparameter_node->text, pnode->text);
+			ok = FALSE;
+		}
+		hss_add(pnameset, pparameter_node->text);
+
 		pcst_subroutine_state->parameter_names[i] = pparameter_node->text;
+	}
+
+	if (!ok) {
+		fprintf(stderr, "Parameter names: ");
+		for (sllve_t* pe = pparameters_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+			mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
+			fprintf(stderr, "\"%s\"", pparameter_node->text);
+			if (pe->pnext != NULL)
+				fprintf(stderr, ", ");
+		}
+		fprintf(stderr, ".\n");
+		exit(1);
 	}
 
 	pcst_subroutine_state->pbound_variables = lhmsmv_alloc();
