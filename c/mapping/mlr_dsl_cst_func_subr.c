@@ -49,9 +49,9 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 	// xxx arrange for this to be freed
 	cst_udf_state_t* pcst_udf_state = mlr_malloc_or_die(sizeof(cst_udf_state_t));
 
-	pcst_udf_state->name = pnode->text; // xxx needed?
+	//pcst_udf_state->name = pnode->text; // xxx needed?
 
-	pcst_udf_state->arity = arity;
+	//pcst_udf_state->arity = arity;
 
 	pcst_udf_state->parameter_names = mlr_malloc_or_die(arity * sizeof(char*));
 	int ok = TRUE;

@@ -223,10 +223,9 @@ void mlr_dsl_cst_handle_statement_list(
 // mapping/mlr_dsl_cst_func_subr.c
 
 // ----------------------------------------------------------------
-// Data needed for the body of a user-defined function
+// cst_udf_state_t is data needed to execute the body of a user-defined function which is implemented by CST statements.
+// udf_defsite_state_t is data needed for any user-defined function (no matter how implemented).
 typedef struct _cst_udf_state_t {
-	char*     name; // xxx needed?
-	int       arity; // xxx needed?
 	char**    parameter_names;
     lhmsmv_t* pbound_variables;
 	sllv_t*   pblock_statements;
@@ -241,7 +240,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(
 void mlr_dsl_cst_free_udf(udf_defsite_state_t* pstate); // xxx call me
 
 // ----------------------------------------------------------------
-// Data needed for the body of a subroutine
+// cst_subroutine_state_t is data needed to execute the body of a subroutine.
 typedef struct _cst_subroutine_state_t {
 	char*     name;
 	int       arity;
