@@ -4,8 +4,8 @@
 #include "mlr_dsl_cst.h"
 #include "context_flags.h"
 
-static mv_t cst_udf_process(void* pvstate, int arity, mv_t* args, variables_t* pvars);
-static void cst_udf_free(struct _udf_defsite_state_t* pdefsite_state);
+static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, variables_t* pvars);
+static void cst_udf_free_callback(void* pvstate);
 
 // ----------------------------------------------------------------
 // $ cat def
@@ -45,10 +45,10 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 	mlr_dsl_ast_node_t* pparameters_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pbody_node = pnode->pchildren->phead->pnext->pvvalue;
 
-	int arity = pparameters_node->pchildren->length;
 	cst_udf_state_t* pcst_udf_state = mlr_malloc_or_die(sizeof(cst_udf_state_t));
 
-	pcst_udf_state->parameter_names = mlr_malloc_or_die(arity * sizeof(char*));
+	pcst_udf_state->arity = pparameters_node->pchildren->length;
+	pcst_udf_state->parameter_names = mlr_malloc_or_die(pcst_udf_state->arity * sizeof(char*));
 	int ok = TRUE;
 	hss_t* pnameset = hss_alloc();
 	int i = 0;
@@ -98,15 +98,83 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 	udf_defsite_state_t* pdefsite_state = mlr_malloc_or_die(sizeof(udf_defsite_state_t));
 	pdefsite_state->pvstate       = pcst_udf_state; // xxx make this gets freed
 	pdefsite_state->name          = mlr_strdup_or_die(pnode->text);
-	pdefsite_state->arity         = arity;
-	pdefsite_state->pprocess_func = cst_udf_process;
-	pdefsite_state->pfree_func    = cst_udf_free;
+	pdefsite_state->arity         = pcst_udf_state->arity;
+	pdefsite_state->pprocess_func = cst_udf_process_callback;
+	pdefsite_state->pfree_func    = cst_udf_free_callback;
 
 	return pdefsite_state;
 }
 
-void mlr_dsl_cst_free_udf(udf_defsite_state_t* pstate) {
-	// xxx
+void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate) {
+	if (pstate == NULL)
+		return;
+
+	for (int i = 0; i < pstate->arity; i++)
+		free(pstate->parameter_names[i]);
+	free(pstate->parameter_names);
+
+	lhmsmv_free(pstate->pbound_variables);
+
+	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+		mlr_dsl_cst_statement_free(pstatement);
+	}
+	sllv_free(pstate->pblock_statements);
+
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
+// Callback function for the function manager to invoke into here
+
+static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, variables_t* pvars) {
+	cst_udf_state_t* pstate = pvstate;
+	mv_t retval = mv_absent();
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Bind parameters to arguments
+	bind_stack_push_fenced(pvars->pbind_stack, pstate->pbound_variables);
+	// xxx mem-free on replace
+	for (int i = 0; i < arity; i++) {
+		lhmsmv_put(pstate->pbound_variables, pstate->parameter_names[i], &args[i], NO_FREE); // xxx free-flags
+	}
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Compute the function value
+	cst_outputs_t* pcst_outputs = NULL; // Functions only produce output via their return values
+
+	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+		if (pstatement->local_variable_name != NULL) {
+			// local statement
+			rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
+			mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+			lhmsmv_put(pstate->pbound_variables, pstatement->local_variable_name, &val, FREE_ENTRY_VALUE);
+		} else if (pstatement->preturn_evaluator != NULL) {
+			// return statement
+			retval = pstatement->preturn_evaluator->pprocess_func(pstatement->preturn_evaluator->pvstate, pvars);
+			break;
+		} else {
+			// anything else
+			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			if (loop_stack_get(pvars->ploop_stack) != 0) {
+				break;
+			}
+		}
+	}
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	bind_stack_pop(pvars->pbind_stack);
+
+	return retval;
+}
+
+// ----------------------------------------------------------------
+// Callback function for the function manager to invoke into here
+
+static void cst_udf_free_callback(void* pvstate) {
+	cst_udf_state_t* pstate = pvstate;
+	mlr_dsl_cst_free_udf(pstate);
 }
 
 // ----------------------------------------------------------------
@@ -227,57 +295,4 @@ void mlr_dsl_cst_execute_subroutine(cst_subroutine_state_t* pstate, variables_t*
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	bind_stack_pop(pvars->pbind_stack);
-}
-
-// ----------------------------------------------------------------
-static mv_t cst_udf_process(void* pvstate, int arity, mv_t* args, variables_t* pvars) {
-	cst_udf_state_t* pstate = pvstate;
-	mv_t retval = mv_absent();
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// Bind parameters to arguments
-	bind_stack_push_fenced(pvars->pbind_stack, pstate->pbound_variables);
-	// xxx mem-free on replace
-	for (int i = 0; i < arity; i++) {
-		lhmsmv_put(pstate->pbound_variables, pstate->parameter_names[i], &args[i], NO_FREE); // xxx free-flags
-	}
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// Compute the function value
-	cst_outputs_t* pcst_outputs = NULL; // Functions only produce output via their return values
-
-	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		if (pstatement->local_variable_name != NULL) {
-			// local statement
-			rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-			mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-			lhmsmv_put(pstate->pbound_variables, pstatement->local_variable_name, &val, FREE_ENTRY_VALUE);
-		} else if (pstatement->preturn_evaluator != NULL) {
-			// return statement
-			retval = pstatement->preturn_evaluator->pprocess_func(pstatement->preturn_evaluator->pvstate, pvars);
-			break;
-		} else {
-			// anything else
-			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
-			if (loop_stack_get(pvars->ploop_stack) != 0) {
-				break;
-			}
-		}
-	}
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	bind_stack_pop(pvars->pbind_stack);
-
-	return retval;
-}
-
-// ----------------------------------------------------------------
-static void cst_udf_free(struct _udf_defsite_state_t* pdefsite_state) {
-	cst_udf_state_t* pstate = pdefsite_state->pvstate;
-	// xxx more
-	free(pstate->parameter_names);
-	lhmsmv_free(pstate->pbound_variables);
-	sllv_free(pstate->pblock_statements);
-	free(pdefsite_state);
 }

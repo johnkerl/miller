@@ -33,6 +33,7 @@ MORE:
 ? some help for keyword clashes? e.g. 'func E(x) { ... }' ?
 * dquoting for other formats.
 ? triple-fors?
+? multiple-valued function returns??
 ! rh/fedora/centos
 ! multi-field x many verbs
 

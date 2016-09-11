@@ -69,7 +69,9 @@ void fmgr_free(fmgr_t* pfmgr) {
 
 	for (lhmsve_t* pe = pfmgr->pudf_names_to_defsite_states->phead; pe != NULL; pe = pe->pnext) {
 		udf_defsite_state_t * pdefsite_state = pe->pvvalue;
-		pdefsite_state->pfree_func(pdefsite_state);
+		free(pdefsite_state->name);
+		pdefsite_state->pfree_func(pdefsite_state->pvstate);
+		free(pdefsite_state);
 	}
 	lhmsv_free(pfmgr->pudf_names_to_defsite_states);
 	free(pfmgr);

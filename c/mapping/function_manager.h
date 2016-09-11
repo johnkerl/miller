@@ -12,10 +12,8 @@
 // be called: pvstate it its own state (whatever that is), and it defines its
 // own process and free functions implementing this interface.
 
-struct _udf_defsite_state_t; // Forward reference
-
 typedef mv_t udf_defsite_process_func_t(void* pvstate, int arity, mv_t* pargs, variables_t* pvars);
-typedef void udf_defsite_free_func_t(struct _udf_defsite_state_t* pdefsite_state);
+typedef void udf_defsite_free_func_t(void* pvstate);
 
 typedef struct _udf_defsite_state_t {
 	void* pvstate;
