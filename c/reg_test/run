@@ -4638,28 +4638,28 @@ run_mlr --opprint --from $indir/abixy put '
   call s("W", NR);
 '
 
-#mlr_expect_fail --from $indir/abixy put '
-#  func f(x,y,z) {
-#    return x + y + z
-#  }
-#  subr s(a,b) {
-#      $[a] = b;
-#      return 1 # subr must not return value
-#  }
-#  $o = f($x, $y, $i);
-#  call s("W", NR);
-#'
-#
-#mlr_expect_fail --from $indir/abixy put '
-#  func f(x,y,z) {
-#    return # func must return value
-#  }
-#  subr s(a,b) {
-#      $[a] = b;
-#  }
-#  $o = f($x, $y, $i);
-#  call s("W", NR);
-#'
+mlr_expect_fail --from $indir/abixy put '
+  func f(x,y,z) {
+    return x + y + z
+  }
+  subr s(a,b) {
+      $[a] = b;
+      return 1 # subr must not return value
+  }
+  $o = f($x, $y, $i);
+  call s("W", NR);
+'
+
+mlr_expect_fail --from $indir/abixy put '
+  func f(x,y,z) {
+    return # func must return value
+  }
+  subr s(a,b) {
+      $[a] = b;
+  }
+  $o = f($x, $y, $i);
+  call s("W", NR);
+'
 
 # ----------------------------------------------------------------
 announce MULTI-PART SCRIPTS
