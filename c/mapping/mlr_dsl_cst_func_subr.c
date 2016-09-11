@@ -46,12 +46,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 	mlr_dsl_ast_node_t* pbody_node = pnode->pchildren->phead->pnext->pvvalue;
 
 	int arity = pparameters_node->pchildren->length;
-	// xxx arrange for this to be freed
 	cst_udf_state_t* pcst_udf_state = mlr_malloc_or_die(sizeof(cst_udf_state_t));
-
-	//pcst_udf_state->name = pnode->text; // xxx needed?
-
-	//pcst_udf_state->arity = arity;
 
 	pcst_udf_state->parameter_names = mlr_malloc_or_die(arity * sizeof(char*));
 	int ok = TRUE;
@@ -102,12 +97,16 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 	// Callback struct for the function manager to invoke the new function:
 	udf_defsite_state_t* pdefsite_state = mlr_malloc_or_die(sizeof(udf_defsite_state_t));
 	pdefsite_state->pvstate       = pcst_udf_state; // xxx make this gets freed
-	pdefsite_state->name          = pnode->text;
+	pdefsite_state->name          = mlr_strdup_or_die(pnode->text);
 	pdefsite_state->arity         = arity;
 	pdefsite_state->pprocess_func = cst_udf_process;
 	pdefsite_state->pfree_func    = cst_udf_free;
 
 	return pdefsite_state;
+}
+
+void mlr_dsl_cst_free_udf(udf_defsite_state_t* pstate) {
+	// xxx
 }
 
 // ----------------------------------------------------------------
@@ -118,13 +117,13 @@ cst_subroutine_state_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_ds
 	mlr_dsl_ast_node_t* pbody_node = pnode->pchildren->phead->pnext->pvvalue;
 
 	int arity = pparameters_node->pchildren->length;
-	cst_subroutine_state_t* pcst_subroutine_state = mlr_malloc_or_die(sizeof(cst_subroutine_state_t));
+	cst_subroutine_state_t* pstate = mlr_malloc_or_die(sizeof(cst_subroutine_state_t));
 
-	pcst_subroutine_state->name = pparameters_node->text;
+	pstate->name = mlr_strdup_or_die(pparameters_node->text);
 
-	pcst_subroutine_state->arity = arity;
+	pstate->arity = arity;
 
-	pcst_subroutine_state->parameter_names = mlr_malloc_or_die(arity * sizeof(char*));
+	pstate->parameter_names = mlr_malloc_or_die(arity * sizeof(char*));
 	int ok = TRUE;
 	hss_t* pnameset = hss_alloc();
 	int i = 0;
@@ -138,7 +137,7 @@ cst_subroutine_state_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_ds
 		}
 		hss_add(pnameset, pparameter_node->text);
 
-		pcst_subroutine_state->parameter_names[i] = pparameter_node->text;
+		pstate->parameter_names[i] = mlr_strdup_or_die(pparameter_node->text);
 	}
 
 	if (!ok) {
@@ -153,9 +152,9 @@ cst_subroutine_state_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_ds
 		exit(1);
 	}
 
-	pcst_subroutine_state->pbound_variables = lhmsmv_alloc();
+	pstate->pbound_variables = lhmsmv_alloc();
 
-	pcst_subroutine_state->pblock_statements = sllv_alloc();
+	pstate->pblock_statements = sllv_alloc();
 
 	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
@@ -165,12 +164,33 @@ cst_subroutine_state_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_ds
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		sllv_append(pcst_subroutine_state->pblock_statements,
-			mlr_dsl_cst_alloc_statement(pbody_ast_node, pcst->pfmgr, pcst->psubroutine_states,
-				type_inferencing, context_flags | IN_BINDABLE));
+		mlr_dsl_cst_statement_t* pstatement = mlr_dsl_cst_alloc_statement(pbody_ast_node,
+			pcst->pfmgr, pcst->psubroutine_states, type_inferencing, context_flags | IN_BINDABLE);
+		sllv_append(pstate->pblock_statements, pstatement);
 	}
 
-	return pcst_subroutine_state;
+	return pstate;
+}
+
+void mlr_dsl_cst_free_subroutine(cst_subroutine_state_t* pstate) {
+	if (pstate == NULL)
+		return;
+
+	free(pstate->name);
+
+	for (int i = 0; i < pstate->arity; i++)
+		free(pstate->parameter_names[i]);
+	free(pstate->parameter_names);
+
+	lhmsmv_free(pstate->pbound_variables);
+
+	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+		mlr_dsl_cst_statement_free(pstatement);
+	}
+	sllv_free(pstate->pblock_statements);
+
+	free(pstate);
 }
 
 // ----------------------------------------------------------------

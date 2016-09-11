@@ -35,7 +35,7 @@ typedef void cst_statement_handler_t(
 static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode);
 
 static mlr_dsl_cst_statement_t* alloc_blank();
-static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
+void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 static cst_statement_allocator_t alloc_local_variable_definition;
 static cst_statement_allocator_t alloc_return_value; // UDF
@@ -396,19 +396,19 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	if (pcst == NULL)
 		return;
 	for (sllve_t* pe = pcst->pbegin_statements->phead; pe != NULL; pe = pe->pnext)
-		cst_statement_free(pe->pvvalue);
+		mlr_dsl_cst_statement_free(pe->pvvalue);
 	for (sllve_t* pe = pcst->pmain_statements->phead; pe != NULL; pe = pe->pnext)
-		cst_statement_free(pe->pvvalue);
+		mlr_dsl_cst_statement_free(pe->pvvalue);
 	for (sllve_t* pe = pcst->pend_statements->phead; pe != NULL; pe = pe->pnext)
-		cst_statement_free(pe->pvvalue);
+		mlr_dsl_cst_statement_free(pe->pvvalue);
 	sllv_free(pcst->pbegin_statements);
 	sllv_free(pcst->pmain_statements);
 	sllv_free(pcst->pend_statements);
 	fmgr_free(pcst->pfmgr);
 
 	for (lhmsve_t* pe = pcst->psubroutine_states->phead; pe != NULL; pe = pe->pnext) {
-		//cst_subroutine_state_t* pcst_subroutine_state = pe->pvvalue;
-		// xxx free void-star payloads as well
+		cst_subroutine_state_t* pcst_subroutine_state = pe->pvvalue;
+		mlr_dsl_cst_free_subroutine(pcst_subroutine_state);
 	}
 	lhmsv_free(pcst->psubroutine_states);
 
@@ -1646,7 +1646,7 @@ static file_output_mode_t file_output_mode_from_ast_node_type(mlr_dsl_ast_node_t
 }
 
 // ----------------------------------------------------------------
-static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
+void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
 	if (pstatement->subr_callsite_argument_evaluators != NULL) {
 		for (int i = 0; i < pstatement->subr_callsite_arity; i++) {
@@ -1739,13 +1739,13 @@ static void cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
 	if (pstatement->pblock_statements != NULL) {
 		for (sllve_t* pe = pstatement->pblock_statements->phead; pe != NULL; pe = pe->pnext)
-			cst_statement_free(pe->pvvalue);
+			mlr_dsl_cst_statement_free(pe->pvvalue);
 		sllv_free(pstatement->pblock_statements);
 	}
 
 	if (pstatement->pif_chain_statements != NULL) {
 		for (sllve_t* pe = pstatement->pif_chain_statements->phead; pe != NULL; pe = pe->pnext)
-			cst_statement_free(pe->pvvalue);
+			mlr_dsl_cst_statement_free(pe->pvvalue);
 		sllv_free(pstatement->pif_chain_statements);
 	}
 

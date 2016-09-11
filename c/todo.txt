@@ -17,7 +17,8 @@ JSON formatting:
 UDFs:
 ! ast work w $/@ prohibits
 * kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
-* xxx's
+* xxxes
+* valgrinds
 * UT/doc: multiple filter/put -f (new mld section)
 * UT: bind-stack fences
 * UT/doc: note UDFs may overwrite built-in functions; & test that

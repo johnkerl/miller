@@ -213,6 +213,7 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_ast_node_t* pnode,
 	fmgr_t* pfmgr, lhmsv_t* pcst_subroutine_states, int type_inferencing, int context_flags);
 
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
+void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 void mlr_dsl_cst_handle_statement_list(
 	sllv_t*      pcst_statements, // block bodies for begin, main, end; cond, if, for, while
@@ -255,7 +256,7 @@ cst_subroutine_state_t* mlr_dsl_cst_alloc_subroutine(
 	int                 type_inferencing,
 	int                 context_flags);
 
-void mlr_dsl_cst_free_subroutine(cst_subroutine_state_t* pcst_subroutine_state); // xxx call me
+void mlr_dsl_cst_free_subroutine(cst_subroutine_state_t* pcst_subroutine_state);
 
 // Invoked directly from the CST statement handler for a subroutine callsite.
 // (Functions, by contrast, are invoked by callback from the right-hand-site-evaluator logic
