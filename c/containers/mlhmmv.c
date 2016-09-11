@@ -1220,8 +1220,9 @@ void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 	static char* leader = "  ";
 	// Top-level opening brace goes on a line by itself; subsequents on the same line after the level key.
 	if (depth == 0)
-		fprintf(ostream, "{\n");
+		fprintf(ostream, "%s{\n", line_indent);
 	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
+		fprintf(ostream, "%s", line_indent);
 		for (int i = 0; i <= depth; i++)
 			fprintf(ostream, "%s", leader);
 		char* level_key_string = mv_alloc_format_val(&pentry->level_key);
@@ -1251,7 +1252,7 @@ void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 			else
 				fprintf(ostream, "\n");
 		} else {
-			fprintf(ostream, "{\n");
+			fprintf(ostream, "%s{\n", line_indent);
 			mlhmmv_level_print_stacked(pentry->level_value.u.pnext_level, depth + 1,
 				pentry->pnext != NULL, quote_values_always, line_indent, ostream);
 		}
@@ -1259,9 +1260,9 @@ void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 	for (int i = 0; i < depth; i++)
 		fprintf(ostream, "%s", leader);
 	if (do_final_comma)
-		fprintf(ostream, "},\n");
+		fprintf(ostream, "%s},\n", line_indent);
 	else
-		fprintf(ostream, "}\n");
+		fprintf(ostream, "%s}\n", line_indent);
 }
 
 // ----------------------------------------------------------------
