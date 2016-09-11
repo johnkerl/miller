@@ -21,11 +21,17 @@ UDFs:
 * xxxes in reg_test/run
 * valgrinds
 ! UT func/subr exhaustively
+* UT for mem-free at unused func/subr args
 * doc: multiple filter/put -f (new mld section)
-* doc: note UDFs may not overwrite built-in functions; subrs different namespace (log example).
-? allow locals in if/for/while as well
+* doc: note UDFs may not overwrite built-in functions; subrs have a different namespace (log example).
+* deferred func/subr name bindings: make recursion possible; more generally, calls to something as yet undefined.
 ? allow func @ filter?
+? allow locals in if/for/while as well
 ? disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
+
+RELATED:
+* make variadic min & max; what other functions?
+* Note mlr -l -L -f -F -k -K rather prominently at mlh.
 
 I/O clopts:
 * --c2p, --c2j etc ...

@@ -137,7 +137,9 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	bind_stack_push_fenced(pvars->pbind_stack, pstate->pbound_variables);
 	// xxx mem-free on replace
 	for (int i = 0; i < arity; i++) {
-		lhmsmv_put(pstate->pbound_variables, pstate->parameter_names[i], &args[i], NO_FREE); // xxx free-flags
+		// xxx cmt re takedown at callsite *if used* ... mv_free idempotence necessary.
+		// xxx free-flags
+		lhmsmv_put(pstate->pbound_variables, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -272,8 +274,9 @@ void mlr_dsl_cst_execute_subroutine(cst_subroutine_state_t* pstate, variables_t*
 
 	// xxx mem-free on replace
 	for (int i = 0; i < pstate->arity; i++) {
-		lhmsmv_put(pstate->pbound_variables, pstate->parameter_names[i], &args[i], NO_FREE);
-			// xxx free-flags
+		// xxx cmt re takedown at callsite *if used* ... mv_free idempotence necessary.
+		// xxx free-flags
+		lhmsmv_put(pstate->pbound_variables, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
 	}
 
 	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
