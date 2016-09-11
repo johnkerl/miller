@@ -434,22 +434,7 @@ static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite
 rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
-	if ((pnode->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME) && (pnode->type != MD_AST_NODE_TYPE_OPERATOR)) {
-        // xxx use error code & let the caller fatal it.
-		// xxx or move to caller.
-		if (context_flags & IN_MLR_FILTER) {
-			fprintf(stderr,
-				"%s: statements in %s filter should only be single expressions evaluating to boolean.\n",
-				MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
-			exit(1);
-		}
-
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d (node type %s).\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__, mlr_dsl_ast_node_describe_type(pnode->type));
-		exit(1);
-	}
 	char* function_name = pnode->text;
-
 	int user_provided_arity = pnode->pchildren->length;
 
 	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states, function_name);
