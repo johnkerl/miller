@@ -4662,8 +4662,8 @@ mlr_expect_fail --from $indir/abixy put '
 '
 
 # Test fencing: function f should not have access to boundvar k from the callsite.
-run_mlr --from s --opprint put 'func f(x) {return k} for (k,v in $*) {$o=f($x)}'
-run_mlr --from s --opprint put 'subr foo() {print "k is [".k."]"} for (k,v in $*) {call foo()}'
+run_mlr --from $indir/abixy --opprint put 'func f(x) {return k} for (k,v in $*) {$o=f($x)}'
+run_mlr --from $indir/abixy --opprint put 'subr foo() {print "k is [".k."]"} for (k,v in $*) {call foo()}'
 
 # Test overriding built-ins
 mlr_expect_fail --opprint --from $indir/abixy put 'func log(x) { return 0 } $o = log($x)'
