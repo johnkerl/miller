@@ -4603,13 +4603,96 @@ run_mlr --ojson --jvstack   --jlistwrap --jquoteall cat $indir/json-output-optio
 run_mlr           --ijson --opprint cat $indir/small-non-nested-wrapped.json $indir/small-non-nested-wrapped.json
 run_mlr --no-mmap --ijson --opprint cat $indir/small-non-nested-wrapped.json $indir/small-non-nested-wrapped.json
 
+# ----------------------------------------------------------------
+announce USER-DEFINED FUNCTIONS AND SUBROUTINES
+
+run_mlr --opprint --from $indir/abixy put 'func f(u,v){return u+v} $o=f(NR*1000,$x)'
+
+# xxx expect fail
+#run_mlr --opprint --from $indir/abixy put 'func f(x,y,z){$nnn=999; local n=10; return $y} $o=f($i,$x,$y)'
+
+run_mlr --opprint --from $indir/abixy put 'subr s(a,b) { $[a] = b } call s("W", 999)'
+
+run_mlr --opprint --from $indir/abixy put '
+  func f(x,y,z) {
+    return x + y + z
+  }
+  subr s(a,b) {
+      $[a] = b;
+      $DID = "YES";
+  }
+  $o = f($x, $y, $i);
+  call s("W", NR);
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  func f(x,y,z) {
+    return x + y + z
+  }
+  subr s(a,b) {
+      $[a] = b;
+      return;
+      $DID = "YES";
+  }
+  $o = f($x, $y, $i);
+  call s("W", NR);
+'
+
+#mlr_expect_fail --from $indir/abixy put '
+#  func f(x,y,z) {
+#    return x + y + z
+#  }
+#  subr s(a,b) {
+#      $[a] = b;
+#      return 1 # subr must not return value
+#  }
+#  $o = f($x, $y, $i);
+#  call s("W", NR);
+#'
+
+#mlr_expect_fail --from $indir/abixy put '
+#  func f(x,y,z) {
+#    return # func must return value
+#  }
+#  subr s(a,b) {
+#      $[a] = b;
+#  }
+#  $o = f($x, $y, $i);
+#  call s("W", NR);
+#'
+
+# ######################################################## def4a
+# subr s(a,b) {
+#     $[a] = b;
+#     $DID = "YES";
+# }
+#
+# ######################################################## def4b
+# func f(x,y,z) {
+#   return x + y + z
+# }
+#
+# ######################################################## def4c
+# $o = f($x, $y, $i);
+# call s("W", NR);
+#
+
 # ================================================================
 # A key feature of this regression script is that it can be invoked from any
 # directory. Depending on the directory it's invoked from, the path to $outdir
 # may vary. Nonetheless for debugging it's crucial that we echo out each
 # command being executed -- here we use diff -I to skip the info lines and
 # focus the test on program output per se.
+
+echo
+echo
+echo ================================================================
+echo "Differences between $expfile and $outfile:"
+echo
+
 diff -I '^mlr ' -C5 $expfile $outfile
+
+echo "No differences found between $expfile and $outfile" # since set -e
 
 # ================================================================
 echo ALL REGRESSION TESTS PASSED
