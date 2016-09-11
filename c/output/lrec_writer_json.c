@@ -9,6 +9,7 @@ typedef struct _lrec_writer_json_state_t {
 	char* output_json_flatten_separator;
 
 	int quote_json_values_always;
+	char* line_indent;
 	char* before_records_at_start_of_stream;
 	char* between_records_after_start_of_stream;
 	char* after_records_at_end_of_stream;
@@ -30,6 +31,7 @@ lrec_writer_t* lrec_writer_json_alloc(int stack_vertically, int wrap_json_output
 	pstate->counter = 0;
 	pstate->output_json_flatten_separator = output_json_flatten_separator;
 
+	pstate->line_indent                           = wrap_json_output_in_outer_list ? "  "  : "";
 	pstate->before_records_at_start_of_stream     = wrap_json_output_in_outer_list ? "[\n" : "";
 	pstate->between_records_after_start_of_stream = wrap_json_output_in_outer_list ? ","   : "";
 	pstate->after_records_at_end_of_stream        = wrap_json_output_in_outer_list ? "]\n" : "";

@@ -33244,6 +33244,31 @@ zee wye 8  0.5985540091064224  0.976181385699006   9.574735  8
 hat wye 9  0.03144187646093577 0.7495507603507059  9.780993  9
 pan wye 10 0.5026260055412137  0.9526183602969864  11.455244 10
 
+mlr --from ./reg_test/input/abixy put 
+  func f(x,y,z) {
+    return x + y + z
+  }
+  subr s(a,b) {
+      $[a] = b;
+      return 1 # subr must not return value
+  }
+  $o = f($x, $y, $i);
+  call s("W", NR);
+
+mlr: return statements within user-defined subroutines must not return a value.
+
+mlr --from ./reg_test/input/abixy put 
+  func f(x,y,z) {
+    return # func must return value
+  }
+  subr s(a,b) {
+      $[a] = b;
+  }
+  $o = f($x, $y, $i);
+  call s("W", NR);
+
+mlr: return statements within user-defined functions must return a value.
+
 
 ================================================================
 MULTI-PART SCRIPTS
