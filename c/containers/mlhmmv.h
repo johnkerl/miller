@@ -207,10 +207,10 @@ void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs,
 	int do_full_prefixing, char* flatten_separator);
 
 // For 'dump' in the DSL; also used by the lrec-to-JSON writer.
-void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always, FILE* ostream);
+void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always, char* line_indent, FILE* ostream);
 void mlhmmv_print_json_single_line(mlhmmv_t* pmap, int quote_values_always, FILE* ostream);
 
 void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
-	int do_final_comma, int quote_values_always, FILE* ostream);
+	int do_final_comma, int quote_values_always, char* line_indent, FILE* ostream);
 
 #endif // MLHMMV_H

@@ -82,7 +82,7 @@ static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t*
 		}
 
 		if (pstate->stack_vertically)
-			mlhmmv_print_json_stacked(pmap, pstate->quote_json_values_always, output_stream);
+			mlhmmv_print_json_stacked(pmap, pstate->quote_json_values_always, pstate->line_indent, output_stream);
 		else
 			mlhmmv_print_json_single_line(pmap, pstate->quote_json_values_always, output_stream);
 

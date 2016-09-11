@@ -2771,7 +2771,7 @@ static void handle_dump(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, pstatement->stdfp);
+	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, "", pstatement->stdfp);
 }
 
 static void handle_dump_to_file(
@@ -2785,7 +2785,7 @@ static void handle_dump_to_file(
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 
 	FILE* outfp = multi_out_get(pstatement->pmulti_out, filename, pstatement->file_output_mode);
-	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, outfp);
+	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, "", outfp);
 	if (pcst_outputs->flush_every_record)
 		fflush(outfp);
 

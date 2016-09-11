@@ -1210,12 +1210,12 @@ static void mlhmmv_to_lrecs_aux_within_record_lashed(
 //   }
 // }
 
-void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always, FILE* ostream) {
-	mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, quote_values_always, ostream);
+void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always, char* line_indent, FILE* ostream) {
+	mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, quote_values_always, line_indent, ostream);
 }
 
 void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
-	int do_final_comma, int quote_values_always, FILE* ostream)
+	int do_final_comma, int quote_values_always, char* line_indent, FILE* ostream)
 {
 	static char* leader = "  ";
 	// Top-level opening brace goes on a line by itself; subsequents on the same line after the level key.
@@ -1253,7 +1253,7 @@ void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 		} else {
 			fprintf(ostream, "{\n");
 			mlhmmv_level_print_stacked(pentry->level_value.u.pnext_level, depth + 1,
-				pentry->pnext != NULL, quote_values_always, ostream);
+				pentry->pnext != NULL, quote_values_always, line_indent, ostream);
 		}
 	}
 	for (int i = 0; i < depth; i++)
