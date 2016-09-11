@@ -57,6 +57,16 @@ fmgr_t* fmgr_alloc() {
 	fmgr_t* pfmgr = mlr_malloc_or_die(sizeof(fmgr_t));
 
 	pfmgr->function_lookup_table = &FUNCTION_LOOKUP_TABLE[0];
+
+	pfmgr->built_in_function_names = hss_alloc();
+	for (int i = 0; ; i++) {
+		function_lookup_t* plookup = &pfmgr->function_lookup_table[i];
+		char* fname = plookup->function_name;
+		if (fname == NULL)
+			break;
+		hss_add(pfmgr->built_in_function_names, fname);
+	}
+
 	pfmgr->pudf_names_to_defsite_states = lhmsv_alloc();
 
 	return pfmgr;
@@ -79,6 +89,11 @@ void fmgr_free(fmgr_t* pfmgr) {
 
 // ----------------------------------------------------------------
 void fmgr_install_udf(fmgr_t* pfmgr, udf_defsite_state_t* pdefsite_state) {
+	if (hss_has(pfmgr->built_in_function_names, pdefsite_state->name)) {
+		fprintf(stderr, "%s: function named \"%s\" must not override a built-in function of the same name.\n",
+			MLR_GLOBALS.bargv0, pdefsite_state->name);
+		exit(1);
+	}
 	// xxx mem leak @ overwrite
 	lhmsv_put(pfmgr->pudf_names_to_defsite_states, mlr_strdup_or_die(pdefsite_state->name), pdefsite_state, FREE_ENTRY_KEY);
 }

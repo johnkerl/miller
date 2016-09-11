@@ -215,6 +215,7 @@ TEST_RVAL_EVALUATORS_SRCS = \
   containers/lhmsi.c \
   containers/mlhmmv.c \
   containers/lhmsmv.c \
+  containers/hss.c \
   containers/bind_stack.c \
   containers/loop_stack.c \
   mapping/function_manager.c \

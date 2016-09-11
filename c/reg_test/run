@@ -4661,6 +4661,12 @@ mlr_expect_fail --from $indir/abixy put '
   call s("W", NR);
 '
 
+# Test overriding built-ins
+mlr_expect_fail --opprint --from $indir/abixy put 'func log(x) { return 0 } $o = log($x)'
+
+run_mlr --from $indir/abixy put 'subr log() { print "hello record  ". NR } call log()'
+
+
 # ----------------------------------------------------------------
 announce MULTI-PART SCRIPTS
 

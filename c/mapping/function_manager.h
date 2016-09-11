@@ -3,6 +3,7 @@
 
 #include "containers/mlrval.h"
 #include "containers/lhmsv.h"
+#include "containers/hss.h"
 #include "containers/mlr_dsl_ast.h"
 #include "mapping/rval_evaluator.h"
 #include "mapping/type_inference.h"
@@ -29,6 +30,7 @@ typedef struct _udf_defsite_state_t {
 struct _function_lookup_t; // Private to the .c file
 typedef struct _fmgr_t {
 	struct _function_lookup_t * function_lookup_table; // Built-ins
+	hss_t* built_in_function_names;                    // Built-ins
 	lhmsv_t* pudf_names_to_defsite_states;             // UDFs
 } fmgr_t;
 

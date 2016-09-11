@@ -19,10 +19,10 @@ UDFs:
 * kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
 * xxxes
 * valgrinds
-* UT/doc: multiple filter/put -f (new mld section)
 * UT: bind-stack fences
-* UT/doc: note UDFs may overwrite built-in functions; & test that
 ! UT func/subr exhaustively
+* doc: multiple filter/put -f (new mld section)
+* doc: note UDFs may not overwrite built-in functions; subrs different namespace (log example).
 ? allow locals in if/for/while as well
 ? allow func @ filter?
 ? disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
