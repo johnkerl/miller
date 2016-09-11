@@ -125,6 +125,7 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv,
 			char* expression_filename = pe->value;
 			char* mlr_dsl_expression_piece = read_file_into_memory(expression_filename, NULL);
 			sb_append_string(psb, mlr_dsl_expression_piece);
+			free(mlr_dsl_expression_piece);
 		}
 		mlr_dsl_expression = sb_finish(psb);
 		sb_free(psb);

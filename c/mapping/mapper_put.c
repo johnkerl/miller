@@ -208,11 +208,15 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 			char* expression_filename = pe->value;
 			char* mlr_dsl_expression_piece = read_file_into_memory(expression_filename, NULL);
 			sb_append_string(psb, mlr_dsl_expression_piece);
+			free(mlr_dsl_expression_piece);
 		}
 		mlr_dsl_expression = sb_finish(psb);
 		sb_free(psb);
 	}
+	slls_free(expression_filenames);
+
 	comment_stripped_mlr_dsl_expression = alloc_comment_strip(mlr_dsl_expression);
+
 
 	// Linked list of mlr_dsl_ast_node_t*.
 	mlr_dsl_ast_t* past = mlr_dsl_parse(comment_stripped_mlr_dsl_expression, trace_parse);

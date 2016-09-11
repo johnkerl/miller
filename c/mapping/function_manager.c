@@ -400,6 +400,7 @@ static void rval_evaluator_udf_callsite_free(rval_evaluator_t* pevaluator) {
 	}
 	free(pstate->pevals);
 	free(pstate->args);
+	free(pstate);
 	free(pevaluator);
 }
 
