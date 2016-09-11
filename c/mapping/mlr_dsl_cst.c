@@ -149,7 +149,6 @@ static void handle_for_oosvar_aux(
 	mlhmmv_value_t           submap,
 	sllse_t*                 prest_for_k_names);
 
-// xxx expand names throughout
 static void handle_unset_vararg_oosvar(
 	mlr_dsl_cst_statement_vararg_t* pvararg,
 	variables_t*                    pvars,
@@ -662,7 +661,7 @@ static mlr_dsl_cst_statement_t* alloc_return_void(mlr_dsl_ast_node_t* pnode,
 //         text="999", type=strnum_literal.
 
 // xxx need to pass subrstates in here too
-//static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t*p, lhmsv_t* pcst_subroutine_states,
+//static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t*pnode, lhmsv_t* pcst_subroutine_states,
 	//fmgr_t* pfmgr, int type_inferencing, int context_flags)
 static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t* pnode,
 	fmgr_t* pfmgr, lhmsv_t* pcst_subroutine_states, int type_inferencing, int context_flags)
