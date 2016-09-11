@@ -97,7 +97,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 
 	// Callback struct for the function manager to invoke the new function:
 	udf_defsite_state_t* pdefsite_state = mlr_malloc_or_die(sizeof(udf_defsite_state_t));
-	pdefsite_state->pvstate       = pcst_udf_state; // xxx make this gets freed
+	pdefsite_state->pvstate       = pcst_udf_state;
 	pdefsite_state->name          = mlr_strdup_or_die(pnode->text);
 	pdefsite_state->arity         = pcst_udf_state->arity;
 	pdefsite_state->pprocess_func = cst_udf_process_callback;

@@ -452,7 +452,6 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_d
 		rval_evaluator_t* pcallsite_evaluator = fmgr_alloc_from_udf_callsite(pfmgr, pudf_defsite_state,
 			pnode, type_inferencing, context_flags);
 
-		// xxx who frees this?
 		return pcallsite_evaluator;
 	}
 
