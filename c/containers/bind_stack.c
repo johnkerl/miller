@@ -28,27 +28,23 @@ void bind_stack_free(bind_stack_t* pstack) {
 }
 
 // ----------------------------------------------------------------
-void bind_stack_push(bind_stack_t* pstack, lhmsmv_t* bindings) {
+static void bind_stack_push_fenced_aux(bind_stack_t* pstack, lhmsmv_t* bindings, int fenced) {
 	if (pstack->num_used >= pstack->num_allocated) {
 		pstack->num_allocated += INITIAL_SIZE;
 		pstack->pframes = mlr_realloc_or_die(pstack->pframes,
 			pstack->num_allocated * sizeof(bind_stack_frame_t));
 	}
 	pstack->pframes[pstack->num_used].bindings = bindings;
-	pstack->pframes[pstack->num_used].fenced = FALSE;
+	pstack->pframes[pstack->num_used].fenced = fenced;
 	pstack->num_used++;
 }
 
-// ----------------------------------------------------------------
+void bind_stack_push(bind_stack_t* pstack, lhmsmv_t* bindings) {
+	bind_stack_push_fenced_aux(pstack, bindings, FALSE);
+}
+
 void bind_stack_push_fenced(bind_stack_t* pstack, lhmsmv_t* bindings) {
-	if (pstack->num_used >= pstack->num_allocated) {
-		pstack->num_allocated += INITIAL_SIZE;
-		pstack->pframes = mlr_realloc_or_die(pstack->pframes,
-			pstack->num_allocated * sizeof(bind_stack_frame_t));
-	}
-	pstack->pframes[pstack->num_used].bindings = bindings;
-	pstack->pframes[pstack->num_used].fenced = FALSE;
-	pstack->num_used++;
+	bind_stack_push_fenced_aux(pstack, bindings, TRUE);
 }
 
 // ----------------------------------------------------------------

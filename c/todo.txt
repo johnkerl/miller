@@ -18,6 +18,7 @@ UDFs:
 ! ast work w $/@ prohibits
 * kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
 * xxxes
+* xxxes in reg_test/run
 * valgrinds
 * UT: bind-stack fences
 ! UT func/subr exhaustively
