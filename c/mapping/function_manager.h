@@ -3,7 +3,7 @@
 
 #include "containers/mlrval.h"
 #include "containers/lhmsv.h"
-#include "containers/mlr_dsl_ast.h" // xxx factor out this dependency?
+#include "containers/mlr_dsl_ast.h"
 #include "mapping/rval_evaluator.h"
 #include "mapping/type_inference.h"
 
