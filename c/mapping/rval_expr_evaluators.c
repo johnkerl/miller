@@ -23,6 +23,8 @@
 rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
+	// xxx split out helper methods for outer if-statement.
+	// xxx convert innner if-elses to switches.
 	if (pnode->pchildren == NULL) { // leaf node
 		if (pnode->type == MD_AST_NODE_TYPE_FIELD_NAME) {
 			if (context_flags & IN_BEGIN_OR_END) {
