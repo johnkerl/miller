@@ -77,8 +77,6 @@ void fmgr_free(fmgr_t* pfmgr) {
 
 // ----------------------------------------------------------------
 void fmgr_install_udf(fmgr_t* pfmgr, char* name, int arity, udf_defsite_state_t* pdefsite_state) {
-	// xxx disallow redefine ?
-	// xxx check built-in fcn tbl?
 	// xxx mem leak @ overwrite
 	lhmsv_put(pfmgr->pudf_names_to_defsite_states, mlr_strdup_or_die(name), pdefsite_state, FREE_ENTRY_KEY);
 }
@@ -373,7 +371,6 @@ void fmgr_list_all_functions_raw(fmgr_t* pfmgr, FILE* output_stream) {
 }
 
 // ================================================================
-// xxx move to other file?
 typedef struct _rval_evaluator_udf_callsite_state_t {
 	int arity;
 	rval_evaluator_t** pevals;
@@ -381,7 +378,7 @@ typedef struct _rval_evaluator_udf_callsite_state_t {
 	udf_defsite_state_t* pdefsite_state;
 } rval_evaluator_udf_callsite_state_t;
 
-mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvars) {
+static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvars) {
 	rval_evaluator_udf_callsite_state_t* pstate = pvstate;
 
 	for (int i = 0; i < pstate->arity; i++) {

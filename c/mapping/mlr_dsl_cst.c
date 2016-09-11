@@ -27,8 +27,8 @@ typedef mlr_dsl_cst_statement_t* cst_statement_allocator_t(
 	int                 context_flags);
 
 typedef void cst_statement_handler_t(
-	mlr_dsl_cst_statement_t* s,
-	variables_t*             v,
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs);
 
 // ----------------------------------------------------------------
@@ -83,8 +83,8 @@ static mlr_dsl_cst_statement_t* alloc_emit_lashed(
 static cst_statement_allocator_t alloc_dump;
 
 static mlr_dsl_cst_statement_t* alloc_print(
-	mlr_dsl_ast_node_t* p,
-	fmgr_t*             m,
+	mlr_dsl_ast_node_t* pnode,
+	fmgr_t*             pfmgr,
 	lhmsv_t*            pcst_subroutine_states,
 	int                 type_inferencing,
 	int                 context_flags,
@@ -151,57 +151,57 @@ static void handle_for_oosvar_aux(
 
 // xxx expand names throughout
 static void handle_unset_vararg_oosvar(
-	mlr_dsl_cst_statement_vararg_t* a,
-	variables_t*                    v,
-	cst_outputs_t*                  o);
+	mlr_dsl_cst_statement_vararg_t* pvararg,
+	variables_t*                    pvars,
+	cst_outputs_t*                  pcst_outputs);
 
 static void handle_unset_vararg_full_srec(
-	mlr_dsl_cst_statement_vararg_t* a,
-	variables_t*                    v,
-	cst_outputs_t*                  o);
+	mlr_dsl_cst_statement_vararg_t* pvararg,
+	variables_t*                    pvars,
+	cst_outputs_t*                  pcst_outputs);
 
 static void handle_unset_vararg_srec_field_name(
-	mlr_dsl_cst_statement_vararg_t* a,
-	variables_t*                    v,
-	cst_outputs_t*                  o);
+	mlr_dsl_cst_statement_vararg_t* pvararg,
+	variables_t*                    pvars,
+	cst_outputs_t*                  pcst_outputs);
 
 static void handle_unset_vararg_indirect_srec_field_name(
-	mlr_dsl_cst_statement_vararg_t* a,
-	variables_t*                    v,
-	cst_outputs_t*                  o);
+	mlr_dsl_cst_statement_vararg_t* pvararg,
+	variables_t*                    pvars,
+	cst_outputs_t*                  pcst_outputs);
 
 
 static cst_statement_handler_t handle_tee_to_stdfp;
 static cst_statement_handler_t handle_tee_to_file;
 static lrec_t*                 handle_tee_common(
-	mlr_dsl_cst_statement_t* s,
-	variables_t*             v,
-	cst_outputs_t*           o);
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs);
 
 static cst_statement_handler_t handle_emitf;
 static cst_statement_handler_t handle_emitf_to_stdfp;
 static cst_statement_handler_t handle_emitf_to_file;
 static void handle_emitf_common(
-	mlr_dsl_cst_statement_t* s,
-	variables_t*             v,
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
 	sllv_t*                  poutrecs);
 
 static cst_statement_handler_t handle_emit;
 static cst_statement_handler_t handle_emit_to_stdfp;
 static cst_statement_handler_t handle_emit_to_file;
 static void handle_emit_common(
-	mlr_dsl_cst_statement_t* s,
-	variables_t*             v,
-	sllv_t*                  o,
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	sllv_t*                  pcst_outputs,
 	char*                    f);
 
 static cst_statement_handler_t handle_emit_lashed;
 static cst_statement_handler_t handle_emit_lashed_to_stdfp;
 static cst_statement_handler_t handle_emit_lashed_to_file;
 static void handle_emit_lashed_common(
-	mlr_dsl_cst_statement_t* s,
-	variables_t*             v,
-	sllv_t*                  o,
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	sllv_t*                  pcst_outputs,
 	char*                    f);
 
 static cst_statement_handler_t handle_emit_all;
