@@ -25,43 +25,65 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 {
 	// xxx split out helper methods for outer if-statement.
 	// xxx convert innner if-elses to switches.
-	if (pnode->pchildren == NULL) { // leaf node
-		if (pnode->type == MD_AST_NODE_TYPE_FIELD_NAME) {
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	if (pnode->pchildren == NULL) {
+		// leaf node
+		switch(pnode->type) {
+		case MD_AST_NODE_TYPE_FIELD_NAME:
 			if (context_flags & IN_BEGIN_OR_END) {
 				fprintf(stderr, "%s: statements involving $-variables are not valid within begin or end blocks.\n",
 					MLR_GLOBALS.bargv0);
 				exit(1);
 			}
 			return rval_evaluator_alloc_from_field_name(pnode->text, type_inferencing);
-		} else if (pnode->type == MD_AST_NODE_TYPE_STRNUM_LITERAL) {
+			break;
+		case MD_AST_NODE_TYPE_STRNUM_LITERAL:
 			return rval_evaluator_alloc_from_strnum_literal(pnode->text, type_inferencing);
-		} else if (pnode->type == MD_AST_NODE_TYPE_BOOLEAN_LITERAL) {
+			break;
+
+		case MD_AST_NODE_TYPE_BOOLEAN_LITERAL:
 			return rval_evaluator_alloc_from_boolean_literal(pnode->text);
-		} else if (pnode->type == MD_AST_NODE_TYPE_REGEXI) {
+			break;
+
+		case MD_AST_NODE_TYPE_REGEXI:
 			return rval_evaluator_alloc_from_strnum_literal(pnode->text, type_inferencing);
-		} else if (pnode->type == MD_AST_NODE_TYPE_CONTEXT_VARIABLE) {
+			break;
+
+		case MD_AST_NODE_TYPE_CONTEXT_VARIABLE:
 			return rval_evaluator_alloc_from_context_variable(pnode->text);
-		} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
+			break;
+
+		case MD_AST_NODE_TYPE_BOUND_VARIABLE:
 			if (context_flags & IN_MLR_FILTER) {
-				fprintf(stderr, "%s: statements involving bound variables are not valid in %s filter.\n",
+				fprintf(stderr,
+					"%s: statements involving bound variables are not valid in %s filter.\n",
 					MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
 				exit(1);
 			} else if (!(context_flags & IN_BINDABLE)) {
-				fprintf(stderr, "%s: statements involving bound variables are not valid outside for-loops or user-defined functions.\n",
+				fprintf(stderr,
+					"%s: statements involving bound variables are not valid outside for-loops or "
+					"user-defined functions.\n",
 					MLR_GLOBALS.bargv0);
 				exit(1);
 			}
 			return rval_evaluator_alloc_from_bound_variable(pnode->text);
-		} else if (context_flags & IN_MLR_FILTER) {
-			fprintf(stderr, "%s: expressions for mlr filter must be single statements, evaluating to boolean.\n",
-				MLR_GLOBALS.bargv0);
-			exit(1);
-		} else {
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
+			break;
+
+		default:
+			if (context_flags & IN_MLR_FILTER) {
+				fprintf(stderr,
+					"%s: expressions for mlr filter must be single statements, evaluating to boolean.\n",
+					MLR_GLOBALS.bargv0);
+				exit(1);
+			} else {
+				fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+					MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+				exit(1);
+			}
+			break;
 		}
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	} else if (pnode->type == MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME) {
 		if (context_flags & IN_BEGIN_OR_END) {
 			fprintf(stderr, "%s: statements involving $-variables are not valid within begin or end blocks.\n",
@@ -71,6 +93,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 		return rval_evaluator_alloc_from_indirect_field_name(pnode->pchildren->phead->pvvalue, pfmgr,
 			type_inferencing, context_flags);
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 		if (context_flags & IN_MLR_FILTER) {
 			fprintf(stderr, "%s: statements involving $-variables are not valid in %s filter.\n",
@@ -79,9 +102,11 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 		}
 		return rval_evaluator_alloc_from_oosvar_keylist(pnode, pfmgr, type_inferencing, context_flags);
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	} else if (pnode->type == MD_AST_NODE_TYPE_ENV) {
 		return rval_evaluator_alloc_from_environment(pnode, pfmgr, type_inferencing, context_flags);
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	} else {
 		if ((pnode->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME) && (pnode->type != MD_AST_NODE_TYPE_OPERATOR)) {
 			if (context_flags & IN_MLR_FILTER) {
