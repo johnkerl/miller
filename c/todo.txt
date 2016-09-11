@@ -16,6 +16,14 @@ JSON formatting:
 
 UDFs:
 ! ast work w $/@ prohibits
+  o for subr
+    - no begin/end/func/subr
+  o for func
+    - no begin/end/func/subr
+    - no for-full-srec, for-oosvar, for-full-oosvar
+    - no subr call
+    - no srec assignment x 3, no oosvar assignment x 2, no filter, no unset
+    - no tee, emitfx3; but allow print; ?dump?
 * kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
 * xxxes
 * xxxes in reg_test/run
@@ -25,12 +33,13 @@ UDFs:
 * doc: multiple filter/put -f (new mld section)
 * doc: note UDFs may not overwrite built-in functions; subrs have a different namespace (log example).
 * deferred func/subr name bindings: make recursion possible; more generally, calls to something as yet undefined.
+  -> needs a separate link step; compile with prototypes only, and resolve them at link time.
 ? allow func @ filter?
 ? allow locals in if/for/while as well
 ? disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
 
 RELATED:
-* make variadic min & max; what other functions?
+* make variadic min & max
 * Note mlr -l -L -f -F -k -K rather prominently at mlh.
 
 I/O clopts:
