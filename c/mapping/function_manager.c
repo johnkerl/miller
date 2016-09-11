@@ -76,9 +76,9 @@ void fmgr_free(fmgr_t* pfmgr) {
 }
 
 // ----------------------------------------------------------------
-void fmgr_install_udf(fmgr_t* pfmgr, char* name, int arity, udf_defsite_state_t* pdefsite_state) {
+void fmgr_install_udf(fmgr_t* pfmgr, udf_defsite_state_t* pdefsite_state) {
 	// xxx mem leak @ overwrite
-	lhmsv_put(pfmgr->pudf_names_to_defsite_states, mlr_strdup_or_die(name), pdefsite_state, FREE_ENTRY_KEY);
+	lhmsv_put(pfmgr->pudf_names_to_defsite_states, mlr_strdup_or_die(pdefsite_state->name), pdefsite_state, FREE_ENTRY_KEY);
 }
 
 // ================================================================

@@ -316,17 +316,22 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	pcst->pfmgr = fmgr_alloc();
 	pcst->psubroutine_states = lhmsv_alloc();
 
+	udf_defsite_state_t* pudf_defsite_state = NULL;
+	cst_subroutine_state_t* pcst_subroutine_state = NULL;
+
 	mlr_dsl_ast_node_t* plistnode = NULL;
 	for (sllve_t* pe = ptop->proot->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 		switch (pnode->type) {
 
 		case MD_AST_NODE_TYPE_FUNC_DEF:
-			mlr_dsl_cst_install_udf(pcst, pnode, type_inferencing, context_flags);
+			pudf_defsite_state = mlr_dsl_cst_alloc_udf(pcst, pnode, type_inferencing, context_flags);
+			fmgr_install_udf(pcst->pfmgr, pudf_defsite_state);
 			break;
 
 		case MD_AST_NODE_TYPE_SUBR_DEF:
-			mlr_dsl_cst_install_subroutine(pcst, pnode, type_inferencing, context_flags);
+			pcst_subroutine_state = mlr_dsl_cst_alloc_subroutine(pcst, pnode, type_inferencing, context_flags);
+			lhmsv_put(pcst->psubroutine_states, pcst_subroutine_state->name, pcst_subroutine_state, NO_FREE);
 			break;
 
 		case MD_AST_NODE_TYPE_BEGIN:

@@ -39,17 +39,17 @@ static void cst_udf_free(struct _udf_defsite_state_t* pdefsite_state);
 //                         text="y", type=bound_variable.
 //                         text="2", type=strnum_literal.
 
-void mlr_dsl_cst_install_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
 	mlr_dsl_ast_node_t* pparameters_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pbody_node = pnode->pchildren->phead->pnext->pvvalue;
 
-	// xxx make cst_udf_state_t ctor/dtor per se
-
 	int arity = pparameters_node->pchildren->length;
 	// xxx arrange for this to be freed
 	cst_udf_state_t* pcst_udf_state = mlr_malloc_or_die(sizeof(cst_udf_state_t));
+
+	pcst_udf_state->name = pnode->text; // xxx needed?
 
 	pcst_udf_state->arity = arity;
 
@@ -101,16 +101,17 @@ void mlr_dsl_cst_install_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 
 	// Callback struct for the function manager to invoke the new function:
 	udf_defsite_state_t* pdefsite_state = mlr_malloc_or_die(sizeof(udf_defsite_state_t));
-	pdefsite_state->pvstate       = pcst_udf_state;
+	pdefsite_state->pvstate       = pcst_udf_state; // xxx make this gets freed
+	pdefsite_state->name          = pnode->text;
 	pdefsite_state->arity         = arity;
 	pdefsite_state->pprocess_func = cst_udf_process;
 	pdefsite_state->pfree_func    = cst_udf_free;
 
-	fmgr_install_udf(pcst->pfmgr, pnode->text, pcst_udf_state->arity, pdefsite_state);
+	return pdefsite_state;
 }
 
 // ----------------------------------------------------------------
-void mlr_dsl_cst_install_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+cst_subroutine_state_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
 	mlr_dsl_ast_node_t* pparameters_node = pnode->pchildren->phead->pvvalue;
@@ -118,6 +119,8 @@ void mlr_dsl_cst_install_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 
 	int arity = pparameters_node->pchildren->length;
 	cst_subroutine_state_t* pcst_subroutine_state = mlr_malloc_or_die(sizeof(cst_subroutine_state_t));
+
+	pcst_subroutine_state->name = pparameters_node->text;
 
 	pcst_subroutine_state->arity = arity;
 
@@ -167,7 +170,7 @@ void mlr_dsl_cst_install_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 				type_inferencing, context_flags | IN_BINDABLE));
 	}
 
-	lhmsv_put(pcst->psubroutine_states, pparameters_node->text, pcst_subroutine_state, NO_FREE);
+	return pcst_subroutine_state;
 }
 
 // ----------------------------------------------------------------

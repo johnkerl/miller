@@ -19,6 +19,7 @@ typedef void udf_defsite_free_func_t(struct _udf_defsite_state_t* pdefsite_state
 
 typedef struct _udf_defsite_state_t {
 	void* pvstate;
+	char* name;
 	int   arity;
 	udf_defsite_process_func_t* pprocess_func;
 	udf_defsite_free_func_t* pfree_func;
@@ -38,7 +39,7 @@ fmgr_t* fmgr_alloc();
 
 void fmgr_free(fmgr_t* pfmgr);
 
-void fmgr_install_udf(fmgr_t* pfmgr, char* name, int arity, udf_defsite_state_t* pdefsitate_state);
+void fmgr_install_udf(fmgr_t* pfmgr, udf_defsite_state_t* pdefsitate_state);
 
 // Callsites as defined by AST nodes
 rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,

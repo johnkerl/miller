@@ -222,35 +222,41 @@ void mlr_dsl_cst_handle_statement_list(
 // ================================================================
 // mapping/mlr_dsl_cst_func_subr.c
 
+// ----------------------------------------------------------------
 // Data needed for the body of a user-defined function
 typedef struct _cst_udf_state_t {
-	int       arity;
+	char*     name; // xxx needed?
+	int       arity; // xxx needed?
 	char**    parameter_names;
     lhmsmv_t* pbound_variables;
 	sllv_t*   pblock_statements;
 } cst_udf_state_t;
 
+udf_defsite_state_t* mlr_dsl_cst_alloc_udf(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags);
+
+void mlr_dsl_cst_free_udf(udf_defsite_state_t* pstate); // xxx call me
+
+// ----------------------------------------------------------------
 // Data needed for the body of a subroutine
 typedef struct _cst_subroutine_state_t {
+	char*     name;
 	int       arity;
 	char**    parameter_names;
     lhmsmv_t* pbound_variables;
 	sllv_t*   pblock_statements;
 } cst_subroutine_state_t;
 
-// Installs into the CST's function-manager object
-void mlr_dsl_cst_install_udf(
+cst_subroutine_state_t* mlr_dsl_cst_alloc_subroutine(
 	mlr_dsl_cst_t*      pcst,
 	mlr_dsl_ast_node_t* pnode,
 	int                 type_inferencing,
 	int                 context_flags);
 
-// Installs into the CST's subroutine-states map
-void mlr_dsl_cst_install_subroutine(
-	mlr_dsl_cst_t*      pcst,
-	mlr_dsl_ast_node_t* pnode,
-	int                 type_inferencing,
-	int                 context_flags);
+void mlr_dsl_cst_free_subroutine(cst_subroutine_state_t* pcst_subroutine_state); // xxx call me
 
 // Invoked directly from the CST statement handler for a subroutine callsite.
 // (Functions, by contrast, are invoked by callback from the right-hand-site-evaluator logic
