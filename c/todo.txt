@@ -20,7 +20,6 @@ UDFs:
 * xxxes
 * xxxes in reg_test/run
 * valgrinds
-* UT: bind-stack fences
 ! UT func/subr exhaustively
 * doc: multiple filter/put -f (new mld section)
 * doc: note UDFs may not overwrite built-in functions; subrs different namespace (log example).
