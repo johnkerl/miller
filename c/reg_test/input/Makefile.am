@@ -27,6 +27,8 @@ EXTRA_DIST=	\
 		f.csv \
 		f.pprint \
 		filter-example.dsl \
+		filter-script-piece-1 \
+		filter-script-piece-2 \
 		from-first.csv \
 		fsec2xhms \
 		g.csv \
@@ -105,6 +107,9 @@ EXTRA_DIST=	\
 		page-aligned-no-final-irs.dkvp \
 		page-aligned-no-final-irs.nidx \
 		put-example.dsl \
+		put-script-piece-1 \
+		put-script-piece-2 \
+		put-script-piece-3 \
 		quote-original.csv \
 		regex.dkvp \
 		regularize.dkvp \
