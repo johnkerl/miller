@@ -99,27 +99,24 @@ void mlr_dsl_cst_install_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 				type_inferencing, context_flags | IN_BINDABLE));
 	}
 
+	// Callback struct for the function manager to invoke the new function:
 	udf_defsite_state_t* pdefsite_state = mlr_malloc_or_die(sizeof(udf_defsite_state_t));
-	pdefsite_state->pvstate = pcst_udf_state;
-	pdefsite_state->arity = arity;
+	pdefsite_state->pvstate       = pcst_udf_state;
+	pdefsite_state->arity         = arity;
 	pdefsite_state->pprocess_func = cst_udf_process;
-	pdefsite_state->pfree_func = cst_udf_free;
+	pdefsite_state->pfree_func    = cst_udf_free;
 
 	fmgr_install_udf(pcst->pfmgr, pnode->text, pcst_udf_state->arity, pdefsite_state);
 }
 
 // ----------------------------------------------------------------
-// xxx factor out ctor from installer?
 void mlr_dsl_cst_install_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
 	mlr_dsl_ast_node_t* pparameters_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pbody_node = pnode->pchildren->phead->pnext->pvvalue;
 
-	// xxx make cst_subroutine_state_t ctor/dtor per se
-
 	int arity = pparameters_node->pchildren->length;
-	// xxx arrange for this to be freed
 	cst_subroutine_state_t* pcst_subroutine_state = mlr_malloc_or_die(sizeof(cst_subroutine_state_t));
 
 	pcst_subroutine_state->arity = arity;

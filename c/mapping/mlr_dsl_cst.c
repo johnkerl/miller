@@ -400,7 +400,12 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	sllv_free(pcst->pmain_statements);
 	sllv_free(pcst->pend_statements);
 	fmgr_free(pcst->pfmgr);
-	lhmsv_free(pcst->psubroutine_states); // xxx free void-star payloads as well
+
+	for (lhmsve_t* pe = pcst->psubroutine_states->phead; pe != NULL; pe = pe->pnext) {
+		//cst_subroutine_state_t* pcst_subroutine_state = pe->pvvalue;
+		// xxx free void-star payloads as well
+	}
+	lhmsv_free(pcst->psubroutine_states);
 
 	free(pcst);
 }
