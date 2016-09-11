@@ -38,7 +38,6 @@ fmgr_t* fmgr_alloc();
 
 void fmgr_free(fmgr_t* pfmgr);
 
-// xxx disallow redefine ?
 void fmgr_install_udf(fmgr_t* pfmgr, char* name, int arity, udf_defsite_state_t* pdefsitate_state);
 
 // Callsites as defined by AST nodes

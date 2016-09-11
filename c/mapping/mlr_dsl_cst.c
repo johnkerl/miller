@@ -653,16 +653,6 @@ static mlr_dsl_cst_statement_t* alloc_return_void(mlr_dsl_ast_node_t* pnode,
 	return pstatement;
 }
 
-// AST:
-//
-// text="subr_callsite", type=subr_callsite:
-//     text="s", type=non_sigil_name:
-//         text="W", type=strnum_literal.
-//         text="999", type=strnum_literal.
-
-// xxx need to pass subrstates in here too
-//static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t*pnode, lhmsv_t* pcst_subroutine_states,
-	//fmgr_t* pfmgr, int type_inferencing, int context_flags)
 static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t* pnode,
 	fmgr_t* pfmgr, lhmsv_t* pcst_subroutine_states, int type_inferencing, int context_flags)
 {
@@ -688,7 +678,6 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t* pnode,
 	pstatement->subr_callsite_arguments = mlr_malloc_or_die(callsite_arity * sizeof(mv_t));
 
 	int i = 0;
-	// xxx dup check ...
 	for (sllve_t* pe = pname_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* pargument_node = pe->pvvalue;
 		pstatement->subr_callsite_argument_evaluators[i] = rval_evaluator_alloc_from_ast(pargument_node,
