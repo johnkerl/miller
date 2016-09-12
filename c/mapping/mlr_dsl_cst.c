@@ -439,32 +439,55 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_ast_node_t* pnode,
 		fprintf(stderr, "%s: func statements are only valid at top level.\n", MLR_GLOBALS.bargv0);
 		exit(1);
 		break;
+
 	case MD_AST_NODE_TYPE_SUBR_DEF:
 		fprintf(stderr, "%s: subr statements are only valid at top level.\n", MLR_GLOBALS.bargv0);
 		exit(1);
 		break;
+
 	case MD_AST_NODE_TYPE_BEGIN:
 		fprintf(stderr, "%s: begin statements are only valid at top level.\n", MLR_GLOBALS.bargv0);
 		exit(1);
 		break;
+
 	case MD_AST_NODE_TYPE_END:
 		fprintf(stderr, "%s: end statements are only valid at top level.\n", MLR_GLOBALS.bargv0);
 		exit(1);
 		break;
 
 	case MD_AST_NODE_TYPE_LOCAL:
+		if (!(context_flags & (IN_FUNC_DEF | IN_SUBR_DEF))) {
+			fprintf(stderr, "%s: local-variable definitions are only valid within func or subr blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_local_variable_definition(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_RETURN_VALUE:
+		if (!(context_flags & IN_FUNC_DEF)) {
+			fprintf(stderr, "%s: return-value statements are only valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_return_value(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_RETURN_VOID:
+		if (!(context_flags & IN_SUBR_DEF)) {
+			fprintf(stderr, "%s: return-void statements are only valid within subr blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_return_void(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_SUBR_CALLSITE:
+		if (context_flags & IN_FUNC_DEF) {
+			fprintf(stderr, "%s: subroutine calls are not valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_subr_callsite(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
 
@@ -513,63 +536,133 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_ast_node_t* pnode,
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
+		if (context_flags & IN_FUNC_DEF) {
+			fprintf(stderr, "%s: assignments to $-variables are not valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_srec_assignment(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
+
 	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:
 		if (context_flags & IN_BEGIN_OR_END) {
 			fprintf(stderr, "%s: assignments to $-variables are not valid within begin or end blocks.\n",
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
+		if (context_flags & IN_FUNC_DEF) {
+			fprintf(stderr, "%s: assignments to $-variables are not valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_indirect_srec_assignment(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
+
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:
+		if (context_flags & IN_FUNC_DEF) {
+			fprintf(stderr, "%s: assignments to @-variables are not valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_oosvar_assignment(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
+
 	case MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
 		if (context_flags & IN_BEGIN_OR_END) {
 			fprintf(stderr, "%s: assignments from $-variables are not valid within begin or end blocks.\n",
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
+		if (context_flags & IN_FUNC_DEF) {
+			fprintf(stderr, "%s: assignments to @-variables are not valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_oosvar_from_full_srec_assignment(pnode, pfmgr, pcst_subroutine_states,
 			type_inferencing, context_flags);
 		break;
+
 	case MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT:
 		if (context_flags & IN_BEGIN_OR_END) {
 			fprintf(stderr, "%s: assignments to $-variables are not valid within begin or end blocks.\n",
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
+		if (context_flags & IN_FUNC_DEF) {
+			fprintf(stderr, "%s: assignments to $-variables are not valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_full_srec_from_oosvar_assignment(pnode, pfmgr, pcst_subroutine_states,
 			type_inferencing, context_flags);
 		break;
+
 	case MD_AST_NODE_TYPE_UNSET:
+		if (context_flags & IN_FUNC_DEF) {
+			fprintf(stderr, "%s: unset statements are not valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_unset(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_TEE:
+		if (context_flags & IN_FUNC_DEF) {
+			fprintf(stderr, "%s: tee statements are not valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_tee(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_EMITF:
+		if (context_flags & IN_FUNC_DEF) {
+			fprintf(stderr, "%s: emitf statements are not valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_emitf(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
 	case MD_AST_NODE_TYPE_EMITP:
+		if (context_flags & IN_FUNC_DEF) {
+			fprintf(stderr, "%s: emitp statements are not valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_emit(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags, TRUE);
 		break;
 	case MD_AST_NODE_TYPE_EMIT:
+		if (context_flags & IN_FUNC_DEF) {
+			fprintf(stderr, "%s: emit statements are not valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_emit(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags, FALSE);
 		break;
 
 	case MD_AST_NODE_TYPE_EMITP_LASHED:
+		if (context_flags & IN_FUNC_DEF) {
+			fprintf(stderr, "%s: emitp statements are not valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_emit_lashed(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags, TRUE);
 		break;
 	case MD_AST_NODE_TYPE_EMIT_LASHED:
+		if (context_flags & IN_FUNC_DEF) {
+			fprintf(stderr, "%s: emit statements are not valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_emit_lashed(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags, FALSE);
 		break;
 
 	case MD_AST_NODE_TYPE_FILTER:
+		if (context_flags & IN_FUNC_DEF) {
+			fprintf(stderr, "%s: filter statements are not valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_filter(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
 

@@ -237,7 +237,7 @@ cst_subroutine_state_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_ds
 			exit(1);
 		}
 		mlr_dsl_cst_statement_t* pstatement = mlr_dsl_cst_alloc_statement(pbody_ast_node,
-			pcst->pfmgr, pcst->psubroutine_states, type_inferencing, context_flags | IN_BINDABLE);
+			pcst->pfmgr, pcst->psubroutine_states, type_inferencing, context_flags | IN_BINDABLE | IN_SUBR_DEF);
 		sllv_append(pstate->pblock_statements, pstatement);
 	}
 

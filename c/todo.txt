@@ -16,14 +16,12 @@ JSON formatting:
 
 UDFs:
 ! ast work w $/@ prohibits
-  o for subr
-    w UT: no begin/end/func/subr
-  o for func
-    w UT: no begin/end/func/subr
-    - (lhs) no for-full-srec, for-oosvar, for-full-oosvar
-    - (lhs) no subr call
-    - (lhs) no srec assignment x 3, no oosvar assignment x 2, no filter, no unset
-    - (lhs) no tee, emitfx3; but allow print; ?dump?
+  w UT: no begin/end/func/subr within subr
+  w UT: no begin/end/func/subr within func
+  w UT: (lhs) no subr call
+  w UT: (lhs) no srec assignment x 3, no oosvar assignment x 2, no filter, no unset
+  w UT: (lhs) no tee, emitfx3; but allow print; ?dump?
+  w UT: no local outside func/subr
 * kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
 * disallow func/subr redefines
 * xxxes
