@@ -15,27 +15,30 @@ JSON formatting:
 * publish
 
 UDFs:
-! ast work w $/@ prohibits
-  w UT: no begin/end/func/subr within subr
-  w UT: no begin/end/func/subr within func
-  w UT: (lhs) no subr call
-  w UT: (lhs) no srec assignment x 3, no oosvar assignment x 2, no filter, no unset
-  w UT: (lhs) no tee, emitfx3; but allow print; ?dump?
-  w UT: no local outside func/subr
-* kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
-* disallow func/subr redefines
-* xxxes
-* xxxes in reg_test/run
-* valgrinds
-! UT func/subr exhaustively
-* UT for mem-free at unused func/subr args
-* doc: multiple filter/put -f (new mld section)
-* doc: note UDFs may not overwrite built-in functions; subrs have a different namespace (log example).
-* deferred func/subr name bindings: make recursion possible; more generally, calls to something as yet undefined.
-  -> needs a separate link step; compile with prototypes only, and resolve them at link time.
-? allow func @ filter?
-? allow locals in if/for/while as well
-? disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
+* maybe:
+  - allow func @ filter?
+  - allow locals in if/for/while as well
+  - disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
+* hygiene:
+  - xxxes
+  - xxxes in reg_test/run
+  - valgrinds
+* to UT & doc:
+  - no begin/end/func/subr within subr
+  - no begin/end/func/subr within func
+  - (lhs) func no subr call
+  - (lhs) func no srec assignment x 3, no oosvar assignment x 2, no filter, no unset
+  - (lhs) func no tee, emitfx3; but allow print, dump.
+  - no local outside func/subr
+  - disallow func/subr redefines
+  - func/subr exhaustively. local/return/etc in/out of various; for ->func -> while; subr -> func; etc
+  - with valgrind: func/subr args read, written, both, neither.
+* to doc:
+  - kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
+  - doc: multiple filter/put -f (new mld section)
+  - doc: note UDFs may not overwrite built-in functions; subrs have a different namespace (log example).
+  - deferred func/subr name bindings: make recursion possible; more generally, calls to something as yet undefined.
+    -> needs a separate link step; compile with prototypes only, and resolve them at link time.
 
 RELATED:
 * make variadic min & max
