@@ -15,6 +15,7 @@ JSON formatting:
 * publish
 
 UDFs:
+* fix: disallow or support locals in control structures
 * maybe:
   - allow func @ filter?
   - allow locals in if/for/while as well
@@ -22,8 +23,6 @@ UDFs:
   - deferred func/subr name bindings: make recursion possible; more generally, calls to something as yet undefined.
     -> needs a separate link step; compile with prototypes only, and resolve them at link time.
 * hygiene:
-  - xxxes
-  - xxxes in reg_test/run
   - valgrinds
 * to UT & doc:
   - no begin/end/func/subr within subr
