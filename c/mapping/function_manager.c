@@ -94,7 +94,11 @@ void fmgr_install_udf(fmgr_t* pfmgr, udf_defsite_state_t* pdefsite_state) {
 			MLR_GLOBALS.bargv0, pdefsite_state->name);
 		exit(1);
 	}
-	// xxx mem leak @ overwrite
+	if (lhmsv_get(pfmgr->pudf_names_to_defsite_states, pdefsite_state->name)) {
+		fprintf(stderr, "%s: function named \"%s\" has already been defined.\n",
+			MLR_GLOBALS.bargv0, pdefsite_state->name);
+		exit(1);
+	}
 	lhmsv_put(pfmgr->pudf_names_to_defsite_states, mlr_strdup_or_die(pdefsite_state->name), pdefsite_state, FREE_ENTRY_KEY);
 }
 

@@ -331,6 +331,11 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 
 		case MD_AST_NODE_TYPE_SUBR_DEF:
 			pcst_subroutine_state = mlr_dsl_cst_alloc_subroutine(pcst, pnode, type_inferencing, context_flags);
+			if (lhmsv_get(pcst->psubroutine_states, pcst_subroutine_state->name)) {
+				fprintf(stderr, "%s: subroutine named \"%s\" has already been defined.\n",
+					MLR_GLOBALS.bargv0, pcst_subroutine_state->name);
+				exit(1);
+			}
 			lhmsv_put(pcst->psubroutine_states, pcst_subroutine_state->name, pcst_subroutine_state, NO_FREE);
 			break;
 
