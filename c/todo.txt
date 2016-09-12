@@ -72,6 +72,9 @@ MORE:
 * inverse-transform-sampling example at cookbook.
 * 10-min
 
+* final xxx check
+* final valgrind check
+
 ----------------------------------------------------------------
 4.6.0 ideas:
 

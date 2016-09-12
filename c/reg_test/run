@@ -1738,9 +1738,6 @@ run_mlr put -v '@["s"] = $x; emitp all' $indir/abixy
 
 run_mlr put -v '@["t"]["u"] = $y; emitp all' $indir/abixy
 
-# xxx indirect from full srec
-# xxx full srec from indirect
-
 # xxx @* on the right
 # xxx @* on the left
 
@@ -4608,8 +4605,7 @@ announce USER-DEFINED FUNCTIONS AND SUBROUTINES
 
 run_mlr --opprint --from $indir/abixy put 'func f(u,v){return u+v} $o=f(NR*1000,$x)'
 
-# xxx expect fail
-#run_mlr --opprint --from $indir/abixy put 'func f(x,y,z){$nnn=999; local n=10; return $y} $o=f($i,$x,$y)'
+mlr_expect_fail --opprint --from $indir/abixy put 'func f(x,y,z){$nnn=999; local n=10; return $y} $o=f($i,$x,$y)'
 
 run_mlr --opprint --from $indir/abixy put 'subr s(a,b) { $[a] = b } call s("W", 999)'
 
