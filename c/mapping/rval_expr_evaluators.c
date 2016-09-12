@@ -23,12 +23,11 @@
 rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
-	// xxx split out helper methods for outer if-statement.
-	// xxx convert innner if-elses to switches.
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	if (pnode->pchildren == NULL) {
 		// leaf node
 		switch(pnode->type) {
+
 		case MD_AST_NODE_TYPE_FIELD_NAME:
 			if (context_flags & IN_BEGIN_OR_END) {
 				fprintf(stderr, "%s: statements involving $-variables are not valid within begin or end blocks.\n",
@@ -37,6 +36,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 			}
 			return rval_evaluator_alloc_from_field_name(pnode->text, type_inferencing);
 			break;
+
 		case MD_AST_NODE_TYPE_STRNUM_LITERAL:
 			return rval_evaluator_alloc_from_strnum_literal(pnode->text, type_inferencing);
 			break;

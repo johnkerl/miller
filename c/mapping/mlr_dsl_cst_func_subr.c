@@ -92,7 +92,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 		}
 		sllv_append(pcst_udf_state->pblock_statements,
 			mlr_dsl_cst_alloc_statement(pbody_ast_node, pcst->pfmgr, pcst->psubroutine_states,
-				type_inferencing, context_flags | IN_BINDABLE));
+				type_inferencing, context_flags | IN_BINDABLE | IN_FUNC_DEF));
 	}
 
 	// Callback struct for the function manager to invoke the new function:

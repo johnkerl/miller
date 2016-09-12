@@ -75,87 +75,41 @@ run_mlr() {
 	num_passed=`expr $num_passed + 1`
 }
 
+mlr_expect_fail() {
+  # Use just "mlr" for info messages
+	echo mlr "$@"
+	echo mlr "$@" >> $outfile
+  # Use path to mlr for invoking the command
+    set +e
+	$path_to_mlr "$@" >> $outfile 2>&1
+    status=$?
+    if [ $status -ne 1 ]; then
+        echo "Exit status was $status; expected 1."
+        echo "Exit status was $status; expected 1." >> $outfile
+    fi
+    set -e
+	echo >> $outfile
+    test $status -eq 1
+	# since set -e
+	num_passed=`expr $num_passed + 1`
+}
+
 # ================================================================
-announce GRAMMAR REORG
+announce FUNC PROHIBITS
 
-run_mlr -n put -v '$["x"]=3'
-run_mlr -n put -v '@["x"]=3'
-run_mlr -n put -v '$[$y]=$y'
-run_mlr -n put -v '@[@y]=@y'
-
-run_mlr -n put -v '@x=2; @x["y"]=3; @x["y"][$z]=4'
-run_mlr -n put -v '@["x"]=2; @["x"]["y"]=3; @["x"]["y"][$z]=4'
-run_mlr --from $indir/abixy put -q -v '@a=2; @b["y"]=3; @c["y"][$a]=4; emitp all'
-run_mlr --from $indir/abixy put -q -v '@a=2; @b["y"]=3; @c["y"][$a]=4; emitp all'
-run_mlr --from $indir/abixy put -q -v '@["a"]=2; @["b"]["y"]=3; @["c"]["y"][$a]=4; emitp all'
-
-echo x=1|mlr put '$x=$x+1; for (k,v in $*) { $[v] = typeof(v)}'
-# x=2,2=MT_INT
-
-echo x=1|mlr put 'for (k,v in $*) { $[v] = typeof(v)}'
-# x=1,1=MT_STRING
-
-run_mlr put -v '@s = NR; $t = typeof(@s); $u= typeof(@["s"]); emitp all' $indir/abixy
-
-run_mlr --opprint put -v '@s = NR; $t = @s; $u=@["s"]' $indir/abixy
-
-run_mlr put -v '@t["u"] = NR; $tu = @["t"]["u"]; emitp all' $indir/abixy
-
-run_mlr put -v '@["t"]["u"] = $y; emitp all' $indir/abixy
-
-run_mlr --from $indir/abixy put -v '$sum = 0; for(k,v in $*) {if (k =~ "^[xy]$") {$sum += $[k]} }'
-
-run_mlr --from $indir/abixy -n put -v '
-  $a = @s;
-  $b = @t[1];
-  $c = @u[1][2];
-  $d = @v[1][2][3];
-  $e = @["s"];
-  $f = @["t"][1];
-  $g = @["u"][1][2];
-  $h = @["v"][1][2][3];
-'
-
-run_mlr -n put -v 'emit  @*'
-run_mlr -n put -v 'emitp @*'
-run_mlr -n put -v 'unset @*'
-
-run_mlr --opprint --from $indir/abixy put -q -v '
-  for (k,v in $*) {
-      @logging1[NR][k] = v;
-      if (k == "x") {
-          break;
-      }
-  }
-
-  for (k,v in $*) {
-      if (k == "x") {
-          break;
-      }
-      @logging2[NR][k] = v;
-  }
-
-  for (k,v in $*) {
-      @logging3[NR][k] = v;
-      if (k == "x") {
-          continue;
-      }
-  }
-
-  for (k,v in $*) {
-      if (k == "x") {
-          continue;
-      }
-      @logging4[NR][k] = v;
-  }
-
-  end {
-    emitp @logging1, "NR", "k";
-    emitp @logging2, "NR", "k";
-    emitp @logging3, "NR", "k";
-    emitp @logging4, "NR", "k"
+mlr_expect_fail --from $indir/abixy put '
+  func f(x,y,z) {
+    return $a # cannot reference srecs from functions
   }
 '
+
+mlr_expect_fail --from $indir/abixy put '
+  func f(x,y,z) {
+    return $[x] # cannot reference srecs from functions
+  }
+'
+
+run_mlr -n put ''
 
 # ================================================================
 cat $outfile

@@ -4707,12 +4707,10 @@ run_mlr --opprint --from $indir/abixy filter -f $indir/filter-script-piece-1 -f 
 echo
 echo ================================================================
 echo "Differences between $expfile and $outfile:"
-echo
-
 diff -I '^mlr ' -C5 $expfile $outfile
-
 echo "No differences found between $expfile and $outfile" # since set -e
 echo ================================================================
+echo
 
 # ================================================================
 echo ALL REGRESSION TESTS PASSED

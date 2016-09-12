@@ -24,8 +24,8 @@ UDFs:
     - (lhs) no subr call
     - (lhs) no srec assignment x 3, no oosvar assignment x 2, no filter, no unset
     - (lhs) no tee, emitfx3; but allow print; ?dump?
-    - (rhs) no srec/oosvar references
 * kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
+* disallow func/subr redefines
 * xxxes
 * xxxes in reg_test/run
 * valgrinds
