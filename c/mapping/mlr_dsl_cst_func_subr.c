@@ -145,12 +145,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 
 	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		if (pstatement->local_variable_name != NULL) {
-			// local statement
-			rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-			mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-			lhmsmv_put(pstate->pbound_variables, pstatement->local_variable_name, &val, FREE_ENTRY_VALUE);
-		} else if (pstatement->preturn_evaluator != NULL) {
+		if (pstatement->preturn_evaluator != NULL) {
 			// return statement
 			retval = pstatement->preturn_evaluator->pprocess_func(pstatement->preturn_evaluator->pvstate, pvars);
 			break;
@@ -275,12 +270,7 @@ void mlr_dsl_cst_execute_subroutine(cst_subroutine_state_t* pstate, variables_t*
 
 	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		if (pstatement->local_variable_name != NULL) {
-			// local statement
-			rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-			mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-			lhmsmv_put(pstatement->pbound_variables, pstatement->local_variable_name, &val, FREE_ENTRY_VALUE);
-		} else if (pstatement->is_return_void) {
+		if (pstatement->is_return_void) {
 			// return statement
 			break;
 		} else {
