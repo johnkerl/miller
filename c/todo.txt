@@ -15,16 +15,30 @@ JSON formatting:
 * publish
 
 UDFs:
-* fix: disallow or support locals in control structures
+! fully disallow or fully support locals in curly-braced control structures.
+  o which:
+    - func, subr
+    - begin, end
+    - if, cond, while
+    - for-srec, for-oosvar, for-full-oosvar
+  o steps:
+    k bind_stack_alloc: push initial frame either in ctor or thereafter at callsite
+    k alloc boundvars for alloc_{if,cond,while,fors}
+    k bind_stack_push/pop at handle_{if,cond,while,fors}
+    k make a new bind_stack_set
+    k make a new handle_local
+    - pull out special-case local handlers from func/subr executors
+    ! who frees?
+! need LHS for local reassign
+! deferred func/subr name bindings: make recursion possible; more generally, calls to something as yet undefined.
+  - needs a separate link step; compile with prototypes only, and resolve them at link time.
+
 * maybe:
   - allow func @ filter?
-  - allow locals in if/for/while as well
   - disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
-  - deferred func/subr name bindings: make recursion possible; more generally, calls to something as yet undefined.
-    -> needs a separate link step; compile with prototypes only, and resolve them at link time.
 * hygiene:
   - valgrinds
-* to UT & doc:
+* UT & doc:
   - no begin/end/func/subr within subr
   - no begin/end/func/subr within func
   - (lhs) func no subr call
@@ -34,6 +48,9 @@ UDFs:
   - disallow func/subr redefines
   - func/subr exhaustively. local/return/etc in/out of various; for ->func -> while; subr -> func; etc
   - with valgrind: func/subr args read, written, both, neither.
+  - block-locals can shadow for-locals ... yuck. strict-mode opportunity?
+* UT:
+  - distinct locals within if/elseif/.../else
 * to doc:
   - kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
   - doc: multiple filter/put -f (new mld section)

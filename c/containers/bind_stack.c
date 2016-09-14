@@ -15,6 +15,9 @@ bind_stack_t* bind_stack_alloc() {
 	pstack->pframes = mlr_malloc_or_die(pstack->num_allocated * sizeof(bind_stack_frame_t));
 	memset(pstack->pframes, 0, pstack->num_allocated * sizeof(bind_stack_frame_t));
 
+	pstack->pbase_bindings = lhmsmv_alloc();
+	bind_stack_push(pstack, pstack->pbase_bindings);
+
 	return pstack;
 }
 
@@ -23,6 +26,7 @@ void bind_stack_free(bind_stack_t* pstack) {
 	if (pstack == NULL)
 		return;
 
+	lhmsmv_free(pstack->pbase_bindings);
 	free(pstack->pframes);
 	free(pstack);
 }
@@ -67,6 +71,12 @@ mv_t* bind_stack_resolve(bind_stack_t* pstack, char* key) {
 			break;
 	}
 	return NULL;
+}
+
+// ----------------------------------------------------------------
+void bind_stack_set(bind_stack_t* pstack, char* name, mv_t* pmv) {
+	bind_stack_frame_t* ptop_frame = &pstack->pframes[pstack->num_used - 1];
+	lhmsmv_put(ptop_frame->bindings, name, pmv, FREE_ENTRY_VALUE);
 }
 
 // ----------------------------------------------------------------

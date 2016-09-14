@@ -30,6 +30,7 @@ typedef struct _bind_stack_t {
 	int num_used;
 	int num_allocated;
 	bind_stack_frame_t* pframes;
+	lhmsmv_t* pbase_bindings;
 } bind_stack_t;
 
 bind_stack_t* bind_stack_alloc();
@@ -39,7 +40,9 @@ void bind_stack_push(bind_stack_t* pstack, lhmsmv_t* bindings);
 void bind_stack_push_fenced(bind_stack_t* pstack, lhmsmv_t* bindings);
 void bind_stack_pop(bind_stack_t* pstack);
 mv_t* bind_stack_resolve(bind_stack_t* pstack, char* key);
-
+// The pmv is not copied. You may wish to mv_copy the argument you pass in.
+// The pmv will be freed.
+void bind_stack_set(bind_stack_t* pstack, char* name, mv_t* pmv);
 void bind_stack_print(bind_stack_t* pstack);
 
 #endif // BIND_STACK_H
