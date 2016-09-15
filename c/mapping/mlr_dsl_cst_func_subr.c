@@ -91,8 +91,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 			exit(1);
 		}
 		sllv_append(pcst_udf_state->pblock_statements,
-			mlr_dsl_cst_alloc_statement(pbody_ast_node, pcst->pfmgr, pcst->psubr_defsites,
-				type_inferencing, context_flags | IN_FUNC_DEF));
+			mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node, type_inferencing, context_flags | IN_FUNC_DEF));
 	}
 
 	// Callback struct for the function manager to invoke the new function:
@@ -228,8 +227,8 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		mlr_dsl_cst_statement_t* pstatement = mlr_dsl_cst_alloc_statement(pbody_ast_node,
-			pcst->pfmgr, pcst->psubr_defsites, type_inferencing, context_flags | IN_SUBR_DEF);
+		mlr_dsl_cst_statement_t* pstatement = mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
+			type_inferencing, context_flags | IN_SUBR_DEF);
 		sllv_append(pstate->pblock_statements, pstatement);
 	}
 
