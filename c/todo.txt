@@ -15,18 +15,16 @@ JSON formatting:
 * publish
 
 UDFs/subrs/localvars:
-
 ! deferred func/subr name bindings: make recursion possible; more generally, calls to something as yet undefined.
   - needs a separate link step; compile with prototypes only, and resolve them at link time.
   - clear boundvars at record end ............. efficiently so ...................
   - mlr --opprint --from s put -v '$o1 = a; local a=1000+NR; $o2 = a; a=2000+NR; $o3 = a'
-
+* new frame; new fenced frame. then hide the lhmsmv_t business a little deeper into the bind-stack API.
 
 * maybe:
   - allow func @ filter?
   - disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
 * hygiene:
-  - new frame; new fenced frame. then hide the lhmsmv_t business a little deeper into the bind-stack API.
   - valgrinds
 * UT & doc:
   - no begin/end/func/subr within subr
@@ -34,18 +32,17 @@ UDFs/subrs/localvars:
   - (lhs) func no subr call
   - (lhs) func no srec assignment x 3, no oosvar assignment x 2, no filter, no unset
   - (lhs) func no tee, emitfx3; but allow print, dump.
-  - no local outside func/subr
   - disallow func/subr redefines
   - func/subr exhaustively. local/return/etc in/out of various; for ->func -> while; subr -> func; etc
   - with valgrind: func/subr args read, written, both, neither.
   - block-locals can shadow for-locals ... yuck. strict-mode opportunity?
-  - fully disallow or fully support locals in curly-braced control structures. but: who frees??
+  - locals in all curly-braced control structures; top-level locals; scope, extent, freeing.
 * UT:
   - distinct locals within if/elseif/.../else
-* to doc:
+* doc:
   - kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
-  - doc: multiple filter/put -f (new mld section)
-  - doc: note UDFs may not overwrite built-in functions; subrs have a different namespace (log example); each
+  - multiple filter/put -f (new mld section)
+  - note UDFs may not overwrite built-in functions; subrs have a different namespace (log example); each
     kind may not be multiply defined.
   - local a=1 @ outer; a=2 in inner; inner cannot modify outer.
   - local @ LHS before @ RHS: absent skips assign
