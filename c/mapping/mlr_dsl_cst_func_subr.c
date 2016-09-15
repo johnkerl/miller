@@ -173,14 +173,14 @@ static void cst_udf_free_callback(void* pvstate) {
 }
 
 // ----------------------------------------------------------------
-cst_subroutine_state_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
 	mlr_dsl_ast_node_t* pparameters_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pbody_node = pnode->pchildren->phead->pnext->pvvalue;
 
 	int arity = pparameters_node->pchildren->length;
-	cst_subroutine_state_t* pstate = mlr_malloc_or_die(sizeof(cst_subroutine_state_t));
+	subr_defsite_t* pstate = mlr_malloc_or_die(sizeof(subr_defsite_t));
 
 	pstate->name = mlr_strdup_or_die(pparameters_node->text);
 
@@ -236,7 +236,7 @@ cst_subroutine_state_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_ds
 	return pstate;
 }
 
-void mlr_dsl_cst_free_subroutine(cst_subroutine_state_t* pstate) {
+void mlr_dsl_cst_free_subroutine(subr_defsite_t* pstate) {
 	if (pstate == NULL)
 		return;
 
@@ -258,7 +258,7 @@ void mlr_dsl_cst_free_subroutine(cst_subroutine_state_t* pstate) {
 }
 
 // ----------------------------------------------------------------
-void mlr_dsl_cst_execute_subroutine(cst_subroutine_state_t* pstate, variables_t* pvars,
+void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 	cst_outputs_t* pcst_outputs, int callsite_arity, mv_t* args)
 {
 	// Bind parameters to arguments

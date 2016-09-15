@@ -53,7 +53,7 @@
 // Forward references for virtual-function prototypes
 struct _mlr_dsl_cst_statement_t;
 struct _mlr_dsl_cst_statement_vararg_t;
-struct _cst_subroutine_state_t;
+struct _subr_defsite_t;
 
 // Parameter bag to reduce parameter-marshaling
 typedef struct _cst_outputs_t {
@@ -110,7 +110,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 	int   subr_callsite_arity;
 	rval_evaluator_t** subr_callsite_argument_evaluators;
 	mv_t* subr_callsite_arguments;
-	struct _cst_subroutine_state_t *psubr_defsite;
+	struct _subr_defsite_t *psubr_defsite;
 
 	// Definition of local variable within user-defined function. Uses prhs_evaluator for value.
 	char* local_variable_name;
@@ -218,7 +218,7 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* past, int type_i
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing);
 
 mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_ast_node_t* pnode,
-	fmgr_t* pfmgr, lhmsv_t* pcst_subroutine_states, int type_inferencing, int context_flags);
+	fmgr_t* pfmgr, lhmsv_t* psubr_defsites, int type_inferencing, int context_flags);
 
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
@@ -257,27 +257,27 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(
 void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate);
 
 // ----------------------------------------------------------------
-// cst_subroutine_state_t is data needed to execute the body of a subroutine.
-typedef struct _cst_subroutine_state_t {
+// subr_defsite_t is data needed to execute the body of a subroutine.
+typedef struct _subr_defsite_t {
 	char*     name;
 	int       arity;
 	char**    parameter_names;
     bind_stack_frame_t* pframe;
 	sllv_t*   pblock_statements;
-} cst_subroutine_state_t;
+} subr_defsite_t;
 
-cst_subroutine_state_t* mlr_dsl_cst_alloc_subroutine(
+subr_defsite_t* mlr_dsl_cst_alloc_subroutine(
 	mlr_dsl_cst_t*      pcst,
 	mlr_dsl_ast_node_t* pnode,
 	int                 type_inferencing,
 	int                 context_flags);
 
-void mlr_dsl_cst_free_subroutine(cst_subroutine_state_t* pcst_subroutine_state);
+void mlr_dsl_cst_free_subroutine(subr_defsite_t* psubr_defsite);
 
 // Invoked directly from the CST statement handler for a subroutine callsite.
 // (Functions, by contrast, are invoked by callback from the right-hand-site-evaluator logic
 // -- hence no execute-function method here.)
-void mlr_dsl_cst_execute_subroutine(cst_subroutine_state_t* pstate, variables_t* pvars,
+void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 	cst_outputs_t* pcst_outputs, int callsite_arity, mv_t* args);
 
 // ================================================================
