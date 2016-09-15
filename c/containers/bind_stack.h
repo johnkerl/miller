@@ -30,8 +30,8 @@ typedef struct _bind_stack_frame_t {
 typedef struct _bind_stack_t {
 	int num_used;
 	int num_allocated;
-	bind_stack_frame_t* pframes;
-	lhmsmv_t* pbase_bindings;
+	bind_stack_frame_t** ppframes;
+	bind_stack_frame_t* pbase_frame;
 } bind_stack_t;
 
 // ----------------------------------------------------------------
@@ -40,7 +40,7 @@ typedef struct _bind_stack_t {
 bind_stack_t* bind_stack_alloc();
 void bind_stack_free(bind_stack_t* pstack);
 
-bind_stack_frame_t* bind_stack_frame_alloc();
+bind_stack_frame_t* bind_stack_frame_alloc_unfenced();
 bind_stack_frame_t* bind_stack_frame_alloc_fenced();
 void bind_stack_frame_free(bind_stack_frame_t* pframe);
 
@@ -48,8 +48,7 @@ void bind_stack_frame_free(bind_stack_frame_t* pframe);
 // Scope entry/exit
 
 // To be called on entry to scoped block
-void bind_stack_push(bind_stack_t* pstack, lhmsmv_t* bindings);
-void bind_stack_push_fenced(bind_stack_t* pstack, lhmsmv_t* bindings); // xxx remove
+void bind_stack_push(bind_stack_t* pstack, bind_stack_frame_t* pframe);
 
 // To be called on exit from scoped block. Clears the binding from the top frame.
 void bind_stack_pop(bind_stack_t* pstack);

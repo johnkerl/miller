@@ -584,12 +584,12 @@ static char* test_bind_stack() {
 	mu_assert_lf(bind_stack_resolve(pstack, "x") == NULL);
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	lhmsmv_t* pbindings0 = lhmsmv_alloc();
-	bind_stack_push(pstack, pbindings0);
+	bind_stack_frame_t* pframe0 = bind_stack_frame_alloc_unfenced();
+	bind_stack_push(pstack, pframe0);
 	bind_stack_print(pstack);
 
-	lhmsmv_put(pbindings0, "x", smv("1"), NO_FREE);
-	lhmsmv_put(pbindings0, "y", smv("2"), NO_FREE);
+	lhmsmv_put(pframe0->pbindings, "x", smv("1"), NO_FREE);
+	lhmsmv_put(pframe0->pbindings, "y", smv("2"), NO_FREE);
 	bind_stack_print(pstack);
 
 	mu_assert_lf(bind_stack_resolve(pstack, "x") != NULL);
@@ -601,13 +601,13 @@ static char* test_bind_stack() {
 	mu_assert_lf(bind_stack_resolve(pstack, "z") == NULL);
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	lhmsmv_t* pbindings1 = lhmsmv_alloc();
-	bind_stack_push(pstack, pbindings1);
+	bind_stack_frame_t* pframe1 = bind_stack_frame_alloc_unfenced();
+	bind_stack_push(pstack, pframe1);
 	bind_stack_print(pstack);
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	lhmsmv_t* pbindings2 = lhmsmv_alloc();
-	bind_stack_push(pstack, pbindings2);
+	bind_stack_frame_t* pframe2 = bind_stack_frame_alloc_unfenced();
+	bind_stack_push(pstack, pframe2);
 	bind_stack_print(pstack);
 
 	mu_assert_lf(bind_stack_resolve(pstack, "x") != NULL);
@@ -618,7 +618,7 @@ static char* test_bind_stack() {
 	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), imv(2)));
 	mu_assert_lf(bind_stack_resolve(pstack, "z") == NULL);
 
-	lhmsmv_put(pbindings2, "x", smv("three"), NO_FREE);
+	lhmsmv_put(pframe2->pbindings, "x", smv("three"), NO_FREE);
 	bind_stack_print(pstack);
 
 	mu_assert_lf(bind_stack_resolve(pstack, "x") != NULL);

@@ -182,8 +182,8 @@ typedef struct _mlr_dsl_cst_statement_t {
 	char* for_v_name;
 	type_infererenced_srec_field_getter_t* ptype_infererenced_srec_field_getter;
 
-	// for-srec and for-oosvar:
-	lhmsmv_t* pbound_variables;
+	// for any kind of statement-block
+	bind_stack_frame_t* pframe;
 
 } mlr_dsl_cst_statement_t;
 
@@ -239,7 +239,7 @@ void mlr_dsl_cst_handle_statement_list(
 typedef struct _cst_udf_state_t {
 	int       arity;
 	char**    parameter_names;
-    lhmsmv_t* pbound_variables;
+    bind_stack_frame_t* pframe;
 	sllv_t*   pblock_statements;
 } cst_udf_state_t;
 
@@ -257,7 +257,7 @@ typedef struct _cst_subroutine_state_t {
 	char*     name;
 	int       arity;
 	char**    parameter_names;
-    lhmsmv_t* pbound_variables;
+    bind_stack_frame_t* pframe;
 	sllv_t*   pblock_statements;
 } cst_subroutine_state_t;
 

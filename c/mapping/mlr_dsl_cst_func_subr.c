@@ -78,7 +78,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 		exit(1);
 	}
 
-	pcst_udf_state->pbound_variables = lhmsmv_alloc();
+	pcst_udf_state->pframe = bind_stack_frame_alloc_fenced();
 
 	pcst_udf_state->pblock_statements = sllv_alloc();
 
@@ -114,7 +114,7 @@ void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate) {
 		free(pstate->parameter_names[i]);
 	free(pstate->parameter_names);
 
-	lhmsmv_free(pstate->pbound_variables);
+	bind_stack_frame_free(pstate->pframe);
 
 	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
@@ -134,9 +134,9 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Bind parameters to arguments
-	bind_stack_push_fenced(pvars->pbind_stack, pstate->pbound_variables);
+	bind_stack_push(pvars->pbind_stack, pstate->pframe);
 	for (int i = 0; i < arity; i++) {
-		lhmsmv_put(pstate->pbound_variables, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
+		lhmsmv_put(pstate->pframe->pbindings, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -216,7 +216,7 @@ cst_subroutine_state_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_ds
 		exit(1);
 	}
 
-	pstate->pbound_variables = lhmsmv_alloc();
+	pstate->pframe = bind_stack_frame_alloc_fenced();
 
 	pstate->pblock_statements = sllv_alloc();
 
@@ -246,7 +246,7 @@ void mlr_dsl_cst_free_subroutine(cst_subroutine_state_t* pstate) {
 		free(pstate->parameter_names[i]);
 	free(pstate->parameter_names);
 
-	lhmsmv_free(pstate->pbound_variables);
+	bind_stack_frame_free(pstate->pframe);
 
 	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
@@ -262,10 +262,10 @@ void mlr_dsl_cst_execute_subroutine(cst_subroutine_state_t* pstate, variables_t*
 	cst_outputs_t* pcst_outputs, int callsite_arity, mv_t* args)
 {
 	// Bind parameters to arguments
-	bind_stack_push_fenced(pvars->pbind_stack, pstate->pbound_variables);
+	bind_stack_push(pvars->pbind_stack, pstate->pframe);
 
 	for (int i = 0; i < pstate->arity; i++) {
-		lhmsmv_put(pstate->pbound_variables, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
+		lhmsmv_put(pstate->pframe->pbindings, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
 	}
 
 	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {

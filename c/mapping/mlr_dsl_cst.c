@@ -729,7 +729,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->pfor_oosvar_k_names                  = NULL;
 	pstatement->for_v_name                           = NULL;
 	pstatement->ptype_infererenced_srec_field_getter = NULL;
-	pstatement->pbound_variables                     = NULL;
+	pstatement->pframe                               = NULL;
 
 	return pstatement;
 }
@@ -1065,7 +1065,7 @@ static mlr_dsl_cst_statement_t* alloc_while(mlr_dsl_ast_node_t* pnode, fmgr_t* p
 		sllv_append(pblock_statements, pstatement);
 	}
 
-	pstatement->pbound_variables = lhmsmv_alloc();
+	pstatement->pframe = bind_stack_frame_alloc_unfenced();
 	pstatement->pnode_handler = handle_while;
 	pstatement->pblock_handler = handle_statement_list_with_break_continue;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pleft, pfmgr, type_inferencing, context_flags);
@@ -1091,7 +1091,7 @@ static mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_ast_node_t* pnode, fmgr_t
 		sllv_append(pblock_statements, pstatement);
 	}
 
-	pstatement->pbound_variables = lhmsmv_alloc();
+	pstatement->pframe = bind_stack_frame_alloc_unfenced();
 	pstatement->pnode_handler = handle_do_while;
 	pstatement->pblock_handler = handle_statement_list_with_break_continue;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pfmgr, type_inferencing, context_flags);
@@ -1146,7 +1146,7 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_ast_node_t* pnode, fmgr_t
 	pstatement->pnode_handler = handle_for_srec;
 	pstatement->pblock_handler = handle_statement_list_with_break_continue;
 	pstatement->pblock_statements = pblock_statements;
-	pstatement->pbound_variables = lhmsmv_alloc();
+	pstatement->pframe = bind_stack_frame_alloc_unfenced();
 	pstatement->ptype_infererenced_srec_field_getter =
 		(type_inferencing == TYPE_INFER_STRING_ONLY)      ? get_srec_value_string_only_aux :
 		(type_inferencing == TYPE_INFER_STRING_FLOAT)     ? get_srec_value_string_float_aux :
@@ -1242,7 +1242,7 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_ast_node_t* pnode, fmgr
 			type_inferencing, context_flags));
 	}
 	pstatement->pblock_statements = pblock_statements;
-	pstatement->pbound_variables = lhmsmv_alloc();
+	pstatement->pframe = bind_stack_frame_alloc_unfenced();
 
 	pstatement->pnode_handler = handle_for_oosvar;
 	pstatement->pblock_handler = handle_statement_list_with_break_continue;
@@ -1285,7 +1285,7 @@ static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_ast_node_t* pnod
 		sllv_append(pblock_statements, pstatement);
 	}
 
-	pstatement->pbound_variables = lhmsmv_alloc();
+	pstatement->pframe = bind_stack_frame_alloc_unfenced();
 	pstatement->pnode_handler = handle_conditional_block;
 	pstatement->pblock_handler = (context_flags & IN_BREAKABLE)
 		? handle_statement_list_with_break_continue
@@ -1392,7 +1392,7 @@ static mlr_dsl_cst_statement_t* alloc_if_item(mlr_dsl_ast_node_t* pexprnode,
 		sllv_append(pblock_statements, pstatement);
 	}
 
-	pstatement->pbound_variables = lhmsmv_alloc();
+	pstatement->pframe = bind_stack_frame_alloc_unfenced();
 	pstatement->pnode_handler = NULL; // handled by the containing if-head evaluator
 	pstatement->prhs_evaluator = pexprnode != NULL
 		? rval_evaluator_alloc_from_ast(pexprnode, pfmgr,
@@ -1893,8 +1893,8 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 		slls_free(pstatement->pfor_oosvar_k_names);
 	}
 
-	if (pstatement->pbound_variables != NULL) {
-		lhmsmv_free(pstatement->pbound_variables);
+	if (pstatement->pframe != NULL) {
+		bind_stack_frame_free(pstatement->pframe);
 	}
 
 	free(pstatement);
@@ -2308,7 +2308,7 @@ static void handle_conditional_block(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	bind_stack_push(pvars->pbind_stack, pstatement->pbound_variables);
+	bind_stack_push(pvars->pbind_stack, pstatement->pframe);
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
@@ -2335,7 +2335,7 @@ static void handle_if_head(
 		if (mv_is_non_null(&val)) {
 			mv_set_boolean_strict(&val);
 			if (val.u.boolv) {
-				bind_stack_push(pvars->pbind_stack, pitemnode->pbound_variables);
+				bind_stack_push(pvars->pbind_stack, pitemnode->pframe);
 				pstatement->pblock_handler(pitemnode->pblock_statements, pvars, pcst_outputs);
 				bind_stack_pop(pvars->pbind_stack);
 				break;
@@ -2350,7 +2350,7 @@ static void handle_while(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	bind_stack_push(pvars->pbind_stack, pstatement->pbound_variables);
+	bind_stack_push(pvars->pbind_stack, pstatement->pframe);
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 
 	loop_stack_push(pvars->ploop_stack);
@@ -2383,7 +2383,7 @@ static void handle_do_while(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	bind_stack_push(pvars->pbind_stack, pstatement->pbound_variables);
+	bind_stack_push(pvars->pbind_stack, pstatement->pframe);
 	loop_stack_push(pvars->ploop_stack);
 
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
@@ -2418,7 +2418,7 @@ static void handle_for_srec(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	bind_stack_push(pvars->pbind_stack, pstatement->pbound_variables);
+	bind_stack_push(pvars->pbind_stack, pstatement->pframe);
 	loop_stack_push(pvars->ploop_stack);
 	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
 	lrec_t* pcopyrec = lrec_copy(pvars->pinrec);
@@ -2429,8 +2429,8 @@ static void handle_for_srec(
 		mv_t mvval = pstatement->ptype_infererenced_srec_field_getter(pe, pcopyoverlay);
 		mv_t mvkey = mv_from_string_no_free(pe->key);
 
-		lhmsmv_put(pstatement->pbound_variables, pstatement->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
-		lhmsmv_put(pstatement->pbound_variables, pstatement->for_v_name, &mvval, FREE_ENTRY_VALUE);
+		lhmsmv_put(pstatement->pframe->pbindings, pstatement->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
+		lhmsmv_put(pstatement->pframe->pbindings, pstatement->for_v_name, &mvval, FREE_ENTRY_VALUE);
 
 		pstatement->pblock_handler(pstatement->pblock_statements, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
@@ -2452,7 +2452,7 @@ static void handle_for_oosvar(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	bind_stack_push(pvars->pbind_stack, pstatement->pbound_variables);
+	bind_stack_push(pvars->pbind_stack, pstatement->pframe);
 	loop_stack_push(pvars->ploop_stack);
 
 	// Evaluate the keylist: e.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', find the value of $4 for
@@ -2508,7 +2508,7 @@ static void handle_for_oosvar_aux(
 			// Loop over keys at this submap level:
 			for (mlhmmv_level_entry_t* pe = submap.u.pnext_level->phead; pe != NULL; pe = pe->pnext) {
 				// Bind the k-name to the entry-key mlrval:
-				lhmsmv_put(pstatement->pbound_variables, prest_for_k_names->value, &pe->level_key, NO_FREE);
+				lhmsmv_put(pstatement->pframe->pbindings, prest_for_k_names->value, &pe->level_key, NO_FREE);
 				// Recurse into the next-level submap:
 				handle_for_oosvar_aux(pstatement, pvars, pcst_outputs, pe->level_value, prest_for_k_names->pnext);
 
@@ -2528,7 +2528,7 @@ static void handle_for_oosvar_aux(
 			// The submap was too deep for the user-specified k-names; there are no terminals here.
 		} else {
 			// Bind the v-name to the terminal mlrval:
-			lhmsmv_put(pstatement->pbound_variables, pstatement->for_v_name, &submap.u.mlrval, NO_FREE);
+			lhmsmv_put(pstatement->pframe->pbindings, pstatement->for_v_name, &submap.u.mlrval, NO_FREE);
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pblock_statements, pvars, pcst_outputs);
 		}

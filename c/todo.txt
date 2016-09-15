@@ -18,7 +18,6 @@ UDFs/subrs/localvars:
 ! deferred func/subr name bindings: make recursion possible; more generally, calls to something as yet undefined.
   - needs a separate link step; compile with prototypes only, and resolve them at link time.
   - clear boundvars at record end ............. efficiently so ...................
-* new frame; new fenced frame. then hide the lhmsmv_t business a little deeper into the bind-stack API.
 
 * maybe:
   - allow func @ filter?
