@@ -135,6 +135,9 @@ typedef struct _mlr_dsl_cst_statement_t {
 	int num_emit_keylist_evaluators;
 	sllv_t** ppemit_keylist_evaluators;
 
+	// Assignment to local
+	char* local_lhs_variable_name;
+
 	// Assignment to srec
 	char* srec_lhs_field_name;
 
@@ -215,8 +218,15 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_ast_node_t* pnode,
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
-void mlr_dsl_cst_handle_statement_list(
+// Top-level entry point, e.g. from mapper_put.
+void mlr_dsl_cst_handle_base_statement_list(
 	sllv_t*      pcst_statements, // block bodies for begin, main, end; cond, if, for, while
+	variables_t* pvars,
+	cst_outputs_t* pcst_outputs);
+
+// Recursive entry point: block bodies for begin, main, end; cond, if, for, while.
+void mlr_dsl_cst_handle_statement_list(
+	sllv_t*      pcst_statements,
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);
 

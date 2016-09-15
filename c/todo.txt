@@ -14,15 +14,22 @@ JSON formatting:
 * sql-schema example -- after JSON formatting fix-up
 * publish
 
-UDFs:
+UDFs/subrs/localvars:
 ! need LHS @ grammar for local reassign. yuk: local a=1 @ outer; a=2 in inner; inner can modify outer. :^/
+  - wtf a=2 before local a=1? get rid of "local" entirely??
+
 ! deferred func/subr name bindings: make recursion possible; more generally, calls to something as yet undefined.
   - needs a separate link step; compile with prototypes only, and resolve them at link time.
+  - completely remove IN_BINDABLE
+  - clear boundvars at record end ............. efficiently so ...................
+  - mlr --opprint --from s put -v '$o1 = a; local a=1000+NR; $o2 = a; a=2000+NR; $o3 = a'
+
 
 * maybe:
   - allow func @ filter?
   - disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
 * hygiene:
+  - new frame; new fenced frame. then hide the lhmsmv_t business a little deeper into the bind-stack API.
   - valgrinds
 * UT & doc:
   - no begin/end/func/subr within subr
@@ -35,7 +42,7 @@ UDFs:
   - func/subr exhaustively. local/return/etc in/out of various; for ->func -> while; subr -> func; etc
   - with valgrind: func/subr args read, written, both, neither.
   - block-locals can shadow for-locals ... yuck. strict-mode opportunity?
-  - fully disallow or fully support locals in curly-braced control structures. who frees??
+  - fully disallow or fully support locals in curly-braced control structures. but: who frees??
 * UT:
   - distinct locals within if/elseif/.../else
 * to doc:

@@ -42,6 +42,7 @@ static cst_statement_allocator_t alloc_return_value; // UDF
 static cst_statement_allocator_t alloc_return_void;  // Subroutine
 static cst_statement_allocator_t alloc_subr_callsite;
 
+static cst_statement_allocator_t alloc_local_variable_assignment;
 static cst_statement_allocator_t alloc_srec_assignment;
 static cst_statement_allocator_t alloc_indirect_srec_assignment;
 static cst_statement_allocator_t alloc_oosvar_assignment;
@@ -121,6 +122,7 @@ static void handle_statement_list_with_break_continue(
 
 static cst_statement_handler_t handle_subr_callsite;
 
+static cst_statement_handler_t handle_local_variable_assignment;
 static cst_statement_handler_t handle_srec_assignment;
 static cst_statement_handler_t handle_indirect_srec_assignment;
 static cst_statement_handler_t handle_oosvar_assignment;
@@ -462,12 +464,8 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_ast_node_t* pnode,
 		break;
 
 	case MD_AST_NODE_TYPE_LOCAL:
-		if (!(context_flags & (IN_FUNC_DEF | IN_SUBR_DEF))) {
-			fprintf(stderr, "%s: local-variable definitions are only valid within func or subr blocks.\n",
-				MLR_GLOBALS.bargv0);
-			exit(1);
-		}
-		return alloc_local_variable_definition(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
+		return alloc_local_variable_definition(pnode, pfmgr, pcst_subroutine_states,
+			type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_RETURN_VALUE:
@@ -534,6 +532,10 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_ast_node_t* pnode,
 			exit(1);
 		}
 		return alloc_continue(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
+		break;
+
+	case MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT:
+		return alloc_local_variable_assignment(pnode, pfmgr, pcst_subroutine_states, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
@@ -707,6 +709,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->pemit_keylist_evaluators             = NULL;
 	pstatement->num_emit_keylist_evaluators          = 0;
 	pstatement->ppemit_keylist_evaluators            = NULL;
+	pstatement->local_lhs_variable_name              = NULL;
 	pstatement->srec_lhs_field_name                  = NULL;
 	pstatement->psrec_lhs_evaluator                  = NULL;
 	pstatement->prhs_evaluator                       = NULL;
@@ -797,6 +800,37 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t* pnode,
 	pstatement->psubr_defsite = pcst_subroutine_state;
 
 	pstatement->pnode_handler = handle_subr_callsite;
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
+static mlr_dsl_cst_statement_t* alloc_local_variable_assignment(mlr_dsl_ast_node_t* pnode,
+	fmgr_t* pfmgr, lhmsv_t* pcst_subroutine_states, int type_inferencing, int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 2)) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+
+	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
+
+	if (pleft->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	} else if (pleft->pchildren != NULL) {
+		fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+
+	pstatement->pnode_handler = handle_local_variable_assignment;
+	pstatement->local_lhs_variable_name = pleft->text;
+	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pfmgr, type_inferencing, context_flags);
 	return pstatement;
 }
 
@@ -1918,6 +1952,15 @@ static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg) {
 }
 
 // ================================================================
+void mlr_dsl_cst_handle_base_statement_list(
+	sllv_t*        pcst_statements,
+	variables_t*   pvars,
+	cst_outputs_t* pcst_outputs)
+{
+	mlr_dsl_cst_handle_statement_list(pcst_statements, pvars, pcst_outputs);
+	bind_stack_clear(pvars->pbind_stack); // clear the baseframe
+}
+
 // This is for statement lists not recursively contained within a loop body -- including the
 // main/begin/end statements.  Since there is no containing loop body, there is no need to check
 // for break or continue flags after each statement.
@@ -1961,6 +2004,22 @@ static void handle_subr_callsite(
 
 	mlr_dsl_cst_execute_subroutine(pstatement->psubr_defsite, pvars, pcst_outputs, pstatement->subr_callsite_arity,
 		pstatement->subr_callsite_arguments);
+}
+
+// ----------------------------------------------------------------
+static void handle_local_variable_assignment(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+
+	if (mv_is_present(&val)) {
+		bind_stack_set(pvars->pbind_stack, pstatement->local_lhs_variable_name, &val);
+	} else {
+		mv_free(&val);
+	}
 }
 
 // ----------------------------------------------------------------

@@ -21,6 +21,7 @@
 // for-loop.  A second frame is pushed in the call to f(x). The former should
 // have access to k; the latter should not.
 
+// ----------------------------------------------------------------
 typedef struct _bind_stack_frame_t {
 	lhmsmv_t*  bindings;
 	int        fenced;
@@ -33,16 +34,40 @@ typedef struct _bind_stack_t {
 	lhmsmv_t* pbase_bindings;
 } bind_stack_t;
 
+// ----------------------------------------------------------------
+// Constructor/destructor
+
 bind_stack_t* bind_stack_alloc();
 void bind_stack_free(bind_stack_t* pstack);
 
+// ----------------------------------------------------------------
+// Scope entry/exit
+
+// To be called on entry to scoped block
 void bind_stack_push(bind_stack_t* pstack, lhmsmv_t* bindings);
 void bind_stack_push_fenced(bind_stack_t* pstack, lhmsmv_t* bindings);
+
+// To be called on exit from scoped block. Clears the binding from the top frame.
 void bind_stack_pop(bind_stack_t* pstack);
+
+// ----------------------------------------------------------------
+// Access within scope
+
+// Use of local variables on expression right-hand sides
 mv_t* bind_stack_resolve(bind_stack_t* pstack, char* key);
+
+// Use of local variables on expression left-hand sides
 // The pmv is not copied. You may wish to mv_copy the argument you pass in.
 // The pmv will be freed.
 void bind_stack_set(bind_stack_t* pstack, char* name, mv_t* pmv);
+
+// Clears the binding from the top frame without popping it. Useful
+// for clearing the baseframe which is never popped.
+void bind_stack_clear(bind_stack_t* pstack);
+
+// ----------------------------------------------------------------
+// Test/debug
+
 void bind_stack_print(bind_stack_t* pstack);
 
 #endif // BIND_STACK_H

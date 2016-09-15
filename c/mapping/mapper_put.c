@@ -359,7 +359,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			.pwriter_opts             = pstate->pwriter_opts,
 		};
 
-		mlr_dsl_cst_handle_statement_list(pstate->pcst->pbegin_statements, &variables, &cst_outputs);
+		mlr_dsl_cst_handle_base_statement_list(pstate->pcst->pbegin_statements, &variables, &cst_outputs);
 		pstate->at_begin = FALSE;
 	}
 
@@ -381,7 +381,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 			.pwriter_opts             = pstate->pwriter_opts,
 		};
 
-		mlr_dsl_cst_handle_statement_list(pstate->pcst->pend_statements, &variables, &cst_outputs);
+		mlr_dsl_cst_handle_base_statement_list(pstate->pcst->pend_statements, &variables, &cst_outputs);
 
 		string_array_free(pregex_captures);
 		sllv_append(poutrecs, NULL);
@@ -409,7 +409,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		.pwriter_opts             = pstate->pwriter_opts,
 	};
 
-	mlr_dsl_cst_handle_statement_list(pstate->pcst->pmain_statements, &variables, &cst_outputs);
+	mlr_dsl_cst_handle_base_statement_list(pstate->pcst->pmain_statements, &variables, &cst_outputs);
 
 	if (should_emit_rec && pstate->outer_filter) {
 		// Write the output fields from the typed overlay back to the lrec.

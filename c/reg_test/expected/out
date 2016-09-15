@@ -12343,16 +12343,6 @@ text="list", type=statement_list:
                 text="$*", type=full_srec.
 
 
----------------------------------------------------------------- boundvars outside for
-mlr put -v $x=x
-mlr: statements involving bound variables are not valid outside for-loops or user-defined functions.
-AST ROOT:
-text="list", type=statement_list:
-    text="=", type=srec_assignment:
-        text="x", type=field_name.
-        text="x", type=bound_variable.
-
-
 ---------------------------------------------------------------- break/continue outside loop
 mlr put -v break
 mlr: break statements are only valid within for, while, or do-while.
@@ -33372,6 +33362,19 @@ hello record  9
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 hello record  10
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr --opprint --from ./reg_test/input/abixy put $o1 = a; local a=1000+NR; $o2 = a; a=2000+NR; $o3 = a
+a   b   i  x                   y                   o2   o3
+pan pan 1  0.3467901443380824  0.7268028627434533  1001 2001
+eks pan 2  0.7586799647899636  0.5221511083334797  1002 2002
+wye wye 3  0.20460330576630303 0.33831852551664776 1003 2003
+eks wye 4  0.38139939387114097 0.13418874328430463 1004 2004
+wye pan 5  0.5732889198020006  0.8636244699032729  1005 2005
+zee pan 6  0.5271261600918548  0.49322128674835697 1006 2006
+eks zee 7  0.6117840605678454  0.1878849191181694  1007 2007
+zee wye 8  0.5985540091064224  0.976181385699006   1008 2008
+hat wye 9  0.03144187646093577 0.7495507603507059  1009 2009
+pan wye 10 0.5026260055412137  0.9526183602969864  1010 2010
 
 
 ================================================================

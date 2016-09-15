@@ -58,6 +58,7 @@ void bind_stack_pop(bind_stack_t* pstack) {
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
+	lhmsmv_clear(pstack->pframes[pstack->num_used-1].bindings);
 	pstack->num_used--;
 }
 
@@ -77,6 +78,16 @@ mv_t* bind_stack_resolve(bind_stack_t* pstack, char* key) {
 void bind_stack_set(bind_stack_t* pstack, char* name, mv_t* pmv) {
 	bind_stack_frame_t* ptop_frame = &pstack->pframes[pstack->num_used - 1];
 	lhmsmv_put(ptop_frame->bindings, name, pmv, FREE_ENTRY_VALUE);
+}
+
+// ----------------------------------------------------------------
+void bind_stack_clear(bind_stack_t* pstack) {
+	if (pstack->num_used <= 0) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	lhmsmv_clear(pstack->pframes[pstack->num_used-1].bindings);
 }
 
 // ----------------------------------------------------------------

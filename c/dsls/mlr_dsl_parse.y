@@ -109,7 +109,7 @@ md_statement_not_braced_end(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("nop", MD_AST_NODE_TYPE_NOP);
 }
 
-// Only valid in func/subr blocks
+// Local-variable definitions at the current scope
 md_statement_not_braced_end(A) ::= MD_TOKEN_LOCAL MD_TOKEN_NON_SIGIL_NAME(N) MD_TOKEN_ASSIGN md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_LOCAL, N, B);
 }
@@ -141,6 +141,7 @@ md_statement_not_braced_end(A) ::= MD_TOKEN_SUBR_CALL md_fcn_or_subr_call(B). {
 }
 
 // Not valid in begin/end since they refer to srecs:
+md_statement_not_braced_end(A) ::= md_local_assignment(B).                 { A = B; }
 md_statement_not_braced_end(A) ::= md_srec_assignment(B).                  { A = B; }
 md_statement_not_braced_end(A) ::= md_srec_indirect_assignment(B).         { A = B; }
 md_statement_not_braced_end(A) ::= md_oosvar_from_full_srec_assignment(B). { A = B; }
@@ -468,6 +469,11 @@ md_bare_boolean(A) ::= md_rhs(B). {
 // ----------------------------------------------------------------
 md_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FILTER, B);
+}
+
+// ----------------------------------------------------------------
+md_local_assignment(A)  ::= MD_TOKEN_NON_SIGIL_NAME(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT, B, C);
 }
 
 // ----------------------------------------------------------------

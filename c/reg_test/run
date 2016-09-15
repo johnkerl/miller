@@ -944,9 +944,6 @@ mlr_expect_fail put -v 'end{unset $x}'
 mlr_expect_fail put -v 'begin{unset $*}'
 mlr_expect_fail put -v 'end{unset $*}'
 
-mention boundvars outside for
-mlr_expect_fail put -v '$x=x'
-
 mention break/continue outside loop
 mlr_expect_fail put -v 'break'
 mlr_expect_fail put -v 'continue'
@@ -4666,6 +4663,8 @@ mlr_expect_fail --opprint --from $indir/abixy put 'func log(x) { return 0 } $o =
 
 run_mlr --from $indir/abixy put 'subr log() { print "hello record  ". NR } call log()'
 
+# Test variable-clear at scope exit; test read of unset locals.
+run_mlr --opprint --from $indir/abixy put '$o1 = a; local a=1000+NR; $o2 = a; a=2000+NR; $o3 = a'
 
 # ----------------------------------------------------------------
 announce MULTI-PART SCRIPTS
