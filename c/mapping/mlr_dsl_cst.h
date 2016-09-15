@@ -199,8 +199,7 @@ typedef struct _mlr_dsl_cst_t {
 	fmgr_t* pfmgr;
 
 	// Subroutine bodies
-	// xxx rename to subr_defsite throughout
-	lhmsv_t* psubroutine_states;
+	lhmsv_t* psubr_defsites;
 
 	// Subroutine callsites, used to bootstrap (e.g. subroutine f calls subroutine g before the latter
 	// has been defined).

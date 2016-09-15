@@ -317,7 +317,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	pcst->pmain_statements  = sllv_alloc();
 	pcst->pend_statements   = sllv_alloc();
 	pcst->pfmgr = fmgr_alloc();
-	pcst->psubroutine_states = lhmsv_alloc();
+	pcst->psubr_defsites = lhmsv_alloc();
 
 	udf_defsite_state_t* pudf_defsite_state = NULL;
 	subr_defsite_t* psubr_defsite = NULL;
@@ -334,12 +334,12 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 
 		case MD_AST_NODE_TYPE_SUBR_DEF:
 			psubr_defsite = mlr_dsl_cst_alloc_subroutine(pcst, pnode, type_inferencing, context_flags);
-			if (lhmsv_get(pcst->psubroutine_states, psubr_defsite->name)) {
+			if (lhmsv_get(pcst->psubr_defsites, psubr_defsite->name)) {
 				fprintf(stderr, "%s: subroutine named \"%s\" has already been defined.\n",
 					MLR_GLOBALS.bargv0, psubr_defsite->name);
 				exit(1);
 			}
-			lhmsv_put(pcst->psubroutine_states, psubr_defsite->name, psubr_defsite, NO_FREE);
+			lhmsv_put(pcst->psubr_defsites, psubr_defsite->name, psubr_defsite, NO_FREE);
 			break;
 
 		case MD_AST_NODE_TYPE_BEGIN:
@@ -347,7 +347,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 			for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 				mlr_dsl_ast_node_t* pchild = pe->pvvalue;
 				sllv_append(pcst->pbegin_statements, mlr_dsl_cst_alloc_statement(pchild,
-					pcst->pfmgr, pcst->psubroutine_states, type_inferencing, context_flags | IN_BEGIN_OR_END));
+					pcst->pfmgr, pcst->psubr_defsites, type_inferencing, context_flags | IN_BEGIN_OR_END));
 			}
 			break;
 
@@ -356,13 +356,13 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 			for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 				mlr_dsl_ast_node_t* pchild = pe->pvvalue;
 				sllv_append(pcst->pend_statements, mlr_dsl_cst_alloc_statement(pchild,
-					pcst->pfmgr, pcst->psubroutine_states, type_inferencing, context_flags | IN_BEGIN_OR_END));
+					pcst->pfmgr, pcst->psubr_defsites, type_inferencing, context_flags | IN_BEGIN_OR_END));
 			}
 			break;
 
 		default:
 			sllv_append(pcst->pmain_statements, mlr_dsl_cst_alloc_statement(pnode, pcst->pfmgr,
-				pcst->psubroutine_states, type_inferencing, context_flags));
+				pcst->psubr_defsites, type_inferencing, context_flags));
 			break;
 		}
 	}
@@ -417,11 +417,11 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	sllv_free(pcst->pend_statements);
 	fmgr_free(pcst->pfmgr);
 
-	for (lhmsve_t* pe = pcst->psubroutine_states->phead; pe != NULL; pe = pe->pnext) {
+	for (lhmsve_t* pe = pcst->psubr_defsites->phead; pe != NULL; pe = pe->pnext) {
 		subr_defsite_t* psubr_defsite = pe->pvvalue;
 		mlr_dsl_cst_free_subroutine(psubr_defsite);
 	}
-	lhmsv_free(pcst->psubroutine_states);
+	lhmsv_free(pcst->psubr_defsites);
 
 	free(pcst);
 }
@@ -800,7 +800,6 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t* pnode,
 			pfmgr, type_inferencing, context_flags);
 	}
 
-	// xxx rename rhs throughout
 	pstatement->psubr_defsite = psubr_defsite;
 
 	//sllv_add(pcst->psubroutine_callsites_to_resolve, xxx);
