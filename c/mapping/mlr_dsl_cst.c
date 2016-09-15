@@ -317,7 +317,8 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	pcst->pmain_statements  = sllv_alloc();
 	pcst->pend_statements   = sllv_alloc();
 	pcst->pfmgr = fmgr_alloc();
-	pcst->psubr_defsites = lhmsv_alloc();
+	pcst->psubr_defsites = lhmsv_alloc(); // xxx temp
+	pcst->psubroutine_callsites_to_resolve = sllv_alloc();
 
 	udf_defsite_state_t* pudf_defsite_state = NULL;
 	subr_defsite_t* psubr_defsite = NULL;
@@ -367,7 +368,11 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 		}
 	}
 
-	pcst->psubroutine_callsites_to_resolve = sllv_alloc();
+	// xxx temp
+	for (sllve_t* pe = pcst->psubroutine_callsites_to_resolve->phead; pe != NULL; pe = pe->pnext) {
+		subr_defsite_t* psubr_defsite = pe->pvvalue;
+		printf("XXX name=%s,arity=%d\n", psubr_defsite->name, psubr_defsite->arity);
+	}
 
 	return pcst;
 }
@@ -779,6 +784,7 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t* pnode,
 	int callsite_arity = pname_node->pchildren->length;
 	pstatement->subr_callsite_arity = callsite_arity;
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	subr_defsite_t* psubr_defsite = lhmsv_get(psubr_defsites, pname_node->text);
 	if (psubr_defsite == NULL) {
 		fprintf(stderr, "%s: subroutine \"%s\" not found.\n", MLR_GLOBALS.bargv0, pname_node->text);
@@ -790,6 +796,10 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t* pnode,
 		exit(1);
 	}
 
+	pstatement->psubr_defsite = psubr_defsite;
+	// xxx sllv_append(pcst->psubroutine_callsites_to_resolve, psubr_defsite); // xxx temp
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 	pstatement->subr_callsite_argument_evaluators = mlr_malloc_or_die(callsite_arity * sizeof(rval_evaluator_t*));
 	pstatement->subr_callsite_arguments = mlr_malloc_or_die(callsite_arity * sizeof(mv_t));
 
@@ -799,10 +809,6 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t* pnode,
 		pstatement->subr_callsite_argument_evaluators[i] = rval_evaluator_alloc_from_ast(pargument_node,
 			pfmgr, type_inferencing, context_flags);
 	}
-
-	pstatement->psubr_defsite = psubr_defsite;
-
-	//sllv_add(pcst->psubroutine_callsites_to_resolve, xxx);
 
 	pstatement->pnode_handler = handle_subr_callsite;
 	return pstatement;
