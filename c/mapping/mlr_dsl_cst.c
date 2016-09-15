@@ -510,11 +510,11 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_ast_node_t* pnode,
 		break;
 	case MD_AST_NODE_TYPE_FOR_SREC:
 		return alloc_for_srec(pnode, pfmgr, pcst_subroutine_states, type_inferencing,
-			context_flags | IN_BREAKABLE | IN_BINDABLE);
+			context_flags | IN_BREAKABLE);
 		break;
 	case MD_AST_NODE_TYPE_FOR_OOSVAR:
 		return alloc_for_oosvar(pnode, pfmgr, pcst_subroutine_states, type_inferencing,
-			context_flags | IN_BREAKABLE | IN_BINDABLE);
+			context_flags | IN_BREAKABLE);
 		break;
 
 	case MD_AST_NODE_TYPE_BREAK:
@@ -743,7 +743,7 @@ static mlr_dsl_cst_statement_t* alloc_local_variable_definition(mlr_dsl_ast_node
 	mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pnext->pvvalue;
 	pstatement->local_variable_name = pname_node->text;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, pfmgr,
-		type_inferencing, context_flags | IN_BINDABLE);
+		type_inferencing, context_flags);
 	pstatement->pnode_handler = handle_local_variable_definition;
 	return pstatement;
 }
@@ -754,7 +754,7 @@ static mlr_dsl_cst_statement_t* alloc_return_value(mlr_dsl_ast_node_t* pnode,
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
 	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pfmgr,
-		type_inferencing, context_flags | IN_BINDABLE);
+		type_inferencing, context_flags);
 	return pstatement;
 }
 
