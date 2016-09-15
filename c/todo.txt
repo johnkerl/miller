@@ -15,8 +15,6 @@ JSON formatting:
 * publish
 
 UDFs/subrs/localvars:
-! need LHS @ grammar for local reassign. yuk: local a=1 @ outer; a=2 in inner; inner can modify outer. :^/
-  - wtf a=2 before local a=1? get rid of "local" entirely??
 
 ! deferred func/subr name bindings: make recursion possible; more generally, calls to something as yet undefined.
   - needs a separate link step; compile with prototypes only, and resolve them at link time.
@@ -50,6 +48,9 @@ UDFs/subrs/localvars:
   - doc: multiple filter/put -f (new mld section)
   - doc: note UDFs may not overwrite built-in functions; subrs have a different namespace (log example); each
     kind may not be multiply defined.
+  - local a=1 @ outer; a=2 in inner; inner cannot modify outer.
+  - local @ LHS before @ RHS: absent skips assign
+  - a=2 before local a=1 -- why to even use local (when optional & when necessary).
 
 RELATED:
 * make variadic min & max
