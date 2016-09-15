@@ -18,7 +18,6 @@ UDFs/subrs/localvars:
 ! deferred func/subr name bindings: make recursion possible; more generally, calls to something as yet undefined.
   - needs a separate link step; compile with prototypes only, and resolve them at link time.
   - clear boundvars at record end ............. efficiently so ...................
-  - mlr --opprint --from s put -v '$o1 = a; local a=1000+NR; $o2 = a; a=2000+NR; $o3 = a'
 * new frame; new fenced frame. then hide the lhmsmv_t business a little deeper into the bind-stack API.
 
 * maybe:
@@ -39,6 +38,7 @@ UDFs/subrs/localvars:
   - locals in all curly-braced control structures; top-level locals; scope, extent, freeing.
 * UT:
   - distinct locals within if/elseif/.../else
+  - mlr --opprint --from s put -v '$o1 = a; local a=1000+NR; $o2 = a; a=2000+NR; $o3 = a'
 * doc:
   - kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
   - multiple filter/put -f (new mld section)
