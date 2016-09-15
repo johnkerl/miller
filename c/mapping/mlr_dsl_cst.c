@@ -366,6 +366,9 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 			break;
 		}
 	}
+
+	pcst->psubroutine_callsites_to_resolve = sllv_alloc();
+
 	return pcst;
 }
 
@@ -797,7 +800,10 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_ast_node_t* pnode,
 			pfmgr, type_inferencing, context_flags);
 	}
 
+	// xxx rename rhs throughout
 	pstatement->psubr_defsite = pcst_subroutine_state;
+
+	//sllv_add(pcst->psubroutine_callsites_to_resolve, xxx);
 
 	pstatement->pnode_handler = handle_subr_callsite;
 	return pstatement;
