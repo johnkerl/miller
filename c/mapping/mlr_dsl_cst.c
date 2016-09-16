@@ -368,23 +368,28 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	// xxx replace with while/pop loop
 	for (sllve_t* pe = pcst->psubr_callsite_statements_to_resolve->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		//subr_callsite_t* psubr_callsite = pstatement->psubr_callsite;
-		subr_defsite_t* ptemp_subr_defsite = pstatement->psubr_defsite;
-
-		subr_defsite_t* psubr_defsite = lhmsv_get(pcst->psubr_defsites, ptemp_subr_defsite->name);
-		if (psubr_defsite == NULL) {
-			fprintf(stderr, "%s: subroutine \"%s\" not found.\n", MLR_GLOBALS.bargv0, ptemp_subr_defsite->name);
-			exit(1);
-		}
-		if (psubr_defsite->arity != ptemp_subr_defsite->arity) {
-			fprintf(stderr, "%s: subroutine \"%s\" expects argument count %d but argument count %d was provied.\n",
-				MLR_GLOBALS.bargv0, ptemp_subr_defsite->name, psubr_defsite->arity, ptemp_subr_defsite->arity);
-			exit(1);
-		}
+		subr_callsite_t* psubr_callsite = pstatement->psubr_callsite;
 
 		// xxx copy over ...
 		//printf("XXX name=%s,arity=%d\n", psubr_callsite->name, psubr_callsite->arity);
-		//printf("YYY name=%s,arity=%d\n", psubr_defsite->name, psubr_defsite->arity);
+
+		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+		// xxx make func
+		subr_defsite_t* psubr_defsite = lhmsv_get(pcst->psubr_defsites, psubr_callsite->name);
+		if (psubr_defsite == NULL) {
+			fprintf(stderr, "%s: subroutine \"%s\" not found.\n", MLR_GLOBALS.bargv0, psubr_callsite->name);
+			exit(1);
+		}
+		if (psubr_defsite->arity != psubr_callsite->arity) {
+			fprintf(stderr, "%s: subroutine \"%s\" expects argument count %d but argument count %d was provied.\n",
+				MLR_GLOBALS.bargv0, psubr_callsite->name, psubr_defsite->arity, psubr_callsite->arity);
+			exit(1);
+		}
+		pstatement->psubr_defsite = psubr_defsite;
+		// xxx temp
+		pstatement->subr_callsite_arity = psubr_callsite->arity;
+		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
 	}
 
 	return pcst;
@@ -802,20 +807,6 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl
 
 	pstatement->psubr_callsite = psubr_callsite;
 	sllv_append(pcst->psubr_callsite_statements_to_resolve, pstatement);
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// xxx temp
-	subr_defsite_t* psubr_defsite = lhmsv_get(pcst->psubr_defsites, pname_node->text);
-	if (psubr_defsite == NULL) {
-		fprintf(stderr, "%s: subroutine \"%s\" not found.\n", MLR_GLOBALS.bargv0, pname_node->text);
-		exit(1);
-	}
-	if (psubr_defsite->arity != callsite_arity) {
-		fprintf(stderr, "%s: subroutine \"%s\" expects argument count %d but argument count %d was provied.\n",
-			MLR_GLOBALS.bargv0, pname_node->text, psubr_defsite->arity, callsite_arity);
-		exit(1);
-	}
-	pstatement->psubr_defsite = psubr_defsite;
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	pstatement->subr_callsite_argument_evaluators = mlr_malloc_or_die(callsite_arity * sizeof(rval_evaluator_t*));

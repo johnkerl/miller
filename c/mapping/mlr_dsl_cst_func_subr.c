@@ -261,6 +261,7 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 	cst_outputs_t* pcst_outputs, int callsite_arity, mv_t* args)
 {
 	// Bind parameters to arguments
+	// xxx when recursive: need separate frames for each instance
 	bind_stack_push(pvars->pbind_stack, pstate->pframe);
 
 	for (int i = 0; i < pstate->arity; i++) {
