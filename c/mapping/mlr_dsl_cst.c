@@ -313,7 +313,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	pcst->pend_statements   = sllv_alloc();
 	pcst->pfmgr = fmgr_alloc();
 	pcst->psubr_defsites = lhmsv_alloc(); // xxx temp
-	pcst->psubr_defsites_to_resolve = sllv_alloc();
+	pcst->psubr_callsite_statements_to_resolve = sllv_alloc();
 
 	udf_defsite_state_t* pudf_defsite_state = NULL;
 	subr_defsite_t* psubr_defsite = NULL;
@@ -366,8 +366,10 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	// xxx temp make separate method
 	// xxx cmt why
 	// xxx replace with while/pop loop
-	for (sllve_t* pe = pcst->psubr_defsites_to_resolve->phead; pe != NULL; pe = pe->pnext) {
-		subr_defsite_t* ptemp_subr_defsite = pe->pvvalue;
+	for (sllve_t* pe = pcst->psubr_callsite_statements_to_resolve->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+		//subr_callsite_t* psubr_callsite = pstatement->psubr_callsite;
+		subr_defsite_t* ptemp_subr_defsite = pstatement->psubr_defsite;
 
 		subr_defsite_t* psubr_defsite = lhmsv_get(pcst->psubr_defsites, ptemp_subr_defsite->name);
 		if (psubr_defsite == NULL) {
@@ -381,8 +383,8 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 		}
 
 		// xxx copy over ...
-		//pstatement->psubr_defsite = psubr_defsite;
-		//printf("XXX name=%s,arity=%d\n", psubr_defsite->name, psubr_defsite->arity);
+		//printf("XXX name=%s,arity=%d\n", psubr_callsite->name, psubr_callsite->arity);
+		//printf("YYY name=%s,arity=%d\n", psubr_defsite->name, psubr_defsite->arity);
 	}
 
 	return pcst;
@@ -791,6 +793,18 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl
 	pstatement->subr_callsite_arity = callsite_arity;
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// xxx make ctor/dtor
+	subr_callsite_t* psubr_callsite = mlr_malloc_or_die(sizeof(subr_callsite_t));
+	psubr_callsite->name             = pname_node->text;
+	psubr_callsite->arity            = callsite_arity;
+	psubr_callsite->type_inferencing = type_inferencing;
+	psubr_callsite->context_flags    = context_flags;
+
+	pstatement->psubr_callsite = psubr_callsite;
+	sllv_append(pcst->psubr_callsite_statements_to_resolve, pstatement);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// xxx temp
 	subr_defsite_t* psubr_defsite = lhmsv_get(pcst->psubr_defsites, pname_node->text);
 	if (psubr_defsite == NULL) {
 		fprintf(stderr, "%s: subroutine \"%s\" not found.\n", MLR_GLOBALS.bargv0, pname_node->text);
@@ -801,9 +815,7 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl
 			MLR_GLOBALS.bargv0, pname_node->text, psubr_defsite->arity, callsite_arity);
 		exit(1);
 	}
-
 	pstatement->psubr_defsite = psubr_defsite;
-	sllv_append(pcst->psubr_defsites_to_resolve, psubr_defsite); // xxx temp
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	pstatement->subr_callsite_argument_evaluators = mlr_malloc_or_die(callsite_arity * sizeof(rval_evaluator_t*));

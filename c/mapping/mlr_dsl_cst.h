@@ -106,11 +106,12 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.
 	mlr_dsl_cst_node_handler_func_t* pnode_handler;
 
-	// For subroutines
-	int   subr_callsite_arity;
+	// For subroutine callsites
+	int   subr_callsite_arity; // xxx rm
 	rval_evaluator_t** subr_callsite_argument_evaluators;
 	mv_t* subr_callsite_arguments;
-	struct _subr_defsite_t *psubr_defsite;
+	struct _subr_callsite_t *psubr_callsite; // caller
+	struct _subr_defsite_t *psubr_defsite; // callee
 
 	// Definition of local variable within user-defined function. Uses prhs_evaluator for value.
 	char* local_variable_name;
@@ -203,7 +204,7 @@ typedef struct _mlr_dsl_cst_t {
 
 	// Subroutine callsites, used to bootstrap (e.g. subroutine f calls subroutine g before the latter
 	// has been defined).
-	sllv_t* psubr_defsites_to_resolve;
+	sllv_t* psubr_callsite_statements_to_resolve;
 } mlr_dsl_cst_t;
 
 // ----------------------------------------------------------------
@@ -256,7 +257,14 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(
 void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate);
 
 // ----------------------------------------------------------------
-// subr_defsite_t is data needed to execute the body of a subroutine.
+
+typedef struct _subr_callsite_t {
+	char* name;
+	int   arity;
+	int   type_inferencing;
+	int   context_flags;
+} subr_callsite_t;
+
 typedef struct _subr_defsite_t {
 	char*     name;
 	int       arity;
