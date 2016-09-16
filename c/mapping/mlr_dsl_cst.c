@@ -313,7 +313,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	pcst->pend_statements   = sllv_alloc();
 	pcst->pfmgr = fmgr_alloc();
 	pcst->psubr_defsites = lhmsv_alloc(); // xxx temp
-	pcst->psubroutine_callsites_to_resolve = sllv_alloc();
+	pcst->psubr_defsites_to_resolve = sllv_alloc();
 
 	udf_defsite_state_t* pudf_defsite_state = NULL;
 	subr_defsite_t* psubr_defsite = NULL;
@@ -363,10 +363,26 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 		}
 	}
 
-	// xxx temp
-	for (sllve_t* pe = pcst->psubroutine_callsites_to_resolve->phead; pe != NULL; pe = pe->pnext) {
-		subr_defsite_t* psubr_defsite = pe->pvvalue;
-		printf("XXX name=%s,arity=%d\n", psubr_defsite->name, psubr_defsite->arity);
+	// xxx temp make separate method
+	// xxx cmt why
+	// xxx replace with while/pop loop
+	for (sllve_t* pe = pcst->psubr_defsites_to_resolve->phead; pe != NULL; pe = pe->pnext) {
+		subr_defsite_t* ptemp_subr_defsite = pe->pvvalue;
+
+		subr_defsite_t* psubr_defsite = lhmsv_get(pcst->psubr_defsites, ptemp_subr_defsite->name);
+		if (psubr_defsite == NULL) {
+			fprintf(stderr, "%s: subroutine \"%s\" not found.\n", MLR_GLOBALS.bargv0, ptemp_subr_defsite->name);
+			exit(1);
+		}
+		if (psubr_defsite->arity != ptemp_subr_defsite->arity) {
+			fprintf(stderr, "%s: subroutine \"%s\" expects argument count %d but argument count %d was provied.\n",
+				MLR_GLOBALS.bargv0, ptemp_subr_defsite->name, psubr_defsite->arity, ptemp_subr_defsite->arity);
+			exit(1);
+		}
+
+		// xxx copy over ...
+		//pstatement->psubr_defsite = psubr_defsite;
+		//printf("XXX name=%s,arity=%d\n", psubr_defsite->name, psubr_defsite->arity);
 	}
 
 	return pcst;
@@ -787,7 +803,7 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl
 	}
 
 	pstatement->psubr_defsite = psubr_defsite;
-	// xxx sllv_append(pcst->psubroutine_callsites_to_resolve, psubr_defsite); // xxx temp
+	sllv_append(pcst->psubr_defsites_to_resolve, psubr_defsite); // xxx temp
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	pstatement->subr_callsite_argument_evaluators = mlr_malloc_or_die(callsite_arity * sizeof(rval_evaluator_t*));

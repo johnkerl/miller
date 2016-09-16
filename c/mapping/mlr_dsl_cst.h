@@ -203,7 +203,7 @@ typedef struct _mlr_dsl_cst_t {
 
 	// Subroutine callsites, used to bootstrap (e.g. subroutine f calls subroutine g before the latter
 	// has been defined).
-	sllv_t* psubroutine_callsites_to_resolve;
+	sllv_t* psubr_defsites_to_resolve;
 } mlr_dsl_cst_t;
 
 // ----------------------------------------------------------------
