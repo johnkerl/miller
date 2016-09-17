@@ -384,8 +384,6 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 			exit(1);
 		}
 		pstatement->psubr_defsite = psubr_defsite;
-		// xxx temp
-		pstatement->subr_callsite_arity = psubr_callsite->arity;
 		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	}
 
@@ -718,7 +716,6 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
 
 	pstatement->pnode_handler                        = NULL;
-	pstatement->subr_callsite_arity                  = 0;
 	pstatement->subr_callsite_argument_evaluators    = NULL;
 	pstatement->subr_callsite_arguments              = NULL;
 	pstatement->psubr_defsite                        = NULL;
@@ -795,7 +792,6 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl
 	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
 
 	int callsite_arity = pname_node->pchildren->length;
-	pstatement->subr_callsite_arity = callsite_arity;
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// xxx make ctor/dtor
@@ -1811,7 +1807,7 @@ static file_output_mode_t file_output_mode_from_ast_node_type(mlr_dsl_ast_node_t
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
 	if (pstatement->subr_callsite_argument_evaluators != NULL) {
-		for (int i = 0; i < pstatement->subr_callsite_arity; i++) {
+		for (int i = 0; i < pstatement->psubr_callsite->arity; i++) {
 			rval_evaluator_t* phandler = pstatement->subr_callsite_argument_evaluators[i];
 			phandler->pfree_func(phandler);
 		}
@@ -1819,7 +1815,7 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 	}
 
 	if (pstatement->subr_callsite_arguments != NULL) {
-		for (int i = 0; i < pstatement->subr_callsite_arity; i++) {
+		for (int i = 0; i < pstatement->psubr_callsite->arity; i++) {
 			mv_free(&pstatement->subr_callsite_arguments[i]);
 		}
 		free(pstatement->subr_callsite_arguments);
@@ -2029,13 +2025,13 @@ static void handle_subr_callsite(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	for (int i = 0; i < pstatement->subr_callsite_arity; i++) {
+	for (int i = 0; i < pstatement->psubr_callsite->arity; i++) {
 		rval_evaluator_t* pev = pstatement->subr_callsite_argument_evaluators[i];
 		pstatement->subr_callsite_arguments[i] = pev->pprocess_func(pev->pvstate, pvars);
 	}
 
-	mlr_dsl_cst_execute_subroutine(pstatement->psubr_defsite, pvars, pcst_outputs, pstatement->subr_callsite_arity,
-		pstatement->subr_callsite_arguments);
+	mlr_dsl_cst_execute_subroutine(pstatement->psubr_defsite, pvars, pcst_outputs,
+		pstatement->psubr_callsite->arity, pstatement->subr_callsite_arguments);
 }
 
 // ----------------------------------------------------------------
