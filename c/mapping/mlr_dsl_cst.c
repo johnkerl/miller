@@ -314,7 +314,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	pcst->pmain_statements  = sllv_alloc();
 	pcst->pend_statements   = sllv_alloc();
 	pcst->pfmgr = fmgr_alloc();
-	pcst->psubr_defsites = lhmsv_alloc(); // xxx temp
+	pcst->psubr_defsites = lhmsv_alloc();
 	pcst->psubr_callsite_statements_to_resolve = sllv_alloc();
 
 	udf_defsite_state_t* pudf_defsite_state = NULL;
@@ -372,9 +372,6 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		subr_callsite_t* psubr_callsite = pstatement->psubr_callsite;
 
-		// xxx copy over ...
-		//printf("XXX name=%s,arity=%d\n", psubr_callsite->name, psubr_callsite->arity);
-
 		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		// xxx make func
 		subr_defsite_t* psubr_defsite = lhmsv_get(pcst->psubr_defsites, psubr_callsite->name);
@@ -391,7 +388,6 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 		// xxx temp
 		pstatement->subr_callsite_arity = psubr_callsite->arity;
 		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
 	}
 
 	return pcst;
@@ -2056,7 +2052,8 @@ static void handle_return_value(
 	cst_outputs_t*           pcst_outputs)
 {
 	pvars->return_state.returned = TRUE;
-	pvars->return_state.retval = pstatement->preturn_evaluator->pprocess_func(pstatement->preturn_evaluator->pvstate, pvars);
+	pvars->return_state.retval = pstatement->preturn_evaluator->pprocess_func(
+		pstatement->preturn_evaluator->pvstate, pvars);
 }
 
 // ----------------------------------------------------------------
