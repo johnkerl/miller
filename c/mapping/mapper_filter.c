@@ -212,6 +212,10 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 		.pctx                     = pctx,
 		.pbind_stack              = NULL,
 		.ploop_stack              = NULL,
+		.return_state = {
+			.returned = FALSE,
+			.retval = mv_absent(),
+		}
 	};
 
 	mv_t val = pstate->pevaluator->pprocess_func(pstate->pevaluator->pvstate, &variables);

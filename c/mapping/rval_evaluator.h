@@ -39,6 +39,11 @@
 
 struct _rval_evaluator_t; // forward reference for method declarations
 
+typedef struct _return_state_t {
+	int returned;
+	mv_t retval;
+} return_state_t;
+
 typedef struct _variables_t {
 	lrec_t*          pinrec;
 	lhmsmv_t*        ptyped_overlay;
@@ -47,6 +52,7 @@ typedef struct _variables_t {
 	context_t*       pctx;
 	bind_stack_t*    pbind_stack;
 	loop_stack_t*    ploop_stack;
+	return_state_t   return_state;
 } variables_t;
 
 typedef mv_t rval_evaluator_process_func_t(void* pvstate, variables_t* pvars);

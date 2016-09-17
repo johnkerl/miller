@@ -116,6 +116,8 @@ static void handle_statement_list_with_break_continue(
 	cst_outputs_t* pcst_outputs);
 
 static cst_statement_handler_t handle_subr_callsite;
+static cst_statement_handler_t handle_return_void;
+static cst_statement_handler_t handle_return_value;
 
 static cst_statement_handler_t handle_local_variable_assignment;
 static cst_statement_handler_t handle_srec_assignment;
@@ -724,7 +726,6 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->psubr_defsite                        = NULL;
 	pstatement->local_variable_name                  = NULL;
 	pstatement->preturn_evaluator                    = NULL;
-	pstatement->is_return_void                       = FALSE;
 	pstatement->pblock_handler                       = NULL;
 	pstatement->poosvar_lhs_keylist_evaluators       = NULL;
 	pstatement->pemit_keylist_evaluators             = NULL;
@@ -776,6 +777,7 @@ static mlr_dsl_cst_statement_t* alloc_return_value(mlr_dsl_cst_t* pcst, mlr_dsl_
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
 	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
 		type_inferencing, context_flags);
+	pstatement->pnode_handler = handle_return_value;
 	return pstatement;
 }
 
@@ -783,7 +785,7 @@ static mlr_dsl_cst_statement_t* alloc_return_void(mlr_dsl_cst_t* pcst, mlr_dsl_a
 	int type_inferencing, int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
-	pstatement->is_return_void = TRUE;
+	pstatement->pnode_handler = handle_return_void;
 	return pstatement;
 }
 
@@ -1996,6 +1998,10 @@ void mlr_dsl_cst_handle_statement_list(
 	for (sllve_t* pe = pcst_statements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+		// The UDF/subroutine executor will clear the flag, and consume the retval if there is one.
+		if (pvars->return_state.returned) {
+			break;
+		}
 	}
 }
 
@@ -2010,6 +2016,10 @@ static void handle_statement_list_with_break_continue(
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) != 0) {
+			break;
+		}
+		// The UDF/subroutine executor will clear the flag, and consume the retval if there is one.
+		if (pvars->return_state.returned) {
 			break;
 		}
 	}
@@ -2028,6 +2038,25 @@ static void handle_subr_callsite(
 
 	mlr_dsl_cst_execute_subroutine(pstatement->psubr_defsite, pvars, pcst_outputs, pstatement->subr_callsite_arity,
 		pstatement->subr_callsite_arguments);
+}
+
+// ----------------------------------------------------------------
+static void handle_return_void(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	pvars->return_state.returned = TRUE;
+}
+
+// ----------------------------------------------------------------
+static void handle_return_value(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	pvars->return_state.returned = TRUE;
+	pvars->return_state.retval = pstatement->preturn_evaluator->pprocess_func(pstatement->preturn_evaluator->pvstate, pvars);
 }
 
 // ----------------------------------------------------------------
