@@ -367,9 +367,8 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 
 	// xxx temp make separate method
 	// xxx cmt why
-	// xxx replace with while/pop loop
-	for (sllve_t* pe = pcst->psubr_callsite_statements_to_resolve->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+	while (pcst->psubr_callsite_statements_to_resolve->phead != NULL) {
+		mlr_dsl_cst_statement_t* pstatement = sllv_pop(pcst->psubr_callsite_statements_to_resolve);
 		subr_callsite_t* psubr_callsite = pstatement->psubr_callsite;
 
 		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -437,6 +436,9 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	sllv_free(pcst->pmain_statements);
 	sllv_free(pcst->pend_statements);
 	fmgr_free(pcst->pfmgr);
+
+	// Void-star payloads already popped and freed during symbol-resolution phase of CST alloc
+	sllv_free(pcst->psubr_callsite_statements_to_resolve);
 
 	for (lhmsve_t* pe = pcst->psubr_defsites->phead; pe != NULL; pe = pe->pnext) {
 		subr_defsite_t* psubr_defsite = pe->pvvalue;

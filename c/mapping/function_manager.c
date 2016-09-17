@@ -396,7 +396,7 @@ typedef struct _rval_evaluator_udf_callsite_state_t {
 	int arity;
 	rval_evaluator_t** pevals;
 	mv_t* args;
-	udf_defsite_state_t* pdefsite_state;
+	udf_defsite_state_t* pdefsite_state; // xxx delay until all functions are defined
 } rval_evaluator_udf_callsite_state_t;
 
 static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvars) {
@@ -459,6 +459,7 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_d
 	char* function_name = pnode->text;
 	int user_provided_arity = pnode->pchildren->length;
 
+	// xxx delay lookup
 	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states, function_name);
 	if (pudf_defsite_state != NULL) {
 		int udf_arity = pudf_defsite_state->arity;
@@ -468,6 +469,7 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_d
 			exit(1);
 		}
 
+		// xxx delay
 		rval_evaluator_t* pcallsite_evaluator = fmgr_alloc_from_udf_callsite(pfmgr, pudf_defsite_state,
 			pnode, type_inferencing, context_flags);
 
