@@ -6,6 +6,13 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
+REQ:
+* top items as cookbook entry:
+    $ mlr stats1 -a count -f a -g a then sort -nr a_count then head -n 2 ../data/big.dkvp
+    a=eks,a_count=200322
+    a=wye,a_count=200023
+  -> make that into a verb for keystroke-reduction?
+
 JSON formatting:
 * indent by two more for jvstack
 ? rework comma placement for jvstack?
