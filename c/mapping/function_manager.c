@@ -429,6 +429,9 @@ static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite
 	rval_evaluator_t* pudf_callsite_evaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 	rval_evaluator_udf_callsite_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_udf_callsite_state_t));
 
+	// xxx define a callsite info struct w/ ctor/dtor
+	// xxx push to a to-be-resolved list
+	// xxx make sure the dtor gets called
 	pstate->arity = pnode->pchildren->length;
 	pstate->pevals = mlr_malloc_or_die(pstate->arity * sizeof(rval_evaluator_t*));
 	int i = 0;
