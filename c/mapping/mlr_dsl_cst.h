@@ -262,6 +262,9 @@ typedef struct _subr_callsite_t {
 	int   context_flags;
 } subr_callsite_t;
 
+subr_callsite_t* subr_callsite_alloc(char* name, int arity, int type_inferencing, int context_flags);
+void subr_callsite_free(subr_callsite_t* psubr_callsite);
+
 typedef struct _subr_defsite_t {
 	char*     name;
 	int       arity;

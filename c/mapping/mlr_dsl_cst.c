@@ -365,14 +365,15 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 		}
 	}
 
-	// xxx temp make separate method
-	// xxx cmt why
+	// Now that all subroutine/function definitions have been done, resolve
+	// their callsites whose locations we stashed during the CST build. (Without
+	// this delayed resolution, there could be no recursion, and subroutines
+	// could call one another only in the reverse order of their definition.
+	// E.g. if 's' is defined and then 't', then t could call s but s could not
+	// call t [subroutine not defined yet], and neither could call itself.)
 	while (pcst->psubr_callsite_statements_to_resolve->phead != NULL) {
 		mlr_dsl_cst_statement_t* pstatement = sllv_pop(pcst->psubr_callsite_statements_to_resolve);
 		subr_callsite_t* psubr_callsite = pstatement->psubr_callsite;
-
-		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		// xxx make func
 		subr_defsite_t* psubr_defsite = lhmsv_get(pcst->psubr_defsites, psubr_callsite->name);
 		if (psubr_defsite == NULL) {
 			fprintf(stderr, "%s: subroutine \"%s\" not found.\n", MLR_GLOBALS.bargv0, psubr_callsite->name);
@@ -384,7 +385,6 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 			exit(1);
 		}
 		pstatement->psubr_defsite = psubr_defsite;
-		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	}
 
 	return pcst;
@@ -784,26 +784,19 @@ static mlr_dsl_cst_statement_t* alloc_return_void(mlr_dsl_cst_t* pcst, mlr_dsl_a
 	return pstatement;
 }
 
+// xxx rename
 static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
-
 	int callsite_arity = pname_node->pchildren->length;
 
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// xxx make ctor/dtor
-	subr_callsite_t* psubr_callsite = mlr_malloc_or_die(sizeof(subr_callsite_t));
-	psubr_callsite->name             = pname_node->text;
-	psubr_callsite->arity            = callsite_arity;
-	psubr_callsite->type_inferencing = type_inferencing;
-	psubr_callsite->context_flags    = context_flags;
-
-	pstatement->psubr_callsite = psubr_callsite;
+	pstatement->psubr_callsite = subr_callsite_alloc(pname_node->text, callsite_arity,
+		type_inferencing, context_flags);
+	// Remember this callsite to be resolved later, after all subroutine definitions have been done.
 	sllv_append(pcst->psubr_callsite_statements_to_resolve, pstatement);
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 	pstatement->subr_callsite_argument_evaluators = mlr_malloc_or_die(callsite_arity * sizeof(rval_evaluator_t*));
 	pstatement->subr_callsite_arguments = mlr_malloc_or_die(callsite_arity * sizeof(mv_t));
@@ -817,6 +810,22 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl
 
 	pstatement->pnode_handler = handle_subr_callsite;
 	return pstatement;
+}
+
+subr_callsite_t* subr_callsite_alloc(char* name, int arity, int type_inferencing, int context_flags) {
+	subr_callsite_t* psubr_callsite  = mlr_malloc_or_die(sizeof(subr_callsite_t));
+	psubr_callsite->name             = mlr_strdup_or_die(name);
+	psubr_callsite->arity            = arity;
+	psubr_callsite->type_inferencing = type_inferencing;
+	psubr_callsite->context_flags    = context_flags;
+	return psubr_callsite;
+}
+
+void subr_callsite_free(subr_callsite_t* psubr_callsite) {
+	if (psubr_callsite == NULL)
+		return;
+	free(psubr_callsite->name);
+	free(psubr_callsite);
 }
 
 // ----------------------------------------------------------------
@@ -1820,6 +1829,7 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 		}
 		free(pstatement->subr_callsite_arguments);
 	}
+	subr_callsite_free(pstatement->psubr_callsite);
 
 	if (pstatement->preturn_evaluator != NULL) {
 		pstatement->preturn_evaluator->pfree_func(pstatement->preturn_evaluator);
