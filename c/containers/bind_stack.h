@@ -22,6 +22,7 @@
 // have access to k; the latter should not.
 
 // ----------------------------------------------------------------
+// xxx privatize
 typedef struct _bind_stack_frame_t {
 	lhmsmv_t*  pbindings;
 	int        fenced;

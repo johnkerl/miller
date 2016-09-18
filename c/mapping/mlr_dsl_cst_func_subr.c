@@ -135,7 +135,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	// Bind parameters to arguments
 	bind_stack_push(pvars->pbind_stack, pstate->pframe);
 	for (int i = 0; i < arity; i++) {
-		lhmsmv_put(pstate->pframe->pbindings, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
+		bind_stack_set(pvars->pbind_stack, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -264,7 +264,7 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 	bind_stack_push(pvars->pbind_stack, pstate->pframe);
 
 	for (int i = 0; i < pstate->arity; i++) {
-		lhmsmv_put(pstate->pframe->pbindings, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
+		bind_stack_set(pvars->pbind_stack, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
 	}
 
 	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {

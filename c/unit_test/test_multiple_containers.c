@@ -588,8 +588,8 @@ static char* test_bind_stack() {
 	bind_stack_push(pstack, pframe0);
 	bind_stack_print(pstack);
 
-	lhmsmv_put(pframe0->pbindings, "x", smv("1"), NO_FREE);
-	lhmsmv_put(pframe0->pbindings, "y", smv("2"), NO_FREE);
+	bind_stack_set(pstack, "x", smv("1"), NO_FREE);
+	bind_stack_set(pstack, "y", smv("2"), NO_FREE);
 	bind_stack_print(pstack);
 
 	mu_assert_lf(bind_stack_resolve(pstack, "x") != NULL);
@@ -618,7 +618,7 @@ static char* test_bind_stack() {
 	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), imv(2)));
 	mu_assert_lf(bind_stack_resolve(pstack, "z") == NULL);
 
-	lhmsmv_put(pframe2->pbindings, "x", smv("three"), NO_FREE);
+	bind_stack_set(pstack, "x", smv("three"), NO_FREE);
 	bind_stack_print(pstack);
 
 	mu_assert_lf(bind_stack_resolve(pstack, "x") != NULL);
