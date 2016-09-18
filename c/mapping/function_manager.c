@@ -69,6 +69,8 @@ fmgr_t* fmgr_alloc() {
 
 	pfmgr->pudf_names_to_defsite_states = lhmsv_alloc();
 
+	pfmgr->pudf_callsite_evaluators_to_resolve = sllv_alloc();
+
 	return pfmgr;
 }
 
@@ -84,6 +86,7 @@ void fmgr_free(fmgr_t* pfmgr) {
 		free(pdefsite_state);
 	}
 	lhmsv_free(pfmgr->pudf_names_to_defsite_states);
+	sllv_free(pfmgr->pudf_callsite_evaluators_to_resolve);
 	free(pfmgr);
 }
 
@@ -446,6 +449,7 @@ static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite
 		pstate->args[i] = mv_absent();
 	}
 
+	// xxx set to null
 	pstate->pdefsite_state = pdefsite_state;
 
 	pudf_callsite_evaluator->pvstate = pstate;
@@ -463,6 +467,7 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_d
 	int user_provided_arity = pnode->pchildren->length;
 
 	// xxx delay lookup
+	// xxx callsite info: name, arity, ti, cf.
 	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states, function_name);
 	if (pudf_defsite_state != NULL) {
 		int udf_arity = pudf_defsite_state->arity;
@@ -475,6 +480,9 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_d
 		// xxx delay
 		rval_evaluator_t* pcallsite_evaluator = fmgr_alloc_from_udf_callsite(pfmgr, pudf_defsite_state,
 			pnode, type_inferencing, context_flags);
+		// Remember this callsite to a function which may or may not have been defined yet.
+		// Then later we can resolve them to point to UDF bodies which have been defined.
+		sllv_append(pfmgr->pudf_callsite_evaluators_to_resolve, pcallsite_evaluator);
 
 		return pcallsite_evaluator;
 	}

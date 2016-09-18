@@ -31,7 +31,10 @@ struct _function_lookup_t; // Private to the .c file
 typedef struct _fmgr_t {
 	struct _function_lookup_t * function_lookup_table; // Built-ins
 	hss_t* built_in_function_names;                    // Built-ins
-	lhmsv_t* pudf_names_to_defsite_states;             // UDFs
+	lhmsv_t* pudf_names_to_defsite_states;             // UDF bodies
+	// Function callsites, used to bootstrap (e.g. function f calls function g before the latter
+	// has been defined).
+	sllv_t* pudf_callsite_evaluators_to_resolve;
 } fmgr_t;
 
 // ----------------------------------------------------------------
