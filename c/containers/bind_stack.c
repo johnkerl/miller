@@ -6,6 +6,13 @@
 #define INITIAL_SIZE 32
 
 // ----------------------------------------------------------------
+// xxx privatize
+struct _bind_stack_frame_t {
+	lhmsmv_t*  pbindings;
+	int        fenced;
+};
+
+// ----------------------------------------------------------------
 bind_stack_t* bind_stack_alloc() {
 	bind_stack_t* pstack = mlr_malloc_or_die(sizeof(bind_stack_t));
 

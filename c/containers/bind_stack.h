@@ -22,11 +22,8 @@
 // have access to k; the latter should not.
 
 // ----------------------------------------------------------------
-// xxx privatize
-typedef struct _bind_stack_frame_t {
-	lhmsmv_t*  pbindings;
-	int        fenced;
-} bind_stack_frame_t;
+// Data private to .c file
+typedef struct _bind_stack_frame_t bind_stack_frame_t;
 
 typedef struct _bind_stack_t {
 	int num_used;
