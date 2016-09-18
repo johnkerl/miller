@@ -390,7 +390,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	}
 
 	// xxx cmt
-	fmgr_resolve_udf_callsites(pcst->pfmgr);
+	fmgr_resolve_func_callsites(pcst->pfmgr);
 
 	return pcst;
 }

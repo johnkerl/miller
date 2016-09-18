@@ -34,7 +34,7 @@ typedef struct _fmgr_t {
 	lhmsv_t* pudf_names_to_defsite_states;             // UDF bodies
 	// Function callsites, used to bootstrap (e.g. function f calls function g before the latter
 	// has been defined).
-	sllv_t* pudf_callsite_evaluators_to_resolve;
+	sllv_t* pfunc_callsite_evaluators_to_resolve;
 } fmgr_t;
 
 // ----------------------------------------------------------------
@@ -48,8 +48,8 @@ void fmgr_install_udf(fmgr_t* pfmgr, udf_defsite_state_t* pdefsitate_state);
 rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags);
 
-// Update all UDF callsites to point to UDF bodies, once all the latter have been defined.
-void fmgr_resolve_udf_callsites(fmgr_t* pfmgr);
+// Update all function callsites to point to UDF bodies, once all the latter have been defined.
+void fmgr_resolve_func_callsites(fmgr_t* pfmgr);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 void fmgr_list_functions(fmgr_t* pfmgr, FILE* output_stream, char* leader);

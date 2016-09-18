@@ -150,7 +150,9 @@ static char * test_numbers() {
 		p2node, plogxnode);
 
 	fmgr_t* pfmgr = fmgr_alloc();
+	// xxx separate entry point ..
 	rval_evaluator_t*  pastr = rval_evaluator_alloc_from_ast(p2logxnode, pfmgr, TYPE_INFER_STRING_FLOAT_INT, 0);
+	fmgr_resolve_func_callsites(pfmgr);
 	fmgr_free(pfmgr);
 
 	lrec_t* prec = lrec_unbacked_alloc();

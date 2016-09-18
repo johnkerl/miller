@@ -52,6 +52,8 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_func_name(char* fnnm,
 static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_regex_arg2_func_name(char* fnnm,
 	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3);
 
+static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev);
+
 // ----------------------------------------------------------------
 fmgr_t* fmgr_alloc() {
 	fmgr_t* pfmgr = mlr_malloc_or_die(sizeof(fmgr_t));
@@ -69,7 +71,7 @@ fmgr_t* fmgr_alloc() {
 
 	pfmgr->pudf_names_to_defsite_states = lhmsv_alloc();
 
-	pfmgr->pudf_callsite_evaluators_to_resolve = sllv_alloc();
+	pfmgr->pfunc_callsite_evaluators_to_resolve = sllv_alloc();
 
 	return pfmgr;
 }
@@ -86,7 +88,7 @@ void fmgr_free(fmgr_t* pfmgr) {
 		free(pdefsite_state);
 	}
 	lhmsv_free(pfmgr->pudf_names_to_defsite_states);
-	sllv_free(pfmgr->pudf_callsite_evaluators_to_resolve);
+	sllv_free(pfmgr->pfunc_callsite_evaluators_to_resolve);
 	free(pfmgr);
 }
 
@@ -102,7 +104,8 @@ void fmgr_install_udf(fmgr_t* pfmgr, udf_defsite_state_t* pdefsite_state) {
 			MLR_GLOBALS.bargv0, pdefsite_state->name);
 		exit(1);
 	}
-	lhmsv_put(pfmgr->pudf_names_to_defsite_states, mlr_strdup_or_die(pdefsite_state->name), pdefsite_state, FREE_ENTRY_KEY);
+	lhmsv_put(pfmgr->pudf_names_to_defsite_states, mlr_strdup_or_die(pdefsite_state->name), pdefsite_state,
+		FREE_ENTRY_KEY);
 }
 
 // ================================================================
@@ -298,7 +301,7 @@ static void fmgr_check_arity_with_report(fmgr_t* pfmgr, char* function_name,
 	int arity = -1;
 	arity_check_t result = check_arity(pfmgr->function_lookup_table, function_name, user_provided_arity, &arity);
 	if (result == ARITY_CHECK_NO_SUCH) {
-		fprintf(stderr, "Function name \"%s\" not found.\n", function_name);
+		fprintf(stderr, "%s: Function name \"%s\" not found.\n", MLR_GLOBALS.bargv0, function_name);
 		exit(1);
 	}
 	if (result == ARITY_CHECK_FAIL) {
@@ -306,12 +309,12 @@ static void fmgr_check_arity_with_report(fmgr_t* pfmgr, char* function_name,
 		// function. But this is overkill: there are unary and binary minus,
 		// and everything else has a single arity.
 		if (streq(function_name, "-")) {
-			fprintf(stderr, "Function named \"%s\" takes one argument or two; got %d.\n",
-				function_name, user_provided_arity);
+			fprintf(stderr, "%s: Function named \"%s\" takes one argument or two; got %d.\n",
+				MLR_GLOBALS.bargv0, function_name, user_provided_arity);
 		} else {
 		}
-			fprintf(stderr, "Function named \"%s\" takes %d argument%s; got %d.\n",
-				function_name, arity, (arity == 1) ? "" : "s", user_provided_arity);
+			fprintf(stderr, "%s: Function named \"%s\" takes %d argument%s; got %d.\n",
+				MLR_GLOBALS.bargv0, function_name, arity, (arity == 1) ? "" : "s", user_provided_arity);
 		exit(1);
 	}
 }
@@ -396,14 +399,10 @@ void fmgr_list_all_functions_raw(fmgr_t* pfmgr, FILE* output_stream) {
 
 // ================================================================
 typedef struct _rval_evaluator_udf_callsite_state_t {
-	char* function_name;
 	int arity;
-	int type_inferencing;
-	int context_flags;
-
 	rval_evaluator_t** pevals;
 	mv_t* args;
-	udf_defsite_state_t* pdefsite_state; // xxx delay until all functions are defined
+	udf_defsite_state_t* pdefsite_state;
 } rval_evaluator_udf_callsite_state_t;
 
 static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvars) {
@@ -424,7 +423,6 @@ static void rval_evaluator_udf_callsite_free(rval_evaluator_t* pevaluator) {
 		peval->pfree_func(peval);
 		mv_free(&pstate->args[i]);
 	}
-	free(pstate->function_name);
 	free(pstate->pevals);
 	free(pstate->args);
 	free(pstate);
@@ -437,13 +435,7 @@ static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite
 	rval_evaluator_t* pudf_callsite_evaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 	rval_evaluator_udf_callsite_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_udf_callsite_state_t));
 
-	// xxx define a callsite info struct w/ ctor/dtor
-	// xxx push to a to-be-resolved list
-	// xxx make sure the dtor gets called
-	pstate->function_name    = mlr_strdup_or_die(function_name);
-	pstate->arity            = pnode->pchildren->length;
-	pstate->type_inferencing = type_inferencing;
-	pstate->context_flags    = context_flags;
+	pstate->arity = pnode->pchildren->length;
 
 	pstate->pevals = mlr_malloc_or_die(pstate->arity * sizeof(rval_evaluator_t*));
 	int i = 0;
@@ -458,7 +450,6 @@ static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite
 		pstate->args[i] = mv_absent();
 	}
 
-	// xxx set to null
 	pstate->pdefsite_state = pdefsite_state;
 
 	pudf_callsite_evaluator->pvstate = pstate;
@@ -468,21 +459,75 @@ static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite
 	return pudf_callsite_evaluator;
 }
 
-static void resolve_udf_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
-	//rval_evaluator_udf_callsite_state_t* pstate = pev->pvstate;
-	// xxx
+// ================================================================
+typedef struct _unresolved_func_callsite_state_t {
+	char* function_name;
+	int arity;
+	int type_inferencing;
+	int context_flags;
+	mlr_dsl_ast_node_t* pnode;
+} unresolved_func_callsite_state_t;
+
+static unresolved_func_callsite_state_t* unresolved_callsite_alloc(char* function_name, int arity,
+	int type_inferencing, int context_flags, mlr_dsl_ast_node_t* pnode)
+{
+	unresolved_func_callsite_state_t* pstate = mlr_malloc_or_die(sizeof(unresolved_func_callsite_state_t));
+	pstate->function_name    = mlr_strdup_or_die(function_name);
+	pstate->arity            = arity;
+	pstate->type_inferencing = type_inferencing;
+	pstate->context_flags    = context_flags;
+	pstate->pnode            = pnode;
+	return pstate;
 }
 
-// ================================================================
+static void unresolved_callsite_free(unresolved_func_callsite_state_t* pstate) {
+	if (pstate == NULL)
+		return;
+	free(pstate->function_name);
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
 rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
 	char* function_name = pnode->text;
 	int user_provided_arity = pnode->pchildren->length;
 
-	// xxx delay lookup
-	// xxx callsite info: function_name, arity, ti, cf.
-	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states, function_name);
+	unresolved_func_callsite_state_t* pstate = unresolved_callsite_alloc(function_name, user_provided_arity,
+		type_inferencing, context_flags, pnode);
+
+	rval_evaluator_t* pev = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pev->pvstate       = pstate;
+	pev->pprocess_func = NULL;
+	pev->pfree_func    = NULL;
+
+	// Remember this callsite to a function which may or may not have been defined yet.
+	// Then later we can resolve them to point to UDF bodies which have been defined.
+	sllv_append(pfmgr->pfunc_callsite_evaluators_to_resolve, pev);
+
+	return pev;
+}
+
+// ----------------------------------------------------------------
+void fmgr_resolve_func_callsites(fmgr_t* pfmgr) {
+	while (pfmgr->pfunc_callsite_evaluators_to_resolve->phead != NULL) {
+		rval_evaluator_t* pev = sllv_pop(pfmgr->pfunc_callsite_evaluators_to_resolve);
+		unresolved_func_callsite_state_t* ptemp_state = pev->pvstate;
+		resolve_func_callsite(pfmgr, pev);
+		unresolved_callsite_free(ptemp_state);
+	}
+}
+
+static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
+	unresolved_func_callsite_state_t* pstate = pev->pvstate;
+	char* function_name       = pstate->function_name;
+	int   user_provided_arity = pstate->arity;
+	int   type_inferencing    = pstate->type_inferencing;
+	int   context_flags       = pstate->context_flags;
+	mlr_dsl_ast_node_t* pnode = pstate->pnode;
+
+	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states, pstate->function_name);
 	if (pudf_defsite_state != NULL) {
 		int udf_arity = pudf_defsite_state->arity;
 		if (user_provided_arity != udf_arity) {
@@ -491,14 +536,11 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_d
 			exit(1);
 		}
 
-		// xxx delay
 		rval_evaluator_t* pcallsite_evaluator = fmgr_alloc_from_udf_callsite(pfmgr, pudf_defsite_state,
 			pnode, function_name, user_provided_arity, type_inferencing, context_flags);
-		// Remember this callsite to a function which may or may not have been defined yet.
-		// Then later we can resolve them to point to UDF bodies which have been defined.
-		sllv_append(pfmgr->pudf_callsite_evaluators_to_resolve, pcallsite_evaluator);
 
-		return pcallsite_evaluator;
+		*pev = *pcallsite_evaluator;
+		return;
 	}
 
 	fmgr_check_arity_with_report(pfmgr, function_name, user_provided_arity);
@@ -570,14 +612,8 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_d
 		fprintf(stderr, "Miller: unrecognized function name \"%s\".\n", function_name);
 		exit(1);
 	}
-	return pevaluator;
-}
 
-void fmgr_resolve_udf_callsites(fmgr_t* pfmgr) {
-	for (sllve_t* pe = pfmgr->pudf_callsite_evaluators_to_resolve->phead; pe != NULL; pe = pe->pnext) {
-		rval_evaluator_t* pev = pe->pvvalue;
-		resolve_udf_callsite(pfmgr, pev);
-	}
+	*pev = *pevaluator;
 }
 
 // ================================================================

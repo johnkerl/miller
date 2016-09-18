@@ -169,7 +169,9 @@ static mapper_t* mapper_filter_alloc(ap_state_t* pargp, char* mlr_dsl_expression
 	pstate->comment_stripped_mlr_dsl_expression = comment_stripped_mlr_dsl_expression;
 	pstate->past       = past;
 	pstate->pfmgr      = fmgr_alloc();
+	// xxx make a separate entry point ...
 	pstate->pevaluator = rval_evaluator_alloc_from_ast(past, pstate->pfmgr, type_inferencing, context_flags);
+	fmgr_resolve_func_callsites(pstate->pfmgr);
 	pstate->poosvars   = mlhmmv_alloc();
 	pstate->do_exclude = do_exclude;
 
