@@ -723,6 +723,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->pnode_handler                        = NULL;
 	pstatement->subr_callsite_argument_evaluators    = NULL;
 	pstatement->subr_callsite_arguments              = NULL;
+	pstatement->psubr_callsite                       = NULL;
 	pstatement->psubr_defsite                        = NULL;
 	pstatement->local_variable_name                  = NULL;
 	pstatement->preturn_evaluator                    = NULL;
