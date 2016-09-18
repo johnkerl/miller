@@ -88,9 +88,9 @@ mv_t* bind_stack_resolve(bind_stack_t* pstack, char* key) {
 }
 
 // ----------------------------------------------------------------
-void bind_stack_set(bind_stack_t* pstack, char* name, mv_t* pmv) {
+void bind_stack_set(bind_stack_t* pstack, char* name, mv_t* pmv, char free_flags) {
 	bind_stack_frame_t* ptop_frame = pstack->ppframes[pstack->num_used - 1];
-	lhmsmv_put(ptop_frame->pbindings, name, pmv, FREE_ENTRY_VALUE);
+	lhmsmv_put(ptop_frame->pbindings, name, pmv, free_flags);
 }
 
 // ----------------------------------------------------------------

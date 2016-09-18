@@ -2080,7 +2080,7 @@ static void handle_local_variable_assignment(
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 
 	if (mv_is_present(&val)) {
-		bind_stack_set(pvars->pbind_stack, pstatement->local_lhs_variable_name, &val);
+		bind_stack_set(pvars->pbind_stack, pstatement->local_lhs_variable_name, &val, FREE_ENTRY_VALUE);
 	} else {
 		mv_free(&val);
 	}
@@ -2280,7 +2280,7 @@ static void handle_local_variable_definition(
 {
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	bind_stack_set(pvars->pbind_stack, pstatement->local_variable_name, &val);
+	bind_stack_set(pvars->pbind_stack, pstatement->local_variable_name, &val, FREE_ENTRY_VALUE);
 }
 
 // ----------------------------------------------------------------
@@ -2493,8 +2493,8 @@ static void handle_for_srec(
 		mv_t mvval = pstatement->ptype_infererenced_srec_field_getter(pe, pcopyoverlay);
 		mv_t mvkey = mv_from_string_no_free(pe->key);
 
-		lhmsmv_put(pstatement->pframe->pbindings, pstatement->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
-		lhmsmv_put(pstatement->pframe->pbindings, pstatement->for_v_name, &mvval, FREE_ENTRY_VALUE);
+		bind_stack_set(pvars->pbind_stack, pstatement->for_srec_k_name, &mvkey, FREE_ENTRY_VALUE);
+		bind_stack_set(pvars->pbind_stack, pstatement->for_v_name, &mvval, FREE_ENTRY_VALUE);
 
 		pstatement->pblock_handler(pstatement->pblock_statements, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
@@ -2572,7 +2572,7 @@ static void handle_for_oosvar_aux(
 			// Loop over keys at this submap level:
 			for (mlhmmv_level_entry_t* pe = submap.u.pnext_level->phead; pe != NULL; pe = pe->pnext) {
 				// Bind the k-name to the entry-key mlrval:
-				lhmsmv_put(pstatement->pframe->pbindings, prest_for_k_names->value, &pe->level_key, NO_FREE);
+				bind_stack_set(pvars->pbind_stack, prest_for_k_names->value, &pe->level_key, NO_FREE);
 				// Recurse into the next-level submap:
 				handle_for_oosvar_aux(pstatement, pvars, pcst_outputs, pe->level_value, prest_for_k_names->pnext);
 
@@ -2592,7 +2592,7 @@ static void handle_for_oosvar_aux(
 			// The submap was too deep for the user-specified k-names; there are no terminals here.
 		} else {
 			// Bind the v-name to the terminal mlrval:
-			lhmsmv_put(pstatement->pframe->pbindings, pstatement->for_v_name, &submap.u.mlrval, NO_FREE);
+			bind_stack_set(pvars->pbind_stack, pstatement->for_v_name, &submap.u.mlrval, NO_FREE);
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pblock_statements, pvars, pcst_outputs);
 		}
