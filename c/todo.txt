@@ -23,8 +23,7 @@ JSON formatting:
 
 UDFs/subrs/localvars:
 
-! handle_return_void / handle_return_value @ mlr_dsl_cst.c
-
+! separate pframes for recursives
 ! deferred func/subr name bindings: make recursion possible; more generally, calls to something as yet undefined.
   - needs a separate link step; compile with prototypes only, and resolve them at link time.
   - clear boundvars at record end ............. efficiently so ...................
