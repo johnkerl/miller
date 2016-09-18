@@ -313,8 +313,8 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	pcst->pbegin_statements = sllv_alloc();
 	pcst->pmain_statements  = sllv_alloc();
 	pcst->pend_statements   = sllv_alloc();
-	pcst->pfmgr = fmgr_alloc();
-	pcst->psubr_defsites = lhmsv_alloc();
+	pcst->pfmgr             = fmgr_alloc();
+	pcst->psubr_defsites    = lhmsv_alloc();
 	pcst->psubr_callsite_statements_to_resolve = sllv_alloc();
 
 	udf_defsite_state_t* pudf_defsite_state = NULL;
@@ -365,6 +365,8 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 		}
 	}
 
+	// xxx move to separate method
+
 	// Now that all subroutine/function definitions have been done, resolve
 	// their callsites whose locations we stashed during the CST build. (Without
 	// this delayed resolution, there could be no recursion, and subroutines
@@ -386,6 +388,9 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 		}
 		pstatement->psubr_defsite = psubr_defsite;
 	}
+
+	// xxx cmt
+	fmgr_resolve_udf_callsites(pcst->pfmgr);
 
 	return pcst;
 }
