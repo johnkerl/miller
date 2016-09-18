@@ -585,6 +585,7 @@ static char* test_bind_stack() {
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	bind_stack_frame_t* pframe0 = bind_stack_frame_alloc_unfenced();
+	// xxx enter/exit logic
 	bind_stack_push(pstack, pframe0);
 	bind_stack_print(pstack);
 
@@ -641,6 +642,9 @@ static char* test_bind_stack() {
 	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), smv("2")));
 	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), imv(2)));
 	mu_assert_lf(bind_stack_resolve(pstack, "z") == NULL);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// xxx recursion test
 
 	bind_stack_free(pstack);
 

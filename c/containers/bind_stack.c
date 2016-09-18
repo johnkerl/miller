@@ -41,23 +41,21 @@ void bind_stack_free(bind_stack_t* pstack) {
 }
 
 // ----------------------------------------------------------------
-bind_stack_frame_t* bind_stack_frame_alloc_unfenced() {
+static inline bind_stack_frame_t* bind_stack_frame_alloc(int fenced, int ephemeral) {
 	bind_stack_frame_t* pframe = mlr_malloc_or_die(sizeof(bind_stack_frame_t));
 	pframe->pbindings = lhmsmv_alloc();
-	pframe->fenced = FALSE;
-	pframe->in_use = FALSE;
-	pframe->ephemeral = FALSE;
+	pframe->fenced    = fenced;
+	pframe->in_use    = FALSE;
+	pframe->ephemeral = ephemeral;
 	return pframe;
 }
 
-// ----------------------------------------------------------------
+bind_stack_frame_t* bind_stack_frame_alloc_unfenced() {
+	return bind_stack_frame_alloc(FALSE, FALSE);
+}
+
 bind_stack_frame_t* bind_stack_frame_alloc_fenced() {
-	bind_stack_frame_t* pframe = mlr_malloc_or_die(sizeof(bind_stack_frame_t));
-	pframe->pbindings = lhmsmv_alloc();
-	pframe->fenced = TRUE;
-	pframe->in_use = FALSE;
-	pframe->ephemeral = FALSE;
-	return pframe;
+	return bind_stack_frame_alloc(TRUE, FALSE);
 }
 
 // ----------------------------------------------------------------
@@ -69,11 +67,23 @@ void bind_stack_frame_free(bind_stack_frame_t* pframe) {
 // ----------------------------------------------------------------
 // xxx cmt
 bind_stack_frame_t* bind_stack_frame_enter(bind_stack_frame_t* pframe) {
-	return pframe; // xxx temp
+	if (pframe->in_use) {
+		bind_stack_frame_t* pephemeral = bind_stack_frame_alloc(pframe->fenced, TRUE);
+		pephemeral->in_use = TRUE;
+		return pephemeral;
+	} else {
+		pframe->in_use = TRUE;
+		return pframe;
+	}
 }
 
 void bind_stack_frame_exit(bind_stack_frame_t* pframe) {
-	// xxx temp
+	if (pframe->ephemeral) {
+		bind_stack_frame_free(pframe);
+	} else {
+		lhmsmv_clear(pframe->pbindings);
+		pframe->in_use = FALSE;
+	}
 }
 
 // ----------------------------------------------------------------
@@ -85,7 +95,6 @@ void bind_stack_push(bind_stack_t* pstack, bind_stack_frame_t* pframe) {
 	}
 	pstack->ppframes[pstack->num_used] = pframe;
 	pstack->num_used++;
-	pframe->in_use = TRUE;
 }
 
 // ----------------------------------------------------------------
@@ -95,10 +104,6 @@ void bind_stack_pop(bind_stack_t* pstack) {
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
-
-	bind_stack_frame_t* pframe = pstack->ppframes[pstack->num_used-1];
-	pframe->in_use = TRUE;
-	lhmsmv_clear(pframe->pbindings);
 
 	pstack->num_used--;
 }
