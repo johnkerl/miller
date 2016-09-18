@@ -42,6 +42,10 @@ bind_stack_frame_t* bind_stack_frame_alloc_unfenced();
 bind_stack_frame_t* bind_stack_frame_alloc_fenced();
 void bind_stack_frame_free(bind_stack_frame_t* pframe);
 
+// xxx comment
+bind_stack_frame_t* bind_stack_frame_enter(bind_stack_frame_t* pframe);
+void bind_stack_frame_exit(bind_stack_frame_t* pframe);
+
 // ----------------------------------------------------------------
 // Scope entry/exit
 

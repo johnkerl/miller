@@ -2372,7 +2372,8 @@ static void handle_conditional_block(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	bind_stack_push(pvars->pbind_stack, pstatement->pframe);
+	bind_stack_frame_t* pframe = bind_stack_frame_enter(pstatement->pframe);
+	bind_stack_push(pvars->pbind_stack, pframe);
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
@@ -2382,7 +2383,10 @@ static void handle_conditional_block(
 			pstatement->pblock_handler(pstatement->pblock_statements, pvars, pcst_outputs);
 		}
 	}
+	// xxx unset on the exit func not the pop
 	bind_stack_pop(pvars->pbind_stack);
+	// xxx_exit func(pframe)
+	bind_stack_frame_exit(pframe);
 }
 
 // ----------------------------------------------------------------

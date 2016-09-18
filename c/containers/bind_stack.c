@@ -9,7 +9,9 @@
 // xxx privatize
 struct _bind_stack_frame_t {
 	lhmsmv_t*  pbindings;
-	int        fenced;
+	char       fenced;
+	char       in_use;
+	char       ephemeral;
 };
 
 // ----------------------------------------------------------------
@@ -43,6 +45,8 @@ bind_stack_frame_t* bind_stack_frame_alloc_unfenced() {
 	bind_stack_frame_t* pframe = mlr_malloc_or_die(sizeof(bind_stack_frame_t));
 	pframe->pbindings = lhmsmv_alloc();
 	pframe->fenced = FALSE;
+	pframe->in_use = FALSE;
+	pframe->ephemeral = FALSE;
 	return pframe;
 }
 
@@ -51,6 +55,8 @@ bind_stack_frame_t* bind_stack_frame_alloc_fenced() {
 	bind_stack_frame_t* pframe = mlr_malloc_or_die(sizeof(bind_stack_frame_t));
 	pframe->pbindings = lhmsmv_alloc();
 	pframe->fenced = TRUE;
+	pframe->in_use = FALSE;
+	pframe->ephemeral = FALSE;
 	return pframe;
 }
 
@@ -58,6 +64,16 @@ bind_stack_frame_t* bind_stack_frame_alloc_fenced() {
 void bind_stack_frame_free(bind_stack_frame_t* pframe) {
 	lhmsmv_free(pframe->pbindings);
 	free(pframe);
+}
+
+// ----------------------------------------------------------------
+// xxx cmt
+bind_stack_frame_t* bind_stack_frame_enter(bind_stack_frame_t* pframe) {
+	return pframe; // xxx temp
+}
+
+void bind_stack_frame_exit(bind_stack_frame_t* pframe) {
+	// xxx temp
 }
 
 // ----------------------------------------------------------------
@@ -69,6 +85,7 @@ void bind_stack_push(bind_stack_t* pstack, bind_stack_frame_t* pframe) {
 	}
 	pstack->ppframes[pstack->num_used] = pframe;
 	pstack->num_used++;
+	pframe->in_use = TRUE;
 }
 
 // ----------------------------------------------------------------
@@ -78,7 +95,11 @@ void bind_stack_pop(bind_stack_t* pstack) {
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
-	lhmsmv_clear(pstack->ppframes[pstack->num_used-1]->pbindings);
+
+	bind_stack_frame_t* pframe = pstack->ppframes[pstack->num_used-1];
+	pframe->in_use = TRUE;
+	lhmsmv_clear(pframe->pbindings);
+
 	pstack->num_used--;
 }
 
