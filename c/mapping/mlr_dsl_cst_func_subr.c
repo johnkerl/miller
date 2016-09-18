@@ -133,8 +133,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Bind parameters to arguments
-	bind_stack_frame_t* pframe = bind_stack_frame_enter(pstate->pframe);
-	bind_stack_push(pvars->pbind_stack, pframe);
+	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstate->pframe));
 	for (int i = 0; i < arity; i++) {
 		bind_stack_set(pvars->pbind_stack, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
 	}
@@ -158,8 +157,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	bind_stack_frame_exit(pframe);
-	bind_stack_pop(pvars->pbind_stack);
+	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
 
 	return retval;
 }
@@ -262,8 +260,7 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 	cst_outputs_t* pcst_outputs, int callsite_arity, mv_t* args)
 {
 	// Bind parameters to arguments
-	bind_stack_frame_t* pframe = bind_stack_frame_enter(pstate->pframe);
-	bind_stack_push(pvars->pbind_stack, pframe);
+	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstate->pframe));
 
 	for (int i = 0; i < pstate->arity; i++) {
 		bind_stack_set(pvars->pbind_stack, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
@@ -282,6 +279,5 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	bind_stack_frame_exit(pframe);
-	bind_stack_pop(pvars->pbind_stack);
+	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
 }

@@ -10,8 +10,8 @@
 struct _bind_stack_frame_t {
 	lhmsmv_t*  pbindings;
 	char       fenced;
-	char       in_use;
 	char       ephemeral;
+	char       in_use;
 };
 
 // ----------------------------------------------------------------
@@ -45,8 +45,8 @@ static inline bind_stack_frame_t* bind_stack_frame_alloc(int fenced, int ephemer
 	bind_stack_frame_t* pframe = mlr_malloc_or_die(sizeof(bind_stack_frame_t));
 	pframe->pbindings = lhmsmv_alloc();
 	pframe->fenced    = fenced;
-	pframe->in_use    = FALSE;
 	pframe->ephemeral = ephemeral;
+	pframe->in_use    = FALSE;
 	return pframe;
 }
 
@@ -98,14 +98,16 @@ void bind_stack_push(bind_stack_t* pstack, bind_stack_frame_t* pframe) {
 }
 
 // ----------------------------------------------------------------
-void bind_stack_pop(bind_stack_t* pstack) {
+bind_stack_frame_t* bind_stack_pop(bind_stack_t* pstack) {
 	if (pstack->num_used <= 0) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 
+	bind_stack_frame_t* pframe = pstack->ppframes[pstack->num_used-1];
 	pstack->num_used--;
+	return pframe;
 }
 
 // ----------------------------------------------------------------

@@ -52,8 +52,8 @@ void bind_stack_frame_exit(bind_stack_frame_t* pframe);
 // To be called on entry to scoped block
 void bind_stack_push(bind_stack_t* pstack, bind_stack_frame_t* pframe);
 
-// To be called on exit from scoped block. Clears the binding from the top frame.
-void bind_stack_pop(bind_stack_t* pstack);
+// To be called on exit from scoped block.
+bind_stack_frame_t* bind_stack_pop(bind_stack_t* pstack);
 
 // ----------------------------------------------------------------
 // Access within scope

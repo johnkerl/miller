@@ -2372,8 +2372,7 @@ static void handle_conditional_block(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	bind_stack_frame_t* pframe = bind_stack_frame_enter(pstatement->pframe);
-	bind_stack_push(pvars->pbind_stack, pframe);
+	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
@@ -2383,8 +2382,7 @@ static void handle_conditional_block(
 			pstatement->pblock_handler(pstatement->pblock_statements, pvars, pcst_outputs);
 		}
 	}
-	bind_stack_frame_exit(pframe);
-	bind_stack_pop(pvars->pbind_stack);
+	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
 }
 
 // ----------------------------------------------------------------
@@ -2401,13 +2399,11 @@ static void handle_if_head(
 		if (mv_is_non_null(&val)) {
 			mv_set_boolean_strict(&val);
 			if (val.u.boolv) {
-				bind_stack_frame_t* pframe = bind_stack_frame_enter(pitemnode->pframe);
-				bind_stack_push(pvars->pbind_stack, pframe);
+				bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pitemnode->pframe));
 
 				pstatement->pblock_handler(pitemnode->pblock_statements, pvars, pcst_outputs);
 
-				bind_stack_frame_exit(pframe);
-				bind_stack_pop(pvars->pbind_stack);
+				bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
 				break;
 			}
 		}
@@ -2420,8 +2416,7 @@ static void handle_while(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	bind_stack_frame_t* pframe = bind_stack_frame_enter(pstatement->pframe);
-	bind_stack_push(pvars->pbind_stack, pframe);
+	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 
 	loop_stack_push(pvars->ploop_stack);
@@ -2445,8 +2440,7 @@ static void handle_while(
 		}
 	}
 	loop_stack_pop(pvars->ploop_stack);
-	bind_stack_frame_exit(pframe);
-	bind_stack_pop(pvars->pbind_stack);
+	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
 }
 
 // ----------------------------------------------------------------
@@ -2455,8 +2449,7 @@ static void handle_do_while(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	bind_stack_frame_t* pframe = bind_stack_frame_enter(pstatement->pframe);
-	bind_stack_push(pvars->pbind_stack, pframe);
+	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
 	loop_stack_push(pvars->ploop_stack);
 
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
@@ -2482,8 +2475,7 @@ static void handle_do_while(
 		}
 	}
 	loop_stack_pop(pvars->ploop_stack);
-	bind_stack_frame_exit(pframe);
-	bind_stack_pop(pvars->pbind_stack);
+	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
 }
 
 // ----------------------------------------------------------------
@@ -2492,8 +2484,7 @@ static void handle_for_srec(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	bind_stack_frame_t* pframe = bind_stack_frame_enter(pstatement->pframe);
-	bind_stack_push(pvars->pbind_stack, pframe);
+	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
 	loop_stack_push(pvars->ploop_stack);
 	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
 	lrec_t* pcopyrec = lrec_copy(pvars->pinrec);
@@ -2518,8 +2509,7 @@ static void handle_for_srec(
 	lhmsmv_free(pcopyoverlay);
 	lrec_free(pcopyrec);
 	loop_stack_pop(pvars->ploop_stack);
-	bind_stack_frame_exit(pframe);
-	bind_stack_pop(pvars->pbind_stack);
+	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
 }
 
 // ----------------------------------------------------------------
@@ -2528,8 +2518,7 @@ static void handle_for_oosvar(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	bind_stack_frame_t* pframe = bind_stack_frame_enter(pstatement->pframe);
-	bind_stack_push(pvars->pbind_stack, pframe);
+	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
 	loop_stack_push(pvars->ploop_stack);
 
 	// Evaluate the keylist: e.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', find the value of $4 for
@@ -2567,8 +2556,7 @@ static void handle_for_oosvar(
 	sllmv_free(plhskeylist);
 
 	loop_stack_pop(pvars->ploop_stack);
-	bind_stack_frame_exit(pframe);
-	bind_stack_pop(pvars->pbind_stack);
+	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
 }
 
 static void handle_for_oosvar_aux(
