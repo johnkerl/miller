@@ -18,19 +18,24 @@ typedef struct _mapper_most_state_t {
 	slls_t* pgroup_by_field_names;
 	lhmslv_t* pcounts_by_group;
 	long long most_count;
+	int descending;
 } mapper_most_state_t;
 
 static void      mapper_most_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_most_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
-static mapper_t* mapper_most_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names, long long most_count);
+static mapper_t* mapper_most_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
+	long long most_count, int descending);
 static void      mapper_most_free(mapper_t* pmapper);
 
 static sllv_t* mapper_most_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
+static int descending_vcmp(const void* pva, const void* pvb);
+static int ascending_vcmp(const void* pva, const void* pvb);
+
 typedef struct _sort_pair_t {
 	slls_t* pgroup_by_field_values;
-	unsigned long long count;
+	long long count; // signed for sort-cmp callback
 } sort_pair_t;
 
 // ----------------------------------------------------------------
@@ -52,13 +57,14 @@ static mapper_t* mapper_most_parse_cli(int* pargi, int argc, char** argv,
 {
 	slls_t* pgroup_by_field_names = NULL;
 	long long most_count = DEFAULT_MOST_COUNT;
+	int descending = TRUE;
 
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_list_flag(pstate, "-f", &pgroup_by_field_names);
 	ap_define_long_long_flag(pstate,   "-n", &most_count);
-//	ap_define_true_flag(pstate,        "-n", &show_num_distinct_only);
+	ap_define_false_flag(pstate,       "-r", &descending);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_most_usage(stderr, argv[0], verb);
@@ -70,11 +76,13 @@ static mapper_t* mapper_most_parse_cli(int* pargi, int argc, char** argv,
 		return NULL;
 	}
 
-	return mapper_most_alloc(pstate, pgroup_by_field_names, most_count);
+	return mapper_most_alloc(pstate, pgroup_by_field_names, most_count, descending);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_most_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names, long long most_count) {
+static mapper_t* mapper_most_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
+	long long most_count, int descending)
+{
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_most_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_most_state_t));
@@ -83,6 +91,7 @@ static mapper_t* mapper_most_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_na
 	pstate->pgroup_by_field_names  = pgroup_by_field_names;
 	pstate->pcounts_by_group       = lhmslv_alloc();
 	pstate->most_count             = most_count;
+	pstate->descending             = descending;
 
 	pmapper->pvstate = pstate;
 	pmapper->pprocess_func = mapper_most_process;
@@ -142,7 +151,8 @@ static sllv_t* mapper_most_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 
 		// Sort by count
 		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-		// xxx sort
+		qsort(sort_pairs, input_length, sizeof(sort_pair_t),
+			pstate->descending ? descending_vcmp : ascending_vcmp);
 		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 		// Emit top n
@@ -164,4 +174,15 @@ static sllv_t* mapper_most_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		free(sort_pairs);
 		return poutrecs;
 	}
+}
+
+static int descending_vcmp(const void* pva, const void* pvb) {
+	const sort_pair_t* pa = pva;
+	const sort_pair_t* pb = pvb;
+	return pb->count - pa->count;
+}
+static int ascending_vcmp(const void* pva, const void* pvb) {
+	const sort_pair_t* pa = pva;
+	const sort_pair_t* pb = pvb;
+	return pa->count - pb->count;
 }
