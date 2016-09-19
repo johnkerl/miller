@@ -10,32 +10,36 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
-#define DEFAULT_MOST_COUNT 10LL
+#define DEFAULT_MAX_OUTPUT_LENGTH 10LL
 
-// xxx pick a better name ...
-typedef struct _mapper_most_state_t {
+typedef struct _mapper_most_or_least_state_t {
 	ap_state_t* pargp;
-	slls_t* pgroup_by_field_names;
-	lhmslv_t* pcounts_by_group;
-	long long most_count;
-	int descending;
-} mapper_most_state_t;
+	slls_t*     pgroup_by_field_names;
+	lhmslv_t*   pcounts_by_group;
+	long long   max_output_length;
+	int         descending;
+} mapper_most_or_least_state_t;
 
-static void      mapper_most_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_most_parse_cli(int* pargi, int argc, char** argv,
-	cli_reader_opts_t* _, cli_writer_opts_t* __);
-static mapper_t* mapper_most_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
-	long long most_count, int descending);
-static void      mapper_most_free(mapper_t* pmapper);
+static void mapper_most_usage(FILE*  o, char* argv0, char* verb);
+static void mapper_least_usage(FILE* o, char* argv0, char* verb);
 
-static sllv_t* mapper_most_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static mapper_t* mapper_most_parse_cli(int*  pargi, int argc, char** argv, cli_reader_opts_t* _, cli_writer_opts_t* __);
+static mapper_t* mapper_least_parse_cli(int* pargi, int argc, char** argv, cli_reader_opts_t* _, cli_writer_opts_t* __);
+static mapper_t* mapper_most_or_least_parse_cli(int* pargi, int argc, char** argv, int descending);
 
+static mapper_t* mapper_most_or_least_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
+	long long max_output_length, int descending);
+static void      mapper_most_or_least_free(mapper_t* pmapper);
+
+static sllv_t*   mapper_most_or_least_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+
+// qsort callbacks
 static int descending_vcmp(const void* pva, const void* pvb);
 static int ascending_vcmp(const void* pva, const void* pvb);
 
 typedef struct _sort_pair_t {
 	slls_t* pgroup_by_field_values;
-	long long count; // signed for sort-cmp callback
+	long long count; // signed, not unsigned, for sort-cmp callback
 } sort_pair_t;
 
 // ----------------------------------------------------------------
@@ -46,8 +50,19 @@ mapper_setup_t mapper_most_setup = {
 	.ignores_input = FALSE,
 };
 
+mapper_setup_t mapper_least_setup = {
+	.verb = "least",
+	.pusage_func = mapper_least_usage,
+	.pparse_func = mapper_least_parse_cli,
+	.ignores_input = FALSE,
+};
+
 // ----------------------------------------------------------------
 static void mapper_most_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "xxx type me up.\n");
+}
+static void mapper_least_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "xxx type me up.\n");
 }
@@ -55,16 +70,24 @@ static void mapper_most_usage(FILE* o, char* argv0, char* verb) {
 static mapper_t* mapper_most_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __)
 {
+	return mapper_most_or_least_parse_cli(pargi, argc, argv, TRUE);
+}
+
+static mapper_t* mapper_least_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __)
+{
+	return mapper_most_or_least_parse_cli(pargi, argc, argv, FALSE);
+}
+
+static mapper_t* mapper_most_or_least_parse_cli(int* pargi, int argc, char** argv, int descending) {
 	slls_t* pgroup_by_field_names = NULL;
-	long long most_count = DEFAULT_MOST_COUNT;
-	int descending = TRUE;
+	long long max_output_length = DEFAULT_MAX_OUTPUT_LENGTH;
 
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_list_flag(pstate, "-f", &pgroup_by_field_names);
-	ap_define_long_long_flag(pstate,   "-n", &most_count);
-	ap_define_false_flag(pstate,       "-r", &descending);
+	ap_define_long_long_flag(pstate,   "-n", &max_output_length);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_most_usage(stderr, argv[0], verb);
@@ -76,32 +99,32 @@ static mapper_t* mapper_most_parse_cli(int* pargi, int argc, char** argv,
 		return NULL;
 	}
 
-	return mapper_most_alloc(pstate, pgroup_by_field_names, most_count, descending);
+	return mapper_most_or_least_alloc(pstate, pgroup_by_field_names, max_output_length, descending);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_most_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
-	long long most_count, int descending)
+static mapper_t* mapper_most_or_least_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
+	long long max_output_length, int descending)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
-	mapper_most_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_most_state_t));
+	mapper_most_or_least_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_most_or_least_state_t));
 
-	pstate->pargp                  = pargp;
-	pstate->pgroup_by_field_names  = pgroup_by_field_names;
-	pstate->pcounts_by_group       = lhmslv_alloc();
-	pstate->most_count             = most_count;
-	pstate->descending             = descending;
+	pstate->pargp                 = pargp;
+	pstate->pgroup_by_field_names = pgroup_by_field_names;
+	pstate->pcounts_by_group      = lhmslv_alloc();
+	pstate->max_output_length     = max_output_length;
+	pstate->descending            = descending;
 
-	pmapper->pvstate = pstate;
-	pmapper->pprocess_func = mapper_most_process;
-	pmapper->pfree_func = mapper_most_free;
+	pmapper->pvstate       = pstate;
+	pmapper->pprocess_func = mapper_most_or_least_process;
+	pmapper->pfree_func    = mapper_most_or_least_free;
 
 	return pmapper;
 }
 
-static void mapper_most_free(mapper_t* pmapper) {
-	mapper_most_state_t* pstate = pmapper->pvstate;
+static void mapper_most_or_least_free(mapper_t* pmapper) {
+	mapper_most_or_least_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->pgroup_by_field_names);
 	// lhmslv_free will free the keys: we only need to free the void-star values.
 	for (lhmslve_t* pa = pstate->pcounts_by_group->phead; pa != NULL; pa = pa->pnext) {
@@ -117,8 +140,8 @@ static void mapper_most_free(mapper_t* pmapper) {
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_most_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	mapper_most_state_t* pstate = pvstate;
+static sllv_t* mapper_most_or_least_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_most_or_least_state_t* pstate = pvstate;
 
 	if (pinrec != NULL) { // Not end of input record stream
 		slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(pinrec,
@@ -150,14 +173,12 @@ static sllv_t* mapper_most_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 		}
 
 		// Sort by count
-		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		qsort(sort_pairs, input_length, sizeof(sort_pair_t),
 			pstate->descending ? descending_vcmp : ascending_vcmp);
-		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 		// Emit top n
 		sllv_t* poutrecs = sllv_alloc();
-		int output_length = (input_length < pstate->most_count) ? input_length : pstate->most_count;
+		int output_length = (input_length < pstate->max_output_length) ? input_length : pstate->max_output_length;
 		for (i = 0; i < output_length; i++) {
 			lrec_t* poutrec = lrec_unbacked_alloc();
 			slls_t* pgroup_by_field_values = sort_pairs[i].pgroup_by_field_values;
