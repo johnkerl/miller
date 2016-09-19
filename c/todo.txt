@@ -6,6 +6,7 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
+----------------------------------------------------------------
 REQ:
 * top items as cookbook entry:
     $ mlr stats1 -a count -f a -g a then sort -nr a_count then head -n 4 ../data/big.dkvp
@@ -34,16 +35,18 @@ REQ:
 
   -> make that into a verb for keystroke-reduction?
 
+----------------------------------------------------------------
 JSON formatting:
 * indent by two more for jvstack
 ? rework comma placement for jvstack?
 
+----------------------------------------------------------------
 10MIN:
 * sql-schema example -- after JSON formatting fix-up
 * publish
 
+----------------------------------------------------------------
 UDFs/subrs/localvars:
-
 * maybe:
   - allow func @ filter?
   - disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
@@ -72,13 +75,16 @@ UDFs/subrs/localvars:
   - local @ LHS before @ RHS: absent skips assign
   - a=2 before local a=1 -- why to even use local (when optional & when necessary).
 
+----------------------------------------------------------------
 RELATED:
 * make variadic min & max
 * Note mlr -l -L -f -F -k -K rather prominently at mlh.
 
+----------------------------------------------------------------
 I/O clopts:
 * --c2p, --c2j etc ...
 
+----------------------------------------------------------------
 MORE:
 ? some help for keyword clashes? e.g. 'func E(x) { ... }' ?
 * dquoting for other formats.
