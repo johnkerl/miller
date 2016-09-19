@@ -593,12 +593,6 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		break;
 
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:
-		// xxx
-		//if (context_flags & IN_FUNC_DEF) {
-			//fprintf(stderr, "%s: assignments to @-variables are not valid within func blocks.\n",
-				//MLR_GLOBALS.bargv0);
-			//exit(1);
-		//}
 		return alloc_oosvar_assignment(pcst, pnode, type_inferencing, context_flags);
 		break;
 
@@ -608,11 +602,6 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		//if (context_flags & IN_FUNC_DEF) {
-			//fprintf(stderr, "%s: assignments to @-variables are not valid within func blocks.\n",
-				//MLR_GLOBALS.bargv0);
-			//exit(1);
-		//}
 		return alloc_oosvar_from_full_srec_assignment(pcst, pnode, type_inferencing, context_flags);
 		break;
 

@@ -4706,6 +4706,33 @@ run_mlr --from $indir/abixy --opprint put '
   $o6 = f(f(f(f(f(f(NR))))));
 '
 
+run_mlr --from $indir/abixy --opprint put '
+  func f(n) {
+      if (n < 2) {
+          return 1
+      } else {
+          return f(n-1) + f(n-2)
+      }
+  }
+  $o = f(NR)
+'
+
+run_mlr --from $indir/abixy --opprint put '
+  func f(n) {
+    if (ispresent(@fcache[n])) {
+      return @fcache[n]
+    } else {
+      local rv = 1;
+      if (n >= 2) {
+        rv = f(n-1) + f(n-2)
+      }
+      @fcache[n] = rv;
+      return rv
+    }
+  }
+  $o = f(NR)
+'
+
 # ----------------------------------------------------------------
 announce MULTI-PART SCRIPTS
 
