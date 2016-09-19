@@ -6,7 +6,7 @@
 #define INITIAL_SIZE 32
 
 // ----------------------------------------------------------------
-// xxx privatize
+// Private to .c file
 struct _bind_stack_frame_t {
 	lhmsmv_t*  pbindings;
 	char       fenced;
