@@ -130,9 +130,9 @@ static sllv_t* mapper_most_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 
 	} else { // End of input record stream
 
+		// Copy keys and counters from hashmap to array for sorting
 		int input_length = pstate->pcounts_by_group->num_occupied;
 		sort_pair_t* sort_pairs = mlr_malloc_or_die(input_length * sizeof(sort_pair_t));
-
 		int i = 0;
 		for (lhmslve_t* pe = pstate->pcounts_by_group->phead; pe != NULL; pe = pe->pnext) {
 			sort_pairs[i].pgroup_by_field_values = pe->key;
@@ -140,14 +140,14 @@ static sllv_t* mapper_most_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 			i++;
 		}
 
+		// Sort by count
 		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		// xxx sort
 		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
+		// Emit top n
 		sllv_t* poutrecs = sllv_alloc();
-
 		int output_length = (input_length < pstate->most_count) ? input_length : pstate->most_count;
-
 		for (i = 0; i < output_length; i++) {
 			lrec_t* poutrec = lrec_unbacked_alloc();
 			slls_t* pgroup_by_field_values = sort_pairs[i].pgroup_by_field_values;
@@ -156,14 +156,12 @@ static sllv_t* mapper_most_process(lrec_t* pinrec, context_t* pctx, void* pvstat
 			for ( ; pb != NULL && pc != NULL; pb = pb->pnext, pc = pc->pnext) {
 				lrec_put(poutrec, pb->value, pc->value, NO_FREE);
 			}
-
 			lrec_put(poutrec, "count", mlr_alloc_string_from_ull(sort_pairs[i].count), FREE_ENTRY_VALUE);
 			sllv_append(poutrecs, poutrec);
 		}
+		sllv_append(poutrecs, NULL);
 
 		free(sort_pairs);
-
-		sllv_append(poutrecs, NULL);
 		return poutrecs;
 	}
 }
