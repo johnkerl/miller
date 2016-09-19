@@ -149,9 +149,9 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 			break;
 		}
 		if (pvars->return_state.returned) {
-			pvars->return_state.returned = FALSE;
 			retval = pvars->return_state.retval;
 			pvars->return_state.retval = mv_absent();
+			pvars->return_state.returned = FALSE;
 			break;
 		}
 	}
@@ -234,6 +234,7 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 	return pstate;
 }
 
+// ----------------------------------------------------------------
 void mlr_dsl_cst_free_subroutine(subr_defsite_t* pstate) {
 	if (pstate == NULL)
 		return;

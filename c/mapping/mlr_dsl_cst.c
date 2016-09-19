@@ -2065,9 +2065,9 @@ static void handle_return_value(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	pvars->return_state.returned = TRUE;
 	pvars->return_state.retval = pstatement->preturn_evaluator->pprocess_func(
 		pstatement->preturn_evaluator->pvstate, pvars);
+	pvars->return_state.returned = TRUE;
 }
 
 // ----------------------------------------------------------------
