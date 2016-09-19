@@ -2207,6 +2207,10 @@ int mveq(mv_t* pval1, mv_t* pval2) {
 	return cmp.u.boolv;
 }
 
+int mvne(mv_t* pval1, mv_t* pval2) {
+	return !mveq(pval1, pval2);
+}
+
 // ----------------------------------------------------------------
 // arg2 evaluates to string via compound expression; regexes compiled on each call.
 mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t** ppregex_captures) {

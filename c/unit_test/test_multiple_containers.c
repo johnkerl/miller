@@ -636,8 +636,8 @@ static char* test_bind_stack() {
 	bind_stack_print(pstack);
 
 	mu_assert_lf(bind_stack_resolve(pstack, "x") != NULL);
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), smv("1")));
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), imv(1)));
+	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), smv("three")));
+	mu_assert_lf(mvne(bind_stack_resolve(pstack, "x"), imv(1)));
 	mu_assert_lf(bind_stack_resolve(pstack, "y") != NULL);
 	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), smv("2")));
 	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), imv(2)));

@@ -480,6 +480,7 @@ int mv_i_nn_le(mv_t* pval1, mv_t* pval2);
 
 // For unit-test keystroke-saving:
 int mveq(mv_t* pval1, mv_t* pval2);
+int mvne(mv_t* pval1, mv_t* pval2);
 
 // ----------------------------------------------------------------
 // For qsort of numeric mlrvals.
