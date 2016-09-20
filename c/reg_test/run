@@ -560,15 +560,15 @@ run_mlr --oxtab merge-fields -i -k -a p0,min,p29,max,p100,sum,count -c in_,out_ 
 # ----------------------------------------------------------------
 announce MOST/LEAST FREQUENT
 
-run_mlr --opprint --from $indir/abixy most-frequent -f a -n 3
-run_mlr --opprint --from $indir/abixy most-frequent -f a,b -n 3
-run_mlr --opprint --from $indir/abixy most-frequent -f a,b -n 3 -b
-run_mlr --opprint --from $indir/abixy most-frequent -f nonesuch -n 3
+run_mlr --opprint --from $indir/freq.dkvp most-frequent -f a -n 3
+run_mlr --opprint --from $indir/freq.dkvp most-frequent -f a,b -n 3
+run_mlr --opprint --from $indir/freq.dkvp most-frequent -f a,b -n 3 -b
+run_mlr --opprint --from $indir/freq.dkvp most-frequent -f nonesuch -n 3
 
-run_mlr --opprint --from $indir/abixy least-frequent -f a -n 3
-run_mlr --opprint --from $indir/abixy least-frequent -f a,b -n 3
-run_mlr --opprint --from $indir/abixy least-frequent -f a,b -n 3 -b
-run_mlr --opprint --from $indir/abixy least-frequent -f nonesuch -n 3
+run_mlr --opprint --from $indir/freq.dkvp least-frequent -f a -n 3
+run_mlr --opprint --from $indir/freq.dkvp least-frequent -f a,b -n 3
+run_mlr --opprint --from $indir/freq.dkvp least-frequent -f a,b -n 3 -b
+run_mlr --opprint --from $indir/freq.dkvp least-frequent -f nonesuch -n 3
 
 # ----------------------------------------------------------------
 announce NON-INTERPOLATED AND INTERPOLATED PERCENTILES

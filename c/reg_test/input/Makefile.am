@@ -29,6 +29,7 @@ EXTRA_DIST=	\
 		filter-example.dsl \
 		filter-script-piece-1 \
 		filter-script-piece-2 \
+		freq.dkvp \
 		from-first.csv \
 		fsec2xhms \
 		g.csv \
