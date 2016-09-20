@@ -121,9 +121,10 @@ OPTIONS
 
    VERB LIST
 	bar bootstrap cat check count-distinct cut decimate filter grep group-by
-	group-like having-fields head histogram join label least merge-fields most
-	nest nothing put regularize rename reorder repeat reshape sample sec2gmt
-	sec2gmtdate seqgen shuffle sort stats1 stats2 step tac tail tee top uniq
+	group-like having-fields head histogram join label least-frequent merge-fields
+	most-frequent nest nothing put regularize rename reorder repeat reshape sample
+	sec2gmt sec2gmtdate seqgen shuffle sort stats1 stats2 step tac tail tee top
+	uniq
 
    FUNCTION LIST
 	+ + - - * / // % ** | ^ & ~ << >> == != =~ !=~ > >= < <= && || ^^ ! ? : isnull
@@ -514,8 +515,8 @@ VERBS
 	 "echo 'a b c d' | mlr --inidx --odkvp cat"	  gives "1=a,2=b,3=c,4=d"
 	 "echo 'a b c d' | mlr --inidx --odkvp label s,t" gives "s=a,t=b,3=c,4=d"
 
-   least
-       Usage: mlr least [options]
+   least-frequent
+       Usage: mlr least-frequent [options]
        Shows the least frequently occurring distinct values for specified field names.
        The first entry is the statistical anti-mode; the remaining are runners-up.
        Options:
@@ -563,8 +564,8 @@ VERBS
 	 since "a_in_x" and "a_out_x" both collapse to "a_x", "b_in_y" collapses to
 	 "b_y", and "b_out_x" collapses to "b_x".
 
-   most
-       Usage: mlr most [options]
+   most-frequent
+       Usage: mlr most-frequent [options]
        Shows the most frequently occurring distinct values for specified field names.
        The first entry is the statistical mode; the remaining are runners-up.
        Options:

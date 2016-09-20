@@ -12,27 +12,27 @@
 
 #define DEFAULT_MAX_OUTPUT_LENGTH 10LL
 
-typedef struct _mapper_most_or_least_state_t {
+typedef struct _mapper_most_or_least_frequent_state_t {
 	ap_state_t* pargp;
 	slls_t*     pgroup_by_field_names;
 	lhmslv_t*   pcounts_by_group;
 	long long   max_output_length;
 	int         descending;
 	int         show_counts;
-} mapper_most_or_least_state_t;
+} mapper_most_or_least_frequent_state_t;
 
-static void mapper_most_usage(FILE*  o, char* argv0, char* verb);
-static void mapper_least_usage(FILE* o, char* argv0, char* verb);
+static void mapper_most_frequent_usage(FILE*  o, char* argv0, char* verb);
+static void mapper_least_frequent_usage(FILE* o, char* argv0, char* verb);
 
-static mapper_t* mapper_most_parse_cli(int*  pargi, int argc, char** argv, cli_reader_opts_t* _, cli_writer_opts_t* __);
-static mapper_t* mapper_least_parse_cli(int* pargi, int argc, char** argv, cli_reader_opts_t* _, cli_writer_opts_t* __);
-static mapper_t* mapper_most_or_least_parse_cli(int* pargi, int argc, char** argv, int descending);
+static mapper_t* mapper_most_frequent_parse_cli(int*  pargi, int argc, char** argv, cli_reader_opts_t* _, cli_writer_opts_t* __);
+static mapper_t* mapper_least_frequent_parse_cli(int* pargi, int argc, char** argv, cli_reader_opts_t* _, cli_writer_opts_t* __);
+static mapper_t* mapper_most_or_least_frequent_parse_cli(int* pargi, int argc, char** argv, int descending);
 
-static mapper_t* mapper_most_or_least_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
+static mapper_t* mapper_most_or_least_frequent_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
 	long long max_output_length, int descending, int show_counts);
-static void      mapper_most_or_least_free(mapper_t* pmapper);
+static void      mapper_most_or_least_frequent_free(mapper_t* pmapper);
 
-static sllv_t*   mapper_most_or_least_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_most_or_least_frequent_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // qsort callbacks
 static int descending_vcmp(const void* pva, const void* pvb);
@@ -44,22 +44,22 @@ typedef struct _sort_pair_t {
 } sort_pair_t;
 
 // ----------------------------------------------------------------
-mapper_setup_t mapper_most_setup = {
-	.verb          = "most",
-	.pusage_func   = mapper_most_usage,
-	.pparse_func   = mapper_most_parse_cli,
+mapper_setup_t mapper_most_frequent_setup = {
+	.verb          = "most-frequent",
+	.pusage_func   = mapper_most_frequent_usage,
+	.pparse_func   = mapper_most_frequent_parse_cli,
 	.ignores_input = FALSE,
 };
 
-mapper_setup_t mapper_least_setup = {
-	.verb          = "least",
-	.pusage_func   = mapper_least_usage,
-	.pparse_func   = mapper_least_parse_cli,
+mapper_setup_t mapper_least_frequent_setup = {
+	.verb          = "least-frequent",
+	.pusage_func   = mapper_least_frequent_usage,
+	.pparse_func   = mapper_least_frequent_parse_cli,
 	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------
-static void mapper_most_usage(FILE* o, char* argv0, char* verb) {
+static void mapper_most_frequent_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "Shows the most frequently occurring distinct values for specified field names.\n");
 	fprintf(o, "The first entry is the statistical mode; the remaining are runners-up.\n");
@@ -70,7 +70,7 @@ static void mapper_most_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "See also \"%s %s\".\n", argv0, "least");
 }
 
-static void mapper_least_usage(FILE* o, char* argv0, char* verb) {
+static void mapper_least_frequent_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "Shows the least frequently occurring distinct values for specified field names.\n");
 	fprintf(o, "The first entry is the statistical anti-mode; the remaining are runners-up.\n");
@@ -81,19 +81,19 @@ static void mapper_least_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "See also \"%s %s\".\n", argv0, "most");
 }
 
-static mapper_t* mapper_most_parse_cli(int* pargi, int argc, char** argv,
+static mapper_t* mapper_most_frequent_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __)
 {
-	return mapper_most_or_least_parse_cli(pargi, argc, argv, TRUE);
+	return mapper_most_or_least_frequent_parse_cli(pargi, argc, argv, TRUE);
 }
 
-static mapper_t* mapper_least_parse_cli(int* pargi, int argc, char** argv,
+static mapper_t* mapper_least_frequent_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __)
 {
-	return mapper_most_or_least_parse_cli(pargi, argc, argv, FALSE);
+	return mapper_most_or_least_frequent_parse_cli(pargi, argc, argv, FALSE);
 }
 
-static mapper_t* mapper_most_or_least_parse_cli(int* pargi, int argc, char** argv, int descending) {
+static mapper_t* mapper_most_or_least_frequent_parse_cli(int* pargi, int argc, char** argv, int descending) {
 	slls_t*   pgroup_by_field_names = NULL;
 	long long max_output_length     = DEFAULT_MAX_OUTPUT_LENGTH;
 	int       show_counts           = TRUE;
@@ -106,25 +106,25 @@ static mapper_t* mapper_most_or_least_parse_cli(int* pargi, int argc, char** arg
 	ap_define_false_flag(pstate,       "-b", &show_counts);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_most_usage(stderr, argv[0], verb);
+		mapper_most_frequent_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
 	if (pgroup_by_field_names == NULL) {
-		mapper_most_usage(stderr, argv[0], verb);
+		mapper_most_frequent_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
-	return mapper_most_or_least_alloc(pstate, pgroup_by_field_names, max_output_length, descending, show_counts);
+	return mapper_most_or_least_frequent_alloc(pstate, pgroup_by_field_names, max_output_length, descending, show_counts);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_most_or_least_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
+static mapper_t* mapper_most_or_least_frequent_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
 	long long max_output_length, int descending, int show_counts)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
-	mapper_most_or_least_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_most_or_least_state_t));
+	mapper_most_or_least_frequent_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_most_or_least_frequent_state_t));
 
 	pstate->pargp                 = pargp;
 	pstate->pgroup_by_field_names = pgroup_by_field_names;
@@ -134,14 +134,14 @@ static mapper_t* mapper_most_or_least_alloc(ap_state_t* pargp, slls_t* pgroup_by
 	pstate->show_counts           = show_counts;
 
 	pmapper->pvstate       = pstate;
-	pmapper->pprocess_func = mapper_most_or_least_process;
-	pmapper->pfree_func    = mapper_most_or_least_free;
+	pmapper->pprocess_func = mapper_most_or_least_frequent_process;
+	pmapper->pfree_func    = mapper_most_or_least_frequent_free;
 
 	return pmapper;
 }
 
-static void mapper_most_or_least_free(mapper_t* pmapper) {
-	mapper_most_or_least_state_t* pstate = pmapper->pvstate;
+static void mapper_most_or_least_frequent_free(mapper_t* pmapper) {
+	mapper_most_or_least_frequent_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->pgroup_by_field_names);
 	// lhmslv_free will free the keys: we only need to free the void-star values.
 	for (lhmslve_t* pa = pstate->pcounts_by_group->phead; pa != NULL; pa = pa->pnext) {
@@ -157,8 +157,8 @@ static void mapper_most_or_least_free(mapper_t* pmapper) {
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_most_or_least_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	mapper_most_or_least_state_t* pstate = pvstate;
+static sllv_t* mapper_most_or_least_frequent_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_most_or_least_frequent_state_t* pstate = pvstate;
 
 	if (pinrec != NULL) { // Not end of input record stream
 		slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(pinrec,

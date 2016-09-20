@@ -557,17 +557,17 @@ POKI_RUN_COMMAND{{mlr --csv --rs lf --implicit-csv-header label name,age,status 
 POKI_RUN_COMMAND{{mlr --icsv --rs lf --implicit-csv-header --opprint label name,age,status data/headerless.csv}}HERE
 
 <!-- ================================================================ -->
-<h2>least</h2>
+<h2>least-frequent</h2>
 
-POKI_RUN_COMMAND{{mlr least -h}}HERE
+POKI_RUN_COMMAND{{mlr least-frequent -h}}HERE
 
-POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp least -f shape -n 5}}HERE
+POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape -n 5}}HERE
 
-POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp least -f shape,color -n 5}}HERE
+POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5}}HERE
 
-POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp least -f shape,color -n 5 -b}}HERE
+POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -b}}HERE
 
-See also <a href="#most">most</a>.
+See also <a href="#most-frequent">most-frequent</a>.
 
 <!-- ================================================================ -->
 <h2>merge-fields</h2>
@@ -585,17 +585,17 @@ POKI_RUN_COMMAND{{mlr --csvlite --opprint merge-fields -a min,max,sum -c _in,_ou
 POKI_RUN_COMMAND{{mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out data/inout.csv}}HERE
 
 <!-- ================================================================ -->
-<h2>most</h2>
+<h2>most-frequent</h2>
 
-POKI_RUN_COMMAND{{mlr most -h}}HERE
+POKI_RUN_COMMAND{{mlr most-frequent -h}}HERE
 
-POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp most -f shape -n 5}}HERE
+POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape -n 5}}HERE
 
-POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp most -f shape,color -n 5}}HERE
+POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5}}HERE
 
-POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp most -f shape,color -n 5 -b}}HERE
+POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -b}}HERE
 
-See also <a href="#least">least</a>.
+See also <a href="#least-frequent">least-frequent</a>.
 
 <!-- ================================================================ -->
 <h2>nest</h2>

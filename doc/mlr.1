@@ -164,9 +164,10 @@ output separator to the given value.
 .\}
 .nf
  bar bootstrap cat check count-distinct cut decimate filter grep group-by
- group-like having-fields head histogram join label least merge-fields most
- nest nothing put regularize rename reorder repeat reshape sample sec2gmt
- sec2gmtdate seqgen shuffle sort stats1 stats2 step tac tail tee top uniq
+ group-like having-fields head histogram join label least-frequent merge-fields
+ most-frequent nest nothing put regularize rename reorder repeat reshape sample
+ sec2gmt sec2gmtdate seqgen shuffle sort stats1 stats2 step tac tail tee top
+ uniq
 .fi
 .if n \{\
 .RE
@@ -711,12 +712,12 @@ Examples:
 .fi
 .if n \{\
 .RE
-.SS "least"
+.SS "least-frequent"
 .if n \{\
 .RS 0
 .\}
 .nf
-Usage: mlr least [options]
+Usage: mlr least-frequent [options]
 Shows the least frequently occurring distinct values for specified field names.
 The first entry is the statistical anti-mode; the remaining are runners-up.
 Options:
@@ -772,12 +773,12 @@ Example: mlr merge-fields -a sum,count -c in_,out_
 .fi
 .if n \{\
 .RE
-.SS "most"
+.SS "most-frequent"
 .if n \{\
 .RS 0
 .\}
 .nf
-Usage: mlr most [options]
+Usage: mlr most-frequent [options]
 Shows the most frequently occurring distinct values for specified field names.
 The first entry is the statistical mode; the remaining are runners-up.
 Options:

@@ -168,9 +168,9 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#histogram">histogram</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#join">join</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#label">label</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#least">least</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#least-frequent">least-frequent</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#merge-fields">merge-fields</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#most">most</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#most-frequent">most-frequent</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#nest">nest</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#nothing">nothing</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#put">put</a><br/>
@@ -416,9 +416,10 @@ Help options:
 
 Verbs:
    bar bootstrap cat check count-distinct cut decimate filter grep group-by
-   group-like having-fields head histogram join label least merge-fields most
-   nest nothing put regularize rename reorder repeat reshape sample sec2gmt
-   sec2gmtdate seqgen shuffle sort stats1 stats2 step tac tail tee top uniq
+   group-like having-fields head histogram join label least-frequent
+   merge-fields most-frequent nest nothing put regularize rename reorder repeat
+   reshape sample sec2gmt sec2gmtdate seqgen shuffle sort stats1 stats2 step
+   tac tail tee top uniq
 
 Functions for the filter and put verbs:
    + + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! ? :
@@ -1970,13 +1971,13 @@ Carol 45  present
 <p/>
 
 <!-- ================================================================ -->
-<a id="least"/><h2>least</h2>
+<a id="least-frequent"/><h2>least-frequent</h2>
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr least -h
-Usage: mlr least [options]
+$ mlr least-frequent -h
+Usage: mlr least-frequent [options]
 Shows the least frequently occurring distinct values for specified field names.
 The first entry is the statistical anti-mode; the remaining are runners-up.
 Options:
@@ -1991,7 +1992,7 @@ See also "mlr most".
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint --from data/colored-shapes.dkvp least -f shape -n 5
+$ mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape -n 5
 shape    count
 circle   2591
 triangle 3372
@@ -2003,7 +2004,7 @@ square   4115
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint --from data/colored-shapes.dkvp least -f shape,color -n 5
+$ mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5
 shape    color  count
 circle   orange 68
 triangle orange 107
@@ -2017,7 +2018,7 @@ circle   purple 289
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint --from data/colored-shapes.dkvp least -f shape,color -n 5 -b
+$ mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -b
 shape    color
 circle   orange
 triangle orange
@@ -2028,7 +2029,7 @@ circle   purple
 </div>
 <p/>
 
-See also <a href="#most">most</a>.
+See also <a href="#most-frequent">most-frequent</a>.
 
 <!-- ================================================================ -->
 <a id="merge-fields"/><h2>merge-fields</h2>
@@ -2119,13 +2120,13 @@ a_in a_out b_in b_out a_sum b_sum
 <p/>
 
 <!-- ================================================================ -->
-<a id="most"/><h2>most</h2>
+<a id="most-frequent"/><h2>most-frequent</h2>
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr most -h
-Usage: mlr most [options]
+$ mlr most-frequent -h
+Usage: mlr most-frequent [options]
 Shows the most frequently occurring distinct values for specified field names.
 The first entry is the statistical mode; the remaining are runners-up.
 Options:
@@ -2140,7 +2141,7 @@ See also "mlr least".
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint --from data/colored-shapes.dkvp most -f shape -n 5
+$ mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape -n 5
 shape    count
 square   4115
 triangle 3372
@@ -2152,7 +2153,7 @@ circle   2591
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint --from data/colored-shapes.dkvp most -f shape,color -n 5
+$ mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5
 shape    color  count
 square   red    1874
 triangle red    1560
@@ -2166,7 +2167,7 @@ square   blue   589
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint --from data/colored-shapes.dkvp most -f shape,color -n 5 -b
+$ mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -b
 shape    color
 square   red
 triangle red
@@ -2177,7 +2178,7 @@ square   blue
 </div>
 <p/>
 
-See also <a href="#least">least</a>.
+See also <a href="#least-frequent">least-frequent</a>.
 
 <!-- ================================================================ -->
 <a id="nest"/><h2>nest</h2>

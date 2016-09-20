@@ -24,7 +24,7 @@ libmapping_la_SOURCES=	\
 			mapper_join.c \
 			mapper_label.c \
 			mapper_merge_fields.c \
-			mapper_most_or_least.c \
+			mapper_most_or_least_frequent.c \
 			mapper_nest.c \
 			mapper_nothing.c \
 			mapper_put.c \
