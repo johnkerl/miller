@@ -89,6 +89,7 @@ void fmgr_free(fmgr_t* pfmgr) {
 	}
 	lhmsv_free(pfmgr->pudf_names_to_defsite_states);
 	sllv_free(pfmgr->pfunc_callsite_evaluators_to_resolve);
+	hss_free(pfmgr->built_in_function_names);
 	free(pfmgr);
 }
 
