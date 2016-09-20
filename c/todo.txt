@@ -7,39 +7,6 @@ BUGFIXES
 TOP OF LIST:
 
 ----------------------------------------------------------------
-REQ:
-* verb:
-  - UT
-  - note on the task
-
-* top items as cookbook entry:
-    $ mlr stats1 -a count -f a -g a then sort -nr a_count then head -n 4 ../data/big.dkvp
-    a=eks,a_count=200322
-    a=wye,a_count=200023
-    a=pan,a_count=200002
-    a=zee,a_count=199868
-
-    $ mlr stats1 -a count -f shape -g shape then sort -nr shape_count then head -n 4 ../doc/data/colored-shapes.dkvp
-    shape=square,shape_count=4115
-    shape=triangle,shape_count=3372
-    shape=circle,shape_count=2591
-
-    $ mlr stats1 -a count -f color -g color then sort -nr color_count then head -n 4 ../doc/data/colored-shapes.dkvp
-    color=red,color_count=4641
-    color=blue,color_count=1470
-    color=yellow,color_count=1413
-    color=purple,color_count=1142
-
-    $ mlr --opprint stats1 -a count -f color -g color then sort -nr color_count then head -n 4 ../doc/data/colored-shapes.dkvp
-    color  color_count
-    red    4641
-    blue   1470
-    yellow 1413
-    purple 1142
-
-  -> make that into a verb for keystroke-reduction?
-
-----------------------------------------------------------------
 JSON formatting:
 * indent by two more for jvstack
 ? rework comma placement for jvstack?
@@ -106,6 +73,7 @@ MORE:
 4.6.0:
 
 * func & subr. acknowledge awk yet again.
+* most-frequent/least-frequent
 * seqgen
 * mlr -F and -K. Note -l -L -f -F -k -K.
 * multiple filter/put -f with examples @ new mld section.
