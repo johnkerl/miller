@@ -308,6 +308,8 @@ dsls: .always
 	make -C dsls -f Makefile.no-autoconfig mlr_dsl_lexer.o
 	make -C dsls -f Makefile.no-autoconfig mlr_dsl_wrapper.o
 
+two: mlr mlrg
+
 # ----------------------------------------------------------------
 # Other executable variants
 

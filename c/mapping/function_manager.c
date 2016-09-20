@@ -541,6 +541,7 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 			pnode, function_name, user_provided_arity, type_inferencing, context_flags);
 
 		*pev = *pcallsite_evaluator;
+		free(pcallsite_evaluator); // xxx comment
 		return;
 	}
 
@@ -615,6 +616,7 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 	}
 
 	*pev = *pevaluator;
+	free(pevaluator); // xxx comment
 }
 
 // ================================================================
