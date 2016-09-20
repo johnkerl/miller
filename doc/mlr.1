@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-09-19
+.\"      Date: 2016-09-20
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-09-19" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-09-20" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -164,9 +164,9 @@ output separator to the given value.
 .\}
 .nf
  bar bootstrap cat check count-distinct cut decimate filter grep group-by
- group-like having-fields head histogram join label merge-fields nest nothing
- put regularize rename reorder repeat reshape sample sec2gmt sec2gmtdate seqgen
- shuffle sort stats1 stats2 step tac tail tee top uniq
+ group-like having-fields head histogram join label least merge-fields most
+ nest nothing put regularize rename reorder repeat reshape sample sec2gmt
+ sec2gmtdate seqgen shuffle sort stats1 stats2 step tac tail tee top uniq
 .fi
 .if n \{\
 .RE
@@ -711,6 +711,22 @@ Examples:
 .fi
 .if n \{\
 .RE
+.SS "least"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr least [options]
+Shows the least frequently occurring distinct values for specified field names.
+The first entry is the statistical anti-mode; the remaining are runners-up.
+Options:
+-f {one or more comma-separated field names}. Required flag.
+-n {count}. Optional flag defaulting to 10.
+-b          Suppress counts; show only field values.
+See also "mlr most".
+.fi
+.if n \{\
+.RE
 .SS "merge-fields"
 .if n \{\
 .RS 0
@@ -753,6 +769,22 @@ Example: mlr merge-fields -a sum,count -c in_,out_
   produces "a_x_sum=3,a_x_count=2,b_y_sum=4,b_y_count=1,b_x_sum=8,b_x_count=1"
   since "a_in_x" and "a_out_x" both collapse to "a_x", "b_in_y" collapses to
   "b_y", and "b_out_x" collapses to "b_x".
+.fi
+.if n \{\
+.RE
+.SS "most"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr most [options]
+Shows the most frequently occurring distinct values for specified field names.
+The first entry is the statistical mode; the remaining are runners-up.
+Options:
+-f {one or more comma-separated field names}. Required flag.
+-n {count}. Optional flag defaulting to 10.
+-b          Suppress counts; show only field values.
+See also "mlr least".
 .fi
 .if n \{\
 .RE
