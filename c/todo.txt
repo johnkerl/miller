@@ -17,6 +17,10 @@ JSON formatting:
 * publish
 
 ----------------------------------------------------------------
+SEQGEN:
+* stop at --stop. not less. update mld/mlh/UT/whateverelse.
+
+----------------------------------------------------------------
 UDFs/subrs/localvars:
 * maybe:
   - allow func @ filter?
