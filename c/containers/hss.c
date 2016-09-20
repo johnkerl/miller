@@ -147,6 +147,8 @@ static void hss_enlarge(hss_t* pset) {
 		if (e.state == OCCUPIED)
 			hss_add(pset, e.key);
 	}
+
+	free(old_array);
 }
 
 // ----------------------------------------------------------------
