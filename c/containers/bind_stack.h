@@ -64,6 +64,9 @@ mv_t* bind_stack_resolve(bind_stack_t* pstack, char* key);
 // Use of local variables on expression left-hand sides
 // The pmv is not copied. You may wish to mv_copy the argument you pass in.
 // The pmv will be freed.
+
+// xxx cmt
+void bind_stack_define(bind_stack_t* pstack, char* name, mv_t* pmv, char free_flags);
 void bind_stack_set(bind_stack_t* pstack, char* name, mv_t* pmv, char free_flags);
 
 // Clears the binding from the top frame without popping it. Useful

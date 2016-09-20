@@ -111,18 +111,48 @@ bind_stack_frame_t* bind_stack_pop(bind_stack_t* pstack) {
 }
 
 // ----------------------------------------------------------------
-mv_t* bind_stack_resolve(bind_stack_t* pstack, char* key) {
+// xxx cmt
+mv_t* bind_stack_resolve(bind_stack_t* pstack, char* name) {
 	for (int i = pstack->num_used - 1; i >= 0; i--) {
-		mv_t* pval = lhmsmv_get(pstack->ppframes[i]->pbindings, key);
-		if (pval != NULL)
+		mv_t* pval = lhmsmv_get(pstack->ppframes[i]->pbindings, name);
+		if (pval != NULL) {
 			return pval;
-		if (pstack->ppframes[i]->fenced)
+		}
+		if (pstack->ppframes[i]->fenced) {
 			break;
+		}
 	}
 	return NULL;
 }
 
 // ----------------------------------------------------------------
+// xxx
+//
+// run_mlr --opprint --from $indir/abixy put '
+//     func f(x) {
+//         local a = 1;
+//         if (NR > 5) {
+//             a = 2;
+//         }
+//         return a;
+//     }
+//
+//     func g(x) {
+//         local b = 1;
+//         if (NR > 5) {
+//             local b = 2;
+//         }
+//         return b;
+//     }
+//     $of = f(NR);
+//     $og = g(NR);
+// '
+
+void bind_stack_define(bind_stack_t* pstack, char* name, mv_t* pmv, char free_flags) {
+	bind_stack_frame_t* ptop_frame = pstack->ppframes[pstack->num_used - 1];
+	lhmsmv_put(ptop_frame->pbindings, name, pmv, free_flags);
+}
+
 void bind_stack_set(bind_stack_t* pstack, char* name, mv_t* pmv, char free_flags) {
 
 	// xxx comment
@@ -133,8 +163,9 @@ void bind_stack_set(bind_stack_t* pstack, char* name, mv_t* pmv, char free_flags
 			lhmsmv_put(pframe->pbindings, name, pmv, free_flags);
 			return;
 		}
-		if (pstack->ppframes[i]->fenced)
+		if (pstack->ppframes[i]->fenced) {
 			break;
+		}
 	}
 
 	bind_stack_frame_t* ptop_frame = pstack->ppframes[pstack->num_used - 1];
@@ -160,3 +191,4 @@ void bind_stack_print(bind_stack_t* pstack) {
 	}
 	printf("BIND STACK END\n");
 }
+

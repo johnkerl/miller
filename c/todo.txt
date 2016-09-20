@@ -54,6 +54,7 @@ UDFs/subrs/localvars:
 RELATED:
 * make variadic min & max
 * Note mlr -l -L -f -F -k -K rather prominently at mlh.
+* print/printn zary
 
 ----------------------------------------------------------------
 I/O clopts:
