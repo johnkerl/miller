@@ -10,8 +10,6 @@ TOP OF LIST:
 REQ:
 * verb:
   - UT
-  - mlh
-  - mld:ref sections
   - note on the task
 
 * top items as cookbook entry:
