@@ -39,6 +39,7 @@ mapper_setup_t mapper_filter_setup = {
 };
 
 // ----------------------------------------------------------------
+// xxx -e @ mld/mlh
 static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options] {expression}\n", argv0, verb);
 	fprintf(o, "Prints records for which {expression} evaluates to true.\n");
@@ -89,9 +90,10 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __)
 {
 	char* verb                                = argv[(*pargi)++];
+	slls_t* expression_filenames              = NULL;
+	slls_t* expression_strings                = NULL;
 	char* mlr_dsl_expression                  = NULL;
 	char* comment_stripped_mlr_dsl_expression = NULL;
-	slls_t* expression_filenames              = NULL;
 	int   print_ast                           = FALSE;
 	int   trace_parse                         = FALSE;
 	int   type_inferencing                    = TYPE_INFER_STRING_FLOAT_INT;
@@ -99,6 +101,7 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv,
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_build_list_flag(pstate, "-f", &expression_filenames);
+	ap_define_string_build_list_flag(pstate, "-e", &expression_strings);
 	ap_define_true_flag(pstate,              "-v", &print_ast);
 	ap_define_true_flag(pstate,              "-t", &trace_parse);
 	ap_define_int_value_flag(pstate,         "-S", TYPE_INFER_STRING_ONLY,  &type_inferencing);
@@ -113,7 +116,7 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv,
 		return NULL;
 	}
 
-	if (expression_filenames == NULL) {
+	if (expression_filenames == NULL && expression_strings == NULL) {
 		if ((argc - *pargi) < 1) {
 			mapper_filter_usage(stderr, argv[0], verb);
 			return NULL;
@@ -121,12 +124,23 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv,
 		mlr_dsl_expression = mlr_strdup_or_die(argv[(*pargi)++]);
 	} else {
 		string_builder_t *psb = sb_alloc(1024);
-		for (sllse_t* pe = expression_filenames->phead; pe != NULL; pe = pe->pnext) {
-			char* expression_filename = pe->value;
-			char* mlr_dsl_expression_piece = read_file_into_memory(expression_filename, NULL);
-			sb_append_string(psb, mlr_dsl_expression_piece);
-			free(mlr_dsl_expression_piece);
+
+		if (expression_filenames != NULL) {
+			for (sllse_t* pe = expression_filenames->phead; pe != NULL; pe = pe->pnext) {
+				char* expression_filename = pe->value;
+				char* mlr_dsl_expression_piece = read_file_into_memory(expression_filename, NULL);
+				sb_append_string(psb, mlr_dsl_expression_piece);
+				free(mlr_dsl_expression_piece);
+			}
 		}
+
+		if (expression_strings != NULL) {
+			for (sllse_t* pe = expression_strings->phead; pe != NULL; pe = pe->pnext) {
+				char* expression_string = pe->value;
+				sb_append_string(psb, expression_string);
+			}
+		}
+
 		mlr_dsl_expression = sb_finish(psb);
 		sb_free(psb);
 	}

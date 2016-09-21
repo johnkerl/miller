@@ -21,6 +21,10 @@ SEQGEN:
 * stop at --stop. not less. update mld/mlh/UT/whateverelse.
 
 ----------------------------------------------------------------
+MORE:
+
+!! mix -f and -e for filter/put !! :)
+
 UDFs/subrs/localvars:
 * maybe:
   - allow func @ filter?

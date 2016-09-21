@@ -128,9 +128,10 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* pmain_writer_opts)
 {
+	slls_t* expression_filenames              = slls_alloc();
+	slls_t* expression_strings                = slls_alloc();
 	char* mlr_dsl_expression                  = NULL;
 	char* comment_stripped_mlr_dsl_expression = NULL;
-	slls_t* expression_filenames              = slls_alloc();
 	int   outer_filter                        = TRUE;
 	int   type_inferencing                    = TYPE_INFER_STRING_FLOAT_INT;
 	int   print_ast                           = FALSE;
@@ -164,6 +165,15 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 			}
 			slls_append_no_free(expression_filenames, argv[argi+1]);
 			argi += 2;
+
+		} else if (streq(argv[argi], "-e")) {
+			if ((argc - argi) < 2) {
+				mapper_put_usage(stderr, argv[0], verb);
+				return NULL;
+			}
+			slls_append_no_free(expression_strings, argv[argi+1]);
+			argi += 2;
+
 		} else if (streq(argv[argi], "-v")) {
 			print_ast = TRUE;
 			argi += 1;
@@ -196,7 +206,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 		}
 	}
 
-	if (expression_filenames->length == 0) {
+	if (expression_filenames->length == 0 && expression_strings->length == 0) {
 		if ((argc - argi) < 1) {
 			mapper_put_usage(stderr, argv[0], verb);
 			return NULL;
@@ -204,16 +214,24 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 		mlr_dsl_expression = mlr_strdup_or_die(argv[argi++]);
 	} else {
 		string_builder_t *psb = sb_alloc(1024);
+
 		for (sllse_t* pe = expression_filenames->phead; pe != NULL; pe = pe->pnext) {
 			char* expression_filename = pe->value;
 			char* mlr_dsl_expression_piece = read_file_into_memory(expression_filename, NULL);
 			sb_append_string(psb, mlr_dsl_expression_piece);
 			free(mlr_dsl_expression_piece);
 		}
+
+		for (sllse_t* pe = expression_strings->phead; pe != NULL; pe = pe->pnext) {
+			char* expression_string = pe->value;
+			sb_append_string(psb, expression_string);
+		}
+
 		mlr_dsl_expression = sb_finish(psb);
 		sb_free(psb);
 	}
 	slls_free(expression_filenames);
+	slls_free(expression_strings);
 
 	comment_stripped_mlr_dsl_expression = alloc_comment_strip(mlr_dsl_expression);
 
