@@ -4747,6 +4747,63 @@ run_mlr --from $indir/abixy --opprint put '
 '
 
 # ----------------------------------------------------------------
+announce LOCALVAR SCOPE AND EXTENT
+
+run_mlr --opprint --from $indir/abixy put '
+  func f() {
+    local a = 1;
+    if (NR > 5) {
+      a = 2;
+    }
+    return a;
+  }
+  func g() {
+    local b = 1;
+    if (NR > 5) {
+      local b = 2;
+    }
+    return b;
+  }
+  func h() {
+    local a = 1;
+    if (NR > 5) {
+      a = 2;
+      return a;
+    }
+    return a;
+  }
+  func i() {
+    local b = 1;
+    if (NR > 5) {
+      local b = 2;
+      return b;
+    }
+    return b;
+  }
+  $of = f();
+  $og = g();
+  $oh = h();
+  $oi = i();
+ '
+
+run_mlr --opprint --from $indir/abixy put '
+  func f() {
+    local a = 2;
+    local b = 2;
+    if (NR > 5) {
+      local a = 3;
+      b = 3;
+    }
+    return 1000 * a + b;
+  }
+  a = 1; # test fencing at function entry
+  b = 1; # test fencing at function entry
+  $ab = f();
+  $oa = a;
+  $ob = b;
+ '
+
+# ----------------------------------------------------------------
 announce MULTI-PART SCRIPTS
 
 run_mlr --opprint --from $indir/abixy put -f $indir/put-script-piece-1
