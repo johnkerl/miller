@@ -4786,6 +4786,7 @@ run_mlr --opprint --from $indir/abixy put '
   $oi = i();
  '
 
+# test fencing at function entry
 run_mlr --opprint --from $indir/abixy put '
   func f() {
     local a = 2;
@@ -4796,8 +4797,8 @@ run_mlr --opprint --from $indir/abixy put '
     }
     return 1000 * a + b;
   }
-  a = 1; # test fencing at function entry
-  b = 1; # test fencing at function entry
+  a = 1;
+  b = 1;
   $ab = f();
   $oa = a;
   $ob = b;

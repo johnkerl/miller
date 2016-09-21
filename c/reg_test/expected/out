@@ -33621,7 +33621,7 @@ mlr --opprint --from ./reg_test/input/abixy put
       local a = 3;
       b = 3;
     }
-    return 1000*a + b;
+    return 1000 * a + b;
   }
   a = 1;
   b = 1;
