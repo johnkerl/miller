@@ -257,6 +257,82 @@ mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* pnode, int type_
 	return pleft;
 }
 
+// xxx temp
+mlr_dsl_cst_t* mlr_dsl_cst_alloc_filterable(mlr_dsl_ast_t* ptop, int type_inferencing) {
+	int context_flags = 0;
+	// The root node is not populated on empty-string input to the parser.
+	if (ptop->proot == NULL) {
+		ptop->proot = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
+	}
+
+	mlr_dsl_cst_t* pcst = mlr_malloc_or_die(sizeof(mlr_dsl_cst_t));
+
+	if (ptop->proot->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d:\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		fprintf(stderr,
+			"expected root node type %s but found %s.\n",
+			mlr_dsl_ast_node_describe_type(MD_AST_NODE_TYPE_STATEMENT_LIST),
+			mlr_dsl_ast_node_describe_type(ptop->proot->type));
+		exit(1);
+	}
+
+	pcst->pbegin_statements = NULL;
+	pcst->pmain_statements  = NULL;
+	pcst->pend_statements   = NULL;
+	pcst->psubr_defsites    = NULL;
+	pcst->psubr_callsite_statements_to_resolve = NULL;
+	pcst->pfmgr             = fmgr_alloc();
+
+	udf_defsite_state_t* pudf_defsite_state = NULL;
+
+	for (sllve_t* pe = ptop->proot->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+		switch (pnode->type) {
+
+		case MD_AST_NODE_TYPE_FUNC_DEF:
+			pudf_defsite_state = mlr_dsl_cst_alloc_udf(pcst, pnode, type_inferencing, context_flags);
+			fmgr_install_udf(pcst->pfmgr, pudf_defsite_state);
+			break;
+
+		case MD_AST_NODE_TYPE_SUBR_DEF:
+			fprintf(stderr, "%s: subroutines are not supported within %s filter.\n",
+				MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
+			exit(1);
+			break;
+
+		case MD_AST_NODE_TYPE_BEGIN:
+			fprintf(stderr, "%s: begin-statements are not supported within %s filter.\n",
+				MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
+			exit(1);
+			break;
+
+		case MD_AST_NODE_TYPE_END:
+			fprintf(stderr, "%s: end-statements are not supported within %s filter.\n",
+				MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
+			exit(1);
+			break;
+
+		default:
+			sllv_append(pcst->pmain_statements, mlr_dsl_cst_alloc_statement(pcst, pnode,
+				type_inferencing, context_flags));
+			break;
+		}
+	}
+
+	// xxx assert single main statement
+
+	// Now that all function definitions have been done, resolve
+	// their callsites whose locations we stashed during the CST build. (Without
+	// this delayed resolution, there could be no recursion, and functions
+	// could call one another only in the reverse order of their definition.
+	// E.g. if 'f' is defined and then 'g', then g could call f but f could not
+	// call g [function not defined yet], and neither could call itself.)
+	fmgr_resolve_func_callsites(pcst->pfmgr);
+
+	return pcst;
+}
+
 // ----------------------------------------------------------------
 // Main entry point for AST-to-CST for mlr put.
 //
