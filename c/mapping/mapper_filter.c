@@ -25,8 +25,9 @@ typedef struct _mapper_filter_state_t {
 static void      mapper_filter_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
-static mapper_t* mapper_filter_alloc(ap_state_t* pargp, char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
-	mlr_dsl_ast_node_t* past, int type_inferencing, int do_exclude);
+static mapper_t* mapper_filter_alloc(ap_state_t* pargp,
+	char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
+	mlr_dsl_ast_t* past, int type_inferencing, int do_exclude);
 static void      mapper_filter_free(mapper_t* pmapper);
 static sllv_t*   mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -168,15 +169,14 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv,
 		mlr_dsl_ast_print(past);
 	}
 
-	mlr_dsl_ast_node_t* psubtree = extract_filterable_statement(past, type_inferencing);
 	return mapper_filter_alloc(pstate, mlr_dsl_expression, comment_stripped_mlr_dsl_expression,
-		psubtree, type_inferencing, do_exclude);
+		past, type_inferencing, do_exclude);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_filter_alloc(ap_state_t* pargp,
 	char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
-	mlr_dsl_ast_node_t* past, int type_inferencing, int do_exclude)
+	mlr_dsl_ast_t* past, int type_inferencing, int do_exclude)
 {
 	mapper_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_filter_state_t));
 	int context_flags = IN_MLR_FILTER;
@@ -185,10 +185,14 @@ static mapper_t* mapper_filter_alloc(ap_state_t* pargp,
 	// Retain the string contents along with any in-pointers from the AST/CST
 	pstate->mlr_dsl_expression = mlr_dsl_expression;
 	pstate->comment_stripped_mlr_dsl_expression = comment_stripped_mlr_dsl_expression;
-	pstate->past       = past;
+
+	// xxx temp
+	mlr_dsl_ast_node_t* psubtree = extract_filterable_statement(past, type_inferencing);
+	pstate->past       = psubtree;
+
 	pstate->pfmgr      = fmgr_alloc();
 	// xxx make a separate entry point ...
-	pstate->pevaluator = rval_evaluator_alloc_from_ast(past, pstate->pfmgr, type_inferencing, context_flags);
+	pstate->pevaluator = rval_evaluator_alloc_from_ast(pstate->past, pstate->pfmgr, type_inferencing, context_flags);
 	fmgr_resolve_func_callsites(pstate->pfmgr);
 	pstate->poosvars   = mlhmmv_alloc();
 	pstate->do_exclude = do_exclude;
