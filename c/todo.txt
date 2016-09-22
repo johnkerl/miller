@@ -22,8 +22,8 @@ SEQGEN:
 
 ----------------------------------------------------------------
 MORE:
-
 !! mix -f and -e for filter/put !! :)
+  -> mld/mlh/UT
 
 UDFs/subrs/localvars:
 * maybe:
