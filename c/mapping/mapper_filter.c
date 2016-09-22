@@ -174,7 +174,8 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv,
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_filter_alloc(ap_state_t* pargp, char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
+static mapper_t* mapper_filter_alloc(ap_state_t* pargp,
+	char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
 	mlr_dsl_ast_node_t* past, int type_inferencing, int do_exclude)
 {
 	mapper_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_filter_state_t));

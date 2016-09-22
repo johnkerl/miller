@@ -24,10 +24,10 @@ SEQGEN:
 MORE:
 !! mix -f and -e for filter/put !! :)
   -> mld/mlh/UT
+! allow func @ filter
 
 UDFs/subrs/localvars:
 * maybe:
-  - allow func @ filter?
   - disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
 * hygiene:
   - valgrinds

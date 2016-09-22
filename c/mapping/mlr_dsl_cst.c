@@ -35,6 +35,7 @@ static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode);
 
 static mlr_dsl_cst_statement_t* alloc_blank();
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
+static void mlr_dsl_cst_resolve_subr_callsites(mlr_dsl_cst_t* pcst);
 
 static cst_statement_allocator_t alloc_return_value; // UDF
 static cst_statement_allocator_t alloc_return_void;  // Subroutine
@@ -365,17 +366,19 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 		}
 	}
 
-	// xxx cmt
-	fmgr_resolve_func_callsites(pcst->pfmgr);
-
-	// xxx move to separate method
-
 	// Now that all subroutine/function definitions have been done, resolve
 	// their callsites whose locations we stashed during the CST build. (Without
 	// this delayed resolution, there could be no recursion, and subroutines
 	// could call one another only in the reverse order of their definition.
 	// E.g. if 's' is defined and then 't', then t could call s but s could not
 	// call t [subroutine not defined yet], and neither could call itself.)
+	fmgr_resolve_func_callsites(pcst->pfmgr);
+	mlr_dsl_cst_resolve_subr_callsites(pcst);
+
+	return pcst;
+}
+
+static void mlr_dsl_cst_resolve_subr_callsites(mlr_dsl_cst_t* pcst) {
 	while (pcst->psubr_callsite_statements_to_resolve->phead != NULL) {
 		mlr_dsl_cst_statement_t* pstatement = sllv_pop(pcst->psubr_callsite_statements_to_resolve);
 		subr_callsite_t* psubr_callsite = pstatement->psubr_callsite;
@@ -391,8 +394,6 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 		}
 		pstatement->psubr_defsite = psubr_defsite;
 	}
-
-	return pcst;
 }
 
 // ================================================================
