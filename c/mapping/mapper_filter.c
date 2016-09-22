@@ -58,6 +58,9 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "    than from the command line. Outer single quotes wrapping the expression\n");
 	fprintf(o, "    should not be placed in the file. If -f is specified more than once,\n");
 	fprintf(o, "    all input files specified using -f are concatenated to produce the expression.\n");
+	fprintf(o, "-e {expression}: You can use this after -f to add an expression. Example use\n");
+	fprintf(o, "    case: define functions/subroutines in a file you specify with -f, then call\n");
+	fprintf(o, "    them with an expression you specify with -e.\n");
 	fprintf(o, "\n");
 	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");

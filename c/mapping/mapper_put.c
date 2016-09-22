@@ -77,7 +77,9 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "    should not be placed in the file. If -f is specified more than once,\n");
 	fprintf(o, "    all input files specified using -f are concatenated to produce the expression.\n");
 	fprintf(o, "    (For example, you can define functions in one file and call them from another.)\n");
-	fprintf(o, "\n");
+	fprintf(o, "-e {expression}: You can use this after -f to add an expression. Example use\n");
+	fprintf(o, "    case: define functions/subroutines in a file you specify with -f, then call\n");
+	fprintf(o, "    them with an expression you specify with -e.\n");
 	fprintf(o, "--no-fflush: for emit, tee, print, and dump, don't call fflush() after every\n");
 	fprintf(o, "    record.\n");
 	fprintf(o, "Any of the output-format command-line flags (see %s -h). Example: using\n",

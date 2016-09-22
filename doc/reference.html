@@ -1237,6 +1237,9 @@ Options:
     than from the command line. Outer single quotes wrapping the expression
     should not be placed in the file. If -f is specified more than once,
     all input files specified using -f are concatenated to produce the expression.
+-e {expression}: You can use this after -f to add an expression. Example use
+    case: define functions/subroutines in a file you specify with -f, then call
+    them with an expression you specify with -e.
 
 Please use a dollar sign for field names and double-quotes for string
 literals. If field names have special characters such as "." then you might
@@ -2282,7 +2285,9 @@ Options:
     should not be placed in the file. If -f is specified more than once,
     all input files specified using -f are concatenated to produce the expression.
     (For example, you can define functions in one file and call them from another.)
-
+-e {expression}: You can use this after -f to add an expression. Example use
+    case: define functions/subroutines in a file you specify with -f, then call
+    them with an expression you specify with -e.
 --no-fflush: for emit, tee, print, and dump, don't call fflush() after every
     record.
 Any of the output-format command-line flags (see mlr -h). Example: using
