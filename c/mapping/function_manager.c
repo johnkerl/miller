@@ -24,6 +24,7 @@ typedef struct _function_lookup_t {
 	func_class_t function_class;
 	char*        function_name;
 	int          arity;
+	int          variadic;
 	char*        usage_string;
 } function_lookup_t;
 
@@ -34,7 +35,9 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[];
 // See also comments in rval_evaluators.h
 
 static void fmgr_check_arity_with_report(fmgr_t* pfmgr, char* function_name,
-	int user_provided_arity);
+	int user_provided_arity, int* pvariadic);
+
+static rval_evaluator_t* fmgr_alloc_evaluator_from_variadic_func_name(char* function_name, rval_evaluator_t** pargs, int nargs);
 
 static rval_evaluator_t* fmgr_alloc_evaluator_from_zary_func_name(char* function_name);
 
@@ -112,170 +115,171 @@ void fmgr_install_udf(fmgr_t* pfmgr, udf_defsite_state_t* pdefsite_state) {
 // ================================================================
 static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 
-	{FUNC_CLASS_ARITHMETIC, "+",  2, "Addition."},
-	{FUNC_CLASS_ARITHMETIC, "+",  1, "Unary plus."},
-	{FUNC_CLASS_ARITHMETIC, "-",  2, "Subtraction."},
-	{FUNC_CLASS_ARITHMETIC, "-",  1, "Unary minus."},
-	{FUNC_CLASS_ARITHMETIC, "*",  2, "Multiplication."},
-	{FUNC_CLASS_ARITHMETIC, "/",  2, "Division."},
-	{FUNC_CLASS_ARITHMETIC, "//", 2, "Integer division: rounds to negative (pythonic)."},
-	{FUNC_CLASS_ARITHMETIC, "%",  2, "Remainder; never negative-valued (pythonic)."},
-	{FUNC_CLASS_ARITHMETIC, "**", 2, "Exponentiation; same as pow, but as an infix\noperator."},
-	{FUNC_CLASS_ARITHMETIC, "|",  2, "Bitwise OR."},
-	{FUNC_CLASS_ARITHMETIC, "^",  2, "Bitwise XOR."},
-	{FUNC_CLASS_ARITHMETIC, "&",  2, "Bitwise AND."},
-	{FUNC_CLASS_ARITHMETIC, "~",  1,
+	{FUNC_CLASS_ARITHMETIC, "+",  2,0, "Addition."},
+	{FUNC_CLASS_ARITHMETIC, "+",  1,0, "Unary plus."},
+	{FUNC_CLASS_ARITHMETIC, "-",  2,0, "Subtraction."},
+	{FUNC_CLASS_ARITHMETIC, "-",  1,0, "Unary minus."},
+	{FUNC_CLASS_ARITHMETIC, "*",  2,0, "Multiplication."},
+	{FUNC_CLASS_ARITHMETIC, "/",  2,0, "Division."},
+	{FUNC_CLASS_ARITHMETIC, "//", 2,0, "Integer division: rounds to negative (pythonic)."},
+	{FUNC_CLASS_ARITHMETIC, "%",  2,0, "Remainder; never negative-valued (pythonic)."},
+	{FUNC_CLASS_ARITHMETIC, "**", 2,0, "Exponentiation; same as pow, but as an infix\noperator."},
+	{FUNC_CLASS_ARITHMETIC, "|",  2,0, "Bitwise OR."},
+	{FUNC_CLASS_ARITHMETIC, "^",  2,0, "Bitwise XOR."},
+	{FUNC_CLASS_ARITHMETIC, "&",  2,0, "Bitwise AND."},
+	{FUNC_CLASS_ARITHMETIC, "~",  1,0,
 		"Bitwise NOT. Beware '$y=~$x' since =~ is the\nregex-match operator: try '$y = ~$x'."},
-	{FUNC_CLASS_ARITHMETIC, "<<", 2, "Bitwise left-shift."},
-	{FUNC_CLASS_ARITHMETIC, ">>", 2, "Bitwise right-shift."},
+	{FUNC_CLASS_ARITHMETIC, "<<", 2,0, "Bitwise left-shift."},
+	{FUNC_CLASS_ARITHMETIC, ">>", 2,0, "Bitwise right-shift."},
 
-	{FUNC_CLASS_BOOLEAN, "==",  2, "String/numeric equality. Mixing number and string\nresults in string compare."},
-	{FUNC_CLASS_BOOLEAN, "!=",  2, "String/numeric inequality. Mixing number and string\nresults in string compare."},
-	{FUNC_CLASS_BOOLEAN, "=~",  2,
+	{FUNC_CLASS_BOOLEAN, "==",  2,0, "String/numeric equality. Mixing number and string\nresults in string compare."},
+	{FUNC_CLASS_BOOLEAN, "!=",  2,0, "String/numeric inequality. Mixing number and string\nresults in string compare."},
+	{FUNC_CLASS_BOOLEAN, "=~",  2,0,
 		"String (left-hand side) matches regex (right-hand\n"
 		"side), e.g. '$name =~ \"^a.*b$\"'."},
-	{FUNC_CLASS_BOOLEAN, "!=~", 2,
+	{FUNC_CLASS_BOOLEAN, "!=~", 2,0,
 		"String (left-hand side) does not match regex\n"
 		"(right-hand side), e.g. '$name !=~ \"^a.*b$\"'."},
-	{FUNC_CLASS_BOOLEAN, ">",   2,
+	{FUNC_CLASS_BOOLEAN, ">",   2,0,
 		"String/numeric greater-than. Mixing number and string\n"
 		"results in string compare."},
-	{FUNC_CLASS_BOOLEAN, ">=",  2,
+	{FUNC_CLASS_BOOLEAN, ">=",  2,0,
 		"String/numeric greater-than-or-equals. Mixing number\n"
 		"and string results in string compare."},
-	{FUNC_CLASS_BOOLEAN, "<",   2,
+	{FUNC_CLASS_BOOLEAN, "<",   2,0,
 		"String/numeric less-than. Mixing number and string\n"
 		"results in string compare."},
-	{FUNC_CLASS_BOOLEAN, "<=",  2,
+	{FUNC_CLASS_BOOLEAN, "<=",  2,0,
 		"String/numeric less-than-or-equals. Mixing number\n"
 		"and string results in string compare."},
-	{FUNC_CLASS_BOOLEAN, "&&",  2, "Logical AND."},
-	{FUNC_CLASS_BOOLEAN, "||",  2, "Logical OR."},
-	{FUNC_CLASS_BOOLEAN, "^^",  2, "Logical XOR."},
-	{FUNC_CLASS_BOOLEAN, "!",   1, "Logical negation."},
-	{FUNC_CLASS_BOOLEAN, "? :", 3, "Ternary operator."},
+	{FUNC_CLASS_BOOLEAN, "&&",  2,0, "Logical AND."},
+	{FUNC_CLASS_BOOLEAN, "||",  2,0, "Logical OR."},
+	{FUNC_CLASS_BOOLEAN, "^^",  2,0, "Logical XOR."},
+	{FUNC_CLASS_BOOLEAN, "!",   1,0, "Logical negation."},
+	{FUNC_CLASS_BOOLEAN, "? :", 3,0, "Ternary operator."},
 
-	{FUNC_CLASS_CONVERSION, "isnull",      1, "True if argument is null (empty or absent), false otherwise"},
-	{FUNC_CLASS_CONVERSION, "isnotnull",   1, "False if argument is null (empty or absent), true otherwise."},
-	{FUNC_CLASS_CONVERSION, "isabsent",    1, "False if field is present in input, false otherwise"},
-	{FUNC_CLASS_CONVERSION, "ispresent",   1, "True if field is present in input, false otherwise."},
-	{FUNC_CLASS_CONVERSION, "isempty",     1, "True if field is present in input with empty value, false otherwise."},
-	{FUNC_CLASS_CONVERSION, "isnotempty",  1, "False if field is present in input with empty value, false otherwise"},
-	{FUNC_CLASS_CONVERSION, "isnumeric",   1, "True if field is present with value inferred to be int or float"},
-	{FUNC_CLASS_CONVERSION, "isint",       1, "True if field is present with value inferred to be int "},
-	{FUNC_CLASS_CONVERSION, "isfloat",     1, "True if field is present with value inferred to be float"},
-	{FUNC_CLASS_CONVERSION, "isbool",      1, "True if field is present with boolean value"},
-	{FUNC_CLASS_CONVERSION, "isstring",    1, "True if field is present with string (including empty-string) value"},
-	{FUNC_CLASS_CONVERSION, "boolean",     1, "Convert int/float/bool/string to boolean."},
-	{FUNC_CLASS_CONVERSION, "float",       1, "Convert int/float/bool/string to float."},
-	{FUNC_CLASS_CONVERSION, "fmtnum",    2,
+	{FUNC_CLASS_CONVERSION, "isnull",      1,0, "True if argument is null (empty or absent), false otherwise"},
+	{FUNC_CLASS_CONVERSION, "isnotnull",   1,0, "False if argument is null (empty or absent), true otherwise."},
+	{FUNC_CLASS_CONVERSION, "isabsent",    1,0, "False if field is present in input, false otherwise"},
+	{FUNC_CLASS_CONVERSION, "ispresent",   1,0, "True if field is present in input, false otherwise."},
+	{FUNC_CLASS_CONVERSION, "isempty",     1,0, "True if field is present in input with empty value, false otherwise."},
+	{FUNC_CLASS_CONVERSION, "isnotempty",  1,0, "False if field is present in input with empty value, false otherwise"},
+	{FUNC_CLASS_CONVERSION, "isnumeric",   1,0, "True if field is present with value inferred to be int or float"},
+	{FUNC_CLASS_CONVERSION, "isint",       1,0, "True if field is present with value inferred to be int "},
+	{FUNC_CLASS_CONVERSION, "isfloat",     1,0, "True if field is present with value inferred to be float"},
+	{FUNC_CLASS_CONVERSION, "isbool",      1,0, "True if field is present with boolean value"},
+	{FUNC_CLASS_CONVERSION, "isstring",    1,0, "True if field is present with string (including empty-string) value"},
+	{FUNC_CLASS_CONVERSION, "boolean",     1,0, "Convert int/float/bool/string to boolean."},
+	{FUNC_CLASS_CONVERSION, "float",       1,0, "Convert int/float/bool/string to float."},
+	{FUNC_CLASS_CONVERSION, "fmtnum",    2,0,
 		"Convert int/float/bool to string using\n"
 		"printf-style format string, e.g. '$s = fmtnum($n, \"%06lld\")'."},
-	{FUNC_CLASS_CONVERSION, "hexfmt",    1, "Convert int to string, e.g. 255 to \"0xff\"."},
-	{FUNC_CLASS_CONVERSION, "int",       1, "Convert int/float/bool/string to int."},
-	{FUNC_CLASS_CONVERSION, "string",    1, "Convert int/float/bool/string to string."},
-	{FUNC_CLASS_CONVERSION, "typeof",    1,
+	{FUNC_CLASS_CONVERSION, "hexfmt",    1,0, "Convert int to string, e.g. 255 to \"0xff\"."},
+	{FUNC_CLASS_CONVERSION, "int",       1,0, "Convert int/float/bool/string to int."},
+	{FUNC_CLASS_CONVERSION, "string",    1,0, "Convert int/float/bool/string to string."},
+	{FUNC_CLASS_CONVERSION, "typeof",    1,0,
 		"Convert argument to type of argument (e.g.\n"
 		"MT_STRING). For debug."},
 
-	{FUNC_CLASS_STRING, ".",        2, "String concatenation."},
-	{FUNC_CLASS_STRING, "gsub",     3, "Example: '$name=gsub($name, \"old\", \"new\")'\n(replace all)."},
-	{FUNC_CLASS_STRING, "strlen",   1, "String length."},
-	{FUNC_CLASS_STRING, "sub",      3, "Example: '$name=sub($name, \"old\", \"new\")'\n(replace once)."},
-	{FUNC_CLASS_STRING, "tolower",  1, "Convert string to lowercase."},
-	{FUNC_CLASS_STRING, "toupper",  1, "Convert string to uppercase."},
+	{FUNC_CLASS_STRING, ".",        2,0, "String concatenation."},
+	{FUNC_CLASS_STRING, "gsub",     3,0, "Example: '$name=gsub($name, \"old\", \"new\")'\n(replace all)."},
+	{FUNC_CLASS_STRING, "strlen",   1,0, "String length."},
+	{FUNC_CLASS_STRING, "sub",      3,0, "Example: '$name=sub($name, \"old\", \"new\")'\n(replace once)."},
+	{FUNC_CLASS_STRING, "tolower",  1,0, "Convert string to lowercase."},
+	{FUNC_CLASS_STRING, "toupper",  1,0, "Convert string to uppercase."},
 
-	{FUNC_CLASS_MATH, "abs",      1, "Absolute value."},
-	{FUNC_CLASS_MATH, "acos",     1, "Inverse trigonometric cosine."},
-	{FUNC_CLASS_MATH, "acosh",    1, "Inverse hyperbolic cosine."},
-	{FUNC_CLASS_MATH, "asin",     1, "Inverse trigonometric sine."},
-	{FUNC_CLASS_MATH, "asinh",    1, "Inverse hyperbolic sine."},
-	{FUNC_CLASS_MATH, "atan",     1, "One-argument arctangent."},
-	{FUNC_CLASS_MATH, "atan2",    2, "Two-argument arctangent."},
-	{FUNC_CLASS_MATH, "atanh",    1, "Inverse hyperbolic tangent."},
-	{FUNC_CLASS_MATH, "cbrt",     1, "Cube root."},
-	{FUNC_CLASS_MATH, "ceil",     1, "Ceiling: nearest integer at or above."},
-	{FUNC_CLASS_MATH, "cos",      1, "Trigonometric cosine."},
-	{FUNC_CLASS_MATH, "cosh",     1, "Hyperbolic cosine."},
-	{FUNC_CLASS_MATH, "erf",      1, "Error function."},
-	{FUNC_CLASS_MATH, "erfc",     1, "Complementary error function."},
-	{FUNC_CLASS_MATH, "exp",      1, "Exponential function e**x."},
-	{FUNC_CLASS_MATH, "expm1",    1, "e**x - 1."},
-	{FUNC_CLASS_MATH, "floor",    1, "Floor: nearest integer at or below."},
+	{FUNC_CLASS_MATH, "abs",      1,0, "Absolute value."},
+	{FUNC_CLASS_MATH, "acos",     1,0, "Inverse trigonometric cosine."},
+	{FUNC_CLASS_MATH, "acosh",    1,0, "Inverse hyperbolic cosine."},
+	{FUNC_CLASS_MATH, "asin",     1,0, "Inverse trigonometric sine."},
+	{FUNC_CLASS_MATH, "asinh",    1,0, "Inverse hyperbolic sine."},
+	{FUNC_CLASS_MATH, "atan",     1,0, "One-argument arctangent."},
+	{FUNC_CLASS_MATH, "atan2",    2,0, "Two-argument arctangent."},
+	{FUNC_CLASS_MATH, "atanh",    1,0, "Inverse hyperbolic tangent."},
+	{FUNC_CLASS_MATH, "cbrt",     1,0, "Cube root."},
+	{FUNC_CLASS_MATH, "ceil",     1,0, "Ceiling: nearest integer at or above."},
+	{FUNC_CLASS_MATH, "cos",      1,0, "Trigonometric cosine."},
+	{FUNC_CLASS_MATH, "cosh",     1,0, "Hyperbolic cosine."},
+	{FUNC_CLASS_MATH, "erf",      1,0, "Error function."},
+	{FUNC_CLASS_MATH, "erfc",     1,0, "Complementary error function."},
+	{FUNC_CLASS_MATH, "exp",      1,0, "Exponential function e**x."},
+	{FUNC_CLASS_MATH, "expm1",    1,0, "e**x - 1."},
+	{FUNC_CLASS_MATH, "floor",    1,0, "Floor: nearest integer at or below."},
 	// See also http://johnkerl.org/doc/randuv.pdf for more about urand() -> other distributions
-	{FUNC_CLASS_MATH, "invqnorm", 1,
+	{FUNC_CLASS_MATH, "invqnorm", 1,0,
 		"Inverse of normal cumulative distribution\n"
 		"function. Note that invqorm(urand()) is normally distributed."},
-	{FUNC_CLASS_MATH, "log",      1, "Natural (base-e) logarithm."},
-	{FUNC_CLASS_MATH, "log10",    1, "Base-10 logarithm."},
-	{FUNC_CLASS_MATH, "log1p",    1, "log(1-x)."},
-	{FUNC_CLASS_MATH, "logifit",  3, "Given m and b from logistic regression, compute\nfit: $yhat=logifit($x,$m,$b)."},
-	{FUNC_CLASS_MATH, "madd",     3, "a + b mod m (integers)"},
-	{FUNC_CLASS_MATH, "max",      2, "max of two numbers; null loses"},
-	{FUNC_CLASS_MATH, "mexp",     3, "a ** b mod m (integers)"},
-	{FUNC_CLASS_MATH, "min",      2, "min of two numbers; null loses"},
-	{FUNC_CLASS_MATH, "mmul",     3, "a * b mod m (integers)"},
-	{FUNC_CLASS_MATH, "msub",     3, "a - b mod m (integers)"},
-	{FUNC_CLASS_MATH, "pow",      2, "Exponentiation; same as **."},
-	{FUNC_CLASS_MATH, "qnorm",    1, "Normal cumulative distribution function."},
-	{FUNC_CLASS_MATH, "round",    1, "Round to nearest integer."},
-	{FUNC_CLASS_MATH, "roundm",   2, "Round to nearest multiple of m: roundm($x,$m) is\nthe same as round($x/$m)*$m"},
-	{FUNC_CLASS_MATH, "sgn",      1, "+1 for positive input, 0 for zero input, -1 for\nnegative input."},
-	{FUNC_CLASS_MATH, "sin",      1, "Trigonometric sine."},
-	{FUNC_CLASS_MATH, "sinh",     1, "Hyperbolic sine."},
-	{FUNC_CLASS_MATH, "sqrt",     1, "Square root."},
-	{FUNC_CLASS_MATH, "tan",      1, "Trigonometric tangent."},
-	{FUNC_CLASS_MATH, "tanh",     1, "Hyperbolic tangent."},
-	{FUNC_CLASS_MATH, "urand",    0,
+	{FUNC_CLASS_MATH, "log",      1,0, "Natural (base-e) logarithm."},
+	{FUNC_CLASS_MATH, "log10",    1,0, "Base-10 logarithm."},
+	{FUNC_CLASS_MATH, "log1p",    1,0, "log(1-x)."},
+	{FUNC_CLASS_MATH, "logifit",  3,0, "Given m and b from logistic regression, compute\nfit: $yhat=logifit($x,$m,$b)."},
+	{FUNC_CLASS_MATH, "madd",     3,0, "a + b mod m (integers)"},
+	{FUNC_CLASS_MATH, "max",      0,1, "max of n numbers; null loses"},
+	{FUNC_CLASS_MATH, "mexp",     3,0, "a ** b mod m (integers)"},
+	{FUNC_CLASS_MATH, "min",      0,1, "Min of n numbers; null loses"},
+	{FUNC_CLASS_MATH, "mmul",     3,0, "a * b mod m (integers)"},
+	{FUNC_CLASS_MATH, "msub",     3,0, "a - b mod m (integers)"},
+	{FUNC_CLASS_MATH, "pow",      2,0, "Exponentiation; same as **."},
+	{FUNC_CLASS_MATH, "qnorm",    1,0, "Normal cumulative distribution function."},
+	{FUNC_CLASS_MATH, "round",    1,0, "Round to nearest integer."},
+	{FUNC_CLASS_MATH, "roundm",   2,0, "Round to nearest multiple of m: roundm($x,$m) is\nthe same as round($x/$m)*$m"},
+	{FUNC_CLASS_MATH, "sgn",      1,0, "+1 for positive input, 0 for zero input, -1 for\nnegative input."},
+	{FUNC_CLASS_MATH, "sin",      1,0, "Trigonometric sine."},
+	{FUNC_CLASS_MATH, "sinh",     1,0, "Hyperbolic sine."},
+	{FUNC_CLASS_MATH, "sqrt",     1,0, "Square root."},
+	{FUNC_CLASS_MATH, "tan",      1,0, "Trigonometric tangent."},
+	{FUNC_CLASS_MATH, "tanh",     1,0, "Hyperbolic tangent."},
+	{FUNC_CLASS_MATH, "urand",    0,0,
 		"Floating-point numbers on the unit interval.\n"
 		"Int-valued example: '$n=floor(20+urand()*11)'." },
-	{FUNC_CLASS_MATH, "urand32",  0, "Integer uniformly distributed 0 and 2**32-1\n"
+	{FUNC_CLASS_MATH, "urand32",  0,0, "Integer uniformly distributed 0 and 2**32-1\n"
 	"inclusive." },
-	{FUNC_CLASS_MATH, "urandint", 2, "Integer uniformly distributed between inclusive\ninteger endpoints." },
+	{FUNC_CLASS_MATH, "urandint", 2,0, "Integer uniformly distributed between inclusive\ninteger endpoints." },
 
-	{FUNC_CLASS_TIME, "dhms2fsec", 1,
+	{FUNC_CLASS_TIME, "dhms2fsec", 1,0,
 		"Recovers floating-point seconds as in\n"
 		"dhms2fsec(\"5d18h53m20.250000s\") = 500000.250000"},
-	{FUNC_CLASS_TIME, "dhms2sec",  1, "Recovers integer seconds as in\ndhms2sec(\"5d18h53m20s\") = 500000"},
-	{FUNC_CLASS_TIME, "fsec2dhms", 1,
+	{FUNC_CLASS_TIME, "dhms2sec",  1,0, "Recovers integer seconds as in\ndhms2sec(\"5d18h53m20s\") = 500000"},
+	{FUNC_CLASS_TIME, "fsec2dhms", 1,0,
 		"Formats floating-point seconds as in\nfsec2dhms(500000.25) = \"5d18h53m20.250000s\""},
-	{FUNC_CLASS_TIME, "fsec2hms",  1,
+	{FUNC_CLASS_TIME, "fsec2hms",  1,0,
 		"Formats floating-point seconds as in\nfsec2hms(5000.25) = \"01:23:20.250000\""},
-	{FUNC_CLASS_TIME, "gmt2sec",   1, "Parses GMT timestamp as integer seconds since\nthe epoch."},
-	{FUNC_CLASS_TIME, "hms2fsec",  1,
+	{FUNC_CLASS_TIME, "gmt2sec",   1,0, "Parses GMT timestamp as integer seconds since\nthe epoch."},
+	{FUNC_CLASS_TIME, "hms2fsec",  1,0,
 		"Recovers floating-point seconds as in\nhms2fsec(\"01:23:20.250000\") = 5000.250000"},
-	{FUNC_CLASS_TIME, "hms2sec",   1, "Recovers integer seconds as in\nhms2sec(\"01:23:20\") = 5000"},
-	{FUNC_CLASS_TIME, "sec2dhms",  1, "Formats integer seconds as in sec2dhms(500000)\n= \"5d18h53m20s\""},
-	{FUNC_CLASS_TIME, "sec2gmt",   1,
+	{FUNC_CLASS_TIME, "hms2sec",   1,0, "Recovers integer seconds as in\nhms2sec(\"01:23:20\") = 5000"},
+	{FUNC_CLASS_TIME, "sec2dhms",  1,0, "Formats integer seconds as in sec2dhms(500000)\n= \"5d18h53m20s\""},
+	{FUNC_CLASS_TIME, "sec2gmt",   1,0,
 		"Formats seconds since epoch (integer part)\n"
 		"as GMT timestamp, e.g. sec2gmt(1440768801.7) = \"2015-08-28T13:33:21Z\".\n"
 		"Leaves non-numbers as-is."},
-	{FUNC_CLASS_TIME, "sec2gmtdate",   1,
+	{FUNC_CLASS_TIME, "sec2gmtdate", 1,0,
 		"Formats seconds since epoch (integer part)\n"
 		"as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = \"2015-08-28\".\n"
 		"Leaves non-numbers as-is."},
-	{FUNC_CLASS_TIME, "sec2hms",   1,
+	{FUNC_CLASS_TIME, "sec2hms",   1,0,
 		"Formats integer seconds as in\n"
 		"sec2hms(5000) = \"01:23:20\""},
-	{FUNC_CLASS_TIME, "strftime",  2,
+	{FUNC_CLASS_TIME, "strftime",  2,0,
 		"Formats seconds since epoch (integer part)\n"
 		"as timestamp, e.g.\n"
 		"strftime(1440768801.7,\"%Y-%m-%dT%H:%M:%SZ\") = \"2015-08-28T13:33:21Z\"."},
-	{FUNC_CLASS_TIME, "strptime",  2,
+	{FUNC_CLASS_TIME, "strptime",  2,0,
 		"Parses timestamp as integer seconds since epoch,\n"
 		"e.g. strptime(\"2015-08-28T13:33:21Z\",\"%Y-%m-%dT%H:%M:%SZ\") = 1440768801."},
-	{FUNC_CLASS_TIME, "systime",   0,
+	{FUNC_CLASS_TIME, "systime",   0,0,
 		"Floating-point seconds since the epoch,\n"
 		"e.g. 1440768801.748936." },
 
-	{0, NULL,      -1 , NULL}, // table terminator
+	{0, NULL, -1 , -1, NULL}, // table terminator
 };
 
 // ----------------------------------------------------------------
 static arity_check_t check_arity(function_lookup_t lookup_table[], char* function_name,
-	int user_provided_arity, int *parity)
+	int user_provided_arity, int *parity, int* pvariadic)
 {
 	*parity = -1;
+	*pvariadic = FALSE;
 	int found_function_name = FALSE;
 	for (int i = 0; ; i++) {
 		function_lookup_t* plookup = &lookup_table[i];
@@ -284,6 +288,10 @@ static arity_check_t check_arity(function_lookup_t lookup_table[], char* functio
 		if (streq(function_name, plookup->function_name)) {
 			found_function_name = TRUE;
 			*parity = plookup->arity;
+			if (plookup->variadic) {
+				*pvariadic = TRUE;
+				return ARITY_CHECK_PASS;
+			}
 			if (user_provided_arity == plookup->arity) {
 				return ARITY_CHECK_PASS;
 			}
@@ -297,10 +305,11 @@ static arity_check_t check_arity(function_lookup_t lookup_table[], char* functio
 }
 
 static void fmgr_check_arity_with_report(fmgr_t* pfmgr, char* function_name,
-	int user_provided_arity)
+	int user_provided_arity, int* pvariadic)
 {
 	int arity = -1;
-	arity_check_t result = check_arity(pfmgr->function_lookup_table, function_name, user_provided_arity, &arity);
+	arity_check_t result = check_arity(pfmgr->function_lookup_table, function_name, user_provided_arity,
+		&arity, pvariadic);
 	if (result == ARITY_CHECK_NO_SUCH) {
 		fprintf(stderr, "%s: Function name \"%s\" not found.\n", MLR_GLOBALS.bargv0, function_name);
 		exit(1);
@@ -313,9 +322,9 @@ static void fmgr_check_arity_with_report(fmgr_t* pfmgr, char* function_name,
 			fprintf(stderr, "%s: Function named \"%s\" takes one argument or two; got %d.\n",
 				MLR_GLOBALS.bargv0, function_name, user_provided_arity);
 		} else {
-		}
 			fprintf(stderr, "%s: Function named \"%s\" takes %d argument%s; got %d.\n",
 				MLR_GLOBALS.bargv0, function_name, arity, (arity == 1) ? "" : "s", user_provided_arity);
+		}
 		exit(1);
 	}
 }
@@ -363,16 +372,23 @@ void fmgr_list_functions(fmgr_t* pfmgr, FILE* output_stream, char* leader) {
 // Pass function_name == NULL to get usage for all functions.
 void fmgr_function_usage(fmgr_t* pfmgr, FILE* output_stream, char* function_name) {
 	int found = FALSE;
-	char* fmt = "%s (class=%s #args=%d): %s\n";
+	char* nfmt = "%s (class=%s #args=%d): %s\n";
+	char* vfmt = "%s (class=%s variadic): %s\n";
 
 	for (int i = 0; ; i++) {
 		function_lookup_t* plookup = &FUNCTION_LOOKUP_TABLE[i];
 		if (plookup->function_name == NULL) // end of table
 			break;
 		if (function_name == NULL || streq(function_name, plookup->function_name)) {
-			fprintf(output_stream, fmt, plookup->function_name,
-				function_class_to_desc(plookup->function_class),
-				plookup->arity, plookup->usage_string);
+			if (plookup->variadic) {
+				fprintf(output_stream, vfmt, plookup->function_name,
+					function_class_to_desc(plookup->function_class),
+					plookup->usage_string);
+			} else {
+				fprintf(output_stream, nfmt, plookup->function_name,
+					function_class_to_desc(plookup->function_class),
+					plookup->arity, plookup->usage_string);
+			}
 			found = TRUE;
 		}
 		if (function_name == NULL)
@@ -545,10 +561,21 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 		return;
 	}
 
-	fmgr_check_arity_with_report(pfmgr, function_name, user_provided_arity);
+	int variadic = FALSE;
+	fmgr_check_arity_with_report(pfmgr, function_name, user_provided_arity, &variadic);
 
 	rval_evaluator_t* pevaluator = NULL;
-	if (user_provided_arity == 0) {
+	if (variadic) {
+		int nargs = pnode->pchildren->length;
+		rval_evaluator_t** pargs = mlr_malloc_or_die(nargs * sizeof(rval_evaluator_t*));
+		int i = 0;
+		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+			pargs[i] = rval_evaluator_alloc_from_ast(pchild, pfmgr, type_inferencing, context_flags);
+		}
+		pevaluator = fmgr_alloc_evaluator_from_variadic_func_name(function_name, pargs, nargs);
+
+	} else if (user_provided_arity == 0) {
 		pevaluator = fmgr_alloc_evaluator_from_zary_func_name(function_name);
 	} else if (user_provided_arity == 1) {
 		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
@@ -617,6 +644,13 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 
 	*pev = *pevaluator;
 	free(pevaluator); // xxx comment
+}
+
+// ================================================================
+static rval_evaluator_t* fmgr_alloc_evaluator_from_variadic_func_name(char* fnnm, rval_evaluator_t** pargs, int nargs) {
+	if        (streq(fnnm, "min")) { return rval_evaluator_alloc_from_variadic_func(variadic_min_func, pargs, nargs);
+	} else if (streq(fnnm, "max")) { return rval_evaluator_alloc_from_variadic_func(variadic_max_func, pargs, nargs);
+	} else return NULL;
 }
 
 // ================================================================
@@ -698,7 +732,6 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_unary_func_name(char* fnnm, r
 	} else if (streq(fnnm, "toupper"))     { return rval_evaluator_alloc_from_s_s_func(s_s_toupper_func,     parg1);
 	} else if (streq(fnnm, "typeof"))      { return rval_evaluator_alloc_from_x_x_func(s_x_typeof_func,      parg1);
 	} else if (streq(fnnm, "~"))           { return rval_evaluator_alloc_from_i_i_func(i_i_bitwise_not_func, parg1);
-
 	} else return NULL;
 }
 
@@ -728,8 +761,6 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "**"))   { return rval_evaluator_alloc_from_f_ff_func(f_ff_pow_func,          parg1, parg2);
 	} else if (streq(fnnm, "pow"))  { return rval_evaluator_alloc_from_f_ff_func(f_ff_pow_func,          parg1, parg2);
 	} else if (streq(fnnm, "atan2")){ return rval_evaluator_alloc_from_f_ff_func(f_ff_atan2_func,        parg1, parg2);
-	} else if (streq(fnnm, "max"))  { return rval_evaluator_alloc_from_x_xx_nullable_func(x_xx_max_func, parg1, parg2);
-	} else if (streq(fnnm, "min"))  { return rval_evaluator_alloc_from_x_xx_nullable_func(x_xx_min_func, parg1, parg2);
 	} else if (streq(fnnm, "roundm")) { return rval_evaluator_alloc_from_x_xx_func(x_xx_roundm_func,     parg1, parg2);
 	} else if (streq(fnnm, "fmtnum")) { return rval_evaluator_alloc_from_s_xs_func(s_xs_fmtnum_func,     parg1, parg2);
 	} else if (streq(fnnm, "urandint")) { return rval_evaluator_alloc_from_i_ii_func(i_ii_urandint_func, parg1, parg2);

@@ -1525,6 +1525,15 @@ static mv_binary_func_t* min_dispositions[MT_DIM][MT_DIM] = {
 
 mv_t x_xx_min_func(mv_t* pval1, mv_t* pval2) { return (min_dispositions[pval1->type][pval2->type])(pval1,pval2); }
 
+mv_t variadic_min_func(mv_t* pvals, int nvals) {
+	mv_t rv = mv_empty();
+	for (int i = 0; i < nvals; i++) {
+		rv = x_xx_min_func(&rv, &pvals[i]);
+		mv_free(&pvals[i]);
+	}
+	return rv;
+}
+
 // ----------------------------------------------------------------
 static mv_t max_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
@@ -1562,6 +1571,15 @@ static mv_binary_func_t* max_dispositions[MT_DIM][MT_DIM] = {
 };
 
 mv_t x_xx_max_func(mv_t* pval1, mv_t* pval2) { return (max_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+
+mv_t variadic_max_func(mv_t* pvals, int nvals) {
+	mv_t rv = mv_empty();
+	for (int i = 0; i < nvals; i++) {
+		rv = x_xx_max_func(&rv, &pvals[i]);
+		mv_free(&pvals[i]);
+	}
+	return rv;
+}
 
 // ----------------------------------------------------------------
 static mv_t int_i_b(mv_t* pa) { return mv_from_int(pa->u.boolv ? 1 : 0); }

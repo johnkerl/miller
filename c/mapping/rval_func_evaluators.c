@@ -11,6 +11,59 @@
 #include "mapping/rval_evaluators.h"
 
 // ----------------------------------------------------------------
+typedef struct _rval_evaluator_variadic_state_t {
+	mv_variadic_func_t* pfunc;
+	rval_evaluator_t**  pargs;
+	mv_t*               pmvs;
+	int                 nargs;
+} rval_evaluator_variadic_state_t;
+
+static mv_t rval_evaluator_variadic_func(void* pvstate, variables_t* pvars) {
+	rval_evaluator_variadic_state_t* pstate = pvstate;
+	int nargs = pstate->nargs;
+
+	for (int i = 0; i < nargs; i++) {
+		rval_evaluator_t* parg = pstate->pargs[i];
+		mv_t* pmv = &pstate->pmvs[i];
+		*pmv = parg->pprocess_func(parg->pvstate, pvars);
+	    mv_set_number_nullable(pmv);
+	}
+
+	return pstate->pfunc(pstate->pmvs, nargs);
+}
+
+static void rval_evaluator_variadic_free(rval_evaluator_t* pevaluator) {
+	rval_evaluator_variadic_state_t* pstate = pevaluator->pvstate;
+
+	for (int i = 0; i < pstate->nargs; i++)
+		pstate->pargs[i]->pfree_func(pstate->pargs[i]);
+	free(pstate->pargs);
+
+	for (int i = 0; i < pstate->nargs; i++)
+		mv_free(&pstate->pmvs[i]);
+	free(pstate->pmvs);
+
+	free(pstate);
+
+	free(pevaluator);
+}
+
+rval_evaluator_t* rval_evaluator_alloc_from_variadic_func(mv_variadic_func_t* pfunc, rval_evaluator_t** pargs, int nargs) {
+	rval_evaluator_variadic_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_variadic_state_t));
+	pstate->pfunc = pfunc;
+	pstate->pargs = pargs;
+	pstate->nargs = nargs;
+	pstate->pmvs  = mlr_malloc_or_die(nargs * sizeof(mv_t));
+
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pevaluator->pvstate       = pstate;
+	pevaluator->pprocess_func = rval_evaluator_variadic_func;
+	pevaluator->pfree_func    = rval_evaluator_variadic_free;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
 typedef struct _rval_evaluator_b_b_state_t {
 	mv_unary_func_t*  pfunc;
 	rval_evaluator_t* parg1;

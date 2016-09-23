@@ -269,6 +269,7 @@ mv_t mv_scan_number_or_die(char* string);
 // ----------------------------------------------------------------
 // FUNCTION-OF-MLRVAL TYPES
 
+typedef mv_t mv_variadic_func_t(mv_t* pvals, int nvals);
 typedef mv_t mv_zary_func_t();
 typedef mv_t mv_unary_func_t(mv_t* pval1);
 typedef mv_t mv_binary_func_t(mv_t* pval1, mv_t* pval2);
@@ -353,6 +354,9 @@ mv_t x_x_ceil_func(mv_t* pval1);
 mv_t x_x_floor_func(mv_t* pval1);
 mv_t x_x_round_func(mv_t* pval1);
 mv_t x_x_sgn_func(mv_t* pval1);
+
+mv_t variadic_min_func(mv_t* pvals, int nvals);
+mv_t variadic_max_func(mv_t* pvals, int nvals);
 
 mv_t x_xx_min_func(mv_t* pval1, mv_t* pval2);
 mv_t x_xx_max_func(mv_t* pval1, mv_t* pval2);

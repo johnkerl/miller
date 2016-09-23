@@ -77,6 +77,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_mlrval(mv_t* pval);
 // rval_func_evaluators.c
 
 // These have some shared code that would otherwise be duplicated per-function in containers/mlrval.c.
+rval_evaluator_t* rval_evaluator_alloc_from_variadic_func(mv_variadic_func_t* pfunc, rval_evaluator_t** pargs, int nargs);
 rval_evaluator_t* rval_evaluator_alloc_from_b_b_func(mv_unary_func_t* pfunc, rval_evaluator_t* parg1);
 rval_evaluator_t* rval_evaluator_alloc_from_b_bb_and_func(rval_evaluator_t* parg1, rval_evaluator_t* parg2);
 rval_evaluator_t* rval_evaluator_alloc_from_b_bb_or_func(rval_evaluator_t* parg1, rval_evaluator_t* parg2);

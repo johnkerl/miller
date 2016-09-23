@@ -1267,13 +1267,13 @@ FUNCTIONS FOR FILTER/PUT
        (class=math #args=3): a + b mod m (integers)
 
    max
-       (class=math #args=2): max of two numbers; null loses
+       (class=math variadic): max of n numbers; null loses
 
    mexp
        (class=math #args=3): a ** b mod m (integers)
 
    min
-       (class=math #args=2): min of two numbers; null loses
+       (class=math variadic): Min of n numbers; null loses
 
    mmul
        (class=math #args=3): a * b mod m (integers)
