@@ -853,12 +853,12 @@ VERBS
        Produces a sequence of counters.  Discards the input record stream. Produces
        output as specified by the following options:
        -f {name} Field name for counters; default "i".
-       --start {number} Inclusive start value; default "0".
-       --stop  {number} Exclusive stop value; default "100".
+       --start {number} Inclusive start value; default "1".
+       --stop  {number} Inclusive stop value; default "100".
        --step  {number} Step value; default "1".
        Start, stop, and/or step may be floating-point. Output is integer if start,
        stop, and step are all integers. Step may be negative. It may not be zero
-       unless start == stop (in which case zero records are emitted).
+       unless start == stop.
 
    shuffle
        Usage: mlr shuffle {no options}

@@ -15,7 +15,7 @@ typedef struct _mapper_seqgen_state_t {
 } mapper_seqgen_state_t;
 
 	#define DEFAULT_FIELD_NAME   "i"
-	#define DEFAULT_START_STRING "0"
+	#define DEFAULT_START_STRING "1"
 	#define DEFAULT_STOP_STRING  "100"
 	#define DEFAULT_STEP_STRING  "1"
 
@@ -84,11 +84,11 @@ static void mapper_seqgen_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "output as specified by the following options:\n");
 	fprintf(o, "-f {name} Field name for counters; default \"%s\".\n", DEFAULT_FIELD_NAME);
 	fprintf(o, "--start {number} Inclusive start value; default \"%s\".\n", DEFAULT_START_STRING);
-	fprintf(o, "--stop  {number} Exclusive stop value; default \"%s\".\n", DEFAULT_STOP_STRING);
+	fprintf(o, "--stop  {number} Inclusive stop value; default \"%s\".\n", DEFAULT_STOP_STRING);
 	fprintf(o, "--step  {number} Step value; default \"%s\".\n", DEFAULT_STEP_STRING);
 	fprintf(o, "Start, stop, and/or step may be floating-point. Output is integer if start,\n");
 	fprintf(o, "stop, and step are all integers. Step may be negative. It may not be zero\n");
-	fprintf(o, "unless start == stop (in which case zero records are emitted).\n");
+	fprintf(o, "unless start == stop.\n");
 }
 
 // ----------------------------------------------------------------
@@ -124,16 +124,16 @@ static sllv_t* mapper_seqgen_process(lrec_t* pinrec, context_t* pctx, void* pvst
 
 	mapper_seqgen_state_t* pstate = pvstate;
 
-	int continue_cmp = -1;
+	int continue_cmp = 1;
 	mv_t zero  = mv_from_int(0);
 	if (mv_i_nn_lt(&pstate->step, &zero)) {
-		continue_cmp = 1;
+		continue_cmp = -1;
 	}
 
 	sllv_t* poutrecs = sllv_alloc();
 	for (
 		mv_t counter = pstate->start;
-		mv_nn_comparator(&counter, &pstate->stop) == continue_cmp;
+		mv_nn_comparator(&counter, &pstate->stop) != continue_cmp;
 		counter = x_xx_plus_func(&counter, &pstate->step)
 	) {
 		lrec_t* poutrec = lrec_unbacked_alloc();

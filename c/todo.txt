@@ -7,13 +7,8 @@ BUGFIXES
 TOP OF LIST:
 
 ----------------------------------------------------------------
-JSON formatting:
-* indent by two more for jvstack
-? rework comma placement for jvstack?
-
-----------------------------------------------------------------
 10MIN:
-* sql-schema example -- after JSON formatting fix-up
+* sql-schema example
 * publish
 
 ----------------------------------------------------------------
@@ -24,8 +19,6 @@ SEQGEN:
 MORE:
 ! make variadic min & max
 ! print/printn zary
-! UT/mlh/mld func @ filter
-! UT/mlh/mld -e, and mixed -f and -e, for filter/put
 
 UDFs/subrs/localvars:
 * maybe:
@@ -33,6 +26,8 @@ UDFs/subrs/localvars:
 * hygiene:
   - valgrinds
 * UT & doc:
+  - UT/mlh/mld func @ filter
+  - UT/mlh/mld -e, and mixed -f and -e, for filter/put
   - no begin/end/func/subr within subr
   - no begin/end/func/subr within func
   - (lhs) func no subr call
@@ -46,6 +41,7 @@ UDFs/subrs/localvars:
 * UT:
   - distinct locals within if/elseif/.../else
   - mlr --opprint --from s put -v '$o1 = a; local a=1000+NR; $o2 = a; a=2000+NR; $o3 = a'
+  - seqgen
 * doc:
   - kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
   - multiple filter/put -f (new mld section)
