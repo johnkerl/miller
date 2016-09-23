@@ -16,6 +16,7 @@ typedef struct _mapper_filter_state_t {
 	char* mlr_dsl_expression;
 	char* comment_stripped_mlr_dsl_expression;
 	mlr_dsl_ast_node_t* past;
+	mlr_dsl_cst_t* pcst;
 	fmgr_t* pfmgr;
 	mlhmmv_t* poosvars;
 	rval_evaluator_t* pevaluator;
@@ -188,7 +189,8 @@ static mapper_t* mapper_filter_alloc(ap_state_t* pargp,
 
 	// xxx temp
 	mlr_dsl_ast_node_t* psubtree = extract_filterable_statement(past, type_inferencing);
-	pstate->past       = psubtree;
+	pstate->past = psubtree;
+	pstate->pcst = mlr_dsl_cst_alloc_filterable(past, type_inferencing);
 
 	pstate->pfmgr      = fmgr_alloc();
 	// xxx make a separate entry point ...
@@ -242,7 +244,9 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 		}
 	};
 
-	mv_t val = pstate->pevaluator->pprocess_func(pstate->pevaluator->pvstate, &variables);
+	//rval_evaluator_t* pev = pstate->pevaluator;
+	rval_evaluator_t* pev = pstate->pcst->pfilter_evaluator;
+	mv_t val = pev->pprocess_func(pev->pvstate, &variables);
 
 	if (mv_is_null(&val)) {
 		lrec_free(pinrec);

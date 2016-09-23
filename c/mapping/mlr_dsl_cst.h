@@ -202,6 +202,9 @@ typedef struct _mlr_dsl_cst_t {
 	// Subroutine callsites, used to bootstrap (e.g. subroutine f calls subroutine g before the latter
 	// has been defined).
 	sllv_t* psubr_callsite_statements_to_resolve;
+
+	// For mlr filter which takes restricted syntax
+	rval_evaluator_t* pfilter_evaluator;
 } mlr_dsl_cst_t;
 
 // ----------------------------------------------------------------
@@ -210,6 +213,7 @@ typedef struct _mlr_dsl_cst_t {
 // For mlr filter, which takes a subset of the syntax of mlr put. Namely, a single top-level
 // bare-boolean statement.
 
+mlr_dsl_cst_t* mlr_dsl_cst_alloc_filterable(mlr_dsl_ast_t* ptop, int type_inferencing);
 mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* past, int type_inferencing);
 
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing);

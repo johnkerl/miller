@@ -278,7 +278,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc_filterable(mlr_dsl_ast_t* ptop, int type_infere
 	}
 
 	pcst->pbegin_statements = NULL;
-	pcst->pmain_statements  = NULL;
+	pcst->pmain_statements  = sllv_alloc();
 	pcst->pend_statements   = NULL;
 	pcst->psubr_defsites    = NULL;
 	pcst->psubr_callsite_statements_to_resolve = NULL;
@@ -315,12 +315,21 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc_filterable(mlr_dsl_ast_t* ptop, int type_infere
 
 		default:
 			sllv_append(pcst->pmain_statements, mlr_dsl_cst_alloc_statement(pcst, pnode,
-				type_inferencing, context_flags));
+				type_inferencing, context_flags | IN_MLR_FILTER));
 			break;
 		}
 	}
 
 	// xxx assert single main statement
+	if (pcst->pmain_statements->length != 1) {
+		fprintf(stderr,
+			"%s: expressions for mlr filter must be single statements, evaluating to boolean.\n",
+			MLR_GLOBALS.bargv0);
+		exit(1);
+	}
+	// xxx other checks
+	mlr_dsl_cst_statement_t* pstatement = pcst->pmain_statements->phead->pvvalue;
+	pcst->pfilter_evaluator = pstatement->prhs_evaluator;
 
 	// Now that all function definitions have been done, resolve
 	// their callsites whose locations we stashed during the CST build. (Without
@@ -393,6 +402,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	pcst->pfmgr             = fmgr_alloc();
 	pcst->psubr_defsites    = lhmsv_alloc();
 	pcst->psubr_callsite_statements_to_resolve = sllv_alloc();
+	pcst->pfilter_evaluator = NULL;
 
 	udf_defsite_state_t* pudf_defsite_state = NULL;
 	subr_defsite_t* psubr_defsite = NULL;

@@ -12420,13 +12420,13 @@ text="list", type=statement_list:
         text="3", type=strnum_literal.
 
 mlr filter -v break
-mlr: expressions for mlr filter must be single statements, evaluating to boolean.
+mlr: break statements are only valid within for, while, or do-while.
 AST ROOT:
 text="list", type=statement_list:
     text="break", type=break.
 
 mlr filter -v continue
-mlr: expressions for mlr filter must be single statements, evaluating to boolean.
+mlr: break statements are only valid within for, while, or do-while.
 AST ROOT:
 text="list", type=statement_list:
     text="continue", type=continue.
