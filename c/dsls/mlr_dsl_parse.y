@@ -1376,7 +1376,8 @@ md_printn_pipe(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_BITWISE_OR md_rhs(P) MD_TOKEN_
 		P));
 }
 
-// Printn with no string (which is a no-op)
+// Printn with no string: produces no output but will create a zero-length
+// output file, so not quite a no-op.
 md_printn(A) ::= MD_TOKEN_PRINTN(O). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN,
 			mlr_dsl_ast_node_alloc("", MD_AST_NODE_TYPE_STRNUM_LITERAL),
