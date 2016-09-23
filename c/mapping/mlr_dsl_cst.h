@@ -180,6 +180,11 @@ typedef struct _mlr_dsl_cst_statement_t {
 	char* for_v_name;
 	type_infererenced_srec_field_getter_t* ptype_infererenced_srec_field_getter;
 
+	// triple-for:
+	sllv_t* ptriple_for_start_statements;
+	rval_evaluator_t* ptriple_for_continuation_evaluator;
+	sllv_t* ptriple_for_update_statements;
+
 	// for any kind of statement-block
 	bind_stack_frame_t* pframe;
 

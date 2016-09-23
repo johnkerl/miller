@@ -840,6 +840,9 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->pfor_oosvar_k_names                  = NULL;
 	pstatement->for_v_name                           = NULL;
 	pstatement->ptype_infererenced_srec_field_getter = NULL;
+	pstatement->ptriple_for_start_statements         = NULL;
+	pstatement->ptriple_for_continuation_evaluator   = NULL;
+	pstatement->ptriple_for_update_statements        = NULL;
 	pstatement->pframe                               = NULL;
 
 	return pstatement;
@@ -1379,59 +1382,36 @@ static mlr_dsl_cst_statement_t* alloc_triple_for(mlr_dsl_cst_t* pcst, mlr_dsl_as
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
-//	// Left child node is list of bound variables.
-//	//   Left subnode is namelist for key boundvars.
-//	//   Right subnode is name for value boundvar.
-//	// Middle child node is keylist for basepoint in the oosvar mlhmmv.
-//	// Right child node is the list of statements in the body.
-//	mlr_dsl_ast_node_t* pleft     = pnode->pchildren->phead->pvvalue;
-//	mlr_dsl_ast_node_t* psubleft  = pleft->pchildren->phead->pvvalue;
-//	mlr_dsl_ast_node_t* psubright = pleft->pchildren->phead->pnext->pvvalue;
-//	mlr_dsl_ast_node_t* pmiddle   = pnode->pchildren->phead->pnext->pvvalue;
-//	mlr_dsl_ast_node_t* pright    = pnode->pchildren->phead->pnext->pnext->pvvalue;
-//
-//	pstatement->pfor_oosvar_k_names = slls_alloc();
-//	int ok = TRUE;
-//	hss_t* pnameset = hss_alloc();
-//	for (sllve_t* pe = psubleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
-//		mlr_dsl_ast_node_t* pnamenode = pe->pvvalue;
-//		slls_append_with_free(pstatement->pfor_oosvar_k_names, mlr_strdup_or_die(pnamenode->text));
-//		if (hss_has(pnameset, pnamenode->text)) {
-//			fprintf(stderr, "%s: duplicate for-loop boundvar \"%s\".\n",
-//				MLR_GLOBALS.bargv0, pnamenode->text);
-//			ok = FALSE;
-//		}
-//		hss_add(pnameset, pnamenode->text);
-//	}
-//	pstatement->for_v_name = psubright->text;
-//	if (hss_has(pnameset, psubright->text)) {
-//		fprintf(stderr, "%s: duplicate for-loop boundvar \"%s\".\n",
-//			MLR_GLOBALS.bargv0, psubright->text);
-//		ok = FALSE;
-//	}
-//	hss_add(pnameset, psubright->text);
-//	if (!ok) {
-//		fprintf(stderr, "Boundvars: ");
-//		for (sllve_t* pe = psubleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
-//			mlr_dsl_ast_node_t* pnamenode = pe->pvvalue;
-//			fprintf(stderr, "\"%s\", ", pnamenode->text);
-//		}
-//		fprintf(stderr, "\"%s\".\n", psubright->text);
-//		exit(1);
-//	}
-//
-//	hss_free(pnameset);
-//
-//	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
-//		pcst, pmiddle, type_inferencing, context_flags);
-//
-	sllv_t* pblock_statements = sllv_alloc();
-//	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
-//		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-//		sllv_append(pblock_statements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
-//			type_inferencing, context_flags));
-//	}
-	pstatement->pblock_statements = pblock_statements;
+	mlr_dsl_ast_node_t* pstart_statements_node        = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pcontinuation_statement_node  = pnode->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* pupdate_statements_node       = pnode->pchildren->phead->pnext->pnext->pvvalue;
+	mlr_dsl_ast_node_t* pbody_statements_node         = pnode->pchildren->phead->pnext->pnext->pnext->pvvalue;
+
+	pstatement->ptriple_for_start_statements = sllv_alloc();
+	for (sllve_t* pe = pstart_statements_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+		sllv_append(pstatement->ptriple_for_start_statements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
+			type_inferencing, context_flags & ~IN_BREAKABLE));
+	}
+
+	// xxx assert length 1
+	pstatement->ptriple_for_continuation_evaluator = rval_evaluator_alloc_from_ast(pcontinuation_statement_node,
+		pcst->pfmgr, type_inferencing, context_flags & ~IN_BREAKABLE);
+
+	pstatement->ptriple_for_update_statements = sllv_alloc();
+	for (sllve_t* pe = pupdate_statements_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+		sllv_append(pstatement->ptriple_for_update_statements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
+			type_inferencing, context_flags & ~IN_BREAKABLE));
+	}
+
+	pstatement->pblock_statements = sllv_alloc();
+	for (sllve_t* pe = pbody_statements_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+		sllv_append(pstatement->pblock_statements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
+			type_inferencing, context_flags));
+	}
+
 	pstatement->pframe = bind_stack_frame_alloc_unfenced();
 
 	pstatement->pnode_handler = handle_triple_for;
@@ -2770,7 +2750,16 @@ static void handle_triple_for(
 	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
 	loop_stack_push(pvars->ploop_stack);
 
-	printf("HANDLE_TRIPLE_FOR STUB\n");
+	mlr_dsl_cst_handle_statement_list(pstatement->ptriple_for_start_statements, pvars, pcst_outputs);
+	while (TRUE) {
+		rval_evaluator_t* pev = pstatement->ptriple_for_continuation_evaluator;
+		mv_t val = pev->pprocess_func(pev->pvstate, pvars);
+		if (mv_is_non_null(&val))
+			mv_set_boolean_strict(&val);
+		if (!val.u.boolv)
+			break;
+		mlr_dsl_cst_handle_statement_list(pstatement->ptriple_for_update_statements, pvars, pcst_outputs);
+	}
 
 	loop_stack_pop(pvars->ploop_stack);
 	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));

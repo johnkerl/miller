@@ -435,15 +435,14 @@ md_triple_for(A) ::=
 	A = mlr_dsl_ast_node_alloc_quaternary(F->text, MD_AST_NODE_TYPE_TRIPLE_FOR, S, C, U, L);
 }
 
-// xxx temp
-md_triple_for_start(A) ::= md_rhs(B). {
-	A = B;
+md_triple_for_start(A) ::= md_statement_not_braced_end(B). { // xxx temp
+	A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
 }
 md_triple_for_condition(A) ::= md_rhs(B). {
 	A = B;
 }
-md_triple_for_update(A) ::= md_rhs(B). {
-	A = B;
+md_triple_for_update(A) ::= md_statement_not_braced_end(B). { // xxx temp
+	A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
 }
 
 // ----------------------------------------------------------------
