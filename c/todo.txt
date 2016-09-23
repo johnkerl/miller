@@ -22,6 +22,8 @@ SEQGEN:
 
 ----------------------------------------------------------------
 MORE:
+! make variadic min & max
+! print/printn zary
 ! UT/mlh/mld func @ filter
 ! UT/mlh/mld -e, and mixed -f and -e, for filter/put
 
@@ -55,9 +57,7 @@ UDFs/subrs/localvars:
 
 ----------------------------------------------------------------
 RELATED:
-* make variadic min & max
 * Note mlr -l -L -f -F -k -K rather prominently at mlh.
-* print/printn zary
 
 ----------------------------------------------------------------
 I/O clopts:
