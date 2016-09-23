@@ -56,6 +56,7 @@ static cst_statement_allocator_t alloc_while;
 static cst_statement_allocator_t alloc_do_while;
 static cst_statement_allocator_t alloc_for_srec;
 static cst_statement_allocator_t alloc_for_oosvar;
+static cst_statement_allocator_t alloc_triple_for;
 static cst_statement_allocator_t alloc_break;
 static cst_statement_allocator_t alloc_continue;
 static cst_statement_allocator_t alloc_filter;
@@ -138,6 +139,7 @@ static cst_statement_handler_t handle_while;
 static cst_statement_handler_t handle_do_while;
 static cst_statement_handler_t handle_for_srec;
 static cst_statement_handler_t handle_for_oosvar;
+static cst_statement_handler_t handle_triple_for;
 static cst_statement_handler_t handle_break;
 static cst_statement_handler_t handle_continue;
 static cst_statement_handler_t handle_if_head;
@@ -630,6 +632,9 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		break;
 	case MD_AST_NODE_TYPE_FOR_OOSVAR:
 		return alloc_for_oosvar(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
+		break;
+	case MD_AST_NODE_TYPE_TRIPLE_FOR:
+		return alloc_triple_for(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
 
 	case MD_AST_NODE_TYPE_BREAK:
@@ -1364,6 +1369,72 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 	pstatement->pframe = bind_stack_frame_alloc_unfenced();
 
 	pstatement->pnode_handler = handle_for_oosvar;
+	pstatement->pblock_handler = handle_statement_list_with_break_continue;
+
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_triple_for(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+//	// Left child node is list of bound variables.
+//	//   Left subnode is namelist for key boundvars.
+//	//   Right subnode is name for value boundvar.
+//	// Middle child node is keylist for basepoint in the oosvar mlhmmv.
+//	// Right child node is the list of statements in the body.
+//	mlr_dsl_ast_node_t* pleft     = pnode->pchildren->phead->pvvalue;
+//	mlr_dsl_ast_node_t* psubleft  = pleft->pchildren->phead->pvvalue;
+//	mlr_dsl_ast_node_t* psubright = pleft->pchildren->phead->pnext->pvvalue;
+//	mlr_dsl_ast_node_t* pmiddle   = pnode->pchildren->phead->pnext->pvvalue;
+//	mlr_dsl_ast_node_t* pright    = pnode->pchildren->phead->pnext->pnext->pvvalue;
+//
+//	pstatement->pfor_oosvar_k_names = slls_alloc();
+//	int ok = TRUE;
+//	hss_t* pnameset = hss_alloc();
+//	for (sllve_t* pe = psubleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
+//		mlr_dsl_ast_node_t* pnamenode = pe->pvvalue;
+//		slls_append_with_free(pstatement->pfor_oosvar_k_names, mlr_strdup_or_die(pnamenode->text));
+//		if (hss_has(pnameset, pnamenode->text)) {
+//			fprintf(stderr, "%s: duplicate for-loop boundvar \"%s\".\n",
+//				MLR_GLOBALS.bargv0, pnamenode->text);
+//			ok = FALSE;
+//		}
+//		hss_add(pnameset, pnamenode->text);
+//	}
+//	pstatement->for_v_name = psubright->text;
+//	if (hss_has(pnameset, psubright->text)) {
+//		fprintf(stderr, "%s: duplicate for-loop boundvar \"%s\".\n",
+//			MLR_GLOBALS.bargv0, psubright->text);
+//		ok = FALSE;
+//	}
+//	hss_add(pnameset, psubright->text);
+//	if (!ok) {
+//		fprintf(stderr, "Boundvars: ");
+//		for (sllve_t* pe = psubleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
+//			mlr_dsl_ast_node_t* pnamenode = pe->pvvalue;
+//			fprintf(stderr, "\"%s\", ", pnamenode->text);
+//		}
+//		fprintf(stderr, "\"%s\".\n", psubright->text);
+//		exit(1);
+//	}
+//
+//	hss_free(pnameset);
+//
+//	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
+//		pcst, pmiddle, type_inferencing, context_flags);
+//
+	sllv_t* pblock_statements = sllv_alloc();
+//	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
+//		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+//		sllv_append(pblock_statements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
+//			type_inferencing, context_flags));
+//	}
+	pstatement->pblock_statements = pblock_statements;
+	pstatement->pframe = bind_stack_frame_alloc_unfenced();
+
+	pstatement->pnode_handler = handle_triple_for;
 	pstatement->pblock_handler = handle_statement_list_with_break_continue;
 
 	return pstatement;
@@ -2688,6 +2759,21 @@ static void handle_for_oosvar_aux(
 		}
 
 	}
+}
+
+// ----------------------------------------------------------------
+static void handle_triple_for(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
+	loop_stack_push(pvars->ploop_stack);
+
+	printf("HANDLE_TRIPLE_FOR STUB\n");
+
+	loop_stack_pop(pvars->ploop_stack);
+	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
 }
 
 // ----------------------------------------------------------------

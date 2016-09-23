@@ -134,6 +134,7 @@ md_statement_braced_end(A) ::= md_while_block(B).          { A = B; }
 md_statement_braced_end(A) ::= md_for_loop_full_srec(B).   { A = B; }
 md_statement_braced_end(A) ::= md_for_loop_full_oosvar(B). { A = B; }
 md_statement_braced_end(A) ::= md_for_loop_oosvar(B).      { A = B; }
+md_statement_braced_end(A) ::= md_triple_for(B).           { A = B; }
 md_statement_braced_end(A) ::= md_if_chain(B).             { A = B; }
 
 md_statement_not_braced_end(A) ::= MD_TOKEN_SUBR_CALL md_fcn_or_subr_call(B). {
@@ -418,6 +419,31 @@ md_for_oosvar_keylist(A) ::= MD_TOKEN_NON_SIGIL_NAME(K). {
 }
 md_for_oosvar_keylist(A) ::= md_for_oosvar_keylist(L) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(K). {
 	A = mlr_dsl_ast_node_append_arg(L, K);
+}
+
+// ----------------------------------------------------------------
+md_triple_for(A) ::=
+	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
+		md_triple_for_start(S) MD_TOKEN_SEMICOLON
+		md_triple_for_condition(C) MD_TOKEN_SEMICOLON
+		md_triple_for_update(U)
+	MD_TOKEN_RPAREN
+	MD_TOKEN_LBRACE
+		md_statement_list(L)
+	MD_TOKEN_RBRACE.
+{
+	A = mlr_dsl_ast_node_alloc_quaternary(F->text, MD_AST_NODE_TYPE_TRIPLE_FOR, S, C, U, L);
+}
+
+// xxx temp
+md_triple_for_start(A) ::= md_rhs(B). {
+	A = B;
+}
+md_triple_for_condition(A) ::= md_rhs(B). {
+	A = B;
+}
+md_triple_for_update(A) ::= md_rhs(B). {
+	A = B;
 }
 
 // ----------------------------------------------------------------

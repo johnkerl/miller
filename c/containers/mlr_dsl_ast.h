@@ -65,6 +65,7 @@ typedef enum _mlr_dsl_ast_node_type_t {
 	MD_AST_NODE_TYPE_FOR_SREC,
 	MD_AST_NODE_TYPE_FOR_OOSVAR,
 	MD_AST_NODE_TYPE_FOR_VARIABLES,
+	MD_AST_NODE_TYPE_TRIPLE_FOR,
 	MD_AST_NODE_TYPE_BOUND_VARIABLE,
 	MD_AST_NODE_TYPE_IN,
 	MD_AST_NODE_TYPE_BREAK,
@@ -97,6 +98,9 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_binary(char* text, mlr_dsl_ast_node_t
 
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_ternary(char* text, mlr_dsl_ast_node_type_t type,
 	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb, mlr_dsl_ast_node_t* pc);
+
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_quaternary(char* text, mlr_dsl_ast_node_type_t type,
+	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb, mlr_dsl_ast_node_t* pc, mlr_dsl_ast_node_t* pd);
 
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_copy(mlr_dsl_ast_node_t* pother);
 // These are so the parser can expand '$x += 1' to '$x = $x + 1', etc.

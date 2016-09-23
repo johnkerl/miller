@@ -80,6 +80,19 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_ternary(char* text, mlr_dsl_ast_node_
 }
 
 // ----------------------------------------------------------------
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc_quaternary(char* text, mlr_dsl_ast_node_type_t type,
+	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb, mlr_dsl_ast_node_t* pc, mlr_dsl_ast_node_t* pd)
+{
+	mlr_dsl_ast_node_t* pnode = mlr_dsl_ast_node_alloc(text, type);
+	pnode->pchildren = sllv_alloc();
+	sllv_append(pnode->pchildren, pa);
+	sllv_append(pnode->pchildren, pb);
+	sllv_append(pnode->pchildren, pc);
+	sllv_append(pnode->pchildren, pd);
+	return pnode;
+}
+
+// ----------------------------------------------------------------
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_prepend_arg(
 	mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb)
 {
@@ -200,6 +213,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FOR_SREC:                         return "for_srec";                         break;
 	case MD_AST_NODE_TYPE_FOR_OOSVAR:                       return "for_oosvar";                       break;
 	case MD_AST_NODE_TYPE_FOR_VARIABLES:                    return "for_variables";                    break;
+	case MD_AST_NODE_TYPE_TRIPLE_FOR:                       return "triple_for";                       break;
 	case MD_AST_NODE_TYPE_BOUND_VARIABLE:                   return "bound_variable";                   break;
 	case MD_AST_NODE_TYPE_IN:                               return "in";                               break;
 	case MD_AST_NODE_TYPE_BREAK:                            return "break";                            break;
