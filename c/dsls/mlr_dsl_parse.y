@@ -1293,6 +1293,7 @@ md_dump_pipe(A) ::= MD_TOKEN_DUMP(O) MD_TOKEN_BITWISE_OR md_rhs(P). {
 		P));
 }
 
+// Print string
 md_print(A) ::= MD_TOKEN_PRINT(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT, B,
 		mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE,
@@ -1319,6 +1320,36 @@ md_print_pipe(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_BITWISE_OR md_rhs(P) MD_TOKEN_CO
 		P));
 }
 
+// Print with no string (newline only)
+md_print(A) ::= MD_TOKEN_PRINT(O). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT,
+			mlr_dsl_ast_node_alloc("", MD_AST_NODE_TYPE_STRNUM_LITERAL),
+			mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE,
+				mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT)));
+}
+md_eprint(A) ::= MD_TOKEN_EPRINT(O). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT,
+			mlr_dsl_ast_node_alloc("", MD_AST_NODE_TYPE_STRNUM_LITERAL),
+			mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE,
+				mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDERR)));
+}
+md_print_write(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_GT md_output_file(F). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT,
+			mlr_dsl_ast_node_alloc("", MD_AST_NODE_TYPE_STRNUM_LITERAL),
+			mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE, F));
+}
+md_print_append(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_BITWISE_RSH md_output_file(F). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT,
+			mlr_dsl_ast_node_alloc("", MD_AST_NODE_TYPE_STRNUM_LITERAL),
+			mlr_dsl_ast_node_alloc_unary(">>", MD_AST_NODE_TYPE_FILE_APPEND, F));
+}
+md_print_pipe(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_BITWISE_OR md_rhs(P). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT,
+			mlr_dsl_ast_node_alloc("", MD_AST_NODE_TYPE_STRNUM_LITERAL),
+			mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE, P));
+}
+
+// Printn string
 md_printn(A) ::= MD_TOKEN_PRINTN(O) md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN, B,
 		mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE,
@@ -1343,6 +1374,35 @@ md_printn_pipe(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_BITWISE_OR md_rhs(P) MD_TOKEN_
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN, C,
 		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE,
 		P));
+}
+
+// Printn with no string (which is a no-op)
+md_printn(A) ::= MD_TOKEN_PRINTN(O). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN,
+			mlr_dsl_ast_node_alloc("", MD_AST_NODE_TYPE_STRNUM_LITERAL),
+			mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE,
+				mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT)));
+}
+md_eprintn(A) ::= MD_TOKEN_EPRINTN(O). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN,
+			mlr_dsl_ast_node_alloc("", MD_AST_NODE_TYPE_STRNUM_LITERAL),
+			mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE,
+				mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDERR)));
+}
+md_printn_write(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_GT md_output_file(F). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN,
+			mlr_dsl_ast_node_alloc("", MD_AST_NODE_TYPE_STRNUM_LITERAL),
+			mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE, F));
+}
+md_printn_append(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_BITWISE_RSH md_output_file(F). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN,
+			mlr_dsl_ast_node_alloc("", MD_AST_NODE_TYPE_STRNUM_LITERAL),
+			mlr_dsl_ast_node_alloc_unary(">>", MD_AST_NODE_TYPE_FILE_APPEND, F));
+}
+md_printn_pipe(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_BITWISE_OR md_rhs(P). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN,
+			mlr_dsl_ast_node_alloc("", MD_AST_NODE_TYPE_STRNUM_LITERAL),
+			mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE, P));
 }
 
 // ----------------------------------------------------------------
