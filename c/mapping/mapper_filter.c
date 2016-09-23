@@ -11,12 +11,14 @@
 #include "cli/argparse.h"
 
 typedef struct _mapper_filter_state_t {
-	ap_state_t* pargp;
-	char* mlr_dsl_expression;
-	char* comment_stripped_mlr_dsl_expression;
+	ap_state_t*    pargp;
+	char*          mlr_dsl_expression;
+	char*          comment_stripped_mlr_dsl_expression;
 	mlr_dsl_cst_t* pcst;
-	mlhmmv_t* poosvars;
-	int do_exclude;
+	mlhmmv_t*      poosvars;
+	bind_stack_t*  pbind_stack;
+	loop_stack_t*  ploop_stack;
+	int            do_exclude;
 } mapper_filter_state_t;
 
 static void      mapper_filter_usage(FILE* o, char* argv0, char* verb);
@@ -181,9 +183,11 @@ static mapper_t* mapper_filter_alloc(ap_state_t* pargp,
 	// Retain the string contents along with any in-pointers from the AST/CST
 	pstate->mlr_dsl_expression = mlr_dsl_expression;
 	pstate->comment_stripped_mlr_dsl_expression = comment_stripped_mlr_dsl_expression;
-	pstate->pcst = mlr_dsl_cst_alloc_filterable(past, type_inferencing);
-	pstate->poosvars   = mlhmmv_alloc();
-	pstate->do_exclude = do_exclude;
+	pstate->pcst        = mlr_dsl_cst_alloc_filterable(past, type_inferencing);
+	pstate->poosvars    = mlhmmv_alloc();
+	pstate->pbind_stack = bind_stack_alloc();
+	pstate->ploop_stack = loop_stack_alloc();
+	pstate->do_exclude  = do_exclude;
 
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
@@ -218,10 +222,10 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 		.pinrec                   = pinrec,
 		.ptyped_overlay           = ptyped_overlay,
 		.poosvars                 = pstate->poosvars,
-		.ppregex_captures         = NULL,
+		.ppregex_captures         = NULL, // xxx UT
 		.pctx                     = pctx,
-		.pbind_stack              = NULL,
-		.ploop_stack              = NULL,
+		.pbind_stack              = pstate->pbind_stack,
+		.ploop_stack              = pstate->ploop_stack,
 		.return_state = {
 			.returned = FALSE,
 			.retval = mv_absent(),

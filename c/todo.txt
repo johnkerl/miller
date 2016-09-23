@@ -24,7 +24,7 @@ SEQGEN:
 MORE:
 !! mix -f and -e for filter/put !! :)
   -> mld/mlh/UT
-! allow func @ filter
+! UT/mlh/mld func @ filter
 
 UDFs/subrs/localvars:
 * maybe:
