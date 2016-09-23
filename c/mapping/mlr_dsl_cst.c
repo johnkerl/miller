@@ -516,12 +516,16 @@ static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode) {
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	if (pcst == NULL)
 		return;
-	for (sllve_t* pe = pcst->pbegin_statements->phead; pe != NULL; pe = pe->pnext)
-		mlr_dsl_cst_statement_free(pe->pvvalue);
+	if (pcst->pbegin_statements != NULL) {
+		for (sllve_t* pe = pcst->pbegin_statements->phead; pe != NULL; pe = pe->pnext)
+			mlr_dsl_cst_statement_free(pe->pvvalue);
+	}
 	for (sllve_t* pe = pcst->pmain_statements->phead; pe != NULL; pe = pe->pnext)
 		mlr_dsl_cst_statement_free(pe->pvvalue);
-	for (sllve_t* pe = pcst->pend_statements->phead; pe != NULL; pe = pe->pnext)
-		mlr_dsl_cst_statement_free(pe->pvvalue);
+	if (pcst->pend_statements != NULL) {
+		for (sllve_t* pe = pcst->pend_statements->phead; pe != NULL; pe = pe->pnext)
+			mlr_dsl_cst_statement_free(pe->pvvalue);
+	}
 	sllv_free(pcst->pbegin_statements);
 	sllv_free(pcst->pmain_statements);
 	sllv_free(pcst->pend_statements);
@@ -530,11 +534,13 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	// Void-star payloads already popped and freed during symbol-resolution phase of CST alloc
 	sllv_free(pcst->psubr_callsite_statements_to_resolve);
 
-	for (lhmsve_t* pe = pcst->psubr_defsites->phead; pe != NULL; pe = pe->pnext) {
-		subr_defsite_t* psubr_defsite = pe->pvvalue;
-		mlr_dsl_cst_free_subroutine(psubr_defsite);
+	if (pcst->psubr_defsites != NULL) {
+		for (lhmsve_t* pe = pcst->psubr_defsites->phead; pe != NULL; pe = pe->pnext) {
+			subr_defsite_t* psubr_defsite = pe->pvvalue;
+			mlr_dsl_cst_free_subroutine(psubr_defsite);
+		}
+		lhmsv_free(pcst->psubr_defsites);
 	}
-	lhmsv_free(pcst->psubr_defsites);
 
 	free(pcst);
 }

@@ -3,7 +3,6 @@
 #include "lib/string_builder.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
-#include "mapping/context_flags.h"
 #include "mapping/mlr_dsl_cst.h"
 #include "mapping/rval_evaluators.h"
 #include "mapping/function_manager.h"
@@ -15,11 +14,8 @@ typedef struct _mapper_filter_state_t {
 	ap_state_t* pargp;
 	char* mlr_dsl_expression;
 	char* comment_stripped_mlr_dsl_expression;
-	mlr_dsl_ast_node_t* past;
 	mlr_dsl_cst_t* pcst;
-	fmgr_t* pfmgr;
 	mlhmmv_t* poosvars;
-	rval_evaluator_t* pevaluator;
 	int do_exclude;
 } mapper_filter_state_t;
 
@@ -180,22 +176,12 @@ static mapper_t* mapper_filter_alloc(ap_state_t* pargp,
 	mlr_dsl_ast_t* past, int type_inferencing, int do_exclude)
 {
 	mapper_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_filter_state_t));
-	int context_flags = IN_MLR_FILTER;
 
 	pstate->pargp      = pargp;
 	// Retain the string contents along with any in-pointers from the AST/CST
 	pstate->mlr_dsl_expression = mlr_dsl_expression;
 	pstate->comment_stripped_mlr_dsl_expression = comment_stripped_mlr_dsl_expression;
-
-	// xxx temp
-	mlr_dsl_ast_node_t* psubtree = extract_filterable_statement(past, type_inferencing);
-	pstate->past = psubtree;
 	pstate->pcst = mlr_dsl_cst_alloc_filterable(past, type_inferencing);
-
-	pstate->pfmgr      = fmgr_alloc();
-	// xxx make a separate entry point ...
-	pstate->pevaluator = rval_evaluator_alloc_from_ast(pstate->past, pstate->pfmgr, type_inferencing, context_flags);
-	fmgr_resolve_func_callsites(pstate->pfmgr);
 	pstate->poosvars   = mlhmmv_alloc();
 	pstate->do_exclude = do_exclude;
 
@@ -210,10 +196,8 @@ static mapper_t* mapper_filter_alloc(ap_state_t* pargp,
 
 static void mapper_filter_free(mapper_t* pmapper) {
 	mapper_filter_state_t* pstate = pmapper->pvstate;
-	pstate->pevaluator->pfree_func(pstate->pevaluator);
 	ap_free(pstate->pargp);
-	mlr_dsl_ast_node_free(pstate->past);
-	fmgr_free(pstate->pfmgr);
+	mlr_dsl_cst_free(pstate->pcst);
 	mlhmmv_free(pstate->poosvars);
 	free(pstate->mlr_dsl_expression);
 	free(pstate->comment_stripped_mlr_dsl_expression);
@@ -244,7 +228,6 @@ static sllv_t* mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvst
 		}
 	};
 
-	//rval_evaluator_t* pev = pstate->pevaluator;
 	rval_evaluator_t* pev = pstate->pcst->pfilter_evaluator;
 	mv_t val = pev->pprocess_func(pev->pvstate, &variables);
 
