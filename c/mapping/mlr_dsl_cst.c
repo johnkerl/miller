@@ -876,7 +876,7 @@ static mlr_dsl_cst_statement_t* alloc_local_variable_assignment(mlr_dsl_cst_t* p
 	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 
-	if (pleft->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME) {
+	if (pleft->type != MD_AST_NODE_TYPE_BOUND_VARIABLE) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
