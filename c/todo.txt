@@ -65,6 +65,8 @@ MORE:
 * windows port?
 ? msort.o wt?
 
+!?! seqgen as lrec-reader ?!?
+
 ----------------------------------------------------------------
 4.6.0:
 
@@ -74,6 +76,7 @@ MORE:
 * most-frequent/least-frequent
 * seqgen
 * variadic min & max
+* bare print/printn
 * multiple filter/put -f with examples @ new mld section.
 * mlr -F and -K. Note -l -L -f -F -k -K.
 

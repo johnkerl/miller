@@ -2758,6 +2758,9 @@ static void handle_triple_for(
 			mv_set_boolean_strict(&val);
 		if (!val.u.boolv)
 			break;
+		// xxx proper handling of empty start/continue/update
+		// xxx proper handling of break and continue
+		mlr_dsl_cst_handle_statement_list(pstatement->pblock_statements, pvars, pcst_outputs);
 		mlr_dsl_cst_handle_statement_list(pstatement->ptriple_for_update_statements, pvars, pcst_outputs);
 	}
 
