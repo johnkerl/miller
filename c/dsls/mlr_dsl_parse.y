@@ -425,7 +425,7 @@ md_for_oosvar_keylist(A) ::= md_for_oosvar_keylist(L) MD_TOKEN_COMMA MD_TOKEN_NO
 md_triple_for(A) ::=
 	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
 		md_triple_for_start(S) MD_TOKEN_SEMICOLON
-		md_triple_for_condition(C) MD_TOKEN_SEMICOLON
+		md_rhs(C) MD_TOKEN_SEMICOLON
 		md_triple_for_update(U)
 	MD_TOKEN_RPAREN
 	MD_TOKEN_LBRACE
@@ -435,15 +435,30 @@ md_triple_for(A) ::=
 	A = mlr_dsl_ast_node_alloc_quaternary(F->text, MD_AST_NODE_TYPE_TRIPLE_FOR, S, C, U, L);
 }
 
-md_triple_for_start(A) ::= md_statement_not_braced_end(B). { // xxx temp
-	A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
+
+//md_triple_for_start(A) ::= md_statement_not_braced_end(B). { // xxx temp
+//	A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
+//}
+//}
+//md_triple_for_update(A) ::= md_statement_not_braced_end(B). { // xxx temp
+//	A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
+//}
+
+md_triple_for_start(A) ::= md_statement_not_braced_end(B). {
+	A = mlr_dsl_ast_node_alloc_unary("start_statements", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
 }
-md_triple_for_condition(A) ::= md_rhs(B). {
-	A = B;
+md_triple_for_start(A) ::= md_triple_for_start(B) MD_TOKEN_COMMA md_statement_not_braced_end(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
 }
-md_triple_for_update(A) ::= md_statement_not_braced_end(B). { // xxx temp
-	A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
+
+md_triple_for_update(A) ::= md_statement_not_braced_end(B). {
+	A = mlr_dsl_ast_node_alloc_unary("update_statements", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
 }
+md_triple_for_update(A) ::= md_triple_for_update(B) MD_TOKEN_COMMA md_statement_not_braced_end(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+
+
 
 // ----------------------------------------------------------------
 // Cases:
