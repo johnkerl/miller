@@ -4809,8 +4809,56 @@ announce TRIPLE-FORs
 
 run_mlr --opprint --from $indir/abixy put '
   local sum = 0;
-  for (local a = 1; a <= NR; a += 1) {
-    sum += a
+  local a = 1;
+  for (;;) {
+    if (a > NR) {
+        break;
+    }
+    sum += a;
+    a += 1
+  }
+  $z = sum
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  local sum = 0;
+  for (local a = 1; ;) {
+    if (a > NR) {
+        break;
+    }
+    sum += a;
+    a += 1
+  }
+  $z = sum
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  local sum = 0;
+  local a = 1;
+  for (; ; a += 1) {
+    if (a > NR) {
+        break;
+    }
+    sum += a;
+  }
+  $z = sum
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  local sum = 0;
+  for (local a=1; ; a += 1) {
+    if (a > NR) {
+        break;
+    }
+    sum += a;
+  }
+  $z = sum
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  local sum = 0;
+  for (local a=1; a <= NR; a += 1) {
+    sum += a;
   }
   $z = sum
 '
