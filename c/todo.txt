@@ -7,18 +7,14 @@ BUGFIXES
 TOP OF LIST:
 
 * --c2p, --c2j etc ...
-! triple-fors
 
 ----------------------------------------------------------------
 10MIN:
 * sql-schema example
 * publish
-* mlr -f, manpage, etc. for variadic funcs.
 
 ----------------------------------------------------------------
 UDFs/subrs/localvars:
-* maybe:
-  - disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
 * hygiene:
   - valgrinds
 * UT & doc:
@@ -41,8 +37,10 @@ UDFs/subrs/localvars:
   - mlr --opprint --from s put -v '$o1 = a; local a=1000+NR; $o2 = a; a=2000+NR; $o3 = a'
   - seqgen
 * doc:
+  - triple-for; also remove statements of absence elsewhere
   - note mlr -l -L -f -F -k -K rather prominently at mlh.
   - kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
+  - mlr -f, manpage, etc. for variadic funcs.
   - multiple filter/put -f (new mld section)
   - note UDFs may not overwrite built-in functions; subrs have a different namespace (log example); each
     kind may not be multiply defined.
@@ -53,6 +51,7 @@ UDFs/subrs/localvars:
 ----------------------------------------------------------------
 MORE:
 
+? disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
 ? some help for keyword clashes? e.g. 'func E(x) { ... }' ?
 ? multiple-valued function returns??
 ? more than 'syntax error' from lemon-parse failures ... lemon API research
