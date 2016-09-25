@@ -1554,6 +1554,147 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 		pwriter_opts->ofile_fmt        = "pprint";
 		argi += 1;
 
+	// xxx under construction
+	} else if (streq(argv[argi], "--c2t")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->irs = cli_sep_from_arg("lf");
+	} else if (streq(argv[argi], "--c2d")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->irs = cli_sep_from_arg("lf");
+	} else if (streq(argv[argi], "--c2n")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->irs = cli_sep_from_arg("lf");
+	} else if (streq(argv[argi], "--c2j")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->irs = cli_sep_from_arg("lf");
+	} else if (streq(argv[argi], "--c2p")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->irs = cli_sep_from_arg("lf");
+	} else if (streq(argv[argi], "--c2x")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->irs = cli_sep_from_arg("lf");
+	} else if (streq(argv[argi], "--c2m")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->irs = cli_sep_from_arg("lf");
+
+	} else if (streq(argv[argi], "--t2c")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->ifs = cli_sep_from_arg("tab");
+		preader_opts->irs = cli_sep_from_arg("lf");
+	} else if (streq(argv[argi], "--t2d")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->ifs = cli_sep_from_arg("tab");
+		preader_opts->irs = cli_sep_from_arg("lf");
+	} else if (streq(argv[argi], "--t2n")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->ifs = cli_sep_from_arg("tab");
+		preader_opts->irs = cli_sep_from_arg("lf");
+	} else if (streq(argv[argi], "--t2j")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->ifs = cli_sep_from_arg("tab");
+		preader_opts->irs = cli_sep_from_arg("lf");
+	} else if (streq(argv[argi], "--t2p")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->ifs = cli_sep_from_arg("tab");
+		preader_opts->irs = cli_sep_from_arg("lf");
+	} else if (streq(argv[argi], "--t2x")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->ifs = cli_sep_from_arg("tab");
+		preader_opts->irs = cli_sep_from_arg("lf");
+	} else if (streq(argv[argi], "--t2m")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->ifs = cli_sep_from_arg("tab");
+		preader_opts->irs = cli_sep_from_arg("lf");
+
+	} else if (streq(argv[argi], "--d2c")) {
+		preader_opts->ifile_fmt = "dkvp";
+	} else if (streq(argv[argi], "--d2t")) {
+		preader_opts->ifile_fmt = "dkvp";
+	} else if (streq(argv[argi], "--d2n")) {
+		preader_opts->ifile_fmt = "dkvp";
+	} else if (streq(argv[argi], "--d2j")) {
+		preader_opts->ifile_fmt = "dkvp";
+	} else if (streq(argv[argi], "--d2p")) {
+		preader_opts->ifile_fmt = "dkvp";
+	} else if (streq(argv[argi], "--d2x")) {
+		preader_opts->ifile_fmt = "dkvp";
+	} else if (streq(argv[argi], "--d2m")) {
+		preader_opts->ifile_fmt = "dkvp";
+
+	} else if (streq(argv[argi], "--n2c")) {
+		preader_opts->ifile_fmt = "nidx";
+	} else if (streq(argv[argi], "--n2t")) {
+		preader_opts->ifile_fmt = "nidx";
+	} else if (streq(argv[argi], "--n2d")) {
+		preader_opts->ifile_fmt = "nidx";
+	} else if (streq(argv[argi], "--n2j")) {
+		preader_opts->ifile_fmt = "nidx";
+	} else if (streq(argv[argi], "--n2p")) {
+		preader_opts->ifile_fmt = "nidx";
+	} else if (streq(argv[argi], "--n2x")) {
+		preader_opts->ifile_fmt = "nidx";
+	} else if (streq(argv[argi], "--n2m")) {
+		preader_opts->ifile_fmt = "nidx";
+
+	} else if (streq(argv[argi], "--j2c")) {
+		preader_opts->ifile_fmt = "json";
+	} else if (streq(argv[argi], "--j2t")) {
+		preader_opts->ifile_fmt = "json";
+	} else if (streq(argv[argi], "--j2d")) {
+		preader_opts->ifile_fmt = "json";
+	} else if (streq(argv[argi], "--j2n")) {
+		preader_opts->ifile_fmt = "json";
+	} else if (streq(argv[argi], "--j2p")) {
+		preader_opts->ifile_fmt = "json";
+	} else if (streq(argv[argi], "--j2x")) {
+		preader_opts->ifile_fmt = "json";
+	} else if (streq(argv[argi], "--j2m")) {
+		preader_opts->ifile_fmt = "json";
+
+	} else if (streq(argv[argi], "--p2c")) {
+		preader_opts->ifile_fmt        = "csvlite";
+		preader_opts->ifs              = " ";
+		preader_opts->allow_repeat_ifs = TRUE;
+	} else if (streq(argv[argi], "--p2t")) {
+		preader_opts->ifile_fmt        = "csvlite";
+		preader_opts->ifs              = " ";
+		preader_opts->allow_repeat_ifs = TRUE;
+	} else if (streq(argv[argi], "--p2d")) {
+		preader_opts->ifile_fmt        = "csvlite";
+		preader_opts->ifs              = " ";
+		preader_opts->allow_repeat_ifs = TRUE;
+	} else if (streq(argv[argi], "--p2n")) {
+		preader_opts->ifile_fmt        = "csvlite";
+		preader_opts->ifs              = " ";
+		preader_opts->allow_repeat_ifs = TRUE;
+	} else if (streq(argv[argi], "--p2j")) {
+		preader_opts->ifile_fmt        = "csvlite";
+		preader_opts->ifs              = " ";
+		preader_opts->allow_repeat_ifs = TRUE;
+	} else if (streq(argv[argi], "--p2x")) {
+		preader_opts->ifile_fmt        = "csvlite";
+		preader_opts->ifs              = " ";
+		preader_opts->allow_repeat_ifs = TRUE;
+	} else if (streq(argv[argi], "--p2m")) {
+		preader_opts->ifile_fmt        = "csvlite";
+		preader_opts->ifs              = " ";
+		preader_opts->allow_repeat_ifs = TRUE;
+
+	} else if (streq(argv[argi], "--x2c")) {
+		preader_opts->ifile_fmt = "xtab";
+	} else if (streq(argv[argi], "--x2t")) {
+		preader_opts->ifile_fmt = "xtab";
+	} else if (streq(argv[argi], "--x2d")) {
+		preader_opts->ifile_fmt = "xtab";
+	} else if (streq(argv[argi], "--x2n")) {
+		preader_opts->ifile_fmt = "xtab";
+	} else if (streq(argv[argi], "--x2j")) {
+		preader_opts->ifile_fmt = "xtab";
+	} else if (streq(argv[argi], "--x2p")) {
+		preader_opts->ifile_fmt = "xtab";
+	} else if (streq(argv[argi], "--x2m")) {
+		preader_opts->ifile_fmt = "xtab";
+
 	}
 	*pargi = argi;
 	return argi != oargi;
