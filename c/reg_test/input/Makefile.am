@@ -2,6 +2,14 @@ SUBDIRS=	rfc-csv
 EXTRA_DIST=	\
 		a.csv \
 		a.pprint \
+		abixy.csv \
+		abixy.dkvp \
+		abixy.json \
+		abixy.md \
+		abixy.nidx \
+		abixy.pprint \
+		abixy.tsv \
+		abixy.xtab \
 		abixy \
 		abixy-het \
 		abixy-wide \
