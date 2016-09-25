@@ -478,6 +478,18 @@ Data-format options, for input, output, or both:
   "export MLR_CSV_DEFAULT_RS=lf" or "setenv MLR_CSV_DEFAULT_RS lf" depending on
   which shell you use.
 
+As keystroke-savers for format-conversion you may use the following:
+  --c2t --c2d --c2n --c2j --c2x --c2p --c2m
+  --t2c       --t2d --t2n --t2j --t2x --t2p --t2m
+  --d2c --d2t       --d2n --d2j --d2x --d2p --d2m
+  --n2c --n2t --n2d       --n2j --n2x --n2p --n2m
+  --j2c --j2t --j2d --j2n       --j2x --j2p --j2m
+  --x2c --x2t --x2d --x2n --x2j       --x2p --x2m
+  --p2c --p2t --p2d --p2n --p2j --p2x       --p2m
+The letters c t d n j x p m refer to formats CSV with LF, TSV with LF, DKVP,
+NIDX, JSON, XTAB, PPRINT, and markdown, respectively. Note that markdown format
+is available for output only.
+
 Compressed-data options:
   --prepipe {command} This allows Miller to handle compressed inputs. You can do
   without this for single input files, e.g. "gunzip &lt; myfile.csv.gz | mlr ...".

@@ -705,6 +705,18 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "  You can also have MLR_CSV_DEFAULT_RS=lf in your shell environment, e.g.\n");
 	fprintf(o, "  \"export MLR_CSV_DEFAULT_RS=lf\" or \"setenv MLR_CSV_DEFAULT_RS lf\" depending on\n");
 	fprintf(o, "  which shell you use.\n");
+	fprintf(o, "\n");
+	fprintf(o, "As keystroke-savers for format-conversion you may use the following:\n");
+	fprintf(o, "  --c2t --c2d --c2n --c2j --c2x --c2p --c2m\n");
+	fprintf(o, "  --t2c       --t2d --t2n --t2j --t2x --t2p --t2m\n");
+	fprintf(o, "  --d2c --d2t       --d2n --d2j --d2x --d2p --d2m\n");
+	fprintf(o, "  --n2c --n2t --n2d       --n2j --n2x --n2p --n2m\n");
+	fprintf(o, "  --j2c --j2t --j2d --j2n       --j2x --j2p --j2m\n");
+	fprintf(o, "  --x2c --x2t --x2d --x2n --x2j       --x2p --x2m\n");
+	fprintf(o, "  --p2c --p2t --p2d --p2n --p2j --p2x       --p2m\n");
+	fprintf(o, "The letters c t d n j x p m refer to formats CSV with LF, TSV with LF, DKVP,\n");
+	fprintf(o, "NIDX, JSON, XTAB, PPRINT, and markdown, respectively. Note that markdown format\n");
+	fprintf(o, "is available for output only.\n");
 }
 
 static void main_usage_compressed_data_options(FILE* o, char* argv0) {
@@ -1554,7 +1566,6 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 		pwriter_opts->ofile_fmt        = "pprint";
 		argi += 1;
 
-	// xxx under construction
 	} else if (streq(argv[argi], "--c2t")) {
 		preader_opts->ifile_fmt = "csv";
 		preader_opts->irs       = "\n";
