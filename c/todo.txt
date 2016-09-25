@@ -6,10 +6,8 @@ BUGFIXES
 ================================================================
 TOP OF LIST:
 
-----------------------------------------------------------------
-I/O CLOPTS:
 * --c2p, --c2j etc ...
-? triple-fors?
+! triple-fors
 
 ----------------------------------------------------------------
 10MIN:
@@ -54,9 +52,10 @@ UDFs/subrs/localvars:
 
 ----------------------------------------------------------------
 MORE:
+
 ? some help for keyword clashes? e.g. 'func E(x) { ... }' ?
-* dquoting for other formats.
 ? multiple-valued function returns??
+? more than 'syntax error' from lemon-parse failures ... lemon API research
 ! rh/fedora/centos
 ! multi-field x many verbs
 
@@ -71,8 +70,8 @@ MORE:
 4.6.0:
 
 * func & subr. acknowledge awk yet again.
-? triple-fors?
-? --c2p et al.?
+* triple-fors
+* --c2p et al.
 * most-frequent/least-frequent
 * seqgen
 * variadic min & max

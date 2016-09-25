@@ -4805,6 +4805,83 @@ run_mlr --opprint --from $indir/abixy put '
  '
 
 # ----------------------------------------------------------------
+announce TRIPLE-FORs
+
+run_mlr --opprint --from $indir/abixy put '
+  local sum = 0;
+  for (local a = 1; a <= NR; a += 1) {
+    sum += a
+  }
+  $z = sum
+'
+
+#run_mlr --from $indir/abixy put '
+#  #for (local a < 1; a <= 10; a += 1) {
+#  #for (a < 1; a <= 10; a += 1) {
+#  #for ($x = 1; $x <= NR; $x += 1) {
+#  #print "BEFORE LOOP";
+#  for ($x = 1; $x <= 10; $x += 1) {
+#  }
+#  #print "AFTER LOOP";
+#'
+
+#run_mlr --from $indir/abixy put '
+#  local a = 0;
+#  for (@a = 1; @a <= 10; @a += 1) {
+#    $x = @a;
+#  }
+#'
+#
+#run_mlr --from $indir/abixy put '
+#  @oa = 0;
+#  @ob = 0;
+#  for (@a = 1, @b = 1; @a <= NR; @a += 1, @b *= 2) {
+#    @oa += @a;
+#    @ob += @b;
+#  }
+#  $oa = @oa;
+#  $ob = @ob;
+#'
+#
+#run_mlr --from $indir/abixy put '
+#  local oa = 0;
+#  local ob = 0;
+#  for (@a = 1, @b = 1; @a <= NR; @a += 1, @b *= 2) {
+#    oa += @a;
+#    ob += @b;
+#  }
+#  $oa = oa;
+#  $ob = ob;
+#'
+#
+#run_mlr --from $indir/abixy put '
+#  local a = 0;
+#  for (a = 1; a <= 10; a += 1) {
+#    $x = a;
+#  }
+#  #print "AFTER LOOP";
+#'
+#
+#echo x=1 | run_mlr put '
+#  local a = 0;
+#  for (a = 1; a <= 10; a += 1) {
+#    $x = a;
+#  }
+#  $x = a;
+#'
+
+echo x=1 | run_mlr put '
+  local a = 100;
+  local b = 100;
+  for (local a = 200, b = 300; a <= 210; a += 1, b += 1) {
+    print "a:".a.",b:".b
+  }
+  $oa = a;
+  $ob = b;
+'
+
+
+# ----------------------------------------------------------------
 announce MULTI-PART SCRIPTS
 
 run_mlr --opprint --from $indir/abixy put -f $indir/put-script-piece-1
