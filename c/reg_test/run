@@ -60,15 +60,15 @@ echo
 num_passed=0
 
 announce() {
-	echo >> $outfile
-	echo "================================================================" >> $outfile
-	echo "$@" >> $outfile
-	echo >> $outfile
+  echo >> $outfile
+  echo "================================================================" >> $outfile
+  echo "$@" >> $outfile
+  echo >> $outfile
 }
 
 mention() {
-	echo >> $outfile
-	echo ---------------------------------------------------------------- "$@" >> $outfile
+  echo >> $outfile
+  echo ---------------------------------------------------------------- "$@" >> $outfile
 }
 
 # A key feature of this regression script is that it can be invoked from any
@@ -77,40 +77,40 @@ mention() {
 # each command being executed. See also diff -I below.
 run_mlr() {
   # Use just "mlr" for info messages
-	echo mlr "$@"
-	echo mlr "$@" >> $outfile
+  echo mlr "$@"
+  echo mlr "$@" >> $outfile
   # Use path to mlr for invoking the command
-	$path_to_mlr "$@" >> $outfile
-	echo >> $outfile
-	# since set -e
-	num_passed=`expr $num_passed + 1`
+  $path_to_mlr "$@" >> $outfile
+  echo >> $outfile
+  # since set -e
+  num_passed=`expr $num_passed + 1`
 }
 
 # Just cats a file while also announcing that fact.
 run_cat() {
-	echo cat "$@"
-	echo cat "$@" >> $outfile # for diff at end
-	cat "$@" >> $outfile      # for diff at end
-	echo >> $outfile
+  echo cat "$@"
+  echo cat "$@" >> $outfile # for diff at end
+  cat "$@" >> $outfile      # for diff at end
+  echo >> $outfile
 }
 
 mlr_expect_fail() {
   # Use just "mlr" for info messages
-	echo mlr "$@"
-	echo mlr "$@" >> $outfile
+  echo mlr "$@"
+  echo mlr "$@" >> $outfile
   # Use path to mlr for invoking the command
-    set +e
-	$path_to_mlr "$@" >> $outfile 2>&1
-    status=$?
-    if [ $status -ne 1 ]; then
-        echo "Exit status was $status; expected 1."
-        echo "Exit status was $status; expected 1." >> $outfile
-    fi
-    set -e
-	echo >> $outfile
-    test $status -eq 1
-	# since set -e
-	num_passed=`expr $num_passed + 1`
+  set +e
+  $path_to_mlr "$@" >> $outfile 2>&1
+  status=$?
+  if [ $status -ne 1 ]; then
+    echo "Exit status was $status; expected 1."
+    echo "Exit status was $status; expected 1." >> $outfile
+  fi
+  set -e
+  echo >> $outfile
+  test $status -eq 1
+  # since set -e
+  num_passed=`expr $num_passed + 1`
 }
 
 # ================================================================
@@ -4822,6 +4822,19 @@ run_mlr --opprint --from $indir/abixy put '
 
 run_mlr --opprint --from $indir/abixy put '
   local sum = 0;
+  local a = 1;
+  for (;;) {
+    if (a > NR) {
+        break;
+    }
+    sum += a;
+    a += 1
+  }
+  $z = sum
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  local sum = 0;
   for (local a = 1; ;) {
     if (a > NR) {
         break;
@@ -4863,61 +4876,6 @@ run_mlr --opprint --from $indir/abixy put '
   $z = sum
 '
 
-#run_mlr --from $indir/abixy put '
-#  #for (local a < 1; a <= 10; a += 1) {
-#  #for (a < 1; a <= 10; a += 1) {
-#  #for ($x = 1; $x <= NR; $x += 1) {
-#  #print "BEFORE LOOP";
-#  for ($x = 1; $x <= 10; $x += 1) {
-#  }
-#  #print "AFTER LOOP";
-#'
-
-#run_mlr --from $indir/abixy put '
-#  local a = 0;
-#  for (@a = 1; @a <= 10; @a += 1) {
-#    $x = @a;
-#  }
-#'
-#
-#run_mlr --from $indir/abixy put '
-#  @oa = 0;
-#  @ob = 0;
-#  for (@a = 1, @b = 1; @a <= NR; @a += 1, @b *= 2) {
-#    @oa += @a;
-#    @ob += @b;
-#  }
-#  $oa = @oa;
-#  $ob = @ob;
-#'
-#
-#run_mlr --from $indir/abixy put '
-#  local oa = 0;
-#  local ob = 0;
-#  for (@a = 1, @b = 1; @a <= NR; @a += 1, @b *= 2) {
-#    oa += @a;
-#    ob += @b;
-#  }
-#  $oa = oa;
-#  $ob = ob;
-#'
-#
-#run_mlr --from $indir/abixy put '
-#  local a = 0;
-#  for (a = 1; a <= 10; a += 1) {
-#    $x = a;
-#  }
-#  #print "AFTER LOOP";
-#'
-#
-#echo x=1 | run_mlr put '
-#  local a = 0;
-#  for (a = 1; a <= 10; a += 1) {
-#    $x = a;
-#  }
-#  $x = a;
-#'
-
 echo x=1 | run_mlr put '
   local a = 100;
   local b = 100;
@@ -4928,6 +4886,59 @@ echo x=1 | run_mlr put '
   $ob = b;
 '
 
+run_mlr --from $indir/abixy put '
+  for ( ; $x <= 10; $x += 1) {
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  local a = 100;
+  b  = 200;
+  @c = 300;
+  $d = 400;
+  for (local i = 1; i < 1024; i *= 2) {
+    a  += 1;
+    b  += 1;
+    @c += 1;
+    $d += 1;
+    $oa = a;
+    $ob = b;
+    $oc = @c;
+    $od = $d;
+  }
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  local sum = 0;
+  for (local a = 1; a <= 10; a += 1) {
+    continue;
+    sum += a;
+  }
+  $z = sum
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  local sum = 0;
+  for (local a = 1; a <= 10; a += 1) {
+    sum += a;
+    break;
+  }
+  $z = sum
+'
+
+run_mlr --opprint --from $indir/abixy put '
+  local sum = 0;
+  for (local a = 1; a <= NR; a += 1) {
+    if (a == 4 || a == 5) {
+      continue;
+    }
+    if (a == 8) {
+        break;
+    }
+    sum += a;
+  }
+  $z = sum
+'
 
 # ----------------------------------------------------------------
 announce MULTI-PART SCRIPTS

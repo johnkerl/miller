@@ -2759,7 +2759,7 @@ static void handle_triple_for(
 		if (!val.u.boolv)
 			break;
 
-		mlr_dsl_cst_handle_statement_list(pstatement->pblock_statements, pvars, pcst_outputs);
+		handle_statement_list_with_break_continue(pstatement->pblock_statements, pvars, pcst_outputs);
 
 		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 			loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
