@@ -214,7 +214,8 @@ static void print_and_free_record_list_barred(sllv_t* precords, FILE* output_str
 
 		if (onr == 0) {
 			j = 0;
-			fputs("| ", output_stream); // xxx parameterize
+			fputc('|', output_stream);
+			fputc(ofs, output_stream);
 			for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext, j++) {
 				if (j > 0) {
 					fputc(ofs, output_stream);
@@ -225,19 +226,23 @@ static void print_and_free_record_list_barred(sllv_t* precords, FILE* output_str
 					int d = max_widths[j] - strlen_for_utf8_display(pe->key);
 					for (int i = 0; i < d; i++)
 						fputc(ofs, output_stream);
-					fputs(" |", output_stream);
+					fputc(ofs, output_stream);
+					fputc('|', output_stream);
 				} else {
 					int d = max_widths[j] - strlen_for_utf8_display(pe->key);
 					for (int i = 0; i < d; i++)
 						fputc(ofs, output_stream);
-					fprintf(output_stream, "%s |", pe->key);
+					fprintf(output_stream, "%s", pe->key);
+					fputc(ofs, output_stream);
+					fputc('|', output_stream);
 				}
 			}
 			fputs(ors, output_stream);
 		}
 
 		j = 0;
-		fputs("| ", output_stream); // xxx parameterize
+		fputc('|', output_stream);
+		fputc(ofs, output_stream);
 		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext, j++) {
 			if (j > 0) {
 				fputc(ofs, output_stream);
@@ -250,12 +255,15 @@ static void print_and_free_record_list_barred(sllv_t* precords, FILE* output_str
 				int d = max_widths[j] - strlen_for_utf8_display(value);
 				for (int i = 0; i < d; i++)
 					fputc(ofs, output_stream);
-				fputs(" |", output_stream);
+				fputc(ofs, output_stream);
+				fputc('|', output_stream);
 			} else {
 				int d = max_widths[j] - strlen_for_utf8_display(value);
 				for (int i = 0; i < d; i++)
 					fputc(ofs, output_stream);
-				fprintf(output_stream, "%s |", value);
+				fprintf(output_stream, "%s", value);
+				fputc(ofs, output_stream);
+				fputc('|', output_stream);
 			}
 		}
 		fputs(ors, output_stream);
