@@ -44,6 +44,7 @@ typedef struct _cli_writer_opts_t {
 	int   headerless_csv_output;
 	int   right_justify_xtab_value;
 	int   right_align_pprint;
+	int   pprint_barred;
 	int   stack_json_output_vertically;
 	int   wrap_json_output_in_outer_list;
 	int   quote_json_values_always;

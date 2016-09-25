@@ -8,6 +8,7 @@ TOP OF LIST:
 
 ! valgrinds
 ! xxxes
+* --pprint --barred or some such
 
 ----------------------------------------------------------------
 10MIN:

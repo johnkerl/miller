@@ -1442,6 +1442,10 @@ int cli_handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts
 		pwriter_opts->right_align_pprint = TRUE;
 		argi += 1;
 
+	} else if (streq(argv[argi], "--barred")) {
+		pwriter_opts->pprint_barred = TRUE;
+		argi += 1;
+
 	} else if (streq(argv[argi], "--quote-all")) {
 		pwriter_opts->oquoting = QUOTE_ALL;
 		argi += 1;
