@@ -212,10 +212,13 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#tee">tee</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#top">top</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#uniq">uniq</a><br/>
-&bull;&nbsp;<a href="#then-chaining">then-chaining</a><br/>
-&bull;&nbsp;<a href="#Keywords_for_put">Keywords for put</a><br/>
+&bull;&nbsp;<a href="#Keywords_for_filter_and_put">Keywords for filter and put</a><br/>
 &bull;&nbsp;<a href="#Built-in_functions_for_filter_and_put">Built-in functions for filter and put</a><br/>
 &bull;&nbsp;<a href="#User-defined_functions_and_subroutines">User-defined functions and subroutines</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#User-defined_functions">User-defined functions</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#User-defined_subroutines">User-defined subroutines</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a><br/>
+&bull;&nbsp;<a href="#then-chaining">then-chaining</a><br/>
 &bull;&nbsp;<a href="#Data_types">Data types</a><br/>
 &bull;&nbsp;<a href="#Null_data:_empty_and_absent">Null data: empty and absent</a><br/>
 &bull;&nbsp;<a href="#String_literals">String literals</a><br/>
@@ -5652,73 +5655,7 @@ count
 </td></tr></table>
 
 <!-- ================================================================ -->
-<a id="then-chaining"/><h1>then-chaining</h1>
-
-<p/>
-In accord with the
-<a href="http://en.wikipedia.org/wiki/Unix_philosophy">Unix philosophy</a>, you can pipe data into or out of
-Miller. For example:
-
-<p/>
-<div class="pokipanel">
-<pre>
-mlr cut --complement -f os_version *.dat | mlr sort -f hostname,uptime
-</pre>
-</div>
-<p/>
-
-<p/>
-You can, if you like, instead simply chain commands together using the
-<tt>then</tt> keyword:
-
-<p/>
-<div class="pokipanel">
-<pre>
-mlr cut --complement -f os_version then sort -f hostname,uptime *.dat
-</pre>
-</div>
-<p/>
-
-Here&rsquo;s a performance comparison:
-
-<p/>
-<div class="pokipanel">
-<pre>
-% cat piped.sh
-mlr cut -x -f i,y data/big | mlr sort -n y &gt; /dev/null
-
-% time sh piped.sh
-real 0m2.828s
-user 0m3.183s
-sys  0m0.137s
-
-
-% cat chained.sh
-mlr cut -x -f i,y then sort -n y data/big &gt; /dev/null
-
-% time sh chained.sh
-real 0m2.082s
-user 0m1.933s
-sys  0m0.137s
-</pre>
-</div>
-<p/>
-
-There are two reasons to use then-chaining: one is for performance, although I
-don&rsquo;t expect this to be a win in all cases.  Using then-chaining avoids
-redundant string-parsing and string-formatting at each pipeline step: instead
-input records are parsed once, they are fed through each pipeline stage in
-memory, and then output records are formatted once. On the other hand, Miller
-is single-threaded, while modern systems are usually multi-processor, and when
-streaming-data programs operate through pipes, each one can use a CPU.  Rest
-assured you get the same results either way.
-
-<p/>The other reason to use then-chaining is for simplicity: you don&rsquo;t
-have re-type formatting flags (e.g. <tt>--csv --rs lf --fs tab</tt>) at every
-pipeline stage.
-
-<!-- ================================================================ -->
-<a id="Keywords_for_put"/><h1>Keywords for put</h1>
+<a id="Keywords_for_filter_and_put"/><h1>Keywords for filter and put</h1>
 
 <p/>
 <div class="pokipanel">
@@ -5903,8 +5840,8 @@ stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
 <p/>Each function takes a specific number of arguments, as shown below, except
 for functions marked as variadic such as <tt>min</tt> and <tt>max</tt>. (The
 latter compute min and max of any number of numerical arguments.) There is no
-notion of optional or default-on-absent arguments. Also, all argument-passing
-is positional rather than by name; arguments are passed by value, not by
+notion of optional or default-on-absent arguments. All argument-passing is
+positional rather than by name; arguments are passed by value, not by
 reference.
 
 <p/>
@@ -6174,17 +6111,46 @@ along with the mathematical constants PI and E.
 <!-- ================================================================ -->
 <a id="User-defined_functions_and_subroutines"/><h1>User-defined functions and subroutines</h1>
 
-<p/> xxx this section is under construction.
-
 <p/> As of Miller 4.6.0 you can define your own functions, as well as subroutines.
 
-<p/> xxx h2s...
+<!-- ================================================================ -->
+<a id="User-defined_functions"/><h2>User-defined functions</h2>
+
+<p/>Here&rsquo;s the obligatory example of a recursive function to compute the Fibonacci sequence:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint --from data/small put '
+    func f(n) {
+        if (isnumeric(n)) {
+            if (n &gt; 0) {
+                return n * f(n-1);
+            } else {
+                return 1;
+            }
+        }
+        # implicitly return absent-null if non-numeric
+    }
+    $ox = f($x + NR);
+    $oi = f($i);
+'
+a   b   i x                   y                   ox         oi
+pan pan 1 0.3467901443380824  0.7268028627434533  0.467054   1
+eks pan 2 0.7586799647899636  0.5221511083334797  3.680838   2
+wye wye 3 0.20460330576630303 0.33831852551664776 1.741251   6
+eks wye 4 0.38139939387114097 0.13418874328430463 18.588349  24
+wye pan 5 0.5732889198020006  0.8636244699032729  211.387310 120
+</pre>
+</div>
+<p/>
 
 <p/>Properties of user-defined functions:
 
 <ul>
 
 <li/> xxx example definition. outside begin/end. before/after body defs (resolved after parse).
+<li/> filter and put both.
 
 <li/> xxx xref to -f/-e for each of use.
 <li/> xxx no redefines of built-ins or of one another.
@@ -6196,9 +6162,110 @@ along with the mathematical constants PI and E.
 <li/> xxx xref to shared section for func/subr localvars (scope/extent/etc.)
 <li/> xxx missing return leads to absent-null (which xref). return value (single).
 
+<li/>
+xxx
+<a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a>
+
 </ul>
 
 <p/>xxx uncached/cached fibo examples.
+
+<!-- ================================================================ -->
+<a id="User-defined_subroutines"/><h2>User-defined subroutines</h2>
+
+<p/> xxx this section is under construction.
+
+<ul>
+<li/> xxx example definition. outside begin/end. before/after body defs (resolved after parse).
+<li/> put only, not filter
+<li/> xxx xref to -f/-e for each of use.
+<li/> xxx no redefines of built-ins or of one another.
+<li/> xxx no nested definitions.
+<li/> xxx access to arguments (positional/value); $/@ state as RHS.
+<li/> xxx all RHS stuff &mdash; and assigns to $/@.
+<li/> xxx recursive/mutually so ok. 
+<li/> xxx localvars as in fors. args may be reassigned.
+<li/> xxx xref to shared section for func/subr localvars (scope/extent/etc.)
+<a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a>
+</ul>
+
+<!-- ================================================================ -->
+<a id="Scope_and_extent_for_local_variables"/><h2>Scope and extent for local variables</h2>
+
+<p/> xxx this section is under construction.
+
+<ul>
+<li/> xxx
+<li/> xxx
+<li/> xxx All argument-passing is positional rather than by name; arguments are passed by value, not by reference.
+</ul>
+
+
+<!-- ================================================================ -->
+<a id="then-chaining"/><h1>then-chaining</h1>
+
+<p/>
+In accord with the
+<a href="http://en.wikipedia.org/wiki/Unix_philosophy">Unix philosophy</a>, you can pipe data into or out of
+Miller. For example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr cut --complement -f os_version *.dat | mlr sort -f hostname,uptime
+</pre>
+</div>
+<p/>
+
+<p/>
+You can, if you like, instead simply chain commands together using the
+<tt>then</tt> keyword:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr cut --complement -f os_version then sort -f hostname,uptime *.dat
+</pre>
+</div>
+<p/>
+
+Here&rsquo;s a performance comparison:
+
+<p/>
+<div class="pokipanel">
+<pre>
+% cat piped.sh
+mlr cut -x -f i,y data/big | mlr sort -n y &gt; /dev/null
+
+% time sh piped.sh
+real 0m2.828s
+user 0m3.183s
+sys  0m0.137s
+
+
+% cat chained.sh
+mlr cut -x -f i,y then sort -n y data/big &gt; /dev/null
+
+% time sh chained.sh
+real 0m2.082s
+user 0m1.933s
+sys  0m0.137s
+</pre>
+</div>
+<p/>
+
+There are two reasons to use then-chaining: one is for performance, although I
+don&rsquo;t expect this to be a win in all cases.  Using then-chaining avoids
+redundant string-parsing and string-formatting at each pipeline step: instead
+input records are parsed once, they are fed through each pipeline stage in
+memory, and then output records are formatted once. On the other hand, Miller
+is single-threaded, while modern systems are usually multi-processor, and when
+streaming-data programs operate through pipes, each one can use a CPU.  Rest
+assured you get the same results either way.
+
+<p/>The other reason to use then-chaining is for simplicity: you don&rsquo;t
+have re-type formatting flags (e.g. <tt>--csv --rs lf --fs tab</tt>) at every
+pipeline stage.
 
 <!-- ================================================================ -->
 <a id="Data_types"/><h1>Data types</h1>

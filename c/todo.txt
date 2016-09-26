@@ -43,6 +43,7 @@ DOC FOR 4.6.0:
 To file:
 * note mlr -l -L -f -F -k -K rather prominently at mlh.
 * mlh/mld func @ filter
+* absent vs. empty; unset $x vs. $x="". no null keyword.
 
 covers:
 * func-def example @ cover x n

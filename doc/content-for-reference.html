@@ -1510,6 +1510,91 @@ POKI_RUN_COMMAND{{mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp}
 </td></tr></table>
 
 <!-- ================================================================ -->
+<h1>Keywords for filter and put</h1>
+
+POKI_RUN_COMMAND{{mlr --help-all-keywords}}HERE
+
+<!-- ================================================================ -->
+<h1>Built-in functions for filter and put</h1>
+
+<p/>Each function takes a specific number of arguments, as shown below, except
+for functions marked as variadic such as <tt>min</tt> and <tt>max</tt>. (The
+latter compute min and max of any number of numerical arguments.) There is no
+notion of optional or default-on-absent arguments. All argument-passing is
+positional rather than by name; arguments are passed by value, not by
+reference.
+
+POKI_RUN_COMMAND{{mlr --help-all-functions}}HERE
+
+<!-- ================================================================ -->
+<h1>User-defined functions and subroutines</h1>
+
+<p/> As of Miller 4.6.0 you can define your own functions, as well as subroutines.
+
+<!-- ================================================================ -->
+<h2>User-defined functions</h2>
+
+<p/>Here&rsquo;s the obligatory example of a recursive function to compute the Fibonacci sequence:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/fibo-example.sh)HERE
+
+<p/>Properties of user-defined functions:
+
+<ul>
+
+<li/> xxx example definition. outside begin/end. before/after body defs (resolved after parse).
+<li/> filter and put both.
+
+<li/> xxx xref to -f/-e for each of use.
+<li/> xxx no redefines of built-ins or of one another.
+<li/> xxx no nested definitions.
+<li/> xxx access to arguments (positional/value); $/@ state as RHS.
+<li/> xxx all RHS stuff &mdash; no assigns to $/@; only to localvars. no subr calls.
+<li/> xxx recursive/mutually so ok. 
+<li/> xxx localvars as in fors. args may be reassigned.
+<li/> xxx xref to shared section for func/subr localvars (scope/extent/etc.)
+<li/> xxx missing return leads to absent-null (which xref). return value (single).
+
+<li/>
+xxx
+<a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a>
+
+</ul>
+
+<p/>xxx uncached/cached fibo examples.
+
+<!-- ================================================================ -->
+<h2>User-defined subroutines</h2>
+
+<p/> xxx this section is under construction.
+
+<ul>
+<li/> xxx example definition. outside begin/end. before/after body defs (resolved after parse).
+<li/> put only, not filter
+<li/> xxx xref to -f/-e for each of use.
+<li/> xxx no redefines of built-ins or of one another.
+<li/> xxx no nested definitions.
+<li/> xxx access to arguments (positional/value); $/@ state as RHS.
+<li/> xxx all RHS stuff &mdash; and assigns to $/@.
+<li/> xxx recursive/mutually so ok. 
+<li/> xxx localvars as in fors. args may be reassigned.
+<li/> xxx xref to shared section for func/subr localvars (scope/extent/etc.)
+<a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a>
+</ul>
+
+<!-- ================================================================ -->
+<h2>Scope and extent for local variables</h2>
+
+<p/> xxx this section is under construction.
+
+<ul>
+<li/> xxx
+<li/> xxx
+<li/> xxx All argument-passing is positional rather than by name; arguments are passed by value, not by reference.
+</ul>
+
+
+<!-- ================================================================ -->
 <h1>then-chaining</h1>
 
 <p/>
@@ -1541,52 +1626,6 @@ assured you get the same results either way.
 <p/>The other reason to use then-chaining is for simplicity: you don&rsquo;t
 have re-type formatting flags (e.g. <tt>--csv --rs lf --fs tab</tt>) at every
 pipeline stage.
-
-<!-- ================================================================ -->
-<h1>Keywords for put</h1>
-
-POKI_RUN_COMMAND{{mlr --help-all-keywords}}HERE
-
-<!-- ================================================================ -->
-<h1>Built-in functions for filter and put</h1>
-
-<p/>Each function takes a specific number of arguments, as shown below, except
-for functions marked as variadic such as <tt>min</tt> and <tt>max</tt>. (The
-latter compute min and max of any number of numerical arguments.) There is no
-notion of optional or default-on-absent arguments. Also, all argument-passing
-is positional rather than by name; arguments are passed by value, not by
-reference.
-
-POKI_RUN_COMMAND{{mlr --help-all-functions}}HERE
-
-<!-- ================================================================ -->
-<h1>User-defined functions and subroutines</h1>
-
-<p/> xxx this section is under construction.
-
-<p/> As of Miller 4.6.0 you can define your own functions, as well as subroutines.
-
-<p/> xxx h2s...
-
-<p/>Properties of user-defined functions:
-
-<ul>
-
-<li/> xxx example definition. outside begin/end. before/after body defs (resolved after parse).
-
-<li/> xxx xref to -f/-e for each of use.
-<li/> xxx no redefines of built-ins or of one another.
-<li/> xxx no nested definitions.
-<li/> xxx access to arguments (positional/value); $/@ state as RHS.
-<li/> xxx all RHS stuff &mdash; no assigns to $/@; only to localvars. no subr calls.
-<li/> xxx recursive/mutually so ok. 
-<li/> xxx localvars as in fors. args may be reassigned.
-<li/> xxx xref to shared section for func/subr localvars (scope/extent/etc.)
-<li/> xxx missing return leads to absent-null (which xref). return value (single).
-
-</ul>
-
-<p/>xxx uncached/cached fibo examples.
 
 <!-- ================================================================ -->
 <h1>Data types</h1>
