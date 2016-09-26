@@ -5875,6 +5875,13 @@ stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
 <!-- ================================================================ -->
 <a id="Functions_for_filter_and_put"/><h1>Functions for filter and put</h1>
 
+<p/>Each function takes a specific number of arguments, as shown below, except
+for functions marked as variadic such as <tt>min</tt> and <tt>max</tt>. (The
+latter compute min and max of any number of numerical arguments.) There is no
+notion of optional or default-on-absent arguments. Also, all argument-passing
+is positional rather than by name; arguments are passed by value, not by
+reference.
+
 <p/>
 <div class="pokipanel">
 <pre>

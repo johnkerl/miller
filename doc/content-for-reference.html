@@ -1535,6 +1535,13 @@ POKI_RUN_COMMAND{{mlr --help-all-keywords}}HERE
 <!-- ================================================================ -->
 <h1>Functions for filter and put</h1>
 
+<p/>Each function takes a specific number of arguments, as shown below, except
+for functions marked as variadic such as <tt>min</tt> and <tt>max</tt>. (The
+latter compute min and max of any number of numerical arguments.) There is no
+notion of optional or default-on-absent arguments. Also, all argument-passing
+is positional rather than by name; arguments are passed by value, not by
+reference.
+
 POKI_RUN_COMMAND{{mlr --help-all-functions}}HERE
 
 <!-- ================================================================ -->
