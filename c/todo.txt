@@ -4,13 +4,23 @@ BUGFIXES
 :D
 
 ================================================================
-TOP OF LIST:
+NON-RELEASE:
+
+! rh/fedora/centos
+* call for use-cases? (go first.)
+* go through lmag article & clarify all unclears
+* windows port?
+? msort.o wt?
+
+----------------------------------------------------------------
+PRE-RELEASE 4.6.0:
 
 ! valgrinds
 ! xxxes
 
 ----------------------------------------------------------------
-UT:
+UT FOR 4.6.0:
+
 * variadic min & max
 * UT/mlh/mld func @ filter
 * UT/mlh/mld -e, and mixed -f and -e, for filter/put
@@ -30,7 +40,8 @@ UT:
 * seqgen
 
 ----------------------------------------------------------------
-DOC:
+DOC FOR 4.6.0:
+
 * --c2p, --c2j etc ...
 * --pprint --barred; emph for output only
 * triple-for; also remove statements of absence elsewhere
@@ -59,24 +70,7 @@ DOC:
 * locals in all curly-braced control structures; top-level locals; scope, extent, freeing.
 
 ----------------------------------------------------------------
-MORE:
-
-? disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
-? some help for keyword clashes? e.g. 'func E(x) { ... }' ?
-? multiple-valued function returns??
-? more than 'syntax error' from lemon-parse failures ... lemon API research
-! rh/fedora/centos
-! multi-field x many verbs
-
-* call for use-cases? (go first.)
-* go through lmag article & clarify all unclears
-* windows port?
-? msort.o wt?
-
-!?! seqgen as lrec-reader ?!?
-
-----------------------------------------------------------------
-4.6.0:
+4.6.0 FEATURES:
 
 * func & subr. acknowledge awk yet again.
 * triple-fors
@@ -96,7 +90,11 @@ MORE:
 * final valgrind check
 
 ----------------------------------------------------------------
-4.6.0 ideas:
+4.7.0 ideas:
+
+! more than 'syntax error' from lemon-parse failures ... lemon API research
+
+! multi-field x many verbs
 
 ! -f/-r field-name-spec opportunities throughout
   - bar
@@ -125,10 +123,16 @@ MORE:
   command-line options, and may be overridden with flags supplied to mlr put and
   mlr tee."
 
+? disallow reads of unset boundvars ? more generally, runtime checks in some --strict ?
+? some help for keyword clashes? e.g. 'func E(x) { ... }' ?
+? multiple-valued function returns??
+
 * bargv0 throughout, replacing "mlr" and argv[0] both. (former against name-changes; latter against /usr/bin/mlr.)
 
 ? mlr step -a shift --by {n}
 ? --imd ?
+
+!?! seqgen as lrec-reader ?!?
 
 ----------------------------------------------------------------
 ? double-quote-aware (non-lite) nidx & dkvp options?
