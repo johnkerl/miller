@@ -213,6 +213,22 @@ static void print_and_free_record_list_barred(sllv_t* precords, FILE* output_str
 		lrec_t* prec = pnode->pvvalue;
 
 		if (onr == 0) {
+
+			j = 0;
+			fputc('+', output_stream);
+			fputc('-', output_stream);
+			for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext, j++) {
+				if (j > 0) {
+					fputc('-', output_stream);
+				}
+				int d = max_widths[j];
+				for (int i = 0; i < d; i++)
+					fputc('-', output_stream);
+				fputc('-', output_stream);
+				fputc('+', output_stream);
+			}
+			fputs(ors, output_stream);
+
 			j = 0;
 			fputc('|', output_stream);
 			fputc(ofs, output_stream);
@@ -238,6 +254,22 @@ static void print_and_free_record_list_barred(sllv_t* precords, FILE* output_str
 				}
 			}
 			fputs(ors, output_stream);
+
+			j = 0;
+			fputc('+', output_stream);
+			fputc('-', output_stream);
+			for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext, j++) {
+				if (j > 0) {
+					fputc('-', output_stream);
+				}
+				int d = max_widths[j];
+				for (int i = 0; i < d; i++)
+					fputc('-', output_stream);
+				fputc('-', output_stream);
+				fputc('+', output_stream);
+			}
+			fputs(ors, output_stream);
+
 		}
 
 		j = 0;
@@ -267,6 +299,23 @@ static void print_and_free_record_list_barred(sllv_t* precords, FILE* output_str
 			}
 		}
 		fputs(ors, output_stream);
+
+		if (pnode->pnext == NULL) {
+			j = 0;
+			fputc('+', output_stream);
+			fputc('-', output_stream);
+			for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext, j++) {
+				if (j > 0) {
+					fputc('-', output_stream);
+				}
+				int d = max_widths[j];
+				for (int i = 0; i < d; i++)
+					fputc('-', output_stream);
+				fputc('-', output_stream);
+				fputc('+', output_stream);
+			}
+			fputs(ors, output_stream);
+		}
 
 		lrec_free(prec); // end of baton-pass
 	}

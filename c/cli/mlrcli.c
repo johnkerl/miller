@@ -678,6 +678,7 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "  --ipprint --opprint --pprint    Pretty-printed tabular (produces no\n");
 	fprintf(o, "                                  output until all input is in).\n");
 	fprintf(o, "                      --right     Right-justifies all fields for PPRINT output.\n");
+	fprintf(o, "                      --barred    Prints a border around PPRINT output.\n");
 	fprintf(o, "\n");
 	fprintf(o, "            --omd                 Markdown-tabular (only available for output).\n");
 	fprintf(o, "\n");
@@ -950,6 +951,7 @@ void cli_writer_opts_init(cli_writer_opts_t* pwriter_opts) {
 	pwriter_opts->headerless_csv_output          = NEITHER_TRUE_NOR_FALSE;
 	pwriter_opts->right_justify_xtab_value       = NEITHER_TRUE_NOR_FALSE;
 	pwriter_opts->right_align_pprint             = NEITHER_TRUE_NOR_FALSE;
+	pwriter_opts->pprint_barred                  = NEITHER_TRUE_NOR_FALSE;
 	pwriter_opts->stack_json_output_vertically   = NEITHER_TRUE_NOR_FALSE;
 	pwriter_opts->wrap_json_output_in_outer_list = NEITHER_TRUE_NOR_FALSE;
 	pwriter_opts->quote_json_values_always       = NEITHER_TRUE_NOR_FALSE;
@@ -996,6 +998,9 @@ void cli_apply_writer_defaults(cli_writer_opts_t* pwriter_opts) {
 
 	if (pwriter_opts->right_align_pprint == NEITHER_TRUE_NOR_FALSE)
 		pwriter_opts->right_align_pprint = FALSE;
+
+	if (pwriter_opts->pprint_barred == NEITHER_TRUE_NOR_FALSE)
+		pwriter_opts->pprint_barred = FALSE;
 
 	if (pwriter_opts->stack_json_output_vertically == NEITHER_TRUE_NOR_FALSE)
 		pwriter_opts->stack_json_output_vertically = FALSE;
@@ -1121,6 +1126,9 @@ void cli_merge_writer_opts(cli_writer_opts_t* pfunc_opts, cli_writer_opts_t* pma
 
 	if (pfunc_opts->right_align_pprint == NEITHER_TRUE_NOR_FALSE)
 		pfunc_opts->right_align_pprint = pmain_opts->right_align_pprint;
+
+	if (pfunc_opts->pprint_barred == NEITHER_TRUE_NOR_FALSE)
+		pfunc_opts->pprint_barred = pmain_opts->pprint_barred;
 
 	if (pfunc_opts->stack_json_output_vertically == NEITHER_TRUE_NOR_FALSE)
 		pfunc_opts->stack_json_output_vertically = pmain_opts->stack_json_output_vertically;

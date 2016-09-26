@@ -4586,6 +4586,15 @@ run_mlr --mmap    --pprint --irs crlf --ifs / --ofs @ cut -x -f b $indir/dots.pp
 run_mlr --no-mmap --pprint --irs crlf --ifs / --ofs @ cut -x -f b $indir/dots.pprint
 
 # ----------------------------------------------------------------
+announce BARRED PPRINT
+
+run_mlr --opprint --barred cat $indir/abixy
+run_mlr --opprint --barred --right cat $indir/abixy
+
+run_mlr --opprint --barred cat $indir/abixy-het
+run_mlr --opprint --barred --right cat $indir/abixy-het
+
+# ----------------------------------------------------------------
 announce MULTI-CHARACTER IXS SPECIFIERS
 
 run_mlr --oxtab --idkvp --mmap  --irs lf   --ifs '\x2c'  --ips '\075'  cut -o -f x,a,i $indir/multi-sep.dkvp
