@@ -8,7 +8,6 @@ TOP OF LIST:
 
 ! valgrinds
 ! xxxes
-* --pprint --barred or some such
 
 ----------------------------------------------------------------
 10MIN:
@@ -72,13 +71,13 @@ MORE:
 
 * func & subr. acknowledge awk yet again.
 * triple-fors
-* --c2p et al.
-* --pprint --barred
+* multiple filter/put -f with examples @ new mld section.
 * most-frequent/least-frequent
 * seqgen
 * variadic min & max
 * bare print/printn
-* multiple filter/put -f with examples @ new mld section.
+* --c2p et al.
+* --pprint --barred
 * mlr -F and -K. Note -l -L -f -F -k -K.
 
 * inverse-transform-sampling example at cookbook.
