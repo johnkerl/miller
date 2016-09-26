@@ -10,11 +10,6 @@ TOP OF LIST:
 ! xxxes
 
 ----------------------------------------------------------------
-10MIN:
-* sql-schema example
-* publish
-
-----------------------------------------------------------------
 UDFs/subrs/localvars:
 * UT & doc:
   - variadic min & max
