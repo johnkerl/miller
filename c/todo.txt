@@ -42,32 +42,39 @@ UT FOR 4.6.0:
 ----------------------------------------------------------------
 DOC FOR 4.6.0:
 
-* --c2p, --c2j etc ...
-* --pprint --barred; emph for output only
-* triple-for; also remove statements of absence elsewhere
+To file:
 * note mlr -l -L -f -F -k -K rather prominently at mlh.
-* kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
 * mlr -f, manpage, etc. for variadic funcs.
-* multiple filter/put -f (new mld section)
-* note UDFs may not overwrite built-in functions; subrs have a different namespace (log example); each
-  kind may not be multiply defined.
+* multiple filter/put -f/-e (new mld section)
 * local a=1 @ outer; a=2 in inner; inner cannot modify outer.
 * local @ LHS before @ RHS: absent skips assign
 * a=2 before local a=1 -- why to even use local (when optional & when necessary).
 * variadic min & max
-* UT/mlh/mld func @ filter
-* UT/mlh/mld -e, and mixed -f and -e, for filter/put
-* no begin/end/func/subr within subr
+* mlh/mld func @ filter
+* mlh/mld -e, and mixed -f and -e, for filter/put
 * print/printn zary
+
+triple-for:
+* triple-for section
+* also remove statements of absence elsewhere
+
+func/subr:
 * no begin/end/func/subr within func
 * (lhs) func no subr call
 * (lhs) func no srec assignment x 3, no oosvar assignment x 2, no filter, no unset
 * (lhs) func no tee, emitfx3; but allow print, dump.
 * disallow func/subr redefines
-* func/subr exhaustively. local/return/etc in/out of various; for ->func -> while; subr -> func; etc
-* with valgrind: func/subr args read, written, both, neither.
-* block-locals can shadow for-locals ... yuck. strict-mode opportunity?
 * locals in all curly-braced control structures; top-level locals; scope, extent, freeing.
+* no begin/end/func/subr within subr
+* note UDFs may not overwrite built-in functions; subrs have a different namespace (log example); each
+  kind may not be multiply defined.
+
+file-formats page:
+* --c2p, --c2j etc ...
+* --pprint --barred; emph for output only
+
+KW autodoc:
+* kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
 
 ----------------------------------------------------------------
 4.6.0 FEATURES:
