@@ -72,6 +72,7 @@ func/subr:
 * local @ RHS before @ LHS: absent skips assign
 * local a=1 @ outer; a=2 in inner; inner modifies outer. avoid with local a=2 in inner.
 * a=2 before local a=1 -- why to even use local (when optional & when necessary).
+* cookbook examples
 
 file-formats page:
 * --c2p, --c2j etc ...

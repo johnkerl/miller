@@ -361,20 +361,6 @@ POKI_RUN_COMMAND{{mlr decimate --help}}HERE
 
 POKI_RUN_COMMAND{{mlr filter --help}}HERE
 
-<p/>Expressions may be arbitrarily complex:
-
-POKI_RUN_COMMAND{{mlr --opprint filter '$a == "pan" || $b == "wye"' data/small}}HERE
-
-<table><tr><td>
-POKI_RUN_COMMAND{{mlr --opprint filter '($x > 0.5 && $y > 0.5) || ($x < 0.5 && $y < 0.5)' then stats2 -a corr -f x,y data/medium}}HERE
-</td></tr><tr><td>
-POKI_RUN_COMMAND{{mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium}}HERE
-</td></tr></table>
-
-Newlines within the expression are ignored, which can help increase legibility of complex expressions:
-
-POKI_INCLUDE_ESCAPED(data/filter-multiline-example.txt)HERE
-
 <h3>Features which filter shares with put</h3>
 
 <p/>Please see <a href="#Expression_language_for_filter_and_put">Expression
@@ -899,7 +885,26 @@ POKI_RUN_COMMAND{{mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp}
 <!-- ================================================================ -->
 <h3>Restricted syntax for filter</h3>
 
-<p/> xxx under construction
+<p/>Miller&rsquo;s <tt>put</tt> and <tt>filter</tt> expression languages are essentially the same, except
+that for <tt>filter</tt> the following restrictions apply:
+
+<ul>
+<li/> The expression passed to <tt>filter</tt> must be a single boolean
+expression, optionally accompanied by definitions of user-defined functions
+(which the single boolean expression can invoke).
+
+<li/> In particular this means field names may not be assigned to.
+
+<li/> Subroutines may neither be defined nor invoked, including from functions
+defined within <tt>filter</tt> scope.
+
+<li/> Out-of-stream variables (<tt>@</tt>-variables) may not be referred to,
+including from functions defined within <tt>filter</tt> scope.
+
+<li/> Functions defined within <tt>filter</tt> scope may not invoke
+<tt>tee</tt> or <tt>emit</tt>, but may invoke <tt>print</tt> and <tt>dump</tt>.
+
+</ul>
 
 <!-- ================================================================ -->
 <h3>Expression formatting</h3>
@@ -910,7 +915,16 @@ POKI_RUN_COMMAND{{ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j =
 
 Newlines within the expression are ignored, which can help increase legibility of complex expressions:
 
+POKI_INCLUDE_ESCAPED(data/filter-multiline-example.txt)HERE
+
 POKI_INCLUDE_AND_RUN_ESCAPED(data/put-multiline-example.txt)HERE
+
+POKI_RUN_COMMAND{{mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium}}HERE
+
+<!-- ================================================================ -->
+<h3>Expressions from files</h3>
+
+<p/> xxx type up. inline; -f; -f/-e; multiples of each; order of evaluation.
 
 <!-- ================================================================ -->
 <h3>Semicolons, newlines, and curly braces</h3>
@@ -941,7 +955,7 @@ POKI_CARDIFY{{mlr put 'if ($x == 1) { $y = 2 }' # This is OK}}HERE
 POKI_CARDIFY{{mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptable}}HERE
 
 <!-- ================================================================ -->
-<h2>Variables</h2>
+<h2>Variables: records, out-of-stream, and local</h2>
 
 <!-- ================================================================ -->
 <h3>Field names</h3>
@@ -974,6 +988,11 @@ variables, e.g.  <tt>ENV["HOME"]</tt> or <tt>ENV["foo_".$hostname]</tt>.
 POKI_RUN_COMMAND{{mlr filter 'FNR == 2' data/small*}}HERE
 
 POKI_RUN_COMMAND{{mlr put '$fnr = FNR' data/small*}}HERE
+
+<!-- ================================================================ -->
+<h3>Local variables</h3>
+
+<p/> xxx
 
 <!-- ================================================================ -->
 <h3>Scope and extent for local variables</h3>
@@ -1545,7 +1564,7 @@ POKI_RUN_COMMAND{{mlr --help-all-functions}}HERE
 
 <p/>Here&rsquo;s the obligatory example of a recursive function to compute the factorial function:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/fibo-example.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/factorial-example.sh)HERE
 
 <p/>Properties of user-defined functions:
 

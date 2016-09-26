@@ -196,10 +196,12 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Syntax">Syntax</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Restricted_syntax_for_filter">Restricted syntax for filter</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Expression_formatting">Expression formatting</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Expressions_from_files">Expressions from files</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Semicolons,_newlines,_and_curly_braces">Semicolons, newlines, and curly braces</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Variables">Variables</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Variables:_records,_out-of-stream,_and_local">Variables: records, out-of-stream, and local</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names">Field names</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables">Built-in variables</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Local_variables">Local variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables_for_put">Out-of-stream variables for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables_for_put">Indexed out-of-stream variables for put</a><br/>
@@ -1287,56 +1289,6 @@ Examples:
 Please see http://johnkerl.org/miller/doc/reference.html for more information
 including function list. Or "mlr -f". Please also also "mlr grep" which is
 useful when you don't yet know which field name(s) you're looking for.
-</pre>
-</div>
-<p/>
-
-<p/>Expressions may be arbitrarily complex:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint filter '$a == "pan" || $b == "wye"' data/small
-a   b   i x                   y
-pan pan 1 0.3467901443380824  0.7268028627434533
-wye wye 3 0.20460330576630303 0.33831852551664776
-eks wye 4 0.38139939387114097 0.13418874328430463
-</pre>
-</div>
-<p/>
-
-<table><tr><td>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint filter '($x &gt; 0.5 &amp;&amp; $y &gt; 0.5) || ($x &lt; 0.5 &amp;&amp; $y &lt; 0.5)' then stats2 -a corr -f x,y data/medium
-x_y_corr
-0.756439
-</pre>
-</div>
-<p/>
-</td></tr><tr><td>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint filter '($x &gt; 0.5 &amp;&amp; $y &lt; 0.5) || ($x &lt; 0.5 &amp;&amp; $y &gt; 0.5)' then stats2 -a corr -f x,y data/medium
-x_y_corr
--0.747994
-</pre>
-</div>
-<p/>
-</td></tr></table>
-
-Newlines within the expression are ignored, which can help increase legibility of complex expressions:
-
-<p/>
-<div class="pokipanel">
-<pre>
-mlr --opprint filter '
-  ($x &gt; 0.5 &amp;&amp; $y &lt; 0.5)
-  ||
-  ($x &lt; 0.5 &amp;&amp; $y &gt; 0.5)' \
-  then stats2 -a corr -f x,y data/medium
 </pre>
 </div>
 <p/>
@@ -3723,7 +3675,26 @@ count
 <!-- ================================================================ -->
 <a id="Restricted_syntax_for_filter"/><h3>Restricted syntax for filter</h3>
 
-<p/> xxx under construction
+<p/>Miller&rsquo;s <tt>put</tt> and <tt>filter</tt> expression languages are essentially the same, except
+that for <tt>filter</tt> the following restrictions apply:
+
+<ul>
+<li/> The expression passed to <tt>filter</tt> must be a single boolean
+expression, optionally accompanied by definitions of user-defined functions
+(which the single boolean expression can invoke).
+
+<li/> In particular this means field names may not be assigned to.
+
+<li/> Subroutines may neither be defined nor invoked, including from functions
+defined within <tt>filter</tt> scope.
+
+<li/> Out-of-stream variables (<tt>@</tt>-variables) may not be referred to,
+including from functions defined within <tt>filter</tt> scope.
+
+<li/> Functions defined within <tt>filter</tt> scope may not invoke
+<tt>tee</tt> or <tt>emit</tt>, but may invoke <tt>print</tt> and <tt>dump</tt>.
+
+</ul>
 
 <!-- ================================================================ -->
 <a id="Expression_formatting"/><h3>Expression formatting</h3>
@@ -3754,6 +3725,18 @@ Newlines within the expression are ignored, which can help increase legibility o
 <p/>
 <div class="pokipanel">
 <pre>
+mlr --opprint filter '
+  ($x &gt; 0.5 &amp;&amp; $y &lt; 0.5)
+  ||
+  ($x &lt; 0.5 &amp;&amp; $y &gt; 0.5)
+' then stats2 -a corr -f x,y data/medium
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
 $ mlr --opprint put '
   $nf       = NF;
   $nr       = NR;
@@ -3775,6 +3758,21 @@ pan zee 10003 0.272054845593895200 0.425789896597056627 5  10 5   2       data/s
 </pre>
 </div>
 <p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint filter '($x &gt; 0.5 &amp;&amp; $y &lt; 0.5) || ($x &lt; 0.5 &amp;&amp; $y &gt; 0.5)' then stats2 -a corr -f x,y data/medium
+x_y_corr
+-0.747994
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Expressions_from_files"/><h3>Expressions from files</h3>
+
+<p/> xxx type up. inline; -f; -f/-e; multiples of each; order of evaluation.
 
 <!-- ================================================================ -->
 <a id="Semicolons,_newlines,_and_curly_braces"/><h3>Semicolons, newlines, and curly braces</h3>
@@ -3860,7 +3858,7 @@ mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptable
 <p/>
 
 <!-- ================================================================ -->
-<a id="Variables"/><h2>Variables</h2>
+<a id="Variables:_records,_out-of-stream,_and_local"/><h2>Variables: records, out-of-stream, and local</h2>
 
 <!-- ================================================================ -->
 <a id="Field_names"/><h3>Field names</h3>
@@ -3937,6 +3935,11 @@ a=pan,b=zee,i=10003,x=0.272054845593895200,y=0.425789896597056627,fnr=5
 </pre>
 </div>
 <p/>
+
+<!-- ================================================================ -->
+<a id="Local_variables"/><h3>Local variables</h3>
+
+<p/> xxx
 
 <!-- ================================================================ -->
 <a id="Scope_and_extent_for_local_variables"/><h3>Scope and extent for local variables</h3>
