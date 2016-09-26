@@ -214,7 +214,8 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#uniq">uniq</a><br/>
 &bull;&nbsp;<a href="#then-chaining">then-chaining</a><br/>
 &bull;&nbsp;<a href="#Keywords_for_put">Keywords for put</a><br/>
-&bull;&nbsp;<a href="#Functions_for_filter_and_put">Functions for filter and put</a><br/>
+&bull;&nbsp;<a href="#Built-in_functions_for_filter_and_put">Built-in functions for filter and put</a><br/>
+&bull;&nbsp;<a href="#User-defined_functions_and_subroutines">User-defined functions and subroutines</a><br/>
 &bull;&nbsp;<a href="#Data_types">Data types</a><br/>
 &bull;&nbsp;<a href="#Null_data:_empty_and_absent">Null data: empty and absent</a><br/>
 &bull;&nbsp;<a href="#String_literals">String literals</a><br/>
@@ -5897,7 +5898,7 @@ stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
 <p/>
 
 <!-- ================================================================ -->
-<a id="Functions_for_filter_and_put"/><h1>Functions for filter and put</h1>
+<a id="Built-in_functions_for_filter_and_put"/><h1>Built-in functions for filter and put</h1>
 
 <p/>Each function takes a specific number of arguments, as shown below, except
 for functions marked as variadic such as <tt>min</tt> and <tt>max</tt>. (The
@@ -6169,6 +6170,35 @@ along with the mathematical constants PI and E.
 </pre>
 </div>
 <p/>
+
+<!-- ================================================================ -->
+<a id="User-defined_functions_and_subroutines"/><h1>User-defined functions and subroutines</h1>
+
+<p/> xxx this section is under construction.
+
+<p/> As of Miller 4.6.0 you can define your own functions, as well as subroutines.
+
+<p/> xxx h2s...
+
+<p/>Properties of user-defined functions:
+
+<ul>
+
+<li/> xxx example definition. outside begin/end. before/after body defs (resolved after parse).
+
+<li/> xxx xref to -f/-e for each of use.
+<li/> xxx no redefines of built-ins or of one another.
+<li/> xxx no nested definitions.
+<li/> xxx access to arguments (positional/value); $/@ state as RHS.
+<li/> xxx all RHS stuff &mdash; no assigns to $/@; only to localvars. no subr calls.
+<li/> xxx recursive/mutually so ok. 
+<li/> xxx localvars as in fors. args may be reassigned.
+<li/> xxx xref to shared section for func/subr localvars (scope/extent/etc.)
+<li/> xxx missing return leads to absent-null (which xref). return value (single).
+
+</ul>
+
+<p/>xxx uncached/cached fibo examples.
 
 <!-- ================================================================ -->
 <a id="Data_types"/><h1>Data types</h1>

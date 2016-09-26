@@ -55,6 +55,7 @@ filter/put w/ -f/-e:
 * new mld section
 
 mlh:
+* func-def example @ mlr put -h ?
 * triple-for example @ mlr put -h ?
 
 func/subr:
