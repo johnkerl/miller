@@ -21,7 +21,6 @@ PRE-RELEASE 4.6.0:
 ----------------------------------------------------------------
 UT FOR 4.6.0:
 
-* variadic min & max
 * UT/mlh/mld func @ filter
 * UT/mlh/mld -e, and mixed -f and -e, for filter/put
 * no begin/end/func/subr within subr

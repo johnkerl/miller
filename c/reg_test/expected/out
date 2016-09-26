@@ -12860,6 +12860,30 @@ x=3,y=,z=3
 x=,y=,z=
 x=,y=2,z=2
 
+mlr put $o=min()
+x=1,y=2,z=3,o=
+
+mlr put $o=max()
+x=1,y=2,z=3,o=
+
+mlr put $o=min($x)
+x=1,y=2,z=3,o=1
+
+mlr put $o=max($x)
+x=1,y=2,z=3,o=1
+
+mlr put $o=min($x,$y)
+x=1,y=2,z=3,o=1
+
+mlr put $o=max($x,$y)
+x=1,y=2,z=3,o=2
+
+mlr put $o=min($x,$y,$z)
+x=1,y=2,z=3,o=1
+
+mlr put $o=max($x,$y,$z)
+x=1,y=2,z=3,o=3
+
 mlr --icsvlite --oxtab put ${x+y} = ${name.x} + ${name.y}; ${x*y} = ${name.x} * ${name.y} ./reg_test/input/braced.csv
 name.x 1
 name.y 2

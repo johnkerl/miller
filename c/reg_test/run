@@ -1000,6 +1000,15 @@ run_mlr --opprint put '$y=mexp($x,35,37)' then put '$z=mmul($x,$y,37)' $indir/mo
 run_mlr put '$z=min($x, $y)' $indir/minmax.dkvp
 run_mlr put '$z=max($x, $y)' $indir/minmax.dkvp
 
+echo 'x=1,y=2,z=3' | run_mlr put '$o=min()'
+echo 'x=1,y=2,z=3' | run_mlr put '$o=max()'
+echo 'x=1,y=2,z=3' | run_mlr put '$o=min($x)'
+echo 'x=1,y=2,z=3' | run_mlr put '$o=max($x)'
+echo 'x=1,y=2,z=3' | run_mlr put '$o=min($x,$y)'
+echo 'x=1,y=2,z=3' | run_mlr put '$o=max($x,$y)'
+echo 'x=1,y=2,z=3' | run_mlr put '$o=min($x,$y,$z)'
+echo 'x=1,y=2,z=3' | run_mlr put '$o=max($x,$y,$z)'
+
 run_mlr --icsvlite --oxtab put '${x+y} = ${name.x} + ${name.y}; ${x*y} = ${name.x} * ${name.y}' $indir/braced.csv
 run_mlr --icsvlite --oxtab filter '${name.y} < ${z}' $indir/braced.csv
 
