@@ -42,19 +42,20 @@ DOC FOR 4.6.0:
 
 To file:
 * note mlr -l -L -f -F -k -K rather prominently at mlh.
-* mlr -f, manpage, etc. for variadic funcs.
-* multiple filter/put -f/-e (new mld section)
-* local a=1 @ outer; a=2 in inner; inner cannot modify outer.
-* local @ LHS before @ RHS: absent skips assign
-* a=2 before local a=1 -- why to even use local (when optional & when necessary).
-* variadic min & max
 * mlh/mld func @ filter
-* mlh/mld -e, and mixed -f and -e, for filter/put
+
+covers:
+* func-def example @ cover x n
+* triple-for example @ cover x n
+
+@ new print/printn section:
 * print/printn zary
 
-triple-for:
-* triple-for section
-* also remove statements of absence elsewhere
+filter/put w/ -f/-e:
+* new mld section
+
+mlh:
+* triple-for example @ mlr put -h ?
 
 func/subr:
 * no begin/end/func/subr within func
@@ -66,6 +67,9 @@ func/subr:
 * no begin/end/func/subr within subr
 * note UDFs may not overwrite built-in functions; subrs have a different namespace (log example); each
   kind may not be multiply defined.
+* local @ RHS before @ LHS: absent skips assign
+* local a=1 @ outer; a=2 in inner; inner modifies outer. avoid with local a=2 in inner.
+* a=2 before local a=1 -- why to even use local (when optional & when necessary).
 
 file-formats page:
 * --c2p, --c2j etc ...

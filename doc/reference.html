@@ -3956,25 +3956,49 @@ wye pan 5 0.5732889198020006  0.8636244699032729  6.436913
 </div>
 <p/>
 
-<p/><b>No triple-for:</b> As of Miller 4.1.0 there is no C-style triple-for of the form
+<p/><b>C-style triple-for loops</b> are supported as follows:
 
 <p/>
 <div class="pokipanel">
 <pre>
-for (i = 1; i &lt;= 10; i++) { ... } # No such
+$ mlr --from data/small --opprint put '
+  local suma = 0;
+  local sumb = 0;
+  for (local a = 1, local b = 1; a &lt;= NR; a += 1, b *= 2) {
+    suma += a;
+    sumb += b;
+  }
+  $suma = suma;
+  $sumb = sumb;
+'
+a   b   i x                   y                   suma sumb
+pan pan 1 0.3467901443380824  0.7268028627434533  1    1
+eks pan 2 0.7586799647899636  0.5221511083334797  3    3
+wye wye 3 0.20460330576630303 0.33831852551664776 6    7
+eks wye 4 0.38139939387114097 0.13418874328430463 10   15
+wye pan 5 0.5732889198020006  0.8636244699032729  15   31
 </pre>
 </div>
 <p/>
 
-but this can be synthesized using out-of-stream variables and <tt>while</tt>:
+Notes:
+<ul>
 
-<p/>
-<div class="pokipanel">
-<pre>
-@i = 1; while (@i &lt;= 10) {...; @i += 1}
-</pre>
-</div>
-<p/>
+<li/> In <tt>for (start; continuation; update) { body }</tt>, the start and
+update statements may be empty, single statements, or multiple comma-separated
+statements.
+
+<li/> In particular, you may use <tt>$</tt>-variables and/or
+<tt>@</tt>-variables in the start, continuation, and/or update steps (as well
+as the body, of course).
+
+<li/> Miller has no comma operator; the continuation must be a single
+expression which evaluates to boolean.
+
+<li/> As with all for/if/while statements in Miller, the curly braces are
+required even if the body is a single statement, or empty.
+
+</ul>
 
 <p/><b>For-loop over out-of-stream variable</b>: This is similar to looping
 over the current stream record except for additional degrees of freedom: you
