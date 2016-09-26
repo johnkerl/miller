@@ -36,7 +36,6 @@ UT FOR 4.6.0:
 * locals in all curly-braced control structures; top-level locals; scope, extent, freeing.
 * distinct locals within if/elseif/.../else
 * mlr --opprint --from s put -v '$o1 = a; local a=1000+NR; $o2 = a; a=2000+NR; $o3 = a'
-* seqgen
 
 ----------------------------------------------------------------
 DOC FOR 4.6.0:

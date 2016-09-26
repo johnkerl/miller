@@ -490,6 +490,17 @@ run_mlr nest --explode --pairs  --across-records -f x $indir/nest-explode.dkvp
 run_mlr nest --explode --pairs  --across-records -f x --nested-fs pipe --nested-ps = $indir/nest-explode-vary-fs-ps.dkvp
 
 # ----------------------------------------------------------------
+announce SEQGEN
+
+run_mlr seqgen --start 1 --stop 5 --step  1
+run_mlr seqgen --start 1 --stop 5 --step  2
+run_mlr seqgen --start 1 --stop 1 --step  1 -f a
+run_mlr seqgen --start 5 --stop 1 --step  1 -f b
+run_mlr seqgen --start 5 --stop 1 --step -1 -f c
+run_mlr seqgen --start 5 --stop 5 --step -1 -f d
+run_mlr --from $indir/abixy cat then seqgen --start 1 --stop 5
+
+# ----------------------------------------------------------------
 announce STATS
 
 run_mlr --opprint stats1    -a mean,sum,count,min,max,mode -f i,x,y $indir/abixy
