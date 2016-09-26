@@ -157,9 +157,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#cut">cut</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#decimate">decimate</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#filter">filter</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names_for_filter">Field names for filter</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables_for_filter">Built-in variables for filter</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Expression_formatting_for_filter">Expression formatting for filter</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Features_which_filter_shares_with_put">Features which filter shares with put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#grep">grep</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#group-by">group-by</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#group-like">group-like</a><br/>
@@ -174,25 +172,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#nest">nest</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#nothing">nothing</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#put">put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names_for_put">Field names for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables_for_put">Built-in variables for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Expression_formatting_for_put">Expression formatting for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Semicolons,_newlines,_and_curly_braces_for_put">Semicolons, newlines, and curly braces for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables_for_put">Out-of-stream variables for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Begin/end_blocks_for_put">Begin/end blocks for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables_for_put">Indexed out-of-stream variables for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit_statements_for_put">Emit statements for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Multi-emit_statements_for_put">Multi-emit statements for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit-all_statements_for_put">Emit-all statements for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Redirected-output_statements_for_put">Redirected-output statements for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Unset_statements_for_put">Unset statements for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#More_variable_assignments_for_put">More variable assignments for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Pattern-action_blocks_for_put">Pattern-action blocks for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#If-statements_for_put">If-statements for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#While_and_do-while_loops_for_put">While and do-while loops for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loops_for_put">For-loops for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Filter_statements_for_put">Filter statements for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#A_note_on_the_complexity_of_put">A note on the complexity of put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Features_which_put_shares_with_filter">Features which put shares with filter</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#regularize">regularize</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#rename">rename</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#reorder">reorder</a><br/>
@@ -212,12 +192,37 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#tee">tee</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#top">top</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#uniq">uniq</a><br/>
-&bull;&nbsp;<a href="#Keywords_for_filter_and_put">Keywords for filter and put</a><br/>
-&bull;&nbsp;<a href="#Built-in_functions_for_filter_and_put">Built-in functions for filter and put</a><br/>
-&bull;&nbsp;<a href="#User-defined_functions_and_subroutines">User-defined functions and subroutines</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#User-defined_functions">User-defined functions</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#User-defined_subroutines">User-defined subroutines</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a><br/>
+&bull;&nbsp;<a href="#Expression_language_for_filter_and_put">Expression language for filter and put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Syntax">Syntax</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Restricted_syntax_for_filter">Restricted syntax for filter</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Expression_formatting">Expression formatting</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Semicolons,_newlines,_and_curly_braces">Semicolons, newlines, and curly braces</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Variables">Variables</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names">Field names</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables">Built-in variables</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables_for_put">Out-of-stream variables for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables_for_put">Indexed out-of-stream variables for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#More_variable_assignments_for_put">More variable assignments for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keywords_for_filter_and_put">Keywords for filter and put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Control_structures">Control structures</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Pattern-action_blocks">Pattern-action blocks</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#If-statements">If-statements</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#While_and_do-while_loops">While and do-while loops</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loops">For-loops</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Begin/end_blocks_for_put">Begin/end blocks for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Output_statements_for_put">Output statements for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit_statements_for_put">Emit statements for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Multi-emit_statements_for_put">Multi-emit statements for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit-all_statements_for_put">Emit-all statements for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Redirected-output_statements_for_put">Redirected-output statements for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Unset_statements_for_put">Unset statements for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Filter_statements_for_put">Filter statements for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_functions_for_filter_and_put">Built-in functions for filter and put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#User-defined_functions_and_subroutines">User-defined functions and subroutines</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#User-defined_functions">User-defined functions</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#User-defined_subroutines">User-defined subroutines</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#A_note_on_the_complexity_of_Miller&rsquo;s_expression_language">A note on the complexity of Miller&rsquo;s expression language</a><br/>
 &bull;&nbsp;<a href="#then-chaining">then-chaining</a><br/>
 &bull;&nbsp;<a href="#Data_types">Data types</a><br/>
 &bull;&nbsp;<a href="#Null_data:_empty_and_absent">Null data: empty and absent</a><br/>
@@ -1286,49 +1291,6 @@ useful when you don't yet know which field name(s) you're looking for.
 </div>
 <p/>
 
-<a id="Field_names_for_filter"/><h3>Field names for filter</h3>
-
-<p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> and <a
-href="#put"><tt>put</tt></a> expressions, even though they don&rsquo;t appear
-in the data stream. For integer-indexed data, this looks like
-<tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.  Likewise, enclose string literals in
-double quotes in <tt>filter</tt> expressions even though they don&rsquo;t
-appear in file data.  In particular, <tt>mlr filter '$x=="abc"'</tt> passes
-through the record <tt>x=abc</tt>.  If field names have special characters such
-as <tt>.</tt> then you can use braces, e.g. <tt>'${field.name}'</tt>.
-
-<p/>You may also use a <b>computed field name</b> in square brackets, e.g.
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo a=3,b=4 | mlr filter '$["x"] &lt; 0.5'
-</pre>
-</div>
-<p/>
-
-<a id="Built-in_variables_for_filter"/><h3>Built-in variables for filter</h3>
-
-<p/>The <tt>filter</tt> command supports the same built-in variables as for <a
-href="#put"><tt>put</tt></a>, all <tt>awk</tt>-inspired: <tt>NF</tt>,
-<tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and <tt>FILENAME</tt>, as well as
-the mathematical constants <tt>PI</tt> and <tt>E</tt>.
-This selects the 2nd
-record from each matching file:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr filter 'FNR == 2' data/small*
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533
-a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134
-</pre>
-</div>
-<p/>
-
-<a id="Expression_formatting_for_filter"/><h3>Expression formatting for filter</h3>
-
 <p/>Expressions may be arbitrarily complex:
 
 <p/>
@@ -1378,6 +1340,12 @@ mlr --opprint filter '
 </pre>
 </div>
 <p/>
+
+<a id="Features_which_filter_shares_with_put"/><h3>Features which filter shares with put</h3>
+
+<p/>Please see <a href="#Expression_language_for_filter_and_put">Expression
+language for filter and put</a> for more information about the expression
+language for <tt>mlr filter</tt>.
 
 <!-- ================================================================ -->
 <a id="grep"/><h2>grep</h2>
@@ -2351,1919 +2319,11 @@ Please see in particular:
 </div>
 <p/>
 
-<a id="Field_names_for_put"/><h3>Field names for put</h3>
-
-<p/>Field names must be specified using a <tt>$</tt> in <a
-href="#filter"><tt>filter</tt></a> and <tt>put</tt> expressions, even though
-they don&rsquo;t appear in the data stream. For integer-indexed data, this
-looks like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.  Likewise, enclose string
-literals in double quotes in <tt>put</tt> expressions even though they
-don&rsquo;t appear in file data. In particular, <tt>mlr put '$x="abc"'</tt>
-creates the field <tt>x=abc</tt> and <tt>mlr filter '$x=="abc"'</tt> passes
-through the field <tt>x</tt> if it has the value <tt>abc</tt>.  If field names
-have special characters such as <tt>.</tt> then you can use braces, e.g.
-<tt>'${field.name}'</tt>.
-
-<p/>You may also use a <b>computed field name</b> in square brackets, e.g.
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'
-s=green,t=blue,a=3,b=4,green_blue=12
-</pre>
-</div>
-<p/>
-
-<a id="Built-in_variables_for_put"/><h3>Built-in variables for put</h3>
-
-<p/>Miller supports the following five built-in variables for <a
-href="#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
-<tt>NF</tt>, <tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and
-<tt>FILENAME</tt>, as well as the mathematical constants <tt>PI</tt> and
-<tt>E</tt>.  Lastly, the <tt>ENV</tt> hashmap allows read access to environment
-variables, e.g.  <tt>ENV["HOME"]</tt> or <tt>ENV["foo_".$hostname]</tt>.
-
-<a id="Expression_formatting_for_put"/><h3>Expression formatting for put</h3>
-
-<p/>Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j = $i + 1; $k = $i +$j'
-i j  k
-0 1  1
-1 2  3
-2 3  5
-3 4  7
-4 5  9
-5 6  11
-6 7  13
-7 8  15
-8 9  17
-9 10 19
-</pre>
-</div>
-<p/>
-
-Newlines within the expression are ignored, which can help increase legibility of complex expressions:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint put '
-  $nf       = NF;
-  $nr       = NR;
-  $fnr      = FNR;
-  $filenum  = FILENUM;
-  $filename = FILENAME
-' data/small data/small2
-a   b   i     x                    y                    nf nr fnr filenum filename
-pan pan 1     0.3467901443380824   0.7268028627434533   5  1  1   1       data/small
-eks pan 2     0.7586799647899636   0.5221511083334797   5  2  2   1       data/small
-wye wye 3     0.20460330576630303  0.33831852551664776  5  3  3   1       data/small
-eks wye 4     0.38139939387114097  0.13418874328430463  5  4  4   1       data/small
-wye pan 5     0.5732889198020006   0.8636244699032729   5  5  5   1       data/small
-pan eks 9999  0.267481232652199086 0.557077185510228001 5  6  1   2       data/small2
-wye eks 10000 0.734806020620654365 0.884788571337605134 5  7  2   2       data/small2
-pan wye 10001 0.870530722602517626 0.009854780514656930 5  8  3   2       data/small2
-hat wye 10002 0.321507044286237609 0.568893318795083758 5  9  4   2       data/small2
-pan zee 10003 0.272054845593895200 0.425789896597056627 5  10 5   2       data/small2
-</pre>
-</div>
-<p/>
-
-<a id="Semicolons,_newlines,_and_curly_braces_for_put"/><h3>Semicolons, newlines, and curly braces for put</h3>
-
-<p/>Miller uses semicolons as statement separators, not statement terminators. This means you can write:
-
-<p/>
-<div class="pokipanel">
-<pre>
-mlr put 'x=1'
-mlr put 'x=1;$y=2'
-mlr put 'x=1;$y=2;'
-mlr put 'x=1;;;;$y=2;'
-</pre>
-</div>
-<p/>
-
-<p/>Semicolons are optional after closing curly braces (which close conditionals and loops as discussed below).
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo x=1,y=2 | mlr put 'while (NF &lt; 10) { $[NF+1] = ""}  $foo = "bar"'
-x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo x=1,y=2 | mlr put 'while (NF &lt; 10) { $[NF+1] = ""}; $foo = "bar"'
-x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
-</pre>
-</div>
-<p/>
-
-<p/>Semicolons are required between statements even if those statements are on
-separate lines.  Newlines are for your convenience but have no syntactic
-meaning: line endings do not terminate statements. For example, adjacent
-assignment statements must be separated by semicolons even if those statements
-are on separate lines:
-
-<p/>
-<div class="pokipanel">
-<pre>
-mlr put '
-  $x = 1
-  $y = 2 # Syntax error
-'
-
-mlr put '
-  $x = 1;
-  $y = 2 # This is OK
-'
-</pre>
-</div>
-<p/>
-
-<p/>Bodies for all compound statements must be enclosed in curly braces, even if the body is a single statement:
-<p/>
-<div class="pokipanel">
-<pre>
-mlr put 'if ($x == 1) $y = 2' # Syntax error
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-mlr put 'if ($x == 1) { $y = 2 }' # This is OK
-</pre>
-</div>
-<p/>
-
-<p/>Bodies for compound statements may be empty:
-
-<p/>
-<div class="pokipanel">
-<pre>
-mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptable
-</pre>
-</div>
-<p/>
-
-<a id="Out-of-stream_variables_for_put"/><h3>Out-of-stream variables for put</h3>
-
-There are three kinds of variables in Miller:
-
-<p/> <b>Built-in variables</b>, as discussed above:
-
-<ul>
-
-<li/>These are written all in capital letters, such as <tt>NR</tt>,
-<tt>NF</tt>, <tt>FILENAME</tt>, and only a small, specific set of them is
-defined by Miller.
-
-<li/> Their values change from one record to the next as Miller scans through
-your input data stream: <tt>NR</tt> is the count of records so far encountered
-in the input stream, starting at 1; <tt>NF</tt> is the number of fields in the
-current input record; <tt>FILENAME</tt> is the current file name; and so on as
-detailed above.
-
-<li/> Their scope is global: you can refer to them in any <tt>filter</tt>
-or <tt>put</tt> statement. Their values are assigned by the input-record reader:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --csv put '$nr = NR' data/a.csv
-a,b,c,nr
-1,2,3,1
-4,5,6,2
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv
-a,b,c,nr
-1,2,3,1
-1,2,3,1
-1,2,3,1
-4,5,6,2
-4,5,6,2
-4,5,6,2
-</pre>
-</div>
-<p/>
-
-<li/> These are read-only for the <tt>mlr put</tt> and <tt>mlr filter</tt>
-DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may not be
-assigned to: <tt>NR=100</tt> is a syntax error.
-
-<li/> You can output built-in variables indirectly, by assigning them to a
-non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named <tt>nr</tt> to
-each output record, containing the value of <tt>NR</tt> as of when that record
-was ingested.
-
-</ul>
-
-<p/><b>Fields within stream records</b>, as discussed above:
-
-<ul>
-
-<li/> These are prefixed with a dollar sign, such as <tt>$quantity</tt>,
-<tt>$hostname</tt>, etc.
-
-<li/> Their names depend on the contents of your input data stream, and their
-values change from one record to the next as Miller scans through your input
-data stream.
-
-<li/> They are scoped to the current record of the <tt>filter</tt> or
-<tt>put</tt> command in which they appear.
-
-<li/> These are read-write: you can do <tt>$y=2*$x</tt>, <tt>$x=$x+1</tt>, etc.
-
-<li/> Records are Miller&rsquo;s output: field names present in the input
-stream are passed through to output (written to standard output) unless fields
-are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
-<tt>put -q</tt>, etc. Simply assign a value to a field and it will be output.
-
-</ul>
-
-<b>Out-of-stream variables</b>, presented here:
-
-<ul>
-
-<li/> These are prefixed with an at-sign, e.g. <tt>@sum</tt>.  Furthermore,
-unlike built-in variables and stream-record fields, they are maintained in an
-arbitrarily nested hashmap: you can do <tt>@sum += $quanity</tt>, or
-<tt>@sum[$color] += $quanity</tt>, or <tt>@sum[$color][$shape] +=
-$quanity</tt>. The keys for the multi-level hashmap can be any expression which
-evaluates to string or integer: e.g.  <tt>@sum[NR] = $a + $b</tt>,
-<tt>@sum[$a."-".$b] = $x</tt>, etc.
-
-<li/> Their names and their values are entirely under your control; they change
-only when you assign to them.
-
-<li/> Just as for field names in stream records, if you want to define out-of-stream variables
-with special characters such as <tt>.</tt> then you can use braces, e.g. <tt>'@{variable.name}["index"]'</tt>.
-
-<li/>You may use a <b>computed key </b> in square brackets, e.g.
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'
-green_blue=12
-</pre>
-</div>
-<p/>
-
-<li/> Out-of-stream variables are scoped to the <tt>put</tt> command in which they appear.
-In particular, if you have two or more <tt>put</tt> commands separated by <tt>then</tt>,
-each put will have its own set of out-of-stream variables:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat data/a.dkvp
-a=1,b=2,c=3
-a=4,b=5,c=6
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '@sum += $a; end {emit @sum}' then put 'ispresent($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp
-a=10,b=2,c=3
-a=40,b=5,c=6
-sum=5
-sum=50
-</pre>
-</div>
-<p/>
-
-<li/> Out-of-stream variables are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
-etc.
-
-<li/> You can <b>output</b> these in <b>four ways</b>: (1) <b>assign</b> them
-to stream-record fields, e.g.  <tt>$cumulative_sum = @sum</tt>; (2) use
-<b>emit</b>/<b>emitp</b>/<b>emitf</b>, e.g.  <tt>@sum += $x; emit @sum</tt>
-which produces an extra output record such as <tt>sum=3.1648382</tt>; (3) use
-the <b>dump</b> or <b>edump</b> keywords, which immediately print all
-out-of-stream variables as a JSON data structure to the standard output or
-standard error (respectively), or (4) use the <b>print</b> or <b>eprint</b>
-keywords which immediately print an expression to standard output or standard
-error, respectively. Note that <tt>dump</tt>, <tt>edump</tt>, <tt>print</tt>,
-and <tt>eprint</tt> don&rsquo;t output records which participate in
-<tt>then</tt>-chaining; rather, they&rsquo;re just immediate prints to
-stdout/stderr. The <tt>printn</tt> and <tt>eprintn</tt> keywords are the same
-except that they don&rsquo;t print final newlines.
-
-</ul>
-
-<p/>Features of out-of-stream variables, and examples of their use, will be
-presented in the following sections.
-
-<a id="Begin/end_blocks_for_put"/><h3>Begin/end blocks for put</h3>
-
-<p/>Miller supports an <tt>awk</tt>-like <tt>begin/end</tt> syntax.  The
-statements in the <tt>begin</tt> block are executed before any input records
-are read; the statements in the <tt>end</tt> block are executed after the last
-input record is read.  (If you want to execute some statement at the start of
-each file, not at the start of the first file as with <tt>begin</tt>, you might
-use a pattern/action block of the form <tt>FNR == 1 { ... }</tt>.) All
-statements outside of <tt>begin</tt> or <tt>end</tt> are, of course, executed
-on every input record. Semicolons separate statements inside or outside of
-begin/end blocks; semicolons are required between begin/end block bodies and
-any subsequent statement.  For example:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '
-  begin { @sum = 0 };
-  @x_sum += $x;
-  end { emit @x_sum }
-' ../data/small
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-x_sum=4.536294
-</pre>
-</div>
-<p/>
-
-<p/>Since uninitialized out-of-stream variables default to 0 for
-addition/substraction and 1 for multiplication when they appear on expression
-right-hand sides (as in <tt>awk</tt>), the above can be written more succinctly
-as
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '
-  @x_sum += $x;
-  end { emit @x_sum }
-' ../data/small
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-x_sum=4.536294
-</pre>
-</div>
-<p/>
-
-<p/>The <b>put -q</b> option is a shorthand which suppresses printing of each
-output record, with only <tt>emit</tt> statements being output. So to get only
-summary outputs, one could write
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '
-  @x_sum += $x;
-  end { emit @x_sum }
-' ../data/small
-x_sum=4.536294
-</pre>
-</div>
-<p/>
-
-<p/>We can do similarly with multiple out-of-stream variables:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '
-  @x_count += 1;
-  @x_sum += $x;
-  end {
-    emit @x_count;
-    emit @x_sum;
-  }
-' ../data/small
-x_count=10
-x_sum=4.536294
-</pre>
-</div>
-<p/>
-
-This is of course not much different than
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr stats1 -a count,sum -f x ../data/small
-x_count=10,x_sum=4.536294
-</pre>
-</div>
-<p/>
-
-<p/>Note that it&rsquo;s a syntax error for begin/end blocks to refer to field names (beginning with <tt>$</tt>),
-since these execute outside the context of input records.
-
-<a id="Indexed_out-of-stream_variables_for_put"/><h3>Indexed out-of-stream variables for put</h3>
-
-<p/>Using an index on the <tt>@count</tt> and <tt>@sum</tt> variables, we get the benefit of the
-<tt>-g</tt> (group-by) option which <tt>mlr stats1</tt> and various other Miller commands have:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '
-  @x_count[$a] += 1;
-  @x_sum[$a] += $x;
-  end {
-    emit @x_count, "a";
-    emit @x_sum, "a";
-  }
-' ../data/small
-a=pan,x_count=2
-a=eks,x_count=3
-a=wye,x_count=2
-a=zee,x_count=2
-a=hat,x_count=1
-a=pan,x_sum=0.849416
-a=eks,x_sum=1.751863
-a=wye,x_sum=0.777892
-a=zee,x_sum=1.125680
-a=hat,x_sum=0.031442
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr stats1 -a count,sum -f x -g a ../data/small
-a=pan,x_count=2,x_sum=0.849416
-a=eks,x_count=3,x_sum=1.751863
-a=wye,x_count=2,x_sum=0.777892
-a=zee,x_count=2,x_sum=1.125680
-a=hat,x_count=1,x_sum=0.031442
-</pre>
-</div>
-<p/>
-
-<p/>Indices can be arbitrarily deep &mdash; here there are two or more of them:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/medium put -q '
-  @x_count[$a][$b] += 1;
-  @x_sum[$a][$b] += $x;
-  end {
-    emit (@x_count, @x_sum), "a", "b";
-  }
-'
-a=pan,b=pan,x_count=427,x_sum=219.185129
-a=pan,b=wye,x_count=395,x_sum=198.432931
-a=pan,b=eks,x_count=429,x_sum=216.075228
-a=pan,b=hat,x_count=417,x_sum=205.222776
-a=pan,b=zee,x_count=413,x_sum=205.097518
-a=eks,b=pan,x_count=371,x_sum=179.963030
-a=eks,b=wye,x_count=407,x_sum=196.945286
-a=eks,b=zee,x_count=357,x_sum=176.880365
-a=eks,b=eks,x_count=413,x_sum=215.916097
-a=eks,b=hat,x_count=417,x_sum=208.783171
-a=wye,b=wye,x_count=377,x_sum=185.295850
-a=wye,b=pan,x_count=392,x_sum=195.847900
-a=wye,b=hat,x_count=426,x_sum=212.033183
-a=wye,b=zee,x_count=385,x_sum=194.774048
-a=wye,b=eks,x_count=386,x_sum=204.812961
-a=zee,b=pan,x_count=389,x_sum=202.213804
-a=zee,b=wye,x_count=455,x_sum=233.991394
-a=zee,b=eks,x_count=391,x_sum=190.961778
-a=zee,b=zee,x_count=403,x_sum=206.640635
-a=zee,b=hat,x_count=409,x_sum=191.300006
-a=hat,b=wye,x_count=423,x_sum=208.883010
-a=hat,b=zee,x_count=385,x_sum=196.349450
-a=hat,b=eks,x_count=389,x_sum=189.006793
-a=hat,b=hat,x_count=381,x_sum=182.853532
-a=hat,b=pan,x_count=363,x_sum=168.553807
-</pre>
-</div>
-<p/>
-
-The idea is that <tt>stats1</tt>, and other Miller commands, encapsulate
-frequently-used patterns with a minimum of keystroking (and run a little
-faster), whereas using out-of-stream variables you have more flexibility and
-control in what you do. <b>Out-of-stream variables, along with pattern/action
-blocks and begin/end blocks, give you flexibility in what you can do with
-Miller.</b>
-
-<p/>Begin/end blocks can be mixed with pattern/action blocks. For example:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '
-  begin {
-    @num_total = 0;
-    @num_positive = 0;
-  };
-  @num_total += 1;
-  $x &gt; 0.0 {
-    @num_positive += 1;
-    $y = log10($x); $z = sqrt($y)
-  };
-  end {
-    emitf @num_total, @num_positive
-  }
-' data/put-gating-example-1.dkvp
-x=-1
-x=0
-x=1,y=0.000000,z=0.000000
-x=2,y=0.301030,z=0.548662
-x=3,y=0.477121,z=0.690740
-num_total=5,num_positive=3
-</pre>
-</div>
-<p/>
-
-<a id="Emit_statements_for_put"/><h3>Emit statements for put</h3>
-
-<p/>As noted above, there are three ways to output out-of-stream variables:
-(1) Assign them to stream-record fields, e.g.  <tt>$cumulative_sum = @sum</tt>;
-(2) Use <tt>emit</tt>, e.g.  <tt>@sum += $x; emit @sum</tt> which produces an
-extra output record such as <tt>sum=3.1648382</tt>; (3) Use the <tt>dump</tt>
-keyword, which immediately prints all out-of-stream variables to the standard
-output as a JSON data structure. Note that the latter aren&rsquo;t output records
-which participate in <tt>then</tt>-chaining; rather, they&rsquo;re just an
-immediate print to stdout. This section is about <tt>emit</tt>.
-
-<p/>There are three variants: <tt>emitf</tt>, <tt>emit</tt>, and
-<tt>emitp</tt>. Keep in mind that out-of-stream variables are a nested,
-multi-level hashmap (directly viewable as JSON using <tt>dump</tt>), whereas
-Miller output records are lists of single-level key-value pairs. The three emit
-variants allow you to control how the multilevel hashmaps are flatten down to
-output records.
-
-<p/>Use <b>emitf</b> to output several out-of-stream variables side-by-side in the same output record.
-For <tt>emitf</tt> these mustn&rsquo;t have indexing using <tt>@name[...]</tt>. Example:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@count += 1; @x_sum += $x; @y_sum += $y; end { emitf @count, @x_sum, @y_sum}' data/small
-count=5,x_sum=2.264762,y_sum=2.585086
-</pre>
-</div>
-<p/>
-
-<p/>Use <b>emit</b> to output an out-of-stream variable. If it&rsquo;s non-indexed you&rsquo;ll get a simple key-value pair:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat data/small
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@sum += $x; end { dump }' data/small
-{
-  "sum": 2.264762
-}
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@sum += $x; end { emit @sum }' data/small
-sum=2.264762
-</pre>
-</div>
-<p/>
-
-<p/>If it&rsquo;s indexed then use as many names after <tt>emit</tt> as there are indices:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@sum[$a] += $x; end { dump }' data/small
-{
-  "sum": {
-    "pan": 0.346790,
-    "eks": 1.140079,
-    "wye": 0.777892
-  }
-}
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@sum[$a] += $x; end { emit @sum, "a" }' data/small
-a=pan,sum=0.346790
-a=eks,sum=1.140079
-a=wye,sum=0.777892
-</pre>
-</div>
-<p/>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
-{
-  "sum": {
-    "pan": {
-      "pan": 0.346790
-    },
-    "eks": {
-      "pan": 0.758680,
-      "wye": 0.381399
-    },
-    "wye": {
-      "wye": 0.204603,
-      "pan": 0.573289
-    }
-  }
-}
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' data/small
-a=pan,b=pan,sum=0.346790
-a=eks,b=pan,sum=0.758680
-a=eks,b=wye,sum=0.381399
-a=wye,b=wye,sum=0.204603
-a=wye,b=pan,sum=0.573289
-</pre>
-</div>
-<p/>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@sum[$a][$b][$i] += $x; end { dump }' data/small
-{
-  "sum": {
-    "pan": {
-      "pan": {
-        "1": 0.346790
-      }
-    },
-    "eks": {
-      "pan": {
-        "2": 0.758680
-      },
-      "wye": {
-        "4": 0.381399
-      }
-    },
-    "wye": {
-      "wye": {
-        "3": 0.204603
-      },
-      "pan": {
-        "5": 0.573289
-      }
-    }
-  }
-}
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@sum[$a][$b][$i] += $x; end { emit @sum, "a", "b", "i" }' data/small
-a=pan,b=pan,i=1,sum=0.346790
-a=eks,b=pan,i=2,sum=0.758680
-a=eks,b=wye,i=4,sum=0.381399
-a=wye,b=wye,i=3,sum=0.204603
-a=wye,b=pan,i=5,sum=0.573289
-</pre>
-</div>
-<p/>
-
-<p/>Now for <b>emitp</b>: if you have as many names following <tt>emit</tt> as
-there are levels in the out-of-stream variable&rsquo;s hashmap, then <tt>emit</tt> and <tt>emitp</tt> do the same
-thing. Where they differ is when you don&rsquo;t specify as many names as there are hashmap levels. In this
-case, Miller needs to flatten multiple map indices down to output-record keys: <tt>emitp</tt> includes full
-prefixing (hence the <tt>p</tt> in <tt>emitp</tt>) while <tt>emit</tt> takes the deepest hashmap key as the
-output-record key:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
-{
-  "sum": {
-    "pan": {
-      "pan": 0.346790
-    },
-    "eks": {
-      "pan": 0.758680,
-      "wye": 0.381399
-    },
-    "wye": {
-      "wye": 0.204603,
-      "pan": 0.573289
-    }
-  }
-}
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' data/small
-a=pan,pan=0.346790
-a=eks,pan=0.758680,wye=0.381399
-a=wye,wye=0.204603,pan=0.573289
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small
-pan=0.346790
-pan=0.758680,wye=0.381399
-wye=0.204603,pan=0.573289
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
-a=pan,sum:pan=0.346790
-a=eks,sum:pan=0.758680,sum:wye=0.381399
-a=wye,sum:wye=0.204603,sum:pan=0.573289
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
-sum:pan:pan=0.346790,sum:eks:pan=0.758680,sum:eks:wye=0.381399,sum:wye:wye=0.204603,sum:wye:pan=0.573289
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
-sum:pan:pan 0.346790
-sum:eks:pan 0.758680
-sum:eks:wye 0.381399
-sum:wye:wye 0.204603
-sum:wye:pan 0.573289
-</pre>
-</div>
-<p/>
-
-<p/>Use <b>--oflatsep</b> to specify the character which joins multilevel
-keys for <tt>emitp</tt> (it defaults to a colon):
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
-a=pan,sum/pan=0.346790
-a=eks,sum/pan=0.758680,sum/wye=0.381399
-a=wye,sum/wye=0.204603,sum/pan=0.573289
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
-sum/pan/pan=0.346790,sum/eks/pan=0.758680,sum/eks/wye=0.381399,sum/wye/wye=0.204603,sum/wye/pan=0.573289
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --oxtab put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
-sum/pan/pan 0.346790
-sum/eks/pan 0.758680
-sum/eks/wye 0.381399
-sum/wye/wye 0.204603
-sum/wye/pan 0.573289
-</pre>
-</div>
-<p/>
-
-<a id="Multi-emit_statements_for_put"/><h3>Multi-emit statements for put</h3>
-
-<p/>You can emit <b>multiple out-of-stream variables side-by-side</b> by including their names in parentheses:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/medium --opprint put -q '
-  @x_count[$a][$b] += 1;
-  @x_sum[$a][$b] += $x;
-  end {
-      for ((a, b), _ in @x_count) {
-          @x_mean[a][b] = @x_sum[a][b] / @x_count[a][b]
-      }
-      emit (@x_sum, @x_count, @x_mean), "a", "b"
-  }
-'
-a   b   x_sum      x_count x_mean
-pan pan 219.185129 427     0.513314
-pan wye 198.432931 395     0.502362
-pan eks 216.075228 429     0.503672
-pan hat 205.222776 417     0.492141
-pan zee 205.097518 413     0.496604
-eks pan 179.963030 371     0.485076
-eks wye 196.945286 407     0.483895
-eks zee 176.880365 357     0.495463
-eks eks 215.916097 413     0.522799
-eks hat 208.783171 417     0.500679
-wye wye 185.295850 377     0.491501
-wye pan 195.847900 392     0.499612
-wye hat 212.033183 426     0.497730
-wye zee 194.774048 385     0.505907
-wye eks 204.812961 386     0.530604
-zee pan 202.213804 389     0.519830
-zee wye 233.991394 455     0.514267
-zee eks 190.961778 391     0.488393
-zee zee 206.640635 403     0.512756
-zee hat 191.300006 409     0.467726
-hat wye 208.883010 423     0.493813
-hat zee 196.349450 385     0.509999
-hat eks 189.006793 389     0.485879
-hat hat 182.853532 381     0.479931
-hat pan 168.553807 363     0.464336
-</pre>
-</div>
-<p/>
-
-What this does is walk through the first out-of-stream variable
-(<tt>@x_sum</tt> in this example) as usual, then for each keylist found (e.g.
-<tt>pan,wye</tt>), include the values for the remaining out-of-stream variables
-(here, <tt>@x_count</tt> and <tt>@x_mean</tt>). You should use this when all
-out-of-stream variables in the emit statement have the same shape and the same
-keylists.
-
-<a id="Emit-all_statements_for_put"/><h3>Emit-all statements for put</h3>
-
-<p/>Use <b>emit all</b> (or <tt>emit @*</tt> which is synonumous) to output all
-out-of-stream variables. You can use the following idiom to get various
-accumulators output side-by-side (reminiscent of <tt>mlr stats1</tt>):
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/small --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit @*,"a","b"}'
-a   b   sum      count
-pan pan 0.346790 1
-eks pan 0.758680 1
-eks wye 0.381399 1
-wye wye 0.204603 1
-wye pan 0.573289 1
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit @*,"a","b"}'
-a   b   sum
-pan pan 0.346790
-eks pan 0.758680
-eks wye 0.381399
-wye wye 0.204603
-wye pan 0.573289
-
-a   b   count
-pan pan 1
-eks pan 1
-eks wye 1
-wye wye 1
-wye pan 1
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit (@sum, @count),"a","b"}'
-a   b   sum      count
-pan pan 0.346790 1
-eks pan 0.758680 1
-eks wye 0.381399 1
-wye wye 0.204603 1
-wye pan 0.573289 1
-</pre>
-</div>
-<p/>
-
-<a id="Redirected-output_statements_for_put"/><h3>Redirected-output statements for put</h3>
-
-The <b>tee</b>, <b>emitf</b>, <b>emitp</b>, <b>emit</b>, <b>print</b>, and
-<b>dump</b> keywords all allow you to redirect output to one or more files or
-pipe-to commands. The filenames/commands are strings which can be constructed
-using record-dependent values, so you can do things like splitting a table into
-multiple files, one for each account ID, and so on.
-
-<p/> Details:
-
-<ul>
-
-<li/> <tt>mlr put</tt> sends the current record (possibly modified by the
-<tt>put</tt> expression) to the output record stream. Records are then input to
-the following verb in a <tt>then</tt>-chain (if any), else printed to standard
-output (unless <tt>put -q</tt>). The <b>tee</b> keyword <i>additionally</i>
-writes the output record to specified file(s) or pipe-to command, or
-immediately to <tt>stdout</tt>/<tt>stderr</tt>.
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --help-keyword tee
-tee: prints the current record to specified file.
-  This is an immediate print to the specified file (except for pprint format
-  which of course waits until the end of the input stream to format all output).
-
-  The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
-  file-overwrite for &gt; is on first write, not per record. The | is for piping to
-  a process which will process the data. There will be one open file for each
-  distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
-  value of the piped-to command (for |). Output-formatting flags are taken from
-  the main command line.
-
-  You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-  etc., to control the format of the output. See also mlr -h.
-
-  Example: mlr --from f.dat put 'tee &gt;  "/tmp/data-".$a, $*'
-  Example: mlr --from f.dat put 'tee &gt;&gt; "/tmp/data-".$a.$b, $*'
-  Example: mlr --from f.dat put 'tee &gt;  stderr, $*'
-  Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\]", $*'
-  Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\] &gt; /tmp/data-".$a, $*'
-  Example: mlr --from f.dat put -q 'tee | "gzip &gt; /tmp/data-".$a.".gz", $*'
-  Example: mlr --from f.dat put -q --ojson 'tee | "gzip &gt; /tmp/data-".$a.".gz", $*'
-</pre>
-</div>
-<p/>
-
-<li/> <tt>mlr put</tt>&rsquo;s <tt>emitf</tt>, <tt>emitp</tt>, and
-<tt>emit</tt> send out-of-stream variables to the output record stream. These
-are then input to the following verb in a <tt>then</tt>-chain (if any), else
-printed to standard output. When redirected with <tt>&gt;</tt>,
-<tt>&gt;&gt;</tt>, or <tt>|</tt>, they <i>instead</i> write the out-of-stream
-variable(s) to specified file(s) or pipe-to command, or immediately to
-<tt>stdout</tt>/<tt>stderr</tt>.
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --help-keyword emitf
-emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
-  output record stream.
-
-  With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
-  are instead redirected.
-
-  The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
-  file-overwrite for &gt; is on first write, not per record. The | is for piping to
-  a process which will process the data. There will be one open file for each
-  distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
-  value of the piped-to command (for |). Output-formatting flags are taken from
-  the main command line.
-
-  You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-  etc., to control the format of the output if the output is redirected. See also mlr -h.
-
-  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
-  Example: mlr --from f.dat put --oxtab '@a=$i;@b+=$x;@c+=$y; emitf &gt; "tap-".$i.".dat", @a'
-  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
-  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt; "mytap.dat", @a, @b, @c'
-  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt;&gt; "mytap.dat", @a, @b, @c'
-  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt; stderr, @a, @b, @c'
-  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
-  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern &gt; mytap.dat", @a, @b, @c'
-
-  Please see http://johnkerl.org/miller/doc for more information.
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --help-keyword emitp
-emitp: inserts an out-of-stream variable into the output record stream.
-  Hashmap indices present in the data but not slotted by emitp arguments are
-  output concatenated with ":".
-
-  With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
-  are instead redirected.
-
-  The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
-  file-overwrite for &gt; is on first write, not per record. The | is for piping to
-  a process which will process the data. There will be one open file for each
-  distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
-  value of the piped-to command (for |). Output-formatting flags are taken from
-  the main command line.
-
-  You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-  etc., to control the format of the output if the output is redirected. See also mlr -h.
-
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
-  Example: mlr --from f.dat put --opprint '@sums[$a][$b]+=$x; emitp &gt; "tap-".$a.$b.".dat", @sums'
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, "index1", "index2"'
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt;  "mytap.dat", @*, "index1", "index2"'
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt;&gt; "mytap.dat", @*, "index1", "index2"'
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "gzip &gt; mytap.dat.gz", @*, "index1", "index2"'
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt; stderr, @*, "index1", "index2"'
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
-
-  Please see http://johnkerl.org/miller/doc for more information.
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --help-keyword emit
-emit: inserts an out-of-stream variable into the output record stream. Hashmap
-  indices present in the data but not slotted by emit arguments are not output.
-
-  With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
-  are instead redirected.
-
-  The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
-  file-overwrite for &gt; is on first write, not per record. The | is for piping to
-  a process which will process the data. There will be one open file for each
-  distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
-  value of the piped-to command (for |). Output-formatting flags are taken from
-  the main command line.
-
-  You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-  etc., to control the format of the output if the output is redirected. See also mlr -h.
-
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
-  Example: mlr --from f.dat put --ojson '@sums[$a][$b]+=$x; emit &gt; "tap-".$a.$b.".dat", @sums'
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, "index1", "index2"'
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt;  "mytap.dat", @*, "index1", "index2"'
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt;&gt; "mytap.dat", @*, "index1", "index2"'
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "gzip &gt; mytap.dat.gz", @*, "index1", "index2"'
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt; stderr, @*, "index1", "index2"'
-  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
-
-  Please see http://johnkerl.org/miller/doc for more information.
-</pre>
-</div>
-<p/>
-
-<li/> The <tt>print</tt> and <tt>dump</tt> keywords produce output immediately
-to standard output, or to specified file(s) or pipe-to command if present.
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --help-keyword print
-print: prints expression immediately to stdout.
-  Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
-  Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " =&gt; " . v }'
-  Example: mlr --from f.dat put  '(NR % 1000 == 0) { print &gt; stderr, "Checkpoint ".NR}'
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --help-keyword dump
-dump: prints all currently defined out-of-stream variables immediately
-  to stdout as JSON.
-
-  With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
-  are instead redirected.
-
-  The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
-  file-overwrite for &gt; is on first write, not per record. The | is for piping to
-  a process which will process the data. There will be one open file for each
-  distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
-  value of the piped-to command (for |). Output-formatting flags are taken from
-  the main command line.
-
-  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump }'
-  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump &gt;  "mytap.dat"}'
-  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump &gt;&gt; "mytap.dat"}'
-  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump | "jq .[]"}'
-</pre>
-</div>
-<p/>
-
-</ul>
-
-<a id="Unset_statements_for_put"/><h3>Unset statements for put</h3>
-
-<p/>You can clear a map key by assigning the empty string as its value: <tt>$x=""</tt> or <tt>@x=""</tt>.
-Using <tt>unset</tt> you can remove the key entirely. Examples:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat data/small
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put 'unset $x, $a' data/small
-b=pan,i=1,y=0.7268028627434533
-b=pan,i=2,y=0.5221511083334797
-b=wye,i=3,y=0.33831852551664776
-b=wye,i=4,y=0.13418874328430463
-b=pan,i=5,y=0.8636244699032729
-</pre>
-</div>
-<p/>
-
-<p/>This can also be done, of course, using <tt>mlr cut -x</tt>. You can also clear out-of-stream variables, at the base name level, or at an indexed sublevel:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum; dump }' data/small
-{
-  "sum": {
-    "pan": {
-      "pan": 0.346790
-    },
-    "eks": {
-      "pan": 0.758680,
-      "wye": 0.381399
-    },
-    "wye": {
-      "wye": 0.204603,
-      "pan": 0.573289
-    }
-  }
-}
-{
-}
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum["eks"]; dump }' data/small
-{
-  "sum": {
-    "pan": {
-      "pan": 0.346790
-    },
-    "eks": {
-      "pan": 0.758680,
-      "wye": 0.381399
-    },
-    "wye": {
-      "wye": 0.204603,
-      "pan": 0.573289
-    }
-  }
-}
-{
-  "sum": {
-    "pan": {
-      "pan": 0.346790
-    },
-    "wye": {
-      "wye": 0.204603,
-      "pan": 0.573289
-    }
-  }
-}
-</pre>
-</div>
-<p/>
-
-<p/>If you use <tt>unset all</tt> (or <tt>unset @*</tt> which is synonymous), that will unset all out-of-stream
-variables which have been defined up to that point.
-
-<a id="More_variable_assignments_for_put"/><h3>More variable assignments for put</h3>
-
-<p/>There are three remaining kinds of variable assignment using out-of-stream
-variables, the last two of which use the <tt>$*</tt> syntax:
-<ul>
-<li/> Recursive copy of out-of-stream variables
-<li/> Out-of-stream variable assigned to full stream record
-<li/> Full stream record assigned to an out-of-stream variable
-</ul>
-
-<p/> Example recursive copy of out-of-stream variables:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{dump; @w = @v; dump}' data/small
-{
-  "v": {
-    "sum": 2.264762,
-    "count": 5
-  }
-}
-{
-  "v": {
-    "sum": 2.264762,
-    "count": 5
-  },
-  "w": {
-    "sum": 2.264762,
-    "count": 5
-  }
-}
-</pre>
-</div>
-<p/>
-
-<p/>Example of out-of-stream variable assigned to full stream record, where the 2nd record is stashed, and the 4th record is overwritten with that:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put 'NR == 2 {@keep = $*}; NR == 4 {$* = @keep}' data/small
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-</pre>
-</div>
-<p/>
-
-<p/>Example of full stream record assigned to an out-of-stream variable, finding
-the record for which the <tt>x</tt> field has the largest value in the input
-stream:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat data/small
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint put -q 'isnull(@xmax) || $x &gt; @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}' data/small
-a   b   i x                  y
-eks pan 2 0.7586799647899636 0.5221511083334797
-</pre>
-</div>
-<p/>
-
-<a id="Pattern-action_blocks_for_put"/><h3>Pattern-action blocks for put</h3>
-
-<p/>These are reminiscent of <tt>awk</tt> syntax.  They can be used to allow
-assignments to be done only when appropriate &mdash; e.g. for math-function
-domain restrictions, regex-matching, and so on:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr cat data/put-gating-example-1.dkvp
-x=-1
-x=0
-x=1
-x=2
-x=3
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '$x &gt; 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp
-x=-1
-x=0
-x=1,y=0.000000,z=0.000000
-x=2,y=0.301030,z=0.548662
-x=3,y=0.477121,z=0.690740
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr cat data/put-gating-example-2.dkvp
-a=abc_123
-a=some other name
-a=xyz_789
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '$a =~ "([a-z]+)_([0-9]+)" { $b = "left_\1"; $c = "right_\2" }' data/put-gating-example-2.dkvp
-a=abc_123,b=left_abc,c=right_123
-a=some other name
-a=xyz_789,b=left_xyz,c=right_789
-</pre>
-</div>
-<p/>
-
-<p/>This produces heteregenous output which Miller, of course, has no problems
-with (see <a href="record-heterogeneity.html">Record-heterogeneity</a>).  But if you
-want homogeneous output, the curly braces can be replaced with a semicolon
-between the expression and the body statements.  This causes <tt>put</tt> to
-evaluate the boolean expression (along with any side effects, namely,
-regex-captures <tt>\1</tt>, <tt>\2</tt>, etc.) but doesn&rsquo;t use it as a
-criterion for whether subsequent assignments should be executed. Instead,
-subsequent assignments are done unconditionally:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '$x &gt; 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp
-x=-1,y=nan,z=nan
-x=0,y=-inf,z=nan
-x=1,y=0.000000,z=0.000000
-x=2,y=0.301030,z=0.548662
-x=3,y=0.477121,z=0.690740
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp
-a=abc_123,b=left_abc,c=right_123
-a=some other name,b=left_,c=right_
-a=xyz_789,b=left_xyz,c=right_789
-</pre>
-</div>
-<p/>
-
-<a id="If-statements_for_put"/><h3>If-statements for put</h3>
-
-<p/>These are again reminiscent of <tt>awk</tt>. Pattern-action blocks are a special case of <tt>if</tt> with no
-<tt>elif</tt> or <tt>else</tt> blocks, no <tt>if</tt> keyword, and parentheses optional around the boolean expression:
-
-<p/>
-<div class="pokipanel">
-<pre>
-mlr put 'NR == 4 {$foo = "bar"}'
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-mlr put 'if (NR == 4) {$foo = "bar"}'
-</pre>
-</div>
-<p/>
-
-<p/>Compound statements use <tt>elif</tt> (rather than <tt>elsif</tt> or <tt>else if</tt>):
-
-<p/>
-<div class="pokipanel">
-<pre>
-mlr put '
-  if (NR == 2) {
-    ...
-  } elif (NR ==4) {
-    ...
-  } elif (NR ==6) {
-    ...
-  } else {
-    ...
-  }
-'
-</pre>
-</div>
-<p/>
-
-<a id="While_and_do-while_loops_for_put"/><h3>While and do-while loops for put</h3>
-
-<p/>Miller&rsquo;s <tt>while</tt> and <tt>do-while</tt> are unsurprising in
-comparison to various languages, as are <tt>break</tt> and <tt>continue</tt>:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo x=1,y=2 | mlr put '
-  while (NF &lt; 10) {
-    $[NF+1] = ""
-  }
-  $foo = "bar"
-'
-x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo x=1,y=2 | mlr put '
-  do {
-    $[NF+1] = "";
-    if (NF == 5) {
-      break
-    }
-  } while (NF &lt; 10);
-  $foo = "bar"
-'
-x=1,y=2,3=,4=,5=,foo=bar
-</pre>
-</div>
-<p/>
-
-<p/> A <tt>break</tt> or <tt>continue</tt> within nested conditional blocks or
-if-statements will, of course, propagate to the innermost loop enclosing them,
-if any. A <tt>break</tt> or <tt>continue</tt> outside a loop is a syntax error
-that will be flagged as soon as the expression is parsed, before any input
-records are ingested.
-
-<p/> The existence of <tt>while</tt>, <tt>do-while</tt>, and <tt>for</tt> loops
-in Miller&rsquo;s DSL means that you can create infinite-loop scenarios
-inadvertently.  In particular, please recall that DSL statements are executed
-once if in <tt>begin</tt> or <tt>end</tt> blocks, and once <i>per record</i>
-otherwise. For example, <b><tt>while (NR < 10)</tt> will never terminate as
-<tt>NR</tt> is only incremented between records</b>.
-
-<a id="For-loops_for_put"/><h3>For-loops for put</h3>
-
-<p/>While Miller&rsquo;s <tt>while</tt> and <tt>do-while</tt> statements are
-much as in many other languages, <tt>for</tt> loops are more idiosyncratic to
-Miller. They are loops over key-value pairs, whether in stream records or
-out-of-stream variables: more reminiscent of <tt>foreach</tt>, as in (for
-example) PHP.
-
-<p/> There are a two variants: <b>for-loop over key-value pairs in the current
-stream record</b> and <b>for-loop over key-value pairs in an out-of-stream
-variable</b>. In each case the <tt>in</tt> keyword specifies the hashmap being
-iterated over, and the variable names between <tt>for</tt> and <tt>in</tt> are
-bound to the keys and values, respectively, of the hashmap&rsquo;s key-value pairs on
-each loop iteration.  As with <tt>while</tt> and <tt>do-while</tt>, a
-<tt>break</tt> or <tt>continue</tt> within nested control structures will
-propagate to the innermost loop enclosing them, if any, and a <tt>break</tt> or
-<tt>continue</tt> outside a loop is a syntax error that will be flagged as soon
-as the expression is parsed, before any input records are ingested.
-
-<p/><b>For-loop over the current stream record</b>:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat data/for-srec-example.tbl
-label1 label2 f1  f2  f3
-blue   green  100 240 350
-red    green  120 11  195
-yellow blue   140 0   240
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --pprint --from data/for-srec-example.tbl put '
-  $sum1 = $f1 + $f2 + $f3;
-  $sum2 = 0;
-  $sum3 = 0;
-  for (key, value in $*) {
-    if (key =~ "^f[0-9]+") {
-      $sum2 += value;
-      $sum3 += $[key];
-    }
-  }
-'
-label1 label2 f1  f2  f3  sum1 sum2 sum3
-blue   green  100 240 350 690  690  690
-red    green  120 11  195 326  326  326
-yellow blue   140 0   240 380  380  380
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'
-a   b   i x                   y                   a_type    b_type    i_type x_type   y_type
-pan pan 1 0.3467901443380824  0.7268028627434533  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-eks pan 2 0.7586799647899636  0.5221511083334797  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-wye wye 3 0.20460330576630303 0.33831852551664776 MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-eks wye 4 0.38139939387114097 0.13418874328430463 MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-wye pan 5 0.5732889198020006  0.8636244699032729  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-</pre>
-</div>
-<p/>
-
-<p/>Note that the value of the current field in the for-loop can be gotten either using the bound
-variable <tt>value</tt>, or through a <b>computed field name</b> using square brackets as in <tt>$[key]</tt>.
-
-<p/>Important note: to avoid inconsistent looping behavior in case you&rsquo;re
-setting new fields (and/or unsetting existing ones) while looping over the
-record, <b>Miller makes a copy of the record before the loop: loop variables
-are bound from the copy and all other reads/writes involve the record
-itself</b>:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/small --opprint put '
-  $sum1 = 0;
-  $sum2 = 0;
-  for (k,v in $*) {
-    if (isnumeric(v)) {
-      $sum1 +=v;
-      $sum2 += $[k];
-    }
-  }
-'
-a   b   i x                   y                   sum1     sum2
-pan pan 1 0.3467901443380824  0.7268028627434533  2.073593 8.294372
-eks pan 2 0.7586799647899636  0.5221511083334797  3.280831 13.123324
-wye wye 3 0.20460330576630303 0.33831852551664776 3.542922 14.171687
-eks wye 4 0.38139939387114097 0.13418874328430463 4.515588 18.062353
-wye pan 5 0.5732889198020006  0.8636244699032729  6.436913 25.747654
-</pre>
-</div>
-<p/>
-
-It can be confusing to modify the stream record while iterating over a copy of it, so
-instead you might find it simpler to use an out-of-stream variable in the loop and only update
-the stream record after the loop:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/small --opprint put '
-  @sum = 0;
-  for (k,v in $*) {
-    if (isnumeric(v)) {
-      @sum += $[k];
-    }
-  }
-  $sum = @sum
-'
-a   b   i x                   y                   sum
-pan pan 1 0.3467901443380824  0.7268028627434533  2.073593
-eks pan 2 0.7586799647899636  0.5221511083334797  3.280831
-wye wye 3 0.20460330576630303 0.33831852551664776 3.542922
-eks wye 4 0.38139939387114097 0.13418874328430463 4.515588
-wye pan 5 0.5732889198020006  0.8636244699032729  6.436913
-</pre>
-</div>
-<p/>
-
-<p/><b>C-style triple-for loops</b> are supported as follows:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/small --opprint put '
-  local suma = 0;
-  local sumb = 0;
-  for (local a = 1, local b = 1; a &lt;= NR; a += 1, b *= 2) {
-    suma += a;
-    sumb += b;
-  }
-  $suma = suma;
-  $sumb = sumb;
-'
-a   b   i x                   y                   suma sumb
-pan pan 1 0.3467901443380824  0.7268028627434533  1    1
-eks pan 2 0.7586799647899636  0.5221511083334797  3    3
-wye wye 3 0.20460330576630303 0.33831852551664776 6    7
-eks wye 4 0.38139939387114097 0.13418874328430463 10   15
-wye pan 5 0.5732889198020006  0.8636244699032729  15   31
-</pre>
-</div>
-<p/>
-
-Notes:
-<ul>
-
-<li/> In <tt>for (start; continuation; update) { body }</tt>, the start and
-update statements may be empty, single statements, or multiple comma-separated
-statements.
-
-<li/> In particular, you may use <tt>$</tt>-variables and/or
-<tt>@</tt>-variables in the start, continuation, and/or update steps (as well
-as the body, of course).
-
-<li/> Miller has no comma operator; the continuation must be a single
-expression which evaluates to boolean.
-
-<li/> As with all for/if/while statements in Miller, the curly braces are
-required even if the body is a single statement, or empty.
-
-</ul>
-
-<p/><b>For-loop over out-of-stream variable</b>: This is similar to looping
-over the current stream record except for additional degrees of freedom: you
-can start iterating on sub-hashmaps of an out-of-stream variable; you can loop
-over nested keys; you can loop over all out-of-stream variables.  As with
-for-loops over stream records, the bound variables are bound to a copy of the
-sub-hashmap as it was before the loop started.  The sub-hashmap is specified by
-square-bracketed indices after <tt>in</tt>, and additional deeper indices are
-bound to loop key-variables. The terminal values are bound to the loop
-value-variable whenever the keys are neither too shallow, nor too deep. Example
-indexing is as follows:
-
-<p/>
-<div class="pokipanel">
-<pre>
-# Parentheses are optional for single key:
-for (k1,           v in @a["b"]["c"]) { ... }
-for ((k1),         v in @a["b"]["c"]) { ... }
-# Parentheses are required for multiple keys:
-for ((k1, k2),     v in @a["b"]["c"]) { ... } # Loop over subhashmap of a variable
-for ((k1, k2, k3), v in @a["b"]["c"]) { ... } # Ditto
-for ((k1, k2, k3), v in @a { ... }            # Loop over variable starting from basename
-for ((k1, k2, k3), v in @* { ... }            # Loop over all variables (k1 is bound to basename)
-</pre>
-</div>
-<p/>
-
-<p/>That&rsquo;s confusing in the abstract, so a concrete example is in order.
-Suppose the out-of-stream variable <tt>@myvar</tt> is populated as follows:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint --from data/small head -n 2 then put -q '
-  begin {
-    @myvar["nesting-is-too-shallow"] = 1;
-    @myvar["nesting-is"]["just-right"] = 2;
-    @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["too-deep"] = 4;
-  }
-  end {
-    dump
-  }
-'
-{
-  "myvar": {
-    "nesting-is-too-shallow": 1,
-    "nesting-is": {
-      "just-right": 2,
-      "also-just-right": 3
-    },
-    "nesting": {
-      "is": {
-        "too-deep": 4
-      }
-    }
-  }
-}
-</pre>
-</div>
-<p/>
-
-<p/> Then the too-shallow parts &mdash; indexed by the basename <tt>myvar</tt>
-and the index <tt>"nesting-is-too-shallow"</tt> &mdash; have depth two
-(basename and one index specify a terminal value) and can be gotten as follows:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/small head -n 2 then put -q '
-  begin {
-    @myvar["nesting-is-too-shallow"] = 1;
-    @myvar["nesting-is"]["just-right"] = 2;
-    @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["too-deep"] = 4;
-  }
-  end {
-    for (k, v in @myvar) {
-      @terminal[k] = v
-    }
-    emit @terminal, "index1"
-  }
-'
-index1=nesting-is-too-shallow,terminal=1
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/small head -n 2 then put -q '
-  begin {
-    @myvar["nesting-is-too-shallow"] = 1;
-    @myvar["nesting-is"]["just-right"] = 2;
-    @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["too-deep"] = 4;
-  }
-  end {
-    for ((k1, k2), v in @*) {
-      @terminal[k1][k2] = v
-    }
-    emit @terminal, "basename", "index1"
-  }
-'
-basename=myvar,index1=nesting-is-too-shallow,terminal=1
-</pre>
-</div>
-<p/>
-
-<p/>Note that it would take more than these two indices to reach the deeper values in the hashmap so they
-aren&rsquo;t bound in either of these for-loops.
-
-<p/>By contrast, the <tt>"just-right"</tt> parts have depth three (basename and
-two indices specify a terminal value) and can be gotten at by any of the
-following:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/small head -n 2 then put -q '
-  begin {
-    @myvar["nesting-is-too-shallow"] = 1;
-    @myvar["nesting-is"]["just-right"] = 2;
-    @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["too-deep"] = 4;
-  }
-  end {
-    for ((k1), v in @myvar["nesting-is"]) {
-      @terminal[k1] = v
-    }
-    emit @terminal, "index1"
-  }
-'
-index1=just-right,terminal=2
-index1=also-just-right,terminal=3
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/small head -n 2 then put -q '
-  begin {
-    @myvar["nesting-is-too-shallow"] = 1;
-    @myvar["nesting-is"]["just-right"] = 2;
-    @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["too-deep"] = 4;
-  }
-  end {
-    for ((k1, k2), v in @myvar) {
-      @terminal[k1][k2] = v
-    }
-    emit @terminal, "index1", "index2"
-  }
-'
-index1=nesting-is,index2=just-right,terminal=2
-index1=nesting-is,index2=also-just-right,terminal=3
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/small head -n 2 then put -q '
-  begin {
-    @myvar["nesting-is-too-shallow"] = 1;
-    @myvar["nesting-is"]["just-right"] = 2;
-    @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["too-deep"] = 4;
-  }
-  end {
-    for ((k1, k2, k3), v in @*) {
-      @terminal[k1][k2][k3] = v
-    }
-    emit @terminal, "basename", "index1", "index2"
-  }
-'
-basename=myvar,index1=nesting-is,index2=just-right,terminal=2
-basename=myvar,index1=nesting-is,index2=also-just-right,terminal=3
-</pre>
-</div>
-<p/>
-
-<p/> Note that three key levels are specified here: basename and two indices.
-So these for-loops don&rsquo;t produce the depth-two or depth-four entries in
-the hashmap.
-
-<a id="Filter_statements_for_put"/><h3>Filter statements for put</h3>
-
-<p/> You can use <tt>filter</tt> within <tt>put</tt>. In fact, the
-following two are synonymous:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr filter 'NR==2 || NR==3' data/small
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put 'filter NR==2 || NR==3' data/small
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-</pre>
-</div>
-<p/>
-
-<p/>The former, of course, is much easier to type. But the latter allows you to define more complex expressions
-for the filter, and/or do other things in addition to the filter:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '@running_sum += $x; filter @running_sum &gt; 1.3' data/small
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '$z = $x * $y; filter $z &gt; 0.3' data/small
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,z=0.396146
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,z=0.495106
-</pre>
-</div>
-<p/>
-
-<a id="A_note_on_the_complexity_of_put"/><h3>A note on the complexity of put</h3>
-
-<p/> One of Miller&rsquo;s strengths is its brevity: it&rsquo;s much quicker
-&mdash; and less error-prone &mdash; to type <tt>mlr stats1 -a sum -f x,y -g
-a,b</tt> than having to track summation variables as in <tt>awk</tt>, or using
-Miller&rsquo;s out-of-stream variables. And the more language features
-Miller&rsquo;s put-DSL has (for-loops, if-statements, nested control
-structures, etc.) then the <i>less</i> powerful it begins to seem: because of
-the other programming-language features it <i>doesn&rsquo;t</i> have.
-
-<p/> When I was originally prototyping Miller in 2015, the decision I had was
-whether to hand-code in a low-level language like C or Rust, with my own
-hand-rolled DSL, or whether to use a higher-level language (like Python or Lua
-or Nim) and let the <tt>put</tt> statements be handled by the implementation
-language&rsquo;s own <tt>eval</tt>: the implementation language would take the
-place of a DSL. Multiple performance experiments showed me I could get better
-throughput using the former, and using C in particular &mdash; by a wide margin. So
-Miller is C under the hood with a hand-rolled DSL.
-
-<p/> I do want to keep focusing on what Miller is good at &mdash; concise notation,
-low latency, and high throughput &mdash; and not add too much in terms of
-high-level-language features to the DSL.  That said, some sort of looping over
-field names is a basic thing to want. As of 4.1.0 we have recursive
-for/while/if structures on about the same complexity level as <tt>awk</tt>.
-While I&rsquo;m excited by these powerful language features, I hope to keep new
-features beyond 4.1.0 focused on Miller&rsquo;s sweet spot which is speed plus
-simplicity.
+<a id="Features_which_put_shares_with_filter"/><h3>Features which put shares with filter</h3>
+
+<p/>Please see <a href="#Expression_language_for_filter_and_put">Expression
+language for filter and put</a> for more information about the expression
+language for <tt>mlr put</tt>.
 
 <!-- ================================================================ -->
 <a id="regularize"/><h2>regularize</h2>
@@ -5655,7 +3715,597 @@ count
 </td></tr></table>
 
 <!-- ================================================================ -->
-<a id="Keywords_for_filter_and_put"/><h1>Keywords for filter and put</h1>
+<a id="Expression_language_for_filter_and_put"/><h1>Expression language for filter and put</h1>
+
+<!-- ================================================================ -->
+<a id="Syntax"/><h2>Syntax</h2>
+
+<!-- ================================================================ -->
+<a id="Restricted_syntax_for_filter"/><h3>Restricted syntax for filter</h3>
+
+<p/> xxx under construction
+
+<!-- ================================================================ -->
+<a id="Expression_formatting"/><h3>Expression formatting</h3>
+
+<p/>Multiple expressions may be given, separated by semicolons, and each may refer to the ones before:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j = $i + 1; $k = $i +$j'
+i j  k
+0 1  1
+1 2  3
+2 3  5
+3 4  7
+4 5  9
+5 6  11
+6 7  13
+7 8  15
+8 9  17
+9 10 19
+</pre>
+</div>
+<p/>
+
+Newlines within the expression are ignored, which can help increase legibility of complex expressions:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '
+  $nf       = NF;
+  $nr       = NR;
+  $fnr      = FNR;
+  $filenum  = FILENUM;
+  $filename = FILENAME
+' data/small data/small2
+a   b   i     x                    y                    nf nr fnr filenum filename
+pan pan 1     0.3467901443380824   0.7268028627434533   5  1  1   1       data/small
+eks pan 2     0.7586799647899636   0.5221511083334797   5  2  2   1       data/small
+wye wye 3     0.20460330576630303  0.33831852551664776  5  3  3   1       data/small
+eks wye 4     0.38139939387114097  0.13418874328430463  5  4  4   1       data/small
+wye pan 5     0.5732889198020006   0.8636244699032729   5  5  5   1       data/small
+pan eks 9999  0.267481232652199086 0.557077185510228001 5  6  1   2       data/small2
+wye eks 10000 0.734806020620654365 0.884788571337605134 5  7  2   2       data/small2
+pan wye 10001 0.870530722602517626 0.009854780514656930 5  8  3   2       data/small2
+hat wye 10002 0.321507044286237609 0.568893318795083758 5  9  4   2       data/small2
+pan zee 10003 0.272054845593895200 0.425789896597056627 5  10 5   2       data/small2
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Semicolons,_newlines,_and_curly_braces"/><h3>Semicolons, newlines, and curly braces</h3>
+
+<p/>Miller uses semicolons as statement separators, not statement terminators. This means you can write:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put 'x=1'
+mlr put 'x=1;$y=2'
+mlr put 'x=1;$y=2;'
+mlr put 'x=1;;;;$y=2;'
+</pre>
+</div>
+<p/>
+
+<p/>Semicolons are optional after closing curly braces (which close conditionals and loops as discussed below).
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo x=1,y=2 | mlr put 'while (NF &lt; 10) { $[NF+1] = ""}  $foo = "bar"'
+x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo x=1,y=2 | mlr put 'while (NF &lt; 10) { $[NF+1] = ""}; $foo = "bar"'
+x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
+</pre>
+</div>
+<p/>
+
+<p/>Semicolons are required between statements even if those statements are on
+separate lines.  Newlines are for your convenience but have no syntactic
+meaning: line endings do not terminate statements. For example, adjacent
+assignment statements must be separated by semicolons even if those statements
+are on separate lines:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put '
+  $x = 1
+  $y = 2 # Syntax error
+'
+
+mlr put '
+  $x = 1;
+  $y = 2 # This is OK
+'
+</pre>
+</div>
+<p/>
+
+<p/>Bodies for all compound statements must be enclosed in curly braces, even if the body is a single statement:
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put 'if ($x == 1) $y = 2' # Syntax error
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put 'if ($x == 1) { $y = 2 }' # This is OK
+</pre>
+</div>
+<p/>
+
+<p/>Bodies for compound statements may be empty:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptable
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Variables"/><h2>Variables</h2>
+
+<!-- ================================================================ -->
+<a id="Field_names"/><h3>Field names</h3>
+
+<p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> and <a
+href="#put"><tt>put</tt></a> expressions, even though they don&rsquo;t appear
+in the data stream. For integer-indexed data, this looks like
+<tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.  Likewise, enclose string literals in
+double quotes in <tt>filter</tt> expressions even though they don&rsquo;t
+appear in file data.  In particular, <tt>mlr filter '$x=="abc"'</tt> passes
+through the record <tt>x=abc</tt>.  If field names have special characters such
+as <tt>.</tt> then you can use braces, e.g. <tt>'${field.name}'</tt>.
+
+<p/>You may also use a <b>computed field name</b> in square brackets, e.g.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo a=3,b=4 | mlr filter '$["x"] &lt; 0.5'
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'
+s=green,t=blue,a=3,b=4,green_blue=12
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Built-in_variables"/><h3>Built-in variables</h3>
+
+<p/>Miller supports the following five built-in variables for <a
+href="#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
+<tt>NF</tt>, <tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and
+<tt>FILENAME</tt>, as well as the mathematical constants <tt>PI</tt> and
+<tt>E</tt>.  Lastly, the <tt>ENV</tt> hashmap allows read access to environment
+variables, e.g.  <tt>ENV["HOME"]</tt> or <tt>ENV["foo_".$hostname]</tt>.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr filter 'FNR == 2' data/small*
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533
+a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$fnr = FNR' data/small*
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,fnr=1
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,fnr=2
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,fnr=3
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,fnr=4
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,fnr=5
+1=a,2=b,3=i,4=x,5=y,fnr=1
+1=pan,2=pan,3=1,4=0.3467901443380824,5=0.7268028627434533,fnr=2
+1=eks,2=pan,3=2,4=0.7586799647899636,5=0.5221511083334797,fnr=3
+1=wye,2=wye,3=3,4=0.20460330576630303,5=0.33831852551664776,fnr=4
+1=eks,2=wye,3=4,4=0.38139939387114097,5=0.13418874328430463,fnr=5
+1=wye,2=pan,3=5,4=0.5732889198020006,5=0.8636244699032729,fnr=6
+a=pan,b=eks,i=9999,x=0.267481232652199086,y=0.557077185510228001,fnr=1
+a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134,fnr=2
+a=pan,b=wye,i=10001,x=0.870530722602517626,y=0.009854780514656930,fnr=3
+a=hat,b=wye,i=10002,x=0.321507044286237609,y=0.568893318795083758,fnr=4
+a=pan,b=zee,i=10003,x=0.272054845593895200,y=0.425789896597056627,fnr=5
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Scope_and_extent_for_local_variables"/><h3>Scope and extent for local variables</h3>
+
+<p/> xxx this section is under construction.
+
+<ul>
+<li/> xxx
+<li/> xxx
+<li/> xxx All argument-passing is positional rather than by name; arguments are passed by value, not by reference.
+</ul>
+
+<!-- ================================================================ -->
+<a id="Out-of-stream_variables_for_put"/><h3>Out-of-stream variables for put</h3>
+
+There are three kinds of variables in Miller:
+
+<p/> <b>Built-in variables</b>, as discussed above:
+
+<ul>
+
+<li/>These are written all in capital letters, such as <tt>NR</tt>,
+<tt>NF</tt>, <tt>FILENAME</tt>, and only a small, specific set of them is
+defined by Miller.
+
+<li/> Their values change from one record to the next as Miller scans through
+your input data stream: <tt>NR</tt> is the count of records so far encountered
+in the input stream, starting at 1; <tt>NF</tt> is the number of fields in the
+current input record; <tt>FILENAME</tt> is the current file name; and so on as
+detailed above.
+
+<li/> Their scope is global: you can refer to them in any <tt>filter</tt>
+or <tt>put</tt> statement. Their values are assigned by the input-record reader:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv put '$nr = NR' data/a.csv
+a,b,c,nr
+1,2,3,1
+4,5,6,2
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv
+a,b,c,nr
+1,2,3,1
+1,2,3,1
+1,2,3,1
+4,5,6,2
+4,5,6,2
+4,5,6,2
+</pre>
+</div>
+<p/>
+
+<li/> These are read-only for the <tt>mlr put</tt> and <tt>mlr filter</tt>
+DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may not be
+assigned to: <tt>NR=100</tt> is a syntax error.
+
+<li/> You can output built-in variables indirectly, by assigning them to a
+non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named <tt>nr</tt> to
+each output record, containing the value of <tt>NR</tt> as of when that record
+was ingested.
+
+</ul>
+
+<p/><b>Fields within stream records</b>, as discussed above:
+
+<ul>
+
+<li/> These are prefixed with a dollar sign, such as <tt>$quantity</tt>,
+<tt>$hostname</tt>, etc.
+
+<li/> Their names depend on the contents of your input data stream, and their
+values change from one record to the next as Miller scans through your input
+data stream.
+
+<li/> They are scoped to the current record of the <tt>filter</tt> or
+<tt>put</tt> command in which they appear.
+
+<li/> These are read-write: you can do <tt>$y=2*$x</tt>, <tt>$x=$x+1</tt>, etc.
+
+<li/> Records are Miller&rsquo;s output: field names present in the input
+stream are passed through to output (written to standard output) unless fields
+are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
+<tt>put -q</tt>, etc. Simply assign a value to a field and it will be output.
+
+</ul>
+
+<b>Out-of-stream variables</b>, presented here:
+
+<ul>
+
+<li/> These are prefixed with an at-sign, e.g. <tt>@sum</tt>.  Furthermore,
+unlike built-in variables and stream-record fields, they are maintained in an
+arbitrarily nested hashmap: you can do <tt>@sum += $quanity</tt>, or
+<tt>@sum[$color] += $quanity</tt>, or <tt>@sum[$color][$shape] +=
+$quanity</tt>. The keys for the multi-level hashmap can be any expression which
+evaluates to string or integer: e.g.  <tt>@sum[NR] = $a + $b</tt>,
+<tt>@sum[$a."-".$b] = $x</tt>, etc.
+
+<li/> Their names and their values are entirely under your control; they change
+only when you assign to them.
+
+<li/> Just as for field names in stream records, if you want to define out-of-stream variables
+with special characters such as <tt>.</tt> then you can use braces, e.g. <tt>'@{variable.name}["index"]'</tt>.
+
+<li/>You may use a <b>computed key </b> in square brackets, e.g.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'
+green_blue=12
+</pre>
+</div>
+<p/>
+
+<li/> Out-of-stream variables are scoped to the <tt>put</tt> command in which they appear.
+In particular, if you have two or more <tt>put</tt> commands separated by <tt>then</tt>,
+each put will have its own set of out-of-stream variables:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/a.dkvp
+a=1,b=2,c=3
+a=4,b=5,c=6
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '@sum += $a; end {emit @sum}' then put 'ispresent($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp
+a=10,b=2,c=3
+a=40,b=5,c=6
+sum=5
+sum=50
+</pre>
+</div>
+<p/>
+
+<li/> Out-of-stream variables are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
+etc.
+
+<li/> You can <b>output</b> these in <b>four ways</b>: (1) <b>assign</b> them
+to stream-record fields, e.g.  <tt>$cumulative_sum = @sum</tt>; (2) use
+<b>emit</b>/<b>emitp</b>/<b>emitf</b>, e.g.  <tt>@sum += $x; emit @sum</tt>
+which produces an extra output record such as <tt>sum=3.1648382</tt>; (3) use
+the <b>dump</b> or <b>edump</b> keywords, which immediately print all
+out-of-stream variables as a JSON data structure to the standard output or
+standard error (respectively), or (4) use the <b>print</b> or <b>eprint</b>
+keywords which immediately print an expression to standard output or standard
+error, respectively. Note that <tt>dump</tt>, <tt>edump</tt>, <tt>print</tt>,
+and <tt>eprint</tt> don&rsquo;t output records which participate in
+<tt>then</tt>-chaining; rather, they&rsquo;re just immediate prints to
+stdout/stderr. The <tt>printn</tt> and <tt>eprintn</tt> keywords are the same
+except that they don&rsquo;t print final newlines.
+
+</ul>
+
+<p/>Features of out-of-stream variables, and examples of their use, will be
+presented in the following sections.
+
+<!-- ================================================================ -->
+<a id="Indexed_out-of-stream_variables_for_put"/><h3>Indexed out-of-stream variables for put</h3>
+
+<p/>Using an index on the <tt>@count</tt> and <tt>@sum</tt> variables, we get the benefit of the
+<tt>-g</tt> (group-by) option which <tt>mlr stats1</tt> and various other Miller commands have:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '
+  @x_count[$a] += 1;
+  @x_sum[$a] += $x;
+  end {
+    emit @x_count, "a";
+    emit @x_sum, "a";
+  }
+' ../data/small
+a=pan,x_count=2
+a=eks,x_count=3
+a=wye,x_count=2
+a=zee,x_count=2
+a=hat,x_count=1
+a=pan,x_sum=0.849416
+a=eks,x_sum=1.751863
+a=wye,x_sum=0.777892
+a=zee,x_sum=1.125680
+a=hat,x_sum=0.031442
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr stats1 -a count,sum -f x -g a ../data/small
+a=pan,x_count=2,x_sum=0.849416
+a=eks,x_count=3,x_sum=1.751863
+a=wye,x_count=2,x_sum=0.777892
+a=zee,x_count=2,x_sum=1.125680
+a=hat,x_count=1,x_sum=0.031442
+</pre>
+</div>
+<p/>
+
+<p/>Indices can be arbitrarily deep &mdash; here there are two or more of them:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/medium put -q '
+  @x_count[$a][$b] += 1;
+  @x_sum[$a][$b] += $x;
+  end {
+    emit (@x_count, @x_sum), "a", "b";
+  }
+'
+a=pan,b=pan,x_count=427,x_sum=219.185129
+a=pan,b=wye,x_count=395,x_sum=198.432931
+a=pan,b=eks,x_count=429,x_sum=216.075228
+a=pan,b=hat,x_count=417,x_sum=205.222776
+a=pan,b=zee,x_count=413,x_sum=205.097518
+a=eks,b=pan,x_count=371,x_sum=179.963030
+a=eks,b=wye,x_count=407,x_sum=196.945286
+a=eks,b=zee,x_count=357,x_sum=176.880365
+a=eks,b=eks,x_count=413,x_sum=215.916097
+a=eks,b=hat,x_count=417,x_sum=208.783171
+a=wye,b=wye,x_count=377,x_sum=185.295850
+a=wye,b=pan,x_count=392,x_sum=195.847900
+a=wye,b=hat,x_count=426,x_sum=212.033183
+a=wye,b=zee,x_count=385,x_sum=194.774048
+a=wye,b=eks,x_count=386,x_sum=204.812961
+a=zee,b=pan,x_count=389,x_sum=202.213804
+a=zee,b=wye,x_count=455,x_sum=233.991394
+a=zee,b=eks,x_count=391,x_sum=190.961778
+a=zee,b=zee,x_count=403,x_sum=206.640635
+a=zee,b=hat,x_count=409,x_sum=191.300006
+a=hat,b=wye,x_count=423,x_sum=208.883010
+a=hat,b=zee,x_count=385,x_sum=196.349450
+a=hat,b=eks,x_count=389,x_sum=189.006793
+a=hat,b=hat,x_count=381,x_sum=182.853532
+a=hat,b=pan,x_count=363,x_sum=168.553807
+</pre>
+</div>
+<p/>
+
+The idea is that <tt>stats1</tt>, and other Miller commands, encapsulate
+frequently-used patterns with a minimum of keystroking (and run a little
+faster), whereas using out-of-stream variables you have more flexibility and
+control in what you do. <b>Out-of-stream variables, along with pattern/action
+blocks and begin/end blocks, give you flexibility in what you can do with
+Miller.</b>
+
+<p/>Begin/end blocks can be mixed with pattern/action blocks. For example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '
+  begin {
+    @num_total = 0;
+    @num_positive = 0;
+  };
+  @num_total += 1;
+  $x &gt; 0.0 {
+    @num_positive += 1;
+    $y = log10($x); $z = sqrt($y)
+  };
+  end {
+    emitf @num_total, @num_positive
+  }
+' data/put-gating-example-1.dkvp
+x=-1
+x=0
+x=1,y=0.000000,z=0.000000
+x=2,y=0.301030,z=0.548662
+x=3,y=0.477121,z=0.690740
+num_total=5,num_positive=3
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="More_variable_assignments_for_put"/><h3>More variable assignments for put</h3>
+
+<p/>There are three remaining kinds of variable assignment using out-of-stream
+variables, the last two of which use the <tt>$*</tt> syntax:
+<ul>
+<li/> Recursive copy of out-of-stream variables
+<li/> Out-of-stream variable assigned to full stream record
+<li/> Full stream record assigned to an out-of-stream variable
+</ul>
+
+<p/> Example recursive copy of out-of-stream variables:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put -q '@v["sum"] += $x; @v["count"] += 1; end{dump; @w = @v; dump}' data/small
+{
+  "v": {
+    "sum": 2.264762,
+    "count": 5
+  }
+}
+{
+  "v": {
+    "sum": 2.264762,
+    "count": 5
+  },
+  "w": {
+    "sum": 2.264762,
+    "count": 5
+  }
+}
+</pre>
+</div>
+<p/>
+
+<p/>Example of out-of-stream variable assigned to full stream record, where the 2nd record is stashed, and the 4th record is overwritten with that:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put 'NR == 2 {@keep = $*}; NR == 4 {$* = @keep}' data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+
+<p/>Example of full stream record assigned to an out-of-stream variable, finding
+the record for which the <tt>x</tt> field has the largest value in the input
+stream:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put -q 'isnull(@xmax) || $x &gt; @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}' data/small
+a   b   i x                  y
+eks pan 2 0.7586799647899636 0.5221511083334797
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Keywords_for_filter_and_put"/><h3>Keywords for filter and put</h3>
 
 <p/>
 <div class="pokipanel">
@@ -5835,7 +4485,1393 @@ stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
 <p/>
 
 <!-- ================================================================ -->
-<a id="Built-in_functions_for_filter_and_put"/><h1>Built-in functions for filter and put</h1>
+<a id="Control_structures"/><h2>Control structures</h2>
+
+<!-- ================================================================ -->
+<a id="Pattern-action_blocks"/><h3>Pattern-action blocks</h3>
+
+<p/>These are reminiscent of <tt>awk</tt> syntax.  They can be used to allow
+assignments to be done only when appropriate &mdash; e.g. for math-function
+domain restrictions, regex-matching, and so on:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr cat data/put-gating-example-1.dkvp
+x=-1
+x=0
+x=1
+x=2
+x=3
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$x &gt; 0.0 { $y = log10($x); $z = sqrt($y) }' data/put-gating-example-1.dkvp
+x=-1
+x=0
+x=1,y=0.000000,z=0.000000
+x=2,y=0.301030,z=0.548662
+x=3,y=0.477121,z=0.690740
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr cat data/put-gating-example-2.dkvp
+a=abc_123
+a=some other name
+a=xyz_789
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$a =~ "([a-z]+)_([0-9]+)" { $b = "left_\1"; $c = "right_\2" }' data/put-gating-example-2.dkvp
+a=abc_123,b=left_abc,c=right_123
+a=some other name
+a=xyz_789,b=left_xyz,c=right_789
+</pre>
+</div>
+<p/>
+
+<p/>This produces heteregenous output which Miller, of course, has no problems
+with (see <a href="record-heterogeneity.html">Record-heterogeneity</a>).  But if you
+want homogeneous output, the curly braces can be replaced with a semicolon
+between the expression and the body statements.  This causes <tt>put</tt> to
+evaluate the boolean expression (along with any side effects, namely,
+regex-captures <tt>\1</tt>, <tt>\2</tt>, etc.) but doesn&rsquo;t use it as a
+criterion for whether subsequent assignments should be executed. Instead,
+subsequent assignments are done unconditionally:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$x &gt; 0.0; $y = log10($x); $z = sqrt($y)' data/put-gating-example-1.dkvp
+x=-1,y=nan,z=nan
+x=0,y=-inf,z=nan
+x=1,y=0.000000,z=0.000000
+x=2,y=0.301030,z=0.548662
+x=3,y=0.477121,z=0.690740
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$a =~ "([a-z]+)_([0-9]+)"; $b = "left_\1"; $c = "right_\2"' data/put-gating-example-2.dkvp
+a=abc_123,b=left_abc,c=right_123
+a=some other name,b=left_,c=right_
+a=xyz_789,b=left_xyz,c=right_789
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="If-statements"/><h3>If-statements</h3>
+
+<p/>These are again reminiscent of <tt>awk</tt>. Pattern-action blocks are a special case of <tt>if</tt> with no
+<tt>elif</tt> or <tt>else</tt> blocks, no <tt>if</tt> keyword, and parentheses optional around the boolean expression:
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put 'NR == 4 {$foo = "bar"}'
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put 'if (NR == 4) {$foo = "bar"}'
+</pre>
+</div>
+<p/>
+
+<p/>Compound statements use <tt>elif</tt> (rather than <tt>elsif</tt> or <tt>else if</tt>):
+
+<p/>
+<div class="pokipanel">
+<pre>
+mlr put '
+  if (NR == 2) {
+    ...
+  } elif (NR ==4) {
+    ...
+  } elif (NR ==6) {
+    ...
+  } else {
+    ...
+  }
+'
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="While_and_do-while_loops"/><h3>While and do-while loops</h3>
+
+<p/>Miller&rsquo;s <tt>while</tt> and <tt>do-while</tt> are unsurprising in
+comparison to various languages, as are <tt>break</tt> and <tt>continue</tt>:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo x=1,y=2 | mlr put '
+  while (NF &lt; 10) {
+    $[NF+1] = ""
+  }
+  $foo = "bar"
+'
+x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo x=1,y=2 | mlr put '
+  do {
+    $[NF+1] = "";
+    if (NF == 5) {
+      break
+    }
+  } while (NF &lt; 10);
+  $foo = "bar"
+'
+x=1,y=2,3=,4=,5=,foo=bar
+</pre>
+</div>
+<p/>
+
+<p/> A <tt>break</tt> or <tt>continue</tt> within nested conditional blocks or
+if-statements will, of course, propagate to the innermost loop enclosing them,
+if any. A <tt>break</tt> or <tt>continue</tt> outside a loop is a syntax error
+that will be flagged as soon as the expression is parsed, before any input
+records are ingested.
+
+<p/> The existence of <tt>while</tt>, <tt>do-while</tt>, and <tt>for</tt> loops
+in Miller&rsquo;s DSL means that you can create infinite-loop scenarios
+inadvertently.  In particular, please recall that DSL statements are executed
+once if in <tt>begin</tt> or <tt>end</tt> blocks, and once <i>per record</i>
+otherwise. For example, <b><tt>while (NR < 10)</tt> will never terminate as
+<tt>NR</tt> is only incremented between records</b>.
+
+<!-- ================================================================ -->
+<a id="For-loops"/><h3>For-loops</h3>
+
+<p/>While Miller&rsquo;s <tt>while</tt> and <tt>do-while</tt> statements are
+much as in many other languages, <tt>for</tt> loops are more idiosyncratic to
+Miller. They are loops over key-value pairs, whether in stream records or
+out-of-stream variables: more reminiscent of <tt>foreach</tt>, as in (for
+example) PHP.
+
+<p/> There are a two variants: <b>for-loop over key-value pairs in the current
+stream record</b> and <b>for-loop over key-value pairs in an out-of-stream
+variable</b>. In each case the <tt>in</tt> keyword specifies the hashmap being
+iterated over, and the variable names between <tt>for</tt> and <tt>in</tt> are
+bound to the keys and values, respectively, of the hashmap&rsquo;s key-value pairs on
+each loop iteration.  As with <tt>while</tt> and <tt>do-while</tt>, a
+<tt>break</tt> or <tt>continue</tt> within nested control structures will
+propagate to the innermost loop enclosing them, if any, and a <tt>break</tt> or
+<tt>continue</tt> outside a loop is a syntax error that will be flagged as soon
+as the expression is parsed, before any input records are ingested.
+
+<p/><b>For-loop over the current stream record</b>:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/for-srec-example.tbl
+label1 label2 f1  f2  f3
+blue   green  100 240 350
+red    green  120 11  195
+yellow blue   140 0   240
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --pprint --from data/for-srec-example.tbl put '
+  $sum1 = $f1 + $f2 + $f3;
+  $sum2 = 0;
+  $sum3 = 0;
+  for (key, value in $*) {
+    if (key =~ "^f[0-9]+") {
+      $sum2 += value;
+      $sum3 += $[key];
+    }
+  }
+'
+label1 label2 f1  f2  f3  sum1 sum2 sum3
+blue   green  100 240 350 690  690  690
+red    green  120 11  195 326  326  326
+yellow blue   140 0   240 380  380  380
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'
+a   b   i x                   y                   a_type    b_type    i_type x_type   y_type
+pan pan 1 0.3467901443380824  0.7268028627434533  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
+eks pan 2 0.7586799647899636  0.5221511083334797  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
+wye wye 3 0.20460330576630303 0.33831852551664776 MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
+eks wye 4 0.38139939387114097 0.13418874328430463 MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
+wye pan 5 0.5732889198020006  0.8636244699032729  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
+</pre>
+</div>
+<p/>
+
+<p/>Note that the value of the current field in the for-loop can be gotten either using the bound
+variable <tt>value</tt>, or through a <b>computed field name</b> using square brackets as in <tt>$[key]</tt>.
+
+<p/>Important note: to avoid inconsistent looping behavior in case you&rsquo;re
+setting new fields (and/or unsetting existing ones) while looping over the
+record, <b>Miller makes a copy of the record before the loop: loop variables
+are bound from the copy and all other reads/writes involve the record
+itself</b>:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small --opprint put '
+  $sum1 = 0;
+  $sum2 = 0;
+  for (k,v in $*) {
+    if (isnumeric(v)) {
+      $sum1 +=v;
+      $sum2 += $[k];
+    }
+  }
+'
+a   b   i x                   y                   sum1     sum2
+pan pan 1 0.3467901443380824  0.7268028627434533  2.073593 8.294372
+eks pan 2 0.7586799647899636  0.5221511083334797  3.280831 13.123324
+wye wye 3 0.20460330576630303 0.33831852551664776 3.542922 14.171687
+eks wye 4 0.38139939387114097 0.13418874328430463 4.515588 18.062353
+wye pan 5 0.5732889198020006  0.8636244699032729  6.436913 25.747654
+</pre>
+</div>
+<p/>
+
+It can be confusing to modify the stream record while iterating over a copy of it, so
+instead you might find it simpler to use an out-of-stream variable in the loop and only update
+the stream record after the loop:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small --opprint put '
+  @sum = 0;
+  for (k,v in $*) {
+    if (isnumeric(v)) {
+      @sum += $[k];
+    }
+  }
+  $sum = @sum
+'
+a   b   i x                   y                   sum
+pan pan 1 0.3467901443380824  0.7268028627434533  2.073593
+eks pan 2 0.7586799647899636  0.5221511083334797  3.280831
+wye wye 3 0.20460330576630303 0.33831852551664776 3.542922
+eks wye 4 0.38139939387114097 0.13418874328430463 4.515588
+wye pan 5 0.5732889198020006  0.8636244699032729  6.436913
+</pre>
+</div>
+<p/>
+
+<p/><b>C-style triple-for loops</b> are supported as follows:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small --opprint put '
+  local suma = 0;
+  local sumb = 0;
+  for (local a = 1, local b = 1; a &lt;= NR; a += 1, b *= 2) {
+    suma += a;
+    sumb += b;
+  }
+  $suma = suma;
+  $sumb = sumb;
+'
+a   b   i x                   y                   suma sumb
+pan pan 1 0.3467901443380824  0.7268028627434533  1    1
+eks pan 2 0.7586799647899636  0.5221511083334797  3    3
+wye wye 3 0.20460330576630303 0.33831852551664776 6    7
+eks wye 4 0.38139939387114097 0.13418874328430463 10   15
+wye pan 5 0.5732889198020006  0.8636244699032729  15   31
+</pre>
+</div>
+<p/>
+
+Notes:
+<ul>
+
+<li/> In <tt>for (start; continuation; update) { body }</tt>, the start and
+update statements may be empty, single statements, or multiple comma-separated
+statements.
+
+<li/> In particular, you may use <tt>$</tt>-variables and/or
+<tt>@</tt>-variables in the start, continuation, and/or update steps (as well
+as the body, of course).
+
+<li/> Miller has no comma operator; the continuation must be a single
+expression which evaluates to boolean.
+
+<li/> As with all for/if/while statements in Miller, the curly braces are
+required even if the body is a single statement, or empty.
+
+</ul>
+
+<p/><b>For-loop over out-of-stream variable</b>: This is similar to looping
+over the current stream record except for additional degrees of freedom: you
+can start iterating on sub-hashmaps of an out-of-stream variable; you can loop
+over nested keys; you can loop over all out-of-stream variables.  As with
+for-loops over stream records, the bound variables are bound to a copy of the
+sub-hashmap as it was before the loop started.  The sub-hashmap is specified by
+square-bracketed indices after <tt>in</tt>, and additional deeper indices are
+bound to loop key-variables. The terminal values are bound to the loop
+value-variable whenever the keys are neither too shallow, nor too deep. Example
+indexing is as follows:
+
+<p/>
+<div class="pokipanel">
+<pre>
+# Parentheses are optional for single key:
+for (k1,           v in @a["b"]["c"]) { ... }
+for ((k1),         v in @a["b"]["c"]) { ... }
+# Parentheses are required for multiple keys:
+for ((k1, k2),     v in @a["b"]["c"]) { ... } # Loop over subhashmap of a variable
+for ((k1, k2, k3), v in @a["b"]["c"]) { ... } # Ditto
+for ((k1, k2, k3), v in @a { ... }            # Loop over variable starting from basename
+for ((k1, k2, k3), v in @* { ... }            # Loop over all variables (k1 is bound to basename)
+</pre>
+</div>
+<p/>
+
+<p/>That&rsquo;s confusing in the abstract, so a concrete example is in order.
+Suppose the out-of-stream variable <tt>@myvar</tt> is populated as follows:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint --from data/small head -n 2 then put -q '
+  begin {
+    @myvar["nesting-is-too-shallow"] = 1;
+    @myvar["nesting-is"]["just-right"] = 2;
+    @myvar["nesting-is"]["also-just-right"] = 3;
+    @myvar["nesting"]["is"]["too-deep"] = 4;
+  }
+  end {
+    dump
+  }
+'
+{
+  "myvar": {
+    "nesting-is-too-shallow": 1,
+    "nesting-is": {
+      "just-right": 2,
+      "also-just-right": 3
+    },
+    "nesting": {
+      "is": {
+        "too-deep": 4
+      }
+    }
+  }
+}
+</pre>
+</div>
+<p/>
+
+<p/> Then the too-shallow parts &mdash; indexed by the basename <tt>myvar</tt>
+and the index <tt>"nesting-is-too-shallow"</tt> &mdash; have depth two
+(basename and one index specify a terminal value) and can be gotten as follows:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small head -n 2 then put -q '
+  begin {
+    @myvar["nesting-is-too-shallow"] = 1;
+    @myvar["nesting-is"]["just-right"] = 2;
+    @myvar["nesting-is"]["also-just-right"] = 3;
+    @myvar["nesting"]["is"]["too-deep"] = 4;
+  }
+  end {
+    for (k, v in @myvar) {
+      @terminal[k] = v
+    }
+    emit @terminal, "index1"
+  }
+'
+index1=nesting-is-too-shallow,terminal=1
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small head -n 2 then put -q '
+  begin {
+    @myvar["nesting-is-too-shallow"] = 1;
+    @myvar["nesting-is"]["just-right"] = 2;
+    @myvar["nesting-is"]["also-just-right"] = 3;
+    @myvar["nesting"]["is"]["too-deep"] = 4;
+  }
+  end {
+    for ((k1, k2), v in @*) {
+      @terminal[k1][k2] = v
+    }
+    emit @terminal, "basename", "index1"
+  }
+'
+basename=myvar,index1=nesting-is-too-shallow,terminal=1
+</pre>
+</div>
+<p/>
+
+<p/>Note that it would take more than these two indices to reach the deeper values in the hashmap so they
+aren&rsquo;t bound in either of these for-loops.
+
+<p/>By contrast, the <tt>"just-right"</tt> parts have depth three (basename and
+two indices specify a terminal value) and can be gotten at by any of the
+following:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small head -n 2 then put -q '
+  begin {
+    @myvar["nesting-is-too-shallow"] = 1;
+    @myvar["nesting-is"]["just-right"] = 2;
+    @myvar["nesting-is"]["also-just-right"] = 3;
+    @myvar["nesting"]["is"]["too-deep"] = 4;
+  }
+  end {
+    for ((k1), v in @myvar["nesting-is"]) {
+      @terminal[k1] = v
+    }
+    emit @terminal, "index1"
+  }
+'
+index1=just-right,terminal=2
+index1=also-just-right,terminal=3
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small head -n 2 then put -q '
+  begin {
+    @myvar["nesting-is-too-shallow"] = 1;
+    @myvar["nesting-is"]["just-right"] = 2;
+    @myvar["nesting-is"]["also-just-right"] = 3;
+    @myvar["nesting"]["is"]["too-deep"] = 4;
+  }
+  end {
+    for ((k1, k2), v in @myvar) {
+      @terminal[k1][k2] = v
+    }
+    emit @terminal, "index1", "index2"
+  }
+'
+index1=nesting-is,index2=just-right,terminal=2
+index1=nesting-is,index2=also-just-right,terminal=3
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small head -n 2 then put -q '
+  begin {
+    @myvar["nesting-is-too-shallow"] = 1;
+    @myvar["nesting-is"]["just-right"] = 2;
+    @myvar["nesting-is"]["also-just-right"] = 3;
+    @myvar["nesting"]["is"]["too-deep"] = 4;
+  }
+  end {
+    for ((k1, k2, k3), v in @*) {
+      @terminal[k1][k2][k3] = v
+    }
+    emit @terminal, "basename", "index1", "index2"
+  }
+'
+basename=myvar,index1=nesting-is,index2=just-right,terminal=2
+basename=myvar,index1=nesting-is,index2=also-just-right,terminal=3
+</pre>
+</div>
+<p/>
+
+<p/> Note that three key levels are specified here: basename and two indices.
+So these for-loops don&rsquo;t produce the depth-two or depth-four entries in
+the hashmap.
+
+<!-- ================================================================ -->
+<a id="Begin/end_blocks_for_put"/><h3>Begin/end blocks for put</h3>
+
+<p/>Miller supports an <tt>awk</tt>-like <tt>begin/end</tt> syntax.  The
+statements in the <tt>begin</tt> block are executed before any input records
+are read; the statements in the <tt>end</tt> block are executed after the last
+input record is read.  (If you want to execute some statement at the start of
+each file, not at the start of the first file as with <tt>begin</tt>, you might
+use a pattern/action block of the form <tt>FNR == 1 { ... }</tt>.) All
+statements outside of <tt>begin</tt> or <tt>end</tt> are, of course, executed
+on every input record. Semicolons separate statements inside or outside of
+begin/end blocks; semicolons are required between begin/end block bodies and
+any subsequent statement.  For example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '
+  begin { @sum = 0 };
+  @x_sum += $x;
+  end { emit @x_sum }
+' ../data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+x_sum=4.536294
+</pre>
+</div>
+<p/>
+
+<p/>Since uninitialized out-of-stream variables default to 0 for
+addition/substraction and 1 for multiplication when they appear on expression
+right-hand sides (as in <tt>awk</tt>), the above can be written more succinctly
+as
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '
+  @x_sum += $x;
+  end { emit @x_sum }
+' ../data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+x_sum=4.536294
+</pre>
+</div>
+<p/>
+
+<p/>The <b>put -q</b> option is a shorthand which suppresses printing of each
+output record, with only <tt>emit</tt> statements being output. So to get only
+summary outputs, one could write
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '
+  @x_sum += $x;
+  end { emit @x_sum }
+' ../data/small
+x_sum=4.536294
+</pre>
+</div>
+<p/>
+
+<p/>We can do similarly with multiple out-of-stream variables:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '
+  @x_count += 1;
+  @x_sum += $x;
+  end {
+    emit @x_count;
+    emit @x_sum;
+  }
+' ../data/small
+x_count=10
+x_sum=4.536294
+</pre>
+</div>
+<p/>
+
+This is of course not much different than
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr stats1 -a count,sum -f x ../data/small
+x_count=10,x_sum=4.536294
+</pre>
+</div>
+<p/>
+
+<p/>Note that it&rsquo;s a syntax error for begin/end blocks to refer to field names (beginning with <tt>$</tt>),
+since these execute outside the context of input records.
+
+<!-- ================================================================ -->
+<a id="Output_statements_for_put"/><h2>Output statements for put</h2>
+
+<!-- ================================================================ -->
+<a id="Emit_statements_for_put"/><h3>Emit statements for put</h3>
+
+<p/>As noted above, there are three ways to output out-of-stream variables:
+(1) Assign them to stream-record fields, e.g.  <tt>$cumulative_sum = @sum</tt>;
+(2) Use <tt>emit</tt>, e.g.  <tt>@sum += $x; emit @sum</tt> which produces an
+extra output record such as <tt>sum=3.1648382</tt>; (3) Use the <tt>dump</tt>
+keyword, which immediately prints all out-of-stream variables to the standard
+output as a JSON data structure. Note that the latter aren&rsquo;t output records
+which participate in <tt>then</tt>-chaining; rather, they&rsquo;re just an
+immediate print to stdout. This section is about <tt>emit</tt>.
+
+<p/>There are three variants: <tt>emitf</tt>, <tt>emit</tt>, and
+<tt>emitp</tt>. Keep in mind that out-of-stream variables are a nested,
+multi-level hashmap (directly viewable as JSON using <tt>dump</tt>), whereas
+Miller output records are lists of single-level key-value pairs. The three emit
+variants allow you to control how the multilevel hashmaps are flatten down to
+output records.
+
+<p/>Use <b>emitf</b> to output several out-of-stream variables side-by-side in the same output record.
+For <tt>emitf</tt> these mustn&rsquo;t have indexing using <tt>@name[...]</tt>. Example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@count += 1; @x_sum += $x; @y_sum += $y; end { emitf @count, @x_sum, @y_sum}' data/small
+count=5,x_sum=2.264762,y_sum=2.585086
+</pre>
+</div>
+<p/>
+
+<p/>Use <b>emit</b> to output an out-of-stream variable. If it&rsquo;s non-indexed you&rsquo;ll get a simple key-value pair:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum += $x; end { dump }' data/small
+{
+  "sum": 2.264762
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum += $x; end { emit @sum }' data/small
+sum=2.264762
+</pre>
+</div>
+<p/>
+
+<p/>If it&rsquo;s indexed then use as many names after <tt>emit</tt> as there are indices:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a] += $x; end { dump }' data/small
+{
+  "sum": {
+    "pan": 0.346790,
+    "eks": 1.140079,
+    "wye": 0.777892
+  }
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a] += $x; end { emit @sum, "a" }' data/small
+a=pan,sum=0.346790
+a=eks,sum=1.140079
+a=wye,sum=0.777892
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
+{
+  "sum": {
+    "pan": {
+      "pan": 0.346790
+    },
+    "eks": {
+      "pan": 0.758680,
+      "wye": 0.381399
+    },
+    "wye": {
+      "wye": 0.204603,
+      "pan": 0.573289
+    }
+  }
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' data/small
+a=pan,b=pan,sum=0.346790
+a=eks,b=pan,sum=0.758680
+a=eks,b=wye,sum=0.381399
+a=wye,b=wye,sum=0.204603
+a=wye,b=pan,sum=0.573289
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b][$i] += $x; end { dump }' data/small
+{
+  "sum": {
+    "pan": {
+      "pan": {
+        "1": 0.346790
+      }
+    },
+    "eks": {
+      "pan": {
+        "2": 0.758680
+      },
+      "wye": {
+        "4": 0.381399
+      }
+    },
+    "wye": {
+      "wye": {
+        "3": 0.204603
+      },
+      "pan": {
+        "5": 0.573289
+      }
+    }
+  }
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b][$i] += $x; end { emit @sum, "a", "b", "i" }' data/small
+a=pan,b=pan,i=1,sum=0.346790
+a=eks,b=pan,i=2,sum=0.758680
+a=eks,b=wye,i=4,sum=0.381399
+a=wye,b=wye,i=3,sum=0.204603
+a=wye,b=pan,i=5,sum=0.573289
+</pre>
+</div>
+<p/>
+
+<p/>Now for <b>emitp</b>: if you have as many names following <tt>emit</tt> as
+there are levels in the out-of-stream variable&rsquo;s hashmap, then <tt>emit</tt> and <tt>emitp</tt> do the same
+thing. Where they differ is when you don&rsquo;t specify as many names as there are hashmap levels. In this
+case, Miller needs to flatten multiple map indices down to output-record keys: <tt>emitp</tt> includes full
+prefixing (hence the <tt>p</tt> in <tt>emitp</tt>) while <tt>emit</tt> takes the deepest hashmap key as the
+output-record key:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { dump }' data/small
+{
+  "sum": {
+    "pan": {
+      "pan": 0.346790
+    },
+    "eks": {
+      "pan": 0.758680,
+      "wye": 0.381399
+    },
+    "wye": {
+      "wye": 0.204603,
+      "pan": 0.573289
+    }
+  }
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' data/small
+a=pan,pan=0.346790
+a=eks,pan=0.758680,wye=0.381399
+a=wye,wye=0.204603,pan=0.573289
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { emit @sum }' data/small
+pan=0.346790
+pan=0.758680,wye=0.381399
+wye=0.204603,pan=0.573289
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
+a=pan,sum:pan=0.346790
+a=eks,sum:pan=0.758680,sum:wye=0.381399
+a=wye,sum:wye=0.204603,sum:pan=0.573289
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+sum:pan:pan=0.346790,sum:eks:pan=0.758680,sum:eks:wye=0.381399,sum:wye:wye=0.204603,sum:wye:pan=0.573289
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab put -q '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+sum:pan:pan 0.346790
+sum:eks:pan 0.758680
+sum:eks:wye 0.381399
+sum:wye:wye 0.204603
+sum:wye:pan 0.573289
+</pre>
+</div>
+<p/>
+
+<p/>Use <b>--oflatsep</b> to specify the character which joins multilevel
+keys for <tt>emitp</tt> (it defaults to a colon):
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum, "a" }' data/small
+a=pan,sum/pan=0.346790
+a=eks,sum/pan=0.758680,sum/wye=0.381399
+a=wye,sum/wye=0.204603,sum/pan=0.573289
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+sum/pan/pan=0.346790,sum/eks/pan=0.758680,sum/eks/wye=0.381399,sum/wye/wye=0.204603,sum/wye/pan=0.573289
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small
+sum/pan/pan 0.346790
+sum/eks/pan 0.758680
+sum/eks/wye 0.381399
+sum/wye/wye 0.204603
+sum/wye/pan 0.573289
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Multi-emit_statements_for_put"/><h3>Multi-emit statements for put</h3>
+
+<p/>You can emit <b>multiple out-of-stream variables side-by-side</b> by including their names in parentheses:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/medium --opprint put -q '
+  @x_count[$a][$b] += 1;
+  @x_sum[$a][$b] += $x;
+  end {
+      for ((a, b), _ in @x_count) {
+          @x_mean[a][b] = @x_sum[a][b] / @x_count[a][b]
+      }
+      emit (@x_sum, @x_count, @x_mean), "a", "b"
+  }
+'
+a   b   x_sum      x_count x_mean
+pan pan 219.185129 427     0.513314
+pan wye 198.432931 395     0.502362
+pan eks 216.075228 429     0.503672
+pan hat 205.222776 417     0.492141
+pan zee 205.097518 413     0.496604
+eks pan 179.963030 371     0.485076
+eks wye 196.945286 407     0.483895
+eks zee 176.880365 357     0.495463
+eks eks 215.916097 413     0.522799
+eks hat 208.783171 417     0.500679
+wye wye 185.295850 377     0.491501
+wye pan 195.847900 392     0.499612
+wye hat 212.033183 426     0.497730
+wye zee 194.774048 385     0.505907
+wye eks 204.812961 386     0.530604
+zee pan 202.213804 389     0.519830
+zee wye 233.991394 455     0.514267
+zee eks 190.961778 391     0.488393
+zee zee 206.640635 403     0.512756
+zee hat 191.300006 409     0.467726
+hat wye 208.883010 423     0.493813
+hat zee 196.349450 385     0.509999
+hat eks 189.006793 389     0.485879
+hat hat 182.853532 381     0.479931
+hat pan 168.553807 363     0.464336
+</pre>
+</div>
+<p/>
+
+What this does is walk through the first out-of-stream variable
+(<tt>@x_sum</tt> in this example) as usual, then for each keylist found (e.g.
+<tt>pan,wye</tt>), include the values for the remaining out-of-stream variables
+(here, <tt>@x_count</tt> and <tt>@x_mean</tt>). You should use this when all
+out-of-stream variables in the emit statement have the same shape and the same
+keylists.
+
+<!-- ================================================================ -->
+<a id="Emit-all_statements_for_put"/><h3>Emit-all statements for put</h3>
+
+<p/>Use <b>emit all</b> (or <tt>emit @*</tt> which is synonumous) to output all
+out-of-stream variables. You can use the following idiom to get various
+accumulators output side-by-side (reminiscent of <tt>mlr stats1</tt>):
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit @*,"a","b"}'
+a   b   sum      count
+pan pan 0.346790 1
+eks pan 0.758680 1
+eks wye 0.381399 1
+wye wye 0.204603 1
+wye pan 0.573289 1
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit @*,"a","b"}'
+a   b   sum
+pan pan 0.346790
+eks pan 0.758680
+eks wye 0.381399
+wye wye 0.204603
+wye pan 0.573289
+
+a   b   count
+pan pan 1
+eks pan 1
+eks wye 1
+wye wye 1
+wye pan 1
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit (@sum, @count),"a","b"}'
+a   b   sum      count
+pan pan 0.346790 1
+eks pan 0.758680 1
+eks wye 0.381399 1
+wye wye 0.204603 1
+wye pan 0.573289 1
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Redirected-output_statements_for_put"/><h3>Redirected-output statements for put</h3>
+
+The <b>tee</b>, <b>emitf</b>, <b>emitp</b>, <b>emit</b>, <b>print</b>, and
+<b>dump</b> keywords all allow you to redirect output to one or more files or
+pipe-to commands. The filenames/commands are strings which can be constructed
+using record-dependent values, so you can do things like splitting a table into
+multiple files, one for each account ID, and so on.
+
+<p/> Details:
+
+<ul>
+
+<li/> <tt>mlr put</tt> sends the current record (possibly modified by the
+<tt>put</tt> expression) to the output record stream. Records are then input to
+the following verb in a <tt>then</tt>-chain (if any), else printed to standard
+output (unless <tt>put -q</tt>). The <b>tee</b> keyword <i>additionally</i>
+writes the output record to specified file(s) or pipe-to command, or
+immediately to <tt>stdout</tt>/<tt>stderr</tt>.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help-keyword tee
+tee: prints the current record to specified file.
+  This is an immediate print to the specified file (except for pprint format
+  which of course waits until the end of the input stream to format all output).
+
+  The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+  file-overwrite for &gt; is on first write, not per record. The | is for piping to
+  a process which will process the data. There will be one open file for each
+  distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
+  value of the piped-to command (for |). Output-formatting flags are taken from
+  the main command line.
+
+  You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+  etc., to control the format of the output. See also mlr -h.
+
+  Example: mlr --from f.dat put 'tee &gt;  "/tmp/data-".$a, $*'
+  Example: mlr --from f.dat put 'tee &gt;&gt; "/tmp/data-".$a.$b, $*'
+  Example: mlr --from f.dat put 'tee &gt;  stderr, $*'
+  Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\]", $*'
+  Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\] &gt; /tmp/data-".$a, $*'
+  Example: mlr --from f.dat put -q 'tee | "gzip &gt; /tmp/data-".$a.".gz", $*'
+  Example: mlr --from f.dat put -q --ojson 'tee | "gzip &gt; /tmp/data-".$a.".gz", $*'
+</pre>
+</div>
+<p/>
+
+<li/> <tt>mlr put</tt>&rsquo;s <tt>emitf</tt>, <tt>emitp</tt>, and
+<tt>emit</tt> send out-of-stream variables to the output record stream. These
+are then input to the following verb in a <tt>then</tt>-chain (if any), else
+printed to standard output. When redirected with <tt>&gt;</tt>,
+<tt>&gt;&gt;</tt>, or <tt>|</tt>, they <i>instead</i> write the out-of-stream
+variable(s) to specified file(s) or pipe-to command, or immediately to
+<tt>stdout</tt>/<tt>stderr</tt>.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help-keyword emitf
+emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
+  output record stream.
+
+  With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
+  are instead redirected.
+
+  The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+  file-overwrite for &gt; is on first write, not per record. The | is for piping to
+  a process which will process the data. There will be one open file for each
+  distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
+  value of the piped-to command (for |). Output-formatting flags are taken from
+  the main command line.
+
+  You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+  etc., to control the format of the output if the output is redirected. See also mlr -h.
+
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
+  Example: mlr --from f.dat put --oxtab '@a=$i;@b+=$x;@c+=$y; emitf &gt; "tap-".$i.".dat", @a'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt; "mytap.dat", @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt;&gt; "mytap.dat", @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf &gt; stderr, @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern &gt; mytap.dat", @a, @b, @c'
+
+  Please see http://johnkerl.org/miller/doc for more information.
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help-keyword emitp
+emitp: inserts an out-of-stream variable into the output record stream.
+  Hashmap indices present in the data but not slotted by emitp arguments are
+  output concatenated with ":".
+
+  With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
+  are instead redirected.
+
+  The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+  file-overwrite for &gt; is on first write, not per record. The | is for piping to
+  a process which will process the data. There will be one open file for each
+  distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
+  value of the piped-to command (for |). Output-formatting flags are taken from
+  the main command line.
+
+  You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+  etc., to control the format of the output if the output is redirected. See also mlr -h.
+
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums'
+  Example: mlr --from f.dat put --opprint '@sums[$a][$b]+=$x; emitp &gt; "tap-".$a.$b.".dat", @sums'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @sums, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt;  "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt;&gt; "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "gzip &gt; mytap.dat.gz", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp &gt; stderr, @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emitp | "grep somepattern", @*, "index1", "index2"'
+
+  Please see http://johnkerl.org/miller/doc for more information.
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help-keyword emit
+emit: inserts an out-of-stream variable into the output record stream. Hashmap
+  indices present in the data but not slotted by emit arguments are not output.
+
+  With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
+  are instead redirected.
+
+  The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+  file-overwrite for &gt; is on first write, not per record. The | is for piping to
+  a process which will process the data. There will be one open file for each
+  distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
+  value of the piped-to command (for |). Output-formatting flags are taken from
+  the main command line.
+
+  You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+  etc., to control the format of the output if the output is redirected. See also mlr -h.
+
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
+  Example: mlr --from f.dat put --ojson '@sums[$a][$b]+=$x; emit &gt; "tap-".$a.$b.".dat", @sums'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt;  "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt;&gt; "mytap.dat", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "gzip &gt; mytap.dat.gz", @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit &gt; stderr, @*, "index1", "index2"'
+  Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
+
+  Please see http://johnkerl.org/miller/doc for more information.
+</pre>
+</div>
+<p/>
+
+<li/> The <tt>print</tt> and <tt>dump</tt> keywords produce output immediately
+to standard output, or to specified file(s) or pipe-to command if present.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help-keyword print
+print: prints expression immediately to stdout.
+  Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
+  Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " =&gt; " . v }'
+  Example: mlr --from f.dat put  '(NR % 1000 == 0) { print &gt; stderr, "Checkpoint ".NR}'
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help-keyword dump
+dump: prints all currently defined out-of-stream variables immediately
+  to stdout as JSON.
+
+  With &gt;, &gt;&gt;, or |, the data do not become part of the output record stream but
+  are instead redirected.
+
+  The &gt; and &gt;&gt; are for write and append, as in the shell, but (as with awk) the
+  file-overwrite for &gt; is on first write, not per record. The | is for piping to
+  a process which will process the data. There will be one open file for each
+  distinct file name (for &gt; and &gt;&gt;) or one subordinate process for each distinct
+  value of the piped-to command (for |). Output-formatting flags are taken from
+  the main command line.
+
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump }'
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump &gt;  "mytap.dat"}'
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump &gt;&gt; "mytap.dat"}'
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump | "jq .[]"}'
+</pre>
+</div>
+<p/>
+
+</ul>
+
+<!-- ================================================================ -->
+<a id="Unset_statements_for_put"/><h2>Unset statements for put</h2>
+
+<p/>You can clear a map key by assigning the empty string as its value: <tt>$x=""</tt> or <tt>@x=""</tt>.
+Using <tt>unset</tt> you can remove the key entirely. Examples:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put 'unset $x, $a' data/small
+b=pan,i=1,y=0.7268028627434533
+b=pan,i=2,y=0.5221511083334797
+b=wye,i=3,y=0.33831852551664776
+b=wye,i=4,y=0.13418874328430463
+b=pan,i=5,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+
+<p/>This can also be done, of course, using <tt>mlr cut -x</tt>. You can also clear out-of-stream variables, at the base name level, or at an indexed sublevel:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum; dump }' data/small
+{
+  "sum": {
+    "pan": {
+      "pan": 0.346790
+    },
+    "eks": {
+      "pan": 0.758680,
+      "wye": 0.381399
+    },
+    "wye": {
+      "wye": 0.204603,
+      "pan": 0.573289
+    }
+  }
+}
+{
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum["eks"]; dump }' data/small
+{
+  "sum": {
+    "pan": {
+      "pan": 0.346790
+    },
+    "eks": {
+      "pan": 0.758680,
+      "wye": 0.381399
+    },
+    "wye": {
+      "wye": 0.204603,
+      "pan": 0.573289
+    }
+  }
+}
+{
+  "sum": {
+    "pan": {
+      "pan": 0.346790
+    },
+    "wye": {
+      "wye": 0.204603,
+      "pan": 0.573289
+    }
+  }
+}
+</pre>
+</div>
+<p/>
+
+<p/>If you use <tt>unset all</tt> (or <tt>unset @*</tt> which is synonymous), that will unset all out-of-stream
+variables which have been defined up to that point.
+
+<!-- ================================================================ -->
+<a id="Filter_statements_for_put"/><h2>Filter statements for put</h2>
+
+<p/> You can use <tt>filter</tt> within <tt>put</tt>. In fact, the
+following two are synonymous:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr filter 'NR==2 || NR==3' data/small
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put 'filter NR==2 || NR==3' data/small
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+</pre>
+</div>
+<p/>
+
+<p/>The former, of course, is much easier to type. But the latter allows you to define more complex expressions
+for the filter, and/or do other things in addition to the filter:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '@running_sum += $x; filter @running_sum &gt; 1.3' data/small
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$z = $x * $y; filter $z &gt; 0.3' data/small
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,z=0.396146
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,z=0.495106
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Built-in_functions_for_filter_and_put"/><h2>Built-in functions for filter and put</h2>
 
 <p/>Each function takes a specific number of arguments, as shown below, except
 for functions marked as variadic such as <tt>min</tt> and <tt>max</tt>. (The
@@ -6109,14 +6145,14 @@ along with the mathematical constants PI and E.
 <p/>
 
 <!-- ================================================================ -->
-<a id="User-defined_functions_and_subroutines"/><h1>User-defined functions and subroutines</h1>
+<a id="User-defined_functions_and_subroutines"/><h2>User-defined functions and subroutines</h2>
 
 <p/> As of Miller 4.6.0 you can define your own functions, as well as subroutines.
 
 <!-- ================================================================ -->
-<a id="User-defined_functions"/><h2>User-defined functions</h2>
+<a id="User-defined_functions"/><h3>User-defined functions</h3>
 
-<p/>Here&rsquo;s the obligatory example of a recursive function to compute the Fibonacci sequence:
+<p/>Here&rsquo;s the obligatory example of a recursive function to compute the factorial function:
 
 <p/>
 <div class="pokipanel">
@@ -6171,7 +6207,7 @@ xxx
 <p/>xxx uncached/cached fibo examples.
 
 <!-- ================================================================ -->
-<a id="User-defined_subroutines"/><h2>User-defined subroutines</h2>
+<a id="User-defined_subroutines"/><h3>User-defined subroutines</h3>
 
 <p/> xxx this section is under construction.
 
@@ -6190,16 +6226,33 @@ xxx
 </ul>
 
 <!-- ================================================================ -->
-<a id="Scope_and_extent_for_local_variables"/><h2>Scope and extent for local variables</h2>
+<a id="A_note_on_the_complexity_of_Miller&rsquo;s_expression_language"/><h2>A note on the complexity of Miller&rsquo;s expression language</h2>
 
-<p/> xxx this section is under construction.
+<p/> One of Miller&rsquo;s strengths is its brevity: it&rsquo;s much quicker
+&mdash; and less error-prone &mdash; to type <tt>mlr stats1 -a sum -f x,y -g
+a,b</tt> than having to track summation variables as in <tt>awk</tt>, or using
+Miller&rsquo;s out-of-stream variables. And the more language features
+Miller&rsquo;s put-DSL has (for-loops, if-statements, nested control
+structures, etc.) then the <i>less</i> powerful it begins to seem: because of
+the other programming-language features it <i>doesn&rsquo;t</i> have.
 
-<ul>
-<li/> xxx
-<li/> xxx
-<li/> xxx All argument-passing is positional rather than by name; arguments are passed by value, not by reference.
-</ul>
+<p/> When I was originally prototyping Miller in 2015, the decision I had was
+whether to hand-code in a low-level language like C or Rust, with my own
+hand-rolled DSL, or whether to use a higher-level language (like Python or Lua
+or Nim) and let the <tt>put</tt> statements be handled by the implementation
+language&rsquo;s own <tt>eval</tt>: the implementation language would take the
+place of a DSL. Multiple performance experiments showed me I could get better
+throughput using the former, and using C in particular &mdash; by a wide margin. So
+Miller is C under the hood with a hand-rolled DSL.
 
+<p/> I do want to keep focusing on what Miller is good at &mdash; concise notation,
+low latency, and high throughput &mdash; and not add too much in terms of
+high-level-language features to the DSL.  That said, some sort of looping over
+field names is a basic thing to want. As of 4.1.0 we have recursive
+for/while/if structures on about the same complexity level as <tt>awk</tt>.
+While I&rsquo;m excited by these powerful language features, I hope to keep new
+features beyond 4.1.0 focused on Miller&rsquo;s sweet spot which is speed plus
+simplicity.
 
 <!-- ================================================================ -->
 <a id="then-chaining"/><h1>then-chaining</h1>
