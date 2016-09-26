@@ -2064,6 +2064,27 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 		slls_free(pstatement->pfor_oosvar_k_names);
 	}
 
+    if (pstatement->ptriple_for_start_statements != NULL) {
+		for (sllve_t* pe = pstatement->ptriple_for_start_statements->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+			mlr_dsl_cst_statement_free(pstatement);
+		}
+		sllv_free(pstatement->ptriple_for_start_statements);
+	}
+
+	if (pstatement->ptriple_for_continuation_evaluator != NULL) {
+		pstatement->ptriple_for_continuation_evaluator->pfree_func(pstatement->ptriple_for_continuation_evaluator);
+	}
+
+    if (pstatement->ptriple_for_update_statements != NULL) {
+		for (sllve_t* pe = pstatement->ptriple_for_update_statements->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+			mlr_dsl_cst_statement_free(pstatement);
+		}
+		sllv_free(pstatement->ptriple_for_update_statements);
+	}
+
+
 	if (pstatement->pframe != NULL) {
 		bind_stack_frame_free(pstatement->pframe);
 	}

@@ -146,6 +146,8 @@ static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv,
 
 		mlr_dsl_expression = sb_finish(psb);
 		sb_free(psb);
+		slls_free(expression_filenames);
+		slls_free(expression_strings);
 	}
 	comment_stripped_mlr_dsl_expression = alloc_comment_strip(mlr_dsl_expression);
 
