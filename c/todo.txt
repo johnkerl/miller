@@ -18,6 +18,8 @@ PRE-RELEASE 4.6.0:
 ! valgrinds
 ! xxxes
 
+! greatly generalize filter: simply insist it end in a bare boolean ?
+
 ----------------------------------------------------------------
 UT FOR 4.6.0:
 

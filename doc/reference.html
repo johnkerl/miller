@@ -201,7 +201,6 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Variables">Variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables">Built-in variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names">Field names</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables">Built-in variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Local_variables">Local variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables_for_put">Out-of-stream variables for put</a><br/>
@@ -3978,90 +3977,9 @@ presented in the following sections.
 <!-- ================================================================ -->
 <a id="Built-in_variables"/><h3>Built-in variables</h3>
 
-<ul>
-
-<li/>These are written all in capital letters, such as <tt>NR</tt>,
+<p/> These are written all in capital letters, such as <tt>NR</tt>,
 <tt>NF</tt>, <tt>FILENAME</tt>, and only a small, specific set of them is
 defined by Miller.
-
-<li/> Their values change from one record to the next as Miller scans through
-your input data stream: <tt>NR</tt> is the count of records so far encountered
-in the input stream, starting at 1; <tt>NF</tt> is the number of fields in the
-current input record; <tt>FILENAME</tt> is the current file name; and so on as
-detailed above.
-
-<li/> Their <b>scope is global</b>: you can refer to them in any <tt>filter</tt>
-or <tt>put</tt> statement. Their values are assigned by the input-record reader:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --csv put '$nr = NR' data/a.csv
-a,b,c,nr
-1,2,3,1
-4,5,6,2
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv
-a,b,c,nr
-1,2,3,1
-1,2,3,1
-1,2,3,1
-4,5,6,2
-4,5,6,2
-4,5,6,2
-</pre>
-</div>
-<p/>
-
-<li/> These are <b>read-only</b> for the <tt>mlr put</tt> and <tt>mlr filter</tt>
-DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may not be
-assigned to: <tt>NR=100</tt> is a syntax error.
-
-<li/> You can output built-in variables indirectly, by assigning them to a
-non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named <tt>nr</tt> to
-each output record, containing the value of <tt>NR</tt> as of when that record
-was ingested.
-
-</ul>
-
-<!-- ================================================================ -->
-<a id="Field_names"/><h3>Field names</h3>
-
-<p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> and <a
-href="#put"><tt>put</tt></a> expressions, even though they don&rsquo;t appear
-in the data stream. For integer-indexed data, this looks like
-<tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.  Likewise, enclose string literals in
-double quotes in <tt>filter</tt> expressions even though they don&rsquo;t
-appear in file data.  In particular, <tt>mlr filter '$x=="abc"'</tt> passes
-through the record <tt>x=abc</tt>.  If field names have special characters such
-as <tt>.</tt> then you can use braces, e.g. <tt>'${field.name}'</tt>.
-
-<p/>You may also use a <b>computed field name</b> in square brackets, e.g.
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo a=3,b=4 | mlr filter '$["x"] &lt; 0.5'
-</pre>
-</div>
-<p/>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'
-s=green,t=blue,a=3,b=4,green_blue=12
-</pre>
-</div>
-<p/>
-
-<!-- ================================================================ -->
-<a id="Built-in_variables"/><h3>Built-in variables</h3>
 
 <p/>Miller supports the following five built-in variables for <a
 href="#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
@@ -4101,6 +4019,83 @@ a=wye,b=eks,i=10000,x=0.734806020620654365,y=0.884788571337605134,fnr=2
 a=pan,b=wye,i=10001,x=0.870530722602517626,y=0.009854780514656930,fnr=3
 a=hat,b=wye,i=10002,x=0.321507044286237609,y=0.568893318795083758,fnr=4
 a=pan,b=zee,i=10003,x=0.272054845593895200,y=0.425789896597056627,fnr=5
+</pre>
+</div>
+<p/>
+
+<p/> Their values of <tt>NF</tt>, <tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>,
+and <tt>FILENAME</tt> change from one record to the next as Miller scans
+through your input data stream. The mathematical constants, of course, do not
+change; <tt>ENV</tt> is populated from the system environment variables at the
+time Miller starts and is read-only for the remainder of program execution.
+
+<p/> Their <b>scope is global</b>: you can refer to them in any
+<tt>filter</tt> or <tt>put</tt> statement. Their values are assigned by the
+input-record reader:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv put '$nr = NR' data/a.csv
+a,b,c,nr
+1,2,3,1
+4,5,6,2
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv
+a,b,c,nr
+1,2,3,1
+1,2,3,1
+1,2,3,1
+4,5,6,2
+4,5,6,2
+4,5,6,2
+</pre>
+</div>
+<p/>
+
+<p/> These are all <b>read-only</b> for the <tt>mlr put</tt> and <tt>mlr filter</tt>
+DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may not be
+assigned to: <tt>NR=100</tt> is a syntax error.
+
+<p/> You can output built-in variables indirectly, by assigning them to a
+non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named <tt>nr</tt> to
+each output record, containing the value of <tt>NR</tt> as of when that record
+was ingested.
+
+<p/> xxx edit w/ xref
+
+<!-- ================================================================ -->
+<a id="Field_names"/><h3>Field names</h3>
+
+<p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> and <a
+href="#put"><tt>put</tt></a> expressions, even though they don&rsquo;t appear
+in the data stream. For integer-indexed data, this looks like
+<tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.  Likewise, enclose string literals in
+double quotes in <tt>filter</tt> expressions even though they don&rsquo;t
+appear in file data.  In particular, <tt>mlr filter '$x=="abc"'</tt> passes
+through the record <tt>x=abc</tt>.  If field names have special characters such
+as <tt>.</tt> then you can use braces, e.g. <tt>'${field.name}'</tt>.
+
+<p/>You may also use a <b>computed field name</b> in square brackets, e.g.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo a=3,b=4 | mlr filter '$["x"] &lt; 0.5'
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'
+s=green,t=blue,a=3,b=4,green_blue=12
 </pre>
 </div>
 <p/>
