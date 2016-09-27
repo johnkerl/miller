@@ -3898,82 +3898,6 @@ are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
 
 </ul>
 
-<b>Out-of-stream variables</b>, presented here:
-
-<ul>
-
-<li/> These are prefixed with an at-sign, e.g. <tt>@sum</tt>.  Furthermore,
-unlike built-in variables and stream-record fields, they are maintained in an
-arbitrarily nested hashmap: you can do <tt>@sum += $quanity</tt>, or
-<tt>@sum[$color] += $quanity</tt>, or <tt>@sum[$color][$shape] +=
-$quanity</tt>. The keys for the multi-level hashmap can be any expression which
-evaluates to string or integer: e.g.  <tt>@sum[NR] = $a + $b</tt>,
-<tt>@sum[$a."-".$b] = $x</tt>, etc.
-
-<li/> Their names and their values are entirely under your control; they change
-only when you assign to them.
-
-<li/> Just as for field names in stream records, if you want to define out-of-stream variables
-with special characters such as <tt>.</tt> then you can use braces, e.g. <tt>'@{variable.name}["index"]'</tt>.
-
-<li/>You may use a <b>computed key </b> in square brackets, e.g.
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'
-green_blue=12
-</pre>
-</div>
-<p/>
-
-<li/> Out-of-stream variables are scoped to the <tt>put</tt> command in which they appear.
-In particular, if you have two or more <tt>put</tt> commands separated by <tt>then</tt>,
-each put will have its own set of out-of-stream variables:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat data/a.dkvp
-a=1,b=2,c=3
-a=4,b=5,c=6
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '@sum += $a; end {emit @sum}' then put 'ispresent($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp
-a=10,b=2,c=3
-a=40,b=5,c=6
-sum=5
-sum=50
-</pre>
-</div>
-<p/>
-
-<li/> Out-of-stream variables are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
-etc.
-
-<li/> You can <b>output</b> these in <b>four ways</b>: (1) <b>assign</b> them
-to stream-record fields, e.g.  <tt>$cumulative_sum = @sum</tt>; (2) use
-<b>emit</b>/<b>emitp</b>/<b>emitf</b>, e.g.  <tt>@sum += $x; emit @sum</tt>
-which produces an extra output record such as <tt>sum=3.1648382</tt>; (3) use
-the <b>dump</b> or <b>edump</b> keywords, which immediately print all
-out-of-stream variables as a JSON data structure to the standard output or
-standard error (respectively), or (4) use the <b>print</b> or <b>eprint</b>
-keywords which immediately print an expression to standard output or standard
-error, respectively. Note that <tt>dump</tt>, <tt>edump</tt>, <tt>print</tt>,
-and <tt>eprint</tt> don&rsquo;t output records which participate in
-<tt>then</tt>-chaining; rather, they&rsquo;re just immediate prints to
-stdout/stderr. The <tt>printn</tt> and <tt>eprintn</tt> keywords are the same
-except that they don&rsquo;t print final newlines.
-
-</ul>
-
-<p/>Features of out-of-stream variables, and examples of their use, will be
-presented in the following sections.
-
 <!-- ================================================================ -->
 <a id="Built-in_variables"/><h3>Built-in variables</h3>
 
@@ -4118,6 +4042,73 @@ s=green,t=blue,a=3,b=4,green_blue=12
 
 <!-- ================================================================ -->
 <a id="Out-of-stream_variables_for_put"/><h3>Out-of-stream variables for put</h3>
+
+<p/> These are prefixed with an at-sign, e.g. <tt>@sum</tt>.  Furthermore,
+unlike built-in variables and stream-record fields, they are maintained in an
+arbitrarily nested hashmap: you can do <tt>@sum += $quanity</tt>, or
+<tt>@sum[$color] += $quanity</tt>, or <tt>@sum[$color][$shape] +=
+$quanity</tt>. The keys for the multi-level hashmap can be any expression which
+evaluates to string or integer: e.g.  <tt>@sum[NR] = $a + $b</tt>,
+<tt>@sum[$a."-".$b] = $x</tt>, etc.
+
+<p/> Their names and their values are entirely under your control; they change
+only when you assign to them.
+
+<p/> Just as for field names in stream records, if you want to define out-of-stream variables
+with special characters such as <tt>.</tt> then you can use braces, e.g. <tt>'@{variable.name}["index"]'</tt>.
+
+<p/>You may use a <b>computed key </b> in square brackets, e.g.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'
+green_blue=12
+</pre>
+</div>
+<p/>
+
+<p/> Out-of-stream variables are scoped to the <tt>put</tt> command in which they appear.
+In particular, if you have two or more <tt>put</tt> commands separated by <tt>then</tt>,
+each put will have its own set of out-of-stream variables:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/a.dkvp
+a=1,b=2,c=3
+a=4,b=5,c=6
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '@sum += $a; end {emit @sum}' then put 'ispresent($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp
+a=10,b=2,c=3
+a=40,b=5,c=6
+sum=5
+sum=50
+</pre>
+</div>
+<p/>
+
+<p/> Out-of-stream variables are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
+etc.
+
+<p/> You can <b>output</b> these in <b>four ways</b>: (1) <b>assign</b> them to
+stream-record fields, e.g.  <tt>$cumulative_sum = @sum</tt>; (2) use
+<b>emit</b>/<b>emitp</b>/<b>emitf</b>, e.g.  <tt>@sum += $x; emit @sum</tt>
+which produces an extra output record such as <tt>sum=3.1648382</tt>; (3) use
+the <b>dump</b> or <b>edump</b> keywords, which immediately print all
+out-of-stream variables as a JSON data structure to the standard output or
+standard error (respectively), or (4) use the <b>print</b> or <b>eprint</b>
+keywords which immediately print an expression to standard output or standard
+error, respectively. Note that <tt>dump</tt>, <tt>edump</tt>, <tt>print</tt>,
+and <tt>eprint</tt> don&rsquo;t output records which participate in
+<tt>then</tt>-chaining; rather, they&rsquo;re just immediate prints to
+stdout/stderr. The <tt>printn</tt> and <tt>eprintn</tt> keywords are the same
+except that they don&rsquo;t print final newlines.
 
 <!-- ================================================================ -->
 <a id="Indexed_out-of-stream_variables_for_put"/><h3>Indexed out-of-stream variables for put</h3>
