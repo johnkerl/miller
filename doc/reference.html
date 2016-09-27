@@ -202,7 +202,6 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables">Built-in variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names">Field names</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Local_variables">Local variables</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables_for_put">Out-of-stream variables for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables_for_put">Indexed out-of-stream variables for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#More_variable_assignments_for_put">More variable assignments for put</a><br/>
@@ -4149,21 +4148,21 @@ $ mlr seqgen --start 1 --stop 10 then put '
   local o = f(10, 20);
   $o = o;
 '
-i=1,o=15.065303
-i=2,o=13.203623
-i=3,o=16.231273
-i=4,o=14.380845
-i=5,o=13.898436
-i=6,o=14.297709
-i=7,o=15.797061
-i=8,o=14.057136
-i=9,o=14.875732
-i=10,o=14.410175
+i=1,o=12.691549
+i=2,o=14.636950
+i=3,o=14.882425
+i=4,o=14.862336
+i=5,o=16.124115
+i=6,o=13.585252
+i=7,o=15.284696
+i=8,o=15.135705
+i=9,o=15.516389
+i=10,o=14.585268
 </pre>
 </div>
 <p/>
 
-Notes:
+<p/>Notes:
 
 <ul>
 
@@ -4171,26 +4170,92 @@ Notes:
 if there is a parameter named <tt>a</tt> then you can reassign the value of
 <tt>a</tt> to be something else within the function if you like.
 
-<li/> All argument-passing is positional rather than by name; arguments are passed by value, not by reference.
+<li/> All argument-passing is positional rather than by name; arguments are
+passed by value, not by reference.
 
-<li/> If a for-loop variable is defined using <tt>local</tt> then it is scoped to that for-loop.
+<li/> You can define locals (using the <tt>local</tt> keyword) at any scope,
+and nested scopes will have access (more details on scope in the next section).
+If you define a local variable with the same name inside an inner scope, then a
+new variable is created with the narrower scope.
 
-<li/> xxx fencing
+<li/> Functions and subroutines never have access to locals from their callee
+(unless passed by value as arguments).
 
-<li/> xxx local/not in nested
+<li/> If a for-loop variable is defined using <tt>local</tt> then it is scoped
+to that for-loop.
 
 </ul>
 
-<!-- ================================================================ -->
-<a id="Scope_and_extent_for_local_variables"/><h3>Scope and extent for local variables</h3>
+<p/> The following example demonstrates the scope rules:
 
-<p/> xxx this section is under construction.
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/scope-example.mlr
+func f(a) {      # argument is local to the function
+  local b = 100; # local to the function
+  c = 100;       # local to the function; does not overwrite outer c
+  return a + 1;
+}
+local a = 10;    # local at top level
+local b = 20;    # local at top level
+c = 30;          # local at top level; there is no more-outer-scope c
+if (NR == 3) {
+  local a = 40;  # scoped to the if-statement; doesn't overwrite outer a
+  b = 50;        # not scoped to the if-statement; overwrites outer b
+  c = 60;        # not scoped to the if-statement; overwrites outer c
+  d = 70;        # there is no outer d so a local d is created here
 
-<ul>
-<li/> xxx
-<li/> xxx
-<li/> xxx All argument-passing is positional rather than by name; arguments are passed by value, not by reference.
-</ul>
+  $inner_a = a;
+  $inner_b = b;
+  $inner_c = c;
+  $inner_d = d;
+}
+$outer_a = a;
+$outer_b = b;
+$outer_c = c;
+$outer_d = d;    # there is no outer d defined so no assignment happens
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/scope-example.dat
+n=1,x=123
+n=2,x=456
+n=3,x=789
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab --from data/scope-example.dat put -f data/scope-example.mlr
+n       1
+x       123
+outer_a 10
+outer_b 20
+outer_c 30
+
+n       2
+x       456
+outer_a 10
+outer_b 20
+outer_c 30
+
+n       3
+x       789
+inner_a 40
+inner_b 50
+inner_c 60
+inner_d 70
+outer_a 10
+outer_b 50
+outer_c 60
+</pre>
+</div>
+<p/>
 
 <!-- ================================================================ -->
 <a id="Out-of-stream_variables_for_put"/><h3>Out-of-stream variables for put</h3>
@@ -6354,9 +6419,7 @@ wye pan 5 0.5732889198020006  0.8636244699032729  211.387310 120
 <li/> xxx xref to shared section for func/subr localvars (scope/extent/etc.)
 <li/> xxx missing return leads to absent-null (which xref). return value (single).
 
-<li/>
-xxx rename
-<a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a>
+<li/> <a href="#Local_variables">Local variables</a>
 
 </ul>
 
@@ -6379,7 +6442,7 @@ xxx rename
 <li/> xxx localvars as in fors. args may be reassigned.
 <li/> xxx xref to shared section for func/subr localvars (scope/extent/etc.)
 <li/> xxx rename
-<a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a>
+<li/> <a href="#Local_variables">Local variables</a>
 </ul>
 
 <!-- ================================================================ -->

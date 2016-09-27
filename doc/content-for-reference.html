@@ -1103,7 +1103,7 @@ within control blocks.
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/local-example-1.sh)HERE
 
-Notes:
+<p/>Notes:
 
 <ul>
 
@@ -1111,26 +1111,27 @@ Notes:
 if there is a parameter named <tt>a</tt> then you can reassign the value of
 <tt>a</tt> to be something else within the function if you like.
 
-<li/> All argument-passing is positional rather than by name; arguments are passed by value, not by reference.
+<li/> All argument-passing is positional rather than by name; arguments are
+passed by value, not by reference.
 
-<li/> If a for-loop variable is defined using <tt>local</tt> then it is scoped to that for-loop.
+<li/> You can define locals (using the <tt>local</tt> keyword) at any scope,
+and nested scopes will have access (more details on scope in the next section).
+If you define a local variable with the same name inside an inner scope, then a
+new variable is created with the narrower scope.
 
-<li/> xxx fencing
+<li/> Functions and subroutines never have access to locals from their callee
+(unless passed by value as arguments).
 
-<li/> xxx local/not in nested
+<li/> If a for-loop variable is defined using <tt>local</tt> then it is scoped
+to that for-loop.
 
 </ul>
 
-<!-- ================================================================ -->
-<h3>Scope and extent for local variables</h3>
+<p/> The following example demonstrates the scope rules:
 
-<p/> xxx this section is under construction.
-
-<ul>
-<li/> xxx
-<li/> xxx
-<li/> xxx All argument-passing is positional rather than by name; arguments are passed by value, not by reference.
-</ul>
+POKI_RUN_COMMAND{{cat data/scope-example.mlr}}HERE
+POKI_RUN_COMMAND{{cat data/scope-example.dat}}HERE
+POKI_RUN_COMMAND{{mlr --oxtab --from data/scope-example.dat put -f data/scope-example.mlr}}HERE
 
 <!-- ================================================================ -->
 <h3>Out-of-stream variables for put</h3>
@@ -1645,9 +1646,7 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/factorial-example.sh)HERE
 <li/> xxx xref to shared section for func/subr localvars (scope/extent/etc.)
 <li/> xxx missing return leads to absent-null (which xref). return value (single).
 
-<li/>
-xxx rename
-<a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a>
+<li/> <a href="#Local_variables">Local variables</a>
 
 </ul>
 
@@ -1670,7 +1669,7 @@ xxx rename
 <li/> xxx localvars as in fors. args may be reassigned.
 <li/> xxx xref to shared section for func/subr localvars (scope/extent/etc.)
 <li/> xxx rename
-<a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a>
+<li/> <a href="#Local_variables">Local variables</a>
 </ul>
 
 <!-- ================================================================ -->
