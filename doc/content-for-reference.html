@@ -972,37 +972,6 @@ POKI_CARDIFY{{mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptabl
 
 <p/> xxx under construction
 
-<p/> <b>Built-in variables</b>, as discussed above:
-
-<ul>
-
-<li/>These are written all in capital letters, such as <tt>NR</tt>,
-<tt>NF</tt>, <tt>FILENAME</tt>, and only a small, specific set of them is
-defined by Miller.
-
-<li/> Their values change from one record to the next as Miller scans through
-your input data stream: <tt>NR</tt> is the count of records so far encountered
-in the input stream, starting at 1; <tt>NF</tt> is the number of fields in the
-current input record; <tt>FILENAME</tt> is the current file name; and so on as
-detailed above.
-
-<li/> Their scope is global: you can refer to them in any <tt>filter</tt>
-or <tt>put</tt> statement. Their values are assigned by the input-record reader:
-
-POKI_RUN_COMMAND{{mlr --csv put '$nr = NR' data/a.csv}}HERE
-POKI_RUN_COMMAND{{mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv}}HERE
-
-<li/> These are read-only for the <tt>mlr put</tt> and <tt>mlr filter</tt>
-DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may not be
-assigned to: <tt>NR=100</tt> is a syntax error.
-
-<li/> You can output built-in variables indirectly, by assigning them to a
-non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named <tt>nr</tt> to
-each output record, containing the value of <tt>NR</tt> as of when that record
-was ingested.
-
-</ul>
-
 <p/><b>Fields within stream records</b>, as discussed above:
 
 <ul>
@@ -1076,6 +1045,38 @@ except that they don&rsquo;t print final newlines.
 
 <p/>Features of out-of-stream variables, and examples of their use, will be
 presented in the following sections.
+
+<!-- ================================================================ -->
+<h3>Built-in variables</h3>
+
+<ul>
+
+<li/>These are written all in capital letters, such as <tt>NR</tt>,
+<tt>NF</tt>, <tt>FILENAME</tt>, and only a small, specific set of them is
+defined by Miller.
+
+<li/> Their values change from one record to the next as Miller scans through
+your input data stream: <tt>NR</tt> is the count of records so far encountered
+in the input stream, starting at 1; <tt>NF</tt> is the number of fields in the
+current input record; <tt>FILENAME</tt> is the current file name; and so on as
+detailed above.
+
+<li/> Their <b>scope is global</b>: you can refer to them in any <tt>filter</tt>
+or <tt>put</tt> statement. Their values are assigned by the input-record reader:
+
+POKI_RUN_COMMAND{{mlr --csv put '$nr = NR' data/a.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv}}HERE
+
+<li/> These are <b>read-only</b> for the <tt>mlr put</tt> and <tt>mlr filter</tt>
+DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may not be
+assigned to: <tt>NR=100</tt> is a syntax error.
+
+<li/> You can output built-in variables indirectly, by assigning them to a
+non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named <tt>nr</tt> to
+each output record, containing the value of <tt>NR</tt> as of when that record
+was ingested.
+
+</ul>
 
 <!-- ================================================================ -->
 <h3>Field names</h3>
