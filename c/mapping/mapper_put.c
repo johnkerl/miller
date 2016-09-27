@@ -51,6 +51,9 @@ mapper_setup_t mapper_put_setup = {
 };
 
 // ----------------------------------------------------------------
+// xxx put vs. filter:
+// * put -q
+// * filter -x
 static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options] {expression}\n", argv0, verb);
 	fprintf(o, "Adds/updates specified field(s). Expressions are semicolon-separated and must\n");
@@ -236,7 +239,6 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 	slls_free(expression_strings);
 
 	comment_stripped_mlr_dsl_expression = alloc_comment_strip(mlr_dsl_expression);
-
 
 	// Linked list of mlr_dsl_ast_node_t*.
 	mlr_dsl_ast_t* past = mlr_dsl_parse(comment_stripped_mlr_dsl_expression, trace_parse);

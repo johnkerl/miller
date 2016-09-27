@@ -12,10 +12,15 @@
 
 typedef struct _mapper_filter_state_t {
 	ap_state_t*    pargp;
+
 	char*          mlr_dsl_expression;
 	char*          comment_stripped_mlr_dsl_expression;
+
+	// xxx keep full AST
 	mlr_dsl_cst_t* pcst;
+
 	mlhmmv_t*      poosvars;
+
 	bind_stack_t*  pbind_stack;
 	loop_stack_t*  ploop_stack;
 	int            do_exclude;
