@@ -879,6 +879,15 @@ POKI_RUN_COMMAND{{mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp}
 <!-- ================================================================ -->
 <h1>Expression language for filter and put</h1>
 
+The basic idea of <tt>mlr filter</tt> and <tt>mlr put</tt> are for
+record-selection and record-updating expressions, respectively. For example:
+
+POKI_RUN_COMMAND{{cat data/small}}HERE
+POKI_RUN_COMMAND{{mlr filter '$a == "eks"' data/small}}HERE
+POKI_RUN_COMMAND{{mlr put '$ab = $a . "_" . $b ' data/small}}HERE
+
+<p/>There are more details and more choices, of course, as detailed in the following sections.
+
 <!-- ================================================================ -->
 <h2>Syntax</h2>
 
@@ -915,8 +924,6 @@ POKI_RUN_COMMAND{{ruby -e '10.times{|i|puts "i=#{i}"}' | mlr --opprint put '$j =
 
 Newlines within the expression are ignored, which can help increase legibility of complex expressions:
 
-POKI_INCLUDE_ESCAPED(data/filter-multiline-example.txt)HERE
-
 POKI_INCLUDE_AND_RUN_ESCAPED(data/put-multiline-example.txt)HERE
 
 POKI_RUN_COMMAND{{mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $y > 0.5)' then stats2 -a corr -f x,y data/medium}}HERE
@@ -924,7 +931,7 @@ POKI_RUN_COMMAND{{mlr --opprint filter '($x > 0.5 && $y < 0.5) || ($x < 0.5 && $
 <!-- ================================================================ -->
 <h3>Expressions from files</h3>
 
-<p/>The simplest way to enter expressions for <tt>put</tt> and <tt>filter</tt> is on the command line, e.g.
+<p/>The simplest way to enter expressions for <tt>put</tt> and <tt>filter</tt> is between single quotes on the command line, e.g.
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/fe-example-1.sh)HERE
 POKI_INCLUDE_AND_RUN_ESCAPED(data/fe-example-2.sh)HERE
@@ -943,10 +950,10 @@ POKI_RUN_COMMAND{{mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f
 
 <p/>A suggested use-case here is defining functions in files, and calling them from command-line expressions.
 
-<p/>You can have one or more <tt>-f</tt> expressions (maybe one function per
-file, for example) and one or more <tt>-e</tt> expressions on the command line.
-All the <tt>-f</tt>&rsquo;s will be evaluated in order, then all the
-<tt>-e</tt>&rsquo;s will be evaluated in order.
+<p/>Moreover, you can have one or more <tt>-f</tt> expressions (maybe one
+function per file, for example) and one or more <tt>-e</tt> expressions on the
+command line.  All the <tt>-f</tt>&rsquo;s will be evaluated in order, then all
+the <tt>-e</tt>&rsquo;s will be evaluated in order.
 
 <!-- ================================================================ -->
 <h3>Semicolons, newlines, and curly braces</h3>
@@ -1001,9 +1008,9 @@ records, such as sums, differences, counters, and so on.  In a few contexts,
 presented below, you can refer to the entire out-of-stream-variables collection
 as <tt>@*</tt>.
 
-<p/> <b>Local variables</b> are limited to the current statements being
-executed: these include function arguments, bound variables in for loops, and
-explicitly declared <tt>local</tt> variables.
+<p/> <b>Local variables</b> are limited in scope and extent to the current
+statements being executed: these include function arguments, bound variables in
+for loops, and explicitly declared <tt>local</tt> variables.
 
 <p/> <b>Keywords</b> are not variables, but since their names are reserved, you
 cannot use these names for local variables.
@@ -1049,13 +1056,6 @@ be the total number of records ingested.
 filter</tt> DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may
 not be assigned to: <tt>NR=100</tt> is a syntax error.
 
-<p/> You can output built-in variables indirectly, by assigning them to a
-non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named <tt>nr</tt> to
-each output record, containing the value of <tt>NR</tt> as of when that record
-was ingested.
-
-<p/> xxx edit w/ xref
-
 <!-- ================================================================ -->
 <h3>Field names</h3>
 
@@ -1095,9 +1095,9 @@ are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
 <!-- ================================================================ -->
 <h3>Local variables</h3>
 
-<p/>There are three kinds of local variables: arguments to
-functions/subroutines, variables bound within for-loops, and locals defined
-within control blocks.
+<p/>There are three kinds of local variables: <b>arguments</b> to
+functions/subroutines, <b>variables bound within for-loops</b>, and
+<b>locals</b> defined within control blocks.
 
 <p/>This example shows all three:
 
@@ -1114,10 +1114,17 @@ if there is a parameter named <tt>a</tt> then you can reassign the value of
 <li/> All argument-passing is positional rather than by name; arguments are
 passed by value, not by reference.
 
-<li/> You can define locals (using the <tt>local</tt> keyword) at any scope,
-and nested scopes will have access (more details on scope in the next section).
-If you define a local variable with the same name inside an inner scope, then a
-new variable is created with the narrower scope.
+<li/> You can define locals (using the <tt>local</tt> keyword) at any scope
+(if-statementst, else-statements, while-loops, for-loops, or the top-level
+scope), and nested scopes will have access (more details on scope in the next
+section).  If you define a local variable with the same name inside an inner
+scope, then a new variable is created with the narrower scope.
+
+<li/> If you assign to a local variable for the first time in a scope without
+declaring it as <tt>local</tt> then: if it exists in an outer scope, that
+outer-scope variable will be updated; if not, it will be defined in the current
+scope as if <tt>local</tt> had been used. I recommend always declaring
+variables with <tt>local</tt> to make the intended scoping clear.
 
 <li/> Functions and subroutines never have access to locals from their callee
 (unless passed by value as arguments).
@@ -1154,29 +1161,16 @@ with <b>special characters</b> such as <tt>.</tt> then you can use braces, e.g. 
 
 POKI_RUN_COMMAND{{echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'}}HERE
 
-<p/> Out-of-stream variables are scoped to the <tt>put</tt> command in which they appear.
-In particular, if you have two or more <tt>put</tt> commands separated by <tt>then</tt>,
-each put will have its own set of out-of-stream variables:
+<p/> Out-of-stream variables are <b>scoped</b> to the <tt>put</tt> command in
+which they appear.  In particular, if you have two or more <tt>put</tt>
+commands separated by <tt>then</tt>, each put will have its own set of
+out-of-stream variables:
 
 POKI_RUN_COMMAND{{cat data/a.dkvp}}HERE
 POKI_RUN_COMMAND{{mlr put '@sum += $a; end {emit @sum}' then put 'ispresent($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp}}HERE
 
 <p/> Out-of-stream variables are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
 etc.
-
-<p/> You can <b>output</b> these in <b>four ways</b>: (1) <b>assign</b> them to
-stream-record fields, e.g.  <tt>$cumulative_sum = @sum</tt>; (2) use
-<b>emit</b>/<b>emitp</b>/<b>emitf</b>, e.g.  <tt>@sum += $x; emit @sum</tt>
-which produces an extra output record such as <tt>sum=3.1648382</tt>; (3) use
-the <b>dump</b> or <b>edump</b> keywords, which immediately print all
-out-of-stream variables as a JSON data structure to the standard output or
-standard error (respectively), or (4) use the <b>print</b> or <b>eprint</b>
-keywords which immediately print an expression to standard output or standard
-error, respectively. Note that <tt>dump</tt>, <tt>edump</tt>, <tt>print</tt>,
-and <tt>eprint</tt> don&rsquo;t output records which participate in
-<tt>then</tt>-chaining; rather, they&rsquo;re just immediate prints to
-stdout/stderr. The <tt>printn</tt> and <tt>eprintn</tt> keywords are the same
-except that they don&rsquo;t print final newlines.
 
 <!-- ================================================================ -->
 <h3>Indexed out-of-stream variables for put</h3>
@@ -1194,16 +1188,14 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6a.sh)HERE
 The idea is that <tt>stats1</tt>, and other Miller commands, encapsulate
 frequently-used patterns with a minimum of keystroking (and run a little
 faster), whereas using out-of-stream variables you have more flexibility and
-control in what you do. <b>Out-of-stream variables, along with pattern/action
-blocks and begin/end blocks, give you flexibility in what you can do with
-Miller.</b>
+control in what you do.
 
 <p/>Begin/end blocks can be mixed with pattern/action blocks. For example:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-8.sh)HERE
 
 <!-- ================================================================ -->
-<h3>More variable assignments for put</h3>
+<h3>Aggregate variable assignments for put</h3>
 
 <p/>There are three remaining kinds of variable assignment using out-of-stream
 variables, the last two of which use the <tt>$*</tt> syntax:
@@ -1304,14 +1296,15 @@ Miller. They are loops over key-value pairs, whether in stream records or
 out-of-stream variables: more reminiscent of <tt>foreach</tt>, as in (for
 example) PHP.
 
-<p/> There are a two variants: <b>for-loop over key-value pairs in the current
-stream record</b> and <b>for-loop over key-value pairs in an out-of-stream
-variable</b>. In each case the <tt>in</tt> keyword specifies the hashmap being
-iterated over, and the variable names between <tt>for</tt> and <tt>in</tt> are
-bound to the keys and values, respectively, of the hashmap&rsquo;s key-value pairs on
-each loop iteration.  As with <tt>while</tt> and <tt>do-while</tt>, a
-<tt>break</tt> or <tt>continue</tt> within nested control structures will
-propagate to the innermost loop enclosing them, if any, and a <tt>break</tt> or
+<p/> There are three variants: <b>for-loop over key-value pairs in the current
+stream record</b>, <b>for-loop over key-value pairs in an out-of-stream
+variable</b>, and <b>C-style triple-for loops</b>.  In each of the first two
+cases the <tt>in</tt> keyword specifies the hashmap being iterated over, and
+the variable names between <tt>for</tt> and <tt>in</tt> are bound to the keys
+and values, respectively, of the hashmap&rsquo;s key-value pairs on each loop
+iteration.  As with <tt>while</tt> and <tt>do-while</tt>, a <tt>break</tt> or
+<tt>continue</tt> within nested control structures will propagate to the
+innermost loop enclosing them, if any, and a <tt>break</tt> or
 <tt>continue</tt> outside a loop is a syntax error that will be flagged as soon
 as the expression is parsed, before any input records are ingested.
 
@@ -1337,29 +1330,6 @@ instead you might find it simpler to use an out-of-stream variable in the loop a
 the stream record after the loop:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-3.sh)HERE
-
-<p/><b>C-style triple-for loops</b> are supported as follows:
-
-POKI_INCLUDE_AND_RUN_ESCAPED(data/triple-for-example.sh)HERE
-
-Notes:
-<ul>
-
-<li/> In <tt>for (start; continuation; update) { body }</tt>, the start and
-update statements may be empty, single statements, or multiple comma-separated
-statements.
-
-<li/> In particular, you may use <tt>$</tt>-variables and/or
-<tt>@</tt>-variables in the start, continuation, and/or update steps (as well
-as the body, of course).
-
-<li/> Miller has no comma operator; the continuation must be a single
-expression which evaluates to boolean.
-
-<li/> As with all for/if/while statements in Miller, the curly braces are
-required even if the body is a single statement, or empty.
-
-</ul>
 
 <p/><b>For-loop over out-of-stream variable</b>: This is similar to looping
 over the current stream record except for additional degrees of freedom: you
@@ -1401,6 +1371,29 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0g.sh)HERE
 So these for-loops don&rsquo;t produce the depth-two or depth-four entries in
 the hashmap.
 
+<p/><b>C-style triple-for loops</b> are supported as follows:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/triple-for-example.sh)HERE
+
+Notes:
+<ul>
+
+<li/> In <tt>for (start; continuation; update) { body }</tt>, the start and
+update statements may be empty, single statements, or multiple comma-separated
+statements.
+
+<li/> In particular, you may use <tt>$</tt>-variables and/or
+<tt>@</tt>-variables in the start, continuation, and/or update steps (as well
+as the body, of course).
+
+<li/> Miller has no comma operator; the continuation must be a single
+expression which evaluates to boolean.
+
+<li/> As with all for/if/while statements in Miller, the curly braces are
+required even if the body is a single statement, or empty.
+
+</ul>
+
 <!-- ================================================================ -->
 <h3>Begin/end blocks for put</h3>
 
@@ -1438,11 +1431,31 @@ This is of course not much different than
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-5.sh)HERE
 
-<p/>Note that it&rsquo;s a syntax error for begin/end blocks to refer to field names (beginning with <tt>$</tt>),
-since these execute outside the context of input records.
+<p/>Note that it&rsquo;s a syntax error for begin/end blocks to refer to field
+names (beginning with <tt>$</tt>), since these execute outside the context of
+input records.
 
 <!-- ================================================================ -->
 <h2>Output statements for put</h2>
+
+<p/> xxx grist: You can output built-in variables indirectly, by assigning them
+to a non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named
+<tt>nr</tt> to each output record, containing the value of <tt>NR</tt> as of
+when that record was ingested.
+
+<p/> xxx grist: You can <b>output</b> these in <b>four ways</b>: (1)
+<b>assign</b> them to stream-record fields, e.g.  <tt>$cumulative_sum =
+@sum</tt>; (2) use <b>emit</b>/<b>emitp</b>/<b>emitf</b>, e.g.  <tt>@sum += $x;
+emit @sum</tt> which produces an extra output record such as
+<tt>sum=3.1648382</tt>; (3) use the <b>dump</b> or <b>edump</b> keywords, which
+immediately print all out-of-stream variables as a JSON data structure to the
+standard output or standard error (respectively), or (4) use the <b>print</b>
+or <b>eprint</b> keywords which immediately print an expression to standard
+output or standard error, respectively. Note that <tt>dump</tt>,
+<tt>edump</tt>, <tt>print</tt>, and <tt>eprint</tt> don&rsquo;t output records
+which participate in <tt>then</tt>-chaining; rather, they&rsquo;re just
+immediate prints to stdout/stderr. The <tt>printn</tt> and <tt>eprintn</tt>
+keywords are the same except that they don&rsquo;t print final newlines.
 
 <!-- ================================================================ -->
 <h3>Emit statements for put</h3>

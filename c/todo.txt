@@ -47,6 +47,9 @@ To file:
 * mlh/mld func @ filter
 * absent vs. empty; unset $x vs. $x="". no null keyword.
 
+vars:
+* clarify absent-null for variable assignments esp local. xref to homogeneity feature.
+
 covers:
 * func-def example @ cover x n
 * triple-for example @ cover x n

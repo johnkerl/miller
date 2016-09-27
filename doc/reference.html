@@ -204,7 +204,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Local_variables">Local variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables_for_put">Out-of-stream variables for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables_for_put">Indexed out-of-stream variables for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#More_variable_assignments_for_put">More variable assignments for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Aggregate_variable_assignments_for_put">Aggregate variable assignments for put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keywords_for_filter_and_put">Keywords for filter and put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Control_structures">Control structures</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Pattern-action_blocks">Pattern-action blocks</a><br/>
@@ -3668,6 +3668,45 @@ count
 <!-- ================================================================ -->
 <a id="Expression_language_for_filter_and_put"/><h1>Expression language for filter and put</h1>
 
+The basic idea of <tt>mlr filter</tt> and <tt>mlr put</tt> are for
+record-selection and record-updating expressions, respectively. For example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr filter '$a == "eks"' data/small
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$ab = $a . "_" . $b ' data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,ab=pan_pan
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,ab=eks_pan
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,ab=wye_wye
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,ab=eks_wye
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,ab=wye_pan
+</pre>
+</div>
+<p/>
+
+<p/>There are more details and more choices, of course, as detailed in the following sections.
+
 <!-- ================================================================ -->
 <a id="Syntax"/><h2>Syntax</h2>
 
@@ -3724,18 +3763,6 @@ Newlines within the expression are ignored, which can help increase legibility o
 <p/>
 <div class="pokipanel">
 <pre>
-mlr --opprint filter '
-  ($x &gt; 0.5 &amp;&amp; $y &lt; 0.5)
-  ||
-  ($x &lt; 0.5 &amp;&amp; $y &gt; 0.5)
-' then stats2 -a corr -f x,y data/medium
-</pre>
-</div>
-<p/>
-
-<p/>
-<div class="pokipanel">
-<pre>
 $ mlr --opprint put '
   $nf       = NF;
   $nr       = NR;
@@ -3771,7 +3798,7 @@ x_y_corr
 <!-- ================================================================ -->
 <a id="Expressions_from_files"/><h3>Expressions from files</h3>
 
-<p/>The simplest way to enter expressions for <tt>put</tt> and <tt>filter</tt> is on the command line, e.g.
+<p/>The simplest way to enter expressions for <tt>put</tt> and <tt>filter</tt> is between single quotes on the command line, e.g.
 
 <p/>
 <div class="pokipanel">
@@ -3853,10 +3880,10 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
 
 <p/>A suggested use-case here is defining functions in files, and calling them from command-line expressions.
 
-<p/>You can have one or more <tt>-f</tt> expressions (maybe one function per
-file, for example) and one or more <tt>-e</tt> expressions on the command line.
-All the <tt>-f</tt>&rsquo;s will be evaluated in order, then all the
-<tt>-e</tt>&rsquo;s will be evaluated in order.
+<p/>Moreover, you can have one or more <tt>-f</tt> expressions (maybe one
+function per file, for example) and one or more <tt>-e</tt> expressions on the
+command line.  All the <tt>-f</tt>&rsquo;s will be evaluated in order, then all
+the <tt>-e</tt>&rsquo;s will be evaluated in order.
 
 <!-- ================================================================ -->
 <a id="Semicolons,_newlines,_and_curly_braces"/><h3>Semicolons, newlines, and curly braces</h3>
@@ -3966,9 +3993,9 @@ records, such as sums, differences, counters, and so on.  In a few contexts,
 presented below, you can refer to the entire out-of-stream-variables collection
 as <tt>@*</tt>.
 
-<p/> <b>Local variables</b> are limited to the current statements being
-executed: these include function arguments, bound variables in for loops, and
-explicitly declared <tt>local</tt> variables.
+<p/> <b>Local variables</b> are limited in scope and extent to the current
+statements being executed: these include function arguments, bound variables in
+for loops, and explicitly declared <tt>local</tt> variables.
 
 <p/> <b>Keywords</b> are not variables, but since their names are reserved, you
 cannot use these names for local variables.
@@ -4067,13 +4094,6 @@ be the total number of records ingested.
 filter</tt> DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may
 not be assigned to: <tt>NR=100</tt> is a syntax error.
 
-<p/> You can output built-in variables indirectly, by assigning them to a
-non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named <tt>nr</tt> to
-each output record, containing the value of <tt>NR</tt> as of when that record
-was ingested.
-
-<p/> xxx edit w/ xref
-
 <!-- ================================================================ -->
 <a id="Field_names"/><h3>Field names</h3>
 
@@ -4126,9 +4146,9 @@ are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
 <!-- ================================================================ -->
 <a id="Local_variables"/><h3>Local variables</h3>
 
-<p/>There are three kinds of local variables: arguments to
-functions/subroutines, variables bound within for-loops, and locals defined
-within control blocks.
+<p/>There are three kinds of local variables: <b>arguments</b> to
+functions/subroutines, <b>variables bound within for-loops</b>, and
+<b>locals</b> defined within control blocks.
 
 <p/>This example shows all three:
 
@@ -4136,28 +4156,28 @@ within control blocks.
 <div class="pokipanel">
 <pre>
 $ mlr seqgen --start 1 --stop 10 then put '
-  func f(a, b) {
-      r = 0.0;
-      for (local i = 0; i &lt; 6; i += 1) {
-          local u = urand();
-          r += u;
+  func f(a, b) {                          # function arguments a and b
+      r = 0.0;                            # local r scoped to the function
+      for (local i = 0; i &lt; 6; i += 1) {  # local i scoped to the for-loop
+          local u = urand();              # local u scoped to the for-loop
+          r += u;                         # updates r from the enclosing scope
       }
       r /= 6;
       return a + (b - a) * r;
   }
-  local o = f(10, 20);
+  local o = f(10, 20);                    # local to the top-level scope
   $o = o;
 '
-i=1,o=12.691549
-i=2,o=14.636950
-i=3,o=14.882425
-i=4,o=14.862336
-i=5,o=16.124115
-i=6,o=13.585252
-i=7,o=15.284696
-i=8,o=15.135705
-i=9,o=15.516389
-i=10,o=14.585268
+i=1,o=16.835520
+i=2,o=15.265576
+i=3,o=15.254853
+i=4,o=14.062365
+i=5,o=15.703872
+i=6,o=14.805455
+i=7,o=15.014121
+i=8,o=14.229247
+i=9,o=16.536008
+i=10,o=15.912648
 </pre>
 </div>
 <p/>
@@ -4173,10 +4193,17 @@ if there is a parameter named <tt>a</tt> then you can reassign the value of
 <li/> All argument-passing is positional rather than by name; arguments are
 passed by value, not by reference.
 
-<li/> You can define locals (using the <tt>local</tt> keyword) at any scope,
-and nested scopes will have access (more details on scope in the next section).
-If you define a local variable with the same name inside an inner scope, then a
-new variable is created with the narrower scope.
+<li/> You can define locals (using the <tt>local</tt> keyword) at any scope
+(if-statementst, else-statements, while-loops, for-loops, or the top-level
+scope), and nested scopes will have access (more details on scope in the next
+section).  If you define a local variable with the same name inside an inner
+scope, then a new variable is created with the narrower scope.
+
+<li/> If you assign to a local variable for the first time in a scope without
+declaring it as <tt>local</tt> then: if it exists in an outer scope, that
+outer-scope variable will be updated; if not, it will be defined in the current
+scope as if <tt>local</tt> had been used. I recommend always declaring
+variables with <tt>local</tt> to make the intended scoping clear.
 
 <li/> Functions and subroutines never have access to locals from their callee
 (unless passed by value as arguments).
@@ -4285,9 +4312,10 @@ green_blue=12
 </div>
 <p/>
 
-<p/> Out-of-stream variables are scoped to the <tt>put</tt> command in which they appear.
-In particular, if you have two or more <tt>put</tt> commands separated by <tt>then</tt>,
-each put will have its own set of out-of-stream variables:
+<p/> Out-of-stream variables are <b>scoped</b> to the <tt>put</tt> command in
+which they appear.  In particular, if you have two or more <tt>put</tt>
+commands separated by <tt>then</tt>, each put will have its own set of
+out-of-stream variables:
 
 <p/>
 <div class="pokipanel">
@@ -4312,20 +4340,6 @@ sum=50
 
 <p/> Out-of-stream variables are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
 etc.
-
-<p/> You can <b>output</b> these in <b>four ways</b>: (1) <b>assign</b> them to
-stream-record fields, e.g.  <tt>$cumulative_sum = @sum</tt>; (2) use
-<b>emit</b>/<b>emitp</b>/<b>emitf</b>, e.g.  <tt>@sum += $x; emit @sum</tt>
-which produces an extra output record such as <tt>sum=3.1648382</tt>; (3) use
-the <b>dump</b> or <b>edump</b> keywords, which immediately print all
-out-of-stream variables as a JSON data structure to the standard output or
-standard error (respectively), or (4) use the <b>print</b> or <b>eprint</b>
-keywords which immediately print an expression to standard output or standard
-error, respectively. Note that <tt>dump</tt>, <tt>edump</tt>, <tt>print</tt>,
-and <tt>eprint</tt> don&rsquo;t output records which participate in
-<tt>then</tt>-chaining; rather, they&rsquo;re just immediate prints to
-stdout/stderr. The <tt>printn</tt> and <tt>eprintn</tt> keywords are the same
-except that they don&rsquo;t print final newlines.
 
 <!-- ================================================================ -->
 <a id="Indexed_out-of-stream_variables_for_put"/><h3>Indexed out-of-stream variables for put</h3>
@@ -4414,9 +4428,7 @@ a=hat,b=pan,x_count=363,x_sum=168.553807
 The idea is that <tt>stats1</tt>, and other Miller commands, encapsulate
 frequently-used patterns with a minimum of keystroking (and run a little
 faster), whereas using out-of-stream variables you have more flexibility and
-control in what you do. <b>Out-of-stream variables, along with pattern/action
-blocks and begin/end blocks, give you flexibility in what you can do with
-Miller.</b>
+control in what you do.
 
 <p/>Begin/end blocks can be mixed with pattern/action blocks. For example:
 
@@ -4448,7 +4460,7 @@ num_total=5,num_positive=3
 <p/>
 
 <!-- ================================================================ -->
-<a id="More_variable_assignments_for_put"/><h3>More variable assignments for put</h3>
+<a id="Aggregate_variable_assignments_for_put"/><h3>Aggregate variable assignments for put</h3>
 
 <p/>There are three remaining kinds of variable assignment using out-of-stream
 variables, the last two of which use the <tt>$*</tt> syntax:
@@ -4891,14 +4903,15 @@ Miller. They are loops over key-value pairs, whether in stream records or
 out-of-stream variables: more reminiscent of <tt>foreach</tt>, as in (for
 example) PHP.
 
-<p/> There are a two variants: <b>for-loop over key-value pairs in the current
-stream record</b> and <b>for-loop over key-value pairs in an out-of-stream
-variable</b>. In each case the <tt>in</tt> keyword specifies the hashmap being
-iterated over, and the variable names between <tt>for</tt> and <tt>in</tt> are
-bound to the keys and values, respectively, of the hashmap&rsquo;s key-value pairs on
-each loop iteration.  As with <tt>while</tt> and <tt>do-while</tt>, a
-<tt>break</tt> or <tt>continue</tt> within nested control structures will
-propagate to the innermost loop enclosing them, if any, and a <tt>break</tt> or
+<p/> There are three variants: <b>for-loop over key-value pairs in the current
+stream record</b>, <b>for-loop over key-value pairs in an out-of-stream
+variable</b>, and <b>C-style triple-for loops</b>.  In each of the first two
+cases the <tt>in</tt> keyword specifies the hashmap being iterated over, and
+the variable names between <tt>for</tt> and <tt>in</tt> are bound to the keys
+and values, respectively, of the hashmap&rsquo;s key-value pairs on each loop
+iteration.  As with <tt>while</tt> and <tt>do-while</tt>, a <tt>break</tt> or
+<tt>continue</tt> within nested control structures will propagate to the
+innermost loop enclosing them, if any, and a <tt>break</tt> or
 <tt>continue</tt> outside a loop is a syntax error that will be flagged as soon
 as the expression is parsed, before any input records are ingested.
 
@@ -5007,50 +5020,6 @@ wye pan 5 0.5732889198020006  0.8636244699032729  6.436913
 </pre>
 </div>
 <p/>
-
-<p/><b>C-style triple-for loops</b> are supported as follows:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/small --opprint put '
-  local suma = 0;
-  local sumb = 0;
-  for (local a = 1, local b = 1; a &lt;= NR; a += 1, b *= 2) {
-    suma += a;
-    sumb += b;
-  }
-  $suma = suma;
-  $sumb = sumb;
-'
-a   b   i x                   y                   suma sumb
-pan pan 1 0.3467901443380824  0.7268028627434533  1    1
-eks pan 2 0.7586799647899636  0.5221511083334797  3    3
-wye wye 3 0.20460330576630303 0.33831852551664776 6    7
-eks wye 4 0.38139939387114097 0.13418874328430463 10   15
-wye pan 5 0.5732889198020006  0.8636244699032729  15   31
-</pre>
-</div>
-<p/>
-
-Notes:
-<ul>
-
-<li/> In <tt>for (start; continuation; update) { body }</tt>, the start and
-update statements may be empty, single statements, or multiple comma-separated
-statements.
-
-<li/> In particular, you may use <tt>$</tt>-variables and/or
-<tt>@</tt>-variables in the start, continuation, and/or update steps (as well
-as the body, of course).
-
-<li/> Miller has no comma operator; the continuation must be a single
-expression which evaluates to boolean.
-
-<li/> As with all for/if/while statements in Miller, the curly braces are
-required even if the body is a single statement, or empty.
-
-</ul>
 
 <p/><b>For-loop over out-of-stream variable</b>: This is similar to looping
 over the current stream record except for additional degrees of freedom: you
@@ -5238,6 +5207,50 @@ basename=myvar,index1=nesting-is,index2=also-just-right,terminal=3
 So these for-loops don&rsquo;t produce the depth-two or depth-four entries in
 the hashmap.
 
+<p/><b>C-style triple-for loops</b> are supported as follows:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small --opprint put '
+  local suma = 0;
+  local sumb = 0;
+  for (local a = 1, local b = 1; a &lt;= NR; a += 1, b *= 2) {
+    suma += a;
+    sumb += b;
+  }
+  $suma = suma;
+  $sumb = sumb;
+'
+a   b   i x                   y                   suma sumb
+pan pan 1 0.3467901443380824  0.7268028627434533  1    1
+eks pan 2 0.7586799647899636  0.5221511083334797  3    3
+wye wye 3 0.20460330576630303 0.33831852551664776 6    7
+eks wye 4 0.38139939387114097 0.13418874328430463 10   15
+wye pan 5 0.5732889198020006  0.8636244699032729  15   31
+</pre>
+</div>
+<p/>
+
+Notes:
+<ul>
+
+<li/> In <tt>for (start; continuation; update) { body }</tt>, the start and
+update statements may be empty, single statements, or multiple comma-separated
+statements.
+
+<li/> In particular, you may use <tt>$</tt>-variables and/or
+<tt>@</tt>-variables in the start, continuation, and/or update steps (as well
+as the body, of course).
+
+<li/> Miller has no comma operator; the continuation must be a single
+expression which evaluates to boolean.
+
+<li/> As with all for/if/while statements in Miller, the curly braces are
+required even if the body is a single statement, or empty.
+
+</ul>
+
 <!-- ================================================================ -->
 <a id="Begin/end_blocks_for_put"/><h3>Begin/end blocks for put</h3>
 
@@ -5348,11 +5361,31 @@ x_count=10,x_sum=4.536294
 </div>
 <p/>
 
-<p/>Note that it&rsquo;s a syntax error for begin/end blocks to refer to field names (beginning with <tt>$</tt>),
-since these execute outside the context of input records.
+<p/>Note that it&rsquo;s a syntax error for begin/end blocks to refer to field
+names (beginning with <tt>$</tt>), since these execute outside the context of
+input records.
 
 <!-- ================================================================ -->
 <a id="Output_statements_for_put"/><h2>Output statements for put</h2>
+
+<p/> xxx grist: You can output built-in variables indirectly, by assigning them
+to a non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named
+<tt>nr</tt> to each output record, containing the value of <tt>NR</tt> as of
+when that record was ingested.
+
+<p/> xxx grist: You can <b>output</b> these in <b>four ways</b>: (1)
+<b>assign</b> them to stream-record fields, e.g.  <tt>$cumulative_sum =
+@sum</tt>; (2) use <b>emit</b>/<b>emitp</b>/<b>emitf</b>, e.g.  <tt>@sum += $x;
+emit @sum</tt> which produces an extra output record such as
+<tt>sum=3.1648382</tt>; (3) use the <b>dump</b> or <b>edump</b> keywords, which
+immediately print all out-of-stream variables as a JSON data structure to the
+standard output or standard error (respectively), or (4) use the <b>print</b>
+or <b>eprint</b> keywords which immediately print an expression to standard
+output or standard error, respectively. Note that <tt>dump</tt>,
+<tt>edump</tt>, <tt>print</tt>, and <tt>eprint</tt> don&rsquo;t output records
+which participate in <tt>then</tt>-chaining; rather, they&rsquo;re just
+immediate prints to stdout/stderr. The <tt>printn</tt> and <tt>eprintn</tt>
+keywords are the same except that they don&rsquo;t print final newlines.
 
 <!-- ================================================================ -->
 <a id="Emit_statements_for_put"/><h3>Emit statements for put</h3>
