@@ -221,45 +221,6 @@ static cst_statement_handler_t handle_print;
 // * The child node must evaluate to boolean, although this is fully enforced only
 //   during stream processing.
 
-mlr_dsl_ast_node_t* extract_filterable_statement(mlr_dsl_ast_t* pnode, int type_inferencing) {
-	mlr_dsl_ast_node_t* proot = pnode->proot;
-
-	if (proot == NULL) {
-		fprintf(stderr,
-			"%s: internal coding error detected in file %s at line %d: null root node.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
-	if (proot->pchildren->phead == NULL) {
-		fprintf(stderr,
-			"%s: internal coding error detected in file %s at line %d: null left child node.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
-	if (proot->pchildren->phead->pnext != NULL) {
-		fprintf(stderr,
-			"%s: internal coding error detected in file %s at line %d: extraneous right child node.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
-
-	if (proot->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
-		fprintf(stderr,
-			"%s: internal coding error detected in file %s at line %d:\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		fprintf(stderr,
-			"expected node type %s but found %s.\n",
-			mlr_dsl_ast_node_describe_type(MD_AST_NODE_TYPE_STATEMENT_LIST),
-			mlr_dsl_ast_node_describe_type(proot->type));
-		exit(1);
-	}
-
-	mlr_dsl_ast_node_t* pleft = proot->pchildren->phead->pvvalue;
-
-	return pleft;
-}
-
-// xxx temp
 mlr_dsl_cst_t* mlr_dsl_cst_alloc_filterable(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	int context_flags = 0;
 	// The root node is not populated on empty-string input to the parser.
