@@ -19,6 +19,7 @@ PRE-RELEASE 4.6.0:
 ! xxxes
 
 ! greatly generalize filter: simply insist it end in a bare boolean ?
+  - disallow filter() inside mlr filter
 
 ----------------------------------------------------------------
 UT FOR 4.6.0:

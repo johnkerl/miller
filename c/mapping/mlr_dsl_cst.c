@@ -340,7 +340,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc_filterable(mlr_dsl_ast_t* ptop, int type_infere
 //                     text="z", type=string_literal.
 //                 text="6", type=strnum_literal.
 
-mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing) {
+mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing, int do_filter/*xxx temp*/) {
 	int context_flags = 0;
 	// The root node is not populated on empty-string input to the parser.
 	if (ptop->proot == NULL) {
