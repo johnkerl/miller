@@ -365,7 +365,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing, int 
 	pcst->pfmgr             = fmgr_alloc();
 	pcst->psubr_defsites    = lhmsv_alloc();
 	pcst->psubr_callsite_statements_to_resolve = sllv_alloc();
-	pcst->pfilter_evaluator = NULL;
+	pcst->pfilter_evaluator = NULL; // xxx rm
 
 	udf_defsite_state_t* pudf_defsite_state = NULL;
 	subr_defsite_t* psubr_defsite = NULL;
@@ -409,6 +409,8 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing, int 
 			break;
 
 		default:
+			// xxx check do_filter, do_exclude, pe->pnext == NULL
+			// xxx re-write this into a filter node
 			sllv_append(pcst->pmain_statements, mlr_dsl_cst_alloc_statement(pcst, pnode,
 				type_inferencing, context_flags));
 			break;
@@ -423,6 +425,8 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing, int 
 	// call t [subroutine not defined yet], and neither could call itself.)
 	fmgr_resolve_func_callsites(pcst->pfmgr);
 	mlr_dsl_cst_resolve_subr_callsites(pcst);
+
+	// xxx set up put/filter base-handler pfunc
 
 	return pcst;
 }
@@ -2105,6 +2109,9 @@ static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg) {
 }
 
 // ================================================================
+// xxx copy to ..._for_filter
+// xxx rename to ..._for_put
+
 void mlr_dsl_cst_handle_base_statement_list(
 	sllv_t*        pcst_statements,
 	variables_t*   pvars,
