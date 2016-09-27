@@ -995,14 +995,15 @@ In a few contexts, presented below, you can refer to the entire record as
 
 <p/> <b>Out-of-stream variables</b> accessed using the <tt>@</tt> prefix. These
 refer to data which persist from one record to the next, including in
-<tt>begin</tt> and <tt>end</tt> blocks. You use them to remember values across
+<tt>begin</tt> and <tt>end</tt> blocks (which execute before/after the record
+stream is consumed, respectively). You use them to remember values across
 records, such as sums, differences, counters, and so on.  In a few contexts,
 presented below, you can refer to the entire out-of-stream-variables collection
 as <tt>@*</tt>.
 
-<p/> <b>Local variables</b> limited to the current statements being executed:
-these include function arguments, bound variables in for loops, and explicitly
-declared <tt>local</tt> variables.
+<p/> <b>Local variables</b> are limited to the current statements being
+executed: these include function arguments, bound variables in for loops, and
+explicitly declared <tt>local</tt> variables.
 
 <p/> <b>Keywords</b> are not variables, but since their names are reserved, you
 cannot use these names for local variables.
@@ -1031,16 +1032,22 @@ through your input data stream. The mathematical constants, of course, do not
 change; <tt>ENV</tt> is populated from the system environment variables at the
 time Miller starts and is read-only for the remainder of program execution.
 
-<p/> Their <b>scope is global</b>: you can refer to them in any
-<tt>filter</tt> or <tt>put</tt> statement. Their values are assigned by the
-input-record reader:
+<p/> Their <b>scope is global</b>: you can refer to them in any <tt>filter</tt>
+or <tt>put</tt> statement. Their values are assigned by the input-record
+reader:
 
 POKI_RUN_COMMAND{{mlr --csv put '$nr = NR' data/a.csv}}HERE
 POKI_RUN_COMMAND{{mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv}}HERE
 
-<p/> These are all <b>read-only</b> for the <tt>mlr put</tt> and <tt>mlr filter</tt>
-DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may not be
-assigned to: <tt>NR=100</tt> is a syntax error.
+<p/> The <b>extent</b> is for the duration of the put/filter: in a
+<tt>begin</tt> statement (which executes before the first input record is
+consumed) you will find <tt>NR=1</tt> and in an <tt>end</tt>statement (which is
+executed after the last input record is consumed) you will find <tt>NR</tt> to
+be the total number of records ingested.
+
+<p/> These are all <b>read-only</b> for the <tt>mlr put</tt> and <tt>mlr
+filter</tt> DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may
+not be assigned to: <tt>NR=100</tt> is a syntax error.
 
 <p/> You can output built-in variables indirectly, by assigning them to a
 non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named <tt>nr</tt> to
@@ -1088,7 +1095,31 @@ are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
 <!-- ================================================================ -->
 <h3>Local variables</h3>
 
-<p/> xxx
+<p/>There are three kinds of local variables: arguments to
+functions/subroutines, variables bound within for-loops, and locals defined
+within control blocks.
+
+<p/>This example shows all three:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/local-example-1.sh)HERE
+
+Notes:
+
+<ul>
+
+<li/> Parameter names are bound to their arguments but can be reassigned, e.g.
+if there is a parameter named <tt>a</tt> then you can reassign the value of
+<tt>a</tt> to be something else within the function if you like.
+
+<li/> All argument-passing is positional rather than by name; arguments are passed by value, not by reference.
+
+<li/> If a for-loop variable is defined using <tt>local</tt> then it is scoped to that for-loop.
+
+<li/> xxx fencing
+
+<li/> xxx local/not in nested
+
+</ul>
 
 <!-- ================================================================ -->
 <h3>Scope and extent for local variables</h3>
@@ -1615,7 +1646,7 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/factorial-example.sh)HERE
 <li/> xxx missing return leads to absent-null (which xref). return value (single).
 
 <li/>
-xxx
+xxx rename
 <a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a>
 
 </ul>
@@ -1638,6 +1669,7 @@ xxx
 <li/> xxx recursive/mutually so ok. 
 <li/> xxx localvars as in fors. args may be reassigned.
 <li/> xxx xref to shared section for func/subr localvars (scope/extent/etc.)
+<li/> xxx rename
 <a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a>
 </ul>
 

@@ -3961,14 +3961,15 @@ In a few contexts, presented below, you can refer to the entire record as
 
 <p/> <b>Out-of-stream variables</b> accessed using the <tt>@</tt> prefix. These
 refer to data which persist from one record to the next, including in
-<tt>begin</tt> and <tt>end</tt> blocks. You use them to remember values across
+<tt>begin</tt> and <tt>end</tt> blocks (which execute before/after the record
+stream is consumed, respectively). You use them to remember values across
 records, such as sums, differences, counters, and so on.  In a few contexts,
 presented below, you can refer to the entire out-of-stream-variables collection
 as <tt>@*</tt>.
 
-<p/> <b>Local variables</b> limited to the current statements being executed:
-these include function arguments, bound variables in for loops, and explicitly
-declared <tt>local</tt> variables.
+<p/> <b>Local variables</b> are limited to the current statements being
+executed: these include function arguments, bound variables in for loops, and
+explicitly declared <tt>local</tt> variables.
 
 <p/> <b>Keywords</b> are not variables, but since their names are reserved, you
 cannot use these names for local variables.
@@ -4028,9 +4029,9 @@ through your input data stream. The mathematical constants, of course, do not
 change; <tt>ENV</tt> is populated from the system environment variables at the
 time Miller starts and is read-only for the remainder of program execution.
 
-<p/> Their <b>scope is global</b>: you can refer to them in any
-<tt>filter</tt> or <tt>put</tt> statement. Their values are assigned by the
-input-record reader:
+<p/> Their <b>scope is global</b>: you can refer to them in any <tt>filter</tt>
+or <tt>put</tt> statement. Their values are assigned by the input-record
+reader:
 
 <p/>
 <div class="pokipanel">
@@ -4057,9 +4058,15 @@ a,b,c,nr
 </div>
 <p/>
 
-<p/> These are all <b>read-only</b> for the <tt>mlr put</tt> and <tt>mlr filter</tt>
-DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may not be
-assigned to: <tt>NR=100</tt> is a syntax error.
+<p/> The <b>extent</b> is for the duration of the put/filter: in a
+<tt>begin</tt> statement (which executes before the first input record is
+consumed) you will find <tt>NR=1</tt> and in an <tt>end</tt>statement (which is
+executed after the last input record is consumed) you will find <tt>NR</tt> to
+be the total number of records ingested.
+
+<p/> These are all <b>read-only</b> for the <tt>mlr put</tt> and <tt>mlr
+filter</tt> DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may
+not be assigned to: <tt>NR=100</tt> is a syntax error.
 
 <p/> You can output built-in variables indirectly, by assigning them to a
 non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named <tt>nr</tt> to
@@ -4120,7 +4127,58 @@ are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
 <!-- ================================================================ -->
 <a id="Local_variables"/><h3>Local variables</h3>
 
-<p/> xxx
+<p/>There are three kinds of local variables: arguments to
+functions/subroutines, variables bound within for-loops, and locals defined
+within control blocks.
+
+<p/>This example shows all three:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr seqgen --start 1 --stop 10 then put '
+  func f(a, b) {
+      r = 0.0;
+      for (local i = 0; i &lt; 6; i += 1) {
+          local u = urand();
+          r += u;
+      }
+      r /= 6;
+      return a + (b - a) * r;
+  }
+  $o = f(10, 20);
+'
+i=1,o=15.035565
+i=2,o=15.706897
+i=3,o=13.714627
+i=4,o=14.004734
+i=5,o=16.240376
+i=6,o=16.062333
+i=7,o=14.775898
+i=8,o=14.532329
+i=9,o=13.730547
+i=10,o=15.133123
+</pre>
+</div>
+<p/>
+
+Notes:
+
+<ul>
+
+<li/> Parameter names are bound to their arguments but can be reassigned, e.g.
+if there is a parameter named <tt>a</tt> then you can reassign the value of
+<tt>a</tt> to be something else within the function if you like.
+
+<li/> All argument-passing is positional rather than by name; arguments are passed by value, not by reference.
+
+<li/> If a for-loop variable is defined using <tt>local</tt> then it is scoped to that for-loop.
+
+<li/> xxx fencing
+
+<li/> xxx local/not in nested
+
+</ul>
 
 <!-- ================================================================ -->
 <a id="Scope_and_extent_for_local_variables"/><h3>Scope and extent for local variables</h3>
@@ -6296,7 +6354,7 @@ wye pan 5 0.5732889198020006  0.8636244699032729  211.387310 120
 <li/> xxx missing return leads to absent-null (which xref). return value (single).
 
 <li/>
-xxx
+xxx rename
 <a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a>
 
 </ul>
@@ -6319,6 +6377,7 @@ xxx
 <li/> xxx recursive/mutually so ok. 
 <li/> xxx localvars as in fors. args may be reassigned.
 <li/> xxx xref to shared section for func/subr localvars (scope/extent/etc.)
+<li/> xxx rename
 <a href="#Scope_and_extent_for_local_variables">Scope and extent for local variables</a>
 </ul>
 
