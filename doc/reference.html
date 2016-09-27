@@ -3772,7 +3772,92 @@ x_y_corr
 <!-- ================================================================ -->
 <a id="Expressions_from_files"/><h3>Expressions from files</h3>
 
-<p/> xxx type up. inline; -f; -f/-e; multiples of each; order of evaluation.
+<p/>The simplest way to enter expressions for <tt>put</tt> and <tt>filter</tt> is on the command line, e.g.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small put '$xy = sqrt($x**2 + $y**2)'
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.805299
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.920998
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.395376
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.404317
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small put 'func f(a, b) { return sqrt(a**2 + b**2) } $xy = f($x, $y)'
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.805299
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.920998
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.395376
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.404317
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
+</pre>
+</div>
+<p/>
+
+<p/>You may, though, find it convenient to put expressions into files for reuse, and read them
+<b>using the -f option</b>. For example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/fe-example-3.mlr
+func f(a, b) {
+  return sqrt(a**2 + b**2)
+}
+$xy = f($x, $y)
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small put -f data/fe-example-3.mlr
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.805299
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.920998
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.395376
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.404317
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
+</pre>
+</div>
+<p/>
+
+<p/>If you have some of the logic in a file and you want to write the rest on the command line, you
+can <b>use the -f and -e options</b>:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/fe-example-4.mlr
+func f(a, b) {
+  return sqrt(a**2 + b**2)
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f($x, $y)'
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,xy=0.805299
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,xy=0.920998
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,xy=0.395376
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,xy=0.404317
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
+</pre>
+</div>
+<p/>
+
+<p/>A suggested use-case here is defining functions in files, and calling them from command-line expressions.
+
+<p/>You can have one or more <tt>-f</tt> expressions (maybe one function per
+file, for example) and one or more <tt>-e</tt> expressions on the command line.
+All the <tt>-f</tt>&rsquo;s will be evaluated in order, then all the
+<tt>-e</tt>&rsquo;s will be evaluated in order.
 
 <!-- ================================================================ -->
 <a id="Semicolons,_newlines,_and_curly_braces"/><h3>Semicolons, newlines, and curly braces</h3>
@@ -3862,41 +3947,31 @@ mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptable
 
 <p/>Miller has the following kinds of variables:
 
-<p/> <b>Built-in variables</b> such as <tt>NF</tt>, <tt>NF</tt>, <tt>FILENAME</tt>, <tt>PI</tt>, and <tt>E</tt>.
-  These are all capital letters and are read-only (although some of them change value from one record to another).
-<p/> <b>Fields of stream records</b>, accessed using the <tt>$</tt> prefix. These refer to fieds of the current
-  data-stream record.
-<p/> <b>Out-of-stream variables</b> accessed using the <tt>@</tt> prefix. These refer to data which persist from
-  one record to the next, including in <tt>begin</tt> and <tt>end</tt> blocks.
-<p/> <b>Local variables</b> limited to the current statements being executed: these include function arguments,
-  bound variables in for loops, and explicitly declared <tt>local</tt> variables.
-<p/> <b>Keywords</b> are not variables, but since their names are reserved, you cannot use these names for local
-  variables.
+<p/> <b>Built-in variables</b> such as <tt>NF</tt>, <tt>NF</tt>,
+<tt>FILENAME</tt>, <tt>PI</tt>, and <tt>E</tt>.  These are all capital letters
+and are read-only (although some of them change value from one record to
+another).
 
-<p/> xxx under construction
+<p/> <b>Fields of stream records</b>, accessed using the <tt>$</tt> prefix.
+These refer to fields of the current data-stream record. For example, in
+<tt>echo x=1,y=2 | mlr put '$z = $x + $y'</tt>, <tt>$x</tt> and <tt>$y</tt>
+refer to input fields, and <tt>$z</tt> refers to a new, computed output field.
+In a few contexts, presented below, you can refer to the entire record as
+<tt>$*</tt>.
 
-<p/><b>Fields within stream records</b>, as discussed above:
+<p/> <b>Out-of-stream variables</b> accessed using the <tt>@</tt> prefix. These
+refer to data which persist from one record to the next, including in
+<tt>begin</tt> and <tt>end</tt> blocks. You use them to remember values across
+records, such as sums, differences, counters, and so on.  In a few contexts,
+presented below, you can refer to the entire out-of-stream-variables collection
+as <tt>@*</tt>.
 
-<ul>
+<p/> <b>Local variables</b> limited to the current statements being executed:
+these include function arguments, bound variables in for loops, and explicitly
+declared <tt>local</tt> variables.
 
-<li/> These are prefixed with a dollar sign, such as <tt>$quantity</tt>,
-<tt>$hostname</tt>, etc.
-
-<li/> Their names depend on the contents of your input data stream, and their
-values change from one record to the next as Miller scans through your input
-data stream.
-
-<li/> They are scoped to the current record of the <tt>filter</tt> or
-<tt>put</tt> command in which they appear.
-
-<li/> These are read-write: you can do <tt>$y=2*$x</tt>, <tt>$x=$x+1</tt>, etc.
-
-<li/> Records are Miller&rsquo;s output: field names present in the input
-stream are passed through to output (written to standard output) unless fields
-are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
-<tt>put -q</tt>, etc. Simply assign a value to a field and it will be output.
-
-</ul>
+<p/> <b>Keywords</b> are not variables, but since their names are reserved, you
+cannot use these names for local variables.
 
 <!-- ================================================================ -->
 <a id="Built-in_variables"/><h3>Built-in variables</h3>
@@ -3997,13 +4072,16 @@ was ingested.
 <a id="Field_names"/><h3>Field names</h3>
 
 <p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> and <a
-href="#put"><tt>put</tt></a> expressions, even though they don&rsquo;t appear
-in the data stream. For integer-indexed data, this looks like
-<tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>.  Likewise, enclose string literals in
-double quotes in <tt>filter</tt> expressions even though they don&rsquo;t
-appear in file data.  In particular, <tt>mlr filter '$x=="abc"'</tt> passes
-through the record <tt>x=abc</tt>.  If field names have special characters such
-as <tt>.</tt> then you can use braces, e.g. <tt>'${field.name}'</tt>.
+href="#put"><tt>put</tt></a> expressions, even though the dollar signs
+don&rsquo;t appear in the data stream. For integer-indexed data, this looks
+like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>, except that Miller allows
+non-numeric names such as <tt>$quantity</tt> or <tt>$hostname</tt>.  (Likewise,
+enclose string literals in double quotes in <tt>filter</tt> expressions even
+though they don&rsquo;t appear in file data.  In particular, <tt>mlr filter
+'$x=="abc"'</tt> passes through the record <tt>x=abc</tt>.)
+
+<p/>If field names have <b>special characters</b> such as <tt>.</tt> then you can use
+braces, e.g. <tt>'${field.name}'</tt>.
 
 <p/>You may also use a <b>computed field name</b> in square brackets, e.g.
 
@@ -4023,6 +4101,21 @@ s=green,t=blue,a=3,b=4,green_blue=12
 </pre>
 </div>
 <p/>
+
+<p/> The names of record fields depend on the contents of your input data stream, and their
+values change from one record to the next as Miller scans through your input
+data stream.
+
+<p/> Their <b>extent</b> is limited to the current record; their <b>scope</b>
+is the <tt>filter</tt> or <tt>put</tt> command in which they appear.
+
+<p/> These are <b>read-write</b>: you can do <tt>$y=2*$x</tt>,
+<tt>$x=$x+1</tt>, etc.
+
+<p/> Records are Miller&rsquo;s output: field names present in the input
+stream are passed through to output (written to standard output) unless fields
+are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
+<tt>put -q</tt>, etc. Simply assign a value to a field and it will be output.
 
 <!-- ================================================================ -->
 <a id="Local_variables"/><h3>Local variables</h3>
@@ -4055,7 +4148,7 @@ evaluates to string or integer: e.g.  <tt>@sum[NR] = $a + $b</tt>,
 only when you assign to them.
 
 <p/> Just as for field names in stream records, if you want to define out-of-stream variables
-with special characters such as <tt>.</tt> then you can use braces, e.g. <tt>'@{variable.name}["index"]'</tt>.
+with <b>special characters</b> such as <tt>.</tt> then you can use braces, e.g. <tt>'@{variable.name}["index"]'</tt>.
 
 <p/>You may use a <b>computed key </b> in square brackets, e.g.
 
