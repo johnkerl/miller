@@ -95,44 +95,10 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "booleans without following curly braces do nothing except side effects (e.g.\n");
 	fprintf(o, "regex-captures into \\1, \\2, etc.).\n");
 	fprintf(o, "\n");
-	fprintf(o, "Options:\n");
-	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
-	fprintf(o, "    full transparency on the precedence and associativity rules of Miller's\n");
-	fprintf(o, "    grammar.\n");
-	fprintf(o, "-t: Print low-level parser-trace to stderr.\n");
-	fprintf(o, "-q: Does not include the modified record in the output stream. Useful for when\n");
-	fprintf(o, "    all desired output is in begin and/or end blocks.\n");
-	fprintf(o, "-S: Keeps field values, or literals in the expression, as strings with no type \n");
-	fprintf(o, "    inference to int or float.\n");
-	fprintf(o, "-F: Keeps field values, or literals in the expression, as strings or floats\n");
-	fprintf(o, "    with no inference to int.\n");
-	fprintf(o, "--oflatsep {string}: Separator to use when flattening multi-level @-variables\n");
-	fprintf(o, "    to output records for emit. Default \"%s\".\n", DEFAULT_OOSVAR_FLATTEN_SEPARATOR);
-	fprintf(o, "-f {filename}: the DSL expression is taken from the specified file rather\n");
-	fprintf(o, "    than from the command line. Outer single quotes wrapping the expression\n");
-	fprintf(o, "    should not be placed in the file. If -f is specified more than once,\n");
-	fprintf(o, "    all input files specified using -f are concatenated to produce the expression.\n");
-	fprintf(o, "    (For example, you can define functions in one file and call them from another.)\n");
-	fprintf(o, "-e {expression}: You can use this after -f to add an expression. Example use\n");
-	fprintf(o, "    case: define functions/subroutines in a file you specify with -f, then call\n");
-	fprintf(o, "    them with an expression you specify with -e.\n");
-	fprintf(o, "--no-fflush: for emit, tee, print, and dump, don't call fflush() after every\n");
-	fprintf(o, "    record.\n");
-	fprintf(o, "Any of the output-format command-line flags (see %s -h). Example: using\n",
-		MLR_GLOBALS.bargv0);
-	fprintf(o, "  %s --icsv --opprint ... then put --ojson 'tee > \"mytap-\".$a.\".dat\", $*' then ...\n",
-		MLR_GLOBALS.bargv0);
-	fprintf(o, "the input is CSV, the output is pretty-print tabular, but the tee-file output\n");
-	fprintf(o, "is written in JSON format.\n");
+
+	shared_usage(o, argv0, verb);
+
 	fprintf(o, "\n");
-	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
-	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");
-	fprintf(o, "use braces, e.g. '${field.name}'. Miller built-in variables are\n");
-	fprintf(o, "NF NR FNR FILENUM FILENAME PI E, and ENV[\"namegoeshere\"] to access environment\n");
-	fprintf(o, "variables. The environment-variable name may be an expression, e.g. a field\n");
-	fprintf(o, "value.\n");
-	fprintf(o, "\n");
-	fprintf(o, "Use # to comment to end of line.\n");
 	fprintf(o, "Examples:\n");
 	fprintf(o, "  %s %s '$y = log10($x); $z = sqrt($y)'\n", argv0, verb);
 	fprintf(o, "  %s %s '$x>0.0 { $y=log10($x); $z=sqrt($y) }' # does {...} only if $x > 0.0\n", argv0, verb);
@@ -169,33 +135,12 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 // ----------------------------------------------------------------
 static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options] {expression}\n", argv0, verb);
+	// xxx elaborate ... more to the story now
 	fprintf(o, "Prints records for which {expression} evaluates to true.\n");
 	fprintf(o, "\n");
-	fprintf(o, "Options:\n");
-	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
-	fprintf(o, "    full transparency on the precedence and associativity rules of Miller's\n");
-	fprintf(o, "    grammar.\n");
-	fprintf(o, "-t: Print low-level parser-trace to stderr.\n");
-	fprintf(o, "-S: Keeps field values, or literals in the expression, as strings with no type \n");
-	fprintf(o, "    inference to int or float.\n");
-	fprintf(o, "-F: Keeps field values, or literals in the expression, as strings or floats\n");
-	fprintf(o, "    with no inference to int.\n");
-	fprintf(o, "-x: Prints records for which {expression} evaluates to false.\n");
-	fprintf(o, "-f {filename}: the DSL expression is taken from the specified file rather\n");
-	fprintf(o, "    than from the command line. Outer single quotes wrapping the expression\n");
-	fprintf(o, "    should not be placed in the file. If -f is specified more than once,\n");
-	fprintf(o, "    all input files specified using -f are concatenated to produce the expression.\n");
-	fprintf(o, "-e {expression}: You can use this after -f to add an expression. Example use\n");
-	fprintf(o, "    case: define functions/subroutines in a file you specify with -f, then call\n");
-	fprintf(o, "    them with an expression you specify with -e.\n");
-	fprintf(o, "\n");
-	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
-	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");
-	fprintf(o, "use braces, e.g. '${field.name}'. Miller built-in variables are\n");
-	fprintf(o, "NF NR FNR FILENUM FILENAME PI E, and ENV[\"namegoeshere\"] to access environment\n");
-	fprintf(o, "variables. The environment-variable name may be an expression, e.g. a field value.\n");
-	fprintf(o, "\n");
-	fprintf(o, "Use # to comment to end of line.\n");
+
+	shared_usage(o, argv0, verb);
+
 	fprintf(o, "\n");
 	fprintf(o, "Examples:\n");
 	fprintf(o, "  %s %s 'log10($count) > 4.0'\n", argv0, verb);
@@ -213,11 +158,52 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
 	fprintf(o, "including function list. Or \"%s -f\". Please also also \"%s grep\" which is\n", argv0, argv0);
 	fprintf(o, "useful when you don't yet know which field name(s) you're looking for.\n");
-	shared_usage(o, argv0, verb);
 }
 
 static void shared_usage(FILE* o, char* argv0, char* verb) {
-	// xxx temp
+	fprintf(o, "Options:\n");
+	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
+	fprintf(o, "    full transparency on the precedence and associativity rules of Miller's\n");
+	fprintf(o, "    grammar.\n");
+	fprintf(o, "-t: Print low-level parser-trace to stderr.\n");
+	if (streq(verb, "put")) {
+		fprintf(o, "-q: Does not include the modified record in the output stream. Useful for when\n");
+		fprintf(o, "    all desired output is in begin and/or end blocks.\n");
+	}
+	if (streq(verb, "filter")) {
+		fprintf(o, "-x: Prints records for which {expression} evaluates to false.\n");
+	}
+	fprintf(o, "-S: Keeps field values, or literals in the expression, as strings with no type \n");
+	fprintf(o, "    inference to int or float.\n");
+	fprintf(o, "-F: Keeps field values, or literals in the expression, as strings or floats\n");
+	fprintf(o, "    with no inference to int.\n");
+	fprintf(o, "--oflatsep {string}: Separator to use when flattening multi-level @-variables\n");
+	fprintf(o, "    to output records for emit. Default \"%s\".\n", DEFAULT_OOSVAR_FLATTEN_SEPARATOR);
+	fprintf(o, "-f {filename}: the DSL expression is taken from the specified file rather\n");
+	fprintf(o, "    than from the command line. Outer single quotes wrapping the expression\n");
+	fprintf(o, "    should not be placed in the file. If -f is specified more than once,\n");
+	fprintf(o, "    all input files specified using -f are concatenated to produce the expression.\n");
+	fprintf(o, "    (For example, you can define functions in one file and call them from another.)\n");
+	fprintf(o, "-e {expression}: You can use this after -f to add an expression. Example use\n");
+	fprintf(o, "    case: define functions/subroutines in a file you specify with -f, then call\n");
+	fprintf(o, "    them with an expression you specify with -e.\n");
+	fprintf(o, "--no-fflush: for emit, tee, print, and dump, don't call fflush() after every\n");
+	fprintf(o, "    record.\n");
+	fprintf(o, "Any of the output-format command-line flags (see %s -h). Example: using\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(o, "  %s --icsv --opprint ... then put --ojson 'tee > \"mytap-\".$a.\".dat\", $*' then ...\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(o, "the input is CSV, the output is pretty-print tabular, but the tee-file output\n");
+	fprintf(o, "is written in JSON format.\n");
+	fprintf(o, "\n");
+	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
+	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");
+	fprintf(o, "use braces, e.g. '${field.name}'. Miller built-in variables are\n");
+	fprintf(o, "NF NR FNR FILENUM FILENAME PI E, and ENV[\"namegoeshere\"] to access environment\n");
+	fprintf(o, "variables. The environment-variable name may be an expression, e.g. a field\n");
+	fprintf(o, "value.\n");
+	fprintf(o, "\n");
+	fprintf(o, "Use # to comment to end of line.\n");
 }
 
 // ----------------------------------------------------------------
@@ -259,7 +245,6 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	}
 	char* verb = argv[argi++];
 
-	// xxx temp
 	if (streq(verb, "filter"))
 		do_final_filter = TRUE;
 
@@ -294,13 +279,14 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 		} else if (streq(argv[argi], "-t")) {
 			trace_parse = TRUE;
 			argi += 1;
-		} else if (streq(argv[argi], "-q")) {
+		} else if (streq(argv[argi], "-q") && streq(verb, "put")) {
+
 			put_output_disabled = TRUE;
 			argi += 1;
-		} else if (streq(argv[argi], "-x")) {
-			do_final_filter = TRUE;
+		} else if (streq(argv[argi], "-x") && streq(verb, "filter")) {
 			negate_final_filter = TRUE;
 			argi += 1;
+
 		} else if (streq(argv[argi], "-S")) {
 			type_inferencing = TYPE_INFER_STRING_ONLY;
 			argi += 1;

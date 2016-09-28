@@ -20,6 +20,7 @@ PRE-RELEASE 4.6.0:
 
 ! greatly generalize filter: simply insist it end in a bare boolean ?
   - disallow filter() inside mlr filter
+  - many more UT cases for filter now
 
 ----------------------------------------------------------------
 UT FOR 4.6.0:
