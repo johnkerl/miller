@@ -27,7 +27,7 @@ libmapping_la_SOURCES=	\
 			mapper_most_or_least_frequent.c \
 			mapper_nest.c \
 			mapper_nothing.c \
-			mapper_put.c \
+			mapper_put_or_filter.c \
 			mapper_regularize.c \
 			mapper_rename.c \
 			mapper_reorder.c \
