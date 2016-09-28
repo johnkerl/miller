@@ -12488,6 +12488,18 @@ mlr --from ./reg_test/input/abixy filter
 
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
 
+mlr --from ./reg_test/input/abixy filter 
+  local a = 5;
+  local b = 7;
+  a <= NR && NR <= b
+
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+
+mlr --from ./reg_test/input/abixy filter filter false
+mlr filter: expressions must not also contain the "filter" keyword.
+
 
 ================================================================
 DSL FUNCTIONAL TESTS

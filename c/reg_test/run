@@ -1005,6 +1005,8 @@ run_mlr --from $indir/abixy filter '
   a <= NR && NR <= b
 '
 
+mlr_expect_fail --from $indir/abixy filter 'filter false'
+
 # ----------------------------------------------------------------
 announce DSL FUNCTIONAL TESTS
 
