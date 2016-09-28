@@ -1000,6 +1000,14 @@ run_mlr --from $indir/abixy filter '
 '
 
 run_mlr --from $indir/abixy filter '
+  subr s(n) {
+    print "NR is ".n
+  }
+  call s(NR);
+  false
+'
+
+run_mlr --from $indir/abixy filter '
   local a = 5;
   local b = 7;
   a <= NR && NR <= b
