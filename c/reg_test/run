@@ -999,6 +999,12 @@ run_mlr --from $indir/abixy filter '
   f(NR) == 5
 '
 
+run_mlr --from $indir/abixy filter '
+  local a = 5;
+  local b = 7;
+  a <= NR && NR <= b
+'
+
 # ----------------------------------------------------------------
 announce DSL FUNCTIONAL TESTS
 

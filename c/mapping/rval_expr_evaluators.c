@@ -54,12 +54,6 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 			break;
 
 		case MD_AST_NODE_TYPE_BOUND_VARIABLE:
-			if (context_flags & IN_MLR_FILTER) {
-				fprintf(stderr,
-					"%s: statements involving bound variables are not valid in %s filter.\n",
-					MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
-				exit(1);
-			}
 			return rval_evaluator_alloc_from_bound_variable(pnode->text);
 			break;
 
@@ -98,12 +92,6 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	} else {
 		if ((pnode->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME) && (pnode->type != MD_AST_NODE_TYPE_OPERATOR)) {
-			if (context_flags & IN_MLR_FILTER) {
-				fprintf(stderr,
-					"%s: statements in %s filter should only be single expressions evaluating to boolean.\n",
-					MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
-				exit(1);
-			}
 			fprintf(stderr, "%s: internal coding error detected in file %s at line %d (node type %s).\n",
 				MLR_GLOBALS.bargv0, __FILE__, __LINE__, mlr_dsl_ast_node_describe_type(pnode->type));
 			exit(1);
