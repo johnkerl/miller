@@ -33,7 +33,7 @@ typedef void cst_statement_handler_t(
 // ----------------------------------------------------------------
 static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode);
 static mlr_dsl_cst_statement_t* alloc_final_filter_statement(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int negate_filter, int type_inferencing, int context_flags);
+	int negate_final_filter, int type_inferencing, int context_flags);
 
 static mlr_dsl_cst_statement_t* alloc_blank();
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
@@ -67,7 +67,7 @@ static cst_statement_allocator_t alloc_bare_boolean;
 static mlr_dsl_cst_statement_t* alloc_final_filter(
 	mlr_dsl_cst_t*      pcst,
 	mlr_dsl_ast_node_t* pnode,
-	int                 negate_filter,
+	int                 negate_final_filter,
 	int                 type_inferencing,
 	int                 context_flags);
 
@@ -142,6 +142,7 @@ static cst_statement_handler_t handle_unset;
 static cst_statement_handler_t handle_unset_all;
 
 static cst_statement_handler_t handle_filter;
+static cst_statement_handler_t handle_final_filter;
 static cst_statement_handler_t handle_conditional_block;
 static cst_statement_handler_t handle_while;
 static cst_statement_handler_t handle_do_while;
@@ -349,7 +350,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc_filterable(mlr_dsl_ast_t* ptop, int type_infere
 //                 text="6", type=strnum_literal.
 
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing,
-	int do_filter, int negate_filter/*xxx temp*/)
+	int do_filter, int negate_final_filter/*xxx temp*/)
 {
 	int context_flags = 0;
 	// The root node is not populated on empty-string input to the parser.
@@ -423,7 +424,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing,
 			// xxx do_exclude
 			if (do_filter && pe->pnext == NULL) {
 				sllv_append(pcst->pmain_statements, alloc_final_filter_statement(
-					pcst, pnode, negate_filter, type_inferencing, context_flags));
+					pcst, pnode, negate_final_filter, type_inferencing, context_flags));
 			} else {
 				sllv_append(pcst->pmain_statements, mlr_dsl_cst_alloc_statement(pcst, pnode,
 					type_inferencing, context_flags));
@@ -530,7 +531,7 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 // ----------------------------------------------------------------
 // xxx comment
 static mlr_dsl_cst_statement_t* alloc_final_filter_statement(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int negate_filter, int type_inferencing, int context_flags)
+	int negate_final_filter, int type_inferencing, int context_flags)
 {
 	switch(pnode->type) {
 
@@ -574,7 +575,7 @@ static mlr_dsl_cst_statement_t* alloc_final_filter_statement(mlr_dsl_cst_t* pcst
 
 	default:
 		// xxx comment
-		return alloc_final_filter(pcst, pnode, negate_filter, type_inferencing, context_flags);
+		return alloc_final_filter(pcst, pnode, negate_final_filter, type_inferencing, context_flags);
 		break;
 	}
 }
@@ -876,6 +877,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->ptriple_for_continuation_evaluator   = NULL;
 	pstatement->ptriple_for_update_statements        = NULL;
 	pstatement->pframe                               = NULL;
+	pstatement->negate_final_filter                  = FALSE;
 
 	return pstatement;
 }
@@ -1629,12 +1631,12 @@ static mlr_dsl_cst_statement_t* alloc_bare_boolean(mlr_dsl_cst_t* pcst, mlr_dsl_
 
 // ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_final_filter(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int negate_filter, int type_inferencing, int context_flags)
+	int negate_final_filter, int type_inferencing, int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
-	// xxx negate
-	pstatement->pnode_handler = handle_filter;
+	pstatement->pnode_handler = handle_final_filter;
+	pstatement->negate_final_filter = negate_final_filter;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pnode, pcst->pfmgr, type_inferencing, context_flags);
 	return pstatement;
 }
@@ -2568,6 +2570,23 @@ static void handle_filter(
 	if (mv_is_non_null(&val)) {
 		mv_set_boolean_strict(&val);
 		*pcst_outputs->pshould_emit_rec = val.u.boolv;
+	} else {
+		*pcst_outputs->pshould_emit_rec = FALSE;
+	}
+}
+
+// ----------------------------------------------------------------
+static void handle_final_filter(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
+
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	if (mv_is_non_null(&val)) {
+		mv_set_boolean_strict(&val);
+		*pcst_outputs->pshould_emit_rec = val.u.boolv ^ pstatement->negate_final_filter;
 	} else {
 		*pcst_outputs->pshould_emit_rec = FALSE;
 	}

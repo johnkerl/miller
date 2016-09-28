@@ -188,6 +188,8 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// for any kind of statement-block
 	bind_stack_frame_t* pframe;
 
+	int negate_final_filter;
+
 } mlr_dsl_cst_statement_t;
 
 // ----------------------------------------------------------------
