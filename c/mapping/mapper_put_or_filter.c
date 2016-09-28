@@ -14,6 +14,7 @@
 
 #define DEFAULT_OOSVAR_FLATTEN_SEPARATOR ":"
 
+// ----------------------------------------------------------------
 typedef struct _mapper_put_or_filter_state_t {
 	char*          mlr_dsl_expression;
 	char*          comment_stripped_mlr_dsl_expression;
@@ -36,9 +37,18 @@ typedef struct _mapper_put_or_filter_state_t {
 	int            negate_final_filter; // mlr filter -x
 } mapper_put_or_filter_state_t;
 
+// ----------------------------------------------------------------
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
+static void   mapper_filter_usage(FILE* o, char* argv0, char* verb);
+static void          shared_usage(FILE* o, char* argv0, char* verb);
 
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
+
+static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* __);
+
+static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 
 static mapper_t* mapper_put_or_filter_alloc(
@@ -63,6 +73,13 @@ mapper_setup_t mapper_put_setup = {
 	.verb = "put",
 	.pusage_func = mapper_put_usage,
 	.pparse_func = mapper_put_parse_cli,
+	.ignores_input = FALSE,
+};
+
+mapper_setup_t mapper_fixter_setup = {
+	.verb = "fixter",
+	.pusage_func = mapper_filter_usage,
+	.pparse_func = mapper_filter_parse_cli,
 	.ignores_input = FALSE,
 };
 
@@ -143,10 +160,80 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "including function list. Or \"%s -f\".\n", argv0);
 	fprintf(o, "Please see in particular:\n");
 	fprintf(o, "  http://www.johnkerl.org/miller/doc/reference.html#put\n");
+	shared_usage(o, argv0, verb);
+}
+
+// xxx conditionally accept -q
+// xxx conditionally accept -x
+
+// ----------------------------------------------------------------
+static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "Usage: %s %s [options] {expression}\n", argv0, verb);
+	fprintf(o, "Prints records for which {expression} evaluates to true.\n");
+	fprintf(o, "\n");
+	fprintf(o, "Options:\n");
+	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
+	fprintf(o, "    full transparency on the precedence and associativity rules of Miller's\n");
+	fprintf(o, "    grammar.\n");
+	fprintf(o, "-t: Print low-level parser-trace to stderr.\n");
+	fprintf(o, "-S: Keeps field values, or literals in the expression, as strings with no type \n");
+	fprintf(o, "    inference to int or float.\n");
+	fprintf(o, "-F: Keeps field values, or literals in the expression, as strings or floats\n");
+	fprintf(o, "    with no inference to int.\n");
+	fprintf(o, "-x: Prints records for which {expression} evaluates to false.\n");
+	fprintf(o, "-f {filename}: the DSL expression is taken from the specified file rather\n");
+	fprintf(o, "    than from the command line. Outer single quotes wrapping the expression\n");
+	fprintf(o, "    should not be placed in the file. If -f is specified more than once,\n");
+	fprintf(o, "    all input files specified using -f are concatenated to produce the expression.\n");
+	fprintf(o, "-e {expression}: You can use this after -f to add an expression. Example use\n");
+	fprintf(o, "    case: define functions/subroutines in a file you specify with -f, then call\n");
+	fprintf(o, "    them with an expression you specify with -e.\n");
+	fprintf(o, "\n");
+	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
+	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");
+	fprintf(o, "use braces, e.g. '${field.name}'. Miller built-in variables are\n");
+	fprintf(o, "NF NR FNR FILENUM FILENAME PI E, and ENV[\"namegoeshere\"] to access environment\n");
+	fprintf(o, "variables. The environment-variable name may be an expression, e.g. a field value.\n");
+	fprintf(o, "\n");
+	fprintf(o, "Use # to comment to end of line.\n");
+	fprintf(o, "\n");
+	fprintf(o, "Examples:\n");
+	fprintf(o, "  %s %s 'log10($count) > 4.0'\n", argv0, verb);
+	fprintf(o, "  %s %s 'FNR == 2          (second record in each file)'\n", argv0, verb);
+	fprintf(o, "  %s %s 'urand() < 0.001'  (subsampling)\n", argv0, verb);
+	fprintf(o, "  %s %s '$color != \"blue\" && $value > 4.2'\n", argv0, verb);
+	fprintf(o, "  %s %s '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'\n", argv0, verb);
+	fprintf(o, "  %s %s '($name =~ \"^sys.*east$\") || ($name =~ \"^dev.[0-9]+\"i)'\n", argv0, verb);
+	fprintf(o, "  %s %s '\n", argv0, verb);
+	fprintf(o, "    NR == 1 ||\n");
+	fprintf(o, "   #NR == 2 ||\n");
+	fprintf(o, "    NR == 3\n");
+	fprintf(o, "  '\n");
+	fprintf(o, "\n");
+	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
+	fprintf(o, "including function list. Or \"%s -f\". Please also also \"%s grep\" which is\n", argv0, argv0);
+	fprintf(o, "useful when you don't yet know which field name(s) you're looking for.\n");
+	shared_usage(o, argv0, verb);
+}
+
+static void shared_usage(FILE* o, char* argv0, char* verb) {
+	// xxx temp
 }
 
 // ----------------------------------------------------------------
+static mapper_t* mapper_filter_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* pmain_writer_opts)
+{
+	return shared_parse_cli(pargi, argc, argv, _, pmain_writer_opts);
+}
+
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
+	cli_reader_opts_t* _, cli_writer_opts_t* pmain_writer_opts)
+{
+	return shared_parse_cli(pargi, argc, argv, _, pmain_writer_opts);
+}
+
+static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* pmain_writer_opts)
 {
 	slls_t* expression_filenames              = slls_alloc();
