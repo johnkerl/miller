@@ -18,16 +18,12 @@ PRE-RELEASE 4.6.0:
 ! valgrinds
 ! xxxes
 
-! greatly generalize filter: simply insist it end in a bare boolean ?
-  - disallow filter() inside mlr filter; UT that
-  - many more UT cases for filter now
-
 ----------------------------------------------------------------
 UT FOR 4.6.0:
 
 * UT/mlh/mld func @ filter
 * disallow filter() inside filter
-* insist on final bare boolean; allow others before that (incl. begin/end)
+* insist on final bare boolean; allow others before that (incl. begin/end) (many tests)
 * UT/mlh/mld -e, and mixed -f and -e, for filter/put
 * no begin/end/func/subr within subr
 * print/printn zary
@@ -50,6 +46,10 @@ To file:
 * note mlr -l -L -f -F -k -K rather prominently at mlh.
 * mlh/mld func @ filter
 * absent vs. empty; unset $x vs. $x="". no null keyword.
+
+filter expansion:
+* mlh
+* mld main sections; also search around elsewhere
 
 vars:
 * clarify absent-null for variable assignments esp local. xref to homogeneity feature.
