@@ -30,23 +30,28 @@ typedef struct _mapper_put_state_t {
 
 	bind_stack_t*  pbind_stack;
 	loop_stack_t*  ploop_stack;
-	int            outer_filter;
 
-	int            do_filter;  // xxx temp merge
-	int            negate_filter; // xxx temp merge
+	int            put_output_enabled;
+	int            do_final_filter;  // xxx temp merge
+	int            negate_final_filter; // xxx temp merge
 } mapper_put_state_t;
 
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
+
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
+
 static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
-	mlr_dsl_ast_t* past, int outer_filter,
-	int do_filter, // xxx temp
-	int negate_filter, // xxx temp
+	mlr_dsl_ast_t* past,
+	int put_output_enabled, // xxx temp
+	int do_final_filter, // xxx temp
+	int negate_final_filter, // xxx temp
 	int type_inferencing, char* oosvar_flatten_separator,
 	int flush_every_record, cli_writer_opts_t* pwriter_opts, cli_writer_opts_t* pmain_writer_opts);
+
 static void      mapper_put_free(mapper_t* pmapper);
-static sllv_t*   mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+
+static sllv_t*   mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_put_setup = {
@@ -143,9 +148,9 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 	slls_t* expression_strings                = slls_alloc();
 	char* mlr_dsl_expression                  = NULL;
 	char* comment_stripped_mlr_dsl_expression = NULL;
-	int   outer_filter                        = TRUE;
-	int   do_filter                           = FALSE; // xxx temp
-	int   negate_filter                       = FALSE; // xxx temp
+	int   put_output_enabled                  = TRUE;
+	int   do_final_filter                     = FALSE; // xxx temp
+	int   negate_final_filter                 = FALSE; // xxx temp
 	int   type_inferencing                    = TYPE_INFER_STRING_FLOAT_INT;
 	int   print_ast                           = FALSE;
 	int   trace_parse                         = FALSE;
@@ -194,14 +199,14 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 			trace_parse = TRUE;
 			argi += 1;
 		} else if (streq(argv[argi], "-q")) {
-			outer_filter = FALSE;
+			put_output_enabled = FALSE;
 			argi += 1;
 		} else if (streq(argv[argi], "--filter")) {
-			do_filter = TRUE;
+			do_final_filter = TRUE;
 			argi += 1;
 		} else if (streq(argv[argi], "-x")) {
-			do_filter = TRUE;
-			negate_filter = TRUE;
+			do_final_filter = TRUE;
+			negate_final_filter = TRUE;
 			argi += 1;
 		} else if (streq(argv[argi], "-S")) {
 			type_inferencing = TYPE_INFER_STRING_ONLY;
@@ -270,15 +275,17 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 
 	*pargi = argi;
 	return mapper_put_alloc(mlr_dsl_expression, comment_stripped_mlr_dsl_expression,
-		past, outer_filter, do_filter, negate_filter, type_inferencing, oosvar_flatten_separator, flush_every_record,
+		past, put_output_enabled, do_final_filter, negate_final_filter,
+		type_inferencing, oosvar_flatten_separator, flush_every_record,
 		pwriter_opts, pmain_writer_opts);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
-	mlr_dsl_ast_t* past, int outer_filter,
-	int do_filter, // xxx temp
-	int negate_filter, // xxx temp
+	mlr_dsl_ast_t* past,
+	int put_output_enabled, // xxx temp
+	int do_final_filter, // xxx temp
+	int negate_final_filter, // xxx temp
 	int type_inferencing, char* oosvar_flatten_separator,
 	int flush_every_record, cli_writer_opts_t* pwriter_opts, cli_writer_opts_t* pmain_writer_opts)
 {
@@ -287,9 +294,9 @@ static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripp
 	pstate->mlr_dsl_expression = mlr_dsl_expression;
 	pstate->comment_stripped_mlr_dsl_expression = comment_stripped_mlr_dsl_expression;
 	pstate->past                     = past;
-	pstate->pcst                     = mlr_dsl_cst_alloc(past, type_inferencing, do_filter, negate_filter);
+	pstate->pcst                     = mlr_dsl_cst_alloc(past, type_inferencing, do_final_filter, negate_final_filter);
 	pstate->at_begin                 = TRUE;
-	pstate->outer_filter             = outer_filter;
+	pstate->put_output_enabled       = put_output_enabled;
 	pstate->poosvars                 = mlhmmv_alloc();
 	pstate->oosvar_flatten_separator = oosvar_flatten_separator;
 	pstate->flush_every_record       = flush_every_record;
@@ -301,7 +308,7 @@ static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripp
 
 	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate       = (void*)pstate;
-	pmapper->pprocess_func = mapper_put_process;
+	pmapper->pprocess_func = mapper_put_or_filter_process;
 	pmapper->pfree_func    = mapper_put_free;
 
 	return pmapper;
@@ -373,7 +380,7 @@ static void mapper_put_free(mapper_t* pmapper) {
 // which the current stream-record was obtained.
 // ----------------------------------------------------------------
 
-static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
 
 	string_array_t* pregex_captures = NULL; // May be set to non-null on evaluation
@@ -463,7 +470,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 
 	mlr_dsl_cst_handle_base_statement_list(pstate->pcst->pmain_statements, &variables, &cst_outputs);
 
-	if (should_emit_rec && pstate->outer_filter) {
+	if (should_emit_rec && pstate->put_output_enabled) {
 		// Write the output fields from the typed overlay back to the lrec.
 		for (lhmsmve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
 			char* output_field_name = pe->key;
@@ -483,7 +490,7 @@ static sllv_t* mapper_put_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 	lhmsmv_free(ptyped_overlay);
 	string_array_free(pregex_captures);
 
-	if (should_emit_rec && pstate->outer_filter) {
+	if (should_emit_rec && pstate->put_output_enabled) {
 		sllv_append(poutrecs, pinrec);
 	} else {
 		lrec_free(pinrec);
