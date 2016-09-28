@@ -529,7 +529,8 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 }
 
 // ----------------------------------------------------------------
-// xxx comment
+// mlr put and mlr filter are almost entirely the same code. The key difference is that the final
+// statement for the latter must be a bare boolean expression.
 static mlr_dsl_cst_statement_t* alloc_final_filter_statement(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int negate_final_filter, int type_inferencing, int context_flags)
 {
@@ -574,7 +575,6 @@ static mlr_dsl_cst_statement_t* alloc_final_filter_statement(mlr_dsl_cst_t* pcst
 		break;
 
 	default:
-		// xxx comment
 		return alloc_final_filter(pcst, pnode, negate_final_filter, type_inferencing, context_flags);
 		break;
 	}
