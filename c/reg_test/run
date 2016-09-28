@@ -976,6 +976,22 @@ mention oosvars etc. in mlr filter
 mlr_expect_fail filter -v 'break'
 mlr_expect_fail filter -v 'continue'
 
+mention expanded filter
+
+run_mlr --from $indir/abixy filter '
+  begin {
+    @avoid = 3
+  }
+  NR != @avoid
+'
+
+run_mlr --from $indir/abixy filter -x '
+  begin {
+    @avoid = 3
+  }
+  NR != @avoid
+'
+
 # ----------------------------------------------------------------
 announce DSL FUNCTIONAL TESTS
 
