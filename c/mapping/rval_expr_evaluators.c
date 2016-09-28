@@ -89,11 +89,6 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
-		if (context_flags & IN_MLR_FILTER) {
-			fprintf(stderr, "%s: statements involving $-variables are not valid in %s filter.\n",
-				MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
-			exit(1);
-		}
 		return rval_evaluator_alloc_from_oosvar_keylist(pnode, pfmgr, type_inferencing, context_flags);
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
