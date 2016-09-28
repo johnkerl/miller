@@ -33,7 +33,7 @@ typedef struct _mapper_put_state_t {
 	int            outer_filter;
 
 	int            do_filter;  // xxx temp merge
-	int            do_exclude; // xxx temp merge
+	int            negate_filter; // xxx temp merge
 } mapper_put_state_t;
 
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
@@ -42,7 +42,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
 	mlr_dsl_ast_t* past, int outer_filter,
 	int do_filter, // xxx temp
-	int do_exclude, // xxx temp
+	int negate_filter, // xxx temp
 	int type_inferencing, char* oosvar_flatten_separator,
 	int flush_every_record, cli_writer_opts_t* pwriter_opts, cli_writer_opts_t* pmain_writer_opts);
 static void      mapper_put_free(mapper_t* pmapper);
@@ -145,7 +145,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 	char* comment_stripped_mlr_dsl_expression = NULL;
 	int   outer_filter                        = TRUE;
 	int   do_filter                           = FALSE; // xxx temp
-	int   do_exclude                          = FALSE; // xxx temp
+	int   negate_filter                       = FALSE; // xxx temp
 	int   type_inferencing                    = TYPE_INFER_STRING_FLOAT_INT;
 	int   print_ast                           = FALSE;
 	int   trace_parse                         = FALSE;
@@ -201,7 +201,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 			argi += 1;
 		} else if (streq(argv[argi], "-x")) {
 			do_filter = TRUE;
-			do_exclude = TRUE;
+			negate_filter = TRUE;
 			argi += 1;
 		} else if (streq(argv[argi], "-S")) {
 			type_inferencing = TYPE_INFER_STRING_ONLY;
@@ -270,7 +270,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 
 	*pargi = argi;
 	return mapper_put_alloc(mlr_dsl_expression, comment_stripped_mlr_dsl_expression,
-		past, outer_filter, do_filter, do_exclude, type_inferencing, oosvar_flatten_separator, flush_every_record,
+		past, outer_filter, do_filter, negate_filter, type_inferencing, oosvar_flatten_separator, flush_every_record,
 		pwriter_opts, pmain_writer_opts);
 }
 
@@ -278,7 +278,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
 	mlr_dsl_ast_t* past, int outer_filter,
 	int do_filter, // xxx temp
-	int do_exclude, // xxx temp
+	int negate_filter, // xxx temp
 	int type_inferencing, char* oosvar_flatten_separator,
 	int flush_every_record, cli_writer_opts_t* pwriter_opts, cli_writer_opts_t* pmain_writer_opts)
 {
@@ -287,7 +287,7 @@ static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripp
 	pstate->mlr_dsl_expression = mlr_dsl_expression;
 	pstate->comment_stripped_mlr_dsl_expression = comment_stripped_mlr_dsl_expression;
 	pstate->past                     = past;
-	pstate->pcst                     = mlr_dsl_cst_alloc(past, type_inferencing, do_filter);
+	pstate->pcst                     = mlr_dsl_cst_alloc(past, type_inferencing, do_filter, negate_filter);
 	pstate->at_begin                 = TRUE;
 	pstate->outer_filter             = outer_filter;
 	pstate->poosvars                 = mlhmmv_alloc();
