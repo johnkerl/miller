@@ -992,6 +992,13 @@ run_mlr --from $indir/abixy filter -x '
   NR != @avoid
 '
 
+run_mlr --from $indir/abixy filter '
+  func f(n) {
+    return n - 1
+  }
+  f(NR) == 5
+'
+
 # ----------------------------------------------------------------
 announce DSL FUNCTIONAL TESTS
 

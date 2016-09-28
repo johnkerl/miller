@@ -12480,6 +12480,14 @@ mlr --from ./reg_test/input/abixy filter -x
 
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 
+mlr --from ./reg_test/input/abixy filter 
+  func f(n) {
+    return n - 1
+  }
+  f(NR) == 5
+
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+
 
 ================================================================
 DSL FUNCTIONAL TESTS
