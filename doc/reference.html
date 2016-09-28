@@ -4202,7 +4202,10 @@ functions/subroutines, <b>variables bound within for-loops</b>, and
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr seqgen --start 1 --stop 10 then put '
+$ # Here I'm using a specified random-number seed so this example always
+# produces the same output for this web document: in everyday practice we
+# would leave off the --seed 12345 part.
+mlr --seed 12345 seqgen --start 1 --stop 10 then put '
   func f(a, b) {                          # function arguments a and b
       r = 0.0;                            # local r scoped to the function
       for (local i = 0; i &lt; 6; i += 1) {  # local i scoped to the for-loop
@@ -4215,16 +4218,16 @@ $ mlr seqgen --start 1 --stop 10 then put '
   local o = f(10, 20);                    # local to the top-level scope
   $o = o;
 '
-i=1,o=15.295385
-i=2,o=16.325162
-i=3,o=15.073703
-i=4,o=15.460435
-i=5,o=14.731866
-i=6,o=15.909446
-i=7,o=14.421644
-i=8,o=14.079942
-i=9,o=16.024715
-i=10,o=14.974465
+i=1,o=14.662901
+i=2,o=17.881983
+i=3,o=14.586560
+i=4,o=16.402409
+i=5,o=16.336598
+i=6,o=14.622701
+i=7,o=15.983753
+i=8,o=13.852177
+i=9,o=15.472899
+i=10,o=15.643912
 </pre>
 </div>
 <p/>
