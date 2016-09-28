@@ -220,10 +220,12 @@ typedef struct _mlr_dsl_cst_t {
 // For mlr filter, which takes a subset of the syntax of mlr put. Namely, a single top-level
 // bare-boolean statement.
 
-mlr_dsl_cst_t* mlr_dsl_cst_alloc_filterable(mlr_dsl_ast_t* ptop, int type_inferencing);
+mlr_dsl_cst_t* mlr_dsl_cst_alloc_filterable(mlr_dsl_ast_t* ptop, int type_inferencing); // xxx rm
 
+// do_final_filter is FALSE for mlr put, TRUE for mlr filter.
+// negate_final_filter is TRUE for mlr filter -x.
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing,
-	int do_filter, int negate_filter); // xxx temp
+	int do_final_filter, int negate_final_filter);
 
 mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags);

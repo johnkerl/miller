@@ -230,6 +230,7 @@ static cst_statement_handler_t handle_print;
 // * The child node must evaluate to boolean, although this is fully enforced only
 //   during stream processing.
 
+// xxx rm
 mlr_dsl_cst_t* mlr_dsl_cst_alloc_filterable(mlr_dsl_ast_t* ptop, int type_inferencing) {
 	int context_flags = 0;
 	// The root node is not populated on empty-string input to the parser.
@@ -350,7 +351,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc_filterable(mlr_dsl_ast_t* ptop, int type_infere
 //                 text="6", type=strnum_literal.
 
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing,
-	int do_filter, int negate_final_filter/*xxx temp*/)
+	int do_final_filter, int negate_final_filter) // for mlr filter
 {
 	int context_flags = 0;
 	// The root node is not populated on empty-string input to the parser.
@@ -420,9 +421,8 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing,
 			break;
 
 		default:
-			// Last statement of mlr filter must be a bare boolean.
-			// xxx do_exclude
-			if (do_filter && pe->pnext == NULL) {
+			// The last statement of mlr filter must be a bare boolean.
+			if (do_final_filter && pe->pnext == NULL) {
 				sllv_append(pcst->pmain_statements, alloc_final_filter_statement(
 					pcst, pnode, negate_final_filter, type_inferencing, context_flags));
 			} else {
