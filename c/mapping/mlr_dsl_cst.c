@@ -260,7 +260,7 @@ static cst_statement_handler_t handle_print;
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing,
 	int do_final_filter, int negate_final_filter) // for mlr filter
 {
-	int context_flags = 0;
+	int context_flags = do_final_filter ? IN_MLR_FILTER : 0;
 	// The root node is not populated on empty-string input to the parser.
 	if (ptop->proot == NULL) {
 		if (do_final_filter) {
@@ -446,6 +446,12 @@ static mlr_dsl_cst_statement_t* alloc_final_filter_statement(mlr_dsl_cst_t* pcst
 {
 	switch(pnode->type) {
 
+	case MD_AST_NODE_TYPE_FILTER:
+		fprintf(stderr, "%s filter: expressions must not also contain the \"filter\" keyword.\n",
+			MLR_GLOBALS.bargv0);
+		exit(1);
+		break;
+
 	case MD_AST_NODE_TYPE_FUNC_DEF:
 	case MD_AST_NODE_TYPE_SUBR_DEF:
 	case MD_AST_NODE_TYPE_BEGIN:
@@ -476,7 +482,6 @@ static mlr_dsl_cst_statement_t* alloc_final_filter_statement(mlr_dsl_cst_t* pcst
 	case MD_AST_NODE_TYPE_EMIT:
 	case MD_AST_NODE_TYPE_EMITP_LASHED:
 	case MD_AST_NODE_TYPE_EMIT_LASHED:
-	case MD_AST_NODE_TYPE_FILTER:
 	case MD_AST_NODE_TYPE_DUMP:
 	case MD_AST_NODE_TYPE_PRINT:
 	case MD_AST_NODE_TYPE_PRINTN:
@@ -723,6 +728,11 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 	case MD_AST_NODE_TYPE_FILTER:
 		if (context_flags & IN_FUNC_DEF) {
 			fprintf(stderr, "%s: filter statements are not valid within func blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
+		if (context_flags & IN_MLR_FILTER) {
+			fprintf(stderr, "%s filter: expressions must not also contain the \"filter\" keyword.\n",
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
