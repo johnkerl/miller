@@ -15,7 +15,6 @@ libmapping_la_SOURCES=	\
 			mapper_check.c \
 			mapper_cut.c \
 			mapper_decimate.c \
-			mapper_filter.c \
 			mapper_grep.c \
 			mapper_group_like.c \
 			mapper_having_fields.c \
