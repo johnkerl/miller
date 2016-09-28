@@ -14,7 +14,7 @@
 
 #define DEFAULT_OOSVAR_FLATTEN_SEPARATOR ":"
 
-typedef struct _mapper_put_state_t {
+typedef struct _mapper_put_or_filter_state_t {
 	char*          mlr_dsl_expression;
 	char*          comment_stripped_mlr_dsl_expression;
 
@@ -31,25 +31,30 @@ typedef struct _mapper_put_state_t {
 	bind_stack_t*  pbind_stack;
 	loop_stack_t*  ploop_stack;
 
-	int            put_output_enabled;
-	int            do_final_filter;  // xxx temp merge
-	int            negate_final_filter; // xxx temp merge
-} mapper_put_state_t;
+	int            put_output_disabled; // mlr put -q
+	int            do_final_filter;     // mlr filter
+	int            negate_final_filter; // mlr filter -x
+} mapper_put_or_filter_state_t;
 
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 
 static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 
-static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
-	mlr_dsl_ast_t* past,
-	int put_output_enabled, // xxx temp
-	int do_final_filter, // xxx temp
-	int negate_final_filter, // xxx temp
-	int type_inferencing, char* oosvar_flatten_separator,
-	int flush_every_record, cli_writer_opts_t* pwriter_opts, cli_writer_opts_t* pmain_writer_opts);
+static mapper_t* mapper_put_or_filter_alloc(
+	char*              mlr_dsl_expression,
+	char*              comment_stripped_mlr_dsl_expression,
+	mlr_dsl_ast_t*     past,
+	int                put_output_disabled, // mlr put -q
+	int                do_final_filter,     // mlr filter
+	int                negate_final_filter, // mlr filter -x
+	int                type_inferencing,
+	char*              oosvar_flatten_separator,
+	int                flush_every_record,
+	cli_writer_opts_t* pwriter_opts,
+	cli_writer_opts_t* pmain_writer_opts);
 
-static void      mapper_put_free(mapper_t* pmapper);
+static void      mapper_put_or_filter_free(mapper_t* pmapper);
 
 static sllv_t*   mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -148,9 +153,9 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 	slls_t* expression_strings                = slls_alloc();
 	char* mlr_dsl_expression                  = NULL;
 	char* comment_stripped_mlr_dsl_expression = NULL;
-	int   put_output_enabled                  = TRUE;
-	int   do_final_filter                     = FALSE; // xxx temp
-	int   negate_final_filter                 = FALSE; // xxx temp
+	int   put_output_disabled                 = FALSE;
+	int   do_final_filter                     = FALSE;
+	int   negate_final_filter                 = FALSE;
 	int   type_inferencing                    = TYPE_INFER_STRING_FLOAT_INT;
 	int   print_ast                           = FALSE;
 	int   trace_parse                         = FALSE;
@@ -199,7 +204,7 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 			trace_parse = TRUE;
 			argi += 1;
 		} else if (streq(argv[argi], "-q")) {
-			put_output_enabled = FALSE;
+			put_output_disabled = TRUE;
 			argi += 1;
 		} else if (streq(argv[argi], "--filter")) {
 			do_final_filter = TRUE;
@@ -274,29 +279,34 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 		mlr_dsl_ast_print(past);
 
 	*pargi = argi;
-	return mapper_put_alloc(mlr_dsl_expression, comment_stripped_mlr_dsl_expression,
-		past, put_output_enabled, do_final_filter, negate_final_filter,
+	return mapper_put_or_filter_alloc(mlr_dsl_expression, comment_stripped_mlr_dsl_expression,
+		past, put_output_disabled, do_final_filter, negate_final_filter,
 		type_inferencing, oosvar_flatten_separator, flush_every_record,
 		pwriter_opts, pmain_writer_opts);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripped_mlr_dsl_expression,
-	mlr_dsl_ast_t* past,
-	int put_output_enabled, // xxx temp
-	int do_final_filter, // xxx temp
-	int negate_final_filter, // xxx temp
-	int type_inferencing, char* oosvar_flatten_separator,
-	int flush_every_record, cli_writer_opts_t* pwriter_opts, cli_writer_opts_t* pmain_writer_opts)
+static mapper_t* mapper_put_or_filter_alloc(
+	char*              mlr_dsl_expression,
+	char*              comment_stripped_mlr_dsl_expression,
+	mlr_dsl_ast_t*     past,
+	int                put_output_disabled, // mlr put -q
+	int                do_final_filter,     // mlr filter
+	int                negate_final_filter, // mlr filter -x
+	int                type_inferencing,
+	char*              oosvar_flatten_separator,
+	int                flush_every_record,
+	cli_writer_opts_t* pwriter_opts,
+	cli_writer_opts_t* pmain_writer_opts)
 {
-	mapper_put_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_state_t));
+	mapper_put_or_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_or_filter_state_t));
 	// Retain the string contents along with any in-pointers from the AST/CST
 	pstate->mlr_dsl_expression = mlr_dsl_expression;
 	pstate->comment_stripped_mlr_dsl_expression = comment_stripped_mlr_dsl_expression;
 	pstate->past                     = past;
 	pstate->pcst                     = mlr_dsl_cst_alloc(past, type_inferencing, do_final_filter, negate_final_filter);
 	pstate->at_begin                 = TRUE;
-	pstate->put_output_enabled       = put_output_enabled;
+	pstate->put_output_disabled      = put_output_disabled;
 	pstate->poosvars                 = mlhmmv_alloc();
 	pstate->oosvar_flatten_separator = oosvar_flatten_separator;
 	pstate->flush_every_record       = flush_every_record;
@@ -309,13 +319,13 @@ static mapper_t* mapper_put_alloc(char* mlr_dsl_expression, char* comment_stripp
 	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate       = (void*)pstate;
 	pmapper->pprocess_func = mapper_put_or_filter_process;
-	pmapper->pfree_func    = mapper_put_free;
+	pmapper->pfree_func    = mapper_put_or_filter_free;
 
 	return pmapper;
 }
 
-static void mapper_put_free(mapper_t* pmapper) {
-	mapper_put_state_t* pstate = pmapper->pvstate;
+static void mapper_put_or_filter_free(mapper_t* pmapper) {
+	mapper_put_or_filter_state_t* pstate = pmapper->pvstate;
 
 	free(pstate->mlr_dsl_expression);
 	free(pstate->comment_stripped_mlr_dsl_expression);
@@ -381,7 +391,7 @@ static void mapper_put_free(mapper_t* pmapper) {
 // ----------------------------------------------------------------
 
 static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	mapper_put_state_t* pstate = (mapper_put_state_t*)pvstate;
+	mapper_put_or_filter_state_t* pstate = (mapper_put_or_filter_state_t*)pvstate;
 
 	string_array_t* pregex_captures = NULL; // May be set to non-null on evaluation
 	sllv_t* poutrecs = sllv_alloc();
@@ -470,7 +480,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 
 	mlr_dsl_cst_handle_base_statement_list(pstate->pcst->pmain_statements, &variables, &cst_outputs);
 
-	if (should_emit_rec && pstate->put_output_enabled) {
+	if (should_emit_rec && !pstate->put_output_disabled) {
 		// Write the output fields from the typed overlay back to the lrec.
 		for (lhmsmve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
 			char* output_field_name = pe->key;
@@ -490,7 +500,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 	lhmsmv_free(ptyped_overlay);
 	string_array_free(pregex_captures);
 
-	if (should_emit_rec && pstate->put_output_enabled) {
+	if (should_emit_rec && !pstate->put_output_disabled) {
 		sllv_append(poutrecs, pinrec);
 	} else {
 		lrec_free(pinrec);
