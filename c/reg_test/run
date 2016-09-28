@@ -973,8 +973,6 @@ mlr_expect_fail put -v 'break'
 mlr_expect_fail put -v 'continue'
 
 mention oosvars etc. in mlr filter
-mlr_expect_fail filter -v '@x > 3'
-mlr_expect_fail filter -v 'x > 3'
 mlr_expect_fail filter -v 'break'
 mlr_expect_fail filter -v 'continue'
 

@@ -356,6 +356,11 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing,
 	int context_flags = 0;
 	// The root node is not populated on empty-string input to the parser.
 	if (ptop->proot == NULL) {
+		if (do_final_filter) {
+			fprintf(stderr, "%s: filter statement must not be empty.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		ptop->proot = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
 	}
 

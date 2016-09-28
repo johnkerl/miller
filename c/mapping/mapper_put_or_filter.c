@@ -76,8 +76,8 @@ mapper_setup_t mapper_put_setup = {
 	.ignores_input = FALSE,
 };
 
-mapper_setup_t mapper_fixter_setup = {
-	.verb = "fixter",
+mapper_setup_t mapper_filt2r_setup = {
+	.verb = "filt2r",
 	.pusage_func = mapper_filter_usage,
 	.pparse_func = mapper_filter_parse_cli,
 	.ignores_input = FALSE,
@@ -259,6 +259,10 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	}
 	char* verb = argv[argi++];
 
+	// xxx temp
+	if (streq(verb, "filter"))
+		do_final_filter = TRUE;
+
 	cli_writer_opts_init(pwriter_opts);
 	for (; argi < argc; /* variable increment: 1 or 2 depending on flag */) {
 
@@ -292,9 +296,6 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 			argi += 1;
 		} else if (streq(argv[argi], "-q")) {
 			put_output_disabled = TRUE;
-			argi += 1;
-		} else if (streq(argv[argi], "--filter")) {
-			do_final_filter = TRUE;
 			argi += 1;
 		} else if (streq(argv[argi], "-x")) {
 			do_final_filter = TRUE;
@@ -480,11 +481,11 @@ static void mapper_put_or_filter_free(mapper_t* pmapper) {
 static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_put_or_filter_state_t* pstate = (mapper_put_or_filter_state_t*)pvstate;
 
-	string_array_t* pregex_captures = NULL; // May be set to non-null on evaluation
 	sllv_t* poutrecs = sllv_alloc();
 	int should_emit_rec = TRUE;
 
 	if (pstate->at_begin) {
+		string_array_t* pregex_captures = NULL; // May be set to non-null on evaluation
 
 		variables_t variables = (variables_t) {
 			.pinrec           = NULL,
@@ -507,11 +508,14 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.pwriter_opts             = pstate->pwriter_opts,
 		};
 
+		string_array_free(pregex_captures);
 		mlr_dsl_cst_handle_base_statement_list(pstate->pcst->pbegin_statements, &variables, &cst_outputs);
 		pstate->at_begin = FALSE;
 	}
 
 	if (pinrec == NULL) { // End of input stream
+		string_array_t* pregex_captures = NULL; // May be set to non-null on evaluation
+
 		variables_t variables = (variables_t) {
 			.pinrec           = NULL,
 			.ptyped_overlay   = NULL,
@@ -541,6 +545,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 	}
 
 	lhmsmv_t* ptyped_overlay = lhmsmv_alloc();
+		string_array_t* pregex_captures = NULL; // May be set to non-null on evaluation
 
 	should_emit_rec = TRUE;
 
