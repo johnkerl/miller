@@ -32,6 +32,8 @@ typedef void cst_statement_handler_t(
 
 // ----------------------------------------------------------------
 static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode);
+static mlr_dsl_cst_statement_t* alloc_final_filter_statement(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags);
 
 static mlr_dsl_cst_statement_t* alloc_blank();
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
@@ -62,6 +64,7 @@ static cst_statement_allocator_t alloc_continue;
 static cst_statement_allocator_t alloc_filter;
 
 static cst_statement_allocator_t alloc_bare_boolean;
+static cst_statement_allocator_t alloc_final_filter;
 
 static cst_statement_allocator_t alloc_tee;
 static cst_statement_allocator_t alloc_emitf;
@@ -409,10 +412,15 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing, int 
 			break;
 
 		default:
-			// xxx check do_filter, do_exclude, pe->pnext == NULL
-			// xxx re-write this into a filter node
-			sllv_append(pcst->pmain_statements, mlr_dsl_cst_alloc_statement(pcst, pnode,
-				type_inferencing, context_flags));
+			// Last statement of mlr filter must be a bare boolean.
+			// xxx do_exclude
+			if (do_filter && pe->pnext == NULL) {
+				sllv_append(pcst->pmain_statements, alloc_final_filter_statement(
+					pcst, pnode, type_inferencing, context_flags));
+			} else {
+				sllv_append(pcst->pmain_statements, mlr_dsl_cst_alloc_statement(pcst, pnode,
+					type_inferencing, context_flags));
+			}
 			break;
 		}
 	}
@@ -510,6 +518,58 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	}
 
 	free(pcst);
+}
+
+// ----------------------------------------------------------------
+// xxx comment
+static mlr_dsl_cst_statement_t* alloc_final_filter_statement(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
+	switch(pnode->type) {
+
+	case MD_AST_NODE_TYPE_FUNC_DEF:
+	case MD_AST_NODE_TYPE_SUBR_DEF:
+	case MD_AST_NODE_TYPE_BEGIN:
+	case MD_AST_NODE_TYPE_END:
+	case MD_AST_NODE_TYPE_RETURN_VALUE:
+	case MD_AST_NODE_TYPE_RETURN_VOID:
+	case MD_AST_NODE_TYPE_SUBR_CALLSITE:
+	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK:
+	case MD_AST_NODE_TYPE_IF_HEAD:
+	case MD_AST_NODE_TYPE_WHILE:
+	case MD_AST_NODE_TYPE_DO_WHILE:
+	case MD_AST_NODE_TYPE_FOR_SREC:
+	case MD_AST_NODE_TYPE_FOR_OOSVAR:
+	case MD_AST_NODE_TYPE_TRIPLE_FOR:
+	case MD_AST_NODE_TYPE_BREAK:
+	case MD_AST_NODE_TYPE_CONTINUE:
+	case MD_AST_NODE_TYPE_LOCAL:
+	case MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT:
+	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
+	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:
+	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:
+	case MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+	case MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT:
+	case MD_AST_NODE_TYPE_UNSET:
+	case MD_AST_NODE_TYPE_TEE:
+	case MD_AST_NODE_TYPE_EMITF:
+	case MD_AST_NODE_TYPE_EMITP:
+	case MD_AST_NODE_TYPE_EMIT:
+	case MD_AST_NODE_TYPE_EMITP_LASHED:
+	case MD_AST_NODE_TYPE_EMIT_LASHED:
+	case MD_AST_NODE_TYPE_FILTER:
+	case MD_AST_NODE_TYPE_DUMP:
+	case MD_AST_NODE_TYPE_PRINT:
+	case MD_AST_NODE_TYPE_PRINTN:
+		fprintf(stderr, "%s: filter expressions must end in a final boolean statement.\n", MLR_GLOBALS.bargv0);
+		exit(1);
+		break;
+
+	default:
+		// xxx comment
+		return alloc_final_filter(pcst, pnode, type_inferencing, context_flags);
+		break;
+	}
 }
 
 // ----------------------------------------------------------------
@@ -1556,6 +1616,17 @@ static mlr_dsl_cst_statement_t* alloc_bare_boolean(mlr_dsl_cst_t* pcst, mlr_dsl_
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	pstatement->pnode_handler = handle_bare_boolean;
+	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pnode, pcst->pfmgr, type_inferencing, context_flags);
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
+static mlr_dsl_cst_statement_t* alloc_final_filter(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	pstatement->pnode_handler = handle_filter;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pnode, pcst->pfmgr, type_inferencing, context_flags);
 	return pstatement;
 }
