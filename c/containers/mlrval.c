@@ -2244,7 +2244,7 @@ mv_t matches_no_precomp_func(mv_t* pval1, mv_t* pval2, string_array_t** ppregex_
 	const size_t nmatchmax = 10; // Capture-groups \1 through \9 supported, along with entire-string match
 	regmatch_t matches[nmatchmax];
 	if (regmatch_or_die(&regex, sstr, nmatchmax, matches)) {
-		if (ppregex_captures != NULL)
+		if (ppregex_captures != NULL && *ppregex_captures != NULL)
 			save_regex_captures(ppregex_captures, pval1->u.strv, matches, nmatchmax);
 		regfree(&regex);
 		mv_free(pval1);

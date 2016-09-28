@@ -1251,24 +1251,34 @@ Options:
     full transparency on the precedence and associativity rules of Miller's
     grammar.
 -t: Print low-level parser-trace to stderr.
+-x: Prints records for which {expression} evaluates to false.
 -S: Keeps field values, or literals in the expression, as strings with no type
     inference to int or float.
 -F: Keeps field values, or literals in the expression, as strings or floats
     with no inference to int.
--x: Prints records for which {expression} evaluates to false.
+--oflatsep {string}: Separator to use when flattening multi-level @-variables
+    to output records for emit. Default ":".
 -f {filename}: the DSL expression is taken from the specified file rather
     than from the command line. Outer single quotes wrapping the expression
     should not be placed in the file. If -f is specified more than once,
     all input files specified using -f are concatenated to produce the expression.
+    (For example, you can define functions in one file and call them from another.)
 -e {expression}: You can use this after -f to add an expression. Example use
     case: define functions/subroutines in a file you specify with -f, then call
     them with an expression you specify with -e.
+--no-fflush: for emit, tee, print, and dump, don't call fflush() after every
+    record.
+Any of the output-format command-line flags (see mlr -h). Example: using
+  mlr --icsv --opprint ... then put --ojson 'tee &gt; "mytap-".$a.".dat", $*' then ...
+the input is CSV, the output is pretty-print tabular, but the tee-file output
+is written in JSON format.
 
 Please use a dollar sign for field names and double-quotes for string
 literals. If field names have special characters such as "." then you might
 use braces, e.g. '${field.name}'. Miller built-in variables are
 NF NR FNR FILENUM FILENAME PI E, and ENV["namegoeshere"] to access environment
-variables. The environment-variable name may be an expression, e.g. a field value.
+variables. The environment-variable name may be an expression, e.g. a field
+value.
 
 Use # to comment to end of line.
 
@@ -2239,6 +2249,7 @@ variables. The environment-variable name may be an expression, e.g. a field
 value.
 
 Use # to comment to end of line.
+
 Examples:
   mlr put '$y = log10($x); $z = sqrt($y)'
   mlr put '$x&gt;0.0 { $y=log10($x); $z=sqrt($y) }' # does {...} only if $x &gt; 0.0
@@ -2266,6 +2277,42 @@ Please see http://johnkerl.org/miller/doc/reference.html for more information
 including function list. Or "mlr -f".
 Please see in particular:
   http://www.johnkerl.org/miller/doc/reference.html#put
+Options:
+-v: First prints the AST (abstract syntax tree) for the expression, which gives
+    full transparency on the precedence and associativity rules of Miller's
+    grammar.
+-t: Print low-level parser-trace to stderr.
+-q: Does not include the modified record in the output stream. Useful for when
+    all desired output is in begin and/or end blocks.
+-S: Keeps field values, or literals in the expression, as strings with no type
+    inference to int or float.
+-F: Keeps field values, or literals in the expression, as strings or floats
+    with no inference to int.
+--oflatsep {string}: Separator to use when flattening multi-level @-variables
+    to output records for emit. Default ":".
+-f {filename}: the DSL expression is taken from the specified file rather
+    than from the command line. Outer single quotes wrapping the expression
+    should not be placed in the file. If -f is specified more than once,
+    all input files specified using -f are concatenated to produce the expression.
+    (For example, you can define functions in one file and call them from another.)
+-e {expression}: You can use this after -f to add an expression. Example use
+    case: define functions/subroutines in a file you specify with -f, then call
+    them with an expression you specify with -e.
+--no-fflush: for emit, tee, print, and dump, don't call fflush() after every
+    record.
+Any of the output-format command-line flags (see mlr -h). Example: using
+  mlr --icsv --opprint ... then put --ojson 'tee &gt; "mytap-".$a.".dat", $*' then ...
+the input is CSV, the output is pretty-print tabular, but the tee-file output
+is written in JSON format.
+
+Please use a dollar sign for field names and double-quotes for string
+literals. If field names have special characters such as "." then you might
+use braces, e.g. '${field.name}'. Miller built-in variables are
+NF NR FNR FILENUM FILENAME PI E, and ENV["namegoeshere"] to access environment
+variables. The environment-variable name may be an expression, e.g. a field
+value.
+
+Use # to comment to end of line.
 </pre>
 </div>
 <p/>
@@ -4168,16 +4215,16 @@ $ mlr seqgen --start 1 --stop 10 then put '
   local o = f(10, 20);                    # local to the top-level scope
   $o = o;
 '
-i=1,o=16.835520
-i=2,o=15.265576
-i=3,o=15.254853
-i=4,o=14.062365
-i=5,o=15.703872
-i=6,o=14.805455
-i=7,o=15.014121
-i=8,o=14.229247
-i=9,o=16.536008
-i=10,o=15.912648
+i=1,o=15.295385
+i=2,o=16.325162
+i=3,o=15.073703
+i=4,o=15.460435
+i=5,o=14.731866
+i=6,o=15.909446
+i=7,o=14.421644
+i=8,o=14.079942
+i=9,o=16.024715
+i=10,o=14.974465
 </pre>
 </div>
 <p/>

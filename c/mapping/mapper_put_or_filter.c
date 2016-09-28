@@ -76,8 +76,8 @@ mapper_setup_t mapper_put_setup = {
 	.ignores_input = FALSE,
 };
 
-mapper_setup_t mapper_filt2r_setup = {
-	.verb = "filt2r",
+mapper_setup_t mapper_filter_setup = {
+	.verb = "filter",
 	.pusage_func = mapper_filter_usage,
 	.pparse_func = mapper_filter_parse_cli,
 	.ignores_input = FALSE,
@@ -545,7 +545,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 	}
 
 	lhmsmv_t* ptyped_overlay = lhmsmv_alloc();
-		string_array_t* pregex_captures = NULL; // May be set to non-null on evaluation
+	string_array_t* pregex_captures = NULL; // May be set to non-null on evaluation
 
 	should_emit_rec = TRUE;
 

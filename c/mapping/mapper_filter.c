@@ -36,8 +36,8 @@ static void      mapper_filter_free(mapper_t* pmapper);
 static sllv_t*   mapper_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
-mapper_setup_t mapper_filter_setup = {
-	.verb = "filter",
+mapper_setup_t mapper_filt1r_setup = {
+	.verb = "filt1r",
 	.pusage_func = mapper_filter_usage,
 	.pparse_func = mapper_filter_parse_cli,
 	.ignores_input = FALSE,

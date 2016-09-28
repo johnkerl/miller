@@ -39,7 +39,8 @@
 //
 // as desired.
 
-char* mlr_alloc_double_backslash(char* input);
+char* mlr_alloc_double_backslash(char* input); // xxx static or proto to header
+
 regex_t* regcomp_or_die(regex_t* pregex, char* regex_string, int cflags) {
 	cflags |= REG_EXTENDED;
 	char* doubly_backslashed = mlr_alloc_double_backslash(regex_string);

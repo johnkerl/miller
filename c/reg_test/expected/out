@@ -12027,7 +12027,9 @@ AST ROOT:
 (null)
 
 mlr -n filter -v 
-mlr filter: filter statement must not be empty.
+mlr: filter statement must not be empty.
+AST ROOT:
+(null)
 
 mlr -n put -v begin {}
 AST ROOT:
@@ -12440,31 +12442,14 @@ text="list", type=statement_list:
 
 
 ---------------------------------------------------------------- oosvars etc. in mlr filter
-mlr filter -v @x > 3
-mlr: statements involving $-variables are not valid in mlr filter.
-AST ROOT:
-text="list", type=statement_list:
-    text=">", type=operator:
-        text="oosvar_keylist", type=oosvar_keylist:
-            text="x", type=string_literal.
-        text="3", type=strnum_literal.
-
-mlr filter -v x > 3
-mlr: statements involving bound variables are not valid in mlr filter.
-AST ROOT:
-text="list", type=statement_list:
-    text=">", type=operator:
-        text="x", type=bound_variable.
-        text="3", type=strnum_literal.
-
 mlr filter -v break
-mlr: break statements are only valid within for, while, or do-while.
+mlr: filter expressions must end in a final boolean statement.
 AST ROOT:
 text="list", type=statement_list:
     text="break", type=break.
 
 mlr filter -v continue
-mlr: break statements are only valid within for, while, or do-while.
+mlr: filter expressions must end in a final boolean statement.
 AST ROOT:
 text="list", type=statement_list:
     text="continue", type=continue.
