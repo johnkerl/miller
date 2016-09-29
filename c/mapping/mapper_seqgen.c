@@ -119,6 +119,7 @@ static sllv_t* mapper_seqgen_process(lrec_t* pinrec, context_t* pctx, void* pvst
 	// Only produce data at end of input stream. Discard the input stream.
 	if (pinrec != NULL) {
 		pctx->force_eof = TRUE;
+		lrec_free(pinrec);
 		return NULL;
 	}
 
