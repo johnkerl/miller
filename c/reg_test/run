@@ -1014,6 +1014,7 @@ run_mlr --from $indir/abixy filter '
 '
 
 mlr_expect_fail --from $indir/abixy filter 'filter false'
+mlr_expect_fail --from $indir/abixy filter 'filter false; true'
 
 # ----------------------------------------------------------------
 announce DSL FUNCTIONAL TESTS

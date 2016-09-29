@@ -12518,6 +12518,9 @@ a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
 mlr --from ./reg_test/input/abixy filter filter false
 mlr filter: expressions must not also contain the "filter" keyword.
 
+mlr --from ./reg_test/input/abixy filter filter false; true
+mlr filter: expressions must not also contain the "filter" keyword.
+
 
 ================================================================
 DSL FUNCTIONAL TESTS

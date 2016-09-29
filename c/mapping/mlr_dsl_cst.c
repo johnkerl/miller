@@ -260,7 +260,7 @@ static cst_statement_handler_t handle_print;
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing,
 	int do_final_filter, int negate_final_filter) // for mlr filter
 {
-	int context_flags = 0;
+	int context_flags = do_final_filter ? IN_MLR_FILTER : 0;
 	// The root node is not populated on empty-string input to the parser.
 	if (ptop->proot == NULL) {
 		if (do_final_filter) {
@@ -336,7 +336,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing,
 			// The last statement of mlr filter must be a bare boolean.
 			if (do_final_filter && pe->pnext == NULL) {
 				sllv_append(pcst->pmain_statements, alloc_final_filter_statement(
-					pcst, pnode, negate_final_filter, type_inferencing, context_flags | IN_MLR_FILTER));
+					pcst, pnode, negate_final_filter, type_inferencing, context_flags | IN_MLR_FINAL_FILTER));
 			} else {
 				sllv_append(pcst->pmain_statements, mlr_dsl_cst_alloc_statement(pcst, pnode,
 					type_inferencing, context_flags));

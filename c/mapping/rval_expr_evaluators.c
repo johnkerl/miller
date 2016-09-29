@@ -58,7 +58,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 			break;
 
 		default:
-			if (context_flags & IN_MLR_FILTER) {
+			if (context_flags & IN_MLR_FINAL_FILTER) {
 				fprintf(stderr,
 					"%s: expressions for mlr filter must be single statements, evaluating to boolean.\n",
 					MLR_GLOBALS.bargv0);
