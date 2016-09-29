@@ -4904,6 +4904,13 @@ mlr_expect_fail --from $indir/abixy --opprint filter 'func f(x) { subr t(y) {} }
 mlr_expect_fail --from $indir/abixy --opprint filter 'subr s(x) { func g(y) {} }; true'
 mlr_expect_fail --from $indir/abixy --opprint filter 'subr s(x) { subr t(y) {} }; true'
 
+# Disallow redefines
+mlr_expect_fail --from $indir/abixy --opprint put 'func log(x) { return $x + 1 }'
+mlr_expect_fail --from $indir/abixy --opprint put 'func f(x) { return $x + 1 } func f(x) { return $x + 1}'
+mlr_expect_fail --from $indir/abixy --opprint put 'subr s() { } subr s() { }'
+mlr_expect_fail --from $indir/abixy --opprint put 'subr s() { } subr s(x) { }'
+run_mlr --from $indir/abixy --opprint put 'subr log(text) { print "TEXT IS ".text } call log("NR is ".NR)'
+
 # ----------------------------------------------------------------
 announce LOCALVAR SCOPE AND EXTENT
 
