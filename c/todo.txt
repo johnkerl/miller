@@ -19,14 +19,12 @@ PRE-RELEASE 4.6.0:
 ! xxxes
 
 ----------------------------------------------------------------
-!!! jkopush update !!! check basename pwd.
-
 UT FOR 4.6.0:
 
 * UT/mlh/mld -e, and mixed -f and -e, for filter/put
+* no begin/end/func/subr within func
 * no begin/end/func/subr within subr
 * print/printn zary
-* no begin/end/func/subr within func
 * func tee, emitfx3, print, dump.
 * disallow func/subr redefines
 * func/subr exhaustively. local/return/etc in/out of various; for ->func -> while; subr -> func; etc
@@ -41,7 +39,7 @@ DOC FOR 4.6.0:
 
 To file:
 * note mlr -l -L -f -F -k -K rather prominently at mlh.
-* mlh/mld func @ filter
+* mlh/mld func/subr @ filter
 * absent vs. empty; unset $x vs. $x="". no null keyword.
 
 filter expansion:
@@ -57,9 +55,6 @@ covers:
 
 @ new print/printn section:
 * print/printn zary
-
-filter/put w/ -f/-e:
-* new mld section
 
 mlh:
 * func-def example @ mlr put -h ?
