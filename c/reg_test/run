@@ -4883,6 +4883,27 @@ run_mlr --from $indir/abixy --opprint put '
   $o = f(NR)
 '
 
+# No nesting of top-levels
+mlr_expect_fail --from $indir/abixy --opprint put 'func f(x) { begin {} }'
+mlr_expect_fail --from $indir/abixy --opprint put 'func f(x) { end {} }'
+mlr_expect_fail --from $indir/abixy --opprint put 'subr s(x) { begin {} }'
+mlr_expect_fail --from $indir/abixy --opprint put 'subr s(x) { end {} }'
+
+mlr_expect_fail --from $indir/abixy --opprint put 'func f(x) { func g(y) {} }'
+mlr_expect_fail --from $indir/abixy --opprint put 'func f(x) { subr t(y) {} }'
+mlr_expect_fail --from $indir/abixy --opprint put 'subr s(x) { func g(y) {} }'
+mlr_expect_fail --from $indir/abixy --opprint put 'subr s(x) { subr t(y) {} }'
+
+mlr_expect_fail --from $indir/abixy --opprint filter 'func f(x) { begin {} }; true'
+mlr_expect_fail --from $indir/abixy --opprint filter 'func f(x) { end {} }; true'
+mlr_expect_fail --from $indir/abixy --opprint filter 'subr s(x) { begin {} }; true'
+mlr_expect_fail --from $indir/abixy --opprint filter 'subr s(x) { end {} }; true'
+
+mlr_expect_fail --from $indir/abixy --opprint filter 'func f(x) { func g(y) {} }; true'
+mlr_expect_fail --from $indir/abixy --opprint filter 'func f(x) { subr t(y) {} }; true'
+mlr_expect_fail --from $indir/abixy --opprint filter 'subr s(x) { func g(y) {} }; true'
+mlr_expect_fail --from $indir/abixy --opprint filter 'subr s(x) { subr t(y) {} }; true'
+
 # ----------------------------------------------------------------
 announce LOCALVAR SCOPE AND EXTENT
 

@@ -34830,6 +34830,54 @@ zee wye 8  0.5985540091064224  0.976181385699006   34
 hat wye 9  0.03144187646093577 0.7495507603507059  55
 pan wye 10 0.5026260055412137  0.9526183602969864  89
 
+mlr --from ./reg_test/input/abixy --opprint put func f(x) { begin {} }
+mlr: begin statements are only valid at top level.
+
+mlr --from ./reg_test/input/abixy --opprint put func f(x) { end {} }
+mlr: end statements are only valid at top level.
+
+mlr --from ./reg_test/input/abixy --opprint put subr s(x) { begin {} }
+mlr: begin statements are only valid at top level.
+
+mlr --from ./reg_test/input/abixy --opprint put subr s(x) { end {} }
+mlr: end statements are only valid at top level.
+
+mlr --from ./reg_test/input/abixy --opprint put func f(x) { func g(y) {} }
+mlr: func statements are only valid at top level.
+
+mlr --from ./reg_test/input/abixy --opprint put func f(x) { subr t(y) {} }
+mlr: subr statements are only valid at top level.
+
+mlr --from ./reg_test/input/abixy --opprint put subr s(x) { func g(y) {} }
+mlr: func statements are only valid at top level.
+
+mlr --from ./reg_test/input/abixy --opprint put subr s(x) { subr t(y) {} }
+mlr: subr statements are only valid at top level.
+
+mlr --from ./reg_test/input/abixy --opprint filter func f(x) { begin {} }; true
+mlr: begin statements are only valid at top level.
+
+mlr --from ./reg_test/input/abixy --opprint filter func f(x) { end {} }; true
+mlr: end statements are only valid at top level.
+
+mlr --from ./reg_test/input/abixy --opprint filter subr s(x) { begin {} }; true
+mlr: begin statements are only valid at top level.
+
+mlr --from ./reg_test/input/abixy --opprint filter subr s(x) { end {} }; true
+mlr: end statements are only valid at top level.
+
+mlr --from ./reg_test/input/abixy --opprint filter func f(x) { func g(y) {} }; true
+mlr: func statements are only valid at top level.
+
+mlr --from ./reg_test/input/abixy --opprint filter func f(x) { subr t(y) {} }; true
+mlr: subr statements are only valid at top level.
+
+mlr --from ./reg_test/input/abixy --opprint filter subr s(x) { func g(y) {} }; true
+mlr: func statements are only valid at top level.
+
+mlr --from ./reg_test/input/abixy --opprint filter subr s(x) { subr t(y) {} }; true
+mlr: subr statements are only valid at top level.
+
 
 ================================================================
 LOCALVAR SCOPE AND EXTENT
