@@ -19,15 +19,14 @@ PRE-RELEASE 4.6.0:
 ! xxxes
 
 ----------------------------------------------------------------
+!!! jkopush update !!! check basename pwd.
+
 UT FOR 4.6.0:
 
 * UT/mlh/mld -e, and mixed -f and -e, for filter/put
 * no begin/end/func/subr within subr
 * print/printn zary
 * no begin/end/func/subr within func
-* func no filter
-  - mlr -n filter 'false'
-  - mlr -n filter 'filter false; false'
 * func tee, emitfx3, print, dump.
 * disallow func/subr redefines
 * func/subr exhaustively. local/return/etc in/out of various; for ->func -> while; subr -> func; etc
