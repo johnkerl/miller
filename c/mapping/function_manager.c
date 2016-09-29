@@ -185,6 +185,9 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_STRING, "gsub",     3,0, "Example: '$name=gsub($name, \"old\", \"new\")'\n(replace all)."},
 	{FUNC_CLASS_STRING, "strlen",   1,0, "String length."},
 	{FUNC_CLASS_STRING, "sub",      3,0, "Example: '$name=sub($name, \"old\", \"new\")'\n(replace once)."},
+	{FUNC_CLASS_STRING, "substr",   3,0,
+		"substr(s,m,n) gives substring of s from 0-up position m to n \n"
+		"inclusive. Negative indices count back from string end."},
 	{FUNC_CLASS_STRING, "tolower",  1,0, "Convert string to lowercase."},
 	{FUNC_CLASS_STRING, "toupper",  1,0, "Convert string to uppercase."},
 
@@ -802,6 +805,8 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_func_name(char* fnnm,
 		return rval_evaluator_alloc_from_i_iii_func(i_iii_modmul_func,    parg1, parg2, parg3);
 	} else if (streq(fnnm, "mexp")) {
 		return rval_evaluator_alloc_from_i_iii_func(i_iii_modexp_func,    parg1, parg2, parg3);
+	} else if (streq(fnnm, "substr")) {
+		return rval_evaluator_alloc_from_s_sii_func(s_sii_substr_func,    parg1, parg2, parg3);
 	} else if (streq(fnnm, "? :")) {
 		return rval_evaluator_alloc_from_ternop(parg1, parg2, parg3);
 	} else  { return NULL; }

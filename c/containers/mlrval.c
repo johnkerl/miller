@@ -1796,6 +1796,33 @@ static mv_unary_func_t* string_dispositions[MT_DIM] = {
 mv_t s_x_string_func(mv_t* pval1) { return (string_dispositions[pval1->type])(pval1); }
 
 // ----------------------------------------------------------------
+mv_t s_sii_substr_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
+	int m = pval2->u.intv;
+	int n = pval3->u.intv + 1;
+	int len = strlen(pval1->u.strv);
+	mv_t rv;
+	if (m < 0)
+		m = len + m;
+	if (n < 0)
+		n = len + n;
+
+	if (m < 0 || m >= len || n < 0 || n >= len) {
+		rv = mv_from_string("", 0);
+	} else if (n < m) {
+		rv = mv_from_string("", 0);
+	} else {
+		char* p = mlr_malloc_or_die(n-m+2);
+		strncpy(p, &pval1->u.strv[m], n-m);
+		p[n-m] = 0;
+		rv = mv_from_string(p, FREE_ENTRY_VALUE);
+	}
+	mv_free(pval1);
+	mv_free(pval2);
+	mv_free(pval3);
+	return rv;
+}
+
+// ----------------------------------------------------------------
 static mv_t hexfmt_s_b(mv_t* pa) { return mv_from_string_no_free(pa->u.boolv?"0x1":"0x0"); }
 static mv_t hexfmt_s_f(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_hexfmt_from_ll((long long)pa->u.fltv)); }
 static mv_t hexfmt_s_i(mv_t* pa) { return mv_from_string_with_free(mlr_alloc_hexfmt_from_ll(pa->u.intv)); }

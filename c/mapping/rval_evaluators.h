@@ -98,6 +98,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_i_ii_func(mv_binary_func_t* pfunc,
 	rval_evaluator_t* parg1, rval_evaluator_t* parg2);
 rval_evaluator_t* rval_evaluator_alloc_from_i_iii_func(mv_ternary_func_t* pfunc,
 	rval_evaluator_t* parg1, rval_evaluator_t* parg2, rval_evaluator_t* parg3);
+rval_evaluator_t* rval_evaluator_alloc_from_s_sii_func(mv_ternary_func_t* pfunc,
+	rval_evaluator_t* parg1, rval_evaluator_t* parg2, rval_evaluator_t* parg3);
 rval_evaluator_t* rval_evaluator_alloc_from_ternop(rval_evaluator_t* parg1, rval_evaluator_t* parg2,
 	rval_evaluator_t* parg3);
 rval_evaluator_t* rval_evaluator_alloc_from_s_s_func(mv_unary_func_t* pfunc, rval_evaluator_t* parg1);

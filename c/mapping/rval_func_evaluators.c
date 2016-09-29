@@ -714,6 +714,58 @@ rval_evaluator_t* rval_evaluator_alloc_from_s_s_func(mv_unary_func_t* pfunc, rva
 }
 
 // ----------------------------------------------------------------
+typedef struct _rval_evaluator_s_sii_state_t {
+	mv_ternary_func_t*  pfunc;
+	rval_evaluator_t* parg1;
+	rval_evaluator_t* parg2;
+	rval_evaluator_t* parg3;
+} rval_evaluator_s_sii_state_t;
+
+static mv_t rval_evaluator_s_sii_func(void* pvstate, variables_t* pvars) {
+	rval_evaluator_s_sii_state_t* pstate = pvstate;
+
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
+	if (!mv_is_string_or_empty(&val1))
+		return mv_error();
+
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
+	mv_set_int_nullable(&val2);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val2);
+
+	mv_t val3 = pstate->parg3->pprocess_func(pstate->parg3->pvstate, pvars);
+	mv_set_int_nullable(&val3);
+	NULL_OR_ERROR_OUT_FOR_NUMBERS(val3);
+
+	return pstate->pfunc(&val1, &val2, &val3);
+}
+static void rval_evaluator_s_sii_free(rval_evaluator_t* pevaluator) {
+	rval_evaluator_s_sii_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	pstate->parg2->pfree_func(pstate->parg2);
+	pstate->parg3->pfree_func(pstate->parg3);
+	free(pstate);
+	free(pevaluator);
+}
+
+rval_evaluator_t* rval_evaluator_alloc_from_s_sii_func(mv_ternary_func_t* pfunc,
+	rval_evaluator_t* parg1, rval_evaluator_t* parg2, rval_evaluator_t* parg3)
+{
+	rval_evaluator_s_sii_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_s_sii_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+	pstate->parg2 = parg2;
+	pstate->parg3 = parg3;
+
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pprocess_func = rval_evaluator_s_sii_func;
+	pevaluator->pfree_func = rval_evaluator_s_sii_free;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
 typedef struct _rval_evaluator_s_f_state_t {
 	mv_unary_func_t*  pfunc;
 	rval_evaluator_t* parg1;

@@ -1,7 +1,7 @@
 ================================================================
 BUGFIXES
 
-mlr --from s put 'subr log(text) { } text="foo"; call log(text)'
+:D
 
 ================================================================
 NON-RELEASE:
@@ -24,15 +24,14 @@ PRE-RELEASE 4.6.0:
 ----------------------------------------------------------------
 UT FOR 4.6.0:
 
-* print/printn zary
 * func tee, emitfx3, print, dump.
-* disallow func/subr redefines
+  mlr --from s put 'func f(x) {print >>"foo".NR, "HELLO";return x}$o=f($i)'
+
 * func/subr exhaustively. local/return/etc in/out of various; for ->func -> while; subr -> func; etc
-* with valgrind: func/subr args read, written, both, neither.
-* block-locals can shadow for-locals ... yuck. strict-mode opportunity?
+
 * locals in all curly-braced control structures; top-level locals; scope, extent, freeing.
-* distinct locals within if/elseif/.../else
-* mlr --opprint --from s put -v '$o1 = a; local a=1000+NR; $o2 = a; a=2000+NR; $o3 = a'
+
+* with valgrind: func/subr args read, written, both, neither.
 
 ----------------------------------------------------------------
 DOC FOR 4.6.0:
@@ -106,6 +105,10 @@ KW autodoc:
 4.7.0 ideas:
 
 ! more than 'syntax error' from lemon-parse failures ... lemon API research
+
+? strict mode:
+  - absent?
+  - local shadow for-loop boundvars / func/subr args?
 
 ! multi-field x many verbs
 
