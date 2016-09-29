@@ -1931,9 +1931,7 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 	}
 
 	if (pstatement->subr_callsite_arguments != NULL) {
-		for (int i = 0; i < pstatement->psubr_callsite->arity; i++) {
-			mv_free(&pstatement->subr_callsite_arguments[i]);
-		}
+		// mv_frees already done in bind_stack_free at call exit
 		free(pstatement->subr_callsite_arguments);
 	}
 	subr_callsite_free(pstatement->psubr_callsite);
