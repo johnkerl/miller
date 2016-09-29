@@ -886,34 +886,20 @@ POKI_RUN_COMMAND{{cat data/small}}HERE
 POKI_RUN_COMMAND{{mlr filter '$a == "eks"' data/small}}HERE
 POKI_RUN_COMMAND{{mlr put '$ab = $a . "_" . $b ' data/small}}HERE
 
+<p/>The two are essentially the same command. The only two differences are that
+expressions sent to <tt>mlr filter</tt> must end with a boolean expression,
+which is the filtering criterion, and that <tt>mlr filter</tt> expressions may
+not reference the <tt>filter</tt> keyword within them. All the rest is the
+same: in particular, you can define and invoke functions and subroutines to
+help produce the final boolean expression.
+
 <p/>There are more details and more choices, of course, as detailed in the following sections.
 
 <!-- ================================================================ -->
 <h2>Syntax</h2>
 
-<!-- ================================================================ -->
-<h3>Restricted syntax for filter</h3>
-
-<p/>Miller&rsquo;s <tt>put</tt> and <tt>filter</tt> expression languages are essentially the same, except
-that for <tt>filter</tt> the following restrictions apply:
-
-<ul>
-<li/> The expression passed to <tt>filter</tt> must be a single boolean
-expression, optionally accompanied by definitions of user-defined functions
-(which the single boolean expression can invoke).
-
-<li/> In particular this means field names may not be assigned to.
-
-<li/> Subroutines may neither be defined nor invoked, including from functions
-defined within <tt>filter</tt> scope.
-
-<li/> Out-of-stream variables (<tt>@</tt>-variables) may not be referred to,
-including from functions defined within <tt>filter</tt> scope.
-
-<li/> Functions defined within <tt>filter</tt> scope may not invoke
-<tt>tee</tt> or <tt>emit</tt>, but may invoke <tt>print</tt> and <tt>dump</tt>.
-
-</ul>
+<p/>
+<tt>mlr put</tt>
 
 <!-- ================================================================ -->
 <h3>Expression formatting</h3>
