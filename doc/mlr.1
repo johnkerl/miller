@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-09-29
+.\"      Date: 2016-09-30
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-09-29" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-09-30" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -179,11 +179,11 @@ output separator to the given value.
  + + - - * / // % ** | ^ & ~ << >> == != =~ !=~ > >= < <= && || ^^ ! ? : isnull
  isnotnull isabsent ispresent isempty isnotempty isnumeric isint isfloat isbool
  isstring boolean float fmtnum hexfmt int string typeof . gsub strlen sub
- tolower toupper abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh
- erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd max mexp min
- mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand urand32
- urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec hms2sec
- sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime
+ substr tolower toupper abs acos acosh asin asinh atan atan2 atanh cbrt ceil
+ cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd max
+ mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand
+ urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec
+ hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -1883,6 +1883,16 @@ MT_STRING). For debug.
 .nf
 (class=string #args=3): Example: '$name=sub($name, "old", "new")'
 (replace once).
+.fi
+.if n \{\
+.RE
+.SS "substr"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=string #args=3): substr(s,m,n) gives substring of s from 0-up position m to n 
+inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
 .fi
 .if n \{\
 .RE

@@ -1616,6 +1616,28 @@ run_mlr --oxtab put -f $indir/subtab3.mlr $indir/subtab.dkvp
 run_mlr --oxtab put -f $indir/subtab4.mlr $indir/subtab.dkvp
 
 # ----------------------------------------------------------------
+announce DSL SUBSTR
+
+run_mlr put -q '
+  local n = strlen($x);
+  print "input= <<".$x.">>";
+  for (i = -n-2; i <= n+2; i += 1) {
+    for (j = -n-2; j <= n+2; j += 1) {
+      print "i: ".fmtnum(i,"%3d")
+        ."   j:".fmtnum(j,"%3d")
+        ."   substr(".$x.",".fmtnum(i,"%3d").",".fmtnum(j,"%3d")."): <<"
+        .substr($x, i, j) .">>";
+    }
+    print;
+}
+' << EOF
+x=
+x=o
+x=o1
+x=o123456789
+EOF
+
+# ----------------------------------------------------------------
 announce DSL OOSVARS
 
 run_mlr --opprint put -v 'begin{@ox=0}; $d=$x-@ox; @ox=$x' $indir/abixy

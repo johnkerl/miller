@@ -187,7 +187,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_STRING, "sub",      3,0, "Example: '$name=sub($name, \"old\", \"new\")'\n(replace once)."},
 	{FUNC_CLASS_STRING, "substr",   3,0,
 		"substr(s,m,n) gives substring of s from 0-up position m to n \n"
-		"inclusive. Negative indices count back from string end."},
+		"inclusive. Negative indices -len .. -1 alias to 0 .. len-1."},
 	{FUNC_CLASS_STRING, "tolower",  1,0, "Convert string to lowercase."},
 	{FUNC_CLASS_STRING, "toupper",  1,0, "Convert string to uppercase."},
 

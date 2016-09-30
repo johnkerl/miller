@@ -1797,23 +1797,23 @@ mv_t s_x_string_func(mv_t* pval1) { return (string_dispositions[pval1->type])(pv
 
 // ----------------------------------------------------------------
 mv_t s_sii_substr_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
-	int m = pval2->u.intv;
-	int n = pval3->u.intv + 1;
+	int m = pval2->u.intv; // inclusive lower; -len..-1 alias to 0..len-1
+	int n = pval3->u.intv; // inclusive upper; -len..-1 alias to 0..len-1
 	int len = strlen(pval1->u.strv);
 	mv_t rv;
+
 	if (m < 0)
 		m = len + m;
 	if (n < 0)
 		n = len + n;
 
-	if (m < 0 || m > len || n < 0 || n > len) {
-		rv = mv_from_string("", 0);
-	} else if (n < m) {
+	if (m < 0 || m >= len || n < 0 || n >= len || n < m) {
 		rv = mv_from_string("", 0);
 	} else {
-		char* p = mlr_malloc_or_die(n-m+2);
-		strncpy(p, &pval1->u.strv[m], n-m);
-		p[n-m] = 0;
+		int olen = n - m + 1;
+		char* p = mlr_malloc_or_die(olen + 1);
+		strncpy(p, &pval1->u.strv[m], olen);
+		p[olen] = 0;
 		rv = mv_from_string(p, FREE_ENTRY_VALUE);
 	}
 	mv_free(pval1);

@@ -434,10 +434,10 @@ Functions for the filter and put verbs:
    + + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! ? :
    isnull isnotnull isabsent ispresent isempty isnotempty isnumeric isint
    isfloat isbool isstring boolean float fmtnum hexfmt int string typeof . gsub
-   strlen sub tolower toupper abs acos acosh asin asinh atan atan2 atanh cbrt
-   ceil cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd
-   max mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh
-   urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec
+   strlen sub substr tolower toupper abs acos acosh asin asinh atan atan2 atanh
+   cbrt ceil cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p logifit
+   madd max mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan
+   tanh urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec
    hms2fsec hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime
    systime
 Please use "mlr --help-function {function name}" for function-specific help.
@@ -6286,6 +6286,9 @@ strlen (class=string #args=1): String length.
 
 sub (class=string #args=3): Example: '$name=sub($name, "old", "new")'
 (replace once).
+
+substr (class=string #args=3): substr(s,m,n) gives substring of s from 0-up position m to n
+inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
 
 tolower (class=string #args=1): Convert string to lowercase.
 
