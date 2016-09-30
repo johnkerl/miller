@@ -60,7 +60,7 @@ typedef struct _cst_outputs_t {
 	int*    pshould_emit_rec;
 	sllv_t* poutrecs;
 	char*   oosvar_flatten_separator;
-	int     flush_every_record; // fflush on emit/tee/print/dump
+	// xxx int     flush_every_record; // fflush on emit/tee/print/dump
 	cli_writer_opts_t* pwriter_opts;
 } cst_outputs_t;
 
@@ -168,6 +168,9 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// emit vs. emitp
 	int do_full_prefixing;
 
+	// fflush on emit/tee/print/dump
+	int flush_every_record;
+
 	// Pattern-action blocks, while, for, etc.
 	sllv_t* pblock_statements;
 
@@ -219,7 +222,7 @@ typedef struct _mlr_dsl_cst_t {
 
 // do_final_filter is FALSE for mlr put, TRUE for mlr filter.
 // negate_final_filter is TRUE for mlr filter -x.
-mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing,
+mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing, int flush_every_record,
 	int do_final_filter, int negate_final_filter);
 
 mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,

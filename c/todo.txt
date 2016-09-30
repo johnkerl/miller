@@ -24,9 +24,10 @@ PRE-RELEASE 4.6.0:
 ----------------------------------------------------------------
 UT FOR 4.6.0:
 
-* use substr @ mand.mlr
+! prohibit tee/emits @ func
+! factor around pcst_outputs->do_fflush to allow print in funcs
 
-* UT substr
+* use substr @ mand.mlr
 
 * func tee, emitfx3, print, dump.
   mlr --from s put 'func f(x) {print >>"foo".NR, "HELLO";return x}$o=f($i)'

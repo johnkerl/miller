@@ -378,7 +378,8 @@ static mapper_t* mapper_put_or_filter_alloc(
 	pstate->mlr_dsl_expression = mlr_dsl_expression;
 	pstate->comment_stripped_mlr_dsl_expression = comment_stripped_mlr_dsl_expression;
 	pstate->past                     = past;
-	pstate->pcst                     = mlr_dsl_cst_alloc(past, type_inferencing, do_final_filter, negate_final_filter);
+	pstate->pcst                     = mlr_dsl_cst_alloc(past, type_inferencing,
+		flush_every_record, do_final_filter, negate_final_filter);
 	pstate->at_begin                 = TRUE;
 	pstate->put_output_disabled      = put_output_disabled;
 	pstate->poosvars                 = mlhmmv_alloc();
@@ -490,7 +491,6 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.pshould_emit_rec         = &should_emit_rec,
 			.poutrecs                 = poutrecs,
 			.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
-			.flush_every_record       = pstate->flush_every_record,
 			.pwriter_opts             = pstate->pwriter_opts,
 		};
 
@@ -519,7 +519,6 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.pshould_emit_rec         = &should_emit_rec,
 			.poutrecs                 = poutrecs,
 			.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
-			.flush_every_record       = pstate->flush_every_record,
 			.pwriter_opts             = pstate->pwriter_opts,
 		};
 
@@ -552,7 +551,6 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 		.pshould_emit_rec         = &should_emit_rec,
 		.poutrecs                 = poutrecs,
 		.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
-		.flush_every_record       = pstate->flush_every_record,
 		.pwriter_opts             = pstate->pwriter_opts,
 	};
 
