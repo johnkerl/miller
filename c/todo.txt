@@ -24,6 +24,10 @@ PRE-RELEASE 4.6.0:
 ----------------------------------------------------------------
 UT FOR 4.6.0:
 
+* use substr @ mand.mlr
+
+* UT substr
+
 * func tee, emitfx3, print, dump.
   mlr --from s put 'func f(x) {print >>"foo".NR, "HELLO";return x}$o=f($i)'
 
@@ -90,6 +94,7 @@ KW autodoc:
 * most-frequent/least-frequent
 * seqgen
 * variadic min & max
+* substr func
 * bare print/printn
 * --c2p et al.
 * --pprint --barred
