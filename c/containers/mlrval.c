@@ -1806,7 +1806,7 @@ mv_t s_sii_substr_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	if (n < 0)
 		n = len + n;
 
-	if (m < 0 || m >= len || n < 0 || n >= len) {
+	if (m < 0 || m > len || n < 0 || n > len) {
 		rv = mv_from_string("", 0);
 	} else if (n < m) {
 		rv = mv_from_string("", 0);
