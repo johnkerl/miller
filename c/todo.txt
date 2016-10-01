@@ -15,11 +15,9 @@ NON-RELEASE:
 ----------------------------------------------------------------
 PRE-RELEASE 4.6.0:
 
-! valgrinds
-! xxxes
-
-!! multi-statement in continuation of triple-for !!
-? substr func ? -> use @ mand
+! multi-statement in continuation of triple-for !!
+* valgrinds
+* xxxes
 
 ----------------------------------------------------------------
 DOC FOR 4.6.0:

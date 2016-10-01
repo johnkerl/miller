@@ -201,23 +201,23 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables">Built-in variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names">Field names</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Local_variables">Local variables</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables_for_put">Out-of-stream variables for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables_for_put">Indexed out-of-stream variables for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Aggregate_variable_assignments_for_put">Aggregate variable assignments for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables">Out-of-stream variables</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables">Indexed out-of-stream variables</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Aggregate_variable_assignments">Aggregate variable assignments</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keywords_for_filter_and_put">Keywords for filter and put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Control_structures">Control structures</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Pattern-action_blocks">Pattern-action blocks</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#If-statements">If-statements</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#While_and_do-while_loops">While and do-while loops</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loops">For-loops</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Begin/end_blocks_for_put">Begin/end blocks for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Output_statements_for_put">Output statements for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit_statements_for_put">Emit statements for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Multi-emit_statements_for_put">Multi-emit statements for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit-all_statements_for_put">Emit-all statements for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Redirected-output_statements_for_put">Redirected-output statements for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Unset_statements_for_put">Unset statements for put</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Filter_statements_for_put">Filter statements for put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Begin/end_blocks">Begin/end blocks</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Output_statements">Output statements</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit_statements">Emit statements</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Multi-emit_statements">Multi-emit statements</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit-all_statements">Emit-all statements</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Redirected-output_statements">Redirected-output statements</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Unset_statements">Unset statements</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Filter_statements">Filter statements</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_functions_for_filter_and_put">Built-in functions for filter and put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#User-defined_functions_and_subroutines">User-defined functions and subroutines</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#User-defined_functions">User-defined functions</a><br/>
@@ -4320,7 +4320,7 @@ outer_c 60
 <p/>
 
 <!-- ================================================================ -->
-<a id="Out-of-stream_variables_for_put"/><h3>Out-of-stream variables for put</h3>
+<a id="Out-of-stream_variables"/><h3>Out-of-stream variables</h3>
 
 <p/> These are prefixed with an at-sign, e.g. <tt>@sum</tt>.  Furthermore,
 unlike built-in variables and stream-record fields, they are maintained in an
@@ -4377,7 +4377,7 @@ sum=50
 etc.
 
 <!-- ================================================================ -->
-<a id="Indexed_out-of-stream_variables_for_put"/><h3>Indexed out-of-stream variables for put</h3>
+<a id="Indexed_out-of-stream_variables"/><h3>Indexed out-of-stream variables</h3>
 
 <p/>Using an index on the <tt>@count</tt> and <tt>@sum</tt> variables, we get the benefit of the
 <tt>-g</tt> (group-by) option which <tt>mlr stats1</tt> and various other Miller commands have:
@@ -4495,7 +4495,7 @@ num_total=5,num_positive=3
 <p/>
 
 <!-- ================================================================ -->
-<a id="Aggregate_variable_assignments_for_put"/><h3>Aggregate variable assignments for put</h3>
+<a id="Aggregate_variable_assignments"/><h3>Aggregate variable assignments</h3>
 
 <p/>There are three remaining kinds of variable assignment using out-of-stream
 variables, the last two of which use the <tt>$*</tt> syntax:
@@ -5287,7 +5287,7 @@ required even if the body is a single statement, or empty.
 </ul>
 
 <!-- ================================================================ -->
-<a id="Begin/end_blocks_for_put"/><h3>Begin/end blocks for put</h3>
+<a id="Begin/end_blocks"/><h3>Begin/end blocks</h3>
 
 <p/>Miller supports an <tt>awk</tt>-like <tt>begin/end</tt> syntax.  The
 statements in the <tt>begin</tt> block are executed before any input records
@@ -5401,7 +5401,7 @@ names (beginning with <tt>$</tt>), since these execute outside the context of
 input records.
 
 <!-- ================================================================ -->
-<a id="Output_statements_for_put"/><h2>Output statements for put</h2>
+<a id="Output_statements"/><h2>Output statements</h2>
 
 <p/> xxx grist: You can output built-in variables indirectly, by assigning them
 to a non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named
@@ -5423,7 +5423,7 @@ immediate prints to stdout/stderr. The <tt>printn</tt> and <tt>eprintn</tt>
 keywords are the same except that they don&rsquo;t print final newlines.
 
 <!-- ================================================================ -->
-<a id="Emit_statements_for_put"/><h3>Emit statements for put</h3>
+<a id="Emit_statements"/><h3>Emit statements</h3>
 
 <p/>As noted above, there are three ways to output out-of-stream variables:
 (1) Assign them to stream-record fields, e.g.  <tt>$cumulative_sum = @sum</tt>;
@@ -5708,7 +5708,7 @@ sum/wye/pan 0.573289
 <p/>
 
 <!-- ================================================================ -->
-<a id="Multi-emit_statements_for_put"/><h3>Multi-emit statements for put</h3>
+<a id="Multi-emit_statements"/><h3>Multi-emit statements</h3>
 
 <p/>You can emit <b>multiple out-of-stream variables side-by-side</b> by including their names in parentheses:
 
@@ -5763,7 +5763,7 @@ out-of-stream variables in the emit statement have the same shape and the same
 keylists.
 
 <!-- ================================================================ -->
-<a id="Emit-all_statements_for_put"/><h3>Emit-all statements for put</h3>
+<a id="Emit-all_statements"/><h3>Emit-all statements</h3>
 
 <p/>Use <b>emit all</b> (or <tt>emit @*</tt> which is synonumous) to output all
 out-of-stream variables. You can use the following idiom to get various
@@ -5817,7 +5817,7 @@ wye pan 0.573289 1
 <p/>
 
 <!-- ================================================================ -->
-<a id="Redirected-output_statements_for_put"/><h3>Redirected-output statements for put</h3>
+<a id="Redirected-output_statements"/><h3>Redirected-output statements</h3>
 
 The <b>tee</b>, <b>emitf</b>, <b>emitp</b>, <b>emit</b>, <b>print</b>, and
 <b>dump</b> keywords all allow you to redirect output to one or more files or
@@ -6018,7 +6018,7 @@ dump: prints all currently defined out-of-stream variables immediately
 </ul>
 
 <!-- ================================================================ -->
-<a id="Unset_statements_for_put"/><h2>Unset statements for put</h2>
+<a id="Unset_statements"/><h2>Unset statements</h2>
 
 <p/>You can clear a map key by assigning the empty string as its value: <tt>$x=""</tt> or <tt>@x=""</tt>.
 Using <tt>unset</tt> you can remove the key entirely. Examples:
@@ -6112,7 +6112,7 @@ $ mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum["eks"]; dump }' data/sm
 variables which have been defined up to that point.
 
 <!-- ================================================================ -->
-<a id="Filter_statements_for_put"/><h2>Filter statements for put</h2>
+<a id="Filter_statements"/><h2>Filter statements</h2>
 
 <p/> You can use <tt>filter</tt> within <tt>put</tt>. In fact, the
 following two are synonymous:

@@ -1127,7 +1127,7 @@ POKI_RUN_COMMAND{{cat data/scope-example.dat}}HERE
 POKI_RUN_COMMAND{{mlr --oxtab --from data/scope-example.dat put -f data/scope-example.mlr}}HERE
 
 <!-- ================================================================ -->
-<h3>Out-of-stream variables for put</h3>
+<h3>Out-of-stream variables</h3>
 
 <p/> These are prefixed with an at-sign, e.g. <tt>@sum</tt>.  Furthermore,
 unlike built-in variables and stream-record fields, they are maintained in an
@@ -1159,7 +1159,7 @@ POKI_RUN_COMMAND{{mlr put '@sum += $a; end {emit @sum}' then put 'ispresent($a) 
 etc.
 
 <!-- ================================================================ -->
-<h3>Indexed out-of-stream variables for put</h3>
+<h3>Indexed out-of-stream variables</h3>
 
 <p/>Using an index on the <tt>@count</tt> and <tt>@sum</tt> variables, we get the benefit of the
 <tt>-g</tt> (group-by) option which <tt>mlr stats1</tt> and various other Miller commands have:
@@ -1181,7 +1181,7 @@ control in what you do.
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-8.sh)HERE
 
 <!-- ================================================================ -->
-<h3>Aggregate variable assignments for put</h3>
+<h3>Aggregate variable assignments</h3>
 
 <p/>There are three remaining kinds of variable assignment using out-of-stream
 variables, the last two of which use the <tt>$*</tt> syntax:
@@ -1381,7 +1381,7 @@ required even if the body is a single statement, or empty.
 </ul>
 
 <!-- ================================================================ -->
-<h3>Begin/end blocks for put</h3>
+<h3>Begin/end blocks</h3>
 
 <p/>Miller supports an <tt>awk</tt>-like <tt>begin/end</tt> syntax.  The
 statements in the <tt>begin</tt> block are executed before any input records
@@ -1422,7 +1422,7 @@ names (beginning with <tt>$</tt>), since these execute outside the context of
 input records.
 
 <!-- ================================================================ -->
-<h2>Output statements for put</h2>
+<h2>Output statements</h2>
 
 <p/> xxx grist: You can output built-in variables indirectly, by assigning them
 to a non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named
@@ -1444,7 +1444,7 @@ immediate prints to stdout/stderr. The <tt>printn</tt> and <tt>eprintn</tt>
 keywords are the same except that they don&rsquo;t print final newlines.
 
 <!-- ================================================================ -->
-<h3>Emit statements for put</h3>
+<h3>Emit statements</h3>
 
 <p/>As noted above, there are three ways to output out-of-stream variables:
 (1) Assign them to stream-record fields, e.g.  <tt>$cumulative_sum = @sum</tt>;
@@ -1506,7 +1506,7 @@ POKI_RUN_COMMAND{{mlr put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum 
 POKI_RUN_COMMAND{{mlr --oxtab put -q --oflatsep / '@sum[$a][$b] += $x; end { emitp @sum }' data/small}}HERE
 
 <!-- ================================================================ -->
-<h3>Multi-emit statements for put</h3>
+<h3>Multi-emit statements</h3>
 
 <p/>You can emit <b>multiple out-of-stream variables side-by-side</b> by including their names in parentheses:
 
@@ -1520,7 +1520,7 @@ out-of-stream variables in the emit statement have the same shape and the same
 keylists.
 
 <!-- ================================================================ -->
-<h3>Emit-all statements for put</h3>
+<h3>Emit-all statements</h3>
 
 <p/>Use <b>emit all</b> (or <tt>emit @*</tt> which is synonumous) to output all
 out-of-stream variables. You can use the following idiom to get various
@@ -1531,7 +1531,7 @@ POKI_RUN_COMMAND{{mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @c
 POKI_RUN_COMMAND{{mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit (@sum, @count),"a","b"}'}}HERE
 
 <!-- ================================================================ -->
-<h3>Redirected-output statements for put</h3>
+<h3>Redirected-output statements</h3>
 
 The <b>tee</b>, <b>emitf</b>, <b>emitp</b>, <b>emit</b>, <b>print</b>, and
 <b>dump</b> keywords all allow you to redirect output to one or more files or
@@ -1573,7 +1573,7 @@ POKI_RUN_COMMAND{{mlr --help-keyword dump}}HERE
 </ul>
 
 <!-- ================================================================ -->
-<h2>Unset statements for put</h2>
+<h2>Unset statements</h2>
 
 <p/>You can clear a map key by assigning the empty string as its value: <tt>$x=""</tt> or <tt>@x=""</tt>.
 Using <tt>unset</tt> you can remove the key entirely. Examples:
@@ -1590,7 +1590,7 @@ POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum["eks"];
 variables which have been defined up to that point.
 
 <!-- ================================================================ -->
-<h2>Filter statements for put</h2>
+<h2>Filter statements</h2>
 
 <p/> You can use <tt>filter</tt> within <tt>put</tt>. In fact, the
 following two are synonymous:
