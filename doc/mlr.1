@@ -2441,7 +2441,7 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-all: xxx temp
+all: used in "emit", "emitp", and "unset" as a synonym for @*
 .fi
 .if n \{\
 .RE
@@ -2743,7 +2743,7 @@ in curly braces.
 .RS 0
 .\}
 .nf
-in: xxx temp
+in: used in for-loops over stream records or out-of-stream variables.
 .fi
 .if n \{\
 .RE
@@ -2752,7 +2752,8 @@ in: xxx temp
 .RS 0
 .\}
 .nf
-local: xxx temp
+local: defines a local variable in the current curly-braced scope.
+Examples: 'local a=1', 'local xyz=""'
 .fi
 .if n \{\
 .RE

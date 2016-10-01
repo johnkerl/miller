@@ -1450,7 +1450,7 @@ FUNCTIONS FOR FILTER/PUT
 
 KEYWORDS FOR PUT AND FILTER
    all
-       all: xxx temp
+       all: used in "emit", "emitp", and "unset" as a synonym for @*
 
    begin
        begin: defines a block of statements to be executed before input records
@@ -1632,10 +1632,11 @@ KEYWORDS FOR PUT AND FILTER
        in curly braces.
 
    in
-       in: xxx temp
+       in: used in for-loops over stream records or out-of-stream variables.
 
    local
-       local: xxx temp
+       local: defines a local variable in the current curly-braced scope.
+       Examples: 'local a=1', 'local xyz=""'
 
    print
        print: prints expression immediately to stdout.

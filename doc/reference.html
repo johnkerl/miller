@@ -4579,7 +4579,7 @@ eks pan 2 0.7586799647899636 0.5221511083334797
 <div class="pokipanel">
 <pre>
 $ mlr --help-all-keywords
-all: xxx temp
+all: used in "emit", "emitp", and "unset" as a synonym for @*
 
 begin: defines a block of statements to be executed before input records
 are ingested. The body statements must be wrapped in curly braces.
@@ -4741,9 +4741,10 @@ Example: 'func f(a,b) { return sqrt(a**2+b**2)} $d = f($x, $y)'
 if: starts an if/elif/elif chain. The body statements must be wrapped
 in curly braces.
 
-in: xxx temp
+in: used in for-loops over stream records or out-of-stream variables.
 
-local: xxx temp
+local: defines a local variable in the current curly-braced scope.
+Examples: 'local a=1', 'local xyz=""'
 
 print: prints expression immediately to stdout.
   Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'

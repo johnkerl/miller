@@ -128,7 +128,9 @@ void mlr_dsl_list_all_keywords_raw(FILE* ostream) {
 
 // ----------------------------------------------------------------
 static void mlr_dsl_all_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "all: xxx temp\n");
+	fprintf(ostream,
+		"all: used in \"emit\", \"emitp\", and \"unset\" as a synonym for @*\n"
+	);
 }
 
 static void mlr_dsl_begin_keyword_usage(FILE* ostream) {
@@ -361,11 +363,14 @@ static void mlr_dsl_if_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_in_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "in: xxx temp\n");
+	fprintf(ostream, "in: used in for-loops over stream records or out-of-stream variables.\n");
 }
 
 static void mlr_dsl_local_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "local: xxx temp\n");
+	fprintf(ostream,
+		"local: defines a local variable in the current curly-braced scope.\n"
+		"Examples: 'local a=1', 'local xyz=\"\"'\n"
+	);
 }
 
 static void mlr_dsl_print_keyword_usage(FILE* ostream) {
