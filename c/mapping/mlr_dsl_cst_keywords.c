@@ -4,37 +4,23 @@
 #include "mlr_dsl_cst.h"
 #include "context_flags.h"
 
-static void mlr_dsl_dump_keyword_usage    (FILE* ostream);
-static void mlr_dsl_edump_keyword_usage   (FILE* ostream);
-static void mlr_dsl_emit_keyword_usage    (FILE* ostream);
-static void mlr_dsl_emitf_keyword_usage   (FILE* ostream);
-static void mlr_dsl_emitp_keyword_usage   (FILE* ostream);
-static void mlr_dsl_eprint_keyword_usage  (FILE* ostream);
-static void mlr_dsl_eprintn_keyword_usage (FILE* ostream);
-static void mlr_dsl_filter_keyword_usage  (FILE* ostream);
-static void mlr_dsl_print_keyword_usage   (FILE* ostream);
-static void mlr_dsl_printn_keyword_usage  (FILE* ostream);
-static void mlr_dsl_stderr_keyword_usage  (FILE* ostream);
-static void mlr_dsl_stdout_keyword_usage  (FILE* ostream);
-static void mlr_dsl_tee_keyword_usage     (FILE* ostream);
-static void mlr_dsl_unset_keyword_usage   (FILE* ostream);
+// ----------------------------------------------------------------
+typedef void keyword_usage_func_t(FILE* ostream);
 
-// xxx make table w/ func ptrs etc. reduce code/data dup.
-
-// filter
-// unset
-// tee
-// emit
-// emitf
-// emitp
-// dump
-// edump
-// print
-// printn
-// eprint
-// eprintn
-// stderr
-// stdout
+static keyword_usage_func_t mlr_dsl_dump_keyword_usage;
+static keyword_usage_func_t mlr_dsl_edump_keyword_usage;
+static keyword_usage_func_t mlr_dsl_emit_keyword_usage;
+static keyword_usage_func_t mlr_dsl_emitf_keyword_usage;
+static keyword_usage_func_t mlr_dsl_emitp_keyword_usage;
+static keyword_usage_func_t mlr_dsl_eprint_keyword_usage;
+static keyword_usage_func_t mlr_dsl_eprintn_keyword_usage;
+static keyword_usage_func_t mlr_dsl_filter_keyword_usage;
+static keyword_usage_func_t mlr_dsl_print_keyword_usage;
+static keyword_usage_func_t mlr_dsl_printn_keyword_usage;
+static keyword_usage_func_t mlr_dsl_stderr_keyword_usage;
+static keyword_usage_func_t mlr_dsl_stdout_keyword_usage;
+static keyword_usage_func_t mlr_dsl_tee_keyword_usage;
+static keyword_usage_func_t mlr_dsl_unset_keyword_usage;
 
 // E
 // ENV
@@ -63,64 +49,66 @@ static void mlr_dsl_unset_keyword_usage   (FILE* ostream);
 // subr
 // while
 
+// ----------------------------------------------------------------
+typedef struct _keyword_usage_entry_t {
+	char* name;
+	keyword_usage_func_t* pusage_func;
+} keyword_usage_entry_t;
+
+static keyword_usage_entry_t KEYWORD_USAGE_TABLE[] = {
+
+	{ "dump",    mlr_dsl_dump_keyword_usage    },
+	{ "edump",   mlr_dsl_edump_keyword_usage   },
+	{ "emit",    mlr_dsl_emit_keyword_usage    },
+	{ "emitf",   mlr_dsl_emitf_keyword_usage   },
+	{ "emitp",   mlr_dsl_emitp_keyword_usage   },
+	{ "eprint",  mlr_dsl_eprint_keyword_usage  },
+	{ "eprintn", mlr_dsl_eprintn_keyword_usage },
+	{ "filter",  mlr_dsl_filter_keyword_usage  },
+	{ "print",   mlr_dsl_print_keyword_usage   },
+	{ "printn",  mlr_dsl_printn_keyword_usage  },
+	{ "stderr",  mlr_dsl_stderr_keyword_usage  },
+	{ "stdout",  mlr_dsl_stdout_keyword_usage  },
+	{ "tee",     mlr_dsl_tee_keyword_usage     },
+	{ "unset",   mlr_dsl_unset_keyword_usage   },
+
+};
+static int KEYWORD_USAGE_TABLE_SIZE = sizeof(KEYWORD_USAGE_TABLE)/sizeof(KEYWORD_USAGE_TABLE[0]);
+
+// ----------------------------------------------------------------
+
 
 // ================================================================
 // Pass function_name == NULL to get usage for all keywords.
 // Note keywords are defined in dsls/mlr_dsl_lexer.l.
 void mlr_dsl_keyword_usage(FILE* ostream, char* keyword) {
 	if (keyword == NULL) {
-		mlr_dsl_dump_keyword_usage(ostream);    fprintf(ostream, "\n");
-		mlr_dsl_edump_keyword_usage(ostream);   fprintf(ostream, "\n");
-		mlr_dsl_emit_keyword_usage(ostream);    fprintf(ostream, "\n");
-		mlr_dsl_emitf_keyword_usage(ostream);   fprintf(ostream, "\n");
-		mlr_dsl_emitp_keyword_usage(ostream);   fprintf(ostream, "\n");
-		mlr_dsl_eprint_keyword_usage(ostream);  fprintf(ostream, "\n");
-		mlr_dsl_eprintn_keyword_usage(ostream); fprintf(ostream, "\n");
-		mlr_dsl_filter_keyword_usage(ostream);  fprintf(ostream, "\n");
-		mlr_dsl_print_keyword_usage(ostream);   fprintf(ostream, "\n");
-		mlr_dsl_printn_keyword_usage(ostream);  fprintf(ostream, "\n");
-		mlr_dsl_stderr_keyword_usage(ostream);
-		mlr_dsl_stdout_keyword_usage(ostream);  fprintf(ostream, "\n");
-		mlr_dsl_tee_keyword_usage(ostream);     fprintf(ostream, "\n");
-		mlr_dsl_unset_keyword_usage(ostream);   fprintf(ostream, "\n");
-		return;
-	}
-
-	if (streq(keyword, "dump"))    { mlr_dsl_dump_keyword_usage(ostream);
-	} else if (streq(keyword, "edump"))   { mlr_dsl_edump_keyword_usage(ostream);
-	} else if (streq(keyword, "emit"))    { mlr_dsl_emit_keyword_usage(ostream);
-	} else if (streq(keyword, "emitf"))   { mlr_dsl_emitf_keyword_usage(ostream);
-	} else if (streq(keyword, "emitp"))   { mlr_dsl_emitp_keyword_usage(ostream);
-	} else if (streq(keyword, "eprint"))  { mlr_dsl_eprint_keyword_usage(ostream);
-	} else if (streq(keyword, "eprintn")) { mlr_dsl_eprint_keyword_usage(ostream);
-	} else if (streq(keyword, "filter"))  { mlr_dsl_filter_keyword_usage(ostream);
-	} else if (streq(keyword, "print"))   { mlr_dsl_print_keyword_usage(ostream);
-	} else if (streq(keyword, "printn"))  { mlr_dsl_print_keyword_usage(ostream);
-	} else if (streq(keyword, "stderr"))  { mlr_dsl_stderr_keyword_usage(ostream);
-	} else if (streq(keyword, "stdout"))  { mlr_dsl_stdout_keyword_usage(ostream);
-	} else if (streq(keyword, "tee"))     { mlr_dsl_tee_keyword_usage(ostream);
-	} else if (streq(keyword, "unset"))   { mlr_dsl_unset_keyword_usage(ostream);
-
+		for (int i = 0; i < KEYWORD_USAGE_TABLE_SIZE; i++) {
+			if (i > 0) {
+				fprintf(ostream, "\n");
+			}
+			KEYWORD_USAGE_TABLE[i].pusage_func(ostream);
+		}
 	} else {
-		fprintf(ostream, "%s: unrecognized keyword \"%s\".\n", MLR_GLOBALS.bargv0, keyword);
+
+		int found = FALSE;
+		for (int i = 0; i < KEYWORD_USAGE_TABLE_SIZE; i++) {
+			if (streq(keyword, KEYWORD_USAGE_TABLE[i].name)) {
+				KEYWORD_USAGE_TABLE[i].pusage_func(ostream);
+				found = TRUE;
+				break;
+			}
+		}
+		if (!found) {
+			fprintf(ostream, "%s: unrecognized keyword \"%s\".\n", MLR_GLOBALS.bargv0, keyword);
+		}
 	}
 }
 
 void mlr_dsl_list_all_keywords_raw(FILE* ostream) {
-  printf("dump\n");
-  printf("edump\n");
-  printf("emit\n");
-  printf("emitf\n");
-  printf("emitp\n");
-  printf("eprint\n");
-  printf("eprintn\n");
-  printf("filter\n");
-  printf("print\n");
-  printf("printn\n");
-  printf("stderr\n");
-  printf("stdout\n");
-  printf("tee\n");
-  printf("unset\n");
+	for (int i = 0; i < KEYWORD_USAGE_TABLE_SIZE; i++) {
+		printf("%s\n", KEYWORD_USAGE_TABLE[i].name);
+	}
 }
 
 // ----------------------------------------------------------------
