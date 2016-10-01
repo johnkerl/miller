@@ -16,6 +16,8 @@ typedef void keyword_usage_func_t(FILE* ostream);
 // NR
 // PI
 
+// Should match the keywords defined in dsls/mlr_dsl_lexer.l.
+
 static keyword_usage_func_t mlr_dsl_all_keyword_usage;
 static keyword_usage_func_t mlr_dsl_begin_keyword_usage;
 static keyword_usage_func_t mlr_dsl_break_keyword_usage;
@@ -130,27 +132,27 @@ void mlr_dsl_list_all_keywords_raw(FILE* ostream) {
 // ----------------------------------------------------------------
 
 static void mlr_dsl_all_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "all: xxx temp\n");
 }
 
 static void mlr_dsl_begin_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "begin: xxx temp\n");
 }
 
 static void mlr_dsl_break_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "break: xxx temp\n");
 }
 
 static void mlr_dsl_call_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "call: xxx temp\n");
 }
 
 static void mlr_dsl_continue_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "continue: xxx temp\n");
 }
 
 static void mlr_dsl_do_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "do: xxx temp\n");
 }
 
 // ----------------------------------------------------------------
@@ -184,11 +186,11 @@ static void mlr_dsl_edump_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_elif_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "elif: xxx temp\n");
 }
 
 static void mlr_dsl_else_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "else: xxx temp\n");
 }
 
 static void mlr_dsl_emit_keyword_usage(FILE* ostream) {
@@ -288,7 +290,7 @@ static void mlr_dsl_emitp_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_end_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "end: xxx temp\n");
 }
 
 static void mlr_dsl_eprint_keyword_usage(FILE* ostream) {
@@ -320,23 +322,23 @@ static void mlr_dsl_filter_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_for_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "for: xxx temp\n");
 }
 
 static void mlr_dsl_func_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "func: xxx temp\n");
 }
 
 static void mlr_dsl_if_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "if: xxx temp\n");
 }
 
 static void mlr_dsl_in_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "in: xxx temp\n");
 }
 
 static void mlr_dsl_local_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "local: xxx temp\n");
 }
 
 static void mlr_dsl_print_keyword_usage(FILE* ostream) {
@@ -354,7 +356,7 @@ static void mlr_dsl_printn_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_return_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "return: xxx temp\n");
 }
 
 static void mlr_dsl_stderr_keyword_usage(FILE* ostream) {
@@ -370,7 +372,7 @@ static void mlr_dsl_stdout_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_subr_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "subr: xxx temp\n");
 }
 
 static void mlr_dsl_tee_keyword_usage(FILE* ostream) {
@@ -412,5 +414,5 @@ static void mlr_dsl_unset_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_while_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "xxx temp\n");
+	fprintf(ostream, "while: xxx temp\n");
 }
