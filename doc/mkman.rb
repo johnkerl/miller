@@ -108,7 +108,7 @@ output separator to the given value."""
   end
 
   keywords = `mlr --list-all-keywords-raw`
-  print make_section('KEYWORDS FOR PUT', [
+  print make_section('KEYWORDS FOR PUT AND FILTER', [
     ""
   ])
   keywords = keywords.strip.split("\n").uniq

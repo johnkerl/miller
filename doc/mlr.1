@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-09-30
+.\"      Date: 2016-10-01
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-09-30" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-10-01" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2433,50 +2433,19 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SH "KEYWORDS FOR PUT"
+.SH "KEYWORDS FOR PUT AND FILTER"
 .sp
 
-.SS "filter"
+.SS "dump"
 .if n \{\
 .RS 0
 .\}
 .nf
-filter: includes/excludes the record in the output record stream.
+dump: prints all currently defined out-of-stream variables immediately
+  to stdout as JSON.
 
-  Example: mlr --from f.dat put 'filter (NR == 2 || $x > 5.4)'
-
-  Instead of put with 'filter false' you can simply use put -q.  The following
-  uses the input record to accumulate data but only prints the running sum
-  without printing the input record:
-
-  Example: mlr --from f.dat put -q '@running_sum += $x * $y; emit @running_sum'
-.fi
-.if n \{\
-.RE
-.SS "unset"
-.if n \{\
-.RS 0
-.\}
-.nf
-unset: clears field(s) from the current record, or an out-of-stream variable.
-
-  Example: mlr --from f.dat put 'unset $x'
-  Example: mlr --from f.dat put 'unset $*'
-  Example: mlr --from f.dat put 'for (k, v in $*) { if (k =~ "a.*") { unset $[k] } }'
-  Example: mlr --from f.dat put '...; unset @sums'
-  Example: mlr --from f.dat put '...; unset @sums["green"]'
-  Example: mlr --from f.dat put '...; unset @*'
-.fi
-.if n \{\
-.RE
-.SS "tee"
-.if n \{\
-.RS 0
-.\}
-.nf
-tee: prints the current record to specified file.
-  This is an immediate print to the specified file (except for pprint format
-  which of course waits until the end of the input stream to format all output).
+  With >, >>, or |, the data do not become part of the output record stream but
+  are instead redirected.
 
   The > and >> are for write and append, as in the shell, but (as with awk) the
   file-overwrite for > is on first write, not per record. The | is for piping to
@@ -2485,16 +2454,22 @@ tee: prints the current record to specified file.
   value of the piped-to command (for |). Output-formatting flags are taken from
   the main command line.
 
-  You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-  etc., to control the format of the output. See also mlr -h.
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump }'
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >  "mytap.dat"}'
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >> "mytap.dat"}'
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump | "jq .[]"}'
+.fi
+.if n \{\
+.RE
+.SS "edump"
+.if n \{\
+.RS 0
+.\}
+.nf
+edump: prints all currently defined out-of-stream variables immediately
+  to stderr as JSON.
 
-  Example: mlr --from f.dat put 'tee >  "/tmp/data-".$a, $*'
-  Example: mlr --from f.dat put 'tee >> "/tmp/data-".$a.$b, $*'
-  Example: mlr --from f.dat put 'tee >  stderr, $*'
-  Example: mlr --from f.dat put -q 'tee | "tr [a-z\e] [A-Z\e]", $*'
-  Example: mlr --from f.dat put -q 'tee | "tr [a-z\e] [A-Z\e] > /tmp/data-".$a, $*'
-  Example: mlr --from f.dat put -q 'tee | "gzip > /tmp/data-".$a.".gz", $*'
-  Example: mlr --from f.dat put -q --ojson 'tee | "gzip > /tmp/data-".$a.".gz", $*'
+  Example: mlr --from f.dat put -q '@v[NR]=$*; end { edump }'
 .fi
 .if n \{\
 .RE
@@ -2528,6 +2503,40 @@ emit: inserts an out-of-stream variable into the output record stream. Hashmap
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "gzip > mytap.dat.gz", @*, "index1", "index2"'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit > stderr, @*, "index1", "index2"'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit | "grep somepattern", @*, "index1", "index2"'
+
+  Please see http://johnkerl.org/miller/doc for more information.
+.fi
+.if n \{\
+.RE
+.SS "emitf"
+.if n \{\
+.RS 0
+.\}
+.nf
+emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
+  output record stream.
+
+  With >, >>, or |, the data do not become part of the output record stream but
+  are instead redirected.
+
+  The > and >> are for write and append, as in the shell, but (as with awk) the
+  file-overwrite for > is on first write, not per record. The | is for piping to
+  a process which will process the data. There will be one open file for each
+  distinct file name (for > and >>) or one subordinate process for each distinct
+  value of the piped-to command (for |). Output-formatting flags are taken from
+  the main command line.
+
+  You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+  etc., to control the format of the output if the output is redirected. See also mlr -h.
+
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
+  Example: mlr --from f.dat put --oxtab '@a=$i;@b+=$x;@c+=$y; emitf > "tap-".$i.".dat", @a'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > "mytap.dat", @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf >> "mytap.dat", @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > stderr, @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
+  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
 
   Please see http://johnkerl.org/miller/doc for more information.
 .fi
@@ -2569,74 +2578,44 @@ emitp: inserts an out-of-stream variable into the output record stream.
 .fi
 .if n \{\
 .RE
-.SS "emitf"
+.SS "eprint"
 .if n \{\
 .RS 0
 .\}
 .nf
-emitf: inserts non-indexed out-of-stream variable(s) side-by-side into the
-  output record stream.
-
-  With >, >>, or |, the data do not become part of the output record stream but
-  are instead redirected.
-
-  The > and >> are for write and append, as in the shell, but (as with awk) the
-  file-overwrite for > is on first write, not per record. The | is for piping to
-  a process which will process the data. There will be one open file for each
-  distinct file name (for > and >>) or one subordinate process for each distinct
-  value of the piped-to command (for |). Output-formatting flags are taken from
-  the main command line.
-
-  You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
-  etc., to control the format of the output if the output is redirected. See also mlr -h.
-
-  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a'
-  Example: mlr --from f.dat put --oxtab '@a=$i;@b+=$x;@c+=$y; emitf > "tap-".$i.".dat", @a'
-  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf @a, @b, @c'
-  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > "mytap.dat", @a, @b, @c'
-  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf >> "mytap.dat", @a, @b, @c'
-  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf > stderr, @a, @b, @c'
-  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern", @a, @b, @c'
-  Example: mlr --from f.dat put '@a=$i;@b+=$x;@c+=$y; emitf | "grep somepattern > mytap.dat", @a, @b, @c'
-
-  Please see http://johnkerl.org/miller/doc for more information.
+eprint: prints expression immediately to stderr.
+  Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
+  Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
+  Example: mlr --from f.dat put  '(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
 .fi
 .if n \{\
 .RE
-.SS "dump"
+.SS "eprintn"
 .if n \{\
 .RS 0
 .\}
 .nf
-dump: prints all currently defined out-of-stream variables immediately
-  to stdout as JSON.
-
-  With >, >>, or |, the data do not become part of the output record stream but
-  are instead redirected.
-
-  The > and >> are for write and append, as in the shell, but (as with awk) the
-  file-overwrite for > is on first write, not per record. The | is for piping to
-  a process which will process the data. There will be one open file for each
-  distinct file name (for > and >>) or one subordinate process for each distinct
-  value of the piped-to command (for |). Output-formatting flags are taken from
-  the main command line.
-
-  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump }'
-  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >  "mytap.dat"}'
-  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump >> "mytap.dat"}'
-  Example: mlr --from f.dat put -q '@v[NR]=$*; end { dump | "jq .[]"}'
+eprint: prints expression immediately to stderr.
+  Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
+  Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
+  Example: mlr --from f.dat put  '(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
 .fi
 .if n \{\
 .RE
-.SS "edump"
+.SS "filter"
 .if n \{\
 .RS 0
 .\}
 .nf
-edump: prints all currently defined out-of-stream variables immediately
-  to stderr as JSON.
+filter: includes/excludes the record in the output record stream.
 
-  Example: mlr --from f.dat put -q '@v[NR]=$*; end { edump }'
+  Example: mlr --from f.dat put 'filter (NR == 2 || $x > 5.4)'
+
+  Instead of put with 'filter false' you can simply use put -q.  The following
+  uses the input record to accumulate data but only prints the running sum
+  without printing the input record:
+
+  Example: mlr --from f.dat put -q '@running_sum += $x * $y; emit @running_sum'
 .fi
 .if n \{\
 .RE
@@ -2664,27 +2643,13 @@ print: prints expression immediately to stdout.
 .fi
 .if n \{\
 .RE
-.SS "eprint"
+.SS "stderr"
 .if n \{\
 .RS 0
 .\}
 .nf
-eprint: prints expression immediately to stderr.
-  Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
-  Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
-  Example: mlr --from f.dat put  '(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
-.fi
-.if n \{\
-.RE
-.SS "eprintn"
-.if n \{\
-.RS 0
-.\}
-.nf
-eprint: prints expression immediately to stderr.
-  Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
-  Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " => " . v }'
-  Example: mlr --from f.dat put  '(NR % 1000 == 0) { eprint "Checkpoint ".NR}'
+stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
+  to print to standard error.
 .fi
 .if n \{\
 .RE
@@ -2698,13 +2663,48 @@ stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
 .fi
 .if n \{\
 .RE
-.SS "stderr"
+.SS "tee"
 .if n \{\
 .RS 0
 .\}
 .nf
-stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
-  to print to standard error.
+tee: prints the current record to specified file.
+  This is an immediate print to the specified file (except for pprint format
+  which of course waits until the end of the input stream to format all output).
+
+  The > and >> are for write and append, as in the shell, but (as with awk) the
+  file-overwrite for > is on first write, not per record. The | is for piping to
+  a process which will process the data. There will be one open file for each
+  distinct file name (for > and >>) or one subordinate process for each distinct
+  value of the piped-to command (for |). Output-formatting flags are taken from
+  the main command line.
+
+  You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
+  etc., to control the format of the output. See also mlr -h.
+
+  Example: mlr --from f.dat put 'tee >  "/tmp/data-".$a, $*'
+  Example: mlr --from f.dat put 'tee >> "/tmp/data-".$a.$b, $*'
+  Example: mlr --from f.dat put 'tee >  stderr, $*'
+  Example: mlr --from f.dat put -q 'tee | "tr [a-z\e] [A-Z\e]", $*'
+  Example: mlr --from f.dat put -q 'tee | "tr [a-z\e] [A-Z\e] > /tmp/data-".$a, $*'
+  Example: mlr --from f.dat put -q 'tee | "gzip > /tmp/data-".$a.".gz", $*'
+  Example: mlr --from f.dat put -q --ojson 'tee | "gzip > /tmp/data-".$a.".gz", $*'
+.fi
+.if n \{\
+.RE
+.SS "unset"
+.if n \{\
+.RS 0
+.\}
+.nf
+unset: clears field(s) from the current record, or an out-of-stream variable.
+
+  Example: mlr --from f.dat put 'unset $x'
+  Example: mlr --from f.dat put 'unset $*'
+  Example: mlr --from f.dat put 'for (k, v in $*) { if (k =~ "a.*") { unset $[k] } }'
+  Example: mlr --from f.dat put '...; unset @sums'
+  Example: mlr --from f.dat put '...; unset @sums["green"]'
+  Example: mlr --from f.dat put '...; unset @*'
 .fi
 .if n \{\
 .RE
