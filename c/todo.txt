@@ -76,18 +76,24 @@ file-formats page:
 ----------------------------------------------------------------
 4.6.0 FEATURES:
 
+DSL:
 * func & subr. acknowledge awk yet again.
 * triple-fors
 * multiple filter/put -f with examples @ new mld section.
-* most-frequent/least-frequent
-* seqgen
 * variadic min & max
 * substr func
+
+VERBS:
+* most-frequent/least-frequent
+* seqgen
+
+I/O:
 * bare print/printn
 * --c2p et al.
 * --pprint --barred
-* mlr -F and -K. Note -l -L -f -F -k -K.
 
+DOC:
+* mlr -F and -K. Note -l -L -f -F -k -K.
 * inverse-transform-sampling example at cookbook.
 * 10-min
 
