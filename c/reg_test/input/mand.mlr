@@ -1,28 +1,36 @@
+# Mandelbrot set generator: simple example of Miller DSL as programming language.
 begin {
-	@rcorn   = -2.0;
-	@icorn   = -2.0;
-	@side    =  4.0;
-	@iheight =   50;  #500;
-	@iwidth  =  100; #1000;
-	@maxits  =  100;
-    @chars   = "@X*o-.";
+	# Set defaults
+	@rcorn     = -2.0;
+	@icorn     = -2.0;
+	@side      = 4.0;
+	@iheight   = 50;
+	@iwidth    = 100;
+	@maxits    = 100;
+	@levelstep = 5;
+	@chars     = "@X*o-.";
+
 }
 
-@rcorn   = $rcorn;
-@icorn   = $icorn;
-@side    = $side;
-@iheight = $iheight;
-@iwidth  = $iwidth;
-@maxits  = $maxits;
-@char    = $chars;
+# Override defaults
+@rcorn     = $rcorn;
+@icorn     = $icorn;
+@side      = $side;
+@iheight   = $iheight;
+@iwidth    = $iwidth;
+@maxits    = $maxits;
+@levelstep = $levelstep;
+@chars     = $chars;
 
 end {
-	print "RCORN   = ".@rcorn;
-	print "ICORN   = ".@icorn;
-	print "SIDE    = ".@side;
-	print "IHEIGHT = ".@iheight;
-	print "IWIDTH  = ".@iwidth;
-	print "MAXITS  = ".@maxits;
+	print "RCORN     = ".@rcorn;
+	print "ICORN     = ".@icorn;
+	print "SIDE      = ".@side;
+	print "IHEIGHT   = ".@iheight;
+	print "IWIDTH    = ".@iwidth;
+	print "MAXITS    = ".@maxits;
+	print "LEVELSTEP = ".@levelstep;
+	print "CHARS     = ".@chars;
 
 	for (local ii = @iheight-1; ii >= 0; ii -= 1) {
 		local ci = @icorn + (ii/@iheight) * @side;
@@ -55,7 +63,7 @@ func get_point_plot(cr, ci, maxits) {
 	if (!escaped) {
 		return ".";
 	} else {
-		local level = (iti // 10) % strlen(@chars);
+		local level = (iti // @levelstep) % strlen(@chars);
 		return substr(@chars, level, level);
 	}
 }

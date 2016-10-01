@@ -1,3 +1,4 @@
+# Sieve of Eratosthenes: simple example of Miller DSL as programming language.
 begin {
 	@n = 100;
 }
