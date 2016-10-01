@@ -24,18 +24,10 @@ PRE-RELEASE 4.6.0:
 ----------------------------------------------------------------
 UT FOR 4.6.0:
 
-! prohibit tee/emits @ func
-! factor around pcst_outputs->do_fflush to allow print in funcs
-
+* sieve
 * use substr @ mand.mlr
-
-* func tee, emitfx3, print, dump.
-  mlr --from s put 'func f(x) {print >>"foo".NR, "HELLO";return x}$o=f($i)'
-
 * func/subr exhaustively. local/return/etc in/out of various; for ->func -> while; subr -> func; etc
-
 * locals in all curly-braced control structures; top-level locals; scope, extent, freeing.
-
 * with valgrind: func/subr args read, written, both, neither.
 
 ----------------------------------------------------------------

@@ -35771,6 +35771,110 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
+mlr --from ./reg_test/input/abixy --opprint put subr log(text) { print "TEXT IS ".text } call log("NR is ".NR)
+TEXT IS NR is 1
+TEXT IS NR is 2
+TEXT IS NR is 3
+TEXT IS NR is 4
+TEXT IS NR is 5
+TEXT IS NR is 6
+TEXT IS NR is 7
+TEXT IS NR is 8
+TEXT IS NR is 9
+TEXT IS NR is 10
+a   b   i  x                   y
+pan pan 1  0.3467901443380824  0.7268028627434533
+eks pan 2  0.7586799647899636  0.5221511083334797
+wye wye 3  0.20460330576630303 0.33831852551664776
+eks wye 4  0.38139939387114097 0.13418874328430463
+wye pan 5  0.5732889198020006  0.8636244699032729
+zee pan 6  0.5271261600918548  0.49322128674835697
+eks zee 7  0.6117840605678454  0.1878849191181694
+zee wye 8  0.5985540091064224  0.976181385699006
+hat wye 9  0.03144187646093577 0.7495507603507059
+pan wye 10 0.5026260055412137  0.9526183602969864
+
+mlr --from ./reg_test/input/abixy --opprint put func f(text) { print "TEXT IS ".text; return text.text } $o = f($a)
+TEXT IS pan
+TEXT IS eks
+TEXT IS wye
+TEXT IS eks
+TEXT IS wye
+TEXT IS zee
+TEXT IS eks
+TEXT IS zee
+TEXT IS hat
+TEXT IS pan
+a   b   i  x                   y                   o
+pan pan 1  0.3467901443380824  0.7268028627434533  panpan
+eks pan 2  0.7586799647899636  0.5221511083334797  ekseks
+wye wye 3  0.20460330576630303 0.33831852551664776 wyewye
+eks wye 4  0.38139939387114097 0.13418874328430463 ekseks
+wye pan 5  0.5732889198020006  0.8636244699032729  wyewye
+zee pan 6  0.5271261600918548  0.49322128674835697 zeezee
+eks zee 7  0.6117840605678454  0.1878849191181694  ekseks
+zee wye 8  0.5985540091064224  0.976181385699006   zeezee
+hat wye 9  0.03144187646093577 0.7495507603507059  hathat
+pan wye 10 0.5026260055412137  0.9526183602969864  panpan
+
+mlr --from ./reg_test/input/abixy put begin{@x=1} func f(x) { dump; print "hello"                 } $o=f($i)
+{
+  "x": 1
+}
+hello
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+{
+  "x": 1
+}
+hello
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+{
+  "x": 1
+}
+hello
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+{
+  "x": 1
+}
+hello
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+{
+  "x": 1
+}
+hello
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+{
+  "x": 1
+}
+hello
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+{
+  "x": 1
+}
+hello
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+{
+  "x": 1
+}
+hello
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+{
+  "x": 1
+}
+hello
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+{
+  "x": 1
+}
+hello
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+mlr --from ./reg_test/input/abixy put begin{@x=1} func f(x) { dump; print "hello"; tee  > "x", $* } $o=f($i)
+mlr: tee statements are not valid within func blocks.
+
+mlr --from ./reg_test/input/abixy put begin{@x=1} func f(x) { dump; print "hello"; emit > "x", @* } $o=f($i)
+mlr: emit statements are not valid within func blocks.
+
 
 ================================================================
 LOCALVAR SCOPE AND EXTENT
