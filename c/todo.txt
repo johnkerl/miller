@@ -22,6 +22,15 @@ PRE-RELEASE 4.6.0:
 ----------------------------------------------------------------
 DOC FOR 4.6.0:
 
+KW autodoc:
+* kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
+
+  E ENV FILENAME FILENUM FNR NF NR PI
+
+  all begin break call continue do dump edump elif else emit
+  emitf emitp end eprint eprintn filter for func if in local
+  print printn return stderr stdout subr tee unset while
+
 To file:
 * note mlr -l -L -f -F -k -K rather prominently at mlh.
 * mlh/mld func/subr @ filter
@@ -63,9 +72,6 @@ func/subr:
 file-formats page:
 * --c2p, --c2j etc ...
 * --pprint --barred; emph for output only
-
-KW autodoc:
-* kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
 
 ----------------------------------------------------------------
 4.6.0 FEATURES:
