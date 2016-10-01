@@ -7,21 +7,6 @@
 // ----------------------------------------------------------------
 typedef void keyword_usage_func_t(FILE* ostream);
 
-static keyword_usage_func_t mlr_dsl_dump_keyword_usage;
-static keyword_usage_func_t mlr_dsl_edump_keyword_usage;
-static keyword_usage_func_t mlr_dsl_emit_keyword_usage;
-static keyword_usage_func_t mlr_dsl_emitf_keyword_usage;
-static keyword_usage_func_t mlr_dsl_emitp_keyword_usage;
-static keyword_usage_func_t mlr_dsl_eprint_keyword_usage;
-static keyword_usage_func_t mlr_dsl_eprintn_keyword_usage;
-static keyword_usage_func_t mlr_dsl_filter_keyword_usage;
-static keyword_usage_func_t mlr_dsl_print_keyword_usage;
-static keyword_usage_func_t mlr_dsl_printn_keyword_usage;
-static keyword_usage_func_t mlr_dsl_stderr_keyword_usage;
-static keyword_usage_func_t mlr_dsl_stdout_keyword_usage;
-static keyword_usage_func_t mlr_dsl_tee_keyword_usage;
-static keyword_usage_func_t mlr_dsl_unset_keyword_usage;
-
 // E
 // ENV
 // FILENAME
@@ -31,23 +16,37 @@ static keyword_usage_func_t mlr_dsl_unset_keyword_usage;
 // NR
 // PI
 
-// all
-// begin
-// break
-// call
-// continue
-// do
-// elif
-// else
-// end
-// for
-// func
-// if
-// in
-// local
-// return
-// subr
-// while
+static keyword_usage_func_t mlr_dsl_all_keyword_usage;
+static keyword_usage_func_t mlr_dsl_begin_keyword_usage;
+static keyword_usage_func_t mlr_dsl_break_keyword_usage;
+static keyword_usage_func_t mlr_dsl_call_keyword_usage;
+static keyword_usage_func_t mlr_dsl_continue_keyword_usage;
+static keyword_usage_func_t mlr_dsl_do_keyword_usage;
+static keyword_usage_func_t mlr_dsl_dump_keyword_usage;
+static keyword_usage_func_t mlr_dsl_edump_keyword_usage;
+static keyword_usage_func_t mlr_dsl_elif_keyword_usage;
+static keyword_usage_func_t mlr_dsl_else_keyword_usage;
+static keyword_usage_func_t mlr_dsl_emit_keyword_usage;
+static keyword_usage_func_t mlr_dsl_emitf_keyword_usage;
+static keyword_usage_func_t mlr_dsl_emitp_keyword_usage;
+static keyword_usage_func_t mlr_dsl_end_keyword_usage;
+static keyword_usage_func_t mlr_dsl_eprint_keyword_usage;
+static keyword_usage_func_t mlr_dsl_eprintn_keyword_usage;
+static keyword_usage_func_t mlr_dsl_filter_keyword_usage;
+static keyword_usage_func_t mlr_dsl_for_keyword_usage;
+static keyword_usage_func_t mlr_dsl_func_keyword_usage;
+static keyword_usage_func_t mlr_dsl_if_keyword_usage;
+static keyword_usage_func_t mlr_dsl_in_keyword_usage;
+static keyword_usage_func_t mlr_dsl_local_keyword_usage;
+static keyword_usage_func_t mlr_dsl_print_keyword_usage;
+static keyword_usage_func_t mlr_dsl_printn_keyword_usage;
+static keyword_usage_func_t mlr_dsl_return_keyword_usage;
+static keyword_usage_func_t mlr_dsl_stderr_keyword_usage;
+static keyword_usage_func_t mlr_dsl_stdout_keyword_usage;
+static keyword_usage_func_t mlr_dsl_subr_keyword_usage;
+static keyword_usage_func_t mlr_dsl_tee_keyword_usage;
+static keyword_usage_func_t mlr_dsl_unset_keyword_usage;
+static keyword_usage_func_t mlr_dsl_while_keyword_usage;
 
 // ----------------------------------------------------------------
 typedef struct _keyword_usage_entry_t {
@@ -57,20 +56,37 @@ typedef struct _keyword_usage_entry_t {
 
 static keyword_usage_entry_t KEYWORD_USAGE_TABLE[] = {
 
+	{ "all",      mlr_dsl_all_keyword_usage      },
+	{ "begin",    mlr_dsl_begin_keyword_usage    },
+	{ "break",    mlr_dsl_break_keyword_usage    },
+	{ "call",     mlr_dsl_call_keyword_usage     },
+	{ "continue", mlr_dsl_continue_keyword_usage },
+	{ "do",       mlr_dsl_do_keyword_usage       },
 	{ "dump",    mlr_dsl_dump_keyword_usage    },
 	{ "edump",   mlr_dsl_edump_keyword_usage   },
+	{ "elif",     mlr_dsl_elif_keyword_usage     },
+	{ "else",     mlr_dsl_else_keyword_usage     },
 	{ "emit",    mlr_dsl_emit_keyword_usage    },
 	{ "emitf",   mlr_dsl_emitf_keyword_usage   },
 	{ "emitp",   mlr_dsl_emitp_keyword_usage   },
+	{ "end",      mlr_dsl_end_keyword_usage      },
 	{ "eprint",  mlr_dsl_eprint_keyword_usage  },
 	{ "eprintn", mlr_dsl_eprintn_keyword_usage },
 	{ "filter",  mlr_dsl_filter_keyword_usage  },
+	{ "for",      mlr_dsl_for_keyword_usage      },
+	{ "func",     mlr_dsl_func_keyword_usage     },
+	{ "if",       mlr_dsl_if_keyword_usage       },
+	{ "in",       mlr_dsl_in_keyword_usage       },
+	{ "local",    mlr_dsl_local_keyword_usage    },
 	{ "print",   mlr_dsl_print_keyword_usage   },
 	{ "printn",  mlr_dsl_printn_keyword_usage  },
+	{ "return",   mlr_dsl_return_keyword_usage   },
 	{ "stderr",  mlr_dsl_stderr_keyword_usage  },
 	{ "stdout",  mlr_dsl_stdout_keyword_usage  },
+	{ "subr",     mlr_dsl_subr_keyword_usage     },
 	{ "tee",     mlr_dsl_tee_keyword_usage     },
 	{ "unset",   mlr_dsl_unset_keyword_usage   },
+	{ "while",    mlr_dsl_while_keyword_usage    },
 
 };
 static int KEYWORD_USAGE_TABLE_SIZE = sizeof(KEYWORD_USAGE_TABLE)/sizeof(KEYWORD_USAGE_TABLE[0]);
@@ -112,6 +128,32 @@ void mlr_dsl_list_all_keywords_raw(FILE* ostream) {
 }
 
 // ----------------------------------------------------------------
+
+static void mlr_dsl_all_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
+}
+
+static void mlr_dsl_begin_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
+}
+
+static void mlr_dsl_break_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
+}
+
+static void mlr_dsl_call_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
+}
+
+static void mlr_dsl_continue_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
+}
+
+static void mlr_dsl_do_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
+}
+
+// ----------------------------------------------------------------
 static void mlr_dsl_dump_keyword_usage(FILE* ostream) {
     fprintf(ostream,
 		"dump: prints all currently defined out-of-stream variables immediately\n"
@@ -139,6 +181,14 @@ static void mlr_dsl_edump_keyword_usage(FILE* ostream) {
 		"  to stderr as JSON.\n"
 		"\n"
 		"  Example: mlr --from f.dat put -q '@v[NR]=$*; end { edump }'\n");
+}
+
+static void mlr_dsl_elif_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
+}
+
+static void mlr_dsl_else_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
 }
 
 static void mlr_dsl_emit_keyword_usage(FILE* ostream) {
@@ -237,6 +287,10 @@ static void mlr_dsl_emitp_keyword_usage(FILE* ostream) {
 		MLR_GLOBALS.bargv0);
 }
 
+static void mlr_dsl_end_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
+}
+
 static void mlr_dsl_eprint_keyword_usage(FILE* ostream) {
     fprintf(ostream,
 		"eprint: prints expression immediately to stderr.\n"
@@ -265,6 +319,26 @@ static void mlr_dsl_filter_keyword_usage(FILE* ostream) {
 		"  Example: mlr --from f.dat put -q '@running_sum += $x * $y; emit @running_sum'\n");
 }
 
+static void mlr_dsl_for_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
+}
+
+static void mlr_dsl_func_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
+}
+
+static void mlr_dsl_if_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
+}
+
+static void mlr_dsl_in_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
+}
+
+static void mlr_dsl_local_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
+}
+
 static void mlr_dsl_print_keyword_usage(FILE* ostream) {
     fprintf(ostream,
 		"print: prints expression immediately to stdout.\n"
@@ -279,6 +353,10 @@ static void mlr_dsl_printn_keyword_usage(FILE* ostream) {
 		"  Example: mlr --from f.dat put -q 'printn \".\"; end { print \"\" }'\n");
 }
 
+static void mlr_dsl_return_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
+}
+
 static void mlr_dsl_stderr_keyword_usage(FILE* ostream) {
     fprintf(ostream,
 		"stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename\n"
@@ -289,6 +367,10 @@ static void mlr_dsl_stdout_keyword_usage(FILE* ostream) {
     fprintf(ostream,
 		"stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename\n"
 		"  to print to standard output.\n");
+}
+
+static void mlr_dsl_subr_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
 }
 
 static void mlr_dsl_tee_keyword_usage(FILE* ostream) {
@@ -327,4 +409,8 @@ static void mlr_dsl_unset_keyword_usage(FILE* ostream) {
 		"  Example: mlr --from f.dat put '...; unset @sums'\n"
 		"  Example: mlr --from f.dat put '...; unset @sums[\"green\"]'\n"
 		"  Example: mlr --from f.dat put '...; unset @*'\n");
+}
+
+static void mlr_dsl_while_keyword_usage(FILE* ostream) {
+	fprintf(ostream, "xxx temp\n");
 }
