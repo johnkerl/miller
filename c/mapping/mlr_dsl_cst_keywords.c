@@ -136,7 +136,11 @@ static void mlr_dsl_all_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_begin_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "begin: xxx temp\n");
+	fprintf(ostream,
+		"begin: defines a block of statements to be executed before input records\n"
+		"are ingested.\n"
+		"Example: 'begin { @count = 0 }'\n"
+	);
 }
 
 static void mlr_dsl_break_keyword_usage(FILE* ostream) {
@@ -290,7 +294,12 @@ static void mlr_dsl_emitp_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_end_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "end: xxx temp\n");
+	fprintf(ostream,
+		"end: defines a block of statements to be executed after input records\n"
+		"are ingested.\n"
+		"Example: 'end { emit @count }'\n"
+		"Example: 'end { eprint \"Final count is \" . @count }'\n"
+	);
 }
 
 static void mlr_dsl_eprint_keyword_usage(FILE* ostream) {
