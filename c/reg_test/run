@@ -4933,6 +4933,10 @@ mlr_expect_fail --from $indir/abixy --opprint put 'subr s() { } subr s() { }'
 mlr_expect_fail --from $indir/abixy --opprint put 'subr s() { } subr s(x) { }'
 run_mlr --from $indir/abixy --opprint put 'subr log(text) { print "TEXT IS ".text } call log("NR is ".NR)'
 
+# print from subr/func
+run_mlr --from $indir/abixy --opprint put 'subr log(text) { print "TEXT IS ".text } call log("NR is ".NR)'
+run_mlr --from $indir/abixy --opprint put 'func f(text) { print "TEXT IS ".text; return text.text } $o = f($a)'
+
 # ----------------------------------------------------------------
 announce LOCALVAR SCOPE AND EXTENT
 
