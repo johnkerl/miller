@@ -22,15 +22,6 @@ PRE-RELEASE 4.6.0:
 ? substr func ? -> use @ mand
 
 ----------------------------------------------------------------
-UT FOR 4.6.0:
-
-* sieve
-* use substr @ mand.mlr
-* func/subr exhaustively. local/return/etc in/out of various; for ->func -> while; subr -> func; etc
-* locals in all curly-braced control structures; top-level locals; scope, extent, freeing.
-* with valgrind: func/subr args read, written, both, neither.
-
-----------------------------------------------------------------
 DOC FOR 4.6.0:
 
 To file:
