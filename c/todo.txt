@@ -16,6 +16,7 @@ NON-RELEASE:
 PRE-RELEASE 4.6.0:
 
 ! multi-statement in continuation of triple-for !!
+  -> also doc update re miller's "lack of comma operator" :^/
 * valgrinds
 * xxxes
 
