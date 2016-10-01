@@ -1,0 +1,21 @@
+begin {
+	@n = 100;
+}
+@n = $n;
+end {
+	for (local i = 0; i <= @n; i += 1) {
+		@s[i] = true;
+	}
+	@s[0] = false;
+	@s[1] = false;
+	for (local i = 2; i <= @n; i += 1) {
+		for (local j = i+i; j <= @n; j += i) {
+			@s[j] = false;
+		}
+	}
+	for (local i = 0; i <= @n; i += 1) {
+		if (@s[i]) {
+			print i;
+		}
+	}
+}
