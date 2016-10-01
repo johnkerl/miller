@@ -4588,7 +4588,8 @@ Example: 'begin { @count = 0 }'
 break: causes execution to continue after the body of the current
 for/while/do-while loop.
 
-call: xxx temp
+call: used for invoking a user-defined subroutine.
+Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'
 
 continue: causes execution to skip the remaining statements in the body of
 the current for/while/do-while loop. For-loop increments are still applied.
@@ -4734,7 +4735,8 @@ filter: includes/excludes the record in the output record stream.
 
 for: xxx temp
 
-func: xxx temp
+func: used for defining a user-defined function.
+Example: 'func f(a,b) { return sqrt(a**2+b**2)} $d = f($x, $y)'
 
 if: starts an if/elif/elif chain. The body statements must be wrapped
 in curly braces.
@@ -4761,7 +4763,8 @@ stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
 stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
   to print to standard output.
 
-subr: xxx temp
+subr: used for defining a subroutine.
+Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'
 
 tee: prints the current record to specified file.
   This is an immediate print to the specified file (except for pprint format

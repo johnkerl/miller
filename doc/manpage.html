@@ -1609,7 +1609,8 @@ KEYWORDS FOR PUT AND FILTER
        for/while/do-while loop.
 
    call
-       call: xxx temp
+       call: used for invoking a user-defined subroutine.
+       Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'
 
    continue
        continue: causes execution to skip the remaining statements in the body of
@@ -1770,7 +1771,8 @@ KEYWORDS FOR PUT AND FILTER
        for: xxx temp
 
    func
-       func: xxx temp
+       func: used for defining a user-defined function.
+       Example: 'func f(a,b) { return sqrt(a**2+b**2)} $d = f($x, $y)'
 
    if
        if: starts an if/elif/elif chain. The body statements must be wrapped
@@ -1806,7 +1808,8 @@ KEYWORDS FOR PUT AND FILTER
 	 to print to standard output.
 
    subr
-       subr: xxx temp
+       subr: used for defining a subroutine.
+       Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'
 
    tee
        tee: prints the current record to specified file.

@@ -2471,7 +2471,8 @@ for/while/do-while loop.
 .RS 0
 .\}
 .nf
-call: xxx temp
+call: used for invoking a user-defined subroutine.
+Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'
 .fi
 .if n \{\
 .RE
@@ -2722,7 +2723,8 @@ for: xxx temp
 .RS 0
 .\}
 .nf
-func: xxx temp
+func: used for defining a user-defined function.
+Example: 'func f(a,b) { return sqrt(a**2+b**2)} $d = f($x, $y)'
 .fi
 .if n \{\
 .RE
@@ -2812,7 +2814,8 @@ stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
 .RS 0
 .\}
 .nf
-subr: xxx temp
+subr: used for defining a subroutine.
+Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'
 .fi
 .if n \{\
 .RE

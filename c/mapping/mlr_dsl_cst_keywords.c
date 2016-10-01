@@ -147,7 +147,10 @@ static void mlr_dsl_break_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_call_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "call: xxx temp\n");
+	fprintf(ostream,
+		"call: used for invoking a user-defined subroutine.\n"
+		"Example: 'subr s(k,v) { print k . \" is \" . v} call s(\"a\", $a)'\n"
+	);
 }
 
 static void mlr_dsl_continue_keyword_usage(FILE* ostream) {
@@ -344,7 +347,10 @@ static void mlr_dsl_for_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_func_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "func: xxx temp\n");
+	fprintf(ostream,
+		"func: used for defining a user-defined function.\n"
+		"Example: 'func f(a,b) { return sqrt(a**2+b**2)} $d = f($x, $y)'\n"
+	);
 }
 
 static void mlr_dsl_if_keyword_usage(FILE* ostream) {
@@ -397,7 +403,10 @@ static void mlr_dsl_stdout_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_subr_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "subr: xxx temp\n");
+	fprintf(ostream,
+		"subr: used for defining a subroutine.\n"
+		"Example: 'subr s(k,v) { print k . \" is \" . v} call s(\"a\", $a)'\n"
+	);
 }
 
 static void mlr_dsl_tee_keyword_usage(FILE* ostream) {
