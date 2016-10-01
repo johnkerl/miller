@@ -1596,6 +1596,29 @@ FUNCTIONS FOR FILTER/PUT
        e.g. 1440768801.748936.
 
 KEYWORDS FOR PUT AND FILTER
+   all
+       all: xxx temp
+
+   begin
+       begin: defines a block of statements to be executed before input records
+       are ingested. The body statements must be wrapped in curly braces.
+       Example: 'begin { @count = 0 }'
+
+   break
+       break: causes execution to continue after the body of the current
+       for/while/do-while loop.
+
+   call
+       call: xxx temp
+
+   continue
+       continue: causes execution to skip the remaining statements in the body of
+       the current for/while/do-while loop. For-loop increments are still applied.
+
+   do
+       do: with "while", introduces a do-while loop. The body statements must be wrapped
+       in curly braces.
+
    dump
        dump: prints all currently defined out-of-stream variables immediately
 	 to stdout as JSON.
@@ -1620,6 +1643,14 @@ KEYWORDS FOR PUT AND FILTER
 	 to stderr as JSON.
 
 	 Example: mlr --from f.dat put -q '@v[NR]=$*; end { edump }'
+
+   elif
+       elif: the way Miller spells "else if". The body statements must be wrapped
+       in curly braces.
+
+   else
+       else: terminates an if/elif/elif chain. The body statements must be wrapped
+       in curly braces.
 
    emit
        emit: inserts an out-of-stream variable into the output record stream. Hashmap
@@ -1708,6 +1739,12 @@ KEYWORDS FOR PUT AND FILTER
 
 	 Please see http://johnkerl.org/miller/doc for more information.
 
+   end
+       end: defines a block of statements to be executed after input records
+       are ingested. The body statements must be wrapped in curly braces.
+       Example: 'end { emit @count }'
+       Example: 'end { eprint "Final count is " . @count }'
+
    eprint
        eprint: prints expression immediately to stderr.
 	 Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
@@ -1729,6 +1766,22 @@ KEYWORDS FOR PUT AND FILTER
 
 	 Example: mlr --from f.dat put -q '@running_sum += $x * $y; emit @running_sum'
 
+   for
+       for: xxx temp
+
+   func
+       func: xxx temp
+
+   if
+       if: starts an if/elif/elif chain. The body statements must be wrapped
+       in curly braces.
+
+   in
+       in: xxx temp
+
+   local
+       local: xxx temp
+
    print
        print: prints expression immediately to stdout.
 	 Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
@@ -1739,6 +1792,11 @@ KEYWORDS FOR PUT AND FILTER
        printn: prints expression immediately to stdout, without trailing newline.
 	 Example: mlr --from f.dat put -q 'printn "."; end { print "" }'
 
+   return
+       return: specifies the return value from a user-defined function.
+       Omitted return statements (including via if-branches) result in an absent-null
+       return value, which in turns results in a skipped assignment to an LHS.
+
    stderr
        stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
 	 to print to standard error.
@@ -1746,6 +1804,9 @@ KEYWORDS FOR PUT AND FILTER
    stdout
        stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
 	 to print to standard output.
+
+   subr
+       subr: xxx temp
 
    tee
        tee: prints the current record to specified file.
@@ -1779,6 +1840,10 @@ KEYWORDS FOR PUT AND FILTER
 	 Example: mlr --from f.dat put '...; unset @sums'
 	 Example: mlr --from f.dat put '...; unset @sums["green"]'
 	 Example: mlr --from f.dat put '...; unset @*'
+
+   while
+       while: introduces a while loop, or with "do", introduces a do-while loop.
+       The body statements must be wrapped in curly braces.
 
 AUTHOR
        Miller is written by John Kerl &lt;kerl.john.r@gmail.com&gt;.

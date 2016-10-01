@@ -4579,6 +4579,23 @@ eks pan 2 0.7586799647899636 0.5221511083334797
 <div class="pokipanel">
 <pre>
 $ mlr --help-all-keywords
+all: xxx temp
+
+begin: defines a block of statements to be executed before input records
+are ingested. The body statements must be wrapped in curly braces.
+Example: 'begin { @count = 0 }'
+
+break: causes execution to continue after the body of the current
+for/while/do-while loop.
+
+call: xxx temp
+
+continue: causes execution to skip the remaining statements in the body of
+the current for/while/do-while loop. For-loop increments are still applied.
+
+do: with "while", introduces a do-while loop. The body statements must be wrapped
+in curly braces.
+
 dump: prints all currently defined out-of-stream variables immediately
   to stdout as JSON.
 
@@ -4601,6 +4618,12 @@ edump: prints all currently defined out-of-stream variables immediately
   to stderr as JSON.
 
   Example: mlr --from f.dat put -q '@v[NR]=$*; end { edump }'
+
+elif: the way Miller spells "else if". The body statements must be wrapped
+in curly braces.
+
+else: terminates an if/elif/elif chain. The body statements must be wrapped
+in curly braces.
 
 emit: inserts an out-of-stream variable into the output record stream. Hashmap
   indices present in the data but not slotted by emit arguments are not output.
@@ -4686,6 +4709,11 @@ emitp: inserts an out-of-stream variable into the output record stream.
 
   Please see http://johnkerl.org/miller/doc for more information.
 
+end: defines a block of statements to be executed after input records
+are ingested. The body statements must be wrapped in curly braces.
+Example: 'end { emit @count }'
+Example: 'end { eprint "Final count is " . @count }'
+
 eprint: prints expression immediately to stderr.
   Example: mlr --from f.dat put -q 'eprint "The sum of x and y is ".($x+$y)'
   Example: mlr --from f.dat put -q 'for (k, v in $*) { eprint k . " =&gt; " . v }'
@@ -4704,6 +4732,17 @@ filter: includes/excludes the record in the output record stream.
 
   Example: mlr --from f.dat put -q '@running_sum += $x * $y; emit @running_sum'
 
+for: xxx temp
+
+func: xxx temp
+
+if: starts an if/elif/elif chain. The body statements must be wrapped
+in curly braces.
+
+in: xxx temp
+
+local: xxx temp
+
 print: prints expression immediately to stdout.
   Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
   Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " =&gt; " . v }'
@@ -4712,11 +4751,17 @@ print: prints expression immediately to stdout.
 printn: prints expression immediately to stdout, without trailing newline.
   Example: mlr --from f.dat put -q 'printn "."; end { print "" }'
 
+return: specifies the return value from a user-defined function.
+Omitted return statements (including via if-branches) result in an absent-null
+return value, which in turns results in a skipped assignment to an LHS.
+
 stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
   to print to standard error.
 
 stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
   to print to standard output.
+
+subr: xxx temp
 
 tee: prints the current record to specified file.
   This is an immediate print to the specified file (except for pprint format
@@ -4748,6 +4793,9 @@ unset: clears field(s) from the current record, or an out-of-stream variable.
   Example: mlr --from f.dat put '...; unset @sums'
   Example: mlr --from f.dat put '...; unset @sums["green"]'
   Example: mlr --from f.dat put '...; unset @*'
+
+while: introduces a while loop, or with "do", introduces a do-while loop.
+The body statements must be wrapped in curly braces.
 </pre>
 </div>
 <p/>

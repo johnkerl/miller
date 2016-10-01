@@ -93,9 +93,6 @@ static keyword_usage_entry_t KEYWORD_USAGE_TABLE[] = {
 };
 static int KEYWORD_USAGE_TABLE_SIZE = sizeof(KEYWORD_USAGE_TABLE)/sizeof(KEYWORD_USAGE_TABLE[0]);
 
-// ----------------------------------------------------------------
-
-
 // ================================================================
 // Pass function_name == NULL to get usage for all keywords.
 // Note keywords are defined in dsls/mlr_dsl_lexer.l.
@@ -130,7 +127,6 @@ void mlr_dsl_list_all_keywords_raw(FILE* ostream) {
 }
 
 // ----------------------------------------------------------------
-
 static void mlr_dsl_all_keyword_usage(FILE* ostream) {
 	fprintf(ostream, "all: xxx temp\n");
 }
@@ -138,13 +134,16 @@ static void mlr_dsl_all_keyword_usage(FILE* ostream) {
 static void mlr_dsl_begin_keyword_usage(FILE* ostream) {
 	fprintf(ostream,
 		"begin: defines a block of statements to be executed before input records\n"
-		"are ingested.\n"
+		"are ingested. The body statements must be wrapped in curly braces.\n"
 		"Example: 'begin { @count = 0 }'\n"
 	);
 }
 
 static void mlr_dsl_break_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "break: xxx temp\n");
+	fprintf(ostream,
+		"break: causes execution to continue after the body of the current\n"
+		"for/while/do-while loop.\n"
+	);
 }
 
 static void mlr_dsl_call_keyword_usage(FILE* ostream) {
@@ -152,14 +151,19 @@ static void mlr_dsl_call_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_continue_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "continue: xxx temp\n");
+	fprintf(ostream,
+		"continue: causes execution to skip the remaining statements in the body of\n"
+		"the current for/while/do-while loop. For-loop increments are still applied.\n"
+	);
 }
 
 static void mlr_dsl_do_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "do: xxx temp\n");
+	fprintf(ostream,
+		"do: with \"while\", introduces a do-while loop. The body statements must be wrapped\n"
+		"in curly braces.\n"
+	);
 }
 
-// ----------------------------------------------------------------
 static void mlr_dsl_dump_keyword_usage(FILE* ostream) {
     fprintf(ostream,
 		"dump: prints all currently defined out-of-stream variables immediately\n"
@@ -190,11 +194,17 @@ static void mlr_dsl_edump_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_elif_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "elif: xxx temp\n");
+	fprintf(ostream,
+		"elif: the way Miller spells \"else if\". The body statements must be wrapped\n"
+		"in curly braces.\n"
+	);
 }
 
 static void mlr_dsl_else_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "else: xxx temp\n");
+	fprintf(ostream,
+		"else: terminates an if/elif/elif chain. The body statements must be wrapped\n"
+		"in curly braces.\n"
+	);
 }
 
 static void mlr_dsl_emit_keyword_usage(FILE* ostream) {
@@ -296,7 +306,7 @@ static void mlr_dsl_emitp_keyword_usage(FILE* ostream) {
 static void mlr_dsl_end_keyword_usage(FILE* ostream) {
 	fprintf(ostream,
 		"end: defines a block of statements to be executed after input records\n"
-		"are ingested.\n"
+		"are ingested. The body statements must be wrapped in curly braces.\n"
 		"Example: 'end { emit @count }'\n"
 		"Example: 'end { eprint \"Final count is \" . @count }'\n"
 	);
@@ -316,7 +326,6 @@ static void mlr_dsl_eprintn_keyword_usage(FILE* ostream) {
 		"  Example: mlr --from f.dat put -q 'eprintn \"The sum of x and y is \".($x+$y); eprint \"\"'\n");
 }
 
-// ----------------------------------------------------------------
 static void mlr_dsl_filter_keyword_usage(FILE* ostream) {
     fprintf(ostream,
 		"filter: includes/excludes the record in the output record stream.\n"
@@ -339,7 +348,10 @@ static void mlr_dsl_func_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_if_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "if: xxx temp\n");
+	fprintf(ostream,
+		"if: starts an if/elif/elif chain. The body statements must be wrapped\n"
+		"in curly braces.\n"
+	);
 }
 
 static void mlr_dsl_in_keyword_usage(FILE* ostream) {
@@ -365,7 +377,11 @@ static void mlr_dsl_printn_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_return_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "return: xxx temp\n");
+	fprintf(ostream,
+		"return: specifies the return value from a user-defined function.\n"
+		"Omitted return statements (including via if-branches) result in an absent-null\n"
+		"return value, which in turns results in a skipped assignment to an LHS.\n"
+	);
 }
 
 static void mlr_dsl_stderr_keyword_usage(FILE* ostream) {
@@ -423,5 +439,8 @@ static void mlr_dsl_unset_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_while_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "while: xxx temp\n");
+	fprintf(ostream,
+		"while: introduces a while loop, or with \"do\", introduces a do-while loop.\n"
+		"The body statements must be wrapped in curly braces.\n"
+	);
 }

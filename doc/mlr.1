@@ -2436,6 +2436,65 @@ e.g. 1440768801.748936.
 .SH "KEYWORDS FOR PUT AND FILTER"
 .sp
 
+.SS "all"
+.if n \{\
+.RS 0
+.\}
+.nf
+all: xxx temp
+.fi
+.if n \{\
+.RE
+.SS "begin"
+.if n \{\
+.RS 0
+.\}
+.nf
+begin: defines a block of statements to be executed before input records
+are ingested. The body statements must be wrapped in curly braces.
+Example: 'begin { @count = 0 }'
+.fi
+.if n \{\
+.RE
+.SS "break"
+.if n \{\
+.RS 0
+.\}
+.nf
+break: causes execution to continue after the body of the current
+for/while/do-while loop.
+.fi
+.if n \{\
+.RE
+.SS "call"
+.if n \{\
+.RS 0
+.\}
+.nf
+call: xxx temp
+.fi
+.if n \{\
+.RE
+.SS "continue"
+.if n \{\
+.RS 0
+.\}
+.nf
+continue: causes execution to skip the remaining statements in the body of
+the current for/while/do-while loop. For-loop increments are still applied.
+.fi
+.if n \{\
+.RE
+.SS "do"
+.if n \{\
+.RS 0
+.\}
+.nf
+do: with "while", introduces a do-while loop. The body statements must be wrapped
+in curly braces.
+.fi
+.if n \{\
+.RE
 .SS "dump"
 .if n \{\
 .RS 0
@@ -2470,6 +2529,26 @@ edump: prints all currently defined out-of-stream variables immediately
   to stderr as JSON.
 
   Example: mlr --from f.dat put -q '@v[NR]=$*; end { edump }'
+.fi
+.if n \{\
+.RE
+.SS "elif"
+.if n \{\
+.RS 0
+.\}
+.nf
+elif: the way Miller spells "else if". The body statements must be wrapped
+in curly braces.
+.fi
+.if n \{\
+.RE
+.SS "else"
+.if n \{\
+.RS 0
+.\}
+.nf
+else: terminates an if/elif/elif chain. The body statements must be wrapped
+in curly braces.
 .fi
 .if n \{\
 .RE
@@ -2578,6 +2657,18 @@ emitp: inserts an out-of-stream variable into the output record stream.
 .fi
 .if n \{\
 .RE
+.SS "end"
+.if n \{\
+.RS 0
+.\}
+.nf
+end: defines a block of statements to be executed after input records
+are ingested. The body statements must be wrapped in curly braces.
+Example: 'end { emit @count }'
+Example: 'end { eprint "Final count is " . @count }'
+.fi
+.if n \{\
+.RE
 .SS "eprint"
 .if n \{\
 .RS 0
@@ -2617,6 +2708,52 @@ filter: includes/excludes the record in the output record stream.
 .fi
 .if n \{\
 .RE
+.SS "for"
+.if n \{\
+.RS 0
+.\}
+.nf
+for: xxx temp
+.fi
+.if n \{\
+.RE
+.SS "func"
+.if n \{\
+.RS 0
+.\}
+.nf
+func: xxx temp
+.fi
+.if n \{\
+.RE
+.SS "if"
+.if n \{\
+.RS 0
+.\}
+.nf
+if: starts an if/elif/elif chain. The body statements must be wrapped
+in curly braces.
+.fi
+.if n \{\
+.RE
+.SS "in"
+.if n \{\
+.RS 0
+.\}
+.nf
+in: xxx temp
+.fi
+.if n \{\
+.RE
+.SS "local"
+.if n \{\
+.RS 0
+.\}
+.nf
+local: xxx temp
+.fi
+.if n \{\
+.RE
 .SS "print"
 .if n \{\
 .RS 0
@@ -2639,6 +2776,17 @@ printn: prints expression immediately to stdout, without trailing newline.
 .fi
 .if n \{\
 .RE
+.SS "return"
+.if n \{\
+.RS 0
+.\}
+.nf
+return: specifies the return value from a user-defined function.
+Omitted return statements (including via if-branches) result in an absent-null
+return value, which in turns results in a skipped assignment to an LHS.
+.fi
+.if n \{\
+.RE
 .SS "stderr"
 .if n \{\
 .RS 0
@@ -2656,6 +2804,15 @@ stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
 .nf
 stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
   to print to standard output.
+.fi
+.if n \{\
+.RE
+.SS "subr"
+.if n \{\
+.RS 0
+.\}
+.nf
+subr: xxx temp
 .fi
 .if n \{\
 .RE
@@ -2701,6 +2858,16 @@ unset: clears field(s) from the current record, or an out-of-stream variable.
   Example: mlr --from f.dat put '...; unset @sums'
   Example: mlr --from f.dat put '...; unset @sums["green"]'
   Example: mlr --from f.dat put '...; unset @*'
+.fi
+.if n \{\
+.RE
+.SS "while"
+.if n \{\
+.RS 0
+.\}
+.nf
+while: introduces a while loop, or with "do", introduces a do-while loop.
+The body statements must be wrapped in curly braces.
 .fi
 .if n \{\
 .RE
