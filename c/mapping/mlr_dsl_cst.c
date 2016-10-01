@@ -290,6 +290,7 @@ static cst_statement_handler_t handle_print;
 	pcst->psubr_defsites    = lhmsv_alloc();
 	pcst->psubr_callsite_statements_to_resolve = sllv_alloc();
 	pcst->pfilter_evaluator = NULL; // xxx rm
+	pcst->flush_every_record = flush_every_record;
 
 	udf_defsite_state_t* pudf_defsite_state = NULL;
 	subr_defsite_t* psubr_defsite = NULL;
@@ -1580,6 +1581,7 @@ static mlr_dsl_cst_statement_t* alloc_tee(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_
 		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
 		pstatement->pnode_handler = handle_tee_to_file;
 	}
+	pstatement->flush_every_record = pcst->flush_every_record;
 
 	return pstatement;
 }
@@ -1622,6 +1624,7 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
 		pstatement->pnode_handler = handle_emitf_to_file;
 	}
+	pstatement->flush_every_record = pcst->flush_every_record;
 
 	return pstatement;
 }
@@ -1720,6 +1723,7 @@ static mlr_dsl_cst_statement_t* alloc_emit(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
 		pstatement->pnode_handler = output_all ? handle_emit_all_to_file : handle_emit_to_file;
 	}
+	pstatement->flush_every_record = pcst->flush_every_record;
 
 	return pstatement;
 }
@@ -1868,6 +1872,7 @@ static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 		pstatement->pmulti_out = multi_out_alloc();
 		pstatement->pnode_handler = handle_dump_to_file;
 	}
+	pstatement->flush_every_record = pcst->flush_every_record;
 
 	return pstatement;
 }
@@ -1899,6 +1904,7 @@ static mlr_dsl_cst_statement_t* alloc_print(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
 		pstatement->pmulti_out = multi_out_alloc();
 	}
+	pstatement->flush_every_record = pcst->flush_every_record;
 	pstatement->pnode_handler = handle_print;
 
 	return pstatement;

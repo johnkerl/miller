@@ -60,7 +60,6 @@ typedef struct _cst_outputs_t {
 	int*    pshould_emit_rec;
 	sllv_t* poutrecs;
 	char*   oosvar_flatten_separator;
-	// xxx int     flush_every_record; // fflush on emit/tee/print/dump
 	cli_writer_opts_t* pwriter_opts;
 } cst_outputs_t;
 
@@ -215,6 +214,9 @@ typedef struct _mlr_dsl_cst_t {
 
 	// For mlr filter which takes restricted syntax
 	rval_evaluator_t* pfilter_evaluator;
+
+	// fflush on emit/tee/print/dump
+	int flush_every_record;
 } mlr_dsl_cst_t;
 
 // ----------------------------------------------------------------
