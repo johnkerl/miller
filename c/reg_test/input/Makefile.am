@@ -134,6 +134,7 @@ EXTRA_DIST=	\
 		sec2xhms \
 		short \
 		short-circuit.dkvp \
+		sieve.mlr \
 		simple.tsv \
 		small \
 		small-nested.json \

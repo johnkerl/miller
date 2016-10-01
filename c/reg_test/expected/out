@@ -35875,6 +35875,33 @@ mlr: tee statements are not valid within func blocks.
 mlr --from ./reg_test/input/abixy put begin{@x=1} func f(x) { dump; print "hello"; emit > "x", @* } $o=f($i)
 mlr: emit statements are not valid within func blocks.
 
+mlr -n put -q -f ./reg_test/input/sieve.mlr
+2
+3
+5
+7
+11
+13
+17
+19
+23
+29
+31
+37
+41
+43
+47
+53
+59
+61
+67
+71
+73
+79
+83
+89
+97
+
 
 ================================================================
 LOCALVAR SCOPE AND EXTENT

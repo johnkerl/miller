@@ -4940,6 +4940,9 @@ run_mlr --from $indir/abixy put 'begin{@x=1} func f(x) { dump; print "hello"    
 mlr_expect_fail --from $indir/abixy put 'begin{@x=1} func f(x) { dump; print "hello"; tee  > "x", $* } $o=f($i)'
 mlr_expect_fail --from $indir/abixy put 'begin{@x=1} func f(x) { dump; print "hello"; emit > "x", @* } $o=f($i)' 
 
+# general programming-language stuff
+run_mlr -n put -q -f $indir/sieve.mlr
+
 # ----------------------------------------------------------------
 announce LOCALVAR SCOPE AND EXTENT
 
