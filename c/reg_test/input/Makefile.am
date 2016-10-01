@@ -85,6 +85,7 @@ EXTRA_DIST=	\
 		joinb.dkvp \
 		json-output-options.dkvp \
 		logi.dkvp \
+		mand.mlr \
 		merge-fields-abxy.dkvp \
 		merge-fields-in-out.csv \
 		minmax.dkvp \

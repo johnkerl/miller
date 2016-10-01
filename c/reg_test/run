@@ -4942,6 +4942,7 @@ mlr_expect_fail --from $indir/abixy put 'begin{@x=1} func f(x) { dump; print "he
 
 # general programming-language stuff
 run_mlr -n put -q -f $indir/sieve.mlr
+run_mlr -n put -q -f $indir/mand.mlr
 
 # ----------------------------------------------------------------
 announce LOCALVAR SCOPE AND EXTENT
