@@ -345,7 +345,18 @@ static void mlr_dsl_filter_keyword_usage(FILE* ostream) {
 }
 
 static void mlr_dsl_for_keyword_usage(FILE* ostream) {
-	fprintf(ostream, "for: xxx temp\n");
+	fprintf(ostream,
+		"for: defines a for-loop using one of three styles. The body statements must\n"
+		"be wrapped in curly braces.\n"
+		"For-loop over stream record:\n"
+		"  Example:  'for (k, v in $*) { ... }'\n"
+		"For-loop over out-of-stream variables:\n"
+		"  Example: 'for (k, v in @counts) { ... }'\n"
+		"  Example: 'for ((k1, k2), v in @counts) { ... }'\n"
+		"  Example: 'for ((k1, k2, k3), v in @*) { ... }'\n"
+		"C-style for-loop:\n"
+		"  Example:  'for (local i = 0, local b = 1; i < 10; i += 1, b *= 2) { ... }'\n"
+	);
 }
 
 static void mlr_dsl_func_keyword_usage(FILE* ostream) {

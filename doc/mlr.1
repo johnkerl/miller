@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-10-01
+.\"      Date: 2016-10-02
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-10-01" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-10-02" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2714,7 +2714,16 @@ filter: includes/excludes the record in the output record stream.
 .RS 0
 .\}
 .nf
-for: xxx temp
+for: defines a for-loop using one of three styles. The body statements must
+be wrapped in curly braces.
+For-loop over stream record:
+  Example:  'for (k, v in $*) { ... }'
+For-loop over out-of-stream variables:
+  Example: 'for (k, v in @counts) { ... }'
+  Example: 'for ((k1, k2), v in @counts) { ... }'
+  Example: 'for ((k1, k2, k3), v in @*) { ... }'
+C-style for-loop:
+  Example:  'for (local i = 0, local b = 1; i < 10; i += 1, b *= 2) { ... }'
 .fi
 .if n \{\
 .RE
