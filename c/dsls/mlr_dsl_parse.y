@@ -149,6 +149,7 @@ md_statement_not_braced_end(A) ::= md_srec_assignment(B).                  { A =
 md_statement_not_braced_end(A) ::= md_srec_indirect_assignment(B).         { A = B; }
 md_statement_not_braced_end(A) ::= md_oosvar_from_full_srec_assignment(B). { A = B; }
 md_statement_not_braced_end(A) ::= md_full_srec_from_oosvar_assignment(B). { A = B; }
+//md_statement_not_braced_end(A) ::= md_env_assignment(B).                   { A = B; }
 
 // Valid in begin/end since they don't refer to srecs (although the RHSs might):
 md_statement_not_braced_end(A) ::= md_do_while_block(B).      { A = B; }
@@ -568,6 +569,13 @@ md_oosvar_from_full_srec_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_ASSIGN
 md_full_srec_from_oosvar_assignment(A)  ::= MD_TOKEN_FULL_SREC(B) MD_TOKEN_ASSIGN(O) md_oosvar_keylist(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT, B, C);
 }
+
+//xxx
+//make intermediate
+
+//md_env_assignment(A)  ::= MD_TOKEN_FULL_SREC(B) MD_TOKEN_ASSIGN(O) md_oosvar_keylist(C). {
+	//A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT, B, C);
+//}
 
 // ----------------------------------------------------------------
 md_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_LOGICAL_OR_EQUALS md_rhs(C). {
@@ -1822,7 +1830,11 @@ md_regexi(A) ::= MD_TOKEN_REGEXI(B). {
 md_atom_or_fcn(A) ::= MD_TOKEN_CONTEXT_VARIABLE(B). {
 	A = B;
 }
-md_atom_or_fcn(A) ::= MD_TOKEN_ENV(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
+md_atom_or_fcn(A) ::= md_env_index(B). {
+	A = B;
+}
+
+md_env_index(A) ::= MD_TOKEN_ENV(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
 	A = mlr_dsl_ast_node_alloc_binary("env", MD_AST_NODE_TYPE_ENV, B, C);
 }
 

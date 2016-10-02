@@ -15,8 +15,9 @@ NON-RELEASE:
 ----------------------------------------------------------------
 FUNCTIONALITY FOR 4.6.0:
 
-! multi-statement in continuation of triple-for !!
-  -> also doc update re miller's "lack of comma operator" :^/
+* multi-continue in triple-for
+
+* ENV @ LHS: esp. for popens.
 
 ! bind-stack: locals map to frame indices. maybe for 4.6.1 ... but prefer to get the perf good at release.
   (issue is computation is dominated by lhmsv_get/put/string_hash_func.)
@@ -25,8 +26,6 @@ FUNCTIONALITY FOR 4.6.0:
   o 2nd AST pass: analyze each for max depth: local def, write, read. adapt existing lmhsv/resolve logic.
   o 3rd AST pass: rewrite localvar names w/ frame-relative indices
   o CST statement-list: push/pop count for entry/exit; mv_absents on enter; mv_frees on exit
-
-* ENV @ LHS? esp. for popens.
 
 * valgrinds
 
