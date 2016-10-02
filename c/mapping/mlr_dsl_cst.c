@@ -50,6 +50,7 @@ static cst_statement_allocator_t alloc_indirect_srec_assignment;
 static cst_statement_allocator_t alloc_oosvar_assignment;
 static cst_statement_allocator_t alloc_oosvar_from_full_srec_assignment;
 static cst_statement_allocator_t alloc_full_srec_from_oosvar_assignment;
+static cst_statement_allocator_t alloc_env_assignment;
 static cst_statement_allocator_t alloc_unset;
 
 static cst_statement_allocator_t alloc_conditional_block;
@@ -136,6 +137,7 @@ static cst_statement_handler_t handle_oosvar_to_oosvar_assignment;
 static cst_statement_handler_t handle_oosvar_from_full_srec_assignment;
 static cst_statement_handler_t handle_full_srec_from_oosvar_assignment;
 static cst_statement_handler_t handle_oosvar_assignment;
+static cst_statement_handler_t handle_env_assignment;
 static cst_statement_handler_t handle_local_variable_definition;
 static cst_statement_handler_t handle_local_variable_assignment;
 static cst_statement_handler_t handle_unset;
@@ -666,6 +668,10 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		return alloc_full_srec_from_oosvar_assignment(pcst, pnode, type_inferencing, context_flags);
 		break;
 
+	case MD_AST_NODE_TYPE_ENV_ASSIGNMENT:
+		return alloc_env_assignment(pcst, pnode, type_inferencing, context_flags);
+		break;
+
 	case MD_AST_NODE_TYPE_UNSET:
 		if (context_flags & IN_FUNC_DEF) {
 			fprintf(stderr, "%s: unset statements are not valid within func blocks.\n",
@@ -776,6 +782,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->ppemit_keylist_evaluators            = NULL;
 	pstatement->local_lhs_variable_name              = NULL;
 	pstatement->srec_lhs_field_name                  = NULL;
+	pstatement->env_lhs_name                         = NULL;
 	pstatement->psrec_lhs_evaluator                  = NULL;
 	pstatement->prhs_evaluator                       = NULL;
 	pstatement->stdfp                                = NULL;
@@ -1060,6 +1067,38 @@ static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_c
 	return pstatement;
 }
 
+// ----------------------------------------------------------------
+static mlr_dsl_cst_statement_t* alloc_env_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	if ((pnode->pchildren == NULL) || (pnode->pchildren->length != 2)) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+
+	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
+
+	if (pleft->type != MD_AST_NODE_TYPE_FIELD_NAME) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	} else if (pleft->pchildren != NULL) {
+		fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+
+	pstatement->pnode_handler = handle_env_assignment;
+	pstatement->env_lhs_name = pleft->text;
+	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
@@ -2415,6 +2454,25 @@ static void handle_full_srec_from_oosvar_assignment(
 		}
 	}
 	sllmv_free(prhskeys);
+}
+
+// ----------------------------------------------------------------
+static void handle_env_assignment(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	//xxx
+	char* srec_lhs_field_name = pstatement->srec_lhs_field_name;
+	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+
+	if (mv_is_present(&val)) {
+		lhmsmv_put(pvars->ptyped_overlay, srec_lhs_field_name, &val, FREE_ENTRY_VALUE);
+		lrec_put(pvars->pinrec, srec_lhs_field_name, "bug", NO_FREE);
+	} else {
+		mv_free(&val);
+	}
 }
 
 // ----------------------------------------------------------------

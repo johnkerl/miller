@@ -138,6 +138,9 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Assignment to srec
 	char* srec_lhs_field_name;
 
+	// Assignment to ENV (i.e. putenv)
+	char* env_lhs_name;
+
 	// Indirect assignment to srec
 	rval_evaluator_t* psrec_lhs_evaluator;
 
