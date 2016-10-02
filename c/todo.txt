@@ -17,8 +17,6 @@ FUNCTIONALITY FOR 4.6.0:
 
 * multi-continue in triple-for
 
-* ENV @ LHS: esp. for popens.
-
 ! bind-stack: locals map to frame indices. maybe for 4.6.1 ... but prefer to get the perf good at release.
   (issue is computation is dominated by lhmsv_get/put/string_hash_func.)
 
@@ -32,6 +30,11 @@ FUNCTIONALITY FOR 4.6.0:
 * xxxes
 
 ----------------------------------------------------------------
+UT FOR 4.6.0:
+
+* ENV @ LHS w/ popen of sh
+
+----------------------------------------------------------------
 DOC FOR 4.6.0:
 
 KW autodoc:
@@ -43,7 +46,6 @@ To file:
 * note mlr -l -L -f -F -k -K rather prominently at mlh.
 * mlh/mld func/subr @ filter
 * absent vs. empty; unset $x vs. $x="". no null keyword.
-* ENV @ LHS, no longer R/O, and why (popens)
 
 filter expansion:
 * mlh
@@ -87,6 +89,7 @@ DSL:
 * multiple filter/put -f with examples @ new mld section.
 * variadic min & max
 * substr func
+* ENV @ LHS (putenv), and why (popens)
 
 VERBS:
 * most-frequent/least-frequent
