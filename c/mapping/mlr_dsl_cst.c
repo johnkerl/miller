@@ -1,3 +1,4 @@
+#include <stdlib.h>
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/hss.h"
@@ -1082,18 +1083,23 @@ static mlr_dsl_cst_statement_t* alloc_env_assignment(mlr_dsl_cst_t* pcst, mlr_ds
 	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 
-	if (pleft->type != MD_AST_NODE_TYPE_FIELD_NAME) {
+	if (pleft->type != MD_AST_NODE_TYPE_ENV) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
-	} else if (pleft->pchildren != NULL) {
+	} else if (pleft->pchildren == NULL) {
+		fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	} else if (pleft->pchildren->length != 2) {
 		fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
+	mlr_dsl_ast_node_t* pnamenode = pleft->pchildren->phead->pnext->pvvalue;
 
 	pstatement->pnode_handler = handle_env_assignment;
-	pstatement->env_lhs_name = pleft->text;
+	pstatement->env_lhs_name = pnamenode->text;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
 	return pstatement;
 }
@@ -2462,17 +2468,14 @@ static void handle_env_assignment(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	//xxx
-	char* srec_lhs_field_name = pstatement->srec_lhs_field_name;
+	char* env_lhs_name = pstatement->env_lhs_name;
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 
 	if (mv_is_present(&val)) {
-		lhmsmv_put(pvars->ptyped_overlay, srec_lhs_field_name, &val, FREE_ENTRY_VALUE);
-		lrec_put(pvars->pinrec, srec_lhs_field_name, "bug", NO_FREE);
-	} else {
-		mv_free(&val);
+		setenv(env_lhs_name, mlr_strdup_or_die(mv_alloc_format_val(&val)), 1);
 	}
+	mv_free(&val);
 }
 
 // ----------------------------------------------------------------
