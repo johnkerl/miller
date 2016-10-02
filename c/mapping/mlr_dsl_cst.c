@@ -2762,8 +2762,12 @@ static void handle_triple_for(
 	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
 	loop_stack_push(pvars->ploop_stack);
 
+	// Start statements
 	mlr_dsl_cst_handle_statement_list(pstatement->ptriple_for_start_statements, pvars, pcst_outputs);
+
 	while (TRUE) {
+
+		// Continuation statement
 		rval_evaluator_t* pev = pstatement->ptriple_for_continuation_evaluator;
 		mv_t val = pev->pprocess_func(pev->pvstate, pvars);
 		if (mv_is_non_null(&val))
@@ -2771,6 +2775,7 @@ static void handle_triple_for(
 		if (!val.u.boolv)
 			break;
 
+		// Body statements
 		handle_statement_list_with_break_continue(pstatement->pblock_statements, pvars, pcst_outputs);
 
 		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
@@ -2780,6 +2785,7 @@ static void handle_triple_for(
 			loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
 		}
 
+		// Update statements
 		mlr_dsl_cst_handle_statement_list(pstatement->ptriple_for_update_statements, pvars, pcst_outputs);
 	}
 

@@ -44,6 +44,7 @@ To file:
 * note mlr -l -L -f -F -k -K rather prominently at mlh.
 * mlh/mld func/subr @ filter
 * absent vs. empty; unset $x vs. $x="". no null keyword.
+* ENV @ LHS, no longer R/O, and why (popens)
 
 filter expansion:
 * mlh

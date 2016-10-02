@@ -426,8 +426,10 @@ md_for_oosvar_keylist(A) ::= md_for_oosvar_keylist(L) MD_TOKEN_COMMA MD_TOKEN_NO
 // ----------------------------------------------------------------
 md_triple_for(A) ::=
 	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
-		md_triple_for_start(S) MD_TOKEN_SEMICOLON
-		md_rhs(C) MD_TOKEN_SEMICOLON
+		md_triple_for_start(S)
+			MD_TOKEN_SEMICOLON
+		md_rhs(C)
+			MD_TOKEN_SEMICOLON
 		md_triple_for_update(U)
 	MD_TOKEN_RPAREN
 	MD_TOKEN_LBRACE
@@ -439,8 +441,9 @@ md_triple_for(A) ::=
 
 md_triple_for(A) ::=
 	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
-		md_triple_for_start(S) MD_TOKEN_SEMICOLON
-		MD_TOKEN_SEMICOLON
+		md_triple_for_start(S)
+			MD_TOKEN_SEMICOLON
+			MD_TOKEN_SEMICOLON
 		md_triple_for_update(U)
 	MD_TOKEN_RPAREN
 	MD_TOKEN_LBRACE
