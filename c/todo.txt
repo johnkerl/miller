@@ -21,6 +21,11 @@ PRE-RELEASE 4.6.0:
 ! bind-stack: locals map to frame indices. maybe for 4.6.1 ... but prefer to get the perf good at release.
   (issue is computation is dominated by lhmsv_get/put/string_hash_func.)
 
+  o 1st AST pass: pivot around to have begin, end, main, funcs, subrs
+  o 2nd AST pass: analyze each for max depth: local def, write, read. adapt existing lmhsv/resolve logic.
+  o 3rd AST pass: rewrite localvar names w/ frame-relative indices
+  o CST statement-list: push/pop count for entry/exit; mv_absents on enter; mv_frees on exit
+
 * valgrinds
 
 * xxxes
@@ -32,10 +37,6 @@ KW autodoc:
 * kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
 
   E ENV FILENAME FILENUM FNR NF NR PI
-
-  all begin break call continue do dump edump elif else emit
-  emitf emitp end eprint eprintn filter for func if in local
-  print printn return stderr stdout subr tee unset while
 
 To file:
 * note mlr -l -L -f -F -k -K rather prominently at mlh.
