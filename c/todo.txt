@@ -13,7 +13,7 @@ NON-RELEASE:
 ? msort.o wt?
 
 ----------------------------------------------------------------
-PRE-RELEASE 4.6.0:
+FUNCTIONALITY FOR 4.6.0:
 
 ! multi-statement in continuation of triple-for !!
   -> also doc update re miller's "lack of comma operator" :^/
@@ -25,6 +25,8 @@ PRE-RELEASE 4.6.0:
   o 2nd AST pass: analyze each for max depth: local def, write, read. adapt existing lmhsv/resolve logic.
   o 3rd AST pass: rewrite localvar names w/ frame-relative indices
   o CST statement-list: push/pop count for entry/exit; mv_absents on enter; mv_frees on exit
+
+* ENV @ LHS? esp. for popens.
 
 * valgrinds
 
@@ -64,15 +66,11 @@ mlh:
 func/subr:
 * no begin/end/func/subr within func
 * (lhs) func no subr call
-* (lhs) func no srec assignment x 3, no oosvar assignment x 2, no filter, no unset
-* (lhs) func no tee, emitfx3; but allow print, dump.
 * disallow func/subr redefines
 * locals in all curly-braced control structures; top-level locals; scope, extent, freeing.
 * no begin/end/func/subr within subr
-* note UDFs may not overwrite built-in functions; subrs have a different namespace (log example); each
-  kind may not be multiply defined.
+* not subrs have a different namespace (log example); each kind may not be multiply defined.
 * local @ RHS before @ LHS: absent skips assign
-* local a=1 @ outer; a=2 in inner; inner modifies outer. avoid with local a=2 in inner.
 * a=2 before local a=1 -- why to even use local (when optional & when necessary).
 * cookbook examples
 
