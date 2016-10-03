@@ -242,8 +242,6 @@ analyzed_ast_t* analyze_ast(mlr_dsl_ast_t* past) {
 }
 
 void analyzed_ast_free(analyzed_ast_t* paast) {
-	// xxx temp
-
 	for (sllve_t* pe = paast->pfunc_defs->phead; pe != NULL; pe = pe->pnext)
 		mlr_dsl_ast_node_free(pe->pvvalue);
 	for (sllve_t* pe = paast->psubr_defs->phead; pe != NULL; pe = pe->pnext)
