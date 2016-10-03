@@ -1962,12 +1962,23 @@ static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg) {
 // xxx copy to ..._for_filter
 // xxx rename to ..._for_put
 
-void mlr_dsl_cst_handle_statement_block(
-	sllv_t*        pcst_statements,
+void mlr_dsl_cst_handle_statement_blocks(
+	sllv_t*        pcst_blocks,
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs)
 {
-	mlr_dsl_cst_handle_statement_list(pcst_statements, pvars, pcst_outputs);
+	for (sllve_t* pe = pcst_blocks->phead; pe != NULL; pe = pe->pnext) {
+		sllv_t* pcst_block = pe->pvvalue;
+		mlr_dsl_cst_handle_statement_block(pcst_block, pvars, pcst_outputs);
+	}
+}
+
+void mlr_dsl_cst_handle_statement_block(
+	sllv_t*        pcst_block,
+	variables_t*   pvars,
+	cst_outputs_t* pcst_outputs)
+{
+	mlr_dsl_cst_handle_statement_list(pcst_block, pvars, pcst_outputs);
 	bind_stack_clear(pvars->pbind_stack); // clear the baseframe
 }
 
