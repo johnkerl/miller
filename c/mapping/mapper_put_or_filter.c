@@ -407,8 +407,8 @@ static void mapper_put_or_filter_free(mapper_t* pmapper) {
 	mlhmmv_free(pstate->poosvars);
 	bind_stack_free(pstate->pbind_stack);
 	loop_stack_free(pstate->ploop_stack);
+	// The AST is pointed to by the CST and will be freed by the CST destructor
 	mlr_dsl_cst_free(pstate->pcst);
-	mlr_dsl_ast_free(pstate->past);
 
 	free(pstate->pwriter_opts);
 	free(pstate);

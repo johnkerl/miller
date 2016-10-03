@@ -286,6 +286,7 @@ static cst_statement_handler_t handle_print;
 		exit(1);
 	}
 
+	pcst->past              = ptop;
 	pcst->pbegin_statements = sllv_alloc();
 	pcst->pmain_statements  = sllv_alloc();
 	pcst->pend_statements   = sllv_alloc();
@@ -438,6 +439,8 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 		}
 		lhmsv_free(pcst->psubr_defsites);
 	}
+
+    mlr_dsl_ast_free(pcst->past);
 
 	free(pcst);
 }
