@@ -35977,6 +35977,176 @@ CHARS     = @X*o-.
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
 
+mlr --from ./reg_test/input/abixy put -v 
+    func f(x) {
+        return x**2
+    }
+    func g(y) {
+        return y+1
+    }
+    subr s(a,b,c) {
+        print a.b.c
+    }
+    begin {
+        @a = 0;
+        local ell = 1;
+        print "local1 = ".ell;
+    }
+    end {
+        emit @a;
+        local emm = 2;
+        print "local2 = ".emm;
+    }
+    @a += 1;
+    begin {
+        @b = 0;
+        @c = 0;
+        print "local3 = ".ell;
+    }
+    @b += 2;
+    @c += 3;
+    end {
+        emit @b;
+        emit @c;
+        print "local4 = ".emm;
+    }
+
+AST ROOT:
+text="list", type=STATEMENT_LIST:
+    text="f", type=FUNC_DEF:
+        text="f", type=NON_SIGIL_NAME:
+            text="x", type=NON_SIGIL_NAME.
+        text="list", type=STATEMENT_LIST:
+            text="return_value", type=RETURN_VALUE:
+                text="**", type=OPERATOR:
+                    text="x", type=BOUND_VARIABLE.
+                    text="2", type=STRNUM_LITERAL.
+    text="g", type=FUNC_DEF:
+        text="g", type=NON_SIGIL_NAME:
+            text="y", type=NON_SIGIL_NAME.
+        text="list", type=STATEMENT_LIST:
+            text="return_value", type=RETURN_VALUE:
+                text="+", type=OPERATOR:
+                    text="y", type=BOUND_VARIABLE.
+                    text="1", type=STRNUM_LITERAL.
+    text="s", type=SUBR_DEF:
+        text="s", type=NON_SIGIL_NAME:
+            text="a", type=NON_SIGIL_NAME.
+            text="b", type=NON_SIGIL_NAME.
+            text="c", type=NON_SIGIL_NAME.
+        text="list", type=STATEMENT_LIST:
+            text="print", type=PRINT:
+                text=".", type=OPERATOR:
+                    text=".", type=OPERATOR:
+                        text="a", type=BOUND_VARIABLE.
+                        text="b", type=BOUND_VARIABLE.
+                    text="c", type=BOUND_VARIABLE.
+                text=">", type=FILE_WRITE:
+                    text="stdout", type=STDOUT:
+    text="begin", type=BEGIN:
+        text="list", type=STATEMENT_LIST:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="a", type=STRING_LITERAL.
+                text="0", type=STRNUM_LITERAL.
+            text="local", type=LOCAL:
+                text="ell", type=BOUND_VARIABLE.
+                text="1", type=STRNUM_LITERAL.
+            text="print", type=PRINT:
+                text=".", type=OPERATOR:
+                    text="local1 = ", type=STRNUM_LITERAL.
+                    text="ell", type=BOUND_VARIABLE.
+                text=">", type=FILE_WRITE:
+                    text="stdout", type=STDOUT:
+    text="end", type=END:
+        text="list", type=STATEMENT_LIST:
+            text="emit", type=EMIT:
+                text="emit", type=EMIT:
+                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                        text="a", type=STRING_LITERAL.
+                text="stream", type=STREAM:
+            text="local", type=LOCAL:
+                text="emm", type=BOUND_VARIABLE.
+                text="2", type=STRNUM_LITERAL.
+            text="print", type=PRINT:
+                text=".", type=OPERATOR:
+                    text="local2 = ", type=STRNUM_LITERAL.
+                    text="emm", type=BOUND_VARIABLE.
+                text=">", type=FILE_WRITE:
+                    text="stdout", type=STDOUT:
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="a", type=STRING_LITERAL.
+        text="+", type=OPERATOR:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="a", type=STRING_LITERAL.
+            text="1", type=STRNUM_LITERAL.
+    text="begin", type=BEGIN:
+        text="list", type=STATEMENT_LIST:
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="b", type=STRING_LITERAL.
+                text="0", type=STRNUM_LITERAL.
+            text="=", type=OOSVAR_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="c", type=STRING_LITERAL.
+                text="0", type=STRNUM_LITERAL.
+            text="print", type=PRINT:
+                text=".", type=OPERATOR:
+                    text="local3 = ", type=STRNUM_LITERAL.
+                    text="ell", type=BOUND_VARIABLE.
+                text=">", type=FILE_WRITE:
+                    text="stdout", type=STDOUT:
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="b", type=STRING_LITERAL.
+        text="+", type=OPERATOR:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="b", type=STRING_LITERAL.
+            text="2", type=STRNUM_LITERAL.
+    text="=", type=OOSVAR_ASSIGNMENT:
+        text="oosvar_keylist", type=OOSVAR_KEYLIST:
+            text="c", type=STRING_LITERAL.
+        text="+", type=OPERATOR:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="c", type=STRING_LITERAL.
+            text="3", type=STRNUM_LITERAL.
+    text="end", type=END:
+        text="list", type=STATEMENT_LIST:
+            text="emit", type=EMIT:
+                text="emit", type=EMIT:
+                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                        text="b", type=STRING_LITERAL.
+                text="stream", type=STREAM:
+            text="emit", type=EMIT:
+                text="emit", type=EMIT:
+                    text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                        text="c", type=STRING_LITERAL.
+                text="stream", type=STREAM:
+            text="print", type=PRINT:
+                text=".", type=OPERATOR:
+                    text="local4 = ", type=STRNUM_LITERAL.
+                    text="emm", type=BOUND_VARIABLE.
+                text=">", type=FILE_WRITE:
+                    text="stdout", type=STDOUT:
+local1 = 1
+local3 = 
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+local2 = 2
+local4 = 
+a=10
+b=20
+c=30
+
 
 ================================================================
 LOCALVAR SCOPE AND EXTENT

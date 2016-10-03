@@ -85,11 +85,11 @@ static void mlr_dsl_cst_resolve_subr_callsites(mlr_dsl_cst_t* pcst);
 	pcst->past  = ptop;
 	pcst->paast = analyzed_ast_alloc(ptop);
 
-	pcst->pbegin_statements = sllv_alloc();
-	pcst->pmain_statements  = sllv_alloc();
-	pcst->pend_statements   = sllv_alloc();
-	pcst->pfmgr             = fmgr_alloc();
-	pcst->psubr_defsites    = lhmsv_alloc();
+	pcst->pbegin_blocks  = sllv_alloc();
+	pcst->pmain_block    = sllv_alloc();
+	pcst->pend_blocks    = sllv_alloc();
+	pcst->pfmgr          = fmgr_alloc();
+	pcst->psubr_defsites = lhmsv_alloc();
 	pcst->psubr_callsite_statements_to_resolve = sllv_alloc();
 	pcst->pfilter_evaluator = NULL; // xxx rm
 	pcst->flush_every_record = flush_every_record;
@@ -114,29 +114,30 @@ static void mlr_dsl_cst_resolve_subr_callsites(mlr_dsl_cst_t* pcst);
 
 	for (sllve_t* pe = pcst->paast->pbegin_blocks->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
-		// xxx retain the scoping ... this will be new.
+		sllv_t* pblock = sllv_alloc();
 		for (sllve_t* pf = pnode->pchildren->phead; pf != NULL; pf = pf->pnext) {
 			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
 			for (sllve_t* pg = plistnode->pchildren->phead; pg != NULL; pg = pg->pnext) {
 				mlr_dsl_ast_node_t* pchild = pg->pvvalue;
-				sllv_append(pcst->pbegin_statements, mlr_dsl_cst_alloc_statement(pcst, pchild,
+				sllv_append(pblock, mlr_dsl_cst_alloc_statement(pcst, pchild,
 					type_inferencing, context_flags | IN_BEGIN_OR_END));
 			}
 		}
+		sllv_append(pcst->pbegin_blocks, pblock);
 	}
 
-	// xxx code dedup w/r/t begin/end
 	for (sllve_t* pe = pcst->paast->pend_blocks->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
-		// xxx retain the scoping ... this will be new.
+		sllv_t* pblock = sllv_alloc();
 		for (sllve_t* pf = pnode->pchildren->phead; pf != NULL; pf = pf->pnext) {
 			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
 			for (sllve_t* pg = plistnode->pchildren->phead; pg != NULL; pg = pg->pnext) {
 				mlr_dsl_ast_node_t* pchild = pg->pvvalue;
-				sllv_append(pcst->pend_statements, mlr_dsl_cst_alloc_statement(pcst, pchild,
+				sllv_append(pblock, mlr_dsl_cst_alloc_statement(pcst, pchild,
 					type_inferencing, context_flags | IN_BEGIN_OR_END));
 			}
 		}
+		sllv_append(pcst->pend_blocks, pblock);
 	}
 
 	for (sllve_t* pe = pcst->paast->pmain_block->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -144,10 +145,10 @@ static void mlr_dsl_cst_resolve_subr_callsites(mlr_dsl_cst_t* pcst);
 
 		// The last statement of mlr filter must be a bare boolean.
 		if (do_final_filter && pe->pnext == NULL) {
-			sllv_append(pcst->pmain_statements, mlr_dsl_cst_alloc_final_filter_statement(
+			sllv_append(pcst->pmain_block, mlr_dsl_cst_alloc_final_filter_statement(
 				pcst, pnode, negate_final_filter, type_inferencing, context_flags | IN_MLR_FINAL_FILTER));
 		} else {
-			sllv_append(pcst->pmain_statements, mlr_dsl_cst_alloc_statement(pcst, pnode,
+			sllv_append(pcst->pmain_block, mlr_dsl_cst_alloc_statement(pcst, pnode,
 				type_inferencing, context_flags));
 		}
 	}
@@ -168,19 +169,31 @@ static void mlr_dsl_cst_resolve_subr_callsites(mlr_dsl_cst_t* pcst);
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	if (pcst == NULL)
 		return;
-	if (pcst->pbegin_statements != NULL) {
-		for (sllve_t* pe = pcst->pbegin_statements->phead; pe != NULL; pe = pe->pnext)
-			mlr_dsl_cst_statement_free(pe->pvvalue);
+	if (pcst->pbegin_blocks != NULL) {
+		for (sllve_t* pe = pcst->pbegin_blocks->phead; pe != NULL; pe = pe->pnext) {
+			sllv_t* pblock = pe->pvvalue;
+			for (sllve_t* pe = pblock->phead; pe != NULL; pe = pe->pnext) {
+				mlr_dsl_cst_statement_free(pe->pvvalue);
+			}
+		}
 	}
-	for (sllve_t* pe = pcst->pmain_statements->phead; pe != NULL; pe = pe->pnext)
+
+	for (sllve_t* pe = pcst->pmain_block->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_free(pe->pvvalue);
-	if (pcst->pend_statements != NULL) {
-		for (sllve_t* pe = pcst->pend_statements->phead; pe != NULL; pe = pe->pnext)
-			mlr_dsl_cst_statement_free(pe->pvvalue);
 	}
-	sllv_free(pcst->pbegin_statements);
-	sllv_free(pcst->pmain_statements);
-	sllv_free(pcst->pend_statements);
+
+	if (pcst->pend_blocks != NULL) {
+		for (sllve_t* pe = pcst->pend_blocks->phead; pe != NULL; pe = pe->pnext) {
+			sllv_t* pblock = pe->pvvalue;
+			for (sllve_t* pe = pblock->phead; pe != NULL; pe = pe->pnext) {
+				mlr_dsl_cst_statement_free(pe->pvvalue);
+			}
+		}
+	}
+
+	sllv_free(pcst->pbegin_blocks);
+	sllv_free(pcst->pmain_block);
+	sllv_free(pcst->pend_blocks);
 	fmgr_free(pcst->pfmgr);
 
 	// Void-star payloads already popped and freed during symbol-resolution phase of CST alloc

@@ -4949,6 +4949,42 @@ run_mlr --from $indir/abixy put 'func f(x,y) { return 2*y } $o = f($x,$y) '
 run_mlr -n put -q -f $indir/sieve.mlr
 run_mlr -n put -q -f $indir/mand.mlr
 
+# scoping within distinct begin/end blocks
+run_mlr --from $indir/abixy put -v '
+    func f(x) {
+        return x**2
+    }
+    func g(y) {
+        return y+1
+    }
+    subr s(a,b,c) {
+        print a.b.c
+    }
+    begin {
+        @a = 0;
+        local ell = 1;
+        print "local1 = ".ell;
+    }
+    end {
+        emit @a;
+        local emm = 2;
+        print "local2 = ".emm;
+    }
+    @a += 1;
+    begin {
+        @b = 0;
+        @c = 0;
+        print "local3 = ".ell;
+    }
+    @b += 2;
+    @c += 3;
+    end {
+        emit @b;
+        emit @c;
+        print "local4 = ".emm;
+    }
+'
+
 # ----------------------------------------------------------------
 announce LOCALVAR SCOPE AND EXTENT
 
