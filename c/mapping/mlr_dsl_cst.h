@@ -264,7 +264,7 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 // Top-level entry point, e.g. from mapper_put.
-void mlr_dsl_cst_handle_base_statement_list(
+void mlr_dsl_cst_handle_statement_block(
 	sllv_t*      pcst_statements, // block bodies for begin, main, end; cond, if, for, while
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);

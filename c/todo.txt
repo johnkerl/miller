@@ -26,6 +26,7 @@ FUNCTIONALITY FOR 4.6.0:
     k all else -> main-statements list
     k sllv_pop/append to make it quick
     k cst_pre_analyze_t struct or some such?
+    * begin/end -> statement lists, and UT the lexical scoping.
     ? ctor-0 frindex field @ mlr_dsl_ast_node_t?
   o 2nd AST pass: analyze each for max depth: local def, write, read. adapt existing lmhsv/resolve logic.
   o 3rd AST pass: rewrite localvar names w/ frame-relative indices

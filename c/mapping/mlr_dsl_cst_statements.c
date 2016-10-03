@@ -1962,7 +1962,7 @@ static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg) {
 // xxx copy to ..._for_filter
 // xxx rename to ..._for_put
 
-void mlr_dsl_cst_handle_base_statement_list(
+void mlr_dsl_cst_handle_statement_block(
 	sllv_t*        pcst_statements,
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs)
