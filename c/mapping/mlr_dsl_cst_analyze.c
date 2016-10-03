@@ -7,6 +7,7 @@
 // xxx make a summary comment here
 
 // ----------------------------------------------------------------
+// xxx have ast freed back where it was (for callsite-balance) but w/ has-been-exfoliated comment
 analyzed_ast_t* analyzed_ast_alloc(mlr_dsl_ast_t* past) {
 	analyzed_ast_t* paast = mlr_malloc_or_die(sizeof(analyzed_ast_t));
 
@@ -26,26 +27,26 @@ analyzed_ast_t* analyzed_ast_alloc(mlr_dsl_ast_t* past) {
 		exit(1);
 	}
 
-	// xxx walk through the AST and transfer nodes
-	// xxx replace with while/pop loop
-	for (sllve_t* pe = past->proot->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+	sllv_t* pnodelist = past->proot->pchildren;
+	while (pnodelist->phead) {
+		mlr_dsl_ast_node_t* pnode = sllv_pop(pnodelist);
 		switch (pnode->type) {
 		case MD_AST_NODE_TYPE_FUNC_DEF:
+			sllv_append(paast->pfunc_defs, pnode);
 			break;
 		case MD_AST_NODE_TYPE_SUBR_DEF:
+			sllv_append(paast->psubr_defs, pnode);
 			break;
 		case MD_AST_NODE_TYPE_BEGIN:
+			sllv_append(paast->pbegin_blocks, pnode);
 			break;
 		case MD_AST_NODE_TYPE_END:
+			sllv_append(paast->pend_blocks, pnode);
 			break;
 		default:
+			sllv_append(paast->pmain_block->pchildren, pnode);
 			break;
 		}
-		//printf("\n");
-		//printf("================================================================\n");
-		//mlr_dsl_ast_node_print(pnode);
-		//printf("\n");
 	}
 
 	return paast;

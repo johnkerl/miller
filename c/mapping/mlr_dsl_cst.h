@@ -217,9 +217,9 @@ typedef struct _mlr_dsl_cst_statement_t {
 // MLR_DSL_CST OBJECT
 
 typedef struct _mlr_dsl_cst_t {
-	sllv_t* pbegin_statements;
+	sllv_t* pbegin_statements; // xxx to blocks (preserve local-scoping within separate begins)
 	sllv_t* pmain_statements;
-	sllv_t* pend_statements;
+	sllv_t* pend_statements;   // xxx to blocks (preserve local-scoping within separate ends)
 
 	// Function manager for built-in functions as well as user-defined functions (which are CST-specific).
 	fmgr_t* pfmgr;

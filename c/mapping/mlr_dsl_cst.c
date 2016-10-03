@@ -299,57 +299,61 @@ static cst_statement_handler_t handle_print;
 	pcst->pfilter_evaluator = NULL; // xxx rm
 	pcst->flush_every_record = flush_every_record;
 
-	udf_defsite_state_t* pudf_defsite_state = NULL;
-	subr_defsite_t* psubr_defsite = NULL;
 
-	mlr_dsl_ast_node_t* plistnode = NULL;
-	for (sllve_t* pe = ptop->proot->pchildren->phead; pe != NULL; pe = pe->pnext) {
+	for (sllve_t* pe = pcst->paast->pfunc_defs->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
-		switch (pnode->type) {
+		udf_defsite_state_t* pudf_defsite_state = mlr_dsl_cst_alloc_udf(pcst, pnode, type_inferencing, context_flags);
+		fmgr_install_udf(pcst->pfmgr, pudf_defsite_state);
+	}
 
-		case MD_AST_NODE_TYPE_FUNC_DEF:
-			pudf_defsite_state = mlr_dsl_cst_alloc_udf(pcst, pnode, type_inferencing, context_flags);
-			fmgr_install_udf(pcst->pfmgr, pudf_defsite_state);
-			break;
+	for (sllve_t* pe = pcst->paast->psubr_defs->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+		subr_defsite_t* psubr_defsite = mlr_dsl_cst_alloc_subroutine(pcst, pnode, type_inferencing, context_flags);
+		if (lhmsv_get(pcst->psubr_defsites, psubr_defsite->name)) {
+			fprintf(stderr, "%s: subroutine named \"%s\" has already been defined.\n",
+				MLR_GLOBALS.bargv0, psubr_defsite->name);
+			exit(1);
+		}
+		lhmsv_put(pcst->psubr_defsites, psubr_defsite->name, psubr_defsite, NO_FREE);
+	}
 
-		case MD_AST_NODE_TYPE_SUBR_DEF:
-			psubr_defsite = mlr_dsl_cst_alloc_subroutine(pcst, pnode, type_inferencing, context_flags);
-			if (lhmsv_get(pcst->psubr_defsites, psubr_defsite->name)) {
-				fprintf(stderr, "%s: subroutine named \"%s\" has already been defined.\n",
-					MLR_GLOBALS.bargv0, psubr_defsite->name);
-				exit(1);
-			}
-			lhmsv_put(pcst->psubr_defsites, psubr_defsite->name, psubr_defsite, NO_FREE);
-			break;
-
-		case MD_AST_NODE_TYPE_BEGIN:
-			plistnode = get_list_for_block(pnode);
-			for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
-				mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+	for (sllve_t* pe = pcst->paast->pbegin_blocks->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+		// xxx retain the scoping ... this will be new.
+		for (sllve_t* pf = pnode->pchildren->phead; pf != NULL; pf = pf->pnext) {
+			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
+			for (sllve_t* pg = plistnode->pchildren->phead; pg != NULL; pg = pg->pnext) {
+				mlr_dsl_ast_node_t* pchild = pg->pvvalue;
 				sllv_append(pcst->pbegin_statements, mlr_dsl_cst_alloc_statement(pcst, pchild,
 					type_inferencing, context_flags | IN_BEGIN_OR_END));
 			}
-			break;
+		}
+	}
 
-		case MD_AST_NODE_TYPE_END:
-			plistnode = get_list_for_block(pnode);
-			for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
-				mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+	// xxx code dedup w/r/t begin/end
+	for (sllve_t* pe = pcst->paast->pend_blocks->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+		// xxx retain the scoping ... this will be new.
+		for (sllve_t* pf = pnode->pchildren->phead; pf != NULL; pf = pf->pnext) {
+			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
+			for (sllve_t* pg = plistnode->pchildren->phead; pg != NULL; pg = pg->pnext) {
+				mlr_dsl_ast_node_t* pchild = pg->pvvalue;
 				sllv_append(pcst->pend_statements, mlr_dsl_cst_alloc_statement(pcst, pchild,
 					type_inferencing, context_flags | IN_BEGIN_OR_END));
 			}
-			break;
+		}
+	}
 
-		default:
-			// The last statement of mlr filter must be a bare boolean.
-			if (do_final_filter && pe->pnext == NULL) {
-				sllv_append(pcst->pmain_statements, alloc_final_filter_statement(
-					pcst, pnode, negate_final_filter, type_inferencing, context_flags | IN_MLR_FINAL_FILTER));
-			} else {
-				sllv_append(pcst->pmain_statements, mlr_dsl_cst_alloc_statement(pcst, pnode,
-					type_inferencing, context_flags));
-			}
-			break;
+	for (sllve_t* pe = pcst->paast->pmain_block->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+
+		// The last statement of mlr filter must be a bare boolean.
+		if (do_final_filter && pe->pnext == NULL) {
+			sllv_append(pcst->pmain_statements, alloc_final_filter_statement(
+				pcst, pnode, negate_final_filter, type_inferencing, context_flags | IN_MLR_FINAL_FILTER));
+		} else {
+			sllv_append(pcst->pmain_statements, mlr_dsl_cst_alloc_statement(pcst, pnode,
+				type_inferencing, context_flags));
 		}
 	}
 
@@ -3356,3 +3360,5 @@ static void handle_print(
 		free(sval);
 	mv_free(&val);
 }
+
+// xxx split out mlr_dsl_cst_statements.c ?
