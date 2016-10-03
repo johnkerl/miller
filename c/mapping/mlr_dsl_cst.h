@@ -240,6 +240,7 @@ typedef struct _mlr_dsl_cst_t {
 	// The CST object retains the AST pointer (in order to reuse its strings etc. with minimal copying)
 	// and will free the AST in the CST destructor.
 	mlr_dsl_ast_t* past;
+	analyzed_ast_t* paast;
 } mlr_dsl_cst_t;
 
 // ----------------------------------------------------------------

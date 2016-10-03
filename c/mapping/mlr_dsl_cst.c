@@ -228,7 +228,7 @@ static cst_statement_handler_t handle_print;
 // ----------------------------------------------------------------
 // xxx split out to separate file? including this one.
 
-analyzed_ast_t* analyze_ast(mlr_dsl_ast_t* past) {
+analyzed_ast_t* analyzed_ast_alloc(mlr_dsl_ast_t* past) {
 	analyzed_ast_t* paast = mlr_malloc_or_die(sizeof(analyzed_ast_t));
 
 	paast->pfunc_defs    = sllv_alloc();
@@ -321,7 +321,9 @@ void analyzed_ast_free(analyzed_ast_t* paast) {
 		exit(1);
 	}
 
-	pcst->past              = ptop;
+	pcst->past  = ptop;
+	pcst->paast = analyzed_ast_alloc(ptop);
+
 	pcst->pbegin_statements = sllv_alloc();
 	pcst->pmain_statements  = sllv_alloc();
 	pcst->pend_statements   = sllv_alloc();
@@ -475,6 +477,7 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 		lhmsv_free(pcst->psubr_defsites);
 	}
 
+	analyzed_ast_free(pcst->paast);
     mlr_dsl_ast_free(pcst->past);
 
 	free(pcst);
