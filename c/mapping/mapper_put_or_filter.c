@@ -53,6 +53,7 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 
 static mapper_t* mapper_put_or_filter_alloc(
 	char*              mlr_dsl_expression,
+	int                print_ast,
 	char*              comment_stripped_mlr_dsl_expression,
 	mlr_dsl_ast_t*     past,
 	int                put_output_disabled, // mlr put -q
@@ -353,7 +354,7 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 		mlr_dsl_ast_print(past);
 
 	*pargi = argi;
-	return mapper_put_or_filter_alloc(mlr_dsl_expression, comment_stripped_mlr_dsl_expression,
+	return mapper_put_or_filter_alloc(mlr_dsl_expression, print_ast, comment_stripped_mlr_dsl_expression,
 		past, put_output_disabled, do_final_filter, negate_final_filter,
 		type_inferencing, oosvar_flatten_separator, flush_every_record,
 		pwriter_opts, pmain_writer_opts);
@@ -362,6 +363,7 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 // ----------------------------------------------------------------
 static mapper_t* mapper_put_or_filter_alloc(
 	char*              mlr_dsl_expression,
+	int                print_ast,
 	char*              comment_stripped_mlr_dsl_expression,
 	mlr_dsl_ast_t*     past,
 	int                put_output_disabled, // mlr put -q
@@ -378,7 +380,7 @@ static mapper_t* mapper_put_or_filter_alloc(
 	pstate->mlr_dsl_expression = mlr_dsl_expression;
 	pstate->comment_stripped_mlr_dsl_expression = comment_stripped_mlr_dsl_expression;
 	pstate->past                     = past;
-	pstate->pcst                     = mlr_dsl_cst_alloc(past, type_inferencing,
+	pstate->pcst                     = mlr_dsl_cst_alloc(past, print_ast, type_inferencing,
 		flush_every_record, do_final_filter, negate_final_filter);
 	pstate->at_begin                 = TRUE;
 	pstate->put_output_disabled      = put_output_disabled;

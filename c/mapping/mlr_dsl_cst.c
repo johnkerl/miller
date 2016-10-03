@@ -55,7 +55,7 @@ static void mlr_dsl_cst_resolve_subr_callsites(mlr_dsl_cst_t* pcst);
 //                     text="z", type=string_literal.
 //                 text="6", type=strnum_literal.
 
- mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int type_inferencing, int flush_every_record,
+ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int print_ast, int type_inferencing, int flush_every_record,
 	int do_final_filter, int negate_final_filter) // for mlr filter
 {
 	int context_flags = do_final_filter ? IN_MLR_FILTER : 0;
