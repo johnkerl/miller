@@ -15,8 +15,6 @@ NON-RELEASE:
 ----------------------------------------------------------------
 FUNCTIONALITY FOR 4.6.0:
 
-* multi-continue in triple-for
-
 ! bind-stack: locals map to frame indices. maybe for 4.6.1 ... but prefer to get the perf good at release.
   (issue is computation is dominated by lhmsv_get/put/string_hash_func.)
 
@@ -31,8 +29,6 @@ FUNCTIONALITY FOR 4.6.0:
 
 ----------------------------------------------------------------
 UT FOR 4.6.0:
-
-* multi-continue in triple-for
 
 * bind-stack allocation
 
