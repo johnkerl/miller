@@ -187,6 +187,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 
 	// triple-for:
 	sllv_t* ptriple_for_start_statements;
+	sllv_t* ptriple_for_pre_continuation_statements;
 	rval_evaluator_t* ptriple_for_continuation_evaluator;
 	sllv_t* ptriple_for_update_statements;
 
