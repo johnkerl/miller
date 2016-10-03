@@ -226,6 +226,43 @@ static cst_statement_handler_t handle_dump_to_file;
 static cst_statement_handler_t handle_print;
 
 // ----------------------------------------------------------------
+// xxx split out to separate file? including this one.
+
+analyzed_ast_t* analyze_ast(mlr_dsl_ast_t* past) {
+	analyzed_ast_t* paast = mlr_malloc_or_die(sizeof(analyzed_ast_t));
+
+	paast->pfunc_defs    = sllv_alloc();
+	paast->psubr_defs    = sllv_alloc();
+	paast->pbegin_blocks = sllv_alloc();
+	paast->pmain_block   = mlr_dsl_ast_node_alloc_zary("main_block", MD_AST_NODE_TYPE_STATEMENT_LIST);
+	paast->pend_blocks   = sllv_alloc();
+
+	return paast;
+
+}
+
+void analyzed_ast_free(analyzed_ast_t* paast) {
+	// xxx temp
+
+	for (sllve_t* pe = paast->pfunc_defs->phead; pe != NULL; pe = pe->pnext)
+		mlr_dsl_ast_node_free(pe->pvvalue);
+	for (sllve_t* pe = paast->psubr_defs->phead; pe != NULL; pe = pe->pnext)
+		mlr_dsl_ast_node_free(pe->pvvalue);
+	for (sllve_t* pe = paast->pbegin_blocks->phead; pe != NULL; pe = pe->pnext)
+		mlr_dsl_ast_node_free(pe->pvvalue);
+	mlr_dsl_ast_node_free(paast->pmain_block);
+	for (sllve_t* pe = paast->pend_blocks->phead; pe != NULL; pe = pe->pnext)
+		mlr_dsl_ast_node_free(pe->pvvalue);
+
+	sllv_free(paast->pfunc_defs);
+	sllv_free(paast->psubr_defs);
+	sllv_free(paast->pbegin_blocks);
+	sllv_free(paast->pend_blocks);
+	free(paast);
+
+}
+
+// ----------------------------------------------------------------
 // Main entry point for AST-to-CST for mlr put and mlr filter.
 //
 // Example AST (using put -v):

@@ -50,6 +50,21 @@
 // before/after stream processing, respectively.
 // ================================================================
 
+// ----------------------------------------------------------------
+// xxx comment
+typedef struct _analyzed_ast_t {
+	sllv_t* pfunc_defs;
+	sllv_t* psubr_defs;
+	sllv_t* pbegin_blocks;
+	mlr_dsl_ast_node_t* pmain_block;
+	sllv_t* pend_blocks;
+} analyzed_ast_t;
+
+// This strips nodes off the raw AST and transfers them to the analyzed AST.
+analyzed_ast_t* analyzed_ast_alloc(mlr_dsl_ast_t* past);
+void analyzed_ast_free(analyzed_ast_t* paast);
+
+// ----------------------------------------------------------------
 // Forward references for virtual-function prototypes
 struct _mlr_dsl_cst_statement_t;
 struct _mlr_dsl_cst_statement_vararg_t;
