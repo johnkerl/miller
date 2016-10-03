@@ -19,13 +19,13 @@ FUNCTIONALITY FOR 4.6.0:
   (issue is computation is dominated by lhmsv_get/put/string_hash_func.)
 
   o 1st AST pass: pivot around to have begin, end, main, funcs, subrs
-    - all begin statements -> one list
-    - all end   statements -> one list
-    - all func defs -> one list
-    - all subr defs -> one list
-    - all else -> main-statements list
-    - sllv_pop/append to make it quick
-    ? cst_pre_analyze_t struct or some such?
+    k all begin statements -> one list
+    k all end   statements -> one list
+    k all func defs -> one list
+    k all subr defs -> one list
+    k all else -> main-statements list
+    k sllv_pop/append to make it quick
+    k cst_pre_analyze_t struct or some such?
     ? ctor-0 frindex field @ mlr_dsl_ast_node_t?
   o 2nd AST pass: analyze each for max depth: local def, write, read. adapt existing lmhsv/resolve logic.
   o 3rd AST pass: rewrite localvar names w/ frame-relative indices

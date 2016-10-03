@@ -195,7 +195,6 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	}
 
 	analyzed_ast_free(pcst->paast);
-    mlr_dsl_ast_free(pcst->past);
 
 	free(pcst);
 }

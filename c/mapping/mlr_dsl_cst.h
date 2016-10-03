@@ -249,8 +249,8 @@ typedef struct _mlr_dsl_cst_t {
 // Notes:
 // * do_final_filter is FALSE for mlr put, TRUE for mlr filter.
 // * negate_final_filter is TRUE for mlr filter -x.
-// * The CST object retains the AST pointer (in order to reuse its strings etc. with minimal copying)
-//   and will free the AST in the CST destructor.
+// * The CST object strips nodes off the raw AST, constructed by the Lemon parser, in order
+//   to do analysis on it. Nonetheless the caller should free what's left.
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing, int flush_every_record,
 	int do_final_filter, int negate_final_filter);
 
