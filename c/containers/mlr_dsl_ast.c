@@ -120,6 +120,25 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(
 }
 
 // ----------------------------------------------------------------
+int mlr_dsl_ast_node_cannot_be_bare_boolean(mlr_dsl_ast_node_t* pnode) {
+	switch (pnode->type) {
+	case MD_AST_NODE_TYPE_BOOLEAN_LITERAL:
+	case MD_AST_NODE_TYPE_FIELD_NAME:
+	case MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME:
+	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
+	case MD_AST_NODE_TYPE_NON_SIGIL_NAME:
+	case MD_AST_NODE_TYPE_OPERATOR:
+	case MD_AST_NODE_TYPE_ENV:
+	case MD_AST_NODE_TYPE_BOUND_VARIABLE:
+		return FALSE;
+		break;
+	default:
+		return TRUE;
+		break;
+	}
+}
+
+// ----------------------------------------------------------------
 void mlr_dsl_ast_print(mlr_dsl_ast_t* past) {
 	printf("AST ROOT:\n");
 	if (past->proot == NULL) {

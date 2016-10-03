@@ -1385,7 +1385,7 @@ static mlr_dsl_cst_statement_t* alloc_triple_for(mlr_dsl_cst_t* pcst, mlr_dsl_as
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
 	mlr_dsl_ast_node_t* pstart_statements_node        = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pcontinuation_statement_node  = pnode->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* pcontinuation_statements_node = pnode->pchildren->phead->pnext->pvvalue;
 	mlr_dsl_ast_node_t* pupdate_statements_node       = pnode->pchildren->phead->pnext->pnext->pvvalue;
 	mlr_dsl_ast_node_t* pbody_statements_node         = pnode->pchildren->phead->pnext->pnext->pnext->pvvalue;
 
@@ -1396,9 +1396,28 @@ static mlr_dsl_cst_statement_t* alloc_triple_for(mlr_dsl_cst_t* pcst, mlr_dsl_as
 			type_inferencing, context_flags & ~IN_BREAKABLE));
 	}
 
-	// xxx assert length 1
-	pstatement->ptriple_for_continuation_evaluator = rval_evaluator_alloc_from_ast(pcontinuation_statement_node,
-		pcst->pfmgr, type_inferencing, context_flags & ~IN_BREAKABLE);
+	// Continuation statements are split into the final boolean, and the statements before (if any).
+	pstatement->ptriple_for_pre_continuation_statements = sllv_alloc();
+	// Empty continuation for triple-for is an implicit TRUE.
+	if (pcontinuation_statements_node->pchildren->length == 0) {
+		pstatement->ptriple_for_continuation_evaluator = rval_evaluator_alloc_from_boolean(TRUE);
+	} else {
+		for (sllve_t* pe = pcontinuation_statements_node->pchildren->phead; pe != NULL && pe->pnext != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+			sllv_append(pstatement->ptriple_for_pre_continuation_statements,
+				mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
+				type_inferencing, context_flags & ~IN_BREAKABLE));
+		}
+		mlr_dsl_ast_node_t* pfinal_continuation_statement_node = pcontinuation_statements_node->pchildren->ptail->pvvalue;
+		if (mlr_dsl_ast_node_cannot_be_bare_boolean(pfinal_continuation_statement_node)) {
+			fprintf(stderr,
+				"%s: the final triple-for continutation statement must be a bare boolean.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
+		pstatement->ptriple_for_continuation_evaluator = rval_evaluator_alloc_from_ast(pfinal_continuation_statement_node,
+			pcst->pfmgr, type_inferencing, (context_flags & ~IN_BREAKABLE) | IN_TRIPLE_FOR_CONTINUE);
+	}
 
 	pstatement->ptriple_for_update_statements = sllv_alloc();
 	for (sllve_t* pe = pupdate_statements_node->pchildren->phead; pe != NULL; pe = pe->pnext) {

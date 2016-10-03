@@ -114,6 +114,8 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_prepend_arg(mlr_dsl_ast_node_t* pa, mlr_dsl
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_append_arg(mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb);
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(mlr_dsl_ast_node_t* pa, char* name);
 
+int mlr_dsl_ast_node_cannot_be_bare_boolean(mlr_dsl_ast_node_t* pnode);
+
 void mlr_dsl_ast_print(mlr_dsl_ast_t* past);
 void mlr_dsl_ast_node_print(mlr_dsl_ast_node_t* pnode);
 void mlr_dsl_ast_node_fprint(mlr_dsl_ast_node_t* pnode, FILE* o);
