@@ -82,6 +82,10 @@ file-formats page:
 * --c2p, --c2j etc ...
 * --pprint --barred; emph for output only
 
+perf note:
+* C stuff performant
+* DSL stuff ... more for utility. but do profile/compare bind-stack allocation stuff 1st. :)
+
 ----------------------------------------------------------------
 4.6.0 FEATURES:
 
