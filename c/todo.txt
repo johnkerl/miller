@@ -32,7 +32,9 @@ FUNCTIONALITY FOR 4.6.0:
 ----------------------------------------------------------------
 UT FOR 4.6.0:
 
-* ENV @ LHS w/ popen of sh
+* multi-continue in triple-for
+
+* bind-stack allocation
 
 ----------------------------------------------------------------
 DOC FOR 4.6.0:

@@ -1088,6 +1088,8 @@ export X=
 export Y=
 run_mlr put '$x = ENV["X"]; $y = ENV[$name]' $indir/env-var.dkvp
 
+run_mlr -n put 'begin{ENV["HOME"]="foobar"} end{print ENV["HOME"]}'
+
 # ----------------------------------------------------------------
 announce DSL NULL/EMPTY HANDLING
 

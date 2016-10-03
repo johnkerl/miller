@@ -13056,6 +13056,9 @@ name=X,x=,y=
 name=Y,x=,y=
 x=,y=6
 
+mlr -n put begin{ENV["HOME"]="foobar"} end{print ENV["HOME"]}
+foobar
+
 
 ================================================================
 DSL NULL/EMPTY HANDLING
