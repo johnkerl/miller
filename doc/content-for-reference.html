@@ -1364,15 +1364,14 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/triple-for-example.sh)HERE
 Notes:
 <ul>
 
-<li/> In <tt>for (start; continuation; update) { body }</tt>, the start and
-update statements may be empty, single statements, or multiple comma-separated
-statements.
+<li/> In <tt>for (start; continuation; update) { body }</tt>, the start,
+continuation, and update statements may be empty, single statements, or
+multiple comma-separated statements. If the continuation is empty it defaults
+to true.
 
 <li/> In particular, you may use <tt>$</tt>-variables and/or
 <tt>@</tt>-variables in the start, continuation, and/or update steps (as well
 as the body, of course).
-
-<li/> The continuation must be a single expression which evaluates to boolean.
 
 <li/> As with all for/if/while statements in Miller, the curly braces are
 required even if the body is a single statement, or empty.
