@@ -257,6 +257,9 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int type_inferencing, int 
 mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags);
 
+mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_final_filter_statement(mlr_dsl_cst_t* pcst,
+	mlr_dsl_ast_node_t* pnode, int negate_final_filter, int type_inferencing, int context_flags);
+
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 

@@ -52,6 +52,7 @@ libmapping_la_SOURCES=	\
 			mlr_dsl_cst_analyze.c \
 			mlr_dsl_cst_func_subr.c \
 			mlr_dsl_cst_keywords.c \
+			mlr_dsl_cst_statements.c \
 			stats1_accumulators.c \
 			stats1_accumulators.h \
 			type_inference.h
