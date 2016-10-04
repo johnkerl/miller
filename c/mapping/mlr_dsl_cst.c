@@ -71,16 +71,6 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int type_in
 
 	mlr_dsl_cst_t* pcst = mlr_malloc_or_die(sizeof(mlr_dsl_cst_t));
 
-	if (past->proot->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d:\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		fprintf(stderr,
-			"expected root node type %s but found %s.\n",
-			mlr_dsl_ast_node_describe_type(MD_AST_NODE_TYPE_STATEMENT_LIST),
-			mlr_dsl_ast_node_describe_type(past->proot->type));
-		exit(1);
-	}
-
 	pcst->paast = analyzed_ast_alloc(past);
 
 	pcst->pbegin_blocks  = sllv_alloc();
@@ -148,6 +138,10 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int type_in
 			sllv_append(pcst->pmain_block, mlr_dsl_cst_alloc_statement(pcst, pnode,
 				type_inferencing, context_flags));
 		}
+	}
+
+	if (print_ast) {
+		// xxx
 	}
 
 	// Now that all subroutine/function definitions have been done, resolve
