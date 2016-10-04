@@ -350,8 +350,11 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 
 	// For just dev-testing the parser, you can do
 	//   mlr put -v 'expression goes here' /dev/null
-	if (print_ast)
+	if (print_ast) {
+		printf("RAW AST:\n");
+		printf("\n");
 		mlr_dsl_ast_print(past);
+	}
 
 	*pargi = argi;
 	return mapper_put_or_filter_alloc(mlr_dsl_expression, print_ast, comment_stripped_mlr_dsl_expression,

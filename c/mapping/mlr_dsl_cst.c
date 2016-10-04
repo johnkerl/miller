@@ -81,15 +81,29 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int type_in
 	pcst->psubr_callsite_statements_to_resolve = sllv_alloc();
 	pcst->flush_every_record = flush_every_record;
 
+	if (print_ast) {
+		printf("\n");
+		printf("ANALYZED AST:\n");
+	}
 
 	for (sllve_t* pe = pcst->paast->pfunc_defs->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+		if (print_ast) {
+			printf("\n");
+			printf("FUNCTION DEFINITION:\n");
+			mlr_dsl_ast_node_print(pnode);
+		}
 		udf_defsite_state_t* pudf_defsite_state = mlr_dsl_cst_alloc_udf(pcst, pnode, type_inferencing, context_flags);
 		fmgr_install_udf(pcst->pfmgr, pudf_defsite_state);
 	}
 
 	for (sllve_t* pe = pcst->paast->psubr_defs->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+		if (print_ast) {
+			printf("\n");
+			printf("SUBROUTINE DEFINITION:\n");
+			mlr_dsl_ast_node_print(pnode);
+		}
 		subr_defsite_t* psubr_defsite = mlr_dsl_cst_alloc_subroutine(pcst, pnode, type_inferencing, context_flags);
 		if (lhmsv_get(pcst->psubr_defsites, psubr_defsite->name)) {
 			fprintf(stderr, "%s: subroutine named \"%s\" has already been defined.\n",
@@ -101,6 +115,11 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int type_in
 
 	for (sllve_t* pe = pcst->paast->pbegin_blocks->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+		if (print_ast) {
+			printf("\n");
+			printf("BEGIN-BLOCK:\n");
+			mlr_dsl_ast_node_print(pnode);
+		}
 		sllv_t* pblock = sllv_alloc();
 		for (sllve_t* pf = pnode->pchildren->phead; pf != NULL; pf = pf->pnext) {
 			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
@@ -115,6 +134,11 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int type_in
 
 	for (sllve_t* pe = pcst->paast->pend_blocks->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+		if (print_ast) {
+			printf("\n");
+			printf("END-BLOCK:\n");
+			mlr_dsl_ast_node_print(pnode);
+		}
 		sllv_t* pblock = sllv_alloc();
 		for (sllve_t* pf = pnode->pchildren->phead; pf != NULL; pf = pf->pnext) {
 			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
@@ -127,6 +151,11 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int type_in
 		sllv_append(pcst->pend_blocks, pblock);
 	}
 
+	if (print_ast) {
+		printf("\n");
+		printf("MAIN BLOCK:\n");
+		mlr_dsl_ast_node_print(pcst->paast->pmain_block);
+	}
 	for (sllve_t* pe = pcst->paast->pmain_block->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 
@@ -138,10 +167,6 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int type_in
 			sllv_append(pcst->pmain_block, mlr_dsl_cst_alloc_statement(pcst, pnode,
 				type_inferencing, context_flags));
 		}
-	}
-
-	if (print_ast) {
-		// xxx
 	}
 
 	// Now that all subroutine/function definitions have been done, resolve
