@@ -99,11 +99,13 @@ void analyzed_ast_free(analyzed_ast_t* paast) {
 // }                     #
 // ================================================================
 
+// ----------------------------------------------------------------
 // * local-var defines are certainly for the current frame
 // * local-var writes need backtracing (if not found at the current frame)
 // * local-var reads  need backtracing (if not found at the current frame)
 // * unresolved-read needs special handling -- maybe a root-level mv_absent at index 0?
 //
+// ----------------------------------------------------------------
 // One frame per curly-braced block
 // One framegroup per block (funcdef, subrdef, begin, end, main)
 // -> has maxdepth attrs
@@ -132,3 +134,21 @@ void analyzed_ast_free(analyzed_ast_t* paast) {
 //   this way AST points to analysis.
 // * analysis tree w/ pointers to statement-list nodes?
 //   this way analysis points to AST.
+//
+// ----------------------------------------------------------------
+// Population:
+// * in-order AST traversal
+// * note statement-list nodes are only every so often in the full AST
+// * at each node:
+//     if is local-var LHS:
+//       if explicit:
+//         lhmsi_put(name, ++fridx)
+//       else:
+//         resolve up ...
+//     else if is statement-list:
+//       allocate a frame struct
+//       attach it to the node
+//       recurse & have the recursion populate it
+//       pop the frame struct but leave it attached to the node
+//     else:
+//       nothing to do here.
