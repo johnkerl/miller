@@ -55,35 +55,33 @@ static void mlr_dsl_cst_resolve_subr_callsites(mlr_dsl_cst_t* pcst);
 //                     text="z", type=string_literal.
 //                 text="6", type=strnum_literal.
 
- mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* ptop, int print_ast, int type_inferencing, int flush_every_record,
+mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int type_inferencing, int flush_every_record,
 	int do_final_filter, int negate_final_filter) // for mlr filter
 {
 	int context_flags = do_final_filter ? IN_MLR_FILTER : 0;
 	// The root node is not populated on empty-string input to the parser.
-	if (ptop->proot == NULL) {
+	if (past->proot == NULL) {
 		if (do_final_filter) {
 			fprintf(stderr, "%s: filter statement must not be empty.\n",
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		ptop->proot = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
+		past->proot = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
 	}
 
 	mlr_dsl_cst_t* pcst = mlr_malloc_or_die(sizeof(mlr_dsl_cst_t));
 
-	if (ptop->proot->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
+	if (past->proot->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d:\n",
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		fprintf(stderr,
 			"expected root node type %s but found %s.\n",
 			mlr_dsl_ast_node_describe_type(MD_AST_NODE_TYPE_STATEMENT_LIST),
-			mlr_dsl_ast_node_describe_type(ptop->proot->type));
+			mlr_dsl_ast_node_describe_type(past->proot->type));
 		exit(1);
 	}
 
-	// xxx free immediately after analysis
-	pcst->past  = ptop;
-	pcst->paast = analyzed_ast_alloc(ptop);
+	pcst->paast = analyzed_ast_alloc(past);
 
 	pcst->pbegin_blocks  = sllv_alloc();
 	pcst->pmain_block    = sllv_alloc();
@@ -91,7 +89,6 @@ static void mlr_dsl_cst_resolve_subr_callsites(mlr_dsl_cst_t* pcst);
 	pcst->pfmgr          = fmgr_alloc();
 	pcst->psubr_defsites = lhmsv_alloc();
 	pcst->psubr_callsite_statements_to_resolve = sllv_alloc();
-	pcst->pfilter_evaluator = NULL; // xxx rm
 	pcst->flush_every_record = flush_every_record;
 
 

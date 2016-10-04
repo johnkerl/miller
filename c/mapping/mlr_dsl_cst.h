@@ -231,15 +231,11 @@ typedef struct _mlr_dsl_cst_t {
 	// has been defined).
 	sllv_t* psubr_callsite_statements_to_resolve;
 
-	// For mlr filter which takes restricted syntax
-	rval_evaluator_t* pfilter_evaluator;
-
 	// fflush on emit/tee/print/dump
 	int flush_every_record;
 
 	// The CST object retains the AST pointer (in order to reuse its strings etc. with minimal copying)
 	// and will free the AST in the CST destructor.
-	mlr_dsl_ast_t* past;
 	analyzed_ast_t* paast;
 } mlr_dsl_cst_t;
 
