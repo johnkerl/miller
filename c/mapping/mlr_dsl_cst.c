@@ -169,6 +169,10 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int type_in
 		}
 	}
 
+	if (print_ast) {
+		printf("\n");
+	}
+
 	// Now that all subroutine/function definitions have been done, resolve
 	// their callsites whose locations we stashed during the CST build. (Without
 	// this delayed resolution, there could be no recursion, and subroutines
