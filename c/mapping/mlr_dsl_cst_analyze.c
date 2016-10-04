@@ -71,3 +71,64 @@ void analyzed_ast_free(analyzed_ast_t* paast) {
 	free(paast);
 
 }
+
+// ================================================================
+//                       # ---- FUNC FRAME: defcount 5 {a,b,c,i,j}
+// func f(a, b, c) {     # arg define A.1,A.2,A.3
+//     local i = 1;      # explicit define A.4
+//     j = 2;            # implicit define A.5
+//                       #
+//                       # ---- IF FRAME: defcount 2 {k,m}
+//     if (a == 3) {     # RHS A.1
+//         local k = 4;  # explicit define B.1
+//         j = 5;        # LHS A.5
+//         m = 6;        # implicit define B.2
+//         k = a;        # LHS B.1 RHS A.1
+//         k = i;        # LHS B.1 RHS A.4
+//         m = k;        # LHS B.2 RHS B.1
+//                       #
+//                       # ---- ELSE FRAME: defcount 3 {n,g,h}
+//     } else {          #
+//         n = b;        #
+//         g = n         #
+//         h = b         #
+//     }                 #
+//                       #
+//     b = 7;            # LHS A.2
+//     i = z;            # LHS A.4 RHS unresolved
+// }                     #
+// ================================================================
+
+// * local-var defines are certainly for the current frame
+// * local-var writes need backtracing (if not found at the current frame)
+// * local-var reads  need backtracing (if not found at the current frame)
+// * unresolved-read needs special handling -- maybe a root-level mv_absent at index 0?
+//
+// One frame per curly-braced block
+// One framegroup per block (funcdef, subrdef, begin, end, main)
+// -> has maxdepth attrs
+//
+// frame_t at analysis phase:
+// * hss I guess. or better: lhmsi. has size attr.
+//
+// frame_t at run phase:
+// * numvars attr
+// * indices refer to frame_group's array:
+//   o non-negative indices are local
+//   o negative indices are locals within ancestor node(s)
+//
+// frame_group_t at analysis phase:
+// * this is a tree
+// * each node has nameset/defcount for its locals
+// * each node also has max defcount for its transitive children?
+//
+// frame_group_t at run phase:
+// * maxdepth attr
+// * array of mlrvals
+// * optionally (or always?) a single slot is the undef.
+//
+// storage options:
+// * decorate ast_node_t w/ default-null pointer to allocated analysis info?
+//   this way AST points to analysis.
+// * analysis tree w/ pointers to statement-list nodes?
+//   this way analysis points to AST.
