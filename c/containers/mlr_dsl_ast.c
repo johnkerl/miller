@@ -120,6 +120,14 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(
 }
 
 // ----------------------------------------------------------------
+void mlr_dsl_ast_node_replace_text(mlr_dsl_ast_node_t* pa, char* text) {
+	if (pa->text != NULL) {
+		free(pa->text);
+	}
+	pa->text = mlr_strdup_or_die(text);
+}
+
+// ----------------------------------------------------------------
 int mlr_dsl_ast_node_cannot_be_bare_boolean(mlr_dsl_ast_node_t* pnode) {
 	switch (pnode->type) {
 	case MD_AST_NODE_TYPE_BOOLEAN_LITERAL:

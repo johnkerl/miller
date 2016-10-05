@@ -351,7 +351,7 @@ static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode, sll
 				lhmsi_t* pnames_to_indices = lhmsi_alloc();
 				for (int i = 0; i < pframe_group->length; i++)
 					printf("::  ");
-				printf("PUSH FRAME\n");
+				printf("PUSH FRAME %s\n", pchild->text);
 				sllv_prepend(pframe_group, pnames_to_indices);
 
 				analyzed_ast_allocate_locals_for_statement_list(pchild, pframe_group);
@@ -359,7 +359,7 @@ static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode, sll
 				sllv_pop(pframe_group);
 				for (int i = 0; i < pframe_group->length; i++)
 					printf("::  ");
-				printf("POP FRAME\n");
+				printf("POP FRAME %s\n", pchild->text);
 				lhmsi_free(pnames_to_indices);
 			} else {
 				analyzed_ast_allocate_locals_for_node(pchild, pframe_group);
