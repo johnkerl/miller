@@ -262,9 +262,12 @@ static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t*
 	mlr_dsl_ast_node_t* plist_node = pnode->pchildren->phead->pnext->pvvalue;
 	for (sllve_t* pe = pdef_name_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
-		lhmsi_put(pnames_to_indices, pparameter_node->text, index_count, NO_FREE);
-		printf("ALLOCATING %s = %lld\n", pparameter_node->text, index_count);
-		index_count++;
+		if (!lhmsi_has_key(pnames_to_indices, pparameter_node->text)) {
+			// xxx wrap in a class
+			printf("ALLOCATING PARAMETER %s = %lld\n", pparameter_node->text, index_count);
+			lhmsi_put(pnames_to_indices, pparameter_node->text, index_count, NO_FREE);
+			index_count++;
+		}
 	}
 	analyzed_ast_allocate_locals_for_statement_list(plist_node, pframe_group);
 
@@ -329,9 +332,14 @@ static void analyzed_ast_allocate_locals_for_statement_list(mlr_dsl_ast_node_t* 
 
 static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group) {
 	if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
-		for (int i = 0; i < pframe_group->length; i++)
-			printf("::  ");
-		printf("BOOP [%s]!\n", pnode->text);
+		// make method
+		if (!lhmsi_has_key(pframe_group->phead->pvvalue, pnode->text)) {
+			// xxx track count
+			lhmsi_put(pframe_group->phead->pvvalue, pnode->text, 999, NO_FREE);
+			for (int i = 0; i < pframe_group->length; i++)
+				printf("::  ");
+			printf("BOOP [%s]!\n", pnode->text);
+		}
 	}
 	if (pnode->pchildren != NULL) {
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
