@@ -246,7 +246,7 @@ static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t*
 	// xxx make a keystroke-saver, use it here, & use it from the cst builder as well
 	if (pnode->type != MD_AST_NODE_TYPE_SUBR_DEF && pnode->type != MD_AST_NODE_TYPE_FUNC_DEF) {
 		fprintf(stderr,
-			"%s: internal coding error detected in file %s at line %d: null left child node.\n",
+			"%s: internal coding error detected in file %s at line %d.\n",
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
@@ -258,8 +258,7 @@ static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t*
 	sllv_t* pframe_group = sllv_alloc();
 	sllv_prepend(pframe_group, pnames_to_indices);
 
-	printf("DEF BLK [%s]\n", pnode->text);
-	// xxx rename
+	printf("ALLOCATING LOCALS FOR DEFINITION BLOCK [%s]\n", pnode->text);
 	mlr_dsl_ast_node_t* pdef_name_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* plist_node = pnode->pchildren->phead->pnext->pvvalue;
 	for (sllve_t* pe = pdef_name_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -277,14 +276,14 @@ static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t*
 
 // ----------------------------------------------------------------
 static void analyzed_ast_allocate_locals_for_begin_end_block(mlr_dsl_ast_node_t* pnode) {
-//	xxx assert node type
 	if (pnode->type != MD_AST_NODE_TYPE_BEGIN && pnode->type != MD_AST_NODE_TYPE_END) {
 		fprintf(stderr,
-			"%s: internal coding error detected in file %s at line %d: null left child node.\n",
+			"%s: internal coding error detected in file %s at line %d.\n",
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
 
+	printf("ALLOCATING LOCALS FOR %s BLOCK\n", pnode->text);
 	lhmsi_t* pnames_to_indices = lhmsi_alloc();
 	sllv_t* pframe_group = sllv_alloc();
 	sllv_prepend(pframe_group, pnames_to_indices);
@@ -301,6 +300,7 @@ static void analyzed_ast_allocate_locals_for_begin_end_block(mlr_dsl_ast_node_t*
 static void analyzed_ast_allocate_locals_for_main_block(mlr_dsl_ast_node_t* pnode) {
 //	xxx assert node type
 
+	printf("ALLOCATING LOCALS FOR MAIN BLOCK\n");
 	lhmsi_t* pnames_to_indices = lhmsi_alloc();
 	sllv_t* pframe_group = sllv_alloc();
 	sllv_prepend(pframe_group, pnames_to_indices);
@@ -318,7 +318,7 @@ static void analyzed_ast_allocate_locals_for_main_block(mlr_dsl_ast_node_t* pnod
 static void analyzed_ast_allocate_locals_for_statement_list(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group) {
 	if (pnode->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
 		fprintf(stderr,
-			"%s: internal coding error detected in file %s at line %d: null left child node.\n",
+			"%s: internal coding error detected in file %s at line %d.\n",
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
