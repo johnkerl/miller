@@ -215,7 +215,6 @@ void analyzed_ast_free(analyzed_ast_t* paast) {
 //         text="2", type=STRNUM_LITERAL.
 
 
-
 // ================================================================
 static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t* pnode);
 static void analyzed_ast_allocate_locals_for_begin_end_block(mlr_dsl_ast_node_t* pnode);
@@ -330,6 +329,8 @@ static void analyzed_ast_allocate_locals_for_statement_list(mlr_dsl_ast_node_t* 
 
 static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group) {
 	if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
+		for (int i = 0; i < pframe_group->length; i++)
+			printf("::  ");
 		printf("BOOP [%s]!\n", pnode->text);
 	}
 	if (pnode->pchildren != NULL) {
