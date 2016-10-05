@@ -64,6 +64,9 @@ typedef struct _analyzed_ast_t {
 analyzed_ast_t* analyzed_ast_alloc(mlr_dsl_ast_t* past);
 void analyzed_ast_free(analyzed_ast_t* paast);
 
+// xxx comment
+void analyzed_ast_allocate_locals(analyzed_ast_t* paast);
+
 // ----------------------------------------------------------------
 // Forward references for virtual-function prototypes
 struct _mlr_dsl_cst_statement_t;

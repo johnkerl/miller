@@ -73,6 +73,11 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int type_in
 
 	pcst->paast = analyzed_ast_alloc(past);
 
+	// xxx temp
+	if (print_ast && getenv("MLR_BIND_STACK_ALLOC_DEV")) {
+		analyzed_ast_allocate_locals(pcst->paast);
+	}
+
 	pcst->pbegin_blocks  = sllv_alloc();
 	pcst->pmain_block    = sllv_alloc();
 	pcst->pend_blocks    = sllv_alloc();

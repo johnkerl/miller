@@ -73,6 +73,9 @@ void analyzed_ast_free(analyzed_ast_t* paast) {
 }
 
 // ================================================================
+// xxx under construction
+
+// ================================================================
 //                       # ---- FUNC FRAME: defcount 5 {a,b,c,i,j}
 // func f(a, b, c) {     # arg define A.1,A.2,A.3
 //     local i = 1;      # explicit define A.4
@@ -90,7 +93,7 @@ void analyzed_ast_free(analyzed_ast_t* paast) {
 //                       # ---- ELSE FRAME: defcount 3 {n,g,h}
 //     } else {          #
 //         n = b;        #
-//         g = n         #
+//         g = n;        #
 //         h = b         #
 //     }                 #
 //                       #
@@ -152,3 +155,198 @@ void analyzed_ast_free(analyzed_ast_t* paast) {
 //       pop the frame struct but leave it attached to the node
 //     else:
 //       nothing to do here.
+// ----------------------------------------------------------------
+
+// func f(a,b) {
+//     return a+b;
+// }
+// subr s(n) {
+//     print n;
+// }
+// begin {
+//     local x = 1;
+// }
+// end {
+//     local z = 3;
+// }
+// local y = 2;
+
+// ANALYZED AST:
+//
+// FUNCTION DEFINITION:
+// text="f", type=FUNC_DEF:
+//     text="f", type=NON_SIGIL_NAME:
+//         text="a", type=NON_SIGIL_NAME.
+//         text="b", type=NON_SIGIL_NAME.
+//     text="list", type=STATEMENT_LIST:
+//         text="return_value", type=RETURN_VALUE:
+//             text="+", type=OPERATOR:
+//                 text="a", type=BOUND_VARIABLE.
+//                 text="b", type=BOUND_VARIABLE.
+//
+// SUBROUTINE DEFINITION:
+// text="s", type=SUBR_DEF:
+//     text="s", type=NON_SIGIL_NAME:
+//         text="n", type=NON_SIGIL_NAME.
+//     text="list", type=STATEMENT_LIST:
+//         text="print", type=PRINT:
+//             text="n", type=BOUND_VARIABLE.
+//             text=">", type=FILE_WRITE:
+//                 text="stdout", type=STDOUT:
+//
+// BEGIN-BLOCK:
+// text="begin", type=BEGIN:
+//     text="list", type=STATEMENT_LIST:
+//         text="local", type=LOCAL:
+//             text="x", type=BOUND_VARIABLE.
+//             text="1", type=STRNUM_LITERAL.
+//
+// END-BLOCK:
+// text="end", type=END:
+//     text="list", type=STATEMENT_LIST:
+//         text="local", type=LOCAL:
+//             text="z", type=BOUND_VARIABLE.
+//             text="3", type=STRNUM_LITERAL.
+//
+// MAIN BLOCK:
+// text="main_block", type=STATEMENT_LIST:
+//     text="local", type=LOCAL:
+//         text="y", type=BOUND_VARIABLE.
+//         text="2", type=STRNUM_LITERAL.
+
+
+
+// ================================================================
+static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t* pnode);
+static void analyzed_ast_allocate_locals_for_begin_end_block(mlr_dsl_ast_node_t* pnode);
+static void analyzed_ast_allocate_locals_for_main_block(mlr_dsl_ast_node_t* pnode);
+static void analyzed_ast_allocate_locals_for_statement_list(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group);
+static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group);
+
+// ----------------------------------------------------------------
+void analyzed_ast_allocate_locals(analyzed_ast_t* paast) {
+	printf("\n"); // xxx temp
+	for (sllve_t* pe = paast->pfunc_defs->phead; pe != NULL; pe = pe->pnext) {
+		analyzed_ast_allocate_locals_for_func_subr_block(pe->pvvalue);
+	}
+	for (sllve_t* pe = paast->psubr_defs->phead; pe != NULL; pe = pe->pnext) {
+		analyzed_ast_allocate_locals_for_func_subr_block(pe->pvvalue);
+	}
+	for (sllve_t* pe = paast->pbegin_blocks->phead; pe != NULL; pe = pe->pnext) {
+		analyzed_ast_allocate_locals_for_begin_end_block(pe->pvvalue);
+	}
+	analyzed_ast_allocate_locals_for_main_block(paast->pmain_block);
+	for (sllve_t* pe = paast->pend_blocks->phead; pe != NULL; pe = pe->pnext) {
+		analyzed_ast_allocate_locals_for_begin_end_block(pe->pvvalue);
+	}
+}
+
+// ----------------------------------------------------------------
+static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t* pnode) {
+	// xxx make a keystroke-saver, use it here, & use it from the cst builder as well
+	if (pnode->type != MD_AST_NODE_TYPE_SUBR_DEF && pnode->type != MD_AST_NODE_TYPE_FUNC_DEF) {
+		fprintf(stderr,
+			"%s: internal coding error detected in file %s at line %d: null left child node.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	//	xxx assert two children of desired type
+
+	long long index_count = 0;
+
+	lhmsi_t* pnames_to_indices = lhmsi_alloc();
+	sllv_t* pframe_group = sllv_alloc();
+	sllv_prepend(pframe_group, pnames_to_indices);
+
+	printf("DEF BLK [%s]\n", pnode->text);
+	// xxx rename
+	mlr_dsl_ast_node_t* pdef_name_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* plist_node = pnode->pchildren->phead->pnext->pvvalue;
+	for (sllve_t* pe = pdef_name_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
+		lhmsi_put(pnames_to_indices, pparameter_node->text, index_count, NO_FREE);
+		printf("ALLOCATING %s = %lld\n", pparameter_node->text, index_count);
+		index_count++;
+	}
+	analyzed_ast_allocate_locals_for_statement_list(plist_node, pframe_group);
+
+	sllv_pop(pframe_group);
+	sllv_free(pframe_group);
+	lhmsi_free(pnames_to_indices);
+}
+
+// ----------------------------------------------------------------
+static void analyzed_ast_allocate_locals_for_begin_end_block(mlr_dsl_ast_node_t* pnode) {
+//	xxx assert node type
+	if (pnode->type != MD_AST_NODE_TYPE_BEGIN && pnode->type != MD_AST_NODE_TYPE_END) {
+		fprintf(stderr,
+			"%s: internal coding error detected in file %s at line %d: null left child node.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+
+	lhmsi_t* pnames_to_indices = lhmsi_alloc();
+	sllv_t* pframe_group = sllv_alloc();
+	sllv_prepend(pframe_group, pnames_to_indices);
+
+	analyzed_ast_allocate_locals_for_statement_list(pnode->pchildren->phead->pvvalue, pframe_group);
+
+	sllv_pop(pframe_group);
+	sllv_free(pframe_group);
+	lhmsi_free(pnames_to_indices);
+
+}
+
+// ----------------------------------------------------------------
+static void analyzed_ast_allocate_locals_for_main_block(mlr_dsl_ast_node_t* pnode) {
+//	xxx assert node type
+
+	lhmsi_t* pnames_to_indices = lhmsi_alloc();
+	sllv_t* pframe_group = sllv_alloc();
+	sllv_prepend(pframe_group, pnames_to_indices);
+
+	analyzed_ast_allocate_locals_for_statement_list(pnode, pframe_group);
+
+	sllv_pop(pframe_group);
+	sllv_free(pframe_group);
+	lhmsi_free(pnames_to_indices);
+}
+
+// ----------------------------------------------------------------
+// xxx this becomes easier (and less contextful) if there are separate BOUNDVAR ast node types
+// for boundvar @ rhs, boundvar @ for-loop bind, @ arg bind, @ local-def, and @ lhs/assign.
+static void analyzed_ast_allocate_locals_for_statement_list(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group) {
+	if (pnode->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
+		fprintf(stderr,
+			"%s: internal coding error detected in file %s at line %d: null left child node.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+		analyzed_ast_allocate_locals_for_node(pchild, pframe_group);
+	}
+}
+
+static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group) {
+	if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
+		printf("BOOP [%s]!\n", pnode->text);
+	}
+	if (pnode->pchildren != NULL) {
+		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+
+			if (pchild->type == MD_AST_NODE_TYPE_STATEMENT_LIST) {
+				lhmsi_t* pnames_to_indices = lhmsi_alloc();
+				sllv_prepend(pframe_group, pnames_to_indices);
+
+				analyzed_ast_allocate_locals_for_statement_list(pchild, pframe_group);
+
+				sllv_pop(pframe_group);
+				lhmsi_free(pnames_to_indices);
+			} else {
+				analyzed_ast_allocate_locals_for_node(pchild, pframe_group);
+			}
+		}
+	}
+}
