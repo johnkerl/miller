@@ -278,7 +278,7 @@ static void mlr_dsl_cst_resolve_subr_callsites(mlr_dsl_cst_t* pcst) {
 			exit(1);
 		}
 		if (psubr_defsite->arity != psubr_callsite->arity) {
-			fprintf(stderr, "%s: subroutine \"%s\" expects argument count %d but argument count %d was provied.\n",
+			fprintf(stderr, "%s: subroutine \"%s\" expects argument count %d but argument count %d was provided.\n",
 				MLR_GLOBALS.bargv0, psubr_callsite->name, psubr_defsite->arity, psubr_callsite->arity);
 			exit(1);
 		}

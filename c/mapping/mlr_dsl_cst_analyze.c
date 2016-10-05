@@ -345,13 +345,21 @@ static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode, sll
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
 
+			// xxx special case for triple-for: only the body statement list is curly braced.
+			// the triple elements are not. maybe make some ast-node-type help here in the parser?
 			if (pchild->type == MD_AST_NODE_TYPE_STATEMENT_LIST) {
 				lhmsi_t* pnames_to_indices = lhmsi_alloc();
+				for (int i = 0; i < pframe_group->length; i++)
+					printf("::  ");
+				printf("PUSH FRAME\n");
 				sllv_prepend(pframe_group, pnames_to_indices);
 
 				analyzed_ast_allocate_locals_for_statement_list(pchild, pframe_group);
 
 				sllv_pop(pframe_group);
+				for (int i = 0; i < pframe_group->length; i++)
+					printf("::  ");
+				printf("POP FRAME\n");
 				lhmsi_free(pnames_to_indices);
 			} else {
 				analyzed_ast_allocate_locals_for_node(pchild, pframe_group);
