@@ -14,15 +14,15 @@ analyzed_ast_t* analyzed_ast_alloc(mlr_dsl_ast_t* past) {
 	paast->pfunc_defs    = sllv_alloc();
 	paast->psubr_defs    = sllv_alloc();
 	paast->pbegin_blocks = sllv_alloc();
-	paast->pmain_block   = mlr_dsl_ast_node_alloc_zary("main_block", MD_AST_NODE_TYPE_STATEMENT_LIST);
+	paast->pmain_block   = mlr_dsl_ast_node_alloc_zary("main_block", MD_AST_NODE_TYPE_STATEMENT_BLOCK);
 	paast->pend_blocks   = sllv_alloc();
 
-	if (past->proot->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
+	if (past->proot->type != MD_AST_NODE_TYPE_STATEMENT_BLOCK) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d:\n",
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		fprintf(stderr,
 			"expected root node type %s but found %s.\n",
-			mlr_dsl_ast_node_describe_type(MD_AST_NODE_TYPE_STATEMENT_LIST),
+			mlr_dsl_ast_node_describe_type(MD_AST_NODE_TYPE_STATEMENT_BLOCK),
 			mlr_dsl_ast_node_describe_type(past->proot->type));
 		exit(1);
 	}
@@ -178,7 +178,7 @@ void analyzed_ast_free(analyzed_ast_t* paast) {
 //     text="f", type=NON_SIGIL_NAME:
 //         text="a", type=NON_SIGIL_NAME.
 //         text="b", type=NON_SIGIL_NAME.
-//     text="list", type=STATEMENT_LIST:
+//     text="list", type=STATEMENT_BLOCK:
 //         text="return_value", type=RETURN_VALUE:
 //             text="+", type=OPERATOR:
 //                 text="a", type=BOUND_VARIABLE.
@@ -188,7 +188,7 @@ void analyzed_ast_free(analyzed_ast_t* paast) {
 // text="s", type=SUBR_DEF:
 //     text="s", type=NON_SIGIL_NAME:
 //         text="n", type=NON_SIGIL_NAME.
-//     text="list", type=STATEMENT_LIST:
+//     text="list", type=STATEMENT_BLOCK:
 //         text="print", type=PRINT:
 //             text="n", type=BOUND_VARIABLE.
 //             text=">", type=FILE_WRITE:
@@ -196,20 +196,20 @@ void analyzed_ast_free(analyzed_ast_t* paast) {
 //
 // BEGIN-BLOCK:
 // text="begin", type=BEGIN:
-//     text="list", type=STATEMENT_LIST:
+//     text="list", type=STATEMENT_BLOCK:
 //         text="local", type=LOCAL:
 //             text="x", type=BOUND_VARIABLE.
 //             text="1", type=STRNUM_LITERAL.
 //
 // END-BLOCK:
 // text="end", type=END:
-//     text="list", type=STATEMENT_LIST:
+//     text="list", type=STATEMENT_BLOCK:
 //         text="local", type=LOCAL:
 //             text="z", type=BOUND_VARIABLE.
 //             text="3", type=STRNUM_LITERAL.
 //
 // MAIN BLOCK:
-// text="main_block", type=STATEMENT_LIST:
+// text="main_block", type=STATEMENT_BLOCK:
 //     text="local", type=LOCAL:
 //         text="y", type=BOUND_VARIABLE.
 //         text="2", type=STRNUM_LITERAL.
@@ -318,7 +318,7 @@ static void analyzed_ast_allocate_locals_for_main_block(mlr_dsl_ast_node_t* pnod
 // xxx this becomes easier (and less contextful) if there are separate BOUNDVAR ast node types
 // for boundvar @ rhs, boundvar @ for-loop bind, @ arg bind, @ local-def, and @ lhs/assign.
 static void analyzed_ast_allocate_locals_for_statement_list(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group) {
-	if (pnode->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
+	if (pnode->type != MD_AST_NODE_TYPE_STATEMENT_BLOCK) {
 		fprintf(stderr,
 			"%s: internal coding error detected in file %s at line %d.\n",
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
@@ -347,7 +347,7 @@ static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode, sll
 
 			// xxx special case for triple-for: only the body statement list is curly braced.
 			// the triple elements are not. maybe make some ast-node-type help here in the parser?
-			if (pchild->type == MD_AST_NODE_TYPE_STATEMENT_LIST) {
+			if (pchild->type == MD_AST_NODE_TYPE_STATEMENT_BLOCK) {
 				lhmsi_t* pnames_to_indices = lhmsi_alloc();
 				for (int i = 0; i < pframe_group->length; i++)
 					printf("::  ");

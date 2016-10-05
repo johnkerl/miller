@@ -61,9 +61,9 @@ md_body ::= md_statement_list(B). {
 // ----------------------------------------------------------------
 md_statement_list(A) ::= md_statement(B). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
-		A = ex_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
+		A = ex_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_BLOCK);
 	} else {
-		A = ex_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
+		A = ex_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_BLOCK, B);
 	}
 }
 

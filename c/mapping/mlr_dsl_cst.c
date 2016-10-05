@@ -66,7 +66,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int type_in
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		past->proot = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
+		past->proot = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_BLOCK);
 	}
 
 	mlr_dsl_cst_t* pcst = mlr_malloc_or_die(sizeof(mlr_dsl_cst_t));
@@ -254,13 +254,13 @@ static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode) {
 	}
 	mlr_dsl_ast_node_t* pleft = pnode->pchildren->phead->pvvalue;
 
-	if (pleft->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
+	if (pleft->type != MD_AST_NODE_TYPE_STATEMENT_BLOCK) {
 		fprintf(stderr,
 			"%s: internal coding error detected in file %s at line %d:\n",
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		fprintf(stderr,
 			"expected node type %s but found %s.\n",
-			mlr_dsl_ast_node_describe_type(MD_AST_NODE_TYPE_STATEMENT_LIST),
+			mlr_dsl_ast_node_describe_type(MD_AST_NODE_TYPE_STATEMENT_BLOCK),
 			mlr_dsl_ast_node_describe_type(pleft->type));
 		exit(1);
 	}

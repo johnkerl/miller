@@ -8,7 +8,7 @@
 
 // ----------------------------------------------------------------
 typedef enum _ex_ast_node_type_t {
-	MD_AST_NODE_TYPE_STATEMENT_LIST,
+	MD_AST_NODE_TYPE_STATEMENT_BLOCK,
 	MD_AST_NODE_TYPE_BEGIN,
 	MD_AST_NODE_TYPE_END,
 	MD_AST_NODE_TYPE_STRING_LITERAL,

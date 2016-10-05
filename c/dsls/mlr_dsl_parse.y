@@ -71,17 +71,17 @@ md_body ::= md_statement_list(B). {
 
 md_statement_list(A) ::= md_statement_not_braced_end(B). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
-		A = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
+		A = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_BLOCK);
 	} else {
-		A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
+		A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_BLOCK, B);
 	}
 }
 
 md_statement_list(A) ::= md_statement_braced_end(B). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
-		A = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_LIST);
+		A = mlr_dsl_ast_node_alloc_zary("list", MD_AST_NODE_TYPE_STATEMENT_BLOCK);
 	} else {
-		A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
+		A = mlr_dsl_ast_node_alloc_unary("list", MD_AST_NODE_TYPE_STATEMENT_BLOCK, B);
 	}
 }
 
@@ -442,9 +442,9 @@ md_triple_for(A) ::=
 
 md_triple_for_start(A) ::= md_statement_not_braced_end(B). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
-		A = mlr_dsl_ast_node_alloc_zary("triple_for_start_statements", MD_AST_NODE_TYPE_STATEMENT_LIST);
+		A = mlr_dsl_ast_node_alloc_zary("triple_for_start_statements", MD_AST_NODE_TYPE_STATEMENT_BLOCK);
 	} else {
-		A = mlr_dsl_ast_node_alloc_unary("triple_for_start_statements", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
+		A = mlr_dsl_ast_node_alloc_unary("triple_for_start_statements", MD_AST_NODE_TYPE_STATEMENT_BLOCK, B);
 	}
 }
 md_triple_for_start(A) ::= md_triple_for_start(B) MD_TOKEN_COMMA md_statement_not_braced_end(C). {
@@ -457,9 +457,9 @@ md_triple_for_start(A) ::= md_triple_for_start(B) MD_TOKEN_COMMA md_statement_no
 
 md_triple_for_continuation(A) ::= md_statement_not_braced_end(B). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
-		A = mlr_dsl_ast_node_alloc_zary("triple_for_continuation_statements", MD_AST_NODE_TYPE_STATEMENT_LIST);
+		A = mlr_dsl_ast_node_alloc_zary("triple_for_continuation_statements", MD_AST_NODE_TYPE_STATEMENT_BLOCK);
 	} else {
-		A = mlr_dsl_ast_node_alloc_unary("triple_for_continuation_statements", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
+		A = mlr_dsl_ast_node_alloc_unary("triple_for_continuation_statements", MD_AST_NODE_TYPE_STATEMENT_BLOCK, B);
 	}
 }
 md_triple_for_continuation(A) ::= md_triple_for_continuation(B) MD_TOKEN_COMMA md_statement_not_braced_end(C). {
@@ -472,9 +472,9 @@ md_triple_for_continuation(A) ::= md_triple_for_continuation(B) MD_TOKEN_COMMA m
 
 md_triple_for_update(A) ::= md_statement_not_braced_end(B). {
 	if (B->type == MD_AST_NODE_TYPE_NOP) {
-		A = mlr_dsl_ast_node_alloc_zary("triple_for_update_statements", MD_AST_NODE_TYPE_STATEMENT_LIST);
+		A = mlr_dsl_ast_node_alloc_zary("triple_for_update_statements", MD_AST_NODE_TYPE_STATEMENT_BLOCK);
 	} else {
-		A = mlr_dsl_ast_node_alloc_unary("triple_for_update_statements", MD_AST_NODE_TYPE_STATEMENT_LIST, B);
+		A = mlr_dsl_ast_node_alloc_unary("triple_for_update_statements", MD_AST_NODE_TYPE_STATEMENT_BLOCK, B);
 	}
 }
 md_triple_for_update(A) ::= md_triple_for_update(B) MD_TOKEN_COMMA md_statement_not_braced_end(C). {

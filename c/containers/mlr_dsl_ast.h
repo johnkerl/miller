@@ -8,7 +8,7 @@
 
 // ----------------------------------------------------------------
 typedef enum _mlr_dsl_ast_node_type_t {
-	MD_AST_NODE_TYPE_STATEMENT_LIST,
+	MD_AST_NODE_TYPE_STATEMENT_BLOCK,
 	MD_AST_NODE_TYPE_FUNC_DEF,
 	MD_AST_NODE_TYPE_SUBR_DEF,
 	MD_AST_NODE_TYPE_SUBR_CALLSITE,
