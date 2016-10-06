@@ -553,7 +553,7 @@ md_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 
 // ----------------------------------------------------------------
 md_local_definition(A) ::= MD_TOKEN_LOCAL md_bound_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_LOCAL, N, B);
+	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_LOCAL_DEFINITION, N, B);
 }
 md_local_assignment(A)  ::= md_bound_variable(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT, B, C);

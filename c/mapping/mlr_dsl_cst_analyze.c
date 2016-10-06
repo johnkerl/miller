@@ -216,11 +216,92 @@ void analyzed_ast_free(analyzed_ast_t* paast) {
 
 
 // ================================================================
+// xxx move to separate file
+
+// ================================================================
+typedef struct _analysis_frame_t {
+	long long index_count;
+	lhmsi_t* pnames_to_indices;
+} analysis_frame_t;
+
+static analysis_frame_t* analysis_frame_alloc();
+static void analysis_frame_free(analysis_frame_t* pframe);
+static int analysis_frame_has(analysis_frame_t* pframe, char* name);
+static void analysis_frame_add(analysis_frame_t* pframe, char* desc, char* name, int depth, int verbose);
+
+static analysis_frame_t* analysis_frame_alloc() {
+	analysis_frame_t* pframe = mlr_malloc_or_die(sizeof(analysis_frame_t));
+	pframe->index_count = 0;
+	pframe->pnames_to_indices = lhmsi_alloc();
+	return pframe;
+}
+
+static void analysis_frame_free(analysis_frame_t* pframe) {
+	if (pframe == NULL)
+		return;
+	lhmsi_free(pframe->pnames_to_indices);
+	free(pframe);
+}
+
+static int analysis_frame_has(analysis_frame_t* pframe, char* name) {
+	return lhmsi_has_key(pframe->pnames_to_indices, name);
+}
+
+static void analysis_frame_add(analysis_frame_t* pframe, char* desc, char* name, int depth, int verbose) {
+	// xxx temp
+	if (verbose) {
+		for (int i = 0; i < depth; i++) {
+			printf("::  ");
+		}
+		printf(":: %s %s @ [%lld]\n", desc, name, pframe->index_count);
+	}
+	lhmsi_put(pframe->pnames_to_indices, name, pframe->index_count, NO_FREE);
+	pframe->index_count++;
+}
+
+// ================================================================
+typedef struct _analysis_frame_group_t {
+	sllv_t* plist;
+} analysis_frame_group_t;
+
+static analysis_frame_group_t* analysis_frame_group_alloc();
+static void analysis_frame_group_free(analysis_frame_group_t* pframe_group);
+static void analysis_frame_group_push(analysis_frame_group_t* pframe_group, analysis_frame_t* pframe);
+static analysis_frame_t* analysis_frame_group_pop(analysis_frame_group_t* pframe_group);
+
+static analysis_frame_group_t* analysis_frame_group_alloc() {
+	analysis_frame_group_t* pframe_group = mlr_malloc_or_die(sizeof(analysis_frame_group_t));
+	pframe_group->plist = sllv_alloc();
+	return pframe_group;
+}
+
+static void analysis_frame_group_free(analysis_frame_group_t* pframe_group) {
+	if (pframe_group == NULL)
+		return;
+	while (pframe_group->plist->phead != NULL) {
+		analysis_frame_free(sllv_pop(pframe_group->plist));
+	}
+	sllv_free(pframe_group->plist);
+	free(pframe_group);
+}
+
+static void analysis_frame_group_push(analysis_frame_group_t* pframe_group, analysis_frame_t* pframe) {
+	sllv_prepend(pframe_group->plist, pframe);
+}
+
+static analysis_frame_t* analysis_frame_group_pop(analysis_frame_group_t* pframe_group) {
+	return sllv_pop(pframe_group->plist);
+}
+
+
+// ================================================================
 static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t* pnode);
 static void analyzed_ast_allocate_locals_for_begin_end_block(mlr_dsl_ast_node_t* pnode);
 static void analyzed_ast_allocate_locals_for_main_block(mlr_dsl_ast_node_t* pnode);
-static void analyzed_ast_allocate_locals_for_statement_block(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group);
-static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group);
+static void analyzed_ast_allocate_locals_for_statement_block(mlr_dsl_ast_node_t* pnode,
+	analysis_frame_group_t* pframe_group);
+static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
+	analysis_frame_group_t* pframe_group);
 
 // ----------------------------------------------------------------
 void analyzed_ast_allocate_locals(analyzed_ast_t* paast) {
@@ -251,29 +332,23 @@ static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t*
 	}
 	//	xxx assert two children of desired type
 
-	long long index_count = 0;
-
-	lhmsi_t* pnames_to_indices = lhmsi_alloc();
-	sllv_t* pframe_group = sllv_alloc();
-	sllv_prepend(pframe_group, pnames_to_indices);
+	analysis_frame_t* pframe = analysis_frame_alloc();
+	analysis_frame_group_t* pframe_group = analysis_frame_group_alloc();
+	analysis_frame_group_push(pframe_group, pframe);
 
 	printf("ALLOCATING LOCALS FOR DEFINITION BLOCK [%s]\n", pnode->text);
 	mlr_dsl_ast_node_t* pdef_name_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* plist_node = pnode->pchildren->phead->pnext->pvvalue;
 	for (sllve_t* pe = pdef_name_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
-		if (!lhmsi_has_key(pnames_to_indices, pparameter_node->text)) {
-			// xxx wrap in a class
-			printf("::  PARAMETER %s @ [%lld]\n", pparameter_node->text, index_count);
-			lhmsi_put(pnames_to_indices, pparameter_node->text, index_count, NO_FREE);
-			index_count++;
+		if (!analysis_frame_has(pframe, pparameter_node->text)) {
+			analysis_frame_add(pframe, "PARAMETER", pparameter_node->text, 0, TRUE/*xxx temp*/);
 		}
 	}
 	analyzed_ast_allocate_locals_for_statement_block(plist_node, pframe_group);
 
-	sllv_pop(pframe_group);
-	sllv_free(pframe_group);
-	lhmsi_free(pnames_to_indices);
+	analysis_frame_free(analysis_frame_group_pop(pframe_group));
+	analysis_frame_group_free(pframe_group);
 }
 
 // ----------------------------------------------------------------
@@ -286,16 +361,15 @@ static void analyzed_ast_allocate_locals_for_begin_end_block(mlr_dsl_ast_node_t*
 	}
 
 	printf("ALLOCATING LOCALS FOR %s BLOCK\n", pnode->text);
-	lhmsi_t* pnames_to_indices = lhmsi_alloc();
-	sllv_t* pframe_group = sllv_alloc();
-	sllv_prepend(pframe_group, pnames_to_indices);
+
+	analysis_frame_t* pframe = analysis_frame_alloc();
+	analysis_frame_group_t* pframe_group = analysis_frame_group_alloc();
+	analysis_frame_group_push(pframe_group, pframe);
 
 	analyzed_ast_allocate_locals_for_statement_block(pnode->pchildren->phead->pvvalue, pframe_group);
 
-	sllv_pop(pframe_group);
-	sllv_free(pframe_group);
-	lhmsi_free(pnames_to_indices);
-
+	analysis_frame_free(analysis_frame_group_pop(pframe_group));
+	analysis_frame_group_free(pframe_group);
 }
 
 // ----------------------------------------------------------------
@@ -303,21 +377,22 @@ static void analyzed_ast_allocate_locals_for_main_block(mlr_dsl_ast_node_t* pnod
 //	xxx assert node type
 
 	printf("ALLOCATING LOCALS FOR MAIN BLOCK\n");
-	lhmsi_t* pnames_to_indices = lhmsi_alloc();
-	sllv_t* pframe_group = sllv_alloc();
-	sllv_prepend(pframe_group, pnames_to_indices);
+
+	// xxx make this a one-liner
+	analysis_frame_t* pframe = analysis_frame_alloc();
+	analysis_frame_group_t* pframe_group = analysis_frame_group_alloc();
+	analysis_frame_group_push(pframe_group, pframe);
 
 	analyzed_ast_allocate_locals_for_statement_block(pnode, pframe_group);
 
-	sllv_pop(pframe_group);
-	sllv_free(pframe_group);
-	lhmsi_free(pnames_to_indices);
+	analysis_frame_free(analysis_frame_group_pop(pframe_group));
+	analysis_frame_group_free(pframe_group);
 }
 
 // ----------------------------------------------------------------
-// xxx this becomes easier (and less contextful) if there are separate BOUNDVAR ast node types
-// for boundvar @ rhs, boundvar @ for-loop bind, @ arg bind, @ local-def, and @ lhs/assign.
-static void analyzed_ast_allocate_locals_for_statement_block(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group) {
+static void analyzed_ast_allocate_locals_for_statement_block(mlr_dsl_ast_node_t* pnode,
+	analysis_frame_group_t* pframe_group)
+{
 	if (pnode->type != MD_AST_NODE_TYPE_STATEMENT_BLOCK) {
 		fprintf(stderr,
 			"%s: internal coding error detected in file %s at line %d.\n",
@@ -330,59 +405,56 @@ static void analyzed_ast_allocate_locals_for_statement_block(mlr_dsl_ast_node_t*
 	}
 }
 
-static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group) {
-
-	if (pnode->type == MD_AST_NODE_TYPE_LOCAL) { // xxx rename
+static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
+	analysis_frame_group_t* pframe_group)
+{
+	// xxx for-bind ...
+	if (pnode->type == MD_AST_NODE_TYPE_LOCAL_DEFINITION) { // xxx rename
+		// xxx decide on preorder vs. postorder
 		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
-		if (!lhmsi_has_key(pframe_group->phead->pvvalue, pnamenode->text)) {
-			// xxx track count
-			lhmsi_put(pframe_group->phead->pvvalue, pnamenode->text, 999, NO_FREE);
-			for (int i = 0; i < pframe_group->length; i++)
-				printf("::  ");
-			printf("DEFINE [%s]\n", pnamenode->text);
+
+		analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue; // xxx temp work into API
+		if (!analysis_frame_has(pframe, pnamenode->text)) {
+			analysis_frame_add(pframe, "DEFINE", pnamenode->text, pframe_group->plist->length, TRUE/*xxx temp*/);
 		}
 		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 		analyzed_ast_allocate_locals_for_node(pvaluenode, pframe_group);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) { // xxx rename
 		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
-		if (!lhmsi_has_key(pframe_group->phead->pvvalue, pnamenode->text)) {
-			// xxx track count
-			lhmsi_put(pframe_group->phead->pvvalue, pnamenode->text, 999, NO_FREE);
-			for (int i = 0; i < pframe_group->length; i++)
-				printf("::  ");
-			printf("WRITE  [%s]\n", pnamenode->text);
+		analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue; // xxx temp work into API
+		if (!analysis_frame_has(pframe, pnamenode->text)) {
+			analysis_frame_add(pframe, "WRITE", pnamenode->text, pframe_group->plist->length, TRUE/*xxx temp*/);
 		}
 		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 		analyzed_ast_allocate_locals_for_node(pvaluenode, pframe_group);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
-		// make method
-		if (!lhmsi_has_key(pframe_group->phead->pvvalue, pnode->text)) {
-			// xxx track count
-			lhmsi_put(pframe_group->phead->pvvalue, pnode->text, 999, NO_FREE);
-			for (int i = 0; i < pframe_group->length; i++)
-				printf("::  ");
-			printf("READ   [%s]!\n", pnode->text);
+		analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue; // xxx temp work into API
+		if (!analysis_frame_has(pframe, pnode->text)) {
+			analysis_frame_add(pframe, "READ", pnode->text, pframe_group->plist->length, TRUE/*xxx temp*/);
 		}
 	} else if (pnode->pchildren != NULL) {
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
 
 			if (pchild->type == MD_AST_NODE_TYPE_STATEMENT_BLOCK) {
-				lhmsi_t* pnames_to_indices = lhmsi_alloc();
-				for (int i = 0; i < pframe_group->length; i++)
+
+				for (int i = 0; i < pframe_group->plist->length; i++) // xxx temp
 					printf("::  ");
 				printf("PUSH FRAME %s\n", pchild->text);
-				sllv_prepend(pframe_group, pnames_to_indices);
+
+				analysis_frame_t* pnext_frame = analysis_frame_alloc();
+				analysis_frame_group_push(pframe_group, pnext_frame);
 
 				analyzed_ast_allocate_locals_for_statement_block(pchild, pframe_group);
 
-				sllv_pop(pframe_group);
-				for (int i = 0; i < pframe_group->length; i++)
+				analysis_frame_free(analysis_frame_group_pop(pframe_group));
+
+				for (int i = 0; i < pframe_group->plist->length; i++)
 					printf("::  ");
 				printf("POP FRAME %s\n", pchild->text);
-				lhmsi_free(pnames_to_indices);
+
 			} else {
 				analyzed_ast_allocate_locals_for_node(pchild, pframe_group);
 			}

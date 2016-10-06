@@ -189,7 +189,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FUNC_DEF:                         return "FUNC_DEF";                         break;
 	case MD_AST_NODE_TYPE_SUBR_DEF:                         return "SUBR_DEF";                         break;
 	case MD_AST_NODE_TYPE_SUBR_CALLSITE:                    return "SUBR_CALLSITE";                    break;
-	case MD_AST_NODE_TYPE_LOCAL:                            return "LOCAL";                            break;
+	case MD_AST_NODE_TYPE_LOCAL_DEFINITION:                            return "LOCAL";                            break;
 	case MD_AST_NODE_TYPE_RETURN_VALUE:                     return "RETURN_VALUE";                     break;
 	case MD_AST_NODE_TYPE_RETURN_VOID:                      return "RETURN_VOID";                      break;
 	case MD_AST_NODE_TYPE_BEGIN:                            return "BEGIN";                            break;
