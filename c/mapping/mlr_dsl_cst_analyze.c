@@ -135,20 +135,20 @@ void analyzed_ast_free(analyzed_ast_t* paast) {
 // storage options:
 // * decorate ast_node_t w/ default-null pointer to allocated analysis info?
 //   this way AST points to analysis.
-// * analysis tree w/ pointers to statement-list nodes?
+// * analysis tree w/ pointers to statement-block nodes?
 //   this way analysis points to AST.
 //
 // ----------------------------------------------------------------
 // Population:
 // * in-order AST traversal
-// * note statement-list nodes are only every so often in the full AST
+// * note statement-block nodes are only every so often in the full AST
 // * at each node:
 //     if is local-var LHS:
 //       if explicit:
 //         lhmsi_put(name, ++fridx)
 //       else:
 //         resolve up ...
-//     else if is statement-list:
+//     else if is statement-block:
 //       allocate a frame struct
 //       attach it to the node
 //       recurse & have the recursion populate it
@@ -219,7 +219,7 @@ void analyzed_ast_free(analyzed_ast_t* paast) {
 static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t* pnode);
 static void analyzed_ast_allocate_locals_for_begin_end_block(mlr_dsl_ast_node_t* pnode);
 static void analyzed_ast_allocate_locals_for_main_block(mlr_dsl_ast_node_t* pnode);
-static void analyzed_ast_allocate_locals_for_statement_list(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group);
+static void analyzed_ast_allocate_locals_for_statement_block(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group);
 static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group);
 
 // ----------------------------------------------------------------
@@ -269,7 +269,7 @@ static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t*
 			index_count++;
 		}
 	}
-	analyzed_ast_allocate_locals_for_statement_list(plist_node, pframe_group);
+	analyzed_ast_allocate_locals_for_statement_block(plist_node, pframe_group);
 
 	sllv_pop(pframe_group);
 	sllv_free(pframe_group);
@@ -290,7 +290,7 @@ static void analyzed_ast_allocate_locals_for_begin_end_block(mlr_dsl_ast_node_t*
 	sllv_t* pframe_group = sllv_alloc();
 	sllv_prepend(pframe_group, pnames_to_indices);
 
-	analyzed_ast_allocate_locals_for_statement_list(pnode->pchildren->phead->pvvalue, pframe_group);
+	analyzed_ast_allocate_locals_for_statement_block(pnode->pchildren->phead->pvvalue, pframe_group);
 
 	sllv_pop(pframe_group);
 	sllv_free(pframe_group);
@@ -307,7 +307,7 @@ static void analyzed_ast_allocate_locals_for_main_block(mlr_dsl_ast_node_t* pnod
 	sllv_t* pframe_group = sllv_alloc();
 	sllv_prepend(pframe_group, pnames_to_indices);
 
-	analyzed_ast_allocate_locals_for_statement_list(pnode, pframe_group);
+	analyzed_ast_allocate_locals_for_statement_block(pnode, pframe_group);
 
 	sllv_pop(pframe_group);
 	sllv_free(pframe_group);
@@ -317,7 +317,7 @@ static void analyzed_ast_allocate_locals_for_main_block(mlr_dsl_ast_node_t* pnod
 // ----------------------------------------------------------------
 // xxx this becomes easier (and less contextful) if there are separate BOUNDVAR ast node types
 // for boundvar @ rhs, boundvar @ for-loop bind, @ arg bind, @ local-def, and @ lhs/assign.
-static void analyzed_ast_allocate_locals_for_statement_list(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group) {
+static void analyzed_ast_allocate_locals_for_statement_block(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group) {
 	if (pnode->type != MD_AST_NODE_TYPE_STATEMENT_BLOCK) {
 		fprintf(stderr,
 			"%s: internal coding error detected in file %s at line %d.\n",
@@ -345,7 +345,7 @@ static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode, sll
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
 
-			// xxx special case for triple-for: only the body statement list is curly braced.
+			// xxx special case for triple-for: only the body statement block is curly braced.
 			// the triple elements are not. maybe make some ast-node-type help here in the parser?
 			if (pchild->type == MD_AST_NODE_TYPE_STATEMENT_BLOCK) {
 				lhmsi_t* pnames_to_indices = lhmsi_alloc();
@@ -354,7 +354,7 @@ static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode, sll
 				printf("PUSH FRAME %s\n", pchild->text);
 				sllv_prepend(pframe_group, pnames_to_indices);
 
-				analyzed_ast_allocate_locals_for_statement_list(pchild, pframe_group);
+				analyzed_ast_allocate_locals_for_statement_block(pchild, pframe_group);
 
 				sllv_pop(pframe_group);
 				for (int i = 0; i < pframe_group->length; i++)
