@@ -228,6 +228,7 @@ static analysis_frame_t* analysis_frame_alloc();
 static void analysis_frame_free(analysis_frame_t* pframe);
 static int analysis_frame_has(analysis_frame_t* pframe, char* name);
 static void analysis_frame_add(analysis_frame_t* pframe, char* desc, char* name, int depth, int verbose);
+static void analysis_frame_mark(analysis_frame_t* pframe, char* desc, char* name, int depth, int verbose);
 
 static analysis_frame_t* analysis_frame_alloc() {
 	analysis_frame_t* pframe = mlr_malloc_or_die(sizeof(analysis_frame_t));
@@ -248,15 +249,23 @@ static int analysis_frame_has(analysis_frame_t* pframe, char* name) {
 }
 
 static void analysis_frame_add(analysis_frame_t* pframe, char* desc, char* name, int depth, int verbose) {
-	// xxx temp
-	if (verbose) {
-		for (int i = 0; i < depth; i++) {
-			printf("::  ");
-		}
-		printf(":: %s %s @ [%lld]\n", desc, name, pframe->index_count);
-	}
 	lhmsi_put(pframe->pnames_to_indices, name, pframe->index_count, NO_FREE);
 	pframe->index_count++;
+}
+
+static void analysis_frame_mark(analysis_frame_t* pframe, char* desc, char* name, int depth, int verbose) {
+	char* op = "REUSE";
+	if (!analysis_frame_has(pframe, name)) {
+		analysis_frame_add(pframe, desc, name, depth, verbose);
+		op = "ADD";
+	}
+	// xxx temp
+	if (verbose) {
+		for (int i = 1; i < depth; i++) {
+			printf("::  ");
+		}
+		printf(":: %s %s %s @ [%lld]\n", op, desc, name, pframe->index_count);
+	}
 }
 
 // ================================================================
@@ -264,14 +273,15 @@ typedef struct _analysis_frame_group_t {
 	sllv_t* plist;
 } analysis_frame_group_t;
 
-static analysis_frame_group_t* analysis_frame_group_alloc();
+static analysis_frame_group_t* analysis_frame_group_alloc(analysis_frame_t* pframe);
 static void analysis_frame_group_free(analysis_frame_group_t* pframe_group);
 static void analysis_frame_group_push(analysis_frame_group_t* pframe_group, analysis_frame_t* pframe);
 static analysis_frame_t* analysis_frame_group_pop(analysis_frame_group_t* pframe_group);
 
-static analysis_frame_group_t* analysis_frame_group_alloc() {
+static analysis_frame_group_t* analysis_frame_group_alloc(analysis_frame_t* pframe) {
 	analysis_frame_group_t* pframe_group = mlr_malloc_or_die(sizeof(analysis_frame_group_t));
 	pframe_group->plist = sllv_alloc();
+	sllv_prepend(pframe_group->plist, pframe);
 	return pframe_group;
 }
 
@@ -333,17 +343,15 @@ static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t*
 	//	xxx assert two children of desired type
 
 	analysis_frame_t* pframe = analysis_frame_alloc();
-	analysis_frame_group_t* pframe_group = analysis_frame_group_alloc();
-	analysis_frame_group_push(pframe_group, pframe);
+	analysis_frame_group_t* pframe_group = analysis_frame_group_alloc(pframe);
 
+	printf("\n");
 	printf("ALLOCATING LOCALS FOR DEFINITION BLOCK [%s]\n", pnode->text);
 	mlr_dsl_ast_node_t* pdef_name_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* plist_node = pnode->pchildren->phead->pnext->pvvalue;
 	for (sllve_t* pe = pdef_name_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
-		if (!analysis_frame_has(pframe, pparameter_node->text)) {
-			analysis_frame_add(pframe, "PARAMETER", pparameter_node->text, 0, TRUE/*xxx temp*/);
-		}
+		analysis_frame_mark(pframe, "PARAMETER", pparameter_node->text, 0, TRUE/*xxx temp*/);
 	}
 	analyzed_ast_allocate_locals_for_statement_block(plist_node, pframe_group);
 
@@ -360,11 +368,11 @@ static void analyzed_ast_allocate_locals_for_begin_end_block(mlr_dsl_ast_node_t*
 		exit(1);
 	}
 
+	printf("\n");
 	printf("ALLOCATING LOCALS FOR %s BLOCK\n", pnode->text);
 
 	analysis_frame_t* pframe = analysis_frame_alloc();
-	analysis_frame_group_t* pframe_group = analysis_frame_group_alloc();
-	analysis_frame_group_push(pframe_group, pframe);
+	analysis_frame_group_t* pframe_group = analysis_frame_group_alloc(pframe);
 
 	analyzed_ast_allocate_locals_for_statement_block(pnode->pchildren->phead->pvvalue, pframe_group);
 
@@ -376,12 +384,12 @@ static void analyzed_ast_allocate_locals_for_begin_end_block(mlr_dsl_ast_node_t*
 static void analyzed_ast_allocate_locals_for_main_block(mlr_dsl_ast_node_t* pnode) {
 //	xxx assert node type
 
+	printf("\n");
 	printf("ALLOCATING LOCALS FOR MAIN BLOCK\n");
 
 	// xxx make this a one-liner
 	analysis_frame_t* pframe = analysis_frame_alloc();
-	analysis_frame_group_t* pframe_group = analysis_frame_group_alloc();
-	analysis_frame_group_push(pframe_group, pframe);
+	analysis_frame_group_t* pframe_group = analysis_frame_group_alloc(pframe);
 
 	analyzed_ast_allocate_locals_for_statement_block(pnode, pframe_group);
 
@@ -414,26 +422,20 @@ static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 
 		analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue; // xxx temp work into API
-		if (!analysis_frame_has(pframe, pnamenode->text)) {
-			analysis_frame_add(pframe, "DEFINE", pnamenode->text, pframe_group->plist->length, TRUE/*xxx temp*/);
-		}
+		analysis_frame_mark(pframe, "DEFINE", pnamenode->text, pframe_group->plist->length, TRUE/*xxx temp*/);
 		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 		analyzed_ast_allocate_locals_for_node(pvaluenode, pframe_group);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) { // xxx rename
 		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 		analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue; // xxx temp work into API
-		if (!analysis_frame_has(pframe, pnamenode->text)) {
-			analysis_frame_add(pframe, "WRITE", pnamenode->text, pframe_group->plist->length, TRUE/*xxx temp*/);
-		}
+		analysis_frame_mark(pframe, "WRITE", pnamenode->text, pframe_group->plist->length, TRUE/*xxx temp*/);
 		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 		analyzed_ast_allocate_locals_for_node(pvaluenode, pframe_group);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
 		analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue; // xxx temp work into API
-		if (!analysis_frame_has(pframe, pnode->text)) {
-			analysis_frame_add(pframe, "READ", pnode->text, pframe_group->plist->length, TRUE/*xxx temp*/);
-		}
+		analysis_frame_mark(pframe, "READ", pnode->text, pframe_group->plist->length, TRUE/*xxx temp*/);
 	} else if (pnode->pchildren != NULL) {
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
@@ -461,3 +463,15 @@ static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 		}
 	}
 }
+
+// xxx nodestash:
+// @ localvar: fridx & upcount; then frgridx
+// @ statement block: frct; then maxdepth (default #def NONESUCH @ ctor; respect @ ast-node printer)
+
+// xxx pass 1:
+// @ localvar put fridx & upcount
+// @ exit from statement block put frct
+
+// xxx pass 2:
+// @ localvar map fridx & upcount to relidx (>=0 for in-frame, <0 for upframe)
+// @ base put maxdepth
