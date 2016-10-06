@@ -264,7 +264,7 @@ static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t*
 		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
 		if (!lhmsi_has_key(pnames_to_indices, pparameter_node->text)) {
 			// xxx wrap in a class
-			printf("ALLOCATING PARAMETER %s = %lld\n", pparameter_node->text, index_count);
+			printf("::  PARAMETER %s @ [%lld]\n", pparameter_node->text, index_count);
 			lhmsi_put(pnames_to_indices, pparameter_node->text, index_count, NO_FREE);
 			index_count++;
 		}
@@ -331,22 +331,44 @@ static void analyzed_ast_allocate_locals_for_statement_block(mlr_dsl_ast_node_t*
 }
 
 static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode, sllv_t* pframe_group) {
-	if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
+
+	if (pnode->type == MD_AST_NODE_TYPE_LOCAL) { // xxx rename
+		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
+		if (!lhmsi_has_key(pframe_group->phead->pvvalue, pnamenode->text)) {
+			// xxx track count
+			lhmsi_put(pframe_group->phead->pvvalue, pnamenode->text, 999, NO_FREE);
+			for (int i = 0; i < pframe_group->length; i++)
+				printf("::  ");
+			printf("DEFINE [%s]\n", pnamenode->text);
+		}
+		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
+		analyzed_ast_allocate_locals_for_node(pvaluenode, pframe_group);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) { // xxx rename
+		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
+		if (!lhmsi_has_key(pframe_group->phead->pvvalue, pnamenode->text)) {
+			// xxx track count
+			lhmsi_put(pframe_group->phead->pvvalue, pnamenode->text, 999, NO_FREE);
+			for (int i = 0; i < pframe_group->length; i++)
+				printf("::  ");
+			printf("WRITE  [%s]\n", pnamenode->text);
+		}
+		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
+		analyzed_ast_allocate_locals_for_node(pvaluenode, pframe_group);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
 		// make method
 		if (!lhmsi_has_key(pframe_group->phead->pvvalue, pnode->text)) {
 			// xxx track count
 			lhmsi_put(pframe_group->phead->pvvalue, pnode->text, 999, NO_FREE);
 			for (int i = 0; i < pframe_group->length; i++)
 				printf("::  ");
-			printf("BOOP [%s]!\n", pnode->text);
+			printf("READ   [%s]!\n", pnode->text);
 		}
-	}
-	if (pnode->pchildren != NULL) {
+	} else if (pnode->pchildren != NULL) {
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
 
-			// xxx special case for triple-for: only the body statement block is curly braced.
-			// the triple elements are not. maybe make some ast-node-type help here in the parser?
 			if (pchild->type == MD_AST_NODE_TYPE_STATEMENT_BLOCK) {
 				lhmsi_t* pnames_to_indices = lhmsi_alloc();
 				for (int i = 0; i < pframe_group->length; i++)
