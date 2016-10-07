@@ -230,6 +230,8 @@ static void analysis_frame_free(analysis_frame_t* pframe);
 
 static int analysis_frame_has(analysis_frame_t* pframe, char* name);
 
+static int analysis_frame_get(analysis_frame_t* pframe, char* name);
+
 static void analysis_frame_add(analysis_frame_t* pframe, char* desc, char* name, int depth, int verbose);
 
 static analysis_frame_t* analysis_frame_alloc() {
@@ -250,6 +252,10 @@ static int analysis_frame_has(analysis_frame_t* pframe, char* name) {
 	return lhmsi_has_key(pframe->pnames_to_indices, name);
 }
 
+static int analysis_frame_get(analysis_frame_t* pframe, char* name) {
+	return lhmsi_get(pframe->pnames_to_indices, name);
+}
+
 static void analysis_frame_add(analysis_frame_t* pframe, char* desc, char* name, int depth, int verbose) {
 	lhmsi_put(pframe->pnames_to_indices, name, pframe->index_count, NO_FREE);
 	pframe->index_count++;
@@ -265,6 +271,7 @@ static void analysis_frame_group_free(analysis_frame_group_t* pframe_group);
 static void analysis_frame_group_push(analysis_frame_group_t* pframe_group, analysis_frame_t* pframe);
 static analysis_frame_t* analysis_frame_group_pop(analysis_frame_group_t* pframe_group);
 
+// xxx shorten names by a lot -- e.g. "af_" and "afg_".
 static void analysis_frame_group_mark_for_define(analysis_frame_group_t* pframe_group,
 	char* desc, char* name, int depth, int verbose);
 
@@ -318,20 +325,36 @@ static void analysis_frame_group_mark_for_define(analysis_frame_group_t* pframe_
 }
 
 static void analysis_frame_group_mark_for_write(analysis_frame_group_t* pframe_group,
-	char* desc, char* name, int depth, int verbose)
+	char* desc, char* name, int depth/*xxx rm*/, int verbose)
 {
 	char* op = "REUSE";
-	analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue; // xxx temp
-	if (!analysis_frame_has(pframe, name)) {
-		analysis_frame_add(pframe, desc, name, depth, verbose);
+	int found = FALSE;
+	int fridx = -1;
+	// xxx loop. if not found, fall back to top frame.
+	int gridx = 0;
+	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, gridx++) {
+		analysis_frame_t* pframe = pe->pvvalue;
+		if (analysis_frame_has(pframe, name)) {
+			found = TRUE; // xxx dup
+			fridx = analysis_frame_get(pframe, name);
+			break;
+		}
+	}
+
+	if (!found) {
+		gridx = 0;
+		analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue;
+		analysis_frame_add(pframe, desc, name, gridx, verbose);
+		// xxx temp
+		fridx = pframe->index_count;
 		op = "ADD";
 	}
-	// xxx temp
+
 	if (verbose) {
 		for (int i = 1; i < depth; i++) {
 			printf("::  ");
 		}
-		printf(":: %s %s %s @ [%lld]\n", op, desc, name, pframe->index_count);
+		printf(":: %s %s %s @ %du%d\n", op, desc, name, fridx, gridx);
 	}
 }
 
@@ -339,6 +362,7 @@ static void analysis_frame_group_mark_for_read(analysis_frame_group_t* pframe_gr
 	char* desc, char* name, int depth, int verbose)
 {
 	char* op = "REUSE";
+	// xxx loop. if not found, fall back to absent-null.
 	analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue; // xxx temp
 	if (!analysis_frame_has(pframe, name)) {
 		analysis_frame_add(pframe, desc, name, depth, verbose);
