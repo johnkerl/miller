@@ -5,12 +5,6 @@
 #include "context_flags.h"
 
 // xxx make a summary comment here
-// xxx rename entire file; also 'analysis' & its acronyms
-// xxx use 'semantic analysis' to describe CST-build-time checks
-// xxx 'object binding' is linking func/subr defs and callsites
-// xxx make a separate file for tree-reorg part into top-level blocks
-// xxx separate verbosity for allocator? and invoke it in UT cases specific to this?
-// xxx   (note allocation marks in the AST will be printed regardless)
 
 // ----------------------------------------------------------------
 // xxx have ast freed back where it was (for callsite-balance) but w/ has-been-exfoliated comment
@@ -223,6 +217,9 @@ void analyzed_ast_free(analyzed_ast_t* paast) {
 
 // ================================================================
 // xxx move to separate file
+
+// xxx analysis -> stack_allocation; saf & safg acronyms
+// xxx put 'pass_1' and 'pass_2' in the function names
 
 // ================================================================
 typedef struct _analysis_frame_t {
@@ -614,20 +611,31 @@ static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 	}
 }
 
-// xxx nodestash:
+// xxx to do:
+
+// * make a separate file for tree-reorg part into top-level blocks
+
+// * rename entire file; also 'analysis' & its acronyms
+//   ->maybe blocked_asts? vs. raw_ast?
+// * 'semantic analysis': use this to describe CST-build-time checks
+// * 'object binding': use this to describe linking func/subr defs and callsites
+// * separate verbosity for allocator? and invoke it in UT cases specific to this?
+//   -> (note allocation marks in the AST will be printed regardless)
+
+// * nodestash:
 // @ localvar: fridx & upcount; then frgridx
 // @ statement block: frct; then maxdepth (default #def NONESUCH @ ctor; respect @ ast-node printer)
 
-// xxx pass 1:
-// @ localvar put fridx & upcount
-// @ exit from statement block put frct
+// pass 1:
+// @localvar put fridx & upcount
+// @exit from statement block put frct
 
-// xxx pass 2:
-// @ localvar map fridx & upcount to relidx (>=0 for in-frame, <0 for upframe)
-// @ base put maxdepth
+// pass 2:
+// @localvar map fridx & upcount to relidx (>=0 for in-frame, <0 for upframe)
+// @base put maxdepth
 
-// frame_relative_index
-// upstack_frame_count
-// absolute_index
-// frame_var_count
-// recursive_max_var_count
+// 1 frame_relative_index
+// 1 upstack_frame_count
+// 2 frame_var_count
+// 2 recursive_max_var_count
+// 2 absolute_index
