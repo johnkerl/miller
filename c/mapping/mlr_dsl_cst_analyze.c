@@ -504,20 +504,64 @@ static void analyzed_ast_allocate_locals_for_statement_block(mlr_dsl_ast_node_t*
 static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 	analysis_frame_group_t* pframe_group)
 {
-	// xxx not right. this is not getting the for-loop boundvars within the scope of the statement list.
-	// xxx check node type MD_AST_NODE_TYPE_FOR_SREC or MD_AST_NODE_TYPE_FOR_OOSVAR. Unpack all parts specially.
-	if (pnode->type == MD_AST_NODE_TYPE_FOR_VARIABLES) {
-		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+	// xxx make separate functions
+
+	if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) { // xxx comment
+
+		for (int i = 0; i < pframe_group->plist->length; i++) // xxx temp
+			printf("::  ");
+		printf("PUSH FRAME %s\n", pnode->text);
+		analysis_frame_t* pnext_frame = analysis_frame_alloc();
+		analysis_frame_group_push(pframe_group, pnext_frame);
+
+		mlr_dsl_ast_node_t* pvarsnode  = pnode->pchildren->phead->pvvalue;
+		mlr_dsl_ast_node_t* pblocknode = pnode->pchildren->phead->pnext->pvvalue;
+
+		mlr_dsl_ast_node_t* pknode = pvarsnode->pchildren->phead->pvvalue;
+		mlr_dsl_ast_node_t* pvnode = pvarsnode->pchildren->phead->pnext->pvvalue;
+		analysis_frame_group_mark_for_define(pframe_group, pknode, "FOR-BIND", TRUE/*xxx temp*/);
+		analysis_frame_group_mark_for_define(pframe_group, pvnode, "FOR-BIND", TRUE/*xxx temp*/);
+
+		analyzed_ast_allocate_locals_for_statement_block(pblocknode, pframe_group);
+
+		analysis_frame_free(analysis_frame_group_pop(pframe_group));
+		for (int i = 0; i < pframe_group->plist->length; i++)
+			printf("::  ");
+		printf("POP FRAME %s\n", pnode->text);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR) { // xxx comment
+
+		mlr_dsl_ast_node_t* pvarsnode    = pnode->pchildren->phead->pvvalue;
+		mlr_dsl_ast_node_t* pkeylistnode = pnode->pchildren->phead->pnext->pvvalue;
+		mlr_dsl_ast_node_t* pblocknode   = pnode->pchildren->phead->pnext->pnext->pvvalue;
+
+		mlr_dsl_ast_node_t* pkeysnode    = pvarsnode->pchildren->phead->pvvalue;
+		mlr_dsl_ast_node_t* pvalnode     = pvarsnode->pchildren->phead->pnext->pvvalue;
+
+		// xxx note keylistnode is outside the block binding. in particular if there are any localvar reads
+		// in there they shouldn't read from forloop boundvars.
+		for (sllve_t* pe = pkeylistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-			if (pchild->type == MD_AST_NODE_TYPE_FOR_VARIABLES) { // for-oosvar multi-key
-				for (sllve_t* pf = pchild->pchildren->phead; pf != NULL; pf = pf->pnext) {
-					mlr_dsl_ast_node_t* pnamenode = pf->pvvalue;
-					analysis_frame_group_mark_for_define(pframe_group, pnamenode, "FOR-BIND", TRUE/*xxx temp*/);
-				}
-			} else {
-				analysis_frame_group_mark_for_define(pframe_group, pchild, "FOR-BIND", TRUE/*xxx temp*/);
-			}
+			analyzed_ast_allocate_locals_for_node(pchild, pframe_group);
 		}
+
+		for (int i = 0; i < pframe_group->plist->length; i++) // xxx temp
+			printf("::  ");
+		printf("PUSH FRAME %s\n", pnode->text);
+		analysis_frame_t* pnext_frame = analysis_frame_alloc();
+		analysis_frame_group_push(pframe_group, pnext_frame);
+
+		for (sllve_t* pe = pkeysnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+			analysis_frame_group_mark_for_define(pframe_group, pkeynode, "FOR-BIND", TRUE/*xxx temp*/);
+		}
+		analysis_frame_group_mark_for_define(pframe_group, pvalnode, "FOR-BIND", TRUE/*xxx temp*/);
+		analyzed_ast_allocate_locals_for_statement_block(pblocknode, pframe_group);
+
+		analysis_frame_free(analysis_frame_group_pop(pframe_group));
+		for (int i = 0; i < pframe_group->plist->length; i++)
+			printf("::  ");
+		printf("POP FRAME %s\n", pnode->text);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_DEFINITION) {
 		// xxx decide on preorder vs. postorder
