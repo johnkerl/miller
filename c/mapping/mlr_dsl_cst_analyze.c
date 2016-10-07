@@ -272,14 +272,14 @@ static void analysis_frame_group_push(analysis_frame_group_t* pframe_group, anal
 static analysis_frame_t* analysis_frame_group_pop(analysis_frame_group_t* pframe_group);
 
 // xxx shorten names by a lot -- e.g. "af_" and "afg_".
-static void analysis_frame_group_mark_for_define(analysis_frame_group_t* pframe_group,
-	char* desc, char* name, int depth, int verbose);
+static void analysis_frame_group_mark_for_define(analysis_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
+	char* desc, int verbose);
 
-static void analysis_frame_group_mark_for_write(analysis_frame_group_t* pframe_group,
-	char* desc, char* name, int depth, int verbose);
+static void analysis_frame_group_mark_for_write(analysis_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
+	char* desc, int verbose);
 
-static void analysis_frame_group_mark_for_read(analysis_frame_group_t* pframe_group,
-	char* desc, char* name, int depth, int verbose);
+static void analysis_frame_group_mark_for_read(analysis_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
+	char* desc, int verbose);
 
 static analysis_frame_group_t* analysis_frame_group_alloc(analysis_frame_t* pframe) {
 	analysis_frame_group_t* pframe_group = mlr_malloc_or_die(sizeof(analysis_frame_group_t));
@@ -306,88 +306,88 @@ static analysis_frame_t* analysis_frame_group_pop(analysis_frame_group_t* pframe
 	return sllv_pop(pframe_group->plist);
 }
 
-static void analysis_frame_group_mark_for_define(analysis_frame_group_t* pframe_group,
-	char* desc, char* name, int depth, int verbose)
+static void analysis_frame_group_mark_for_define(analysis_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
+	char* desc, int verbose)
 {
 	char* op = "REUSE";
 	analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue;
-	int fridx = -1;
-	if (!analysis_frame_has(pframe, name)) {
-		analysis_frame_add(pframe, desc, name, depth, verbose);
+	if (!analysis_frame_has(pframe, pnode->text)) {
+		analysis_frame_add(pframe, desc, pnode->text, pframe_group->plist->length, verbose);
 		op = "ADD";
 	}
-	fridx = analysis_frame_get(pframe, name);
+	pnode->upstack_frame_count = 0;
+	pnode->frame_relative_index = analysis_frame_get(pframe, pnode->text);
 	if (verbose) {
-		for (int i = 1; i < depth; i++) {
+		for (int i = 1; i < pframe_group->plist->length; i++) {
 			printf("::  ");
 		}
-		printf(":: %s %s %s @ %du0\n", op, desc, name, fridx);
+		printf("::  %s %s %s @ %du%d\n", op, desc, pnode->text,
+			pnode->frame_relative_index, pnode->upstack_frame_count);
 	}
 }
 
-static void analysis_frame_group_mark_for_write(analysis_frame_group_t* pframe_group,
-	char* desc, char* name, int depth/*xxx rm*/, int verbose)
+static void analysis_frame_group_mark_for_write(analysis_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
+	char* desc, int verbose)
 {
 	char* op = "REUSE";
 	int found = FALSE;
-	int fridx = -1;
 	// xxx loop. if not found, fall back to top frame.
-	int gridx = 0;
-	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, gridx++) {
+	pnode->upstack_frame_count = 0;
+	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, pnode->upstack_frame_count++) {
 		analysis_frame_t* pframe = pe->pvvalue;
-		if (analysis_frame_has(pframe, name)) {
+		if (analysis_frame_has(pframe, pnode->text)) {
 			found = TRUE; // xxx dup
-			fridx = analysis_frame_get(pframe, name);
+			pnode->frame_relative_index = analysis_frame_get(pframe, pnode->text);
 			break;
 		}
 	}
 
 	if (!found) {
-		gridx = 0;
+		pnode->upstack_frame_count = 0;
 		analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue;
-		analysis_frame_add(pframe, desc, name, gridx, verbose);
+		analysis_frame_add(pframe, desc, pnode->text, pnode->upstack_frame_count, verbose);
 		// xxx temp
-		fridx = pframe->index_count;
+		pnode->frame_relative_index = pframe->index_count;
 		op = "ADD";
 	}
 
 	if (verbose) {
-		for (int i = 1; i < depth; i++) {
+		for (int i = 1; i < pframe_group->plist->length; i++) {
 			printf("::  ");
 		}
-		printf(":: %s %s %s @ %du%d\n", op, desc, name, fridx, gridx);
+		printf("::  %s %s %s @ %du%d\n", op, desc, pnode->text,
+			pnode->frame_relative_index, pnode->upstack_frame_count);
 	}
 }
 
-static void analysis_frame_group_mark_for_read(analysis_frame_group_t* pframe_group,
-	char* desc, char* name, int depth/*xxx rm*/, int verbose)
+static void analysis_frame_group_mark_for_read(analysis_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
+	char* desc, int verbose)
 {
 	int found = FALSE;
-	int fridx = -1;
 	// xxx loop. if not found, fall back to top frame.
-	int gridx = 0;
-	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, gridx++) {
+	pnode->upstack_frame_count = 0;
+	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, pnode->upstack_frame_count++) {
 		analysis_frame_t* pframe = pe->pvvalue;
-		if (analysis_frame_has(pframe, name)) {
+		if (analysis_frame_has(pframe, pnode->text)) {
 			found = TRUE; // xxx dup
-			fridx = analysis_frame_get(pframe, name);
+			pnode->frame_relative_index = analysis_frame_get(pframe, pnode->text);
 			break;
 		}
 	}
 
 	if (found) {
 		if (verbose) {
-			for (int i = 1; i < depth; i++) {
+			for (int i = 1; i < pframe_group->plist->length; i++) {
 				printf("::  ");
 			}
-			printf(":: %s %s @ %du%d\n", desc, name, fridx, gridx);
+			printf("::  %s %s @ %du%d\n", desc, pnode->text, pnode->frame_relative_index, pnode->upstack_frame_count);
 		}
 	} else {
 		if (verbose) {
-			for (int i = 1; i < depth; i++) {
+			for (int i = 1; i < pframe_group->plist->length; i++) {
 				printf("::  ");
 			}
-			printf(":: %s %s ABSENT\n", desc, name);
+			printf("::  %s %s ABSENT\n", desc, pnode->text);
 		}
 	}
 }
@@ -439,7 +439,7 @@ static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t*
 	mlr_dsl_ast_node_t* plist_node = pnode->pchildren->phead->pnext->pvvalue;
 	for (sllve_t* pe = pdef_name_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
-		analysis_frame_group_mark_for_define(pframe_group, "PARAMETER", pparameter_node->text, 0, TRUE/*xxx temp*/);
+		analysis_frame_group_mark_for_define(pframe_group, pparameter_node, "PARAMETER", TRUE/*xxx temp*/);
 	}
 	analyzed_ast_allocate_locals_for_statement_block(plist_node, pframe_group);
 
@@ -504,26 +504,38 @@ static void analyzed_ast_allocate_locals_for_statement_block(mlr_dsl_ast_node_t*
 static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 	analysis_frame_group_t* pframe_group)
 {
-	// xxx for-bind ...
-	if (pnode->type == MD_AST_NODE_TYPE_LOCAL_DEFINITION) { // xxx rename
+	// xxx not right. this is not getting the for-loop boundvars within the scope of the statement list.
+	// xxx check node type MD_AST_NODE_TYPE_FOR_SREC or MD_AST_NODE_TYPE_FOR_OOSVAR. Unpack all parts specially.
+	if (pnode->type == MD_AST_NODE_TYPE_FOR_VARIABLES) {
+		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+			if (pchild->type == MD_AST_NODE_TYPE_FOR_VARIABLES) { // for-oosvar multi-key
+				for (sllve_t* pf = pchild->pchildren->phead; pf != NULL; pf = pf->pnext) {
+					mlr_dsl_ast_node_t* pnamenode = pf->pvvalue;
+					analysis_frame_group_mark_for_define(pframe_group, pnamenode, "FOR-BIND", TRUE/*xxx temp*/);
+				}
+			} else {
+				analysis_frame_group_mark_for_define(pframe_group, pchild, "FOR-BIND", TRUE/*xxx temp*/);
+			}
+		}
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_DEFINITION) {
 		// xxx decide on preorder vs. postorder
 		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 
-		analysis_frame_group_mark_for_define(pframe_group, "DEFINE", pnamenode->text,
-			pframe_group->plist->length, TRUE/*xxx temp*/);
+		analysis_frame_group_mark_for_define(pframe_group, pnamenode, "DEFINE", TRUE/*xxx temp*/);
 		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 		analyzed_ast_allocate_locals_for_node(pvaluenode, pframe_group);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) { // xxx rename
 		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
-		analysis_frame_group_mark_for_write(pframe_group, "WRITE", pnamenode->text,
-			pframe_group->plist->length, TRUE/*xxx temp*/);
+		analysis_frame_group_mark_for_write(pframe_group, pnamenode, "WRITE", TRUE/*xxx temp*/);
 		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 		analyzed_ast_allocate_locals_for_node(pvaluenode, pframe_group);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
-		analysis_frame_group_mark_for_read(pframe_group, "READ", pnode->text,
-			pframe_group->plist->length, TRUE/*xxx temp*/);
+		analysis_frame_group_mark_for_read(pframe_group, pnode, "READ", TRUE/*xxx temp*/);
+
 	} else if (pnode->pchildren != NULL) {
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
@@ -563,3 +575,9 @@ static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 // xxx pass 2:
 // @ localvar map fridx & upcount to relidx (>=0 for in-frame, <0 for upframe)
 // @ base put maxdepth
+
+// frame_relative_index
+// upstack_frame_count
+// absolute_index
+// frame_var_count
+// recursive_max_var_count

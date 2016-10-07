@@ -76,10 +76,21 @@ typedef enum _mlr_dsl_ast_node_type_t {
 	MD_AST_NODE_TYPE_IF_ITEM,
 } mlr_dsl_ast_node_type_t;
 
+#define MD_UNUSED_INDEX -1000000000
+
 typedef struct _mlr_dsl_ast_node_t {
 	char*                   text;
 	mlr_dsl_ast_node_type_t type;
 	sllv_t*                 pchildren;
+
+	// For bind-stack allocation only in local-var nodes: unused for any other node types.
+	int frame_relative_index;
+	int upstack_frame_count;
+	int absolute_index;
+	// For bind-stack allocation only in statement-block nodes: unused for any other node types.
+	int frame_var_count;
+	int recursive_max_var_count;
+
 } mlr_dsl_ast_node_t;
 
 typedef struct _mlr_dsl_ast_t {

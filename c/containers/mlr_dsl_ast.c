@@ -13,9 +13,17 @@ mlr_dsl_ast_t* mlr_dsl_ast_alloc() {
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, mlr_dsl_ast_node_type_t type) {
 	mlr_dsl_ast_node_t* pnode = (mlr_dsl_ast_node_t*)mlr_malloc_or_die(
 		sizeof(mlr_dsl_ast_node_t));
-	pnode->text = mlr_strdup_or_die(text);
-	pnode->type = type;
+
+	pnode->text      = mlr_strdup_or_die(text);
+	pnode->type      = type;
 	pnode->pchildren = NULL;
+
+	pnode->frame_relative_index    = MD_UNUSED_INDEX;
+	pnode->upstack_frame_count     = MD_UNUSED_INDEX;
+	pnode->absolute_index          = MD_UNUSED_INDEX;
+	pnode->frame_var_count         = MD_UNUSED_INDEX;
+	pnode->recursive_max_var_count = MD_UNUSED_INDEX;
+
 	return pnode;
 }
 
@@ -26,6 +34,8 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_copy(mlr_dsl_ast_node_t* pother) {
 }
 
 // ----------------------------------------------------------------
+// This is used within the Lemon parser before bind-stack allocation is done.
+// It does not copy the indices at each node: text and type.
 mlr_dsl_ast_node_t* mlr_dsl_ast_tree_copy(mlr_dsl_ast_node_t* pold) {
 	mlr_dsl_ast_node_t* pnew = mlr_dsl_ast_node_copy(pold);
 	if (pold->pchildren != NULL) {
@@ -162,10 +172,24 @@ static void mlr_dsl_ast_node_print_aux(mlr_dsl_ast_node_t* pnode, int level, FIL
 		return;
 	for (int i = 0; i < level; i++)
 		fprintf(o, "    ");
-	fprintf(o, "text=\"%s\", type=%s%s\n",
+	fprintf(o, "text=\"%s\", type=%s%s",
 		pnode->text,
 		mlr_dsl_ast_node_describe_type(pnode->type),
 		(pnode->pchildren != NULL) ? ":" : ".");
+
+	if (pnode->frame_relative_index != MD_UNUSED_INDEX)
+		fprintf(o, " fridx=%d", pnode->frame_relative_index);
+	if (pnode->upstack_frame_count != MD_UNUSED_INDEX)
+		fprintf(o, " gridx=%d", pnode->upstack_frame_count);
+	if (pnode->absolute_index != MD_UNUSED_INDEX)
+		fprintf(o, " absidx=%d", pnode->absolute_index);
+	if (pnode->frame_var_count != MD_UNUSED_INDEX)
+		fprintf(o, " frct=%d", pnode->frame_var_count);
+	if (pnode->recursive_max_var_count != MD_UNUSED_INDEX)
+		fprintf(o, " maxct=%d", pnode->recursive_max_var_count);
+
+	fprintf(o, "\n");
+
 	if (pnode->pchildren != NULL) {
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_print_aux(pe->pvvalue, level + 1, o);
@@ -189,7 +213,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FUNC_DEF:                         return "FUNC_DEF";                         break;
 	case MD_AST_NODE_TYPE_SUBR_DEF:                         return "SUBR_DEF";                         break;
 	case MD_AST_NODE_TYPE_SUBR_CALLSITE:                    return "SUBR_CALLSITE";                    break;
-	case MD_AST_NODE_TYPE_LOCAL_DEFINITION:                            return "LOCAL";                            break;
+	case MD_AST_NODE_TYPE_LOCAL_DEFINITION:                 return "LOCAL";                            break;
 	case MD_AST_NODE_TYPE_RETURN_VALUE:                     return "RETURN_VALUE";                     break;
 	case MD_AST_NODE_TYPE_RETURN_VOID:                      return "RETURN_VOID";                      break;
 	case MD_AST_NODE_TYPE_BEGIN:                            return "BEGIN";                            break;
