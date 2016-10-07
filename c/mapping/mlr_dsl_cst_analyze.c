@@ -225,10 +225,12 @@ typedef struct _analysis_frame_t {
 } analysis_frame_t;
 
 static analysis_frame_t* analysis_frame_alloc();
+
 static void analysis_frame_free(analysis_frame_t* pframe);
+
 static int analysis_frame_has(analysis_frame_t* pframe, char* name);
+
 static void analysis_frame_add(analysis_frame_t* pframe, char* desc, char* name, int depth, int verbose);
-static void analysis_frame_mark(analysis_frame_t* pframe, char* desc, char* name, int depth, int verbose);
 
 static analysis_frame_t* analysis_frame_alloc() {
 	analysis_frame_t* pframe = mlr_malloc_or_die(sizeof(analysis_frame_t));
@@ -253,21 +255,6 @@ static void analysis_frame_add(analysis_frame_t* pframe, char* desc, char* name,
 	pframe->index_count++;
 }
 
-static void analysis_frame_mark(analysis_frame_t* pframe, char* desc, char* name, int depth, int verbose) {
-	char* op = "REUSE";
-	if (!analysis_frame_has(pframe, name)) {
-		analysis_frame_add(pframe, desc, name, depth, verbose);
-		op = "ADD";
-	}
-	// xxx temp
-	if (verbose) {
-		for (int i = 1; i < depth; i++) {
-			printf("::  ");
-		}
-		printf(":: %s %s %s @ [%lld]\n", op, desc, name, pframe->index_count);
-	}
-}
-
 // ================================================================
 typedef struct _analysis_frame_group_t {
 	sllv_t* plist;
@@ -277,6 +264,15 @@ static analysis_frame_group_t* analysis_frame_group_alloc(analysis_frame_t* pfra
 static void analysis_frame_group_free(analysis_frame_group_t* pframe_group);
 static void analysis_frame_group_push(analysis_frame_group_t* pframe_group, analysis_frame_t* pframe);
 static analysis_frame_t* analysis_frame_group_pop(analysis_frame_group_t* pframe_group);
+
+static void analysis_frame_group_mark_for_define(analysis_frame_group_t* pframe_group,
+	char* desc, char* name, int depth, int verbose);
+
+static void analysis_frame_group_mark_for_write(analysis_frame_group_t* pframe_group,
+	char* desc, char* name, int depth, int verbose);
+
+static void analysis_frame_group_mark_for_read(analysis_frame_group_t* pframe_group,
+	char* desc, char* name, int depth, int verbose);
 
 static analysis_frame_group_t* analysis_frame_group_alloc(analysis_frame_t* pframe) {
 	analysis_frame_group_t* pframe_group = mlr_malloc_or_die(sizeof(analysis_frame_group_t));
@@ -301,6 +297,60 @@ static void analysis_frame_group_push(analysis_frame_group_t* pframe_group, anal
 
 static analysis_frame_t* analysis_frame_group_pop(analysis_frame_group_t* pframe_group) {
 	return sllv_pop(pframe_group->plist);
+}
+
+static void analysis_frame_group_mark_for_define(analysis_frame_group_t* pframe_group,
+	char* desc, char* name, int depth, int verbose)
+{
+	char* op = "REUSE";
+	analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue;
+	if (!analysis_frame_has(pframe, name)) {
+		analysis_frame_add(pframe, desc, name, depth, verbose);
+		op = "ADD";
+	}
+	// xxx temp
+	if (verbose) {
+		for (int i = 1; i < depth; i++) {
+			printf("::  ");
+		}
+		printf(":: %s %s %s @ [%lld]\n", op, desc, name, pframe->index_count);
+	}
+}
+
+static void analysis_frame_group_mark_for_write(analysis_frame_group_t* pframe_group,
+	char* desc, char* name, int depth, int verbose)
+{
+	char* op = "REUSE";
+	analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue; // xxx temp
+	if (!analysis_frame_has(pframe, name)) {
+		analysis_frame_add(pframe, desc, name, depth, verbose);
+		op = "ADD";
+	}
+	// xxx temp
+	if (verbose) {
+		for (int i = 1; i < depth; i++) {
+			printf("::  ");
+		}
+		printf(":: %s %s %s @ [%lld]\n", op, desc, name, pframe->index_count);
+	}
+}
+
+static void analysis_frame_group_mark_for_read(analysis_frame_group_t* pframe_group,
+	char* desc, char* name, int depth, int verbose)
+{
+	char* op = "REUSE";
+	analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue; // xxx temp
+	if (!analysis_frame_has(pframe, name)) {
+		analysis_frame_add(pframe, desc, name, depth, verbose);
+		op = "ADD";
+	}
+	// xxx temp
+	if (verbose) {
+		for (int i = 1; i < depth; i++) {
+			printf("::  ");
+		}
+		printf(":: %s %s %s @ [%lld]\n", op, desc, name, pframe->index_count);
+	}
 }
 
 
@@ -351,7 +401,7 @@ static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t*
 	mlr_dsl_ast_node_t* plist_node = pnode->pchildren->phead->pnext->pvvalue;
 	for (sllve_t* pe = pdef_name_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
-		analysis_frame_mark(pframe, "PARAMETER", pparameter_node->text, 0, TRUE/*xxx temp*/);
+		analysis_frame_group_mark_for_define(pframe_group, "PARAMETER", pparameter_node->text, 0, TRUE/*xxx temp*/);
 	}
 	analyzed_ast_allocate_locals_for_statement_block(plist_node, pframe_group);
 
@@ -421,21 +471,21 @@ static void analyzed_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 		// xxx decide on preorder vs. postorder
 		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 
-		analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue; // xxx temp work into API
-		analysis_frame_mark(pframe, "DEFINE", pnamenode->text, pframe_group->plist->length, TRUE/*xxx temp*/);
+		analysis_frame_group_mark_for_define(pframe_group, "DEFINE", pnamenode->text,
+			pframe_group->plist->length, TRUE/*xxx temp*/);
 		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 		analyzed_ast_allocate_locals_for_node(pvaluenode, pframe_group);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) { // xxx rename
 		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
-		analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue; // xxx temp work into API
-		analysis_frame_mark(pframe, "WRITE", pnamenode->text, pframe_group->plist->length, TRUE/*xxx temp*/);
+		analysis_frame_group_mark_for_write(pframe_group, "WRITE", pnamenode->text,
+			pframe_group->plist->length, TRUE/*xxx temp*/);
 		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 		analyzed_ast_allocate_locals_for_node(pvaluenode, pframe_group);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
-		analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue; // xxx temp work into API
-		analysis_frame_mark(pframe, "READ", pnode->text, pframe_group->plist->length, TRUE/*xxx temp*/);
+		analysis_frame_group_mark_for_read(pframe_group, "READ", pnode->text,
+			pframe_group->plist->length, TRUE/*xxx temp*/);
 	} else if (pnode->pchildren != NULL) {
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
