@@ -9,6 +9,8 @@
 // xxx use 'semantic analysis' to describe CST-build-time checks
 // xxx 'object binding' is linking func/subr defs and callsites
 // xxx make a separate file for tree-reorg part into top-level blocks
+// xxx separate verbosity for allocator? and invoke it in UT cases specific to this?
+// xxx   (note allocation marks in the AST will be printed regardless)
 
 // ----------------------------------------------------------------
 // xxx have ast freed back where it was (for callsite-balance) but w/ has-been-exfoliated comment
