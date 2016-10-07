@@ -5,6 +5,10 @@
 #include "context_flags.h"
 
 // xxx make a summary comment here
+// xxx rename entire file; also 'analysis' & its acronyms
+// xxx use 'semantic analysis' to describe CST-build-time checks
+// xxx 'object binding' is linking func/subr defs and callsites
+// xxx make a separate file for tree-reorg part into top-level blocks
 
 // ----------------------------------------------------------------
 // xxx have ast freed back where it was (for callsite-balance) but w/ has-been-exfoliated comment
