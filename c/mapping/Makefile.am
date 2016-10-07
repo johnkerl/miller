@@ -49,7 +49,9 @@ libmapping_la_SOURCES=	\
 			mappers.h \
 			mlr_dsl_cst.h \
 			mlr_dsl_cst.c \
-			mlr_dsl_cst_analyze.c \
+			mlr_dsl_cst_stack_allocate.c \
+			mlr_dsl_blocked_ast.c \
+			mlr_dsl_blocked_ast.h \
 			mlr_dsl_cst_func_subr.c \
 			mlr_dsl_cst_keywords.c \
 			mlr_dsl_cst_statements.c \

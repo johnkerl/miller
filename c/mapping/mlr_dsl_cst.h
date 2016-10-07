@@ -6,6 +6,7 @@
 #include "containers/lhmsmv.h"
 #include "containers/bind_stack.h"
 #include "containers/loop_stack.h"
+#include "mapping/mlr_dsl_blocked_ast.h"
 #include "mapping/rval_evaluators.h"
 #include "mapping/function_manager.h"
 #include "output/multi_out.h"
@@ -52,20 +53,8 @@
 
 // ----------------------------------------------------------------
 // xxx comment
-typedef struct _analyzed_ast_t {
-	sllv_t* pfunc_defs;
-	sllv_t* psubr_defs;
-	sllv_t* pbegin_blocks;
-	mlr_dsl_ast_node_t* pmain_block;
-	sllv_t* pend_blocks;
-} analyzed_ast_t;
-
-// This strips nodes off the raw AST and transfers them to the analyzed AST.
-analyzed_ast_t* analyzed_ast_alloc(mlr_dsl_ast_t* past);
-void analyzed_ast_free(analyzed_ast_t* paast);
-
-// xxx comment
-void analyzed_ast_allocate_locals(analyzed_ast_t* paast);
+// xxx move to own source&header
+void blocked_ast_allocate_locals(blocked_ast_t* paast);
 
 // ----------------------------------------------------------------
 // Forward references for virtual-function prototypes
@@ -239,7 +228,7 @@ typedef struct _mlr_dsl_cst_t {
 
 	// The CST object retains the AST pointer (in order to reuse its strings etc. with minimal copying)
 	// and will free the AST in the CST destructor.
-	analyzed_ast_t* paast;
+	blocked_ast_t* paast;
 } mlr_dsl_cst_t;
 
 // ----------------------------------------------------------------
