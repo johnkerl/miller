@@ -311,16 +311,17 @@ static void analysis_frame_group_mark_for_define(analysis_frame_group_t* pframe_
 {
 	char* op = "REUSE";
 	analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue;
+	int fridx = -1;
 	if (!analysis_frame_has(pframe, name)) {
 		analysis_frame_add(pframe, desc, name, depth, verbose);
 		op = "ADD";
 	}
-	// xxx temp
+	fridx = analysis_frame_get(pframe, name);
 	if (verbose) {
 		for (int i = 1; i < depth; i++) {
 			printf("::  ");
 		}
-		printf(":: %s %s %s @ [%lld]\n", op, desc, name, pframe->index_count);
+		printf(":: %s %s %s @ %du0\n", op, desc, name, fridx);
 	}
 }
 
@@ -359,24 +360,37 @@ static void analysis_frame_group_mark_for_write(analysis_frame_group_t* pframe_g
 }
 
 static void analysis_frame_group_mark_for_read(analysis_frame_group_t* pframe_group,
-	char* desc, char* name, int depth, int verbose)
+	char* desc, char* name, int depth/*xxx rm*/, int verbose)
 {
-	char* op = "REUSE";
-	// xxx loop. if not found, fall back to absent-null.
-	analysis_frame_t* pframe = pframe_group->plist->phead->pvvalue; // xxx temp
-	if (!analysis_frame_has(pframe, name)) {
-		analysis_frame_add(pframe, desc, name, depth, verbose);
-		op = "ADD";
-	}
-	// xxx temp
-	if (verbose) {
-		for (int i = 1; i < depth; i++) {
-			printf("::  ");
+	int found = FALSE;
+	int fridx = -1;
+	// xxx loop. if not found, fall back to top frame.
+	int gridx = 0;
+	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, gridx++) {
+		analysis_frame_t* pframe = pe->pvvalue;
+		if (analysis_frame_has(pframe, name)) {
+			found = TRUE; // xxx dup
+			fridx = analysis_frame_get(pframe, name);
+			break;
 		}
-		printf(":: %s %s %s @ [%lld]\n", op, desc, name, pframe->index_count);
+	}
+
+	if (found) {
+		if (verbose) {
+			for (int i = 1; i < depth; i++) {
+				printf("::  ");
+			}
+			printf(":: %s %s @ %du%d\n", desc, name, fridx, gridx);
+		}
+	} else {
+		if (verbose) {
+			for (int i = 1; i < depth; i++) {
+				printf("::  ");
+			}
+			printf(":: %s %s ABSENT\n", desc, name);
+		}
 	}
 }
-
 
 // ================================================================
 static void analyzed_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t* pnode);
