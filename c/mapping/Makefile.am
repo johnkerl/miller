@@ -47,14 +47,14 @@ libmapping_la_SOURCES=	\
 			mapper_top.c \
 			mapper_uniq.c \
 			mappers.h \
-			mlr_dsl_cst.h \
-			mlr_dsl_cst.c \
-			mlr_dsl_cst_stack_allocate.c \
 			mlr_dsl_blocked_ast.c \
 			mlr_dsl_blocked_ast.h \
+			mlr_dsl_cst.c \
+			mlr_dsl_cst.h \
 			mlr_dsl_cst_func_subr.c \
 			mlr_dsl_cst_keywords.c \
 			mlr_dsl_cst_statements.c \
+			mlr_dsl_stack_allocate.c \
 			stats1_accumulators.c \
 			stats1_accumulators.h \
 			type_inference.h
