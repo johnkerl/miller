@@ -38,7 +38,7 @@
 
 // 1 frame_relative_index
 // 1 upstack_frame_count
-// 2 frame_var_count
+// 1 frame_var_count
 // 2 recursive_max_var_count
 // 2 absolute_index
 
@@ -297,13 +297,13 @@ static void blocked_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 		stkalc_frame_group_mark_for_define(pframe_group, pvnode, "FOR-BIND", TRUE/*xxx temp*/);
 
 		blocked_ast_allocate_locals_for_statement_block(pblocknode, pframe_group);
-		pblocknode->frame_var_count = pnext_frame->index_count;
+		pnode->frame_var_count = pnext_frame->index_count;
 
 		stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
 
 		for (int i = 0; i < pframe_group->plist->length; i++)
 			printf("::  ");
-		printf("POP FRAME %s frct=%d\n", pnode->text, pblocknode->frame_var_count);
+		printf("POP FRAME %s frct=%d\n", pnode->text, pnode->frame_var_count);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR) { // xxx comment
 
@@ -334,12 +334,12 @@ static void blocked_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 		stkalc_frame_group_mark_for_define(pframe_group, pvalnode, "FOR-BIND", TRUE/*xxx temp*/);
 		blocked_ast_allocate_locals_for_statement_block(pblocknode, pframe_group);
 		// xxx make accessor ...
-		pblocknode->frame_var_count = pnext_frame->index_count;
+		pnode->frame_var_count = pnext_frame->index_count;
 
 		stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
 		for (int i = 0; i < pframe_group->plist->length; i++)
 			printf("::  ");
-		printf("POP FRAME %s frct=%d\n", pnode->text, pblocknode->frame_var_count);
+		printf("POP FRAME %s frct=%d\n", pnode->text, pnode->frame_var_count);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_DEFINITION) {
 		// xxx decide on preorder vs. postorder
