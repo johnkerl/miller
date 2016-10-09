@@ -280,7 +280,24 @@ static void blocked_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 {
 	// xxx make separate functions
 
-	if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) { // xxx comment
+	if (pnode->type == MD_AST_NODE_TYPE_LOCAL_DEFINITION) {
+		// xxx decide on preorder vs. postorder
+		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
+
+		stkalc_frame_group_mark_for_define(pframe_group, pnamenode, "DEFINE", TRUE/*xxx temp*/);
+		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
+		blocked_ast_allocate_locals_for_node(pvaluenode, pframe_group);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) { // xxx rename
+		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
+		stkalc_frame_group_mark_for_write(pframe_group, pnamenode, "WRITE", TRUE/*xxx temp*/);
+		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
+		blocked_ast_allocate_locals_for_node(pvaluenode, pframe_group);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
+		stkalc_frame_group_mark_for_read(pframe_group, pnode, "READ", TRUE/*xxx temp*/);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) { // xxx comment
 
 		for (int i = 0; i < pframe_group->plist->length; i++) // xxx temp
 			printf("::  ");
@@ -340,23 +357,6 @@ static void blocked_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 		for (int i = 0; i < pframe_group->plist->length; i++)
 			printf("::  ");
 		printf("POP FRAME %s frct=%d\n", pnode->text, pnode->frame_var_count);
-
-	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_DEFINITION) {
-		// xxx decide on preorder vs. postorder
-		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
-
-		stkalc_frame_group_mark_for_define(pframe_group, pnamenode, "DEFINE", TRUE/*xxx temp*/);
-		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
-		blocked_ast_allocate_locals_for_node(pvaluenode, pframe_group);
-
-	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) { // xxx rename
-		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
-		stkalc_frame_group_mark_for_write(pframe_group, pnamenode, "WRITE", TRUE/*xxx temp*/);
-		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
-		blocked_ast_allocate_locals_for_node(pvaluenode, pframe_group);
-
-	} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
-		stkalc_frame_group_mark_for_read(pframe_group, pnode, "READ", TRUE/*xxx temp*/);
 
 	} else if (pnode->pchildren != NULL) {
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
