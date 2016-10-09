@@ -74,6 +74,7 @@ static void stkalc_frame_group_mark_for_read(stkalc_frame_group_t* pframe_group,
 	char* desc, int verbose);
 
 // ----------------------------------------------------------------
+// PASS 1
 static void blocked_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t* pnode);
 static void blocked_ast_allocate_locals_for_begin_end_block(mlr_dsl_ast_node_t* pnode);
 static void blocked_ast_allocate_locals_for_main_block(mlr_dsl_ast_node_t* pnode);
@@ -81,6 +82,10 @@ static void blocked_ast_allocate_locals_for_statement_block(mlr_dsl_ast_node_t* 
 	stkalc_frame_group_t* pframe_group);
 static void blocked_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 	stkalc_frame_group_t* pframe_group);
+
+// PASS 2
+static void blocked_ast_absolutify_locals(mlr_dsl_ast_node_t* pnode);
+static void blocked_ast_absolutify_locals_aux(mlr_dsl_ast_node_t* pnode);
 
 // ================================================================
 // xxx under construction
@@ -170,7 +175,8 @@ static void blocked_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 // ----------------------------------------------------------------
 // xxx rename
 void blocked_ast_allocate_locals(blocked_ast_t* paast) {
-	printf("\n"); // xxx temp
+
+	// PASS 1
 	for (sllve_t* pe = paast->pfunc_defs->phead; pe != NULL; pe = pe->pnext) {
 		blocked_ast_allocate_locals_for_func_subr_block(pe->pvvalue);
 	}
@@ -180,9 +186,28 @@ void blocked_ast_allocate_locals(blocked_ast_t* paast) {
 	for (sllve_t* pe = paast->pbegin_blocks->phead; pe != NULL; pe = pe->pnext) {
 		blocked_ast_allocate_locals_for_begin_end_block(pe->pvvalue);
 	}
-	blocked_ast_allocate_locals_for_main_block(paast->pmain_block);
+	{
+		blocked_ast_allocate_locals_for_main_block(paast->pmain_block);
+	}
 	for (sllve_t* pe = paast->pend_blocks->phead; pe != NULL; pe = pe->pnext) {
 		blocked_ast_allocate_locals_for_begin_end_block(pe->pvvalue);
+	}
+
+	// PASS 2
+	for (sllve_t* pe = paast->pfunc_defs->phead; pe != NULL; pe = pe->pnext) {
+		blocked_ast_absolutify_locals(pe->pvvalue);
+	}
+	for (sllve_t* pe = paast->psubr_defs->phead; pe != NULL; pe = pe->pnext) {
+		blocked_ast_absolutify_locals(pe->pvvalue);
+	}
+	for (sllve_t* pe = paast->pbegin_blocks->phead; pe != NULL; pe = pe->pnext) {
+		blocked_ast_absolutify_locals(pe->pvvalue);
+	}
+	{
+		blocked_ast_absolutify_locals(paast->pmain_block);
+	}
+	for (sllve_t* pe = paast->pend_blocks->phead; pe != NULL; pe = pe->pnext) {
+		blocked_ast_absolutify_locals(pe->pvvalue);
 	}
 }
 
@@ -523,6 +548,33 @@ static void stkalc_frame_group_mark_for_read(stkalc_frame_group_t* pframe_group,
 				printf("::  ");
 			}
 			printf("::  %s %s ABSENT\n", desc, pnode->text);
+		}
+	}
+}
+
+// ================================================================
+static void blocked_ast_absolutify_locals(mlr_dsl_ast_node_t* pnode) {
+	//int count_below = 0;
+	//int count_above = 0;
+	//int max_count   = 0;
+	printf("\n");
+	printf("ABSOLUTIZING LOCALS FOR DEFINITION BLOCK [%s]\n", pnode->text);
+	blocked_ast_absolutify_locals_aux(pnode);
+}
+
+static void blocked_ast_absolutify_locals_aux(mlr_dsl_ast_node_t* pnode) {
+	printf("XXX %s\n", pnode->text);
+
+	// frame_relative_index
+	// upstack_frame_count
+	// frame_var_count
+	// recursive_max_var_count
+	// absolute_index
+
+	if (pnode->pchildren != NULL) {
+		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+			blocked_ast_absolutify_locals_aux(pchild);
 		}
 	}
 }
