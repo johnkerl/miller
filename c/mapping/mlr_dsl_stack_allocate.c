@@ -37,7 +37,7 @@
 // @base put maxdepth
 
 // 1 frame_relative_index
-// 1 upstack_frame_count
+// 1 upstack_frame_count <--- xxx rm ?
 // 1 frame_var_count
 // 2 recursive_max_var_count
 // 2 absolute_index
@@ -85,7 +85,8 @@ static void blocked_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 
 // PASS 2
 static void blocked_ast_absolutify_locals(mlr_dsl_ast_node_t* pnode);
-static void blocked_ast_absolutify_locals_aux(mlr_dsl_ast_node_t* pnode);
+static void blocked_ast_absolutify_locals_aux(mlr_dsl_ast_node_t* pnode,
+	int count_below_frame, int count_at_frame, int* pmax_depth);
 
 // ================================================================
 // xxx under construction
@@ -554,16 +555,30 @@ static void stkalc_frame_group_mark_for_read(stkalc_frame_group_t* pframe_group,
 
 // ================================================================
 static void blocked_ast_absolutify_locals(mlr_dsl_ast_node_t* pnode) {
-	//int count_below = 0;
-	//int count_above = 0;
-	//int max_count   = 0;
+	int count_below_frame = 0;
+	int count_at_frame = 0;
+	int max_depth   = 0;
 	printf("\n");
 	printf("ABSOLUTIZING LOCALS FOR DEFINITION BLOCK [%s]\n", pnode->text);
-	blocked_ast_absolutify_locals_aux(pnode);
+	blocked_ast_absolutify_locals_aux(pnode, count_below_frame, count_at_frame, &max_depth);
 }
 
-static void blocked_ast_absolutify_locals_aux(mlr_dsl_ast_node_t* pnode) {
+static void blocked_ast_absolutify_locals_aux(mlr_dsl_ast_node_t* pnode,
+	int count_below_frame, int count_at_frame, int* pmax_depth)
+{
 	printf("XXX %s\n", pnode->text);
+	if (pnode->frame_var_count != MD_UNUSED_INDEX) {
+		count_below_frame += count_at_frame;
+		count_at_frame = pnode->frame_var_count;
+		int depth = count_below_frame + count_at_frame;
+		if (depth > *pmax_depth) {
+			*pmax_depth = depth;
+		}
+	}
+
+	if (pnode->frame_relative_index != MD_UNUSED_INDEX) {
+		pnode->absolute_index = count_below_frame + pnode->frame_relative_index;
+	}
 
 	// frame_relative_index
 	// upstack_frame_count
@@ -574,7 +589,7 @@ static void blocked_ast_absolutify_locals_aux(mlr_dsl_ast_node_t* pnode) {
 	if (pnode->pchildren != NULL) {
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-			blocked_ast_absolutify_locals_aux(pchild);
+			blocked_ast_absolutify_locals_aux(pchild, count_below_frame, count_at_frame, pmax_depth);
 		}
 	}
 }
