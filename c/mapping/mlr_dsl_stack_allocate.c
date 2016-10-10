@@ -566,7 +566,6 @@ static void blocked_ast_absolutify_locals(mlr_dsl_ast_node_t* pnode) {
 static void blocked_ast_absolutify_locals_aux(mlr_dsl_ast_node_t* pnode,
 	int count_below_frame, int count_at_frame, int* pmax_depth)
 {
-	printf("XXX %s\n", pnode->text);
 	if (pnode->frame_var_count != MD_UNUSED_INDEX) {
 		count_below_frame += count_at_frame;
 		count_at_frame = pnode->frame_var_count;
@@ -574,10 +573,17 @@ static void blocked_ast_absolutify_locals_aux(mlr_dsl_ast_node_t* pnode,
 		if (depth > *pmax_depth) {
 			*pmax_depth = depth;
 		}
+		printf("FRAME %s under=%d at=%d maxdepth=%d\n",
+			pnode->text, count_below_frame, count_at_frame, *pmax_depth);
 	}
 
 	if (pnode->frame_relative_index != MD_UNUSED_INDEX) {
 		pnode->absolute_index = count_below_frame + pnode->frame_relative_index;
+		printf("NODE %s %du%d -> %d\n",
+			pnode->text,
+			pnode->frame_relative_index,
+			pnode->upstack_frame_count,
+			pnode->absolute_index);
 	}
 
 	// frame_relative_index
