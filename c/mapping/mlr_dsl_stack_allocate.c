@@ -119,61 +119,6 @@ static void blocked_ast_absolutify_locals_aux(mlr_dsl_ast_node_t* pnode,
 // ================================================================
 
 // ----------------------------------------------------------------
-// * local-var defines are certainly for the current frame
-// * local-var writes need backtracing (if not found at the current frame)
-// * local-var reads  need backtracing (if not found at the current frame)
-// * unresolved-read needs special handling -- maybe a root-level mv_absent at index 0?
-//
-// ----------------------------------------------------------------
-// One frame per curly-braced block
-// One framegroup per block (funcdef, subrdef, begin, end, main)
-// -> has maxdepth attrs
-//
-// frame_t at analysis phase:
-// * hss I guess. or better: lhmsi. has size attr.
-//
-// frame_t at run phase:
-// * numvars attr
-// * indices refer to frame_group's array:
-//   o non-negative indices are local
-//   o negative indices are locals within ancestor node(s)
-//
-// frame_group_t at analysis phase:
-// * this is a tree
-// * each node has nameset/defcount for its locals
-// * each node also has max defcount for its transitive children?
-//
-// frame_group_t at run phase:
-// * maxdepth attr
-// * array of mlrvals
-// * optionally (or always?) a single slot is the undef.
-//
-// storage options:
-// * decorate ast_node_t w/ default-null pointer to allocated analysis info?
-//   this way AST points to analysis.
-// * analysis tree w/ pointers to statement-block nodes?
-//   this way analysis points to AST.
-//
-// ----------------------------------------------------------------
-// Population:
-// * in-order AST traversal
-// * note statement-block nodes are only every so often in the full AST
-// * at each node:
-//     if is local-var LHS:
-//       if explicit:
-//         lhmsi_put(name, ++fridx)
-//       else:
-//         resolve up ...
-//     else if is statement-block:
-//       allocate a frame struct
-//       attach it to the node
-//       recurse & have the recursion populate it
-//       pop the frame struct but leave it attached to the node
-//     else:
-//       nothing to do here.
-// ----------------------------------------------------------------
-
-// ----------------------------------------------------------------
 // xxx rename
 void blocked_ast_allocate_locals(blocked_ast_t* paast) {
 
@@ -448,6 +393,7 @@ static stkalc_frame_group_t* stkalc_frame_group_alloc(stkalc_frame_t* pframe) {
 	stkalc_frame_group_t* pframe_group = mlr_malloc_or_die(sizeof(stkalc_frame_group_t));
 	pframe_group->plist = sllv_alloc();
 	sllv_prepend(pframe_group->plist, pframe);
+	stkalc_frame_add(pframe, "FOR_ABSENT", "", /*xxx temp*/TRUE);
 	return pframe_group;
 }
 
@@ -524,9 +470,11 @@ static void stkalc_frame_group_mark_for_write(stkalc_frame_group_t* pframe_group
 	}
 }
 
+// xxx make this very clear in the header somehow ... this is an assumption to be tracked across modules.
 static void stkalc_frame_group_mark_for_read(stkalc_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
 	char* desc, int verbose)
 {
+	char* op = "PRESENT";
 	int found = FALSE;
 	// xxx loop. if not found, fall back to top frame.
 	int upstack_frame_count = 0;
@@ -539,22 +487,22 @@ static void stkalc_frame_group_mark_for_read(stkalc_frame_group_t* pframe_group,
 		}
 	}
 
-	if (found) {
-		if (verbose) {
-			for (int i = 1; i < pframe_group->plist->length; i++) {
-				printf("::  ");
-			}
-			printf("::  %s %s @ %du%d\n", desc, pnode->text, pnode->frame_relative_index, upstack_frame_count);
-		}
-		pnode->upstack_frame_count = upstack_frame_count;
-	} else {
-		if (verbose) {
-			for (int i = 1; i < pframe_group->plist->length; i++) {
-				printf("::  ");
-			}
-			printf("::  %s %s ABSENT\n", desc, pnode->text);
-		}
+	// xxx if not found: go to the tail & use the "" entry
+	if (!found) {
+		stkalc_frame_t* plast = pframe_group->plist->ptail->pvvalue;
+		pnode->frame_relative_index = stkalc_frame_get(plast, "");
+		upstack_frame_count = pframe_group->plist->length - 1;
+		op = "ABSENT";
 	}
+
+	if (verbose) {
+		for (int i = 1; i < pframe_group->plist->length; i++) {
+			printf("::  ");
+		}
+		printf("::  %s %s %s @ %du%d\n", desc, pnode->text, op, pnode->frame_relative_index, upstack_frame_count);
+	}
+	pnode->upstack_frame_count = upstack_frame_count;
+
 }
 
 // ================================================================
