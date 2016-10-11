@@ -19,7 +19,8 @@
 // lookup to locate each local variable on the stack.  For compute-intensive
 // work this resulted in 80% or more of the compute time being used for the
 // hashmap accesses. It doesn't make sense to always be asking "where is
-// variable 'a'"? at runtime since this can be figured out ahead of time.
+// variable 'a'"? at runtime (maybe ten million times) since this can be figured
+// out ahead of time.
 //
 // The Miller DSL allows for recursive functions and subroutines, but within
 // those, stack layout is knowable at parse time.
@@ -27,23 +28,23 @@
 // ----------------------------------------------------------------
 // EXAMPLE:
 //
-//                       # ---- FUNC FRAME: defcount 5 {a,b,c,i,j}
+//                       # ---- FUNC FRAME: defcount 7 {absent-RHS,a,b,c,i,j,y}
 //                       # To be noted below: absent-RHS is at slot 0 of top level.
 // func f(a, b, c) {     # Args define locals 1,2,3 at current level.
 //     local i = 24;     # Explicitly define local 4 at current level.
 //     j = 25;           # Implicitly define local 5 at current level.
 //                       #
-//                       # ---- IF FRAME: defcount 2 {k,m}
+//                       # ---- IF FRAME: defcount 1 {k}
 //     if (a == 26) {    # Read local 1, up 1 level.
 //         local k = 27; # Explicitly define local 0 at this level.
 //         j = 28;       # LHS is local 5 up one level.
 //                       #
 //                       #
-//     } else {          # ---- ELSE FRAME: defcount 3 {n,g,h}
+//     } else {          # ---- ELSE FRAME: defcount 1 {n}
 //         n = b;        # Implicitly define local 0 at this level.
 //     }                 #
 //                       #
-//     b = 7;            # LHS is local 2 at current level.
+//     y = 7;            # LHS is local 6 at current level.
 //     i = z;            # LHS is local 4 at current level;
 //                       #   RHS is unresolved -> slot 0 at current level.
 // }                     #
@@ -54,17 +55,24 @@
 //   as in the example, for each local variable.
 //
 // * Pass 2 computes absolute indices for each local variable. These
-//   aren't computable in pass 1 due to the example 'b = 7' assignment
+//   aren't computable in pass 1 due to the example 'y = 7' assignment
 //   above: the number of local variables in an upper level can change
 //   after the invocation of a child level, so total frame size is not
 //   known until all AST nodes in the top-level block have been visited.
+//
+// * Pass 2 also computes the max depth, counting number of variables, so
+//   that for each top-level block we can allocate an array of mlrvals which
+//   will be reused on every invocation. (For recursive function calls this will
+//   be dynamically allocated.)
 //
 // * Slot 0 of the top level is reserved for an absent-null for unresolved
 //   names on reads.
 //
 // * The tree-traversal order is done correctly so that if a variable is read
 //   before it is defined, then read again after it is defined, then the first
-//   read gets absent-null and the second gets the defined value.
+//   read gets absent-null and the second gets the defined value. This also
+//   requires the concrete-syntax-tree implementation to initialize the
+//   stack to mv_absent on each invocation.
 // ================================================================
 
 // ----------------------------------------------------------------
@@ -147,9 +155,8 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 	int frame_depth, int var_count_below_frame, int var_count_at_frame, int* pmax_var_depth);
 
 // ================================================================
-// xxx under construction
+// Main entry point for the bind-stack allocator
 
-// ----------------------------------------------------------------
 void blocked_ast_allocate_locals(blocked_ast_t* paast) {
 
 	for (sllve_t* pe = paast->pfunc_defs->phead; pe != NULL; pe = pe->pnext) {

@@ -33,6 +33,7 @@ FUNCTIONALITY FOR 4.6.0:
   o 2nd AST pass: analyze each for max depth: local def, write, read. adapt existing lmhsv/resolve logic.
   o 3rd AST pass: rewrite localvar names w/ frame-relative indices
   o CST statement-list: push/pop count for entry/exit; mv_absents on enter; mv_frees on exit
+  o mv_absent init: find a way to do this only when needed.
 
 * valgrinds
 
