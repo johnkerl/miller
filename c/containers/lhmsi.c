@@ -194,6 +194,23 @@ long long lhmsi_get(lhmsi_t* pmap, char* key) {
 	}
 }
 
+// ----------------------------------------------------------------
+int lhmsi_test_and_get(lhmsi_t* pmap, char* key, long long* pval) {
+	int ideal_index = 0;
+	int index = lhmsi_find_index_for_key(pmap, key, &ideal_index);
+	lhmsie_t* pe = &pmap->entries[index];
+
+	if (pmap->states[index] == OCCUPIED) {
+		*pval = pe->value;
+		return TRUE;
+	} else if (pmap->states[index] == EMPTY) {
+		return FALSE;
+	} else {
+		fprintf(stderr, "%s: lhmsi_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.bargv0);
+		exit(1);
+	}
+}
+
 lhmsie_t* lhmsi_get_entry(lhmsi_t* pmap, char* key) {
 	int ideal_index = 0;
 	int index = lhmsi_find_index_for_key(pmap, key, &ideal_index);
