@@ -52,7 +52,7 @@ static      stkalc_frame_t* stkalc_frame_alloc();
 static void stkalc_frame_free(stkalc_frame_t* pframe);
 static int  stkalc_frame_has(stkalc_frame_t* pframe, char* name);
 static int  stkalc_frame_get(stkalc_frame_t* pframe, char* name);
-static int  stkalc_frame_add(stkalc_frame_t* pframe, char* desc, char* name, int depth, int verbose);
+static int  stkalc_frame_add(stkalc_frame_t* pframe, char* desc, char* name, int verbose);
 
 // ----------------------------------------------------------------
 typedef struct _stkalc_frame_group_t {
@@ -436,7 +436,7 @@ static int stkalc_frame_get(stkalc_frame_t* pframe, char* name) {
 	return lhmsi_get(pframe->pnames_to_indices, name);
 }
 
-static int stkalc_frame_add(stkalc_frame_t* pframe, char* desc, char* name, int depth, int verbose) {
+static int stkalc_frame_add(stkalc_frame_t* pframe, char* desc, char* name, int verbose) {
 	int rv = pframe->var_count;
 	lhmsi_put(pframe->pnames_to_indices, name, pframe->var_count, NO_FREE);
 	pframe->var_count++;
@@ -479,8 +479,7 @@ static void stkalc_frame_group_mark_for_define(stkalc_frame_group_t* pframe_grou
 		pnode->frame_relative_index = stkalc_frame_get(pframe, pnode->text);
 	} else {
 		// xxx this factorization is gross.
-		pnode->frame_relative_index = stkalc_frame_add(pframe, desc,
-			pnode->text, pframe_group->plist->length, verbose);
+		pnode->frame_relative_index = stkalc_frame_add(pframe, desc, pnode->text, verbose);
 		op = "ADD";
 	}
 	if (verbose) {
@@ -511,9 +510,7 @@ static void stkalc_frame_group_mark_for_write(stkalc_frame_group_t* pframe_group
 	if (!found) {
 		pnode->upstack_frame_count = 0;
 		stkalc_frame_t* pframe = pframe_group->plist->phead->pvvalue;
-		// xxx get this via fcn retval?
-		pnode->frame_relative_index = stkalc_frame_add(pframe, desc,
-			pnode->text, pnode->upstack_frame_count, verbose);
+		pnode->frame_relative_index = stkalc_frame_add(pframe, desc, pnode->text, verbose);
 		// xxx temp
 		op = "ADD";
 	}
