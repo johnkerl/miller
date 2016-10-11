@@ -47,9 +47,25 @@
 //     i = z;            # LHS is local 4 at current level;
 //                       #   RHS is unresolved -> slot 0 at current level.
 // }                     #
+//
+// Notes:
+//
+// * Pass 1 computes frame-relative indices and upstack-level counts,
+//   as in the example, for each local variable.
+//
+// * Pass 2 computes absolute indices for each local variable. These
+//   aren't computable in pass 1 due to the example 'b = 7' assignment
+//   above: the number of local variables in an upper level can change
+//   after the invocation of a child level, so total frame size is not
+//   known until all AST nodes in the top-level block have been visited.
+//
+// * Slot 0 of the top level is reserved for an absent-null for unresolved
+//   names on reads.
+//
+// * The tree-traversal order is done correctly so that if a variable is read
+//   before it is defined, then read again after it is defined, then the first
+//   read gets absent-null and the second gets the defined value.
 // ================================================================
-
-// xxx absent
 
 // ----------------------------------------------------------------
 // xxx to do:
