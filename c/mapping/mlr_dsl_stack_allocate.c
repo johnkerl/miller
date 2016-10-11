@@ -39,9 +39,9 @@ typedef struct _stkalc_frame_group_t {
 	sllv_t* plist;
 } stkalc_frame_group_t;
 
-static                 stkalc_frame_group_t* stkalc_frame_group_alloc(stkalc_frame_t* pframe);
-static void            stkalc_frame_group_free(stkalc_frame_group_t* pframe_group);
-static void            stkalc_frame_group_push(stkalc_frame_group_t* pframe_group, stkalc_frame_t* pframe);
+static      stkalc_frame_group_t* stkalc_frame_group_alloc(stkalc_frame_t* pframe);
+static void stkalc_frame_group_free(stkalc_frame_group_t* pframe_group);
+static void stkalc_frame_group_push(stkalc_frame_group_t* pframe_group, stkalc_frame_t* pframe);
 static stkalc_frame_t* stkalc_frame_group_pop(stkalc_frame_group_t* pframe_group);
 
 static void stkalc_frame_group_mark_node_for_define(stkalc_frame_group_t* pframe_group,
@@ -185,12 +185,16 @@ static void pass_1_for_begin_end_block(mlr_dsl_ast_node_t* pnode) {
 
 // ----------------------------------------------------------------
 static void pass_1_for_main_block(mlr_dsl_ast_node_t* pnode) {
-//	xxx assert node type
+	if (pnode->type != MD_AST_NODE_TYPE_STATEMENT_BLOCK) {
+		fprintf(stderr,
+			"%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
 
 	printf("\n");
 	printf("ALLOCATING LOCALS FOR MAIN BLOCK\n");
 
-	// xxx make this a one-liner
 	stkalc_frame_t* pframe = stkalc_frame_alloc();
 	stkalc_frame_group_t* pframe_group = stkalc_frame_group_alloc(pframe);
 
