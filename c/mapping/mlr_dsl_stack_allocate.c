@@ -101,7 +101,7 @@ typedef struct _stkalc_frame_t {
 // xxx make a test-and-get API for lhmsi
 static      stkalc_frame_t* stkalc_frame_alloc();
 static void stkalc_frame_free(stkalc_frame_t* pframe);
-static int  stkalc_frame_has(stkalc_frame_t* pframe, char* name);
+static int  stkalc_frame_test_and_get(stkalc_frame_t* pframe, char* name, int* pvalue);
 static int  stkalc_frame_get(stkalc_frame_t* pframe, char* name);
 static int  stkalc_frame_add(stkalc_frame_t* pframe, char* desc, char* name, int verbose);
 
@@ -412,8 +412,12 @@ static void stkalc_frame_free(stkalc_frame_t* pframe) {
 	free(pframe);
 }
 
-static int stkalc_frame_has(stkalc_frame_t* pframe, char* name) {
-	return lhmsi_has_key(pframe->pnames_to_indices, name);
+static int stkalc_frame_test_and_get(stkalc_frame_t* pframe, char* name, int* pvalue) {
+	long long llvalue;
+	int rc = lhmsi_test_and_get(pframe->pnames_to_indices, name, &llvalue);
+	if (rc)
+		*pvalue = llvalue;
+	return rc;
 }
 
 static int stkalc_frame_get(stkalc_frame_t* pframe, char* name) {
@@ -460,10 +464,7 @@ static void stkalc_frame_group_mutate_node_for_define(stkalc_frame_group_t* pfra
 	char* op = "REUSE";
 	stkalc_frame_t* pframe = pframe_group->plist->phead->pvvalue;
 	pnode->upstack_frame_count = 0;
-	if (stkalc_frame_has(pframe, pnode->text)) {
-		pnode->frame_relative_index = stkalc_frame_get(pframe, pnode->text);
-	} else {
-		// xxx this factorization is gross.
+	if (!stkalc_frame_test_and_get(pframe, pnode->text, &pnode->frame_relative_index)) {
 		pnode->frame_relative_index = stkalc_frame_add(pframe, desc, pnode->text, verbose);
 		op = "ADD";
 	}
@@ -485,9 +486,8 @@ static void stkalc_frame_group_mutate_node_for_write(stkalc_frame_group_t* pfram
 	pnode->upstack_frame_count = 0;
 	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, pnode->upstack_frame_count++) {
 		stkalc_frame_t* pframe = pe->pvvalue;
-		if (stkalc_frame_has(pframe, pnode->text)) {
+		if (stkalc_frame_test_and_get(pframe, pnode->text, &pnode->frame_relative_index)) {
 			found = TRUE; // xxx dup
-			pnode->frame_relative_index = stkalc_frame_get(pframe, pnode->text);
 			break;
 		}
 	}
@@ -519,9 +519,8 @@ static void stkalc_frame_group_mutate_node_for_read(stkalc_frame_group_t* pframe
 	int upstack_frame_count = 0;
 	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, upstack_frame_count++) {
 		stkalc_frame_t* pframe = pe->pvvalue;
-		if (stkalc_frame_has(pframe, pnode->text)) {
+		if (stkalc_frame_test_and_get(pframe, pnode->text, &pnode->frame_relative_index)) {
 			found = TRUE; // xxx dup
-			pnode->frame_relative_index = stkalc_frame_get(pframe, pnode->text);
 			break;
 		}
 	}
