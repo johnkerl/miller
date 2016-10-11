@@ -13,8 +13,6 @@
 // ----------------------------------------------------------------
 // xxx to do:
 
-// xxx put 'pass_1' and 'pass_2' in the function names
-
 // * maybe move ast from containers to mapping?
 
 // * make a separate file for tree-reorg part into top-level blocks
@@ -23,24 +21,6 @@
 // * 'object binding': use this to describe linking func/subr defs and callsites
 // * separate verbosity for allocator? and invoke it in UT cases specific to this?
 //   -> (note allocation marks in the AST will be printed regardless)
-
-// * nodestash:
-// @ localvar: fridx & upcount; then frgridx
-// @ statement block: frct; then maxdepth (default #def NONESUCH @ ctor; respect @ ast-node printer)
-
-// pass 1:
-// @localvar put fridx & upcount
-// @exit from statement block put frct
-
-// pass 2:
-// @localvar map fridx & upcount to relidx (>=0 for in-frame, <0 for upframe)
-// @base put maxdepth
-
-// 1 frame_relative_index
-// 1 upstack_frame_count <--- xxx rm ?
-// 1 frame_var_count
-// 2 recursive_max_var_count
-// 2 absolute_index
 
 // ================================================================
 typedef struct _stkalc_frame_t {
@@ -64,27 +44,23 @@ static void            stkalc_frame_group_free(stkalc_frame_group_t* pframe_grou
 static void            stkalc_frame_group_push(stkalc_frame_group_t* pframe_group, stkalc_frame_t* pframe);
 static stkalc_frame_t* stkalc_frame_group_pop(stkalc_frame_group_t* pframe_group);
 
-static void stkalc_frame_group_mark_for_define(stkalc_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
-	char* desc, int verbose);
+static void stkalc_frame_group_mark_node_for_define(stkalc_frame_group_t* pframe_group,
+	mlr_dsl_ast_node_t* pnode, char* desc, int verbose);
 
-static void stkalc_frame_group_mark_for_write(stkalc_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
-	char* desc, int verbose);
+static void stkalc_frame_group_mark_node_for_write(stkalc_frame_group_t* pframe_group,
+	mlr_dsl_ast_node_t* pnode, char* desc, int verbose);
 
-static void stkalc_frame_group_mark_for_read(stkalc_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
-	char* desc, int verbose);
+static void stkalc_frame_group_mark_node_for_read(stkalc_frame_group_t* pframe_group,
+	mlr_dsl_ast_node_t* pnode, char* desc, int verbose);
 
 // ----------------------------------------------------------------
-// PASS 1
 static void pass_1_for_func_subr_block(mlr_dsl_ast_node_t* pnode);
 static void pass_1_for_begin_end_block(mlr_dsl_ast_node_t* pnode);
 static void pass_1_for_main_block(mlr_dsl_ast_node_t* pnode);
-static void pass_1_for_statement_block(mlr_dsl_ast_node_t* pnode,
-	stkalc_frame_group_t* pframe_group);
-static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
-	stkalc_frame_group_t* pframe_group);
+static void pass_1_for_statement_block(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group);
+static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group);
 
-// PASS 2
-static void pass_2_for_block(mlr_dsl_ast_node_t* pnode);
+static void pass_2_for_top_level_block(mlr_dsl_ast_node_t* pnode);
 static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 	int frame_depth, int var_count_below_frame, int var_count_at_frame, int* pmax_var_depth);
 
@@ -119,10 +95,8 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 // ================================================================
 
 // ----------------------------------------------------------------
-// xxx rename
 void blocked_ast_allocate_locals(blocked_ast_t* paast) {
 
-	// PASS 1
 	for (sllve_t* pe = paast->pfunc_defs->phead; pe != NULL; pe = pe->pnext) {
 		pass_1_for_func_subr_block(pe->pvvalue);
 	}
@@ -139,21 +113,20 @@ void blocked_ast_allocate_locals(blocked_ast_t* paast) {
 		pass_1_for_begin_end_block(pe->pvvalue);
 	}
 
-	// PASS 2
 	for (sllve_t* pe = paast->pfunc_defs->phead; pe != NULL; pe = pe->pnext) {
-		pass_2_for_block(pe->pvvalue);
+		pass_2_for_top_level_block(pe->pvvalue);
 	}
 	for (sllve_t* pe = paast->psubr_defs->phead; pe != NULL; pe = pe->pnext) {
-		pass_2_for_block(pe->pvvalue);
+		pass_2_for_top_level_block(pe->pvvalue);
 	}
 	for (sllve_t* pe = paast->pbegin_blocks->phead; pe != NULL; pe = pe->pnext) {
-		pass_2_for_block(pe->pvvalue);
+		pass_2_for_top_level_block(pe->pvvalue);
 	}
 	{
-		pass_2_for_block(paast->pmain_block);
+		pass_2_for_top_level_block(paast->pmain_block);
 	}
 	for (sllve_t* pe = paast->pend_blocks->phead; pe != NULL; pe = pe->pnext) {
-		pass_2_for_block(pe->pvvalue);
+		pass_2_for_top_level_block(pe->pvvalue);
 	}
 }
 
@@ -177,7 +150,7 @@ static void pass_1_for_func_subr_block(mlr_dsl_ast_node_t* pnode) {
 	mlr_dsl_ast_node_t* plist_node = pnode->pchildren->phead->pnext->pvvalue;
 	for (sllve_t* pe = pdef_name_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
-		stkalc_frame_group_mark_for_define(pframe_group, pparameter_node, "PARAMETER", TRUE/*xxx temp*/);
+		stkalc_frame_group_mark_node_for_define(pframe_group, pparameter_node, "PARAMETER", TRUE/*xxx temp*/);
 	}
 	pass_1_for_statement_block(plist_node, pframe_group);
 	pnode->frame_var_count = pframe->var_count;
@@ -255,18 +228,18 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 		// xxx decide on preorder vs. postorder
 		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 
-		stkalc_frame_group_mark_for_define(pframe_group, pnamenode, "DEFINE", TRUE/*xxx temp*/);
+		stkalc_frame_group_mark_node_for_define(pframe_group, pnamenode, "DEFINE", TRUE/*xxx temp*/);
 		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 		pass_1_for_node(pvaluenode, pframe_group);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) { // xxx rename
 		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
-		stkalc_frame_group_mark_for_write(pframe_group, pnamenode, "WRITE", TRUE/*xxx temp*/);
+		stkalc_frame_group_mark_node_for_write(pframe_group, pnamenode, "WRITE", TRUE/*xxx temp*/);
 		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 		pass_1_for_node(pvaluenode, pframe_group);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
-		stkalc_frame_group_mark_for_read(pframe_group, pnode, "READ", TRUE/*xxx temp*/);
+		stkalc_frame_group_mark_node_for_read(pframe_group, pnode, "READ", TRUE/*xxx temp*/);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) { // xxx comment
 
@@ -281,8 +254,8 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 
 		mlr_dsl_ast_node_t* pknode = pvarsnode->pchildren->phead->pvvalue;
 		mlr_dsl_ast_node_t* pvnode = pvarsnode->pchildren->phead->pnext->pvvalue;
-		stkalc_frame_group_mark_for_define(pframe_group, pknode, "FOR-BIND", TRUE/*xxx temp*/);
-		stkalc_frame_group_mark_for_define(pframe_group, pvnode, "FOR-BIND", TRUE/*xxx temp*/);
+		stkalc_frame_group_mark_node_for_define(pframe_group, pknode, "FOR-BIND", TRUE/*xxx temp*/);
+		stkalc_frame_group_mark_node_for_define(pframe_group, pvnode, "FOR-BIND", TRUE/*xxx temp*/);
 
 		pass_1_for_statement_block(pblocknode, pframe_group);
 		pnode->frame_var_count = pnext_frame->var_count;
@@ -317,9 +290,9 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 
 		for (sllve_t* pe = pkeysnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-			stkalc_frame_group_mark_for_define(pframe_group, pkeynode, "FOR-BIND", TRUE/*xxx temp*/);
+			stkalc_frame_group_mark_node_for_define(pframe_group, pkeynode, "FOR-BIND", TRUE/*xxx temp*/);
 		}
-		stkalc_frame_group_mark_for_define(pframe_group, pvalnode, "FOR-BIND", TRUE/*xxx temp*/);
+		stkalc_frame_group_mark_node_for_define(pframe_group, pvalnode, "FOR-BIND", TRUE/*xxx temp*/);
 		pass_1_for_statement_block(pblocknode, pframe_group);
 		// xxx make accessor ...
 		pnode->frame_var_count = pnext_frame->var_count;
@@ -415,7 +388,7 @@ static stkalc_frame_t* stkalc_frame_group_pop(stkalc_frame_group_t* pframe_group
 	return sllv_pop(pframe_group->plist);
 }
 
-static void stkalc_frame_group_mark_for_define(stkalc_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
+static void stkalc_frame_group_mark_node_for_define(stkalc_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
 	char* desc, int verbose)
 {
 	char* op = "REUSE";
@@ -437,7 +410,7 @@ static void stkalc_frame_group_mark_for_define(stkalc_frame_group_t* pframe_grou
 	}
 }
 
-static void stkalc_frame_group_mark_for_write(stkalc_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
+static void stkalc_frame_group_mark_node_for_write(stkalc_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
 	char* desc, int verbose)
 {
 	char* op = "REUSE";
@@ -471,7 +444,7 @@ static void stkalc_frame_group_mark_for_write(stkalc_frame_group_t* pframe_group
 }
 
 // xxx make this very clear in the header somehow ... this is an assumption to be tracked across modules.
-static void stkalc_frame_group_mark_for_read(stkalc_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
+static void stkalc_frame_group_mark_node_for_read(stkalc_frame_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
 	char* desc, int verbose)
 {
 	char* op = "PRESENT";
@@ -506,16 +479,15 @@ static void stkalc_frame_group_mark_for_read(stkalc_frame_group_t* pframe_group,
 }
 
 // ================================================================
-// PASS 2
-static void pass_2_for_block(mlr_dsl_ast_node_t* pnode) {
+static void pass_2_for_top_level_block(mlr_dsl_ast_node_t* pnode) {
 	int frame_depth = 0;
 	int var_count_below_frame = 0;
 	int var_count_at_frame = 0;
-	int max_depth   = 0;
+	int max_var_depth   = 0;
 	printf("\n");
 	printf("ABSOLUTIZING LOCALS FOR DEFINITION BLOCK [%s]\n", pnode->text);
-	pass_2_for_node(pnode, frame_depth, var_count_below_frame, var_count_at_frame, &max_depth);
-	pnode->recursive_max_var_count = max_depth; // xxx rename(s)
+	pass_2_for_node(pnode, frame_depth, var_count_below_frame, var_count_at_frame, &max_var_depth);
+	pnode->max_var_depth = max_var_depth;
 }
 
 static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,

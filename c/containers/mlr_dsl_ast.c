@@ -18,11 +18,11 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, mlr_dsl_ast_node_type_t t
 	pnode->type      = type;
 	pnode->pchildren = NULL;
 
-	pnode->frame_relative_index    = MD_UNUSED_INDEX;
-	pnode->upstack_frame_count     = MD_UNUSED_INDEX;
-	pnode->absolute_index          = MD_UNUSED_INDEX;
-	pnode->frame_var_count         = MD_UNUSED_INDEX;
-	pnode->recursive_max_var_count = MD_UNUSED_INDEX;
+	pnode->frame_relative_index = MD_UNUSED_INDEX;
+	pnode->upstack_frame_count  = MD_UNUSED_INDEX;
+	pnode->absolute_index       = MD_UNUSED_INDEX;
+	pnode->frame_var_count      = MD_UNUSED_INDEX;
+	pnode->max_var_depth        = MD_UNUSED_INDEX;
 
 	return pnode;
 }
@@ -185,8 +185,8 @@ static void mlr_dsl_ast_node_print_aux(mlr_dsl_ast_node_t* pnode, int level, FIL
 		fprintf(o, " absidx=%d", pnode->absolute_index);
 	if (pnode->frame_var_count != MD_UNUSED_INDEX)
 		fprintf(o, " frct=%d", pnode->frame_var_count);
-	if (pnode->recursive_max_var_count != MD_UNUSED_INDEX)
-		fprintf(o, " maxct=%d", pnode->recursive_max_var_count);
+	if (pnode->max_var_depth != MD_UNUSED_INDEX)
+		fprintf(o, " maxct=%d", pnode->max_var_depth);
 
 	fprintf(o, "\n");
 
