@@ -529,8 +529,8 @@ static void stkalc_frame_group_mark_for_read(stkalc_frame_group_t* pframe_group,
 {
 	int found = FALSE;
 	// xxx loop. if not found, fall back to top frame.
-	pnode->upstack_frame_count = 0;
-	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, pnode->upstack_frame_count++) {
+	int upstack_frame_count = 0;
+	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, upstack_frame_count++) {
 		stkalc_frame_t* pframe = pe->pvvalue;
 		if (stkalc_frame_has(pframe, pnode->text)) {
 			found = TRUE; // xxx dup
@@ -544,8 +544,9 @@ static void stkalc_frame_group_mark_for_read(stkalc_frame_group_t* pframe_group,
 			for (int i = 1; i < pframe_group->plist->length; i++) {
 				printf("::  ");
 			}
-			printf("::  %s %s @ %du%d\n", desc, pnode->text, pnode->frame_relative_index, pnode->upstack_frame_count);
+			printf("::  %s %s @ %du%d\n", desc, pnode->text, pnode->frame_relative_index, upstack_frame_count);
 		}
+		pnode->upstack_frame_count = upstack_frame_count;
 	} else {
 		if (verbose) {
 			for (int i = 1; i < pframe_group->plist->length; i++) {
@@ -557,6 +558,7 @@ static void stkalc_frame_group_mark_for_read(stkalc_frame_group_t* pframe_group,
 }
 
 // ================================================================
+// PASS 2
 static void blocked_ast_absolutify_locals(mlr_dsl_ast_node_t* pnode) {
 	int frame_depth = 0;
 	int var_count_below_frame = 0;
@@ -565,6 +567,7 @@ static void blocked_ast_absolutify_locals(mlr_dsl_ast_node_t* pnode) {
 	printf("\n");
 	printf("ABSOLUTIZING LOCALS FOR DEFINITION BLOCK [%s]\n", pnode->text);
 	blocked_ast_absolutify_locals_aux(pnode, frame_depth, var_count_below_frame, var_count_at_frame, &max_depth);
+	pnode->recursive_max_var_count = max_depth; // xxx rename(s)
 }
 
 static void blocked_ast_absolutify_locals_aux(mlr_dsl_ast_node_t* pnode,
