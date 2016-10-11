@@ -86,7 +86,7 @@ static void blocked_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 // PASS 2
 static void blocked_ast_absolutify_locals(mlr_dsl_ast_node_t* pnode);
 static void blocked_ast_absolutify_locals_aux(mlr_dsl_ast_node_t* pnode,
-	int count_below_frame, int count_at_frame, int* pmax_depth);
+	int frame_depth, int var_count_below_frame, int var_count_at_frame, int* pmax_var_depth);
 
 // ================================================================
 // xxx under construction
@@ -561,30 +561,37 @@ static void stkalc_frame_group_mark_for_read(stkalc_frame_group_t* pframe_group,
 
 // ================================================================
 static void blocked_ast_absolutify_locals(mlr_dsl_ast_node_t* pnode) {
-	int count_below_frame = 0;
-	int count_at_frame = 0;
+	int frame_depth = 0;
+	int var_count_below_frame = 0;
+	int var_count_at_frame = 0;
 	int max_depth   = 0;
 	printf("\n");
 	printf("ABSOLUTIZING LOCALS FOR DEFINITION BLOCK [%s]\n", pnode->text);
-	blocked_ast_absolutify_locals_aux(pnode, count_below_frame, count_at_frame, &max_depth);
+	blocked_ast_absolutify_locals_aux(pnode, frame_depth, var_count_below_frame, var_count_at_frame, &max_depth);
 }
 
 static void blocked_ast_absolutify_locals_aux(mlr_dsl_ast_node_t* pnode,
-	int count_below_frame, int count_at_frame, int* pmax_depth)
+	int frame_depth, int var_count_below_frame, int var_count_at_frame, int* pmax_var_depth)
 {
 	if (pnode->frame_var_count != MD_UNUSED_INDEX) {
-		count_below_frame += count_at_frame;
-		count_at_frame = pnode->frame_var_count;
-		int depth = count_below_frame + count_at_frame;
-		if (depth > *pmax_depth) {
-			*pmax_depth = depth;
+		var_count_below_frame += var_count_at_frame;
+		var_count_at_frame = pnode->frame_var_count;
+		int depth = var_count_below_frame + var_count_at_frame;
+		frame_depth++;
+		if (depth > *pmax_var_depth) {
+			*pmax_var_depth = depth;
 		}
-		printf("FRAME %s under=%d at=%d maxdepth=%d\n",
-			pnode->text, count_below_frame, count_at_frame, *pmax_depth);
+		// xxx funcify
+		for (int i = 1; i < frame_depth; i++)
+			printf("::  ");
+		printf("FRAME [%s] var_count_below=%d var_count_at=%d max_var_depth=%d\n",
+			pnode->text, var_count_below_frame, var_count_at_frame, *pmax_var_depth);
 	}
 
 	if (pnode->frame_relative_index != MD_UNUSED_INDEX) {
-		pnode->absolute_index = count_below_frame + pnode->frame_relative_index;
+		pnode->absolute_index = var_count_below_frame + pnode->frame_relative_index;
+		for (int i = 0; i < frame_depth; i++)
+			printf("::  ");
 		printf("NODE %s %du%d -> %d\n",
 			pnode->text,
 			pnode->frame_relative_index,
@@ -592,16 +599,11 @@ static void blocked_ast_absolutify_locals_aux(mlr_dsl_ast_node_t* pnode,
 			pnode->absolute_index);
 	}
 
-	// frame_relative_index
-	// upstack_frame_count
-	// frame_var_count
-	// recursive_max_var_count
-	// absolute_index
-
 	if (pnode->pchildren != NULL) {
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-			blocked_ast_absolutify_locals_aux(pchild, count_below_frame, count_at_frame, pmax_depth);
+			blocked_ast_absolutify_locals_aux(pchild, frame_depth,
+				var_count_below_frame, var_count_at_frame, pmax_var_depth);
 		}
 	}
 }
