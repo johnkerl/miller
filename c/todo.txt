@@ -46,6 +46,9 @@ UT FOR 4.6.0:
 ----------------------------------------------------------------
 DOC FOR 4.6.0:
 
+-f/-e:
+* emph it's just concat so watch for ;
+
 KW autodoc:
 * kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
 

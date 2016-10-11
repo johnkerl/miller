@@ -44,7 +44,7 @@
 
 // ================================================================
 typedef struct _stkalc_frame_t {
-	long long index_count;
+	long long var_count;
 	lhmsi_t* pnames_to_indices;
 } stkalc_frame_t;
 
@@ -52,7 +52,7 @@ static      stkalc_frame_t* stkalc_frame_alloc();
 static void stkalc_frame_free(stkalc_frame_t* pframe);
 static int  stkalc_frame_has(stkalc_frame_t* pframe, char* name);
 static int  stkalc_frame_get(stkalc_frame_t* pframe, char* name);
-static void stkalc_frame_add(stkalc_frame_t* pframe, char* desc, char* name, int depth, int verbose);
+static int  stkalc_frame_add(stkalc_frame_t* pframe, char* desc, char* name, int depth, int verbose);
 
 // ----------------------------------------------------------------
 typedef struct _stkalc_frame_group_t {
@@ -235,7 +235,7 @@ static void blocked_ast_allocate_locals_for_func_subr_block(mlr_dsl_ast_node_t* 
 		stkalc_frame_group_mark_for_define(pframe_group, pparameter_node, "PARAMETER", TRUE/*xxx temp*/);
 	}
 	blocked_ast_allocate_locals_for_statement_block(plist_node, pframe_group);
-	pnode->frame_var_count = pframe->index_count;
+	pnode->frame_var_count = pframe->var_count;
 	printf("BLK %s frct=%d\n", pnode->text, pnode->frame_var_count);
 
 	stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
@@ -258,7 +258,7 @@ static void blocked_ast_allocate_locals_for_begin_end_block(mlr_dsl_ast_node_t* 
 	stkalc_frame_group_t* pframe_group = stkalc_frame_group_alloc(pframe);
 
 	blocked_ast_allocate_locals_for_statement_block(pnode->pchildren->phead->pvvalue, pframe_group);
-	pnode->frame_var_count = pframe->index_count;
+	pnode->frame_var_count = pframe->var_count;
 	printf("BLK %s frct=%d\n", pnode->text, pnode->frame_var_count); // xxx fix name
 
 	stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
@@ -277,7 +277,7 @@ static void blocked_ast_allocate_locals_for_main_block(mlr_dsl_ast_node_t* pnode
 	stkalc_frame_group_t* pframe_group = stkalc_frame_group_alloc(pframe);
 
 	blocked_ast_allocate_locals_for_statement_block(pnode, pframe_group);
-	pnode->frame_var_count = pframe->index_count;
+	pnode->frame_var_count = pframe->var_count;
 	printf("BLK %s frct=%d\n", pnode->text, pnode->frame_var_count); // xxx fix name
 
 	stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
@@ -340,7 +340,7 @@ static void blocked_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 		stkalc_frame_group_mark_for_define(pframe_group, pvnode, "FOR-BIND", TRUE/*xxx temp*/);
 
 		blocked_ast_allocate_locals_for_statement_block(pblocknode, pframe_group);
-		pnode->frame_var_count = pnext_frame->index_count;
+		pnode->frame_var_count = pnext_frame->var_count;
 
 		stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
 
@@ -377,7 +377,7 @@ static void blocked_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 		stkalc_frame_group_mark_for_define(pframe_group, pvalnode, "FOR-BIND", TRUE/*xxx temp*/);
 		blocked_ast_allocate_locals_for_statement_block(pblocknode, pframe_group);
 		// xxx make accessor ...
-		pnode->frame_var_count = pnext_frame->index_count;
+		pnode->frame_var_count = pnext_frame->var_count;
 
 		stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
 		for (int i = 0; i < pframe_group->plist->length; i++)
@@ -398,7 +398,7 @@ static void blocked_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 				stkalc_frame_group_push(pframe_group, pnext_frame);
 
 				blocked_ast_allocate_locals_for_statement_block(pchild, pframe_group);
-				pchild->frame_var_count = pnext_frame->index_count;
+				pchild->frame_var_count = pnext_frame->var_count;
 
 				stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
 
@@ -416,7 +416,7 @@ static void blocked_ast_allocate_locals_for_node(mlr_dsl_ast_node_t* pnode,
 // ================================================================
 static stkalc_frame_t* stkalc_frame_alloc() {
 	stkalc_frame_t* pframe = mlr_malloc_or_die(sizeof(stkalc_frame_t));
-	pframe->index_count = 0;
+	pframe->var_count = 0;
 	pframe->pnames_to_indices = lhmsi_alloc();
 	return pframe;
 }
@@ -436,9 +436,11 @@ static int stkalc_frame_get(stkalc_frame_t* pframe, char* name) {
 	return lhmsi_get(pframe->pnames_to_indices, name);
 }
 
-static void stkalc_frame_add(stkalc_frame_t* pframe, char* desc, char* name, int depth, int verbose) {
-	lhmsi_put(pframe->pnames_to_indices, name, pframe->index_count, NO_FREE);
-	pframe->index_count++;
+static int stkalc_frame_add(stkalc_frame_t* pframe, char* desc, char* name, int depth, int verbose) {
+	int rv = pframe->var_count;
+	lhmsi_put(pframe->pnames_to_indices, name, pframe->var_count, NO_FREE);
+	pframe->var_count++;
+	return rv;
 }
 
 // ================================================================
@@ -472,12 +474,15 @@ static void stkalc_frame_group_mark_for_define(stkalc_frame_group_t* pframe_grou
 {
 	char* op = "REUSE";
 	stkalc_frame_t* pframe = pframe_group->plist->phead->pvvalue;
-	if (!stkalc_frame_has(pframe, pnode->text)) {
-		stkalc_frame_add(pframe, desc, pnode->text, pframe_group->plist->length, verbose);
+	pnode->upstack_frame_count = 0;
+	if (stkalc_frame_has(pframe, pnode->text)) {
+		pnode->frame_relative_index = stkalc_frame_get(pframe, pnode->text);
+	} else {
+		// xxx this factorization is gross.
+		pnode->frame_relative_index = stkalc_frame_add(pframe, desc,
+			pnode->text, pframe_group->plist->length, verbose);
 		op = "ADD";
 	}
-	pnode->upstack_frame_count = 0;
-	pnode->frame_relative_index = stkalc_frame_get(pframe, pnode->text);
 	if (verbose) {
 		for (int i = 1; i < pframe_group->plist->length; i++) {
 			printf("::  ");
@@ -506,9 +511,10 @@ static void stkalc_frame_group_mark_for_write(stkalc_frame_group_t* pframe_group
 	if (!found) {
 		pnode->upstack_frame_count = 0;
 		stkalc_frame_t* pframe = pframe_group->plist->phead->pvvalue;
-		stkalc_frame_add(pframe, desc, pnode->text, pnode->upstack_frame_count, verbose);
+		// xxx get this via fcn retval?
+		pnode->frame_relative_index = stkalc_frame_add(pframe, desc,
+			pnode->text, pnode->upstack_frame_count, verbose);
 		// xxx temp
-		pnode->frame_relative_index = pframe->index_count;
 		op = "ADD";
 	}
 
