@@ -30,8 +30,6 @@ void* file_reader_stdio_vopen(void* pvstate, char* prepipe, char* filename) {
 			sprintf(command, "%s", prepipe);
 		else
 			sprintf(command, "%s < %s", prepipe, escaped_filename);
-		//printf("<<<%s>>>\n", escaped_filename);
-		//printf("<<<%s>>>\n", command);
 		input_stream = popen(command, "r");
 		if (input_stream == NULL) {
 			fprintf(stderr, "%s: Couldn't popen \"%s\" for read.\n", MLR_GLOBALS.bargv0, command);
