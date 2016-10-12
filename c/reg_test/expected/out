@@ -9349,7 +9349,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9373,7 +9373,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9397,7 +9397,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9421,7 +9421,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9445,7 +9445,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9469,7 +9469,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9493,7 +9493,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9517,7 +9517,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9541,7 +9541,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9565,7 +9565,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9589,7 +9589,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9613,7 +9613,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9637,7 +9637,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9661,7 +9661,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9685,7 +9685,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9709,7 +9709,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9733,7 +9733,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9757,7 +9757,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9781,7 +9781,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9805,7 +9805,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9829,7 +9829,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9853,7 +9853,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9877,7 +9877,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9901,7 +9901,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9925,7 +9925,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9949,7 +9949,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9973,7 +9973,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -9997,7 +9997,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10021,7 +10021,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10045,7 +10045,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10069,7 +10069,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10093,7 +10093,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10117,7 +10117,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10141,7 +10141,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10165,7 +10165,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10189,7 +10189,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10213,7 +10213,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10237,7 +10237,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10261,7 +10261,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10285,7 +10285,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10309,7 +10309,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10333,7 +10333,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10357,7 +10357,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10381,7 +10381,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10405,7 +10405,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10429,7 +10429,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10453,7 +10453,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10477,7 +10477,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10501,7 +10501,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10525,7 +10525,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10549,7 +10549,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10573,7 +10573,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10597,7 +10597,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10621,7 +10621,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10645,7 +10645,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10669,7 +10669,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10693,7 +10693,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10717,7 +10717,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10741,7 +10741,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10765,7 +10765,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10789,7 +10789,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10813,7 +10813,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10837,7 +10837,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10861,7 +10861,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10885,7 +10885,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10909,7 +10909,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10933,7 +10933,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10957,7 +10957,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -10981,7 +10981,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11005,7 +11005,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11029,7 +11029,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11053,7 +11053,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11077,7 +11077,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11101,7 +11101,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11125,7 +11125,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11149,7 +11149,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11173,7 +11173,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11197,7 +11197,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11221,7 +11221,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11245,7 +11245,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11269,7 +11269,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11293,7 +11293,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11317,7 +11317,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11341,7 +11341,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11365,7 +11365,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11389,7 +11389,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11413,7 +11413,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11437,7 +11437,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11461,7 +11461,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11485,7 +11485,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11509,7 +11509,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11533,7 +11533,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11557,7 +11557,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11581,7 +11581,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11605,7 +11605,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11629,7 +11629,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11653,7 +11653,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11677,7 +11677,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11701,7 +11701,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11725,7 +11725,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11749,7 +11749,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11773,7 +11773,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11797,7 +11797,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11821,7 +11821,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11845,7 +11845,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11869,7 +11869,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11893,7 +11893,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11917,7 +11917,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11941,7 +11941,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11965,7 +11965,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -11989,7 +11989,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12013,7 +12013,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12037,7 +12037,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12061,7 +12061,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12085,7 +12085,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12109,7 +12109,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12131,7 +12131,7 @@ text="block", type=STATEMENT_BLOCK:
             text="+", type=OPERATOR:
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12151,7 +12151,7 @@ text="block", type=STATEMENT_BLOCK:
         text="+", type=OPERATOR:
             text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12171,7 +12171,7 @@ text="block", type=STATEMENT_BLOCK:
             text="-", type=OPERATOR:
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12191,7 +12191,7 @@ text="block", type=STATEMENT_BLOCK:
         text="-", type=OPERATOR:
             text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12211,7 +12211,7 @@ text="block", type=STATEMENT_BLOCK:
             text="!", type=OPERATOR:
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12231,7 +12231,7 @@ text="block", type=STATEMENT_BLOCK:
         text="!", type=OPERATOR:
             text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12251,7 +12251,7 @@ text="block", type=STATEMENT_BLOCK:
             text="~", type=OPERATOR:
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12271,7 +12271,7 @@ text="block", type=STATEMENT_BLOCK:
         text="~", type=OPERATOR:
             text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12292,7 +12292,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12314,7 +12314,7 @@ text="block", type=STATEMENT_BLOCK:
         text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12339,7 +12339,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="4", type=STRNUM_LITERAL.
             text="5", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12367,7 +12367,7 @@ text="block", type=STATEMENT_BLOCK:
             text="4", type=STRNUM_LITERAL.
         text="5", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12395,7 +12395,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="4", type=STRNUM_LITERAL.
                 text="5", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12423,7 +12423,7 @@ text="block", type=STATEMENT_BLOCK:
             text="4", type=STRNUM_LITERAL.
             text="5", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12453,7 +12453,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12477,7 +12477,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12501,7 +12501,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12525,7 +12525,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12549,7 +12549,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12573,7 +12573,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12597,7 +12597,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12621,7 +12621,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12645,7 +12645,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12669,7 +12669,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12693,7 +12693,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12717,7 +12717,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12741,7 +12741,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12765,7 +12765,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12789,7 +12789,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12813,7 +12813,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12837,7 +12837,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12861,7 +12861,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12885,7 +12885,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12909,7 +12909,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12933,7 +12933,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12957,7 +12957,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -12981,7 +12981,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13005,7 +13005,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13029,7 +13029,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13053,7 +13053,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13077,7 +13077,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13101,7 +13101,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13125,7 +13125,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13149,7 +13149,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13173,7 +13173,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13197,7 +13197,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13221,7 +13221,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13245,7 +13245,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13269,7 +13269,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13293,7 +13293,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13317,7 +13317,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13341,7 +13341,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13365,7 +13365,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13389,7 +13389,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13413,7 +13413,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13437,7 +13437,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13461,7 +13461,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13485,7 +13485,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13509,7 +13509,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13533,7 +13533,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13557,7 +13557,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13581,7 +13581,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13605,7 +13605,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13629,7 +13629,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13653,7 +13653,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13677,7 +13677,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13701,7 +13701,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13725,7 +13725,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13749,7 +13749,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13773,7 +13773,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13797,7 +13797,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13821,7 +13821,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13845,7 +13845,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13869,7 +13869,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13893,7 +13893,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13917,7 +13917,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13941,7 +13941,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13965,7 +13965,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -13989,7 +13989,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14013,7 +14013,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14037,7 +14037,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14061,7 +14061,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14086,7 +14086,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14112,7 +14112,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14138,7 +14138,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14164,7 +14164,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14190,7 +14190,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14216,7 +14216,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14242,7 +14242,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14268,7 +14268,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14294,7 +14294,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="-", type=OPERATOR:
                     text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14320,7 +14320,7 @@ text="block", type=STATEMENT_BLOCK:
             text="-", type=OPERATOR:
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14346,7 +14346,7 @@ text="block", type=STATEMENT_BLOCK:
             text="-", type=OPERATOR:
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14372,7 +14372,7 @@ text="block", type=STATEMENT_BLOCK:
         text="-", type=OPERATOR:
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14398,7 +14398,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14424,7 +14424,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14450,7 +14450,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14476,7 +14476,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14502,7 +14502,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="2", type=STRNUM_LITERAL.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14528,7 +14528,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14554,7 +14554,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="2", type=STRNUM_LITERAL.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14580,7 +14580,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14606,7 +14606,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="~", type=OPERATOR:
                     text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14632,7 +14632,7 @@ text="block", type=STATEMENT_BLOCK:
             text="~", type=OPERATOR:
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14658,7 +14658,7 @@ text="block", type=STATEMENT_BLOCK:
             text="~", type=OPERATOR:
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14684,7 +14684,7 @@ text="block", type=STATEMENT_BLOCK:
         text="~", type=OPERATOR:
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14715,7 +14715,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="c", type=FIELD_NAME.
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14751,7 +14751,7 @@ text="block", type=STATEMENT_BLOCK:
             text="c", type=FIELD_NAME.
             text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14787,7 +14787,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="c", type=FIELD_NAME.
                     text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14823,7 +14823,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="c", type=FIELD_NAME.
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14859,7 +14859,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="c", type=FIELD_NAME.
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14895,7 +14895,7 @@ text="block", type=STATEMENT_BLOCK:
             text="c", type=FIELD_NAME.
             text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14931,7 +14931,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="c", type=FIELD_NAME.
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -14967,7 +14967,7 @@ text="block", type=STATEMENT_BLOCK:
             text="c", type=FIELD_NAME.
             text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15002,7 +15002,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="c", type=FIELD_NAME.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15036,7 +15036,7 @@ text="block", type=STATEMENT_BLOCK:
             text="c", type=FIELD_NAME.
             text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15061,7 +15061,7 @@ text="block", type=STATEMENT_BLOCK:
         text="x", type=FIELD_NAME.
         text="true", type=BOOLEAN_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15077,7 +15077,7 @@ AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="true", type=BOOLEAN_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15098,7 +15098,7 @@ text="block", type=STATEMENT_BLOCK:
         text="x", type=FIELD_NAME.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15123,7 +15123,7 @@ text="block", type=STATEMENT_BLOCK:
             text="1", type=STRNUM_LITERAL.
             text="0", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15148,7 +15148,7 @@ text="block", type=STATEMENT_BLOCK:
         text="x", type=FIELD_NAME.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15173,7 +15173,7 @@ text="block", type=STATEMENT_BLOCK:
             text="0", type=STRNUM_LITERAL.
         text="false", type=BOOLEAN_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15196,7 +15196,7 @@ text="block", type=STATEMENT_BLOCK:
         text="x", type=FIELD_NAME.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15217,7 +15217,7 @@ text="block", type=STATEMENT_BLOCK:
         text="true", type=BOOLEAN_LITERAL.
         text="false", type=BOOLEAN_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15240,7 +15240,7 @@ text="block", type=STATEMENT_BLOCK:
         text="x", type=FIELD_NAME.
         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15265,7 +15265,7 @@ text="block", type=STATEMENT_BLOCK:
             text="false", type=BOOLEAN_LITERAL.
         text="true", type=BOOLEAN_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15289,7 +15289,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="x", type=FIELD_NAME.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15315,7 +15315,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="x", type=FIELD_NAME.
                 text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15339,7 +15339,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15361,7 +15361,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15383,7 +15383,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15405,7 +15405,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15427,7 +15427,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15449,7 +15449,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15471,7 +15471,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15493,7 +15493,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15515,7 +15515,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15537,7 +15537,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15559,7 +15559,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15581,7 +15581,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15603,7 +15603,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15625,7 +15625,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15647,7 +15647,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15669,7 +15669,7 @@ text="block", type=STATEMENT_BLOCK:
             text="y", type=FIELD_NAME.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15718,7 +15718,7 @@ RAW AST:
 AST ROOT:
 (null)
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15739,7 +15739,7 @@ text="block", type=STATEMENT_BLOCK:
     text="begin", type=BEGIN:
         text="begin_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -15757,7 +15757,7 @@ text="block", type=STATEMENT_BLOCK:
     text="begin", type=BEGIN:
         text="begin_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -15775,7 +15775,7 @@ text="block", type=STATEMENT_BLOCK:
     text="begin", type=BEGIN:
         text="begin_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -15793,7 +15793,7 @@ text="block", type=STATEMENT_BLOCK:
     text="begin", type=BEGIN:
         text="begin_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -15815,7 +15815,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="x", type=STRING_LITERAL.
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -15841,7 +15841,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="x", type=STRING_LITERAL.
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -15867,7 +15867,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="x", type=STRING_LITERAL.
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -15897,7 +15897,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="y", type=STRING_LITERAL.
                 text="2", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -15931,7 +15931,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="y", type=STRING_LITERAL.
                 text="2", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -15958,7 +15958,7 @@ text="block", type=STATEMENT_BLOCK:
         text="true", type=BOOLEAN_LITERAL.
         text="cond_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15976,7 +15976,7 @@ text="block", type=STATEMENT_BLOCK:
         text="true", type=BOOLEAN_LITERAL.
         text="cond_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -15994,7 +15994,7 @@ text="block", type=STATEMENT_BLOCK:
         text="true", type=BOOLEAN_LITERAL.
         text="cond_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -16012,7 +16012,7 @@ text="block", type=STATEMENT_BLOCK:
         text="true", type=BOOLEAN_LITERAL.
         text="cond_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -16034,7 +16034,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="x", type=STRING_LITERAL.
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -16060,7 +16060,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="x", type=STRING_LITERAL.
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -16086,7 +16086,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="x", type=STRING_LITERAL.
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -16116,7 +16116,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="y", type=STRING_LITERAL.
                 text="2", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -16150,7 +16150,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="y", type=STRING_LITERAL.
                 text="2", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -16175,7 +16175,7 @@ text="block", type=STATEMENT_BLOCK:
     text="end", type=END:
         text="end_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -16193,7 +16193,7 @@ text="block", type=STATEMENT_BLOCK:
     text="end", type=END:
         text="end_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -16211,7 +16211,7 @@ text="block", type=STATEMENT_BLOCK:
     text="end", type=END:
         text="end_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -16229,7 +16229,7 @@ text="block", type=STATEMENT_BLOCK:
     text="end", type=END:
         text="end_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -16251,7 +16251,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="x", type=STRING_LITERAL.
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -16277,7 +16277,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="x", type=STRING_LITERAL.
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -16303,7 +16303,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="x", type=STRING_LITERAL.
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -16333,7 +16333,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="y", type=STRING_LITERAL.
                 text="2", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -16367,7 +16367,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="y", type=STRING_LITERAL.
                 text="2", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -16406,7 +16406,7 @@ text="block", type=STATEMENT_BLOCK:
                             text="x", type=STRING_LITERAL.
                         text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -16434,7 +16434,7 @@ text="block", type=STATEMENT_BLOCK:
                             text="x", type=STRING_LITERAL.
                         text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -16463,7 +16463,7 @@ text="block", type=STATEMENT_BLOCK:
                             text="x", type=STRING_LITERAL.
                         text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -16491,7 +16491,7 @@ text="block", type=STATEMENT_BLOCK:
                             text="x", type=STRING_LITERAL.
                         text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -16519,7 +16519,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="x", type=FIELD_NAME.
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -16541,7 +16541,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="x", type=STRING_LITERAL.
                 text="y", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -16563,7 +16563,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="x", type=FIELD_NAME.
                 text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -16585,7 +16585,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="x", type=STRING_LITERAL.
                 text="y", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -16606,7 +16606,7 @@ text="block", type=STATEMENT_BLOCK:
             text="unset", type=UNSET:
                 text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -16625,7 +16625,7 @@ text="block", type=STATEMENT_BLOCK:
             text="unset", type=UNSET:
                 text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -16644,7 +16644,7 @@ text="block", type=STATEMENT_BLOCK:
             text="unset", type=UNSET:
                 text="$*", type=FULL_SREC.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -16663,7 +16663,7 @@ text="block", type=STATEMENT_BLOCK:
             text="unset", type=UNSET:
                 text="$*", type=FULL_SREC.
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -16681,7 +16681,7 @@ AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="break", type=BREAK.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -16695,7 +16695,7 @@ AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="continue", type=CONTINUE.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -16711,7 +16711,7 @@ AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="break", type=BREAK.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -16725,7 +16725,7 @@ AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="continue", type=CONTINUE.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -20483,7 +20483,7 @@ text="block", type=STATEMENT_BLOCK:
         text="x", type=FIELD_NAME.
         text="bcd", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -20503,7 +20503,7 @@ text="block", type=STATEMENT_BLOCK:
         text="x", type=FIELD_NAME.
         text="^bcd", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -20521,7 +20521,7 @@ text="block", type=STATEMENT_BLOCK:
         text="x", type=FIELD_NAME.
         text="^abc", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -20542,7 +20542,7 @@ text="block", type=STATEMENT_BLOCK:
         text="x", type=FIELD_NAME.
         text="^abc$", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -20561,7 +20561,7 @@ text="block", type=STATEMENT_BLOCK:
         text="x", type=FIELD_NAME.
         text="^a.*d$", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -20582,7 +20582,7 @@ text="block", type=STATEMENT_BLOCK:
             text="^a.*", type=STRNUM_LITERAL.
             text="d$", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -20603,7 +20603,7 @@ text="block", type=STATEMENT_BLOCK:
         text="y", type=FIELD_NAME.
         text=""..", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -20622,7 +20622,7 @@ text="block", type=STATEMENT_BLOCK:
         text="x", type=FIELD_NAME.
         text="bcd", type=REGEXI.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -20645,7 +20645,7 @@ text="block", type=STATEMENT_BLOCK:
         text="x", type=FIELD_NAME.
         text="^bcd", type=REGEXI.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -20663,7 +20663,7 @@ text="block", type=STATEMENT_BLOCK:
         text="x", type=FIELD_NAME.
         text="^abc", type=REGEXI.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -20688,7 +20688,7 @@ text="block", type=STATEMENT_BLOCK:
         text="x", type=FIELD_NAME.
         text="^abc$", type=REGEXI.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -20708,7 +20708,7 @@ text="block", type=STATEMENT_BLOCK:
         text="x", type=FIELD_NAME.
         text="^a.*d$", type=REGEXI.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -20730,7 +20730,7 @@ text="block", type=STATEMENT_BLOCK:
             text="^a.*", type=STRNUM_LITERAL.
             text="d$", type=REGEXI.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -22785,7 +22785,7 @@ text="block", type=STATEMENT_BLOCK:
             text="ox", type=STRING_LITERAL.
         text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -22848,7 +22848,7 @@ text="block", type=STATEMENT_BLOCK:
             text="ox", type=STRING_LITERAL.
         text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -22905,7 +22905,7 @@ text="block", type=STATEMENT_BLOCK:
             text="ox", type=STRING_LITERAL.
         text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -22960,7 +22960,7 @@ text="block", type=STATEMENT_BLOCK:
             text="ox", type=STRING_LITERAL.
         text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -23024,7 +23024,7 @@ text="block", type=STATEMENT_BLOCK:
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
             text="rsum", type=STRING_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -23116,7 +23116,7 @@ text="block", type=STATEMENT_BLOCK:
             text="c", type=STRING_LITERAL.
         text="i", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -23241,7 +23241,7 @@ text="block", type=STATEMENT_BLOCK:
             text="c", type=STRING_LITERAL.
         text="i", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -23332,7 +23332,7 @@ text="block", type=STATEMENT_BLOCK:
             text="ox", type=STRING_LITERAL.
         text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -23402,7 +23402,7 @@ text="block", type=STATEMENT_BLOCK:
                         text="c", type=STRING_LITERAL.
                 text="stream", type=STREAM:
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -23481,7 +23481,7 @@ text="block", type=STATEMENT_BLOCK:
                         text="c", type=STRING_LITERAL.
                 text="stream", type=STREAM:
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -23568,7 +23568,7 @@ text="block", type=STATEMENT_BLOCK:
                         text="mean", type=STRING_LITERAL.
                 text="stream", type=STREAM:
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -23676,7 +23676,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="sum", type=STRING_LITERAL.
             text="x", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -23777,7 +23777,7 @@ text="block", type=STATEMENT_BLOCK:
                             text="h", type=STRING_LITERAL.
                 text="6", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -24347,7 +24347,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="z", type=STRING_LITERAL.
                 text="9", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -24420,7 +24420,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="z", type=STRING_LITERAL.
                 text="9", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -24499,7 +24499,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="z", type=STRING_LITERAL.
                 text="9", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -24584,7 +24584,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="z", type=STRING_LITERAL.
                 text="9", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -24683,7 +24683,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="z", type=STRING_LITERAL.
                 text="9", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -24771,7 +24771,7 @@ text="block", type=STATEMENT_BLOCK:
                             text="x", type=STRING_LITERAL.
                         text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -24834,7 +24834,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="y", type=FIELD_NAME.
                     text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -24925,7 +24925,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="y", type=FIELD_NAME.
                     text="1008", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -25038,7 +25038,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="y", type=FIELD_NAME.
                     text="1016", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -25176,7 +25176,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="y", type=FIELD_NAME.
                     text="1027", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -25339,7 +25339,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="y", type=FIELD_NAME.
                     text="1041", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -25462,7 +25462,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="y", type=FIELD_NAME.
                     text="3", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -25556,7 +25556,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="y", type=FIELD_NAME.
                     text="9", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -25675,7 +25675,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="y", type=FIELD_NAME.
                     text="18", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -25819,7 +25819,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="y", type=FIELD_NAME.
                     text="30", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -25930,7 +25930,7 @@ text="block", type=STATEMENT_BLOCK:
             text="indirect_field_name", type=INDIRECT_FIELD_NAME:
                 text="y", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -25995,7 +25995,7 @@ text="block", type=STATEMENT_BLOCK:
             text="t", type=FIELD_NAME.
             text="u", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -26049,7 +26049,7 @@ text="block", type=STATEMENT_BLOCK:
             text="all", type=ALL.
         text="stream", type=STREAM:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -26109,7 +26109,7 @@ text="block", type=STATEMENT_BLOCK:
             text="@*", type=FULL_OOSVAR.
         text="stream", type=STREAM:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -26163,7 +26163,7 @@ text="block", type=STATEMENT_BLOCK:
             text="all", type=ALL.
         text="stream", type=STREAM:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -26212,7 +26212,7 @@ text="block", type=STATEMENT_BLOCK:
             text="all", type=ALL.
         text="stream", type=STREAM:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -26267,7 +26267,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="i", type=FIELD_NAME.
                     text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -26309,7 +26309,7 @@ text="block", type=STATEMENT_BLOCK:
             text="i", type=FIELD_NAME.
             text="5", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -26352,7 +26352,7 @@ text="block", type=STATEMENT_BLOCK:
             text="v", type=NON_SIGIL_NAME.
         text="for_full_srec_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -26389,7 +26389,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="nr", type=FIELD_NAME.
                 text="NR", type=CONTEXT_VARIABLE.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -26432,7 +26432,7 @@ text="block", type=STATEMENT_BLOCK:
         text="j", type=FIELD_NAME.
         text="NR", type=CONTEXT_VARIABLE.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -26482,7 +26482,7 @@ text="block", type=STATEMENT_BLOCK:
         text="j", type=FIELD_NAME.
         text="NR", type=CONTEXT_VARIABLE.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -26534,7 +26534,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="k", type=BOUND_VARIABLE.
                 text="other", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -26578,7 +26578,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="v", type=BOUND_VARIABLE.
                 text="k", type=BOUND_VARIABLE.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -26634,7 +26634,7 @@ text="block", type=STATEMENT_BLOCK:
                                 text="indirect_field_name", type=INDIRECT_FIELD_NAME:
                                     text="k", type=BOUND_VARIABLE.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -26704,7 +26704,7 @@ text="block", type=STATEMENT_BLOCK:
                                     text="indirect_field_name", type=INDIRECT_FIELD_NAME:
                                         text="k", type=BOUND_VARIABLE.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -26819,7 +26819,7 @@ text="block", type=STATEMENT_BLOCK:
                         text="d", type=STRNUM_LITERAL.
                 text="stream", type=STREAM:
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -27064,7 +27064,7 @@ text="block", type=STATEMENT_BLOCK:
             text="k", type=NON_SIGIL_NAME.
         text="for_full_srec_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -27089,7 +27089,7 @@ text="block", type=STATEMENT_BLOCK:
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -27117,7 +27117,7 @@ text="block", type=STATEMENT_BLOCK:
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -27146,7 +27146,7 @@ text="block", type=STATEMENT_BLOCK:
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -27175,7 +27175,7 @@ text="block", type=STATEMENT_BLOCK:
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -27205,7 +27205,7 @@ text="block", type=STATEMENT_BLOCK:
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -27236,7 +27236,7 @@ text="block", type=STATEMENT_BLOCK:
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -27267,7 +27267,7 @@ text="block", type=STATEMENT_BLOCK:
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -27298,7 +27298,7 @@ text="block", type=STATEMENT_BLOCK:
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -27329,7 +27329,7 @@ text="block", type=STATEMENT_BLOCK:
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -27360,7 +27360,7 @@ text="block", type=STATEMENT_BLOCK:
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37153,7 +37153,7 @@ text="block", type=STATEMENT_BLOCK:
             text="v", type=STRING_LITERAL.
         text="$*", type=FULL_SREC.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37174,7 +37174,7 @@ text="block", type=STATEMENT_BLOCK:
             text="1", type=STRNUM_LITERAL.
         text="$*", type=FULL_SREC.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37196,7 +37196,7 @@ text="block", type=STATEMENT_BLOCK:
             text="2", type=FIELD_NAME.
         text="$*", type=FULL_SREC.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37222,7 +37222,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="v", type=STRING_LITERAL.
                 text="$*", type=FULL_SREC.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37253,7 +37253,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="1", type=STRNUM_LITERAL.
                 text="$*", type=FULL_SREC.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37285,7 +37285,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="2", type=FIELD_NAME.
                 text="$*", type=FULL_SREC.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37511,7 +37511,7 @@ text="block", type=STATEMENT_BLOCK:
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
             text="v", type=STRING_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37532,7 +37532,7 @@ text="block", type=STATEMENT_BLOCK:
             text="v", type=STRING_LITERAL.
             text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37554,7 +37554,7 @@ text="block", type=STATEMENT_BLOCK:
             text="v", type=STRING_LITERAL.
             text="2", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37580,7 +37580,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="v", type=STRING_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37611,7 +37611,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="v", type=STRING_LITERAL.
                     text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37643,7 +37643,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="v", type=STRING_LITERAL.
                     text="2", type=FIELD_NAME.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37686,7 +37686,7 @@ text="block", type=STATEMENT_BLOCK:
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
             text="v", type=STRING_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37709,7 +37709,7 @@ text="block", type=STATEMENT_BLOCK:
             text="v", type=STRING_LITERAL.
             text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37733,7 +37733,7 @@ text="block", type=STATEMENT_BLOCK:
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
             text="v", type=STRING_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37758,7 +37758,7 @@ text="block", type=STATEMENT_BLOCK:
             text="v", type=STRING_LITERAL.
             text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37784,7 +37784,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="v", type=STRING_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -37813,7 +37813,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="v", type=STRING_LITERAL.
                     text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -37843,7 +37843,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="v", type=STRING_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -37874,7 +37874,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="v", type=STRING_LITERAL.
                     text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 BEGIN-BLOCK:
 text="begin", type=BEGIN:
@@ -37907,7 +37907,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="v", type=STRING_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37940,7 +37940,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="v", type=STRING_LITERAL.
                     text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -37974,7 +37974,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="v", type=STRING_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -38009,7 +38009,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="v", type=STRING_LITERAL.
                     text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK:
@@ -38040,7 +38040,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="v", type=STRING_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -38069,7 +38069,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="v", type=STRING_LITERAL.
                     text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -38099,7 +38099,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="v", type=STRING_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -38130,7 +38130,7 @@ text="block", type=STATEMENT_BLOCK:
                     text="v", type=STRING_LITERAL.
                     text="1", type=STRNUM_LITERAL.
 
-ANALYZED AST:
+BLOCKED AST:
 
 END-BLOCK:
 text="end", type=END:
@@ -42685,7 +42685,7 @@ text="block", type=STATEMENT_BLOCK:
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
 
-ANALYZED AST:
+BLOCKED AST:
 
 FUNCTION DEFINITION:
 text="f", type=FUNC_DEF:
