@@ -63,6 +63,7 @@ TEST_ARGPARSE_SRCS = \
 
 TEST_BYTE_READERS_SRCS = \
   lib/mlrutil.c \
+  lib/mlrescape.c \
   lib/mlr_test_util.c \
   lib/mlr_globals.c \
   lib/string_builder.c \
@@ -82,6 +83,7 @@ TEST_PEEK_FILE_READER_SRCS = \
 
 TEST_LREC_SRCS = \
   lib/mlrutil.c \
+  lib/mlrescape.c \
   lib/mlrregex.c \
   lib/mlr_globals.c \
   lib/string_builder.c \
@@ -116,6 +118,7 @@ TEST_LREC_SRCS = \
 
 TEST_MULTIPLE_CONTAINERS_SRCS = \
   lib/mlrutil.c \
+  lib/mlrescape.c \
   lib/mlrregex.c \
   lib/mlr_globals.c \
   lib/string_builder.c \
@@ -227,6 +230,7 @@ TEST_RVAL_EVALUATORS_SRCS = \
 
 TEST_JOIN_BUCKET_KEEPER_SRCS = \
   lib/mlrutil.c \
+  lib/mlrescape.c \
   lib/mlr_globals.c \
   lib/string_builder.c \
   lib/context.c \
@@ -267,6 +271,7 @@ TEST_JOIN_BUCKET_KEEPER_SRCS = \
 
 EXPERIMENTAL_READER_SRCS = \
   lib/mlrutil.c \
+  lib/mlrescape.c \
   lib/mlrregex.c \
   lib/mlr_globals.c \
   lib/string_builder.c \

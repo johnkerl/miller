@@ -3,6 +3,7 @@
 #include "input/byte_readers.h"
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
+#include "lib/mlrescape.h"
 
 typedef struct _stdio_byte_reader_state_t {
 	char* filename;
@@ -51,17 +52,19 @@ static int stdio_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe
 			}
 		}
 	} else {
-		char* command = mlr_malloc_or_die(strlen(prepipe) + 5 + strlen(filename) + 1);
+		char* escaped_filename = alloc_file_name_escaped_for_popen(filename);
+		char* command = mlr_malloc_or_die(strlen(prepipe) + 3 + strlen(escaped_filename) + 1);
 		if (streq(filename, "-"))
 			sprintf(command, "%s", prepipe);
 		else
-			sprintf(command, "%s < '%s'", prepipe, filename);
+			sprintf(command, "%s < %s", prepipe, escaped_filename);
 		pstate->fp = popen(command, "r");
 		if (pstate->fp == NULL) {
 			fprintf(stderr, "%s: Couldn't popen \"%s\" for read.\n", MLR_GLOBALS.bargv0, command);
 			perror(command);
 			exit(1);
 		}
+		free(escaped_filename);
 		free(command);
 	}
 

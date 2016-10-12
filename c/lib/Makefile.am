@@ -2,6 +2,8 @@ noinst_LTLIBRARIES=	libmlr.la
 libmlr_la_SOURCES=	minunit.h \
 			mlr_globals.c \
 			mlr_globals.h \
+			mlrescape.c \
+			mlrescape.h \
 			mlrmath.c \
 			mlrmath.h \
 			mlrstat.c \
