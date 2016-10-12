@@ -52,8 +52,8 @@
 // ================================================================
 
 // ----------------------------------------------------------------
-// xxx comment
-// xxx move to own source&header
+// Two-pass stack allocator which operates on the block-structured AST
+// before the CST is build (mlr_dsl_stack_allocate.c).
 void blocked_ast_allocate_locals(blocked_ast_t* paast, int trace);
 
 // ----------------------------------------------------------------

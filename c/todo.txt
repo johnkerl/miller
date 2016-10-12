@@ -27,11 +27,11 @@ FUNCTIONALITY FOR 4.6.0:
     k sllv_pop/append to make it quick
     k cst_pre_analyze_t struct or some such?
     k begin/end -> statement lists, and UT the lexical scoping.
-    ! propagate -v to post-analyze
+    k propagate -v to post-analyze
     ! BOUNDVAR->LOCALVAR thruout
     ? ctor-0 frindex field @ mlr_dsl_ast_node_t?
-  o 2nd AST pass: analyze each for max depth: local def, write, read. adapt existing lmhsv/resolve logic.
-  o 3rd AST pass: rewrite localvar names w/ frame-relative indices
+  k 2nd AST pass: analyze each for max depth: local def, write, read. adapt existing lmhsv/resolve logic.
+  x 3rd AST pass: rewrite localvar names w/ frame-relative indices
   o CST statement-list: push/pop count for entry/exit; mv_absents on enter; mv_frees on exit
   o mv_absent init: find a way to do this only when needed.
   o mv_absent init: UT read/define/read. special case: 'local nonesuch = nonesuch'.
