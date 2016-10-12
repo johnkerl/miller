@@ -2,7 +2,7 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/free_flags.h"
-#include "containers/lhmsi.h"
+#include "containers/lhmsll.h"
 #include "mapping/mlr_dsl_blocked_ast.h"
 #include "mapping/context_flags.h"
 
@@ -92,7 +92,7 @@
 
 typedef struct _stkalc_frame_t {
 	long long var_count;
-	lhmsi_t* pnames_to_indices;
+	lhmsll_t* pnames_to_indices;
 } stkalc_frame_t;
 
 // ----------------------------------------------------------------
@@ -400,32 +400,32 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 static stkalc_frame_t* stkalc_frame_alloc() {
 	stkalc_frame_t* pframe = mlr_malloc_or_die(sizeof(stkalc_frame_t));
 	pframe->var_count = 0;
-	pframe->pnames_to_indices = lhmsi_alloc();
+	pframe->pnames_to_indices = lhmsll_alloc();
 	return pframe;
 }
 
 static void stkalc_frame_free(stkalc_frame_t* pframe) {
 	if (pframe == NULL)
 		return;
-	lhmsi_free(pframe->pnames_to_indices);
+	lhmsll_free(pframe->pnames_to_indices);
 	free(pframe);
 }
 
 static int stkalc_frame_test_and_get(stkalc_frame_t* pframe, char* name, int* pvalue) {
 	long long llvalue;
-	int rc = lhmsi_test_and_get(pframe->pnames_to_indices, name, &llvalue);
+	int rc = lhmsll_test_and_get(pframe->pnames_to_indices, name, &llvalue);
 	if (rc)
 		*pvalue = llvalue;
 	return rc;
 }
 
 static int stkalc_frame_get(stkalc_frame_t* pframe, char* name) {
-	return lhmsi_get(pframe->pnames_to_indices, name);
+	return lhmsll_get(pframe->pnames_to_indices, name);
 }
 
 static int stkalc_frame_add(stkalc_frame_t* pframe, char* desc, char* name, int verbose) {
 	int rv = pframe->var_count;
-	lhmsi_put(pframe->pnames_to_indices, name, pframe->var_count, NO_FREE);
+	lhmsll_put(pframe->pnames_to_indices, name, pframe->var_count, NO_FREE);
 	pframe->var_count++;
 	return rv;
 }

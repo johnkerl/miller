@@ -17,6 +17,8 @@ libcontainers_la_SOURCES=	\
 			lhms2v.h \
 			lhmsi.c \
 			lhmsi.h \
+			lhmsll.c \
+			lhmsll.h \
 			lhmslv.c \
 			lhmslv.h \
 			lhmsmv.c \

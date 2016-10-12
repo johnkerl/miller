@@ -7,7 +7,7 @@
 #include "lib/mtrand.h"
 #include "containers/slls.h"
 #include "containers/lhmss.h"
-#include "containers/lhmsi.h"
+#include "containers/lhmsll.h"
 #include "input/lrec_readers.h"
 #include "mapping/mappers.h"
 #include "mapping/function_manager.h"
@@ -79,8 +79,8 @@ static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(map
 
 // ----------------------------------------------------------------
 static lhmss_t* get_desc_to_chars_map();
-static lhmsi_t* get_default_repeat_ifses();
-static lhmsi_t* get_default_repeat_ipses();
+static lhmsll_t* get_default_repeat_ifses();
+static lhmsll_t* get_default_repeat_ipses();
 static lhmss_t* get_default_fses();
 static lhmss_t* get_default_pses();
 static lhmss_t* get_default_rses();
@@ -114,7 +114,7 @@ static mapper_setup_t* look_up_mapper_setup(char* verb);
 static int handle_terminal_usage(char** argv, int argc, int argi);
 
 static char* lhmss_get_or_die(lhmss_t* pmap, char* key, char* argv0);
-static int lhmsi_get_or_die(lhmsi_t* pmap, char* key, char* argv0);
+static int lhmsll_get_or_die(lhmsll_t* pmap, char* key, char* argv0);
 
 // ----------------------------------------------------------------
 cli_opts_t* parse_command_line(int argc, char** argv) {
@@ -189,8 +189,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	lhmss_t* default_rses = get_default_rses();
 	lhmss_t* default_fses = get_default_fses();
 	lhmss_t* default_pses = get_default_pses();
-	lhmsi_t* default_repeat_ifses = get_default_repeat_ifses();
-	lhmsi_t* default_repeat_ipses = get_default_repeat_ipses();
+	lhmsll_t* default_repeat_ifses = get_default_repeat_ifses();
+	lhmsll_t* default_repeat_ipses = get_default_repeat_ipses();
 
 	if (popts->reader_opts.irs == NULL)
 		popts->reader_opts.irs = lhmss_get_or_die(default_rses, popts->reader_opts.ifile_fmt, argv[0]);
@@ -200,10 +200,10 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		popts->reader_opts.ips = lhmss_get_or_die(default_pses, popts->reader_opts.ifile_fmt, argv[0]);
 
 	if (popts->reader_opts.allow_repeat_ifs == NEITHER_TRUE_NOR_FALSE)
-		popts->reader_opts.allow_repeat_ifs = lhmsi_get_or_die(default_repeat_ifses,
+		popts->reader_opts.allow_repeat_ifs = lhmsll_get_or_die(default_repeat_ifses,
 			popts->reader_opts.ifile_fmt, argv[0]);
 	if (popts->reader_opts.allow_repeat_ips == NEITHER_TRUE_NOR_FALSE)
-		popts->reader_opts.allow_repeat_ips = lhmsi_get_or_die(default_repeat_ipses,
+		popts->reader_opts.allow_repeat_ips = lhmsll_get_or_die(default_repeat_ipses,
 			popts->reader_opts.ifile_fmt, argv[0]);
 
 	if (popts->writer_opts.ors == NULL)
@@ -350,8 +350,8 @@ char* cli_sep_from_arg(char* arg) {
 static lhmss_t* singleton_default_rses = NULL;
 static lhmss_t* singleton_default_fses = NULL;
 static lhmss_t* singleton_default_pses = NULL;
-static lhmsi_t* singleton_default_repeat_ifses = NULL;
-static lhmsi_t* singleton_default_repeat_ipses = NULL;
+static lhmsll_t* singleton_default_repeat_ifses = NULL;
+static lhmsll_t* singleton_default_repeat_ipses = NULL;
 
 static lhmss_t* get_default_rses() {
 	if (singleton_default_rses == NULL) {
@@ -405,32 +405,32 @@ static lhmss_t* get_default_pses() {
 	return singleton_default_pses;
 }
 
-static lhmsi_t* get_default_repeat_ifses() {
+static lhmsll_t* get_default_repeat_ifses() {
 	if (singleton_default_repeat_ifses == NULL) {
-		singleton_default_repeat_ifses = lhmsi_alloc();
-		lhmsi_put(singleton_default_repeat_ifses, "dkvp",     FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ifses, "json",     FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ifses, "csv",      FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ifses, "csvlite",  FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ifses, "markdown", FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ifses, "nidx",     FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ifses, "xtab",     FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ifses, "pprint",   TRUE,  NO_FREE);
+		singleton_default_repeat_ifses = lhmsll_alloc();
+		lhmsll_put(singleton_default_repeat_ifses, "dkvp",     FALSE, NO_FREE);
+		lhmsll_put(singleton_default_repeat_ifses, "json",     FALSE, NO_FREE);
+		lhmsll_put(singleton_default_repeat_ifses, "csv",      FALSE, NO_FREE);
+		lhmsll_put(singleton_default_repeat_ifses, "csvlite",  FALSE, NO_FREE);
+		lhmsll_put(singleton_default_repeat_ifses, "markdown", FALSE, NO_FREE);
+		lhmsll_put(singleton_default_repeat_ifses, "nidx",     FALSE, NO_FREE);
+		lhmsll_put(singleton_default_repeat_ifses, "xtab",     FALSE, NO_FREE);
+		lhmsll_put(singleton_default_repeat_ifses, "pprint",   TRUE,  NO_FREE);
 	}
 	return singleton_default_repeat_ifses;
 }
 
-static lhmsi_t* get_default_repeat_ipses() {
+static lhmsll_t* get_default_repeat_ipses() {
 	if (singleton_default_repeat_ipses == NULL) {
-		singleton_default_repeat_ipses = lhmsi_alloc();
-		lhmsi_put(singleton_default_repeat_ipses, "dkvp",     FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ipses, "json",     FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ipses, "csv",      FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ipses, "csvlite",  FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ipses, "markdown", FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ipses, "nidx",     FALSE, NO_FREE);
-		lhmsi_put(singleton_default_repeat_ipses, "xtab",     TRUE,  NO_FREE);
-		lhmsi_put(singleton_default_repeat_ipses, "pprint",   FALSE, NO_FREE);
+		singleton_default_repeat_ipses = lhmsll_alloc();
+		lhmsll_put(singleton_default_repeat_ipses, "dkvp",     FALSE, NO_FREE);
+		lhmsll_put(singleton_default_repeat_ipses, "json",     FALSE, NO_FREE);
+		lhmsll_put(singleton_default_repeat_ipses, "csv",      FALSE, NO_FREE);
+		lhmsll_put(singleton_default_repeat_ipses, "csvlite",  FALSE, NO_FREE);
+		lhmsll_put(singleton_default_repeat_ipses, "markdown", FALSE, NO_FREE);
+		lhmsll_put(singleton_default_repeat_ipses, "nidx",     FALSE, NO_FREE);
+		lhmsll_put(singleton_default_repeat_ipses, "xtab",     TRUE,  NO_FREE);
+		lhmsll_put(singleton_default_repeat_ipses, "pprint",   FALSE, NO_FREE);
 	}
 	return singleton_default_repeat_ipses;
 }
@@ -440,8 +440,8 @@ static void free_opt_singletons() {
 	lhmss_free(singleton_default_rses);
 	lhmss_free(singleton_default_fses);
 	lhmss_free(singleton_default_pses);
-	lhmsi_free(singleton_default_repeat_ifses);
-	lhmsi_free(singleton_default_repeat_ipses);
+	lhmsll_free(singleton_default_repeat_ifses);
+	lhmsll_free(singleton_default_repeat_ipses);
 }
 
 // For displaying the default separators in on-line help
@@ -1073,10 +1073,10 @@ void cli_merge_reader_opts(cli_reader_opts_t* pfunc_opts, cli_reader_opts_t* pma
 			pfunc_opts->ips = lhmss_get_or_die(get_default_pses(), pfunc_opts->ifile_fmt,
 				MLR_GLOBALS.bargv0);
 		if (pfunc_opts->allow_repeat_ifs  == NEITHER_TRUE_NOR_FALSE)
-			pfunc_opts->allow_repeat_ifs = lhmsi_get_or_die(get_default_repeat_ifses(), pfunc_opts->ifile_fmt,
+			pfunc_opts->allow_repeat_ifs = lhmsll_get_or_die(get_default_repeat_ifses(), pfunc_opts->ifile_fmt,
 				MLR_GLOBALS.bargv0);
 		if (pfunc_opts->allow_repeat_ips  == NEITHER_TRUE_NOR_FALSE)
-			pfunc_opts->allow_repeat_ips = lhmsi_get_or_die(get_default_repeat_ipses(), pfunc_opts->ifile_fmt,
+			pfunc_opts->allow_repeat_ips = lhmsll_get_or_die(get_default_repeat_ipses(), pfunc_opts->ifile_fmt,
 				MLR_GLOBALS.bargv0);
 
 	}
@@ -1851,11 +1851,11 @@ static char* lhmss_get_or_die(lhmss_t* pmap, char* key, char* argv0) {
 }
 
 // ----------------------------------------------------------------
-static int lhmsi_get_or_die(lhmsi_t* pmap, char* key, char* argv0) {
-	if (!lhmsi_has_key(pmap, key)) {
+static int lhmsll_get_or_die(lhmsll_t* pmap, char* key, char* argv0) {
+	if (!lhmsll_has_key(pmap, key)) {
 		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
 			argv0, __FILE__, __LINE__);
 		exit(1);
 	}
-	return lhmsi_get(pmap, key);
+	return lhmsll_get(pmap, key);
 }

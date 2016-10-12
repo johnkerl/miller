@@ -128,6 +128,7 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
   containers/hss.c \
   containers/mlrval.c \
   containers/lhmsi.c \
+  containers/lhmsll.c \
   containers/lhmss.c \
   containers/lhmsv.c \
   containers/lhms2v.c \
@@ -212,7 +213,7 @@ TEST_RVAL_EVALUATORS_SRCS = \
   containers/sllmv.c \
   containers/lrec.c \
   containers/lhmsv.c \
-  containers/lhmsi.c \
+  containers/lhmsll.c \
   containers/mlhmmv.c \
   containers/lhmsmv.c \
   containers/hss.c \

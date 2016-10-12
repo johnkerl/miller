@@ -8,7 +8,7 @@
 #include "containers/slls.h"
 #include "containers/sllv.h"
 #include "cli/quoting.h"
-#include "containers/lhmsi.h"
+#include "containers/lhmsll.h"
 #include "containers/lhmss.h"
 #include "input/lrec_reader.h"
 #include "output/lrec_writer.h"

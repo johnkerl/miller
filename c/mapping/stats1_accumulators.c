@@ -8,7 +8,7 @@
 #include "containers/lhmslv.h"
 #include "containers/lhmsv.h"
 #include "containers/lhmss.h"
-#include "containers/lhmsi.h"
+#include "containers/lhmsll.h"
 #include "containers/percentile_keeper.h"
 #include "containers/mlrval.h"
 #include "mapping/stats1_accumulators.h"
@@ -131,16 +131,16 @@ stats1_acc_t* stats1_count_alloc(char* value_field_name, char* stats1_acc_name, 
 
 // ----------------------------------------------------------------
 typedef struct _stats1_mode_state_t {
-	lhmsi_t* pcounts_for_value;
+	lhmsll_t* pcounts_for_value;
 	char* output_field_name;
 } stats1_mode_state_t;
 // mode on strings: "1" and "1.0" and "1.0000" are distinct text.
 static void stats1_mode_singest(void* pvstate, char* val) {
 	stats1_mode_state_t* pstate = pvstate;
-	lhmsie_t* pe = lhmsi_get_entry(pstate->pcounts_for_value, val);
+	lhmslle_t* pe = lhmsll_get_entry(pstate->pcounts_for_value, val);
 	if (pe == NULL) {
-		// lhmsi does a strdup so we needn't.
-		lhmsi_put(pstate->pcounts_for_value, mlr_strdup_or_die(val), 1, FREE_ENTRY_KEY);
+		// lhmsll does a strdup so we needn't.
+		lhmsll_put(pstate->pcounts_for_value, mlr_strdup_or_die(val), 1, FREE_ENTRY_KEY);
 	} else {
 		pe->value++;
 	}
@@ -149,7 +149,7 @@ static void stats1_mode_emit(void* pvstate, char* value_field_name, char* stats1
 	stats1_mode_state_t* pstate = pvstate;
 	int max_count = 0;
 	char* max_key = "";
-	for (lhmsie_t* pe = pstate->pcounts_for_value->phead; pe != NULL; pe = pe->pnext) {
+	for (lhmslle_t* pe = pstate->pcounts_for_value->phead; pe != NULL; pe = pe->pnext) {
 		int count = pe->value;
 		if (count > max_count) {
 			max_key = pe->key;
@@ -163,7 +163,7 @@ static void stats1_mode_emit(void* pvstate, char* value_field_name, char* stats1
 }
 static void stats1_mode_free(stats1_acc_t* pstats1_acc) {
 	stats1_mode_state_t* pstate = pstats1_acc->pvstate;
-	lhmsi_free(pstate->pcounts_for_value);
+	lhmsll_free(pstate->pcounts_for_value);
 	free(pstate->output_field_name);
 	free(pstate);
 	free(pstats1_acc);
@@ -173,7 +173,7 @@ stats1_acc_t* stats1_mode_alloc(char* value_field_name, char* stats1_acc_name, i
 {
 	stats1_acc_t* pstats1_acc   = mlr_malloc_or_die(sizeof(stats1_acc_t));
 	stats1_mode_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_mode_state_t));
-	pstate->pcounts_for_value   = lhmsi_alloc();
+	pstate->pcounts_for_value   = lhmsll_alloc();
 	pstate->output_field_name   = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
 
 	pstats1_acc->pvstate        = (void*)pstate;
