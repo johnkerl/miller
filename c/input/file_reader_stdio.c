@@ -23,11 +23,11 @@ void* file_reader_stdio_vopen(void* pvstate, char* prepipe, char* filename) {
 			}
 		}
 	} else {
-		char* command = mlr_malloc_or_die(strlen(prepipe) + 3 + strlen(filename) + 1);
+		char* command = mlr_malloc_or_die(strlen(prepipe) + 5 + strlen(filename) + 1);
 		if (streq(filename, "-"))
 			sprintf(command, "%s", prepipe);
 		else
-			sprintf(command, "%s < %s", prepipe, filename);
+			sprintf(command, "%s < '%s'", prepipe, filename);
 		input_stream = popen(command, "r");
 		if (input_stream == NULL) {
 			fprintf(stderr, "%s: Couldn't popen \"%s\" for read.\n", MLR_GLOBALS.bargv0, command);

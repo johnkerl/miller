@@ -51,11 +51,11 @@ static int stdio_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe
 			}
 		}
 	} else {
-		char* command = mlr_malloc_or_die(strlen(prepipe) + 3 + strlen(filename) + 1);
+		char* command = mlr_malloc_or_die(strlen(prepipe) + 5 + strlen(filename) + 1);
 		if (streq(filename, "-"))
 			sprintf(command, "%s", prepipe);
 		else
-			sprintf(command, "%s < %s", prepipe, filename);
+			sprintf(command, "%s < '%s'", prepipe, filename);
 		pstate->fp = popen(command, "r");
 		if (pstate->fp == NULL) {
 			fprintf(stderr, "%s: Couldn't popen \"%s\" for read.\n", MLR_GLOBALS.bargv0, command);
