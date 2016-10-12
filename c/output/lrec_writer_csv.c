@@ -134,6 +134,10 @@ static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* o
 			output_quotes = TRUE;
 			break;
 		}
+		if (*p == '"') {
+			output_quotes = TRUE;
+			break;
+		}
 	}
 	if (output_quotes) {
 		quote_string(fp, string);
