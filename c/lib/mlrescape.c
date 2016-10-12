@@ -10,10 +10,18 @@ char* alloc_file_name_escaped_for_popen(char* filename) {
 	sb_append_char(psb, '\'');
 	for (char* p = filename; *p; p++) {
 		char c = *p;
+		//if (c == '\'') {
+			//sb_append_char(psb, '\\');
+		//}
+		//sb_append_char(psb, c);
 		if (c == '\'') {
+			sb_append_char(psb, '\'');
 			sb_append_char(psb, '\\');
+			sb_append_char(psb, '\'');
+			sb_append_char(psb, '\'');
+		} else {
+			sb_append_char(psb, c);
 		}
-		sb_append_char(psb, c);
 	}
 
 	sb_append_char(psb, '\'');

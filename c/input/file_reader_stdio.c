@@ -26,11 +26,12 @@ void* file_reader_stdio_vopen(void* pvstate, char* prepipe, char* filename) {
 	} else {
 		char* escaped_filename = alloc_file_name_escaped_for_popen(filename);
 		char* command = mlr_malloc_or_die(strlen(prepipe) + 3 + strlen(escaped_filename) + 1);
-		//printf("<<<%s>>>\n", escaped_filename);
 		if (streq(filename, "-"))
 			sprintf(command, "%s", prepipe);
 		else
 			sprintf(command, "%s < %s", prepipe, escaped_filename);
+		//printf("<<<%s>>>\n", escaped_filename);
+		//printf("<<<%s>>>\n", command);
 		input_stream = popen(command, "r");
 		if (input_stream == NULL) {
 			fprintf(stderr, "%s: Couldn't popen \"%s\" for read.\n", MLR_GLOBALS.bargv0, command);
