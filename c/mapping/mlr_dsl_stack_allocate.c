@@ -299,10 +299,8 @@ static void pass_1_for_statement_block(mlr_dsl_ast_node_t* pnode, stkalc_frame_g
 
 // ----------------------------------------------------------------
 static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
-	// xxx make separate functions
 
 	if (pnode->type == MD_AST_NODE_TYPE_LOCAL_DEFINITION) {
-		// xxx decide on preorder vs. postorder
 		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 
 		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
@@ -310,7 +308,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pfr
 		// Do the LHS after the RHS, in case 'local nonesuch = nonesuch'
 		stkalc_frame_group_mutate_node_for_define(pframe_group, pnamenode, "DEFINE", trace);
 
-	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) { // xxx rename
+	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) {
 		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 		pass_1_for_node(pvaluenode, pframe_group, trace);
@@ -323,7 +321,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pfr
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) { // xxx comment
 
 		if (trace) {
-			leader_print(pframe_group->plist->length); // xxx depth ?
+			leader_print(pframe_group->plist->length);
 			printf("PUSH FRAME %s\n", pnode->text);
 		}
 		stkalc_frame_t* pnext_frame = stkalc_frame_alloc();
@@ -343,7 +341,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pfr
 		stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
 
 		if (trace) {
-			leader_print(pframe_group->plist->length); // xxx depth ?
+			leader_print(pframe_group->plist->length);
 			printf("POP FRAME %s frct=%d\n", pnode->text, pnode->frame_var_count);
 		}
 
@@ -494,7 +492,7 @@ static void stkalc_frame_group_mutate_node_for_write(stkalc_frame_group_t* pfram
 {
 	char* op = "REUSE";
 	int found = FALSE;
-	// xxx loop. if not found, fall back to top frame.
+	// xxx comment: re loop. if not found, fall back to top frame.
 	pnode->upstack_frame_count = 0;
 	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, pnode->upstack_frame_count++) {
 		stkalc_frame_t* pframe = pe->pvvalue;
@@ -525,7 +523,7 @@ static void stkalc_frame_group_mutate_node_for_read(stkalc_frame_group_t* pframe
 {
 	char* op = "PRESENT";
 	int found = FALSE;
-	// xxx loop. if not found, fall back to top frame.
+	// xxx comment: re loop. if not found, fall back to top frame.
 	int upstack_frame_count = 0;
 	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, upstack_frame_count++) {
 		stkalc_frame_t* pframe = pe->pvvalue;
