@@ -88,7 +88,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int type_in
 
 	if (print_ast) {
 		printf("\n");
-		printf("ANALYZED AST:\n");
+		printf("BLOCKED AST:\n");
 	}
 
 	for (sllve_t* pe = pcst->paast->pfunc_defs->phead; pe != NULL; pe = pe->pnext) {

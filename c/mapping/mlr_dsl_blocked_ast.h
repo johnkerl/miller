@@ -18,7 +18,7 @@ typedef struct _blocked_ast_t {
 	sllv_t* pend_blocks;
 } blocked_ast_t;
 
-// This strips nodes off the raw AST and transfers them to the analyzed AST.
+// This strips nodes off the raw AST and transfers them to the block-structured AST.
 blocked_ast_t* blocked_ast_alloc(mlr_dsl_ast_t* past);
 void blocked_ast_free(blocked_ast_t* paast);
 

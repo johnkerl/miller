@@ -154,6 +154,10 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 	int frame_depth, int var_count_below_frame, int var_count_at_frame, int* pmax_var_depth);
 
 // ================================================================
+// Utility methods
+static void leader_print(int depth);
+
+// ================================================================
 // Main entry point for the bind-stack allocator
 
 void blocked_ast_allocate_locals(blocked_ast_t* paast) {
@@ -206,7 +210,7 @@ static void pass_1_for_func_subr_block(mlr_dsl_ast_node_t* pnode) {
 	stkalc_frame_group_t* pframe_group = stkalc_frame_group_alloc(pframe);
 
 	printf("\n");
-	printf("ALLOCATING LOCALS FOR DEFINITION BLOCK [%s]\n", pnode->text);
+	printf("ALLOCATING RELATIVE (PASS-1) LOCALS FOR DEFINITION BLOCK [%s]\n", pnode->text);
 	mlr_dsl_ast_node_t* pdef_name_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* plist_node = pnode->pchildren->phead->pnext->pvvalue;
 	for (sllve_t* pe = pdef_name_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -231,7 +235,7 @@ static void pass_1_for_begin_end_block(mlr_dsl_ast_node_t* pnode) {
 	}
 
 	printf("\n");
-	printf("ALLOCATING LOCALS FOR %s BLOCK\n", pnode->text);
+	printf("ALLOCATING RELATIVE (PASS-1) LOCALS FOR %s BLOCK\n", pnode->text);
 
 	stkalc_frame_t* pframe = stkalc_frame_alloc();
 	stkalc_frame_group_t* pframe_group = stkalc_frame_group_alloc(pframe);
@@ -254,7 +258,7 @@ static void pass_1_for_main_block(mlr_dsl_ast_node_t* pnode) {
 	}
 
 	printf("\n");
-	printf("ALLOCATING LOCALS FOR MAIN BLOCK\n");
+	printf("ALLOCATING RELATIVE (PASS-1) LOCALS FOR MAIN BLOCK\n");
 
 	stkalc_frame_t* pframe = stkalc_frame_alloc();
 	stkalc_frame_group_t* pframe_group = stkalc_frame_group_alloc(pframe);
@@ -310,8 +314,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) { // xxx comment
 
-		for (int i = 0; i < pframe_group->plist->length; i++) // xxx temp
-			printf("    ");
+		leader_print(pframe_group->plist->length); // xxx depth ?
 		printf("PUSH FRAME %s\n", pnode->text);
 		stkalc_frame_t* pnext_frame = stkalc_frame_alloc();
 		stkalc_frame_group_push(pframe_group, pnext_frame);
@@ -329,8 +332,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 
 		stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
 
-		for (int i = 0; i < pframe_group->plist->length; i++)
-			printf("    ");
+		leader_print(pframe_group->plist->length); // xxx depth ?
 		printf("POP FRAME %s frct=%d\n", pnode->text, pnode->frame_var_count);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR) { // xxx comment
@@ -349,8 +351,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 			pass_1_for_node(pchild, pframe_group);
 		}
 
-		for (int i = 0; i < pframe_group->plist->length; i++) // xxx temp
-			printf("    ");
+		leader_print(pframe_group->plist->length);
 		printf("PUSH FRAME %s\n", pnode->text);
 		stkalc_frame_t* pnext_frame = stkalc_frame_alloc();
 		stkalc_frame_group_push(pframe_group, pnext_frame);
@@ -364,8 +365,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 		pnode->frame_var_count = pnext_frame->var_count;
 
 		stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
-		for (int i = 0; i < pframe_group->plist->length; i++)
-			printf("    ");
+		leader_print(pframe_group->plist->length);
 		printf("POP FRAME %s frct=%d\n", pnode->text, pnode->frame_var_count);
 
 	} else if (pnode->pchildren != NULL) {
@@ -374,8 +374,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 
 			if (pchild->type == MD_AST_NODE_TYPE_STATEMENT_BLOCK) {
 
-				for (int i = 0; i < pframe_group->plist->length; i++) // xxx temp
-					printf("    ");
+				leader_print(pframe_group->plist->length);
 				printf("PUSH FRAME %s\n", pchild->text);
 
 				stkalc_frame_t* pnext_frame = stkalc_frame_alloc();
@@ -386,8 +385,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 
 				stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
 
-				for (int i = 0; i < pframe_group->plist->length; i++)
-					printf("    ");
+				leader_print(pframe_group->plist->length);
 				printf("POP FRAME %s frct=%d\n", pnode->text, pchild->frame_var_count);
 
 			} else {
@@ -465,10 +463,8 @@ static void stkalc_frame_group_mutate_node_for_define(stkalc_frame_group_t* pfra
 		op = "ADD";
 	}
 	if (verbose) {
-		for (int i = 1; i < pframe_group->plist->length; i++) {
-			printf("    ");
-		}
-		printf("    %s %s %s @ %du%d\n", op, desc, pnode->text,
+		leader_print(pframe_group->plist->length);
+		printf("%s %s %s @ %du%d\n", op, desc, pnode->text,
 			pnode->frame_relative_index, pnode->upstack_frame_count);
 	}
 }
@@ -497,10 +493,8 @@ static void stkalc_frame_group_mutate_node_for_write(stkalc_frame_group_t* pfram
 	}
 
 	if (verbose) {
-		for (int i = 1; i < pframe_group->plist->length; i++) {
-			printf("    ");
-		}
-		printf("    %s %s %s @ %du%d\n", op, desc, pnode->text,
+		leader_print(pframe_group->plist->length);
+		printf("%s %s %s @ %du%d\n", op, desc, pnode->text,
 			pnode->frame_relative_index, pnode->upstack_frame_count);
 	}
 }
@@ -530,10 +524,8 @@ static void stkalc_frame_group_mutate_node_for_read(stkalc_frame_group_t* pframe
 	}
 
 	if (verbose) {
-		for (int i = 1; i < pframe_group->plist->length; i++) {
-			printf("    ");
-		}
-		printf("    %s %s %s @ %du%d\n", desc, pnode->text, op, pnode->frame_relative_index, upstack_frame_count);
+		leader_print(pframe_group->plist->length);
+		printf("%s %s %s @ %du%d\n", desc, pnode->text, op, pnode->frame_relative_index, upstack_frame_count);
 	}
 	pnode->upstack_frame_count = upstack_frame_count;
 
@@ -546,7 +538,7 @@ static void pass_2_for_top_level_block(mlr_dsl_ast_node_t* pnode) {
 	int var_count_at_frame = 0;
 	int max_var_depth   = 0;
 	printf("\n");
-	printf("ABSOLUTIZING LOCALS FOR DEFINITION BLOCK [%s]\n", pnode->text);
+	printf("ALLOCATING ABSOLUTE (PASS-2) LOCALS FOR DEFINITION BLOCK [%s]\n", pnode->text);
 	pass_2_for_node(pnode, frame_depth, var_count_below_frame, var_count_at_frame, &max_var_depth);
 	pnode->max_var_depth = max_var_depth;
 }
@@ -562,17 +554,14 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 		if (depth > *pmax_var_depth) {
 			*pmax_var_depth = depth;
 		}
-		// xxx funcify
-		for (int i = 1; i < frame_depth; i++)
-			printf("    ");
+		leader_print(frame_depth-1);
 		printf("FRAME [%s] var_count_below=%d var_count_at=%d max_var_depth=%d\n",
 			pnode->text, var_count_below_frame, var_count_at_frame, *pmax_var_depth);
 	}
 
 	if (pnode->frame_relative_index != MD_UNUSED_INDEX) {
 		pnode->absolute_index = var_count_below_frame + pnode->frame_relative_index;
-		for (int i = 0; i < frame_depth; i++)
-			printf("    ");
+		leader_print(frame_depth);
 		printf("NODE %s %du%d -> %d\n",
 			pnode->text,
 			pnode->frame_relative_index,
@@ -587,4 +576,11 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 				var_count_below_frame, var_count_at_frame, pmax_var_depth);
 		}
 	}
+}
+
+// ================================================================
+const char* STKALC_TRACE_LEADER = "    ";
+static void leader_print(int depth) {
+	for (int i = 0; i < depth; i++)
+		printf("%s", STKALC_TRACE_LEADER);
 }
