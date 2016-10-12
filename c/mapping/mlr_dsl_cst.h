@@ -54,7 +54,7 @@
 // ----------------------------------------------------------------
 // xxx comment
 // xxx move to own source&header
-void blocked_ast_allocate_locals(blocked_ast_t* paast);
+void blocked_ast_allocate_locals(blocked_ast_t* paast, int trace);
 
 // ----------------------------------------------------------------
 // Forward references for virtual-function prototypes
