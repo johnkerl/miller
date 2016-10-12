@@ -1,7 +1,7 @@
 ================================================================
 BUGFIXES
 
-:D
+* shell injection remaining cases
 
 ================================================================
 NON-RELEASE:
@@ -34,7 +34,7 @@ FUNCTIONALITY FOR 4.6.0:
   o 3rd AST pass: rewrite localvar names w/ frame-relative indices
   o CST statement-list: push/pop count for entry/exit; mv_absents on enter; mv_frees on exit
   o mv_absent init: find a way to do this only when needed.
-  o lmhsll & lhmsi?
+  o mv_absent init: UT read/define/read. special case: 'local nonesuch = nonesuch'.
 
 * valgrinds
 

@@ -293,17 +293,19 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 		// xxx decide on preorder vs. postorder
 		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 
-		stkalc_frame_group_mutate_node_for_define(pframe_group, pnamenode, "DEFINE", TRUE/*xxx temp*/);
 		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 		pass_1_for_node(pvaluenode, pframe_group);
+		// Do the LHS after the RHS, in case 'local nonesuch = nonesuch'
+		stkalc_frame_group_mutate_node_for_define(pframe_group, pnamenode, "DEFINE", TRUE/*xxx temp*/);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) { // xxx rename
 		mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
-		stkalc_frame_group_mutate_node_for_write(pframe_group, pnamenode, "WRITE", TRUE/*xxx temp*/);
 		mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 		pass_1_for_node(pvaluenode, pframe_group);
+		// Do the LHS after the RHS, in case 'local nonesuch = nonesuch'
+		stkalc_frame_group_mutate_node_for_write(pframe_group, pnamenode, "WRITE", TRUE/*xxx temp*/);
 
-	} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) {
+	} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) { // RHS
 		stkalc_frame_group_mutate_node_for_read(pframe_group, pnode, "READ", TRUE/*xxx temp*/);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) { // xxx comment
@@ -359,7 +361,6 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 		}
 		stkalc_frame_group_mutate_node_for_define(pframe_group, pvalnode, "FOR-BIND", TRUE/*xxx temp*/);
 		pass_1_for_statement_block(pblocknode, pframe_group);
-		// xxx make accessor ...
 		pnode->frame_var_count = pnext_frame->var_count;
 
 		stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
