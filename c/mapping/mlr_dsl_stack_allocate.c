@@ -98,7 +98,6 @@ typedef struct _stkalc_frame_t {
 // ----------------------------------------------------------------
 // Pass-1 stack-frame methods
 
-// xxx make a test-and-get API for lhmsi
 static      stkalc_frame_t* stkalc_frame_alloc();
 static void stkalc_frame_free(stkalc_frame_t* pframe);
 static int  stkalc_frame_test_and_get(stkalc_frame_t* pframe, char* name, int* pvalue);
