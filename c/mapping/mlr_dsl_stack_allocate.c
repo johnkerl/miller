@@ -2,7 +2,7 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/free_flags.h"
-#include "containers/lhmsll.h"
+#include "containers/lhmsi.h"
 #include "mapping/mlr_dsl_blocked_ast.h"
 #include "mapping/context_flags.h"
 
@@ -91,8 +91,8 @@
 // if-statement, else-statement, etc.).
 
 typedef struct _stkalc_frame_t {
-	long long var_count;
-	lhmsll_t* pnames_to_indices;
+	int var_count;
+	lhmsi_t* pnames_to_indices;
 } stkalc_frame_t;
 
 // ----------------------------------------------------------------
@@ -309,7 +309,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) { // xxx comment
 
 		for (int i = 0; i < pframe_group->plist->length; i++) // xxx temp
-			printf("::  ");
+			printf("    ");
 		printf("PUSH FRAME %s\n", pnode->text);
 		stkalc_frame_t* pnext_frame = stkalc_frame_alloc();
 		stkalc_frame_group_push(pframe_group, pnext_frame);
@@ -328,7 +328,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 		stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
 
 		for (int i = 0; i < pframe_group->plist->length; i++)
-			printf("::  ");
+			printf("    ");
 		printf("POP FRAME %s frct=%d\n", pnode->text, pnode->frame_var_count);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR) { // xxx comment
@@ -348,7 +348,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 		}
 
 		for (int i = 0; i < pframe_group->plist->length; i++) // xxx temp
-			printf("::  ");
+			printf("    ");
 		printf("PUSH FRAME %s\n", pnode->text);
 		stkalc_frame_t* pnext_frame = stkalc_frame_alloc();
 		stkalc_frame_group_push(pframe_group, pnext_frame);
@@ -364,7 +364,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 
 		stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
 		for (int i = 0; i < pframe_group->plist->length; i++)
-			printf("::  ");
+			printf("    ");
 		printf("POP FRAME %s frct=%d\n", pnode->text, pnode->frame_var_count);
 
 	} else if (pnode->pchildren != NULL) {
@@ -374,7 +374,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 			if (pchild->type == MD_AST_NODE_TYPE_STATEMENT_BLOCK) {
 
 				for (int i = 0; i < pframe_group->plist->length; i++) // xxx temp
-					printf("::  ");
+					printf("    ");
 				printf("PUSH FRAME %s\n", pchild->text);
 
 				stkalc_frame_t* pnext_frame = stkalc_frame_alloc();
@@ -386,7 +386,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 				stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
 
 				for (int i = 0; i < pframe_group->plist->length; i++)
-					printf("::  ");
+					printf("    ");
 				printf("POP FRAME %s frct=%d\n", pnode->text, pchild->frame_var_count);
 
 			} else {
@@ -400,32 +400,28 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode,
 static stkalc_frame_t* stkalc_frame_alloc() {
 	stkalc_frame_t* pframe = mlr_malloc_or_die(sizeof(stkalc_frame_t));
 	pframe->var_count = 0;
-	pframe->pnames_to_indices = lhmsll_alloc();
+	pframe->pnames_to_indices = lhmsi_alloc();
 	return pframe;
 }
 
 static void stkalc_frame_free(stkalc_frame_t* pframe) {
 	if (pframe == NULL)
 		return;
-	lhmsll_free(pframe->pnames_to_indices);
+	lhmsi_free(pframe->pnames_to_indices);
 	free(pframe);
 }
 
 static int stkalc_frame_test_and_get(stkalc_frame_t* pframe, char* name, int* pvalue) {
-	long long llvalue;
-	int rc = lhmsll_test_and_get(pframe->pnames_to_indices, name, &llvalue);
-	if (rc)
-		*pvalue = llvalue;
-	return rc;
+	return lhmsi_test_and_get(pframe->pnames_to_indices, name, pvalue);
 }
 
 static int stkalc_frame_get(stkalc_frame_t* pframe, char* name) {
-	return lhmsll_get(pframe->pnames_to_indices, name);
+	return lhmsi_get(pframe->pnames_to_indices, name);
 }
 
 static int stkalc_frame_add(stkalc_frame_t* pframe, char* desc, char* name, int verbose) {
 	int rv = pframe->var_count;
-	lhmsll_put(pframe->pnames_to_indices, name, pframe->var_count, NO_FREE);
+	lhmsi_put(pframe->pnames_to_indices, name, pframe->var_count, NO_FREE);
 	pframe->var_count++;
 	return rv;
 }
@@ -469,9 +465,9 @@ static void stkalc_frame_group_mutate_node_for_define(stkalc_frame_group_t* pfra
 	}
 	if (verbose) {
 		for (int i = 1; i < pframe_group->plist->length; i++) {
-			printf("::  ");
+			printf("    ");
 		}
-		printf("::  %s %s %s @ %du%d\n", op, desc, pnode->text,
+		printf("    %s %s %s @ %du%d\n", op, desc, pnode->text,
 			pnode->frame_relative_index, pnode->upstack_frame_count);
 	}
 }
@@ -501,9 +497,9 @@ static void stkalc_frame_group_mutate_node_for_write(stkalc_frame_group_t* pfram
 
 	if (verbose) {
 		for (int i = 1; i < pframe_group->plist->length; i++) {
-			printf("::  ");
+			printf("    ");
 		}
-		printf("::  %s %s %s @ %du%d\n", op, desc, pnode->text,
+		printf("    %s %s %s @ %du%d\n", op, desc, pnode->text,
 			pnode->frame_relative_index, pnode->upstack_frame_count);
 	}
 }
@@ -534,9 +530,9 @@ static void stkalc_frame_group_mutate_node_for_read(stkalc_frame_group_t* pframe
 
 	if (verbose) {
 		for (int i = 1; i < pframe_group->plist->length; i++) {
-			printf("::  ");
+			printf("    ");
 		}
-		printf("::  %s %s %s @ %du%d\n", desc, pnode->text, op, pnode->frame_relative_index, upstack_frame_count);
+		printf("    %s %s %s @ %du%d\n", desc, pnode->text, op, pnode->frame_relative_index, upstack_frame_count);
 	}
 	pnode->upstack_frame_count = upstack_frame_count;
 
@@ -567,7 +563,7 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 		}
 		// xxx funcify
 		for (int i = 1; i < frame_depth; i++)
-			printf("::  ");
+			printf("    ");
 		printf("FRAME [%s] var_count_below=%d var_count_at=%d max_var_depth=%d\n",
 			pnode->text, var_count_below_frame, var_count_at_frame, *pmax_var_depth);
 	}
@@ -575,7 +571,7 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 	if (pnode->frame_relative_index != MD_UNUSED_INDEX) {
 		pnode->absolute_index = var_count_below_frame + pnode->frame_relative_index;
 		for (int i = 0; i < frame_depth; i++)
-			printf("::  ");
+			printf("    ");
 		printf("NODE %s %du%d -> %d\n",
 			pnode->text,
 			pnode->frame_relative_index,
