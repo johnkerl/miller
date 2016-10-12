@@ -39738,7 +39738,7 @@ mlr --csv --prepipe cat cat ./reg_test/input/rfc-csv/simple.csv
 a,b,c
 1,x,3
 4,5,6
-x,y"yy,z
+x,"y""yy",z
 
 mlr --dkvp --prepipe cat cat ./reg_test/input/abixy
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -39756,7 +39756,7 @@ mlr --csv --prepipe cat cat
 a,b,c
 1,x,3
 4,5,6
-x,y"yy,z
+x,"y""yy",z
 
 mlr --dkvp --prepipe cat cat
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -39778,7 +39778,7 @@ mlr --csv cat
 a,b,c
 1,x,3
 4,5,6
-x,y"yy,z
+x,"y""yy",z
 
 
 ================================================================
@@ -39788,13 +39788,13 @@ mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/simple.csv
 a,b,c
 1,x,3
 4,5,6
-x,y"yy,z
+x,"y""yy",z
 
 mlr --mmap --csv cat ./reg_test/input/rfc-csv/simple.csv
 a,b,c
 1,x,3
 4,5,6
-x,y"yy,z
+x,"y""yy",z
 
 mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv
 a,b,c
@@ -39884,7 +39884,7 @@ a,b,c
 4,5,6
 1,x,3
 4,5,6
-x,y"yy,z
+x,"y""yy",z
 
 mlr --mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv ./reg_test/input/rfc-csv/simple.csv
 a,b,c
@@ -39892,7 +39892,7 @@ a,b,c
 4,5,6
 1,x,3
 4,5,6
-x,y"yy,z
+x,"y""yy",z
 
 mlr --no-mmap --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b ./reg_test/input/rfc-csv/modify-defaults.csv
 a|c
