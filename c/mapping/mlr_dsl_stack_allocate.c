@@ -204,7 +204,7 @@ static void pass_1_for_func_subr_block(mlr_dsl_ast_node_t* pnode, int trace) {
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
-	//	xxx assert two children of desired type
+	// xxx assert two children of desired type
 
 	stkalc_frame_t* pframe = stkalc_frame_alloc();
 	stkalc_frame_group_t* pframe_group = stkalc_frame_group_alloc(pframe);
@@ -249,7 +249,7 @@ static void pass_1_for_begin_end_block(mlr_dsl_ast_node_t* pnode, int trace) {
 	pass_1_for_statement_block(pnode->pchildren->phead->pvvalue, pframe_group, trace);
 	pnode->frame_var_count = pframe->var_count;
 	if (trace) {
-		printf("BLK %s frct=%d\n", pnode->text, pnode->frame_var_count); // xxx fix name
+		printf("BLOCK %s frct=%d\n", pnode->text, pnode->frame_var_count);
 	}
 
 	stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
@@ -276,7 +276,7 @@ static void pass_1_for_main_block(mlr_dsl_ast_node_t* pnode, int trace) {
 	pass_1_for_statement_block(pnode, pframe_group, trace);
 	pnode->frame_var_count = pframe->var_count;
 	if (trace) {
-		printf("BLK %s frct=%d\n", pnode->text, pnode->frame_var_count); // xxx fix name
+		printf("BLOCK %s frct=%d\n", pnode->text, pnode->frame_var_count);
 	}
 
 	stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
@@ -318,7 +318,8 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pfr
 	} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) { // RHS
 		stkalc_frame_group_mutate_node_for_read(pframe_group, pnode, "READ", trace);
 
-	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) { // xxx comment
+	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) {
+		// for (k,v in $*) { ... }: the k and v are scoped to the curly-brace block.
 
 		if (trace) {
 			leader_print(pframe_group->plist->length);

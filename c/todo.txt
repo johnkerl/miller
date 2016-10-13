@@ -13,6 +13,16 @@ NON-RELEASE:
 ? msort.o wt?
 
 ----------------------------------------------------------------
+MISC:
+
+* xsv notes; update rust/go experiment info
+
+----------------------------------------------------------------
+5.0.0:
+
+$-vars to %-vars ??
+
+----------------------------------------------------------------
 FUNCTIONALITY FOR 4.6.0:
 
 ! bind-stack: locals map to frame indices. maybe for 4.6.1 ... but prefer to get the perf good at release.
