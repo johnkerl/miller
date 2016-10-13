@@ -1,7 +1,7 @@
 #ifndef MLR_DSL_BLOCKED_AST_H
 #define MLR_DSL_BLOCKED_AST_H
 
-#include "containers/mlr_dsl_ast.h"
+#include "mapping/mlr_dsl_ast.h"
 #include "containers/sllv.h"
 
 // ================================================================

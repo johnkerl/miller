@@ -6,7 +6,7 @@
 #include <string.h>
 #include <math.h>
 #include "../lib/mlrutil.h"
-#include "../containers/mlr_dsl_ast.h"
+#include "../mapping/mlr_dsl_ast.h"
 #include "../containers/sllv.h"
 
 // ================================================================

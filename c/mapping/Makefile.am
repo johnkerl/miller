@@ -47,6 +47,8 @@ libmapping_la_SOURCES=	\
 			mapper_top.c \
 			mapper_uniq.c \
 			mappers.h \
+			mlr_dsl_ast.c \
+			mlr_dsl_ast.h \
 			mlr_dsl_blocked_ast.c \
 			mlr_dsl_blocked_ast.h \
 			mlr_dsl_cst.c \

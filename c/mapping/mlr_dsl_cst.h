@@ -2,7 +2,7 @@
 #define MLR_DSL_CST_H
 
 #include "cli/mlrcli.h"
-#include "containers/mlr_dsl_ast.h"
+#include "mapping/mlr_dsl_ast.h"
 #include "containers/lhmsmv.h"
 #include "containers/bind_stack.h"
 #include "containers/loop_stack.h"

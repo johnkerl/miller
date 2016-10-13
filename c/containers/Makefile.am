@@ -35,8 +35,6 @@ libcontainers_la_SOURCES=	\
 			mixutil.h \
 			mlhmmv.c \
 			mlhmmv.h \
-			mlr_dsl_ast.c \
-			mlr_dsl_ast.h \
 			mlrval.c \
 			mlrval.h \
 			parse_trie.c \

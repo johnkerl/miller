@@ -2,7 +2,7 @@
 #include "stdio.h"  // for fileno() prototype
 #include "string.h" // for strdup() prototype
 #include "mlr_dsl_parse.h"
-#include "../containers/mlr_dsl_ast.h"
+#include "../mapping/mlr_dsl_ast.h"
 // http://flex.sourceforge.net/manual/Extra-Data.html
 
 // NOTE: any new keywords defined here should also be documented

@@ -210,7 +210,6 @@ TEST_RVAL_EVALUATORS_SRCS = \
   lib/string_builder.c \
   lib/string_array.c \
   containers/mlrval.c \
-  containers/mlr_dsl_ast.c \
   containers/sllv.c \
   containers/slls.c \
   containers/sllmv.c \
@@ -222,6 +221,7 @@ TEST_RVAL_EVALUATORS_SRCS = \
   containers/hss.c \
   containers/bind_stack.c \
   containers/loop_stack.c \
+  mapping/mlr_dsl_ast.c \
   mapping/function_manager.c \
   mapping/rval_expr_evaluators.c \
   mapping/rval_func_evaluators.c \

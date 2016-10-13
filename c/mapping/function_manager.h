@@ -4,7 +4,7 @@
 #include "containers/mlrval.h"
 #include "containers/lhmsv.h"
 #include "containers/hss.h"
-#include "containers/mlr_dsl_ast.h"
+#include "mapping/mlr_dsl_ast.h"
 #include "mapping/rval_evaluator.h"
 #include "mapping/type_inference.h"
 

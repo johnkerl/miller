@@ -1,6 +1,6 @@
 #include <string.h>
 #include "lib/mlrutil.h"
-#include "containers/mlr_dsl_ast.h"
+#include "mapping/mlr_dsl_ast.h"
 
 // ----------------------------------------------------------------
 mlr_dsl_ast_t* mlr_dsl_ast_alloc() {

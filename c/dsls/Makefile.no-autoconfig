@@ -20,12 +20,12 @@ top: mlr_dsl_lexer.o mlr_dsl_parse.o mlr_dsl_wrapper.o
 
 # ----------------------------------------------------------------
 mlr_dsl_wrapper.o: mlr_dsl_wrapper.c mlr_dsl_wrapper.h mlr_dsl_parse.h \
-../lib/mlrutil.h ../containers/mlr_dsl_ast.h ../containers/sllv.h
+../lib/mlrutil.h ../mapping/mlr_dsl_ast.h ../containers/sllv.h
 	$(CC) -Wall $(DSLCFLAGS) -c -std=gnu99 mlr_dsl_wrapper.c
 
 mlr_dsl_parse.o: mlr_dsl_parse.c mlr_dsl_parse.h
 	$(CC) $(DSLCFLAGS) -c -std=gnu99 mlr_dsl_parse.c
-mlr_dsl_parse.c mlr_dsl_parse.h: mlr_dsl_parse.y lemon ../containers/mlr_dsl_ast.h ../containers/sllv.h
+mlr_dsl_parse.c mlr_dsl_parse.h: mlr_dsl_parse.y lemon ../mapping/mlr_dsl_ast.h ../containers/sllv.h
 	./lemon -s mlr_dsl_parse.y
 	mv mlr_dsl_parse.c mlr_dsl_parse.c.tmp
 	sed \
@@ -48,12 +48,12 @@ mlr_dsl_parse.c mlr_dsl_parse.h: mlr_dsl_parse.y lemon ../containers/mlr_dsl_ast
 
 mlr_dsl_lexer.o: mlr_dsl_lexer.c mlr_dsl_lexer.h mlr_dsl_parse.h
 	$(CC) $(DSLCFLAGS) -c -std=gnu99 mlr_dsl_lexer.c
-mlr_dsl_lexer.c mlr_dsl_lexer.h: mlr_dsl_lexer.l ../containers/mlr_dsl_ast.h
+mlr_dsl_lexer.c mlr_dsl_lexer.h: mlr_dsl_lexer.l ../mapping/mlr_dsl_ast.h
 	flex --prefix=mlr_dsl_lexer_ --outfile=mlr_dsl_lexer.c --header-file=mlr_dsl_lexer.h mlr_dsl_lexer.l
 
-mlr_dsl: mlr_dsl_wrapper_main.c mlr_dsl_wrapper.c mlr_dsl_wrapper.h mlr_dsl_parse.h mlr_dsl_lexer.o mlr_dsl_parse.o ../lib/mlrutil.c ../lib/mlrutil.h ../lib/mlr_globals.c ../lib/mlr_globals.h ./../containers/mlr_dsl_ast.h \
-../lib/mlrutil.c ../containers/sllv.c ./../containers/mlr_dsl_ast.c
-	$(CC) -Wall $(DSLCFLAGS) -std=gnu99 mlr_dsl_wrapper_main.c mlr_dsl_wrapper.c mlr_dsl_lexer.o mlr_dsl_parse.o ../lib/mlrutil.c ../lib/mlr_globals.c ../containers/sllv.c ./../containers/mlr_dsl_ast.c -o mlr_dsl
+mlr_dsl: mlr_dsl_wrapper_main.c mlr_dsl_wrapper.c mlr_dsl_wrapper.h mlr_dsl_parse.h mlr_dsl_lexer.o mlr_dsl_parse.o ../lib/mlrutil.c ../lib/mlrutil.h ../lib/mlr_globals.c ../lib/mlr_globals.h ./../mapping/mlr_dsl_ast.h \
+../lib/mlrutil.c ../containers/sllv.c ./../mapping/mlr_dsl_ast.c
+	$(CC) -Wall $(DSLCFLAGS) -std=gnu99 mlr_dsl_wrapper_main.c mlr_dsl_wrapper.c mlr_dsl_lexer.o mlr_dsl_parse.o ../lib/mlrutil.c ../lib/mlr_globals.c ../containers/sllv.c ./../mapping/mlr_dsl_ast.c -o mlr_dsl
 
 # ----------------------------------------------------------------
 ex0: ex0_wrapper.c ex0_wrapper.h ex0_parse.h ex0_lexer.o ex0_parse.o ../lib/mlrutil.c ../lib/mlrutil.h ../lib/mlr_globals.c ../lib/mlr_globals.h ./ex_ast.h \
