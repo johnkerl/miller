@@ -4,7 +4,7 @@
 
 #ifndef MLR_DSL_AST_H
 #define MLR_DSL_AST_H
-#include "containers/sllv.h"
+#include "../containers/sllv.h"
 
 // ----------------------------------------------------------------
 typedef enum _mlr_dsl_ast_node_type_t {
