@@ -27,24 +27,16 @@ FUNCTIONALITY FOR 4.6.0:
 
 ! bind-stack: locals map to frame indices. maybe for 4.6.1 ... but prefer to get the perf good at release.
   (issue is computation is dominated by lhmsv_get/put/string_hash_func.)
-
-  o 1st AST pass: pivot around to have begin, end, main, funcs, subrs
-    k all begin statements -> one list
-    k all end   statements -> one list
-    k all func defs -> one list
-    k all subr defs -> one list
-    k all else -> main-statements list
-    k sllv_pop/append to make it quick
-    k cst_pre_analyze_t struct or some such?
-    k begin/end -> statement lists, and UT the lexical scoping.
-    k propagate -v to post-analyze
-    ! BOUNDVAR->LOCALVAR thruout
-    ? ctor-0 frindex field @ mlr_dsl_ast_node_t?
-  k 2nd AST pass: analyze each for max depth: local def, write, read. adapt existing lmhsv/resolve logic.
-  x 3rd AST pass: rewrite localvar names w/ frame-relative indices
-  o CST statement-list: push/pop count for entry/exit; mv_absents on enter; mv_frees on exit
-  o mv_absent init: find a way to do this only when needed.
-  o mv_absent init: UT read/define/read. special case: 'local nonesuch = nonesuch'.
+* BOUNDVAR->LOCALVAR thruout
+* make a top_level_statement_block_t for use in the CST
+  - it includes a local_stack_t
+  - local_stack_t includes an in_use flag
+  - begin/main/end of course can't be reentered (they are unnamed) but func/subr can. alloc new stack if in_use.
+  - statement_list needs a wrapper object too (not just sllv_t); if (has_absent_read) { absentify local-count }
+    at handle_statement_list.
+* CST statement-list: push/pop count for entry/exit; mv_absents on enter; mv_frees on exit
+* mv_absent init: find a way to do this only when needed.
+* mv_absent init: UT read/define/read. special case: 'local nonesuch = nonesuch'.
 
 * valgrinds
 
