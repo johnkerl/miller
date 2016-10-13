@@ -3,6 +3,7 @@
 
 #include "containers/mlrval.h"
 
+// ================================================================
 // Bound & scoped variables for use in for-loops, function bodies, and
 // subroutine bodies. Indices of local variables, and max-depth for top-level
 // statement blocks, are compted by the stack-allocator which marks up the AST
@@ -11,6 +12,7 @@
 // A convention shared between the stack-allocator and this data structure is
 // that slot 0 is an absent-null which is used for reads of undefined (or
 // as-yet-undefined) local variables.
+// ================================================================
 
 // ----------------------------------------------------------------
 typedef struct _local_stack_t {
@@ -29,6 +31,8 @@ typedef struct _local_stack_t {
 local_stack_t* local_stack_alloc(int size);
 void local_stack_free(local_stack_t* pstack);
 
+// Sets/clear the in-use flag for top-level statement blocks, and verifies
+// the contract for absent-null at slot 0.
 void local_stack_enter(local_stack_t* pstack);
 void local_stack_exit (local_stack_t* pstack);
 

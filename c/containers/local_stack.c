@@ -34,6 +34,7 @@ void local_stack_enter(local_stack_t* pstack) {
 	pstack->in_use = TRUE;
 }
 
+// ----------------------------------------------------------------
 void local_stack_exit (local_stack_t* pstack) {
 	pstack->in_use = FALSE;
 	if (!mv_is_absent(&pstack->pvars[0])) {
