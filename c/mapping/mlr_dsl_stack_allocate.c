@@ -346,6 +346,36 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pfr
 			printf("POP FRAME %s frct=%d\n", pnode->text, pnode->frame_var_count);
 		}
 
+	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY) { // xxx comment
+
+		mlr_dsl_ast_node_t* pkeynode     = pnode->pchildren->phead->pvvalue;
+		mlr_dsl_ast_node_t* pkeylistnode = pnode->pchildren->phead->pnext->pvvalue;
+		mlr_dsl_ast_node_t* pblocknode   = pnode->pchildren->phead->pnext->pnext->pvvalue;
+
+		// xxx note keylistnode is outside the block binding. in particular if there are any localvar reads
+		// in there they shouldn't read from forloop boundvars.
+		for (sllve_t* pe = pkeylistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+			pass_1_for_node(pchild, pframe_group, trace);
+		}
+
+		if (trace) {
+			leader_print(pframe_group->plist->length);
+			printf("PUSH FRAME %s\n", pnode->text);
+		}
+		stkalc_frame_t* pnext_frame = stkalc_frame_alloc();
+		stkalc_frame_group_push(pframe_group, pnext_frame);
+
+		stkalc_frame_group_mutate_node_for_define(pframe_group, pkeynode, "FOR-BIND", trace);
+		pass_1_for_statement_block(pblocknode, pframe_group, trace);
+		pnode->frame_var_count = pnext_frame->var_count;
+
+		stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
+		if (trace) {
+			leader_print(pframe_group->plist->length);
+			printf("POP FRAME %s frct=%d\n", pnode->text, pnode->frame_var_count);
+		}
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR) { // xxx comment
 
 		mlr_dsl_ast_node_t* pvarsnode    = pnode->pchildren->phead->pvvalue;

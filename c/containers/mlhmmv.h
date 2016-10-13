@@ -99,6 +99,8 @@ void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys);
 mlhmmv_value_t mlhmmv_copy_submap(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 void mlhmmv_free_submap(mlhmmv_value_t submap);
 
+sllv_t* mlhmmv_copy_keys_from_submap(mlhmmv_t* pmap, sllmv_t* pmvkeys);
+
 // Unset value/submap from a specified level onward, also unsetting any maps which become empty as a result.
 // Examples:
 //   {

@@ -17,6 +17,12 @@ MISC:
 
 * xsv notes; update rust/go experiment info
 
+* mand bench somewhere; other benches.
+* also note mkvgen somewhere.
+
+* when @x is a:b:c:v then allow for(a,b in @x) to bind to *unique* a,b pairs.
+  syntax: for(a, ... in @v) etc.
+
 ----------------------------------------------------------------
 5.0.0:
 
@@ -30,9 +36,9 @@ FUNCTIONALITY FOR 4.6.0:
 * make a top_level_statement_block_t for use in the CST
   - it includes a local_stack_t
   - local_stack_t includes an in_use flag
-  - begin/main/end of course can't be reentered (they are unnamed) but func/subr can. alloc new stack if in_use.
   - statement_list needs a wrapper object too (not just sllv_t); if (has_absent_read) { absentify local-count }
     at handle_statement_list.
+  - begin/main/end of course can't be reentered (they are unnamed) but func/subr can. alloc new stack if in_use.
 * CST statement-list: push/pop count for entry/exit; mv_absents on enter; mv_frees on exit
 * mv_absent init: find a way to do this only when needed.
 * mv_absent init: UT read/define/read. special case: 'local nonesuch = nonesuch'.

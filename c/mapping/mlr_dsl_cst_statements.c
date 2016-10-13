@@ -55,6 +55,7 @@ static cst_statement_allocator_t alloc_while;
 static cst_statement_allocator_t alloc_do_while;
 static cst_statement_allocator_t alloc_for_srec;
 static cst_statement_allocator_t alloc_for_oosvar;
+static cst_statement_allocator_t alloc_for_oosvar_key_only;
 static cst_statement_allocator_t alloc_triple_for;
 static cst_statement_allocator_t alloc_break;
 static cst_statement_allocator_t alloc_continue;
@@ -146,6 +147,7 @@ static cst_statement_handler_t handle_while;
 static cst_statement_handler_t handle_do_while;
 static cst_statement_handler_t handle_for_srec;
 static cst_statement_handler_t handle_for_oosvar;
+static cst_statement_handler_t handle_for_oosvar_key_only;
 static cst_statement_handler_t handle_triple_for;
 static cst_statement_handler_t handle_break;
 static cst_statement_handler_t handle_continue;
@@ -305,6 +307,9 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		break;
 	case MD_AST_NODE_TYPE_FOR_OOSVAR:
 		return alloc_for_oosvar(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
+		break;
+	case MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY:
+		return alloc_for_oosvar_key_only(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
 	case MD_AST_NODE_TYPE_TRIPLE_FOR:
 		return alloc_triple_for(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
@@ -1153,6 +1158,39 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 	pstatement->pframe = bind_stack_frame_alloc_unfenced();
 
 	pstatement->pnode_handler = handle_for_oosvar;
+	pstatement->pblock_handler = handle_statement_list_with_break_continue;
+
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_for_oosvar_key_only(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	// Left child node is single bound variable
+	// Middle child node is keylist for basepoint in the oosvar mlhmmv.
+	// Right child node is the list of statements in the body.
+	mlr_dsl_ast_node_t* pleft     = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pmiddle   = pnode->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* pright    = pnode->pchildren->phead->pnext->pnext->pvvalue;
+
+	pstatement->pfor_oosvar_k_names = slls_alloc();
+	slls_append_with_free(pstatement->pfor_oosvar_k_names, mlr_strdup_or_die(pleft->text));
+
+	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
+		pcst, pmiddle, type_inferencing, context_flags);
+
+	sllv_t* pblock_statements = sllv_alloc();
+	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+		sllv_append(pblock_statements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
+			type_inferencing, context_flags));
+	}
+	pstatement->pblock_statements = pblock_statements;
+	pstatement->pframe = bind_stack_frame_alloc_unfenced();
+
+	pstatement->pnode_handler = handle_for_oosvar_key_only;
 	pstatement->pblock_handler = handle_statement_list_with_break_continue;
 
 	return pstatement;
@@ -2622,6 +2660,51 @@ static void handle_for_oosvar_aux(
 		}
 
 	}
+}
+
+// ----------------------------------------------------------------
+static void handle_for_oosvar_key_only(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
+	loop_stack_push(pvars->ploop_stack);
+
+	// Evaluate the keylist: e.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', find the value of $4 for
+	// the current record.
+
+	int keys_all_non_null_or_error = FALSE;
+	sllmv_t* plhskeylist = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
+		&keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		// Locate the submap indexed by the keylist and copy its keys. E.g. in 'for (k1 in @a[3][$4]) { ... }', the
+		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
+		// for-loop.
+		sllv_t* pkeys = mlhmmv_copy_keys_from_submap(pvars->poosvars, plhskeylist);
+
+		for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
+			// Bind the v-name to the terminal mlrval:
+			bind_stack_set(pvars->pbind_stack, pstatement->pfor_oosvar_k_names->phead->value, pe->pvvalue, NO_FREE);
+
+			// Execute the loop-body statements:
+			pstatement->pblock_handler(pstatement->pblock_statements, pvars, pcst_outputs);
+
+			if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
+				loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
+			}
+			if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
+				loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
+			}
+
+			mv_free(pe->pvvalue);
+		}
+		sllv_free(pkeys);
+	}
+	sllmv_free(plhskeylist);
+
+	loop_stack_pop(pvars->ploop_stack);
+	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
 }
 
 // ----------------------------------------------------------------

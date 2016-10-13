@@ -45,6 +45,7 @@ static void mlhmmv_level_put_value_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* 
 static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel);
 
 static mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue);
+static sllv_t* mlhmmv_copy_keys_from_submap_aux(mlhmmv_value_t* pvalue);
 
 static void mlhmmv_to_lrecs_aux_across_records(mlhmmv_level_t* plevel, char* prefix, sllmve_t* prestnames,
 	lrec_t* ptemplate, sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator);
@@ -672,6 +673,38 @@ void mlhmmv_free_submap(mlhmmv_value_t submap) {
 	} else if (submap.u.pnext_level != NULL) {
 		mlhmmv_level_free(submap.u.pnext_level);
 	}
+}
+
+// ----------------------------------------------------------------
+sllv_t* mlhmmv_copy_keys_from_submap(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
+	int error;
+	if (pmvkeys->length == 0) {
+		mlhmmv_value_t root_value = (mlhmmv_value_t) {
+			.is_terminal = FALSE,
+			.u.pnext_level = pmap->proot_level,
+		};
+		return mlhmmv_copy_keys_from_submap_aux(&root_value);
+	} else {
+		mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(pmap->proot_level, pmvkeys->phead, &error);
+		if (pfromentry != NULL) {
+			return mlhmmv_copy_keys_from_submap_aux(&pfromentry->level_value);
+		} else {
+			return sllv_alloc();
+		}
+	}
+}
+
+static sllv_t* mlhmmv_copy_keys_from_submap_aux(mlhmmv_value_t* pvalue) {
+	sllv_t* pkeys = sllv_alloc();
+
+	if (!pvalue->is_terminal) {
+		mlhmmv_level_t* pnext_level = pvalue->u.pnext_level;
+		for (mlhmmv_level_entry_t* pe = pnext_level->phead; pe != NULL; pe = pe->pnext) {
+			sllv_append(pkeys, mv_alloc_copy(&pe->level_key));
+		}
+	}
+
+	return pkeys;
 }
 
 // ----------------------------------------------------------------

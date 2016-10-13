@@ -132,13 +132,15 @@ md_statement_braced_end(A) ::= md_begin_block(B). { A = B; }
 md_statement_braced_end(A) ::= md_end_block(B).   { A = B; }
 
 // Nested control structures:
-md_statement_braced_end(A) ::= md_cond_block(B).           { A = B; }
-md_statement_braced_end(A) ::= md_while_block(B).          { A = B; }
-md_statement_braced_end(A) ::= md_for_loop_full_srec(B).   { A = B; }
-md_statement_braced_end(A) ::= md_for_loop_full_oosvar(B). { A = B; }
-md_statement_braced_end(A) ::= md_for_loop_oosvar(B).      { A = B; }
-md_statement_braced_end(A) ::= md_triple_for(B).           { A = B; }
-md_statement_braced_end(A) ::= md_if_chain(B).             { A = B; }
+md_statement_braced_end(A) ::= md_cond_block(B).                    { A = B; }
+md_statement_braced_end(A) ::= md_while_block(B).                   { A = B; }
+md_statement_braced_end(A) ::= md_for_loop_full_srec(B).            { A = B; }
+md_statement_braced_end(A) ::= md_for_loop_full_oosvar(B).          { A = B; }
+md_statement_braced_end(A) ::= md_for_loop_full_oosvar_key_only(B). { A = B; }
+md_statement_braced_end(A) ::= md_for_loop_oosvar(B).               { A = B; }
+md_statement_braced_end(A) ::= md_for_loop_oosvar_key_only(B).      { A = B; }
+md_statement_braced_end(A) ::= md_triple_for(B).                    { A = B; }
+md_statement_braced_end(A) ::= md_if_chain(B).                      { A = B; }
 
 md_statement_not_braced_end(A) ::= MD_TOKEN_SUBR_CALL md_fcn_or_subr_call(B). {
 	A = mlr_dsl_ast_node_alloc_unary("subr_call", MD_AST_NODE_TYPE_SUBR_CALLSITE, B);
@@ -370,6 +372,27 @@ md_for_loop_full_oosvar(A) ::=
 	);
 }
 
+// for(k in @*) { ... }
+md_for_loop_full_oosvar_key_only(A) ::=
+	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
+		md_for_loop_index(K)
+		MD_TOKEN_IN
+		MD_TOKEN_FULL_OOSVAR
+	MD_TOKEN_RPAREN
+	MD_TOKEN_LBRACE
+		md_statement_block(S)
+	MD_TOKEN_RBRACE.
+{
+	mlr_dsl_ast_node_replace_text(S, "for_full_oosvar_block");
+	A = mlr_dsl_ast_node_alloc_ternary(
+		F->text,
+		MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY,
+		K,
+		mlr_dsl_ast_node_alloc_zary("empty_keylist", MD_AST_NODE_TYPE_OOSVAR_KEYLIST),
+		S
+	);
+}
+
 // for(k, v in @o[1][2]) { ... }
 md_for_loop_oosvar(A) ::=
 	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
@@ -433,6 +456,26 @@ md_for_oosvar_keylist(A) ::= MD_TOKEN_NON_SIGIL_NAME(K). {
 }
 md_for_oosvar_keylist(A) ::= md_for_oosvar_keylist(L) MD_TOKEN_COMMA MD_TOKEN_NON_SIGIL_NAME(K). {
 	A = mlr_dsl_ast_node_append_arg(L, K);
+}
+
+// for(k in @o[1][2]) { ... }
+md_for_loop_oosvar_key_only(A) ::=
+	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
+		md_for_loop_index(K)
+		MD_TOKEN_IN md_oosvar_keylist(O)
+	MD_TOKEN_RPAREN
+	MD_TOKEN_LBRACE
+		md_statement_block(S)
+	MD_TOKEN_RBRACE.
+{
+	mlr_dsl_ast_node_replace_text(S, "for_loop_oosvar_block");
+	A = mlr_dsl_ast_node_alloc_ternary(
+		F->text,
+		MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY,
+		K,
+		O,
+		S
+	);
 }
 
 // ----------------------------------------------------------------
