@@ -27,7 +27,6 @@ FUNCTIONALITY FOR 4.6.0:
 
 ! bind-stack: locals map to frame indices. maybe for 4.6.1 ... but prefer to get the perf good at release.
   (issue is computation is dominated by lhmsv_get/put/string_hash_func.)
-* BOUNDVAR->LOCALVAR thruout
 * make a top_level_statement_block_t for use in the CST
   - it includes a local_stack_t
   - local_stack_t includes an in_use flag
@@ -39,7 +38,6 @@ FUNCTIONALITY FOR 4.6.0:
 * mv_absent init: UT read/define/read. special case: 'local nonesuch = nonesuch'.
 
 * valgrinds
-
 * xxxes
 
 ----------------------------------------------------------------
