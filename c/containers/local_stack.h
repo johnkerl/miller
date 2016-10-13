@@ -29,6 +29,9 @@ typedef struct _local_stack_t {
 local_stack_t* local_stack_alloc(int size);
 void local_stack_free(local_stack_t* pstack);
 
+void local_stack_enter(local_stack_t* pstack);
+void local_stack_exit (local_stack_t* pstack);
+
 // Frames are entered/exited for each curly-braced statement block, including
 // the top-level block itself as well as ifs/fors/whiles.
 

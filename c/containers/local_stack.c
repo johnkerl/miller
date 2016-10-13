@@ -22,16 +22,25 @@ local_stack_t* local_stack_alloc(int size) {
 void local_stack_free(local_stack_t* pstack) {
 	if (pstack == NULL)
 		return;
-	if (!mv_is_absent(&pstack->pvars[0])) {
-		fprintf(stderr, "%s: Internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
 	for (int i = 0; i < pstack->size; i++) {
 		mv_free(&pstack->pvars[i]);
 	}
 	free(pstack->pvars);
 	free(pstack);
+}
+
+// ----------------------------------------------------------------
+void local_stack_enter(local_stack_t* pstack) {
+	pstack->in_use = TRUE;
+}
+
+void local_stack_exit (local_stack_t* pstack) {
+	pstack->in_use = FALSE;
+	if (!mv_is_absent(&pstack->pvars[0])) {
+		fprintf(stderr, "%s: Internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
 }
 
 // ----------------------------------------------------------------
