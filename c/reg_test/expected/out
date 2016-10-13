@@ -26427,7 +26427,7 @@ text="block", type=STATEMENT_BLOCK:
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="unset", type=UNSET:
                 text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                    text="k", type=BOUND_VARIABLE.
+                    text="k", type=LOCAL_VARIABLE.
     text="=", type=SREC_ASSIGNMENT:
         text="j", type=FIELD_NAME.
         text="NR", type=CONTEXT_VARIABLE.
@@ -26443,7 +26443,7 @@ text="main_block", type=STATEMENT_BLOCK: frct=1 maxct=3
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="unset", type=UNSET:
                 text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                    text="k", type=BOUND_VARIABLE. fridx=0 gridx=0 absidx=1
+                    text="k", type=LOCAL_VARIABLE. fridx=0 gridx=0 absidx=1
     text="=", type=SREC_ASSIGNMENT:
         text="j", type=FIELD_NAME.
         text="NR", type=CONTEXT_VARIABLE.
@@ -26472,12 +26472,12 @@ text="block", type=STATEMENT_BLOCK:
             text="if_head", type=IF_HEAD:
                 text="if", type=IF_ITEM:
                     text="!=", type=OPERATOR:
-                        text="k", type=BOUND_VARIABLE.
+                        text="k", type=LOCAL_VARIABLE.
                         text="x", type=STRNUM_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK:
                         text="unset", type=UNSET:
                             text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                                text="k", type=BOUND_VARIABLE.
+                                text="k", type=LOCAL_VARIABLE.
     text="=", type=SREC_ASSIGNMENT:
         text="j", type=FIELD_NAME.
         text="NR", type=CONTEXT_VARIABLE.
@@ -26494,12 +26494,12 @@ text="main_block", type=STATEMENT_BLOCK: frct=1 maxct=3
             text="if_head", type=IF_HEAD:
                 text="if", type=IF_ITEM:
                     text="!=", type=OPERATOR:
-                        text="k", type=BOUND_VARIABLE. fridx=0 gridx=0 absidx=1
+                        text="k", type=LOCAL_VARIABLE. fridx=0 gridx=0 absidx=1
                         text="x", type=STRNUM_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK: frct=0
                         text="unset", type=UNSET:
                             text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                                text="k", type=BOUND_VARIABLE. fridx=0 gridx=1 absidx=3
+                                text="k", type=LOCAL_VARIABLE. fridx=0 gridx=1 absidx=3
     text="=", type=SREC_ASSIGNMENT:
         text="j", type=FIELD_NAME.
         text="NR", type=CONTEXT_VARIABLE.
@@ -26527,11 +26527,11 @@ text="block", type=STATEMENT_BLOCK:
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
                 text=".", type=OPERATOR:
-                    text="k", type=BOUND_VARIABLE.
+                    text="k", type=LOCAL_VARIABLE.
                     text="_orig", type=STRNUM_LITERAL.
-                text="v", type=BOUND_VARIABLE.
+                text="v", type=LOCAL_VARIABLE.
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
-                text="k", type=BOUND_VARIABLE.
+                text="k", type=LOCAL_VARIABLE.
                 text="other", type=STRNUM_LITERAL.
 
 BLOCKED AST:
@@ -26545,11 +26545,11 @@ text="main_block", type=STATEMENT_BLOCK: frct=1 maxct=3
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
                 text=".", type=OPERATOR:
-                    text="k", type=BOUND_VARIABLE. fridx=0 gridx=0 absidx=1
+                    text="k", type=LOCAL_VARIABLE. fridx=0 gridx=0 absidx=1
                     text="_orig", type=STRNUM_LITERAL.
-                text="v", type=BOUND_VARIABLE. fridx=1 gridx=0 absidx=2
+                text="v", type=LOCAL_VARIABLE. fridx=1 gridx=0 absidx=2
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
-                text="k", type=BOUND_VARIABLE. fridx=0 gridx=0 absidx=1
+                text="k", type=LOCAL_VARIABLE. fridx=0 gridx=0 absidx=1
                 text="other", type=STRNUM_LITERAL.
 
 a     b     i     x     y     a_orig b_orig i_orig x_orig              y_orig
@@ -26575,8 +26575,8 @@ text="block", type=STATEMENT_BLOCK:
             text="v", type=NON_SIGIL_NAME.
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
-                text="v", type=BOUND_VARIABLE.
-                text="k", type=BOUND_VARIABLE.
+                text="v", type=LOCAL_VARIABLE.
+                text="k", type=LOCAL_VARIABLE.
 
 BLOCKED AST:
 
@@ -26588,8 +26588,8 @@ text="main_block", type=STATEMENT_BLOCK: frct=1 maxct=3
             text="v", type=NON_SIGIL_NAME. fridx=1 gridx=0 absidx=2
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
-                text="v", type=BOUND_VARIABLE. fridx=1 gridx=0 absidx=2
-                text="k", type=BOUND_VARIABLE. fridx=0 gridx=0 absidx=1
+                text="v", type=LOCAL_VARIABLE. fridx=1 gridx=0 absidx=2
+                text="k", type=LOCAL_VARIABLE. fridx=0 gridx=0 absidx=1
 
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,pan=b,1=i,0.3467901443380824=x,0.7268028627434533=y
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,eks=a,pan=b,2=i,0.7586799647899636=x,0.5221511083334797=y
@@ -26624,7 +26624,7 @@ text="block", type=STATEMENT_BLOCK:
             text="if_head", type=IF_HEAD:
                 text="if", type=IF_ITEM:
                     text="=~", type=OPERATOR:
-                        text="k", type=BOUND_VARIABLE.
+                        text="k", type=LOCAL_VARIABLE.
                         text="^[xy]$", type=STRNUM_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK:
                         text="=", type=SREC_ASSIGNMENT:
@@ -26632,7 +26632,7 @@ text="block", type=STATEMENT_BLOCK:
                             text="+", type=OPERATOR:
                                 text="sum", type=FIELD_NAME.
                                 text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                                    text="k", type=BOUND_VARIABLE.
+                                    text="k", type=LOCAL_VARIABLE.
 
 BLOCKED AST:
 
@@ -26649,7 +26649,7 @@ text="main_block", type=STATEMENT_BLOCK: frct=1 maxct=3
             text="if_head", type=IF_HEAD:
                 text="if", type=IF_ITEM:
                     text="=~", type=OPERATOR:
-                        text="k", type=BOUND_VARIABLE. fridx=0 gridx=0 absidx=1
+                        text="k", type=LOCAL_VARIABLE. fridx=0 gridx=0 absidx=1
                         text="^[xy]$", type=STRNUM_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK: frct=0
                         text="=", type=SREC_ASSIGNMENT:
@@ -26657,7 +26657,7 @@ text="main_block", type=STATEMENT_BLOCK: frct=1 maxct=3
                             text="+", type=OPERATOR:
                                 text="sum", type=FIELD_NAME.
                                 text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                                    text="k", type=BOUND_VARIABLE. fridx=0 gridx=1 absidx=3
+                                    text="k", type=LOCAL_VARIABLE. fridx=0 gridx=1 absidx=3
 
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=1.073593
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=1.280831
@@ -26693,7 +26693,7 @@ text="block", type=STATEMENT_BLOCK:
             text="if_head", type=IF_HEAD:
                 text="if", type=IF_ITEM:
                     text="=~", type=OPERATOR:
-                        text="k", type=BOUND_VARIABLE.
+                        text="k", type=LOCAL_VARIABLE.
                         text="^[xy]$", type=STRNUM_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK:
                         text="=", type=SREC_ASSIGNMENT:
@@ -26702,7 +26702,7 @@ text="block", type=STATEMENT_BLOCK:
                                 text="sum", type=FIELD_NAME.
                                 text="float", type=NON_SIGIL_NAME:
                                     text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                                        text="k", type=BOUND_VARIABLE.
+                                        text="k", type=LOCAL_VARIABLE.
 
 BLOCKED AST:
 
@@ -26720,7 +26720,7 @@ text="main_block", type=STATEMENT_BLOCK: frct=1 maxct=3
             text="if_head", type=IF_HEAD:
                 text="if", type=IF_ITEM:
                     text="=~", type=OPERATOR:
-                        text="k", type=BOUND_VARIABLE. fridx=0 gridx=0 absidx=1
+                        text="k", type=LOCAL_VARIABLE. fridx=0 gridx=0 absidx=1
                         text="^[xy]$", type=STRNUM_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK: frct=0
                         text="=", type=SREC_ASSIGNMENT:
@@ -26729,7 +26729,7 @@ text="main_block", type=STATEMENT_BLOCK: frct=1 maxct=3
                                 text="sum", type=FIELD_NAME.
                                 text="float", type=NON_SIGIL_NAME:
                                     text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                                        text="k", type=BOUND_VARIABLE. fridx=0 gridx=1 absidx=3
+                                        text="k", type=LOCAL_VARIABLE. fridx=0 gridx=1 absidx=3
 
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=1.073593
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=1.280831
@@ -26803,9 +26803,9 @@ text="block", type=STATEMENT_BLOCK:
                     text="n", type=STRING_LITERAL.
                     text="3", type=STRNUM_LITERAL.
                     text="4", type=STRNUM_LITERAL.
-                    text="k2", type=BOUND_VARIABLE.
-                    text="k1", type=BOUND_VARIABLE.
-                text="v", type=BOUND_VARIABLE.
+                    text="k2", type=LOCAL_VARIABLE.
+                    text="k1", type=LOCAL_VARIABLE.
+                text="v", type=LOCAL_VARIABLE.
     text="end", type=END:
         text="end_block", type=STATEMENT_BLOCK:
             text="emit", type=EMIT:
@@ -26879,9 +26879,9 @@ text="main_block", type=STATEMENT_BLOCK: frct=1 maxct=4
                     text="n", type=STRING_LITERAL.
                     text="3", type=STRNUM_LITERAL.
                     text="4", type=STRNUM_LITERAL.
-                    text="k2", type=BOUND_VARIABLE. fridx=1 gridx=0 absidx=2
-                    text="k1", type=BOUND_VARIABLE. fridx=0 gridx=0 absidx=1
-                text="v", type=BOUND_VARIABLE. fridx=2 gridx=0 absidx=3
+                    text="k2", type=LOCAL_VARIABLE. fridx=1 gridx=0 absidx=2
+                    text="k1", type=LOCAL_VARIABLE. fridx=0 gridx=0 absidx=1
+                text="v", type=LOCAL_VARIABLE. fridx=2 gridx=0 absidx=3
 
 
 mlr --opprint --from ./reg_test/input/abixy put -q 
@@ -42574,7 +42574,7 @@ text="block", type=STATEMENT_BLOCK:
         text="func_block", type=STATEMENT_BLOCK:
             text="return_value", type=RETURN_VALUE:
                 text="**", type=OPERATOR:
-                    text="x", type=BOUND_VARIABLE.
+                    text="x", type=LOCAL_VARIABLE.
                     text="2", type=STRNUM_LITERAL.
     text="g", type=FUNC_DEF:
         text="g", type=NON_SIGIL_NAME:
@@ -42582,7 +42582,7 @@ text="block", type=STATEMENT_BLOCK:
         text="func_block", type=STATEMENT_BLOCK:
             text="return_value", type=RETURN_VALUE:
                 text="+", type=OPERATOR:
-                    text="y", type=BOUND_VARIABLE.
+                    text="y", type=LOCAL_VARIABLE.
                     text="1", type=STRNUM_LITERAL.
     text="s", type=SUBR_DEF:
         text="s", type=NON_SIGIL_NAME:
@@ -42593,9 +42593,9 @@ text="block", type=STATEMENT_BLOCK:
             text="print", type=PRINT:
                 text=".", type=OPERATOR:
                     text=".", type=OPERATOR:
-                        text="a", type=BOUND_VARIABLE.
-                        text="b", type=BOUND_VARIABLE.
-                    text="c", type=BOUND_VARIABLE.
+                        text="a", type=LOCAL_VARIABLE.
+                        text="b", type=LOCAL_VARIABLE.
+                    text="c", type=LOCAL_VARIABLE.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
     text="begin", type=BEGIN:
@@ -42605,12 +42605,12 @@ text="block", type=STATEMENT_BLOCK:
                     text="a", type=STRING_LITERAL.
                 text="0", type=STRNUM_LITERAL.
             text="local", type=LOCAL:
-                text="ell", type=BOUND_VARIABLE.
+                text="ell", type=LOCAL_VARIABLE.
                 text="1", type=STRNUM_LITERAL.
             text="print", type=PRINT:
                 text=".", type=OPERATOR:
                     text="local1 = ", type=STRNUM_LITERAL.
-                    text="ell", type=BOUND_VARIABLE.
+                    text="ell", type=LOCAL_VARIABLE.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
     text="end", type=END:
@@ -42621,12 +42621,12 @@ text="block", type=STATEMENT_BLOCK:
                         text="a", type=STRING_LITERAL.
                 text="stream", type=STREAM:
             text="local", type=LOCAL:
-                text="emm", type=BOUND_VARIABLE.
+                text="emm", type=LOCAL_VARIABLE.
                 text="2", type=STRNUM_LITERAL.
             text="print", type=PRINT:
                 text=".", type=OPERATOR:
                     text="local2 = ", type=STRNUM_LITERAL.
-                    text="emm", type=BOUND_VARIABLE.
+                    text="emm", type=LOCAL_VARIABLE.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
     text="=", type=OOSVAR_ASSIGNMENT:
@@ -42649,7 +42649,7 @@ text="block", type=STATEMENT_BLOCK:
             text="print", type=PRINT:
                 text=".", type=OPERATOR:
                     text="local3 = ", type=STRNUM_LITERAL.
-                    text="ell", type=BOUND_VARIABLE.
+                    text="ell", type=LOCAL_VARIABLE.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
     text="=", type=OOSVAR_ASSIGNMENT:
@@ -42681,7 +42681,7 @@ text="block", type=STATEMENT_BLOCK:
             text="print", type=PRINT:
                 text=".", type=OPERATOR:
                     text="local4 = ", type=STRNUM_LITERAL.
-                    text="emm", type=BOUND_VARIABLE.
+                    text="emm", type=LOCAL_VARIABLE.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
 
@@ -42694,7 +42694,7 @@ text="f", type=FUNC_DEF: frct=2 maxct=2
     text="func_block", type=STATEMENT_BLOCK:
         text="return_value", type=RETURN_VALUE:
             text="**", type=OPERATOR:
-                text="x", type=BOUND_VARIABLE. fridx=1 gridx=0 absidx=1
+                text="x", type=LOCAL_VARIABLE. fridx=1 gridx=0 absidx=1
                 text="2", type=STRNUM_LITERAL.
 
 FUNCTION DEFINITION:
@@ -42704,7 +42704,7 @@ text="g", type=FUNC_DEF: frct=2 maxct=2
     text="func_block", type=STATEMENT_BLOCK:
         text="return_value", type=RETURN_VALUE:
             text="+", type=OPERATOR:
-                text="y", type=BOUND_VARIABLE. fridx=1 gridx=0 absidx=1
+                text="y", type=LOCAL_VARIABLE. fridx=1 gridx=0 absidx=1
                 text="1", type=STRNUM_LITERAL.
 
 SUBROUTINE DEFINITION:
@@ -42717,9 +42717,9 @@ text="s", type=SUBR_DEF: frct=4 maxct=4
         text="print", type=PRINT:
             text=".", type=OPERATOR:
                 text=".", type=OPERATOR:
-                    text="a", type=BOUND_VARIABLE. fridx=1 gridx=0 absidx=1
-                    text="b", type=BOUND_VARIABLE. fridx=2 gridx=0 absidx=2
-                text="c", type=BOUND_VARIABLE. fridx=3 gridx=0 absidx=3
+                    text="a", type=LOCAL_VARIABLE. fridx=1 gridx=0 absidx=1
+                    text="b", type=LOCAL_VARIABLE. fridx=2 gridx=0 absidx=2
+                text="c", type=LOCAL_VARIABLE. fridx=3 gridx=0 absidx=3
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
 
@@ -42731,12 +42731,12 @@ text="begin", type=BEGIN: frct=2 maxct=2
                 text="a", type=STRING_LITERAL.
             text="0", type=STRNUM_LITERAL.
         text="local", type=LOCAL:
-            text="ell", type=BOUND_VARIABLE. fridx=1 gridx=0 absidx=1
+            text="ell", type=LOCAL_VARIABLE. fridx=1 gridx=0 absidx=1
             text="1", type=STRNUM_LITERAL.
         text="print", type=PRINT:
             text=".", type=OPERATOR:
                 text="local1 = ", type=STRNUM_LITERAL.
-                text="ell", type=BOUND_VARIABLE. fridx=1 gridx=0 absidx=1
+                text="ell", type=LOCAL_VARIABLE. fridx=1 gridx=0 absidx=1
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
 
@@ -42754,7 +42754,7 @@ text="begin", type=BEGIN: frct=1 maxct=1
         text="print", type=PRINT:
             text=".", type=OPERATOR:
                 text="local3 = ", type=STRNUM_LITERAL.
-                text="ell", type=BOUND_VARIABLE. fridx=0 gridx=0 absidx=0
+                text="ell", type=LOCAL_VARIABLE. fridx=0 gridx=0 absidx=0
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
 
@@ -42767,12 +42767,12 @@ text="end", type=END: frct=2 maxct=2
                     text="a", type=STRING_LITERAL.
             text="stream", type=STREAM:
         text="local", type=LOCAL:
-            text="emm", type=BOUND_VARIABLE. fridx=1 gridx=0 absidx=1
+            text="emm", type=LOCAL_VARIABLE. fridx=1 gridx=0 absidx=1
             text="2", type=STRNUM_LITERAL.
         text="print", type=PRINT:
             text=".", type=OPERATOR:
                 text="local2 = ", type=STRNUM_LITERAL.
-                text="emm", type=BOUND_VARIABLE. fridx=1 gridx=0 absidx=1
+                text="emm", type=LOCAL_VARIABLE. fridx=1 gridx=0 absidx=1
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
 
@@ -42792,7 +42792,7 @@ text="end", type=END: frct=1 maxct=1
         text="print", type=PRINT:
             text=".", type=OPERATOR:
                 text="local4 = ", type=STRNUM_LITERAL.
-                text="emm", type=BOUND_VARIABLE. fridx=0 gridx=0 absidx=0
+                text="emm", type=LOCAL_VARIABLE. fridx=0 gridx=0 absidx=0
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
 

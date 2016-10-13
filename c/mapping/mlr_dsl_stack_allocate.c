@@ -315,7 +315,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pfr
 		// Do the LHS after the RHS, in case 'local nonesuch = nonesuch'
 		stkalc_frame_group_mutate_node_for_write(pframe_group, pnamenode, "WRITE", trace);
 
-	} else if (pnode->type == MD_AST_NODE_TYPE_BOUND_VARIABLE) { // RHS
+	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_VARIABLE) { // RHS
 		stkalc_frame_group_mutate_node_for_read(pframe_group, pnode, "READ", trace);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) {

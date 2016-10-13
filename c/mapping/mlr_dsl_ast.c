@@ -147,7 +147,7 @@ int mlr_dsl_ast_node_cannot_be_bare_boolean(mlr_dsl_ast_node_t* pnode) {
 	case MD_AST_NODE_TYPE_NON_SIGIL_NAME:
 	case MD_AST_NODE_TYPE_OPERATOR:
 	case MD_AST_NODE_TYPE_ENV:
-	case MD_AST_NODE_TYPE_BOUND_VARIABLE:
+	case MD_AST_NODE_TYPE_LOCAL_VARIABLE:
 		return FALSE;
 		break;
 	default:
@@ -267,7 +267,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FOR_OOSVAR:                       return "FOR_OOSVAR";                       break;
 	case MD_AST_NODE_TYPE_FOR_VARIABLES:                    return "FOR_VARIABLES";                    break;
 	case MD_AST_NODE_TYPE_TRIPLE_FOR:                       return "TRIPLE_FOR";                       break;
-	case MD_AST_NODE_TYPE_BOUND_VARIABLE:                   return "BOUND_VARIABLE";                   break;
+	case MD_AST_NODE_TYPE_LOCAL_VARIABLE:                   return "LOCAL_VARIABLE";                   break;
 	case MD_AST_NODE_TYPE_IN:                               return "IN";                               break;
 	case MD_AST_NODE_TYPE_BREAK:                            return "BREAK";                            break;
 	case MD_AST_NODE_TYPE_CONTINUE:                         return "CONTINUE";                         break;

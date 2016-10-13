@@ -53,8 +53,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 			return rval_evaluator_alloc_from_context_variable(pnode->text);
 			break;
 
-		case MD_AST_NODE_TYPE_BOUND_VARIABLE:
-			return rval_evaluator_alloc_from_bound_variable(pnode->text);
+		case MD_AST_NODE_TYPE_LOCAL_VARIABLE:
+			return rval_evaluator_alloc_from_local_variable(pnode->text);
 			break;
 
 		default:
@@ -689,12 +689,12 @@ rval_evaluator_t* rval_evaluator_alloc_from_context_variable(char* variable_name
 }
 
 // ================================================================
-typedef struct _rval_evaluator_from_bound_variable_state_t {
+typedef struct _rval_evaluator_from_local_variable_state_t {
 	char* variable_name;
-} rval_evaluator_from_bound_variable_state_t;
+} rval_evaluator_from_local_variable_state_t;
 
-mv_t rval_evaluator_from_bound_variable_func(void* pvstate, variables_t* pvars) {
-	rval_evaluator_from_bound_variable_state_t* pstate = pvstate;
+mv_t rval_evaluator_from_local_variable_func(void* pvstate, variables_t* pvars) {
+	rval_evaluator_from_local_variable_state_t* pstate = pvstate;
 	mv_t* pval = bind_stack_resolve(pvars->pbind_stack, pstate->variable_name);
 	if (pval == NULL) {
 		return mv_absent();
@@ -702,21 +702,21 @@ mv_t rval_evaluator_from_bound_variable_func(void* pvstate, variables_t* pvars) 
 		return mv_copy(pval);
 	}
 }
-static void rval_evaluator_from_bound_variable_free(rval_evaluator_t* pevaluator) {
-	rval_evaluator_from_bound_variable_state_t* pstate = pevaluator->pvstate;
+static void rval_evaluator_from_local_variable_free(rval_evaluator_t* pevaluator) {
+	rval_evaluator_from_local_variable_state_t* pstate = pevaluator->pvstate;
 	free(pstate->variable_name);
 	free(pstate);
 	free(pevaluator);
 }
 
-rval_evaluator_t* rval_evaluator_alloc_from_bound_variable(char* variable_name) {
-	rval_evaluator_from_bound_variable_state_t* pstate = mlr_malloc_or_die(
-		sizeof(rval_evaluator_from_bound_variable_state_t));
+rval_evaluator_t* rval_evaluator_alloc_from_local_variable(char* variable_name) {
+	rval_evaluator_from_local_variable_state_t* pstate = mlr_malloc_or_die(
+		sizeof(rval_evaluator_from_local_variable_state_t));
 	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 
 	pstate->variable_name     = mlr_strdup_or_die(variable_name);
-	pevaluator->pprocess_func = rval_evaluator_from_bound_variable_func;
-	pevaluator->pfree_func    = rval_evaluator_from_bound_variable_free;
+	pevaluator->pprocess_func = rval_evaluator_from_local_variable_func;
+	pevaluator->pfree_func    = rval_evaluator_from_local_variable_free;
 
 	pevaluator->pvstate = pstate;
 	return pevaluator;
