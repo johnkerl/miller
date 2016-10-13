@@ -28,33 +28,3 @@ void local_stack_free(local_stack_t* pstack) {
 	free(pstack->pvars);
 	free(pstack);
 }
-
-// ----------------------------------------------------------------
-void local_stack_enter(local_stack_t* pstack) {
-	pstack->in_use = TRUE;
-}
-
-// ----------------------------------------------------------------
-void local_stack_exit (local_stack_t* pstack) {
-	pstack->in_use = FALSE;
-	if (!mv_is_absent(&pstack->pvars[0])) {
-		fprintf(stderr, "%s: Internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
-}
-
-// ----------------------------------------------------------------
-void local_stack_frame_enter(local_stack_t* pstack, int count) {
-	// xxx try to avoid with absent-read flag at stack-allocator ...
-	mv_t* pframe = &pstack->pvars[pstack->frame_base];
-	for (int i = 0; i < count; i++) {
-		pframe[i] = mv_absent();
-	}
-	pstack->frame_base += count;
-}
-
-// ----------------------------------------------------------------
-void local_stack_frame_exit(local_stack_t* pstack, int count) {
-	pstack->frame_base -= count;
-}
