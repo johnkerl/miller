@@ -79,6 +79,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 	}
 
 	pcst_udf_state->pframe = bind_stack_frame_alloc_fenced();
+	//printf("FVARN=%d\n", pnode->max_var_depth);
 
 	pcst_udf_state->pblock_statements = sllv_alloc();
 
@@ -215,6 +216,7 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 	}
 
 	pstate->pframe = bind_stack_frame_alloc_fenced();
+	//printf("SVARN=%d\n", pnode->max_var_depth);
 
 	pstate->pblock_statements = sllv_alloc();
 

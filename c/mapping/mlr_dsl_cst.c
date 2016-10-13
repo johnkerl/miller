@@ -119,6 +119,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 
 	for (sllve_t* pe = pcst->paast->pbegin_blocks->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+		//printf("BVARN=%d\n", pnode->max_var_depth);
 		if (print_ast) {
 			printf("\n");
 			printf("BEGIN-BLOCK:\n");
@@ -138,6 +139,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 
 	for (sllve_t* pe = pcst->paast->pend_blocks->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+		//printf("EVARN=%d\n", pnode->max_var_depth);
 		if (print_ast) {
 			printf("\n");
 			printf("END-BLOCK:\n");
@@ -160,6 +162,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 		printf("MAIN BLOCK:\n");
 		mlr_dsl_ast_node_print(pcst->paast->pmain_block);
 	}
+	//printf("MVARN=%d\n", pcst->paast->pmain_block->max_var_depth);
 	for (sllve_t* pe = pcst->paast->pmain_block->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 
