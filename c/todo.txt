@@ -20,8 +20,9 @@ MISC:
 * mand bench somewhere; other benches.
 * also note mkvgen somewhere.
 
-* when @x is a:b:c:v then allow for(a,b in @x) to bind to *unique* a,b pairs.
-  syntax: for(a, ... in @v) etc.
+* oosvar-single-for UT
+* oosvar-single-for mlh
+* oosvar-single-for mld
 
 ----------------------------------------------------------------
 5.0.0:
