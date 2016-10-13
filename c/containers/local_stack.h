@@ -16,53 +16,23 @@
 typedef struct _local_stack_t {
 	int in_use;
 	int size;
+	int frame_base;
 	mv_t* pvars;
+	// xxx has-absent-read flag ...
 } local_stack_t;
 
 // ----------------------------------------------------------------
-// Constructors/destructors
+// A stack is allocated for a top-level statement block: begin, end, or main, or
+// user-defined function/subroutine. (The latter two may be called recursively
+// in which case the in_use flag notes the need to allocate a new stack.)
 
 local_stack_t* local_stack_alloc(int size);
 void local_stack_free(local_stack_t* pstack);
 
-//local_stack_frame_t* local_stack_frame_alloc_unfenced();
-//local_stack_frame_t* local_stack_frame_alloc_fenced();
-//void local_stack_frame_free(local_stack_frame_t* pframe);
-//
-//// xxx comment
-//local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe);
-//void local_stack_frame_exit(local_stack_frame_t* pframe);
-//
-//// ----------------------------------------------------------------
-//// Scope entry/exit
-//
-//// To be called on entry to scoped block
-//void local_stack_push(local_stack_t* pstack, local_stack_frame_t* pframe);
-//
-//// To be called on exit from scoped block.
-//local_stack_frame_t* local_stack_pop(local_stack_t* pstack);
-//
-//// ----------------------------------------------------------------
-//// Access within scope
-//
-//// Use of local variables on expression right-hand sides
-//mv_t* local_stack_resolve(local_stack_t* pstack, char* key);
-//
-//// Use of local variables on expression left-hand sides
-//// The pmv is not copied. You may wish to mv_copy the argument you pass in.
-//// The pmv will be freed.
-//
-//// xxx cmt
-//void local_stack_define(local_stack_t* pstack, char* name, mv_t* pmv, char free_flags);
-//void local_stack_set(local_stack_t* pstack, char* name, mv_t* pmv, char free_flags);
-//
-//// Clears the binding from the top frame without popping it. Useful
-//// for clearing the baseframe which is never popped.
-//void local_stack_clear(local_stack_t* pstack);
-//
-//// ----------------------------------------------------------------
-//// Test/debug
-//
-//void local_stack_print(local_stack_t* pstack);
+// Frames are entered/exited for each curly-braced statement block, including
+// the top-level block itself as well as ifs/fors/whiles.
+
+void local_stack_frame_enter(local_stack_t* pstack, int count);
+void local_stack_frame_exit (local_stack_t* pstack, int count);
 
 #endif // LOCAL_STACK_H
