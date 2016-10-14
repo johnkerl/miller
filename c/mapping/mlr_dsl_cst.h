@@ -283,11 +283,6 @@ void mlr_dsl_cst_handle_top_level_statement_block(
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);
 
-void mlr_dsl_cst_handle_statement_block( // xxx rm
-	sllv_t*      pcst_block, // block bodies for begin, main, end; cond, if, for, while
-	variables_t* pvars,
-	cst_outputs_t* pcst_outputs);
-
 // Recursive entry point: block bodies for begin, main, end; cond, if, for, while.
 void mlr_dsl_cst_handle_statement_list( // xxx rename to handle statement block
 	sllv_t*      pcst_statements,

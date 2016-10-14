@@ -2068,17 +2068,8 @@ void mlr_dsl_cst_handle_top_level_statement_block(
 }
 
 // ================================================================
-// xxx copy to ..._for_filter
-// xxx rename to ..._for_put
 
-void mlr_dsl_cst_handle_statement_block(
-	sllv_t*        pcst_block,
-	variables_t*   pvars,
-	cst_outputs_t* pcst_outputs)
-{
-	mlr_dsl_cst_handle_statement_list(pcst_block, pvars, pcst_outputs);
-	bind_stack_clear(pvars->pbind_stack); // clear the baseframe
-}
+// xxx whack
 
 // This is for statement lists not recursively contained within a loop body -- including the
 // main/begin/end statements.  Since there is no containing loop body, there is no need to check
