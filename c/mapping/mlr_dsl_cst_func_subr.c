@@ -78,10 +78,9 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 		exit(1);
 	}
 
-	pcst_udf_state->pframe = bind_stack_frame_alloc_fenced();
-	//printf("FVARN=%d\n", pnode->max_var_depth);
+	pcst_udf_state->pframe = bind_stack_frame_alloc_fenced(); // xxx rm
 
-	pcst_udf_state->pblock_statements = sllv_alloc();
+	pcst_udf_state->ptop_level_block = cst_top_level_statement_block_alloc(pnode->max_var_depth);
 
 	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
@@ -91,7 +90,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		sllv_append(pcst_udf_state->pblock_statements,
+		sllv_append(pcst_udf_state->ptop_level_block->pstatements,
 			mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node, type_inferencing, context_flags | IN_FUNC_DEF));
 	}
 
@@ -116,11 +115,7 @@ void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate) {
 
 	bind_stack_frame_free(pstate->pframe);
 
-	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		mlr_dsl_cst_statement_free(pstatement);
-	}
-	sllv_free(pstate->pblock_statements);
+	cst_top_level_statement_block_free(pstate->ptop_level_block);
 
 	free(pstate);
 }
@@ -139,11 +134,13 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 		bind_stack_set(pvars->pbind_stack, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
 	}
 
+	// xxx local-stack enter
+
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Compute the function value
 	cst_outputs_t* pcst_outputs = NULL; // Functions only produce output via their return values
 
-	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
+	for (sllve_t* pe = pstate->ptop_level_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) != 0) {
@@ -218,7 +215,7 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 	pstate->pframe = bind_stack_frame_alloc_fenced();
 	//printf("SVARN=%d\n", pnode->max_var_depth);
 
-	pstate->pblock_statements = sllv_alloc();
+	pstate->ptop_level_block = cst_top_level_statement_block_alloc(pnode->max_var_depth);
 
 	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
@@ -230,7 +227,7 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 		}
 		mlr_dsl_cst_statement_t* pstatement = mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
 			type_inferencing, context_flags | IN_SUBR_DEF);
-		sllv_append(pstate->pblock_statements, pstatement);
+		sllv_append(pstate->ptop_level_block->pstatements, pstatement);
 	}
 
 	return pstate;
@@ -249,11 +246,7 @@ void mlr_dsl_cst_free_subroutine(subr_defsite_t* pstate) {
 
 	bind_stack_frame_free(pstate->pframe);
 
-	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		mlr_dsl_cst_statement_free(pstatement);
-	}
-	sllv_free(pstate->pblock_statements);
+	cst_top_level_statement_block_free(pstate->ptop_level_block);
 
 	free(pstate);
 }
@@ -265,11 +258,12 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 	// Bind parameters to arguments
 	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstate->pframe));
 
+	// xxx local enter
 	for (int i = 0; i < pstate->arity; i++) {
 		bind_stack_set(pvars->pbind_stack, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
 	}
 
-	for (sllve_t* pe = pstate->pblock_statements->phead; pe != NULL; pe = pe->pnext) {
+	for (sllve_t* pe = pstate->ptop_level_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) != 0) {

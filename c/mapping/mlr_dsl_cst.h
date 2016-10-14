@@ -202,7 +202,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 	int flush_every_record;
 
 	// Pattern-action blocks, while, for, etc.
-	sllv_t* pblock_statements;
+	sllv_t* pblock_statements; // xxx replace
 
 	// if-elif-elif-else:
 	sllv_t* pif_chain_statements;
@@ -310,7 +310,7 @@ typedef struct _cst_udf_state_t {
 	int       arity;
 	char**    parameter_names;
     bind_stack_frame_t* pframe;
-	sllv_t*   pblock_statements;
+	cst_top_level_statement_block_t* ptop_level_block;
 } cst_udf_state_t;
 
 udf_defsite_state_t* mlr_dsl_cst_alloc_udf(
@@ -338,7 +338,7 @@ typedef struct _subr_defsite_t {
 	int       arity;
 	char**    parameter_names;
     bind_stack_frame_t* pframe;
-	sllv_t*   pblock_statements;
+	cst_top_level_statement_block_t* ptop_level_block;
 } subr_defsite_t;
 
 subr_defsite_t* mlr_dsl_cst_alloc_subroutine(
