@@ -18,15 +18,19 @@ MISC:
 * xsv notes; update rust/go experiment info
 
 * mand bench somewhere; other benches.
+* mkv2/3/4 somewhere
 * also note mkvgen somewhere.
 
 * oosvar-single-for UT
 * oosvar-single-for mlh
 * oosvar-single-for mld
+* find & update cookbook/ref/whateveritwas ...
 
 * try # at grammar? try not to get strip-outs from strings.
 
 * gonna wanna pass maps to funcs/subrs ...... and return them too. syntax = ? val/map type-keywords?
+
+* rethink -f/-e ordering -- argvish is possible otherwise.
 
 ----------------------------------------------------------------
 5.0.0:
@@ -143,6 +147,12 @@ DOC:
 4.7.0 ideas:
 
 ! more than 'syntax error' from lemon-parse failures ... lemon API research
+
+? some argv array?
+
+? some sort of debug/single-step/trace ... include the AST in the CST & reverse-generate ?
+
+? formalize _ for skipvars?
 
 ? strict mode:
   - absent?
