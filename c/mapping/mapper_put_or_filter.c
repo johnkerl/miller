@@ -17,7 +17,6 @@
 // ----------------------------------------------------------------
 typedef struct _mapper_put_or_filter_state_t {
 	char*          mlr_dsl_expression;
-	char*          comment_stripped_mlr_dsl_expression;
 
 	mlr_dsl_ast_t* past;
 	mlr_dsl_cst_t* pcst;
@@ -55,7 +54,6 @@ static mapper_t* mapper_put_or_filter_alloc(
 	char*              mlr_dsl_expression,
 	int                print_ast,
 	int                trace_stack_allocation,
-	char*              comment_stripped_mlr_dsl_expression,
 	mlr_dsl_ast_t*     past,
 	int                put_output_disabled, // mlr put -q
 	int                do_final_filter,     // mlr filter
@@ -227,7 +225,6 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	slls_t* expression_filenames              = slls_alloc();
 	slls_t* expression_strings                = slls_alloc();
 	char* mlr_dsl_expression                  = NULL;
-	char* comment_stripped_mlr_dsl_expression = NULL;
 	int   put_output_disabled                 = FALSE;
 	int   do_final_filter                     = FALSE;
 	int   negate_final_filter                 = FALSE;
@@ -343,14 +340,11 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	slls_free(expression_filenames);
 	slls_free(expression_strings);
 
-	//comment_stripped_mlr_dsl_expression = alloc_comment_strip(mlr_dsl_expression);
-	comment_stripped_mlr_dsl_expression = mlr_strdup_or_die(mlr_dsl_expression);
-
 	// Linked list of mlr_dsl_ast_node_t*.
-	mlr_dsl_ast_t* past = mlr_dsl_parse(comment_stripped_mlr_dsl_expression, trace_parse);
+	mlr_dsl_ast_t* past = mlr_dsl_parse(mlr_dsl_expression, trace_parse);
 	if (past == NULL) {
 		fprintf(stderr, "%s %s: syntax error on DSL parse of '%s'\n",
-			argv[0], verb, comment_stripped_mlr_dsl_expression);
+			argv[0], verb, mlr_dsl_expression);
 		return NULL;
 	}
 
@@ -364,7 +358,6 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 
 	*pargi = argi;
 	return mapper_put_or_filter_alloc(mlr_dsl_expression, print_ast, trace_stack_allocation,
-		comment_stripped_mlr_dsl_expression,
 		past, put_output_disabled, do_final_filter, negate_final_filter,
 		type_inferencing, oosvar_flatten_separator, flush_every_record,
 		pwriter_opts, pmain_writer_opts);
@@ -375,7 +368,6 @@ static mapper_t* mapper_put_or_filter_alloc(
 	char*              mlr_dsl_expression,
 	int                print_ast,
 	int                trace_stack_allocation,
-	char*              comment_stripped_mlr_dsl_expression,
 	mlr_dsl_ast_t*     past,
 	int                put_output_disabled, // mlr put -q
 	int                do_final_filter,     // mlr filter
@@ -389,7 +381,6 @@ static mapper_t* mapper_put_or_filter_alloc(
 	mapper_put_or_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_or_filter_state_t));
 	// Retain the string contents along with any in-pointers from the AST/CST
 	pstate->mlr_dsl_expression = mlr_dsl_expression;
-	pstate->comment_stripped_mlr_dsl_expression = comment_stripped_mlr_dsl_expression;
 	pstate->past                     = past;
 	pstate->pcst                     = mlr_dsl_cst_alloc(past, print_ast, trace_stack_allocation,
 		type_inferencing, flush_every_record, do_final_filter, negate_final_filter);
@@ -416,7 +407,6 @@ static void mapper_put_or_filter_free(mapper_t* pmapper) {
 	mapper_put_or_filter_state_t* pstate = pmapper->pvstate;
 
 	free(pstate->mlr_dsl_expression);
-	free(pstate->comment_stripped_mlr_dsl_expression);
 	mlhmmv_free(pstate->poosvars);
 	bind_stack_free(pstate->pbind_stack);
 	loop_stack_free(pstate->ploop_stack);

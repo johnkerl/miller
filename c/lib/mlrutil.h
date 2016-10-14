@@ -159,8 +159,4 @@ char* read_file_into_memory(char* filename, size_t* psize);
 // The caller should free the return value.
 char* read_fp_into_memory(FILE* fp, size_t* psize);
 
-// Returns a copy of the input string with pound-sign to newline elided.
-// Does not modify the input. The caller should free the output.
-char* alloc_comment_strip(char* input);
-
 #endif // MLRUTIL_H

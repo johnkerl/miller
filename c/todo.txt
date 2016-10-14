@@ -119,6 +119,7 @@ DSL:
 * variadic min & max
 * substr func
 * ENV @ LHS (putenv), and why (popens)
+* # in the lexer so #-strings are OK now (show an example)
 
 VERBS:
 * most-frequent/least-frequent
