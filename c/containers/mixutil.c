@@ -77,11 +77,7 @@ slls_t* mlr_reference_selected_values_from_record(lrec_t* prec, slls_t* pselecte
 void mlr_reference_values_from_record_into_string_array(lrec_t* prec, string_array_t* pselected_field_names,
 	string_array_t* pvalues)
 {
-	if (pselected_field_names->length != pvalues->length) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
+	MLR_INTERNAL_CODING_ERROR_IF(pselected_field_names->length != pvalues->length);
 	pvalues->strings_need_freeing = FALSE;
 	for (int i = 0; i < pselected_field_names->length; i++) {
 		char* selected_field_name = pselected_field_names->strings[i];

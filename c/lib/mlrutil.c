@@ -8,6 +8,25 @@
 #include "lib/mlr_globals.h"
 
 // ----------------------------------------------------------------
+void mlr_internal_coding_error(char* file, int line) {
+	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+		MLR_GLOBALS.bargv0, file, line);
+	exit(1);
+}
+
+void mlr_internal_coding_error_if(int v, char* file, int line) {
+	if (v) {
+		mlr_internal_coding_error(file, line);
+	}
+}
+
+void mlr_internal_coding_error_unless(int v, char* file, int line) {
+	if (!v) {
+		mlr_internal_coding_error(file, line);
+	}
+}
+
+// ----------------------------------------------------------------
 int mlr_bsearch_double_for_insert(double* array, int size, double value) {
 	int lo = 0;
 	int hi = size-1;

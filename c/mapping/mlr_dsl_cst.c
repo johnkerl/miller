@@ -123,16 +123,8 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 			printf("BEGIN-BLOCK:\n");
 			mlr_dsl_ast_node_print(pnode);
 		}
-		if (pnode->max_var_depth == MD_UNUSED_INDEX) {
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", // xxx funcify
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
-		}
-		if (pnode->frame_var_count == MD_UNUSED_INDEX) {
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", // xxx funcify
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
-		}
+		MLR_INTERNAL_CODING_ERROR_IF(pnode->max_var_depth == MD_UNUSED_INDEX);
+		MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_var_count == MD_UNUSED_INDEX);
 		cst_top_level_statement_block_t* pblock = cst_top_level_statement_block_alloc(pnode->max_var_depth, pnode->frame_var_count);
 		for (sllve_t* pf = pnode->pchildren->phead; pf != NULL; pf = pf->pnext) {
 			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
@@ -154,16 +146,9 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 			printf("END-BLOCK:\n");
 			mlr_dsl_ast_node_print(pnode);
 		}
-		if (pnode->max_var_depth == MD_UNUSED_INDEX) {
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", // xxx funcify
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
-		}
-		if (pnode->frame_var_count == MD_UNUSED_INDEX) {
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", // xxx funcify
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
-		}
+		// xxx funcify x all
+		MLR_INTERNAL_CODING_ERROR_IF(pnode->max_var_depth == MD_UNUSED_INDEX);
+		MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_var_count == MD_UNUSED_INDEX);
 		cst_top_level_statement_block_t* pblock = cst_top_level_statement_block_alloc(pnode->max_var_depth, pnode->frame_var_count);
 		for (sllve_t* pf = pnode->pchildren->phead; pf != NULL; pf = pf->pnext) {
 			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
@@ -181,16 +166,8 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 		printf("MAIN BLOCK:\n");
 		mlr_dsl_ast_node_print(pcst->paast->pmain_block);
 	}
-	if (pcst->paast->pmain_block->max_var_depth == MD_UNUSED_INDEX) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", // xxx funcify
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
-	if (pcst->paast->pmain_block->frame_var_count == MD_UNUSED_INDEX) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", // xxx funcify
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
+	MLR_INTERNAL_CODING_ERROR_IF(pcst->paast->pmain_block->max_var_depth == MD_UNUSED_INDEX);
+	MLR_INTERNAL_CODING_ERROR_IF(pcst->paast->pmain_block->frame_var_count == MD_UNUSED_INDEX);
 	pcst->pmain_block = cst_top_level_statement_block_alloc(pcst->paast->pmain_block->max_var_depth,
 		pcst->paast->pmain_block->frame_var_count);
 	for (sllve_t* pe = pcst->paast->pmain_block->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -262,18 +239,8 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 // ----------------------------------------------------------------
 // For begin, end, cond: there must be one child node, of type list.
 static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode) {
-	if (pnode->pchildren->phead == NULL) {
-		fprintf(stderr,
-			"%s: internal coding error detected in file %s at line %d: null left child node.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
-	if (pnode->pchildren->phead->pnext != NULL) {
-		fprintf(stderr,
-			"%s: internal coding error detected in file %s at line %d: extraneous right child node.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
+	MLR_INTERNAL_CODING_ERROR_IF(pnode->pchildren->phead == NULL);
+	MLR_INTERNAL_CODING_ERROR_IF(pnode->pchildren->phead->pnext != NULL);
 	mlr_dsl_ast_node_t* pleft = pnode->pchildren->phead->pvvalue;
 
 	if (pleft->type != MD_AST_NODE_TYPE_STATEMENT_BLOCK) {

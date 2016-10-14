@@ -215,11 +215,7 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 			// Loop over characters in field
 			field_done = FALSE;
 			while (!field_done) {
-				if (e > phandle->eof) {
-					fprintf(stderr, "%s: internal coding error detected at line %d of file %s.\n",
-						MLR_GLOBALS.bargv0, __LINE__, __FILE__);
-					exit(1);
-				}
+				MLR_INTERNAL_CODING_ERROR_IF(e > phandle->eof);
 				rc = parse_trie_match(pstate->pno_dquote_parse_trie, e, phandle->eof, &stridx, &matchlen);
 				if (rc) {
 					switch(stridx) {

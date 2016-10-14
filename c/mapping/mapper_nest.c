@@ -192,9 +192,7 @@ static mapper_t* mapper_nest_alloc(ap_state_t* pargp, char* argv0,
 	} else {
 		if (do_pairs) {
 			// Should have been caught in CLI-parser.
-			fprintf(stderr, "%s: internal coding error detected at file %s line %d.\n",
-				argv0, __FILE__, __LINE__);
-			exit(1);
+			MLR_INTERNAL_CODING_ERROR();
 		} else {
 			pmapper->pprocess_func = do_across_fields
 				? mapper_nest_implode_values_across_fields

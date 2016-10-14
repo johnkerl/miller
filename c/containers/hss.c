@@ -102,9 +102,7 @@ static int hss_find_index_for_key(hss_t* pset, char* key, int* pideal_index) {
 		if (++index >= pset->array_length)
 			index = 0;
 	}
-	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-		MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-	exit(1);
+	MLR_INTERNAL_CODING_ERROR();
 }
 
 // ----------------------------------------------------------------

@@ -87,9 +87,7 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 			lrec_put(prec, key, pjson_value->u.dbl.sval, NO_FREE);
 			break;
 		default:
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
+			MLR_INTERNAL_CODING_ERROR();
 			break;
 		}
 
@@ -141,9 +139,7 @@ static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object
 			lrec_put(prec, lrec_key, pjson_value->u.dbl.sval, FREE_ENTRY_KEY);
 			break;
 		default:
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
+			MLR_INTERNAL_CODING_ERROR();
 			break;
 		}
 

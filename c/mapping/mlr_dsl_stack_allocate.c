@@ -198,13 +198,7 @@ void blocked_ast_allocate_locals(blocked_ast_t* paast, int trace) {
 
 // ----------------------------------------------------------------
 static void pass_1_for_func_subr_block(mlr_dsl_ast_node_t* pnode, int trace) {
-	// xxx make a keystroke-saver, use it here, & use it from the cst builder as well
-	if (pnode->type != MD_AST_NODE_TYPE_SUBR_DEF && pnode->type != MD_AST_NODE_TYPE_FUNC_DEF) {
-		fprintf(stderr,
-			"%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
+	MLR_INTERNAL_CODING_ERROR_IF(pnode->type != MD_AST_NODE_TYPE_SUBR_DEF && pnode->type != MD_AST_NODE_TYPE_FUNC_DEF);
 	// xxx assert two children of desired type
 
 	stkalc_frame_t* pframe = stkalc_frame_alloc();
@@ -232,12 +226,7 @@ static void pass_1_for_func_subr_block(mlr_dsl_ast_node_t* pnode, int trace) {
 
 // ----------------------------------------------------------------
 static void pass_1_for_begin_end_block(mlr_dsl_ast_node_t* pnode, int trace) {
-	if (pnode->type != MD_AST_NODE_TYPE_BEGIN && pnode->type != MD_AST_NODE_TYPE_END) {
-		fprintf(stderr,
-			"%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
+	MLR_INTERNAL_CODING_ERROR_IF(pnode->type != MD_AST_NODE_TYPE_BEGIN && pnode->type != MD_AST_NODE_TYPE_END);
 
 	if (trace) {
 		printf("\n");
@@ -259,12 +248,7 @@ static void pass_1_for_begin_end_block(mlr_dsl_ast_node_t* pnode, int trace) {
 
 // ----------------------------------------------------------------
 static void pass_1_for_main_block(mlr_dsl_ast_node_t* pnode, int trace) {
-	if (pnode->type != MD_AST_NODE_TYPE_STATEMENT_BLOCK) {
-		fprintf(stderr,
-			"%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
+	MLR_INTERNAL_CODING_ERROR_IF(pnode->type != MD_AST_NODE_TYPE_STATEMENT_BLOCK);
 
 	if (trace) {
 		printf("\n");
@@ -287,12 +271,7 @@ static void pass_1_for_main_block(mlr_dsl_ast_node_t* pnode, int trace) {
 // ----------------------------------------------------------------
 // Curly-bracked bodies of if/while/for/etc.
 static void pass_1_for_statement_block(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
-	if (pnode->type != MD_AST_NODE_TYPE_STATEMENT_BLOCK) {
-		fprintf(stderr,
-			"%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
+	MLR_INTERNAL_CODING_ERROR_IF(pnode->type != MD_AST_NODE_TYPE_STATEMENT_BLOCK);
 	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pchild = pe->pvvalue;
 		pass_1_for_node(pchild, pframe_group, trace);
@@ -301,12 +280,7 @@ static void pass_1_for_statement_block(mlr_dsl_ast_node_t* pnode, stkalc_frame_g
 
 // Non-curly-braced triple-for starts/continuations/updates statement lists.
 static void pass_1_for_statement_list(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
-	if (pnode->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
-		fprintf(stderr,
-			"%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
+	MLR_INTERNAL_CODING_ERROR_IF(pnode->type != MD_AST_NODE_TYPE_STATEMENT_LIST);
 	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pchild = pe->pvvalue;
 		pass_1_for_node(pchild, pframe_group, trace);

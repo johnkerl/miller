@@ -55,11 +55,7 @@ void loop_stack_push(loop_stack_t* pstack) {
 
 // ----------------------------------------------------------------
 int loop_stack_pop(loop_stack_t* pstack) {
-	if (pstack->num_used_minus_one <= 0) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
+	MLR_INTERNAL_CODING_ERROR_IF(pstack->num_used_minus_one <= 0);
 	int rv = pstack->pframes[pstack->num_used_minus_one];
 	pstack->num_used_minus_one--;
 	return rv;

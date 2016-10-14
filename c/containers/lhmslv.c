@@ -120,9 +120,8 @@ static int lhmslv_find_index_for_key(lhmslv_t* pmap, slls_t* key, int* pideal_in
 		if (++index >= pmap->array_length)
 			index = 0;
 	}
-	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-		MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-	exit(1);
+	MLR_INTERNAL_CODING_ERROR();
+	return -1; // not reached
 }
 
 // ----------------------------------------------------------------

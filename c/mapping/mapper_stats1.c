@@ -381,11 +381,7 @@ static lrec_t* mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec
 		if (streq(stats1_acc_name, fake_acc_name_for_setups))
 			continue;
 		stats1_acc_t* pstats1_acc = lhmsv_get(acc_field_to_acc_state_out, stats1_acc_name);
-		if (pstats1_acc == NULL) {
-			fprintf(stderr, "%s stats1: internal coding error: stats1_acc_name \"%s\" has gone missing.\n",
-				MLR_GLOBALS.bargv0, stats1_acc_name);
-			exit(1);
-		}
+		MLR_INTERNAL_CODING_ERROR_IF(pstats1_acc == NULL);
 		pstats1_acc->pemit_func(pstats1_acc->pvstate, value_field_name, stats1_acc_name, FALSE, poutrec);
 	}
 	return poutrec;

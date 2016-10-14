@@ -198,8 +198,7 @@ void mv_set_float_strict(mv_t* pval) {
 		pval->u.intv = 0LL;
 		break;
 	default:
-		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		MLR_INTERNAL_CODING_ERROR();
 		break;
 	}
 }
@@ -236,8 +235,7 @@ void mv_set_float_nullable(mv_t* pval) {
 		*pval = nval;
 		break;
 	default:
-		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		MLR_INTERNAL_CODING_ERROR();
 		break;
 	}
 }
@@ -274,8 +272,7 @@ void mv_set_int_nullable(mv_t* pval) {
 		*pval = nval;
 		break;
 	default:
-		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		MLR_INTERNAL_CODING_ERROR();
 		break;
 	}
 }
@@ -303,8 +300,7 @@ void mv_set_number_nullable(mv_t* pval) {
 		*pval = nval;
 		break;
 	default:
-		fprintf(stderr, "%s: internal coding error detected at file %s, line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		MLR_INTERNAL_CODING_ERROR();
 		break;
 	}
 }
@@ -640,11 +636,7 @@ mv_t time_string_from_seconds(mv_t* psec, char* format) {
 
 	struct tm tm;
 	struct tm *ptm = gmtime_r(&clock, &tm);
-	if (ptm == NULL) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
+	MLR_INTERNAL_CODING_ERROR_IF(ptm == NULL);
 	char* string = mlr_malloc_or_die(NZBUFLEN + 1);
 	int written_length = strftime(string, NZBUFLEN, format, ptm);
 	if (written_length > NZBUFLEN || written_length == 0) {
@@ -706,11 +698,7 @@ static mv_t seconds_from_time_string(char* time, char* format) {
 				MLR_GLOBALS.bargv0, time, format, MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		if (*retval != 0) { // Parseable input followed by non-parseable
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d: unparseable trailer \"%s\".\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__, retval);
-			exit(1);
-		}
+		MLR_INTERNAL_CODING_ERROR_IF(*retval != 0); // Parseable input followed by non-parseable
 		time_t t = mlr_timegm(&tm);
 		return mv_from_int((long long)t);
 	}

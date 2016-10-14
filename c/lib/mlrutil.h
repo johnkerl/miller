@@ -13,6 +13,14 @@
 //#define MLR_MALLOC_TRACE
 
 // ----------------------------------------------------------------
+#define MLR_INTERNAL_CODING_ERROR() mlr_internal_coding_error(__FILE__, __LINE__)
+#define MLR_INTERNAL_CODING_ERROR_IF(v) mlr_internal_coding_error_if(v, __FILE__, __LINE__)
+#define MLR_INTERNAL_CODING_ERROR_UNLESS(v) mlr_internal_coding_error_unless(v, __FILE__, __LINE__)
+void mlr_internal_coding_error(char* file, int line);
+void mlr_internal_coding_error_if(int v, char* file, int line);
+void mlr_internal_coding_error_unless(int v, char* file, int line);
+
+// ----------------------------------------------------------------
 //int mlr_canonical_mod(int a, int n);
 static inline int mlr_canonical_mod(int a, int n) {
 	int r = a % n;

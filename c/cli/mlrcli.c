@@ -1842,20 +1842,12 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 // ----------------------------------------------------------------
 static char* lhmss_get_or_die(lhmss_t* pmap, char* key, char* argv0) {
 	char* value = lhmss_get(pmap, key);
-	if (value == NULL) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			argv0, __FILE__, __LINE__);
-		exit(1);
-	}
+	MLR_INTERNAL_CODING_ERROR_IF(value == NULL);
 	return value;
 }
 
 // ----------------------------------------------------------------
 static int lhmsll_get_or_die(lhmsll_t* pmap, char* key, char* argv0) {
-	if (!lhmsll_has_key(pmap, key)) {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			argv0, __FILE__, __LINE__);
-		exit(1);
-	}
+	MLR_INTERNAL_CODING_ERROR_UNLESS(lhmsll_has_key(pmap, key));
 	return lhmsll_get(pmap, key);
 }
