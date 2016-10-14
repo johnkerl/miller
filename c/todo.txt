@@ -47,6 +47,7 @@ FUNCTIONALITY FOR 4.6.0:
 * CST statement-list: push/pop count for entry/exit; mv_absents on enter; mv_frees on exit
 * mv_absent init: find a way to do this only when needed.
 * mv_absent init: UT read/define/read. special case: 'local nonesuch = nonesuch'.
+* more comment-strip UT (with inside-string cases)
 
 * valgrinds
 * xxxes
