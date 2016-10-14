@@ -24,6 +24,10 @@ MISC:
 * oosvar-single-for mlh
 * oosvar-single-for mld
 
+* try # at grammar? try not to get strip-outs from strings.
+
+* gonna wanna pass maps to funcs/subrs ...... and return them too. syntax = ? val/map type-keywords?
+
 ----------------------------------------------------------------
 5.0.0:
 

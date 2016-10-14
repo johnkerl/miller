@@ -491,6 +491,8 @@ false {
 	return MD_TOKEN_COMMA;
 }
 
+#.*\n { }
+
 [ \t\r\n] { }
 
 . {

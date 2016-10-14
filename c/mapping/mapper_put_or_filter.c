@@ -343,7 +343,8 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	slls_free(expression_filenames);
 	slls_free(expression_strings);
 
-	comment_stripped_mlr_dsl_expression = alloc_comment_strip(mlr_dsl_expression);
+	//comment_stripped_mlr_dsl_expression = alloc_comment_strip(mlr_dsl_expression);
+	comment_stripped_mlr_dsl_expression = mlr_strdup_or_die(mlr_dsl_expression);
 
 	// Linked list of mlr_dsl_ast_node_t*.
 	mlr_dsl_ast_t* past = mlr_dsl_parse(comment_stripped_mlr_dsl_expression, trace_parse);
