@@ -1018,7 +1018,6 @@ static mlr_dsl_cst_statement_t* alloc_while(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
-	// xxx at alloc_blank
 	pstatement->pstatement_block = cst_statement_block_alloc(pright->frame_var_count);
 
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -1051,7 +1050,6 @@ static mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
-	// xxx at alloc_blank
 	pstatement->pstatement_block = cst_statement_block_alloc(pleft->frame_var_count);
 
 	for (sllve_t* pe = pleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -1111,7 +1109,6 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
-	// xxx at alloc_blank
 	pstatement->pstatement_block = cst_statement_block_alloc(pnode->frame_var_count);
 
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -1217,7 +1214,6 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
-	// xxx at alloc_blank
 	pstatement->pstatement_block = cst_statement_block_alloc(pnode->frame_var_count);
 
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -1257,7 +1253,6 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar_key_only(mlr_dsl_cst_t* pcst, m
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
-	// xxx at alloc_blank
 	pstatement->pstatement_block = cst_statement_block_alloc(pnode->frame_var_count);
 
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -1487,7 +1482,6 @@ static mlr_dsl_cst_statement_t* alloc_if_item(mlr_dsl_cst_t* pcst, mlr_dsl_ast_n
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
-	// xxx at alloc_blank
 	pstatement->pstatement_block = cst_statement_block_alloc(plistnode->frame_var_count);
 
 	for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
