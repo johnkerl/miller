@@ -77,8 +77,6 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 	// Assign local-variable names to indices within frame-stack.
 	blocked_ast_allocate_locals(pcst->paast, trace_stack_allocation);
 
-	pcst->pbegin_blocks  = sllv_alloc();
-	pcst->pend_blocks    = sllv_alloc();
 	pcst->pfmgr          = fmgr_alloc();
 	pcst->psubr_defsites = lhmsv_alloc();
 	pcst->psubr_callsite_statements_to_resolve = sllv_alloc();
@@ -116,6 +114,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 		lhmsv_put(pcst->psubr_defsites, psubr_defsite->name, psubr_defsite, NO_FREE);
 	}
 
+	pcst->pbegin_blocks = sllv_alloc();
 	for (sllve_t* pe = pcst->paast->pbegin_blocks->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 		//printf("BVARN=%d\n", pnode->max_var_depth);
@@ -124,32 +123,33 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 			printf("BEGIN-BLOCK:\n");
 			mlr_dsl_ast_node_print(pnode);
 		}
-		sllv_t* pblock = sllv_alloc();
+		cst_top_level_statement_block_t* pblock = cst_top_level_statement_block_alloc(pnode->max_var_depth);
 		for (sllve_t* pf = pnode->pchildren->phead; pf != NULL; pf = pf->pnext) {
 			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
 			for (sllve_t* pg = plistnode->pchildren->phead; pg != NULL; pg = pg->pnext) {
 				mlr_dsl_ast_node_t* pchild = pg->pvvalue;
-				sllv_append(pblock, mlr_dsl_cst_alloc_statement(pcst, pchild,
+				sllv_append(pblock->pstatements, mlr_dsl_cst_alloc_statement(pcst, pchild,
 					type_inferencing, context_flags | IN_BEGIN_OR_END));
 			}
 		}
 		sllv_append(pcst->pbegin_blocks, pblock);
 	}
 
+	pcst->pend_blocks = sllv_alloc();
 	for (sllve_t* pe = pcst->paast->pend_blocks->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
-		//printf("EVARN=%d\n", pnode->max_var_depth);
+		//printf("EVARN=%d\n", pnode->max_var_depth); // xxx rm
 		if (print_ast) {
 			printf("\n");
 			printf("END-BLOCK:\n");
 			mlr_dsl_ast_node_print(pnode);
 		}
-		sllv_t* pblock = sllv_alloc();
+		cst_top_level_statement_block_t* pblock = cst_top_level_statement_block_alloc(pnode->max_var_depth);
 		for (sllve_t* pf = pnode->pchildren->phead; pf != NULL; pf = pf->pnext) {
 			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
 			for (sllve_t* pg = plistnode->pchildren->phead; pg != NULL; pg = pg->pnext) {
 				mlr_dsl_ast_node_t* pchild = pg->pvvalue;
-				sllv_append(pblock, mlr_dsl_cst_alloc_statement(pcst, pchild,
+				sllv_append(pblock->pstatements, mlr_dsl_cst_alloc_statement(pcst, pchild,
 					type_inferencing, context_flags | IN_BEGIN_OR_END));
 			}
 		}
@@ -196,27 +196,21 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	if (pcst == NULL)
 		return;
+
 	if (pcst->pbegin_blocks != NULL) {
 		for (sllve_t* pe = pcst->pbegin_blocks->phead; pe != NULL; pe = pe->pnext) {
-			sllv_t* pblock = pe->pvvalue;
-			for (sllve_t* pe = pblock->phead; pe != NULL; pe = pe->pnext) {
-				mlr_dsl_cst_statement_free(pe->pvvalue);
-			}
+			cst_top_level_statement_block_free(pe->pvvalue);
 		}
 	}
+
+	cst_top_level_statement_block_free(pcst->pmain_block);
 
 	if (pcst->pend_blocks != NULL) {
 		for (sllve_t* pe = pcst->pend_blocks->phead; pe != NULL; pe = pe->pnext) {
-			sllv_t* pblock = pe->pvvalue;
-			for (sllve_t* pe = pblock->phead; pe != NULL; pe = pe->pnext) {
-				mlr_dsl_cst_statement_free(pe->pvvalue);
-			}
+			cst_top_level_statement_block_free(pe->pvvalue);
 		}
 	}
 
-	sllv_free(pcst->pbegin_blocks);
-	cst_top_level_statement_block_free(pcst->pmain_block);
-	sllv_free(pcst->pend_blocks);
 	fmgr_free(pcst->pfmgr);
 
 	// Void-star payloads already popped and freed during symbol-resolution phase of CST alloc

@@ -230,9 +230,9 @@ typedef struct _mlr_dsl_cst_statement_t {
 // MLR_DSL_CST OBJECT
 
 typedef struct _mlr_dsl_cst_t {
-	sllv_t* pbegin_blocks; // xxx
+	sllv_t* pbegin_blocks;
 	cst_top_level_statement_block_t* pmain_block;
-	sllv_t* pend_blocks; // xxx
+	sllv_t* pend_blocks;
 
 	// Function manager for built-in functions as well as user-defined functions (which are CST-specific).
 	fmgr_t* pfmgr;

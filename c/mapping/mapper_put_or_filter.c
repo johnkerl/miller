@@ -499,7 +499,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 		};
 
 		string_array_free(pregex_captures);
-		mlr_dsl_cst_handle_statement_blocks(pstate->pcst->pbegin_blocks, &variables, &cst_outputs);
+		mlr_dsl_cst_handle_top_level_statement_blocks(pstate->pcst->pbegin_blocks, &variables, &cst_outputs);
 		pstate->at_begin = FALSE;
 	}
 
@@ -526,7 +526,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.pwriter_opts             = pstate->pwriter_opts,
 		};
 
-		mlr_dsl_cst_handle_statement_blocks(pstate->pcst->pend_blocks, &variables, &cst_outputs);
+		mlr_dsl_cst_handle_top_level_statement_blocks(pstate->pcst->pend_blocks, &variables, &cst_outputs);
 
 		string_array_free(pregex_captures);
 		sllv_append(poutrecs, NULL);
