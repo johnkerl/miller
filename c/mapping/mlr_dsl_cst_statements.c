@@ -222,7 +222,51 @@ static cst_statement_handler_t handle_dump;
 static cst_statement_handler_t handle_dump_to_file;
 static cst_statement_handler_t handle_print;
 
+// ================================================================
+cst_top_level_statement_block_t* cst_top_level_statement_block_alloc(int max_var_depth) {
+	cst_top_level_statement_block_t* pblock = mlr_malloc_or_die(sizeof(cst_top_level_statement_block_t));
+
+	pblock->max_var_depth = max_var_depth;
+	pblock->pstack        = local_stack_alloc(max_var_depth);
+	pblock->pstatements   = sllv_alloc();
+
+	return pblock;
+}
+
 // ----------------------------------------------------------------
+void cst_top_level_statement_block_free(cst_top_level_statement_block_t* pblock) {
+	if (pblock == NULL)
+		return;
+	local_stack_free(pblock->pstack);
+	for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_cst_statement_free(pe->pvvalue);
+	}
+	sllv_free(pblock->pstatements);
+	free(pblock);
+}
+
+// ----------------------------------------------------------------
+cst_statement_block_t* cst_statement_block_alloc(int frame_var_count) {
+	cst_statement_block_t* pblock = mlr_malloc_or_die(sizeof(cst_statement_block_t));
+
+	pblock->frame_var_count = frame_var_count;
+	pblock->pstatements     = sllv_alloc();
+
+	return pblock;
+}
+
+// ----------------------------------------------------------------
+void cst_statement_block_free(cst_statement_block_t* pblock) {
+	if (pblock == NULL)
+		return;
+	for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_cst_statement_free(pe->pvvalue);
+	}
+	sllv_free(pblock->pstatements);
+	free(pblock);
+}
+
+// ================================================================
 // The parser accepts many things that are invalid, e.g.
 // * begin{end{}} -- begin/end not at top level
 // * begin{$x=1} -- references to stream records at begin/end

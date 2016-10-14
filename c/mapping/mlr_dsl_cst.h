@@ -71,17 +71,26 @@ typedef struct _cst_outputs_t {
 	cli_writer_opts_t* pwriter_opts;
 } cst_outputs_t;
 
+// ----------------------------------------------------------------
 typedef struct _cst_top_level_statement_block_t {
 	local_stack_t* pstack;
 	int max_var_depth;
 	sllv_t* pstatements;
 } cst_top_level_statement_block_t;
 
+cst_top_level_statement_block_t* cst_top_level_statement_block_alloc(int max_var_depth);
+void cst_top_level_statement_block_free(cst_top_level_statement_block_t* pblock);
+
+// ----------------------------------------------------------------
 typedef struct _cst_statement_block_t {
 	int frame_var_count;
 	sllv_t* pstatements;
 } cst_statement_block_t;
 
+cst_statement_block_t* cst_statement_block_alloc(int frame_var_count);
+void cst_statement_block_free(cst_statement_block_t* pblock);
+
+// ----------------------------------------------------------------
 // Generic handler for a statement.
 typedef void mlr_dsl_cst_node_handler_func_t(
 	struct _mlr_dsl_cst_statement_t* pnode,
