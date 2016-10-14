@@ -1341,7 +1341,7 @@ static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_cst_t* pcst, mlr
 	pstatement->pnode_handler = handle_conditional_block;
 	pstatement->pblock_handler = (context_flags & IN_BREAKABLE)
 		? handle_statement_list_with_break_continue
-		: mlr_dsl_cst_handle_statement_list;
+		: mlr_dsl_cst_handle_statement_block;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pleft, pcst->pfmgr, type_inferencing, context_flags);
 	pstatement->pblock_statements = pblock_statements;
 	return pstatement;
@@ -1424,7 +1424,7 @@ static mlr_dsl_cst_statement_t* alloc_if_head(mlr_dsl_cst_t* pcst, mlr_dsl_ast_n
 	pstatement->pnode_handler = handle_if_head;
 	pstatement->pblock_handler = (context_flags & IN_BREAKABLE)
 		?  handle_statement_list_with_break_continue
-		: mlr_dsl_cst_handle_statement_list;
+		: mlr_dsl_cst_handle_statement_block;
 	pstatement->pif_chain_statements = pif_chain_statements;
 	return pstatement;
 }
@@ -2061,7 +2061,7 @@ void mlr_dsl_cst_handle_top_level_statement_block(
 	local_stack_enter(ptop_level_block->pstack);
 
 	// xxx adapt callee to also handle local stack
-	mlr_dsl_cst_handle_statement_list(ptop_level_block->pstatements, pvars, pcst_outputs);
+	mlr_dsl_cst_handle_statement_block(ptop_level_block->pstatements, pvars, pcst_outputs);
 
 	bind_stack_clear(pvars->pbind_stack); // clear the baseframe // xxx rm
 	local_stack_exit(ptop_level_block->pstack);
@@ -2074,7 +2074,7 @@ void mlr_dsl_cst_handle_top_level_statement_block(
 // This is for statement lists not recursively contained within a loop body -- including the
 // main/begin/end statements.  Since there is no containing loop body, there is no need to check
 // for break or continue flags after each statement.
-void mlr_dsl_cst_handle_statement_list(
+void mlr_dsl_cst_handle_statement_block(
 	sllv_t*        pcst_statements,
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs)
@@ -2768,7 +2768,7 @@ static void handle_triple_for(
 	loop_stack_push(pvars->ploop_stack);
 
 	// Start statements
-	mlr_dsl_cst_handle_statement_list(pstatement->ptriple_for_start_statements, pvars, pcst_outputs);
+	mlr_dsl_cst_handle_statement_block(pstatement->ptriple_for_start_statements, pvars, pcst_outputs);
 
 	while (TRUE) {
 
@@ -2791,7 +2791,7 @@ static void handle_triple_for(
 		}
 
 		// Update statements
-		mlr_dsl_cst_handle_statement_list(pstatement->ptriple_for_update_statements, pvars, pcst_outputs);
+		mlr_dsl_cst_handle_statement_block(pstatement->ptriple_for_update_statements, pvars, pcst_outputs);
 	}
 
 	loop_stack_pop(pvars->ploop_stack);
