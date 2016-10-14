@@ -48,9 +48,7 @@ lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, quoting_t oquoting, i
 	case QUOTE_NUMERIC:  pstate->pquoted_output_func = quote_numeric_output_func;  break;
 	case QUOTE_ORIGINAL: pstate->pquoted_output_func = quote_original_output_func; break;
 	default:
-		fprintf(stderr, "%s: internal coding error: output-quoting style 0x%x unrecognized.\n",
-			MLR_GLOBALS.bargv0, oquoting);
-		exit(1);
+		MLR_INTERNAL_CODING_ERROR();
 	}
 
 	pstate->num_header_lines_output = 0LL;

@@ -58,9 +58,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 			break;
 
 		default:
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
+			MLR_INTERNAL_CODING_ERROR();
+			return NULL; // not reached
 			break;
 		}
 
@@ -84,13 +83,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	} else {
-		if ((pnode->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME) && (pnode->type != MD_AST_NODE_TYPE_OPERATOR)) {
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d (node type %s).\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__, mlr_dsl_ast_node_describe_type(pnode->type));
-			mlr_dsl_ast_node_print(pnode);
-			exit(1);
-		}
-
+		MLR_INTERNAL_CODING_ERROR_IF((pnode->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME) && (pnode->type != MD_AST_NODE_TYPE_OPERATOR));
 		return fmgr_alloc_from_operator_or_function_call(pfmgr, pnode, type_inferencing, context_flags);
 	}
 }
@@ -140,9 +133,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_field_name(char* field_name, int typ
 		pevaluator->pprocess_func = rval_evaluator_field_name_func_string_float_int;
 		break;
 	default:
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
+		MLR_INTERNAL_CODING_ERROR();
 		break;
 	}
 	pevaluator->pfree_func = rval_evaluator_field_name_free;
@@ -240,9 +231,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_indirect_field_name(mlr_dsl_ast_node
 		pevaluator->pprocess_func = rval_evaluator_indirect_field_name_func_string_float_int;
 		break;
 	default:
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
+		MLR_INTERNAL_CODING_ERROR();
 		break;
 	}
 	pevaluator->pfree_func = rval_evaluator_indirect_field_name_free;
@@ -412,9 +401,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_strnum_literal(char* string, int typ
 			}
 			break;
 		default:
-			fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
+			MLR_INTERNAL_CODING_ERROR();
 			break;
 		}
 	}
@@ -481,9 +468,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_boolean_literal(char* string) {
 	} else if (streq(string, "false")) {
 		pstate->literal = mv_from_false();
 	} else {
-		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
+		MLR_INTERNAL_CODING_ERROR();
 	}
 	pevaluator->pprocess_func = rval_evaluator_boolean_literal_func;
 	pevaluator->pfree_func = rval_evaluator_boolean_literal_free;
