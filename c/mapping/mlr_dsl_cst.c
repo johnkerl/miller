@@ -78,7 +78,6 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 	blocked_ast_allocate_locals(pcst->paast, trace_stack_allocation);
 
 	pcst->pbegin_blocks  = sllv_alloc();
-	pcst->pmain_block    = sllv_alloc();
 	pcst->pend_blocks    = sllv_alloc();
 	pcst->pfmgr          = fmgr_alloc();
 	pcst->psubr_defsites = lhmsv_alloc();
@@ -163,15 +162,16 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 		mlr_dsl_ast_node_print(pcst->paast->pmain_block);
 	}
 	//printf("MVARN=%d\n", pcst->paast->pmain_block->max_var_depth);
+	pcst->pmain_block = cst_top_level_statement_block_alloc(pcst->paast->pmain_block->max_var_depth);
 	for (sllve_t* pe = pcst->paast->pmain_block->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 
 		// The last statement of mlr filter must be a bare boolean.
 		if (do_final_filter && pe->pnext == NULL) {
-			sllv_append(pcst->pmain_block, mlr_dsl_cst_alloc_final_filter_statement(
+			sllv_append(pcst->pmain_block->pstatements, mlr_dsl_cst_alloc_final_filter_statement(
 				pcst, pnode, negate_final_filter, type_inferencing, context_flags | IN_MLR_FINAL_FILTER));
 		} else {
-			sllv_append(pcst->pmain_block, mlr_dsl_cst_alloc_statement(pcst, pnode,
+			sllv_append(pcst->pmain_block->pstatements, mlr_dsl_cst_alloc_statement(pcst, pnode,
 				type_inferencing, context_flags));
 		}
 	}
@@ -205,10 +205,6 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 		}
 	}
 
-	for (sllve_t* pe = pcst->pmain_block->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_free(pe->pvvalue);
-	}
-
 	if (pcst->pend_blocks != NULL) {
 		for (sllve_t* pe = pcst->pend_blocks->phead; pe != NULL; pe = pe->pnext) {
 			sllv_t* pblock = pe->pvvalue;
@@ -219,7 +215,7 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	}
 
 	sllv_free(pcst->pbegin_blocks);
-	sllv_free(pcst->pmain_block);
+	cst_top_level_statement_block_free(pcst->pmain_block);
 	sllv_free(pcst->pend_blocks);
 	fmgr_free(pcst->pfmgr);
 

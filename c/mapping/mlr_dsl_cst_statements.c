@@ -2041,6 +2041,33 @@ static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg) {
 }
 
 // ================================================================
+// Top-level entry point, e.g. from mapper_put.
+void mlr_dsl_cst_handle_top_level_statement_blocks(
+	sllv_t*      ptop_level_blocks, // block bodies for begins, main, ends
+	variables_t* pvars,
+	cst_outputs_t* pcst_outputs)
+{
+	for (sllve_t* pe = ptop_level_blocks->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_cst_handle_top_level_statement_block(pe->pvvalue, pvars, pcst_outputs);
+	}
+}
+
+void mlr_dsl_cst_handle_top_level_statement_block(
+	cst_top_level_statement_block_t* ptop_level_block,
+	variables_t* pvars,
+	cst_outputs_t* pcst_outputs)
+{
+	// xxx check in-use
+	local_stack_enter(ptop_level_block->pstack);
+
+	// xxx adapt callee to also handle local stack
+	mlr_dsl_cst_handle_statement_list(ptop_level_block->pstatements, pvars, pcst_outputs);
+
+	bind_stack_clear(pvars->pbind_stack); // clear the baseframe // xxx rm
+	local_stack_exit(ptop_level_block->pstack);
+}
+
+// ================================================================
 // xxx copy to ..._for_filter
 // xxx rename to ..._for_put
 

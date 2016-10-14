@@ -113,9 +113,9 @@ typedef struct _mlr_dsl_cst_statement_vararg_t {
 } mlr_dsl_cst_statement_vararg_t;
 
 // Handler for statement lists: begin/main/end; cond/if/for/while/do-while.
-typedef void mlr_dsl_cst_statement_list_handler_t(
-	sllv_t*      pcst_statements,
-	variables_t* pvars,
+typedef void mlr_dsl_cst_statement_block_handler_t(
+	sllv_t*        pcst_statements, // xxx rename / work in block
+	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs);
 
 // ----------------------------------------------------------------
@@ -148,7 +148,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// There are two variants of statement-list handlers: one for inside loop bodies which has to check break/continue
 	// flags after each statement, and another for outside loop bodies which doesn't need to check those. (This is a
 	// micro-optimization.) For bodyless statements (e.g. assignment) this is null.
-	mlr_dsl_cst_statement_list_handler_t* pblock_handler;
+	mlr_dsl_cst_statement_block_handler_t* pblock_handler;
 
 	// Assignment to oosvar
 	sllv_t* poosvar_lhs_keylist_evaluators;
@@ -230,9 +230,9 @@ typedef struct _mlr_dsl_cst_statement_t {
 // MLR_DSL_CST OBJECT
 
 typedef struct _mlr_dsl_cst_t {
-	sllv_t* pbegin_blocks;
-	sllv_t* pmain_block;
-	sllv_t* pend_blocks;
+	sllv_t* pbegin_blocks; // xxx
+	cst_top_level_statement_block_t* pmain_block;
+	sllv_t* pend_blocks; // xxx
 
 	// Function manager for built-in functions as well as user-defined functions (which are CST-specific).
 	fmgr_t* pfmgr;
@@ -273,18 +273,29 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 // Top-level entry point, e.g. from mapper_put.
-void mlr_dsl_cst_handle_statement_blocks(
+void mlr_dsl_cst_handle_top_level_statement_blocks(
+	sllv_t*      ptop_level_blocks, // block bodies for begins, main, ends
+	variables_t* pvars,
+	cst_outputs_t* pcst_outputs);
+
+void mlr_dsl_cst_handle_top_level_statement_block(
+	cst_top_level_statement_block_t* ptop_level_block,
+	variables_t* pvars,
+	cst_outputs_t* pcst_outputs);
+
+// Top-level entry point, e.g. from mapper_put.
+void mlr_dsl_cst_handle_statement_blocks( // xxx rm
 	sllv_t*      pcst_blocks, // block bodies for begin, main, end; cond, if, for, while
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);
 
-void mlr_dsl_cst_handle_statement_block(
+void mlr_dsl_cst_handle_statement_block( // xxx rm
 	sllv_t*      pcst_block, // block bodies for begin, main, end; cond, if, for, while
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);
 
 // Recursive entry point: block bodies for begin, main, end; cond, if, for, while.
-void mlr_dsl_cst_handle_statement_list(
+void mlr_dsl_cst_handle_statement_list( // xxx rename to handle statement block
 	sllv_t*      pcst_statements,
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);
