@@ -2071,17 +2071,6 @@ void mlr_dsl_cst_handle_top_level_statement_block(
 // xxx copy to ..._for_filter
 // xxx rename to ..._for_put
 
-void mlr_dsl_cst_handle_statement_blocks(
-	sllv_t*        pcst_blocks,
-	variables_t*   pvars,
-	cst_outputs_t* pcst_outputs)
-{
-	for (sllve_t* pe = pcst_blocks->phead; pe != NULL; pe = pe->pnext) {
-		sllv_t* pcst_block = pe->pvvalue;
-		mlr_dsl_cst_handle_statement_block(pcst_block, pvars, pcst_outputs);
-	}
-}
-
 void mlr_dsl_cst_handle_statement_block(
 	sllv_t*        pcst_block,
 	variables_t*   pvars,

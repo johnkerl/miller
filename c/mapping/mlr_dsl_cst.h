@@ -283,12 +283,6 @@ void mlr_dsl_cst_handle_top_level_statement_block(
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs);
 
-// Top-level entry point, e.g. from mapper_put.
-void mlr_dsl_cst_handle_statement_blocks( // xxx rm
-	sllv_t*      pcst_blocks, // block bodies for begin, main, end; cond, if, for, while
-	variables_t* pvars,
-	cst_outputs_t* pcst_outputs);
-
 void mlr_dsl_cst_handle_statement_block( // xxx rm
 	sllv_t*      pcst_block, // block bodies for begin, main, end; cond, if, for, while
 	variables_t* pvars,
