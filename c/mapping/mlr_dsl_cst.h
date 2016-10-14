@@ -4,7 +4,8 @@
 #include "cli/mlrcli.h"
 #include "mapping/mlr_dsl_ast.h"
 #include "containers/lhmsmv.h"
-#include "containers/bind_stack.h"
+#include "containers/bind_stack.h" // xxx rm
+#include "containers/local_stack.h"
 #include "containers/loop_stack.h"
 #include "mapping/mlr_dsl_blocked_ast.h"
 #include "mapping/rval_evaluators.h"
@@ -69,6 +70,17 @@ typedef struct _cst_outputs_t {
 	char*   oosvar_flatten_separator;
 	cli_writer_opts_t* pwriter_opts;
 } cst_outputs_t;
+
+typedef struct _cst_top_level_statement_block_t {
+	local_stack_t* pstack;
+	int max_var_depth;
+	sllv_t* pstatements;
+} cst_top_level_statement_block_t;
+
+typedef struct _cst_statement_block_t {
+	int frame_var_count;
+	sllv_t* pstatements;
+} cst_statement_block_t;
 
 // Generic handler for a statement.
 typedef void mlr_dsl_cst_node_handler_func_t(
