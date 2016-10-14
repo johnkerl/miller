@@ -146,6 +146,7 @@ static void pass_1_for_func_subr_block(mlr_dsl_ast_node_t* pnode, int trace);
 static void pass_1_for_begin_end_block(mlr_dsl_ast_node_t* pnode, int trace);
 static void pass_1_for_main_block(mlr_dsl_ast_node_t* pnode, int trace);
 static void pass_1_for_statement_block(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace);
+static void pass_1_for_statement_list(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace);
 static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace);
 
 // Pass-2 helper methods for the main entry point to this file.
@@ -284,8 +285,23 @@ static void pass_1_for_main_block(mlr_dsl_ast_node_t* pnode, int trace) {
 }
 
 // ----------------------------------------------------------------
+// Curly-bracked bodies of if/while/for/etc.
 static void pass_1_for_statement_block(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
 	if (pnode->type != MD_AST_NODE_TYPE_STATEMENT_BLOCK) {
+		fprintf(stderr,
+			"%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+		pass_1_for_node(pchild, pframe_group, trace);
+	}
+}
+
+// Non-curly-braced triple-for starts/continuations/updates statement lists.
+static void pass_1_for_statement_list(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
+	if (pnode->type != MD_AST_NODE_TYPE_STATEMENT_LIST) {
 		fprintf(stderr,
 			"%s: internal coding error detected in file %s at line %d.\n",
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
@@ -377,6 +393,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pfr
 		}
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR) { // xxx comment
+		// xxx funcify all these
 
 		mlr_dsl_ast_node_t* pvarsnode    = pnode->pchildren->phead->pvvalue;
 		mlr_dsl_ast_node_t* pkeylistnode = pnode->pchildren->phead->pnext->pvvalue;
@@ -405,6 +422,32 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pfr
 		}
 		stkalc_frame_group_mutate_node_for_define(pframe_group, pvalnode, "FOR-BIND", trace);
 		pass_1_for_statement_block(pblocknode, pframe_group, trace);
+		pnode->frame_var_count = pnext_frame->var_count;
+
+		stkalc_frame_free(stkalc_frame_group_pop(pframe_group));
+		if (trace) {
+			leader_print(pframe_group->plist->length);
+			printf("POP FRAME %s frct=%d\n", pnode->text, pnode->frame_var_count);
+		}
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_TRIPLE_FOR) { // xxx comment
+		mlr_dsl_ast_node_t* pstarts_node        = pnode->pchildren->phead->pvvalue;
+		mlr_dsl_ast_node_t* pcontinuations_node = pnode->pchildren->phead->pnext->pvvalue;
+		mlr_dsl_ast_node_t* pupdates_node       = pnode->pchildren->phead->pnext->pnext->pvvalue;
+		mlr_dsl_ast_node_t* pblock_node         = pnode->pchildren->phead->pnext->pnext->pnext->pvvalue;
+
+		if (trace) {
+			leader_print(pframe_group->plist->length);
+			printf("PUSH FRAME %s\n", pnode->text);
+		}
+		stkalc_frame_t* pnext_frame = stkalc_frame_alloc();
+		stkalc_frame_group_push(pframe_group, pnext_frame);
+
+		pass_1_for_statement_list(pstarts_node, pframe_group, trace);
+		pass_1_for_statement_list(pcontinuations_node, pframe_group, trace);
+		pass_1_for_statement_list(pupdates_node, pframe_group, trace);
+		pass_1_for_statement_block(pblock_node, pframe_group, trace);
+
 		pnode->frame_var_count = pnext_frame->var_count;
 
 		stkalc_frame_free(stkalc_frame_group_pop(pframe_group));

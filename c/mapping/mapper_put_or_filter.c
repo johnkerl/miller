@@ -276,7 +276,7 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 		} else if (streq(argv[argi], "-v")) {
 			print_ast = TRUE;
 			argi += 1;
-		} else if (streq(argv[argi], "--tsa")) { // xxx to on-line help
+		} else if (streq(argv[argi], "-a")) { // xxx to on-line help
 			trace_stack_allocation = TRUE;
 			argi += 1;
 		} else if (streq(argv[argi], "-t")) {

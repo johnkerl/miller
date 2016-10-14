@@ -72,16 +72,6 @@ typedef struct _cst_outputs_t {
 } cst_outputs_t;
 
 // ----------------------------------------------------------------
-typedef struct _cst_top_level_statement_block_t {
-	local_stack_t* pstack;
-	int max_var_depth;
-	sllv_t* pstatements;
-} cst_top_level_statement_block_t;
-
-cst_top_level_statement_block_t* cst_top_level_statement_block_alloc(int max_var_depth);
-void cst_top_level_statement_block_free(cst_top_level_statement_block_t* pblock);
-
-// ----------------------------------------------------------------
 typedef struct _cst_statement_block_t {
 	int frame_var_count;
 	sllv_t* pstatements;
@@ -89,6 +79,16 @@ typedef struct _cst_statement_block_t {
 
 cst_statement_block_t* cst_statement_block_alloc(int frame_var_count);
 void cst_statement_block_free(cst_statement_block_t* pblock);
+
+// ----------------------------------------------------------------
+typedef struct _cst_top_level_statement_block_t {
+	local_stack_t* pstack;
+	int max_var_depth;
+	cst_statement_block_t* pstatement_block;
+} cst_top_level_statement_block_t;
+
+cst_top_level_statement_block_t* cst_top_level_statement_block_alloc(int max_var_depth, int frame_var_count);
+void cst_top_level_statement_block_free(cst_top_level_statement_block_t* pblock);
 
 // ----------------------------------------------------------------
 // Generic handler for a statement.
@@ -114,9 +114,9 @@ typedef struct _mlr_dsl_cst_statement_vararg_t {
 
 // Handler for statement lists: begin/main/end; cond/if/for/while/do-while.
 typedef void mlr_dsl_cst_statement_block_handler_t(
-	sllv_t*        pcst_statements, // xxx rename / work in block
-	variables_t*   pvars,
-	cst_outputs_t* pcst_outputs);
+	cst_statement_block_t* pblock,
+	variables_t*           pvars,
+	cst_outputs_t*         pcst_outputs);
 
 // ----------------------------------------------------------------
 // MLR_DSL_CST_STATEMENT OBJECT
@@ -202,7 +202,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 	int flush_every_record;
 
 	// Pattern-action blocks, while, for, etc.
-	sllv_t* pblock_statements; // xxx replace
+	cst_statement_block_t* pstatement_block;
 
 	// if-elif-elif-else:
 	sllv_t* pif_chain_statements;
@@ -284,9 +284,15 @@ void mlr_dsl_cst_handle_top_level_statement_block(
 	cst_outputs_t* pcst_outputs);
 
 // Recursive entry point: block bodies for begin, main, end; cond, if, for, while.
-void mlr_dsl_cst_handle_statement_block( // xxx rename to handle statement block
-	sllv_t*      pcst_statements,
-	variables_t* pvars,
+void mlr_dsl_cst_handle_statement_block(
+	cst_statement_block_t* pblock,
+	variables_t*           pvars,
+	cst_outputs_t*         pcst_outputs);
+
+// Statement lists which are not curly-braced bodies: start/continuation/update statements for triple-for.
+void mlr_dsl_cst_handle_statement_list(
+	sllv_t*        pstatements,
+	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs);
 
 // ================================================================

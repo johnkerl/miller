@@ -85,7 +85,12 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
-	pcst_udf_state->ptop_level_block = cst_top_level_statement_block_alloc(pnode->max_var_depth);
+	if (pnode->frame_var_count == MD_UNUSED_INDEX) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", // xxx funcify
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	pcst_udf_state->ptop_level_block = cst_top_level_statement_block_alloc(pnode->max_var_depth, pnode->frame_var_count);
 
 	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
@@ -95,7 +100,8 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		sllv_append(pcst_udf_state->ptop_level_block->pstatements,
+		// xxx funcify here & thruout
+		sllv_append(pcst_udf_state->ptop_level_block->pstatement_block->pstatements,
 			mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node, type_inferencing, context_flags | IN_FUNC_DEF));
 	}
 
@@ -145,7 +151,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	// Compute the function value
 	cst_outputs_t* pcst_outputs = NULL; // Functions only produce output via their return values
 
-	for (sllve_t* pe = pstate->ptop_level_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
+	for (sllve_t* pe = pstate->ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) != 0) {
@@ -223,7 +229,12 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
 		exit(1);
 	}
-	pstate->ptop_level_block = cst_top_level_statement_block_alloc(pnode->max_var_depth);
+	if (pnode->frame_var_count == MD_UNUSED_INDEX) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", // xxx funcify
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+	pstate->ptop_level_block = cst_top_level_statement_block_alloc(pnode->max_var_depth, pnode->frame_var_count);
 
 	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
@@ -235,7 +246,7 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 		}
 		mlr_dsl_cst_statement_t* pstatement = mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
 			type_inferencing, context_flags | IN_SUBR_DEF);
-		sllv_append(pstate->ptop_level_block->pstatements, pstatement);
+		sllv_append(pstate->ptop_level_block->pstatement_block->pstatements, pstatement);
 	}
 
 	return pstate;
@@ -271,7 +282,7 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 		bind_stack_set(pvars->pbind_stack, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
 	}
 
-	for (sllve_t* pe = pstate->ptop_level_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
+	for (sllve_t* pe = pstate->ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) != 0) {
