@@ -80,6 +80,11 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 
 	pcst_udf_state->pframe = bind_stack_frame_alloc_fenced(); // xxx rm
 
+	if (pnode->max_var_depth == MD_UNUSED_INDEX) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", // xxx funcify
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
 	pcst_udf_state->ptop_level_block = cst_top_level_statement_block_alloc(pnode->max_var_depth);
 
 	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -213,8 +218,11 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 	}
 
 	pstate->pframe = bind_stack_frame_alloc_fenced();
-	//printf("SVARN=%d\n", pnode->max_var_depth);
-
+	if (pnode->max_var_depth == MD_UNUSED_INDEX) {
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n", // xxx funcify
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
 	pstate->ptop_level_block = cst_top_level_statement_block_alloc(pnode->max_var_depth);
 
 	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
