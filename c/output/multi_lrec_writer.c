@@ -35,11 +35,7 @@ void multi_lrec_writer_output_srec(multi_lrec_writer_t* pmlw, lrec_t* poutrec, c
 	if (pstate == NULL) {
 		pstate = mlr_malloc_or_die(sizeof(lrec_writer_and_fp_t));
 		pstate->plrec_writer = lrec_writer_alloc(pmlw->pwriter_opts);
-		if (pstate->plrec_writer == NULL) {
-			fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
-				MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-			exit(1);
-		}
+		MLR_INTERNAL_CODING_ERROR_IF(pstate->plrec_writer == NULL);
 		pstate->filename_or_command = mlr_strdup_or_die(filename_or_command);
 		char* mode_string = get_mode_string(file_output_mode);
 		char* mode_desc = get_mode_desc(file_output_mode);

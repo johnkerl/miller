@@ -45,11 +45,7 @@ lrec_writer_t*  lrec_writer_alloc(cli_writer_opts_t* popts) {
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_alloc_or_die(cli_writer_opts_t* popts) {
 	lrec_writer_t* plrec_writer = lrec_writer_alloc(popts);
-	if (plrec_writer == NULL) {
-		fprintf(stderr, "%s: internal coding error detected in file \"%s\" at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
+	MLR_INTERNAL_CODING_ERROR_IF(plrec_writer == NULL);
 	return plrec_writer;
 }
 
