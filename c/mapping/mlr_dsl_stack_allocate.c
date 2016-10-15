@@ -317,6 +317,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pfr
 	}
 }
 
+// ----------------------------------------------------------------
 static void pass_1_for_local_definition(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
 	mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 
@@ -326,6 +327,7 @@ static void pass_1_for_local_definition(mlr_dsl_ast_node_t* pnode, stkalc_frame_
 	stkalc_frame_group_mutate_node_for_define(pframe_group, pnamenode, "DEFINE", trace);
 }
 
+// ----------------------------------------------------------------
 static void pass_1_for_local_assignment(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
 	mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
@@ -333,9 +335,13 @@ static void pass_1_for_local_assignment(mlr_dsl_ast_node_t* pnode, stkalc_frame_
 	// Do the LHS after the RHS, in case 'local nonesuch = nonesuch'
 	stkalc_frame_group_mutate_node_for_write(pframe_group, pnamenode, "WRITE", trace);
 }
+
+// ----------------------------------------------------------------
 static void pass_1_for_local_read(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
 	stkalc_frame_group_mutate_node_for_read(pframe_group, pnode, "READ", trace);
 }
+
+// ----------------------------------------------------------------
 static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
 	// for (k,v in $*) { ... }: the k and v are scoped to the curly-brace block.
 
@@ -365,6 +371,7 @@ static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_frame_gro
 	}
 }
 
+// ----------------------------------------------------------------
 static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
 
 	mlr_dsl_ast_node_t* pkeynode     = pnode->pchildren->phead->pvvalue;
@@ -400,6 +407,7 @@ static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkal
 	}
 }
 
+// ----------------------------------------------------------------
 static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
 
 	mlr_dsl_ast_node_t* pvarsnode    = pnode->pchildren->phead->pvvalue;
@@ -442,6 +450,7 @@ static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_frame_g
 	}
 }
 
+// ----------------------------------------------------------------
 static void pass_1_for_triple_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
 	mlr_dsl_ast_node_t* pstarts_node        = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pcontinuations_node = pnode->pchildren->phead->pnext->pvvalue;
@@ -469,6 +478,7 @@ static void pass_1_for_triple_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_frame_g
 	}
 }
 
+// ----------------------------------------------------------------
 static void pass_1_for_non_terminal_node(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
 	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pchild = pe->pvvalue;
