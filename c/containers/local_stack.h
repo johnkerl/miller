@@ -36,7 +36,10 @@ void local_stack_free(local_stack_t* pstack);
 // Sets/clear the in-use flag for top-level statement blocks, and verifies
 // the contract for absent-null at slot 0.
 
-// xxx comment re retval & in-use
+// For non-recursive functions/subroutines the enter method sets the in-use flag
+// and returns its argument; the exit method clears that flag. For recursively
+// invoked functions/subroutines the enter method returns another stack of the
+// same size, and the exit method frees that.
 local_stack_t* local_stack_enter(local_stack_t* pstack);
 void local_stack_exit(local_stack_t* pstack);
 
