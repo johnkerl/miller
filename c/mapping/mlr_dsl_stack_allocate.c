@@ -279,6 +279,7 @@ static void pass_1_for_main_block(mlr_dsl_ast_node_t* pnode, int trace) {
 
 // ----------------------------------------------------------------
 // Curly-bracked bodies of if/while/for/etc.
+
 static void pass_1_for_statement_block(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->type != MD_AST_NODE_TYPE_STATEMENT_BLOCK);
 	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
@@ -342,8 +343,8 @@ static void pass_1_for_local_read(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_
 }
 
 // ----------------------------------------------------------------
+// for (k,v in $*) { ... }: the k and v are scoped to the curly-brace block.
 static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
-	// for (k,v in $*) { ... }: the k and v are scoped to the curly-brace block.
 
 	if (trace) {
 		leader_print(pframe_group->plist->length);
