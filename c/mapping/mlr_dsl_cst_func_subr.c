@@ -128,6 +128,7 @@ void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate) {
 
 static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, variables_t* pvars) {
 	cst_udf_state_t* pstate = pvstate;
+	cst_top_level_statement_block_t* ptop_level_block = pstate->ptop_level_block;
 	mv_t retval = mv_absent();
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -138,12 +139,15 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	}
 
 	// xxx local-stack enter
+	// xxx alloc new if in_use ...
+	local_stack_enter(ptop_level_block->pstack);
+	//local_stack_frame_enter(ptop_level_block->pstack, ptop_level_block->pstatement_block->frame_var_count);
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Compute the function value
 	cst_outputs_t* pcst_outputs = NULL; // Functions only produce output via their return values
 
-	for (sllve_t* pe = pstate->ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
+	for (sllve_t* pe = ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) != 0) {
@@ -159,6 +163,9 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
+
+	//local_stack_frame_exit(ptop_level_block->pstack, ptop_level_block->pstatement_block->frame_var_count);
+	local_stack_exit(ptop_level_block->pstack);
 
 	return retval;
 }

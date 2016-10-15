@@ -977,7 +977,6 @@ static mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 
-	// xxx funcify: mlr_assert
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->frame_var_count == MD_UNUSED_INDEX);
 	pstatement->pstatement_block = cst_statement_block_alloc(pleft->frame_var_count);
 
@@ -1128,7 +1127,6 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
 		pcst, pmiddle, type_inferencing, context_flags);
 
-	// xxx funcify: mlr_assert
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_var_count == MD_UNUSED_INDEX);
 	pstatement->pstatement_block = cst_statement_block_alloc(pnode->frame_var_count);
 
@@ -1377,7 +1375,6 @@ static mlr_dsl_cst_statement_t* alloc_if_item(mlr_dsl_cst_t* pcst, mlr_dsl_ast_n
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
-	// xxx funcify: mlr_assert
 	MLR_INTERNAL_CODING_ERROR_IF(plistnode->frame_var_count == MD_UNUSED_INDEX);
 	pstatement->pstatement_block = cst_statement_block_alloc(plistnode->frame_var_count);
 
