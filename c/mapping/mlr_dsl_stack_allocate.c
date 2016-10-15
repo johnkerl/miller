@@ -278,7 +278,7 @@ static void pass_1_for_main_block(mlr_dsl_ast_node_t* pnode, int trace) {
 }
 
 // ----------------------------------------------------------------
-// Curly-bracked bodies of if/while/for/etc.
+// Curly-braced bodies of if/while/for/etc.
 
 static void pass_1_for_statement_block(mlr_dsl_ast_node_t* pnode, stkalc_frame_group_t* pframe_group, int trace) {
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->type != MD_AST_NODE_TYPE_STATEMENT_BLOCK);
