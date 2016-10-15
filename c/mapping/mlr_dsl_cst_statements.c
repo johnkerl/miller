@@ -247,8 +247,8 @@ void cst_statement_block_free(cst_statement_block_t* pblock) {
 cst_top_level_statement_block_t* cst_top_level_statement_block_alloc(int max_var_depth, int frame_var_count) {
 	cst_top_level_statement_block_t* pblock = mlr_malloc_or_die(sizeof(cst_top_level_statement_block_t));
 
-	pblock->max_var_depth = max_var_depth;
-	pblock->pstack        = local_stack_alloc(max_var_depth);
+	pblock->max_var_depth    = max_var_depth;
+	pblock->pstack           = local_stack_alloc(max_var_depth);
 	pblock->pstatement_block = cst_statement_block_alloc(frame_var_count);
 
 	return pblock;
@@ -1200,21 +1200,28 @@ static mlr_dsl_cst_statement_t* alloc_triple_for(mlr_dsl_cst_t* pcst, mlr_dsl_as
 	if (pcontinuation_statements_node->pchildren->length == 0) {
 		pstatement->ptriple_for_continuation_evaluator = rval_evaluator_alloc_from_boolean(TRUE);
 	} else {
-		for (sllve_t* pe = pcontinuation_statements_node->pchildren->phead; pe != NULL && pe->pnext != NULL; pe = pe->pnext) {
+		for (
+			sllve_t* pe = pcontinuation_statements_node->pchildren->phead;
+			pe != NULL && pe->pnext != NULL;
+			pe = pe->pnext
+		)
+		{
 			mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
 			sllv_append(pstatement->ptriple_for_pre_continuation_statements,
 				mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
 				type_inferencing, context_flags & ~IN_BREAKABLE));
 		}
-		mlr_dsl_ast_node_t* pfinal_continuation_statement_node = pcontinuation_statements_node->pchildren->ptail->pvvalue;
+		mlr_dsl_ast_node_t* pfinal_continuation_statement_node =
+			pcontinuation_statements_node->pchildren->ptail->pvvalue;
 		if (mlr_dsl_ast_node_cannot_be_bare_boolean(pfinal_continuation_statement_node)) {
 			fprintf(stderr,
 				"%s: the final triple-for continutation statement must be a bare boolean.\n",
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		pstatement->ptriple_for_continuation_evaluator = rval_evaluator_alloc_from_ast(pfinal_continuation_statement_node,
-			pcst->pfmgr, type_inferencing, (context_flags & ~IN_BREAKABLE) | IN_TRIPLE_FOR_CONTINUE);
+		pstatement->ptriple_for_continuation_evaluator = rval_evaluator_alloc_from_ast(
+			pfinal_continuation_statement_node, pcst->pfmgr,
+			type_inferencing, (context_flags & ~IN_BREAKABLE) | IN_TRIPLE_FOR_CONTINUE);
 	}
 
 	pstatement->ptriple_for_update_statements = sllv_alloc();
@@ -1982,13 +1989,15 @@ void mlr_dsl_cst_handle_top_level_statement_blocks(
 	}
 }
 
+// XXX split alloc & handle files ... too big.
+
 void mlr_dsl_cst_handle_top_level_statement_block(
 	cst_top_level_statement_block_t* ptop_level_block,
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs)
 {
-	// xxx cmt re in-use
-	local_stack_t* pstack = local_stack_enter(ptop_level_block->pstack);
+	// XXX cmt re in-use
+	local_stack_t* pstack = local_stack_enter(ptop_level_block->pstack); // XXX sllv_push pvars->pstack ?
 
 	// xxx adapt callee to also handle local stack
 	mlr_dsl_cst_handle_statement_block(ptop_level_block->pstatement_block, pvars, pcst_outputs);
@@ -2423,7 +2432,9 @@ static void handle_conditional_block(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	// xxx local entry, here & all bind.stack.push
+	// XXX need pvars->pstacks ...
+	// local_stack_t* pstack = pvars->pstacks->phead->pvvalue;
+	// XXX local_stack_frame_enter(pstack, pstatement->pstatement_block->frame_var_count);
 	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 
@@ -2435,6 +2446,7 @@ static void handle_conditional_block(
 		}
 	}
 	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
+	// XXX local_stack_frame_exit(pstack, pstatement->pstatement_block->frame_var_count);
 }
 
 // ----------------------------------------------------------------

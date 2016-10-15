@@ -50,6 +50,7 @@ typedef struct _variables_t {
 	mlhmmv_t*        poosvars;
 	string_array_t** ppregex_captures;
 	context_t*       pctx;
+	// XXX pstacks (sllv_t*)
 	bind_stack_t*    pbind_stack;
 	loop_stack_t*    ploop_stack;
 	return_state_t   return_state;

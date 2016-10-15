@@ -128,6 +128,8 @@ typedef void mlr_dsl_cst_statement_block_handler_t(
 // Difference between keylist and namelist: in emit @a[$b]["c"], "d", @e, the keylist is ["a", $b, "c"]
 // and the namelist is ["d", @e].
 
+// xxx make this a union ... ?
+
 typedef struct _mlr_dsl_cst_statement_t {
 
 	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.

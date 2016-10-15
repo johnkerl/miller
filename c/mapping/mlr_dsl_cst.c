@@ -94,7 +94,8 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 			printf("FUNCTION DEFINITION:\n");
 			mlr_dsl_ast_node_print(pnode);
 		}
-		udf_defsite_state_t* pudf_defsite_state = mlr_dsl_cst_alloc_udf(pcst, pnode, type_inferencing, context_flags);
+		udf_defsite_state_t* pudf_defsite_state = mlr_dsl_cst_alloc_udf(pcst, pnode,
+			type_inferencing, context_flags);
 		fmgr_install_udf(pcst->pfmgr, pudf_defsite_state);
 	}
 
@@ -117,7 +118,6 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 	pcst->pbegin_blocks = sllv_alloc();
 	for (sllve_t* pe = pcst->paast->pbegin_blocks->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
-		// xxx assert non-uninit max var depth x all callsites
 		if (print_ast) {
 			printf("\n");
 			printf("BEGIN-BLOCK:\n");
@@ -125,7 +125,8 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 		}
 		MLR_INTERNAL_CODING_ERROR_IF(pnode->max_var_depth == MD_UNUSED_INDEX);
 		MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_var_count == MD_UNUSED_INDEX);
-		cst_top_level_statement_block_t* pblock = cst_top_level_statement_block_alloc(pnode->max_var_depth, pnode->frame_var_count);
+		cst_top_level_statement_block_t* pblock = cst_top_level_statement_block_alloc(pnode->max_var_depth,
+			pnode->frame_var_count);
 		for (sllve_t* pf = pnode->pchildren->phead; pf != NULL; pf = pf->pnext) {
 			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
 			for (sllve_t* pg = plistnode->pchildren->phead; pg != NULL; pg = pg->pnext) {
@@ -146,10 +147,10 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 			printf("END-BLOCK:\n");
 			mlr_dsl_ast_node_print(pnode);
 		}
-		// xxx funcify x all
 		MLR_INTERNAL_CODING_ERROR_IF(pnode->max_var_depth == MD_UNUSED_INDEX);
 		MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_var_count == MD_UNUSED_INDEX);
-		cst_top_level_statement_block_t* pblock = cst_top_level_statement_block_alloc(pnode->max_var_depth, pnode->frame_var_count);
+		cst_top_level_statement_block_t* pblock = cst_top_level_statement_block_alloc(pnode->max_var_depth,
+			pnode->frame_var_count);
 		for (sllve_t* pf = pnode->pchildren->phead; pf != NULL; pf = pf->pnext) {
 			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
 			for (sllve_t* pg = plistnode->pchildren->phead; pg != NULL; pg = pg->pnext) {
