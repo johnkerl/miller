@@ -17,6 +17,7 @@
 // ----------------------------------------------------------------
 typedef struct _local_stack_t {
 	int in_use;
+	int ephemeral;
 	int size;
 	int frame_base;
 	mv_t* pvars;
@@ -35,17 +36,9 @@ void local_stack_free(local_stack_t* pstack);
 // Sets/clear the in-use flag for top-level statement blocks, and verifies
 // the contract for absent-null at slot 0.
 
-static inline void local_stack_enter(local_stack_t* pstack) {
-	pstack->in_use = TRUE;
-}
-static inline void local_stack_exit (local_stack_t* pstack) {
-	pstack->in_use = FALSE;
-	if (!mv_is_absent(&pstack->pvars[0])) {
-		fprintf(stderr, "%s: Internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
-}
+// xxx comment re retval & in-use
+local_stack_t* local_stack_enter(local_stack_t* pstack);
+void local_stack_exit(local_stack_t* pstack);
 
 // ----------------------------------------------------------------
 // Frames are entered/exited for each curly-braced statement block, including
