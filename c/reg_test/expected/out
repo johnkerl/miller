@@ -26358,8 +26358,8 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=3
     text="for", type=FOR_SREC: frame_var_count=2
         text="variables", type=FOR_VARIABLES:
-            text="k", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-            text="v", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
+            text="k", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+            text="v", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
         text="for_full_srec_block", type=STATEMENT_BLOCK:
 
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
@@ -26395,8 +26395,8 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=3
     text="for", type=FOR_SREC: frame_var_count=2
         text="variables", type=FOR_VARIABLES:
-            text="k", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-            text="v", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
+            text="k", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+            text="v", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="=", type=SREC_ASSIGNMENT:
                 text="nr", type=FIELD_NAME.
@@ -26438,12 +26438,12 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=3
     text="for", type=FOR_SREC: frame_var_count=2
         text="variables", type=FOR_VARIABLES:
-            text="k", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-            text="v", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
+            text="k", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+            text="v", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="unset", type=UNSET:
                 text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                    text="k", type=LOCAL_VARIABLE. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
+                    text="k", type=LOCAL_VARIABLE. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
     text="=", type=SREC_ASSIGNMENT:
         text="j", type=FIELD_NAME.
         text="NR", type=CONTEXT_VARIABLE.
@@ -26488,18 +26488,18 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=3
     text="for", type=FOR_SREC: frame_var_count=2
         text="variables", type=FOR_VARIABLES:
-            text="k", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-            text="v", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
+            text="k", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+            text="v", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="if_head", type=IF_HEAD:
                 text="if", type=IF_ITEM:
                     text="!=", type=OPERATOR:
-                        text="k", type=LOCAL_VARIABLE. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
+                        text="k", type=LOCAL_VARIABLE. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
                         text="x", type=STRNUM_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK: frame_var_count=0
                         text="unset", type=UNSET:
                             text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                                text="k", type=LOCAL_VARIABLE. frame_relative_index=0 upstack_frame_count=1 absolute_index=3
+                                text="k", type=LOCAL_VARIABLE. subframe_relative_index=0 upstack_subframe_count=1 frame_relative_index=3
     text="=", type=SREC_ASSIGNMENT:
         text="j", type=FIELD_NAME.
         text="NR", type=CONTEXT_VARIABLE.
@@ -26540,16 +26540,16 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=3
     text="for", type=FOR_SREC: frame_var_count=2
         text="variables", type=FOR_VARIABLES:
-            text="k", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-            text="v", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
+            text="k", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+            text="v", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
                 text=".", type=OPERATOR:
-                    text="k", type=LOCAL_VARIABLE. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
+                    text="k", type=LOCAL_VARIABLE. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
                     text="_orig", type=STRNUM_LITERAL.
-                text="v", type=LOCAL_VARIABLE. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
+                text="v", type=LOCAL_VARIABLE. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
-                text="k", type=LOCAL_VARIABLE. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
+                text="k", type=LOCAL_VARIABLE. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
                 text="other", type=STRNUM_LITERAL.
 
 a     b     i     x     y     a_orig b_orig i_orig x_orig              y_orig
@@ -26584,12 +26584,12 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=3
     text="for", type=FOR_SREC: frame_var_count=2
         text="variables", type=FOR_VARIABLES:
-            text="k", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-            text="v", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
+            text="k", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+            text="v", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
-                text="v", type=LOCAL_VARIABLE. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
-                text="k", type=LOCAL_VARIABLE. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
+                text="v", type=LOCAL_VARIABLE. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
+                text="k", type=LOCAL_VARIABLE. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
 
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,pan=b,1=i,0.3467901443380824=x,0.7268028627434533=y
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,eks=a,pan=b,2=i,0.7586799647899636=x,0.5221511083334797=y
@@ -26643,13 +26643,13 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=3
         text="0", type=STRNUM_LITERAL.
     text="for", type=FOR_SREC: frame_var_count=2
         text="variables", type=FOR_VARIABLES:
-            text="k", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-            text="v", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
+            text="k", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+            text="v", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="if_head", type=IF_HEAD:
                 text="if", type=IF_ITEM:
                     text="=~", type=OPERATOR:
-                        text="k", type=LOCAL_VARIABLE. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
+                        text="k", type=LOCAL_VARIABLE. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
                         text="^[xy]$", type=STRNUM_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK: frame_var_count=0
                         text="=", type=SREC_ASSIGNMENT:
@@ -26657,7 +26657,7 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=3
                             text="+", type=OPERATOR:
                                 text="sum", type=FIELD_NAME.
                                 text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                                    text="k", type=LOCAL_VARIABLE. frame_relative_index=0 upstack_frame_count=1 absolute_index=3
+                                    text="k", type=LOCAL_VARIABLE. subframe_relative_index=0 upstack_subframe_count=1 frame_relative_index=3
 
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=1.073593
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=1.280831
@@ -26714,13 +26714,13 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=3
             text="0", type=STRNUM_LITERAL.
     text="for", type=FOR_SREC: frame_var_count=2
         text="variables", type=FOR_VARIABLES:
-            text="k", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-            text="v", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
+            text="k", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+            text="v", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="if_head", type=IF_HEAD:
                 text="if", type=IF_ITEM:
                     text="=~", type=OPERATOR:
-                        text="k", type=LOCAL_VARIABLE. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
+                        text="k", type=LOCAL_VARIABLE. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
                         text="^[xy]$", type=STRNUM_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK: frame_var_count=0
                         text="=", type=SREC_ASSIGNMENT:
@@ -26729,7 +26729,7 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=3
                                 text="sum", type=FIELD_NAME.
                                 text="float", type=NON_SIGIL_NAME:
                                     text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                                        text="k", type=LOCAL_VARIABLE. frame_relative_index=0 upstack_frame_count=1 absolute_index=3
+                                        text="k", type=LOCAL_VARIABLE. subframe_relative_index=0 upstack_subframe_count=1 frame_relative_index=3
 
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=1.073593
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=1.280831
@@ -26866,9 +26866,9 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=4
     text="for", type=FOR_OOSVAR: frame_var_count=3
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="k1", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-                text="k2", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
-            text="v", type=NON_SIGIL_NAME. frame_relative_index=2 upstack_frame_count=0 absolute_index=3
+                text="k1", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+                text="k2", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
+            text="v", type=NON_SIGIL_NAME. subframe_relative_index=2 upstack_subframe_count=0 frame_relative_index=3
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
             text="o", type=STRING_LITERAL.
             text="1", type=STRNUM_LITERAL.
@@ -26879,9 +26879,9 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=4
                     text="n", type=STRING_LITERAL.
                     text="3", type=STRNUM_LITERAL.
                     text="4", type=STRNUM_LITERAL.
-                    text="k2", type=LOCAL_VARIABLE. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
-                    text="k1", type=LOCAL_VARIABLE. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-                text="v", type=LOCAL_VARIABLE. frame_relative_index=2 upstack_frame_count=0 absolute_index=3
+                    text="k2", type=LOCAL_VARIABLE. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
+                    text="k1", type=LOCAL_VARIABLE. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+                text="v", type=LOCAL_VARIABLE. subframe_relative_index=2 upstack_subframe_count=0 frame_relative_index=3
 
 
 mlr --opprint --from ./reg_test/input/abixy put -q 
@@ -27070,8 +27070,8 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=2
     text="for", type=FOR_SREC: frame_var_count=1
         text="variables", type=FOR_VARIABLES:
-            text="k", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-            text="k", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
+            text="k", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+            text="k", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
         text="for_full_srec_block", type=STATEMENT_BLOCK:
 
 mlr -n put -v for (k, k in @*) {}
@@ -27096,8 +27096,8 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=2
     text="for", type=FOR_OOSVAR: frame_var_count=1
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="k", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-            text="k", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
+                text="k", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+            text="k", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
@@ -27124,9 +27124,9 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=3
     text="for", type=FOR_OOSVAR: frame_var_count=2
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-                text="a", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-            text="c", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
+                text="a", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+                text="a", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+            text="c", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
@@ -27153,9 +27153,9 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=3
     text="for", type=FOR_OOSVAR: frame_var_count=2
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-                text="b", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
-            text="a", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
+                text="a", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+                text="b", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
+            text="a", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
@@ -27182,9 +27182,9 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=3
     text="for", type=FOR_OOSVAR: frame_var_count=2
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-                text="b", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
-            text="b", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
+                text="a", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+                text="b", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
+            text="b", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
@@ -27212,10 +27212,10 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=4
     text="for", type=FOR_OOSVAR: frame_var_count=3
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-                text="a", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-                text="c", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
-            text="d", type=NON_SIGIL_NAME. frame_relative_index=2 upstack_frame_count=0 absolute_index=3
+                text="a", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+                text="a", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+                text="c", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
+            text="d", type=NON_SIGIL_NAME. subframe_relative_index=2 upstack_subframe_count=0 frame_relative_index=3
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
@@ -27243,10 +27243,10 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=4
     text="for", type=FOR_OOSVAR: frame_var_count=3
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-                text="b", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
-                text="a", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-            text="d", type=NON_SIGIL_NAME. frame_relative_index=2 upstack_frame_count=0 absolute_index=3
+                text="a", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+                text="b", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
+                text="a", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+            text="d", type=NON_SIGIL_NAME. subframe_relative_index=2 upstack_subframe_count=0 frame_relative_index=3
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
@@ -27274,10 +27274,10 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=4
     text="for", type=FOR_OOSVAR: frame_var_count=3
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-                text="b", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
-                text="c", type=NON_SIGIL_NAME. frame_relative_index=2 upstack_frame_count=0 absolute_index=3
-            text="a", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
+                text="a", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+                text="b", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
+                text="c", type=NON_SIGIL_NAME. subframe_relative_index=2 upstack_subframe_count=0 frame_relative_index=3
+            text="a", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
@@ -27305,10 +27305,10 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=4
     text="for", type=FOR_OOSVAR: frame_var_count=3
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-                text="b", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
-                text="b", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
-            text="d", type=NON_SIGIL_NAME. frame_relative_index=2 upstack_frame_count=0 absolute_index=3
+                text="a", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+                text="b", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
+                text="b", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
+            text="d", type=NON_SIGIL_NAME. subframe_relative_index=2 upstack_subframe_count=0 frame_relative_index=3
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
@@ -27336,10 +27336,10 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=4
     text="for", type=FOR_OOSVAR: frame_var_count=3
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-                text="b", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
-                text="c", type=NON_SIGIL_NAME. frame_relative_index=2 upstack_frame_count=0 absolute_index=3
-            text="b", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
+                text="a", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+                text="b", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
+                text="c", type=NON_SIGIL_NAME. subframe_relative_index=2 upstack_subframe_count=0 frame_relative_index=3
+            text="b", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
@@ -27367,10 +27367,10 @@ text="main_block", type=STATEMENT_BLOCK: frame_var_count=1 max_var_depth=4
     text="for", type=FOR_OOSVAR: frame_var_count=3
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. frame_relative_index=0 upstack_frame_count=0 absolute_index=1
-                text="b", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=2
-                text="c", type=NON_SIGIL_NAME. frame_relative_index=2 upstack_frame_count=0 absolute_index=3
-            text="c", type=NON_SIGIL_NAME. frame_relative_index=2 upstack_frame_count=0 absolute_index=3
+                text="a", type=NON_SIGIL_NAME. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=1
+                text="b", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=2
+                text="c", type=NON_SIGIL_NAME. subframe_relative_index=2 upstack_subframe_count=0 frame_relative_index=3
+            text="c", type=NON_SIGIL_NAME. subframe_relative_index=2 upstack_subframe_count=0 frame_relative_index=3
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
 
@@ -42690,36 +42690,36 @@ BLOCKED AST:
 FUNCTION DEFINITION:
 text="f", type=FUNC_DEF: frame_var_count=2 max_var_depth=2
     text="f", type=NON_SIGIL_NAME:
-        text="x", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=1
+        text="x", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=1
     text="func_block", type=STATEMENT_BLOCK:
         text="return_value", type=RETURN_VALUE:
             text="**", type=OPERATOR:
-                text="x", type=LOCAL_VARIABLE. frame_relative_index=1 upstack_frame_count=0 absolute_index=1
+                text="x", type=LOCAL_VARIABLE. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=1
                 text="2", type=STRNUM_LITERAL.
 
 FUNCTION DEFINITION:
 text="g", type=FUNC_DEF: frame_var_count=2 max_var_depth=2
     text="g", type=NON_SIGIL_NAME:
-        text="y", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=1
+        text="y", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=1
     text="func_block", type=STATEMENT_BLOCK:
         text="return_value", type=RETURN_VALUE:
             text="+", type=OPERATOR:
-                text="y", type=LOCAL_VARIABLE. frame_relative_index=1 upstack_frame_count=0 absolute_index=1
+                text="y", type=LOCAL_VARIABLE. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=1
                 text="1", type=STRNUM_LITERAL.
 
 SUBROUTINE DEFINITION:
 text="s", type=SUBR_DEF: frame_var_count=4 max_var_depth=4
     text="s", type=NON_SIGIL_NAME:
-        text="a", type=NON_SIGIL_NAME. frame_relative_index=1 upstack_frame_count=0 absolute_index=1
-        text="b", type=NON_SIGIL_NAME. frame_relative_index=2 upstack_frame_count=0 absolute_index=2
-        text="c", type=NON_SIGIL_NAME. frame_relative_index=3 upstack_frame_count=0 absolute_index=3
+        text="a", type=NON_SIGIL_NAME. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=1
+        text="b", type=NON_SIGIL_NAME. subframe_relative_index=2 upstack_subframe_count=0 frame_relative_index=2
+        text="c", type=NON_SIGIL_NAME. subframe_relative_index=3 upstack_subframe_count=0 frame_relative_index=3
     text="subr_block", type=STATEMENT_BLOCK:
         text="print", type=PRINT:
             text=".", type=OPERATOR:
                 text=".", type=OPERATOR:
-                    text="a", type=LOCAL_VARIABLE. frame_relative_index=1 upstack_frame_count=0 absolute_index=1
-                    text="b", type=LOCAL_VARIABLE. frame_relative_index=2 upstack_frame_count=0 absolute_index=2
-                text="c", type=LOCAL_VARIABLE. frame_relative_index=3 upstack_frame_count=0 absolute_index=3
+                    text="a", type=LOCAL_VARIABLE. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=1
+                    text="b", type=LOCAL_VARIABLE. subframe_relative_index=2 upstack_subframe_count=0 frame_relative_index=2
+                text="c", type=LOCAL_VARIABLE. subframe_relative_index=3 upstack_subframe_count=0 frame_relative_index=3
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
 
@@ -42731,12 +42731,12 @@ text="begin", type=BEGIN: frame_var_count=2 max_var_depth=2
                 text="a", type=STRING_LITERAL.
             text="0", type=STRNUM_LITERAL.
         text="local", type=LOCAL:
-            text="ell", type=LOCAL_VARIABLE. frame_relative_index=1 upstack_frame_count=0 absolute_index=1
+            text="ell", type=LOCAL_VARIABLE. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=1
             text="1", type=STRNUM_LITERAL.
         text="print", type=PRINT:
             text=".", type=OPERATOR:
                 text="local1 = ", type=STRNUM_LITERAL.
-                text="ell", type=LOCAL_VARIABLE. frame_relative_index=1 upstack_frame_count=0 absolute_index=1
+                text="ell", type=LOCAL_VARIABLE. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=1
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
 
@@ -42754,7 +42754,7 @@ text="begin", type=BEGIN: frame_var_count=1 max_var_depth=1
         text="print", type=PRINT:
             text=".", type=OPERATOR:
                 text="local3 = ", type=STRNUM_LITERAL.
-                text="ell", type=LOCAL_VARIABLE. frame_relative_index=0 upstack_frame_count=0 absolute_index=0
+                text="ell", type=LOCAL_VARIABLE. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=0
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
 
@@ -42767,12 +42767,12 @@ text="end", type=END: frame_var_count=2 max_var_depth=2
                     text="a", type=STRING_LITERAL.
             text="stream", type=STREAM:
         text="local", type=LOCAL:
-            text="emm", type=LOCAL_VARIABLE. frame_relative_index=1 upstack_frame_count=0 absolute_index=1
+            text="emm", type=LOCAL_VARIABLE. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=1
             text="2", type=STRNUM_LITERAL.
         text="print", type=PRINT:
             text=".", type=OPERATOR:
                 text="local2 = ", type=STRNUM_LITERAL.
-                text="emm", type=LOCAL_VARIABLE. frame_relative_index=1 upstack_frame_count=0 absolute_index=1
+                text="emm", type=LOCAL_VARIABLE. subframe_relative_index=1 upstack_subframe_count=0 frame_relative_index=1
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
 
@@ -42792,7 +42792,7 @@ text="end", type=END: frame_var_count=1 max_var_depth=1
         text="print", type=PRINT:
             text=".", type=OPERATOR:
                 text="local4 = ", type=STRNUM_LITERAL.
-                text="emm", type=LOCAL_VARIABLE. frame_relative_index=0 upstack_frame_count=0 absolute_index=0
+                text="emm", type=LOCAL_VARIABLE. subframe_relative_index=0 upstack_subframe_count=0 frame_relative_index=0
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
 
