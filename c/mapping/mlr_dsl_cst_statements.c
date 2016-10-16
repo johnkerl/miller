@@ -607,6 +607,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->num_emit_keylist_evaluators             = 0;
 	pstatement->ppemit_keylist_evaluators               = NULL;
 	pstatement->local_lhs_variable_name                 = NULL;
+	pstatement->local_lhs_stack_frame_index             = 0;
 	pstatement->srec_lhs_field_name                     = NULL;
 	pstatement->env_lhs_name                            = NULL;
 	pstatement->psrec_lhs_evaluator                     = NULL;
@@ -645,6 +646,8 @@ static mlr_dsl_cst_statement_t* alloc_local_variable_definition(mlr_dsl_cst_t* p
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pnext->pvvalue;
+	MLR_INTERNAL_CODING_ERROR_IF(pname_node->absolute_index == MD_UNUSED_INDEX);
+	pstatement->local_lhs_stack_frame_index = pname_node->absolute_index;
 	pstatement->local_variable_name = pname_node->text;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, pcst->pfmgr,
 		type_inferencing, context_flags);
@@ -667,6 +670,8 @@ static mlr_dsl_cst_statement_t* alloc_local_variable_assignment(mlr_dsl_cst_t* p
 
 	pstatement->pnode_handler = handle_local_variable_assignment;
 	pstatement->local_lhs_variable_name = pleft->text;
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->absolute_index == MD_UNUSED_INDEX);
+	pstatement->local_lhs_stack_frame_index = pleft->absolute_index;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
 	return pstatement;
 }
