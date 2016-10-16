@@ -54,6 +54,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 			break;
 
 		case MD_AST_NODE_TYPE_LOCAL_VARIABLE:
+			// XXX idx too
 			return rval_evaluator_alloc_from_local_variable(pnode->text);
 			break;
 
