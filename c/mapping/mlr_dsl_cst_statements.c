@@ -2122,6 +2122,7 @@ static void handle_local_variable_assignment(
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 
 	if (mv_is_present(&val)) {
+		// xxx local stack set
 		bind_stack_set(pvars->pbind_stack, pstatement->local_lhs_variable_name, &val, FREE_ENTRY_VALUE);
 	} else {
 		mv_free(&val);
