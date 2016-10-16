@@ -68,7 +68,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_FILENUM();
 rval_evaluator_t* rval_evaluator_alloc_from_PI();
 rval_evaluator_t* rval_evaluator_alloc_from_E();
 rval_evaluator_t* rval_evaluator_alloc_from_context_variable(char* variable_name);
-rval_evaluator_t* rval_evaluator_alloc_from_local_variable(char* variable_name);
+rval_evaluator_t* rval_evaluator_alloc_from_local_variable(char* variable_name/*xxx rm*/, int frame_relative_index);
 
 // For unit test:
 rval_evaluator_t* rval_evaluator_alloc_from_mlrval(mv_t* pval);
