@@ -16,6 +16,9 @@ static local_stack_frame_t* _local_stack_alloc(int size, int ephemeral) {
 		pframe->pvars[i] = mv_absent();
 	}
 
+// xxx #ifdef DEBUG
+	// xxx printf(">>LOCAL_STACK_ALLOC %d %p\n", size, pframe);
+// xxx #endif
 	return pframe;
 }
 
@@ -26,6 +29,9 @@ local_stack_frame_t* local_stack_frame_alloc(int size) {
 
 // ----------------------------------------------------------------
 void local_stack_frame_free(local_stack_frame_t* pframe) {
+// xxx #ifdef DEBUG
+	// xxx printf(">>LOCAL_STACK_FREE  %d %p\n", pframe->size, pframe);
+// xxx #endif
 	if (pframe == NULL)
 		return;
 	for (int i = 0; i < pframe->size; i++) {
@@ -39,10 +45,16 @@ void local_stack_frame_free(local_stack_frame_t* pframe) {
 // xxx cmt
 local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe) {
 	if (!pframe->in_use) {
+// xxx #ifdef DEBUG
+	// xxx printf(">>LOCAL_STACK_FRAME_ENTER NONREC %d %p\n", pframe->size, pframe);
+// xxx #endif
 		pframe->in_use = TRUE;
 		return pframe;
 	} else {
 		local_stack_frame_t* prv = _local_stack_alloc(pframe->size, TRUE);
+// xxx #ifdef DEBUG
+	// xxx printf(">>LOCAL_STACK_FRAME_ENTER REC %d %p/%p\n", pframe->size, pframe, prv);
+// xxx #endif
 		prv->in_use = TRUE;
 		return prv;
 	}

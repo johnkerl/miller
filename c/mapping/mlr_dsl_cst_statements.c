@@ -2015,7 +2015,6 @@ void mlr_dsl_cst_handle_statement_block(
 	variables_t*           pvars,
 	cst_outputs_t*         pcst_outputs)
 {
-	// xxx frame ...
 	for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
@@ -2432,9 +2431,9 @@ static void handle_conditional_block(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	// XXX need pvars->pstacks ...
-	// local_stack_frame_t* pframe = pvars->pstacks->phead->pvvalue;
-	// XXX local_stack_subframe_enter(pframe, pstatement->pstatement_block->frame_var_count);
+	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	local_stack_subframe_enter(pframe, pstatement->pstatement_block->frame_var_count);
+
 	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 
@@ -2446,7 +2445,8 @@ static void handle_conditional_block(
 		}
 	}
 	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
-	// XXX local_stack_subframe_exit(pframe, pstatement->pstatement_block->frame_var_count);
+
+	local_stack_subframe_exit(pframe, pstatement->pstatement_block->frame_var_count);
 }
 
 // ----------------------------------------------------------------
@@ -2464,10 +2464,14 @@ static void handle_if_head(
 			mv_set_boolean_strict(&val);
 			if (val.u.boolv) {
 				bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pitemnode->pframe));
+				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+				local_stack_subframe_enter(pframe, pitemnode->pstatement_block->frame_var_count);
 
 				pstatement->pblock_handler(pitemnode->pstatement_block, pvars, pcst_outputs);
 
 				bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
+
+				local_stack_subframe_exit(pframe, pitemnode->pstatement_block->frame_var_count);
 				break;
 			}
 		}
@@ -2480,6 +2484,9 @@ static void handle_while(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	local_stack_subframe_enter(pframe, pstatement->pstatement_block->frame_var_count);
+
 	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 
@@ -2505,6 +2512,8 @@ static void handle_while(
 	}
 	loop_stack_pop(pvars->ploop_stack);
 	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
+
+	local_stack_subframe_exit(pframe, pstatement->pstatement_block->frame_var_count);
 }
 
 // ----------------------------------------------------------------
@@ -2513,6 +2522,9 @@ static void handle_do_while(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	local_stack_subframe_enter(pframe, pstatement->pstatement_block->frame_var_count);
+
 	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
 	loop_stack_push(pvars->ploop_stack);
 
@@ -2540,6 +2552,8 @@ static void handle_do_while(
 	}
 	loop_stack_pop(pvars->ploop_stack);
 	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
+
+	local_stack_subframe_exit(pframe, pstatement->pstatement_block->frame_var_count);
 }
 
 // ----------------------------------------------------------------
@@ -2548,6 +2562,9 @@ static void handle_for_srec(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	local_stack_subframe_enter(pframe, pstatement->pstatement_block->frame_var_count);
+
 	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
 	loop_stack_push(pvars->ploop_stack);
 	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
@@ -2574,6 +2591,8 @@ static void handle_for_srec(
 	lrec_free(pcopyrec);
 	loop_stack_pop(pvars->ploop_stack);
 	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
+
+	local_stack_subframe_exit(pframe, pstatement->pstatement_block->frame_var_count);
 }
 
 // ----------------------------------------------------------------
@@ -2582,8 +2601,7 @@ static void handle_for_oosvar(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
-	loop_stack_push(pvars->ploop_stack);
+	// xxx comment keylist outside scope
 
 	// Evaluate the keylist: e.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', find the value of $4 for
 	// the current record.
@@ -2592,6 +2610,12 @@ static void handle_for_oosvar(
 	sllmv_t* plhskeylist = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
 		&keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
+
+		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+		local_stack_subframe_enter(pframe, pstatement->pstatement_block->frame_var_count);
+
+		bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
+		loop_stack_push(pvars->ploop_stack);
 
 		// Locate and copy the submap indexed by the keylist. E.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', the
 		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
@@ -2616,11 +2640,12 @@ static void handle_for_oosvar(
 		}
 
 		mlhmmv_free_submap(submap);
+
+		loop_stack_pop(pvars->ploop_stack);
+		bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
+		local_stack_subframe_exit(pframe, pstatement->pstatement_block->frame_var_count);
 	}
 	sllmv_free(plhskeylist);
-
-	loop_stack_pop(pvars->ploop_stack);
-	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
 }
 
 static void handle_for_oosvar_aux(
@@ -2672,9 +2697,7 @@ static void handle_for_oosvar_key_only(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
-	loop_stack_push(pvars->ploop_stack);
-
+	// xxx comment re keylist scope
 	// Evaluate the keylist: e.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', find the value of $4 for
 	// the current record.
 
@@ -2685,6 +2708,12 @@ static void handle_for_oosvar_key_only(
 		// Locate the submap indexed by the keylist and copy its keys. E.g. in 'for (k1 in @a[3][$4]) { ... }', the
 		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
 		// for-loop.
+
+		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+		local_stack_subframe_enter(pframe, pstatement->pstatement_block->frame_var_count);
+		bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
+		loop_stack_push(pvars->ploop_stack);
+
 		sllv_t* pkeys = mlhmmv_copy_keys_from_submap(pvars->poosvars, plhskeylist);
 
 		for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
@@ -2703,12 +2732,14 @@ static void handle_for_oosvar_key_only(
 
 			mv_free(pe->pvvalue);
 		}
+
+		loop_stack_pop(pvars->ploop_stack);
+		bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
+		local_stack_subframe_exit(pframe, pstatement->pstatement_block->frame_var_count);
+
 		sllv_free(pkeys);
 	}
 	sllmv_free(plhskeylist);
-
-	loop_stack_pop(pvars->ploop_stack);
-	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
 }
 
 // ----------------------------------------------------------------
@@ -2717,6 +2748,9 @@ static void handle_triple_for(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	local_stack_subframe_enter(pframe, pstatement->pstatement_block->frame_var_count);
+
 	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
 	loop_stack_push(pvars->ploop_stack);
 
@@ -2750,6 +2784,8 @@ static void handle_triple_for(
 
 	loop_stack_pop(pvars->ploop_stack);
 	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
+
+	local_stack_subframe_exit(pframe, pstatement->pstatement_block->frame_var_count);
 }
 
 // ----------------------------------------------------------------

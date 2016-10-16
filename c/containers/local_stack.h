@@ -69,6 +69,11 @@ local_stack_t* local_stack_alloc();
 void local_stack_free(local_stack_t* pstack);
 
 void local_stack_push(local_stack_t* pstack, local_stack_frame_t* pframe);
+
 local_stack_frame_t* local_stack_pop(local_stack_t* pstack);
+
+static inline local_stack_frame_t* local_stack_get_top_frame(local_stack_t* pstack) {
+	return pstack->pframes->phead->pvvalue;
+}
 
 #endif // LOCAL_STACK_H

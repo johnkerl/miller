@@ -82,7 +82,8 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->max_var_depth == MD_UNUSED_INDEX);
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_var_count == MD_UNUSED_INDEX);
-	pcst_udf_state->ptop_level_block = cst_top_level_statement_block_alloc(pnode->max_var_depth, pnode->frame_var_count);
+	pcst_udf_state->ptop_level_block = cst_top_level_statement_block_alloc(pnode->max_var_depth,
+		pnode->frame_var_count);
 
 	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
@@ -138,8 +139,10 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 		bind_stack_set(pvars->pbind_stack, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
 	}
 
+	// XXX this is getting called twice, once here and once for top-level-statement-block.
 	// xxx local-stack enter
 	// xxx alloc new if in_use ...
+	local_stack_push(pvars->plocal_stack, local_stack_frame_enter(ptop_level_block->pframe));
 	local_stack_frame_t* pframe = local_stack_frame_enter(ptop_level_block->pframe);
 	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->frame_var_count);
 
@@ -166,6 +169,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 
 	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->frame_var_count);
 	local_stack_frame_exit(pframe);
+	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 
 	return retval;
 }
@@ -265,6 +269,12 @@ void mlr_dsl_cst_free_subroutine(subr_defsite_t* pstate) {
 void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 	cst_outputs_t* pcst_outputs, int callsite_arity, mv_t* args)
 {
+	cst_top_level_statement_block_t* ptop_level_block = pstate->ptop_level_block;
+
+	local_stack_push(pvars->plocal_stack, local_stack_frame_enter(ptop_level_block->pframe));
+	local_stack_frame_t* pframe = local_stack_frame_enter(ptop_level_block->pframe);
+	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->frame_var_count);
+
 	// Bind parameters to arguments
 	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstate->pframe));
 
@@ -287,4 +297,8 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
+
+	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->frame_var_count);
+	local_stack_frame_exit(pframe);
+	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 }
