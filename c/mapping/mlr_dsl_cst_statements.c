@@ -1997,13 +1997,14 @@ void mlr_dsl_cst_handle_top_level_statement_block(
 	cst_outputs_t* pcst_outputs)
 {
 	// XXX cmt re in-use
-	local_stack_frame_t* pframe = local_stack_frame_enter(ptop_level_block->pframe); // XXX sllv_push pvars->pstack ?
+	// XXX pvars->pstack
+	local_stack_push(pvars->plocal_stack, local_stack_frame_enter(ptop_level_block->pframe));
 
 	// xxx adapt callee to also handle local stack
 	mlr_dsl_cst_handle_statement_block(ptop_level_block->pstatement_block, pvars, pcst_outputs);
 
 	bind_stack_clear(pvars->pbind_stack); // clear the baseframe // xxx rm
-	local_stack_frame_exit(pframe);
+	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 }
 
 // ================================================================

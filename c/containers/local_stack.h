@@ -68,7 +68,7 @@ typedef struct _local_stack_t {
 local_stack_t* local_stack_alloc();
 void local_stack_free(local_stack_t* pstack);
 
-// xxx push
-// xxx pop
+void local_stack_push(local_stack_t* pstack, local_stack_frame_t* pframe);
+local_stack_frame_t* local_stack_pop(local_stack_t* pstack);
 
 #endif // LOCAL_STACK_H

@@ -34,6 +34,7 @@
 #include "containers/mlhmmv.h"
 #include "containers/mlrval.h"
 #include "containers/bind_stack.h"
+#include "containers/local_stack.h"
 #include "containers/loop_stack.h"
 #include "lib/string_array.h"
 
@@ -50,7 +51,7 @@ typedef struct _variables_t {
 	mlhmmv_t*        poosvars;
 	string_array_t** ppregex_captures;
 	context_t*       pctx;
-	// XXX pstacks (sllv_t*)
+	local_stack_t*   plocal_stack;
 	bind_stack_t*    pbind_stack;
 	loop_stack_t*    ploop_stack;
 	return_state_t   return_state;

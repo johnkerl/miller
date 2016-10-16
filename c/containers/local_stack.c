@@ -77,3 +77,13 @@ void local_stack_free(local_stack_t* pstack) {
 	sllv_free(pstack->pframes);
 	free(pstack);
 }
+
+// ----------------------------------------------------------------
+void local_stack_push(local_stack_t* pstack, local_stack_frame_t* pframe) {
+	// xxx rename to sllv_push throughout
+	sllv_prepend(pstack->pframes, pframe);
+}
+
+local_stack_frame_t* local_stack_pop(local_stack_t* pstack) {
+	return sllv_pop(pstack->pframes);
+}
