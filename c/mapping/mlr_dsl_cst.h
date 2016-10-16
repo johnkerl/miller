@@ -4,7 +4,6 @@
 #include "cli/mlrcli.h"
 #include "mapping/mlr_dsl_ast.h"
 #include "containers/lhmsmv.h"
-#include "containers/bind_stack.h" // xxx rm
 #include "containers/local_stack.h"
 #include "containers/loop_stack.h"
 #include "mapping/mlr_dsl_blocked_ast.h"
@@ -164,7 +163,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 
 	// Assignment to local
 	char* local_lhs_variable_name; // xxx rm
-	int local_lhs_stack_frame_index;
+	int local_lhs_frame_relative_index;
 
 	// Assignment to srec
 	char* srec_lhs_field_name;
@@ -211,19 +210,21 @@ typedef struct _mlr_dsl_cst_statement_t {
 	sllv_t* pif_chain_statements;
 
 	// for-srec / for-oosvar:
-	char* for_srec_k_name;
+	char* for_srec_k_name; // xxx rm
 	slls_t* pfor_oosvar_k_names;
-	char* for_v_name;
-	type_infererenced_srec_field_getter_t* ptype_infererenced_srec_field_getter;
+	char* for_v_name; // xxx rm
+	int for_srec_k_frame_relative_index;
+	int* for_oosvar_k_frame_relative_indices;
+	int for_oosvar_k_count;
+	int for_v_frame_relative_index;
+
+	type_inferenced_srec_field_getter_t* ptype_inferenced_srec_field_getter;
 
 	// triple-for:
 	sllv_t* ptriple_for_start_statements;
 	sllv_t* ptriple_for_pre_continuation_statements;
 	rval_evaluator_t* ptriple_for_continuation_evaluator;
 	sllv_t* ptriple_for_update_statements;
-
-	// for any kind of statement-block
-	bind_stack_frame_t* pframe;
 
 	int negate_final_filter;
 
@@ -307,7 +308,6 @@ void mlr_dsl_cst_handle_statement_list(
 typedef struct _cst_udf_state_t {
 	int       arity;
 	char**    parameter_names;
-    bind_stack_frame_t* pframe;
 	cst_top_level_statement_block_t* ptop_level_block;
 } cst_udf_state_t;
 
@@ -335,7 +335,6 @@ typedef struct _subr_defsite_t {
 	char*     name;
 	int       arity;
 	char**    parameter_names;
-    bind_stack_frame_t* pframe;
 	cst_top_level_statement_block_t* ptop_level_block;
 } subr_defsite_t;
 

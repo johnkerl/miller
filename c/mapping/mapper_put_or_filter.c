@@ -6,7 +6,6 @@
 #include "containers/sllv.h"
 #include "containers/lhmsv.h"
 #include "containers/mlhmmv.h"
-#include "containers/bind_stack.h"
 #include "mapping/mappers.h"
 #include "mapping/rval_evaluators.h"
 #include "dsls/mlr_dsl_wrapper.h"
@@ -28,7 +27,6 @@ typedef struct _mapper_put_or_filter_state_t {
 	int            flush_every_record;
 	cli_writer_opts_t* pwriter_opts;
 
-	bind_stack_t*  pbind_stack; // xxx rm
 	local_stack_t* plocal_stack;
 	loop_stack_t*  ploop_stack;
 
@@ -390,7 +388,6 @@ static mapper_t* mapper_put_or_filter_alloc(
 	pstate->poosvars                 = mlhmmv_alloc();
 	pstate->oosvar_flatten_separator = oosvar_flatten_separator;
 	pstate->flush_every_record       = flush_every_record;
-	pstate->pbind_stack              = bind_stack_alloc();
 	pstate->plocal_stack             = local_stack_alloc();
 	pstate->ploop_stack              = loop_stack_alloc();
 	pstate->pwriter_opts             = pwriter_opts;
@@ -410,7 +407,6 @@ static void mapper_put_or_filter_free(mapper_t* pmapper) {
 
 	free(pstate->mlr_dsl_expression);
 	mlhmmv_free(pstate->poosvars);
-	bind_stack_free(pstate->pbind_stack);
 	local_stack_free(pstate->plocal_stack);
 	loop_stack_free(pstate->ploop_stack);
 	mlr_dsl_cst_free(pstate->pcst);
@@ -487,7 +483,6 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.poosvars         = pstate->poosvars,
 			.ppregex_captures = &pregex_captures,
 			.pctx             = pctx,
-			.pbind_stack      = pstate->pbind_stack,
 			.plocal_stack     = pstate->plocal_stack,
 			.ploop_stack      = pstate->ploop_stack,
 			.return_state = {
@@ -516,7 +511,6 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.poosvars         = pstate->poosvars,
 			.ppregex_captures = &pregex_captures,
 			.pctx             = pctx,
-			.pbind_stack      = pstate->pbind_stack,
 			.plocal_stack     = pstate->plocal_stack,
 			.ploop_stack      = pstate->ploop_stack,
 			.return_state = {
@@ -549,7 +543,6 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 		.poosvars         = pstate->poosvars,
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
-		.pbind_stack      = pstate->pbind_stack,
 		.plocal_stack     = pstate->plocal_stack,
 		.ploop_stack      = pstate->ploop_stack,
 		.return_state = {

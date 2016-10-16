@@ -25,7 +25,6 @@ static char * test_caps() {
 	lhmsmv_t* ptyped_overlay = lhmsmv_alloc();
 	mlhmmv_t* poosvars = mlhmmv_alloc();
 	string_array_t* pregex_captures = NULL;
-	bind_stack_t* pbind_stack = bind_stack_alloc();
 	loop_stack_t* ploop_stack = loop_stack_alloc();
 
 	variables_t variables = (variables_t) {
@@ -34,7 +33,6 @@ static char * test_caps() {
 		.poosvars         = poosvars,
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
-		.pbind_stack      = pbind_stack,
 		.ploop_stack      = ploop_stack,
 	};
 
@@ -79,7 +77,6 @@ static char * test_strings() {
 	lhmsmv_t* ptyped_overlay = lhmsmv_alloc();
 	mlhmmv_t* poosvars = mlhmmv_alloc();
 	string_array_t* pregex_captures = NULL;
-	bind_stack_t* pbind_stack = bind_stack_alloc();
 	loop_stack_t* ploop_stack = loop_stack_alloc();
 
 	lrec_put(prec, "s", "abc", NO_FREE);
@@ -91,7 +88,6 @@ static char * test_strings() {
 		.poosvars         = poosvars,
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
-		.pbind_stack      = pbind_stack,
 		.ploop_stack      = ploop_stack,
 	};
 
@@ -159,7 +155,6 @@ static char * test_numbers() {
 	lhmsmv_t* ptyped_overlay = lhmsmv_alloc();
 	mlhmmv_t* poosvars = mlhmmv_alloc();
 	string_array_t* pregex_captures = NULL;
-	bind_stack_t* pbind_stack = bind_stack_alloc();
 	loop_stack_t* ploop_stack = loop_stack_alloc();
 
 	lrec_put(prec, "x", "4.5", NO_FREE);
@@ -170,7 +165,6 @@ static char * test_numbers() {
 		.poosvars         = poosvars,
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
-		.pbind_stack      = pbind_stack,
 		.ploop_stack      = ploop_stack,
 	};
 
@@ -250,7 +244,6 @@ static char * test_logical_and() {
 	lhmsmv_t* ptyped_overlay = NULL;
 	mlhmmv_t* poosvars = NULL;
 	string_array_t* pregex_captures = NULL;
-	bind_stack_t* pbind_stack = bind_stack_alloc();
 	loop_stack_t* ploop_stack = loop_stack_alloc();
 
 	variables_t variables = (variables_t) {
@@ -259,7 +252,6 @@ static char * test_logical_and() {
 		.poosvars         = poosvars,
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
-		.pbind_stack      = pbind_stack,
 		.ploop_stack      = ploop_stack,
 	};
 
@@ -315,7 +307,6 @@ static char * test_logical_or() {
 	lhmsmv_t* ptyped_overlay = NULL;
 	mlhmmv_t* poosvars = NULL;
 	string_array_t* pregex_captures = NULL;
-	bind_stack_t* pbind_stack = bind_stack_alloc();
 	loop_stack_t* ploop_stack = loop_stack_alloc();
 
 	variables_t variables = (variables_t) {
@@ -324,7 +315,6 @@ static char * test_logical_or() {
 		.poosvars         = poosvars,
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
-		.pbind_stack      = pbind_stack,
 		.ploop_stack      = ploop_stack,
 	};
 
@@ -380,7 +370,6 @@ static char * test_logical_xor() {
 	lhmsmv_t* ptyped_overlay = NULL;
 	mlhmmv_t* poosvars = NULL;
 	string_array_t* pregex_captures = NULL;
-	bind_stack_t* pbind_stack = bind_stack_alloc();
 	loop_stack_t* ploop_stack = loop_stack_alloc();
 
 	variables_t variables = (variables_t) {
@@ -389,7 +378,6 @@ static char * test_logical_xor() {
 		.poosvars         = poosvars,
 		.ppregex_captures = &pregex_captures,
 		.pctx             = pctx,
-		.pbind_stack      = pbind_stack,
 		.ploop_stack      = ploop_stack,
 	};
 

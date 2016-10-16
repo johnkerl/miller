@@ -78,8 +78,6 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 		exit(1);
 	}
 
-	pcst_udf_state->pframe = bind_stack_frame_alloc_fenced(); // xxx rm
-
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->max_var_depth == MD_UNUSED_INDEX);
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_var_count == MD_UNUSED_INDEX);
 	pcst_udf_state->ptop_level_block = cst_top_level_statement_block_alloc(pnode->max_var_depth,
@@ -117,8 +115,6 @@ void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate) {
 		free(pstate->parameter_names[i]);
 	free(pstate->parameter_names);
 
-	bind_stack_frame_free(pstate->pframe);
-
 	cst_top_level_statement_block_free(pstate->ptop_level_block);
 
 	free(pstate);
@@ -134,17 +130,19 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Bind parameters to arguments
-	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstate->pframe));
-	for (int i = 0; i < arity; i++) {
-		bind_stack_set(pvars->pbind_stack, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
-	}
 
 	// XXX this is getting called twice, once here and once for top-level-statement-block.
 	// xxx local-stack enter
 	// xxx alloc new if in_use ...
-	local_stack_push(pvars->plocal_stack, local_stack_frame_enter(ptop_level_block->pframe));
+	// xxx check for unnecessary ephemerals !!
 	local_stack_frame_t* pframe = local_stack_frame_enter(ptop_level_block->pframe);
+	local_stack_push(pvars->plocal_stack, pframe);
 	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->frame_var_count);
+
+	for (int i = 0; i < arity; i++) {
+		// xxx comment absent-null-at-0 convention ...............
+		local_stack_frame_set(pframe, i+1, mv_copy(&args[i]));
+	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Compute the function value
@@ -165,8 +163,6 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
-
 	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->frame_var_count);
 	local_stack_frame_exit(pframe);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
@@ -226,7 +222,6 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 		exit(1);
 	}
 
-	pstate->pframe = bind_stack_frame_alloc_fenced();
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->max_var_depth == MD_UNUSED_INDEX);
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_var_count == MD_UNUSED_INDEX);
 	pstate->ptop_level_block = cst_top_level_statement_block_alloc(pnode->max_var_depth, pnode->frame_var_count);
@@ -258,8 +253,6 @@ void mlr_dsl_cst_free_subroutine(subr_defsite_t* pstate) {
 		free(pstate->parameter_names[i]);
 	free(pstate->parameter_names);
 
-	bind_stack_frame_free(pstate->pframe);
-
 	cst_top_level_statement_block_free(pstate->ptop_level_block);
 
 	free(pstate);
@@ -271,16 +264,13 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 {
 	cst_top_level_statement_block_t* ptop_level_block = pstate->ptop_level_block;
 
-	local_stack_push(pvars->plocal_stack, local_stack_frame_enter(ptop_level_block->pframe));
 	local_stack_frame_t* pframe = local_stack_frame_enter(ptop_level_block->pframe);
+	local_stack_push(pvars->plocal_stack, pframe);
 	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->frame_var_count);
 
-	// Bind parameters to arguments
-	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstate->pframe));
-
-	// xxx local enter
 	for (int i = 0; i < pstate->arity; i++) {
-		bind_stack_set(pvars->pbind_stack, pstate->parameter_names[i], &args[i], FREE_ENTRY_VALUE);
+		// xxx comment absent-null-at-0 convention ...............
+		local_stack_frame_set(pframe, i+1, args[i]);
 	}
 
 	for (sllve_t* pe = pstate->ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
@@ -296,8 +286,6 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
-
 	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->frame_var_count);
 	local_stack_frame_exit(pframe);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));

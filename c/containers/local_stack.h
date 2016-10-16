@@ -44,6 +44,15 @@ void local_stack_frame_free(local_stack_frame_t* pframe);
 local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe);
 void local_stack_frame_exit(local_stack_frame_t* pframe);
 
+static inline mv_t* local_stack_frame_get(local_stack_frame_t* pframe, int frame_relative_index) {
+	printf("XXX GET FRAME=%p IDX=%d\n", pframe, frame_relative_index);
+	return &pframe->pvars[frame_relative_index];
+}
+static inline void local_stack_frame_set(local_stack_frame_t* pframe, int frame_relative_index, mv_t val) {
+	printf("XXX SET FRAME=%p IDX=%d\n", pframe, frame_relative_index);
+	pframe->pvars[frame_relative_index] = val;
+}
+
 // ----------------------------------------------------------------
 // Frames are entered/exited for each curly-braced statement block, including
 // the top-level block itself as well as ifs/fors/whiles.

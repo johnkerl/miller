@@ -14,7 +14,6 @@
 #include "containers/lhms2v.h"
 #include "containers/lhmslv.h"
 #include "containers/lhmsmv.h"
-#include "containers/bind_stack.h"
 #include "containers/percentile_keeper.h"
 #include "containers/top_keeper.h"
 #include "containers/dheap.h"
@@ -665,85 +664,6 @@ static char* test_lhmsmv() {
 }
 
 // ----------------------------------------------------------------
-static char* test_bind_stack() {
-	printf("\n");
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	bind_stack_t* pstack = bind_stack_alloc();
-	bind_stack_print(pstack);
-
-	mu_assert_lf(bind_stack_resolve(pstack, "x") == NULL);
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	bind_stack_frame_t* pframe0 = bind_stack_frame_alloc_unfenced();
-	// xxx enter/exit logic
-	bind_stack_push(pstack, pframe0);
-	bind_stack_print(pstack);
-
-	bind_stack_set(pstack, "x", smv("1"), NO_FREE);
-	bind_stack_set(pstack, "y", smv("2"), NO_FREE);
-	bind_stack_print(pstack);
-
-	mu_assert_lf(bind_stack_resolve(pstack, "x") != NULL);
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), smv("1")));
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), imv(1)));
-	mu_assert_lf(bind_stack_resolve(pstack, "y") != NULL);
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), smv("2")));
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), imv(2)));
-	mu_assert_lf(bind_stack_resolve(pstack, "z") == NULL);
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	bind_stack_frame_t* pframe1 = bind_stack_frame_alloc_unfenced();
-	bind_stack_push(pstack, pframe1);
-	bind_stack_print(pstack);
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	bind_stack_frame_t* pframe2 = bind_stack_frame_alloc_unfenced();
-	bind_stack_push(pstack, pframe2);
-	bind_stack_print(pstack);
-
-	mu_assert_lf(bind_stack_resolve(pstack, "x") != NULL);
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), smv("1")));
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), imv(1)));
-	mu_assert_lf(bind_stack_resolve(pstack, "y") != NULL);
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), smv("2")));
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), imv(2)));
-	mu_assert_lf(bind_stack_resolve(pstack, "z") == NULL);
-
-	bind_stack_set(pstack, "x", smv("three"), NO_FREE);
-	bind_stack_print(pstack);
-
-	mu_assert_lf(bind_stack_resolve(pstack, "x") != NULL);
-	mu_assert_lf(!mveq(bind_stack_resolve(pstack, "x"), smv("1")));
-	mu_assert_lf(!mveq(bind_stack_resolve(pstack, "x"), imv(1)));
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), smv("three")));
-	mu_assert_lf(bind_stack_resolve(pstack, "y") != NULL);
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), smv("2")));
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), imv(2)));
-	mu_assert_lf(bind_stack_resolve(pstack, "z") == NULL);
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	bind_stack_pop(pstack);
-	bind_stack_print(pstack);
-
-	mu_assert_lf(bind_stack_resolve(pstack, "x") != NULL);
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "x"), smv("three")));
-	mu_assert_lf(mvne(bind_stack_resolve(pstack, "x"), imv(1)));
-	mu_assert_lf(bind_stack_resolve(pstack, "y") != NULL);
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), smv("2")));
-	mu_assert_lf(mveq(bind_stack_resolve(pstack, "y"), imv(2)));
-	mu_assert_lf(bind_stack_resolve(pstack, "z") == NULL);
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// xxx recursion test
-
-	bind_stack_free(pstack);
-
-	printf("\n");
-	return NULL;
-}
-
-// ----------------------------------------------------------------
 static char* test_percentile_keeper() {
 
 	percentile_keeper_t* ppercentile_keeper = percentile_keeper_alloc();
@@ -930,7 +850,6 @@ static char * run_all_tests() {
 	mu_run_test(test_lhms2v);
 	mu_run_test(test_lhmslv);
 	mu_run_test(test_lhmsmv);
-	mu_run_test(test_bind_stack);
 	mu_run_test(test_percentile_keeper);
 	mu_run_test(test_top_keeper);
 	mu_run_test(test_dheap);
