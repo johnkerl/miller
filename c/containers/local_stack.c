@@ -3,7 +3,7 @@
 #include "lib/mlr_globals.h"
 #include "containers/local_stack.h"
 
-// ----------------------------------------------------------------
+// ================================================================
 static local_stack_frame_t* _local_stack_alloc(int size, int ephemeral) {
 	local_stack_frame_t* pframe = mlr_malloc_or_die(sizeof(local_stack_frame_t));
 
@@ -56,4 +56,24 @@ void local_stack_frame_exit (local_stack_frame_t* pframe) {
 	} else {
 		local_stack_frame_free(pframe);
 	}
+}
+
+// ================================================================
+local_stack_t* local_stack_alloc() {
+	local_stack_t* pstack = mlr_malloc_or_die(sizeof(local_stack_t));
+
+	pstack->pframes = sllv_alloc();
+
+	return pstack;
+}
+
+// ----------------------------------------------------------------
+void local_stack_free(local_stack_t* pstack) {
+	if (pstack == NULL)
+		return;
+	for (sllve_t* pe = pstack->pframes->phead; pe != NULL; pe = pe->pnext) {
+		local_stack_frame_free(pe->pvvalue);
+	}
+	sllv_free(pstack->pframes);
+	free(pstack);
 }

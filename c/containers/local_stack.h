@@ -2,6 +2,7 @@
 #define LOCAL_STACK_H
 
 #include "containers/mlrval.h"
+#include "containers/sllv.h"
 
 // ================================================================
 // Bound & scoped variables for use in for-loops, function bodies, and
@@ -14,7 +15,7 @@
 // as-yet-undefined) local variables.
 // ================================================================
 
-// ----------------------------------------------------------------
+// ================================================================
 typedef struct _local_stack_frame_t {
 	int in_use;
 	int ephemeral;
@@ -58,5 +59,16 @@ static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int c
 static inline void local_stack_subframe_exit(local_stack_frame_t* pframe, int count) {
 	pframe->subframe_base -= count;
 }
+
+// ================================================================
+typedef struct _local_stack_t {
+	sllv_t* pframes;
+} local_stack_t;
+
+local_stack_t* local_stack_alloc();
+void local_stack_free(local_stack_t* pstack);
+
+// xxx push
+// xxx pop
 
 #endif // LOCAL_STACK_H
