@@ -1917,7 +1917,6 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 		sllv_free(pstatement->ptriple_for_update_statements);
 	}
 
-
 	if (pstatement->pframe != NULL) {
 		bind_stack_frame_free(pstatement->pframe);
 	}
