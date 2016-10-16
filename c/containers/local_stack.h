@@ -15,22 +15,22 @@
 // ================================================================
 
 // ----------------------------------------------------------------
-typedef struct _local_stack_t {
+typedef struct _local_stack_frame_t {
 	int in_use;
 	int ephemeral;
 	int size;
-	int frame_base;
+	int subframe_base;
 	mv_t* pvars;
 	// xxx has-absent-read flag ...
-} local_stack_t;
+} local_stack_frame_t;
 
 // ----------------------------------------------------------------
 // A stack is allocated for a top-level statement block: begin, end, or main, or
 // user-defined function/subroutine. (The latter two may be called recursively
 // in which case the in_use flag notes the need to allocate a new stack.)
 
-local_stack_t* local_stack_alloc(int size);
-void local_stack_free(local_stack_t* pstack);
+local_stack_frame_t* local_stack_frame_alloc(int size);
+void local_stack_frame_free(local_stack_frame_t* pframe);
 
 // ----------------------------------------------------------------
 // Sets/clear the in-use flag for top-level statement blocks, and verifies
@@ -40,23 +40,23 @@ void local_stack_free(local_stack_t* pstack);
 // and returns its argument; the exit method clears that flag. For recursively
 // invoked functions/subroutines the enter method returns another stack of the
 // same size, and the exit method frees that.
-local_stack_t* local_stack_enter(local_stack_t* pstack);
-void local_stack_exit(local_stack_t* pstack);
+local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe);
+void local_stack_frame_exit(local_stack_frame_t* pframe);
 
 // ----------------------------------------------------------------
 // Frames are entered/exited for each curly-braced statement block, including
 // the top-level block itself as well as ifs/fors/whiles.
 
-static inline void local_stack_frame_enter(local_stack_t* pstack, int count) {
+static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int count) {
 	// xxx try to avoid with absent-read flag at stack-allocator ...
-	mv_t* pframe = &pstack->pvars[pstack->frame_base];
+	mv_t* psubframe = &pframe->pvars[pframe->subframe_base];
 	for (int i = 0; i < count; i++) {
-		pframe[i] = mv_absent();
+		psubframe[i] = mv_absent();
 	}
-	pstack->frame_base += count;
+	pframe->subframe_base += count;
 }
-static inline void local_stack_frame_exit(local_stack_t* pstack, int count) {
-	pstack->frame_base -= count;
+static inline void local_stack_subframe_exit(local_stack_frame_t* pframe, int count) {
+	pframe->subframe_base -= count;
 }
 
 #endif // LOCAL_STACK_H

@@ -140,8 +140,8 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 
 	// xxx local-stack enter
 	// xxx alloc new if in_use ...
-	local_stack_t* pstack = local_stack_enter(ptop_level_block->pstack);
-	local_stack_frame_enter(pstack, ptop_level_block->pstatement_block->frame_var_count);
+	local_stack_frame_t* pframe = local_stack_frame_enter(ptop_level_block->pframe);
+	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->frame_var_count);
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Compute the function value
@@ -164,8 +164,8 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
 
-	local_stack_frame_exit(pstack, ptop_level_block->pstatement_block->frame_var_count);
-	local_stack_exit(pstack);
+	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->frame_var_count);
+	local_stack_frame_exit(pframe);
 
 	return retval;
 }

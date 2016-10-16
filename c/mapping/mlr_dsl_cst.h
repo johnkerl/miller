@@ -82,7 +82,7 @@ void cst_statement_block_free(cst_statement_block_t* pblock);
 
 // ----------------------------------------------------------------
 typedef struct _cst_top_level_statement_block_t {
-	local_stack_t* pstack;
+	local_stack_frame_t* pframe;
 	int max_var_depth;
 	cst_statement_block_t* pstatement_block;
 } cst_top_level_statement_block_t;

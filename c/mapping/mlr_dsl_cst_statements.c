@@ -248,7 +248,7 @@ cst_top_level_statement_block_t* cst_top_level_statement_block_alloc(int max_var
 	cst_top_level_statement_block_t* pblock = mlr_malloc_or_die(sizeof(cst_top_level_statement_block_t));
 
 	pblock->max_var_depth    = max_var_depth;
-	pblock->pstack           = local_stack_alloc(max_var_depth);
+	pblock->pframe           = local_stack_frame_alloc(max_var_depth);
 	pblock->pstatement_block = cst_statement_block_alloc(frame_var_count);
 
 	return pblock;
@@ -258,8 +258,7 @@ cst_top_level_statement_block_t* cst_top_level_statement_block_alloc(int max_var
 void cst_top_level_statement_block_free(cst_top_level_statement_block_t* pblock) {
 	if (pblock == NULL)
 		return;
-	// xxx rename pblock to ptop_level_block here & thruout
-	local_stack_free(pblock->pstack);
+	local_stack_frame_free(pblock->pframe);
 	cst_statement_block_free(pblock->pstatement_block);
 	free(pblock);
 }
@@ -1989,6 +1988,7 @@ void mlr_dsl_cst_handle_top_level_statement_blocks(
 	}
 }
 
+// XXX frame -> subframe; stack -> frame; stacks -> stack
 // XXX split alloc & handle files ... too big.
 
 void mlr_dsl_cst_handle_top_level_statement_block(
@@ -1997,13 +1997,13 @@ void mlr_dsl_cst_handle_top_level_statement_block(
 	cst_outputs_t* pcst_outputs)
 {
 	// XXX cmt re in-use
-	local_stack_t* pstack = local_stack_enter(ptop_level_block->pstack); // XXX sllv_push pvars->pstack ?
+	local_stack_frame_t* pframe = local_stack_frame_enter(ptop_level_block->pframe); // XXX sllv_push pvars->pstack ?
 
 	// xxx adapt callee to also handle local stack
 	mlr_dsl_cst_handle_statement_block(ptop_level_block->pstatement_block, pvars, pcst_outputs);
 
 	bind_stack_clear(pvars->pbind_stack); // clear the baseframe // xxx rm
-	local_stack_exit(pstack);
+	local_stack_frame_exit(pframe);
 }
 
 // ================================================================
@@ -2433,8 +2433,8 @@ static void handle_conditional_block(
 	cst_outputs_t*           pcst_outputs)
 {
 	// XXX need pvars->pstacks ...
-	// local_stack_t* pstack = pvars->pstacks->phead->pvvalue;
-	// XXX local_stack_frame_enter(pstack, pstatement->pstatement_block->frame_var_count);
+	// local_stack_frame_t* pframe = pvars->pstacks->phead->pvvalue;
+	// XXX local_stack_subframe_enter(pframe, pstatement->pstatement_block->frame_var_count);
 	bind_stack_push(pvars->pbind_stack, bind_stack_frame_enter(pstatement->pframe));
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 
@@ -2446,7 +2446,7 @@ static void handle_conditional_block(
 		}
 	}
 	bind_stack_frame_exit(bind_stack_pop(pvars->pbind_stack));
-	// XXX local_stack_frame_exit(pstack, pstatement->pstatement_block->frame_var_count);
+	// XXX local_stack_subframe_exit(pframe, pstatement->pstatement_block->frame_var_count);
 }
 
 // ----------------------------------------------------------------
