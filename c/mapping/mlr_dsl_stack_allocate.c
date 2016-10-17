@@ -795,11 +795,21 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 
 		if (trace) {
 			leader_print(subframe_depth);
-			printf("NODE %s %ds%d -> %d\n", // xxx put keynames here and elsewhere (%du%d)
+
+			// xxx put keynames here and elsewhere (%du%d)
+			printf("NODE %s %ds%d (",
 				pnode->text,
 				pnode->subframe_relative_index,
-				pnode->vardef_subframe_index,
+				pnode->vardef_subframe_index);
+
+			for (int i = 0; i < subframe_depth; i++) {
+				if (i > 0)
+					printf(",");
+				printf("%d:%d", i, subframe_var_count_belows[i]);
+			}
+			printf(") -> %d\n",
 				pnode->frame_relative_index);
+
 		}
 		MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_relative_index < 0);
 		// xxx MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_relative_index >= *pmax_var_depth);
