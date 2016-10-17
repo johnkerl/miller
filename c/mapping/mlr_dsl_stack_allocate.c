@@ -147,23 +147,36 @@ static void stkalc_subframe_group_mutate_node_for_read(stkalc_subframe_group_t* 
 static void pass_1_for_func_subr_block(mlr_dsl_ast_node_t* pnode, int trace);
 static void pass_1_for_begin_end_block(mlr_dsl_ast_node_t* pnode, int trace);
 static void pass_1_for_main_block(mlr_dsl_ast_node_t* pnode, int trace);
-static void pass_1_for_statement_block(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace);
-static void pass_1_for_statement_list(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace);
-static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace);
 
-static void pass_1_for_local_definition(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace);
-static void pass_1_for_local_assignment(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace);
-static void pass_1_for_local_read(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace);
-static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace);
-static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace);
-static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace);
-static void pass_1_for_triple_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace);
-static void pass_1_for_non_terminal_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace);
+static void pass_1_for_statement_block(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace);
+static void pass_1_for_statement_list(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace);
+static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace);
+
+static void pass_1_for_local_definition(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace);
+static void pass_1_for_local_assignment(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace);
+static void pass_1_for_local_read(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace);
+static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace);
+static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace);
+static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace);
+static void pass_1_for_triple_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace);
+static void pass_1_for_non_terminal_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace);
 
 // Pass-2 helper methods for the main entry point to this file.
 static void pass_2_for_top_level_block(mlr_dsl_ast_node_t* pnode, int trace);
 static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
-	int frame_depth, int var_count_below_subframe, int var_count_at_subframe, int* pmax_var_depth, int trace);
+	int frame_depth, int var_count_below_subframe, int var_count_at_subframe,
+	int* pmax_var_depth, int trace);
 
 // ================================================================
 // Utility methods
@@ -214,6 +227,7 @@ static void pass_1_for_func_subr_block(mlr_dsl_ast_node_t* pnode, int trace) {
 
 	stkalc_subframe_t* pframe = stkalc_subframe_alloc();
 	stkalc_subframe_group_t* pframe_group = stkalc_subframe_group_alloc(pframe, trace);
+	int max_subframe_depth = 0;
 
 	if (trace) {
 		printf("\n");
@@ -225,7 +239,9 @@ static void pass_1_for_func_subr_block(mlr_dsl_ast_node_t* pnode, int trace) {
 		mlr_dsl_ast_node_t* pparameter_node = pe->pvvalue;
 		stkalc_subframe_group_mutate_node_for_define(pframe_group, pparameter_node, "PARAMETER", trace);
 	}
-	pass_1_for_statement_block(plist_node, pframe_group, trace);
+	pass_1_for_statement_block(plist_node, pframe_group, &max_subframe_depth, trace);
+	// xxx mark max subframe depth at the appropriate root
+	// xxx md unused @ astnode ctor
 	pnode->subframe_var_count = pframe->var_count;
 	if (trace) {
 		printf("BLOCK %s subframe_var_count=%d\n", pnode->text, pnode->subframe_var_count);
@@ -246,8 +262,9 @@ static void pass_1_for_begin_end_block(mlr_dsl_ast_node_t* pnode, int trace) {
 
 	stkalc_subframe_t* pframe = stkalc_subframe_alloc();
 	stkalc_subframe_group_t* pframe_group = stkalc_subframe_group_alloc(pframe, trace);
+	int max_subframe_depth = 0;
 
-	pass_1_for_statement_block(pnode->pchildren->phead->pvvalue, pframe_group, trace);
+	pass_1_for_statement_block(pnode->pchildren->phead->pvvalue, pframe_group, &max_subframe_depth, trace);
 	pnode->subframe_var_count = pframe->var_count;
 	if (trace) {
 		printf("BLOCK %s subframe_var_count=%d\n", pnode->text, pnode->subframe_var_count);
@@ -268,8 +285,9 @@ static void pass_1_for_main_block(mlr_dsl_ast_node_t* pnode, int trace) {
 
 	stkalc_subframe_t* pframe = stkalc_subframe_alloc();
 	stkalc_subframe_group_t* pframe_group = stkalc_subframe_group_alloc(pframe, trace);
+	int max_subframe_depth = 0;
 
-	pass_1_for_statement_block(pnode, pframe_group, trace);
+	pass_1_for_statement_block(pnode, pframe_group, &max_subframe_depth, trace);
 	pnode->subframe_var_count = pframe->var_count;
 	if (trace) {
 		printf("BLOCK %s subframe_var_count=%d\n", pnode->text, pnode->subframe_var_count);
@@ -282,72 +300,85 @@ static void pass_1_for_main_block(mlr_dsl_ast_node_t* pnode, int trace) {
 // ----------------------------------------------------------------
 // Curly-braced bodies of if/while/for/etc.
 
-static void pass_1_for_statement_block(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace) {
+static void pass_1_for_statement_block(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace)
+{
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->type != MD_AST_NODE_TYPE_STATEMENT_BLOCK);
 	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-		pass_1_for_node(pchild, pframe_group, trace);
+		pass_1_for_node(pchild, pframe_group, pmax_subframe_depth, trace);
 	}
 }
 
 // Non-curly-braced triple-for starts/continuations/updates statement lists.
-static void pass_1_for_statement_list(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace) {
+static void pass_1_for_statement_list(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace)
+{
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->type != MD_AST_NODE_TYPE_STATEMENT_LIST);
 	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-		pass_1_for_node(pchild, pframe_group, trace);
+		pass_1_for_node(pchild, pframe_group, pmax_subframe_depth, trace);
 	}
 }
 
 // ----------------------------------------------------------------
-static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace) {
+static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace)
+{
 	if (pnode->type == MD_AST_NODE_TYPE_LOCAL_DEFINITION) {
-		pass_1_for_local_definition(pnode, pframe_group, trace);
+		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) {
-		pass_1_for_local_assignment(pnode, pframe_group, trace);
+		pass_1_for_local_assignment(pnode, pframe_group, pmax_subframe_depth, trace);
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_VARIABLE) { // RHS
-		pass_1_for_local_read(pnode, pframe_group, trace);
+		pass_1_for_local_read(pnode, pframe_group, pmax_subframe_depth, trace);
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) {
-		pass_1_for_srec_for_loop(pnode, pframe_group, trace);
+		pass_1_for_srec_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY) { // xxx comment
-		pass_1_for_oosvar_key_only_for_loop(pnode, pframe_group, trace);
+		pass_1_for_oosvar_key_only_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR) { // xxx comment
-		pass_1_for_oosvar_for_loop(pnode, pframe_group, trace);
+		pass_1_for_oosvar_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
 	} else if (pnode->type == MD_AST_NODE_TYPE_TRIPLE_FOR) { // xxx comment
-		pass_1_for_triple_for_loop(pnode, pframe_group, trace);
+		pass_1_for_triple_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
 	} else if (pnode->pchildren != NULL) {
-		pass_1_for_non_terminal_node(pnode, pframe_group, trace);
+		pass_1_for_non_terminal_node(pnode, pframe_group, pmax_subframe_depth, trace);
 	}
 }
 
 // ----------------------------------------------------------------
-static void pass_1_for_local_definition(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace) {
+static void pass_1_for_local_definition(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace)
+{
 	mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 
 	mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
-	pass_1_for_node(pvaluenode, pframe_group, trace);
+	pass_1_for_node(pvaluenode, pframe_group, pmax_subframe_depth, trace);
 	// Do the LHS after the RHS, in case 'local nonesuch = nonesuch'
 	stkalc_subframe_group_mutate_node_for_define(pframe_group, pnamenode, "DEFINE", trace);
 }
 
 // ----------------------------------------------------------------
-static void pass_1_for_local_assignment(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace) {
+static void pass_1_for_local_assignment(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace)
+{
 	mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
-	pass_1_for_node(pvaluenode, pframe_group, trace);
+	pass_1_for_node(pvaluenode, pframe_group, pmax_subframe_depth, trace);
 	// Do the LHS after the RHS, in case 'local nonesuch = nonesuch'
 	stkalc_subframe_group_mutate_node_for_write(pframe_group, pnamenode, "WRITE", trace);
 }
 
 // ----------------------------------------------------------------
-static void pass_1_for_local_read(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace) {
+static void pass_1_for_local_read(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace)
+{
 	stkalc_subframe_group_mutate_node_for_read(pframe_group, pnode, "READ", trace);
 }
 
 // ----------------------------------------------------------------
 // for (k,v in $*) { ... }: the k and v are scoped to the curly-brace block.
-static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace) {
-
+static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace)
+{
 	if (trace) {
 		leader_print(pframe_group->plist->length);
 		printf("PUSH FRAME %s\n", pnode->text);
@@ -363,7 +394,7 @@ static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_
 	stkalc_subframe_group_mutate_node_for_define(pframe_group, pknode, "FOR-BIND", trace);
 	stkalc_subframe_group_mutate_node_for_define(pframe_group, pvnode, "FOR-BIND", trace);
 
-	pass_1_for_statement_block(pblocknode, pframe_group, trace);
+	pass_1_for_statement_block(pblocknode, pframe_group, pmax_subframe_depth, trace);
 	pnode->subframe_var_count = pnext_subframe->var_count;
 
 	stkalc_subframe_free(stkalc_subframe_group_pop(pframe_group));
@@ -375,8 +406,9 @@ static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_
 }
 
 // ----------------------------------------------------------------
-static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace) {
-
+static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace)
+{
 	mlr_dsl_ast_node_t* pkeynode     = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pkeylistnode = pnode->pchildren->phead->pnext->pvvalue;
 	mlr_dsl_ast_node_t* pblocknode   = pnode->pchildren->phead->pnext->pnext->pvvalue;
@@ -389,7 +421,7 @@ static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkal
 	// should be obtained from the enclosing scope.
 	for (sllve_t* pe = pkeylistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-		pass_1_for_node(pchild, pframe_group, trace);
+		pass_1_for_node(pchild, pframe_group, pmax_subframe_depth, trace);
 	}
 
 	if (trace) {
@@ -400,7 +432,7 @@ static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkal
 	stkalc_subframe_group_push(pframe_group, pnext_subframe);
 
 	stkalc_subframe_group_mutate_node_for_define(pframe_group, pkeynode, "FOR-BIND", trace);
-	pass_1_for_statement_block(pblocknode, pframe_group, trace);
+	pass_1_for_statement_block(pblocknode, pframe_group, pmax_subframe_depth, trace);
 	pnode->subframe_var_count = pnext_subframe->var_count;
 
 	stkalc_subframe_free(stkalc_subframe_group_pop(pframe_group));
@@ -411,8 +443,9 @@ static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkal
 }
 
 // ----------------------------------------------------------------
-static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace) {
-
+static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace)
+{
 	mlr_dsl_ast_node_t* pvarsnode    = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pkeylistnode = pnode->pchildren->phead->pnext->pvvalue;
 	mlr_dsl_ast_node_t* pblocknode   = pnode->pchildren->phead->pnext->pnext->pvvalue;
@@ -428,7 +461,7 @@ static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subfram
 	// should be obtained from the enclosing scope.
 	for (sllve_t* pe = pkeylistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-		pass_1_for_node(pchild, pframe_group, trace);
+		pass_1_for_node(pchild, pframe_group, pmax_subframe_depth, trace);
 	}
 
 	if (trace) {
@@ -443,7 +476,7 @@ static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subfram
 		stkalc_subframe_group_mutate_node_for_define(pframe_group, pkeynode, "FOR-BIND", trace);
 	}
 	stkalc_subframe_group_mutate_node_for_define(pframe_group, pvalnode, "FOR-BIND", trace);
-	pass_1_for_statement_block(pblocknode, pframe_group, trace);
+	pass_1_for_statement_block(pblocknode, pframe_group, pmax_subframe_depth, trace);
 	pnode->subframe_var_count = pnext_subframe->var_count;
 
 	stkalc_subframe_free(stkalc_subframe_group_pop(pframe_group));
@@ -454,7 +487,9 @@ static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subfram
 }
 
 // ----------------------------------------------------------------
-static void pass_1_for_triple_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace) {
+static void pass_1_for_triple_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace)
+{
 	mlr_dsl_ast_node_t* pstarts_node        = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pcontinuations_node = pnode->pchildren->phead->pnext->pvvalue;
 	mlr_dsl_ast_node_t* pupdates_node       = pnode->pchildren->phead->pnext->pnext->pvvalue;
@@ -467,10 +502,10 @@ static void pass_1_for_triple_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subfram
 	stkalc_subframe_t* pnext_subframe = stkalc_subframe_alloc();
 	stkalc_subframe_group_push(pframe_group, pnext_subframe);
 
-	pass_1_for_statement_list(pstarts_node, pframe_group, trace);
-	pass_1_for_statement_list(pcontinuations_node, pframe_group, trace);
-	pass_1_for_statement_list(pupdates_node, pframe_group, trace);
-	pass_1_for_statement_block(pblock_node, pframe_group, trace);
+	pass_1_for_statement_list(pstarts_node, pframe_group, pmax_subframe_depth, trace);
+	pass_1_for_statement_list(pcontinuations_node, pframe_group, pmax_subframe_depth, trace);
+	pass_1_for_statement_list(pupdates_node, pframe_group, pmax_subframe_depth, trace);
+	pass_1_for_statement_block(pblock_node, pframe_group, pmax_subframe_depth, trace);
 
 	pnode->subframe_var_count = pnext_subframe->var_count;
 
@@ -482,7 +517,9 @@ static void pass_1_for_triple_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subfram
 }
 
 // ----------------------------------------------------------------
-static void pass_1_for_non_terminal_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group, int trace) {
+static void pass_1_for_non_terminal_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace)
+{
 	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pchild = pe->pvvalue;
 
@@ -496,7 +533,7 @@ static void pass_1_for_non_terminal_node(mlr_dsl_ast_node_t* pnode, stkalc_subfr
 			stkalc_subframe_t* pnext_subframe = stkalc_subframe_alloc();
 			stkalc_subframe_group_push(pframe_group, pnext_subframe);
 
-			pass_1_for_statement_block(pchild, pframe_group, trace);
+			pass_1_for_statement_block(pchild, pframe_group, pmax_subframe_depth, trace);
 			pchild->subframe_var_count = pnext_subframe->var_count;
 
 			stkalc_subframe_free(stkalc_subframe_group_pop(pframe_group));
@@ -507,7 +544,7 @@ static void pass_1_for_non_terminal_node(mlr_dsl_ast_node_t* pnode, stkalc_subfr
 			}
 
 		} else {
-			pass_1_for_node(pchild, pframe_group, trace);
+			pass_1_for_node(pchild, pframe_group, pmax_subframe_depth, trace);
 		}
 	}
 }
@@ -670,7 +707,8 @@ static void pass_2_for_top_level_block(mlr_dsl_ast_node_t* pnode, int trace) {
 }
 
 static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
-	int frame_depth, int var_count_below_subframe, int var_count_at_subframe, int* pmax_var_depth, int trace)
+	int frame_depth, int var_count_below_subframe, int var_count_at_subframe,
+	int* pmax_var_depth, int trace)
 {
 	if (pnode->subframe_var_count != MD_UNUSED_INDEX) {
 		var_count_below_subframe += var_count_at_subframe;
