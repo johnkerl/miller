@@ -137,7 +137,6 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
   containers/lhms2v.c \
   containers/lhmslv.c \
   containers/lhmsmv.c \
-  containers/bind_stack.c \
   containers/loop_stack.c \
   containers/percentile_keeper.c \
   containers/top_keeper.c \
@@ -219,7 +218,6 @@ TEST_RVAL_EVALUATORS_SRCS = \
   containers/mlhmmv.c \
   containers/lhmsmv.c \
   containers/hss.c \
-  containers/bind_stack.c \
   containers/loop_stack.c \
   mapping/mlr_dsl_ast.c \
   mapping/function_manager.c \
