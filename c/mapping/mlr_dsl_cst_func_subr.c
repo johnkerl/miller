@@ -79,9 +79,9 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 	}
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->max_var_depth == MD_UNUSED_INDEX);
-	MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_var_count == MD_UNUSED_INDEX);
+	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
 	pcst_udf_state->ptop_level_block = cst_top_level_statement_block_alloc(pnode->max_var_depth,
-		pnode->frame_var_count);
+		pnode->subframe_var_count);
 
 	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
@@ -137,7 +137,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	// xxx check for unnecessary ephemerals !!
 	local_stack_frame_t* pframe = local_stack_frame_enter(ptop_level_block->pframe);
 	local_stack_push(pvars->plocal_stack, pframe);
-	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->frame_var_count);
+	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->subframe_var_count);
 
 	for (int i = 0; i < arity; i++) {
 		// xxx comment absent-null-at-0 convention ...............
@@ -163,7 +163,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->frame_var_count);
+	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->subframe_var_count);
 	local_stack_frame_exit(pframe);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 
@@ -223,8 +223,8 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 	}
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->max_var_depth == MD_UNUSED_INDEX);
-	MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_var_count == MD_UNUSED_INDEX);
-	pstate->ptop_level_block = cst_top_level_statement_block_alloc(pnode->max_var_depth, pnode->frame_var_count);
+	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
+	pstate->ptop_level_block = cst_top_level_statement_block_alloc(pnode->max_var_depth, pnode->subframe_var_count);
 
 	for (sllve_t* pe = pbody_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
@@ -266,7 +266,7 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 
 	local_stack_frame_t* pframe = local_stack_frame_enter(ptop_level_block->pframe);
 	local_stack_push(pvars->plocal_stack, pframe);
-	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->frame_var_count);
+	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->subframe_var_count);
 
 	for (int i = 0; i < pstate->arity; i++) {
 		// xxx comment absent-null-at-0 convention ...............
@@ -286,7 +286,7 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->frame_var_count);
+	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->subframe_var_count);
 	local_stack_frame_exit(pframe);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 }

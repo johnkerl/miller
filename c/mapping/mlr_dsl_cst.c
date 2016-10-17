@@ -124,9 +124,9 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 			mlr_dsl_ast_node_print(pnode);
 		}
 		MLR_INTERNAL_CODING_ERROR_IF(pnode->max_var_depth == MD_UNUSED_INDEX);
-		MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_var_count == MD_UNUSED_INDEX);
+		MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
 		cst_top_level_statement_block_t* pblock = cst_top_level_statement_block_alloc(pnode->max_var_depth,
-			pnode->frame_var_count);
+			pnode->subframe_var_count);
 		for (sllve_t* pf = pnode->pchildren->phead; pf != NULL; pf = pf->pnext) {
 			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
 			for (sllve_t* pg = plistnode->pchildren->phead; pg != NULL; pg = pg->pnext) {
@@ -148,9 +148,9 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 			mlr_dsl_ast_node_print(pnode);
 		}
 		MLR_INTERNAL_CODING_ERROR_IF(pnode->max_var_depth == MD_UNUSED_INDEX);
-		MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_var_count == MD_UNUSED_INDEX);
+		MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
 		cst_top_level_statement_block_t* pblock = cst_top_level_statement_block_alloc(pnode->max_var_depth,
-			pnode->frame_var_count);
+			pnode->subframe_var_count);
 		for (sllve_t* pf = pnode->pchildren->phead; pf != NULL; pf = pf->pnext) {
 			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
 			for (sllve_t* pg = plistnode->pchildren->phead; pg != NULL; pg = pg->pnext) {
@@ -168,9 +168,9 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 		mlr_dsl_ast_node_print(pcst->paast->pmain_block);
 	}
 	MLR_INTERNAL_CODING_ERROR_IF(pcst->paast->pmain_block->max_var_depth == MD_UNUSED_INDEX);
-	MLR_INTERNAL_CODING_ERROR_IF(pcst->paast->pmain_block->frame_var_count == MD_UNUSED_INDEX);
+	MLR_INTERNAL_CODING_ERROR_IF(pcst->paast->pmain_block->subframe_var_count == MD_UNUSED_INDEX);
 	pcst->pmain_block = cst_top_level_statement_block_alloc(pcst->paast->pmain_block->max_var_depth,
-		pcst->paast->pmain_block->frame_var_count);
+		pcst->paast->pmain_block->subframe_var_count);
 	for (sllve_t* pe = pcst->paast->pmain_block->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
 

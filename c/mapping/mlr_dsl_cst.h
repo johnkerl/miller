@@ -72,11 +72,11 @@ typedef struct _cst_outputs_t {
 
 // ----------------------------------------------------------------
 typedef struct _cst_statement_block_t {
-	int frame_var_count;
+	int subframe_var_count;
 	sllv_t* pstatements;
 } cst_statement_block_t;
 
-cst_statement_block_t* cst_statement_block_alloc(int frame_var_count);
+cst_statement_block_t* cst_statement_block_alloc(int subframe_var_count);
 void cst_statement_block_free(cst_statement_block_t* pblock);
 
 // ----------------------------------------------------------------
@@ -86,7 +86,7 @@ typedef struct _cst_top_level_statement_block_t {
 	cst_statement_block_t* pstatement_block;
 } cst_top_level_statement_block_t;
 
-cst_top_level_statement_block_t* cst_top_level_statement_block_alloc(int max_var_depth, int frame_var_count);
+cst_top_level_statement_block_t* cst_top_level_statement_block_alloc(int max_var_depth, int subframe_var_count);
 void cst_top_level_statement_block_free(cst_top_level_statement_block_t* pblock);
 
 // ----------------------------------------------------------------
