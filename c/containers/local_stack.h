@@ -34,7 +34,7 @@ local_stack_frame_t* local_stack_frame_alloc(int size);
 void local_stack_frame_free(local_stack_frame_t* pframe);
 
 // ----------------------------------------------------------------
-#define LOCAL_STACK_BOUNDS_CHECK_ENABLE
+#define LOCAL_STACK_BOUNDS_CHECK_ENABLE // xxx disable
 #ifdef LOCAL_STACK_BOUNDS_CHECK_ENABLE
 
 static void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int frame_relative_index) {
