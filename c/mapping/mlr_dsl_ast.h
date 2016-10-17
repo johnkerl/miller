@@ -90,6 +90,7 @@ typedef struct _mlr_dsl_ast_node_t {
 	int frame_relative_index;
 	// For bind-stack allocation only in statement-block nodes: unused for any other node types.
 	int subframe_var_count;
+	int max_subframe_depth;
 	int max_var_depth;
 
 } mlr_dsl_ast_node_t;

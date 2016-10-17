@@ -20,9 +20,10 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, mlr_dsl_ast_node_type_t t
 
 	pnode->subframe_relative_index = MD_UNUSED_INDEX;
 	pnode->upstack_subframe_count  = MD_UNUSED_INDEX;
-	pnode->frame_relative_index       = MD_UNUSED_INDEX;
+	pnode->frame_relative_index    = MD_UNUSED_INDEX;
 	pnode->subframe_var_count      = MD_UNUSED_INDEX;
-	pnode->max_var_depth        = MD_UNUSED_INDEX;
+	pnode->max_subframe_depth      = MD_UNUSED_INDEX;
+	pnode->max_var_depth           = MD_UNUSED_INDEX;
 
 	return pnode;
 }
@@ -185,6 +186,8 @@ static void mlr_dsl_ast_node_print_aux(mlr_dsl_ast_node_t* pnode, int level, FIL
 		fprintf(o, " frame_relative_index=%d", pnode->frame_relative_index);
 	if (pnode->subframe_var_count != MD_UNUSED_INDEX)
 		fprintf(o, " subframe_var_count=%d", pnode->subframe_var_count);
+	if (pnode->max_subframe_depth != MD_UNUSED_INDEX)
+		fprintf(o, " max_subframe_depth=%d", pnode->max_subframe_depth);
 	if (pnode->max_var_depth != MD_UNUSED_INDEX)
 		fprintf(o, " max_var_depth=%d", pnode->max_var_depth);
 
