@@ -1,6 +1,8 @@
 ================================================================
 BUGFIXES
 
+! set up incremental cases. focus on the stack allocator w/ -v -a. keep all as UTs.
+
 * b04k
   func f(x) {
       return k
