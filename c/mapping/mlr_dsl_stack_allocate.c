@@ -797,7 +797,7 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 
 		// xxx comment re absent-null at slot 0 ...
 		//if (vardef_subframe_index == 0)
-			pnode->frame_relative_index++;
+			//pnode->frame_relative_index++;
 
 		if (trace) {
 			leader_print(subframe_depth);
