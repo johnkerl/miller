@@ -85,9 +85,9 @@ typedef struct _mlr_dsl_ast_node_t {
 	sllv_t*                 pchildren;
 
 	// For bind-stack allocation only in local-var nodes: unused for any other node types.
-	int subframe_relative_index;
-	int upstack_subframe_count;
-	int frame_relative_index;
+	int subframe_relative_index; // xxx put vardef in this name too
+	int vardef_subframe_index; // xxx or remove vardef from this
+	int frame_relative_index; // xxx put vardef in this name too
 	// For bind-stack allocation only in statement-block nodes: unused for any other node types.
 	int subframe_var_count;
 	int max_subframe_depth;

@@ -60,6 +60,8 @@ FUNCTIONALITY FOR 5.0.0:
 UT FOR 5.0.0:
 
 * bind-stack allocation
+  - oo's -> regtestrun
+  - put them *above* all local/for/UDF/etc
 * oosvar-single-for UT
 
 ----------------------------------------------------------------

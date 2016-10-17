@@ -53,7 +53,7 @@
 //
 // Notes:
 //
-// * Pass 1 computes frame-relative indices and upstack-level counts,
+// * Pass 1 computes frame-relative indices and upstack-level counts, xxx update x all
 //   as in the example, for each local variable.
 //
 // * Pass 2 computes absolute indices for each local variable. These
@@ -651,15 +651,15 @@ static void stkalc_subframe_group_mutate_node_for_define(stkalc_subframe_group_t
 {
 	char* op = "REUSE";
 	stkalc_subframe_t* pframe = pframe_group->plist->phead->pvvalue;
-	pnode->upstack_subframe_count = 0;
+	pnode->vardef_subframe_index = pframe_group->plist->length - 1;
 	if (!stkalc_subframe_test_and_get(pframe, pnode->text, &pnode->subframe_relative_index)) {
 		pnode->subframe_relative_index = stkalc_subframe_add(pframe, pnode->text);
 		op = "ADD";
 	}
 	if (trace) {
 		leader_print(pframe_group->plist->length);
-		printf("%s %s %s @ %du%d\n", op, desc, pnode->text,
-			pnode->subframe_relative_index, pnode->upstack_subframe_count);
+		printf("%s %s %s @ %ds%d\n", op, desc, pnode->text,
+			pnode->subframe_relative_index, pnode->vardef_subframe_index);
 	}
 }
 
@@ -669,8 +669,8 @@ static void stkalc_subframe_group_mutate_node_for_write(stkalc_subframe_group_t*
 	char* op = "REUSE";
 	int found = FALSE;
 	// xxx comment: re loop. if not found, fall back to top frame.
-	pnode->upstack_subframe_count = 0;
-	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, pnode->upstack_subframe_count++) {
+	pnode->vardef_subframe_index = pframe_group->plist->length - 1;
+	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, pnode->vardef_subframe_index--) {
 		stkalc_subframe_t* pframe = pe->pvvalue;
 		if (stkalc_subframe_test_and_get(pframe, pnode->text, &pnode->subframe_relative_index)) {
 			found = TRUE; // xxx dup
@@ -679,7 +679,7 @@ static void stkalc_subframe_group_mutate_node_for_write(stkalc_subframe_group_t*
 	}
 
 	if (!found) {
-		pnode->upstack_subframe_count = 0;
+		pnode->vardef_subframe_index = pframe_group->plist->length - 1;
 		stkalc_subframe_t* pframe = pframe_group->plist->phead->pvvalue;
 		pnode->subframe_relative_index = stkalc_subframe_add(pframe, pnode->text);
 		// xxx temp
@@ -688,8 +688,8 @@ static void stkalc_subframe_group_mutate_node_for_write(stkalc_subframe_group_t*
 
 	if (trace) {
 		leader_print(pframe_group->plist->length);
-		printf("%s %s %s @ %du%d\n", op, desc, pnode->text,
-			pnode->subframe_relative_index, pnode->upstack_subframe_count);
+		printf("%s %s %s @ %ds%d\n", op, desc, pnode->text,
+			pnode->subframe_relative_index, pnode->vardef_subframe_index);
 	}
 }
 
@@ -700,8 +700,8 @@ static void stkalc_subframe_group_mutate_node_for_read(stkalc_subframe_group_t* 
 	char* op = "PRESENT";
 	int found = FALSE;
 	// xxx comment: re loop. if not found, fall back to top frame.
-	int upstack_subframe_count = 0;
-	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, upstack_subframe_count++) {
+	pnode->vardef_subframe_index = pframe_group->plist->length - 1;
+	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, pnode->vardef_subframe_index--) {
 		stkalc_subframe_t* pframe = pe->pvvalue;
 		if (stkalc_subframe_test_and_get(pframe, pnode->text, &pnode->subframe_relative_index)) {
 			found = TRUE; // xxx dup
@@ -713,16 +713,15 @@ static void stkalc_subframe_group_mutate_node_for_read(stkalc_subframe_group_t* 
 	if (!found) {
 		stkalc_subframe_t* plast = pframe_group->plist->ptail->pvvalue;
 		pnode->subframe_relative_index = stkalc_subframe_get(plast, "");
-		upstack_subframe_count = pframe_group->plist->length - 1;
+		pnode->vardef_subframe_index = 0;
 		op = "ABSENT";
 	}
 
 	if (trace) {
 		leader_print(pframe_group->plist->length);
-		printf("%s %s %s @ %du%d\n", desc, pnode->text, op, pnode->subframe_relative_index, upstack_subframe_count);
+		printf("%s %s %s @ %ds%d\n", desc, pnode->text, op,
+			pnode->subframe_relative_index, pnode->vardef_subframe_index);
 	}
-	pnode->upstack_subframe_count = upstack_subframe_count;
-
 }
 
 // ================================================================
@@ -789,23 +788,17 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 
 	if (pnode->subframe_relative_index != MD_UNUSED_INDEX) {
 
-		int vardef_subframe_index = subframe_depth - pnode->upstack_subframe_count - 1;
-		MLR_INTERNAL_CODING_ERROR_IF(vardef_subframe_index < 0);
-		MLR_INTERNAL_CODING_ERROR_IF(vardef_subframe_index >= max_subframe_depth);
-		pnode->frame_relative_index = subframe_var_count_belows[vardef_subframe_index]
+		MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_subframe_index < 0);
+		MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_subframe_index >= max_subframe_depth);
+		pnode->frame_relative_index = subframe_var_count_belows[pnode->vardef_subframe_index]
 			+ pnode->subframe_relative_index;
-
-		// xxx comment re absent-null at slot 0 ...
-		//if (vardef_subframe_index == 0)
-			//pnode->frame_relative_index++;
 
 		if (trace) {
 			leader_print(subframe_depth);
-			printf("NODE %s %du%d(%d) -> %d\n", // xxx put keynames here and elsewhere (%du%d)
+			printf("NODE %s %ds%d -> %d\n", // xxx put keynames here and elsewhere (%du%d)
 				pnode->text,
 				pnode->subframe_relative_index,
-				pnode->upstack_subframe_count,
-				vardef_subframe_index,
+				pnode->vardef_subframe_index,
 				pnode->frame_relative_index);
 		}
 		MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_relative_index < 0);
