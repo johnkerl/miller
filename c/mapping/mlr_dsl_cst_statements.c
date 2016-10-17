@@ -608,7 +608,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->num_emit_keylist_evaluators             = 0;
 	pstatement->ppemit_keylist_evaluators               = NULL;
 	pstatement->local_lhs_variable_name                 = NULL;
-	pstatement->local_lhs_frame_relative_index             = 0;
+	pstatement->local_lhs_frame_relative_index          = 0;
 	pstatement->srec_lhs_field_name                     = NULL;
 	pstatement->env_lhs_name                            = NULL;
 	pstatement->psrec_lhs_evaluator                     = NULL;
@@ -2664,7 +2664,7 @@ static void handle_for_oosvar_aux(
 			for (mlhmmv_level_entry_t* pe = submap.u.pnext_level->phead; pe != NULL; pe = pe->pnext) {
 				// Bind the k-name to the entry-key mlrval:
 				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-				local_stack_frame_set(pframe, pstatement->local_lhs_frame_relative_index, mv_copy(&pe->level_key)); // stackent w/ freeflags?!?
+				local_stack_frame_set(pframe, prest_for_k_frame_relative_indices[0], mv_copy(&pe->level_key)); // stackent w/ freeflags?!?
 				// Recurse into the next-level submap:
 				handle_for_oosvar_aux(pstatement, pvars, pcst_outputs, pe->level_value,
 					&prest_for_k_frame_relative_indices[1], prest_for_k_count - 1);

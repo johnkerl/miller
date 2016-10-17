@@ -37,9 +37,13 @@ void local_stack_frame_free(local_stack_frame_t* pframe);
 #define LOCAL_STACK_BOUNDS_CHECK_ENABLE // xxx disable
 #ifdef LOCAL_STACK_BOUNDS_CHECK_ENABLE
 
-static void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int frame_relative_index) {
+static void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, int frame_relative_index) {
 	if (frame_relative_index < 0) {
 		fprintf(stderr, "OP=%s FRAME=%p IDX=%d/%d STACK UNDERFLOW\n", op, pframe, frame_relative_index, pframe->size);
+		exit(1);
+	}
+	if (set && frame_relative_index == 0) {
+		fprintf(stderr, "OP=%s FRAME=%p IDX=%d/%d ABSENT WRITE\n", op, pframe, frame_relative_index, pframe->size);
 		exit(1);
 	}
 	if (frame_relative_index >= pframe->size) {
@@ -47,8 +51,8 @@ static void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int 
 		exit(1);
 	}
 }
-#define LOCAL_STACK_BOUNDS_CHECK(pframe, op, frame_relative_index) \
-	local_stack_bounds_check((pframe), (op), (frame_relative_index))
+#define LOCAL_STACK_BOUNDS_CHECK(pframe, op, set, frame_relative_index) \
+	local_stack_bounds_check((pframe), (op), (set), (frame_relative_index))
 
 #else
 
@@ -68,12 +72,14 @@ local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe);
 void local_stack_frame_exit(local_stack_frame_t* pframe);
 
 static inline mv_t* local_stack_frame_get(local_stack_frame_t* pframe, int frame_relative_index) {
-	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", frame_relative_index);
+	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, frame_relative_index);
 	return &pframe->pvars[frame_relative_index];
 }
 static inline void local_stack_frame_set(local_stack_frame_t* pframe, int frame_relative_index, mv_t val) {
-	LOCAL_STACK_BOUNDS_CHECK(pframe, "SET", frame_relative_index);
-	pframe->pvars[frame_relative_index] = val;
+	LOCAL_STACK_BOUNDS_CHECK(pframe, "SET", TRUE, frame_relative_index);
+	// xxx debug after free-flags semantics are in place
+	// xxx pframe->pvars[frame_relative_index] = val;
+	pframe->pvars[frame_relative_index] = mv_copy(&val);
 }
 
 // ----------------------------------------------------------------

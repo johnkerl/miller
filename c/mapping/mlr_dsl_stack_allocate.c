@@ -101,9 +101,13 @@ typedef struct _stkalc_subframe_t {
 // Pass-1 stack-frame methods
 
 static      stkalc_subframe_t* stkalc_subframe_alloc();
+
 static void stkalc_subframe_free(stkalc_subframe_t* pframe);
+
 static int  stkalc_subframe_test_and_get(stkalc_subframe_t* pframe, char* name, int* pvalue);
+
 static int  stkalc_subframe_get(stkalc_subframe_t* pframe, char* name);
+
 static int  stkalc_subframe_add(stkalc_subframe_t* pframe, char* name);
 
 // ================================================================
@@ -123,8 +127,11 @@ typedef struct _stkalc_subframe_group_t {
 // Pass-1 stack-frame-group methods
 
 static      stkalc_subframe_group_t* stkalc_subframe_group_alloc(stkalc_subframe_t* pframe, int trace);
+
 static void stkalc_subframe_group_free(stkalc_subframe_group_t* pframe_group);
+
 static void stkalc_subframe_group_push(stkalc_subframe_group_t* pframe_group, stkalc_subframe_t* pframe);
+
 static stkalc_subframe_t* stkalc_subframe_group_pop(stkalc_subframe_group_t* pframe_group);
 
 // Pass-1 stack-frame-group node-mutator methods: given an AST node containing a
@@ -145,38 +152,52 @@ static void stkalc_subframe_group_mutate_node_for_read(stkalc_subframe_group_t* 
 // Pass-1 helper methods for the main entry point to this file.
 
 static void pass_1_for_func_subr_block(mlr_dsl_ast_node_t* pnode, int trace);
+
 static void pass_1_for_begin_end_block(mlr_dsl_ast_node_t* pnode, int trace);
+
 static void pass_1_for_main_block(mlr_dsl_ast_node_t* pnode, int trace);
 
 static void pass_1_for_statement_block(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
+
 static void pass_1_for_statement_list(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
+
 static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
 
+
 static void pass_1_for_local_definition(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
+
 static void pass_1_for_local_assignment(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
+
 static void pass_1_for_local_read(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
+
 static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
+
 static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
+
 static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
+
 static void pass_1_for_triple_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
+
 static void pass_1_for_non_terminal_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
 
 // Pass-2 helper methods for the main entry point to this file.
 static void pass_2_for_top_level_block(mlr_dsl_ast_node_t* pnode, int trace);
+
 static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
-	int frame_depth, int var_count_below_subframe, int var_count_at_subframe,
-	int* pmax_var_depth, int trace);
+	int subframe_depth, int var_count_below_subframe, int var_count_at_subframe, int* pmax_var_depth,
+	int* subframe_var_count_belows, int max_subframe_depth,
+	int trace);
 
 // ================================================================
 // Utility methods
@@ -241,8 +262,6 @@ static void pass_1_for_func_subr_block(mlr_dsl_ast_node_t* pnode, int trace) {
 		stkalc_subframe_group_mutate_node_for_define(pframe_group, pparameter_node, "PARAMETER", trace);
 	}
 	pass_1_for_statement_block(plist_node, pframe_group, &max_subframe_depth, trace);
-	// xxx mark max subframe depth at the appropriate root
-	// xxx md unused @ astnode ctor
 	pnode->subframe_var_count = pframe->var_count;
 	pnode->max_subframe_depth = max_subframe_depth;
 	if (trace) {
@@ -708,10 +727,18 @@ static void stkalc_subframe_group_mutate_node_for_read(stkalc_subframe_group_t* 
 
 // ================================================================
 static void pass_2_for_top_level_block(mlr_dsl_ast_node_t* pnode, int trace) {
-	int frame_depth = 0;
+	int subframe_depth           = 0;
 	int var_count_below_subframe = 0;
-	int var_count_at_subframe = 0;
-	int max_var_depth   = 0;
+	int var_count_at_subframe    = 0;
+	int max_var_depth            = 0;
+
+	int max_subframe_depth = pnode->max_subframe_depth;
+	MLR_INTERNAL_CODING_ERROR_IF(max_subframe_depth == MD_UNUSED_INDEX);
+	int* subframe_var_count_belows = mlr_malloc_or_die(max_subframe_depth * sizeof(int));
+	for (int i = 0; i < pnode->max_subframe_depth; i++)
+		subframe_var_count_belows[i] = MD_UNUSED_INDEX;
+
+
 	if (trace) {
 		printf("\n");
 		printf("ALLOCATING ABSOLUTE (PASS-2) LOCALS FOR DEFINITION BLOCK [%s]\n", pnode->text);
@@ -719,51 +746,85 @@ static void pass_2_for_top_level_block(mlr_dsl_ast_node_t* pnode, int trace) {
 		mlr_dsl_ast_node_print(pnode);
 		printf("\n");
 	}
-	pass_2_for_node(pnode, frame_depth, var_count_below_subframe, var_count_at_subframe, &max_var_depth, trace);
-	pnode->max_var_depth = max_var_depth;
+	pass_2_for_node(pnode, subframe_depth, var_count_below_subframe, var_count_at_subframe, &max_var_depth,
+		subframe_var_count_belows, max_subframe_depth, trace);
+	//pnode->max_var_depth = max_var_depth;
+	pnode->max_var_depth = max_var_depth + 1; // xxx comment re absent-null at slot 0
 }
 
+// ----------------------------------------------------------------
+
+// xxx elaborate:
+//
+// 0:3 (0..2)
+//     1:5 (3..7)
+//         2:4 (8..1)
+//         here 1u0 means: abs9
+//         here 1u1 means: abs4
+//         here 1u2 means: abs1
+// * go to array slot vardef_subframe_index
+// * there find the var_count_below
+
+// xxx this is crying out for a managed struct
 static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
-	int frame_depth, int var_count_below_subframe, int var_count_at_subframe,
-	int* pmax_var_depth, int trace)
+	int subframe_depth, int var_count_below_subframe, int var_count_at_subframe, int* pmax_var_depth,
+	int* subframe_var_count_belows, int max_subframe_depth,
+	int trace)
 {
 	if (pnode->subframe_var_count != MD_UNUSED_INDEX) {
 		var_count_below_subframe += var_count_at_subframe;
 		var_count_at_subframe = pnode->subframe_var_count;
 		int depth = var_count_below_subframe + var_count_at_subframe;
-		frame_depth++;
 		if (depth > *pmax_var_depth) {
 			*pmax_var_depth = depth;
 		}
+		subframe_var_count_belows[subframe_depth] = var_count_below_subframe;
 		if (trace) {
-			leader_print(frame_depth-1);
-			printf("FRAME [%s] var_count_below=%d var_count_at=%d max_var_depth_so_far=%d\n",
-				pnode->text, var_count_below_subframe, var_count_at_subframe, *pmax_var_depth);
+			leader_print(subframe_depth);
+			printf("FRAME [%s] var_count_below=%d var_count_at=%d max_var_depth_so_far=%d subframe_depth=%d\n",
+				pnode->text, var_count_below_subframe, var_count_at_subframe, *pmax_var_depth, subframe_depth);
 		}
+		subframe_depth++;
 	}
 
 	if (pnode->subframe_relative_index != MD_UNUSED_INDEX) {
 
-		pnode->frame_relative_index = var_count_below_subframe + pnode->subframe_relative_index; // R-O-N-G
+		int vardef_subframe_index = subframe_depth - pnode->upstack_subframe_count - 1;
+		MLR_INTERNAL_CODING_ERROR_IF(vardef_subframe_index < 0);
+		MLR_INTERNAL_CODING_ERROR_IF(vardef_subframe_index >= max_subframe_depth);
+		pnode->frame_relative_index = subframe_var_count_belows[vardef_subframe_index]
+			+ pnode->subframe_relative_index;
+
+		// xxx comment re absent-null at slot 0 ...
+		//if (vardef_subframe_index == 0)
+			pnode->frame_relative_index++;
 
 		if (trace) {
-			leader_print(frame_depth);
-			printf("NODE %s %du%d -> %d\n",
+			leader_print(subframe_depth);
+			printf("NODE %s %du%d(%d) -> %d\n", // xxx put keynames here and elsewhere (%du%d)
 				pnode->text,
 				pnode->subframe_relative_index,
 				pnode->upstack_subframe_count,
+				vardef_subframe_index,
 				pnode->frame_relative_index);
 		}
 		MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_relative_index <= 0);
-		MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_relative_index >= *pmax_var_depth);
+		// xxx MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_relative_index >= *pmax_var_depth);
+		MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_relative_index > *pmax_var_depth);
 	}
 
 	if (pnode->pchildren != NULL) {
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-			pass_2_for_node(pchild, frame_depth,
-				var_count_below_subframe, var_count_at_subframe, pmax_var_depth, trace);
+			pass_2_for_node(pchild, subframe_depth,
+				var_count_below_subframe, var_count_at_subframe, pmax_var_depth,
+				subframe_var_count_belows, max_subframe_depth,
+				trace);
 		}
+	}
+	if (pnode->subframe_var_count != MD_UNUSED_INDEX) {
+		subframe_depth--;
+		subframe_var_count_belows[subframe_depth] = MD_UNUSED_INDEX;
 	}
 }
 
