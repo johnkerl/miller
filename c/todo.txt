@@ -35,6 +35,7 @@ NON-RELEASE:
 HYGIENE FOR 5.0.0:
 
 * split up mlr_dsl_cst.h et al.
+* clean up local-stack macrofuncs (hide ifdeffing from callsites)
 * valgrinds
 * xxxes
 
@@ -77,10 +78,10 @@ FUNCTIONALITY FOR 5.0.0:
 UT FOR 5.0.0:
 
 !! stack-clear:
+  k mlrt
   - mv_reset()
-  - test_dsl_stack
-  - try to repro w/ clearless
-  - mlrt
+  - test_dsl_stack for all control-structure combos (including if-in-breakable), asserting contracts
+  - UT repro test w/ std regtest output cmp
 
 * bind-stack allocation
   - oo's -> regtestrun
