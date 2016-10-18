@@ -2448,8 +2448,8 @@ static void handle_conditional_block(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+	// xxx local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	// xxx local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
 
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 
@@ -2461,7 +2461,7 @@ static void handle_conditional_block(
 		}
 	}
 
-	local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+	// xxx local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
 }
 
 // ----------------------------------------------------------------
@@ -2496,8 +2496,8 @@ static void handle_while(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+	// xxx local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	// xxx local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
 
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 
@@ -2523,7 +2523,7 @@ static void handle_while(
 	}
 	loop_stack_pop(pvars->ploop_stack);
 
-	local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+	// xxx local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
 }
 
 // ----------------------------------------------------------------
@@ -2532,8 +2532,8 @@ static void handle_do_while(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+	// xxx local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	// xxx local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
 
 	loop_stack_push(pvars->ploop_stack);
 
@@ -2561,7 +2561,7 @@ static void handle_do_while(
 	}
 	loop_stack_pop(pvars->ploop_stack);
 
-	local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+	// xxx local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
 }
 
 // ----------------------------------------------------------------
@@ -2570,8 +2570,8 @@ static void handle_for_srec(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+	// xxx local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	// xxx local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
 
 	loop_stack_push(pvars->ploop_stack);
 	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
@@ -2599,7 +2599,7 @@ static void handle_for_srec(
 	lrec_free(pcopyrec);
 	loop_stack_pop(pvars->ploop_stack);
 
-	local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+	// xxx local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
 }
 
 // ----------------------------------------------------------------
@@ -2618,8 +2618,8 @@ static void handle_for_oosvar(
 		&keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
 
-		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+		//local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+		//local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
 
 		loop_stack_push(pvars->ploop_stack);
 
@@ -2648,7 +2648,7 @@ static void handle_for_oosvar(
 		mlhmmv_free_submap(submap);
 
 		loop_stack_pop(pvars->ploop_stack);
-		local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+		//local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
 	}
 	sllmv_free(plhskeylist);
 }
@@ -2719,7 +2719,7 @@ static void handle_for_oosvar_key_only(
 		// for-loop.
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+		//local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
 		loop_stack_push(pvars->ploop_stack);
 
 		sllv_t* pkeys = mlhmmv_copy_keys_from_submap(pvars->poosvars, plhskeylist);
@@ -2742,7 +2742,7 @@ static void handle_for_oosvar_key_only(
 		}
 
 		loop_stack_pop(pvars->ploop_stack);
-		local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+		//local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
 
 		sllv_free(pkeys);
 	}
@@ -2755,8 +2755,8 @@ static void handle_triple_for(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+	//local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	//local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
 	// xxx clean up whitespace throughout
 	loop_stack_push(pvars->ploop_stack);
 
@@ -2790,7 +2790,7 @@ static void handle_triple_for(
 
 	loop_stack_pop(pvars->ploop_stack);
 
-	local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+	//local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
 }
 
 // ----------------------------------------------------------------

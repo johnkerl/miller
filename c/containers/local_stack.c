@@ -61,9 +61,6 @@ local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe) {
 	local_stack_trace_announce();
 	printf("LOCAL STACK FRAME EPH ENTER %p/%p %d\n", pframe, prv, pframe->size);
 #endif
-#ifdef LOCAL_STACK_BOUNDS_CHECK_ENABLE
-		printf("LOCAL STACK EPHEMERAL ALLOCATE\n");
-#endif // LOCAL_STACK_BOUNDS_CHECK_ENABLE
 		prv->in_use = TRUE;
 		return prv;
 	}
