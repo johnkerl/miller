@@ -110,7 +110,7 @@ static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int c
 	printf("LOCAL STACK FRAME %p CLEAR %d\n", pframe, pframe->subframe_base+i);
 #endif
 		LOCAL_STACK_BOUNDS_CHECK(pframe, "CLEAR", FALSE, pframe->subframe_base+i);
-		psubframe[i] = mv_absent();
+		mv_reset(&psubframe[i]);
 	}
 	pframe->subframe_base += count;
 }

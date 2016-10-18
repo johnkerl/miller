@@ -61,16 +61,7 @@ FUNCTIONALITY FOR 5.0.0:
 
 * rethink -f/-e ordering -- argvish is possible otherwise.
 
-! bind-stack: locals map to frame indices. maybe for 5.1.0 ... but prefer to get the perf good at release.
-  (issue is computation is dominated by lhmsv_get/put/string_hash_func.)
-* make a top_level_statement_block_t for use in the CST
-  - it includes a local_stack_t
-  - local_stack_t includes an in_use flag
-  - statement_list needs a wrapper object too (not just sllv_t); if (has_absent_read) { absentify local-count }
-    at handle_statement_list.
-  - begin/main/end of course can't be reentered (they are unnamed) but func/subr can. alloc new stack if in_use.
-* CST statement-list: push/pop count for entry/exit; mv_absents on enter; mv_frees on exit
-* mv_absent init: find a way to do this only when needed.
+? mv_absent init: find a way to do this only when needed.
 * mv_absent init: UT read/define/read. special case: 'local nonesuch = nonesuch'.
 * more comment-strip UT (with inside-string cases)
 
@@ -79,7 +70,7 @@ UT FOR 5.0.0:
 
 !! stack-clear:
   k mlrt
-  - mv_reset()
+  k mv_reset()
   - test_dsl_stack for all control-structure combos (including if-in-breakable), asserting contracts
   - UT repro test w/ std regtest output cmp
 

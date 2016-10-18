@@ -199,6 +199,15 @@ static inline void mv_free(mv_t* pval) {
 }
 
 // ----------------------------------------------------------------
+// For stack-clear: set to ABSENT, freeing previous value if necessary
+static inline void mv_reset(mv_t* pval) {
+	if ((pval->type) == MT_STRING && (pval->free_flags & FREE_ENTRY_VALUE)) {
+		free(pval->u.strv);
+	}
+	*pval = mv_absent();
+}
+
+// ----------------------------------------------------------------
 // TYPE-TESTERS
 
 static inline int mv_is_string_or_empty(mv_t* pval) {
