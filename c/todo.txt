@@ -42,6 +42,7 @@ HYGIENE FOR 5.0.0:
 ----------------------------------------------------------------
 FUNCTIONALITY FOR 5.0.0:
 
+* time frame-ovf chk
 !! stack-clear:
   ? begin top-level
   ? main  top-level
