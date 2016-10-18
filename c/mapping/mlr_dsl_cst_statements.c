@@ -2023,8 +2023,8 @@ void mlr_dsl_cst_handle_statement_block(
 	variables_t*           pvars,
 	cst_outputs_t*         pcst_outputs)
 {
-	//local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	//local_stack_subframe_enter(pframe, pblock->subframe_var_count);
+	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	local_stack_subframe_enter(pframe, pblock->subframe_var_count);
 	for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
@@ -2033,7 +2033,7 @@ void mlr_dsl_cst_handle_statement_block(
 			break;
 		}
 	}
-	//local_stack_subframe_exit(pframe, pblock->subframe_var_count);
+	local_stack_subframe_exit(pframe, pblock->subframe_var_count);
 }
 
 // This is for statement lists recursively contained within a loop body.
