@@ -137,10 +137,13 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	// xxx check for unnecessary ephemerals !!
 	local_stack_frame_t* pframe = local_stack_frame_enter(ptop_level_block->pframe);
 	local_stack_push(pvars->plocal_stack, pframe);
+
+	// xxx make a separate entry point for clear-0 only ... we are about to assign args.
 	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->subframe_var_count);
 
 	for (int i = 0; i < arity; i++) {
 		// xxx comment absent-null-at-0 convention ...............
+		// xxx make an mv_replace()
 		local_stack_frame_set(pframe, i+1, mv_copy(&args[i]));
 	}
 
