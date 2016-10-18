@@ -41,6 +41,23 @@ HYGIENE FOR 5.0.0:
 ----------------------------------------------------------------
 FUNCTIONALITY FOR 5.0.0:
 
+!! stack-clear:
+  ? begin top-level
+  ? main  top-level
+  ? end   top-level
+  ? func  top-level
+  ? subr  top-level
+
+  ? md_cond_block
+  ? md_while_block
+  ? md_for_loop_full_srec
+  ? md_for_loop_full_oosvar
+  ? md_for_loop_full_oosvar_key_only
+  ? md_for_loop_oosvar
+  ? md_for_loop_oosvar_key_only
+  ? md_triple_for
+  ? md_if_chain
+
 * rethink -f/-e ordering -- argvish is possible otherwise.
 
 ! bind-stack: locals map to frame indices. maybe for 5.1.0 ... but prefer to get the perf good at release.
@@ -59,10 +76,18 @@ FUNCTIONALITY FOR 5.0.0:
 ----------------------------------------------------------------
 UT FOR 5.0.0:
 
+!! stack-clear:
+  - mv_reset()
+  - test_dsl_stack
+  - try to repro w/ clearless
+  - mlrt
+
 * bind-stack allocation
   - oo's -> regtestrun
   - put them *above* all local/for/UDF/etc
 * oosvar-single-for UT
+
+* UT-per-se program for CST
 
 ----------------------------------------------------------------
 DOC FOR 5.0.0:
