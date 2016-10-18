@@ -34,8 +34,8 @@ local_stack_frame_t* local_stack_frame_alloc(int size);
 void local_stack_frame_free(local_stack_frame_t* pframe);
 
 // ----------------------------------------------------------------
-//#define LOCAL_STACK_TRACE_ENABLE // xxx disable
-#define LOCAL_STACK_BOUNDS_CHECK_ENABLE // xxx disable
+//#define LOCAL_STACK_TRACE_ENABLE
+//#define LOCAL_STACK_BOUNDS_CHECK_ENABLE
 
 #ifdef LOCAL_STACK_BOUNDS_CHECK_ENABLE
 static int local_stack_bounds_check_announce_first_call = TRUE;
