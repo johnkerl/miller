@@ -34,10 +34,17 @@ local_stack_frame_t* local_stack_frame_alloc(int size);
 void local_stack_frame_free(local_stack_frame_t* pframe);
 
 // ----------------------------------------------------------------
-#define LOCAL_STACK_BOUNDS_CHECK_ENABLE // xxx disable
+//#define LOCAL_STACK_TRACE_ENABLE // xxx disable
+//#define LOCAL_STACK_BOUNDS_CHECK_ENABLE // xxx disable
+
 #ifdef LOCAL_STACK_BOUNDS_CHECK_ENABLE
+static int local_stack_bounds_check_announce_first_call = TRUE;
 
 static void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, int frame_relative_index) {
+	if (local_stack_bounds_check_announce_first_call) {
+		fprintf(stderr, "%s: local-stack bounds-checking is enabled\n", MLR_GLOBALS.bargv0);
+		local_stack_bounds_check_announce_first_call = FALSE;
+	}
 	if (frame_relative_index < 0) {
 		fprintf(stderr, "OP=%s FRAME=%p IDX=%d/%d STACK UNDERFLOW\n", op, pframe, frame_relative_index, pframe->size);
 		exit(1);
@@ -56,7 +63,7 @@ static void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int 
 
 #else
 
-#define LOCAL_STACK_BOUNDS_CHECK(pframe, op, frame_relative_index)
+#define LOCAL_STACK_BOUNDS_CHECK(pframe, op, set, frame_relative_index)
 
 #endif
 
@@ -72,10 +79,16 @@ local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe);
 void local_stack_frame_exit(local_stack_frame_t* pframe);
 
 static inline mv_t* local_stack_frame_get(local_stack_frame_t* pframe, int frame_relative_index) {
+#ifdef LOCAL_STACK_TRACE_ENABLE // xxx macroify
+	printf("LOCAL STACK FRAME %p GET %d\n", pframe, frame_relative_index);
+#endif
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, frame_relative_index);
 	return &pframe->pvars[frame_relative_index];
 }
 static inline void local_stack_frame_set(local_stack_frame_t* pframe, int frame_relative_index, mv_t val) {
+#ifdef LOCAL_STACK_TRACE_ENABLE // xxx macroify
+	printf("LOCAL STACK FRAME %p SET %d\n", pframe, frame_relative_index);
+#endif
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "SET", TRUE, frame_relative_index);
 	// xxx debug after free-flags semantics are in place
 	// xxx pframe->pvars[frame_relative_index] = val;
@@ -88,13 +101,23 @@ static inline void local_stack_frame_set(local_stack_frame_t* pframe, int frame_
 
 static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int count) {
 	// xxx try to avoid with absent-read flag at stack-allocator ...
+#ifdef LOCAL_STACK_TRACE_ENABLE // xxx macroify
+	printf("LOCAL STACK SUBFRAME %p ENTER %d->%d\n", pframe, pframe->subframe_base, pframe->subframe_base+count);
+#endif
 	mv_t* psubframe = &pframe->pvars[pframe->subframe_base];
 	for (int i = 0; i < count; i++) {
+#ifdef LOCAL_STACK_TRACE_ENABLE // xxx macroify
+	printf("LOCAL STACK FRAME %p CLEAR %d\n", pframe, pframe->subframe_base+i);
+#endif
+		LOCAL_STACK_BOUNDS_CHECK(pframe, "CLEAR", FALSE, pframe->subframe_base+i);
 		psubframe[i] = mv_absent();
 	}
 	pframe->subframe_base += count;
 }
 static inline void local_stack_subframe_exit(local_stack_frame_t* pframe, int count) {
+#ifdef LOCAL_STACK_TRACE_ENABLE // xxx macroify
+	printf("LOCAL STACK SUBFRAME %p EXIT  %d->%d\n", pframe, pframe->subframe_base, pframe->subframe_base-count);
+#endif
 	pframe->subframe_base -= count;
 }
 

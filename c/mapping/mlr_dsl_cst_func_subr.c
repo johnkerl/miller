@@ -164,7 +164,6 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->subframe_var_count);
-	local_stack_frame_exit(pframe);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 
 	return retval;
@@ -287,6 +286,5 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->subframe_var_count);
-	local_stack_frame_exit(pframe);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 }

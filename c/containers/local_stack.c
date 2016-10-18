@@ -3,6 +3,16 @@
 #include "lib/mlr_globals.h"
 #include "containers/local_stack.h"
 
+#ifdef LOCAL_STACK_TRACE_ENABLE
+static int local_stack_trace_first_call = TRUE;
+static void local_stack_trace_announce() {
+	if (local_stack_trace_first_call) {
+		fprintf(stderr, "%s: local-stack bounds-checking is enabled\n", MLR_GLOBALS.bargv0);
+		local_stack_trace_first_call = FALSE;
+	}
+}
+#endif
+
 // ================================================================
 static local_stack_frame_t* _local_stack_alloc(int size, int ephemeral) {
 	local_stack_frame_t* pframe = mlr_malloc_or_die(sizeof(local_stack_frame_t));
@@ -40,9 +50,20 @@ void local_stack_frame_free(local_stack_frame_t* pframe) {
 local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe) {
 	if (!pframe->in_use) {
 		pframe->in_use = TRUE;
+#ifdef LOCAL_STACK_TRACE_ENABLE
+	local_stack_trace_announce();
+	printf("LOCAL STACK FRAME NON-EPH ENTER %p %d\n", pframe, pframe->size);
+#endif
 		return pframe;
 	} else {
 		local_stack_frame_t* prv = _local_stack_alloc(pframe->size, TRUE);
+#ifdef LOCAL_STACK_TRACE_ENABLE
+	local_stack_trace_announce();
+	printf("LOCAL STACK FRAME EPH ENTER %p/%p %d\n", pframe, prv, pframe->size);
+#endif
+#ifdef LOCAL_STACK_BOUNDS_CHECK_ENABLE
+		printf("LOCAL STACK EPHEMERAL ALLOCATE\n");
+#endif // LOCAL_STACK_BOUNDS_CHECK_ENABLE
 		prv->in_use = TRUE;
 		return prv;
 	}
@@ -53,8 +74,16 @@ void local_stack_frame_exit (local_stack_frame_t* pframe) {
 	MLR_INTERNAL_CODING_ERROR_UNLESS(mv_is_absent(&pframe->pvars[0]));
 	if (!pframe->ephemeral) {
 		pframe->in_use = FALSE;
+#ifdef LOCAL_STACK_TRACE_ENABLE
+	local_stack_trace_announce();
+	printf("LOCAL STACK FRAME NON-EPH EXIT %p %d\n", pframe, pframe->size);
+#endif
 	} else {
 		local_stack_frame_free(pframe);
+#ifdef LOCAL_STACK_TRACE_ENABLE
+	local_stack_trace_announce();
+	printf("LOCAL STACK FRAME EPH EXIT %p %d\n", pframe, pframe->size);
+#endif
 	}
 }
 

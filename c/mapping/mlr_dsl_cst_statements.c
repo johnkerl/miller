@@ -2023,6 +2023,8 @@ void mlr_dsl_cst_handle_statement_block(
 	variables_t*           pvars,
 	cst_outputs_t*         pcst_outputs)
 {
+	//local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	//local_stack_subframe_enter(pframe, pblock->subframe_var_count);
 	for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
@@ -2031,6 +2033,7 @@ void mlr_dsl_cst_handle_statement_block(
 			break;
 		}
 	}
+	//local_stack_subframe_exit(pframe, pblock->subframe_var_count);
 }
 
 // This is for statement lists recursively contained within a loop body.
@@ -2040,6 +2043,8 @@ static void handle_statement_block_with_break_continue(
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs)
 {
+	// xxx local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	// xxx local_stack_subframe_enter(pframe, pblock->subframe_var_count);
 	for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
@@ -2051,6 +2056,7 @@ static void handle_statement_block_with_break_continue(
 			break;
 		}
 	}
+	// xxx local_stack_subframe_exit(pframe, pblock->subframe_var_count);
 }
 
 // Triple-for start/continuation/update statement lists
@@ -2472,12 +2478,12 @@ static void handle_if_head(
 		if (mv_is_non_null(&val)) {
 			mv_set_boolean_strict(&val);
 			if (val.u.boolv) {
-				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-				local_stack_subframe_enter(pframe, pitemnode->pstatement_block->subframe_var_count);
+				//local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+				//local_stack_subframe_enter(pframe, pitemnode->pstatement_block->subframe_var_count);
 
 				pstatement->pblock_handler(pitemnode->pstatement_block, pvars, pcst_outputs);
 
-				local_stack_subframe_exit(pframe, pitemnode->pstatement_block->subframe_var_count);
+				//local_stack_subframe_exit(pframe, pitemnode->pstatement_block->subframe_var_count);
 				break;
 			}
 		}
@@ -2751,7 +2757,7 @@ static void handle_triple_for(
 {
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
-
+	// xxx clean up whitespace throughout
 	loop_stack_push(pvars->ploop_stack);
 
 	// Start statements

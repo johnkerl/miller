@@ -741,14 +741,13 @@ static void pass_2_for_top_level_block(mlr_dsl_ast_node_t* pnode, int trace) {
 	if (trace) {
 		printf("\n");
 		printf("ALLOCATING ABSOLUTE (PASS-2) LOCALS FOR DEFINITION BLOCK [%s]\n", pnode->text);
-		printf("\n");
-		mlr_dsl_ast_node_print(pnode);
-		printf("\n");
+		// xxx printf("\n");
+		// xxx mlr_dsl_ast_node_print(pnode);
+		// xxx printf("\n");
 	}
 	pass_2_for_node(pnode, subframe_depth, var_count_below_subframe, var_count_at_subframe, &max_var_depth,
 		subframe_var_count_belows, max_subframe_depth, trace);
-	//pnode->max_var_depth = max_var_depth;
-	pnode->max_var_depth = max_var_depth + 1; // xxx comment re absent-null at slot 0
+	pnode->max_var_depth = max_var_depth;
 }
 
 // ----------------------------------------------------------------
