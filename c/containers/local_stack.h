@@ -114,6 +114,7 @@ static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int c
 	}
 	pframe->subframe_base += count;
 }
+
 static inline void local_stack_subframe_exit(local_stack_frame_t* pframe, int count) {
 #ifdef LOCAL_STACK_TRACE_ENABLE // xxx macroify
 	printf("LOCAL STACK SUBFRAME %p EXIT  %d->%d\n", pframe, pframe->subframe_base, pframe->subframe_base-count);
