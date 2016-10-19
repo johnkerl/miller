@@ -12,23 +12,13 @@ NON-RELEASE:
 * windows port?
 ? msort.o wt?
 
-================================================================
-5.1.0: MAP // STRICT // TRACE // SYNTAXERROR // ALLRECAGG
-
-mapvars for 5.1.0 not 5.0.0 but make some decisions before releasing 5.0.0:
-
-* gonna wanna pass maps to funcs/subrs, and return them too.
-  - '&m syntax'?
-  - 'local map m' syntax? 'map/val' ?
-  - categorize all LHS/RHS/arg/param/forbind/etc possibilities & pencil/paper the options.
-  - choose simplest possible option
-
 ----------------------------------------------------------------
 HYGIENE FOR 5.0.0:
 
+! VALGRINDS
+
 * split up mlr_dsl_cst.h et al.
 * clean up local-stack macrofuncs (hide ifdeffing from callsites)
-* valgrinds
 * xxxes
 
 ----------------------------------------------------------------
@@ -111,7 +101,18 @@ perf note:
 * C stuff performant
 * DSL stuff ... more for utility. but do profile/compare bind-stack allocation stuff 1st. :)
 
-----------------------------------------------------------------
+================================================================
+5.1.0: MAP // STRICT // TRACE // SYNTAXERROR // ALLRECAGG
+
+mapvars for 5.1.0 not 5.0.0 but make some decisions before releasing 5.0.0:
+
+* gonna wanna pass maps to funcs/subrs, and return them too.
+  - '&m syntax'?
+  - 'local map m' syntax? 'map/val' ?
+  - categorize all LHS/RHS/arg/param/forbind/etc possibilities & pencil/paper the options.
+  - choose simplest possible option
+
+================================================================
 5.0.0 FEATURES:
 
 DSL:

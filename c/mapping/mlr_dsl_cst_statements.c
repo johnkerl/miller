@@ -2736,6 +2736,7 @@ static void handle_for_oosvar_key_only(
 
 		for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
 			// Bind the v-name to the terminal mlrval:
+			// xxx free-flags here
 			local_stack_frame_set(pframe, pstatement->for_oosvar_k_frame_relative_indices[0], mv_copy(pe->pvvalue));
 
 			// Execute the loop-body statements:
