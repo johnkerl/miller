@@ -748,6 +748,7 @@ static void pass_2_for_top_level_block(mlr_dsl_ast_node_t* pnode, int trace) {
 	pass_2_for_node(pnode, subframe_depth, var_count_below_subframe, var_count_at_subframe, &max_var_depth,
 		subframe_var_count_belows, max_subframe_depth, trace);
 	pnode->max_var_depth = max_var_depth;
+	free(subframe_var_count_belows);
 }
 
 // ----------------------------------------------------------------
