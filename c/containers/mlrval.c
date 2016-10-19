@@ -2230,18 +2230,27 @@ int mv_i_nn_le(mv_t* pval1, mv_t* pval2) { return (ile_dispositions[pval1->type]
 
 // ----------------------------------------------------------------
 // For unit-test keystroke-saving
+
 int mveq(mv_t* pval1, mv_t* pval2) {
 	mv_t cmp = eq_op_func(pval1, pval2);
-	if (cmp.type != MT_BOOL) {
-		fprintf(stderr, "%s: Internal coding error detected in file %s at line %d.\n",
-			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
-		exit(1);
-	}
+	MLR_INTERNAL_CODING_ERROR_UNLESS(cmp.type == MT_BOOL);
 	return cmp.u.boolv;
 }
 
 int mvne(mv_t* pval1, mv_t* pval2) {
 	return !mveq(pval1, pval2);
+}
+
+int mveqcopy(mv_t* pval1, mv_t* pval2) {
+	mv_t c1 = mv_copy(pval1);
+	mv_t c2 = mv_copy(pval2);
+	return mveq(&c1, &c2);
+}
+
+int mvnecopy(mv_t* pval1, mv_t* pval2) {
+	mv_t c1 = mv_copy(pval1);
+	mv_t c2 = mv_copy(pval2);
+	return mvne(&c1, &c2);
 }
 
 // ----------------------------------------------------------------

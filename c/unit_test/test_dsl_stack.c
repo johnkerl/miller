@@ -52,19 +52,6 @@ static mlr_dsl_cst_t* my_mlr_dsl_cst_alloc(mlr_dsl_ast_t* past) {
 }
 
 // ----------------------------------------------------------------
-static mv_t* imv(long long intv) {
-	mv_t* pmv = mlr_malloc_or_die(sizeof(mv_t));
-	*pmv = mv_from_int(intv);
-	return pmv;
-}
-
-static mv_t* smv(char* strv) {
-	mv_t* pmv = mlr_malloc_or_die(sizeof(mv_t));
-	*pmv = mv_from_string(strv, NO_FREE);
-	return pmv;
-}
-
-// ----------------------------------------------------------------
 static variables_t* my_make_variables() {
 	variables_t* pvariables = mlr_malloc_or_die(sizeof(variables_t));
 
@@ -158,10 +145,11 @@ static char* test_top_level_locals() {
 
 	mlr_dsl_cst_handle_top_level_statement_block(pcst->pmain_block, pvariables, pcst_outputs);
 
+	// xxx make a dump-frame method
 	mu_assert_lf(mv_is_absent(&pvars[0]));
-	mu_assert_lf(mv_equals_si(&pvars[1], imv(1)));
-	mu_assert_lf(mv_equals_si(&pvars[2], imv(2)));
-	mu_assert_lf(mv_equals_si(&pvars[3], imv(3)));
+	mu_assert_lf(mv_is_absent(&pvars[1]));
+	mu_assert_lf(mv_is_absent(&pvars[2]));
+	mu_assert_lf(mv_is_absent(&pvars[3]));
 
 	printf("%s\n", sep);
 	return NULL;
@@ -213,7 +201,7 @@ static char* test_top_level_clears() {
 	pvariables->pctx->nr = 2;
 	mlr_dsl_cst_handle_top_level_statement_block(pcst->pmain_block, pvariables, pcst_outputs);
 	mu_assert_lf(mv_is_absent(&pvars[0]));
-	mu_assert_lf(mv_equals_si(&pvars[1], imv(999)));
+	mu_assert_lf(mv_is_absent(&pvars[1]));
 
 	pvariables->pctx->nr = 3;
 	mlr_dsl_cst_handle_top_level_statement_block(pcst->pmain_block, pvariables, pcst_outputs);
@@ -284,9 +272,9 @@ static char* test_placements() {
 	printf("\n");
 	for (int i = 1; i <= 4; i++) { printf("1:%d:%s\n", i, mv_alloc_format_val(&pvars[i])); }
 	mu_assert_lf(mv_is_absent(&pvars[0]));
-	mu_assert_lf(mv_equals_si(&pvars[1], smv("ijkl")));
-	mu_assert_lf(mv_equals_si(&pvars[2], smv("xyz")));
-	mu_assert_lf(mv_equals_si(&pvars[3], smv("ijkl")));
+	mu_assert_lf(mv_is_absent(&pvars[1]));
+	mu_assert_lf(mv_is_absent(&pvars[2]));
+	mu_assert_lf(mv_is_absent(&pvars[3]));
 	mu_assert_lf(mv_is_absent(&pvars[4]));
 
 	// Push record 2
@@ -296,8 +284,8 @@ static char* test_placements() {
 	for (int i = 1; i <= 4; i++) { printf("2:%d:%s\n", i, mv_alloc_format_val(&pvars[i])); }
 	mu_assert_lf(mv_is_absent(&pvars[0]));
 	mu_assert_lf(mv_is_absent(&pvars[1]));
-	mu_assert_lf(mv_equals_si(&pvars[2], imv(2)));
-	mu_assert_lf(mv_equals_si(&pvars[3], smv("ijkl")));
+	mu_assert_lf(mv_is_absent(&pvars[2]));
+	mu_assert_lf(mv_is_absent(&pvars[3]));
 	mu_assert_lf(mv_is_absent(&pvars[4]));
 
 	// Push record 3
@@ -307,8 +295,8 @@ static char* test_placements() {
 	for (int i = 1; i <= 4; i++) { printf("3:%d:%s\n", i, mv_alloc_format_val(&pvars[i])); }
 	mu_assert_lf(mv_is_absent(&pvars[0]));
 	mu_assert_lf(mv_is_absent(&pvars[1]));
-	mu_assert_lf(mv_equals_si(&pvars[2], imv(3)));
-	mu_assert_lf(mv_equals_si(&pvars[3], imv(3000)));
+	mu_assert_lf(mv_is_absent(&pvars[2]));
+	mu_assert_lf(mv_is_absent(&pvars[3]));
 	mu_assert_lf(mv_is_absent(&pvars[4]));
 
 	// Push record 4
@@ -317,10 +305,10 @@ static char* test_placements() {
 	printf("\n");
 	for (int i = 1; i <= 4; i++) { printf("4:%d:%s\n", i, mv_alloc_format_val(&pvars[i])); }
 	mu_assert_lf(mv_is_absent(&pvars[0]));
-	mu_assert_lf(mv_equals_si(&pvars[1], imv(3025)));
-	mu_assert_lf(mv_equals_si(&pvars[2], imv(3025)));
-	mu_assert_lf(mv_equals_si(&pvars[3], imv(11)));
-	mu_assert_lf(mv_equals_si(&pvars[3], imv(11)));
+	mu_assert_lf(mv_is_absent(&pvars[1]));
+	mu_assert_lf(mv_is_absent(&pvars[2]));
+	mu_assert_lf(mv_is_absent(&pvars[3])); // xxx with free-on-pop this is nearly a useless file now :(
+	mu_assert_lf(mv_is_absent(&pvars[4]));
 
 	printf("%s\n", sep);
 	return NULL;

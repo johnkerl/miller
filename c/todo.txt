@@ -12,14 +12,20 @@ NON-RELEASE:
 * windows port?
 ? msort.o wt?
 
+* benchmark lua per se
+* benchmark lua-jit
+
 ----------------------------------------------------------------
 HYGIENE FOR 5.0.0:
 
 ! VALGRINDS
 
+! rename to 5.0.0-alpha; impl $ -> %
+
 * split up mlr_dsl_cst.h et al.
 * clean up local-stack macrofuncs (hide ifdeffing from callsites)
 * xxxes
+* mlr-globals-uninit ... enter-func @ UT mains (and any other mains ...)
 
 ----------------------------------------------------------------
 FUNCTIONALITY FOR 5.0.0:
@@ -30,6 +36,8 @@ FUNCTIONALITY FOR 5.0.0:
 UT FOR 5.0.0:
 
 * local nonesuch=nonesuch
+* test-dsl-stack has limited utility now ... trim or remove it.
+  -> rtr w/ put -v -a ...
 
 * rtr case for $* in begin/end/func
 

@@ -383,7 +383,7 @@ mlrp: .always dsls
 # ================================================================
 tests: unit-test reg-test
 
-unit-test: test-mlrutil test-mlrregex test-argparse test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-mlhmmv test-string-builder test-rval-evaluators test-join-bucket-keeper
+unit-test: test-mlrutil test-mlrregex test-argparse test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-mlhmmv test-string-builder test-rval-evaluators test-dsl-stack test-join-bucket-keeper
 	./test-mlrutil
 	./test-mlrregex
 	./test-argparse
@@ -395,6 +395,7 @@ unit-test: test-mlrutil test-mlrregex test-argparse test-byte-readers test-peek-
 	./test-mlhmmv
 	./test-string-builder
 	./test-rval-evaluators
+	./test-dsl-stack
 	./test-join-bucket-keeper
 	@echo
 	@echo DONE
