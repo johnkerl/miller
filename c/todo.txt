@@ -73,6 +73,14 @@ UT FOR 5.0.0:
   k mlrt
   k mv_reset()
   - test_dsl_stack for all control-structure combos (including if-in-breakable), asserting contracts
+    > ctor w/ alloc
+    > assert stksize
+    > assert absents
+    > drive an lrec (if:NR etc.)
+    > assert placments & remaining absents
+    > drive another
+    > etc.
+    > do for func/subr/begin/end/main
   - UT repro test w/ std regtest output cmp
 
 * bind-stack allocation
