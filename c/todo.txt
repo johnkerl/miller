@@ -1,15 +1,7 @@
 ================================================================
 BUGFIXES
 
-! set up incremental cases. focus on the stack allocator w/ -v -a. keep all as UTs.
-
-* b04k
-  func f(x) {
-      return k
-  }
-  for (k,v in $*) {
-    $o=f($x)
-  }
+:D
 
 ================================================================
 NON-RELEASE:
@@ -21,15 +13,15 @@ NON-RELEASE:
 ? msort.o wt?
 
 ================================================================
-5.1.0 TOP: MAP // STRICT // TRACE // SYNTAXERROR // ALLRECAGG
+5.1.0: MAP // STRICT // TRACE // SYNTAXERROR // ALLRECAGG
 
-================================================================
-5.1.0 MAPVARS BUT MAKE SOME DECISIONS FOR RELEASING 5.0.0:
+mapvars for 5.1.0 not 5.0.0 but make some decisions before releasing 5.0.0:
 
 * gonna wanna pass maps to funcs/subrs, and return them too.
   - '&m syntax'?
   - 'local map m' syntax? 'map/val' ?
   - categorize all LHS/RHS/arg/param/forbind/etc possibilities & pencil/paper the options.
+  - choose simplest possible option
 
 ----------------------------------------------------------------
 HYGIENE FOR 5.0.0:
@@ -42,9 +34,7 @@ HYGIENE FOR 5.0.0:
 ----------------------------------------------------------------
 FUNCTIONALITY FOR 5.0.0:
 
-* rethink -f/-e ordering -- argvish is possible otherwise.
-
-* mv_absent init: UT read/define/read. special case: 'local nonesuch = nonesuch'.
+* rethink -f/-e ordering -- argvish is possible w/ -e 1st
 
 ----------------------------------------------------------------
 UT FOR 5.0.0:
