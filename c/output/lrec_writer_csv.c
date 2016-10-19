@@ -5,12 +5,12 @@
 #include "containers/mixutil.h"
 #include "output/lrec_writers.h"
 
-typedef void       quoted_output_func_t(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags);
-static  void      quote_all_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags);
-static  void     quote_none_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags);
-static  void  quote_minimal_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags);
-static  void  quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags);
-static  void quote_original_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags);
+typedef void       quoted_output_func_t(FILE* fp,char*s,char*ors,char*ofs, int orslen,int ofslen, char quote_flags);
+static  void      quote_all_output_func(FILE* fp,char*s,char*ors,char*ofs, int orslen,int ofslen, char quote_flags);
+static  void     quote_none_output_func(FILE* fp,char*s,char*ors,char*ofs, int orslen,int ofslen, char quote_flags);
+static  void  quote_minimal_output_func(FILE* fp,char*s,char*ors,char*ofs, int orslen,int ofslen, char quote_flags);
+static  void  quote_numeric_output_func(FILE* fp,char*s,char*ors,char*ofs, int orslen,int ofslen, char quote_flags);
+static  void quote_original_output_func(FILE* fp,char*s,char*ors,char*ofs, int orslen,int ofslen, char quote_flags);
 static void quote_string(FILE* fp, char* string);
 
 typedef struct _lrec_writer_csv_state_t {
