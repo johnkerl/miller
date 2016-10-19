@@ -2144,7 +2144,7 @@ static void handle_local_variable_assignment(
 
 	if (mv_is_present(&val)) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_set(pframe, pstatement->local_lhs_frame_relative_index, val); // stackent w/ freeflags?!?
+		local_stack_frame_set(pframe, pstatement->local_lhs_frame_relative_index, val);
 	} else {
 		mv_free(&val);
 	}
@@ -2594,8 +2594,8 @@ static void handle_for_srec(
 		mv_t mvkey = mv_from_string_no_free(pe->key);
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_set(pframe, pstatement->for_srec_k_frame_relative_index, mvkey); // stackent w/ freeflags?!?
-		local_stack_frame_set(pframe, pstatement->for_v_frame_relative_index, mvval); // stackent w/ freeflags?!?
+		local_stack_frame_set(pframe, pstatement->for_srec_k_frame_relative_index, mvkey); // xxx free-flags
+		local_stack_frame_set(pframe, pstatement->for_v_frame_relative_index, mvval);
 
 		pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
@@ -2680,7 +2680,7 @@ static void handle_for_oosvar_aux(
 			for (mlhmmv_level_entry_t* pe = submap.u.pnext_level->phead; pe != NULL; pe = pe->pnext) {
 				// Bind the k-name to the entry-key mlrval:
 				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-				local_stack_frame_set(pframe, prest_for_k_frame_relative_indices[0], mv_copy(&pe->level_key)); // stackent w/ freeflags?!?
+				local_stack_frame_set(pframe, prest_for_k_frame_relative_indices[0], mv_copy(&pe->level_key));
 				// Recurse into the next-level submap:
 				handle_for_oosvar_aux(pstatement, pvars, pcst_outputs, pe->level_value,
 					&prest_for_k_frame_relative_indices[1], prest_for_k_count - 1);
@@ -2702,7 +2702,7 @@ static void handle_for_oosvar_aux(
 		} else {
 			// Bind the v-name to the terminal mlrval:
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-			local_stack_frame_set(pframe, pstatement->for_v_frame_relative_index, submap.u.mlrval);
+			local_stack_frame_set(pframe, pstatement->for_v_frame_relative_index, mv_copy(&submap.u.mlrval));
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
 		}
@@ -2736,7 +2736,7 @@ static void handle_for_oosvar_key_only(
 
 		for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
 			// Bind the v-name to the terminal mlrval:
-			// xxx free-flags here
+			// xxx need copy?
 			local_stack_frame_set(pframe, pstatement->for_oosvar_k_frame_relative_indices[0], mv_copy(pe->pvvalue));
 
 			// Execute the loop-body statements:

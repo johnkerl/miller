@@ -144,7 +144,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	for (int i = 0; i < arity; i++) {
 		// xxx comment absent-null-at-0 convention ...............
 		// xxx make an mv_replace()
-		local_stack_frame_set(pframe, i+1, mv_copy(&args[i]));
+		local_stack_frame_set(pframe, i+1, args[i]);
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

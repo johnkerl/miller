@@ -92,7 +92,7 @@ static inline void local_stack_frame_set(local_stack_frame_t* pframe, int frame_
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "SET", TRUE, frame_relative_index);
 	// xxx debug after free-flags semantics are in place
 	// xxx pframe->pvars[frame_relative_index] = val;
-	pframe->pvars[frame_relative_index] = mv_copy(&val);
+	pframe->pvars[frame_relative_index] = val;
 }
 
 // ----------------------------------------------------------------
