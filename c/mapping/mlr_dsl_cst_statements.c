@@ -345,6 +345,11 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		return alloc_do_while(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
 	case MD_AST_NODE_TYPE_FOR_SREC:
+		if (context_flags & IN_BEGIN_OR_END) {
+			fprintf(stderr, "%s: statements involving $-variables are not valid within begin or end blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 		return alloc_for_srec(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
 	case MD_AST_NODE_TYPE_FOR_OOSVAR:
