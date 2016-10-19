@@ -18,14 +18,14 @@ AM_CPPFLAGS=		-I${srcdir}/..
 AM_CFLAGS=		-Wall -std=gnu99
 
 all_ldadd=		\
-			../cli/libcli.la \
+			../lib/libmlr.la \
 			../containers/libcontainers.la \
-			../stream/libstream.la \
+			../dsls/libdsl.la \
+			../cli/libcli.la \
 			../input/libinput.la \
 			../mapping/libmapping.la \
 			../output/liboutput.la \
-			../lib/libmlr.la \
-			../dsls/libdsl.la \
+			../stream/libstream.la \
 			-lm
 
 # Unit-test mains

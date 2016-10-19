@@ -16,6 +16,8 @@ liboutput_la_SOURCES=	\
 			multi_lrec_writer.h \
 			multi_out.c \
 			multi_out.h
-liboutput_la_LIBADD=	../lib/libmlr.la
+liboutput_la_LIBADD=	\
+                        ../lib/libmlr.la \
+                        ../containers/libcontainers.la
 liboutput_la_CPPFLAGS=	-I${srcdir}/../
 liboutput_la_CFLAGS=	-std=gnu99

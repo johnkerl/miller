@@ -1,4 +1,4 @@
-SUBDIRS=		lib cli stream input mapping output containers dsls experimental tools . unit_test reg_test
+SUBDIRS=		lib cli stream input mapping containers output dsls experimental tools . unit_test reg_test
 
 AM_CPPFLAGS=		-I${srcdir}
 AM_CFLAGS=		-Wall -std=gnu99
