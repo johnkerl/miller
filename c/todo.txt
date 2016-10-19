@@ -42,31 +42,14 @@ HYGIENE FOR 5.0.0:
 ----------------------------------------------------------------
 FUNCTIONALITY FOR 5.0.0:
 
-!! stack-clear:
-  ? begin top-level
-  ? main  top-level
-  ? end   top-level
-  ? func  top-level
-  ? subr  top-level
-
-  ? md_cond_block
-  ? md_while_block
-  ? md_for_loop_full_srec
-  ? md_for_loop_full_oosvar
-  ? md_for_loop_full_oosvar_key_only
-  ? md_for_loop_oosvar
-  ? md_for_loop_oosvar_key_only
-  ? md_triple_for
-  ? md_if_chain
-
 * rethink -f/-e ordering -- argvish is possible otherwise.
 
 * mv_absent init: UT read/define/read. special case: 'local nonesuch = nonesuch'.
-* more comment-strip UT (with inside-string cases)
 
 ----------------------------------------------------------------
 UT FOR 5.0.0:
 
+* missing b/e prints for test-dsl-stack.mlr
 * stack-clear: UT repro test w/ std regtest output cmp
 
 * bind-stack allocation
