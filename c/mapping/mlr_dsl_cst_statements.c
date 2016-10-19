@@ -632,12 +632,10 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->flush_every_record                      = TRUE;
 	pstatement->pstatement_block                        = NULL;
 	pstatement->pif_chain_statements                    = NULL;
-	pstatement->for_srec_k_name                         = NULL;
 	pstatement->for_srec_k_frame_relative_index         = 0;
 	pstatement->pfor_oosvar_k_names                     = NULL;
 	pstatement->for_oosvar_k_frame_relative_indices     = NULL;
 	pstatement->for_oosvar_k_count                      = 0;
-	pstatement->for_v_name                              = NULL;
 	pstatement->for_v_frame_relative_index              = 0;
 	pstatement->ptype_inferenced_srec_field_getter      = NULL;
 	pstatement->ptriple_for_start_statements            = NULL;
@@ -971,7 +969,7 @@ static mlr_dsl_cst_statement_t* alloc_while(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
 		mlr_dsl_cst_statement_t *pchild_statement = mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
 			type_inferencing, context_flags);
-		sllv_append(pstatement->pstatement_block->pstatements, pchild_statement); // xxx funcify
+		sllv_append(pstatement->pstatement_block->pstatements, pchild_statement);
 	}
 
 	pstatement->pnode_handler = handle_while;
@@ -1040,8 +1038,6 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 			MLR_GLOBALS.bargv0, pknode->text, pvnode->text);
 		exit(1);
 	}
-	pstatement->for_srec_k_name = pknode->text; // xxx rm
-	pstatement->for_v_name = pvnode->text; // xxx rm
 	MLR_INTERNAL_CODING_ERROR_IF(pknode->frame_relative_index == MD_UNUSED_INDEX);
 	MLR_INTERNAL_CODING_ERROR_IF(pvnode->frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->for_srec_k_frame_relative_index = pknode->frame_relative_index;
@@ -1124,7 +1120,6 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 		}
 		hss_add(pnameset, pnamenode->text);
 	}
-	pstatement->for_v_name = psubright->text;
 	MLR_INTERNAL_CODING_ERROR_IF(psubright->frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->for_v_frame_relative_index = psubright->frame_relative_index;
 	if (hss_has(pnameset, psubright->text)) {

@@ -24,7 +24,7 @@ HYGIENE FOR 5.0.0:
 ----------------------------------------------------------------
 FUNCTIONALITY FOR 5.0.0:
 
-* rethink -f/-e ordering -- argvish is possible w/ -e 1st
+* retain CLI -e/-f ordering -- argvish is possible w/ -e 1st
 
 ----------------------------------------------------------------
 UT FOR 5.0.0:

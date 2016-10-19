@@ -210,9 +210,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 	sllv_t* pif_chain_statements;
 
 	// for-srec / for-oosvar:
-	char* for_srec_k_name; // xxx rm
 	slls_t* pfor_oosvar_k_names;
-	char* for_v_name; // xxx rm
 	int for_srec_k_frame_relative_index;
 	int* for_oosvar_k_frame_relative_indices;
 	int for_oosvar_k_count;
