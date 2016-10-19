@@ -209,6 +209,7 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 		for (sllve_t* pe = pcst->pbegin_blocks->phead; pe != NULL; pe = pe->pnext) {
 			cst_top_level_statement_block_free(pe->pvvalue);
 		}
+		sllv_free(pcst->pbegin_blocks);
 	}
 
 	cst_top_level_statement_block_free(pcst->pmain_block);
@@ -217,6 +218,7 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 		for (sllve_t* pe = pcst->pend_blocks->phead; pe != NULL; pe = pe->pnext) {
 			cst_top_level_statement_block_free(pe->pvvalue);
 		}
+		sllv_free(pcst->pend_blocks);
 	}
 
 	fmgr_free(pcst->pfmgr);
