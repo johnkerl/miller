@@ -11,7 +11,6 @@ check_PROGRAMS = 	test_mlrutil \
 			test_multiple_containers \
 			test_string_builder \
 			test_rval_evaluators \
-			test_dsl_stack \
 			test_join_bucket_keeper
 
 AM_CPPFLAGS=		-I${srcdir}/..
@@ -61,9 +60,6 @@ test_string_builder_LDADD=        ${all_ldadd}
 
 test_rval_evaluators_CFLAGS=      -std=gnu99 -g ${AM_CFLAGS}
 test_rval_evaluators_LDADD=       ${all_ldadd}
-
-test_dsl_stack_CFLAGS=            -std=gnu99 -g ${AM_CFLAGS}
-test_dsl_stack_LDADD=             ${all_ldadd}
 
 test_join_bucket_keeper_CFLAGS=   -std=gnu99 -g ${AM_CFLAGS}
 test_join_bucket_keeper_LDADD=    ${all_ldadd}
