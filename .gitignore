@@ -4,6 +4,7 @@ mlrg
 mlrp
 test-argparse
 test-byte-readers
+test-dsl-stack
 test-join-bucket-keeper
 test-json-parser
 test-lrec
