@@ -42,7 +42,6 @@ HYGIENE FOR 5.0.0:
 ----------------------------------------------------------------
 FUNCTIONALITY FOR 5.0.0:
 
-* time frame-ovf chk
 !! stack-clear:
   ? begin top-level
   ? main  top-level
@@ -62,33 +61,18 @@ FUNCTIONALITY FOR 5.0.0:
 
 * rethink -f/-e ordering -- argvish is possible otherwise.
 
-? mv_absent init: find a way to do this only when needed.
 * mv_absent init: UT read/define/read. special case: 'local nonesuch = nonesuch'.
 * more comment-strip UT (with inside-string cases)
 
 ----------------------------------------------------------------
 UT FOR 5.0.0:
 
-!! stack-clear:
-  k mlrt
-  k mv_reset()
-  - test_dsl_stack for all control-structure combos (including if-in-breakable), asserting contracts
-    > ctor w/ alloc
-    > assert stksize
-    > assert absents
-    > drive an lrec (if:NR etc.)
-    > assert placments & remaining absents
-    > drive another
-    > etc.
-    > do for func/subr/begin/end/main
-  - UT repro test w/ std regtest output cmp
+* stack-clear: UT repro test w/ std regtest output cmp
 
 * bind-stack allocation
   - oo's -> regtestrun
   - put them *above* all local/for/UDF/etc
 * oosvar-single-for UT
-
-* UT-per-se program for CST
 
 ----------------------------------------------------------------
 DOC FOR 5.0.0:
