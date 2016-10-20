@@ -652,14 +652,14 @@ static void stkalc_subframe_group_mutate_node_for_define(stkalc_subframe_group_t
 	char* op = "REUSE";
 	stkalc_subframe_t* pframe = pframe_group->plist->phead->pvvalue;
 	pnode->vardef_subframe_index = pframe_group->plist->length - 1;
-	if (!stkalc_subframe_test_and_get(pframe, pnode->text, &pnode->subframe_relative_index)) {
-		pnode->subframe_relative_index = stkalc_subframe_add(pframe, pnode->text);
+	if (!stkalc_subframe_test_and_get(pframe, pnode->text, &pnode->vardef_subframe_relative_index)) {
+		pnode->vardef_subframe_relative_index = stkalc_subframe_add(pframe, pnode->text);
 		op = "ADD";
 	}
 	if (trace) {
 		leader_print(pframe_group->plist->length);
 		printf("%s %s %s @ %ds%d\n", op, desc, pnode->text,
-			pnode->subframe_relative_index, pnode->vardef_subframe_index);
+			pnode->vardef_subframe_relative_index, pnode->vardef_subframe_index);
 	}
 }
 
@@ -672,7 +672,7 @@ static void stkalc_subframe_group_mutate_node_for_write(stkalc_subframe_group_t*
 	pnode->vardef_subframe_index = pframe_group->plist->length - 1;
 	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, pnode->vardef_subframe_index--) {
 		stkalc_subframe_t* pframe = pe->pvvalue;
-		if (stkalc_subframe_test_and_get(pframe, pnode->text, &pnode->subframe_relative_index)) {
+		if (stkalc_subframe_test_and_get(pframe, pnode->text, &pnode->vardef_subframe_relative_index)) {
 			found = TRUE; // xxx dup
 			break;
 		}
@@ -681,7 +681,7 @@ static void stkalc_subframe_group_mutate_node_for_write(stkalc_subframe_group_t*
 	if (!found) {
 		pnode->vardef_subframe_index = pframe_group->plist->length - 1;
 		stkalc_subframe_t* pframe = pframe_group->plist->phead->pvvalue;
-		pnode->subframe_relative_index = stkalc_subframe_add(pframe, pnode->text);
+		pnode->vardef_subframe_relative_index = stkalc_subframe_add(pframe, pnode->text);
 		// xxx temp
 		op = "ADD";
 	}
@@ -689,7 +689,7 @@ static void stkalc_subframe_group_mutate_node_for_write(stkalc_subframe_group_t*
 	if (trace) {
 		leader_print(pframe_group->plist->length);
 		printf("%s %s %s @ %ds%d\n", op, desc, pnode->text,
-			pnode->subframe_relative_index, pnode->vardef_subframe_index);
+			pnode->vardef_subframe_relative_index, pnode->vardef_subframe_index);
 	}
 }
 
@@ -703,7 +703,7 @@ static void stkalc_subframe_group_mutate_node_for_read(stkalc_subframe_group_t* 
 	pnode->vardef_subframe_index = pframe_group->plist->length - 1;
 	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, pnode->vardef_subframe_index--) {
 		stkalc_subframe_t* pframe = pe->pvvalue;
-		if (stkalc_subframe_test_and_get(pframe, pnode->text, &pnode->subframe_relative_index)) {
+		if (stkalc_subframe_test_and_get(pframe, pnode->text, &pnode->vardef_subframe_relative_index)) {
 			found = TRUE; // xxx dup
 			break;
 		}
@@ -712,7 +712,7 @@ static void stkalc_subframe_group_mutate_node_for_read(stkalc_subframe_group_t* 
 	// xxx if not found: go to the tail & use the "" entry
 	if (!found) {
 		stkalc_subframe_t* plast = pframe_group->plist->ptail->pvvalue;
-		pnode->subframe_relative_index = stkalc_subframe_get(plast, "");
+		pnode->vardef_subframe_relative_index = stkalc_subframe_get(plast, "");
 		pnode->vardef_subframe_index = 0;
 		op = "ABSENT";
 	}
@@ -720,7 +720,7 @@ static void stkalc_subframe_group_mutate_node_for_read(stkalc_subframe_group_t* 
 	if (trace) {
 		leader_print(pframe_group->plist->length);
 		printf("%s %s %s @ %ds%d\n", desc, pnode->text, op,
-			pnode->subframe_relative_index, pnode->vardef_subframe_index);
+			pnode->vardef_subframe_relative_index, pnode->vardef_subframe_index);
 	}
 }
 
@@ -786,12 +786,12 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 		subframe_depth++;
 	}
 
-	if (pnode->subframe_relative_index != MD_UNUSED_INDEX) {
+	if (pnode->vardef_subframe_relative_index != MD_UNUSED_INDEX) {
 
 		MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_subframe_index < 0);
 		MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_subframe_index >= max_subframe_depth);
-		pnode->frame_relative_index = subframe_var_count_belows[pnode->vardef_subframe_index]
-			+ pnode->subframe_relative_index;
+		pnode->vardef_frame_relative_index = subframe_var_count_belows[pnode->vardef_subframe_index]
+			+ pnode->vardef_subframe_relative_index;
 
 		if (trace) {
 			leader_print(subframe_depth);
@@ -799,7 +799,7 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 			// xxx put keynames here and elsewhere (%du%d)
 			printf("NODE %s %ds%d (",
 				pnode->text,
-				pnode->subframe_relative_index,
+				pnode->vardef_subframe_relative_index,
 				pnode->vardef_subframe_index);
 
 			for (int i = 0; i < subframe_depth; i++) {
@@ -808,12 +808,12 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 				printf("%d:%d", i, subframe_var_count_belows[i]);
 			}
 			printf(") -> %d\n",
-				pnode->frame_relative_index);
+				pnode->vardef_frame_relative_index);
 
 		}
-		MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_relative_index < 0);
-		// xxx MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_relative_index >= *pmax_var_depth);
-		MLR_INTERNAL_CODING_ERROR_IF(pnode->frame_relative_index > *pmax_var_depth);
+		MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_frame_relative_index < 0);
+		// xxx MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_frame_relative_index >= *pmax_var_depth);
+		MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_frame_relative_index > *pmax_var_depth);
 	}
 
 	if (pnode->pchildren != NULL) {

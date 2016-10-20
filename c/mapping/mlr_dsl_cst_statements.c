@@ -654,8 +654,8 @@ static mlr_dsl_cst_statement_t* alloc_local_variable_definition(mlr_dsl_cst_t* p
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pnext->pvvalue;
-	MLR_INTERNAL_CODING_ERROR_IF(pname_node->frame_relative_index == MD_UNUSED_INDEX);
-	pstatement->local_lhs_frame_relative_index = pname_node->frame_relative_index;
+	MLR_INTERNAL_CODING_ERROR_IF(pname_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
+	pstatement->local_lhs_frame_relative_index = pname_node->vardef_frame_relative_index;
 	pstatement->local_variable_name = pname_node->text;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, pcst->pfmgr,
 		type_inferencing, context_flags);
@@ -678,8 +678,8 @@ static mlr_dsl_cst_statement_t* alloc_local_variable_assignment(mlr_dsl_cst_t* p
 
 	pstatement->pnode_handler = handle_local_variable_assignment;
 	pstatement->local_lhs_variable_name = pleft->text;
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->frame_relative_index == MD_UNUSED_INDEX);
-	pstatement->local_lhs_frame_relative_index = pleft->frame_relative_index;
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
+	pstatement->local_lhs_frame_relative_index = pleft->vardef_frame_relative_index;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
 	return pstatement;
 }
@@ -1038,10 +1038,10 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 			MLR_GLOBALS.bargv0, pknode->text, pvnode->text);
 		exit(1);
 	}
-	MLR_INTERNAL_CODING_ERROR_IF(pknode->frame_relative_index == MD_UNUSED_INDEX);
-	MLR_INTERNAL_CODING_ERROR_IF(pvnode->frame_relative_index == MD_UNUSED_INDEX);
-	pstatement->for_srec_k_frame_relative_index = pknode->frame_relative_index;
-	pstatement->for_v_frame_relative_index = pvnode->frame_relative_index;
+	MLR_INTERNAL_CODING_ERROR_IF(pknode->vardef_frame_relative_index == MD_UNUSED_INDEX);
+	MLR_INTERNAL_CODING_ERROR_IF(pvnode->vardef_frame_relative_index == MD_UNUSED_INDEX);
+	pstatement->for_srec_k_frame_relative_index = pknode->vardef_frame_relative_index;
+	pstatement->for_v_frame_relative_index = pvnode->vardef_frame_relative_index;
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
 	pstatement->pstatement_block = cst_statement_block_alloc(pnode->subframe_var_count);
@@ -1111,8 +1111,8 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 	for (sllve_t* pe = psubleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnamenode = pe->pvvalue;
 		slls_append_with_free(pstatement->pfor_oosvar_k_names, mlr_strdup_or_die(pnamenode->text)); // xxx rm
-		MLR_INTERNAL_CODING_ERROR_IF(pnamenode->frame_relative_index == MD_UNUSED_INDEX);
-		pstatement->for_oosvar_k_frame_relative_indices[pstatement->for_oosvar_k_count++] = pnamenode->frame_relative_index;
+		MLR_INTERNAL_CODING_ERROR_IF(pnamenode->vardef_frame_relative_index == MD_UNUSED_INDEX);
+		pstatement->for_oosvar_k_frame_relative_indices[pstatement->for_oosvar_k_count++] = pnamenode->vardef_frame_relative_index;
 		if (hss_has(pnameset, pnamenode->text)) {
 			fprintf(stderr, "%s: duplicate for-loop boundvar \"%s\".\n",
 				MLR_GLOBALS.bargv0, pnamenode->text);
@@ -1120,8 +1120,8 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 		}
 		hss_add(pnameset, pnamenode->text);
 	}
-	MLR_INTERNAL_CODING_ERROR_IF(psubright->frame_relative_index == MD_UNUSED_INDEX);
-	pstatement->for_v_frame_relative_index = psubright->frame_relative_index;
+	MLR_INTERNAL_CODING_ERROR_IF(psubright->vardef_frame_relative_index == MD_UNUSED_INDEX);
+	pstatement->for_v_frame_relative_index = psubright->vardef_frame_relative_index;
 	if (hss_has(pnameset, psubright->text)) {
 		fprintf(stderr, "%s: duplicate for-loop boundvar \"%s\".\n",
 			MLR_GLOBALS.bargv0, psubright->text);
@@ -1171,8 +1171,8 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar_key_only(mlr_dsl_cst_t* pcst, m
 
 	pstatement->pfor_oosvar_k_names = slls_alloc();
 	pstatement->for_oosvar_k_frame_relative_indices = mlr_malloc_or_die(sizeof(int));
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->frame_relative_index == MD_UNUSED_INDEX);
-	pstatement->for_oosvar_k_frame_relative_indices[0] = pleft->frame_relative_index;
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
+	pstatement->for_oosvar_k_frame_relative_indices[0] = pleft->vardef_frame_relative_index;
 	slls_append_with_free(pstatement->pfor_oosvar_k_names, mlr_strdup_or_die(pleft->text));
 
 	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(

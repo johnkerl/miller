@@ -55,7 +55,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 
 		case MD_AST_NODE_TYPE_LOCAL_VARIABLE:
 			// XXX idx too
-			return rval_evaluator_alloc_from_local_variable(pnode->text, pnode->frame_relative_index);
+			return rval_evaluator_alloc_from_local_variable(pnode->text, pnode->vardef_frame_relative_index);
 			break;
 
 		default:
@@ -675,13 +675,13 @@ rval_evaluator_t* rval_evaluator_alloc_from_context_variable(char* variable_name
 // ================================================================
 typedef struct _rval_evaluator_from_local_variable_state_t {
 	char* variable_name; // xxx rm
-	int frame_relative_index;
+	int vardef_frame_relative_index;
 } rval_evaluator_from_local_variable_state_t;
 
 mv_t rval_evaluator_from_local_variable_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_from_local_variable_state_t* pstate = pvstate;
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	return mv_copy(local_stack_frame_get(pframe, pstate->frame_relative_index));
+	return mv_copy(local_stack_frame_get(pframe, pstate->vardef_frame_relative_index));
 }
 static void rval_evaluator_from_local_variable_free(rval_evaluator_t* pevaluator) {
 	rval_evaluator_from_local_variable_state_t* pstate = pevaluator->pvstate;
@@ -690,13 +690,13 @@ static void rval_evaluator_from_local_variable_free(rval_evaluator_t* pevaluator
 	free(pevaluator);
 }
 
-rval_evaluator_t* rval_evaluator_alloc_from_local_variable(char* variable_name, int frame_relative_index) {
+rval_evaluator_t* rval_evaluator_alloc_from_local_variable(char* variable_name, int vardef_frame_relative_index) {
 	rval_evaluator_from_local_variable_state_t* pstate = mlr_malloc_or_die(
 		sizeof(rval_evaluator_from_local_variable_state_t));
 	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 
 	pstate->variable_name        = mlr_strdup_or_die(variable_name);
-	pstate->frame_relative_index = frame_relative_index;
+	pstate->vardef_frame_relative_index = vardef_frame_relative_index;
 	pevaluator->pprocess_func    = rval_evaluator_from_local_variable_func;
 	pevaluator->pfree_func       = rval_evaluator_from_local_variable_free;
 

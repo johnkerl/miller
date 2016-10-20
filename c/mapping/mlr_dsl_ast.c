@@ -18,9 +18,9 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, mlr_dsl_ast_node_type_t t
 	pnode->type      = type;
 	pnode->pchildren = NULL;
 
-	pnode->subframe_relative_index = MD_UNUSED_INDEX;
+	pnode->vardef_subframe_relative_index = MD_UNUSED_INDEX;
 	pnode->vardef_subframe_index   = MD_UNUSED_INDEX;
-	pnode->frame_relative_index    = MD_UNUSED_INDEX;
+	pnode->vardef_frame_relative_index    = MD_UNUSED_INDEX;
 	pnode->subframe_var_count      = MD_UNUSED_INDEX;
 	pnode->max_subframe_depth      = MD_UNUSED_INDEX;
 	pnode->max_var_depth           = MD_UNUSED_INDEX;
@@ -178,12 +178,12 @@ static void mlr_dsl_ast_node_print_aux(mlr_dsl_ast_node_t* pnode, int level, FIL
 		mlr_dsl_ast_node_describe_type(pnode->type),
 		(pnode->pchildren != NULL) ? ":" : ".");
 
-	if (pnode->subframe_relative_index != MD_UNUSED_INDEX)
-		fprintf(o, " subframe_relative_index=%d", pnode->subframe_relative_index);
+	if (pnode->vardef_subframe_relative_index != MD_UNUSED_INDEX)
+		fprintf(o, " vardef_subframe_relative_index=%d", pnode->vardef_subframe_relative_index);
 	if (pnode->vardef_subframe_index != MD_UNUSED_INDEX)
 		fprintf(o, " vardef_subframe_index=%d", pnode->vardef_subframe_index);
-	if (pnode->frame_relative_index != MD_UNUSED_INDEX)
-		fprintf(o, " frame_relative_index=%d", pnode->frame_relative_index);
+	if (pnode->vardef_frame_relative_index != MD_UNUSED_INDEX)
+		fprintf(o, " vardef_frame_relative_index=%d", pnode->vardef_frame_relative_index);
 	if (pnode->subframe_var_count != MD_UNUSED_INDEX)
 		fprintf(o, " subframe_var_count=%d", pnode->subframe_var_count);
 	if (pnode->max_subframe_depth != MD_UNUSED_INDEX)
