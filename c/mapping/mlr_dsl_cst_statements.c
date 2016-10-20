@@ -1920,6 +1920,14 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 		sllv_free(pstatement->ptriple_for_start_statements);
 	}
 
+    if (pstatement->ptriple_for_pre_continuation_statements != NULL) {
+		for (sllve_t* pe = pstatement->ptriple_for_pre_continuation_statements->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+			mlr_dsl_cst_statement_free(pstatement);
+		}
+		sllv_free(pstatement->ptriple_for_pre_continuation_statements);
+	}
+
 	if (pstatement->ptriple_for_continuation_evaluator != NULL) {
 		pstatement->ptriple_for_continuation_evaluator->pfree_func(pstatement->ptriple_for_continuation_evaluator);
 	}
