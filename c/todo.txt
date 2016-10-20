@@ -18,11 +18,9 @@ NON-RELEASE:
 ----------------------------------------------------------------
 HYGIENE FOR 4.6.0:
 
-
 * split up mlr_dsl_cst.h et al.
 * clean up local-stack macrofuncs (hide ifdeffing from callsites)
 * xxxes
-* mlr-globals-uninit ... enter-func @ UT mains (and any other mains ...)
 
 * final double-check valgrinds
 

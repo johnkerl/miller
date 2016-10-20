@@ -2019,7 +2019,6 @@ void mlr_dsl_cst_handle_top_level_statement_block(
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->subframe_var_count);
 
-	// xxx adapt callee to also handle local stack
 	mlr_dsl_cst_handle_statement_block(ptop_level_block->pstatement_block, pvars, pcst_outputs);
 
 	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->subframe_var_count);
@@ -2036,8 +2035,6 @@ void mlr_dsl_cst_handle_statement_block(
 	variables_t*           pvars,
 	cst_outputs_t*         pcst_outputs)
 {
-	// xxx local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	// xxx local_stack_subframe_enter(pframe, pblock->subframe_var_count);
 	for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
@@ -2046,7 +2043,6 @@ void mlr_dsl_cst_handle_statement_block(
 			break;
 		}
 	}
-	// xxx local_stack_subframe_exit(pframe, pblock->subframe_var_count);
 }
 
 // This is for statement lists recursively contained within a loop body.
@@ -2056,8 +2052,6 @@ static void handle_statement_block_with_break_continue(
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs)
 {
-	// xxx local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	// xxx local_stack_subframe_enter(pframe, pblock->subframe_var_count);
 	for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
@@ -2069,7 +2063,6 @@ static void handle_statement_block_with_break_continue(
 			break;
 		}
 	}
-	// xxx local_stack_subframe_exit(pframe, pblock->subframe_var_count);
 }
 
 // Triple-for start/continuation/update statement lists
@@ -2597,7 +2590,7 @@ static void handle_for_srec(
 		mv_t mvkey = mv_from_string_no_free(pe->key);
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_set(pframe, pstatement->for_srec_k_frame_relative_index, mvkey); // xxx free-flags
+		local_stack_frame_set(pframe, pstatement->for_srec_k_frame_relative_index, mvkey);
 		local_stack_frame_set(pframe, pstatement->for_v_frame_relative_index, mvval);
 
 		pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
@@ -2739,7 +2732,6 @@ static void handle_for_oosvar_key_only(
 
 		for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
 			// Bind the v-name to the terminal mlrval:
-			// xxx need copy?
 			local_stack_frame_set(pframe, pstatement->for_oosvar_k_frame_relative_indices[0], mv_copy(pe->pvvalue));
 
 			// Execute the loop-body statements:
@@ -2781,7 +2773,7 @@ static void handle_triple_for(
 	while (TRUE) {
 
 		// Continuation statement
-		// xxx the rest -- ?!?
+		// xxx the rest -- ?!? needs a UT !!
 		rval_evaluator_t* pev = pstatement->ptriple_for_continuation_evaluator;
 		mv_t val = pev->pprocess_func(pev->pvstate, pvars);
 		if (mv_is_non_null(&val))
