@@ -54,8 +54,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 			break;
 
 		case MD_AST_NODE_TYPE_LOCAL_VARIABLE:
-			// XXX idx too
-			return rval_evaluator_alloc_from_local_variable(pnode->text, pnode->vardef_frame_relative_index);
+			return rval_evaluator_alloc_from_local_variable(pnode->vardef_frame_relative_index);
 			break;
 
 		default:
@@ -674,7 +673,6 @@ rval_evaluator_t* rval_evaluator_alloc_from_context_variable(char* variable_name
 
 // ================================================================
 typedef struct _rval_evaluator_from_local_variable_state_t {
-	char* variable_name; // xxx rm
 	int vardef_frame_relative_index;
 } rval_evaluator_from_local_variable_state_t;
 
@@ -685,17 +683,15 @@ mv_t rval_evaluator_from_local_variable_func(void* pvstate, variables_t* pvars) 
 }
 static void rval_evaluator_from_local_variable_free(rval_evaluator_t* pevaluator) {
 	rval_evaluator_from_local_variable_state_t* pstate = pevaluator->pvstate;
-	free(pstate->variable_name);
 	free(pstate);
 	free(pevaluator);
 }
 
-rval_evaluator_t* rval_evaluator_alloc_from_local_variable(char* variable_name, int vardef_frame_relative_index) {
+rval_evaluator_t* rval_evaluator_alloc_from_local_variable(int vardef_frame_relative_index) {
 	rval_evaluator_from_local_variable_state_t* pstate = mlr_malloc_or_die(
 		sizeof(rval_evaluator_from_local_variable_state_t));
 	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 
-	pstate->variable_name        = mlr_strdup_or_die(variable_name);
 	pstate->vardef_frame_relative_index = vardef_frame_relative_index;
 	pevaluator->pprocess_func    = rval_evaluator_from_local_variable_func;
 	pevaluator->pfree_func       = rval_evaluator_from_local_variable_free;
