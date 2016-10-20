@@ -351,19 +351,19 @@ static void pass_1_for_statement_list(mlr_dsl_ast_node_t* pnode, stkalc_subframe
 static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace)
 {
-	if (pnode->type == MD_AST_NODE_TYPE_LOCAL_DEFINITION) {
+	if (pnode->type == MD_AST_NODE_TYPE_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
-	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) {
+	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) { // LHS
 		pass_1_for_local_assignment(pnode, pframe_group, pmax_subframe_depth, trace);
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_VARIABLE) { // RHS
 		pass_1_for_local_read(pnode, pframe_group, pmax_subframe_depth, trace);
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) {
 		pass_1_for_srec_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
-	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY) { // xxx comment
+	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY) {
 		pass_1_for_oosvar_key_only_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
-	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR) { // xxx comment
+	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR) {
 		pass_1_for_oosvar_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
-	} else if (pnode->type == MD_AST_NODE_TYPE_TRIPLE_FOR) { // xxx comment
+	} else if (pnode->type == MD_AST_NODE_TYPE_TRIPLE_FOR) {
 		pass_1_for_triple_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
 	} else if (pnode->pchildren != NULL) {
 		pass_1_for_non_terminal_node(pnode, pframe_group, pmax_subframe_depth, trace);
@@ -620,7 +620,7 @@ static stkalc_subframe_group_t* stkalc_subframe_group_alloc(stkalc_subframe_t* p
 	stkalc_subframe_group_t* pframe_group = mlr_malloc_or_die(sizeof(stkalc_subframe_group_t));
 	pframe_group->plist = sllv_alloc();
 	sllv_prepend(pframe_group->plist, pframe);
-	stkalc_subframe_add(pframe, ""); // xxx add to trace
+	stkalc_subframe_add(pframe, "");
 	if (trace) {
 		leader_print(pframe_group->plist->length);
 		printf("ADD FOR ABSENT s @ %du%d\n", 0, 0);
@@ -646,6 +646,7 @@ static stkalc_subframe_t* stkalc_subframe_group_pop(stkalc_subframe_group_t* pfr
 	return sllv_pop(pframe_group->plist);
 }
 
+// 'local x = 1' always applies to the current subframe.
 static void stkalc_subframe_group_mutate_node_for_define(stkalc_subframe_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
 	char* desc, int trace)
 {
@@ -663,26 +664,29 @@ static void stkalc_subframe_group_mutate_node_for_define(stkalc_subframe_group_t
 	}
 }
 
+// 'x = 1' is one of two things: (1) already defined in a higher subframe and referenced in the current subframe;
+// (2) not defined in a higher subframe, in which case it is hereby defined in the current subframe.
 static void stkalc_subframe_group_mutate_node_for_write(stkalc_subframe_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
 	char* desc, int trace)
 {
 	char* op = "REUSE";
 	int found = FALSE;
-	// xxx comment: re loop. if not found, fall back to top frame.
+
+	// Search for definitions in current & higher subframes.
 	pnode->vardef_subframe_index = pframe_group->plist->length - 1;
 	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, pnode->vardef_subframe_index--) {
 		stkalc_subframe_t* pframe = pe->pvvalue;
 		if (stkalc_subframe_test_and_get(pframe, pnode->text, &pnode->vardef_subframe_relative_index)) {
-			found = TRUE; // xxx dup
+			found = TRUE;
 			break;
 		}
 	}
 
+	// If not found, define locally.
 	if (!found) {
 		pnode->vardef_subframe_index = pframe_group->plist->length - 1;
 		stkalc_subframe_t* pframe = pframe_group->plist->phead->pvvalue;
 		pnode->vardef_subframe_relative_index = stkalc_subframe_add(pframe, pnode->text);
-		// xxx temp
 		op = "ADD";
 	}
 
@@ -693,23 +697,29 @@ static void stkalc_subframe_group_mutate_node_for_write(stkalc_subframe_group_t*
 	}
 }
 
-// xxx make this very clear in the header somehow ... this is an assumption to be tracked across modules.
+// The right-hand side of '$a = b' is one of two things: (1) already defined in
+// a higher subframe and referenced in the current subframe; (2) not defined in
+// a higher subframe, in which case the RHS evaluates to absent-null.  An
+// absent-null is always kept at index 0 in the frame. This is an important
+// assumption to be tracked across modules, including here as well as the
+// CST-node handlers. It's tested in the test-dsl-stack.mlr regtest case.
 static void stkalc_subframe_group_mutate_node_for_read(stkalc_subframe_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
 	char* desc, int trace)
 {
 	char* op = "PRESENT";
 	int found = FALSE;
-	// xxx comment: re loop. if not found, fall back to top frame.
+
+	// Search for definitions in current & higher subframes.
 	pnode->vardef_subframe_index = pframe_group->plist->length - 1;
 	for (sllve_t* pe = pframe_group->plist->phead; pe != NULL; pe = pe->pnext, pnode->vardef_subframe_index--) {
 		stkalc_subframe_t* pframe = pe->pvvalue;
 		if (stkalc_subframe_test_and_get(pframe, pnode->text, &pnode->vardef_subframe_relative_index)) {
-			found = TRUE; // xxx dup
+			found = TRUE;
 			break;
 		}
 	}
 
-	// xxx if not found: go to the tail & use the "" entry
+	// Absent-null is indexed in this stack allocator by the "" variable name.
 	if (!found) {
 		stkalc_subframe_t* plast = pframe_group->plist->ptail->pvvalue;
 		pnode->vardef_subframe_relative_index = stkalc_subframe_get(plast, "");
@@ -741,9 +751,6 @@ static void pass_2_for_top_level_block(mlr_dsl_ast_node_t* pnode, int trace) {
 	if (trace) {
 		printf("\n");
 		printf("ALLOCATING ABSOLUTE (PASS-2) LOCALS FOR DEFINITION BLOCK [%s]\n", pnode->text);
-		// xxx printf("\n");
-		// xxx mlr_dsl_ast_node_print(pnode);
-		// xxx printf("\n");
 	}
 	pass_2_for_node(pnode, subframe_depth, var_count_below_subframe, var_count_at_subframe, &max_var_depth,
 		subframe_var_count_belows, max_subframe_depth, trace);
@@ -796,7 +803,6 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 		if (trace) {
 			leader_print(subframe_depth);
 
-			// xxx put keynames here and elsewhere (%du%d)
 			printf("NODE %s %ds%d (",
 				pnode->text,
 				pnode->vardef_subframe_relative_index,
@@ -812,7 +818,6 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 
 		}
 		MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_frame_relative_index < 0);
-		// xxx MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_frame_relative_index >= *pmax_var_depth);
 		MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_frame_relative_index > *pmax_var_depth);
 	}
 

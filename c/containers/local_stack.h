@@ -101,7 +101,6 @@ static inline void local_stack_frame_set(local_stack_frame_t* pframe, int vardef
 // the top-level block itself as well as ifs/fors/whiles.
 
 static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int count) {
-	// xxx try to avoid with absent-read flag at stack-allocator ...
 #ifdef LOCAL_STACK_TRACE_ENABLE // xxx macroify
 	printf("LOCAL STACK SUBFRAME %p ENTER %d->%d\n", pframe, pframe->subframe_base, pframe->subframe_base+count);
 #endif
