@@ -699,7 +699,9 @@ static sllv_t* mlhmmv_copy_keys_from_submap_aux(mlhmmv_value_t* pvalue) {
 	if (!pvalue->is_terminal) {
 		mlhmmv_level_t* pnext_level = pvalue->u.pnext_level;
 		for (mlhmmv_level_entry_t* pe = pnext_level->phead; pe != NULL; pe = pe->pnext) {
-			sllv_append(pkeys, mv_alloc_copy(&pe->level_key));
+			//sllv_append(pkeys, mv_alloc_copy(&pe->level_key));
+			mv_t* p = mv_alloc_copy(&pe->level_key);
+			sllv_append(pkeys, p);
 		}
 	}
 

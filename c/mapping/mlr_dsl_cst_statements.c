@@ -2753,6 +2753,7 @@ static void handle_for_oosvar_key_only(
 			}
 
 			mv_free(pe->pvvalue);
+			free(pe->pvvalue);
 		}
 
 		loop_stack_pop(pvars->ploop_stack);

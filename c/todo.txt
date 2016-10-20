@@ -20,9 +20,6 @@ HYGIENE FOR 5.0.0:
 
 ! VALGRINDS
 
-? impl $ -> %
-  fatal: '100 % 3' vs. '100%3'.
-
 * split up mlr_dsl_cst.h et al.
 * clean up local-stack macrofuncs (hide ifdeffing from callsites)
 * xxxes
