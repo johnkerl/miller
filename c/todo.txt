@@ -16,22 +16,23 @@ NON-RELEASE:
 * benchmark lua-jit
 
 ----------------------------------------------------------------
-HYGIENE FOR 5.0.0:
+HYGIENE FOR 4.6.0:
 
-! VALGRINDS
 
 * split up mlr_dsl_cst.h et al.
 * clean up local-stack macrofuncs (hide ifdeffing from callsites)
 * xxxes
 * mlr-globals-uninit ... enter-func @ UT mains (and any other mains ...)
 
+* final double-check valgrinds
+
 ----------------------------------------------------------------
-FUNCTIONALITY FOR 5.0.0:
+FUNCTIONALITY FOR 4.6.0:
 
 * retain CLI -e/-f ordering -- argvish is possible w/ -e 1st
 
 ----------------------------------------------------------------
-UT FOR 5.0.0:
+UT FOR 4.6.0:
 
 * local nonesuch=nonesuch
 * test-dsl-stack has limited utility now ... trim or remove it.
@@ -40,7 +41,7 @@ UT FOR 5.0.0:
 * rtr case for $* in begin/end/func
 
 ----------------------------------------------------------------
-DOC FOR 5.0.0:
+DOC FOR 4.6.0:
 
 MAJOR:
 * $-vars to %-vars
@@ -52,7 +53,7 @@ OOSVAR SINGLE FOR:
 
 PERF:
 * mand bench somewhere; other benches.
-* mkv2/3/4 somewhere; also cookbook. (better w/ mappable vars ... maybe for 5.1.0)
+* mkv2/3/4 somewhere; also cookbook. (better w/ mappable vars ... maybe for 4.7.0)
 * also note mkvgen somewhere.
 * xsv notes; update rust/go experiment info
 
@@ -108,9 +109,9 @@ perf note:
 * DSL stuff ... more for utility. but do profile/compare bind-stack allocation stuff 1st. :)
 
 ================================================================
-5.1.0: MAP // STRICT // TRACE // SYNTAXERROR // ALLRECAGG
+4.7.0: MAP // STRICT // TRACE // SYNTAXERROR // ALLRECAGG
 
-mapvars for 5.1.0 not 5.0.0 but make some decisions before releasing 5.0.0:
+mapvars for 4.7.0 not 4.6.0 but make some decisions before releasing 4.6.0:
 
 * gonna wanna pass maps to funcs/subrs, and return them too.
   - '&m syntax'?
@@ -119,7 +120,7 @@ mapvars for 5.1.0 not 5.0.0 but make some decisions before releasing 5.0.0:
   - choose simplest possible option
 
 ================================================================
-5.0.0 FEATURES:
+4.6.0 FEATURES:
 
 DSL:
 * func & subr. acknowledge awk yet again.
@@ -148,7 +149,7 @@ DOC:
 * final valgrind check
 
 ----------------------------------------------------------------
-5.1.0 ideas:
+4.7.0 ideas:
 
 ! more than 'syntax error' from lemon-parse failures ... lemon API research
 

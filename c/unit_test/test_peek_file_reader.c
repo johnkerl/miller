@@ -2,6 +2,7 @@
 #include <string.h>
 #include <unistd.h>
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
 #include "lib/minunit.h"
 #include "lib/mlr_test_util.h"
 #include "input/byte_readers.h"
@@ -76,6 +77,7 @@ static char * run_all_tests() {
 }
 
 int main(int argc, char **argv) {
+	mlr_global_init(argv[0], NULL);
 	printf("TEST_PEEK_FILE_READER ENTER\n");
 	char *result = run_all_tests();
 	printf("\n");

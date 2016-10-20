@@ -2,6 +2,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "lib/minunit.h"
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/parse_trie.h"
 
@@ -268,6 +269,7 @@ static char* all_tests() {
 }
 
 int main(int argc, char** argv) {
+	mlr_global_init(argv[0], NULL);
 	printf("TEST_PARSE_TRIE ENTER\n");
 	char* result = all_tests();
 	printf("\n");

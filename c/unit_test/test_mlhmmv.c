@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "lib/minunit.h"
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/mlhmmv.h"
 
@@ -333,6 +334,7 @@ static char * run_all_tests() {
 }
 
 int main(int argc, char **argv) {
+	mlr_global_init(argv[0], NULL);
 	printf("TEST_MLHMMV ENTER\n");
 	char *result = run_all_tests();
 	printf("\n");
