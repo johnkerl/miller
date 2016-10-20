@@ -64,6 +64,7 @@ void _sb_enlarge(string_builder_t* psb) {
 	int new_alloc_length = psb->alloc_length * 2;
 	char* new_buffer = mlr_malloc_or_die(new_alloc_length);
 	memcpy(new_buffer, psb->buffer, psb->used_length);
+	free(psb->buffer);
 	psb->alloc_length = new_alloc_length;
 	psb->buffer = new_buffer;
 }
