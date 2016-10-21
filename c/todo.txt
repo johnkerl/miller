@@ -18,7 +18,14 @@ NON-RELEASE:
 ----------------------------------------------------------------
 FUNCTIONALITY FOR 4.6.0:
 
-* retain CLI -e/-f ordering -- argvish is possible w/ -e 1st
+! triple-for multi-continuation !
+
+? map-locals into 4.6.0?!?!?
+  - parameter marshal
+  - LHS define/assign
+  - RHS expr eval
+  - maplocal <=> $* / @* / @a[b][c]
+  ? for-oosvar map-valued boundvars?!?
 
 ----------------------------------------------------------------
 UT FOR 4.6.0:
