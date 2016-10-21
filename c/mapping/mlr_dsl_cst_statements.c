@@ -2496,10 +2496,10 @@ static void handle_while(
 {
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+	loop_stack_push(pvars->ploop_stack);
 
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 
-	loop_stack_push(pvars->ploop_stack);
 	while (TRUE) {
 		mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 		if (mv_is_non_null(&val)) {
@@ -2519,8 +2519,8 @@ static void handle_while(
 			break;
 		}
 	}
-	loop_stack_pop(pvars->ploop_stack);
 
+	loop_stack_pop(pvars->ploop_stack);
 	local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
 }
 
@@ -2532,7 +2532,6 @@ static void handle_do_while(
 {
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
-
 	loop_stack_push(pvars->ploop_stack);
 
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
@@ -2557,8 +2556,8 @@ static void handle_do_while(
 			break;
 		}
 	}
-	loop_stack_pop(pvars->ploop_stack);
 
+	loop_stack_pop(pvars->ploop_stack);
 	local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
 }
 
@@ -2570,8 +2569,8 @@ static void handle_for_srec(
 {
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
-
 	loop_stack_push(pvars->ploop_stack);
+
 	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
 	lrec_t* pcopyrec = lrec_copy(pvars->pinrec);
 	lhmsmv_t* pcopyoverlay = lhmsmv_copy(pvars->ptyped_overlay);
@@ -2595,8 +2594,8 @@ static void handle_for_srec(
 	}
 	lhmsmv_free(pcopyoverlay);
 	lrec_free(pcopyrec);
-	loop_stack_pop(pvars->ploop_stack);
 
+	loop_stack_pop(pvars->ploop_stack);
 	local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
 }
 
@@ -2618,7 +2617,6 @@ static void handle_for_oosvar(
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 		local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
-
 		loop_stack_push(pvars->ploop_stack);
 
 		// Locate and copy the submap indexed by the keylist. E.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', the
@@ -2756,7 +2754,6 @@ static void handle_triple_for(
 {
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
-	// xxx clean up whitespace throughout
 	loop_stack_push(pvars->ploop_stack);
 
 	// Start statements
@@ -2790,7 +2787,6 @@ static void handle_triple_for(
 	}
 
 	loop_stack_pop(pvars->ploop_stack);
-
 	local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
 }
 
