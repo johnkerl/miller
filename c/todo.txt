@@ -41,9 +41,6 @@ UT FOR 4.6.0:
 ----------------------------------------------------------------
 DOC FOR 4.6.0:
 
-MAJOR:
-* $-vars to %-vars
-
 OOSVAR SINGLE FOR:
 * oosvar-single-for mlh
 * oosvar-single-for mld
