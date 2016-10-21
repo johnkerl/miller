@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <ctype.h>
 #include <sys/time.h>
+#include "lib/mlrutil.h"
 #include "lib/mlrregex.h"
 #include "lib/mlr_globals.h"
 #include "containers/free_flags.h"
@@ -38,8 +39,6 @@
 //   aTABb
 //
 // as desired.
-
-char* mlr_alloc_double_backslash(char* input); // xxx static or proto to header
 
 regex_t* regcomp_or_die(regex_t* pregex, char* regex_string, int cflags) {
 	cflags |= REG_EXTENDED;

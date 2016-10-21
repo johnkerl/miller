@@ -20,7 +20,7 @@ sllv_t* sllv_alloc();
 void    sllv_free(sllv_t* plist);
 sllv_t* sllv_single(void* pvvalue);
 void    sllv_append(sllv_t* plist,  void* pvvalue); // Add at tail
-void    sllv_prepend(sllv_t* plist, void* pvvalue); // Add at head
+void    sllv_push(sllv_t* plist, void* pvvalue); // Add at head
 void*   sllv_pop(sllv_t* plist);
 void    sllv_reverse(sllv_t* plist);
 // Move all records from pthat to end of pthis. Upon return, pthat is the empty

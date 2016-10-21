@@ -637,7 +637,7 @@ static int stkalc_subframe_add(stkalc_subframe_t* pframe, char* name) {
 static stkalc_subframe_group_t* stkalc_subframe_group_alloc(stkalc_subframe_t* pframe, int trace) {
 	stkalc_subframe_group_t* pframe_group = mlr_malloc_or_die(sizeof(stkalc_subframe_group_t));
 	pframe_group->plist = sllv_alloc();
-	sllv_prepend(pframe_group->plist, pframe);
+	sllv_push(pframe_group->plist, pframe);
 	stkalc_subframe_add(pframe, "");
 	if (trace) {
 		leader_print(pframe_group->plist->length);
@@ -657,7 +657,7 @@ static void stkalc_subframe_group_free(stkalc_subframe_group_t* pframe_group) {
 }
 
 static void stkalc_subframe_group_push(stkalc_subframe_group_t* pframe_group, stkalc_subframe_t* pframe) {
-	sllv_prepend(pframe_group->plist, pframe);
+	sllv_push(pframe_group->plist, pframe);
 }
 
 static stkalc_subframe_t* stkalc_subframe_group_pop(stkalc_subframe_group_t* pframe_group) {

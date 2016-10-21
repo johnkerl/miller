@@ -187,9 +187,9 @@ static char* test_sllv() {
 	sllv_free(pb);
 
 	pa = sllv_alloc();
-	sllv_prepend(pa, "a");
-	sllv_prepend(pa, "b");
-	sllv_prepend(pa, "c");
+	sllv_push(pa, "a");
+	sllv_push(pa, "b");
+	sllv_push(pa, "c");
 	mu_assert_lf(pa->length == 3);
 
 	pe = pa->phead;

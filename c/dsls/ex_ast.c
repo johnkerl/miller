@@ -85,7 +85,7 @@ ex_ast_node_t* ex_ast_node_prepend_arg(
 {
 	if (pa->pchildren == NULL)
 		pa->pchildren = sllv_alloc();
-	sllv_prepend(pa->pchildren, pb);
+	sllv_push(pa->pchildren, pb);
 	return pa;
 }
 

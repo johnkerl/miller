@@ -51,7 +51,7 @@ void sllv_append(sllv_t* plist, void* pvvalue) {
 }
 
 // ----------------------------------------------------------------
-void sllv_prepend(sllv_t* plist, void* pvvalue) {
+void sllv_push(sllv_t* plist, void* pvvalue) {
 	sllve_t* pnode = mlr_malloc_or_die(sizeof(sllve_t));
 	pnode->pvvalue = pvvalue;
 	if (plist->ptail == NULL) {

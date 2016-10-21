@@ -36,7 +36,6 @@ void local_stack_frame_free(local_stack_frame_t* pframe) {
 }
 
 // ----------------------------------------------------------------
-// xxx cmt
 local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe) {
 	if (!pframe->in_use) {
 		pframe->in_use = TRUE;
@@ -86,8 +85,7 @@ void local_stack_free(local_stack_t* pstack) {
 
 // ----------------------------------------------------------------
 void local_stack_push(local_stack_t* pstack, local_stack_frame_t* pframe) {
-	// xxx rename to sllv_push throughout
-	sllv_prepend(pstack->pframes, pframe);
+	sllv_push(pstack->pframes, pframe);
 }
 
 local_stack_frame_t* local_stack_pop(local_stack_t* pstack) {

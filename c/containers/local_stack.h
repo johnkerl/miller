@@ -78,13 +78,20 @@ static void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int 
 #endif
 
 // ----------------------------------------------------------------
-// Sets/clear the in-use flag for top-level statement blocks, and verifies
-// the contract for absent-null at slot 0.
+// Sets/clear the in-use flag for top-level statement blocks, and verifies the
+// contract for absent-null at slot 0.
 
 // For non-recursive functions/subroutines the enter method sets the in-use flag
 // and returns its argument; the exit method clears that flag. For recursively
 // invoked functions/subroutines the enter method returns another stack of the
 // same size, and the exit method frees that.
+//
+// The reason we don't simply always allocate is that begin/main/end statements
+// are never recursive, and most functions and subroutines are not recursive, so
+// most of the time there will be a single frame for each. We allocate that once
+// at startup, reuse it on every record, and free it at exit -- rather than
+// allocating and freeing frames on every record.
+
 local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe);
 void local_stack_frame_exit(local_stack_frame_t* pframe);
 
@@ -96,8 +103,6 @@ static inline mv_t* local_stack_frame_get(local_stack_frame_t* pframe, int varde
 static inline void local_stack_frame_set(local_stack_frame_t* pframe, int vardef_frame_relative_index, mv_t val) {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "SET", TRUE, vardef_frame_relative_index);
-	// xxx debug after free-flags semantics are in place
-	// xxx pframe->pvars[vardef_frame_relative_index] = val;
 	mv_free(&pframe->pvars[vardef_frame_relative_index]);
 	pframe->pvars[vardef_frame_relative_index] = val;
 }
