@@ -1734,6 +1734,13 @@ announce DSL STACK-ALLOCATION
 
 run_mlr --from $indir/abixy put -v -a -f $indir/test-dsl-stack.mlr
 
+# These test absent-null handing for as-yet-undefined localvars in expression RHSs.
+run_mlr --from $indir/abixy put 'a=a; $oa = a'
+run_mlr --from $indir/abixy put 'a=a; $oa = a; a = a; $ob = a'
+run_mlr --from $indir/abixy put 'a=a; $oa = a; a = a; $ob = a; a = b; $oc = a'
+run_mlr --from $indir/abixy put 'a=a; $oa = a; a = a; $ob = a; a = b; $oc = a; b = 3; b = a; $od = a'
+run_mlr --from $indir/abixy put 'a=a; $oa = a; a = a; $ob = a; a = b; $oc = a; b = 3; b = a; $od = a; b = 4;a = b; $oe= a'
+
 # ----------------------------------------------------------------
 announce DSL IF-CHAINING
 
