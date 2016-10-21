@@ -31,7 +31,8 @@ lrec_writer_t* lrec_writer_json_alloc(int stack_vertically, int wrap_json_output
 	pstate->counter = 0;
 	pstate->output_json_flatten_separator = output_json_flatten_separator;
 
-	// xxx temp
+	// xxx pending reworked JSON-output logic (not always ending in LF; needing fflush),
+	// to be implemented someday if ever. Workaround: pipe output to "jq .".
 	//pstate->line_indent                           = wrap_json_output_in_outer_list ? "  "  : "";
 	pstate->line_indent                           = wrap_json_output_in_outer_list ? ""  : "";
 	pstate->before_records_at_start_of_stream     = wrap_json_output_in_outer_list ? "[\n" : "";

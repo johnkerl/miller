@@ -131,7 +131,6 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
 			for (sllve_t* pg = plistnode->pchildren->phead; pg != NULL; pg = pg->pnext) {
 				mlr_dsl_ast_node_t* pchild = pg->pvvalue;
-				// xxx funcify here & throughout?
 				sllv_append(pblock->pstatement_block->pstatements, mlr_dsl_cst_alloc_statement(pcst, pchild,
 					type_inferencing, context_flags | IN_BEGIN_OR_END));
 			}

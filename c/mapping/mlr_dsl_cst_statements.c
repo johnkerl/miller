@@ -135,8 +135,7 @@ static cst_statement_handler_t handle_oosvar_from_full_srec_assignment;
 static cst_statement_handler_t handle_full_srec_from_oosvar_assignment;
 static cst_statement_handler_t handle_oosvar_assignment;
 static cst_statement_handler_t handle_env_assignment;
-static cst_statement_handler_t handle_local_variable_definition;
-static cst_statement_handler_t handle_local_variable_assignment;
+static cst_statement_handler_t handle_local_variable_definition_or_assignment;
 static cst_statement_handler_t handle_unset;
 static cst_statement_handler_t handle_unset_all;
 
@@ -657,7 +656,7 @@ static mlr_dsl_cst_statement_t* alloc_local_variable_definition(mlr_dsl_cst_t* p
 	pstatement->local_variable_name = pname_node->text;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, pcst->pfmgr,
 		type_inferencing, context_flags);
-	pstatement->pnode_handler = handle_local_variable_definition;
+	pstatement->pnode_handler = handle_local_variable_definition_or_assignment;
 	return pstatement;
 }
 
@@ -674,7 +673,7 @@ static mlr_dsl_cst_statement_t* alloc_local_variable_assignment(mlr_dsl_cst_t* p
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_LOCAL_VARIABLE);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren != NULL);
 
-	pstatement->pnode_handler = handle_local_variable_assignment;
+	pstatement->pnode_handler = handle_local_variable_definition_or_assignment;
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->local_lhs_frame_relative_index = pleft->vardef_frame_relative_index;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
@@ -1984,7 +1983,8 @@ static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg) {
 }
 
 // ================================================================
-// Top-level entry point, e.g. from mapper_put.
+// Top-level entry point for statement-handling, e.g. from mapper_put.
+
 void mlr_dsl_cst_handle_top_level_statement_blocks(
 	sllv_t*      ptop_level_blocks, // block bodies for begins, main, ends
 	variables_t* pvars,
@@ -1995,23 +1995,18 @@ void mlr_dsl_cst_handle_top_level_statement_blocks(
 	}
 }
 
-// xxx split alloc & handle files ... too big.
-
 void mlr_dsl_cst_handle_top_level_statement_block(
 	cst_top_level_statement_block_t* ptop_level_block,
 	variables_t* pvars,
 	cst_outputs_t* pcst_outputs)
 {
-	// xxx cmt re in-use
 	local_stack_push(pvars->plocal_stack, local_stack_frame_enter(ptop_level_block->pframe));
-
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->subframe_var_count);
 
 	mlr_dsl_cst_handle_statement_block(ptop_level_block->pstatement_block, pvars, pcst_outputs);
 
 	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->subframe_var_count);
-
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 }
 
@@ -2102,31 +2097,13 @@ static void handle_return_value(
 }
 
 // ----------------------------------------------------------------
-static void handle_local_variable_definition(
+static void handle_local_variable_definition_or_assignment(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	if (mv_is_present(&val)) {
-		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_set(pframe, pstatement->local_lhs_frame_relative_index, val);
-	} else {
-		mv_free(&val);
-	}
-}
-
-// ----------------------------------------------------------------
-// xxx merge a/ handle-def ?
-static void handle_local_variable_assignment(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-
 	if (mv_is_present(&val)) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 		local_stack_frame_set(pframe, pstatement->local_lhs_frame_relative_index, val);
@@ -2602,10 +2579,9 @@ static void handle_for_oosvar(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	// xxx comment keylist outside scope
-
-	// Evaluate the keylist: e.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', find the value of $4 for
-	// the current record.
+	// Evaluate the keylist: e.g. in 'for ((k1, k2), v in @a[$3][x]) { ... }', find the values of $3
+	// and x for the current record and stack frame. The keylist bindings are outside the scope
+	// of the for-loop, while the k1/k2/v are bound within the for-loop.
 
 	int keys_all_non_null_or_error = FALSE;
 	sllmv_t* plhskeylist = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
@@ -2699,9 +2675,9 @@ static void handle_for_oosvar_key_only(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	// xxx comment re keylist scope
-	// Evaluate the keylist: e.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', find the value of $4 for
-	// the current record.
+	// Evaluate the keylist: e.g. in 'for (k in @a[$3][x]) { ... }', find the values of $3
+	// and x for the current record and stack frame. The keylist bindings are outside the scope
+	// of the for-loop, while the k is bound within the for-loop.
 
 	int keys_all_non_null_or_error = FALSE;
 	sllmv_t* plhskeylist = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,

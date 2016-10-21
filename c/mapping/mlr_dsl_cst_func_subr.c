@@ -91,7 +91,6 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		// xxx funcify here & thruout
 		sllv_append(pcst_udf_state->ptop_level_block->pstatement_block->pstatements,
 			mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node, type_inferencing, context_flags | IN_FUNC_DEF));
 	}
