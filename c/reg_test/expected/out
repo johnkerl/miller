@@ -25550,12 +25550,12 @@ ALLOCATING RELATIVE (PASS-1) LOCALS FOR DEFINITION BLOCK [f]
     ADD PARAMETER a @ 1s0
     ADD PARAMETER b @ 2s0
     ADD PARAMETER c @ 3s0
-    PUSH FRAME cond_block
+    PUSH SUBFRAME cond_block
         READ nonesuch ABSENT @ 0s0
         ADD DEFINE val @ 0s1
-        PUSH FRAME while_block
-            PUSH FRAME if_block
-                PUSH FRAME for
+        PUSH SUBFRAME while_block
+            PUSH SUBFRAME if_block
+                PUSH SUBFRAME for
                     ADD FOR-BIND k @ 0s4
                     ADD FOR-BIND v @ 1s4
                     READ v PRESENT @ 1s4
@@ -25564,30 +25564,30 @@ ALLOCATING RELATIVE (PASS-1) LOCALS FOR DEFINITION BLOCK [f]
                     READ c PRESENT @ 3s0
                     REUSE WRITE val @ 0s1
                     READ val PRESENT @ 0s1
-                POP FRAME for subframe_var_count=2
-            POP FRAME if subframe_var_count=0
-            PUSH FRAME elif_block
-                PUSH FRAME for
+                POP SUBFRAME for subframe_var_count=2
+            POP SUBFRAME if subframe_var_count=0
+            PUSH SUBFRAME elif_block
+                PUSH SUBFRAME for
                     ADD FOR-BIND k @ 0s4
                     READ k PRESENT @ 0s4
-                POP FRAME for subframe_var_count=1
-            POP FRAME elif subframe_var_count=0
-            PUSH FRAME elif_block
-                PUSH FRAME for
+                POP SUBFRAME for subframe_var_count=1
+            POP SUBFRAME elif subframe_var_count=0
+            PUSH SUBFRAME elif_block
+                PUSH SUBFRAME for
                     ADD FOR-BIND k @ 0s4
                     ADD FOR-BIND v @ 1s4
                     READ k PRESENT @ 0s4
                     READ v PRESENT @ 1s4
-                POP FRAME for subframe_var_count=2
-            POP FRAME elif subframe_var_count=0
-            PUSH FRAME elif_block
+                POP SUBFRAME for subframe_var_count=2
+            POP SUBFRAME elif subframe_var_count=0
+            PUSH SUBFRAME elif_block
                 ADD DEFINE sum @ 0s3
-                PUSH FRAME for
+                PUSH SUBFRAME for
                     ADD DEFINE i @ 0s4
                     READ i PRESENT @ 0s4
                     READ i PRESENT @ 0s4
                     REUSE WRITE i @ 0s4
-                    PUSH FRAME for
+                    PUSH SUBFRAME for
                         ADD DEFINE j @ 0s5
                         READ j PRESENT @ 0s5
                         READ j PRESENT @ 0s5
@@ -25596,14 +25596,14 @@ ALLOCATING RELATIVE (PASS-1) LOCALS FOR DEFINITION BLOCK [f]
                         READ i PRESENT @ 0s4
                         READ j PRESENT @ 0s5
                         REUSE WRITE sum @ 0s3
-                    POP FRAME for subframe_var_count=1
-                POP FRAME for subframe_var_count=1
+                    POP SUBFRAME for subframe_var_count=1
+                POP SUBFRAME for subframe_var_count=1
                 READ sum PRESENT @ 0s3
                 REUSE WRITE val @ 0s1
                 READ val PRESENT @ 0s1
-            POP FRAME elif subframe_var_count=1
-        POP FRAME while subframe_var_count=0
-    POP FRAME cond subframe_var_count=1
+            POP SUBFRAME elif subframe_var_count=1
+        POP SUBFRAME while subframe_var_count=0
+    POP SUBFRAME cond subframe_var_count=1
 BLOCK f subframe_var_count=4 max_subframe_depth=6
 
 ALLOCATING RELATIVE (PASS-1) LOCALS FOR DEFINITION BLOCK [s]
@@ -25611,12 +25611,12 @@ ALLOCATING RELATIVE (PASS-1) LOCALS FOR DEFINITION BLOCK [s]
     ADD PARAMETER a @ 1s0
     ADD PARAMETER b @ 2s0
     ADD PARAMETER c @ 3s0
-    PUSH FRAME cond_block
+    PUSH SUBFRAME cond_block
         READ nonesuch ABSENT @ 0s0
         ADD DEFINE val @ 0s1
-        PUSH FRAME while_block
-            PUSH FRAME if_block
-                PUSH FRAME for
+        PUSH SUBFRAME while_block
+            PUSH SUBFRAME if_block
+                PUSH SUBFRAME for
                     ADD FOR-BIND k @ 0s4
                     ADD FOR-BIND v @ 1s4
                     READ v PRESENT @ 1s4
@@ -25625,30 +25625,30 @@ ALLOCATING RELATIVE (PASS-1) LOCALS FOR DEFINITION BLOCK [s]
                     READ c PRESENT @ 3s0
                     REUSE WRITE val @ 0s1
                     READ val PRESENT @ 0s1
-                POP FRAME for subframe_var_count=2
-            POP FRAME if subframe_var_count=0
-            PUSH FRAME elif_block
-                PUSH FRAME for
+                POP SUBFRAME for subframe_var_count=2
+            POP SUBFRAME if subframe_var_count=0
+            PUSH SUBFRAME elif_block
+                PUSH SUBFRAME for
                     ADD FOR-BIND k @ 0s4
                     READ k PRESENT @ 0s4
-                POP FRAME for subframe_var_count=1
-            POP FRAME elif subframe_var_count=0
-            PUSH FRAME elif_block
-                PUSH FRAME for
+                POP SUBFRAME for subframe_var_count=1
+            POP SUBFRAME elif subframe_var_count=0
+            PUSH SUBFRAME elif_block
+                PUSH SUBFRAME for
                     ADD FOR-BIND k @ 0s4
                     ADD FOR-BIND v @ 1s4
                     READ k PRESENT @ 0s4
                     READ v PRESENT @ 1s4
-                POP FRAME for subframe_var_count=2
-            POP FRAME elif subframe_var_count=0
-            PUSH FRAME elif_block
+                POP SUBFRAME for subframe_var_count=2
+            POP SUBFRAME elif subframe_var_count=0
+            PUSH SUBFRAME elif_block
                 ADD DEFINE sum @ 0s3
-                PUSH FRAME for
+                PUSH SUBFRAME for
                     ADD DEFINE i @ 0s4
                     READ i PRESENT @ 0s4
                     READ i PRESENT @ 0s4
                     REUSE WRITE i @ 0s4
-                    PUSH FRAME for
+                    PUSH SUBFRAME for
                         ADD DEFINE j @ 0s5
                         READ j PRESENT @ 0s5
                         READ j PRESENT @ 0s5
@@ -25657,51 +25657,51 @@ ALLOCATING RELATIVE (PASS-1) LOCALS FOR DEFINITION BLOCK [s]
                         READ i PRESENT @ 0s4
                         READ j PRESENT @ 0s5
                         REUSE WRITE sum @ 0s3
-                    POP FRAME for subframe_var_count=1
-                POP FRAME for subframe_var_count=1
+                    POP SUBFRAME for subframe_var_count=1
+                POP SUBFRAME for subframe_var_count=1
                 READ sum PRESENT @ 0s3
                 REUSE WRITE val @ 0s1
                 READ val PRESENT @ 0s1
-            POP FRAME elif subframe_var_count=1
-        POP FRAME while subframe_var_count=0
-    POP FRAME cond subframe_var_count=1
+            POP SUBFRAME elif subframe_var_count=1
+        POP SUBFRAME while subframe_var_count=0
+    POP SUBFRAME cond subframe_var_count=1
 BLOCK s subframe_var_count=4 max_subframe_depth=6
 
 ALLOCATING RELATIVE (PASS-1) LOCALS FOR begin BLOCK
     ADD FOR ABSENT s @ 0u0
-    PUSH FRAME cond_block
+    PUSH SUBFRAME cond_block
         READ nonesuch ABSENT @ 0s0
         ADD DEFINE val @ 0s1
-        PUSH FRAME for
+        PUSH SUBFRAME for
             ADD DEFINE idx @ 0s2
             READ idx PRESENT @ 0s2
             READ idx PRESENT @ 0s2
             REUSE WRITE idx @ 0s2
             READ idx PRESENT @ 0s2
-            PUSH FRAME if_block
-                PUSH FRAME for
+            PUSH SUBFRAME if_block
+                PUSH SUBFRAME for
                     ADD FOR-BIND k @ 0s4
                     READ k PRESENT @ 0s4
-                POP FRAME for subframe_var_count=1
-            POP FRAME if subframe_var_count=0
+                POP SUBFRAME for subframe_var_count=1
+            POP SUBFRAME if subframe_var_count=0
             READ idx PRESENT @ 0s2
-            PUSH FRAME elif_block
-                PUSH FRAME for
+            PUSH SUBFRAME elif_block
+                PUSH SUBFRAME for
                     ADD FOR-BIND k @ 0s4
                     ADD FOR-BIND v @ 1s4
                     READ k PRESENT @ 0s4
                     READ v PRESENT @ 1s4
-                POP FRAME for subframe_var_count=2
-            POP FRAME elif subframe_var_count=0
+                POP SUBFRAME for subframe_var_count=2
+            POP SUBFRAME elif subframe_var_count=0
             READ idx PRESENT @ 0s2
-            PUSH FRAME elif_block
+            PUSH SUBFRAME elif_block
                 ADD DEFINE sum @ 0s3
-                PUSH FRAME for
+                PUSH SUBFRAME for
                     ADD DEFINE i @ 0s4
                     READ i PRESENT @ 0s4
                     READ i PRESENT @ 0s4
                     REUSE WRITE i @ 0s4
-                    PUSH FRAME for
+                    PUSH SUBFRAME for
                         ADD DEFINE j @ 0s5
                         READ j PRESENT @ 0s5
                         READ j PRESENT @ 0s5
@@ -25710,53 +25710,53 @@ ALLOCATING RELATIVE (PASS-1) LOCALS FOR begin BLOCK
                         READ i PRESENT @ 0s4
                         READ j PRESENT @ 0s5
                         REUSE WRITE sum @ 0s3
-                    POP FRAME for subframe_var_count=1
-                POP FRAME for subframe_var_count=1
+                    POP SUBFRAME for subframe_var_count=1
+                POP SUBFRAME for subframe_var_count=1
                 READ sum PRESENT @ 0s3
                 REUSE WRITE val @ 0s1
                 READ val PRESENT @ 0s1
-            POP FRAME elif subframe_var_count=1
-        POP FRAME for subframe_var_count=1
-    POP FRAME cond subframe_var_count=1
+            POP SUBFRAME elif subframe_var_count=1
+        POP SUBFRAME for subframe_var_count=1
+    POP SUBFRAME cond subframe_var_count=1
 BLOCK begin subframe_var_count=1 max_subframe_depth=6
 
 ALLOCATING RELATIVE (PASS-1) LOCALS FOR MAIN BLOCK
     ADD FOR ABSENT s @ 0u0
-    PUSH FRAME cond_block
+    PUSH SUBFRAME cond_block
         READ nonesuch ABSENT @ 0s0
         ADD DEFINE val @ 0s1
-        PUSH FRAME while_block
-            PUSH FRAME if_block
-                PUSH FRAME for
+        PUSH SUBFRAME while_block
+            PUSH SUBFRAME if_block
+                PUSH SUBFRAME for
                     ADD FOR-BIND k @ 0s4
                     ADD FOR-BIND v @ 1s4
                     READ v PRESENT @ 1s4
                     REUSE WRITE val @ 0s1
                     READ val PRESENT @ 0s1
-                POP FRAME for subframe_var_count=2
-            POP FRAME if subframe_var_count=0
-            PUSH FRAME elif_block
-                PUSH FRAME for
+                POP SUBFRAME for subframe_var_count=2
+            POP SUBFRAME if subframe_var_count=0
+            PUSH SUBFRAME elif_block
+                PUSH SUBFRAME for
                     ADD FOR-BIND k @ 0s4
                     READ k PRESENT @ 0s4
-                POP FRAME for subframe_var_count=1
-            POP FRAME elif subframe_var_count=0
-            PUSH FRAME elif_block
-                PUSH FRAME for
+                POP SUBFRAME for subframe_var_count=1
+            POP SUBFRAME elif subframe_var_count=0
+            PUSH SUBFRAME elif_block
+                PUSH SUBFRAME for
                     ADD FOR-BIND k @ 0s4
                     ADD FOR-BIND v @ 1s4
                     READ k PRESENT @ 0s4
                     READ v PRESENT @ 1s4
-                POP FRAME for subframe_var_count=2
-            POP FRAME elif subframe_var_count=0
-            PUSH FRAME elif_block
+                POP SUBFRAME for subframe_var_count=2
+            POP SUBFRAME elif subframe_var_count=0
+            PUSH SUBFRAME elif_block
                 ADD DEFINE sum @ 0s3
-                PUSH FRAME for
+                PUSH SUBFRAME for
                     ADD DEFINE i @ 0s4
                     READ i PRESENT @ 0s4
                     READ i PRESENT @ 0s4
                     REUSE WRITE i @ 0s4
-                    PUSH FRAME for
+                    PUSH SUBFRAME for
                         ADD DEFINE j @ 0s5
                         READ j PRESENT @ 0s5
                         READ j PRESENT @ 0s5
@@ -25765,51 +25765,51 @@ ALLOCATING RELATIVE (PASS-1) LOCALS FOR MAIN BLOCK
                         READ i PRESENT @ 0s4
                         READ j PRESENT @ 0s5
                         REUSE WRITE sum @ 0s3
-                    POP FRAME for subframe_var_count=1
-                POP FRAME for subframe_var_count=1
+                    POP SUBFRAME for subframe_var_count=1
+                POP SUBFRAME for subframe_var_count=1
                 READ sum PRESENT @ 0s3
                 REUSE WRITE val @ 0s1
                 READ val PRESENT @ 0s1
-            POP FRAME elif subframe_var_count=1
-        POP FRAME while subframe_var_count=0
-    POP FRAME cond subframe_var_count=1
+            POP SUBFRAME elif subframe_var_count=1
+        POP SUBFRAME while subframe_var_count=0
+    POP SUBFRAME cond subframe_var_count=1
 BLOCK main_block subframe_var_count=1 max_subframe_depth=6
 
 ALLOCATING RELATIVE (PASS-1) LOCALS FOR end BLOCK
     ADD FOR ABSENT s @ 0u0
-    PUSH FRAME cond_block
+    PUSH SUBFRAME cond_block
         READ nonesuch ABSENT @ 0s0
         ADD DEFINE val @ 0s1
-        PUSH FRAME for
+        PUSH SUBFRAME for
             ADD DEFINE idx @ 0s2
             READ idx PRESENT @ 0s2
             READ idx PRESENT @ 0s2
             REUSE WRITE idx @ 0s2
             READ idx PRESENT @ 0s2
-            PUSH FRAME if_block
-                PUSH FRAME for
+            PUSH SUBFRAME if_block
+                PUSH SUBFRAME for
                     ADD FOR-BIND k @ 0s4
                     READ k PRESENT @ 0s4
-                POP FRAME for subframe_var_count=1
-            POP FRAME if subframe_var_count=0
+                POP SUBFRAME for subframe_var_count=1
+            POP SUBFRAME if subframe_var_count=0
             READ idx PRESENT @ 0s2
-            PUSH FRAME elif_block
-                PUSH FRAME for
+            PUSH SUBFRAME elif_block
+                PUSH SUBFRAME for
                     ADD FOR-BIND k @ 0s4
                     ADD FOR-BIND v @ 1s4
                     READ k PRESENT @ 0s4
                     READ v PRESENT @ 1s4
-                POP FRAME for subframe_var_count=2
-            POP FRAME elif subframe_var_count=0
+                POP SUBFRAME for subframe_var_count=2
+            POP SUBFRAME elif subframe_var_count=0
             READ idx PRESENT @ 0s2
-            PUSH FRAME elif_block
+            PUSH SUBFRAME elif_block
                 ADD DEFINE sum @ 0s3
-                PUSH FRAME for
+                PUSH SUBFRAME for
                     ADD DEFINE i @ 0s4
                     READ i PRESENT @ 0s4
                     READ i PRESENT @ 0s4
                     REUSE WRITE i @ 0s4
-                    PUSH FRAME for
+                    PUSH SUBFRAME for
                         ADD DEFINE j @ 0s5
                         READ j PRESENT @ 0s5
                         READ j PRESENT @ 0s5
@@ -25818,27 +25818,27 @@ ALLOCATING RELATIVE (PASS-1) LOCALS FOR end BLOCK
                         READ i PRESENT @ 0s4
                         READ j PRESENT @ 0s5
                         REUSE WRITE sum @ 0s3
-                    POP FRAME for subframe_var_count=1
-                POP FRAME for subframe_var_count=1
+                    POP SUBFRAME for subframe_var_count=1
+                POP SUBFRAME for subframe_var_count=1
                 READ sum PRESENT @ 0s3
                 REUSE WRITE val @ 0s1
                 READ val PRESENT @ 0s1
-            POP FRAME elif subframe_var_count=1
-        POP FRAME for subframe_var_count=1
-    POP FRAME cond subframe_var_count=1
+            POP SUBFRAME elif subframe_var_count=1
+        POP SUBFRAME for subframe_var_count=1
+    POP SUBFRAME cond subframe_var_count=1
 BLOCK end subframe_var_count=1 max_subframe_depth=6
 
 ALLOCATING ABSOLUTE (PASS-2) LOCALS FOR DEFINITION BLOCK [f]
-FRAME [f] var_count_below=0 var_count_at=4 max_var_depth_so_far=4 subframe_depth=0
+SUBFRAME [f] var_count_below=0 var_count_at=4 max_var_depth_so_far=4 subframe_depth=0
     NODE a 1s0 (0:0) -> 1
     NODE b 2s0 (0:0) -> 2
     NODE c 3s0 (0:0) -> 3
-    FRAME [cond_block] var_count_below=4 var_count_at=1 max_var_depth_so_far=5 subframe_depth=1
+    SUBFRAME [cond_block] var_count_below=4 var_count_at=1 max_var_depth_so_far=5 subframe_depth=1
         NODE val 0s1 (0:0,1:4) -> 4
         NODE nonesuch 0s0 (0:0,1:4) -> 0
-        FRAME [while_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=5 subframe_depth=2
-            FRAME [if_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=5 subframe_depth=3
-                FRAME [for] var_count_below=5 var_count_at=2 max_var_depth_so_far=7 subframe_depth=4
+        SUBFRAME [while_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=5 subframe_depth=2
+            SUBFRAME [if_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=5 subframe_depth=3
+                SUBFRAME [for] var_count_below=5 var_count_at=2 max_var_depth_so_far=7 subframe_depth=4
                     NODE k 0s4 (0:0,1:4,2:5,3:5,4:5) -> 5
                     NODE v 1s4 (0:0,1:4,2:5,3:5,4:5) -> 6
                     NODE val 0s1 (0:0,1:4,2:5,3:5,4:5) -> 4
@@ -25847,24 +25847,24 @@ FRAME [f] var_count_below=0 var_count_at=4 max_var_depth_so_far=4 subframe_depth
                     NODE b 2s0 (0:0,1:4,2:5,3:5,4:5) -> 2
                     NODE c 3s0 (0:0,1:4,2:5,3:5,4:5) -> 3
                     NODE val 0s1 (0:0,1:4,2:5,3:5,4:5) -> 4
-            FRAME [elif_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=7 subframe_depth=3
-                FRAME [for] var_count_below=5 var_count_at=1 max_var_depth_so_far=7 subframe_depth=4
+            SUBFRAME [elif_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=7 subframe_depth=3
+                SUBFRAME [for] var_count_below=5 var_count_at=1 max_var_depth_so_far=7 subframe_depth=4
                     NODE k 0s4 (0:0,1:4,2:5,3:5,4:5) -> 5
                     NODE k 0s4 (0:0,1:4,2:5,3:5,4:5) -> 5
-            FRAME [elif_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=7 subframe_depth=3
-                FRAME [for] var_count_below=5 var_count_at=2 max_var_depth_so_far=7 subframe_depth=4
-                    NODE k 0s4 (0:0,1:4,2:5,3:5,4:5) -> 5
-                    NODE v 1s4 (0:0,1:4,2:5,3:5,4:5) -> 6
+            SUBFRAME [elif_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=7 subframe_depth=3
+                SUBFRAME [for] var_count_below=5 var_count_at=2 max_var_depth_so_far=7 subframe_depth=4
                     NODE k 0s4 (0:0,1:4,2:5,3:5,4:5) -> 5
                     NODE v 1s4 (0:0,1:4,2:5,3:5,4:5) -> 6
-            FRAME [elif_block] var_count_below=5 var_count_at=1 max_var_depth_so_far=7 subframe_depth=3
+                    NODE k 0s4 (0:0,1:4,2:5,3:5,4:5) -> 5
+                    NODE v 1s4 (0:0,1:4,2:5,3:5,4:5) -> 6
+            SUBFRAME [elif_block] var_count_below=5 var_count_at=1 max_var_depth_so_far=7 subframe_depth=3
                 NODE sum 0s3 (0:0,1:4,2:5,3:5) -> 5
-                FRAME [for] var_count_below=6 var_count_at=1 max_var_depth_so_far=7 subframe_depth=4
+                SUBFRAME [for] var_count_below=6 var_count_at=1 max_var_depth_so_far=7 subframe_depth=4
                     NODE i 0s4 (0:0,1:4,2:5,3:5,4:6) -> 6
                     NODE i 0s4 (0:0,1:4,2:5,3:5,4:6) -> 6
                     NODE i 0s4 (0:0,1:4,2:5,3:5,4:6) -> 6
                     NODE i 0s4 (0:0,1:4,2:5,3:5,4:6) -> 6
-                    FRAME [for] var_count_below=7 var_count_at=1 max_var_depth_so_far=8 subframe_depth=5
+                    SUBFRAME [for] var_count_below=7 var_count_at=1 max_var_depth_so_far=8 subframe_depth=5
                         NODE j 0s5 (0:0,1:4,2:5,3:5,4:6,5:7) -> 7
                         NODE j 0s5 (0:0,1:4,2:5,3:5,4:6,5:7) -> 7
                         NODE j 0s5 (0:0,1:4,2:5,3:5,4:6,5:7) -> 7
@@ -25878,16 +25878,16 @@ FRAME [f] var_count_below=0 var_count_at=4 max_var_depth_so_far=4 subframe_depth
                 NODE val 0s1 (0:0,1:4,2:5,3:5) -> 4
 
 ALLOCATING ABSOLUTE (PASS-2) LOCALS FOR DEFINITION BLOCK [s]
-FRAME [s] var_count_below=0 var_count_at=4 max_var_depth_so_far=4 subframe_depth=0
+SUBFRAME [s] var_count_below=0 var_count_at=4 max_var_depth_so_far=4 subframe_depth=0
     NODE a 1s0 (0:0) -> 1
     NODE b 2s0 (0:0) -> 2
     NODE c 3s0 (0:0) -> 3
-    FRAME [cond_block] var_count_below=4 var_count_at=1 max_var_depth_so_far=5 subframe_depth=1
+    SUBFRAME [cond_block] var_count_below=4 var_count_at=1 max_var_depth_so_far=5 subframe_depth=1
         NODE val 0s1 (0:0,1:4) -> 4
         NODE nonesuch 0s0 (0:0,1:4) -> 0
-        FRAME [while_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=5 subframe_depth=2
-            FRAME [if_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=5 subframe_depth=3
-                FRAME [for] var_count_below=5 var_count_at=2 max_var_depth_so_far=7 subframe_depth=4
+        SUBFRAME [while_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=5 subframe_depth=2
+            SUBFRAME [if_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=5 subframe_depth=3
+                SUBFRAME [for] var_count_below=5 var_count_at=2 max_var_depth_so_far=7 subframe_depth=4
                     NODE k 0s4 (0:0,1:4,2:5,3:5,4:5) -> 5
                     NODE v 1s4 (0:0,1:4,2:5,3:5,4:5) -> 6
                     NODE val 0s1 (0:0,1:4,2:5,3:5,4:5) -> 4
@@ -25896,24 +25896,24 @@ FRAME [s] var_count_below=0 var_count_at=4 max_var_depth_so_far=4 subframe_depth
                     NODE b 2s0 (0:0,1:4,2:5,3:5,4:5) -> 2
                     NODE c 3s0 (0:0,1:4,2:5,3:5,4:5) -> 3
                     NODE val 0s1 (0:0,1:4,2:5,3:5,4:5) -> 4
-            FRAME [elif_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=7 subframe_depth=3
-                FRAME [for] var_count_below=5 var_count_at=1 max_var_depth_so_far=7 subframe_depth=4
+            SUBFRAME [elif_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=7 subframe_depth=3
+                SUBFRAME [for] var_count_below=5 var_count_at=1 max_var_depth_so_far=7 subframe_depth=4
                     NODE k 0s4 (0:0,1:4,2:5,3:5,4:5) -> 5
                     NODE k 0s4 (0:0,1:4,2:5,3:5,4:5) -> 5
-            FRAME [elif_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=7 subframe_depth=3
-                FRAME [for] var_count_below=5 var_count_at=2 max_var_depth_so_far=7 subframe_depth=4
-                    NODE k 0s4 (0:0,1:4,2:5,3:5,4:5) -> 5
-                    NODE v 1s4 (0:0,1:4,2:5,3:5,4:5) -> 6
+            SUBFRAME [elif_block] var_count_below=5 var_count_at=0 max_var_depth_so_far=7 subframe_depth=3
+                SUBFRAME [for] var_count_below=5 var_count_at=2 max_var_depth_so_far=7 subframe_depth=4
                     NODE k 0s4 (0:0,1:4,2:5,3:5,4:5) -> 5
                     NODE v 1s4 (0:0,1:4,2:5,3:5,4:5) -> 6
-            FRAME [elif_block] var_count_below=5 var_count_at=1 max_var_depth_so_far=7 subframe_depth=3
+                    NODE k 0s4 (0:0,1:4,2:5,3:5,4:5) -> 5
+                    NODE v 1s4 (0:0,1:4,2:5,3:5,4:5) -> 6
+            SUBFRAME [elif_block] var_count_below=5 var_count_at=1 max_var_depth_so_far=7 subframe_depth=3
                 NODE sum 0s3 (0:0,1:4,2:5,3:5) -> 5
-                FRAME [for] var_count_below=6 var_count_at=1 max_var_depth_so_far=7 subframe_depth=4
+                SUBFRAME [for] var_count_below=6 var_count_at=1 max_var_depth_so_far=7 subframe_depth=4
                     NODE i 0s4 (0:0,1:4,2:5,3:5,4:6) -> 6
                     NODE i 0s4 (0:0,1:4,2:5,3:5,4:6) -> 6
                     NODE i 0s4 (0:0,1:4,2:5,3:5,4:6) -> 6
                     NODE i 0s4 (0:0,1:4,2:5,3:5,4:6) -> 6
-                    FRAME [for] var_count_below=7 var_count_at=1 max_var_depth_so_far=8 subframe_depth=5
+                    SUBFRAME [for] var_count_below=7 var_count_at=1 max_var_depth_so_far=8 subframe_depth=5
                         NODE j 0s5 (0:0,1:4,2:5,3:5,4:6,5:7) -> 7
                         NODE j 0s5 (0:0,1:4,2:5,3:5,4:6,5:7) -> 7
                         NODE j 0s5 (0:0,1:4,2:5,3:5,4:6,5:7) -> 7
@@ -25927,36 +25927,36 @@ FRAME [s] var_count_below=0 var_count_at=4 max_var_depth_so_far=4 subframe_depth
                 NODE val 0s1 (0:0,1:4,2:5,3:5) -> 4
 
 ALLOCATING ABSOLUTE (PASS-2) LOCALS FOR DEFINITION BLOCK [begin]
-FRAME [begin] var_count_below=0 var_count_at=1 max_var_depth_so_far=1 subframe_depth=0
-    FRAME [cond_block] var_count_below=1 var_count_at=1 max_var_depth_so_far=2 subframe_depth=1
+SUBFRAME [begin] var_count_below=0 var_count_at=1 max_var_depth_so_far=1 subframe_depth=0
+    SUBFRAME [cond_block] var_count_below=1 var_count_at=1 max_var_depth_so_far=2 subframe_depth=1
         NODE val 0s1 (0:0,1:1) -> 1
         NODE nonesuch 0s0 (0:0,1:1) -> 0
-        FRAME [for] var_count_below=2 var_count_at=1 max_var_depth_so_far=3 subframe_depth=2
+        SUBFRAME [for] var_count_below=2 var_count_at=1 max_var_depth_so_far=3 subframe_depth=2
             NODE idx 0s2 (0:0,1:1,2:2) -> 2
             NODE idx 0s2 (0:0,1:1,2:2) -> 2
             NODE idx 0s2 (0:0,1:1,2:2) -> 2
             NODE idx 0s2 (0:0,1:1,2:2) -> 2
             NODE idx 0s2 (0:0,1:1,2:2) -> 2
-            FRAME [if_block] var_count_below=3 var_count_at=0 max_var_depth_so_far=3 subframe_depth=3
-                FRAME [for] var_count_below=3 var_count_at=1 max_var_depth_so_far=4 subframe_depth=4
+            SUBFRAME [if_block] var_count_below=3 var_count_at=0 max_var_depth_so_far=3 subframe_depth=3
+                SUBFRAME [for] var_count_below=3 var_count_at=1 max_var_depth_so_far=4 subframe_depth=4
                     NODE k 0s4 (0:0,1:1,2:2,3:3,4:3) -> 3
                     NODE k 0s4 (0:0,1:1,2:2,3:3,4:3) -> 3
             NODE idx 0s2 (0:0,1:1,2:2) -> 2
-            FRAME [elif_block] var_count_below=3 var_count_at=0 max_var_depth_so_far=4 subframe_depth=3
-                FRAME [for] var_count_below=3 var_count_at=2 max_var_depth_so_far=5 subframe_depth=4
-                    NODE k 0s4 (0:0,1:1,2:2,3:3,4:3) -> 3
-                    NODE v 1s4 (0:0,1:1,2:2,3:3,4:3) -> 4
+            SUBFRAME [elif_block] var_count_below=3 var_count_at=0 max_var_depth_so_far=4 subframe_depth=3
+                SUBFRAME [for] var_count_below=3 var_count_at=2 max_var_depth_so_far=5 subframe_depth=4
                     NODE k 0s4 (0:0,1:1,2:2,3:3,4:3) -> 3
                     NODE v 1s4 (0:0,1:1,2:2,3:3,4:3) -> 4
+                    NODE k 0s4 (0:0,1:1,2:2,3:3,4:3) -> 3
+                    NODE v 1s4 (0:0,1:1,2:2,3:3,4:3) -> 4
             NODE idx 0s2 (0:0,1:1,2:2) -> 2
-            FRAME [elif_block] var_count_below=3 var_count_at=1 max_var_depth_so_far=5 subframe_depth=3
+            SUBFRAME [elif_block] var_count_below=3 var_count_at=1 max_var_depth_so_far=5 subframe_depth=3
                 NODE sum 0s3 (0:0,1:1,2:2,3:3) -> 3
-                FRAME [for] var_count_below=4 var_count_at=1 max_var_depth_so_far=5 subframe_depth=4
+                SUBFRAME [for] var_count_below=4 var_count_at=1 max_var_depth_so_far=5 subframe_depth=4
                     NODE i 0s4 (0:0,1:1,2:2,3:3,4:4) -> 4
                     NODE i 0s4 (0:0,1:1,2:2,3:3,4:4) -> 4
                     NODE i 0s4 (0:0,1:1,2:2,3:3,4:4) -> 4
                     NODE i 0s4 (0:0,1:1,2:2,3:3,4:4) -> 4
-                    FRAME [for] var_count_below=5 var_count_at=1 max_var_depth_so_far=6 subframe_depth=5
+                    SUBFRAME [for] var_count_below=5 var_count_at=1 max_var_depth_so_far=6 subframe_depth=5
                         NODE j 0s5 (0:0,1:1,2:2,3:3,4:4,5:5) -> 5
                         NODE j 0s5 (0:0,1:1,2:2,3:3,4:4,5:5) -> 5
                         NODE j 0s5 (0:0,1:1,2:2,3:3,4:4,5:5) -> 5
@@ -25970,36 +25970,36 @@ FRAME [begin] var_count_below=0 var_count_at=1 max_var_depth_so_far=1 subframe_d
                 NODE val 0s1 (0:0,1:1,2:2,3:3) -> 1
 
 ALLOCATING ABSOLUTE (PASS-2) LOCALS FOR DEFINITION BLOCK [main_block]
-FRAME [main_block] var_count_below=0 var_count_at=1 max_var_depth_so_far=1 subframe_depth=0
-    FRAME [cond_block] var_count_below=1 var_count_at=1 max_var_depth_so_far=2 subframe_depth=1
+SUBFRAME [main_block] var_count_below=0 var_count_at=1 max_var_depth_so_far=1 subframe_depth=0
+    SUBFRAME [cond_block] var_count_below=1 var_count_at=1 max_var_depth_so_far=2 subframe_depth=1
         NODE val 0s1 (0:0,1:1) -> 1
         NODE nonesuch 0s0 (0:0,1:1) -> 0
-        FRAME [while_block] var_count_below=2 var_count_at=0 max_var_depth_so_far=2 subframe_depth=2
-            FRAME [if_block] var_count_below=2 var_count_at=0 max_var_depth_so_far=2 subframe_depth=3
-                FRAME [for] var_count_below=2 var_count_at=2 max_var_depth_so_far=4 subframe_depth=4
+        SUBFRAME [while_block] var_count_below=2 var_count_at=0 max_var_depth_so_far=2 subframe_depth=2
+            SUBFRAME [if_block] var_count_below=2 var_count_at=0 max_var_depth_so_far=2 subframe_depth=3
+                SUBFRAME [for] var_count_below=2 var_count_at=2 max_var_depth_so_far=4 subframe_depth=4
                     NODE k 0s4 (0:0,1:1,2:2,3:2,4:2) -> 2
                     NODE v 1s4 (0:0,1:1,2:2,3:2,4:2) -> 3
                     NODE val 0s1 (0:0,1:1,2:2,3:2,4:2) -> 1
                     NODE v 1s4 (0:0,1:1,2:2,3:2,4:2) -> 3
                     NODE val 0s1 (0:0,1:1,2:2,3:2,4:2) -> 1
-            FRAME [elif_block] var_count_below=2 var_count_at=0 max_var_depth_so_far=4 subframe_depth=3
-                FRAME [for] var_count_below=2 var_count_at=1 max_var_depth_so_far=4 subframe_depth=4
+            SUBFRAME [elif_block] var_count_below=2 var_count_at=0 max_var_depth_so_far=4 subframe_depth=3
+                SUBFRAME [for] var_count_below=2 var_count_at=1 max_var_depth_so_far=4 subframe_depth=4
                     NODE k 0s4 (0:0,1:1,2:2,3:2,4:2) -> 2
                     NODE k 0s4 (0:0,1:1,2:2,3:2,4:2) -> 2
-            FRAME [elif_block] var_count_below=2 var_count_at=0 max_var_depth_so_far=4 subframe_depth=3
-                FRAME [for] var_count_below=2 var_count_at=2 max_var_depth_so_far=4 subframe_depth=4
-                    NODE k 0s4 (0:0,1:1,2:2,3:2,4:2) -> 2
-                    NODE v 1s4 (0:0,1:1,2:2,3:2,4:2) -> 3
+            SUBFRAME [elif_block] var_count_below=2 var_count_at=0 max_var_depth_so_far=4 subframe_depth=3
+                SUBFRAME [for] var_count_below=2 var_count_at=2 max_var_depth_so_far=4 subframe_depth=4
                     NODE k 0s4 (0:0,1:1,2:2,3:2,4:2) -> 2
                     NODE v 1s4 (0:0,1:1,2:2,3:2,4:2) -> 3
-            FRAME [elif_block] var_count_below=2 var_count_at=1 max_var_depth_so_far=4 subframe_depth=3
+                    NODE k 0s4 (0:0,1:1,2:2,3:2,4:2) -> 2
+                    NODE v 1s4 (0:0,1:1,2:2,3:2,4:2) -> 3
+            SUBFRAME [elif_block] var_count_below=2 var_count_at=1 max_var_depth_so_far=4 subframe_depth=3
                 NODE sum 0s3 (0:0,1:1,2:2,3:2) -> 2
-                FRAME [for] var_count_below=3 var_count_at=1 max_var_depth_so_far=4 subframe_depth=4
+                SUBFRAME [for] var_count_below=3 var_count_at=1 max_var_depth_so_far=4 subframe_depth=4
                     NODE i 0s4 (0:0,1:1,2:2,3:2,4:3) -> 3
                     NODE i 0s4 (0:0,1:1,2:2,3:2,4:3) -> 3
                     NODE i 0s4 (0:0,1:1,2:2,3:2,4:3) -> 3
                     NODE i 0s4 (0:0,1:1,2:2,3:2,4:3) -> 3
-                    FRAME [for] var_count_below=4 var_count_at=1 max_var_depth_so_far=5 subframe_depth=5
+                    SUBFRAME [for] var_count_below=4 var_count_at=1 max_var_depth_so_far=5 subframe_depth=5
                         NODE j 0s5 (0:0,1:1,2:2,3:2,4:3,5:4) -> 4
                         NODE j 0s5 (0:0,1:1,2:2,3:2,4:3,5:4) -> 4
                         NODE j 0s5 (0:0,1:1,2:2,3:2,4:3,5:4) -> 4
@@ -26013,36 +26013,36 @@ FRAME [main_block] var_count_below=0 var_count_at=1 max_var_depth_so_far=1 subfr
                 NODE val 0s1 (0:0,1:1,2:2,3:2) -> 1
 
 ALLOCATING ABSOLUTE (PASS-2) LOCALS FOR DEFINITION BLOCK [end]
-FRAME [end] var_count_below=0 var_count_at=1 max_var_depth_so_far=1 subframe_depth=0
-    FRAME [cond_block] var_count_below=1 var_count_at=1 max_var_depth_so_far=2 subframe_depth=1
+SUBFRAME [end] var_count_below=0 var_count_at=1 max_var_depth_so_far=1 subframe_depth=0
+    SUBFRAME [cond_block] var_count_below=1 var_count_at=1 max_var_depth_so_far=2 subframe_depth=1
         NODE val 0s1 (0:0,1:1) -> 1
         NODE nonesuch 0s0 (0:0,1:1) -> 0
-        FRAME [for] var_count_below=2 var_count_at=1 max_var_depth_so_far=3 subframe_depth=2
+        SUBFRAME [for] var_count_below=2 var_count_at=1 max_var_depth_so_far=3 subframe_depth=2
             NODE idx 0s2 (0:0,1:1,2:2) -> 2
             NODE idx 0s2 (0:0,1:1,2:2) -> 2
             NODE idx 0s2 (0:0,1:1,2:2) -> 2
             NODE idx 0s2 (0:0,1:1,2:2) -> 2
             NODE idx 0s2 (0:0,1:1,2:2) -> 2
-            FRAME [if_block] var_count_below=3 var_count_at=0 max_var_depth_so_far=3 subframe_depth=3
-                FRAME [for] var_count_below=3 var_count_at=1 max_var_depth_so_far=4 subframe_depth=4
+            SUBFRAME [if_block] var_count_below=3 var_count_at=0 max_var_depth_so_far=3 subframe_depth=3
+                SUBFRAME [for] var_count_below=3 var_count_at=1 max_var_depth_so_far=4 subframe_depth=4
                     NODE k 0s4 (0:0,1:1,2:2,3:3,4:3) -> 3
                     NODE k 0s4 (0:0,1:1,2:2,3:3,4:3) -> 3
             NODE idx 0s2 (0:0,1:1,2:2) -> 2
-            FRAME [elif_block] var_count_below=3 var_count_at=0 max_var_depth_so_far=4 subframe_depth=3
-                FRAME [for] var_count_below=3 var_count_at=2 max_var_depth_so_far=5 subframe_depth=4
-                    NODE k 0s4 (0:0,1:1,2:2,3:3,4:3) -> 3
-                    NODE v 1s4 (0:0,1:1,2:2,3:3,4:3) -> 4
+            SUBFRAME [elif_block] var_count_below=3 var_count_at=0 max_var_depth_so_far=4 subframe_depth=3
+                SUBFRAME [for] var_count_below=3 var_count_at=2 max_var_depth_so_far=5 subframe_depth=4
                     NODE k 0s4 (0:0,1:1,2:2,3:3,4:3) -> 3
                     NODE v 1s4 (0:0,1:1,2:2,3:3,4:3) -> 4
+                    NODE k 0s4 (0:0,1:1,2:2,3:3,4:3) -> 3
+                    NODE v 1s4 (0:0,1:1,2:2,3:3,4:3) -> 4
             NODE idx 0s2 (0:0,1:1,2:2) -> 2
-            FRAME [elif_block] var_count_below=3 var_count_at=1 max_var_depth_so_far=5 subframe_depth=3
+            SUBFRAME [elif_block] var_count_below=3 var_count_at=1 max_var_depth_so_far=5 subframe_depth=3
                 NODE sum 0s3 (0:0,1:1,2:2,3:3) -> 3
-                FRAME [for] var_count_below=4 var_count_at=1 max_var_depth_so_far=5 subframe_depth=4
+                SUBFRAME [for] var_count_below=4 var_count_at=1 max_var_depth_so_far=5 subframe_depth=4
                     NODE i 0s4 (0:0,1:1,2:2,3:3,4:4) -> 4
                     NODE i 0s4 (0:0,1:1,2:2,3:3,4:4) -> 4
                     NODE i 0s4 (0:0,1:1,2:2,3:3,4:4) -> 4
                     NODE i 0s4 (0:0,1:1,2:2,3:3,4:4) -> 4
-                    FRAME [for] var_count_below=5 var_count_at=1 max_var_depth_so_far=6 subframe_depth=5
+                    SUBFRAME [for] var_count_below=5 var_count_at=1 max_var_depth_so_far=6 subframe_depth=5
                         NODE j 0s5 (0:0,1:1,2:2,3:3,4:4,5:5) -> 5
                         NODE j 0s5 (0:0,1:1,2:2,3:3,4:4,5:5) -> 5
                         NODE j 0s5 (0:0,1:1,2:2,3:3,4:4,5:5) -> 5

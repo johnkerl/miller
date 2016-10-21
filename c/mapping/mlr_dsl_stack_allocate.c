@@ -6,8 +6,6 @@
 #include "mapping/mlr_dsl_blocked_ast.h"
 #include "mapping/context_flags.h"
 
-// xxx check 'frame' vs. 'subframe' throughout in comments as well as code
-
 // ================================================================
 // This is a two-pass stack allocator for the Miller DSL.
 //
@@ -21,71 +19,90 @@
 // lookup to locate each local variable on the stack.  For compute-intensive
 // work this resulted in 80% or more of the compute time being used for the
 // hashmap accesses. It doesn't make sense to always be asking "where is
-// variable 'a'"? at runtime (maybe ten million times) since this can be figured
-// out ahead of time.
+// variable 'a'"? at runtime (maybe ten million times doing hash-map lookups)
+// since this can be figured out ahead of time.
 //
 // The Miller DSL allows for recursive functions and subroutines, but within
 // those, stack layout is knowable at parse time.
 //
 // ----------------------------------------------------------------
+// TERMINOLOGY
+//
+// * A top-level statement block starts with 'begin', 'end', 'func', 'subr',
+//   or is the remaining collection of statements outside of any of those which
+//   is called the 'main' statement block.
+//
+// * A stack frame is all the locals for a top-level statement block including
+//   anything local to a scoped block within the top-level block. For example,
+//   locals may be defined within if/while/do-while blocks. Also, variables can
+//   be local to a triple-fo, e.g. 'for (local i = 0; i < 10; i += 1) { ... }'.
+//   As well, locals are bound to variables in for-loops over stream records
+//   or out-of-stream variables: 'for (k, v in $*) { ... }' or
+//   'for ((k1, k2), v in @*) { ... }'. Lastly, function arguments are local
+//   to the function/subroutine definition site.
+//
+// * A subframe is the locals defined within any of the above: locals
+//   defined within an if/while/for/etc. block. Or, the locals defined
+//   in the top-level block have their own subframe.
+//
+// ----------------------------------------------------------------
+// CONVENTION: Local variables are bound to indices within the stack frame, but,
+// local variable may be read before they are defined.  Slot 0 of each frame is
+// an absent-null which is reserved for this purpose.
+//
+// ----------------------------------------------------------------
 // EXAMPLE:
 //
-//                       # ---- FUNC FRAME: defcount 7 {absent-RHS,a,b,c,i,j,y}
-//                       # To be noted below: absent-RHS is at slot 0 of top level.
+//                       # ---- FUNC TOP-LEVEL SUBFRAME 0: defcount 7 {absent-RHS,a,b,c,i,j,y}
+//                       # Absent-null-RHS is at slot 0 of top level.
 // func f(a, b, c) {     # Args define locals 1,2,3 at current level.
 //     local i = 24;     # Explicitly define local 4 at current level.
 //     j = 25;           # Implicitly define local 5 at current level.
 //                       #
-//                       # ---- IF FRAME: defcount 1 {k}
-//     if (a == 26) {    # Read local 1, up 1 level.
+//                       # ---- IF-STATEMENT SUBFRAME 1: defcount 1 {k}
+//     if (a == 26) {    # Read of local 1, found at top level (subframe 0).
 //         local k = 27; # Explicitly define local 0 at this level.
-//         j = 28;       # LHS is local 5 up one level.
+//         j = 28;       # LHS is local 5, found at top level.
 //                       #
+//                       # Note that the 'if' and the 'else' are both at subframe
+//                       # depth 1, while each defines a different number of locals.
+//                       # For this function the max variable depth is 9:
+//                       # 7 at top level plus 1 = 8 if the if is taken,
+//                       # 7 at top level plus 2 = 9 if the else is taken,
 //                       #
-//     } else {          # ---- ELSE FRAME: defcount 1 {n}
+//     } else {          # ---- ELSE-STATEMENT SUBFRAME 1: defcount 2 {n, u}
 //         n = b;        # Implicitly define local 0 at this level.
+//         local u = 4;  # Implicitly define local 1 at this level.
 //     }                 #
 //                       #
 //     y = 7;            # LHS is local 6 at current level.
 //     i = z;            # LHS is local 4 at current level;
-//                       #   RHS is unresolved -> slot 0 at current level.
+//                       # RHS is unresolved -> slot 0 at current level.
 // }                     #
 //
 // Notes:
 //
-// * Pass 1 computes frame-relative indices and upstack-level counts, xxx update x all
+// * Pass 1 computes frame-relative indices and subframe-level counts,
 //   as in the example, for each local variable.
 //
 // * Pass 2 computes absolute indices for each local variable. These
 //   aren't computable in pass 1 due to the example 'y = 7' assignment
 //   above: the number of local variables in an upper level can change
-//   after the invocation of a child level, so total frame size is not
+//   after the invocation of a child level, so the total frame size is not
 //   known until all AST nodes in the top-level block have been visited.
 //
 // * Pass 2 also computes the max depth, counting number of variables, so
 //   that for each top-level block we can allocate an array of mlrvals which
-//   will be reused on every invocation. (For recursive function calls this will
-//   be dynamically allocated.)
+//   will be reused on every invocation. (For recursive function calls an entire
+//   frame be dynamically allocated.)
 //
 // * Slot 0 of the top level is reserved for an absent-null for unresolved
 //   names on reads.
 //
 // * The tree-traversal order is done correctly so that if a variable is read
 //   before it is defined, then read again after it is defined, then the first
-//   read gets absent-null and the second gets the defined value. This also
-//   requires the concrete-syntax-tree implementation to initialize the
-//   stack to mv_absent on each invocation.
+//   read gets absent-null and the second gets the defined value.
 // ================================================================
-
-// ----------------------------------------------------------------
-// xxx to do:
-
-// * maybe move ast from containers to mapping?
-
-// * 'semantic analysis': use this to describe CST-build-time checks
-// * 'object binding': use this to describe linking func/subr defs and callsites
-// * separate verbosity for allocator? and invoke it in UT cases specific to this?
-//   -> (note allocation marks in the AST will be printed regardless)
 
 // ================================================================
 // Pass-1 stack-frame container: simply a hashmap from name to position on the
@@ -100,7 +117,7 @@ typedef struct _stkalc_subframe_t {
 // ----------------------------------------------------------------
 // Pass-1 stack-frame methods
 
-static      stkalc_subframe_t* stkalc_subframe_alloc();
+static stkalc_subframe_t* stkalc_subframe_alloc();
 
 static void stkalc_subframe_free(stkalc_subframe_t* pframe);
 
@@ -135,7 +152,7 @@ static void stkalc_subframe_group_push(stkalc_subframe_group_t* pframe_group, st
 static stkalc_subframe_t* stkalc_subframe_group_pop(stkalc_subframe_group_t* pframe_group);
 
 // Pass-1 stack-frame-group node-mutator methods: given an AST node containing a
-// local-variable usage they assign a frame-relative index and a frame-depth
+// local-variable usage they assign a subframe-relative index and a subframe-depth
 // counter (how many frames deep into the top-level statement block the node
 // is).
 
@@ -208,6 +225,7 @@ static void leader_print(int depth);
 
 void blocked_ast_allocate_locals(blocked_ast_t* paast, int trace) {
 
+	// Pass 1
 	for (sllve_t* pe = paast->pfunc_defs->phead; pe != NULL; pe = pe->pnext) {
 		pass_1_for_func_subr_block(pe->pvvalue, trace);
 	}
@@ -224,6 +242,7 @@ void blocked_ast_allocate_locals(blocked_ast_t* paast, int trace) {
 		pass_1_for_begin_end_block(pe->pvvalue, trace);
 	}
 
+	// Pass 2
 	for (sllve_t* pe = paast->pfunc_defs->phead; pe != NULL; pe = pe->pnext) {
 		pass_2_for_top_level_block(pe->pvvalue, trace);
 	}
@@ -249,7 +268,6 @@ static void pass_1_for_func_subr_block(mlr_dsl_ast_node_t* pnode, int trace) {
 	}
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->type != MD_AST_NODE_TYPE_SUBR_DEF && pnode->type != MD_AST_NODE_TYPE_FUNC_DEF);
-	// xxx assert two children of desired type
 
 	stkalc_subframe_t* pframe = stkalc_subframe_alloc();
 	stkalc_subframe_group_t* pframe_group = stkalc_subframe_group_alloc(pframe, trace);
@@ -407,7 +425,7 @@ static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_
 {
 	if (trace) {
 		leader_print(pframe_group->plist->length);
-		printf("PUSH FRAME %s\n", pnode->text);
+		printf("PUSH SUBFRAME %s\n", pnode->text);
 	}
 	stkalc_subframe_t* pnext_subframe = stkalc_subframe_alloc();
 	stkalc_subframe_group_push(pframe_group, pnext_subframe);
@@ -429,7 +447,7 @@ static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_
 
 	if (trace) {
 		leader_print(pframe_group->plist->length);
-		printf("POP FRAME %s subframe_var_count=%d\n", pnode->text, pnode->subframe_var_count);
+		printf("POP SUBFRAME %s subframe_var_count=%d\n", pnode->text, pnode->subframe_var_count);
 	}
 }
 
@@ -454,7 +472,7 @@ static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkal
 
 	if (trace) {
 		leader_print(pframe_group->plist->length);
-		printf("PUSH FRAME %s\n", pnode->text);
+		printf("PUSH SUBFRAME %s\n", pnode->text);
 	}
 	stkalc_subframe_t* pnext_subframe = stkalc_subframe_alloc();
 	stkalc_subframe_group_push(pframe_group, pnext_subframe);
@@ -468,7 +486,7 @@ static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkal
 	stkalc_subframe_free(stkalc_subframe_group_pop(pframe_group));
 	if (trace) {
 		leader_print(pframe_group->plist->length);
-		printf("POP FRAME %s subframe_var_count=%d\n", pnode->text, pnode->subframe_var_count);
+		printf("POP SUBFRAME %s subframe_var_count=%d\n", pnode->text, pnode->subframe_var_count);
 	}
 }
 
@@ -496,7 +514,7 @@ static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subfram
 
 	if (trace) {
 		leader_print(pframe_group->plist->length);
-		printf("PUSH FRAME %s\n", pnode->text);
+		printf("PUSH SUBFRAME %s\n", pnode->text);
 	}
 	stkalc_subframe_t* pnext_subframe = stkalc_subframe_alloc();
 	stkalc_subframe_group_push(pframe_group, pnext_subframe);
@@ -514,7 +532,7 @@ static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subfram
 	stkalc_subframe_free(stkalc_subframe_group_pop(pframe_group));
 	if (trace) {
 		leader_print(pframe_group->plist->length);
-		printf("POP FRAME %s subframe_var_count=%d\n", pnode->text, pnode->subframe_var_count);
+		printf("POP SUBFRAME %s subframe_var_count=%d\n", pnode->text, pnode->subframe_var_count);
 	}
 }
 
@@ -529,7 +547,7 @@ static void pass_1_for_triple_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subfram
 
 	if (trace) {
 		leader_print(pframe_group->plist->length);
-		printf("PUSH FRAME %s\n", pnode->text);
+		printf("PUSH SUBFRAME %s\n", pnode->text);
 	}
 	stkalc_subframe_t* pnext_subframe = stkalc_subframe_alloc();
 	stkalc_subframe_group_push(pframe_group, pnext_subframe);
@@ -546,7 +564,7 @@ static void pass_1_for_triple_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subfram
 	stkalc_subframe_free(stkalc_subframe_group_pop(pframe_group));
 	if (trace) {
 		leader_print(pframe_group->plist->length);
-		printf("POP FRAME %s subframe_var_count=%d\n", pnode->text, pnode->subframe_var_count);
+		printf("POP SUBFRAME %s subframe_var_count=%d\n", pnode->text, pnode->subframe_var_count);
 	}
 }
 
@@ -561,7 +579,7 @@ static void pass_1_for_non_terminal_node(mlr_dsl_ast_node_t* pnode, stkalc_subfr
 
 			if (trace) {
 				leader_print(pframe_group->plist->length);
-				printf("PUSH FRAME %s\n", pchild->text);
+				printf("PUSH SUBFRAME %s\n", pchild->text);
 			}
 
 			stkalc_subframe_t* pnext_subframe = stkalc_subframe_alloc();
@@ -576,7 +594,7 @@ static void pass_1_for_non_terminal_node(mlr_dsl_ast_node_t* pnode, stkalc_subfr
 
 			if (trace) {
 				leader_print(pframe_group->plist->length);
-				printf("POP FRAME %s subframe_var_count=%d\n", pnode->text, pchild->subframe_var_count);
+				printf("POP SUBFRAME %s subframe_var_count=%d\n", pnode->text, pchild->subframe_var_count);
 			}
 
 		} else {
@@ -664,8 +682,9 @@ static void stkalc_subframe_group_mutate_node_for_define(stkalc_subframe_group_t
 	}
 }
 
-// 'x = 1' is one of two things: (1) already defined in a higher subframe and referenced in the current subframe;
-// (2) not defined in a higher subframe, in which case it is hereby defined in the current subframe.
+// 'x = 1' is one of two things: (1) already defined in a higher subframe and
+// referenced in the current subframe; (2) not defined in a higher subframe, in
+// which case it is hereby defined in the current subframe.
 static void stkalc_subframe_group_mutate_node_for_write(stkalc_subframe_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
 	char* desc, int trace)
 {
@@ -759,19 +778,6 @@ static void pass_2_for_top_level_block(mlr_dsl_ast_node_t* pnode, int trace) {
 }
 
 // ----------------------------------------------------------------
-
-// xxx elaborate:
-//
-// 0:3 (0..2)
-//     1:5 (3..7)
-//         2:4 (8..1)
-//         here 1u0 means: abs9
-//         here 1u1 means: abs4
-//         here 1u2 means: abs1
-// * go to array slot vardef_subframe_index
-// * there find the var_count_below
-
-// xxx this is crying out for a managed struct
 static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 	int subframe_depth, int var_count_below_subframe, int var_count_at_subframe, int* pmax_var_depth,
 	int* subframe_var_count_belows, int max_subframe_depth,
@@ -787,7 +793,7 @@ static void pass_2_for_node(mlr_dsl_ast_node_t* pnode,
 		subframe_var_count_belows[subframe_depth] = var_count_below_subframe;
 		if (trace) {
 			leader_print(subframe_depth);
-			printf("FRAME [%s] var_count_below=%d var_count_at=%d max_var_depth_so_far=%d subframe_depth=%d\n",
+			printf("SUBFRAME [%s] var_count_below=%d var_count_at=%d max_var_depth_so_far=%d subframe_depth=%d\n",
 				pnode->text, var_count_below_subframe, var_count_at_subframe, *pmax_var_depth, subframe_depth);
 		}
 		subframe_depth++;

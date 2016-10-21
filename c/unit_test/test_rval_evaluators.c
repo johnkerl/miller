@@ -182,7 +182,6 @@ static char * test_numbers() {
 	printf("newval log(x)   = %s\n", mv_describe_val(valplogx));
 	printf("newval 2*log(x) = %s\n", mv_describe_val(valp2logx));
 
-	printf("XXX %s\n", mt_describe_type(valp2.type));
 	mu_assert_lf(valp2.type     == MT_FLOAT);
 	mu_assert_lf(valp4.type     == MT_FLOAT);
 	mu_assert_lf(valpx.type     == MT_FLOAT);

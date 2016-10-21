@@ -55,6 +55,11 @@ HYGIENE FOR 4.6.0:
 * clean up local-stack macrofuncs (hide ifdeffing from callsites)
 * xxxes
 
+* 'semantic analysis': use this to describe CST-build-time checks
+* 'object binding': use this to describe linking func/subr defs and callsites
+* separate verbosity for allocator? and invoke it in UT cases specific to this?
+  -> (note allocation marks in the AST will be printed regardless)
+
 ----------------------------------------------------------------
 DOC FOR 4.6.0:
 
