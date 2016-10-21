@@ -1811,7 +1811,7 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 	}
 
 	if (pstatement->subr_callsite_arguments != NULL) {
-		// mv_frees already done in bind_stack_free at call exit // xxx fix comment
+		// mv_frees are done by the local-stack container which owns the mlrvals it contains
 		free(pstatement->subr_callsite_arguments);
 	}
 	subr_callsite_free(pstatement->psubr_callsite);
@@ -2764,8 +2764,10 @@ static void handle_triple_for(
 
 	while (TRUE) {
 
-		// Continuation statement
-		// xxx the rest -- ?!? needs a UT !!
+		// Continuation statements:
+		// * all but the last one are simply executed ...
+		mlr_dsl_cst_handle_statement_list(pstatement->ptriple_for_pre_continuation_statements, pvars, pcst_outputs);
+		// * ... and the last one is used to determine continuation:
 		rval_evaluator_t* pev = pstatement->ptriple_for_continuation_evaluator;
 		mv_t val = pev->pprocess_func(pev->pvstate, pvars);
 		if (mv_is_non_null(&val))

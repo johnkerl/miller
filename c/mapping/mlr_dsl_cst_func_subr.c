@@ -129,21 +129,15 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	mv_t retval = mv_absent();
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// Bind parameters to arguments
+	// Push stack and bind parameters to arguments
 
-	// XXX this is getting called twice, once here and once for top-level-statement-block.
-	// xxx local-stack enter
-	// xxx alloc new if in_use ...
-	// xxx check for unnecessary ephemerals !!
 	local_stack_frame_t* pframe = local_stack_frame_enter(ptop_level_block->pframe);
 	local_stack_push(pvars->plocal_stack, pframe);
-
-	// xxx make a separate entry point for clear-0 only ... we are about to assign args.
 	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->subframe_var_count);
 
 	for (int i = 0; i < arity; i++) {
-		// xxx comment absent-null-at-0 convention ...............
-		// xxx make an mv_replace()
+		// Absent-null is by convention at slot 0 of the frame, and arguments are next.
+		// Hence starting the loop at 1.
 		local_stack_frame_set(pframe, i+1, args[i]);
 	}
 
@@ -166,6 +160,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Pop stack
 	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->subframe_var_count);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 
@@ -266,15 +261,20 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 {
 	cst_top_level_statement_block_t* ptop_level_block = pstate->ptop_level_block;
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Push stack and bind parameters to arguments
 	local_stack_frame_t* pframe = local_stack_frame_enter(ptop_level_block->pframe);
 	local_stack_push(pvars->plocal_stack, pframe);
 	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->subframe_var_count);
 
 	for (int i = 0; i < pstate->arity; i++) {
-		// xxx comment absent-null-at-0 convention ...............
+		// Absent-null is by convention at slot 0 of the frame, and arguments are next.
+		// Hence starting the loop at 1.
 		local_stack_frame_set(pframe, i+1, args[i]);
 	}
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Execute the subroutine body
 	for (sllve_t* pe = pstate->ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
@@ -288,6 +288,7 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Pop stack
 	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->subframe_var_count);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 }
