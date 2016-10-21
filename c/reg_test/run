@@ -968,6 +968,8 @@ mlr_expect_fail put -v 'begin{$x=1}'
 mlr_expect_fail put -v 'begin{@x=$y}'
 mlr_expect_fail put -v 'end{$x=1}'
 mlr_expect_fail put -v 'end{@x=$y}'
+mlr_expect_fail put -v 'begin{@v=$*}'
+mlr_expect_fail put -v 'end{$*=@v}'
 
 mlr_expect_fail put -v 'begin{unset $x}'
 mlr_expect_fail put -v 'end{unset $x}'

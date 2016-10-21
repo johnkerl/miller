@@ -16611,6 +16611,52 @@ text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
                 text="x", type=STRING_LITERAL.
             text="y", type=FIELD_NAME.
 
+mlr put -v begin{@v=$*}
+mlr: assignments from $-variables are not valid within begin or end blocks.
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="begin", type=BEGIN:
+        text="begin_block", type=STATEMENT_BLOCK:
+            text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+                text="$*", type=FULL_SREC.
+
+BLOCKED AST:
+
+BEGIN-BLOCK:
+text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="begin_block", type=STATEMENT_BLOCK:
+        text="=", type=OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="v", type=STRING_LITERAL.
+            text="$*", type=FULL_SREC.
+
+mlr put -v end{$*=@v}
+mlr: assignments to $-variables are not valid within begin or end blocks.
+RAW AST:
+
+AST ROOT:
+text="block", type=STATEMENT_BLOCK:
+    text="end", type=END:
+        text="end_block", type=STATEMENT_BLOCK:
+            text="=", type=FULL_SREC_FROM_OOSVAR_ASSIGNMENT:
+                text="$*", type=FULL_SREC.
+                text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                    text="v", type=STRING_LITERAL.
+
+BLOCKED AST:
+
+END-BLOCK:
+text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
+    text="end_block", type=STATEMENT_BLOCK:
+        text="=", type=FULL_SREC_FROM_OOSVAR_ASSIGNMENT:
+            text="$*", type=FULL_SREC.
+            text="oosvar_keylist", type=OOSVAR_KEYLIST:
+                text="v", type=STRING_LITERAL.
+
 mlr put -v begin{unset $x}
 mlr: unset of $-variables is not valid within begin or end blocks.
 RAW AST:
