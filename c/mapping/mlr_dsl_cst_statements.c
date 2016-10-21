@@ -633,7 +633,6 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->pstatement_block                        = NULL;
 	pstatement->pif_chain_statements                    = NULL;
 	pstatement->for_srec_k_frame_relative_index         = 0;
-	pstatement->pfor_oosvar_k_names                     = NULL;
 	pstatement->for_oosvar_k_frame_relative_indices     = NULL;
 	pstatement->for_oosvar_k_count                      = 0;
 	pstatement->for_v_frame_relative_index              = 0;
@@ -1105,12 +1104,10 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 
 	pstatement->for_oosvar_k_frame_relative_indices = mlr_malloc_or_die(sizeof(int) * psubleft->pchildren->length);
 	pstatement->for_oosvar_k_count = 0;
-	pstatement->pfor_oosvar_k_names = slls_alloc(); // xxx rm
 	int ok = TRUE;
 	hss_t* pnameset = hss_alloc();
 	for (sllve_t* pe = psubleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnamenode = pe->pvvalue;
-		slls_append_with_free(pstatement->pfor_oosvar_k_names, mlr_strdup_or_die(pnamenode->text)); // xxx rm
 		MLR_INTERNAL_CODING_ERROR_IF(pnamenode->vardef_frame_relative_index == MD_UNUSED_INDEX);
 		pstatement->for_oosvar_k_frame_relative_indices[pstatement->for_oosvar_k_count++] = pnamenode->vardef_frame_relative_index;
 		if (hss_has(pnameset, pnamenode->text)) {
@@ -1169,11 +1166,9 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar_key_only(mlr_dsl_cst_t* pcst, m
 	mlr_dsl_ast_node_t* pmiddle   = pnode->pchildren->phead->pnext->pvvalue;
 	mlr_dsl_ast_node_t* pright    = pnode->pchildren->phead->pnext->pnext->pvvalue;
 
-	pstatement->pfor_oosvar_k_names = slls_alloc();
 	pstatement->for_oosvar_k_frame_relative_indices = mlr_malloc_or_die(sizeof(int));
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->for_oosvar_k_frame_relative_indices[0] = pleft->vardef_frame_relative_index;
-	slls_append_with_free(pstatement->pfor_oosvar_k_names, mlr_strdup_or_die(pleft->text));
 
 	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
 		pcst, pmiddle, type_inferencing, context_flags);
@@ -1905,9 +1900,6 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 		sllv_free(pstatement->pif_chain_statements);
 	}
 
-	if (pstatement->pfor_oosvar_k_names != NULL) {
-		slls_free(pstatement->pfor_oosvar_k_names);
-	}
 	if (pstatement->for_oosvar_k_frame_relative_indices != NULL) {
 		free(pstatement->for_oosvar_k_frame_relative_indices);
 	}
