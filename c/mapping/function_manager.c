@@ -559,8 +559,10 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 		rval_evaluator_t* pcallsite_evaluator = fmgr_alloc_from_udf_callsite(pfmgr, pudf_defsite_state,
 			pnode, function_name, user_provided_arity, type_inferencing, context_flags);
 
+		// Struct assignment into the callsite space
 		*pev = *pcallsite_evaluator;
-		free(pcallsite_evaluator); // xxx comment
+		free(pcallsite_evaluator);
+
 		return;
 	}
 

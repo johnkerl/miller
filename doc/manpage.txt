@@ -375,6 +375,8 @@ VERBS
    filter
        Usage: mlr filter [options] {expression}
        Prints records for which {expression} evaluates to true.
+       If there are multiple semicolon-delimited expressions, all of them are
+       evaluated and the last one is used as the filter criterion.
 
        Options:
        -v: First prints the AST (abstract syntax tree) for the expression, which gives
@@ -422,6 +424,7 @@ VERBS
 	 mlr filter '$color != "blue" && $value > 4.2'
 	 mlr filter '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'
 	 mlr filter '($name =~ "^sys.*east$") || ($name =~ "^dev.[0-9]+"i)'
+	 mlr filter '$ab = $a+$b; $cd = $c+$d; $ab != $cd'
 	 mlr filter '
 	   NR == 1 ||
 	  #NR == 2 ||

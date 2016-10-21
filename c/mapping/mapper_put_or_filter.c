@@ -88,9 +88,6 @@ mapper_setup_t mapper_filter_setup = {
 };
 
 // ----------------------------------------------------------------
-// xxx put vs. filter:
-// * put -q
-// * filter -x
 static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options] {expression}\n", argv0, verb);
 	fprintf(o, "Adds/updates specified field(s). Expressions are semicolon-separated and must\n");
@@ -133,14 +130,12 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	shared_usage(o, argv0, verb);
 }
 
-// xxx conditionally accept -q
-// xxx conditionally accept -x
-
 // ----------------------------------------------------------------
 static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options] {expression}\n", argv0, verb);
-	// xxx elaborate ... more to the story now
 	fprintf(o, "Prints records for which {expression} evaluates to true.\n");
+	fprintf(o, "If there are multiple semicolon-delimited expressions, all of them are\n");
+	fprintf(o, "evaluated and the last one is used as the filter criterion.\n");
 	fprintf(o, "\n");
 
 	shared_usage(o, argv0, verb);
@@ -153,6 +148,7 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  %s %s '$color != \"blue\" && $value > 4.2'\n", argv0, verb);
 	fprintf(o, "  %s %s '($x<.5 && $y<.5) || ($x>.5 && $y>.5)'\n", argv0, verb);
 	fprintf(o, "  %s %s '($name =~ \"^sys.*east$\") || ($name =~ \"^dev.[0-9]+\"i)'\n", argv0, verb);
+	fprintf(o, "  %s %s '$ab = $a+$b; $cd = $c+$d; $ab != $cd'\n", argv0, verb);
 	fprintf(o, "  %s %s '\n", argv0, verb);
 	fprintf(o, "    NR == 1 ||\n");
 	fprintf(o, "   #NR == 2 ||\n");
