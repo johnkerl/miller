@@ -18,8 +18,6 @@ NON-RELEASE:
 ----------------------------------------------------------------
 FUNCTIONALITY FOR 4.6.0:
 
-! triple-for multi-continuation !
-
 ? map-locals into 4.6.0?!?!?
   - LHS define/assign
     a = $*
@@ -40,7 +38,8 @@ FUNCTIONALITY FOR 4.6.0:
 
   ? for-oosvar map-valued boundvars?!?
 
-? runtime type assertion ?
+? runtime type assertion ? either an 'int x' ... needing propagation ...
+  or maybe more simply an assert_int(x), assert_numeric, assert_present(x), etc.
 
 ----------------------------------------------------------------
 UT FOR 4.6.0:
@@ -52,13 +51,6 @@ UT FOR 4.6.0:
 HYGIENE FOR 4.6.0:
 
 * split up mlr_dsl_cst.h et al.
-* clean up local-stack macrofuncs (hide ifdeffing from callsites)
-* xxxes
-
-* 'semantic analysis': use this to describe CST-build-time checks
-* 'object binding': use this to describe linking func/subr defs and callsites
-* separate verbosity for allocator? and invoke it in UT cases specific to this?
-  -> (note allocation marks in the AST will be printed regardless)
 
 ----------------------------------------------------------------
 DOC FOR 4.6.0:

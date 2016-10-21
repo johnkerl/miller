@@ -193,6 +193,9 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 	// could call one another only in the reverse order of their definition.
 	// E.g. if 's' is defined and then 't', then t could call s but s could not
 	// call t [subroutine not defined yet], and neither could call itself.)
+	//
+	// This object-binding step is not a full pass through the CST since we've
+	// maintained pointers into callsites which we can now directly poke.
 	fmgr_resolve_func_callsites(pcst->pfmgr);
 	mlr_dsl_cst_resolve_subr_callsites(pcst);
 

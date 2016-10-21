@@ -146,9 +146,11 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Return statement within user-defined function
 	rval_evaluator_t* preturn_evaluator;
 
-	// There are two variants of statement-list handlers: one for inside loop bodies which has to check break/continue
-	// flags after each statement, and another for outside loop bodies which doesn't need to check those. (This is a
-	// micro-optimization.) For bodyless statements (e.g. assignment) this is null.
+	// There are two variants of statement-list handlers: one for inside loop
+	// bodies which has to check break/continue flags after each statement, and
+	// another for outside loop bodies which doesn't need to check those. (This
+	// is a micro-optimization.) For bodyless statements (e.g. assignment) this
+	// is null.
 	mlr_dsl_cst_statement_block_handler_t* pblock_handler;
 
 	// Assignment to oosvar

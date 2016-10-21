@@ -19,6 +19,8 @@
 // The grammar permits certain statements which are syntactically invalid, (a) because it's awkward to handle
 // there, and (b) because we get far better control over error messages here (vs. 'syntax error').
 // The context flags are used as the CST is built from the AST, for CST-build-time validation.
+// This semantic analysis isn't a separate pass through the AST or CST since it's done while the
+// CST is being constructed.
 
 rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
