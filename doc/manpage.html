@@ -526,10 +526,11 @@ VERBS
        evaluated and the last one is used as the filter criterion.
 
        Options:
-       -v: First prints the AST (abstract syntax tree) for the expression, which gives
-	   full transparency on the precedence and associativity rules of Miller's
-	   grammar.
-       -t: Print low-level parser-trace to stderr.
+       -v: Prints the expressions's AST (abstract syntax tree), which gives
+	   full transparency on the precedence and associativity rules of
+	   Miller's grammar, to stdout.
+       -a: Prints a low-level stack-allocation trace to stdout.
+       -t: Prints a low-level parser trace to stderr.
        -x: Prints records for which {expression} evaluates to false.
        -S: Keeps field values, or literals in the expression, as strings with no type
 	   inference to int or float.
@@ -814,10 +815,11 @@ VERBS
        regex-captures into \1, \2, etc.).
 
        Options:
-       -v: First prints the AST (abstract syntax tree) for the expression, which gives
-	   full transparency on the precedence and associativity rules of Miller's
-	   grammar.
-       -t: Print low-level parser-trace to stderr.
+       -v: Prints the expressions's AST (abstract syntax tree), which gives
+	   full transparency on the precedence and associativity rules of
+	   Miller's grammar, to stdout.
+       -a: Prints a low-level stack-allocation trace to stdout.
+       -t: Prints a low-level parser trace to stderr.
        -q: Does not include the modified record in the output stream. Useful for when
 	   all desired output is in begin and/or end blocks.
        -S: Keeps field values, or literals in the expression, as strings with no type
@@ -880,45 +882,6 @@ VERBS
        including function list. Or "mlr -f".
        Please see in particular:
 	 http://www.johnkerl.org/miller/doc/reference.html#put
-       Options:
-       -v: First prints the AST (abstract syntax tree) for the expression, which gives
-	   full transparency on the precedence and associativity rules of Miller's
-	   grammar.
-       -t: Print low-level parser-trace to stderr.
-       -q: Does not include the modified record in the output stream. Useful for when
-	   all desired output is in begin and/or end blocks.
-       -S: Keeps field values, or literals in the expression, as strings with no type
-	   inference to int or float.
-       -F: Keeps field values, or literals in the expression, as strings or floats
-	   with no inference to int.
-       --oflatsep {string}: Separator to use when flattening multi-level @-variables
-	   to output records for emit. Default ":".
-       -f {filename}: the DSL expression is taken from the specified file rather
-	   than from the command line. Outer single quotes wrapping the expression
-	   should not be placed in the file. If -f is specified more than once,
-	   all input files specified using -f are concatenated to produce the expression.
-	   (For example, you can define functions in one file and call them from another.)
-       -e {expression}: You can use this after -f to add an expression. Example use
-	   case: define functions/subroutines in a file you specify with -f, then call
-	   them with an expression you specify with -e.
-       (If you mix -e and -f then the expressions are evaluated in the order encountered.
-       Since the expression pieces are simply concatenated, please be sure to use intervening
-       semicolons to separate expressions.)
-       --no-fflush: for emit, tee, print, and dump, don't call fflush() after every
-	   record.
-       Any of the output-format command-line flags (see mlr -h). Example: using
-	 mlr --icsv --opprint ... then put --ojson 'tee &gt; "mytap-".$a.".dat", $*' then ...
-       the input is CSV, the output is pretty-print tabular, but the tee-file output
-       is written in JSON format.
-
-       Please use a dollar sign for field names and double-quotes for string
-       literals. If field names have special characters such as "." then you might
-       use braces, e.g. '${field.name}'. Miller built-in variables are
-       NF NR FNR FILENUM FILENAME PI E, and ENV["namegoeshere"] to access environment
-       variables. The environment-variable name may be an expression, e.g. a field
-       value.
-
-       Use # to comment to end of line.
 
    regularize
        Usage: mlr regularize

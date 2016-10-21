@@ -127,7 +127,6 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "including function list. Or \"%s -f\".\n", argv0);
 	fprintf(o, "Please see in particular:\n");
 	fprintf(o, "  http://www.johnkerl.org/miller/doc/reference.html#put\n");
-	shared_usage(o, argv0, verb);
 }
 
 // ----------------------------------------------------------------
@@ -162,10 +161,11 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 
 static void shared_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Options:\n");
-	fprintf(o, "-v: First prints the AST (abstract syntax tree) for the expression, which gives\n");
-	fprintf(o, "    full transparency on the precedence and associativity rules of Miller's\n");
-	fprintf(o, "    grammar.\n");
-	fprintf(o, "-t: Print low-level parser-trace to stderr.\n");
+	fprintf(o, "-v: Prints the expressions's AST (abstract syntax tree), which gives\n");
+	fprintf(o, "    full transparency on the precedence and associativity rules of\n");
+	fprintf(o, "    Miller's grammar, to stdout.\n");
+	fprintf(o, "-a: Prints a low-level stack-allocation trace to stdout.\n");
+	fprintf(o, "-t: Prints a low-level parser trace to stderr.\n");
 	if (streq(verb, "put")) {
 		fprintf(o, "-q: Does not include the modified record in the output stream. Useful for when\n");
 		fprintf(o, "    all desired output is in begin and/or end blocks.\n");
@@ -284,7 +284,7 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 		} else if (streq(argv[argi], "-v")) {
 			print_ast = TRUE;
 			argi += 1;
-		} else if (streq(argv[argi], "-a")) { // xxx to on-line help
+		} else if (streq(argv[argi], "-a")) {
 			trace_stack_allocation = TRUE;
 			argi += 1;
 		} else if (streq(argv[argi], "-t")) {

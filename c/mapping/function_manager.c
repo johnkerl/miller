@@ -647,8 +647,9 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 		exit(1);
 	}
 
+	// Struct assignment into callsite space
 	*pev = *pevaluator;
-	free(pevaluator); // xxx comment
+	free(pevaluator);
 }
 
 // ================================================================
