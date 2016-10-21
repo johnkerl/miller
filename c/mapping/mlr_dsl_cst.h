@@ -162,7 +162,6 @@ typedef struct _mlr_dsl_cst_statement_t {
 	sllv_t** ppemit_keylist_evaluators;
 
 	// Assignment to local
-	char* local_lhs_variable_name; // xxx rm
 	int local_lhs_frame_relative_index;
 
 	// Assignment to srec

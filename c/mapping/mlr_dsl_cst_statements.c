@@ -612,7 +612,6 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->pemit_keylist_evaluators                = NULL;
 	pstatement->num_emit_keylist_evaluators             = 0;
 	pstatement->ppemit_keylist_evaluators               = NULL;
-	pstatement->local_lhs_variable_name                 = NULL;
 	pstatement->local_lhs_frame_relative_index          = 0;
 	pstatement->srec_lhs_field_name                     = NULL;
 	pstatement->env_lhs_name                            = NULL;
@@ -676,7 +675,6 @@ static mlr_dsl_cst_statement_t* alloc_local_variable_assignment(mlr_dsl_cst_t* p
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren != NULL);
 
 	pstatement->pnode_handler = handle_local_variable_assignment;
-	pstatement->local_lhs_variable_name = pleft->text;
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->local_lhs_frame_relative_index = pleft->vardef_frame_relative_index;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
