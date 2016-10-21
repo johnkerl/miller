@@ -16,15 +16,6 @@ NON-RELEASE:
 * benchmark lua-jit
 
 ----------------------------------------------------------------
-HYGIENE FOR 4.6.0:
-
-* split up mlr_dsl_cst.h et al.
-* clean up local-stack macrofuncs (hide ifdeffing from callsites)
-* xxxes
-
-* final double-check valgrinds
-
-----------------------------------------------------------------
 FUNCTIONALITY FOR 4.6.0:
 
 * retain CLI -e/-f ordering -- argvish is possible w/ -e 1st
@@ -33,10 +24,14 @@ FUNCTIONALITY FOR 4.6.0:
 UT FOR 4.6.0:
 
 * local nonesuch=nonesuch
-* test-dsl-stack has limited utility now ... trim or remove it.
-  -> rtr w/ put -v -a ...
-
 * rtr case for $* in begin/end/func
+
+----------------------------------------------------------------
+HYGIENE FOR 4.6.0:
+
+* split up mlr_dsl_cst.h et al.
+* clean up local-stack macrofuncs (hide ifdeffing from callsites)
+* xxxes
 
 ----------------------------------------------------------------
 DOC FOR 4.6.0:
