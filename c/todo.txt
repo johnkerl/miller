@@ -21,11 +21,26 @@ FUNCTIONALITY FOR 4.6.0:
 ! triple-for multi-continuation !
 
 ? map-locals into 4.6.0?!?!?
-  - parameter marshal
   - LHS define/assign
-  - RHS expr eval
-  - maplocal <=> $* / @* / @a[b][c]
+    a = $*
+    a = @*
+    a = @b
+    a = @b[c]
+    a = b
+    $* = a
+    @* = a
+    @b = a
+    @b[c] = a
+
+  - RHS expr eval: terminality as already for oosvars
+
+  - parameter marshal
+
+  - function return value
+
   ? for-oosvar map-valued boundvars?!?
+
+? runtime type assertion ?
 
 ----------------------------------------------------------------
 UT FOR 4.6.0:
@@ -47,6 +62,10 @@ OOSVAR SINGLE FOR:
 * oosvar-single-for mlh
 * oosvar-single-for mld
 * find & update cookbook/ref/whateveritwas ...
+
+COOK:
+* n-grams ...
+* mlr --from words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 
 PERF:
 * mand bench somewhere; other benches.

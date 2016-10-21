@@ -22,7 +22,6 @@ typedef struct _local_stack_frame_t {
 	int size;
 	int subframe_base;
 	mv_t* pvars;
-	// xxx has-absent-read flag ...
 } local_stack_frame_t;
 
 // ----------------------------------------------------------------
@@ -33,10 +32,11 @@ typedef struct _local_stack_frame_t {
 local_stack_frame_t* local_stack_frame_alloc(int size);
 void local_stack_frame_free(local_stack_frame_t* pframe);
 
-// ----------------------------------------------------------------
+// ================================================================
 //#define LOCAL_STACK_TRACE_ENABLE
 //#define LOCAL_STACK_BOUNDS_CHECK_ENABLE
 
+// ----------------------------------------------------------------
 #ifdef LOCAL_STACK_BOUNDS_CHECK_ENABLE
 static int local_stack_bounds_check_announce_first_call = TRUE;
 
@@ -46,15 +46,18 @@ static void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int 
 		local_stack_bounds_check_announce_first_call = FALSE;
 	}
 	if (vardef_frame_relative_index < 0) {
-		fprintf(stderr, "OP=%s FRAME=%p IDX=%d/%d STACK UNDERFLOW\n", op, pframe, vardef_frame_relative_index, pframe->size);
+		fprintf(stderr, "OP=%s FRAME=%p IDX=%d/%d STACK UNDERFLOW\n",
+			op, pframe, vardef_frame_relative_index, pframe->size);
 		exit(1);
 	}
 	if (set && vardef_frame_relative_index == 0) {
-		fprintf(stderr, "OP=%s FRAME=%p IDX=%d/%d ABSENT WRITE\n", op, pframe, vardef_frame_relative_index, pframe->size);
+		fprintf(stderr, "OP=%s FRAME=%p IDX=%d/%d ABSENT WRITE\n",
+			op, pframe, vardef_frame_relative_index, pframe->size);
 		exit(1);
 	}
 	if (vardef_frame_relative_index >= pframe->size) {
-		fprintf(stderr, "OP=%s FRAME=%p IDX=%d/%d STACK OVERFLOW\n", op, pframe, vardef_frame_relative_index, pframe->size);
+		fprintf(stderr, "OP=%s FRAME=%p IDX=%d/%d STACK OVERFLOW\n",
+			op, pframe, vardef_frame_relative_index, pframe->size);
 		exit(1);
 	}
 }
@@ -65,6 +68,13 @@ static void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int 
 
 #define LOCAL_STACK_BOUNDS_CHECK(pframe, op, set, vardef_frame_relative_index)
 
+#endif
+
+// ----------------------------------------------------------------
+#ifdef LOCAL_STACK_TRACE_ENABLE
+#define LOCAL_STACK_TRACE(p) p
+#else
+#define LOCAL_STACK_TRACE(p)
 #endif
 
 // ----------------------------------------------------------------
@@ -79,16 +89,12 @@ local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe);
 void local_stack_frame_exit(local_stack_frame_t* pframe);
 
 static inline mv_t* local_stack_frame_get(local_stack_frame_t* pframe, int vardef_frame_relative_index) {
-#ifdef LOCAL_STACK_TRACE_ENABLE // xxx macroify
-	printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index);
-#endif
+	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
 	return &pframe->pvars[vardef_frame_relative_index];
 }
 static inline void local_stack_frame_set(local_stack_frame_t* pframe, int vardef_frame_relative_index, mv_t val) {
-#ifdef LOCAL_STACK_TRACE_ENABLE // xxx macroify
-	printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index);
-#endif
+	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "SET", TRUE, vardef_frame_relative_index);
 	// xxx debug after free-flags semantics are in place
 	// xxx pframe->pvars[vardef_frame_relative_index] = val;
@@ -101,14 +107,11 @@ static inline void local_stack_frame_set(local_stack_frame_t* pframe, int vardef
 // the top-level block itself as well as ifs/fors/whiles.
 
 static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int count) {
-#ifdef LOCAL_STACK_TRACE_ENABLE // xxx macroify
-	printf("LOCAL STACK SUBFRAME %p ENTER %d->%d\n", pframe, pframe->subframe_base, pframe->subframe_base+count);
-#endif
+	LOCAL_STACK_TRACE(printf("LOCAL STACK SUBFRAME %p ENTER %d->%d\n",
+		pframe, pframe->subframe_base, pframe->subframe_base+count));
 	mv_t* psubframe = &pframe->pvars[pframe->subframe_base];
 	for (int i = 0; i < count; i++) {
-#ifdef LOCAL_STACK_TRACE_ENABLE // xxx macroify
-	printf("LOCAL STACK FRAME %p CLEAR %d\n", pframe, pframe->subframe_base+i);
-#endif
+		LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p CLEAR %d\n", pframe, pframe->subframe_base+i));
 		LOCAL_STACK_BOUNDS_CHECK(pframe, "CLEAR", FALSE, pframe->subframe_base+i);
 		mv_reset(&psubframe[i]);
 	}
@@ -116,9 +119,8 @@ static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int c
 }
 
 static inline void local_stack_subframe_exit(local_stack_frame_t* pframe, int count) {
-#ifdef LOCAL_STACK_TRACE_ENABLE // xxx macroify
-	printf("LOCAL STACK SUBFRAME %p EXIT  %d->%d\n", pframe, pframe->subframe_base, pframe->subframe_base-count);
-#endif
+	LOCAL_STACK_TRACE(printf("LOCAL STACK SUBFRAME %p EXIT  %d->%d\n",
+		pframe, pframe->subframe_base, pframe->subframe_base-count));
 	pframe->subframe_base -= count;
 }
 
