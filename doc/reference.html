@@ -1265,6 +1265,9 @@ Options:
 -e {expression}: You can use this after -f to add an expression. Example use
     case: define functions/subroutines in a file you specify with -f, then call
     them with an expression you specify with -e.
+(If you mix -e and -f then the expressions are evaluated in the order encountered.
+Since the expression pieces are simply concatenated, please be sure to use intervening
+semicolons to separate expressions.)
 --no-fflush: for emit, tee, print, and dump, don't call fflush() after every
     record.
 Any of the output-format command-line flags (see mlr -h). Example: using
@@ -2233,6 +2236,9 @@ Options:
 -e {expression}: You can use this after -f to add an expression. Example use
     case: define functions/subroutines in a file you specify with -f, then call
     them with an expression you specify with -e.
+(If you mix -e and -f then the expressions are evaluated in the order encountered.
+Since the expression pieces are simply concatenated, please be sure to use intervening
+semicolons to separate expressions.)
 --no-fflush: for emit, tee, print, and dump, don't call fflush() after every
     record.
 Any of the output-format command-line flags (see mlr -h). Example: using
@@ -2297,6 +2303,9 @@ Options:
 -e {expression}: You can use this after -f to add an expression. Example use
     case: define functions/subroutines in a file you specify with -f, then call
     them with an expression you specify with -e.
+(If you mix -e and -f then the expressions are evaluated in the order encountered.
+Since the expression pieces are simply concatenated, please be sure to use intervening
+semicolons to separate expressions.)
 --no-fflush: for emit, tee, print, and dump, don't call fflush() after every
     record.
 Any of the output-format command-line flags (see mlr -h). Example: using
@@ -3914,8 +3923,8 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
 
 <p/>Moreover, you can have one or more <tt>-f</tt> expressions (maybe one
 function per file, for example) and one or more <tt>-e</tt> expressions on the
-command line.  All the <tt>-f</tt>&rsquo;s will be evaluated in order, then all
-the <tt>-e</tt>&rsquo;s will be evaluated in order.
+command line.  If you mix <tt>-f</tt> and <tt>-e</tt> then the expressions are
+evaluated in the order encountered.
 
 <!-- ================================================================ -->
 <a id="Semicolons,_newlines,_and_curly_braces"/><h3>Semicolons, newlines, and curly braces</h3>

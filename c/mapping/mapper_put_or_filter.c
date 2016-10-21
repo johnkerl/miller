@@ -35,6 +35,11 @@ typedef struct _mapper_put_or_filter_state_t {
 	int            negate_final_filter; // mlr filter -x
 } mapper_put_or_filter_state_t;
 
+typedef struct _expression_info_t {
+	char* filename;
+	char* expression;
+} expression_info_t;
+
 // ----------------------------------------------------------------
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static void   mapper_filter_usage(FILE* o, char* argv0, char* verb);
@@ -186,6 +191,9 @@ static void shared_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-e {expression}: You can use this after -f to add an expression. Example use\n");
 	fprintf(o, "    case: define functions/subroutines in a file you specify with -f, then call\n");
 	fprintf(o, "    them with an expression you specify with -e.\n");
+	fprintf(o, "(If you mix -e and -f then the expressions are evaluated in the order encountered.\n");
+	fprintf(o, "Since the expression pieces are simply concatenated, please be sure to use intervening\n");
+	fprintf(o, "semicolons to separate expressions.)\n");
 	fprintf(o, "--no-fflush: for emit, tee, print, and dump, don't call fflush() after every\n");
 	fprintf(o, "    record.\n");
 	fprintf(o, "Any of the output-format command-line flags (see %s -h). Example: using\n",
@@ -221,18 +229,17 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* pmain_writer_opts)
 {
-	slls_t* expression_filenames              = slls_alloc();
-	slls_t* expression_strings                = slls_alloc();
-	char* mlr_dsl_expression                  = NULL;
-	int   put_output_disabled                 = FALSE;
-	int   do_final_filter                     = FALSE;
-	int   negate_final_filter                 = FALSE;
-	int   type_inferencing                    = TYPE_INFER_STRING_FLOAT_INT;
-	int   print_ast                           = FALSE;
-	int   trace_stack_allocation              = FALSE;
-	int   trace_parse                         = FALSE;
-	char* oosvar_flatten_separator            = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
-	int   flush_every_record                  = TRUE;
+	sllv_t* expression_infos         = sllv_alloc();
+	char*   mlr_dsl_expression       = NULL;
+	int     put_output_disabled      = FALSE;
+	int     do_final_filter          = FALSE;
+	int     negate_final_filter      = FALSE;
+	int     type_inferencing         = TYPE_INFER_STRING_FLOAT_INT;
+	int     print_ast                = FALSE;
+	int     trace_stack_allocation   = FALSE;
+	int     trace_parse              = FALSE;
+	char*   oosvar_flatten_separator = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
+	int     flush_every_record       = TRUE;
 
 	cli_writer_opts_t* pwriter_opts = mlr_malloc_or_die(sizeof(cli_writer_opts_t));
     cli_writer_opts_init(pwriter_opts);
@@ -261,7 +268,10 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 				mapper_put_usage(stderr, argv[0], verb);
 				return NULL;
 			}
-			slls_append_no_free(expression_filenames, argv[argi+1]);
+			expression_info_t* pexpression_info = mlr_malloc_or_die(sizeof(expression_info_t));
+			pexpression_info->filename = argv[argi+1];
+			pexpression_info->expression = NULL;
+			sllv_append(expression_infos, pexpression_info);
 			argi += 2;
 
 		} else if (streq(argv[argi], "-e")) {
@@ -269,7 +279,10 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 				mapper_put_usage(stderr, argv[0], verb);
 				return NULL;
 			}
-			slls_append_no_free(expression_strings, argv[argi+1]);
+			expression_info_t* pexpression_info = mlr_malloc_or_die(sizeof(expression_info_t));
+			pexpression_info->filename = NULL;
+			pexpression_info->expression = argv[argi+1];
+			sllv_append(expression_infos, pexpression_info);
 			argi += 2;
 
 		} else if (streq(argv[argi], "-v")) {
@@ -312,7 +325,7 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 		}
 	}
 
-	if (expression_filenames->length == 0 && expression_strings->length == 0) {
+	if (expression_infos->length == 0) {
 		if ((argc - argi) < 1) {
 			mapper_put_usage(stderr, argv[0], verb);
 			return NULL;
@@ -321,23 +334,22 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	} else {
 		string_builder_t *psb = sb_alloc(1024);
 
-		for (sllse_t* pe = expression_filenames->phead; pe != NULL; pe = pe->pnext) {
-			char* expression_filename = pe->value;
-			char* mlr_dsl_expression_piece = read_file_into_memory(expression_filename, NULL);
-			sb_append_string(psb, mlr_dsl_expression_piece);
-			free(mlr_dsl_expression_piece);
-		}
-
-		for (sllse_t* pe = expression_strings->phead; pe != NULL; pe = pe->pnext) {
-			char* expression_string = pe->value;
-			sb_append_string(psb, expression_string);
+		for (sllve_t* pe = expression_infos->phead; pe != NULL; pe = pe->pnext) {
+			expression_info_t* pexpression_info = pe->pvvalue;
+			if (pexpression_info->filename != NULL) {
+				char* mlr_dsl_expression_piece = read_file_into_memory(pexpression_info->filename, NULL);
+				sb_append_string(psb, mlr_dsl_expression_piece);
+				free(mlr_dsl_expression_piece);
+			} else {
+				sb_append_string(psb, pexpression_info->expression);
+			}
+			free(pexpression_info);
 		}
 
 		mlr_dsl_expression = sb_finish(psb);
 		sb_free(psb);
 	}
-	slls_free(expression_filenames);
-	slls_free(expression_strings);
+	sllv_free(expression_infos);
 
 	mlr_dsl_ast_t* past = mlr_dsl_parse(mlr_dsl_expression, trace_parse);
 	// xxx funcify

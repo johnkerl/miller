@@ -938,8 +938,8 @@ POKI_RUN_COMMAND{{mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f
 
 <p/>Moreover, you can have one or more <tt>-f</tt> expressions (maybe one
 function per file, for example) and one or more <tt>-e</tt> expressions on the
-command line.  All the <tt>-f</tt>&rsquo;s will be evaluated in order, then all
-the <tt>-e</tt>&rsquo;s will be evaluated in order.
+command line.  If you mix <tt>-f</tt> and <tt>-e</tt> then the expressions are
+evaluated in the order encountered.
 
 <!-- ================================================================ -->
 <h3>Semicolons, newlines, and curly braces</h3>
