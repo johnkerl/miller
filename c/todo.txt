@@ -43,7 +43,12 @@ FUNCTIONALITY FOR 4.6.0:
 
 ----------------------------------------------------------------
 ? runtime type assertion ? either an 'int x' ... needing propagation ...
-  or maybe more simply an assert_int(x), assert_numeric, assert_present(x), etc.
+  - or maybe more simply an assert_int(x), assert_numeric, assert_present(x), etc.
+
+? strict types: bool x, int x, float x, num x, string x, map x ?
+  - if so, how to performantly type them at runtime?
+  - RHS evals are as always
+  - the only time they're changed is at LHS/varbind/argpass
 
 ================================================================
 UT FOR 4.6.0:
@@ -67,6 +72,20 @@ COOK:
 * n-grams ... post these once mapvars are in place.
 * mlr --from words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 * use: https://github.com/petewarden/dstkdata
+
+DEBUGGING:
+* disclaimer about the Miller DSL having the usual plusses and minuses of a dynamically typed language:
+  rapid prototyping and rapid access to data -- e.g. '$y=$x**2' should be free of syntactic bric-a-brac
+  & the miller dsl is a place to get just that. but type-mixing can be unintentional (things really are
+  implcitly typed in our heads).
+* absent-null & skipped assigns are a feature but aren't typo-proof:
+  o typeof()
+  o print/eprint
+  o isX()
+  o assertX() (once I write them)
+* 'syntax error' is cryptic
+  o ; is a common omission
+  o no ++ or --
 
 PERF:
 * mand bench somewhere; other benches.
