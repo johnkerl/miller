@@ -38,6 +38,8 @@ FUNCTIONALITY FOR 4.6.0:
 
   ? for-oosvar map-valued boundvars?!?
 
+  ? for-local -- with keylist etc.?
+
 ? runtime type assertion ? either an 'int x' ... needing propagation ...
   or maybe more simply an assert_int(x), assert_numeric, assert_present(x), etc.
 
@@ -66,7 +68,6 @@ COOK:
 PERF:
 * mand bench somewhere; other benches.
 * mkv2/3/4 somewhere; also cookbook. (better w/ mappable vars ... maybe for 4.7.0)
-* also note mkvgen somewhere.
 * xsv notes; update rust/go experiment info
 
 -f/-e:
