@@ -64,6 +64,7 @@ OOSVAR SINGLE FOR:
 COOK:
 * n-grams ...
 * mlr --from words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
+* use: https://github.com/petewarden/dstkdata
 
 PERF:
 * mand bench somewhere; other benches.
