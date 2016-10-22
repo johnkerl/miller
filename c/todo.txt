@@ -19,6 +19,8 @@ NON-RELEASE:
 FUNCTIONALITY FOR 4.6.0:
 
 ----------------------------------------------------------------
+MAPVARS:
+
 ? map-locals into 4.6.0?!?!?
   - LHS define/assign
     a = $*
@@ -41,7 +43,17 @@ FUNCTIONALITY FOR 4.6.0:
 
   ? for-local -- with keylist etc.?
 
+* iterating:
+  - save off a copy of the mlr exe before this for timings later
+  - put mv_t -> mlhmmv_value_t @ localstack etc. but keep using u.mlrval and assume u.is_terminal
+  - add in the grammar mods for each case one at a time & stub out the alloc/handle sites one at a time
+  - fullimpl the alloc/handle sites one at a time
+  ! timings before & after ! really i don't want to ship without the map feature but its cost
+    should be known.
+
 ----------------------------------------------------------------
+STRICTNESS:
+
 ? runtime type assertion ? either an 'int x' ... needing propagation ...
   - or maybe more simply an assert_int(x), assert_numeric, assert_present(x), etc.
 
@@ -49,6 +61,8 @@ FUNCTIONALITY FOR 4.6.0:
   - if so, how to performantly type them at runtime?
   - RHS evals are as always
   - the only time they're changed is at LHS/varbind/argpass
+  - only applies to locals/parameters.
+  - everywhere there is the 'local' keyword we need to handle the others as well
 
 ================================================================
 UT FOR 4.6.0:
@@ -78,14 +92,16 @@ DEBUGGING:
   rapid prototyping and rapid access to data -- e.g. '$y=$x**2' should be free of syntactic bric-a-brac
   & the miller dsl is a place to get just that. but type-mixing can be unintentional (things really are
   implcitly typed in our heads).
+* additional disclaimer: type-heterogeneity is a feature, e.g. 'for (k, v in $*) { ... }'
 * absent-null & skipped assigns are a feature but aren't typo-proof:
   o typeof()
   o print/eprint
   o isX()
   o assertX() (once I write them)
 * 'syntax error' is cryptic
-  o ; is a common omission
-  o no ++ or --
+  o ; is a common omission (separator not terminator)
+  o no ++ or -- (not C-like)
+  o curly braces are required in if/for/while even w/ single-statement bodies (not C-like)
 
 PERF:
 * mand bench somewhere; other benches.
