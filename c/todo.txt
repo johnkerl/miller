@@ -118,8 +118,8 @@ file-formats page:
 * --pprint --barred; emph for output only
 
 perf note:
-* C stuff performant
-* DSL stuff ... more for utility. but do profile/compare bind-stack allocation stuff 1st. :)
+* C stuff performant w/r/t other compiled langs (put up getlines samples)
+* DSL stuff performant w/r/t ruby/python (mand bench & maybe others)
 
 ================================================================
 4.7.0: MAP // STRICT // TRACE // SYNTAXERROR // ALLRECAGG
