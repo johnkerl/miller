@@ -16,6 +16,12 @@ NON-RELEASE:
 * benchmark lua-jit
 
 ================================================================
+QUICKLIST:
+* mapvar iterate
+* typedecl iterate
+* xxx@doc iterate
+
+================================================================
 FUNCTIONALITY FOR 4.6.0:
 
 ----------------------------------------------------------------
@@ -98,6 +104,7 @@ DEBUGGING:
   o print/eprint
   o isX()
   o assertX() (once I write them)
+  o type decls (once I write them)
 * 'syntax error' is cryptic
   o ; is a common omission (separator not terminator)
   o no ++ or -- (not C-like)
