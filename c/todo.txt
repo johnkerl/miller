@@ -64,40 +64,13 @@ OOSVAR SINGLE FOR:
 * find & update cookbook/ref/whateveritwas ...
 
 COOK:
-* n-grams ...
+* n-grams ... post these once mapvars are in place.
 * mlr --from words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 * use: https://github.com/petewarden/dstkdata
-* uncached/cached fibo
-  run_mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
-    func f(n) {
-        if (n < 2) {
-            return 1
-        } else {
-            return f(n-1) + f(n-2)
-        }
-    }
-    $o = f($i)
-  ' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
-  echo
-  run_mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
-    func f(n) {
-      if (ispresent(@fcache[n])) {
-        return @fcache[n]
-      } else {
-        local rv = 1;
-        if (n >= 2) {
-          rv = f(n-1) + f(n-2)
-        }
-        @fcache[n] = rv;
-        return rv
-      }
-    }
-    $o = f($i)
-  ' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
 
 PERF:
 * mand bench somewhere; other benches.
-* mkv2/3/4 somewhere; also cookbook. (better w/ mappable vars ... maybe for 4.7.0)
+* mkv2/3/4/5 somewhere; also cookbook. (better w/ mappable vars ... maybe for 4.7.0)
 * xsv notes; update rust/go experiment info
 
 -f/-e:
@@ -163,7 +136,7 @@ mapvars for 4.7.0 not 4.6.0 but make some decisions before releasing 4.6.0:
   - choose simplest possible option
 
 ================================================================
-4.6.0 FEATURES:
+4.6.0 RELEASE NOTES:
 
 DSL:
 * func & subr. acknowledge awk yet again.
@@ -184,9 +157,12 @@ I/O:
 * --pprint --barred
 
 DOC:
-* mlr -F and -K. Note -l -L -f -F -k -K.
-* inverse-transform-sampling example at cookbook.
 * 10-min
+* inverse-transform-sampling example at cookbook.
+* http://johnkerl.org/miller/doc/cookbook.html#Memoization_with_out-of-stream_variables
+* mlr -F and -K. Note -l -L -f -F -k -K.
+* go/d/rust cmps @ getline
+* ruby/python cmps @ mand
 
 * final xxx check
 * final valgrind check
