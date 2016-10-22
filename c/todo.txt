@@ -66,6 +66,32 @@ COOK:
 * mlr --from words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 * use: https://github.com/petewarden/dstkdata
 * uncached/cached fibo
+  run_mlr --from ../data/medium --opprint head -n 30 then put '
+    func f(n) {
+        if (n < 2) {
+            return 1
+        } else {
+            return f(n-1) + f(n-2)
+        }
+    }
+    $o = f(NR)
+  ' then put '$t=systime()' then step -a delta -f t
+  echo
+  run_mlr --from ../data/medium --opprint head -n 30 then put '
+    func f(n) {
+      if (ispresent(@fcache[n])) {
+        return @fcache[n]
+      } else {
+        local rv = 1;
+        if (n >= 2) {
+          rv = f(n-1) + f(n-2)
+        }
+        @fcache[n] = rv;
+        return rv
+      }
+    }
+    $o = f(NR)
+  ' then put '$t=systime()' then step -a delta -f t
 
 PERF:
 * mand bench somewhere; other benches.
