@@ -146,6 +146,8 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Bulk_rename_of_field_names">Bulk rename of field names</a><br/>
 &bull;&nbsp;<a href="#Headerless_CSV_on_input_or_output">Headerless CSV on input or output</a><br/>
 &bull;&nbsp;<a href="#Regularizing_ragged_CSV">Regularizing ragged CSV</a><br/>
+&bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
+&bull;&nbsp;<a href="#Memoization_with_out-of-stream_variables">Memoization with out-of-stream variables</a><br/>
 &bull;&nbsp;<a href="#Finding_missing_dates">Finding missing dates</a><br/>
 &bull;&nbsp;<a href="#Generating_random_variables">Generating random variables</a><br/>
 &bull;&nbsp;<a href="#Two-pass_algorithms">Two-pass algorithms</a><br/>
@@ -154,7 +156,6 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Two-pass_algorithms:_records_having_max_value">Two-pass algorithms: records having max value</a><br/>
 &bull;&nbsp;<a href="#Filtering_paragraphs_of_text">Filtering paragraphs of text</a><br/>
 &bull;&nbsp;<a href="#Doing_arithmetic_on_fields_with_currency_symbols">Doing arithmetic on fields with currency symbols</a><br/>
-&bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
 &bull;&nbsp;<a href="#Using_out-of-stream_variables">Using out-of-stream variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Mean_without/with_oosvars">Mean without/with oosvars</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keyed_mean_without/with_oosvars">Keyed mean without/with oosvars</a><br/>
@@ -171,6 +172,7 @@ Miller commands were run with pretty-print-tabular output format.
 ways you mightn&rsquo;t have thought of. For an intro, please also see
 <a href="10-min.html">Miller in 10 minutes</a>.
 
+<!-- ================================================================ -->
 <a id="Parsing_log-file_output"/><h1>Parsing log-file output</h1>
 
 <p/>This, of course, depends highly on what&rsquo;s in your log files. But, as
@@ -194,6 +196,7 @@ grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab st
 </div>
 <p/>
 
+<!-- ================================================================ -->
 <a id="Rectangularizing_data"/><h1>Rectangularizing data</h1>
 
 <p/>Suppose you have a method (in whatever language) which is printing things of the form
@@ -300,6 +303,7 @@ outer=3,middle=31,inner1=313,inner2=314
 </div>
 <p/>
 
+<!-- ================================================================ -->
 <a id="Bulk_rename_of_field_names"/><h1>Bulk rename of field names</h1>
 
 <p/>
@@ -365,6 +369,7 @@ def  a_b_c g_h_i
 </div>
 <p/>
 
+<!-- ================================================================ -->
 <a id="Headerless_CSV_on_input_or_output"/><h1>Headerless CSV on input or output</h1>
 
 <p/>Sometimes we get CSV files which lack a header. For example:
@@ -465,6 +470,7 @@ purple,triangle,0,51,0.4355354501763202,0.8591292672156728,0.8122903963006748,5.
 </div>
 <p/>
 
+<!-- ================================================================ -->
 <a id="Regularizing_ragged_CSV"/><h1>Regularizing ragged CSV</h1>
 
 <p/>Miller handles compliant CSV: in particular, it&rsquo;s an error if the
@@ -526,6 +532,169 @@ a,b,c
 </div>
 <p/>
 
+<!-- ================================================================ -->
+<a id="Program_timing"/><h1>Program timing</h1>
+
+This admittedly artificial example demonstrates using Miller time and stats
+functions to introspectly acquire some information about Miller&rsquo;s own
+runtime. The <tt>delta</tt> function computes the difference between successive
+timestamps.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ ruby -e '10000.times{|i|puts "i=#{i+1}"}' &gt; lines.txt
+
+$ head -n 5 lines.txt
+i=1
+i=2
+i=3
+i=4
+i=5
+
+mlr --ofmt '%.9le' --opprint put '$t=systime()' then step -a delta -f t lines.txt | head -n 7
+i     t                 t_delta
+1     1430603027.018016 1.430603027e+09
+2     1430603027.018043 2.694129944e-05
+3     1430603027.018048 5.006790161e-06
+4     1430603027.018052 4.053115845e-06
+5     1430603027.018055 2.861022949e-06
+6     1430603027.018058 3.099441528e-06
+
+mlr --ofmt '%.9le' --oxtab \
+  put '$t=systime()' then \
+  step -a delta -f t then \
+  filter '$i&gt;1' then \
+  stats1 -a min,mean,max -f t_delta \
+  lines.txt
+t_delta_min  2.861022949e-06
+t_delta_mean 4.077508505e-06
+t_delta_max  5.388259888e-05
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Memoization_with_out-of-stream_variables"/><h1>Memoization with out-of-stream variables</h1>
+
+<p/> The recursive function for the Fibonacci sequence is famous for its computational complexity.
+Namely, using
+<i>f</i>(0)=1,
+<i>f</i>(1)=1,
+<i>f</i>(<i>n</i>)=<i>f</i>(<i>n</i>-1)+<i>f</i>(<i>n</i>-2) for <i>n</i>&ge;2,
+the evaluation tree branches left as well as right at each non-trivial level, resulting in millions
+or more paths to the root 0/1 nodes:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
+  func f(n) {
+      @fcount += 1;              # count number of calls to the function
+      if (n &lt; 2) {
+          return 1
+      } else {
+          return f(n-1) + f(n-2) # recurse
+      }
+  }
+
+  @fcount = 0;
+  $o = f($i);
+  $fcount = @fcount;
+
+' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
+i  o      fcount  seconds_delta
+1  1      1       0
+2  2      3       0.000021935
+3  3      5       0.000011921
+4  5      9       0.000014067
+5  8      15      0.000019073
+6  13     25      0.000026941
+7  21     41      0.000039101
+8  34     67      0.000059843
+9  55     109     0.000093937
+10 89     177     0.000149012
+11 144    287     0.000236988
+12 233    465     0.000380039
+13 377    753     0.000611067
+14 610    1219    0.000978947
+15 987    1973    0.001580000
+16 1597   3193    0.002699137
+17 2584   5167    0.004158974
+18 4181   8361    0.006558895
+19 6765   13529   0.010390997
+20 10946  21891   0.017174959
+21 17711  35421   0.028885126
+22 28657  57313   0.049085855
+23 46368  92735   0.076279163
+24 75025  150049  0.123904943
+25 121393 242785  0.191952944
+26 196418 392835  0.320515156
+27 317811 635621  0.508138895
+28 514229 1028457 0.816854954
+</pre>
+</div>
+<p/>
+
+<p/> Note that the time it takes to evaluate the function is blowing up exponentially as the input argument
+increases. Using <tt>@</tt>-variables, which persist across records, we can cache and reuse the results
+of previous computations:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
+  func f(n) {
+      @fcount += 1;               # count number of calls to the function
+    if (ispresent(@fcache[n])) {  # cache hit
+      return @fcache[n]
+    } else {                      # cache miss
+      local rv = 1;
+      if (n &gt;= 2) {
+        rv = f(n-1) + f(n-2)      # recurse
+      }
+      @fcache[n] = rv;
+      return rv
+    }
+  }
+  @fcount = 0;
+  $o = f($i);
+  $fcount = @fcount;
+' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
+i  o      fcount seconds_delta
+1  1      1      0
+2  2      3      0.000023842
+3  3      3      0.000013113
+4  5      3      0.000012875
+5  8      3      0.000010967
+6  13     3      0.000010014
+7  21     3      0.000010014
+8  34     3      0.000010014
+9  55     3      0.000010014
+10 89     3      0.000010014
+11 144    3      0.000010014
+12 233    3      0.000014067
+13 377    3      0.000010967
+14 610    3      0.000010014
+15 987    3      0.000010014
+16 1597   3      0.000010014
+17 2584   3      0.000009060
+18 4181   3      0.000009775
+19 6765   3      0.000010014
+20 10946  3      0.000010014
+21 17711  3      0.000009060
+22 28657  3      0.000011921
+23 46368  3      0.000012159
+24 75025  3      0.000009060
+25 121393 3      0.000009775
+26 196418 3      0.000009060
+27 317811 3      0.000010014
+28 514229 3      0.000009060
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
 <a id="Finding_missing_dates"/><h1>Finding missing dates</h1>
 
 <p/>Suppose you have some date-stamped data which may (or may not) be missing entries for one or more dates:
@@ -624,6 +793,7 @@ n=1125,1=2015-04-05,2=182528
 </div>
 <p/>
 
+<!-- ================================================================ -->
 <a id="Generating_random_variables"/><h1>Generating random variables</h1>
 
 <p/>Here can chain together a few simple building blocks:
@@ -737,6 +907,7 @@ bin_lo   bin_hi   u_count                        s_count                        
 </div>
 <p/>
 
+<!-- ================================================================ -->
 <a id="Two-pass_algorithms"/><h1>Two-pass algorithms</h1>
 
 <p/>Miller is a streaming record processor; commands are performed once per
@@ -904,6 +1075,7 @@ green  purple 5 0.203577
 </div>
 <p/>
 
+<!-- ================================================================ -->
 <a id="Filtering_paragraphs_of_text"/><h1>Filtering paragraphs of text</h1>
 
 <p/>The idea is to use a record separator which is a pair of newlines. Then, if
@@ -983,6 +1155,7 @@ falls mainly on the plain. The rain in Spain falls mainly on the plain. The
 </div>
 <p/>
 
+<!-- ================================================================ -->
 <a id="Doing_arithmetic_on_fields_with_currency_symbols"/><h1>Doing arithmetic on fields with currency symbols</h1>
 
 <p/>
@@ -1024,47 +1197,7 @@ Amount_sum
 </div>
 <p/>
 
-<a id="Program_timing"/><h1>Program timing</h1>
-
-This admittedly artificial example demonstrates using Miller time and stats
-functions to introspectly acquire some information about Miller&rsquo;s own
-runtime. The <tt>delta</tt> function computes the difference between successive
-timestamps.
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ ruby -e '10000.times{|i|puts "i=#{i+1}"}' &gt; lines.txt
-
-$ head -n 5 lines.txt
-i=1
-i=2
-i=3
-i=4
-i=5
-
-mlr --ofmt '%.9le' --opprint put '$t=systime()' then step -a delta -f t lines.txt | head -n 7
-i     t                 t_delta
-1     1430603027.018016 1.430603027e+09
-2     1430603027.018043 2.694129944e-05
-3     1430603027.018048 5.006790161e-06
-4     1430603027.018052 4.053115845e-06
-5     1430603027.018055 2.861022949e-06
-6     1430603027.018058 3.099441528e-06
-
-mlr --ofmt '%.9le' --oxtab \
-  put '$t=systime()' then \
-  step -a delta -f t then \
-  filter '$i&gt;1' then \
-  stats1 -a min,mean,max -f t_delta \
-  lines.txt
-t_delta_min  2.861022949e-06
-t_delta_mean 4.077508505e-06
-t_delta_max  5.388259888e-05
-</pre>
-</div>
-<p/>
-
+<!-- ================================================================ -->
 <a id="Using_out-of-stream_variables"/><h1>Using out-of-stream variables</h1>
 
 <p/> One of Miller&rsquo;s strengths is its compact notation: for example, given input of the form

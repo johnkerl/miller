@@ -15,9 +15,10 @@ NON-RELEASE:
 * benchmark lua per se
 * benchmark lua-jit
 
-----------------------------------------------------------------
+================================================================
 FUNCTIONALITY FOR 4.6.0:
 
+----------------------------------------------------------------
 ? map-locals into 4.6.0?!?!?
   - LHS define/assign
     a = $*
@@ -40,20 +41,21 @@ FUNCTIONALITY FOR 4.6.0:
 
   ? for-local -- with keylist etc.?
 
+----------------------------------------------------------------
 ? runtime type assertion ? either an 'int x' ... needing propagation ...
   or maybe more simply an assert_int(x), assert_numeric, assert_present(x), etc.
 
-----------------------------------------------------------------
+================================================================
 UT FOR 4.6.0:
 
 :D
 
-----------------------------------------------------------------
+================================================================
 HYGIENE FOR 4.6.0:
 
 :D
 
-----------------------------------------------------------------
+================================================================
 DOC FOR 4.6.0:
 
 OOSVAR SINGLE FOR:
@@ -66,7 +68,7 @@ COOK:
 * mlr --from words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 * use: https://github.com/petewarden/dstkdata
 * uncached/cached fibo
-  run_mlr --from ../data/medium --opprint head -n 30 then put '
+  run_mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
     func f(n) {
         if (n < 2) {
             return 1
@@ -74,10 +76,10 @@ COOK:
             return f(n-1) + f(n-2)
         }
     }
-    $o = f(NR)
-  ' then put '$t=systime()' then step -a delta -f t
+    $o = f($i)
+  ' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
   echo
-  run_mlr --from ../data/medium --opprint head -n 30 then put '
+  run_mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
     func f(n) {
       if (ispresent(@fcache[n])) {
         return @fcache[n]
@@ -90,8 +92,8 @@ COOK:
         return rv
       }
     }
-    $o = f(NR)
-  ' then put '$t=systime()' then step -a delta -f t
+    $o = f($i)
+  ' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
 
 PERF:
 * mand bench somewhere; other benches.
@@ -203,6 +205,8 @@ DOC:
   - local shadow for-loop boundvars / func/subr args?
 
 ! multi-field x many verbs
+
+* seqgen as input lrec "reader"? the seqgen verb doesn't (and shouldn't) step NR.
 
 ! -f/-r field-name-spec opportunities throughout
   - bar

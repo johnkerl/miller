@@ -4,6 +4,7 @@ POKI_PUT_TOC_HERE
 ways you mightn&rsquo;t have thought of. For an intro, please also see
 <a href="10-min.html">Miller in 10 minutes</a>.
 
+<!-- ================================================================ -->
 <h1>Parsing log-file output</h1>
 
 <p/>This, of course, depends highly on what&rsquo;s in your log files. But, as
@@ -15,6 +16,7 @@ I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the str
 
 POKI_CARDIFY(grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status)HERE
 
+<!-- ================================================================ -->
 <h1>Rectangularizing data</h1>
 
 <p/>Suppose you have a method (in whatever language) which is printing things of the form
@@ -45,6 +47,7 @@ output when you see the inner IDs.
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/rect.sh)HERE
 
+<!-- ================================================================ -->
 <h1>Bulk rename of field names</h1>
 
 POKI_RUN_COMMAND{{cat data/spaces.csv}}HERE
@@ -57,6 +60,7 @@ POKI_RUN_COMMAND{{cat data/bulk-rename-for-loop.mlr}}HERE
 
 POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv}}HERE
 
+<!-- ================================================================ -->
 <h1>Headerless CSV on input or output</h1>
 
 <p/>Sometimes we get CSV files which lack a header. For example:
@@ -80,6 +84,7 @@ to the system command <tt>sed 1d</tt>, or you can use Miller&rsquo;s <tt>--heade
 POKI_RUN_COMMAND{{head -5 data/colored-shapes.dkvp | mlr --ocsv cat}}HERE
 POKI_RUN_COMMAND{{head -5 data/colored-shapes.dkvp | mlr --ocsv --headerless-csv-output cat}}HERE
 
+<!-- ================================================================ -->
 <h1>Regularizing ragged CSV</h1>
 
 <p/>Miller handles compliant CSV: in particular, it&rsquo;s an error if the
@@ -96,6 +101,36 @@ or, more simply,
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv-2.sh)HERE
 
+<!-- ================================================================ -->
+<h1>Program timing</h1>
+
+This admittedly artificial example demonstrates using Miller time and stats
+functions to introspectly acquire some information about Miller&rsquo;s own
+runtime. The <tt>delta</tt> function computes the difference between successive
+timestamps.
+
+POKI_INCLUDE_ESCAPED(data/timing-example.txt)HERE
+
+<!-- ================================================================ -->
+<h1>Memoization with out-of-stream variables</h1>
+
+<p/> The recursive function for the Fibonacci sequence is famous for its computational complexity.
+Namely, using
+<i>f</i>(0)=1,
+<i>f</i>(1)=1,
+<i>f</i>(<i>n</i>)=<i>f</i>(<i>n</i>-1)+<i>f</i>(<i>n</i>-2) for <i>n</i>&ge;2,
+the evaluation tree branches left as well as right at each non-trivial level, resulting in millions
+or more paths to the root 0/1 nodes:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/fibo-uncached.sh)HERE
+
+<p/> Note that the time it takes to evaluate the function is blowing up exponentially as the input argument
+increases. Using <tt>@</tt>-variables, which persist across records, we can cache and reuse the results
+of previous computations:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/fibo-cached.sh)HERE
+
+<!-- ================================================================ -->
 <h1>Finding missing dates</h1>
 
 <p/>Suppose you have some date-stamped data which may (or may not) be missing entries for one or more dates:
@@ -117,6 +152,7 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/miss-date-2.sh)HERE
 POKI_RUN_COMMAND{{mlr cat -n then filter '$n >= 770 && $n <= 780' data/miss-date.csv}}HERE
 POKI_RUN_COMMAND{{mlr cat -n then filter '$n >= 1115 && $n <= 1125' data/miss-date.csv}}HERE
 
+<!-- ================================================================ -->
 <h1>Generating random variables</h1>
 
 <p/>Here can chain together a few simple building blocks:
@@ -140,6 +176,7 @@ The output is as follows:
 
 POKI_RUN_COMMAND{{sh expo-sample.sh}}HERE
 
+<!-- ================================================================ -->
 <h1>Two-pass algorithms</h1>
 
 <p/>Miller is a streaming record processor; commands are performed once per
@@ -182,6 +219,7 @@ POKI_RUN_COMMAND{{cat data/maxrows.mlr}}HERE
 
 POKI_RUN_COMMAND{{mlr --itsv --irs lf --opprint put -q -f data/maxrows.mlr data/maxrows.tsv}}HERE
 
+<!-- ================================================================ -->
 <h1>Filtering paragraphs of text</h1>
 
 <p/>The idea is to use a record separator which is a pair of newlines. Then, if
@@ -196,19 +234,12 @@ POKI_RUN_COMMAND{{mlr --from paragraphs.txt --nidx --rs '\n\n' --fs '\001' filte
 
 POKI_RUN_COMMAND{{mlr --from paragraphs.txt --nidx --rs '\n\n' --fs '\n' cut  -f 1,3}}HERE
 
+<!-- ================================================================ -->
 <h1>Doing arithmetic on fields with currency symbols</h1>
 
 POKI_INCLUDE_ESCAPED(data/dollar-sign.txt)HERE
 
-<h1>Program timing</h1>
-
-This admittedly artificial example demonstrates using Miller time and stats
-functions to introspectly acquire some information about Miller&rsquo;s own
-runtime. The <tt>delta</tt> function computes the difference between successive
-timestamps.
-
-POKI_INCLUDE_ESCAPED(data/timing-example.txt)HERE
-
+<!-- ================================================================ -->
 <h1>Using out-of-stream variables</h1>
 
 <p/> One of Miller&rsquo;s strengths is its compact notation: for example, given input of the form
