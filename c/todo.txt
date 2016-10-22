@@ -65,6 +65,7 @@ COOK:
 * n-grams ...
 * mlr --from words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 * use: https://github.com/petewarden/dstkdata
+* uncached/cached fibo
 
 PERF:
 * mand bench somewhere; other benches.
