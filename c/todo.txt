@@ -68,6 +68,7 @@ k assert_X()
   - the only time they're changed is at LHS/varbind/argpass: all via local_stack_frame_set
   - everywhere there is the 'local' keyword we need to handle the others as well
   - local_stack slots need an acceptable-types bitmask and a funcptr to test. use at local_stack_frame_set
+  ? allow typedecls in forsrec/foroosvar boundvar specs ?
 
 ================================================================
 UT FOR 4.6.0:
@@ -161,6 +162,9 @@ func/subr:
 * local @ RHS before @ LHS: absent skips assign
 * a=2 before local a=1 -- why to even use local (when optional & when necessary).
 * cookbook examples
+
+also re scoping:
+* forsrec/foroosvar boundvars are implicitly local'ed. not triple-for stuff.
 
 file-formats page:
 * --c2p, --c2j etc ...
