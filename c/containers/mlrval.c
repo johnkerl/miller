@@ -1744,6 +1744,44 @@ mv_t b_x_isstring_func(mv_t* pval1) {
 }
 
 // ----------------------------------------------------------------
+mv_t b_x_isnull_no_free_func(mv_t* pval1) {
+	return mv_from_bool(mv_is_null(pval1));
+}
+mv_t b_x_isnotnull_no_free_func(mv_t* pval1) {
+	return mv_from_bool(mv_is_non_null(pval1));
+}
+
+mv_t b_x_isabsent_no_free_func(mv_t* pval1) {
+	return mv_from_bool(mv_is_absent(pval1));
+}
+mv_t b_x_ispresent_no_free_func(mv_t* pval1) {
+	return mv_from_bool(mv_is_present(pval1));
+}
+
+mv_t b_x_isempty_no_free_func(mv_t* pval1) {
+	return mv_from_bool(mv_is_empty(pval1));
+}
+mv_t b_x_isnotempty_no_free_func(mv_t* pval1) {
+	return mv_from_bool(mv_is_not_empty(pval1));
+}
+
+mv_t b_x_isnumeric_no_free_func(mv_t* pval1) {
+	return mv_from_bool(pval1->type == MT_INT || pval1->type == MT_FLOAT);
+}
+mv_t b_x_isint_no_free_func(mv_t* pval1) {
+	return mv_from_bool(pval1->type == MT_INT);
+}
+mv_t b_x_isfloat_no_free_func(mv_t* pval1) {
+	return mv_from_bool(pval1->type == MT_FLOAT);
+}
+mv_t b_x_isboolean_no_free_func(mv_t* pval1) {
+	return mv_from_bool(pval1->type == MT_BOOL);
+}
+mv_t b_x_isstring_no_free_func(mv_t* pval1) {
+	return mv_from_bool(pval1->type == MT_STRING || pval1->type == MT_EMPTY);
+}
+
+// ----------------------------------------------------------------
 static mv_t boolean_b_b(mv_t* pa) { return mv_from_bool(pa->u.boolv); }
 static mv_t boolean_b_f(mv_t* pa) { return mv_from_bool((pa->u.fltv == 0.0) ? FALSE : TRUE); }
 static mv_t boolean_b_i(mv_t* pa) { return mv_from_bool((pa->u.intv == 0LL) ? FALSE : TRUE); }

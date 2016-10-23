@@ -158,7 +158,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_BOOLEAN, "!",   1,0, "Logical negation."},
 	{FUNC_CLASS_BOOLEAN, "? :", 3,0, "Ternary operator."},
 
-	{FUNC_CLASS_CONVERSION, "isnull",      1,0, "True if argument is null (empty or absent), false otherwise"},
+	{FUNC_CLASS_CONVERSION, "isnull",      1,0, "True if argument is null (empty or absent), false otherwise."},
 	{FUNC_CLASS_CONVERSION, "isnotnull",   1,0, "False if argument is null (empty or absent), true otherwise."},
 	{FUNC_CLASS_CONVERSION, "isabsent",    1,0, "False if field is present in input, false otherwise"},
 	{FUNC_CLASS_CONVERSION, "ispresent",   1,0, "True if field is present in input, false otherwise."},
@@ -170,6 +170,18 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_CONVERSION, "isbool",      1,0, "True if field is present with boolean value. Synonymous with isboolean."},
 	{FUNC_CLASS_CONVERSION, "isboolean",   1,0, "True if field is present with boolean value. Synonymous with isbool."},
 	{FUNC_CLASS_CONVERSION, "isstring",    1,0, "True if field is present with string (including empty-string) value"},
+
+	{FUNC_CLASS_CONVERSION, "assert_notnull",   1,0, "Returns argument if non-null (non-empty and non-absent), else throws an error."},
+	{FUNC_CLASS_CONVERSION, "assert_present",   1,0, "Returns argument if present in input, else throws an error."},
+	{FUNC_CLASS_CONVERSION, "assert_empty",     1,0, "Returns argument if present in input with empty value, else throws an error."},
+	{FUNC_CLASS_CONVERSION, "assert_notempty",  1,0, "Returns argument if present in input with non-empty value, else throws an error."},
+	{FUNC_CLASS_CONVERSION, "assert_numeric",   1,0, "Returns argument if present with int or float value, else throws an error."},
+	{FUNC_CLASS_CONVERSION, "assert_int",       1,0, "Returns argument if present with int value, else throws an error."},
+	{FUNC_CLASS_CONVERSION, "assert_float",     1,0, "Returns argument if present with float value, else throws an error."},
+	{FUNC_CLASS_CONVERSION, "assert_bool",      1,0, "Returns argument if present with boolean value, else throws an error."},
+	{FUNC_CLASS_CONVERSION, "assert_boolean",   1,0, "Returns argument if present with boolean value, else throws an error."},
+	{FUNC_CLASS_CONVERSION, "assert_string",    1,0, "Returns argument if present with string (including empty-string) value, else throws an error."},
+
 	{FUNC_CLASS_CONVERSION, "boolean",     1,0, "Convert int/float/bool/string to boolean."},
 	{FUNC_CLASS_CONVERSION, "float",       1,0, "Convert int/float/bool/string to float."},
 	{FUNC_CLASS_CONVERSION, "fmtnum",    2,0,
@@ -675,71 +687,93 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_zary_func_name(char* function
 
 // ================================================================
 static rval_evaluator_t* fmgr_alloc_evaluator_from_unary_func_name(char* fnnm, rval_evaluator_t* parg1)  {
-	if        (streq(fnnm, "!"))           { return rval_evaluator_alloc_from_b_b_func(b_b_not_func,         parg1);
-	} else if (streq(fnnm, "+"))           { return rval_evaluator_alloc_from_x_x_func(x_x_upos_func,        parg1);
-	} else if (streq(fnnm, "-"))           { return rval_evaluator_alloc_from_x_x_func(x_x_uneg_func,        parg1);
-	} else if (streq(fnnm, "abs"))         { return rval_evaluator_alloc_from_x_x_func(x_x_abs_func,         parg1);
-	} else if (streq(fnnm, "acos"))        { return rval_evaluator_alloc_from_f_f_func(f_f_acos_func,        parg1);
-	} else if (streq(fnnm, "acosh"))       { return rval_evaluator_alloc_from_f_f_func(f_f_acosh_func,       parg1);
-	} else if (streq(fnnm, "asin"))        { return rval_evaluator_alloc_from_f_f_func(f_f_asin_func,        parg1);
-	} else if (streq(fnnm, "asinh"))       { return rval_evaluator_alloc_from_f_f_func(f_f_asinh_func,       parg1);
-	} else if (streq(fnnm, "atan"))        { return rval_evaluator_alloc_from_f_f_func(f_f_atan_func,        parg1);
-	} else if (streq(fnnm, "atanh"))       { return rval_evaluator_alloc_from_f_f_func(f_f_atanh_func,       parg1);
-	} else if (streq(fnnm, "boolean"))     { return rval_evaluator_alloc_from_x_x_func(b_x_boolean_func,     parg1);
-	} else if (streq(fnnm, "boolean"))     { return rval_evaluator_alloc_from_x_x_func(b_x_boolean_func,     parg1);
-	} else if (streq(fnnm, "cbrt"))        { return rval_evaluator_alloc_from_f_f_func(f_f_cbrt_func,        parg1);
-	} else if (streq(fnnm, "ceil"))        { return rval_evaluator_alloc_from_x_x_func(x_x_ceil_func,        parg1);
-	} else if (streq(fnnm, "cos"))         { return rval_evaluator_alloc_from_f_f_func(f_f_cos_func,         parg1);
-	} else if (streq(fnnm, "cosh"))        { return rval_evaluator_alloc_from_f_f_func(f_f_cosh_func,        parg1);
-	} else if (streq(fnnm, "dhms2fsec"))   { return rval_evaluator_alloc_from_f_s_func(f_s_dhms2fsec_func,   parg1);
-	} else if (streq(fnnm, "dhms2sec"))    { return rval_evaluator_alloc_from_f_s_func(i_s_dhms2sec_func,    parg1);
-	} else if (streq(fnnm, "erf"))         { return rval_evaluator_alloc_from_f_f_func(f_f_erf_func,         parg1);
-	} else if (streq(fnnm, "erfc"))        { return rval_evaluator_alloc_from_f_f_func(f_f_erfc_func,        parg1);
-	} else if (streq(fnnm, "exp"))         { return rval_evaluator_alloc_from_f_f_func(f_f_exp_func,         parg1);
-	} else if (streq(fnnm, "expm1"))       { return rval_evaluator_alloc_from_f_f_func(f_f_expm1_func,       parg1);
-	} else if (streq(fnnm, "float"))       { return rval_evaluator_alloc_from_x_x_func(f_x_float_func,       parg1);
-	} else if (streq(fnnm, "floor"))       { return rval_evaluator_alloc_from_x_x_func(x_x_floor_func,       parg1);
-	} else if (streq(fnnm, "fsec2dhms"))   { return rval_evaluator_alloc_from_s_f_func(s_f_fsec2dhms_func,   parg1);
-	} else if (streq(fnnm, "fsec2hms"))    { return rval_evaluator_alloc_from_s_f_func(s_f_fsec2hms_func,    parg1);
-	} else if (streq(fnnm, "gmt2sec"))     { return rval_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func,     parg1);
-	} else if (streq(fnnm, "hexfmt"))      { return rval_evaluator_alloc_from_x_x_func(s_x_hexfmt_func,      parg1);
-	} else if (streq(fnnm, "hms2fsec"))    { return rval_evaluator_alloc_from_f_s_func(f_s_hms2fsec_func,    parg1);
-	} else if (streq(fnnm, "hms2sec"))     { return rval_evaluator_alloc_from_f_s_func(i_s_hms2sec_func,     parg1);
-	} else if (streq(fnnm, "int"))         { return rval_evaluator_alloc_from_x_x_func(i_x_int_func,         parg1);
-	} else if (streq(fnnm, "invqnorm"))    { return rval_evaluator_alloc_from_f_f_func(f_f_invqnorm_func,    parg1);
-	} else if (streq(fnnm, "isabsent"))    { return rval_evaluator_alloc_from_x_x_func(b_x_isabsent_func,    parg1);
-	} else if (streq(fnnm, "isempty"))     { return rval_evaluator_alloc_from_x_x_func(b_x_isempty_func,     parg1);
-	} else if (streq(fnnm, "isnotempty"))  { return rval_evaluator_alloc_from_x_x_func(b_x_isnotempty_func,  parg1);
-	} else if (streq(fnnm, "isnotnull"))   { return rval_evaluator_alloc_from_x_x_func(b_x_isnotnull_func,   parg1);
-	} else if (streq(fnnm, "isnull"))      { return rval_evaluator_alloc_from_x_x_func(b_x_isnull_func,      parg1);
-	} else if (streq(fnnm, "ispresent"))   { return rval_evaluator_alloc_from_x_x_func(b_x_ispresent_func,   parg1);
-	} else if (streq(fnnm, "isnumeric"))   { return rval_evaluator_alloc_from_x_x_func(b_x_isnumeric_func,   parg1);
-	} else if (streq(fnnm, "isint"))       { return rval_evaluator_alloc_from_x_x_func(b_x_isint_func,       parg1);
-	} else if (streq(fnnm, "isfloat"))     { return rval_evaluator_alloc_from_x_x_func(b_x_isfloat_func,     parg1);
-	} else if (streq(fnnm, "isbool"))      { return rval_evaluator_alloc_from_x_x_func(b_x_isboolean_func,   parg1);
-	} else if (streq(fnnm, "isboolean"))   { return rval_evaluator_alloc_from_x_x_func(b_x_isboolean_func,   parg1);
-	} else if (streq(fnnm, "isstring"))    { return rval_evaluator_alloc_from_x_x_func(b_x_isstring_func,    parg1);
-	} else if (streq(fnnm, "log"))         { return rval_evaluator_alloc_from_f_f_func(f_f_log_func,         parg1);
-	} else if (streq(fnnm, "log10"))       { return rval_evaluator_alloc_from_f_f_func(f_f_log10_func,       parg1);
-	} else if (streq(fnnm, "log1p"))       { return rval_evaluator_alloc_from_f_f_func(f_f_log1p_func,       parg1);
-	} else if (streq(fnnm, "qnorm"))       { return rval_evaluator_alloc_from_f_f_func(f_f_qnorm_func,       parg1);
-	} else if (streq(fnnm, "round"))       { return rval_evaluator_alloc_from_x_x_func(x_x_round_func,       parg1);
-	} else if (streq(fnnm, "sec2dhms"))    { return rval_evaluator_alloc_from_s_i_func(s_i_sec2dhms_func,    parg1);
-	} else if (streq(fnnm, "sec2gmt"))     { return rval_evaluator_alloc_from_x_x_func(s_x_sec2gmt_func,     parg1);
-	} else if (streq(fnnm, "sec2gmtdate")) { return rval_evaluator_alloc_from_x_x_func(s_x_sec2gmtdate_func, parg1);
-	} else if (streq(fnnm, "sec2hms"))     { return rval_evaluator_alloc_from_s_i_func(s_i_sec2hms_func,     parg1);
-	} else if (streq(fnnm, "sgn"))         { return rval_evaluator_alloc_from_x_x_func(x_x_sgn_func,         parg1);
-	} else if (streq(fnnm, "sin"))         { return rval_evaluator_alloc_from_f_f_func(f_f_sin_func,         parg1);
-	} else if (streq(fnnm, "sinh"))        { return rval_evaluator_alloc_from_f_f_func(f_f_sinh_func,        parg1);
-	} else if (streq(fnnm, "sqrt"))        { return rval_evaluator_alloc_from_f_f_func(f_f_sqrt_func,        parg1);
-	} else if (streq(fnnm, "string"))      { return rval_evaluator_alloc_from_x_x_func(s_x_string_func,      parg1);
-	} else if (streq(fnnm, "strlen"))      { return rval_evaluator_alloc_from_i_s_func(i_s_strlen_func,      parg1);
-	} else if (streq(fnnm, "tan"))         { return rval_evaluator_alloc_from_f_f_func(f_f_tan_func,         parg1);
-	} else if (streq(fnnm, "tanh"))        { return rval_evaluator_alloc_from_f_f_func(f_f_tanh_func,        parg1);
-	} else if (streq(fnnm, "tolower"))     { return rval_evaluator_alloc_from_s_s_func(s_s_tolower_func,     parg1);
-	} else if (streq(fnnm, "toupper"))     { return rval_evaluator_alloc_from_s_s_func(s_s_toupper_func,     parg1);
-	} else if (streq(fnnm, "typeof"))      { return rval_evaluator_alloc_from_x_x_func(s_x_typeof_func,      parg1);
-	} else if (streq(fnnm, "~"))           { return rval_evaluator_alloc_from_i_i_func(i_i_bitwise_not_func, parg1);
+	if        (streq(fnnm, "!"))               { return rval_evaluator_alloc_from_b_b_func(b_b_not_func,         parg1);
+	} else if (streq(fnnm, "+"))               { return rval_evaluator_alloc_from_x_x_func(x_x_upos_func,        parg1);
+	} else if (streq(fnnm, "-"))               { return rval_evaluator_alloc_from_x_x_func(x_x_uneg_func,        parg1);
+	} else if (streq(fnnm, "abs"))             { return rval_evaluator_alloc_from_x_x_func(x_x_abs_func,         parg1);
+	} else if (streq(fnnm, "acos"))            { return rval_evaluator_alloc_from_f_f_func(f_f_acos_func,        parg1);
+	} else if (streq(fnnm, "acosh"))           { return rval_evaluator_alloc_from_f_f_func(f_f_acosh_func,       parg1);
+	} else if (streq(fnnm, "asin"))            { return rval_evaluator_alloc_from_f_f_func(f_f_asin_func,        parg1);
+	} else if (streq(fnnm, "asinh"))           { return rval_evaluator_alloc_from_f_f_func(f_f_asinh_func,       parg1);
+
+	} else if (streq(fnnm, "assert_notnull"))  {
+		return rval_evaluator_alloc_from_A_x_func(b_x_isnotnull_no_free_func,  parg1, "notnull");
+	} else if (streq(fnnm, "assert_present"))  {
+		return rval_evaluator_alloc_from_A_x_func(b_x_ispresent_no_free_func,  parg1, "present");
+	} else if (streq(fnnm, "assert_empty"))    {
+		return rval_evaluator_alloc_from_A_x_func(b_x_isempty_no_free_func,    parg1, "empty");
+	} else if (streq(fnnm, "assert_notempty")) {
+		return rval_evaluator_alloc_from_A_x_func(b_x_isnotempty_no_free_func, parg1, "notempty");
+	} else if (streq(fnnm, "assert_numeric"))  {
+		return rval_evaluator_alloc_from_A_x_func(b_x_isnumeric_no_free_func,  parg1, "numeric");
+	} else if (streq(fnnm, "assert_int"))      {
+		return rval_evaluator_alloc_from_A_x_func(b_x_isint_no_free_func,      parg1, "int");
+	} else if (streq(fnnm, "assert_float"))    {
+		return rval_evaluator_alloc_from_A_x_func(b_x_isfloat_no_free_func,    parg1, "float");
+	} else if (streq(fnnm, "assert_bool"))     {
+		return rval_evaluator_alloc_from_A_x_func(b_x_isboolean_no_free_func,  parg1, "boolean");
+	} else if (streq(fnnm, "assert_boolean"))  {
+		return rval_evaluator_alloc_from_A_x_func(b_x_isboolean_no_free_func,  parg1, "boolean");
+	} else if (streq(fnnm, "assert_string"))   {
+		return rval_evaluator_alloc_from_A_x_func(b_x_isstring_no_free_func,   parg1, "string");
+
+	} else if (streq(fnnm, "atan"))            { return rval_evaluator_alloc_from_f_f_func(f_f_atan_func,        parg1);
+	} else if (streq(fnnm, "atanh"))           { return rval_evaluator_alloc_from_f_f_func(f_f_atanh_func,       parg1);
+	} else if (streq(fnnm, "boolean"))         { return rval_evaluator_alloc_from_x_x_func(b_x_boolean_func,     parg1);
+	} else if (streq(fnnm, "cbrt"))            { return rval_evaluator_alloc_from_f_f_func(f_f_cbrt_func,        parg1);
+	} else if (streq(fnnm, "ceil"))            { return rval_evaluator_alloc_from_x_x_func(x_x_ceil_func,        parg1);
+	} else if (streq(fnnm, "cos"))             { return rval_evaluator_alloc_from_f_f_func(f_f_cos_func,         parg1);
+	} else if (streq(fnnm, "cosh"))            { return rval_evaluator_alloc_from_f_f_func(f_f_cosh_func,        parg1);
+	} else if (streq(fnnm, "dhms2fsec"))       { return rval_evaluator_alloc_from_f_s_func(f_s_dhms2fsec_func,   parg1);
+	} else if (streq(fnnm, "dhms2sec"))        { return rval_evaluator_alloc_from_f_s_func(i_s_dhms2sec_func,    parg1);
+	} else if (streq(fnnm, "erf"))             { return rval_evaluator_alloc_from_f_f_func(f_f_erf_func,         parg1);
+	} else if (streq(fnnm, "erfc"))            { return rval_evaluator_alloc_from_f_f_func(f_f_erfc_func,        parg1);
+	} else if (streq(fnnm, "exp"))             { return rval_evaluator_alloc_from_f_f_func(f_f_exp_func,         parg1);
+	} else if (streq(fnnm, "expm1"))           { return rval_evaluator_alloc_from_f_f_func(f_f_expm1_func,       parg1);
+	} else if (streq(fnnm, "float"))           { return rval_evaluator_alloc_from_x_x_func(f_x_float_func,       parg1);
+	} else if (streq(fnnm, "floor"))           { return rval_evaluator_alloc_from_x_x_func(x_x_floor_func,       parg1);
+	} else if (streq(fnnm, "fsec2dhms"))       { return rval_evaluator_alloc_from_s_f_func(s_f_fsec2dhms_func,   parg1);
+	} else if (streq(fnnm, "fsec2hms"))        { return rval_evaluator_alloc_from_s_f_func(s_f_fsec2hms_func,    parg1);
+	} else if (streq(fnnm, "gmt2sec"))         { return rval_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func,     parg1);
+	} else if (streq(fnnm, "hexfmt"))          { return rval_evaluator_alloc_from_x_x_func(s_x_hexfmt_func,      parg1);
+	} else if (streq(fnnm, "hms2fsec"))        { return rval_evaluator_alloc_from_f_s_func(f_s_hms2fsec_func,    parg1);
+	} else if (streq(fnnm, "hms2sec"))         { return rval_evaluator_alloc_from_f_s_func(i_s_hms2sec_func,     parg1);
+	} else if (streq(fnnm, "int"))             { return rval_evaluator_alloc_from_x_x_func(i_x_int_func,         parg1);
+	} else if (streq(fnnm, "invqnorm"))        { return rval_evaluator_alloc_from_f_f_func(f_f_invqnorm_func,    parg1);
+	} else if (streq(fnnm, "isabsent"))        { return rval_evaluator_alloc_from_x_x_func(b_x_isabsent_func,    parg1);
+	} else if (streq(fnnm, "isempty"))         { return rval_evaluator_alloc_from_x_x_func(b_x_isempty_func,     parg1);
+	} else if (streq(fnnm, "isnotempty"))      { return rval_evaluator_alloc_from_x_x_func(b_x_isnotempty_func,  parg1);
+	} else if (streq(fnnm, "isnotnull"))       { return rval_evaluator_alloc_from_x_x_func(b_x_isnotnull_func,   parg1);
+	} else if (streq(fnnm, "isnull"))          { return rval_evaluator_alloc_from_x_x_func(b_x_isnull_func,      parg1);
+	} else if (streq(fnnm, "ispresent"))       { return rval_evaluator_alloc_from_x_x_func(b_x_ispresent_func,   parg1);
+	} else if (streq(fnnm, "isnumeric"))       { return rval_evaluator_alloc_from_x_x_func(b_x_isnumeric_func,   parg1);
+	} else if (streq(fnnm, "isint"))           { return rval_evaluator_alloc_from_x_x_func(b_x_isint_func,       parg1);
+	} else if (streq(fnnm, "isfloat"))         { return rval_evaluator_alloc_from_x_x_func(b_x_isfloat_func,     parg1);
+	} else if (streq(fnnm, "isbool"))          { return rval_evaluator_alloc_from_x_x_func(b_x_isboolean_func,   parg1);
+	} else if (streq(fnnm, "isboolean"))       { return rval_evaluator_alloc_from_x_x_func(b_x_isboolean_func,   parg1);
+	} else if (streq(fnnm, "isstring"))        { return rval_evaluator_alloc_from_x_x_func(b_x_isstring_func,    parg1);
+	} else if (streq(fnnm, "log"))             { return rval_evaluator_alloc_from_f_f_func(f_f_log_func,         parg1);
+	} else if (streq(fnnm, "log10"))           { return rval_evaluator_alloc_from_f_f_func(f_f_log10_func,       parg1);
+	} else if (streq(fnnm, "log1p"))           { return rval_evaluator_alloc_from_f_f_func(f_f_log1p_func,       parg1);
+	} else if (streq(fnnm, "qnorm"))           { return rval_evaluator_alloc_from_f_f_func(f_f_qnorm_func,       parg1);
+	} else if (streq(fnnm, "round"))           { return rval_evaluator_alloc_from_x_x_func(x_x_round_func,       parg1);
+	} else if (streq(fnnm, "sec2dhms"))        { return rval_evaluator_alloc_from_s_i_func(s_i_sec2dhms_func,    parg1);
+	} else if (streq(fnnm, "sec2gmt"))         { return rval_evaluator_alloc_from_x_x_func(s_x_sec2gmt_func,     parg1);
+	} else if (streq(fnnm, "sec2gmtdate"))     { return rval_evaluator_alloc_from_x_x_func(s_x_sec2gmtdate_func, parg1);
+	} else if (streq(fnnm, "sec2hms"))         { return rval_evaluator_alloc_from_s_i_func(s_i_sec2hms_func,     parg1);
+	} else if (streq(fnnm, "sgn"))             { return rval_evaluator_alloc_from_x_x_func(x_x_sgn_func,         parg1);
+	} else if (streq(fnnm, "sin"))             { return rval_evaluator_alloc_from_f_f_func(f_f_sin_func,         parg1);
+	} else if (streq(fnnm, "sinh"))            { return rval_evaluator_alloc_from_f_f_func(f_f_sinh_func,        parg1);
+	} else if (streq(fnnm, "sqrt"))            { return rval_evaluator_alloc_from_f_f_func(f_f_sqrt_func,        parg1);
+	} else if (streq(fnnm, "string"))          { return rval_evaluator_alloc_from_x_x_func(s_x_string_func,      parg1);
+	} else if (streq(fnnm, "strlen"))          { return rval_evaluator_alloc_from_i_s_func(i_s_strlen_func,      parg1);
+	} else if (streq(fnnm, "tan"))             { return rval_evaluator_alloc_from_f_f_func(f_f_tan_func,         parg1);
+	} else if (streq(fnnm, "tanh"))            { return rval_evaluator_alloc_from_f_f_func(f_f_tanh_func,        parg1);
+	} else if (streq(fnnm, "tolower"))         { return rval_evaluator_alloc_from_s_s_func(s_s_tolower_func,     parg1);
+	} else if (streq(fnnm, "toupper"))         { return rval_evaluator_alloc_from_s_s_func(s_s_toupper_func,     parg1);
+	} else if (streq(fnnm, "typeof"))          { return rval_evaluator_alloc_from_x_x_func(s_x_typeof_func,      parg1);
+	} else if (streq(fnnm, "~"))               { return rval_evaluator_alloc_from_i_i_func(i_i_bitwise_not_func, parg1);
+
 	} else return NULL;
 }
 

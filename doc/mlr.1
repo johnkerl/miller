@@ -178,10 +178,12 @@ output separator to the given value.
 .nf
  + + - - * / // % ** | ^ & ~ << >> == != =~ !=~ > >= < <= && || ^^ ! ? : isnull
  isnotnull isabsent ispresent isempty isnotempty isnumeric isint isfloat isbool
- isboolean isstring boolean float fmtnum hexfmt int string typeof . gsub strlen
- sub substr tolower toupper abs acos acosh asin asinh atan atan2 atanh cbrt
- ceil cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd
- max mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand
+ isboolean isstring assert_notnull assert_present assert_empty assert_notempty
+ assert_numeric assert_int assert_float assert_bool assert_boolean
+ assert_string boolean float fmtnum hexfmt int string typeof . gsub strlen sub
+ substr tolower toupper abs acos acosh asin asinh atan atan2 atanh cbrt ceil
+ cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd max
+ mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand
  urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec
  hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime
 Please use "mlr --help-function {function name}" for function-specific help.
@@ -1664,7 +1666,7 @@ and string results in string compare.
 .RS 0
 .\}
 .nf
-(class=conversion #args=1): True if argument is null (empty or absent), false otherwise
+(class=conversion #args=1): True if argument is null (empty or absent), false otherwise.
 .fi
 .if n \{\
 .RE
@@ -1764,6 +1766,96 @@ and string results in string compare.
 .\}
 .nf
 (class=conversion #args=1): True if field is present with string (including empty-string) value
+.fi
+.if n \{\
+.RE
+.SS "assert_notnull"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): Returns argument if non-null (non-empty and non-absent), else throws an error.
+.fi
+.if n \{\
+.RE
+.SS "assert_present"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): Returns argument if present in input, else throws an error.
+.fi
+.if n \{\
+.RE
+.SS "assert_empty"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): Returns argument if present in input with empty value, else throws an error.
+.fi
+.if n \{\
+.RE
+.SS "assert_notempty"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): Returns argument if present in input with non-empty value, else throws an error.
+.fi
+.if n \{\
+.RE
+.SS "assert_numeric"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): Returns argument if present with int or float value, else throws an error.
+.fi
+.if n \{\
+.RE
+.SS "assert_int"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): Returns argument if present with int value, else throws an error.
+.fi
+.if n \{\
+.RE
+.SS "assert_float"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): Returns argument if present with float value, else throws an error.
+.fi
+.if n \{\
+.RE
+.SS "assert_bool"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): Returns argument if present with boolean value, else throws an error.
+.fi
+.if n \{\
+.RE
+.SS "assert_boolean"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): Returns argument if present with boolean value, else throws an error.
+.fi
+.if n \{\
+.RE
+.SS "assert_string"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=conversion #args=1): Returns argument if present with string (including empty-string) value, else throws an error.
 .fi
 .if n \{\
 .RE

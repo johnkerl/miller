@@ -433,13 +433,15 @@ Verbs:
 Functions for the filter and put verbs:
    + + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! ? :
    isnull isnotnull isabsent ispresent isempty isnotempty isnumeric isint
-   isfloat isbool isboolean isstring boolean float fmtnum hexfmt int string
-   typeof . gsub strlen sub substr tolower toupper abs acos acosh asin asinh
-   atan atan2 atanh cbrt ceil cos cosh erf erfc exp expm1 floor invqnorm log
-   log10 log1p logifit madd max mexp min mmul msub pow qnorm round roundm sgn
-   sin sinh sqrt tan tanh urand urand32 urandint dhms2fsec dhms2sec fsec2dhms
-   fsec2hms gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms
-   strftime strptime systime
+   isfloat isbool isboolean isstring assert_notnull assert_present assert_empty
+   assert_notempty assert_numeric assert_int assert_float assert_bool
+   assert_boolean assert_string boolean float fmtnum hexfmt int string typeof .
+   gsub strlen sub substr tolower toupper abs acos acosh asin asinh atan atan2
+   atanh cbrt ceil cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p
+   logifit madd max mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt
+   tan tanh urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms
+   gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime
+   strptime systime
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -6273,7 +6275,7 @@ and string results in string compare.
 
 ? : (class=boolean #args=3): Ternary operator.
 
-isnull (class=conversion #args=1): True if argument is null (empty or absent), false otherwise
+isnull (class=conversion #args=1): True if argument is null (empty or absent), false otherwise.
 
 isnotnull (class=conversion #args=1): False if argument is null (empty or absent), true otherwise.
 
@@ -6296,6 +6298,26 @@ isbool (class=conversion #args=1): True if field is present with boolean value. 
 isboolean (class=conversion #args=1): True if field is present with boolean value. Synonymous with isbool.
 
 isstring (class=conversion #args=1): True if field is present with string (including empty-string) value
+
+assert_notnull (class=conversion #args=1): Returns argument if non-null (non-empty and non-absent), else throws an error.
+
+assert_present (class=conversion #args=1): Returns argument if present in input, else throws an error.
+
+assert_empty (class=conversion #args=1): Returns argument if present in input with empty value, else throws an error.
+
+assert_notempty (class=conversion #args=1): Returns argument if present in input with non-empty value, else throws an error.
+
+assert_numeric (class=conversion #args=1): Returns argument if present with int or float value, else throws an error.
+
+assert_int (class=conversion #args=1): Returns argument if present with int value, else throws an error.
+
+assert_float (class=conversion #args=1): Returns argument if present with float value, else throws an error.
+
+assert_bool (class=conversion #args=1): Returns argument if present with boolean value, else throws an error.
+
+assert_boolean (class=conversion #args=1): Returns argument if present with boolean value, else throws an error.
+
+assert_string (class=conversion #args=1): Returns argument if present with string (including empty-string) value, else throws an error.
 
 boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
 
