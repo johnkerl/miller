@@ -20,5 +20,8 @@
 
 // ----------------------------------------------------------------
 char* type_mask_to_desc(int type_mask);
+static inline int type_mask_from_mv(mv_t* pmv) {
+	return 1 << pmv->type;
+}
 
 #endif // TYPE_DECL_H

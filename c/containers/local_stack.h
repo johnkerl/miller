@@ -79,11 +79,38 @@ static inline mv_t* local_stack_frame_get(local_stack_frame_t* pframe, int varde
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
 	return &pframe->pvars[vardef_frame_relative_index].mlrval;
 }
-static inline void local_stack_frame_set(local_stack_frame_t* pframe, int vardef_frame_relative_index, mv_t val) {
+
+static inline void local_stack_frame_define(local_stack_frame_t* pframe, int vardef_frame_relative_index,
+	mv_t val, int type_mask)
+{
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
-	LOCAL_STACK_BOUNDS_CHECK(pframe, "SET", TRUE, vardef_frame_relative_index);
-	mv_free(&pframe->pvars[vardef_frame_relative_index].mlrval);
-	pframe->pvars[vardef_frame_relative_index].mlrval = val;
+	LOCAL_STACK_BOUNDS_CHECK(pframe, "DEFINE", TRUE, vardef_frame_relative_index);
+	mlrval_and_type_mask_t* pentry = &pframe->pvars[vardef_frame_relative_index];
+
+	pentry->type_mask = type_mask;
+	if (!(type_mask_from_mv(&val) & pentry->type_mask)) {
+		fprintf(stderr, "%s: %s type-assertion failed at stack-frame index %d.\n",
+			MLR_GLOBALS.bargv0, type_mask_to_desc(pentry->type_mask), vardef_frame_relative_index);
+		exit(1);
+	}
+
+	mv_free(&pentry->mlrval);
+	pentry->mlrval = val;
+}
+
+static inline void local_stack_frame_assign(local_stack_frame_t* pframe, int vardef_frame_relative_index, mv_t val) {
+	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
+	LOCAL_STACK_BOUNDS_CHECK(pframe, "ASSIGN", TRUE, vardef_frame_relative_index);
+	mlrval_and_type_mask_t* pentry = &pframe->pvars[vardef_frame_relative_index];
+
+	if (!(type_mask_from_mv(&val) & pentry->type_mask)) {
+		fprintf(stderr, "%s: %s type-assertion failed at stack-frame index %d.\n",
+			MLR_GLOBALS.bargv0, type_mask_to_desc(pentry->type_mask), vardef_frame_relative_index);
+		exit(1);
+	}
+
+	mv_free(&pentry->mlrval);
+	pentry->mlrval = val;
 }
 
 // ----------------------------------------------------------------
@@ -98,6 +125,7 @@ static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int c
 		LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p CLEAR %d\n", pframe, pframe->subframe_base+i));
 		LOCAL_STACK_BOUNDS_CHECK(pframe, "CLEAR", FALSE, pframe->subframe_base+i);
 		mv_reset(&psubframe[i].mlrval);
+		psubframe[i].type_mask = TYPE_MASK_ANY;
 	}
 	pframe->subframe_base += count;
 }
