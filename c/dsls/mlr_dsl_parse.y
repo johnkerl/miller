@@ -115,7 +115,6 @@ md_statement_not_braced_end(A) ::= . {
 // Local-variable definitions at the current scope
 md_statement_not_braced_end(A) ::= md_local_definition(B).   { A = B; }
 md_statement_not_braced_end(A) ::= md_local_assignment(B).   { A = B; }
-md_statement_not_braced_end(A) ::= md_present_definition(B). { A = B; }
 md_statement_not_braced_end(A) ::= md_numeric_definition(B). { A = B; }
 md_statement_not_braced_end(A) ::= md_int_definition(B).     { A = B; }
 md_statement_not_braced_end(A) ::= md_float_definition(B).   { A = B; }
@@ -608,9 +607,6 @@ md_local_assignment(A)  ::= md_local_variable(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT, B, C);
 }
 
-md_present_definition(A) ::= MD_TOKEN_PRESENT md_local_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_PRESENT_DEFINITION, N, B);
-}
 md_numeric_definition(A) ::= MD_TOKEN_NUMERIC md_local_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_NUMERIC_DEFINITION, N, B);
 }

@@ -12,7 +12,6 @@ char* type_mask_to_desc(int type_mask) {
 	case TYPE_MASK_BOOLEAN: return "boolean"; break;
 	case TYPE_MASK_MAP:     return "map";     break;
 	case TYPE_MASK_NUMERIC: return "numeric"; break;
-	case TYPE_MASK_PRESENT: return "present"; break;
 	case TYPE_MASK_ANY:     return "any";     break;
 	default:                return "???";     break;
 	}

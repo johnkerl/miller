@@ -217,7 +217,6 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_SUBR_DEF:                         return "SUBR_DEF";                         break;
 	case MD_AST_NODE_TYPE_SUBR_CALLSITE:                    return "SUBR_CALLSITE";                    break;
 	case MD_AST_NODE_TYPE_LOCAL_DEFINITION:                 return "LOCAL";                            break;
-	case MD_AST_NODE_TYPE_PRESENT_DEFINITION:               return "PRESENT_DEFINITION";               break;
 	case MD_AST_NODE_TYPE_NUMERIC_DEFINITION:               return "NUMERIC_DEFINITION";               break;
 	case MD_AST_NODE_TYPE_INT_DEFINITION:                   return "INT_DEFINITION";                   break;
 	case MD_AST_NODE_TYPE_FLOAT_DEFINITION:                 return "FLOAT_DEFINITION";                 break;

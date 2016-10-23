@@ -38,6 +38,7 @@ k assert_X()
   - everywhere there is the 'local' keyword we need to handle the others as well
   - local_stack slots need an acceptable-types bitmask and a funcptr to test. use at local_stack_frame_set
   ? allow typedecls in forsrec/foroosvar boundvar specs ?
+  ! impl for param/arg
 
 ----------------------------------------------------------------
 MAPVARS:

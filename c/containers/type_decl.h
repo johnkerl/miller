@@ -15,7 +15,6 @@
 #define TYPE_MASK_MAP     (1 << MT_DIM) // xxx for later. xxx note map-types are outside of mlrval.h.
 
 #define TYPE_MASK_NUMERIC (TYPE_MASK_INT | TYPE_MASK_FLOAT)
-#define TYPE_MASK_PRESENT (TYPE_MASK_EMPTY | TYPE_MASK_STRING | TYPE_MASK_INT | TYPE_MASK_FLOAT | TYPE_MASK_BOOLEAN)
 #define TYPE_MASK_ANY     (~0)
 
 // ----------------------------------------------------------------
