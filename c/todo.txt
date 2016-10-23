@@ -17,12 +17,27 @@ NON-RELEASE:
 
 ================================================================
 QUICKLIST:
-* mapvar iterate
 * typedecl iterate
+* mapvar iterate
 * xxx@doc iterate
 
 ================================================================
 FUNCTIONALITY FOR 4.6.0:
+
+----------------------------------------------------------------
+STRICTNESS:
+
+k assert_X()
+
+! disallow subsequent localdefs of the same name in the same block
+
+* strict types: bool x, int x, float x, num x, string x, map x.
+  - only applies to locals/parameters/forbinds
+  - RHS evals are as always
+  - the only time they're changed is at LHS/varbind/argpass: all via local_stack_frame_set
+  - everywhere there is the 'local' keyword we need to handle the others as well
+  - local_stack slots need an acceptable-types bitmask and a funcptr to test. use at local_stack_frame_set
+  ? allow typedecls in forsrec/foroosvar boundvar specs ?
 
 ----------------------------------------------------------------
 MAPVARS:
@@ -56,19 +71,6 @@ MAPVARS:
   - fullimpl the alloc/handle sites one at a time
   ! timings before & after ! really i don't want to ship without the map feature but its cost
     should be known.
-
-----------------------------------------------------------------
-STRICTNESS:
-
-k assert_X()
-
-* strict types: bool x, int x, float x, num x, string x, map x.
-  - only applies to locals/parameters/forbinds
-  - RHS evals are as always
-  - the only time they're changed is at LHS/varbind/argpass: all via local_stack_frame_set
-  - everywhere there is the 'local' keyword we need to handle the others as well
-  - local_stack slots need an acceptable-types bitmask and a funcptr to test. use at local_stack_frame_set
-  ? allow typedecls in forsrec/foroosvar boundvar specs ?
 
 ================================================================
 UT FOR 4.6.0:

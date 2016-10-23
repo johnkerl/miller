@@ -85,7 +85,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	} else {
-		MLR_INTERNAL_CODING_ERROR_IF((pnode->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME) && (pnode->type != MD_AST_NODE_TYPE_OPERATOR));
+		MLR_INTERNAL_CODING_ERROR_IF((pnode->type != MD_AST_NODE_TYPE_NON_SIGIL_NAME)
+			&& (pnode->type != MD_AST_NODE_TYPE_OPERATOR));
 		return fmgr_alloc_from_operator_or_function_call(pfmgr, pnode, type_inferencing, context_flags);
 	}
 }

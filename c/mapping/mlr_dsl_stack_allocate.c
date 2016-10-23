@@ -371,6 +371,18 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* 
 {
 	if (pnode->type == MD_AST_NODE_TYPE_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
+	} else if (pnode->type == MD_AST_NODE_TYPE_PRESENT_DEFINITION) { // LHS
+		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
+	} else if (pnode->type == MD_AST_NODE_TYPE_NUMERIC_DEFINITION) { // LHS
+		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
+	} else if (pnode->type == MD_AST_NODE_TYPE_INT_DEFINITION) { // LHS
+		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
+	} else if (pnode->type == MD_AST_NODE_TYPE_FLOAT_DEFINITION) { // LHS
+		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
+	} else if (pnode->type == MD_AST_NODE_TYPE_BOOLEAN_DEFINITION) { // LHS
+		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
+	} else if (pnode->type == MD_AST_NODE_TYPE_STRING_DEFINITION) { // LHS
+		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) { // LHS
 		pass_1_for_local_assignment(pnode, pframe_group, pmax_subframe_depth, trace);
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_VARIABLE) { // RHS

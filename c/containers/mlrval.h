@@ -73,7 +73,7 @@
 //   o a: MT_ABSENT
 //   o v: MT_EMPTY (v for void; e is for error)
 //   o e: MT_ERROR
-//   o b: MT_BOOL
+//   o b: MT_BOOL xxx rename to MT_BOOLEAN throughout
 //   o f: MT_FLOAT
 //   o i: MT_INT
 //   o s: MT_STRING

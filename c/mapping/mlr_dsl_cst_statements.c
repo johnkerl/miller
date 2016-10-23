@@ -39,7 +39,13 @@ static cst_statement_allocator_t alloc_return_value; // For UDFs
 static cst_statement_allocator_t alloc_return_void;  // For subroutines
 static cst_statement_allocator_t alloc_subr_callsite;
 
-static cst_statement_allocator_t alloc_local_variable_definition;
+static mlr_dsl_cst_statement_t* alloc_local_variable_definition(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags,
+	int                 type_mask);
+
 static cst_statement_allocator_t alloc_local_variable_assignment;
 static cst_statement_allocator_t alloc_srec_assignment;
 static cst_statement_allocator_t alloc_indirect_srec_assignment;
@@ -379,7 +385,30 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		break;
 
 	case MD_AST_NODE_TYPE_LOCAL_DEFINITION:
-		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags);
+		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_ANY);
+
+	case MD_AST_NODE_TYPE_PRESENT_DEFINITION:
+		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_PRESENT);
+		break;
+
+	case MD_AST_NODE_TYPE_NUMERIC_DEFINITION:
+		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_NUMERIC);
+		break;
+
+	case MD_AST_NODE_TYPE_INT_DEFINITION:
+		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_INT);
+		break;
+
+	case MD_AST_NODE_TYPE_FLOAT_DEFINITION:
+		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_FLOAT);
+		break;
+
+	case MD_AST_NODE_TYPE_BOOLEAN_DEFINITION:
+		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_BOOLEAN);
+		break;
+
+	case MD_AST_NODE_TYPE_STRING_DEFINITION:
+		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_STRING);
 		break;
 
 	case MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT:
@@ -569,6 +598,12 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_final_filter_statement(mlr_dsl_cst_t*
 	case MD_AST_NODE_TYPE_BREAK:
 	case MD_AST_NODE_TYPE_CONTINUE:
 	case MD_AST_NODE_TYPE_LOCAL_DEFINITION:
+	case MD_AST_NODE_TYPE_PRESENT_DEFINITION:
+	case MD_AST_NODE_TYPE_NUMERIC_DEFINITION:
+	case MD_AST_NODE_TYPE_INT_DEFINITION:
+	case MD_AST_NODE_TYPE_FLOAT_DEFINITION:
+	case MD_AST_NODE_TYPE_BOOLEAN_DEFINITION:
+	case MD_AST_NODE_TYPE_STRING_DEFINITION:
 	case MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT:
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
 	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:
@@ -612,6 +647,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->num_emit_keylist_evaluators             = 0;
 	pstatement->ppemit_keylist_evaluators               = NULL;
 	pstatement->local_lhs_frame_relative_index          = 0;
+	pstatement->local_lhs_acceptable_type_mask          = TYPE_MASK_ANY;
 	pstatement->srec_lhs_field_name                     = NULL;
 	pstatement->env_lhs_name                            = NULL;
 	pstatement->psrec_lhs_evaluator                     = NULL;
@@ -646,13 +682,14 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 
 // ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_local_variable_definition(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
+	int type_inferencing, int context_flags, int type_mask)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pnext->pvvalue;
 	MLR_INTERNAL_CODING_ERROR_IF(pname_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->local_lhs_frame_relative_index = pname_node->vardef_frame_relative_index;
+	pstatement->local_lhs_acceptable_type_mask = type_mask;
 	pstatement->local_variable_name = pname_node->text;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, pcst->pfmgr,
 		type_inferencing, context_flags);
@@ -2106,7 +2143,8 @@ static void handle_local_variable_definition_or_assignment(
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	if (mv_is_present(&val)) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_set(pframe, pstatement->local_lhs_frame_relative_index, val);
+		local_stack_frame_set(pframe, pstatement->local_lhs_frame_relative_index, val
+			/*, xxx pstaetment->local_lhs_acceptable_type_mask*/);
 	} else {
 		mv_free(&val);
 	}
