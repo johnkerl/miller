@@ -39,6 +39,10 @@ k assert_X()
   - local_stack slots need an acceptable-types bitmask and a funcptr to test. use at local_stack_frame_set
   ? allow typedecls in forsrec/foroosvar boundvar specs ?
   ! impl for param/arg
+  * UT cases
+  * new mld section
+  * impl assertions as subr calls (don't require assign). entire new category: non-user-defined subrs. to mld.
+  * needs minimally the variable name preserved. additionally ... line numbers; stack trace ...
 
 ----------------------------------------------------------------
 MAPVARS:
