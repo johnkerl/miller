@@ -167,7 +167,8 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_CONVERSION, "isnumeric",   1,0, "True if field is present with value inferred to be int or float"},
 	{FUNC_CLASS_CONVERSION, "isint",       1,0, "True if field is present with value inferred to be int "},
 	{FUNC_CLASS_CONVERSION, "isfloat",     1,0, "True if field is present with value inferred to be float"},
-	{FUNC_CLASS_CONVERSION, "isbool",      1,0, "True if field is present with boolean value"},
+	{FUNC_CLASS_CONVERSION, "isbool",      1,0, "True if field is present with boolean value. Synonymous with isboolean."},
+	{FUNC_CLASS_CONVERSION, "isboolean",   1,0, "True if field is present with boolean value. Synonymous with isbool."},
 	{FUNC_CLASS_CONVERSION, "isstring",    1,0, "True if field is present with string (including empty-string) value"},
 	{FUNC_CLASS_CONVERSION, "boolean",     1,0, "Convert int/float/bool/string to boolean."},
 	{FUNC_CLASS_CONVERSION, "float",       1,0, "Convert int/float/bool/string to float."},
@@ -715,7 +716,8 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_unary_func_name(char* fnnm, r
 	} else if (streq(fnnm, "isnumeric"))   { return rval_evaluator_alloc_from_x_x_func(b_x_isnumeric_func,   parg1);
 	} else if (streq(fnnm, "isint"))       { return rval_evaluator_alloc_from_x_x_func(b_x_isint_func,       parg1);
 	} else if (streq(fnnm, "isfloat"))     { return rval_evaluator_alloc_from_x_x_func(b_x_isfloat_func,     parg1);
-	} else if (streq(fnnm, "isbool"))      { return rval_evaluator_alloc_from_x_x_func(b_x_isbool_func,      parg1);
+	} else if (streq(fnnm, "isbool"))      { return rval_evaluator_alloc_from_x_x_func(b_x_isboolean_func,   parg1);
+	} else if (streq(fnnm, "isboolean"))   { return rval_evaluator_alloc_from_x_x_func(b_x_isboolean_func,   parg1);
 	} else if (streq(fnnm, "isstring"))    { return rval_evaluator_alloc_from_x_x_func(b_x_isstring_func,    parg1);
 	} else if (streq(fnnm, "log"))         { return rval_evaluator_alloc_from_f_f_func(f_f_log_func,         parg1);
 	} else if (streq(fnnm, "log10"))       { return rval_evaluator_alloc_from_f_f_func(f_f_log10_func,       parg1);

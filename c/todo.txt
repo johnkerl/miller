@@ -18,6 +18,7 @@ NON-RELEASE:
 ================================================================
 QUICKLIST:
 * mapvar iterate
+* assertX iterate
 * typedecl iterate
 * xxx@doc iterate
 

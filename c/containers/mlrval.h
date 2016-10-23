@@ -382,7 +382,7 @@ mv_t b_x_isnotempty_func(mv_t* pval1);
 mv_t b_x_isnumeric_func(mv_t* pval1);
 mv_t b_x_isint_func(mv_t* pval1);
 mv_t b_x_isfloat_func(mv_t* pval1);
-mv_t b_x_isbool_func(mv_t* pval1);
+mv_t b_x_isboolean_func(mv_t* pval1);
 mv_t b_x_isstring_func(mv_t* pval1);
 
 mv_t i_x_int_func(mv_t* pval1);

@@ -1732,7 +1732,7 @@ mv_t b_x_isfloat_func(mv_t* pval1) {
 	mv_free(pval1);
 	return rv;
 }
-mv_t b_x_isbool_func(mv_t* pval1) {
+mv_t b_x_isboolean_func(mv_t* pval1) {
 	mv_t rv = mv_from_bool(pval1->type == MT_BOOL);
 	mv_free(pval1);
 	return rv;

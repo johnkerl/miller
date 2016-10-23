@@ -433,13 +433,13 @@ Verbs:
 Functions for the filter and put verbs:
    + + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! ? :
    isnull isnotnull isabsent ispresent isempty isnotempty isnumeric isint
-   isfloat isbool isstring boolean float fmtnum hexfmt int string typeof . gsub
-   strlen sub substr tolower toupper abs acos acosh asin asinh atan atan2 atanh
-   cbrt ceil cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p logifit
-   madd max mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan
-   tanh urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec
-   hms2fsec hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime
-   systime
+   isfloat isbool isboolean isstring boolean float fmtnum hexfmt int string
+   typeof . gsub strlen sub substr tolower toupper abs acos acosh asin asinh
+   atan atan2 atanh cbrt ceil cos cosh erf erfc exp expm1 floor invqnorm log
+   log10 log1p logifit madd max mexp min mmul msub pow qnorm round roundm sgn
+   sin sinh sqrt tan tanh urand urand32 urandint dhms2fsec dhms2sec fsec2dhms
+   fsec2hms gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms
+   strftime strptime systime
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -6291,7 +6291,9 @@ isint (class=conversion #args=1): True if field is present with value inferred t
 
 isfloat (class=conversion #args=1): True if field is present with value inferred to be float
 
-isbool (class=conversion #args=1): True if field is present with boolean value
+isbool (class=conversion #args=1): True if field is present with boolean value. Synonymous with isboolean.
+
+isboolean (class=conversion #args=1): True if field is present with boolean value. Synonymous with isbool.
 
 isstring (class=conversion #args=1): True if field is present with string (including empty-string) value
 
