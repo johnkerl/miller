@@ -11,9 +11,11 @@ static local_stack_frame_t* _local_stack_alloc(int size, int ephemeral) {
 	pframe->ephemeral = ephemeral;
 	pframe->size = size;
 	pframe->subframe_base = 0;
-	pframe->pvars = mlr_malloc_or_die(size * sizeof(mv_t));
+	pframe->pvars = mlr_malloc_or_die(size * sizeof(mlrval_and_type_mask_t));
 	for (int i = 0; i < size; i++) {
-		pframe->pvars[i] = mv_absent();
+		pframe->pvars[i].mlrval = mv_absent();
+		// Any type can be written here, unless otherwise specified by a typed definition
+		pframe->pvars[i].type_mask = TYPE_MASK_ANY;
 	}
 
 	return pframe;
@@ -29,7 +31,7 @@ void local_stack_frame_free(local_stack_frame_t* pframe) {
 	if (pframe == NULL)
 		return;
 	for (int i = 0; i < pframe->size; i++) {
-		mv_free(&pframe->pvars[i]);
+		mv_free(&pframe->pvars[i].mlrval);
 	}
 	free(pframe->pvars);
 	free(pframe);
@@ -51,9 +53,9 @@ local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe) {
 
 // ----------------------------------------------------------------
 void local_stack_frame_exit (local_stack_frame_t* pframe) {
-	MLR_INTERNAL_CODING_ERROR_UNLESS(mv_is_absent(&pframe->pvars[0]));
+	MLR_INTERNAL_CODING_ERROR_UNLESS(mv_is_absent(&pframe->pvars[0].mlrval));
 	for (int i = 0; i < pframe->size; i++)
-		mv_free(&pframe->pvars[i]);
+		mv_free(&pframe->pvars[i].mlrval);
 	if (!pframe->ephemeral) {
 		pframe->in_use = FALSE;
 		LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME NON-EPH EXIT %p %d\n", pframe, pframe->size));

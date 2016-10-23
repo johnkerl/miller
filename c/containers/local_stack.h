@@ -2,6 +2,7 @@
 #define LOCAL_STACK_H
 
 #include "containers/mlrval.h"
+#include "containers/type_decl.h"
 #include "containers/sllv.h"
 
 // ================================================================
@@ -16,12 +17,17 @@
 // ================================================================
 
 // ================================================================
+typedef struct _mlrval_and_type_mask_t {
+	mv_t mlrval;
+	int  type_mask;
+} mlrval_and_type_mask_t;
+
 typedef struct _local_stack_frame_t {
 	int in_use;
 	int ephemeral;
 	int size;
 	int subframe_base;
-	mv_t* pxars;
+	mlrval_and_type_mask_t* pvars;
 } local_stack_frame_t;
 
 // ----------------------------------------------------------------
@@ -71,13 +77,13 @@ void local_stack_frame_exit(local_stack_frame_t* pframe);
 static inline mv_t* local_stack_frame_get(local_stack_frame_t* pframe, int vardef_frame_relative_index) {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
-	return &pframe->pvars[vardef_frame_relative_index];
+	return &pframe->pvars[vardef_frame_relative_index].mlrval;
 }
 static inline void local_stack_frame_set(local_stack_frame_t* pframe, int vardef_frame_relative_index, mv_t val) {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "SET", TRUE, vardef_frame_relative_index);
-	mv_free(&pframe->pvars[vardef_frame_relative_index]);
-	pframe->pvars[vardef_frame_relative_index] = val;
+	mv_free(&pframe->pvars[vardef_frame_relative_index].mlrval);
+	pframe->pvars[vardef_frame_relative_index].mlrval = val;
 }
 
 // ----------------------------------------------------------------
@@ -87,11 +93,11 @@ static inline void local_stack_frame_set(local_stack_frame_t* pframe, int vardef
 static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int count) {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK SUBFRAME %p ENTER %d->%d\n",
 		pframe, pframe->subframe_base, pframe->subframe_base+count));
-	mv_t* psubframe = &pframe->pvars[pframe->subframe_base];
+	mlrval_and_type_mask_t* psubframe = &pframe->pvars[pframe->subframe_base];
 	for (int i = 0; i < count; i++) {
 		LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p CLEAR %d\n", pframe, pframe->subframe_base+i));
 		LOCAL_STACK_BOUNDS_CHECK(pframe, "CLEAR", FALSE, pframe->subframe_base+i);
-		mv_reset(&psubframe[i]);
+		mv_reset(&psubframe[i].mlrval);
 	}
 	pframe->subframe_base += count;
 }
