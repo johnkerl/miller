@@ -21,7 +21,7 @@ typedef struct _local_stack_frame_t {
 	int ephemeral;
 	int size;
 	int subframe_base;
-	mv_t* pvars;
+	mv_t* pxars;
 } local_stack_frame_t;
 
 // ----------------------------------------------------------------
@@ -36,41 +36,14 @@ void local_stack_frame_free(local_stack_frame_t* pframe);
 //#define LOCAL_STACK_TRACE_ENABLE
 //#define LOCAL_STACK_BOUNDS_CHECK_ENABLE
 
-// ----------------------------------------------------------------
 #ifdef LOCAL_STACK_BOUNDS_CHECK_ENABLE
-static int local_stack_bounds_check_announce_first_call = TRUE;
-
-static void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, int vardef_frame_relative_index) {
-	if (local_stack_bounds_check_announce_first_call) {
-		fprintf(stderr, "%s: local-stack bounds-checking is enabled\n", MLR_GLOBALS.bargv0);
-		local_stack_bounds_check_announce_first_call = FALSE;
-	}
-	if (vardef_frame_relative_index < 0) {
-		fprintf(stderr, "OP=%s FRAME=%p IDX=%d/%d STACK UNDERFLOW\n",
-			op, pframe, vardef_frame_relative_index, pframe->size);
-		exit(1);
-	}
-	if (set && vardef_frame_relative_index == 0) {
-		fprintf(stderr, "OP=%s FRAME=%p IDX=%d/%d ABSENT WRITE\n",
-			op, pframe, vardef_frame_relative_index, pframe->size);
-		exit(1);
-	}
-	if (vardef_frame_relative_index >= pframe->size) {
-		fprintf(stderr, "OP=%s FRAME=%p IDX=%d/%d STACK OVERFLOW\n",
-			op, pframe, vardef_frame_relative_index, pframe->size);
-		exit(1);
-	}
-}
+void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, int vardef_frame_relative_index);
 #define LOCAL_STACK_BOUNDS_CHECK(pframe, op, set, vardef_frame_relative_index) \
 	local_stack_bounds_check((pframe), (op), (set), (vardef_frame_relative_index))
-
 #else
-
 #define LOCAL_STACK_BOUNDS_CHECK(pframe, op, set, vardef_frame_relative_index)
-
 #endif
 
-// ----------------------------------------------------------------
 #ifdef LOCAL_STACK_TRACE_ENABLE
 #define LOCAL_STACK_TRACE(p) p
 #else

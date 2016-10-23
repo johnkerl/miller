@@ -91,3 +91,28 @@ void local_stack_push(local_stack_t* pstack, local_stack_frame_t* pframe) {
 local_stack_frame_t* local_stack_pop(local_stack_t* pstack) {
 	return sllv_pop(pstack->pframes);
 }
+
+// ----------------------------------------------------------------
+static int local_stack_bounds_check_announce_first_call = TRUE;
+
+void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, int vardef_frame_relative_index) {
+	if (local_stack_bounds_check_announce_first_call) {
+		fprintf(stderr, "%s: local-stack bounds-checking is enabled\n", MLR_GLOBALS.bargv0);
+		local_stack_bounds_check_announce_first_call = FALSE;
+	}
+	if (vardef_frame_relative_index < 0) {
+		fprintf(stderr, "OP=%s FRAME=%p IDX=%d/%d STACK UNDERFLOW\n",
+			op, pframe, vardef_frame_relative_index, pframe->size);
+		exit(1);
+	}
+	if (set && vardef_frame_relative_index == 0) {
+		fprintf(stderr, "OP=%s FRAME=%p IDX=%d/%d ABSENT WRITE\n",
+			op, pframe, vardef_frame_relative_index, pframe->size);
+		exit(1);
+	}
+	if (vardef_frame_relative_index >= pframe->size) {
+		fprintf(stderr, "OP=%s FRAME=%p IDX=%d/%d STACK OVERFLOW\n",
+			op, pframe, vardef_frame_relative_index, pframe->size);
+		exit(1);
+	}
+}
