@@ -113,12 +113,15 @@ md_statement_not_braced_end(A) ::= . {
 }
 
 // Local-variable definitions at the current scope
-md_statement_not_braced_end(A) ::= md_local_definition(B). {
-	A = B;
-}
-md_statement_not_braced_end(A) ::= md_local_assignment(B).  {
-	A = B;
-}
+md_statement_not_braced_end(A) ::= md_local_definition(B).   { A = B; }
+md_statement_not_braced_end(A) ::= md_local_assignment(B).   { A = B; }
+md_statement_not_braced_end(A) ::= md_present_definition(B). { A = B; }
+md_statement_not_braced_end(A) ::= md_numeric_definition(B). { A = B; }
+md_statement_not_braced_end(A) ::= md_int_definition(B).     { A = B; }
+md_statement_not_braced_end(A) ::= md_float_definition(B).   { A = B; }
+md_statement_not_braced_end(A) ::= md_boolean_definition(B). { A = B; }
+md_statement_not_braced_end(A) ::= md_string_definition(B).  { A = B; }
+
 // For user-defined functions
 md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
@@ -603,6 +606,25 @@ md_local_definition(A) ::= MD_TOKEN_LOCAL md_local_variable(N) MD_TOKEN_ASSIGN m
 }
 md_local_assignment(A)  ::= md_local_variable(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT, B, C);
+}
+
+md_present_definition(A) ::= MD_TOKEN_PRESENT md_local_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_PRESENT_DEFINITION, N, B);
+}
+md_numeric_definition(A) ::= MD_TOKEN_NUMERIC md_local_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_NUMERIC_DEFINITION, N, B);
+}
+md_int_definition(A) ::= MD_TOKEN_INT md_local_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_INT_DEFINITION, N, B);
+}
+md_float_definition(A) ::= MD_TOKEN_FLOAT md_local_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_FLOAT_DEFINITION, N, B);
+}
+md_boolean_definition(A) ::= MD_TOKEN_BOOLEAN md_local_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_BOOLEAN_DEFINITION, N, B);
+}
+md_string_definition(A) ::= MD_TOKEN_STRING md_local_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_STRING_DEFINITION, N, B);
 }
 
 // ----------------------------------------------------------------
@@ -1977,6 +1999,22 @@ md_atom_or_fcn(A) ::= md_fcn_or_subr_call(B). {
 md_fcn_or_subr_call(A) ::= MD_TOKEN_NON_SIGIL_NAME(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
+// For most functions it suffices to use the MD_TOKEN_NON_SIGIL_NAME pattern. But
+// int/float/boolean/string are keywords in the lexer so we need to spell those out explicitly.
+// (They're type-decl keywords but they're also the names of type-conversion functions.)
+md_fcn_or_subr_call(A) ::= MD_TOKEN_INT(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
+	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+}
+md_fcn_or_subr_call(A) ::= MD_TOKEN_FLOAT(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
+	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+}
+md_fcn_or_subr_call(A) ::= MD_TOKEN_BOOLEAN(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
+	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+}
+md_fcn_or_subr_call(A) ::= MD_TOKEN_STRING(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
+	A = mlr_dsl_ast_node_set_function_name(B, O->text);
+}
+
 // Need to invalidate "f(10,)" -- use some non-empty-args expr.
 md_fcn_args(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);

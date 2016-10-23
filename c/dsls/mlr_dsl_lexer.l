@@ -101,10 +101,6 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
 	return MD_TOKEN_SUBR_CALL;
 }
-"local" {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-	return MD_TOKEN_LOCAL;
-}
 "return" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
 	return MD_TOKEN_RETURN;
@@ -430,11 +426,40 @@
 	return MD_TOKEN_REGEXI;
 }
 
-true {
+"local" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
+	return MD_TOKEN_LOCAL;
+}
+"present" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_PRESENT_DEFINITION);
+	return MD_TOKEN_PRESENT;
+}
+"numeric" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NUMERIC_DEFINITION);
+	return MD_TOKEN_NUMERIC;
+}
+"int" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_INT_DEFINITION);
+	return MD_TOKEN_INT;
+}
+"float" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FLOAT_DEFINITION);
+	return MD_TOKEN_FLOAT;
+}
+"boolean" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_BOOLEAN_DEFINITION);
+	return MD_TOKEN_BOOLEAN;
+}
+"string" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_DEFINITION);
+	return MD_TOKEN_STRING;
+}
+
+"true" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_BOOLEAN_LITERAL);
 	return MD_TOKEN_TRUE;
 }
-false {
+"false" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_BOOLEAN_LITERAL);
 	return MD_TOKEN_FALSE;
 }

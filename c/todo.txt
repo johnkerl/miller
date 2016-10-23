@@ -18,7 +18,6 @@ NON-RELEASE:
 ================================================================
 QUICKLIST:
 * mapvar iterate
-* assertX iterate
 * typedecl iterate
 * xxx@doc iterate
 
@@ -85,7 +84,8 @@ DOC FOR 4.6.0:
 
 TYPE-CHECKING:
 * assert_X() functions
-* also make a separate section
+* mlr -k re present numeric int float boolean string
+* make a separate mld section
 
 OOSVAR SINGLE FOR:
 * oosvar-single-for mlh
