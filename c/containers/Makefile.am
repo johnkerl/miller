@@ -50,7 +50,9 @@ libcontainers_la_SOURCES=	\
 			sllv.c \
 			sllv.h \
 			top_keeper.c \
-			top_keeper.h
+			top_keeper.h \
+			type_decl.c \
+			type_decl.h
 
 libcontainers_la_LIBADD=	\
 			../lib/libmlr.la \
