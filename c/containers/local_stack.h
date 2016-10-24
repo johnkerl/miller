@@ -18,9 +18,10 @@
 
 // ================================================================
 typedef struct _mlrval_and_type_mask_t {
-	mv_t mlrval;
-	int  type_mask;
-} mlrval_and_type_mask_t;
+	mv_t  mlrval;
+	char* name; // for type-check error messages. not strduped; the caller must ensure extent.
+	int   type_mask;
+} mlrval_and_type_mask_t; // xxx rename
 
 typedef struct _local_stack_frame_t {
 	int in_use;
@@ -73,6 +74,7 @@ void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, in
 
 local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe);
 void local_stack_frame_exit(local_stack_frame_t* pframe);
+void local_stack_frame_throw_type_mismatch(mlrval_and_type_mask_t* pentry, mv_t* pval);
 
 static inline mv_t* local_stack_frame_get(local_stack_frame_t* pframe, int vardef_frame_relative_index) {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
@@ -80,18 +82,18 @@ static inline mv_t* local_stack_frame_get(local_stack_frame_t* pframe, int varde
 	return &pframe->pvars[vardef_frame_relative_index].mlrval;
 }
 
-static inline void local_stack_frame_define(local_stack_frame_t* pframe, int vardef_frame_relative_index,
-	mv_t val, int type_mask)
+static inline void local_stack_frame_define(local_stack_frame_t* pframe, char* variable_name,
+	int vardef_frame_relative_index, int type_mask, mv_t val)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "DEFINE", TRUE, vardef_frame_relative_index);
 	mlrval_and_type_mask_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 
+	pentry->name = variable_name; // no strdup, for performance -- caller must ensure extent
 	pentry->type_mask = type_mask;
+
 	if (!(type_mask_from_mv(&val) & pentry->type_mask)) {
-		fprintf(stderr, "%s: %s type-assertion failed at stack-frame index %d.\n",
-			MLR_GLOBALS.bargv0, type_mask_to_desc(pentry->type_mask), vardef_frame_relative_index);
-		exit(1);
+		local_stack_frame_throw_type_mismatch(pentry, &val);
 	}
 
 	mv_free(&pentry->mlrval);
@@ -104,9 +106,7 @@ static inline void local_stack_frame_assign(local_stack_frame_t* pframe, int var
 	mlrval_and_type_mask_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 
 	if (!(type_mask_from_mv(&val) & pentry->type_mask)) {
-		fprintf(stderr, "%s: %s type-assertion failed at stack-frame index %d.\n",
-			MLR_GLOBALS.bargv0, type_mask_to_desc(pentry->type_mask), vardef_frame_relative_index);
-		exit(1);
+		local_stack_frame_throw_type_mismatch(pentry, &val);
 	}
 
 	mv_free(&pentry->mlrval);

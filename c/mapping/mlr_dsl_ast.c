@@ -19,11 +19,11 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_alloc(char* text, mlr_dsl_ast_node_type_t t
 	pnode->pchildren = NULL;
 
 	pnode->vardef_subframe_relative_index = MD_UNUSED_INDEX;
-	pnode->vardef_subframe_index   = MD_UNUSED_INDEX;
+	pnode->vardef_subframe_index          = MD_UNUSED_INDEX;
 	pnode->vardef_frame_relative_index    = MD_UNUSED_INDEX;
-	pnode->subframe_var_count      = MD_UNUSED_INDEX;
-	pnode->max_subframe_depth      = MD_UNUSED_INDEX;
-	pnode->max_var_depth           = MD_UNUSED_INDEX;
+	pnode->subframe_var_count             = MD_UNUSED_INDEX;
+	pnode->max_subframe_depth             = MD_UNUSED_INDEX;
+	pnode->max_var_depth                  = MD_UNUSED_INDEX;
 
 	return pnode;
 }
@@ -216,12 +216,18 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FUNC_DEF:                         return "FUNC_DEF";                         break;
 	case MD_AST_NODE_TYPE_SUBR_DEF:                         return "SUBR_DEF";                         break;
 	case MD_AST_NODE_TYPE_SUBR_CALLSITE:                    return "SUBR_CALLSITE";                    break;
-	case MD_AST_NODE_TYPE_LOCAL_DEFINITION:                 return "LOCAL";                            break;
-	case MD_AST_NODE_TYPE_NUMERIC_DEFINITION:               return "NUMERIC_DEFINITION";               break;
-	case MD_AST_NODE_TYPE_INT_DEFINITION:                   return "INT_DEFINITION";                   break;
-	case MD_AST_NODE_TYPE_FLOAT_DEFINITION:                 return "FLOAT_DEFINITION";                 break;
-	case MD_AST_NODE_TYPE_BOOLEAN_DEFINITION:               return "BOOLEAN_DEFINITION";               break;
-	case MD_AST_NODE_TYPE_STRING_DEFINITION:                return "STRING_DEFINITION";                break;
+	case MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION:         return "UNTYPED_LOCAL_DEFINITION";         break;
+	case MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION:         return "NUMERIC_LOCAL_DEFINITION";         break;
+	case MD_AST_NODE_TYPE_INT_LOCAL_DEFINITION:             return "INT_LOCAL_DEFINITION";             break;
+	case MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION:           return "FLOAT_LOCAL_DEFINITION";           break;
+	case MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION:         return "BOOLEAN_LOCAL_DEFINITION";         break;
+	case MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION:          return "STRING_LOCAL_DEFINITION";          break;
+	case MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION:     return "UNTYPED_PARAMETER_DEFINITION";     break;
+	case MD_AST_NODE_TYPE_NUMERIC_PARAMETER_DEFINITION:     return "NUMERIC_PARAMETER_DEFINITION";     break;
+	case MD_AST_NODE_TYPE_INT_PARAMETER_DEFINITION:         return "INT_PARAMETER_DEFINITION";         break;
+	case MD_AST_NODE_TYPE_FLOAT_PARAMETER_DEFINITION:       return "FLOAT_PARAMETER_DEFINITION";       break;
+	case MD_AST_NODE_TYPE_BOOLEAN_PARAMETER_DEFINITION:     return "BOOLEAN_PARAMETER_DEFINITION";     break;
+	case MD_AST_NODE_TYPE_STRING_PARAMETER_DEFINITION:      return "STRING_PARAMETER_DEFINITION";      break;
 	case MD_AST_NODE_TYPE_RETURN_VALUE:                     return "RETURN_VALUE";                     break;
 	case MD_AST_NODE_TYPE_RETURN_VOID:                      return "RETURN_VOID";                      break;
 	case MD_AST_NODE_TYPE_BEGIN:                            return "BEGIN";                            break;

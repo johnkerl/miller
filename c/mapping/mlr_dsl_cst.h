@@ -141,9 +141,6 @@ typedef struct _mlr_dsl_cst_statement_t {
 	struct _subr_callsite_t *psubr_callsite;
 	struct _subr_defsite_t *psubr_defsite;
 
-	// Definition of local variable within user-defined function. Uses prhs_evaluator for value.
-	char* local_variable_name;
-
 	// Return statement within user-defined function
 	rval_evaluator_t* preturn_evaluator;
 
@@ -165,8 +162,11 @@ typedef struct _mlr_dsl_cst_statement_t {
 	sllv_t** ppemit_keylist_evaluators;
 
 	// Assignment to local
-	int local_lhs_frame_relative_index;
-	int local_lhs_acceptable_type_mask;
+	// The variable name is used only for type-decl exceptions. Otherwise the
+	// name is replaced with the frame-relative index by the stack allocator.
+	char* local_lhs_variable_name;
+	int   local_lhs_frame_relative_index;
+	int   local_lhs_acceptable_type_mask;
 
 	// Assignment to srec
 	char* srec_lhs_field_name;
@@ -213,10 +213,17 @@ typedef struct _mlr_dsl_cst_statement_t {
 	sllv_t* pif_chain_statements;
 
 	// for-srec / for-oosvar:
-	int  for_srec_k_frame_relative_index;
-	int* for_oosvar_k_frame_relative_indices;
-	int  for_oosvar_k_count;
-	int  for_v_frame_relative_index;
+	// (The variable name is used only for type-decl exceptions. Otherwise the
+	// name is replaced with the frame-relative index by the stack allocator.)
+	char* for_srec_k_variable_name;
+	int   for_srec_k_frame_relative_index;
+
+	char** for_oosvar_k_variable_names;
+	int*  for_oosvar_k_frame_relative_indices;
+	int   for_oosvar_k_count;
+
+	char* for_v_variable_name;
+	int   for_v_frame_relative_index;
 
 	type_inferenced_srec_field_getter_t* ptype_inferenced_srec_field_getter;
 

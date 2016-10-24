@@ -20,6 +20,7 @@ QUICKLIST:
 * typedecl iterate
 * mapvar iterate
 * xxx@doc iterate
+* mlr_exit n w/ fflush stdout/stderr & exit n?
 
 ================================================================
 FUNCTIONALITY FOR 4.6.0:
@@ -32,16 +33,21 @@ k assert_X()
 ! disallow subsequent localdefs of the same name in the same block
 
 * strict types: bool x, int x, float x, num x, string x, map x.
-  - only applies to locals/parameters/forbinds
-  - RHS evals are as always
-  - the only time they're changed is at LHS/varbind/argpass: all via local_stack_frame_set
+  i only applies to locals/parameters/forbinds
+  i the only time they're changed is at LHS/varbind/argpass: all via local_stack_frame_set
+  k RHS evals are as always
+  ! string mask MT_STRING | MT_EMPTY ?
   - everywhere there is the 'local' keyword we need to handle the others as well
-  - local_stack slots need an acceptable-types bitmask and a funcptr to test. use at local_stack_frame_set
-  ? allow typedecls in forsrec/foroosvar boundvar specs ?
+  - local_stack slots need an acceptable-types bitmask and a funcptr to test. use at local_stack_frame_set.
+  - need varnames back into the CST nodes
+  - wording:
+    int type assertion for parameter x unmet by argument "3" with type string.
+    int type assertion for variable x unmet by value "3" with type string.
   ! impl for param/arg
-  * UT cases
+  ? allow typedecls in forsrec/foroosvar boundvar specs ?
+  * UT cases x all
   * new mld section
-  * impl assertions as subr calls (don't require assign). entire new category: non-user-defined subrs. to mld.
+  * impl assertions also as subr calls (don't require assign). entire new category: non-user-defined subrs. to mld.
   * needs minimally the variable name preserved. additionally ... line numbers; stack trace ...
 
 ----------------------------------------------------------------

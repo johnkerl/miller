@@ -369,17 +369,17 @@ static void pass_1_for_statement_list(mlr_dsl_ast_node_t* pnode, stkalc_subframe
 static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace)
 {
-	if (pnode->type == MD_AST_NODE_TYPE_LOCAL_DEFINITION) { // LHS
+	if (pnode->type == MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
-	} else if (pnode->type == MD_AST_NODE_TYPE_NUMERIC_DEFINITION) { // LHS
+	} else if (pnode->type == MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
-	} else if (pnode->type == MD_AST_NODE_TYPE_INT_DEFINITION) { // LHS
+	} else if (pnode->type == MD_AST_NODE_TYPE_INT_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
-	} else if (pnode->type == MD_AST_NODE_TYPE_FLOAT_DEFINITION) { // LHS
+	} else if (pnode->type == MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
-	} else if (pnode->type == MD_AST_NODE_TYPE_BOOLEAN_DEFINITION) { // LHS
+	} else if (pnode->type == MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
-	} else if (pnode->type == MD_AST_NODE_TYPE_STRING_DEFINITION) { // LHS
+	} else if (pnode->type == MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT) { // LHS
 		pass_1_for_local_assignment(pnode, pframe_group, pmax_subframe_depth, trace);
@@ -402,8 +402,10 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* 
 static void pass_1_for_local_definition(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace)
 {
+	// xxx node-type assert
 	mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 
+	// xxx node-type assert
 	mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 	pass_1_for_node(pvaluenode, pframe_group, pmax_subframe_depth, trace);
 	// Do the LHS after the RHS, in case 'local nonesuch = nonesuch'
