@@ -17,18 +17,18 @@
 // ================================================================
 
 // ================================================================
-typedef struct _mlrval_and_type_mask_t {
+typedef struct _local_stack_frame_entry_t {
 	mv_t  mlrval;
 	char* name; // for type-check error messages. not strduped; the caller must ensure extent.
 	int   type_mask;
-} mlrval_and_type_mask_t; // xxx rename
+} local_stack_frame_entry_t;
 
 typedef struct _local_stack_frame_t {
 	int in_use;
 	int ephemeral;
 	int size;
 	int subframe_base;
-	mlrval_and_type_mask_t* pvars;
+	local_stack_frame_entry_t* pvars;
 } local_stack_frame_t;
 
 // ----------------------------------------------------------------
@@ -74,7 +74,7 @@ void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, in
 
 local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe);
 void local_stack_frame_exit(local_stack_frame_t* pframe);
-void local_stack_frame_throw_type_mismatch(mlrval_and_type_mask_t* pentry, mv_t* pval);
+void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv_t* pval);
 
 static inline mv_t* local_stack_frame_get(local_stack_frame_t* pframe, int vardef_frame_relative_index) {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
@@ -87,7 +87,7 @@ static inline void local_stack_frame_define(local_stack_frame_t* pframe, char* v
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "DEFINE", TRUE, vardef_frame_relative_index);
-	mlrval_and_type_mask_t* pentry = &pframe->pvars[vardef_frame_relative_index];
+	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 
 	pentry->name = variable_name; // no strdup, for performance -- caller must ensure extent
 	pentry->type_mask = type_mask;
@@ -103,7 +103,7 @@ static inline void local_stack_frame_define(local_stack_frame_t* pframe, char* v
 static inline void local_stack_frame_assign(local_stack_frame_t* pframe, int vardef_frame_relative_index, mv_t val) {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "ASSIGN", TRUE, vardef_frame_relative_index);
-	mlrval_and_type_mask_t* pentry = &pframe->pvars[vardef_frame_relative_index];
+	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 
 	if (!(type_mask_from_mv(&val) & pentry->type_mask)) {
 		local_stack_frame_throw_type_mismatch(pentry, &val);
@@ -120,7 +120,7 @@ static inline void local_stack_frame_assign(local_stack_frame_t* pframe, int var
 static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int count) {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK SUBFRAME %p ENTER %d->%d\n",
 		pframe, pframe->subframe_base, pframe->subframe_base+count));
-	mlrval_and_type_mask_t* psubframe = &pframe->pvars[pframe->subframe_base];
+	local_stack_frame_entry_t* psubframe = &pframe->pvars[pframe->subframe_base];
 	for (int i = 0; i < count; i++) {
 		LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p CLEAR %d\n", pframe, pframe->subframe_base+i));
 		LOCAL_STACK_BOUNDS_CHECK(pframe, "CLEAR", FALSE, pframe->subframe_base+i);

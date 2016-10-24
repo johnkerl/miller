@@ -11,9 +11,9 @@ static local_stack_frame_t* _local_stack_alloc(int size, int ephemeral) {
 	pframe->ephemeral = ephemeral;
 	pframe->size = size;
 	pframe->subframe_base = 0;
-	pframe->pvars = mlr_malloc_or_die(size * sizeof(mlrval_and_type_mask_t));
+	pframe->pvars = mlr_malloc_or_die(size * sizeof(local_stack_frame_entry_t));
 	for (int i = 0; i < size; i++) {
-		mlrval_and_type_mask_t* pentry = &pframe->pvars[i];
+		local_stack_frame_entry_t* pentry = &pframe->pvars[i];
 		pentry->mlrval = mv_absent();
 		pentry->name = NULL;
 		// Any type can be written here, unless otherwise specified by a typed definition
@@ -122,7 +122,7 @@ void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, in
 }
 
 // ----------------------------------------------------------------
-void local_stack_frame_throw_type_mismatch(mlrval_and_type_mask_t* pentry, mv_t* pval) {
+void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv_t* pval) {
 	MLR_INTERNAL_CODING_ERROR_IF(pentry->name == NULL);
 	char* sval = mv_alloc_format_val(pval);
 	fprintf(stderr, "%s: %s type assertion for variable %s unmet by value [%s] with type %s.\n",
