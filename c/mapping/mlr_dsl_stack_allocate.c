@@ -402,10 +402,8 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* 
 static void pass_1_for_local_definition(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace)
 {
-	// xxx node-type assert
 	mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 
-	// xxx node-type assert
 	mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 	pass_1_for_node(pvaluenode, pframe_group, pmax_subframe_depth, trace);
 	// Do the LHS after the RHS, in case 'local nonesuch = nonesuch'
