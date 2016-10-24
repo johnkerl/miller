@@ -5,6 +5,7 @@
 #ifndef MLR_DSL_AST_H
 #define MLR_DSL_AST_H
 #include "../containers/sllv.h"
+#include "../containers/type_decl.h"
 
 // ----------------------------------------------------------------
 typedef enum _mlr_dsl_ast_node_type_t {
@@ -141,6 +142,8 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_append_arg(mlr_dsl_ast_node_t* pa, mlr_dsl_
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(mlr_dsl_ast_node_t* pa, char* name);
 
 void mlr_dsl_ast_node_replace_text(mlr_dsl_ast_node_t* pa, char* text);
+
+int mlr_dsl_ast_node_to_type_mask(mlr_dsl_ast_node_t* pa);
 
 int mlr_dsl_ast_node_cannot_be_bare_boolean(mlr_dsl_ast_node_t* pnode);
 

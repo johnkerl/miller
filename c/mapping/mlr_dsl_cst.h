@@ -315,6 +315,7 @@ void mlr_dsl_cst_handle_statement_list(
 typedef struct _cst_udf_state_t {
 	int       arity;
 	char**    parameter_names;
+	int*      parameter_type_masks;
 	cst_top_level_statement_block_t* ptop_level_block;
 } cst_udf_state_t;
 
@@ -342,6 +343,7 @@ typedef struct _subr_defsite_t {
 	char*     name;
 	int       arity;
 	char**    parameter_names;
+	int*      parameter_type_masks;
 	cst_top_level_statement_block_t* ptop_level_block;
 } subr_defsite_t;
 

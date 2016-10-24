@@ -139,6 +139,28 @@ void mlr_dsl_ast_node_replace_text(mlr_dsl_ast_node_t* pa, char* text) {
 }
 
 // ----------------------------------------------------------------
+int mlr_dsl_ast_node_to_type_mask(mlr_dsl_ast_node_t* pa) {
+	switch(pa->type) {
+
+	case MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION:     return TYPE_MASK_ANY;
+	case MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION:     return TYPE_MASK_NUMERIC;
+	case MD_AST_NODE_TYPE_INT_LOCAL_DEFINITION:         return TYPE_MASK_INT;
+	case MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION:       return TYPE_MASK_FLOAT;
+	case MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION:     return TYPE_MASK_BOOLEAN;
+	case MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION:      return TYPE_MASK_STRING;
+
+	case MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION: return TYPE_MASK_ANY;
+	case MD_AST_NODE_TYPE_NUMERIC_PARAMETER_DEFINITION: return TYPE_MASK_NUMERIC;
+	case MD_AST_NODE_TYPE_INT_PARAMETER_DEFINITION:     return TYPE_MASK_INT;
+	case MD_AST_NODE_TYPE_FLOAT_PARAMETER_DEFINITION:   return TYPE_MASK_FLOAT;
+	case MD_AST_NODE_TYPE_BOOLEAN_PARAMETER_DEFINITION: return TYPE_MASK_BOOLEAN;
+	case MD_AST_NODE_TYPE_STRING_PARAMETER_DEFINITION:  return TYPE_MASK_STRING;
+
+	default: MLR_INTERNAL_CODING_ERROR();               return 0; // not reached
+	}
+}
+
+// ----------------------------------------------------------------
 int mlr_dsl_ast_node_cannot_be_bare_boolean(mlr_dsl_ast_node_t* pnode) {
 	switch (pnode->type) {
 	case MD_AST_NODE_TYPE_BOOLEAN_LITERAL:

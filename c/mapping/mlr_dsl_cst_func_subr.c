@@ -49,6 +49,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 
 	pcst_udf_state->arity = pparameters_node->pchildren->length;
 	pcst_udf_state->parameter_names = mlr_malloc_or_die(pcst_udf_state->arity * sizeof(char*));
+	pcst_udf_state->parameter_type_masks = mlr_malloc_or_die(pcst_udf_state->arity * sizeof(int));
 	int ok = TRUE;
 	hss_t* pnameset = hss_alloc();
 	int i = 0;
@@ -63,6 +64,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 		hss_add(pnameset, pparameter_node->text);
 
 		pcst_udf_state->parameter_names[i] = mlr_strdup_or_die(pparameter_node->text);
+		pcst_udf_state->parameter_type_masks[i] = mlr_dsl_ast_node_to_type_mask(pparameter_node);
 	}
 	hss_free(pnameset);
 
@@ -113,6 +115,7 @@ void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate) {
 	for (int i = 0; i < pstate->arity; i++)
 		free(pstate->parameter_names[i]);
 	free(pstate->parameter_names);
+	free(pstate->parameter_type_masks);
 
 	cst_top_level_statement_block_free(pstate->ptop_level_block);
 
@@ -138,7 +141,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 		// Absent-null is by convention at slot 0 of the frame, and arguments are next.
 		// Hence starting the loop at 1.
 		local_stack_frame_define(pframe, pstate->parameter_names[i], i+1,
-			TYPE_MASK_ANY, args[i]); // xxx func defsite type mask
+			pstate->parameter_type_masks[i], args[i]);
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -190,6 +193,7 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 	pstate->arity = arity;
 
 	pstate->parameter_names = mlr_malloc_or_die(arity * sizeof(char*));
+	pstate->parameter_type_masks = mlr_malloc_or_die(arity * sizeof(int));
 	int ok = TRUE;
 	hss_t* pnameset = hss_alloc();
 	int i = 0;
@@ -204,6 +208,7 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 		hss_add(pnameset, pparameter_node->text);
 
 		pstate->parameter_names[i] = mlr_strdup_or_die(pparameter_node->text);
+		pstate->parameter_type_masks[i] = mlr_dsl_ast_node_to_type_mask(pparameter_node);
 	}
 	hss_free(pnameset);
 
@@ -249,6 +254,7 @@ void mlr_dsl_cst_free_subroutine(subr_defsite_t* pstate) {
 	for (int i = 0; i < pstate->arity; i++)
 		free(pstate->parameter_names[i]);
 	free(pstate->parameter_names);
+	free(pstate->parameter_type_masks);
 
 	cst_top_level_statement_block_free(pstate->ptop_level_block);
 
@@ -271,7 +277,7 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 		// Absent-null is by convention at slot 0 of the frame, and arguments are next.
 		// Hence starting the loop at 1.
 		local_stack_frame_define(pframe, pstate->parameter_names[i], i+1,
-			TYPE_MASK_ANY, args[i]); // xxx subr defsite type mask
+			pstate->parameter_type_masks[i], args[i]);
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
