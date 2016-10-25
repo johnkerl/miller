@@ -139,8 +139,8 @@ void mlr_dsl_ast_node_replace_text(mlr_dsl_ast_node_t* pa, char* text) {
 }
 
 // ----------------------------------------------------------------
-int mlr_dsl_ast_node_to_type_mask(mlr_dsl_ast_node_t* pa) {
-	switch(pa->type) {
+int mlr_dsl_ast_node_type_to_type_mask(mlr_dsl_ast_node_type_t type) {
+	switch(type) {
 
 	case MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION:     return TYPE_MASK_ANY;
 	case MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION:     return TYPE_MASK_NUMERIC;

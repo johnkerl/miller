@@ -28961,8 +28961,8 @@ text="block", type=STATEMENT_BLOCK:
     text="for", type=FOR_OOSVAR:
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="k1", type=NON_SIGIL_NAME.
-                text="k2", type=NON_SIGIL_NAME.
+                text="k1", type=UNTYPED_LOCAL_DEFINITION.
+                text="k2", type=UNTYPED_LOCAL_DEFINITION.
             text="v", type=UNTYPED_LOCAL_DEFINITION.
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
             text="o", type=STRING_LITERAL.
@@ -29037,8 +29037,8 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
     text="for", type=FOR_OOSVAR: subframe_var_count=3
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="k1", type=NON_SIGIL_NAME. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="k2", type=NON_SIGIL_NAME. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+                text="k1", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="k2", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
             text="v", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
             text="o", type=STRING_LITERAL.
@@ -29282,8 +29282,8 @@ text="block", type=STATEMENT_BLOCK:
     text="for", type=FOR_OOSVAR:
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME.
-                text="a", type=NON_SIGIL_NAME.
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
             text="c", type=UNTYPED_LOCAL_DEFINITION.
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29295,8 +29295,8 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
     text="for", type=FOR_OOSVAR: subframe_var_count=2
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="a", type=NON_SIGIL_NAME. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="a", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="a", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
             text="c", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29311,8 +29311,8 @@ text="block", type=STATEMENT_BLOCK:
     text="for", type=FOR_OOSVAR:
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME.
-                text="b", type=NON_SIGIL_NAME.
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
             text="a", type=UNTYPED_LOCAL_DEFINITION.
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29324,8 +29324,8 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
     text="for", type=FOR_OOSVAR: subframe_var_count=2
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="b", type=NON_SIGIL_NAME. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+                text="a", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="b", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
             text="a", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29340,8 +29340,8 @@ text="block", type=STATEMENT_BLOCK:
     text="for", type=FOR_OOSVAR:
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME.
-                text="b", type=NON_SIGIL_NAME.
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
             text="b", type=UNTYPED_LOCAL_DEFINITION.
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29353,8 +29353,8 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
     text="for", type=FOR_OOSVAR: subframe_var_count=2
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="b", type=NON_SIGIL_NAME. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+                text="a", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="b", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
             text="b", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29369,9 +29369,9 @@ text="block", type=STATEMENT_BLOCK:
     text="for", type=FOR_OOSVAR:
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME.
-                text="a", type=NON_SIGIL_NAME.
-                text="c", type=NON_SIGIL_NAME.
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="c", type=UNTYPED_LOCAL_DEFINITION.
             text="d", type=UNTYPED_LOCAL_DEFINITION.
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29383,9 +29383,9 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
     text="for", type=FOR_OOSVAR: subframe_var_count=3
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="a", type=NON_SIGIL_NAME. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="c", type=NON_SIGIL_NAME. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+                text="a", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="a", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="c", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
             text="d", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29400,9 +29400,9 @@ text="block", type=STATEMENT_BLOCK:
     text="for", type=FOR_OOSVAR:
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME.
-                text="b", type=NON_SIGIL_NAME.
-                text="a", type=NON_SIGIL_NAME.
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
             text="d", type=UNTYPED_LOCAL_DEFINITION.
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29414,9 +29414,9 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
     text="for", type=FOR_OOSVAR: subframe_var_count=3
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="b", type=NON_SIGIL_NAME. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
-                text="a", type=NON_SIGIL_NAME. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="a", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="b", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+                text="a", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
             text="d", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29431,9 +29431,9 @@ text="block", type=STATEMENT_BLOCK:
     text="for", type=FOR_OOSVAR:
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME.
-                text="b", type=NON_SIGIL_NAME.
-                text="c", type=NON_SIGIL_NAME.
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
+                text="c", type=UNTYPED_LOCAL_DEFINITION.
             text="a", type=UNTYPED_LOCAL_DEFINITION.
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29445,9 +29445,9 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
     text="for", type=FOR_OOSVAR: subframe_var_count=3
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="b", type=NON_SIGIL_NAME. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
-                text="c", type=NON_SIGIL_NAME. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
+                text="a", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="b", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+                text="c", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
             text="a", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29462,9 +29462,9 @@ text="block", type=STATEMENT_BLOCK:
     text="for", type=FOR_OOSVAR:
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME.
-                text="b", type=NON_SIGIL_NAME.
-                text="b", type=NON_SIGIL_NAME.
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
             text="d", type=UNTYPED_LOCAL_DEFINITION.
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29476,9 +29476,9 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
     text="for", type=FOR_OOSVAR: subframe_var_count=3
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="b", type=NON_SIGIL_NAME. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
-                text="b", type=NON_SIGIL_NAME. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+                text="a", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="b", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+                text="b", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
             text="d", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29493,9 +29493,9 @@ text="block", type=STATEMENT_BLOCK:
     text="for", type=FOR_OOSVAR:
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME.
-                text="b", type=NON_SIGIL_NAME.
-                text="c", type=NON_SIGIL_NAME.
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
+                text="c", type=UNTYPED_LOCAL_DEFINITION.
             text="b", type=UNTYPED_LOCAL_DEFINITION.
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29507,9 +29507,9 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
     text="for", type=FOR_OOSVAR: subframe_var_count=3
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="b", type=NON_SIGIL_NAME. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
-                text="c", type=NON_SIGIL_NAME. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
+                text="a", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="b", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+                text="c", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
             text="b", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29524,9 +29524,9 @@ text="block", type=STATEMENT_BLOCK:
     text="for", type=FOR_OOSVAR:
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME.
-                text="b", type=NON_SIGIL_NAME.
-                text="c", type=NON_SIGIL_NAME.
+                text="a", type=UNTYPED_LOCAL_DEFINITION.
+                text="b", type=UNTYPED_LOCAL_DEFINITION.
+                text="c", type=UNTYPED_LOCAL_DEFINITION.
             text="c", type=UNTYPED_LOCAL_DEFINITION.
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:
@@ -29538,9 +29538,9 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
     text="for", type=FOR_OOSVAR: subframe_var_count=3
         text="key_and_value_variables", type=FOR_VARIABLES:
             text="key_variables", type=FOR_VARIABLES:
-                text="a", type=NON_SIGIL_NAME. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="b", type=NON_SIGIL_NAME. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
-                text="c", type=NON_SIGIL_NAME. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
+                text="a", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="b", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+                text="c", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
             text="c", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
         text="empty_keylist", type=OOSVAR_KEYLIST:
         text="for_full_oosvar_block", type=STATEMENT_BLOCK:

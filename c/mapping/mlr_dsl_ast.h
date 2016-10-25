@@ -143,7 +143,7 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(mlr_dsl_ast_node_t* pa, c
 
 void mlr_dsl_ast_node_replace_text(mlr_dsl_ast_node_t* pa, char* text);
 
-int mlr_dsl_ast_node_to_type_mask(mlr_dsl_ast_node_t* pa);
+int mlr_dsl_ast_node_type_to_type_mask(mlr_dsl_ast_node_type_t type);
 
 int mlr_dsl_ast_node_cannot_be_bare_boolean(mlr_dsl_ast_node_t* pnode);
 

@@ -64,7 +64,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 		hss_add(pnameset, pparameter_node->text);
 
 		pcst_udf_state->parameter_names[i] = mlr_strdup_or_die(pparameter_node->text);
-		pcst_udf_state->parameter_type_masks[i] = mlr_dsl_ast_node_to_type_mask(pparameter_node);
+		pcst_udf_state->parameter_type_masks[i] = mlr_dsl_ast_node_type_to_type_mask(pparameter_node->type);
 	}
 	hss_free(pnameset);
 
@@ -208,7 +208,7 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 		hss_add(pnameset, pparameter_node->text);
 
 		pstate->parameter_names[i] = mlr_strdup_or_die(pparameter_node->text);
-		pstate->parameter_type_masks[i] = mlr_dsl_ast_node_to_type_mask(pparameter_node);
+		pstate->parameter_type_masks[i] = mlr_dsl_ast_node_type_to_type_mask(pparameter_node->type);
 	}
 	hss_free(pnameset);
 

@@ -167,6 +167,7 @@ static void handle_for_oosvar_aux(
 	mlhmmv_value_t           submap,
 	char**                   prest_for_k_variable_names,
 	int*                     prest_for_k_frame_relative_indices,
+	int*                     prest_for_k_frame_type_masks,
 	int                      prest_for_k_count);
 
 static void handle_unset_vararg_oosvar(
@@ -644,7 +645,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->ppemit_keylist_evaluators               = NULL;
 	pstatement->local_lhs_variable_name                 = 0;
 	pstatement->local_lhs_frame_relative_index          = 0;
-	pstatement->local_lhs_acceptable_type_mask          = TYPE_MASK_ANY;
+	pstatement->local_lhs_type_mask                     = TYPE_MASK_ANY;
 	pstatement->srec_lhs_field_name                     = NULL;
 	pstatement->env_lhs_name                            = NULL;
 	pstatement->psrec_lhs_evaluator                     = NULL;
@@ -665,11 +666,14 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->pif_chain_statements                    = NULL;
 	pstatement->for_srec_k_variable_name                = NULL;
 	pstatement->for_srec_k_frame_relative_index         = 0;
+	pstatement->for_srec_k_type_mask                    = TYPE_MASK_ANY;
 	pstatement->for_oosvar_k_variable_names             = NULL;
 	pstatement->for_oosvar_k_frame_relative_indices     = NULL;
+	pstatement->for_oosvar_k_type_masks                 = NULL;
 	pstatement->for_oosvar_k_count                      = 0;
 	pstatement->for_v_variable_name                     = NULL;
 	pstatement->for_v_frame_relative_index              = 0;
+	pstatement->for_v_type_mask                         = TYPE_MASK_ANY;
 	pstatement->ptype_inferenced_srec_field_getter      = NULL;
 	pstatement->ptriple_for_start_statements            = NULL;
 	pstatement->ptriple_for_pre_continuation_statements = NULL;
@@ -690,7 +694,7 @@ static mlr_dsl_cst_statement_t* alloc_local_variable_definition(mlr_dsl_cst_t* p
 	pstatement->local_lhs_variable_name = mlr_strdup_or_die(pname_node->text);
 	MLR_INTERNAL_CODING_ERROR_IF(pname_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->local_lhs_frame_relative_index = pname_node->vardef_frame_relative_index;
-	pstatement->local_lhs_acceptable_type_mask = type_mask;
+	pstatement->local_lhs_type_mask = type_mask;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, pcst->pfmgr,
 		type_inferencing, context_flags);
 	pstatement->pnode_handler = handle_local_variable_definition;
@@ -1073,10 +1077,13 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 	}
 	pstatement->for_srec_k_variable_name = mlr_strdup_or_die(pknode->text);
 	pstatement->for_v_variable_name = mlr_strdup_or_die(pvnode->text);
+	pstatement->for_v_type_mask = mlr_dsl_ast_node_type_to_type_mask(pvnode->type);
 	MLR_INTERNAL_CODING_ERROR_IF(pknode->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	MLR_INTERNAL_CODING_ERROR_IF(pvnode->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->for_srec_k_frame_relative_index = pknode->vardef_frame_relative_index;
 	pstatement->for_v_frame_relative_index = pvnode->vardef_frame_relative_index;
+	pstatement->for_srec_k_type_mask = mlr_dsl_ast_node_type_to_type_mask(pknode->type);
+	pstatement->for_v_type_mask = mlr_dsl_ast_node_type_to_type_mask(pvnode->type);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
 	pstatement->pstatement_block = cst_statement_block_alloc(pnode->subframe_var_count);
@@ -1140,6 +1147,7 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 
 	pstatement->for_oosvar_k_variable_names = mlr_malloc_or_die(sizeof(char*) * psubleft->pchildren->length);
 	pstatement->for_oosvar_k_frame_relative_indices = mlr_malloc_or_die(sizeof(int) * psubleft->pchildren->length);
+	pstatement->for_oosvar_k_type_masks = mlr_malloc_or_die(sizeof(int) * psubleft->pchildren->length);
 	pstatement->for_oosvar_k_count = 0;
 	int ok = TRUE;
 	hss_t* pnameset = hss_alloc();
@@ -1150,6 +1158,8 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 			mlr_strdup_or_die(pnamenode->text);
 		pstatement->for_oosvar_k_frame_relative_indices[pstatement->for_oosvar_k_count] =
 			pnamenode->vardef_frame_relative_index;
+		pstatement->for_oosvar_k_type_masks[pstatement->for_oosvar_k_count] =
+			mlr_dsl_ast_node_type_to_type_mask(pnamenode->type);
 		pstatement->for_oosvar_k_count++;
 		if (hss_has(pnameset, pnamenode->text)) {
 			fprintf(stderr, "%s: duplicate for-loop boundvar \"%s\".\n",
@@ -1161,6 +1171,7 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 	pstatement->for_v_variable_name = mlr_strdup_or_die(psubright->text);
 	MLR_INTERNAL_CODING_ERROR_IF(psubright->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->for_v_frame_relative_index = psubright->vardef_frame_relative_index;
+	pstatement->for_v_type_mask = mlr_dsl_ast_node_type_to_type_mask(psubright->type);
 	if (hss_has(pnameset, psubright->text)) {
 		fprintf(stderr, "%s: duplicate for-loop boundvar \"%s\".\n",
 			MLR_GLOBALS.bargv0, psubright->text);
@@ -1210,9 +1221,11 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar_key_only(mlr_dsl_cst_t* pcst, m
 
 	pstatement->for_oosvar_k_variable_names = mlr_malloc_or_die(sizeof(char*));
 	pstatement->for_oosvar_k_frame_relative_indices = mlr_malloc_or_die(sizeof(int));
+	pstatement->for_oosvar_k_type_masks = mlr_malloc_or_die(sizeof(int));
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->for_oosvar_k_variable_names[0] = mlr_strdup_or_die(pleft->text);
 	pstatement->for_oosvar_k_frame_relative_indices[0] = pleft->vardef_frame_relative_index;
+	pstatement->for_oosvar_k_type_masks[0] = mlr_dsl_ast_node_type_to_type_mask(pleft->type);
 
 	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
 		pcst, pmiddle, type_inferencing, context_flags);
@@ -1952,9 +1965,8 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 			free(pstatement->for_oosvar_k_variable_names[i]);
 		free(pstatement->for_oosvar_k_variable_names);
 	}
-	if (pstatement->for_oosvar_k_frame_relative_indices != NULL) {
-		free(pstatement->for_oosvar_k_frame_relative_indices);
-	}
+	free(pstatement->for_oosvar_k_frame_relative_indices);
+	free(pstatement->for_oosvar_k_type_masks);
 	free(pstatement->for_v_variable_name);
 
     if (pstatement->ptriple_for_start_statements != NULL) {
@@ -2165,7 +2177,7 @@ static void handle_local_variable_definition(
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 		local_stack_frame_define(pframe,
 			pstatement->local_lhs_variable_name, pstatement->local_lhs_frame_relative_index,
-			pstatement->local_lhs_acceptable_type_mask, val);
+			pstatement->local_lhs_type_mask, val);
 	} else {
 		mv_free(&val);
 	}
@@ -2630,13 +2642,12 @@ static void handle_for_srec(
 		mv_t mvkey = mv_from_string_no_free(pe->key);
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		// xxx for-srec typedecl
 		local_stack_frame_define(pframe,
 			pstatement->for_srec_k_variable_name, pstatement->for_srec_k_frame_relative_index,
-			TYPE_MASK_ANY, mvkey);
+			pstatement->for_srec_k_type_mask, mvkey);
 		local_stack_frame_define(pframe,
 			pstatement->for_v_variable_name, pstatement->for_v_frame_relative_index,
-			TYPE_MASK_ANY, mvval);
+			pstatement->for_v_type_mask, mvval);
 
 		pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
@@ -2685,7 +2696,7 @@ static void handle_for_oosvar(
 
 			handle_for_oosvar_aux(pstatement, pvars, pcst_outputs, submap,
 				pstatement->for_oosvar_k_variable_names, pstatement->for_oosvar_k_frame_relative_indices,
-				pstatement->for_oosvar_k_count);
+				pstatement->for_oosvar_k_type_masks, pstatement->for_oosvar_k_count);
 
 			if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 				loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
@@ -2710,6 +2721,7 @@ static void handle_for_oosvar_aux(
 	mlhmmv_value_t           submap,
 	char**                   prest_for_k_variable_names,
 	int*                     prest_for_k_frame_relative_indices,
+	int*                     prest_for_k_type_masks,
 	int                      prest_for_k_count)
 {
 	if (prest_for_k_count > 0) { // Keep recursing over remaining k-names
@@ -2721,12 +2733,12 @@ static void handle_for_oosvar_aux(
 			for (mlhmmv_level_entry_t* pe = submap.u.pnext_level->phead; pe != NULL; pe = pe->pnext) {
 				// Bind the k-name to the entry-key mlrval:
 				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-				// xxx for-oosvar typedecl
 				local_stack_frame_define(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
-					TYPE_MASK_ANY, mv_copy(&pe->level_key));
+					prest_for_k_type_masks[0], mv_copy(&pe->level_key));
 				// Recurse into the next-level submap:
 				handle_for_oosvar_aux(pstatement, pvars, pcst_outputs, pe->level_value,
-					&prest_for_k_variable_names[1], &prest_for_k_frame_relative_indices[1], prest_for_k_count - 1);
+					&prest_for_k_variable_names[1], &prest_for_k_frame_relative_indices[1], &prest_for_k_type_masks[1],
+					prest_for_k_count - 1);
 
 				if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 					// Bit cleared in recursive caller
@@ -2745,9 +2757,8 @@ static void handle_for_oosvar_aux(
 		} else {
 			// Bind the v-name to the terminal mlrval:
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-			// xxx for-oosvar typedecl
 			local_stack_frame_define(pframe, pstatement->for_v_variable_name, pstatement->for_v_frame_relative_index,
-				TYPE_MASK_ANY, mv_copy(&submap.u.mlrval));
+				pstatement->for_v_type_mask, mv_copy(&submap.u.mlrval));
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
 		}
@@ -2781,10 +2792,9 @@ static void handle_for_oosvar_key_only(
 
 		for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
 			// Bind the v-name to the terminal mlrval:
-			// xxx for-oosvar typedecl
 			local_stack_frame_define(pframe,
 				pstatement->for_oosvar_k_variable_names[0], pstatement->for_oosvar_k_frame_relative_indices[0],
-				TYPE_MASK_ANY, mv_copy(pe->pvvalue));
+				pstatement->for_oosvar_k_type_masks[0], mv_copy(pe->pvvalue));
 
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
