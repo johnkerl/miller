@@ -28,27 +28,7 @@ FUNCTIONALITY FOR 4.6.0:
 ----------------------------------------------------------------
 STRICTNESS:
 
-k assert_X()
-
 ! disallow subsequent localdefs of the same name in the same block
-
-* strict types: bool x, int x, float x, num x, string x, map x.
-  i only applies to locals/parameters/forbinds
-  i the only time they're changed is at LHS/varbind/argpass: all via local_stack_frame_set
-  k RHS evals are as always
-  ! string mask MT_STRING | MT_EMPTY ?
-  - everywhere there is the 'local' keyword we need to handle the others as well
-  - local_stack slots need an acceptable-types bitmask and a funcptr to test. use at local_stack_frame_set.
-  - need varnames back into the CST nodes
-  - wording:
-    int type assertion for parameter x unmet by argument "3" with type string.
-    int type assertion for variable x unmet by value "3" with type string.
-  ! impl for param/arg
-  ? allow typedecls in forsrec/foroosvar boundvar specs ?
-  * UT cases x all
-  * new mld section
-  * impl assertions also as subr calls (don't require assign). entire new category: non-user-defined subrs. to mld.
-  * needs minimally the variable name preserved. additionally ... line numbers; stack trace ...
 
 ----------------------------------------------------------------
 MAPVARS:
@@ -87,6 +67,7 @@ MAPVARS:
 UT FOR 4.6.0:
 
 * all assert_X() cases
+* all type-decl cases: local/forbind/argpass; initial assign & reuse thereafter.
 
 ================================================================
 HYGIENE FOR 4.6.0:
@@ -98,7 +79,8 @@ DOC FOR 4.6.0:
 
 TYPE-CHECKING:
 * assert_X() functions
-* mlr -k re present numeric int float boolean string
+* type-decl for local/forbind/argpass; applies to reassigns
+* mlr -k re numeric int float boolean string
 * make a separate mld section
 
 OOSVAR SINGLE FOR:
