@@ -675,19 +675,21 @@ static stkalc_subframe_t* stkalc_subframe_group_pop(stkalc_subframe_group_t* pfr
 }
 
 // 'local x = 1' always applies to the current subframe.
-static void stkalc_subframe_group_mutate_node_for_define(stkalc_subframe_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
-	char* desc, int trace)
+static void stkalc_subframe_group_mutate_node_for_define(stkalc_subframe_group_t* pframe_group,
+	mlr_dsl_ast_node_t* pnode, char* desc, int trace)
 {
-	char* op = "REUSE";
 	stkalc_subframe_t* pframe = pframe_group->plist->phead->pvvalue;
 	pnode->vardef_subframe_index = pframe_group->plist->length - 1;
-	if (!stkalc_subframe_test_and_get(pframe, pnode->text, &pnode->vardef_subframe_relative_index)) {
+	if (stkalc_subframe_test_and_get(pframe, pnode->text, &pnode->vardef_subframe_relative_index)) {
+		fprintf(stderr, "%s: redefinition of variable %s in the same scope.\n",
+			MLR_GLOBALS.bargv0, pnode->text);
+		exit(1);
+	} else {
 		pnode->vardef_subframe_relative_index = stkalc_subframe_add(pframe, pnode->text);
-		op = "ADD";
 	}
 	if (trace) {
 		leader_print(pframe_group->plist->length);
-		printf("%s %s %s @ %ds%d\n", op, desc, pnode->text,
+		printf("ADD %s %s @ %ds%d\n", desc, pnode->text,
 			pnode->vardef_subframe_relative_index, pnode->vardef_subframe_index);
 	}
 }

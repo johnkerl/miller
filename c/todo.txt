@@ -28,7 +28,7 @@ FUNCTIONALITY FOR 4.6.0:
 ----------------------------------------------------------------
 STRICTNESS:
 
-! disallow subsequent localdefs of the same name in the same block
+* "Boundvars" logic in CST-build is no longer reached (handled in pass1)
 
 ----------------------------------------------------------------
 MAPVARS:
