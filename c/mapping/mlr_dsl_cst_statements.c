@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
-#include "containers/hss.h"
 #include "mlr_dsl_cst.h"
 #include "context_flags.h"
 
@@ -1149,8 +1148,6 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 	pstatement->for_oosvar_k_frame_relative_indices = mlr_malloc_or_die(sizeof(int) * psubleft->pchildren->length);
 	pstatement->for_oosvar_k_type_masks = mlr_malloc_or_die(sizeof(int) * psubleft->pchildren->length);
 	pstatement->for_oosvar_k_count = 0;
-	int ok = TRUE;
-	hss_t* pnameset = hss_alloc();
 	for (sllve_t* pe = psubleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnamenode = pe->pvvalue;
 		MLR_INTERNAL_CODING_ERROR_IF(pnamenode->vardef_frame_relative_index == MD_UNUSED_INDEX);
@@ -1161,34 +1158,11 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 		pstatement->for_oosvar_k_type_masks[pstatement->for_oosvar_k_count] =
 			mlr_dsl_ast_node_type_to_type_mask(pnamenode->type);
 		pstatement->for_oosvar_k_count++;
-		if (hss_has(pnameset, pnamenode->text)) {
-			fprintf(stderr, "%s: duplicate for-loop boundvar \"%s\".\n",
-				MLR_GLOBALS.bargv0, pnamenode->text);
-			ok = FALSE;
-		}
-		hss_add(pnameset, pnamenode->text);
 	}
 	pstatement->for_v_variable_name = mlr_strdup_or_die(psubright->text);
 	MLR_INTERNAL_CODING_ERROR_IF(psubright->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->for_v_frame_relative_index = psubright->vardef_frame_relative_index;
 	pstatement->for_v_type_mask = mlr_dsl_ast_node_type_to_type_mask(psubright->type);
-	if (hss_has(pnameset, psubright->text)) {
-		fprintf(stderr, "%s: duplicate for-loop boundvar \"%s\".\n",
-			MLR_GLOBALS.bargv0, psubright->text);
-		ok = FALSE;
-	}
-	hss_add(pnameset, psubright->text);
-	if (!ok) {
-		fprintf(stderr, "Boundvars: ");
-		for (sllve_t* pe = psubleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_ast_node_t* pnamenode = pe->pvvalue;
-			fprintf(stderr, "\"%s\", ", pnamenode->text);
-		}
-		fprintf(stderr, "\"%s\".\n", psubright->text);
-		exit(1);
-	}
-
-	hss_free(pnameset);
 
 	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
 		pcst, pmiddle, type_inferencing, context_flags);

@@ -81,6 +81,7 @@ TYPE-CHECKING:
 * assert_X() functions
 * type-decl for local/forbind/argpass; applies to reassigns
 * mlr -k re numeric int float boolean string
+* redefinitions disallowed, including duplicate forbind vars / parameter names.
 * make a separate mld section
 
 OOSVAR SINGLE FOR:
