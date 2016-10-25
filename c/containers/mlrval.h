@@ -5,12 +5,12 @@
 #include <string.h>
 #include <ctype.h>
 #include <regex.h>
-#include "lib/mlrmath.h"
-#include "lib/mlrutil.h"
-#include "lib/mtrand.h"
-#include "lib/string_builder.h"
-#include "lib/string_array.h"
-#include "containers/free_flags.h"
+#include "../lib/mlrmath.h"
+#include "../lib/mlrutil.h"
+#include "../lib/mtrand.h"
+#include "../lib/string_builder.h"
+#include "../lib/string_array.h"
+#include "../containers/free_flags.h"
 
 // ================================================================
 // MT for Miller type -- highly abbreviated here since these are
