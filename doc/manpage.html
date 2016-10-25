@@ -1787,7 +1787,7 @@ KEYWORDS FOR PUT AND FILTER
 	 Example: 'for ((k1, k2), v in @counts) { ... }'
 	 Example: 'for ((k1, k2, k3), v in @*) { ... }'
        C-style for-loop:
-	 Example:  'for (local i = 0, local b = 1; i &lt; 10; i += 1, b *= 2) { ... }'
+	 Example:  'for (var i = 0, var b = 1; i &lt; 10; i += 1, b *= 2) { ... }'
 
    func
        func: used for defining a user-defined function.
@@ -1799,10 +1799,6 @@ KEYWORDS FOR PUT AND FILTER
 
    in
        in: used in for-loops over stream records or out-of-stream variables.
-
-   local
-       local: defines a local variable in the current curly-braced scope.
-       Examples: 'local a=1', 'local xyz=""'
 
    print
        print: prints expression immediately to stdout.
@@ -1863,6 +1859,10 @@ KEYWORDS FOR PUT AND FILTER
 	 Example: mlr --from f.dat put '...; unset @sums'
 	 Example: mlr --from f.dat put '...; unset @sums["green"]'
 	 Example: mlr --from f.dat put '...; unset @*'
+
+   var
+       var: defines a local variable in the current curly-braced scope.
+       Examples: 'var a=1', 'var xyz=""'
 
    while
        while: introduces a while loop, or with "do", introduces a do-while loop.

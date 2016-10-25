@@ -35,7 +35,7 @@
 // * A stack frame is all the locals for a top-level statement block including
 //   anything local to a scoped block within the top-level block. For example,
 //   locals may be defined within if/while/do-while blocks. Also, variables can
-//   be local to a triple-fo, e.g. 'for (local i = 0; i < 10; i += 1) { ... }'.
+//   be local to a triple-for, e.g. 'for (var i = 0; i < 10; i += 1) { ... }'.
 //   As well, locals are bound to variables in for-loops over stream records
 //   or out-of-stream variables: 'for (k, v in $*) { ... }' or
 //   'for ((k1, k2), v in @*) { ... }'. Lastly, function arguments are local
@@ -56,12 +56,12 @@
 //                       # ---- FUNC TOP-LEVEL SUBFRAME 0: defcount 7 {absent-RHS,a,b,c,i,j,y}
 //                       # Absent-null-RHS is at slot 0 of top level.
 // func f(a, b, c) {     # Args define locals 1,2,3 at current level.
-//     local i = 24;     # Explicitly define local 4 at current level.
+//     var i = 24;       # Explicitly define local 4 at current level.
 //     j = 25;           # Implicitly define local 5 at current level.
 //                       #
 //                       # ---- IF-STATEMENT SUBFRAME 1: defcount 1 {k}
 //     if (a == 26) {    # Read of local 1, found at top level (subframe 0).
-//         local k = 27; # Explicitly define local 0 at this level.
+//         var k = 27;   # Explicitly define local 0 at this level.
 //         j = 28;       # LHS is local 5, found at top level.
 //                       #
 //                       # Note that the 'if' and the 'else' are both at subframe
@@ -72,7 +72,7 @@
 //                       #
 //     } else {          # ---- ELSE-STATEMENT SUBFRAME 1: defcount 2 {n, u}
 //         n = b;        # Implicitly define local 0 at this level.
-//         local u = 4;  # Implicitly define local 1 at this level.
+//         var u = 4;    # Implicitly define local 1 at this level.
 //     }                 #
 //                       #
 //     y = 7;            # LHS is local 6 at current level.
@@ -406,7 +406,7 @@ static void pass_1_for_local_definition(mlr_dsl_ast_node_t* pnode, stkalc_subfra
 
 	mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 	pass_1_for_node(pvaluenode, pframe_group, pmax_subframe_depth, trace);
-	// Do the LHS after the RHS, in case 'local nonesuch = nonesuch'
+	// Do the LHS after the RHS, in case 'var nonesuch = nonesuch'
 	stkalc_subframe_group_mutate_node_for_define(pframe_group, pnamenode, "DEFINE", trace);
 }
 
@@ -417,7 +417,7 @@ static void pass_1_for_local_assignment(mlr_dsl_ast_node_t* pnode, stkalc_subfra
 	mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 	pass_1_for_node(pvaluenode, pframe_group, pmax_subframe_depth, trace);
-	// Do the LHS after the RHS, in case 'local nonesuch = nonesuch'
+	// Do the LHS after the RHS, in case 'var nonesuch = nonesuch'
 	stkalc_subframe_group_mutate_node_for_write(pframe_group, pnamenode, "WRITE", trace);
 }
 
@@ -473,7 +473,7 @@ static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkal
 	// are any localvar reads in there, they shouldn't read from forloop
 	// boundvars.
 	//
-	// Example: 'for(a in @b[c][d]) { local e = a}': the c and d
+	// Example: 'for(a in @b[c][d]) { var e = a}': the c and d
 	// should be obtained from the enclosing scope.
 	for (sllve_t* pe = pkeylistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pchild = pe->pvvalue;
@@ -515,7 +515,7 @@ static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subfram
 	// are any localvar reads in there, they shouldn't read from forloop
 	// boundvars.
 	//
-	// Example: 'for(k, v in @a[b][c]) { local d = k; local e = v }': the b and c
+	// Example: 'for(k, v in @a[b][c]) { var d = k; var e = v }': the b and c
 	// should be obtained from the enclosing scope.
 	for (sllve_t* pe = pkeylistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pchild = pe->pvvalue;
@@ -674,7 +674,7 @@ static stkalc_subframe_t* stkalc_subframe_group_pop(stkalc_subframe_group_t* pfr
 	return sllv_pop(pframe_group->plist);
 }
 
-// 'local x = 1' always applies to the current subframe.
+// 'var x = 1' always applies to the current subframe.
 static void stkalc_subframe_group_mutate_node_for_define(stkalc_subframe_group_t* pframe_group,
 	mlr_dsl_ast_node_t* pnode, char* desc, int trace)
 {

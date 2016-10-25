@@ -1,13 +1,13 @@
 func f(a) {      # argument is local to the function
-  local b = 100; # local to the function
+  var b = 100;   # local to the function
   c = 100;       # local to the function; does not overwrite outer c
   return a + 1;
 }
-local a = 10;    # local at top level
-local b = 20;    # local at top level
+var a = 10;      # local at top level
+var b = 20;      # local at top level
 c = 30;          # local at top level; there is no more-outer-scope c
 if (NR == 3) {
-  local a = 40;  # scoped to the if-statement; doesn't overwrite outer a
+  var a = 40;    # scoped to the if-statement; doesn't overwrite outer a
   b = 50;        # not scoped to the if-statement; overwrites outer b
   c = 60;        # not scoped to the if-statement; overwrites outer c
   d = 70;        # there is no outer d so a local d is created here

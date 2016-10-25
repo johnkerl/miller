@@ -4,7 +4,7 @@ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
     if (ispresent(@fcache[n])) {  # cache hit
       return @fcache[n]
     } else {                      # cache miss
-      local rv = 1;
+      num rv = 1;
       if (n >= 2) {
         rv = f(n-1) + f(n-2)      # recurse
       }

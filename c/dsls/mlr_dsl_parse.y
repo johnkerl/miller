@@ -635,7 +635,7 @@ md_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 }
 
 // ----------------------------------------------------------------
-md_untyped_local_definition(A) ::= MD_TOKEN_LOCAL md_local_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
+md_untyped_local_definition(A) ::= MD_TOKEN_VAR md_local_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION, N, B);
 }
 md_numeric_local_definition(A) ::= MD_TOKEN_NUMERIC md_local_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
@@ -2031,18 +2031,12 @@ md_fcn_or_subr_call(A) ::= MD_TOKEN_NON_SIGIL_NAME(O) MD_TOKEN_LPAREN md_fcn_arg
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
 // For most functions it suffices to use the MD_TOKEN_NON_SIGIL_NAME pattern. But
-// int/float/boolean/string are keywords in the lexer so we need to spell those out explicitly.
+// int and float are keywords in the lexer so we need to spell those out explicitly.
 // (They're type-decl keywords but they're also the names of type-conversion functions.)
 md_fcn_or_subr_call(A) ::= MD_TOKEN_INT(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
 md_fcn_or_subr_call(A) ::= MD_TOKEN_FLOAT(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
-	A = mlr_dsl_ast_node_set_function_name(B, O->text);
-}
-md_fcn_or_subr_call(A) ::= MD_TOKEN_BOOLEAN(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
-	A = mlr_dsl_ast_node_set_function_name(B, O->text);
-}
-md_fcn_or_subr_call(A) ::= MD_TOKEN_STRING(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 }
 

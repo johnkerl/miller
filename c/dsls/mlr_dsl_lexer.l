@@ -426,11 +426,11 @@
 	return MD_TOKEN_REGEXI;
 }
 
-"local" {
+"var" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
-	return MD_TOKEN_LOCAL;
+	return MD_TOKEN_VAR;
 }
-"numeric" {
+"num" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION);
 	return MD_TOKEN_NUMERIC;
 }
@@ -442,11 +442,11 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION);
 	return MD_TOKEN_FLOAT;
 }
-"boolean" {
+"bool" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION);
 	return MD_TOKEN_BOOLEAN;
 }
-"string" {
+"str" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION);
 	return MD_TOKEN_STRING;
 }

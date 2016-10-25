@@ -2799,7 +2799,7 @@ For-loop over out-of-stream variables:
   Example: 'for ((k1, k2), v in @counts) { ... }'
   Example: 'for ((k1, k2, k3), v in @*) { ... }'
 C-style for-loop:
-  Example:  'for (local i = 0, local b = 1; i < 10; i += 1, b *= 2) { ... }'
+  Example:  'for (var i = 0, var b = 1; i < 10; i += 1, b *= 2) { ... }'
 .fi
 .if n \{\
 .RE
@@ -2829,16 +2829,6 @@ in curly braces.
 .\}
 .nf
 in: used in for-loops over stream records or out-of-stream variables.
-.fi
-.if n \{\
-.RE
-.SS "local"
-.if n \{\
-.RS 0
-.\}
-.nf
-local: defines a local variable in the current curly-braced scope.
-Examples: 'local a=1', 'local xyz=""'
 .fi
 .if n \{\
 .RE
@@ -2947,6 +2937,16 @@ unset: clears field(s) from the current record, or an out-of-stream variable.
   Example: mlr --from f.dat put '...; unset @sums'
   Example: mlr --from f.dat put '...; unset @sums["green"]'
   Example: mlr --from f.dat put '...; unset @*'
+.fi
+.if n \{\
+.RE
+.SS "var"
+.if n \{\
+.RS 0
+.\}
+.nf
+var: defines a local variable in the current curly-braced scope.
+Examples: 'var a=1', 'var xyz=""'
 .fi
 .if n \{\
 .RE

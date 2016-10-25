@@ -8,18 +8,21 @@ begin {
 }
 
 for (_, v in $*) {
-  local n = strlen(v);
+  if (string(v) == "inf" || string(v) == "nan") {
+    continue;
+  }
+  int n = strlen(v);
   if (n >= 2) {
-    local a = substr(v, 0, 0);
+    str a = substr(v, 0, 0);
     @a_histo[a] += 1;
 
-    local b = substr(v, 1, 1);
+    str b = substr(v, 1, 1);
     @ab_histo[a][b] += 1;
 
-    for (local i = 0; i < n-2; i += 1) {
-      local a = substr(v, i, i);
-      local b = substr(v, i+1, i+1);
-      local c = substr(v, i+2, i+2);
+    for (int i = 0; i < n-2; i += 1) {
+      str a = substr(v, i, i);
+      str b = substr(v, i+1, i+1);
+      str c = substr(v, i+2, i+2);
       @abc_histo[a][b][c] += 1;
     }
   }
@@ -27,13 +30,13 @@ for (_, v in $*) {
 
 end {
 
-  local a_sum = 0;
+  num a_sum = 0;
   for (a, na in @a_histo) {
     a_sum += na;
   }
-  local a_cumu = 0.0;
+  num a_cumu = 0.0;
   for (a, _ in @a_histo) {
-    local a_p = @a_histo[a] / a_sum;
+    num a_p = @a_histo[a] / a_sum;
     a_cumu += a_p;
     @a_pmf[a] = a_p;
     @a_cmf[a] += a_cumu;
@@ -41,13 +44,13 @@ end {
 
   for (a in @ab_histo) {
 
-    local ab_sum = 0.0;
+    num ab_sum = 0.0;
     for (b, nab in @ab_histo[a]) {
       ab_sum += nab;
     }
-    local ab_cumu = 0.0;
+    num ab_cumu = 0.0;
     for (b, _ in @ab_histo[a]) {
-      local ab_p = @ab_histo[a][b] / ab_sum;
+      num ab_p = @ab_histo[a][b] / ab_sum;
       ab_cumu += ab_p;
       @ab_pmf[a][b] = ab_p;
       @ab_cmf[a][b] = ab_cumu;
@@ -57,13 +60,13 @@ end {
   for (a in @abc_histo) {
     for (b in @abc_histo[a]) {
 
-      local abc_sum = 0.0;
+      num abc_sum = 0.0;
       for (c, nabc in @abc_histo[a][b]) {
         abc_sum += nabc;
       }
-      local abc_cumu = 0.0;
+      num abc_cumu = 0.0;
       for (c, _ in @abc_histo[a][b]) {
-        local abc_p = @abc_histo[a][b][c] / abc_sum;
+        num abc_p = @abc_histo[a][b][c] / abc_sum;
         abc_cumu += abc_p;
         @abc_pmf[a][b][c] = abc_p;
         @abc_cmf[a][b][c] = abc_cumu;
@@ -73,7 +76,7 @@ end {
 
   #dump;
 
-  for (local oi = 0; oi < @ocount; oi += 1) {
+  for (int oi = 0; oi < @ocount; oi += 1) {
     oa_u = urand();
     oa = "?";
     for (a, c in @a_cmf) {
@@ -82,7 +85,7 @@ end {
         break;
       }
     }
-    local out = oa;
+    str out = oa;
 
     ob_u = urand();
     ob = "?";
@@ -94,9 +97,9 @@ end {
     }
     out .= ob;
 
-    for (local i = 2; i < @olen; i += 1) {
-      local abc_u = urand();
-      local oc = "???";
+    for (int i = 2; i < @olen; i += 1) {
+      num abc_u = urand();
+      str oc = "???";
       #print;
       #print "i=".i;
       #print "oa = ".oa." ob = ".ob;

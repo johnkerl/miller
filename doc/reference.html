@@ -4170,14 +4170,14 @@ $ # Here I'm using a specified random-number seed so this example always
 mlr --seed 12345 seqgen --start 1 --stop 10 then put '
   func f(a, b) {                          # function arguments a and b
       r = 0.0;                            # local r scoped to the function
-      for (local i = 0; i &lt; 6; i += 1) {  # local i scoped to the for-loop
-          local u = urand();              # local u scoped to the for-loop
+      for (int i = 0; i &lt; 6; i += 1) {    # local i scoped to the for-loop
+          num u = urand();                # local u scoped to the for-loop
           r += u;                         # updates r from the enclosing scope
       }
       r /= 6;
       return a + (b - a) * r;
   }
-  local o = f(10, 20);                    # local to the top-level scope
+  num o = f(10, 20);                      # local to the top-level scope
   $o = o;
 '
 i=1,o=14.662901
@@ -4232,15 +4232,15 @@ to that for-loop.
 <pre>
 $ cat data/scope-example.mlr
 func f(a) {      # argument is local to the function
-  local b = 100; # local to the function
+  var b = 100;   # local to the function
   c = 100;       # local to the function; does not overwrite outer c
   return a + 1;
 }
-local a = 10;    # local at top level
-local b = 20;    # local at top level
+var a = 10;      # local at top level
+var b = 20;      # local at top level
 c = 30;          # local at top level; there is no more-outer-scope c
 if (NR == 3) {
-  local a = 40;  # scoped to the if-statement; doesn't overwrite outer a
+  var a = 40;    # scoped to the if-statement; doesn't overwrite outer a
   b = 50;        # not scoped to the if-statement; overwrites outer b
   c = 60;        # not scoped to the if-statement; overwrites outer c
   d = 70;        # there is no outer d so a local d is created here
@@ -4719,7 +4719,7 @@ For-loop over out-of-stream variables:
   Example: 'for ((k1, k2), v in @counts) { ... }'
   Example: 'for ((k1, k2, k3), v in @*) { ... }'
 C-style for-loop:
-  Example:  'for (local i = 0, local b = 1; i &lt; 10; i += 1, b *= 2) { ... }'
+  Example:  'for (var i = 0, var b = 1; i &lt; 10; i += 1, b *= 2) { ... }'
 
 func: used for defining a user-defined function.
 Example: 'func f(a,b) { return sqrt(a**2+b**2)} $d = f($x, $y)'
@@ -4728,9 +4728,6 @@ if: starts an if/elif/elif chain. The body statements must be wrapped
 in curly braces.
 
 in: used in for-loops over stream records or out-of-stream variables.
-
-local: defines a local variable in the current curly-braced scope.
-Examples: 'local a=1', 'local xyz=""'
 
 print: prints expression immediately to stdout.
   Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
@@ -4783,6 +4780,9 @@ unset: clears field(s) from the current record, or an out-of-stream variable.
   Example: mlr --from f.dat put '...; unset @sums'
   Example: mlr --from f.dat put '...; unset @sums["green"]'
   Example: mlr --from f.dat put '...; unset @*'
+
+var: defines a local variable in the current curly-braced scope.
+Examples: 'var a=1', 'var xyz=""'
 
 while: introduces a while loop, or with "do", introduces a do-while loop.
 The body statements must be wrapped in curly braces.
@@ -5286,9 +5286,9 @@ the hashmap.
 <div class="pokipanel">
 <pre>
 $ mlr --from data/small --opprint put '
-  local suma = 0;
-  local sumb = 0;
-  for (local a = 1, local b = 1; a &lt;= NR; a += 1, b *= 2) {
+  num suma = 0;
+  num sumb = 0;
+  for (num a = 1, num b = 1; a &lt;= NR; a += 1, b *= 2) {
     suma += a;
     sumb += b;
   }

@@ -6,7 +6,7 @@
 func f(a,b,c) {
     @v[NR] = NR*1000;
     true {
-        local val = nonesuch;
+        var val = nonesuch;
         while (1 == 1) {
             if (NR == 1) {
                 for (k, v in $*) {
@@ -22,9 +22,9 @@ func f(a,b,c) {
                     print "f:3:k:".k."v:".v;
                 }
             } elif (NR == 4) {
-                local sum = 0;
-                for (local i = 1; i <= 10; i += 1) {
-                    for (local j = 1; j <= 10; j += 1) {
+                var sum = 0;
+                for (var i = 1; i <= 10; i += 1) {
+                    for (var j = 1; j <= 10; j += 1) {
                         sum += i*j;
                     }
                 }
@@ -40,7 +40,7 @@ func f(a,b,c) {
 subr s(a,b,c) {
     @v[NR] = NR*2000;
     true {
-        local val = nonesuch;
+        var val = nonesuch;
         while (1 == 1) {
             if (NR == 1) {
                 for (k, v in $*) {
@@ -56,9 +56,9 @@ subr s(a,b,c) {
                     print "s:3:k:".k."v:".v;
                 }
             } elif (NR == 4) {
-                local sum = 0;
-                for (local i = 1; i <= 10; i += 1) {
-                    for (local j = 1; j <= 10; j += 1) {
+                var sum = 0;
+                for (var i = 1; i <= 10; i += 1) {
+                    for (var j = 1; j <= 10; j += 1) {
                         sum += i*j;
                     }
                 }
@@ -75,8 +75,8 @@ begin {
     print "BEGIN";
     @v[0] = 456;
     true {
-        local val = nonesuch;
-        for (local idx = 1; idx <= 4; idx += 1) {
+        var val = nonesuch;
+        for (var idx = 1; idx <= 4; idx += 1) {
             if (idx == 2) {
                 for (k in @v) {
                     print "b:2:k:".k;
@@ -86,9 +86,9 @@ begin {
                     print "b:3:k:".k."v:".v;
                 }
             } elif (idx == 4) {
-                local sum = 0;
-                for (local i = 1; i <= 10; i += 1) {
-                    for (local j = 1; j <= 10; j += 1) {
+                var sum = 0;
+                for (var i = 1; i <= 10; i += 1) {
+                    for (var j = 1; j <= 10; j += 1) {
                         sum += i*j;
                     }
                 }
@@ -103,7 +103,7 @@ begin {
 print "MAIN";
 @v[NR] = NR*4000;
 true {
-    local val = nonesuch;
+    var val = nonesuch;
     while (1 == 1) {
         if (NR == 1) {
             for (k, v in $*) {
@@ -119,9 +119,9 @@ true {
                 print "m:3:k:".k."v:".v;
             }
         } elif (NR == 4) {
-            local sum = 0;
-            for (local i = 1; i <= 10; i += 1) {
-                for (local j = 1; j <= 10; j += 1) {
+            var sum = 0;
+            for (var i = 1; i <= 10; i += 1) {
+                for (var j = 1; j <= 10; j += 1) {
                     sum += i*j;
                 }
             }
@@ -139,8 +139,8 @@ end {
     print "END";
     @v[100] = 789;
     true {
-        local val = nonesuch;
-        for (local idx = 1; idx <= 4; idx += 1) {
+        var val = nonesuch;
+        for (var idx = 1; idx <= 4; idx += 1) {
             if (idx == 2) {
                 for (k in @v) {
                     print "e:2:k:".k;
@@ -150,9 +150,9 @@ end {
                     print "e:3:k:".k."v:".v;
                 }
             } elif (idx == 4) {
-                local sum = 0;
-                for (local i = 1; i <= 10; i += 1) {
-                    for (local j = 1; j <= 10; j += 1) {
+                var sum = 0;
+                for (var i = 1; i <= 10; i += 1) {
+                    for (var j = 1; j <= 10; j += 1) {
                         sum += i*j;
                     }
                 }

@@ -39,7 +39,6 @@ static keyword_usage_func_t mlr_dsl_for_keyword_usage;
 static keyword_usage_func_t mlr_dsl_func_keyword_usage;
 static keyword_usage_func_t mlr_dsl_if_keyword_usage;
 static keyword_usage_func_t mlr_dsl_in_keyword_usage;
-static keyword_usage_func_t mlr_dsl_local_keyword_usage;
 static keyword_usage_func_t mlr_dsl_print_keyword_usage;
 static keyword_usage_func_t mlr_dsl_printn_keyword_usage;
 static keyword_usage_func_t mlr_dsl_return_keyword_usage;
@@ -48,6 +47,7 @@ static keyword_usage_func_t mlr_dsl_stdout_keyword_usage;
 static keyword_usage_func_t mlr_dsl_subr_keyword_usage;
 static keyword_usage_func_t mlr_dsl_tee_keyword_usage;
 static keyword_usage_func_t mlr_dsl_unset_keyword_usage;
+static keyword_usage_func_t mlr_dsl_var_keyword_usage;
 static keyword_usage_func_t mlr_dsl_while_keyword_usage;
 
 // ----------------------------------------------------------------
@@ -64,30 +64,30 @@ static keyword_usage_entry_t KEYWORD_USAGE_TABLE[] = {
 	{ "call",     mlr_dsl_call_keyword_usage     },
 	{ "continue", mlr_dsl_continue_keyword_usage },
 	{ "do",       mlr_dsl_do_keyword_usage       },
-	{ "dump",    mlr_dsl_dump_keyword_usage    },
-	{ "edump",   mlr_dsl_edump_keyword_usage   },
+	{ "dump",     mlr_dsl_dump_keyword_usage     },
+	{ "edump",    mlr_dsl_edump_keyword_usage    },
 	{ "elif",     mlr_dsl_elif_keyword_usage     },
 	{ "else",     mlr_dsl_else_keyword_usage     },
-	{ "emit",    mlr_dsl_emit_keyword_usage    },
-	{ "emitf",   mlr_dsl_emitf_keyword_usage   },
-	{ "emitp",   mlr_dsl_emitp_keyword_usage   },
+	{ "emit",     mlr_dsl_emit_keyword_usage     },
+	{ "emitf",    mlr_dsl_emitf_keyword_usage    },
+	{ "emitp",    mlr_dsl_emitp_keyword_usage    },
 	{ "end",      mlr_dsl_end_keyword_usage      },
-	{ "eprint",  mlr_dsl_eprint_keyword_usage  },
-	{ "eprintn", mlr_dsl_eprintn_keyword_usage },
-	{ "filter",  mlr_dsl_filter_keyword_usage  },
+	{ "eprint",   mlr_dsl_eprint_keyword_usage   },
+	{ "eprintn",  mlr_dsl_eprintn_keyword_usage  },
+	{ "filter",   mlr_dsl_filter_keyword_usage   },
 	{ "for",      mlr_dsl_for_keyword_usage      },
 	{ "func",     mlr_dsl_func_keyword_usage     },
 	{ "if",       mlr_dsl_if_keyword_usage       },
 	{ "in",       mlr_dsl_in_keyword_usage       },
-	{ "local",    mlr_dsl_local_keyword_usage    },
-	{ "print",   mlr_dsl_print_keyword_usage   },
-	{ "printn",  mlr_dsl_printn_keyword_usage  },
+	{ "print",    mlr_dsl_print_keyword_usage    },
+	{ "printn",   mlr_dsl_printn_keyword_usage   },
 	{ "return",   mlr_dsl_return_keyword_usage   },
-	{ "stderr",  mlr_dsl_stderr_keyword_usage  },
-	{ "stdout",  mlr_dsl_stdout_keyword_usage  },
+	{ "stderr",   mlr_dsl_stderr_keyword_usage   },
+	{ "stdout",   mlr_dsl_stdout_keyword_usage   },
 	{ "subr",     mlr_dsl_subr_keyword_usage     },
-	{ "tee",     mlr_dsl_tee_keyword_usage     },
-	{ "unset",   mlr_dsl_unset_keyword_usage   },
+	{ "tee",      mlr_dsl_tee_keyword_usage      },
+	{ "unset",    mlr_dsl_unset_keyword_usage    },
+	{ "var",      mlr_dsl_var_keyword_usage    },
 	{ "while",    mlr_dsl_while_keyword_usage    },
 
 };
@@ -355,7 +355,7 @@ static void mlr_dsl_for_keyword_usage(FILE* ostream) {
 		"  Example: 'for ((k1, k2), v in @counts) { ... }'\n"
 		"  Example: 'for ((k1, k2, k3), v in @*) { ... }'\n"
 		"C-style for-loop:\n"
-		"  Example:  'for (local i = 0, local b = 1; i < 10; i += 1, b *= 2) { ... }'\n"
+		"  Example:  'for (var i = 0, var b = 1; i < 10; i += 1, b *= 2) { ... }'\n"
 	);
 }
 
@@ -377,10 +377,10 @@ static void mlr_dsl_in_keyword_usage(FILE* ostream) {
 	fprintf(ostream, "in: used in for-loops over stream records or out-of-stream variables.\n");
 }
 
-static void mlr_dsl_local_keyword_usage(FILE* ostream) {
+static void mlr_dsl_var_keyword_usage(FILE* ostream) {
 	fprintf(ostream,
-		"local: defines a local variable in the current curly-braced scope.\n"
-		"Examples: 'local a=1', 'local xyz=\"\"'\n"
+		"var: defines a local variable in the current curly-braced scope.\n"
+		"Examples: 'var a=1', 'var xyz=\"\"'\n"
 	);
 }
 

@@ -11,7 +11,7 @@ static void cst_udf_free_callback(void* pvstate);
 // $ cat def
 //mlr --from s put -v '
 //  def f(x,y,z) {
-//    local a = 1;
+//    var a = 1;
 //    $x = 2;
 //    return a + y * 2;
 //  }
@@ -26,7 +26,7 @@ static void cst_udf_free_callback(void* pvstate);
 //             text="y", type=non_sigil_name.
 //             text="z", type=non_sigil_name.
 //         text="list", type=statement_list:
-//             text="local", type=return:
+//             text="var", type=return:
 //                 text="a", type=non_sigil_name.
 //                 text="1", type=strnum_literal.
 //             text="=", type=srec_assignment:

@@ -1016,8 +1016,8 @@ run_mlr --from $indir/abixy filter '
 '
 
 run_mlr --from $indir/abixy filter '
-  local a = 5;
-  local b = 7;
+  int a = 5;
+  int b = 7;
   a <= NR && NR <= b
 '
 
@@ -1629,7 +1629,7 @@ run_mlr --oxtab put -f $indir/subtab4.mlr $indir/subtab.dkvp
 announce DSL SUBSTR
 
 run_mlr put -q '
-  local n = strlen($x);
+  int n = strlen($x);
   print "input= <<".$x.">>";
   for (i = -n-2; i <= n+2; i += 1) {
     for (j = -n-2; j <= n+2; j += 1) {
@@ -4802,7 +4802,7 @@ announce USER-DEFINED FUNCTIONS AND SUBROUTINES
 
 run_mlr --opprint --from $indir/abixy put 'func f(u,v){return u+v} $o=f(NR*1000,$x)'
 
-mlr_expect_fail --opprint --from $indir/abixy put 'func f(x,y,z){$nnn=999; local n=10; return $y} $o=f($i,$x,$y)'
+mlr_expect_fail --opprint --from $indir/abixy put 'func f(x,y,z){$nnn=999; int n=10; return $y} $o=f($i,$x,$y)'
 
 run_mlr --opprint --from $indir/abixy put 'subr s(a,b) { $[a] = b } call s("W", 999)'
 
@@ -4864,7 +4864,7 @@ mlr_expect_fail --opprint --from $indir/abixy put 'func log(x) { return 0 } $o =
 run_mlr --from $indir/abixy put 'subr log() { print "hello record  ". NR } call log()'
 
 # Test variable-clear at scope exit; test read of unset locals.
-run_mlr --opprint --from $indir/abixy put '$o1 = a; local a=1000+NR; $o2 = a; a=2000+NR; $o3 = a'
+run_mlr --opprint --from $indir/abixy put '$o1 = a; int a=1000+NR; $o2 = a; a=2000+NR; $o3 = a'
 
 # Test recursion
 run_mlr --opprint --from $indir/abixy put '
@@ -4922,7 +4922,7 @@ run_mlr --from $indir/abixy --opprint put '
     if (ispresent(@fcache[n])) {
       return @fcache[n]
     } else {
-      local rv = 1;
+      num rv = 1;
       if (n >= 2) {
         rv = f(n-1) + f(n-2)
       }
@@ -4988,12 +4988,12 @@ run_mlr --from $indir/abixy put -v '
     }
     begin {
         @a = 0;
-        local ell = 1;
+        var ell = 1;
         print "local1 = ".ell;
     }
     end {
         emit @a;
-        local emm = 2;
+        var emm = 2;
         print "local2 = ".emm;
     }
     @a += 1;
@@ -5016,21 +5016,21 @@ announce LOCALVAR SCOPE AND EXTENT
 
 run_mlr --opprint --from $indir/abixy put '
   func f() {
-    local a = 1;
+    var a = 1;
     if (NR > 5) {
       a = 2;
     }
     return a;
   }
   func g() {
-    local b = 1;
+    var b = 1;
     if (NR > 5) {
-      local b = 2;
+      var b = 2;
     }
     return b;
   }
   func h() {
-    local a = 1;
+    var a = 1;
     if (NR > 5) {
       a = 2;
       return a;
@@ -5038,9 +5038,9 @@ run_mlr --opprint --from $indir/abixy put '
     return a;
   }
   func i() {
-    local b = 1;
+    var b = 1;
     if (NR > 5) {
-      local b = 2;
+      var b = 2;
       return b;
     }
     return b;
@@ -5054,10 +5054,10 @@ run_mlr --opprint --from $indir/abixy put '
 # test fencing at function entry
 run_mlr --opprint --from $indir/abixy put '
   func f() {
-    local a = 2;
-    local b = 2;
+    var a = 2;
+    var b = 2;
     if (NR > 5) {
-      local a = 3;
+      var a = 3;
       b = 3;
     }
     return 1000 * a + b;
@@ -5073,8 +5073,8 @@ run_mlr --opprint --from $indir/abixy put '
 announce TRIPLE-FORs
 
 run_mlr --opprint --from $indir/abixy put '
-  local sum = 0;
-  local a = 1;
+  num sum = 0;
+  num a = 1;
   for (;;) {
     if (a > NR) {
         break;
@@ -5086,8 +5086,8 @@ run_mlr --opprint --from $indir/abixy put '
 '
 
 run_mlr --opprint --from $indir/abixy put '
-  local sum = 0;
-  local a = 1;
+  num sum = 0;
+  num a = 1;
   for (;;) {
     if (a > NR) {
         break;
@@ -5099,8 +5099,8 @@ run_mlr --opprint --from $indir/abixy put '
 '
 
 run_mlr --opprint --from $indir/abixy put '
-  local sum = 0;
-  for (local a = 1; ;) {
+  num sum = 0;
+  for (num a = 1; ;) {
     if (a > NR) {
         break;
     }
@@ -5111,8 +5111,8 @@ run_mlr --opprint --from $indir/abixy put '
 '
 
 run_mlr --opprint --from $indir/abixy put '
-  local sum = 0;
-  local a = 1;
+  num sum = 0;
+  num a = 1;
   for (; ; a += 1) {
     if (a > NR) {
         break;
@@ -5123,8 +5123,8 @@ run_mlr --opprint --from $indir/abixy put '
 '
 
 run_mlr --opprint --from $indir/abixy put '
-  local sum = 0;
-  for (local a=1; ; a += 1) {
+  num sum = 0;
+  for (num a=1; ; a += 1) {
     if (a > NR) {
         break;
     }
@@ -5134,17 +5134,17 @@ run_mlr --opprint --from $indir/abixy put '
 '
 
 run_mlr --opprint --from $indir/abixy put '
-  local sum = 0;
-  for (local a=1; a <= NR; a += 1) {
+  num sum = 0;
+  for (num a=1; a <= NR; a += 1) {
     sum += a;
   }
   $z = sum
 '
 
 echo x=1 | run_mlr put '
-  local a = 100;
-  local b = 100;
-  for (local a = 200, b = 300; a <= 210; a += 1, b += 1) {
+  num a = 100;
+  num b = 100;
+  for (num a = 200, b = 300; a <= 210; a += 1, b += 1) {
     print "a:".a.",b:".b
   }
   $oa = a;
@@ -5157,11 +5157,11 @@ run_mlr --from $indir/abixy put '
 '
 
 run_mlr --opprint --from $indir/abixy put '
-  local a = 100;
+  num a = 100;
   b  = 200;
   @c = 300;
   $d = 400;
-  for (local i = 1; i < 1024; i *= 2) {
+  for (num i = 1; i < 1024; i *= 2) {
     a  += 1;
     b  += 1;
     @c += 1;
@@ -5174,8 +5174,8 @@ run_mlr --opprint --from $indir/abixy put '
 '
 
 run_mlr --opprint --from $indir/abixy put '
-  local sum = 0;
-  for (local a = 1; a <= 10; a += 1) {
+  num sum = 0;
+  for (num a = 1; a <= 10; a += 1) {
     continue;
     sum += a;
   }
@@ -5183,8 +5183,8 @@ run_mlr --opprint --from $indir/abixy put '
 '
 
 run_mlr --opprint --from $indir/abixy put '
-  local sum = 0;
-  for (local a = 1; a <= 10; a += 1) {
+  num sum = 0;
+  for (num a = 1; a <= 10; a += 1) {
     sum += a;
     break;
   }
@@ -5192,8 +5192,8 @@ run_mlr --opprint --from $indir/abixy put '
 '
 
 run_mlr --opprint --from $indir/abixy put '
-  local sum = 0;
-  for (local a = 1; a <= NR; a += 1) {
+  num sum = 0;
+  for (num a = 1; a <= NR; a += 1) {
     if (a == 4 || a == 5) {
       continue;
     }

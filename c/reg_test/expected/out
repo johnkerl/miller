@@ -16846,8 +16846,8 @@ NR is 9
 NR is 10
 
 mlr --from ./reg_test/input/abixy filter 
-  local a = 5;
-  local b = 7;
+  int a = 5;
+  int b = 7;
   a <= NR && NR <= b
 
 a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
@@ -21978,7 +21978,7 @@ y
 DSL SUBSTR
 
 mlr put -q 
-  local n = strlen($x);
+  int n = strlen($x);
   print "input= <<".$x.">>";
   for (i = -n-2; i <= n+2; i += 1) {
     for (j = -n-2; j <= n+2; j += 1) {
@@ -43917,7 +43917,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   8000.598554
 hat wye 9  0.03144187646093577 0.7495507603507059  9000.031442
 pan wye 10 0.5026260055412137  0.9526183602969864  10000.502626
 
-mlr --opprint --from ./reg_test/input/abixy put func f(x,y,z){$nnn=999; local n=10; return $y} $o=f($i,$x,$y)
+mlr --opprint --from ./reg_test/input/abixy put func f(x,y,z){$nnn=999; int n=10; return $y} $o=f($i,$x,$y)
 mlr: assignments to $-variables are not valid within func blocks.
 
 mlr --opprint --from ./reg_test/input/abixy put subr s(a,b) { $[a] = b } call s("W", 999)
@@ -44106,7 +44106,7 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 hello record  10
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --opprint --from ./reg_test/input/abixy put $o1 = a; local a=1000+NR; $o2 = a; a=2000+NR; $o3 = a
+mlr --opprint --from ./reg_test/input/abixy put $o1 = a; int a=1000+NR; $o2 = a; a=2000+NR; $o3 = a
 a   b   i  x                   y                   o2   o3
 pan pan 1  0.3467901443380824  0.7268028627434533  1001 2001
 eks pan 2  0.7586799647899636  0.5221511083334797  1002 2002
@@ -44238,7 +44238,7 @@ mlr --from ./reg_test/input/abixy --opprint put
     if (ispresent(@fcache[n])) {
       return @fcache[n]
     } else {
-      local rv = 1;
+      num rv = 1;
       if (n >= 2) {
         rv = f(n-1) + f(n-2)
       }
@@ -44558,12 +44558,12 @@ mlr --from ./reg_test/input/abixy put -v
     }
     begin {
         @a = 0;
-        local ell = 1;
+        var ell = 1;
         print "local1 = ".ell;
     }
     end {
         emit @a;
-        local emm = 2;
+        var emm = 2;
         print "local2 = ".emm;
     }
     @a += 1;
@@ -44860,21 +44860,21 @@ LOCALVAR SCOPE AND EXTENT
 
 mlr --opprint --from ./reg_test/input/abixy put 
   func f() {
-    local a = 1;
+    var a = 1;
     if (NR > 5) {
       a = 2;
     }
     return a;
   }
   func g() {
-    local b = 1;
+    var b = 1;
     if (NR > 5) {
-      local b = 2;
+      var b = 2;
     }
     return b;
   }
   func h() {
-    local a = 1;
+    var a = 1;
     if (NR > 5) {
       a = 2;
       return a;
@@ -44882,9 +44882,9 @@ mlr --opprint --from ./reg_test/input/abixy put
     return a;
   }
   func i() {
-    local b = 1;
+    var b = 1;
     if (NR > 5) {
-      local b = 2;
+      var b = 2;
       return b;
     }
     return b;
@@ -44908,10 +44908,10 @@ pan wye 10 0.5026260055412137  0.9526183602969864  2  1  2  2
 
 mlr --opprint --from ./reg_test/input/abixy put 
   func f() {
-    local a = 2;
-    local b = 2;
+    var a = 2;
+    var b = 2;
     if (NR > 5) {
-      local a = 3;
+      var a = 3;
       b = 3;
     }
     return 1000 * a + b;
@@ -44939,8 +44939,8 @@ pan wye 10 0.5026260055412137  0.9526183602969864  2003 1  1
 TRIPLE-FORs
 
 mlr --opprint --from ./reg_test/input/abixy put 
-  local sum = 0;
-  local a = 1;
+  num sum = 0;
+  num a = 1;
   for (;;) {
     if (a > NR) {
         break;
@@ -44963,8 +44963,8 @@ hat wye 9  0.03144187646093577 0.7495507603507059  45
 pan wye 10 0.5026260055412137  0.9526183602969864  55
 
 mlr --opprint --from ./reg_test/input/abixy put 
-  local sum = 0;
-  local a = 1;
+  num sum = 0;
+  num a = 1;
   for (;;) {
     if (a > NR) {
         break;
@@ -44987,8 +44987,8 @@ hat wye 9  0.03144187646093577 0.7495507603507059  45
 pan wye 10 0.5026260055412137  0.9526183602969864  55
 
 mlr --opprint --from ./reg_test/input/abixy put 
-  local sum = 0;
-  for (local a = 1; ;) {
+  num sum = 0;
+  for (num a = 1; ;) {
     if (a > NR) {
         break;
     }
@@ -45010,8 +45010,8 @@ hat wye 9  0.03144187646093577 0.7495507603507059  45
 pan wye 10 0.5026260055412137  0.9526183602969864  55
 
 mlr --opprint --from ./reg_test/input/abixy put 
-  local sum = 0;
-  local a = 1;
+  num sum = 0;
+  num a = 1;
   for (; ; a += 1) {
     if (a > NR) {
         break;
@@ -45033,8 +45033,8 @@ hat wye 9  0.03144187646093577 0.7495507603507059  45
 pan wye 10 0.5026260055412137  0.9526183602969864  55
 
 mlr --opprint --from ./reg_test/input/abixy put 
-  local sum = 0;
-  for (local a=1; ; a += 1) {
+  num sum = 0;
+  for (num a=1; ; a += 1) {
     if (a > NR) {
         break;
     }
@@ -45055,8 +45055,8 @@ hat wye 9  0.03144187646093577 0.7495507603507059  45
 pan wye 10 0.5026260055412137  0.9526183602969864  55
 
 mlr --opprint --from ./reg_test/input/abixy put 
-  local sum = 0;
-  for (local a=1; a <= NR; a += 1) {
+  num sum = 0;
+  for (num a=1; a <= NR; a += 1) {
     sum += a;
   }
   $z = sum
@@ -45074,9 +45074,9 @@ hat wye 9  0.03144187646093577 0.7495507603507059  45
 pan wye 10 0.5026260055412137  0.9526183602969864  55
 
 mlr put 
-  local a = 100;
-  local b = 100;
-  for (local a = 200, b = 300; a <= 210; a += 1, b += 1) {
+  num a = 100;
+  num b = 100;
+  for (num a = 200, b = 300; a <= 210; a += 1, b += 1) {
     print "a:".a.",b:".b
   }
   $oa = a;
@@ -45111,11 +45111,11 @@ a=hat,b=wye,i=9,x=10.031442,y=0.7495507603507059
 a=pan,b=wye,i=10,x=10.502626,y=0.9526183602969864
 
 mlr --opprint --from ./reg_test/input/abixy put 
-  local a = 100;
+  num a = 100;
   b  = 200;
   @c = 300;
   $d = 400;
-  for (local i = 1; i < 1024; i *= 2) {
+  for (num i = 1; i < 1024; i *= 2) {
     a  += 1;
     b  += 1;
     @c += 1;
@@ -45139,8 +45139,8 @@ hat wye 9  0.03144187646093577 0.7495507603507059  410 110 210 310 410
 pan wye 10 0.5026260055412137  0.9526183602969864  410 110 210 310 410
 
 mlr --opprint --from ./reg_test/input/abixy put 
-  local sum = 0;
-  for (local a = 1; a <= 10; a += 1) {
+  num sum = 0;
+  for (num a = 1; a <= 10; a += 1) {
     continue;
     sum += a;
   }
@@ -45159,8 +45159,8 @@ hat wye 9  0.03144187646093577 0.7495507603507059  0
 pan wye 10 0.5026260055412137  0.9526183602969864  0
 
 mlr --opprint --from ./reg_test/input/abixy put 
-  local sum = 0;
-  for (local a = 1; a <= 10; a += 1) {
+  num sum = 0;
+  for (num a = 1; a <= 10; a += 1) {
     sum += a;
     break;
   }
@@ -45179,8 +45179,8 @@ hat wye 9  0.03144187646093577 0.7495507603507059  1
 pan wye 10 0.5026260055412137  0.9526183602969864  1
 
 mlr --opprint --from ./reg_test/input/abixy put 
-  local sum = 0;
-  for (local a = 1; a <= NR; a += 1) {
+  num sum = 0;
+  for (num a = 1; a <= NR; a += 1) {
     if (a == 4 || a == 5) {
       continue;
     }

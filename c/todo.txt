@@ -17,18 +17,12 @@ NON-RELEASE:
 
 ================================================================
 QUICKLIST:
-* typedecl iterate
-* mapvar iterate
+
 * xxx@doc iterate
-* mlr_exit n w/ fflush stdout/stderr & exit n?
+* mapvar iterate
 
 ================================================================
 FUNCTIONALITY FOR 4.6.0:
-
-----------------------------------------------------------------
-STRICTNESS:
-
-* "Boundvars" logic in CST-build is no longer reached (handled in pass1)
 
 ----------------------------------------------------------------
 MAPVARS:
@@ -83,6 +77,8 @@ TYPE-CHECKING:
 * mlr -k re numeric int float boolean string
 * redefinitions disallowed, including duplicate forbind vars / parameter names.
 * make a separate mld section
+* note why pref num over int/float: int overflows to float; literal 0 vs. 0.0; etc.
+! local -> var & all UT & doc & etc
 
 OOSVAR SINGLE FOR:
 * oosvar-single-for mlh
@@ -171,15 +167,9 @@ perf note:
 * DSL stuff performant w/r/t ruby/python (mand bench & maybe others)
 
 ================================================================
-4.7.0: MAP // STRICT // TRACE // SYNTAXERROR // ALLRECAGG
+4.7.0: TRACE // SYNTAXERROR // ALLRECAGG // FCNALS
 
-mapvars for 4.7.0 not 4.6.0 but make some decisions before releasing 4.6.0:
-
-* gonna wanna pass maps to funcs/subrs, and return them too.
-  - '&m syntax'?
-  - 'local map m' syntax? 'map/val' ?
-  - categorize all LHS/RHS/arg/param/forbind/etc possibilities & pencil/paper the options.
-  - choose simplest possible option
+? maybe some sort of collections logic to complement for-loops? important, or just fun to code up?
 
 ================================================================
 4.6.0 RELEASE NOTES:

@@ -32,10 +32,10 @@ end {
 	print "LEVELSTEP = ".@levelstep;
 	print "CHARS     = ".@chars;
 
-	for (local ii = @iheight-1; ii >= 0; ii -= 1) {
-		local ci = @icorn + (ii/@iheight) * @side;
-		for (local ir = 0; ir < @iwidth; ir += 1) {
-			local cr = @rcorn + (ir/@iwidth) * @side;
+	for (int ii = @iheight-1; ii >= 0; ii -= 1) {
+		num ci = @icorn + (ii/@iheight) * @side;
+		for (int ir = 0; ir < @iwidth; ir += 1) {
+			num cr = @rcorn + (ir/@iwidth) * @side;
 			printn get_point_plot(cr, ci, @maxits);
 		}
 		print;
@@ -43,14 +43,14 @@ end {
 }
 
 func get_point_plot(cr, ci, maxits) {
-	local zr = 0.0;
-	local zi = 0.0;
+	num zr = 0.0;
+	num zi = 0.0;
 
-	local iti = 0;
-	local escaped = false;
-	local zt = 0;
+	int iti = 0;
+	bool escaped = false;
+	num zt = 0;
 	for (iti = 0; iti < maxits; iti += 1) {
-		local mag = zr*zr + zi+zi;
+		num mag = zr*zr + zi+zi;
 		if (mag > 4.0) {
 				escaped = true;
 				break;
@@ -63,7 +63,7 @@ func get_point_plot(cr, ci, maxits) {
 	if (!escaped) {
 		return ".";
 	} else {
-		local level = (iti // @levelstep) % strlen(@chars);
+		int level = (iti // @levelstep) % strlen(@chars);
 		return substr(@chars, level, level);
 	}
 }
