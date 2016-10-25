@@ -252,6 +252,7 @@ char* mt_describe_type_simple(int type);
 // Returns no reference to the mlrval's data.  Suitable for getting data out of
 // a mlrval which might be about to be freed.
 char* mv_alloc_format_val(mv_t* pval);
+char* mv_alloc_format_val_quoting_strings(mv_t* pval);
 
 // Returns a reference to the mlrval's data if the mlrval is MT_STRING.
 // Does not modify the mlrval. Suitable only for read-only string-formatting

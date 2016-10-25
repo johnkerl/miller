@@ -102,6 +102,17 @@ void* mlr_realloc_or_die(void *optr, size_t size) {
 }
 
 // ----------------------------------------------------------------
+char * mlr_strdup_quoted_or_die(const char *s1) { // xxx UT
+	int len = strlen(s1);
+	char* s2 = mlr_malloc_or_die(len+3);
+	s2[0] = '"';
+	strcpy(&s2[1], s1);
+	s2[len+1] = '"';
+	s2[len+2] = 0;
+	return s2;
+}
+
+// ----------------------------------------------------------------
 // The caller should free the return value from each of these.
 
 char* mlr_alloc_string_from_double(double value, char* fmt) {

@@ -75,6 +75,33 @@ char* mv_alloc_format_val(mv_t* pval) {
 	}
 }
 
+char* mv_alloc_format_val_quoting_strings(mv_t* pval) {
+	switch(pval->type) {
+	case MT_ABSENT:
+	case MT_EMPTY:
+		return mlr_strdup_quoted_or_die("");
+		break;
+	case MT_ERROR:
+		return mlr_strdup_or_die("(error)");
+		break;
+	case MT_STRING:
+		return mlr_strdup_quoted_or_die(pval->u.strv);
+		break;
+	case MT_BOOL:
+		return mlr_strdup_or_die(pval->u.boolv ? "true" : "false");
+		break;
+	case MT_FLOAT:
+		return mlr_alloc_string_from_double(pval->u.fltv, MLR_GLOBALS.ofmt);
+		break;
+	case MT_INT:
+		return mlr_alloc_string_from_ll(pval->u.intv);
+		break;
+	default:
+		return mlr_strdup_or_die("???");
+		break;
+	}
+}
+
 // See comments in header file
 char* mv_maybe_alloc_format_val(mv_t* pval, char* pfree_flags) {
 	switch(pval->type) {

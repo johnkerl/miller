@@ -91,6 +91,7 @@ static inline char * mlr_strdup_or_die(const char *s1) {
 #endif
 	return s2;
 }
+char * mlr_strdup_quoted_or_die(const char *s1);
 
 // The caller should free the return values from each of these.
 char* mlr_alloc_string_from_double(double value, char* fmt);

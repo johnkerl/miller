@@ -94,6 +94,17 @@ static char * test_streqn() {
 }
 
 // ----------------------------------------------------------------
+static char * test_strdup_quoted() {
+
+	mu_assert_lf(streq(mlr_strdup_quoted_or_die(""), "\"\""));
+	mu_assert_lf(streq(mlr_strdup_quoted_or_die("x"), "\"x\""));
+	mu_assert_lf(streq(mlr_strdup_quoted_or_die("xy"), "\"xy\""));
+	mu_assert_lf(streq(mlr_strdup_quoted_or_die("xyz"), "\"xyz\""));
+
+	return 0;
+}
+
+// ----------------------------------------------------------------
 static char * test_starts_or_ends_with() {
 
 	mu_assert_lf(string_starts_with("abcde", ""));
@@ -147,6 +158,7 @@ static char * all_tests() {
 	mu_run_test(test_canonical_mod);
 	mu_run_test(test_streq);
 	mu_run_test(test_streqn);
+	mu_run_test(test_strdup_quoted);
 	mu_run_test(test_starts_or_ends_with);
 	mu_run_test(test_scanners);
 	mu_run_test(test_paste);
