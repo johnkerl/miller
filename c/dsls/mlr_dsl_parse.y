@@ -473,8 +473,24 @@ md_for_loop_oosvar(A) ::=
 }
 
 md_for_loop_index(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
-	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_NON_SIGIL_NAME);
+	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION);
 }
+md_for_loop_index(A) ::= MD_TOKEN_NUMERIC MD_TOKEN_NON_SIGIL_NAME(B). {
+	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION);
+}
+md_for_loop_index(A) ::= MD_TOKEN_INT MD_TOKEN_NON_SIGIL_NAME(B). {
+	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_INT_LOCAL_DEFINITION);
+}
+md_for_loop_index(A) ::= MD_TOKEN_FLOAT MD_TOKEN_NON_SIGIL_NAME(B). {
+	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION);
+}
+md_for_loop_index(A) ::= MD_TOKEN_STRING MD_TOKEN_NON_SIGIL_NAME(B). {
+	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION);
+}
+md_for_loop_index(A) ::= MD_TOKEN_BOOLEAN MD_TOKEN_NON_SIGIL_NAME(B). {
+	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION);
+}
+
 md_for_oosvar_keylist(A) ::= MD_TOKEN_NON_SIGIL_NAME(K). {
 	A = mlr_dsl_ast_node_alloc_unary("key_variables", MD_AST_NODE_TYPE_FOR_VARIABLES, K);
 }
