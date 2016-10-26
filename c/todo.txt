@@ -24,7 +24,6 @@ NON-RELEASE:
 ================================================================
 QUICKLIST:
 
-* xxx@doc iterate
 * mapvar iterate
 
 ================================================================
@@ -81,9 +80,7 @@ HYGIENE FOR 4.6.0:
 DOC FOR 4.6.0:
 
 TYPE-CHECKING:
-* more examples in the localvars section
 * assert_X() functions
-! local -> var & all UT & doc & etc
 
 OOSVAR SINGLE FOR:
 * oosvar-single-for mlh
