@@ -1,7 +1,13 @@
 ================================================================
 BUGFIXES
 
-:D
+* differentiate type-inference on srecs from type-inference on literals:
+
+  $ ../c/mlr --from ../c/s put 'int a="3"'
+  -> no error
+
+  $ ../c/mlr --from ../c/s put 'int a=string("3")'
+  mlr: int type assertion for variable a unmet by value "3" with type string.
 
 ================================================================
 NON-RELEASE:
