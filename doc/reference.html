@@ -4219,7 +4219,7 @@ if there is a parameter named <tt>a</tt> then you can reassign the value of
 <tt>int</tt>, <tt>float</tt>, <tt>str</tt>, and <tt>bool</tt> are necessary to
 declare local variables.  Function arguments and variables bound in for-loops
 over stream records and out-of-stream variables are <i>implicitly</i> declared
-using <tt>var</tt>. xxx put some examples here.
+using <tt>var</tt>. (Some examples are shown below.)
 
 <li/> Type-checking is done at assignment time. For example, <tt>float f =
 0</tt> is an error (since <tt>0</tt> is an integer), as is <tt>float f = 0.0; f
@@ -5540,36 +5540,46 @@ input records.
 <!-- ================================================================ -->
 <a id="Output_statements"/><h2>Output statements</h2>
 
-<p/> xxx grist: You can output built-in variables indirectly, by assigning them
-to a non-built-in variable: e.g. <tt>$nr = NR</tt> adds a field named
-<tt>nr</tt> to each output record, containing the value of <tt>NR</tt> as of
-when that record was ingested.
+<p/>You can <b>output</b> variable-values or expressions in <b>five ways</b>:
 
-<p/> xxx grist: You can <b>output</b> these in <b>four ways</b>: (1)
-<b>assign</b> them to stream-record fields, e.g.  <tt>$cumulative_sum =
-@sum</tt>; (2) use <b>emit</b>/<b>emitp</b>/<b>emitf</b>, e.g.  <tt>@sum += $x;
-emit @sum</tt> which produces an extra output record such as
-<tt>sum=3.1648382</tt>; (3) use the <b>dump</b> or <b>edump</b> keywords, which
-immediately print all out-of-stream variables as a JSON data structure to the
-standard output or standard error (respectively), or (4) use the <b>print</b>
-or <b>eprint</b> keywords which immediately print an expression to standard
-output or standard error, respectively. Note that <tt>dump</tt>,
-<tt>edump</tt>, <tt>print</tt>, and <tt>eprint</tt> don&rsquo;t output records
-which participate in <tt>then</tt>-chaining; rather, they&rsquo;re just
-immediate prints to stdout/stderr. The <tt>printn</tt> and <tt>eprintn</tt>
-keywords are the same except that they don&rsquo;t print final newlines.
+<ul>
+
+<li/> <b>Assign</b> them to stream-record fields. For example,
+<tt>$cumulative_sum = @sum</tt>. For another example, <tt>$nr = NR</tt> adds a
+field named <tt>nr</tt> to each output record, containing the value of the
+built-in variable <tt>NR</tt> as of when that record was ingested.
+
+<li/> Use <b>emit</b>/<b>emitp</b>/<b>emitf</b> to send out-of-stream
+variables&rsquo; current values to the output record stream, e.g.  <tt>@sum +=
+$x; emit @sum</tt> which produces an extra output record such as
+<tt>sum=3.1648382</tt>.
+
+<li/> Use the <b>dump</b> or <b>edump</b> keywords, which immediately print all
+out-of-stream variables as a JSON data structure to the standard output or
+standard error (respectively).
+
+<li/> Use the <b>print</b> or <b>eprint</b> keywords which immediately print an
+expression to standard output or standard error, respectively. Note that
+<tt>dump</tt>, <tt>edump</tt>, <tt>print</tt>, and <tt>eprint</tt> don&rsquo;t
+output records which participate in <tt>then</tt>-chaining; rather,
+they&rsquo;re just immediate prints to stdout/stderr. The <tt>printn</tt> and
+<tt>eprintn</tt> keywords are the same except that they don&rsquo;t print final
+newlines. Additionally, you can print to a specified file instead of stdout/stderr.
+
+<li/> Use <b>tee</b> which formats the current stream record (not just an
+arbitrary string as with <b>print</b>) to a specific file.
+
+</ul>
+
+<p/>For the first two options you are populating the output-records stream
+which feeds into the next verb in a <tt>then</tt>-chain (if any), or which otherwise
+is formatted for output using <tt>--oxxx</tt> flags.
+
+<p/>For the last three options you are sending output directly to standard
+output, standard error, or a file.
 
 <!-- ================================================================ -->
 <a id="Emit_statements"/><h3>Emit statements</h3>
-
-<p/>As noted above, there are three ways to output out-of-stream variables:
-(1) Assign them to stream-record fields, e.g.  <tt>$cumulative_sum = @sum</tt>;
-(2) Use <tt>emit</tt>, e.g.  <tt>@sum += $x; emit @sum</tt> which produces an
-extra output record such as <tt>sum=3.1648382</tt>; (3) Use the <tt>dump</tt>
-keyword, which immediately prints all out-of-stream variables to the standard
-output as a JSON data structure. Note that the latter aren&rsquo;t output records
-which participate in <tt>then</tt>-chaining; rather, they&rsquo;re just an
-immediate print to stdout. This section is about <tt>emit</tt>.
 
 <p/>There are three variants: <tt>emitf</tt>, <tt>emit</tt>, and
 <tt>emitp</tt>. Keep in mind that out-of-stream variables are a nested,
