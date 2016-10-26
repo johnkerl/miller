@@ -6652,6 +6652,9 @@ outside of <tt>begin</tt>, <tt>end</tt>, or other <tt>func</tt> or
 
 <li/> A function (uniqified by its name) may not be redefined: either by
 redefining a user-defined function, or by redefining a built-in function.
+However, functions and subroutines have separate namespaces: you can define a
+subroutine <tt>log</tt> which does not clash with the mathematical <tt>log</tt>
+function.
 
 <li/> Functions may be defined either before or after use (there is an
 object-binding/linkage step).  More specifically, functions may be either
@@ -6665,11 +6668,12 @@ recursive or mutually recursive. Functions may not call subroutines.
 
 <li/> Argument values may be reassigned: they are not read-only.
 
-<li/> When a return value is not implicitely means a return value of
-absent-null.  See also the section on <a
-href="#Null_data:_empty_and_absent">empty_and_absent null data</a>.
+<li/> When a return value is not implicitly returned, this results in a return
+value of absent-null.  See also the section on
+<a href="#Null_data:_empty_and_absent">empty_and_absent null data</a>.
 
 <p/> xxx example code here
+
 <li/> xxx missing return leads to absent-null (which xref). return value (single).
 
 <li/> See the section on <a href="#Local_variables">local variables</a> for
