@@ -20,6 +20,7 @@ typedef void keyword_usage_func_t(FILE* ostream);
 
 static keyword_usage_func_t mlr_dsl_all_keyword_usage;
 static keyword_usage_func_t mlr_dsl_begin_keyword_usage;
+static keyword_usage_func_t mlr_dsl_bool_keyword_usage;
 static keyword_usage_func_t mlr_dsl_break_keyword_usage;
 static keyword_usage_func_t mlr_dsl_call_keyword_usage;
 static keyword_usage_func_t mlr_dsl_continue_keyword_usage;
@@ -34,18 +35,24 @@ static keyword_usage_func_t mlr_dsl_emitp_keyword_usage;
 static keyword_usage_func_t mlr_dsl_end_keyword_usage;
 static keyword_usage_func_t mlr_dsl_eprint_keyword_usage;
 static keyword_usage_func_t mlr_dsl_eprintn_keyword_usage;
+static keyword_usage_func_t mlr_dsl_false_keyword_usage;
 static keyword_usage_func_t mlr_dsl_filter_keyword_usage;
+static keyword_usage_func_t mlr_dsl_float_keyword_usage;
 static keyword_usage_func_t mlr_dsl_for_keyword_usage;
 static keyword_usage_func_t mlr_dsl_func_keyword_usage;
 static keyword_usage_func_t mlr_dsl_if_keyword_usage;
 static keyword_usage_func_t mlr_dsl_in_keyword_usage;
+static keyword_usage_func_t mlr_dsl_int_keyword_usage;
+static keyword_usage_func_t mlr_dsl_num_keyword_usage;
 static keyword_usage_func_t mlr_dsl_print_keyword_usage;
 static keyword_usage_func_t mlr_dsl_printn_keyword_usage;
 static keyword_usage_func_t mlr_dsl_return_keyword_usage;
 static keyword_usage_func_t mlr_dsl_stderr_keyword_usage;
 static keyword_usage_func_t mlr_dsl_stdout_keyword_usage;
+static keyword_usage_func_t mlr_dsl_str_keyword_usage;
 static keyword_usage_func_t mlr_dsl_subr_keyword_usage;
 static keyword_usage_func_t mlr_dsl_tee_keyword_usage;
+static keyword_usage_func_t mlr_dsl_true_keyword_usage;
 static keyword_usage_func_t mlr_dsl_unset_keyword_usage;
 static keyword_usage_func_t mlr_dsl_var_keyword_usage;
 static keyword_usage_func_t mlr_dsl_while_keyword_usage;
@@ -60,6 +67,7 @@ static keyword_usage_entry_t KEYWORD_USAGE_TABLE[] = {
 
 	{ "all",      mlr_dsl_all_keyword_usage      },
 	{ "begin",    mlr_dsl_begin_keyword_usage    },
+	{ "bool",     mlr_dsl_bool_keyword_usage     },
 	{ "break",    mlr_dsl_break_keyword_usage    },
 	{ "call",     mlr_dsl_call_keyword_usage     },
 	{ "continue", mlr_dsl_continue_keyword_usage },
@@ -74,20 +82,26 @@ static keyword_usage_entry_t KEYWORD_USAGE_TABLE[] = {
 	{ "end",      mlr_dsl_end_keyword_usage      },
 	{ "eprint",   mlr_dsl_eprint_keyword_usage   },
 	{ "eprintn",  mlr_dsl_eprintn_keyword_usage  },
+	{ "false",    mlr_dsl_false_keyword_usage    },
 	{ "filter",   mlr_dsl_filter_keyword_usage   },
+	{ "float",    mlr_dsl_float_keyword_usage    },
 	{ "for",      mlr_dsl_for_keyword_usage      },
 	{ "func",     mlr_dsl_func_keyword_usage     },
 	{ "if",       mlr_dsl_if_keyword_usage       },
 	{ "in",       mlr_dsl_in_keyword_usage       },
+	{ "int",      mlr_dsl_int_keyword_usage      },
+	{ "num",      mlr_dsl_num_keyword_usage      },
 	{ "print",    mlr_dsl_print_keyword_usage    },
 	{ "printn",   mlr_dsl_printn_keyword_usage   },
 	{ "return",   mlr_dsl_return_keyword_usage   },
 	{ "stderr",   mlr_dsl_stderr_keyword_usage   },
 	{ "stdout",   mlr_dsl_stdout_keyword_usage   },
+	{ "str",      mlr_dsl_str_keyword_usage      },
 	{ "subr",     mlr_dsl_subr_keyword_usage     },
 	{ "tee",      mlr_dsl_tee_keyword_usage      },
+	{ "true",     mlr_dsl_true_keyword_usage     },
 	{ "unset",    mlr_dsl_unset_keyword_usage    },
-	{ "var",      mlr_dsl_var_keyword_usage    },
+	{ "var",      mlr_dsl_var_keyword_usage      },
 	{ "while",    mlr_dsl_while_keyword_usage    },
 
 };
@@ -127,6 +141,8 @@ void mlr_dsl_list_all_keywords_raw(FILE* ostream) {
 }
 
 // ----------------------------------------------------------------
+
+
 static void mlr_dsl_all_keyword_usage(FILE* ostream) {
 	fprintf(ostream,
 		"all: used in \"emit\", \"emitp\", and \"unset\" as a synonym for @*\n"
@@ -138,6 +154,13 @@ static void mlr_dsl_begin_keyword_usage(FILE* ostream) {
 		"begin: defines a block of statements to be executed before input records\n"
 		"are ingested. The body statements must be wrapped in curly braces.\n"
 		"Example: 'begin { @count = 0 }'\n"
+	);
+}
+
+static void mlr_dsl_bool_keyword_usage(FILE* ostream) {
+	fprintf(ostream,
+		"bool: declares a boolean local variable in the current curly-braced scope.\n"
+		"Type-checking happens at assignment: 'bool b = 1' is an error.\n"
 	);
 }
 
@@ -331,6 +354,12 @@ static void mlr_dsl_eprintn_keyword_usage(FILE* ostream) {
 		"  Example: mlr --from f.dat put -q 'eprintn \"The sum of x and y is \".($x+$y); eprint \"\"'\n");
 }
 
+static void mlr_dsl_false_keyword_usage(FILE* ostream) {
+	fprintf(ostream,
+		"false: the boolean literal value.\n"
+	);
+}
+
 static void mlr_dsl_filter_keyword_usage(FILE* ostream) {
     fprintf(ostream,
 		"filter: includes/excludes the record in the output record stream.\n"
@@ -342,6 +371,13 @@ static void mlr_dsl_filter_keyword_usage(FILE* ostream) {
 		"  without printing the input record:\n"
 		"\n"
 		"  Example: mlr --from f.dat put -q '@running_sum += $x * $y; emit @running_sum'\n");
+}
+
+static void mlr_dsl_float_keyword_usage(FILE* ostream) {
+	fprintf(ostream,
+		"float: declares a floating-point local variable in the current curly-braced scope.\n"
+		"Type-checking happens at assignment: 'float x = 0' is an error.\n"
+	);
 }
 
 static void mlr_dsl_for_keyword_usage(FILE* ostream) {
@@ -377,10 +413,17 @@ static void mlr_dsl_in_keyword_usage(FILE* ostream) {
 	fprintf(ostream, "in: used in for-loops over stream records or out-of-stream variables.\n");
 }
 
-static void mlr_dsl_var_keyword_usage(FILE* ostream) {
+static void mlr_dsl_int_keyword_usage(FILE* ostream) {
 	fprintf(ostream,
-		"var: defines a local variable in the current curly-braced scope.\n"
-		"Examples: 'var a=1', 'var xyz=\"\"'\n"
+		"int: declares an integer local variable in the current curly-braced scope.\n"
+		"Type-checking happens at assignment: 'int x = 0.0' is an error.\n"
+	);
+}
+
+static void mlr_dsl_num_keyword_usage(FILE* ostream) {
+	fprintf(ostream,
+		"num: declares an int/float local variable in the current curly-braced scope.\n"
+		"Type-checking happens at assignment: 'num b = true' is an error.\n"
 	);
 }
 
@@ -418,6 +461,13 @@ static void mlr_dsl_stdout_keyword_usage(FILE* ostream) {
 		"  to print to standard output.\n");
 }
 
+static void mlr_dsl_str_keyword_usage(FILE* ostream) {
+	fprintf(ostream,
+		"str: declares a string local variable in the current curly-braced scope.\n"
+		"Type-checking happens at assignment.\n"
+	);
+}
+
 static void mlr_dsl_subr_keyword_usage(FILE* ostream) {
 	fprintf(ostream,
 		"subr: used for defining a subroutine.\n"
@@ -451,6 +501,12 @@ static void mlr_dsl_tee_keyword_usage(FILE* ostream) {
 		MLR_GLOBALS.bargv0);
 }
 
+static void mlr_dsl_true_keyword_usage(FILE* ostream) {
+	fprintf(ostream,
+		"true: the boolean literal value.\n"
+	);
+}
+
 static void mlr_dsl_unset_keyword_usage(FILE* ostream) {
     fprintf(ostream,
 		"unset: clears field(s) from the current record, or an out-of-stream variable.\n"
@@ -461,6 +517,13 @@ static void mlr_dsl_unset_keyword_usage(FILE* ostream) {
 		"  Example: mlr --from f.dat put '...; unset @sums'\n"
 		"  Example: mlr --from f.dat put '...; unset @sums[\"green\"]'\n"
 		"  Example: mlr --from f.dat put '...; unset @*'\n");
+}
+
+static void mlr_dsl_var_keyword_usage(FILE* ostream) {
+	fprintf(ostream,
+		"var: declares an untyped local variable in the current curly-braced scope.\n"
+		"Examples: 'var a=1', 'var xyz=\"\"'\n"
+	);
 }
 
 static void mlr_dsl_while_keyword_usage(FILE* ostream) {

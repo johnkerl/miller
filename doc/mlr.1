@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-10-25
+.\"      Date: 2016-10-26
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-10-25" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-10-26" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2532,6 +2532,16 @@ Example: 'begin { @count = 0 }'
 .fi
 .if n \{\
 .RE
+.SS "bool"
+.if n \{\
+.RS 0
+.\}
+.nf
+bool: declares a boolean local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'bool b = 1' is an error.
+.fi
+.if n \{\
+.RE
 .SS "break"
 .if n \{\
 .RS 0
@@ -2768,6 +2778,15 @@ eprintn: prints expression immediately to stderr, without trailing newline.
 .fi
 .if n \{\
 .RE
+.SS "false"
+.if n \{\
+.RS 0
+.\}
+.nf
+false: the boolean literal value.
+.fi
+.if n \{\
+.RE
 .SS "filter"
 .if n \{\
 .RS 0
@@ -2782,6 +2801,16 @@ filter: includes/excludes the record in the output record stream.
   without printing the input record:
 
   Example: mlr --from f.dat put -q '@running_sum += $x * $y; emit @running_sum'
+.fi
+.if n \{\
+.RE
+.SS "float"
+.if n \{\
+.RS 0
+.\}
+.nf
+float: declares a floating-point local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'float x = 0' is an error.
 .fi
 .if n \{\
 .RE
@@ -2829,6 +2858,26 @@ in curly braces.
 .\}
 .nf
 in: used in for-loops over stream records or out-of-stream variables.
+.fi
+.if n \{\
+.RE
+.SS "int"
+.if n \{\
+.RS 0
+.\}
+.nf
+int: declares an integer local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'int x = 0.0' is an error.
+.fi
+.if n \{\
+.RE
+.SS "num"
+.if n \{\
+.RS 0
+.\}
+.nf
+num: declares an int/float local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'num b = true' is an error.
 .fi
 .if n \{\
 .RE
@@ -2885,6 +2934,16 @@ stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
 .fi
 .if n \{\
 .RE
+.SS "str"
+.if n \{\
+.RS 0
+.\}
+.nf
+str: declares a string local variable in the current curly-braced scope.
+Type-checking happens at assignment.
+.fi
+.if n \{\
+.RE
 .SS "subr"
 .if n \{\
 .RS 0
@@ -2924,6 +2983,15 @@ tee: prints the current record to specified file.
 .fi
 .if n \{\
 .RE
+.SS "true"
+.if n \{\
+.RS 0
+.\}
+.nf
+true: the boolean literal value.
+.fi
+.if n \{\
+.RE
 .SS "unset"
 .if n \{\
 .RS 0
@@ -2945,7 +3013,7 @@ unset: clears field(s) from the current record, or an out-of-stream variable.
 .RS 0
 .\}
 .nf
-var: defines a local variable in the current curly-braced scope.
+var: declares an untyped local variable in the current curly-braced scope.
 Examples: 'var a=1', 'var xyz=""'
 .fi
 .if n \{\

@@ -1467,6 +1467,10 @@ KEYWORDS FOR PUT AND FILTER
        are ingested. The body statements must be wrapped in curly braces.
        Example: 'begin { @count = 0 }'
 
+   bool
+       bool: declares a boolean local variable in the current curly-braced scope.
+       Type-checking happens at assignment: 'bool b = 1' is an error.
+
    break
        break: causes execution to continue after the body of the current
        for/while/do-while loop.
@@ -1619,6 +1623,9 @@ KEYWORDS FOR PUT AND FILTER
        eprintn: prints expression immediately to stderr, without trailing newline.
 	 Example: mlr --from f.dat put -q 'eprintn "The sum of x and y is ".($x+$y); eprint ""'
 
+   false
+       false: the boolean literal value.
+
    filter
        filter: includes/excludes the record in the output record stream.
 
@@ -1629,6 +1636,10 @@ KEYWORDS FOR PUT AND FILTER
 	 without printing the input record:
 
 	 Example: mlr --from f.dat put -q '@running_sum += $x * $y; emit @running_sum'
+
+   float
+       float: declares a floating-point local variable in the current curly-braced scope.
+       Type-checking happens at assignment: 'float x = 0' is an error.
 
    for
        for: defines a for-loop using one of three styles. The body statements must
@@ -1653,6 +1664,14 @@ KEYWORDS FOR PUT AND FILTER
    in
        in: used in for-loops over stream records or out-of-stream variables.
 
+   int
+       int: declares an integer local variable in the current curly-braced scope.
+       Type-checking happens at assignment: 'int x = 0.0' is an error.
+
+   num
+       num: declares an int/float local variable in the current curly-braced scope.
+       Type-checking happens at assignment: 'num b = true' is an error.
+
    print
        print: prints expression immediately to stdout.
 	 Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
@@ -1675,6 +1694,10 @@ KEYWORDS FOR PUT AND FILTER
    stdout
        stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
 	 to print to standard output.
+
+   str
+       str: declares a string local variable in the current curly-braced scope.
+       Type-checking happens at assignment.
 
    subr
        subr: used for defining a subroutine.
@@ -1703,6 +1726,9 @@ KEYWORDS FOR PUT AND FILTER
 	 Example: mlr --from f.dat put -q 'tee | "gzip > /tmp/data-".$a.".gz", $*'
 	 Example: mlr --from f.dat put -q --ojson 'tee | "gzip > /tmp/data-".$a.".gz", $*'
 
+   true
+       true: the boolean literal value.
+
    unset
        unset: clears field(s) from the current record, or an out-of-stream variable.
 
@@ -1714,7 +1740,7 @@ KEYWORDS FOR PUT AND FILTER
 	 Example: mlr --from f.dat put '...; unset @*'
 
    var
-       var: defines a local variable in the current curly-braced scope.
+       var: declares an untyped local variable in the current curly-braced scope.
        Examples: 'var a=1', 'var xyz=""'
 
    while
@@ -1734,4 +1760,4 @@ SEE ALSO
 
 
 
-				  2016-10-25			     MILLER(1)
+				  2016-10-26			     MILLER(1)

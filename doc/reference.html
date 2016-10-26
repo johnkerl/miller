@@ -4562,6 +4562,9 @@ begin: defines a block of statements to be executed before input records
 are ingested. The body statements must be wrapped in curly braces.
 Example: 'begin { @count = 0 }'
 
+bool: declares a boolean local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'bool b = 1' is an error.
+
 break: causes execution to continue after the body of the current
 for/while/do-while loop.
 
@@ -4700,6 +4703,8 @@ eprint: prints expression immediately to stderr.
 eprintn: prints expression immediately to stderr, without trailing newline.
   Example: mlr --from f.dat put -q 'eprintn "The sum of x and y is ".($x+$y); eprint ""'
 
+false: the boolean literal value.
+
 filter: includes/excludes the record in the output record stream.
 
   Example: mlr --from f.dat put 'filter (NR == 2 || $x &gt; 5.4)'
@@ -4709,6 +4714,9 @@ filter: includes/excludes the record in the output record stream.
   without printing the input record:
 
   Example: mlr --from f.dat put -q '@running_sum += $x * $y; emit @running_sum'
+
+float: declares a floating-point local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'float x = 0' is an error.
 
 for: defines a for-loop using one of three styles. The body statements must
 be wrapped in curly braces.
@@ -4729,6 +4737,12 @@ in curly braces.
 
 in: used in for-loops over stream records or out-of-stream variables.
 
+int: declares an integer local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'int x = 0.0' is an error.
+
+num: declares an int/float local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'num b = true' is an error.
+
 print: prints expression immediately to stdout.
   Example: mlr --from f.dat put -q 'print "The sum of x and y is ".($x+$y)'
   Example: mlr --from f.dat put -q 'for (k, v in $*) { print k . " =&gt; " . v }'
@@ -4746,6 +4760,9 @@ stderr: Used for tee, emit, emitf, emitp, print, and dump in place of filename
 
 stdout: Used for tee, emit, emitf, emitp, print, and dump in place of filename
   to print to standard output.
+
+str: declares a string local variable in the current curly-braced scope.
+Type-checking happens at assignment.
 
 subr: used for defining a subroutine.
 Example: 'subr s(k,v) { print k . " is " . v} call s("a", $a)'
@@ -4772,6 +4789,8 @@ tee: prints the current record to specified file.
   Example: mlr --from f.dat put -q 'tee | "gzip &gt; /tmp/data-".$a.".gz", $*'
   Example: mlr --from f.dat put -q --ojson 'tee | "gzip &gt; /tmp/data-".$a.".gz", $*'
 
+true: the boolean literal value.
+
 unset: clears field(s) from the current record, or an out-of-stream variable.
 
   Example: mlr --from f.dat put 'unset $x'
@@ -4781,7 +4800,7 @@ unset: clears field(s) from the current record, or an out-of-stream variable.
   Example: mlr --from f.dat put '...; unset @sums["green"]'
   Example: mlr --from f.dat put '...; unset @*'
 
-var: defines a local variable in the current curly-braced scope.
+var: declares an untyped local variable in the current curly-braced scope.
 Examples: 'var a=1', 'var xyz=""'
 
 while: introduces a while loop, or with "do", introduces a do-while loop.
