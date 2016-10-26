@@ -1698,11 +1698,16 @@ recursive or mutually recursive. Functions may not call subroutines.
 
 <li/> Functions have read access to <tt>$</tt>-variables and
 <tt>@</tt>-variables but may not modify them.
+See also
+<a href="cookbook.html#Memoization_with_out-of-stream_variables">
+this cookbook item</a> for an example.
 
 <li/> Argument values may be reassigned: they are not read-only.
 
 <li/> When a return value is not implicitly returned, this results in a return
-value of absent-null.  See also the section on
+value of absent-null. (In the example above, if there were records for which
+the argument to <tt>f</tt> is non-numeric, the assignments would be skipped.)
+See also the section on
 <a href="#Null_data:_empty_and_absent">empty_and_absent null data</a>.
 
 <li/> See the section on <a href="#Local_variables">local variables</a> for
