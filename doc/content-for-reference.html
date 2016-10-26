@@ -1690,8 +1690,8 @@ subroutine <tt>log</tt> which does not clash with the mathematical <tt>log</tt>
 function.
 
 <li/> Functions may be defined either before or after use (there is an
-object-binding/linkage step).  More specifically, functions may be either
-recursive or mutually recursive. Functions may not call subroutines.
+object-binding/linkage step at startup).  More specifically, functions may be
+either recursive or mutually recursive. Functions may not call subroutines.
 
 <li/> Functions may be defined and called either within <tt>mlr put</tt> or
 <tt>mlr put</tt>.
@@ -1721,21 +1721,42 @@ files</a> for information on the use of <tt>-f</tt> and <tt>-e</tt> flags.
 <!-- ================================================================ -->
 <h3>User-defined subroutines</h3>
 
-<p/> xxx this section is under construction.
+<p/>Example:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/subr-example.sh)HERE
+
+<p/>Properties of user-defined subroutines:
 
 <ul>
-<li/> xxx example definition. outside begin/end. before/after body defs (resolved after parse).
-<li/> put only, not filter
-<li/> xxx xref to -f/-e for each of use.
-<li/> xxx no redefines of built-ins or of one another.
-<li/> xxx no nested definitions.
-<li/> xxx access to arguments (positional/value); $/@ state as RHS.
-<li/> xxx all RHS stuff &mdash; and assigns to $/@.
-<li/> xxx recursive/mutually so ok. 
-<li/> xxx localvars as in fors. args may be reassigned.
-<li/> xxx xref to shared section for func/subr localvars (scope/extent/etc.)
-<li/> xxx rename
-<li/> <a href="#Local_variables">Local variables</a>
+
+<li/> Subroutine bodies start with <tt>subr</tt> and a parameter list, defined
+outside of <tt>begin</tt>, <tt>end</tt>, or other <tt>func</tt> or
+<tt>subr</tt> blocks. (I.e. the Miller DSL has no nested subroutines.)
+
+<li/> A subroutine (uniqified by its name) may not be redefined.
+However, functions and subroutines have separate namespaces: you can define a
+subroutine <tt>log</tt> which does not clash with the mathematical <tt>log</tt>
+function.
+
+<li/> Subroutines may be defined either before or after use (there is an
+object-binding/linkage step at startup).  More specifically, subroutines may be
+either recursive or mutually recursive. Subroutines may call functions.
+
+<li/> Subroutines may be defined and called either within <tt>mlr put</tt> or
+<tt>mlr put</tt>.
+
+<li/> Subroutines have read/write access to <tt>$</tt>-variables and
+<tt>@</tt>-variables.
+
+<li/> Argument values may be reassigned: they are not read-only.
+
+<li/> See the section on <a href="#Local_variables">local variables</a> for
+information on scope and extent of arguments, as well as for information on the
+use of local variables within functions.
+
+<li/> See the section on <a href="Expressions_from_files">expressions from
+files</a> for information on the use of <tt>-f</tt> and <tt>-e</tt> flags.
+
 </ul>
 
 <!-- ================================================================ -->
