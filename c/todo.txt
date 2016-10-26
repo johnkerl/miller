@@ -73,11 +73,8 @@ HYGIENE FOR 4.6.0:
 DOC FOR 4.6.0:
 
 TYPE-CHECKING:
+* more examples in the localvars section
 * assert_X() functions
-* type-decl for local/forbind/argpass; applies to reassigns
-* redefinitions disallowed, including duplicate forbind vars / parameter names.
-* make a separate mld section
-* note why pref num over int/float: int overflows to float; literal 0 vs. 0.0; etc.
 ! local -> var & all UT & doc & etc
 
 OOSVAR SINGLE FOR:

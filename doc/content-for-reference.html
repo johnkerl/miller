@@ -879,7 +879,7 @@ POKI_RUN_COMMAND{{mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp}
 <!-- ================================================================ -->
 <h1>Expression language for filter and put</h1>
 
-The basic idea of <tt>mlr filter</tt> and <tt>mlr put</tt> are for
+The essential usages of <tt>mlr filter</tt> and <tt>mlr put</tt> are for
 record-selection and record-updating expressions, respectively. For example:
 
 POKI_RUN_COMMAND{{cat data/small}}HERE
@@ -936,10 +936,17 @@ POKI_RUN_COMMAND{{mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f
 
 <p/>A suggested use-case here is defining functions in files, and calling them from command-line expressions.
 
+<p/>Another suggest use-case is putting default parameter values in files, e.g. using
+<tt>begin{@count=ispresent(@count)?@count:10}</tt> in the file, where you can precede that using
+<tt>begin{@count=40}</tt> using <tt>-e</tt>.
+
 <p/>Moreover, you can have one or more <tt>-f</tt> expressions (maybe one
 function per file, for example) and one or more <tt>-e</tt> expressions on the
 command line.  If you mix <tt>-f</tt> and <tt>-e</tt> then the expressions are
-evaluated in the order encountered.
+evaluated in the order encountered. (Since the expressions are all simply
+concatenated together in order, don&rsquo;t forget intervening semicolons: e.g.
+not <tt>mlr put -e '$x=1' -e '$y=2 ...'</tt> but rather <tt>mlr put -e '$x=1;' -e
+'$y=2' ...</tt>.)
 
 <!-- ================================================================ -->
 <h3>Semicolons, newlines, and curly braces</h3>
@@ -1083,15 +1090,15 @@ are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
 
 <p/>There are three kinds of local variables: <b>arguments</b> to
 functions/subroutines, <b>variables bound within for-loops</b>, and
-<b>locals</b> defined within control blocks.
+<b>locals</b> defined within control blocks. They may be untyped using
+<tt>var</tt>, or typed using <tt>num</tt>, <tt>int</tt>, <tt>float</tt>,
+<tt>str</tt>, and <tt>bool</tt>.
 
-<p/>This example shows all three:
+<p/>For example:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/local-example-1.sh)HERE
 
 <p/>Notes:
-
-<p/> xxx spell out the types.
 
 <ul>
 
@@ -1099,26 +1106,52 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/local-example-1.sh)HERE
 if there is a parameter named <tt>a</tt> then you can reassign the value of
 <tt>a</tt> to be something else within the function if you like.
 
+<li/> However, you cannot redeclare the <i>type</i> of an argument or a local:
+<tt>var a=1; var a=2</tt> is an error but
+<tt>var a=1;  a=2</tt> is OK.
+
+<li/> Type declarations using <tt>var</tt>, or typed using <tt>num</tt>,
+<tt>int</tt>, <tt>float</tt>, <tt>str</tt>, and <tt>bool</tt> are necessary to
+declare local variables.  Function arguments and variables bound in for-loops
+over stream records and out-of-stream variables are <i>implicitly</i> declared
+using <tt>var</tt>. xxx put some examples here.
+
+<li/> Type-checking is done at assignment time. For example, <tt>float f =
+0</tt> is an error (since <tt>0</tt> is an integer), as is <tt>float f = 0.0; f
+= 1</tt>. For this reason I prefer to use <tt>num</tt> over <tt>float</tt>
+since <tt>num</tt> encompasses integer and floating-point values.
+
 <li/> All argument-passing is positional rather than by name; arguments are
 passed by value, not by reference.
 
-<li/> You can define locals (using the <tt>local</tt> keyword) at any scope
-(if-statementst, else-statements, while-loops, for-loops, or the top-level
+<li/> You can define locals (using <tt>var</tt>, <tt>num</tt>, etc.) at any
+scope (if-statements, else-statements, while-loops, for-loops, or the top-level
 scope), and nested scopes will have access (more details on scope in the next
 section).  If you define a local variable with the same name inside an inner
 scope, then a new variable is created with the narrower scope.
 
 <li/> If you assign to a local variable for the first time in a scope without
-declaring it as <tt>local</tt> then: if it exists in an outer scope, that
-outer-scope variable will be updated; if not, it will be defined in the current
-scope as if <tt>local</tt> had been used. I recommend always declaring
-variables with <tt>local</tt> to make the intended scoping clear.
+declaring it as <tt>var</tt>, <tt>num</tt>, etc. then: if it exists in an outer
+scope, that outer-scope variable will be updated; if not, it will be defined in
+the current scope as if <tt>var</tt> had been used. I recommend always
+declaring variables explicitly to make the intended scoping clear.
 
 <li/> Functions and subroutines never have access to locals from their callee
 (unless passed by value as arguments).
 
-<li/> If a for-loop variable is defined using <tt>local</tt> then it is scoped
-to that for-loop.
+<li/> Bound variables in for-loops over stream records and out-of-stream
+variables are implicitly local to that block. E.g. in
+<tt>for (k, v in $*) { ... }</tt>
+<tt>for ((k1, k2), v in @*) { ... }</tt>
+if there are <tt>k</tt>, <tt>v</tt>, etc. in the enclosing scope then those
+will be masked by the loop-local bound variables in the loop, and moreover
+the values of the loop-local bound variables are not available after the
+end of the loop.
+
+<li/> For C-style triple-for loops, if a for-loop variable is defined using
+<tt>var</tt>, <tt>int</tt>, etc. then it is scoped to that for-loop. E.g.
+<tt>for (i = 0; i < 10; i += 1) { ... }</tt> and
+<tt>for (int i = 0; i < 10; i += 1) { ... }</tt>.
 
 </ul>
 
