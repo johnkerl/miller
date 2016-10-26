@@ -22,27 +22,27 @@ typedef int mv_i_cncn_comparator_func_t(const mv_t* pa, const mv_t* pb);
 // ----------------------------------------------------------------
 char* mt_describe_type(int type) {
 	switch (type) {
-	case MT_ERROR:  return "MT_ERROR";  break;
-	case MT_ABSENT: return "MT_ABSENT"; break;
-	case MT_EMPTY:  return "MT_EMPTY";  break;
-	case MT_STRING: return "MT_STRING"; break;
-	case MT_INT:    return "MT_INT";    break;
-	case MT_FLOAT:  return "MT_FLOAT";  break;
-	case MT_BOOL:   return "MT_BOOL";   break;
-	default:        return "???";       break;
+	case     MT_ERROR:   return "MT_ERROR";   break;
+	case     MT_ABSENT:  return "MT_ABSENT";  break;
+	case     MT_EMPTY:   return "MT_EMPTY";   break;
+	case     MT_STRING:  return "MT_STRING";  break;
+	case     MT_INT:     return "MT_INT";     break;
+	case     MT_FLOAT:   return "MT_FLOAT";   break;
+	case     MT_BOOLEAN: return "MT_BOOLEAN"; break;
+	default:             return "???";        break;
 	}
 }
 
 char* mt_describe_type_simple(int type) {
 	switch (type) {
-	case MT_ERROR:  return "error";  break;
-	case MT_ABSENT: return "absent"; break;
-	case MT_EMPTY:  return "empty";  break;
-	case MT_STRING: return "string"; break;
-	case MT_INT:    return "int";    break;
-	case MT_FLOAT:  return "float";  break;
-	case MT_BOOL:   return "bool";   break;
-	default:        return "???";       break;
+	case MT_ERROR:   return "error";  break;
+	case MT_ABSENT:  return "absent"; break;
+	case MT_EMPTY:   return "empty";  break;
+	case MT_STRING:  return "string"; break;
+	case MT_INT:     return "int";    break;
+	case MT_FLOAT:   return "float";  break;
+	case MT_BOOLEAN: return "bool";   break;
+	default:         return "???";    break;
 	}
 }
 
@@ -60,7 +60,7 @@ char* mv_alloc_format_val(mv_t* pval) {
 	case MT_STRING:
 		return mlr_strdup_or_die(pval->u.strv);
 		break;
-	case MT_BOOL:
+	case MT_BOOLEAN:
 		return mlr_strdup_or_die(pval->u.boolv ? "true" : "false");
 		break;
 	case MT_FLOAT:
@@ -87,7 +87,7 @@ char* mv_alloc_format_val_quoting_strings(mv_t* pval) {
 	case MT_STRING:
 		return mlr_strdup_quoted_or_die(pval->u.strv);
 		break;
-	case MT_BOOL:
+	case MT_BOOLEAN:
 		return mlr_strdup_or_die(pval->u.boolv ? "true" : "false");
 		break;
 	case MT_FLOAT:
@@ -118,7 +118,7 @@ char* mv_maybe_alloc_format_val(mv_t* pval, char* pfree_flags) {
 		*pfree_flags = NO_FREE;
 		return pval->u.strv;
 		break;
-	case MT_BOOL:
+	case MT_BOOLEAN:
 		*pfree_flags = NO_FREE;
 		return pval->u.boolv ? "true" : "false";
 		break;
@@ -156,7 +156,7 @@ char* mv_format_val(mv_t* pval, char* pfree_flags) {
 		rv = pval->u.strv;
 		*pval = mv_empty();
 		break;
-	case MT_BOOL:
+	case MT_BOOLEAN:
 		*pfree_flags = NO_FREE;
 		rv = pval->u.boolv ? "true" : "false";
 		break;
@@ -188,7 +188,7 @@ char* mv_describe_val(mv_t val) {
 
 // ----------------------------------------------------------------
 void mv_set_boolean_strict(mv_t* pval) {
-	if (pval->type != MT_BOOL) {
+	if (pval->type != MT_BOOLEAN) {
 		char* desc = mt_describe_type(pval->type);
 		fprintf(stderr, "Expression does not evaluate to boolean: got %s.\n", desc);
 		exit(1);
@@ -220,7 +220,7 @@ void mv_set_float_strict(mv_t* pval) {
 		pval ->type = MT_FLOAT;
 		pval->u.fltv = (double)pval->u.intv;
 		break;
-	case MT_BOOL:
+	case MT_BOOLEAN:
 		pval->type = MT_ERROR;
 		pval->u.intv = 0LL;
 		break;
@@ -246,7 +246,7 @@ void mv_set_float_nullable(mv_t* pval) {
 		pval ->type = MT_FLOAT;
 		pval->u.fltv = (double)pval->u.intv;
 		break;
-	case MT_BOOL:
+	case MT_BOOLEAN:
 		pval->type = MT_ERROR;
 		pval->u.intv = 0;
 		break;
@@ -283,7 +283,7 @@ void mv_set_int_nullable(mv_t* pval) {
 		pval ->type = MT_INT;
 		pval->u.intv = (long long)pval->u.fltv;
 		break;
-	case MT_BOOL:
+	case MT_BOOLEAN:
 		pval->type = MT_ERROR;
 		pval->u.intv = 0;
 		break;
@@ -317,7 +317,7 @@ void mv_set_number_nullable(mv_t* pval) {
 		break;
 	case MT_FLOAT:
 		break;
-	case MT_BOOL:
+	case MT_BOOLEAN:
 		pval->type = MT_ERROR;
 		pval->u.intv = 0;
 		break;
@@ -1760,7 +1760,7 @@ mv_t b_x_isfloat_func(mv_t* pval1) {
 	return rv;
 }
 mv_t b_x_isboolean_func(mv_t* pval1) {
-	mv_t rv = mv_from_bool(pval1->type == MT_BOOL);
+	mv_t rv = mv_from_bool(pval1->type == MT_BOOLEAN);
 	mv_free(pval1);
 	return rv;
 }
@@ -1802,7 +1802,7 @@ mv_t b_x_isfloat_no_free_func(mv_t* pval1) {
 	return mv_from_bool(pval1->type == MT_FLOAT);
 }
 mv_t b_x_isboolean_no_free_func(mv_t* pval1) {
-	return mv_from_bool(pval1->type == MT_BOOL);
+	return mv_from_bool(pval1->type == MT_BOOLEAN);
 }
 mv_t b_x_isstring_no_free_func(mv_t* pval1) {
 	return mv_from_bool(pval1->type == MT_STRING || pval1->type == MT_EMPTY);
@@ -2298,7 +2298,7 @@ int mv_i_nn_le(mv_t* pval1, mv_t* pval2) { return (ile_dispositions[pval1->type]
 
 int mveq(mv_t* pval1, mv_t* pval2) {
 	mv_t cmp = eq_op_func(pval1, pval2);
-	MLR_INTERNAL_CODING_ERROR_UNLESS(cmp.type == MT_BOOL);
+	MLR_INTERNAL_CODING_ERROR_UNLESS(cmp.type == MT_BOOLEAN);
 	return cmp.u.boolv;
 }
 

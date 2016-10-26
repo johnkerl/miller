@@ -74,7 +74,7 @@ static mv_t rval_evaluator_b_b_func(void* pvstate, variables_t* pvars) {
 	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 
 	NULL_OR_ERROR_OUT_FOR_NUMBERS(val1);
-	if (val1.type != MT_BOOL)
+	if (val1.type != MT_BOOLEAN)
 		return mv_error();
 
 	return pstate->pfunc(&val1);
@@ -112,7 +112,7 @@ static mv_t rval_evaluator_b_bb_and_func(void* pvstate, variables_t* pvars) {
 
 	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val1);
-	if (val1.type == MT_BOOL) {
+	if (val1.type == MT_BOOLEAN) {
 		if (val1.u.boolv == FALSE)
 			return val1;
 	} else if (val1.type != MT_ABSENT) {
@@ -121,7 +121,7 @@ static mv_t rval_evaluator_b_bb_and_func(void* pvstate, variables_t* pvars) {
 
 	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val2);
-	if (val2.type == MT_BOOL) {
+	if (val2.type == MT_BOOLEAN) {
 		return val2;
 	} else if (val2.type == MT_ABSENT) {
 		return val1;
@@ -137,7 +137,7 @@ static mv_t rval_evaluator_b_bb_or_func(void* pvstate, variables_t* pvars) {
 
 	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val1);
-	if (val1.type == MT_BOOL) {
+	if (val1.type == MT_BOOLEAN) {
 		if (val1.u.boolv == TRUE)
 			return val1;
 	} else if (val1.type != MT_ABSENT) {
@@ -146,7 +146,7 @@ static mv_t rval_evaluator_b_bb_or_func(void* pvstate, variables_t* pvars) {
 
 	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val2);
-	if (val2.type == MT_BOOL) {
+	if (val2.type == MT_BOOLEAN) {
 		return val2;
 	} else if (val2.type == MT_ABSENT) {
 		return val1;
@@ -160,14 +160,14 @@ static mv_t rval_evaluator_b_bb_xor_func(void* pvstate, variables_t* pvars) {
 
 	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val1);
-	if (val1.type != MT_BOOL && val1.type != MT_ABSENT) {
+	if (val1.type != MT_BOOLEAN && val1.type != MT_ABSENT) {
 		return mv_error();
 	}
 
 	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 	EMPTY_OR_ERROR_OUT_FOR_NUMBERS(val2);
-	if (val2.type == MT_BOOL) {
-		if (val1.type == MT_BOOL)
+	if (val2.type == MT_BOOLEAN) {
+		if (val1.type == MT_BOOLEAN)
 			return mv_from_bool(val1.u.boolv ^ val2.u.boolv);
 		else
 			return val2;

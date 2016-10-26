@@ -73,7 +73,7 @@
 //   o a: MT_ABSENT
 //   o v: MT_EMPTY (v for void; e is for error)
 //   o e: MT_ERROR
-//   o b: MT_BOOL xxx rename to MT_BOOLEAN throughout
+//   o b: MT_BOOLEAN
 //   o f: MT_FLOAT
 //   o i: MT_INT
 //   o s: MT_STRING
@@ -104,7 +104,7 @@
 #define MT_STRING   3
 #define MT_INT      4
 #define MT_FLOAT    5
-#define MT_BOOL     6
+#define MT_BOOLEAN     6
 #define MT_DIM      7
 
 #define MV_SB_ALLOC_LENGTH 32
@@ -117,7 +117,7 @@ typedef struct _mv_t {
 		char*      strv;  // MT_STRING and MT_EMPTY
 		long long  intv;  // MT_INT, and == 0 for MT_ABSENT and MT_ERROR
 		double     fltv;  // MT_FLOAT
-		int        boolv; // MT_BOOL
+		int        boolv; // MT_BOOLEAN
 	} u;
 	unsigned char type;
 	char free_flags;
@@ -151,13 +151,13 @@ static inline mv_t mv_from_int(long long i) {
 }
 
 static inline mv_t mv_from_bool(int b) {
-	return (mv_t) {.type = MT_BOOL, .free_flags = NO_FREE, .u.boolv = b};
+	return (mv_t) {.type = MT_BOOLEAN, .free_flags = NO_FREE, .u.boolv = b};
 }
 static inline mv_t mv_from_true() {
-	return (mv_t) {.type = MT_BOOL, .free_flags = NO_FREE, .u.boolv = TRUE};
+	return (mv_t) {.type = MT_BOOLEAN, .free_flags = NO_FREE, .u.boolv = TRUE};
 }
 static inline mv_t mv_from_false() {
-	return (mv_t) {.type = MT_BOOL, .free_flags = NO_FREE, .u.boolv = FALSE};
+	return (mv_t) {.type = MT_BOOLEAN, .free_flags = NO_FREE, .u.boolv = FALSE};
 }
 
 static inline mv_t mv_from_string_with_free(char* s) {

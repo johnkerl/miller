@@ -281,14 +281,14 @@ static char * test_logical_and() {
 	mv_t ofa = pfa->pprocess_func(pfa->pvstate, &variables);
 	mv_t oaa = paa->pprocess_func(paa->pvstate, &variables);
 
-	mu_assert_lf(ott.type == MT_BOOL); mu_assert_lf(ott.u.boolv == TRUE);
-	mu_assert_lf(otf.type == MT_BOOL); mu_assert_lf(otf.u.boolv == FALSE);
-	mu_assert_lf(oft.type == MT_BOOL); mu_assert_lf(oft.u.boolv == FALSE);
-	mu_assert_lf(off.type == MT_BOOL); mu_assert_lf(off.u.boolv == FALSE);
-	mu_assert_lf(oat.type == MT_BOOL); mu_assert_lf(oat.u.boolv == TRUE);
-	mu_assert_lf(oaf.type == MT_BOOL); mu_assert_lf(oaf.u.boolv == FALSE);
-	mu_assert_lf(ota.type == MT_BOOL); mu_assert_lf(ota.u.boolv == TRUE);
-	mu_assert_lf(ofa.type == MT_BOOL); mu_assert_lf(ofa.u.boolv == FALSE);
+	mu_assert_lf(ott.type == MT_BOOLEAN); mu_assert_lf(ott.u.boolv == TRUE);
+	mu_assert_lf(otf.type == MT_BOOLEAN); mu_assert_lf(otf.u.boolv == FALSE);
+	mu_assert_lf(oft.type == MT_BOOLEAN); mu_assert_lf(oft.u.boolv == FALSE);
+	mu_assert_lf(off.type == MT_BOOLEAN); mu_assert_lf(off.u.boolv == FALSE);
+	mu_assert_lf(oat.type == MT_BOOLEAN); mu_assert_lf(oat.u.boolv == TRUE);
+	mu_assert_lf(oaf.type == MT_BOOLEAN); mu_assert_lf(oaf.u.boolv == FALSE);
+	mu_assert_lf(ota.type == MT_BOOLEAN); mu_assert_lf(ota.u.boolv == TRUE);
+	mu_assert_lf(ofa.type == MT_BOOLEAN); mu_assert_lf(ofa.u.boolv == FALSE);
 	mu_assert_lf(oaa.type == MT_ABSENT);
 
 	return 0;
@@ -344,14 +344,14 @@ static char * test_logical_or() {
 	mv_t oaf = paf->pprocess_func(paf->pvstate, &variables);
 	mv_t oaa = paa->pprocess_func(paa->pvstate, &variables);
 
-	mu_assert_lf(ott.type == MT_BOOL); mu_assert_lf(ott.u.boolv == TRUE);
-	mu_assert_lf(otf.type == MT_BOOL); mu_assert_lf(otf.u.boolv == TRUE);
-	mu_assert_lf(ota.type == MT_BOOL); mu_assert_lf(ota.u.boolv == TRUE);
-	mu_assert_lf(oft.type == MT_BOOL); mu_assert_lf(oft.u.boolv == TRUE);
-	mu_assert_lf(off.type == MT_BOOL); mu_assert_lf(off.u.boolv == FALSE);
-	mu_assert_lf(ofa.type == MT_BOOL); mu_assert_lf(ofa.u.boolv == FALSE);
-	mu_assert_lf(oat.type == MT_BOOL); mu_assert_lf(oat.u.boolv == TRUE);
-	mu_assert_lf(oaf.type == MT_BOOL); mu_assert_lf(oaf.u.boolv == FALSE);
+	mu_assert_lf(ott.type == MT_BOOLEAN); mu_assert_lf(ott.u.boolv == TRUE);
+	mu_assert_lf(otf.type == MT_BOOLEAN); mu_assert_lf(otf.u.boolv == TRUE);
+	mu_assert_lf(ota.type == MT_BOOLEAN); mu_assert_lf(ota.u.boolv == TRUE);
+	mu_assert_lf(oft.type == MT_BOOLEAN); mu_assert_lf(oft.u.boolv == TRUE);
+	mu_assert_lf(off.type == MT_BOOLEAN); mu_assert_lf(off.u.boolv == FALSE);
+	mu_assert_lf(ofa.type == MT_BOOLEAN); mu_assert_lf(ofa.u.boolv == FALSE);
+	mu_assert_lf(oat.type == MT_BOOLEAN); mu_assert_lf(oat.u.boolv == TRUE);
+	mu_assert_lf(oaf.type == MT_BOOLEAN); mu_assert_lf(oaf.u.boolv == FALSE);
 	mu_assert_lf(oaa.type == MT_ABSENT);
 
 	return 0;
@@ -407,14 +407,14 @@ static char * test_logical_xor() {
 	mv_t ofa = pfa->pprocess_func(pfa->pvstate, &variables);
 	mv_t oaa = paa->pprocess_func(paa->pvstate, &variables);
 
-	mu_assert_lf(ott.type == MT_BOOL); mu_assert_lf(ott.u.boolv == FALSE);
-	mu_assert_lf(otf.type == MT_BOOL); mu_assert_lf(otf.u.boolv == TRUE);
-	mu_assert_lf(oft.type == MT_BOOL); mu_assert_lf(oft.u.boolv == TRUE);
-	mu_assert_lf(off.type == MT_BOOL); mu_assert_lf(off.u.boolv == FALSE);
-	mu_assert_lf(oat.type == MT_BOOL); mu_assert_lf(oat.u.boolv == TRUE);
-	mu_assert_lf(oaf.type == MT_BOOL); mu_assert_lf(oaf.u.boolv == FALSE);
-	mu_assert_lf(ota.type == MT_BOOL); mu_assert_lf(ota.u.boolv == TRUE);
-	mu_assert_lf(ofa.type == MT_BOOL); mu_assert_lf(ofa.u.boolv == FALSE);
+	mu_assert_lf(ott.type == MT_BOOLEAN); mu_assert_lf(ott.u.boolv == FALSE);
+	mu_assert_lf(otf.type == MT_BOOLEAN); mu_assert_lf(otf.u.boolv == TRUE);
+	mu_assert_lf(oft.type == MT_BOOLEAN); mu_assert_lf(oft.u.boolv == TRUE);
+	mu_assert_lf(off.type == MT_BOOLEAN); mu_assert_lf(off.u.boolv == FALSE);
+	mu_assert_lf(oat.type == MT_BOOLEAN); mu_assert_lf(oat.u.boolv == TRUE);
+	mu_assert_lf(oaf.type == MT_BOOLEAN); mu_assert_lf(oaf.u.boolv == FALSE);
+	mu_assert_lf(ota.type == MT_BOOLEAN); mu_assert_lf(ota.u.boolv == TRUE);
+	mu_assert_lf(ofa.type == MT_BOOLEAN); mu_assert_lf(ofa.u.boolv == FALSE);
 	mu_assert_lf(oaa.type == MT_ABSENT);
 
 	return 0;
