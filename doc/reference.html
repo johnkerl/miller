@@ -5573,7 +5573,7 @@ arbitrary string as with <b>print</b>) to a specific file.
 
 <p/>For the first two options you are populating the output-records stream
 which feeds into the next verb in a <tt>then</tt>-chain (if any), or which otherwise
-is formatted for output using <tt>--oxxx</tt> flags.
+is formatted for output using <tt>--o...</tt> flags.
 
 <p/>For the last three options you are sending output directly to standard
 output, standard error, or a file.
@@ -6646,20 +6646,31 @@ wye pan 5 0.5732889198020006  0.8636244699032729  211.387310 120
 
 <ul>
 
-<li/> xxx example definition. outside begin/end. before/after body defs (resolved after parse).
-<li/> filter and put both.
+<li/> Function bodies start with <tt>func</tt> and a parameter list, defined
+outside of <tt>begin</tt>, <tt>end</tt>, or other <tt>func</tt> or
+<tt>subr</tt> blocks. (I.e. the Miller DSL has no nested functions.)
+
+<li/> A function (uniqified by its name) may not be redefined: either by
+redefining a user-defined function, or by redefining a built-in function.
+
+<li/> Functions may be defined either before or after use (there is an
+object-binding/linkage step).  More specifically, functions may be either
+recursive or mutually recursive. Functions may not call subroutines.
+
+<li/> Functions may be defined and called either within <tt>mlr put</tt> or
+<tt>mlr put</tt>.
+
+<li/> Functions have read access to <tt>$</tt>-variables and
+<tt>@</tt>-variables but may not modify them.
+
+<li/> Argument values may be reassigned: they are not read-only.
+
+<li/> See the section on <a href="#Local_variables">local variables</a> for
+information on scope and extent of arguments, as well as for information on the
+use of local variables within functions.
 
 <li/> xxx xref to -f/-e for each of use.
-<li/> xxx no redefines of built-ins or of one another.
-<li/> xxx no nested definitions.
-<li/> xxx access to arguments (positional/value); $/@ state as RHS.
-<li/> xxx all RHS stuff &mdash; no assigns to $/@; only to localvars. no subr calls.
-<li/> xxx recursive/mutually so ok. 
-<li/> xxx localvars as in fors. args may be reassigned.
-<li/> xxx xref to shared section for func/subr localvars (scope/extent/etc.)
 <li/> xxx missing return leads to absent-null (which xref). return value (single).
-
-<li/> <a href="#Local_variables">Local variables</a>
 
 </ul>
 
