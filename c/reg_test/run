@@ -1374,6 +1374,8 @@ run_mlr --xtab put    '$a=roundm($pf1,10)  ;$b=roundm($pf1,-10)  ' $indir/mixed-
 run_mlr --xtab put    '$a=roundm($pi1,10.0);$b=roundm($pi1,-10.0)' $indir/mixed-types.xtab
 run_mlr --xtab put    '$a=roundm($pi1,10)  ;$b=roundm($pi1,-10)  ' $indir/mixed-types.xtab
 
+echo 'x=3,y=4' | run_mlr --oxtab put '$z=$x+$y; $a=3+4; $b="3"."4"; $c="3"+4'
+
 # ----------------------------------------------------------------
 announce DSL SCIENTIFIC NOTATION IN FIELD VALUES
 

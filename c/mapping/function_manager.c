@@ -604,7 +604,7 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 		mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
 		int type2 = parg2_node->type;
 
-		if ((streq(function_name, "=~") || streq(function_name, "!=~")) && type2 == MD_AST_NODE_TYPE_STRNUM_LITERAL) {
+		if ((streq(function_name, "=~") || streq(function_name, "!=~")) && type2 == MD_AST_NODE_TYPE_STRING_LITERAL) {
 			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
 			pevaluator = fmgr_alloc_evaluator_from_binary_regex_arg2_func_name(function_name,
 				parg1, parg2_node->text, FALSE);
@@ -627,7 +627,7 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 		mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvvalue;
 		int type2 = parg2_node->type;
 
-		if ((streq(function_name, "sub") || streq(function_name, "gsub")) && type2 == MD_AST_NODE_TYPE_STRNUM_LITERAL) {
+		if ((streq(function_name, "sub") || streq(function_name, "gsub")) && type2 == MD_AST_NODE_TYPE_STRING_LITERAL) {
 			// sub/gsub-regex special case:
 			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
 			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast(parg3_node, pfmgr, type_inferencing, context_flags);

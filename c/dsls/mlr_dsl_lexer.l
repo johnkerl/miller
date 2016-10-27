@@ -417,7 +417,7 @@
 }
 
 \"([^\\\"]|\\.)*\" {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRNUM_LITERAL);
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRING_LITERAL);
 	return MD_TOKEN_STRING;
 }
 

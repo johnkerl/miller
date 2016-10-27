@@ -19887,6 +19887,14 @@ ni2 -76
 a   70
 b   70
 
+mlr --oxtab put $z=$x+$y; $a=3+4; $b="3"."4"; $c="3"+4
+x 3
+y 4
+z 7
+a 7
+b 34
+c (error)
+
 
 ================================================================
 DSL SCIENTIFIC NOTATION IN FIELD VALUES
@@ -20543,7 +20551,7 @@ AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="=~", type=OPERATOR:
         text="x", type=FIELD_NAME.
-        text="bcd", type=STRNUM_LITERAL.
+        text="bcd", type=STRING_LITERAL.
 
 BLOCKED AST:
 
@@ -20551,7 +20559,7 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
     text="=~", type=OPERATOR:
         text="x", type=FIELD_NAME.
-        text="bcd", type=STRNUM_LITERAL.
+        text="bcd", type=STRING_LITERAL.
 
 x=abcd,y=ghi
 x=abcde,y=ghi
@@ -20563,7 +20571,7 @@ AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="=~", type=OPERATOR:
         text="x", type=FIELD_NAME.
-        text="^bcd", type=STRNUM_LITERAL.
+        text="^bcd", type=STRING_LITERAL.
 
 BLOCKED AST:
 
@@ -20571,7 +20579,7 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
     text="=~", type=OPERATOR:
         text="x", type=FIELD_NAME.
-        text="^bcd", type=STRNUM_LITERAL.
+        text="^bcd", type=STRING_LITERAL.
 
 
 mlr filter -v $x =~ "^abc" ./reg_test/input/regex.dkvp
@@ -20581,7 +20589,7 @@ AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="=~", type=OPERATOR:
         text="x", type=FIELD_NAME.
-        text="^abc", type=STRNUM_LITERAL.
+        text="^abc", type=STRING_LITERAL.
 
 BLOCKED AST:
 
@@ -20589,7 +20597,7 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
     text="=~", type=OPERATOR:
         text="x", type=FIELD_NAME.
-        text="^abc", type=STRNUM_LITERAL.
+        text="^abc", type=STRING_LITERAL.
 
 x=abc,y=def
 x=abcd,y=ghi
@@ -20602,7 +20610,7 @@ AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="=~", type=OPERATOR:
         text="x", type=FIELD_NAME.
-        text="^abc$", type=STRNUM_LITERAL.
+        text="^abc$", type=STRING_LITERAL.
 
 BLOCKED AST:
 
@@ -20610,7 +20618,7 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
     text="=~", type=OPERATOR:
         text="x", type=FIELD_NAME.
-        text="^abc$", type=STRNUM_LITERAL.
+        text="^abc$", type=STRING_LITERAL.
 
 x=abc,y=def
 
@@ -20621,7 +20629,7 @@ AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="=~", type=OPERATOR:
         text="x", type=FIELD_NAME.
-        text="^a.*d$", type=STRNUM_LITERAL.
+        text="^a.*d$", type=STRING_LITERAL.
 
 BLOCKED AST:
 
@@ -20629,7 +20637,7 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
     text="=~", type=OPERATOR:
         text="x", type=FIELD_NAME.
-        text="^a.*d$", type=STRNUM_LITERAL.
+        text="^a.*d$", type=STRING_LITERAL.
 
 x=abcd,y=ghi
 
@@ -20641,8 +20649,8 @@ text="block", type=STATEMENT_BLOCK:
     text="=~", type=OPERATOR:
         text="x", type=FIELD_NAME.
         text=".", type=OPERATOR:
-            text="^a.*", type=STRNUM_LITERAL.
-            text="d$", type=STRNUM_LITERAL.
+            text="^a.*", type=STRING_LITERAL.
+            text="d$", type=STRING_LITERAL.
 
 BLOCKED AST:
 
@@ -20651,8 +20659,8 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
     text="=~", type=OPERATOR:
         text="x", type=FIELD_NAME.
         text=".", type=OPERATOR:
-            text="^a.*", type=STRNUM_LITERAL.
-            text="d$", type=STRNUM_LITERAL.
+            text="^a.*", type=STRING_LITERAL.
+            text="d$", type=STRING_LITERAL.
 
 x=abcd,y=ghi
 
@@ -20663,7 +20671,7 @@ AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="=~", type=OPERATOR:
         text="y", type=FIELD_NAME.
-        text=""..", type=STRNUM_LITERAL.
+        text=""..", type=STRING_LITERAL.
 
 BLOCKED AST:
 
@@ -20671,7 +20679,7 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
     text="=~", type=OPERATOR:
         text="y", type=FIELD_NAME.
-        text=""..", type=STRNUM_LITERAL.
+        text=""..", type=STRING_LITERAL.
 
 x=ABCDE,y="GHI"
 
@@ -20789,7 +20797,7 @@ text="block", type=STATEMENT_BLOCK:
     text="=~", type=OPERATOR:
         text="x", type=FIELD_NAME.
         text=".", type=OPERATOR:
-            text="^a.*", type=STRNUM_LITERAL.
+            text="^a.*", type=STRING_LITERAL.
             text="d$", type=REGEXI.
 
 BLOCKED AST:
@@ -20799,7 +20807,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
     text="=~", type=OPERATOR:
         text="x", type=FIELD_NAME.
         text=".", type=OPERATOR:
-            text="^a.*", type=STRNUM_LITERAL.
+            text="^a.*", type=STRING_LITERAL.
             text="d$", type=REGEXI.
 
 x=abcd,y=ghi
@@ -22892,14 +22900,14 @@ text="block", type=STATEMENT_BLOCK:
             text="=", type=OOSVAR_ASSIGNMENT:
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="ox", type=STRING_LITERAL.
-                text="no", type=STRNUM_LITERAL.
+                text="no", type=STRING_LITERAL.
     text="=", type=SREC_ASSIGNMENT:
         text="d", type=FIELD_NAME.
         text="? :", type=OPERATOR:
             text="==", type=OPERATOR:
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="ox", type=STRING_LITERAL.
-                text="no", type=STRNUM_LITERAL.
+                text="no", type=STRING_LITERAL.
             text="1.0", type=STRNUM_LITERAL.
             text="/", type=OPERATOR:
                 text="x", type=FIELD_NAME.
@@ -22918,7 +22926,7 @@ text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_dept
         text="=", type=OOSVAR_ASSIGNMENT:
             text="oosvar_keylist", type=OOSVAR_KEYLIST:
                 text="ox", type=STRING_LITERAL.
-            text="no", type=STRNUM_LITERAL.
+            text="no", type=STRING_LITERAL.
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
@@ -22928,7 +22936,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
             text="==", type=OPERATOR:
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="ox", type=STRING_LITERAL.
-                text="no", type=STRNUM_LITERAL.
+                text="no", type=STRING_LITERAL.
             text="1.0", type=STRNUM_LITERAL.
             text="/", type=OPERATOR:
                 text="x", type=FIELD_NAME.
@@ -23004,14 +23012,14 @@ text="block", type=STATEMENT_BLOCK:
             text="=", type=OOSVAR_ASSIGNMENT:
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="ox", type=STRING_LITERAL.
-                text="no", type=STRNUM_LITERAL.
+                text="no", type=STRING_LITERAL.
     text="=", type=SREC_ASSIGNMENT:
         text="d", type=FIELD_NAME.
         text="? :", type=OPERATOR:
             text="==", type=OPERATOR:
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="ox", type=STRING_LITERAL.
-                text="no", type=STRNUM_LITERAL.
+                text="no", type=STRING_LITERAL.
             text="1.0", type=STRNUM_LITERAL.
             text="/", type=OPERATOR:
                 text="x", type=FIELD_NAME.
@@ -23030,7 +23038,7 @@ text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_dept
         text="=", type=OOSVAR_ASSIGNMENT:
             text="oosvar_keylist", type=OOSVAR_KEYLIST:
                 text="ox", type=STRING_LITERAL.
-            text="no", type=STRNUM_LITERAL.
+            text="no", type=STRING_LITERAL.
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
@@ -23040,7 +23048,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
             text="==", type=OPERATOR:
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="ox", type=STRING_LITERAL.
-                text="no", type=STRNUM_LITERAL.
+                text="no", type=STRING_LITERAL.
             text="1.0", type=STRNUM_LITERAL.
             text="/", type=OPERATOR:
                 text="x", type=FIELD_NAME.
@@ -24754,7 +24762,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="t", type=STRING_LITERAL.
                     text=".", type=OPERATOR:
-                        text="u", type=STRNUM_LITERAL.
+                        text="u", type=STRING_LITERAL.
                         text="5", type=FIELD_NAME.
                 text="2", type=STRNUM_LITERAL.
             text="emitf", type=EMITF:
@@ -24816,7 +24824,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="t", type=STRING_LITERAL.
                     text=".", type=OPERATOR:
-                        text="u", type=STRNUM_LITERAL.
+                        text="u", type=STRING_LITERAL.
                         text="5", type=FIELD_NAME.
                 text="2", type=STRNUM_LITERAL.
             text="emitf", type=EMITF:
@@ -24953,15 +24961,15 @@ text="block", type=STATEMENT_BLOCK:
                                                                     text=".", type=OPERATOR:
                                                                         text=".", type=OPERATOR:
                                                                             text="v", type=LOCAL_VARIABLE.
-                                                                            text=":", type=STRNUM_LITERAL.
+                                                                            text=":", type=STRING_LITERAL.
                                                                         text="a", type=LOCAL_VARIABLE.
-                                                                    text=":", type=STRNUM_LITERAL.
+                                                                    text=":", type=STRING_LITERAL.
                                                                 text="b", type=LOCAL_VARIABLE.
-                                                            text=":", type=STRNUM_LITERAL.
+                                                            text=":", type=STRING_LITERAL.
                                                         text="c", type=LOCAL_VARIABLE.
                                                 text="print", type=PRINT:
                                                     text=".", type=OPERATOR:
-                                                        text="f:1:val:", type=STRNUM_LITERAL.
+                                                        text="f:1:val:", type=STRING_LITERAL.
                                                         text="val", type=LOCAL_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
@@ -24977,7 +24985,7 @@ text="block", type=STATEMENT_BLOCK:
                                             text="for_loop_oosvar_block", type=STATEMENT_BLOCK:
                                                 text="print", type=PRINT:
                                                     text=".", type=OPERATOR:
-                                                        text="f:2:k:", type=STRNUM_LITERAL.
+                                                        text="f:2:k:", type=STRING_LITERAL.
                                                         text="k", type=LOCAL_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
@@ -24998,9 +25006,9 @@ text="block", type=STATEMENT_BLOCK:
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
                                                             text=".", type=OPERATOR:
-                                                                text="f:3:k:", type=STRNUM_LITERAL.
+                                                                text="f:3:k:", type=STRING_LITERAL.
                                                                 text="k", type=LOCAL_VARIABLE.
-                                                            text="v:", type=STRNUM_LITERAL.
+                                                            text="v:", type=STRING_LITERAL.
                                                         text="v", type=LOCAL_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
@@ -25056,7 +25064,7 @@ text="block", type=STATEMENT_BLOCK:
                                             text="sum", type=LOCAL_VARIABLE.
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
-                                                text="f:val:", type=STRNUM_LITERAL.
+                                                text="f:val:", type=STRING_LITERAL.
                                                 text="val", type=LOCAL_VARIABLE.
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
@@ -25105,15 +25113,15 @@ text="block", type=STATEMENT_BLOCK:
                                                                     text=".", type=OPERATOR:
                                                                         text=".", type=OPERATOR:
                                                                             text="v", type=LOCAL_VARIABLE.
-                                                                            text=":", type=STRNUM_LITERAL.
+                                                                            text=":", type=STRING_LITERAL.
                                                                         text="a", type=LOCAL_VARIABLE.
-                                                                    text=":", type=STRNUM_LITERAL.
+                                                                    text=":", type=STRING_LITERAL.
                                                                 text="b", type=LOCAL_VARIABLE.
-                                                            text=":", type=STRNUM_LITERAL.
+                                                            text=":", type=STRING_LITERAL.
                                                         text="c", type=LOCAL_VARIABLE.
                                                 text="print", type=PRINT:
                                                     text=".", type=OPERATOR:
-                                                        text="s:1:val:", type=STRNUM_LITERAL.
+                                                        text="s:1:val:", type=STRING_LITERAL.
                                                         text="val", type=LOCAL_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
@@ -25129,7 +25137,7 @@ text="block", type=STATEMENT_BLOCK:
                                             text="for_loop_oosvar_block", type=STATEMENT_BLOCK:
                                                 text="print", type=PRINT:
                                                     text=".", type=OPERATOR:
-                                                        text="s:2:k:", type=STRNUM_LITERAL.
+                                                        text="s:2:k:", type=STRING_LITERAL.
                                                         text="k", type=LOCAL_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
@@ -25150,9 +25158,9 @@ text="block", type=STATEMENT_BLOCK:
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
                                                             text=".", type=OPERATOR:
-                                                                text="s:3:k:", type=STRNUM_LITERAL.
+                                                                text="s:3:k:", type=STRING_LITERAL.
                                                                 text="k", type=LOCAL_VARIABLE.
-                                                            text="v:", type=STRNUM_LITERAL.
+                                                            text="v:", type=STRING_LITERAL.
                                                         text="v", type=LOCAL_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
@@ -25208,7 +25216,7 @@ text="block", type=STATEMENT_BLOCK:
                                             text="sum", type=LOCAL_VARIABLE.
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
-                                                text="s:val:", type=STRNUM_LITERAL.
+                                                text="s:val:", type=STRING_LITERAL.
                                                 text="val", type=LOCAL_VARIABLE.
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
@@ -25216,7 +25224,7 @@ text="block", type=STATEMENT_BLOCK:
     text="begin", type=BEGIN:
         text="begin_block", type=STATEMENT_BLOCK:
             text="print", type=PRINT:
-                text="BEGIN", type=STRNUM_LITERAL.
+                text="BEGIN", type=STRING_LITERAL.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
             text="=", type=OOSVAR_ASSIGNMENT:
@@ -25259,7 +25267,7 @@ text="block", type=STATEMENT_BLOCK:
                                             text="for_loop_oosvar_block", type=STATEMENT_BLOCK:
                                                 text="print", type=PRINT:
                                                     text=".", type=OPERATOR:
-                                                        text="b:2:k:", type=STRNUM_LITERAL.
+                                                        text="b:2:k:", type=STRING_LITERAL.
                                                         text="k", type=LOCAL_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
@@ -25280,9 +25288,9 @@ text="block", type=STATEMENT_BLOCK:
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
                                                             text=".", type=OPERATOR:
-                                                                text="b:3:k:", type=STRNUM_LITERAL.
+                                                                text="b:3:k:", type=STRING_LITERAL.
                                                                 text="k", type=LOCAL_VARIABLE.
-                                                            text="v:", type=STRNUM_LITERAL.
+                                                            text="v:", type=STRING_LITERAL.
                                                         text="v", type=LOCAL_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
@@ -25338,12 +25346,12 @@ text="block", type=STATEMENT_BLOCK:
                                             text="sum", type=LOCAL_VARIABLE.
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
-                                                text="b:val:", type=STRNUM_LITERAL.
+                                                text="b:val:", type=STRING_LITERAL.
                                                 text="val", type=LOCAL_VARIABLE.
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
     text="print", type=PRINT:
-        text="MAIN", type=STRNUM_LITERAL.
+        text="MAIN", type=STRING_LITERAL.
         text=">", type=FILE_WRITE:
             text="stdout", type=STDOUT:
     text="=", type=OOSVAR_ASSIGNMENT:
@@ -25380,7 +25388,7 @@ text="block", type=STATEMENT_BLOCK:
                                             text="v", type=LOCAL_VARIABLE.
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
-                                                text="m:1:val:", type=STRNUM_LITERAL.
+                                                text="m:1:val:", type=STRING_LITERAL.
                                                 text="val", type=LOCAL_VARIABLE.
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
@@ -25396,7 +25404,7 @@ text="block", type=STATEMENT_BLOCK:
                                     text="for_loop_oosvar_block", type=STATEMENT_BLOCK:
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
-                                                text="m:2:k:", type=STRNUM_LITERAL.
+                                                text="m:2:k:", type=STRING_LITERAL.
                                                 text="k", type=LOCAL_VARIABLE.
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
@@ -25417,9 +25425,9 @@ text="block", type=STATEMENT_BLOCK:
                                             text=".", type=OPERATOR:
                                                 text=".", type=OPERATOR:
                                                     text=".", type=OPERATOR:
-                                                        text="m:3:k:", type=STRNUM_LITERAL.
+                                                        text="m:3:k:", type=STRING_LITERAL.
                                                         text="k", type=LOCAL_VARIABLE.
-                                                    text="v:", type=STRNUM_LITERAL.
+                                                    text="v:", type=STRING_LITERAL.
                                                 text="v", type=LOCAL_VARIABLE.
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
@@ -25475,7 +25483,7 @@ text="block", type=STATEMENT_BLOCK:
                                     text="sum", type=LOCAL_VARIABLE.
                                 text="print", type=PRINT:
                                     text=".", type=OPERATOR:
-                                        text="m:val:", type=STRNUM_LITERAL.
+                                        text="m:val:", type=STRING_LITERAL.
                                         text="val", type=LOCAL_VARIABLE.
                                     text=">", type=FILE_WRITE:
                                         text="stdout", type=STDOUT:
@@ -25496,7 +25504,7 @@ text="block", type=STATEMENT_BLOCK:
     text="end", type=END:
         text="end_block", type=STATEMENT_BLOCK:
             text="print", type=PRINT:
-                text="END", type=STRNUM_LITERAL.
+                text="END", type=STRING_LITERAL.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
             text="=", type=OOSVAR_ASSIGNMENT:
@@ -25539,7 +25547,7 @@ text="block", type=STATEMENT_BLOCK:
                                             text="for_loop_oosvar_block", type=STATEMENT_BLOCK:
                                                 text="print", type=PRINT:
                                                     text=".", type=OPERATOR:
-                                                        text="e:2:k:", type=STRNUM_LITERAL.
+                                                        text="e:2:k:", type=STRING_LITERAL.
                                                         text="k", type=LOCAL_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
@@ -25560,9 +25568,9 @@ text="block", type=STATEMENT_BLOCK:
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
                                                             text=".", type=OPERATOR:
-                                                                text="e:3:k:", type=STRNUM_LITERAL.
+                                                                text="e:3:k:", type=STRING_LITERAL.
                                                                 text="k", type=LOCAL_VARIABLE.
-                                                            text="v:", type=STRNUM_LITERAL.
+                                                            text="v:", type=STRING_LITERAL.
                                                         text="v", type=LOCAL_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
@@ -25618,7 +25626,7 @@ text="block", type=STATEMENT_BLOCK:
                                             text="sum", type=LOCAL_VARIABLE.
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
-                                                text="e:val:", type=STRNUM_LITERAL.
+                                                text="e:val:", type=STRING_LITERAL.
                                                 text="val", type=LOCAL_VARIABLE.
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
@@ -26180,15 +26188,15 @@ text="f", type=FUNC_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                                                 text=".", type=OPERATOR:
                                                                     text=".", type=OPERATOR:
                                                                         text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=6
-                                                                        text=":", type=STRNUM_LITERAL.
+                                                                        text=":", type=STRING_LITERAL.
                                                                     text="a", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
-                                                                text=":", type=STRNUM_LITERAL.
+                                                                text=":", type=STRING_LITERAL.
                                                             text="b", type=LOCAL_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
-                                                        text=":", type=STRNUM_LITERAL.
+                                                        text=":", type=STRING_LITERAL.
                                                     text="c", type=LOCAL_VARIABLE. vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
                                             text="print", type=PRINT:
                                                 text=".", type=OPERATOR:
-                                                    text="f:1:val:", type=STRNUM_LITERAL.
+                                                    text="f:1:val:", type=STRING_LITERAL.
                                                     text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
@@ -26204,7 +26212,7 @@ text="f", type=FUNC_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                         text="for_loop_oosvar_block", type=STATEMENT_BLOCK:
                                             text="print", type=PRINT:
                                                 text=".", type=OPERATOR:
-                                                    text="f:2:k:", type=STRNUM_LITERAL.
+                                                    text="f:2:k:", type=STRING_LITERAL.
                                                     text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=5
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
@@ -26225,9 +26233,9 @@ text="f", type=FUNC_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                                 text=".", type=OPERATOR:
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
-                                                            text="f:3:k:", type=STRNUM_LITERAL.
+                                                            text="f:3:k:", type=STRING_LITERAL.
                                                             text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=5
-                                                        text="v:", type=STRNUM_LITERAL.
+                                                        text="v:", type=STRING_LITERAL.
                                                     text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=6
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
@@ -26283,7 +26291,7 @@ text="f", type=FUNC_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                         text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
                                     text="print", type=PRINT:
                                         text=".", type=OPERATOR:
-                                            text="f:val:", type=STRNUM_LITERAL.
+                                            text="f:val:", type=STRING_LITERAL.
                                             text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
                                         text=">", type=FILE_WRITE:
                                             text="stdout", type=STDOUT:
@@ -26334,15 +26342,15 @@ text="s", type=SUBR_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                                                 text=".", type=OPERATOR:
                                                                     text=".", type=OPERATOR:
                                                                         text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=6
-                                                                        text=":", type=STRNUM_LITERAL.
+                                                                        text=":", type=STRING_LITERAL.
                                                                     text="a", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
-                                                                text=":", type=STRNUM_LITERAL.
+                                                                text=":", type=STRING_LITERAL.
                                                             text="b", type=LOCAL_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
-                                                        text=":", type=STRNUM_LITERAL.
+                                                        text=":", type=STRING_LITERAL.
                                                     text="c", type=LOCAL_VARIABLE. vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
                                             text="print", type=PRINT:
                                                 text=".", type=OPERATOR:
-                                                    text="s:1:val:", type=STRNUM_LITERAL.
+                                                    text="s:1:val:", type=STRING_LITERAL.
                                                     text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
@@ -26358,7 +26366,7 @@ text="s", type=SUBR_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                         text="for_loop_oosvar_block", type=STATEMENT_BLOCK:
                                             text="print", type=PRINT:
                                                 text=".", type=OPERATOR:
-                                                    text="s:2:k:", type=STRNUM_LITERAL.
+                                                    text="s:2:k:", type=STRING_LITERAL.
                                                     text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=5
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
@@ -26379,9 +26387,9 @@ text="s", type=SUBR_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                                 text=".", type=OPERATOR:
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
-                                                            text="s:3:k:", type=STRNUM_LITERAL.
+                                                            text="s:3:k:", type=STRING_LITERAL.
                                                             text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=5
-                                                        text="v:", type=STRNUM_LITERAL.
+                                                        text="v:", type=STRING_LITERAL.
                                                     text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=6
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
@@ -26437,7 +26445,7 @@ text="s", type=SUBR_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                         text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
                                     text="print", type=PRINT:
                                         text=".", type=OPERATOR:
-                                            text="s:val:", type=STRNUM_LITERAL.
+                                            text="s:val:", type=STRING_LITERAL.
                                             text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
                                         text=">", type=FILE_WRITE:
                                             text="stdout", type=STDOUT:
@@ -26447,7 +26455,7 @@ BEGIN-BLOCK:
 text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=6 max_var_depth=6
     text="begin_block", type=STATEMENT_BLOCK:
         text="print", type=PRINT:
-            text="BEGIN", type=STRNUM_LITERAL.
+            text="BEGIN", type=STRING_LITERAL.
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
         text="=", type=OOSVAR_ASSIGNMENT:
@@ -26490,7 +26498,7 @@ text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=6 max_var_dept
                                         text="for_loop_oosvar_block", type=STATEMENT_BLOCK:
                                             text="print", type=PRINT:
                                                 text=".", type=OPERATOR:
-                                                    text="b:2:k:", type=STRNUM_LITERAL.
+                                                    text="b:2:k:", type=STRING_LITERAL.
                                                     text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
@@ -26511,9 +26519,9 @@ text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=6 max_var_dept
                                                 text=".", type=OPERATOR:
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
-                                                            text="b:3:k:", type=STRNUM_LITERAL.
+                                                            text="b:3:k:", type=STRING_LITERAL.
                                                             text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
-                                                        text="v:", type=STRNUM_LITERAL.
+                                                        text="v:", type=STRING_LITERAL.
                                                     text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=4
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
@@ -26569,7 +26577,7 @@ text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=6 max_var_dept
                                         text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
                                     text="print", type=PRINT:
                                         text=".", type=OPERATOR:
-                                            text="b:val:", type=STRNUM_LITERAL.
+                                            text="b:val:", type=STRING_LITERAL.
                                             text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
                                         text=">", type=FILE_WRITE:
                                             text="stdout", type=STDOUT:
@@ -26578,7 +26586,7 @@ END-BLOCK:
 text="end", type=END: subframe_var_count=1 max_subframe_depth=6 max_var_depth=6
     text="end_block", type=STATEMENT_BLOCK:
         text="print", type=PRINT:
-            text="END", type=STRNUM_LITERAL.
+            text="END", type=STRING_LITERAL.
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
         text="=", type=OOSVAR_ASSIGNMENT:
@@ -26621,7 +26629,7 @@ text="end", type=END: subframe_var_count=1 max_subframe_depth=6 max_var_depth=6
                                         text="for_loop_oosvar_block", type=STATEMENT_BLOCK:
                                             text="print", type=PRINT:
                                                 text=".", type=OPERATOR:
-                                                    text="e:2:k:", type=STRNUM_LITERAL.
+                                                    text="e:2:k:", type=STRING_LITERAL.
                                                     text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
@@ -26642,9 +26650,9 @@ text="end", type=END: subframe_var_count=1 max_subframe_depth=6 max_var_depth=6
                                                 text=".", type=OPERATOR:
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
-                                                            text="e:3:k:", type=STRNUM_LITERAL.
+                                                            text="e:3:k:", type=STRING_LITERAL.
                                                             text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
-                                                        text="v:", type=STRNUM_LITERAL.
+                                                        text="v:", type=STRING_LITERAL.
                                                     text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=4
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
@@ -26700,7 +26708,7 @@ text="end", type=END: subframe_var_count=1 max_subframe_depth=6 max_var_depth=6
                                         text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
                                     text="print", type=PRINT:
                                         text=".", type=OPERATOR:
-                                            text="e:val:", type=STRNUM_LITERAL.
+                                            text="e:val:", type=STRING_LITERAL.
                                             text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
                                         text=">", type=FILE_WRITE:
                                             text="stdout", type=STDOUT:
@@ -26708,7 +26716,7 @@ text="end", type=END: subframe_var_count=1 max_subframe_depth=6 max_var_depth=6
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=6 max_var_depth=5
     text="print", type=PRINT:
-        text="MAIN", type=STRNUM_LITERAL.
+        text="MAIN", type=STRING_LITERAL.
         text=">", type=FILE_WRITE:
             text="stdout", type=STDOUT:
     text="=", type=OOSVAR_ASSIGNMENT:
@@ -26745,7 +26753,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                                             text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=3
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
-                                                text="m:1:val:", type=STRNUM_LITERAL.
+                                                text="m:1:val:", type=STRING_LITERAL.
                                                 text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
@@ -26761,7 +26769,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                                     text="for_loop_oosvar_block", type=STATEMENT_BLOCK:
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
-                                                text="m:2:k:", type=STRNUM_LITERAL.
+                                                text="m:2:k:", type=STRING_LITERAL.
                                                 text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=2
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
@@ -26782,9 +26790,9 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                                             text=".", type=OPERATOR:
                                                 text=".", type=OPERATOR:
                                                     text=".", type=OPERATOR:
-                                                        text="m:3:k:", type=STRNUM_LITERAL.
+                                                        text="m:3:k:", type=STRING_LITERAL.
                                                         text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=2
-                                                    text="v:", type=STRNUM_LITERAL.
+                                                    text="v:", type=STRING_LITERAL.
                                                 text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=3
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
@@ -26840,7 +26848,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                                     text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=2
                                 text="print", type=PRINT:
                                     text=".", type=OPERATOR:
-                                        text="m:val:", type=STRNUM_LITERAL.
+                                        text="m:val:", type=STRING_LITERAL.
                                         text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
                                     text=">", type=FILE_WRITE:
                                         text="stdout", type=STDOUT:
@@ -28123,30 +28131,30 @@ RAW AST:
 AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="=", type=INDIRECT_SREC_ASSIGNMENT:
-        text="a", type=STRNUM_LITERAL.
+        text="a", type=STRING_LITERAL.
         text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-            text="b", type=STRNUM_LITERAL.
+            text="b", type=STRING_LITERAL.
     text="=", type=INDIRECT_SREC_ASSIGNMENT:
-        text="x", type=STRNUM_LITERAL.
+        text="x", type=STRING_LITERAL.
         text="*", type=OPERATOR:
             text="10", type=STRNUM_LITERAL.
             text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                text="y", type=STRNUM_LITERAL.
+                text="y", type=STRING_LITERAL.
 
 BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
     text="=", type=INDIRECT_SREC_ASSIGNMENT:
-        text="a", type=STRNUM_LITERAL.
+        text="a", type=STRING_LITERAL.
         text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-            text="b", type=STRNUM_LITERAL.
+            text="b", type=STRING_LITERAL.
     text="=", type=INDIRECT_SREC_ASSIGNMENT:
-        text="x", type=STRNUM_LITERAL.
+        text="x", type=STRING_LITERAL.
         text="*", type=OPERATOR:
             text="10", type=STRNUM_LITERAL.
             text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                text="y", type=STRNUM_LITERAL.
+                text="y", type=STRING_LITERAL.
 
 a=pan,b=pan,i=1,x=7.268029,y=0.7268028627434533
 a=pan,b=pan,i=2,x=5.221511,y=0.5221511083334797
@@ -28191,7 +28199,7 @@ text="block", type=STATEMENT_BLOCK:
     text="=", type=SREC_ASSIGNMENT:
         text="u", type=FIELD_NAME.
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="s", type=STRNUM_LITERAL.
+            text="s", type=STRING_LITERAL.
     text="=", type=SREC_ASSIGNMENT:
         text="v", type=FIELD_NAME.
         text="-", type=OPERATOR:
@@ -28213,7 +28221,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
     text="=", type=SREC_ASSIGNMENT:
         text="u", type=FIELD_NAME.
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="s", type=STRNUM_LITERAL.
+            text="s", type=STRING_LITERAL.
     text="=", type=SREC_ASSIGNMENT:
         text="v", type=FIELD_NAME.
         text="-", type=OPERATOR:
@@ -28240,13 +28248,13 @@ text="block", type=STATEMENT_BLOCK:
     text="=", type=OOSVAR_ASSIGNMENT:
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
             text="t", type=STRING_LITERAL.
-            text="u", type=STRNUM_LITERAL.
+            text="u", type=STRING_LITERAL.
         text="NR", type=CONTEXT_VARIABLE.
     text="=", type=SREC_ASSIGNMENT:
         text="tu", type=FIELD_NAME.
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="t", type=STRNUM_LITERAL.
-            text="u", type=STRNUM_LITERAL.
+            text="t", type=STRING_LITERAL.
+            text="u", type=STRING_LITERAL.
     text="emitp", type=EMITP:
         text="emitp", type=EMITP:
             text="all", type=ALL.
@@ -28259,13 +28267,13 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
     text="=", type=OOSVAR_ASSIGNMENT:
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
             text="t", type=STRING_LITERAL.
-            text="u", type=STRNUM_LITERAL.
+            text="u", type=STRING_LITERAL.
         text="NR", type=CONTEXT_VARIABLE.
     text="=", type=SREC_ASSIGNMENT:
         text="tu", type=FIELD_NAME.
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="t", type=STRNUM_LITERAL.
-            text="u", type=STRNUM_LITERAL.
+            text="t", type=STRING_LITERAL.
+            text="u", type=STRING_LITERAL.
     text="emitp", type=EMITP:
         text="emitp", type=EMITP:
             text="all", type=ALL.
@@ -28300,13 +28308,13 @@ text="block", type=STATEMENT_BLOCK:
     text="=", type=OOSVAR_ASSIGNMENT:
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
             text="t", type=STRING_LITERAL.
-            text="u", type=STRNUM_LITERAL.
+            text="u", type=STRING_LITERAL.
         text="NR", type=CONTEXT_VARIABLE.
     text="=", type=SREC_ASSIGNMENT:
         text="tu", type=FIELD_NAME.
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="t", type=STRNUM_LITERAL.
-            text="u", type=STRNUM_LITERAL.
+            text="t", type=STRING_LITERAL.
+            text="u", type=STRING_LITERAL.
     text="emitp", type=EMITP:
         text="emitp", type=EMITP:
             text="@*", type=FULL_OOSVAR.
@@ -28319,13 +28327,13 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
     text="=", type=OOSVAR_ASSIGNMENT:
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
             text="t", type=STRING_LITERAL.
-            text="u", type=STRNUM_LITERAL.
+            text="u", type=STRING_LITERAL.
         text="NR", type=CONTEXT_VARIABLE.
     text="=", type=SREC_ASSIGNMENT:
         text="tu", type=FIELD_NAME.
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="t", type=STRNUM_LITERAL.
-            text="u", type=STRNUM_LITERAL.
+            text="t", type=STRING_LITERAL.
+            text="u", type=STRING_LITERAL.
     text="emitp", type=EMITP:
         text="emitp", type=EMITP:
             text="@*", type=FULL_OOSVAR.
@@ -28359,7 +28367,7 @@ AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="=", type=OOSVAR_ASSIGNMENT:
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="s", type=STRNUM_LITERAL.
+            text="s", type=STRING_LITERAL.
         text="x", type=FIELD_NAME.
     text="emitp", type=EMITP:
         text="emitp", type=EMITP:
@@ -28372,7 +28380,7 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
     text="=", type=OOSVAR_ASSIGNMENT:
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="s", type=STRNUM_LITERAL.
+            text="s", type=STRING_LITERAL.
         text="x", type=FIELD_NAME.
     text="emitp", type=EMITP:
         text="emitp", type=EMITP:
@@ -28407,8 +28415,8 @@ AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="=", type=OOSVAR_ASSIGNMENT:
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="t", type=STRNUM_LITERAL.
-            text="u", type=STRNUM_LITERAL.
+            text="t", type=STRING_LITERAL.
+            text="u", type=STRING_LITERAL.
         text="y", type=FIELD_NAME.
     text="emitp", type=EMITP:
         text="emitp", type=EMITP:
@@ -28421,8 +28429,8 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
     text="=", type=OOSVAR_ASSIGNMENT:
         text="oosvar_keylist", type=OOSVAR_KEYLIST:
-            text="t", type=STRNUM_LITERAL.
-            text="u", type=STRNUM_LITERAL.
+            text="t", type=STRING_LITERAL.
+            text="u", type=STRING_LITERAL.
         text="y", type=FIELD_NAME.
     text="emitp", type=EMITP:
         text="emitp", type=EMITP:
@@ -28676,7 +28684,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="if", type=IF_ITEM:
                     text="!=", type=OPERATOR:
                         text="k", type=LOCAL_VARIABLE.
-                        text="x", type=STRNUM_LITERAL.
+                        text="x", type=STRING_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK:
                         text="unset", type=UNSET:
                             text="indirect_field_name", type=INDIRECT_FIELD_NAME:
@@ -28698,7 +28706,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                 text="if", type=IF_ITEM:
                     text="!=", type=OPERATOR:
                         text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                        text="x", type=STRNUM_LITERAL.
+                        text="x", type=STRING_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
                         text="unset", type=UNSET:
                             text="indirect_field_name", type=INDIRECT_FIELD_NAME:
@@ -28731,11 +28739,11 @@ text="block", type=STATEMENT_BLOCK:
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
                 text=".", type=OPERATOR:
                     text="k", type=LOCAL_VARIABLE.
-                    text="_orig", type=STRNUM_LITERAL.
+                    text="_orig", type=STRING_LITERAL.
                 text="v", type=LOCAL_VARIABLE.
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
                 text="k", type=LOCAL_VARIABLE.
-                text="other", type=STRNUM_LITERAL.
+                text="other", type=STRING_LITERAL.
 
 BLOCKED AST:
 
@@ -28749,11 +28757,11 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
                 text=".", type=OPERATOR:
                     text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                    text="_orig", type=STRNUM_LITERAL.
+                    text="_orig", type=STRING_LITERAL.
                 text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
                 text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="other", type=STRNUM_LITERAL.
+                text="other", type=STRING_LITERAL.
 
 a     b     i     x     y     a_orig b_orig i_orig x_orig              y_orig
 other other other other other pan    pan    1      0.3467901443380824  0.7268028627434533
@@ -28828,7 +28836,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="if", type=IF_ITEM:
                     text="=~", type=OPERATOR:
                         text="k", type=LOCAL_VARIABLE.
-                        text="^[xy]$", type=STRNUM_LITERAL.
+                        text="^[xy]$", type=STRING_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK:
                         text="=", type=SREC_ASSIGNMENT:
                             text="sum", type=FIELD_NAME.
@@ -28853,7 +28861,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                 text="if", type=IF_ITEM:
                     text="=~", type=OPERATOR:
                         text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                        text="^[xy]$", type=STRNUM_LITERAL.
+                        text="^[xy]$", type=STRING_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
                         text="=", type=SREC_ASSIGNMENT:
                             text="sum", type=FIELD_NAME.
@@ -28897,7 +28905,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="if", type=IF_ITEM:
                     text="=~", type=OPERATOR:
                         text="k", type=LOCAL_VARIABLE.
-                        text="^[xy]$", type=STRNUM_LITERAL.
+                        text="^[xy]$", type=STRING_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK:
                         text="=", type=SREC_ASSIGNMENT:
                             text="sum", type=FIELD_NAME.
@@ -28924,7 +28932,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                 text="if", type=IF_ITEM:
                     text="=~", type=OPERATOR:
                         text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                        text="^[xy]$", type=STRNUM_LITERAL.
+                        text="^[xy]$", type=STRING_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
                         text="=", type=SREC_ASSIGNMENT:
                             text="sum", type=FIELD_NAME.
@@ -28969,7 +28977,7 @@ text="block", type=STATEMENT_BLOCK:
             text="o", type=STRING_LITERAL.
             text="1", type=STRNUM_LITERAL.
             text="1", type=STRNUM_LITERAL.
-            text="text1", type=STRNUM_LITERAL.
+            text="text1", type=STRING_LITERAL.
             text="NR", type=CONTEXT_VARIABLE.
         text="a", type=FIELD_NAME.
     text="=", type=OOSVAR_ASSIGNMENT:
@@ -28977,7 +28985,7 @@ text="block", type=STATEMENT_BLOCK:
             text="o", type=STRING_LITERAL.
             text="1", type=STRNUM_LITERAL.
             text="2", type=STRNUM_LITERAL.
-            text="text2", type=STRNUM_LITERAL.
+            text="text2", type=STRING_LITERAL.
             text="NR", type=CONTEXT_VARIABLE.
         text="b", type=FIELD_NAME.
     text="=", type=OOSVAR_ASSIGNMENT:
@@ -29016,10 +29024,10 @@ text="block", type=STATEMENT_BLOCK:
                     text="oosvar_keylist", type=OOSVAR_KEYLIST:
                         text="n", type=STRING_LITERAL.
                     text="emit_namelist", type=EMIT:
-                        text="a", type=STRNUM_LITERAL.
-                        text="b", type=STRNUM_LITERAL.
-                        text="c", type=STRNUM_LITERAL.
-                        text="d", type=STRNUM_LITERAL.
+                        text="a", type=STRING_LITERAL.
+                        text="b", type=STRING_LITERAL.
+                        text="c", type=STRING_LITERAL.
+                        text="d", type=STRING_LITERAL.
                 text="stream", type=STREAM:
 
 BLOCKED AST:
@@ -29032,10 +29040,10 @@ text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
                 text="oosvar_keylist", type=OOSVAR_KEYLIST:
                     text="n", type=STRING_LITERAL.
                 text="emit_namelist", type=EMIT:
-                    text="a", type=STRNUM_LITERAL.
-                    text="b", type=STRNUM_LITERAL.
-                    text="c", type=STRNUM_LITERAL.
-                    text="d", type=STRNUM_LITERAL.
+                    text="a", type=STRING_LITERAL.
+                    text="b", type=STRING_LITERAL.
+                    text="c", type=STRING_LITERAL.
+                    text="d", type=STRING_LITERAL.
             text="stream", type=STREAM:
 
 MAIN BLOCK:
@@ -29045,7 +29053,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
             text="o", type=STRING_LITERAL.
             text="1", type=STRNUM_LITERAL.
             text="1", type=STRNUM_LITERAL.
-            text="text1", type=STRNUM_LITERAL.
+            text="text1", type=STRING_LITERAL.
             text="NR", type=CONTEXT_VARIABLE.
         text="a", type=FIELD_NAME.
     text="=", type=OOSVAR_ASSIGNMENT:
@@ -29053,7 +29061,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
             text="o", type=STRING_LITERAL.
             text="1", type=STRNUM_LITERAL.
             text="2", type=STRNUM_LITERAL.
-            text="text2", type=STRNUM_LITERAL.
+            text="text2", type=STRING_LITERAL.
             text="NR", type=CONTEXT_VARIABLE.
         text="b", type=FIELD_NAME.
     text="=", type=OOSVAR_ASSIGNMENT:
@@ -44657,7 +44665,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="1", type=STRNUM_LITERAL.
             text="print", type=PRINT:
                 text=".", type=OPERATOR:
-                    text="local1 = ", type=STRNUM_LITERAL.
+                    text="local1 = ", type=STRING_LITERAL.
                     text="ell", type=LOCAL_VARIABLE.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
@@ -44673,7 +44681,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="2", type=STRNUM_LITERAL.
             text="print", type=PRINT:
                 text=".", type=OPERATOR:
-                    text="local2 = ", type=STRNUM_LITERAL.
+                    text="local2 = ", type=STRING_LITERAL.
                     text="emm", type=LOCAL_VARIABLE.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
@@ -44696,7 +44704,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="0", type=STRNUM_LITERAL.
             text="print", type=PRINT:
                 text=".", type=OPERATOR:
-                    text="local3 = ", type=STRNUM_LITERAL.
+                    text="local3 = ", type=STRING_LITERAL.
                     text="ell", type=LOCAL_VARIABLE.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
@@ -44728,7 +44736,7 @@ text="block", type=STATEMENT_BLOCK:
                 text="stream", type=STREAM:
             text="print", type=PRINT:
                 text=".", type=OPERATOR:
-                    text="local4 = ", type=STRNUM_LITERAL.
+                    text="local4 = ", type=STRING_LITERAL.
                     text="emm", type=LOCAL_VARIABLE.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
@@ -44783,7 +44791,7 @@ text="begin", type=BEGIN: subframe_var_count=2 max_subframe_depth=1 max_var_dept
             text="1", type=STRNUM_LITERAL.
         text="print", type=PRINT:
             text=".", type=OPERATOR:
-                text="local1 = ", type=STRNUM_LITERAL.
+                text="local1 = ", type=STRING_LITERAL.
                 text="ell", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
@@ -44801,7 +44809,7 @@ text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_dept
             text="0", type=STRNUM_LITERAL.
         text="print", type=PRINT:
             text=".", type=OPERATOR:
-                text="local3 = ", type=STRNUM_LITERAL.
+                text="local3 = ", type=STRING_LITERAL.
                 text="ell", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
@@ -44819,7 +44827,7 @@ text="end", type=END: subframe_var_count=2 max_subframe_depth=1 max_var_depth=2
             text="2", type=STRNUM_LITERAL.
         text="print", type=PRINT:
             text=".", type=OPERATOR:
-                text="local2 = ", type=STRNUM_LITERAL.
+                text="local2 = ", type=STRING_LITERAL.
                 text="emm", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
@@ -44839,7 +44847,7 @@ text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
             text="stream", type=STREAM:
         text="print", type=PRINT:
             text=".", type=OPERATOR:
-                text="local4 = ", type=STRNUM_LITERAL.
+                text="local4 = ", type=STRING_LITERAL.
                 text="emm", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:

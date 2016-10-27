@@ -1,13 +1,7 @@
 ================================================================
 BUGFIXES
 
-* differentiate type-inference on srecs from type-inference on literals:
-
-  $ ../c/mlr --from ../c/s put 'int a="3"'
-  -> no error
-
-  $ ../c/mlr --from ../c/s put 'int a=string("3")'
-  mlr: int type assertion for variable a unmet by value "3" with type string.
+:D
 
 ================================================================
 NON-RELEASE:
@@ -25,6 +19,14 @@ NON-RELEASE:
 FUNCTIONALITY FOR 5.0.0:
 
 * mapvar iterate
+
+* no type-inference on literals
+
+  $ ../c/mlr --from ../c/s put 'int a="3"'
+  -> no error
+
+  $ ../c/mlr --from ../c/s put 'int a=string("3")'
+  mlr: int type assertion for variable a unmet by value "3" with type string.
 
 ----------------------------------------------------------------
 MAPVARS:
@@ -174,6 +176,7 @@ perf note:
 
 MAJOR BECAUSE:
 * new keywords
+* no type-inference on literals: "3"+4 != 7
 * note this isn't huge. as w/ previous majors.
 
 DSL:

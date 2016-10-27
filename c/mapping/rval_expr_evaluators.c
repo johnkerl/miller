@@ -39,7 +39,17 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 			return rval_evaluator_alloc_from_field_name(pnode->text, type_inferencing);
 			break;
 
+		case MD_AST_NODE_TYPE_STRING_LITERAL:
+			// In input data such as echo x=3,y=4 | mlr put '$z=$x+$y', the 3 and 4 are strings
+			// which need parsing as integers. But in DSL expression literals such as 'put $z = "3" + 4'
+			// the "3" should not.
+			return rval_evaluator_alloc_from_strnum_literal(pnode->text, TYPE_INFER_STRING_ONLY);
+			break;
+
 		case MD_AST_NODE_TYPE_STRNUM_LITERAL:
+			// In input data such as echo x=3,y=4 | mlr put '$z=$x+$y', the 3 and 4 are strings
+			// which need parsing as integers. But in DSL expression literals such as 'put $z = "3" + 4'
+			// the "3" should not.
 			return rval_evaluator_alloc_from_strnum_literal(pnode->text, type_inferencing);
 			break;
 
