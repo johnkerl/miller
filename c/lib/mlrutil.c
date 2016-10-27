@@ -102,7 +102,7 @@ void* mlr_realloc_or_die(void *optr, size_t size) {
 }
 
 // ----------------------------------------------------------------
-char * mlr_strdup_quoted_or_die(const char *s1) { // xxx UT
+char * mlr_strdup_quoted_or_die(const char *s1) {
 	int len = strlen(s1);
 	char* s2 = mlr_malloc_or_die(len+3);
 	s2[0] = '"';

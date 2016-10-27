@@ -49,7 +49,7 @@ MAPVARS:
 
 * iterating:
   k save off a copy of the mlr exe before this for timings later
-  - put mv_t -> mlhmmv_value_t @ localstack etc. but keep using u.mlrval and assume u.is_terminal
+  k put mv_t -> mlhmmv_value_t @ localstack etc. but keep using u.mlrval and assume u.is_terminal
   - add in the grammar mods for each case one at a time & stub out the alloc/handle sites one at a time
   - fullimpl the alloc/handle sites one at a time
   ! timings before & after ! really i don't want to ship without the map feature but its cost

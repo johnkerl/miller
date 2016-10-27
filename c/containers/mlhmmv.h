@@ -48,7 +48,13 @@ typedef struct _mlhmmv_level_entry_t {
 
 typedef unsigned char mlhmmv_level_entry_state_t;
 
-static inline mlhmmv_value_t xxx_temp_wrap(mv_t val) { // xxx temp
+// Store a mlrval into the mlhmmv_value without copying, implicitly transferring
+// ownership of the mlrval's free_flags. This means the mlrval will be freed
+// when the mlhmmv_value is freed, so the caller should make a copy first if
+// necessary.
+//
+// This is a hot path for non-map local-variable assignments.
+static inline mlhmmv_value_t mlhmmv_value_transfer_terminal(mv_t val) {
 	return (mlhmmv_value_t) {.is_terminal = TRUE, .u.mlrval = val};
 }
 
