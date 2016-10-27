@@ -121,6 +121,7 @@ md_statement_not_braced_end(A) ::= md_boolean_local_definition(B). { A = B; }
 md_statement_not_braced_end(A) ::= md_string_local_definition(B).  { A = B; }
 md_statement_not_braced_end(A) ::= md_map_local_declaration(B).    { A = B; }
 md_statement_not_braced_end(A) ::= md_local_assignment(B).         { A = B; }
+md_statement_not_braced_end(A) ::= md_local_map_assignment(B).     { A = B; }
 
 // For user-defined functions
 md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN md_rhs(B). {
@@ -659,6 +660,9 @@ md_map_local_declaration(A) ::= MD_TOKEN_MAP md_local_variable(N). {
 }
 
 md_local_assignment(A)  ::= md_local_variable(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT, B, C);
+}
+md_local_map_assignment(A)  ::= md_indexed_local_variable(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT, B, C);
 }
 
@@ -1991,6 +1995,12 @@ md_atom_or_fcn(A) ::= md_local_variable(B). {
 }
 md_local_variable(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_LOCAL_VARIABLE);
+}
+md_indexed_local_variable(A) ::= md_local_variable(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
+	A = mlr_dsl_ast_node_alloc_binary("xxx", MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE, B, C);
+}
+md_indexed_local_variable(A) ::= md_indexed_local_variable(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
+	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
 md_string(A) ::= MD_TOKEN_STRING(B). {

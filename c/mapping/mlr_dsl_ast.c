@@ -306,6 +306,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FOR_VARIABLES:                    return "FOR_VARIABLES";                    break;
 	case MD_AST_NODE_TYPE_TRIPLE_FOR:                       return "TRIPLE_FOR";                       break;
 	case MD_AST_NODE_TYPE_LOCAL_VARIABLE:                   return "LOCAL_VARIABLE";                   break;
+	case MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE:               return "LOCAL_MAP_VARIABLE";               break;
 	case MD_AST_NODE_TYPE_IN:                               return "IN";                               break;
 	case MD_AST_NODE_TYPE_BREAK:                            return "BREAK";                            break;
 	case MD_AST_NODE_TYPE_CONTINUE:                         return "CONTINUE";                         break;
