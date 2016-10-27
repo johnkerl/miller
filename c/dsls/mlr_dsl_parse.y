@@ -975,6 +975,9 @@ md_unset_args(A) ::= MD_TOKEN_FULL_SREC(B). {
 md_unset_args(A) ::= md_oosvar_keylist(B). {
 	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
 }
+md_unset_args(A) ::= md_local_variable(B). {
+	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
+}
 
 md_unset_args(A) ::= md_unset_args(B) MD_TOKEN_COMMA md_field_name(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);

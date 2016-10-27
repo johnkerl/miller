@@ -110,6 +110,7 @@ static mlr_dsl_cst_statement_t* alloc_if_item(
 	int                 context_flags);
 
 static mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc(
+	int               unset_local_variable_frame_relative_index,
 	char*             emitf_or_unset_srec_field_name,
 	rval_evaluator_t* punset_srec_field_name_evaluator,
 	rval_evaluator_t* pemitf_arg_evaluator,
@@ -168,6 +169,11 @@ static void handle_for_oosvar_aux(
 	int*                     prest_for_k_frame_relative_indices,
 	int*                     prest_for_k_frame_type_masks,
 	int                      prest_for_k_count);
+
+static void handle_unset_local_variable(
+	mlr_dsl_cst_statement_vararg_t* pvararg,
+	variables_t*                    pvars,
+	cst_outputs_t*                  pcst_outputs);
 
 static void handle_unset_vararg_oosvar(
 	mlr_dsl_cst_statement_vararg_t* pvararg,
@@ -942,6 +948,7 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 				exit(1);
 			}
 			sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
+				MD_UNUSED_INDEX,
 				NULL,
 				NULL,
 				NULL,
@@ -954,6 +961,7 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 				exit(1);
 			}
 			sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
+				MD_UNUSED_INDEX,
 				pnode->text,
 				NULL,
 				NULL,
@@ -966,6 +974,7 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 				exit(1);
 			}
 			sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
+				MD_UNUSED_INDEX,
 				NULL,
 				rval_evaluator_alloc_from_ast(pnode->pchildren->phead->pvvalue, pcst->pfmgr,
 					type_inferencing, context_flags),
@@ -974,11 +983,21 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 
 		} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 			sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
+				MD_UNUSED_INDEX,
 				NULL,
 				NULL,
 				NULL,
 				allocate_keylist_evaluators_from_oosvar_node(pcst, pnode,
 					type_inferencing, context_flags)));
+
+		} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_VARIABLE) {
+			MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_frame_relative_index == MD_UNUSED_INDEX);
+			sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
+				pnode->vardef_frame_relative_index,
+				NULL,
+				NULL,
+				NULL,
+				NULL)); // xxx temp
 
 		} else {
 			MLR_INTERNAL_CODING_ERROR();
@@ -1512,6 +1531,7 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 		mlr_dsl_ast_node_t* pchild = pwalker->pchildren->phead->pvvalue;
 		// This could be enforced in the lemon parser but it's easier to do it here.
 		sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
+			MD_UNUSED_INDEX,
 			pchild->text,
 			NULL,
 			rval_evaluator_alloc_from_ast(pwalker, pcst->pfmgr, type_inferencing, context_flags),
@@ -1976,6 +1996,7 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
 // ================================================================
 static mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc(
+	int               unset_local_variable_frame_relative_index,
 	char*             emitf_or_unset_srec_field_name,
 	rval_evaluator_t* punset_srec_field_name_evaluator,
 	rval_evaluator_t* pemitf_arg_evaluator,
@@ -1983,13 +2004,16 @@ static mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc(
 {
 	mlr_dsl_cst_statement_vararg_t* pvararg = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_vararg_t));
 	pvararg->punset_handler = NULL;
+	pvararg->unset_local_variable_frame_relative_index = unset_local_variable_frame_relative_index;
 	pvararg->emitf_or_unset_srec_field_name = emitf_or_unset_srec_field_name == NULL
 		? NULL : mlr_strdup_or_die(emitf_or_unset_srec_field_name);
 	pvararg->punset_oosvar_keylist_evaluators = punset_oosvar_keylist_evaluators;
 	pvararg->punset_srec_field_name_evaluator = punset_srec_field_name_evaluator;
 	pvararg->pemitf_arg_evaluator             = pemitf_arg_evaluator;
 
-	if (pvararg->punset_oosvar_keylist_evaluators != NULL) {
+	if (pvararg->unset_local_variable_frame_relative_index != MD_UNUSED_INDEX) {
+		pvararg->punset_handler = handle_unset_local_variable;
+	} else if (pvararg->punset_oosvar_keylist_evaluators != NULL) {
 		pvararg->punset_handler = handle_unset_vararg_oosvar;
 	} else if (pvararg->punset_srec_field_name_evaluator != NULL) {
 		pvararg->punset_handler = handle_unset_vararg_indirect_srec_field_name;
@@ -2385,6 +2409,15 @@ static void handle_unset(
 		mlr_dsl_cst_statement_vararg_t* pvararg = pf->pvvalue;
 		pvararg->punset_handler(pvararg, pvars, pcst_outputs);
 	}
+}
+
+static void handle_unset_local_variable(
+	mlr_dsl_cst_statement_vararg_t* pvararg,
+	variables_t*                    pvars,
+	cst_outputs_t*                  pcst_outputs)
+{
+	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	local_stack_frame_assign(pframe, pvararg->unset_local_variable_frame_relative_index, mv_absent());
 }
 
 static void handle_unset_vararg_oosvar(

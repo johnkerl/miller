@@ -105,6 +105,7 @@ typedef void unset_vararg_handler_t(
 
 // Most statements have one item, except emit and unset.
 typedef struct _mlr_dsl_cst_statement_vararg_t {
+	int unset_local_variable_frame_relative_index;
 	unset_vararg_handler_t* punset_handler;
 	char* emitf_or_unset_srec_field_name;
 	rval_evaluator_t* punset_srec_field_name_evaluator;
