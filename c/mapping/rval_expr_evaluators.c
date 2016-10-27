@@ -43,14 +43,14 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 			// In input data such as echo x=3,y=4 | mlr put '$z=$x+$y', the 3 and 4 are strings
 			// which need parsing as integers. But in DSL expression literals such as 'put $z = "3" + 4'
 			// the "3" should not.
-			return rval_evaluator_alloc_from_strnum_literal(pnode->text, TYPE_INFER_STRING_ONLY);
+			return rval_evaluator_alloc_from_numeric_literal(pnode->text, TYPE_INFER_STRING_ONLY);
 			break;
 
-		case MD_AST_NODE_TYPE_STRNUM_LITERAL:
+		case MD_AST_NODE_TYPE_NUMERIC_LITERAL:
 			// In input data such as echo x=3,y=4 | mlr put '$z=$x+$y', the 3 and 4 are strings
 			// which need parsing as integers. But in DSL expression literals such as 'put $z = "3" + 4'
 			// the "3" should not.
-			return rval_evaluator_alloc_from_strnum_literal(pnode->text, type_inferencing);
+			return rval_evaluator_alloc_from_numeric_literal(pnode->text, type_inferencing);
 			break;
 
 		case MD_AST_NODE_TYPE_BOOLEAN_LITERAL:
@@ -58,7 +58,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 			break;
 
 		case MD_AST_NODE_TYPE_REGEXI:
-			return rval_evaluator_alloc_from_strnum_literal(pnode->text, type_inferencing);
+			return rval_evaluator_alloc_from_numeric_literal(pnode->text, type_inferencing);
 			break;
 
 		case MD_AST_NODE_TYPE_CONTEXT_VARIABLE:
@@ -298,11 +298,11 @@ static void rval_evaluator_oosvar_keylist_free(rval_evaluator_t* pevaluator) {
 //         y (field_name).
 //         oosvar_keylist (oosvar_keylist):
 //             x (string_literal).
-//             1 (strnum_literal).
-//             two (strnum_literal).
+//             1 (numeric_literal).
+//             two (numeric_literal).
 //             + (operator):
 //                 3 (field_name).
-//                 4 (strnum_literal).
+//                 4 (numeric_literal).
 //             oosvar_keylist (oosvar_keylist):
 //                 5 (string_literal).
 
@@ -342,17 +342,17 @@ rval_evaluator_t* rval_evaluator_alloc_from_oosvar_keylist(mlr_dsl_ast_node_t* p
 // Compare rval_evaluator_alloc_from_string which doesn't do regex replacement: it is intended for
 // oosvar names on expression left-hand sides (outside of this file).
 
-typedef struct _rval_evaluator_strnum_literal_state_t {
+typedef struct _rval_evaluator_numeric_literal_state_t {
 	mv_t literal;
-} rval_evaluator_strnum_literal_state_t;
+} rval_evaluator_numeric_literal_state_t;
 
 mv_t rval_evaluator_non_string_literal_func(void* pvstate, variables_t* pvars) {
-	rval_evaluator_strnum_literal_state_t* pstate = pvstate;
+	rval_evaluator_numeric_literal_state_t* pstate = pvstate;
 	return pstate->literal;
 }
 
 mv_t rval_evaluator_string_literal_func(void* pvstate, variables_t* pvars) {
-	rval_evaluator_strnum_literal_state_t* pstate = pvstate;
+	rval_evaluator_numeric_literal_state_t* pstate = pvstate;
 	char* input = pstate->literal.u.strv;
 
 	if (pvars->ppregex_captures == NULL || *pvars->ppregex_captures == NULL) {
@@ -366,15 +366,15 @@ mv_t rval_evaluator_string_literal_func(void* pvstate, variables_t* pvars) {
 			return mv_from_string_no_free(output);
 	}
 }
-static void rval_evaluator_strnum_literal_free(rval_evaluator_t* pevaluator) {
-	rval_evaluator_strnum_literal_state_t* pstate = pevaluator->pvstate;
+static void rval_evaluator_numeric_literal_free(rval_evaluator_t* pevaluator) {
+	rval_evaluator_numeric_literal_state_t* pstate = pevaluator->pvstate;
 	mv_free(&pstate->literal);
 	free(pstate);
 	free(pevaluator);
 }
 
-rval_evaluator_t* rval_evaluator_alloc_from_strnum_literal(char* string, int type_inferencing) {
-	rval_evaluator_strnum_literal_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_strnum_literal_state_t));
+rval_evaluator_t* rval_evaluator_alloc_from_numeric_literal(char* string, int type_inferencing) {
+	rval_evaluator_numeric_literal_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_numeric_literal_state_t));
 	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 
 	if (string == NULL) {
@@ -418,7 +418,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_strnum_literal(char* string, int typ
 			break;
 		}
 	}
-	pevaluator->pfree_func = rval_evaluator_strnum_literal_free;
+	pevaluator->pfree_func = rval_evaluator_numeric_literal_free;
 
 	pevaluator->pvstate = pstate;
 	return pevaluator;
@@ -426,7 +426,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_strnum_literal(char* string, int typ
 
 // ================================================================
 // This is intended only for oosvar names on expression left-hand sides (outside of this file).
-// Compare rval_evaluator_alloc_from_strnum_literal.
+// Compare rval_evaluator_alloc_from_numeric_literal.
 
 typedef struct _rval_evaluator_string_state_t {
 	char* string;
@@ -511,7 +511,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_boolean(int boolval) {
 //     y (field_name).
 //     env (env):
 //         ENV (env).
-//         X (strnum_literal).
+//         X (numeric_literal).
 // AST END STATEMENTS (0):
 
 // ----------------------------------------------------------------

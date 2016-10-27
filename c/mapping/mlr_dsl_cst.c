@@ -33,27 +33,27 @@ static void mlr_dsl_cst_resolve_subr_callsites(mlr_dsl_cst_t* pcst);
 //             text="=", type=oosvar_assignment:
 //                 text="oosvar_keylist", type=oosvar_keylist:
 //                     text="a", type=string_literal.
-//                 text="1", type=strnum_literal.
+//                 text="1", type=numeric_literal.
 //             text="=", type=oosvar_assignment:
 //                 text="oosvar_keylist", type=oosvar_keylist:
 //                     text="b", type=string_literal.
-//                 text="2", type=strnum_literal.
+//                 text="2", type=numeric_literal.
 //     text="=", type=srec_assignment:
 //         text="m", type=field_name.
-//         text="2", type=strnum_literal.
+//         text="2", type=numeric_literal.
 //     text="=", type=srec_assignment:
 //         text="n", type=field_name.
-//         text="4", type=strnum_literal.
+//         text="4", type=numeric_literal.
 //     text="end", type=end:
 //         text="list", type=statement_list:
 //             text="=", type=oosvar_assignment:
 //                 text="oosvar_keylist", type=oosvar_keylist:
 //                     text="y", type=string_literal.
-//                 text="5", type=strnum_literal.
+//                 text="5", type=numeric_literal.
 //             text="=", type=oosvar_assignment:
 //                 text="oosvar_keylist", type=oosvar_keylist:
 //                     text="z", type=string_literal.
-//                 text="6", type=strnum_literal.
+//                 text="6", type=numeric_literal.
 
 mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_stack_allocation,
 	int type_inferencing, int flush_every_record,

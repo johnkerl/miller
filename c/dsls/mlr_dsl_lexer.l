@@ -408,11 +408,11 @@
 	// 1.2e-3 1.e-3
 	// .2e3
 	// .2e-3 1.e-3
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRNUM_LITERAL);
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NUMERIC_LITERAL);
 	return MD_TOKEN_NUMBER;
 }
 0x[0-9a-fA-F]+ {
-	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRNUM_LITERAL);
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_NUMERIC_LITERAL);
 	return MD_TOKEN_NUMBER;
 }
 

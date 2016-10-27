@@ -50,10 +50,10 @@ rval_evaluator_t* rval_evaluator_alloc_from_oosvar_keylist(mlr_dsl_ast_node_t* p
 //
 // Compare rval_evaluator_alloc_from_string which doesn't do regex replacement: it is intended for
 // oosvar names on expression left-hand sides (outside of this file).
-rval_evaluator_t* rval_evaluator_alloc_from_strnum_literal(char* string, int type_inferencing);
+rval_evaluator_t* rval_evaluator_alloc_from_numeric_literal(char* string, int type_inferencing);
 
 // This is intended only for oosvar names on expression left-hand sides.
-// Compare rval_evaluator_alloc_from_strnum_literal.
+// Compare rval_evaluator_alloc_from_numeric_literal.
 rval_evaluator_t* rval_evaluator_alloc_from_string(char* string);
 
 rval_evaluator_t* rval_evaluator_alloc_from_boolean_literal(char* string);

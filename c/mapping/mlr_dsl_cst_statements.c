@@ -818,7 +818,7 @@ static mlr_dsl_cst_statement_t* alloc_srec_assignment(mlr_dsl_cst_t* pcst, mlr_d
 //     text="=", type=indirect_srec_assignment:
 //         text="oosvar_keylist", type=oosvar_keylist:
 //             text="x", type=string_literal.
-//         text="1", type=strnum_literal.
+//         text="1", type=numeric_literal.
 
 static mlr_dsl_cst_statement_t* alloc_indirect_srec_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
@@ -1070,10 +1070,10 @@ static mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 //         text="list", type=statement_list:
 //             text="=", type=srec_assignment:
 //                 text="x", type=field_name.
-//                 text="1", type=strnum_literal.
+//                 text="1", type=numeric_literal.
 //             text="=", type=srec_assignment:
 //                 text="y", type=field_name.
-//                 text="2", type=strnum_literal.
+//                 text="2", type=numeric_literal.
 
 static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
@@ -1137,15 +1137,15 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 //             text="v", type=non_sigil_name.
 //         text="oosvar_keylist", type=oosvar_keylist:
 //             text="a", type=string_literal.
-//             text="4", type=strnum_literal.
+//             text="4", type=numeric_literal.
 //             text="5", type=field_name.
 //         text="list", type=statement_list:
 //             text="=", type=srec_assignment:
 //                 text="6", type=field_name.
-//                 text="7", type=strnum_literal.
+//                 text="7", type=numeric_literal.
 //             text="=", type=srec_assignment:
 //                 text="8", type=field_name.
-//                 text="9", type=strnum_literal.
+//                 text="9", type=numeric_literal.
 
 static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
@@ -1371,33 +1371,33 @@ static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_cst_t* pcst, mlr
 //       if (if_item):
 //           == (operator):
 //               NR (context_variable).
-//               9 (strnum_literal).
+//               9 (numeric_literal).
 //           list (statement_list):
 //               = (srec_assignment):
 //                   x (field_name).
-//                   10 (strnum_literal).
+//                   10 (numeric_literal).
 //               = (srec_assignment):
 //                   x (field_name).
-//                   11 (strnum_literal).
+//                   11 (numeric_literal).
 //       elif (if_item):
 //           == (operator):
 //               NR (context_variable).
-//               12 (strnum_literal).
+//               12 (numeric_literal).
 //           list (statement_list):
 //               = (srec_assignment):
 //                   x (field_name).
-//                   13 (strnum_literal).
+//                   13 (numeric_literal).
 //               = (srec_assignment):
 //                   x (field_name).
-//                   14 (strnum_literal).
+//                   14 (numeric_literal).
 //       else (if_item):
 //           list (statement_list):
 //               = (srec_assignment):
 //                   x (field_name).
-//                   15 (strnum_literal).
+//                   15 (numeric_literal).
 //               = (srec_assignment):
 //                   x (field_name).
-//                   16 (strnum_literal).
+//                   16 (numeric_literal).
 
 static mlr_dsl_cst_statement_t* alloc_if_head(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
@@ -1568,12 +1568,12 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 //         text="emit", type=emit:
 //             text="oosvar_keylist", type=oosvar_keylist:
 //                 text="a", type=string_literal.
-//                 text="2", type=strnum_literal.
-//                 text="3", type=strnum_literal.
+//                 text="2", type=numeric_literal.
+//                 text="3", type=numeric_literal.
 //             text="emit_namelist", type=emit:
-//                 text="x", type=strnum_literal.
-//                 text="y", type=strnum_literal.
-//                 text="z", type=strnum_literal.
+//                 text="x", type=numeric_literal.
+//                 text="y", type=numeric_literal.
+//                 text="z", type=numeric_literal.
 //         text="stream", type=stream:
 //
 // $ mlr -n put -v 'emit all, "x", "y", "z"'
@@ -1583,9 +1583,9 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 //         text="emit", type=emit:
 //             text="all", type=all.
 //             text="emit_namelist", type=emit:
-//                 text="x", type=strnum_literal.
-//                 text="y", type=strnum_literal.
-//                 text="z", type=strnum_literal.
+//                 text="x", type=numeric_literal.
+//                 text="y", type=numeric_literal.
+//                 text="z", type=numeric_literal.
 //         text="stream", type=stream:
 
 static mlr_dsl_cst_statement_t* alloc_emit(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
@@ -1719,12 +1719,12 @@ static mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_a
 //     text="=", type=oosvar_assignment:
 //         text="oosvar_keylist", type=oosvar_keylist:
 //             text="x", type=string_literal.
-//             text="1", type=strnum_literal.
-//             text="2", type=strnum_literal.
+//             text="1", type=numeric_literal.
+//             text="2", type=numeric_literal.
 //             text="3", type=field_name.
 //             text="oosvar_keylist", type=oosvar_keylist:
 //                 text="4", type=string_literal.
-//         text="5", type=strnum_literal.
+//         text="5", type=numeric_literal.
 //
 // $ mlr -n put -v '@x = $y'
 // AST ROOT:
@@ -1742,9 +1742,9 @@ static mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_a
 //             text="oosvar_keylist", type=oosvar_keylist:
 //                 text="v", type=string_literal.
 //             text="emit_namelist", type=emit:
-//                 text="a", type=strnum_literal.
-//                 text="b", type=strnum_literal.
-//                 text="c", type=strnum_literal.
+//                 text="a", type=numeric_literal.
+//                 text="b", type=numeric_literal.
+//                 text="c", type=numeric_literal.
 //         text="stream", type=stream:
 //
 // $ mlr -n put -q -v 'emit @v[1][2], "a", "b","c"'
@@ -1754,12 +1754,12 @@ static mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_a
 //         text="emit", type=emit:
 //             text="oosvar_keylist", type=oosvar_keylist:
 //                 text="v", type=string_literal.
-//                 text="1", type=strnum_literal.
-//                 text="2", type=strnum_literal.
+//                 text="1", type=numeric_literal.
+//                 text="2", type=numeric_literal.
 //             text="emit_namelist", type=emit:
-//                 text="a", type=strnum_literal.
-//                 text="b", type=strnum_literal.
-//                 text="c", type=strnum_literal.
+//                 text="a", type=numeric_literal.
+//                 text="b", type=numeric_literal.
+//                 text="c", type=numeric_literal.
 //         text="stream", type=stream:
 
 // pnode is input; pkeylist_evaluators is appended to.

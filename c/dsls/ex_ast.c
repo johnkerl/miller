@@ -148,7 +148,7 @@ char* ex_ast_node_describe_type(ex_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_BEGIN:                            return "begin";                            break;
 	case MD_AST_NODE_TYPE_END:                              return "end";                              break;
 	case MD_AST_NODE_TYPE_STRING_LITERAL:                   return "string_literal";                   break;
-	case MD_AST_NODE_TYPE_STRNUM_LITERAL:                   return "strnum_literal";                   break;
+	case MD_AST_NODE_TYPE_NUMERIC_LITERAL:                   return "numeric_literal";                   break;
 	case MD_AST_NODE_TYPE_BOOLEAN_LITERAL:                  return "boolean_literal";                  break;
 	case MD_AST_NODE_TYPE_REGEXI:                           return "regexi";                           break;
 	case MD_AST_NODE_TYPE_FIELD_NAME:                       return "field_name";                       break;

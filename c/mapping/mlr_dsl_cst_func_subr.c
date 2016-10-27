@@ -28,16 +28,16 @@ static void cst_udf_free_callback(void* pvstate);
 //         text="list", type=statement_list:
 //             text="var", type=return:
 //                 text="a", type=non_sigil_name.
-//                 text="1", type=strnum_literal.
+//                 text="1", type=numeric_literal.
 //             text="=", type=srec_assignment:
 //                 text="x", type=field_name.
-//                 text="2", type=strnum_literal.
+//                 text="2", type=numeric_literal.
 //             text="return", type=return:
 //                 text="+", type=operator:
 //                     text="a", type=local_variable.
 //                     text="*", type=operator:
 //                         text="y", type=local_variable.
-//                         text="2", type=strnum_literal.
+//                         text="2", type=numeric_literal.
 
 udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
