@@ -426,6 +426,10 @@
 	return MD_TOKEN_REGEXI;
 }
 
+"map" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
+	return MD_TOKEN_MAP;
+}
 "var" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_STRIPPED_AWAY);
 	return MD_TOKEN_VAR;

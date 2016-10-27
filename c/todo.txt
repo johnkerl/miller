@@ -41,9 +41,7 @@ MAPVARS:
 
   - function return value
 
-  ? for-oosvar map-valued boundvars?!?
-
-  ? for-local -- with keylist etc.?
+  - for-local -- with keylist etc. just as for oosvars
 
 * needs assert_not_map
 

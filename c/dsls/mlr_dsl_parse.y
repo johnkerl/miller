@@ -119,6 +119,7 @@ md_statement_not_braced_end(A) ::= md_int_local_definition(B).     { A = B; }
 md_statement_not_braced_end(A) ::= md_float_local_definition(B).   { A = B; }
 md_statement_not_braced_end(A) ::= md_boolean_local_definition(B). { A = B; }
 md_statement_not_braced_end(A) ::= md_string_local_definition(B).  { A = B; }
+md_statement_not_braced_end(A) ::= md_map_local_declaration(B).    { A = B; }
 md_statement_not_braced_end(A) ::= md_local_assignment(B).         { A = B; }
 
 // For user-defined functions
@@ -652,6 +653,9 @@ md_boolean_local_definition(A) ::= MD_TOKEN_BOOLEAN md_local_variable(N) MD_TOKE
 }
 md_string_local_definition(A) ::= MD_TOKEN_STRING md_local_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_binary("local", MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION, N, B);
+}
+md_map_local_declaration(A) ::= MD_TOKEN_MAP md_local_variable(N). {
+	A = mlr_dsl_ast_node_alloc_unary("local", MD_AST_NODE_TYPE_MAP_LOCAL_DECLARATION, N);
 }
 
 md_local_assignment(A)  ::= md_local_variable(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {

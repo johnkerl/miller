@@ -244,6 +244,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION:           return "FLOAT_LOCAL_DEFINITION";           break;
 	case MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION:         return "BOOLEAN_LOCAL_DEFINITION";         break;
 	case MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION:          return "STRING_LOCAL_DEFINITION";          break;
+	case MD_AST_NODE_TYPE_MAP_LOCAL_DECLARATION:            return "MAP_LOCAL_DECLARATION";            break;
 	case MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION:     return "UNTYPED_PARAMETER_DEFINITION";     break;
 	case MD_AST_NODE_TYPE_NUMERIC_PARAMETER_DEFINITION:     return "NUMERIC_PARAMETER_DEFINITION";     break;
 	case MD_AST_NODE_TYPE_INT_PARAMETER_DEFINITION:         return "INT_PARAMETER_DEFINITION";         break;
@@ -255,7 +256,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_BEGIN:                            return "BEGIN";                            break;
 	case MD_AST_NODE_TYPE_END:                              return "END";                              break;
 	case MD_AST_NODE_TYPE_STRING_LITERAL:                   return "STRING_LITERAL";                   break;
-	case MD_AST_NODE_TYPE_NUMERIC_LITERAL:                   return "NUMERIC_LITERAL";                   break;
+	case MD_AST_NODE_TYPE_NUMERIC_LITERAL:                  return "NUMERIC_LITERAL";                  break;
 	case MD_AST_NODE_TYPE_BOOLEAN_LITERAL:                  return "BOOLEAN_LITERAL";                  break;
 	case MD_AST_NODE_TYPE_REGEXI:                           return "REGEXI";                           break;
 	case MD_AST_NODE_TYPE_FIELD_NAME:                       return "FIELD_NAME";                       break;
