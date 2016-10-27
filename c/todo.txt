@@ -27,14 +27,14 @@ QUICKLIST:
 * mapvar iterate
 
 ================================================================
-FUNCTIONALITY FOR 4.6.0:
+FUNCTIONALITY FOR 5.0.0:
 
 ? unset local syntax ?
 
 ----------------------------------------------------------------
 MAPVARS:
 
-? map-locals into 4.6.0?!?!?
+? map-locals into 5.0.0?!?!?
   - LHS define/assign
     a = $*
     a = @*
@@ -65,19 +65,19 @@ MAPVARS:
     should be known.
 
 ================================================================
-UT FOR 4.6.0:
+UT FOR 5.0.0:
 
 * all assert_X() cases
 * all type-decl cases: local/forbind/argpass; initial assign & reuse thereafter.
 
 ================================================================
-HYGIENE FOR 4.6.0:
+HYGIENE FOR 5.0.0:
 
 * xxxes
 * valgrinds
 
 ================================================================
-DOC FOR 4.6.0:
+DOC FOR 5.0.0:
 
 TYPE-CHECKING:
 * assert_X() functions
@@ -111,7 +111,7 @@ DEBUGGING:
 
 PERF:
 * mand bench somewhere; other benches.
-* mkv2/3/4/5 somewhere; also cookbook. (better w/ mappable vars ... maybe for 4.7.0)
+* mkv2/3/4/5 somewhere; also cookbook. (better w/ mappable vars ... maybe for 5.1.0)
 * xsv notes; update rust/go experiment info
 
 -f/-e:
@@ -169,12 +169,16 @@ perf note:
 * DSL stuff performant w/r/t ruby/python (mand bench & maybe others)
 
 ================================================================
-4.7.0: TRACE // SYNTAXERROR // ALLRECAGG // FCNALS
+5.1.0: TRACE // SYNTAXERROR // ALLRECAGG // FCNALS
 
 ? maybe some sort of collections logic to complement for-loops? important, or just fun to code up?
 
 ================================================================
-4.6.0 RELEASE NOTES:
+5.0.0 RELEASE NOTES:
+
+MAJOR BECAUSE:
+* new keywords
+* note this isn't huge. as w/ previous majors.
 
 DSL:
 * func & subr. acknowledge awk yet again.
@@ -206,7 +210,7 @@ DOC:
 * final valgrind check
 
 ----------------------------------------------------------------
-4.7.0 ideas:
+5.1.0 ideas:
 
 ! more than 'syntax error' from lemon-parse failures ... lemon API research
 
