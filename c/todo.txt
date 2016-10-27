@@ -22,14 +22,9 @@ NON-RELEASE:
 * benchmark lua-jit
 
 ================================================================
-QUICKLIST:
-
-* mapvar iterate
-
-================================================================
 FUNCTIONALITY FOR 5.0.0:
 
-? unset local syntax ?
+* mapvar iterate
 
 ----------------------------------------------------------------
 MAPVARS:
@@ -186,6 +181,7 @@ DSL:
 * triple-fors
 * multiple filter/put -f with examples @ new mld section.
 * variadic min & max
+* unset for locals
 * substr func
 * ENV @ LHS (putenv), and why (popens)
 * # in the lexer so #-strings are OK now (show an example)
