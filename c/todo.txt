@@ -54,6 +54,7 @@ MAPVARS:
   - fullimpl the alloc/handle sites one at a time
   ! timings before & after ! really i don't want to ship without the map feature but its cost
     should be known.
+  - doc re what you can do: @-vars and locals are scalars except for the enumerated contexts
 
 ================================================================
 UT FOR 5.0.0:
@@ -81,7 +82,7 @@ OOSVAR SINGLE FOR:
 
 COOK:
 * n-grams ... post these once mapvars are in place.
-* mlr --from words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
+* mlr --from ~/misc/words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 * use: https://github.com/petewarden/dstkdata
 
 DEBUGGING:
@@ -141,16 +142,12 @@ mlh:
 func/subr:
 * no begin/end/func/subr within func
 * (lhs) func no subr call
-* disallow func/subr redefines
 * locals in all curly-braced control structures; top-level locals; scope, extent, freeing.
 * no begin/end/func/subr within subr
-* not subrs have a different namespace (log example); each kind may not be multiply defined.
+* note subrs have a different namespace (log example); each kind may not be multiply defined.
 * local @ RHS before @ LHS: absent skips assign
 * a=2 before local a=1 -- why to even use local (when optional & when necessary).
 * cookbook examples
-
-also re scoping:
-* forsrec/foroosvar boundvars are implicitly local'ed. not triple-for stuff.
 
 file-formats page:
 * --c2p, --c2j etc ...
@@ -159,11 +156,6 @@ file-formats page:
 perf note:
 * C stuff performant w/r/t other compiled langs (put up getlines samples)
 * DSL stuff performant w/r/t ruby/python (mand bench & maybe others)
-
-================================================================
-5.1.0: TRACE // SYNTAXERROR // ALLRECAGG // FCNALS
-
-? maybe some sort of collections logic to complement for-loops? important, or just fun to code up?
 
 ================================================================
 5.0.0 RELEASE NOTES:
@@ -202,6 +194,11 @@ DOC:
 
 * final xxx check
 * final valgrind check
+
+================================================================
+5.1.0: TRACE // SYNTAXERROR // ALLRECAGG // FCNALS
+
+? maybe some sort of collections logic to complement for-loops? important, or just fun to code up?
 
 ----------------------------------------------------------------
 5.1.0 ideas:
