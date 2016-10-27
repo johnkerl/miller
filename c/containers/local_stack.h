@@ -58,7 +58,7 @@ void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, in
 #endif
 
 // ----------------------------------------------------------------
-// Sets/clear the in-use flag for top-level statement blocks, and verifies the
+// Sets/clears the in-use flag for top-level statement blocks, and verifies the
 // contract for absent-null at slot 0.
 
 // For non-recursive functions/subroutines the enter method sets the in-use flag

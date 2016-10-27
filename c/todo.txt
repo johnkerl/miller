@@ -45,8 +45,10 @@ MAPVARS:
 
   ? for-local -- with keylist etc.?
 
+* needs assert_not_map
+
 * iterating:
-  - save off a copy of the mlr exe before this for timings later
+  k save off a copy of the mlr exe before this for timings later
   - put mv_t -> mlhmmv_value_t @ localstack etc. but keep using u.mlrval and assume u.is_terminal
   - add in the grammar mods for each case one at a time & stub out the alloc/handle sites one at a time
   - fullimpl the alloc/handle sites one at a time
