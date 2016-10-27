@@ -48,6 +48,11 @@ typedef struct _mlhmmv_level_entry_t {
 
 typedef unsigned char mlhmmv_level_entry_state_t;
 
+// xxx temp
+static inline mlhmmv_value_t xxx_temp_wrap(mv_t val) {
+	return (mlhmmv_value_t) {.is_terminal = TRUE, .u.mlrval = val};
+}
+
 // ----------------------------------------------------------------
 typedef struct _mlhmmv_level_t {
 	int                         num_occupied;

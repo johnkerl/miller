@@ -692,7 +692,8 @@ typedef struct _rval_evaluator_from_local_variable_state_t {
 mv_t rval_evaluator_from_local_variable_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_from_local_variable_state_t* pstate = pvstate;
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	return mv_copy(local_stack_frame_get(pframe, pstate->vardef_frame_relative_index));
+	mlhmmv_value_t* pmval = local_stack_frame_get(pframe, pstate->vardef_frame_relative_index);
+	return mv_copy(&pmval->u.mlrval); // xxx temp
 }
 static void rval_evaluator_from_local_variable_free(rval_evaluator_t* pevaluator) {
 	rval_evaluator_from_local_variable_state_t* pstate = pevaluator->pvstate;

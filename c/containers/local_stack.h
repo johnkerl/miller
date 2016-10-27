@@ -4,6 +4,7 @@
 #include "containers/mlrval.h"
 #include "containers/type_decl.h"
 #include "containers/sllv.h"
+#include "containers/mlhmmv.h"
 
 // ================================================================
 // Bound & scoped variables for use in for-loops, function bodies, and
@@ -18,7 +19,8 @@
 
 // ================================================================
 typedef struct _local_stack_frame_entry_t {
-	mv_t  mlrval;
+	// mv_t  mlrval;
+	mlhmmv_value_t mlrval; // xxx temp name
 	char* name; // for type-check error messages. not strduped; the caller must ensure extent.
 	int   type_mask;
 } local_stack_frame_entry_t;
@@ -74,10 +76,10 @@ void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, in
 
 local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe);
 void local_stack_frame_exit(local_stack_frame_t* pframe);
-void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv_t* pval);
+void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mlhmmv_value_t* pval);
 
 // ----------------------------------------------------------------
-static inline mv_t* local_stack_frame_get(local_stack_frame_t* pframe, int vardef_frame_relative_index) {
+static inline mlhmmv_value_t* local_stack_frame_get(local_stack_frame_t* pframe, int vardef_frame_relative_index) {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
 	return &pframe->pvars[vardef_frame_relative_index].mlrval;
@@ -85,7 +87,7 @@ static inline mv_t* local_stack_frame_get(local_stack_frame_t* pframe, int varde
 
 // ----------------------------------------------------------------
 static inline void local_stack_frame_define(local_stack_frame_t* pframe, char* variable_name,
-	int vardef_frame_relative_index, int type_mask, mv_t val)
+	int vardef_frame_relative_index, int type_mask, mlhmmv_value_t val)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "DEFINE", TRUE, vardef_frame_relative_index);
@@ -94,26 +96,28 @@ static inline void local_stack_frame_define(local_stack_frame_t* pframe, char* v
 	pentry->name = variable_name; // no strdup, for performance -- caller must ensure extent
 	pentry->type_mask = type_mask;
 
-	if (!(type_mask_from_mv(&val) & pentry->type_mask)) {
+	if (!(type_mask_from_mv(&val.u.mlrval) & pentry->type_mask)) { // xxx temp
 		local_stack_frame_throw_type_mismatch(pentry, &val);
 	}
 
-	mv_free(&pentry->mlrval);
-	pentry->mlrval = val;
+	mv_free(&pentry->mlrval.u.mlrval); // xxx temp -- make value-free
+	pentry->mlrval = val; // xxx deep-copy?
 }
 
 // ----------------------------------------------------------------
-static inline void local_stack_frame_assign(local_stack_frame_t* pframe, int vardef_frame_relative_index, mv_t val) {
+static inline void local_stack_frame_assign(local_stack_frame_t* pframe,
+	int vardef_frame_relative_index, mlhmmv_value_t val)
+{
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "ASSIGN", TRUE, vardef_frame_relative_index);
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 
-	if (!(type_mask_from_mv(&val) & pentry->type_mask)) {
+	if (!(type_mask_from_mv(&val.u.mlrval) & pentry->type_mask)) { // xxx temp
 		local_stack_frame_throw_type_mismatch(pentry, &val);
 	}
 
-	mv_free(&pentry->mlrval);
-	pentry->mlrval = val;
+	mv_free(&pentry->mlrval.u.mlrval);
+	pentry->mlrval = val; // xxx deep-copy?
 }
 
 // ----------------------------------------------------------------
@@ -127,7 +131,7 @@ static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int c
 	for (int i = 0; i < count; i++) {
 		LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p CLEAR %d\n", pframe, pframe->subframe_base+i));
 		LOCAL_STACK_BOUNDS_CHECK(pframe, "CLEAR", FALSE, pframe->subframe_base+i);
-		mv_reset(&psubframe[i].mlrval);
+		mv_reset(&psubframe[i].mlrval.u.mlrval); // xxx make method
 		psubframe[i].type_mask = TYPE_MASK_ANY;
 	}
 	pframe->subframe_base += count;

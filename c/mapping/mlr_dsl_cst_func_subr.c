@@ -141,7 +141,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 		// Absent-null is by convention at slot 0 of the frame, and arguments are next.
 		// Hence starting the loop at 1.
 		local_stack_frame_define(pframe, pstate->parameter_names[i], i+1,
-			pstate->parameter_type_masks[i], args[i]);
+			pstate->parameter_type_masks[i], xxx_temp_wrap(args[i]));
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -277,7 +277,7 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 		// Absent-null is by convention at slot 0 of the frame, and arguments are next.
 		// Hence starting the loop at 1.
 		local_stack_frame_define(pframe, pstate->parameter_names[i], i+1,
-			pstate->parameter_type_masks[i], args[i]);
+			pstate->parameter_type_masks[i], xxx_temp_wrap(args[i]));
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

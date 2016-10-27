@@ -2175,7 +2175,7 @@ static void handle_local_variable_definition(
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 		local_stack_frame_define(pframe,
 			pstatement->local_lhs_variable_name, pstatement->local_lhs_frame_relative_index,
-			pstatement->local_lhs_type_mask, val);
+			pstatement->local_lhs_type_mask, xxx_temp_wrap(val));
 	} else {
 		mv_free(&val);
 	}
@@ -2191,7 +2191,7 @@ static void handle_local_variable_assignment(
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	if (mv_is_present(&val)) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_assign(pframe, pstatement->local_lhs_frame_relative_index, val);
+		local_stack_frame_assign(pframe, pstatement->local_lhs_frame_relative_index, xxx_temp_wrap(val));
 	} else {
 		mv_free(&val);
 	}
@@ -2417,7 +2417,7 @@ static void handle_unset_local_variable(
 	cst_outputs_t*                  pcst_outputs)
 {
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_frame_assign(pframe, pvararg->unset_local_variable_frame_relative_index, mv_absent());
+	local_stack_frame_assign(pframe, pvararg->unset_local_variable_frame_relative_index, xxx_temp_wrap(mv_absent()));
 }
 
 static void handle_unset_vararg_oosvar(
@@ -2651,10 +2651,10 @@ static void handle_for_srec(
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 		local_stack_frame_define(pframe,
 			pstatement->for_srec_k_variable_name, pstatement->for_srec_k_frame_relative_index,
-			pstatement->for_srec_k_type_mask, mvkey);
+			pstatement->for_srec_k_type_mask, xxx_temp_wrap(mvkey));
 		local_stack_frame_define(pframe,
 			pstatement->for_v_variable_name, pstatement->for_v_frame_relative_index,
-			pstatement->for_v_type_mask, mvval);
+			pstatement->for_v_type_mask, xxx_temp_wrap(mvval));
 
 		pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
@@ -2741,7 +2741,7 @@ static void handle_for_oosvar_aux(
 				// Bind the k-name to the entry-key mlrval:
 				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 				local_stack_frame_define(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
-					prest_for_k_type_masks[0], mv_copy(&pe->level_key));
+					prest_for_k_type_masks[0], xxx_temp_wrap(mv_copy(&pe->level_key)));
 				// Recurse into the next-level submap:
 				handle_for_oosvar_aux(pstatement, pvars, pcst_outputs, pe->level_value,
 					&prest_for_k_variable_names[1], &prest_for_k_frame_relative_indices[1], &prest_for_k_type_masks[1],
@@ -2765,7 +2765,7 @@ static void handle_for_oosvar_aux(
 			// Bind the v-name to the terminal mlrval:
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 			local_stack_frame_define(pframe, pstatement->for_v_variable_name, pstatement->for_v_frame_relative_index,
-				pstatement->for_v_type_mask, mv_copy(&submap.u.mlrval));
+				pstatement->for_v_type_mask, xxx_temp_wrap(mv_copy(&submap.u.mlrval)));
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
 		}
@@ -2801,7 +2801,7 @@ static void handle_for_oosvar_key_only(
 			// Bind the v-name to the terminal mlrval:
 			local_stack_frame_define(pframe,
 				pstatement->for_oosvar_k_variable_names[0], pstatement->for_oosvar_k_frame_relative_indices[0],
-				pstatement->for_oosvar_k_type_masks[0], mv_copy(pe->pvvalue));
+				pstatement->for_oosvar_k_type_masks[0], xxx_temp_wrap(mv_copy(pe->pvvalue)));
 
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
