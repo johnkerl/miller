@@ -81,6 +81,7 @@ DOC FOR 5.0.0:
 
 TYPE-CHECKING:
 * assert_X() functions
+* doc unset of localvars along w/ unset elsewheredoc
 
 OOSVAR SINGLE FOR:
 * oosvar-single-for mlh
