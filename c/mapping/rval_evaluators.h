@@ -43,6 +43,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_indirect_field_name(mlr_dsl_ast_node
 	int type_inferencing, int context_flags);
 rval_evaluator_t* rval_evaluator_alloc_from_oosvar_keylist(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags);
+rval_evaluator_t* rval_evaluator_alloc_from_local_map_keylist(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+	int type_inferencing, int context_flags);
 
 // This is used for evaluating strings and numbers in literal expressions, e.g. '$x = "abc"'
 // or '$x = "left_\1". The values are subject to replacement with regex captures. See comments

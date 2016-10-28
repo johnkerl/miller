@@ -90,7 +90,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 		return rval_evaluator_alloc_from_oosvar_keylist(pnode, pfmgr, type_inferencing, context_flags);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE) {
-		return NULL; // xxx map-local keylist
+		return rval_evaluator_alloc_from_local_map_keylist(pnode, pfmgr, type_inferencing, context_flags);
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	} else if (pnode->type == MD_AST_NODE_TYPE_ENV) {
@@ -333,6 +333,75 @@ rval_evaluator_t* rval_evaluator_alloc_from_oosvar_keylist(mlr_dsl_ast_node_t* p
 	pevaluator->pprocess_func = NULL;
 	pevaluator->pprocess_func = rval_evaluator_oosvar_keylist_func;
 	pevaluator->pfree_func = rval_evaluator_oosvar_keylist_free;
+
+	return pevaluator;
+}
+
+// ================================================================
+typedef struct _rval_evaluator_local_map_keylist_state_t {
+	int vardef_frame_relative_index;
+	sllv_t* plocal_map_rhs_keylist_evaluators;
+} rval_evaluator_local_map_keylist_state_t;
+
+mv_t rval_evaluator_local_map_keylist_func(void* pvstate, variables_t* pvars) {
+	rval_evaluator_local_map_keylist_state_t* pstate = pvstate;
+
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pstate->plocal_map_rhs_keylist_evaluators, pvars, &all_non_null_or_error);
+
+	mv_t rv = mv_absent();
+	if (all_non_null_or_error) {
+		int error = 0;
+		mv_t* pval = mlhmmv_get_terminal(pvars->poosvars, pmvkeys, &error); // xxx temp -- get from stack frame
+		if (pval != NULL) {
+			if (pval->type == MT_STRING && *pval->u.strv == 0)
+				rv = mv_empty();
+			else
+				rv = mv_copy(pval);
+		}
+	}
+
+	sllmv_free(pmvkeys);
+	return rv;
+}
+
+static void rval_evaluator_local_map_keylist_free(rval_evaluator_t* pevaluator) {
+	rval_evaluator_local_map_keylist_state_t* pstate = pevaluator->pvstate;
+	for (sllve_t* pe = pstate->plocal_map_rhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		rval_evaluator_t* pevaluator = pe->pvvalue;
+		pevaluator->pfree_func(pevaluator);
+	}
+	sllv_free(pstate->plocal_map_rhs_keylist_evaluators);
+	free(pstate);
+	free(pevaluator);
+}
+
+rval_evaluator_t* rval_evaluator_alloc_from_local_map_keylist(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+	int type_inferencing, int context_flags)
+{
+	rval_evaluator_local_map_keylist_state_t* pstate = mlr_malloc_or_die(
+		sizeof(rval_evaluator_local_map_keylist_state_t));
+
+	MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_frame_relative_index == MD_UNUSED_INDEX);
+
+	sllv_t* pkeylist_evaluators = sllv_alloc();
+
+	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+		if (pkeynode->type == MD_AST_NODE_TYPE_STRING_LITERAL) {
+			sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_string(pkeynode->text));
+		} else {
+			sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, pfmgr,
+				type_inferencing, context_flags));
+		}
+	}
+	pstate->plocal_map_rhs_keylist_evaluators = pkeylist_evaluators;
+
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pprocess_func = NULL;
+	pevaluator->pprocess_func = rval_evaluator_local_map_keylist_func;
+	pevaluator->pfree_func = rval_evaluator_local_map_keylist_free;
 
 	return pevaluator;
 }

@@ -168,6 +168,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 	char* local_lhs_variable_name;
 	int   local_lhs_frame_relative_index;
 	int   local_lhs_type_mask;
+	sllv_t* plocal_map_lhs_keylist_evaluators; // Assignment to local map-variable
 
 	// Assignment to srec
 	char* srec_lhs_field_name;

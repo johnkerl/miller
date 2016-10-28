@@ -656,6 +656,7 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->preturn_evaluator                       = NULL;
 	pstatement->pblock_handler                          = NULL;
 	pstatement->poosvar_lhs_keylist_evaluators          = NULL;
+	pstatement->plocal_map_lhs_keylist_evaluators       = NULL;
 	pstatement->pemit_keylist_evaluators                = NULL;
 	pstatement->num_emit_keylist_evaluators             = 0;
 	pstatement->ppemit_keylist_evaluators               = NULL;
@@ -750,20 +751,33 @@ static mlr_dsl_cst_statement_t* alloc_local_map_variable_assignment(mlr_dsl_cst_
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
-	// xxx keylist evaluators
-
-	MLR_INTERNAL_CODING_ERROR_IF((pnode->pchildren == NULL) || (pnode->pchildren->length != 2));
-
 	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_LOCAL_VARIABLE);
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren != NULL);
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE);
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren == NULL);
 
 	pstatement->pnode_handler = handle_local_map_variable_assignment;
 	pstatement->local_lhs_variable_name = mlr_strdup_or_die(pleft->text);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->local_lhs_frame_relative_index = pleft->vardef_frame_relative_index;
+
+// xxx to code up
+
+//	sllv_t* plocal_map_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pleft,
+//		type_inferencing, context_flags);
+//
+//	if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST && pright->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
+//		pstatement->pnode_handler = handle_oosvar_to_oosvar_assignment;
+//		pstatement->poosvar_rhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pright,
+//			type_inferencing, context_flags);
+//	} else {
+//		pstatement->pnode_handler = handle_oosvar_assignment;
+//		pstatement->poosvar_rhs_keylist_evaluators = NULL;
+//	}
+//
+//	pstatement->plocal_map_lhs_keylist_evaluators = plocal_map_lhs_keylist_evaluators;
+
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
 	return pstatement;
 }
