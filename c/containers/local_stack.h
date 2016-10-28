@@ -75,7 +75,7 @@ void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, in
 
 local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe);
 void local_stack_frame_exit(local_stack_frame_t* pframe);
-void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mlhmmv_value_t* pval);
+void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv_t* pval);
 
 // ----------------------------------------------------------------
 static inline mlhmmv_value_t* local_stack_frame_get(local_stack_frame_t* pframe, int vardef_frame_relative_index) {
@@ -86,7 +86,7 @@ static inline mlhmmv_value_t* local_stack_frame_get(local_stack_frame_t* pframe,
 
 // ----------------------------------------------------------------
 static inline void local_stack_frame_define(local_stack_frame_t* pframe, char* variable_name,
-	int vardef_frame_relative_index, int type_mask, mlhmmv_value_t val)
+	int vardef_frame_relative_index, int type_mask, mv_t val)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "DEFINE", TRUE, vardef_frame_relative_index);
@@ -95,29 +95,36 @@ static inline void local_stack_frame_define(local_stack_frame_t* pframe, char* v
 	pentry->name = variable_name; // no strdup, for performance -- caller must ensure extent
 	pentry->type_mask = type_mask;
 
-	if (!(type_mask_from_mv(&val.u.mlrval) & pentry->type_mask)) { // xxx temp
+	if (!(type_mask_from_mv(&val) & pentry->type_mask)) { // xxx temp
 		local_stack_frame_throw_type_mismatch(pentry, &val);
 	}
 
+	// xxx temp -- make a single method
 	mv_free(&pentry->value.u.mlrval); // xxx temp -- make value-free
-	pentry->value = val; // xxx deep-copy?
+	pentry->value = mlhmmv_value_transfer_terminal(val); // xxx deep-copy?
 }
+
 
 // ----------------------------------------------------------------
 static inline void local_stack_frame_assign(local_stack_frame_t* pframe,
-	int vardef_frame_relative_index, mlhmmv_value_t val)
+	int vardef_frame_relative_index, mv_t val)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "ASSIGN", TRUE, vardef_frame_relative_index);
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 
-	if (!(type_mask_from_mv(&val.u.mlrval) & pentry->type_mask)) { // xxx temp
+	if (!(type_mask_from_mv(&val) & pentry->type_mask)) { // xxx temp
 		local_stack_frame_throw_type_mismatch(pentry, &val);
 	}
 
-	mv_free(&pentry->value.u.mlrval);
-	pentry->value = val; // xxx deep-copy?
+	// xxx temp -- make a single method
+	mv_free(&pentry->value.u.mlrval); // xxx temp -- make value-free
+	pentry->value = mlhmmv_value_transfer_terminal(val); // xxx deep-copy?
 }
+
+void local_stack_frame_assign_map(local_stack_frame_t* pframe,
+	int vardef_frame_relative_index, sllmv_t* pmvkeys,
+	mv_t terminal_value);
 
 // ----------------------------------------------------------------
 // Frames are entered/exited for each curly-braced statement block, including

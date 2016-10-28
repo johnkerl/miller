@@ -65,7 +65,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 			return rval_evaluator_alloc_from_context_variable(pnode->text);
 			break;
 
-		case MD_AST_NODE_TYPE_LOCAL_VARIABLE:
+		case MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE:
 			return rval_evaluator_alloc_from_local_variable(pnode->vardef_frame_relative_index);
 			break;
 

@@ -97,6 +97,30 @@ local_stack_frame_t* local_stack_pop(local_stack_t* pstack) {
 }
 
 // ----------------------------------------------------------------
+void local_stack_frame_assign_map(local_stack_frame_t* pframe,
+	int vardef_frame_relative_index, sllmv_t* pmvkeys,
+	mv_t terminal_value)
+{
+	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
+	LOCAL_STACK_BOUNDS_CHECK(pframe, "ASSIGN", TRUE, vardef_frame_relative_index);
+	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
+
+	if (!(type_mask_from_mv(&terminal_value) & pentry->type_mask)) { // xxx temp
+		local_stack_frame_throw_type_mismatch(pentry, &terminal_value);
+	}
+
+	mlhmmv_value_t* pmvalue = &pentry->value;
+	mv_free(&pmvalue->u.mlrval); // xxx make a free method ...
+
+	//pmvalue->is_terminal = FALSE;
+	// xxx expose some logic in mlhmmv.h
+	// mlhmmv_put_terminal_from_level(pmap->proot_level, pmvkeys->phead, &terminal_value);
+	// xxx finish coding
+
+	pentry->value = mlhmmv_value_transfer_terminal(terminal_value);
+}
+
+// ----------------------------------------------------------------
 static int local_stack_bounds_check_announce_first_call = TRUE;
 
 void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, int vardef_frame_relative_index) {
@@ -122,12 +146,12 @@ void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, in
 }
 
 // ----------------------------------------------------------------
-void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mlhmmv_value_t* pval) {
+void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv_t* pval) {
 	MLR_INTERNAL_CODING_ERROR_IF(pentry->name == NULL);
-	char* sval = mv_alloc_format_val_quoting_strings(&pval->u.mlrval); // xxx temp
+	char* sval = mv_alloc_format_val_quoting_strings(pval); // xxx temp
 	fprintf(stderr, "%s: %s type assertion for variable %s unmet by value %s with type %s.\n",
 		MLR_GLOBALS.bargv0, type_mask_to_desc(pentry->type_mask), pentry->name,
-		sval, mt_describe_type_simple(pval->u.mlrval.type)); // xxx temp
+		sval, mt_describe_type_simple(pval->type)); // xxx temp
 	free(sval);
 	exit(1);
 }

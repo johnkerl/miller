@@ -54,7 +54,7 @@ typedef unsigned char mlhmmv_level_entry_state_t;
 // necessary.
 //
 // This is a hot path for non-map local-variable assignments.
-static inline mlhmmv_value_t mlhmmv_value_transfer_terminal(mv_t val) {
+static inline mlhmmv_value_t mlhmmv_value_transfer_terminal(mv_t val) { // xxx temp?
 	return (mlhmmv_value_t) {.is_terminal = TRUE, .u.mlrval = val};
 }
 

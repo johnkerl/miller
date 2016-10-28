@@ -38,14 +38,14 @@ static cst_statement_allocator_t alloc_return_value; // For UDFs
 static cst_statement_allocator_t alloc_return_void;  // For subroutines
 static cst_statement_allocator_t alloc_subr_callsite;
 
-static mlr_dsl_cst_statement_t* alloc_local_variable_definition(
+static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(
 	mlr_dsl_cst_t*      pcst,
 	mlr_dsl_ast_node_t* pnode,
 	int                 type_inferencing,
 	int                 context_flags,
 	int                 type_mask);
 
-static cst_statement_allocator_t alloc_local_variable_assignment;
+static cst_statement_allocator_t alloc_local_non_map_variable_assignment;
 static cst_statement_allocator_t alloc_local_map_variable_assignment;
 static cst_statement_allocator_t alloc_srec_assignment;
 static cst_statement_allocator_t alloc_indirect_srec_assignment;
@@ -142,9 +142,9 @@ static cst_statement_handler_t handle_oosvar_from_full_srec_assignment;
 static cst_statement_handler_t handle_full_srec_from_oosvar_assignment;
 static cst_statement_handler_t handle_oosvar_assignment;
 static cst_statement_handler_t handle_env_assignment;
-static cst_statement_handler_t handle_local_variable_definition;
-static cst_statement_handler_t handle_map_variable_declaration;
-static cst_statement_handler_t handle_local_variable_assignment;
+static cst_statement_handler_t handle_local_non_map_variable_definition;
+static cst_statement_handler_t handle_local_map_variable_declaration;
+static cst_statement_handler_t handle_local_non_map_variable_assignment;
 static cst_statement_handler_t handle_local_map_variable_assignment;
 static cst_statement_handler_t handle_unset;
 static cst_statement_handler_t handle_unset_all;
@@ -396,34 +396,34 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		break;
 
 	case MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION:
-		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_ANY);
+		return alloc_local_non_map_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_ANY);
 
 	case MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION:
-		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_NUMERIC);
+		return alloc_local_non_map_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_NUMERIC);
 		break;
 
 	case MD_AST_NODE_TYPE_INT_LOCAL_DEFINITION:
-		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_INT);
+		return alloc_local_non_map_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_INT);
 		break;
 
 	case MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION:
-		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_FLOAT);
+		return alloc_local_non_map_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_FLOAT);
 		break;
 
 	case MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION:
-		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_BOOLEAN);
+		return alloc_local_non_map_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_BOOLEAN);
 		break;
 
 	case MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION:
-		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_STRING);
+		return alloc_local_non_map_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_STRING);
 		break;
 
 	case MD_AST_NODE_TYPE_MAP_LOCAL_DECLARATION:
-		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_MAP);
+		return alloc_local_non_map_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_MAP);
 		break;
 
-	case MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT:
-		return alloc_local_variable_assignment(pcst, pnode, type_inferencing, context_flags);
+	case MD_AST_NODE_TYPE_LOCAL_NON_MAP_ASSIGNMENT:
+		return alloc_local_non_map_variable_assignment(pcst, pnode, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_LOCAL_MAP_ASSIGNMENT:
@@ -618,7 +618,7 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_final_filter_statement(mlr_dsl_cst_t*
 	case MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION:
 	case MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION:
 	case MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION:
-	case MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT:
+	case MD_AST_NODE_TYPE_LOCAL_NON_MAP_ASSIGNMENT:
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
 	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:
@@ -702,8 +702,8 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 }
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_local_variable_definition(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags, int type_mask)
+static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(mlr_dsl_cst_t* pcst,
+	mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags, int type_mask)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
@@ -717,16 +717,16 @@ static mlr_dsl_cst_statement_t* alloc_local_variable_definition(mlr_dsl_cst_t* p
 		mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pnext->pvvalue;
 		pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, pcst->pfmgr,
 			type_inferencing, context_flags);
-		pstatement->pnode_handler = handle_local_variable_definition;
+		pstatement->pnode_handler = handle_local_non_map_variable_definition;
 	} else {
 		pstatement->prhs_evaluator = NULL;
-		pstatement->pnode_handler = handle_map_variable_declaration;
+		pstatement->pnode_handler = handle_local_map_variable_declaration;
 	}
 	return pstatement;
 }
 
-static mlr_dsl_cst_statement_t* alloc_local_variable_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
+static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_assignment(
+	mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
 
@@ -735,10 +735,10 @@ static mlr_dsl_cst_statement_t* alloc_local_variable_assignment(mlr_dsl_cst_t* p
 	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_LOCAL_VARIABLE);
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren != NULL);
 
-	pstatement->pnode_handler = handle_local_variable_assignment;
+	pstatement->pnode_handler = handle_local_non_map_variable_assignment;
 	pstatement->local_lhs_variable_name = mlr_strdup_or_die(pleft->text);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->local_lhs_frame_relative_index = pleft->vardef_frame_relative_index;
@@ -1041,7 +1041,7 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 				allocate_keylist_evaluators_from_oosvar_node(pcst, pnode,
 					type_inferencing, context_flags)));
 
-		} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_VARIABLE) {
+		} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE) {
 			MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_frame_relative_index == MD_UNUSED_INDEX);
 			sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
 				pnode->vardef_frame_relative_index,
@@ -2215,7 +2215,7 @@ static void handle_return_value(
 }
 
 // ----------------------------------------------------------------
-static void handle_local_variable_definition(
+static void handle_local_non_map_variable_definition(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -2226,14 +2226,14 @@ static void handle_local_variable_definition(
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 		local_stack_frame_define(pframe,
 			pstatement->local_lhs_variable_name, pstatement->local_lhs_frame_relative_index,
-			pstatement->local_lhs_type_mask, mlhmmv_value_transfer_terminal(val));
+			pstatement->local_lhs_type_mask, val);
 	} else {
 		mv_free(&val);
 	}
 }
 
 // ----------------------------------------------------------------
-static void handle_map_variable_declaration(
+static void handle_local_map_variable_declaration(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -2241,11 +2241,11 @@ static void handle_map_variable_declaration(
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	local_stack_frame_define(pframe,
 		pstatement->local_lhs_variable_name, pstatement->local_lhs_frame_relative_index,
-		pstatement->local_lhs_type_mask, mlhmmv_value_transfer_terminal(mv_absent()));
+		pstatement->local_lhs_type_mask, mv_absent());
 }
 
 // ----------------------------------------------------------------
-static void handle_local_variable_assignment(
+static void handle_local_non_map_variable_assignment(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -2254,8 +2254,7 @@ static void handle_local_variable_assignment(
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	if (mv_is_present(&val)) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_assign(pframe, pstatement->local_lhs_frame_relative_index,
-			mlhmmv_value_transfer_terminal(val));
+		local_stack_frame_assign(pframe, pstatement->local_lhs_frame_relative_index, val);
 	} else {
 		mv_free(&val);
 	}
@@ -2275,13 +2274,8 @@ static void handle_local_map_variable_assignment(
 		sllmv_t* pmvkeys = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
 			&all_non_null_or_error);
 		if (all_non_null_or_error) {
-
-//			mlhmmv_put_terminal(pvars->poosvars, pmvkeys, &rhs_value);
-//mlhmmv_put_terminal_from_level(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-			local_stack_frame_assign(pframe, pstatement->local_lhs_frame_relative_index,
-				mlhmmv_value_transfer_terminal(rhs_value)); // xxx non-terminal
-
+			local_stack_frame_assign_map(pframe, pstatement->local_lhs_frame_relative_index, pmvkeys, rhs_value);
 		}
 		sllmv_free(pmvkeys);
 
@@ -2510,8 +2504,7 @@ static void handle_unset_local_variable(
 	cst_outputs_t*                  pcst_outputs)
 {
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_frame_assign(pframe, pvararg->unset_local_variable_frame_relative_index,
-		mlhmmv_value_transfer_terminal(mv_absent()));
+	local_stack_frame_assign(pframe, pvararg->unset_local_variable_frame_relative_index, mv_absent());
 }
 
 static void handle_unset_vararg_oosvar(
@@ -2745,10 +2738,10 @@ static void handle_for_srec(
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 		local_stack_frame_define(pframe,
 			pstatement->for_srec_k_variable_name, pstatement->for_srec_k_frame_relative_index,
-			pstatement->for_srec_k_type_mask, mlhmmv_value_transfer_terminal(mvkey));
+			pstatement->for_srec_k_type_mask, mvkey);
 		local_stack_frame_define(pframe,
 			pstatement->for_v_variable_name, pstatement->for_v_frame_relative_index,
-			pstatement->for_v_type_mask, mlhmmv_value_transfer_terminal(mvval));
+			pstatement->for_v_type_mask, mvval);
 
 		pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
@@ -2835,7 +2828,7 @@ static void handle_for_oosvar_aux(
 				// Bind the k-name to the entry-key mlrval:
 				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 				local_stack_frame_define(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
-					prest_for_k_type_masks[0], mlhmmv_value_transfer_terminal(mv_copy(&pe->level_key)));
+					prest_for_k_type_masks[0], mv_copy(&pe->level_key));
 				// Recurse into the next-level submap:
 				handle_for_oosvar_aux(pstatement, pvars, pcst_outputs, pe->level_value,
 					&prest_for_k_variable_names[1], &prest_for_k_frame_relative_indices[1], &prest_for_k_type_masks[1],
@@ -2859,7 +2852,7 @@ static void handle_for_oosvar_aux(
 			// Bind the v-name to the terminal mlrval:
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 			local_stack_frame_define(pframe, pstatement->for_v_variable_name, pstatement->for_v_frame_relative_index,
-				pstatement->for_v_type_mask, mlhmmv_value_transfer_terminal(mv_copy(&submap.u.mlrval)));
+				pstatement->for_v_type_mask, mv_copy(&submap.u.mlrval));
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
 		}
@@ -2895,7 +2888,7 @@ static void handle_for_oosvar_key_only(
 			// Bind the v-name to the terminal mlrval:
 			local_stack_frame_define(pframe,
 				pstatement->for_oosvar_k_variable_names[0], pstatement->for_oosvar_k_frame_relative_indices[0],
-				pstatement->for_oosvar_k_type_masks[0], mlhmmv_value_transfer_terminal(mv_copy(pe->pvvalue)));
+				pstatement->for_oosvar_k_type_masks[0], mv_copy(pe->pvvalue));
 
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
