@@ -89,6 +89,9 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 	} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 		return rval_evaluator_alloc_from_oosvar_keylist(pnode, pfmgr, type_inferencing, context_flags);
 
+	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE) {
+		return NULL; // xxx map-local keylist
+
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	} else if (pnode->type == MD_AST_NODE_TYPE_ENV) {
 		return rval_evaluator_alloc_from_environment(pnode, pfmgr, type_inferencing, context_flags);
@@ -693,7 +696,11 @@ mv_t rval_evaluator_from_local_variable_func(void* pvstate, variables_t* pvars) 
 	rval_evaluator_from_local_variable_state_t* pstate = pvstate;
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	mlhmmv_value_t* pmval = local_stack_frame_get(pframe, pstate->vardef_frame_relative_index);
-	return mv_copy(&pmval->u.mlrval); // xxx temp
+	if (pmval->is_terminal) {
+		return mv_copy(&pmval->u.mlrval); // xxx temp
+	} else {
+		return mv_absent();
+	}
 }
 static void rval_evaluator_from_local_variable_free(rval_evaluator_t* pevaluator) {
 	rval_evaluator_from_local_variable_state_t* pstate = pevaluator->pvstate;
