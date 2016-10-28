@@ -2271,17 +2271,19 @@ static void handle_local_map_variable_assignment(
 	mv_t rhs_value = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	if (mv_is_present(&rhs_value)) {
 
-	// xxx keylist evaluators
-//		int all_non_null_or_error = TRUE;
-//		sllmv_t* pmvkeys = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
-//			&all_non_null_or_error);
-//		if (all_non_null_or_error)
-//			mlhmmv_put_terminal(pvars->poosvars, pmvkeys, &rhs_value);
-//		sllmv_free(pmvkeys);
+		int all_non_null_or_error = TRUE;
+		sllmv_t* pmvkeys = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
+			&all_non_null_or_error);
+		if (all_non_null_or_error) {
 
-		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_assign(pframe, pstatement->local_lhs_frame_relative_index,
-			mlhmmv_value_transfer_terminal(rhs_value)); // xxx non-terminal
+//			mlhmmv_put_terminal(pvars->poosvars, pmvkeys, &rhs_value);
+//mlhmmv_put_terminal_from_level(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
+			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+			local_stack_frame_assign(pframe, pstatement->local_lhs_frame_relative_index,
+				mlhmmv_value_transfer_terminal(rhs_value)); // xxx non-terminal
+
+		}
+		sllmv_free(pmvkeys);
 
 	} else {
 		mv_free(&rhs_value);
