@@ -46,6 +46,7 @@ static mlr_dsl_cst_statement_t* alloc_local_variable_definition(
 	int                 type_mask);
 
 static cst_statement_allocator_t alloc_local_variable_assignment;
+static cst_statement_allocator_t alloc_local_map_variable_assignment;
 static cst_statement_allocator_t alloc_srec_assignment;
 static cst_statement_allocator_t alloc_indirect_srec_assignment;
 static cst_statement_allocator_t alloc_oosvar_assignment;
@@ -144,6 +145,7 @@ static cst_statement_handler_t handle_env_assignment;
 static cst_statement_handler_t handle_local_variable_definition;
 static cst_statement_handler_t handle_map_variable_declaration;
 static cst_statement_handler_t handle_local_variable_assignment;
+static cst_statement_handler_t handle_local_map_variable_assignment;
 static cst_statement_handler_t handle_unset;
 static cst_statement_handler_t handle_unset_all;
 
@@ -422,6 +424,10 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 
 	case MD_AST_NODE_TYPE_LOCAL_ASSIGNMENT:
 		return alloc_local_variable_assignment(pcst, pnode, type_inferencing, context_flags);
+		break;
+
+	case MD_AST_NODE_TYPE_LOCAL_MAP_ASSIGNMENT:
+		return alloc_local_map_variable_assignment(pcst, pnode, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
@@ -732,6 +738,29 @@ static mlr_dsl_cst_statement_t* alloc_local_variable_assignment(mlr_dsl_cst_t* p
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren != NULL);
 
 	pstatement->pnode_handler = handle_local_variable_assignment;
+	pstatement->local_lhs_variable_name = mlr_strdup_or_die(pleft->text);
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
+	pstatement->local_lhs_frame_relative_index = pleft->vardef_frame_relative_index;
+	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_local_map_variable_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	// xxx keylist evaluators
+
+	MLR_INTERNAL_CODING_ERROR_IF((pnode->pchildren == NULL) || (pnode->pchildren->length != 2));
+
+	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
+
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_LOCAL_VARIABLE);
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren != NULL);
+
+	pstatement->pnode_handler = handle_local_map_variable_assignment;
 	pstatement->local_lhs_variable_name = mlr_strdup_or_die(pleft->text);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->local_lhs_frame_relative_index = pleft->vardef_frame_relative_index;
@@ -2211,6 +2240,24 @@ static void handle_local_variable_assignment(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	if (mv_is_present(&val)) {
+		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+		local_stack_frame_assign(pframe, pstatement->local_lhs_frame_relative_index,
+			mlhmmv_value_transfer_terminal(val));
+	} else {
+		mv_free(&val);
+	}
+}
+
+// ----------------------------------------------------------------
+static void handle_local_map_variable_assignment(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	// xxx keylist evaluators
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	if (mv_is_present(&val)) {
