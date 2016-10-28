@@ -762,21 +762,17 @@ static mlr_dsl_cst_statement_t* alloc_local_map_variable_assignment(mlr_dsl_cst_
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->local_lhs_frame_relative_index = pleft->vardef_frame_relative_index;
 
-// xxx to code up
-
-//	sllv_t* plocal_map_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pleft,
-//		type_inferencing, context_flags);
-//
-//	if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST && pright->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
-//		pstatement->pnode_handler = handle_oosvar_to_oosvar_assignment;
-//		pstatement->poosvar_rhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pright,
-//			type_inferencing, context_flags);
-//	} else {
-//		pstatement->pnode_handler = handle_oosvar_assignment;
-//		pstatement->poosvar_rhs_keylist_evaluators = NULL;
-//	}
-//
-//	pstatement->plocal_map_lhs_keylist_evaluators = plocal_map_lhs_keylist_evaluators;
+	sllv_t* plocal_map_lhs_keylist_evaluators = sllv_alloc();
+	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+		if (pkeynode->type == MD_AST_NODE_TYPE_STRING_LITERAL) {
+			sllv_append(plocal_map_lhs_keylist_evaluators, rval_evaluator_alloc_from_string(pkeynode->text));
+		} else {
+			sllv_append(plocal_map_lhs_keylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, pcst->pfmgr,
+				type_inferencing, context_flags));
+		}
+	}
+	pstatement->plocal_map_lhs_keylist_evaluators = plocal_map_lhs_keylist_evaluators;
 
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
 	return pstatement;
@@ -2271,15 +2267,24 @@ static void handle_local_map_variable_assignment(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	// xxx keylist evaluators
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	if (mv_is_present(&val)) {
+	mv_t rhs_value = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	if (mv_is_present(&rhs_value)) {
+
+	// xxx keylist evaluators
+//		int all_non_null_or_error = TRUE;
+//		sllmv_t* pmvkeys = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
+//			&all_non_null_or_error);
+//		if (all_non_null_or_error)
+//			mlhmmv_put_terminal(pvars->poosvars, pmvkeys, &rhs_value);
+//		sllmv_free(pmvkeys);
+
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 		local_stack_frame_assign(pframe, pstatement->local_lhs_frame_relative_index,
-			mlhmmv_value_transfer_terminal(val));
+			mlhmmv_value_transfer_terminal(rhs_value)); // xxx non-terminal
+
 	} else {
-		mv_free(&val);
+		mv_free(&rhs_value);
 	}
 }
 
