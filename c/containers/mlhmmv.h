@@ -76,9 +76,9 @@ typedef struct _mlhmmv_t {
 
 mlhmmv_t* mlhmmv_alloc();
 
-void  mlhmmv_free(mlhmmv_t* pmap);
+void mlhmmv_free(mlhmmv_t* pmap);
 
-void  mlhmmv_put_terminal(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
+void mlhmmv_put_terminal(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
 
 // If the return value is non-null, error will be MLHMMV_ERROR_NONE.  If the
 // return value is null, the error will be MLHMMV_ERROR_KEYLIST_TOO_DEEP or
