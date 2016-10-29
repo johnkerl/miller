@@ -5127,12 +5127,29 @@ run_mlr --from $indir/xyz345 put -v -a '
 '
 
 # ----------------------------------------------------------------
-# xxx type-check ...
+announce LOCAL MAP-VARIABLE TYPE-DECL
 
-#run_mlr put -v -a '
-#    map a;
-#'
+run_mlr --from $indir/xyz345 put $vee '
+    map a;
+'
 
+run_mlr --from $indir/xyz345 put $vee '
+    map a;
+    a[1]=2;
+    a[3][4]=5;
+'
+
+mlr_expect_fail --from $indir/xyz345 put $vee '
+    map a;
+    a=2;
+    a[3][4]=5;
+'
+
+mlr_expect_fail --from $indir/xyz345 put $vee '
+    map a;
+    a[3][4]=5;
+    a=2;
+'
 
 # ----------------------------------------------------------------
 announce TRIPLE-FORs

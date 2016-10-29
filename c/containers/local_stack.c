@@ -134,7 +134,7 @@ void local_stack_frame_assign_map(local_stack_frame_t* pframe,
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "ASSIGN", TRUE, vardef_frame_relative_index);
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 
-	if (!(type_mask_from_mv(&terminal_value) & pentry->type_mask)) { // xxx temp
+	if (!(TYPE_MASK_MAP & pentry->type_mask)) {
 		local_stack_frame_throw_type_mismatch(pentry, &terminal_value);
 	}
 
