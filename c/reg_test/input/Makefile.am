@@ -2,6 +2,10 @@ SUBDIRS=	rfc-csv
 EXTRA_DIST=	\
 		a.csv \
 		a.pprint \
+		abixy \
+		abixy-het \
+		abixy-wide \
+		abixy-wide-short \
 		abixy.csv \
 		abixy.dkvp \
 		abixy.json \
@@ -10,10 +14,6 @@ EXTRA_DIST=	\
 		abixy.pprint \
 		abixy.tsv \
 		abixy.xtab \
-		abixy \
-		abixy-het \
-		abixy-wide \
-		abixy-wide-short \
 		absent.dkvp \
 		b.csv \
 		b.pprint \
@@ -165,5 +165,6 @@ EXTRA_DIST=	\
 		utf8-2.csv \
 		utf8-align.dkvp \
 		utf8-align.nidx \
+		x0to10.dat \
 		xy40.dkvp \
-		x0to10.dat
+		xyz345
