@@ -3029,7 +3029,7 @@ static void handle_for_oosvar_key_only(
 }
 
 // ----------------------------------------------------------------
-static void handle_for_local_map(
+static void handle_for_local_map( // xxx vardef_frame_relative_index
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -3050,7 +3050,7 @@ static void handle_for_local_map(
 		// Locate and copy the submap indexed by the keylist. E.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', the
 		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
 		// for-loop.
-		mlhmmv_value_t submap = mlhmmv_copy_submap(pvars->poosvars, plhskeylist);
+		mlhmmv_value_t submap = mlhmmv_copy_submap(pvars->poosvars, plhskeylist); // xxx local-map
 
 		if (!submap.is_terminal && submap.u.pnext_level != NULL) {
 			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level
@@ -3078,7 +3078,7 @@ static void handle_for_local_map(
 	sllmv_free(plhskeylist);
 }
 
-static void handle_for_local_map_aux(
+static void handle_for_local_map_aux( // xxx vardef_frame_relative_index
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs,
@@ -3131,7 +3131,7 @@ static void handle_for_local_map_aux(
 }
 
 // ----------------------------------------------------------------
-static void handle_for_local_map_key_only(
+static void handle_for_local_map_key_only( // xxx vardef_frame_relative_index
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -3152,7 +3152,7 @@ static void handle_for_local_map_key_only(
 		local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
 		loop_stack_push(pvars->ploop_stack);
 
-		sllv_t* pkeys = mlhmmv_copy_keys_from_submap(pvars->poosvars, plhskeylist);
+		sllv_t* pkeys = mlhmmv_copy_keys_from_submap(pvars->poosvars, plhskeylist); // xxx for-local-maQ
 
 		for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
 			// Bind the v-name to the terminal mlrval:
