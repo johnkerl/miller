@@ -78,11 +78,23 @@ void local_stack_frame_exit(local_stack_frame_t* pframe);
 void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv_t* pval);
 
 // ----------------------------------------------------------------
-static inline mlhmmv_value_t* local_stack_frame_get(local_stack_frame_t* pframe, int vardef_frame_relative_index) {
+static inline mv_t local_stack_frame_get_non_map(local_stack_frame_t* pframe,
+	int vardef_frame_relative_index)
+{
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
-	return &pframe->pvars[vardef_frame_relative_index].value;
+	// xxx encapsulate
+	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
+	mlhmmv_value_t* pvalue = &pentry->value;
+	if (pvalue->is_terminal) {
+		return pvalue->u.mlrval;
+	} else {
+		return mv_absent();
+	}
 }
+
+mv_t local_stack_frame_get_map(local_stack_frame_t* pframe,
+	int vardef_frame_relative_index, sllmv_t* pmvkeys);
 
 // ----------------------------------------------------------------
 static inline void local_stack_frame_define(local_stack_frame_t* pframe, char* variable_name,
@@ -106,7 +118,7 @@ static inline void local_stack_frame_define(local_stack_frame_t* pframe, char* v
 
 
 // ----------------------------------------------------------------
-static inline void local_stack_frame_assign(local_stack_frame_t* pframe,
+static inline void local_stack_frame_assign_non_map(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, mv_t val)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));

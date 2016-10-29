@@ -97,6 +97,24 @@ local_stack_frame_t* local_stack_pop(local_stack_t* pstack) {
 }
 
 // ----------------------------------------------------------------
+mv_t local_stack_frame_get_map(local_stack_frame_t* pframe,
+	int vardef_frame_relative_index, sllmv_t* pmvkeys)
+{
+	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
+	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
+
+	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
+	mlhmmv_value_t* pmvalue = &pentry->value;
+	// xxx encapsulate
+	if (pmvalue->is_terminal) {
+		return mv_absent();
+	} else {
+		int error = 0;
+		return *mlhmmv_get_terminal_from_level(pmvalue->u.pnext_level, pmvkeys, &error);
+	}
+}
+
+// ----------------------------------------------------------------
 void local_stack_frame_assign_map(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, sllmv_t* pmvkeys,
 	mv_t terminal_value)

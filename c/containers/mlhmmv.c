@@ -304,8 +304,21 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_v
 }
 
 // ----------------------------------------------------------------
+// xxx merge these two
 mv_t* mlhmmv_get_terminal(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror) {
 	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_entry_at_level(pmap->proot_level, pmvkeys->phead, perror);
+	if (plevel_entry == NULL) {
+		return NULL;
+	}
+	if (!plevel_entry->level_value.is_terminal) {
+		*perror = MLHMMV_ERROR_KEYLIST_TOO_SHALLOW;
+		return NULL;
+	}
+	return &plevel_entry->level_value.u.mlrval;
+}
+
+mv_t* mlhmmv_get_terminal_from_level(mlhmmv_level_t* plevel, sllmv_t* pmvkeys, int* perror) {
+	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_entry_at_level(plevel, pmvkeys->phead, perror);
 	if (plevel_entry == NULL) {
 		return NULL;
 	}

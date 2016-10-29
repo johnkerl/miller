@@ -88,6 +88,7 @@ void mlhmmv_put_terminal(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value
 // Note: this returns a pointer to the map's data, not to a copy.
 // The caller shouldn't free it, or modify it.
 mv_t* mlhmmv_get_terminal(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
+mv_t* mlhmmv_get_terminal_from_level(mlhmmv_level_t* plevel, sllmv_t* pmvkeys, int* perror);
 
 // These are an optimization for assignment from full srec, e.g. '@records[$key1][$key2] = $*'.
 // Using mlhmmv_get_or_create_level, the CST logic can get or create the @records[$key1][$key2]
