@@ -196,10 +196,10 @@ static void pass_1_for_local_read(mlr_dsl_ast_node_t* pnode, stkalc_subframe_gro
 static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
 
-static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+static void pass_1_for_oosvar_or_local_map_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
 
-static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+static void pass_1_for_oosvar_or_local_map_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
 
 static void pass_1_for_triple_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
@@ -406,10 +406,16 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* 
 		pass_1_for_srec_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY) {
-		pass_1_for_oosvar_key_only_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
+		pass_1_for_oosvar_or_local_map_key_only_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR) {
-		pass_1_for_oosvar_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
+		pass_1_for_oosvar_or_local_map_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_LOCAL_MAP_KEY_ONLY) {
+		pass_1_for_oosvar_or_local_map_key_only_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_LOCAL_MAP) {
+		pass_1_for_oosvar_or_local_map_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_TRIPLE_FOR) {
 		pass_1_for_triple_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
@@ -488,7 +494,7 @@ static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_
 }
 
 // ----------------------------------------------------------------
-static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+static void pass_1_for_oosvar_or_local_map_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace)
 {
 	mlr_dsl_ast_node_t* pkeynode     = pnode->pchildren->phead->pvvalue;
@@ -527,7 +533,7 @@ static void pass_1_for_oosvar_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkal
 }
 
 // ----------------------------------------------------------------
-static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+static void pass_1_for_oosvar_or_local_map_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace)
 {
 	mlr_dsl_ast_node_t* pvarsnode    = pnode->pchildren->phead->pvvalue;
@@ -543,9 +549,13 @@ static void pass_1_for_oosvar_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subfram
 	//
 	// Example: 'for(k, v in @a[b][c]) { var d = k; var e = v }': the b and c
 	// should be obtained from the enclosing scope.
-	for (sllve_t* pe = pkeylistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-		pass_1_for_node(pchild, pframe_group, pmax_subframe_depth, trace);
+	if (pkeylistnode->pchildren == NULL) {
+		pass_1_for_node(pkeylistnode, pframe_group, pmax_subframe_depth, trace);
+	} else {
+		for (sllve_t* pe = pkeylistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+			pass_1_for_node(pchild, pframe_group, pmax_subframe_depth, trace);
+		}
 	}
 
 	if (trace) {
