@@ -2271,7 +2271,7 @@ static void handle_local_map_variable_assignment(
 	if (mv_is_present(&rhs_value)) {
 
 		int all_non_null_or_error = TRUE;
-		sllmv_t* pmvkeys = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
+		sllmv_t* pmvkeys = evaluate_list(pstatement->plocal_map_lhs_keylist_evaluators, pvars,
 			&all_non_null_or_error);
 		if (all_non_null_or_error) {
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
