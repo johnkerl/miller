@@ -382,8 +382,9 @@ rval_evaluator_t* rval_evaluator_alloc_from_local_map_keylist(mlr_dsl_ast_node_t
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_frame_relative_index == MD_UNUSED_INDEX);
 
-	sllv_t* pkeylist_evaluators = sllv_alloc();
+	pstate->vardef_frame_relative_index = pnode->vardef_frame_relative_index;
 
+	sllv_t* pkeylist_evaluators = sllv_alloc();
 	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
 		if (pkeynode->type == MD_AST_NODE_TYPE_STRING_LITERAL) {
