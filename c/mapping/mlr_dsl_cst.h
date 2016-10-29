@@ -137,13 +137,13 @@ typedef struct _mlr_dsl_cst_statement_t {
 	mlr_dsl_cst_node_handler_func_t* pnode_handler;
 
 	// For subroutine callsites
-	rval_evaluator_t** subr_callsite_argument_evaluators;
-	mv_t* subr_callsite_arguments;
+	rval_evaluator_t** subr_callsite_argument_evaluators; // xxx mapvar
+	mv_t* subr_callsite_arguments; // xxx mapvar
 	struct _subr_callsite_t *psubr_callsite;
 	struct _subr_defsite_t *psubr_defsite;
 
 	// Return statement within user-defined function
-	rval_evaluator_t* preturn_evaluator;
+	rval_evaluator_t* preturn_evaluator; // xxx mapvar
 
 	// There are two variants of statement-list handlers: one for inside loop
 	// bodies which has to check break/continue flags after each statement, and

@@ -2187,7 +2187,7 @@ static void handle_subr_callsite(
 {
 	for (int i = 0; i < pstatement->psubr_callsite->arity; i++) {
 		rval_evaluator_t* pev = pstatement->subr_callsite_argument_evaluators[i];
-		pstatement->subr_callsite_arguments[i] = pev->pprocess_func(pev->pvstate, pvars);
+		pstatement->subr_callsite_arguments[i] = pev->pprocess_func(pev->pvstate, pvars); // xxx mapvars
 	}
 
 	mlr_dsl_cst_execute_subroutine(pstatement->psubr_defsite, pvars, pcst_outputs,

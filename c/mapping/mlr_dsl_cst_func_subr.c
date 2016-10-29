@@ -125,7 +125,7 @@ void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate) {
 // ----------------------------------------------------------------
 // Callback function for the function manager to invoke into here
 
-static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, variables_t* pvars) {
+static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, variables_t* pvars) { // xxx mapvars
 	cst_udf_state_t* pstate = pvstate;
 	cst_top_level_statement_block_t* ptop_level_block = pstate->ptop_level_block;
 	mv_t retval = mv_absent();
@@ -141,7 +141,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 		// Absent-null is by convention at slot 0 of the frame, and arguments are next.
 		// Hence starting the loop at 1.
 		local_stack_frame_define(pframe, pstate->parameter_names[i], i+1,
-			pstate->parameter_type_masks[i], args[i]);
+			pstate->parameter_type_masks[i], args[i]); // xxx mapvars
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -155,7 +155,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 			break;
 		}
 		if (pvars->return_state.returned) {
-			retval = pvars->return_state.retval;
+			retval = pvars->return_state.retval; // xxx mapvar
 			pvars->return_state.retval = mv_absent();
 			pvars->return_state.returned = FALSE;
 			break;
@@ -262,7 +262,7 @@ void mlr_dsl_cst_free_subroutine(subr_defsite_t* pstate) {
 }
 
 // ----------------------------------------------------------------
-void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
+void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars, // xxx mv_t -> mlhmmv_value_t
 	cst_outputs_t* pcst_outputs, int callsite_arity, mv_t* args)
 {
 	cst_top_level_statement_block_t* ptop_level_block = pstate->ptop_level_block;

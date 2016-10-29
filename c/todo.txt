@@ -35,7 +35,7 @@ MAPVARS:
     @b = a
     @b[c] = a
 
-  - RHS expr eval: terminality as already for oosvars
+  k RHS expr eval: terminality as already for oosvars
 
   - parameter marshal
 
@@ -48,8 +48,8 @@ MAPVARS:
 * iterating:
   k save off a copy of the mlr exe before this for timings later
   k put mv_t -> mlhmmv_value_t @ localstack etc. but keep using u.mlrval and assume u.is_terminal
-  - add in the grammar mods for each case one at a time & stub out the alloc/handle sites one at a time
-  - fullimpl the alloc/handle sites one at a time
+  ~ add in the grammar mods for each case one at a time & stub out the alloc/handle sites one at a time
+  ~ fullimpl the alloc/handle sites one at a time
   ! timings before & after ! really i don't want to ship without the map feature but its cost
     should be known.
   - doc re what you can do: @-vars and locals are scalars except for the enumerated contexts
