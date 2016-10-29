@@ -116,7 +116,12 @@ mv_t local_stack_frame_get_map(local_stack_frame_t* pframe,
 		LOCAL_STACK_TRACE(printf("VALUE IS:\n"));
 		LOCAL_STACK_TRACE(printf("PTR IS %p\n", pmvalue->u.pnext_level));
 		LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->u.pnext_level, 0, TRUE, TRUE, "", stdout));
-		return *mlhmmv_get_terminal_from_level(pmvalue->u.pnext_level, pmvkeys, &error);
+		mv_t* pval = mlhmmv_get_terminal_from_level(pmvalue->u.pnext_level, pmvkeys, &error);
+		if (pval == NULL) {
+			return mv_absent();
+		} else {
+			return mv_copy(pval); // xxx temp copy?
+		}
 	}
 }
 
