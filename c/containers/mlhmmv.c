@@ -19,7 +19,7 @@
 #include "lib/mlrutil.h"
 #include "containers/mlhmmv.h"
 
-static mlhmmv_level_t* mlhmmv_level_alloc();
+// xxx temp static mlhmmv_level_t* mlhmmv_level_alloc();
 static void            mlhmmv_level_init(mlhmmv_level_t *plevel, int length);
 static void            mlhmmv_level_free(mlhmmv_level_t* plevel);
 
@@ -86,7 +86,8 @@ mlhmmv_t* mlhmmv_alloc() {
 	return pmap;
 }
 
-static mlhmmv_level_t* mlhmmv_level_alloc() {
+// xxx temp expose static
+mlhmmv_level_t* mlhmmv_level_alloc() {
 	mlhmmv_level_t* plevel = mlr_malloc_or_die(sizeof(mlhmmv_level_t));
 	mlhmmv_level_init(plevel, MLHMMV_INITIAL_ARRAY_LENGTH);
 	return plevel;

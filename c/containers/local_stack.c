@@ -130,12 +130,13 @@ void local_stack_frame_assign_map(local_stack_frame_t* pframe,
 	mlhmmv_value_t* pmvalue = &pentry->value;
 	mv_free(&pmvalue->u.mlrval); // xxx make a free method ...
 
-	//pmvalue->is_terminal = FALSE;
-	// xxx expose some logic in mlhmmv.h
-	// mlhmmv_put_terminal_from_level(pmap->proot_level, pmvkeys->phead, &terminal_value);
-	// xxx finish coding
+	// xxx encapsulate
+	pmvalue->is_terminal = FALSE;
+	pmvalue->u.pnext_level = mlhmmv_level_alloc();
+	mlhmmv_put_terminal_from_level(pmvalue->u.pnext_level, pmvkeys->phead, &terminal_value);
 
-	pentry->value = mlhmmv_value_transfer_terminal(terminal_value);
+	LOCAL_STACK_TRACE(printf("VALUE IS:\n"));
+	LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->u.pnext_level, 0, TRUE, TRUE, "", stdout));
 }
 
 // ----------------------------------------------------------------

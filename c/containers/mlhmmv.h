@@ -69,6 +69,9 @@ typedef struct _mlhmmv_level_t {
 	mlhmmv_level_entry_t*       ptail;
 } mlhmmv_level_t;
 
+// xxx temp expose
+mlhmmv_level_t* mlhmmv_level_alloc();
+
 // ----------------------------------------------------------------
 typedef struct _mlhmmv_t {
 	mlhmmv_level_t* proot_level;

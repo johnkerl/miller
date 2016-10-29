@@ -763,8 +763,9 @@ static mlr_dsl_cst_statement_t* alloc_local_map_variable_assignment(mlr_dsl_cst_
 	pstatement->local_lhs_frame_relative_index = pleft->vardef_frame_relative_index;
 
 	sllv_t* plocal_map_lhs_keylist_evaluators = sllv_alloc();
-	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+	for (sllve_t* pe = pleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+		mlr_dsl_ast_node_print(pkeynode);
 		if (pkeynode->type == MD_AST_NODE_TYPE_STRING_LITERAL) {
 			sllv_append(plocal_map_lhs_keylist_evaluators, rval_evaluator_alloc_from_string(pkeynode->text));
 		} else {
@@ -2271,11 +2272,15 @@ static void handle_local_map_variable_assignment(
 	if (mv_is_present(&rhs_value)) {
 
 		int all_non_null_or_error = TRUE;
+		printf("LEN=%lld\n", pstatement->plocal_map_lhs_keylist_evaluators->length);
 		sllmv_t* pmvkeys = evaluate_list(pstatement->plocal_map_lhs_keylist_evaluators, pvars,
 			&all_non_null_or_error);
 		if (all_non_null_or_error) {
+			printf("YES\n");
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 			local_stack_frame_assign_map(pframe, pstatement->local_lhs_frame_relative_index, pmvkeys, rhs_value);
+		} else {
+			printf("NO\n");
 		}
 		sllmv_free(pmvkeys);
 
