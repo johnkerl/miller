@@ -754,12 +754,12 @@ static void stkalc_subframe_group_mutate_node_for_write(stkalc_subframe_group_t*
 	}
 }
 
-// The right-hand side of '$a = b' is one of two things: (1) already defined in
-// a higher subframe and referenced in the current subframe; (2) not defined in
-// a higher subframe, in which case the RHS evaluates to absent-null.  An
-// absent-null is always kept at index 0 in the frame. This is an important
-// assumption to be tracked across modules, including here as well as the
-// CST-node handlers. It's tested in the test-dsl-stack.mlr regtest case.
+// The right-hand side of '$a = b' is one of two things: (1) already defined in a higher
+// subframe and referenced in the current subframe; (2) not defined in a higher subframe,
+// in which case the RHS evaluates to absent-null.  An absent-null is always kept at index
+// 0 in the frame. This is an important assumption to be tracked across modules, including
+// here as well as the CST-node handlers. It's tested in the test-dsl-stack-allocation.mlr
+// regtest case.
 static void stkalc_subframe_group_mutate_node_for_read(stkalc_subframe_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
 	char* desc, int trace)
 {

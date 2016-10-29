@@ -1737,7 +1737,7 @@ announce DSL STACK-ALLOCATION
 # the AST; the -a flag provides the essential output on variable placement; the
 # Miller script per se validates semantics.
 
-run_mlr --from $indir/abixy put -v -a -f $indir/test-dsl-stack.mlr
+run_mlr --from $indir/abixy put -v -a -f $indir/test-dsl-stack-allocation.mlr
 
 # These test absent-null handing for as-yet-undefined localvars in expression RHSs.
 run_mlr --from $indir/abixy put 'a=a; $oa = a'
