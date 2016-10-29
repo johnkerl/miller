@@ -24,16 +24,26 @@ FUNCTIONALITY FOR 5.0.0:
 MAPVARS:
 
 ? map-locals into 5.0.0?!?!?
-  - LHS define/assign
+  - LHS define/assign special cases:
+
     a = $*
     a = @*
     a = @b
     a = @b[c]
+
     a = b
+
     $* = a
     @* = a
     @b = a
     @b[c] = a
+
+    $* = f(...)
+    @* = f(...)
+    @b = f(...)
+    @b[c] = f(...)
+
+  k all other (non-special-case) LHS situations
 
   k RHS expr eval: terminality as already for oosvars
 
@@ -43,7 +53,7 @@ MAPVARS:
 
   - for-local -- with keylist etc. just as for oosvars
 
-* needs assert_not_map
+* needs assert_not_map in userspace
 
 * iterating:
   k save off a copy of the mlr exe before this for timings later
