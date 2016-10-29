@@ -128,7 +128,7 @@ void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate) {
 static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, variables_t* pvars) { // xxx mapvars
 	cst_udf_state_t* pstate = pvstate;
 	cst_top_level_statement_block_t* ptop_level_block = pstate->ptop_level_block;
-	mv_t retval = mv_absent();
+	mlhmmv_value_t retval = mlhmmv_value_transfer_terminal(mv_absent());
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Push stack and bind parameters to arguments
@@ -156,7 +156,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 		}
 		if (pvars->return_state.returned) {
 			retval = pvars->return_state.retval; // xxx mapvar
-			pvars->return_state.retval = mv_absent();
+			pvars->return_state.retval = mlhmmv_value_transfer_terminal(mv_absent());
 			pvars->return_state.returned = FALSE;
 			break;
 		}
@@ -167,7 +167,11 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->subframe_var_count);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 
-	return retval;
+	if (retval.is_terminal) {
+		return retval.u.mlrval; // xxx mapvars
+	} else {
+		return mv_absent();
+	}
 }
 
 // ----------------------------------------------------------------

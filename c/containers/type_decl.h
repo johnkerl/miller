@@ -15,7 +15,7 @@
 #define TYPE_MASK_NUMERIC (TYPE_MASK_INT | TYPE_MASK_FLOAT)
 #define TYPE_MASK_BOOLEAN  (1 << MT_BOOLEAN)
 // Initial declaration is an empty map.
-// xxx maybe change that? For oosvars there's no empty map but for local mapvars there could be?
+// xxx maybe change that? For oosvars there's no empty map but for local mapvars there could be? what about after final unset?
 // Or, simply use the convention that empty map <=> absent?
 #define TYPE_MASK_MAP     ((1 << MT_DIM) | (1 << MT_ABSENT))
 #define TYPE_MASK_ANY     (~0)

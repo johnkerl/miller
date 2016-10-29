@@ -40,7 +40,7 @@
 struct _rval_evaluator_t; // forward reference for method declarations
 
 typedef struct _return_state_t {
-	mv_t retval; // xxx mapvars
+	mlhmmv_value_t retval;
 	int returned;
 } return_state_t;
 

@@ -64,6 +64,10 @@ MAPVARS:
     should be known.
   - doc re what you can do: @-vars and locals are scalars except for the enumerated contexts
 
+* type-decl assert RHS for map/non-map reads, and doc that:
+  this should throw an error:
+    mlr --from s put 'int a=1;var b=a[2]'
+
 ================================================================
 UT FOR 5.0.0:
 

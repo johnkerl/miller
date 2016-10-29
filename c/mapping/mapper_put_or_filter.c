@@ -494,7 +494,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.ploop_stack      = pstate->ploop_stack,
 			.return_state = {
 				.returned = FALSE,
-				.retval = mv_absent(),
+				.retval = mlhmmv_value_transfer_terminal(mv_absent()),
 			}
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
@@ -522,7 +522,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.ploop_stack      = pstate->ploop_stack,
 			.return_state = {
 				.returned = FALSE,
-				.retval = mv_absent(),
+				.retval = mlhmmv_value_transfer_terminal(mv_absent()),
 			}
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
@@ -554,7 +554,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 		.ploop_stack      = pstate->ploop_stack,
 		.return_state = {
 			.returned = FALSE,
-			.retval = mv_absent(),
+			.retval = mlhmmv_value_transfer_terminal(mv_absent()),
 		}
 	};
 	cst_outputs_t cst_outputs = (cst_outputs_t) {
