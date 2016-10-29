@@ -23,7 +23,8 @@ FUNCTIONALITY FOR 5.0.0:
 ----------------------------------------------------------------
 MAPVARS:
 
-? map-locals into 5.0.0?!?!?
+* steps:
+
   - LHS define/assign special cases:
 
     a = $*
@@ -51,6 +52,10 @@ MAPVARS:
 
   - for-local -- with keylist etc. just as for oosvars
     > should be a straightforward duplication of existing for-oosvar code
+    > grammar rules
+    > cst alloc
+    > cst handle
+    > UT
 
   - function return value
     > only map-valued in one of the above special-case contexts

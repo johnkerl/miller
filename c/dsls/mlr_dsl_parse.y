@@ -146,6 +146,8 @@ md_statement_braced_end(A) ::= md_for_loop_full_oosvar(B).          { A = B; }
 md_statement_braced_end(A) ::= md_for_loop_full_oosvar_key_only(B). { A = B; }
 md_statement_braced_end(A) ::= md_for_loop_oosvar(B).               { A = B; }
 md_statement_braced_end(A) ::= md_for_loop_oosvar_key_only(B).      { A = B; }
+md_statement_braced_end(A) ::= md_for_loop_local_map(B).            { A = B; }
+md_statement_braced_end(A) ::= md_for_loop_local_map_key_only(B).   { A = B; }
 md_statement_braced_end(A) ::= md_triple_for(B).                    { A = B; }
 md_statement_braced_end(A) ::= md_if_chain(B).                      { A = B; }
 
@@ -376,7 +378,7 @@ md_for_loop_full_oosvar(A) ::=
 // for((k1, k2, k3), v in @*) { ... }
 md_for_loop_full_oosvar(A) ::=
 	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
-		MD_TOKEN_LPAREN md_for_oosvar_keylist(L) MD_TOKEN_RPAREN MD_TOKEN_COMMA md_for_loop_index(V)
+		MD_TOKEN_LPAREN md_for_oosvar_or_local_map_keylist(L) MD_TOKEN_RPAREN MD_TOKEN_COMMA md_for_loop_index(V)
 		MD_TOKEN_IN MD_TOKEN_FULL_OOSVAR
 	MD_TOKEN_RPAREN
 	MD_TOKEN_LBRACE
@@ -452,7 +454,7 @@ md_for_loop_oosvar(A) ::=
 // for((k1, k2, k3), v in @o[1][2]) { ... }
 md_for_loop_oosvar(A) ::=
 	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
-		MD_TOKEN_LPAREN md_for_oosvar_keylist(L) MD_TOKEN_RPAREN MD_TOKEN_COMMA md_for_loop_index(V)
+		MD_TOKEN_LPAREN md_for_oosvar_or_local_map_keylist(L) MD_TOKEN_RPAREN MD_TOKEN_COMMA md_for_loop_index(V)
 		MD_TOKEN_IN md_oosvar_keylist(O)
 	MD_TOKEN_RPAREN
 	MD_TOKEN_LBRACE
@@ -493,10 +495,10 @@ md_for_loop_index(A) ::= MD_TOKEN_BOOLEAN MD_TOKEN_NON_SIGIL_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION);
 }
 
-md_for_oosvar_keylist(A) ::= md_for_loop_index(K). {
+md_for_oosvar_or_local_map_keylist(A) ::= md_for_loop_index(K). { // xxx rename
 	A = mlr_dsl_ast_node_alloc_unary("key_variables", MD_AST_NODE_TYPE_FOR_VARIABLES, K);
 }
-md_for_oosvar_keylist(A) ::= md_for_oosvar_keylist(L) MD_TOKEN_COMMA md_for_loop_index(K). {
+md_for_oosvar_or_local_map_keylist(A) ::= md_for_oosvar_or_local_map_keylist(L) MD_TOKEN_COMMA md_for_loop_index(K). {
 	A = mlr_dsl_ast_node_append_arg(L, K);
 }
 
@@ -514,6 +516,82 @@ md_for_loop_oosvar_key_only(A) ::=
 	A = mlr_dsl_ast_node_alloc_ternary(
 		F->text,
 		MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY,
+		K,
+		O,
+		S
+	);
+}
+
+// ----------------------------------------------------------------
+// for(k, v in o[1][2]) { ... }
+md_for_loop_local_map(A) ::=
+	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
+		md_for_loop_index(K) MD_TOKEN_COMMA md_for_loop_index(V)
+		MD_TOKEN_IN md_local_map_keylist(O)
+	MD_TOKEN_RPAREN
+	MD_TOKEN_LBRACE
+		md_statement_block(S)
+	MD_TOKEN_RBRACE.
+{
+	mlr_dsl_ast_node_replace_text(S, "for_loop_local_map_block");
+	A = mlr_dsl_ast_node_alloc_ternary(
+		F->text,
+		MD_AST_NODE_TYPE_FOR_LOCAL_MAP,
+		mlr_dsl_ast_node_alloc_binary(
+			"key_and_value_variables",
+			MD_AST_NODE_TYPE_FOR_VARIABLES,
+			mlr_dsl_ast_node_alloc_unary(
+				"key_variables",
+				MD_AST_NODE_TYPE_FOR_VARIABLES,
+				K
+			),
+			V
+		),
+		O,
+		S
+	);
+}
+
+// for((k1, k2), v in o[1][2]) { ... }
+// for((k1, k2, k3), v in o[1][2]) { ... }
+md_for_loop_local_map(A) ::=
+	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
+		MD_TOKEN_LPAREN md_for_oosvar_or_local_map_keylist(L) MD_TOKEN_RPAREN MD_TOKEN_COMMA md_for_loop_index(V)
+		MD_TOKEN_IN md_local_map_keylist(O)
+	MD_TOKEN_RPAREN
+	MD_TOKEN_LBRACE
+		md_statement_block(S)
+	MD_TOKEN_RBRACE.
+{
+	mlr_dsl_ast_node_replace_text(S, "for_loop_local_map_block");
+	A = mlr_dsl_ast_node_alloc_ternary(
+		F->text,
+		MD_AST_NODE_TYPE_FOR_LOCAL_MAP,
+		mlr_dsl_ast_node_alloc_binary(
+			"key_and_value_variables",
+			MD_AST_NODE_TYPE_FOR_VARIABLES,
+			L,
+			V
+		),
+		O,
+		S
+	);
+}
+
+// for(k in o[1][2]) { ... }
+md_for_loop_local_map_key_only(A) ::=
+	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
+		md_for_loop_index(K)
+		MD_TOKEN_IN md_local_map_keylist(O)
+	MD_TOKEN_RPAREN
+	MD_TOKEN_LBRACE
+		md_statement_block(S)
+	MD_TOKEN_RBRACE.
+{
+	mlr_dsl_ast_node_replace_text(S, "for_loop_local_map_block");
+	A = mlr_dsl_ast_node_alloc_ternary(
+		F->text,
+		MD_AST_NODE_TYPE_FOR_LOCAL_MAP_KEY_ONLY,
 		K,
 		O,
 		S
@@ -1973,6 +2051,13 @@ md_oosvar_basename(A) ::= MD_TOKEN_BRACED_OOSVAR_NAME(B). {
 // E.g. @["name"]
 md_oosvar_basename(A) ::= MD_TOKEN_AT_SIGN MD_TOKEN_LEFT_BRACKET md_rhs(B) MD_TOKEN_RIGHT_BRACKET. {
 	A = mlr_dsl_ast_node_alloc_unary("oosvar_keylist", MD_AST_NODE_TYPE_OOSVAR_KEYLIST, B);
+}
+
+md_local_map_keylist(A) ::= md_local_variable(B). {
+	A = B;
+}
+md_local_map_keylist(A) ::= md_local_map_keylist(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
+	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
 // ----------------------------------------------------------------
