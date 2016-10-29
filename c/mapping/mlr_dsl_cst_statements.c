@@ -62,6 +62,8 @@ static cst_statement_allocator_t alloc_do_while;
 static cst_statement_allocator_t alloc_for_srec;
 static cst_statement_allocator_t alloc_for_oosvar;
 static cst_statement_allocator_t alloc_for_oosvar_key_only;
+static cst_statement_allocator_t alloc_for_local_map;
+static cst_statement_allocator_t alloc_for_local_map_key_only;
 static cst_statement_allocator_t alloc_triple_for;
 static cst_statement_allocator_t alloc_break;
 static cst_statement_allocator_t alloc_continue;
@@ -157,6 +159,8 @@ static cst_statement_handler_t handle_do_while;
 static cst_statement_handler_t handle_for_srec;
 static cst_statement_handler_t handle_for_oosvar;
 static cst_statement_handler_t handle_for_oosvar_key_only;
+static cst_statement_handler_t handle_for_local_map;
+static cst_statement_handler_t handle_for_local_map_key_only;
 static cst_statement_handler_t handle_triple_for;
 static cst_statement_handler_t handle_break;
 static cst_statement_handler_t handle_continue;
@@ -164,6 +168,16 @@ static cst_statement_handler_t handle_if_head;
 static cst_statement_handler_t handle_bare_boolean;
 
 static void handle_for_oosvar_aux(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs,
+	mlhmmv_value_t           submap,
+	char**                   prest_for_k_variable_names,
+	int*                     prest_for_k_frame_relative_indices,
+	int*                     prest_for_k_frame_type_masks,
+	int                      prest_for_k_count);
+
+static void handle_for_local_map_aux(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs,
@@ -360,6 +374,7 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 	case MD_AST_NODE_TYPE_DO_WHILE:
 		return alloc_do_while(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
+
 	case MD_AST_NODE_TYPE_FOR_SREC:
 		if (context_flags & IN_BEGIN_OR_END) {
 			fprintf(stderr, "%s: statements involving $-variables are not valid within begin or end blocks.\n",
@@ -368,12 +383,21 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		}
 		return alloc_for_srec(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
+
 	case MD_AST_NODE_TYPE_FOR_OOSVAR:
 		return alloc_for_oosvar(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
 	case MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY:
 		return alloc_for_oosvar_key_only(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
+
+	case MD_AST_NODE_TYPE_FOR_LOCAL_MAP:
+		return alloc_for_local_map(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
+		break;
+	case MD_AST_NODE_TYPE_FOR_LOCAL_MAP_KEY_ONLY:
+		return alloc_for_local_map_key_only(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
+		break;
+
 	case MD_AST_NODE_TYPE_TRIPLE_FOR:
 		return alloc_triple_for(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
@@ -684,10 +708,10 @@ static mlr_dsl_cst_statement_t* alloc_blank() {
 	pstatement->for_srec_k_variable_name                = NULL;
 	pstatement->for_srec_k_frame_relative_index         = 0;
 	pstatement->for_srec_k_type_mask                    = TYPE_MASK_ANY;
-	pstatement->for_oosvar_k_variable_names             = NULL;
-	pstatement->for_oosvar_k_frame_relative_indices     = NULL;
-	pstatement->for_oosvar_k_type_masks                 = NULL;
-	pstatement->for_oosvar_k_count                      = 0;
+	pstatement->for_map_k_variable_names                = NULL;
+	pstatement->for_map_k_frame_relative_indices        = NULL;
+	pstatement->for_map_k_type_masks                    = NULL;
+	pstatement->for_map_k_count                         = 0;
 	pstatement->for_v_variable_name                     = NULL;
 	pstatement->for_v_frame_relative_index              = 0;
 	pstatement->for_v_type_mask                         = TYPE_MASK_ANY;
@@ -1214,20 +1238,20 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 	mlr_dsl_ast_node_t* pmiddle   = pnode->pchildren->phead->pnext->pvvalue;
 	mlr_dsl_ast_node_t* pright    = pnode->pchildren->phead->pnext->pnext->pvvalue;
 
-	pstatement->for_oosvar_k_variable_names = mlr_malloc_or_die(sizeof(char*) * psubleft->pchildren->length);
-	pstatement->for_oosvar_k_frame_relative_indices = mlr_malloc_or_die(sizeof(int) * psubleft->pchildren->length);
-	pstatement->for_oosvar_k_type_masks = mlr_malloc_or_die(sizeof(int) * psubleft->pchildren->length);
-	pstatement->for_oosvar_k_count = 0;
+	pstatement->for_map_k_variable_names = mlr_malloc_or_die(sizeof(char*) * psubleft->pchildren->length);
+	pstatement->for_map_k_frame_relative_indices = mlr_malloc_or_die(sizeof(int) * psubleft->pchildren->length);
+	pstatement->for_map_k_type_masks = mlr_malloc_or_die(sizeof(int) * psubleft->pchildren->length);
+	pstatement->for_map_k_count = 0;
 	for (sllve_t* pe = psubleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnamenode = pe->pvvalue;
 		MLR_INTERNAL_CODING_ERROR_IF(pnamenode->vardef_frame_relative_index == MD_UNUSED_INDEX);
-		pstatement->for_oosvar_k_variable_names[pstatement->for_oosvar_k_count] =
+		pstatement->for_map_k_variable_names[pstatement->for_map_k_count] =
 			mlr_strdup_or_die(pnamenode->text);
-		pstatement->for_oosvar_k_frame_relative_indices[pstatement->for_oosvar_k_count] =
+		pstatement->for_map_k_frame_relative_indices[pstatement->for_map_k_count] =
 			pnamenode->vardef_frame_relative_index;
-		pstatement->for_oosvar_k_type_masks[pstatement->for_oosvar_k_count] =
+		pstatement->for_map_k_type_masks[pstatement->for_map_k_count] =
 			mlr_dsl_ast_node_type_to_type_mask(pnamenode->type);
-		pstatement->for_oosvar_k_count++;
+		pstatement->for_map_k_count++;
 	}
 	pstatement->for_v_variable_name = mlr_strdup_or_die(psubright->text);
 	MLR_INTERNAL_CODING_ERROR_IF(psubright->vardef_frame_relative_index == MD_UNUSED_INDEX);
@@ -1263,13 +1287,13 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar_key_only(mlr_dsl_cst_t* pcst, m
 	mlr_dsl_ast_node_t* pmiddle   = pnode->pchildren->phead->pnext->pvvalue;
 	mlr_dsl_ast_node_t* pright    = pnode->pchildren->phead->pnext->pnext->pvvalue;
 
-	pstatement->for_oosvar_k_variable_names = mlr_malloc_or_die(sizeof(char*));
-	pstatement->for_oosvar_k_frame_relative_indices = mlr_malloc_or_die(sizeof(int));
-	pstatement->for_oosvar_k_type_masks = mlr_malloc_or_die(sizeof(int));
+	pstatement->for_map_k_variable_names = mlr_malloc_or_die(sizeof(char*));
+	pstatement->for_map_k_frame_relative_indices = mlr_malloc_or_die(sizeof(int));
+	pstatement->for_map_k_type_masks = mlr_malloc_or_die(sizeof(int));
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
-	pstatement->for_oosvar_k_variable_names[0] = mlr_strdup_or_die(pleft->text);
-	pstatement->for_oosvar_k_frame_relative_indices[0] = pleft->vardef_frame_relative_index;
-	pstatement->for_oosvar_k_type_masks[0] = mlr_dsl_ast_node_type_to_type_mask(pleft->type);
+	pstatement->for_map_k_variable_names[0] = mlr_strdup_or_die(pleft->text);
+	pstatement->for_map_k_frame_relative_indices[0] = pleft->vardef_frame_relative_index;
+	pstatement->for_map_k_type_masks[0] = mlr_dsl_ast_node_type_to_type_mask(pleft->type);
 
 	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
 		pcst, pmiddle, type_inferencing, context_flags);
@@ -1283,6 +1307,97 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar_key_only(mlr_dsl_cst_t* pcst, m
 			type_inferencing, context_flags));
 	}
 	pstatement->pnode_handler = handle_for_oosvar_key_only;
+	pstatement->pblock_handler = handle_statement_block_with_break_continue;
+
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
+static mlr_dsl_cst_statement_t* alloc_for_local_map(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	// Left child node is list of bound variables.
+	//   Left subnode is namelist for key boundvars.
+	//   Right subnode is name for value boundvar.
+	// Middle child node is keylist for basepoint in the local mlhmmv.
+	// Right child node is the list of statements in the body.
+	mlr_dsl_ast_node_t* pleft     = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* psubleft  = pleft->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* psubright = pleft->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* pmiddle   = pnode->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* pright    = pnode->pchildren->phead->pnext->pnext->pvvalue;
+
+	pstatement->for_map_k_variable_names = mlr_malloc_or_die(sizeof(char*) * psubleft->pchildren->length);
+	pstatement->for_map_k_frame_relative_indices = mlr_malloc_or_die(sizeof(int) * psubleft->pchildren->length);
+	pstatement->for_map_k_type_masks = mlr_malloc_or_die(sizeof(int) * psubleft->pchildren->length);
+	pstatement->for_map_k_count = 0;
+	for (sllve_t* pe = psubleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pnamenode = pe->pvvalue;
+		MLR_INTERNAL_CODING_ERROR_IF(pnamenode->vardef_frame_relative_index == MD_UNUSED_INDEX);
+		pstatement->for_map_k_variable_names[pstatement->for_map_k_count] =
+			mlr_strdup_or_die(pnamenode->text);
+		pstatement->for_map_k_frame_relative_indices[pstatement->for_map_k_count] =
+			pnamenode->vardef_frame_relative_index;
+		pstatement->for_map_k_type_masks[pstatement->for_map_k_count] =
+			mlr_dsl_ast_node_type_to_type_mask(pnamenode->type);
+		pstatement->for_map_k_count++;
+	}
+	pstatement->for_v_variable_name = mlr_strdup_or_die(psubright->text);
+	MLR_INTERNAL_CODING_ERROR_IF(psubright->vardef_frame_relative_index == MD_UNUSED_INDEX);
+	pstatement->for_v_frame_relative_index = psubright->vardef_frame_relative_index;
+	pstatement->for_v_type_mask = mlr_dsl_ast_node_type_to_type_mask(psubright->type);
+
+	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
+		pcst, pmiddle, type_inferencing, context_flags);
+
+	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
+	pstatement->pstatement_block = cst_statement_block_alloc(pnode->subframe_var_count);
+
+	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+		sllv_append(pstatement->pstatement_block->pstatements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
+			type_inferencing, context_flags));
+	}
+	pstatement->pnode_handler = handle_for_local_map;
+	pstatement->pblock_handler = handle_statement_block_with_break_continue;
+
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_for_local_map_key_only(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank();
+
+	// Left child node is single bound variable
+	// Middle child node is keylist for basepoint in the oosvar mlhmmv.
+	// Right child node is the list of statements in the body.
+	mlr_dsl_ast_node_t* pleft     = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pmiddle   = pnode->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* pright    = pnode->pchildren->phead->pnext->pnext->pvvalue;
+
+	pstatement->for_map_k_variable_names = mlr_malloc_or_die(sizeof(char*));
+	pstatement->for_map_k_frame_relative_indices = mlr_malloc_or_die(sizeof(int));
+	pstatement->for_map_k_type_masks = mlr_malloc_or_die(sizeof(int));
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
+	pstatement->for_map_k_variable_names[0] = mlr_strdup_or_die(pleft->text);
+	pstatement->for_map_k_frame_relative_indices[0] = pleft->vardef_frame_relative_index;
+	pstatement->for_map_k_type_masks[0] = mlr_dsl_ast_node_type_to_type_mask(pleft->type);
+
+	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
+		pcst, pmiddle, type_inferencing, context_flags);
+
+	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
+	pstatement->pstatement_block = cst_statement_block_alloc(pnode->subframe_var_count);
+
+	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
+		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
+		sllv_append(pstatement->pstatement_block->pstatements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
+			type_inferencing, context_flags));
+	}
+	pstatement->pnode_handler = handle_for_local_map_key_only;
 	pstatement->pblock_handler = handle_statement_block_with_break_continue;
 
 	return pstatement;
@@ -2005,13 +2120,13 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 	}
 
 	free(pstatement->for_srec_k_variable_name);
-	if (pstatement->for_oosvar_k_variable_names != NULL) {
-		for (int i = 0; i < pstatement->for_oosvar_k_count; i++)
-			free(pstatement->for_oosvar_k_variable_names[i]);
-		free(pstatement->for_oosvar_k_variable_names);
+	if (pstatement->for_map_k_variable_names != NULL) {
+		for (int i = 0; i < pstatement->for_map_k_count; i++)
+			free(pstatement->for_map_k_variable_names[i]);
+		free(pstatement->for_map_k_variable_names);
 	}
-	free(pstatement->for_oosvar_k_frame_relative_indices);
-	free(pstatement->for_oosvar_k_type_masks);
+	free(pstatement->for_map_k_frame_relative_indices);
+	free(pstatement->for_map_k_type_masks);
 	free(pstatement->for_v_variable_name);
 
     if (pstatement->ptriple_for_start_statements != NULL) {
@@ -2790,8 +2905,8 @@ static void handle_for_oosvar(
 			// handle_statement_block_with_break_continue was called through there.
 
 			handle_for_oosvar_aux(pstatement, pvars, pcst_outputs, submap,
-				pstatement->for_oosvar_k_variable_names, pstatement->for_oosvar_k_frame_relative_indices,
-				pstatement->for_oosvar_k_type_masks, pstatement->for_oosvar_k_count);
+				pstatement->for_map_k_variable_names, pstatement->for_map_k_frame_relative_indices,
+				pstatement->for_map_k_type_masks, pstatement->for_map_k_count);
 
 			if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 				loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
@@ -2888,8 +3003,162 @@ static void handle_for_oosvar_key_only(
 		for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
 			// Bind the v-name to the terminal mlrval:
 			local_stack_frame_define(pframe,
-				pstatement->for_oosvar_k_variable_names[0], pstatement->for_oosvar_k_frame_relative_indices[0],
-				pstatement->for_oosvar_k_type_masks[0], mv_copy(pe->pvvalue));
+				pstatement->for_map_k_variable_names[0], pstatement->for_map_k_frame_relative_indices[0],
+				pstatement->for_map_k_type_masks[0], mv_copy(pe->pvvalue));
+
+			// Execute the loop-body statements:
+			pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
+
+			if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
+				loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
+			}
+			if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
+				loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
+			}
+
+			mv_free(pe->pvvalue);
+			free(pe->pvvalue);
+		}
+
+		loop_stack_pop(pvars->ploop_stack);
+		local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+
+		sllv_free(pkeys);
+	}
+	sllmv_free(plhskeylist);
+}
+
+// ----------------------------------------------------------------
+static void handle_for_local_map(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	// Evaluate the keylist: e.g. in 'for ((k1, k2), v in @a[$3][x]) { ... }', find the values of $3
+	// and x for the current record and stack frame. The keylist bindings are outside the scope
+	// of the for-loop, while the k1/k2/v are bound within the for-loop.
+
+	int keys_all_non_null_or_error = FALSE;
+	sllmv_t* plhskeylist = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
+		&keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+
+		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+		local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+		loop_stack_push(pvars->ploop_stack);
+
+		// Locate and copy the submap indexed by the keylist. E.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', the
+		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
+		// for-loop.
+		mlhmmv_value_t submap = mlhmmv_copy_submap(pvars->poosvars, plhskeylist);
+
+		if (!submap.is_terminal && submap.u.pnext_level != NULL) {
+			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level
+			// deeper into the submap.  Note there must be at least one k-name so we are assuming
+			// the for-loop within handle_for_local_map_aux was gone through once & thus
+			// handle_statement_block_with_break_continue was called through there.
+
+			handle_for_local_map_aux(pstatement, pvars, pcst_outputs, submap,
+				pstatement->for_map_k_variable_names, pstatement->for_map_k_frame_relative_indices,
+				pstatement->for_map_k_type_masks, pstatement->for_map_k_count);
+
+			if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
+				loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
+			}
+			if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
+				loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
+			}
+		}
+
+		mlhmmv_free_submap(submap);
+
+		loop_stack_pop(pvars->ploop_stack);
+		local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+	}
+	sllmv_free(plhskeylist);
+}
+
+static void handle_for_local_map_aux(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs,
+	mlhmmv_value_t           submap,
+	char**                   prest_for_k_variable_names,
+	int*                     prest_for_k_frame_relative_indices,
+	int*                     prest_for_k_type_masks,
+	int                      prest_for_k_count)
+{
+	if (prest_for_k_count > 0) { // Keep recursing over remaining k-names
+
+		if (submap.is_terminal) {
+			// The submap was too shallow for the user-specified k-names; there are no terminals here.
+		} else {
+			// Loop over keys at this submap level:
+			for (mlhmmv_level_entry_t* pe = submap.u.pnext_level->phead; pe != NULL; pe = pe->pnext) {
+				// Bind the k-name to the entry-key mlrval:
+				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+				local_stack_frame_define(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
+					prest_for_k_type_masks[0], mv_copy(&pe->level_key));
+				// Recurse into the next-level submap:
+				handle_for_local_map_aux(pstatement, pvars, pcst_outputs, pe->level_value,
+					&prest_for_k_variable_names[1], &prest_for_k_frame_relative_indices[1], &prest_for_k_type_masks[1],
+					prest_for_k_count - 1);
+
+				if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
+					// Bit cleared in recursive caller
+					return;
+				} else if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
+					loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
+				}
+
+			}
+		}
+
+	} else { // End of recursion: k-names have all been used up
+
+		if (!submap.is_terminal) {
+			// The submap was too deep for the user-specified k-names; there are no terminals here.
+		} else {
+			// Bind the v-name to the terminal mlrval:
+			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+			local_stack_frame_define(pframe, pstatement->for_v_variable_name, pstatement->for_v_frame_relative_index,
+				pstatement->for_v_type_mask, mv_copy(&submap.u.mlrval));
+			// Execute the loop-body statements:
+			pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
+		}
+
+	}
+}
+
+// ----------------------------------------------------------------
+static void handle_for_local_map_key_only(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	// Evaluate the keylist: e.g. in 'for (k in @a[$3][x]) { ... }', find the values of $3
+	// and x for the current record and stack frame. The keylist bindings are outside the scope
+	// of the for-loop, while the k is bound within the for-loop.
+
+	int keys_all_non_null_or_error = FALSE;
+	sllmv_t* plhskeylist = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
+		&keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		// Locate the submap indexed by the keylist and copy its keys. E.g. in 'for (k1 in @a[3][$4]) { ... }', the
+		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
+		// for-loop.
+
+		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+		local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+		loop_stack_push(pvars->ploop_stack);
+
+		sllv_t* pkeys = mlhmmv_copy_keys_from_submap(pvars->poosvars, plhskeylist);
+
+		for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
+			// Bind the v-name to the terminal mlrval:
+			local_stack_frame_define(pframe,
+				pstatement->for_map_k_variable_names[0], pstatement->for_map_k_frame_relative_indices[0],
+				pstatement->for_map_k_type_masks[0], mv_copy(pe->pvvalue));
 
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);

@@ -214,17 +214,17 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// if-elif-elif-else:
 	sllv_t* pif_chain_statements;
 
-	// for-srec / for-oosvar:
+	// for-srec / for-oosvar / for-local-map:
 	// (The variable name is used only for type-decl exceptions. Otherwise the
 	// name is replaced with the frame-relative index by the stack allocator.)
 	char* for_srec_k_variable_name;
 	int   for_srec_k_frame_relative_index;
 	int   for_srec_k_type_mask;
 
-	char** for_oosvar_k_variable_names;
-	int*  for_oosvar_k_frame_relative_indices;
-	int*  for_oosvar_k_type_masks;
-	int   for_oosvar_k_count;
+	char** for_map_k_variable_names;
+	int*  for_map_k_frame_relative_indices;
+	int*  for_map_k_type_masks;
+	int   for_map_k_count;
 
 	char* for_v_variable_name;
 	int   for_v_frame_relative_index;

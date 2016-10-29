@@ -378,7 +378,7 @@ md_for_loop_full_oosvar(A) ::=
 // for((k1, k2, k3), v in @*) { ... }
 md_for_loop_full_oosvar(A) ::=
 	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
-		MD_TOKEN_LPAREN md_for_oosvar_or_local_map_keylist(L) MD_TOKEN_RPAREN MD_TOKEN_COMMA md_for_loop_index(V)
+		MD_TOKEN_LPAREN md_for_map_keylist(L) MD_TOKEN_RPAREN MD_TOKEN_COMMA md_for_loop_index(V)
 		MD_TOKEN_IN MD_TOKEN_FULL_OOSVAR
 	MD_TOKEN_RPAREN
 	MD_TOKEN_LBRACE
@@ -454,7 +454,7 @@ md_for_loop_oosvar(A) ::=
 // for((k1, k2, k3), v in @o[1][2]) { ... }
 md_for_loop_oosvar(A) ::=
 	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
-		MD_TOKEN_LPAREN md_for_oosvar_or_local_map_keylist(L) MD_TOKEN_RPAREN MD_TOKEN_COMMA md_for_loop_index(V)
+		MD_TOKEN_LPAREN md_for_map_keylist(L) MD_TOKEN_RPAREN MD_TOKEN_COMMA md_for_loop_index(V)
 		MD_TOKEN_IN md_oosvar_keylist(O)
 	MD_TOKEN_RPAREN
 	MD_TOKEN_LBRACE
@@ -495,10 +495,10 @@ md_for_loop_index(A) ::= MD_TOKEN_BOOLEAN MD_TOKEN_NON_SIGIL_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION);
 }
 
-md_for_oosvar_or_local_map_keylist(A) ::= md_for_loop_index(K). { // xxx rename
+md_for_map_keylist(A) ::= md_for_loop_index(K). { // xxx rename
 	A = mlr_dsl_ast_node_alloc_unary("key_variables", MD_AST_NODE_TYPE_FOR_VARIABLES, K);
 }
-md_for_oosvar_or_local_map_keylist(A) ::= md_for_oosvar_or_local_map_keylist(L) MD_TOKEN_COMMA md_for_loop_index(K). {
+md_for_map_keylist(A) ::= md_for_map_keylist(L) MD_TOKEN_COMMA md_for_loop_index(K). {
 	A = mlr_dsl_ast_node_append_arg(L, K);
 }
 
@@ -556,7 +556,7 @@ md_for_loop_local_map(A) ::=
 // for((k1, k2, k3), v in o[1][2]) { ... }
 md_for_loop_local_map(A) ::=
 	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
-		MD_TOKEN_LPAREN md_for_oosvar_or_local_map_keylist(L) MD_TOKEN_RPAREN MD_TOKEN_COMMA md_for_loop_index(V)
+		MD_TOKEN_LPAREN md_for_map_keylist(L) MD_TOKEN_RPAREN MD_TOKEN_COMMA md_for_loop_index(V)
 		MD_TOKEN_IN md_local_map_keylist(O)
 	MD_TOKEN_RPAREN
 	MD_TOKEN_LBRACE
