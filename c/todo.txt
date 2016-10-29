@@ -60,6 +60,8 @@ UT FOR 5.0.0:
 * all assert_X() cases
 * all type-decl cases: local/forbind/argpass; initial assign & reuse thereafter.
 
+* UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
+
 ================================================================
 HYGIENE FOR 5.0.0:
 

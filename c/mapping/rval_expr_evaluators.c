@@ -351,14 +351,12 @@ mv_t rval_evaluator_local_map_keylist_func(void* pvstate, variables_t* pvars) {
 
 	mv_t rv = mv_absent();
 	if (all_non_null_or_error) {
-		int error = 0;
-		mv_t* pval = mlhmmv_get_terminal(pvars->poosvars, pmvkeys, &error); // xxx temp -- get from stack frame
-		if (pval != NULL) {
-			if (pval->type == MT_STRING && *pval->u.strv == 0)
-				rv = mv_empty();
-			else
-				rv = mv_copy(pval);
-		}
+		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+		mv_t val = local_stack_frame_get_map(pframe, pstate->vardef_frame_relative_index, pmvkeys);
+		if (val.type == MT_STRING && *val.u.strv == 0)
+			rv = mv_empty();
+		else
+			rv = mv_copy(&val);
 	}
 
 	sllmv_free(pmvkeys);

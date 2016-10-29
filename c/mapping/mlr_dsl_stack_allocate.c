@@ -371,34 +371,52 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* 
 {
 	if (pnode->type == MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_INT_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_MAP_LOCAL_DECLARATION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_NON_MAP_ASSIGNMENT) { // LHS
 		pass_1_for_local_assignment(pnode, pframe_group, pmax_subframe_depth, trace);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_MAP_ASSIGNMENT) { // LHS
+		pass_1_for_local_assignment(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE) { // RHS
 		pass_1_for_local_read(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE) { // RHS
 		pass_1_for_local_read(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) {
 		pass_1_for_srec_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY) {
 		pass_1_for_oosvar_key_only_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR) {
 		pass_1_for_oosvar_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_TRIPLE_FOR) {
 		pass_1_for_triple_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->pchildren != NULL) {
 		pass_1_for_non_terminal_node(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	}
 }
 

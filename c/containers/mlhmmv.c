@@ -1388,7 +1388,7 @@ static int mlhmmv_int_hash_func(mv_t* pa) {
 	return pa->u.intv;
 }
 static int mlhmmv_other_hash_func(mv_t* pa) {
-	fprintf(stderr, "%s: @-variable keys must be of type %s or %s; got %s.\n",
+	fprintf(stderr, "%s: map keys must be of type %s or %s; got %s.\n",
 		MLR_GLOBALS.bargv0,
 		mt_describe_type(MT_STRING),
 		mt_describe_type(MT_INT),

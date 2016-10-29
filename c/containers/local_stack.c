@@ -108,8 +108,14 @@ mv_t local_stack_frame_get_map(local_stack_frame_t* pframe,
 	// xxx encapsulate
 	if (pmvalue->is_terminal) {
 		return mv_absent();
+	} else if (pmvalue->u.pnext_level == NULL) {
+		LOCAL_STACK_TRACE(printf("VALUE IS EMPTY\n"));
+		return mv_absent();
 	} else {
 		int error = 0;
+		LOCAL_STACK_TRACE(printf("VALUE IS:\n"));
+		LOCAL_STACK_TRACE(printf("PTR IS %p\n", pmvalue->u.pnext_level));
+		LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->u.pnext_level, 0, TRUE, TRUE, "", stdout));
 		return *mlhmmv_get_terminal_from_level(pmvalue->u.pnext_level, pmvkeys, &error);
 	}
 }

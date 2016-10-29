@@ -44,8 +44,8 @@ void local_stack_frame_free(local_stack_frame_t* pframe);
 //#define LOCAL_STACK_TRACE_ENABLE
 //#define LOCAL_STACK_BOUNDS_CHECK_ENABLE
 
-#ifdef LOCAL_STACK_BOUNDS_CHECK_ENABLE
 void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, int vardef_frame_relative_index);
+#ifdef LOCAL_STACK_BOUNDS_CHECK_ENABLE
 #define LOCAL_STACK_BOUNDS_CHECK(pframe, op, set, vardef_frame_relative_index) \
 	local_stack_bounds_check((pframe), (op), (set), (vardef_frame_relative_index))
 #else
@@ -57,6 +57,13 @@ void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, in
 #else
 #define LOCAL_STACK_TRACE(p)
 #endif
+
+// These are unconditional. With the single added character 'X' they can be
+// used to focus verbosity at specific callsites for dev/debug.
+#define LOCAL_STACK_BOUNDS_CHECKX(pframe, op, set, vardef_frame_relative_index) \
+	local_stack_bounds_check((pframe), (op), (set), (vardef_frame_relative_index))
+
+#define LOCAL_STACK_TRACEX(p) p
 
 // ----------------------------------------------------------------
 // Sets/clears the in-use flag for top-level statement blocks, and verifies the
