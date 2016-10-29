@@ -44,14 +44,20 @@ MAPVARS:
     @b[c] = f(...)
 
   k all other (non-special-case) LHS situations
+    > coded; just need more UT coverage.
 
   k RHS expr eval: terminality as already for oosvars
-
-  - parameter marshal
-
-  - function return value
+    > coded; just need more UT coverage.
 
   - for-local -- with keylist etc. just as for oosvars
+    > should be a straightforward duplication of existing for-oosvar code
+
+  - function return value
+    > only map-valued in one of the above special-case contexts
+    > should be straightforward
+
+  ! parameter marshal
+    > this is more complex. breaks mv-eval-from-ast model. :(
 
 * needs assert_not_map in userspace
 
@@ -67,6 +73,13 @@ MAPVARS:
 * type-decl assert RHS for map/non-map reads, and doc that:
   this should throw an error:
     mlr --from s put 'int a=1;var b=a[2]'
+
+* type-decl assert:
+  map a;
+  a[1][2] = 3;
+  map b = a;
+  map c = a[1];
+  int d = a[1][2];
 
 ================================================================
 UT FOR 5.0.0:
