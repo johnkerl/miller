@@ -133,6 +133,9 @@ typedef void mlr_dsl_cst_statement_block_handler_t(
 
 typedef struct _mlr_dsl_cst_statement_t {
 
+	// For trace-mode.
+	mlr_dsl_ast_node_t* past_node;
+
 	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.
 	mlr_dsl_cst_node_handler_func_t* pnode_handler;
 

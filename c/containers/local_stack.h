@@ -159,8 +159,10 @@ static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int c
 	for (int i = 0; i < count; i++) {
 		LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p CLEAR %d\n", pframe, pframe->subframe_base+i));
 		LOCAL_STACK_BOUNDS_CHECK(pframe, "CLEAR", FALSE, pframe->subframe_base+i);
-		mv_reset(&psubframe[i].value.u.mlrval); // xxx make method
-		psubframe[i].type_mask = TYPE_MASK_ANY;
+		local_stack_frame_entry_t* pentry = &psubframe[i];
+		pentry->value.is_terminal = TRUE; // xxx make inline method in mlhmmv for all of this
+		mv_reset(&pentry->value.u.mlrval);
+		pentry->type_mask = TYPE_MASK_ANY;
 	}
 	pframe->subframe_base += count;
 }
