@@ -230,6 +230,8 @@ typedef struct _mlr_dsl_cst_statement_t {
 	int   for_v_frame_relative_index;
 	int   for_v_type_mask;
 
+	int   for_map_target_frame_relative_index;
+
 	type_inferenced_srec_field_getter_t* ptype_inferenced_srec_field_getter;
 
 	// triple-for:

@@ -97,7 +97,7 @@ local_stack_frame_t* local_stack_pop(local_stack_t* pstack) {
 }
 
 // ----------------------------------------------------------------
-mv_t local_stack_frame_get_map(local_stack_frame_t* pframe,
+mv_t local_stack_frame_get_map(local_stack_frame_t* pframe, // xxx rename
 	int vardef_frame_relative_index, sllmv_t* pmvkeys)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
@@ -122,6 +122,34 @@ mv_t local_stack_frame_get_map(local_stack_frame_t* pframe,
 		} else {
 			return mv_copy(pval); // xxx temp copy?
 		}
+	}
+}
+
+// a[b][c] w/ [b]
+// a[b][c] w/ [b,c]
+// a[b][c] w/ [b,c,d]
+// ----------------------------------------------------------------
+mlhmmv_value_t* local_stack_frame_get_map_value(local_stack_frame_t* pframe, // xxx rename w/ 'reference' in name
+	int vardef_frame_relative_index, sllmv_t* pmvkeys)
+{
+	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
+	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
+
+	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
+	mlhmmv_value_t* pmvalue = &pentry->value;
+	if (pmvalue->u.pnext_level == NULL) {
+		LOCAL_STACK_TRACE(printf("VALUE IS EMPTY\n"));
+		return NULL;
+	} else {
+		int error = 0;
+		LOCAL_STACK_TRACE(printf("VALUE IS:\n"));
+		LOCAL_STACK_TRACE(printf("PTR IS %p\n", pmvalue->u.pnext_level));
+		LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->u.pnext_level, 0, TRUE, TRUE, "", stdout));
+
+		// Maybe null
+		mlhmmv_value_t* pmval = mlhmmv_get_value_from_level(pmvalue->u.pnext_level, pmvkeys, &error);
+
+		return pmval;
 	}
 }
 

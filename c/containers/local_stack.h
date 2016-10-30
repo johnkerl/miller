@@ -100,7 +100,10 @@ static inline mv_t local_stack_frame_get_non_map(local_stack_frame_t* pframe,
 	}
 }
 
-mv_t local_stack_frame_get_map(local_stack_frame_t* pframe,
+mv_t local_stack_frame_get_map(local_stack_frame_t* pframe, // xxx rename
+	int vardef_frame_relative_index, sllmv_t* pmvkeys);
+
+mlhmmv_value_t* local_stack_frame_get_map_value(local_stack_frame_t* pframe, // xxx rename
 	int vardef_frame_relative_index, sllmv_t* pmvkeys);
 
 // ----------------------------------------------------------------

@@ -24934,8 +24934,8 @@ text="block", type=STATEMENT_BLOCK:
                 text="true", type=BOOLEAN_LITERAL.
                 text="cond_block", type=STATEMENT_BLOCK:
                     text="local", type=UNTYPED_LOCAL_DEFINITION:
-                        text="val", type=LOCAL_VARIABLE.
-                        text="nonesuch", type=LOCAL_VARIABLE.
+                        text="val", type=LOCAL_NON_MAP_VARIABLE.
+                        text="nonesuch", type=LOCAL_NON_MAP_VARIABLE.
                     text="while", type=WHILE:
                         text="==", type=OPERATOR:
                             text="1", type=NUMERIC_LITERAL.
@@ -24952,25 +24952,25 @@ text="block", type=STATEMENT_BLOCK:
                                                 text="k", type=UNTYPED_LOCAL_DEFINITION.
                                                 text="v", type=UNTYPED_LOCAL_DEFINITION.
                                             text="for_full_srec_block", type=STATEMENT_BLOCK:
-                                                text="=", type=LOCAL_ASSIGNMENT:
-                                                    text="val", type=LOCAL_VARIABLE.
+                                                text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                    text="val", type=LOCAL_NON_MAP_VARIABLE.
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
                                                             text=".", type=OPERATOR:
                                                                 text=".", type=OPERATOR:
                                                                     text=".", type=OPERATOR:
                                                                         text=".", type=OPERATOR:
-                                                                            text="v", type=LOCAL_VARIABLE.
+                                                                            text="v", type=LOCAL_NON_MAP_VARIABLE.
                                                                             text=":", type=STRING_LITERAL.
-                                                                        text="a", type=LOCAL_VARIABLE.
+                                                                        text="a", type=LOCAL_NON_MAP_VARIABLE.
                                                                     text=":", type=STRING_LITERAL.
-                                                                text="b", type=LOCAL_VARIABLE.
+                                                                text="b", type=LOCAL_NON_MAP_VARIABLE.
                                                             text=":", type=STRING_LITERAL.
-                                                        text="c", type=LOCAL_VARIABLE.
+                                                        text="c", type=LOCAL_NON_MAP_VARIABLE.
                                                 text="print", type=PRINT:
                                                     text=".", type=OPERATOR:
                                                         text="f:1:val:", type=STRING_LITERAL.
-                                                        text="val", type=LOCAL_VARIABLE.
+                                                        text="val", type=LOCAL_NON_MAP_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
                                 text="elif", type=IF_ITEM:
@@ -24986,7 +24986,7 @@ text="block", type=STATEMENT_BLOCK:
                                                 text="print", type=PRINT:
                                                     text=".", type=OPERATOR:
                                                         text="f:2:k:", type=STRING_LITERAL.
-                                                        text="k", type=LOCAL_VARIABLE.
+                                                        text="k", type=LOCAL_NON_MAP_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
                                 text="elif", type=IF_ITEM:
@@ -25007,9 +25007,9 @@ text="block", type=STATEMENT_BLOCK:
                                                         text=".", type=OPERATOR:
                                                             text=".", type=OPERATOR:
                                                                 text="f:3:k:", type=STRING_LITERAL.
-                                                                text="k", type=LOCAL_VARIABLE.
+                                                                text="k", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="v:", type=STRING_LITERAL.
-                                                        text="v", type=LOCAL_VARIABLE.
+                                                        text="v", type=LOCAL_NON_MAP_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
                                 text="elif", type=IF_ITEM:
@@ -25018,54 +25018,54 @@ text="block", type=STATEMENT_BLOCK:
                                         text="4", type=NUMERIC_LITERAL.
                                     text="elif_block", type=STATEMENT_BLOCK:
                                         text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                            text="sum", type=LOCAL_VARIABLE.
+                                            text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                             text="0", type=NUMERIC_LITERAL.
                                         text="for", type=TRIPLE_FOR:
                                             text="triple_for_start_statements", type=STATEMENT_LIST:
                                                 text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                    text="i", type=LOCAL_VARIABLE.
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="1", type=NUMERIC_LITERAL.
                                             text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                                 text="<=", type=OPERATOR:
-                                                    text="i", type=LOCAL_VARIABLE.
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="10", type=NUMERIC_LITERAL.
                                             text="triple_for_update_statements", type=STATEMENT_LIST:
-                                                text="=", type=LOCAL_ASSIGNMENT:
-                                                    text="i", type=LOCAL_VARIABLE.
+                                                text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="+", type=OPERATOR:
-                                                        text="i", type=LOCAL_VARIABLE.
+                                                        text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                         text="1", type=NUMERIC_LITERAL.
                                             text="triple_for_block", type=STATEMENT_BLOCK:
                                                 text="for", type=TRIPLE_FOR:
                                                     text="triple_for_start_statements", type=STATEMENT_LIST:
                                                         text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                            text="j", type=LOCAL_VARIABLE.
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="1", type=NUMERIC_LITERAL.
                                                     text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                                         text="<=", type=OPERATOR:
-                                                            text="j", type=LOCAL_VARIABLE.
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="10", type=NUMERIC_LITERAL.
                                                     text="triple_for_update_statements", type=STATEMENT_LIST:
-                                                        text="=", type=LOCAL_ASSIGNMENT:
-                                                            text="j", type=LOCAL_VARIABLE.
+                                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="+", type=OPERATOR:
-                                                                text="j", type=LOCAL_VARIABLE.
+                                                                text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                                 text="1", type=NUMERIC_LITERAL.
                                                     text="triple_for_block", type=STATEMENT_BLOCK:
-                                                        text="=", type=LOCAL_ASSIGNMENT:
-                                                            text="sum", type=LOCAL_VARIABLE.
+                                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                            text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="+", type=OPERATOR:
-                                                                text="sum", type=LOCAL_VARIABLE.
+                                                                text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                                                 text="*", type=OPERATOR:
-                                                                    text="i", type=LOCAL_VARIABLE.
-                                                                    text="j", type=LOCAL_VARIABLE.
-                                        text="=", type=LOCAL_ASSIGNMENT:
-                                            text="val", type=LOCAL_VARIABLE.
-                                            text="sum", type=LOCAL_VARIABLE.
+                                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
+                                                                    text="j", type=LOCAL_NON_MAP_VARIABLE.
+                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                            text="val", type=LOCAL_NON_MAP_VARIABLE.
+                                            text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
                                                 text="f:val:", type=STRING_LITERAL.
-                                                text="val", type=LOCAL_VARIABLE.
+                                                text="val", type=LOCAL_NON_MAP_VARIABLE.
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
                             text="break", type=BREAK.
@@ -25086,8 +25086,8 @@ text="block", type=STATEMENT_BLOCK:
                 text="true", type=BOOLEAN_LITERAL.
                 text="cond_block", type=STATEMENT_BLOCK:
                     text="local", type=UNTYPED_LOCAL_DEFINITION:
-                        text="val", type=LOCAL_VARIABLE.
-                        text="nonesuch", type=LOCAL_VARIABLE.
+                        text="val", type=LOCAL_NON_MAP_VARIABLE.
+                        text="nonesuch", type=LOCAL_NON_MAP_VARIABLE.
                     text="while", type=WHILE:
                         text="==", type=OPERATOR:
                             text="1", type=NUMERIC_LITERAL.
@@ -25104,25 +25104,25 @@ text="block", type=STATEMENT_BLOCK:
                                                 text="k", type=UNTYPED_LOCAL_DEFINITION.
                                                 text="v", type=UNTYPED_LOCAL_DEFINITION.
                                             text="for_full_srec_block", type=STATEMENT_BLOCK:
-                                                text="=", type=LOCAL_ASSIGNMENT:
-                                                    text="val", type=LOCAL_VARIABLE.
+                                                text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                    text="val", type=LOCAL_NON_MAP_VARIABLE.
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
                                                             text=".", type=OPERATOR:
                                                                 text=".", type=OPERATOR:
                                                                     text=".", type=OPERATOR:
                                                                         text=".", type=OPERATOR:
-                                                                            text="v", type=LOCAL_VARIABLE.
+                                                                            text="v", type=LOCAL_NON_MAP_VARIABLE.
                                                                             text=":", type=STRING_LITERAL.
-                                                                        text="a", type=LOCAL_VARIABLE.
+                                                                        text="a", type=LOCAL_NON_MAP_VARIABLE.
                                                                     text=":", type=STRING_LITERAL.
-                                                                text="b", type=LOCAL_VARIABLE.
+                                                                text="b", type=LOCAL_NON_MAP_VARIABLE.
                                                             text=":", type=STRING_LITERAL.
-                                                        text="c", type=LOCAL_VARIABLE.
+                                                        text="c", type=LOCAL_NON_MAP_VARIABLE.
                                                 text="print", type=PRINT:
                                                     text=".", type=OPERATOR:
                                                         text="s:1:val:", type=STRING_LITERAL.
-                                                        text="val", type=LOCAL_VARIABLE.
+                                                        text="val", type=LOCAL_NON_MAP_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
                                 text="elif", type=IF_ITEM:
@@ -25138,7 +25138,7 @@ text="block", type=STATEMENT_BLOCK:
                                                 text="print", type=PRINT:
                                                     text=".", type=OPERATOR:
                                                         text="s:2:k:", type=STRING_LITERAL.
-                                                        text="k", type=LOCAL_VARIABLE.
+                                                        text="k", type=LOCAL_NON_MAP_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
                                 text="elif", type=IF_ITEM:
@@ -25159,9 +25159,9 @@ text="block", type=STATEMENT_BLOCK:
                                                         text=".", type=OPERATOR:
                                                             text=".", type=OPERATOR:
                                                                 text="s:3:k:", type=STRING_LITERAL.
-                                                                text="k", type=LOCAL_VARIABLE.
+                                                                text="k", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="v:", type=STRING_LITERAL.
-                                                        text="v", type=LOCAL_VARIABLE.
+                                                        text="v", type=LOCAL_NON_MAP_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
                                 text="elif", type=IF_ITEM:
@@ -25170,54 +25170,54 @@ text="block", type=STATEMENT_BLOCK:
                                         text="4", type=NUMERIC_LITERAL.
                                     text="elif_block", type=STATEMENT_BLOCK:
                                         text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                            text="sum", type=LOCAL_VARIABLE.
+                                            text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                             text="0", type=NUMERIC_LITERAL.
                                         text="for", type=TRIPLE_FOR:
                                             text="triple_for_start_statements", type=STATEMENT_LIST:
                                                 text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                    text="i", type=LOCAL_VARIABLE.
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="1", type=NUMERIC_LITERAL.
                                             text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                                 text="<=", type=OPERATOR:
-                                                    text="i", type=LOCAL_VARIABLE.
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="10", type=NUMERIC_LITERAL.
                                             text="triple_for_update_statements", type=STATEMENT_LIST:
-                                                text="=", type=LOCAL_ASSIGNMENT:
-                                                    text="i", type=LOCAL_VARIABLE.
+                                                text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="+", type=OPERATOR:
-                                                        text="i", type=LOCAL_VARIABLE.
+                                                        text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                         text="1", type=NUMERIC_LITERAL.
                                             text="triple_for_block", type=STATEMENT_BLOCK:
                                                 text="for", type=TRIPLE_FOR:
                                                     text="triple_for_start_statements", type=STATEMENT_LIST:
                                                         text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                            text="j", type=LOCAL_VARIABLE.
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="1", type=NUMERIC_LITERAL.
                                                     text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                                         text="<=", type=OPERATOR:
-                                                            text="j", type=LOCAL_VARIABLE.
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="10", type=NUMERIC_LITERAL.
                                                     text="triple_for_update_statements", type=STATEMENT_LIST:
-                                                        text="=", type=LOCAL_ASSIGNMENT:
-                                                            text="j", type=LOCAL_VARIABLE.
+                                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="+", type=OPERATOR:
-                                                                text="j", type=LOCAL_VARIABLE.
+                                                                text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                                 text="1", type=NUMERIC_LITERAL.
                                                     text="triple_for_block", type=STATEMENT_BLOCK:
-                                                        text="=", type=LOCAL_ASSIGNMENT:
-                                                            text="sum", type=LOCAL_VARIABLE.
+                                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                            text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="+", type=OPERATOR:
-                                                                text="sum", type=LOCAL_VARIABLE.
+                                                                text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                                                 text="*", type=OPERATOR:
-                                                                    text="i", type=LOCAL_VARIABLE.
-                                                                    text="j", type=LOCAL_VARIABLE.
-                                        text="=", type=LOCAL_ASSIGNMENT:
-                                            text="val", type=LOCAL_VARIABLE.
-                                            text="sum", type=LOCAL_VARIABLE.
+                                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
+                                                                    text="j", type=LOCAL_NON_MAP_VARIABLE.
+                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                            text="val", type=LOCAL_NON_MAP_VARIABLE.
+                                            text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
                                                 text="s:val:", type=STRING_LITERAL.
-                                                text="val", type=LOCAL_VARIABLE.
+                                                text="val", type=LOCAL_NON_MAP_VARIABLE.
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
                             text="break", type=BREAK.
@@ -25236,28 +25236,28 @@ text="block", type=STATEMENT_BLOCK:
                 text="true", type=BOOLEAN_LITERAL.
                 text="cond_block", type=STATEMENT_BLOCK:
                     text="local", type=UNTYPED_LOCAL_DEFINITION:
-                        text="val", type=LOCAL_VARIABLE.
-                        text="nonesuch", type=LOCAL_VARIABLE.
+                        text="val", type=LOCAL_NON_MAP_VARIABLE.
+                        text="nonesuch", type=LOCAL_NON_MAP_VARIABLE.
                     text="for", type=TRIPLE_FOR:
                         text="triple_for_start_statements", type=STATEMENT_LIST:
                             text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                text="idx", type=LOCAL_VARIABLE.
+                                text="idx", type=LOCAL_NON_MAP_VARIABLE.
                                 text="1", type=NUMERIC_LITERAL.
                         text="triple_for_continuation_statements", type=STATEMENT_LIST:
                             text="<=", type=OPERATOR:
-                                text="idx", type=LOCAL_VARIABLE.
+                                text="idx", type=LOCAL_NON_MAP_VARIABLE.
                                 text="4", type=NUMERIC_LITERAL.
                         text="triple_for_update_statements", type=STATEMENT_LIST:
-                            text="=", type=LOCAL_ASSIGNMENT:
-                                text="idx", type=LOCAL_VARIABLE.
+                            text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                text="idx", type=LOCAL_NON_MAP_VARIABLE.
                                 text="+", type=OPERATOR:
-                                    text="idx", type=LOCAL_VARIABLE.
+                                    text="idx", type=LOCAL_NON_MAP_VARIABLE.
                                     text="1", type=NUMERIC_LITERAL.
                         text="triple_for_block", type=STATEMENT_BLOCK:
                             text="if_head", type=IF_HEAD:
                                 text="if", type=IF_ITEM:
                                     text="==", type=OPERATOR:
-                                        text="idx", type=LOCAL_VARIABLE.
+                                        text="idx", type=LOCAL_NON_MAP_VARIABLE.
                                         text="2", type=NUMERIC_LITERAL.
                                     text="if_block", type=STATEMENT_BLOCK:
                                         text="for", type=FOR_OOSVAR_KEY_ONLY:
@@ -25268,12 +25268,12 @@ text="block", type=STATEMENT_BLOCK:
                                                 text="print", type=PRINT:
                                                     text=".", type=OPERATOR:
                                                         text="b:2:k:", type=STRING_LITERAL.
-                                                        text="k", type=LOCAL_VARIABLE.
+                                                        text="k", type=LOCAL_NON_MAP_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
                                 text="elif", type=IF_ITEM:
                                     text="==", type=OPERATOR:
-                                        text="idx", type=LOCAL_VARIABLE.
+                                        text="idx", type=LOCAL_NON_MAP_VARIABLE.
                                         text="3", type=NUMERIC_LITERAL.
                                     text="elif_block", type=STATEMENT_BLOCK:
                                         text="for", type=FOR_OOSVAR:
@@ -25289,65 +25289,65 @@ text="block", type=STATEMENT_BLOCK:
                                                         text=".", type=OPERATOR:
                                                             text=".", type=OPERATOR:
                                                                 text="b:3:k:", type=STRING_LITERAL.
-                                                                text="k", type=LOCAL_VARIABLE.
+                                                                text="k", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="v:", type=STRING_LITERAL.
-                                                        text="v", type=LOCAL_VARIABLE.
+                                                        text="v", type=LOCAL_NON_MAP_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
                                 text="elif", type=IF_ITEM:
                                     text="==", type=OPERATOR:
-                                        text="idx", type=LOCAL_VARIABLE.
+                                        text="idx", type=LOCAL_NON_MAP_VARIABLE.
                                         text="4", type=NUMERIC_LITERAL.
                                     text="elif_block", type=STATEMENT_BLOCK:
                                         text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                            text="sum", type=LOCAL_VARIABLE.
+                                            text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                             text="0", type=NUMERIC_LITERAL.
                                         text="for", type=TRIPLE_FOR:
                                             text="triple_for_start_statements", type=STATEMENT_LIST:
                                                 text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                    text="i", type=LOCAL_VARIABLE.
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="1", type=NUMERIC_LITERAL.
                                             text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                                 text="<=", type=OPERATOR:
-                                                    text="i", type=LOCAL_VARIABLE.
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="10", type=NUMERIC_LITERAL.
                                             text="triple_for_update_statements", type=STATEMENT_LIST:
-                                                text="=", type=LOCAL_ASSIGNMENT:
-                                                    text="i", type=LOCAL_VARIABLE.
+                                                text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="+", type=OPERATOR:
-                                                        text="i", type=LOCAL_VARIABLE.
+                                                        text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                         text="1", type=NUMERIC_LITERAL.
                                             text="triple_for_block", type=STATEMENT_BLOCK:
                                                 text="for", type=TRIPLE_FOR:
                                                     text="triple_for_start_statements", type=STATEMENT_LIST:
                                                         text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                            text="j", type=LOCAL_VARIABLE.
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="1", type=NUMERIC_LITERAL.
                                                     text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                                         text="<=", type=OPERATOR:
-                                                            text="j", type=LOCAL_VARIABLE.
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="10", type=NUMERIC_LITERAL.
                                                     text="triple_for_update_statements", type=STATEMENT_LIST:
-                                                        text="=", type=LOCAL_ASSIGNMENT:
-                                                            text="j", type=LOCAL_VARIABLE.
+                                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="+", type=OPERATOR:
-                                                                text="j", type=LOCAL_VARIABLE.
+                                                                text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                                 text="1", type=NUMERIC_LITERAL.
                                                     text="triple_for_block", type=STATEMENT_BLOCK:
-                                                        text="=", type=LOCAL_ASSIGNMENT:
-                                                            text="sum", type=LOCAL_VARIABLE.
+                                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                            text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="+", type=OPERATOR:
-                                                                text="sum", type=LOCAL_VARIABLE.
+                                                                text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                                                 text="*", type=OPERATOR:
-                                                                    text="i", type=LOCAL_VARIABLE.
-                                                                    text="j", type=LOCAL_VARIABLE.
-                                        text="=", type=LOCAL_ASSIGNMENT:
-                                            text="val", type=LOCAL_VARIABLE.
-                                            text="sum", type=LOCAL_VARIABLE.
+                                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
+                                                                    text="j", type=LOCAL_NON_MAP_VARIABLE.
+                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                            text="val", type=LOCAL_NON_MAP_VARIABLE.
+                                            text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
                                                 text="b:val:", type=STRING_LITERAL.
-                                                text="val", type=LOCAL_VARIABLE.
+                                                text="val", type=LOCAL_NON_MAP_VARIABLE.
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
     text="print", type=PRINT:
@@ -25365,8 +25365,8 @@ text="block", type=STATEMENT_BLOCK:
         text="true", type=BOOLEAN_LITERAL.
         text="cond_block", type=STATEMENT_BLOCK:
             text="local", type=UNTYPED_LOCAL_DEFINITION:
-                text="val", type=LOCAL_VARIABLE.
-                text="nonesuch", type=LOCAL_VARIABLE.
+                text="val", type=LOCAL_NON_MAP_VARIABLE.
+                text="nonesuch", type=LOCAL_NON_MAP_VARIABLE.
             text="while", type=WHILE:
                 text="==", type=OPERATOR:
                     text="1", type=NUMERIC_LITERAL.
@@ -25383,13 +25383,13 @@ text="block", type=STATEMENT_BLOCK:
                                         text="k", type=UNTYPED_LOCAL_DEFINITION.
                                         text="v", type=UNTYPED_LOCAL_DEFINITION.
                                     text="for_full_srec_block", type=STATEMENT_BLOCK:
-                                        text="=", type=LOCAL_ASSIGNMENT:
-                                            text="val", type=LOCAL_VARIABLE.
-                                            text="v", type=LOCAL_VARIABLE.
+                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                            text="val", type=LOCAL_NON_MAP_VARIABLE.
+                                            text="v", type=LOCAL_NON_MAP_VARIABLE.
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
                                                 text="m:1:val:", type=STRING_LITERAL.
-                                                text="val", type=LOCAL_VARIABLE.
+                                                text="val", type=LOCAL_NON_MAP_VARIABLE.
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
                         text="elif", type=IF_ITEM:
@@ -25405,7 +25405,7 @@ text="block", type=STATEMENT_BLOCK:
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
                                                 text="m:2:k:", type=STRING_LITERAL.
-                                                text="k", type=LOCAL_VARIABLE.
+                                                text="k", type=LOCAL_NON_MAP_VARIABLE.
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
                         text="elif", type=IF_ITEM:
@@ -25426,9 +25426,9 @@ text="block", type=STATEMENT_BLOCK:
                                                 text=".", type=OPERATOR:
                                                     text=".", type=OPERATOR:
                                                         text="m:3:k:", type=STRING_LITERAL.
-                                                        text="k", type=LOCAL_VARIABLE.
+                                                        text="k", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="v:", type=STRING_LITERAL.
-                                                text="v", type=LOCAL_VARIABLE.
+                                                text="v", type=LOCAL_NON_MAP_VARIABLE.
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
                         text="elif", type=IF_ITEM:
@@ -25437,54 +25437,54 @@ text="block", type=STATEMENT_BLOCK:
                                 text="4", type=NUMERIC_LITERAL.
                             text="elif_block", type=STATEMENT_BLOCK:
                                 text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                    text="sum", type=LOCAL_VARIABLE.
+                                    text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                     text="0", type=NUMERIC_LITERAL.
                                 text="for", type=TRIPLE_FOR:
                                     text="triple_for_start_statements", type=STATEMENT_LIST:
                                         text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                            text="i", type=LOCAL_VARIABLE.
+                                            text="i", type=LOCAL_NON_MAP_VARIABLE.
                                             text="1", type=NUMERIC_LITERAL.
                                     text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                         text="<=", type=OPERATOR:
-                                            text="i", type=LOCAL_VARIABLE.
+                                            text="i", type=LOCAL_NON_MAP_VARIABLE.
                                             text="10", type=NUMERIC_LITERAL.
                                     text="triple_for_update_statements", type=STATEMENT_LIST:
-                                        text="=", type=LOCAL_ASSIGNMENT:
-                                            text="i", type=LOCAL_VARIABLE.
+                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                            text="i", type=LOCAL_NON_MAP_VARIABLE.
                                             text="+", type=OPERATOR:
-                                                text="i", type=LOCAL_VARIABLE.
+                                                text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                 text="1", type=NUMERIC_LITERAL.
                                     text="triple_for_block", type=STATEMENT_BLOCK:
                                         text="for", type=TRIPLE_FOR:
                                             text="triple_for_start_statements", type=STATEMENT_LIST:
                                                 text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                    text="j", type=LOCAL_VARIABLE.
+                                                    text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="1", type=NUMERIC_LITERAL.
                                             text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                                 text="<=", type=OPERATOR:
-                                                    text="j", type=LOCAL_VARIABLE.
+                                                    text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="10", type=NUMERIC_LITERAL.
                                             text="triple_for_update_statements", type=STATEMENT_LIST:
-                                                text="=", type=LOCAL_ASSIGNMENT:
-                                                    text="j", type=LOCAL_VARIABLE.
+                                                text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                    text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="+", type=OPERATOR:
-                                                        text="j", type=LOCAL_VARIABLE.
+                                                        text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                         text="1", type=NUMERIC_LITERAL.
                                             text="triple_for_block", type=STATEMENT_BLOCK:
-                                                text="=", type=LOCAL_ASSIGNMENT:
-                                                    text="sum", type=LOCAL_VARIABLE.
+                                                text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                    text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="+", type=OPERATOR:
-                                                        text="sum", type=LOCAL_VARIABLE.
+                                                        text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                                         text="*", type=OPERATOR:
-                                                            text="i", type=LOCAL_VARIABLE.
-                                                            text="j", type=LOCAL_VARIABLE.
-                                text="=", type=LOCAL_ASSIGNMENT:
-                                    text="val", type=LOCAL_VARIABLE.
-                                    text="sum", type=LOCAL_VARIABLE.
+                                                            text="i", type=LOCAL_NON_MAP_VARIABLE.
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE.
+                                text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                    text="val", type=LOCAL_NON_MAP_VARIABLE.
+                                    text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                 text="print", type=PRINT:
                                     text=".", type=OPERATOR:
                                         text="m:val:", type=STRING_LITERAL.
-                                        text="val", type=LOCAL_VARIABLE.
+                                        text="val", type=LOCAL_NON_MAP_VARIABLE.
                                     text=">", type=FILE_WRITE:
                                         text="stdout", type=STDOUT:
                     text="break", type=BREAK.
@@ -25516,28 +25516,28 @@ text="block", type=STATEMENT_BLOCK:
                 text="true", type=BOOLEAN_LITERAL.
                 text="cond_block", type=STATEMENT_BLOCK:
                     text="local", type=UNTYPED_LOCAL_DEFINITION:
-                        text="val", type=LOCAL_VARIABLE.
-                        text="nonesuch", type=LOCAL_VARIABLE.
+                        text="val", type=LOCAL_NON_MAP_VARIABLE.
+                        text="nonesuch", type=LOCAL_NON_MAP_VARIABLE.
                     text="for", type=TRIPLE_FOR:
                         text="triple_for_start_statements", type=STATEMENT_LIST:
                             text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                text="idx", type=LOCAL_VARIABLE.
+                                text="idx", type=LOCAL_NON_MAP_VARIABLE.
                                 text="1", type=NUMERIC_LITERAL.
                         text="triple_for_continuation_statements", type=STATEMENT_LIST:
                             text="<=", type=OPERATOR:
-                                text="idx", type=LOCAL_VARIABLE.
+                                text="idx", type=LOCAL_NON_MAP_VARIABLE.
                                 text="4", type=NUMERIC_LITERAL.
                         text="triple_for_update_statements", type=STATEMENT_LIST:
-                            text="=", type=LOCAL_ASSIGNMENT:
-                                text="idx", type=LOCAL_VARIABLE.
+                            text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                text="idx", type=LOCAL_NON_MAP_VARIABLE.
                                 text="+", type=OPERATOR:
-                                    text="idx", type=LOCAL_VARIABLE.
+                                    text="idx", type=LOCAL_NON_MAP_VARIABLE.
                                     text="1", type=NUMERIC_LITERAL.
                         text="triple_for_block", type=STATEMENT_BLOCK:
                             text="if_head", type=IF_HEAD:
                                 text="if", type=IF_ITEM:
                                     text="==", type=OPERATOR:
-                                        text="idx", type=LOCAL_VARIABLE.
+                                        text="idx", type=LOCAL_NON_MAP_VARIABLE.
                                         text="2", type=NUMERIC_LITERAL.
                                     text="if_block", type=STATEMENT_BLOCK:
                                         text="for", type=FOR_OOSVAR_KEY_ONLY:
@@ -25548,12 +25548,12 @@ text="block", type=STATEMENT_BLOCK:
                                                 text="print", type=PRINT:
                                                     text=".", type=OPERATOR:
                                                         text="e:2:k:", type=STRING_LITERAL.
-                                                        text="k", type=LOCAL_VARIABLE.
+                                                        text="k", type=LOCAL_NON_MAP_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
                                 text="elif", type=IF_ITEM:
                                     text="==", type=OPERATOR:
-                                        text="idx", type=LOCAL_VARIABLE.
+                                        text="idx", type=LOCAL_NON_MAP_VARIABLE.
                                         text="3", type=NUMERIC_LITERAL.
                                     text="elif_block", type=STATEMENT_BLOCK:
                                         text="for", type=FOR_OOSVAR:
@@ -25569,65 +25569,65 @@ text="block", type=STATEMENT_BLOCK:
                                                         text=".", type=OPERATOR:
                                                             text=".", type=OPERATOR:
                                                                 text="e:3:k:", type=STRING_LITERAL.
-                                                                text="k", type=LOCAL_VARIABLE.
+                                                                text="k", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="v:", type=STRING_LITERAL.
-                                                        text="v", type=LOCAL_VARIABLE.
+                                                        text="v", type=LOCAL_NON_MAP_VARIABLE.
                                                     text=">", type=FILE_WRITE:
                                                         text="stdout", type=STDOUT:
                                 text="elif", type=IF_ITEM:
                                     text="==", type=OPERATOR:
-                                        text="idx", type=LOCAL_VARIABLE.
+                                        text="idx", type=LOCAL_NON_MAP_VARIABLE.
                                         text="4", type=NUMERIC_LITERAL.
                                     text="elif_block", type=STATEMENT_BLOCK:
                                         text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                            text="sum", type=LOCAL_VARIABLE.
+                                            text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                             text="0", type=NUMERIC_LITERAL.
                                         text="for", type=TRIPLE_FOR:
                                             text="triple_for_start_statements", type=STATEMENT_LIST:
                                                 text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                    text="i", type=LOCAL_VARIABLE.
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="1", type=NUMERIC_LITERAL.
                                             text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                                 text="<=", type=OPERATOR:
-                                                    text="i", type=LOCAL_VARIABLE.
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="10", type=NUMERIC_LITERAL.
                                             text="triple_for_update_statements", type=STATEMENT_LIST:
-                                                text="=", type=LOCAL_ASSIGNMENT:
-                                                    text="i", type=LOCAL_VARIABLE.
+                                                text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                     text="+", type=OPERATOR:
-                                                        text="i", type=LOCAL_VARIABLE.
+                                                        text="i", type=LOCAL_NON_MAP_VARIABLE.
                                                         text="1", type=NUMERIC_LITERAL.
                                             text="triple_for_block", type=STATEMENT_BLOCK:
                                                 text="for", type=TRIPLE_FOR:
                                                     text="triple_for_start_statements", type=STATEMENT_LIST:
                                                         text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                            text="j", type=LOCAL_VARIABLE.
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="1", type=NUMERIC_LITERAL.
                                                     text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                                         text="<=", type=OPERATOR:
-                                                            text="j", type=LOCAL_VARIABLE.
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="10", type=NUMERIC_LITERAL.
                                                     text="triple_for_update_statements", type=STATEMENT_LIST:
-                                                        text="=", type=LOCAL_ASSIGNMENT:
-                                                            text="j", type=LOCAL_VARIABLE.
+                                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="+", type=OPERATOR:
-                                                                text="j", type=LOCAL_VARIABLE.
+                                                                text="j", type=LOCAL_NON_MAP_VARIABLE.
                                                                 text="1", type=NUMERIC_LITERAL.
                                                     text="triple_for_block", type=STATEMENT_BLOCK:
-                                                        text="=", type=LOCAL_ASSIGNMENT:
-                                                            text="sum", type=LOCAL_VARIABLE.
+                                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                            text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                                             text="+", type=OPERATOR:
-                                                                text="sum", type=LOCAL_VARIABLE.
+                                                                text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                                                 text="*", type=OPERATOR:
-                                                                    text="i", type=LOCAL_VARIABLE.
-                                                                    text="j", type=LOCAL_VARIABLE.
-                                        text="=", type=LOCAL_ASSIGNMENT:
-                                            text="val", type=LOCAL_VARIABLE.
-                                            text="sum", type=LOCAL_VARIABLE.
+                                                                    text="i", type=LOCAL_NON_MAP_VARIABLE.
+                                                                    text="j", type=LOCAL_NON_MAP_VARIABLE.
+                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                            text="val", type=LOCAL_NON_MAP_VARIABLE.
+                                            text="sum", type=LOCAL_NON_MAP_VARIABLE.
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
                                                 text="e:val:", type=STRING_LITERAL.
-                                                text="val", type=LOCAL_VARIABLE.
+                                                text="val", type=LOCAL_NON_MAP_VARIABLE.
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
 
@@ -26161,8 +26161,8 @@ text="f", type=FUNC_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
             text="true", type=BOOLEAN_LITERAL.
             text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=1
                 text="local", type=UNTYPED_LOCAL_DEFINITION:
-                    text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
-                    text="nonesuch", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
+                    text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
+                    text="nonesuch", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
                 text="while", type=WHILE:
                     text="==", type=OPERATOR:
                         text="1", type=NUMERIC_LITERAL.
@@ -26179,25 +26179,25 @@ text="f", type=FUNC_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                             text="k", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=5
                                             text="v", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=6
                                         text="for_full_srec_block", type=STATEMENT_BLOCK:
-                                            text="=", type=LOCAL_ASSIGNMENT:
-                                                text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
+                                            text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
                                                 text=".", type=OPERATOR:
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
                                                             text=".", type=OPERATOR:
                                                                 text=".", type=OPERATOR:
                                                                     text=".", type=OPERATOR:
-                                                                        text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=6
+                                                                        text="v", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=6
                                                                         text=":", type=STRING_LITERAL.
-                                                                    text="a", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+                                                                    text="a", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
                                                                 text=":", type=STRING_LITERAL.
-                                                            text="b", type=LOCAL_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
+                                                            text="b", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
                                                         text=":", type=STRING_LITERAL.
-                                                    text="c", type=LOCAL_VARIABLE. vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
+                                                    text="c", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
                                             text="print", type=PRINT:
                                                 text=".", type=OPERATOR:
                                                     text="f:1:val:", type=STRING_LITERAL.
-                                                    text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
+                                                    text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
                             text="elif", type=IF_ITEM:
@@ -26213,7 +26213,7 @@ text="f", type=FUNC_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                             text="print", type=PRINT:
                                                 text=".", type=OPERATOR:
                                                     text="f:2:k:", type=STRING_LITERAL.
-                                                    text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=5
+                                                    text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=5
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
                             text="elif", type=IF_ITEM:
@@ -26234,9 +26234,9 @@ text="f", type=FUNC_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
                                                             text="f:3:k:", type=STRING_LITERAL.
-                                                            text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=5
+                                                            text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=5
                                                         text="v:", type=STRING_LITERAL.
-                                                    text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=6
+                                                    text="v", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=6
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
                             text="elif", type=IF_ITEM:
@@ -26245,54 +26245,54 @@ text="f", type=FUNC_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                     text="4", type=NUMERIC_LITERAL.
                                 text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=1
                                     text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                        text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
+                                        text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
                                         text="0", type=NUMERIC_LITERAL.
                                     text="for", type=TRIPLE_FOR: subframe_var_count=1
                                         text="triple_for_start_statements", type=STATEMENT_LIST:
                                             text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
+                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
                                                 text="1", type=NUMERIC_LITERAL.
                                         text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                             text="<=", type=OPERATOR:
-                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
+                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
                                                 text="10", type=NUMERIC_LITERAL.
                                         text="triple_for_update_statements", type=STATEMENT_LIST:
-                                            text="=", type=LOCAL_ASSIGNMENT:
-                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
+                                            text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
                                                 text="+", type=OPERATOR:
-                                                    text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
                                                     text="1", type=NUMERIC_LITERAL.
                                         text="triple_for_block", type=STATEMENT_BLOCK:
                                             text="for", type=TRIPLE_FOR: subframe_var_count=1
                                                 text="triple_for_start_statements", type=STATEMENT_LIST:
                                                     text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                        text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
+                                                        text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
                                                         text="1", type=NUMERIC_LITERAL.
                                                 text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                                     text="<=", type=OPERATOR:
-                                                        text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
+                                                        text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
                                                         text="10", type=NUMERIC_LITERAL.
                                                 text="triple_for_update_statements", type=STATEMENT_LIST:
-                                                    text="=", type=LOCAL_ASSIGNMENT:
-                                                        text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
+                                                    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                        text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
                                                         text="+", type=OPERATOR:
-                                                            text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
                                                             text="1", type=NUMERIC_LITERAL.
                                                 text="triple_for_block", type=STATEMENT_BLOCK:
-                                                    text="=", type=LOCAL_ASSIGNMENT:
-                                                        text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
+                                                    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                        text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
                                                         text="+", type=OPERATOR:
-                                                            text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
+                                                            text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
                                                             text="*", type=OPERATOR:
-                                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
-                                                                text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
-                                    text="=", type=LOCAL_ASSIGNMENT:
-                                        text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
-                                        text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
+                                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
+                                                                text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
+                                    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                        text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
+                                        text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
                                     text="print", type=PRINT:
                                         text=".", type=OPERATOR:
                                             text="f:val:", type=STRING_LITERAL.
-                                            text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
+                                            text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
                                         text=">", type=FILE_WRITE:
                                             text="stdout", type=STDOUT:
                         text="break", type=BREAK.
@@ -26315,8 +26315,8 @@ text="s", type=SUBR_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
             text="true", type=BOOLEAN_LITERAL.
             text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=1
                 text="local", type=UNTYPED_LOCAL_DEFINITION:
-                    text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
-                    text="nonesuch", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
+                    text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
+                    text="nonesuch", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
                 text="while", type=WHILE:
                     text="==", type=OPERATOR:
                         text="1", type=NUMERIC_LITERAL.
@@ -26333,25 +26333,25 @@ text="s", type=SUBR_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                             text="k", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=5
                                             text="v", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=6
                                         text="for_full_srec_block", type=STATEMENT_BLOCK:
-                                            text="=", type=LOCAL_ASSIGNMENT:
-                                                text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
+                                            text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
                                                 text=".", type=OPERATOR:
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
                                                             text=".", type=OPERATOR:
                                                                 text=".", type=OPERATOR:
                                                                     text=".", type=OPERATOR:
-                                                                        text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=6
+                                                                        text="v", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=6
                                                                         text=":", type=STRING_LITERAL.
-                                                                    text="a", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+                                                                    text="a", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
                                                                 text=":", type=STRING_LITERAL.
-                                                            text="b", type=LOCAL_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
+                                                            text="b", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
                                                         text=":", type=STRING_LITERAL.
-                                                    text="c", type=LOCAL_VARIABLE. vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
+                                                    text="c", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
                                             text="print", type=PRINT:
                                                 text=".", type=OPERATOR:
                                                     text="s:1:val:", type=STRING_LITERAL.
-                                                    text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
+                                                    text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
                             text="elif", type=IF_ITEM:
@@ -26367,7 +26367,7 @@ text="s", type=SUBR_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                             text="print", type=PRINT:
                                                 text=".", type=OPERATOR:
                                                     text="s:2:k:", type=STRING_LITERAL.
-                                                    text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=5
+                                                    text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=5
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
                             text="elif", type=IF_ITEM:
@@ -26388,9 +26388,9 @@ text="s", type=SUBR_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
                                                             text="s:3:k:", type=STRING_LITERAL.
-                                                            text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=5
+                                                            text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=5
                                                         text="v:", type=STRING_LITERAL.
-                                                    text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=6
+                                                    text="v", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=6
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
                             text="elif", type=IF_ITEM:
@@ -26399,54 +26399,54 @@ text="s", type=SUBR_DEF: subframe_var_count=4 max_subframe_depth=6 max_var_depth
                                     text="4", type=NUMERIC_LITERAL.
                                 text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=1
                                     text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                        text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
+                                        text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
                                         text="0", type=NUMERIC_LITERAL.
                                     text="for", type=TRIPLE_FOR: subframe_var_count=1
                                         text="triple_for_start_statements", type=STATEMENT_LIST:
                                             text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
+                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
                                                 text="1", type=NUMERIC_LITERAL.
                                         text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                             text="<=", type=OPERATOR:
-                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
+                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
                                                 text="10", type=NUMERIC_LITERAL.
                                         text="triple_for_update_statements", type=STATEMENT_LIST:
-                                            text="=", type=LOCAL_ASSIGNMENT:
-                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
+                                            text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
                                                 text="+", type=OPERATOR:
-                                                    text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
                                                     text="1", type=NUMERIC_LITERAL.
                                         text="triple_for_block", type=STATEMENT_BLOCK:
                                             text="for", type=TRIPLE_FOR: subframe_var_count=1
                                                 text="triple_for_start_statements", type=STATEMENT_LIST:
                                                     text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                        text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
+                                                        text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
                                                         text="1", type=NUMERIC_LITERAL.
                                                 text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                                     text="<=", type=OPERATOR:
-                                                        text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
+                                                        text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
                                                         text="10", type=NUMERIC_LITERAL.
                                                 text="triple_for_update_statements", type=STATEMENT_LIST:
-                                                    text="=", type=LOCAL_ASSIGNMENT:
-                                                        text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
+                                                    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                        text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
                                                         text="+", type=OPERATOR:
-                                                            text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
                                                             text="1", type=NUMERIC_LITERAL.
                                                 text="triple_for_block", type=STATEMENT_BLOCK:
-                                                    text="=", type=LOCAL_ASSIGNMENT:
-                                                        text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
+                                                    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                        text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
                                                         text="+", type=OPERATOR:
-                                                            text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
+                                                            text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
                                                             text="*", type=OPERATOR:
-                                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
-                                                                text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
-                                    text="=", type=LOCAL_ASSIGNMENT:
-                                        text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
-                                        text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
+                                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=6
+                                                                text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=7
+                                    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                        text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
+                                        text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=5
                                     text="print", type=PRINT:
                                         text=".", type=OPERATOR:
                                             text="s:val:", type=STRING_LITERAL.
-                                            text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
+                                            text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=4
                                         text=">", type=FILE_WRITE:
                                             text="stdout", type=STDOUT:
                         text="break", type=BREAK.
@@ -26467,28 +26467,28 @@ text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=6 max_var_dept
             text="true", type=BOOLEAN_LITERAL.
             text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=1
                 text="local", type=UNTYPED_LOCAL_DEFINITION:
-                    text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                    text="nonesuch", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
+                    text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                    text="nonesuch", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
                 text="for", type=TRIPLE_FOR: subframe_var_count=1
                     text="triple_for_start_statements", type=STATEMENT_LIST:
                         text="local", type=UNTYPED_LOCAL_DEFINITION:
-                            text="idx", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
+                            text="idx", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
                             text="1", type=NUMERIC_LITERAL.
                     text="triple_for_continuation_statements", type=STATEMENT_LIST:
                         text="<=", type=OPERATOR:
-                            text="idx", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
+                            text="idx", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
                             text="4", type=NUMERIC_LITERAL.
                     text="triple_for_update_statements", type=STATEMENT_LIST:
-                        text="=", type=LOCAL_ASSIGNMENT:
-                            text="idx", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
+                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                            text="idx", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
                             text="+", type=OPERATOR:
-                                text="idx", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
+                                text="idx", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
                                 text="1", type=NUMERIC_LITERAL.
                     text="triple_for_block", type=STATEMENT_BLOCK:
                         text="if_head", type=IF_HEAD:
                             text="if", type=IF_ITEM:
                                 text="==", type=OPERATOR:
-                                    text="idx", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
+                                    text="idx", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
                                     text="2", type=NUMERIC_LITERAL.
                                 text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
                                     text="for", type=FOR_OOSVAR_KEY_ONLY: subframe_var_count=1
@@ -26499,12 +26499,12 @@ text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=6 max_var_dept
                                             text="print", type=PRINT:
                                                 text=".", type=OPERATOR:
                                                     text="b:2:k:", type=STRING_LITERAL.
-                                                    text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
+                                                    text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
                             text="elif", type=IF_ITEM:
                                 text="==", type=OPERATOR:
-                                    text="idx", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
+                                    text="idx", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
                                     text="3", type=NUMERIC_LITERAL.
                                 text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
                                     text="for", type=FOR_OOSVAR: subframe_var_count=2
@@ -26520,65 +26520,65 @@ text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=6 max_var_dept
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
                                                             text="b:3:k:", type=STRING_LITERAL.
-                                                            text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
+                                                            text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
                                                         text="v:", type=STRING_LITERAL.
-                                                    text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=4
+                                                    text="v", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=4
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
                             text="elif", type=IF_ITEM:
                                 text="==", type=OPERATOR:
-                                    text="idx", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
+                                    text="idx", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
                                     text="4", type=NUMERIC_LITERAL.
                                 text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=1
                                     text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                        text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
+                                        text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
                                         text="0", type=NUMERIC_LITERAL.
                                     text="for", type=TRIPLE_FOR: subframe_var_count=1
                                         text="triple_for_start_statements", type=STATEMENT_LIST:
                                             text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
+                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
                                                 text="1", type=NUMERIC_LITERAL.
                                         text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                             text="<=", type=OPERATOR:
-                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
+                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
                                                 text="10", type=NUMERIC_LITERAL.
                                         text="triple_for_update_statements", type=STATEMENT_LIST:
-                                            text="=", type=LOCAL_ASSIGNMENT:
-                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
+                                            text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
                                                 text="+", type=OPERATOR:
-                                                    text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
                                                     text="1", type=NUMERIC_LITERAL.
                                         text="triple_for_block", type=STATEMENT_BLOCK:
                                             text="for", type=TRIPLE_FOR: subframe_var_count=1
                                                 text="triple_for_start_statements", type=STATEMENT_LIST:
                                                     text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                        text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
+                                                        text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
                                                         text="1", type=NUMERIC_LITERAL.
                                                 text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                                     text="<=", type=OPERATOR:
-                                                        text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
+                                                        text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
                                                         text="10", type=NUMERIC_LITERAL.
                                                 text="triple_for_update_statements", type=STATEMENT_LIST:
-                                                    text="=", type=LOCAL_ASSIGNMENT:
-                                                        text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
+                                                    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                        text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
                                                         text="+", type=OPERATOR:
-                                                            text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
                                                             text="1", type=NUMERIC_LITERAL.
                                                 text="triple_for_block", type=STATEMENT_BLOCK:
-                                                    text="=", type=LOCAL_ASSIGNMENT:
-                                                        text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
+                                                    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                        text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
                                                         text="+", type=OPERATOR:
-                                                            text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
+                                                            text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
                                                             text="*", type=OPERATOR:
-                                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
-                                                                text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
-                                    text="=", type=LOCAL_ASSIGNMENT:
-                                        text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                                        text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
+                                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
+                                                                text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
+                                    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                        text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                                        text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
                                     text="print", type=PRINT:
                                         text=".", type=OPERATOR:
                                             text="b:val:", type=STRING_LITERAL.
-                                            text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                                            text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
                                         text=">", type=FILE_WRITE:
                                             text="stdout", type=STDOUT:
 
@@ -26598,28 +26598,28 @@ text="end", type=END: subframe_var_count=1 max_subframe_depth=6 max_var_depth=6
             text="true", type=BOOLEAN_LITERAL.
             text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=1
                 text="local", type=UNTYPED_LOCAL_DEFINITION:
-                    text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                    text="nonesuch", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
+                    text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                    text="nonesuch", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
                 text="for", type=TRIPLE_FOR: subframe_var_count=1
                     text="triple_for_start_statements", type=STATEMENT_LIST:
                         text="local", type=UNTYPED_LOCAL_DEFINITION:
-                            text="idx", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
+                            text="idx", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
                             text="1", type=NUMERIC_LITERAL.
                     text="triple_for_continuation_statements", type=STATEMENT_LIST:
                         text="<=", type=OPERATOR:
-                            text="idx", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
+                            text="idx", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
                             text="4", type=NUMERIC_LITERAL.
                     text="triple_for_update_statements", type=STATEMENT_LIST:
-                        text="=", type=LOCAL_ASSIGNMENT:
-                            text="idx", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
+                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                            text="idx", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
                             text="+", type=OPERATOR:
-                                text="idx", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
+                                text="idx", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
                                 text="1", type=NUMERIC_LITERAL.
                     text="triple_for_block", type=STATEMENT_BLOCK:
                         text="if_head", type=IF_HEAD:
                             text="if", type=IF_ITEM:
                                 text="==", type=OPERATOR:
-                                    text="idx", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
+                                    text="idx", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
                                     text="2", type=NUMERIC_LITERAL.
                                 text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
                                     text="for", type=FOR_OOSVAR_KEY_ONLY: subframe_var_count=1
@@ -26630,12 +26630,12 @@ text="end", type=END: subframe_var_count=1 max_subframe_depth=6 max_var_depth=6
                                             text="print", type=PRINT:
                                                 text=".", type=OPERATOR:
                                                     text="e:2:k:", type=STRING_LITERAL.
-                                                    text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
+                                                    text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
                             text="elif", type=IF_ITEM:
                                 text="==", type=OPERATOR:
-                                    text="idx", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
+                                    text="idx", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
                                     text="3", type=NUMERIC_LITERAL.
                                 text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=0
                                     text="for", type=FOR_OOSVAR: subframe_var_count=2
@@ -26651,65 +26651,65 @@ text="end", type=END: subframe_var_count=1 max_subframe_depth=6 max_var_depth=6
                                                     text=".", type=OPERATOR:
                                                         text=".", type=OPERATOR:
                                                             text="e:3:k:", type=STRING_LITERAL.
-                                                            text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
+                                                            text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
                                                         text="v:", type=STRING_LITERAL.
-                                                    text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=4
+                                                    text="v", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=4
                                                 text=">", type=FILE_WRITE:
                                                     text="stdout", type=STDOUT:
                             text="elif", type=IF_ITEM:
                                 text="==", type=OPERATOR:
-                                    text="idx", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
+                                    text="idx", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=2 vardef_frame_relative_index=2
                                     text="4", type=NUMERIC_LITERAL.
                                 text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=1
                                     text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                        text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
+                                        text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
                                         text="0", type=NUMERIC_LITERAL.
                                     text="for", type=TRIPLE_FOR: subframe_var_count=1
                                         text="triple_for_start_statements", type=STATEMENT_LIST:
                                             text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
+                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
                                                 text="1", type=NUMERIC_LITERAL.
                                         text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                             text="<=", type=OPERATOR:
-                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
+                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
                                                 text="10", type=NUMERIC_LITERAL.
                                         text="triple_for_update_statements", type=STATEMENT_LIST:
-                                            text="=", type=LOCAL_ASSIGNMENT:
-                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
+                                            text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
                                                 text="+", type=OPERATOR:
-                                                    text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
+                                                    text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
                                                     text="1", type=NUMERIC_LITERAL.
                                         text="triple_for_block", type=STATEMENT_BLOCK:
                                             text="for", type=TRIPLE_FOR: subframe_var_count=1
                                                 text="triple_for_start_statements", type=STATEMENT_LIST:
                                                     text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                        text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
+                                                        text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
                                                         text="1", type=NUMERIC_LITERAL.
                                                 text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                                     text="<=", type=OPERATOR:
-                                                        text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
+                                                        text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
                                                         text="10", type=NUMERIC_LITERAL.
                                                 text="triple_for_update_statements", type=STATEMENT_LIST:
-                                                    text="=", type=LOCAL_ASSIGNMENT:
-                                                        text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
+                                                    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                        text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
                                                         text="+", type=OPERATOR:
-                                                            text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
                                                             text="1", type=NUMERIC_LITERAL.
                                                 text="triple_for_block", type=STATEMENT_BLOCK:
-                                                    text="=", type=LOCAL_ASSIGNMENT:
-                                                        text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
+                                                    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                        text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
                                                         text="+", type=OPERATOR:
-                                                            text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
+                                                            text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
                                                             text="*", type=OPERATOR:
-                                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
-                                                                text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
-                                    text="=", type=LOCAL_ASSIGNMENT:
-                                        text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                                        text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
+                                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=4
+                                                                text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=5
+                                    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                        text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                                        text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=3
                                     text="print", type=PRINT:
                                         text=".", type=OPERATOR:
                                             text="e:val:", type=STRING_LITERAL.
-                                            text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                                            text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
                                         text=">", type=FILE_WRITE:
                                             text="stdout", type=STDOUT:
 
@@ -26730,8 +26730,8 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
         text="true", type=BOOLEAN_LITERAL.
         text="cond_block", type=STATEMENT_BLOCK: subframe_var_count=1
             text="local", type=UNTYPED_LOCAL_DEFINITION:
-                text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="nonesuch", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
+                text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="nonesuch", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
             text="while", type=WHILE:
                 text="==", type=OPERATOR:
                     text="1", type=NUMERIC_LITERAL.
@@ -26748,13 +26748,13 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                                         text="k", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=2
                                         text="v", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=3
                                     text="for_full_srec_block", type=STATEMENT_BLOCK:
-                                        text="=", type=LOCAL_ASSIGNMENT:
-                                            text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                                            text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=3
+                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                            text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                                            text="v", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=3
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
                                                 text="m:1:val:", type=STRING_LITERAL.
-                                                text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                                                text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
                         text="elif", type=IF_ITEM:
@@ -26770,7 +26770,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                                         text="print", type=PRINT:
                                             text=".", type=OPERATOR:
                                                 text="m:2:k:", type=STRING_LITERAL.
-                                                text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=2
+                                                text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=2
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
                         text="elif", type=IF_ITEM:
@@ -26791,9 +26791,9 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                                                 text=".", type=OPERATOR:
                                                     text=".", type=OPERATOR:
                                                         text="m:3:k:", type=STRING_LITERAL.
-                                                        text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=2
+                                                        text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=2
                                                     text="v:", type=STRING_LITERAL.
-                                                text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=3
+                                                text="v", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=4 vardef_frame_relative_index=3
                                             text=">", type=FILE_WRITE:
                                                 text="stdout", type=STDOUT:
                         text="elif", type=IF_ITEM:
@@ -26802,54 +26802,54 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                                 text="4", type=NUMERIC_LITERAL.
                             text="elif_block", type=STATEMENT_BLOCK: subframe_var_count=1
                                 text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                    text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=2
+                                    text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=2
                                     text="0", type=NUMERIC_LITERAL.
                                 text="for", type=TRIPLE_FOR: subframe_var_count=1
                                     text="triple_for_start_statements", type=STATEMENT_LIST:
                                         text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                            text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
+                                            text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
                                             text="1", type=NUMERIC_LITERAL.
                                     text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                         text="<=", type=OPERATOR:
-                                            text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
+                                            text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
                                             text="10", type=NUMERIC_LITERAL.
                                     text="triple_for_update_statements", type=STATEMENT_LIST:
-                                        text="=", type=LOCAL_ASSIGNMENT:
-                                            text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
+                                        text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                            text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
                                             text="+", type=OPERATOR:
-                                                text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
+                                                text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
                                                 text="1", type=NUMERIC_LITERAL.
                                     text="triple_for_block", type=STATEMENT_BLOCK:
                                         text="for", type=TRIPLE_FOR: subframe_var_count=1
                                             text="triple_for_start_statements", type=STATEMENT_LIST:
                                                 text="local", type=UNTYPED_LOCAL_DEFINITION:
-                                                    text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=4
+                                                    text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=4
                                                     text="1", type=NUMERIC_LITERAL.
                                             text="triple_for_continuation_statements", type=STATEMENT_LIST:
                                                 text="<=", type=OPERATOR:
-                                                    text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=4
+                                                    text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=4
                                                     text="10", type=NUMERIC_LITERAL.
                                             text="triple_for_update_statements", type=STATEMENT_LIST:
-                                                text="=", type=LOCAL_ASSIGNMENT:
-                                                    text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=4
+                                                text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                    text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=4
                                                     text="+", type=OPERATOR:
-                                                        text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=4
+                                                        text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=4
                                                         text="1", type=NUMERIC_LITERAL.
                                             text="triple_for_block", type=STATEMENT_BLOCK:
-                                                text="=", type=LOCAL_ASSIGNMENT:
-                                                    text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=2
+                                                text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                                    text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=2
                                                     text="+", type=OPERATOR:
-                                                        text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=2
+                                                        text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=2
                                                         text="*", type=OPERATOR:
-                                                            text="i", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
-                                                            text="j", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=4
-                                text="=", type=LOCAL_ASSIGNMENT:
-                                    text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                                    text="sum", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=2
+                                                            text="i", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=4 vardef_frame_relative_index=3
+                                                            text="j", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=5 vardef_frame_relative_index=4
+                                text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+                                    text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                                    text="sum", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=3 vardef_frame_relative_index=2
                                 text="print", type=PRINT:
                                     text=".", type=OPERATOR:
                                         text="m:val:", type=STRING_LITERAL.
-                                        text="val", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                                        text="val", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
                                     text=">", type=FILE_WRITE:
                                         text="stdout", type=STDOUT:
                     text="break", type=BREAK.
@@ -28638,7 +28638,7 @@ text="block", type=STATEMENT_BLOCK:
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="unset", type=UNSET:
                 text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                    text="k", type=LOCAL_VARIABLE.
+                    text="k", type=LOCAL_NON_MAP_VARIABLE.
     text="=", type=SREC_ASSIGNMENT:
         text="j", type=FIELD_NAME.
         text="NR", type=CONTEXT_VARIABLE.
@@ -28654,7 +28654,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="unset", type=UNSET:
                 text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                    text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                    text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
     text="=", type=SREC_ASSIGNMENT:
         text="j", type=FIELD_NAME.
         text="NR", type=CONTEXT_VARIABLE.
@@ -28683,12 +28683,12 @@ text="block", type=STATEMENT_BLOCK:
             text="if_head", type=IF_HEAD:
                 text="if", type=IF_ITEM:
                     text="!=", type=OPERATOR:
-                        text="k", type=LOCAL_VARIABLE.
+                        text="k", type=LOCAL_NON_MAP_VARIABLE.
                         text="x", type=STRING_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK:
                         text="unset", type=UNSET:
                             text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                                text="k", type=LOCAL_VARIABLE.
+                                text="k", type=LOCAL_NON_MAP_VARIABLE.
     text="=", type=SREC_ASSIGNMENT:
         text="j", type=FIELD_NAME.
         text="NR", type=CONTEXT_VARIABLE.
@@ -28705,12 +28705,12 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
             text="if_head", type=IF_HEAD:
                 text="if", type=IF_ITEM:
                     text="!=", type=OPERATOR:
-                        text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                        text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
                         text="x", type=STRING_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
                         text="unset", type=UNSET:
                             text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                                text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                                text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
     text="=", type=SREC_ASSIGNMENT:
         text="j", type=FIELD_NAME.
         text="NR", type=CONTEXT_VARIABLE.
@@ -28738,11 +28738,11 @@ text="block", type=STATEMENT_BLOCK:
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
                 text=".", type=OPERATOR:
-                    text="k", type=LOCAL_VARIABLE.
+                    text="k", type=LOCAL_NON_MAP_VARIABLE.
                     text="_orig", type=STRING_LITERAL.
-                text="v", type=LOCAL_VARIABLE.
+                text="v", type=LOCAL_NON_MAP_VARIABLE.
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
-                text="k", type=LOCAL_VARIABLE.
+                text="k", type=LOCAL_NON_MAP_VARIABLE.
                 text="other", type=STRING_LITERAL.
 
 BLOCKED AST:
@@ -28756,11 +28756,11 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
                 text=".", type=OPERATOR:
-                    text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                    text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
                     text="_orig", type=STRING_LITERAL.
-                text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+                text="v", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
-                text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
                 text="other", type=STRING_LITERAL.
 
 a     b     i     x     y     a_orig b_orig i_orig x_orig              y_orig
@@ -28786,8 +28786,8 @@ text="block", type=STATEMENT_BLOCK:
             text="v", type=UNTYPED_LOCAL_DEFINITION.
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
-                text="v", type=LOCAL_VARIABLE.
-                text="k", type=LOCAL_VARIABLE.
+                text="v", type=LOCAL_NON_MAP_VARIABLE.
+                text="k", type=LOCAL_NON_MAP_VARIABLE.
 
 BLOCKED AST:
 
@@ -28799,8 +28799,8 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
             text="v", type=UNTYPED_LOCAL_DEFINITION. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
         text="for_full_srec_block", type=STATEMENT_BLOCK:
             text="=", type=INDIRECT_SREC_ASSIGNMENT:
-                text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
-                text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="v", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+                text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
 
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,pan=b,1=i,0.3467901443380824=x,0.7268028627434533=y
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,eks=a,pan=b,2=i,0.7586799647899636=x,0.5221511083334797=y
@@ -28835,7 +28835,7 @@ text="block", type=STATEMENT_BLOCK:
             text="if_head", type=IF_HEAD:
                 text="if", type=IF_ITEM:
                     text="=~", type=OPERATOR:
-                        text="k", type=LOCAL_VARIABLE.
+                        text="k", type=LOCAL_NON_MAP_VARIABLE.
                         text="^[xy]$", type=STRING_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK:
                         text="=", type=SREC_ASSIGNMENT:
@@ -28843,7 +28843,7 @@ text="block", type=STATEMENT_BLOCK:
                             text="+", type=OPERATOR:
                                 text="sum", type=FIELD_NAME.
                                 text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                                    text="k", type=LOCAL_VARIABLE.
+                                    text="k", type=LOCAL_NON_MAP_VARIABLE.
 
 BLOCKED AST:
 
@@ -28860,7 +28860,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
             text="if_head", type=IF_HEAD:
                 text="if", type=IF_ITEM:
                     text="=~", type=OPERATOR:
-                        text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                        text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
                         text="^[xy]$", type=STRING_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
                         text="=", type=SREC_ASSIGNMENT:
@@ -28868,7 +28868,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                             text="+", type=OPERATOR:
                                 text="sum", type=FIELD_NAME.
                                 text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                                    text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                                    text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
 
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=1.073593
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=1.280831
@@ -28904,7 +28904,7 @@ text="block", type=STATEMENT_BLOCK:
             text="if_head", type=IF_HEAD:
                 text="if", type=IF_ITEM:
                     text="=~", type=OPERATOR:
-                        text="k", type=LOCAL_VARIABLE.
+                        text="k", type=LOCAL_NON_MAP_VARIABLE.
                         text="^[xy]$", type=STRING_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK:
                         text="=", type=SREC_ASSIGNMENT:
@@ -28913,7 +28913,7 @@ text="block", type=STATEMENT_BLOCK:
                                 text="sum", type=FIELD_NAME.
                                 text="float", type=NON_SIGIL_NAME:
                                     text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                                        text="k", type=LOCAL_VARIABLE.
+                                        text="k", type=LOCAL_NON_MAP_VARIABLE.
 
 BLOCKED AST:
 
@@ -28931,7 +28931,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
             text="if_head", type=IF_HEAD:
                 text="if", type=IF_ITEM:
                     text="=~", type=OPERATOR:
-                        text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                        text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
                         text="^[xy]$", type=STRING_LITERAL.
                     text="if_block", type=STATEMENT_BLOCK: subframe_var_count=0
                         text="=", type=SREC_ASSIGNMENT:
@@ -28940,7 +28940,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                                 text="sum", type=FIELD_NAME.
                                 text="float", type=NON_SIGIL_NAME:
                                     text="indirect_field_name", type=INDIRECT_FIELD_NAME:
-                                        text="k", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                                        text="k", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
 
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,sum=1.073593
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,sum=1.280831
@@ -29014,9 +29014,9 @@ text="block", type=STATEMENT_BLOCK:
                     text="n", type=STRING_LITERAL.
                     text="3", type=NUMERIC_LITERAL.
                     text="4", type=NUMERIC_LITERAL.
-                    text="k2", type=LOCAL_VARIABLE.
-                    text="k1", type=LOCAL_VARIABLE.
-                text="v", type=LOCAL_VARIABLE.
+                    text="k2", type=LOCAL_NON_MAP_VARIABLE.
+                    text="k1", type=LOCAL_NON_MAP_VARIABLE.
+                text="v", type=LOCAL_NON_MAP_VARIABLE.
     text="end", type=END:
         text="end_block", type=STATEMENT_BLOCK:
             text="emit", type=EMIT:
@@ -29090,9 +29090,9 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                     text="n", type=STRING_LITERAL.
                     text="3", type=NUMERIC_LITERAL.
                     text="4", type=NUMERIC_LITERAL.
-                    text="k2", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
-                    text="k1", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
-                text="v", type=LOCAL_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
+                    text="k2", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=1 vardef_frame_relative_index=2
+                    text="k1", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
+                text="v", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=1 vardef_frame_relative_index=3
 
 
 mlr --opprint --from ./reg_test/input/abixy put -q 
@@ -44630,7 +44630,7 @@ text="block", type=STATEMENT_BLOCK:
         text="func_block", type=STATEMENT_BLOCK:
             text="return_value", type=RETURN_VALUE:
                 text="**", type=OPERATOR:
-                    text="x", type=LOCAL_VARIABLE.
+                    text="x", type=LOCAL_NON_MAP_VARIABLE.
                     text="2", type=NUMERIC_LITERAL.
     text="g", type=FUNC_DEF:
         text="g", type=NON_SIGIL_NAME:
@@ -44638,7 +44638,7 @@ text="block", type=STATEMENT_BLOCK:
         text="func_block", type=STATEMENT_BLOCK:
             text="return_value", type=RETURN_VALUE:
                 text="+", type=OPERATOR:
-                    text="y", type=LOCAL_VARIABLE.
+                    text="y", type=LOCAL_NON_MAP_VARIABLE.
                     text="1", type=NUMERIC_LITERAL.
     text="s", type=SUBR_DEF:
         text="s", type=NON_SIGIL_NAME:
@@ -44649,9 +44649,9 @@ text="block", type=STATEMENT_BLOCK:
             text="print", type=PRINT:
                 text=".", type=OPERATOR:
                     text=".", type=OPERATOR:
-                        text="a", type=LOCAL_VARIABLE.
-                        text="b", type=LOCAL_VARIABLE.
-                    text="c", type=LOCAL_VARIABLE.
+                        text="a", type=LOCAL_NON_MAP_VARIABLE.
+                        text="b", type=LOCAL_NON_MAP_VARIABLE.
+                    text="c", type=LOCAL_NON_MAP_VARIABLE.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
     text="begin", type=BEGIN:
@@ -44661,12 +44661,12 @@ text="block", type=STATEMENT_BLOCK:
                     text="a", type=STRING_LITERAL.
                 text="0", type=NUMERIC_LITERAL.
             text="local", type=UNTYPED_LOCAL_DEFINITION:
-                text="ell", type=LOCAL_VARIABLE.
+                text="ell", type=LOCAL_NON_MAP_VARIABLE.
                 text="1", type=NUMERIC_LITERAL.
             text="print", type=PRINT:
                 text=".", type=OPERATOR:
                     text="local1 = ", type=STRING_LITERAL.
-                    text="ell", type=LOCAL_VARIABLE.
+                    text="ell", type=LOCAL_NON_MAP_VARIABLE.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
     text="end", type=END:
@@ -44677,12 +44677,12 @@ text="block", type=STATEMENT_BLOCK:
                         text="a", type=STRING_LITERAL.
                 text="stream", type=STREAM:
             text="local", type=UNTYPED_LOCAL_DEFINITION:
-                text="emm", type=LOCAL_VARIABLE.
+                text="emm", type=LOCAL_NON_MAP_VARIABLE.
                 text="2", type=NUMERIC_LITERAL.
             text="print", type=PRINT:
                 text=".", type=OPERATOR:
                     text="local2 = ", type=STRING_LITERAL.
-                    text="emm", type=LOCAL_VARIABLE.
+                    text="emm", type=LOCAL_NON_MAP_VARIABLE.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
     text="=", type=OOSVAR_ASSIGNMENT:
@@ -44705,7 +44705,7 @@ text="block", type=STATEMENT_BLOCK:
             text="print", type=PRINT:
                 text=".", type=OPERATOR:
                     text="local3 = ", type=STRING_LITERAL.
-                    text="ell", type=LOCAL_VARIABLE.
+                    text="ell", type=LOCAL_NON_MAP_VARIABLE.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
     text="=", type=OOSVAR_ASSIGNMENT:
@@ -44737,7 +44737,7 @@ text="block", type=STATEMENT_BLOCK:
             text="print", type=PRINT:
                 text=".", type=OPERATOR:
                     text="local4 = ", type=STRING_LITERAL.
-                    text="emm", type=LOCAL_VARIABLE.
+                    text="emm", type=LOCAL_NON_MAP_VARIABLE.
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
 
@@ -44750,7 +44750,7 @@ text="f", type=FUNC_DEF: subframe_var_count=2 max_subframe_depth=1 max_var_depth
     text="func_block", type=STATEMENT_BLOCK:
         text="return_value", type=RETURN_VALUE:
             text="**", type=OPERATOR:
-                text="x", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+                text="x", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
                 text="2", type=NUMERIC_LITERAL.
 
 FUNCTION DEFINITION:
@@ -44760,7 +44760,7 @@ text="g", type=FUNC_DEF: subframe_var_count=2 max_subframe_depth=1 max_var_depth
     text="func_block", type=STATEMENT_BLOCK:
         text="return_value", type=RETURN_VALUE:
             text="+", type=OPERATOR:
-                text="y", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+                text="y", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
                 text="1", type=NUMERIC_LITERAL.
 
 SUBROUTINE DEFINITION:
@@ -44773,9 +44773,9 @@ text="s", type=SUBR_DEF: subframe_var_count=4 max_subframe_depth=1 max_var_depth
         text="print", type=PRINT:
             text=".", type=OPERATOR:
                 text=".", type=OPERATOR:
-                    text="a", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
-                    text="b", type=LOCAL_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
-                text="c", type=LOCAL_VARIABLE. vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
+                    text="a", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+                    text="b", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
+                text="c", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
 
@@ -44787,12 +44787,12 @@ text="begin", type=BEGIN: subframe_var_count=2 max_subframe_depth=1 max_var_dept
                 text="a", type=STRING_LITERAL.
             text="0", type=NUMERIC_LITERAL.
         text="local", type=UNTYPED_LOCAL_DEFINITION:
-            text="ell", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+            text="ell", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
             text="1", type=NUMERIC_LITERAL.
         text="print", type=PRINT:
             text=".", type=OPERATOR:
                 text="local1 = ", type=STRING_LITERAL.
-                text="ell", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+                text="ell", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
 
@@ -44810,7 +44810,7 @@ text="begin", type=BEGIN: subframe_var_count=1 max_subframe_depth=1 max_var_dept
         text="print", type=PRINT:
             text=".", type=OPERATOR:
                 text="local3 = ", type=STRING_LITERAL.
-                text="ell", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
+                text="ell", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
 
@@ -44823,12 +44823,12 @@ text="end", type=END: subframe_var_count=2 max_subframe_depth=1 max_var_depth=2
                     text="a", type=STRING_LITERAL.
             text="stream", type=STREAM:
         text="local", type=UNTYPED_LOCAL_DEFINITION:
-            text="emm", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+            text="emm", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
             text="2", type=NUMERIC_LITERAL.
         text="print", type=PRINT:
             text=".", type=OPERATOR:
                 text="local2 = ", type=STRING_LITERAL.
-                text="emm", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+                text="emm", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
 
@@ -44848,7 +44848,7 @@ text="end", type=END: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
         text="print", type=PRINT:
             text=".", type=OPERATOR:
                 text="local4 = ", type=STRING_LITERAL.
-                text="emm", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
+                text="emm", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
             text=">", type=FILE_WRITE:
                 text="stdout", type=STDOUT:
 
@@ -44990,7 +44990,7 @@ AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="=", type=SREC_ASSIGNMENT:
         text="s", type=FIELD_NAME.
-        text="a", type=LOCAL_VARIABLE.
+        text="a", type=LOCAL_NON_MAP_VARIABLE.
     text="=", type=SREC_ASSIGNMENT:
         text="t", type=FIELD_NAME.
         text="b", type=LOCAL_MAP_VARIABLE:
@@ -45028,7 +45028,7 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=1 max_var_depth=1
     text="=", type=SREC_ASSIGNMENT:
         text="s", type=FIELD_NAME.
-        text="a", type=LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
+        text="a", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
     text="=", type=SREC_ASSIGNMENT:
         text="t", type=FIELD_NAME.
         text="b", type=LOCAL_MAP_VARIABLE: vardef_subframe_relative_index=0 vardef_subframe_index=0 vardef_frame_relative_index=0
@@ -45113,8 +45113,8 @@ RAW AST:
 
 AST ROOT:
 text="block", type=STATEMENT_BLOCK:
-    text="=", type=LOCAL_ASSIGNMENT:
-        text="a", type=LOCAL_VARIABLE.
+    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+        text="a", type=LOCAL_NON_MAP_VARIABLE.
         text="6", type=NUMERIC_LITERAL.
     text="=", type=LOCAL_MAP_ASSIGNMENT:
         text="b", type=LOCAL_MAP_VARIABLE:
@@ -45133,7 +45133,7 @@ text="block", type=STATEMENT_BLOCK:
         text="9", type=NUMERIC_LITERAL.
     text="=", type=SREC_ASSIGNMENT:
         text="a", type=FIELD_NAME.
-        text="a", type=LOCAL_VARIABLE.
+        text="a", type=LOCAL_NON_MAP_VARIABLE.
     text="=", type=SREC_ASSIGNMENT:
         text="b", type=FIELD_NAME.
         text="b", type=LOCAL_MAP_VARIABLE:
@@ -45177,8 +45177,8 @@ BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=5 max_subframe_depth=1 max_var_depth=5
-    text="=", type=LOCAL_ASSIGNMENT:
-        text="a", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+        text="a", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
         text="6", type=NUMERIC_LITERAL.
     text="=", type=LOCAL_MAP_ASSIGNMENT:
         text="b", type=LOCAL_MAP_VARIABLE: vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
@@ -45197,7 +45197,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=5 max_subframe_depth
         text="9", type=NUMERIC_LITERAL.
     text="=", type=SREC_ASSIGNMENT:
         text="a", type=FIELD_NAME.
-        text="a", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+        text="a", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
     text="=", type=SREC_ASSIGNMENT:
         text="b", type=FIELD_NAME.
         text="b", type=LOCAL_MAP_VARIABLE: vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
@@ -45246,8 +45246,8 @@ RAW AST:
 
 AST ROOT:
 text="block", type=STATEMENT_BLOCK:
-    text="=", type=LOCAL_ASSIGNMENT:
-        text="a", type=LOCAL_VARIABLE.
+    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+        text="a", type=LOCAL_NON_MAP_VARIABLE.
         text="6", type=NUMERIC_LITERAL.
     text="=", type=LOCAL_MAP_ASSIGNMENT:
         text="b", type=LOCAL_MAP_VARIABLE:
@@ -45266,7 +45266,7 @@ text="block", type=STATEMENT_BLOCK:
         text="9", type=NUMERIC_LITERAL.
     text="=", type=SREC_ASSIGNMENT:
         text="a0", type=FIELD_NAME.
-        text="a", type=LOCAL_VARIABLE.
+        text="a", type=LOCAL_NON_MAP_VARIABLE.
     text="=", type=SREC_ASSIGNMENT:
         text="a1", type=FIELD_NAME.
         text="a", type=LOCAL_MAP_VARIABLE:
@@ -45284,7 +45284,7 @@ text="block", type=STATEMENT_BLOCK:
             text="z", type=FIELD_NAME.
     text="=", type=SREC_ASSIGNMENT:
         text="b0", type=FIELD_NAME.
-        text="b", type=LOCAL_VARIABLE.
+        text="b", type=LOCAL_NON_MAP_VARIABLE.
     text="=", type=SREC_ASSIGNMENT:
         text="b1", type=FIELD_NAME.
         text="b", type=LOCAL_MAP_VARIABLE:
@@ -45302,7 +45302,7 @@ text="block", type=STATEMENT_BLOCK:
             text="z", type=FIELD_NAME.
     text="=", type=SREC_ASSIGNMENT:
         text="c0", type=FIELD_NAME.
-        text="c", type=LOCAL_VARIABLE.
+        text="c", type=LOCAL_NON_MAP_VARIABLE.
     text="=", type=SREC_ASSIGNMENT:
         text="c1", type=FIELD_NAME.
         text="c", type=LOCAL_MAP_VARIABLE:
@@ -45320,7 +45320,7 @@ text="block", type=STATEMENT_BLOCK:
             text="z", type=FIELD_NAME.
     text="=", type=SREC_ASSIGNMENT:
         text="d0", type=FIELD_NAME.
-        text="d", type=LOCAL_VARIABLE.
+        text="d", type=LOCAL_NON_MAP_VARIABLE.
     text="=", type=SREC_ASSIGNMENT:
         text="d1", type=FIELD_NAME.
         text="d", type=LOCAL_MAP_VARIABLE:
@@ -45388,8 +45388,8 @@ BLOCKED AST:
 
 MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=5 max_subframe_depth=1 max_var_depth=5
-    text="=", type=LOCAL_ASSIGNMENT:
-        text="a", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+    text="=", type=LOCAL_NON_MAP_ASSIGNMENT:
+        text="a", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
         text="6", type=NUMERIC_LITERAL.
     text="=", type=LOCAL_MAP_ASSIGNMENT:
         text="b", type=LOCAL_MAP_VARIABLE: vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
@@ -45408,7 +45408,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=5 max_subframe_depth
         text="9", type=NUMERIC_LITERAL.
     text="=", type=SREC_ASSIGNMENT:
         text="a0", type=FIELD_NAME.
-        text="a", type=LOCAL_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
+        text="a", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
     text="=", type=SREC_ASSIGNMENT:
         text="a1", type=FIELD_NAME.
         text="a", type=LOCAL_MAP_VARIABLE: vardef_subframe_relative_index=1 vardef_subframe_index=0 vardef_frame_relative_index=1
@@ -45426,7 +45426,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=5 max_subframe_depth
             text="z", type=FIELD_NAME.
     text="=", type=SREC_ASSIGNMENT:
         text="b0", type=FIELD_NAME.
-        text="b", type=LOCAL_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
+        text="b", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
     text="=", type=SREC_ASSIGNMENT:
         text="b1", type=FIELD_NAME.
         text="b", type=LOCAL_MAP_VARIABLE: vardef_subframe_relative_index=2 vardef_subframe_index=0 vardef_frame_relative_index=2
@@ -45444,7 +45444,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=5 max_subframe_depth
             text="z", type=FIELD_NAME.
     text="=", type=SREC_ASSIGNMENT:
         text="c0", type=FIELD_NAME.
-        text="c", type=LOCAL_VARIABLE. vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
+        text="c", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
     text="=", type=SREC_ASSIGNMENT:
         text="c1", type=FIELD_NAME.
         text="c", type=LOCAL_MAP_VARIABLE: vardef_subframe_relative_index=3 vardef_subframe_index=0 vardef_frame_relative_index=3
@@ -45462,7 +45462,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=5 max_subframe_depth
             text="z", type=FIELD_NAME.
     text="=", type=SREC_ASSIGNMENT:
         text="d0", type=FIELD_NAME.
-        text="d", type=LOCAL_VARIABLE. vardef_subframe_relative_index=4 vardef_subframe_index=0 vardef_frame_relative_index=4
+        text="d", type=LOCAL_NON_MAP_VARIABLE. vardef_subframe_relative_index=4 vardef_subframe_index=0 vardef_frame_relative_index=4
     text="=", type=SREC_ASSIGNMENT:
         text="d1", type=FIELD_NAME.
         text="d", type=LOCAL_MAP_VARIABLE: vardef_subframe_relative_index=4 vardef_subframe_index=0 vardef_frame_relative_index=4

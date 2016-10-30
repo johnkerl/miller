@@ -481,6 +481,32 @@ static mlhmmv_value_t* mlhmmv_get_next_level_entry_value(mlhmmv_level_t* pmap, m
 }
 
 // ----------------------------------------------------------------
+mlhmmv_value_t* mlhmmv_get_value_from_level(mlhmmv_level_t* pstart_level, sllmv_t* pmvkeys, int* perror) {
+	*perror = MLHMMV_ERROR_NONE;
+	sllmve_t* prest_keys = pmvkeys->phead;
+	if (prest_keys == NULL) {
+		*perror = MLHMMV_ERROR_KEYLIST_TOO_SHALLOW;
+	}
+	mlhmmv_level_t* plevel = pstart_level;
+	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value, NULL);
+	while (prest_keys->pnext != NULL) {
+		if (plevel_entry == NULL) {
+			return NULL;
+		} else {
+			plevel = plevel_entry->level_value.u.pnext_level;
+			prest_keys = prest_keys->pnext;
+			plevel_entry = mlhmmv_get_next_level_entry(plevel_entry->level_value.u.pnext_level,
+				&prest_keys->value, NULL);
+		}
+	}
+	if (plevel_entry == NULL) {
+		*perror = MLHMMV_ERROR_KEYLIST_TOO_DEEP;
+		return NULL;
+	}
+	return &plevel_entry->level_value;
+}
+
+// ----------------------------------------------------------------
 // Removes entries from a specified level downward, unsetting any maps which become empty as a result.  For example, if
 // e.g. a=>b=>c=>4 and the c level is to be removed, then all up-nodes are emptied out & should be pruned.
 // * If restkeys too long (e.g. 'unset $a["b"]["c"]' with data "a":"b":3): do nothing.

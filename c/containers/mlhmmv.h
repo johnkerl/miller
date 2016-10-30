@@ -103,6 +103,8 @@ void mlhmmv_put_terminal_from_level(mlhmmv_level_t* plevel, sllmve_t* prest_keys
 // The CST logic can use this function to get the @records[$key1][$key2] level of the mlhmmv,
 // then copy values from there.
 mlhmmv_level_t* mlhmmv_get_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, int* perror);
+// This is for getting submaps out of local variables.
+mlhmmv_value_t* mlhmmv_get_value_from_level(mlhmmv_level_t* plevel, sllmv_t* pmvkeys, int* perror);
 
 // For oosvar-to-oosvar assignment.
 void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys);
