@@ -25,6 +25,7 @@ EXECUTION TRACE:
 
 * find a better way than cst_outputs (fails for udf-calls). maybe at each cst node (bleah).
 * work through the grammar & neaten up pnode->text instances, now that these names are user-visible.
+* mld. note it's an AST dump, not source-level.
 
 ----------------------------------------------------------------
 MAPVARS:
