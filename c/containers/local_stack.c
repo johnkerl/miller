@@ -125,9 +125,6 @@ mv_t local_stack_frame_get_map(local_stack_frame_t* pframe, // xxx rename
 	}
 }
 
-// a[b][c] w/ [b]
-// a[b][c] w/ [b,c]
-// a[b][c] w/ [b,c,d]
 // ----------------------------------------------------------------
 mlhmmv_value_t* local_stack_frame_get_map_value(local_stack_frame_t* pframe, // xxx rename w/ 'reference' in name
 	int vardef_frame_relative_index, sllmv_t* pmvkeys)
@@ -147,9 +144,11 @@ mlhmmv_value_t* local_stack_frame_get_map_value(local_stack_frame_t* pframe, // 
 		LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->u.pnext_level, 0, TRUE, TRUE, "", stdout));
 
 		// Maybe null
-		mlhmmv_value_t* pmval = mlhmmv_get_value_from_level(pmvalue->u.pnext_level, pmvkeys, &error);
-
-		return pmval;
+		if (pmvkeys->length == 0) {
+			return pmvalue;
+		} else {
+			return mlhmmv_get_value_from_level(pmvalue->u.pnext_level, pmvkeys, &error);
+		}
 	}
 }
 

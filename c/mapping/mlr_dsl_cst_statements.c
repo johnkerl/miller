@@ -1933,20 +1933,24 @@ static mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_a
 //         text="stream", type=stream:
 
 // pnode is input; pkeylist_evaluators is appended to.
-static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
+static sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_cst_t* pcst, // xxx rename
+	mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags)
 {
 	sllv_t* pkeylist_evaluators = sllv_alloc();
 
-	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-		if (pkeynode->type == MD_AST_NODE_TYPE_STRING_LITERAL) {
-			sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_string(pkeynode->text));
-		} else {
-			sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, pcst->pfmgr,
-				type_inferencing, context_flags));
+	// xxx comment
+	if (pnode->pchildren != NULL) {
+		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+			if (pkeynode->type == MD_AST_NODE_TYPE_STRING_LITERAL) {
+				sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_string(pkeynode->text));
+			} else {
+				sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, pcst->pfmgr,
+					type_inferencing, context_flags));
+			}
 		}
 	}
+
 	return pkeylist_evaluators;
 }
 
@@ -3061,34 +3065,37 @@ static void handle_for_local_map( // xxx vardef_frame_relative_index
 
 		mlhmmv_value_t *psubmap = local_stack_frame_get_map_value(pframe,
 			pstatement->for_map_target_frame_relative_index, plhskeylist);
-		// xxx copy !!!
 
-		local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
-		loop_stack_push(pvars->ploop_stack);
+		if (psubmap != NULL) {
+			// xxx copy !!!
 
-		if (!psubmap->is_terminal && psubmap->u.pnext_level != NULL) {
-			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level
-			// deeper into the submap.  Note there must be at least one k-name so we are assuming
-			// the for-loop within handle_for_local_map_aux was gone through once & thus
-			// handle_statement_block_with_break_continue was called through there.
+			local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+			loop_stack_push(pvars->ploop_stack);
 
-			handle_for_local_map_aux(pstatement, pvars, pcst_outputs, psubmap,
-				pstatement->for_map_k_variable_names, pstatement->for_map_k_frame_relative_indices,
-				pstatement->for_map_k_type_masks, pstatement->for_map_k_count);
+			if (!psubmap->is_terminal && psubmap->u.pnext_level != NULL) {
+				// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level
+				// deeper into the submap.  Note there must be at least one k-name so we are assuming
+				// the for-loop within handle_for_local_map_aux was gone through once & thus
+				// handle_statement_block_with_break_continue was called through there.
 
-			if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
-				loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
+				handle_for_local_map_aux(pstatement, pvars, pcst_outputs, psubmap,
+					pstatement->for_map_k_variable_names, pstatement->for_map_k_frame_relative_indices,
+					pstatement->for_map_k_type_masks, pstatement->for_map_k_count);
+
+				if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
+					loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
+				}
+				if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
+					loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
+				}
 			}
-			if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
-				loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
-			}
+
+			// xxx only after impl copy !!!
+			// mlhmmv_free_submap(submap);
+
+			loop_stack_pop(pvars->ploop_stack);
+			local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
 		}
-
-		// xxx only after impl copy !!!
-		// mlhmmv_free_submap(submap);
-
-		loop_stack_pop(pvars->ploop_stack);
-		local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
 	}
 	sllmv_free(plhskeylist);
 }
