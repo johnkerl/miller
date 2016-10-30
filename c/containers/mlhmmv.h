@@ -112,7 +112,8 @@ void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys);
 // For for-loop-over-oosvar, wherein we need to copy the submap before iterating over it
 // (since the iteration may modify it). If the keys don't index a submap, then the return
 // value has is_terminal = TRUE and pnext_level = NULL.
-mlhmmv_value_t mlhmmv_copy_submap(mlhmmv_t* pmap, sllmv_t* pmvkeys);
+mlhmmv_value_t mlhmmv_copy_submap_from_root(mlhmmv_t* pmap, sllmv_t* pmvkeys);
+mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue); // xxx rename
 void mlhmmv_free_submap(mlhmmv_value_t submap);
 
 sllv_t* mlhmmv_copy_keys_from_submap(mlhmmv_t* pmap, sllmv_t* pmvkeys);

@@ -44,7 +44,7 @@ static void mlhmmv_level_put_value_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* 
 	mlhmmv_value_t* pvalue);
 static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel);
 
-static mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue);
+// xxx needs to be public -- rename -- static mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue);
 static sllv_t* mlhmmv_copy_keys_from_submap_aux(mlhmmv_value_t* pvalue);
 
 static void mlhmmv_to_lrecs_aux_across_records(mlhmmv_level_t* plevel, char* prefix, sllmve_t* prestnames,
@@ -655,7 +655,7 @@ void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys) {
 	}
 }
 
-static mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue) {
+mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue) { // xxx rename
 	if (pvalue->is_terminal) {
 		return (mlhmmv_value_t) {
 			.is_terminal = TRUE,
@@ -686,7 +686,7 @@ static mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue) {
 }
 
 // ----------------------------------------------------------------
-mlhmmv_value_t mlhmmv_copy_submap(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
+mlhmmv_value_t mlhmmv_copy_submap_from_root(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 	int error;
 	if (pmvkeys->length == 0) {
 		mlhmmv_value_t root_value = (mlhmmv_value_t) {
