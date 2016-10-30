@@ -554,6 +554,10 @@ static void pass_1_for_map_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_g
 	//
 	// Example: 'for(k, v in @a[b][c]) { var d = k; var e = v }': the b and c
 	// should be obtained from the enclosing scope.
+	if (pkeylistnode->type == MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE) {
+		// For-local-map: e.g. 'for(a,b in c[d][e])'.
+		pass_1_for_node(pkeylistnode, pframe_group, pmax_subframe_depth, trace);
+	}
 	if (pkeylistnode->pchildren == NULL) {
 		pass_1_for_node(pkeylistnode, pframe_group, pmax_subframe_depth, trace);
 	} else {
