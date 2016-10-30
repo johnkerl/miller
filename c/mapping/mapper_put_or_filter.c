@@ -23,6 +23,7 @@ typedef struct _mapper_put_or_filter_state_t {
 	int            at_begin;
 	mlhmmv_t*      poosvars;
 
+	int            trace_execution;
 	char*          oosvar_flatten_separator;
 	int            flush_every_record;
 	cli_writer_opts_t* pwriter_opts;
@@ -58,6 +59,7 @@ static mapper_t* mapper_put_or_filter_alloc(
 	char*              mlr_dsl_expression,
 	int                print_ast,
 	int                trace_stack_allocation,
+	int                trace_execution,
 	mlr_dsl_ast_t*     past,
 	int                put_output_disabled, // mlr put -q
 	int                do_final_filter,     // mlr filter
@@ -166,6 +168,7 @@ static void shared_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "    Miller's grammar, to stdout.\n");
 	fprintf(o, "-a: Prints a low-level stack-allocation trace to stdout.\n");
 	fprintf(o, "-t: Prints a low-level parser trace to stderr.\n");
+	fprintf(o, "-T: Prints a every statement to stderr as it is executed.\n");
 	if (streq(verb, "put")) {
 		fprintf(o, "-q: Does not include the modified record in the output stream. Useful for when\n");
 		fprintf(o, "    all desired output is in begin and/or end blocks.\n");
@@ -234,6 +237,7 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	int     print_ast                = FALSE;
 	int     trace_stack_allocation   = FALSE;
 	int     trace_parse              = FALSE;
+	int     trace_execution          = FALSE;
 	char*   oosvar_flatten_separator = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
 	int     flush_every_record       = TRUE;
 
@@ -289,6 +293,9 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 			argi += 1;
 		} else if (streq(argv[argi], "-t")) {
 			trace_parse = TRUE;
+			argi += 1;
+		} else if (streq(argv[argi], "-T")) {
+			trace_execution = TRUE;
 			argi += 1;
 		} else if (streq(argv[argi], "-q") && streq(verb, "put")) {
 
@@ -363,10 +370,9 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	}
 
 	*pargi = argi;
-	return mapper_put_or_filter_alloc(mlr_dsl_expression, print_ast, trace_stack_allocation,
-		past, put_output_disabled, do_final_filter, negate_final_filter,
-		type_inferencing, oosvar_flatten_separator, flush_every_record,
-		pwriter_opts, pmain_writer_opts);
+	return mapper_put_or_filter_alloc(mlr_dsl_expression, print_ast, trace_stack_allocation, trace_execution,
+		past, put_output_disabled, do_final_filter, negate_final_filter, type_inferencing, oosvar_flatten_separator,
+		flush_every_record, pwriter_opts, pmain_writer_opts);
 }
 
 // ----------------------------------------------------------------
@@ -374,6 +380,7 @@ static mapper_t* mapper_put_or_filter_alloc(
 	char*              mlr_dsl_expression,
 	int                print_ast,
 	int                trace_stack_allocation,
+	int                trace_execution,
 	mlr_dsl_ast_t*     past,
 	int                put_output_disabled, // mlr put -q
 	int                do_final_filter,     // mlr filter
@@ -393,6 +400,7 @@ static mapper_t* mapper_put_or_filter_alloc(
 	pstate->at_begin                 = TRUE;
 	pstate->put_output_disabled      = put_output_disabled;
 	pstate->poosvars                 = mlhmmv_alloc();
+	pstate->trace_execution          = trace_execution;
 	pstate->oosvar_flatten_separator = oosvar_flatten_separator;
 	pstate->flush_every_record       = flush_every_record;
 	pstate->plocal_stack             = local_stack_alloc();
@@ -498,6 +506,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			}
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
+			.trace_execution          = pstate->trace_execution,
 			.pshould_emit_rec         = &should_emit_rec,
 			.poutrecs                 = poutrecs,
 			.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
@@ -526,6 +535,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			}
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
+			.trace_execution          = pstate->trace_execution,
 			.pshould_emit_rec         = &should_emit_rec,
 			.poutrecs                 = poutrecs,
 			.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
@@ -558,6 +568,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 		}
 	};
 	cst_outputs_t cst_outputs = (cst_outputs_t) {
+		.trace_execution          = pstate->trace_execution,
 		.pshould_emit_rec         = &should_emit_rec,
 		.poutrecs                 = poutrecs,
 		.oosvar_flatten_separator = pstate->oosvar_flatten_separator,

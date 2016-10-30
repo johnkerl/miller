@@ -231,23 +231,31 @@ void mlr_dsl_ast_node_fprint(mlr_dsl_ast_node_t* pnode, FILE* o) {
 }
 
 // ----------------------------------------------------------------
-static void mlr_dsl_ast_node_pretty_fprint_aux(mlr_dsl_ast_node_t* pnode, int level, FILE* o) {
+static void mlr_dsl_ast_node_pretty_fprint_aux(mlr_dsl_ast_node_t* pnode, FILE* o) {
 	if (pnode == NULL)
 		return;
 
-	for (int i = 0; i < level; i++)
-		fprintf(o, "    ");
-	fprintf(o, "\"%s\"\n", pnode->text);
+	if (pnode->pchildren != NULL) {
+		fprintf(o, "(");
+	}
+	if (pnode->type == MD_AST_NODE_TYPE_STRING_LITERAL || pnode->type == MD_AST_NODE_TYPE_REGEXI) {
+		fprintf(o, "\"%s\"", pnode->text);
+	} else {
+		fprintf(o, "%s", pnode->text);
+	}
 
 	if (pnode->pchildren != NULL) {
 		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_ast_node_pretty_fprint_aux(pe->pvvalue, level + 1, o);
+			fprintf(o, " ");
+			mlr_dsl_ast_node_pretty_fprint_aux(pe->pvvalue, o);
 		}
+		fprintf(o, ")");
 	}
 }
 
 void mlr_dsl_ast_node_pretty_fprint(mlr_dsl_ast_node_t* pnode, FILE* o) {
-	mlr_dsl_ast_node_pretty_fprint_aux(pnode, 0, o);
+	mlr_dsl_ast_node_pretty_fprint_aux(pnode, o);
+	fprintf(o, "\n");
 }
 
 // ----------------------------------------------------------------

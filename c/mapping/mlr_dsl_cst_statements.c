@@ -2265,16 +2265,25 @@ void mlr_dsl_cst_handle_statement_block(
 	variables_t*           pvars,
 	cst_outputs_t*         pcst_outputs)
 {
-	// xxx trace opportunity. have stashed ast node at cst node. make an ast-node pretty-printer.
-	// xxx: printf("----------------------------------------------------------------\n");
-	// xxx: mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
-	// xxx: printf("----------------------------------------------------------------\n");
-	for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
-		// The UDF/subroutine executor will clear the flag, and consume the retval if there is one.
-		if (pvars->return_state.returned) {
-			break;
+	if (pcst_outputs != NULL && pcst_outputs->trace_execution) { // xxx find a better way to control this ...
+		for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+			fprintf(stderr, "TRACE ");
+			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
+			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			// The UDF/subroutine executor will clear the flag, and consume the retval if there is one.
+			if (pvars->return_state.returned) {
+				break;
+			}
+		}
+	} else {
+		for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			// The UDF/subroutine executor will clear the flag, and consume the retval if there is one.
+			if (pvars->return_state.returned) {
+				break;
+			}
 		}
 	}
 }
@@ -2286,16 +2295,31 @@ static void handle_statement_block_with_break_continue(
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs)
 {
-	// xxx trace opportunity. have stashed ast node at cst node. make an ast-node pretty-printer.
-	for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
-		if (loop_stack_get(pvars->ploop_stack) != 0) {
-			break;
+	if (pcst_outputs != NULL && pcst_outputs->trace_execution) { // xxx find a better way to control this ...
+		for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+			fprintf(stderr, "TRACE ");
+			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
+			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			if (loop_stack_get(pvars->ploop_stack) != 0) {
+				break;
+			}
+			// The UDF/subroutine executor will clear the flag, and consume the retval if there is one.
+			if (pvars->return_state.returned) {
+				break;
+			}
 		}
-		// The UDF/subroutine executor will clear the flag, and consume the retval if there is one.
-		if (pvars->return_state.returned) {
-			break;
+	} else {
+		for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			if (loop_stack_get(pvars->ploop_stack) != 0) {
+				break;
+			}
+			// The UDF/subroutine executor will clear the flag, and consume the retval if there is one.
+			if (pvars->return_state.returned) {
+				break;
+			}
 		}
 	}
 }
@@ -2306,10 +2330,18 @@ void mlr_dsl_cst_handle_statement_list(
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs)
 {
-	// xxx trace opportunity. have stashed ast node at cst node. make an ast-node pretty-printer.
-	for (sllve_t* pe = pstatements->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+	if (pcst_outputs != NULL && pcst_outputs->trace_execution) { // xxx find a better way to control this ...
+		for (sllve_t* pe = pstatements->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+			fprintf(stderr, "TRACE ");
+			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
+			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+		}
+	} else {
+		for (sllve_t* pe = pstatements->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+		}
 	}
 }
 

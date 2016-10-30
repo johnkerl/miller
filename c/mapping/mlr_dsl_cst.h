@@ -69,6 +69,7 @@ typedef struct _cst_outputs_t {
 	sllv_t* poutrecs;
 	char*   oosvar_flatten_separator;
 	cli_writer_opts_t* pwriter_opts;
+	int     trace_execution;
 } cst_outputs_t;
 
 // ----------------------------------------------------------------
