@@ -28,6 +28,12 @@ EXECUTION TRACE:
 * mld. note it's an AST dump, not source-level.
 
 ----------------------------------------------------------------
+SYNTAX ERROR IMPROVEMENT:
+
+* try to get some source-level info in there.
+  http://archive.oreilly.com/pub/a/linux/excerpts/9780596155971/error-reporting-recovery.html
+
+----------------------------------------------------------------
 MAPVARS:
 
 * steps:

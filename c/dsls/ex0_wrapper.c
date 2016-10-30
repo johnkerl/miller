@@ -41,8 +41,9 @@ static ex_ast_t* ex0_parse_inner(yyscan_t scanner, void* pvparser, ex_ast_node_t
 		lex_code = ex0_lexer_lex(scanner);
 		ex_ast_node_t* plexed_node = *ppnode;
 		parse_code = ex0_lemon_parser_parse_token(pvparser, lex_code, plexed_node, past);
-		if (parse_code == 0)
+		if (parse_code == 0) {
 			return NULL;
+		}
 	} while (lex_code > 0);
 	if (-1 == lex_code) {
 		fprintf(stderr, "The scanner encountered an error.\n");

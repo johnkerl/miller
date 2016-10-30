@@ -41,8 +41,10 @@ static mlr_dsl_ast_t* mlr_dsl_parse_inner(yyscan_t scanner, void* pvparser, mlr_
 		lex_code = mlr_dsl_lexer_lex(scanner);
 		mlr_dsl_ast_node_t* plexed_node = *ppnode;
 		parse_code = mlr_dsl_lemon_parser_parse_token(pvparser, lex_code, plexed_node, past);
-		if (parse_code == 0)
+		if (parse_code == 0) {
+			//mlr_dsl_ast_node_print(plexed_node);
 			return NULL;
+		}
 	} while (lex_code > 0);
 	if (-1 == lex_code) {
 		fprintf(stderr, "The scanner encountered an error.\n");
