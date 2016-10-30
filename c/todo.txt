@@ -140,6 +140,7 @@ DEBUGGING:
   o ; is a common omission (separator not terminator)
   o no ++ or -- (not C-like)
   o curly braces are required in if/for/while even w/ single-statement bodies (not C-like)
+* execution-trace option: disclaim it's an AST dump, not source-level.
 
 PERF:
 * mand bench somewhere; other benches.
