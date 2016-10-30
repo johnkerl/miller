@@ -52,7 +52,7 @@
 
 // The caller is expected to provide more context.
 %syntax_error {
-	fprintf(stderr, "mlr DSL: syntax error.\n");
+	fprintf(stderr, "mlr DSL: syntax error at \"%s\"\n", TOKEN->text);
 
 //	xxx may or may not publish this ... it's confusing and maybe not better than nothing.
 //	xxx ideally we want the position within the input of the syntax error.
