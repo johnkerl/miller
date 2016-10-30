@@ -53,6 +53,17 @@
 // The caller is expected to provide more context.
 %syntax_error {
 	fprintf(stderr, "mlr DSL: syntax error.\n");
+
+//	xxx may or may not publish this ... it's confusing and maybe not better than nothing.
+//	xxx ideally we want the position within the input of the syntax error.
+//
+//	int n = sizeof(yyTokenName) / sizeof(yyTokenName[0]);
+//	for (int i = 0; i < n; ++i) {
+//			int a = yy_find_shift_action(pparser, (YYCODETYPE)i);
+//			if (a < YYNSTATE + YYNRULE) {
+//				fprintf(stderr, "Possible token \"%s\"\n", yyTokenName[i]);
+//			}
+//	}
 }
 
 // ================================================================

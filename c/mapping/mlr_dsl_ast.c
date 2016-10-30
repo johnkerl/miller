@@ -231,6 +231,26 @@ void mlr_dsl_ast_node_fprint(mlr_dsl_ast_node_t* pnode, FILE* o) {
 }
 
 // ----------------------------------------------------------------
+static void mlr_dsl_ast_node_pretty_fprint_aux(mlr_dsl_ast_node_t* pnode, int level, FILE* o) {
+	if (pnode == NULL)
+		return;
+
+	for (int i = 0; i < level; i++)
+		fprintf(o, "    ");
+	fprintf(o, "\"%s\"\n", pnode->text);
+
+	if (pnode->pchildren != NULL) {
+		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_pretty_fprint_aux(pe->pvvalue, level + 1, o);
+		}
+	}
+}
+
+void mlr_dsl_ast_node_pretty_fprint(mlr_dsl_ast_node_t* pnode, FILE* o) {
+	mlr_dsl_ast_node_pretty_fprint_aux(pnode, 0, o);
+}
+
+// ----------------------------------------------------------------
 char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	switch(type) {
 	case MD_AST_NODE_TYPE_STATEMENT_BLOCK:                  return "STATEMENT_BLOCK";                  break;

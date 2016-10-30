@@ -275,6 +275,8 @@ void cst_statement_block_free(cst_statement_block_t* pblock) {
 }
 
 // ================================================================
+// ALLOCATORS
+// ================================================================
 cst_top_level_statement_block_t* cst_top_level_statement_block_alloc(int max_var_depth, int subframe_var_count) {
 	cst_top_level_statement_block_t* pblock = mlr_malloc_or_die(sizeof(cst_top_level_statement_block_t));
 
@@ -2253,6 +2255,8 @@ void mlr_dsl_cst_handle_top_level_statement_block(
 }
 
 // ================================================================
+// HANDLERS
+// ================================================================
 // This is for statement lists not recursively contained within a loop body -- including the
 // main/begin/end statements.  Since there is no containing loop body, there is no need to check
 // for break or continue flags after each statement.
@@ -2262,6 +2266,9 @@ void mlr_dsl_cst_handle_statement_block(
 	cst_outputs_t*         pcst_outputs)
 {
 	// xxx trace opportunity. have stashed ast node at cst node. make an ast-node pretty-printer.
+	// xxx: printf("----------------------------------------------------------------\n");
+	// xxx: mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
+	// xxx: printf("----------------------------------------------------------------\n");
 	for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);

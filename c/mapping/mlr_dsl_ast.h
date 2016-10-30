@@ -155,6 +155,7 @@ int mlr_dsl_ast_node_cannot_be_bare_boolean(mlr_dsl_ast_node_t* pnode);
 void mlr_dsl_ast_print(mlr_dsl_ast_t* past);
 void mlr_dsl_ast_node_print(mlr_dsl_ast_node_t* pnode);
 void mlr_dsl_ast_node_fprint(mlr_dsl_ast_node_t* pnode, FILE* o);
+void mlr_dsl_ast_node_pretty_fprint(mlr_dsl_ast_node_t* pnode, FILE* o);
 char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type);
 
 void mlr_dsl_ast_node_free(mlr_dsl_ast_node_t* pnode);
