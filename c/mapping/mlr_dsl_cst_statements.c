@@ -3141,7 +3141,7 @@ static void handle_for_local_map( // xxx vardef_frame_relative_index
 	sllmv_free(plhskeylist);
 }
 
-static void handle_for_local_map_aux( // xxx vardef_frame_relative_index
+static void handle_for_local_map_aux(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs,
@@ -3211,7 +3211,8 @@ static void handle_for_local_map_key_only( // xxx vardef_frame_relative_index
 		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
 		// for-loop.
 
-		sllv_t* pkeys = mlhmmv_copy_keys_from_submap(pvars->poosvars, plhskeylist); // xxx for-local-maQ
+		// xxx factor out a 2nd entry point into the same logic
+		sllv_t* pkeys = mlhmmv_copy_keys_from_submap(pvars->poosvars, plhskeylist); // xxx for-local-map
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 		local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
