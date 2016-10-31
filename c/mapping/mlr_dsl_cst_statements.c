@@ -2378,6 +2378,10 @@ static void handle_return_value(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
+	// xxx mapvar: special-case retval is local map/non-map: need vardef_frame_relative_index & keylist evaluators
+	// xxx mapvar: special-case retval is oosvar/@*: need keylist evaluators
+	// xxx mapvar: special-case retval is $* ?
+	// xxx mapvar: what if 'return g(a,b)' and g is map-valued?
 	pvars->return_state.retval = mlhmmv_value_transfer_terminal( // xxx mapvars
 		pstatement->preturn_evaluator->pprocess_func(
 			pstatement->preturn_evaluator->pvstate, pvars));
