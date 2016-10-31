@@ -752,7 +752,7 @@ static sllv_t* mlhmmv_copy_keys_from_submap_aux(mlhmmv_value_t* pvalue) {
 // xxx code dedupe
 sllv_t* mlhmmv_copy_keys_from_submap_xxx_rename(mlhmmv_value_t* pmvalue, sllmv_t* pmvkeys) {
 	int error;
-	if (pmvkeys->length == 0) {
+	if (pmvkeys == NULL || pmvkeys->length == 0) {
 		return mlhmmv_copy_keys_from_submap_aux(pmvalue);
 	} else if (pmvalue->is_terminal) { // xxx copy this check up to oosvar case too
 		return sllv_alloc();

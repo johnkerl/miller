@@ -3207,6 +3207,7 @@ static void handle_for_local_map_key_only( // xxx vardef_frame_relative_index
 	// of the for-loop, while the k is bound within the for-loop.
 
 	int keys_all_non_null_or_error = FALSE;
+	// xxx rename plhskeylist to ptarget_keylist
 	sllmv_t* plhskeylist = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
 		&keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
@@ -3216,9 +3217,10 @@ static void handle_for_local_map_key_only( // xxx vardef_frame_relative_index
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 
+		// xxx this is wrong. each of these two statements is subscripting. only one or the other should.
 		mlhmmv_value_t *psubmap = local_stack_frame_get_map_value(pframe,
 			pstatement->for_map_target_frame_relative_index, plhskeylist);
-		sllv_t* pkeys = mlhmmv_copy_keys_from_submap_xxx_rename(psubmap, plhskeylist); // xxx for-local-map
+		sllv_t* pkeys = mlhmmv_copy_keys_from_submap_xxx_rename(psubmap, NULL); // xxx refactor w/o null
 
 		local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
 		loop_stack_push(pvars->ploop_stack);
