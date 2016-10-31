@@ -139,7 +139,7 @@ static char * test_numbers() {
 	rval_evaluator_t* p4     = rval_evaluator_alloc_from_x_xx_func(x_xx_times_func, p2, p2);
 
 	mlr_dsl_ast_node_t* pxnode     = mlr_dsl_ast_node_alloc("x",  MD_AST_NODE_TYPE_FIELD_NAME);
-	mlr_dsl_ast_node_t* plognode   = mlr_dsl_ast_node_alloc_zary("log", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
+	mlr_dsl_ast_node_t* plognode   = mlr_dsl_ast_node_alloc_zary("log", MD_AST_NODE_TYPE_FUNC_CALLSITE);
 	mlr_dsl_ast_node_t* plogxnode  = mlr_dsl_ast_node_append_arg(plognode, pxnode);
 	mlr_dsl_ast_node_t* p2node     = mlr_dsl_ast_node_alloc("2",   MD_AST_NODE_TYPE_NUMERIC_LITERAL);
 	mlr_dsl_ast_node_t* p2logxnode = mlr_dsl_ast_node_alloc_binary("*", MD_AST_NODE_TYPE_OPERATOR,
