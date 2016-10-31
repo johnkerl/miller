@@ -30,6 +30,8 @@ EXECUTION TRACE:
 * maybe go through and replace (...)-style with AST-to-source formatting ...
 * UT
 
+! this is all very cute tracing at source-level but would be significantly more useful with values shown.
+
 ----------------------------------------------------------------
 SYNTAX ERROR IMPROVEMENT:
 
