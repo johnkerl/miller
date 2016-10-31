@@ -53,6 +53,7 @@ typedef struct _variables_t {
 	local_stack_t*   plocal_stack;
 	loop_stack_t*    ploop_stack;
 	return_state_t   return_state;
+	int              trace_execution;
 } variables_t;
 
 typedef mv_t rval_evaluator_process_func_t(void* pvstate, variables_t* pvars);

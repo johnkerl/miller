@@ -503,10 +503,10 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.return_state = {
 				.returned = FALSE,
 				.retval = mlhmmv_value_transfer_terminal(mv_absent()),
-			}
+			},
+			.trace_execution          = pstate->trace_execution,
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
-			.trace_execution          = pstate->trace_execution,
 			.pshould_emit_rec         = &should_emit_rec,
 			.poutrecs                 = poutrecs,
 			.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
@@ -532,10 +532,10 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.return_state = {
 				.returned = FALSE,
 				.retval = mlhmmv_value_transfer_terminal(mv_absent()),
-			}
+			},
+			.trace_execution          = pstate->trace_execution,
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
-			.trace_execution          = pstate->trace_execution,
 			.pshould_emit_rec         = &should_emit_rec,
 			.poutrecs                 = poutrecs,
 			.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
@@ -565,10 +565,10 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 		.return_state = {
 			.returned = FALSE,
 			.retval = mlhmmv_value_transfer_terminal(mv_absent()),
-		}
+		},
+		.trace_execution          = pstate->trace_execution,
 	};
 	cst_outputs_t cst_outputs = (cst_outputs_t) {
-		.trace_execution          = pstate->trace_execution,
 		.pshould_emit_rec         = &should_emit_rec,
 		.poutrecs                 = poutrecs,
 		.oosvar_flatten_separator = pstate->oosvar_flatten_separator,
