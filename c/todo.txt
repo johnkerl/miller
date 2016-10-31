@@ -20,6 +20,8 @@ FUNCTIONALITY FOR 5.0.0:
 
 * mapvar iterate
 
+* map literals?!?
+
 ----------------------------------------------------------------
 EXECUTION TRACE:
 
