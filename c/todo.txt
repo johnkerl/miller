@@ -20,7 +20,10 @@ FUNCTIONALITY FOR 5.0.0:
 
 * mapvar iterate
 
-* map literals?!?
+? map literals?!?
+  - allow assignment to oosvar or local. or srec?!?
+  - requires support for empty maps/levels
+  - remove the emptystrip feature from oosvars? update the doc if so. also, another backwards-incompatible change.
 
 ----------------------------------------------------------------
 EXECUTION TRACE:

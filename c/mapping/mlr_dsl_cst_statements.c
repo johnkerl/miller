@@ -134,7 +134,13 @@ static void handle_statement_block_with_break_continue(
 
 static cst_statement_handler_t handle_subr_callsite;
 static cst_statement_handler_t handle_return_void;
-static cst_statement_handler_t handle_return_value;
+static cst_statement_handler_t handle_return_value_from_local_non_map_variable;
+static cst_statement_handler_t handle_return_value_from_local_map_variable;
+static cst_statement_handler_t handle_return_value_from_oosvar;
+static cst_statement_handler_t handle_return_value_from_full_oosvar;
+static cst_statement_handler_t handle_return_value_from_full_srec; // xxx needs grammar support
+static cst_statement_handler_t handle_return_value_from_function_callsite;
+static cst_statement_handler_t handle_return_value_non_map_valued;
 
 static cst_statement_handler_t handle_srec_assignment;
 static cst_statement_handler_t handle_indirect_srec_assignment;
@@ -807,14 +813,59 @@ static mlr_dsl_cst_statement_t* alloc_local_map_variable_assignment(mlr_dsl_cst_
 }
 
 // ----------------------------------------------------------------
+// XXX mapvar retval
+// xxx mapvar: special-case retval is map-literal: need vardef_frame_relative_index & keylist evaluators
+// xxx mapvar: special-case retval is local map/non-map: need vardef_frame_relative_index & keylist evaluators
+// xxx mapvar: special-case retval is oosvar/@*: need keylist evaluators
+// xxx mapvar: special-case retval is $* ?
+// xxx mapvar: what if 'return g(a,b)' and g is map-valued?
+
 static mlr_dsl_cst_statement_t* alloc_return_value(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
-	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
-		type_inferencing, context_flags);
-	pstatement->pnode_handler = handle_return_value;
+
+	if (prhs_node->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
+		printf("map-literal CST-alloc stub!\n");
+
+	} else if (prhs_node->type == MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE) {
+		pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
+			type_inferencing, context_flags);
+		pstatement->pnode_handler = handle_return_value_from_local_non_map_variable;
+
+	} else if (prhs_node->type == MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE) {
+		pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
+			type_inferencing, context_flags);
+		pstatement->pnode_handler = handle_return_value_from_local_map_variable;
+
+	} else if (prhs_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
+		pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
+			type_inferencing, context_flags);
+		pstatement->pnode_handler = handle_return_value_from_oosvar;
+
+	} else if (prhs_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
+		pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
+			type_inferencing, context_flags);
+		pstatement->pnode_handler = handle_return_value_from_full_oosvar;
+
+	} else if (prhs_node->type == MD_AST_NODE_TYPE_FULL_SREC) {
+		pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
+			type_inferencing, context_flags);
+		pstatement->pnode_handler = handle_return_value_from_full_srec; // xxx needs grammar support
+
+	} else if (prhs_node->type == MD_AST_NODE_TYPE_FUNC_CALLSITE) {
+		pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
+			type_inferencing, context_flags);
+		pstatement->pnode_handler = handle_return_value_from_function_callsite;
+
+	} else {
+		pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
+			type_inferencing, context_flags);
+		pstatement->pnode_handler = handle_return_value_non_map_valued;
+
+	}
+
 	return pstatement;
 }
 
@@ -2373,15 +2424,83 @@ static void handle_return_void(
 }
 
 // ----------------------------------------------------------------
-static void handle_return_value(
+static void handle_return_value_from_local_non_map_variable(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	// xxx mapvar: special-case retval is local map/non-map: need vardef_frame_relative_index & keylist evaluators
-	// xxx mapvar: special-case retval is oosvar/@*: need keylist evaluators
-	// xxx mapvar: special-case retval is $* ?
-	// xxx mapvar: what if 'return g(a,b)' and g is map-valued?
+	pvars->return_state.retval = mlhmmv_value_transfer_terminal( // xxx mapvars
+		pstatement->preturn_evaluator->pprocess_func(
+			pstatement->preturn_evaluator->pvstate, pvars));
+	pvars->return_state.returned = TRUE;
+}
+
+// ----------------------------------------------------------------
+static void handle_return_value_from_local_map_variable(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	pvars->return_state.retval = mlhmmv_value_transfer_terminal( // xxx mapvars
+		pstatement->preturn_evaluator->pprocess_func(
+			pstatement->preturn_evaluator->pvstate, pvars));
+	pvars->return_state.returned = TRUE;
+}
+
+// ----------------------------------------------------------------
+static void handle_return_value_from_oosvar(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	pvars->return_state.retval = mlhmmv_value_transfer_terminal( // xxx mapvars
+		pstatement->preturn_evaluator->pprocess_func(
+			pstatement->preturn_evaluator->pvstate, pvars));
+	pvars->return_state.returned = TRUE;
+}
+
+// ----------------------------------------------------------------
+static void handle_return_value_from_full_oosvar(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	pvars->return_state.retval = mlhmmv_value_transfer_terminal( // xxx mapvars
+		pstatement->preturn_evaluator->pprocess_func(
+			pstatement->preturn_evaluator->pvstate, pvars));
+	pvars->return_state.returned = TRUE;
+}
+
+// ----------------------------------------------------------------
+static void handle_return_value_from_full_srec(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	pvars->return_state.retval = mlhmmv_value_transfer_terminal( // xxx mapvars
+		pstatement->preturn_evaluator->pprocess_func(
+			pstatement->preturn_evaluator->pvstate, pvars));
+	pvars->return_state.returned = TRUE;
+}
+
+// ----------------------------------------------------------------
+static void handle_return_value_from_function_callsite(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	pvars->return_state.retval = mlhmmv_value_transfer_terminal( // xxx mapvars
+		pstatement->preturn_evaluator->pprocess_func(
+			pstatement->preturn_evaluator->pvstate, pvars));
+	pvars->return_state.returned = TRUE;
+}
+
+// ----------------------------------------------------------------
+static void handle_return_value_non_map_valued(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
 	pvars->return_state.retval = mlhmmv_value_transfer_terminal( // xxx mapvars
 		pstatement->preturn_evaluator->pprocess_func(
 			pstatement->preturn_evaluator->pvstate, pvars));
