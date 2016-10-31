@@ -148,17 +148,35 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	// Compute the function value
 	cst_outputs_t* pcst_outputs = NULL; // Functions only produce output via their return values
 
-	for (sllve_t* pe = ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
-		if (loop_stack_get(pvars->ploop_stack) != 0) {
-			break;
+	if (pvars->trace_execution) {
+		for (sllve_t* pe = ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+			fprintf(stderr, "TRACE ");
+			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
+			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			if (loop_stack_get(pvars->ploop_stack) != 0) {
+				break;
+			}
+			if (pvars->return_state.returned) {
+				retval = pvars->return_state.retval; // xxx mapvar
+				pvars->return_state.retval = mlhmmv_value_transfer_terminal(mv_absent());
+				pvars->return_state.returned = FALSE;
+				break;
+			}
 		}
-		if (pvars->return_state.returned) {
-			retval = pvars->return_state.retval; // xxx mapvar
-			pvars->return_state.retval = mlhmmv_value_transfer_terminal(mv_absent());
-			pvars->return_state.returned = FALSE;
-			break;
+	} else {
+		for (sllve_t* pe = ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			if (loop_stack_get(pvars->ploop_stack) != 0) {
+				break;
+			}
+			if (pvars->return_state.returned) {
+				retval = pvars->return_state.retval; // xxx mapvar
+				pvars->return_state.retval = mlhmmv_value_transfer_terminal(mv_absent());
+				pvars->return_state.returned = FALSE;
+				break;
+			}
 		}
 	}
 
@@ -286,15 +304,32 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars, 
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Execute the subroutine body
-	for (sllve_t* pe = pstate->ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-		pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
-		if (loop_stack_get(pvars->ploop_stack) != 0) {
-			break;
+
+	if (pvars->trace_execution) {
+		for (sllve_t* pe = pstate->ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+			fprintf(stderr, "TRACE ");
+			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
+			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			if (loop_stack_get(pvars->ploop_stack) != 0) {
+				break;
+			}
+			if (pvars->return_state.returned) {
+				pvars->return_state.returned = FALSE;
+				break;
+			}
 		}
-		if (pvars->return_state.returned) {
-			pvars->return_state.returned = FALSE;
-			break;
+	} else {
+		for (sllve_t* pe = pstate->ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
+			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			if (loop_stack_get(pvars->ploop_stack) != 0) {
+				break;
+			}
+			if (pvars->return_state.returned) {
+				pvars->return_state.returned = FALSE;
+				break;
+			}
 		}
 	}
 
