@@ -23,7 +23,8 @@ FUNCTIONALITY FOR 5.0.0:
 ----------------------------------------------------------------
 EXECUTION TRACE:
 
-! need something at function callsite. as is, it shows func return explicitly but not entry; vice-versa for subrs.
+! need something at function callsite. as is, it shows func return explicitly but not entry.
+! vice-versa for subrs.
 * work through the grammar & neaten up pnode->text instances, now that these names are user-visible.
 * mld. note it's an AST dump, not source-level.
 * maybe go through and replace (...)-style with AST-to-source formatting ...
@@ -65,12 +66,8 @@ MAPVARS:
   k RHS expr eval: terminality as already for oosvars
     > coded; just need more UT coverage.
 
-  - for-local -- with keylist etc. just as for oosvars
-    > should be a straightforward duplication of existing for-oosvar code
-    > grammar rules
-    > cst alloc
-    > cst handle
-    > UT
+  k for-local -- with keylist etc. just as for oosvars
+    > coded; just need more UT coverage.
 
   - function return value
     > only map-valued in one of the above special-case contexts

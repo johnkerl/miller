@@ -47,6 +47,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 
 	cst_udf_state_t* pcst_udf_state = mlr_malloc_or_die(sizeof(cst_udf_state_t));
 
+	pcst_udf_state->name = mlr_strdup_or_die(pnode->text);
 	pcst_udf_state->arity = pparameters_node->pchildren->length;
 	pcst_udf_state->parameter_names = mlr_malloc_or_die(pcst_udf_state->arity * sizeof(char*));
 	pcst_udf_state->parameter_type_masks = mlr_malloc_or_die(pcst_udf_state->arity * sizeof(int));
@@ -112,6 +113,7 @@ void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate) {
 	if (pstate == NULL)
 		return;
 
+	free(pstate->name);
 	for (int i = 0; i < pstate->arity; i++)
 		free(pstate->parameter_names[i]);
 	free(pstate->parameter_names);
@@ -149,6 +151,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	cst_outputs_t* pcst_outputs = NULL; // Functions only produce output via their return values
 
 	if (pvars->trace_execution) {
+		fprintf(stderr, "TRACE ENTER FUNC %s\n", pstate->name);
 		for (sllve_t* pe = ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 			fprintf(stderr, "TRACE ");
@@ -164,6 +167,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 				break;
 			}
 		}
+		fprintf(stderr, "TRACE EXIT FUNC %s\n", pstate->name);
 	} else {
 		for (sllve_t* pe = ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
@@ -306,6 +310,7 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars, 
 	// Execute the subroutine body
 
 	if (pvars->trace_execution) {
+		fprintf(stderr, "TRACE ENTER SUBR %s\n", pstate->name);
 		for (sllve_t* pe = pstate->ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 			fprintf(stderr, "TRACE ");
@@ -319,6 +324,7 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars, 
 				break;
 			}
 		}
+		fprintf(stderr, "TRACE EXIT SUBR %s\n", pstate->name);
 	} else {
 		for (sllve_t* pe = pstate->ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;

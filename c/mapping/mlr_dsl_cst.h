@@ -323,6 +323,7 @@ void mlr_dsl_cst_handle_statement_list(
 // cst_udf_state_t is data needed to execute the body of a user-defined function which is implemented by CST statements.
 // udf_defsite_state_t is data needed for any user-defined function (no matter how implemented).
 typedef struct _cst_udf_state_t {
+	char*     name;
 	int       arity;
 	char**    parameter_names;
 	int*      parameter_type_masks;
