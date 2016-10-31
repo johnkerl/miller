@@ -749,6 +749,23 @@ static sllv_t* mlhmmv_copy_keys_from_submap_aux(mlhmmv_value_t* pvalue) {
 	return pkeys;
 }
 
+// xxx code dedupe
+sllv_t* mlhmmv_copy_keys_from_submap_xxx_rename(mlhmmv_value_t* pmvalue, sllmv_t* pmvkeys) {
+	int error;
+	if (pmvkeys->length == 0) {
+		return mlhmmv_copy_keys_from_submap_aux(pmvalue);
+	} else if (pmvalue->is_terminal) { // xxx copy this check up to oosvar case too
+		return sllv_alloc();
+	} else {
+		mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(pmvalue->u.pnext_level, pmvkeys->phead, &error);
+		if (pfromentry != NULL) {
+			return mlhmmv_copy_keys_from_submap_aux(&pfromentry->level_value);
+		} else {
+			return sllv_alloc();
+		}
+	}
+}
+
 // ----------------------------------------------------------------
 static void mlhmmv_put_value_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_value_t* pvalue) {
 	mlhmmv_put_value_at_level_aux(pmap->proot_level, pmvkeys->phead, pvalue);

@@ -1393,7 +1393,10 @@ static mlr_dsl_cst_statement_t* alloc_for_local_map_key_only(mlr_dsl_cst_t* pcst
 	pstatement->for_map_k_frame_relative_indices[0] = pleft->vardef_frame_relative_index;
 	pstatement->for_map_k_type_masks[0] = mlr_dsl_ast_node_type_to_type_mask(pleft->type);
 
-	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
+	// xxx comment liberally
+	MLR_INTERNAL_CODING_ERROR_IF(pmiddle->vardef_frame_relative_index == MD_UNUSED_INDEX);
+	pstatement->for_map_target_frame_relative_index = pmiddle->vardef_frame_relative_index;
+	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node( // xxx rename x 2
 		pcst, pmiddle, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
@@ -3211,10 +3214,12 @@ static void handle_for_local_map_key_only( // xxx vardef_frame_relative_index
 		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
 		// for-loop.
 
-		// xxx factor out a 2nd entry point into the same logic
-		sllv_t* pkeys = mlhmmv_copy_keys_from_submap(pvars->poosvars, plhskeylist); // xxx for-local-map
-
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+
+		mlhmmv_value_t *psubmap = local_stack_frame_get_map_value(pframe,
+			pstatement->for_map_target_frame_relative_index, plhskeylist);
+		sllv_t* pkeys = mlhmmv_copy_keys_from_submap_xxx_rename(psubmap, plhskeylist); // xxx for-local-map
+
 		local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
 		loop_stack_push(pvars->ploop_stack);
 

@@ -512,9 +512,11 @@ static void pass_1_for_map_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_s
 		// For-local-map: e.g. 'for(a in b[c][d])'.
 		pass_1_for_node(pkeylistnode, pframe_group, pmax_subframe_depth, trace);
 	}
-	for (sllve_t* pe = pkeylistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-		pass_1_for_node(pchild, pframe_group, pmax_subframe_depth, trace);
+	if (pkeylistnode->pchildren != NULL) {
+		for (sllve_t* pe = pkeylistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+			pass_1_for_node(pchild, pframe_group, pmax_subframe_depth, trace);
+		}
 	}
 
 	if (trace) {
