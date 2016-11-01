@@ -34,8 +34,18 @@ typedef void cst_statement_handler_t(
 static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node);
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
-static cst_statement_allocator_t alloc_return_value; // For UDFs
 static cst_statement_allocator_t alloc_return_void;  // For subroutines
+
+static cst_statement_allocator_t alloc_return_value; // For UDFs
+static cst_statement_allocator_t alloc_return_value_from_local_non_map_variable;
+static cst_statement_allocator_t alloc_return_value_from_local_map_variable;
+static cst_statement_allocator_t alloc_return_value_from_oosvar;
+static cst_statement_allocator_t alloc_return_value_from_full_oosvar;
+static cst_statement_allocator_t alloc_return_value_from_full_srec; // xxx needs grammar support
+static cst_statement_allocator_t alloc_return_value_from_function_callsite;
+static cst_statement_allocator_t alloc_return_value_non_map_valued;
+static cst_statement_allocator_t alloc_return_void;
+
 static cst_statement_allocator_t alloc_subr_callsite;
 
 static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(
@@ -133,6 +143,7 @@ static void handle_statement_block_with_break_continue(
 	cst_outputs_t*         pcst_outputs);
 
 static cst_statement_handler_t handle_subr_callsite;
+
 static cst_statement_handler_t handle_return_void;
 static cst_statement_handler_t handle_return_value_from_local_non_map_variable;
 static cst_statement_handler_t handle_return_value_from_local_map_variable;
@@ -823,51 +834,122 @@ static mlr_dsl_cst_statement_t* alloc_local_map_variable_assignment(mlr_dsl_cst_
 static mlr_dsl_cst_statement_t* alloc_return_value(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
 
-	if (prhs_node->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
-		printf("map-literal CST-alloc stub!\n");
+	switch (prhs_node->type) {
+	case MD_AST_NODE_TYPE_MAP_LITERAL:
+		printf("return-map-literal CST-alloc stub!\n");
+		return NULL;
+		break;
 
-	} else if (prhs_node->type == MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE) {
-		pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
-			type_inferencing, context_flags);
-		pstatement->pnode_handler = handle_return_value_from_local_non_map_variable;
+	case  MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE:
+		return alloc_return_value_from_local_non_map_variable(pcst, pnode, type_inferencing, context_flags);
+		break;
 
-	} else if (prhs_node->type == MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE) {
-		pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
-			type_inferencing, context_flags);
-		pstatement->pnode_handler = handle_return_value_from_local_map_variable;
+	case  MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE:
+		return alloc_return_value_from_local_map_variable(pcst, pnode, type_inferencing, context_flags);
+		break;
 
-	} else if (prhs_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
-		pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
-			type_inferencing, context_flags);
-		pstatement->pnode_handler = handle_return_value_from_oosvar;
+	case  MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
+		return alloc_return_value_from_oosvar(pcst, pnode, type_inferencing, context_flags);
+		break;
 
-	} else if (prhs_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
-		pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
-			type_inferencing, context_flags);
-		pstatement->pnode_handler = handle_return_value_from_full_oosvar;
+	case  MD_AST_NODE_TYPE_FULL_OOSVAR:
+		return alloc_return_value_from_full_oosvar(pcst, pnode, type_inferencing, context_flags);
+		break;
 
-	} else if (prhs_node->type == MD_AST_NODE_TYPE_FULL_SREC) {
-		pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
-			type_inferencing, context_flags);
-		pstatement->pnode_handler = handle_return_value_from_full_srec; // xxx needs grammar support
+	case  MD_AST_NODE_TYPE_FULL_SREC:
+		return alloc_return_value_from_full_srec(pcst, pnode, type_inferencing, context_flags);
+		break;
 
-	} else if (prhs_node->type == MD_AST_NODE_TYPE_FUNC_CALLSITE) {
-		pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
-			type_inferencing, context_flags);
-		pstatement->pnode_handler = handle_return_value_from_function_callsite;
+	case  MD_AST_NODE_TYPE_FUNC_CALLSITE:
+		return alloc_return_value_from_function_callsite(pcst, pnode, type_inferencing, context_flags);
+		break;
 
-	} else {
-		pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
-			type_inferencing, context_flags);
-		pstatement->pnode_handler = handle_return_value_non_map_valued;
+	default:
+		return alloc_return_value_non_map_valued(pcst, pnode, type_inferencing, context_flags);
+		break;
 
 	}
+}
 
+static mlr_dsl_cst_statement_t* alloc_return_value_from_local_non_map_variable(
+	mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags)
+{
+	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
+	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
+		type_inferencing, context_flags);
+	pstatement->pnode_handler = handle_return_value_from_local_non_map_variable;
 	return pstatement;
 }
+
+static mlr_dsl_cst_statement_t* alloc_return_value_from_local_map_variable(
+	mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags)
+{
+	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
+	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
+		type_inferencing, context_flags);
+	pstatement->pnode_handler = handle_return_value_from_local_map_variable;
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_return_value_from_oosvar(
+	mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags)
+{
+	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
+	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
+		type_inferencing, context_flags);
+	pstatement->pnode_handler = handle_return_value_from_oosvar;
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_return_value_from_full_oosvar(
+	mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags)
+{
+	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
+	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
+		type_inferencing, context_flags);
+	pstatement->pnode_handler = handle_return_value_from_full_oosvar;
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_return_value_from_full_srec(
+	mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags)
+{
+	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
+	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
+		type_inferencing, context_flags);
+	pstatement->pnode_handler = handle_return_value_from_full_srec; // xxx needs grammar support
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_return_value_from_function_callsite(
+	mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags)
+{
+	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
+	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
+		type_inferencing, context_flags);
+	pstatement->pnode_handler = handle_return_value_from_function_callsite;
+	return pstatement;
+}
+
+static mlr_dsl_cst_statement_t* alloc_return_value_non_map_valued(
+	mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags)
+{
+	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
+	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
+		type_inferencing, context_flags);
+	pstatement->pnode_handler = handle_return_value_non_map_valued;
+	return pstatement;
+}
+
 
 static mlr_dsl_cst_statement_t* alloc_return_void(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
