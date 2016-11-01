@@ -699,7 +699,7 @@ static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node) {
 	pstatement->psubr_defsite                           = NULL;
 	pstatement->preturn_evaluator                       = NULL;
 	pstatement->pblock_handler                          = NULL;
-	pstatement->poosvar_lhs_keylist_evaluators          = NULL;
+	pstatement->poosvar_target_keylist_evaluators          = NULL;
 	pstatement->plocal_map_lhs_keylist_evaluators       = NULL;
 	pstatement->pemit_keylist_evaluators                = NULL;
 	pstatement->num_emit_keylist_evaluators             = 0;
@@ -1061,7 +1061,7 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr
 
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST);
 
-	sllv_t* poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pleft,
+	sllv_t* poosvar_target_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pleft,
 		type_inferencing, context_flags);
 
 	if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST && pright->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
@@ -1073,7 +1073,7 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr
 		pstatement->poosvar_rhs_keylist_evaluators = NULL;
 	}
 
-	pstatement->poosvar_lhs_keylist_evaluators = poosvar_lhs_keylist_evaluators;
+	pstatement->poosvar_target_keylist_evaluators = poosvar_target_keylist_evaluators;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr,
 		type_inferencing, context_flags);
 
@@ -1093,7 +1093,7 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_c
 	MLR_INTERNAL_CODING_ERROR_IF(pright->type != MD_AST_NODE_TYPE_FULL_SREC);
 
 	pstatement->pnode_handler = handle_oosvar_from_full_srec_assignment;
-	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pleft,
+	pstatement->poosvar_target_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pleft,
 		type_inferencing, context_flags);
 	return pstatement;
 }
@@ -1395,7 +1395,7 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 	pstatement->for_v_frame_relative_index = psubright->vardef_frame_relative_index;
 	pstatement->for_v_type_mask = mlr_dsl_ast_node_type_to_type_mask(psubright->type);
 
-	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
+	pstatement->poosvar_target_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
 		pcst, pmiddle, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
@@ -1432,7 +1432,7 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar_key_only(mlr_dsl_cst_t* pcst, m
 	pstatement->for_map_k_frame_relative_indices[0] = pleft->vardef_frame_relative_index;
 	pstatement->for_map_k_type_masks[0] = mlr_dsl_ast_node_type_to_type_mask(pleft->type);
 
-	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
+	pstatement->poosvar_target_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
 		pcst, pmiddle, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
@@ -1489,7 +1489,7 @@ static mlr_dsl_cst_statement_t* alloc_for_local_map(mlr_dsl_cst_t* pcst, mlr_dsl
 	// xxx comment liberally
 	MLR_INTERNAL_CODING_ERROR_IF(pmiddle->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->for_map_target_frame_relative_index = pmiddle->vardef_frame_relative_index;
-	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node( // xxx rename x 2
+	pstatement->poosvar_target_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node( // xxx rename x 2
 		pcst, pmiddle, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
@@ -1529,7 +1529,7 @@ static mlr_dsl_cst_statement_t* alloc_for_local_map_key_only(mlr_dsl_cst_t* pcst
 	// xxx comment liberally
 	MLR_INTERNAL_CODING_ERROR_IF(pmiddle->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->for_map_target_frame_relative_index = pmiddle->vardef_frame_relative_index;
-	pstatement->poosvar_lhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node( // xxx rename x 2
+	pstatement->poosvar_target_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node( // xxx rename x 2
 		pcst, pmiddle, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
@@ -2186,12 +2186,12 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
 	free(pstatement->local_lhs_variable_name);
 
-	if (pstatement->poosvar_lhs_keylist_evaluators != NULL) {
-		for (sllve_t* pe = pstatement->poosvar_lhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+	if (pstatement->poosvar_target_keylist_evaluators != NULL) {
+		for (sllve_t* pe = pstatement->poosvar_target_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 			rval_evaluator_t* phandler = pe->pvvalue;
 			phandler->pfree_func(phandler);
 		}
-		sllv_free(pstatement->poosvar_lhs_keylist_evaluators);
+		sllv_free(pstatement->poosvar_target_keylist_evaluators);
 	}
 
 	if (pstatement->pemit_keylist_evaluators != NULL) {
@@ -2737,7 +2737,7 @@ static void handle_oosvar_assignment(
 
 	if (mv_is_present(&rhs_value)) {
 		int all_non_null_or_error = TRUE;
-		sllmv_t* pmvkeys = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
+		sllmv_t* pmvkeys = evaluate_list(pstatement->poosvar_target_keylist_evaluators, pvars,
 			&all_non_null_or_error);
 		if (all_non_null_or_error)
 			mlhmmv_put_terminal(pvars->poosvars, pmvkeys, &rhs_value);
@@ -2756,7 +2756,7 @@ static void handle_oosvar_to_oosvar_assignment(
 	cst_outputs_t*           pcst_outputs)
 {
 	int lhs_all_non_null_or_error = TRUE;
-	sllmv_t* plhskeys = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
+	sllmv_t* plhskeys = evaluate_list(pstatement->poosvar_target_keylist_evaluators, pvars,
 		&lhs_all_non_null_or_error);
 
 	if (lhs_all_non_null_or_error) {
@@ -2778,7 +2778,7 @@ static void handle_oosvar_from_full_srec_assignment(
 	cst_outputs_t*           pcst_outputs)
 {
 	int all_non_null_or_error = TRUE;
-	sllmv_t* plhskeys = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars, &all_non_null_or_error);
+	sllmv_t* plhskeys = evaluate_list(pstatement->poosvar_target_keylist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
 
 		mlhmmv_level_t* plevel = mlhmmv_get_or_create_level(pvars->poosvars, plhskeys);
@@ -3144,7 +3144,7 @@ static void handle_for_oosvar(
 	// of the for-loop, while the k1/k2/v are bound within the for-loop.
 
 	int keys_all_non_null_or_error = FALSE;
-	sllmv_t* plhskeylist = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
+	sllmv_t* plhskeylist = evaluate_list(pstatement->poosvar_target_keylist_evaluators, pvars,
 		&keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
 
@@ -3246,7 +3246,7 @@ static void handle_for_oosvar_key_only(
 	// of the for-loop, while the k is bound within the for-loop.
 
 	int keys_all_non_null_or_error = FALSE;
-	sllmv_t* plhskeylist = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
+	sllmv_t* plhskeylist = evaluate_list(pstatement->poosvar_target_keylist_evaluators, pvars,
 		&keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
 		// Locate the submap indexed by the keylist and copy its keys. E.g. in 'for (k1 in @a[3][$4]) { ... }', the
@@ -3300,7 +3300,7 @@ static void handle_for_local_map( // xxx vardef_frame_relative_index
 	int keys_all_non_null_or_error = FALSE;
 	// xxx confusing 'oosvar' name ... clean up please.
 	// xxx confusing 'keylist' name ... clean up please.
-	sllmv_t* plhskeylist = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
+	sllmv_t* plhskeylist = evaluate_list(pstatement->poosvar_target_keylist_evaluators, pvars,
 		&keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
 
@@ -3413,7 +3413,7 @@ static void handle_for_local_map_key_only( // xxx vardef_frame_relative_index
 
 	int keys_all_non_null_or_error = FALSE;
 	// xxx rename plhskeylist to ptarget_keylist
-	sllmv_t* plhskeylist = evaluate_list(pstatement->poosvar_lhs_keylist_evaluators, pvars,
+	sllmv_t* plhskeylist = evaluate_list(pstatement->poosvar_target_keylist_evaluators, pvars,
 		&keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
 		// Locate the submap indexed by the keylist and copy its keys. E.g. in 'for (k1 in @a[3][$4]) { ... }', the

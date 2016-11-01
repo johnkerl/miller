@@ -156,12 +156,12 @@ typedef struct _mlr_dsl_cst_statement_t {
 	mlr_dsl_cst_statement_block_handler_t* pblock_handler;
 
 	// Assignment to oosvar
-	sllv_t* poosvar_lhs_keylist_evaluators;
+	sllv_t* poosvar_target_keylist_evaluators;
 
-	// unlashed emit and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
+	// Unlashed emit and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
 	sllv_t* pemit_keylist_evaluators;
 
-	// lashed emit and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
+	// Lashed emit and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
 	int num_emit_keylist_evaluators;
 	sllv_t** ppemit_keylist_evaluators;
 
