@@ -131,7 +131,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
 			for (sllve_t* pg = plistnode->pchildren->phead; pg != NULL; pg = pg->pnext) {
 				mlr_dsl_ast_node_t* pchild = pg->pvvalue;
-				sllv_append(pblock->pstatement_block->pstatements, mlr_dsl_cst_alloc_statement(pcst, pchild,
+				sllv_append(pblock->pblock->pstatements, mlr_dsl_cst_alloc_statement(pcst, pchild,
 					type_inferencing, context_flags | IN_BEGIN_OR_END));
 			}
 		}
@@ -154,7 +154,7 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 			mlr_dsl_ast_node_t* plistnode = get_list_for_block(pnode);
 			for (sllve_t* pg = plistnode->pchildren->phead; pg != NULL; pg = pg->pnext) {
 				mlr_dsl_ast_node_t* pchild = pg->pvvalue;
-				sllv_append(pblock->pstatement_block->pstatements, mlr_dsl_cst_alloc_statement(pcst, pchild,
+				sllv_append(pblock->pblock->pstatements, mlr_dsl_cst_alloc_statement(pcst, pchild,
 					type_inferencing, context_flags | IN_BEGIN_OR_END));
 			}
 		}
@@ -175,10 +175,10 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 
 		// The last statement of mlr filter must be a bare boolean.
 		if (do_final_filter && pe->pnext == NULL) {
-			sllv_append(pcst->pmain_block->pstatement_block->pstatements, mlr_dsl_cst_alloc_final_filter_statement(
+			sllv_append(pcst->pmain_block->pblock->pstatements, mlr_dsl_cst_alloc_final_filter_statement(
 				pcst, pnode, negate_final_filter, type_inferencing, context_flags | IN_MLR_FINAL_FILTER));
 		} else {
-			sllv_append(pcst->pmain_block->pstatement_block->pstatements, mlr_dsl_cst_alloc_statement(pcst, pnode,
+			sllv_append(pcst->pmain_block->pblock->pstatements, mlr_dsl_cst_alloc_statement(pcst, pnode,
 				type_inferencing, context_flags));
 		}
 	}

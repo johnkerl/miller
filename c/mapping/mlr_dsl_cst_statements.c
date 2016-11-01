@@ -19,34 +19,23 @@
 // Here, though, they're used to reduce keystrokes in the (very large) number
 // of static-function prototypes here at the top of this file.
 
-typedef mlr_dsl_cst_statement_t* cst_statement_allocator_t(
-	mlr_dsl_cst_t*      pcst,
-	mlr_dsl_ast_node_t* pnode,
-	int                 type_inferencing,
-	int                 context_flags);
-
-typedef void cst_statement_handler_t(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs);
-
 // ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node);
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
-static cst_statement_allocator_t alloc_return_void;  // For subroutines
+static mlr_dsl_cst_statement_allocator_t alloc_return_void;  // For subroutines
 
-static cst_statement_allocator_t alloc_return_value; // For UDFs
-static cst_statement_allocator_t alloc_return_value_from_local_non_map_variable;
-static cst_statement_allocator_t alloc_return_value_from_local_map_variable;
-static cst_statement_allocator_t alloc_return_value_from_oosvar;
-static cst_statement_allocator_t alloc_return_value_from_full_oosvar;
-static cst_statement_allocator_t alloc_return_value_from_full_srec; // xxx needs grammar support
-static cst_statement_allocator_t alloc_return_value_from_function_callsite;
-static cst_statement_allocator_t alloc_return_value_non_map_valued;
-static cst_statement_allocator_t alloc_return_void;
+static mlr_dsl_cst_statement_allocator_t alloc_return_value; // For UDFs
+static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_local_non_map_variable;
+static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_local_map_variable;
+static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_oosvar;
+static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_full_oosvar;
+static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_full_srec; // xxx needs grammar support
+static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_function_callsite;
+static mlr_dsl_cst_statement_allocator_t alloc_return_value_non_map_valued;
+static mlr_dsl_cst_statement_allocator_t alloc_return_void;
 
-static cst_statement_allocator_t alloc_subr_callsite;
+static mlr_dsl_cst_statement_allocator_t alloc_subr_callsite;
 
 static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(
 	mlr_dsl_cst_t*      pcst,
@@ -55,31 +44,30 @@ static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(
 	int                 context_flags,
 	int                 type_mask);
 
-static cst_statement_allocator_t alloc_local_non_map_variable_assignment;
-static cst_statement_allocator_t alloc_local_map_variable_assignment;
-static cst_statement_allocator_t alloc_srec_assignment;
-static cst_statement_allocator_t alloc_indirect_srec_assignment;
-static cst_statement_allocator_t alloc_oosvar_assignment;
-static cst_statement_allocator_t alloc_oosvar_from_full_srec_assignment;
-static cst_statement_allocator_t alloc_full_srec_from_oosvar_assignment;
-static cst_statement_allocator_t alloc_env_assignment;
-static cst_statement_allocator_t alloc_unset;
+static mlr_dsl_cst_statement_allocator_t alloc_local_non_map_variable_assignment;
+static mlr_dsl_cst_statement_allocator_t alloc_local_map_variable_assignment;
+static mlr_dsl_cst_statement_allocator_t alloc_srec_assignment;
+static mlr_dsl_cst_statement_allocator_t alloc_indirect_srec_assignment;
+static mlr_dsl_cst_statement_allocator_t alloc_oosvar_assignment;
+static mlr_dsl_cst_statement_allocator_t alloc_oosvar_from_full_srec_assignment;
+static mlr_dsl_cst_statement_allocator_t alloc_full_srec_from_oosvar_assignment;
+static mlr_dsl_cst_statement_allocator_t alloc_env_assignment;
+static mlr_dsl_cst_statement_allocator_t alloc_unset;
 
-static cst_statement_allocator_t alloc_conditional_block;
-static cst_statement_allocator_t alloc_if_head;
-static cst_statement_allocator_t alloc_while;
-static cst_statement_allocator_t alloc_do_while;
-static cst_statement_allocator_t alloc_for_srec;
-static cst_statement_allocator_t alloc_for_oosvar;
-static cst_statement_allocator_t alloc_for_oosvar_key_only;
-static cst_statement_allocator_t alloc_for_local_map;
-static cst_statement_allocator_t alloc_for_local_map_key_only;
-static cst_statement_allocator_t alloc_triple_for;
-static cst_statement_allocator_t alloc_break;
-static cst_statement_allocator_t alloc_continue;
-static cst_statement_allocator_t alloc_filter;
+static mlr_dsl_cst_statement_allocator_t alloc_conditional_block;
+static mlr_dsl_cst_statement_allocator_t alloc_if_head;
+static mlr_dsl_cst_statement_allocator_t alloc_while;
+static mlr_dsl_cst_statement_allocator_t alloc_do_while;
+static mlr_dsl_cst_statement_allocator_t alloc_for_srec;
+static mlr_dsl_cst_statement_allocator_t alloc_for_oosvar;
+static mlr_dsl_cst_statement_allocator_t alloc_for_oosvar_key_only;
+static mlr_dsl_cst_statement_allocator_t alloc_for_local_map;
+static mlr_dsl_cst_statement_allocator_t alloc_for_local_map_key_only;
+static mlr_dsl_cst_statement_allocator_t alloc_break;
+static mlr_dsl_cst_statement_allocator_t alloc_continue;
+static mlr_dsl_cst_statement_allocator_t alloc_filter;
 
-static cst_statement_allocator_t alloc_bare_boolean;
+static mlr_dsl_cst_statement_allocator_t alloc_bare_boolean;
 static mlr_dsl_cst_statement_t* alloc_final_filter(
 	mlr_dsl_cst_t*      pcst,
 	mlr_dsl_ast_node_t* pnode,
@@ -87,8 +75,8 @@ static mlr_dsl_cst_statement_t* alloc_final_filter(
 	int                 type_inferencing,
 	int                 context_flags);
 
-static cst_statement_allocator_t alloc_tee;
-static cst_statement_allocator_t alloc_emitf;
+static mlr_dsl_cst_statement_allocator_t alloc_tee;
+static mlr_dsl_cst_statement_allocator_t alloc_emitf;
 
 static mlr_dsl_cst_statement_t* alloc_emit(
 	mlr_dsl_cst_t*      pcst,
@@ -104,7 +92,7 @@ static mlr_dsl_cst_statement_t* alloc_emit_lashed(
 	int                 context_flags,
 	int                 do_full_prefixing);
 
-static cst_statement_allocator_t alloc_dump;
+static mlr_dsl_cst_statement_allocator_t alloc_dump;
 
 static mlr_dsl_cst_statement_t* alloc_print(
 	mlr_dsl_cst_t*      pcst,
@@ -137,52 +125,46 @@ static sllv_t* allocate_keylist_evaluators_from_oosvar_node(
 
 static void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg);
 
-static void handle_statement_block_with_break_continue(
-	cst_statement_block_t* pblock,
-	variables_t*           pvars,
-	cst_outputs_t*         pcst_outputs);
+static mlr_dsl_cst_statement_handler_t handle_subr_callsite;
 
-static cst_statement_handler_t handle_subr_callsite;
+static mlr_dsl_cst_statement_handler_t handle_return_void;
+static mlr_dsl_cst_statement_handler_t handle_return_value_from_local_non_map_variable;
+static mlr_dsl_cst_statement_handler_t handle_return_value_from_local_map_variable;
+static mlr_dsl_cst_statement_handler_t handle_return_value_from_oosvar;
+static mlr_dsl_cst_statement_handler_t handle_return_value_from_full_oosvar;
+static mlr_dsl_cst_statement_handler_t handle_return_value_from_full_srec; // xxx needs grammar support
+static mlr_dsl_cst_statement_handler_t handle_return_value_from_function_callsite;
+static mlr_dsl_cst_statement_handler_t handle_return_value_non_map_valued;
 
-static cst_statement_handler_t handle_return_void;
-static cst_statement_handler_t handle_return_value_from_local_non_map_variable;
-static cst_statement_handler_t handle_return_value_from_local_map_variable;
-static cst_statement_handler_t handle_return_value_from_oosvar;
-static cst_statement_handler_t handle_return_value_from_full_oosvar;
-static cst_statement_handler_t handle_return_value_from_full_srec; // xxx needs grammar support
-static cst_statement_handler_t handle_return_value_from_function_callsite;
-static cst_statement_handler_t handle_return_value_non_map_valued;
+static mlr_dsl_cst_statement_handler_t handle_srec_assignment;
+static mlr_dsl_cst_statement_handler_t handle_indirect_srec_assignment;
+static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment;
+static mlr_dsl_cst_statement_handler_t handle_oosvar_to_oosvar_assignment;
+static mlr_dsl_cst_statement_handler_t handle_oosvar_from_full_srec_assignment;
+static mlr_dsl_cst_statement_handler_t handle_full_srec_from_oosvar_assignment;
+static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment;
+static mlr_dsl_cst_statement_handler_t handle_env_assignment;
+static mlr_dsl_cst_statement_handler_t handle_local_non_map_variable_definition;
+static mlr_dsl_cst_statement_handler_t handle_local_map_variable_declaration;
+static mlr_dsl_cst_statement_handler_t handle_local_non_map_variable_assignment;
+static mlr_dsl_cst_statement_handler_t handle_local_map_variable_assignment;
+static mlr_dsl_cst_statement_handler_t handle_unset;
+static mlr_dsl_cst_statement_handler_t handle_unset_all;
 
-static cst_statement_handler_t handle_srec_assignment;
-static cst_statement_handler_t handle_indirect_srec_assignment;
-static cst_statement_handler_t handle_oosvar_assignment;
-static cst_statement_handler_t handle_oosvar_to_oosvar_assignment;
-static cst_statement_handler_t handle_oosvar_from_full_srec_assignment;
-static cst_statement_handler_t handle_full_srec_from_oosvar_assignment;
-static cst_statement_handler_t handle_oosvar_assignment;
-static cst_statement_handler_t handle_env_assignment;
-static cst_statement_handler_t handle_local_non_map_variable_definition;
-static cst_statement_handler_t handle_local_map_variable_declaration;
-static cst_statement_handler_t handle_local_non_map_variable_assignment;
-static cst_statement_handler_t handle_local_map_variable_assignment;
-static cst_statement_handler_t handle_unset;
-static cst_statement_handler_t handle_unset_all;
-
-static cst_statement_handler_t handle_filter;
-static cst_statement_handler_t handle_final_filter;
-static cst_statement_handler_t handle_conditional_block;
-static cst_statement_handler_t handle_while;
-static cst_statement_handler_t handle_do_while;
-static cst_statement_handler_t handle_for_srec;
-static cst_statement_handler_t handle_for_oosvar;
-static cst_statement_handler_t handle_for_oosvar_key_only;
-static cst_statement_handler_t handle_for_local_map;
-static cst_statement_handler_t handle_for_local_map_key_only;
-static cst_statement_handler_t handle_triple_for;
-static cst_statement_handler_t handle_break;
-static cst_statement_handler_t handle_continue;
-static cst_statement_handler_t handle_if_head;
-static cst_statement_handler_t handle_bare_boolean;
+static mlr_dsl_cst_statement_handler_t handle_filter;
+static mlr_dsl_cst_statement_handler_t handle_final_filter;
+static mlr_dsl_cst_statement_handler_t handle_conditional_block;
+static mlr_dsl_cst_statement_handler_t handle_while;
+static mlr_dsl_cst_statement_handler_t handle_do_while;
+static mlr_dsl_cst_statement_handler_t handle_for_srec;
+static mlr_dsl_cst_statement_handler_t handle_for_oosvar;
+static mlr_dsl_cst_statement_handler_t handle_for_oosvar_key_only;
+static mlr_dsl_cst_statement_handler_t handle_for_local_map;
+static mlr_dsl_cst_statement_handler_t handle_for_local_map_key_only;
+static mlr_dsl_cst_statement_handler_t handle_break;
+static mlr_dsl_cst_statement_handler_t handle_continue;
+static mlr_dsl_cst_statement_handler_t handle_if_head;
+static mlr_dsl_cst_statement_handler_t handle_bare_boolean;
 
 static void handle_for_oosvar_aux(
 	mlr_dsl_cst_statement_t* pstatement,
@@ -230,45 +212,45 @@ static void handle_unset_vararg_indirect_srec_field_name(
 	cst_outputs_t*                  pcst_outputs);
 
 
-static cst_statement_handler_t handle_tee_to_stdfp;
-static cst_statement_handler_t handle_tee_to_file;
+static mlr_dsl_cst_statement_handler_t handle_tee_to_stdfp;
+static mlr_dsl_cst_statement_handler_t handle_tee_to_file;
 static lrec_t*                 handle_tee_common(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs);
 
-static cst_statement_handler_t handle_emitf;
-static cst_statement_handler_t handle_emitf_to_stdfp;
-static cst_statement_handler_t handle_emitf_to_file;
+static mlr_dsl_cst_statement_handler_t handle_emitf;
+static mlr_dsl_cst_statement_handler_t handle_emitf_to_stdfp;
+static mlr_dsl_cst_statement_handler_t handle_emitf_to_file;
 static void handle_emitf_common(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	sllv_t*                  poutrecs);
 
-static cst_statement_handler_t handle_emit;
-static cst_statement_handler_t handle_emit_to_stdfp;
-static cst_statement_handler_t handle_emit_to_file;
+static mlr_dsl_cst_statement_handler_t handle_emit;
+static mlr_dsl_cst_statement_handler_t handle_emit_to_stdfp;
+static mlr_dsl_cst_statement_handler_t handle_emit_to_file;
 static void handle_emit_common(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	sllv_t*                  pcst_outputs,
 	char*                    f);
 
-static cst_statement_handler_t handle_emit_lashed;
-static cst_statement_handler_t handle_emit_lashed_to_stdfp;
-static cst_statement_handler_t handle_emit_lashed_to_file;
+static mlr_dsl_cst_statement_handler_t handle_emit_lashed;
+static mlr_dsl_cst_statement_handler_t handle_emit_lashed_to_stdfp;
+static mlr_dsl_cst_statement_handler_t handle_emit_lashed_to_file;
 static void handle_emit_lashed_common(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	sllv_t*                  pcst_outputs,
 	char*                    f);
 
-static cst_statement_handler_t handle_emit_all;
-static cst_statement_handler_t handle_emit_all_to_stdfp;
-static cst_statement_handler_t handle_emit_all_to_file;
-static cst_statement_handler_t handle_dump;
-static cst_statement_handler_t handle_dump_to_file;
-static cst_statement_handler_t handle_print;
+static mlr_dsl_cst_statement_handler_t handle_emit_all;
+static mlr_dsl_cst_statement_handler_t handle_emit_all_to_stdfp;
+static mlr_dsl_cst_statement_handler_t handle_emit_all_to_file;
+static mlr_dsl_cst_statement_handler_t handle_dump;
+static mlr_dsl_cst_statement_handler_t handle_dump_to_file;
+static mlr_dsl_cst_statement_handler_t handle_print;
 
 // ================================================================
 cst_statement_block_t* cst_statement_block_alloc(int subframe_var_count) {
@@ -295,22 +277,22 @@ void cst_statement_block_free(cst_statement_block_t* pblock) {
 // ALLOCATORS
 // ================================================================
 cst_top_level_statement_block_t* cst_top_level_statement_block_alloc(int max_var_depth, int subframe_var_count) {
-	cst_top_level_statement_block_t* pblock = mlr_malloc_or_die(sizeof(cst_top_level_statement_block_t));
+	cst_top_level_statement_block_t* ptop_level_block = mlr_malloc_or_die(sizeof(cst_top_level_statement_block_t));
 
-	pblock->max_var_depth    = max_var_depth;
-	pblock->pframe           = local_stack_frame_alloc(max_var_depth);
-	pblock->pstatement_block = cst_statement_block_alloc(subframe_var_count);
+	ptop_level_block->max_var_depth = max_var_depth;
+	ptop_level_block->pframe        = local_stack_frame_alloc(max_var_depth);
+	ptop_level_block->pblock        = cst_statement_block_alloc(subframe_var_count);
 
-	return pblock;
+	return ptop_level_block;
 }
 
 // ----------------------------------------------------------------
-void cst_top_level_statement_block_free(cst_top_level_statement_block_t* pblock) {
-	if (pblock == NULL)
+void cst_top_level_statement_block_free(cst_top_level_statement_block_t* ptop_level_block) {
+	if (ptop_level_block == NULL)
 		return;
-	local_stack_frame_free(pblock->pframe);
-	cst_statement_block_free(pblock->pstatement_block);
-	free(pblock);
+	local_stack_frame_free(ptop_level_block->pframe);
+	cst_statement_block_free(ptop_level_block->pblock);
+	free(ptop_level_block);
 }
 
 // ================================================================
@@ -691,58 +673,102 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_final_filter_statement(mlr_dsl_cst_t*
 static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node) {
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
 
-	pstatement->past_node                                            = past_node;
-	pstatement->pnode_handler                                        = NULL;
+	// xxx post-federation
+	pstatement->past_node           = past_node;
+	pstatement->pstatement_handler  = NULL;
+	pstatement->pstatement_freer    = NULL;
+	pstatement->pblock_handler      = NULL;
+	pstatement->negate_final_filter = FALSE;
+	pstatement->pvstate             = FALSE;
+
+	// xxx pre-federation
+
 	pstatement->subr_callsite_info.subr_callsite_argument_evaluators = NULL;
 	pstatement->subr_callsite_info.subr_callsite_arguments           = NULL;
 	pstatement->subr_callsite_info.psubr_callsite                    = NULL;
 	pstatement->subr_callsite_info.psubr_defsite                     = NULL;
-	pstatement->preturn_evaluator                                    = NULL;
-	pstatement->pblock_handler                                       = NULL;
-	pstatement->poosvar_target_keylist_evaluators                    = NULL;
-	pstatement->plocal_map_lhs_keylist_evaluators                    = NULL;
-	pstatement->pemit_keylist_evaluators                             = NULL;
-	pstatement->num_emit_keylist_evaluators                          = 0;
-	pstatement->ppemit_keylist_evaluators                            = NULL;
-	pstatement->local_lhs_variable_name                              = 0;
-	pstatement->local_lhs_frame_relative_index                       = 0;
-	pstatement->local_lhs_type_mask                                  = TYPE_MASK_ANY;
-	pstatement->srec_lhs_field_name                                  = NULL;
-	pstatement->env_lhs_name                                         = NULL;
-	pstatement->psrec_lhs_evaluator                                  = NULL;
-	pstatement->prhs_evaluator                                       = NULL;
-	pstatement->stdfp                                                = NULL;
-	pstatement->print_terminator                                     = "\n";
-	pstatement->poutput_filename_evaluator                           = NULL;
-	pstatement->file_output_mode                                     = MODE_WRITE;
-	pstatement->pmulti_out                                           = NULL;
-	pstatement->psingle_lrec_writer                                  = NULL;
-	pstatement->pmulti_lrec_writer                                   = NULL;
-	pstatement->poosvar_rhs_keylist_evaluators                       = NULL;
-	pstatement->pemit_oosvar_namelist_evaluators                     = NULL;
-	pstatement->pvarargs                                             = NULL;
-	pstatement->do_full_prefixing                                    = FALSE;
-	pstatement->flush_every_record                                   = TRUE;
-	pstatement->pstatement_block                                     = NULL;
-	pstatement->pif_chain_statements                                 = NULL;
-	pstatement->for_srec_k_variable_name                             = NULL;
-	pstatement->for_srec_k_frame_relative_index                      = 0;
-	pstatement->for_srec_k_type_mask                                 = TYPE_MASK_ANY;
-	pstatement->for_map_k_variable_names                             = NULL;
-	pstatement->for_map_k_frame_relative_indices                     = NULL;
-	pstatement->for_map_k_type_masks                                 = NULL;
-	pstatement->for_map_k_count                                      = 0;
-	pstatement->for_v_variable_name                                  = NULL;
-	pstatement->for_v_frame_relative_index                           = 0;
-	pstatement->for_v_type_mask                                      = TYPE_MASK_ANY;
-	pstatement->for_map_target_frame_relative_index                  = 0;
-	pstatement->ptype_inferenced_srec_field_getter                   = NULL;
-	pstatement->ptriple_for_start_statements                         = NULL;
-	pstatement->ptriple_for_pre_continuation_statements              = NULL;
-	pstatement->ptriple_for_continuation_evaluator                   = NULL;
-	pstatement->ptriple_for_update_statements                        = NULL;
-	pstatement->negate_final_filter                                  = FALSE;
 
+	pstatement->preturn_evaluator                   = NULL;
+
+	pstatement->poosvar_target_keylist_evaluators   = NULL;
+	pstatement->plocal_map_lhs_keylist_evaluators   = NULL;
+	pstatement->pemit_keylist_evaluators            = NULL;
+	pstatement->num_emit_keylist_evaluators         = 0;
+	pstatement->ppemit_keylist_evaluators           = NULL;
+	pstatement->local_lhs_variable_name             = 0;
+	pstatement->local_lhs_frame_relative_index      = 0;
+	pstatement->local_lhs_type_mask                 = TYPE_MASK_ANY;
+	pstatement->srec_lhs_field_name                 = NULL;
+	pstatement->env_lhs_name                        = NULL;
+	pstatement->psrec_lhs_evaluator                 = NULL;
+	pstatement->prhs_evaluator                      = NULL;
+	pstatement->stdfp                               = NULL;
+	pstatement->print_terminator                    = "\n";
+	pstatement->poutput_filename_evaluator          = NULL;
+	pstatement->file_output_mode                    = MODE_WRITE;
+	pstatement->pmulti_out                          = NULL;
+	pstatement->psingle_lrec_writer                 = NULL;
+	pstatement->pmulti_lrec_writer                  = NULL;
+	pstatement->poosvar_rhs_keylist_evaluators      = NULL;
+	pstatement->pemit_oosvar_namelist_evaluators    = NULL;
+	pstatement->pvarargs                            = NULL;
+	pstatement->do_full_prefixing                   = FALSE;
+	pstatement->flush_every_record                  = TRUE;
+	pstatement->pblock                              = NULL;
+	pstatement->pif_chain_statements                = NULL;
+
+	pstatement->for_srec_k_variable_name            = NULL;
+	pstatement->for_srec_k_frame_relative_index     = 0;
+	pstatement->for_srec_k_type_mask                = TYPE_MASK_ANY;
+	pstatement->for_map_k_variable_names            = NULL;
+	pstatement->for_map_k_frame_relative_indices    = NULL;
+	pstatement->for_map_k_type_masks                = NULL;
+	pstatement->for_map_k_count                     = 0;
+	pstatement->for_v_variable_name                 = NULL;
+	pstatement->for_v_frame_relative_index          = 0;
+	pstatement->for_v_type_mask                     = TYPE_MASK_ANY;
+	pstatement->for_map_target_frame_relative_index = 0;
+
+	pstatement->ptype_inferenced_srec_field_getter  = NULL;
+
+	return pstatement;
+}
+
+// ----------------------------------------------------------------
+// xxx post-federation
+
+mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc(
+	mlr_dsl_ast_node_t*              past_node,
+	mlr_dsl_cst_statement_handler_t* pstatement_handler,
+	mlr_dsl_cst_statement_freer_t*   pstatement_freer,
+	void*                            pvstate)
+{
+	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
+	pstatement->past_node           = past_node;
+	pstatement->pstatement_handler  = pstatement_handler;
+	pstatement->pblock_handler      = NULL;
+	pstatement->pstatement_freer    = pstatement_freer;
+	pstatement->negate_final_filter = FALSE;
+	pstatement->pvstate             = pvstate;
+	return pstatement;
+}
+
+mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc_with_block(
+	mlr_dsl_ast_node_t*              past_node,
+	mlr_dsl_cst_statement_handler_t* pstatement_handler,
+	cst_statement_block_t*           pblock,
+	mlr_dsl_cst_block_handler_t*     pblock_handler,
+	mlr_dsl_cst_statement_freer_t*   pstatement_freer,
+	void*                            pvstate)
+{
+	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
+	pstatement->past_node           = past_node;
+	pstatement->pstatement_handler  = pstatement_handler;
+	pstatement->pblock              = pblock;
+	pstatement->pblock_handler      = pblock_handler;
+	pstatement->pstatement_freer    = pstatement_freer;
+	pstatement->negate_final_filter = FALSE;
+	pstatement->pvstate             = pvstate;
 	return pstatement;
 }
 
@@ -762,10 +788,10 @@ static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(mlr_dsl_
 		mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pnext->pvvalue;
 		pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, pcst->pfmgr,
 			type_inferencing, context_flags);
-		pstatement->pnode_handler = handle_local_non_map_variable_definition;
+		pstatement->pstatement_handler = handle_local_non_map_variable_definition;
 	} else {
 		pstatement->prhs_evaluator = NULL;
-		pstatement->pnode_handler = handle_local_map_variable_declaration;
+		pstatement->pstatement_handler = handle_local_map_variable_declaration;
 	}
 	return pstatement;
 }
@@ -783,7 +809,7 @@ static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_assignment(
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren != NULL);
 
-	pstatement->pnode_handler = handle_local_non_map_variable_assignment;
+	pstatement->pstatement_handler = handle_local_non_map_variable_assignment;
 	pstatement->local_lhs_variable_name = mlr_strdup_or_die(pleft->text);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->local_lhs_frame_relative_index = pleft->vardef_frame_relative_index;
@@ -802,7 +828,7 @@ static mlr_dsl_cst_statement_t* alloc_local_map_variable_assignment(mlr_dsl_cst_
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren == NULL);
 
-	pstatement->pnode_handler = handle_local_map_variable_assignment;
+	pstatement->pstatement_handler = handle_local_map_variable_assignment;
 	pstatement->local_lhs_variable_name = mlr_strdup_or_die(pleft->text);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstatement->local_lhs_frame_relative_index = pleft->vardef_frame_relative_index;
@@ -880,7 +906,7 @@ static mlr_dsl_cst_statement_t* alloc_return_value_from_local_non_map_variable(
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
 	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, // xxx mapvars
 		type_inferencing, context_flags);
-	pstatement->pnode_handler = handle_return_value_from_local_non_map_variable;
+	pstatement->pstatement_handler = handle_return_value_from_local_non_map_variable;
 	return pstatement;
 }
 
@@ -891,7 +917,7 @@ static mlr_dsl_cst_statement_t* alloc_return_value_from_local_map_variable(
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
 	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, // xxx mapvars
 		type_inferencing, context_flags);
-	pstatement->pnode_handler = handle_return_value_from_local_map_variable;
+	pstatement->pstatement_handler = handle_return_value_from_local_map_variable;
 	return pstatement;
 }
 
@@ -902,7 +928,7 @@ static mlr_dsl_cst_statement_t* alloc_return_value_from_oosvar(
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
 	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, // xxx mapvars
 		type_inferencing, context_flags);
-	pstatement->pnode_handler = handle_return_value_from_oosvar;
+	pstatement->pstatement_handler = handle_return_value_from_oosvar;
 	return pstatement;
 }
 
@@ -913,7 +939,7 @@ static mlr_dsl_cst_statement_t* alloc_return_value_from_full_oosvar(
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
 	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, // xxx mapvars
 		type_inferencing, context_flags);
-	pstatement->pnode_handler = handle_return_value_from_full_oosvar;
+	pstatement->pstatement_handler = handle_return_value_from_full_oosvar;
 	return pstatement;
 }
 
@@ -924,7 +950,7 @@ static mlr_dsl_cst_statement_t* alloc_return_value_from_full_srec(
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
 	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, // xxx mapvars
 		type_inferencing, context_flags);
-	pstatement->pnode_handler = handle_return_value_from_full_srec; // xxx needs grammar support
+	pstatement->pstatement_handler = handle_return_value_from_full_srec; // xxx needs grammar support
 	return pstatement;
 }
 
@@ -935,7 +961,7 @@ static mlr_dsl_cst_statement_t* alloc_return_value_from_function_callsite(
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
 	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, // xxx mapvars
 		type_inferencing, context_flags);
-	pstatement->pnode_handler = handle_return_value_from_function_callsite;
+	pstatement->pstatement_handler = handle_return_value_from_function_callsite;
 	return pstatement;
 }
 
@@ -946,7 +972,7 @@ static mlr_dsl_cst_statement_t* alloc_return_value_non_map_valued(
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
 	pstatement->preturn_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, // xxx mapvars
 		type_inferencing, context_flags);
-	pstatement->pnode_handler = handle_return_value_non_map_valued;
+	pstatement->pstatement_handler = handle_return_value_non_map_valued;
 	return pstatement;
 }
 
@@ -955,7 +981,7 @@ static mlr_dsl_cst_statement_t* alloc_return_void(mlr_dsl_cst_t* pcst, mlr_dsl_a
 	int type_inferencing, int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-	pstatement->pnode_handler = handle_return_void;
+	pstatement->pstatement_handler = handle_return_void;
 	return pstatement;
 }
 
@@ -983,7 +1009,7 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl
 			pcst->pfmgr, type_inferencing, context_flags);
 	}
 
-	pstatement->pnode_handler = handle_subr_callsite;
+	pstatement->pstatement_handler = handle_subr_callsite;
 	return pstatement;
 }
 
@@ -1017,7 +1043,7 @@ static mlr_dsl_cst_statement_t* alloc_srec_assignment(mlr_dsl_cst_t* pcst, mlr_d
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_FIELD_NAME);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren != NULL);
 
-	pstatement->pnode_handler = handle_srec_assignment;
+	pstatement->pstatement_handler = handle_srec_assignment;
 	pstatement->srec_lhs_field_name = pleft->text;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
 	return pstatement;
@@ -1042,7 +1068,7 @@ static mlr_dsl_cst_statement_t* alloc_indirect_srec_assignment(mlr_dsl_cst_t* pc
 	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 
-	pstatement->pnode_handler = handle_indirect_srec_assignment;
+	pstatement->pstatement_handler = handle_indirect_srec_assignment;
 	pstatement->psrec_lhs_evaluator = rval_evaluator_alloc_from_ast(pleft,  pcst->pfmgr,
 		type_inferencing, context_flags);
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr,
@@ -1065,11 +1091,11 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr
 		type_inferencing, context_flags);
 
 	if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST && pright->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
-		pstatement->pnode_handler = handle_oosvar_to_oosvar_assignment;
+		pstatement->pstatement_handler = handle_oosvar_to_oosvar_assignment;
 		pstatement->poosvar_rhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pright,
 			type_inferencing, context_flags);
 	} else {
-		pstatement->pnode_handler = handle_oosvar_assignment;
+		pstatement->pstatement_handler = handle_oosvar_assignment;
 		pstatement->poosvar_rhs_keylist_evaluators = NULL;
 	}
 
@@ -1092,7 +1118,7 @@ static mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_c
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST);
 	MLR_INTERNAL_CODING_ERROR_IF(pright->type != MD_AST_NODE_TYPE_FULL_SREC);
 
-	pstatement->pnode_handler = handle_oosvar_from_full_srec_assignment;
+	pstatement->pstatement_handler = handle_oosvar_from_full_srec_assignment;
 	pstatement->poosvar_target_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pleft,
 		type_inferencing, context_flags);
 	return pstatement;
@@ -1109,7 +1135,7 @@ static mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_c
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_FULL_SREC);
 	MLR_INTERNAL_CODING_ERROR_IF(pright->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST);
 
-	pstatement->pnode_handler = handle_full_srec_from_oosvar_assignment;
+	pstatement->pstatement_handler = handle_full_srec_from_oosvar_assignment;
 	pstatement->poosvar_rhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pright,
 		type_inferencing, context_flags);
 	return pstatement;
@@ -1131,7 +1157,7 @@ static mlr_dsl_cst_statement_t* alloc_env_assignment(mlr_dsl_cst_t* pcst, mlr_ds
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren->length != 2);
 	mlr_dsl_ast_node_t* pnamenode = pleft->pchildren->phead->pnext->pvvalue;
 
-	pstatement->pnode_handler = handle_env_assignment;
+	pstatement->pstatement_handler = handle_env_assignment;
 	pstatement->env_lhs_name = pnamenode->text;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
 	return pstatement;
@@ -1143,7 +1169,7 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
 
-	pstatement->pnode_handler = handle_unset;
+	pstatement->pstatement_handler = handle_unset;
 	pstatement->pvarargs = sllv_alloc();
 	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
@@ -1151,7 +1177,7 @@ static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 		if (pnode->type == MD_AST_NODE_TYPE_ALL || pnode->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
 			// The grammar allows only 'unset all', not 'unset @x, all, $y'.
 			// So if 'all' appears at all, it's the only name. Likewise with '@*'.
-			pstatement->pnode_handler = handle_unset_all;
+			pstatement->pstatement_handler = handle_unset_all;
 
 		} else if (pnode->type == MD_AST_NODE_TYPE_FULL_SREC) {
 			if (context_flags & IN_BEGIN_OR_END) {
@@ -1230,16 +1256,16 @@ static mlr_dsl_cst_statement_t* alloc_while(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 
 	MLR_INTERNAL_CODING_ERROR_IF(pright->subframe_var_count == MD_UNUSED_INDEX);
-	pstatement->pstatement_block = cst_statement_block_alloc(pright->subframe_var_count);
+	pstatement->pblock = cst_statement_block_alloc(pright->subframe_var_count);
 
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
 		mlr_dsl_cst_statement_t *pchild_statement = mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
 			type_inferencing, context_flags);
-		sllv_append(pstatement->pstatement_block->pstatements, pchild_statement);
+		sllv_append(pstatement->pblock->pstatements, pchild_statement);
 	}
 
-	pstatement->pnode_handler = handle_while;
+	pstatement->pstatement_handler = handle_while;
 	pstatement->pblock_handler = handle_statement_block_with_break_continue;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pleft, pcst->pfmgr, type_inferencing, context_flags);
 	return pstatement;
@@ -1256,16 +1282,16 @@ static mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->subframe_var_count == MD_UNUSED_INDEX);
-	pstatement->pstatement_block = cst_statement_block_alloc(pleft->subframe_var_count);
+	pstatement->pblock = cst_statement_block_alloc(pleft->subframe_var_count);
 
 	for (sllve_t* pe = pleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
 		mlr_dsl_cst_statement_t *pchild_statement = mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
 			type_inferencing, context_flags);
-		sllv_append(pstatement->pstatement_block->pstatements, pchild_statement);
+		sllv_append(pstatement->pblock->pstatements, pchild_statement);
 	}
 
-	pstatement->pnode_handler = handle_do_while;
+	pstatement->pstatement_handler = handle_do_while;
 	pstatement->pblock_handler = handle_statement_block_with_break_continue;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
 	return pstatement;
@@ -1316,15 +1342,15 @@ static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 	pstatement->for_v_type_mask = mlr_dsl_ast_node_type_to_type_mask(pvnode->type);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
-	pstatement->pstatement_block = cst_statement_block_alloc(pnode->subframe_var_count);
+	pstatement->pblock = cst_statement_block_alloc(pnode->subframe_var_count);
 
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		sllv_append(pstatement->pstatement_block->pstatements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
+		sllv_append(pstatement->pblock->pstatements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
 			type_inferencing, context_flags));
 	}
 
-	pstatement->pnode_handler = handle_for_srec;
+	pstatement->pstatement_handler = handle_for_srec;
 	pstatement->pblock_handler = handle_statement_block_with_break_continue;
 	pstatement->ptype_inferenced_srec_field_getter =
 		(type_inferencing == TYPE_INFER_STRING_ONLY)      ? get_srec_value_string_only_aux :
@@ -1399,14 +1425,14 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_as
 		pcst, pmiddle, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
-	pstatement->pstatement_block = cst_statement_block_alloc(pnode->subframe_var_count);
+	pstatement->pblock = cst_statement_block_alloc(pnode->subframe_var_count);
 
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		sllv_append(pstatement->pstatement_block->pstatements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
+		sllv_append(pstatement->pblock->pstatements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
 			type_inferencing, context_flags));
 	}
-	pstatement->pnode_handler = handle_for_oosvar;
+	pstatement->pstatement_handler = handle_for_oosvar;
 	pstatement->pblock_handler = handle_statement_block_with_break_continue;
 
 	return pstatement;
@@ -1436,14 +1462,14 @@ static mlr_dsl_cst_statement_t* alloc_for_oosvar_key_only(mlr_dsl_cst_t* pcst, m
 		pcst, pmiddle, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
-	pstatement->pstatement_block = cst_statement_block_alloc(pnode->subframe_var_count);
+	pstatement->pblock = cst_statement_block_alloc(pnode->subframe_var_count);
 
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		sllv_append(pstatement->pstatement_block->pstatements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
+		sllv_append(pstatement->pblock->pstatements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
 			type_inferencing, context_flags));
 	}
-	pstatement->pnode_handler = handle_for_oosvar_key_only;
+	pstatement->pstatement_handler = handle_for_oosvar_key_only;
 	pstatement->pblock_handler = handle_statement_block_with_break_continue;
 
 	return pstatement;
@@ -1493,14 +1519,14 @@ static mlr_dsl_cst_statement_t* alloc_for_local_map(mlr_dsl_cst_t* pcst, mlr_dsl
 		pcst, pmiddle, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
-	pstatement->pstatement_block = cst_statement_block_alloc(pnode->subframe_var_count);
+	pstatement->pblock = cst_statement_block_alloc(pnode->subframe_var_count);
 
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		sllv_append(pstatement->pstatement_block->pstatements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
+		sllv_append(pstatement->pblock->pstatements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
 			type_inferencing, context_flags));
 	}
-	pstatement->pnode_handler = handle_for_local_map;
+	pstatement->pstatement_handler = handle_for_local_map;
 	pstatement->pblock_handler = handle_statement_block_with_break_continue;
 
 	return pstatement;
@@ -1533,83 +1559,14 @@ static mlr_dsl_cst_statement_t* alloc_for_local_map_key_only(mlr_dsl_cst_t* pcst
 		pcst, pmiddle, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
-	pstatement->pstatement_block = cst_statement_block_alloc(pnode->subframe_var_count);
+	pstatement->pblock = cst_statement_block_alloc(pnode->subframe_var_count);
 
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		sllv_append(pstatement->pstatement_block->pstatements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
+		sllv_append(pstatement->pblock->pstatements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
 			type_inferencing, context_flags));
 	}
-	pstatement->pnode_handler = handle_for_local_map_key_only;
-	pstatement->pblock_handler = handle_statement_block_with_break_continue;
-
-	return pstatement;
-}
-
-static mlr_dsl_cst_statement_t* alloc_triple_for(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-
-	mlr_dsl_ast_node_t* pstart_statements_node        = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pcontinuation_statements_node = pnode->pchildren->phead->pnext->pvvalue;
-	mlr_dsl_ast_node_t* pupdate_statements_node       = pnode->pchildren->phead->pnext->pnext->pvvalue;
-	mlr_dsl_ast_node_t* pbody_statements_node         = pnode->pchildren->phead->pnext->pnext->pnext->pvvalue;
-
-	pstatement->ptriple_for_start_statements = sllv_alloc();
-	for (sllve_t* pe = pstart_statements_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		sllv_append(pstatement->ptriple_for_start_statements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
-			type_inferencing, context_flags & ~IN_BREAKABLE));
-	}
-
-	// Continuation statements are split into the final boolean, and the statements before (if any).
-	pstatement->ptriple_for_pre_continuation_statements = sllv_alloc();
-	// Empty continuation for triple-for is an implicit TRUE.
-	if (pcontinuation_statements_node->pchildren->length == 0) {
-		pstatement->ptriple_for_continuation_evaluator = rval_evaluator_alloc_from_boolean(TRUE);
-	} else {
-		for (
-			sllve_t* pe = pcontinuation_statements_node->pchildren->phead;
-			pe != NULL && pe->pnext != NULL;
-			pe = pe->pnext
-		)
-		{
-			mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-			sllv_append(pstatement->ptriple_for_pre_continuation_statements,
-				mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
-				type_inferencing, context_flags & ~IN_BREAKABLE));
-		}
-		mlr_dsl_ast_node_t* pfinal_continuation_statement_node =
-			pcontinuation_statements_node->pchildren->ptail->pvvalue;
-		if (mlr_dsl_ast_node_cannot_be_bare_boolean(pfinal_continuation_statement_node)) {
-			fprintf(stderr,
-				"%s: the final triple-for continutation statement must be a bare boolean.\n",
-				MLR_GLOBALS.bargv0);
-			exit(1);
-		}
-		pstatement->ptriple_for_continuation_evaluator = rval_evaluator_alloc_from_ast(
-			pfinal_continuation_statement_node, pcst->pfmgr,
-			type_inferencing, (context_flags & ~IN_BREAKABLE) | IN_TRIPLE_FOR_CONTINUE);
-	}
-
-	pstatement->ptriple_for_update_statements = sllv_alloc();
-	for (sllve_t* pe = pupdate_statements_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		sllv_append(pstatement->ptriple_for_update_statements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
-			type_inferencing, context_flags & ~IN_BREAKABLE));
-	}
-
-	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
-	pstatement->pstatement_block = cst_statement_block_alloc(pnode->subframe_var_count);
-
-	for (sllve_t* pe = pbody_statements_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		sllv_append(pstatement->pstatement_block->pstatements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
-			type_inferencing, context_flags));
-	}
-
-	pstatement->pnode_handler = handle_triple_for;
+	pstatement->pstatement_handler = handle_for_local_map_key_only;
 	pstatement->pblock_handler = handle_statement_block_with_break_continue;
 
 	return pstatement;
@@ -1619,7 +1576,7 @@ static mlr_dsl_cst_statement_t* alloc_break(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 	int type_inferencing, int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-	pstatement->pnode_handler = handle_break;
+	pstatement->pstatement_handler = handle_break;
 	return pstatement;
 }
 
@@ -1627,7 +1584,7 @@ static mlr_dsl_cst_statement_t* alloc_continue(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 	int type_inferencing, int context_flags)
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-	pstatement->pnode_handler = handle_continue;
+	pstatement->pstatement_handler = handle_continue;
 	return pstatement;
 }
 
@@ -1644,16 +1601,16 @@ static mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_cst_t* pcst, mlr
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 
 	MLR_INTERNAL_CODING_ERROR_IF(pright->subframe_var_count == MD_UNUSED_INDEX);
-	pstatement->pstatement_block = cst_statement_block_alloc(pright->subframe_var_count);
+	pstatement->pblock = cst_statement_block_alloc(pright->subframe_var_count);
 
 	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
 		mlr_dsl_cst_statement_t *pchild_statement = mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
 			type_inferencing, context_flags);
-		sllv_append(pstatement->pstatement_block->pstatements, pchild_statement);
+		sllv_append(pstatement->pblock->pstatements, pchild_statement);
 	}
 
-	pstatement->pnode_handler = handle_conditional_block;
+	pstatement->pstatement_handler = handle_conditional_block;
 	pstatement->pblock_handler = (context_flags & IN_BREAKABLE)
 		? handle_statement_block_with_break_continue
 		: mlr_dsl_cst_handle_statement_block;
@@ -1735,7 +1692,7 @@ static mlr_dsl_cst_statement_t* alloc_if_head(mlr_dsl_cst_t* pcst, mlr_dsl_ast_n
 			type_inferencing, context_flags));
 	}
 
-	pstatement->pnode_handler = handle_if_head;
+	pstatement->pstatement_handler = handle_if_head;
 	pstatement->pblock_handler = (context_flags & IN_BREAKABLE)
 		?  handle_statement_block_with_break_continue
 		: mlr_dsl_cst_handle_statement_block;
@@ -1749,16 +1706,16 @@ static mlr_dsl_cst_statement_t* alloc_if_item(mlr_dsl_cst_t* pcst, mlr_dsl_ast_n
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pexprnode);
 
 	MLR_INTERNAL_CODING_ERROR_IF(plistnode->subframe_var_count == MD_UNUSED_INDEX);
-	pstatement->pstatement_block = cst_statement_block_alloc(plistnode->subframe_var_count);
+	pstatement->pblock = cst_statement_block_alloc(plistnode->subframe_var_count);
 
 	for (sllve_t* pe = plistnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
 		mlr_dsl_cst_statement_t *pchild_statement = mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
 			type_inferencing, context_flags);
-		sllv_append(pstatement->pstatement_block->pstatements, pchild_statement);
+		sllv_append(pstatement->pblock->pstatements, pchild_statement);
 	}
 
-	pstatement->pnode_handler = NULL; // handled by the containing if-head evaluator
+	pstatement->pstatement_handler = NULL; // handled by the containing if-head evaluator
 	pstatement->prhs_evaluator = pexprnode != NULL
 		? rval_evaluator_alloc_from_ast(pexprnode, pcst->pfmgr,
 			type_inferencing, context_flags) // if-statement or elif-statement
@@ -1774,7 +1731,7 @@ static mlr_dsl_cst_statement_t* alloc_filter(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 
 	mlr_dsl_ast_node_t* pchild = pnode->pchildren->phead->pvvalue;
 
-	pstatement->pnode_handler = handle_filter;
+	pstatement->pstatement_handler = handle_filter;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pchild, pcst->pfmgr, type_inferencing, context_flags);
 	return pstatement;
 }
@@ -1785,7 +1742,7 @@ static mlr_dsl_cst_statement_t* alloc_bare_boolean(mlr_dsl_cst_t* pcst, mlr_dsl_
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
 
-	pstatement->pnode_handler = handle_bare_boolean;
+	pstatement->pstatement_handler = handle_bare_boolean;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pnode, pcst->pfmgr, type_inferencing, context_flags);
 	return pstatement;
 }
@@ -1796,7 +1753,7 @@ static mlr_dsl_cst_statement_t* alloc_final_filter(mlr_dsl_cst_t* pcst, mlr_dsl_
 {
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
 
-	pstatement->pnode_handler = handle_final_filter;
+	pstatement->pstatement_handler = handle_final_filter;
 	pstatement->negate_final_filter = negate_final_filter;
 	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pnode, pcst->pfmgr, type_inferencing, context_flags);
 	return pstatement;
@@ -1812,13 +1769,13 @@ static mlr_dsl_cst_statement_t* alloc_tee(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_
 	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 
 	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstatement->pnode_handler = handle_tee_to_stdfp;
+		pstatement->pstatement_handler = handle_tee_to_stdfp;
 		pstatement->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
 	} else {
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node, pcst->pfmgr,
 			type_inferencing, context_flags);
 		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
-		pstatement->pnode_handler = handle_tee_to_file;
+		pstatement->pstatement_handler = handle_tee_to_file;
 	}
 	pstatement->flush_every_record = pcst->flush_every_record;
 
@@ -1854,15 +1811,15 @@ static mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 		? NULL
 		: poutput_node->pchildren->phead->pvvalue;
 	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
-		pstatement->pnode_handler = handle_emitf;
+		pstatement->pstatement_handler = handle_emitf;
 	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstatement->pnode_handler = handle_emitf_to_stdfp;
+		pstatement->pstatement_handler = handle_emitf_to_stdfp;
 		pstatement->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
 	} else {
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node, pcst->pfmgr,
 			type_inferencing, context_flags);
 		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
-		pstatement->pnode_handler = handle_emitf_to_file;
+		pstatement->pstatement_handler = handle_emitf_to_file;
 	}
 	pstatement->flush_every_record = pcst->flush_every_record;
 
@@ -1951,15 +1908,15 @@ static mlr_dsl_cst_statement_t* alloc_emit(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 		? NULL
 		: poutput_node->pchildren->phead->pvvalue;
 	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
-		pstatement->pnode_handler = output_all ? handle_emit_all : handle_emit;
+		pstatement->pstatement_handler = output_all ? handle_emit_all : handle_emit;
 	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstatement->pnode_handler = output_all ? handle_emit_all_to_stdfp : handle_emit_to_stdfp;
+		pstatement->pstatement_handler = output_all ? handle_emit_all_to_stdfp : handle_emit_to_stdfp;
 		pstatement->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
 	} else {
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node, pcst->pfmgr,
 			type_inferencing, context_flags);
 		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
-		pstatement->pnode_handler = output_all ? handle_emit_all_to_file : handle_emit_to_file;
+		pstatement->pstatement_handler = output_all ? handle_emit_all_to_file : handle_emit_to_file;
 	}
 	pstatement->flush_every_record = pcst->flush_every_record;
 
@@ -2005,15 +1962,15 @@ static mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_a
 		? NULL
 		: poutput_node->pchildren->phead->pvvalue;
 	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
-		pstatement->pnode_handler = handle_emit_lashed;
+		pstatement->pstatement_handler = handle_emit_lashed;
 	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstatement->pnode_handler = handle_emit_lashed_to_stdfp;
+		pstatement->pstatement_handler = handle_emit_lashed_to_stdfp;
 		pstatement->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
 	} else {
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node, pcst->pfmgr,
 			type_inferencing, context_flags);
 		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
-		pstatement->pnode_handler = handle_emit_lashed_to_file;
+		pstatement->pstatement_handler = handle_emit_lashed_to_file;
 	}
 
 	return pstatement;
@@ -2102,17 +2059,17 @@ static mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) {
-		pstatement->pnode_handler = handle_dump;
+		pstatement->pstatement_handler = handle_dump;
 		pstatement->stdfp = stdout;
 	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstatement->pnode_handler = handle_dump;
+		pstatement->pstatement_handler = handle_dump;
 		pstatement->stdfp = stderr;
 	} else {
 		pstatement->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node, pcst->pfmgr,
 			type_inferencing, context_flags);
 		pstatement->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
 		pstatement->pmulti_out = multi_out_alloc();
-		pstatement->pnode_handler = handle_dump_to_file;
+		pstatement->pstatement_handler = handle_dump_to_file;
 	}
 	pstatement->flush_every_record = pcst->flush_every_record;
 
@@ -2143,7 +2100,7 @@ static mlr_dsl_cst_statement_t* alloc_print(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 		pstatement->pmulti_out = multi_out_alloc();
 	}
 	pstatement->flush_every_record = pcst->flush_every_record;
-	pstatement->pnode_handler = handle_print;
+	pstatement->pstatement_handler = handle_print;
 
 	return pstatement;
 }
@@ -2166,6 +2123,12 @@ static file_output_mode_t file_output_mode_from_ast_node_type(mlr_dsl_ast_node_t
 // ----------------------------------------------------------------
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
+	// xxx post-federation
+	if (pstatement->pstatement_freer != NULL) {
+		pstatement->pstatement_freer(pstatement);
+	}
+
+	// xxx pre-federation
 	if (pstatement->subr_callsite_info.subr_callsite_argument_evaluators != NULL) {
 		for (int i = 0; i < pstatement->subr_callsite_info.psubr_callsite->arity; i++) {
 			rval_evaluator_t* phandler = pstatement->subr_callsite_info.subr_callsite_argument_evaluators[i];
@@ -2258,7 +2221,7 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 		sllv_free(pstatement->pvarargs);
 	}
 
-	cst_statement_block_free(pstatement->pstatement_block);
+	cst_statement_block_free(pstatement->pblock);
 
 	if (pstatement->pif_chain_statements != NULL) {
 		for (sllve_t* pe = pstatement->pif_chain_statements->phead; pe != NULL; pe = pe->pnext)
@@ -2275,34 +2238,6 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 	free(pstatement->for_map_k_frame_relative_indices);
 	free(pstatement->for_map_k_type_masks);
 	free(pstatement->for_v_variable_name);
-
-    if (pstatement->ptriple_for_start_statements != NULL) {
-		for (sllve_t* pe = pstatement->ptriple_for_start_statements->phead; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-			mlr_dsl_cst_statement_free(pstatement);
-		}
-		sllv_free(pstatement->ptriple_for_start_statements);
-	}
-
-    if (pstatement->ptriple_for_pre_continuation_statements != NULL) {
-		for (sllve_t* pe = pstatement->ptriple_for_pre_continuation_statements->phead; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-			mlr_dsl_cst_statement_free(pstatement);
-		}
-		sllv_free(pstatement->ptriple_for_pre_continuation_statements);
-	}
-
-	if (pstatement->ptriple_for_continuation_evaluator != NULL) {
-		pstatement->ptriple_for_continuation_evaluator->pfree_func(pstatement->ptriple_for_continuation_evaluator);
-	}
-
-    if (pstatement->ptriple_for_update_statements != NULL) {
-		for (sllve_t* pe = pstatement->ptriple_for_update_statements->phead; pe != NULL; pe = pe->pnext) {
-			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-			mlr_dsl_cst_statement_free(pstatement);
-		}
-		sllv_free(pstatement->ptriple_for_update_statements);
-	}
 
 	free(pstatement);
 }
@@ -2382,11 +2317,11 @@ void mlr_dsl_cst_handle_top_level_statement_block(
 {
 	local_stack_push(pvars->plocal_stack, local_stack_frame_enter(ptop_level_block->pframe));
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->subframe_var_count);
+	local_stack_subframe_enter(pframe, ptop_level_block->pblock->subframe_var_count);
 
-	mlr_dsl_cst_handle_statement_block(ptop_level_block->pstatement_block, pvars, pcst_outputs);
+	mlr_dsl_cst_handle_statement_block(ptop_level_block->pblock, pvars, pcst_outputs);
 
-	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->subframe_var_count);
+	local_stack_subframe_exit(pframe, ptop_level_block->pblock->subframe_var_count);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 }
 
@@ -2406,7 +2341,7 @@ void mlr_dsl_cst_handle_statement_block(
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 			fprintf(stderr, "TRACE ");
 			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
-			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 			// The UDF/subroutine executor will clear the flag, and consume the retval if there is one.
 			if (pvars->return_state.returned) {
 				break;
@@ -2415,7 +2350,7 @@ void mlr_dsl_cst_handle_statement_block(
 	} else {
 		for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 			// The UDF/subroutine executor will clear the flag, and consume the retval if there is one.
 			if (pvars->return_state.returned) {
 				break;
@@ -2426,7 +2361,7 @@ void mlr_dsl_cst_handle_statement_block(
 
 // This is for statement lists recursively contained within a loop body.
 // It checks for break or continue flags after each statement.
-static void handle_statement_block_with_break_continue(
+void handle_statement_block_with_break_continue(
 	cst_statement_block_t* pblock,
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs)
@@ -2436,7 +2371,7 @@ static void handle_statement_block_with_break_continue(
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 			fprintf(stderr, "TRACE ");
 			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
-			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 			if (loop_stack_get(pvars->ploop_stack) != 0) {
 				break;
 			}
@@ -2448,7 +2383,7 @@ static void handle_statement_block_with_break_continue(
 	} else {
 		for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 			if (loop_stack_get(pvars->ploop_stack) != 0) {
 				break;
 			}
@@ -2471,12 +2406,12 @@ void mlr_dsl_cst_handle_statement_list(
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 			fprintf(stderr, "TRACE ");
 			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
-			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 		}
 	} else {
 		for (sllve_t* pe = pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 		}
 	}
 }
@@ -2977,7 +2912,7 @@ static void handle_conditional_block(
 	cst_outputs_t*           pcst_outputs)
 {
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+	local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 
@@ -2985,11 +2920,11 @@ static void handle_conditional_block(
 	if (mv_is_non_null(&val)) {
 		mv_set_boolean_strict(&val);
 		if (val.u.boolv) {
-			pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
+			pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
 		}
 	}
 
-	local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+	local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
 }
 
 // ----------------------------------------------------------------
@@ -3007,11 +2942,11 @@ static void handle_if_head(
 			mv_set_boolean_strict(&val);
 			if (val.u.boolv) {
 				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-				local_stack_subframe_enter(pframe, pitemnode->pstatement_block->subframe_var_count);
+				local_stack_subframe_enter(pframe, pitemnode->pblock->subframe_var_count);
 
-				pstatement->pblock_handler(pitemnode->pstatement_block, pvars, pcst_outputs);
+				pstatement->pblock_handler(pitemnode->pblock, pvars, pcst_outputs);
 
-				local_stack_subframe_exit(pframe, pitemnode->pstatement_block->subframe_var_count);
+				local_stack_subframe_exit(pframe, pitemnode->pblock->subframe_var_count);
 				break;
 			}
 		}
@@ -3025,7 +2960,7 @@ static void handle_while(
 	cst_outputs_t*           pcst_outputs)
 {
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+	local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 	loop_stack_push(pvars->ploop_stack);
 
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
@@ -3035,7 +2970,7 @@ static void handle_while(
 		if (mv_is_non_null(&val)) {
 			mv_set_boolean_strict(&val);
 			if (val.u.boolv) {
-				pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
+				pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
 				if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 					loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
 					break;
@@ -3051,7 +2986,7 @@ static void handle_while(
 	}
 
 	loop_stack_pop(pvars->ploop_stack);
-	local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+	local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
 }
 
 // ----------------------------------------------------------------
@@ -3061,13 +2996,13 @@ static void handle_do_while(
 	cst_outputs_t*           pcst_outputs)
 {
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+	local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 	loop_stack_push(pvars->ploop_stack);
 
 	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
 
 	while (TRUE) {
-		pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
+		pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 			loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
 			break;
@@ -3088,7 +3023,7 @@ static void handle_do_while(
 	}
 
 	loop_stack_pop(pvars->ploop_stack);
-	local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+	local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
 }
 
 // ----------------------------------------------------------------
@@ -3098,7 +3033,7 @@ static void handle_for_srec(
 	cst_outputs_t*           pcst_outputs)
 {
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+	local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 	loop_stack_push(pvars->ploop_stack);
 
 	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
@@ -3118,7 +3053,7 @@ static void handle_for_srec(
 			pstatement->for_v_variable_name, pstatement->for_v_frame_relative_index,
 			pstatement->for_v_type_mask, mvval);
 
-		pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
+		pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
 		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 			loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
 			break;
@@ -3130,7 +3065,7 @@ static void handle_for_srec(
 	lrec_free(pcopyrec);
 
 	loop_stack_pop(pvars->ploop_stack);
-	local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+	local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
 }
 
 // ----------------------------------------------------------------
@@ -3149,7 +3084,7 @@ static void handle_for_oosvar(
 	if (keys_all_non_null_or_error) {
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+		local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 		loop_stack_push(pvars->ploop_stack);
 
 		// Locate and copy the submap indexed by the keylist. E.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', the
@@ -3178,7 +3113,7 @@ static void handle_for_oosvar(
 		mlhmmv_free_submap(submap);
 
 		loop_stack_pop(pvars->ploop_stack);
-		local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+		local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
 	}
 	sllmv_free(plhskeylist);
 }
@@ -3229,7 +3164,7 @@ static void handle_for_oosvar_aux(
 			local_stack_frame_define(pframe, pstatement->for_v_variable_name, pstatement->for_v_frame_relative_index,
 				pstatement->for_v_type_mask, mv_copy(&submap.u.mlrval));
 			// Execute the loop-body statements:
-			pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
+			pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
 		}
 
 	}
@@ -3254,7 +3189,7 @@ static void handle_for_oosvar_key_only(
 		// for-loop.
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+		local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 		loop_stack_push(pvars->ploop_stack);
 
 		sllv_t* pkeys = mlhmmv_copy_keys_from_submap(pvars->poosvars, plhskeylist);
@@ -3266,7 +3201,7 @@ static void handle_for_oosvar_key_only(
 				pstatement->for_map_k_type_masks[0], mv_copy(pe->pvvalue));
 
 			// Execute the loop-body statements:
-			pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
+			pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
 
 			if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 				loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
@@ -3280,7 +3215,7 @@ static void handle_for_oosvar_key_only(
 		}
 
 		loop_stack_pop(pvars->ploop_stack);
-		local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+		local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
 
 		sllv_free(pkeys);
 	}
@@ -3319,7 +3254,7 @@ static void handle_for_local_map( // xxx vardef_frame_relative_index
 		if (psubmap != NULL) {
 			mlhmmv_value_t submap = mlhmmv_copy_aux(psubmap);
 
-			local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+			local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 			loop_stack_push(pvars->ploop_stack);
 
 			if (!submap.is_terminal && submap.u.pnext_level != NULL) {
@@ -3343,7 +3278,7 @@ static void handle_for_local_map( // xxx vardef_frame_relative_index
 			mlhmmv_free_submap(submap);
 
 			loop_stack_pop(pvars->ploop_stack);
-			local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+			local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
 		}
 	}
 	sllmv_free(plhskeylist);
@@ -3395,7 +3330,7 @@ static void handle_for_local_map_aux(
 			local_stack_frame_define(pframe, pstatement->for_v_variable_name, pstatement->for_v_frame_relative_index,
 				pstatement->for_v_type_mask, mv_copy(&submap.u.mlrval));
 			// Execute the loop-body statements:
-			pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
+			pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
 		}
 
 	}
@@ -3427,7 +3362,7 @@ static void handle_for_local_map_key_only( // xxx vardef_frame_relative_index
 			pstatement->for_map_target_frame_relative_index, plhskeylist);
 		sllv_t* pkeys = mlhmmv_copy_keys_from_submap_xxx_rename(psubmap, NULL); // xxx refactor w/o null
 
-		local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
+		local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 		loop_stack_push(pvars->ploop_stack);
 
 		for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
@@ -3437,7 +3372,7 @@ static void handle_for_local_map_key_only( // xxx vardef_frame_relative_index
 				pstatement->for_map_k_type_masks[0], mv_copy(pe->pvvalue));
 
 			// Execute the loop-body statements:
-			pstatement->pblock_handler(pstatement->pstatement_block, pvars, pcst_outputs);
+			pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
 
 			if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 				loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
@@ -3451,55 +3386,11 @@ static void handle_for_local_map_key_only( // xxx vardef_frame_relative_index
 		}
 
 		loop_stack_pop(pvars->ploop_stack);
-		local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
+		local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
 
 		sllv_free(pkeys);
 	}
 	sllmv_free(plhskeylist);
-}
-
-// ----------------------------------------------------------------
-static void handle_triple_for(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_subframe_enter(pframe, pstatement->pstatement_block->subframe_var_count);
-	loop_stack_push(pvars->ploop_stack);
-
-	// Start statements
-	mlr_dsl_cst_handle_statement_list(pstatement->ptriple_for_start_statements, pvars, pcst_outputs);
-
-	while (TRUE) {
-
-		// Continuation statements:
-		// * all but the last one are simply executed ...
-		mlr_dsl_cst_handle_statement_list(pstatement->ptriple_for_pre_continuation_statements, pvars, pcst_outputs);
-		// * ... and the last one is used to determine continuation:
-		rval_evaluator_t* pev = pstatement->ptriple_for_continuation_evaluator;
-		mv_t val = pev->pprocess_func(pev->pvstate, pvars);
-		if (mv_is_non_null(&val))
-			mv_set_boolean_strict(&val);
-		if (!val.u.boolv)
-			break;
-
-		// Body statements
-		handle_statement_block_with_break_continue(pstatement->pstatement_block, pvars, pcst_outputs);
-
-		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
-			loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
-			break;
-		} else if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
-			loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
-		}
-
-		// Update statements
-		mlr_dsl_cst_handle_statement_list(pstatement->ptriple_for_update_statements, pvars, pcst_outputs);
-	}
-
-	loop_stack_pop(pvars->ploop_stack);
-	local_stack_subframe_exit(pframe, pstatement->pstatement_block->subframe_var_count);
 }
 
 // ----------------------------------------------------------------

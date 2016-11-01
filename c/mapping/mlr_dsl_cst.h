@@ -59,6 +59,7 @@ void blocked_ast_allocate_locals(blocked_ast_t* paast, int trace);
 
 // ----------------------------------------------------------------
 // Forward references for virtual-function prototypes
+struct _mlr_dsl_cst_t;
 struct _mlr_dsl_cst_statement_t;
 struct _mlr_dsl_cst_statement_vararg_t;
 struct _subr_defsite_t;
@@ -84,7 +85,7 @@ void cst_statement_block_free(cst_statement_block_t* pblock);
 typedef struct _cst_top_level_statement_block_t {
 	local_stack_frame_t* pframe;
 	int max_var_depth;
-	cst_statement_block_t* pstatement_block;
+	cst_statement_block_t* pblock;
 } cst_top_level_statement_block_t;
 
 cst_top_level_statement_block_t* cst_top_level_statement_block_alloc(int max_var_depth, int subframe_var_count);
@@ -92,10 +93,6 @@ void cst_top_level_statement_block_free(cst_top_level_statement_block_t* pblock)
 
 // ----------------------------------------------------------------
 // Generic handler for a statement.
-typedef void mlr_dsl_cst_node_handler_func_t(
-	struct _mlr_dsl_cst_statement_t* pnode,
-	variables_t* pvars,
-	cst_outputs_t* pcst_outputs);
 
 // Subhandler for emitf/unset vararg items: e.g. in 'unset @o, $s' there is one for the @o and one for the $s.
 typedef void unset_vararg_handler_t(
@@ -114,10 +111,29 @@ typedef struct _mlr_dsl_cst_statement_vararg_t {
 } mlr_dsl_cst_statement_vararg_t;
 
 // Handler for statement lists: begin/main/end; cond/if/for/while/do-while.
-typedef void mlr_dsl_cst_statement_block_handler_t(
+typedef void mlr_dsl_cst_block_handler_t(
 	cst_statement_block_t* pblock,
 	variables_t*           pvars,
 	cst_outputs_t*         pcst_outputs);
+
+// ----------------------------------------------------------------
+// xxx cst-statement-federation project
+
+typedef struct _mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_allocator_t(
+	struct _mlr_dsl_cst_t* pcst,
+	mlr_dsl_ast_node_t*    pnode,
+	int                    type_inferencing,
+	int                    context_flags);
+
+typedef void mlr_dsl_cst_statement_handler_t(
+	struct _mlr_dsl_cst_statement_t* pstatement,
+	variables_t*                     pvars,
+	cst_outputs_t*                   pcst_outputs);
+
+typedef void mlr_dsl_cst_statement_freer_t(
+	struct _mlr_dsl_cst_statement_t* pstatement);
+
+mlr_dsl_cst_statement_allocator_t alloc_triple_for;
 
 // ----------------------------------------------------------------
 // MLR_DSL_CST_STATEMENT OBJECT
@@ -129,18 +145,37 @@ typedef void mlr_dsl_cst_statement_block_handler_t(
 // Difference between keylist and namelist: in emit @a[$b]["c"], "d", @e, the keylist is ["a", $b, "c"]
 // and the namelist is ["d", @e].
 
-// xxx make this a union ... ?
-
 typedef struct _mlr_dsl_cst_statement_t {
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Common to most or all statement types
 
 	// For trace-mode.
 	mlr_dsl_ast_node_t* past_node;
 
 	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.
-	mlr_dsl_cst_node_handler_func_t* pnode_handler;
+	mlr_dsl_cst_statement_handler_t* pstatement_handler;
+
+	// The reason for this being a function pointer is that there are two variants of
+	// statement-list handlers: one for inside loop bodies which has to check
+	// break/continue flags after each statement, and another for outside loop bodies
+	// which doesn't need to check those. (This is a micro-optimization.) For bodyless
+	// statements (e.g. assignment) this is null.
+	cst_statement_block_t* pblock;
+	mlr_dsl_cst_block_handler_t* pblock_handler;
+
+	mlr_dsl_cst_statement_freer_t* pstatement_freer;
 
 	// For mlr filter
 	int negate_final_filter;
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// Specific to each statement type:
+
+	void* pvstate;
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// To be federated:
 
 	// For subroutine callsites
 	struct {
@@ -152,13 +187,6 @@ typedef struct _mlr_dsl_cst_statement_t {
 
 	// Return statement within user-defined function
 	rval_evaluator_t* preturn_evaluator; // xxx mapvar
-
-	// There are two variants of statement-list handlers: one for inside loop
-	// bodies which has to check break/continue flags after each statement, and
-	// another for outside loop bodies which doesn't need to check those. (This
-	// is a micro-optimization.) For bodyless statements (e.g. assignment) this
-	// is null.
-	mlr_dsl_cst_statement_block_handler_t* pblock_handler;
 
 	// Assignment to oosvar
 	sllv_t* poosvar_target_keylist_evaluators;
@@ -216,9 +244,6 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// fflush on emit/tee/print/dump
 	int flush_every_record;
 
-	// Pattern-action blocks, while, for, etc.
-	cst_statement_block_t* pstatement_block;
-
 	// if-elif-elif-else:
 	sllv_t* pif_chain_statements;
 
@@ -242,13 +267,21 @@ typedef struct _mlr_dsl_cst_statement_t {
 
 	type_inferenced_srec_field_getter_t* ptype_inferenced_srec_field_getter;
 
-	// triple-for:
-	sllv_t* ptriple_for_start_statements;
-	sllv_t* ptriple_for_pre_continuation_statements;
-	rval_evaluator_t* ptriple_for_continuation_evaluator;
-	sllv_t* ptriple_for_update_statements;
-
 } mlr_dsl_cst_statement_t;
+
+mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc( // xxx rename?
+	mlr_dsl_ast_node_t*                    past_node,
+	mlr_dsl_cst_statement_handler_t*       pstatement_handler,
+	mlr_dsl_cst_statement_freer_t*         pstatement_freer,
+	void*                                  pvstate);
+
+mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc_with_block( // xxx rename?
+	mlr_dsl_ast_node_t*                    past_node,
+	mlr_dsl_cst_statement_handler_t*       pstatement_handler,
+	cst_statement_block_t*                 pblock,
+	mlr_dsl_cst_block_handler_t*           pblock_handler,
+	mlr_dsl_cst_statement_freer_t*         pstatement_freer,
+	void*                                  pvstate);
 
 // ----------------------------------------------------------------
 // MLR_DSL_CST OBJECT
@@ -309,6 +342,11 @@ void mlr_dsl_cst_handle_top_level_statement_block(
 
 // Recursive entry point: block bodies for begin, main, end; cond, if, for, while.
 void mlr_dsl_cst_handle_statement_block(
+	cst_statement_block_t* pblock,
+	variables_t*           pvars,
+	cst_outputs_t*         pcst_outputs);
+
+void handle_statement_block_with_break_continue( // xxx rename w/ prefix
 	cst_statement_block_t* pblock,
 	variables_t*           pvars,
 	cst_outputs_t*         pcst_outputs);

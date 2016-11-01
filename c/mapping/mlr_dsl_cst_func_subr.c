@@ -94,7 +94,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		sllv_append(pcst_udf_state->ptop_level_block->pstatement_block->pstatements,
+		sllv_append(pcst_udf_state->ptop_level_block->pblock->pstatements,
 			mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node, type_inferencing, context_flags | IN_FUNC_DEF));
 	}
 
@@ -137,7 +137,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 
 	local_stack_frame_t* pframe = local_stack_frame_enter(ptop_level_block->pframe);
 	local_stack_push(pvars->plocal_stack, pframe);
-	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->subframe_var_count);
+	local_stack_subframe_enter(pframe, ptop_level_block->pblock->subframe_var_count);
 
 	for (int i = 0; i < arity; i++) {
 		// Absent-null is by convention at slot 0 of the frame, and arguments are next.
@@ -152,11 +152,11 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 
 	if (pvars->trace_execution) {
 		fprintf(stderr, "TRACE ENTER FUNC %s\n", pstate->name);
-		for (sllve_t* pe = ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
+		for (sllve_t* pe = ptop_level_block->pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 			fprintf(stderr, "TRACE ");
 			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
-			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 			if (loop_stack_get(pvars->ploop_stack) != 0) {
 				break;
 			}
@@ -169,9 +169,9 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 		}
 		fprintf(stderr, "TRACE EXIT FUNC %s\n", pstate->name);
 	} else {
-		for (sllve_t* pe = ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
+		for (sllve_t* pe = ptop_level_block->pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 			if (loop_stack_get(pvars->ploop_stack) != 0) {
 				break;
 			}
@@ -186,7 +186,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Pop stack
-	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->subframe_var_count);
+	local_stack_subframe_exit(pframe, ptop_level_block->pblock->subframe_var_count);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 
 	if (retval.is_terminal) {
@@ -264,7 +264,7 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 		}
 		mlr_dsl_cst_statement_t* pstatement = mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
 			type_inferencing, context_flags | IN_SUBR_DEF);
-		sllv_append(pstate->ptop_level_block->pstatement_block->pstatements, pstatement);
+		sllv_append(pstate->ptop_level_block->pblock->pstatements, pstatement);
 	}
 
 	return pstate;
@@ -297,7 +297,7 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars, 
 	// Push stack and bind parameters to arguments
 	local_stack_frame_t* pframe = local_stack_frame_enter(ptop_level_block->pframe);
 	local_stack_push(pvars->plocal_stack, pframe);
-	local_stack_subframe_enter(pframe, ptop_level_block->pstatement_block->subframe_var_count);
+	local_stack_subframe_enter(pframe, ptop_level_block->pblock->subframe_var_count);
 
 	for (int i = 0; i < pstate->arity; i++) {
 		// Absent-null is by convention at slot 0 of the frame, and arguments are next.
@@ -311,11 +311,11 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars, 
 
 	if (pvars->trace_execution) {
 		fprintf(stderr, "TRACE ENTER SUBR %s\n", pstate->name);
-		for (sllve_t* pe = pstate->ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
+		for (sllve_t* pe = pstate->ptop_level_block->pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 			fprintf(stderr, "TRACE ");
 			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
-			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 			if (loop_stack_get(pvars->ploop_stack) != 0) {
 				break;
 			}
@@ -326,9 +326,9 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars, 
 		}
 		fprintf(stderr, "TRACE EXIT SUBR %s\n", pstate->name);
 	} else {
-		for (sllve_t* pe = pstate->ptop_level_block->pstatement_block->pstatements->phead; pe != NULL; pe = pe->pnext) {
+		for (sllve_t* pe = pstate->ptop_level_block->pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-			pstatement->pnode_handler(pstatement, pvars, pcst_outputs);
+			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 			if (loop_stack_get(pvars->ploop_stack) != 0) {
 				break;
 			}
@@ -341,6 +341,6 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars, 
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Pop stack
-	local_stack_subframe_exit(pframe, ptop_level_block->pstatement_block->subframe_var_count);
+	local_stack_subframe_exit(pframe, ptop_level_block->pblock->subframe_var_count);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 }
