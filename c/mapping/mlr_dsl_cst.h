@@ -139,11 +139,16 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.
 	mlr_dsl_cst_node_handler_func_t* pnode_handler;
 
+	// For mlr filter
+	int negate_final_filter;
+
 	// For subroutine callsites
-	rval_evaluator_t** subr_callsite_argument_evaluators; // xxx mapvar
-	mv_t* subr_callsite_arguments; // xxx mapvar
-	struct _subr_callsite_t *psubr_callsite;
-	struct _subr_defsite_t *psubr_defsite;
+	struct {
+		rval_evaluator_t** subr_callsite_argument_evaluators; // xxx mapvar
+		mv_t* subr_callsite_arguments; // xxx mapvar
+		struct _subr_callsite_t *psubr_callsite;
+		struct _subr_defsite_t *psubr_defsite;
+	} subr_callsite_info;
 
 	// Return statement within user-defined function
 	rval_evaluator_t* preturn_evaluator; // xxx mapvar
@@ -242,8 +247,6 @@ typedef struct _mlr_dsl_cst_statement_t {
 	sllv_t* ptriple_for_pre_continuation_statements;
 	rval_evaluator_t* ptriple_for_continuation_evaluator;
 	sllv_t* ptriple_for_update_statements;
-
-	int negate_final_filter;
 
 } mlr_dsl_cst_statement_t;
 

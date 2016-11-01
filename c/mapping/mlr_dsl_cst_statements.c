@@ -691,57 +691,57 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_final_filter_statement(mlr_dsl_cst_t*
 static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node) {
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
 
-	pstatement->past_node                               = past_node;
-	pstatement->pnode_handler                           = NULL;
-	pstatement->subr_callsite_argument_evaluators       = NULL;
-	pstatement->subr_callsite_arguments                 = NULL;
-	pstatement->psubr_callsite                          = NULL;
-	pstatement->psubr_defsite                           = NULL;
-	pstatement->preturn_evaluator                       = NULL;
-	pstatement->pblock_handler                          = NULL;
-	pstatement->poosvar_target_keylist_evaluators          = NULL;
-	pstatement->plocal_map_lhs_keylist_evaluators       = NULL;
-	pstatement->pemit_keylist_evaluators                = NULL;
-	pstatement->num_emit_keylist_evaluators             = 0;
-	pstatement->ppemit_keylist_evaluators               = NULL;
-	pstatement->local_lhs_variable_name                 = 0;
-	pstatement->local_lhs_frame_relative_index          = 0;
-	pstatement->local_lhs_type_mask                     = TYPE_MASK_ANY;
-	pstatement->srec_lhs_field_name                     = NULL;
-	pstatement->env_lhs_name                            = NULL;
-	pstatement->psrec_lhs_evaluator                     = NULL;
-	pstatement->prhs_evaluator                          = NULL;
-	pstatement->stdfp                                   = NULL;
-	pstatement->print_terminator                        = "\n";
-	pstatement->poutput_filename_evaluator              = NULL;
-	pstatement->file_output_mode                        = MODE_WRITE;
-	pstatement->pmulti_out                              = NULL;
-	pstatement->psingle_lrec_writer                     = NULL;
-	pstatement->pmulti_lrec_writer                      = NULL;
-	pstatement->poosvar_rhs_keylist_evaluators          = NULL;
-	pstatement->pemit_oosvar_namelist_evaluators        = NULL;
-	pstatement->pvarargs                                = NULL;
-	pstatement->do_full_prefixing                       = FALSE;
-	pstatement->flush_every_record                      = TRUE;
-	pstatement->pstatement_block                        = NULL;
-	pstatement->pif_chain_statements                    = NULL;
-	pstatement->for_srec_k_variable_name                = NULL;
-	pstatement->for_srec_k_frame_relative_index         = 0;
-	pstatement->for_srec_k_type_mask                    = TYPE_MASK_ANY;
-	pstatement->for_map_k_variable_names                = NULL;
-	pstatement->for_map_k_frame_relative_indices        = NULL;
-	pstatement->for_map_k_type_masks                    = NULL;
-	pstatement->for_map_k_count                         = 0;
-	pstatement->for_v_variable_name                     = NULL;
-	pstatement->for_v_frame_relative_index              = 0;
-	pstatement->for_v_type_mask                         = TYPE_MASK_ANY;
-	pstatement->for_map_target_frame_relative_index     = 0;
-	pstatement->ptype_inferenced_srec_field_getter      = NULL;
-	pstatement->ptriple_for_start_statements            = NULL;
-	pstatement->ptriple_for_pre_continuation_statements = NULL;
-	pstatement->ptriple_for_continuation_evaluator      = NULL;
-	pstatement->ptriple_for_update_statements           = NULL;
-	pstatement->negate_final_filter                     = FALSE;
+	pstatement->past_node                                            = past_node;
+	pstatement->pnode_handler                                        = NULL;
+	pstatement->subr_callsite_info.subr_callsite_argument_evaluators = NULL;
+	pstatement->subr_callsite_info.subr_callsite_arguments           = NULL;
+	pstatement->subr_callsite_info.psubr_callsite                    = NULL;
+	pstatement->subr_callsite_info.psubr_defsite                     = NULL;
+	pstatement->preturn_evaluator                                    = NULL;
+	pstatement->pblock_handler                                       = NULL;
+	pstatement->poosvar_target_keylist_evaluators                    = NULL;
+	pstatement->plocal_map_lhs_keylist_evaluators                    = NULL;
+	pstatement->pemit_keylist_evaluators                             = NULL;
+	pstatement->num_emit_keylist_evaluators                          = 0;
+	pstatement->ppemit_keylist_evaluators                            = NULL;
+	pstatement->local_lhs_variable_name                              = 0;
+	pstatement->local_lhs_frame_relative_index                       = 0;
+	pstatement->local_lhs_type_mask                                  = TYPE_MASK_ANY;
+	pstatement->srec_lhs_field_name                                  = NULL;
+	pstatement->env_lhs_name                                         = NULL;
+	pstatement->psrec_lhs_evaluator                                  = NULL;
+	pstatement->prhs_evaluator                                       = NULL;
+	pstatement->stdfp                                                = NULL;
+	pstatement->print_terminator                                     = "\n";
+	pstatement->poutput_filename_evaluator                           = NULL;
+	pstatement->file_output_mode                                     = MODE_WRITE;
+	pstatement->pmulti_out                                           = NULL;
+	pstatement->psingle_lrec_writer                                  = NULL;
+	pstatement->pmulti_lrec_writer                                   = NULL;
+	pstatement->poosvar_rhs_keylist_evaluators                       = NULL;
+	pstatement->pemit_oosvar_namelist_evaluators                     = NULL;
+	pstatement->pvarargs                                             = NULL;
+	pstatement->do_full_prefixing                                    = FALSE;
+	pstatement->flush_every_record                                   = TRUE;
+	pstatement->pstatement_block                                     = NULL;
+	pstatement->pif_chain_statements                                 = NULL;
+	pstatement->for_srec_k_variable_name                             = NULL;
+	pstatement->for_srec_k_frame_relative_index                      = 0;
+	pstatement->for_srec_k_type_mask                                 = TYPE_MASK_ANY;
+	pstatement->for_map_k_variable_names                             = NULL;
+	pstatement->for_map_k_frame_relative_indices                     = NULL;
+	pstatement->for_map_k_type_masks                                 = NULL;
+	pstatement->for_map_k_count                                      = 0;
+	pstatement->for_v_variable_name                                  = NULL;
+	pstatement->for_v_frame_relative_index                           = 0;
+	pstatement->for_v_type_mask                                      = TYPE_MASK_ANY;
+	pstatement->for_map_target_frame_relative_index                  = 0;
+	pstatement->ptype_inferenced_srec_field_getter                   = NULL;
+	pstatement->ptriple_for_start_statements                         = NULL;
+	pstatement->ptriple_for_pre_continuation_statements              = NULL;
+	pstatement->ptriple_for_continuation_evaluator                   = NULL;
+	pstatement->ptriple_for_update_statements                        = NULL;
+	pstatement->negate_final_filter                                  = FALSE;
 
 	return pstatement;
 }
@@ -968,18 +968,18 @@ static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl
 	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
 	int callsite_arity = pname_node->pchildren->length;
 
-	pstatement->psubr_callsite = subr_callsite_alloc(pname_node->text, callsite_arity,
+	pstatement->subr_callsite_info.psubr_callsite = subr_callsite_alloc(pname_node->text, callsite_arity,
 		type_inferencing, context_flags);
 	// Remember this callsite to be resolved later, after all subroutine definitions have been done.
 	sllv_append(pcst->psubr_callsite_statements_to_resolve, pstatement);
 
-	pstatement->subr_callsite_argument_evaluators = mlr_malloc_or_die(callsite_arity * sizeof(rval_evaluator_t*));
-	pstatement->subr_callsite_arguments = mlr_malloc_or_die(callsite_arity * sizeof(mv_t));
+	pstatement->subr_callsite_info.subr_callsite_argument_evaluators = mlr_malloc_or_die(callsite_arity * sizeof(rval_evaluator_t*));
+	pstatement->subr_callsite_info.subr_callsite_arguments = mlr_malloc_or_die(callsite_arity * sizeof(mv_t));
 
 	int i = 0;
 	for (sllve_t* pe = pname_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* pargument_node = pe->pvvalue;
-		pstatement->subr_callsite_argument_evaluators[i] = rval_evaluator_alloc_from_ast(pargument_node,
+		pstatement->subr_callsite_info.subr_callsite_argument_evaluators[i] = rval_evaluator_alloc_from_ast(pargument_node,
 			pcst->pfmgr, type_inferencing, context_flags);
 	}
 
@@ -2166,19 +2166,19 @@ static file_output_mode_t file_output_mode_from_ast_node_type(mlr_dsl_ast_node_t
 // ----------------------------------------------------------------
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
-	if (pstatement->subr_callsite_argument_evaluators != NULL) {
-		for (int i = 0; i < pstatement->psubr_callsite->arity; i++) {
-			rval_evaluator_t* phandler = pstatement->subr_callsite_argument_evaluators[i];
+	if (pstatement->subr_callsite_info.subr_callsite_argument_evaluators != NULL) {
+		for (int i = 0; i < pstatement->subr_callsite_info.psubr_callsite->arity; i++) {
+			rval_evaluator_t* phandler = pstatement->subr_callsite_info.subr_callsite_argument_evaluators[i];
 			phandler->pfree_func(phandler);
 		}
-		free(pstatement->subr_callsite_argument_evaluators);
+		free(pstatement->subr_callsite_info.subr_callsite_argument_evaluators);
 	}
 
-	if (pstatement->subr_callsite_arguments != NULL) {
+	if (pstatement->subr_callsite_info.subr_callsite_arguments != NULL) {
 		// mv_frees are done by the local-stack container which owns the mlrvals it contains
-		free(pstatement->subr_callsite_arguments);
+		free(pstatement->subr_callsite_info.subr_callsite_arguments);
 	}
-	subr_callsite_free(pstatement->psubr_callsite);
+	subr_callsite_free(pstatement->subr_callsite_info.psubr_callsite);
 
 	if (pstatement->preturn_evaluator != NULL) {
 		pstatement->preturn_evaluator->pfree_func(pstatement->preturn_evaluator);
@@ -2487,13 +2487,13 @@ static void handle_subr_callsite(
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	for (int i = 0; i < pstatement->psubr_callsite->arity; i++) {
-		rval_evaluator_t* pev = pstatement->subr_callsite_argument_evaluators[i];
-		pstatement->subr_callsite_arguments[i] = pev->pprocess_func(pev->pvstate, pvars); // xxx mapvars
+	for (int i = 0; i < pstatement->subr_callsite_info.psubr_callsite->arity; i++) {
+		rval_evaluator_t* pev = pstatement->subr_callsite_info.subr_callsite_argument_evaluators[i];
+		pstatement->subr_callsite_info.subr_callsite_arguments[i] = pev->pprocess_func(pev->pvstate, pvars); // xxx mapvars
 	}
 
-	mlr_dsl_cst_execute_subroutine(pstatement->psubr_defsite, pvars, pcst_outputs,
-		pstatement->psubr_callsite->arity, pstatement->subr_callsite_arguments);
+	mlr_dsl_cst_execute_subroutine(pstatement->subr_callsite_info.psubr_defsite, pvars, pcst_outputs,
+		pstatement->subr_callsite_info.psubr_callsite->arity, pstatement->subr_callsite_info.subr_callsite_arguments);
 }
 
 // ----------------------------------------------------------------
