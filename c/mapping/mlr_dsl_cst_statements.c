@@ -739,6 +739,7 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc(
 	void*                            pvstate)
 {
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
+	memset(pstatement, 0, sizeof(*pstatement)); // xxx temp
 	pstatement->past_node           = past_node;
 	pstatement->pstatement_handler  = pstatement_handler;
 	pstatement->pblock_handler      = NULL;
@@ -757,6 +758,7 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc_with_block(
 	void*                            pvstate)
 {
 	mlr_dsl_cst_statement_t* pstatement = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_t));
+	memset(pstatement, 0, sizeof(*pstatement)); // xxx temp
 	pstatement->past_node           = past_node;
 	pstatement->pstatement_handler  = pstatement_handler;
 	pstatement->pblock              = pblock;
