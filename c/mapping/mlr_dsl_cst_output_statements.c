@@ -859,11 +859,6 @@ static void free_emit(mlr_dsl_cst_statement_t* pstatement) { // emit
 		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
 	}
 
-	if (pstate->pmulti_lrec_writer != NULL) {
-		multi_lrec_writer_drain(pstate->pmulti_lrec_writer);
-		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
-	}
-
 	if (pstate->pemit_oosvar_namelist_evaluators != NULL) {
 		for (sllve_t* pe = pstate->pemit_oosvar_namelist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 			rval_evaluator_t* phandler = pe->pvvalue;
