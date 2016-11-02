@@ -165,4 +165,6 @@ static void free_triple_for(mlr_dsl_cst_statement_t* pstatement) {
 		}
 		sllv_free(pstate->ptriple_for_update_statements);
 	}
+
+	free(pstate);
 }

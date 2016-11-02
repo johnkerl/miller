@@ -133,8 +133,6 @@ typedef void mlr_dsl_cst_statement_handler_t(
 typedef void mlr_dsl_cst_statement_freer_t(
 	struct _mlr_dsl_cst_statement_t* pstatement);
 
-mlr_dsl_cst_statement_allocator_t alloc_triple_for;
-
 // ----------------------------------------------------------------
 // MLR_DSL_CST_STATEMENT OBJECT
 
@@ -191,13 +189,6 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Assignment to oosvar
 	sllv_t* poosvar_target_keylist_evaluators;
 
-	// Unlashed emit and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
-	sllv_t* pemit_keylist_evaluators;
-
-	// Lashed emit and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
-	int num_emit_keylist_evaluators;
-	sllv_t** ppemit_keylist_evaluators;
-
 	// Assignment to local
 	// The variable name is used only for type-decl exceptions. Otherwise the
 	// name is replaced with the frame-relative index by the stack allocator.
@@ -221,13 +212,6 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// For print/printn/eprint/eprintn
 	FILE* stdfp;
 	char* print_terminator;
-
-	// For print-to-file and dump-to-file, and emit-to-file
-	rval_evaluator_t* poutput_filename_evaluator;
-	file_output_mode_t file_output_mode;
-	multi_out_t* pmulti_out; // print-to-file and dump-to-file
-	lrec_writer_t* psingle_lrec_writer; // emit/tee to stdout/stderr
-	multi_lrec_writer_t* pmulti_lrec_writer; // emit-to-file
 
 	// Assigning full srec from oosvar:
 	sllv_t* poosvar_rhs_keylist_evaluators;
@@ -421,5 +405,53 @@ void mlr_dsl_list_all_keywords_raw(FILE* output_stream);
 
 // Pass function_name == NULL to get usage for all keywords:
 void mlr_dsl_keyword_usage(FILE* output_stream, char* keyword);
+
+// ================================================================
+// xxx comment/reorg ...
+
+mlr_dsl_cst_statement_allocator_t alloc_tee;
+
+mlr_dsl_cst_statement_allocator_t alloc_emitf;
+
+mlr_dsl_cst_statement_t* alloc_emit(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags,
+	int                 do_full_prefixing);
+
+mlr_dsl_cst_statement_t* alloc_emit_lashed(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags,
+	int                 do_full_prefixing);
+
+mlr_dsl_cst_statement_t* alloc_print(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags,
+	char*               print_terminator);
+
+mlr_dsl_cst_statement_allocator_t alloc_dump;
+
+mlr_dsl_cst_statement_allocator_t alloc_triple_for;
+
+// ----------------------------------------------------------------
+mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc(
+	int               unset_local_variable_frame_relative_index,
+	char*             emitf_or_unset_srec_field_name,
+	rval_evaluator_t* punset_srec_field_name_evaluator,
+	rval_evaluator_t* pemitf_arg_evaluator,
+	sllv_t*           punset_oosvar_keylist_evaluators);
+
+void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg);
+
+sllv_t* allocate_keylist_evaluators_from_oosvar_node(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags);
 
 #endif // MLR_DSL_CST_H

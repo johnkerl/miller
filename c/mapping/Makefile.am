@@ -56,6 +56,7 @@ libmapping_la_SOURCES=	\
 			mlr_dsl_cst_func_subr.c \
 			mlr_dsl_cst_keywords.c \
 			mlr_dsl_cst_statements.c \
+			mlr_dsl_cst_output_statements.c \
 			mlr_dsl_cst_triple_for_statements.c \
 			mlr_dsl_stack_allocate.c \
 			stats1_accumulators.c \
