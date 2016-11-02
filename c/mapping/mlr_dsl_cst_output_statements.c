@@ -44,15 +44,17 @@ mlr_dsl_cst_statement_t* alloc_tee(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnod
 {
 	tee_state_t* pstate = mlr_malloc_or_die(sizeof(tee_state_t));
 
+	pstate->stdfp                      = NULL;
+	pstate->poutput_filename_evaluator = NULL;
+	pstate->psingle_lrec_writer        = NULL;
+	pstate->pmulti_lrec_writer         = NULL;
+
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 
 	pstate->flush_every_record = pcst->flush_every_record;
-	pstate->psingle_lrec_writer = NULL;
-	pstate->pmulti_lrec_writer = NULL;
 	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
 		pstate->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
-		pstate->poutput_filename_evaluator = NULL;
 
 		return mlr_dsl_cst_statement_valloc(
 			pnode,
@@ -61,7 +63,6 @@ mlr_dsl_cst_statement_t* alloc_tee(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnod
 			pstate);
 
 	} else {
-		pstate->stdfp = NULL;
 		pstate->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node, pcst->pfmgr,
 			type_inferencing, context_flags);
 		pstate->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
@@ -209,12 +210,16 @@ mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 {
 	emitf_state_t* pstate = mlr_malloc_or_die(sizeof(emitf_state_t));
 
+	pstate->stdfp                      = NULL;
+	pstate->poutput_filename_evaluator = NULL;
+	pstate->psingle_lrec_writer        = NULL;
+	pstate->pmulti_lrec_writer         = NULL;
+	pstate->pvarargs                   = NULL;
+
 	mlr_dsl_ast_node_t* pnamesnode = pnode->pchildren->phead->pvvalue;
 
 	// Loop over oosvar names to emit in e.g. 'emitf @a, @b, @c'.
 	pstate->pvarargs = sllv_alloc();
-	pstate->psingle_lrec_writer = NULL;
-	pstate->pmulti_lrec_writer = NULL;
 	for (sllve_t* pe = pnamesnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pwalker = pe->pvvalue;
 		mlr_dsl_ast_node_t* pchild = pwalker->pchildren->phead->pvvalue;
@@ -235,18 +240,14 @@ mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 		: poutput_node->pchildren->phead->pvvalue;
 	mlr_dsl_cst_statement_handler_t* phandler = NULL;
 	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
-		pstate->poutput_filename_evaluator = NULL;
-		pstate->stdfp = NULL;
 		phandler = handle_emitf;
 	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstate->poutput_filename_evaluator = NULL;
 		pstate->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
 		phandler = handle_emitf_to_stdfp;
 	} else {
 		pstate->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node, pcst->pfmgr,
 			type_inferencing, context_flags);
 		pstate->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
-		pstate->stdfp = NULL;
 		phandler = handle_emitf_to_file;
 	}
 	pstate->flush_every_record = pcst->flush_every_record;
@@ -454,6 +455,15 @@ mlr_dsl_cst_statement_t* alloc_emit(
 {
 	emit_state_t* pstate = mlr_malloc_or_die(sizeof(emit_state_t));
 
+	pstate->poutput_filename_evaluator       = NULL;
+	pstate->stdfp                            = NULL;
+	pstate->pemit_oosvar_namelist_evaluators = NULL;
+	pstate->pemit_keylist_evaluators         = NULL;
+	pstate->num_emit_keylist_evaluators      = 0;
+	pstate->ppemit_keylist_evaluators        = NULL;
+	pstate->psingle_lrec_writer              = NULL;
+	pstate->pmulti_lrec_writer               = NULL;
+
 	mlr_dsl_ast_node_t* pemit_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
 	mlr_dsl_ast_node_t* pkeylist_node = pemit_node->pchildren->phead->pvvalue;
@@ -461,10 +471,6 @@ mlr_dsl_cst_statement_t* alloc_emit(
 	int output_all = FALSE;
 	// The grammar allows only 'emit all', not 'emit @x, all, $y'.
 	// So if 'all' appears at all, it's the only name.
-	pstate->num_emit_keylist_evaluators = 0;
-	pstate->ppemit_keylist_evaluators = NULL;
-	pstate->psingle_lrec_writer = NULL;
-	pstate->pmulti_lrec_writer = NULL;
 	if (pkeylist_node->type == MD_AST_NODE_TYPE_ALL || pkeylist_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
 		output_all = TRUE;
 
@@ -508,18 +514,14 @@ mlr_dsl_cst_statement_t* alloc_emit(
 		? NULL
 		: poutput_node->pchildren->phead->pvvalue;
 	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
-		pstate->poutput_filename_evaluator = NULL;
-		pstate->stdfp = NULL;
 		phandler = output_all ? handle_emit_all : handle_emit;
 	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstate->poutput_filename_evaluator = NULL;
 		phandler = output_all ? handle_emit_all_to_stdfp : handle_emit_to_stdfp;
 		pstate->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
 	} else {
 		pstate->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node, pcst->pfmgr,
 			type_inferencing, context_flags);
 		pstate->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
-		pstate->stdfp = NULL;
 		phandler = output_all ? handle_emit_all_to_file : handle_emit_to_file;
 	}
 	pstate->flush_every_record = pcst->flush_every_record;
@@ -542,10 +544,15 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 
 	mlr_dsl_ast_node_t* pkeylists_node = pemit_node->pchildren->phead->pvvalue;
 
-	pstate->num_emit_keylist_evaluators = 0;
-	pstate->ppemit_keylist_evaluators = NULL;
-	pstate->psingle_lrec_writer = NULL;
-	pstate->pmulti_lrec_writer = NULL;
+	pstate->poutput_filename_evaluator       = NULL;
+	pstate->stdfp                            = NULL;
+	pstate->pemit_oosvar_namelist_evaluators = NULL;
+	pstate->pemit_keylist_evaluators         = NULL;
+	pstate->num_emit_keylist_evaluators      = 0;
+	pstate->ppemit_keylist_evaluators        = NULL;
+	pstate->psingle_lrec_writer              = NULL;
+	pstate->pmulti_lrec_writer               = NULL;
+
 	pstate->num_emit_keylist_evaluators = pkeylists_node->pchildren->length;
 	pstate->ppemit_keylist_evaluators = mlr_malloc_or_die(pstate->num_emit_keylist_evaluators
 		* sizeof(sllv_t*));
@@ -575,10 +582,8 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 		? NULL
 		: poutput_node->pchildren->phead->pvvalue;
 	if (poutput_node->type == MD_AST_NODE_TYPE_STREAM) {
-		pstate->poutput_filename_evaluator = NULL;
 		phandler = handle_emit_lashed;
 	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT || pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstate->poutput_filename_evaluator = NULL;
 		phandler = handle_emit_lashed_to_stdfp;
 		pstate->stdfp = (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) ? stdout : stderr;
 	} else {
@@ -859,6 +864,14 @@ static void free_emit(mlr_dsl_cst_statement_t* pstatement) { // emit
 		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
 	}
 
+	if (pstate->pemit_oosvar_namelist_evaluators != NULL) {
+		for (sllve_t* pe = pstate->pemit_oosvar_namelist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+			rval_evaluator_t* phandler = pe->pvvalue;
+			phandler->pfree_func(phandler);
+		}
+		sllv_free(pstate->pemit_oosvar_namelist_evaluators);
+	}
+
 	if (pstate->pemit_keylist_evaluators != NULL) {
 		for (sllve_t* pe = pstate->pemit_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 			rval_evaluator_t* phandler = pe->pvvalue;
@@ -877,6 +890,15 @@ static void free_emit(mlr_dsl_cst_statement_t* pstatement) { // emit
 			sllv_free(pemit_keylist_evaluators);
 		}
 		free(pstate->ppemit_keylist_evaluators);
+	}
+
+	if (pstate->psingle_lrec_writer != NULL) {
+		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer);
+	}
+
+	if (pstate->pmulti_lrec_writer != NULL) {
+		multi_lrec_writer_drain(pstate->pmulti_lrec_writer);
+		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
 	}
 
 	free(pstate);
@@ -906,6 +928,11 @@ mlr_dsl_cst_statement_t* alloc_print(
 {
 	print_state_t* pstate = mlr_malloc_or_die(sizeof(print_state_t));
 
+	pstate->prhs_evaluator             = NULL;
+	pstate->stdfp                      = NULL;
+	pstate->poutput_filename_evaluator = NULL;
+	pstate->pmulti_out                 = NULL;
+
 	MLR_INTERNAL_CODING_ERROR_IF((pnode->pchildren == NULL) || (pnode->pchildren->length != 2));
 	mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pvvalue;
 	pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, pcst->pfmgr,
@@ -915,18 +942,13 @@ mlr_dsl_cst_statement_t* alloc_print(
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
 	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) {
-		pstate->poutput_filename_evaluator = NULL;
 		pstate->stdfp = stdout;
-		pstate->pmulti_out = NULL;
 	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstate->poutput_filename_evaluator = NULL;
 		pstate->stdfp = stderr;
-		pstate->pmulti_out = NULL;
 	} else {
 		pstate->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node, pcst->pfmgr,
 			type_inferencing, context_flags);
 		pstate->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
-		pstate->stdfp = NULL;
 		pstate->pmulti_out = multi_out_alloc();
 	}
 	pstate->flush_every_record = pcst->flush_every_record;
@@ -978,6 +1000,10 @@ static void handle_print(
 static void free_print(mlr_dsl_cst_statement_t* pstatement) { // print
 	print_state_t* pstate = pstatement->pvstate;
 
+	if (pstate->prhs_evaluator != NULL) {
+		pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
+	}
+
 	if (pstate->poutput_filename_evaluator != NULL) {
 		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
 	}
@@ -1009,19 +1035,19 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 {
 	dump_state_t* pstate = mlr_malloc_or_die(sizeof(dump_state_t));
 
+	pstate->stdfp                      = NULL;
+	pstate->poutput_filename_evaluator = NULL;
+	pstate->pmulti_out                 = NULL;
+
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 	mlr_dsl_cst_statement_handler_t* phandler = NULL;
 	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) {
-		pstate->poutput_filename_evaluator = NULL;
 		phandler = handle_dump;
 		pstate->stdfp = stdout;
-		pstate->pmulti_out = NULL;
 	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		pstate->poutput_filename_evaluator = NULL;
 		phandler = handle_dump;
 		pstate->stdfp = stderr;
-		pstate->pmulti_out = NULL;
 	} else {
 		pstate->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node, pcst->pfmgr,
 			type_inferencing, context_flags);
