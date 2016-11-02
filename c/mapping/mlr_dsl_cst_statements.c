@@ -30,8 +30,6 @@ static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_function_callsi
 static mlr_dsl_cst_statement_allocator_t alloc_return_value_non_map_valued;
 static mlr_dsl_cst_statement_allocator_t alloc_return_void;
 
-static mlr_dsl_cst_statement_allocator_t alloc_subr_callsite;
-
 static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(
 	mlr_dsl_cst_t*      pcst,
 	mlr_dsl_ast_node_t* pnode,
@@ -53,11 +51,13 @@ static mlr_dsl_cst_statement_allocator_t alloc_conditional_block;
 static mlr_dsl_cst_statement_allocator_t alloc_if_head;
 static mlr_dsl_cst_statement_allocator_t alloc_while;
 static mlr_dsl_cst_statement_allocator_t alloc_do_while;
+
 static mlr_dsl_cst_statement_allocator_t alloc_for_srec;
 static mlr_dsl_cst_statement_allocator_t alloc_for_oosvar;
 static mlr_dsl_cst_statement_allocator_t alloc_for_oosvar_key_only;
 static mlr_dsl_cst_statement_allocator_t alloc_for_local_map;
 static mlr_dsl_cst_statement_allocator_t alloc_for_local_map_key_only;
+
 static mlr_dsl_cst_statement_allocator_t alloc_break;
 static mlr_dsl_cst_statement_allocator_t alloc_continue;
 static mlr_dsl_cst_statement_allocator_t alloc_filter;
@@ -78,8 +78,6 @@ static mlr_dsl_cst_statement_t* alloc_if_item(
 	int                 context_flags);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static mlr_dsl_cst_statement_handler_t handle_subr_callsite;
-
 static mlr_dsl_cst_statement_handler_t handle_return_void;
 static mlr_dsl_cst_statement_handler_t handle_return_value_from_local_non_map_variable;
 static mlr_dsl_cst_statement_handler_t handle_return_value_from_local_map_variable;
@@ -272,7 +270,7 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 				MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		return alloc_subr_callsite(pcst, pnode, type_inferencing, context_flags);
+		return alloc_subr_callsite_statement(pcst, pnode, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_CONDITIONAL_BLOCK:
@@ -596,11 +594,6 @@ static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node) {
 
 	// xxx pre-federation
 
-	pstatement->subr_callsite_info.subr_callsite_argument_evaluators = NULL;
-	pstatement->subr_callsite_info.subr_callsite_arguments           = NULL;
-	pstatement->subr_callsite_info.psubr_callsite                    = NULL;
-	pstatement->subr_callsite_info.psubr_defsite                     = NULL;
-
 	pstatement->preturn_evaluator                   = NULL;
 
 	pstatement->poosvar_target_keylist_evaluators   = NULL;
@@ -886,50 +879,6 @@ static mlr_dsl_cst_statement_t* alloc_return_void(mlr_dsl_cst_t* pcst, mlr_dsl_a
 	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
 	pstatement->pstatement_handler = handle_return_void;
 	return pstatement;
-}
-
-// ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-
-	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
-	int callsite_arity = pname_node->pchildren->length;
-
-	pstatement->subr_callsite_info.psubr_callsite = subr_callsite_alloc(pname_node->text, callsite_arity,
-		type_inferencing, context_flags);
-	// Remember this callsite to be resolved later, after all subroutine definitions have been done.
-	sllv_append(pcst->psubr_callsite_statements_to_resolve, pstatement);
-
-	pstatement->subr_callsite_info.subr_callsite_argument_evaluators = mlr_malloc_or_die(callsite_arity * sizeof(rval_evaluator_t*));
-	pstatement->subr_callsite_info.subr_callsite_arguments = mlr_malloc_or_die(callsite_arity * sizeof(mv_t));
-
-	int i = 0;
-	for (sllve_t* pe = pname_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
-		mlr_dsl_ast_node_t* pargument_node = pe->pvvalue;
-		pstatement->subr_callsite_info.subr_callsite_argument_evaluators[i] = rval_evaluator_alloc_from_ast(pargument_node,
-			pcst->pfmgr, type_inferencing, context_flags);
-	}
-
-	pstatement->pstatement_handler = handle_subr_callsite;
-	return pstatement;
-}
-
-subr_callsite_t* subr_callsite_alloc(char* name, int arity, int type_inferencing, int context_flags) {
-	subr_callsite_t* psubr_callsite  = mlr_malloc_or_die(sizeof(subr_callsite_t));
-	psubr_callsite->name             = mlr_strdup_or_die(name);
-	psubr_callsite->arity            = arity;
-	psubr_callsite->type_inferencing = type_inferencing;
-	psubr_callsite->context_flags    = context_flags;
-	return psubr_callsite;
-}
-
-void subr_callsite_free(subr_callsite_t* psubr_callsite) {
-	if (psubr_callsite == NULL)
-		return;
-	free(psubr_callsite->name);
-	free(psubr_callsite);
 }
 
 // ----------------------------------------------------------------
@@ -1744,21 +1693,6 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 		pstatement->pstatement_freer(pstatement);
 	}
 
-	// xxx pre-federation
-	if (pstatement->subr_callsite_info.subr_callsite_argument_evaluators != NULL) {
-		for (int i = 0; i < pstatement->subr_callsite_info.psubr_callsite->arity; i++) {
-			rval_evaluator_t* phandler = pstatement->subr_callsite_info.subr_callsite_argument_evaluators[i];
-			phandler->pfree_func(phandler);
-		}
-		free(pstatement->subr_callsite_info.subr_callsite_argument_evaluators);
-	}
-
-	if (pstatement->subr_callsite_info.subr_callsite_arguments != NULL) {
-		// mv_frees are done by the local-stack container which owns the mlrvals it contains
-		free(pstatement->subr_callsite_info.subr_callsite_arguments);
-	}
-	subr_callsite_free(pstatement->subr_callsite_info.psubr_callsite);
-
 	if (pstatement->preturn_evaluator != NULL) {
 		pstatement->preturn_evaluator->pfree_func(pstatement->preturn_evaluator);
 	}
@@ -1988,21 +1922,6 @@ void mlr_dsl_cst_handle_statement_list(
 			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 		}
 	}
-}
-
-// ----------------------------------------------------------------
-static void handle_subr_callsite(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	for (int i = 0; i < pstatement->subr_callsite_info.psubr_callsite->arity; i++) {
-		rval_evaluator_t* pev = pstatement->subr_callsite_info.subr_callsite_argument_evaluators[i];
-		pstatement->subr_callsite_info.subr_callsite_arguments[i] = pev->pprocess_func(pev->pvstate, pvars); // xxx mapvars
-	}
-
-	mlr_dsl_cst_execute_subroutine(pstatement->subr_callsite_info.psubr_defsite, pvars, pcst_outputs,
-		pstatement->subr_callsite_info.psubr_callsite->arity, pstatement->subr_callsite_info.subr_callsite_arguments);
 }
 
 // ----------------------------------------------------------------

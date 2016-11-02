@@ -265,17 +265,6 @@ static mlr_dsl_ast_node_t* get_list_for_block(mlr_dsl_ast_node_t* pnode) {
 static void mlr_dsl_cst_resolve_subr_callsites(mlr_dsl_cst_t* pcst) {
 	while (pcst->psubr_callsite_statements_to_resolve->phead != NULL) {
 		mlr_dsl_cst_statement_t* pstatement = sllv_pop(pcst->psubr_callsite_statements_to_resolve);
-		subr_callsite_t* psubr_callsite = pstatement->subr_callsite_info.psubr_callsite;
-		subr_defsite_t* psubr_defsite = lhmsv_get(pcst->psubr_defsites, psubr_callsite->name);
-		if (psubr_defsite == NULL) {
-			fprintf(stderr, "%s: subroutine \"%s\" not found.\n", MLR_GLOBALS.bargv0, psubr_callsite->name);
-			exit(1);
-		}
-		if (psubr_defsite->arity != psubr_callsite->arity) {
-			fprintf(stderr, "%s: subroutine \"%s\" expects argument count %d but argument count %d was provided.\n",
-				MLR_GLOBALS.bargv0, psubr_callsite->name, psubr_defsite->arity, psubr_callsite->arity);
-			exit(1);
-		}
-		pstatement->subr_callsite_info.psubr_defsite = psubr_defsite;
+		mlr_dsl_cst_resolve_subr_callsite(pcst, pstatement);
 	}
 }

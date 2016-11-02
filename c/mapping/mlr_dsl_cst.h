@@ -175,14 +175,6 @@ typedef struct _mlr_dsl_cst_statement_t {
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// To be federated:
 
-	// For subroutine callsites
-	struct {
-		rval_evaluator_t** subr_callsite_argument_evaluators; // xxx mapvar
-		mv_t* subr_callsite_arguments; // xxx mapvar
-		struct _subr_callsite_t *psubr_callsite;
-		struct _subr_defsite_t *psubr_defsite;
-	} subr_callsite_info;
-
 	// Return statement within user-defined function
 	rval_evaluator_t* preturn_evaluator; // xxx mapvar
 
@@ -359,9 +351,6 @@ typedef struct _subr_callsite_t {
 	int   context_flags;
 } subr_callsite_t;
 
-subr_callsite_t* subr_callsite_alloc(char* name, int arity, int type_inferencing, int context_flags);
-void subr_callsite_free(subr_callsite_t* psubr_callsite);
-
 typedef struct _subr_defsite_t {
 	char*     name;
 	int       arity;
@@ -396,6 +385,9 @@ void mlr_dsl_keyword_usage(FILE* output_stream, char* keyword);
 // ================================================================
 // xxx comment/reorg ...
 
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// mapping/mlr_dsl_cst_output_statements.c
+
 mlr_dsl_cst_statement_allocator_t alloc_tee;
 
 mlr_dsl_cst_statement_allocator_t alloc_emitf;
@@ -423,7 +415,18 @@ mlr_dsl_cst_statement_t* alloc_print(
 
 mlr_dsl_cst_statement_allocator_t alloc_dump;
 
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// mapping/mlr_dsl_cst_triple_for_statements.c
+
 mlr_dsl_cst_statement_allocator_t alloc_triple_for;
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// mapping/mlr_dsl_cst_func_subr.c
+
+// When we allocate a callsite we can do so before the callee has been defined.
+// Hence the two-step process, with the second step being an object-binding step.
+mlr_dsl_cst_statement_allocator_t alloc_subr_callsite_statement;
+void mlr_dsl_cst_resolve_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl_cst_statement_t* pstatement);
 
 // ----------------------------------------------------------------
 mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc(
