@@ -15,11 +15,6 @@
 // ================================================================
 
 // ----------------------------------------------------------------
-// Normally I use function typedefs only to simplify function-pointer usage.
-// Here, though, they're used to reduce keystrokes in the (very large) number
-// of static-function prototypes here at the top of this file.
-
-// ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node);
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
