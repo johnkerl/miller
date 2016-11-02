@@ -77,6 +77,7 @@ static mlr_dsl_cst_statement_t* alloc_if_item(
 	int                 type_inferencing,
 	int                 context_flags);
 
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static mlr_dsl_cst_statement_handler_t handle_subr_callsite;
 
 static mlr_dsl_cst_statement_handler_t handle_return_void;
@@ -611,13 +612,8 @@ static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node) {
 	pstatement->env_lhs_name                        = NULL;
 	pstatement->psrec_lhs_evaluator                 = NULL;
 	pstatement->prhs_evaluator                      = NULL;
-	pstatement->stdfp                               = NULL;
-	pstatement->print_terminator                    = "\n";
 	pstatement->poosvar_rhs_keylist_evaluators      = NULL;
-	pstatement->pemit_oosvar_namelist_evaluators    = NULL;
 	pstatement->pvarargs                            = NULL;
-	pstatement->do_full_prefixing                   = FALSE;
-	pstatement->flush_every_record                  = TRUE;
 	pstatement->pblock                              = NULL;
 	pstatement->pif_chain_statements                = NULL;
 
@@ -1791,14 +1787,6 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 			phandler->pfree_func(phandler);
 		}
 		sllv_free(pstatement->poosvar_rhs_keylist_evaluators);
-	}
-
-	if (pstatement->pemit_oosvar_namelist_evaluators != NULL) {
-		for (sllve_t* pe = pstatement->pemit_oosvar_namelist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-			rval_evaluator_t* phandler = pe->pvvalue;
-			phandler->pfree_func(phandler);
-		}
-		sllv_free(pstatement->pemit_oosvar_namelist_evaluators);
 	}
 
 	if (pstatement->pvarargs != NULL) {

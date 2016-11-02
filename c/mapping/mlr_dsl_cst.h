@@ -209,24 +209,11 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Assignments to srec or oosvar, as well as the boolean expression in filter, cond, and bare-boolean
 	rval_evaluator_t* prhs_evaluator;
 
-	// For print/printn/eprint/eprintn
-	FILE* stdfp;
-	char* print_terminator;
-
 	// Assigning full srec from oosvar:
 	sllv_t* poosvar_rhs_keylist_evaluators;
 
-	// emit/emitp:
-	sllv_t* pemit_oosvar_namelist_evaluators;
-
 	// Vararg stuff for emit and unset
 	sllv_t* pvarargs;
-
-	// emit vs. emitp
-	int do_full_prefixing;
-
-	// fflush on emit/tee/print/dump
-	int flush_every_record;
 
 	// if-elif-elif-else:
 	sllv_t* pif_chain_statements;
