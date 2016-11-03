@@ -207,9 +207,6 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Vararg stuff for emit and unset
 	sllv_t* pvarargs;
 
-	// if-elif-elif-else:
-	sllv_t* pif_chain_statements;
-
 	char** for_map_k_variable_names;
 	int*  for_map_k_frame_relative_indices;
 	int*  for_map_k_type_masks;
@@ -379,6 +376,21 @@ void mlr_dsl_keyword_usage(FILE* output_stream, char* keyword);
 // xxx comment/reorg ...
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// mapping/mlr_dsl_cst_condish_statements.c
+mlr_dsl_cst_statement_allocator_t alloc_conditional_block;
+mlr_dsl_cst_statement_allocator_t alloc_if_head;
+mlr_dsl_cst_statement_allocator_t alloc_while;
+mlr_dsl_cst_statement_allocator_t alloc_do_while;
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// mapping/mlr_dsl_cst_for_srec_statements.c
+mlr_dsl_cst_statement_allocator_t alloc_for_srec;
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// mapping/mlr_dsl_cst_triple_for_statements.c
+mlr_dsl_cst_statement_allocator_t alloc_triple_for;
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_output_statements.c
 
 mlr_dsl_cst_statement_allocator_t alloc_tee;
@@ -407,15 +419,6 @@ mlr_dsl_cst_statement_t* alloc_print(
 	char*               print_terminator);
 
 mlr_dsl_cst_statement_allocator_t alloc_dump;
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// mapping/mlr_dsl_cst_for_srec_statements.c
-mlr_dsl_cst_statement_allocator_t alloc_for_srec;
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// mapping/mlr_dsl_cst_triple_for_statements.c
-
-mlr_dsl_cst_statement_allocator_t alloc_triple_for;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_func_subr.c
