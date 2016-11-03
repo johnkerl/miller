@@ -210,13 +210,6 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// if-elif-elif-else:
 	sllv_t* pif_chain_statements;
 
-	// for-srec / for-oosvar / for-local-map:
-	// (The variable name is used only for type-decl exceptions. Otherwise the
-	// name is replaced with the frame-relative index by the stack allocator.)
-	char* for_srec_k_variable_name;
-	int   for_srec_k_frame_relative_index;
-	int   for_srec_k_type_mask;
-
 	char** for_map_k_variable_names;
 	int*  for_map_k_frame_relative_indices;
 	int*  for_map_k_type_masks;
@@ -228,7 +221,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 
 	int   for_map_target_frame_relative_index;
 
-	type_inferenced_srec_field_getter_t* ptype_inferenced_srec_field_getter;
+	//type_inferenced_srec_field_getter_t* ptype_inferenced_srec_field_getter;
 
 } mlr_dsl_cst_statement_t;
 
@@ -414,6 +407,10 @@ mlr_dsl_cst_statement_t* alloc_print(
 	char*               print_terminator);
 
 mlr_dsl_cst_statement_allocator_t alloc_dump;
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// mapping/mlr_dsl_cst_for_srec_statements.c
+mlr_dsl_cst_statement_allocator_t alloc_for_srec;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_triple_for_statements.c

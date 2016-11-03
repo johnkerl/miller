@@ -333,7 +333,7 @@ static void subr_callsite_free(subr_callsite_t* psubr_callsite) {
 }
 
 // ================================================================
-subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode, // xxx rename
+subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode, // xxx rename?
 	int type_inferencing, int context_flags)
 {
 	mlr_dsl_ast_node_t* pparameters_node = pnode->pchildren->phead->pvvalue;

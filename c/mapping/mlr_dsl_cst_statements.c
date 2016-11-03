@@ -52,7 +52,6 @@ static mlr_dsl_cst_statement_allocator_t alloc_if_head;
 static mlr_dsl_cst_statement_allocator_t alloc_while;
 static mlr_dsl_cst_statement_allocator_t alloc_do_while;
 
-static mlr_dsl_cst_statement_allocator_t alloc_for_srec;
 static mlr_dsl_cst_statement_allocator_t alloc_for_oosvar;
 static mlr_dsl_cst_statement_allocator_t alloc_for_oosvar_key_only;
 static mlr_dsl_cst_statement_allocator_t alloc_for_local_map;
@@ -107,7 +106,6 @@ static mlr_dsl_cst_statement_handler_t handle_final_filter;
 static mlr_dsl_cst_statement_handler_t handle_conditional_block;
 static mlr_dsl_cst_statement_handler_t handle_while;
 static mlr_dsl_cst_statement_handler_t handle_do_while;
-static mlr_dsl_cst_statement_handler_t handle_for_srec;
 static mlr_dsl_cst_statement_handler_t handle_for_oosvar;
 static mlr_dsl_cst_statement_handler_t handle_for_oosvar_key_only;
 static mlr_dsl_cst_statement_handler_t handle_for_local_map;
@@ -610,9 +608,6 @@ static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node) {
 	pstatement->pblock                              = NULL;
 	pstatement->pif_chain_statements                = NULL;
 
-	pstatement->for_srec_k_variable_name            = NULL;
-	pstatement->for_srec_k_frame_relative_index     = 0;
-	pstatement->for_srec_k_type_mask                = TYPE_MASK_ANY;
 	pstatement->for_map_k_variable_names            = NULL;
 	pstatement->for_map_k_frame_relative_indices    = NULL;
 	pstatement->for_map_k_type_masks                = NULL;
@@ -621,8 +616,6 @@ static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node) {
 	pstatement->for_v_frame_relative_index          = 0;
 	pstatement->for_v_type_mask                     = TYPE_MASK_ANY;
 	pstatement->for_map_target_frame_relative_index = 0;
-
-	pstatement->ptype_inferenced_srec_field_getter  = NULL;
 
 	return pstatement;
 }
@@ -1150,71 +1143,6 @@ static mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 }
 
 // ----------------------------------------------------------------
-// $ mlr -n put -v 'for (k,v in $*) { $x=1; $y=2 }'
-// AST ROOT:
-// text="list", type=statement_list:
-//     text="for", type=for_srec:
-//         text="variables", type=for_variables:
-//             text="k", type=non_sigil_name.
-//             text="v", type=non_sigil_name.
-//         text="list", type=statement_list:
-//             text="=", type=srec_assignment:
-//                 text="x", type=field_name.
-//                 text="1", type=numeric_literal.
-//             text="=", type=srec_assignment:
-//                 text="y", type=field_name.
-//                 text="2", type=numeric_literal.
-
-static mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-
-	// Left child node is list of bound variables.
-	// Right child node is the list of statements in the body.
-	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
-
-	mlr_dsl_ast_node_t* pknode = pleft->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pvnode = pleft->pchildren->phead->pnext->pvvalue;
-
-	if (streq(pknode->text, pvnode->text)) {
-		fprintf(stderr, "%s: duplicate for-loop boundvars \"%s\" and \"%s\".\n",
-			MLR_GLOBALS.bargv0, pknode->text, pvnode->text);
-		exit(1);
-	}
-	pstatement->for_srec_k_variable_name = mlr_strdup_or_die(pknode->text);
-	pstatement->for_v_variable_name = mlr_strdup_or_die(pvnode->text);
-	pstatement->for_v_type_mask = mlr_dsl_ast_node_type_to_type_mask(pvnode->type);
-	MLR_INTERNAL_CODING_ERROR_IF(pknode->vardef_frame_relative_index == MD_UNUSED_INDEX);
-	MLR_INTERNAL_CODING_ERROR_IF(pvnode->vardef_frame_relative_index == MD_UNUSED_INDEX);
-	pstatement->for_srec_k_frame_relative_index = pknode->vardef_frame_relative_index;
-	pstatement->for_v_frame_relative_index = pvnode->vardef_frame_relative_index;
-	pstatement->for_srec_k_type_mask = mlr_dsl_ast_node_type_to_type_mask(pknode->type);
-	pstatement->for_v_type_mask = mlr_dsl_ast_node_type_to_type_mask(pvnode->type);
-
-	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
-	pstatement->pblock = cst_statement_block_alloc(pnode->subframe_var_count);
-
-	for (sllve_t* pe = pright->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pbody_ast_node = pe->pvvalue;
-		sllv_append(pstatement->pblock->pstatements, mlr_dsl_cst_alloc_statement(pcst, pbody_ast_node,
-			type_inferencing, context_flags));
-	}
-
-	pstatement->pstatement_handler = handle_for_srec;
-	pstatement->pblock_handler = handle_statement_block_with_break_continue;
-	pstatement->ptype_inferenced_srec_field_getter =
-		(type_inferencing == TYPE_INFER_STRING_ONLY)      ? get_srec_value_string_only_aux :
-		(type_inferencing == TYPE_INFER_STRING_FLOAT)     ? get_srec_value_string_float_aux :
-		(type_inferencing == TYPE_INFER_STRING_FLOAT_INT) ? get_srec_value_string_float_int_aux :
-		NULL;
-	MLR_INTERNAL_CODING_ERROR_IF(pstatement->ptype_inferenced_srec_field_getter == NULL);
-
-	return pstatement;
-}
-
-// ----------------------------------------------------------------
 // $ mlr -n put -v 'for((k1,k2,k3),v in @a["4"][$5]) { $6 = 7; $8 = 9}'
 // AST ROOT:
 // text="list", type=statement_list:
@@ -1737,7 +1665,6 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 		sllv_free(pstatement->pif_chain_statements);
 	}
 
-	free(pstatement->for_srec_k_variable_name);
 	if (pstatement->for_map_k_variable_names != NULL) {
 		for (int i = 0; i < pstatement->for_map_k_count; i++)
 			free(pstatement->for_map_k_variable_names[i]);
@@ -2514,48 +2441,6 @@ static void handle_do_while(
 			break;
 		}
 	}
-
-	loop_stack_pop(pvars->ploop_stack);
-	local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
-}
-
-// ----------------------------------------------------------------
-static void handle_for_srec(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
-	loop_stack_push(pvars->ploop_stack);
-
-	// Copy the lrec for the very likely case that it is being updated inside the for-loop.
-	lrec_t* pcopyrec = lrec_copy(pvars->pinrec);
-	lhmsmv_t* pcopyoverlay = lhmsmv_copy(pvars->ptyped_overlay);
-
-	for (lrece_t* pe = pcopyrec->phead; pe != NULL; pe = pe->pnext) {
-
-		mv_t mvval = pstatement->ptype_inferenced_srec_field_getter(pe, pcopyoverlay);
-		mv_t mvkey = mv_from_string_no_free(pe->key);
-
-		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_define(pframe,
-			pstatement->for_srec_k_variable_name, pstatement->for_srec_k_frame_relative_index,
-			pstatement->for_srec_k_type_mask, mvkey);
-		local_stack_frame_define(pframe,
-			pstatement->for_v_variable_name, pstatement->for_v_frame_relative_index,
-			pstatement->for_v_type_mask, mvval);
-
-		pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
-		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
-			loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);
-			break;
-		} else if (loop_stack_get(pvars->ploop_stack) & LOOP_CONTINUED) {
-			loop_stack_clear(pvars->ploop_stack, LOOP_CONTINUED);
-		}
-	}
-	lhmsmv_free(pcopyoverlay);
-	lrec_free(pcopyrec);
 
 	loop_stack_pop(pvars->ploop_stack);
 	local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
