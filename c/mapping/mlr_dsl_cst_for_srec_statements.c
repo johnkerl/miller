@@ -38,7 +38,6 @@ typedef struct _for_srec_state_t {
 //                 text="y", type=FIELD_NAME.
 //                 text="2", type=NUMERIC_LITERAL.
 
-// ----------------------------------------------------------------
 mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {

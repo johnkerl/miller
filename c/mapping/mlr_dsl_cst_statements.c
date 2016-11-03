@@ -18,6 +18,7 @@
 static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node);
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static mlr_dsl_cst_statement_allocator_t alloc_return_void;  // For subroutines
 
 static mlr_dsl_cst_statement_allocator_t alloc_return_value; // For UDFs
@@ -30,6 +31,10 @@ static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_function_callsi
 static mlr_dsl_cst_statement_allocator_t alloc_return_value_non_map_valued;
 static mlr_dsl_cst_statement_allocator_t alloc_return_void;
 
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static mlr_dsl_cst_statement_allocator_t alloc_srec_assignment;
+static mlr_dsl_cst_statement_allocator_t alloc_indirect_srec_assignment;
+
 static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(
 	mlr_dsl_cst_t*      pcst,
 	mlr_dsl_ast_node_t* pnode,
@@ -39,29 +44,35 @@ static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(
 
 static mlr_dsl_cst_statement_allocator_t alloc_local_non_map_variable_assignment;
 static mlr_dsl_cst_statement_allocator_t alloc_local_map_variable_assignment;
-static mlr_dsl_cst_statement_allocator_t alloc_srec_assignment;
-static mlr_dsl_cst_statement_allocator_t alloc_indirect_srec_assignment;
+
 static mlr_dsl_cst_statement_allocator_t alloc_oosvar_assignment;
 static mlr_dsl_cst_statement_allocator_t alloc_oosvar_from_full_srec_assignment;
 static mlr_dsl_cst_statement_allocator_t alloc_full_srec_from_oosvar_assignment;
+
 static mlr_dsl_cst_statement_allocator_t alloc_env_assignment;
 static mlr_dsl_cst_statement_allocator_t alloc_unset;
 
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static mlr_dsl_cst_statement_allocator_t alloc_conditional_block;
 static mlr_dsl_cst_statement_allocator_t alloc_if_head;
 static mlr_dsl_cst_statement_allocator_t alloc_while;
 static mlr_dsl_cst_statement_allocator_t alloc_do_while;
 
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static mlr_dsl_cst_statement_allocator_t alloc_for_oosvar;
 static mlr_dsl_cst_statement_allocator_t alloc_for_oosvar_key_only;
 static mlr_dsl_cst_statement_allocator_t alloc_for_local_map;
 static mlr_dsl_cst_statement_allocator_t alloc_for_local_map_key_only;
 
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static mlr_dsl_cst_statement_allocator_t alloc_break;
 static mlr_dsl_cst_statement_allocator_t alloc_continue;
 static mlr_dsl_cst_statement_allocator_t alloc_filter;
 
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static mlr_dsl_cst_statement_allocator_t alloc_bare_boolean;
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static mlr_dsl_cst_statement_t* alloc_final_filter(
 	mlr_dsl_cst_t*      pcst,
 	mlr_dsl_ast_node_t* pnode,
