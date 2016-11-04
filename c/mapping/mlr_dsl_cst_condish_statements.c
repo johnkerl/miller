@@ -515,6 +515,65 @@ static void handle_bare_boolean(
 }
 
 // ================================================================
+typedef struct _filter_state_t {
+	rval_evaluator_t* pexpression_evaluator;
+} filter_state_t;
+
+static mlr_dsl_cst_statement_handler_t handle_filter;
+static mlr_dsl_cst_statement_freer_t free_filter;
+
+// ----------------------------------------------------------------
+mlr_dsl_cst_statement_t* alloc_filter(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags)
+{
+	filter_state_t* pstate = mlr_malloc_or_die(sizeof(filter_state_t));
+
+	mlr_dsl_ast_node_t* pchild = pnode->pchildren->phead->pvvalue;
+
+	pstate->pexpression_evaluator = rval_evaluator_alloc_from_ast(
+		pchild, pcst->pfmgr, type_inferencing, context_flags);
+
+	return mlr_dsl_cst_statement_valloc(
+		pnode,
+		handle_filter,
+		free_filter,
+		pstate);
+}
+
+// ----------------------------------------------------------------
+// xxx move all frees between allocs & handles. and header-file order too.
+
+static void free_filter(mlr_dsl_cst_statement_t* pstatement) { // filter
+	filter_state_t* pstate = pstatement->pvstate;
+
+	pstate->pexpression_evaluator->pfree_func(pstate->pexpression_evaluator);
+
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
+static void handle_filter(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	filter_state_t* pstate = pstatement->pvstate;
+	rval_evaluator_t* pexpression_evaluator = pstate->pexpression_evaluator;
+
+	mv_t val = pexpression_evaluator->pprocess_func(pexpression_evaluator->pvstate, pvars);
+
+	if (mv_is_non_null(&val)) {
+		mv_set_boolean_strict(&val);
+		*pcst_outputs->pshould_emit_rec = val.u.boolv;
+	} else {
+		*pcst_outputs->pshould_emit_rec = FALSE;
+	}
+}
+
+// ================================================================
 typedef struct _final_filter_state_t {
 	rval_evaluator_t* pexpression_evaluator;
 	int               negate_final_filter;

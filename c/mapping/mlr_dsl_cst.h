@@ -181,7 +181,6 @@ typedef struct _mlr_dsl_cst_statement_t {
 	char* local_lhs_variable_name;
 	int   local_lhs_frame_relative_index;
 	int   local_lhs_type_mask;
-	sllv_t* plocal_map_lhs_keylist_evaluators; // Assignment to local map-variable
 
 	// Assignment to srec
 	char* srec_lhs_field_name;
@@ -212,17 +211,15 @@ typedef struct _mlr_dsl_cst_statement_t {
 
 	int   for_map_target_frame_relative_index;
 
-	//type_inferenced_srec_field_getter_t* ptype_inferenced_srec_field_getter;
-
 } mlr_dsl_cst_statement_t;
 
-mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc( // xxx rename?
+mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc(
 	mlr_dsl_ast_node_t*                    past_node,
 	mlr_dsl_cst_statement_handler_t*       pstatement_handler,
 	mlr_dsl_cst_statement_freer_t*         pstatement_freer,
 	void*                                  pvstate);
 
-mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc_with_block( // xxx rename?
+mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc_with_block(
 	mlr_dsl_ast_node_t*                    past_node,
 	mlr_dsl_cst_statement_handler_t*       pstatement_handler,
 	cst_statement_block_t*                 pblock,
@@ -376,6 +373,13 @@ mlr_dsl_cst_statement_allocator_t alloc_if_head;
 mlr_dsl_cst_statement_allocator_t alloc_while;
 mlr_dsl_cst_statement_allocator_t alloc_do_while;
 mlr_dsl_cst_statement_allocator_t alloc_bare_boolean;
+
+mlr_dsl_cst_statement_t* alloc_filter(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags);
+
 mlr_dsl_cst_statement_t* alloc_final_filter(
 	mlr_dsl_cst_t*      pcst,
 	mlr_dsl_ast_node_t* pnode,
@@ -384,12 +388,24 @@ mlr_dsl_cst_statement_t* alloc_final_filter(
 	int                 context_flags);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// mapping/mlr_dsl_cst_assignment_statements.c
+mlr_dsl_cst_statement_allocator_t alloc_srec_assignment;
+mlr_dsl_cst_statement_allocator_t alloc_indirect_srec_assignment;
+mlr_dsl_cst_statement_allocator_t alloc_local_non_map_variable_assignment;
+mlr_dsl_cst_statement_allocator_t alloc_local_map_variable_assignment;
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_for_srec_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_for_srec;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_triple_for_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_triple_for;
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// mapping/mlr_dsl_cst_loop_control_statements.c
+mlr_dsl_cst_statement_allocator_t alloc_break;
+mlr_dsl_cst_statement_allocator_t alloc_continue;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_return_statements.c

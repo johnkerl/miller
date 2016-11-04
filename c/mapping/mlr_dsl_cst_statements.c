@@ -19,18 +19,12 @@ static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node);
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static mlr_dsl_cst_statement_allocator_t alloc_srec_assignment;
-static mlr_dsl_cst_statement_allocator_t alloc_indirect_srec_assignment;
-
 static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(
 	mlr_dsl_cst_t*      pcst,
 	mlr_dsl_ast_node_t* pnode,
 	int                 type_inferencing,
 	int                 context_flags,
 	int                 type_mask);
-
-static mlr_dsl_cst_statement_allocator_t alloc_local_non_map_variable_assignment;
-static mlr_dsl_cst_statement_allocator_t alloc_local_map_variable_assignment;
 
 static mlr_dsl_cst_statement_allocator_t alloc_oosvar_assignment;
 static mlr_dsl_cst_statement_allocator_t alloc_oosvar_from_full_srec_assignment;
@@ -45,14 +39,7 @@ static mlr_dsl_cst_statement_allocator_t alloc_for_oosvar_key_only;
 static mlr_dsl_cst_statement_allocator_t alloc_for_local_map;
 static mlr_dsl_cst_statement_allocator_t alloc_for_local_map_key_only;
 
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static mlr_dsl_cst_statement_allocator_t alloc_break;
-static mlr_dsl_cst_statement_allocator_t alloc_continue;
-static mlr_dsl_cst_statement_allocator_t alloc_filter;
-
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_handler_t handle_srec_assignment;
-static mlr_dsl_cst_statement_handler_t handle_indirect_srec_assignment;
 static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment;
 static mlr_dsl_cst_statement_handler_t handle_oosvar_to_oosvar_assignment;
 static mlr_dsl_cst_statement_handler_t handle_oosvar_from_full_srec_assignment;
@@ -61,19 +48,13 @@ static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment;
 static mlr_dsl_cst_statement_handler_t handle_env_assignment;
 static mlr_dsl_cst_statement_handler_t handle_local_non_map_variable_definition;
 static mlr_dsl_cst_statement_handler_t handle_local_map_variable_declaration;
-static mlr_dsl_cst_statement_handler_t handle_local_non_map_variable_assignment;
-static mlr_dsl_cst_statement_handler_t handle_local_map_variable_assignment;
 static mlr_dsl_cst_statement_handler_t handle_unset;
 static mlr_dsl_cst_statement_handler_t handle_unset_all;
-
-static mlr_dsl_cst_statement_handler_t handle_filter;
 
 static mlr_dsl_cst_statement_handler_t handle_for_oosvar;
 static mlr_dsl_cst_statement_handler_t handle_for_oosvar_key_only;
 static mlr_dsl_cst_statement_handler_t handle_for_local_map;
 static mlr_dsl_cst_statement_handler_t handle_for_local_map_key_only;
-static mlr_dsl_cst_statement_handler_t handle_break;
-static mlr_dsl_cst_statement_handler_t handle_continue;
 
 static void handle_for_oosvar_aux(
 	mlr_dsl_cst_statement_t* pstatement,
@@ -552,11 +533,9 @@ static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node) {
 	// xxx pre-federation
 
 	pstatement->poosvar_target_keylist_evaluators   = NULL;
-	pstatement->plocal_map_lhs_keylist_evaluators   = NULL;
 	pstatement->local_lhs_variable_name             = 0;
 	pstatement->local_lhs_frame_relative_index      = 0;
 	pstatement->local_lhs_type_mask                 = TYPE_MASK_ANY;
-	pstatement->srec_lhs_field_name                 = NULL;
 	pstatement->env_lhs_name                        = NULL;
 	pstatement->psrec_lhs_evaluator                 = NULL;
 	pstatement->prhs_evaluator                      = NULL;
@@ -636,106 +615,6 @@ static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(mlr_dsl_
 		pstatement->prhs_evaluator = NULL;
 		pstatement->pstatement_handler = handle_local_map_variable_declaration;
 	}
-	return pstatement;
-}
-
-static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_assignment(
-	mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-
-	MLR_INTERNAL_CODING_ERROR_IF((pnode->pchildren == NULL) || (pnode->pchildren->length != 2));
-
-	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
-
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE);
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren != NULL);
-
-	pstatement->pstatement_handler = handle_local_non_map_variable_assignment;
-	pstatement->local_lhs_variable_name = mlr_strdup_or_die(pleft->text);
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
-	pstatement->local_lhs_frame_relative_index = pleft->vardef_frame_relative_index;
-	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
-	return pstatement;
-}
-
-static mlr_dsl_cst_statement_t* alloc_local_map_variable_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-
-	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
-
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE);
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren == NULL);
-
-	pstatement->pstatement_handler = handle_local_map_variable_assignment;
-	pstatement->local_lhs_variable_name = mlr_strdup_or_die(pleft->text);
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
-	pstatement->local_lhs_frame_relative_index = pleft->vardef_frame_relative_index;
-
-	sllv_t* plocal_map_lhs_keylist_evaluators = sllv_alloc();
-	for (sllve_t* pe = pleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-		if (pkeynode->type == MD_AST_NODE_TYPE_STRING_LITERAL) {
-			sllv_append(plocal_map_lhs_keylist_evaluators, rval_evaluator_alloc_from_string(pkeynode->text));
-		} else {
-			sllv_append(plocal_map_lhs_keylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, pcst->pfmgr,
-				type_inferencing, context_flags));
-		}
-	}
-	pstatement->plocal_map_lhs_keylist_evaluators = plocal_map_lhs_keylist_evaluators;
-
-	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
-	return pstatement;
-}
-
-// ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_srec_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-
-	MLR_INTERNAL_CODING_ERROR_IF((pnode->pchildren == NULL) || (pnode->pchildren->length != 2));
-
-	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
-
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_FIELD_NAME);
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren != NULL);
-
-	pstatement->pstatement_handler = handle_srec_assignment;
-	pstatement->srec_lhs_field_name = pleft->text;
-	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
-	return pstatement;
-}
-
-// ----------------------------------------------------------------
-// $ mlr --from ../data/small put -v '$[@x] = 1'
-// AST ROOT:
-// text="list", type=statement_list:
-//     text="=", type=indirect_srec_assignment:
-//         text="oosvar_keylist", type=oosvar_keylist:
-//             text="x", type=string_literal.
-//         text="1", type=numeric_literal.
-
-static mlr_dsl_cst_statement_t* alloc_indirect_srec_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-
-	MLR_INTERNAL_CODING_ERROR_IF((pnode->pchildren == NULL) || (pnode->pchildren->length != 2));
-
-	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
-
-	pstatement->pstatement_handler = handle_indirect_srec_assignment;
-	pstatement->psrec_lhs_evaluator = rval_evaluator_alloc_from_ast(pleft,  pcst->pfmgr,
-		type_inferencing, context_flags);
-	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr,
-		type_inferencing, context_flags);
 	return pstatement;
 }
 
@@ -1117,35 +996,6 @@ static mlr_dsl_cst_statement_t* alloc_for_local_map_key_only(mlr_dsl_cst_t* pcst
 	return pstatement;
 }
 
-static mlr_dsl_cst_statement_t* alloc_break(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-	pstatement->pstatement_handler = handle_break;
-	return pstatement;
-}
-
-static mlr_dsl_cst_statement_t* alloc_continue(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-	pstatement->pstatement_handler = handle_continue;
-	return pstatement;
-}
-
-// ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_filter(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-
-	mlr_dsl_ast_node_t* pchild = pnode->pchildren->phead->pvvalue;
-
-	pstatement->pstatement_handler = handle_filter;
-	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pchild, pcst->pfmgr, type_inferencing, context_flags);
-	return pstatement;
-}
-
 // ----------------------------------------------------------------
 // Example ASTs, with and without indexing on the left-hand-side oosvar name:
 
@@ -1479,113 +1329,6 @@ static void handle_local_map_variable_declaration(
 }
 
 // ----------------------------------------------------------------
-static void handle_local_non_map_variable_assignment(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	if (mv_is_present(&val)) {
-		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_assign_non_map(pframe, pstatement->local_lhs_frame_relative_index, val);
-	} else {
-		mv_free(&val);
-	}
-}
-
-// ----------------------------------------------------------------
-static void handle_local_map_variable_assignment(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-	mv_t rhs_value = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	if (mv_is_present(&rhs_value)) {
-
-		int all_non_null_or_error = TRUE;
-		sllmv_t* pmvkeys = evaluate_list(pstatement->plocal_map_lhs_keylist_evaluators, pvars,
-			&all_non_null_or_error);
-		if (all_non_null_or_error) {
-			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-			local_stack_frame_assign_map(pframe, pstatement->local_lhs_frame_relative_index, pmvkeys, rhs_value);
-		}
-		sllmv_free(pmvkeys);
-
-	} else {
-		mv_free(&rhs_value);
-	}
-}
-
-// ----------------------------------------------------------------
-static void handle_srec_assignment(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	char* srec_lhs_field_name = pstatement->srec_lhs_field_name;
-	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-
-	// Write typed mlrval output to the typed overlay rather than into the lrec (which holds only
-	// string values).
-	//
-	// The rval_evaluator reads the overlay in preference to the lrec. E.g. if the input had
-	// "x"=>"abc","y"=>"def" but the previous pass through this loop set "y"=>7.4 and "z"=>"ghi" then an
-	// expression right-hand side referring to $y would get the floating-point value 7.4. So we don't need
-	// to do lrec_put here, and moreover should not for two reasons: (1) there is a performance hit of doing
-	// throwaway number-to-string formatting -- it's better to do it once at the end; (2) having the string
-	// values doubly owned by the typed overlay and the lrec would result in double frees, or awkward
-	// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
-	// here. And putting something statically allocated minimizes copying/freeing.
-	if (mv_is_present(&val)) {
-		lhmsmv_put(pvars->ptyped_overlay, srec_lhs_field_name, &val, FREE_ENTRY_VALUE);
-		lrec_put(pvars->pinrec, srec_lhs_field_name, "bug", NO_FREE);
-	} else {
-		mv_free(&val);
-	}
-}
-
-// ----------------------------------------------------------------
-static void handle_indirect_srec_assignment(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* plhs_evaluator = pstatement->psrec_lhs_evaluator;
-	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-
-	mv_t lval = plhs_evaluator->pprocess_func(plhs_evaluator->pvstate, pvars);
-	char free_flags;
-	char* srec_lhs_field_name = mv_format_val(&lval, &free_flags);
-
-	mv_t rval = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-
-	// Write typed mlrval output to the typed overlay rather than into the lrec (which holds only
-	// string values).
-	//
-	// The rval_evaluator reads the overlay in preference to the lrec. E.g. if the input had
-	// "x"=>"abc","y"=>"def" but the previous pass through this loop set "y"=>7.4 and "z"=>"ghi" then an
-	// expression right-hand side referring to $y would get the floating-point value 7.4. So we don't need
-	// to do lrec_put here, and moreover should not for two reasons: (1) there is a performance hit of doing
-	// throwaway number-to-string formatting -- it's better to do it once at the end; (2) having the string
-	// values doubly owned by the typed overlay and the lrec would result in double frees, or awkward
-	// bookkeeping. However, the NR variable evaluator reads prec->field_count, so we need to put something
-	// here. And putting something statically allocated minimizes copying/freeing.
-	if (mv_is_present(&rval)) {
-		lhmsmv_put(pvars->ptyped_overlay, mlr_strdup_or_die(srec_lhs_field_name), &rval,
-			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-		lrec_put(pvars->pinrec, mlr_strdup_or_die(srec_lhs_field_name), "bug", FREE_ENTRY_KEY | FREE_ENTRY_KEY);
-	} else {
-		mv_free(&rval);
-	}
-
-	if (free_flags)
-		free(srec_lhs_field_name);
-}
-
-// ----------------------------------------------------------------
 static void handle_oosvar_assignment(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
@@ -1793,23 +1536,6 @@ static void handle_unset_all(
 	sllmv_t* pempty = sllmv_alloc();
 	mlhmmv_remove(pvars->poosvars, pempty);
 	sllmv_free(pempty);
-}
-
-// ----------------------------------------------------------------
-static void handle_filter(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	if (mv_is_non_null(&val)) {
-		mv_set_boolean_strict(&val);
-		*pcst_outputs->pshould_emit_rec = val.u.boolv;
-	} else {
-		*pcst_outputs->pshould_emit_rec = FALSE;
-	}
 }
 
 // ----------------------------------------------------------------
@@ -2135,22 +1861,4 @@ static void handle_for_local_map_key_only( // xxx vardef_frame_relative_index
 		sllv_free(pkeys);
 	}
 	sllmv_free(plhskeylist);
-}
-
-// ----------------------------------------------------------------
-static void handle_break(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	loop_stack_set(pvars->ploop_stack, LOOP_BROKEN);
-}
-
-// ----------------------------------------------------------------
-static void handle_continue(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	loop_stack_set(pvars->ploop_stack, LOOP_CONTINUED);
 }
