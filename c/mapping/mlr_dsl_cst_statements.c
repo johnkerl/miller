@@ -19,8 +19,6 @@ static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node);
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static mlr_dsl_cst_statement_allocator_t alloc_return_void;  // For subroutines
-
 static mlr_dsl_cst_statement_allocator_t alloc_return_value; // For UDFs
 static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_local_non_map_variable;
 static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_local_map_variable;
@@ -63,7 +61,6 @@ static mlr_dsl_cst_statement_allocator_t alloc_continue;
 static mlr_dsl_cst_statement_allocator_t alloc_filter;
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_handler_t handle_return_void;
 static mlr_dsl_cst_statement_handler_t handle_return_value_from_local_non_map_variable;
 static mlr_dsl_cst_statement_handler_t handle_return_value_from_local_map_variable;
 static mlr_dsl_cst_statement_handler_t handle_return_value_from_oosvar;
@@ -842,15 +839,6 @@ static mlr_dsl_cst_statement_t* alloc_return_value_non_map_valued(
 	return pstatement;
 }
 
-
-static mlr_dsl_cst_statement_t* alloc_return_void(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-	pstatement->pstatement_handler = handle_return_void;
-	return pstatement;
-}
-
 // ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_srec_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
@@ -1609,15 +1597,6 @@ void mlr_dsl_cst_handle_statement_list(
 			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 		}
 	}
-}
-
-// ----------------------------------------------------------------
-static void handle_return_void(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	pvars->return_state.returned = TRUE;
 }
 
 // ----------------------------------------------------------------

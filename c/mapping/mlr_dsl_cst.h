@@ -396,8 +396,7 @@ mlr_dsl_cst_statement_allocator_t alloc_triple_for;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_return_statements.c
-
-//mlr_dsl_cst_statement_allocator_t alloc_return_void;  // For subroutines
+mlr_dsl_cst_statement_allocator_t alloc_return_void;  // For subroutines
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_output_statements.c
