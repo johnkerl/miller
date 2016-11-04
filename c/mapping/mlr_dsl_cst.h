@@ -172,9 +172,6 @@ typedef struct _mlr_dsl_cst_statement_t {
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// To be federated:
 
-	// Return statement within user-defined function
-	rval_evaluator_t* preturn_evaluator; // xxx mapvar
-
 	// Assignment to oosvar
 	sllv_t* poosvar_target_keylist_evaluators;
 

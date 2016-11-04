@@ -551,8 +551,6 @@ static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node) {
 
 	// xxx pre-federation
 
-	pstatement->preturn_evaluator                   = NULL;
-
 	pstatement->poosvar_target_keylist_evaluators   = NULL;
 	pstatement->plocal_map_lhs_keylist_evaluators   = NULL;
 	pstatement->local_lhs_variable_name             = 0;
@@ -1228,10 +1226,6 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 	// xxx post-federation
 	if (pstatement->pstatement_freer != NULL) {
 		pstatement->pstatement_freer(pstatement);
-	}
-
-	if (pstatement->preturn_evaluator != NULL) {
-		pstatement->preturn_evaluator->pfree_func(pstatement->preturn_evaluator);
 	}
 
 	free(pstatement->local_lhs_variable_name);
