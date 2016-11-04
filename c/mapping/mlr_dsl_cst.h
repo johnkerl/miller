@@ -164,9 +164,6 @@ typedef struct _mlr_dsl_cst_statement_t {
 
 	mlr_dsl_cst_statement_freer_t* pstatement_freer;
 
-	// For mlr filter
-	int negate_final_filter;
-
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Specific to each statement type:
 
@@ -382,6 +379,12 @@ mlr_dsl_cst_statement_allocator_t alloc_if_head;
 mlr_dsl_cst_statement_allocator_t alloc_while;
 mlr_dsl_cst_statement_allocator_t alloc_do_while;
 mlr_dsl_cst_statement_allocator_t alloc_bare_boolean;
+mlr_dsl_cst_statement_t* alloc_final_filter(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 negate_final_filter,
+	int                 type_inferencing,
+	int                 context_flags);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_for_srec_statements.c
