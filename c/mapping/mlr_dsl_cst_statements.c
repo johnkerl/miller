@@ -63,9 +63,6 @@ static mlr_dsl_cst_statement_allocator_t alloc_continue;
 static mlr_dsl_cst_statement_allocator_t alloc_filter;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static mlr_dsl_cst_statement_allocator_t alloc_bare_boolean;
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static mlr_dsl_cst_statement_t* alloc_final_filter(
 	mlr_dsl_cst_t*      pcst,
 	mlr_dsl_ast_node_t* pnode,
@@ -73,7 +70,7 @@ static mlr_dsl_cst_statement_t* alloc_final_filter(
 	int                 type_inferencing,
 	int                 context_flags);
 
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// ----------------------------------------------------------------
 static mlr_dsl_cst_statement_handler_t handle_return_void;
 static mlr_dsl_cst_statement_handler_t handle_return_value_from_local_non_map_variable;
 static mlr_dsl_cst_statement_handler_t handle_return_value_from_local_map_variable;
@@ -107,7 +104,6 @@ static mlr_dsl_cst_statement_handler_t handle_for_local_map;
 static mlr_dsl_cst_statement_handler_t handle_for_local_map_key_only;
 static mlr_dsl_cst_statement_handler_t handle_break;
 static mlr_dsl_cst_statement_handler_t handle_continue;
-static mlr_dsl_cst_statement_handler_t handle_bare_boolean;
 
 static void handle_for_oosvar_aux(
 	mlr_dsl_cst_statement_t* pstatement,
@@ -1322,17 +1318,6 @@ static mlr_dsl_cst_statement_t* alloc_filter(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 }
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_bare_boolean(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-
-	pstatement->pstatement_handler = handle_bare_boolean;
-	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pnode, pcst->pfmgr, type_inferencing, context_flags);
-	return pstatement;
-}
-
-// ----------------------------------------------------------------
 static mlr_dsl_cst_statement_t* alloc_final_filter(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int negate_final_filter, int type_inferencing, int context_flags)
 {
@@ -2465,17 +2450,4 @@ static void handle_continue(
 	cst_outputs_t*           pcst_outputs)
 {
 	loop_stack_set(pvars->ploop_stack, LOOP_CONTINUED);
-}
-
-// ----------------------------------------------------------------
-static void handle_bare_boolean(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	if (mv_is_non_null(&val))
-		mv_set_boolean_strict(&val);
 }

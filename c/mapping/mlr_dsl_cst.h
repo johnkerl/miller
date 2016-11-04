@@ -381,6 +381,7 @@ mlr_dsl_cst_statement_allocator_t alloc_conditional_block;
 mlr_dsl_cst_statement_allocator_t alloc_if_head;
 mlr_dsl_cst_statement_allocator_t alloc_while;
 mlr_dsl_cst_statement_allocator_t alloc_do_while;
+mlr_dsl_cst_statement_allocator_t alloc_bare_boolean;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_for_srec_statements.c

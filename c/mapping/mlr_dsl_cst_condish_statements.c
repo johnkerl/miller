@@ -462,3 +462,54 @@ static void handle_do_while(
 	loop_stack_pop(pvars->ploop_stack);
 	local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
 }
+
+// ================================================================
+typedef struct _bare_boolean_state_t {
+	rval_evaluator_t* pexpression_evaluator;
+} bare_boolean_state_t;
+
+static mlr_dsl_cst_statement_handler_t handle_bare_boolean;
+static mlr_dsl_cst_statement_freer_t free_bare_boolean;
+
+// ----------------------------------------------------------------
+mlr_dsl_cst_statement_t* alloc_bare_boolean(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
+	bare_boolean_state_t* pstate = mlr_malloc_or_die(sizeof(bare_boolean_state_t));
+
+	pstate->pexpression_evaluator = NULL;
+
+	pstate->pexpression_evaluator = rval_evaluator_alloc_from_ast(
+		pnode, pcst->pfmgr, type_inferencing, context_flags);
+
+	return mlr_dsl_cst_statement_valloc(
+		pnode,
+		handle_bare_boolean,
+		free_bare_boolean,
+		pstate);
+}
+
+// ----------------------------------------------------------------
+// xxx move all frees between allocs & handles. and header-file order too.
+
+static void free_bare_boolean(mlr_dsl_cst_statement_t* pstatement) { // bare_boolean
+	bare_boolean_state_t* pstate = pstatement->pvstate;
+
+	pstate->pexpression_evaluator->pfree_func(pstate->pexpression_evaluator);
+
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
+static void handle_bare_boolean(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	bare_boolean_state_t* pstate = pstatement->pvstate;
+	rval_evaluator_t* pexpression_evaluator = pstate->pexpression_evaluator;
+
+	mv_t val = pexpression_evaluator->pprocess_func(pexpression_evaluator->pvstate, pvars);
+	if (mv_is_non_null(&val))
+		mv_set_boolean_strict(&val);
+}
