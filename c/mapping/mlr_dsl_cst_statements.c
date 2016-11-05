@@ -26,7 +26,6 @@ static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(
 	int                 context_flags,
 	int                 type_mask);
 
-static mlr_dsl_cst_statement_allocator_t alloc_oosvar_assignment;
 static mlr_dsl_cst_statement_allocator_t alloc_oosvar_from_full_srec_assignment;
 static mlr_dsl_cst_statement_allocator_t alloc_full_srec_from_oosvar_assignment;
 
@@ -40,11 +39,8 @@ static mlr_dsl_cst_statement_allocator_t alloc_for_local_map;
 static mlr_dsl_cst_statement_allocator_t alloc_for_local_map_key_only;
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment;
-static mlr_dsl_cst_statement_handler_t handle_oosvar_to_oosvar_assignment;
 static mlr_dsl_cst_statement_handler_t handle_oosvar_from_full_srec_assignment;
 static mlr_dsl_cst_statement_handler_t handle_full_srec_from_oosvar_assignment;
-static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment;
 static mlr_dsl_cst_statement_handler_t handle_env_assignment;
 static mlr_dsl_cst_statement_handler_t handle_local_non_map_variable_definition;
 static mlr_dsl_cst_statement_handler_t handle_local_map_variable_declaration;
@@ -615,36 +611,6 @@ static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(mlr_dsl_
 		pstatement->prhs_evaluator = NULL;
 		pstatement->pstatement_handler = handle_local_map_variable_declaration;
 	}
-	return pstatement;
-}
-
-// ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-
-	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
-
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST);
-
-	sllv_t* poosvar_target_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pleft,
-		type_inferencing, context_flags);
-
-	if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST && pright->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
-		pstatement->pstatement_handler = handle_oosvar_to_oosvar_assignment;
-		pstatement->poosvar_rhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pright,
-			type_inferencing, context_flags);
-	} else {
-		pstatement->pstatement_handler = handle_oosvar_assignment;
-		pstatement->poosvar_rhs_keylist_evaluators = NULL;
-	}
-
-	pstatement->poosvar_target_keylist_evaluators = poosvar_target_keylist_evaluators;
-	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr,
-		type_inferencing, context_flags);
-
 	return pstatement;
 }
 
@@ -1329,51 +1295,6 @@ static void handle_local_map_variable_declaration(
 }
 
 // ----------------------------------------------------------------
-static void handle_oosvar_assignment(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-	mv_t rhs_value = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-
-	if (mv_is_present(&rhs_value)) {
-		int all_non_null_or_error = TRUE;
-		sllmv_t* pmvkeys = evaluate_list(pstatement->poosvar_target_keylist_evaluators, pvars,
-			&all_non_null_or_error);
-		if (all_non_null_or_error)
-			mlhmmv_put_terminal(pvars->poosvars, pmvkeys, &rhs_value);
-		sllmv_free(pmvkeys);
-	}
-	mv_free(&rhs_value);
-}
-
-// ----------------------------------------------------------------
-// All assignments produce a mlrval on the RHS and store it on the left -- except if both LHS and RHS
-// are oosvars in which case there are recursive copies, or in case of $* on the LHS or RHS.
-
-static void handle_oosvar_to_oosvar_assignment(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	int lhs_all_non_null_or_error = TRUE;
-	sllmv_t* plhskeys = evaluate_list(pstatement->poosvar_target_keylist_evaluators, pvars,
-		&lhs_all_non_null_or_error);
-
-	if (lhs_all_non_null_or_error) {
-		int rhs_all_non_null_or_error = TRUE;
-		sllmv_t* prhskeys = evaluate_list(pstatement->poosvar_rhs_keylist_evaluators, pvars,
-			&rhs_all_non_null_or_error);
-		if (rhs_all_non_null_or_error) {
-			mlhmmv_copy(pvars->poosvars, plhskeys, prhskeys);
-		}
-		sllmv_free(prhskeys);
-	}
-
-	sllmv_free(plhskeys);
-}
-
 static void handle_oosvar_from_full_srec_assignment(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,

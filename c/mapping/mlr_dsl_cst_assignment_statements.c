@@ -333,3 +333,122 @@ static void handle_local_map_variable_assignment(
 		mv_free(&rhs_value);
 	}
 }
+
+// ================================================================
+// All assignments produce a mlrval on the RHS and store it on the left -- except if both LHS and RHS
+// are oosvars in which case there are recursive copies, or in case of $* on the LHS or RHS.
+
+typedef struct _oosvar_assignment_state_t {
+
+	sllv_t* plhs_keylist_evaluators;
+
+	rval_evaluator_t* prhs_evaluator;
+	sllv_t* prhs_keylist_evaluators;
+
+} oosvar_assignment_state_t;
+
+static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment;
+static mlr_dsl_cst_statement_handler_t handle_oosvar_to_oosvar_assignment;
+static mlr_dsl_cst_statement_freer_t free_oosvar_assignment;
+
+// ----------------------------------------------------------------
+mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
+	oosvar_assignment_state_t* pstate = mlr_malloc_or_die(sizeof(oosvar_assignment_state_t));
+
+	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
+
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST);
+
+	pstate->plhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pleft,
+		type_inferencing, context_flags);
+
+	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
+	if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST && pright->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
+		pstatement_handler = handle_oosvar_to_oosvar_assignment;
+		pstate->prhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pright,
+			type_inferencing, context_flags);
+		pstate->prhs_evaluator = NULL;
+	} else {
+		pstatement_handler = handle_oosvar_assignment;
+		pstate->prhs_keylist_evaluators = NULL;
+		pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr,
+			type_inferencing, context_flags);
+	}
+
+	return mlr_dsl_cst_statement_valloc(
+		pnode,
+		pstatement_handler,
+		free_oosvar_assignment,
+		pstate);
+}
+
+// ----------------------------------------------------------------
+static void free_oosvar_assignment(mlr_dsl_cst_statement_t* pstatement) {
+	oosvar_assignment_state_t* pstate = pstatement->pvstate;
+
+	for (sllve_t* pe = pstate->plhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		rval_evaluator_t* pev = pe->pvvalue;
+		pev->pfree_func(pev);
+	}
+	if (pstate->prhs_evaluator != NULL) {
+		pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
+	}
+	if (pstate->prhs_keylist_evaluators != NULL) {
+		for (sllve_t* pe = pstate->prhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+			rval_evaluator_t* pev = pe->pvvalue;
+			pev->pfree_func(pev);
+		}
+	}
+
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
+static void handle_oosvar_assignment(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	oosvar_assignment_state_t* pstate = pstatement->pvstate;
+
+	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator;
+	mv_t rhs_value = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+
+	if (mv_is_present(&rhs_value)) {
+		int all_non_null_or_error = TRUE;
+		sllmv_t* pmvkeys = evaluate_list(pstate->plhs_keylist_evaluators, pvars,
+			&all_non_null_or_error);
+		if (all_non_null_or_error)
+			mlhmmv_put_terminal(pvars->poosvars, pmvkeys, &rhs_value);
+		sllmv_free(pmvkeys);
+	}
+	mv_free(&rhs_value);
+}
+
+// ----------------------------------------------------------------
+static void handle_oosvar_to_oosvar_assignment(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	oosvar_assignment_state_t* pstate = pstatement->pvstate;
+
+	int lhs_all_non_null_or_error = TRUE;
+	sllmv_t* plhskeys = evaluate_list(pstate->plhs_keylist_evaluators, pvars,
+		&lhs_all_non_null_or_error);
+
+	if (lhs_all_non_null_or_error) {
+		int rhs_all_non_null_or_error = TRUE;
+		sllmv_t* prhskeys = evaluate_list(pstate->prhs_keylist_evaluators, pvars,
+			&rhs_all_non_null_or_error);
+		if (rhs_all_non_null_or_error) {
+			mlhmmv_copy(pvars->poosvars, plhskeys, prhskeys);
+		}
+		sllmv_free(prhskeys);
+	}
+
+	sllmv_free(plhskeys);
+}
