@@ -185,9 +185,6 @@ typedef struct _mlr_dsl_cst_statement_t {
 	// Assignment to srec
 	char* srec_lhs_field_name;
 
-	// Assignment to ENV (i.e. putenv)
-	char* env_lhs_name;
-
 	// Indirect assignment to srec
 	rval_evaluator_t* psrec_lhs_evaluator;
 
@@ -391,6 +388,14 @@ mlr_dsl_cst_statement_t* alloc_final_filter(
 // mapping/mlr_dsl_cst_assignment_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_srec_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_indirect_srec_assignment;
+
+mlr_dsl_cst_statement_t* alloc_local_variable_definition(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags,
+	int                 type_mask);
+
 mlr_dsl_cst_statement_allocator_t alloc_local_non_map_variable_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_local_map_variable_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_oosvar_assignment;

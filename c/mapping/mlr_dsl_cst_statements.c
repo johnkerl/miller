@@ -19,13 +19,6 @@ static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node);
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(
-	mlr_dsl_cst_t*      pcst,
-	mlr_dsl_ast_node_t* pnode,
-	int                 type_inferencing,
-	int                 context_flags,
-	int                 type_mask);
-
 static mlr_dsl_cst_statement_allocator_t alloc_unset;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -35,8 +28,6 @@ static mlr_dsl_cst_statement_allocator_t alloc_for_local_map;
 static mlr_dsl_cst_statement_allocator_t alloc_for_local_map_key_only;
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_handler_t handle_local_non_map_variable_definition;
-static mlr_dsl_cst_statement_handler_t handle_local_map_variable_declaration;
 static mlr_dsl_cst_statement_handler_t handle_unset;
 static mlr_dsl_cst_statement_handler_t handle_unset_all;
 
@@ -260,30 +251,30 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		break;
 
 	case MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION:
-		return alloc_local_non_map_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_ANY);
+		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_ANY);
 
 	case MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION:
-		return alloc_local_non_map_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_NUMERIC);
+		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_NUMERIC);
 		break;
 
 	case MD_AST_NODE_TYPE_INT_LOCAL_DEFINITION:
-		return alloc_local_non_map_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_INT);
+		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_INT);
 		break;
 
 	case MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION:
-		return alloc_local_non_map_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_FLOAT);
+		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_FLOAT);
 		break;
 
 	case MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION:
-		return alloc_local_non_map_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_BOOLEAN);
+		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_BOOLEAN);
 		break;
 
 	case MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION:
-		return alloc_local_non_map_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_STRING);
+		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_STRING);
 		break;
 
 	case MD_AST_NODE_TYPE_MAP_LOCAL_DECLARATION:
-		return alloc_local_non_map_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_MAP);
+		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_MAP);
 		break;
 
 	case MD_AST_NODE_TYPE_LOCAL_NON_MAP_ASSIGNMENT:
@@ -525,7 +516,6 @@ static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node) {
 	pstatement->local_lhs_variable_name             = 0;
 	pstatement->local_lhs_frame_relative_index      = 0;
 	pstatement->local_lhs_type_mask                 = TYPE_MASK_ANY;
-	pstatement->env_lhs_name                        = NULL;
 	pstatement->psrec_lhs_evaluator                 = NULL;
 	pstatement->prhs_evaluator                      = NULL;
 	pstatement->poosvar_rhs_keylist_evaluators      = NULL;
@@ -580,30 +570,6 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc_with_block(
 	pstatement->pblock_handler      = pblock_handler;
 	pstatement->pstatement_freer    = pstatement_freer;
 	pstatement->pvstate             = pvstate;
-	return pstatement;
-}
-
-// ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(mlr_dsl_cst_t* pcst,
-	mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags, int type_mask)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
-	pstatement->local_lhs_variable_name = mlr_strdup_or_die(pname_node->text);
-	MLR_INTERNAL_CODING_ERROR_IF(pname_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
-	pstatement->local_lhs_frame_relative_index = pname_node->vardef_frame_relative_index;
-	pstatement->local_lhs_type_mask = type_mask;
-
-	if (pnode->type != MD_AST_NODE_TYPE_MAP_LOCAL_DECLARATION) {
-		// 'map x' rather than 'map x = ...' so there is no initial right-hand side.
-		mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pnext->pvvalue;
-		pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, pcst->pfmgr,
-			type_inferencing, context_flags);
-		pstatement->pstatement_handler = handle_local_non_map_variable_definition;
-	} else {
-		pstatement->prhs_evaluator = NULL;
-		pstatement->pstatement_handler = handle_local_map_variable_declaration;
-	}
 	return pstatement;
 }
 
@@ -1198,36 +1164,6 @@ void mlr_dsl_cst_handle_statement_list(
 			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 		}
 	}
-}
-
-// ----------------------------------------------------------------
-static void handle_local_non_map_variable_definition(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	if (mv_is_present(&val)) {
-		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_define(pframe,
-			pstatement->local_lhs_variable_name, pstatement->local_lhs_frame_relative_index,
-			pstatement->local_lhs_type_mask, val);
-	} else {
-		mv_free(&val);
-	}
-}
-
-// ----------------------------------------------------------------
-static void handle_local_map_variable_declaration(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_frame_define(pframe,
-		pstatement->local_lhs_variable_name, pstatement->local_lhs_frame_relative_index,
-		pstatement->local_lhs_type_mask, mv_absent());
 }
 
 // ----------------------------------------------------------------

@@ -692,3 +692,96 @@ static void handle_env_assignment(
 	mv_free(&lval);
 	mv_free(&rval);
 }
+
+// ================================================================
+typedef struct _local_variable_definition_state_t {
+	char*             lhs_variable_name;
+	int               lhs_frame_relative_index;
+	int               lhs_type_mask;
+	rval_evaluator_t* prhs_evaluator;
+} local_variable_definition_state_t;
+
+static mlr_dsl_cst_statement_handler_t handle_local_non_map_variable_definition;
+static mlr_dsl_cst_statement_handler_t handle_local_map_variable_declaration;
+static mlr_dsl_cst_statement_freer_t free_local_variable_definition;
+
+// ----------------------------------------------------------------
+mlr_dsl_cst_statement_t* alloc_local_variable_definition(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags,
+	int                 type_mask)
+{
+	local_variable_definition_state_t* pstate = mlr_malloc_or_die(
+		sizeof(local_variable_definition_state_t));
+
+	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
+	pstate->lhs_variable_name = pname_node->text;
+	MLR_INTERNAL_CODING_ERROR_IF(pname_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
+	pstate->lhs_frame_relative_index = pname_node->vardef_frame_relative_index;
+	pstate->lhs_type_mask = type_mask;
+
+	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
+	if (pnode->type != MD_AST_NODE_TYPE_MAP_LOCAL_DECLARATION) {
+		// 'map x' rather than 'map x = ...' so there is no initial right-hand side.
+		mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pnext->pvvalue;
+		pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, pcst->pfmgr,
+			type_inferencing, context_flags);
+		pstatement_handler = handle_local_non_map_variable_definition;
+	} else {
+		pstate->prhs_evaluator = NULL;
+		pstatement_handler = handle_local_map_variable_declaration;
+	}
+
+	return mlr_dsl_cst_statement_valloc(
+		pnode,
+		pstatement_handler,
+		free_local_variable_definition,
+		pstate);
+}
+
+// ----------------------------------------------------------------
+static void free_local_variable_definition(mlr_dsl_cst_statement_t* pstatement) {
+	local_variable_definition_state_t* pstate = pstatement->pvstate;
+
+	if (pstate->prhs_evaluator != NULL) {
+		pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
+	}
+
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
+static void handle_local_non_map_variable_definition(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	local_variable_definition_state_t* pstate = pstatement->pvstate;
+
+	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator;
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	if (mv_is_present(&val)) {
+		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+		local_stack_frame_define(pframe,
+			pstate->lhs_variable_name, pstate->lhs_frame_relative_index,
+			pstate->lhs_type_mask, val);
+	} else {
+		mv_free(&val);
+	}
+}
+
+// ----------------------------------------------------------------
+static void handle_local_map_variable_declaration(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	local_variable_definition_state_t* pstate = pstatement->pvstate;
+
+	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	local_stack_frame_define(pframe,
+		pstate->lhs_variable_name, pstate->lhs_frame_relative_index,
+		pstate->lhs_type_mask, mv_absent());
+}

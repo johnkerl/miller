@@ -112,6 +112,7 @@ UT FOR 5.0.0:
 * all type-decl cases: local/forbind/argpass; initial assign & reuse thereafter.
 
 * UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
+* env lhs expr
 
 ================================================================
 HYGIENE FOR 5.0.0:
@@ -173,6 +174,7 @@ To file:
 * note mlr -l -L -f -F -k -K rather prominently at mlh.
 * mlh/mld func/subr @ filter
 * absent vs. empty; unset $x vs. $x="". no null keyword.
+* env lhs expr
 
 filter expansion:
 * mlh
