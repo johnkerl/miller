@@ -627,3 +627,68 @@ static void handle_full_srec_from_oosvar_assignment(
 	}
 	sllmv_free(prhskeys);
 }
+
+// ================================================================
+typedef struct _env_assignment_state_t {
+	rval_evaluator_t* plhs_evaluator;
+	rval_evaluator_t* prhs_evaluator;
+} env_assignment_state_t;
+
+static mlr_dsl_cst_statement_handler_t handle_env_assignment;
+static mlr_dsl_cst_statement_freer_t free_env_assignment;
+
+// ----------------------------------------------------------------
+mlr_dsl_cst_statement_t* alloc_env_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
+	env_assignment_state_t* pstate = mlr_malloc_or_die(sizeof(env_assignment_state_t));
+
+	MLR_INTERNAL_CODING_ERROR_IF((pnode->pchildren == NULL) || (pnode->pchildren->length != 2));
+
+	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
+
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_ENV);
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren == NULL);
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren->length != 2);
+	mlr_dsl_ast_node_t* pnamenode  = pleft->pchildren->phead->pnext->pvvalue;
+
+	pstate->plhs_evaluator = rval_evaluator_alloc_from_ast(pnamenode, pcst->pfmgr, type_inferencing, context_flags);
+	pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
+
+	return mlr_dsl_cst_statement_valloc(
+		pnode,
+		handle_env_assignment,
+		free_env_assignment,
+		pstate);
+}
+
+// ----------------------------------------------------------------
+static void free_env_assignment(mlr_dsl_cst_statement_t* pstatement) {
+	env_assignment_state_t* pstate = pstatement->pvstate;
+
+	pstate->plhs_evaluator->pfree_func(pstate->plhs_evaluator);
+	pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
+
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
+static void handle_env_assignment(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	env_assignment_state_t* pstate = pstatement->pvstate;
+
+	rval_evaluator_t* plhs_evaluator = pstate->plhs_evaluator;
+	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator;
+	mv_t lval = plhs_evaluator->pprocess_func(plhs_evaluator->pvstate, pvars);
+	mv_t rval = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+
+	if (mv_is_present(&lval) && mv_is_present(&rval)) {
+		setenv(mlr_strdup_or_die(mv_alloc_format_val(&lval)), mlr_strdup_or_die(mv_alloc_format_val(&rval)), 1);
+	}
+	mv_free(&lval);
+	mv_free(&rval);
+}

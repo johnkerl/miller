@@ -26,7 +26,6 @@ static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(
 	int                 context_flags,
 	int                 type_mask);
 
-static mlr_dsl_cst_statement_allocator_t alloc_env_assignment;
 static mlr_dsl_cst_statement_allocator_t alloc_unset;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -36,7 +35,6 @@ static mlr_dsl_cst_statement_allocator_t alloc_for_local_map;
 static mlr_dsl_cst_statement_allocator_t alloc_for_local_map_key_only;
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_handler_t handle_env_assignment;
 static mlr_dsl_cst_statement_handler_t handle_local_non_map_variable_definition;
 static mlr_dsl_cst_statement_handler_t handle_local_map_variable_declaration;
 static mlr_dsl_cst_statement_handler_t handle_unset;
@@ -606,28 +604,6 @@ static mlr_dsl_cst_statement_t* alloc_local_non_map_variable_definition(mlr_dsl_
 		pstatement->prhs_evaluator = NULL;
 		pstatement->pstatement_handler = handle_local_map_variable_declaration;
 	}
-	return pstatement;
-}
-
-// ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_env_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-
-	MLR_INTERNAL_CODING_ERROR_IF((pnode->pchildren == NULL) || (pnode->pchildren->length != 2));
-
-	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
-
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_ENV);
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren == NULL);
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren->length != 2);
-	mlr_dsl_ast_node_t* pnamenode = pleft->pchildren->phead->pnext->pvvalue;
-
-	pstatement->pstatement_handler = handle_env_assignment;
-	pstatement->env_lhs_name = pnamenode->text;
-	pstatement->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
 	return pstatement;
 }
 
@@ -1252,22 +1228,6 @@ static void handle_local_map_variable_declaration(
 	local_stack_frame_define(pframe,
 		pstatement->local_lhs_variable_name, pstatement->local_lhs_frame_relative_index,
 		pstatement->local_lhs_type_mask, mv_absent());
-}
-
-// ----------------------------------------------------------------
-static void handle_env_assignment(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	char* env_lhs_name = pstatement->env_lhs_name;
-	rval_evaluator_t* prhs_evaluator = pstatement->prhs_evaluator;
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-
-	if (mv_is_present(&val)) {
-		setenv(env_lhs_name, mlr_strdup_or_die(mv_alloc_format_val(&val)), 1);
-	}
-	mv_free(&val);
 }
 
 // ----------------------------------------------------------------

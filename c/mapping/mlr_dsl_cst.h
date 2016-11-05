@@ -396,6 +396,7 @@ mlr_dsl_cst_statement_allocator_t alloc_local_map_variable_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_oosvar_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_oosvar_from_full_srec_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_full_srec_from_oosvar_assignment;
+mlr_dsl_cst_statement_allocator_t alloc_env_assignment;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_for_srec_statements.c
