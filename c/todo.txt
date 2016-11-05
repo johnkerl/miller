@@ -25,6 +25,21 @@ FUNCTIONALITY FOR 5.0.0:
   - requires support for empty maps/levels
   - remove the emptystrip feature from oosvars? update the doc if so. also, another backwards-incompatible change.
 
+* null JSON syntax -- what syntactic meaning for miller? mv_absent or mv_empty, neither would render back as 'null'
+  on output. yet i also don't want another null-type.
+* support JSON arrays:
+  - allow them in map-literal input
+  - allow them in JSON record input
+  - add mlhmmv array type, complementing map type
+  - negative-index read semantics (backwards index)
+  - out-of-bounds read semantics (mv_absent)
+  - -out-of-bounds write semantics (array extend)
+  - for srec-to-mlhmmv: loop over level & if all integer keys & all in sequence, treat as array
+* map-literal grammar:
+  - replace existing json parser?
+  - use this for streaming parser?
+  - implement byte-getter with fgetc to keep reading until closing bracket?
+
 ----------------------------------------------------------------
 EXECUTION TRACE:
 
