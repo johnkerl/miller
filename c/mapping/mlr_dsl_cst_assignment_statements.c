@@ -452,3 +452,85 @@ static void handle_oosvar_to_oosvar_assignment(
 
 	sllmv_free(plhskeys);
 }
+
+// ================================================================
+// All assignments produce a mlrval on the RHS and store it on the left -- except if both LHS and RHS
+// are oosvars in which case there are recursive copies, or in case of $* on the LHS or RHS.
+
+typedef struct _oosvar_from_full_srec_assignment_state_t {
+
+	sllv_t* plhs_keylist_evaluators;
+
+} oosvar_from_full_srec_assignment_state_t;
+
+static mlr_dsl_cst_statement_handler_t handle_oosvar_from_full_srec_assignment;
+static mlr_dsl_cst_statement_freer_t free_oosvar_from_full_srec_assignment;
+
+// ----------------------------------------------------------------
+mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
+	oosvar_from_full_srec_assignment_state_t* pstate = mlr_malloc_or_die(sizeof(
+		oosvar_from_full_srec_assignment_state_t));
+
+	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
+
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST);
+	MLR_INTERNAL_CODING_ERROR_IF(pright->type != MD_AST_NODE_TYPE_FULL_SREC);
+
+	pstate->plhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pleft,
+		type_inferencing, context_flags);
+
+	return mlr_dsl_cst_statement_valloc(
+		pnode,
+		handle_oosvar_from_full_srec_assignment,
+		free_oosvar_from_full_srec_assignment,
+		pstate);
+}
+
+// ----------------------------------------------------------------
+static void free_oosvar_from_full_srec_assignment(mlr_dsl_cst_statement_t* pstatement) {
+	oosvar_from_full_srec_assignment_state_t* pstate = pstatement->pvstate;
+
+	for (sllve_t* pe = pstate->plhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		rval_evaluator_t* pev = pe->pvvalue;
+		pev->pfree_func(pev);
+	}
+
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
+static void handle_oosvar_from_full_srec_assignment(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	oosvar_from_full_srec_assignment_state_t* pstate = pstatement->pvstate;
+
+	int all_non_null_or_error = TRUE;
+	sllmv_t* plhskeys = evaluate_list(pstate->plhs_keylist_evaluators, pvars, &all_non_null_or_error);
+	if (all_non_null_or_error) {
+
+		mlhmmv_level_t* plevel = mlhmmv_get_or_create_level(pvars->poosvars, plhskeys);
+		if (plevel != NULL) {
+
+			mlhmmv_clear_level(plevel);
+
+			for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {
+				mv_t k = mv_from_string(pe->key, NO_FREE); // mlhmmv_put_terminal_from_level will copy
+				sllmve_t e = { .value = k, .free_flags = 0, .pnext = NULL };
+				mv_t* pomv = lhmsmv_get(pvars->ptyped_overlay, pe->key);
+				if (pomv != NULL) {
+					mlhmmv_put_terminal_from_level(plevel, &e, pomv);
+				} else {
+					mv_t v = mv_from_string(pe->value, NO_FREE); // mlhmmv_put_terminal_from_level will copy
+					mlhmmv_put_terminal_from_level(plevel, &e, &v);
+				}
+			}
+
+		}
+	}
+	sllmv_free(plhskeys);
+}
