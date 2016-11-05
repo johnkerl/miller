@@ -534,3 +534,96 @@ static void handle_oosvar_from_full_srec_assignment(
 	}
 	sllmv_free(plhskeys);
 }
+
+// ================================================================
+// All assignments produce a mlrval on the RHS and store it on the left -- except if both LHS and RHS
+// are oosvars in which case there are recursive copies, or in case of $* on the LHS or RHS.
+
+typedef struct _full_srec_from_oosvar_assignment_state_t {
+
+	sllv_t* prhs_keylist_evaluators;
+
+} full_srec_from_oosvar_assignment_state_t;
+
+static mlr_dsl_cst_statement_handler_t handle_full_srec_from_oosvar_assignment;
+static mlr_dsl_cst_statement_freer_t free_full_srec_from_oosvar_assignment;
+
+// ----------------------------------------------------------------
+mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
+	full_srec_from_oosvar_assignment_state_t* pstate = mlr_malloc_or_die(sizeof(
+		full_srec_from_oosvar_assignment_state_t));
+
+	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
+
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_FULL_SREC);
+	MLR_INTERNAL_CODING_ERROR_IF(pright->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST);
+
+	pstate->prhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pright,
+		type_inferencing, context_flags);
+
+	return mlr_dsl_cst_statement_valloc(
+		pnode,
+		handle_full_srec_from_oosvar_assignment,
+		free_full_srec_from_oosvar_assignment,
+		pstate);
+}
+
+// ----------------------------------------------------------------
+static void free_full_srec_from_oosvar_assignment(mlr_dsl_cst_statement_t* pstatement) {
+	full_srec_from_oosvar_assignment_state_t* pstate = pstatement->pvstate;
+
+	for (sllve_t* pe = pstate->prhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		rval_evaluator_t* pev = pe->pvvalue;
+		pev->pfree_func(pev);
+	}
+
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
+static void handle_full_srec_from_oosvar_assignment(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	full_srec_from_oosvar_assignment_state_t* pstate = pstatement->pvstate;
+
+	lrec_clear(pvars->pinrec);
+	lhmsmv_clear(pvars->ptyped_overlay);
+
+	int all_non_null_or_error = TRUE;
+	sllmv_t* prhskeys = evaluate_list(pstate->prhs_keylist_evaluators, pvars, &all_non_null_or_error);
+	if (all_non_null_or_error) {
+		int error = 0;
+		mlhmmv_level_t* plevel = mlhmmv_get_level(pvars->poosvars, prhskeys, &error);
+		if (plevel != NULL) {
+			for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
+				if (pentry->level_value.is_terminal) {
+					char* skey = mv_alloc_format_val(&pentry->level_key);
+					mv_t val = mv_copy(&pentry->level_value.u.mlrval);
+
+					// Write typed mlrval output to the typed overlay rather than into the lrec
+					// (which holds only string values).
+					//
+					// The rval_evaluator reads the overlay in preference to the lrec. E.g. if the
+					// input had "x"=>"abc","y"=>"def" but a previous statement had set "y"=>7.4 and
+					// "z"=>"ghi", then an expression right-hand side referring to $y would get the
+					// floating-point value 7.4. So we don't need to lrec_put the value here, and
+					// moreover should not for two reasons: (1) there is a performance hit of doing
+					// throwaway number-to-string formatting -- it's better to do it once at the
+					// end; (2) having the string values doubly owned by the typed overlay and the
+					// lrec would result in double frees, or awkward bookkeeping. However, the NR
+					// variable evaluator reads prec->field_count, so we need to put something here.
+					// And putting something statically allocated minimizes copying/freeing.
+					lhmsmv_put(pvars->ptyped_overlay, mlr_strdup_or_die(skey), &val,
+						FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
+					lrec_put(pvars->pinrec, skey, "bug", FREE_ENTRY_KEY);
+				}
+			}
+		}
+	}
+	sllmv_free(prhskeys);
+}
