@@ -48,11 +48,6 @@ FUNCTIONALITY FOR 5.0.0:
   - eliminate 'map a' and replace with 'map a = {}'
 
 ----------------------------------------------------------------
-CST-FEDERATION:
-
-* rm varargs entirely?
-
-----------------------------------------------------------------
 EXECUTION TRACE:
 
 ! need something at function callsite. as is, it shows func return explicitly but not entry.

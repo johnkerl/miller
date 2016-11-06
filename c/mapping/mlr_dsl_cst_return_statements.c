@@ -53,6 +53,13 @@ mlr_dsl_cst_statement_t* alloc_return_value(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 {
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
 
+	// $ mlr --from s put -v 'map v = {}'
+	// AST ROOT:
+	// text="block", type=STATEMENT_BLOCK:
+	//     text="map", type=MAP_LOCAL_DECLARATION:
+	//         text="v", type=LOCAL_NON_MAP_VARIABLE.     <---- xxx wtfc
+	//         text="map_literal", type=MAP_LITERAL:
+
 	switch (prhs_node->type) {
 	case MD_AST_NODE_TYPE_MAP_LITERAL:
 		printf("return-map-literal CST-alloc stub!\n");
@@ -417,7 +424,7 @@ mlr_dsl_cst_statement_t* alloc_return_value_from_non_map_valued(mlr_dsl_cst_t* p
 	pstate->preturn_value_evaluator = NULL;
 
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
-	pstate->preturn_value_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, // xxx mapvars
+	pstate->preturn_value_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr,
 		type_inferencing, context_flags);
 
 	return mlr_dsl_cst_statement_valloc(
