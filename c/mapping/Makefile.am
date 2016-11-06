@@ -60,6 +60,7 @@ libmapping_la_SOURCES=	\
 			mlr_dsl_cst_unset_statements.c \
 			mlr_dsl_cst_condish_statements.c \
 			mlr_dsl_cst_for_srec_statements.c \
+			mlr_dsl_cst_for_map_statements.c \
 			mlr_dsl_cst_triple_for_statements.c \
 			mlr_dsl_cst_loop_control_statements.c \
 			mlr_dsl_cst_return_statements.c \

@@ -195,18 +195,7 @@ typedef struct _mlr_dsl_cst_statement_t {
 	sllv_t* poosvar_rhs_keylist_evaluators;
 
 	// Vararg stuff for emit and unset
-	sllv_t* pvarargs;
-
-	char** for_map_k_variable_names;
-	int*  for_map_k_frame_relative_indices;
-	int*  for_map_k_type_masks;
-	int   for_map_k_count;
-
-	char* for_v_variable_name;
-	int   for_v_frame_relative_index;
-	int   for_v_type_mask;
-
-	int   for_map_target_frame_relative_index;
+	sllv_t* pvarargs; // factor out of emit as well, as i did for unset
 
 } mlr_dsl_cst_statement_t;
 
@@ -410,6 +399,13 @@ mlr_dsl_cst_statement_allocator_t alloc_unset;
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_for_srec_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_for_srec;
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// mapping/mlr_dsl_cst_for_map_statements.c
+mlr_dsl_cst_statement_allocator_t alloc_for_oosvar;
+mlr_dsl_cst_statement_allocator_t alloc_for_oosvar_key_only;
+mlr_dsl_cst_statement_allocator_t alloc_for_local_map;
+mlr_dsl_cst_statement_allocator_t alloc_for_local_map_key_only;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_triple_for_statements.c
