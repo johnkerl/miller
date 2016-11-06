@@ -50,13 +50,10 @@ FUNCTIONALITY FOR 5.0.0:
 ----------------------------------------------------------------
 EXECUTION TRACE:
 
-! need something at function callsite. as is, it shows func return explicitly but not entry.
-! vice-versa for subrs.
 * work through the grammar & neaten up pnode->text instances, now that these names are user-visible.
 * mld. note it's an AST dump, not source-level.
 * maybe go through and replace (...)-style with AST-to-source formatting ...
 * UT
-
 ! this is all very cute tracing at source-level but would be significantly more useful with values shown.
 
 ----------------------------------------------------------------

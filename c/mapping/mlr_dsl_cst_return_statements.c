@@ -32,6 +32,7 @@ static void free_return_void(mlr_dsl_cst_statement_t* pstatement) {
 }
 
 // ================================================================
+static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_map_literal;
 static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_local_non_map_variable;
 static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_local_map_variable;
 static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_oosvar;
@@ -48,8 +49,11 @@ static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_non_map_valued;
 // xxx mapvar: special-case retval is $* ?
 // xxx mapvar: what if 'return g(a,b)' and g is map-valued?
 
-mlr_dsl_cst_statement_t* alloc_return_value(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
+mlr_dsl_cst_statement_t* alloc_return_value(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags)
 {
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
 
@@ -62,8 +66,7 @@ mlr_dsl_cst_statement_t* alloc_return_value(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 
 	switch (prhs_node->type) {
 	case MD_AST_NODE_TYPE_MAP_LITERAL:
-		printf("return-map-literal CST-alloc stub!\n");
-		return NULL;
+		return alloc_return_value_from_map_literal(pcst, pnode, type_inferencing, context_flags);
 		break;
 
 	case  MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE:
@@ -115,8 +118,34 @@ static mlr_dsl_cst_statement_handler_t handle_return_value_from_local_non_map_va
 static mlr_dsl_cst_statement_freer_t free_return_value_from_local_non_map_variable;
 
 // ----------------------------------------------------------------
-mlr_dsl_cst_statement_t* alloc_return_value_from_local_non_map_variable(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
+mlr_dsl_cst_statement_t* alloc_return_value_from_map_literal(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags)
+{
+	return_value_from_local_non_map_variable_state_t* pstate =
+		mlr_malloc_or_die(sizeof(return_value_from_local_non_map_variable_state_t));
+
+	pstate->preturn_value_evaluator = NULL;
+
+	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
+	pstate->preturn_value_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, // xxx mapvars
+		type_inferencing, context_flags);
+
+	return mlr_dsl_cst_statement_valloc(
+		pnode,
+		handle_return_value_from_local_non_map_variable,
+		free_return_value_from_local_non_map_variable,
+		pstate);
+}
+
+// ----------------------------------------------------------------
+mlr_dsl_cst_statement_t* alloc_return_value_from_local_non_map_variable(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags)
 {
 	return_value_from_local_non_map_variable_state_t* pstate =
 		mlr_malloc_or_die(sizeof(return_value_from_local_non_map_variable_state_t));
@@ -165,8 +194,11 @@ static mlr_dsl_cst_statement_handler_t handle_return_value_from_local_map_variab
 static mlr_dsl_cst_statement_freer_t free_return_value_from_local_map_variable;
 
 // ----------------------------------------------------------------
-mlr_dsl_cst_statement_t* alloc_return_value_from_local_map_variable(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
+mlr_dsl_cst_statement_t* alloc_return_value_from_local_map_variable(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags)
 {
 	return_value_from_local_map_variable_state_t* pstate =
 		mlr_malloc_or_die(sizeof(return_value_from_local_map_variable_state_t));
@@ -215,8 +247,11 @@ static mlr_dsl_cst_statement_handler_t handle_return_value_from_oosvar;
 static mlr_dsl_cst_statement_freer_t free_return_value_from_oosvar;
 
 // ----------------------------------------------------------------
-mlr_dsl_cst_statement_t* alloc_return_value_from_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
+mlr_dsl_cst_statement_t* alloc_return_value_from_oosvar(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags)
 {
 	return_value_from_oosvar_state_t* pstate =
 		mlr_malloc_or_die(sizeof(return_value_from_oosvar_state_t));
@@ -265,8 +300,11 @@ static mlr_dsl_cst_statement_handler_t handle_return_value_from_full_oosvar;
 static mlr_dsl_cst_statement_freer_t free_return_value_from_full_oosvar;
 
 // ----------------------------------------------------------------
-mlr_dsl_cst_statement_t* alloc_return_value_from_full_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
+mlr_dsl_cst_statement_t* alloc_return_value_from_full_oosvar(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags)
 {
 	return_value_from_full_oosvar_state_t* pstate =
 		mlr_malloc_or_die(sizeof(return_value_from_full_oosvar_state_t));
@@ -315,8 +353,11 @@ static mlr_dsl_cst_statement_handler_t handle_return_value_from_full_srec;
 static mlr_dsl_cst_statement_freer_t free_return_value_from_full_srec;
 
 // ----------------------------------------------------------------
-mlr_dsl_cst_statement_t* alloc_return_value_from_full_srec(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
+mlr_dsl_cst_statement_t* alloc_return_value_from_full_srec(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags)
 {
 	return_value_from_full_srec_state_t* pstate =
 		mlr_malloc_or_die(sizeof(return_value_from_full_srec_state_t));
@@ -365,8 +406,11 @@ static mlr_dsl_cst_statement_handler_t handle_return_value_from_function_callsit
 static mlr_dsl_cst_statement_freer_t free_return_value_from_function_callsite;
 
 // ----------------------------------------------------------------
-mlr_dsl_cst_statement_t* alloc_return_value_from_function_callsite(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
+mlr_dsl_cst_statement_t* alloc_return_value_from_function_callsite(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags)
 {
 	return_value_from_function_callsite_state_t* pstate =
 		mlr_malloc_or_die(sizeof(return_value_from_function_callsite_state_t));
@@ -415,8 +459,11 @@ static mlr_dsl_cst_statement_handler_t handle_return_value_from_non_map_valued;
 static mlr_dsl_cst_statement_freer_t free_return_value_from_non_map_valued;
 
 // ----------------------------------------------------------------
-mlr_dsl_cst_statement_t* alloc_return_value_from_non_map_valued(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
+mlr_dsl_cst_statement_t* alloc_return_value_from_non_map_valued(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags)
 {
 	return_value_from_non_map_valued_state_t* pstate =
 		mlr_malloc_or_die(sizeof(return_value_from_non_map_valued_state_t));

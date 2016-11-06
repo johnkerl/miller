@@ -138,6 +138,9 @@ md_statement_not_braced_end(A) ::= md_local_map_assignment(B).     { A = B; }
 md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
 }
+md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN md_map_literal(B). {
+	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
+}
 // For user-defined subroutines
 md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN. {
 	A = mlr_dsl_ast_node_alloc_zary("return_void", MD_AST_NODE_TYPE_RETURN_VOID);
