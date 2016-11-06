@@ -747,6 +747,9 @@ md_string_local_definition(A) ::= MD_TOKEN_STRING(T) md_local_variable(N) MD_TOK
 md_map_local_declaration(A) ::= MD_TOKEN_MAP(T) md_local_variable(N). {
 	A = mlr_dsl_ast_node_alloc_unary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DECLARATION, N);
 }
+md_map_local_declaration(A) ::= MD_TOKEN_MAP(T) md_local_variable(N) MD_TOKEN_ASSIGN md_map_literal(C). {
+	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DECLARATION, N, C);
+}
 
 md_local_assignment(A)  ::= md_local_variable(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_LOCAL_NON_MAP_ASSIGNMENT, B, C);
@@ -2172,4 +2175,32 @@ md_fcn_args(A) ::= md_rhs(B). {
 }
 md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+
+// ----------------------------------------------------------------
+// Map-literals in Miller are JSON-ish.
+
+md_map_literal(A) ::= MD_TOKEN_LBRACE MD_TOKEN_RBRACE. {
+	A = mlr_dsl_ast_node_alloc_zary("map_literal", MD_AST_NODE_TYPE_MAP_LITERAL);
+}
+md_map_literal(A) ::= MD_TOKEN_LBRACE md_map_literal_elements(B) MD_TOKEN_RBRACE. {
+	A = B;
+}
+md_map_literal_elements(A) ::= md_map_literal_element(B). {
+	A = mlr_dsl_ast_node_alloc_unary("map_literal", MD_AST_NODE_TYPE_MAP_LITERAL, B);
+}
+md_map_literal_elements(A) ::= md_map_literal_elements(B) MD_TOKEN_COMMA md_map_literal_element(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+md_map_literal_element(A) ::= md_map_literal_key(B) MD_TOKEN_COLON md_map_literal_value(C). {
+	A = mlr_dsl_ast_node_alloc_binary("mappair", MD_AST_NODE_TYPE_MAP_LITERAL_PAIR, B, C);
+}
+md_map_literal_key(A) ::= md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_unary("mapkey", MD_AST_NODE_TYPE_MAP_LITERAL, B);
+}
+md_map_literal_value(A) ::= md_rhs(B). {
+	A = mlr_dsl_ast_node_alloc_unary("mapval", MD_AST_NODE_TYPE_MAP_LITERAL, B);
+}
+md_map_literal_value(A) ::= md_map_literal(B). {
+	A = mlr_dsl_ast_node_alloc_unary("mapval", MD_AST_NODE_TYPE_MAP_LITERAL, B);
 }
