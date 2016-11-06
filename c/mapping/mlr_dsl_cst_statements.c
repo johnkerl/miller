@@ -209,11 +209,11 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		return alloc_local_variable_definition(pcst, pnode, type_inferencing, context_flags, TYPE_MASK_MAP);
 		break;
 
-	case MD_AST_NODE_TYPE_LOCAL_NONINDEXED_ASSIGNMENT:
+	case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT:
 		return alloc_nonindexed_local_variable_assignment(pcst, pnode, type_inferencing, context_flags);
 		break;
 
-	case MD_AST_NODE_TYPE_LOCAL_INDEXED_ASSIGNMENT:
+	case MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT:
 		return alloc_local_map_variable_assignment(pcst, pnode, type_inferencing, context_flags);
 		break;
 
@@ -405,7 +405,7 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_final_filter_statement(mlr_dsl_cst_t*
 	case MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION:
 	case MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION:
 	case MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION:
-	case MD_AST_NODE_TYPE_LOCAL_NONINDEXED_ASSIGNMENT:
+	case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT:
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
 	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:
