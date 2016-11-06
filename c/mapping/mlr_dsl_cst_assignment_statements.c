@@ -174,14 +174,9 @@ static void handle_indirect_srec_assignment(
 
 // ================================================================
 typedef struct _nonindexed_local_variable_assignment_state_t {
-
-	// For error messages only: stack-index is computed by stack-allocator:
-	char* lhs_variable_name;
-
-	int lhs_frame_relative_index;
-
+	char*             lhs_variable_name; // For error messages only: stack-index is computed by stack-allocator:
+	int               lhs_frame_relative_index;
 	rval_evaluator_t* prhs_evaluator;
-
 } nonindexed_local_variable_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_nonindexed_local_variable_assignment;
@@ -334,12 +329,9 @@ static void handle_indexed_local_variable_assignment(
 // are oosvars in which case there are recursive copies, or in case of $* on the LHS or RHS.
 
 typedef struct _oosvar_assignment_state_t {
-
-	sllv_t* plhs_keylist_evaluators;
-
+	sllv_t*           plhs_keylist_evaluators;
 	rval_evaluator_t* prhs_evaluator;
-	sllv_t* prhs_keylist_evaluators;
-
+	sllv_t*           prhs_keylist_evaluators;
 } oosvar_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment;
@@ -453,9 +445,7 @@ static void handle_oosvar_to_oosvar_assignment(
 // are oosvars in which case there are recursive copies, or in case of $* on the LHS or RHS.
 
 typedef struct _oosvar_from_full_srec_assignment_state_t {
-
 	sllv_t* plhs_keylist_evaluators;
-
 } oosvar_from_full_srec_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_oosvar_from_full_srec_assignment;
@@ -535,9 +525,7 @@ static void handle_oosvar_from_full_srec_assignment(
 // are oosvars in which case there are recursive copies, or in case of $* on the LHS or RHS.
 
 typedef struct _full_srec_from_oosvar_assignment_state_t {
-
 	sllv_t* prhs_keylist_evaluators;
-
 } full_srec_from_oosvar_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_full_srec_from_oosvar_assignment;
@@ -696,8 +684,8 @@ typedef struct _local_variable_definition_state_t {
 	rval_evaluator_t* prhs_evaluator;
 } local_variable_definition_state_t;
 
-static mlr_dsl_cst_statement_handler_t handle_nonindexed_local_variable_definition;
-static mlr_dsl_cst_statement_handler_t handle_indexed_local_variable_declaration;
+static mlr_dsl_cst_statement_handler_t handle_local_variable_definition;
+static mlr_dsl_cst_statement_handler_t handle_local_map_declaration;
 static mlr_dsl_cst_statement_freer_t free_local_variable_definition;
 
 // ----------------------------------------------------------------
@@ -718,15 +706,15 @@ mlr_dsl_cst_statement_t* alloc_local_variable_definition(
 	pstate->lhs_type_mask = type_mask;
 
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
-	if (pnode->type != MD_AST_NODE_TYPE_MAP_LOCAL_DECLARATION) {
+	if (pnode->type == MD_AST_NODE_TYPE_MAP_LOCAL_DECLARATION) { // xxx remove
 		// 'map x' rather than 'map x = ...' so there is no initial right-hand side.
+		pstate->prhs_evaluator = NULL;
+		pstatement_handler = handle_local_map_declaration;
+	} else {
 		mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pnext->pvvalue;
 		pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, pcst->pfmgr,
 			type_inferencing, context_flags);
-		pstatement_handler = handle_nonindexed_local_variable_definition;
-	} else {
-		pstate->prhs_evaluator = NULL;
-		pstatement_handler = handle_indexed_local_variable_declaration;
+		pstatement_handler = handle_local_variable_definition;
 	}
 
 	return mlr_dsl_cst_statement_valloc(
@@ -748,7 +736,7 @@ static void free_local_variable_definition(mlr_dsl_cst_statement_t* pstatement) 
 }
 
 // ----------------------------------------------------------------
-static void handle_nonindexed_local_variable_definition( // xxx mapvar
+static void handle_local_variable_definition( // xxx mapvar
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -768,7 +756,7 @@ static void handle_nonindexed_local_variable_definition( // xxx mapvar
 }
 
 // ----------------------------------------------------------------
-static void handle_indexed_local_variable_declaration( // xxx mapvar
+static void handle_local_map_declaration( // xxx rm
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
