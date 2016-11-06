@@ -176,9 +176,9 @@ static void handle_indirect_srec_assignment(
 typedef struct _local_non_map_variable_assignment_state_t {
 
 	// For error messages only: stack-index is computed by stack-allocator:
-	char* local_lhs_variable_name;
+	char* lhs_variable_name;
 
-	int local_lhs_frame_relative_index;
+	int lhs_frame_relative_index;
 
 	rval_evaluator_t* prhs_evaluator;
 
@@ -202,9 +202,9 @@ mlr_dsl_cst_statement_t* alloc_local_non_map_variable_assignment(mlr_dsl_cst_t* 
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren != NULL);
 
-	pstate->local_lhs_variable_name = pleft->text;
+	pstate->lhs_variable_name = pleft->text;
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
-	pstate->local_lhs_frame_relative_index = pleft->vardef_frame_relative_index;
+	pstate->lhs_frame_relative_index = pleft->vardef_frame_relative_index;
 	pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
 
 	return mlr_dsl_cst_statement_valloc(
@@ -235,7 +235,7 @@ static void handle_local_non_map_variable_assignment(
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	if (mv_is_present(&val)) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_assign_non_map(pframe, pstate->local_lhs_frame_relative_index, val);
+		local_stack_frame_assign_non_map(pframe, pstate->lhs_frame_relative_index, val);
 	} else {
 		mv_free(&val);
 	}
@@ -243,16 +243,10 @@ static void handle_local_non_map_variable_assignment(
 
 // ================================================================
 typedef struct _local_map_variable_assignment_state_t {
-
-	// For error messages only: stack-index is computed by stack-allocator:
-	char* local_lhs_variable_name; // xxx renames
-
-	int local_lhs_frame_relative_index;
-
-	sllv_t* plhs_keylist_evaluators;
-
+	char*             lhs_variable_name; // For error messages only: stack-index is computed by stack-allocator:
+	int               lhs_frame_relative_index;
+	sllv_t*           plhs_keylist_evaluators;
 	rval_evaluator_t* prhs_evaluator;
-
 } local_map_variable_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_local_map_variable_assignment;
@@ -271,10 +265,11 @@ mlr_dsl_cst_statement_t* alloc_local_map_variable_assignment(mlr_dsl_cst_t* pcst
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren == NULL);
 
-	pstate->local_lhs_variable_name = mlr_strdup_or_die(pleft->text);
+	pstate->lhs_variable_name = mlr_strdup_or_die(pleft->text);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
-	pstate->local_lhs_frame_relative_index = pleft->vardef_frame_relative_index;
+	pstate->lhs_frame_relative_index = pleft->vardef_frame_relative_index;
 
+	// xxx replace with call to (renamed) allocate_keylist_evaluators_from_oosvar_node here & elsewhere
 	pstate->plhs_keylist_evaluators = sllv_alloc();
 	for (sllve_t* pe = pleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
@@ -325,7 +320,7 @@ static void handle_local_map_variable_assignment(
 			&all_non_null_or_error);
 		if (all_non_null_or_error) {
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-			local_stack_frame_assign_map(pframe, pstate->local_lhs_frame_relative_index, pmvkeys, rhs_value);
+			local_stack_frame_assign_map(pframe, pstate->lhs_frame_relative_index, pmvkeys, rhs_value);
 		}
 		sllmv_free(pmvkeys);
 

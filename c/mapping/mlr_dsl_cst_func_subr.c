@@ -189,6 +189,8 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	local_stack_subframe_exit(pframe, ptop_level_block->pblock->subframe_var_count);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 
+	// xxx XXX NEXT
+	// xxx mapvars return retval;
 	if (retval.is_terminal) {
 		return retval.u.mlrval; // xxx mapvars
 	} else {

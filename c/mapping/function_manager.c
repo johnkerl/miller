@@ -445,6 +445,7 @@ static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvar
 		pstate->args[i] = pstate->pevals[i]->pprocess_func(pstate->pevals[i]->pvstate, pvars);
 	}
 
+	// xxx XXX NEXT
 	return pstate->pdefsite_state->pprocess_func(pstate->pdefsite_state->pvstate, // xxx mapvar out of UDF
 		pstate->arity, pstate->args, pvars); // xxx mapvars into UDF
 }

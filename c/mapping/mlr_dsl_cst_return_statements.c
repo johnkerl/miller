@@ -42,7 +42,6 @@ static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_function_callsi
 static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_non_map_valued;
 
 // ----------------------------------------------------------------
-// XXX mapvar retval
 // xxx mapvar: special-case retval is map-literal: need vardef_frame_relative_index & keylist evaluators
 // xxx mapvar: special-case retval is local map/non-map: need vardef_frame_relative_index & keylist evaluators
 // xxx mapvar: special-case retval is oosvar/@*: need keylist evaluators
@@ -187,7 +186,12 @@ static void free_return_value_from_local_non_map_variable(mlr_dsl_cst_statement_
 
 // ================================================================
 typedef struct _return_value_from_local_map_variable_state_t {
-	rval_evaluator_t* preturn_value_evaluator;
+
+	// For error messages only: stack-index is computed by stack-allocator:
+	char* rhs_variable_name;
+	int rhs_frame_relative_index;
+	sllv_t* prhs_keylist_evaluators;
+
 } return_value_from_local_map_variable_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_return_value_from_local_map_variable;
@@ -203,11 +207,15 @@ mlr_dsl_cst_statement_t* alloc_return_value_from_local_map_variable(
 	return_value_from_local_map_variable_state_t* pstate =
 		mlr_malloc_or_die(sizeof(return_value_from_local_map_variable_state_t));
 
-	pstate->preturn_value_evaluator = NULL;
-
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
-	pstate->preturn_value_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, // xxx mapvars
-		type_inferencing, context_flags);
+
+	pstate->rhs_variable_name = prhs_node->text;
+
+	MLR_INTERNAL_CODING_ERROR_IF(prhs_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
+	pstate->rhs_frame_relative_index = prhs_node->vardef_frame_relative_index;
+
+	pstate->prhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
+		pcst, prhs_node, type_inferencing, context_flags);
 
 	return mlr_dsl_cst_statement_valloc(
 		pnode,
@@ -224,16 +232,37 @@ static void handle_return_value_from_local_map_variable(
 {
 	return_value_from_local_map_variable_state_t* pstate = pstatement->pvstate;
 
-	pvars->return_state.retval = mlhmmv_value_transfer_terminal( // xxx mapvars
-		pstate->preturn_value_evaluator->pprocess_func(
-			pstate->preturn_value_evaluator->pvstate, pvars));
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pstate->prhs_keylist_evaluators, pvars,
+		&all_non_null_or_error);
+	if (all_non_null_or_error) {
+		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+
+		mlhmmv_value_t* pmvalue = local_stack_frame_get_map_value(pframe,
+			pstate->rhs_frame_relative_index, pmvkeys);
+
+		if (pmvalue == NULL) {
+			pvars->return_state.retval = mlhmmv_value_transfer_terminal(mv_absent());
+		} else {
+			pvars->return_state.retval = mlhmmv_copy_aux(pmvalue);
+		}
+
+	} else {
+		pvars->return_state.retval = mlhmmv_value_transfer_terminal(mv_absent());
+	}
+
+	sllmv_free(pmvkeys);
+
 	pvars->return_state.returned = TRUE;
 }
 
 static void free_return_value_from_local_map_variable(mlr_dsl_cst_statement_t* pstatement) {
 	return_value_from_local_map_variable_state_t* pstate = pstatement->pvstate;
 
-	pstate->preturn_value_evaluator->pfree_func(pstate->preturn_value_evaluator);
+	for (sllve_t* pe = pstate->prhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		rval_evaluator_t* pev = pe->pvvalue;
+		pev->pfree_func(pev);
+	}
 
 	free(pstate);
 }
