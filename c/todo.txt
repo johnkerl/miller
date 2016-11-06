@@ -85,6 +85,8 @@ MAPVARS:
     @* = f(...)
     @b = f(...)
     @b[c] = f(...)
+    a = f(...)
+    a[b] = f(...)
 
   k all other (non-special-case) LHS situations
     > coded; just need more UT coverage.

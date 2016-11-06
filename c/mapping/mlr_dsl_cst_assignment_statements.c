@@ -748,14 +748,14 @@ static void free_local_variable_definition(mlr_dsl_cst_statement_t* pstatement) 
 }
 
 // ----------------------------------------------------------------
-static void handle_local_non_map_variable_definition(
+static void handle_local_non_map_variable_definition( // xxx mapvar
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
 	local_variable_definition_state_t* pstate = pstatement->pvstate;
 
-	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator;
+	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator; // xxx mapvar
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 	if (mv_is_present(&val)) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
@@ -768,7 +768,7 @@ static void handle_local_non_map_variable_definition(
 }
 
 // ----------------------------------------------------------------
-static void handle_local_map_variable_declaration(
+static void handle_local_map_variable_declaration( // xxx mapvar
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
