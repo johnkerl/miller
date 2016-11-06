@@ -273,7 +273,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION:           return "FLOAT_LOCAL_DEFINITION";           break;
 	case MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION:         return "BOOLEAN_LOCAL_DEFINITION";         break;
 	case MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION:          return "STRING_LOCAL_DEFINITION";          break;
-	case MD_AST_NODE_TYPE_MAP_LOCAL_DECLARATION:            return "MAP_LOCAL_DECLARATION";            break;
+	case MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION:            return "MAP_LOCAL_DEFINITION";            break;
 	case MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION:     return "UNTYPED_PARAMETER_DEFINITION";     break;
 	case MD_AST_NODE_TYPE_NUMERIC_PARAMETER_DEFINITION:     return "NUMERIC_PARAMETER_DEFINITION";     break;
 	case MD_AST_NODE_TYPE_INT_PARAMETER_DEFINITION:         return "INT_PARAMETER_DEFINITION";         break;

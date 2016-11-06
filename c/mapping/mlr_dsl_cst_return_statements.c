@@ -59,7 +59,7 @@ mlr_dsl_cst_statement_t* alloc_return_value(
 	// $ mlr --from s put -v 'map v = {}'
 	// AST ROOT:
 	// text="block", type=STATEMENT_BLOCK:
-	//     text="map", type=MAP_LOCAL_DECLARATION:
+	//     text="map", type=MAP_LOCAL_DEFINITION:
 	//         text="v", type=NONINDEXED_LOCAL_VARIABLE.
 	//         text="map_literal", type=MAP_LITERAL:
 

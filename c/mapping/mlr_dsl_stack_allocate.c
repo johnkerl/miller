@@ -387,7 +387,7 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* 
 	} else if (pnode->type == MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
 
-	} else if (pnode->type == MD_AST_NODE_TYPE_MAP_LOCAL_DECLARATION) { // LHS
+	} else if (pnode->type == MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION) { // LHS
 		pass_1_for_local_definition(pnode, pframe_group, pmax_subframe_depth, trace);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT) { // LHS
