@@ -171,6 +171,24 @@ static void free_tee(mlr_dsl_cst_statement_t* pstatement) { // xxx from mlr_dsl_
 }
 
 // ================================================================
+// Most statements have one item, except emit and emitf.
+struct _emitf_item_t;
+typedef void emitf_item_handler_t(
+	struct _emitf_item_t* pemitf_item,
+	variables_t*          pvars,
+	cst_outputs_t*        pcst_outputs);
+
+typedef struct _emitf_item_t {
+	emitf_item_handler_t* pemitf_item_handler;
+	char*                 srec_field_name;
+	rval_evaluator_t*     parg_evaluator;
+
+} emitf_item_t;
+
+static emitf_item_t* alloc_blank_emitf_item(char* srec_field_name, rval_evaluator_t* parg_evaluator);
+static void free_emitf_item(emitf_item_t* pemitf_item);
+
+// ----------------------------------------------------------------
 typedef struct _emitf_state_t {
 	FILE*                stdfp;
 	file_output_mode_t   file_output_mode;
@@ -178,7 +196,7 @@ typedef struct _emitf_state_t {
 	int                  flush_every_record;
 	lrec_writer_t*       psingle_lrec_writer;
 	multi_lrec_writer_t* pmulti_lrec_writer;
-	sllv_t* pvarargs;
+	sllv_t*              pemitf_items;
 } emitf_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_emitf;
@@ -214,22 +232,20 @@ mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 	pstate->poutput_filename_evaluator = NULL;
 	pstate->psingle_lrec_writer        = NULL;
 	pstate->pmulti_lrec_writer         = NULL;
-	pstate->pvarargs                   = NULL;
+	pstate->pemitf_items               = NULL;
 
 	mlr_dsl_ast_node_t* pnamesnode = pnode->pchildren->phead->pvvalue;
 
 	// Loop over oosvar names to emit in e.g. 'emitf @a, @b, @c'.
-	pstate->pvarargs = sllv_alloc();
+	pstate->pemitf_items = sllv_alloc();
 	for (sllve_t* pe = pnamesnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pwalker = pe->pvvalue;
 		mlr_dsl_ast_node_t* pchild = pwalker->pchildren->phead->pvvalue;
 		// This could be enforced in the lemon parser but it's easier to do it here.
-		sllv_append(pstate->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
-			MD_UNUSED_INDEX,
-			pchild->text,
-			NULL,
-			rval_evaluator_alloc_from_ast(pwalker, pcst->pfmgr, type_inferencing, context_flags),
-			NULL));
+		sllv_append(pstate->pemitf_items,
+			alloc_blank_emitf_item(
+				pchild->text,
+				rval_evaluator_alloc_from_ast(pwalker, pcst->pfmgr, type_inferencing, context_flags)));
 	}
 
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
@@ -257,6 +273,18 @@ mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 		phandler,
 		free_emitf,
 		pstate);
+}
+
+static emitf_item_t* alloc_blank_emitf_item(char* srec_field_name, rval_evaluator_t* parg_evaluator) {
+	emitf_item_t* pemitf_item = mlr_malloc_or_die(sizeof(emitf_item_t));
+	pemitf_item->srec_field_name = srec_field_name;
+	pemitf_item->parg_evaluator  = parg_evaluator;
+	return pemitf_item;
+}
+
+static void free_emitf_item(emitf_item_t* pemitf_item) {
+	pemitf_item->parg_evaluator->pfree_func(pemitf_item->parg_evaluator);
+	free(pemitf_item);
 }
 
 // ----------------------------------------------------------------
@@ -325,22 +353,22 @@ static void handle_emitf_common(
 	sllv_t*        poutrecs)
 {
 	lrec_t* prec_to_emit = lrec_unbacked_alloc();
-	for (sllve_t* pf = pstate->pvarargs->phead; pf != NULL; pf = pf->pnext) {
-		mlr_dsl_cst_statement_vararg_t* pvararg = pf->pvvalue;
-		char* emitf_or_unset_srec_field_name = pvararg->emitf_or_unset_srec_field_name;
-		rval_evaluator_t* pemitf_arg_evaluator = pvararg->pemitf_arg_evaluator;
+	for (sllve_t* pf = pstate->pemitf_items->phead; pf != NULL; pf = pf->pnext) {
+		emitf_item_t* pemitf_item = pf->pvvalue;
+		char* srec_field_name = pemitf_item->srec_field_name;
+		rval_evaluator_t* parg_evaluator = pemitf_item->parg_evaluator;
 
 		// This is overkill ... the grammar allows only for oosvar names as args to emit.  So we could bypass
-		// that and just hashmap-get keyed by emitf_or_unset_srec_field_name here.
-		mv_t val = pemitf_arg_evaluator->pprocess_func(pemitf_arg_evaluator->pvstate, pvars);
+		// that and just hashmap-get keyed by srec_field_name here.
+		mv_t val = parg_evaluator->pprocess_func(parg_evaluator->pvstate, pvars);
 
 		if (val.type == MT_STRING) {
 			// Ownership transfer from (newly created) mlrval to (newly created) lrec.
-			lrec_put(prec_to_emit, emitf_or_unset_srec_field_name, val.u.strv, val.free_flags);
+			lrec_put(prec_to_emit, srec_field_name, val.u.strv, val.free_flags);
 		} else {
 			char free_flags = NO_FREE;
 			char* string = mv_format_val(&val, &free_flags);
-			lrec_put(prec_to_emit, emitf_or_unset_srec_field_name, string, free_flags);
+			lrec_put(prec_to_emit, srec_field_name, string, free_flags);
 		}
 
 	}
@@ -363,10 +391,10 @@ static void free_emitf(mlr_dsl_cst_statement_t* pstatement) { // xxx
 		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
 	}
 
-	if (pstate->pvarargs != NULL) {
-		for (sllve_t* pe = pstate->pvarargs->phead; pe != NULL; pe = pe->pnext)
-			cst_statement_vararg_free(pe->pvvalue);
-		sllv_free(pstate->pvarargs);
+	if (pstate->pemitf_items != NULL) {
+		for (sllve_t* pe = pstate->pemitf_items->phead; pe != NULL; pe = pe->pnext)
+			free_emitf_item(pe->pvvalue);
+		sllv_free(pstate->pemitf_items);
 	}
 
 	free(pstate);

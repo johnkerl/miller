@@ -62,7 +62,6 @@ void blocked_ast_allocate_locals(blocked_ast_t* paast, int trace);
 // Forward references for virtual-function prototypes
 struct _mlr_dsl_cst_t;
 struct _mlr_dsl_cst_statement_t;
-struct _mlr_dsl_cst_statement_vararg_t;
 struct _subr_defsite_t;
 
 // Parameter bag to reduce parameter-marshaling
@@ -94,22 +93,6 @@ void cst_top_level_statement_block_free(cst_top_level_statement_block_t* pblock)
 
 // ----------------------------------------------------------------
 // Generic handler for a statement.
-
-// Subhandler for emitf/unset vararg items: e.g. in 'unset @o, $s' there is one for the @o and one for the $s.
-typedef void unset_vararg_handler_t( // xxx factor out for emit
-	struct _mlr_dsl_cst_statement_vararg_t* pvararg,
-	variables_t*                    pvars,
-	cst_outputs_t*                  pcst_outputs);
-
-// Most statements have one item, except emit and unset.
-typedef struct _mlr_dsl_cst_statement_vararg_t {
-	unset_vararg_handler_t* punset_handler;
-	int                     unset_local_variable_frame_relative_index;
-	char*                   emitf_or_unset_srec_field_name;
-	sllv_t*                 punset_oosvar_keylist_evaluators;
-	rval_evaluator_t*       punset_srec_field_name_evaluator;
-	rval_evaluator_t*       pemitf_arg_evaluator;
-} mlr_dsl_cst_statement_vararg_t;
 
 // Handler for statement lists: begin/main/end; cond/if/for/while/do-while.
 typedef void mlr_dsl_cst_block_handler_t(
@@ -143,13 +126,17 @@ typedef void mlr_dsl_cst_statement_freer_t(
 typedef struct _mlr_dsl_cst_statement_t {
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// Common to most or all statement types
+	// Common to most or all statement types:
 
 	// For trace-mode.
 	mlr_dsl_ast_node_t* past_node;
 
 	// Function-pointer for the handler of the given statement type, e.g. srec-assignment, while-loop, etc.
 	mlr_dsl_cst_statement_handler_t* pstatement_handler;
+
+	// Subclass destructor. It should free whatever's in the pvstate but it should not
+	// free the pstatement itself.
+	mlr_dsl_cst_statement_freer_t* pstatement_freer;
 
 	// The reason for this being a function pointer is that there are two variants of
 	// statement-list handlers: one for inside loop bodies which has to check
@@ -159,42 +146,15 @@ typedef struct _mlr_dsl_cst_statement_t {
 	cst_statement_block_t* pblock;
 	mlr_dsl_cst_block_handler_t* pblock_handler;
 
-	mlr_dsl_cst_statement_freer_t* pstatement_freer;
-
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Specific to each statement type:
 
 	void* pvstate;
 
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	// To be federated:
-
-	// Assignment to oosvar
-	sllv_t* poosvar_target_keylist_evaluators;
-
-	// Assignment to local
-	// The variable name is used only for type-decl exceptions. Otherwise the
-	// name is replaced with the frame-relative index by the stack allocator.
-	char* local_lhs_variable_name;
-	int   local_lhs_frame_relative_index;
-	int   local_lhs_type_mask;
-
-	// Assignment to srec
-	char* srec_lhs_field_name;
-
-	// Indirect assignment to srec
-	rval_evaluator_t* psrec_lhs_evaluator;
-
-	// Assignments to srec or oosvar, as well as the boolean expression in filter, cond, and bare-boolean
-	rval_evaluator_t* prhs_evaluator;
-
-	// Assigning full srec from oosvar:
-	sllv_t* poosvar_rhs_keylist_evaluators;
-
-	// Vararg stuff for emit and unset
-	sllv_t* pvarargs; // factor out of emit as well, as i did for unset
-
 } mlr_dsl_cst_statement_t;
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// For use by the statement-subclass constructors
 
 mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc(
 	mlr_dsl_ast_node_t*                    past_node,
@@ -455,16 +415,6 @@ mlr_dsl_cst_statement_allocator_t alloc_dump;
 // Hence the two-step process, with the second step being an object-binding step.
 mlr_dsl_cst_statement_allocator_t alloc_subr_callsite_statement;
 void mlr_dsl_cst_resolve_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl_cst_statement_t* pstatement);
-
-// ----------------------------------------------------------------
-mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc( // xxx factor out
-	int               unset_local_variable_frame_relative_index,
-	char*             emitf_or_unset_srec_field_name,
-	rval_evaluator_t* punset_srec_field_name_evaluator,
-	rval_evaluator_t* pemitf_arg_evaluator,
-	sllv_t*           punset_oosvar_keylist_evaluators);
-
-void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg);
 
 sllv_t* allocate_keylist_evaluators_from_oosvar_node(
 	mlr_dsl_cst_t*      pcst,

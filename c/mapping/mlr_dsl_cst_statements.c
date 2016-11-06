@@ -547,93 +547,13 @@ sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_cst_t* pcst, // xxx
 // ----------------------------------------------------------------
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
-	// xxx post-federation
 	if (pstatement->pstatement_freer != NULL) {
 		pstatement->pstatement_freer(pstatement);
-	}
-
-	free(pstatement->local_lhs_variable_name);
-
-	if (pstatement->psrec_lhs_evaluator != NULL) {
-		pstatement->psrec_lhs_evaluator->pfree_func(pstatement->psrec_lhs_evaluator);
-	}
-
-	if (pstatement->prhs_evaluator != NULL) {
-		pstatement->prhs_evaluator->pfree_func(pstatement->prhs_evaluator);
-	}
-
-	if (pstatement->poosvar_rhs_keylist_evaluators != NULL) {
-		for (sllve_t* pe = pstatement->poosvar_rhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-			rval_evaluator_t* phandler = pe->pvvalue;
-			phandler->pfree_func(phandler);
-		}
-		sllv_free(pstatement->poosvar_rhs_keylist_evaluators);
-	}
-
-	if (pstatement->pvarargs != NULL) {
-		for (sllve_t* pe = pstatement->pvarargs->phead; pe != NULL; pe = pe->pnext)
-			cst_statement_vararg_free(pe->pvvalue);
-		sllv_free(pstatement->pvarargs);
 	}
 
 	cst_statement_block_free(pstatement->pblock);
 
 	free(pstatement);
-}
-
-// ================================================================
-mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc(
-	int               unset_local_variable_frame_relative_index,
-	char*             emitf_or_unset_srec_field_name,
-	rval_evaluator_t* punset_srec_field_name_evaluator,
-	rval_evaluator_t* pemitf_arg_evaluator,
-	sllv_t*           punset_oosvar_keylist_evaluators)
-{
-	mlr_dsl_cst_statement_vararg_t* pvararg = mlr_malloc_or_die(sizeof(mlr_dsl_cst_statement_vararg_t));
-	pvararg->punset_handler = NULL;
-	pvararg->unset_local_variable_frame_relative_index = unset_local_variable_frame_relative_index;
-	pvararg->emitf_or_unset_srec_field_name = emitf_or_unset_srec_field_name == NULL
-		? NULL : mlr_strdup_or_die(emitf_or_unset_srec_field_name);
-	pvararg->punset_oosvar_keylist_evaluators = punset_oosvar_keylist_evaluators;
-	pvararg->punset_srec_field_name_evaluator = punset_srec_field_name_evaluator;
-	pvararg->pemitf_arg_evaluator             = pemitf_arg_evaluator;
-
-	if (pvararg->unset_local_variable_frame_relative_index != MD_UNUSED_INDEX) {
-		// xxx pvararg->punset_handler = handle_unset_local_variable;
-	} else if (pvararg->punset_oosvar_keylist_evaluators != NULL) {
-		// xxx pvararg->punset_handler = handle_unset_vararg_oosvar;
-	} else if (pvararg->punset_srec_field_name_evaluator != NULL) {
-		// xxx pvararg->punset_handler = handle_unset_vararg_indirect_srec_field_name;
-	} else if (pvararg->emitf_or_unset_srec_field_name != NULL) {
-		// xxx pvararg->punset_handler = handle_unset_vararg_srec_field_name;
-	} else {
-		// xxx pvararg->punset_handler = handle_unset_vararg_full_srec;
-	}
-
-	return pvararg;
-}
-
-void cst_statement_vararg_free(mlr_dsl_cst_statement_vararg_t* pvararg) {
-	if (pvararg == NULL)
-		return;
-	free(pvararg->emitf_or_unset_srec_field_name);
-
-	if (pvararg->punset_srec_field_name_evaluator != NULL) {
-		pvararg->punset_srec_field_name_evaluator->pfree_func(pvararg->punset_srec_field_name_evaluator);
-	}
-
-	if (pvararg->punset_oosvar_keylist_evaluators != NULL) {
-		for (sllve_t* pe = pvararg->punset_oosvar_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-			rval_evaluator_t* phandler = pe->pvvalue;
-			phandler->pfree_func(phandler);
-		}
-		sllv_free(pvararg->punset_oosvar_keylist_evaluators);
-	}
-
-	if (pvararg->pemitf_arg_evaluator != NULL)
-		pvararg->pemitf_arg_evaluator->pfree_func(pvararg->pemitf_arg_evaluator);
-
-	free(pvararg);
 }
 
 // ================================================================
