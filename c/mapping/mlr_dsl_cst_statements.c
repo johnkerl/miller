@@ -554,14 +554,6 @@ void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
 
 	free(pstatement->local_lhs_variable_name);
 
-	if (pstatement->poosvar_target_keylist_evaluators != NULL) {
-		for (sllve_t* pe = pstatement->poosvar_target_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-			rval_evaluator_t* phandler = pe->pvvalue;
-			phandler->pfree_func(phandler);
-		}
-		sllv_free(pstatement->poosvar_target_keylist_evaluators);
-	}
-
 	if (pstatement->psrec_lhs_evaluator != NULL) {
 		pstatement->psrec_lhs_evaluator->pfree_func(pstatement->psrec_lhs_evaluator);
 	}
