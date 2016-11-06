@@ -2112,10 +2112,10 @@ md_atom_or_fcn(A) ::= md_indexed_local_variable(B). {
 }
 
 md_local_variable(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
-	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE);
+	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE);
 }
 md_indexed_local_variable(A) ::= md_local_variable(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
-	A = mlr_dsl_ast_node_alloc_unary(B->text, MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE, C);
+	A = mlr_dsl_ast_node_alloc_unary(B->text, MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE, C);
 }
 md_indexed_local_variable(A) ::= md_indexed_local_variable(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
 	A = mlr_dsl_ast_node_append_arg(B, C);

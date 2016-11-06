@@ -199,7 +199,7 @@ mlr_dsl_cst_statement_t* alloc_local_non_map_variable_assignment(mlr_dsl_cst_t* 
 	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE);
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren != NULL);
 
 	pstate->lhs_variable_name = pleft->text;
@@ -262,7 +262,7 @@ mlr_dsl_cst_statement_t* alloc_local_map_variable_assignment(mlr_dsl_cst_t* pcst
 	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE);
+	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren == NULL);
 
 	pstate->lhs_variable_name = mlr_strdup_or_die(pleft->text);

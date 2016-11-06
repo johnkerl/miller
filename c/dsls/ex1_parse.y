@@ -1248,7 +1248,7 @@ md_atom_or_fcn(A) ::= md_local_variable(B). {
 	A = B;
 }
 md_local_variable(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
-	A = ex_ast_node_alloc(B->text, MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE);
+	A = ex_ast_node_alloc(B->text, MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE);
 }
 
 md_string(A) ::= MD_TOKEN_STRING(B). {

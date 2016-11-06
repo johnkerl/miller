@@ -60,7 +60,7 @@ mlr_dsl_cst_statement_t* alloc_return_value(
 	// AST ROOT:
 	// text="block", type=STATEMENT_BLOCK:
 	//     text="map", type=MAP_LOCAL_DECLARATION:
-	//         text="v", type=LOCAL_NON_MAP_VARIABLE.     <---- xxx wtfc
+	//         text="v", type=NONINDEXED_LOCAL_VARIABLE.     <---- xxx wtfc
 	//         text="map_literal", type=MAP_LITERAL:
 
 	switch (prhs_node->type) {
@@ -68,11 +68,11 @@ mlr_dsl_cst_statement_t* alloc_return_value(
 		return alloc_return_value_from_map_literal(pcst, pnode, type_inferencing, context_flags);
 		break;
 
-	case  MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE:
+	case  MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE:
 		return alloc_return_value_from_local_non_map_variable(pcst, pnode, type_inferencing, context_flags);
 		break;
 
-	case  MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE:
+	case  MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE:
 		return alloc_return_value_from_local_map_variable(pcst, pnode, type_inferencing, context_flags);
 		break;
 

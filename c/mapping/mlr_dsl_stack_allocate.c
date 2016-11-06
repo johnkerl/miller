@@ -396,10 +396,10 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* 
 	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_MAP_ASSIGNMENT) { // LHS
 		pass_1_for_local_assignment(pnode, pframe_group, pmax_subframe_depth, trace);
 
-	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE) { // RHS
+	} else if (pnode->type == MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE) { // RHS
 		pass_1_for_local_read(pnode, pframe_group, pmax_subframe_depth, trace);
 
-	} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_MAP_VARIABLE) { // RHS
+	} else if (pnode->type == MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE) { // RHS
 		pass_1_for_local_read(pnode, pframe_group, pmax_subframe_depth, trace);
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) {
@@ -508,7 +508,7 @@ static void pass_1_for_map_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_s
 	// Example: 'for(a in @b[c][d]) { var e = a}': the c and d
 	// should be obtained from the enclosing scope.
 
-	if (pkeylistnode->type == MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE) {
+	if (pkeylistnode->type == MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE) {
 		// For-local-map: e.g. 'for(a in b[c][d])'.
 		pass_1_for_node(pkeylistnode, pframe_group, pmax_subframe_depth, trace);
 	}
@@ -556,7 +556,7 @@ static void pass_1_for_map_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_g
 	//
 	// Example: 'for(k, v in @a[b][c]) { var d = k; var e = v }': the b and c
 	// should be obtained from the enclosing scope.
-	if (pkeylistnode->type == MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE) {
+	if (pkeylistnode->type == MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE) {
 		// For-local-map: e.g. 'for(a,b in c[d][e])'.
 		pass_1_for_node(pkeylistnode, pframe_group, pmax_subframe_depth, trace);
 	}
