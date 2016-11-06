@@ -53,6 +53,7 @@
 // ================================================================
 
 // ----------------------------------------------------------------
+// mapping/mlr_dsl_stack_allocate.c
 // Two-pass stack allocator which operates on the block-structured AST
 // before the CST is build (mlr_dsl_stack_allocate.c).
 void blocked_ast_allocate_locals(blocked_ast_t* paast, int trace);
@@ -95,7 +96,7 @@ void cst_top_level_statement_block_free(cst_top_level_statement_block_t* pblock)
 // Generic handler for a statement.
 
 // Subhandler for emitf/unset vararg items: e.g. in 'unset @o, $s' there is one for the @o and one for the $s.
-typedef void unset_vararg_handler_t(
+typedef void unset_vararg_handler_t( // xxx factor out for emit
 	struct _mlr_dsl_cst_statement_vararg_t* pvararg,
 	variables_t*                    pvars,
 	cst_outputs_t*                  pcst_outputs);
@@ -117,8 +118,8 @@ typedef void mlr_dsl_cst_block_handler_t(
 	cst_outputs_t*         pcst_outputs);
 
 // ----------------------------------------------------------------
-// xxx cst-statement-federation project
-
+// mlr_dsl_cst_statement_t is a base class extended by all manner of subclasses.
+// The following are for their method pointers.
 typedef struct _mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_allocator_t(
 	struct _mlr_dsl_cst_t* pcst,
 	mlr_dsl_ast_node_t*    pnode,
@@ -136,12 +137,8 @@ typedef void mlr_dsl_cst_statement_freer_t(
 // ----------------------------------------------------------------
 // MLR_DSL_CST_STATEMENT OBJECT
 
-// These hold all the member data needed to evaluate any CST statement. No one kind of statement
-// uses all of them. They aren't expressed as a union since their count is small: there's one CST
-// per mlr-put invocation, independent of the number of stream records processed.
-//
-// Difference between keylist and namelist: in emit @a[$b]["c"], "d", @e, the keylist is ["a", $b, "c"]
-// and the namelist is ["d", @e].
+// Name note: difference between keylist and namelist: in emit @a[$b]["c"], "d", @e,
+// the keylist is ["a", $b, "c"] and the namelist is ["d", @e].
 
 typedef struct _mlr_dsl_cst_statement_t {
 
@@ -350,7 +347,7 @@ void mlr_dsl_list_all_keywords_raw(FILE* output_stream);
 void mlr_dsl_keyword_usage(FILE* output_stream, char* keyword);
 
 // ================================================================
-// xxx comment/reorg ...
+// Specific CST-statement subclasses
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_condish_statements.c
@@ -460,7 +457,7 @@ mlr_dsl_cst_statement_allocator_t alloc_subr_callsite_statement;
 void mlr_dsl_cst_resolve_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl_cst_statement_t* pstatement);
 
 // ----------------------------------------------------------------
-mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc(
+mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc( // xxx factor out
 	int               unset_local_variable_frame_relative_index,
 	char*             emitf_or_unset_srec_field_name,
 	rval_evaluator_t* punset_srec_field_name_evaluator,
