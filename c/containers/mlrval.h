@@ -104,7 +104,7 @@
 #define MT_STRING   3
 #define MT_INT      4
 #define MT_FLOAT    5
-#define MT_BOOLEAN     6
+#define MT_BOOLEAN  6
 #define MT_DIM      7
 
 #define MV_SB_ALLOC_LENGTH 32

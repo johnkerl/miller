@@ -4,7 +4,7 @@
 #include "mlr_dsl_cst.h"
 #include "context_flags.h"
 
-static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, variables_t* pvars);
+static mlhmmv_value_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, variables_t* pvars);
 static void cst_udf_free_callback(void* pvstate);
 
 // ----------------------------------------------------------------
@@ -127,7 +127,7 @@ void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate) {
 // ----------------------------------------------------------------
 // Callback function for the function manager to invoke into here
 
-static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, variables_t* pvars) { // xxx mapvars
+static mlhmmv_value_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, variables_t* pvars) {
 	cst_udf_state_t* pstate = pvstate;
 	cst_top_level_statement_block_t* ptop_level_block = pstate->ptop_level_block;
 	mlhmmv_value_t retval = mlhmmv_value_transfer_terminal(mv_absent());
@@ -189,13 +189,7 @@ static mv_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, varia
 	local_stack_subframe_exit(pframe, ptop_level_block->pblock->subframe_var_count);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 
-	// xxx XXX NEXT
-	// xxx mapvars return retval;
-	if (retval.is_terminal) {
-		return retval.u.mlrval; // xxx mapvars
-	} else {
-		return mv_absent();
-	}
+	return retval;
 }
 
 // ----------------------------------------------------------------
