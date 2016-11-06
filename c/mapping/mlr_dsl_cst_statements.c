@@ -210,7 +210,7 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		break;
 
 	case MD_AST_NODE_TYPE_LOCAL_NONINDEXED_ASSIGNMENT:
-		return alloc_local_non_map_variable_assignment(pcst, pnode, type_inferencing, context_flags);
+		return alloc_nonindexed_local_variable_assignment(pcst, pnode, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_LOCAL_INDEXED_ASSIGNMENT:

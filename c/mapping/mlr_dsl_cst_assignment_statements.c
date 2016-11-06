@@ -173,7 +173,7 @@ static void handle_indirect_srec_assignment(
 }
 
 // ================================================================
-typedef struct _local_non_map_variable_assignment_state_t {
+typedef struct _nonindexed_local_variable_assignment_state_t {
 
 	// For error messages only: stack-index is computed by stack-allocator:
 	char* lhs_variable_name;
@@ -182,17 +182,17 @@ typedef struct _local_non_map_variable_assignment_state_t {
 
 	rval_evaluator_t* prhs_evaluator;
 
-} local_non_map_variable_assignment_state_t;
+} nonindexed_local_variable_assignment_state_t;
 
-static mlr_dsl_cst_statement_handler_t handle_local_non_map_variable_assignment;
-static mlr_dsl_cst_statement_freer_t free_local_non_map_variable_assignment;
+static mlr_dsl_cst_statement_handler_t handle_nonindexed_local_variable_assignment;
+static mlr_dsl_cst_statement_freer_t free_nonindexed_local_variable_assignment;
 
 // ----------------------------------------------------------------
-mlr_dsl_cst_statement_t* alloc_local_non_map_variable_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+mlr_dsl_cst_statement_t* alloc_nonindexed_local_variable_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
-	local_non_map_variable_assignment_state_t* pstate = mlr_malloc_or_die(sizeof(
-		local_non_map_variable_assignment_state_t));
+	nonindexed_local_variable_assignment_state_t* pstate = mlr_malloc_or_die(sizeof(
+		nonindexed_local_variable_assignment_state_t));
 
 	MLR_INTERNAL_CODING_ERROR_IF((pnode->pchildren == NULL) || (pnode->pchildren->length != 2));
 
@@ -209,14 +209,14 @@ mlr_dsl_cst_statement_t* alloc_local_non_map_variable_assignment(mlr_dsl_cst_t* 
 
 	return mlr_dsl_cst_statement_valloc(
 		pnode,
-		handle_local_non_map_variable_assignment,
-		free_local_non_map_variable_assignment,
+		handle_nonindexed_local_variable_assignment,
+		free_nonindexed_local_variable_assignment,
 		pstate);
 }
 
 // ----------------------------------------------------------------
-static void free_local_non_map_variable_assignment(mlr_dsl_cst_statement_t* pstatement) {
-	local_non_map_variable_assignment_state_t* pstate = pstatement->pvstate;
+static void free_nonindexed_local_variable_assignment(mlr_dsl_cst_statement_t* pstatement) {
+	nonindexed_local_variable_assignment_state_t* pstate = pstatement->pvstate;
 
 	pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
 
@@ -224,12 +224,12 @@ static void free_local_non_map_variable_assignment(mlr_dsl_cst_statement_t* psta
 }
 
 // ----------------------------------------------------------------
-static void handle_local_non_map_variable_assignment(
+static void handle_nonindexed_local_variable_assignment(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	local_non_map_variable_assignment_state_t* pstate = pstatement->pvstate;
+	nonindexed_local_variable_assignment_state_t* pstate = pstatement->pvstate;
 
 	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator;
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
@@ -696,7 +696,7 @@ typedef struct _local_variable_definition_state_t {
 	rval_evaluator_t* prhs_evaluator;
 } local_variable_definition_state_t;
 
-static mlr_dsl_cst_statement_handler_t handle_local_non_map_variable_definition;
+static mlr_dsl_cst_statement_handler_t handle_nonindexed_local_variable_definition;
 static mlr_dsl_cst_statement_handler_t handle_local_map_variable_declaration;
 static mlr_dsl_cst_statement_freer_t free_local_variable_definition;
 
@@ -723,7 +723,7 @@ mlr_dsl_cst_statement_t* alloc_local_variable_definition(
 		mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pnext->pvvalue;
 		pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, pcst->pfmgr,
 			type_inferencing, context_flags);
-		pstatement_handler = handle_local_non_map_variable_definition;
+		pstatement_handler = handle_nonindexed_local_variable_definition;
 	} else {
 		pstate->prhs_evaluator = NULL;
 		pstatement_handler = handle_local_map_variable_declaration;
@@ -748,7 +748,7 @@ static void free_local_variable_definition(mlr_dsl_cst_statement_t* pstatement) 
 }
 
 // ----------------------------------------------------------------
-static void handle_local_non_map_variable_definition( // xxx mapvar
+static void handle_nonindexed_local_variable_definition( // xxx mapvar
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)

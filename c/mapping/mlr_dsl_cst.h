@@ -342,7 +342,7 @@ mlr_dsl_cst_statement_t* alloc_local_variable_definition(
 	int                 context_flags,
 	int                 type_mask);
 
-mlr_dsl_cst_statement_allocator_t alloc_local_non_map_variable_assignment;
+mlr_dsl_cst_statement_allocator_t alloc_nonindexed_local_variable_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_local_map_variable_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_oosvar_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_oosvar_from_full_srec_assignment;
