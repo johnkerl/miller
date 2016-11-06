@@ -34,7 +34,7 @@ static void free_return_void(mlr_dsl_cst_statement_t* pstatement) {
 // ================================================================
 static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_map_literal;
 static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_local_non_map_variable;
-static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_local_map_variable;
+static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_indexed_local_variable;
 static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_oosvar;
 static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_full_oosvar;
 static mlr_dsl_cst_statement_allocator_t alloc_return_value_from_full_srec; // xxx needs grammar support
@@ -73,7 +73,7 @@ mlr_dsl_cst_statement_t* alloc_return_value(
 		break;
 
 	case  MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE:
-		return alloc_return_value_from_local_map_variable(pcst, pnode, type_inferencing, context_flags);
+		return alloc_return_value_from_indexed_local_variable(pcst, pnode, type_inferencing, context_flags);
 		break;
 
 	case  MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
@@ -101,7 +101,7 @@ mlr_dsl_cst_statement_t* alloc_return_value(
 
 // ----------------------------------------------------------------
 static mlr_dsl_cst_statement_handler_t handle_return_value_from_local_non_map_variable;
-static mlr_dsl_cst_statement_handler_t handle_return_value_from_local_map_variable;
+static mlr_dsl_cst_statement_handler_t handle_return_value_from_indexed_local_variable;
 static mlr_dsl_cst_statement_handler_t handle_return_value_from_oosvar;
 static mlr_dsl_cst_statement_handler_t handle_return_value_from_full_oosvar;
 static mlr_dsl_cst_statement_handler_t handle_return_value_from_full_srec; // xxx needs grammar support
@@ -185,27 +185,27 @@ static void free_return_value_from_local_non_map_variable(mlr_dsl_cst_statement_
 }
 
 // ================================================================
-typedef struct _return_value_from_local_map_variable_state_t {
+typedef struct _return_value_from_indexed_local_variable_state_t {
 
 	// For error messages only: stack-index is computed by stack-allocator:
 	char* rhs_variable_name;
 	int rhs_frame_relative_index;
 	sllv_t* prhs_keylist_evaluators;
 
-} return_value_from_local_map_variable_state_t;
+} return_value_from_indexed_local_variable_state_t;
 
-static mlr_dsl_cst_statement_handler_t handle_return_value_from_local_map_variable;
-static mlr_dsl_cst_statement_freer_t free_return_value_from_local_map_variable;
+static mlr_dsl_cst_statement_handler_t handle_return_value_from_indexed_local_variable;
+static mlr_dsl_cst_statement_freer_t free_return_value_from_indexed_local_variable;
 
 // ----------------------------------------------------------------
-mlr_dsl_cst_statement_t* alloc_return_value_from_local_map_variable(
+mlr_dsl_cst_statement_t* alloc_return_value_from_indexed_local_variable(
 	mlr_dsl_cst_t*      pcst,
 	mlr_dsl_ast_node_t* pnode,
 	int                 type_inferencing,
 	int                 context_flags)
 {
-	return_value_from_local_map_variable_state_t* pstate =
-		mlr_malloc_or_die(sizeof(return_value_from_local_map_variable_state_t));
+	return_value_from_indexed_local_variable_state_t* pstate =
+		mlr_malloc_or_die(sizeof(return_value_from_indexed_local_variable_state_t));
 
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pvvalue;
 
@@ -219,18 +219,18 @@ mlr_dsl_cst_statement_t* alloc_return_value_from_local_map_variable(
 
 	return mlr_dsl_cst_statement_valloc(
 		pnode,
-		handle_return_value_from_local_map_variable,
-		free_return_value_from_local_map_variable,
+		handle_return_value_from_indexed_local_variable,
+		free_return_value_from_indexed_local_variable,
 		pstate);
 }
 
 // ----------------------------------------------------------------
-static void handle_return_value_from_local_map_variable(
+static void handle_return_value_from_indexed_local_variable(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	return_value_from_local_map_variable_state_t* pstate = pstatement->pvstate;
+	return_value_from_indexed_local_variable_state_t* pstate = pstatement->pvstate;
 
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvkeys = evaluate_list(pstate->prhs_keylist_evaluators, pvars,
@@ -256,8 +256,8 @@ static void handle_return_value_from_local_map_variable(
 	pvars->return_state.returned = TRUE;
 }
 
-static void free_return_value_from_local_map_variable(mlr_dsl_cst_statement_t* pstatement) {
-	return_value_from_local_map_variable_state_t* pstate = pstatement->pvstate;
+static void free_return_value_from_indexed_local_variable(mlr_dsl_cst_statement_t* pstatement) {
+	return_value_from_indexed_local_variable_state_t* pstate = pstatement->pvstate;
 
 	for (sllve_t* pe = pstate->prhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 		rval_evaluator_t* pev = pe->pvvalue;

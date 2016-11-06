@@ -214,7 +214,7 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		break;
 
 	case MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT:
-		return alloc_local_map_variable_assignment(pcst, pnode, type_inferencing, context_flags);
+		return alloc_indexed_local_variable_assignment(pcst, pnode, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:
