@@ -404,6 +404,10 @@ mlr_dsl_cst_statement_allocator_t alloc_full_srec_from_oosvar_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_env_assignment;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// mapping/mlr_dsl_cst_unset_statements.c
+mlr_dsl_cst_statement_allocator_t alloc_unset;
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_for_srec_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_for_srec;
 

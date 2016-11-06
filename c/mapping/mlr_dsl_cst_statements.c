@@ -19,18 +19,12 @@ static mlr_dsl_cst_statement_t* alloc_blank(mlr_dsl_ast_node_t* past_node);
 void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static mlr_dsl_cst_statement_allocator_t alloc_unset;
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static mlr_dsl_cst_statement_allocator_t alloc_for_oosvar;
 static mlr_dsl_cst_statement_allocator_t alloc_for_oosvar_key_only;
 static mlr_dsl_cst_statement_allocator_t alloc_for_local_map;
 static mlr_dsl_cst_statement_allocator_t alloc_for_local_map_key_only;
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_handler_t handle_unset;
-static mlr_dsl_cst_statement_handler_t handle_unset_all;
-
 static mlr_dsl_cst_statement_handler_t handle_for_oosvar;
 static mlr_dsl_cst_statement_handler_t handle_for_oosvar_key_only;
 static mlr_dsl_cst_statement_handler_t handle_for_local_map;
@@ -55,32 +49,6 @@ static void handle_for_local_map_aux(
 	int*                     prest_for_k_frame_relative_indices,
 	int*                     prest_for_k_frame_type_masks,
 	int                      prest_for_k_count);
-
-static void handle_unset_local_variable(
-	mlr_dsl_cst_statement_vararg_t* pvararg,
-	variables_t*                    pvars,
-	cst_outputs_t*                  pcst_outputs);
-
-static void handle_unset_vararg_oosvar(
-	mlr_dsl_cst_statement_vararg_t* pvararg,
-	variables_t*                    pvars,
-	cst_outputs_t*                  pcst_outputs);
-
-static void handle_unset_vararg_full_srec(
-	mlr_dsl_cst_statement_vararg_t* pvararg,
-	variables_t*                    pvars,
-	cst_outputs_t*                  pcst_outputs);
-
-static void handle_unset_vararg_srec_field_name(
-	mlr_dsl_cst_statement_vararg_t* pvararg,
-	variables_t*                    pvars,
-	cst_outputs_t*                  pcst_outputs);
-
-static void handle_unset_vararg_indirect_srec_field_name(
-	mlr_dsl_cst_statement_vararg_t* pvararg,
-	variables_t*                    pvars,
-	cst_outputs_t*                  pcst_outputs);
-
 
 // ================================================================
 cst_statement_block_t* cst_statement_block_alloc(int subframe_var_count) {
@@ -574,87 +542,6 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc_with_block(
 }
 
 // ----------------------------------------------------------------
-static mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
-	int type_inferencing, int context_flags)
-{
-	mlr_dsl_cst_statement_t* pstatement = alloc_blank(pnode);
-
-	pstatement->pstatement_handler = handle_unset;
-	pstatement->pvarargs = sllv_alloc();
-	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
-
-		if (pnode->type == MD_AST_NODE_TYPE_ALL || pnode->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
-			// The grammar allows only 'unset all', not 'unset @x, all, $y'.
-			// So if 'all' appears at all, it's the only name. Likewise with '@*'.
-			pstatement->pstatement_handler = handle_unset_all;
-
-		} else if (pnode->type == MD_AST_NODE_TYPE_FULL_SREC) {
-			if (context_flags & IN_BEGIN_OR_END) {
-				fprintf(stderr, "%s: unset of $-variables is not valid within begin or end blocks.\n",
-					MLR_GLOBALS.bargv0);
-				exit(1);
-			}
-			sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
-				MD_UNUSED_INDEX,
-				NULL,
-				NULL,
-				NULL,
-				NULL));
-
-		} else if (pnode->type == MD_AST_NODE_TYPE_FIELD_NAME) {
-			if (context_flags & IN_BEGIN_OR_END) {
-				fprintf(stderr, "%s: unset of $-variables is not valid within begin or end blocks.\n",
-					MLR_GLOBALS.bargv0);
-				exit(1);
-			}
-			sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
-				MD_UNUSED_INDEX,
-				pnode->text,
-				NULL,
-				NULL,
-				NULL));
-
-		} else if (pnode->type == MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME) {
-			if (context_flags & IN_BEGIN_OR_END) {
-				fprintf(stderr, "%s: unset of $-variables are not valid within begin or end blocks.\n",
-					MLR_GLOBALS.bargv0);
-				exit(1);
-			}
-			sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
-				MD_UNUSED_INDEX,
-				NULL,
-				rval_evaluator_alloc_from_ast(pnode->pchildren->phead->pvvalue, pcst->pfmgr,
-					type_inferencing, context_flags),
-				NULL,
-				NULL));
-
-		} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
-			sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
-				MD_UNUSED_INDEX,
-				NULL,
-				NULL,
-				NULL,
-				allocate_keylist_evaluators_from_oosvar_node(pcst, pnode,
-					type_inferencing, context_flags)));
-
-		} else if (pnode->type == MD_AST_NODE_TYPE_LOCAL_NON_MAP_VARIABLE) {
-			MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_frame_relative_index == MD_UNUSED_INDEX);
-			sllv_append(pstatement->pvarargs, mlr_dsl_cst_statement_vararg_alloc(
-				pnode->vardef_frame_relative_index,
-				NULL,
-				NULL,
-				NULL,
-				NULL));
-
-		} else {
-			MLR_INTERNAL_CODING_ERROR();
-		}
-	}
-	return pstatement;
-}
-
-// ----------------------------------------------------------------
 // $ mlr -n put -v 'for((k1,k2,k3),v in @a["4"][$5]) { $6 = 7; $8 = 9}'
 // AST ROOT:
 // text="list", type=statement_list:
@@ -1010,15 +897,15 @@ mlr_dsl_cst_statement_vararg_t* mlr_dsl_cst_statement_vararg_alloc(
 	pvararg->pemitf_arg_evaluator             = pemitf_arg_evaluator;
 
 	if (pvararg->unset_local_variable_frame_relative_index != MD_UNUSED_INDEX) {
-		pvararg->punset_handler = handle_unset_local_variable;
+		// xxx pvararg->punset_handler = handle_unset_local_variable;
 	} else if (pvararg->punset_oosvar_keylist_evaluators != NULL) {
-		pvararg->punset_handler = handle_unset_vararg_oosvar;
+		// xxx pvararg->punset_handler = handle_unset_vararg_oosvar;
 	} else if (pvararg->punset_srec_field_name_evaluator != NULL) {
-		pvararg->punset_handler = handle_unset_vararg_indirect_srec_field_name;
+		// xxx pvararg->punset_handler = handle_unset_vararg_indirect_srec_field_name;
 	} else if (pvararg->emitf_or_unset_srec_field_name != NULL) {
-		pvararg->punset_handler = handle_unset_vararg_srec_field_name;
+		// xxx pvararg->punset_handler = handle_unset_vararg_srec_field_name;
 	} else {
-		pvararg->punset_handler = handle_unset_vararg_full_srec;
+		// xxx pvararg->punset_handler = handle_unset_vararg_full_srec;
 	}
 
 	return pvararg;
@@ -1164,81 +1051,6 @@ void mlr_dsl_cst_handle_statement_list(
 			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 		}
 	}
-}
-
-// ----------------------------------------------------------------
-static void handle_unset(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	for (sllve_t* pf = pstatement->pvarargs->phead; pf != NULL; pf = pf->pnext) {
-		mlr_dsl_cst_statement_vararg_t* pvararg = pf->pvvalue;
-		pvararg->punset_handler(pvararg, pvars, pcst_outputs);
-	}
-}
-
-static void handle_unset_local_variable(
-	mlr_dsl_cst_statement_vararg_t* pvararg,
-	variables_t*                    pvars,
-	cst_outputs_t*                  pcst_outputs)
-{
-	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_frame_assign_non_map(pframe, pvararg->unset_local_variable_frame_relative_index, mv_absent());
-}
-
-static void handle_unset_vararg_oosvar(
-	mlr_dsl_cst_statement_vararg_t* pvararg,
-	variables_t*                    pvars,
-	cst_outputs_t*                  pcst_outputs)
-{
-	int all_non_null_or_error = TRUE;
-	sllmv_t* pmvkeys = evaluate_list(pvararg->punset_oosvar_keylist_evaluators, pvars, &all_non_null_or_error);
-	if (all_non_null_or_error)
-		mlhmmv_remove(pvars->poosvars, pmvkeys);
-	sllmv_free(pmvkeys);
-}
-
-static void handle_unset_vararg_full_srec(
-	mlr_dsl_cst_statement_vararg_t* pvararg,
-	variables_t*                    pvars,
-	cst_outputs_t*                  pcst_outputs)
-{
-	lrec_clear(pvars->pinrec);
-}
-
-static void handle_unset_vararg_srec_field_name(
-	mlr_dsl_cst_statement_vararg_t* pvararg,
-	variables_t*                    pvars,
-	cst_outputs_t*                  pcst_outputs)
-{
-	lrec_remove(pvars->pinrec, pvararg->emitf_or_unset_srec_field_name);
-}
-
-static void handle_unset_vararg_indirect_srec_field_name(
-	mlr_dsl_cst_statement_vararg_t* pvararg,
-	variables_t*                    pvars,
-	cst_outputs_t*                  pcst_outputs)
-{
-	rval_evaluator_t* pevaluator = pvararg->punset_srec_field_name_evaluator;
-	mv_t nameval = pevaluator->pprocess_func(pevaluator->pvstate, pvars);
-	char free_flags = NO_FREE;
-	char* field_name = mv_maybe_alloc_format_val(&nameval, &free_flags);
-	lrec_remove(pvars->pinrec, field_name);
-	if (free_flags & FREE_ENTRY_VALUE)
-		free(field_name);
-	mv_free(&nameval);
-}
-
-// ----------------------------------------------------------------
-static void handle_unset_all(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	sllmv_t* pempty = sllmv_alloc();
-	mlhmmv_remove(pvars->poosvars, pempty);
-	sllmv_free(pempty);
 }
 
 // ----------------------------------------------------------------

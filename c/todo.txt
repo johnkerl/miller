@@ -18,18 +18,23 @@ NON-RELEASE:
 ================================================================
 FUNCTIONALITY FOR 5.0.0:
 
-* typedecl:
-  - eliminate 'map a' and replace with 'map a = {}'
-
 * mapvar iterate
 
 ? map literals?!?
   - allow assignment to oosvar or local. or srec?!?
   - requires support for empty maps/levels
   - remove the emptystrip feature from oosvars? update the doc if so. also, another backwards-incompatible change.
+  ! allow $* @* @x varx all in map-literals in value nodes, with copy
+  - present at AST; needs CST work
 
-* null JSON syntax -- what syntactic meaning for miller? mv_absent or mv_empty, neither would render back as 'null'
+? map-literal grammar as separate parser?
+  - replace existing json parser?
+  - use this for streaming parser?
+  - implement byte-getter with fgetc to keep reading until closing bracket?
+
+? 'null' JSON syntax -- what syntactic meaning for miller? mv_absent or mv_empty, neither would render back as 'null'
   on output. yet i also don't want another null-type.
+
 * support JSON arrays:
   - allow them in map-literal input
   - allow them in JSON record input
@@ -38,10 +43,14 @@ FUNCTIONALITY FOR 5.0.0:
   - out-of-bounds read semantics (mv_absent)
   - -out-of-bounds write semantics (array extend)
   - for srec-to-mlhmmv: loop over level & if all integer keys & all in sequence, treat as array
-* map-literal grammar:
-  - replace existing json parser?
-  - use this for streaming parser?
-  - implement byte-getter with fgetc to keep reading until closing bracket?
+
+* typedecl:
+  - eliminate 'map a' and replace with 'map a = {}'
+
+----------------------------------------------------------------
+CST-FEDERATION:
+
+* rm varargs entirely?
 
 ----------------------------------------------------------------
 EXECUTION TRACE:
