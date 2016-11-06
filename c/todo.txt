@@ -18,6 +18,9 @@ NON-RELEASE:
 ================================================================
 FUNCTIONALITY FOR 5.0.0:
 
+* typedecl:
+  - eliminate 'map a' and replace with 'map a = {}'
+
 * mapvar iterate
 
 ? map literals?!?
