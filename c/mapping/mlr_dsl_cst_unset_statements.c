@@ -112,7 +112,7 @@ mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 		} else if (pchild->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 			unset_item_t* punset_item = alloc_blank_unset_item();
 			punset_item->punset_item_handler = handle_unset_oosvar;
-			punset_item->poosvar_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
+			punset_item->poosvar_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
 				pcst, pchild, type_inferencing, context_flags);
 			sllv_append(pstate->punset_items, punset_item);
 

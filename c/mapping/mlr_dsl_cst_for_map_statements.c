@@ -108,7 +108,7 @@ mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_
 	pstate->v_frame_relative_index = psubright->vardef_frame_relative_index;
 	pstate->v_type_mask = mlr_dsl_ast_node_type_to_type_mask(psubright->type);
 
-	pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
+	pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
 		pcst, pmiddle, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
@@ -295,7 +295,7 @@ mlr_dsl_cst_statement_t* alloc_for_oosvar_key_only(mlr_dsl_cst_t* pcst, mlr_dsl_
 	pstate->k_frame_relative_index = pleft->vardef_frame_relative_index;
 	pstate->k_type_mask = mlr_dsl_ast_node_type_to_type_mask(pleft->type);
 
-	pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
+	pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
 		pcst, pmiddle, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
@@ -450,7 +450,7 @@ mlr_dsl_cst_statement_t* alloc_for_local_map(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 	// xxx comment liberally
 	MLR_INTERNAL_CODING_ERROR_IF(pmiddle->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstate->target_frame_relative_index = pmiddle->vardef_frame_relative_index;
-	pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node( // xxx rename x 2
+	pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node( // xxx rename x 2
 		pcst, pmiddle, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
@@ -652,7 +652,7 @@ mlr_dsl_cst_statement_t* alloc_for_local_map_key_only(mlr_dsl_cst_t* pcst, mlr_d
 	// xxx comment liberally
 	MLR_INTERNAL_CODING_ERROR_IF(pmiddle->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstate->target_frame_relative_index = pmiddle->vardef_frame_relative_index;
-	pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node( // xxx rename x 2
+	pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node( // xxx rename x 2
 		pcst, pmiddle, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);

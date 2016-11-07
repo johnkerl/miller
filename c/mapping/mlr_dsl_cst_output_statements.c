@@ -515,7 +515,7 @@ mlr_dsl_cst_statement_t* alloc_emit(
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 
-		pstate->pemit_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(pcst, pkeylist_node,
+		pstate->pemit_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(pcst, pkeylist_node,
 			type_inferencing, context_flags);
 
 		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
@@ -587,7 +587,7 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 	int i = 0;
 	for (sllve_t* pe = pkeylists_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* pkeylist_node = pe->pvvalue;
-		pstate->ppemit_keylist_evaluators[i] = allocate_keylist_evaluators_from_oosvar_node(pcst,
+		pstate->ppemit_keylist_evaluators[i] = allocate_keylist_evaluators_from_ast_node(pcst,
 			pkeylist_node, type_inferencing, context_flags);
 	}
 

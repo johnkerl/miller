@@ -654,7 +654,7 @@ void mlr_dsl_cst_handle_statement_list(
 //         text="stream", type=stream:
 
 // pnode is input; pkeylist_evaluators is appended to.
-sllv_t* allocate_keylist_evaluators_from_oosvar_node(mlr_dsl_cst_t* pcst, // xxx rename // xxx make corresp free & call x n
+sllv_t* allocate_keylist_evaluators_from_ast_node(mlr_dsl_cst_t* pcst, // xxx rename // xxx make corresp free & call x n
 	mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags)
 {
 	sllv_t* pkeylist_evaluators = sllv_alloc();

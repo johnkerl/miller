@@ -214,7 +214,7 @@ mlr_dsl_cst_statement_t* alloc_return_value_from_indexed_local_variable(
 	MLR_INTERNAL_CODING_ERROR_IF(prhs_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstate->rhs_frame_relative_index = prhs_node->vardef_frame_relative_index;
 
-	pstate->prhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
+	pstate->prhs_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
 		pcst, prhs_node, type_inferencing, context_flags);
 
 	return mlr_dsl_cst_statement_valloc(
