@@ -185,7 +185,7 @@ static mlr_dsl_cst_statement_handler_t handle_local_variable_definition_from_map
 static mlr_dsl_cst_statement_freer_t free_local_variable_definition;
 
 // ----------------------------------------------------------------
-mlr_dsl_cst_statement_t* alloc_local_variable_definition(
+mlr_dsl_cst_statement_t* alloc_local_variable_definition( // xxx XXX mapvars next
 	mlr_dsl_cst_t*      pcst,
 	mlr_dsl_ast_node_t* pnode,
 	int                 type_inferencing,
@@ -282,7 +282,7 @@ static mlr_dsl_cst_statement_handler_t handle_nonindexed_local_variable_assignme
 static mlr_dsl_cst_statement_freer_t free_nonindexed_local_variable_assignment;
 
 // ----------------------------------------------------------------
-mlr_dsl_cst_statement_t* alloc_nonindexed_local_variable_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+mlr_dsl_cst_statement_t* alloc_nonindexed_local_variable_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode, // xxx XXX mapvars next
 	int type_inferencing, int context_flags)
 {
 	nonindexed_local_variable_assignment_state_t* pstate = mlr_malloc_or_die(sizeof(
@@ -295,6 +295,14 @@ mlr_dsl_cst_statement_t* alloc_nonindexed_local_variable_assignment(mlr_dsl_cst_
 
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren != NULL);
+
+	// xxx XXX mapvar case: rhs is MAP_LITERAL
+	// xxx XXX mapvar case: rhs is FULL_SREC
+	// xxx XXX mapvar case: rhs is OOSVAR_KEYLIST
+	// xxx XXX mapvar case: rhs is FULL_OOSVAR
+	// xxx XXX mapvar case: rhs is NONINDEXED_LOCAL_VARIABLE
+	// xxx XXX mapvar case: rhs is INDEXED_LOCAL_VARIABLE
+	// xxx XXX mapvar case: rhs is FUNC_CALLSITE
 
 	pstate->lhs_variable_name = pleft->text;
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
@@ -364,18 +372,38 @@ mlr_dsl_cst_statement_t* alloc_indexed_local_variable_assignment(mlr_dsl_cst_t* 
 	pstate->lhs_frame_relative_index = pleft->vardef_frame_relative_index;
 
 	// xxx replace with call to (renamed) allocate_keylist_evaluators_from_oosvar_node here & elsewhere
-	pstate->plhs_keylist_evaluators = sllv_alloc();
-	for (sllve_t* pe = pleft->pchildren->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-		if (pkeynode->type == MD_AST_NODE_TYPE_STRING_LITERAL) {
-			sllv_append(pstate->plhs_keylist_evaluators, rval_evaluator_alloc_from_string(pkeynode->text));
-		} else {
-			sllv_append(pstate->plhs_keylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, pcst->pfmgr,
-				type_inferencing, context_flags));
-		}
-	}
+	pstate->plhs_keylist_evaluators = allocate_keylist_evaluators_from_oosvar_node(
+		pcst, pleft, type_inferencing, context_flags);
 
-	pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
+	switch(pright->type) { // xxx XXX mapvar cases
+
+	case MD_AST_NODE_TYPE_MAP_LITERAL:
+		// xxx
+		break;
+
+	case MD_AST_NODE_TYPE_FULL_SREC:
+		break;
+
+	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
+		break;
+
+	case MD_AST_NODE_TYPE_FULL_OOSVAR:
+		break;
+
+	case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE:
+		break;
+
+	case MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE:
+		break;
+
+	case MD_AST_NODE_TYPE_FUNC_CALLSITE:
+		break;
+
+	default:
+		pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
+		break;
+
+	}
 
 	return mlr_dsl_cst_statement_valloc(
 		pnode,

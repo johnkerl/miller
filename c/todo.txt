@@ -69,24 +69,32 @@ MAPVARS:
 
   - LHS define/assign special cases:
 
-    a = $*
-    a = @*
-    a = @b
-    a = @b[c]
+    > assign local from xxx:
+      a = {...}
+      a = $*
+      a = @*
+      a = @b
+      a = @b[c]
+      a = b
+      a = b[c]
+      a = f(...)
+      a[b] = f(...)
 
-    a = b
+    > assign srec from local or function call:
+      $* = {...}
+      $* = a
+      $* = f(...)
+    > assign full oosvar from local or function call:
+      @* = {...}
+      @* = a
+      @* = f(...)
+    > assign oosvar from local or function call:
+      @b = {...}
+      @b = a
+      @b[c] = a
+      @b = f(...)
+      @b[c] = f(...)
 
-    $* = a
-    @* = a
-    @b = a
-    @b[c] = a
-
-    $* = f(...)
-    @* = f(...)
-    @b = f(...)
-    @b[c] = f(...)
-    a = f(...)
-    a[b] = f(...)
 
   k all other (non-special-case) LHS situations
     > coded; just need more UT coverage.
