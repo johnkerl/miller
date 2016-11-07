@@ -173,6 +173,105 @@ static void handle_indirect_srec_assignment(
 }
 
 // ================================================================
+typedef struct _local_variable_definition_state_t {
+	char*             lhs_variable_name;
+	int               lhs_frame_relative_index;
+	int               lhs_type_mask;
+	rval_evaluator_t* prhs_evaluator;
+} local_variable_definition_state_t;
+
+static mlr_dsl_cst_statement_handler_t handle_local_variable_definition;
+static mlr_dsl_cst_statement_handler_t handle_local_variable_definition_from_map_literal;
+static mlr_dsl_cst_statement_freer_t free_local_variable_definition;
+
+// ----------------------------------------------------------------
+mlr_dsl_cst_statement_t* alloc_local_variable_definition(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags,
+	int                 type_mask)
+{
+	local_variable_definition_state_t* pstate = mlr_malloc_or_die(
+		sizeof(local_variable_definition_state_t));
+
+	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
+	pstate->lhs_variable_name = pname_node->text;
+	MLR_INTERNAL_CODING_ERROR_IF(pname_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
+	pstate->lhs_frame_relative_index = pname_node->vardef_frame_relative_index;
+	pstate->lhs_type_mask = type_mask;
+
+	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
+	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pnext->pvvalue;
+	if (prhs_node->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
+		pstate->prhs_evaluator = NULL; // xxx more to do for mapvars
+		pstatement_handler = handle_local_variable_definition_from_map_literal;
+	} else {
+		pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, type_inferencing, context_flags);
+		pstatement_handler = handle_local_variable_definition;
+	}
+
+	return mlr_dsl_cst_statement_valloc(
+		pnode,
+		pstatement_handler,
+		free_local_variable_definition,
+		pstate);
+}
+
+// ----------------------------------------------------------------
+static void free_local_variable_definition(mlr_dsl_cst_statement_t* pstatement) {
+	local_variable_definition_state_t* pstate = pstatement->pvstate;
+
+	if (pstate->prhs_evaluator != NULL) {
+		pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
+	}
+
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
+static void handle_local_variable_definition( // xxx mapvar
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	local_variable_definition_state_t* pstate = pstatement->pvstate;
+
+	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator; // xxx mapvar
+	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	if (mv_is_present(&val)) {
+		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+		local_stack_frame_define(pframe,
+			pstate->lhs_variable_name, pstate->lhs_frame_relative_index,
+			pstate->lhs_type_mask, val);
+	} else {
+		mv_free(&val);
+	}
+}
+
+// ----------------------------------------------------------------
+static void handle_local_variable_definition_from_map_literal( // xxx mapvar
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	local_variable_definition_state_t* pstate = pstatement->pvstate;
+
+	//rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator; // xxx mapvar
+	//mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	// xxx mapvar stub
+	mv_t val = mv_absent();
+	//if (mv_is_present(&val)) {
+		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+		local_stack_frame_define(pframe,
+			pstate->lhs_variable_name, pstate->lhs_frame_relative_index,
+			/*pstate->lhs_type_mask*/ TYPE_MASK_MAP|TYPE_MASK_ABSENT, val); // xxx temp stub
+	//} else {
+		//mv_free(&val);
+	//}
+}
+
+// ================================================================
 typedef struct _nonindexed_local_variable_assignment_state_t {
 	char*             lhs_variable_name; // For error messages only: stack-index is computed by stack-allocator:
 	int               lhs_frame_relative_index;
@@ -674,103 +773,4 @@ static void handle_env_assignment(
 	}
 	mv_free(&lval);
 	mv_free(&rval);
-}
-
-// ================================================================
-typedef struct _local_variable_definition_state_t {
-	char*             lhs_variable_name;
-	int               lhs_frame_relative_index;
-	int               lhs_type_mask;
-	rval_evaluator_t* prhs_evaluator;
-} local_variable_definition_state_t;
-
-static mlr_dsl_cst_statement_handler_t handle_local_variable_definition;
-static mlr_dsl_cst_statement_handler_t handle_local_variable_definition_from_map_literal;
-static mlr_dsl_cst_statement_freer_t free_local_variable_definition;
-
-// ----------------------------------------------------------------
-mlr_dsl_cst_statement_t* alloc_local_variable_definition(
-	mlr_dsl_cst_t*      pcst,
-	mlr_dsl_ast_node_t* pnode,
-	int                 type_inferencing,
-	int                 context_flags,
-	int                 type_mask)
-{
-	local_variable_definition_state_t* pstate = mlr_malloc_or_die(
-		sizeof(local_variable_definition_state_t));
-
-	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
-	pstate->lhs_variable_name = pname_node->text;
-	MLR_INTERNAL_CODING_ERROR_IF(pname_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
-	pstate->lhs_frame_relative_index = pname_node->vardef_frame_relative_index;
-	pstate->lhs_type_mask = type_mask;
-
-	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
-	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pnext->pvvalue;
-	if (prhs_node->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
-		pstate->prhs_evaluator = NULL; // xxx more to do for mapvars
-		pstatement_handler = handle_local_variable_definition_from_map_literal;
-	} else {
-		pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, type_inferencing, context_flags);
-		pstatement_handler = handle_local_variable_definition;
-	}
-
-	return mlr_dsl_cst_statement_valloc(
-		pnode,
-		pstatement_handler,
-		free_local_variable_definition,
-		pstate);
-}
-
-// ----------------------------------------------------------------
-static void free_local_variable_definition(mlr_dsl_cst_statement_t* pstatement) {
-	local_variable_definition_state_t* pstate = pstatement->pvstate;
-
-	if (pstate->prhs_evaluator != NULL) {
-		pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
-	}
-
-	free(pstate);
-}
-
-// ----------------------------------------------------------------
-static void handle_local_variable_definition( // xxx mapvar
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	local_variable_definition_state_t* pstate = pstatement->pvstate;
-
-	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator; // xxx mapvar
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	if (mv_is_present(&val)) {
-		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_define(pframe,
-			pstate->lhs_variable_name, pstate->lhs_frame_relative_index,
-			pstate->lhs_type_mask, val);
-	} else {
-		mv_free(&val);
-	}
-}
-
-// ----------------------------------------------------------------
-static void handle_local_variable_definition_from_map_literal( // xxx mapvar
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	local_variable_definition_state_t* pstate = pstatement->pvstate;
-
-	//rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator; // xxx mapvar
-	//mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	// xxx mapvar stub
-	mv_t val = mv_absent();
-	//if (mv_is_present(&val)) {
-		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_define(pframe,
-			pstate->lhs_variable_name, pstate->lhs_frame_relative_index,
-			/*pstate->lhs_type_mask*/ TYPE_MASK_MAP, val); // xxx temp stub
-	//} else {
-		//mv_free(&val);
-	//}
 }
