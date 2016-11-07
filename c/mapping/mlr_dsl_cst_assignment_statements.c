@@ -282,7 +282,7 @@ static mlr_dsl_cst_statement_handler_t handle_nonindexed_local_variable_assignme
 static mlr_dsl_cst_statement_freer_t free_nonindexed_local_variable_assignment;
 
 // ----------------------------------------------------------------
-mlr_dsl_cst_statement_t* alloc_nonindexed_local_variable_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode, // xxx XXX mapvars next
+mlr_dsl_cst_statement_t* alloc_nonindexed_local_variable_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
 	nonindexed_local_variable_assignment_state_t* pstate = mlr_malloc_or_die(sizeof(
@@ -377,25 +377,32 @@ mlr_dsl_cst_statement_t* alloc_indexed_local_variable_assignment(mlr_dsl_cst_t* 
 	switch(pright->type) { // xxx XXX mapvar cases
 
 	case MD_AST_NODE_TYPE_MAP_LITERAL:
-		// xxx
+		// xxx map-build
+		// xxx level-copy
 		break;
 
 	case MD_AST_NODE_TYPE_FULL_SREC:
 		break;
 
 	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
+		// xxx level-copy
 		break;
 
 	case MD_AST_NODE_TYPE_FULL_OOSVAR:
+		// xxx level-copy
 		break;
 
 	case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE:
+		// xxx level-copy
 		break;
 
 	case MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE:
 		break;
 
 	case MD_AST_NODE_TYPE_FUNC_CALLSITE:
+		// xxx clone fmgr_alloc_from_operator_or_function_call
+		// xxx parameter-marshal etc.
+		// xxx retval etc.
 		break;
 
 	default:
