@@ -35,7 +35,8 @@
 // rval_expr_evaluators.c
 
 // Topmost function:
-rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+rval_evaluator_t* rval_evaluator_alloc_from_ast(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
 // Next level:
 rval_evaluator_t* rval_evaluator_alloc_from_field_name(char* field_name, int type_inferencing);
@@ -149,6 +150,12 @@ mv_t get_srec_value_string_float_int_aux(lrece_t* pentry, lhmsmv_t* ptyped_overl
 
 // ----------------------------------------------------------------
 // Topmost function:
-rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+rxval_evaluator_t* rxval_evaluator_alloc_from_ast(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
+// Next level:
+rxval_evaluator_t* rxval_evaluator_alloc_from_nonindexed_local_variable(int vardef_frame_relative_index);
+rxval_evaluator_t* rxval_evaluator_alloc_wrapping_rval(mlr_dsl_ast_node_t* past, fmgr_t* pfmgr,
+	int type_inferencing, int context_flags);
 
 #endif // LREC_FEVALUATORS_H

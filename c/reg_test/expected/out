@@ -25490,12 +25490,12 @@ text="block", type=STATEMENT_BLOCK:
                     text="break", type=BREAK.
     text="=", type=SREC_ASSIGNMENT:
         text="o", type=FIELD_NAME.
-        text="f", type=FUNC_CALLSITE:
+        text="f", type=FUNCTION_CALLSITE:
             text="NR", type=CONTEXT_VARIABLE.
             text="a", type=FIELD_NAME.
             text="y", type=FIELD_NAME.
     text="subr_call", type=SUBR_CALLSITE:
-        text="s", type=FUNC_CALLSITE:
+        text="s", type=FUNCTION_CALLSITE:
             text="b", type=FIELD_NAME.
             text="NR", type=CONTEXT_VARIABLE.
             text="**", type=OPERATOR:
@@ -26855,12 +26855,12 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                     text="break", type=BREAK.
     text="=", type=SREC_ASSIGNMENT:
         text="o", type=FIELD_NAME.
-        text="f", type=FUNC_CALLSITE:
+        text="f", type=FUNCTION_CALLSITE:
             text="NR", type=CONTEXT_VARIABLE.
             text="a", type=FIELD_NAME.
             text="y", type=FIELD_NAME.
     text="subr_call", type=SUBR_CALLSITE:
-        text="s", type=FUNC_CALLSITE:
+        text="s", type=FUNCTION_CALLSITE:
             text="b", type=FIELD_NAME.
             text="NR", type=CONTEXT_VARIABLE.
             text="**", type=OPERATOR:
@@ -28894,7 +28894,7 @@ AST ROOT:
 text="block", type=STATEMENT_BLOCK:
     text="=", type=SREC_ASSIGNMENT:
         text="sum", type=FIELD_NAME.
-        text="float", type=FUNC_CALLSITE:
+        text="float", type=FUNCTION_CALLSITE:
             text="0", type=NUMERIC_LITERAL.
     text="for", type=FOR_SREC:
         text="variables", type=FOR_VARIABLES:
@@ -28911,7 +28911,7 @@ text="block", type=STATEMENT_BLOCK:
                             text="sum", type=FIELD_NAME.
                             text="+", type=OPERATOR:
                                 text="sum", type=FIELD_NAME.
-                                text="float", type=FUNC_CALLSITE:
+                                text="float", type=FUNCTION_CALLSITE:
                                     text="indirect_field_name", type=INDIRECT_FIELD_NAME:
                                         text="k", type=NONINDEXED_LOCAL_VARIABLE.
 
@@ -28921,7 +28921,7 @@ MAIN BLOCK:
 text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth=3 max_var_depth=3
     text="=", type=SREC_ASSIGNMENT:
         text="sum", type=FIELD_NAME.
-        text="float", type=FUNC_CALLSITE:
+        text="float", type=FUNCTION_CALLSITE:
             text="0", type=NUMERIC_LITERAL.
     text="for", type=FOR_SREC: subframe_var_count=2
         text="variables", type=FOR_VARIABLES:
@@ -28938,7 +28938,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
                             text="sum", type=FIELD_NAME.
                             text="+", type=OPERATOR:
                                 text="sum", type=FIELD_NAME.
-                                text="float", type=FUNC_CALLSITE:
+                                text="float", type=FUNCTION_CALLSITE:
                                     text="indirect_field_name", type=INDIRECT_FIELD_NAME:
                                         text="k", type=NONINDEXED_LOCAL_VARIABLE. vardef_subframe_relative_index=0 vardef_subframe_index=1 vardef_frame_relative_index=1
 
