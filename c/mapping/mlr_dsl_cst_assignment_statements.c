@@ -410,7 +410,7 @@ mlr_dsl_cst_statement_t* alloc_indexed_local_variable_assignment(mlr_dsl_cst_t* 
 	pstate->lhs_frame_relative_index = pleft->vardef_frame_relative_index;
 
 	pstate->plhs_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
-		pcst, pleft, type_inferencing, context_flags);
+		pleft, pcst->pfmgr, type_inferencing, context_flags);
 
 	switch(pright->type) { // xxx XXX mapvar cases
 
@@ -520,14 +520,14 @@ mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_as
 
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST);
 
-	pstate->plhs_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(pcst, pleft,
-		type_inferencing, context_flags);
+	pstate->plhs_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+		pleft, pcst->pfmgr, type_inferencing, context_flags);
 
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
 	if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST && pright->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 		pstatement_handler = handle_oosvar_to_oosvar_assignment;
-		pstate->prhs_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(pcst, pright,
-			type_inferencing, context_flags);
+		pstate->prhs_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+			pright, pcst->pfmgr, type_inferencing, context_flags);
 		pstate->prhs_evaluator = NULL;
 	} else {
 		pstatement_handler = handle_oosvar_assignment;
@@ -645,8 +645,8 @@ mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_cst_t* p
 	// xxx XXX mapvar srec := indexed local
 	// xxx XXX mapvar srec := udf call
 
-	pstate->plhs_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(pcst, pleft,
-		type_inferencing, context_flags);
+	pstate->plhs_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+		pleft, pcst->pfmgr, type_inferencing, context_flags);
 
 	return mlr_dsl_cst_statement_valloc(
 		pnode,
@@ -725,8 +725,8 @@ mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_cst_t* p
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_FULL_SREC);
 	MLR_INTERNAL_CODING_ERROR_IF(pright->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST);
 
-	pstate->prhs_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(pcst, pright,
-		type_inferencing, context_flags);
+	pstate->prhs_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+		pright, pcst->pfmgr, type_inferencing, context_flags);
 
 	return mlr_dsl_cst_statement_valloc(
 		pnode,

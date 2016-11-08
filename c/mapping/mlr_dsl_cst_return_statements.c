@@ -215,7 +215,7 @@ mlr_dsl_cst_statement_t* alloc_return_value_from_indexed_local_variable(
 	pstate->rhs_frame_relative_index = prhs_node->vardef_frame_relative_index;
 
 	pstate->prhs_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
-		pcst, prhs_node, type_inferencing, context_flags);
+		prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 
 	return mlr_dsl_cst_statement_valloc(
 		pnode,

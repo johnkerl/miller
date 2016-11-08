@@ -416,9 +416,9 @@ mlr_dsl_cst_statement_allocator_t alloc_dump;
 mlr_dsl_cst_statement_allocator_t alloc_subr_callsite_statement;
 void mlr_dsl_cst_resolve_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl_cst_statement_t* pstatement);
 
-sllv_t* allocate_keylist_evaluators_from_ast_node(
-	mlr_dsl_cst_t*      pcst,
+sllv_t* allocate_keylist_evaluators_from_ast_node( // xxx move to another header
 	mlr_dsl_ast_node_t* pnode,
+	fmgr_t*             pfmgr,
 	int                 type_inferencing,
 	int                 context_flags);
 

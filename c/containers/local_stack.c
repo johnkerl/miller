@@ -144,7 +144,7 @@ mlhmmv_value_t* local_stack_frame_get_map_value(local_stack_frame_t* pframe, // 
 		LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->u.pnext_level, 0, TRUE, TRUE, "", stdout));
 
 		// Maybe null
-		if (pmvkeys->length == 0) {
+		if (pmvkeys == NULL || pmvkeys->length == 0) {
 			return pmvalue;
 		} else {
 			return mlhmmv_get_value_from_level(pmvalue->u.pnext_level, pmvkeys, &error);

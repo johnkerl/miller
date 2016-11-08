@@ -654,8 +654,8 @@ void mlr_dsl_cst_handle_statement_list(
 //         text="stream", type=stream:
 
 // pnode is input; pkeylist_evaluators is appended to.
-sllv_t* allocate_keylist_evaluators_from_ast_node(mlr_dsl_cst_t* pcst, // xxx rename // xxx make corresp free & call x n
-	mlr_dsl_ast_node_t* pnode, int type_inferencing, int context_flags)
+sllv_t* allocate_keylist_evaluators_from_ast_node(
+	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
 {
 	sllv_t* pkeylist_evaluators = sllv_alloc();
 
@@ -666,7 +666,7 @@ sllv_t* allocate_keylist_evaluators_from_ast_node(mlr_dsl_cst_t* pcst, // xxx re
 			if (pkeynode->type == MD_AST_NODE_TYPE_STRING_LITERAL) {
 				sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_string(pkeynode->text));
 			} else {
-				sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, pcst->pfmgr,
+				sllv_append(pkeylist_evaluators, rval_evaluator_alloc_from_ast(pkeynode, pfmgr,
 					type_inferencing, context_flags));
 			}
 		}

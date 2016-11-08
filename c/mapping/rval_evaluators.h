@@ -31,8 +31,9 @@
 //   type(s). See also comments in containers/mlrval.h.
 // ================================================================
 
-// ----------------------------------------------------------------
+// ================================================================
 // rval_expr_evaluators.c
+// ================================================================
 
 // Topmost function:
 rval_evaluator_t* rval_evaluator_alloc_from_ast(
@@ -76,8 +77,9 @@ rval_evaluator_t* rval_evaluator_alloc_from_local_variable(int vardef_frame_rela
 // For unit test:
 rval_evaluator_t* rval_evaluator_alloc_from_mlrval(mv_t* pval);
 
-// ----------------------------------------------------------------
+// ================================================================
 // rval_func_evaluators.c
+// ================================================================
 
 // These have some shared code that would otherwise be duplicated per-function in containers/mlrval.c.
 rval_evaluator_t* rval_evaluator_alloc_from_variadic_func(mv_variadic_func_t* pfunc, rval_evaluator_t** pargs, int nargs);
@@ -127,8 +129,9 @@ rval_evaluator_t* rval_evaluator_alloc_from_s_sss_func(mv_ternary_func_t* pfunc,
 rval_evaluator_t* rval_evaluator_alloc_from_x_srs_func(mv_ternary_arg2_regex_func_t* pfunc,
 	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3);
 
-// ----------------------------------------------------------------
+// ================================================================
 // rval_list_evaluators.c
+// ================================================================
 
 // Nominally for oosvar multikeys.
 sllmv_t* evaluate_list(sllv_t* pevaluators, variables_t* pvars, int* pall_non_null_or_error);
@@ -148,14 +151,23 @@ mv_t get_srec_value_string_only_aux(lrece_t* pentry, lhmsmv_t* ptyped_overlay);
 mv_t get_srec_value_string_float_aux(lrece_t* pentry, lhmsmv_t* ptyped_overlay);
 mv_t get_srec_value_string_float_int_aux(lrece_t* pentry, lhmsmv_t* ptyped_overlay);
 
+// ================================================================
+// rxval_expr_evaluators.c // xxx make separate header file for these
+// ================================================================
+
 // ----------------------------------------------------------------
 // Topmost function:
 rxval_evaluator_t* rxval_evaluator_alloc_from_ast(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
 // Next level:
-rxval_evaluator_t* rxval_evaluator_alloc_from_nonindexed_local_variable(int vardef_frame_relative_index);
-rxval_evaluator_t* rxval_evaluator_alloc_wrapping_rval(mlr_dsl_ast_node_t* past, fmgr_t* pfmgr,
-	int type_inferencing, int context_flags);
+rxval_evaluator_t* rxval_evaluator_alloc_from_nonindexed_local_variable(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_indexed_local_variable(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
+rxval_evaluator_t* rxval_evaluator_alloc_wrapping_rval(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
 #endif // LREC_FEVALUATORS_H
