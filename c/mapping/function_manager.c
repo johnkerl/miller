@@ -471,9 +471,11 @@ static void rval_evaluator_udf_callsite_free(rval_evaluator_t* pevaluator) {
 	free(pevaluator);
 }
 
-static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite_state_t* pdefsite_state,
+static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite_state_t* pdefsite_state, // XXX
 	mlr_dsl_ast_node_t* pnode, char* function_name, int arity, int type_inferencing, int context_flags)
 {
+	// xxx XXX mapvar fmgr_alloc_from_udf_callsite. extend or clone.
+	// xxx libify the marshaling part ...
 	rval_evaluator_t* pudf_callsite_evaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 	rval_evaluator_udf_callsite_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_udf_callsite_state_t));
 

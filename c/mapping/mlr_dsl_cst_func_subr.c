@@ -273,7 +273,7 @@ void mlr_dsl_cst_resolve_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl_cst_statemen
 }
 
 // ----------------------------------------------------------------
-static void handle_subr_callsite_statement(
+static void handle_subr_callsite_statement( // XXX
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)

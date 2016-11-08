@@ -16,7 +16,82 @@ NON-RELEASE:
 * benchmark lua-jit
 
 ================================================================
+MAPVARS:
+
+* steps:
+
+  ! need an mlval_evaluator_t. delegate to rval_evaluator_t ...
+    - ctor from AST node
+    - compute an mlhmmv_value_t (which rename) from variables_t
+
+  ! parameter marshal
+    - all UDFs need multiplexed marshaling: compound vs. scalar types
+    - so all (even internally defined) functions do
+    - at internall defined functions, check is_terminal
+
+  - LHS define/assign special cases:
+
+    > assign local from xxx:
+      a = {...}
+      a = $*
+      a = @*
+      a = @b
+      a = @b[c]
+      a = b
+      a = b[c]
+      a = f(...)
+      a[b] = f(...)
+
+    > assign srec from local or function call:
+      $* = {...}
+      $* = a
+      $* = f(...)
+    > assign full oosvar from local or function call:
+      @* = {...}
+      @* = a
+      @* = f(...)
+    > assign oosvar from local or function call:
+      @b = {...}
+      @b = a
+      @b[c] = a
+      @b = f(...)
+      @b[c] = f(...)
+
+  k all other (non-special-case) LHS situations
+    > coded; just need more UT coverage.
+
+  k RHS expr eval: terminality as already for oosvars
+    > coded; just need more UT coverage.
+
+  k for-local -- with keylist etc. just as for oosvars
+    > coded; just need more UT coverage.
+
+* needs assert_not_map in userspace
+
+* iterating:
+  k save off a copy of the mlr exe before this for timings later
+  k put mv_t -> mlhmmv_value_t @ localstack etc. but keep using u.mlrval and assume u.is_terminal
+  ~ add in the grammar mods for each case one at a time & stub out the alloc/handle sites one at a time
+  ~ fullimpl the alloc/handle sites one at a time
+  ! timings before & after ! really i don't want to ship without the map feature but its cost
+    should be known.
+  - doc re what you can do: @-vars and locals are scalars except for the enumerated contexts
+
+* type-decl assert RHS for map/non-map reads, and doc that:
+  this should throw an error:
+    mlr --from s put 'int a=1;var b=a[2]'
+
+* type-decl assert:
+  map a;
+  a[1][2] = 3;
+  map b = a;
+  map c = a[1];
+  int d = a[1][2];
+
+================================================================
 FUNCTIONALITY FOR 5.0.0:
+
+* cat -n -g
 
 * mapvar iterate
 
@@ -47,6 +122,10 @@ FUNCTIONALITY FOR 5.0.0:
 * typedecl:
   - eliminate 'map a' and replace with 'map a = {}'
 
+* array types? [a,b,c]
+* set types? {a,b,c} (vs. map {a:1,b:2,c:3})
+* maybe overkill (map covers array & set) but with those there would be solid collections coverage.
+
 ----------------------------------------------------------------
 EXECUTION TRACE:
 
@@ -61,78 +140,6 @@ SYNTAX ERROR IMPROVEMENT:
 
 * try to get some source-level info in there.
   http://archive.oreilly.com/pub/a/linux/excerpts/9780596155971/error-reporting-recovery.html
-
-----------------------------------------------------------------
-MAPVARS:
-
-* steps:
-
-  - LHS define/assign special cases:
-
-    > assign local from xxx:
-      a = {...}
-      a = $*
-      a = @*
-      a = @b
-      a = @b[c]
-      a = b
-      a = b[c]
-      a = f(...)
-      a[b] = f(...)
-
-    > assign srec from local or function call:
-      $* = {...}
-      $* = a
-      $* = f(...)
-    > assign full oosvar from local or function call:
-      @* = {...}
-      @* = a
-      @* = f(...)
-    > assign oosvar from local or function call:
-      @b = {...}
-      @b = a
-      @b[c] = a
-      @b = f(...)
-      @b[c] = f(...)
-
-
-  k all other (non-special-case) LHS situations
-    > coded; just need more UT coverage.
-
-  k RHS expr eval: terminality as already for oosvars
-    > coded; just need more UT coverage.
-
-  k for-local -- with keylist etc. just as for oosvars
-    > coded; just need more UT coverage.
-
-  - function return value
-    > only map-valued in one of the above special-case contexts
-    > should be straightforward
-
-  ! parameter marshal
-    > this is more complex. breaks mv-eval-from-ast model. :(
-
-* needs assert_not_map in userspace
-
-* iterating:
-  k save off a copy of the mlr exe before this for timings later
-  k put mv_t -> mlhmmv_value_t @ localstack etc. but keep using u.mlrval and assume u.is_terminal
-  ~ add in the grammar mods for each case one at a time & stub out the alloc/handle sites one at a time
-  ~ fullimpl the alloc/handle sites one at a time
-  ! timings before & after ! really i don't want to ship without the map feature but its cost
-    should be known.
-  - doc re what you can do: @-vars and locals are scalars except for the enumerated contexts
-
-* type-decl assert RHS for map/non-map reads, and doc that:
-  this should throw an error:
-    mlr --from s put 'int a=1;var b=a[2]'
-
-* type-decl assert:
-  map a;
-  a[1][2] = 3;
-  map b = a;
-  map c = a[1];
-  int d = a[1][2];
 
 ================================================================
 UT FOR 5.0.0:
@@ -280,12 +287,34 @@ DOC:
 * final valgrind check
 
 ================================================================
-5.1.0: TRACE // SYNTAXERROR // ALLRECAGG // FCNALS
+5.1.0: TRACE // SYNTAXERROR // **ALLRECAGG** // FCNALS
 
 ? maybe some sort of collections logic to complement for-loops? important, or just fun to code up?
 
 ----------------------------------------------------------------
 5.1.0 ideas:
+
+!!! multi-field x many verbs
+  ! -f/-r field-name-spec opportunities throughout
+    - bar
+    - count-distinct
+    - histogram
+    - label
+    - merge-fields -x
+    - nest
+    - reorder
+    - sec2gmt/seg2gmtdate
+    - sort
+    * stats1
+    * stats2
+    - step
+    - top
+    ? join
+    ? decimate -g
+    ? head -g
+    ? sample -g
+    ? tail -g
+    - uniq -g
 
 ! more than 'syntax error' from lemon-parse failures ... lemon API research
 
@@ -297,30 +326,7 @@ DOC:
   - absent?
   - local shadow for-loop boundvars / func/subr args?
 
-! multi-field x many verbs
-
 * seqgen as input lrec "reader"? the seqgen verb doesn't (and shouldn't) step NR.
-
-! -f/-r field-name-spec opportunities throughout
-  - bar
-  - count-distinct
-  - histogram
-  - label
-  - merge-fields -x
-  - nest
-  - reorder
-  - sec2gmt/seg2gmtdate
-  - sort
-  * stats1
-  * stats2
-  - step
-  - top
-  ? join
-  ? decimate -g
-  ? head -g
-  ? sample -g
-  ? tail -g
-  - uniq -g
 
 * emph override wording: from rel notes.
   "Likewise --ofs, --ors, --ops, --jvstack, and all other output-formatting

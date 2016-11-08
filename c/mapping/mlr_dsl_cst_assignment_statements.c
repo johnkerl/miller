@@ -111,6 +111,11 @@ mlr_dsl_cst_statement_t* alloc_indirect_srec_assignment(mlr_dsl_cst_t* pcst, mlr
 	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 
+	// xxx XXX mapvar srec := map-lit
+	// xxx XXX mapvar srec := non-indexed local
+	// xxx XXX mapvar srec := indexed local
+	// xxx XXX mapvar srec := udf call
+
 	pstate->plhs_evaluator = rval_evaluator_alloc_from_ast(pleft,  pcst->pfmgr, type_inferencing, context_flags);
 	pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
 
@@ -316,6 +321,39 @@ mlr_dsl_cst_statement_t* alloc_nonindexed_local_variable_assignment(mlr_dsl_cst_
 		pstate);
 }
 
+// xxx libify
+
+//static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite_state_t* pdefsite_state,
+//	mlr_dsl_ast_node_t* pnode, char* function_name, int arity, int type_inferencing, int context_flags)
+//{
+//	// xxx XXX mapvar fmgr_alloc_from_udf_callsite. extend or clone.
+//	rval_evaluator_t* pudf_callsite_evaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+//	rval_evaluator_udf_callsite_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_udf_callsite_state_t));
+//
+//	pstate->arity = pnode->pchildren->length;
+//
+//	pstate->pevals = mlr_malloc_or_die(pstate->arity * sizeof(rval_evaluator_t*));
+//	int i = 0;
+//	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+//		mlr_dsl_ast_node_t* parg_node = pe->pvvalue;
+//		pstate->pevals[i] = rval_evaluator_alloc_from_ast(parg_node,
+//			pfmgr, type_inferencing, context_flags);
+//	}
+//
+//	pstate->args = mlr_malloc_or_die(pstate->arity * sizeof(mv_t));
+//	for (i = 0; i < pstate->arity; i++) {
+//		pstate->args[i] = mv_absent();
+//	}
+//
+//	pstate->pdefsite_state = pdefsite_state;
+//
+//	pudf_callsite_evaluator->pvstate = pstate;
+//	pudf_callsite_evaluator->pprocess_func = rval_evaluator_udf_callsite_process;
+//	pudf_callsite_evaluator->pfree_func = rval_evaluator_udf_callsite_free;
+//
+//	return pudf_callsite_evaluator;
+//}
+
 // ----------------------------------------------------------------
 static void free_nonindexed_local_variable_assignment(mlr_dsl_cst_statement_t* pstatement) {
 	nonindexed_local_variable_assignment_state_t* pstate = pstatement->pvstate;
@@ -498,6 +536,11 @@ mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_as
 			type_inferencing, context_flags);
 	}
 
+	// xxx XXX mapvar oosvar := map-lit
+	// xxx XXX mapvar oosvar := non-indexed local
+	// xxx XXX mapvar oosvar := indexed local
+	// xxx XXX mapvar oosvar := udf call
+
 	return mlr_dsl_cst_statement_valloc(
 		pnode,
 		pstatement_handler,
@@ -596,6 +639,11 @@ mlr_dsl_cst_statement_t* alloc_oosvar_from_full_srec_assignment(mlr_dsl_cst_t* p
 
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST);
 	MLR_INTERNAL_CODING_ERROR_IF(pright->type != MD_AST_NODE_TYPE_FULL_SREC);
+
+	// xxx XXX mapvar srec := map-lit
+	// xxx XXX mapvar srec := non-indexed local
+	// xxx XXX mapvar srec := indexed local
+	// xxx XXX mapvar srec := udf call
 
 	pstate->plhs_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(pcst, pleft,
 		type_inferencing, context_flags);
