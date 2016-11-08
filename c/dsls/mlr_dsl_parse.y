@@ -2226,18 +2226,18 @@ md_atom_or_fcn(A) ::= md_fcn_or_subr_call(B). {
 
 md_fcn_or_subr_call(A) ::= MD_TOKEN_NON_SIGIL_NAME(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
-	A->type = MD_AST_NODE_TYPE_FUNC_CALLSITE;
+	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
 }
 // For most functions it suffices to use the MD_TOKEN_NON_SIGIL_NAME pattern. But
 // int and float are keywords in the lexer so we need to spell those out explicitly.
 // (They're type-decl keywords but they're also the names of type-conversion functions.)
 md_fcn_or_subr_call(A) ::= MD_TOKEN_INT(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
-	A->type = MD_AST_NODE_TYPE_FUNC_CALLSITE;
+	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
 }
 md_fcn_or_subr_call(A) ::= MD_TOKEN_FLOAT(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
-	A->type = MD_AST_NODE_TYPE_FUNC_CALLSITE;
+	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
 }
 
 // Need to invalidate "f(10,)" -- use some non-empty-args expr.

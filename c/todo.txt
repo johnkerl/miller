@@ -29,6 +29,11 @@ MAPVARS:
     - so all (even internally defined) functions do
     - at internall defined functions, check is_terminal
 
+    > $x = f(a, b)
+    > $x = f($a, b)
+
+  ! bugfix: @v=@* is a syntax error but @v=@all is not.
+
   - LHS define/assign special cases:
 
     > assign local from xxx:

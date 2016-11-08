@@ -264,7 +264,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_STATEMENT_BLOCK:                  return "STATEMENT_BLOCK";                  break;
 	case MD_AST_NODE_TYPE_STATEMENT_LIST:                   return "STATEMENT_LIST";                   break;
 	case MD_AST_NODE_TYPE_FUNC_DEF:                         return "FUNC_DEF";                         break;
-	case MD_AST_NODE_TYPE_FUNC_CALLSITE:                    return "FUNC_CALLSITE";                    break;
+	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:                    return "FUNCTION_CALLSITE";                    break;
 	case MD_AST_NODE_TYPE_SUBR_DEF:                         return "SUBR_DEF";                         break;
 	case MD_AST_NODE_TYPE_SUBR_CALLSITE:                    return "SUBR_CALLSITE";                    break;
 	case MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION:         return "UNTYPED_LOCAL_DEFINITION";         break;

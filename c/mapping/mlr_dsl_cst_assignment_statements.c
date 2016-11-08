@@ -307,7 +307,7 @@ mlr_dsl_cst_statement_t* alloc_nonindexed_local_variable_assignment(mlr_dsl_cst_
 	// xxx XXX mapvar case: rhs is FULL_OOSVAR
 	// xxx XXX mapvar case: rhs is NONINDEXED_LOCAL_VARIABLE
 	// xxx XXX mapvar case: rhs is INDEXED_LOCAL_VARIABLE
-	// xxx XXX mapvar case: rhs is FUNC_CALLSITE
+	// xxx XXX mapvar case: rhs is FUNCTION_CALLSITE
 
 	pstate->lhs_variable_name = pleft->text;
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
@@ -437,7 +437,7 @@ mlr_dsl_cst_statement_t* alloc_indexed_local_variable_assignment(mlr_dsl_cst_t* 
 	case MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE:
 		break;
 
-	case MD_AST_NODE_TYPE_FUNC_CALLSITE:
+	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
 		// xxx clone fmgr_alloc_from_operator_or_function_call
 		// xxx parameter-marshal etc.
 		// xxx retval etc.

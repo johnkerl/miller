@@ -88,7 +88,7 @@ mlr_dsl_cst_statement_t* alloc_return_value(
 		return alloc_return_value_from_full_srec(pcst, pnode, type_inferencing, context_flags);
 		break;
 
-	case  MD_AST_NODE_TYPE_FUNC_CALLSITE:
+	case  MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
 		return alloc_return_value_from_function_callsite(pcst, pnode, type_inferencing, context_flags);
 		break;
 
