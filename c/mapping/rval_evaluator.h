@@ -37,8 +37,6 @@
 #include "containers/loop_stack.h"
 #include "lib/string_array.h"
 
-struct _rval_evaluator_t; // forward reference for method declarations
-
 typedef struct _return_state_t {
 	mlhmmv_value_t retval;
 	int returned;
@@ -56,6 +54,12 @@ typedef struct _variables_t {
 	int              trace_execution;
 } variables_t;
 
+// ----------------------------------------------------------------
+// This is for scalar-valued contexts: almost all expressions except
+// for rxval contexts (see below).
+
+struct _rval_evaluator_t;  // forward reference for method declarations
+
 typedef mv_t rval_evaluator_process_func_t(void* pvstate, variables_t* pvars);
 
 typedef void rval_evaluator_free_func_t(struct _rval_evaluator_t*);
@@ -65,5 +69,21 @@ typedef struct _rval_evaluator_t {
 	rval_evaluator_process_func_t* pprocess_func;
 	rval_evaluator_free_func_t*    pfree_func;
 } rval_evaluator_t;
+
+// ----------------------------------------------------------------
+// This is for map-valued contexts: LHS/RHS of assignments,
+// UDF/subroutine arguments, and UDF return values.
+
+struct _rxval_evaluator_t;  // forward reference for method declarations
+
+typedef mlhmmv_value_t rxval_evaluator_process_func_t(void* pvstate, variables_t* pvars);
+
+typedef void rxval_evaluator_free_func_t(struct _rxval_evaluator_t*);
+
+typedef struct _rxval_evaluator_t {
+	void* pvstate;
+	rxval_evaluator_process_func_t* pprocess_func;
+	rxval_evaluator_free_func_t*    pfree_func;
+} rxval_evaluator_t;
 
 #endif // RVAL_EVALUATOR_H
