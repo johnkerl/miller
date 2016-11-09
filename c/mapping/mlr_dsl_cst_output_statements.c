@@ -1041,6 +1041,8 @@ static void free_print(mlr_dsl_cst_statement_t* pstatement) { // print
 
 // ================================================================
 typedef struct _dump_state_t {
+	int                target_vardef_frame_relative_index;
+	sllv_t*            ptarget_keylist_evaluators;
 	FILE*              stdfp;
 	file_output_mode_t file_output_mode;
 	rval_evaluator_t*  poutput_filename_evaluator;
@@ -1048,8 +1050,8 @@ typedef struct _dump_state_t {
 	multi_out_t*       pmulti_out;
 } dump_state_t;
 
-static mlr_dsl_cst_statement_handler_t handle_dump;
-static mlr_dsl_cst_statement_handler_t handle_dump_to_file;
+static mlr_dsl_cst_statement_handler_t handle_dump_all_oosvars;
+static mlr_dsl_cst_statement_handler_t handle_dump_all_oosvars_to_file;
 static mlr_dsl_cst_statement_freer_t free_dump;
 
 // ----------------------------------------------------------------
@@ -1058,25 +1060,27 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 {
 	dump_state_t* pstate = mlr_malloc_or_die(sizeof(dump_state_t));
 
-	pstate->stdfp                      = NULL;
-	pstate->poutput_filename_evaluator = NULL;
-	pstate->pmulti_out                 = NULL;
+	pstate->target_vardef_frame_relative_index = MD_UNUSED_INDEX;
+	pstate->ptarget_keylist_evaluators         = NULL;
+	pstate->stdfp                              = NULL;
+	pstate->poutput_filename_evaluator         = NULL;
+	pstate->pmulti_out                         = NULL;
 
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 	mlr_dsl_cst_statement_handler_t* phandler = NULL;
 	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) {
-		phandler = handle_dump;
+		phandler = handle_dump_all_oosvars;
 		pstate->stdfp = stdout;
 	} else if (pfilename_node->type == MD_AST_NODE_TYPE_STDERR) {
-		phandler = handle_dump;
+		phandler = handle_dump_all_oosvars;
 		pstate->stdfp = stderr;
 	} else {
 		pstate->poutput_filename_evaluator = rval_evaluator_alloc_from_ast(pfilename_node, pcst->pfmgr,
 			type_inferencing, context_flags);
 		pstate->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
 		pstate->pmulti_out = multi_out_alloc();
-		phandler = handle_dump_to_file;
+		phandler = handle_dump_all_oosvars_to_file;
 	}
 	pstate->flush_every_record = pcst->flush_every_record;
 
@@ -1088,7 +1092,7 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 }
 
 // ----------------------------------------------------------------
-static void handle_dump(
+static void handle_dump_all_oosvars(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -1097,8 +1101,22 @@ static void handle_dump(
 	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, "", pstate->stdfp);
 }
 
+//void mlhmmv_print_json_stacked(
+//	mlhmmv_t* pmap,
+//	int       quote_values_always,
+//	char*     line_indent,
+//	FILE*     ostream);
+
+//void mlhmmv_level_print_stacked(
+//	mlhmmv_level_t* plevel,
+//	int             depth,
+//	int             do_final_comma,
+//	int             quote_values_always,
+//	char*           line_indent,
+//	FILE*           ostream);
+
 // ----------------------------------------------------------------
-static void handle_dump_to_file(
+static void handle_dump_all_oosvars_to_file(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
