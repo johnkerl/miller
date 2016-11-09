@@ -31,11 +31,13 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 		break;
 
 	case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE:
-		return rxval_evaluator_alloc_from_nonindexed_local_variable(pnode, pfmgr, type_inferencing, context_flags);
+		return rxval_evaluator_alloc_from_nonindexed_local_variable(
+			pnode, pfmgr, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE:
-		return rxval_evaluator_alloc_from_indexed_local_variable(pnode, pfmgr, type_inferencing, context_flags);
+		return rxval_evaluator_alloc_from_indexed_local_variable(
+			pnode, pfmgr, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_FULL_SREC:
@@ -55,6 +57,17 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 		break;
 	}
 }
+
+//// ----------------------------------------------------------------
+//void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys) {
+//	int error = 0;
+//
+//	mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(pmap->proot_level, pfromkeys->phead, &error);
+//	if (pfromentry != NULL) {
+//		mlhmmv_value_t submap = mlhmmv_copy_aux(&pfromentry->level_value);
+//		mlhmmv_put_value_at_level(pmap, ptokeys, &submap);
+//	}
+//}
 
 // ================================================================
 typedef struct _rxval_evaluator_from_nonindexed_local_variable_state_t {

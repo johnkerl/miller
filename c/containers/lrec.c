@@ -454,6 +454,13 @@ void lrec_dump_titled(char* msg, lrec_t* prec) {
 	printf("\n");
 }
 
+void lrec_pointer_dump(lrec_t* prec) {
+	printf("prec %p\n", prec);
+	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+		printf("  pe %p k %p v %p\n", pe, pe->key, pe->value);
+	}
+}
+
 // ----------------------------------------------------------------
 static void lrec_unbacked_free(lrec_t* prec) {
 }
