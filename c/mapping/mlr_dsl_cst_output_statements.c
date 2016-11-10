@@ -1040,7 +1040,9 @@ static void free_print(mlr_dsl_cst_statement_t* pstatement) { // print
 }
 
 // ================================================================
-typedef void dump_target_getter_t(variables_t* pvars, mv_t** ppval, mlhmmv_level_t** pplevel);
+struct _dump_state_t; // forward reference
+typedef void dump_target_getter_t(variables_t* pvars, struct _dump_state_t* pstate,
+	mv_t** ppval, mlhmmv_level_t** pplevel);
 
 static dump_target_getter_t all_oosvar_target_getter;
 static dump_target_getter_t oosvar_target_getter;
@@ -1125,22 +1127,30 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 }
 
 // ----------------------------------------------------------------
-static void all_oosvar_target_getter(variables_t* pvars, mv_t** ppval, mlhmmv_level_t** pplevel) {
+static void all_oosvar_target_getter(variables_t* pvars, dump_state_t* pstate,
+	mv_t** ppval, mlhmmv_level_t** pplevel)
+{
 	*ppval   = NULL;
 	*pplevel = pvars->poosvars->proot_level;
 }
 
-static void oosvar_target_getter(variables_t* pvars, mv_t** ppval, mlhmmv_level_t** pplevel) {
+static void oosvar_target_getter(variables_t* pvars, dump_state_t* pstate,
+	mv_t** ppval, mlhmmv_level_t** pplevel)
+{
 	*ppval   = NULL; // xxx temp
 	*pplevel = NULL; // xxx temp
 }
 
-static void nonindexed_local_variable_target_getter(variables_t* pvars, mv_t** ppval, mlhmmv_level_t** pplevel) {
+static void nonindexed_local_variable_target_getter(variables_t* pvars, dump_state_t* pstate,
+	mv_t** ppval, mlhmmv_level_t** pplevel)
+{
 	*ppval   = NULL; // xxx temp
 	*pplevel = NULL; // xxx temp
 }
 
-static void indexed_local_variable_target_getter(variables_t* pvars, mv_t** ppval, mlhmmv_level_t** pplevel) {
+static void indexed_local_variable_target_getter(variables_t* pvars, dump_state_t* pstate,
+	mv_t** ppval, mlhmmv_level_t** pplevel)
+{
 	*ppval   = NULL; // xxx temp
 	*pplevel = NULL; // xxx temp
 }
@@ -1152,22 +1162,16 @@ static void handle_dump(
 	cst_outputs_t*           pcst_outputs)
 {
 	dump_state_t* pstate = pstatement->pvstate;
-	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, "", pstate->stdfp);
+	mv_t* pval = NULL;
+	mlhmmv_level_t* plevel = NULL;
+	pstate->pdump_target_getter(pvars, pstate, &pval, &plevel);
+	if (pval != NULL) {
+		// xxx stub
+	} else {
+		// xxx make simpler entry-point w/ default args
+		mlhmmv_level_print_stacked(plevel, 0, FALSE, FALSE, "", pstate->stdfp);
+	}
 }
-
-//void mlhmmv_print_json_stacked(
-//	mlhmmv_t* pmap,
-//	int       quote_values_always,
-//	char*     line_indent,
-//	FILE*     ostream);
-
-//void mlhmmv_level_print_stacked(
-//	mlhmmv_level_t* plevel,
-//	int             depth,
-//	int             do_final_comma,
-//	int             quote_values_always,
-//	char*           line_indent,
-//	FILE*           ostream);
 
 // ----------------------------------------------------------------
 static void handle_dump_to_file(
