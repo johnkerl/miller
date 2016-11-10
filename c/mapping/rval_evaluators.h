@@ -161,6 +161,9 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
 // Next level:
+rxval_evaluator_t* rxval_evaluator_alloc_from_map_literal(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
 rxval_evaluator_t* rxval_evaluator_alloc_from_nonindexed_local_variable(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 

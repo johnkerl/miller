@@ -23,7 +23,8 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 	switch(pnode->type) {
 
 	case MD_AST_NODE_TYPE_MAP_LITERAL:
-		return NULL; // xxx XXX mapvar stub
+		return rxval_evaluator_alloc_from_map_literal(
+			pnode, pfmgr, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
@@ -62,6 +63,151 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 }
 
 // ================================================================
+// xxx
+// {
+//   "a" : 1,
+//   "b" : {
+//     "x" : 7,
+//     "y" : 8,
+//   },
+//   "c" : 3,
+// }
+
+// $ mlr --from s put -v -q 'm={"a":NR,"b":{"x":999},"c":3};dump m'
+// text="block", type=STATEMENT_BLOCK:
+//     text="=", type=NONINDEXED_LOCAL_ASSIGNMENT:
+//         text="m", type=NONINDEXED_LOCAL_VARIABLE.
+//         text="map_literal", type=MAP_LITERAL:
+//             text="mappair", type=MAP_LITERAL_PAIR:
+//                 text="mapkey", type=MAP_LITERAL:
+//                     text="a", type=STRING_LITERAL.
+//                 text="mapval", type=MAP_LITERAL:
+//                     text="NR", type=CONTEXT_VARIABLE.
+//             text="mappair", type=MAP_LITERAL_PAIR:
+//                 text="mapkey", type=MAP_LITERAL:
+//                     text="b", type=STRING_LITERAL.
+//                 text="mapval", type=MAP_LITERAL:
+//                     text="map_literal", type=MAP_LITERAL:
+//                         text="mappair", type=MAP_LITERAL_PAIR:
+//                             text="mapkey", type=MAP_LITERAL:
+//                                 text="x", type=STRING_LITERAL.
+//                             text="mapval", type=MAP_LITERAL:
+//                                 text="999", type=NUMERIC_LITERAL.
+//             text="mappair", type=MAP_LITERAL_PAIR:
+//                 text="mapkey", type=MAP_LITERAL:
+//                     text="c", type=STRING_LITERAL.
+//                 text="mapval", type=MAP_LITERAL:
+//                     text="3", type=NUMERIC_LITERAL.
+//     text="dump", type=DUMP:
+//         text=">", type=FILE_WRITE:
+//             text="stdout", type=STDOUT:
+//         text="m", type=NONINDEXED_LOCAL_VARIABLE.
+
+typedef struct _map_literal_list_evaluator_t {
+	sllv_t* ppairs;
+} map_literal_list_evaluator_t;
+typedef struct _map_literal_pair_evaluator_t {
+	rval_evaluator_t*             pkey_evaluator;
+	int                           is_terminal;
+	rval_evaluator_t*             pval_evaluator;
+	map_literal_list_evaluator_t* plist_evaluator;
+} map_literal_pair_evaluator_t;
+
+static map_literal_list_evaluator_t* allocate_map_literal_evaluator_from_ast(
+	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
+{
+	map_literal_list_evaluator_t* plist_evaluator = mlr_malloc_or_die(sizeof(map_literal_list_evaluator_t));
+	plist_evaluator->ppairs = sllv_alloc();
+	MLR_INTERNAL_CODING_ERROR_IF(pnode->type != MD_AST_NODE_TYPE_MAP_LITERAL);
+	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+
+		map_literal_pair_evaluator_t* ppair = mlr_malloc_or_die(sizeof(map_literal_pair_evaluator_t));
+		*ppair = (map_literal_pair_evaluator_t) {
+			.pkey_evaluator  = NULL,
+			.is_terminal     = TRUE,
+			.pval_evaluator  = NULL,
+			.plist_evaluator = NULL,
+		};
+
+		mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+		MLR_INTERNAL_CODING_ERROR_IF(pchild->type != MD_AST_NODE_TYPE_MAP_LITERAL_PAIR);
+
+		mlr_dsl_ast_node_t* pleft = pchild->pchildren->phead->pvvalue;
+		MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_MAP_LITERAL_KEY);
+		mlr_dsl_ast_node_t* pkeynode = pleft->pchildren->phead->pvvalue;
+		ppair->pkey_evaluator = rval_evaluator_alloc_from_ast(pkeynode, pfmgr, type_inferencing, context_flags);
+
+		mlr_dsl_ast_node_t* pright = pchild->pchildren->phead->pnext->pvvalue;
+		mlr_dsl_ast_node_t* pvalnode = pright->pchildren->phead->pvvalue;
+		if (pright->type == MD_AST_NODE_TYPE_MAP_LITERAL_VALUE) {
+			ppair->pval_evaluator = rval_evaluator_alloc_from_ast(pvalnode, pfmgr, type_inferencing, context_flags);
+		} else if (pright->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
+			ppair->is_terminal = FALSE;
+			ppair->plist_evaluator = allocate_map_literal_evaluator_from_ast(
+				pvalnode, pfmgr, type_inferencing, context_flags);
+		} else {
+			MLR_INTERNAL_CODING_ERROR();
+		}
+
+		sllv_append(plist_evaluator->ppairs, ppair);
+	}
+	return plist_evaluator;
+}
+
+// ----------------------------------------------------------------
+typedef struct _rxval_evaluator_from_map_literal_state_t {
+	map_literal_list_evaluator_t* proot_list_evaluator;
+} rxval_evaluator_from_map_literal_state_t;
+
+mlhmmv_value_t rxval_evaluator_from_map_literal_func(void* pvstate, variables_t* pvars) {
+	rxval_evaluator_from_map_literal_state_t* pstate = pvstate;
+
+	mlhmmv_value_t xval = mlhmmv_value_alloc_empty_map();
+
+	for (sllve_t* pe = pstate->proot_list_evaluator->ppairs->phead; pe != NULL; pe = pe->pnext) {
+
+		map_literal_pair_evaluator_t* ppair = pe->pvvalue;
+
+		// mlhmmv_put_terminal_from_level will copy keys and valuess
+		mv_t mvkey = ppair->pkey_evaluator->pprocess_func(ppair->pkey_evaluator->pvstate, pvars);
+		if (ppair->is_terminal) {
+			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
+			mv_t mvval = ppair->pval_evaluator->pprocess_func(ppair->pval_evaluator->pvstate, pvars);
+			mlhmmv_put_terminal_from_level(xval.u.pnext_level, &e, &mvval);
+		} else {
+			//xxx recurse on ppair->plist_evaluator; -- xxx need an aux func
+		}
+
+	}
+
+	return xval;
+}
+
+static void rxval_evaluator_from_map_literal_free(rxval_evaluator_t* prxval_evaluator) {
+	rxval_evaluator_from_map_literal_state_t* pstate = prxval_evaluator->pvstate;
+	//xxx free pstate->prval_evaluator->pfree_func(pstate->prval_evaluator);
+	free(pstate);
+	free(prxval_evaluator);
+}
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_map_literal(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+	int type_inferencing, int context_flags)
+{
+	rxval_evaluator_from_map_literal_state_t* pstate = mlr_malloc_or_die(
+		sizeof(rxval_evaluator_from_map_literal_state_t));
+	pstate->proot_list_evaluator = allocate_map_literal_evaluator_from_ast(
+		pnode, pfmgr, type_inferencing, context_flags);
+
+	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	prxval_evaluator->pvstate       = pstate;
+	prxval_evaluator->pprocess_func = rxval_evaluator_from_map_literal_func;
+	prxval_evaluator->pfree_func    = rxval_evaluator_from_map_literal_free;
+
+	return prxval_evaluator;
+}
+
+
+// ================================================================
 typedef struct _rxval_evaluator_from_nonindexed_local_variable_state_t {
 	int vardef_frame_relative_index;
 } rxval_evaluator_from_nonindexed_local_variable_state_t;
@@ -70,7 +216,11 @@ mlhmmv_value_t rxval_evaluator_from_nonindexed_local_variable_func(void* pvstate
 	rxval_evaluator_from_nonindexed_local_variable_state_t* pstate = pvstate;
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	mlhmmv_value_t* pxval = local_stack_frame_get_map_value(pframe, pstate->vardef_frame_relative_index, NULL);
-	return mlhmmv_copy_aux(pxval);
+	if (pxval == NULL) {
+		return mlhmmv_value_transfer_terminal(mv_absent()); // xxx rename transfer to wrap ?
+	} else {
+		return mlhmmv_copy_aux(pxval);
+	}
 }
 
 static void rxval_evaluator_from_nonindexed_local_variable_free(rxval_evaluator_t* prxval_evaluator) {

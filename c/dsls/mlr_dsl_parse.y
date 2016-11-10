@@ -2379,10 +2379,10 @@ md_map_literal_element(A) ::= md_map_literal_key(B) MD_TOKEN_COLON md_map_litera
 	A = mlr_dsl_ast_node_alloc_binary("mappair", MD_AST_NODE_TYPE_MAP_LITERAL_PAIR, B, C);
 }
 md_map_literal_key(A) ::= md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_unary("mapkey", MD_AST_NODE_TYPE_MAP_LITERAL, B);
+	A = mlr_dsl_ast_node_alloc_unary("mapkey", MD_AST_NODE_TYPE_MAP_LITERAL_KEY, B);
 }
 md_map_literal_value(A) ::= md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_unary("mapval", MD_AST_NODE_TYPE_MAP_LITERAL, B);
+	A = mlr_dsl_ast_node_alloc_unary("mapval", MD_AST_NODE_TYPE_MAP_LITERAL_VALUE, B);
 }
 md_map_literal_value(A) ::= md_map_literal(B). {
 	A = mlr_dsl_ast_node_alloc_unary("mapval", MD_AST_NODE_TYPE_MAP_LITERAL, B);
