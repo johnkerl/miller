@@ -301,14 +301,6 @@ mlr_dsl_cst_statement_t* alloc_nonindexed_local_variable_assignment(mlr_dsl_cst_
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE);
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->pchildren != NULL);
 
-	// xxx XXX mapvar case: rhs is MAP_LITERAL
-	// xxx XXX mapvar case: rhs is FULL_SREC
-	// xxx XXX mapvar case: rhs is OOSVAR_KEYLIST
-	// xxx XXX mapvar case: rhs is FULL_OOSVAR
-	// xxx XXX mapvar case: rhs is NONINDEXED_LOCAL_VARIABLE
-	// xxx XXX mapvar case: rhs is INDEXED_LOCAL_VARIABLE
-	// xxx XXX mapvar case: rhs is FUNCTION_CALLSITE
-
 	pstate->lhs_variable_name = pleft->text;
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstate->lhs_frame_relative_index = pleft->vardef_frame_relative_index;

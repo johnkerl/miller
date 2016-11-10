@@ -45,7 +45,8 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 		break;
 
 	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
-		return NULL; // xxx XXX mapvar stub
+		return rxval_evaluator_alloc_from_oosvar_keylist(
+			pnode, pfmgr, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_FULL_OOSVAR:
@@ -152,6 +153,57 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_indexed_local_variable(
 	prxval_evaluator->pvstate       = pstate;
 	prxval_evaluator->pprocess_func = rxval_evaluator_from_indexed_local_variable_func;
 	prxval_evaluator->pfree_func    = rxval_evaluator_from_indexed_local_variable_free;
+
+	return prxval_evaluator;
+}
+
+// ================================================================
+typedef struct _rxval_evaluator_from_oosvar_keylist_state_t {
+	sllv_t* pkeylist_evaluators;
+} rxval_evaluator_from_oosvar_keylist_state_t;
+
+mlhmmv_value_t rxval_evaluator_from_oosvar_keylist_func(void* pvstate, variables_t* pvars) {
+	rxval_evaluator_from_oosvar_keylist_state_t* pstate = pvstate;
+
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pstate->pkeylist_evaluators, pvars, &all_non_null_or_error);
+
+	if (all_non_null_or_error) {
+
+		int lookup_error = FALSE;
+		mlhmmv_value_t* pxval = mlhmmv_get_value_from_level(pvars->poosvars->proot_level,
+			pmvkeys, &lookup_error);
+		sllmv_free(pmvkeys);
+		return mlhmmv_copy_aux(pxval);
+	} else {
+		sllmv_free(pmvkeys);
+		return mlhmmv_value_transfer_terminal(mv_absent());
+	}
+}
+
+static void rxval_evaluator_from_oosvar_keylist_free(rxval_evaluator_t* prxval_evaluator) {
+	rxval_evaluator_from_oosvar_keylist_state_t* pstate = prxval_evaluator->pvstate;
+	for (sllve_t* pe = pstate->pkeylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		rval_evaluator_t* prval_evaluator = pe->pvvalue;
+		prval_evaluator->pfree_func(prval_evaluator);
+	}
+	sllv_free(pstate->pkeylist_evaluators);
+	free(pstate);
+	free(prxval_evaluator);
+}
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_oosvar_keylist(
+	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
+{
+	rxval_evaluator_from_oosvar_keylist_state_t* pstate = mlr_malloc_or_die(
+		sizeof(rxval_evaluator_from_oosvar_keylist_state_t));
+	pstate->pkeylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+		pnode, pfmgr, type_inferencing, context_flags);
+
+	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	prxval_evaluator->pvstate       = pstate;
+	prxval_evaluator->pprocess_func = rxval_evaluator_from_oosvar_keylist_func;
+	prxval_evaluator->pfree_func    = rxval_evaluator_from_oosvar_keylist_free;
 
 	return prxval_evaluator;
 }
