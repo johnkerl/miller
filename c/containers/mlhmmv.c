@@ -86,6 +86,14 @@ mlhmmv_t* mlhmmv_alloc() {
 	return pmap;
 }
 
+mlhmmv_value_t mlhmmv_value_alloc_empty_map() {
+	mlhmmv_value_t xval = (mlhmmv_value_t) {
+		.is_terminal = FALSE,
+		.u.pnext_level = mlhmmv_level_alloc()
+	};
+	return xval;
+}
+
 // xxx temp expose static
 mlhmmv_level_t* mlhmmv_level_alloc() {
 	mlhmmv_level_t* plevel = mlr_malloc_or_die(sizeof(mlhmmv_level_t));

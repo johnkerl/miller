@@ -775,6 +775,13 @@ md_indexed_local_assignment(A)  ::= md_indexed_local_variable(B) MD_TOKEN_ASSIGN
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B, C);
 }
 
+md_nonindexed_local_assignment(A)  ::= md_nonindexed_local_variable(B) MD_TOKEN_ASSIGN(O) MD_TOKEN_FULL_SREC(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B, C);
+}
+md_indexed_local_assignment(A)  ::= md_indexed_local_variable(B) MD_TOKEN_ASSIGN(O) MD_TOKEN_FULL_SREC(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B, C);
+}
+
 // ----------------------------------------------------------------
 md_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B, C);

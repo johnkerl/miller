@@ -78,6 +78,7 @@ typedef struct _mlhmmv_t {
 } mlhmmv_t;
 
 mlhmmv_t* mlhmmv_alloc();
+mlhmmv_value_t mlhmmv_value_alloc_empty_map();
 
 void mlhmmv_free(mlhmmv_t* pmap);
 

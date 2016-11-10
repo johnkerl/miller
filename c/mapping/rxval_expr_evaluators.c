@@ -40,10 +40,6 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 			pnode, pfmgr, type_inferencing, context_flags);
 		break;
 
-	case MD_AST_NODE_TYPE_FULL_SREC:
-		return NULL; // xxx XXX mapvar stub
-		break;
-
 	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
 		return rxval_evaluator_alloc_from_oosvar_keylist(
 			pnode, pfmgr, type_inferencing, context_flags);
@@ -54,22 +50,16 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 			pnode, pfmgr, type_inferencing, context_flags);
 		break;
 
+	case MD_AST_NODE_TYPE_FULL_SREC:
+		return rxval_evaluator_alloc_from_full_srec(
+			pnode, pfmgr, type_inferencing, context_flags);
+		break;
+
 	default:
 		return rxval_evaluator_alloc_wrapping_rval(pnode, pfmgr, type_inferencing, context_flags);
 		break;
 	}
 }
-
-//// ----------------------------------------------------------------
-//void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys) {
-//	int error = 0;
-//
-//	mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(pmap->proot_level, pfromkeys->phead, &error);
-//	if (pfromentry != NULL) {
-//		mlhmmv_value_t submap = mlhmmv_copy_aux(&pfromentry->level_value);
-//		mlhmmv_put_value_at_level(pmap, ptokeys, &submap);
-//	}
-//}
 
 // ================================================================
 typedef struct _rxval_evaluator_from_nonindexed_local_variable_state_t {
@@ -229,6 +219,39 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_full_oosvar(
 }
 
 // ================================================================
+mlhmmv_value_t rxval_evaluator_from_full_srec_func(void* pvstate, variables_t* pvars) {
+	mlhmmv_value_t xval = mlhmmv_value_alloc_empty_map(); // xxx memory leak. replace w/ initter.
+
+	for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {
+		mv_t k = mv_from_string(pe->key, NO_FREE); // mlhmmv_put_terminal_from_level will copy
+		sllmve_t e = { .value = k, .free_flags = 0, .pnext = NULL };
+		mv_t* pomv = lhmsmv_get(pvars->ptyped_overlay, pe->key);
+		if (pomv != NULL) {
+			mlhmmv_put_terminal_from_level(xval.u.pnext_level, &e, pomv);
+		} else {
+			mv_t v = mv_from_string(pe->value, NO_FREE); // mlhmmv_put_terminal_from_level will copy
+			mlhmmv_put_terminal_from_level(xval.u.pnext_level, &e, &v);
+		}
+	}
+
+	return xval;
+}
+
+static void rxval_evaluator_from_full_srec_free(rxval_evaluator_t* prxval_evaluator) {
+	free(prxval_evaluator);
+}
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_full_srec(
+	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
+{
+	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	prxval_evaluator->pprocess_func = rxval_evaluator_from_full_srec_func;
+	prxval_evaluator->pfree_func    = rxval_evaluator_from_full_srec_free;
+
+	return prxval_evaluator;
+}
+
+// ================================================================
 typedef struct _rxval_evaluator_wrapping_rval_state_t {
 	rval_evaluator_t* prval_evaluator;
 } rxval_evaluator_wrapping_rval_state_t;
@@ -261,34 +284,3 @@ rxval_evaluator_t* rxval_evaluator_alloc_wrapping_rval(mlr_dsl_ast_node_t* pnode
 
 	return prxval_evaluator;
 }
-
-//// ================================================================
-//typedef struct _rval_evaluator_from_local_variable_state_t {
-//	int vardef_frame_relative_index;
-//} rval_evaluator_from_local_variable_state_t;
-
-//mv_t rval_evaluator_from_local_variable_func(void* pvstate, variables_t* pvars) {
-//	rval_evaluator_from_local_variable_state_t* pstate = pvstate;
-//	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-//	mv_t val = local_stack_frame_get_non_map(pframe, pstate->vardef_frame_relative_index);
-//	return mv_copy(&val);
-//}
-
-//static void rval_evaluator_from_local_variable_free(rval_evaluator_t* prxval_evaluator) {
-//	rval_evaluator_from_local_variable_state_t* pstate = prxval_evaluator->pvstate;
-//	free(pstate);
-//	free(prxval_evaluator);
-//}
-
-//rval_evaluator_t* rval_evaluator_alloc_from_local_variable(int vardef_frame_relative_index) {
-//	rval_evaluator_from_local_variable_state_t* pstate = mlr_malloc_or_die(
-//		sizeof(rval_evaluator_from_local_variable_state_t));
-//	rval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
-//
-//	pstate->vardef_frame_relative_index = vardef_frame_relative_index;
-//	prxval_evaluator->pvstate = pstate;
-//	prxval_evaluator->pprocess_func    = rval_evaluator_from_local_variable_func;
-//	prxval_evaluator->pfree_func       = rval_evaluator_from_local_variable_free;
-//
-//	return prxval_evaluator;
-//}
