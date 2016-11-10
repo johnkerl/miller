@@ -230,6 +230,7 @@ void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs,
 
 // For 'dump' in the DSL; also used by the lrec-to-JSON writer.
 void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always, char* line_indent, FILE* ostream);
+void mlhmmv_print_terminal(mv_t* pmv, int quote_values_always, FILE* ostream);
 void mlhmmv_print_json_single_line(mlhmmv_t* pmap, int quote_values_always, FILE* ostream);
 
 void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,

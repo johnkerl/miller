@@ -1166,10 +1166,9 @@ static void handle_dump(
 	mlhmmv_level_t* plevel = NULL;
 	pstate->pdump_target_getter(pvars, pstate, &pval, &plevel);
 	if (pval != NULL) {
-		// xxx stub
+		mlhmmv_print_terminal(pval, FALSE, pstate->stdfp);
 	} else {
-		// xxx make simpler entry-point w/ default args
-		mlhmmv_level_print_stacked(plevel, 0, FALSE, FALSE, "", pstate->stdfp);
+		mlhmmv_level_print_stacked(plevel, 0, FALSE, FALSE, "", pstate->stdfp); // xxx mk simpler call w/ dfl args
 	}
 }
 

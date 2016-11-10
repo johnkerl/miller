@@ -1306,6 +1306,24 @@ void mlhmmv_print_json_stacked(mlhmmv_t* pmap, int quote_values_always, char* li
 	mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, quote_values_always, line_indent, ostream);
 }
 
+void mlhmmv_print_terminal(mv_t* pmv, int quote_values_always, FILE* ostream) {
+	char* level_value_string = mv_alloc_format_val(pmv);
+
+	if (quote_values_always) {
+		fprintf(ostream, "\"%s\"", level_value_string);
+	} else if (pmv->type == MT_STRING) {
+		double unused;
+		if (mlr_try_float_from_string(level_value_string, &unused))
+			json_decimal_print(level_value_string, ostream);
+		else if (streq(level_value_string, "true") || streq(level_value_string, "false"))
+			fprintf(ostream, "%s", level_value_string);
+		else
+			fprintf(ostream, "\"%s\"", level_value_string);
+	} else {
+		fprintf(ostream, "%s", level_value_string);
+	}
+}
+
 void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 	int do_final_comma, int quote_values_always, char* line_indent, FILE* ostream)
 {
@@ -1322,23 +1340,8 @@ void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 		free(level_key_string);
 
 		if (pentry->level_value.is_terminal) {
-			char* level_value_string = mv_alloc_format_val(&pentry->level_value.u.mlrval);
+			mlhmmv_print_terminal(&pentry->level_value.u.mlrval, quote_values_always, ostream);
 
-			if (quote_values_always) {
-				fprintf(ostream, "\"%s\"", level_value_string);
-			} else if (pentry->level_value.u.mlrval.type == MT_STRING) {
-				double unused;
-				if (mlr_try_float_from_string(level_value_string, &unused))
-					json_decimal_print(level_value_string, ostream);
-				else if (streq(level_value_string, "true") || streq(level_value_string, "false"))
-					fprintf(ostream, "%s", level_value_string);
-				else
-					fprintf(ostream, "\"%s\"", level_value_string);
-			} else {
-				fprintf(ostream, "%s", level_value_string);
-			}
-
-			free(level_value_string);
 			if (pentry->pnext != NULL)
 				fprintf(ostream, ",\n");
 			else
