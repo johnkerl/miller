@@ -99,6 +99,7 @@ mv_t* mlhmmv_get_terminal_from_level(mlhmmv_level_t* plevel, sllmv_t* pmvkeys, i
 // level of the mlhmmv, then copy values there.
 mlhmmv_level_t* mlhmmv_get_or_create_level(mlhmmv_t* pmap, sllmv_t* pmvkeys);
 void mlhmmv_put_terminal_from_level(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
+mlhmmv_level_t* mlhmmv_put_empty_map_from_level(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
 
 // This is an assignment for assignment to full srec, e.g. '$* = @records[$key1][$key2]'.
 // The CST logic can use this function to get the @records[$key1][$key2] level of the mlhmmv,

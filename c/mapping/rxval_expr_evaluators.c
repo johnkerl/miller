@@ -104,7 +104,7 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 //         text="m", type=NONINDEXED_LOCAL_VARIABLE.
 
 typedef struct _map_literal_list_evaluator_t {
-	sllv_t* ppairs;
+	sllv_t* ppair_evaluators;
 } map_literal_list_evaluator_t;
 typedef struct _map_literal_pair_evaluator_t {
 	rval_evaluator_t*             pkey_evaluator;
@@ -117,7 +117,7 @@ static map_literal_list_evaluator_t* allocate_map_literal_evaluator_from_ast(
 	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
 {
 	map_literal_list_evaluator_t* plist_evaluator = mlr_malloc_or_die(sizeof(map_literal_list_evaluator_t));
-	plist_evaluator->ppairs = sllv_alloc();
+	plist_evaluator->ppair_evaluators = sllv_alloc();
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->type != MD_AST_NODE_TYPE_MAP_LITERAL);
 	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 
@@ -149,7 +149,7 @@ static map_literal_list_evaluator_t* allocate_map_literal_evaluator_from_ast(
 			MLR_INTERNAL_CODING_ERROR();
 		}
 
-		sllv_append(plist_evaluator->ppairs, ppair);
+		sllv_append(plist_evaluator->ppair_evaluators, ppair);
 	}
 	return plist_evaluator;
 }
@@ -159,26 +159,36 @@ typedef struct _rxval_evaluator_from_map_literal_state_t {
 	map_literal_list_evaluator_t* proot_list_evaluator;
 } rxval_evaluator_from_map_literal_state_t;
 
+static void rxval_evaluator_from_map_literal_aux(
+	rxval_evaluator_from_map_literal_state_t* pstate,
+	map_literal_list_evaluator_t*             plist_evaluator,
+	mlhmmv_level_t*                           plevel,
+	variables_t*                              pvars)
+{
+	for (sllve_t* pe = plist_evaluator->ppair_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		map_literal_pair_evaluator_t* ppair = pe->pvvalue;
+
+		// mlhmmv_put_terminal_from_level will copy keys and values
+		mv_t mvkey = ppair->pkey_evaluator->pprocess_func(ppair->pkey_evaluator->pvstate, pvars);
+		if (ppair->is_terminal) {
+			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
+			mv_t mvval = ppair->pval_evaluator->pprocess_func(ppair->pval_evaluator->pvstate, pvars);
+			mlhmmv_put_terminal_from_level(plevel, &e, &mvval);
+		} else {
+			// xxx make mlhmmv method
+			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
+			mlhmmv_level_t* pnext_level = mlhmmv_put_empty_map_from_level(plevel, &e);
+			rxval_evaluator_from_map_literal_aux(pstate, ppair->plist_evaluator, pnext_level, pvars);
+		}
+	}
+}
+
 mlhmmv_value_t rxval_evaluator_from_map_literal_func(void* pvstate, variables_t* pvars) {
 	rxval_evaluator_from_map_literal_state_t* pstate = pvstate;
 
 	mlhmmv_value_t xval = mlhmmv_value_alloc_empty_map();
 
-	for (sllve_t* pe = pstate->proot_list_evaluator->ppairs->phead; pe != NULL; pe = pe->pnext) {
-
-		map_literal_pair_evaluator_t* ppair = pe->pvvalue;
-
-		// mlhmmv_put_terminal_from_level will copy keys and valuess
-		mv_t mvkey = ppair->pkey_evaluator->pprocess_func(ppair->pkey_evaluator->pvstate, pvars);
-		if (ppair->is_terminal) {
-			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
-			mv_t mvval = ppair->pval_evaluator->pprocess_func(ppair->pval_evaluator->pvstate, pvars);
-			mlhmmv_put_terminal_from_level(xval.u.pnext_level, &e, &mvval);
-		} else {
-			//xxx recurse on ppair->plist_evaluator; -- xxx need an aux func
-		}
-
-	}
+	rxval_evaluator_from_map_literal_aux(pstate, pstate->proot_list_evaluator, xval.u.pnext_level, pvars);
 
 	return xval;
 }
@@ -373,11 +383,13 @@ mlhmmv_value_t rxval_evaluator_from_full_srec_func(void* pvstate, variables_t* p
 	mlhmmv_value_t xval = mlhmmv_value_alloc_empty_map(); // xxx memory leak. replace w/ initter.
 
 	for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {
-		mv_t k = mv_from_string(pe->key, NO_FREE); // mlhmmv_put_terminal_from_level will copy
+		// mlhmmv_put_terminal_from_level will copy mv keys and values so we needn't (and shouldn't)
+		// duplicate them here.
+		mv_t k = mv_from_string(pe->key, NO_FREE);
 		sllmve_t e = { .value = k, .free_flags = 0, .pnext = NULL };
 		mv_t* pomv = lhmsmv_get(pvars->ptyped_overlay, pe->key);
 		if (pomv != NULL) {
-			mlhmmv_put_terminal_from_level(xval.u.pnext_level, &e, pomv);
+			mlhmmv_put_terminal_from_level(xval.u.pnext_level, &e, pomv); // xxx make a simpler 1-level API call
 		} else {
 			mv_t v = mv_from_string(pe->value, NO_FREE); // mlhmmv_put_terminal_from_level will copy
 			mlhmmv_put_terminal_from_level(xval.u.pnext_level, &e, &v);

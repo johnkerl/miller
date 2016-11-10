@@ -264,6 +264,21 @@ static void mlhmmv_level_put_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_
 }
 
 // ----------------------------------------------------------------
+mlhmmv_level_t* mlhmmv_put_empty_map_from_level(mlhmmv_level_t* plevel, sllmve_t* prest_keys) {
+	mv_t x = mv_absent();
+	mlhmmv_put_terminal_from_level(plevel, prest_keys, &x); // xxx optimize to avoid 2nd lookup
+	int error;
+	sllmv_t s = { // xxx simplify API
+		.phead = prest_keys,
+		.ptail = prest_keys,
+		.length = 1
+	};
+	mlhmmv_value_t* pxval = mlhmmv_get_value_from_level(plevel, &s, &error);
+	*pxval = mlhmmv_value_alloc_empty_map();
+	return pxval->u.pnext_level;
+}
+
+// ----------------------------------------------------------------
 // This is done only on map-level enlargement.
 // Example:
 // * level = map["a"], rest_keys = [2, "c"] ,   terminal_value = 4.
