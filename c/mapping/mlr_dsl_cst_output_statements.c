@@ -1063,7 +1063,7 @@ typedef struct _dump_state_t {
 
 static mlr_dsl_cst_statement_handler_t handle_dump;
 static mlr_dsl_cst_statement_handler_t handle_dump_to_file;
-static mlr_dsl_cst_statement_freer_t free_dump;
+static mlr_dsl_cst_statement_freer_t   free_dump;
 
 // ----------------------------------------------------------------
 mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
@@ -1088,13 +1088,25 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 		pstate->pdump_target_getter = all_oosvar_target_getter;
 
 	} else if (pnode->pchildren->length == 2) { // dump specific oosvar or local
-		mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
-		if (poutput_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
+		mlr_dsl_ast_node_t* ptarget_node = pnode->pchildren->phead->pnext->pvvalue;
+
+		if (ptarget_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 			pstate->pdump_target_getter = oosvar_target_getter;
-		} else if (poutput_node->type == MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE) {
+			pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+				ptarget_node, pcst->pfmgr, type_inferencing, context_flags);
+
+		} else if (ptarget_node->type == MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE) {
 			pstate->pdump_target_getter = nonindexed_local_variable_target_getter;
-		} else if (poutput_node->type == MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE) {
+			MLR_INTERNAL_CODING_ERROR_IF(ptarget_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
+			pstate->target_vardef_frame_relative_index = ptarget_node->vardef_frame_relative_index;
+
+		} else if (ptarget_node->type == MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE) {
 			pstate->pdump_target_getter = indexed_local_variable_target_getter;
+			MLR_INTERNAL_CODING_ERROR_IF(ptarget_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
+			pstate->target_vardef_frame_relative_index = ptarget_node->vardef_frame_relative_index;
+			pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+				ptarget_node, pcst->pfmgr, type_inferencing, context_flags);
+
 		} else {
 			MLR_INTERNAL_CODING_ERROR();
 		}
@@ -1117,13 +1129,11 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 		phandler = handle_dump_to_file;
 	}
 
-	// xxx temp
 	return mlr_dsl_cst_statement_valloc(
 		pnode,
 		phandler,
 		free_dump,
 		pstate);
-
 }
 
 // ----------------------------------------------------------------
@@ -1137,22 +1147,65 @@ static void all_oosvar_target_getter(variables_t* pvars, dump_state_t* pstate,
 static void oosvar_target_getter(variables_t* pvars, dump_state_t* pstate,
 	mv_t** ppval, mlhmmv_level_t** pplevel)
 {
-	*ppval   = NULL; // xxx temp
-	*pplevel = NULL; // xxx temp
+	*ppval = NULL;
+
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pstate->ptarget_keylist_evaluators, pvars, &all_non_null_or_error);
+	if (all_non_null_or_error) {
+		int lookup_error = FALSE;
+		mlhmmv_level_t* plevel = mlhmmv_get_level(pvars->poosvars, pmvkeys, &lookup_error);
+		if (plevel != NULL) {
+			*pplevel = plevel;
+		}
+	}
+	sllmv_free(pmvkeys);
 }
 
 static void nonindexed_local_variable_target_getter(variables_t* pvars, dump_state_t* pstate,
 	mv_t** ppval, mlhmmv_level_t** pplevel)
 {
-	*ppval   = NULL; // xxx temp
-	*pplevel = NULL; // xxx temp
+	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+
+	mlhmmv_value_t* pmval = local_stack_frame_get_map_value(pframe,
+		pstate->target_vardef_frame_relative_index, NULL);
+	if (pmval == NULL) {
+		*ppval   = NULL;
+		*pplevel = NULL;
+	} else if (pmval->is_terminal) {
+		*ppval   = &pmval->u.mlrval;
+		*pplevel = NULL;
+	} else {
+		*ppval   = NULL;
+		*pplevel = pmval->u.pnext_level;
+	}
 }
 
 static void indexed_local_variable_target_getter(variables_t* pvars, dump_state_t* pstate,
 	mv_t** ppval, mlhmmv_level_t** pplevel)
 {
-	*ppval   = NULL; // xxx temp
-	*pplevel = NULL; // xxx temp
+	*ppval   = NULL;
+	*pplevel = NULL;
+
+	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pstate->ptarget_keylist_evaluators, pvars, &all_non_null_or_error);
+	if (all_non_null_or_error) {
+
+		mlhmmv_value_t* pmval = local_stack_frame_get_map_value(pframe,
+			pstate->target_vardef_frame_relative_index, pmvkeys);
+		if (pmval != NULL) {
+			if (pmval->is_terminal) {
+				*ppval   = &pmval->u.mlrval;
+				*pplevel = NULL;
+			} else {
+				*ppval   = NULL;
+				*pplevel = pmval->u.pnext_level;
+			}
+		}
+	}
+
+	sllmv_free(pmvkeys);
 }
 
 // ----------------------------------------------------------------
@@ -1167,7 +1220,8 @@ static void handle_dump(
 	pstate->pdump_target_getter(pvars, pstate, &pval, &plevel);
 	if (pval != NULL) {
 		mlhmmv_print_terminal(pval, FALSE, pstate->stdfp);
-	} else {
+		fprintf(pstate->stdfp, "\n");
+	} else if (plevel != NULL) {
 		mlhmmv_level_print_stacked(plevel, 0, FALSE, FALSE, "", pstate->stdfp); // xxx mk simpler call w/ dfl args
 	}
 }
@@ -1185,7 +1239,17 @@ static void handle_dump_to_file(
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 
 	FILE* outfp = multi_out_get(pstate->pmulti_out, filename, pstate->file_output_mode);
-	mlhmmv_print_json_stacked(pvars->poosvars, FALSE, "", outfp);
+
+	mv_t* pval = NULL;
+	mlhmmv_level_t* plevel = NULL;
+	pstate->pdump_target_getter(pvars, pstate, &pval, &plevel);
+	if (pval != NULL) {
+		mlhmmv_print_terminal(pval, FALSE, outfp);
+		fprintf(outfp, "\n");
+	} else if (plevel != NULL) {
+		mlhmmv_level_print_stacked(plevel, 0, FALSE, FALSE, "", outfp); // xxx mk simpler call w/ dfl args
+	}
+
 	if (pstate->flush_every_record)
 		fflush(outfp);
 

@@ -27,6 +27,8 @@ MAPVARS:
 
 !!! dump {arg}
 
+! emit/emitf w/ locals
+
 * steps:
 
   ! need an mlval_evaluator_t. delegate to rval_evaluator_t ...
