@@ -50,7 +50,8 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 		break;
 
 	case MD_AST_NODE_TYPE_FULL_OOSVAR:
-		return NULL; // xxx XXX mapvar stub
+		return rxval_evaluator_alloc_from_full_oosvar(
+			pnode, pfmgr, type_inferencing, context_flags);
 		break;
 
 	default:
@@ -204,6 +205,25 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_oosvar_keylist(
 	prxval_evaluator->pvstate       = pstate;
 	prxval_evaluator->pprocess_func = rxval_evaluator_from_oosvar_keylist_func;
 	prxval_evaluator->pfree_func    = rxval_evaluator_from_oosvar_keylist_free;
+
+	return prxval_evaluator;
+}
+
+// ================================================================
+mlhmmv_value_t rxval_evaluator_from_full_oosvar_func(void* pvstate, variables_t* pvars) {
+	return mlhmmv_copy_submap_from_root(pvars->poosvars, NULL);
+}
+
+static void rxval_evaluator_from_full_oosvar_free(rxval_evaluator_t* prxval_evaluator) {
+	free(prxval_evaluator);
+}
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_full_oosvar(
+	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
+{
+	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	prxval_evaluator->pprocess_func = rxval_evaluator_from_full_oosvar_func;
+	prxval_evaluator->pfree_func    = rxval_evaluator_from_full_oosvar_free;
 
 	return prxval_evaluator;
 }

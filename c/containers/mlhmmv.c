@@ -688,7 +688,7 @@ mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue) { // xxx rename
 // ----------------------------------------------------------------
 mlhmmv_value_t mlhmmv_copy_submap_from_root(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 	int error;
-	if (pmvkeys->length == 0) {
+	if (pmvkeys == NULL || pmvkeys->length == 0) {
 		mlhmmv_value_t root_value = (mlhmmv_value_t) {
 			.is_terminal = FALSE,
 			.u.pnext_level = pmap->proot_level,

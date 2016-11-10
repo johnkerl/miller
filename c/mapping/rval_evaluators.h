@@ -170,6 +170,9 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_indexed_local_variable(
 rxval_evaluator_t* rxval_evaluator_alloc_from_oosvar_keylist(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
+rxval_evaluator_t* rxval_evaluator_alloc_from_full_oosvar(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
 rxval_evaluator_t* rxval_evaluator_alloc_wrapping_rval(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
