@@ -165,6 +165,8 @@ UT FOR 5.0.0:
 
 * UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
 * env lhs expr
+* dump locals & named/subscripted oosvars
+* emit locals & named/subscripted oosvars
 
 ================================================================
 HYGIENE FOR 5.0.0:
@@ -207,6 +209,8 @@ DEBUGGING:
   o no ++ or -- (not C-like)
   o curly braces are required in if/for/while even w/ single-statement bodies (not C-like)
 * execution-trace option: disclaim it's an AST dump, not source-level.
+* dump locals & named/subscripted oosvars
+* emit locals & named/subscripted oosvars
 
 PERF:
 * mand bench somewhere; other benches.

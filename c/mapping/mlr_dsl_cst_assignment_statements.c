@@ -278,9 +278,9 @@ static void handle_local_variable_definition_from_map_literal( // xxx mapvar
 
 // ================================================================
 typedef struct _nonindexed_local_variable_assignment_state_t {
-	char*             lhs_variable_name; // For error messages only: stack-index is computed by stack-allocator:
-	int               lhs_frame_relative_index;
-	rval_evaluator_t* prhs_evaluator;
+	char*              lhs_variable_name; // For error messages only: stack-index is computed by stack-allocator:
+	int                lhs_frame_relative_index;
+	rxval_evaluator_t* prhs_evaluator;
 } nonindexed_local_variable_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_nonindexed_local_variable_assignment;
@@ -312,7 +312,7 @@ mlr_dsl_cst_statement_t* alloc_nonindexed_local_variable_assignment(mlr_dsl_cst_
 	pstate->lhs_variable_name = pleft->text;
 	MLR_INTERNAL_CODING_ERROR_IF(pleft->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstate->lhs_frame_relative_index = pleft->vardef_frame_relative_index;
-	pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
+	pstate->prhs_evaluator = rxval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
 
 	return mlr_dsl_cst_statement_valloc(
 		pnode,
@@ -371,13 +371,13 @@ static void handle_nonindexed_local_variable_assignment(
 {
 	nonindexed_local_variable_assignment_state_t* pstate = pstatement->pvstate;
 
-	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator;
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	if (mv_is_present(&val)) {
+	rxval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator;
+	mlhmmv_value_t xval = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+	if (!xval.is_terminal || mv_is_present(&xval.u.mlrval)) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_assign_non_map(pframe, pstate->lhs_frame_relative_index, val);
+		local_stack_frame_xassign_non_map(pframe, pstate->lhs_frame_relative_index, xval);
 	} else {
-		mv_free(&val);
+		mlhmmv_free_submap(xval);
 	}
 }
 
