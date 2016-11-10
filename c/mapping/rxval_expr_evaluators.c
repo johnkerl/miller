@@ -109,7 +109,7 @@ typedef struct _map_literal_list_evaluator_t {
 typedef struct _map_literal_pair_evaluator_t {
 	rval_evaluator_t*             pkey_evaluator;
 	int                           is_terminal;
-	rval_evaluator_t*             pval_evaluator;
+	rval_evaluator_t*             pval_evaluator; // xxx rxval evaluator! 'map m = {"s":$*, "o":@v}'
 	map_literal_list_evaluator_t* plist_evaluator;
 } map_literal_pair_evaluator_t;
 

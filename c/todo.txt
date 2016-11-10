@@ -18,9 +18,11 @@ NON-RELEASE:
 ================================================================
 OTHER:
 
-!!! b.tsv bug
+!!! b.tsv bug -- to relnotes
 
 !! don't dump full help on unrecognized flag. WAY too much info. just print short, w/ info on how to get long.
+
+* ?: operator ?
 
 ================================================================
 MAPVARS:
