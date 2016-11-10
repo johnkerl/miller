@@ -175,7 +175,6 @@ static void rxval_evaluator_from_map_literal_aux(
 			mv_t mvval = ppair->pval_evaluator->pprocess_func(ppair->pval_evaluator->pvstate, pvars);
 			mlhmmv_put_terminal_from_level(plevel, &e, &mvval);
 		} else {
-			// xxx make mlhmmv method
 			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
 			mlhmmv_level_t* pnext_level = mlhmmv_put_empty_map_from_level(plevel, &e);
 			rxval_evaluator_from_map_literal_aux(pstate, ppair->plist_evaluator, pnext_level, pvars);
@@ -195,7 +194,7 @@ mlhmmv_value_t rxval_evaluator_from_map_literal_func(void* pvstate, variables_t*
 
 static void rxval_evaluator_from_map_literal_free(rxval_evaluator_t* prxval_evaluator) {
 	rxval_evaluator_from_map_literal_state_t* pstate = prxval_evaluator->pvstate;
-	//xxx free pstate->prval_evaluator->pfree_func(pstate->prval_evaluator);
+	//xxx free the tree recursively pstate->prval_evaluator->pfree_func(pstate->prval_evaluator);
 	free(pstate);
 	free(prxval_evaluator);
 }
