@@ -24,10 +24,20 @@ OTHER:
 
 * ?: operator ?
 
+* unragged example:
+  http://unix.stackexchange.com/questions/322314/sed-or-awk-command-to-insert-tabs-delimiter-at-spcific-positions
+  unragged.txt
+
 ================================================================
 MAPVARS:
 
-!!! dump {arg}
+k dump {arg}
+
+!! support map rec = @recs[i] !!
+
+!! we are going to need builtin functions which deal with maps.
+  - count(@map), proxy for NF.
+  - ?
 
 ! emit/emitf w/ locals
 

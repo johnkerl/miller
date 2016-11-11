@@ -130,7 +130,7 @@ md_statement_not_braced_end(A) ::= md_int_local_definition(B).        { A = B; }
 md_statement_not_braced_end(A) ::= md_float_local_definition(B).      { A = B; }
 md_statement_not_braced_end(A) ::= md_boolean_local_definition(B).    { A = B; }
 md_statement_not_braced_end(A) ::= md_string_local_definition(B).     { A = B; }
-md_statement_not_braced_end(A) ::= md_map_local_definition(B).       { A = B; }
+md_statement_not_braced_end(A) ::= md_map_local_definition(B).        { A = B; }
 md_statement_not_braced_end(A) ::= md_nonindexed_local_assignment(B). { A = B; }
 md_statement_not_braced_end(A) ::= md_indexed_local_assignment(B).    { A = B; }
 
@@ -732,6 +732,16 @@ md_filter(A) ::= MD_TOKEN_FILTER(O) md_rhs(B). {
 md_untyped_local_definition(A) ::= MD_TOKEN_VAR(T) md_nonindexed_local_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION, N, B);
 }
+md_untyped_local_definition(A) ::= MD_TOKEN_VAR(T) md_nonindexed_local_variable(N) MD_TOKEN_ASSIGN MD_TOKEN_FULL_SREC(B). {
+	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION, N, B);
+}
+md_untyped_local_definition(A) ::= MD_TOKEN_VAR(T) md_nonindexed_local_variable(N) MD_TOKEN_ASSIGN MD_TOKEN_FULL_OOSVAR(B). {
+	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION, N, B);
+}
+md_untyped_local_definition(A) ::= MD_TOKEN_VAR(T) md_nonindexed_local_variable(N) MD_TOKEN_ASSIGN md_map_literal(C). {
+	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION, N, C);
+}
+
 md_numeric_local_definition(A) ::= MD_TOKEN_NUMERIC(T) md_nonindexed_local_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION, N, B);
 }
@@ -747,10 +757,14 @@ md_boolean_local_definition(A) ::= MD_TOKEN_BOOLEAN(T) md_nonindexed_local_varia
 md_string_local_definition(A) ::= MD_TOKEN_STRING(T) md_nonindexed_local_variable(N) MD_TOKEN_ASSIGN md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION, N, B);
 }
-md_untyped_local_definition(A) ::= MD_TOKEN_VAR(T) md_nonindexed_local_variable(N) MD_TOKEN_ASSIGN md_map_literal(C). {
+
+md_map_local_definition(A) ::= MD_TOKEN_MAP(T) md_nonindexed_local_variable(N) MD_TOKEN_ASSIGN md_map_literal(C). {
 	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION, N, C);
 }
-md_map_local_definition(A) ::= MD_TOKEN_MAP(T) md_nonindexed_local_variable(N) MD_TOKEN_ASSIGN md_map_literal(C). {
+md_map_local_definition(A) ::= MD_TOKEN_MAP(T) md_nonindexed_local_variable(N) MD_TOKEN_ASSIGN MD_TOKEN_FULL_SREC(C). {
+	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION, N, C);
+}
+md_map_local_definition(A) ::= MD_TOKEN_MAP(T) md_nonindexed_local_variable(N) MD_TOKEN_ASSIGN MD_TOKEN_FULL_OOSVAR(C). {
 	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION, N, C);
 }
 

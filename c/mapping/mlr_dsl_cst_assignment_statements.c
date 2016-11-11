@@ -111,11 +111,6 @@ mlr_dsl_cst_statement_t* alloc_indirect_srec_assignment(mlr_dsl_cst_t* pcst, mlr
 	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
 
-	// xxx XXX mapvar srec := map-lit
-	// xxx XXX mapvar srec := non-indexed local
-	// xxx XXX mapvar srec := indexed local
-	// xxx XXX mapvar srec := udf call
-
 	pstate->plhs_evaluator = rval_evaluator_alloc_from_ast(pleft,  pcst->pfmgr, type_inferencing, context_flags);
 	pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr, type_inferencing, context_flags);
 
@@ -179,10 +174,11 @@ static void handle_indirect_srec_assignment(
 
 // ================================================================
 typedef struct _local_variable_definition_state_t {
-	char*             lhs_variable_name;
-	int               lhs_frame_relative_index;
-	int               lhs_type_mask;
-	rval_evaluator_t* prhs_evaluator;
+	char*              lhs_variable_name;
+	int                lhs_frame_relative_index;
+	int                lhs_type_mask;
+	rval_evaluator_t*  prhs_evaluator;
+	rxval_evaluator_t* prhs_xevaluator;
 } local_variable_definition_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_local_variable_definition;
@@ -200,6 +196,12 @@ mlr_dsl_cst_statement_t* alloc_local_variable_definition( // xxx XXX mapvars nex
 	local_variable_definition_state_t* pstate = mlr_malloc_or_die(
 		sizeof(local_variable_definition_state_t));
 
+	pstate->lhs_variable_name        = NULL;
+	pstate->lhs_frame_relative_index = MD_UNUSED_INDEX;
+	pstate->lhs_type_mask            = 0;
+	pstate->prhs_evaluator           = NULL;
+	pstate->prhs_xevaluator          = NULL;
+
 	mlr_dsl_ast_node_t* pname_node = pnode->pchildren->phead->pvvalue;
 	pstate->lhs_variable_name = pname_node->text;
 	MLR_INTERNAL_CODING_ERROR_IF(pname_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
@@ -208,12 +210,19 @@ mlr_dsl_cst_statement_t* alloc_local_variable_definition( // xxx XXX mapvars nex
 
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pnext->pvvalue;
-	if (prhs_node->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
-		pstate->prhs_evaluator = NULL; // xxx more to do for mapvars
+
+	switch (prhs_node->type) {
+	case MD_AST_NODE_TYPE_MAP_LITERAL:
+	case MD_AST_NODE_TYPE_FULL_SREC:
+	case MD_AST_NODE_TYPE_FULL_OOSVAR:
+		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
+			prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 		pstatement_handler = handle_local_variable_definition_from_map_literal;
-	} else {
+		break;
+	default:
 		pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 		pstatement_handler = handle_local_variable_definition;
+		break;
 	}
 
 	return mlr_dsl_cst_statement_valloc(
