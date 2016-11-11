@@ -192,9 +192,24 @@ mlhmmv_value_t rxval_evaluator_from_map_literal_func(void* pvstate, variables_t*
 	return xval;
 }
 
+static void rxval_evaluator_from_map_literal_free_aux(map_literal_list_evaluator_t* plist_evaluator) {
+	for (sllve_t* pe = plist_evaluator->ppair_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		map_literal_pair_evaluator_t* ppair_evaluator = pe->pvvalue;
+		if (ppair_evaluator->pkey_evaluator != NULL) {
+			ppair_evaluator->pkey_evaluator->pfree_func(ppair_evaluator->pkey_evaluator);
+		}
+		if (ppair_evaluator->pxval_evaluator != NULL) {
+			ppair_evaluator->pxval_evaluator->pfree_func(ppair_evaluator->pxval_evaluator);
+		}
+		if (ppair_evaluator->plist_evaluator != NULL) {
+			rxval_evaluator_from_map_literal_free_aux(ppair_evaluator->plist_evaluator);
+		}
+	}
+}
+
 static void rxval_evaluator_from_map_literal_free(rxval_evaluator_t* prxval_evaluator) {
 	rxval_evaluator_from_map_literal_state_t* pstate = prxval_evaluator->pvstate;
-	//xxx free the tree recursively pstate->prval_evaluator->pfree_func(pstate->prval_evaluator);
+	rxval_evaluator_from_map_literal_free_aux(pstate->proot_list_evaluator);
 	free(pstate);
 	free(prxval_evaluator);
 }
