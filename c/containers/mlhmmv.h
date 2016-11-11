@@ -83,6 +83,7 @@ mlhmmv_value_t mlhmmv_value_alloc_empty_map();
 void mlhmmv_free(mlhmmv_t* pmap);
 
 void mlhmmv_put_terminal(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
+void mlhmmv_put_value_at_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue); // xxx rename
 
 // If the return value is non-null, error will be MLHMMV_ERROR_NONE.  If the
 // return value is null, the error will be MLHMMV_ERROR_KEYLIST_TOO_DEEP or

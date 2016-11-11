@@ -2397,6 +2397,3 @@ md_map_literal_value(A) ::= MD_TOKEN_FULL_SREC(B). {
 md_map_literal_value(A) ::= MD_TOKEN_FULL_OOSVAR(B). {
 	A = mlr_dsl_ast_node_alloc_unary("mapval", MD_AST_NODE_TYPE_MAP_LITERAL_VALUE, B);
 }
-//md_map_literal_value(A) ::= md_oosvar_keylist(B). { // wtfc 'this rule cannot be reduced' ?!?
-//	A = mlr_dsl_ast_node_alloc_unary("mapval", MD_AST_NODE_TYPE_MAP_LITERAL_VALUE, B);
-//}

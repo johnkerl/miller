@@ -109,7 +109,7 @@ typedef struct _map_literal_list_evaluator_t {
 typedef struct _map_literal_pair_evaluator_t {
 	rval_evaluator_t*             pkey_evaluator;
 	int                           is_terminal;
-	rval_evaluator_t*             pval_evaluator; // xxx rxval evaluator! 'map m = {"s":$*, "o":@v}'
+	rxval_evaluator_t*            pxval_evaluator;
 	map_literal_list_evaluator_t* plist_evaluator;
 } map_literal_pair_evaluator_t;
 
@@ -125,7 +125,7 @@ static map_literal_list_evaluator_t* allocate_map_literal_evaluator_from_ast(
 		*ppair = (map_literal_pair_evaluator_t) {
 			.pkey_evaluator  = NULL,
 			.is_terminal     = TRUE,
-			.pval_evaluator  = NULL,
+			.pxval_evaluator = NULL,
 			.plist_evaluator = NULL,
 		};
 
@@ -140,7 +140,7 @@ static map_literal_list_evaluator_t* allocate_map_literal_evaluator_from_ast(
 		mlr_dsl_ast_node_t* pright = pchild->pchildren->phead->pnext->pvvalue;
 		mlr_dsl_ast_node_t* pvalnode = pright->pchildren->phead->pvvalue;
 		if (pright->type == MD_AST_NODE_TYPE_MAP_LITERAL_VALUE) {
-			ppair->pval_evaluator = rval_evaluator_alloc_from_ast(pvalnode, pfmgr, type_inferencing, context_flags);
+			ppair->pxval_evaluator = rxval_evaluator_alloc_from_ast(pvalnode, pfmgr, type_inferencing, context_flags);
 		} else if (pright->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
 			ppair->is_terminal = FALSE;
 			ppair->plist_evaluator = allocate_map_literal_evaluator_from_ast(
@@ -154,7 +154,7 @@ static map_literal_list_evaluator_t* allocate_map_literal_evaluator_from_ast(
 	return plist_evaluator;
 }
 
-// ----------------------------------------------------------------
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef struct _rxval_evaluator_from_map_literal_state_t {
 	map_literal_list_evaluator_t* proot_list_evaluator;
 } rxval_evaluator_from_map_literal_state_t;
@@ -172,8 +172,8 @@ static void rxval_evaluator_from_map_literal_aux(
 		mv_t mvkey = ppair->pkey_evaluator->pprocess_func(ppair->pkey_evaluator->pvstate, pvars);
 		if (ppair->is_terminal) {
 			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
-			mv_t mvval = ppair->pval_evaluator->pprocess_func(ppair->pval_evaluator->pvstate, pvars);
-			mlhmmv_put_terminal_from_level(plevel, &e, &mvval);
+			mlhmmv_value_t xval = ppair->pxval_evaluator->pprocess_func(ppair->pxval_evaluator->pvstate, pvars);
+			mlhmmv_put_value_at_level_aux(plevel, &e, &xval);
 		} else {
 			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
 			mlhmmv_level_t* pnext_level = mlhmmv_put_empty_map_from_level(plevel, &e);

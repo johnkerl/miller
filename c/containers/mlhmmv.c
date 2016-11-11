@@ -39,7 +39,6 @@ static mlhmmv_value_t* mlhmmv_get_next_level_entry_value(mlhmmv_level_t* pmap, m
 
 static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* pemptied, int depth);
 
-static void mlhmmv_put_value_at_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue);
 static void mlhmmv_level_put_value_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys,
 	mlhmmv_value_t* pvalue);
 static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel);
@@ -794,7 +793,7 @@ static void mlhmmv_put_value_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_v
 	mlhmmv_put_value_at_level_aux(pmap->proot_level, pmvkeys->phead, pvalue);
 }
 
-static void mlhmmv_put_value_at_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue) {
+void mlhmmv_put_value_at_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue) {
 	if ((plevel->num_occupied + plevel->num_freed) >= (plevel->array_length * LOAD_FACTOR))
 		mlhmmv_level_enlarge(plevel);
 	mlhmmv_level_put_value_no_enlarge(plevel, prest_keys, pvalue);
