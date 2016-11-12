@@ -503,12 +503,14 @@ static void handle_indexed_local_variable_assignment(
 // are oosvars in which case there are recursive copies, or in case of $* on the LHS or RHS.
 
 typedef struct _oosvar_assignment_state_t {
-	sllv_t*           plhs_keylist_evaluators;
-	rval_evaluator_t* prhs_evaluator;
-	sllv_t*           prhs_keylist_evaluators;
+	sllv_t*            plhs_keylist_evaluators;
+	rval_evaluator_t*  prhs_evaluator;
+	rxval_evaluator_t* prhs_xevaluator;
+	sllv_t*            prhs_keylist_evaluators;
 } oosvar_assignment_state_t;
 
-static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment;
+static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment_from_val;
+// xxx static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment_from_xval;
 static mlr_dsl_cst_statement_handler_t handle_oosvar_to_oosvar_assignment;
 static mlr_dsl_cst_statement_freer_t free_oosvar_assignment;
 
@@ -517,6 +519,11 @@ mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_as
 	int type_inferencing, int context_flags)
 {
 	oosvar_assignment_state_t* pstate = mlr_malloc_or_die(sizeof(oosvar_assignment_state_t));
+
+	pstate->plhs_keylist_evaluators = NULL;
+	pstate->prhs_evaluator          = NULL;
+	pstate->prhs_xevaluator         = NULL;
+	pstate->prhs_keylist_evaluators = NULL;
 
 	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
@@ -533,16 +540,28 @@ mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_as
 			pright, pcst->pfmgr, type_inferencing, context_flags);
 		pstate->prhs_evaluator = NULL;
 	} else {
-		pstatement_handler = handle_oosvar_assignment;
+		pstatement_handler = handle_oosvar_assignment_from_val;
 		pstate->prhs_keylist_evaluators = NULL;
 		pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr,
 			type_inferencing, context_flags);
 	}
 
-	// xxx XXX mapvar oosvar := map-lit
-	// xxx XXX mapvar oosvar := non-indexed local
-	// xxx XXX mapvar oosvar := indexed local
-	// xxx XXX mapvar oosvar := udf call
+//	switch (prhs_node->type) {
+//	case MD_AST_NODE_TYPE_MAP_LITERAL:
+//	case MD_AST_NODE_TYPE_FULL_SREC:
+//	case MD_AST_NODE_TYPE_FULL_OOSVAR:
+//	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
+//	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
+//		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
+//			prhs_node, pcst->pfmgr, type_inferencing, context_flags);
+//		pstatement_handler = handle_local_variable_definition_from_xval;
+//		break;
+//
+//	default:
+//		pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, type_inferencing, context_flags);
+//		pstatement_handler = handle_local_variable_definition_from_val;
+//		break;
+//	}
 
 	return mlr_dsl_cst_statement_valloc(
 		pnode,
@@ -550,6 +569,58 @@ mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_as
 		free_oosvar_assignment,
 		pstate);
 }
+
+//// ----------------------------------------------------------------
+//static void free_local_variable_definition(mlr_dsl_cst_statement_t* pstatement) {
+//	local_variable_definition_state_t* pstate = pstatement->pvstate;
+//
+//	if (pstate->prhs_evaluator != NULL) {
+//		pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
+//	}
+//
+//	free(pstate);
+//}
+//
+//// ----------------------------------------------------------------
+//static void handle_local_variable_definition_from_val( // xxx mapvar
+//	mlr_dsl_cst_statement_t* pstatement,
+//	variables_t*             pvars,
+//	cst_outputs_t*           pcst_outputs)
+//{
+//	local_variable_definition_state_t* pstate = pstatement->pvstate;
+//
+//	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator; // xxx mapvar
+//	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+//	if (mv_is_present(&val)) {
+//		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+//		local_stack_frame_define(pframe,
+//			pstate->lhs_variable_name, pstate->lhs_frame_relative_index,
+//			pstate->lhs_type_mask, val);
+//	} else {
+//		mv_free(&val);
+//	}
+//}
+//
+//// ----------------------------------------------------------------
+//static void handle_local_variable_definition_from_xval( // xxx mapvar
+//	mlr_dsl_cst_statement_t* pstatement,
+//	variables_t*             pvars,
+//	cst_outputs_t*           pcst_outputs)
+//{
+//	local_variable_definition_state_t* pstate = pstatement->pvstate;
+//
+//	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator; // xxx mapvar
+//	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+//
+//	if (!xval.is_terminal || mv_is_present(&xval.u.mlrval)) { // xxx funcify
+//		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+//		local_stack_frame_xdefine(pframe, // xxx rename
+//			pstate->lhs_variable_name, pstate->lhs_frame_relative_index, pstate->lhs_type_mask,
+//			xval);
+//	} else {
+//		mlhmmv_free_submap(xval); // xxx rename
+//	}
+//}
 
 // ----------------------------------------------------------------
 static void free_oosvar_assignment(mlr_dsl_cst_statement_t* pstatement) {
@@ -562,6 +633,9 @@ static void free_oosvar_assignment(mlr_dsl_cst_statement_t* pstatement) {
 	if (pstate->prhs_evaluator != NULL) {
 		pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
 	}
+	if (pstate->prhs_xevaluator != NULL) {
+		pstate->prhs_xevaluator->pfree_func(pstate->prhs_xevaluator);
+	}
 	if (pstate->prhs_keylist_evaluators != NULL) {
 		for (sllve_t* pe = pstate->prhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 			rval_evaluator_t* pev = pe->pvvalue;
@@ -573,7 +647,7 @@ static void free_oosvar_assignment(mlr_dsl_cst_statement_t* pstatement) {
 }
 
 // ----------------------------------------------------------------
-static void handle_oosvar_assignment(
+static void handle_oosvar_assignment_from_val(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)

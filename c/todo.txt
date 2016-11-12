@@ -41,6 +41,56 @@ k dump {arg}
 
 ! emit/emitf w/ locals
 
+----------------------------------------------------------------
+MAPVAR CHECKLIST:
+
+things which are always maps:
+* maplit
+* full srec
+* full oosvar
+
+things which can be maps:
+* oosvar
+* localvar
+* func retval
+* func args
+
+contexts:
+
+k dump w/ no args
+k dump oosvar
+k dump local
+
+? emit maplit
+? emit localvar
+? emit func retval
+
+? for-loop over maplit
+? for-loop over localvar
+? for-loop over func retval
+
+? parameter marshal for all function calls
+
+? assign LHS full srec
+? assign LHS full oosvar
+? assign LHS oosvar
+? assign LHS localvar
+
+? define LHS untyped localvar
+? define LHS map-typed localvar
+
+? assign RHS maplit
+? assign RHS oosvar
+? assign RHS localval
+? assign RHS func retval
+
+? built-in function take map arg(s)
+? - count(.)
+? - depth(.)
+? - deepcount(.)
+? built-in function produce map retval
+----------------------------------------------------------------
+
 * steps:
 
   ! need an mlval_evaluator_t. delegate to rval_evaluator_t ...
