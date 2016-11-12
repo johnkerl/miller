@@ -721,19 +721,19 @@ static void handle_oosvar_from_full_srec_assignment(
 // All assignments produce a mlrval on the RHS and store it on the left -- except if both LHS and RHS
 // are oosvars in which case there are recursive copies, or in case of $* on the LHS or RHS.
 
-typedef struct _full_srec_from_oosvar_assignment_state_t {
+typedef struct _full_srec_assignment_state_t {
 	sllv_t* prhs_keylist_evaluators;
-} full_srec_from_oosvar_assignment_state_t;
+} full_srec_assignment_state_t;
 
-static mlr_dsl_cst_statement_handler_t handle_full_srec_from_oosvar_assignment;
-static mlr_dsl_cst_statement_freer_t free_full_srec_from_oosvar_assignment;
+static mlr_dsl_cst_statement_handler_t handle_full_srec_assignment;
+static mlr_dsl_cst_statement_freer_t free_full_srec_assignment;
 
 // ----------------------------------------------------------------
-mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+mlr_dsl_cst_statement_t* alloc_full_srec_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
-	full_srec_from_oosvar_assignment_state_t* pstate = mlr_malloc_or_die(sizeof(
-		full_srec_from_oosvar_assignment_state_t));
+	full_srec_assignment_state_t* pstate = mlr_malloc_or_die(sizeof(
+		full_srec_assignment_state_t));
 
 	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
@@ -746,14 +746,14 @@ mlr_dsl_cst_statement_t* alloc_full_srec_from_oosvar_assignment(mlr_dsl_cst_t* p
 
 	return mlr_dsl_cst_statement_valloc(
 		pnode,
-		handle_full_srec_from_oosvar_assignment,
-		free_full_srec_from_oosvar_assignment,
+		handle_full_srec_assignment,
+		free_full_srec_assignment,
 		pstate);
 }
 
 // ----------------------------------------------------------------
-static void free_full_srec_from_oosvar_assignment(mlr_dsl_cst_statement_t* pstatement) {
-	full_srec_from_oosvar_assignment_state_t* pstate = pstatement->pvstate;
+static void free_full_srec_assignment(mlr_dsl_cst_statement_t* pstatement) {
+	full_srec_assignment_state_t* pstate = pstatement->pvstate;
 
 	for (sllve_t* pe = pstate->prhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 		rval_evaluator_t* pev = pe->pvvalue;
@@ -764,12 +764,12 @@ static void free_full_srec_from_oosvar_assignment(mlr_dsl_cst_statement_t* pstat
 }
 
 // ----------------------------------------------------------------
-static void handle_full_srec_from_oosvar_assignment(
+static void handle_full_srec_assignment(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
-	full_srec_from_oosvar_assignment_state_t* pstate = pstatement->pvstate;
+	full_srec_assignment_state_t* pstate = pstatement->pvstate;
 
 	lrec_clear(pvars->pinrec);
 	lhmsmv_clear(pvars->ptyped_overlay);

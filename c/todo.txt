@@ -107,10 +107,10 @@ k assign LHS localvar           ? assign RHS localvar
 
 ----------------------------------------------------------------
 ! we are going to need builtin functions which deal with maps.
-  - length(@map), proxy for NF.
+  - length(@map) and length(map), proxy for NF. make it work with length({...}) and length($*).
   - depth on maps
   - deepcount on maps
-  - split/join: but these are on lists. and would benefit from infix operators ...
+  - split/join: but these are on lists. and would benefit from infix operators?
   - variadic list-cat function ...
   - variadic map-cat function ...
   - ?
