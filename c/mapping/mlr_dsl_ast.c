@@ -264,7 +264,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_STATEMENT_BLOCK:                  return "STATEMENT_BLOCK";                  break;
 	case MD_AST_NODE_TYPE_STATEMENT_LIST:                   return "STATEMENT_LIST";                   break;
 	case MD_AST_NODE_TYPE_FUNC_DEF:                         return "FUNC_DEF";                         break;
-	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:                    return "FUNCTION_CALLSITE";                    break;
+	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:                return "FUNCTION_CALLSITE";                break;
 	case MD_AST_NODE_TYPE_SUBR_DEF:                         return "SUBR_DEF";                         break;
 	case MD_AST_NODE_TYPE_SUBR_CALLSITE:                    return "SUBR_CALLSITE";                    break;
 	case MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION:         return "UNTYPED_LOCAL_DEFINITION";         break;
@@ -273,7 +273,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FLOAT_LOCAL_DEFINITION:           return "FLOAT_LOCAL_DEFINITION";           break;
 	case MD_AST_NODE_TYPE_BOOLEAN_LOCAL_DEFINITION:         return "BOOLEAN_LOCAL_DEFINITION";         break;
 	case MD_AST_NODE_TYPE_STRING_LOCAL_DEFINITION:          return "STRING_LOCAL_DEFINITION";          break;
-	case MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION:            return "MAP_LOCAL_DEFINITION";            break;
+	case MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION:             return "MAP_LOCAL_DEFINITION";             break;
 	case MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION:     return "UNTYPED_PARAMETER_DEFINITION";     break;
 	case MD_AST_NODE_TYPE_NUMERIC_PARAMETER_DEFINITION:     return "NUMERIC_PARAMETER_DEFINITION";     break;
 	case MD_AST_NODE_TYPE_INT_PARAMETER_DEFINITION:         return "INT_PARAMETER_DEFINITION";         break;
@@ -299,13 +299,19 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FULL_OOSVAR:                      return "FULL_OOSVAR";                      break;
 	case MD_AST_NODE_TYPE_NON_SIGIL_NAME:                   return "NON_SIGIL_NAME";                   break;
 	case MD_AST_NODE_TYPE_OPERATOR:                         return "OPERATOR";                         break;
-	case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT:         return "NONINDEXED_LOCAL_ASSIGNMENT";         break;
-	case MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT:             return "INDEXED_LOCAL_ASSIGNMENT";             break;
+	case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT:      return "NONINDEXED_LOCAL_ASSIGNMENT";      break;
+	case MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT:         return "INDEXED_LOCAL_ASSIGNMENT";         break;
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:                  return "SREC_ASSIGNMENT";                  break;
 	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:         return "INDIRECT_SREC_ASSIGNMENT";         break;
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:                return "OOSVAR_ASSIGNMENT";                break;
 	case MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT: return "OOSVAR_FROM_FULL_SREC_ASSIGNMENT"; break;
 	case MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT: return "FULL_SREC_FROM_OOSVAR_ASSIGNMENT"; break;
+	case MD_AST_NODE_TYPE_FULL_SREC_FROM_NONINDEXED_LOCAL_VARIABLE_ASSIGNMENT:
+		return "FULL_SREC_FROM_NONINDEXED_LOCAL_VARIABLE_ASSIGNMENT";
+		break;
+	case MD_AST_NODE_TYPE_FULL_SREC_FROM_INDEXED_LOCAL_VARIABLE_ASSIGNMENT:
+		return "FULL_SREC_FROM_INDEXED_LOCAL_VARIABLE_ASSIGNMENT";
+		break;
 	case MD_AST_NODE_TYPE_ENV_ASSIGNMENT:                   return "ENV_ASSIGNMENT";                   break;
 	case MD_AST_NODE_TYPE_CONTEXT_VARIABLE:                 return "CONTEXT_VARIABLE";                 break;
 	case MD_AST_NODE_TYPE_STRIPPED_AWAY:                    return "STRIPPED_AWAY";                    break;
@@ -348,6 +354,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_CONTINUE:                         return "CONTINUE";                         break;
 	case MD_AST_NODE_TYPE_IF_HEAD:                          return "IF_HEAD";                          break;
 	case MD_AST_NODE_TYPE_IF_ITEM:                          return "IF_ITEM";                          break;
+
 	default: return "UNRECOGNIZED_AST_NODE_TYPE";
 	}
 }

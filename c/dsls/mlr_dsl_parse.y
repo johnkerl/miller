@@ -170,11 +170,12 @@ md_statement_not_braced_end(A) ::= MD_TOKEN_SUBR_CALL md_fcn_or_subr_call(B). {
 }
 
 // Not valid in begin/end since they refer to srecs:
-md_statement_not_braced_end(A) ::= md_srec_assignment(B).                  { A = B; }
-md_statement_not_braced_end(A) ::= md_srec_indirect_assignment(B).         { A = B; }
-md_statement_not_braced_end(A) ::= md_oosvar_from_full_srec_assignment(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_full_srec_from_oosvar_assignment(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_env_assignment(B).                   { A = B; }
+md_statement_not_braced_end(A) ::= md_srec_assignment(B).                       { A = B; }
+md_statement_not_braced_end(A) ::= md_srec_indirect_assignment(B).              { A = B; }
+md_statement_not_braced_end(A) ::= md_oosvar_from_full_srec_assignment(B).      { A = B; }
+md_statement_not_braced_end(A) ::= md_full_srec_from_oosvar_assignment(B).      { A = B; }
+md_statement_not_braced_end(A) ::= md_full_srec_from_map_literal_assignment(B). { A = B; }
+md_statement_not_braced_end(A) ::= md_env_assignment(B).                        { A = B; }
 
 // Valid in begin/end since they don't refer to srecs (although the RHSs might):
 md_statement_not_braced_end(A) ::= md_do_while_block(B).      { A = B; }
@@ -822,7 +823,18 @@ md_oosvar_from_full_srec_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_ASSIGN
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT, B, C);
 }
 
+md_full_srec_from_oosvar_assignment(A)  ::= MD_TOKEN_FULL_SREC(B) MD_TOKEN_ASSIGN(O) md_nonindexed_local_variable(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text,
+		MD_AST_NODE_TYPE_FULL_SREC_FROM_NONINDEXED_LOCAL_VARIABLE_ASSIGNMENT, B, C);
+}
+md_full_srec_from_oosvar_assignment(A)  ::= MD_TOKEN_FULL_SREC(B) MD_TOKEN_ASSIGN(O) md_indexed_local_variable(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text,
+		MD_AST_NODE_TYPE_FULL_SREC_FROM_INDEXED_LOCAL_VARIABLE_ASSIGNMENT, B, C);
+}
 md_full_srec_from_oosvar_assignment(A)  ::= MD_TOKEN_FULL_SREC(B) MD_TOKEN_ASSIGN(O) md_oosvar_keylist(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT, B, C);
+}
+md_full_srec_from_map_literal_assignment(A)  ::= MD_TOKEN_FULL_SREC(B) MD_TOKEN_ASSIGN(O) md_map_literal(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_SREC_FROM_OOSVAR_ASSIGNMENT, B, C);
 }
 

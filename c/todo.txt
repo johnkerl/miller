@@ -94,7 +94,7 @@ k assign LHS full-srec          ? assign RHS oosvar
 - assign LHS full-oosvar        ? assign RHS localvar
 - assign LHS full-oosvar        ? assign RHS func-retval
 .
-- assign LHS oosvar             ? assign RHS maplit
+k assign LHS oosvar             ? assign RHS maplit
 k assign LHS oosvar             ? assign RHS full-srec
 - assign LHS oosvar             ? assign RHS full-oosvar
 k assign LHS oosvar             ? assign RHS oosvar
@@ -105,21 +105,21 @@ k define LHS map-typed-localvar ? assign RHS maplit
 k define LHS map-typed-localvar ? assign RHS full-srec
 k define LHS map-typed-localvar ? assign RHS full-oosvar
 k define LHS map-typed-localvar ? assign RHS oosvar
-- define LHS map-typed-localvar ? assign RHS localvar
+k define LHS map-typed-localvar ? assign RHS localvar
 - define LHS map-typed-localvar ? assign RHS func-retval
 .
-- define LHS untyped-localvar   ? assign RHS maplit
-- define LHS untyped-localvar   ? assign RHS full-srec
-- define LHS untyped-localvar   ? assign RHS full-oosvar
-- define LHS untyped-localvar   ? assign RHS oosvar
-- define LHS untyped-localvar   ? assign RHS localvar
+k define LHS untyped-localvar   ? assign RHS maplit
+k define LHS untyped-localvar   ? assign RHS full-srec
+k define LHS untyped-localvar   ? assign RHS full-oosvar
+k define LHS untyped-localvar   ? assign RHS oosvar
+k define LHS untyped-localvar   ? assign RHS localvar
 - define LHS untyped-localvar   ? assign RHS func-retval
 .
-- assign LHS localvar           ? assign RHS maplit
-- assign LHS localvar           ? assign RHS full-srec
-- assign LHS localvar           ? assign RHS full-oosvar
-- assign LHS localvar           ? assign RHS oosvar
-- assign LHS localvar           ? assign RHS localvar
+k assign LHS localvar           ? assign RHS maplit
+k assign LHS localvar           ? assign RHS full-srec
+k assign LHS localvar           ? assign RHS full-oosvar
+k assign LHS localvar           ? assign RHS oosvar
+k assign LHS localvar           ? assign RHS localvar
 - assign LHS localvar           ? assign RHS func-retval
 
 new:
