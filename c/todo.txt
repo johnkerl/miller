@@ -31,6 +31,7 @@ things which are always maps:
 * maplit
 * full srec
 * full oosvar
+? ENV -- support unindexed as map-valued RHS ?
 
 things which can be maps:
 * oosvar
@@ -114,6 +115,9 @@ k assign LHS localvar           ? assign RHS localvar
   - variadic list-cat function ...
   - variadic map-cat function ...
   - ?
+
+? ENV iterator ?
+? ENV as map-valued RHS ?
 
 ----------------------------------------------------------------
 
