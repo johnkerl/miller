@@ -312,6 +312,9 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FULL_SREC_FROM_INDEXED_LOCAL_VARIABLE_ASSIGNMENT:
 		return "FULL_SREC_FROM_INDEXED_LOCAL_VARIABLE_ASSIGNMENT";
 		break;
+	case MD_AST_NODE_TYPE_FULL_SREC_FROM_MAP_LITERAL_ASSIGNMENT:
+		return "FULL_SREC_FROM_MAP_LITERAL_ASSIGNMENT";
+		break;
 	case MD_AST_NODE_TYPE_ENV_ASSIGNMENT:                   return "ENV_ASSIGNMENT";                   break;
 	case MD_AST_NODE_TYPE_CONTEXT_VARIABLE:                 return "CONTEXT_VARIABLE";                 break;
 	case MD_AST_NODE_TYPE_STRIPPED_AWAY:                    return "STRIPPED_AWAY";                    break;
