@@ -48,6 +48,7 @@ void fmgr_install_udf(fmgr_t* pfmgr, udf_defsite_state_t* pdefsitate_state);
 rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags);
 
+// xxx make a mark-callsite-for-resolve method
 // Update all function callsites to point to UDF bodies, once all the latter have been defined.
 void fmgr_resolve_func_callsites(fmgr_t* pfmgr);
 

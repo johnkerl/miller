@@ -181,8 +181,8 @@ typedef struct _local_variable_definition_state_t {
 	rxval_evaluator_t* prhs_xevaluator;
 } local_variable_definition_state_t;
 
-static mlr_dsl_cst_statement_handler_t handle_local_variable_definition;
-static mlr_dsl_cst_statement_handler_t handle_local_variable_definition_from_map_literal;
+static mlr_dsl_cst_statement_handler_t handle_local_variable_definition_from_val;
+static mlr_dsl_cst_statement_handler_t handle_local_variable_definition_from_xval;
 static mlr_dsl_cst_statement_freer_t free_local_variable_definition;
 
 // ----------------------------------------------------------------
@@ -215,13 +215,16 @@ mlr_dsl_cst_statement_t* alloc_local_variable_definition( // xxx XXX mapvars nex
 	case MD_AST_NODE_TYPE_MAP_LITERAL:
 	case MD_AST_NODE_TYPE_FULL_SREC:
 	case MD_AST_NODE_TYPE_FULL_OOSVAR:
+	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
+	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
 		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
 			prhs_node, pcst->pfmgr, type_inferencing, context_flags);
-		pstatement_handler = handle_local_variable_definition_from_map_literal;
+		pstatement_handler = handle_local_variable_definition_from_xval;
 		break;
+
 	default:
 		pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, type_inferencing, context_flags);
-		pstatement_handler = handle_local_variable_definition;
+		pstatement_handler = handle_local_variable_definition_from_val;
 		break;
 	}
 
@@ -244,7 +247,7 @@ static void free_local_variable_definition(mlr_dsl_cst_statement_t* pstatement) 
 }
 
 // ----------------------------------------------------------------
-static void handle_local_variable_definition( // xxx mapvar
+static void handle_local_variable_definition_from_val( // xxx mapvar
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -264,25 +267,24 @@ static void handle_local_variable_definition( // xxx mapvar
 }
 
 // ----------------------------------------------------------------
-static void handle_local_variable_definition_from_map_literal( // xxx mapvar
+static void handle_local_variable_definition_from_xval( // xxx mapvar
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
 	local_variable_definition_state_t* pstate = pstatement->pvstate;
 
-	//rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator; // xxx mapvar
-	//mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	// xxx mapvar stub
-	mv_t val = mv_absent();
-	//if (mv_is_present(&val)) {
+	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator; // xxx mapvar
+	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+
+	if (!xval.is_terminal || mv_is_present(&xval.u.mlrval)) { // xxx funcify
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_define(pframe,
-			pstate->lhs_variable_name, pstate->lhs_frame_relative_index,
-			/*pstate->lhs_type_mask*/ TYPE_MASK_MAP|TYPE_MASK_ABSENT, val); // xxx temp stub
-	//} else {
-		//mv_free(&val);
-	//}
+		local_stack_frame_xdefine(pframe, // xxx rename
+			pstate->lhs_variable_name, pstate->lhs_frame_relative_index, pstate->lhs_type_mask,
+			xval);
+	} else {
+		mlhmmv_free_submap(xval); // xxx rename
+	}
 }
 
 // ================================================================

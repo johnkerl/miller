@@ -431,6 +431,7 @@ void fmgr_list_all_functions_raw(fmgr_t* pfmgr, FILE* output_stream) {
 }
 
 // ================================================================
+// xxx code dup w/ rxval_expr_evaluators.c
 typedef struct _rval_evaluator_udf_callsite_state_t {
 	int arity;
 	rval_evaluator_t** pevals;

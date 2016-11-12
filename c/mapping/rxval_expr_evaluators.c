@@ -28,7 +28,10 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 		break;
 
 	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
-		return NULL; // xxx XXX mapvar stub
+		// xxx to do
+		//return rxval_evaluator_alloc_from_function_callsite(
+			//pnode, pfmgr, type_inferencing, context_flags);
+		return rxval_evaluator_alloc_wrapping_rval(pnode, pfmgr, type_inferencing, context_flags);
 		break;
 
 	case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE:
@@ -230,6 +233,99 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_map_literal(mlr_dsl_ast_node_t* pn
 	return prxval_evaluator;
 }
 
+// ================================================================
+// xxx XXX to do
+// xxx code dup w/ function_manager.c
+//typedef struct _rxval_evaluator_from_unresolved_function_callsite_state_t {
+//	char*                function_name; // Maybe not yet defined as of when the callsite is parsed
+//	int                  type_inferencing;
+//	int                  context_flags;
+//	mlr_dsl_ast_node_t*  pnode;
+//} rxval_evaluator_from_unresolved_function_callsite_state_t;
+//
+//typedef struct _rxval_evaluator_from_unresolved_function_callsite_state_t {
+//		int                  arity;
+//		rval_evaluator_t**   pevals; // xxx XXX mapvars
+//		mv_t*                args;   // xxx XXX mapvars
+//		udf_defsite_state_t* pdefsite_state; // xxx XXX mapvars
+//	} resolved;
+//} rxval_evaluator_from_function_callsite_state_t;
+//
+//// ----------------------------------------------------------------
+//mlhmmv_value_t rxval_evaluator_from_function_callsite_func(void* pvstate, variables_t* pvars) {
+//	rxval_evaluator_from_function_callsite_state_t* pstate = pvstate;
+//
+//	for (int i = 0; i < pstate->arity; i++) {
+//		pstate->args[i] = pstate->pevals[i]->pprocess_func(pstate->pevals[i]->pvstate, pvars);
+//	}
+//
+//	// Functions returning map values in a scalar context get their return values treated as
+//	// absent-null. (E.g. f() returns a map and g() returns an int and the statement is '$x
+//	// = f() + g()'.) Non-scalar-context return values are handled separately (not here).
+//	mlhmmv_value_t retval = pstate->pdefsite_state->pprocess_func(
+//		pstate->pdefsite_state->pvstate, pstate->arity, pstate->args, pvars);
+//
+//	if (retval.is_terminal) {
+//		return retval;
+//	} else {
+//		return mlhmmv_value_transfer_terminal(mv_absent());
+//	}
+//}
+//
+//static void rxval_evaluator_from_function_callsite_free(rxval_evaluator_t* prxval_evaluator) {
+//	rxval_evaluator_from_function_callsite_state_t* pstate = prxval_evaluator->pvstate;
+//	for (int i = 0; i < pstate->arity; i++) {
+//		pstate->pevals[i]->pfree_func(pstate->pevals[i]);
+//		mv_free(&pstate->args[i]);
+//	}
+//	pstate->pdefsite_state->pfree_func(pstate->pdefsite_state->pvstate); // modify API to free all?
+//	free(pstate);
+//	free(prxval_evaluator);
+//}
+//
+//rxval_evaluator_t* rxval_evaluator_alloc_from_function_callsite(
+//	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
+//{
+//	rxval_evaluator_from_function_callsite_state_t* pstate = mlr_malloc_or_die(
+//		sizeof(rxval_evaluator_from_function_callsite_state_t));
+//
+//	// xxx libify the marshaling part ...
+//	pstate->resolved.arity = pnode->pchildren->length;
+//
+//	pstate->pevals = mlr_malloc_or_die(pstate->arity * sizeof(rval_evaluator_t*));
+//	int i = 0;
+//	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+//		mlr_dsl_ast_node_t* parg_node = pe->pvvalue;
+//		pstate->pevals[i] = rval_evaluator_alloc_from_ast(parg_node,
+//			pfmgr, type_inferencing, context_flags);
+//	}
+//
+//	pstate->args = mlr_malloc_or_die(pstate->arity * sizeof(mv_t));
+//	for (i = 0; i < pstate->arity; i++) {
+//		pstate->args[i] = mv_absent();
+//	}
+//
+////	pudf_callsite_evaluator->pvstate = pstate;
+//
+//	// xxx XXX need to resolve here too! gah. need 2nd sllv for rxval evaluators.
+//
+//	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+//	prxval_evaluator->pvstate       = pstate;
+//	prxval_evaluator->pprocess_func = rxval_evaluator_from_function_callsite_func;
+//	prxval_evaluator->pfree_func    = rxval_evaluator_from_function_callsite_free;
+//
+//	return prxval_evaluator;
+//}
+
+//typedef mlhmmv_value_t udf_defsite_process_func_t(void* pvstate, int arity, mv_t* pargs, variables_t* pvars);
+//typedef void udf_defsite_free_func_t(void* pvstate);
+//typedef struct _udf_defsite_state_t {
+//	void* pvstate;
+//	char* name;
+//	int   arity;
+//	udf_defsite_process_func_t* pprocess_func;
+//	udf_defsite_free_func_t* pfree_func;
+//} udf_defsite_state_t;
 
 // ================================================================
 typedef struct _rxval_evaluator_from_nonindexed_local_variable_state_t {
