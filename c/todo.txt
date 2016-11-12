@@ -24,23 +24,6 @@ OTHER:
 
 * ?: operator ?
 
-* unragged example:
-  http://unix.stackexchange.com/questions/322314/sed-or-awk-command-to-insert-tabs-delimiter-at-spcific-positions
-  unragged.txt
-
-================================================================
-MAPVARS:
-
-k dump {arg}
-
-!! support map rec = @recs[i] !!
-
-!! we are going to need builtin functions which deal with maps.
-  - count(@map), proxy for NF.
-  - ?
-
-! emit/emitf w/ locals
-
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
@@ -122,12 +105,15 @@ k assign LHS localvar           ? assign RHS oosvar
 k assign LHS localvar           ? assign RHS localvar
 - assign LHS localvar           ? assign RHS func-retval
 
-new:
-? built-in function take map arg(s)
-? - count(.)
-? - depth(.)
-? - deepcount(.)
-? built-in function produce map retval
+----------------------------------------------------------------
+! we are going to need builtin functions which deal with maps.
+  - length(@map), proxy for NF.
+  - depth on maps
+  - deepcount on maps
+  - split/join: but these are on lists. and would benefit from infix operators ...
+  - variadic list-cat function ...
+  - variadic map-cat function ...
+  - ?
 
 ----------------------------------------------------------------
 
