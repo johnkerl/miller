@@ -725,6 +725,7 @@ typedef struct _full_srec_assignment_state_t {
 	rxval_evaluator_t* prhs_xevaluator;
 } full_srec_assignment_state_t;
 
+static mlr_dsl_cst_statement_handler_t handle_full_srec_assignment_nop;
 static mlr_dsl_cst_statement_handler_t handle_full_srec_assignment;
 static mlr_dsl_cst_statement_freer_t free_full_srec_assignment;
 
@@ -740,12 +741,20 @@ mlr_dsl_cst_statement_t* alloc_full_srec_assignment(mlr_dsl_cst_t* pcst, mlr_dsl
 
 	MLR_INTERNAL_CODING_ERROR_IF(plhs_node->type != MD_AST_NODE_TYPE_FULL_SREC);
 
-	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
-		prhs_node, pcst->pfmgr, type_inferencing, context_flags);
+	mlr_dsl_cst_statement_handler_t* phandler = handle_full_srec_assignment;
+	if (prhs_node->type == MD_AST_NODE_TYPE_FULL_SREC) {
+		// '$* = $*' is a syntactically acceptable no-op
+		pstate->prhs_xevaluator = NULL;
+		phandler = handle_full_srec_assignment_nop;
+	} else {
+		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
+			prhs_node, pcst->pfmgr, type_inferencing, context_flags);
+		phandler = handle_full_srec_assignment;
+	}
 
 	return mlr_dsl_cst_statement_valloc(
 		pnode,
-		handle_full_srec_assignment,
+		phandler,
 		free_full_srec_assignment,
 		pstate);
 }
@@ -754,9 +763,19 @@ mlr_dsl_cst_statement_t* alloc_full_srec_assignment(mlr_dsl_cst_t* pcst, mlr_dsl
 static void free_full_srec_assignment(mlr_dsl_cst_statement_t* pstatement) {
 	full_srec_assignment_state_t* pstate = pstatement->pvstate;
 
-	pstate->prhs_xevaluator->pfree_func(pstate->prhs_xevaluator);
+	if (pstate->prhs_xevaluator != NULL) {
+		pstate->prhs_xevaluator->pfree_func(pstate->prhs_xevaluator);
+	}
 
 	free(pstate);
+}
+
+// ----------------------------------------------------------------
+static void handle_full_srec_assignment_nop(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
 }
 
 // ----------------------------------------------------------------
@@ -778,12 +797,10 @@ static void handle_full_srec_assignment(
 	} else {
 
 		for (mlhmmv_level_entry_t* pe = mapval.u.pnext_level->phead; pe != NULL; pe = pe->pnext) {
-
 			mv_t* pkey = &pe->level_key;
 			mlhmmv_value_t* pval = &pe->level_value;
 
 			if (pval->is_terminal) { // xxx else collapse-down using json separator?
-
 				char* skey = mv_alloc_format_val(pkey);
 				mv_t val = mv_copy(&pval->u.mlrval);
 				// Write typed mlrval output to the typed overlay rather than into the lrec
