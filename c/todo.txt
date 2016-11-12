@@ -83,7 +83,7 @@ mlr_dsl_cst_assignment_statements.c:
 - assign LHS full-srec          ? assign RHS maplit
 - assign LHS full-srec          ? assign RHS full-srec
 - assign LHS full-srec          ? assign RHS full-oosvar
-K assign LHS full-srec          ? assign RHS oosvar
+k assign LHS full-srec          ? assign RHS oosvar
 - assign LHS full-srec          ? assign RHS localvar
 - assign LHS full-srec          ? assign RHS func-retval
 .
@@ -95,16 +95,16 @@ K assign LHS full-srec          ? assign RHS oosvar
 - assign LHS full-oosvar        ? assign RHS func-retval
 .
 - assign LHS oosvar             ? assign RHS maplit
-K assign LHS oosvar             ? assign RHS full-srec
+k assign LHS oosvar             ? assign RHS full-srec
 - assign LHS oosvar             ? assign RHS full-oosvar
-K assign LHS oosvar             ? assign RHS oosvar
-K assign LHS oosvar             ? assign RHS localvar
+k assign LHS oosvar             ? assign RHS oosvar
+k assign LHS oosvar             ? assign RHS localvar
 - assign LHS oosvar             ? assign RHS func-retval
 .
-K define LHS map-typed-localvar ? assign RHS maplit
-K define LHS map-typed-localvar ? assign RHS full-srec
-K define LHS map-typed-localvar ? assign RHS full-oosvar
-- define LHS map-typed-localvar ? assign RHS oosvar
+k define LHS map-typed-localvar ? assign RHS maplit
+k define LHS map-typed-localvar ? assign RHS full-srec
+k define LHS map-typed-localvar ? assign RHS full-oosvar
+k define LHS map-typed-localvar ? assign RHS oosvar
 - define LHS map-typed-localvar ? assign RHS localvar
 - define LHS map-typed-localvar ? assign RHS func-retval
 .

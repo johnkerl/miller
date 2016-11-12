@@ -510,8 +510,8 @@ typedef struct _oosvar_assignment_state_t {
 } oosvar_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment_from_val;
-// xxx static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment_from_xval;
-static mlr_dsl_cst_statement_handler_t handle_oosvar_to_oosvar_assignment;
+static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment_from_xval;
+// xxx rm static mlr_dsl_cst_statement_handler_t handle_oosvar_to_oosvar_assignment;
 static mlr_dsl_cst_statement_freer_t free_oosvar_assignment;
 
 // ----------------------------------------------------------------
@@ -525,43 +525,34 @@ mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_as
 	pstate->prhs_xevaluator         = NULL;
 	pstate->prhs_keylist_evaluators = NULL;
 
-	mlr_dsl_ast_node_t* pleft  = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* pright = pnode->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* plhs_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pnext->pvvalue;
 
-	MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST);
+	MLR_INTERNAL_CODING_ERROR_IF(plhs_node->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST);
 
 	pstate->plhs_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
-		pleft, pcst->pfmgr, type_inferencing, context_flags);
+		plhs_node, pcst->pfmgr, type_inferencing, context_flags);
 
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
-	if (pleft->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST && pright->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
-		pstatement_handler = handle_oosvar_to_oosvar_assignment;
-		pstate->prhs_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
-			pright, pcst->pfmgr, type_inferencing, context_flags);
-		pstate->prhs_evaluator = NULL;
-	} else {
-		pstatement_handler = handle_oosvar_assignment_from_val;
-		pstate->prhs_keylist_evaluators = NULL;
-		pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(pright, pcst->pfmgr,
-			type_inferencing, context_flags);
-	}
 
-//	switch (prhs_node->type) {
-//	case MD_AST_NODE_TYPE_MAP_LITERAL:
-//	case MD_AST_NODE_TYPE_FULL_SREC:
-//	case MD_AST_NODE_TYPE_FULL_OOSVAR:
-//	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
-//	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
-//		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
-//			prhs_node, pcst->pfmgr, type_inferencing, context_flags);
-//		pstatement_handler = handle_local_variable_definition_from_xval;
-//		break;
-//
-//	default:
-//		pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, type_inferencing, context_flags);
-//		pstatement_handler = handle_local_variable_definition_from_val;
-//		break;
-//	}
+	switch (prhs_node->type) {
+	case MD_AST_NODE_TYPE_MAP_LITERAL:
+	case MD_AST_NODE_TYPE_FULL_SREC:
+	case MD_AST_NODE_TYPE_FULL_OOSVAR:
+	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
+	case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE:
+	case MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE:
+	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
+		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
+			prhs_node, pcst->pfmgr, type_inferencing, context_flags);
+		pstatement_handler = handle_oosvar_assignment_from_xval;
+		break;
+
+	default:
+		pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, type_inferencing, context_flags);
+		pstatement_handler = handle_oosvar_assignment_from_val;
+		break;
+	}
 
 	return mlr_dsl_cst_statement_valloc(
 		pnode,
@@ -617,7 +608,7 @@ static void handle_oosvar_assignment_from_val(
 }
 
 // ----------------------------------------------------------------
-static void handle_oosvar_to_oosvar_assignment(
+static void handle_oosvar_assignment_from_xval(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -629,30 +620,17 @@ static void handle_oosvar_to_oosvar_assignment(
 		&lhs_all_non_null_or_error);
 
 	if (lhs_all_non_null_or_error) {
-		int rhs_all_non_null_or_error = TRUE;
-		sllmv_t* prhskeys = evaluate_list(pstate->prhs_keylist_evaluators, pvars,
-			&rhs_all_non_null_or_error);
-		if (rhs_all_non_null_or_error) {
-			mlhmmv_copy(pvars->poosvars, plhskeys, prhskeys);
+		rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+		mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+		if (!xval.is_terminal || mv_is_present(&xval.u.mlrval)) { // xxx funcify
+			mlhmmv_put_value_at_level_aux(pvars->poosvars->proot_level, plhskeys->phead, &xval); // xxx rename
+		} else {
+			mlhmmv_free_submap(xval); // xxx rename
 		}
-		sllmv_free(prhskeys);
 	}
-
-//	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
-//	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
-//
-//	if (!xval.is_terminal || mv_is_present(&xval.u.mlrval)) { // xxx funcify
-//		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-//		local_stack_frame_xdefine(pframe, // xxx rename
-//			pstate->lhs_variable_name, pstate->lhs_frame_relative_index, pstate->lhs_type_mask,
-//			xval);
-//	} else {
-//		mlhmmv_free_submap(xval); // xxx rename
-//	}
 
 	sllmv_free(plhskeys);
 }
-
 
 // ================================================================
 // All assignments produce a mlrval on the RHS and store it on the left -- except if both LHS and RHS

@@ -435,7 +435,11 @@ mlhmmv_value_t rxval_evaluator_from_oosvar_keylist_func(void* pvstate, variables
 		mlhmmv_value_t* pxval = mlhmmv_get_value_from_level(pvars->poosvars->proot_level,
 			pmvkeys, &lookup_error);
 		sllmv_free(pmvkeys);
-		return mlhmmv_copy_aux(pxval);
+		if (pxval == NULL) {
+			return mlhmmv_value_transfer_terminal(mv_absent());
+		} else {
+			return mlhmmv_copy_aux(pxval);
+		}
 	} else {
 		sllmv_free(pmvkeys);
 		return mlhmmv_value_transfer_terminal(mv_absent());

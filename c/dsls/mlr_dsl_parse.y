@@ -767,6 +767,9 @@ md_map_local_definition(A) ::= MD_TOKEN_MAP(T) md_nonindexed_local_variable(N) M
 md_map_local_definition(A) ::= MD_TOKEN_MAP(T) md_nonindexed_local_variable(N) MD_TOKEN_ASSIGN MD_TOKEN_FULL_OOSVAR(C). {
 	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION, N, C);
 }
+md_map_local_definition(A) ::= MD_TOKEN_MAP(T) md_nonindexed_local_variable(N) MD_TOKEN_ASSIGN md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary(T->text, MD_AST_NODE_TYPE_MAP_LOCAL_DEFINITION, N, C);
+}
 
 md_nonindexed_local_assignment(A)  ::= md_nonindexed_local_variable(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B, C);
