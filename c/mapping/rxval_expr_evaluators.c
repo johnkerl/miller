@@ -20,6 +20,17 @@
 rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
+	rxval_evaluator_t* pxev = rxval_evaluator_pure_alloc_from_ast(pnode, pfmgr, type_inferencing, context_flags);
+	if (pxev != NULL) {
+		return pxev;
+	} else {
+		return rxval_evaluator_alloc_wrapping_rval(pnode, pfmgr, type_inferencing, context_flags);
+	}
+}
+
+rxval_evaluator_t* rxval_evaluator_pure_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+	int type_inferencing, int context_flags)
+{
 	switch(pnode->type) {
 
 	case MD_AST_NODE_TYPE_MAP_LITERAL:
@@ -60,7 +71,7 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 		break;
 
 	default:
-		return rxval_evaluator_alloc_wrapping_rval(pnode, pfmgr, type_inferencing, context_flags);
+		return NULL;
 		break;
 	}
 }
