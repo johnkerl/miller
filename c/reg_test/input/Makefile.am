@@ -167,4 +167,5 @@ EXTRA_DIST=	\
 		utf8-align.nidx \
 		x0to10.dat \
 		xy40.dkvp \
-		xyz345
+		xyz345 \
+		xyz2

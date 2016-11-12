@@ -41,12 +41,12 @@ things which can be maps:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 mlr_dsl_cst_output_statements.c:
 k dump w/ no args
-? dump maplit
-? dump full-srec
-? dump full-oosvar
-k dump oosvar
-k dump localvar
-k dump func retval
+? dump maplit -- ensure scalar-out is printed
+? dump full-srec -- ensure scalar-out is printed
+? dump full-oosvar -- ensure scalar-out is printed
+k dump oosvar -- ensure scalar-out is printed
+k dump localvar -- ensure scalar-out is printed
+k dump func retval -- ensure scalar-out is printed
 ? emit maplit
 ? emit full oosvar
 ? emit oosvar
@@ -90,6 +90,9 @@ k define LHS map-typed-localvar ? assign RHS full-oosvar
 k define LHS map-typed-localvar ? assign RHS oosvar
 k define LHS map-typed-localvar ? assign RHS localvar
 - define LHS map-typed-localvar ? assign RHS func-retval
+WRONG:
+  mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; map o = b; dump o
+  mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; map o = c; dump o
 .
 k define LHS untyped-localvar   ? assign RHS maplit
 k define LHS untyped-localvar   ? assign RHS full-srec
@@ -97,6 +100,9 @@ k define LHS untyped-localvar   ? assign RHS full-oosvar
 k define LHS untyped-localvar   ? assign RHS oosvar
 k define LHS untyped-localvar   ? assign RHS localvar
 - define LHS untyped-localvar   ? assign RHS func-retval
+WRONG:
+  mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; var o = b; dump o
+  mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; var o = c; dump o
 .
 k assign LHS localvar           ? assign RHS maplit
 k assign LHS localvar           ? assign RHS full-srec

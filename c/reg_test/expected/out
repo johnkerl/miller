@@ -45844,3 +45844,250 @@ zee wye 8  0.5985540091064224  0.976181385699006   0  1  2  3
 hat wye 9  0.03144187646093577 0.7495507603507059  0  1  2  3
 pan wye 10 0.5026260055412137  0.9526183602969864  0  1  2  3
 
+
+================================================================
+MAPVAR ASSIGNMENTS TO FULL SREC
+
+mlr --from ./reg_test/input/xyz2 put $* = {"a":1, "b": {"x":8,"y":9}, "c":3}
+a=1,c=3
+
+mlr --from ./reg_test/input/xyz2 put $* = $*
+x=3,y=4,z=5
+
+mlr --from ./reg_test/input/xyz2 put @a = 1; $* = @a
+
+
+mlr --from ./reg_test/input/xyz2 put @b[1] = 2; $* = @b
+1=2
+
+mlr --from ./reg_test/input/xyz2 put @c[1][2] = 3; $* = @c
+
+
+mlr --from ./reg_test/input/xyz2 put @a = 1; $* = @*
+a=1
+
+mlr --from ./reg_test/input/xyz2 put @b[1] = 2; $* = @*
+
+
+mlr --from ./reg_test/input/xyz2 put @c[1][2] = 3; $* = @*
+
+
+mlr --from ./reg_test/input/xyz2 put a = 1; $* = a
+
+
+mlr --from ./reg_test/input/xyz2 put b[1] = 2; $* = b
+1=2
+
+mlr --from ./reg_test/input/xyz2 put c[1][2] = 3; $* = c
+
+
+
+================================================================
+MAPVAR ASSIGNMENTS TO FULL OOSVAR
+
+
+================================================================
+MAPVAR ASSIGNMENTS TO OOSVAR
+
+mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump @o
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @o = @o; dump @o
+
+mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; @o = @o; dump @o
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @a = 1; @o = @a; dump @o
+
+mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; @o = @b; dump @o
+{
+  "1": 2
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; @o = @c; dump @o
+{
+  "1": {
+    "2": 3
+  }
+}
+
+mlr --from ./reg_test/input/xyz2 put -q a = 1; @o = a; dump @o
+
+mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; @o = b; dump @o
+{
+  "1": 2
+}
+
+mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; @o = c; dump @o
+{
+  "1": {
+    "2": 3
+  }
+}
+
+
+================================================================
+MAPVAR ASSIGNMENTS TO MAP-TYPED LOCAL
+
+mlr --from ./reg_test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump o
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+
+mlr --from ./reg_test/input/xyz2 put -q map o = @o; dump o
+
+mlr --from ./reg_test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @a = 1; map o = @a; dump o
+mlr: map type assertion for variable o unmet by value 1 with type int.
+
+mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; map o = @b; dump o
+{
+  "1": 2
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; map o = @c; dump o
+{
+  "1": {
+    "2": 3
+  }
+}
+
+mlr --from ./reg_test/input/xyz2 put -q a = 1; map o = a; dump o
+mlr: map type assertion for variable o unmet by value 1 with type int.
+
+mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; map o = b; dump o
+
+mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; map o = c; dump o
+
+
+================================================================
+MAPVAR ASSIGNMENTS TO VAR-TYPED LOCAL
+
+mlr --from ./reg_test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump o
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+
+mlr --from ./reg_test/input/xyz2 put -q var o = @o; dump o
+
+mlr --from ./reg_test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @a = 1; var o = @a; dump o
+1
+
+mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; var o = @b; dump o
+{
+  "1": 2
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; var o = @c; dump o
+{
+  "1": {
+    "2": 3
+  }
+}
+
+mlr --from ./reg_test/input/xyz2 put -q a = 1; var o = a; dump o
+1
+
+mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; var o = b; dump o
+
+mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; var o = c; dump o
+
+
+================================================================
+MAPVAR ASSIGNMENTS TO UNTYPED LOCAL
+
+mlr --from ./reg_test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump o
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+
+mlr --from ./reg_test/input/xyz2 put -q o = @o; dump o
+
+mlr --from ./reg_test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @a = 1; o = @a; dump o
+1
+
+mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; o = @b; dump o
+{
+  "1": 2
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; o = @c; dump o
+{
+  "1": {
+    "2": 3
+  }
+}
+
+mlr --from ./reg_test/input/xyz2 put -q a = 1; o = a; dump o
+1
+
+mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; o = b; dump o
+{
+  "1": 2
+}
+
+mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; o = c; dump o
+{
+  "1": {
+    "2": 3
+  }
+}
+
