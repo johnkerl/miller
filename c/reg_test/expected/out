@@ -45984,8 +45984,16 @@ mlr --from ./reg_test/input/xyz2 put -q a = 1; map o = a; dump o
 mlr: map type assertion for variable o unmet by value 1 with type int.
 
 mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; map o = b; dump o
+{
+  "1": 2
+}
 
 mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; map o = c; dump o
+{
+  "1": {
+    "2": 3
+  }
+}
 
 
 ================================================================
@@ -46032,8 +46040,16 @@ mlr --from ./reg_test/input/xyz2 put -q a = 1; var o = a; dump o
 1
 
 mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; var o = b; dump o
+{
+  "1": 2
+}
 
 mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; var o = c; dump o
+{
+  "1": {
+    "2": 3
+  }
+}
 
 
 ================================================================

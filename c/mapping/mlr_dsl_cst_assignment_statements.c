@@ -90,15 +90,6 @@ static mlr_dsl_cst_statement_handler_t handle_indirect_srec_assignment;
 static mlr_dsl_cst_statement_freer_t free_indirect_srec_assignment;
 
 // ----------------------------------------------------------------
-// $ mlr --from ../data/small put -v '$[@x] = 1'
-// AST ROOT:
-// text="block", type=STATEMENT_BLOCK:
-//     text="=", type=INDIRECT_SREC_ASSIGNMENT:
-//         text="oosvar_keylist", type=OOSVAR_KEYLIST:
-//             text="x", type=STRING_LITERAL.
-//         text="1", type=NUMERIC_LITERAL.
-
-// ----------------------------------------------------------------
 mlr_dsl_cst_statement_t* alloc_indirect_srec_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
@@ -216,6 +207,8 @@ mlr_dsl_cst_statement_t* alloc_local_variable_definition( // xxx XXX mapvars nex
 	case MD_AST_NODE_TYPE_FULL_SREC:
 	case MD_AST_NODE_TYPE_FULL_OOSVAR:
 	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
+	case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE:
+	case MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE:
 	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
 		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
 			prhs_node, pcst->pfmgr, type_inferencing, context_flags);
