@@ -570,58 +570,6 @@ mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_as
 		pstate);
 }
 
-//// ----------------------------------------------------------------
-//static void free_local_variable_definition(mlr_dsl_cst_statement_t* pstatement) {
-//	local_variable_definition_state_t* pstate = pstatement->pvstate;
-//
-//	if (pstate->prhs_evaluator != NULL) {
-//		pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
-//	}
-//
-//	free(pstate);
-//}
-//
-//// ----------------------------------------------------------------
-//static void handle_local_variable_definition_from_val( // xxx mapvar
-//	mlr_dsl_cst_statement_t* pstatement,
-//	variables_t*             pvars,
-//	cst_outputs_t*           pcst_outputs)
-//{
-//	local_variable_definition_state_t* pstate = pstatement->pvstate;
-//
-//	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator; // xxx mapvar
-//	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-//	if (mv_is_present(&val)) {
-//		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-//		local_stack_frame_define(pframe,
-//			pstate->lhs_variable_name, pstate->lhs_frame_relative_index,
-//			pstate->lhs_type_mask, val);
-//	} else {
-//		mv_free(&val);
-//	}
-//}
-//
-//// ----------------------------------------------------------------
-//static void handle_local_variable_definition_from_xval( // xxx mapvar
-//	mlr_dsl_cst_statement_t* pstatement,
-//	variables_t*             pvars,
-//	cst_outputs_t*           pcst_outputs)
-//{
-//	local_variable_definition_state_t* pstate = pstatement->pvstate;
-//
-//	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator; // xxx mapvar
-//	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
-//
-//	if (!xval.is_terminal || mv_is_present(&xval.u.mlrval)) { // xxx funcify
-//		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-//		local_stack_frame_xdefine(pframe, // xxx rename
-//			pstate->lhs_variable_name, pstate->lhs_frame_relative_index, pstate->lhs_type_mask,
-//			xval);
-//	} else {
-//		mlhmmv_free_submap(xval); // xxx rename
-//	}
-//}
-
 // ----------------------------------------------------------------
 static void free_oosvar_assignment(mlr_dsl_cst_statement_t* pstatement) {
 	oosvar_assignment_state_t* pstate = pstatement->pvstate;
@@ -690,8 +638,21 @@ static void handle_oosvar_to_oosvar_assignment(
 		sllmv_free(prhskeys);
 	}
 
+//	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+//	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+//
+//	if (!xval.is_terminal || mv_is_present(&xval.u.mlrval)) { // xxx funcify
+//		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+//		local_stack_frame_xdefine(pframe, // xxx rename
+//			pstate->lhs_variable_name, pstate->lhs_frame_relative_index, pstate->lhs_type_mask,
+//			xval);
+//	} else {
+//		mlhmmv_free_submap(xval); // xxx rename
+//	}
+
 	sllmv_free(plhskeys);
 }
+
 
 // ================================================================
 // All assignments produce a mlrval on the RHS and store it on the left -- except if both LHS and RHS

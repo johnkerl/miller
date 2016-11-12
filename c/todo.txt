@@ -55,57 +55,93 @@ things which can be maps:
 * func retval
 * func args
 
-contexts:
-
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+mlr_dsl_cst_output_statements.c:
 k dump w/ no args
+? dump maplit
+? dump full-srec
+? dump full-oosvar
 k dump oosvar
-k dump local
-
+k dump localvar
+k dump func retval
 ? emit maplit
+? emit full oosvar
+? emit oosvar
 ? emit localvar
 ? emit func retval
 
+mlr_dsl_cst_for_map_statements.c:
 ? for-loop over maplit
 ? for-loop over localvar
 ? for-loop over func retval
 
-? parameter marshal for all function calls
+function_manager.c:
+? - parameter marshaling in general rval context
 
-? assign LHS full srec
-? assign LHS full oosvar
-? assign LHS oosvar
-? assign LHS localvar
+mlr_dsl_cst_assignment_statements.c:
+? parameter marshaling in single-rhs-assign-to-map-lhs context
+- assign LHS full-srec          ? assign RHS maplit
+- assign LHS full-srec          ? assign RHS full-srec
+- assign LHS full-srec          ? assign RHS full-oosvar
+K assign LHS full-srec          ? assign RHS oosvar
+- assign LHS full-srec          ? assign RHS localvar
+- assign LHS full-srec          ? assign RHS func-retval
+.
+- assign LHS full-oosvar        ? assign RHS maplit
+- assign LHS full-oosvar        ? assign RHS full-srec
+- assign LHS full-oosvar        ? assign RHS full-oosvar
+- assign LHS full-oosvar        ? assign RHS oosvar
+- assign LHS full-oosvar        ? assign RHS localvar
+- assign LHS full-oosvar        ? assign RHS func-retval
+.
+- assign LHS oosvar             ? assign RHS maplit
+K assign LHS oosvar             ? assign RHS full-srec
+- assign LHS oosvar             ? assign RHS full-oosvar
+K assign LHS oosvar             ? assign RHS oosvar
+K assign LHS oosvar             ? assign RHS localvar
+- assign LHS oosvar             ? assign RHS func-retval
+.
+K define LHS map-typed-localvar ? assign RHS maplit
+K define LHS map-typed-localvar ? assign RHS full-srec
+K define LHS map-typed-localvar ? assign RHS full-oosvar
+- define LHS map-typed-localvar ? assign RHS oosvar
+- define LHS map-typed-localvar ? assign RHS localvar
+- define LHS map-typed-localvar ? assign RHS func-retval
+.
+- define LHS untyped-localvar   ? assign RHS maplit
+- define LHS untyped-localvar   ? assign RHS full-srec
+- define LHS untyped-localvar   ? assign RHS full-oosvar
+- define LHS untyped-localvar   ? assign RHS oosvar
+- define LHS untyped-localvar   ? assign RHS localvar
+- define LHS untyped-localvar   ? assign RHS func-retval
+.
+- assign LHS localvar           ? assign RHS maplit
+- assign LHS localvar           ? assign RHS full-srec
+- assign LHS localvar           ? assign RHS full-oosvar
+- assign LHS localvar           ? assign RHS oosvar
+- assign LHS localvar           ? assign RHS localvar
+- assign LHS localvar           ? assign RHS func-retval
 
-? define LHS untyped localvar
-? define LHS map-typed localvar
-
-? assign RHS maplit
-? assign RHS oosvar
-? assign RHS localval
-? assign RHS func retval
-
+new:
 ? built-in function take map arg(s)
 ? - count(.)
 ? - depth(.)
 ? - deepcount(.)
 ? built-in function produce map retval
+
 ----------------------------------------------------------------
 
 * steps:
 
-  ! need an mlval_evaluator_t. delegate to rval_evaluator_t ...
-    - ctor from AST node
-    - compute an mlhmmv_value_t (which rename) from variables_t
-
   ! parameter marshal
     - all UDFs need multiplexed marshaling: compound vs. scalar types
     - so all (even internally defined) functions do
-    - at internall defined functions, check is_terminal
+    - at internally defined functions, check is_terminal
 
     > $x = f(a, b)
     > $x = f($a, b)
 
-  ! bugfix: @v=@* is a syntax error but @v=@all is not.
+  ! bugfix: @v=@* is a syntax error
 
   - LHS define/assign special cases:
 
