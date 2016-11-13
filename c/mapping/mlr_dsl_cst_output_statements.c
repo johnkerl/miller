@@ -498,7 +498,7 @@ mlr_dsl_cst_statement_t* alloc_emit(
 
 	int output_all = FALSE;
 	// The grammar allows only 'emit all', not 'emit @x, all, $y'.
-	// So if 'all' appears at all, it's the only name.
+	// So if 'all' appears at all, it's the only name. // not true anymore
 	if (pkeylist_node->type == MD_AST_NODE_TYPE_ALL || pkeylist_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
 		output_all = TRUE;
 
@@ -528,6 +528,12 @@ mlr_dsl_cst_statement_t* alloc_emit(
 			}
 		}
 		pstate->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+
+	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE) {
+		printf("EMIT LOCALVAR STUB!\n");
+
+	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE) {
+		printf("EMIT LOCALVAR STUB!\n");
 
 	} else {
 		MLR_INTERNAL_CODING_ERROR();
