@@ -179,13 +179,11 @@ typedef void emitf_item_handler_t(
 	cst_outputs_t*        pcst_outputs);
 
 typedef struct _emitf_item_t {
-	emitf_item_handler_t* pemitf_item_handler;
 	char*                 srec_field_name;
 	rval_evaluator_t*     parg_evaluator;
-
 } emitf_item_t;
 
-static emitf_item_t* alloc_blank_emitf_item(char* srec_field_name, rval_evaluator_t* parg_evaluator);
+static emitf_item_t* alloc_emitf_item(char* srec_field_name, rval_evaluator_t* parg_evaluator);
 static void free_emitf_item(emitf_item_t* pemitf_item);
 
 // ----------------------------------------------------------------
@@ -241,9 +239,9 @@ mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 	for (sllve_t* pe = pnamesnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pwalker = pe->pvvalue;
 		mlr_dsl_ast_node_t* pchild = pwalker->pchildren->phead->pvvalue;
-		// This could be enforced in the lemon parser but it's easier to do it here.
+		// This could be enforced in the lemon parser but it's easier to do it here. // xxx rm cmt x all
 		sllv_append(pstate->pemitf_items,
-			alloc_blank_emitf_item(
+			alloc_emitf_item(
 				pchild->text,
 				rval_evaluator_alloc_from_ast(pwalker, pcst->pfmgr, type_inferencing, context_flags)));
 	}
@@ -275,7 +273,7 @@ mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 		pstate);
 }
 
-static emitf_item_t* alloc_blank_emitf_item(char* srec_field_name, rval_evaluator_t* parg_evaluator) {
+static emitf_item_t* alloc_emitf_item(char* srec_field_name, rval_evaluator_t* parg_evaluator) {
 	emitf_item_t* pemitf_item = mlr_malloc_or_die(sizeof(emitf_item_t));
 	pemitf_item->srec_field_name = srec_field_name;
 	pemitf_item->parg_evaluator  = parg_evaluator;
