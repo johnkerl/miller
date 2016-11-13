@@ -1045,11 +1045,11 @@ typedef void dump_target_getter_t(variables_t* pvars, struct _dump_state_t* psta
 	mv_t** ppval, mlhmmv_level_t** pplevel);
 typedef void dump_target_ephemeral_freer_t(struct _dump_state_t* pstate);
 
-static dump_target_getter_t all_oosvar_target_getter;
 static dump_target_getter_t oosvar_target_getter;
+static dump_target_getter_t full_oosvar_target_getter;
 static dump_target_getter_t nonindexed_local_variable_target_getter;
 static dump_target_getter_t indexed_local_variable_target_getter;
-static dump_target_getter_t map_literal_target_getter;
+static dump_target_getter_t ephemeral_target_getter;
 static dump_target_ephemeral_freer_t dump_target_ephemeral_free;
 
 typedef struct _dump_state_t {
@@ -1094,7 +1094,7 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 	mlr_dsl_cst_statement_handler_t* phandler = NULL;
 
 	if (pnode->pchildren->length == 1) { // dump all oosvars
-		pstate->pdump_target_getter = all_oosvar_target_getter;
+		pstate->pdump_target_getter = full_oosvar_target_getter;
 
 	} else if (pnode->pchildren->length == 2) { // dump specific oosvar or local
 		mlr_dsl_ast_node_t* ptarget_node = pnode->pchildren->phead->pnext->pvvalue;
@@ -1103,6 +1103,9 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 			pstate->pdump_target_getter = oosvar_target_getter;
 			pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
 				ptarget_node, pcst->pfmgr, type_inferencing, context_flags);
+
+		} else if (ptarget_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
+			pstate->pdump_target_getter = full_oosvar_target_getter;
 
 		} else if (ptarget_node->type == MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE) {
 			pstate->pdump_target_getter = nonindexed_local_variable_target_getter;
@@ -1116,14 +1119,14 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 			pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
 				ptarget_node, pcst->pfmgr, type_inferencing, context_flags);
 
-		} else if (ptarget_node->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
-			pstate->pdump_target_getter = map_literal_target_getter;
+		// MD_AST_NODE_TYPE_FULL_SREC
+		// MD_AST_NODE_TYPE_MAP_LITERAL
+		} else {
+			pstate->pdump_target_getter = ephemeral_target_getter;
 			pstate->pdump_target_ephemeral_freer = dump_target_ephemeral_free;
 			pstate->pephemeral_target_xevaluator = rxval_evaluator_alloc_from_ast(
 				ptarget_node, pcst->pfmgr, type_inferencing, context_flags);
 
-		} else {
-			MLR_INTERNAL_CODING_ERROR();
 		}
 
 	} else {
@@ -1152,7 +1155,7 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 }
 
 // ----------------------------------------------------------------
-static void all_oosvar_target_getter(variables_t* pvars, dump_state_t* pstate,
+static void full_oosvar_target_getter(variables_t* pvars, dump_state_t* pstate,
 	mv_t** ppval, mlhmmv_level_t** pplevel)
 {
 	*ppval   = NULL;
@@ -1223,7 +1226,7 @@ static void indexed_local_variable_target_getter(variables_t* pvars, dump_state_
 	sllmv_free(pmvkeys);
 }
 
-static void map_literal_target_getter(variables_t* pvars, dump_state_t* pstate,
+static void ephemeral_target_getter(variables_t* pvars, dump_state_t* pstate,
 	mv_t** ppval, mlhmmv_level_t** pplevel)
 {
 	*ppval   = NULL;
