@@ -1,7 +1,8 @@
 ================================================================
 BUGFIXES
 
-* b.tsv
+! x y z clu crash
+  -> recurse into child nodes of LHS on indexed-local assignment
 
 ================================================================
 NON-RELEASE:
@@ -18,11 +19,17 @@ NON-RELEASE:
 ================================================================
 OTHER:
 
+!!! x y z clu crash
+
 !!! b.tsv bug -- to relnotes
 
 !! don't dump full help on unrecognized flag. WAY too much info. just print short, w/ info on how to get long.
 
 * ?: operator ?
+
+! typeof -> include 'map'
+
+! dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d
 
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:

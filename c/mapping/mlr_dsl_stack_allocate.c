@@ -449,8 +449,17 @@ static void pass_1_for_local_assignment(mlr_dsl_ast_node_t* pnode, stkalc_subfra
 	mlr_dsl_ast_node_t* pnamenode = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pvaluenode = pnode->pchildren->phead->pnext->pvvalue;
 	pass_1_for_node(pvaluenode, pframe_group, pmax_subframe_depth, trace);
+
 	// Do the LHS after the RHS, in case 'var nonesuch = nonesuch'
 	stkalc_subframe_group_mutate_node_for_write(pframe_group, pnamenode, "WRITE", trace);
+
+	if (pnamenode->pchildren != NULL) {
+		// E.g. a[i][j]: variable is being written to; i and j are being read from.
+		for (sllve_t* pe = pnamenode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+			pass_1_for_node(pchild, pframe_group, pmax_subframe_depth, trace);
+		}
+	}
 }
 
 // ----------------------------------------------------------------
@@ -744,8 +753,8 @@ static void stkalc_subframe_group_mutate_node_for_define(stkalc_subframe_group_t
 // 'x = 1' is one of two things: (1) already defined in a higher subframe and
 // referenced in the current subframe; (2) not defined in a higher subframe, in
 // which case it is hereby defined in the current subframe.
-static void stkalc_subframe_group_mutate_node_for_write(stkalc_subframe_group_t* pframe_group, mlr_dsl_ast_node_t* pnode,
-	char* desc, int trace)
+static void stkalc_subframe_group_mutate_node_for_write(stkalc_subframe_group_t* pframe_group,
+	mlr_dsl_ast_node_t* pnode, char* desc, int trace)
 {
 	char* op = "REUSE";
 	int found = FALSE;

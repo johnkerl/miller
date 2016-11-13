@@ -93,7 +93,7 @@ static inline mv_t local_stack_frame_get_non_map(local_stack_frame_t* pframe,
 	// xxx encapsulate
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 	mlhmmv_value_t* pvalue = &pentry->value;
-	if (pvalue->is_terminal) {
+	if (pvalue != NULL && pvalue->is_terminal) {
 		return pvalue->u.mlrval;
 	} else {
 		return mv_absent();
