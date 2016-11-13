@@ -1272,6 +1272,9 @@ static void handle_dump(
 	} else if (plevel != NULL) {
 		mlhmmv_level_print_stacked(plevel, 0, FALSE, FALSE, "", pstate->stdfp); // xxx mk simpler call w/ dfl args
 	}
+	if (pstate->pdump_target_ephemeral_freer != NULL) {
+		pstate->pdump_target_ephemeral_freer(pstate);
+	}
 }
 
 // ----------------------------------------------------------------

@@ -45,12 +45,12 @@ things which can be maps:
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 mlr_dsl_cst_output_statements.c:
 k dump w/ no args
-? dump maplit -- ensure scalar-out is printed
-? dump full-srec -- ensure scalar-out is printed
-? dump full-oosvar -- ensure scalar-out is printed
+k dump maplit -- ensure scalar-out is printed
+k dump full-srec -- ensure scalar-out is printed
+k dump full-oosvar -- ensure scalar-out is printed
 k dump oosvar -- ensure scalar-out is printed
 k dump localvar -- ensure scalar-out is printed
-k dump func retval -- ensure scalar-out is printed
+- dump func retval -- ensure scalar-out is printed
 ? emit maplit
 ? emit full oosvar
 ? emit oosvar
