@@ -1,8 +1,7 @@
 ================================================================
 BUGFIXES
 
-! x y z clu crash
-  -> recurse into child nodes of LHS on indexed-local assignment
+:D
 
 ================================================================
 NON-RELEASE:
@@ -18,8 +17,6 @@ NON-RELEASE:
 
 ================================================================
 OTHER:
-
-!!! x y z clu crash
 
 !!! b.tsv bug -- to relnotes
 
@@ -61,20 +58,20 @@ k dump func retval -- ensure scalar-out is printed
 ? emit func retval
 
 mlr_dsl_cst_for_map_statements.c:
-? for-loop over maplit
-? for-loop over localvar
-? for-loop over func retval
+k for-loop over maplit
+k for-loop over localvar
+- for-loop over func retval
 
 function_manager.c:
 ? - parameter marshaling in general rval context
 
 mlr_dsl_cst_assignment_statements.c:
 ? parameter marshaling in single-rhs-assign-to-map-lhs context
-- assign LHS full-srec          ? assign RHS maplit
-- assign LHS full-srec          ? assign RHS full-srec
-- assign LHS full-srec          ? assign RHS full-oosvar
+k assign LHS full-srec          ? assign RHS maplit
+k assign LHS full-srec          ? assign RHS full-srec
+k assign LHS full-srec          ? assign RHS full-oosvar
 k assign LHS full-srec          ? assign RHS oosvar
-- assign LHS full-srec          ? assign RHS localvar
+k assign LHS full-srec          ? assign RHS localvar
 - assign LHS full-srec          ? assign RHS func-retval
 .
 - assign LHS full-oosvar        ? assign RHS maplit
@@ -86,7 +83,7 @@ k assign LHS full-srec          ? assign RHS oosvar
 .
 k assign LHS oosvar             ? assign RHS maplit
 k assign LHS oosvar             ? assign RHS full-srec
-- assign LHS oosvar             ? assign RHS full-oosvar
+k assign LHS oosvar             ? assign RHS full-oosvar
 k assign LHS oosvar             ? assign RHS oosvar
 k assign LHS oosvar             ? assign RHS localvar
 - assign LHS oosvar             ? assign RHS func-retval
@@ -115,6 +112,7 @@ k assign LHS localvar           ? assign RHS localvar
 ----------------------------------------------------------------
 ! we are going to need builtin functions which deal with maps.
   - length(@map) and length(map), proxy for NF. make it work with length({...}) and length($*).
+  - typeof: what should it say for $*?
   - depth on maps
   - deepcount on maps
   - split/join: but these are on lists. and would benefit from infix operators?
