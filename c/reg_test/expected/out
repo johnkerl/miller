@@ -45912,6 +45912,7 @@ mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3};
 }
 
 mlr --from ./reg_test/input/xyz2 put -q @a = 1; @o = @a; dump @o
+1
 
 mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; @o = @b; dump @o
 {
@@ -45926,6 +45927,7 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; @o = @c; dump @o
 }
 
 mlr --from ./reg_test/input/xyz2 put -q a = 1; @o = a; dump @o
+1
 
 mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; @o = b; dump @o
 {

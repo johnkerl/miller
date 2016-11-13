@@ -1099,19 +1099,22 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 	} else if (pnode->pchildren->length == 2) { // dump specific oosvar or local
 		mlr_dsl_ast_node_t* ptarget_node = pnode->pchildren->phead->pnext->pvvalue;
 
-		if (ptarget_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
+		if (ptarget_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
+			pstate->pdump_target_getter = full_oosvar_target_getter;
+
+		// Special case of ephemeral getter: dumps the data structure without copying it.
+		} else if (ptarget_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 			pstate->pdump_target_getter = oosvar_target_getter;
 			pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
 				ptarget_node, pcst->pfmgr, type_inferencing, context_flags);
 
-		} else if (ptarget_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
-			pstate->pdump_target_getter = full_oosvar_target_getter;
-
+		// Special case of ephemeral getter: dumps the data structure without copying it.
 		} else if (ptarget_node->type == MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE) {
 			pstate->pdump_target_getter = nonindexed_local_variable_target_getter;
 			MLR_INTERNAL_CODING_ERROR_IF(ptarget_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
 			pstate->target_vardef_frame_relative_index = ptarget_node->vardef_frame_relative_index;
 
+		// Special case of ephemeral getter: dumps the data structure without copying it.
 		} else if (ptarget_node->type == MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE) {
 			pstate->pdump_target_getter = indexed_local_variable_target_getter;
 			MLR_INTERNAL_CODING_ERROR_IF(ptarget_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
@@ -1165,15 +1168,20 @@ static void full_oosvar_target_getter(variables_t* pvars, dump_state_t* pstate,
 static void oosvar_target_getter(variables_t* pvars, dump_state_t* pstate,
 	mv_t** ppval, mlhmmv_level_t** pplevel)
 {
-	*ppval = NULL;
-
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvkeys = evaluate_list(pstate->ptarget_keylist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
 		int lookup_error = FALSE;
-		mlhmmv_level_t* plevel = mlhmmv_get_level(pvars->poosvars, pmvkeys, &lookup_error);
-		if (plevel != NULL) {
-			*pplevel = plevel;
+		mlhmmv_value_t* pmval = mlhmmv_get_value_from_level(pvars->poosvars->proot_level, pmvkeys, &lookup_error);
+		if (pmval == NULL) {
+			*ppval   = NULL;
+			*pplevel = NULL;
+		} else if (pmval->is_terminal) {
+			*ppval   = &pmval->u.mlrval;
+			*pplevel = NULL;
+		} else {
+			*ppval   = NULL;
+			*pplevel = pmval->u.pnext_level;
 		}
 	}
 	sllmv_free(pmvkeys);

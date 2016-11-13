@@ -256,6 +256,7 @@ UT FOR 5.0.0:
 * env lhs expr
 * dump locals & named/subscripted oosvars
 * emit locals & named/subscripted oosvars
+* for-records-counts example
 
 ================================================================
 HYGIENE FOR 5.0.0:
@@ -280,6 +281,7 @@ COOK:
 * n-grams ... post these once mapvars are in place.
 * mlr --from ~/misc/words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 * use: https://github.com/petewarden/dstkdata
+* for-records-counts example
 
 DEBUGGING:
 * disclaimer about the Miller DSL having the usual plusses and minuses of a dynamically typed language:
