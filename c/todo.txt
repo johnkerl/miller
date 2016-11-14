@@ -24,7 +24,7 @@ OTHER:
 
 * ?: operator ?
 
-! typeof -> include 'map'
+! typeof -> include 'map' and 'srec'
 
 ! dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d
 
