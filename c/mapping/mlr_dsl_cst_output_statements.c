@@ -427,6 +427,7 @@ typedef struct _emit_state_t {
 	file_output_mode_t file_output_mode;
 	sllv_t*            pemit_oosvar_namelist_evaluators;
 	int                do_full_prefixing;
+
 	record_emitter_t*  precord_emitter;
 
 	// Unlashed emit and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
@@ -506,6 +507,7 @@ mlr_dsl_cst_statement_t* alloc_emit(
 
 	pstate->poutput_filename_evaluator       = NULL;
 	pstate->stdfp                            = NULL;
+	pstate->precord_emitter                  = NULL;
 	pstate->pemit_oosvar_namelist_evaluators = NULL;
 	pstate->pemit_keylist_evaluators         = NULL;
 	pstate->num_emit_keylist_evaluators      = 0;
@@ -533,6 +535,7 @@ mlr_dsl_cst_statement_t* alloc_emit(
 			}
 		}
 		pstate->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+		pstate->precord_emitter = record_emitter_from_oosvar;
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 
@@ -549,6 +552,7 @@ mlr_dsl_cst_statement_t* alloc_emit(
 			}
 		}
 		pstate->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+		pstate->precord_emitter = record_emitter_from_oosvar;
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE) {
 		printf("EMIT LOCALVAR STUB!\n");
@@ -663,7 +667,7 @@ static void handle_emit(
 	cst_outputs_t*           pcst_outputs)
 {
 	emit_state_t* pstate = pstatement->pvstate;
-	record_emitter_from_oosvar(pstate, pvars, pcst_outputs->poutrecs, pcst_outputs->oosvar_flatten_separator);
+	pstate->precord_emitter(pstate, pvars, pcst_outputs->poutrecs, pcst_outputs->oosvar_flatten_separator);
 }
 
 // ----------------------------------------------------------------
@@ -675,7 +679,7 @@ static void handle_emit_to_stdfp(
 	emit_state_t* pstate = pstatement->pvstate;
 	sllv_t* poutrecs = sllv_alloc();
 
-	record_emitter_from_oosvar(pstate, pvars, poutrecs, pcst_outputs->oosvar_flatten_separator);
+	pstate->precord_emitter(pstate, pvars, poutrecs, pcst_outputs->oosvar_flatten_separator);
 
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pstate->psingle_lrec_writer == NULL)
@@ -702,7 +706,7 @@ static void handle_emit_to_file(
 
 	sllv_t* poutrecs = sllv_alloc();
 
-	record_emitter_from_oosvar(pstate, pvars, poutrecs, pcst_outputs->oosvar_flatten_separator);
+	pstate->precord_emitter(pstate, pvars, poutrecs, pcst_outputs->oosvar_flatten_separator);
 
 	rval_evaluator_t* poutput_filename_evaluator = pstate->poutput_filename_evaluator;
 	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
