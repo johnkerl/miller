@@ -430,6 +430,9 @@ typedef struct _emit_state_t {
 
 	record_emitter_t*  precord_emitter;
 
+	// For map literals
+	rxval_evaluator_t* prhs_xevaluator;
+
 	// For local variables
 	char* localvar_name;
 	int   localvar_frame_relative_index;
@@ -464,6 +467,12 @@ static void record_emitter_from_local_variable(
 	char*         oosvar_flatten_separator);
 
 static void record_emitter_from_full_srec(
+	emit_state_t* pstate,
+	variables_t*  pvars,
+	sllv_t*       poutrecs,
+	char*         oosvar_flatten_separator);
+
+static void record_emitter_from_map_literal(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,
@@ -524,6 +533,7 @@ mlr_dsl_cst_statement_t* alloc_emit(
 	pstate->poutput_filename_evaluator    = NULL;
 	pstate->stdfp                         = NULL;
 	pstate->precord_emitter               = NULL;
+	pstate->prhs_xevaluator               = NULL;
 	pstate->localvar_name                 = NULL;
 	pstate->localvar_frame_relative_index = MD_UNUSED_INDEX;
 	pstate->pemit_namelist_evaluators     = NULL;
@@ -574,6 +584,11 @@ mlr_dsl_cst_statement_t* alloc_emit(
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_FULL_SREC) {
 		pstate->precord_emitter = record_emitter_from_full_srec;
+
+	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
+		pstate->precord_emitter = record_emitter_from_map_literal;
+		pstate->prhs_xevaluator = rxval_evaluator_pure_alloc_from_ast(
+			pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
 
 	} else {
 		MLR_INTERNAL_CODING_ERROR();
@@ -801,6 +816,7 @@ static void record_emitter_from_local_variable(
 				sllmv_prepend_no_free(pmvkeys, &name);
 				mlhmmv_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
 					pstate->do_full_prefixing, oosvar_flatten_separator);
+
 			}
 		}
 		sllmv_free(pmvnames);
@@ -815,6 +831,43 @@ static void record_emitter_from_full_srec(
 	char*         oosvar_flatten_separator)
 {
 	sllv_append(poutrecs, lrec_copy(pvars->pinrec));
+}
+
+static void record_emitter_from_map_literal(
+	emit_state_t* pstate,
+	variables_t*  pvars,
+	sllv_t*       poutrecs,
+	char*         oosvar_flatten_separator)
+{
+	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+	sllmv_t* pmvkeys = sllmv_alloc();
+
+	if (!xval.is_terminal) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars,
+			&names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+
+			// xxx this is an unpleasant hack. The idea is to temporarily wrap the localvar
+			// in a parent map whose single key is the variable name.
+			mv_t name = mv_from_string("_", NO_FREE);
+			sllmve_t e = { .value = name, .free_flags = 0, .pnext = NULL };
+
+			mlhmmv_level_t* proot_level = mlhmmv_level_alloc();
+			mlhmmv_put_value_at_level_aux(proot_level, &e, &xval);
+
+			mlhmmv_t map;
+			map.proot_level = proot_level;
+			sllmv_prepend_no_free(pmvkeys, &name);
+			mlhmmv_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
+				pstate->do_full_prefixing, oosvar_flatten_separator);
+
+		}
+		sllmv_free(pmvnames);
+	}
+
+	sllmv_free(pmvkeys);
 }
 
 // ----------------------------------------------------------------
@@ -989,6 +1042,10 @@ static void free_emit(mlr_dsl_cst_statement_t* pstatement) { // emit
 
 	if (pstate->poutput_filename_evaluator != NULL) {
 		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
+	}
+
+	if (pstate->prhs_xevaluator != NULL) {
+		pstate->prhs_xevaluator->pfree_func(pstate->prhs_xevaluator);
 	}
 
 	if (pstate->pemit_namelist_evaluators != NULL) {
