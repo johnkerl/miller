@@ -414,12 +414,20 @@ static void free_emitf(mlr_dsl_cst_statement_t* pstatement) { // xxx
 }
 
 // ================================================================
+struct _emit_state_t; // Forward reference
+typedef void record_emitter_t(
+	struct _emit_state_t* pstate,
+	variables_t*  pvars,
+	sllv_t*       poutrecs,
+	char*         oosvar_flatten_separator);
+
 typedef struct _emit_state_t {
 	rval_evaluator_t*  poutput_filename_evaluator;
 	FILE*              stdfp;
 	file_output_mode_t file_output_mode;
 	sllv_t*            pemit_oosvar_namelist_evaluators;
 	int                do_full_prefixing;
+	record_emitter_t*  precord_emitter;
 
 	// Unlashed emit and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
 	sllv_t* pemit_keylist_evaluators;
@@ -438,7 +446,7 @@ static mlr_dsl_cst_statement_handler_t handle_emit;
 static mlr_dsl_cst_statement_handler_t handle_emit_to_stdfp;
 static mlr_dsl_cst_statement_handler_t handle_emit_to_file;
 
-static void handle_emit_common(
+static void record_emitter_from_oosvar(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       pcst_outputs,
@@ -655,7 +663,7 @@ static void handle_emit(
 	cst_outputs_t*           pcst_outputs)
 {
 	emit_state_t* pstate = pstatement->pvstate;
-	handle_emit_common(pstate, pvars, pcst_outputs->poutrecs, pcst_outputs->oosvar_flatten_separator);
+	record_emitter_from_oosvar(pstate, pvars, pcst_outputs->poutrecs, pcst_outputs->oosvar_flatten_separator);
 }
 
 // ----------------------------------------------------------------
@@ -667,7 +675,7 @@ static void handle_emit_to_stdfp(
 	emit_state_t* pstate = pstatement->pvstate;
 	sllv_t* poutrecs = sllv_alloc();
 
-	handle_emit_common(pstate, pvars, poutrecs, pcst_outputs->oosvar_flatten_separator);
+	record_emitter_from_oosvar(pstate, pvars, poutrecs, pcst_outputs->oosvar_flatten_separator);
 
 	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pstate->psingle_lrec_writer == NULL)
@@ -694,7 +702,7 @@ static void handle_emit_to_file(
 
 	sllv_t* poutrecs = sllv_alloc();
 
-	handle_emit_common(pstate, pvars, poutrecs, pcst_outputs->oosvar_flatten_separator);
+	record_emitter_from_oosvar(pstate, pvars, poutrecs, pcst_outputs->oosvar_flatten_separator);
 
 	rval_evaluator_t* poutput_filename_evaluator = pstate->poutput_filename_evaluator;
 	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
@@ -711,7 +719,7 @@ static void handle_emit_to_file(
 }
 
 // ----------------------------------------------------------------
-static void handle_emit_common(
+static void record_emitter_from_oosvar(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,
