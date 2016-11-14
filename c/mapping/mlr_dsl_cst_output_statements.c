@@ -425,7 +425,7 @@ typedef struct _emit_state_t {
 	rval_evaluator_t*  poutput_filename_evaluator;
 	FILE*              stdfp;
 	file_output_mode_t file_output_mode;
-	sllv_t*            pemit_oosvar_namelist_evaluators;
+	sllv_t*            pemit_namelist_evaluators;
 	int                do_full_prefixing;
 
 	record_emitter_t*  precord_emitter;
@@ -450,7 +450,31 @@ static mlr_dsl_cst_statement_handler_t handle_emit_to_file;
 static void record_emitter_from_oosvar(
 	emit_state_t* pstate,
 	variables_t*  pvars,
-	sllv_t*       pcst_outputs,
+	sllv_t*       poutrecs,
+	char*         f);
+
+static void record_emitter_from_nonindexed_local_variable(
+	emit_state_t* pstate,
+	variables_t*  pvars,
+	sllv_t*       poutrecs,
+	char*         f);
+
+static void record_emitter_from_indexed_local_variable(
+	emit_state_t* pstate,
+	variables_t*  pvars,
+	sllv_t*       poutrecs,
+	char*         f);
+
+static void record_emitter_from_map_literal(
+	emit_state_t* pstate,
+	variables_t*  pvars,
+	sllv_t*       poutrecs,
+	char*         f);
+
+static void record_emitter_from_full_srec(
+	emit_state_t* pstate,
+	variables_t*  pvars,
+	sllv_t*       poutrecs,
 	char*         f);
 
 static mlr_dsl_cst_statement_handler_t handle_emit_lashed;
@@ -459,7 +483,7 @@ static mlr_dsl_cst_statement_handler_t handle_emit_lashed_to_file;
 static void handle_emit_lashed_common(
 	emit_state_t* pstate,
 	variables_t*  pvars,
-	sllv_t*       pcst_outputs,
+	sllv_t*       poutrecs,
 	char*         f);
 
 static mlr_dsl_cst_statement_handler_t handle_emit_all;
@@ -505,36 +529,29 @@ mlr_dsl_cst_statement_t* alloc_emit(
 {
 	emit_state_t* pstate = mlr_malloc_or_die(sizeof(emit_state_t));
 
-	pstate->poutput_filename_evaluator       = NULL;
-	pstate->stdfp                            = NULL;
-	pstate->precord_emitter                  = NULL;
-	pstate->pemit_oosvar_namelist_evaluators = NULL;
-	pstate->pemit_keylist_evaluators         = NULL;
-	pstate->num_emit_keylist_evaluators      = 0;
-	pstate->ppemit_keylist_evaluators        = NULL;
-	pstate->psingle_lrec_writer              = NULL;
-	pstate->pmulti_lrec_writer               = NULL;
+	pstate->poutput_filename_evaluator  = NULL;
+	pstate->stdfp                       = NULL;
+	pstate->precord_emitter             = NULL;
+	pstate->pemit_namelist_evaluators   = NULL;
+	pstate->pemit_keylist_evaluators    = NULL;
+	pstate->num_emit_keylist_evaluators = 0;
+	pstate->ppemit_keylist_evaluators   = NULL;
+	pstate->psingle_lrec_writer         = NULL;
+	pstate->pmulti_lrec_writer          = NULL;
 
 	mlr_dsl_ast_node_t* pemit_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
 	mlr_dsl_ast_node_t* pkeylist_node = pemit_node->pchildren->phead->pvvalue;
 
+	// Name note: difference between keylist and namelist: in emit @a[$b]["c"], "d", @e,
+	// the keylist is ["a", $b, "c"] and the namelist is ["d", @e].
+
 	int output_all = FALSE;
 	// The grammar allows only 'emit all', not 'emit @x, all, $y'.
-	// So if 'all' appears at all, it's the only name. // not true anymore
+	// So if 'all' appears at all, it's the only name.
 	if (pkeylist_node->type == MD_AST_NODE_TYPE_ALL || pkeylist_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
 		output_all = TRUE;
 
-		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
-		if (pemit_node->pchildren->length == 2) {
-			mlr_dsl_ast_node_t* pnamelist_node = pemit_node->pchildren->phead->pnext->pvvalue;
-			for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
-				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-				sllv_append(pemit_oosvar_namelist_evaluators,
-					rval_evaluator_alloc_from_ast(pkeynode, pcst->pfmgr, type_inferencing, context_flags));
-			}
-		}
-		pstate->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
 		pstate->precord_emitter = record_emitter_from_oosvar;
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
@@ -542,32 +559,32 @@ mlr_dsl_cst_statement_t* alloc_emit(
 		pstate->pemit_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
 			pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
 
-		sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
-		if (pemit_node->pchildren->length == 2) {
-			mlr_dsl_ast_node_t* pnamelist_node = pemit_node->pchildren->phead->pnext->pvvalue;
-			for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
-				mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-				sllv_append(pemit_oosvar_namelist_evaluators,
-					rval_evaluator_alloc_from_ast(pkeynode, pcst->pfmgr, type_inferencing, context_flags));
-			}
-		}
-		pstate->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
 		pstate->precord_emitter = record_emitter_from_oosvar;
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE) {
-		printf("EMIT LOCALVAR STUB!\n");
+		pstate->precord_emitter = record_emitter_from_nonindexed_local_variable;
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE) {
-		printf("EMIT LOCALVAR STUB!\n");
+		pstate->precord_emitter = record_emitter_from_indexed_local_variable;
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
-		printf("EMIT MAPLITERAL STUB!\n");
+		pstate->precord_emitter = record_emitter_from_map_literal;
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_FULL_SREC) {
-		printf("EMIT FULLSREC STUB!\n");
+		pstate->precord_emitter = record_emitter_from_full_srec;
 
 	} else {
 		MLR_INTERNAL_CODING_ERROR();
+	}
+
+	pstate->pemit_namelist_evaluators = sllv_alloc();
+	if (pemit_node->pchildren->length == 2) {
+		mlr_dsl_ast_node_t* pnamelist_node = pemit_node->pchildren->phead->pnext->pvvalue;
+		for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
+			sllv_append(pstate->pemit_namelist_evaluators,
+				rval_evaluator_alloc_from_ast(pkeynode, pcst->pfmgr, type_inferencing, context_flags));
+		}
 	}
 
 	mlr_dsl_cst_statement_handler_t* phandler = NULL;
@@ -609,14 +626,14 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 
 	mlr_dsl_ast_node_t* pkeylists_node = pemit_node->pchildren->phead->pvvalue;
 
-	pstate->poutput_filename_evaluator       = NULL;
-	pstate->stdfp                            = NULL;
-	pstate->pemit_oosvar_namelist_evaluators = NULL;
-	pstate->pemit_keylist_evaluators         = NULL;
-	pstate->num_emit_keylist_evaluators      = 0;
-	pstate->ppemit_keylist_evaluators        = NULL;
-	pstate->psingle_lrec_writer              = NULL;
-	pstate->pmulti_lrec_writer               = NULL;
+	pstate->poutput_filename_evaluator  = NULL;
+	pstate->stdfp                       = NULL;
+	pstate->pemit_namelist_evaluators   = NULL;
+	pstate->pemit_keylist_evaluators    = NULL;
+	pstate->num_emit_keylist_evaluators = 0;
+	pstate->ppemit_keylist_evaluators   = NULL;
+	pstate->psingle_lrec_writer         = NULL;
+	pstate->pmulti_lrec_writer          = NULL;
 
 	pstate->num_emit_keylist_evaluators = pkeylists_node->pchildren->length;
 	pstate->ppemit_keylist_evaluators = mlr_malloc_or_die(pstate->num_emit_keylist_evaluators
@@ -628,16 +645,16 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 			pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
 	}
 
-	sllv_t* pemit_oosvar_namelist_evaluators = sllv_alloc();
+	sllv_t* pemit_namelist_evaluators = sllv_alloc();
 	if (pemit_node->pchildren->length == 2) {
 		mlr_dsl_ast_node_t* pnamelist_node = pemit_node->pchildren->phead->pnext->pvvalue;
 		for (sllve_t* pe = pnamelist_node->pchildren->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_ast_node_t* pkeynode = pe->pvvalue;
-			sllv_append(pemit_oosvar_namelist_evaluators,
+			sllv_append(pemit_namelist_evaluators,
 				rval_evaluator_alloc_from_ast(pkeynode, pcst->pfmgr, type_inferencing, context_flags));
 		}
 	}
-	pstate->pemit_oosvar_namelist_evaluators = pemit_oosvar_namelist_evaluators;
+	pstate->pemit_namelist_evaluators = pemit_namelist_evaluators;
 
 	mlr_dsl_cst_statement_handler_t* phandler = NULL;
 	pstate->do_full_prefixing = do_full_prefixing;
@@ -739,7 +756,7 @@ static void record_emitter_from_oosvar(
 	sllmv_t* pmvkeys = evaluate_list(pstate->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
 		int names_all_non_null_or_error = TRUE;
-		sllmv_t* pmvnames = evaluate_list(pstate->pemit_oosvar_namelist_evaluators, pvars,
+		sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars,
 			&names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
 			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, poutrecs,
@@ -748,6 +765,42 @@ static void record_emitter_from_oosvar(
 		sllmv_free(pmvnames);
 	}
 	sllmv_free(pmvkeys);
+}
+
+static void record_emitter_from_nonindexed_local_variable(
+	emit_state_t* pstate,
+	variables_t*  pvars,
+	sllv_t*       poutrecs,
+	char*         f)
+{
+	// xxx stub
+}
+
+static void record_emitter_from_indexed_local_variable(
+	emit_state_t* pstate,
+	variables_t*  pvars,
+	sllv_t*       poutrecs,
+	char*         f)
+{
+	// xxx stub
+}
+
+static void record_emitter_from_map_literal(
+	emit_state_t* pstate,
+	variables_t*  pvars,
+	sllv_t*       poutrecs,
+	char*         f)
+{
+	// xxx stub
+}
+
+static void record_emitter_from_full_srec(
+	emit_state_t* pstate,
+	variables_t*  pvars,
+	sllv_t*       poutrecs,
+	char*         f)
+{
+	sllv_append(poutrecs, lrec_copy(pvars->pinrec));
 }
 
 // ----------------------------------------------------------------
@@ -825,7 +878,7 @@ static void handle_emit_lashed_common(
 		pvars, &keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
 		int names_all_non_null_or_error = TRUE;
-		sllmv_t* pmvnames = evaluate_list(pstate->pemit_oosvar_namelist_evaluators, pvars,
+		sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars,
 			&names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
 			mlhmmv_to_lrecs_lashed(pvars->poosvars, ppmvkeys, pstate->num_emit_keylist_evaluators, pmvnames,
@@ -847,7 +900,7 @@ static void handle_emit_all(
 {
 	emit_state_t* pstate = pstatement->pvstate;
 	int all_non_null_or_error = TRUE;
-	sllmv_t* pmvnames = evaluate_list(pstate->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
+	sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
 		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, pcst_outputs->poutrecs,
 			pstate->do_full_prefixing, pcst_outputs->oosvar_flatten_separator);
@@ -869,7 +922,7 @@ static void handle_emit_all_to_stdfp(
 
 	sllv_t* poutrecs = sllv_alloc();
 	int all_non_null_or_error = TRUE;
-	sllmv_t* pmvnames = evaluate_list(pstate->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
+	sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
 		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, poutrecs,
 			pstate->do_full_prefixing, pcst_outputs->oosvar_flatten_separator);
@@ -898,7 +951,7 @@ static void handle_emit_all_to_file(
 	rval_evaluator_t* poutput_filename_evaluator = pstate->poutput_filename_evaluator;
 	mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 	int all_non_null_or_error = TRUE;
-	sllmv_t* pmvnames = evaluate_list(pstate->pemit_oosvar_namelist_evaluators, pvars, &all_non_null_or_error);
+	sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
 		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, poutrecs,
 			pstate->do_full_prefixing, pcst_outputs->oosvar_flatten_separator);
@@ -924,12 +977,12 @@ static void free_emit(mlr_dsl_cst_statement_t* pstatement) { // emit
 		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
 	}
 
-	if (pstate->pemit_oosvar_namelist_evaluators != NULL) {
-		for (sllve_t* pe = pstate->pemit_oosvar_namelist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+	if (pstate->pemit_namelist_evaluators != NULL) {
+		for (sllve_t* pe = pstate->pemit_namelist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 			rval_evaluator_t* phandler = pe->pvvalue;
 			phandler->pfree_func(phandler);
 		}
-		sllv_free(pstate->pemit_oosvar_namelist_evaluators);
+		sllv_free(pstate->pemit_namelist_evaluators);
 	}
 
 	if (pstate->pemit_keylist_evaluators != NULL) {

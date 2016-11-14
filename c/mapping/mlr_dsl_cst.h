@@ -120,9 +120,6 @@ typedef void mlr_dsl_cst_statement_freer_t(
 // ----------------------------------------------------------------
 // MLR_DSL_CST_STATEMENT OBJECT
 
-// Name note: difference between keylist and namelist: in emit @a[$b]["c"], "d", @e,
-// the keylist is ["a", $b, "c"] and the namelist is ["d", @e].
-
 typedef struct _mlr_dsl_cst_statement_t {
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
