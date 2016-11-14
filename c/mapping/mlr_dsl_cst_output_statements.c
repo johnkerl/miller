@@ -429,17 +429,19 @@ typedef struct _emit_state_t {
 	int                do_full_prefixing;
 
 	record_emitter_t*  precord_emitter;
+	// xxx need lashed array ... needs to be heterogeneous ...
 
 	// For map literals
 	rxval_evaluator_t* prhs_xevaluator;
+	// xxx need lashed array ... needs to be heterogeneous ...
 
 	// For local variables
 	char* localvar_name;
 	int   localvar_frame_relative_index;
+	// xxx need lashed array ... needs to be heterogeneous ...
 
 	// Unlashed emit and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
 	sllv_t* pemit_keylist_evaluators;
-
 	// Lashed emit and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
 	int num_emit_keylist_evaluators;
 	sllv_t** ppemit_keylist_evaluators;
