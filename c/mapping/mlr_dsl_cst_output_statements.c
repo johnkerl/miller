@@ -560,6 +560,12 @@ mlr_dsl_cst_statement_t* alloc_emit(
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE) {
 		printf("EMIT LOCALVAR STUB!\n");
 
+	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
+		printf("EMIT MAPLITERAL STUB!\n");
+
+	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_FULL_SREC) {
+		printf("EMIT FULLSREC STUB!\n");
+
 	} else {
 		MLR_INTERNAL_CODING_ERROR();
 	}
