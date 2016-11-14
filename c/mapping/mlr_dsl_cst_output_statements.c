@@ -238,11 +238,26 @@ mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 	pstate->pemitf_items = sllv_alloc();
 	for (sllve_t* pe = pnamesnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 		mlr_dsl_ast_node_t* pwalker = pe->pvvalue;
-		mlr_dsl_ast_node_t* pchild = pwalker->pchildren->phead->pvvalue;
+
+		char* name = NULL;
+		switch(pwalker->type) {
+		case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
+			name = ((mlr_dsl_ast_node_t*)(pwalker->pchildren->phead->pvvalue))->text;
+			break;
+		case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE:
+			name = pwalker->text;
+			break;
+		case MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE:
+			name = pwalker->text;
+			break;
+		default:
+			MLR_INTERNAL_CODING_ERROR();
+			break;
+		}
 		// This could be enforced in the lemon parser but it's easier to do it here. // xxx rm cmt x all
 		sllv_append(pstate->pemitf_items,
 			alloc_emitf_item(
-				pchild->text,
+				name,
 				rval_evaluator_alloc_from_ast(pwalker, pcst->pfmgr, type_inferencing, context_flags)));
 	}
 
