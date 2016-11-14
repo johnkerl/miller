@@ -162,6 +162,8 @@ md_statement_braced_end(A) ::= md_for_loop_oosvar(B).               { A = B; }
 md_statement_braced_end(A) ::= md_for_loop_oosvar_key_only(B).      { A = B; }
 md_statement_braced_end(A) ::= md_for_loop_local_map(B).            { A = B; }
 md_statement_braced_end(A) ::= md_for_loop_local_map_key_only(B).   { A = B; }
+md_statement_braced_end(A) ::= md_for_loop_map_literal(B).          { A = B; }
+md_statement_braced_end(A) ::= md_for_loop_map_literal_key_only(B). { A = B; }
 md_statement_braced_end(A) ::= md_triple_for(B).                    { A = B; }
 md_statement_braced_end(A) ::= md_if_chain(B).                      { A = B; }
 
@@ -606,6 +608,82 @@ md_for_loop_local_map_key_only(A) ::=
 	A = mlr_dsl_ast_node_alloc_ternary(
 		F->text,
 		MD_AST_NODE_TYPE_FOR_LOCAL_MAP_KEY_ONLY,
+		K,
+		O,
+		S
+	);
+}
+
+// ----------------------------------------------------------------
+// for(k, v in o[1][2]) { ... }
+md_for_loop_map_literal(A) ::=
+	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
+		md_for_loop_index(K) MD_TOKEN_COMMA md_for_loop_index(V)
+		MD_TOKEN_IN md_map_literal(O)
+	MD_TOKEN_RPAREN
+	MD_TOKEN_LBRACE
+		md_statement_block(S)
+	MD_TOKEN_RBRACE.
+{
+	mlr_dsl_ast_node_replace_text(S, "for_loop_map_literal_block");
+	A = mlr_dsl_ast_node_alloc_ternary(
+		F->text,
+		MD_AST_NODE_TYPE_FOR_MAP_LITERAL,
+		mlr_dsl_ast_node_alloc_binary(
+			"key_and_value_variables",
+			MD_AST_NODE_TYPE_FOR_VARIABLES,
+			mlr_dsl_ast_node_alloc_unary(
+				"key_variables",
+				MD_AST_NODE_TYPE_FOR_VARIABLES,
+				K
+			),
+			V
+		),
+		O,
+		S
+	);
+}
+
+// for((k1, k2), v in o[1][2]) { ... }
+// for((k1, k2, k3), v in o[1][2]) { ... }
+md_for_loop_map_literal(A) ::=
+	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
+		MD_TOKEN_LPAREN md_for_map_keylist(L) MD_TOKEN_RPAREN MD_TOKEN_COMMA md_for_loop_index(V)
+		MD_TOKEN_IN md_map_literal(O)
+	MD_TOKEN_RPAREN
+	MD_TOKEN_LBRACE
+		md_statement_block(S)
+	MD_TOKEN_RBRACE.
+{
+	mlr_dsl_ast_node_replace_text(S, "for_loop_map_literal_block");
+	A = mlr_dsl_ast_node_alloc_ternary(
+		F->text,
+		MD_AST_NODE_TYPE_FOR_MAP_LITERAL,
+		mlr_dsl_ast_node_alloc_binary(
+			"key_and_value_variables",
+			MD_AST_NODE_TYPE_FOR_VARIABLES,
+			L,
+			V
+		),
+		O,
+		S
+	);
+}
+
+// for(k in o[1][2]) { ... }
+md_for_loop_map_literal_key_only(A) ::=
+	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
+		md_for_loop_index(K)
+		MD_TOKEN_IN md_map_literal(O)
+	MD_TOKEN_RPAREN
+	MD_TOKEN_LBRACE
+		md_statement_block(S)
+	MD_TOKEN_RBRACE.
+{
+	mlr_dsl_ast_node_replace_text(S, "for_loop_map_literal_block");
+	A = mlr_dsl_ast_node_alloc_ternary(
+		F->text,
+		MD_AST_NODE_TYPE_FOR_MAP_LITERAL_KEY_ONLY,
 		K,
 		O,
 		S

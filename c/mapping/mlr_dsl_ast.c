@@ -339,6 +339,8 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY:              return "FOR_OOSVAR_KEY_ONLY";              break;
 	case MD_AST_NODE_TYPE_FOR_LOCAL_MAP:                    return "FOR_LOCAL_MAP";                    break;
 	case MD_AST_NODE_TYPE_FOR_LOCAL_MAP_KEY_ONLY:           return "FOR_LOCAL_MAP_KEY_ONLY";           break;
+	case MD_AST_NODE_TYPE_FOR_MAP_LITERAL:                  return "FOR_MAP_LITERAL";                  break;
+	case MD_AST_NODE_TYPE_FOR_MAP_LITERAL_KEY_ONLY:         return "FOR_MAP_LITERAL_KEY_ONLY";         break;
 	case MD_AST_NODE_TYPE_FOR_VARIABLES:                    return "FOR_VARIABLES";                    break;
 	case MD_AST_NODE_TYPE_TRIPLE_FOR:                       return "TRIPLE_FOR";                       break;
 	case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE:        return "NONINDEXED_LOCAL_VARIABLE";        break;

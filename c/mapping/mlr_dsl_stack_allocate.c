@@ -417,6 +417,18 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* 
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_LOCAL_MAP) {
 		pass_1_for_map_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
 
+	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_MAP_LITERAL_KEY_ONLY) {
+		pass_1_for_map_key_only_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_MAP_LITERAL) {
+		pass_1_for_map_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_LOCAL_MAP_KEY_ONLY) {
+		pass_1_for_map_key_only_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_LOCAL_MAP) {
+		pass_1_for_map_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_TRIPLE_FOR) {
 		pass_1_for_triple_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
 

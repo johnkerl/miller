@@ -360,6 +360,8 @@ mlr_dsl_cst_statement_allocator_t alloc_for_oosvar;
 mlr_dsl_cst_statement_allocator_t alloc_for_oosvar_key_only;
 mlr_dsl_cst_statement_allocator_t alloc_for_local_map;
 mlr_dsl_cst_statement_allocator_t alloc_for_local_map_key_only;
+mlr_dsl_cst_statement_allocator_t alloc_for_map_literal;
+mlr_dsl_cst_statement_allocator_t alloc_for_map_literal_key_only;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_triple_for_statements.c

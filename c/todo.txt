@@ -51,11 +51,18 @@ k dump full-oosvar -- ensure scalar-out is printed
 k dump oosvar -- ensure scalar-out is printed
 k dump localvar -- ensure scalar-out is printed
 - dump func retval -- ensure scalar-out is printed
+
 k emit full oosvar
 k emit oosvar
-? emit localvar -- check lashed; UTs
-- emit mapliteral -- check lashed; UTs
+k emit localvar -- check lashed; UTs
+k emit mapliteral -- check lashed; UTs
 - emit func retval
+
+- emit-lashed full oosvar
+k emit-lashed oosvar
+- emit-lashed localvar -- check lashed; UTs
+- emit-lashed mapliteral -- check lashed; UTs
+- emit-lashed func retval
 
 mlr_dsl_cst_for_map_statements.c:
 k for-loop over maplit
