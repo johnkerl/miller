@@ -73,7 +73,8 @@ function_manager.c:
 ? - parameter marshaling in general rval context
 
 mlr_dsl_cst_assignment_statements.c:
-? parameter marshaling in single-rhs-assign-to-map-lhs context
+- parameter marshaling in single-rhs-assign-to-map-lhs context
+.
 k assign LHS full-srec          ? assign RHS maplit
 k assign LHS full-srec          ? assign RHS full-srec
 k assign LHS full-srec          ? assign RHS full-oosvar
@@ -139,7 +140,7 @@ k assign LHS localvar           ? assign RHS localvar
     > $x = f(a, b)
     > $x = f($a, b)
 
-  ! bugfix: @v=@* is a syntax error
+  ! @v=@* is a syntax error
 
   - LHS define/assign special cases:
 
@@ -178,7 +179,7 @@ k assign LHS localvar           ? assign RHS localvar
   k for-local -- with keylist etc. just as for oosvars
     > coded; just need more UT coverage.
 
-* needs assert_not_map in userspace
+* needs assert_scalar in userspace
 
 * iterating:
   k save off a copy of the mlr exe before this for timings later
