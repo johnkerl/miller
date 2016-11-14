@@ -961,9 +961,52 @@ void mlhmmv_all_to_lrecs(mlhmmv_t* pmap, sllmv_t* pnames, sllv_t* poutrecs, int 
 void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing,
 	char* flatten_separator)
 {
+	// There should be at least the oosvar basename, e.g. '@a[b][c]' or '@a[b]' or '@a' but not '@'.
+	MLR_INTERNAL_CODING_ERROR_IF(pkeys->phead == NULL);
 	mv_t* pfirstkey = &pkeys->phead->value;
 
 	mlhmmv_level_entry_t* ptop_entry = mlhmmv_get_entry_at_level(pmap->proot_level, pkeys->phead, NULL);
+
+	if (ptop_entry == NULL) {
+		// No such entry in the mlhmmv results in no output records
+	} else if (ptop_entry->level_value.is_terminal) {
+		// E.g. '@v = 3' at the top level of the mlhmmv.
+		lrec_t* poutrec = lrec_unbacked_alloc();
+		lrec_put(poutrec,
+			mv_alloc_format_val(pfirstkey),
+			mv_alloc_format_val(&ptop_entry->level_value.u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		sllv_append(poutrecs, poutrec);
+	} else {
+		// E.g. '@v = {...}' at the top level of the mlhmmv: the map value keyed by oosvar-name 'v' is itself a hashmap.
+		// This needs to be flattened down to an lrec which is a list of key-value pairs.  We recursively invoke
+		// mlhmmv_to_lrecs_aux_across_records for each of the name-list entries, one map level deeper each call, then
+		// from there invoke mlhmmv_to_lrecs_aux_within_record on any remaining map levels.
+		lrec_t* ptemplate = lrec_unbacked_alloc();
+		char* oosvar_name = mv_alloc_format_val(pfirstkey);
+		mlhmmv_to_lrecs_aux_across_records(ptop_entry->level_value.u.pnext_level, oosvar_name, pnames->phead,
+			ptemplate, poutrecs, do_full_prefixing, flatten_separator);
+		free(oosvar_name);
+		lrec_free(ptemplate);
+	}
+}
+
+void mlhmmv_level_to_lrecs(mlhmmv_level_t* plevel, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs,
+	int do_full_prefixing, char* flatten_separator)
+{
+	// xxx gross hack. fix this.
+	if (pkeys == NULL || pkeys->phead == NULL) {
+		for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
+			sllmv_t* pkey = sllmv_single_no_free(&pentry->level_key);
+			mlhmmv_level_to_lrecs(plevel, pkey, pnames, poutrecs, do_full_prefixing, flatten_separator);
+			sllmv_free(pkey);
+		}
+		return;
+	}
+
+	mv_t* pfirstkey = &pkeys->phead->value;
+
+	mlhmmv_level_entry_t* ptop_entry = mlhmmv_get_entry_at_level(plevel, pkeys->phead, NULL);
+
 	if (ptop_entry == NULL) {
 		// No such entry in the mlhmmv results in no output records
 	} else if (ptop_entry->level_value.is_terminal) {

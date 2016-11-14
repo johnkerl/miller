@@ -430,6 +430,9 @@ typedef struct _emit_state_t {
 
 	record_emitter_t*  precord_emitter;
 
+	// For map-literals
+	rxval_evaluator_t* prxval_evaluator;
+
 	// Unlashed emit and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
 	sllv_t* pemit_keylist_evaluators;
 
@@ -451,31 +454,31 @@ static void record_emitter_from_oosvar(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,
-	char*         f);
+	char*         oosvar_flatten_separator);
 
 static void record_emitter_from_nonindexed_local_variable(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,
-	char*         f);
+	char*         oosvar_flatten_separator);
 
 static void record_emitter_from_indexed_local_variable(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,
-	char*         f);
+	char*         oosvar_flatten_separator);
 
 static void record_emitter_from_map_literal(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,
-	char*         f);
+	char*         oosvar_flatten_separator);
 
 static void record_emitter_from_full_srec(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,
-	char*         f);
+	char*         oosvar_flatten_separator);
 
 static mlr_dsl_cst_statement_handler_t handle_emit_lashed;
 static mlr_dsl_cst_statement_handler_t handle_emit_lashed_to_stdfp;
@@ -484,7 +487,7 @@ static void handle_emit_lashed_common(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,
-	char*         f);
+	char*         oosvar_flatten_separator);
 
 static mlr_dsl_cst_statement_handler_t handle_emit_all;
 static mlr_dsl_cst_statement_handler_t handle_emit_all_to_stdfp;
@@ -532,6 +535,7 @@ mlr_dsl_cst_statement_t* alloc_emit(
 	pstate->poutput_filename_evaluator  = NULL;
 	pstate->stdfp                       = NULL;
 	pstate->precord_emitter             = NULL;
+	pstate->prxval_evaluator            = NULL;
 	pstate->pemit_namelist_evaluators   = NULL;
 	pstate->pemit_keylist_evaluators    = NULL;
 	pstate->num_emit_keylist_evaluators = 0;
@@ -568,6 +572,8 @@ mlr_dsl_cst_statement_t* alloc_emit(
 		pstate->precord_emitter = record_emitter_from_indexed_local_variable;
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
+		pstate->prxval_evaluator = rxval_evaluator_alloc_from_ast(
+			pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
 		pstate->precord_emitter = record_emitter_from_map_literal;
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_FULL_SREC) {
@@ -771,7 +777,7 @@ static void record_emitter_from_nonindexed_local_variable(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,
-	char*         f)
+	char*         oosvar_flatten_separator)
 {
 	// xxx stub
 }
@@ -780,7 +786,7 @@ static void record_emitter_from_indexed_local_variable(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,
-	char*         f)
+	char*         oosvar_flatten_separator)
 {
 	// xxx stub
 }
@@ -789,16 +795,32 @@ static void record_emitter_from_map_literal(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,
-	char*         f)
+	char*         oosvar_flatten_separator)
 {
-	// xxx stub
+	rxval_evaluator_t* prhs_xevaluator = pstate->prxval_evaluator;
+	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+	sllmv_t* pmvkeys = sllmv_alloc();
+
+	if (!xval.is_terminal) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars,
+			&names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+			mlhmmv_level_to_lrecs(xval.u.pnext_level, pmvkeys, pmvnames, poutrecs,
+				pstate->do_full_prefixing, oosvar_flatten_separator);
+		}
+		sllmv_free(pmvnames);
+
+	}
+
+	sllmv_free(pmvkeys);
 }
 
 static void record_emitter_from_full_srec(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,
-	char*         f)
+	char*         oosvar_flatten_separator)
 {
 	sllv_append(poutrecs, lrec_copy(pvars->pinrec));
 }
