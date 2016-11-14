@@ -1443,9 +1443,6 @@ md_emittable(A) ::= md_indexed_local_variable(B). {
 md_emittable(A) ::= MD_TOKEN_FULL_SREC(B). {
 	A = B;
 }
-md_emittable(A) ::= md_map_literal(B). {
-	A = B;
-}
 
 // ----------------------------------------------------------------
 md_emit_namelist(A) ::= md_rhs(B). {
