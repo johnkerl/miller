@@ -25,8 +25,10 @@ typedef struct _sllmv_t {
 // ----------------------------------------------------------------
 sllmv_t* sllmv_alloc();
 void     sllmv_free(sllmv_t* plist);
-void     sllmv_add_with_free(sllmv_t* plist, mv_t* pvalue);
-void     sllmv_add_no_free(sllmv_t* plist, mv_t* pvalue);
+void     sllmv_prepend_with_free(sllmv_t* plist, mv_t* pvalue);
+void     sllmv_prepend_no_free(sllmv_t* plist, mv_t* pvalue);
+void     sllmv_append_with_free(sllmv_t* plist, mv_t* pvalue);
+void     sllmv_append_no_free(sllmv_t* plist, mv_t* pvalue);
 
 sllmv_t* sllmv_single_no_free(mv_t* pvalue);
 sllmv_t* sllmv_single_with_free(mv_t* pvalue);

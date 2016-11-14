@@ -433,6 +433,10 @@ typedef struct _emit_state_t {
 	// For map-literals
 	rxval_evaluator_t* prxval_evaluator;
 
+	// For local variables
+	char* localvar_name;
+	int   localvar_frame_relative_index;
+
 	// Unlashed emit and emitp; indices ["a", 1, $2] in 'for (k,v in @a[1][$2]) {...}'.
 	sllv_t* pemit_keylist_evaluators;
 
@@ -456,13 +460,7 @@ static void record_emitter_from_oosvar(
 	sllv_t*       poutrecs,
 	char*         oosvar_flatten_separator);
 
-static void record_emitter_from_nonindexed_local_variable(
-	emit_state_t* pstate,
-	variables_t*  pvars,
-	sllv_t*       poutrecs,
-	char*         oosvar_flatten_separator);
-
-static void record_emitter_from_indexed_local_variable(
+static void record_emitter_from_local_variable(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,
@@ -532,16 +530,18 @@ mlr_dsl_cst_statement_t* alloc_emit(
 {
 	emit_state_t* pstate = mlr_malloc_or_die(sizeof(emit_state_t));
 
-	pstate->poutput_filename_evaluator  = NULL;
-	pstate->stdfp                       = NULL;
-	pstate->precord_emitter             = NULL;
-	pstate->prxval_evaluator            = NULL;
-	pstate->pemit_namelist_evaluators   = NULL;
-	pstate->pemit_keylist_evaluators    = NULL;
-	pstate->num_emit_keylist_evaluators = 0;
-	pstate->ppemit_keylist_evaluators   = NULL;
-	pstate->psingle_lrec_writer         = NULL;
-	pstate->pmulti_lrec_writer          = NULL;
+	pstate->poutput_filename_evaluator    = NULL;
+	pstate->stdfp                         = NULL;
+	pstate->precord_emitter               = NULL;
+	pstate->prxval_evaluator              = NULL;
+	pstate->localvar_name                 = NULL;
+	pstate->localvar_frame_relative_index = MD_UNUSED_INDEX;
+	pstate->pemit_namelist_evaluators     = NULL;
+	pstate->pemit_keylist_evaluators      = NULL;
+	pstate->num_emit_keylist_evaluators   = 0;
+	pstate->ppemit_keylist_evaluators     = NULL;
+	pstate->psingle_lrec_writer           = NULL;
+	pstate->pmulti_lrec_writer            = NULL;
 
 	mlr_dsl_ast_node_t* pemit_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
@@ -566,10 +566,21 @@ mlr_dsl_cst_statement_t* alloc_emit(
 		pstate->precord_emitter = record_emitter_from_oosvar;
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE) {
-		pstate->precord_emitter = record_emitter_from_nonindexed_local_variable;
+		pstate->precord_emitter = record_emitter_from_local_variable;
+
+		MLR_INTERNAL_CODING_ERROR_IF(pkeylist_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
+		pstate->localvar_name = pkeylist_node->text;
+		pstate->localvar_frame_relative_index = pkeylist_node->vardef_frame_relative_index;
+		pstate->pemit_keylist_evaluators = sllv_alloc();
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE) {
-		pstate->precord_emitter = record_emitter_from_indexed_local_variable;
+		pstate->precord_emitter = record_emitter_from_local_variable;
+
+		MLR_INTERNAL_CODING_ERROR_IF(pkeylist_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
+		pstate->localvar_name = pkeylist_node->text;
+		pstate->localvar_frame_relative_index = pkeylist_node->vardef_frame_relative_index;
+		pstate->pemit_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+			pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
 		pstate->prxval_evaluator = rxval_evaluator_alloc_from_ast(
@@ -773,22 +784,43 @@ static void record_emitter_from_oosvar(
 	sllmv_free(pmvkeys);
 }
 
-static void record_emitter_from_nonindexed_local_variable(
+static void record_emitter_from_local_variable(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,
 	char*         oosvar_flatten_separator)
 {
-	// xxx stub
-}
+	int keys_all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pstate->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
+	if (keys_all_non_null_or_error) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars,
+			&names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
 
-static void record_emitter_from_indexed_local_variable(
-	emit_state_t* pstate,
-	variables_t*  pvars,
-	sllv_t*       poutrecs,
-	char*         oosvar_flatten_separator)
-{
-	// xxx stub
+			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+			mlhmmv_value_t* pmval = local_stack_frame_get_map_value(pframe,
+				pstate->localvar_frame_relative_index, NULL);
+			if (pmval != NULL) {
+
+				// xxx this is an unpleasant hack. The idea is to temporarily wrap the localvar
+				// in a parent map whose single key is the variable name.
+				mv_t name = mv_from_string(pstate->localvar_name, NO_FREE);
+				sllmve_t e = { .value = name, .free_flags = 0, .pnext = NULL };
+
+				mlhmmv_level_t* proot_level = mlhmmv_level_alloc();
+				mlhmmv_put_value_at_level_aux(proot_level, &e, pmval);
+
+				mlhmmv_t map;
+				map.proot_level = proot_level;
+				sllmv_prepend_no_free(pmvkeys, &name);
+				mlhmmv_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
+					pstate->do_full_prefixing, oosvar_flatten_separator);
+			}
+		}
+		sllmv_free(pmvnames);
+	}
+	sllmv_free(pmvkeys);
 }
 
 static void record_emitter_from_map_literal(
@@ -810,7 +842,6 @@ static void record_emitter_from_map_literal(
 				pstate->do_full_prefixing, oosvar_flatten_separator);
 		}
 		sllmv_free(pmvnames);
-
 	}
 
 	sllmv_free(pmvkeys);

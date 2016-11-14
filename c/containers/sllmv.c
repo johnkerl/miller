@@ -35,7 +35,7 @@ void sllmv_free(sllmv_t* plist) {
 // For string mlrvals, it is pointer assignment without string duplication.
 // This is intentional (for performance); callees are advised.
 
-static void sllmv_add(sllmv_t* plist, mv_t* pvalue, char free_flags) {
+static void sllmv_append(sllmv_t* plist, mv_t* pvalue, char free_flags) {
 	sllmve_t* pnode = mlr_malloc_or_die(sizeof(sllmve_t));
 	pnode->value = *pvalue; // struct assignment
 	pnode->free_flags = free_flags;
@@ -51,48 +51,72 @@ static void sllmv_add(sllmv_t* plist, mv_t* pvalue, char free_flags) {
 	plist->length++;
 }
 
-void sllmv_add_with_free(sllmv_t* plist, mv_t* pvalue) {
-	sllmv_add(plist, pvalue, FREE_ENTRY_VALUE);
+void sllmv_append_with_free(sllmv_t* plist, mv_t* pvalue) {
+	sllmv_append(plist, pvalue, FREE_ENTRY_VALUE);
 }
 
-void sllmv_add_no_free(sllmv_t* plist, mv_t* pvalue) {
-	sllmv_add(plist, pvalue, NO_FREE);
+void sllmv_append_no_free(sllmv_t* plist, mv_t* pvalue) {
+	sllmv_append(plist, pvalue, NO_FREE);
+}
+
+static void sllmv_prepend(sllmv_t* plist, mv_t* pvalue, char free_flags) {
+	sllmve_t* pnode = mlr_malloc_or_die(sizeof(sllmve_t));
+	pnode->value = *pvalue; // struct assignment
+	pnode->free_flags = free_flags;
+	pnode->value = *pvalue; // struct assignment
+	if (plist->ptail == NULL) {
+		pnode->pnext = NULL;
+		plist->phead = pnode;
+		plist->ptail = pnode;
+	} else {
+		pnode->pnext = plist->phead;
+		plist->phead = pnode;
+	}
+	plist->length++;
+}
+
+void sllmv_prepend_with_free(sllmv_t* plist, mv_t* pvalue) {
+	sllmv_prepend(plist, pvalue, FREE_ENTRY_VALUE);
+}
+
+void sllmv_prepend_no_free(sllmv_t* plist, mv_t* pvalue) {
+	sllmv_prepend(plist, pvalue, NO_FREE);
 }
 
 // ----------------------------------------------------------------
 sllmv_t* sllmv_single_no_free(mv_t* pvalue) {
 	sllmv_t* psllmv = sllmv_alloc();
-	sllmv_add_no_free(psllmv, pvalue);
+	sllmv_append_no_free(psllmv, pvalue);
 	return psllmv;
 }
 
 sllmv_t* sllmv_single_with_free(mv_t* pvalue) {
 	sllmv_t* psllmv = sllmv_alloc();
-	sllmv_add_with_free(psllmv, pvalue);
+	sllmv_append_with_free(psllmv, pvalue);
 	return psllmv;
 }
 
 sllmv_t* sllmv_double_with_free(mv_t* pvalue1, mv_t* pvalue2) {
 	sllmv_t* psllmv = sllmv_alloc();
-	sllmv_add_with_free(psllmv, pvalue1);
-	sllmv_add_with_free(psllmv, pvalue2);
+	sllmv_append_with_free(psllmv, pvalue1);
+	sllmv_append_with_free(psllmv, pvalue2);
 	return psllmv;
 }
 
 sllmv_t* sllmv_triple_with_free(mv_t* pvalue1, mv_t* pvalue2, mv_t* pvalue3) {
 	sllmv_t* psllmv = sllmv_alloc();
-	sllmv_add_with_free(psllmv, pvalue1);
-	sllmv_add_with_free(psllmv, pvalue2);
-	sllmv_add_with_free(psllmv, pvalue3);
+	sllmv_append_with_free(psllmv, pvalue1);
+	sllmv_append_with_free(psllmv, pvalue2);
+	sllmv_append_with_free(psllmv, pvalue3);
 	return psllmv;
 }
 
 sllmv_t* sllmv_quadruple_with_free(mv_t* pvalue1, mv_t* pvalue2, mv_t* pvalue3, mv_t* pvalue4) {
 	sllmv_t* psllmv = sllmv_alloc();
-	sllmv_add_with_free(psllmv, pvalue1);
-	sllmv_add_with_free(psllmv, pvalue2);
-	sllmv_add_with_free(psllmv, pvalue3);
-	sllmv_add_with_free(psllmv, pvalue4);
+	sllmv_append_with_free(psllmv, pvalue1);
+	sllmv_append_with_free(psllmv, pvalue2);
+	sllmv_append_with_free(psllmv, pvalue3);
+	sllmv_append_with_free(psllmv, pvalue4);
 	return psllmv;
 }
 

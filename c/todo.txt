@@ -51,11 +51,11 @@ k dump full-oosvar -- ensure scalar-out is printed
 k dump oosvar -- ensure scalar-out is printed
 k dump localvar -- ensure scalar-out is printed
 - dump func retval -- ensure scalar-out is printed
-? emit maplit
-? emit full oosvar
-? emit oosvar
-? emit localvar
-? emit func retval
+k emit maplit
+k emit full oosvar
+k emit oosvar
+- emit localvar
+- emit func retval
 
 mlr_dsl_cst_for_map_statements.c:
 k for-loop over maplit

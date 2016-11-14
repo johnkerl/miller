@@ -990,6 +990,7 @@ void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* po
 	}
 }
 
+// xxx code-dup w/ mlhmmv_to_lrecs and mlhmmv_all_to_lrecs
 void mlhmmv_level_to_lrecs(mlhmmv_level_t* plevel, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs,
 	int do_full_prefixing, char* flatten_separator)
 {
