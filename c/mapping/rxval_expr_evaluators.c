@@ -393,7 +393,11 @@ mlhmmv_value_t rxval_evaluator_from_indexed_local_variable_func(void* pvstate, v
 		mlhmmv_value_t* pxval = local_stack_frame_get_map_value(pframe, pstate->vardef_frame_relative_index,
 			pmvkeys);
 		sllmv_free(pmvkeys);
-		return mlhmmv_copy_aux(pxval);
+		if (pxval == NULL) {
+			return mlhmmv_value_transfer_terminal(mv_absent());
+		} else {
+			return mlhmmv_copy_aux(pxval);
+		}
 	} else {
 		sllmv_free(pmvkeys);
 		return mlhmmv_value_transfer_terminal(mv_absent());
