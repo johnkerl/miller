@@ -45956,6 +45956,7 @@ mlr --from ./reg_test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":
 }
 
 mlr --from ./reg_test/input/xyz2 put -q map o = @o; dump o
+mlr: map type assertion for variable o unmet by value "" with type absent.
 
 mlr --from ./reg_test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
 {

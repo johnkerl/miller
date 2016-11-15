@@ -134,10 +134,7 @@ mlhmmv_value_t* local_stack_frame_get_map_value(local_stack_frame_t* pframe, // 
 
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 	mlhmmv_value_t* pmvalue = &pentry->value;
-	if (pmvalue->is_terminal) {
-		LOCAL_STACK_TRACE(printf("VALUE IS TERMINAL\n"));
-		return NULL;
-	} else if (pmvalue->u.pnext_level == NULL) {
+	if (pmvalue->is_terminal && pmvalue->u.pnext_level == NULL) {
 		LOCAL_STACK_TRACE(printf("VALUE IS EMPTY\n"));
 		return NULL;
 	} else {
