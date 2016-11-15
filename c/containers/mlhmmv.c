@@ -1128,22 +1128,23 @@ static void mlhmmv_to_lrecs_aux_within_record(
 void mlhmmv_to_lrecs_lashed(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, sllmv_t* pnames,
 	sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator)
 {
-	mlhmmv_level_entry_t** ptop_entries = mlr_malloc_or_die(num_keylists * sizeof(mlhmmv_level_entry_t*));
+	mlhmmv_value_t** ptop_values = mlr_malloc_or_die(num_keylists * sizeof(mlhmmv_level_entry_t*));
 	for (int i = 0; i < num_keylists; i++) {
-		ptop_entries[i] = mlhmmv_get_entry_at_level(pmap->proot_level, ppkeys[i]->phead, NULL);
+		int error = 0;
+		ptop_values[i] = mlhmmv_get_value_from_level(pmap->proot_level, ppkeys[i], &error);
 	}
 
 	// First is primary and rest are lashed to it (lookups with same keys as primary).
-	if (ptop_entries[0] == NULL) {
+	if (ptop_values[0] == NULL) {
 		// No such entry in the mlhmmv results in no output records
-	} else if (ptop_entries[0]->level_value.is_terminal) {
+	} else if (ptop_values[0]->is_terminal) {
 		lrec_t* poutrec = lrec_unbacked_alloc();
 		for (int i = 0; i < num_keylists; i++) {
 			// E.g. '@v = 3' at the top level of the mlhmmv.
-			if (ptop_entries[i]->level_value.is_terminal) {
+			if (ptop_values[i]->is_terminal) {
 				lrec_put(poutrec,
 					mv_alloc_format_val(&ppkeys[i]->phead->value),
-					mv_alloc_format_val(&ptop_entries[i]->level_value.u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+					mv_alloc_format_val(&ptop_values[i]->u.mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 			}
 		}
 		sllv_append(poutrecs, poutrec);
@@ -1160,11 +1161,11 @@ void mlhmmv_to_lrecs_lashed(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, 
 		mlhmmv_level_t** ppnext_levels = mlr_malloc_or_die(num_keylists * sizeof(mlhmmv_level_t*));
 		char** oosvar_names = mlr_malloc_or_die(num_keylists * sizeof(char*));
 		for (int i = 0; i < num_keylists; i++) {
-			if (ptop_entries[i] == NULL || ptop_entries[i]->level_value.is_terminal) {
+			if (ptop_values[i] == NULL || ptop_values[i]->is_terminal) {
 				ppnext_levels[i] = NULL;
 				oosvar_names[i] = NULL;
 			} else {
-				ppnext_levels[i] = ptop_entries[i]->level_value.u.pnext_level;
+				ppnext_levels[i] = ptop_values[i]->u.pnext_level;
 				oosvar_names[i] = mv_alloc_format_val(&ppkeys[i]->phead->value);
 			}
 		}
@@ -1181,7 +1182,7 @@ void mlhmmv_to_lrecs_lashed(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, 
 		lrec_free(ptemplate);
 	}
 
-	free(ptop_entries);
+	free(ptop_values);
 }
 
 static void mlhmmv_to_lrecs_aux_across_records_lashed(
