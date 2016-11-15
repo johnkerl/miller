@@ -31,7 +31,9 @@ sllmv_t* evaluate_list(sllv_t* pevaluators, variables_t* pvars, int* pall_non_nu
 	return pmvs;
 }
 
-sllmv_t** evaluate_lists(sllv_t** ppevaluators, int num_evaluators, variables_t* pvars, int* pall_non_null_or_error) {
+sllmv_t** evaluate_lists( // xxx rm
+	sllv_t** ppevaluators, int num_evaluators, variables_t* pvars, int* pall_non_null_or_error)
+{
 	sllmv_t** retval = mlr_malloc_or_die(num_evaluators * sizeof(sllmv_t*));
 	for (int i = 0; i < num_evaluators; i++) {
 		retval[i] = evaluate_list(ppevaluators[i], pvars, pall_non_null_or_error);

@@ -1110,9 +1110,12 @@ static void handle_emit_lashed_common(
 	char*                oosvar_flatten_separator)
 {
 	int keys_all_non_null_or_error = TRUE;
-	// xxx XXX next.
-	sllmv_t** ppmvkeys = evaluate_lists(pstate->ppemit_keylist_evaluators, pstate->num_emit_lashed_items,
-		pvars, &keys_all_non_null_or_error);
+
+	sllmv_t** ppmvkeys = mlr_malloc_or_die(pstate->num_emit_lashed_items * sizeof(sllmv_t*));
+	for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
+		ppmvkeys[i] = evaluate_list(pstate->ppemit_keylist_evaluators[i], pvars, &keys_all_non_null_or_error);
+	}
+
 	if (keys_all_non_null_or_error) {
 		int names_all_non_null_or_error = TRUE;
 		sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars,
