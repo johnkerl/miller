@@ -1125,21 +1125,15 @@ static void mlhmmv_to_lrecs_aux_within_record(
 }
 
 // ----------------------------------------------------------------
-void mlhmmv_to_lrecs_lashed(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, sllmv_t* pnames,
+void mlhmmv_to_lrecs_lashed(mlhmmv_value_t** ptop_values, int num_submaps, sllmv_t** ppkeys, sllmv_t* pnames,
 	sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator)
 {
-	mlhmmv_value_t** ptop_values = mlr_malloc_or_die(num_keylists * sizeof(mlhmmv_level_entry_t*));
-	for (int i = 0; i < num_keylists; i++) {
-		int error = 0;
-		ptop_values[i] = mlhmmv_get_value_from_level(pmap->proot_level, ppkeys[i], &error);
-	}
-
 	// First is primary and rest are lashed to it (lookups with same keys as primary).
 	if (ptop_values[0] == NULL) {
 		// No such entry in the mlhmmv results in no output records
 	} else if (ptop_values[0]->is_terminal) {
 		lrec_t* poutrec = lrec_unbacked_alloc();
-		for (int i = 0; i < num_keylists; i++) {
+		for (int i = 0; i < num_submaps; i++) {
 			// E.g. '@v = 3' at the top level of the mlhmmv.
 			if (ptop_values[i]->is_terminal) {
 				lrec_put(poutrec,
@@ -1158,9 +1152,9 @@ void mlhmmv_to_lrecs_lashed(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, 
 
 		lrec_t* ptemplate = lrec_unbacked_alloc();
 
-		mlhmmv_level_t** ppnext_levels = mlr_malloc_or_die(num_keylists * sizeof(mlhmmv_level_t*));
-		char** oosvar_names = mlr_malloc_or_die(num_keylists * sizeof(char*));
-		for (int i = 0; i < num_keylists; i++) {
+		mlhmmv_level_t** ppnext_levels = mlr_malloc_or_die(num_submaps * sizeof(mlhmmv_level_t*));
+		char** oosvar_names = mlr_malloc_or_die(num_submaps * sizeof(char*));
+		for (int i = 0; i < num_submaps; i++) {
 			if (ptop_values[i] == NULL || ptop_values[i]->is_terminal) {
 				ppnext_levels[i] = NULL;
 				oosvar_names[i] = NULL;
@@ -1170,10 +1164,10 @@ void mlhmmv_to_lrecs_lashed(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, 
 			}
 		}
 
-		mlhmmv_to_lrecs_aux_across_records_lashed(ppnext_levels, oosvar_names, num_keylists,
+		mlhmmv_to_lrecs_aux_across_records_lashed(ppnext_levels, oosvar_names, num_submaps,
 			pnames->phead, ptemplate, poutrecs, do_full_prefixing, flatten_separator);
 
-		for (int i = 0; i < num_keylists; i++) {
+		for (int i = 0; i < num_submaps; i++) {
 			free(oosvar_names[i]);
 		}
 		free(oosvar_names);
@@ -1181,8 +1175,6 @@ void mlhmmv_to_lrecs_lashed(mlhmmv_t* pmap, sllmv_t** ppkeys, int num_keylists, 
 
 		lrec_free(ptemplate);
 	}
-
-	free(ptop_values);
 }
 
 static void mlhmmv_to_lrecs_aux_across_records_lashed(

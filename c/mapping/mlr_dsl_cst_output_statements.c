@@ -1109,8 +1109,18 @@ static void handle_emit_lashed_common(
 		sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars,
 			&names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs_lashed(pvars->poosvars, ppmvkeys, pstate->num_emit_keylist_evaluators, pmvnames,
+
+			mlhmmv_value_t** ptop_values = mlr_malloc_or_die(
+				pstate->num_emit_keylist_evaluators * sizeof(mlhmmv_level_entry_t*));
+			for (int i = 0; i < pstate->num_emit_keylist_evaluators; i++) {
+				int error = 0;
+				ptop_values[i] = mlhmmv_get_value_from_level(pvars->poosvars->proot_level, ppmvkeys[i], &error);
+			}
+
+			mlhmmv_to_lrecs_lashed(ptop_values, pstate->num_emit_keylist_evaluators, ppmvkeys, pmvnames,
 				poutrecs, pstate->do_full_prefixing, oosvar_flatten_separator);
+
+			free(ptop_values);
 		}
 		sllmv_free(pmvnames);
 	}
