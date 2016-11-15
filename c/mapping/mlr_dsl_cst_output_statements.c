@@ -1141,6 +1141,102 @@ static void handle_emit_lashed_common(
 	free(ppmvkeys);
 }
 
+// xxx XXX next: adapt
+
+//// ----------------------------------------------------------------
+//static mlhmmv_level_t* full_oosvar_target_getter(variables_t* pvars, dump_state_t* pstate) {
+//	return pvars->poosvars->proot_level;
+//}
+//
+//static mlhmmv_level_t* oosvar_target_getter(variables_t* pvars, dump_state_t* pstate) {
+//	int all_non_null_or_error = TRUE;
+//	sllmv_t* pmvkeys = evaluate_list(pstate->ptarget_keylist_evaluators, pvars, &all_non_null_or_error);
+//	if (all_non_null_or_error) {
+//		int lookup_error = FALSE;
+//		mlhmmv_value_t* pmval = mlhmmv_get_value_from_level(pvars->poosvars->proot_level, pmvkeys, &lookup_error);
+//		if (pmval == NULL) {
+//			*ppval   = NULL;
+//			*pplevel = NULL;
+//		} else if (pmval->is_terminal) {
+//			*ppval   = &pmval->u.mlrval;
+//			*pplevel = NULL;
+//		} else {
+//			*ppval   = NULL;
+//			*pplevel = pmval->u.pnext_level;
+//		}
+//	}
+//	sllmv_free(pmvkeys);
+//}
+//
+//static void nonindexed_local_variable_target_getter(variables_t* pvars, dump_state_t* pstate,
+//	mv_t** ppval, mlhmmv_level_t** pplevel)
+//{
+//	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+//
+//	mlhmmv_value_t* pmval = local_stack_frame_get_map_value(pframe,
+//		pstate->target_vardef_frame_relative_index, NULL);
+//	if (pmval == NULL) {
+//		*ppval   = NULL;
+//		*pplevel = NULL;
+//	} else if (pmval->is_terminal) {
+//		*ppval   = &pmval->u.mlrval;
+//		*pplevel = NULL;
+//	} else {
+//		*ppval   = NULL;
+//		*pplevel = pmval->u.pnext_level;
+//	}
+//}
+//
+//static void indexed_local_variable_target_getter(variables_t* pvars, dump_state_t* pstate,
+//	mv_t** ppval, mlhmmv_level_t** pplevel)
+//{
+//	*ppval   = NULL;
+//	*pplevel = NULL;
+//
+//	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+//
+//	int all_non_null_or_error = TRUE;
+//	sllmv_t* pmvkeys = evaluate_list(pstate->ptarget_keylist_evaluators, pvars, &all_non_null_or_error);
+//	if (all_non_null_or_error) {
+//
+//		mlhmmv_value_t* pmval = local_stack_frame_get_map_value(pframe,
+//			pstate->target_vardef_frame_relative_index, pmvkeys);
+//		if (pmval != NULL) {
+//			if (pmval->is_terminal) {
+//				*ppval   = &pmval->u.mlrval;
+//				*pplevel = NULL;
+//			} else {
+//				*ppval   = NULL;
+//				*pplevel = pmval->u.pnext_level;
+//			}
+//		}
+//	}
+//
+//	sllmv_free(pmvkeys);
+//}
+//
+//static void ephemeral_target_getter(variables_t* pvars, dump_state_t* pstate,
+//	mv_t** ppval, mlhmmv_level_t** pplevel)
+//{
+//	*ppval   = NULL;
+//	*pplevel = NULL;
+//
+//	rxval_evaluator_t* prhs_xevaluator = pstate->pephemeral_target_xevaluator;
+//	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+//
+//	pstate->ephemeral_xvalue = xval;
+//
+//	if (xval.is_terminal) {
+//		*ppval = &pstate->ephemeral_xvalue.u.mlrval;
+//	} else {
+//		*pplevel = pstate->ephemeral_xvalue.u.pnext_level;
+//	}
+//}
+//
+//static void dump_target_ephemeral_free(struct _dump_state_t* pstate) {
+//	mlhmmv_free_submap(pstate->ephemeral_xvalue);
+//}
+
 // ----------------------------------------------------------------
 static void free_emit_lashed(mlr_dsl_cst_statement_t* pstatement) {
 	emit_lashed_state_t* pstate = pstatement->pvstate;

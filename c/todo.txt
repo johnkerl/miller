@@ -43,6 +43,9 @@ things which can be maps:
 * func args
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+! func retval typedecl: 'f(int a): map {...}' ?
+  -> typedecls for TYPE_MASK_INT|TYPE_MASK_ABSENT ? e.g. '?int' or some such?
+
 ! lashed
 
 mlr_dsl_cst_output_statements.c:
