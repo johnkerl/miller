@@ -1,8 +1,7 @@
 ================================================================
 BUGFIXES
 
-* mlr --from ./reg_test/input/xyz2 put -q 'a = 1; map o = a; dump o'
-  UMR?
+:D
 
 ================================================================
 NON-RELEASE:
@@ -44,6 +43,8 @@ things which can be maps:
 * func args
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+! lashed
+
 mlr_dsl_cst_output_statements.c:
 k dump w/ no args
 k dump maplit -- ensure scalar-out is printed

@@ -908,19 +908,17 @@ static void free_emit(mlr_dsl_cst_statement_t* pstatement) { // emit
 struct _emit_lashed_state_t; // Forward reference
 
 typedef struct _emit_lashed_item_t {
-	// xxx
+	// For map literals
+	rxval_evaluator_t* prhs_xevaluator;
 
-//	// For map literals
-//	rxval_evaluator_t* prhs_xevaluator;
-
-//	// For local variables
-//	char* localvar_name;
-//	int   localvar_frame_relative_index;
+	// For local variables
+	char* localvar_name;
+	int   localvar_frame_relative_index;
 
 	// Oosvar/localvar indices ["a", 1, $2] in
 	//   'for (k,v in @a[1][$2]) {...}' or
 	//   'for (k,v in  a[1][$2]) {...}'.
-	// sllv_t* pemit_keylist_evaluators;
+	 sllv_t* pemit_keylist_evaluators;
 } emit_lashed_item_t;
 
 //typedef void lashed_record_emitter_t(
@@ -1102,6 +1100,7 @@ static void handle_emit_lashed_common(
 	char*                oosvar_flatten_separator)
 {
 	int keys_all_non_null_or_error = TRUE;
+	// xxx XXX next.
 	sllmv_t** ppmvkeys = evaluate_lists(pstate->ppemit_keylist_evaluators, pstate->num_emit_keylist_evaluators,
 		pvars, &keys_all_non_null_or_error);
 	if (keys_all_non_null_or_error) {
