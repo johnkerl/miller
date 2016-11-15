@@ -1124,6 +1124,7 @@ static void handle_emit_lashed_common(
 				pstate->num_emit_lashed_items * sizeof(mlhmmv_level_entry_t*));
 			for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
 				int error = 0;
+				// xxx XXX next: heterogenize
 				ptop_values[i] = mlhmmv_get_value_from_level(pvars->poosvars->proot_level, ppmvkeys[i], &error);
 			}
 
