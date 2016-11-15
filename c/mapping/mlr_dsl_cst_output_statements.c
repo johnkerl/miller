@@ -952,7 +952,6 @@ typedef struct _emit_lashed_state_t {
 
 	int                  num_emit_lashed_items;
 	emit_lashed_item_t** ppitems;
-	sllv_t**             ppemit_keylist_evaluators;
 
 	lrec_writer_t*       psingle_lrec_writer; // emit/tee to stdout/stderr
 	multi_lrec_writer_t* pmulti_lrec_writer;  // emit-to-file
@@ -986,19 +985,17 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 	pstate->pemit_namelist_evaluators  = NULL;
 	pstate->num_emit_lashed_items      = 0;
 	pstate->ppitems                    = NULL;
-	pstate->ppemit_keylist_evaluators  = NULL;
 	pstate->psingle_lrec_writer        = NULL;
 	pstate->pmulti_lrec_writer         = NULL;
 
 	pstate->num_emit_lashed_items = pkeylists_node->pchildren->length;
 	pstate->ppitems = mlr_malloc_or_die(pstate->num_emit_lashed_items * sizeof(emit_lashed_item_t*));
-	pstate->ppemit_keylist_evaluators = mlr_malloc_or_die(pstate->num_emit_lashed_items * sizeof(sllv_t*));
 	int i = 0;
 	for (sllve_t* pe = pkeylists_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* pkeylist_node = pe->pvvalue;
-		pstate->ppemit_keylist_evaluators[i] = allocate_keylist_evaluators_from_ast_node(
+		pstate->ppitems[i] = emit_lashed_item_alloc();
+		pstate->ppitems[i]->pemit_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
 			pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
-			pstate->ppitems[i] = emit_lashed_item_alloc();
 	}
 
 	sllv_t* pemit_namelist_evaluators = sllv_alloc();
@@ -1113,7 +1110,8 @@ static void handle_emit_lashed_common(
 
 	sllmv_t** ppmvkeys = mlr_malloc_or_die(pstate->num_emit_lashed_items * sizeof(sllmv_t*));
 	for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
-		ppmvkeys[i] = evaluate_list(pstate->ppemit_keylist_evaluators[i], pvars, &keys_all_non_null_or_error);
+		ppmvkeys[i] = evaluate_list(pstate->ppitems[i]->pemit_keylist_evaluators, pvars,
+			&keys_all_non_null_or_error);
 	}
 
 	if (keys_all_non_null_or_error) {
@@ -1163,18 +1161,6 @@ static void free_emit_lashed(mlr_dsl_cst_statement_t* pstatement) {
 			emit_lashed_item_free(pstate->ppitems[i]);
 		}
 		free(pstate->ppitems);
-	}
-
-	if (pstate->ppemit_keylist_evaluators != NULL) {
-		for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
-			sllv_t* pemit_keylist_evaluators = pstate->ppemit_keylist_evaluators[i];
-			for (sllve_t* pe = pemit_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-				rval_evaluator_t* phandler = pe->pvvalue;
-				phandler->pfree_func(phandler);
-			}
-			sllv_free(pemit_keylist_evaluators);
-		}
-		free(pstate->ppemit_keylist_evaluators);
 	}
 
 	if (pstate->psingle_lrec_writer != NULL) {
