@@ -123,7 +123,11 @@ static inline void local_stack_frame_define(local_stack_frame_t* pframe, char* v
 
 	// xxx temp -- make a single method
 	mv_free(&pentry->value.u.mlrval); // xxx temp -- make value-free
-	pentry->value = mlhmmv_value_transfer_terminal(val); // xxx deep-copy?
+	if (mv_is_absent(&val)) {
+		mv_free(&val); // xxx confusing ownership semantics
+	} else {
+		pentry->value = mlhmmv_value_transfer_terminal(val); // xxx deep-copy?
+	}
 }
 
 static inline void local_stack_frame_xdefine(local_stack_frame_t* pframe, char* variable_name, // xxx rename
@@ -148,8 +152,12 @@ static inline void local_stack_frame_xdefine(local_stack_frame_t* pframe, char* 
 	}
 
 	// xxx temp -- make a single method
-	mlhmmv_free_submap(pentry->value); // xxx rename
-	pentry->value = xval;
+	if (xval.is_terminal && mv_is_absent(&xval.u.mlrval)) {
+		mlhmmv_free_submap(xval); // xxx confusing ownership semantics
+	} else {
+		mlhmmv_free_submap(pentry->value); // xxx rename
+		pentry->value = xval;
+	}
 }
 
 

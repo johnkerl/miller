@@ -1,7 +1,8 @@
 ================================================================
 BUGFIXES
 
-:D
+* mlr --from ./reg_test/input/xyz2 put -q 'a = 1; map o = a; dump o'
+  UMR?
 
 ================================================================
 NON-RELEASE:
@@ -116,6 +117,9 @@ k assign LHS localvar           ? assign RHS full-oosvar
 k assign LHS localvar           ? assign RHS oosvar
 k assign LHS localvar           ? assign RHS localvar
 - assign LHS localvar           ? assign RHS func-retval
+
+----------------------------------------------------------------
+* 'not yet' UT cases
 
 ----------------------------------------------------------------
 ! we are going to need builtin functions which deal with maps.

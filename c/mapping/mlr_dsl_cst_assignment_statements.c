@@ -239,14 +239,11 @@ static void handle_local_variable_definition_from_val( // xxx mapvar
 
 	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator;
 	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	if (mv_is_present(&val)) {
-		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_define(pframe,
-			pstate->lhs_variable_name, pstate->lhs_frame_relative_index,
-			pstate->lhs_type_mask, val);
-	} else {
-		mv_free(&val);
-	}
+
+	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	local_stack_frame_define(pframe,
+		pstate->lhs_variable_name, pstate->lhs_frame_relative_index,
+		pstate->lhs_type_mask, val);
 }
 
 // ----------------------------------------------------------------
@@ -260,14 +257,10 @@ static void handle_local_variable_definition_from_xval( // xxx mapvar
 	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
 	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 
-	if (!xval.is_terminal || mv_is_present(&xval.u.mlrval)) { // xxx funcify
-		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_xdefine(pframe, // xxx rename
-			pstate->lhs_variable_name, pstate->lhs_frame_relative_index, pstate->lhs_type_mask,
-			xval);
-	} else {
-		mlhmmv_free_submap(xval); // xxx rename
-	}
+	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	local_stack_frame_xdefine(pframe, // xxx rename
+		pstate->lhs_variable_name, pstate->lhs_frame_relative_index, pstate->lhs_type_mask,
+		xval);
 }
 
 // ================================================================
