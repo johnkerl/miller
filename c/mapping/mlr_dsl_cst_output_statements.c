@@ -572,7 +572,7 @@ mlr_dsl_cst_statement_t* alloc_emit(
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
 		pstate->precord_emitter = record_emitter_from_map_literal;
-		pstate->prhs_xevaluator = rxval_evaluator_pure_alloc_from_ast(
+		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_astx(
 			pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
 
 	} else {
@@ -1089,7 +1089,7 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 			pitem->pemit_lashed_item_freer  = map_literal_emit_lashed_item_free;
 			pitem->pemit_keylist_evaluators = sllv_alloc();
 			sllv_push(pitem->pemit_keylist_evaluators, rval_evaluator_alloc_from_string("_"));
-			pitem->prhs_xevaluator = rxval_evaluator_pure_alloc_from_ast(
+			pitem->prhs_xevaluator = rxval_evaluator_alloc_from_astx(
 				pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
 			break;
 
@@ -1485,7 +1485,7 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 		} else {
 			pstate->pdump_target_getter = ephemeral_target_getter;
 			pstate->pdump_target_freer = dump_target_free;
-			pstate->pephemeral_target_xevaluator = rxval_evaluator_alloc_from_ast(
+			pstate->pephemeral_target_xevaluator = rxval_evaluator_alloc_from_astx(
 				ptarget_node, pcst->pfmgr, type_inferencing, context_flags);
 
 		}

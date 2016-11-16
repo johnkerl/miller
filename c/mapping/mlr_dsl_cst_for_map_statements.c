@@ -817,7 +817,7 @@ mlr_dsl_cst_statement_t* alloc_for_map_literal(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 	pstate->v_type_mask = mlr_dsl_ast_node_type_to_type_mask(psubright->type);
 
 	// xxx comment liberally
-	pstate->ptarget_xevaluator = rxval_evaluator_pure_alloc_from_ast(
+	pstate->ptarget_xevaluator = rxval_evaluator_alloc_from_astx(
 		pmiddle, pcst->pfmgr, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
@@ -1000,7 +1000,7 @@ mlr_dsl_cst_statement_t* alloc_for_map_literal_key_only(mlr_dsl_cst_t* pcst, mlr
 	pstate->k_frame_relative_index = pleft->vardef_frame_relative_index;
 	pstate->k_type_mask = mlr_dsl_ast_node_type_to_type_mask(pleft->type);
 
-	pstate->ptarget_xevaluator = rxval_evaluator_pure_alloc_from_ast(
+	pstate->ptarget_xevaluator = rxval_evaluator_alloc_from_astx(
 		pmiddle, pcst->pfmgr, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);

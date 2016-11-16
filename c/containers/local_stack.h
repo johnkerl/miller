@@ -83,6 +83,7 @@ void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, in
 local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe);
 void local_stack_frame_exit(local_stack_frame_t* pframe);
 void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv_t* pval);
+void local_stack_frame_throw_type_xmismatch(local_stack_frame_entry_t* pentry, mlhmmv_value_t* pxval); // xxx temp
 
 // ----------------------------------------------------------------
 static inline mv_t local_stack_frame_get_non_map(local_stack_frame_t* pframe,
@@ -207,7 +208,7 @@ void local_stack_frame_assign_map(local_stack_frame_t* pframe,
 
 void local_stack_frame_xassign_map(local_stack_frame_t* pframe, // xxx rename
 	int vardef_frame_relative_index, sllmv_t* pmvkeys,
-	mv_t terminal_value);
+	mlhmmv_value_t terminal_value);
 
 // ----------------------------------------------------------------
 // Frames are entered/exited for each curly-braced statement block, including
