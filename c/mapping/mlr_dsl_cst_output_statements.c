@@ -911,14 +911,12 @@ typedef mlhmmv_value_t* emit_lashed_item_getter_t(
 // Ooosvars/localvars don't need freeing; ephemeral map-literals do.
 typedef void emit_lashed_item_freer_t(struct _emit_lashed_item_t* pitem);
 
-static emit_lashed_item_getter_t oosvar_emit_lashed_item_getter;
-
 typedef struct _emit_lashed_item_t {
 	// For map literals
 	rxval_evaluator_t* prhs_xevaluator;
+	mlhmmv_value_t ephemeral_xvalue;
 
 	// For local variables
-	char* localvar_name;
 	int   localvar_frame_relative_index;
 
 	// Oosvar/localvar indices ["a", 1, $2] in
@@ -933,7 +931,6 @@ typedef struct _emit_lashed_item_t {
 static emit_lashed_item_t* emit_lashed_item_alloc() {
 	emit_lashed_item_t* pitem = mlr_malloc_or_die(sizeof(emit_lashed_item_t));
 	pitem->prhs_xevaluator               = NULL;
-	pitem->localvar_name                 = NULL;
 	pitem->localvar_frame_relative_index = MD_UNUSED_INDEX;
 	pitem->pemit_keylist_evaluators      = NULL;
 	pitem->pemit_lashed_item_getter      = NULL;
@@ -955,12 +952,56 @@ static void emit_lashed_item_free(emit_lashed_item_t* pitem) {
 	free(pitem);
 }
 
-static mlhmmv_value_t* oosvar_emit_lashed_item_getter(
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static mlhmmv_value_t* oosvar_emit_lashed_item_get(
 	emit_lashed_item_t* pitem, variables_t* pvars, sllmv_t* pmvkeys)
 {
 	int error = 0;
 	// xxx check copy or not ... also encode that into all such names.
 	return mlhmmv_get_value_from_level(pvars->poosvars->proot_level, pmvkeys, &error);
+}
+static void oosvar_emit_lashed_item_free(emit_lashed_item_t* pitem) {
+	// Nothing to free for oosvars: we pointed to data within the oosvar and printed it, without allocating
+	// anything extra.
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static mlhmmv_value_t* nonindexed_local_variable_emit_lashed_item_get(
+	emit_lashed_item_t* pitem, variables_t* pvars, sllmv_t* pmvkeys)
+{
+	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	// xxx check for copy/reference; and annotate the method names to make that clear at a glance.
+	return local_stack_frame_get_map_value(pframe, pitem->localvar_frame_relative_index, NULL);
+}
+static void nonindexed_local_variable_emit_lashed_item_free(emit_lashed_item_t* pitem) {
+	// Nothing to free for localvars: we pointed to data within the localvar and printed it, without allocating
+	// anything extra.
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static mlhmmv_value_t* indexed_local_variable_emit_lashed_item_get(
+	emit_lashed_item_t* pitem, variables_t* pvars, sllmv_t* pmvkeys)
+{
+	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	// xxx check for copy/reference; and annotate the method names to make that clear at a glance.
+	// xxx need to index but skip the variable name at list head ...
+	return local_stack_frame_get_map_value(pframe, pitem->localvar_frame_relative_index, NULL);
+}
+static void indexed_local_variable_emit_lashed_item_free(emit_lashed_item_t* pitem) {
+	// Nothing to free for localvars: we pointed to data within the localvar and printed it, without allocating
+	// anything extra.
+}
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static mlhmmv_value_t* map_literal_emit_lashed_item_get(
+	emit_lashed_item_t* pitem, variables_t* pvars, sllmv_t* pmvkeys)
+{
+	rxval_evaluator_t* prhs_xevaluator = pitem->prhs_xevaluator;
+	pitem->ephemeral_xvalue = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+	return &pitem->ephemeral_xvalue;
+}
+static void map_literal_emit_lashed_item_free(emit_lashed_item_t* pitem) {
+	mlhmmv_free_submap(pitem->ephemeral_xvalue);
 }
 
 // ----------------------------------------------------------------
@@ -1014,10 +1055,49 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 	int i = 0;
 	for (sllve_t* pe = pkeylists_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* pkeylist_node = pe->pvvalue;
-		pstate->ppitems[i] = emit_lashed_item_alloc();
-		pstate->ppitems[i]->pemit_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
-			pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
-		pstate->ppitems[i]->pemit_lashed_item_getter = oosvar_emit_lashed_item_getter; // xxx vary
+		emit_lashed_item_t* pitem = emit_lashed_item_alloc();
+
+		switch (pkeylist_node->type) {
+		case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
+			pitem->pemit_lashed_item_getter = oosvar_emit_lashed_item_get;
+			pitem->pemit_lashed_item_freer  = oosvar_emit_lashed_item_free;
+			pitem->pemit_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+				pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
+			break;
+
+		case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE:
+			pitem->pemit_lashed_item_getter = nonindexed_local_variable_emit_lashed_item_get;
+			pitem->pemit_lashed_item_freer  = nonindexed_local_variable_emit_lashed_item_free;
+			pitem->pemit_keylist_evaluators = sllv_alloc();
+			// xxx comment; also, this is awkward.
+			sllv_push(pitem->pemit_keylist_evaluators, rval_evaluator_alloc_from_string(pkeylist_node->text));
+			MLR_INTERNAL_CODING_ERROR_IF(pkeylist_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
+			pitem->localvar_frame_relative_index = pkeylist_node->vardef_frame_relative_index;
+			break;
+
+		case MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE:
+			pitem->pemit_lashed_item_getter = indexed_local_variable_emit_lashed_item_get;
+			pitem->pemit_lashed_item_freer  = indexed_local_variable_emit_lashed_item_free;
+			pitem->pemit_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+				pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
+			MLR_INTERNAL_CODING_ERROR_IF(pkeylist_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
+			pitem->localvar_frame_relative_index = pkeylist_node->vardef_frame_relative_index;
+			break;
+
+		case MD_AST_NODE_TYPE_MAP_LITERAL:
+			pitem->pemit_lashed_item_getter = map_literal_emit_lashed_item_get;
+			pitem->pemit_lashed_item_freer  = map_literal_emit_lashed_item_free;
+			pitem->pemit_keylist_evaluators = sllv_alloc();
+			sllv_push(pitem->pemit_keylist_evaluators, rval_evaluator_alloc_from_string("_"));
+			pitem->prhs_xevaluator = rxval_evaluator_pure_alloc_from_ast(
+				pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
+			break;
+
+		default:
+			MLR_INTERNAL_CODING_ERROR();
+		}
+
+		pstate->ppitems[i] = pitem;
 	}
 
 	sllv_t* pemit_namelist_evaluators = sllv_alloc();
@@ -1168,102 +1248,6 @@ static void handle_emit_lashed_common(
 	}
 	free(ppmvkeys);
 }
-
-// xxx XXX next: adapt
-
-//// ----------------------------------------------------------------
-//static mlhmmv_level_t* full_oosvar_target_getter(variables_t* pvars, dump_state_t* pstate) {
-//	return pvars->poosvars->proot_level;
-//}
-//
-//static mlhmmv_level_t* oosvar_target_getter(variables_t* pvars, dump_state_t* pstate) {
-//	int all_non_null_or_error = TRUE;
-//	sllmv_t* pmvkeys = evaluate_list(pstate->ptarget_keylist_evaluators, pvars, &all_non_null_or_error);
-//	if (all_non_null_or_error) {
-//		int lookup_error = FALSE;
-//		mlhmmv_value_t* pmval = mlhmmv_get_value_from_level(pvars->poosvars->proot_level, pmvkeys, &lookup_error);
-//		if (pmval == NULL) {
-//			*ppval   = NULL;
-//			*pplevel = NULL;
-//		} else if (pmval->is_terminal) {
-//			*ppval   = &pmval->u.mlrval;
-//			*pplevel = NULL;
-//		} else {
-//			*ppval   = NULL;
-//			*pplevel = pmval->u.pnext_level;
-//		}
-//	}
-//	sllmv_free(pmvkeys);
-//}
-//
-//static void nonindexed_local_variable_target_getter(variables_t* pvars, dump_state_t* pstate,
-//	mv_t** ppval, mlhmmv_level_t** pplevel)
-//{
-//	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-//
-//	mlhmmv_value_t* pmval = local_stack_frame_get_map_value(pframe,
-//		pstate->target_vardef_frame_relative_index, NULL);
-//	if (pmval == NULL) {
-//		*ppval   = NULL;
-//		*pplevel = NULL;
-//	} else if (pmval->is_terminal) {
-//		*ppval   = &pmval->u.mlrval;
-//		*pplevel = NULL;
-//	} else {
-//		*ppval   = NULL;
-//		*pplevel = pmval->u.pnext_level;
-//	}
-//}
-//
-//static void indexed_local_variable_target_getter(variables_t* pvars, dump_state_t* pstate,
-//	mv_t** ppval, mlhmmv_level_t** pplevel)
-//{
-//	*ppval   = NULL;
-//	*pplevel = NULL;
-//
-//	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-//
-//	int all_non_null_or_error = TRUE;
-//	sllmv_t* pmvkeys = evaluate_list(pstate->ptarget_keylist_evaluators, pvars, &all_non_null_or_error);
-//	if (all_non_null_or_error) {
-//
-//		mlhmmv_value_t* pmval = local_stack_frame_get_map_value(pframe,
-//			pstate->target_vardef_frame_relative_index, pmvkeys);
-//		if (pmval != NULL) {
-//			if (pmval->is_terminal) {
-//				*ppval   = &pmval->u.mlrval;
-//				*pplevel = NULL;
-//			} else {
-//				*ppval   = NULL;
-//				*pplevel = pmval->u.pnext_level;
-//			}
-//		}
-//	}
-//
-//	sllmv_free(pmvkeys);
-//}
-//
-//static void ephemeral_target_getter(variables_t* pvars, dump_state_t* pstate,
-//	mv_t** ppval, mlhmmv_level_t** pplevel)
-//{
-//	*ppval   = NULL;
-//	*pplevel = NULL;
-//
-//	rxval_evaluator_t* prhs_xevaluator = pstate->pephemeral_target_xevaluator;
-//	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
-//
-//	pstate->ephemeral_xvalue = xval;
-//
-//	if (xval.is_terminal) {
-//		*ppval = &pstate->ephemeral_xvalue.u.mlrval;
-//	} else {
-//		*pplevel = pstate->ephemeral_xvalue.u.pnext_level;
-//	}
-//}
-//
-//static void dump_target_free(struct _dump_state_t* pstate) {
-//	mlhmmv_free_submap(pstate->ephemeral_xvalue);
-//}
 
 // ----------------------------------------------------------------
 static void free_emit_lashed(mlr_dsl_cst_statement_t* pstatement) {

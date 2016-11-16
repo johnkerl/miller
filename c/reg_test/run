@@ -5425,6 +5425,19 @@ run_mlr         --from $indir/xyz2 put -q 'c[1][2] = 3; o = c; dump o'
 # xxx not yet
 # run_mlr         --from xyz2 put -q 'func map_valued_func() { return {"a":1,"b":2}} o = map_valued_func(); dump o'
 
+run_mlr -n put 'end {
+  @a[2][3] = 4;
+  b[2][3] = 8;
+  emitp (@a, b, {2:{3:12}}); # xxx crash on orderswap
+  emit  (@a, b, {2:{3:12}});
+  emit {};
+  emit  (@a, b, {2:{3:12}}), "t";
+  emitp (@a, b, {2:{3:12}}), "t";
+  emit {};
+  emit  (@a, b, {2:{3:12}}), "t", "u";
+  emitp (@a, b, {2:{3:12}}), "t", "u";
+}'
+
 # ######################################################## def4a
 # subr s(a,b) {
 #     $[a] = b;

@@ -28,6 +28,8 @@ OTHER:
 
 ! dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d
 
+? rename dsls/ to parsers; mapping -> mappers & dsl ?
+
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
@@ -47,6 +49,8 @@ things which can be maps:
   -> typedecls for TYPE_MASK_INT|TYPE_MASK_ABSENT ? e.g. '?int' or some such?
 
 ! lashed
+
+! reg_test/run to-do items
 
 mlr_dsl_cst_output_statements.c:
 k dump w/ no args

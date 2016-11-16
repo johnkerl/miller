@@ -1143,6 +1143,8 @@ void mlhmmv_to_lrecs_lashed(mlhmmv_value_t** ptop_values, int num_submaps, sllmv
 		}
 		sllv_append(poutrecs, poutrec);
 	} else {
+		// xxx need to update this for the more general oosvar/localvar/mapliteral cases.
+
 		// E.g. '@v = {...}' at the top level of the mlhmmv: the map value keyed by
 		// oosvar-name 'v' is itself a hashmap.  This needs to be flattened down to an
 		// lrec which is a list of key-value pairs.  We recursively invoke
