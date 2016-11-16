@@ -28,6 +28,11 @@ OTHER:
 MAPVAR CHECKLIST:
 
 * debt-reduction
+  - xxxes
+  - local-stack renames
+  - mlhmmv renames
+  - mlhmmv.h reorg
+  - map-in vs. map-out ... xval ... mxv_t ... ?
 * func/subr mapvar args; func mapvar retval
 * emit-lashed debug
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
