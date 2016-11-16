@@ -14,7 +14,7 @@ static local_stack_frame_t* _local_stack_alloc(int size, int ephemeral) {
 	pframe->pvars = mlr_malloc_or_die(size * sizeof(local_stack_frame_entry_t));
 	for (int i = 0; i < size; i++) {
 		local_stack_frame_entry_t* pentry = &pframe->pvars[i];
-		pentry->value.u.mlrval = mv_absent(); // xxx make method
+		pentry->value.mlrval = mv_absent(); // xxx make method
 		pentry->name = NULL;
 		// Any type can be written here, unless otherwise specified by a typed definition
 		pentry->type_mask = TYPE_MASK_ANY;
@@ -33,7 +33,7 @@ void local_stack_frame_free(local_stack_frame_t* pframe) {
 	if (pframe == NULL)
 		return;
 	for (int i = 0; i < pframe->size; i++) {
-		mv_free(&pframe->pvars[i].value.u.mlrval); // xxx temp
+		mv_free(&pframe->pvars[i].value.mlrval); // xxx temp
 	}
 	free(pframe->pvars);
 	free(pframe);
@@ -55,9 +55,9 @@ local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe) {
 
 // ----------------------------------------------------------------
 void local_stack_frame_exit (local_stack_frame_t* pframe) {
-	MLR_INTERNAL_CODING_ERROR_UNLESS(mv_is_absent(&pframe->pvars[0].value.u.mlrval)); // xxx temp
+	MLR_INTERNAL_CODING_ERROR_UNLESS(mv_is_absent(&pframe->pvars[0].value.mlrval)); // xxx temp
 	for (int i = 0; i < pframe->size; i++)
-		mv_free(&pframe->pvars[i].value.u.mlrval); // xxx temp
+		mv_free(&pframe->pvars[i].value.mlrval); // xxx temp
 	if (!pframe->ephemeral) {
 		pframe->in_use = FALSE;
 		LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME NON-EPH EXIT %p %d\n", pframe, pframe->size));
@@ -108,15 +108,15 @@ mv_t local_stack_frame_get_map(local_stack_frame_t* pframe, // xxx rename
 	// xxx encapsulate
 	if (pmvalue->is_terminal) {
 		return mv_absent();
-	} else if (pmvalue->u.pnext_level == NULL) {
+	} else if (pmvalue->pnext_level == NULL) {
 		LOCAL_STACK_TRACE(printf("VALUE IS EMPTY\n"));
 		return mv_absent();
 	} else {
 		int error = 0;
 		LOCAL_STACK_TRACE(printf("VALUE IS:\n"));
-		LOCAL_STACK_TRACE(printf("PTR IS %p\n", pmvalue->u.pnext_level));
-		LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->u.pnext_level, 0, TRUE, TRUE, "", stdout));
-		mv_t* pval = mlhmmv_get_terminal_from_level(pmvalue->u.pnext_level, pmvkeys, &error);
+		LOCAL_STACK_TRACE(printf("PTR IS %p\n", pmvalue->pnext_level));
+		LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->pnext_level, 0, TRUE, TRUE, "", stdout));
+		mv_t* pval = mlhmmv_get_terminal_from_level(pmvalue->pnext_level, pmvkeys, &error);
 		if (pval == NULL) {
 			return mv_absent();
 		} else {
@@ -134,20 +134,20 @@ mlhmmv_value_t* local_stack_frame_get_map_value(local_stack_frame_t* pframe, // 
 
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 	mlhmmv_value_t* pmvalue = &pentry->value;
-	if (pmvalue->is_terminal && pmvalue->u.pnext_level == NULL) {
+	if (pmvalue->is_terminal && pmvalue->pnext_level == NULL) {
 		LOCAL_STACK_TRACE(printf("VALUE IS EMPTY\n"));
 		return NULL;
 	} else {
 		int error = 0;
 		LOCAL_STACK_TRACE(printf("VALUE IS:\n"));
-		LOCAL_STACK_TRACE(printf("PTR IS %p\n", pmvalue->u.pnext_level));
-		LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->u.pnext_level, 0, TRUE, TRUE, "", stdout));
+		LOCAL_STACK_TRACE(printf("PTR IS %p\n", pmvalue->pnext_level));
+		LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->pnext_level, 0, TRUE, TRUE, "", stdout));
 
 		// Maybe null
 		if (pmvkeys == NULL || pmvkeys->length == 0) {
 			return pmvalue;
 		} else {
-			return mlhmmv_get_value_from_level(pmvalue->u.pnext_level, pmvkeys, &error);
+			return mlhmmv_get_value_from_level(pmvalue->pnext_level, pmvkeys, &error);
 		}
 	}
 }
@@ -169,14 +169,14 @@ void local_stack_frame_assign_map(local_stack_frame_t* pframe,
 
 	// xxx encapsulate
 	if (pmvalue->is_terminal) {
-		mv_free(&pmvalue->u.mlrval);
+		mv_free(&pmvalue->mlrval);
 		pmvalue->is_terminal = FALSE;
-		pmvalue->u.pnext_level = mlhmmv_level_alloc();
+		pmvalue->pnext_level = mlhmmv_level_alloc();
 	}
-	mlhmmv_put_terminal_from_level(pmvalue->u.pnext_level, pmvkeys->phead, &terminal_value);
+	mlhmmv_put_terminal_from_level(pmvalue->pnext_level, pmvkeys->phead, &terminal_value);
 
 	LOCAL_STACK_TRACE(printf("VALUE IS:\n"));
-	LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->u.pnext_level, 0, TRUE, TRUE, "", stdout));
+	LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->pnext_level, 0, TRUE, TRUE, "", stdout));
 }
 
 // ----------------------------------------------------------------

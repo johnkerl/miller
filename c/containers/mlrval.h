@@ -113,7 +113,12 @@
 #define ISO8601_DATE_FORMAT "%Y-%m-%d"
 
 typedef struct _mv_t {
-	union {
+//#ifdef MLR_UNIONIZE // xxx temp
+	union
+//#else
+	//struct
+//#endif
+	{
 		char*      strv;  // MT_STRING and MT_EMPTY
 		long long  intv;  // MT_INT, and == 0 for MT_ABSENT and MT_ERROR
 		double     fltv;  // MT_FLOAT

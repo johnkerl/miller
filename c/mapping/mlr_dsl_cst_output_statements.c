@@ -1535,11 +1535,11 @@ static void oosvar_target_getter(variables_t* pvars, dump_state_t* pstate,
 			*ppval   = NULL;
 			*pplevel = NULL;
 		} else if (pmval->is_terminal) {
-			*ppval   = &pmval->u.mlrval;
+			*ppval   = &pmval->mlrval;
 			*pplevel = NULL;
 		} else {
 			*ppval   = NULL;
-			*pplevel = pmval->u.pnext_level;
+			*pplevel = pmval->pnext_level;
 		}
 	}
 	sllmv_free(pmvkeys);
@@ -1556,11 +1556,11 @@ static void nonindexed_local_variable_target_getter(variables_t* pvars, dump_sta
 		*ppval   = NULL;
 		*pplevel = NULL;
 	} else if (pmval->is_terminal) {
-		*ppval   = &pmval->u.mlrval;
+		*ppval   = &pmval->mlrval;
 		*pplevel = NULL;
 	} else {
 		*ppval   = NULL;
-		*pplevel = pmval->u.pnext_level;
+		*pplevel = pmval->pnext_level;
 	}
 }
 
@@ -1580,11 +1580,11 @@ static void indexed_local_variable_target_getter(variables_t* pvars, dump_state_
 			pstate->target_vardef_frame_relative_index, pmvkeys);
 		if (pmval != NULL) {
 			if (pmval->is_terminal) {
-				*ppval   = &pmval->u.mlrval;
+				*ppval   = &pmval->mlrval;
 				*pplevel = NULL;
 			} else {
 				*ppval   = NULL;
-				*pplevel = pmval->u.pnext_level;
+				*pplevel = pmval->pnext_level;
 			}
 		}
 	}
@@ -1604,9 +1604,9 @@ static void ephemeral_target_getter(variables_t* pvars, dump_state_t* pstate,
 	pstate->ephemeral_xvalue = xval;
 
 	if (xval.is_terminal) {
-		*ppval = &pstate->ephemeral_xvalue.u.mlrval;
+		*ppval = &pstate->ephemeral_xvalue.mlrval;
 	} else {
-		*pplevel = pstate->ephemeral_xvalue.u.pnext_level;
+		*pplevel = pstate->ephemeral_xvalue.pnext_level;
 	}
 }
 

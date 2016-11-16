@@ -28,7 +28,10 @@ OTHER:
 MAPVAR CHECKLIST:
 
 * debt-reduction
+  - valgrinds
   - xxxes
+  -> undo MLR_UNIONIZE
+  ! get rid of ALL callsites where i return mv/mxv by struct-value but do not copy string-pointers
   - local-stack renames
   - mlhmmv renames
   - mlhmmv.h reorg
@@ -292,6 +295,7 @@ HYGIENE FOR 5.0.0:
 * leading-whitespace cleanup
 * xxxes
 * valgrinds
+* u. x 2 from union to struct & retest
 
 ================================================================
 DOC FOR 5.0.0:

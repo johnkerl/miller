@@ -94,7 +94,7 @@ static inline mv_t local_stack_frame_get_non_map(local_stack_frame_t* pframe,
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 	mlhmmv_value_t* pvalue = &pentry->value;
 	if (pvalue != NULL && pvalue->is_terminal) {
-		return pvalue->u.mlrval;
+		return pvalue->mlrval;
 	} else {
 		return mv_absent();
 	}
@@ -122,7 +122,7 @@ static inline void local_stack_frame_define(local_stack_frame_t* pframe, char* v
 	}
 
 	// xxx temp -- make a single method
-	mv_free(&pentry->value.u.mlrval); // xxx temp -- make value-free
+	mv_free(&pentry->value.mlrval); // xxx temp -- make value-free
 	if (mv_is_absent(&val)) {
 		mv_free(&val); // xxx confusing ownership semantics
 	} else {
@@ -142,17 +142,17 @@ static inline void local_stack_frame_xdefine(local_stack_frame_t* pframe, char* 
 
 	// xxx subroutineize
 	if (xval.is_terminal) {
-		if (!(type_mask_from_mv(&xval.u.mlrval) & pentry->type_mask)) { // xxx temp
-			local_stack_frame_throw_type_mismatch(pentry, &xval.u.mlrval);
+		if (!(type_mask_from_mv(&xval.mlrval) & pentry->type_mask)) { // xxx temp
+			local_stack_frame_throw_type_mismatch(pentry, &xval.mlrval);
 		}
 	} else {
 		if (!(TYPE_MASK_MAP & pentry->type_mask)) { // xxx temp
-			local_stack_frame_throw_type_mismatch(pentry, &xval.u.mlrval); // xxx allow xvals
+			local_stack_frame_throw_type_mismatch(pentry, &xval.mlrval); // xxx allow xvals
 		}
 	}
 
 	// xxx temp -- make a single method
-	if (xval.is_terminal && mv_is_absent(&xval.u.mlrval)) {
+	if (xval.is_terminal && mv_is_absent(&xval.mlrval)) {
 		mlhmmv_free_submap(xval); // xxx confusing ownership semantics
 	} else {
 		mlhmmv_free_submap(pentry->value); // xxx rename
@@ -174,7 +174,7 @@ static inline void local_stack_frame_assign_non_map(local_stack_frame_t* pframe,
 	}
 
 	// xxx temp -- make a single method
-	mv_free(&pentry->value.u.mlrval); // xxx temp -- make value-free
+	mv_free(&pentry->value.mlrval); // xxx temp -- make value-free
 	pentry->value = mlhmmv_value_transfer_terminal(val); // xxx deep-copy?
 }
 
@@ -187,12 +187,12 @@ static inline void local_stack_frame_xassign_non_map(local_stack_frame_t* pframe
 
 	// xxx subroutineize
 	if (xval.is_terminal) {
-		if (!(type_mask_from_mv(&xval.u.mlrval) & pentry->type_mask)) { // xxx temp
-			local_stack_frame_throw_type_mismatch(pentry, &xval.u.mlrval);
+		if (!(type_mask_from_mv(&xval.mlrval) & pentry->type_mask)) { // xxx temp
+			local_stack_frame_throw_type_mismatch(pentry, &xval.mlrval);
 		}
 	} else {
 		if (!(TYPE_MASK_MAP & pentry->type_mask)) { // xxx temp
-			local_stack_frame_throw_type_mismatch(pentry, &xval.u.mlrval); // xxx allow xvals
+			local_stack_frame_throw_type_mismatch(pentry, &xval.mlrval); // xxx allow xvals
 		}
 	}
 
@@ -222,7 +222,7 @@ static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int c
 		LOCAL_STACK_BOUNDS_CHECK(pframe, "CLEAR", FALSE, pframe->subframe_base+i);
 		local_stack_frame_entry_t* pentry = &psubframe[i];
 		pentry->value.is_terminal = TRUE; // xxx make inline method in mlhmmv for all of this
-		mv_reset(&pentry->value.u.mlrval);
+		mv_reset(&pentry->value.mlrval);
 		pentry->type_mask = TYPE_MASK_ANY;
 	}
 	pframe->subframe_base += count;

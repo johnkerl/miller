@@ -362,7 +362,7 @@ static void handle_nonindexed_local_variable_assignment_from_xval(
 
 	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
 	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
-	if (!xval.is_terminal || mv_is_present(&xval.u.mlrval)) {
+	if (!xval.is_terminal || mv_is_present(&xval.mlrval)) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 		local_stack_frame_xassign_non_map(pframe, pstate->lhs_frame_relative_index, xval);
 	} else {
@@ -535,7 +535,7 @@ mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_as
 
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
 
-	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
+	pstate->prhs_xevaluator = rxval_evaluator_pure_alloc_from_ast( // xxx search for others needing 'pure'
 		prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 	if (pstate->prhs_xevaluator != NULL) {
 		pstatement_handler = handle_oosvar_assignment_from_xval;
@@ -612,7 +612,7 @@ static void handle_oosvar_assignment_from_xval(
 	if (lhs_all_non_null_or_error) {
 		rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
 		mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
-		if (!xval.is_terminal || mv_is_present(&xval.u.mlrval)) { // xxx funcify
+		if (!xval.is_terminal || mv_is_present(&xval.mlrval)) { // xxx funcify
 			mlhmmv_put_value_at_level_aux(pvars->poosvars->proot_level, plhskeys->phead, &xval); // xxx rename
 		} else {
 			mlhmmv_free_submap(xval); // xxx rename
@@ -781,13 +781,13 @@ static void handle_full_srec_assignment(
 		mlhmmv_free_submap(mapval); // xxx rename
 	} else {
 
-		for (mlhmmv_level_entry_t* pe = mapval.u.pnext_level->phead; pe != NULL; pe = pe->pnext) {
+		for (mlhmmv_level_entry_t* pe = mapval.pnext_level->phead; pe != NULL; pe = pe->pnext) {
 			mv_t* pkey = &pe->level_key;
 			mlhmmv_value_t* pval = &pe->level_value;
 
 			if (pval->is_terminal) { // xxx else collapse-down using json separator?
 				char* skey = mv_alloc_format_val(pkey);
-				mv_t val = mv_copy(&pval->u.mlrval);
+				mv_t val = mv_copy(&pval->mlrval);
 				// Write typed mlrval output to the typed overlay rather than into the lrec
 				// (which holds only string values).
 				//

@@ -201,7 +201,7 @@ mlhmmv_value_t rxval_evaluator_from_map_literal_func(void* pvstate, variables_t*
 
 	mlhmmv_value_t xval = mlhmmv_value_alloc_empty_map();
 
-	rxval_evaluator_from_map_literal_aux(pstate, pstate->proot_list_evaluator, xval.u.pnext_level, pvars);
+	rxval_evaluator_from_map_literal_aux(pstate, pstate->proot_list_evaluator, xval.pnext_level, pvars);
 
 	return xval;
 }
@@ -518,10 +518,10 @@ mlhmmv_value_t rxval_evaluator_from_full_srec_func(void* pvstate, variables_t* p
 		sllmve_t e = { .value = k, .free_flags = 0, .pnext = NULL };
 		mv_t* pomv = lhmsmv_get(pvars->ptyped_overlay, pe->key);
 		if (pomv != NULL) {
-			mlhmmv_put_terminal_from_level(xval.u.pnext_level, &e, pomv); // xxx make a simpler 1-level API call
+			mlhmmv_put_terminal_from_level(xval.pnext_level, &e, pomv); // xxx make a simpler 1-level API call
 		} else {
 			mv_t v = mv_from_string(pe->value, NO_FREE); // mlhmmv_put_terminal_from_level will copy
-			mlhmmv_put_terminal_from_level(xval.u.pnext_level, &e, &v);
+			mlhmmv_put_terminal_from_level(xval.pnext_level, &e, &v);
 		}
 	}
 
