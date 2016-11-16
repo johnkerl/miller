@@ -18,21 +18,22 @@ NON-RELEASE:
 ================================================================
 OTHER:
 
-!!! b.tsv bug -- to relnotes
-
-!! don't dump full help on unrecognized flag. WAY too much info. just print short, w/ info on how to get long.
-
-* ?: operator ?
-
-! typeof -> include 'map' and 'srec'
-
-! dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d
-
-? rename dsls/ to parsers; mapping -> mappers & dsl ?
+* b.tsv bug -- to relnotes
+* don't dump full help on unrecognized flag. WAY too much info. just print short, w/ info on how to get long.
+* typeof -> include 'map' and 'srec'
+* dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d
+* rename dsls/ to parsers; mapping -> mappers & dsl ?
 
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
+* debt-reduction
+* func/subr mapvar args; func mapvar retval
+* emit-lashed debug
+* apply mapvar contexts to some built-ins: length, typeof, ... ?
+* allow empty maps/levels in oosvars as well as map-literals
+
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 things which are always maps:
 * maplit
 * full srec
@@ -48,7 +49,7 @@ things which can be maps:
 ! func retval typedecl: 'f(int a): map {...}' ?
   -> typedecls for TYPE_MASK_INT|TYPE_MASK_ABSENT ? e.g. '?int' or some such?
 
-! lashed
+w lashed -- code-renames/debt-reduction/valgrinds first, before digging further
 
 ! reg_test/run to-do items
 
@@ -69,8 +70,8 @@ k emit mapliteral -- check lashed; UTs
 
 - emit-lashed full oosvar
 k emit-lashed oosvar
-- emit-lashed localvar -- check lashed; UTs
-- emit-lashed mapliteral -- check lashed; UTs
+k emit-lashed localvar -- check lashed; UTs
+k emit-lashed mapliteral -- check lashed; UTs
 - emit-lashed func retval
 
 mlr_dsl_cst_for_map_statements.c:
@@ -125,6 +126,8 @@ k assign LHS localvar           ? assign RHS full-oosvar
 k assign LHS localvar           ? assign RHS oosvar
 k assign LHS localvar           ? assign RHS localvar
 - assign LHS localvar           ? assign RHS func-retval
+
+* typedecl annotation for func retvals: 'func f(): bool'
 
 ----------------------------------------------------------------
 * 'not yet' UT cases
@@ -220,8 +223,8 @@ FUNCTIONALITY FOR 5.0.0:
 
 * mapvar iterate
 
-? map literals?!?
-  - allow assignment to oosvar or local. or srec?!?
+* map literals
+  - allow assignment to oosvar or local or srec
   - requires support for empty maps/levels
   - remove the emptystrip feature from oosvars? update the doc if so. also, another backwards-incompatible change.
   ! allow $* @* @x varx all in map-literals in value nodes, with copy
@@ -247,7 +250,7 @@ FUNCTIONALITY FOR 5.0.0:
 * typedecl:
   - eliminate 'map a' and replace with 'map a = {}'
 
-* array types? [a,b,c]
+* array/list types? [a,b,c]
 * set types? {a,b,c} (vs. map {a:1,b:2,c:3})
 * maybe overkill (map covers array & set) but with those there would be solid collections coverage.
 
