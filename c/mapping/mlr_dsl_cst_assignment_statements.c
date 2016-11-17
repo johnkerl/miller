@@ -405,11 +405,9 @@ static void handle_indexed_local_variable_assignment_from_xval(
 typedef struct _oosvar_assignment_state_t {
 	sllv_t*            plhs_keylist_evaluators;
 	rxval_evaluator_t* prhs_xevaluator;
-	sllv_t*            prhs_keylist_evaluators;
 } oosvar_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment_from_xval;
-// xxx rm static mlr_dsl_cst_statement_handler_t handle_oosvar_to_oosvar_assignment;
 static mlr_dsl_cst_statement_freer_t free_oosvar_assignment;
 
 // ----------------------------------------------------------------
@@ -420,7 +418,6 @@ mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_as
 
 	pstate->plhs_keylist_evaluators = NULL;
 	pstate->prhs_xevaluator         = NULL;
-	pstate->prhs_keylist_evaluators = NULL;
 
 	mlr_dsl_ast_node_t* plhs_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pnext->pvvalue;
@@ -453,12 +450,6 @@ static void free_oosvar_assignment(mlr_dsl_cst_statement_t* pstatement) {
 	}
 	if (pstate->prhs_xevaluator != NULL) {
 		pstate->prhs_xevaluator->pfree_func(pstate->prhs_xevaluator);
-	}
-	if (pstate->prhs_keylist_evaluators != NULL) {
-		for (sllve_t* pe = pstate->prhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-			rval_evaluator_t* pev = pe->pvvalue;
-			pev->pfree_func(pev);
-		}
 	}
 
 	free(pstate);

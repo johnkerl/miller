@@ -134,21 +134,17 @@ mlhmmv_value_t* local_stack_frame_get_extended_from_indexed(local_stack_frame_t*
 
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 	mlhmmv_value_t* pmvalue = &pentry->value;
-	if (pmvalue->is_terminal && pmvalue->pnext_level == NULL) {
-		LOCAL_STACK_TRACE(printf("VALUE IS EMPTY\n"));
-		return NULL;
-	} else {
-		int error = 0;
-		LOCAL_STACK_TRACE(printf("VALUE IS:\n"));
-		LOCAL_STACK_TRACE(printf("PTR IS %p\n", pmvalue->pnext_level));
-		LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->pnext_level, 0, TRUE, TRUE, "", stdout));
 
-		// Maybe null
-		if (pmvkeys == NULL || pmvkeys->length == 0) {
-			return pmvalue;
-		} else {
-			return mlhmmv_get_value_from_level(pmvalue->pnext_level, pmvkeys, &error);
-		}
+	int error = 0;
+	LOCAL_STACK_TRACE(printf("VALUE IS:\n"));
+	LOCAL_STACK_TRACE(printf("PTR IS %p\n", pmvalue->pnext_level));
+	LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->pnext_level, 0, TRUE, TRUE, "", stdout));
+
+	// Maybe null
+	if (pmvkeys == NULL || pmvkeys->length == 0) {
+		return pmvalue;
+	} else {
+		return mlhmmv_get_value_from_level(pmvalue->pnext_level, pmvkeys, &error);
 	}
 }
 
