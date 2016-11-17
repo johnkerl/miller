@@ -32,6 +32,7 @@ MAPVAR CHECKLIST:
 
 * debt-reduction
   ! valgrinds
+  ! vg.out.000 @neatener !
   - xxxes
   - prune unused functions
   ! get rid of ALL callsites where i return mv/mxv by struct-value but do not copy string-pointers
@@ -318,6 +319,7 @@ COOK:
 * mlr --from ~/misc/words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 * use: https://github.com/petewarden/dstkdata
 * for-records-counts example
+* ./se/ examples
 
 DEBUGGING:
 * disclaimer about the Miller DSL having the usual plusses and minuses of a dynamically typed language:
