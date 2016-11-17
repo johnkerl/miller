@@ -4,8 +4,8 @@
 #include "mlr_dsl_cst.h"
 #include "context_flags.h"
 
-static mlr_dsl_cst_statement_handler_t handle_for_srec;
 static mlr_dsl_cst_statement_freer_t free_for_srec;
+static mlr_dsl_cst_statement_handler_t handle_for_srec;
 
 // The variable names are used only for type-decl exceptions. Otherwise the
 // names are replaced with frame-relative indices by the stack allocator.
@@ -100,6 +100,14 @@ mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t*
 }
 
 // ----------------------------------------------------------------
+static void free_for_srec(mlr_dsl_cst_statement_t* pstatement) {
+	for_srec_state_t* pstate = pstatement->pvstate;
+	free(pstate->k_variable_name);
+	free(pstate->v_variable_name);
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
 static void handle_for_srec(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
@@ -141,12 +149,4 @@ static void handle_for_srec(
 
 	loop_stack_pop(pvars->ploop_stack);
 	local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
-}
-
-// ----------------------------------------------------------------
-static void free_for_srec(mlr_dsl_cst_statement_t* pstatement) {
-	for_srec_state_t* pstate = pstatement->pvstate;
-	free(pstate->k_variable_name);
-	free(pstate->v_variable_name);
-	free(pstate);
 }

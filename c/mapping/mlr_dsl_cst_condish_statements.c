@@ -9,8 +9,8 @@ typedef struct _conditional_block_state_t {
 	rval_evaluator_t* pexpression_evaluator;
 } conditional_block_state_t;
 
-static mlr_dsl_cst_statement_handler_t handle_conditional_block;
 static mlr_dsl_cst_statement_freer_t free_conditional_block;
+static mlr_dsl_cst_statement_handler_t handle_conditional_block;
 
 // ----------------------------------------------------------------
 mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
@@ -51,9 +51,7 @@ mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_cst_t* pcst, mlr_dsl_as
 }
 
 // ----------------------------------------------------------------
-// xxx move all frees between allocs & handles. and header-file order too.
-
-static void free_conditional_block(mlr_dsl_cst_statement_t* pstatement) { // conditional_block
+static void free_conditional_block(mlr_dsl_cst_statement_t* pstatement) {
 	conditional_block_state_t* pstate = pstatement->pvstate;
 
 	pstate->pexpression_evaluator->pfree_func(pstate->pexpression_evaluator);
@@ -226,8 +224,6 @@ static mlr_dsl_cst_statement_t* alloc_if_item(mlr_dsl_cst_t* pcst,
 }
 
 // ----------------------------------------------------------------
-// xxx move all frees between allocs & handles. and header-file order too.
-
 static void free_if_head(mlr_dsl_cst_statement_t* pstatement) {
 	if_head_state_t* pstate = pstatement->pvstate;
 
@@ -321,9 +317,7 @@ mlr_dsl_cst_statement_t* alloc_while(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 }
 
 // ----------------------------------------------------------------
-// xxx move all frees between allocs & handles. and header-file order too.
-
-static void free_while(mlr_dsl_cst_statement_t* pstatement) { // xxx
+static void free_while(mlr_dsl_cst_statement_t* pstatement) {
 	while_state_t* pstate = pstatement->pvstate;
 
 	pstate->pexpression_evaluator->pfree_func(pstate->pexpression_evaluator);
@@ -414,9 +408,7 @@ mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t*
 }
 
 // ----------------------------------------------------------------
-// xxx move all frees between allocs & handles. and header-file order too.
-
-static void free_do_while(mlr_dsl_cst_statement_t* pstatement) { // xxx
+static void free_do_while(mlr_dsl_cst_statement_t* pstatement) {
 	do_while_state_t* pstate = pstatement->pvstate;
 
 	pstate->pexpression_evaluator->pfree_func(pstate->pexpression_evaluator);
@@ -490,9 +482,7 @@ mlr_dsl_cst_statement_t* alloc_bare_boolean(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 }
 
 // ----------------------------------------------------------------
-// xxx move all frees between allocs & handles. and header-file order too.
-
-static void free_bare_boolean(mlr_dsl_cst_statement_t* pstatement) { // bare_boolean
+static void free_bare_boolean(mlr_dsl_cst_statement_t* pstatement) {
 	bare_boolean_state_t* pstate = pstatement->pvstate;
 
 	pstate->pexpression_evaluator->pfree_func(pstate->pexpression_evaluator);
@@ -544,9 +534,7 @@ mlr_dsl_cst_statement_t* alloc_filter(
 }
 
 // ----------------------------------------------------------------
-// xxx move all frees between allocs & handles. and header-file order too.
-
-static void free_filter(mlr_dsl_cst_statement_t* pstatement) { // filter
+static void free_filter(mlr_dsl_cst_statement_t* pstatement) {
 	filter_state_t* pstate = pstatement->pvstate;
 
 	pstate->pexpression_evaluator->pfree_func(pstate->pexpression_evaluator);
@@ -605,9 +593,7 @@ mlr_dsl_cst_statement_t* alloc_final_filter(
 }
 
 // ----------------------------------------------------------------
-// xxx move all frees between allocs & handles. and header-file order too.
-
-static void free_final_filter(mlr_dsl_cst_statement_t* pstatement) { // final_filter
+static void free_final_filter(mlr_dsl_cst_statement_t* pstatement) {
 	final_filter_state_t* pstate = pstatement->pvstate;
 
 	pstate->pexpression_evaluator->pfree_func(pstate->pexpression_evaluator);

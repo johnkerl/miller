@@ -76,6 +76,26 @@ mlr_dsl_cst_statement_t* alloc_tee(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnod
 }
 
 // ----------------------------------------------------------------
+static void free_tee(mlr_dsl_cst_statement_t* pstatement) { // xxx from mlr_dsl_cst_statement_free
+	tee_state_t* pstate = pstatement->pvstate;
+
+	if (pstate->poutput_filename_evaluator != NULL) {
+		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
+	}
+
+	if (pstate->psingle_lrec_writer != NULL) {
+		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer);
+	}
+
+	if (pstate->pmulti_lrec_writer != NULL) {
+		multi_lrec_writer_drain(pstate->pmulti_lrec_writer);
+		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
+	}
+
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
 static void handle_tee_to_stdfp(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
@@ -148,26 +168,6 @@ static lrec_t* handle_tee_common(
 		}
 	}
 	return pcopy;
-}
-
-// ----------------------------------------------------------------
-static void free_tee(mlr_dsl_cst_statement_t* pstatement) { // xxx from mlr_dsl_cst_statement_free
-	tee_state_t* pstate = pstatement->pvstate;
-
-	if (pstate->poutput_filename_evaluator != NULL) {
-		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
-	}
-
-	if (pstate->psingle_lrec_writer != NULL) {
-		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer);
-	}
-
-	if (pstate->pmulti_lrec_writer != NULL) {
-		multi_lrec_writer_drain(pstate->pmulti_lrec_writer);
-		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
-	}
-
-	free(pstate);
 }
 
 // ================================================================
@@ -300,6 +300,31 @@ static void free_emitf_item(emitf_item_t* pemitf_item) {
 	free(pemitf_item);
 }
 
+static void free_emitf(mlr_dsl_cst_statement_t* pstatement) {
+	emitf_state_t* pstate = pstatement->pvstate;
+
+	if (pstate->poutput_filename_evaluator != NULL) {
+		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
+	}
+
+	if (pstate->psingle_lrec_writer != NULL) {
+		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer);
+	}
+
+	if (pstate->pmulti_lrec_writer != NULL) {
+		multi_lrec_writer_drain(pstate->pmulti_lrec_writer);
+		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
+	}
+
+	if (pstate->pemitf_items != NULL) {
+		for (sllve_t* pe = pstate->pemitf_items->phead; pe != NULL; pe = pe->pnext)
+			free_emitf_item(pe->pvvalue);
+		sllv_free(pstate->pemitf_items);
+	}
+
+	free(pstate);
+}
+
 // ----------------------------------------------------------------
 static void handle_emitf(
 	mlr_dsl_cst_statement_t* pstatement,
@@ -386,31 +411,6 @@ static void handle_emitf_common(
 
 	}
 	sllv_append(poutrecs, prec_to_emit);
-}
-
-static void free_emitf(mlr_dsl_cst_statement_t* pstatement) { // xxx
-	emitf_state_t* pstate = pstatement->pvstate;
-
-	if (pstate->poutput_filename_evaluator != NULL) {
-		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
-	}
-
-	if (pstate->psingle_lrec_writer != NULL) {
-		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer);
-	}
-
-	if (pstate->pmulti_lrec_writer != NULL) {
-		multi_lrec_writer_drain(pstate->pmulti_lrec_writer);
-		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
-	}
-
-	if (pstate->pemitf_items != NULL) {
-		for (sllve_t* pe = pstate->pemitf_items->phead; pe != NULL; pe = pe->pnext)
-			free_emitf_item(pe->pvvalue);
-		sllv_free(pstate->pemitf_items);
-	}
-
-	free(pstate);
 }
 
 // ================================================================
@@ -615,6 +615,46 @@ mlr_dsl_cst_statement_t* alloc_emit(
 		phandler,
 		free_emit,
 		pstate);
+}
+
+// ----------------------------------------------------------------
+static void free_emit(mlr_dsl_cst_statement_t* pstatement) {
+	emit_state_t* pstate = pstatement->pvstate;
+
+	if (pstate->poutput_filename_evaluator != NULL) {
+		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
+	}
+
+	if (pstate->prhs_xevaluator != NULL) {
+		pstate->prhs_xevaluator->pfree_func(pstate->prhs_xevaluator);
+	}
+
+	if (pstate->pemit_namelist_evaluators != NULL) {
+		for (sllve_t* pe = pstate->pemit_namelist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+			rval_evaluator_t* phandler = pe->pvvalue;
+			phandler->pfree_func(phandler);
+		}
+		sllv_free(pstate->pemit_namelist_evaluators);
+	}
+
+	if (pstate->pemit_keylist_evaluators != NULL) {
+		for (sllve_t* pe = pstate->pemit_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+			rval_evaluator_t* phandler = pe->pvvalue;
+			phandler->pfree_func(phandler);
+		}
+		sllv_free(pstate->pemit_keylist_evaluators);
+	}
+
+	if (pstate->psingle_lrec_writer != NULL) {
+		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer);
+	}
+
+	if (pstate->pmulti_lrec_writer != NULL) {
+		multi_lrec_writer_drain(pstate->pmulti_lrec_writer);
+		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
+	}
+
+	free(pstate);
 }
 
 // ----------------------------------------------------------------
@@ -864,46 +904,6 @@ static void handle_emit_all_to_file(
 	sllmv_free(pmvnames);
 }
 
-// ----------------------------------------------------------------
-static void free_emit(mlr_dsl_cst_statement_t* pstatement) { // emit
-	emit_state_t* pstate = pstatement->pvstate;
-
-	if (pstate->poutput_filename_evaluator != NULL) {
-		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
-	}
-
-	if (pstate->prhs_xevaluator != NULL) {
-		pstate->prhs_xevaluator->pfree_func(pstate->prhs_xevaluator);
-	}
-
-	if (pstate->pemit_namelist_evaluators != NULL) {
-		for (sllve_t* pe = pstate->pemit_namelist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-			rval_evaluator_t* phandler = pe->pvvalue;
-			phandler->pfree_func(phandler);
-		}
-		sllv_free(pstate->pemit_namelist_evaluators);
-	}
-
-	if (pstate->pemit_keylist_evaluators != NULL) {
-		for (sllve_t* pe = pstate->pemit_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-			rval_evaluator_t* phandler = pe->pvvalue;
-			phandler->pfree_func(phandler);
-		}
-		sllv_free(pstate->pemit_keylist_evaluators);
-	}
-
-	if (pstate->psingle_lrec_writer != NULL) {
-		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer);
-	}
-
-	if (pstate->pmulti_lrec_writer != NULL) {
-		multi_lrec_writer_drain(pstate->pmulti_lrec_writer);
-		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
-	}
-
-	free(pstate);
-}
-
 // ================================================================
 struct _emit_lashed_item_t; // Forward reference
 typedef mlhmmv_value_t* emit_lashed_item_getter_t(
@@ -1139,6 +1139,41 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 }
 
 // ----------------------------------------------------------------
+static void free_emit_lashed(mlr_dsl_cst_statement_t* pstatement) {
+	emit_lashed_state_t* pstate = pstatement->pvstate;
+
+	if (pstate->poutput_filename_evaluator != NULL) {
+		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
+	}
+
+	if (pstate->pemit_namelist_evaluators != NULL) {
+		for (sllve_t* pe = pstate->pemit_namelist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+			rval_evaluator_t* phandler = pe->pvvalue;
+			phandler->pfree_func(phandler);
+		}
+		sllv_free(pstate->pemit_namelist_evaluators);
+	}
+
+	if (pstate->ppitems != NULL) {
+		for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
+			emit_lashed_item_free(pstate->ppitems[i]);
+		}
+		free(pstate->ppitems);
+	}
+
+	if (pstate->psingle_lrec_writer != NULL) {
+		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer);
+	}
+
+	if (pstate->pmulti_lrec_writer != NULL) {
+		multi_lrec_writer_drain(pstate->pmulti_lrec_writer);
+		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
+	}
+
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
 static void handle_emit_lashed(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
@@ -1249,41 +1284,6 @@ static void handle_emit_lashed_common(
 	free(ppmvkeys);
 }
 
-// ----------------------------------------------------------------
-static void free_emit_lashed(mlr_dsl_cst_statement_t* pstatement) {
-	emit_lashed_state_t* pstate = pstatement->pvstate;
-
-	if (pstate->poutput_filename_evaluator != NULL) {
-		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
-	}
-
-	if (pstate->pemit_namelist_evaluators != NULL) {
-		for (sllve_t* pe = pstate->pemit_namelist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-			rval_evaluator_t* phandler = pe->pvvalue;
-			phandler->pfree_func(phandler);
-		}
-		sllv_free(pstate->pemit_namelist_evaluators);
-	}
-
-	if (pstate->ppitems != NULL) {
-		for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
-			emit_lashed_item_free(pstate->ppitems[i]);
-		}
-		free(pstate->ppitems);
-	}
-
-	if (pstate->psingle_lrec_writer != NULL) {
-		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer);
-	}
-
-	if (pstate->pmulti_lrec_writer != NULL) {
-		multi_lrec_writer_drain(pstate->pmulti_lrec_writer);
-		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
-	}
-
-	free(pstate);
-}
-
 // ================================================================
 typedef struct _print_state_t {
 	rval_evaluator_t*    prhs_evaluator;
@@ -1341,6 +1341,26 @@ mlr_dsl_cst_statement_t* alloc_print(
 }
 
 // ----------------------------------------------------------------
+static void free_print(mlr_dsl_cst_statement_t* pstatement) { // print
+	print_state_t* pstate = pstatement->pvstate;
+
+	if (pstate->prhs_evaluator != NULL) {
+		pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
+	}
+
+	if (pstate->poutput_filename_evaluator != NULL) {
+		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
+	}
+
+	if (pstate->pmulti_out != NULL) {
+		multi_out_close(pstate->pmulti_out);
+		multi_out_free(pstate->pmulti_out);
+	}
+
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
 static void handle_print(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
@@ -1375,25 +1395,6 @@ static void handle_print(
 	if (sfree_flags)
 		free(sval);
 	mv_free(&val);
-}
-
-static void free_print(mlr_dsl_cst_statement_t* pstatement) { // print
-	print_state_t* pstate = pstatement->pvstate;
-
-	if (pstate->prhs_evaluator != NULL) {
-		pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
-	}
-
-	if (pstate->poutput_filename_evaluator != NULL) {
-		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
-	}
-
-	if (pstate->pmulti_out != NULL) {
-		multi_out_close(pstate->pmulti_out);
-		multi_out_free(pstate->pmulti_out);
-	}
-
-	free(pstate);
 }
 
 // ================================================================
@@ -1513,6 +1514,22 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 		phandler,
 		free_dump,
 		pstate);
+}
+
+// ----------------------------------------------------------------
+static void free_dump(mlr_dsl_cst_statement_t* pstatement) {
+	dump_state_t* pstate = pstatement->pvstate;
+
+	if (pstate->poutput_filename_evaluator != NULL) {
+		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
+	}
+
+	if (pstate->pmulti_out != NULL) {
+		multi_out_close(pstate->pmulti_out);
+		multi_out_free(pstate->pmulti_out);
+	}
+
+	free(pstate);
 }
 
 // ----------------------------------------------------------------
@@ -1665,20 +1682,4 @@ static void handle_dump_to_file(
 	if (fn_free_flags)
 		free(filename);
 	mv_free(&filename_mv);
-}
-
-// ----------------------------------------------------------------
-static void free_dump(mlr_dsl_cst_statement_t* pstatement) {
-	dump_state_t* pstate = pstatement->pvstate;
-
-	if (pstate->poutput_filename_evaluator != NULL) {
-		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
-	}
-
-	if (pstate->pmulti_out != NULL) {
-		multi_out_close(pstate->pmulti_out);
-		multi_out_free(pstate->pmulti_out);
-	}
-
-	free(pstate);
 }

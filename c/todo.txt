@@ -31,9 +31,9 @@ OTHER:
 MAPVAR CHECKLIST:
 
 * debt-reduction
-  - valgrinds
+  ! valgrinds
   - xxxes
-  -> undo MLR_UNIONIZE
+  - prune unused functions
   ! get rid of ALL callsites where i return mv/mxv by struct-value but do not copy string-pointers
   - local-stack renames
   - mlhmmv renames

@@ -139,6 +139,14 @@ mlr_dsl_cst_statement_t* alloc_return_value_from_map_literal(
 		pstate);
 }
 
+static void free_return_value_from_local_non_map_variable(mlr_dsl_cst_statement_t* pstatement) {
+	return_value_from_local_non_map_variable_state_t* pstate = pstatement->pvstate;
+
+	pstate->preturn_value_evaluator->pfree_func(pstate->preturn_value_evaluator);
+
+	free(pstate);
+}
+
 // ----------------------------------------------------------------
 mlr_dsl_cst_statement_t* alloc_return_value_from_local_non_map_variable(
 	mlr_dsl_cst_t*      pcst,
@@ -174,14 +182,6 @@ static void handle_return_value_from_local_non_map_variable(
 		pstate->preturn_value_evaluator->pprocess_func(
 			pstate->preturn_value_evaluator->pvstate, pvars));
 	pvars->return_state.returned = TRUE;
-}
-
-static void free_return_value_from_local_non_map_variable(mlr_dsl_cst_statement_t* pstatement) {
-	return_value_from_local_non_map_variable_state_t* pstate = pstatement->pvstate;
-
-	pstate->preturn_value_evaluator->pfree_func(pstate->preturn_value_evaluator);
-
-	free(pstate);
 }
 
 // ================================================================
@@ -224,6 +224,17 @@ mlr_dsl_cst_statement_t* alloc_return_value_from_indexed_local_variable(
 		pstate);
 }
 
+static void free_return_value_from_indexed_local_variable(mlr_dsl_cst_statement_t* pstatement) {
+	return_value_from_indexed_local_variable_state_t* pstate = pstatement->pvstate;
+
+	for (sllve_t* pe = pstate->prhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		rval_evaluator_t* pev = pe->pvvalue;
+		pev->pfree_func(pev);
+	}
+
+	free(pstate);
+}
+
 // ----------------------------------------------------------------
 static void handle_return_value_from_indexed_local_variable(
 	mlr_dsl_cst_statement_t* pstatement,
@@ -254,17 +265,6 @@ static void handle_return_value_from_indexed_local_variable(
 	sllmv_free(pmvkeys);
 
 	pvars->return_state.returned = TRUE;
-}
-
-static void free_return_value_from_indexed_local_variable(mlr_dsl_cst_statement_t* pstatement) {
-	return_value_from_indexed_local_variable_state_t* pstate = pstatement->pvstate;
-
-	for (sllve_t* pe = pstate->prhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-		rval_evaluator_t* pev = pe->pvvalue;
-		pev->pfree_func(pev);
-	}
-
-	free(pstate);
 }
 
 // ================================================================
@@ -298,6 +298,14 @@ mlr_dsl_cst_statement_t* alloc_return_value_from_oosvar(
 		pstate);
 }
 
+static void free_return_value_from_oosvar(mlr_dsl_cst_statement_t* pstatement) {
+	return_value_from_oosvar_state_t* pstate = pstatement->pvstate;
+
+	pstate->preturn_value_evaluator->pfree_func(pstate->preturn_value_evaluator);
+
+	free(pstate);
+}
+
 // ----------------------------------------------------------------
 static void handle_return_value_from_oosvar(
 	mlr_dsl_cst_statement_t* pstatement,
@@ -310,14 +318,6 @@ static void handle_return_value_from_oosvar(
 		pstate->preturn_value_evaluator->pprocess_func(
 			pstate->preturn_value_evaluator->pvstate, pvars));
 	pvars->return_state.returned = TRUE;
-}
-
-static void free_return_value_from_oosvar(mlr_dsl_cst_statement_t* pstatement) {
-	return_value_from_oosvar_state_t* pstate = pstatement->pvstate;
-
-	pstate->preturn_value_evaluator->pfree_func(pstate->preturn_value_evaluator);
-
-	free(pstate);
 }
 
 // ================================================================
@@ -351,6 +351,14 @@ mlr_dsl_cst_statement_t* alloc_return_value_from_full_oosvar(
 		pstate);
 }
 
+static void free_return_value_from_full_oosvar(mlr_dsl_cst_statement_t* pstatement) {
+	return_value_from_full_oosvar_state_t* pstate = pstatement->pvstate;
+
+	pstate->preturn_value_evaluator->pfree_func(pstate->preturn_value_evaluator);
+
+	free(pstate);
+}
+
 // ----------------------------------------------------------------
 static void handle_return_value_from_full_oosvar(
 	mlr_dsl_cst_statement_t* pstatement,
@@ -363,14 +371,6 @@ static void handle_return_value_from_full_oosvar(
 		pstate->preturn_value_evaluator->pprocess_func(
 			pstate->preturn_value_evaluator->pvstate, pvars));
 	pvars->return_state.returned = TRUE;
-}
-
-static void free_return_value_from_full_oosvar(mlr_dsl_cst_statement_t* pstatement) {
-	return_value_from_full_oosvar_state_t* pstate = pstatement->pvstate;
-
-	pstate->preturn_value_evaluator->pfree_func(pstate->preturn_value_evaluator);
-
-	free(pstate);
 }
 
 // ================================================================
@@ -404,6 +404,14 @@ mlr_dsl_cst_statement_t* alloc_return_value_from_full_srec(
 		pstate);
 }
 
+static void free_return_value_from_full_srec(mlr_dsl_cst_statement_t* pstatement) {
+	return_value_from_full_srec_state_t* pstate = pstatement->pvstate;
+
+	pstate->preturn_value_evaluator->pfree_func(pstate->preturn_value_evaluator);
+
+	free(pstate);
+}
+
 // ----------------------------------------------------------------
 static void handle_return_value_from_full_srec(
 	mlr_dsl_cst_statement_t* pstatement,
@@ -416,14 +424,6 @@ static void handle_return_value_from_full_srec(
 		pstate->preturn_value_evaluator->pprocess_func(
 			pstate->preturn_value_evaluator->pvstate, pvars));
 	pvars->return_state.returned = TRUE;
-}
-
-static void free_return_value_from_full_srec(mlr_dsl_cst_statement_t* pstatement) {
-	return_value_from_full_srec_state_t* pstate = pstatement->pvstate;
-
-	pstate->preturn_value_evaluator->pfree_func(pstate->preturn_value_evaluator);
-
-	free(pstate);
 }
 
 // ================================================================
@@ -457,6 +457,14 @@ mlr_dsl_cst_statement_t* alloc_return_value_from_function_callsite(
 		pstate);
 }
 
+static void free_return_value_from_function_callsite(mlr_dsl_cst_statement_t* pstatement) {
+	return_value_from_function_callsite_state_t* pstate = pstatement->pvstate;
+
+	pstate->preturn_value_evaluator->pfree_func(pstate->preturn_value_evaluator);
+
+	free(pstate);
+}
+
 // ----------------------------------------------------------------
 static void handle_return_value_from_function_callsite(
 	mlr_dsl_cst_statement_t* pstatement,
@@ -469,14 +477,6 @@ static void handle_return_value_from_function_callsite(
 		pstate->preturn_value_evaluator->pprocess_func(
 			pstate->preturn_value_evaluator->pvstate, pvars));
 	pvars->return_state.returned = TRUE;
-}
-
-static void free_return_value_from_function_callsite(mlr_dsl_cst_statement_t* pstatement) {
-	return_value_from_function_callsite_state_t* pstate = pstatement->pvstate;
-
-	pstate->preturn_value_evaluator->pfree_func(pstate->preturn_value_evaluator);
-
-	free(pstate);
 }
 
 // ================================================================
@@ -510,6 +510,14 @@ mlr_dsl_cst_statement_t* alloc_return_value_from_non_map_valued(
 		pstate);
 }
 
+static void free_return_value_from_non_map_valued(mlr_dsl_cst_statement_t* pstatement) {
+	return_value_from_non_map_valued_state_t* pstate = pstatement->pvstate;
+
+	pstate->preturn_value_evaluator->pfree_func(pstate->preturn_value_evaluator);
+
+	free(pstate);
+}
+
 // ----------------------------------------------------------------
 static void handle_return_value_from_non_map_valued(
 	mlr_dsl_cst_statement_t* pstatement,
@@ -522,12 +530,4 @@ static void handle_return_value_from_non_map_valued(
 		pstate->preturn_value_evaluator->pprocess_func(
 			pstate->preturn_value_evaluator->pvstate, pvars));
 	pvars->return_state.returned = TRUE;
-}
-
-static void free_return_value_from_non_map_valued(mlr_dsl_cst_statement_t* pstatement) {
-	return_value_from_non_map_valued_state_t* pstate = pstatement->pvstate;
-
-	pstate->preturn_value_evaluator->pfree_func(pstate->preturn_value_evaluator);
-
-	free(pstate);
 }
