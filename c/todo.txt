@@ -18,6 +18,8 @@ NON-RELEASE:
 ================================================================
 OTHER:
 
+* mlr paste (sjackman)
+
 * b.tsv bug -- to relnotes
 * don't dump full help on unrecognized flag. WAY too much info. just print short, w/ info on how to get long.
 * typeof -> include 'map' and 'srec'
@@ -41,6 +43,7 @@ MAPVAR CHECKLIST:
 * emit-lashed debug
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
 * allow empty maps/levels in oosvars as well as map-literals
+* print mapvar; dump scalarvar
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 things which are always maps:

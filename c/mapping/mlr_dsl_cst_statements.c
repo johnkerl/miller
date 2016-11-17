@@ -531,7 +531,7 @@ void mlr_dsl_cst_handle_statement_block(
 	if (pvars->trace_execution) { // xxx find a better way to control this ...
 		for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-			fprintf(stderr, "TRACE ");
+			fprintf(stdout, "TRACE ");
 			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
 			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 			// The UDF/subroutine executor will clear the flag, and consume the retval if there is one.
@@ -561,7 +561,7 @@ void handle_statement_block_with_break_continue(
 	if (pvars->trace_execution) { // xxx find a better way to control this ...
 		for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-			fprintf(stderr, "TRACE ");
+			fprintf(stdout, "TRACE ");
 			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
 			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 			if (loop_stack_get(pvars->ploop_stack) != 0) {
@@ -596,7 +596,7 @@ void mlr_dsl_cst_handle_statement_list(
 	if (pvars->trace_execution) { // xxx find a better way to control this ...
 		for (sllve_t* pe = pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
-			fprintf(stderr, "TRACE ");
+			fprintf(stdout, "TRACE ");
 			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
 			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 		}
