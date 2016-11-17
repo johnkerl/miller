@@ -479,6 +479,14 @@ static void pass_1_for_local_read(mlr_dsl_ast_node_t* pnode, stkalc_subframe_gro
 	int* pmax_subframe_depth, int trace)
 {
 	stkalc_subframe_group_mutate_node_for_read(pframe_group, pnode, "READ", trace);
+
+	if (pnode->pchildren != NULL) {
+		// E.g. a[i][j]: variable is being written to; i and j are being read from.
+		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
+			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+			pass_1_for_node(pchild, pframe_group, pmax_subframe_depth, trace);
+		}
+	}
 }
 
 // ----------------------------------------------------------------
