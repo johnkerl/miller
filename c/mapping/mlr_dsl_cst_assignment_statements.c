@@ -199,7 +199,7 @@ mlr_dsl_cst_statement_t* alloc_local_variable_definition(
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pnext->pvvalue;
 
-	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast( // xxx rename
+	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
 		prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 	pstatement_handler = handle_local_variable_definition_from_xval;
 
@@ -231,7 +231,7 @@ static void handle_local_variable_definition_from_xval( // xxx mapvar
 	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_frame_xdefine(pframe, // xxx rename
+	local_stack_frame_define_extended(pframe,
 		pstate->lhs_variable_name, pstate->lhs_frame_relative_index, pstate->lhs_type_mask,
 		xval);
 }
@@ -271,7 +271,7 @@ mlr_dsl_cst_statement_t* alloc_nonindexed_local_variable_assignment(mlr_dsl_cst_
 
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
 
-	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast( // xxx rename
+	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
 		prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 	pstatement_handler = handle_nonindexed_local_variable_assignment_from_xval;
 
@@ -300,13 +300,12 @@ static void handle_nonindexed_local_variable_assignment_from_xval(
 	cst_outputs_t*           pcst_outputs)
 {
 	nonindexed_local_variable_assignment_state_t* pstate = pstatement->pvstate;
-	// xxx
 
 	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
 	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 	if (!xval.is_terminal || mv_is_present(&xval.mlrval)) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_xassign_non_map(pframe, pstate->lhs_frame_relative_index, xval);
+		local_stack_frame_assign_extended_nonindexed(pframe, pstate->lhs_frame_relative_index, xval);
 	} else {
 		mlhmmv_free_submap(xval);
 	}
@@ -390,7 +389,7 @@ static void handle_indexed_local_variable_assignment_from_xval(
 			&all_non_null_or_error);
 		if (all_non_null_or_error) {
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-			local_stack_frame_xassign_map(pframe, pstate->lhs_frame_relative_index, pmvkeys, rhs_xvalue);
+			local_stack_frame_assign_extended_indexed(pframe, pstate->lhs_frame_relative_index, pmvkeys, rhs_xvalue);
 		}
 		sllmv_free(pmvkeys);
 
@@ -405,12 +404,10 @@ static void handle_indexed_local_variable_assignment_from_xval(
 
 typedef struct _oosvar_assignment_state_t {
 	sllv_t*            plhs_keylist_evaluators;
-	rval_evaluator_t*  prhs_evaluator;
 	rxval_evaluator_t* prhs_xevaluator;
 	sllv_t*            prhs_keylist_evaluators;
 } oosvar_assignment_state_t;
 
-static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment_from_val;
 static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment_from_xval;
 // xxx rm static mlr_dsl_cst_statement_handler_t handle_oosvar_to_oosvar_assignment;
 static mlr_dsl_cst_statement_freer_t free_oosvar_assignment;
@@ -422,7 +419,6 @@ mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_as
 	oosvar_assignment_state_t* pstate = mlr_malloc_or_die(sizeof(oosvar_assignment_state_t));
 
 	pstate->plhs_keylist_evaluators = NULL;
-	pstate->prhs_evaluator          = NULL;
 	pstate->prhs_xevaluator         = NULL;
 	pstate->prhs_keylist_evaluators = NULL;
 
@@ -438,12 +434,7 @@ mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_as
 
 	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
 		prhs_node, pcst->pfmgr, type_inferencing, context_flags);
-	if (pstate->prhs_xevaluator != NULL) {
-		pstatement_handler = handle_oosvar_assignment_from_xval;
-	} else {
-		pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, type_inferencing, context_flags);
-		pstatement_handler = handle_oosvar_assignment_from_val;
-	}
+	pstatement_handler = handle_oosvar_assignment_from_xval;
 
 	return mlr_dsl_cst_statement_valloc(
 		pnode,
@@ -460,9 +451,6 @@ static void free_oosvar_assignment(mlr_dsl_cst_statement_t* pstatement) {
 		rval_evaluator_t* pev = pe->pvvalue;
 		pev->pfree_func(pev);
 	}
-	if (pstate->prhs_evaluator != NULL) {
-		pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
-	}
 	if (pstate->prhs_xevaluator != NULL) {
 		pstate->prhs_xevaluator->pfree_func(pstate->prhs_xevaluator);
 	}
@@ -474,28 +462,6 @@ static void free_oosvar_assignment(mlr_dsl_cst_statement_t* pstatement) {
 	}
 
 	free(pstate);
-}
-
-// ----------------------------------------------------------------
-static void handle_oosvar_assignment_from_val(
-	mlr_dsl_cst_statement_t* pstatement,
-	variables_t*             pvars,
-	cst_outputs_t*           pcst_outputs)
-{
-	oosvar_assignment_state_t* pstate = pstatement->pvstate;
-
-	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator;
-	mv_t rhs_value = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-
-	if (mv_is_present(&rhs_value)) {
-		int all_non_null_or_error = TRUE;
-		sllmv_t* pmvkeys = evaluate_list(pstate->plhs_keylist_evaluators, pvars,
-			&all_non_null_or_error);
-		if (all_non_null_or_error)
-			mlhmmv_put_terminal(pvars->poosvars, pmvkeys, &rhs_value);
-		sllmv_free(pmvkeys);
-	}
-	mv_free(&rhs_value);
 }
 
 // ----------------------------------------------------------------

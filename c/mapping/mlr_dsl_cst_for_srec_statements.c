@@ -121,10 +121,10 @@ static void handle_for_srec(
 		mv_t mvkey = mv_from_string_no_free(pe->key);
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		local_stack_frame_define(pframe,
+		local_stack_frame_define_scalar(pframe,
 			pstate->k_variable_name, pstate->k_frame_relative_index,
 			pstate->k_type_mask, mvkey);
-		local_stack_frame_define(pframe,
+		local_stack_frame_define_scalar(pframe,
 			pstate->v_variable_name, pstate->v_frame_relative_index,
 			pstate->v_type_mask, mvval);
 

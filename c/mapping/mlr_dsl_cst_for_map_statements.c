@@ -228,7 +228,7 @@ static void handle_for_oosvar_aux(
 			for (mlhmmv_level_entry_t* pe = submap.pnext_level->phead; pe != NULL; pe = pe->pnext) {
 				// Bind the k-name to the entry-key mlrval:
 				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-				local_stack_frame_define(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
+				local_stack_frame_define_scalar(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
 					prest_for_k_type_masks[0], mv_copy(&pe->level_key));
 				// Recurse into the next-level submap:
 				handle_for_oosvar_aux(pstatement, pvars, pcst_outputs, pe->level_value,
@@ -252,7 +252,7 @@ static void handle_for_oosvar_aux(
 		} else {
 			// Bind the v-name to the terminal mlrval:
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-			local_stack_frame_define(pframe, pstate->v_variable_name, pstate->v_frame_relative_index,
+			local_stack_frame_define_scalar(pframe, pstate->v_variable_name, pstate->v_frame_relative_index,
 				pstate->v_type_mask, mv_copy(&submap.mlrval));
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
@@ -367,7 +367,7 @@ static void handle_for_oosvar_key_only(
 
 		for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
 			// Bind the v-name to the terminal mlrval:
-			local_stack_frame_define(pframe,
+			local_stack_frame_define_scalar(pframe,
 				pstate->k_variable_name, pstate->k_frame_relative_index,
 				pstate->k_type_mask, mv_copy(pe->pvvalue));
 
@@ -523,7 +523,7 @@ static void handle_for_local_map(
 		// indexed by [3, $4].  Copy it for the very likely case that it is being updated inside the
 		// for-loop.
 
-		mlhmmv_value_t *psubmap = local_stack_frame_get_map_value(pframe,
+		mlhmmv_value_t *psubmap = local_stack_frame_get_extended_from_indexed(pframe,
 			pstate->target_frame_relative_index, ptarget_keylist);
 
 		if (psubmap != NULL) {
@@ -580,7 +580,7 @@ static void handle_for_local_map_aux(
 			for (mlhmmv_level_entry_t* pe = submap.pnext_level->phead; pe != NULL; pe = pe->pnext) {
 				// Bind the k-name to the entry-key mlrval:
 				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-				local_stack_frame_define(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
+				local_stack_frame_define_scalar(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
 					prest_for_k_type_masks[0], mv_copy(&pe->level_key));
 				// Recurse into the next-level submap:
 				handle_for_local_map_aux(pstatement, pvars, pcst_outputs, pe->level_value,
@@ -604,7 +604,7 @@ static void handle_for_local_map_aux(
 		} else {
 			// Bind the v-name to the terminal mlrval:
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-			local_stack_frame_define(pframe, pstate->v_variable_name, pstate->v_frame_relative_index,
+			local_stack_frame_define_scalar(pframe, pstate->v_variable_name, pstate->v_frame_relative_index,
 				pstate->v_type_mask, mv_copy(&submap.mlrval));
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
@@ -719,7 +719,7 @@ static void handle_for_local_map_key_only(
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 
-		mlhmmv_value_t *psubmap = local_stack_frame_get_map_value(pframe,
+		mlhmmv_value_t *psubmap = local_stack_frame_get_extended_from_indexed(pframe,
 			pstate->target_frame_relative_index, ptarget_keylist);
 		sllv_t* pkeys = mlhmmv_copy_keys_from_submap_xxx_rename(psubmap, NULL); // xxx refactor w/o null
 
@@ -728,7 +728,7 @@ static void handle_for_local_map_key_only(
 
 		for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
 			// Bind the v-name to the terminal mlrval:
-			local_stack_frame_define(pframe,
+			local_stack_frame_define_scalar(pframe,
 				pstate->k_variable_name, pstate->k_frame_relative_index,
 				pstate->k_type_mask, mv_copy(pe->pvvalue));
 
@@ -923,7 +923,7 @@ static void handle_for_map_literal_aux(
 			for (mlhmmv_level_entry_t* pe = submap.pnext_level->phead; pe != NULL; pe = pe->pnext) {
 				// Bind the k-name to the entry-key mlrval:
 				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-				local_stack_frame_define(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
+				local_stack_frame_define_scalar(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
 					prest_for_k_type_masks[0], mv_copy(&pe->level_key));
 				// Recurse into the next-level submap:
 				handle_for_map_literal_aux(pstatement, pvars, pcst_outputs, pe->level_value,
@@ -947,7 +947,7 @@ static void handle_for_map_literal_aux(
 		} else {
 			// Bind the v-name to the terminal mlrval:
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-			local_stack_frame_define(pframe, pstate->v_variable_name, pstate->v_frame_relative_index,
+			local_stack_frame_define_scalar(pframe, pstate->v_variable_name, pstate->v_frame_relative_index,
 				pstate->v_type_mask, mv_copy(&submap.mlrval));
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
@@ -1050,7 +1050,7 @@ static void handle_for_map_literal_key_only(
 
 	for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
 		// Bind the v-name to the terminal mlrval:
-		local_stack_frame_define(pframe,
+		local_stack_frame_define_scalar(pframe,
 			pstate->k_variable_name, pstate->k_frame_relative_index,
 			pstate->k_type_mask, mv_copy(pe->pvvalue));
 

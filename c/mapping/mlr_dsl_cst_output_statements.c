@@ -716,7 +716,7 @@ static void record_emitter_from_local_variable(
 		if (names_all_non_null_or_error) {
 
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-			mlhmmv_value_t* pmval = local_stack_frame_get_map_value(pframe,
+			mlhmmv_value_t* pmval = local_stack_frame_get_extended_from_indexed(pframe,
 				pstate->localvar_frame_relative_index, NULL);
 			if (pmval != NULL) {
 
@@ -971,7 +971,7 @@ static mlhmmv_value_t* nonindexed_local_variable_emit_lashed_item_get(
 {
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	// xxx check for copy/reference; and annotate the method names to make that clear at a glance.
-	return local_stack_frame_get_map_value(pframe, pitem->localvar_frame_relative_index, NULL);
+	return local_stack_frame_get_extended_from_indexed(pframe, pitem->localvar_frame_relative_index, NULL);
 }
 static void nonindexed_local_variable_emit_lashed_item_free(emit_lashed_item_t* pitem) {
 	// Nothing to free for localvars: we pointed to data within the localvar and printed it, without allocating
@@ -985,7 +985,7 @@ static mlhmmv_value_t* indexed_local_variable_emit_lashed_item_get(
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	// xxx check for copy/reference; and annotate the method names to make that clear at a glance.
 	// xxx need to index but skip the variable name at list head ...
-	return local_stack_frame_get_map_value(pframe, pitem->localvar_frame_relative_index, NULL);
+	return local_stack_frame_get_extended_from_indexed(pframe, pitem->localvar_frame_relative_index, NULL);
 }
 static void indexed_local_variable_emit_lashed_item_free(emit_lashed_item_t* pitem) {
 	// Nothing to free for localvars: we pointed to data within the localvar and printed it, without allocating
@@ -1550,7 +1550,7 @@ static void nonindexed_local_variable_target_getter(variables_t* pvars, dump_sta
 {
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 
-	mlhmmv_value_t* pmval = local_stack_frame_get_map_value(pframe,
+	mlhmmv_value_t* pmval = local_stack_frame_get_extended_from_indexed(pframe,
 		pstate->target_vardef_frame_relative_index, NULL);
 	if (pmval == NULL) {
 		*ppval   = NULL;
@@ -1576,7 +1576,7 @@ static void indexed_local_variable_target_getter(variables_t* pvars, dump_state_
 	sllmv_t* pmvkeys = evaluate_list(pstate->ptarget_keylist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
 
-		mlhmmv_value_t* pmval = local_stack_frame_get_map_value(pframe,
+		mlhmmv_value_t* pmval = local_stack_frame_get_extended_from_indexed(pframe,
 			pstate->target_vardef_frame_relative_index, pmvkeys);
 		if (pmval != NULL) {
 			if (pmval->is_terminal) {

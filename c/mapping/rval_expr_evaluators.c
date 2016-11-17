@@ -352,7 +352,7 @@ mv_t rval_evaluator_local_map_keylist_func(void* pvstate, variables_t* pvars) {
 	mv_t rv = mv_absent();
 	if (all_non_null_or_error) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		mv_t val = local_stack_frame_get_map(pframe, pstate->vardef_frame_relative_index, pmvkeys);
+		mv_t val = local_stack_frame_get_scalar_from_indexed(pframe, pstate->vardef_frame_relative_index, pmvkeys);
 		if (val.type == MT_STRING && *val.u.strv == 0)
 			rv = mv_empty();
 		else
@@ -763,7 +763,7 @@ typedef struct _rval_evaluator_from_local_variable_state_t {
 mv_t rval_evaluator_from_local_variable_func(void* pvstate, variables_t* pvars) {
 	rval_evaluator_from_local_variable_state_t* pstate = pvstate;
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	mv_t val = local_stack_frame_get_non_map(pframe, pstate->vardef_frame_relative_index);
+	mv_t val = local_stack_frame_get_scalar_from_nonindexed(pframe, pstate->vardef_frame_relative_index);
 	return mv_copy(&val);
 }
 
