@@ -46014,6 +46014,7 @@ mlr --from ./reg_test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":
 
 mlr --from ./reg_test/input/xyz2 put -q var o = @o; dump o
 
+
 mlr --from ./reg_test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
 {
   "a": 1,
@@ -46069,6 +46070,7 @@ mlr --from ./reg_test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; 
 }
 
 mlr --from ./reg_test/input/xyz2 put -q o = @o; dump o
+
 
 mlr --from ./reg_test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
 {
