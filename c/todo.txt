@@ -117,47 +117,47 @@ function_manager.c:
 mlr_dsl_cst_assignment_statements.c:
 - parameter marshaling in single-rhs-assign-to-map-lhs context
 .
-k assign LHS full-srec          from RHS maplit             alloc ephem & moev to 
-k assign LHS full-srec          from RHS full-srec          xxx
-k assign LHS full-srec          from RHS full-oosvar        xxx
-k assign LHS full-srec          from RHS oosvar             xxx
-k assign LHS full-srec          from RHS localvar           xxx
-- assign LHS full-srec          from RHS func-retval        xxx
+k assign LHS full-srec          from RHS maplit             alloc ephem & write elementwise
+k assign LHS full-srec          from RHS full-srec          no-op
+k assign LHS full-srec          from RHS full-oosvar        ref & write elementwise
+k assign LHS full-srec          from RHS oosvar             ref & write elementwise
+k assign LHS full-srec          from RHS localvar           ref & copy & move
+- assign LHS full-srec          from RHS func-retval        alloc ephem & move
 .
-- assign LHS full-oosvar        from RHS maplit             xxx
-- assign LHS full-oosvar        from RHS full-srec          xxx
-- assign LHS full-oosvar        from RHS full-oosvar        xxx
-- assign LHS full-oosvar        from RHS oosvar             xxx
-- assign LHS full-oosvar        from RHS localvar           xxx
-- assign LHS full-oosvar        from RHS func-retval        xxx
+- assign LHS full-oosvar        from RHS maplit             alloc ephem & move
+- assign LHS full-oosvar        from RHS full-srec          copy & move
+- assign LHS full-oosvar        from RHS full-oosvar        ref & copy & move
+- assign LHS full-oosvar        from RHS oosvar             ref & copy & move
+- assign LHS full-oosvar        from RHS localvar           ref & copy & move
+- assign LHS full-oosvar        from RHS func-retval        alloc ephem & move
 .
-k assign LHS oosvar             from RHS maplit             xxx
-k assign LHS oosvar             from RHS full-srec          xxx
-k assign LHS oosvar             from RHS full-oosvar        xxx
-k assign LHS oosvar             from RHS oosvar             xxx
-k assign LHS oosvar             from RHS localvar           xxx
-- assign LHS oosvar             from RHS func-retval        xxx
+k assign LHS oosvar             from RHS maplit             alloc ephem & move
+k assign LHS oosvar             from RHS full-srec          copy elementwise
+k assign LHS oosvar             from RHS full-oosvar        ref & copy
+k assign LHS oosvar             from RHS oosvar             ref & copy
+k assign LHS oosvar             from RHS localvar           ref & copy
+- assign LHS oosvar             from RHS func-retval        alloc ephem & move
 .
-k define LHS map-typed-localvar from RHS maplit             xxx
-k define LHS map-typed-localvar from RHS full-srec          xxx
-k define LHS map-typed-localvar from RHS full-oosvar        xxx
-k define LHS map-typed-localvar from RHS oosvar             xxx
-k define LHS map-typed-localvar from RHS localvar           xxx
-- define LHS map-typed-localvar from RHS func-retval        xxx
+k define LHS map-typed-localvar from RHS maplit             alloc ephem & move
+k define LHS map-typed-localvar from RHS full-srec          copy elementwise
+k define LHS map-typed-localvar from RHS full-oosvar        ref & copy
+k define LHS map-typed-localvar from RHS oosvar             ref & copy
+k define LHS map-typed-localvar from RHS localvar           ref & copy
+- define LHS map-typed-localvar from RHS func-retval        alloc ephem & move
 .
-k define LHS untyped-localvar   from RHS maplit             xxx
-k define LHS untyped-localvar   from RHS full-srec          xxx
-k define LHS untyped-localvar   from RHS full-oosvar        xxx
-k define LHS untyped-localvar   from RHS oosvar             xxx
-k define LHS untyped-localvar   from RHS localvar           xxx
-- define LHS untyped-localvar   from RHS func-retval        xxx
+k define LHS untyped-localvar   from RHS maplit             alloc ephem & move
+k define LHS untyped-localvar   from RHS full-srec          copy elementwise
+k define LHS untyped-localvar   from RHS full-oosvar        ref & copy
+k define LHS untyped-localvar   from RHS oosvar             ref & copy
+k define LHS untyped-localvar   from RHS localvar           ref & copy
+- define LHS untyped-localvar   from RHS func-retval        alloc ephem & move
 .
-k assign LHS localvar           from RHS maplit             xxx
-k assign LHS localvar           from RHS full-srec          xxx
-k assign LHS localvar           from RHS full-oosvar        xxx
-k assign LHS localvar           from RHS oosvar             xxx
-k assign LHS localvar           from RHS localvar           xxx
-- assign LHS localvar           from RHS func-retval        xxx
+k assign LHS localvar           from RHS maplit             alloc ephem & move
+k assign LHS localvar           from RHS full-srec          copy elementwise
+k assign LHS localvar           from RHS full-oosvar        ref & copy
+k assign LHS localvar           from RHS oosvar             ref & copy
+k assign LHS localvar           from RHS localvar           ref & copy
+- assign LHS localvar           from RHS func-retval        alloc ephem & move
 
 * typedecl annotation for func retvals: 'func f(): bool'
 
