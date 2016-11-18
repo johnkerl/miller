@@ -306,6 +306,7 @@ static void handle_nonindexed_local_variable_assignment_from_xval(
 	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 	if (!xval.is_terminal || mv_is_present(&xval.mlrval)) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+		// xxx copy-or-not semantics
 		local_stack_frame_assign_extended_nonindexed(pframe, pstate->lhs_frame_relative_index, xval);
 	} else {
 		mlhmmv_free_submap(xval);
