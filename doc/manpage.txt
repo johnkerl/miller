@@ -3,7 +3,7 @@ MILLER(1)							     MILLER(1)
 
 
 NAME
-       Miller is like sed, awk, cut, join, and sort for name-indexed data such
+       Miller is like awk, sed, cut, join, and sort for name-indexed data such
        as CSV and tabular JSON.
 
 SYNOPSIS
@@ -1756,10 +1756,10 @@ AUTHOR
        MSP Veith <eveith@veith-m.de>.
 
 SEE ALSO
-       sed(1), awk(1), cut(1), join(1), sort(1), RFC 4180: Common Format and
+       awk(1), sed(1), cut(1), join(1), sort(1), RFC 4180: Common Format and
        MIME Type for Comma-Separated Values (CSV) Files, the miller website
        http://johnkerl.org/miller/doc
 
 
 
-				  2016-11-15			     MILLER(1)
+				  2016-11-18			     MILLER(1)

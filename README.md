@@ -1,4 +1,4 @@
-**Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV and tabular JSON.**
+**Miller is like awk, sed, cut, join, and sort for name-indexed data such as CSV and tabular JSON.**
 
 [![Build Status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller) [![License](http://img.shields.io/badge/license-BSD2-blue.svg)](https://github.com/johnkerl/miller/blob/master/LICENSE.txt) [![Docs](https://img.shields.io/badge/docs-here-yellow.svg)](http://johnkerl.org/miller/doc)
 

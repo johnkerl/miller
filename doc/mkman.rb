@@ -18,7 +18,7 @@ def main
   print make_top
 
   print make_section('NAME', [
-    "Miller is like sed, awk, cut, join, and sort for name-indexed data such as CSV and tabular JSON."
+    "Miller is like awk, sed, cut, join, and sort for name-indexed data such as CSV and tabular JSON."
   ])
 
   print make_section('SYNOPSIS', [
@@ -123,7 +123,7 @@ output separator to the given value."""
     "This manual page has been composed from Miller's help output by Eric MSP Veith <eveith@veith-m.de>."
   ])
   print make_section('SEE ALSO', [
-    "sed(1), awk(1), cut(1), join(1), sort(1), RFC 4180: Common Format and MIME Type for " +
+    "awk(1), sed(1), cut(1), join(1), sort(1), RFC 4180: Common Format and MIME Type for " +
     "Comma-Separated Values (CSV) Files, the miller website http://johnkerl.org/miller/doc"
   ])
 end
