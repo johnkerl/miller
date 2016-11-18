@@ -340,7 +340,7 @@ mlr_dsl_cst_statement_t* alloc_indexed_local_variable_assignment(mlr_dsl_cst_t* 
 	MLR_INTERNAL_CODING_ERROR_IF(plhs_node->type != MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE);
 	MLR_INTERNAL_CODING_ERROR_IF(plhs_node->pchildren == NULL);
 
-	pstate->lhs_variable_name = mlr_strdup_or_die(plhs_node->text);
+	pstate->lhs_variable_name = plhs_node->text;
 	MLR_INTERNAL_CODING_ERROR_IF(plhs_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstate->lhs_frame_relative_index = plhs_node->vardef_frame_relative_index;
 
@@ -639,10 +639,7 @@ static void handle_full_srec_assignment(
 	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
 	mlhmmv_value_t mapval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 
-	if (mapval.is_terminal) {
-		mlhmmv_free_submap(mapval); // xxx rename
-	} else {
-
+	if (!mapval.is_terminal) {
 		for (mlhmmv_level_entry_t* pe = mapval.pnext_level->phead; pe != NULL; pe = pe->pnext) {
 			mv_t* pkey = &pe->level_key;
 			mlhmmv_value_t* pval = &pe->level_value;
@@ -669,6 +666,7 @@ static void handle_full_srec_assignment(
 			}
 		}
 	}
+	mlhmmv_free_submap(mapval);
 }
 
 // ================================================================
