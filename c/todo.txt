@@ -31,7 +31,8 @@ OTHER:
 MAPVAR CHECKLIST:
 
 * debt-reduction
-  ! valgrinds
+  * get a grip on copy/reference semantics. probably separate out maplit & fcnretval.
+  - valgrinds
   ! vg.out.000 @neatener !
   - xxxes
   - prune unused functions
@@ -114,6 +115,7 @@ k for-loop over localvar
 function_manager.c:
 ? - parameter marshaling in general rval context
 
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 mlr_dsl_cst_assignment_statements.c:
 - parameter marshaling in single-rhs-assign-to-map-lhs context
 .
@@ -158,6 +160,26 @@ k assign LHS localvar           from RHS full-oosvar        ref & copy
 k assign LHS localvar           from RHS oosvar             ref & copy
 k assign LHS localvar           from RHS localvar           ref & copy
 - assign LHS localvar           from RHS func-retval        alloc ephem & move
+
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+mlr_dsl_cst_output_statements.c:
+
+dump
+print
+emit
+
+all should ref & copy except for fcnretval & maplit which need alloc-copy
+
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+./mapping/mlr_dsl_cst_for_map_statements.c
+
+all should ref & except for fcnretval & maplit which need alloc -- ?
+-> what about protection against modifying the map while iterating?
+-> single-fors: copy keylist first.
+-> multi-fors: imitate existing for-oosvar
+-> make an xval_ref_evaluator & use that to reduce code-dupe across for-types
+
+ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
 * typedecl annotation for func retvals: 'func f(): bool'
 
