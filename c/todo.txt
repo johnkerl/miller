@@ -69,28 +69,47 @@ w lashed -- code-renames/debt-reduction/valgrinds first, before digging further
 mlr_dsl_cst_output_statements.c:
 k dump w/ no args
 k dump maplit -- ensure scalar-out is printed
+  > must alloc & free the ephemeral
 k dump full-srec -- ensure scalar-out is printed
+  > ref only
 k dump full-oosvar -- ensure scalar-out is printed
+  > ref only
 k dump oosvar -- ensure scalar-out is printed
+  > ref only
 k dump localvar -- ensure scalar-out is printed
+  > ref only
 - dump func retval -- ensure scalar-out is printed
+  > must alloc & free the ephemeral
 
 k emit full oosvar
+  > only ref the rhs
 k emit oosvar
+  > only ref the rhs
 k emit localvar -- check lashed; UTs
+  > only ref the rhs
 k emit mapliteral -- check lashed; UTs
+  > must alloc & free the ephemeral
 - emit func retval
+  > must alloc & free the ephemeral
 
 - emit-lashed full oosvar
+  > only ref the rhs
 k emit-lashed oosvar
+  > only ref the rhs
 k emit-lashed localvar -- check lashed; UTs
+  > only ref the rhs
 k emit-lashed mapliteral -- check lashed; UTs
+  > must alloc & free the ephemeral
 - emit-lashed func retval
+  > must alloc & free the ephemeral
 
 mlr_dsl_cst_for_map_statements.c:
 k for-loop over maplit
+  > must alloc & free the ephemeral
 k for-loop over localvar
+  > only ref the rhs
 - for-loop over func retval
+  > must alloc & free the ephemeral
 
 function_manager.c:
 ? - parameter marshaling in general rval context
@@ -98,47 +117,47 @@ function_manager.c:
 mlr_dsl_cst_assignment_statements.c:
 - parameter marshaling in single-rhs-assign-to-map-lhs context
 .
-k assign LHS full-srec          ? assign RHS maplit
-k assign LHS full-srec          ? assign RHS full-srec
-k assign LHS full-srec          ? assign RHS full-oosvar
-k assign LHS full-srec          ? assign RHS oosvar
-k assign LHS full-srec          ? assign RHS localvar
-- assign LHS full-srec          ? assign RHS func-retval
+k assign LHS full-srec          from RHS maplit             alloc ephem & moev to 
+k assign LHS full-srec          from RHS full-srec          xxx
+k assign LHS full-srec          from RHS full-oosvar        xxx
+k assign LHS full-srec          from RHS oosvar             xxx
+k assign LHS full-srec          from RHS localvar           xxx
+- assign LHS full-srec          from RHS func-retval        xxx
 .
-- assign LHS full-oosvar        ? assign RHS maplit
-- assign LHS full-oosvar        ? assign RHS full-srec
-- assign LHS full-oosvar        ? assign RHS full-oosvar
-- assign LHS full-oosvar        ? assign RHS oosvar
-- assign LHS full-oosvar        ? assign RHS localvar
-- assign LHS full-oosvar        ? assign RHS func-retval
+- assign LHS full-oosvar        from RHS maplit             xxx
+- assign LHS full-oosvar        from RHS full-srec          xxx
+- assign LHS full-oosvar        from RHS full-oosvar        xxx
+- assign LHS full-oosvar        from RHS oosvar             xxx
+- assign LHS full-oosvar        from RHS localvar           xxx
+- assign LHS full-oosvar        from RHS func-retval        xxx
 .
-k assign LHS oosvar             ? assign RHS maplit
-k assign LHS oosvar             ? assign RHS full-srec
-k assign LHS oosvar             ? assign RHS full-oosvar
-k assign LHS oosvar             ? assign RHS oosvar
-k assign LHS oosvar             ? assign RHS localvar
-- assign LHS oosvar             ? assign RHS func-retval
+k assign LHS oosvar             from RHS maplit             xxx
+k assign LHS oosvar             from RHS full-srec          xxx
+k assign LHS oosvar             from RHS full-oosvar        xxx
+k assign LHS oosvar             from RHS oosvar             xxx
+k assign LHS oosvar             from RHS localvar           xxx
+- assign LHS oosvar             from RHS func-retval        xxx
 .
-k define LHS map-typed-localvar ? assign RHS maplit
-k define LHS map-typed-localvar ? assign RHS full-srec
-k define LHS map-typed-localvar ? assign RHS full-oosvar
-k define LHS map-typed-localvar ? assign RHS oosvar
-k define LHS map-typed-localvar ? assign RHS localvar
-- define LHS map-typed-localvar ? assign RHS func-retval
+k define LHS map-typed-localvar from RHS maplit             xxx
+k define LHS map-typed-localvar from RHS full-srec          xxx
+k define LHS map-typed-localvar from RHS full-oosvar        xxx
+k define LHS map-typed-localvar from RHS oosvar             xxx
+k define LHS map-typed-localvar from RHS localvar           xxx
+- define LHS map-typed-localvar from RHS func-retval        xxx
 .
-k define LHS untyped-localvar   ? assign RHS maplit
-k define LHS untyped-localvar   ? assign RHS full-srec
-k define LHS untyped-localvar   ? assign RHS full-oosvar
-k define LHS untyped-localvar   ? assign RHS oosvar
-k define LHS untyped-localvar   ? assign RHS localvar
-- define LHS untyped-localvar   ? assign RHS func-retval
+k define LHS untyped-localvar   from RHS maplit             xxx
+k define LHS untyped-localvar   from RHS full-srec          xxx
+k define LHS untyped-localvar   from RHS full-oosvar        xxx
+k define LHS untyped-localvar   from RHS oosvar             xxx
+k define LHS untyped-localvar   from RHS localvar           xxx
+- define LHS untyped-localvar   from RHS func-retval        xxx
 .
-k assign LHS localvar           ? assign RHS maplit
-k assign LHS localvar           ? assign RHS full-srec
-k assign LHS localvar           ? assign RHS full-oosvar
-k assign LHS localvar           ? assign RHS oosvar
-k assign LHS localvar           ? assign RHS localvar
-- assign LHS localvar           ? assign RHS func-retval
+k assign LHS localvar           from RHS maplit             xxx
+k assign LHS localvar           from RHS full-srec          xxx
+k assign LHS localvar           from RHS full-oosvar        xxx
+k assign LHS localvar           from RHS oosvar             xxx
+k assign LHS localvar           from RHS localvar           xxx
+- assign LHS localvar           from RHS func-retval        xxx
 
 * typedecl annotation for func retvals: 'func f(): bool'
 
