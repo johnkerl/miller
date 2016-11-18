@@ -220,7 +220,7 @@ static void free_local_variable_definition(mlr_dsl_cst_statement_t* pstatement) 
 }
 
 // ----------------------------------------------------------------
-static void handle_local_variable_definition_from_xval( // xxx mapvar
+static void handle_local_variable_definition_from_xval(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -231,6 +231,7 @@ static void handle_local_variable_definition_from_xval( // xxx mapvar
 	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	// xxx copy semantics for the assign? find out, fix, and encode that in the function name.
 	local_stack_frame_define_extended(pframe,
 		pstate->lhs_variable_name, pstate->lhs_frame_relative_index, pstate->lhs_type_mask,
 		xval);
@@ -367,6 +368,7 @@ static void free_indexed_local_variable_assignment(mlr_dsl_cst_statement_t* psta
 		rval_evaluator_t* pev = pe->pvvalue;
 		pev->pfree_func(pev);
 	}
+	sllv_free(pstate->plhs_keylist_evaluators);
 
 	pstate->prhs_xevaluator->pfree_func(pstate->prhs_xevaluator);
 
@@ -448,6 +450,7 @@ static void free_oosvar_assignment(mlr_dsl_cst_statement_t* pstatement) {
 		rval_evaluator_t* pev = pe->pvvalue;
 		pev->pfree_func(pev);
 	}
+	sllv_free(pstate->plhs_keylist_evaluators);
 	if (pstate->prhs_xevaluator != NULL) {
 		pstate->prhs_xevaluator->pfree_func(pstate->prhs_xevaluator);
 	}
@@ -522,6 +525,7 @@ static void free_oosvar_from_full_srec_assignment(mlr_dsl_cst_statement_t* pstat
 		rval_evaluator_t* pev = pe->pvvalue;
 		pev->pfree_func(pev);
 	}
+	sllv_free(pstate->plhs_keylist_evaluators);
 
 	free(pstate);
 }

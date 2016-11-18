@@ -193,6 +193,7 @@ static void free_unset_item(unset_item_t* punset_item) {
 	if (punset_item->psrec_field_name_evaluator != NULL) {
 		punset_item->psrec_field_name_evaluator->pfree_func(punset_item->psrec_field_name_evaluator);
 	}
+	free(punset_item);
 }
 
 static void handle_unset_local_variable(

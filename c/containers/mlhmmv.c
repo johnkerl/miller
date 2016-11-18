@@ -1383,6 +1383,7 @@ void mlhmmv_print_terminal(mv_t* pmv, int quote_values_always, FILE* ostream) {
 	} else {
 		fprintf(ostream, "%s", level_value_string);
 	}
+	free(level_value_string);
 }
 
 void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
