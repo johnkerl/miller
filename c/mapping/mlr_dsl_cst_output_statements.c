@@ -1524,6 +1524,16 @@ static void free_dump(mlr_dsl_cst_statement_t* pstatement) {
 	if (pstate->poutput_filename_evaluator != NULL) {
 		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
 	}
+	if (pstate->pephemeral_target_xevaluator != NULL) {
+		pstate->pephemeral_target_xevaluator->pfree_func(pstate->pephemeral_target_xevaluator);
+	}
+	if (pstate->ptarget_keylist_evaluators != NULL) {
+		for (sllve_t* pe = pstate->ptarget_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+			rval_evaluator_t* pev = pe->pvvalue;
+			pev->pfree_func(pev);
+		}
+		sllv_free(pstate->ptarget_keylist_evaluators);
+	}
 
 	if (pstate->pmulti_out != NULL) {
 		multi_out_close(pstate->pmulti_out);
@@ -1532,6 +1542,10 @@ static void free_dump(mlr_dsl_cst_statement_t* pstatement) {
 
 	free(pstate);
 }
+
+	sllv_t*               ptarget_keylist_evaluators;
+	rxval_evaluator_t*    pephemeral_target_xevaluator;
+
 
 // ----------------------------------------------------------------
 static void full_oosvar_target_getter(variables_t* pvars, dump_state_t* pstate,

@@ -391,6 +391,7 @@ static void handle_indexed_local_variable_assignment_from_xval(
 			&all_non_null_or_error);
 		if (all_non_null_or_error) {
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+			// xxx copy-or-not semantics. find out, fix, encode in function name.
 			local_stack_frame_assign_extended_indexed(pframe, pstate->lhs_frame_relative_index, pmvkeys, rhs_xvalue);
 		}
 		sllmv_free(pmvkeys);

@@ -66,7 +66,6 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 }
 
 // ================================================================
-// xxx
 // {
 //   "a" : 1,
 //   "b" : {
@@ -208,6 +207,7 @@ static void rxval_evaluator_from_map_literal_free_aux(map_literal_list_evaluator
 			rxval_evaluator_from_map_literal_free_aux(ppair_evaluator->plist_evaluator);
 		}
 	}
+	sllv_free(plist_evaluator->ppair_evaluators);
 }
 
 static void rxval_evaluator_from_map_literal_free(rxval_evaluator_t* prxval_evaluator) {
