@@ -1130,6 +1130,7 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 		pstate->file_output_mode = file_output_mode_from_ast_node_type(poutput_node->type);
 		phandler = handle_emit_lashed_to_file;
 	}
+	pstate->flush_every_record = pcst->flush_every_record;
 
 	return mlr_dsl_cst_statement_valloc(
 		pnode,
