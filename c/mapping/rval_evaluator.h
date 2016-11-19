@@ -37,11 +37,15 @@
 #include "containers/loop_stack.h"
 #include "lib/string_array.h"
 
+// ----------------------------------------------------------------
+// xxx needs to be in a different header file
 typedef struct _return_state_t {
 	mlhmmv_value_t retval;
 	int returned;
 } return_state_t;
 
+// ----------------------------------------------------------------
+// xxx needs to be in a different header file
 typedef struct _variables_t {
 	lrec_t*          pinrec;
 	lhmsmv_t*        ptyped_overlay;
@@ -74,16 +78,24 @@ typedef struct _rval_evaluator_t {
 // This is for map-valued contexts: LHS/RHS of assignments,
 // UDF/subroutine arguments, and UDF return values.
 
+// is_ephemeral is TRUE for map-literals, function return values, and data
+// copied out of srecs.  is_ephemeral is FALSE when the pointer is into an
+// existing data structure's memory (e.g. oosvars or locals).
+typedef struct _boxed_xval_t {
+	mlhmmv_value_t* pxval;
+	int is_ephemeral;
+} boxed_xval_t;
+
 struct _rxval_evaluator_xxx_deprecated_t;  // forward reference for method declarations
 
-typedef mlhmmv_value_t rxval_evaluator_process_func_t(void* pvstate, variables_t* pvars);
+typedef mlhmmv_value_t rxval_evaluator_process_func_xxx_deprecated_t(void* pvstate, variables_t* pvars);
 
-typedef void rxval_evaluator_free_func_t(struct _rxval_evaluator_xxx_deprecated_t*);
+typedef void rxval_evaluator_free_func_xxx_deprecated_t(struct _rxval_evaluator_xxx_deprecated_t*);
 
 typedef struct _rxval_evaluator_xxx_deprecated_t {
 	void* pvstate;
-	rxval_evaluator_process_func_t* pprocess_func;
-	rxval_evaluator_free_func_t*    pfree_func;
+	rxval_evaluator_process_func_xxx_deprecated_t* pprocess_func;
+	rxval_evaluator_free_func_xxx_deprecated_t*    pfree_func;
 } rxval_evaluator_xxx_deprecated_t;
 
 #endif // RVAL_EVALUATOR_H
