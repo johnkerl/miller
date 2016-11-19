@@ -17,7 +17,7 @@
 // ================================================================
 
 // ----------------------------------------------------------------
-rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
 	switch(pnode->type) {
@@ -111,7 +111,7 @@ typedef struct _map_literal_list_evaluator_t {
 typedef struct _map_literal_pair_evaluator_t {
 	rval_evaluator_t*             pkey_evaluator;
 	int                           is_terminal;
-	rxval_evaluator_t*            pxval_evaluator;
+	rxval_evaluator_xxx_deprecated_t*            pxval_evaluator;
 	map_literal_list_evaluator_t* plist_evaluator;
 } map_literal_pair_evaluator_t;
 
@@ -210,14 +210,14 @@ static void rxval_evaluator_from_map_literal_free_aux(map_literal_list_evaluator
 	sllv_free(plist_evaluator->ppair_evaluators);
 }
 
-static void rxval_evaluator_from_map_literal_free(rxval_evaluator_t* prxval_evaluator) {
+static void rxval_evaluator_from_map_literal_free(rxval_evaluator_xxx_deprecated_t* prxval_evaluator) {
 	rxval_evaluator_from_map_literal_state_t* pstate = prxval_evaluator->pvstate;
 	rxval_evaluator_from_map_literal_free_aux(pstate->proot_list_evaluator);
 	free(pstate);
 	free(prxval_evaluator);
 }
 
-rxval_evaluator_t* rxval_evaluator_alloc_from_map_literal(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_map_literal(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
 	rxval_evaluator_from_map_literal_state_t* pstate = mlr_malloc_or_die(
@@ -225,7 +225,7 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_map_literal(mlr_dsl_ast_node_t* pn
 	pstate->proot_list_evaluator = allocate_map_literal_evaluator_from_ast(
 		pnode, pfmgr, type_inferencing, context_flags);
 
-	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	rxval_evaluator_xxx_deprecated_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_xxx_deprecated_t));
 	prxval_evaluator->pvstate       = pstate;
 	prxval_evaluator->pprocess_func = rxval_evaluator_from_map_literal_func;
 	prxval_evaluator->pfree_func    = rxval_evaluator_from_map_literal_free;
@@ -249,13 +249,13 @@ mlhmmv_value_t rxval_evaluator_from_nonindexed_local_variable_func(void* pvstate
 	}
 }
 
-static void rxval_evaluator_from_nonindexed_local_variable_free(rxval_evaluator_t* prxval_evaluator) {
+static void rxval_evaluator_from_nonindexed_local_variable_free(rxval_evaluator_xxx_deprecated_t* prxval_evaluator) {
 	rxval_evaluator_from_nonindexed_local_variable_state_t* pstate = prxval_evaluator->pvstate;
 	free(pstate);
 	free(prxval_evaluator);
 }
 
-rxval_evaluator_t* rxval_evaluator_alloc_from_nonindexed_local_variable(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_nonindexed_local_variable(
 	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
 {
 	rxval_evaluator_from_nonindexed_local_variable_state_t* pstate = mlr_malloc_or_die(
@@ -263,7 +263,7 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_nonindexed_local_variable(
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstate->vardef_frame_relative_index = pnode->vardef_frame_relative_index;
 
-	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	rxval_evaluator_xxx_deprecated_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_xxx_deprecated_t));
 	prxval_evaluator->pvstate       = pstate;
 	prxval_evaluator->pprocess_func = rxval_evaluator_from_nonindexed_local_variable_func;
 	prxval_evaluator->pfree_func    = rxval_evaluator_from_nonindexed_local_variable_free;
@@ -299,7 +299,7 @@ mlhmmv_value_t rxval_evaluator_from_indexed_local_variable_func(void* pvstate, v
 	}
 }
 
-static void rxval_evaluator_from_indexed_local_variable_free(rxval_evaluator_t* prxval_evaluator) {
+static void rxval_evaluator_from_indexed_local_variable_free(rxval_evaluator_xxx_deprecated_t* prxval_evaluator) {
 	rxval_evaluator_from_indexed_local_variable_state_t* pstate = prxval_evaluator->pvstate;
 	for (sllve_t* pe = pstate->pkeylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 		rval_evaluator_t* prval_evaluator = pe->pvvalue;
@@ -310,7 +310,7 @@ static void rxval_evaluator_from_indexed_local_variable_free(rxval_evaluator_t* 
 	free(prxval_evaluator);
 }
 
-rxval_evaluator_t* rxval_evaluator_alloc_from_indexed_local_variable(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_indexed_local_variable(
 	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
 {
 	rxval_evaluator_from_indexed_local_variable_state_t* pstate = mlr_malloc_or_die(
@@ -320,7 +320,7 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_indexed_local_variable(
 	pstate->pkeylist_evaluators = allocate_keylist_evaluators_from_ast_node(
 		pnode, pfmgr, type_inferencing, context_flags);
 
-	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	rxval_evaluator_xxx_deprecated_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_xxx_deprecated_t));
 	prxval_evaluator->pvstate       = pstate;
 	prxval_evaluator->pprocess_func = rxval_evaluator_from_indexed_local_variable_func;
 	prxval_evaluator->pfree_func    = rxval_evaluator_from_indexed_local_variable_free;
@@ -356,7 +356,7 @@ mlhmmv_value_t rxval_evaluator_from_oosvar_keylist_func(void* pvstate, variables
 	}
 }
 
-static void rxval_evaluator_from_oosvar_keylist_free(rxval_evaluator_t* prxval_evaluator) {
+static void rxval_evaluator_from_oosvar_keylist_free(rxval_evaluator_xxx_deprecated_t* prxval_evaluator) {
 	rxval_evaluator_from_oosvar_keylist_state_t* pstate = prxval_evaluator->pvstate;
 	for (sllve_t* pe = pstate->pkeylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 		rval_evaluator_t* prval_evaluator = pe->pvvalue;
@@ -367,7 +367,7 @@ static void rxval_evaluator_from_oosvar_keylist_free(rxval_evaluator_t* prxval_e
 	free(prxval_evaluator);
 }
 
-rxval_evaluator_t* rxval_evaluator_alloc_from_oosvar_keylist(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_oosvar_keylist(
 	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
 {
 	rxval_evaluator_from_oosvar_keylist_state_t* pstate = mlr_malloc_or_die(
@@ -375,7 +375,7 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_oosvar_keylist(
 	pstate->pkeylist_evaluators = allocate_keylist_evaluators_from_ast_node(
 		pnode, pfmgr, type_inferencing, context_flags);
 
-	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	rxval_evaluator_xxx_deprecated_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_xxx_deprecated_t));
 	prxval_evaluator->pvstate       = pstate;
 	prxval_evaluator->pprocess_func = rxval_evaluator_from_oosvar_keylist_func;
 	prxval_evaluator->pfree_func    = rxval_evaluator_from_oosvar_keylist_free;
@@ -388,14 +388,14 @@ mlhmmv_value_t rxval_evaluator_from_full_oosvar_func(void* pvstate, variables_t*
 	return mlhmmv_copy_submap_from_root(pvars->poosvars, NULL);
 }
 
-static void rxval_evaluator_from_full_oosvar_free(rxval_evaluator_t* prxval_evaluator) {
+static void rxval_evaluator_from_full_oosvar_free(rxval_evaluator_xxx_deprecated_t* prxval_evaluator) {
 	free(prxval_evaluator);
 }
 
-rxval_evaluator_t* rxval_evaluator_alloc_from_full_oosvar(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_full_oosvar(
 	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
 {
-	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	rxval_evaluator_xxx_deprecated_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_xxx_deprecated_t));
 	prxval_evaluator->pprocess_func = rxval_evaluator_from_full_oosvar_func;
 	prxval_evaluator->pfree_func    = rxval_evaluator_from_full_oosvar_free;
 
@@ -423,14 +423,14 @@ mlhmmv_value_t rxval_evaluator_from_full_srec_func(void* pvstate, variables_t* p
 	return xval;
 }
 
-static void rxval_evaluator_from_full_srec_free(rxval_evaluator_t* prxval_evaluator) {
+static void rxval_evaluator_from_full_srec_free(rxval_evaluator_xxx_deprecated_t* prxval_evaluator) {
 	free(prxval_evaluator);
 }
 
-rxval_evaluator_t* rxval_evaluator_alloc_from_full_srec(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_full_srec(
 	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
 {
-	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	rxval_evaluator_xxx_deprecated_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_xxx_deprecated_t));
 	prxval_evaluator->pprocess_func = rxval_evaluator_from_full_srec_func;
 	prxval_evaluator->pfree_func    = rxval_evaluator_from_full_srec_free;
 
@@ -449,21 +449,21 @@ mlhmmv_value_t rxval_evaluator_wrapping_rval_func(void* pvstate, variables_t* pv
 	return mlhmmv_value_transfer_terminal(val);
 }
 
-static void rxval_evaluator_wrapping_rval_free(rxval_evaluator_t* prxval_evaluator) {
+static void rxval_evaluator_wrapping_rval_free(rxval_evaluator_xxx_deprecated_t* prxval_evaluator) {
 	rxval_evaluator_wrapping_rval_state_t* pstate = prxval_evaluator->pvstate;
 	pstate->prval_evaluator->pfree_func(pstate->prval_evaluator);
 	free(pstate);
 	free(prxval_evaluator);
 }
 
-rxval_evaluator_t* rxval_evaluator_alloc_wrapping_rval(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_wrapping_rval(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
 	rxval_evaluator_wrapping_rval_state_t* pstate = mlr_malloc_or_die(
 		sizeof(rxval_evaluator_wrapping_rval_state_t));
 	pstate->prval_evaluator = rval_evaluator_alloc_from_ast(pnode, pfmgr, type_inferencing, context_flags);
 
-	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	rxval_evaluator_xxx_deprecated_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_xxx_deprecated_t));
 	prxval_evaluator->pvstate       = pstate;
 	prxval_evaluator->pprocess_func = rxval_evaluator_wrapping_rval_func;
 	prxval_evaluator->pfree_func    = rxval_evaluator_wrapping_rval_free;

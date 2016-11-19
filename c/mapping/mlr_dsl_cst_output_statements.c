@@ -431,7 +431,7 @@ typedef struct _emit_state_t {
 	record_emitter_t*  precord_emitter;
 
 	// For map literals
-	rxval_evaluator_t* prhs_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
 
 	// For local variables
 	char* localvar_name;
@@ -796,7 +796,7 @@ static void record_emitter_from_map_literal(
 	sllv_t*       poutrecs,
 	char*         oosvar_flatten_separator)
 {
-	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pstate->prhs_xevaluator;
 	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 	sllmv_t* pmvkeys = sllmv_alloc();
 
@@ -913,7 +913,7 @@ typedef void emit_lashed_item_freer_t(struct _emit_lashed_item_t* pitem);
 
 typedef struct _emit_lashed_item_t {
 	// For map literals
-	rxval_evaluator_t* prhs_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
 	mlhmmv_value_t ephemeral_xvalue;
 
 	// For local variables
@@ -996,7 +996,7 @@ static void indexed_local_variable_emit_lashed_item_free(emit_lashed_item_t* pit
 static mlhmmv_value_t* map_literal_emit_lashed_item_get(
 	emit_lashed_item_t* pitem, variables_t* pvars, sllmv_t* pmvkeys)
 {
-	rxval_evaluator_t* prhs_xevaluator = pitem->prhs_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pitem->prhs_xevaluator;
 	pitem->ephemeral_xvalue = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 	return &pitem->ephemeral_xvalue;
 }
@@ -1415,7 +1415,7 @@ static dump_target_freer_t dump_target_free;
 typedef struct _dump_state_t {
 	int                   target_vardef_frame_relative_index;
 	sllv_t*               ptarget_keylist_evaluators;
-	rxval_evaluator_t*    pephemeral_target_xevaluator;
+	rxval_evaluator_xxx_deprecated_t*    pephemeral_target_xevaluator;
 	mlhmmv_value_t        ephemeral_xvalue;
 
 	dump_target_getter_t* pdump_target_getter;
@@ -1544,7 +1544,7 @@ static void free_dump(mlr_dsl_cst_statement_t* pstatement) {
 }
 
 	sllv_t*               ptarget_keylist_evaluators;
-	rxval_evaluator_t*    pephemeral_target_xevaluator;
+	rxval_evaluator_xxx_deprecated_t*    pephemeral_target_xevaluator;
 
 
 // ----------------------------------------------------------------
@@ -1630,7 +1630,7 @@ static void ephemeral_target_getter(variables_t* pvars, dump_state_t* pstate,
 	*ppval   = NULL;
 	*pplevel = NULL;
 
-	rxval_evaluator_t* prhs_xevaluator = pstate->pephemeral_target_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pstate->pephemeral_target_xevaluator;
 	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 
 	pstate->ephemeral_xvalue = xval;

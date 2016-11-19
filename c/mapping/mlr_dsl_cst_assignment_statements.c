@@ -168,7 +168,7 @@ typedef struct _local_variable_definition_state_t {
 	char*              lhs_variable_name;
 	int                lhs_frame_relative_index;
 	int                lhs_type_mask;
-	rxval_evaluator_t* prhs_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
 } local_variable_definition_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_local_variable_definition_from_xval;
@@ -227,7 +227,7 @@ static void handle_local_variable_definition_from_xval(
 {
 	local_variable_definition_state_t* pstate = pstatement->pvstate;
 
-	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pstate->prhs_xevaluator;
 	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
@@ -241,7 +241,7 @@ static void handle_local_variable_definition_from_xval(
 typedef struct _nonindexed_local_variable_assignment_state_t {
 	char*              lhs_variable_name; // For error messages only: stack-index is computed by stack-allocator:
 	int                lhs_frame_relative_index;
-	rxval_evaluator_t* prhs_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
 } nonindexed_local_variable_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_nonindexed_local_variable_assignment_from_xval;
@@ -302,7 +302,7 @@ static void handle_nonindexed_local_variable_assignment_from_xval(
 {
 	nonindexed_local_variable_assignment_state_t* pstate = pstatement->pvstate;
 
-	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pstate->prhs_xevaluator;
 	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 	if (!xval.is_terminal || mv_is_present(&xval.mlrval)) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
@@ -318,7 +318,7 @@ typedef struct _indexed_local_variable_assignment_state_t {
 	char*              lhs_variable_name; // For error messages only: stack-index is computed by stack-allocator:
 	int                lhs_frame_relative_index;
 	sllv_t*            plhs_keylist_evaluators;
-	rxval_evaluator_t* prhs_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
 } indexed_local_variable_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_indexed_local_variable_assignment_from_xval;
@@ -384,7 +384,7 @@ static void handle_indexed_local_variable_assignment_from_xval(
 {
 	indexed_local_variable_assignment_state_t* pstate = pstatement->pvstate;
 
-	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pstate->prhs_xevaluator;
 	mlhmmv_value_t rhs_xvalue = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 	if (!rhs_xvalue.is_terminal || mv_is_present(&rhs_xvalue.mlrval)) {
 		int all_non_null_or_error = TRUE;
@@ -408,7 +408,7 @@ static void handle_indexed_local_variable_assignment_from_xval(
 
 typedef struct _oosvar_assignment_state_t {
 	sllv_t*            plhs_keylist_evaluators;
-	rxval_evaluator_t* prhs_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
 } oosvar_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment_from_xval;
@@ -473,7 +473,7 @@ static void handle_oosvar_assignment_from_xval(
 		&lhs_all_non_null_or_error);
 
 	if (lhs_all_non_null_or_error) {
-		rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+		rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pstate->prhs_xevaluator;
 		mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 		if (!xval.is_terminal || mv_is_present(&xval.mlrval)) { // xxx funcify
 			mlhmmv_put_value_at_level_aux(pvars->poosvars->proot_level, plhskeys->phead, &xval); // xxx rename
@@ -571,7 +571,7 @@ static void handle_oosvar_from_full_srec_assignment(
 // are oosvars in which case there are recursive copies, or in case of $* on the LHS or RHS.
 
 typedef struct _full_srec_assignment_state_t {
-	rxval_evaluator_t* prhs_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
 } full_srec_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_full_srec_assignment_nop;
@@ -638,7 +638,7 @@ static void handle_full_srec_assignment(
 	lrec_clear(pvars->pinrec);
 	lhmsmv_clear(pvars->ptyped_overlay);
 
-	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pstate->prhs_xevaluator;
 	mlhmmv_value_t mapval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 
 	if (!mapval.is_terminal) {

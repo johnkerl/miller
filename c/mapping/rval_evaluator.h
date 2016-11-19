@@ -74,16 +74,16 @@ typedef struct _rval_evaluator_t {
 // This is for map-valued contexts: LHS/RHS of assignments,
 // UDF/subroutine arguments, and UDF return values.
 
-struct _rxval_evaluator_t;  // forward reference for method declarations
+struct _rxval_evaluator_xxx_deprecated_t;  // forward reference for method declarations
 
 typedef mlhmmv_value_t rxval_evaluator_process_func_t(void* pvstate, variables_t* pvars);
 
-typedef void rxval_evaluator_free_func_t(struct _rxval_evaluator_t*);
+typedef void rxval_evaluator_free_func_t(struct _rxval_evaluator_xxx_deprecated_t*);
 
-typedef struct _rxval_evaluator_t {
+typedef struct _rxval_evaluator_xxx_deprecated_t {
 	void* pvstate;
 	rxval_evaluator_process_func_t* pprocess_func;
 	rxval_evaluator_free_func_t*    pfree_func;
-} rxval_evaluator_t;
+} rxval_evaluator_xxx_deprecated_t;
 
 #endif // RVAL_EVALUATOR_H

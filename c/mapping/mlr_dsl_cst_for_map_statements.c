@@ -765,7 +765,7 @@ typedef struct _for_map_literal_state_t {
 	int    v_frame_relative_index;
 	int    v_type_mask;
 
-	rxval_evaluator_t* ptarget_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* ptarget_xevaluator;
 } for_map_literal_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_for_map_literal;
@@ -966,7 +966,7 @@ typedef struct _for_map_literal_key_only_state_t {
 	int   v_frame_relative_index;
 	int   v_type_mask;
 
-	rxval_evaluator_t* ptarget_xevaluator;
+	rxval_evaluator_xxx_deprecated_t* ptarget_xevaluator;
 } for_map_literal_key_only_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_for_map_literal_key_only;
