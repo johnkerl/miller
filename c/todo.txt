@@ -69,29 +69,30 @@ w lashed -- code-renames/debt-reduction/valgrinds first, before digging further
 
 mlr_dsl_cst_output_statements.c:
 k dump w/ no args
-k dump maplit -- ensure scalar-out is printed      > alloc & free the ephemeral
-k dump full-srec -- ensure scalar-out is printed   > ref only
-k dump full-oosvar -- ensure scalar-out is printed > ref only
-k dump oosvar -- ensure scalar-out is printed      > ref only
 k dump localvar -- ensure scalar-out is printed    > ref only
+k dump oosvar -- ensure scalar-out is printed      > ref only
+k dump full-oosvar -- ensure scalar-out is printed > ref only
+k dump full-srec -- ensure scalar-out is printed   > ref only
+k dump maplit -- ensure scalar-out is printed      > alloc & free the ephemeral
 - dump func retval -- ensure scalar-out is printed > alloc & free the ephemeral
 
-k emit full oosvar                            > ref the rhs
-k emit oosvar                                 > ref the rhs
 k emit localvar -- check lashed; UTs          > ref the rhs
+k emit oosvar                                 > ref the rhs
+k emit full oosvar                            > ref the rhs
 k emit mapliteral -- check lashed; UTs        > alloc & free the ephemeral
 - emit func retval                            > alloc & free the ephemeral
 
-- emit-lashed full oosvar                     > ref the rhs
-k emit-lashed oosvar                          > ref the rhs
 k emit-lashed localvar -- check lashed; UTs   > ref the rhs
+k emit-lashed oosvar                          > ref the rhs
+- emit-lashed full oosvar                     > ref the rhs
 k emit-lashed mapliteral -- check lashed; UTs > alloc & free the ephemeral
 - emit-lashed func retval                     > alloc & free the ephemeral
 
 mlr_dsl_cst_for_map_statements.c:
-k for-loop over maplit                        > alloc & free the ephemeral
+k for-loop over oosvar                        > ref the rhs
 k for-loop over localvar                      > ref the rhs
 - for-loop over func retval                   > alloc & free the ephemeral
+k for-loop over maplit                        > alloc & free the ephemeral
 
 function_manager.c:
 ? - parameter marshaling in general rval context
