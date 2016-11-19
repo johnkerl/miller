@@ -117,6 +117,9 @@ function_manager.c:
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 mlr_dsl_cst_assignment_statements.c:
+
+>>>>> split into scalar_assignment_statements.c & map_assignment_statements.c ?
+
 - parameter marshaling in single-rhs-assign-to-map-lhs context
 .
 k assign LHS full-srec          from RHS maplit             alloc ephem & write elementwise
