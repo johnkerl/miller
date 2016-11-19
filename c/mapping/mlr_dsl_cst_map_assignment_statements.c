@@ -34,7 +34,7 @@ mlr_dsl_cst_statement_t* alloc_full_srec_assignment(mlr_dsl_cst_t* pcst, mlr_dsl
 		pstate->prhs_xevaluator = NULL;
 		phandler = handle_full_srec_assignment_nop;
 	} else {
-		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
+		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(
 			prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 		phandler = handle_full_srec_assignment;
 	}
@@ -145,7 +145,7 @@ mlr_dsl_cst_statement_t* alloc_local_variable_definition(
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pnext->pvvalue;
 
-	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
+	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(
 		prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 	pstatement_handler = handle_local_variable_definition_from_xval;
 
@@ -218,7 +218,7 @@ mlr_dsl_cst_statement_t* alloc_nonindexed_local_variable_assignment(mlr_dsl_cst_
 
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
 
-	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
+	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(
 		prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 	pstatement_handler = handle_nonindexed_local_variable_assignment_from_xval;
 
@@ -296,7 +296,7 @@ mlr_dsl_cst_statement_t* alloc_indexed_local_variable_assignment(mlr_dsl_cst_t* 
 
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
 
-	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
+	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(
 		prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 	pstatement_handler = handle_indexed_local_variable_assignment_from_xval;
 
@@ -379,7 +379,7 @@ mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_as
 
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
 
-	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
+	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(
 		prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 	pstatement_handler = handle_oosvar_assignment_from_xval;
 

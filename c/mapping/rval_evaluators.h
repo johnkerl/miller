@@ -159,7 +159,7 @@ mv_t get_srec_value_string_float_int_aux(lrece_t* pentry, lhmsmv_t* ptyped_overl
 // Topmost functions:
 
 // Wraps mv_t evaluator in an mlhmmv_value_t evaluator.
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_ast(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_ast_xxx_deprecated(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
 // Next level:

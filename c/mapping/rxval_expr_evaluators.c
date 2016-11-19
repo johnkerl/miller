@@ -17,7 +17,7 @@
 // ================================================================
 
 // ----------------------------------------------------------------
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_ast_xxx_deprecated(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
 	switch(pnode->type) {
@@ -142,7 +142,7 @@ static map_literal_list_evaluator_t* allocate_map_literal_evaluator_from_ast(
 		mlr_dsl_ast_node_t* pright = pchild->pchildren->phead->pnext->pvvalue;
 		mlr_dsl_ast_node_t* pvalnode = pright->pchildren->phead->pvvalue;
 		if (pright->type == MD_AST_NODE_TYPE_MAP_LITERAL_VALUE) {
-			ppair->pxval_evaluator = rxval_evaluator_alloc_from_ast(pvalnode, pfmgr, type_inferencing, context_flags);
+			ppair->pxval_evaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(pvalnode, pfmgr, type_inferencing, context_flags);
 		} else if (pright->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
 			ppair->is_terminal = FALSE;
 			ppair->plist_evaluator = allocate_map_literal_evaluator_from_ast(

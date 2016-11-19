@@ -334,8 +334,6 @@ mlr_dsl_cst_statement_allocator_t alloc_indirect_srec_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_env_assignment;
 
 // mapping/mlr_dsl_cst_map_assignment_statements.c
-
-// xxx tbf
 mlr_dsl_cst_statement_allocator_t alloc_full_srec_assignment;
 mlr_dsl_cst_statement_t* alloc_local_variable_definition(
 	mlr_dsl_cst_t*      pcst,
@@ -382,6 +380,13 @@ mlr_dsl_cst_statement_allocator_t alloc_return_value; // For UDFs
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_output_statements.c
 
+mlr_dsl_cst_statement_t* alloc_print(
+	mlr_dsl_cst_t*      pcst,
+	mlr_dsl_ast_node_t* pnode,
+	int                 type_inferencing,
+	int                 context_flags,
+	char*               print_terminator);
+
 mlr_dsl_cst_statement_allocator_t alloc_tee;
 
 mlr_dsl_cst_statement_allocator_t alloc_emitf;
@@ -399,13 +404,6 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(
 	int                 type_inferencing,
 	int                 context_flags,
 	int                 do_full_prefixing);
-
-mlr_dsl_cst_statement_t* alloc_print(
-	mlr_dsl_cst_t*      pcst,
-	mlr_dsl_ast_node_t* pnode,
-	int                 type_inferencing,
-	int                 context_flags,
-	char*               print_terminator);
 
 mlr_dsl_cst_statement_allocator_t alloc_dump;
 
