@@ -328,23 +328,25 @@ mlr_dsl_cst_statement_t* alloc_final_filter(
 	int                 context_flags);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// mapping/mlr_dsl_cst_assignment_statements.c
+// mapping/mlr_dsl_cst_scalar_assignment_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_srec_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_indirect_srec_assignment;
+mlr_dsl_cst_statement_allocator_t alloc_env_assignment;
 
+// mapping/mlr_dsl_cst_map_assignment_statements.c
+
+// xxx tbf
+mlr_dsl_cst_statement_allocator_t alloc_full_srec_assignment;
 mlr_dsl_cst_statement_t* alloc_local_variable_definition(
 	mlr_dsl_cst_t*      pcst,
 	mlr_dsl_ast_node_t* pnode,
 	int                 type_inferencing,
 	int                 context_flags,
 	int                 type_mask);
-
 mlr_dsl_cst_statement_allocator_t alloc_nonindexed_local_variable_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_indexed_local_variable_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_oosvar_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_oosvar_from_full_srec_assignment; // xxx fold into previous
-mlr_dsl_cst_statement_allocator_t alloc_full_srec_assignment;
-mlr_dsl_cst_statement_allocator_t alloc_env_assignment;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_unset_statements.c

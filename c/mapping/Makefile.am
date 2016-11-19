@@ -57,7 +57,8 @@ libmapping_la_SOURCES=	\
 			mlr_dsl_cst_func_subr.c \
 			mlr_dsl_cst_keywords.c \
 			mlr_dsl_cst_statements.c \
-			mlr_dsl_cst_assignment_statements.c \
+			mlr_dsl_cst_scalar_assignment_statements.c \
+			mlr_dsl_cst_map_assignment_statements.c \
 			mlr_dsl_cst_unset_statements.c \
 			mlr_dsl_cst_condish_statements.c \
 			mlr_dsl_cst_for_srec_statements.c \
