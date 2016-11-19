@@ -78,9 +78,9 @@ typedef struct _rval_evaluator_t {
 // This is for map-valued contexts: LHS/RHS of assignments,
 // UDF/subroutine arguments, and UDF return values.
 
-// is_ephemeral is TRUE for map-literals, function return values, and data
-// copied out of srecs.  is_ephemeral is FALSE when the pointer is into an
-// existing data structure's memory (e.g. oosvars or locals).
+// The is_ephemeral flag is TRUE for map-literals, function return values, and
+// data copied out of srecs.  It is FALSE when the pointer is into an existing
+// data structure's memory (e.g. oosvars or locals).
 typedef struct _boxed_xval_t {
 	mlhmmv_value_t* pxval;
 	int is_ephemeral;

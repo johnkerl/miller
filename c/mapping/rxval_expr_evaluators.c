@@ -17,50 +17,107 @@
 // ================================================================
 
 // ----------------------------------------------------------------
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_ast_xxx_deprecated(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
 	switch(pnode->type) {
 
 	case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE:
-		return rxval_evaluator_alloc_from_nonindexed_local_variable(
-			pnode, pfmgr, type_inferencing, context_flags);
+		//return rxval_evaluator_alloc_from_nonindexed_local_variable(
+			//pnode, pfmgr, type_inferencing, context_flags);
+		return NULL;
 		break;
 
 	case MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE:
-		return rxval_evaluator_alloc_from_indexed_local_variable(
-			pnode, pfmgr, type_inferencing, context_flags);
+		//return rxval_evaluator_alloc_from_indexed_local_variable(
+			//pnode, pfmgr, type_inferencing, context_flags);
+		return NULL;
 		break;
 
 	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
-		return rxval_evaluator_alloc_from_oosvar_keylist(
-			pnode, pfmgr, type_inferencing, context_flags);
+		//return rxval_evaluator_alloc_from_oosvar_keylist(
+			//pnode, pfmgr, type_inferencing, context_flags);
+		return NULL;
 		break;
 
 	case MD_AST_NODE_TYPE_FULL_OOSVAR:
-		return rxval_evaluator_alloc_from_full_oosvar(
-			pnode, pfmgr, type_inferencing, context_flags);
+		//return rxval_evaluator_alloc_from_full_oosvar(
+			//pnode, pfmgr, type_inferencing, context_flags);
+		return NULL;
 		break;
 
 	case MD_AST_NODE_TYPE_FULL_SREC:
-		return rxval_evaluator_alloc_from_full_srec(
-			pnode, pfmgr, type_inferencing, context_flags);
+		//return rxval_evaluator_alloc_from_full_srec(
+			//pnode, pfmgr, type_inferencing, context_flags);
+		return NULL;
 		break;
 
 	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
 		// xxx XXX to do
 		//return rxval_evaluator_alloc_from_function_callsite(
 			//pnode, pfmgr, type_inferencing, context_flags);
-		return rxval_evaluator_alloc_wrapping_rval(pnode, pfmgr, type_inferencing, context_flags);
+		//return rxval_evaluator_alloc_wrapping_rval(pnode, pfmgr, type_inferencing, context_flags);
+		return NULL;
 		break;
 
 	case MD_AST_NODE_TYPE_MAP_LITERAL:
-		return rxval_evaluator_alloc_from_map_literal(
+		//return rxval_evaluator_alloc_from_map_literal(
+			//pnode, pfmgr, type_inferencing, context_flags);
+		return NULL;
+		break;
+
+	default:
+		//return rxval_evaluator_alloc_wrapping_rval(pnode, pfmgr, type_inferencing, context_flags);
+		return NULL;
+		break;
+	}
+}
+
+// ----------------------------------------------------------------
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_ast_xxx_deprecated(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+	int type_inferencing, int context_flags)
+{
+	switch(pnode->type) {
+
+	case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE:
+		return rxval_evaluator_alloc_from_nonindexed_local_variable_xxx_deprecated(
+			pnode, pfmgr, type_inferencing, context_flags);
+		break;
+
+	case MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE:
+		return rxval_evaluator_alloc_from_indexed_local_variable_xxx_deprecated(
+			pnode, pfmgr, type_inferencing, context_flags);
+		break;
+
+	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
+		return rxval_evaluator_alloc_from_oosvar_keylist_xxx_deprecated(
+			pnode, pfmgr, type_inferencing, context_flags);
+		break;
+
+	case MD_AST_NODE_TYPE_FULL_OOSVAR:
+		return rxval_evaluator_alloc_from_full_oosvar_xxx_deprecated(
+			pnode, pfmgr, type_inferencing, context_flags);
+		break;
+
+	case MD_AST_NODE_TYPE_FULL_SREC:
+		return rxval_evaluator_alloc_from_full_srec_xxx_deprecated(
+			pnode, pfmgr, type_inferencing, context_flags);
+		break;
+
+	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
+		// xxx XXX to do
+		//return rxval_evaluator_alloc_from_function_callsite_xxx_deprecated(
+			//pnode, pfmgr, type_inferencing, context_flags);
+		return rxval_evaluator_alloc_wrapping_rval_xxx_deprecated(pnode, pfmgr, type_inferencing, context_flags);
+		break;
+
+	case MD_AST_NODE_TYPE_MAP_LITERAL:
+		return rxval_evaluator_alloc_from_map_literal_xxx_deprecated(
 			pnode, pfmgr, type_inferencing, context_flags);
 		break;
 
 	default:
-		return rxval_evaluator_alloc_wrapping_rval(pnode, pfmgr, type_inferencing, context_flags);
+		return rxval_evaluator_alloc_wrapping_rval_xxx_deprecated(pnode, pfmgr, type_inferencing, context_flags);
 		break;
 	}
 }
@@ -115,7 +172,7 @@ typedef struct _map_literal_pair_evaluator_t {
 	map_literal_list_evaluator_t* plist_evaluator;
 } map_literal_pair_evaluator_t;
 
-static map_literal_list_evaluator_t* allocate_map_literal_evaluator_from_ast(
+static map_literal_list_evaluator_t* allocate_map_literal_evaluator_from_ast_xxx_deprecated(
 	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
 {
 	map_literal_list_evaluator_t* plist_evaluator = mlr_malloc_or_die(sizeof(map_literal_list_evaluator_t));
@@ -145,7 +202,7 @@ static map_literal_list_evaluator_t* allocate_map_literal_evaluator_from_ast(
 			ppair->pxval_evaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(pvalnode, pfmgr, type_inferencing, context_flags);
 		} else if (pright->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
 			ppair->is_terminal = FALSE;
-			ppair->plist_evaluator = allocate_map_literal_evaluator_from_ast(
+			ppair->plist_evaluator = allocate_map_literal_evaluator_from_ast_xxx_deprecated(
 				pvalnode, pfmgr, type_inferencing, context_flags);
 		} else {
 			MLR_INTERNAL_CODING_ERROR();
@@ -161,7 +218,7 @@ typedef struct _rxval_evaluator_from_map_literal_state_t {
 	map_literal_list_evaluator_t* proot_list_evaluator;
 } rxval_evaluator_from_map_literal_state_t;
 
-static void rxval_evaluator_from_map_literal_aux(
+static void rxval_evaluator_from_map_literal_aux_xxx_deprecated(
 	rxval_evaluator_from_map_literal_state_t* pstate,
 	map_literal_list_evaluator_t*             plist_evaluator,
 	mlhmmv_level_t*                           plevel,
@@ -179,7 +236,7 @@ static void rxval_evaluator_from_map_literal_aux(
 		} else {
 			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
 			mlhmmv_level_t* pnext_level = mlhmmv_put_empty_map_from_level(plevel, &e);
-			rxval_evaluator_from_map_literal_aux(pstate, ppair->plist_evaluator, pnext_level, pvars);
+			rxval_evaluator_from_map_literal_aux_xxx_deprecated(pstate, ppair->plist_evaluator, pnext_level, pvars);
 		}
 	}
 }
@@ -189,7 +246,7 @@ mlhmmv_value_t rxval_evaluator_from_map_literal_func(void* pvstate, variables_t*
 
 	mlhmmv_value_t xval = mlhmmv_value_alloc_empty_map();
 
-	rxval_evaluator_from_map_literal_aux(pstate, pstate->proot_list_evaluator, xval.pnext_level, pvars);
+	rxval_evaluator_from_map_literal_aux_xxx_deprecated(pstate, pstate->proot_list_evaluator, xval.pnext_level, pvars);
 
 	return xval;
 }
@@ -217,12 +274,12 @@ static void rxval_evaluator_from_map_literal_free(rxval_evaluator_xxx_deprecated
 	free(prxval_evaluator);
 }
 
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_map_literal(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_map_literal_xxx_deprecated(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
 	rxval_evaluator_from_map_literal_state_t* pstate = mlr_malloc_or_die(
 		sizeof(rxval_evaluator_from_map_literal_state_t));
-	pstate->proot_list_evaluator = allocate_map_literal_evaluator_from_ast(
+	pstate->proot_list_evaluator = allocate_map_literal_evaluator_from_ast_xxx_deprecated(
 		pnode, pfmgr, type_inferencing, context_flags);
 
 	rxval_evaluator_xxx_deprecated_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_xxx_deprecated_t));
@@ -255,7 +312,7 @@ static void rxval_evaluator_from_nonindexed_local_variable_free(rxval_evaluator_
 	free(prxval_evaluator);
 }
 
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_nonindexed_local_variable(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_nonindexed_local_variable_xxx_deprecated(
 	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
 {
 	rxval_evaluator_from_nonindexed_local_variable_state_t* pstate = mlr_malloc_or_die(
@@ -310,7 +367,7 @@ static void rxval_evaluator_from_indexed_local_variable_free(rxval_evaluator_xxx
 	free(prxval_evaluator);
 }
 
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_indexed_local_variable(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_indexed_local_variable_xxx_deprecated(
 	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
 {
 	rxval_evaluator_from_indexed_local_variable_state_t* pstate = mlr_malloc_or_die(
@@ -367,7 +424,7 @@ static void rxval_evaluator_from_oosvar_keylist_free(rxval_evaluator_xxx_depreca
 	free(prxval_evaluator);
 }
 
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_oosvar_keylist(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_oosvar_keylist_xxx_deprecated(
 	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
 {
 	rxval_evaluator_from_oosvar_keylist_state_t* pstate = mlr_malloc_or_die(
@@ -392,7 +449,7 @@ static void rxval_evaluator_from_full_oosvar_free(rxval_evaluator_xxx_deprecated
 	free(prxval_evaluator);
 }
 
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_full_oosvar(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_full_oosvar_xxx_deprecated(
 	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
 {
 	rxval_evaluator_xxx_deprecated_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_xxx_deprecated_t));
@@ -427,7 +484,7 @@ static void rxval_evaluator_from_full_srec_free(rxval_evaluator_xxx_deprecated_t
 	free(prxval_evaluator);
 }
 
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_full_srec(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_full_srec_xxx_deprecated(
 	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
 {
 	rxval_evaluator_xxx_deprecated_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_xxx_deprecated_t));
@@ -456,7 +513,7 @@ static void rxval_evaluator_wrapping_rval_free(rxval_evaluator_xxx_deprecated_t*
 	free(prxval_evaluator);
 }
 
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_wrapping_rval(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_wrapping_rval_xxx_deprecated(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags)
 {
 	rxval_evaluator_wrapping_rval_state_t* pstate = mlr_malloc_or_die(

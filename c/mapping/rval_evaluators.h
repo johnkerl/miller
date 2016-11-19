@@ -163,28 +163,28 @@ rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_ast_xxx_deprecated(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
 // Next level:
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_map_literal(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_map_literal_xxx_deprecated(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_function_callsite(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_function_callsite_xxx_deprecated(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_nonindexed_local_variable(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_nonindexed_local_variable_xxx_deprecated(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_indexed_local_variable(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_indexed_local_variable_xxx_deprecated(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_oosvar_keylist(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_oosvar_keylist_xxx_deprecated(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_full_oosvar(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_full_oosvar_xxx_deprecated(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_full_srec(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_full_srec_xxx_deprecated(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
-rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_wrapping_rval(
+rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_wrapping_rval_xxx_deprecated(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
 #endif // LREC_FEVALUATORS_H
