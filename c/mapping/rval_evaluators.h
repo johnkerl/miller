@@ -159,6 +159,36 @@ mv_t get_srec_value_string_float_int_aux(lrece_t* pentry, lhmsmv_t* ptyped_overl
 // Topmost functions:
 
 // Wraps mv_t evaluator in an mlhmmv_value_t evaluator.
+rxval_evaluator_t* rxval_evaluator_alloc_from_ast(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
+// Next level:
+rxval_evaluator_t* rxval_evaluator_alloc_from_map_literal(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_function_callsite(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_nonindexed_local_variable(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_indexed_local_variable(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_oosvar_keylist(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_full_oosvar(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_full_srec(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
+rxval_evaluator_t* rxval_evaluator_alloc_wrapping_rval(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+// Wraps mv_t evaluator in an mlhmmv_value_t evaluator.
 rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_ast_xxx_deprecated(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
