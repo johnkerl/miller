@@ -442,7 +442,7 @@ typedef struct _rxval_evaluator_wrapping_rval_state_t {
 	rval_evaluator_t* prval_evaluator;
 } rxval_evaluator_wrapping_rval_state_t;
 
-mlhmmv_value_t rxval_evaluator_wrapping_rval_func(void* pvstate, variables_t* pvars) {
+static mlhmmv_value_t rxval_evaluator_wrapping_rval_func(void* pvstate, variables_t* pvars) {
 	rxval_evaluator_wrapping_rval_state_t* pstate = pvstate;
 	rval_evaluator_t* prval_evaluator = pstate->prval_evaluator;
 	mv_t val = prval_evaluator->pprocess_func(prval_evaluator->pvstate, pvars);

@@ -82,7 +82,7 @@ typedef struct _rval_evaluator_t {
 // data copied out of srecs.  It is FALSE when the pointer is into an existing
 // data structure's memory (e.g. oosvars or locals).
 typedef struct _boxed_xval_t {
-	mlhmmv_value_t* pxval;
+	mlhmmv_value_t xval;
 	int is_ephemeral;
 } boxed_xval_t;
 
