@@ -22,18 +22,6 @@ rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_ast_xxx_deprecated(
 {
 	switch(pnode->type) {
 
-	case MD_AST_NODE_TYPE_MAP_LITERAL:
-		return rxval_evaluator_alloc_from_map_literal(
-			pnode, pfmgr, type_inferencing, context_flags);
-		break;
-
-	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
-		// xxx XXX to do
-		//return rxval_evaluator_alloc_from_function_callsite(
-			//pnode, pfmgr, type_inferencing, context_flags);
-		return rxval_evaluator_alloc_wrapping_rval(pnode, pfmgr, type_inferencing, context_flags);
-		break;
-
 	case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE:
 		return rxval_evaluator_alloc_from_nonindexed_local_variable(
 			pnode, pfmgr, type_inferencing, context_flags);
@@ -56,6 +44,18 @@ rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_ast_xxx_deprecated(
 
 	case MD_AST_NODE_TYPE_FULL_SREC:
 		return rxval_evaluator_alloc_from_full_srec(
+			pnode, pfmgr, type_inferencing, context_flags);
+		break;
+
+	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
+		// xxx XXX to do
+		//return rxval_evaluator_alloc_from_function_callsite(
+			//pnode, pfmgr, type_inferencing, context_flags);
+		return rxval_evaluator_alloc_wrapping_rval(pnode, pfmgr, type_inferencing, context_flags);
+		break;
+
+	case MD_AST_NODE_TYPE_MAP_LITERAL:
+		return rxval_evaluator_alloc_from_map_literal(
 			pnode, pfmgr, type_inferencing, context_flags);
 		break;
 

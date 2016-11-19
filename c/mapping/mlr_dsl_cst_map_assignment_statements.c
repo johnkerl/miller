@@ -4,10 +4,16 @@
 #include "mlr_dsl_cst.h"
 #include "context_flags.h"
 
-// ================================================================
-// All assignments produce a mlrval on the RHS and store it on the left -- except if both LHS and RHS
-// are oosvars in which case there are recursive copies, or in case of $* on the LHS or RHS.
+// xxx:
+//
+// assign LHS full-srec from RHS localvar    ref & write elementwise
+// assign LHS full-srec from RHS oosvar      ref & write elementwise
+// assign LHS full-srec from RHS full-oosvar ref & write elementwise
+// assign LHS full-srec from RHS full-srec   no-op
+// assign LHS full-srec from RHS maplit      alloc ephem & write elementwise
+// assign LHS full-srec from RHS func-retval alloc ephem & move
 
+// ================================================================
 typedef struct _full_srec_assignment_state_t {
 	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
 } full_srec_assignment_state_t;

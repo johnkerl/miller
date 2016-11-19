@@ -69,48 +69,29 @@ w lashed -- code-renames/debt-reduction/valgrinds first, before digging further
 
 mlr_dsl_cst_output_statements.c:
 k dump w/ no args
-k dump maplit -- ensure scalar-out is printed
-  > must alloc & free the ephemeral
-k dump full-srec -- ensure scalar-out is printed
-  > ref only
-k dump full-oosvar -- ensure scalar-out is printed
-  > ref only
-k dump oosvar -- ensure scalar-out is printed
-  > ref only
-k dump localvar -- ensure scalar-out is printed
-  > ref only
-- dump func retval -- ensure scalar-out is printed
-  > must alloc & free the ephemeral
+k dump maplit -- ensure scalar-out is printed      > alloc & free the ephemeral
+k dump full-srec -- ensure scalar-out is printed   > ref only
+k dump full-oosvar -- ensure scalar-out is printed > ref only
+k dump oosvar -- ensure scalar-out is printed      > ref only
+k dump localvar -- ensure scalar-out is printed    > ref only
+- dump func retval -- ensure scalar-out is printed > alloc & free the ephemeral
 
-k emit full oosvar
-  > only ref the rhs
-k emit oosvar
-  > only ref the rhs
-k emit localvar -- check lashed; UTs
-  > only ref the rhs
-k emit mapliteral -- check lashed; UTs
-  > must alloc & free the ephemeral
-- emit func retval
-  > must alloc & free the ephemeral
+k emit full oosvar                            > ref the rhs
+k emit oosvar                                 > ref the rhs
+k emit localvar -- check lashed; UTs          > ref the rhs
+k emit mapliteral -- check lashed; UTs        > alloc & free the ephemeral
+- emit func retval                            > alloc & free the ephemeral
 
-- emit-lashed full oosvar
-  > only ref the rhs
-k emit-lashed oosvar
-  > only ref the rhs
-k emit-lashed localvar -- check lashed; UTs
-  > only ref the rhs
-k emit-lashed mapliteral -- check lashed; UTs
-  > must alloc & free the ephemeral
-- emit-lashed func retval
-  > must alloc & free the ephemeral
+- emit-lashed full oosvar                     > ref the rhs
+k emit-lashed oosvar                          > ref the rhs
+k emit-lashed localvar -- check lashed; UTs   > ref the rhs
+k emit-lashed mapliteral -- check lashed; UTs > alloc & free the ephemeral
+- emit-lashed func retval                     > alloc & free the ephemeral
 
 mlr_dsl_cst_for_map_statements.c:
-k for-loop over maplit
-  > must alloc & free the ephemeral
-k for-loop over localvar
-  > only ref the rhs
-- for-loop over func retval
-  > must alloc & free the ephemeral
+k for-loop over maplit                        > alloc & free the ephemeral
+k for-loop over localvar                      > ref the rhs
+- for-loop over func retval                   > alloc & free the ephemeral
 
 function_manager.c:
 ? - parameter marshaling in general rval context
@@ -121,48 +102,34 @@ mlr_dsl_cst_assignment_statements.c:
 >>>>> split into scalar_assignment_statements.c & map_assignment_statements.c ?
 
 - parameter marshaling in single-rhs-assign-to-map-lhs context
-.
-k assign LHS full-srec          from RHS maplit             alloc ephem & write elementwise
-k assign LHS full-srec          from RHS full-srec          no-op
-k assign LHS full-srec          from RHS full-oosvar        ref & write elementwise
-k assign LHS full-srec          from RHS oosvar             ref & write elementwise
-k assign LHS full-srec          from RHS localvar           ref & copy & move
-- assign LHS full-srec          from RHS func-retval        alloc ephem & move
-.
-- assign LHS full-oosvar        from RHS maplit             alloc ephem & move
-- assign LHS full-oosvar        from RHS full-srec          copy & move
-- assign LHS full-oosvar        from RHS full-oosvar        ref & copy & move
-- assign LHS full-oosvar        from RHS oosvar             ref & copy & move
-- assign LHS full-oosvar        from RHS localvar           ref & copy & move
-- assign LHS full-oosvar        from RHS func-retval        alloc ephem & move
-.
-k assign LHS oosvar             from RHS maplit             alloc ephem & move
-k assign LHS oosvar             from RHS full-srec          copy elementwise
-k assign LHS oosvar             from RHS full-oosvar        ref & copy
-k assign LHS oosvar             from RHS oosvar             ref & copy
-k assign LHS oosvar             from RHS localvar           ref & copy
-- assign LHS oosvar             from RHS func-retval        alloc ephem & move
-.
-k define LHS map-typed-localvar from RHS maplit             alloc ephem & move
-k define LHS map-typed-localvar from RHS full-srec          copy elementwise
-k define LHS map-typed-localvar from RHS full-oosvar        ref & copy
-k define LHS map-typed-localvar from RHS oosvar             ref & copy
-k define LHS map-typed-localvar from RHS localvar           ref & copy
-- define LHS map-typed-localvar from RHS func-retval        alloc ephem & move
-.
-k define LHS untyped-localvar   from RHS maplit             alloc ephem & move
-k define LHS untyped-localvar   from RHS full-srec          copy elementwise
-k define LHS untyped-localvar   from RHS full-oosvar        ref & copy
-k define LHS untyped-localvar   from RHS oosvar             ref & copy
-k define LHS untyped-localvar   from RHS localvar           ref & copy
-- define LHS untyped-localvar   from RHS func-retval        alloc ephem & move
-.
-k assign LHS localvar           from RHS maplit             alloc ephem & move
-k assign LHS localvar           from RHS full-srec          copy elementwise
-k assign LHS localvar           from RHS full-oosvar        ref & copy
-k assign LHS localvar           from RHS oosvar             ref & copy
+
 k assign LHS localvar           from RHS localvar           ref & copy
+k assign LHS localvar           from RHS oosvar             ref & copy
+k assign LHS localvar           from RHS full-oosvar        ref & copy
+k assign LHS localvar           from RHS full-srec          copy elementwise
+k assign LHS localvar           from RHS maplit             alloc ephem & move
 - assign LHS localvar           from RHS func-retval        alloc ephem & move
+
+k assign LHS oosvar             from RHS localvar           ref & copy
+k assign LHS oosvar             from RHS oosvar             ref & copy
+k assign LHS oosvar             from RHS full-oosvar        ref & copy
+k assign LHS oosvar             from RHS full-srec          copy elementwise
+k assign LHS oosvar             from RHS maplit             alloc ephem & move
+- assign LHS oosvar             from RHS func-retval        alloc ephem & move
+
+- assign LHS full-oosvar        from RHS localvar           ref & copy & move
+- assign LHS full-oosvar        from RHS oosvar             ref & copy & move
+- assign LHS full-oosvar        from RHS full-oosvar        no-op
+- assign LHS full-oosvar        from RHS full-srec          copy & move
+- assign LHS full-oosvar        from RHS maplit             alloc ephem & move
+- assign LHS full-oosvar        from RHS func-retval        alloc ephem & move
+
+k assign LHS full-srec          from RHS localvar           ref & copy & move
+k assign LHS full-srec          from RHS oosvar             ref & write elementwise
+k assign LHS full-srec          from RHS full-oosvar        ref & write elementwise
+k assign LHS full-srec          from RHS full-srec          no-op
+k assign LHS full-srec          from RHS maplit             alloc ephem & write elementwise
+- assign LHS full-srec          from RHS func-retval        alloc ephem & move
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 mlr_dsl_cst_output_statements.c:
