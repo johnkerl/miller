@@ -28,7 +28,7 @@ static void handle_for_map_literal_aux(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs,
-	mlhmmv_value_t           submap,
+	mlhmmv_value_t*          psubmap,
 	char**                   prest_for_k_variable_names,
 	int*                     prest_for_k_frame_relative_indices,
 	int*                     prest_for_k_frame_type_masks,
@@ -765,7 +765,7 @@ typedef struct _for_map_literal_state_t {
 	int    v_frame_relative_index;
 	int    v_type_mask;
 
-	rxval_evaluator_xxx_deprecated_t* ptarget_xevaluator;
+	rxval_evaluator_t* ptarget_xevaluator;
 } for_map_literal_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_for_map_literal;
@@ -817,7 +817,7 @@ mlr_dsl_cst_statement_t* alloc_for_map_literal(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 	pstate->v_type_mask = mlr_dsl_ast_node_type_to_type_mask(psubright->type);
 
 	// xxx comment liberally
-	pstate->ptarget_xevaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(
+	pstate->ptarget_xevaluator = rxval_evaluator_alloc_from_ast(
 		pmiddle, pcst->pfmgr, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
@@ -871,19 +871,19 @@ static void handle_for_map_literal(
 	// indexed by [3, $4].  Copy it for the very likely case that it is being updated inside the
 	// for-loop.
 
-	mlhmmv_value_t submap = pstate->ptarget_xevaluator->pprocess_func(
+	boxed_xval_t boxed_xval = pstate->ptarget_xevaluator->pprocess_func(
 		pstate->ptarget_xevaluator->pvstate, pvars);
 
 	local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 	loop_stack_push(pvars->ploop_stack);
 
-	if (!submap.is_terminal && submap.pnext_level != NULL) {
+	if (!boxed_xval.xval.is_terminal && boxed_xval.xval.pnext_level != NULL) {
 		// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level
 		// deeper into the submap.  Note there must be at least one k-name so we are assuming
 		// the for-loop within handle_for_map_literal_aux was gone through once & thus
 		// handle_statement_block_with_break_continue was called through there.
 
-		handle_for_map_literal_aux(pstatement, pvars, pcst_outputs, submap,
+		handle_for_map_literal_aux(pstatement, pvars, pcst_outputs, &boxed_xval.xval,
 			pstate->k_variable_names, pstate->k_frame_relative_indices,
 			pstate->k_type_masks, pstate->k_count);
 
@@ -895,18 +895,19 @@ static void handle_for_map_literal(
 		}
 	}
 
-	mlhmmv_free_submap(submap);
+	if (boxed_xval.map_is_ephemeral) {
+		mlhmmv_free_submap(boxed_xval.xval);
+	}
 
 	loop_stack_pop(pvars->ploop_stack);
 	local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
-
 }
 
 static void handle_for_map_literal_aux(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs,
-	mlhmmv_value_t           submap,
+	mlhmmv_value_t*          psubmap,
 	char**                   prest_for_k_variable_names,
 	int*                     prest_for_k_frame_relative_indices,
 	int*                     prest_for_k_type_masks,
@@ -916,17 +917,17 @@ static void handle_for_map_literal_aux(
 
 	if (prest_for_k_count > 0) { // Keep recursing over remaining k-names
 
-		if (submap.is_terminal) {
+		if (psubmap->is_terminal) {
 			// The submap was too shallow for the user-specified k-names; there are no terminals here.
 		} else {
 			// Loop over keys at this submap level:
-			for (mlhmmv_level_entry_t* pe = submap.pnext_level->phead; pe != NULL; pe = pe->pnext) {
+			for (mlhmmv_level_entry_t* pe = psubmap->pnext_level->phead; pe != NULL; pe = pe->pnext) {
 				// Bind the k-name to the entry-key mlrval:
 				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 				local_stack_frame_define_scalar(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
 					prest_for_k_type_masks[0], mv_copy(&pe->level_key));
 				// Recurse into the next-level submap:
-				handle_for_map_literal_aux(pstatement, pvars, pcst_outputs, pe->level_value,
+				handle_for_map_literal_aux(pstatement, pvars, pcst_outputs, &pe->level_value,
 					&prest_for_k_variable_names[1], &prest_for_k_frame_relative_indices[1], &prest_for_k_type_masks[1],
 					prest_for_k_count - 1);
 
@@ -942,13 +943,13 @@ static void handle_for_map_literal_aux(
 
 	} else { // End of recursion: k-names have all been used up
 
-		if (!submap.is_terminal) {
+		if (!psubmap->is_terminal) {
 			// The submap was too deep for the user-specified k-names; there are no terminals here.
 		} else {
 			// Bind the v-name to the terminal mlrval:
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 			local_stack_frame_define_scalar(pframe, pstate->v_variable_name, pstate->v_frame_relative_index,
-				pstate->v_type_mask, mv_copy(&submap.mlrval));
+				pstate->v_type_mask, mv_copy(&psubmap->mlrval));
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
 		}
