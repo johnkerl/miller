@@ -15,7 +15,7 @@
 
 // ================================================================
 typedef struct _full_srec_assignment_state_t {
-	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
+	rxval_evaluator_t* prhs_xevaluator;
 } full_srec_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_full_srec_assignment_nop;
@@ -40,7 +40,7 @@ mlr_dsl_cst_statement_t* alloc_full_srec_assignment(mlr_dsl_cst_t* pcst, mlr_dsl
 		pstate->prhs_xevaluator = NULL;
 		phandler = handle_full_srec_assignment_nop;
 	} else {
-		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(
+		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
 			prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 		phandler = handle_full_srec_assignment;
 	}
@@ -82,11 +82,11 @@ static void handle_full_srec_assignment(
 	lrec_clear(pvars->pinrec);
 	lhmsmv_clear(pvars->ptyped_overlay);
 
-	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pstate->prhs_xevaluator;
-	mlhmmv_value_t mapval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+	boxed_xval_t boxed_xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 
-	if (!mapval.is_terminal) {
-		for (mlhmmv_level_entry_t* pe = mapval.pnext_level->phead; pe != NULL; pe = pe->pnext) {
+	if (!boxed_xval.xval.is_terminal) {
+		for (mlhmmv_level_entry_t* pe = boxed_xval.xval.pnext_level->phead; pe != NULL; pe = pe->pnext) {
 			mv_t* pkey = &pe->level_key;
 			mlhmmv_value_t* pval = &pe->level_value;
 
@@ -112,7 +112,10 @@ static void handle_full_srec_assignment(
 			}
 		}
 	}
-	mlhmmv_free_submap(mapval);
+	if (boxed_xval.xval.is_terminal) {
+		mlhmmv_free_submap(boxed_xval.xval);
+	} else {
+	}
 }
 
 // ================================================================
