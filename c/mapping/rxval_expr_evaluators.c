@@ -203,7 +203,7 @@ static boxed_xval_t rxval_evaluator_from_map_literal_func(void* pvstate, variabl
 
 	return (boxed_xval_t) {
 		.xval = xval,
-		.map_is_ephemeral = FALSE,
+		.map_is_ephemeral = TRUE,
 	};
 }
 
@@ -376,7 +376,7 @@ static boxed_xval_t rxval_evaluator_from_oosvar_keylist_func(void* pvstate, vari
 		if (pxval != NULL) {
 			return (boxed_xval_t) {
 				.xval = *pxval,
-				.map_is_ephemeral = TRUE,
+				.map_is_ephemeral = FALSE,
 			};
 		} else {
 			return (boxed_xval_t) {
@@ -493,7 +493,7 @@ static boxed_xval_t rxval_evaluator_wrapping_rval_func(void* pvstate, variables_
 	mv_t val = prval_evaluator->pprocess_func(prval_evaluator->pvstate, pvars);
 	return (boxed_xval_t) {
 		.xval = mlhmmv_value_transfer_terminal(val),
-		.map_is_ephemeral = TRUE,
+		.map_is_ephemeral = FALSE,
 	};
 }
 

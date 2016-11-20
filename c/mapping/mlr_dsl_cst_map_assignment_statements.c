@@ -90,6 +90,7 @@ static void handle_full_srec_assignment(
 			mv_t* pkey = &pe->level_key;
 			mlhmmv_value_t* pval = &pe->level_value;
 
+			// xxx do copyless transfer if ephemeral
 			if (pval->is_terminal) { // xxx else collapse-down using json separator?
 				char* skey = mv_alloc_format_val(pkey);
 				mv_t val = mv_copy(&pval->mlrval);
@@ -115,6 +116,9 @@ static void handle_full_srec_assignment(
 	if (boxed_xval.xval.is_terminal) {
 		mlhmmv_free_submap(boxed_xval.xval);
 	} else {
+		if (boxed_xval.map_is_ephemeral) {
+			mlhmmv_free_submap(boxed_xval.xval);
+		}
 	}
 }
 
