@@ -122,8 +122,9 @@ static inline void local_stack_frame_define_scalar(local_stack_frame_t* pframe, 
 		local_stack_frame_throw_type_mismatch(pentry, &val);
 	}
 
-	// xxx temp -- make a single method
 	mv_free(&pentry->value.mlrval); // xxx temp -- make value-free
+	pentry->value.mlrval = mv_absent();
+
 	if (mv_is_absent(&val)) {
 		mv_free(&val); // xxx confusing ownership semantics
 	} else {
@@ -196,6 +197,9 @@ static inline void local_stack_frame_assign_extended_nonindexed(local_stack_fram
 			local_stack_frame_throw_type_mismatch(pentry, &xval.mlrval); // xxx allow xvals
 		}
 	}
+
+	// xxx temp -- make a single method
+	mv_free(&pentry->value.mlrval); // xxx temp -- make value-free
 
 	// xxx temp -- make a single method
 	mlhmmv_free_submap(pentry->value); // xxx rename

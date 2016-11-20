@@ -155,7 +155,7 @@ static mlhmmv_value_t cst_udf_process_callback(void* pvstate, int arity, mv_t* a
 		for (sllve_t* pe = ptop_level_block->pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 			fprintf(stdout, "TRACE ");
-			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
+			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stdout);
 			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 			if (loop_stack_get(pvars->ploop_stack) != 0) {
 				break;
@@ -438,7 +438,7 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars, 
 		for (sllve_t* pe = pstate->ptop_level_block->pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 			fprintf(stdout, "TRACE ");
-			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stderr);
+			mlr_dsl_ast_node_pretty_fprint(pstatement->past_node, stdout);
 			pstatement->pstatement_handler(pstatement, pvars, pcst_outputs);
 			if (loop_stack_get(pvars->ploop_stack) != 0) {
 				break;

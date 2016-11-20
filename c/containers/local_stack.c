@@ -15,6 +15,7 @@ static local_stack_frame_t* _local_stack_alloc(int size, int ephemeral) {
 	for (int i = 0; i < size; i++) {
 		local_stack_frame_entry_t* pentry = &pframe->pvars[i];
 		pentry->value.mlrval = mv_absent(); // xxx make method
+		pentry->value.pnext_level = NULL; // xxx make method
 		pentry->name = NULL;
 		// Any type can be written here, unless otherwise specified by a typed definition
 		pentry->type_mask = TYPE_MASK_ANY;
@@ -104,24 +105,44 @@ mv_t local_stack_frame_get_scalar_from_indexed(local_stack_frame_t* pframe, // x
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
 
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
-	mlhmmv_value_t* pmvalue = &pentry->value;
-	// xxx encapsulate
-	if (pmvalue->is_terminal) {
-		return mv_absent();
-	} else if (pmvalue->pnext_level == NULL) {
+	mlhmmv_value_t* pbase_xval = &pentry->value;
+
+#ifdef LOCAL_STACK_TRACE_ENABLE
+	// xxx needs an mlhmmv_value_print
+	if (pbase_xval == NULL) {
+		printf("VALUE IS NULL\n");
+	} else if (pbase_xval->is_terminal) {
+		char* s = mv_alloc_format_val(&pbase_xval->mlrval);
+		printf("VALUE IS %s\n", s);
+		free(s);
+	} else if (pbase_xval->pnext_level == NULL) {
 		LOCAL_STACK_TRACE(printf("VALUE IS EMPTY\n"));
-		return mv_absent();
 	} else {
-		int error = 0;
-		LOCAL_STACK_TRACE(printf("VALUE IS:\n"));
-		LOCAL_STACK_TRACE(printf("PTR IS %p\n", pmvalue->pnext_level));
-		LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->pnext_level, 0, TRUE, TRUE, "", stdout));
-		mv_t* pval = mlhmmv_get_terminal_from_level(pmvalue->pnext_level, pmvkeys, &error);
-		if (pval == NULL) {
+		printf("VALUE IS:\n");
+		printf("PTR IS %p\n", pbase_xval->pnext_level);
+		mlhmmv_level_print_stacked(pbase_xval->pnext_level, 0, TRUE, TRUE, "", stdout);
+	}
+#endif
+
+	// xxx this is a mess; clean it up.
+	int error = 0;
+	// Maybe null
+	mlhmmv_value_t* pxval;
+	if (pmvkeys == NULL || pmvkeys->length == 0) {
+		pxval = pbase_xval;
+	} else {
+		if (pbase_xval->is_terminal) {
 			return mv_absent();
 		} else {
-			return mv_copy(pval); // xxx temp copy?
+			pxval = mlhmmv_get_value_from_level(pbase_xval->pnext_level, pmvkeys, &error);
 		}
+	}
+	if (pxval == NULL) {
+		return mv_absent();
+	} else if (pxval->is_terminal) {
+		return mv_copy(&pxval->mlrval);
+	} else {
+		return mv_absent();
 	}
 }
 
@@ -135,17 +156,31 @@ mlhmmv_value_t* local_stack_frame_get_extended_from_indexed(local_stack_frame_t*
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 	mlhmmv_value_t* pmvalue = &pentry->value;
 
-	int error = 0;
-	LOCAL_STACK_TRACE(printf("VALUE IS:\n"));
-	LOCAL_STACK_TRACE(printf("PTR IS %p\n", pmvalue->pnext_level));
-	LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->pnext_level, 0, TRUE, TRUE, "", stdout));
+#ifdef LOCAL_STACK_TRACE_ENABLE
+	// xxx needs an mlhmmv_value_print
+	if (pmvalue == NULL) {
+		printf("VALUE IS NULL\n");
+	} else if (pmvalue->is_terminal) {
+		char* s = mv_alloc_format_val(&pmvalue->mlrval);
+		printf("VALUE IS %s\n", s);
+		free(s);
+	} else if (pmvalue->pnext_level == NULL) {
+		LOCAL_STACK_TRACE(printf("VALUE IS EMPTY\n"));
+	} else {
+		printf("VALUE IS:\n");
+		printf("PTR IS %p\n", pmvalue->pnext_level);
+		mlhmmv_level_print_stacked(pmvalue->pnext_level, 0, TRUE, TRUE, "", stdout);
+	}
+#endif
 
+	int error = 0;
 	// Maybe null
 	if (pmvkeys == NULL || pmvkeys->length == 0) {
 		return pmvalue;
 	} else {
 		return mlhmmv_get_value_from_level(pmvalue->pnext_level, pmvkeys, &error);
 	}
+
 }
 
 // ----------------------------------------------------------------

@@ -28,13 +28,9 @@ INSTALLDIR=/usr/local/bin
 CCOPT=$(CC) $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
 CCDEBUG=$(CC) -g $(CFLAGS) $(IFLAGS) $(WFLAGS)
 
-#-fno-omit-frame-pointer
-#CCOPT=clang -fsanitize=address $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
-#CCDEBUG=clang -O2 -fsanitize=address $(CFLAGS) $(IFLAGS) $(WFLAGS)
-
-#-fno-omit-frame-pointer
-#CCOPT=clang -fsanitize=leak $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
-#CCDEBUG=clang -O2 -fsanitize=leak $(CFLAGS) $(IFLAGS) $(WFLAGS)
+# clang ASAN. Use -O1 for debug mode to (among other things) disable inlining.
+#CCOPT=clang -fsanitize=address -fno-omit-frame-pointer $(CFLAGS) $(IFLAGS) $(WFLAGS)
+#CCDEBUG=clang -g -fsanitize=address -fno-omit-frame-pointer $(CFLAGS) $(IFLAGS) $(WFLAGS)
 
 # ----------------------------------------------------------------
 # Miller source except DSL

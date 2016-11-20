@@ -33,7 +33,7 @@ struct _mlhmmv_level_t; // forward reference
 typedef struct _mlhmmv_value_t {
 	int is_terminal;
 	// xxx needs absent/null initters respectively in the .c file
-	mv_t mlrval;
+	mv_t mlrval; // xxx rename to terminal_mlrval
 	struct _mlhmmv_level_t* pnext_level;
 } mlhmmv_value_t;
 

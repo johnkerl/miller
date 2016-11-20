@@ -261,6 +261,12 @@ static boxed_xval_t rxval_evaluator_from_nonindexed_local_variable_func(void* pv
 			.xval = mlhmmv_value_transfer_terminal(mv_absent()),
 			.map_is_ephemeral = FALSE,
 		};
+	} else if (pxval->is_terminal) {
+		// xxx cmt terminals are always copied, maps are pointed to unless ephemeral. xxx or rethink that (i.e. refall)
+		return (boxed_xval_t) {
+			.xval = mlhmmv_copy_aux(pxval),
+			.map_is_ephemeral = FALSE,
+		};
 	} else {
 		return (boxed_xval_t) {
 			.xval = *pxval,
@@ -311,6 +317,11 @@ static boxed_xval_t rxval_evaluator_from_indexed_local_variable_func(void* pvsta
 		if (pxval == NULL) {
 			return (boxed_xval_t) {
 				.xval = mlhmmv_value_transfer_terminal(mv_absent()),
+				.map_is_ephemeral = FALSE,
+			};
+		} else if (pxval->is_terminal) {
+			return (boxed_xval_t) {
+				.xval = mlhmmv_copy_aux(pxval),
 				.map_is_ephemeral = FALSE,
 			};
 		} else {
@@ -374,10 +385,17 @@ static boxed_xval_t rxval_evaluator_from_oosvar_keylist_func(void* pvstate, vari
 			pmvkeys, &lookup_error);
 		sllmv_free(pmvkeys);
 		if (pxval != NULL) {
-			return (boxed_xval_t) {
-				.xval = *pxval,
-				.map_is_ephemeral = FALSE,
-			};
+			if (pxval->is_terminal) {
+				return (boxed_xval_t) {
+					.xval = mlhmmv_copy_aux(pxval),
+					.map_is_ephemeral = FALSE,
+				};
+			} else {
+				return (boxed_xval_t) {
+					.xval = *pxval,
+					.map_is_ephemeral = FALSE,
+				};
+			}
 		} else {
 			return (boxed_xval_t) {
 				.xval = mlhmmv_value_transfer_terminal(mv_absent()),
@@ -492,6 +510,7 @@ static boxed_xval_t rxval_evaluator_wrapping_rval_func(void* pvstate, variables_
 	rval_evaluator_t* prval_evaluator = pstate->prval_evaluator;
 	mv_t val = prval_evaluator->pprocess_func(prval_evaluator->pvstate, pvars);
 	return (boxed_xval_t) {
+		// xxx comment rvals are always copied
 		.xval = mlhmmv_value_transfer_terminal(val),
 		.map_is_ephemeral = FALSE,
 	};

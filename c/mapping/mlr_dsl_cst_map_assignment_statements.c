@@ -200,7 +200,7 @@ static void handle_local_variable_definition_from_xval(
 typedef struct _nonindexed_local_variable_assignment_state_t {
 	char*              lhs_variable_name; // For error messages only: stack-index is computed by stack-allocator:
 	int                lhs_frame_relative_index;
-	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
+	rxval_evaluator_t* prhs_xevaluator;
 } nonindexed_local_variable_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_nonindexed_local_variable_assignment_from_xval;
@@ -231,7 +231,7 @@ mlr_dsl_cst_statement_t* alloc_nonindexed_local_variable_assignment(mlr_dsl_cst_
 
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
 
-	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(
+	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
 		prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 	pstatement_handler = handle_nonindexed_local_variable_assignment_from_xval;
 
@@ -261,14 +261,24 @@ static void handle_nonindexed_local_variable_assignment_from_xval(
 {
 	nonindexed_local_variable_assignment_state_t* pstate = pstatement->pvstate;
 
-	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pstate->prhs_xevaluator;
-	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
-	if (!xval.is_terminal || mv_is_present(&xval.mlrval)) {
-		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		// xxx copy-or-not semantics
-		local_stack_frame_assign_extended_nonindexed(pframe, pstate->lhs_frame_relative_index, xval);
+	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+	boxed_xval_t boxed_xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+
+	if (boxed_xval.xval.is_terminal) {
+		if (mv_is_present(&boxed_xval.xval.mlrval)) {
+			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+			local_stack_frame_assign_extended_nonindexed(pframe, pstate->lhs_frame_relative_index,
+				boxed_xval.xval);
+		}
 	} else {
-		mlhmmv_free_submap(xval);
+		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+		if (boxed_xval.map_is_ephemeral) {
+			local_stack_frame_assign_extended_nonindexed(pframe, pstate->lhs_frame_relative_index,
+				boxed_xval.xval);
+		} else {
+			local_stack_frame_assign_extended_nonindexed(pframe, pstate->lhs_frame_relative_index,
+				mlhmmv_copy_aux(&boxed_xval.xval));
+		}
 	}
 }
 
@@ -277,7 +287,7 @@ typedef struct _indexed_local_variable_assignment_state_t {
 	char*              lhs_variable_name; // For error messages only: stack-index is computed by stack-allocator:
 	int                lhs_frame_relative_index;
 	sllv_t*            plhs_keylist_evaluators;
-	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
+	rxval_evaluator_t* prhs_xevaluator;
 } indexed_local_variable_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_indexed_local_variable_assignment_from_xval;
@@ -309,7 +319,7 @@ mlr_dsl_cst_statement_t* alloc_indexed_local_variable_assignment(mlr_dsl_cst_t* 
 
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
 
-	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(
+	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
 		prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 	pstatement_handler = handle_indexed_local_variable_assignment_from_xval;
 
@@ -343,22 +353,32 @@ static void handle_indexed_local_variable_assignment_from_xval(
 {
 	indexed_local_variable_assignment_state_t* pstate = pstatement->pvstate;
 
-	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pstate->prhs_xevaluator;
-	mlhmmv_value_t rhs_xvalue = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
-	if (!rhs_xvalue.is_terminal || mv_is_present(&rhs_xvalue.mlrval)) {
-		int all_non_null_or_error = TRUE;
-		sllmv_t* pmvkeys = evaluate_list(pstate->plhs_keylist_evaluators, pvars,
-			&all_non_null_or_error);
-		if (all_non_null_or_error) {
-			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-			// xxx copy-or-not semantics. find out, fix, encode in function name.
-			local_stack_frame_assign_extended_indexed(pframe, pstate->lhs_frame_relative_index, pmvkeys, rhs_xvalue);
-		}
-		sllmv_free(pmvkeys);
+	int lhs_keys_all_non_null_or_error;
+	sllmv_t* pmvkeys = evaluate_list(pstate->plhs_keylist_evaluators, pvars, &lhs_keys_all_non_null_or_error);
+	if (lhs_keys_all_non_null_or_error) {
 
-	} else {
-		mlhmmv_free_submap(rhs_xvalue);
+		rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+		boxed_xval_t boxed_xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+
+		if (boxed_xval.xval.is_terminal) {
+			if (mv_is_present(&boxed_xval.xval.mlrval)) {
+				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+				local_stack_frame_assign_extended_indexed(pframe, pstate->lhs_frame_relative_index,
+					pmvkeys, boxed_xval.xval);
+			}
+		} else {
+			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+			if (boxed_xval.map_is_ephemeral) {
+				local_stack_frame_assign_extended_indexed(pframe, pstate->lhs_frame_relative_index,
+					pmvkeys, boxed_xval.xval);
+			} else {
+				local_stack_frame_assign_extended_nonindexed(pframe, pstate->lhs_frame_relative_index,
+					mlhmmv_copy_aux(&boxed_xval.xval));
+			}
+		}
 	}
+	sllmv_free(pmvkeys);
+
 }
 
 // ================================================================

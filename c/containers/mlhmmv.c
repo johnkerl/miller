@@ -517,8 +517,9 @@ mlhmmv_value_t* mlhmmv_get_value_from_level(mlhmmv_level_t* pstart_level, sllmv_
 		} else {
 			plevel = plevel_entry->level_value.pnext_level;
 			prest_keys = prest_keys->pnext;
-			plevel_entry = mlhmmv_get_next_level_entry(plevel_entry->level_value.pnext_level,
-				&prest_keys->value, NULL);
+			if (plevel == NULL)
+				return NULL;
+			plevel_entry = mlhmmv_get_next_level_entry(plevel, &prest_keys->value, NULL);
 		}
 	}
 	if (plevel_entry == NULL) {
@@ -1389,6 +1390,9 @@ void mlhmmv_print_terminal(mv_t* pmv, int quote_values_always, FILE* ostream) {
 void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 	int do_final_comma, int quote_values_always, char* line_indent, FILE* ostream)
 {
+	if (plevel == NULL) {
+		return;
+	}
 	static char* leader = "  ";
 	// Top-level opening brace goes on a line by itself; subsequents on the same line after the level key.
 	if (depth == 0)
