@@ -1031,7 +1031,7 @@ typedef void emit_lashed_item_freer_t(struct _emit_lashed_item_t* pitem);
 typedef struct _emit_lashed_item_t {
 	// For map literals
 	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
-	mlhmmv_value_t ephemeral_xvalue;
+	mlhmmv_value_t ephemeral_xvalue; // xxx rm
 
 	// For local variables
 	int   localvar_frame_relative_index;
@@ -1414,7 +1414,7 @@ static dump_target_getter_t full_oosvar_target_getter;
 static dump_target_getter_t nonindexed_local_variable_target_getter;
 static dump_target_getter_t indexed_local_variable_target_getter;
 static dump_target_getter_t ephemeral_target_getter;
-static dump_target_freer_t dump_target_free;
+static dump_target_freer_t  dump_target_free;
 
 typedef struct _dump_state_t {
 	int                   target_vardef_frame_relative_index;
