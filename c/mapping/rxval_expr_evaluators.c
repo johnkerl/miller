@@ -456,7 +456,7 @@ static boxed_xval_t rxval_evaluator_wrapping_rval_func(void* pvstate, variables_
 	mv_t val = prval_evaluator->pprocess_func(prval_evaluator->pvstate, pvars);
 	return (boxed_xval_t) {
 		.xval = mlhmmv_value_transfer_terminal(val),
-		.is_ephemeral = TRUE,
+		.map_is_ephemeral = TRUE,
 	};
 }
 
