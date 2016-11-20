@@ -1404,26 +1404,9 @@ static void handle_emit_lashed_common(
 
 // ================================================================
 struct _dump_state_t; // forward reference
-typedef void dump_target_getter_t(variables_t* pvars, struct _dump_state_t* pstate, // xxx rename: not 'target'
-	mv_t** ppval, mlhmmv_level_t** pplevel);
-// Ooosvars/localvars don't need freeing; ephemeral map-literals do.
-typedef void dump_target_freer_t(struct _dump_state_t* pstate);
-
-static dump_target_getter_t oosvar_target_getter;
-static dump_target_getter_t full_oosvar_target_getter;
-static dump_target_getter_t nonindexed_local_variable_target_getter;
-static dump_target_getter_t indexed_local_variable_target_getter;
-static dump_target_getter_t ephemeral_target_getter;
-static dump_target_freer_t  dump_target_free;
 
 typedef struct _dump_state_t {
-	int                   target_vardef_frame_relative_index;
-	sllv_t*               ptarget_keylist_evaluators;
-	rxval_evaluator_xxx_deprecated_t*    pephemeral_target_xevaluator;
-	mlhmmv_value_t        ephemeral_xvalue;
-
-	dump_target_getter_t* pdump_target_getter;
-	dump_target_freer_t* pdump_target_freer;
+	rxval_evaluator_t*    ptarget_xevaluator;
 
 	FILE*                 stdfp;
 	file_output_mode_t    file_output_mode;
@@ -1442,63 +1425,22 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 {
 	dump_state_t* pstate = mlr_malloc_or_die(sizeof(dump_state_t));
 
-	pstate->target_vardef_frame_relative_index = MD_UNUSED_INDEX;
-	pstate->ptarget_keylist_evaluators   = NULL;
-	pstate->pephemeral_target_xevaluator = NULL;
-	pstate->pdump_target_getter          = NULL;
-	pstate->pdump_target_freer           = NULL;
-
-	pstate->stdfp                        = NULL;
-	pstate->poutput_filename_evaluator   = NULL;
-	pstate->pmulti_out                   = NULL;
-	pstate->flush_every_record = pcst->flush_every_record;
+	pstate->ptarget_xevaluator         = NULL;
+	pstate->stdfp                      = NULL;
+	pstate->poutput_filename_evaluator = NULL;
+	pstate->pmulti_out                 = NULL;
+	pstate->flush_every_record         = pcst->flush_every_record;
 
 	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren->phead->pvvalue;
 	mlr_dsl_cst_statement_handler_t* phandler = NULL;
 
-	if (pnode->pchildren->length == 1) { // dump all oosvars
-		pstate->pdump_target_getter = full_oosvar_target_getter;
+	MLR_INTERNAL_CODING_ERROR_UNLESS(pnode->pchildren->length == 2);
 
-	} else if (pnode->pchildren->length == 2) { // dump specific oosvar or local
-		mlr_dsl_ast_node_t* ptarget_node = pnode->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* ptarget_node = pnode->pchildren->phead->pnext->pvvalue;
 
-		if (ptarget_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
-			pstate->pdump_target_getter = full_oosvar_target_getter;
-
-		// Special case of ephemeral getter: dumps the data structure without copying it.
-		} else if (ptarget_node->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
-			pstate->pdump_target_getter = oosvar_target_getter;
-			pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
-				ptarget_node, pcst->pfmgr, type_inferencing, context_flags);
-
-		// Special case of ephemeral getter: dumps the data structure without copying it.
-		} else if (ptarget_node->type == MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE) {
-			pstate->pdump_target_getter = nonindexed_local_variable_target_getter;
-			MLR_INTERNAL_CODING_ERROR_IF(ptarget_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
-			pstate->target_vardef_frame_relative_index = ptarget_node->vardef_frame_relative_index;
-
-		// Special case of ephemeral getter: dumps the data structure without copying it.
-		} else if (ptarget_node->type == MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE) {
-			pstate->pdump_target_getter = indexed_local_variable_target_getter;
-			MLR_INTERNAL_CODING_ERROR_IF(ptarget_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
-			pstate->target_vardef_frame_relative_index = ptarget_node->vardef_frame_relative_index;
-			pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
-				ptarget_node, pcst->pfmgr, type_inferencing, context_flags);
-
-		// MD_AST_NODE_TYPE_FULL_SREC
-		// MD_AST_NODE_TYPE_MAP_LITERAL
-		} else {
-			pstate->pdump_target_getter = ephemeral_target_getter;
-			pstate->pdump_target_freer = dump_target_free;
-			pstate->pephemeral_target_xevaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(
-				ptarget_node, pcst->pfmgr, type_inferencing, context_flags);
-
-		}
-
-	} else {
-		MLR_INTERNAL_CODING_ERROR();
-	}
+	pstate->ptarget_xevaluator = rxval_evaluator_alloc_from_ast(
+		ptarget_node, pcst->pfmgr, type_inferencing, context_flags);
 
 	if (pfilename_node->type == MD_AST_NODE_TYPE_STDOUT) {
 		phandler = handle_dump;
@@ -1525,129 +1467,18 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 static void free_dump(mlr_dsl_cst_statement_t* pstatement) {
 	dump_state_t* pstate = pstatement->pvstate;
 
+	if (pstate->ptarget_xevaluator != NULL) {
+		pstate->ptarget_xevaluator->pfree_func(pstate->ptarget_xevaluator);
+	}
 	if (pstate->poutput_filename_evaluator != NULL) {
 		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
 	}
-	if (pstate->pephemeral_target_xevaluator != NULL) {
-		pstate->pephemeral_target_xevaluator->pfree_func(pstate->pephemeral_target_xevaluator);
-	}
-	if (pstate->ptarget_keylist_evaluators != NULL) {
-		for (sllve_t* pe = pstate->ptarget_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-			rval_evaluator_t* pev = pe->pvvalue;
-			pev->pfree_func(pev);
-		}
-		sllv_free(pstate->ptarget_keylist_evaluators);
-	}
-
 	if (pstate->pmulti_out != NULL) {
 		multi_out_close(pstate->pmulti_out);
 		multi_out_free(pstate->pmulti_out);
 	}
 
 	free(pstate);
-}
-
-	sllv_t*               ptarget_keylist_evaluators;
-	rxval_evaluator_xxx_deprecated_t*    pephemeral_target_xevaluator;
-
-
-// ----------------------------------------------------------------
-static void full_oosvar_target_getter(variables_t* pvars, dump_state_t* pstate,
-	mv_t** ppval, mlhmmv_level_t** pplevel)
-{
-	*ppval   = NULL;
-	*pplevel = pvars->poosvars->proot_level;
-}
-
-static void oosvar_target_getter(variables_t* pvars, dump_state_t* pstate,
-	mv_t** ppval, mlhmmv_level_t** pplevel)
-{
-	int all_non_null_or_error = TRUE;
-	sllmv_t* pmvkeys = evaluate_list(pstate->ptarget_keylist_evaluators, pvars, &all_non_null_or_error);
-	if (all_non_null_or_error) {
-		int lookup_error = FALSE;
-		mlhmmv_value_t* pmval = mlhmmv_get_value_from_level(pvars->poosvars->proot_level, pmvkeys, &lookup_error);
-		if (pmval == NULL) {
-			*ppval   = NULL;
-			*pplevel = NULL;
-		} else if (pmval->is_terminal) {
-			*ppval   = &pmval->mlrval;
-			*pplevel = NULL;
-		} else {
-			*ppval   = NULL;
-			*pplevel = pmval->pnext_level;
-		}
-	}
-	sllmv_free(pmvkeys);
-}
-
-static void nonindexed_local_variable_target_getter(variables_t* pvars, dump_state_t* pstate,
-	mv_t** ppval, mlhmmv_level_t** pplevel)
-{
-	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-
-	mlhmmv_value_t* pmval = local_stack_frame_get_extended_from_indexed(pframe,
-		pstate->target_vardef_frame_relative_index, NULL);
-	if (pmval == NULL) {
-		*ppval   = NULL;
-		*pplevel = NULL;
-	} else if (pmval->is_terminal) {
-		*ppval   = &pmval->mlrval;
-		*pplevel = NULL;
-	} else {
-		*ppval   = NULL;
-		*pplevel = pmval->pnext_level;
-	}
-}
-
-static void indexed_local_variable_target_getter(variables_t* pvars, dump_state_t* pstate,
-	mv_t** ppval, mlhmmv_level_t** pplevel)
-{
-	*ppval   = NULL;
-	*pplevel = NULL;
-
-	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-
-	int all_non_null_or_error = TRUE;
-	sllmv_t* pmvkeys = evaluate_list(pstate->ptarget_keylist_evaluators, pvars, &all_non_null_or_error);
-	if (all_non_null_or_error) {
-
-		mlhmmv_value_t* pmval = local_stack_frame_get_extended_from_indexed(pframe,
-			pstate->target_vardef_frame_relative_index, pmvkeys);
-		if (pmval != NULL) {
-			if (pmval->is_terminal) {
-				*ppval   = &pmval->mlrval;
-				*pplevel = NULL;
-			} else {
-				*ppval   = NULL;
-				*pplevel = pmval->pnext_level;
-			}
-		}
-	}
-
-	sllmv_free(pmvkeys);
-}
-
-static void ephemeral_target_getter(variables_t* pvars, dump_state_t* pstate,
-	mv_t** ppval, mlhmmv_level_t** pplevel)
-{
-	*ppval   = NULL;
-	*pplevel = NULL;
-
-	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pstate->pephemeral_target_xevaluator;
-	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
-
-	pstate->ephemeral_xvalue = xval;
-
-	if (xval.is_terminal) {
-		*ppval = &pstate->ephemeral_xvalue.mlrval;
-	} else {
-		*pplevel = pstate->ephemeral_xvalue.pnext_level;
-	}
-}
-
-static void dump_target_free(struct _dump_state_t* pstate) {
-	mlhmmv_free_submap(pstate->ephemeral_xvalue);
 }
 
 // ----------------------------------------------------------------
@@ -1657,17 +1488,19 @@ static void handle_dump(
 	cst_outputs_t*           pcst_outputs)
 {
 	dump_state_t* pstate = pstatement->pvstate;
-	mv_t* pval = NULL;
-	mlhmmv_level_t* plevel = NULL;
-	pstate->pdump_target_getter(pvars, pstate, &pval, &plevel);
-	if (pval != NULL) {
-		mlhmmv_print_terminal(pval, FALSE, pstate->stdfp);
+
+	rxval_evaluator_t* ptarget_xevaluator = pstate->ptarget_xevaluator;
+	boxed_xval_t boxed_xval = ptarget_xevaluator->pprocess_func(ptarget_xevaluator->pvstate, pvars);
+
+	if (boxed_xval.xval.is_terminal) {
+		mlhmmv_print_terminal(&boxed_xval.xval.mlrval, FALSE, pstate->stdfp);
 		fprintf(pstate->stdfp, "\n");
-	} else if (plevel != NULL) {
-		mlhmmv_level_print_stacked(plevel, 0, FALSE, FALSE, "", pstate->stdfp); // xxx mk simpler call w/ dfl args
+	} else {
+		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE, FALSE, "", pstate->stdfp); // xxx mk simpler call w/ dfl args
 	}
-	if (pstate->pdump_target_freer != NULL) {
-		pstate->pdump_target_freer(pstate);
+
+	if (!boxed_xval.xval.is_terminal && boxed_xval.map_is_ephemeral) {
+		mlhmmv_free_submap(boxed_xval.xval);
 	}
 }
 
@@ -1685,14 +1518,14 @@ static void handle_dump_to_file(
 
 	FILE* outfp = multi_out_get(pstate->pmulti_out, filename, pstate->file_output_mode);
 
-	mv_t* pval = NULL;
-	mlhmmv_level_t* plevel = NULL;
-	pstate->pdump_target_getter(pvars, pstate, &pval, &plevel);
-	if (pval != NULL) {
-		mlhmmv_print_terminal(pval, FALSE, outfp);
+	rxval_evaluator_t* ptarget_xevaluator = pstate->ptarget_xevaluator;
+	boxed_xval_t boxed_xval = ptarget_xevaluator->pprocess_func(ptarget_xevaluator->pvstate, pvars);
+
+	if (boxed_xval.xval.is_terminal) {
+		mlhmmv_print_terminal(&boxed_xval.xval.mlrval, FALSE, outfp);
 		fprintf(outfp, "\n");
-	} else if (plevel != NULL) {
-		mlhmmv_level_print_stacked(plevel, 0, FALSE, FALSE, "", outfp); // xxx mk simpler call w/ dfl args
+	} else if (boxed_xval.xval.pnext_level != NULL) {
+		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE, FALSE, "", outfp); // xxx mk simpler call w/ dfl args
 	}
 
 	if (pstate->flush_every_record)
@@ -1701,4 +1534,8 @@ static void handle_dump_to_file(
 	if (fn_free_flags)
 		free(filename);
 	mv_free(&filename_mv);
+
+	if (!boxed_xval.xval.is_terminal && boxed_xval.map_is_ephemeral) {
+		mlhmmv_free_submap(boxed_xval.xval);
+	}
 }

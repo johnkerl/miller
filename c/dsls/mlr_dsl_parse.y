@@ -1763,29 +1763,34 @@ md_emit_lashed_namelist(A) ::= md_emit_lashed_namelist(B) MD_TOKEN_COMMA md_rhs(
 
 // ----------------------------------------------------------------
 md_dump(A) ::= MD_TOKEN_DUMP(O). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_DUMP,
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_DUMP,
 		mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE,
-			mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT)));
+			mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT)),
+		mlr_dsl_ast_node_alloc("all", MD_AST_NODE_TYPE_FULL_OOSVAR));
 }
 md_edump(A) ::= MD_TOKEN_EDUMP(O). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_DUMP,
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_DUMP,
 		mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE,
-			mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDERR)));
+			mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDERR)),
+		mlr_dsl_ast_node_alloc("all", MD_AST_NODE_TYPE_FULL_OOSVAR));
 }
 md_dump_write(A) ::= MD_TOKEN_DUMP(O) MD_TOKEN_GT md_output_file(F). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_DUMP,
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_DUMP,
 		mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE,
-			F));
+			F),
+		mlr_dsl_ast_node_alloc("all", MD_AST_NODE_TYPE_FULL_OOSVAR));
 }
 md_dump_append(A) ::= MD_TOKEN_DUMP(O) MD_TOKEN_BITWISE_RSH md_output_file(F). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_DUMP,
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_DUMP,
 		mlr_dsl_ast_node_alloc_unary(">>", MD_AST_NODE_TYPE_FILE_APPEND,
-			F));
+			F),
+		mlr_dsl_ast_node_alloc("all", MD_AST_NODE_TYPE_FULL_OOSVAR));
 }
 md_dump_pipe(A) ::= MD_TOKEN_DUMP(O) MD_TOKEN_BITWISE_OR md_rhs(P). {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_DUMP,
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_DUMP,
 		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE,
-			P));
+			P),
+		mlr_dsl_ast_node_alloc("all", MD_AST_NODE_TYPE_FULL_OOSVAR));
 }
 
 md_dump(A) ::= MD_TOKEN_DUMP(O) md_dumpable(B). {

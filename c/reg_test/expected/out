@@ -24775,6 +24775,7 @@ text="block", type=STATEMENT_BLOCK:
             text="dump", type=DUMP:
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
+                text="all", type=FULL_OOSVAR.
     text="=", type=SREC_ASSIGNMENT:
         text="x", type=FIELD_NAME.
         text="6", type=NUMERIC_LITERAL.
@@ -24837,6 +24838,7 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
             text="dump", type=DUMP:
                 text=">", type=FILE_WRITE:
                     text="stdout", type=STDOUT:
+                text="all", type=FULL_OOSVAR.
     text="=", type=SREC_ASSIGNMENT:
         text="x", type=FIELD_NAME.
         text="6", type=NUMERIC_LITERAL.
@@ -45900,6 +45902,7 @@ mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3};
 }
 
 mlr --from ./reg_test/input/xyz2 put -q @o = @o; dump @o
+
 
 mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; @o = @o; dump @o
 {
