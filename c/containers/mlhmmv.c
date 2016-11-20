@@ -1129,6 +1129,17 @@ static void mlhmmv_to_lrecs_aux_within_record(
 void mlhmmv_to_lrecs_lashed(mlhmmv_value_t** ptop_values, int num_submaps, sllmv_t** ppkeys, sllmv_t* pnames,
 	sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator)
 {
+
+// xxx remove
+// printf("BGN\n");
+// for (int i = 0; i < num_submaps; i++) {
+// printf("KEYS %d:\n", i);
+// sllmv_print(ppkeys[i]);
+// }
+// printf("NAMES:\n");
+// sllmv_print(pnames);
+// printf("END\n");
+
 	// First is primary and rest are lashed to it (lookups with same keys as primary).
 	if (ptop_values[0] == NULL) {
 		// No such entry in the mlhmmv results in no output records
