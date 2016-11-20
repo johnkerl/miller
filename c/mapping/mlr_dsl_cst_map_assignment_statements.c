@@ -120,7 +120,7 @@ typedef struct _local_variable_definition_state_t {
 	char*              lhs_variable_name;
 	int                lhs_frame_relative_index;
 	int                lhs_type_mask;
-	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
+	rxval_evaluator_t* prhs_xevaluator;
 } local_variable_definition_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_local_variable_definition_from_xval;
@@ -150,8 +150,7 @@ mlr_dsl_cst_statement_t* alloc_local_variable_definition(
 
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pnext->pvvalue;
-
-	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(
+	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
 		prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 	pstatement_handler = handle_local_variable_definition_from_xval;
 
@@ -178,15 +177,19 @@ static void handle_local_variable_definition_from_xval(
 	cst_outputs_t*           pcst_outputs)
 {
 	local_variable_definition_state_t* pstate = pstatement->pvstate;
-
-	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pstate->prhs_xevaluator;
-	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+	boxed_xval_t boxed_xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	// xxx copy semantics for the assign? find out, fix, and encode that in the function name.
-	local_stack_frame_define_extended(pframe,
-		pstate->lhs_variable_name, pstate->lhs_frame_relative_index, pstate->lhs_type_mask,
-		xval);
+	if (!boxed_xval.map_is_ephemeral && !boxed_xval.xval.is_terminal) {
+		local_stack_frame_define_extended(pframe,
+			pstate->lhs_variable_name, pstate->lhs_frame_relative_index, pstate->lhs_type_mask,
+			mlhmmv_copy_aux(&boxed_xval.xval));
+	} else {
+		local_stack_frame_define_extended(pframe,
+			pstate->lhs_variable_name, pstate->lhs_frame_relative_index, pstate->lhs_type_mask,
+			boxed_xval.xval);
+	}
 }
 
 // ================================================================
