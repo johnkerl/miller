@@ -184,7 +184,7 @@ static void rxval_evaluator_from_map_literal_aux_xxx_deprecated(
 	}
 }
 
-mlhmmv_value_t rxval_evaluator_from_map_literal_func(void* pvstate, variables_t* pvars) {
+static mlhmmv_value_t rxval_evaluator_from_map_literal_func(void* pvstate, variables_t* pvars) {
 	rxval_evaluator_from_map_literal_state__xxx_deprecated_t* pstate = pvstate;
 
 	mlhmmv_value_t xval = mlhmmv_value_alloc_empty_map();
@@ -238,7 +238,7 @@ typedef struct _rxval_evaluator_from_nonindexed_local_variable_state_t {
 	int vardef_frame_relative_index;
 } rxval_evaluator_from_nonindexed_local_variable_state_t;
 
-mlhmmv_value_t rxval_evaluator_from_nonindexed_local_variable_func(void* pvstate, variables_t* pvars) {
+static mlhmmv_value_t rxval_evaluator_from_nonindexed_local_variable_func(void* pvstate, variables_t* pvars) {
 	rxval_evaluator_from_nonindexed_local_variable_state_t* pstate = pvstate;
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	mlhmmv_value_t* pxval = local_stack_frame_get_extended_from_indexed(pframe, pstate->vardef_frame_relative_index, NULL);
@@ -277,7 +277,7 @@ typedef struct _rxval_evaluator_from_indexed_local_variable_state_t {
 	sllv_t* pkeylist_evaluators;
 } rxval_evaluator_from_indexed_local_variable_state_t;
 
-mlhmmv_value_t rxval_evaluator_from_indexed_local_variable_func(void* pvstate, variables_t* pvars) {
+static mlhmmv_value_t rxval_evaluator_from_indexed_local_variable_func(void* pvstate, variables_t* pvars) {
 	rxval_evaluator_from_indexed_local_variable_state_t* pstate = pvstate;
 
 	int all_non_null_or_error = TRUE;
@@ -333,7 +333,7 @@ typedef struct _rxval_evaluator_from_oosvar_keylist_state_t {
 	sllv_t* pkeylist_evaluators;
 } rxval_evaluator_from_oosvar_keylist_state_t;
 
-mlhmmv_value_t rxval_evaluator_from_oosvar_keylist_func(void* pvstate, variables_t* pvars) {
+static mlhmmv_value_t rxval_evaluator_from_oosvar_keylist_func(void* pvstate, variables_t* pvars) {
 	rxval_evaluator_from_oosvar_keylist_state_t* pstate = pvstate;
 
 	int all_non_null_or_error = TRUE;
@@ -384,7 +384,7 @@ rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_oosvar_keylist_xxx_
 }
 
 // ================================================================
-mlhmmv_value_t rxval_evaluator_from_full_oosvar_func(void* pvstate, variables_t* pvars) {
+static mlhmmv_value_t rxval_evaluator_from_full_oosvar_func(void* pvstate, variables_t* pvars) {
 	return mlhmmv_copy_submap_from_root(pvars->poosvars, NULL);
 }
 
@@ -403,7 +403,7 @@ rxval_evaluator_xxx_deprecated_t* rxval_evaluator_alloc_from_full_oosvar_xxx_dep
 }
 
 // ================================================================
-mlhmmv_value_t rxval_evaluator_from_full_srec_func(void* pvstate, variables_t* pvars) {
+static mlhmmv_value_t rxval_evaluator_from_full_srec_func(void* pvstate, variables_t* pvars) {
 	mlhmmv_value_t xval = mlhmmv_value_alloc_empty_map(); // xxx memory leak. replace w/ initter.
 
 	for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {

@@ -163,7 +163,7 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 //	}
 //	return plist_evaluator;
 //}
-//
+
 ////  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 //typedef struct _rxval_evaluator_from_map_literal_state__t {
 //	map_literal_list_evaluator_t* proot_list_evaluator;
@@ -240,45 +240,52 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 //
 //	return prxval_evaluator;
 //}
-//
-//// ================================================================
-//typedef struct _rxval_evaluator_from_nonindexed_local_variable_state_t {
-//	int vardef_frame_relative_index;
-//} rxval_evaluator_from_nonindexed_local_variable_state_t;
-//
-//mlhmmv_value_t rxval_evaluator_from_nonindexed_local_variable_func(void* pvstate, variables_t* pvars) {
-//	rxval_evaluator_from_nonindexed_local_variable_state_t* pstate = pvstate;
-//	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-//	mlhmmv_value_t* pxval = local_stack_frame_get_extended_from_indexed(pframe, pstate->vardef_frame_relative_index, NULL);
-//	if (pxval == NULL) {
-//		return mlhmmv_value_transfer_terminal(mv_absent()); // xxx rename transfer to wrap ?
-//	} else {
-//		return mlhmmv_copy_aux(pxval);
-//	}
-//}
-//
-//static void rxval_evaluator_from_nonindexed_local_variable_free(rxval_evaluator_t* prxval_evaluator) {
-//	rxval_evaluator_from_nonindexed_local_variable_state_t* pstate = prxval_evaluator->pvstate;
-//	free(pstate);
-//	free(prxval_evaluator);
-//}
-//
-//rxval_evaluator_t* rxval_evaluator_alloc_from_nonindexed_local_variable(
-//	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
-//{
-//	rxval_evaluator_from_nonindexed_local_variable_state_t* pstate = mlr_malloc_or_die(
-//		sizeof(rxval_evaluator_from_nonindexed_local_variable_state_t));
-//	MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_frame_relative_index == MD_UNUSED_INDEX);
-//	pstate->vardef_frame_relative_index = pnode->vardef_frame_relative_index;
-//
-//	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
-//	prxval_evaluator->pvstate       = pstate;
-//	prxval_evaluator->pprocess_func = rxval_evaluator_from_nonindexed_local_variable_func;
-//	prxval_evaluator->pfree_func    = rxval_evaluator_from_nonindexed_local_variable_free;
-//
-//	return prxval_evaluator;
-//}
-//
+
+// ================================================================
+typedef struct _rxval_evaluator_from_nonindexed_local_variable_state_t {
+	int vardef_frame_relative_index;
+} rxval_evaluator_from_nonindexed_local_variable_state_t;
+
+static boxed_xval_t rxval_evaluator_from_nonindexed_local_variable_func(void* pvstate, variables_t* pvars) {
+	rxval_evaluator_from_nonindexed_local_variable_state_t* pstate = pvstate;
+	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+	mlhmmv_value_t* pxval = local_stack_frame_get_extended_from_indexed(
+		pframe, pstate->vardef_frame_relative_index, NULL);
+	if (pxval == NULL) {
+		return (boxed_xval_t) {
+			.xval = mlhmmv_value_transfer_terminal(mv_absent()),
+			.map_is_ephemeral = FALSE,
+		};
+	} else {
+		return (boxed_xval_t) {
+			.xval = *pxval,
+			.map_is_ephemeral = FALSE,
+		};
+	}
+}
+
+static void rxval_evaluator_from_nonindexed_local_variable_free(rxval_evaluator_t* prxval_evaluator) {
+	rxval_evaluator_from_nonindexed_local_variable_state_t* pstate = prxval_evaluator->pvstate;
+	free(pstate);
+	free(prxval_evaluator);
+}
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_nonindexed_local_variable(
+	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
+{
+	rxval_evaluator_from_nonindexed_local_variable_state_t* pstate = mlr_malloc_or_die(
+		sizeof(rxval_evaluator_from_nonindexed_local_variable_state_t));
+	MLR_INTERNAL_CODING_ERROR_IF(pnode->vardef_frame_relative_index == MD_UNUSED_INDEX);
+	pstate->vardef_frame_relative_index = pnode->vardef_frame_relative_index;
+
+	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	prxval_evaluator->pvstate       = pstate;
+	prxval_evaluator->pprocess_func = rxval_evaluator_from_nonindexed_local_variable_func;
+	prxval_evaluator->pfree_func    = rxval_evaluator_from_nonindexed_local_variable_free;
+
+	return prxval_evaluator;
+}
+
 //// ================================================================
 //typedef struct _rxval_evaluator_from_indexed_local_variable_state_t {
 //	int vardef_frame_relative_index;
@@ -335,115 +342,131 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 //
 //	return prxval_evaluator;
 //}
-//
-//// ================================================================
-//typedef struct _rxval_evaluator_from_oosvar_keylist_state_t {
-//	sllv_t* pkeylist_evaluators;
-//} rxval_evaluator_from_oosvar_keylist_state_t;
-//
-//mlhmmv_value_t rxval_evaluator_from_oosvar_keylist_func(void* pvstate, variables_t* pvars) {
-//	rxval_evaluator_from_oosvar_keylist_state_t* pstate = pvstate;
-//
-//	int all_non_null_or_error = TRUE;
-//	sllmv_t* pmvkeys = evaluate_list(pstate->pkeylist_evaluators, pvars, &all_non_null_or_error);
-//
-//	if (all_non_null_or_error) {
-//
-//		int lookup_error = FALSE;
-//		mlhmmv_value_t* pxval = mlhmmv_get_value_from_level(pvars->poosvars->proot_level,
-//			pmvkeys, &lookup_error);
-//		sllmv_free(pmvkeys);
-//		if (pxval == NULL) {
-//			return mlhmmv_value_transfer_terminal(mv_absent());
-//		} else {
-//			return mlhmmv_copy_aux(pxval);
-//		}
-//	} else {
-//		sllmv_free(pmvkeys);
-//		return mlhmmv_value_transfer_terminal(mv_absent());
-//	}
-//}
-//
-//static void rxval_evaluator_from_oosvar_keylist_free(rxval_evaluator_t* prxval_evaluator) {
-//	rxval_evaluator_from_oosvar_keylist_state_t* pstate = prxval_evaluator->pvstate;
-//	for (sllve_t* pe = pstate->pkeylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-//		rval_evaluator_t* prval_evaluator = pe->pvvalue;
-//		prval_evaluator->pfree_func(prval_evaluator);
-//	}
-//	sllv_free(pstate->pkeylist_evaluators);
-//	free(pstate);
-//	free(prxval_evaluator);
-//}
-//
-//rxval_evaluator_t* rxval_evaluator_alloc_from_oosvar_keylist(
-//	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
-//{
-//	rxval_evaluator_from_oosvar_keylist_state_t* pstate = mlr_malloc_or_die(
-//		sizeof(rxval_evaluator_from_oosvar_keylist_state_t));
-//	pstate->pkeylist_evaluators = allocate_keylist_evaluators_from_ast_node(
-//		pnode, pfmgr, type_inferencing, context_flags);
-//
-//	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
-//	prxval_evaluator->pvstate       = pstate;
-//	prxval_evaluator->pprocess_func = rxval_evaluator_from_oosvar_keylist_func;
-//	prxval_evaluator->pfree_func    = rxval_evaluator_from_oosvar_keylist_free;
-//
-//	return prxval_evaluator;
-//}
-//
-//// ================================================================
-//mlhmmv_value_t rxval_evaluator_from_full_oosvar_func(void* pvstate, variables_t* pvars) {
-//	return mlhmmv_copy_submap_from_root(pvars->poosvars, NULL);
-//}
-//
-//static void rxval_evaluator_from_full_oosvar_free(rxval_evaluator_t* prxval_evaluator) {
-//	free(prxval_evaluator);
-//}
-//
-//rxval_evaluator_t* rxval_evaluator_alloc_from_full_oosvar(
-//	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
-//{
-//	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
-//	prxval_evaluator->pprocess_func = rxval_evaluator_from_full_oosvar_func;
-//	prxval_evaluator->pfree_func    = rxval_evaluator_from_full_oosvar_free;
-//
-//	return prxval_evaluator;
-//}
-//
-//// ================================================================
-//mlhmmv_value_t rxval_evaluator_from_full_srec_func(void* pvstate, variables_t* pvars) {
-//	mlhmmv_value_t xval = mlhmmv_value_alloc_empty_map(); // xxx memory leak. replace w/ initter.
-//
-//	for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {
-//		// mlhmmv_put_terminal_from_level will copy mv keys and values so we needn't (and shouldn't)
-//		// duplicate them here.
-//		mv_t k = mv_from_string(pe->key, NO_FREE);
-//		sllmve_t e = { .value = k, .free_flags = 0, .pnext = NULL };
-//		mv_t* pomv = lhmsmv_get(pvars->ptyped_overlay, pe->key);
-//		if (pomv != NULL) {
-//			mlhmmv_put_terminal_from_level(xval.pnext_level, &e, pomv); // xxx make a simpler 1-level API call
-//		} else {
-//			mv_t v = mv_from_string(pe->value, NO_FREE); // mlhmmv_put_terminal_from_level will copy
-//			mlhmmv_put_terminal_from_level(xval.pnext_level, &e, &v);
-//		}
-//	}
-//
-//	return xval;
-//}
-//
-//static void rxval_evaluator_from_full_srec_free(rxval_evaluator_t* prxval_evaluator) {
-//	free(prxval_evaluator);
-//}
-//
-//rxval_evaluator_t* rxval_evaluator_alloc_from_full_srec(
-//	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
-//{
-//	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
-//	prxval_evaluator->pprocess_func = rxval_evaluator_from_full_srec_func;
-//	prxval_evaluator->pfree_func    = rxval_evaluator_from_full_srec_free;
-//
-//	return prxval_evaluator;
-//}
+
+// ================================================================
+typedef struct _rxval_evaluator_from_oosvar_keylist_state_t {
+	sllv_t* pkeylist_evaluators;
+} rxval_evaluator_from_oosvar_keylist_state_t;
+
+static boxed_xval_t rxval_evaluator_from_oosvar_keylist_func(void* pvstate, variables_t* pvars) {
+	rxval_evaluator_from_oosvar_keylist_state_t* pstate = pvstate;
+
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pstate->pkeylist_evaluators, pvars, &all_non_null_or_error);
+
+	if (all_non_null_or_error) {
+		int lookup_error = FALSE;
+		mlhmmv_value_t* pxval = mlhmmv_get_value_from_level(pvars->poosvars->proot_level,
+			pmvkeys, &lookup_error);
+		sllmv_free(pmvkeys);
+		if (pxval != NULL) {
+			return (boxed_xval_t) {
+				.xval = *pxval,
+				.map_is_ephemeral = TRUE,
+			};
+		} else {
+			return (boxed_xval_t) {
+				.xval = mlhmmv_value_transfer_terminal(mv_absent()),
+				.map_is_ephemeral = FALSE,
+			};
+		}
+	} else {
+		sllmv_free(pmvkeys);
+		return (boxed_xval_t) {
+			.xval = mlhmmv_value_transfer_terminal(mv_absent()),
+			.map_is_ephemeral = FALSE,
+		};
+	}
+}
+
+static void rxval_evaluator_from_oosvar_keylist_free(rxval_evaluator_t* prxval_evaluator) {
+	rxval_evaluator_from_oosvar_keylist_state_t* pstate = prxval_evaluator->pvstate;
+	for (sllve_t* pe = pstate->pkeylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		rval_evaluator_t* prval_evaluator = pe->pvvalue;
+		prval_evaluator->pfree_func(prval_evaluator);
+	}
+	sllv_free(pstate->pkeylist_evaluators);
+	free(pstate);
+	free(prxval_evaluator);
+}
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_oosvar_keylist(
+	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
+{
+	rxval_evaluator_from_oosvar_keylist_state_t* pstate = mlr_malloc_or_die(
+		sizeof(rxval_evaluator_from_oosvar_keylist_state_t));
+	pstate->pkeylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+		pnode, pfmgr, type_inferencing, context_flags);
+
+	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	prxval_evaluator->pvstate       = pstate;
+	prxval_evaluator->pprocess_func = rxval_evaluator_from_oosvar_keylist_func;
+	prxval_evaluator->pfree_func    = rxval_evaluator_from_oosvar_keylist_free;
+
+	return prxval_evaluator;
+}
+
+// ================================================================
+static boxed_xval_t rxval_evaluator_from_full_oosvar_func(void* pvstate, variables_t* pvars) {
+	return (boxed_xval_t) {
+		.map_is_ephemeral = FALSE,
+		.xval = (mlhmmv_value_t) {
+			.is_terminal = FALSE,
+			.pnext_level = pvars->poosvars->proot_level,
+		},
+	};
+}
+
+static void rxval_evaluator_from_full_oosvar_free(rxval_evaluator_t* prxval_evaluator) {
+	free(prxval_evaluator);
+}
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_full_oosvar(
+	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
+{
+	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	prxval_evaluator->pprocess_func = rxval_evaluator_from_full_oosvar_func;
+	prxval_evaluator->pfree_func    = rxval_evaluator_from_full_oosvar_free;
+
+	return prxval_evaluator;
+}
+
+// ================================================================
+static boxed_xval_t rxval_evaluator_from_full_srec_func(void* pvstate, variables_t* pvars) {
+	boxed_xval_t boxed_xval;
+	boxed_xval.map_is_ephemeral = TRUE;
+	boxed_xval.xval = mlhmmv_value_alloc_empty_map();
+
+	for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {
+		// mlhmmv_put_terminal_from_level will copy mv keys and values so we needn't (and shouldn't)
+		// duplicate them here.
+		mv_t k = mv_from_string(pe->key, NO_FREE);
+		sllmve_t e = { .value = k, .free_flags = 0, .pnext = NULL };
+		mv_t* pomv = lhmsmv_get(pvars->ptyped_overlay, pe->key);
+		if (pomv != NULL) {
+			mlhmmv_put_terminal_from_level(boxed_xval.xval.pnext_level, &e, pomv); // xxx make a simpler 1-level API call
+		} else {
+			mv_t v = mv_from_string(pe->value, NO_FREE); // mlhmmv_put_terminal_from_level will copy
+			mlhmmv_put_terminal_from_level(boxed_xval.xval.pnext_level, &e, &v);
+		}
+	}
+
+	return boxed_xval;
+}
+
+static void rxval_evaluator_from_full_srec_free(rxval_evaluator_t* prxval_evaluator) {
+	free(prxval_evaluator);
+}
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_full_srec(
+	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
+{
+	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	prxval_evaluator->pprocess_func = rxval_evaluator_from_full_srec_func;
+	prxval_evaluator->pfree_func    = rxval_evaluator_from_full_srec_free;
+
+	return prxval_evaluator;
+}
 
 // ================================================================
 typedef struct _rxval_evaluator_wrapping_rval_state_t {
