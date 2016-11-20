@@ -544,7 +544,7 @@ typedef struct _emit_state_t {
 	record_emitter_t*  precord_emitter;
 
 	// For map literals
-	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
+	rxval_evaluator_t* prhs_xevaluator;
 
 	// For local variables
 	char* localvar_name;
@@ -685,7 +685,7 @@ mlr_dsl_cst_statement_t* alloc_emit(
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
 		pstate->precord_emitter = record_emitter_from_map_literal;
-		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(
+		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
 			pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
 
 	} else {
@@ -909,11 +909,11 @@ static void record_emitter_from_map_literal(
 	sllv_t*       poutrecs,
 	char*         oosvar_flatten_separator)
 {
-	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pstate->prhs_xevaluator;
-	mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+	boxed_xval_t boxed_xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 	sllmv_t* pmvkeys = sllmv_alloc();
 
-	if (!xval.is_terminal) {
+	if (!boxed_xval.xval.is_terminal) {
 		int names_all_non_null_or_error = TRUE;
 		sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars,
 			&names_all_non_null_or_error);
@@ -925,7 +925,7 @@ static void record_emitter_from_map_literal(
 			sllmve_t e = { .value = name, .free_flags = 0, .pnext = NULL };
 
 			mlhmmv_level_t* proot_level = mlhmmv_level_alloc();
-			mlhmmv_put_value_at_level_aux(proot_level, &e, &xval);
+			mlhmmv_put_value_at_level_aux(proot_level, &e, &boxed_xval.xval);
 
 			mlhmmv_t map;
 			map.proot_level = proot_level;
@@ -935,6 +935,10 @@ static void record_emitter_from_map_literal(
 
 		}
 		sllmv_free(pmvnames);
+	}
+
+	if (boxed_xval.map_is_ephemeral) {
+		mlhmmv_free_submap(boxed_xval.xval);
 	}
 
 	sllmv_free(pmvkeys);
