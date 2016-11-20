@@ -90,10 +90,9 @@ static void handle_full_srec_assignment(
 			mv_t* pkey = &pe->level_key;
 			mlhmmv_value_t* pval = &pe->level_value;
 
-			// xxx do copyless transfer if ephemeral
 			if (pval->is_terminal) { // xxx else collapse-down using json separator?
 				char* skey = mv_alloc_format_val(pkey);
-				mv_t val = mv_copy(&pval->mlrval);
+				mv_t val = boxed_xval.map_is_ephemeral ? pval->mlrval : mv_copy(&pval->mlrval);
 				// Write typed mlrval output to the typed overlay rather than into the lrec
 				// (which holds only string values).
 				//
@@ -112,13 +111,11 @@ static void handle_full_srec_assignment(
 				lrec_put(pvars->pinrec, skey, "bug", FREE_ENTRY_KEY);
 			}
 		}
-	}
-	if (boxed_xval.xval.is_terminal) {
-		mlhmmv_free_submap(boxed_xval.xval);
-	} else {
 		if (boxed_xval.map_is_ephemeral) {
 			mlhmmv_free_submap(boxed_xval.xval);
 		}
+	} else {
+		mlhmmv_free_submap(boxed_xval.xval);
 	}
 }
 
