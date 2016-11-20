@@ -32,6 +32,10 @@ CCDEBUG=$(CC) -g $(CFLAGS) $(IFLAGS) $(WFLAGS)
 #CCOPT=clang -fsanitize=address $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
 #CCDEBUG=clang -O2 -fsanitize=address $(CFLAGS) $(IFLAGS) $(WFLAGS)
 
+#-fno-omit-frame-pointer
+#CCOPT=clang -fsanitize=leak $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
+#CCDEBUG=clang -O2 -fsanitize=leak $(CFLAGS) $(IFLAGS) $(WFLAGS)
+
 # ----------------------------------------------------------------
 # Miller source except DSL
 NON_DSL_SRCS = \
