@@ -376,6 +376,7 @@ static void handle_indexed_local_variable_assignment_from_xval(
 					mlhmmv_copy_aux(&boxed_xval.xval));
 			}
 		}
+
 	}
 	sllmv_free(pmvkeys);
 
@@ -387,7 +388,7 @@ static void handle_indexed_local_variable_assignment_from_xval(
 
 typedef struct _oosvar_assignment_state_t {
 	sllv_t*            plhs_keylist_evaluators;
-	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
+	rxval_evaluator_t* prhs_xevaluator;
 } oosvar_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_oosvar_assignment_from_xval;
@@ -412,7 +413,7 @@ mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_as
 
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
 
-	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(
+	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
 		prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 	pstatement_handler = handle_oosvar_assignment_from_xval;
 
@@ -452,13 +453,22 @@ static void handle_oosvar_assignment_from_xval(
 		&lhs_all_non_null_or_error);
 
 	if (lhs_all_non_null_or_error) {
-		rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pstate->prhs_xevaluator;
-		mlhmmv_value_t xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
-		if (!xval.is_terminal || mv_is_present(&xval.mlrval)) { // xxx funcify
-			mlhmmv_put_value_at_level_aux(pvars->poosvars->proot_level, plhskeys->phead, &xval); // xxx rename
+		rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+		boxed_xval_t boxed_xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+
+		if (boxed_xval.xval.is_terminal) {
+			if (mv_is_present(&boxed_xval.xval.mlrval)) {
+				mlhmmv_put_value_at_level_aux(pvars->poosvars->proot_level, plhskeys->phead, &boxed_xval.xval);
+			}
 		} else {
-			mlhmmv_free_submap(xval); // xxx rename
+			if (boxed_xval.map_is_ephemeral) {
+				mlhmmv_put_value_at_level_aux(pvars->poosvars->proot_level, plhskeys->phead, &boxed_xval.xval);
+			} else {
+				mlhmmv_value_t copy_xval = mlhmmv_copy_aux(&boxed_xval.xval);
+				mlhmmv_put_value_at_level_aux(pvars->poosvars->proot_level, plhskeys->phead, &copy_xval);
+			}
 		}
+
 	}
 
 	sllmv_free(plhskeys);
