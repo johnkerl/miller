@@ -967,7 +967,7 @@ typedef struct _for_map_literal_key_only_state_t {
 	int   v_frame_relative_index;
 	int   v_type_mask;
 
-	rxval_evaluator_xxx_deprecated_t* ptarget_xevaluator;
+	rxval_evaluator_t* ptarget_xevaluator;
 } for_map_literal_key_only_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_for_map_literal_key_only;
@@ -1001,7 +1001,7 @@ mlr_dsl_cst_statement_t* alloc_for_map_literal_key_only(mlr_dsl_cst_t* pcst, mlr
 	pstate->k_frame_relative_index = pleft->vardef_frame_relative_index;
 	pstate->k_type_mask = mlr_dsl_ast_node_type_to_type_mask(pleft->type);
 
-	pstate->ptarget_xevaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(
+	pstate->ptarget_xevaluator = rxval_evaluator_alloc_from_ast(
 		pmiddle, pcst->pfmgr, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
@@ -1040,10 +1040,10 @@ static void handle_for_map_literal_key_only(
 {
 	for_map_literal_key_only_state_t* pstate = pstatement->pvstate;
 
-	mlhmmv_value_t mapval = pstate->ptarget_xevaluator->pprocess_func(
+	boxed_xval_t boxed_xval = pstate->ptarget_xevaluator->pprocess_func(
 		pstate->ptarget_xevaluator->pvstate, pvars);
 
-	sllv_t* pkeys = mlhmmv_copy_keys_from_submap_xxx_rename(&mapval, NULL); // xxx refactor w/o null
+	sllv_t* pkeys = mlhmmv_copy_keys_from_submap_xxx_rename(&boxed_xval.xval, NULL); // xxx refactor w/o null
 
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
@@ -1074,5 +1074,7 @@ static void handle_for_map_literal_key_only(
 
 	sllv_free(pkeys);
 
-	mlhmmv_free_submap(mapval); // xxx rename
+	if (boxed_xval.map_is_ephemeral) {
+		mlhmmv_free_submap(boxed_xval.xval); // xxx rename
+	}
 }
