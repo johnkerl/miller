@@ -189,7 +189,7 @@ mlr_dsl_cst_statement_t* alloc_tee(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnod
 }
 
 // ----------------------------------------------------------------
-static void free_tee(mlr_dsl_cst_statement_t* pstatement) { // xxx from mlr_dsl_cst_statement_free
+static void free_tee(mlr_dsl_cst_statement_t* pstatement) {
 	tee_state_t* pstate = pstatement->pvstate;
 
 	if (pstate->poutput_filename_evaluator != NULL) {
@@ -1023,119 +1023,42 @@ static void handle_emit_all_to_file(
 
 // ================================================================
 struct _emit_lashed_item_t; // Forward reference
-typedef mlhmmv_value_t* emit_lashed_item_getter_t(
-	struct _emit_lashed_item_t* pitem, variables_t* pvars, sllmv_t* pmvkeys);
-// Ooosvars/localvars don't need freeing; ephemeral map-literals do.
-typedef void emit_lashed_item_freer_t(struct _emit_lashed_item_t* pitem);
 
 typedef struct _emit_lashed_item_t {
-	// For map literals
-	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator;
-	mlhmmv_value_t ephemeral_xvalue; // xxx rm
-
-	// For local variables
-	int   localvar_frame_relative_index;
-
-	// Oosvar/localvar indices ["a", 1, $2] in
-	//   'for (k,v in @a[1][$2]) {...}' or
-	//   'for (k,v in  a[1][$2]) {...}'.
-	 sllv_t* pemit_keylist_evaluators;
-
-	emit_lashed_item_getter_t* pemit_lashed_item_getter;
-	emit_lashed_item_freer_t*  pemit_lashed_item_freer;
+	rval_evaluator_t*  pbasename_evaluator;
+	rxval_evaluator_t* pitem_xevaluator;
 } emit_lashed_item_t;
 
-static emit_lashed_item_t* emit_lashed_item_alloc() {
+static emit_lashed_item_t* emit_lashed_item_alloc(
+	rval_evaluator_t*  pbasename_evaluator,
+	rxval_evaluator_t* pitem_xevaluator)
+{
 	emit_lashed_item_t* pitem = mlr_malloc_or_die(sizeof(emit_lashed_item_t));
-	pitem->prhs_xevaluator               = NULL;
-	pitem->localvar_frame_relative_index = MD_UNUSED_INDEX;
-	pitem->pemit_keylist_evaluators      = NULL;
-	pitem->pemit_lashed_item_getter      = NULL;
-	pitem->pemit_lashed_item_freer       = NULL;
+	pitem->pbasename_evaluator = pbasename_evaluator;
+	pitem->pitem_xevaluator = pitem_xevaluator;
 	return pitem;
 }
 
 static void emit_lashed_item_free(emit_lashed_item_t* pitem) {
-	if (pitem->prhs_xevaluator != NULL) {
-		pitem->prhs_xevaluator->pfree_func(pitem->prhs_xevaluator);
-	}
-	if (pitem->pemit_keylist_evaluators != NULL) {
-		for (sllve_t* pe = pitem->pemit_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-			rval_evaluator_t* phandler = pe->pvvalue;
-			phandler->pfree_func(phandler);
-		}
-		sllv_free(pitem->pemit_keylist_evaluators);
-	}
+	pitem->pbasename_evaluator->pfree_func(pitem->pbasename_evaluator);
+	pitem->pitem_xevaluator->pfree_func(pitem->pitem_xevaluator);
 	free(pitem);
-}
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static mlhmmv_value_t* oosvar_emit_lashed_item_get(
-	emit_lashed_item_t* pitem, variables_t* pvars, sllmv_t* pmvkeys)
-{
-	int error = 0;
-	// xxx check copy or not ... also encode that into all such names.
-	return mlhmmv_get_value_from_level(pvars->poosvars->proot_level, pmvkeys, &error);
-}
-static void oosvar_emit_lashed_item_free(emit_lashed_item_t* pitem) {
-	// Nothing to free for oosvars: we pointed to data within the oosvar and printed it, without allocating
-	// anything extra.
-}
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static mlhmmv_value_t* nonindexed_local_variable_emit_lashed_item_get(
-	emit_lashed_item_t* pitem, variables_t* pvars, sllmv_t* pmvkeys)
-{
-	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	// xxx check for copy/reference; and annotate the method names to make that clear at a glance.
-	return local_stack_frame_get_extended_from_indexed(pframe, pitem->localvar_frame_relative_index, NULL);
-}
-static void nonindexed_local_variable_emit_lashed_item_free(emit_lashed_item_t* pitem) {
-	// Nothing to free for localvars: we pointed to data within the localvar and printed it, without allocating
-	// anything extra.
-}
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static mlhmmv_value_t* indexed_local_variable_emit_lashed_item_get(
-	emit_lashed_item_t* pitem, variables_t* pvars, sllmv_t* pmvkeys)
-{
-	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	// xxx check for copy/reference; and annotate the method names to make that clear at a glance.
-	// xxx need to index but skip the variable name at list head ...
-	return local_stack_frame_get_extended_from_indexed(pframe, pitem->localvar_frame_relative_index, NULL);
-}
-static void indexed_local_variable_emit_lashed_item_free(emit_lashed_item_t* pitem) {
-	// Nothing to free for localvars: we pointed to data within the localvar and printed it, without allocating
-	// anything extra.
-}
-
-//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static mlhmmv_value_t* map_literal_emit_lashed_item_get(
-	emit_lashed_item_t* pitem, variables_t* pvars, sllmv_t* pmvkeys)
-{
-	rxval_evaluator_xxx_deprecated_t* prhs_xevaluator = pitem->prhs_xevaluator;
-	pitem->ephemeral_xvalue = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
-	return &pitem->ephemeral_xvalue;
-}
-static void map_literal_emit_lashed_item_free(emit_lashed_item_t* pitem) {
-	mlhmmv_free_submap(pitem->ephemeral_xvalue);
 }
 
 // ----------------------------------------------------------------
 typedef struct _emit_lashed_state_t {
+	int                  num_emit_lashed_items;
+	emit_lashed_item_t** ppitems;
+	sllv_t*              pemit_namelist_evaluators;
+
 	rval_evaluator_t*    poutput_filename_evaluator;
 	FILE*                stdfp;
 	file_output_mode_t   file_output_mode;
-	sllv_t*              pemit_namelist_evaluators;
-	int                  do_full_prefixing;
-
-	int                  num_emit_lashed_items;
-	emit_lashed_item_t** ppitems;
-
 	lrec_writer_t*       psingle_lrec_writer; // emit/tee to stdout/stderr
 	multi_lrec_writer_t* pmulti_lrec_writer;  // emit-to-file
 
-	int flush_every_record;
+	int                  do_full_prefixing;
+	int                  flush_every_record;
 } emit_lashed_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_emit_lashed;
@@ -1154,67 +1077,44 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 {
 	emit_lashed_state_t* pstate = mlr_malloc_or_die(sizeof(emit_lashed_state_t));
 
-	mlr_dsl_ast_node_t* pemit_node = pnode->pchildren->phead->pvvalue;
-	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
-
-	mlr_dsl_ast_node_t* pkeylists_node = pemit_node->pchildren->phead->pvvalue;
+	pstate->num_emit_lashed_items      = 0;
+	pstate->ppitems                    = NULL;
+	pstate->pemit_namelist_evaluators  = NULL;
 
 	pstate->poutput_filename_evaluator = NULL;
 	pstate->stdfp                      = NULL;
-	pstate->pemit_namelist_evaluators  = NULL;
-	pstate->num_emit_lashed_items      = 0;
-	pstate->ppitems                    = NULL;
 	pstate->psingle_lrec_writer        = NULL;
 	pstate->pmulti_lrec_writer         = NULL;
+
+	mlr_dsl_ast_node_t* pemit_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* poutput_node = pnode->pchildren->phead->pnext->pvvalue;
+	mlr_dsl_ast_node_t* pkeylists_node = pemit_node->pchildren->phead->pvvalue;
 
 	pstate->num_emit_lashed_items = pkeylists_node->pchildren->length;
 	pstate->ppitems = mlr_malloc_or_die(pstate->num_emit_lashed_items * sizeof(emit_lashed_item_t*));
 	int i = 0;
 	for (sllve_t* pe = pkeylists_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* pkeylist_node = pe->pvvalue;
-		emit_lashed_item_t* pitem = emit_lashed_item_alloc();
 
+		rval_evaluator_t* pbasename_evaluator = NULL;
 		switch (pkeylist_node->type) {
-		case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
-			pitem->pemit_lashed_item_getter = oosvar_emit_lashed_item_get;
-			pitem->pemit_lashed_item_freer  = oosvar_emit_lashed_item_free;
-			pitem->pemit_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
-				pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
-			break;
-
 		case MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE:
-			pitem->pemit_lashed_item_getter = nonindexed_local_variable_emit_lashed_item_get;
-			pitem->pemit_lashed_item_freer  = nonindexed_local_variable_emit_lashed_item_free;
-			pitem->pemit_keylist_evaluators = sllv_alloc();
-			// xxx comment; also, this is awkward.
-			sllv_push(pitem->pemit_keylist_evaluators, rval_evaluator_alloc_from_string(pkeylist_node->text));
-			MLR_INTERNAL_CODING_ERROR_IF(pkeylist_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
-			pitem->localvar_frame_relative_index = pkeylist_node->vardef_frame_relative_index;
-			break;
-
 		case MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE:
-			pitem->pemit_lashed_item_getter = indexed_local_variable_emit_lashed_item_get;
-			pitem->pemit_lashed_item_freer  = indexed_local_variable_emit_lashed_item_free;
-			pitem->pemit_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
-				pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
-			MLR_INTERNAL_CODING_ERROR_IF(pkeylist_node->vardef_frame_relative_index == MD_UNUSED_INDEX);
-			pitem->localvar_frame_relative_index = pkeylist_node->vardef_frame_relative_index;
+			pbasename_evaluator = rval_evaluator_alloc_from_string(pkeylist_node->text);
 			break;
-
-		case MD_AST_NODE_TYPE_MAP_LITERAL:
-			pitem->pemit_lashed_item_getter = map_literal_emit_lashed_item_get;
-			pitem->pemit_lashed_item_freer  = map_literal_emit_lashed_item_free;
-			pitem->pemit_keylist_evaluators = sllv_alloc();
-			sllv_push(pitem->pemit_keylist_evaluators, rval_evaluator_alloc_from_string("_"));
-			pitem->prhs_xevaluator = rxval_evaluator_alloc_from_ast_xxx_deprecated(
-				pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
+		case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
+			pbasename_evaluator = rval_evaluator_alloc_from_string(
+				((mlr_dsl_ast_node_t*)pkeylist_node->pchildren->phead->pvvalue)->text);
 			break;
-
 		default:
-			MLR_INTERNAL_CODING_ERROR();
+			pbasename_evaluator = rval_evaluator_alloc_from_string("_");
+			break;
 		}
 
-		pstate->ppitems[i] = pitem;
+		rxval_evaluator_t* pitem_xevaluator = rxval_evaluator_alloc_from_ast(
+			pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
+
+		pstate->ppitems[i] = emit_lashed_item_alloc(pbasename_evaluator, pitem_xevaluator);
 	}
 
 	sllv_t* pemit_namelist_evaluators = sllv_alloc();
@@ -1260,6 +1160,13 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 static void free_emit_lashed(mlr_dsl_cst_statement_t* pstatement) {
 	emit_lashed_state_t* pstate = pstatement->pvstate;
 
+	if (pstate->ppitems != NULL) {
+		for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
+			emit_lashed_item_free(pstate->ppitems[i]);
+		}
+		free(pstate->ppitems);
+	}
+
 	if (pstate->poutput_filename_evaluator != NULL) {
 		pstate->poutput_filename_evaluator->pfree_func(pstate->poutput_filename_evaluator);
 	}
@@ -1270,13 +1177,6 @@ static void free_emit_lashed(mlr_dsl_cst_statement_t* pstatement) {
 			phandler->pfree_func(phandler);
 		}
 		sllv_free(pstate->pemit_namelist_evaluators);
-	}
-
-	if (pstate->ppitems != NULL) {
-		for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
-			emit_lashed_item_free(pstate->ppitems[i]);
-		}
-		free(pstate->ppitems);
 	}
 
 	if (pstate->psingle_lrec_writer != NULL) {
@@ -1361,45 +1261,48 @@ static void handle_emit_lashed_common(
 	sllv_t*              poutrecs,
 	char*                oosvar_flatten_separator)
 {
-	int keys_all_non_null_or_error = TRUE;
-
-	sllmv_t** ppmvkeys = mlr_malloc_or_die(pstate->num_emit_lashed_items * sizeof(sllmv_t*));
+	// xxx alloc array in ctor, free in dtor, reuse here
+	mv_t* pbasenames = mlr_malloc_or_die(pstate->num_emit_lashed_items * sizeof(mv_t));
 	for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
-		ppmvkeys[i] = evaluate_list(pstate->ppitems[i]->pemit_keylist_evaluators, pvars,
-			&keys_all_non_null_or_error);
+		rval_evaluator_t* pev = pstate->ppitems[i]->pbasename_evaluator;
+		pbasenames[i] = pev->pprocess_func(pev->pvstate, pvars);
 	}
 
-	if (keys_all_non_null_or_error) {
-		int names_all_non_null_or_error = TRUE;
-		sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars,
-			&names_all_non_null_or_error);
-		if (names_all_non_null_or_error) {
+	int names_all_non_null_or_error = TRUE;
+	sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars,
+		&names_all_non_null_or_error);
+	if (names_all_non_null_or_error) {
 
-			mlhmmv_value_t** ptop_values = mlr_malloc_or_die(
-				pstate->num_emit_lashed_items * sizeof(mlhmmv_level_entry_t*));
-			for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
-				emit_lashed_item_t* pitem = pstate->ppitems[i];
-				ptop_values[i] = pitem->pemit_lashed_item_getter(pitem, pvars, ppmvkeys[i]);
-			}
-
-			mlhmmv_to_lrecs_lashed(ptop_values, pstate->num_emit_lashed_items, ppmvkeys, pmvnames,
-				poutrecs, pstate->do_full_prefixing, oosvar_flatten_separator);
-
-			for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
-				emit_lashed_item_t* pitem = pstate->ppitems[i];
-				if (pitem->pemit_lashed_item_freer != NULL) {
-					pitem->pemit_lashed_item_freer(pitem);
-				}
-			}
-
-			free(ptop_values);
+		// xxx alloc array in ctor, free in dtor, reuse here
+		boxed_xval_t* pboxed_xvals = mlr_malloc_or_die(
+			pstate->num_emit_lashed_items * sizeof(boxed_xval_t));
+		// xxx comment
+		mlhmmv_value_t** ptop_values = mlr_malloc_or_die(
+			pstate->num_emit_lashed_items * sizeof(mlhmmv_level_entry_t*));
+		for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
+			emit_lashed_item_t* pitem = pstate->ppitems[i];
+			pboxed_xvals[i] = pitem->pitem_xevaluator->pprocess_func(
+				pitem->pitem_xevaluator->pvstate, pvars);
+			ptop_values[i] = &pboxed_xvals[i].xval;
 		}
-		sllmv_free(pmvnames);
+
+		mlhmmv_to_lrecs_lashed(ptop_values, pstate->num_emit_lashed_items, pbasenames, pmvnames,
+			poutrecs, pstate->do_full_prefixing, oosvar_flatten_separator);
+
+		for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
+			if (pboxed_xvals[i].map_is_ephemeral) {
+				mlhmmv_free_submap(pboxed_xvals[i].xval);
+			}
+		}
+
+		free(ptop_values);
+		free(pboxed_xvals);
 	}
+	sllmv_free(pmvnames);
+
 	for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
-		sllmv_free(ppmvkeys[i]);
+		mv_free(&pbasenames[i]);
 	}
-	free(ppmvkeys);
 }
 
 // ================================================================

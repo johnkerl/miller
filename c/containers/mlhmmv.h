@@ -224,7 +224,7 @@ void mlhmmv_clear_level(mlhmmv_level_t* plevel);
 void mlhmmv_to_lrecs(mlhmmv_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs,
 	int do_full_prefixing, char* flatten_separator);
 
-void mlhmmv_to_lrecs_lashed(mlhmmv_value_t** ptop_values, int num_submaps, sllmv_t** ppkeys, sllmv_t* pnames,
+void mlhmmv_to_lrecs_lashed(mlhmmv_value_t** ptop_values, int num_submaps, mv_t* pbasenames, sllmv_t* pnames,
 	sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator);
 
 // xxx rm?
