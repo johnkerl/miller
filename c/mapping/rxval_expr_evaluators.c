@@ -180,7 +180,7 @@ static void rxval_evaluator_from_map_literal_aux(
 		if (ppair->is_terminal) {
 			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
 			boxed_xval_t boxed_xval = ppair->pxval_evaluator->pprocess_func(ppair->pxval_evaluator->pvstate, pvars);
-			if (!boxed_xval.xval.is_terminal && !boxed_xval.map_is_ephemeral) {
+			if (!boxed_xval.xval.is_terminal && !boxed_xval.is_ephemeral) {
 				mlhmmv_value_t copy_xval = mlhmmv_copy_aux(&boxed_xval.xval);
 				mlhmmv_put_value_at_level_aux(plevel, &e, &copy_xval);
 			} else {
@@ -203,7 +203,7 @@ static boxed_xval_t rxval_evaluator_from_map_literal_func(void* pvstate, variabl
 
 	return (boxed_xval_t) {
 		.xval = xval,
-		.map_is_ephemeral = TRUE,
+		.is_ephemeral = TRUE,
 	};
 }
 
@@ -259,12 +259,12 @@ static boxed_xval_t rxval_evaluator_from_nonindexed_local_variable_func(void* pv
 	if (pxval == NULL) {
 		return (boxed_xval_t) {
 			.xval = mlhmmv_value_transfer_terminal(mv_absent()),
-			.map_is_ephemeral = FALSE,
+			.is_ephemeral = FALSE,
 		};
 	} else {
 		return (boxed_xval_t) {
 			.xval = *pxval,
-			.map_is_ephemeral = FALSE,
+			.is_ephemeral = FALSE,
 		};
 	}
 }
@@ -311,19 +311,19 @@ static boxed_xval_t rxval_evaluator_from_indexed_local_variable_func(void* pvsta
 		if (pxval == NULL) {
 			return (boxed_xval_t) {
 				.xval = mlhmmv_value_transfer_terminal(mv_absent()),
-				.map_is_ephemeral = FALSE,
+				.is_ephemeral = FALSE,
 			};
 		} else {
 			return (boxed_xval_t) {
 				.xval = *pxval,
-				.map_is_ephemeral = FALSE,
+				.is_ephemeral = FALSE,
 			};
 		}
 	} else {
 		sllmv_free(pmvkeys);
 		return (boxed_xval_t) {
 			.xval = mlhmmv_value_transfer_terminal(mv_absent()),
-			.map_is_ephemeral = TRUE,
+			.is_ephemeral = TRUE,
 		};
 	}
 }
@@ -376,19 +376,19 @@ static boxed_xval_t rxval_evaluator_from_oosvar_keylist_func(void* pvstate, vari
 		if (pxval != NULL) {
 			return (boxed_xval_t) {
 				.xval = *pxval,
-				.map_is_ephemeral = FALSE,
+				.is_ephemeral = FALSE,
 			};
 		} else {
 			return (boxed_xval_t) {
 				.xval = mlhmmv_value_transfer_terminal(mv_absent()),
-				.map_is_ephemeral = TRUE,
+				.is_ephemeral = TRUE,
 			};
 		}
 	} else {
 		sllmv_free(pmvkeys);
 		return (boxed_xval_t) {
 			.xval = mlhmmv_value_transfer_terminal(mv_absent()),
-			.map_is_ephemeral = TRUE,
+			.is_ephemeral = TRUE,
 		};
 	}
 }
@@ -423,7 +423,7 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_oosvar_keylist(
 // ================================================================
 static boxed_xval_t rxval_evaluator_from_full_oosvar_func(void* pvstate, variables_t* pvars) {
 	return (boxed_xval_t) {
-		.map_is_ephemeral = FALSE,
+		.is_ephemeral = FALSE,
 		.xval = (mlhmmv_value_t) {
 			.is_terminal = FALSE,
 			.pnext_level = pvars->poosvars->proot_level,
@@ -448,7 +448,7 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_full_oosvar(
 // ================================================================
 static boxed_xval_t rxval_evaluator_from_full_srec_func(void* pvstate, variables_t* pvars) {
 	boxed_xval_t boxed_xval;
-	boxed_xval.map_is_ephemeral = TRUE;
+	boxed_xval.is_ephemeral = TRUE;
 	boxed_xval.xval = mlhmmv_value_alloc_empty_map();
 
 	for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {
@@ -493,7 +493,7 @@ static boxed_xval_t rxval_evaluator_wrapping_rval_func(void* pvstate, variables_
 	mv_t val = prval_evaluator->pprocess_func(prval_evaluator->pvstate, pvars);
 	return (boxed_xval_t) {
 		.xval = mlhmmv_value_transfer_terminal(val),
-		.map_is_ephemeral = TRUE,
+		.is_ephemeral = TRUE,
 	};
 }
 

@@ -937,7 +937,7 @@ static void record_emitter_from_map_literal(
 		sllmv_free(pmvnames);
 	}
 
-	if (boxed_xval.map_is_ephemeral) {
+	if (boxed_xval.is_ephemeral) {
 		mlhmmv_free_submap(boxed_xval.xval);
 	}
 
@@ -1290,7 +1290,7 @@ static void handle_emit_lashed_common(
 			poutrecs, pstate->do_full_prefixing, oosvar_flatten_separator);
 
 		for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
-			if (pboxed_xvals[i].map_is_ephemeral) {
+			if (pboxed_xvals[i].is_ephemeral) {
 				mlhmmv_free_submap(pboxed_xvals[i].xval);
 			}
 		}
@@ -1402,7 +1402,7 @@ static void handle_dump(
 		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE, FALSE, "", pstate->stdfp); // xxx mk simpler call w/ dfl args
 	}
 
-	if (!boxed_xval.xval.is_terminal && boxed_xval.map_is_ephemeral) {
+	if (!boxed_xval.xval.is_terminal && boxed_xval.is_ephemeral) {
 		mlhmmv_free_submap(boxed_xval.xval);
 	}
 }
@@ -1438,7 +1438,7 @@ static void handle_dump_to_file(
 		free(filename);
 	mv_free(&filename_mv);
 
-	if (!boxed_xval.xval.is_terminal && boxed_xval.map_is_ephemeral) {
+	if (!boxed_xval.xval.is_terminal && boxed_xval.is_ephemeral) {
 		mlhmmv_free_submap(boxed_xval.xval);
 	}
 }

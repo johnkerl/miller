@@ -92,7 +92,7 @@ static void handle_full_srec_assignment(
 
 			if (pval->is_terminal) { // xxx else collapse-down using json separator?
 				char* skey = mv_alloc_format_val(pkey);
-				mv_t val = boxed_xval.map_is_ephemeral ? pval->mlrval : mv_copy(&pval->mlrval);
+				mv_t val = boxed_xval.is_ephemeral ? pval->mlrval : mv_copy(&pval->mlrval);
 				// Write typed mlrval output to the typed overlay rather than into the lrec
 				// (which holds only string values).
 				//
@@ -111,7 +111,7 @@ static void handle_full_srec_assignment(
 				lrec_put(pvars->pinrec, skey, "bug", FREE_ENTRY_KEY);
 			}
 		}
-		if (boxed_xval.map_is_ephemeral) {
+		if (boxed_xval.is_ephemeral) {
 			mlhmmv_free_submap(boxed_xval.xval);
 		}
 	} else {
@@ -185,7 +185,7 @@ static void handle_local_variable_definition_from_xval(
 	boxed_xval_t boxed_xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	if (boxed_xval.map_is_ephemeral) {
+	if (boxed_xval.is_ephemeral) {
 		local_stack_frame_define_extended(pframe,
 			pstate->lhs_variable_name, pstate->lhs_frame_relative_index, pstate->lhs_type_mask,
 			boxed_xval.xval);
@@ -266,7 +266,7 @@ static void handle_nonindexed_local_variable_assignment_from_xval(
 
 	if (!boxed_xval.xval.is_terminal || mv_is_present(&boxed_xval.xval.mlrval)) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		if (boxed_xval.map_is_ephemeral) {
+		if (boxed_xval.is_ephemeral) {
 			local_stack_frame_assign_extended_nonindexed(pframe, pstate->lhs_frame_relative_index,
 				boxed_xval.xval);
 		} else {
@@ -356,7 +356,7 @@ static void handle_indexed_local_variable_assignment_from_xval(
 
 		if (!boxed_xval.xval.is_terminal || mv_is_present(&boxed_xval.xval.mlrval)) {
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-			if (boxed_xval.map_is_ephemeral) {
+			if (boxed_xval.is_ephemeral) {
 				local_stack_frame_assign_extended_indexed(pframe, pstate->lhs_frame_relative_index,
 					pmvkeys, boxed_xval.xval);
 			} else {
@@ -445,7 +445,7 @@ static void handle_oosvar_assignment_from_xval(
 		boxed_xval_t boxed_xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 
 		if (!boxed_xval.xval.is_terminal || mv_is_present(&boxed_xval.xval.mlrval)) {
-			if (boxed_xval.map_is_ephemeral) {
+			if (boxed_xval.is_ephemeral) {
 				mlhmmv_put_value_at_level_aux(pvars->poosvars->proot_level, plhskeys->phead, &boxed_xval.xval);
 			} else {
 				mlhmmv_value_t copy_xval = mlhmmv_copy_aux(&boxed_xval.xval);

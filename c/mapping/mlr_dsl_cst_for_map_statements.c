@@ -895,7 +895,7 @@ static void handle_for_map_literal(
 		}
 	}
 
-	if (boxed_xval.map_is_ephemeral) {
+	if (boxed_xval.is_ephemeral) {
 		mlhmmv_free_submap(boxed_xval.xval);
 	}
 
@@ -1074,7 +1074,7 @@ static void handle_for_map_literal_key_only(
 
 	sllv_free(pkeys);
 
-	if (boxed_xval.map_is_ephemeral) {
+	if (boxed_xval.is_ephemeral) {
 		mlhmmv_free_submap(boxed_xval.xval); // xxx rename
 	}
 }
