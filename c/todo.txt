@@ -31,7 +31,8 @@ OTHER:
 MAPVAR CHECKLIST:
 
 * debt-reduction
-  * get a grip on copy/reference semantics. probably separate out maplit & fcnretval.
+  ~ get a grip on copy/reference semantics. probably separate out maplit & fcnretval.
+  ! ephemerality of terminals as well as maps
   - valgrinds
   ! vg.out.000 @neatener !
   - xxxes
