@@ -7,7 +7,6 @@ libmapping_la_SOURCES=	\
 			rval_evaluators.h \
 			rval_expr_evaluators.c \
 			rxval_expr_evaluators.c \
-			rxval_expr_evaluators_xxx_deprecated.c \
 			rval_func_evaluators.c \
 			rval_list_evaluators.c \
 			mapper.h \
