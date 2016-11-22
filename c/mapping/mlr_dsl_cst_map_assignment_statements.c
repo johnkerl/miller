@@ -360,8 +360,8 @@ static void handle_indexed_local_variable_assignment_from_xval(
 				local_stack_frame_assign_extended_indexed(pframe, pstate->lhs_frame_relative_index,
 					pmvkeys, boxed_xval.xval);
 			} else {
-				local_stack_frame_assign_extended_nonindexed(pframe, pstate->lhs_frame_relative_index,
-					mlhmmv_copy_aux(&boxed_xval.xval));
+				local_stack_frame_assign_extended_indexed(pframe, pstate->lhs_frame_relative_index,
+					pmvkeys, mlhmmv_copy_aux(&boxed_xval.xval));
 			}
 		}
 
