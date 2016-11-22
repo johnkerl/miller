@@ -4742,6 +4742,11 @@ run_mlr --ojson --jvstack   --jlistwrap --jquoteall cat $indir/json-output-optio
 run_mlr           --ijson --opprint cat $indir/small-non-nested-wrapped.json $indir/small-non-nested-wrapped.json
 run_mlr --no-mmap --ijson --opprint cat $indir/small-non-nested-wrapped.json $indir/small-non-nested-wrapped.json
 
+run_mlr --icsv --ojson --rs lf cat <<EOF
+col
+"abc ""def"" \ghi"
+EOF
+
 # ----------------------------------------------------------------
 announce FORMAT-CONVERSION KEYSTROKE-SAVERS
 
