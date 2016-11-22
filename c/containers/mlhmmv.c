@@ -59,7 +59,9 @@ static void mlhmmv_to_lrecs_aux_within_record_lashed(mlhmmv_level_t** pplevels, 
 static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 	int do_final_comma, int quote_values_always, FILE* ostream);
 
-static void json_decimal_print(char* s, FILE* ostream);
+static void json_decimal_print(FILE* ostream, char* s);
+
+static void json_print_string_escaped(FILE* ostream, char* s);
 
 static int mlhmmv_hash_func(mv_t* plevel_key);
 
@@ -1375,15 +1377,16 @@ void mlhmmv_print_terminal(mv_t* pmv, int quote_values_always, FILE* ostream) {
 	char* level_value_string = mv_alloc_format_val(pmv);
 
 	if (quote_values_always) {
-		fprintf(ostream, "\"%s\"", level_value_string);
+		json_print_string_escaped(ostream, level_value_string);
 	} else if (pmv->type == MT_STRING) {
 		double unused;
-		if (mlr_try_float_from_string(level_value_string, &unused))
-			json_decimal_print(level_value_string, ostream);
-		else if (streq(level_value_string, "true") || streq(level_value_string, "false"))
+		if (mlr_try_float_from_string(level_value_string, &unused)) {
+			json_decimal_print(ostream, level_value_string);
+		} else if (streq(level_value_string, "true") || streq(level_value_string, "false")) {
 			fprintf(ostream, "%s", level_value_string);
-		else
-			fprintf(ostream, "\"%s\"", level_value_string);
+		} else {
+			json_print_string_escaped(ostream, level_value_string);
+		}
 	} else {
 		fprintf(ostream, "%s", level_value_string);
 	}
@@ -1405,8 +1408,9 @@ void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 		for (int i = 0; i <= depth; i++)
 			fprintf(ostream, "%s", leader);
 		char* level_key_string = mv_alloc_format_val(&pentry->level_key);
-			fprintf(ostream, "\"%s\": ", level_key_string);
+		json_print_string_escaped(ostream, level_key_string);
 		free(level_key_string);
+		fprintf(ostream, ": ");
 
 		if (pentry->level_value.is_terminal) {
 			mlhmmv_print_terminal(&pentry->level_value.mlrval, quote_values_always, ostream);
@@ -1443,8 +1447,9 @@ static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 		fprintf(ostream, "{ ");
 	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
 		char* level_key_string = mv_alloc_format_val(&pentry->level_key);
-			fprintf(ostream, "\"%s\": ", level_key_string);
+		json_print_string_escaped(ostream, level_key_string);
 		free(level_key_string);
+		fprintf(ostream, ": ");
 
 		if (pentry->level_value.is_terminal) {
 			char* level_value_string = mv_alloc_format_val(&pentry->level_value.mlrval);
@@ -1453,12 +1458,13 @@ static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 				fprintf(ostream, "\"%s\"", level_value_string);
 			} else if (pentry->level_value.mlrval.type == MT_STRING) {
 				double unused;
-				if (mlr_try_float_from_string(level_value_string, &unused))
-					json_decimal_print(level_value_string, ostream);
-				else if (streq(level_value_string, "true") || streq(level_value_string, "false"))
+				if (mlr_try_float_from_string(level_value_string, &unused)) {
 					fprintf(ostream, "%s", level_value_string);
-				else
-					fprintf(ostream, "\"%s\"", level_value_string);
+				} else if (streq(level_value_string, "true") || streq(level_value_string, "false")) {
+					fprintf(ostream, "%s", level_value_string);
+				} else {
+					json_print_string_escaped(ostream,level_value_string);
+				}
 			} else {
 				fprintf(ostream, "%s", level_value_string);
 			}
@@ -1479,11 +1485,12 @@ static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 }
 
 // ----------------------------------------------------------------
-// 0.123 is valid JSON; .123 is not. Meanwhile is a format-converter tool so if there is
-// perfectly legitimate CSV/DKVP/etc. data to be JSON-formatted, we make it JSON-compliant.
+// 0.123 is valid JSON; .123 is not. Meanwhile Miller is a format-converter tool
+// so if there is perfectly legitimate CSV/DKVP/etc. data to be JSON-formatted,
+// we make it JSON-compliant.
 //
 // Precondition: the caller has already checked that the string represents a number.
-static void json_decimal_print(char* s, FILE* ostream) {
+static void json_decimal_print(FILE* ostream, char* s) {
 	if (s[0] == '.') {
 		fprintf(ostream, "0%s", s);
 	} else if (s[0] == '-' && s[1] == '.') {
@@ -1491,6 +1498,17 @@ static void json_decimal_print(char* s, FILE* ostream) {
 	} else {
 		fprintf(ostream, "%s", s);
 	}
+}
+
+static void json_print_string_escaped(FILE* ostream, char* s) {
+	fputc('"', ostream);
+	for (char* p = s; *p; p++) {
+		char c = *p;
+		if ((c == '"' || c == '\\'))
+			fputc('\\', ostream);
+		fputc(c, ostream);
+	}
+	fputc('"', ostream);
 }
 
 // ----------------------------------------------------------------
