@@ -684,7 +684,8 @@ mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue) { // xxx rename
 	if (pvalue->is_terminal) {
 		return (mlhmmv_value_t) {
 			.is_terminal = TRUE,
-			.mlrval = mv_copy(&pvalue->mlrval)
+			.mlrval = mv_copy(&pvalue->mlrval),
+			.pnext_level = NULL,
 		};
 
 	} else {
@@ -705,7 +706,8 @@ mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue) { // xxx rename
 
 		return (mlhmmv_value_t) {
 			.is_terminal = FALSE,
-			.pnext_level = pdst_level
+			.mlrval = mv_absent(),
+			.pnext_level = pdst_level,
 		};
 	}
 }
@@ -726,6 +728,7 @@ mlhmmv_value_t mlhmmv_copy_submap_from_root(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 		} else {
 			return (mlhmmv_value_t) {
 				.is_terminal = FALSE,
+				.mlrval = mv_absent(),
 				.pnext_level = NULL,
 			};
 		}
