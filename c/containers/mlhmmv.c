@@ -494,10 +494,10 @@ static mlhmmv_level_entry_t* mlhmmv_get_next_level_entry(mlhmmv_level_t* plevel,
 	}
 }
 
-static mlhmmv_value_t* mlhmmv_get_next_level_entry_value(mlhmmv_level_t* pmap, mv_t* plevel_key) {
-	if (pmap == NULL)
+static mlhmmv_value_t* mlhmmv_get_next_level_entry_value(mlhmmv_level_t* plevel, mv_t* plevel_key) {
+	if (plevel == NULL)
 		return NULL;
-	mlhmmv_level_entry_t* pentry = mlhmmv_get_next_level_entry(pmap, plevel_key, NULL);
+	mlhmmv_level_entry_t* pentry = mlhmmv_get_next_level_entry(plevel, plevel_key, NULL);
 	if (pentry == NULL)
 		return NULL;
 	else
@@ -1271,9 +1271,11 @@ static void mlhmmv_to_lrecs_aux_across_records_lashed(
 						ppnext_levels[i] = NULL;
 						next_prefixes[i] = NULL;
 					}
-					mlhmmv_to_lrecs_aux_within_record_lashed(ppnext_levels, next_prefixes, num_levels,
-						pnextrec, do_full_prefixing, flatten_separator);
 				}
+
+				mlhmmv_to_lrecs_aux_within_record_lashed(ppnext_levels, next_prefixes, num_levels,
+					pnextrec, do_full_prefixing, flatten_separator);
+
 				for (int i = 0; i < num_levels; i++) {
 					free(next_prefixes[i]);
 				}
