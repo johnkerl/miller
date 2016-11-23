@@ -19,6 +19,75 @@
 #include "lib/mlrutil.h"
 #include "containers/mlhmmv.h"
 
+// ================================================================
+// Allow compile-time override, e.g using gcc -D.
+
+#ifndef LOAD_FACTOR
+#define LOAD_FACTOR          0.7
+#endif
+
+#ifndef ENLARGEMENT_FACTOR
+#define ENLARGEMENT_FACTOR   2
+#endif
+
+#define OCCUPIED             0xa4
+#define DELETED              0xb8
+#define EMPTY                0xce
+
+// ================================================================
+static void json_decimal_print(FILE* ostream, char* s);
+static void json_print_string_escaped(FILE* ostream, char* s);
+void mlhmmv_print_terminal(mv_t* pmv, int quote_values_always, FILE* ostream) {
+	char* level_value_string = mv_alloc_format_val(pmv);
+	if (quote_values_always) {
+		json_print_string_escaped(ostream, level_value_string);
+	} else if (pmv->type == MT_STRING) {
+		double unused;
+		if (mlr_try_float_from_string(level_value_string, &unused)) {
+			json_decimal_print(ostream, level_value_string);
+		} else if (streq(level_value_string, "true") || streq(level_value_string, "false")) {
+			fprintf(ostream, "%s", level_value_string);
+		} else {
+			json_print_string_escaped(ostream, level_value_string);
+		}
+	} else {
+		fprintf(ostream, "%s", level_value_string);
+	}
+	free(level_value_string);
+}
+
+// 0.123 is valid JSON; .123 is not. Meanwhile Miller is a format-converter tool
+// so if there is perfectly legitimate CSV/DKVP/etc. data to be JSON-formatted,
+// we make it JSON-compliant.
+//
+// Precondition: the caller has already checked that the string represents a number.
+static void json_decimal_print(FILE* ostream, char* s) {
+	if (s[0] == '.') {
+		fprintf(ostream, "0%s", s);
+	} else if (s[0] == '-' && s[1] == '.') {
+		fprintf(ostream, "-0.%s", &s[2]);
+	} else {
+		fprintf(ostream, "%s", s);
+	}
+}
+
+static void json_print_string_escaped(FILE* ostream, char* s) {
+	fputc('"', ostream);
+	for (char* p = s; *p; p++) {
+		char c = *p;
+		if ((c == '"' || c == '\\'))
+			fputc('\\', ostream);
+		fputc(c, ostream);
+	}
+	fputc('"', ostream);
+}
+
+// ================================================================
+// ================================================================
+// xxx to be reorganized from here on down
+// ================================================================
+// ================================================================
+
 // xxx reorganize to reflect the ordering in the header file. and, maybe split up into separate source files.
 
 // xxx temp static mlhmmv_level_t* mlhmmv_level_alloc();
@@ -63,24 +132,7 @@ static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 
 static void json_decimal_print(FILE* ostream, char* s);
 
-static void json_print_string_escaped(FILE* ostream, char* s);
-
 static int mlhmmv_hash_func(mv_t* plevel_key);
-
-// ----------------------------------------------------------------
-// Allow compile-time override, e.g using gcc -D.
-
-#ifndef LOAD_FACTOR
-#define LOAD_FACTOR          0.7
-#endif
-
-#ifndef ENLARGEMENT_FACTOR
-#define ENLARGEMENT_FACTOR   2
-#endif
-
-#define OCCUPIED             0xa4
-#define DELETED              0xb8
-#define EMPTY                0xce
 
 // ----------------------------------------------------------------
 mlhmmv_root_t* mlhmmv_root_alloc() {
@@ -1380,26 +1432,6 @@ void mlhmmv_root_print_json_stacked(mlhmmv_root_t* pmap, int quote_values_always
 	mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, quote_values_always, line_indent, ostream);
 }
 
-void mlhmmv_print_terminal(mv_t* pmv, int quote_values_always, FILE* ostream) {
-	char* level_value_string = mv_alloc_format_val(pmv);
-
-	if (quote_values_always) {
-		json_print_string_escaped(ostream, level_value_string);
-	} else if (pmv->type == MT_STRING) {
-		double unused;
-		if (mlr_try_float_from_string(level_value_string, &unused)) {
-			json_decimal_print(ostream, level_value_string);
-		} else if (streq(level_value_string, "true") || streq(level_value_string, "false")) {
-			fprintf(ostream, "%s", level_value_string);
-		} else {
-			json_print_string_escaped(ostream, level_value_string);
-		}
-	} else {
-		fprintf(ostream, "%s", level_value_string);
-	}
-	free(level_value_string);
-}
-
 void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 	int do_final_comma, int quote_values_always, char* line_indent, FILE* ostream)
 {
@@ -1489,33 +1521,6 @@ static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 		fprintf(ostream, " },");
 	else
 		fprintf(ostream, " }");
-}
-
-// ----------------------------------------------------------------
-// 0.123 is valid JSON; .123 is not. Meanwhile Miller is a format-converter tool
-// so if there is perfectly legitimate CSV/DKVP/etc. data to be JSON-formatted,
-// we make it JSON-compliant.
-//
-// Precondition: the caller has already checked that the string represents a number.
-static void json_decimal_print(FILE* ostream, char* s) {
-	if (s[0] == '.') {
-		fprintf(ostream, "0%s", s);
-	} else if (s[0] == '-' && s[1] == '.') {
-		fprintf(ostream, "-0.%s", &s[2]);
-	} else {
-		fprintf(ostream, "%s", s);
-	}
-}
-
-static void json_print_string_escaped(FILE* ostream, char* s) {
-	fputc('"', ostream);
-	for (char* p = s; *p; p++) {
-		char c = *p;
-		if ((c == '"' || c == '\\'))
-			fputc('\\', ostream);
-		fputc(c, ostream);
-	}
-	fputc('"', ostream);
 }
 
 // ----------------------------------------------------------------
