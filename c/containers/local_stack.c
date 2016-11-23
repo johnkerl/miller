@@ -134,7 +134,7 @@ mv_t local_stack_frame_get_scalar_from_indexed(local_stack_frame_t* pframe, // x
 		if (pbase_xval->is_terminal) {
 			return mv_absent();
 		} else {
-			pxval = mlhmmv_level_look_up_and_reference_xvalue(pbase_xval->pnext_level, pmvkeys, &error);
+			pxval = mlhmmv_level_look_up_and_ref_xvalue(pbase_xval->pnext_level, pmvkeys, &error);
 		}
 	}
 	if (pxval == NULL) {
@@ -178,7 +178,7 @@ mlhmmv_value_t* local_stack_frame_get_extended_from_indexed(local_stack_frame_t*
 	if (pmvkeys == NULL || pmvkeys->length == 0) {
 		return pmvalue;
 	} else {
-		return mlhmmv_level_look_up_and_reference_xvalue(pmvalue->pnext_level, pmvkeys, &error);
+		return mlhmmv_level_look_up_and_ref_xvalue(pmvalue->pnext_level, pmvkeys, &error);
 	}
 
 }
@@ -230,7 +230,7 @@ void local_stack_frame_assign_extended_indexed(local_stack_frame_t* pframe, // x
 		pmvalue->is_terminal = FALSE;
 		pmvalue->pnext_level = mlhmmv_level_alloc();
 	}
-	mlhmmv_level_put_value(pmvalue->pnext_level, pmvkeys->phead, &new_value);
+	mlhmmv_level_put_xvalue(pmvalue->pnext_level, pmvkeys->phead, &new_value);
 
 	LOCAL_STACK_TRACE(printf("VALUE IS:\n"));
 	LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->pnext_level, 0, TRUE, TRUE, "", stdout));

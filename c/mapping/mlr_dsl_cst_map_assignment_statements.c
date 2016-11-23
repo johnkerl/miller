@@ -446,10 +446,10 @@ static void handle_oosvar_assignment_from_xval(
 
 		if (!boxed_xval.xval.is_terminal || mv_is_present(&boxed_xval.xval.terminal_mlrval)) {
 			if (boxed_xval.is_ephemeral) {
-				mlhmmv_level_put_value(pvars->poosvars->proot_level, plhskeys->phead, &boxed_xval.xval);
+				mlhmmv_level_put_xvalue(pvars->poosvars->proot_level, plhskeys->phead, &boxed_xval.xval);
 			} else {
 				mlhmmv_value_t copy_xval = mlhmmv_value_copy(&boxed_xval.xval);
-				mlhmmv_level_put_value(pvars->poosvars->proot_level, plhskeys->phead, &copy_xval);
+				mlhmmv_level_put_xvalue(pvars->poosvars->proot_level, plhskeys->phead, &copy_xval);
 			}
 		}
 	}

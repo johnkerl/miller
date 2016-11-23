@@ -39,7 +39,7 @@ static char* test_no_overlap() {
 	mlhmmv_root_put_terminal(pmap, pmvkeys1, &value1);
 	printf("map:\n");
 	mlhmmv_root_print_json_stacked(pmap, FALSE, "", stdout);
-	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_reference_terminal(pmap, pmvkeys1, &error), &value1));
+	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys1, &error), &value1));
 
 	sllmv_t* pmvkeys2 = sllmv_double_with_free(smv("abcde"), imv(-6));
 	mv_t value2 = mv_from_int(7);
@@ -50,7 +50,7 @@ static char* test_no_overlap() {
 	mlhmmv_root_put_terminal(pmap, pmvkeys2, &value2);
 	printf("map:\n");
 	mlhmmv_root_print_json_stacked(pmap, FALSE, "", stdout);
-	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_reference_terminal(pmap, pmvkeys2, &error), &value2));
+	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys2, &error), &value2));
 
 	sllmv_t* pmvkeys3 = sllmv_triple_with_free(imv(0), smv("fghij"), imv(0));
 	mv_t value3 = mv_from_int(0LL);
@@ -61,7 +61,7 @@ static char* test_no_overlap() {
 	mlhmmv_root_put_terminal(pmap, pmvkeys3, &value3);
 	printf("map:\n");
 	mlhmmv_root_print_json_stacked(pmap, FALSE, "", stdout);
-	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_reference_terminal(pmap, pmvkeys3, &error), &value3));
+	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys3, &error), &value3));
 
 	sllmv_free(pmvkeys1);
 	mlhmmv_root_free(pmap);
@@ -78,35 +78,35 @@ static char* test_overlap() {
 	mv_t* ptermval = imv(4);
 	mlhmmv_root_put_terminal(pmap, pmvkeys, ptermval);
 	mlhmmv_root_print_json_stacked(pmap, FALSE, "", stdout);
-	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_reference_terminal(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	ptermval = imv(5);
 	mlhmmv_root_put_terminal(pmap, pmvkeys, ptermval);
 	mlhmmv_root_print_json_stacked(pmap, FALSE, "", stdout);
-	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_reference_terminal(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_double_with_free(imv(3), smv("x"));
 	ptermval = imv(6);
 	mlhmmv_root_put_terminal(pmap, pmvkeys, ptermval);
 	mlhmmv_root_print_json_stacked(pmap, FALSE, "", stdout);
-	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_reference_terminal(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	ptermval = imv(7);
 	mlhmmv_root_put_terminal(pmap, pmvkeys, ptermval);
 	mlhmmv_root_print_json_stacked(pmap, FALSE, "", stdout);
-	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_reference_terminal(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_triple_with_free(imv(3), imv(9), smv("y"));
 	ptermval = smv("z");
 	mlhmmv_root_put_terminal(pmap, pmvkeys, ptermval);
 	mlhmmv_root_print_json_stacked(pmap, FALSE, "", stdout);
-	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_reference_terminal(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_triple_with_free(imv(3), imv(9), smv("z"));
 	ptermval = smv("y");
 	mlhmmv_root_put_terminal(pmap, pmvkeys, ptermval);
 	mlhmmv_root_print_json_stacked(pmap, FALSE, "", stdout);
-	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_reference_terminal(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	mlhmmv_root_free(pmap);
 	return NULL;
@@ -134,27 +134,27 @@ static char* test_resize() {
 
 	sllmv_t* pmvkeys = sllmv_single_with_free(imv(2));
 	mv_t* ptermval = imv(-2);
-	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_reference_terminal(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_double_with_free(smv("a"), imv(9));
 	ptermval = imv(-9);
-	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_reference_terminal(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_double_with_free(smv("a"), imv(31));
 	ptermval = imv(-31);
-	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_reference_terminal(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_triple_with_free(imv(0), imv(0), smv("b"));
 	ptermval = smv("term");
-	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_reference_terminal(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_triple_with_free(imv(100), imv(1), smv("b"));
 	ptermval = smv("term");
-	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_reference_terminal(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_triple_with_free(imv(1700), imv(1), smv("b"));
 	ptermval = smv("term");
-	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_reference_terminal(pmap, pmvkeys, &error), ptermval));
+	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	mlhmmv_root_free(pmap);
 	return NULL;
@@ -168,22 +168,22 @@ static char* test_depth_errors() {
 	printf("================================================================\n");
 	mlhmmv_root_put_terminal(pmap, sllmv_triple_with_free(imv(1), imv(2), imv(3)), imv(4));
 
-	mu_assert_lf(NULL != mlhmmv_root_look_up_and_reference_terminal(pmap, sllmv_triple_with_free(imv(1), imv(2), imv(3)), &error));
+	mu_assert_lf(NULL != mlhmmv_root_look_up_and_ref_terminal(pmap, sllmv_triple_with_free(imv(1), imv(2), imv(3)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_NONE);
 
-	mu_assert_lf(NULL == mlhmmv_root_look_up_and_reference_terminal(pmap, sllmv_triple_with_free(imv(0), imv(2), imv(3)), &error));
+	mu_assert_lf(NULL == mlhmmv_root_look_up_and_ref_terminal(pmap, sllmv_triple_with_free(imv(0), imv(2), imv(3)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_NONE);
 
-	mu_assert_lf(NULL == mlhmmv_root_look_up_and_reference_terminal(pmap, sllmv_triple_with_free(imv(1), imv(0), imv(3)), &error));
+	mu_assert_lf(NULL == mlhmmv_root_look_up_and_ref_terminal(pmap, sllmv_triple_with_free(imv(1), imv(0), imv(3)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_NONE);
 
-	mu_assert_lf(NULL == mlhmmv_root_look_up_and_reference_terminal(pmap, sllmv_triple_with_free(imv(1), imv(2), imv(0)), &error));
+	mu_assert_lf(NULL == mlhmmv_root_look_up_and_ref_terminal(pmap, sllmv_triple_with_free(imv(1), imv(2), imv(0)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_NONE);
 
-	mu_assert_lf(NULL == mlhmmv_root_look_up_and_reference_terminal(pmap, sllmv_quadruple_with_free(imv(1), imv(2), imv(3), imv(4)), &error));
+	mu_assert_lf(NULL == mlhmmv_root_look_up_and_ref_terminal(pmap, sllmv_quadruple_with_free(imv(1), imv(2), imv(3), imv(4)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_KEYLIST_TOO_DEEP);
 
-	mu_assert_lf(NULL == mlhmmv_root_look_up_and_reference_terminal(pmap, sllmv_double_with_free(imv(1), imv(2)), &error));
+	mu_assert_lf(NULL == mlhmmv_root_look_up_and_ref_terminal(pmap, sllmv_double_with_free(imv(1), imv(2)), &error));
 	mu_assert_lf(error == MLHMMV_ERROR_KEYLIST_TOO_SHALLOW);
 
 	mlhmmv_root_free(pmap);

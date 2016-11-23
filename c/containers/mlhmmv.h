@@ -44,6 +44,18 @@ mlhmmv_value_t mlhmmv_value_alloc_empty_map();
 mlhmmv_value_t mlhmmv_value_copy(mlhmmv_value_t* pvalue);
 void           mlhmmv_value_free(mlhmmv_value_t submap);
 
+// Used by for-loops over map-valued local variables
+sllv_t* mlhmmv_value_copy_keys(mlhmmv_value_t* pmvalue, sllmv_t* pmvkeys);
+
+void mlhmmv_xvalues_to_lrecs_lashed(
+	mlhmmv_value_t** ptop_values,
+	int              num_submaps,
+	mv_t*            pbasenames,
+	sllmv_t*         pnames,
+	sllv_t*          poutrecs,
+	int              do_full_prefixing,
+	char*            flatten_separator);
+
 // ----------------------------------------------------------------
 typedef struct _mlhmmv_level_entry_t {
 	int     ideal_index;
@@ -81,17 +93,11 @@ mlhmmv_level_t* mlhmmv_level_alloc();
 
 void mlhmmv_clear_level(mlhmmv_level_t* plevel);
 
-mv_t*           mlhmmv_level_look_up_and_reference_terminal(mlhmmv_level_t* plevel, sllmv_t* pmvkeys, int* perror);
-mlhmmv_value_t* mlhmmv_level_look_up_and_reference_xvalue  (mlhmmv_level_t* plevel, sllmv_t* pmvkeys, int* perror);
-mlhmmv_level_t* mlhmmv_level_put_empty_map                 (mlhmmv_level_t* plevel, sllmve_t* prest_keys);
-void            mlhmmv_level_put_value                     (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue); // xxx rename w/ xval
-void            mlhmmv_level_put_terminal                  (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
-
-// Used by for-loops over map-valued local variables
-sllv_t* mlhmmv_copy_keys_from_submap_xxx_rename(mlhmmv_value_t* pmvalue, sllmv_t* pmvkeys);
-
-void mlhmmv_to_lrecs_lashed(mlhmmv_value_t** ptop_values, int num_submaps, mv_t* pbasenames, sllmv_t* pnames,
-	sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator);
+mv_t*           mlhmmv_level_look_up_and_ref_terminal(mlhmmv_level_t* plevel, sllmv_t*  pmvkeys, int* perror);
+mlhmmv_value_t* mlhmmv_level_look_up_and_ref_xvalue  (mlhmmv_level_t* plevel, sllmv_t*  pmvkeys, int* perror);
+mlhmmv_level_t* mlhmmv_level_put_empty_map           (mlhmmv_level_t* plevel, sllmve_t* prest_keys);
+void            mlhmmv_level_put_xvalue              (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue);
+void            mlhmmv_level_put_terminal            (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
 
 void mlhmmv_level_to_lrecs(mlhmmv_level_t* plevel, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs,
 	int do_full_prefixing, char* flatten_separator);
@@ -117,7 +123,7 @@ void mlhmmv_root_put_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mv_t* pterm
 //
 // Note: this returns a pointer to the map's data, not to a copy.
 // The caller shouldn't free it, or modify it.
-mv_t* mlhmmv_root_look_up_and_reference_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, int* perror);
+mv_t* mlhmmv_root_look_up_and_ref_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, int* perror);
 
 // These are an optimization for assignment from full srec, e.g. '@records[$key1][$key2] = $*'.
 // Using mlhmmv_root_look_up_or_create_then_reference_level, the CST logic can get or create the @records[$key1][$key2]
@@ -127,7 +133,7 @@ mlhmmv_level_t* mlhmmv_root_look_up_or_create_then_reference_level(mlhmmv_root_t
 // This is an assignment for assignment to full srec, e.g. '$* = @records[$key1][$key2]'.
 // The CST logic can use this function to get the @records[$key1][$key2] level of the mlhmmv,
 // then copy values from there.
-mlhmmv_level_t* mlhmmv_root_look_up_and_reference_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, int* perror);
+mlhmmv_level_t* mlhmmv_root_look_up_and_ref_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, int* perror);
 
 // For oosvar-to-oosvar assignment.
 void mlhmmv_root_copy_submap(mlhmmv_root_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys);

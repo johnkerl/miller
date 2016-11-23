@@ -721,7 +721,7 @@ static void handle_for_local_map_key_only(
 
 		mlhmmv_value_t *psubmap = local_stack_frame_get_extended_from_indexed(pframe,
 			pstate->target_frame_relative_index, ptarget_keylist);
-		sllv_t* pkeys = mlhmmv_copy_keys_from_submap_xxx_rename(psubmap, NULL); // xxx refactor w/o null
+		sllv_t* pkeys = mlhmmv_value_copy_keys(psubmap, NULL); // xxx refactor w/o null
 
 		local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 		loop_stack_push(pvars->ploop_stack);
@@ -1043,7 +1043,7 @@ static void handle_for_map_literal_key_only(
 	boxed_xval_t boxed_xval = pstate->ptarget_xevaluator->pprocess_func(
 		pstate->ptarget_xevaluator->pvstate, pvars);
 
-	sllv_t* pkeys = mlhmmv_copy_keys_from_submap_xxx_rename(&boxed_xval.xval, NULL); // xxx refactor w/o null
+	sllv_t* pkeys = mlhmmv_value_copy_keys(&boxed_xval.xval, NULL); // xxx refactor w/o null
 
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);

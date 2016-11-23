@@ -190,9 +190,9 @@ static void rxval_evaluator_from_map_literal_aux(
 			boxed_xval_t boxed_xval = pkvpair->pxval_evaluator->pprocess_func(pkvpair->pxval_evaluator->pvstate, pvars);
 			if (!boxed_xval.xval.is_terminal && !boxed_xval.is_ephemeral) {
 				mlhmmv_value_t copy_xval = mlhmmv_value_copy(&boxed_xval.xval);
-				mlhmmv_level_put_value(plevel, &e, &copy_xval);
+				mlhmmv_level_put_xvalue(plevel, &e, &copy_xval);
 			} else {
-				mlhmmv_level_put_value(plevel, &e, &boxed_xval.xval);
+				mlhmmv_level_put_xvalue(plevel, &e, &boxed_xval.xval);
 			}
 		} else {
 			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
@@ -379,7 +379,7 @@ static boxed_xval_t rxval_evaluator_from_oosvar_keylist_func(void* pvstate, vari
 
 	if (all_non_null_or_error) {
 		int lookup_error = FALSE;
-		mlhmmv_value_t* pxval = mlhmmv_level_look_up_and_reference_xvalue(pvars->poosvars->proot_level,
+		mlhmmv_value_t* pxval = mlhmmv_level_look_up_and_ref_xvalue(pvars->poosvars->proot_level,
 			pmvkeys, &lookup_error);
 		sllmv_free(pmvkeys);
 		if (pxval != NULL) {

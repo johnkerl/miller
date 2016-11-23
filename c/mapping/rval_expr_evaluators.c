@@ -269,7 +269,7 @@ mv_t rval_evaluator_oosvar_keylist_func(void* pvstate, variables_t* pvars) {
 	mv_t rv = mv_absent();
 	if (all_non_null_or_error) {
 		int error = 0;
-		mv_t* pval = mlhmmv_root_look_up_and_reference_terminal(pvars->poosvars, pmvkeys, &error);
+		mv_t* pval = mlhmmv_root_look_up_and_ref_terminal(pvars->poosvars, pmvkeys, &error);
 		if (pval != NULL) {
 			if (pval->type == MT_STRING && *pval->u.strv == 0)
 				rv = mv_empty();
