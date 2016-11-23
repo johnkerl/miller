@@ -1,13 +1,12 @@
 ================================================================
 BUGFIXES
 
-! segfault.mlr
+:D
 
 ================================================================
 NON-RELEASE:
 
 ! rh/fedora/centos
-* call for use-cases? (go first.)
 * go through lmag article & clarify all unclears
 * windows port?
 ? msort.o wt?
@@ -20,7 +19,6 @@ OTHER:
 
 * mlr paste (sjackman)
 
-* b.tsv bug -- to relnotes
 * don't dump full help on unrecognized flag. WAY too much info. just print short, w/ info on how to get long.
 * typeof -> include 'map' and 'srec'
 * dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d
@@ -31,7 +29,7 @@ OTHER:
 MAPVAR CHECKLIST:
 
 * debt-reduction
-  ~ get a grip on copy/reference semantics. probably separate out maplit & fcnretval.
+  ~ get a grip on copy/reference semantics for all mv cases.
   - valgrinds
   ! vg.out.000 @neatener !
   - xxxes
@@ -98,9 +96,7 @@ function_manager.c:
 ? - parameter marshaling in general rval context
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-mlr_dsl_cst_assignment_statements.c:
-
->>>>> split into scalar_assignment_statements.c & map_assignment_statements.c ?
+mlr_dsl_cst_{scalar,map}_assignment_statements.c:
 
 - parameter marshaling in single-rhs-assign-to-map-lhs context
 
@@ -435,6 +431,9 @@ I/O:
 * bare print/printn
 * --c2p et al.
 * --pprint --barred
+
+BUGFIXES:
+* b.tsv bug -- to relnotes
 
 DOC:
 * 10-min

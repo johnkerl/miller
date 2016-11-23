@@ -71,6 +71,8 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 }
 
 // ================================================================
+// Map-literal input:
+//
 // {
 //   "a" : 1,
 //   "b" : {
@@ -79,7 +81,9 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 //   },
 //   "c" : 3,
 // }
-
+//
+// Map-literal AST:
+//
 // $ mlr --from s put -v -q 'm={"a":NR,"b":{"x":999},"c":3};dump m'
 // text="block", type=STATEMENT_BLOCK:
 //     text="=", type=NONINDEXED_LOCAL_ASSIGNMENT:
@@ -110,26 +114,30 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 //             text="stdout", type=STDOUT:
 //         text="m", type=NONINDEXED_LOCAL_VARIABLE.
 
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 typedef struct _map_literal_list_evaluator_t {
-	sllv_t* ppair_evaluators;
+	sllv_t* pkvpair_evaluators;
 } map_literal_list_evaluator_t;
-typedef struct _map_literal_pair_evaluator_t {
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+typedef struct _map_literal_kvpair_evaluator_t {
 	rval_evaluator_t*             pkey_evaluator;
 	int                           is_terminal;
 	rxval_evaluator_t*            pxval_evaluator;
 	map_literal_list_evaluator_t* plist_evaluator;
-} map_literal_pair_evaluator_t;
+} map_literal_kvpair_evaluator_t;
 
+// ----------------------------------------------------------------
 static map_literal_list_evaluator_t* allocate_map_literal_evaluator_from_ast(
 	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
 {
 	map_literal_list_evaluator_t* plist_evaluator = mlr_malloc_or_die(sizeof(map_literal_list_evaluator_t));
-	plist_evaluator->ppair_evaluators = sllv_alloc();
+	plist_evaluator->pkvpair_evaluators = sllv_alloc();
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->type != MD_AST_NODE_TYPE_MAP_LITERAL);
 	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext) {
 
-		map_literal_pair_evaluator_t* ppair = mlr_malloc_or_die(sizeof(map_literal_pair_evaluator_t));
-		*ppair = (map_literal_pair_evaluator_t) {
+		map_literal_kvpair_evaluator_t* pkvpair = mlr_malloc_or_die(sizeof(map_literal_kvpair_evaluator_t));
+		*pkvpair = (map_literal_kvpair_evaluator_t) {
 			.pkey_evaluator  = NULL,
 			.is_terminal     = TRUE,
 			.pxval_evaluator = NULL,
@@ -142,21 +150,21 @@ static map_literal_list_evaluator_t* allocate_map_literal_evaluator_from_ast(
 		mlr_dsl_ast_node_t* pleft = pchild->pchildren->phead->pvvalue;
 		MLR_INTERNAL_CODING_ERROR_IF(pleft->type != MD_AST_NODE_TYPE_MAP_LITERAL_KEY);
 		mlr_dsl_ast_node_t* pkeynode = pleft->pchildren->phead->pvvalue;
-		ppair->pkey_evaluator = rval_evaluator_alloc_from_ast(pkeynode, pfmgr, type_inferencing, context_flags);
+		pkvpair->pkey_evaluator = rval_evaluator_alloc_from_ast(pkeynode, pfmgr, type_inferencing, context_flags);
 
 		mlr_dsl_ast_node_t* pright = pchild->pchildren->phead->pnext->pvvalue;
 		mlr_dsl_ast_node_t* pvalnode = pright->pchildren->phead->pvvalue;
 		if (pright->type == MD_AST_NODE_TYPE_MAP_LITERAL_VALUE) {
-			ppair->pxval_evaluator = rxval_evaluator_alloc_from_ast(pvalnode, pfmgr, type_inferencing, context_flags);
+			pkvpair->pxval_evaluator = rxval_evaluator_alloc_from_ast(pvalnode, pfmgr, type_inferencing, context_flags);
 		} else if (pright->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
-			ppair->is_terminal = FALSE;
-			ppair->plist_evaluator = allocate_map_literal_evaluator_from_ast(
+			pkvpair->is_terminal = FALSE;
+			pkvpair->plist_evaluator = allocate_map_literal_evaluator_from_ast(
 				pvalnode, pfmgr, type_inferencing, context_flags);
 		} else {
 			MLR_INTERNAL_CODING_ERROR();
 		}
 
-		sllv_append(plist_evaluator->ppair_evaluators, ppair);
+		sllv_append(plist_evaluator->pkvpair_evaluators, pkvpair);
 	}
 	return plist_evaluator;
 }
@@ -172,14 +180,14 @@ static void rxval_evaluator_from_map_literal_aux(
 	mlhmmv_level_t*                           plevel,
 	variables_t*                              pvars)
 {
-	for (sllve_t* pe = plist_evaluator->ppair_evaluators->phead; pe != NULL; pe = pe->pnext) {
-		map_literal_pair_evaluator_t* ppair = pe->pvvalue;
+	for (sllve_t* pe = plist_evaluator->pkvpair_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		map_literal_kvpair_evaluator_t* pkvpair = pe->pvvalue;
 
 		// mlhmmv_put_terminal_from_level will copy keys and values
-		mv_t mvkey = ppair->pkey_evaluator->pprocess_func(ppair->pkey_evaluator->pvstate, pvars);
-		if (ppair->is_terminal) {
+		mv_t mvkey = pkvpair->pkey_evaluator->pprocess_func(pkvpair->pkey_evaluator->pvstate, pvars);
+		if (pkvpair->is_terminal) {
 			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
-			boxed_xval_t boxed_xval = ppair->pxval_evaluator->pprocess_func(ppair->pxval_evaluator->pvstate, pvars);
+			boxed_xval_t boxed_xval = pkvpair->pxval_evaluator->pprocess_func(pkvpair->pxval_evaluator->pvstate, pvars);
 			if (!boxed_xval.xval.is_terminal && !boxed_xval.is_ephemeral) {
 				mlhmmv_value_t copy_xval = mlhmmv_copy_aux(&boxed_xval.xval);
 				mlhmmv_put_value_at_level_aux(plevel, &e, &copy_xval);
@@ -189,7 +197,7 @@ static void rxval_evaluator_from_map_literal_aux(
 		} else {
 			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
 			mlhmmv_level_t* pnext_level = mlhmmv_put_empty_map_from_level(plevel, &e);
-			rxval_evaluator_from_map_literal_aux(pstate, ppair->plist_evaluator, pnext_level, pvars);
+			rxval_evaluator_from_map_literal_aux(pstate, pkvpair->plist_evaluator, pnext_level, pvars);
 		}
 	}
 }
@@ -208,19 +216,20 @@ static boxed_xval_t rxval_evaluator_from_map_literal_func(void* pvstate, variabl
 }
 
 static void rxval_evaluator_from_map_literal_free_aux(map_literal_list_evaluator_t* plist_evaluator) {
-	for (sllve_t* pe = plist_evaluator->ppair_evaluators->phead; pe != NULL; pe = pe->pnext) {
-		map_literal_pair_evaluator_t* ppair_evaluator = pe->pvvalue;
-		if (ppair_evaluator->pkey_evaluator != NULL) {
-			ppair_evaluator->pkey_evaluator->pfree_func(ppair_evaluator->pkey_evaluator);
+	for (sllve_t* pe = plist_evaluator->pkvpair_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		map_literal_kvpair_evaluator_t* pkvpair_evaluator = pe->pvvalue;
+		if (pkvpair_evaluator->pkey_evaluator != NULL) {
+			pkvpair_evaluator->pkey_evaluator->pfree_func(pkvpair_evaluator->pkey_evaluator);
 		}
-		if (ppair_evaluator->pxval_evaluator != NULL) {
-			ppair_evaluator->pxval_evaluator->pfree_func(ppair_evaluator->pxval_evaluator);
+		if (pkvpair_evaluator->pxval_evaluator != NULL) {
+			pkvpair_evaluator->pxval_evaluator->pfree_func(pkvpair_evaluator->pxval_evaluator);
 		}
-		if (ppair_evaluator->plist_evaluator != NULL) {
-			rxval_evaluator_from_map_literal_free_aux(ppair_evaluator->plist_evaluator);
+		if (pkvpair_evaluator->plist_evaluator != NULL) {
+			rxval_evaluator_from_map_literal_free_aux(pkvpair_evaluator->plist_evaluator);
 		}
 	}
-	sllv_free(plist_evaluator->ppair_evaluators);
+	sllv_free(plist_evaluator->pkvpair_evaluators);
+	free(plist_evaluator);
 }
 
 static void rxval_evaluator_from_map_literal_free(rxval_evaluator_t* prxval_evaluator) {
