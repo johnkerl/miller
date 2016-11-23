@@ -98,9 +98,8 @@ mlhmmv_value_t* mlhmmv_level_look_up_and_ref_xvalue  (mlhmmv_level_t* plevel, sl
 mlhmmv_level_t* mlhmmv_level_put_empty_map           (mlhmmv_level_t* plevel, sllmve_t* prest_keys);
 void            mlhmmv_level_put_xvalue              (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue);
 void            mlhmmv_level_put_terminal            (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
-
-void mlhmmv_level_to_lrecs(mlhmmv_level_t* plevel, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs,
-	int do_full_prefixing, char* flatten_separator);
+void            mlhmmv_level_to_lrecs                (mlhmmv_level_t* plevel, sllmv_t* pkeys,
+	sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator);
 
 void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 	int do_final_comma, int quote_values_always, char* line_indent, FILE* ostream);
@@ -126,9 +125,9 @@ void mlhmmv_root_put_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mv_t* pterm
 mv_t* mlhmmv_root_look_up_and_ref_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, int* perror);
 
 // These are an optimization for assignment from full srec, e.g. '@records[$key1][$key2] = $*'.
-// Using mlhmmv_root_look_up_or_create_then_reference_level, the CST logic can get or create the @records[$key1][$key2]
+// Using mlhmmv_root_look_up_or_create_then_ref_level, the CST logic can get or create the @records[$key1][$key2]
 // level of the mlhmmv, then copy values there.
-mlhmmv_level_t* mlhmmv_root_look_up_or_create_then_reference_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys);
+mlhmmv_level_t* mlhmmv_root_look_up_or_create_then_ref_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys);
 
 // This is an assignment for assignment to full srec, e.g. '$* = @records[$key1][$key2]'.
 // The CST logic can use this function to get the @records[$key1][$key2] level of the mlhmmv,
@@ -141,10 +140,10 @@ void mlhmmv_root_copy_submap(mlhmmv_root_t* pmap, sllmv_t* ptokeys, sllmv_t* pfr
 // For for-loop-over-oosvar, wherein we need to copy the submap before iterating over it
 // (since the iteration may modify it). If the keys don't index a submap, then the return
 // value has is_terminal = TRUE and pnext_level = NULL.
-mlhmmv_value_t mlhmmv_copy_submap_from_root(mlhmmv_root_t* pmap, sllmv_t* pmvkeys);
+mlhmmv_value_t mlhmmv_root_copy_xvalue(mlhmmv_root_t* pmap, sllmv_t* pmvkeys);
 
 // Used by for-loops over oosvars
-sllv_t* mlhmmv_copy_keys_from_submap(mlhmmv_root_t* pmap, sllmv_t* pmvkeys);
+sllv_t* mlhmmv_root_copy_keys_from_submap(mlhmmv_root_t* pmap, sllmv_t* pmvkeys);
 
 // Unset value/submap from a specified level onward, also unsetting any maps which become empty as a result.
 // Examples:
@@ -242,6 +241,7 @@ void mlhmmv_root_remove(mlhmmv_root_t* pmap, sllmv_t* pmvkeys);
 //   a   sum:wye
 //   hat 0.031442
 
+// For 'emit' and 'emitp' in the DSL
 void mlhmmv_root_partial_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs,
 	int do_full_prefixing, char* flatten_separator);
 

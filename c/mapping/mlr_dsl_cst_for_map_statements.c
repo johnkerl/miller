@@ -179,7 +179,7 @@ static void handle_for_oosvar(
 		// Locate and copy the submap indexed by the keylist. E.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', the
 		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
 		// for-loop.
-		mlhmmv_value_t submap = mlhmmv_copy_submap_from_root(pvars->poosvars, ptarget_keylist);
+		mlhmmv_value_t submap = mlhmmv_root_copy_xvalue(pvars->poosvars, ptarget_keylist);
 
 		if (!submap.is_terminal && submap.pnext_level != NULL) {
 			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level
@@ -363,7 +363,7 @@ static void handle_for_oosvar_key_only(
 		local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 		loop_stack_push(pvars->ploop_stack);
 
-		sllv_t* pkeys = mlhmmv_copy_keys_from_submap(pvars->poosvars, ptarget_keylist);
+		sllv_t* pkeys = mlhmmv_root_copy_keys_from_submap(pvars->poosvars, ptarget_keylist);
 
 		for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
 			// Bind the v-name to the terminal mlrval:

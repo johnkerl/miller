@@ -516,7 +516,7 @@ static void handle_oosvar_from_full_srec_assignment(
 	sllmv_t* plhskeys = evaluate_list(pstate->plhs_keylist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
 
-		mlhmmv_level_t* plevel = mlhmmv_root_look_up_or_create_then_reference_level(pvars->poosvars, plhskeys);
+		mlhmmv_level_t* plevel = mlhmmv_root_look_up_or_create_then_ref_level(pvars->poosvars, plhskeys);
 		if (plevel != NULL) {
 
 			mlhmmv_clear_level(plevel);

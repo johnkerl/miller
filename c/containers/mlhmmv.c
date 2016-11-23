@@ -387,7 +387,7 @@ static mlhmmv_level_entry_t* mlhmmv_get_entry_at_level(mlhmmv_level_t* plevel, s
 // * level = map, rest_keys = ["a", 2, "c"]
 // * level = map["a"], rest_keys = [2, "c"]
 // * level = map["a"][2], rest_keys = ["c"]
-mlhmmv_level_t* mlhmmv_root_look_up_or_create_then_reference_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
+mlhmmv_level_t* mlhmmv_root_look_up_or_create_then_ref_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
 	return mlhmmv_get_or_create_level_aux(pmap->proot_level, pmvkeys->phead);
 }
 static mlhmmv_level_t* mlhmmv_get_or_create_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys) {
@@ -715,7 +715,7 @@ mlhmmv_value_t mlhmmv_value_copy(mlhmmv_value_t* pvalue) { // xxx rename
 }
 
 // ----------------------------------------------------------------
-mlhmmv_value_t mlhmmv_copy_submap_from_root(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
+mlhmmv_value_t mlhmmv_root_copy_xvalue(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
 	int error;
 	if (pmvkeys == NULL || pmvkeys->length == 0) {
 		mlhmmv_value_t root_value = (mlhmmv_value_t) {
@@ -746,7 +746,7 @@ void mlhmmv_value_free(mlhmmv_value_t submap) {
 }
 
 // ----------------------------------------------------------------
-sllv_t* mlhmmv_copy_keys_from_submap(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
+sllv_t* mlhmmv_root_copy_keys_from_submap(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
 	int error;
 	if (pmvkeys->length == 0) {
 		mlhmmv_value_t root_value = (mlhmmv_value_t) {
