@@ -165,7 +165,7 @@ static void handle_unset_all(
 	cst_outputs_t*           pcst_outputs)
 {
 	sllmv_t* pempty = sllmv_alloc();
-	mlhmmv_remove(pvars->poosvars, pempty);
+	mlhmmv_root_remove(pvars->poosvars, pempty);
 	sllmv_free(pempty);
 }
 
@@ -213,7 +213,7 @@ static void handle_unset_oosvar(
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvkeys = evaluate_list(punset_item->poosvar_keylist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error)
-		mlhmmv_remove(pvars->poosvars, pmvkeys);
+		mlhmmv_root_remove(pvars->poosvars, pmvkeys);
 	sllmv_free(pmvkeys);
 }
 

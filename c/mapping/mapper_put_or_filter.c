@@ -21,7 +21,7 @@ typedef struct _mapper_put_or_filter_state_t {
 	mlr_dsl_cst_t* pcst;
 
 	int            at_begin;
-	mlhmmv_t*      poosvars;
+	mlhmmv_root_t*      poosvars;
 
 	int            trace_execution;
 	char*          oosvar_flatten_separator;
@@ -399,7 +399,7 @@ static mapper_t* mapper_put_or_filter_alloc(
 		type_inferencing, flush_every_record, do_final_filter, negate_final_filter);
 	pstate->at_begin                 = TRUE;
 	pstate->put_output_disabled      = put_output_disabled;
-	pstate->poosvars                 = mlhmmv_alloc();
+	pstate->poosvars                 = mlhmmv_root_alloc();
 	pstate->trace_execution          = trace_execution;
 	pstate->oosvar_flatten_separator = oosvar_flatten_separator;
 	pstate->flush_every_record       = flush_every_record;
@@ -421,7 +421,7 @@ static void mapper_put_or_filter_free(mapper_t* pmapper) {
 	mapper_put_or_filter_state_t* pstate = pmapper->pvstate;
 
 	free(pstate->mlr_dsl_expression);
-	mlhmmv_free(pstate->poosvars);
+	mlhmmv_root_free(pstate->poosvars);
 	local_stack_free(pstate->plocal_stack);
 	loop_stack_free(pstate->ploop_stack);
 	mlr_dsl_cst_free(pstate->pcst);

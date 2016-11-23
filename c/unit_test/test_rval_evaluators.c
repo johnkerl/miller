@@ -23,7 +23,7 @@ static char * test_caps() {
 
 	lrec_t* prec = lrec_unbacked_alloc();
 	lhmsmv_t* ptyped_overlay = lhmsmv_alloc();
-	mlhmmv_t* poosvars = mlhmmv_alloc();
+	mlhmmv_root_t* poosvars = mlhmmv_root_alloc();
 	string_array_t* pregex_captures = NULL;
 	loop_stack_t* ploop_stack = loop_stack_alloc();
 
@@ -75,7 +75,7 @@ static char * test_strings() {
 
 	lrec_t* prec = lrec_unbacked_alloc();
 	lhmsmv_t* ptyped_overlay = lhmsmv_alloc();
-	mlhmmv_t* poosvars = mlhmmv_alloc();
+	mlhmmv_root_t* poosvars = mlhmmv_root_alloc();
 	string_array_t* pregex_captures = NULL;
 	loop_stack_t* ploop_stack = loop_stack_alloc();
 
@@ -152,7 +152,7 @@ static char * test_numbers() {
 
 	lrec_t* prec = lrec_unbacked_alloc();
 	lhmsmv_t* ptyped_overlay = lhmsmv_alloc();
-	mlhmmv_t* poosvars = mlhmmv_alloc();
+	mlhmmv_root_t* poosvars = mlhmmv_root_alloc();
 	string_array_t* pregex_captures = NULL;
 	loop_stack_t* ploop_stack = loop_stack_alloc();
 
@@ -240,7 +240,7 @@ static char * test_logical_and() {
 
 	lrec_t* prec = NULL;
 	lhmsmv_t* ptyped_overlay = NULL;
-	mlhmmv_t* poosvars = NULL;
+	mlhmmv_root_t* poosvars = NULL;
 	string_array_t* pregex_captures = NULL;
 	loop_stack_t* ploop_stack = loop_stack_alloc();
 
@@ -303,7 +303,7 @@ static char * test_logical_or() {
 
 	lrec_t* prec = NULL;
 	lhmsmv_t* ptyped_overlay = NULL;
-	mlhmmv_t* poosvars = NULL;
+	mlhmmv_root_t* poosvars = NULL;
 	string_array_t* pregex_captures = NULL;
 	loop_stack_t* ploop_stack = loop_stack_alloc();
 
@@ -366,7 +366,7 @@ static char * test_logical_xor() {
 
 	lrec_t* prec = NULL;
 	lhmsmv_t* ptyped_overlay = NULL;
-	mlhmmv_t* poosvars = NULL;
+	mlhmmv_root_t* poosvars = NULL;
 	string_array_t* pregex_captures = NULL;
 	loop_stack_t* ploop_stack = loop_stack_alloc();
 

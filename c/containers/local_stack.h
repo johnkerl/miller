@@ -155,9 +155,9 @@ static inline void local_stack_frame_define_extended(local_stack_frame_t* pframe
 
 	// xxx temp -- make a single method
 	if (xval.is_terminal && mv_is_absent(&xval.terminal_mlrval)) {
-		mlhmmv_free_submap(xval); // xxx confusing ownership semantics
+		mlhmmv_value_free(xval); // xxx confusing ownership semantics
 	} else {
-		mlhmmv_free_submap(pentry->value); // xxx rename
+		mlhmmv_value_free(pentry->value); // xxx rename
 		pentry->value = xval;
 	}
 }
@@ -202,7 +202,7 @@ static inline void local_stack_frame_assign_extended_nonindexed(local_stack_fram
 	mv_free(&pentry->value.terminal_mlrval); // xxx temp -- make value-free
 
 	// xxx temp -- make a single method
-	mlhmmv_free_submap(pentry->value); // xxx rename
+	mlhmmv_value_free(pentry->value); // xxx rename
 	pentry->value = xval;
 }
 

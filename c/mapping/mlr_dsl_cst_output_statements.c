@@ -846,7 +846,7 @@ static void record_emitter_from_oosvar(
 		sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars,
 			&names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
-			mlhmmv_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, poutrecs,
+			mlhmmv_root_partial_to_lrecs(pvars->poosvars, pmvkeys, pmvnames, poutrecs,
 				pstate->do_full_prefixing, oosvar_flatten_separator);
 		}
 		sllmv_free(pmvnames);
@@ -881,10 +881,10 @@ static void record_emitter_from_local_variable(
 				mlhmmv_level_t* proot_level = mlhmmv_level_alloc();
 				mlhmmv_level_put_value(proot_level, &e, pmval);
 
-				mlhmmv_t map;
+				mlhmmv_root_t map;
 				map.proot_level = proot_level;
 				sllmv_prepend_no_free(pmvkeys, &name);
-				mlhmmv_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
+				mlhmmv_root_partial_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
 					pstate->do_full_prefixing, oosvar_flatten_separator);
 
 			}
@@ -927,10 +927,10 @@ static void record_emitter_from_map_literal(
 			mlhmmv_level_t* proot_level = mlhmmv_level_alloc();
 			mlhmmv_level_put_value(proot_level, &e, &boxed_xval.xval);
 
-			mlhmmv_t map;
+			mlhmmv_root_t map;
 			map.proot_level = proot_level;
 			sllmv_prepend_no_free(pmvkeys, &name);
-			mlhmmv_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
+			mlhmmv_root_partial_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
 				pstate->do_full_prefixing, oosvar_flatten_separator);
 
 		}
@@ -938,7 +938,7 @@ static void record_emitter_from_map_literal(
 	}
 
 	if (boxed_xval.is_ephemeral) {
-		mlhmmv_free_submap(boxed_xval.xval);
+		mlhmmv_value_free(boxed_xval.xval);
 	}
 
 	sllmv_free(pmvkeys);
@@ -954,7 +954,7 @@ static void handle_emit_all(
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, pcst_outputs->poutrecs,
+		mlhmmv_root_all_to_lrecs(pvars->poosvars, pmvnames, pcst_outputs->poutrecs,
 			pstate->do_full_prefixing, pcst_outputs->oosvar_flatten_separator);
 	}
 	sllmv_free(pmvnames);
@@ -976,7 +976,7 @@ static void handle_emit_all_to_stdfp(
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, poutrecs,
+		mlhmmv_root_all_to_lrecs(pvars->poosvars, pmvnames, poutrecs,
 			pstate->do_full_prefixing, pcst_outputs->oosvar_flatten_separator);
 	}
 	sllmv_free(pmvnames);
@@ -1005,7 +1005,7 @@ static void handle_emit_all_to_file(
 	int all_non_null_or_error = TRUE;
 	sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
-		mlhmmv_all_to_lrecs(pvars->poosvars, pmvnames, poutrecs,
+		mlhmmv_root_all_to_lrecs(pvars->poosvars, pmvnames, poutrecs,
 			pstate->do_full_prefixing, pcst_outputs->oosvar_flatten_separator);
 	}
 
@@ -1291,7 +1291,7 @@ static void handle_emit_lashed_common(
 
 		for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
 			if (pboxed_xvals[i].is_ephemeral) {
-				mlhmmv_free_submap(pboxed_xvals[i].xval);
+				mlhmmv_value_free(pboxed_xvals[i].xval);
 			}
 		}
 
@@ -1404,7 +1404,7 @@ static void handle_dump(
 	}
 
 	if (!boxed_xval.xval.is_terminal && boxed_xval.is_ephemeral) {
-		mlhmmv_free_submap(boxed_xval.xval);
+		mlhmmv_value_free(boxed_xval.xval);
 	}
 }
 
@@ -1440,6 +1440,6 @@ static void handle_dump_to_file(
 	mv_free(&filename_mv);
 
 	if (!boxed_xval.xval.is_terminal && boxed_xval.is_ephemeral) {
-		mlhmmv_free_submap(boxed_xval.xval);
+		mlhmmv_value_free(boxed_xval.xval);
 	}
 }

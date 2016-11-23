@@ -63,7 +63,7 @@ static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t*
 
 		// Use the mlhmmv printer since it naturally handles Miller-to-JSON key deconcatenation:
 		// e.g. 'a:x=1,a:y=2' maps to '{"a":{"x":1,"y":2}}'.
-		mlhmmv_t* pmap = mlhmmv_alloc();
+		mlhmmv_root_t* pmap = mlhmmv_root_alloc();
 
 		char* sep = pstate->output_json_flatten_separator;
 
@@ -79,17 +79,17 @@ static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t*
 				sllmv_append_no_free(pmvkeys, &mvkey);
 			}
 			mv_t mvval = mv_from_string(lvalue, NO_FREE);
-			mlhmmv_put_terminal(pmap, pmvkeys, &mvval);
+			mlhmmv_root_put_terminal(pmap, pmvkeys, &mvval);
 			sllmv_free(pmvkeys);
 			free(lkey);
 		}
 
 		if (pstate->stack_vertically)
-			mlhmmv_print_json_stacked(pmap, pstate->quote_json_values_always, pstate->line_indent, output_stream);
+			mlhmmv_root_print_json_stacked(pmap, pstate->quote_json_values_always, pstate->line_indent, output_stream);
 		else
-			mlhmmv_print_json_single_line(pmap, pstate->quote_json_values_always, output_stream);
+			mlhmmv_root_print_json_single_lines(pmap, pstate->quote_json_values_always, output_stream);
 
-		mlhmmv_free(pmap);
+		mlhmmv_root_free(pmap);
 
 		lrec_free(prec); // end of baton-pass
 

@@ -199,7 +199,7 @@ static void handle_for_oosvar(
 			}
 		}
 
-		mlhmmv_free_submap(submap);
+		mlhmmv_value_free(submap);
 
 		loop_stack_pop(pvars->ploop_stack);
 		local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
@@ -550,7 +550,7 @@ static void handle_for_local_map(
 				}
 			}
 
-			mlhmmv_free_submap(submap);
+			mlhmmv_value_free(submap);
 
 			loop_stack_pop(pvars->ploop_stack);
 			local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
@@ -896,7 +896,7 @@ static void handle_for_map_literal(
 	}
 
 	if (boxed_xval.is_ephemeral) {
-		mlhmmv_free_submap(boxed_xval.xval);
+		mlhmmv_value_free(boxed_xval.xval);
 	}
 
 	loop_stack_pop(pvars->ploop_stack);
@@ -1075,6 +1075,6 @@ static void handle_for_map_literal_key_only(
 	sllv_free(pkeys);
 
 	if (boxed_xval.is_ephemeral) {
-		mlhmmv_free_submap(boxed_xval.xval); // xxx rename
+		mlhmmv_value_free(boxed_xval.xval); // xxx rename
 	}
 }
