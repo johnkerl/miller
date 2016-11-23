@@ -1303,6 +1303,7 @@ static void handle_emit_lashed_common(
 	for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
 		mv_free(&pbasenames[i]);
 	}
+	free(pbasenames);
 }
 
 // ================================================================
