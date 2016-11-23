@@ -42,19 +42,19 @@ typedef struct _mlhmmv_xvalue_t {
 
 mlhmmv_xvalue_t mlhmmv_xvalue_alloc_empty_map();
 mlhmmv_xvalue_t mlhmmv_xvalue_copy(mlhmmv_xvalue_t* pvalue);
-void           mlhmmv_xvalue_free(mlhmmv_xvalue_t submap);
+void            mlhmmv_xvalue_free(mlhmmv_xvalue_t submap);
 
 // Used by for-loops over map-valued local variables
 sllv_t* mlhmmv_xvalue_copy_keys(mlhmmv_xvalue_t* pmvalue, sllmv_t* pmvkeys);
 
 void mlhmmv_xvalues_to_lrecs_lashed(
 	mlhmmv_xvalue_t** ptop_values,
-	int              num_submaps,
-	mv_t*            pbasenames,
-	sllmv_t*         pnames,
-	sllv_t*          poutrecs,
-	int              do_full_prefixing,
-	char*            flatten_separator);
+	int               num_submaps,
+	mv_t*             pbasenames,
+	sllmv_t*          pnames,
+	sllv_t*           poutrecs,
+	int               do_full_prefixing,
+	char*             flatten_separator);
 
 // ----------------------------------------------------------------
 typedef struct _mlhmmv_level_entry_t {
@@ -93,12 +93,12 @@ mlhmmv_level_t* mlhmmv_level_alloc();
 
 void mlhmmv_clear_level(mlhmmv_level_t* plevel);
 
-mv_t*           mlhmmv_level_look_up_and_ref_terminal(mlhmmv_level_t* plevel, sllmv_t*  pmvkeys, int* perror);
-mlhmmv_xvalue_t* mlhmmv_level_look_up_and_ref_xvalue (mlhmmv_level_t* plevel, sllmv_t*  pmvkeys, int* perror);
-mlhmmv_level_t* mlhmmv_level_put_empty_map           (mlhmmv_level_t* plevel, sllmve_t* prest_keys);
-void            mlhmmv_level_put_xvalue              (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_xvalue_t* pvalue);
-void            mlhmmv_level_put_terminal            (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
-void            mlhmmv_level_to_lrecs                (mlhmmv_level_t* plevel, sllmv_t* pkeys,
+mv_t*            mlhmmv_level_look_up_and_ref_terminal(mlhmmv_level_t* plevel, sllmv_t*  pmvkeys, int* perror);
+mlhmmv_xvalue_t* mlhmmv_level_look_up_and_ref_xvalue  (mlhmmv_level_t* plevel, sllmv_t*  pmvkeys, int* perror);
+mlhmmv_level_t*  mlhmmv_level_put_empty_map           (mlhmmv_level_t* plevel, sllmve_t* prest_keys);
+void             mlhmmv_level_put_xvalue              (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_xvalue_t* pvalue);
+void             mlhmmv_level_put_terminal            (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
+void             mlhmmv_level_to_lrecs                (mlhmmv_level_t* plevel, sllmv_t* pkeys,
 	sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator);
 
 void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
@@ -142,7 +142,7 @@ void mlhmmv_root_copy_submap(mlhmmv_root_t* pmap, sllmv_t* ptokeys, sllmv_t* pfr
 // value has is_terminal = TRUE and pnext_level = NULL.
 mlhmmv_xvalue_t mlhmmv_root_copy_xvalue(mlhmmv_root_t* pmap, sllmv_t* pmvkeys);
 
-// Used by for-loops over oosvars
+// Used by for-loops over oosvars. Return value is an array of ephemeral mlrvals.
 sllv_t* mlhmmv_root_copy_keys_from_submap(mlhmmv_root_t* pmap, sllmv_t* pmvkeys);
 
 // Unset value/submap from a specified level onward, also unsetting any maps which become empty as a result.
