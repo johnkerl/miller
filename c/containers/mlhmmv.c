@@ -43,8 +43,8 @@ static void mlhmmv_level_init(mlhmmv_level_t  *plevel, int length);
 static void mlhmmv_level_free(mlhmmv_level_t* plevel);
 
 // ----------------------------------------------------------------
-// xxx rename
-static mlhmmv_level_entry_t* mlhmmv_get_entry_at_level(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* perror);
+static mlhmmv_level_entry_t* mlhmmv_level_look_up_and_ref_entry(
+	mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* perror);
 
 // ================================================================
 void mlhmmv_print_terminal(mv_t* pmv, int quote_values_always, FILE* ostream) {
@@ -148,7 +148,7 @@ sllv_t* mlhmmv_xvalue_copy_keys_indexed(mlhmmv_xvalue_t* pmvalue, sllmv_t* pmvke
 	} else if (pmvalue->is_terminal) { // xxx copy this check up to oosvar case too
 		return sllv_alloc();
 	} else {
-		mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(pmvalue->pnext_level, pmvkeys->phead, &error);
+		mlhmmv_level_entry_t* pfromentry = mlhmmv_level_look_up_and_ref_entry(pmvalue->pnext_level, pmvkeys->phead, &error);
 		if (pfromentry != NULL) {
 			return mlhmmv_xvalue_copy_keys_nonindexed(&pfromentry->level_value);
 		} else {
@@ -458,7 +458,7 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_x
 // ----------------------------------------------------------------
 // xxx merge these two
 mv_t* mlhmmv_root_look_up_and_ref_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, int* perror) {
-	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_entry_at_level(pmap->proot_level, pmvkeys->phead, perror);
+	mlhmmv_level_entry_t* plevel_entry = mlhmmv_level_look_up_and_ref_entry(pmap->proot_level, pmvkeys->phead, perror);
 	if (plevel_entry == NULL) {
 		return NULL;
 	}
@@ -470,7 +470,7 @@ mv_t* mlhmmv_root_look_up_and_ref_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys
 }
 
 mv_t* mlhmmv_level_look_up_and_ref_terminal(mlhmmv_level_t* plevel, sllmv_t* pmvkeys, int* perror) {
-	mlhmmv_level_entry_t* plevel_entry = mlhmmv_get_entry_at_level(plevel, pmvkeys->phead, perror);
+	mlhmmv_level_entry_t* plevel_entry = mlhmmv_level_look_up_and_ref_entry(plevel, pmvkeys->phead, perror);
 	if (plevel_entry == NULL) {
 		return NULL;
 	}
@@ -482,7 +482,7 @@ mv_t* mlhmmv_level_look_up_and_ref_terminal(mlhmmv_level_t* plevel, sllmv_t* pmv
 }
 
 // ----------------------------------------------------------------
-static mlhmmv_level_entry_t* mlhmmv_get_entry_at_level(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* perror) {
+static mlhmmv_level_entry_t* mlhmmv_level_look_up_and_ref_entry(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* perror) {
 	if (perror)
 		*perror = MLHMMV_ERROR_NONE;
 	if (prestkeys == NULL) {
@@ -800,7 +800,7 @@ void mlhmmv_clear_level(mlhmmv_level_t* plevel) {
 void mlhmmv_root_copy_submap(mlhmmv_root_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys) {
 	int error = 0;
 
-	mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(pmap->proot_level, pfromkeys->phead, &error);
+	mlhmmv_level_entry_t* pfromentry = mlhmmv_level_look_up_and_ref_entry(pmap->proot_level, pfromkeys->phead, &error);
 	if (pfromentry != NULL) {
 		mlhmmv_xvalue_t submap = mlhmmv_xvalue_copy(&pfromentry->level_value);
 		mlhmmv_put_value_at_level(pmap, ptokeys, &submap);
@@ -817,7 +817,7 @@ mlhmmv_xvalue_t mlhmmv_root_copy_xvalue(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
 		};
 		return mlhmmv_xvalue_copy(&root_value);
 	} else {
-		mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(pmap->proot_level, pmvkeys->phead, &error);
+		mlhmmv_level_entry_t* pfromentry = mlhmmv_level_look_up_and_ref_entry(pmap->proot_level, pmvkeys->phead, &error);
 		if (pfromentry != NULL) {
 			return mlhmmv_xvalue_copy(&pfromentry->level_value);
 		} else {
@@ -840,7 +840,7 @@ sllv_t* mlhmmv_root_copy_keys_from_submap(mlhmmv_root_t* pmap, sllmv_t* pmvkeys)
 		};
 		return mlhmmv_xvalue_copy_keys_nonindexed(&root_value);
 	} else {
-		mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(pmap->proot_level, pmvkeys->phead, &error);
+		mlhmmv_level_entry_t* pfromentry = mlhmmv_level_look_up_and_ref_entry(pmap->proot_level, pmvkeys->phead, &error);
 		if (pfromentry != NULL) {
 			return mlhmmv_xvalue_copy_keys_nonindexed(&pfromentry->level_value);
 		} else {
@@ -1026,7 +1026,7 @@ void mlhmmv_root_partial_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pkeys, sllmv_t* 
 	MLR_INTERNAL_CODING_ERROR_IF(pkeys->phead == NULL);
 	mv_t* pfirstkey = &pkeys->phead->value;
 
-	mlhmmv_level_entry_t* ptop_entry = mlhmmv_get_entry_at_level(pmap->proot_level, pkeys->phead, NULL);
+	mlhmmv_level_entry_t* ptop_entry = mlhmmv_level_look_up_and_ref_entry(pmap->proot_level, pkeys->phead, NULL);
 
 	if (ptop_entry == NULL) {
 		// No such entry in the mlhmmv results in no output records
@@ -1067,7 +1067,7 @@ void mlhmmv_level_to_lrecs(mlhmmv_level_t* plevel, sllmv_t* pkeys, sllmv_t* pnam
 
 	mv_t* pfirstkey = &pkeys->phead->value;
 
-	mlhmmv_level_entry_t* ptop_entry = mlhmmv_get_entry_at_level(plevel, pkeys->phead, NULL);
+	mlhmmv_level_entry_t* ptop_entry = mlhmmv_level_look_up_and_ref_entry(plevel, pkeys->phead, NULL);
 
 	if (ptop_entry == NULL) {
 		// No such entry in the mlhmmv results in no output records
