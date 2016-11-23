@@ -81,11 +81,11 @@ mlhmmv_level_t* mlhmmv_level_alloc();
 
 void mlhmmv_clear_level(mlhmmv_level_t* plevel);
 
-mv_t* mlhmmv_get_terminal_from_level(mlhmmv_level_t* plevel, sllmv_t* pmvkeys, int* perror); // xxx rename
-mlhmmv_value_t* mlhmmv_get_value_from_level(mlhmmv_level_t* plevel, sllmv_t* pmvkeys, int* perror);
-mlhmmv_level_t* mlhmmv_put_empty_map_from_level(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
-void mlhmmv_level_put_value(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue); // xxx rename w/ xval
-void mlhmmv_put_terminal_from_level(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
+mv_t*           mlhmmv_level_look_up_and_reference_terminal(mlhmmv_level_t* plevel, sllmv_t* pmvkeys, int* perror);
+mlhmmv_value_t* mlhmmv_level_look_up_and_reference_xvalue  (mlhmmv_level_t* plevel, sllmv_t* pmvkeys, int* perror);
+mlhmmv_level_t* mlhmmv_level_put_empty_map                 (mlhmmv_level_t* plevel, sllmve_t* prest_keys);
+void            mlhmmv_level_put_value                     (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue); // xxx rename w/ xval
+void            mlhmmv_level_put_terminal                  (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
 
 // Used by for-loops over map-valued local variables
 sllv_t* mlhmmv_copy_keys_from_submap_xxx_rename(mlhmmv_value_t* pmvalue, sllmv_t* pmvkeys);

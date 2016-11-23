@@ -183,7 +183,7 @@ static void rxval_evaluator_from_map_literal_aux(
 	for (sllve_t* pe = plist_evaluator->pkvpair_evaluators->phead; pe != NULL; pe = pe->pnext) {
 		map_literal_kvpair_evaluator_t* pkvpair = pe->pvvalue;
 
-		// mlhmmv_put_terminal_from_level will copy keys and values
+		// mlhmmv_level_put_terminal will copy keys and values
 		mv_t mvkey = pkvpair->pkey_evaluator->pprocess_func(pkvpair->pkey_evaluator->pvstate, pvars);
 		if (pkvpair->is_terminal) {
 			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
@@ -196,7 +196,7 @@ static void rxval_evaluator_from_map_literal_aux(
 			}
 		} else {
 			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
-			mlhmmv_level_t* pnext_level = mlhmmv_put_empty_map_from_level(plevel, &e);
+			mlhmmv_level_t* pnext_level = mlhmmv_level_put_empty_map(plevel, &e);
 			rxval_evaluator_from_map_literal_aux(pstate, pkvpair->plist_evaluator, pnext_level, pvars);
 		}
 	}
@@ -379,7 +379,7 @@ static boxed_xval_t rxval_evaluator_from_oosvar_keylist_func(void* pvstate, vari
 
 	if (all_non_null_or_error) {
 		int lookup_error = FALSE;
-		mlhmmv_value_t* pxval = mlhmmv_get_value_from_level(pvars->poosvars->proot_level,
+		mlhmmv_value_t* pxval = mlhmmv_level_look_up_and_reference_xvalue(pvars->poosvars->proot_level,
 			pmvkeys, &lookup_error);
 		sllmv_free(pmvkeys);
 		if (pxval != NULL) {
@@ -461,16 +461,16 @@ static boxed_xval_t rxval_evaluator_from_full_srec_func(void* pvstate, variables
 	boxed_xval.xval = mlhmmv_value_alloc_empty_map();
 
 	for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {
-		// mlhmmv_put_terminal_from_level will copy mv keys and values so we needn't (and shouldn't)
+		// mlhmmv_level_put_terminal will copy mv keys and values so we needn't (and shouldn't)
 		// duplicate them here.
 		mv_t k = mv_from_string(pe->key, NO_FREE);
 		sllmve_t e = { .value = k, .free_flags = 0, .pnext = NULL };
 		mv_t* pomv = lhmsmv_get(pvars->ptyped_overlay, pe->key);
 		if (pomv != NULL) {
-			mlhmmv_put_terminal_from_level(boxed_xval.xval.pnext_level, &e, pomv); // xxx make a simpler 1-level API call
+			mlhmmv_level_put_terminal(boxed_xval.xval.pnext_level, &e, pomv); // xxx make a simpler 1-level API call
 		} else {
-			mv_t v = mv_from_string(pe->value, NO_FREE); // mlhmmv_put_terminal_from_level will copy
-			mlhmmv_put_terminal_from_level(boxed_xval.xval.pnext_level, &e, &v);
+			mv_t v = mv_from_string(pe->value, NO_FREE); // mlhmmv_level_put_terminal will copy
+			mlhmmv_level_put_terminal(boxed_xval.xval.pnext_level, &e, &v);
 		}
 	}
 

@@ -522,14 +522,14 @@ static void handle_oosvar_from_full_srec_assignment(
 			mlhmmv_clear_level(plevel);
 
 			for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {
-				mv_t k = mv_from_string(pe->key, NO_FREE); // mlhmmv_put_terminal_from_level will copy
+				mv_t k = mv_from_string(pe->key, NO_FREE); // mlhmmv_level_put_terminal will copy
 				sllmve_t e = { .value = k, .free_flags = 0, .pnext = NULL };
 				mv_t* pomv = lhmsmv_get(pvars->ptyped_overlay, pe->key);
 				if (pomv != NULL) {
-					mlhmmv_put_terminal_from_level(plevel, &e, pomv);
+					mlhmmv_level_put_terminal(plevel, &e, pomv);
 				} else {
-					mv_t v = mv_from_string(pe->value, NO_FREE); // mlhmmv_put_terminal_from_level will copy
-					mlhmmv_put_terminal_from_level(plevel, &e, &v);
+					mv_t v = mv_from_string(pe->value, NO_FREE); // mlhmmv_level_put_terminal will copy
+					mlhmmv_level_put_terminal(plevel, &e, &v);
 				}
 			}
 
