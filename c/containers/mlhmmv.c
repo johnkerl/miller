@@ -19,6 +19,8 @@
 #include "lib/mlrutil.h"
 #include "containers/mlhmmv.h"
 
+// xxx reorganize to reflect the ordering in the header file. and, maybe split up into separate source files.
+
 // xxx temp static mlhmmv_level_t* mlhmmv_level_alloc();
 static void            mlhmmv_level_init(mlhmmv_level_t *plevel, int length);
 static void            mlhmmv_level_free(mlhmmv_level_t* plevel);
