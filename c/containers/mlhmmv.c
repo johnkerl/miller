@@ -35,8 +35,16 @@
 #define EMPTY                0xce
 
 // ================================================================
-static void json_decimal_print(FILE* ostream, char* s);
+
+// ----------------------------------------------------------------
+static void json_decimal_print       (FILE* ostream, char* s);
 static void json_print_string_escaped(FILE* ostream, char* s);
+
+// ----------------------------------------------------------------
+static void mlhmmv_level_init(mlhmmv_level_t  *plevel, int length);
+static void mlhmmv_level_free(mlhmmv_level_t* plevel);
+
+// ================================================================
 void mlhmmv_print_terminal(mv_t* pmv, int quote_values_always, FILE* ostream) {
 	char* level_value_string = mv_alloc_format_val(pmv);
 	if (quote_values_always) {
@@ -83,16 +91,53 @@ static void json_print_string_escaped(FILE* ostream, char* s) {
 }
 
 // ================================================================
+mlhmmv_xvalue_t mlhmmv_xvalue_alloc_empty_map() {
+	mlhmmv_xvalue_t xval = (mlhmmv_xvalue_t) {
+		.is_terminal = FALSE,
+		.pnext_level = mlhmmv_level_alloc()
+	};
+	return xval;
+}
+
+mlhmmv_xvalue_t mlhmmv_xvalue_copy(mlhmmv_xvalue_t* pvalue) {
+	if (pvalue->is_terminal) {
+		return (mlhmmv_xvalue_t) {
+			.is_terminal = TRUE,
+			.terminal_mlrval = mv_copy(&pvalue->terminal_mlrval),
+			.pnext_level = NULL,
+		};
+
+	} else {
+		mlhmmv_level_t* psrc_level = pvalue->pnext_level;
+		mlhmmv_level_t* pdst_level = mlr_malloc_or_die(sizeof(mlhmmv_level_t));
+
+		mlhmmv_level_init(pdst_level, MLHMMV_INITIAL_ARRAY_LENGTH);
+
+		for (
+			mlhmmv_level_entry_t* psubentry = psrc_level->phead;
+			psubentry != NULL;
+			psubentry = psubentry->pnext)
+		{
+			sllmve_t e = { .value = psubentry->level_key, .free_flags = 0, .pnext = NULL };
+			mlhmmv_xvalue_t next_value = mlhmmv_xvalue_copy(&psubentry->level_value);
+			mlhmmv_level_put_xvalue(pdst_level, &e, &next_value);
+		}
+
+		return (mlhmmv_xvalue_t) {
+			.is_terminal = FALSE,
+			.terminal_mlrval = mv_absent(),
+			.pnext_level = pdst_level,
+		};
+	}
+}
+
+// ================================================================
 // ================================================================
 // xxx to be reorganized from here on down
 // ================================================================
 // ================================================================
 
 // xxx reorganize to reflect the ordering in the header file. and, maybe split up into separate source files.
-
-// xxx temp static mlhmmv_level_t* mlhmmv_level_alloc();
-static void            mlhmmv_level_init(mlhmmv_level_t *plevel, int length);
-static void            mlhmmv_level_free(mlhmmv_level_t* plevel);
 
 static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pideal_index);
 
@@ -139,14 +184,6 @@ mlhmmv_root_t* mlhmmv_root_alloc() {
 	mlhmmv_root_t* pmap = mlr_malloc_or_die(sizeof(mlhmmv_root_t));
 	pmap->proot_level = mlhmmv_level_alloc();
 	return pmap;
-}
-
-mlhmmv_xvalue_t mlhmmv_xvalue_alloc_empty_map() {
-	mlhmmv_xvalue_t xval = (mlhmmv_xvalue_t) {
-		.is_terminal = FALSE,
-		.pnext_level = mlhmmv_level_alloc()
-	};
-	return xval;
 }
 
 // xxx temp expose static
@@ -731,38 +768,6 @@ void mlhmmv_root_copy_submap(mlhmmv_root_t* pmap, sllmv_t* ptokeys, sllmv_t* pfr
 	if (pfromentry != NULL) {
 		mlhmmv_xvalue_t submap = mlhmmv_xvalue_copy(&pfromentry->level_value);
 		mlhmmv_put_value_at_level(pmap, ptokeys, &submap);
-	}
-}
-
-mlhmmv_xvalue_t mlhmmv_xvalue_copy(mlhmmv_xvalue_t* pvalue) { // xxx rename
-	if (pvalue->is_terminal) {
-		return (mlhmmv_xvalue_t) {
-			.is_terminal = TRUE,
-			.terminal_mlrval = mv_copy(&pvalue->terminal_mlrval),
-			.pnext_level = NULL,
-		};
-
-	} else {
-		mlhmmv_level_t* psrc_level = pvalue->pnext_level;
-		mlhmmv_level_t* pdst_level = mlr_malloc_or_die(sizeof(mlhmmv_level_t));
-
-		mlhmmv_level_init(pdst_level, MLHMMV_INITIAL_ARRAY_LENGTH);
-
-		for (
-			mlhmmv_level_entry_t* psubentry = psrc_level->phead;
-			psubentry != NULL;
-			psubentry = psubentry->pnext)
-		{
-			sllmve_t e = { .value = psubentry->level_key, .free_flags = 0, .pnext = NULL };
-			mlhmmv_xvalue_t next_value = mlhmmv_xvalue_copy(&psubentry->level_value);
-			mlhmmv_level_put_xvalue(pdst_level, &e, &next_value);
-		}
-
-		return (mlhmmv_xvalue_t) {
-			.is_terminal = FALSE,
-			.terminal_mlrval = mv_absent(),
-			.pnext_level = pdst_level,
-		};
 	}
 }
 
