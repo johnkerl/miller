@@ -253,7 +253,7 @@ static void handle_for_oosvar_aux(
 			// Bind the v-name to the terminal mlrval:
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 			local_stack_frame_define_scalar(pframe, pstate->v_variable_name, pstate->v_frame_relative_index,
-				pstate->v_type_mask, mv_copy(&submap.mlrval));
+				pstate->v_type_mask, mv_copy(&submap.terminal_mlrval));
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
 		}
@@ -605,7 +605,7 @@ static void handle_for_local_map_aux(
 			// Bind the v-name to the terminal mlrval:
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 			local_stack_frame_define_scalar(pframe, pstate->v_variable_name, pstate->v_frame_relative_index,
-				pstate->v_type_mask, mv_copy(&submap.mlrval));
+				pstate->v_type_mask, mv_copy(&submap.terminal_mlrval));
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
 		}
@@ -949,7 +949,7 @@ static void handle_for_map_literal_aux(
 			// Bind the v-name to the terminal mlrval:
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 			local_stack_frame_define_scalar(pframe, pstate->v_variable_name, pstate->v_frame_relative_index,
-				pstate->v_type_mask, mv_copy(&psubmap->mlrval));
+				pstate->v_type_mask, mv_copy(&psubmap->terminal_mlrval));
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
 		}

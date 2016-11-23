@@ -453,7 +453,7 @@ static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvar
 		pstate->pdefsite_state->pvstate, pstate->arity, pstate->args, pvars);
 
 	if (retval.is_terminal) {
-		return retval.mlrval;
+		return retval.terminal_mlrval;
 	} else {
 		return mv_absent();
 	}

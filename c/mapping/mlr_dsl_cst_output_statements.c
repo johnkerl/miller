@@ -1397,7 +1397,7 @@ static void handle_dump(
 	boxed_xval_t boxed_xval = ptarget_xevaluator->pprocess_func(ptarget_xevaluator->pvstate, pvars);
 
 	if (boxed_xval.xval.is_terminal) {
-		mlhmmv_print_terminal(&boxed_xval.xval.mlrval, FALSE, pstate->stdfp);
+		mlhmmv_print_terminal(&boxed_xval.xval.terminal_mlrval, FALSE, pstate->stdfp);
 		fprintf(pstate->stdfp, "\n");
 	} else {
 		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE, FALSE, "", pstate->stdfp); // xxx mk simpler call w/ dfl args
@@ -1426,7 +1426,7 @@ static void handle_dump_to_file(
 	boxed_xval_t boxed_xval = ptarget_xevaluator->pprocess_func(ptarget_xevaluator->pvstate, pvars);
 
 	if (boxed_xval.xval.is_terminal) {
-		mlhmmv_print_terminal(&boxed_xval.xval.mlrval, FALSE, outfp);
+		mlhmmv_print_terminal(&boxed_xval.xval.terminal_mlrval, FALSE, outfp);
 		fprintf(outfp, "\n");
 	} else if (boxed_xval.xval.pnext_level != NULL) {
 		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE, FALSE, "", outfp); // xxx mk simpler call w/ dfl args

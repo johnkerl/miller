@@ -33,7 +33,7 @@ struct _mlhmmv_level_t; // forward reference
 typedef struct _mlhmmv_value_t {
 	int is_terminal;
 	// xxx needs absent/null initters respectively in the .c file
-	mv_t mlrval; // xxx rename to terminal_mlrval
+	mv_t terminal_mlrval;
 	struct _mlhmmv_level_t* pnext_level;
 } mlhmmv_value_t;
 
@@ -54,7 +54,7 @@ typedef unsigned char mlhmmv_level_entry_state_t;
 //
 // This is a hot path for non-map local-variable assignments.
 static inline mlhmmv_value_t mlhmmv_value_transfer_terminal(mv_t val) { // xxx temp?
-	return (mlhmmv_value_t) {.is_terminal = TRUE, .mlrval = val, .pnext_level = NULL};
+	return (mlhmmv_value_t) {.is_terminal = TRUE, .terminal_mlrval = val, .pnext_level = NULL};
 }
 
 // ----------------------------------------------------------------
