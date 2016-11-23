@@ -267,7 +267,7 @@ static boxed_xval_t rxval_evaluator_from_nonindexed_local_variable_func(void* pv
 		pframe, pstate->vardef_frame_relative_index, NULL);
 	if (pxval == NULL) {
 		return (boxed_xval_t) {
-			.xval = mlhmmv_value_transfer_terminal(mv_absent()),
+			.xval = mlhmmv_value_wrap_terminal(mv_absent()),
 			.is_ephemeral = FALSE,
 		};
 	} else {
@@ -319,7 +319,7 @@ static boxed_xval_t rxval_evaluator_from_indexed_local_variable_func(void* pvsta
 		sllmv_free(pmvkeys);
 		if (pxval == NULL) {
 			return (boxed_xval_t) {
-				.xval = mlhmmv_value_transfer_terminal(mv_absent()),
+				.xval = mlhmmv_value_wrap_terminal(mv_absent()),
 				.is_ephemeral = FALSE,
 			};
 		} else {
@@ -331,7 +331,7 @@ static boxed_xval_t rxval_evaluator_from_indexed_local_variable_func(void* pvsta
 	} else {
 		sllmv_free(pmvkeys);
 		return (boxed_xval_t) {
-			.xval = mlhmmv_value_transfer_terminal(mv_absent()),
+			.xval = mlhmmv_value_wrap_terminal(mv_absent()),
 			.is_ephemeral = TRUE,
 		};
 	}
@@ -389,14 +389,14 @@ static boxed_xval_t rxval_evaluator_from_oosvar_keylist_func(void* pvstate, vari
 			};
 		} else {
 			return (boxed_xval_t) {
-				.xval = mlhmmv_value_transfer_terminal(mv_absent()),
+				.xval = mlhmmv_value_wrap_terminal(mv_absent()),
 				.is_ephemeral = TRUE,
 			};
 		}
 	} else {
 		sllmv_free(pmvkeys);
 		return (boxed_xval_t) {
-			.xval = mlhmmv_value_transfer_terminal(mv_absent()),
+			.xval = mlhmmv_value_wrap_terminal(mv_absent()),
 			.is_ephemeral = TRUE,
 		};
 	}
@@ -501,7 +501,7 @@ static boxed_xval_t rxval_evaluator_wrapping_rval_func(void* pvstate, variables_
 	rval_evaluator_t* prval_evaluator = pstate->prval_evaluator;
 	mv_t val = prval_evaluator->pprocess_func(prval_evaluator->pvstate, pvars);
 	return (boxed_xval_t) {
-		.xval = mlhmmv_value_transfer_terminal(val),
+		.xval = mlhmmv_value_wrap_terminal(val),
 		.is_ephemeral = FALSE, // verify reference semantics for RHS evaluators!
 	};
 }

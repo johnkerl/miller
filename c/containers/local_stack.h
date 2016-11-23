@@ -128,7 +128,7 @@ static inline void local_stack_frame_define_scalar(local_stack_frame_t* pframe, 
 	if (mv_is_absent(&val)) {
 		mv_free(&val); // xxx confusing ownership semantics
 	} else {
-		pentry->value = mlhmmv_value_transfer_terminal(val); // xxx deep-copy?
+		pentry->value = mlhmmv_value_wrap_terminal(val); // xxx deep-copy?
 	}
 }
 
@@ -177,7 +177,7 @@ static inline void local_stack_frame_assign_scalar_nonindexed(local_stack_frame_
 
 	// xxx temp -- make a single method
 	mv_free(&pentry->value.terminal_mlrval); // xxx temp -- make value-free
-	pentry->value = mlhmmv_value_transfer_terminal(val); // xxx deep-copy?
+	pentry->value = mlhmmv_value_wrap_terminal(val); // xxx deep-copy?
 }
 
 static inline void local_stack_frame_assign_extended_nonindexed(local_stack_frame_t* pframe, // xxx rename

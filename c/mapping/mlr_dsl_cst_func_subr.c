@@ -130,7 +130,7 @@ void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate) {
 static mlhmmv_value_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, variables_t* pvars) {
 	cst_udf_state_t* pstate = pvstate;
 	cst_top_level_statement_block_t* ptop_level_block = pstate->ptop_level_block;
-	mlhmmv_value_t retval = mlhmmv_value_transfer_terminal(mv_absent());
+	mlhmmv_value_t retval = mlhmmv_value_wrap_terminal(mv_absent());
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Push stack and bind parameters to arguments
@@ -162,7 +162,7 @@ static mlhmmv_value_t cst_udf_process_callback(void* pvstate, int arity, mv_t* a
 			}
 			if (pvars->return_state.returned) {
 				retval = pvars->return_state.retval; // xxx mapvar
-				pvars->return_state.retval = mlhmmv_value_transfer_terminal(mv_absent());
+				pvars->return_state.retval = mlhmmv_value_wrap_terminal(mv_absent());
 				pvars->return_state.returned = FALSE;
 				break;
 			}
@@ -177,7 +177,7 @@ static mlhmmv_value_t cst_udf_process_callback(void* pvstate, int arity, mv_t* a
 			}
 			if (pvars->return_state.returned) {
 				retval = pvars->return_state.retval; // xxx mapvar
-				pvars->return_state.retval = mlhmmv_value_transfer_terminal(mv_absent());
+				pvars->return_state.retval = mlhmmv_value_wrap_terminal(mv_absent());
 				pvars->return_state.returned = FALSE;
 				break;
 			}
