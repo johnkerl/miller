@@ -35,8 +35,6 @@
 #define EMPTY                0xce
 
 // ================================================================
-
-// ----------------------------------------------------------------
 static void json_decimal_print       (FILE* ostream, char* s);
 static void json_print_string_escaped(FILE* ostream, char* s);
 
@@ -128,6 +126,14 @@ mlhmmv_xvalue_t mlhmmv_xvalue_copy(mlhmmv_xvalue_t* pvalue) {
 			.terminal_mlrval = mv_absent(),
 			.pnext_level = pdst_level,
 		};
+	}
+}
+
+void mlhmmv_xvalue_free(mlhmmv_xvalue_t submap) {
+	if (submap.is_terminal) {
+		mv_free(&submap.terminal_mlrval);
+	} else if (submap.pnext_level != NULL) {
+		mlhmmv_level_free(submap.pnext_level);
 	}
 }
 
@@ -791,14 +797,6 @@ mlhmmv_xvalue_t mlhmmv_root_copy_xvalue(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
 				.pnext_level = NULL,
 			};
 		}
-	}
-}
-
-void mlhmmv_xvalue_free(mlhmmv_xvalue_t submap) {
-	if (submap.is_terminal) {
-		mv_free(&submap.terminal_mlrval);
-	} else if (submap.pnext_level != NULL) {
-		mlhmmv_level_free(submap.pnext_level);
 	}
 }
 
