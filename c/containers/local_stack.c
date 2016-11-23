@@ -230,7 +230,7 @@ void local_stack_frame_assign_extended_indexed(local_stack_frame_t* pframe, // x
 		pmvalue->is_terminal = FALSE;
 		pmvalue->pnext_level = mlhmmv_level_alloc();
 	}
-	mlhmmv_put_value_at_level_aux(pmvalue->pnext_level, pmvkeys->phead, &new_value);
+	mlhmmv_level_put_value(pmvalue->pnext_level, pmvkeys->phead, &new_value);
 
 	LOCAL_STACK_TRACE(printf("VALUE IS:\n"));
 	LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->pnext_level, 0, TRUE, TRUE, "", stdout));

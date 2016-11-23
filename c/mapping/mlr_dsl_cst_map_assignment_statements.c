@@ -192,7 +192,7 @@ static void handle_local_variable_definition_from_xval(
 	} else {
 		local_stack_frame_define_extended(pframe,
 			pstate->lhs_variable_name, pstate->lhs_frame_relative_index, pstate->lhs_type_mask,
-			mlhmmv_copy_aux(&boxed_xval.xval));
+			mlhmmv_value_copy(&boxed_xval.xval));
 	}
 }
 
@@ -271,7 +271,7 @@ static void handle_nonindexed_local_variable_assignment_from_xval(
 				boxed_xval.xval);
 		} else {
 			local_stack_frame_assign_extended_nonindexed(pframe, pstate->lhs_frame_relative_index,
-				mlhmmv_copy_aux(&boxed_xval.xval));
+				mlhmmv_value_copy(&boxed_xval.xval));
 		}
 	}
 }
@@ -361,7 +361,7 @@ static void handle_indexed_local_variable_assignment_from_xval(
 					pmvkeys, boxed_xval.xval);
 			} else {
 				local_stack_frame_assign_extended_indexed(pframe, pstate->lhs_frame_relative_index,
-					pmvkeys, mlhmmv_copy_aux(&boxed_xval.xval));
+					pmvkeys, mlhmmv_value_copy(&boxed_xval.xval));
 			}
 		}
 
@@ -446,10 +446,10 @@ static void handle_oosvar_assignment_from_xval(
 
 		if (!boxed_xval.xval.is_terminal || mv_is_present(&boxed_xval.xval.terminal_mlrval)) {
 			if (boxed_xval.is_ephemeral) {
-				mlhmmv_put_value_at_level_aux(pvars->poosvars->proot_level, plhskeys->phead, &boxed_xval.xval);
+				mlhmmv_level_put_value(pvars->poosvars->proot_level, plhskeys->phead, &boxed_xval.xval);
 			} else {
-				mlhmmv_value_t copy_xval = mlhmmv_copy_aux(&boxed_xval.xval);
-				mlhmmv_put_value_at_level_aux(pvars->poosvars->proot_level, plhskeys->phead, &copy_xval);
+				mlhmmv_value_t copy_xval = mlhmmv_value_copy(&boxed_xval.xval);
+				mlhmmv_level_put_value(pvars->poosvars->proot_level, plhskeys->phead, &copy_xval);
 			}
 		}
 	}

@@ -189,10 +189,10 @@ static void rxval_evaluator_from_map_literal_aux(
 			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
 			boxed_xval_t boxed_xval = pkvpair->pxval_evaluator->pprocess_func(pkvpair->pxval_evaluator->pvstate, pvars);
 			if (!boxed_xval.xval.is_terminal && !boxed_xval.is_ephemeral) {
-				mlhmmv_value_t copy_xval = mlhmmv_copy_aux(&boxed_xval.xval);
-				mlhmmv_put_value_at_level_aux(plevel, &e, &copy_xval);
+				mlhmmv_value_t copy_xval = mlhmmv_value_copy(&boxed_xval.xval);
+				mlhmmv_level_put_value(plevel, &e, &copy_xval);
 			} else {
-				mlhmmv_put_value_at_level_aux(plevel, &e, &boxed_xval.xval);
+				mlhmmv_level_put_value(plevel, &e, &boxed_xval.xval);
 			}
 		} else {
 			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };

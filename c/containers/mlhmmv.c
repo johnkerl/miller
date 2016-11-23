@@ -43,7 +43,7 @@ static void mlhmmv_level_put_value_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* 
 	mlhmmv_value_t* pvalue);
 static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel);
 
-// xxx needs to be public -- rename -- static mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue);
+// xxx needs to be public -- rename -- static mlhmmv_value_t mlhmmv_value_copy(mlhmmv_value_t* pvalue);
 static sllv_t* mlhmmv_copy_keys_from_submap_aux(mlhmmv_value_t* pvalue);
 
 static void mlhmmv_to_lrecs_aux_across_records(mlhmmv_level_t* plevel, char* prefix, sllmve_t* prestnames,
@@ -675,12 +675,12 @@ void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys) {
 
 	mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(pmap->proot_level, pfromkeys->phead, &error);
 	if (pfromentry != NULL) {
-		mlhmmv_value_t submap = mlhmmv_copy_aux(&pfromentry->level_value);
+		mlhmmv_value_t submap = mlhmmv_value_copy(&pfromentry->level_value);
 		mlhmmv_put_value_at_level(pmap, ptokeys, &submap);
 	}
 }
 
-mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue) { // xxx rename
+mlhmmv_value_t mlhmmv_value_copy(mlhmmv_value_t* pvalue) { // xxx rename
 	if (pvalue->is_terminal) {
 		return (mlhmmv_value_t) {
 			.is_terminal = TRUE,
@@ -700,8 +700,8 @@ mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue) { // xxx rename
 			psubentry = psubentry->pnext)
 		{
 			sllmve_t e = { .value = psubentry->level_key, .free_flags = 0, .pnext = NULL };
-			mlhmmv_value_t next_value = mlhmmv_copy_aux(&psubentry->level_value);
-			mlhmmv_put_value_at_level_aux(pdst_level, &e, &next_value);
+			mlhmmv_value_t next_value = mlhmmv_value_copy(&psubentry->level_value);
+			mlhmmv_level_put_value(pdst_level, &e, &next_value);
 		}
 
 		return (mlhmmv_value_t) {
@@ -720,11 +720,11 @@ mlhmmv_value_t mlhmmv_copy_submap_from_root(mlhmmv_t* pmap, sllmv_t* pmvkeys) {
 			.is_terminal = FALSE,
 			.pnext_level = pmap->proot_level,
 		};
-		return mlhmmv_copy_aux(&root_value);
+		return mlhmmv_value_copy(&root_value);
 	} else {
 		mlhmmv_level_entry_t* pfromentry = mlhmmv_get_entry_at_level(pmap->proot_level, pmvkeys->phead, &error);
 		if (pfromentry != NULL) {
-			return mlhmmv_copy_aux(&pfromentry->level_value);
+			return mlhmmv_value_copy(&pfromentry->level_value);
 		} else {
 			return (mlhmmv_value_t) {
 				.is_terminal = FALSE,
@@ -796,10 +796,10 @@ sllv_t* mlhmmv_copy_keys_from_submap_xxx_rename(mlhmmv_value_t* pmvalue, sllmv_t
 
 // ----------------------------------------------------------------
 static void mlhmmv_put_value_at_level(mlhmmv_t* pmap, sllmv_t* pmvkeys, mlhmmv_value_t* pvalue) {
-	mlhmmv_put_value_at_level_aux(pmap->proot_level, pmvkeys->phead, pvalue);
+	mlhmmv_level_put_value(pmap->proot_level, pmvkeys->phead, pvalue);
 }
 
-void mlhmmv_put_value_at_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue) {
+void mlhmmv_level_put_value(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue) {
 	if ((plevel->num_occupied + plevel->num_freed) >= (plevel->array_length * LOAD_FACTOR))
 		mlhmmv_level_enlarge(plevel);
 	mlhmmv_level_put_value_no_enlarge(plevel, prest_keys, pvalue);
@@ -840,7 +840,7 @@ static void mlhmmv_level_put_value_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* 
 		plevel->num_occupied++;
 		if (prest_keys->pnext != NULL) {
 			// RECURSE
-			mlhmmv_put_value_at_level_aux(pentry->level_value.pnext_level, prest_keys->pnext, pvalue);
+			mlhmmv_level_put_value(pentry->level_value.pnext_level, prest_keys->pnext, pvalue);
 		}
 
 	} else if (plevel->states[index] == OCCUPIED) { // Existing key found in chain
@@ -859,7 +859,7 @@ static void mlhmmv_level_put_value_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* 
 				pentry->level_value.pnext_level = mlhmmv_level_alloc();
 			}
 			// RECURSE
-			mlhmmv_put_value_at_level_aux(pentry->level_value.pnext_level, prest_keys->pnext, pvalue);
+			mlhmmv_level_put_value(pentry->level_value.pnext_level, prest_keys->pnext, pvalue);
 		}
 
 	} else {

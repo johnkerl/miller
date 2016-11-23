@@ -255,7 +255,7 @@ static void handle_return_value_from_indexed_local_variable(
 		if (pmvalue == NULL) {
 			pvars->return_state.retval = mlhmmv_value_transfer_terminal(mv_absent());
 		} else {
-			pvars->return_state.retval = mlhmmv_copy_aux(pmvalue);
+			pvars->return_state.retval = mlhmmv_value_copy(pmvalue);
 		}
 
 	} else {

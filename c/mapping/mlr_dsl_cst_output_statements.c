@@ -879,7 +879,7 @@ static void record_emitter_from_local_variable(
 				sllmve_t e = { .value = name, .free_flags = 0, .pnext = NULL };
 
 				mlhmmv_level_t* proot_level = mlhmmv_level_alloc();
-				mlhmmv_put_value_at_level_aux(proot_level, &e, pmval);
+				mlhmmv_level_put_value(proot_level, &e, pmval);
 
 				mlhmmv_t map;
 				map.proot_level = proot_level;
@@ -925,7 +925,7 @@ static void record_emitter_from_map_literal(
 			sllmve_t e = { .value = name, .free_flags = 0, .pnext = NULL };
 
 			mlhmmv_level_t* proot_level = mlhmmv_level_alloc();
-			mlhmmv_put_value_at_level_aux(proot_level, &e, &boxed_xval.xval);
+			mlhmmv_level_put_value(proot_level, &e, &boxed_xval.xval);
 
 			mlhmmv_t map;
 			map.proot_level = proot_level;

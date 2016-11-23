@@ -32,11 +32,15 @@ struct _mlhmmv_level_t; // forward reference
 // ----------------------------------------------------------------
 typedef struct _mlhmmv_value_t {
 	int is_terminal;
-	// xxx needs absent/null initters respectively in the .c file
+	// audit for absent/null initters respectively in the .c file
 	mv_t terminal_mlrval;
 	struct _mlhmmv_level_t* pnext_level;
 } mlhmmv_value_t;
 
+mlhmmv_value_t mlhmmv_value_copy(mlhmmv_value_t* pvalue); // xxx rename
+void mlhmmv_free_submap(mlhmmv_value_t submap);
+
+// ----------------------------------------------------------------
 typedef struct _mlhmmv_level_entry_t {
 	int     ideal_index;
 	mv_t    level_key;
@@ -53,7 +57,7 @@ typedef unsigned char mlhmmv_level_entry_state_t;
 // necessary.
 //
 // This is a hot path for non-map local-variable assignments.
-static inline mlhmmv_value_t mlhmmv_value_transfer_terminal(mv_t val) { // xxx temp?
+static inline mlhmmv_value_t mlhmmv_value_transfer_terminal(mv_t val) {
 	return (mlhmmv_value_t) {.is_terminal = TRUE, .terminal_mlrval = val, .pnext_level = NULL};
 }
 
@@ -68,8 +72,10 @@ typedef struct _mlhmmv_level_t {
 	mlhmmv_level_entry_t*       ptail;
 } mlhmmv_level_t;
 
-// xxx temp expose
 mlhmmv_level_t* mlhmmv_level_alloc();
+// xxx need to expose level-free
+
+void mlhmmv_level_put_value(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue);
 
 // ----------------------------------------------------------------
 typedef struct _mlhmmv_t {
@@ -82,7 +88,6 @@ mlhmmv_value_t mlhmmv_value_alloc_empty_map();
 void mlhmmv_free(mlhmmv_t* pmap);
 
 void mlhmmv_put_terminal(mlhmmv_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
-void mlhmmv_put_value_at_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue); // xxx rename
 
 // If the return value is non-null, error will be MLHMMV_ERROR_NONE.  If the
 // return value is null, the error will be MLHMMV_ERROR_KEYLIST_TOO_DEEP or
@@ -115,8 +120,6 @@ void mlhmmv_copy(mlhmmv_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys);
 // (since the iteration may modify it). If the keys don't index a submap, then the return
 // value has is_terminal = TRUE and pnext_level = NULL.
 mlhmmv_value_t mlhmmv_copy_submap_from_root(mlhmmv_t* pmap, sllmv_t* pmvkeys);
-mlhmmv_value_t mlhmmv_copy_aux(mlhmmv_value_t* pvalue); // xxx rename
-void mlhmmv_free_submap(mlhmmv_value_t submap);
 
 // xxx comment context
 sllv_t* mlhmmv_copy_keys_from_submap(mlhmmv_t* pmap, sllmv_t* pmvkeys);

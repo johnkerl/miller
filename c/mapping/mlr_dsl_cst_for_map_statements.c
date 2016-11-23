@@ -527,7 +527,7 @@ static void handle_for_local_map(
 			pstate->target_frame_relative_index, ptarget_keylist);
 
 		if (psubmap != NULL) {
-			mlhmmv_value_t submap = mlhmmv_copy_aux(psubmap);
+			mlhmmv_value_t submap = mlhmmv_value_copy(psubmap);
 
 			local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 			loop_stack_push(pvars->ploop_stack);
