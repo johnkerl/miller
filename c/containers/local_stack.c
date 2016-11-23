@@ -105,10 +105,10 @@ mv_t local_stack_frame_get_scalar_from_indexed(local_stack_frame_t* pframe, // x
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
 
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
-	mlhmmv_value_t* pbase_xval = &pentry->value;
+	mlhmmv_xvalue_t* pbase_xval = &pentry->value;
 
 #ifdef LOCAL_STACK_TRACE_ENABLE
-	// xxx needs an mlhmmv_value_print
+	// xxx needs an mlhmmv_xvalue_print
 	if (pbase_xval == NULL) {
 		printf("VALUE IS NULL\n");
 	} else if (pbase_xval->is_terminal) {
@@ -127,7 +127,7 @@ mv_t local_stack_frame_get_scalar_from_indexed(local_stack_frame_t* pframe, // x
 	// xxx this is a mess; clean it up.
 	int error = 0;
 	// Maybe null
-	mlhmmv_value_t* pxval;
+	mlhmmv_xvalue_t* pxval;
 	if (pmvkeys == NULL || pmvkeys->length == 0) {
 		pxval = pbase_xval;
 	} else {
@@ -147,17 +147,17 @@ mv_t local_stack_frame_get_scalar_from_indexed(local_stack_frame_t* pframe, // x
 }
 
 // ----------------------------------------------------------------
-mlhmmv_value_t* local_stack_frame_get_extended_from_indexed(local_stack_frame_t* pframe, // xxx rename w/ 'reference' in name
+mlhmmv_xvalue_t* local_stack_frame_get_extended_from_indexed(local_stack_frame_t* pframe, // xxx rename w/ 'reference' in name
 	int vardef_frame_relative_index, sllmv_t* pmvkeys)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
 
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
-	mlhmmv_value_t* pmvalue = &pentry->value;
+	mlhmmv_xvalue_t* pmvalue = &pentry->value;
 
 #ifdef LOCAL_STACK_TRACE_ENABLE
-	// xxx needs an mlhmmv_value_print
+	// xxx needs an mlhmmv_xvalue_print
 	if (pmvalue == NULL) {
 		printf("VALUE IS NULL\n");
 	} else if (pmvalue->is_terminal) {
@@ -196,7 +196,7 @@ void local_stack_frame_assign_scalar_indexed(local_stack_frame_t* pframe,
 		local_stack_frame_throw_type_mismatch(pentry, &terminal_value);
 	}
 
-	mlhmmv_value_t* pmvalue = &pentry->value;
+	mlhmmv_xvalue_t* pmvalue = &pentry->value;
 
 	// xxx encapsulate
 	if (pmvalue->is_terminal) {
@@ -212,7 +212,7 @@ void local_stack_frame_assign_scalar_indexed(local_stack_frame_t* pframe,
 
 void local_stack_frame_assign_extended_indexed(local_stack_frame_t* pframe, // xxx rename
 	int vardef_frame_relative_index, sllmv_t* pmvkeys,
-	mlhmmv_value_t new_value) // xxx by ptr
+	mlhmmv_xvalue_t new_value) // xxx by ptr
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "ASSIGN", TRUE, vardef_frame_relative_index);
@@ -222,7 +222,7 @@ void local_stack_frame_assign_extended_indexed(local_stack_frame_t* pframe, // x
 		local_stack_frame_throw_type_xmismatch(pentry, &new_value);
 	}
 
-	mlhmmv_value_t* pmvalue = &pentry->value;
+	mlhmmv_xvalue_t* pmvalue = &pentry->value;
 
 	// xxx encapsulate
 	if (pmvalue->is_terminal) {
@@ -272,7 +272,7 @@ void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv
 	exit(1);
 }
 
-void local_stack_frame_throw_type_xmismatch(local_stack_frame_entry_t* pentry, mlhmmv_value_t* pxval) {
+void local_stack_frame_throw_type_xmismatch(local_stack_frame_entry_t* pentry, mlhmmv_xvalue_t* pxval) {
 	MLR_INTERNAL_CODING_ERROR_IF(pentry->name == NULL);
 	char* sval = mv_alloc_format_val_quoting_strings(&pxval->terminal_mlrval); // xxx temp
 	fprintf(stderr, "%s: %s type assertion for variable %s unmet by value %s with type %s.\n",

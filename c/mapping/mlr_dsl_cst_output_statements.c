@@ -869,7 +869,7 @@ static void record_emitter_from_local_variable(
 		if (names_all_non_null_or_error) {
 
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-			mlhmmv_value_t* pmval = local_stack_frame_get_extended_from_indexed(pframe,
+			mlhmmv_xvalue_t* pmval = local_stack_frame_get_extended_from_indexed(pframe,
 				pstate->localvar_frame_relative_index, NULL);
 			if (pmval != NULL) {
 
@@ -938,7 +938,7 @@ static void record_emitter_from_map_literal(
 	}
 
 	if (boxed_xval.is_ephemeral) {
-		mlhmmv_value_free(boxed_xval.xval);
+		mlhmmv_xvalue_free(boxed_xval.xval);
 	}
 
 	sllmv_free(pmvkeys);
@@ -1277,7 +1277,7 @@ static void handle_emit_lashed_common(
 		boxed_xval_t* pboxed_xvals = mlr_malloc_or_die(
 			pstate->num_emit_lashed_items * sizeof(boxed_xval_t));
 		// xxx comment
-		mlhmmv_value_t** ptop_values = mlr_malloc_or_die(
+		mlhmmv_xvalue_t** ptop_values = mlr_malloc_or_die(
 			pstate->num_emit_lashed_items * sizeof(mlhmmv_level_entry_t*));
 		for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
 			emit_lashed_item_t* pitem = pstate->ppitems[i];
@@ -1291,7 +1291,7 @@ static void handle_emit_lashed_common(
 
 		for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
 			if (pboxed_xvals[i].is_ephemeral) {
-				mlhmmv_value_free(pboxed_xvals[i].xval);
+				mlhmmv_xvalue_free(pboxed_xvals[i].xval);
 			}
 		}
 
@@ -1404,7 +1404,7 @@ static void handle_dump(
 	}
 
 	if (!boxed_xval.xval.is_terminal && boxed_xval.is_ephemeral) {
-		mlhmmv_value_free(boxed_xval.xval);
+		mlhmmv_xvalue_free(boxed_xval.xval);
 	}
 }
 
@@ -1440,6 +1440,6 @@ static void handle_dump_to_file(
 	mv_free(&filename_mv);
 
 	if (!boxed_xval.xval.is_terminal && boxed_xval.is_ephemeral) {
-		mlhmmv_value_free(boxed_xval.xval);
+		mlhmmv_xvalue_free(boxed_xval.xval);
 	}
 }

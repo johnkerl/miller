@@ -88,7 +88,7 @@ static void handle_full_srec_assignment(
 	if (!boxed_xval.xval.is_terminal) {
 		for (mlhmmv_level_entry_t* pe = boxed_xval.xval.pnext_level->phead; pe != NULL; pe = pe->pnext) {
 			mv_t* pkey = &pe->level_key;
-			mlhmmv_value_t* pval = &pe->level_value;
+			mlhmmv_xvalue_t* pval = &pe->level_value;
 
 			if (pval->is_terminal) { // xxx else collapse-down using json separator?
 				char* skey = mv_alloc_format_val(pkey);
@@ -112,10 +112,10 @@ static void handle_full_srec_assignment(
 			}
 		}
 		if (boxed_xval.is_ephemeral) {
-			mlhmmv_value_free(boxed_xval.xval);
+			mlhmmv_xvalue_free(boxed_xval.xval);
 		}
 	} else {
-		mlhmmv_value_free(boxed_xval.xval);
+		mlhmmv_xvalue_free(boxed_xval.xval);
 	}
 }
 
@@ -192,7 +192,7 @@ static void handle_local_variable_definition_from_xval(
 	} else {
 		local_stack_frame_define_extended(pframe,
 			pstate->lhs_variable_name, pstate->lhs_frame_relative_index, pstate->lhs_type_mask,
-			mlhmmv_value_copy(&boxed_xval.xval));
+			mlhmmv_xvalue_copy(&boxed_xval.xval));
 	}
 }
 
@@ -271,7 +271,7 @@ static void handle_nonindexed_local_variable_assignment_from_xval(
 				boxed_xval.xval);
 		} else {
 			local_stack_frame_assign_extended_nonindexed(pframe, pstate->lhs_frame_relative_index,
-				mlhmmv_value_copy(&boxed_xval.xval));
+				mlhmmv_xvalue_copy(&boxed_xval.xval));
 		}
 	}
 }
@@ -361,7 +361,7 @@ static void handle_indexed_local_variable_assignment_from_xval(
 					pmvkeys, boxed_xval.xval);
 			} else {
 				local_stack_frame_assign_extended_indexed(pframe, pstate->lhs_frame_relative_index,
-					pmvkeys, mlhmmv_value_copy(&boxed_xval.xval));
+					pmvkeys, mlhmmv_xvalue_copy(&boxed_xval.xval));
 			}
 		}
 
@@ -448,7 +448,7 @@ static void handle_oosvar_assignment_from_xval(
 			if (boxed_xval.is_ephemeral) {
 				mlhmmv_level_put_xvalue(pvars->poosvars->proot_level, plhskeys->phead, &boxed_xval.xval);
 			} else {
-				mlhmmv_value_t copy_xval = mlhmmv_value_copy(&boxed_xval.xval);
+				mlhmmv_xvalue_t copy_xval = mlhmmv_xvalue_copy(&boxed_xval.xval);
 				mlhmmv_level_put_xvalue(pvars->poosvars->proot_level, plhskeys->phead, &copy_xval);
 			}
 		}

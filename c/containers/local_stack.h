@@ -20,7 +20,7 @@
 // ================================================================
 typedef struct _local_stack_frame_entry_t {
 	char* name; // For type-check error messages. Not strduped; the caller must ensure extent.
-	mlhmmv_value_t value;
+	mlhmmv_xvalue_t value;
 	int   type_mask;
 } local_stack_frame_entry_t;
 
@@ -83,7 +83,7 @@ void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, in
 local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe);
 void local_stack_frame_exit(local_stack_frame_t* pframe);
 void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv_t* pval);
-void local_stack_frame_throw_type_xmismatch(local_stack_frame_entry_t* pentry, mlhmmv_value_t* pxval); // xxx temp
+void local_stack_frame_throw_type_xmismatch(local_stack_frame_entry_t* pentry, mlhmmv_xvalue_t* pxval); // xxx temp
 
 // ----------------------------------------------------------------
 static inline mv_t local_stack_frame_get_scalar_from_nonindexed(local_stack_frame_t* pframe,
@@ -93,7 +93,7 @@ static inline mv_t local_stack_frame_get_scalar_from_nonindexed(local_stack_fram
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
 	// xxx encapsulate
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
-	mlhmmv_value_t* pvalue = &pentry->value;
+	mlhmmv_xvalue_t* pvalue = &pentry->value;
 	if (pvalue != NULL && pvalue->is_terminal) {
 		return pvalue->terminal_mlrval;
 	} else {
@@ -104,7 +104,7 @@ static inline mv_t local_stack_frame_get_scalar_from_nonindexed(local_stack_fram
 mv_t local_stack_frame_get_scalar_from_indexed(local_stack_frame_t* pframe, // xxx rename
 	int vardef_frame_relative_index, sllmv_t* pmvkeys);
 
-mlhmmv_value_t* local_stack_frame_get_extended_from_indexed(local_stack_frame_t* pframe, // xxx rename
+mlhmmv_xvalue_t* local_stack_frame_get_extended_from_indexed(local_stack_frame_t* pframe, // xxx rename
 	int vardef_frame_relative_index, sllmv_t* pmvkeys);
 
 // ----------------------------------------------------------------
@@ -128,12 +128,12 @@ static inline void local_stack_frame_define_scalar(local_stack_frame_t* pframe, 
 	if (mv_is_absent(&val)) {
 		mv_free(&val); // xxx confusing ownership semantics
 	} else {
-		pentry->value = mlhmmv_value_wrap_terminal(val); // xxx deep-copy?
+		pentry->value = mlhmmv_xvalue_wrap_terminal(val); // xxx deep-copy?
 	}
 }
 
 static inline void local_stack_frame_define_extended(local_stack_frame_t* pframe, char* variable_name, // xxx rename
-	int vardef_frame_relative_index, int type_mask, mlhmmv_value_t xval)
+	int vardef_frame_relative_index, int type_mask, mlhmmv_xvalue_t xval)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "ASSIGN", TRUE, vardef_frame_relative_index);
@@ -155,9 +155,9 @@ static inline void local_stack_frame_define_extended(local_stack_frame_t* pframe
 
 	// xxx temp -- make a single method
 	if (xval.is_terminal && mv_is_absent(&xval.terminal_mlrval)) {
-		mlhmmv_value_free(xval); // xxx confusing ownership semantics
+		mlhmmv_xvalue_free(xval); // xxx confusing ownership semantics
 	} else {
-		mlhmmv_value_free(pentry->value); // xxx rename
+		mlhmmv_xvalue_free(pentry->value); // xxx rename
 		pentry->value = xval;
 	}
 }
@@ -177,11 +177,11 @@ static inline void local_stack_frame_assign_scalar_nonindexed(local_stack_frame_
 
 	// xxx temp -- make a single method
 	mv_free(&pentry->value.terminal_mlrval); // xxx temp -- make value-free
-	pentry->value = mlhmmv_value_wrap_terminal(val); // xxx deep-copy?
+	pentry->value = mlhmmv_xvalue_wrap_terminal(val); // xxx deep-copy?
 }
 
 static inline void local_stack_frame_assign_extended_nonindexed(local_stack_frame_t* pframe, // xxx rename
-	int vardef_frame_relative_index, mlhmmv_value_t xval)
+	int vardef_frame_relative_index, mlhmmv_xvalue_t xval)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "ASSIGN", TRUE, vardef_frame_relative_index);
@@ -202,7 +202,7 @@ static inline void local_stack_frame_assign_extended_nonindexed(local_stack_fram
 	mv_free(&pentry->value.terminal_mlrval); // xxx temp -- make value-free
 
 	// xxx temp -- make a single method
-	mlhmmv_value_free(pentry->value); // xxx rename
+	mlhmmv_xvalue_free(pentry->value); // xxx rename
 	pentry->value = xval;
 }
 
@@ -212,7 +212,7 @@ void local_stack_frame_assign_scalar_indexed(local_stack_frame_t* pframe,
 
 void local_stack_frame_assign_extended_indexed(local_stack_frame_t* pframe, // xxx rename
 	int vardef_frame_relative_index, sllmv_t* pmvkeys,
-	mlhmmv_value_t terminal_value);
+	mlhmmv_xvalue_t terminal_value);
 
 // ----------------------------------------------------------------
 // Frames are entered/exited for each curly-braced statement block, including

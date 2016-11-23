@@ -33,22 +33,22 @@ void mlhmmv_print_terminal(mv_t* pmv, int quote_values_always, FILE* ostream);
 // ----------------------------------------------------------------
 struct _mlhmmv_level_t; // forward reference
 
-typedef struct _mlhmmv_value_t {
+// The 'x' is for extended: this can hold a scalar or a map.
+typedef struct _mlhmmv_xvalue_t {
 	int is_terminal;
-	// audit for absent/null initters respectively in the .c file
-	mv_t terminal_mlrval;
+	mv_t terminal_mlrval; // xxx audit for absent/null initters respectively in the .c file
 	struct _mlhmmv_level_t* pnext_level;
-} mlhmmv_value_t;
+} mlhmmv_xvalue_t;
 
-mlhmmv_value_t mlhmmv_value_alloc_empty_map();
-mlhmmv_value_t mlhmmv_value_copy(mlhmmv_value_t* pvalue);
-void           mlhmmv_value_free(mlhmmv_value_t submap);
+mlhmmv_xvalue_t mlhmmv_xvalue_alloc_empty_map();
+mlhmmv_xvalue_t mlhmmv_xvalue_copy(mlhmmv_xvalue_t* pvalue);
+void           mlhmmv_xvalue_free(mlhmmv_xvalue_t submap);
 
 // Used by for-loops over map-valued local variables
-sllv_t* mlhmmv_value_copy_keys(mlhmmv_value_t* pmvalue, sllmv_t* pmvkeys);
+sllv_t* mlhmmv_xvalue_copy_keys(mlhmmv_xvalue_t* pmvalue, sllmv_t* pmvkeys);
 
 void mlhmmv_xvalues_to_lrecs_lashed(
-	mlhmmv_value_t** ptop_values,
+	mlhmmv_xvalue_t** ptop_values,
 	int              num_submaps,
 	mv_t*            pbasenames,
 	sllmv_t*         pnames,
@@ -60,21 +60,21 @@ void mlhmmv_xvalues_to_lrecs_lashed(
 typedef struct _mlhmmv_level_entry_t {
 	int     ideal_index;
 	mv_t    level_key;
-	mlhmmv_value_t level_value; // terminal mlrval, or another hashmap
+	mlhmmv_xvalue_t level_value; // terminal mlrval, or another hashmap
 	struct _mlhmmv_level_entry_t *pprev;
 	struct _mlhmmv_level_entry_t *pnext;
 } mlhmmv_level_entry_t;
 
 typedef unsigned char mlhmmv_level_entry_state_t;
 
-// Store a mlrval into the mlhmmv_value without copying, implicitly transferring
+// Store a mlrval into the mlhmmv_xvalue without copying, implicitly transferring
 // ownership of the mlrval's free_flags. This means the mlrval will be freed
-// when the mlhmmv_value is freed, so the caller should make a copy first if
+// when the mlhmmv_xvalue is freed, so the caller should make a copy first if
 // necessary.
 //
 // This is a hot path for non-map local-variable assignments.
-static inline mlhmmv_value_t mlhmmv_value_wrap_terminal(mv_t val) {
-	return (mlhmmv_value_t) {.is_terminal = TRUE, .terminal_mlrval = val, .pnext_level = NULL};
+static inline mlhmmv_xvalue_t mlhmmv_xvalue_wrap_terminal(mv_t val) {
+	return (mlhmmv_xvalue_t) {.is_terminal = TRUE, .terminal_mlrval = val, .pnext_level = NULL};
 }
 
 // ----------------------------------------------------------------
@@ -94,9 +94,9 @@ mlhmmv_level_t* mlhmmv_level_alloc();
 void mlhmmv_clear_level(mlhmmv_level_t* plevel);
 
 mv_t*           mlhmmv_level_look_up_and_ref_terminal(mlhmmv_level_t* plevel, sllmv_t*  pmvkeys, int* perror);
-mlhmmv_value_t* mlhmmv_level_look_up_and_ref_xvalue  (mlhmmv_level_t* plevel, sllmv_t*  pmvkeys, int* perror);
+mlhmmv_xvalue_t* mlhmmv_level_look_up_and_ref_xvalue (mlhmmv_level_t* plevel, sllmv_t*  pmvkeys, int* perror);
 mlhmmv_level_t* mlhmmv_level_put_empty_map           (mlhmmv_level_t* plevel, sllmve_t* prest_keys);
-void            mlhmmv_level_put_xvalue              (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_value_t* pvalue);
+void            mlhmmv_level_put_xvalue              (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_xvalue_t* pvalue);
 void            mlhmmv_level_put_terminal            (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
 void            mlhmmv_level_to_lrecs                (mlhmmv_level_t* plevel, sllmv_t* pkeys,
 	sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator);
@@ -140,7 +140,7 @@ void mlhmmv_root_copy_submap(mlhmmv_root_t* pmap, sllmv_t* ptokeys, sllmv_t* pfr
 // For for-loop-over-oosvar, wherein we need to copy the submap before iterating over it
 // (since the iteration may modify it). If the keys don't index a submap, then the return
 // value has is_terminal = TRUE and pnext_level = NULL.
-mlhmmv_value_t mlhmmv_root_copy_xvalue(mlhmmv_root_t* pmap, sllmv_t* pmvkeys);
+mlhmmv_xvalue_t mlhmmv_root_copy_xvalue(mlhmmv_root_t* pmap, sllmv_t* pmvkeys);
 
 // Used by for-loops over oosvars
 sllv_t* mlhmmv_root_copy_keys_from_submap(mlhmmv_root_t* pmap, sllmv_t* pmvkeys);

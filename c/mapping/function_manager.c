@@ -449,7 +449,7 @@ static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvar
 	// Functions returning map values in a scalar context get their return values treated as
 	// absent-null. (E.g. f() returns a map and g() returns an int and the statement is '$x
 	// = f() + g()'.) Non-scalar-context return values are handled separately (not here).
-	mlhmmv_value_t retval = pstate->pdefsite_state->pprocess_func(
+	mlhmmv_xvalue_t retval = pstate->pdefsite_state->pprocess_func(
 		pstate->pdefsite_state->pvstate, pstate->arity, pstate->args, pvars);
 
 	if (retval.is_terminal) {

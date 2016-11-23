@@ -178,7 +178,7 @@ static void handle_return_value_from_local_non_map_variable(
 {
 	return_value_from_local_non_map_variable_state_t* pstate = pstatement->pvstate;
 
-	pvars->return_state.retval = mlhmmv_value_wrap_terminal( // xxx mapvars
+	pvars->return_state.retval = mlhmmv_xvalue_wrap_terminal( // xxx mapvars
 		pstate->preturn_value_evaluator->pprocess_func(
 			pstate->preturn_value_evaluator->pvstate, pvars));
 	pvars->return_state.returned = TRUE;
@@ -249,17 +249,17 @@ static void handle_return_value_from_indexed_local_variable(
 	if (all_non_null_or_error) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 
-		mlhmmv_value_t* pmvalue = local_stack_frame_get_extended_from_indexed(pframe,
+		mlhmmv_xvalue_t* pmvalue = local_stack_frame_get_extended_from_indexed(pframe,
 			pstate->rhs_frame_relative_index, pmvkeys);
 
 		if (pmvalue == NULL) {
-			pvars->return_state.retval = mlhmmv_value_wrap_terminal(mv_absent());
+			pvars->return_state.retval = mlhmmv_xvalue_wrap_terminal(mv_absent());
 		} else {
-			pvars->return_state.retval = mlhmmv_value_copy(pmvalue);
+			pvars->return_state.retval = mlhmmv_xvalue_copy(pmvalue);
 		}
 
 	} else {
-		pvars->return_state.retval = mlhmmv_value_wrap_terminal(mv_absent());
+		pvars->return_state.retval = mlhmmv_xvalue_wrap_terminal(mv_absent());
 	}
 
 	sllmv_free(pmvkeys);
@@ -314,7 +314,7 @@ static void handle_return_value_from_oosvar(
 {
 	return_value_from_oosvar_state_t* pstate = pstatement->pvstate;
 
-	pvars->return_state.retval = mlhmmv_value_wrap_terminal( // xxx mapvars
+	pvars->return_state.retval = mlhmmv_xvalue_wrap_terminal( // xxx mapvars
 		pstate->preturn_value_evaluator->pprocess_func(
 			pstate->preturn_value_evaluator->pvstate, pvars));
 	pvars->return_state.returned = TRUE;
@@ -367,7 +367,7 @@ static void handle_return_value_from_full_oosvar(
 {
 	return_value_from_full_oosvar_state_t* pstate = pstatement->pvstate;
 
-	pvars->return_state.retval = mlhmmv_value_wrap_terminal( // xxx mapvars
+	pvars->return_state.retval = mlhmmv_xvalue_wrap_terminal( // xxx mapvars
 		pstate->preturn_value_evaluator->pprocess_func(
 			pstate->preturn_value_evaluator->pvstate, pvars));
 	pvars->return_state.returned = TRUE;
@@ -420,7 +420,7 @@ static void handle_return_value_from_full_srec(
 {
 	return_value_from_full_srec_state_t* pstate = pstatement->pvstate;
 
-	pvars->return_state.retval = mlhmmv_value_wrap_terminal( // xxx mapvars
+	pvars->return_state.retval = mlhmmv_xvalue_wrap_terminal( // xxx mapvars
 		pstate->preturn_value_evaluator->pprocess_func(
 			pstate->preturn_value_evaluator->pvstate, pvars));
 	pvars->return_state.returned = TRUE;
@@ -473,7 +473,7 @@ static void handle_return_value_from_function_callsite(
 {
 	return_value_from_function_callsite_state_t* pstate = pstatement->pvstate;
 
-	pvars->return_state.retval = mlhmmv_value_wrap_terminal( // xxx mapvars
+	pvars->return_state.retval = mlhmmv_xvalue_wrap_terminal( // xxx mapvars
 		pstate->preturn_value_evaluator->pprocess_func(
 			pstate->preturn_value_evaluator->pvstate, pvars));
 	pvars->return_state.returned = TRUE;
@@ -526,7 +526,7 @@ static void handle_return_value_from_non_map_valued(
 {
 	return_value_from_non_map_valued_state_t* pstate = pstatement->pvstate;
 
-	pvars->return_state.retval = mlhmmv_value_wrap_terminal( // xxx mapvars
+	pvars->return_state.retval = mlhmmv_xvalue_wrap_terminal( // xxx mapvars
 		pstate->preturn_value_evaluator->pprocess_func(
 			pstate->preturn_value_evaluator->pvstate, pvars));
 	pvars->return_state.returned = TRUE;

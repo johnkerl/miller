@@ -40,7 +40,7 @@
 // ----------------------------------------------------------------
 // xxx needs to be in a different header file
 typedef struct _return_state_t {
-	mlhmmv_value_t retval;
+	mlhmmv_xvalue_t retval;
 	int returned;
 } return_state_t;
 
@@ -82,7 +82,7 @@ typedef struct _rval_evaluator_t {
 // data copied out of srecs.  It is FALSE when the pointer is into an existing
 // data structure's memory (e.g. oosvars or locals).
 typedef struct _boxed_xval_t {
-	mlhmmv_value_t xval;
+	mlhmmv_xvalue_t xval;
 	int is_ephemeral;
 } boxed_xval_t;
 

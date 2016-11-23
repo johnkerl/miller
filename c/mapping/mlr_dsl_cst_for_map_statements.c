@@ -8,7 +8,7 @@ static void handle_for_oosvar_aux(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs,
-	mlhmmv_value_t           submap,
+	mlhmmv_xvalue_t           submap,
 	char**                   prest_for_k_variable_names,
 	int*                     prest_for_k_frame_relative_indices,
 	int*                     prest_for_k_frame_type_masks,
@@ -18,7 +18,7 @@ static void handle_for_local_map_aux(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs,
-	mlhmmv_value_t           submap,
+	mlhmmv_xvalue_t           submap,
 	char**                   prest_for_k_variable_names,
 	int*                     prest_for_k_frame_relative_indices,
 	int*                     prest_for_k_frame_type_masks,
@@ -28,7 +28,7 @@ static void handle_for_map_literal_aux(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs,
-	mlhmmv_value_t*          psubmap,
+	mlhmmv_xvalue_t*          psubmap,
 	char**                   prest_for_k_variable_names,
 	int*                     prest_for_k_frame_relative_indices,
 	int*                     prest_for_k_frame_type_masks,
@@ -179,7 +179,7 @@ static void handle_for_oosvar(
 		// Locate and copy the submap indexed by the keylist. E.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', the
 		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
 		// for-loop.
-		mlhmmv_value_t submap = mlhmmv_root_copy_xvalue(pvars->poosvars, ptarget_keylist);
+		mlhmmv_xvalue_t submap = mlhmmv_root_copy_xvalue(pvars->poosvars, ptarget_keylist);
 
 		if (!submap.is_terminal && submap.pnext_level != NULL) {
 			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level
@@ -199,7 +199,7 @@ static void handle_for_oosvar(
 			}
 		}
 
-		mlhmmv_value_free(submap);
+		mlhmmv_xvalue_free(submap);
 
 		loop_stack_pop(pvars->ploop_stack);
 		local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
@@ -211,7 +211,7 @@ static void handle_for_oosvar_aux(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs,
-	mlhmmv_value_t           submap,
+	mlhmmv_xvalue_t           submap,
 	char**                   prest_for_k_variable_names,
 	int*                     prest_for_k_frame_relative_indices,
 	int*                     prest_for_k_type_masks,
@@ -523,11 +523,11 @@ static void handle_for_local_map(
 		// indexed by [3, $4].  Copy it for the very likely case that it is being updated inside the
 		// for-loop.
 
-		mlhmmv_value_t *psubmap = local_stack_frame_get_extended_from_indexed(pframe,
+		mlhmmv_xvalue_t *psubmap = local_stack_frame_get_extended_from_indexed(pframe,
 			pstate->target_frame_relative_index, ptarget_keylist);
 
 		if (psubmap != NULL) {
-			mlhmmv_value_t submap = mlhmmv_value_copy(psubmap);
+			mlhmmv_xvalue_t submap = mlhmmv_xvalue_copy(psubmap);
 
 			local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 			loop_stack_push(pvars->ploop_stack);
@@ -550,7 +550,7 @@ static void handle_for_local_map(
 				}
 			}
 
-			mlhmmv_value_free(submap);
+			mlhmmv_xvalue_free(submap);
 
 			loop_stack_pop(pvars->ploop_stack);
 			local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
@@ -563,7 +563,7 @@ static void handle_for_local_map_aux(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs,
-	mlhmmv_value_t           submap,
+	mlhmmv_xvalue_t           submap,
 	char**                   prest_for_k_variable_names,
 	int*                     prest_for_k_frame_relative_indices,
 	int*                     prest_for_k_type_masks,
@@ -719,9 +719,9 @@ static void handle_for_local_map_key_only(
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 
-		mlhmmv_value_t *psubmap = local_stack_frame_get_extended_from_indexed(pframe,
+		mlhmmv_xvalue_t *psubmap = local_stack_frame_get_extended_from_indexed(pframe,
 			pstate->target_frame_relative_index, ptarget_keylist);
-		sllv_t* pkeys = mlhmmv_value_copy_keys(psubmap, NULL); // xxx refactor w/o null
+		sllv_t* pkeys = mlhmmv_xvalue_copy_keys(psubmap, NULL); // xxx refactor w/o null
 
 		local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 		loop_stack_push(pvars->ploop_stack);
@@ -896,7 +896,7 @@ static void handle_for_map_literal(
 	}
 
 	if (boxed_xval.is_ephemeral) {
-		mlhmmv_value_free(boxed_xval.xval);
+		mlhmmv_xvalue_free(boxed_xval.xval);
 	}
 
 	loop_stack_pop(pvars->ploop_stack);
@@ -907,7 +907,7 @@ static void handle_for_map_literal_aux(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs,
-	mlhmmv_value_t*          psubmap,
+	mlhmmv_xvalue_t*          psubmap,
 	char**                   prest_for_k_variable_names,
 	int*                     prest_for_k_frame_relative_indices,
 	int*                     prest_for_k_type_masks,
@@ -1043,7 +1043,7 @@ static void handle_for_map_literal_key_only(
 	boxed_xval_t boxed_xval = pstate->ptarget_xevaluator->pprocess_func(
 		pstate->ptarget_xevaluator->pvstate, pvars);
 
-	sllv_t* pkeys = mlhmmv_value_copy_keys(&boxed_xval.xval, NULL); // xxx refactor w/o null
+	sllv_t* pkeys = mlhmmv_xvalue_copy_keys(&boxed_xval.xval, NULL); // xxx refactor w/o null
 
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
@@ -1075,6 +1075,6 @@ static void handle_for_map_literal_key_only(
 	sllv_free(pkeys);
 
 	if (boxed_xval.is_ephemeral) {
-		mlhmmv_value_free(boxed_xval.xval); // xxx rename
+		mlhmmv_xvalue_free(boxed_xval.xval); // xxx rename
 	}
 }
