@@ -519,7 +519,7 @@ static void handle_oosvar_from_full_srec_assignment(
 		mlhmmv_level_t* plevel = mlhmmv_root_look_up_or_create_then_ref_level(pvars->poosvars, plhskeys);
 		if (plevel != NULL) {
 
-			mlhmmv_clear_level(plevel);
+			mlhmmv_level_clear(plevel);
 
 			for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {
 				mv_t k = mv_from_string(pe->key, NO_FREE); // mlhmmv_level_put_terminal will copy

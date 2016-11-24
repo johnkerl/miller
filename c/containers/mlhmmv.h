@@ -92,7 +92,7 @@ typedef struct _mlhmmv_level_t {
 mlhmmv_level_t* mlhmmv_level_alloc();
 // xxx need to expose level-free
 
-void mlhmmv_clear_level(mlhmmv_level_t* plevel);
+void mlhmmv_level_clear(mlhmmv_level_t* plevel);
 
 mv_t*            mlhmmv_level_look_up_and_ref_terminal(mlhmmv_level_t* plevel, sllmv_t*  pmvkeys, int* perror);
 mlhmmv_xvalue_t* mlhmmv_level_look_up_and_ref_xvalue  (mlhmmv_level_t* plevel, sllmv_t*  pmvkeys, int* perror);
