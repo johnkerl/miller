@@ -55,7 +55,7 @@ static void mlhmmv_level_put_xvalue_no_enlarge(mlhmmv_level_t* plevel, sllmve_t*
 
 static void mlhmmv_level_put_terminal_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
 
-static void mlhmmv_to_lrecs_aux_across_records(
+static void mlhmmv_level_to_lrecs_across_records(
 	mlhmmv_level_t* plevel,
 	char*           prefix,
 	sllmve_t*       prestnames,
@@ -64,7 +64,7 @@ static void mlhmmv_to_lrecs_aux_across_records(
 	int             do_full_prefixing,
 	char*           flatten_separator);
 
-static void mlhmmv_to_lrecs_aux_within_record(
+static void mlhmmv_level_to_lrec_within_record(
 	mlhmmv_level_t* plevel,
 	char*           prefix,
 	lrec_t*         poutrec,
@@ -402,11 +402,11 @@ void mlhmmv_level_to_lrecs(mlhmmv_level_t* plevel, sllmv_t* pkeys, sllmv_t* pnam
 	} else {
 		// E.g. '@v = {...}' at the top level of the mlhmmv: the map value keyed by oosvar-name 'v' is itself a hashmap.
 		// This needs to be flattened down to an lrec which is a list of key-value pairs.  We recursively invoke
-		// mlhmmv_to_lrecs_aux_across_records for each of the name-list entries, one map level deeper each call, then
-		// from there invoke mlhmmv_to_lrecs_aux_within_record on any remaining map levels.
+		// mlhmmv_level_to_lrecs_across_records for each of the name-list entries, one map level deeper each call, then
+		// from there invoke mlhmmv_level_to_lrec_within_record on any remaining map levels.
 		lrec_t* ptemplate = lrec_unbacked_alloc();
 		char* oosvar_name = mv_alloc_format_val(pfirstkey);
-		mlhmmv_to_lrecs_aux_across_records(ptop_entry->level_value.pnext_level, oosvar_name, pnames->phead,
+		mlhmmv_level_to_lrecs_across_records(ptop_entry->level_value.pnext_level, oosvar_name, pnames->phead,
 			ptemplate, poutrecs, do_full_prefixing, flatten_separator);
 		free(oosvar_name);
 		lrec_free(ptemplate);
@@ -589,34 +589,48 @@ static void mlhhmv_levels_to_lrecs_lashed_within_records(
 	}
 }
 
-// ================================================================
-// ================================================================
-// xxx @@@ to be reorganized from here on down
-// ================================================================
-// ================================================================
-
-// xxx reorganize to reflect the ordering in the header file. and, maybe split up into separate source files.
-
-static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pideal_index);
-
-static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_xvalue_t* plevel_value);
-
-static mlhmmv_level_t* mlhmmv_get_or_create_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
-static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
-
-static void mlhmmv_put_value_at_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mlhmmv_xvalue_t* pvalue);
-
-
-static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* pemptied, int depth);
-
-static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
-	int do_final_comma, int quote_values_always, FILE* ostream);
-
-static void json_decimal_print(FILE* ostream, char* s);
-
-static int mlhmmv_hash_func(mv_t* plevel_key);
-
 // ----------------------------------------------------------------
+void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
+	int do_final_comma, int quote_values_always, char* line_indent, FILE* ostream)
+{
+	if (plevel == NULL) {
+		return;
+	}
+	static char* leader = "  ";
+	// Top-level opening brace goes on a line by itself; subsequents on the same line after the level key.
+	if (depth == 0)
+		fprintf(ostream, "%s{\n", line_indent);
+	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
+		fprintf(ostream, "%s", line_indent);
+		for (int i = 0; i <= depth; i++)
+			fprintf(ostream, "%s", leader);
+		char* level_key_string = mv_alloc_format_val(&pentry->level_key);
+		json_print_string_escaped(ostream, level_key_string);
+		free(level_key_string);
+		fprintf(ostream, ": ");
+
+		if (pentry->level_value.is_terminal) {
+			mlhmmv_print_terminal(&pentry->level_value.terminal_mlrval, quote_values_always, ostream);
+
+			if (pentry->pnext != NULL)
+				fprintf(ostream, ",\n");
+			else
+				fprintf(ostream, "\n");
+		} else {
+			fprintf(ostream, "%s{\n", line_indent);
+			mlhmmv_level_print_stacked(pentry->level_value.pnext_level, depth + 1,
+				pentry->pnext != NULL, quote_values_always, line_indent, ostream);
+		}
+	}
+	for (int i = 0; i < depth; i++)
+		fprintf(ostream, "%s", leader);
+	if (do_final_comma)
+		fprintf(ostream, "%s},\n", line_indent);
+	else
+		fprintf(ostream, "%s}\n", line_indent);
+}
+
+// ================================================================
 mlhmmv_root_t* mlhmmv_root_alloc() {
 	mlhmmv_root_t* pmap = mlr_malloc_or_die(sizeof(mlhmmv_root_t));
 	pmap->proot_level = mlhmmv_level_alloc();
@@ -649,6 +663,33 @@ void mlhmmv_root_free(mlhmmv_root_t* pmap) {
 	mlhmmv_level_free(pmap->proot_level);
 	free(pmap);
 }
+
+// ================================================================
+// ================================================================
+// xxx @@@ to be reorganized from here on down
+// ================================================================
+// ================================================================
+
+// xxx reorganize to reflect the ordering in the header file. and, maybe split up into separate source files.
+
+static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pideal_index);
+
+static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_xvalue_t* plevel_value);
+
+static mlhmmv_level_t* mlhmmv_get_or_create_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
+static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
+
+static void mlhmmv_put_value_at_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mlhmmv_xvalue_t* pvalue);
+
+
+static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* pemptied, int depth);
+
+static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
+	int do_final_comma, int quote_values_always, FILE* ostream);
+
+static void json_decimal_print(FILE* ostream, char* s);
+
+static int mlhmmv_hash_func(mv_t* plevel_key);
 
 static void mlhmmv_level_free(mlhmmv_level_t* plevel) {
 	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
@@ -1343,18 +1384,18 @@ void mlhmmv_root_partial_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pkeys, sllmv_t* 
 	} else {
 		// E.g. '@v = {...}' at the top level of the mlhmmv: the map value keyed by oosvar-name 'v' is itself a hashmap.
 		// This needs to be flattened down to an lrec which is a list of key-value pairs.  We recursively invoke
-		// mlhmmv_to_lrecs_aux_across_records for each of the name-list entries, one map level deeper each call, then
-		// from there invoke mlhmmv_to_lrecs_aux_within_record on any remaining map levels.
+		// mlhmmv_level_to_lrecs_across_records for each of the name-list entries, one map level deeper each call, then
+		// from there invoke mlhmmv_level_to_lrec_within_record on any remaining map levels.
 		lrec_t* ptemplate = lrec_unbacked_alloc();
 		char* oosvar_name = mv_alloc_format_val(pfirstkey);
-		mlhmmv_to_lrecs_aux_across_records(ptop_entry->level_value.pnext_level, oosvar_name, pnames->phead,
+		mlhmmv_level_to_lrecs_across_records(ptop_entry->level_value.pnext_level, oosvar_name, pnames->phead,
 			ptemplate, poutrecs, do_full_prefixing, flatten_separator);
 		free(oosvar_name);
 		lrec_free(ptemplate);
 	}
 }
 
-static void mlhmmv_to_lrecs_aux_across_records(
+static void mlhmmv_level_to_lrecs_across_records(
 	mlhmmv_level_t* plevel,
 	char*           prefix,
 	sllmve_t*       prestnames,
@@ -1377,7 +1418,7 @@ static void mlhmmv_to_lrecs_aux_across_records(
 					mv_alloc_format_val(&plevel_value->terminal_mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 				sllv_append(poutrecs, pnextrec);
 			} else {
-				mlhmmv_to_lrecs_aux_across_records(pe->level_value.pnext_level,
+				mlhmmv_level_to_lrecs_across_records(pe->level_value.pnext_level,
 					prefix, prestnames->pnext, pnextrec, poutrecs, do_full_prefixing, flatten_separator);
 				lrec_free(pnextrec);
 			}
@@ -1404,11 +1445,11 @@ static void mlhmmv_to_lrecs_aux_across_records(
 				char* temp = mv_alloc_format_val(&pe->level_key);
 				char* next_prefix = mlr_paste_3_strings(prefix, flatten_separator, temp);
 				free(temp);
-				mlhmmv_to_lrecs_aux_within_record(plevel_value->pnext_level, next_prefix, pnextrec,
+				mlhmmv_level_to_lrec_within_record(plevel_value->pnext_level, next_prefix, pnextrec,
 					do_full_prefixing, flatten_separator);
 				free(next_prefix);
 			} else {
-				mlhmmv_to_lrecs_aux_across_records(pe->level_value.pnext_level,
+				mlhmmv_level_to_lrecs_across_records(pe->level_value.pnext_level,
 					prefix, NULL, pnextrec, poutrecs, do_full_prefixing, flatten_separator);
 				emit = FALSE;
 			}
@@ -1420,7 +1461,7 @@ static void mlhmmv_to_lrecs_aux_across_records(
 	}
 }
 
-static void mlhmmv_to_lrecs_aux_within_record(
+static void mlhmmv_level_to_lrec_within_record(
 	mlhmmv_level_t* plevel,
 	char*           prefix,
 	lrec_t*         poutrec,
@@ -1440,7 +1481,7 @@ static void mlhmmv_to_lrecs_aux_within_record(
 				mv_alloc_format_val(&plevel_value->terminal_mlrval),
 				FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 		} else {
-			mlhmmv_to_lrecs_aux_within_record(plevel_value->pnext_level, next_prefix, poutrec,
+			mlhmmv_level_to_lrec_within_record(plevel_value->pnext_level, next_prefix, poutrec,
 				do_full_prefixing, flatten_separator);
 			free(next_prefix);
 		}
@@ -1463,46 +1504,6 @@ static void mlhmmv_to_lrecs_aux_within_record(
 
 void mlhmmv_root_print_json_stacked(mlhmmv_root_t* pmap, int quote_values_always, char* line_indent, FILE* ostream) {
 	mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, quote_values_always, line_indent, ostream);
-}
-
-void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
-	int do_final_comma, int quote_values_always, char* line_indent, FILE* ostream)
-{
-	if (plevel == NULL) {
-		return;
-	}
-	static char* leader = "  ";
-	// Top-level opening brace goes on a line by itself; subsequents on the same line after the level key.
-	if (depth == 0)
-		fprintf(ostream, "%s{\n", line_indent);
-	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
-		fprintf(ostream, "%s", line_indent);
-		for (int i = 0; i <= depth; i++)
-			fprintf(ostream, "%s", leader);
-		char* level_key_string = mv_alloc_format_val(&pentry->level_key);
-		json_print_string_escaped(ostream, level_key_string);
-		free(level_key_string);
-		fprintf(ostream, ": ");
-
-		if (pentry->level_value.is_terminal) {
-			mlhmmv_print_terminal(&pentry->level_value.terminal_mlrval, quote_values_always, ostream);
-
-			if (pentry->pnext != NULL)
-				fprintf(ostream, ",\n");
-			else
-				fprintf(ostream, "\n");
-		} else {
-			fprintf(ostream, "%s{\n", line_indent);
-			mlhmmv_level_print_stacked(pentry->level_value.pnext_level, depth + 1,
-				pentry->pnext != NULL, quote_values_always, line_indent, ostream);
-		}
-	}
-	for (int i = 0; i < depth; i++)
-		fprintf(ostream, "%s", leader);
-	if (do_final_comma)
-		fprintf(ostream, "%s},\n", line_indent);
-	else
-		fprintf(ostream, "%s}\n", line_indent);
 }
 
 // ----------------------------------------------------------------
