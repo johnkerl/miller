@@ -29,19 +29,11 @@ OTHER:
 MAPVAR CHECKLIST:
 
 * debt-reduction
-  ~ get a grip on copy/reference semantics for all mv cases.
   - valgrinds
   - xxxes
-  - xval.is_terminal -> xval_is_terminal(&xval) reading pnext_level == NULL. omit separate flag.
   - prune unused functions
-  ! get rid of ALL callsites where i return mv/mxv by struct-value but do not copy string-pointers
-  - local-stack renames
-  - mlhmmv renames
-  - mlhmmv.h reorg
-  - map-in vs. map-out ... xval ... mxv_t ... ?
   ? free vs. free_contents names ?
 * func/subr mapvar args; func mapvar retval
-* emit-lashed debug
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
 * allow empty maps/levels in oosvars as well as map-literals
 * print mapvar; dump scalarvar
