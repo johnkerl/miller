@@ -194,8 +194,7 @@ static void rxval_evaluator_from_map_literal_aux(
 				mlhmmv_level_put_xvalue_singly_keyed(plevel, &mvkey, &boxed_xval.xval);
 			}
 		} else {
-			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL }; // xxx simplify API
-			mlhmmv_level_t* pnext_level = mlhmmv_level_put_empty_map(plevel, &e);
+			mlhmmv_level_t* pnext_level = mlhmmv_level_put_empty_map(plevel, &mvkey);
 			rxval_evaluator_from_map_literal_aux(pstate, pkvpair->plist_evaluator, pnext_level, pvars);
 		}
 	}

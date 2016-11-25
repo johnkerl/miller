@@ -590,13 +590,19 @@ static mlhmmv_level_t* mlhmmv_level_get_or_create_no_enlarge(mlhmmv_level_t* ple
 }
 
 // ----------------------------------------------------------------
-mlhmmv_level_t* mlhmmv_level_put_empty_map(mlhmmv_level_t* plevel, sllmve_t* prest_keys) {
-	mv_t x = mv_absent();
-	mlhmmv_level_put_terminal(plevel, prest_keys, &x); // xxx optimize to avoid 2nd lookup
+mlhmmv_level_t* mlhmmv_level_put_empty_map(mlhmmv_level_t* plevel, mv_t* pkey) {
 	int error;
+	mv_t absent = mv_absent();
+
+	sllmve_t e = {
+		.value      = *pkey,
+		.free_flags = 0,
+		.pnext      = NULL
+	};
+	mlhmmv_level_put_terminal(plevel, &e, &absent); // xxx optimize to avoid 2nd lookup
 	sllmv_t s = { // xxx simplify API
-		.phead = prest_keys,
-		.ptail = prest_keys,
+		.phead = &e,
+		.ptail = &e,
 		.length = 1
 	};
 	mlhmmv_xvalue_t* pxval = mlhmmv_level_look_up_and_ref_xvalue(plevel, &s, &error);
