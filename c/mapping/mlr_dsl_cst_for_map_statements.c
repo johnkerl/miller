@@ -1043,7 +1043,7 @@ static void handle_for_map_literal_key_only(
 	boxed_xval_t boxed_xval = pstate->ptarget_xevaluator->pprocess_func(
 		pstate->ptarget_xevaluator->pvstate, pvars);
 
-	sllv_t* pkeys = mlhmmv_xvalue_copy_keys_indexed(&boxed_xval.xval, NULL); // xxx refactor w/o null
+	sllv_t* pkeys = mlhmmv_xvalue_copy_keys_nonindexed(&boxed_xval.xval);
 
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 	local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
