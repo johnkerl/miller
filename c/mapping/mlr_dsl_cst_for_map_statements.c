@@ -721,7 +721,7 @@ static void handle_for_local_map_key_only(
 
 		mlhmmv_xvalue_t *psubmap = local_stack_frame_ref_extended_from_indexed(pframe,
 			pstate->target_frame_relative_index, ptarget_keylist);
-		sllv_t* pkeys = mlhmmv_xvalue_copy_keys_indexed(psubmap, NULL); // xxx refactor w/o null
+		sllv_t* pkeys = mlhmmv_xvalue_copy_keys_nonindexed(psubmap);
 
 		local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 		loop_stack_push(pvars->ploop_stack);
