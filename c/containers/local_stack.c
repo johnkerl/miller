@@ -184,6 +184,31 @@ mlhmmv_xvalue_t* local_stack_frame_get_extended_from_indexed(local_stack_frame_t
 }
 
 // ----------------------------------------------------------------
+void local_stack_frame_define_terminal(local_stack_frame_t* pframe, char* variable_name,
+	int vardef_frame_relative_index, int type_mask, mv_t val)
+{
+	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
+	LOCAL_STACK_BOUNDS_CHECK(pframe, "DEFINE", TRUE, vardef_frame_relative_index);
+	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
+
+	pentry->name = variable_name; // no strdup, for performance -- caller must ensure extent
+	pentry->type_mask = type_mask;
+
+	if (!(type_mask_from_mv(&val) & pentry->type_mask)) { // xxx temp
+		local_stack_frame_throw_type_mismatch(pentry, &val);
+	}
+
+	mv_free(&pentry->value.terminal_mlrval); // xxx temp -- make value-free
+	pentry->value.terminal_mlrval = mv_absent();
+
+	if (mv_is_absent(&val)) {
+		mv_free(&val); // xxx confusing ownership semantics
+	} else {
+		pentry->value = mlhmmv_xvalue_wrap_terminal(val); // xxx deep-copy?
+	}
+}
+
+// ----------------------------------------------------------------
 void local_stack_frame_assign_terminal_indexed(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, sllmv_t* pmvkeys,
 	mv_t terminal_value)
@@ -210,6 +235,7 @@ void local_stack_frame_assign_terminal_indexed(local_stack_frame_t* pframe,
 	LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->pnext_level, 0, TRUE, TRUE, "", stdout));
 }
 
+// ----------------------------------------------------------------
 void local_stack_frame_assign_extended_indexed(local_stack_frame_t* pframe, // xxx rename
 	int vardef_frame_relative_index, sllmv_t* pmvkeys,
 	mlhmmv_xvalue_t new_value) // xxx by ptr
