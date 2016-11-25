@@ -419,6 +419,7 @@ mv_t dot_s_ss(mv_t* pval1, mv_t* pval2) {
 
 mv_t dot_s_xs(mv_t* pval1, mv_t* pval2) {
 	mv_t sval1 = s_x_string_func(pval1);
+	mv_free(pval1);
 	mv_t rv = dot_strings(sval1.u.strv, pval2->u.strv);
 	mv_free(&sval1);
 	mv_free(pval2);
@@ -427,6 +428,7 @@ mv_t dot_s_xs(mv_t* pval1, mv_t* pval2) {
 
 mv_t dot_s_sx(mv_t* pval1, mv_t* pval2) {
 	mv_t sval2 = s_x_string_func(pval2);
+	mv_free(pval2);
 	mv_t rv = dot_strings(pval1->u.strv, sval2.u.strv);
 	mv_free(pval1);
 	mv_free(&sval2);
