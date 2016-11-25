@@ -193,14 +193,14 @@ void local_stack_frame_define_terminal(local_stack_frame_t* pframe, char* variab
 	pentry->name = variable_name; // no strdup, for performance -- caller must ensure extent
 	pentry->type_mask = type_mask;
 
-	if (!(type_mask_from_mv(&val) & pentry->type_mask)) { // xxx temp
+	if (!(type_mask_from_mv(&val) & pentry->type_mask)) {
 		local_stack_frame_throw_type_mismatch(pentry, &val);
 	}
 
 	mlhmmv_xvalue_free(&pentry->xvalue);
 
 	if (mv_is_absent(&val)) {
-		mv_free(&val); // xxx confusing ownership semantics
+		mv_free(&val); // xxx doc ownership semantics at header file
 	} else {
 		pentry->xvalue = mlhmmv_xvalue_wrap_terminal(val); // xxx deep-copy?
 	}
@@ -217,18 +217,16 @@ void local_stack_frame_define_extended(local_stack_frame_t* pframe, char* variab
 	pentry->name = variable_name; // no strdup, for performance -- caller must ensure extent
 	pentry->type_mask = type_mask;
 
-	// xxx subroutineize
 	if (xval.is_terminal) {
-		if (!(type_mask_from_mv(&xval.terminal_mlrval) & pentry->type_mask)) { // xxx temp
+		if (!(type_mask_from_mv(&xval.terminal_mlrval) & pentry->type_mask)) {
 			local_stack_frame_throw_type_mismatch(pentry, &xval.terminal_mlrval);
 		}
 	} else {
-		if (!(TYPE_MASK_MAP & pentry->type_mask)) { // xxx temp
-			local_stack_frame_throw_type_mismatch(pentry, &xval.terminal_mlrval); // xxx allow xvals
+		if (!(TYPE_MASK_MAP & pentry->type_mask)) {
+			local_stack_frame_throw_type_mismatch(pentry, &xval.terminal_mlrval);
 		}
 	}
 
-	// xxx temp -- make a single method
 	if (!mlhmmv_xvalue_is_absent_and_nonterminal(&xval)) {
 		mlhmmv_xvalue_free(&pentry->xvalue);
 		pentry->xvalue = xval;
@@ -250,11 +248,9 @@ void local_stack_frame_assign_terminal_indexed(local_stack_frame_t* pframe,
 
 	mlhmmv_xvalue_t* pmvalue = &pentry->xvalue;
 
-	// xxx encapsulate
 	if (pmvalue->is_terminal) {
 		mv_free(&pmvalue->terminal_mlrval);
-		pmvalue->is_terminal = FALSE;
-		pmvalue->pnext_level = mlhmmv_level_alloc();
+		*pmvalue = mlhmmv_xvalue_alloc_empty_map();
 	}
 	mlhmmv_level_put_terminal(pmvalue->pnext_level, pmvkeys->phead, &terminal_value);
 
@@ -272,12 +268,12 @@ void local_stack_frame_assign_extended_nonindexed(local_stack_frame_t* pframe,
 
 	// xxx subroutineize
 	if (xval.is_terminal) {
-		if (!(type_mask_from_mv(&xval.terminal_mlrval) & pentry->type_mask)) { // xxx temp
+		if (!(type_mask_from_mv(&xval.terminal_mlrval) & pentry->type_mask)) {
 			local_stack_frame_throw_type_mismatch(pentry, &xval.terminal_mlrval);
 		}
 	} else {
-		if (!(TYPE_MASK_MAP & pentry->type_mask)) { // xxx temp
-			local_stack_frame_throw_type_mismatch(pentry, &xval.terminal_mlrval); // xxx allow xvals
+		if (!(TYPE_MASK_MAP & pentry->type_mask)) {
+			local_stack_frame_throw_type_mismatch(pentry, &xval.terminal_mlrval);
 		}
 	}
 
@@ -300,11 +296,9 @@ void local_stack_frame_assign_extended_indexed(local_stack_frame_t* pframe,
 
 	mlhmmv_xvalue_t* pmvalue = &pentry->xvalue;
 
-	// xxx encapsulate
 	if (pmvalue->is_terminal) {
 		mv_free(&pmvalue->terminal_mlrval);
-		pmvalue->is_terminal = FALSE;
-		pmvalue->pnext_level = mlhmmv_level_alloc();
+		*pmvalue = mlhmmv_xvalue_alloc_empty_map();
 	}
 	mlhmmv_level_put_xvalue(pmvalue->pnext_level, pmvkeys->phead, &new_value);
 
