@@ -2230,6 +2230,7 @@ md_nonindexed_local_variable(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
 }
 md_indexed_local_variable(A) ::= md_nonindexed_local_variable(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
 	A = mlr_dsl_ast_node_alloc_unary(B->text, MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE, C);
+	mlr_dsl_ast_node_free(B);
 }
 md_indexed_local_variable(A) ::= md_indexed_local_variable(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
 	A = mlr_dsl_ast_node_append_arg(B, C);
