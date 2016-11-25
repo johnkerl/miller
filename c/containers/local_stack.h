@@ -20,7 +20,7 @@
 // ================================================================
 typedef struct _local_stack_frame_entry_t {
 	char* name; // For type-check error messages. Not strduped; the caller must ensure extent.
-	mlhmmv_xvalue_t value;
+	mlhmmv_xvalue_t xvalue;
 	int   type_mask;
 } local_stack_frame_entry_t;
 
@@ -93,7 +93,7 @@ static inline mv_t local_stack_frame_get_terminal_from_nonindexed(local_stack_fr
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
 	// xxx encapsulate
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
-	mlhmmv_xvalue_t* pvalue = &pentry->value;
+	mlhmmv_xvalue_t* pvalue = &pentry->xvalue;
 	if (pvalue != NULL && pvalue->is_terminal) {
 		return pvalue->terminal_mlrval;
 	} else {
@@ -113,9 +113,8 @@ static inline void local_stack_frame_assign_terminal_nonindexed(local_stack_fram
 		local_stack_frame_throw_type_mismatch(pentry, &val);
 	}
 
-	// xxx temp -- make a single method
-	mv_free(&pentry->value.terminal_mlrval); // xxx temp -- make value-free
-	pentry->value = mlhmmv_xvalue_wrap_terminal(val); // xxx deep-copy?
+	mlhmmv_xvalue_free(&pentry->xvalue);
+	pentry->xvalue = mlhmmv_xvalue_wrap_terminal(val); // xxx deep-copy?
 }
 
 // ----------------------------------------------------------------
@@ -154,8 +153,8 @@ static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int c
 		LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p CLEAR %d\n", pframe, pframe->subframe_base+i));
 		LOCAL_STACK_BOUNDS_CHECK(pframe, "CLEAR", FALSE, pframe->subframe_base+i);
 		local_stack_frame_entry_t* pentry = &psubframe[i];
-		pentry->value.is_terminal = TRUE; // xxx make inline method in mlhmmv for all of this
-		mv_reset(&pentry->value.terminal_mlrval);
+		pentry->xvalue.is_terminal = TRUE; // xxx make inline method in mlhmmv for all of this
+		mv_reset(&pentry->xvalue.terminal_mlrval);
 		pentry->type_mask = TYPE_MASK_ANY;
 	}
 	pframe->subframe_base += count;

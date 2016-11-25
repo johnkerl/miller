@@ -112,10 +112,10 @@ static void handle_full_srec_assignment(
 			}
 		}
 		if (boxed_xval.is_ephemeral) {
-			mlhmmv_xvalue_free(boxed_xval.xval);
+			mlhmmv_xvalue_free(&boxed_xval.xval);
 		}
 	} else {
-		mlhmmv_xvalue_free(boxed_xval.xval);
+		mlhmmv_xvalue_free(&boxed_xval.xval);
 	}
 }
 

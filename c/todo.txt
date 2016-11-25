@@ -39,6 +39,7 @@ MAPVAR CHECKLIST:
   - mlhmmv renames
   - mlhmmv.h reorg
   - map-in vs. map-out ... xval ... mxv_t ... ?
+  ? free vs. free_contents names ?
 * func/subr mapvar args; func mapvar retval
 * emit-lashed debug
 * apply mapvar contexts to some built-ins: length, typeof, ... ?

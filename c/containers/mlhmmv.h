@@ -42,7 +42,7 @@ typedef struct _mlhmmv_xvalue_t {
 
 mlhmmv_xvalue_t mlhmmv_xvalue_alloc_empty_map();
 mlhmmv_xvalue_t mlhmmv_xvalue_copy(mlhmmv_xvalue_t* pvalue);
-void            mlhmmv_xvalue_free(mlhmmv_xvalue_t submap);
+void            mlhmmv_xvalue_free(mlhmmv_xvalue_t* pxvalue);
 
 // Used by for-loops over map-valued local variables
 sllv_t* mlhmmv_xvalue_copy_keys_indexed   (mlhmmv_xvalue_t* pxvalue, sllmv_t* pmvkeys);

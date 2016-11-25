@@ -938,7 +938,7 @@ static void record_emitter_from_map_literal(
 	}
 
 	if (boxed_xval.is_ephemeral) {
-		mlhmmv_xvalue_free(boxed_xval.xval);
+		mlhmmv_xvalue_free(&boxed_xval.xval);
 	}
 
 	sllmv_free(pmvkeys);
@@ -1291,7 +1291,7 @@ static void handle_emit_lashed_common(
 
 		for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
 			if (pboxed_xvals[i].is_ephemeral) {
-				mlhmmv_xvalue_free(pboxed_xvals[i].xval);
+				mlhmmv_xvalue_free(&pboxed_xvals[i].xval);
 			}
 		}
 
@@ -1404,7 +1404,7 @@ static void handle_dump(
 	}
 
 	if (!boxed_xval.xval.is_terminal && boxed_xval.is_ephemeral) {
-		mlhmmv_xvalue_free(boxed_xval.xval);
+		mlhmmv_xvalue_free(&boxed_xval.xval);
 	}
 }
 
@@ -1440,6 +1440,6 @@ static void handle_dump_to_file(
 	mv_free(&filename_mv);
 
 	if (!boxed_xval.xval.is_terminal && boxed_xval.is_ephemeral) {
-		mlhmmv_xvalue_free(boxed_xval.xval);
+		mlhmmv_xvalue_free(&boxed_xval.xval);
 	}
 }

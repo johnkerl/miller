@@ -218,11 +218,12 @@ mlhmmv_xvalue_t mlhmmv_xvalue_copy(mlhmmv_xvalue_t* pvalue) {
 	}
 }
 
-void mlhmmv_xvalue_free(mlhmmv_xvalue_t submap) {
-	if (submap.is_terminal) {
-		mv_free(&submap.terminal_mlrval);
-	} else if (submap.pnext_level != NULL) {
-		mlhmmv_level_free(submap.pnext_level);
+void mlhmmv_xvalue_free(mlhmmv_xvalue_t* pxvalue) {
+	if (pxvalue->is_terminal) {
+		mv_free(&pxvalue->terminal_mlrval);
+	} else if (pxvalue->pnext_level != NULL) {
+		mlhmmv_level_free(pxvalue->pnext_level);
+		pxvalue->pnext_level = NULL;
 	}
 }
 

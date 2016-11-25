@@ -14,8 +14,8 @@ static local_stack_frame_t* _local_stack_alloc(int size, int ephemeral) {
 	pframe->pvars = mlr_malloc_or_die(size * sizeof(local_stack_frame_entry_t));
 	for (int i = 0; i < size; i++) {
 		local_stack_frame_entry_t* pentry = &pframe->pvars[i];
-		pentry->value.terminal_mlrval = mv_absent(); // xxx make method
-		pentry->value.pnext_level = NULL; // xxx make method
+		pentry->xvalue.terminal_mlrval = mv_absent(); // xxx make method
+		pentry->xvalue.pnext_level = NULL; // xxx make method
 		pentry->name = NULL;
 		// Any type can be written here, unless otherwise specified by a typed definition
 		pentry->type_mask = TYPE_MASK_ANY;
@@ -34,7 +34,7 @@ void local_stack_frame_free(local_stack_frame_t* pframe) {
 	if (pframe == NULL)
 		return;
 	for (int i = 0; i < pframe->size; i++) {
-		mv_free(&pframe->pvars[i].value.terminal_mlrval); // xxx temp
+		mlhmmv_xvalue_free(&pframe->pvars[i].xvalue);
 	}
 	free(pframe->pvars);
 	free(pframe);
@@ -56,9 +56,9 @@ local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe) {
 
 // ----------------------------------------------------------------
 void local_stack_frame_exit (local_stack_frame_t* pframe) {
-	MLR_INTERNAL_CODING_ERROR_UNLESS(mv_is_absent(&pframe->pvars[0].value.terminal_mlrval)); // xxx temp
+	MLR_INTERNAL_CODING_ERROR_UNLESS(mv_is_absent(&pframe->pvars[0].xvalue.terminal_mlrval)); // xxx temp
 	for (int i = 0; i < pframe->size; i++)
-		mv_free(&pframe->pvars[i].value.terminal_mlrval); // xxx temp
+		mlhmmv_xvalue_free(&pframe->pvars[i].xvalue);
 	if (!pframe->ephemeral) {
 		pframe->in_use = FALSE;
 		LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME NON-EPH EXIT %p %d\n", pframe, pframe->size));
@@ -105,7 +105,7 @@ mv_t local_stack_frame_get_terminal_from_indexed(local_stack_frame_t* pframe, //
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
 
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
-	mlhmmv_xvalue_t* pbase_xval = &pentry->value;
+	mlhmmv_xvalue_t* pbase_xval = &pentry->xvalue;
 
 #ifdef LOCAL_STACK_TRACE_ENABLE
 	// xxx needs an mlhmmv_xvalue_print
@@ -154,7 +154,7 @@ mlhmmv_xvalue_t* local_stack_frame_get_extended_from_indexed(local_stack_frame_t
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
 
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
-	mlhmmv_xvalue_t* pmvalue = &pentry->value;
+	mlhmmv_xvalue_t* pmvalue = &pentry->xvalue;
 
 #ifdef LOCAL_STACK_TRACE_ENABLE
 	// xxx needs an mlhmmv_xvalue_print
@@ -198,13 +198,12 @@ void local_stack_frame_define_terminal(local_stack_frame_t* pframe, char* variab
 		local_stack_frame_throw_type_mismatch(pentry, &val);
 	}
 
-	mv_free(&pentry->value.terminal_mlrval); // xxx temp -- make value-free
-	pentry->value.terminal_mlrval = mv_absent();
+	mlhmmv_xvalue_free(&pentry->xvalue);
 
 	if (mv_is_absent(&val)) {
 		mv_free(&val); // xxx confusing ownership semantics
 	} else {
-		pentry->value = mlhmmv_xvalue_wrap_terminal(val); // xxx deep-copy?
+		pentry->xvalue = mlhmmv_xvalue_wrap_terminal(val); // xxx deep-copy?
 	}
 }
 
@@ -232,10 +231,10 @@ void local_stack_frame_define_extended(local_stack_frame_t* pframe, char* variab
 
 	// xxx temp -- make a single method
 	if (xval.is_terminal && mv_is_absent(&xval.terminal_mlrval)) {
-		mlhmmv_xvalue_free(xval); // xxx confusing ownership semantics
+		mlhmmv_xvalue_free(&xval);
 	} else {
-		mlhmmv_xvalue_free(pentry->value); // xxx rename
-		pentry->value = xval;
+		mlhmmv_xvalue_free(&pentry->xvalue);
+		pentry->xvalue = xval;
 	}
 }
 
@@ -252,7 +251,7 @@ void local_stack_frame_assign_terminal_indexed(local_stack_frame_t* pframe,
 		local_stack_frame_throw_type_mismatch(pentry, &terminal_value);
 	}
 
-	mlhmmv_xvalue_t* pmvalue = &pentry->value;
+	mlhmmv_xvalue_t* pmvalue = &pentry->xvalue;
 
 	// xxx encapsulate
 	if (pmvalue->is_terminal) {
@@ -285,12 +284,8 @@ void local_stack_frame_assign_extended_nonindexed(local_stack_frame_t* pframe,
 		}
 	}
 
-	// xxx temp -- make a single method
-	mv_free(&pentry->value.terminal_mlrval); // xxx temp -- make value-free
-
-	// xxx temp -- make a single method
-	mlhmmv_xvalue_free(pentry->value); // xxx rename
-	pentry->value = xval;
+	mlhmmv_xvalue_free(&pentry->xvalue);
+	pentry->xvalue = xval;
 }
 
 // ----------------------------------------------------------------
@@ -306,7 +301,7 @@ void local_stack_frame_assign_extended_indexed(local_stack_frame_t* pframe, // x
 		local_stack_frame_throw_type_xmismatch(pentry, &new_value);
 	}
 
-	mlhmmv_xvalue_t* pmvalue = &pentry->value;
+	mlhmmv_xvalue_t* pmvalue = &pentry->xvalue;
 
 	// xxx encapsulate
 	if (pmvalue->is_terminal) {
