@@ -91,7 +91,6 @@ static inline mv_t local_stack_frame_get_terminal_from_nonindexed(local_stack_fr
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
-	// xxx encapsulate
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 	mlhmmv_xvalue_t* pvalue = &pentry->xvalue;
 	if (pvalue != NULL && pvalue->is_terminal) {
@@ -153,8 +152,9 @@ static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int c
 		LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p CLEAR %d\n", pframe, pframe->subframe_base+i));
 		LOCAL_STACK_BOUNDS_CHECK(pframe, "CLEAR", FALSE, pframe->subframe_base+i);
 		local_stack_frame_entry_t* pentry = &psubframe[i];
-		pentry->xvalue.is_terminal = TRUE; // xxx make inline method in mlhmmv for all of this
-		mv_reset(&pentry->xvalue.terminal_mlrval);
+
+		mlhmmv_xvalue_reset(&pentry->xvalue);
+
 		pentry->type_mask = TYPE_MASK_ANY;
 	}
 	pframe->subframe_base += count;

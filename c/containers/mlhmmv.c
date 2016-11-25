@@ -184,6 +184,12 @@ mlhmmv_xvalue_t mlhmmv_xvalue_alloc_empty_map() {
 	return xval;
 }
 
+void mlhmmv_xvalue_reset(mlhmmv_xvalue_t* pxvalue) {
+	pxvalue->is_terminal     = TRUE;
+	pxvalue->terminal_mlrval = mv_absent();
+	pxvalue->pnext_level     = NULL;
+}
+
 mlhmmv_xvalue_t mlhmmv_xvalue_copy(mlhmmv_xvalue_t* pvalue) {
 	if (pvalue->is_terminal) {
 		return (mlhmmv_xvalue_t) {

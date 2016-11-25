@@ -40,8 +40,9 @@ typedef struct _mlhmmv_xvalue_t {
 	struct _mlhmmv_level_t* pnext_level;
 } mlhmmv_xvalue_t;
 
+void            mlhmmv_xvalue_reset(mlhmmv_xvalue_t* pxvalue);
 mlhmmv_xvalue_t mlhmmv_xvalue_alloc_empty_map();
-mlhmmv_xvalue_t mlhmmv_xvalue_copy(mlhmmv_xvalue_t* pvalue);
+mlhmmv_xvalue_t mlhmmv_xvalue_copy(mlhmmv_xvalue_t* pxvalue);
 void            mlhmmv_xvalue_free(mlhmmv_xvalue_t* pxvalue);
 
 // Used by for-loops over map-valued local variables
