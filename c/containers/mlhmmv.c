@@ -289,15 +289,12 @@ void mlhmmv_xvalues_to_lrecs_lashed(mlhmmv_xvalue_t** ptop_values, int num_subma
 		}
 		sllv_append(poutrecs, poutrec);
 	} else {
-		// xxx need to update this for the more general oosvar/localvar/mapliteral cases.
-
-		// E.g. '@v = {...}' at the top level of the mlhmmv: the map value keyed by
-		// oosvar-name 'v' is itself a hashmap.  This needs to be flattened down to an
-		// lrec which is a list of key-value pairs.  We recursively invoke
-		// mlhhmv_levels_to_lrecs_lashed_across_records for each of the name-list entries,
-		// one map level deeper each call, then from there invoke
+		// E.g. '@v = {...}' at the top level of the map, where the map is an oosvar
+		// submap keyed by oosvar-name 'v', or a localvar value, or a map literal.  This
+		// needs to be flattened down to an lrec which is a list of key-value pairs.  We
+		// recursively invoke mlhhmv_levels_to_lrecs_lashed_across_records for each of the
+		// name-list entries, one map level deeper each call, then from there invoke
 		// mlhhmv_levels_to_lrecs_lashed_within_records on any remaining map levels.
-
 		lrec_t* ptemplate = lrec_unbacked_alloc();
 
 		mlhmmv_level_t** ppnext_levels = mlr_malloc_or_die(num_submaps * sizeof(mlhmmv_level_t*));
