@@ -90,7 +90,7 @@ typedef struct _mlhmmv_level_t {
 } mlhmmv_level_t;
 
 mlhmmv_level_t* mlhmmv_level_alloc();
-// xxx need to expose level-free
+void mlhmmv_level_free(mlhmmv_level_t* plevel);
 
 void mlhmmv_level_clear(mlhmmv_level_t* plevel);
 
@@ -242,12 +242,12 @@ void mlhmmv_root_remove(mlhmmv_root_t* pmap, sllmv_t* pmvkeys);
 //   a   sum:wye
 //   hat 0.031442
 
-// For 'emit' and 'emitp' in the DSL
-void mlhmmv_root_partial_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs,
-	int do_full_prefixing, char* flatten_separator);
-
 // For 'emit all' and 'emitp all' in the DSL
 void mlhmmv_root_all_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pnames, sllv_t* poutrecs,
+	int do_full_prefixing, char* flatten_separator);
+
+// For 'emit' and 'emitp' in the DSL
+void mlhmmv_root_partial_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs,
 	int do_full_prefixing, char* flatten_separator);
 
 // For 'dump' in the DSL; also used by the lrec-to-JSON writer.
