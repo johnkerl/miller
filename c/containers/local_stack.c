@@ -347,7 +347,7 @@ void local_stack_frame_throw_type_xmismatch(local_stack_frame_entry_t* pentry, m
 	char* sval = mv_alloc_format_val_quoting_strings(&pxval->terminal_mlrval); // xxx temp
 	fprintf(stderr, "%s: %s type assertion for variable %s unmet by value %s with type %s.\n",
 		MLR_GLOBALS.bargv0, type_mask_to_desc(pentry->type_mask), pentry->name,
-		sval, mt_describe_type_simple(pxval->terminal_mlrval.type)); // xxx temp -- needs xtype
+		sval, mlhmmv_xvalue_describe_type_simple(pxval));
 	free(sval);
 	exit(1);
 }

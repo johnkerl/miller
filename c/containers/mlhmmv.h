@@ -45,6 +45,7 @@ mlhmmv_xvalue_t mlhmmv_xvalue_alloc_empty_map();
 mlhmmv_xvalue_t mlhmmv_xvalue_copy(mlhmmv_xvalue_t* pxvalue);
 void            mlhmmv_xvalue_free(mlhmmv_xvalue_t* pxvalue);
 
+char* mlhmmv_xvalue_describe_type_simple(mlhmmv_xvalue_t* pxvalue);
 
 static inline int mlhmmv_xvalue_is_absent_and_nonterminal(mlhmmv_xvalue_t* pxvalue) {
 	return (pxvalue->is_terminal && mv_is_absent(&pxvalue->terminal_mlrval));

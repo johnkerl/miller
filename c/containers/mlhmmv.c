@@ -231,6 +231,14 @@ void mlhmmv_xvalue_free(mlhmmv_xvalue_t* pxvalue) {
 	}
 }
 
+char* mlhmmv_xvalue_describe_type_simple(mlhmmv_xvalue_t* pxvalue) {
+	if (pxvalue->is_terminal) {
+		return mt_describe_type_simple(pxvalue->terminal_mlrval.type);
+	} else {
+		return "map";
+	}
+}
+
 sllv_t* mlhmmv_xvalue_copy_keys_indexed(mlhmmv_xvalue_t* pmvalue, sllmv_t* pmvkeys) { // xxx code dedupe
 	int error;
 	if (pmvkeys == NULL || pmvkeys->length == 0) {
