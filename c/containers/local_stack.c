@@ -229,9 +229,7 @@ void local_stack_frame_define_extended(local_stack_frame_t* pframe, char* variab
 	}
 
 	// xxx temp -- make a single method
-	if (xval.is_terminal && mv_is_absent(&xval.terminal_mlrval)) {
-		mlhmmv_xvalue_free(&xval);
-	} else {
+	if (!mlhmmv_xvalue_is_absent_and_nonterminal(&xval)) {
 		mlhmmv_xvalue_free(&pentry->xvalue);
 		pentry->xvalue = xval;
 	}
