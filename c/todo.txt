@@ -363,6 +363,13 @@ KW autodoc:
 
   E ENV FILENAME FILENUM FNR NF NR PI
 
+COMPARES:
+* https://github.com/shenwei356/csvtk
+* http://csvkit.readthedocs.io/en/540/
+* https://github.com/BurntSushi/xsv
+* https://github.com/eBay/tsv-utils-dlang
+* https://www.gnu.org/software/datamash/manual/datamash.html
+
 To file:
 * note mlr -l -L -f -F -k -K rather prominently at mlh.
 * mlh/mld func/subr @ filter
