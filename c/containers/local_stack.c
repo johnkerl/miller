@@ -209,6 +209,37 @@ void local_stack_frame_define_terminal(local_stack_frame_t* pframe, char* variab
 }
 
 // ----------------------------------------------------------------
+void local_stack_frame_define_extended(local_stack_frame_t* pframe, char* variable_name,
+	int vardef_frame_relative_index, int type_mask, mlhmmv_xvalue_t xval)
+{
+	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
+	LOCAL_STACK_BOUNDS_CHECK(pframe, "ASSIGN", TRUE, vardef_frame_relative_index);
+	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
+
+	pentry->name = variable_name; // no strdup, for performance -- caller must ensure extent
+	pentry->type_mask = type_mask;
+
+	// xxx subroutineize
+	if (xval.is_terminal) {
+		if (!(type_mask_from_mv(&xval.terminal_mlrval) & pentry->type_mask)) { // xxx temp
+			local_stack_frame_throw_type_mismatch(pentry, &xval.terminal_mlrval);
+		}
+	} else {
+		if (!(TYPE_MASK_MAP & pentry->type_mask)) { // xxx temp
+			local_stack_frame_throw_type_mismatch(pentry, &xval.terminal_mlrval); // xxx allow xvals
+		}
+	}
+
+	// xxx temp -- make a single method
+	if (xval.is_terminal && mv_is_absent(&xval.terminal_mlrval)) {
+		mlhmmv_xvalue_free(xval); // xxx confusing ownership semantics
+	} else {
+		mlhmmv_xvalue_free(pentry->value); // xxx rename
+		pentry->value = xval;
+	}
+}
+
+// ----------------------------------------------------------------
 void local_stack_frame_assign_terminal_indexed(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, sllmv_t* pmvkeys,
 	mv_t terminal_value)
@@ -233,6 +264,33 @@ void local_stack_frame_assign_terminal_indexed(local_stack_frame_t* pframe,
 
 	LOCAL_STACK_TRACE(printf("VALUE IS:\n"));
 	LOCAL_STACK_TRACE(mlhmmv_level_print_stacked(pmvalue->pnext_level, 0, TRUE, TRUE, "", stdout));
+}
+
+// ----------------------------------------------------------------
+void local_stack_frame_assign_extended_nonindexed(local_stack_frame_t* pframe,
+	int vardef_frame_relative_index, mlhmmv_xvalue_t xval)
+{
+	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
+	LOCAL_STACK_BOUNDS_CHECK(pframe, "ASSIGN", TRUE, vardef_frame_relative_index);
+	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
+
+	// xxx subroutineize
+	if (xval.is_terminal) {
+		if (!(type_mask_from_mv(&xval.terminal_mlrval) & pentry->type_mask)) { // xxx temp
+			local_stack_frame_throw_type_mismatch(pentry, &xval.terminal_mlrval);
+		}
+	} else {
+		if (!(TYPE_MASK_MAP & pentry->type_mask)) { // xxx temp
+			local_stack_frame_throw_type_mismatch(pentry, &xval.terminal_mlrval); // xxx allow xvals
+		}
+	}
+
+	// xxx temp -- make a single method
+	mv_free(&pentry->value.terminal_mlrval); // xxx temp -- make value-free
+
+	// xxx temp -- make a single method
+	mlhmmv_xvalue_free(pentry->value); // xxx rename
+	pentry->value = xval;
 }
 
 // ----------------------------------------------------------------
