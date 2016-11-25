@@ -227,6 +227,7 @@ static void rxval_evaluator_from_map_literal_free_aux(map_literal_list_evaluator
 		if (pkvpair_evaluator->plist_evaluator != NULL) {
 			rxval_evaluator_from_map_literal_free_aux(pkvpair_evaluator->plist_evaluator);
 		}
+		free(pkvpair_evaluator);
 	}
 	sllv_free(plist_evaluator->pkvpair_evaluators);
 	free(plist_evaluator);
