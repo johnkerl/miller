@@ -83,10 +83,10 @@ void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, in
 local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe);
 void local_stack_frame_exit(local_stack_frame_t* pframe);
 void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv_t* pval);
-void local_stack_frame_throw_type_xmismatch(local_stack_frame_entry_t* pentry, mlhmmv_xvalue_t* pxval); // xxx temp
+void local_stack_frame_throw_type_xmismatch(local_stack_frame_entry_t* pentry, mlhmmv_xvalue_t* pxval);
 
 // ----------------------------------------------------------------
-static inline mv_t local_stack_frame_get_terminal_from_nonindexed(local_stack_frame_t* pframe,
+static inline mv_t local_stack_frame_get_terminal_from_nonindexed(local_stack_frame_t* pframe, // move to reference semantics
 	int vardef_frame_relative_index)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));

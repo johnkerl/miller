@@ -367,7 +367,6 @@ mlr_dsl_cst_statement_t* alloc_emitf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 			MLR_INTERNAL_CODING_ERROR();
 			break;
 		}
-		// This could be enforced in the lemon parser but it's easier to do it here. // xxx rm cmt x all
 		sllv_append(pstate->pemitf_items,
 			alloc_emitf_item(
 				name,
@@ -1051,6 +1050,11 @@ typedef struct _emit_lashed_state_t {
 	emit_lashed_item_t** ppitems;
 	sllv_t*              pemit_namelist_evaluators;
 
+	// Used per-call but allocated once in the constructor:
+	mv_t*                pbasenames;
+	boxed_xval_t*        pboxed_xvals;
+	mlhmmv_xvalue_t**    ptop_values;
+
 	rval_evaluator_t*    poutput_filename_evaluator;
 	FILE*                stdfp;
 	file_output_mode_t   file_output_mode;
@@ -1128,6 +1132,10 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 	}
 	pstate->pemit_namelist_evaluators = pemit_namelist_evaluators;
 
+	pstate->pbasenames   = mlr_malloc_or_die(pstate->num_emit_lashed_items * sizeof(mv_t));
+	pstate->pboxed_xvals = mlr_malloc_or_die(pstate->num_emit_lashed_items * sizeof(boxed_xval_t));
+	pstate->ptop_values  = mlr_malloc_or_die(pstate->num_emit_lashed_items * sizeof(mlhmmv_level_entry_t*));
+
 	mlr_dsl_cst_statement_handler_t* phandler = NULL;
 	pstate->do_full_prefixing = do_full_prefixing;
 	mlr_dsl_ast_node_t* pfilename_node = poutput_node->pchildren == NULL
@@ -1178,6 +1186,10 @@ static void free_emit_lashed(mlr_dsl_cst_statement_t* pstatement) {
 		}
 		sllv_free(pstate->pemit_namelist_evaluators);
 	}
+
+	free(pstate->pbasenames);
+	free(pstate->pboxed_xvals);
+	free(pstate->ptop_values);
 
 	if (pstate->psingle_lrec_writer != NULL) {
 		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer);
@@ -1261,11 +1273,9 @@ static void handle_emit_lashed_common(
 	sllv_t*              poutrecs,
 	char*                oosvar_flatten_separator)
 {
-	// xxx alloc array in ctor, free in dtor, reuse here
-	mv_t* pbasenames = mlr_malloc_or_die(pstate->num_emit_lashed_items * sizeof(mv_t));
 	for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
 		rval_evaluator_t* pev = pstate->ppitems[i]->pbasename_evaluator;
-		pbasenames[i] = pev->pprocess_func(pev->pvstate, pvars);
+		pstate->pbasenames[i] = pev->pprocess_func(pev->pvstate, pvars);
 	}
 
 	int names_all_non_null_or_error = TRUE;
@@ -1274,36 +1284,28 @@ static void handle_emit_lashed_common(
 	if (names_all_non_null_or_error) {
 
 		// xxx alloc array in ctor, free in dtor, reuse here
-		boxed_xval_t* pboxed_xvals = mlr_malloc_or_die(
-			pstate->num_emit_lashed_items * sizeof(boxed_xval_t));
 		// xxx comment
-		mlhmmv_xvalue_t** ptop_values = mlr_malloc_or_die(
-			pstate->num_emit_lashed_items * sizeof(mlhmmv_level_entry_t*));
 		for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
 			emit_lashed_item_t* pitem = pstate->ppitems[i];
-			pboxed_xvals[i] = pitem->pitem_xevaluator->pprocess_func(
+			pstate->pboxed_xvals[i] = pitem->pitem_xevaluator->pprocess_func(
 				pitem->pitem_xevaluator->pvstate, pvars);
-			ptop_values[i] = &pboxed_xvals[i].xval;
+			pstate->ptop_values[i] = &pstate->pboxed_xvals[i].xval;
 		}
 
-		mlhmmv_xvalues_to_lrecs_lashed(ptop_values, pstate->num_emit_lashed_items, pbasenames, pmvnames,
-			poutrecs, pstate->do_full_prefixing, oosvar_flatten_separator);
+		mlhmmv_xvalues_to_lrecs_lashed(pstate->ptop_values, pstate->num_emit_lashed_items,
+			pstate->pbasenames, pmvnames, poutrecs, pstate->do_full_prefixing, oosvar_flatten_separator);
 
 		for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
-			if (pboxed_xvals[i].is_ephemeral) {
-				mlhmmv_xvalue_free(&pboxed_xvals[i].xval);
+			if (pstate->pboxed_xvals[i].is_ephemeral) {
+				mlhmmv_xvalue_free(&pstate->pboxed_xvals[i].xval);
 			}
 		}
-
-		free(ptop_values);
-		free(pboxed_xvals);
 	}
 	sllmv_free(pmvnames);
 
 	for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
-		mv_free(&pbasenames[i]);
+		mv_free(&pstate->pbasenames[i]);
 	}
-	free(pbasenames);
 }
 
 // ================================================================
