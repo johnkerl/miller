@@ -114,8 +114,6 @@ mlhmmv_root_t* mlhmmv_root_alloc();
 
 void mlhmmv_root_free(mlhmmv_root_t* pmap);
 
-void mlhmmv_root_put_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
-
 // If the return value is non-null, error will be MLHMMV_ERROR_NONE.  If the
 // return value is null, the error will be MLHMMV_ERROR_KEYLIST_TOO_DEEP or
 // MLHMMV_ERROR_KEYLIST_TOO_SHALLOW, or MLHMMV_ERROR_NONE if the keylist matches
@@ -134,6 +132,8 @@ mlhmmv_level_t* mlhmmv_root_look_up_or_create_then_ref_level(mlhmmv_root_t* pmap
 // The CST logic can use this function to get the @records[$key1][$key2] level of the mlhmmv,
 // then copy values from there.
 mlhmmv_level_t* mlhmmv_root_look_up_and_ref_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, int* perror);
+
+void mlhmmv_root_put_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
 
 // For oosvar-to-oosvar assignment.
 void mlhmmv_root_copy_submap(mlhmmv_root_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys);

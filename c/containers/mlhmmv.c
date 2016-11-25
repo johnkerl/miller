@@ -55,6 +55,8 @@ static void mlhmmv_level_put_xvalue_no_enlarge(mlhmmv_level_t* plevel, sllmve_t*
 
 static void mlhmmv_level_put_terminal_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
 
+static mlhmmv_level_t* mlhmmv_level_ref_or_create(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
+
 static void mlhmmv_level_to_lrecs_across_records(
 	mlhmmv_level_t* plevel,
 	char*           prefix,
@@ -664,6 +666,44 @@ void mlhmmv_root_free(mlhmmv_root_t* pmap) {
 	free(pmap);
 }
 
+// ----------------------------------------------------------------
+mv_t* mlhmmv_root_look_up_and_ref_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, int* perror) {
+	mlhmmv_level_entry_t* plevel_entry = mlhmmv_level_look_up_and_ref_entry(pmap->proot_level, pmvkeys->phead, perror);
+	if (plevel_entry == NULL) {
+		return NULL;
+	}
+	if (!plevel_entry->level_value.is_terminal) {
+		*perror = MLHMMV_ERROR_KEYLIST_TOO_SHALLOW;
+		return NULL;
+	}
+	return &plevel_entry->level_value.terminal_mlrval;
+}
+
+// ----------------------------------------------------------------
+// Example on recursive calls:
+// * level = map, rest_keys = ["a", 2, "c"]
+// * level = map["a"], rest_keys = [2, "c"]
+// * level = map["a"][2], rest_keys = ["c"]
+mlhmmv_level_t* mlhmmv_root_look_up_or_create_then_ref_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
+	return mlhmmv_level_ref_or_create(pmap->proot_level, pmvkeys->phead);
+}
+
+// ----------------------------------------------------------------
+// Example: keys = ["a", 2, "c"] and value = 4.
+void mlhmmv_root_put_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value) {
+	mlhmmv_level_put_terminal(pmap->proot_level, pmvkeys->phead, pterminal_value);
+}
+
+// ----------------------------------------------------------------
+void mlhmmv_root_copy_submap(mlhmmv_root_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys) {
+	int error = 0;
+	mlhmmv_level_entry_t* pfromentry = mlhmmv_level_look_up_and_ref_entry(pmap->proot_level, pfromkeys->phead, &error);
+	if (pfromentry != NULL) {
+		mlhmmv_xvalue_t submap = mlhmmv_xvalue_copy(&pfromentry->level_value);
+		mlhmmv_put_value_at_level(pmap, ptokeys, &submap);
+	}
+}
+
 // ================================================================
 // ================================================================
 // xxx @@@ to be reorganized from here on down
@@ -676,7 +716,6 @@ static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_
 
 static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_xvalue_t* plevel_value);
 
-static mlhmmv_level_t* mlhmmv_get_or_create_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
 static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
 
 static void mlhmmv_put_value_at_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mlhmmv_xvalue_t* pvalue);
@@ -745,12 +784,6 @@ static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_
 	}
 	MLR_INTERNAL_CODING_ERROR();
 	return -1; // not reached
-}
-
-// ----------------------------------------------------------------
-// Example: keys = ["a", 2, "c"] and value = 4.
-void mlhmmv_root_put_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value) {
-	mlhmmv_level_put_terminal(pmap->proot_level, pmvkeys->phead, pterminal_value);
 }
 
 static void mlhmmv_level_put_terminal_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value) {
@@ -866,20 +899,6 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_x
 }
 
 // ----------------------------------------------------------------
-// xxx merge these two
-mv_t* mlhmmv_root_look_up_and_ref_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, int* perror) {
-	mlhmmv_level_entry_t* plevel_entry = mlhmmv_level_look_up_and_ref_entry(pmap->proot_level, pmvkeys->phead, perror);
-	if (plevel_entry == NULL) {
-		return NULL;
-	}
-	if (!plevel_entry->level_value.is_terminal) {
-		*perror = MLHMMV_ERROR_KEYLIST_TOO_SHALLOW;
-		return NULL;
-	}
-	return &plevel_entry->level_value.terminal_mlrval;
-}
-
-// ----------------------------------------------------------------
 static mlhmmv_level_entry_t* mlhmmv_level_look_up_and_ref_entry(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* perror) {
 	if (perror)
 		*perror = MLHMMV_ERROR_NONE;
@@ -905,15 +924,7 @@ static mlhmmv_level_entry_t* mlhmmv_level_look_up_and_ref_entry(mlhmmv_level_t* 
 	return plevel_entry;
 }
 
-// ----------------------------------------------------------------
-// Example on recursive calls:
-// * level = map, rest_keys = ["a", 2, "c"]
-// * level = map["a"], rest_keys = [2, "c"]
-// * level = map["a"][2], rest_keys = ["c"]
-mlhmmv_level_t* mlhmmv_root_look_up_or_create_then_ref_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
-	return mlhmmv_get_or_create_level_aux(pmap->proot_level, pmvkeys->phead);
-}
-static mlhmmv_level_t* mlhmmv_get_or_create_level_aux(mlhmmv_level_t* plevel, sllmve_t* prest_keys) {
+static mlhmmv_level_t* mlhmmv_level_ref_or_create(mlhmmv_level_t* plevel, sllmve_t* prest_keys) {
 	if ((plevel->num_occupied + plevel->num_freed) >= (plevel->array_length * LOAD_FACTOR))
 		mlhmmv_level_enlarge(plevel);
 	return mlhmmv_get_or_create_level_aux_no_enlarge(plevel, prest_keys);
@@ -948,7 +959,7 @@ static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t*
 
 		if (prest_keys->pnext != NULL) {
 			// RECURSE
-			return mlhmmv_get_or_create_level_aux(pentry->level_value.pnext_level, prest_keys->pnext);
+			return mlhmmv_level_ref_or_create(pentry->level_value.pnext_level, prest_keys->pnext);
 		} else {
 			return pentry->level_value.pnext_level;
 		}
@@ -963,7 +974,7 @@ static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t*
 		if (prest_keys->pnext == NULL) {
 			return pentry->level_value.pnext_level;
 		} else { // RECURSE
-			return mlhmmv_get_or_create_level_aux(pentry->level_value.pnext_level, prest_keys->pnext);
+			return mlhmmv_level_ref_or_create(pentry->level_value.pnext_level, prest_keys->pnext);
 		}
 
 	} else {
@@ -1144,17 +1155,6 @@ static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* 
 		}
 	}
 
-}
-
-// ----------------------------------------------------------------
-void mlhmmv_root_copy_submap(mlhmmv_root_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys) {
-	int error = 0;
-
-	mlhmmv_level_entry_t* pfromentry = mlhmmv_level_look_up_and_ref_entry(pmap->proot_level, pfromkeys->phead, &error);
-	if (pfromentry != NULL) {
-		mlhmmv_xvalue_t submap = mlhmmv_xvalue_copy(&pfromentry->level_value);
-		mlhmmv_put_value_at_level(pmap, ptokeys, &submap);
-	}
 }
 
 // ----------------------------------------------------------------
