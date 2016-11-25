@@ -102,19 +102,6 @@ static inline mv_t local_stack_frame_get_terminal_from_nonindexed(local_stack_fr
 }
 
 // ----------------------------------------------------------------
-mv_t local_stack_frame_get_terminal_from_indexed(local_stack_frame_t* pframe,
-	int vardef_frame_relative_index, sllmv_t* pmvkeys);
-
-mlhmmv_xvalue_t* local_stack_frame_get_extended_from_indexed(local_stack_frame_t* pframe,
-	int vardef_frame_relative_index, sllmv_t* pmvkeys);
-
-void local_stack_frame_define_terminal(local_stack_frame_t* pframe, char* variable_name,
-	int vardef_frame_relative_index, int type_mask, mv_t val);
-
-void local_stack_frame_define_extended(local_stack_frame_t* pframe, char* variable_name,
-	int vardef_frame_relative_index, int type_mask, mlhmmv_xvalue_t xval);
-
-// ----------------------------------------------------------------
 static inline void local_stack_frame_assign_terminal_nonindexed(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, mv_t val)
 {
@@ -132,6 +119,18 @@ static inline void local_stack_frame_assign_terminal_nonindexed(local_stack_fram
 }
 
 // ----------------------------------------------------------------
+mv_t local_stack_frame_get_terminal_from_indexed(local_stack_frame_t* pframe,
+	int vardef_frame_relative_index, sllmv_t* pmvkeys);
+
+mlhmmv_xvalue_t* local_stack_frame_get_extended_from_indexed(local_stack_frame_t* pframe,
+	int vardef_frame_relative_index, sllmv_t* pmvkeys);
+
+void local_stack_frame_define_terminal(local_stack_frame_t* pframe, char* variable_name,
+	int vardef_frame_relative_index, int type_mask, mv_t val);
+
+void local_stack_frame_define_extended(local_stack_frame_t* pframe, char* variable_name,
+	int vardef_frame_relative_index, int type_mask, mlhmmv_xvalue_t xval);
+
 void local_stack_frame_assign_extended_nonindexed(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, mlhmmv_xvalue_t xval);
 
