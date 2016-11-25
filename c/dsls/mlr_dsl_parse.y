@@ -54,8 +54,8 @@
 %syntax_error {
 	fprintf(stderr, "mlr DSL: syntax error at \"%s\"\n", TOKEN->text);
 
-//	xxx may or may not publish this ... it's confusing and maybe not better than nothing.
-//	xxx ideally we want the position within the input of the syntax error.
+//	This is confusing and (as is) worse than nothing.
+//	Ideally we want to show the position within the input of the syntax error.
 //
 //	int n = sizeof(yyTokenName) / sizeof(yyTokenName[0]);
 //	for (int i = 0; i < n; ++i) {
@@ -64,6 +64,7 @@
 //				fprintf(stderr, "Possible token \"%s\"\n", yyTokenName[i]);
 //			}
 //	}
+
 }
 
 // ================================================================

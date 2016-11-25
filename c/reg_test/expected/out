@@ -23996,6 +23996,8 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @t[1]   ; dump} ./re
 }
 {
   "s": 9,
+  "t": {
+  },
   "u": {
     "1": {
       "2": 9
@@ -24038,6 +24040,8 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1]   ; dump} ./re
   "s": 9,
   "t": {
     "1": 9
+  },
+  "u": {
   }
 }
 
@@ -24057,6 +24061,10 @@ mlr put -q @s=$x; @t[$a]=$x; @u[$a][$b]=$x; end{dump; unset @u[1][2]; dump} ./re
   "s": 9,
   "t": {
     "1": 9
+  },
+  "u": {
+    "1": {
+    }
   }
 }
 

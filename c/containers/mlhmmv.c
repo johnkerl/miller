@@ -97,8 +97,6 @@ static void mlhhmv_levels_to_lrecs_lashed_within_records(
 static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 	int do_final_comma, int quote_values_always, FILE* ostream);
 
-static void mlhmmv_level_remove(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* pemptied, int depth);
-
 // ----------------------------------------------------------------
 static void mlhmmv_root_put_xvalue(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mlhmmv_xvalue_t* pvalue);
 
@@ -1203,9 +1201,7 @@ static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 }
 
 // ----------------------------------------------------------------
-static void mlhmmv_level_remove(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* pemptied, int depth) {
-	*pemptied = FALSE;
-
+void mlhmmv_level_remove(mlhmmv_level_t* plevel, sllmve_t* prestkeys) {
 	if (prestkeys == NULL) // restkeys too short
 		return;
 
@@ -1218,48 +1214,9 @@ static void mlhmmv_level_remove(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int
 		// Keep recursing until end of restkeys.
 		if (pentry->level_value.is_terminal) // restkeys too long
 			return;
-		int descendant_emptied = FALSE;
-		mlhmmv_level_remove(pentry->level_value.pnext_level, prestkeys->pnext, &descendant_emptied, depth+1);
-
-		// If the recursive call emptied the next-level slot, remove it from our level as well. This may continue all
-		// the way back up. Example: the map is '{"a":{"b":{"c":4}}}' and we're asked to remove keylist ["a", "b", "c"].
-		// The recursive call to the terminal will leave '{"a":{"b":{}}}' -- note the '{}'. Then we remove
-		// that to leave '{"a":{}}'. Since this leaves another '{}', passing emptied==TRUE back to our caller
-		// leaves empty top-level map '{}'.
-		if (descendant_emptied) {
-			plevel->num_occupied--;
-			plevel->num_freed++;
-			plevel->states[index] = DELETED;
-			pentry->ideal_index = -1;
-			mv_free(&pentry->level_key);
-			pentry->level_key = mv_error();
-
-			if (pentry == plevel->phead) {
-				if (pentry == plevel->ptail) {
-					plevel->phead = NULL;
-					plevel->ptail = NULL;
-					*pemptied = TRUE;
-				} else {
-					plevel->phead = pentry->pnext;
-					pentry->pnext->pprev = NULL;
-				}
-			} else if (pentry == plevel->ptail) {
-					plevel->ptail = pentry->pprev;
-					pentry->pprev->pnext = NULL;
-			} else {
-				pentry->pprev->pnext = pentry->pnext;
-				pentry->pnext->pprev = pentry->pprev;
-			}
-			if (pentry->level_value.is_terminal) {
-				mv_free(&pentry->level_value.terminal_mlrval);
-			} else {
-				mlhmmv_level_free(pentry->level_value.pnext_level);
-			}
-		}
+		mlhmmv_level_remove(pentry->level_value.pnext_level, prestkeys->pnext);
 
 	} else {
-		// End of restkeys. Deletion & free logic goes here. Set *pemptied if the level was emptied out.
-
 		// 1. Excise the node and its descendants from the storage tree
 		if (plevel->states[index] != OCCUPIED) {
 			fprintf(stderr, "%s: mlhmmv_root_remove: did not find end of chain.\n", MLR_GLOBALS.bargv0);
@@ -1274,7 +1231,6 @@ static void mlhmmv_level_remove(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int
 			if (pentry == plevel->ptail) {
 				plevel->phead = NULL;
 				plevel->ptail = NULL;
-				*pemptied = TRUE;
 			} else {
 				plevel->phead = pentry->pnext;
 				pentry->pnext->pprev = NULL;
@@ -1297,7 +1253,6 @@ static void mlhmmv_level_remove(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int
 			mlhmmv_level_free(pentry->level_value.pnext_level);
 		}
 	}
-
 }
 
 // ================================================================
@@ -1417,8 +1372,7 @@ void mlhmmv_root_remove(mlhmmv_root_t* pmap, sllmv_t* prestkeys) {
 		pmap->proot_level = mlhmmv_level_alloc();
 		return;
 	} else {
-		int unused = FALSE;
-		mlhmmv_level_remove(pmap->proot_level, prestkeys->phead, &unused, 0);
+		mlhmmv_level_remove(pmap->proot_level, prestkeys->phead);
 	}
 }
 
