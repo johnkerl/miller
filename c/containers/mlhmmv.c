@@ -804,7 +804,6 @@ static void mlhmmv_level_put_terminal_no_enlarge(mlhmmv_level_t* plevel, sllmve_
 }
 
 // ----------------------------------------------------------------
-// xxx code-dup w/ mlhmmv_root_partial_to_lrecs and mlhmmv_root_all_to_lrecs
 void mlhmmv_level_to_lrecs(mlhmmv_level_t* plevel, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs,
 	int do_full_prefixing, char* flatten_separator)
 {
@@ -1509,31 +1508,8 @@ void mlhmmv_root_partial_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pkeys, sllmv_t* 
 {
 	// There should be at least the oosvar basename, e.g. '@a[b][c]' or '@a[b]' or '@a' but not '@'.
 	MLR_INTERNAL_CODING_ERROR_IF(pkeys->phead == NULL);
-	mv_t* pfirstkey = &pkeys->phead->value;
 
-	mlhmmv_level_entry_t* ptop_entry = mlhmmv_level_look_up_and_ref_entry(pmap->proot_level, pkeys->phead, NULL);
-
-	if (ptop_entry == NULL) {
-		// No such entry in the mlhmmv results in no output records
-	} else if (ptop_entry->level_value.is_terminal) {
-		// E.g. '@v = 3' at the top level of the mlhmmv.
-		lrec_t* poutrec = lrec_unbacked_alloc();
-		lrec_put(poutrec,
-			mv_alloc_format_val(pfirstkey),
-			mv_alloc_format_val(&ptop_entry->level_value.terminal_mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-		sllv_append(poutrecs, poutrec);
-	} else {
-		// E.g. '@v = {...}' at the top level of the mlhmmv: the map value keyed by oosvar-name 'v' is itself a hashmap.
-		// This needs to be flattened down to an lrec which is a list of key-value pairs.  We recursively invoke
-		// mlhmmv_level_to_lrecs_across_records for each of the name-list entries, one map level deeper each call, then
-		// from there invoke mlhmmv_level_to_lrec_within_record on any remaining map levels.
-		lrec_t* ptemplate = lrec_unbacked_alloc();
-		char* oosvar_name = mv_alloc_format_val(pfirstkey);
-		mlhmmv_level_to_lrecs_across_records(ptop_entry->level_value.pnext_level, oosvar_name, pnames->phead,
-			ptemplate, poutrecs, do_full_prefixing, flatten_separator);
-		free(oosvar_name);
-		lrec_free(ptemplate);
-	}
+	mlhmmv_level_to_lrecs(pmap->proot_level, pkeys, pnames, poutrecs, do_full_prefixing, flatten_separator);
 }
 
 // ----------------------------------------------------------------
