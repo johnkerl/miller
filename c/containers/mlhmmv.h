@@ -45,6 +45,15 @@ mlhmmv_xvalue_t mlhmmv_xvalue_alloc_empty_map();
 mlhmmv_xvalue_t mlhmmv_xvalue_copy(mlhmmv_xvalue_t* pxvalue);
 void            mlhmmv_xvalue_free(mlhmmv_xvalue_t* pxvalue);
 
+
+static inline int mlhmmv_xvalue_is_absent_and_nonterminal(mlhmmv_xvalue_t* pxvalue) {
+	return (pxvalue->is_terminal && mv_is_absent(&pxvalue->terminal_mlrval));
+}
+
+static inline int mlhmmv_xvalue_is_present_and_nonterminal(mlhmmv_xvalue_t* pxvalue) {
+	return (pxvalue->is_terminal && mv_is_present(&pxvalue->terminal_mlrval));
+}
+
 // Used by for-loops over map-valued local variables
 sllv_t* mlhmmv_xvalue_copy_keys_indexed   (mlhmmv_xvalue_t* pxvalue, sllmv_t* pmvkeys);
 sllv_t* mlhmmv_xvalue_copy_keys_nonindexed(mlhmmv_xvalue_t* pxvalue);

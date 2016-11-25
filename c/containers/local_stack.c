@@ -55,7 +55,7 @@ local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe) {
 
 // ----------------------------------------------------------------
 void local_stack_frame_exit (local_stack_frame_t* pframe) {
-	MLR_INTERNAL_CODING_ERROR_UNLESS(mv_is_absent(&pframe->pvars[0].xvalue.terminal_mlrval)); // xxx temp
+	MLR_INTERNAL_CODING_ERROR_UNLESS(mlhmmv_xvalue_is_absent_and_nonterminal(&pframe->pvars[0].xvalue));
 	for (int i = 0; i < pframe->size; i++)
 		mlhmmv_xvalue_free(&pframe->pvars[i].xvalue);
 	if (!pframe->ephemeral) {
