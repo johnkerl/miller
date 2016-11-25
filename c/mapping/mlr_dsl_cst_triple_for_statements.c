@@ -83,7 +83,7 @@ mlr_dsl_cst_statement_t* alloc_triple_for(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_
 		pnode,
 		handle_triple_for,
 		pblock,
-		handle_statement_block_with_break_continue,
+		mlr_dsl_cst_handle_statement_block_with_break_continue,
 		free_triple_for,
 		pstate);
 }
@@ -152,7 +152,7 @@ static void handle_triple_for(
 			break;
 
 		// Body statements
-		handle_statement_block_with_break_continue(pstatement->pblock, pvars, pcst_outputs);
+		mlr_dsl_cst_handle_statement_block_with_break_continue(pstatement->pblock, pvars, pcst_outputs);
 
 		if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 			loop_stack_clear(pvars->ploop_stack, LOOP_BROKEN);

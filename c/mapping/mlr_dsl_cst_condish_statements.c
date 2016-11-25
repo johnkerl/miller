@@ -38,7 +38,7 @@ mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_cst_t* pcst, mlr_dsl_as
 	}
 
 	mlr_dsl_cst_block_handler_t* pblock_handler = (context_flags & IN_BREAKABLE)
-		? handle_statement_block_with_break_continue
+		? mlr_dsl_cst_handle_statement_block_with_break_continue
 		: mlr_dsl_cst_handle_statement_block;
 
 	return mlr_dsl_cst_statement_valloc_with_block(
@@ -181,7 +181,7 @@ mlr_dsl_cst_statement_t* alloc_if_head(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* 
 	}
 
 	mlr_dsl_cst_block_handler_t* pblock_handler = (context_flags & IN_BREAKABLE)
-		?  handle_statement_block_with_break_continue
+		?  mlr_dsl_cst_handle_statement_block_with_break_continue
 		: mlr_dsl_cst_handle_statement_block;
 
 	return mlr_dsl_cst_statement_valloc_with_block(
@@ -311,7 +311,7 @@ mlr_dsl_cst_statement_t* alloc_while(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 		pnode,
 		handle_while,
 		pblock,
-		handle_statement_block_with_break_continue,
+		mlr_dsl_cst_handle_statement_block_with_break_continue,
 		free_while,
 		pstate);
 }
@@ -402,7 +402,7 @@ mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t*
 		pnode,
 		handle_do_while,
 		pblock,
-		handle_statement_block_with_break_continue,
+		mlr_dsl_cst_handle_statement_block_with_break_continue,
 		free_do_while,
 		pstate);
 }

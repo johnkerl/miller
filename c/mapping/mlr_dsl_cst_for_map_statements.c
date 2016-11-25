@@ -134,7 +134,7 @@ mlr_dsl_cst_statement_t* alloc_for_oosvar(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_
 		pnode,
 		handle_for_oosvar,
 		pblock,
-		handle_statement_block_with_break_continue,
+		mlr_dsl_cst_handle_statement_block_with_break_continue,
 		free_for_oosvar,
 		pstate);
 }
@@ -185,7 +185,7 @@ static void handle_for_oosvar(
 			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level
 			// deeper into the submap.  Note there must be at least one k-name so we are assuming
 			// the for-loop within handle_for_oosvar_aux was gone through once & thus
-			// handle_statement_block_with_break_continue was called through there.
+			// mlr_dsl_cst_handle_statement_block_with_break_continue was called through there.
 
 			handle_for_oosvar_aux(pstatement, pvars, pcst_outputs, submap,
 				pstate->k_variable_names, pstate->k_frame_relative_indices,
@@ -321,7 +321,7 @@ mlr_dsl_cst_statement_t* alloc_for_oosvar_key_only(mlr_dsl_cst_t* pcst, mlr_dsl_
 		pnode,
 		handle_for_oosvar_key_only,
 		pblock,
-		handle_statement_block_with_break_continue,
+		mlr_dsl_cst_handle_statement_block_with_break_continue,
 		free_for_oosvar_key_only,
 		pstate);
 }
@@ -476,7 +476,7 @@ mlr_dsl_cst_statement_t* alloc_for_local_map(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 		pnode,
 		handle_for_local_map,
 		pblock,
-		handle_statement_block_with_break_continue,
+		mlr_dsl_cst_handle_statement_block_with_break_continue,
 		free_for_local_map,
 		pstate);
 }
@@ -523,7 +523,7 @@ static void handle_for_local_map(
 		// indexed by [3, $4].  Copy it for the very likely case that it is being updated inside the
 		// for-loop.
 
-		mlhmmv_xvalue_t *psubmap = local_stack_frame_get_extended_from_indexed(pframe,
+		mlhmmv_xvalue_t *psubmap = local_stack_frame_ref_extended_from_indexed(pframe,
 			pstate->target_frame_relative_index, ptarget_keylist);
 
 		if (psubmap != NULL) {
@@ -536,7 +536,7 @@ static void handle_for_local_map(
 				// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level
 				// deeper into the submap.  Note there must be at least one k-name so we are assuming
 				// the for-loop within handle_for_local_map_aux was gone through once & thus
-				// handle_statement_block_with_break_continue was called through there.
+				// mlr_dsl_cst_handle_statement_block_with_break_continue was called through there.
 
 				handle_for_local_map_aux(pstatement, pvars, pcst_outputs, submap,
 					pstate->k_variable_names, pstate->k_frame_relative_indices,
@@ -662,7 +662,7 @@ mlr_dsl_cst_statement_t* alloc_for_local_map_key_only(mlr_dsl_cst_t* pcst, mlr_d
 	// xxx comment liberally
 	MLR_INTERNAL_CODING_ERROR_IF(pmiddle->vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstate->target_frame_relative_index = pmiddle->vardef_frame_relative_index;
-	pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node( // xxx rename x 2
+	pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
 		pmiddle, pcst->pfmgr, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
@@ -678,7 +678,7 @@ mlr_dsl_cst_statement_t* alloc_for_local_map_key_only(mlr_dsl_cst_t* pcst, mlr_d
 		pnode,
 		handle_for_local_map_key_only,
 		pblock,
-		handle_statement_block_with_break_continue,
+		mlr_dsl_cst_handle_statement_block_with_break_continue,
 		free_for_local_map_key_only,
 		pstate);
 }
@@ -719,7 +719,7 @@ static void handle_for_local_map_key_only(
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 
-		mlhmmv_xvalue_t *psubmap = local_stack_frame_get_extended_from_indexed(pframe,
+		mlhmmv_xvalue_t *psubmap = local_stack_frame_ref_extended_from_indexed(pframe,
 			pstate->target_frame_relative_index, ptarget_keylist);
 		sllv_t* pkeys = mlhmmv_xvalue_copy_keys_indexed(psubmap, NULL); // xxx refactor w/o null
 
@@ -833,7 +833,7 @@ mlr_dsl_cst_statement_t* alloc_for_map_literal(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 		pnode,
 		handle_for_map_literal,
 		pblock,
-		handle_statement_block_with_break_continue,
+		mlr_dsl_cst_handle_statement_block_with_break_continue,
 		free_for_map_literal,
 		pstate);
 }
@@ -881,7 +881,7 @@ static void handle_for_map_literal(
 		// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level
 		// deeper into the submap.  Note there must be at least one k-name so we are assuming
 		// the for-loop within handle_for_map_literal_aux was gone through once & thus
-		// handle_statement_block_with_break_continue was called through there.
+		// mlr_dsl_cst_handle_statement_block_with_break_continue was called through there.
 
 		handle_for_map_literal_aux(pstatement, pvars, pcst_outputs, &boxed_xval.xval,
 			pstate->k_variable_names, pstate->k_frame_relative_indices,
@@ -1017,7 +1017,7 @@ mlr_dsl_cst_statement_t* alloc_for_map_literal_key_only(mlr_dsl_cst_t* pcst, mlr
 		pnode,
 		handle_for_map_literal_key_only,
 		pblock,
-		handle_statement_block_with_break_continue,
+		mlr_dsl_cst_handle_statement_block_with_break_continue,
 		free_for_map_literal_key_only,
 		pstate);
 }

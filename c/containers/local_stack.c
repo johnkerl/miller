@@ -98,7 +98,7 @@ local_stack_frame_t* local_stack_pop(local_stack_t* pstack) {
 }
 
 // ----------------------------------------------------------------
-mv_t local_stack_frame_get_terminal_from_indexed(local_stack_frame_t* pframe, // xxx rename
+mv_t local_stack_frame_ref_terminal_from_indexed(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, sllmv_t* pmvkeys)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
@@ -147,7 +147,7 @@ mv_t local_stack_frame_get_terminal_from_indexed(local_stack_frame_t* pframe, //
 }
 
 // ----------------------------------------------------------------
-mlhmmv_xvalue_t* local_stack_frame_get_extended_from_indexed(local_stack_frame_t* pframe, // xxx rename w/ 'reference' in name
+mlhmmv_xvalue_t* local_stack_frame_ref_extended_from_indexed(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, sllmv_t* pmvkeys)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
@@ -289,7 +289,7 @@ void local_stack_frame_assign_extended_nonindexed(local_stack_frame_t* pframe,
 }
 
 // ----------------------------------------------------------------
-void local_stack_frame_assign_extended_indexed(local_stack_frame_t* pframe, // xxx rename
+void local_stack_frame_assign_extended_indexed(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, sllmv_t* pmvkeys,
 	mlhmmv_xvalue_t new_value) // xxx by ptr
 {

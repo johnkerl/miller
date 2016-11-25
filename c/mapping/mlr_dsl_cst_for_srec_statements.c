@@ -94,7 +94,7 @@ mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t*
 		pnode,
 		handle_for_srec,
 		pblock,
-		handle_statement_block_with_break_continue,
+		mlr_dsl_cst_handle_statement_block_with_break_continue,
 		free_for_srec,
 		pstate);
 }

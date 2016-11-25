@@ -551,7 +551,7 @@ void mlr_dsl_cst_handle_statement_block(
 
 // This is for statement lists recursively contained within a loop body.
 // It checks for break or continue flags after each statement.
-void handle_statement_block_with_break_continue(
+void mlr_dsl_cst_handle_statement_block_with_break_continue(
 	cst_statement_block_t* pblock,
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs)

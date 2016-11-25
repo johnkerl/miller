@@ -249,7 +249,7 @@ static void handle_return_value_from_indexed_local_variable(
 	if (all_non_null_or_error) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 
-		mlhmmv_xvalue_t* pmvalue = local_stack_frame_get_extended_from_indexed(pframe,
+		mlhmmv_xvalue_t* pmvalue = local_stack_frame_ref_extended_from_indexed(pframe,
 			pstate->rhs_frame_relative_index, pmvkeys);
 
 		if (pmvalue == NULL) {

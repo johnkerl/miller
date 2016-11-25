@@ -869,7 +869,7 @@ static void record_emitter_from_local_variable(
 		if (names_all_non_null_or_error) {
 
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-			mlhmmv_xvalue_t* pmval = local_stack_frame_get_extended_from_indexed(pframe,
+			mlhmmv_xvalue_t* pmval = local_stack_frame_ref_extended_from_indexed(pframe,
 				pstate->localvar_frame_relative_index, NULL);
 			if (pmval != NULL) {
 

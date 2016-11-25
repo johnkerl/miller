@@ -230,7 +230,7 @@ void mlr_dsl_cst_handle_statement_block(
 	variables_t*           pvars,
 	cst_outputs_t*         pcst_outputs);
 
-void handle_statement_block_with_break_continue( // xxx rename w/ prefix
+void mlr_dsl_cst_handle_statement_block_with_break_continue(
 	cst_statement_block_t* pblock,
 	variables_t*           pvars,
 	cst_outputs_t*         pcst_outputs);
