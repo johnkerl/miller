@@ -791,7 +791,7 @@ mlr_dsl_cst_statement_t* alloc_for_map_literal(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 	// Left child node is list of bound variables.
 	//   Left subnode is namelist for key boundvars.
 	//   Right subnode is name for value boundvar.
-	// Middle child node is keylist for basepoint in the local mlhmmv. // xxx update
+	// Middle child node is keylist for basepoint in the localvar/mlhmmv.
 	// Right child node is the list of statements in the body.
 	mlr_dsl_ast_node_t* pleft     = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* psubleft  = pleft->pchildren->phead->pvvalue;
