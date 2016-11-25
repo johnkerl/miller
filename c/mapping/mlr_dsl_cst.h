@@ -328,7 +328,7 @@ mlr_dsl_cst_statement_t* alloc_final_filter(
 	int                 context_flags);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// mapping/mlr_dsl_cst_scalar_assignment_statements.c
+// mapping/mlr_dsl_cst_terminal_assignment_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_srec_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_indirect_srec_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_env_assignment;

@@ -86,7 +86,7 @@ void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv
 void local_stack_frame_throw_type_xmismatch(local_stack_frame_entry_t* pentry, mlhmmv_xvalue_t* pxval); // xxx temp
 
 // ----------------------------------------------------------------
-static inline mv_t local_stack_frame_get_scalar_from_nonindexed(local_stack_frame_t* pframe,
+static inline mv_t local_stack_frame_get_terminal_from_nonindexed(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
@@ -101,14 +101,15 @@ static inline mv_t local_stack_frame_get_scalar_from_nonindexed(local_stack_fram
 	}
 }
 
-mv_t local_stack_frame_get_scalar_from_indexed(local_stack_frame_t* pframe, // xxx rename
+// ----------------------------------------------------------------
+mv_t local_stack_frame_get_terminal_from_indexed(local_stack_frame_t* pframe, // xxx rename
 	int vardef_frame_relative_index, sllmv_t* pmvkeys);
 
 mlhmmv_xvalue_t* local_stack_frame_get_extended_from_indexed(local_stack_frame_t* pframe, // xxx rename
 	int vardef_frame_relative_index, sllmv_t* pmvkeys);
 
 // ----------------------------------------------------------------
-static inline void local_stack_frame_define_scalar(local_stack_frame_t* pframe, char* variable_name,
+static inline void local_stack_frame_define_terminal(local_stack_frame_t* pframe, char* variable_name,
 	int vardef_frame_relative_index, int type_mask, mv_t val)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
@@ -164,7 +165,7 @@ static inline void local_stack_frame_define_extended(local_stack_frame_t* pframe
 
 
 // ----------------------------------------------------------------
-static inline void local_stack_frame_assign_scalar_nonindexed(local_stack_frame_t* pframe, // xxx rename
+static inline void local_stack_frame_assign_terminal_nonindexed(local_stack_frame_t* pframe, // xxx rename
 	int vardef_frame_relative_index, mv_t val)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
@@ -180,6 +181,7 @@ static inline void local_stack_frame_assign_scalar_nonindexed(local_stack_frame_
 	pentry->value = mlhmmv_xvalue_wrap_terminal(val); // xxx deep-copy?
 }
 
+// ----------------------------------------------------------------
 static inline void local_stack_frame_assign_extended_nonindexed(local_stack_frame_t* pframe, // xxx rename
 	int vardef_frame_relative_index, mlhmmv_xvalue_t xval)
 {
@@ -206,7 +208,8 @@ static inline void local_stack_frame_assign_extended_nonindexed(local_stack_fram
 	pentry->value = xval;
 }
 
-void local_stack_frame_assign_scalar_indexed(local_stack_frame_t* pframe,
+// ----------------------------------------------------------------
+void local_stack_frame_assign_terminal_indexed(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, sllmv_t* pmvkeys,
 	mv_t terminal_value);
 
@@ -233,6 +236,7 @@ static inline void local_stack_subframe_enter(local_stack_frame_t* pframe, int c
 	pframe->subframe_base += count;
 }
 
+// ----------------------------------------------------------------
 static inline void local_stack_subframe_exit(local_stack_frame_t* pframe, int count) {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK SUBFRAME %p EXIT  %d->%d\n",
 		pframe, pframe->subframe_base, pframe->subframe_base-count));

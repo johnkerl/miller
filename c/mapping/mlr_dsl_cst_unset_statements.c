@@ -202,7 +202,7 @@ static void handle_unset_local_variable(
 	cst_outputs_t* pcst_outputs)
 {
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	local_stack_frame_assign_scalar_nonindexed(pframe, punset_item->local_variable_frame_relative_index, mv_absent());
+	local_stack_frame_assign_terminal_nonindexed(pframe, punset_item->local_variable_frame_relative_index, mv_absent());
 }
 
 static void handle_unset_oosvar(
