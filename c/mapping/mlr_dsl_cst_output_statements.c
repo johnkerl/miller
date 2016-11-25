@@ -1283,8 +1283,6 @@ static void handle_emit_lashed_common(
 		&names_all_non_null_or_error);
 	if (names_all_non_null_or_error) {
 
-		// xxx alloc array in ctor, free in dtor, reuse here
-		// xxx comment
 		for (int i = 0; i < pstate->num_emit_lashed_items; i++) {
 			emit_lashed_item_t* pitem = pstate->ppitems[i];
 			pstate->pboxed_xvals[i] = pitem->pitem_xevaluator->pprocess_func(
