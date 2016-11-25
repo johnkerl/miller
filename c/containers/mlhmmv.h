@@ -108,10 +108,12 @@ void mlhmmv_level_remove(mlhmmv_level_t* plevel, sllmve_t* prestkeys);
 
 mv_t*            mlhmmv_level_look_up_and_ref_terminal(mlhmmv_level_t* plevel, sllmv_t*  pmvkeys, int* perror);
 mlhmmv_xvalue_t* mlhmmv_level_look_up_and_ref_xvalue  (mlhmmv_level_t* plevel, sllmv_t*  pmvkeys, int* perror);
-mlhmmv_level_t*  mlhmmv_level_put_empty_map           (mlhmmv_level_t* plevel, sllmve_t* prest_keys);
-void             mlhmmv_level_put_xvalue              (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_xvalue_t* pvalue);
-void             mlhmmv_level_put_terminal            (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
-void             mlhmmv_level_to_lrecs                (mlhmmv_level_t* plevel, sllmv_t* pkeys,
+mlhmmv_level_t*  mlhmmv_level_put_empty_map   (mlhmmv_level_t* plevel, sllmve_t* prest_keys);
+void             mlhmmv_level_put_xvalue      (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmmv_xvalue_t* pvalue);
+void      mlhmmv_level_put_xvalue_singly_keyed(mlhmmv_level_t* plevel, mv_t* pkey, mlhmmv_xvalue_t* pvalue);
+void             mlhmmv_level_put_terminal    (mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value);
+void    mlhmmv_level_put_terminal_singly_keyed(mlhmmv_level_t* plevel, mv_t* pkey, mv_t* pterminal_value);
+void             mlhmmv_level_to_lrecs        (mlhmmv_level_t* plevel, sllmv_t* pkeys,
 	sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing, char* flatten_separator);
 
 void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,

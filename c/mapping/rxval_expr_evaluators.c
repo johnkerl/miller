@@ -186,16 +186,15 @@ static void rxval_evaluator_from_map_literal_aux(
 		// mlhmmv_level_put_terminal will copy keys and values
 		mv_t mvkey = pkvpair->pkey_evaluator->pprocess_func(pkvpair->pkey_evaluator->pvstate, pvars);
 		if (pkvpair->is_terminal) {
-			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
 			boxed_xval_t boxed_xval = pkvpair->pxval_evaluator->pprocess_func(pkvpair->pxval_evaluator->pvstate, pvars);
 			if (!boxed_xval.xval.is_terminal && !boxed_xval.is_ephemeral) {
 				mlhmmv_xvalue_t copy_xval = mlhmmv_xvalue_copy(&boxed_xval.xval);
-				mlhmmv_level_put_xvalue(plevel, &e, &copy_xval);
+				mlhmmv_level_put_xvalue_singly_keyed(plevel, &mvkey, &copy_xval);
 			} else {
-				mlhmmv_level_put_xvalue(plevel, &e, &boxed_xval.xval);
+				mlhmmv_level_put_xvalue_singly_keyed(plevel, &mvkey, &boxed_xval.xval);
 			}
 		} else {
-			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL };
+			sllmve_t e = { .value = mvkey, .free_flags = 0, .pnext = NULL }; // xxx simplify API
 			mlhmmv_level_t* pnext_level = mlhmmv_level_put_empty_map(plevel, &e);
 			rxval_evaluator_from_map_literal_aux(pstate, pkvpair->plist_evaluator, pnext_level, pvars);
 		}
@@ -465,13 +464,12 @@ static boxed_xval_t rxval_evaluator_from_full_srec_func(void* pvstate, variables
 		// mlhmmv_level_put_terminal will copy mv keys and values so we needn't (and shouldn't)
 		// duplicate them here.
 		mv_t k = mv_from_string(pe->key, NO_FREE);
-		sllmve_t e = { .value = k, .free_flags = 0, .pnext = NULL };
 		mv_t* pomv = lhmsmv_get(pvars->ptyped_overlay, pe->key);
 		if (pomv != NULL) {
-			mlhmmv_level_put_terminal(boxed_xval.xval.pnext_level, &e, pomv); // xxx make a simpler 1-level API call
+			mlhmmv_level_put_terminal_singly_keyed(boxed_xval.xval.pnext_level, &k, pomv);
 		} else {
 			mv_t v = mv_from_string(pe->value, NO_FREE); // mlhmmv_level_put_terminal will copy
-			mlhmmv_level_put_terminal(boxed_xval.xval.pnext_level, &e, &v);
+			mlhmmv_level_put_terminal_singly_keyed(boxed_xval.xval.pnext_level, &k, &v);
 		}
 	}
 

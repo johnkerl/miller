@@ -209,9 +209,8 @@ mlhmmv_xvalue_t mlhmmv_xvalue_copy(mlhmmv_xvalue_t* pvalue) {
 			psubentry != NULL;
 			psubentry = psubentry->pnext)
 		{
-			sllmve_t e = { .value = psubentry->level_key, .free_flags = 0, .pnext = NULL };
 			mlhmmv_xvalue_t next_value = mlhmmv_xvalue_copy(&psubentry->level_value);
-			mlhmmv_level_put_xvalue(pdst_level, &e, &next_value);
+			mlhmmv_level_put_xvalue_singly_keyed(pdst_level, &psubentry->level_key, &next_value);
 		}
 
 		return (mlhmmv_xvalue_t) {
@@ -676,6 +675,11 @@ void mlhmmv_level_put_xvalue(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mlhmm
 	mlhmmv_level_put_xvalue_no_enlarge(plevel, prest_keys, pvalue);
 }
 
+void mlhmmv_level_put_xvalue_singly_keyed(mlhmmv_level_t* plevel, mv_t* pkey, mlhmmv_xvalue_t* pvalue) {
+	sllmve_t e = { .value = *pkey, .free_flags = 0, .pnext = NULL };
+	mlhmmv_level_put_xvalue(plevel, &e, pvalue);
+}
+
 // ----------------------------------------------------------------
 static void mlhmmv_level_put_xvalue_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys,
 	mlhmmv_xvalue_t* pvalue)
@@ -745,10 +749,16 @@ static void mlhmmv_level_put_xvalue_no_enlarge(mlhmmv_level_t* plevel, sllmve_t*
 // * level = map, rest_keys = ["a", 2, "c"] , terminal value = 4.
 // * level = map["a"], rest_keys = [2, "c"] , terminal value = 4.
 // * level = map["a"][2], rest_keys = ["c"] , terminal value = 4.
+
 void mlhmmv_level_put_terminal(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value) {
 	if ((plevel->num_occupied + plevel->num_freed) >= (plevel->array_length * LOAD_FACTOR))
 		mlhmmv_level_enlarge(plevel);
 	mlhmmv_level_put_terminal_no_enlarge(plevel, prest_keys, pterminal_value);
+}
+
+void mlhmmv_level_put_terminal_singly_keyed(mlhmmv_level_t* plevel, mv_t* pkey, mv_t* pterminal_value) {
+	sllmve_t e = { .value = *pkey, .free_flags = 0, .pnext = NULL };
+	mlhmmv_level_put_terminal(plevel, &e, pterminal_value);
 }
 
 // ----------------------------------------------------------------

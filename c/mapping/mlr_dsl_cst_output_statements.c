@@ -875,10 +875,9 @@ static void record_emitter_from_local_variable(
 				// xxx this is an unpleasant hack. The idea is to temporarily wrap the localvar
 				// in a parent map whose single key is the variable name.
 				mv_t name = mv_from_string(pstate->localvar_name, NO_FREE);
-				sllmve_t e = { .value = name, .free_flags = 0, .pnext = NULL };
 
 				mlhmmv_level_t* proot_level = mlhmmv_level_alloc();
-				mlhmmv_level_put_xvalue(proot_level, &e, pmval);
+				mlhmmv_level_put_xvalue_singly_keyed(proot_level, &name, pmval);
 
 				mlhmmv_root_t map;
 				map.proot_level = proot_level;
@@ -921,10 +920,9 @@ static void record_emitter_from_map_literal(
 			// xxx this is an unpleasant hack. The idea is to temporarily wrap the localvar
 			// in a parent map whose single key is the variable name.
 			mv_t name = mv_from_string("_", NO_FREE);
-			sllmve_t e = { .value = name, .free_flags = 0, .pnext = NULL };
 
 			mlhmmv_level_t* proot_level = mlhmmv_level_alloc();
-			mlhmmv_level_put_xvalue(proot_level, &e, &boxed_xval.xval);
+			mlhmmv_level_put_xvalue_singly_keyed(proot_level, &name, &boxed_xval.xval);
 
 			mlhmmv_root_t map;
 			map.proot_level = proot_level;
