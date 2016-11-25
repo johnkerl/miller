@@ -128,11 +128,6 @@ mv_t* mlhmmv_root_look_up_and_ref_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys
 // level of the mlhmmv, then copy values there.
 mlhmmv_level_t* mlhmmv_root_look_up_or_create_then_ref_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys);
 
-// This is an assignment for assignment to full srec, e.g. '$* = @records[$key1][$key2]'.
-// The CST logic can use this function to get the @records[$key1][$key2] level of the mlhmmv,
-// then copy values from there.
-mlhmmv_level_t* mlhmmv_root_look_up_and_ref_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, int* perror);
-
 void mlhmmv_root_put_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mv_t* pterminal_value);
 
 // For oosvar-to-oosvar assignment.

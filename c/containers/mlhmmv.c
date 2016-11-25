@@ -1539,35 +1539,6 @@ static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t*
 }
 
 // ----------------------------------------------------------------
-mlhmmv_level_t* mlhmmv_root_look_up_and_ref_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, int* perror) {
-	*perror = MLHMMV_ERROR_NONE;
-	sllmve_t* prest_keys = pmvkeys->phead;
-	if (prest_keys == NULL) {
-		*perror = MLHMMV_ERROR_KEYLIST_TOO_SHALLOW;
-	}
-	mlhmmv_level_t* plevel = pmap->proot_level;
-	mlhmmv_level_entry_t* plevel_entry = mlhmmv_level_get_next_level_entry(plevel, &prest_keys->value, NULL);
-	while (prest_keys->pnext != NULL) {
-		if (plevel_entry == NULL) {
-			return NULL;
-		} else if (plevel_entry->level_value.is_terminal) {
-			*perror = MLHMMV_ERROR_KEYLIST_TOO_DEEP;
-			return NULL;
-		} else {
-			plevel = plevel_entry->level_value.pnext_level;
-			prest_keys = prest_keys->pnext;
-			plevel_entry = mlhmmv_level_get_next_level_entry(plevel_entry->level_value.pnext_level,
-				&prest_keys->value, NULL);
-		}
-	}
-	if (plevel_entry == NULL || plevel_entry->level_value.is_terminal) {
-		*perror = MLHMMV_ERROR_KEYLIST_TOO_DEEP;
-		return NULL;
-	}
-	return plevel_entry->level_value.pnext_level;
-}
-
-// ----------------------------------------------------------------
 static mlhmmv_level_entry_t* mlhmmv_level_get_next_level_entry(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pindex) {
 	int ideal_index = 0;
 	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
