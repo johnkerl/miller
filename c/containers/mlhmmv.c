@@ -91,6 +91,14 @@ static void mlhhmv_levels_to_lrecs_lashed_within_records(
 	int              do_full_prefixing,
 	char*            flatten_separator);
 
+static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
+	int do_final_comma, int quote_values_always, FILE* ostream);
+
+static void mlhmmv_level_remove(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* pemptied, int depth);
+
+// ----------------------------------------------------------------
+static void mlhmmv_root_put_xvalue(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mlhmmv_xvalue_t* pvalue);
+
 // ================================================================
 void mlhmmv_print_terminal(mv_t* pmv, int quote_values_always, FILE* ostream) {
 	char* level_value_string = mv_alloc_format_val(pmv);
@@ -632,6 +640,150 @@ void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 		fprintf(ostream, "%s}\n", line_indent);
 }
 
+// ----------------------------------------------------------------
+static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
+	int do_final_comma, int quote_values_always, FILE* ostream)
+{
+	// Top-level opening brace goes on a line by itself; subsequents on the same line after the level key.
+	if (depth == 0)
+		fprintf(ostream, "{ ");
+	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
+		char* level_key_string = mv_alloc_format_val(&pentry->level_key);
+		json_print_string_escaped(ostream, level_key_string);
+		free(level_key_string);
+		fprintf(ostream, ": ");
+
+		if (pentry->level_value.is_terminal) {
+			char* level_value_string = mv_alloc_format_val(&pentry->level_value.terminal_mlrval);
+
+			if (quote_values_always) {
+				fprintf(ostream, "\"%s\"", level_value_string);
+			} else if (pentry->level_value.terminal_mlrval.type == MT_STRING) {
+				double unused;
+				if (mlr_try_float_from_string(level_value_string, &unused)) {
+					fprintf(ostream, "%s", level_value_string);
+				} else if (streq(level_value_string, "true") || streq(level_value_string, "false")) {
+					fprintf(ostream, "%s", level_value_string);
+				} else {
+					json_print_string_escaped(ostream,level_value_string);
+				}
+			} else {
+				fprintf(ostream, "%s", level_value_string);
+			}
+
+			free(level_value_string);
+			if (pentry->pnext != NULL)
+				fprintf(ostream, ", ");
+		} else {
+			fprintf(ostream, "{");
+			mlhmmv_level_print_single_line(pentry->level_value.pnext_level, depth + 1,
+				pentry->pnext != NULL, quote_values_always, ostream);
+		}
+	}
+	if (do_final_comma)
+		fprintf(ostream, " },");
+	else
+		fprintf(ostream, " }");
+}
+
+// ----------------------------------------------------------------
+static void mlhmmv_level_remove(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* pemptied, int depth) {
+	*pemptied = FALSE;
+
+	if (prestkeys == NULL) // restkeys too short
+		return;
+
+	int index = -1;
+	mlhmmv_level_entry_t* pentry = mlhmmv_level_get_next_level_entry(plevel, &prestkeys->value, &index);
+	if (pentry == NULL)
+		return;
+
+	if (prestkeys->pnext != NULL) {
+		// Keep recursing until end of restkeys.
+		if (pentry->level_value.is_terminal) // restkeys too long
+			return;
+		int descendant_emptied = FALSE;
+		mlhmmv_level_remove(pentry->level_value.pnext_level, prestkeys->pnext, &descendant_emptied, depth+1);
+
+		// If the recursive call emptied the next-level slot, remove it from our level as well. This may continue all
+		// the way back up. Example: the map is '{"a":{"b":{"c":4}}}' and we're asked to remove keylist ["a", "b", "c"].
+		// The recursive call to the terminal will leave '{"a":{"b":{}}}' -- note the '{}'. Then we remove
+		// that to leave '{"a":{}}'. Since this leaves another '{}', passing emptied==TRUE back to our caller
+		// leaves empty top-level map '{}'.
+		if (descendant_emptied) {
+			plevel->num_occupied--;
+			plevel->num_freed++;
+			plevel->states[index] = DELETED;
+			pentry->ideal_index = -1;
+			mv_free(&pentry->level_key);
+			pentry->level_key = mv_error();
+
+			if (pentry == plevel->phead) {
+				if (pentry == plevel->ptail) {
+					plevel->phead = NULL;
+					plevel->ptail = NULL;
+					*pemptied = TRUE;
+				} else {
+					plevel->phead = pentry->pnext;
+					pentry->pnext->pprev = NULL;
+				}
+			} else if (pentry == plevel->ptail) {
+					plevel->ptail = pentry->pprev;
+					pentry->pprev->pnext = NULL;
+			} else {
+				pentry->pprev->pnext = pentry->pnext;
+				pentry->pnext->pprev = pentry->pprev;
+			}
+			if (pentry->level_value.is_terminal) {
+				mv_free(&pentry->level_value.terminal_mlrval);
+			} else {
+				mlhmmv_level_free(pentry->level_value.pnext_level);
+			}
+		}
+
+	} else {
+		// End of restkeys. Deletion & free logic goes here. Set *pemptied if the level was emptied out.
+
+		// 1. Excise the node and its descendants from the storage tree
+		if (plevel->states[index] != OCCUPIED) {
+			fprintf(stderr, "%s: mlhmmv_root_remove: did not find end of chain.\n", MLR_GLOBALS.bargv0);
+			exit(1);
+		}
+
+		mv_free(&pentry->level_key);
+		pentry->ideal_index = -1;
+		plevel->states[index] = DELETED;
+
+		if (pentry == plevel->phead) {
+			if (pentry == plevel->ptail) {
+				plevel->phead = NULL;
+				plevel->ptail = NULL;
+				*pemptied = TRUE;
+			} else {
+				plevel->phead = pentry->pnext;
+				pentry->pnext->pprev = NULL;
+			}
+		} else if (pentry == plevel->ptail) {
+				plevel->ptail = pentry->pprev;
+				pentry->pprev->pnext = NULL;
+		} else {
+			pentry->pprev->pnext = pentry->pnext;
+			pentry->pnext->pprev = pentry->pprev;
+		}
+
+		plevel->num_freed++;
+		plevel->num_occupied--;
+
+		// 2. Free the memory for the node and its descendants
+		if (pentry->level_value.is_terminal) {
+			mv_free(&pentry->level_value.terminal_mlrval);
+		} else {
+			mlhmmv_level_free(pentry->level_value.pnext_level);
+		}
+	}
+
+}
+
 // ================================================================
 mlhmmv_root_t* mlhmmv_root_alloc() {
 	mlhmmv_root_t* pmap = mlr_malloc_or_die(sizeof(mlhmmv_root_t));
@@ -695,13 +847,219 @@ void mlhmmv_root_put_terminal(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mv_t* pterm
 }
 
 // ----------------------------------------------------------------
+static void mlhmmv_root_put_xvalue(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mlhmmv_xvalue_t* pvalue) {
+	mlhmmv_level_put_xvalue(pmap->proot_level, pmvkeys->phead, pvalue);
+}
+
+// ----------------------------------------------------------------
 void mlhmmv_root_copy_submap(mlhmmv_root_t* pmap, sllmv_t* ptokeys, sllmv_t* pfromkeys) {
 	int error = 0;
 	mlhmmv_level_entry_t* pfromentry = mlhmmv_level_look_up_and_ref_entry(pmap->proot_level, pfromkeys->phead, &error);
 	if (pfromentry != NULL) {
 		mlhmmv_xvalue_t submap = mlhmmv_xvalue_copy(&pfromentry->level_value);
-		mlhmmv_put_value_at_level(pmap, ptokeys, &submap);
+		mlhmmv_root_put_xvalue(pmap, ptokeys, &submap);
 	}
+}
+
+// ----------------------------------------------------------------
+mlhmmv_xvalue_t mlhmmv_root_copy_xvalue(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
+	int error;
+	if (pmvkeys == NULL || pmvkeys->length == 0) {
+		mlhmmv_xvalue_t root_value = (mlhmmv_xvalue_t) {
+			.is_terminal = FALSE,
+			.pnext_level = pmap->proot_level,
+		};
+		return mlhmmv_xvalue_copy(&root_value);
+	} else {
+		mlhmmv_level_entry_t* pfromentry = mlhmmv_level_look_up_and_ref_entry(
+			pmap->proot_level, pmvkeys->phead, &error);
+		if (pfromentry != NULL) {
+			return mlhmmv_xvalue_copy(&pfromentry->level_value);
+		} else {
+			return (mlhmmv_xvalue_t) {
+				.is_terminal = FALSE,
+				.terminal_mlrval = mv_absent(),
+				.pnext_level = NULL,
+			};
+		}
+	}
+}
+
+// ----------------------------------------------------------------
+sllv_t* mlhmmv_root_copy_keys_from_submap(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
+	int error;
+	if (pmvkeys->length == 0) {
+		mlhmmv_xvalue_t root_value = (mlhmmv_xvalue_t) {
+			.is_terminal = FALSE,
+			.pnext_level = pmap->proot_level,
+		};
+		return mlhmmv_xvalue_copy_keys_nonindexed(&root_value);
+	} else {
+		mlhmmv_level_entry_t* pfromentry = mlhmmv_level_look_up_and_ref_entry(
+			pmap->proot_level, pmvkeys->phead, &error);
+		if (pfromentry != NULL) {
+			return mlhmmv_xvalue_copy_keys_nonindexed(&pfromentry->level_value);
+		} else {
+			return sllv_alloc();
+		}
+	}
+}
+
+// ----------------------------------------------------------------
+// Removes entries from a specified level downward, unsetting any maps which become empty as a result.  For example, if
+// e.g. a=>b=>c=>4 and the c level is to be removed, then all up-nodes are emptied out & should be pruned.
+// * If restkeys too long (e.g. 'unset $a["b"]["c"]' with data "a":"b":3): do nothing.
+// * If restkeys just right: (e.g. 'unset $a["b"]' with data "a":"b":3) remove the terminal mlrval.
+// * If restkeys is too short: (e.g. 'unset $a["b"]' with data "a":"b":"c":4): remove the level and all below.
+
+void mlhmmv_root_remove(mlhmmv_root_t* pmap, sllmv_t* prestkeys) {
+	if (prestkeys == NULL) {
+		return;
+	} else if (prestkeys->phead == NULL) {
+		mlhmmv_level_free(pmap->proot_level);
+		pmap->proot_level = mlhmmv_level_alloc();
+		return;
+	} else {
+		int unused = FALSE;
+		mlhmmv_level_remove(pmap->proot_level, prestkeys->phead, &unused, 0);
+	}
+}
+
+// ----------------------------------------------------------------
+// For 'emit all' and 'emitp all'.
+void mlhmmv_root_all_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing,
+	char* flatten_separator)
+{
+	for (mlhmmv_level_entry_t* pentry = pmap->proot_level->phead; pentry != NULL; pentry = pentry->pnext) {
+		sllmv_t* pkey = sllmv_single_no_free(&pentry->level_key);
+		mlhmmv_root_partial_to_lrecs(pmap, pkey, pnames, poutrecs, do_full_prefixing, flatten_separator);
+		sllmv_free(pkey);
+	}
+}
+
+// ----------------------------------------------------------------
+// For 'emit' and 'emitp': the latter has do_full_prefixing == TRUE.  These allocate lrecs, appended to the poutrecs
+// list.
+
+// * pmap is the base-level oosvar multi-level hashmap.
+// * pkeys specify the level in the mlhmmv at which to produce data.
+// * pnames is used to pull subsequent-level keys out into separate fields.
+// * In case pnames isn't long enough to reach a terminal mlrval level in the mlhmmv,
+//   do_full_prefixing specifies whether to concatenate nested mlhmmv keys into single lrec keys.
+//
+// Examples:
+
+// * pkeys reaches a terminal level:
+//
+//   $ mlr --opprint put -q '@sum += $x; end { emit @sum }' ../data/small
+//   sum
+//   4.536294
+
+// * pkeys reaches terminal levels:
+//
+//   $ mlr --opprint put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' ../data/small
+//   a   b   sum
+//   pan pan 0.346790
+//   pan wye 0.502626
+//   eks pan 0.758680
+//   eks wye 0.381399
+//   eks zee 0.611784
+//   wye wye 0.204603
+//   wye pan 0.573289
+//   zee pan 0.527126
+//   zee wye 0.598554
+//   hat wye 0.031442
+
+// * pkeys reaches non-terminal levels: non-prefixed:
+//
+//   $ mlr --opprint put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' ../data/small
+//   a   pan      wye
+//   pan 0.346790 0.502626
+//
+//   a   pan      wye      zee
+//   eks 0.758680 0.381399 0.611784
+//
+//   a   wye      pan
+//   wye 0.204603 0.573289
+//
+//   a   pan      wye
+//   zee 0.527126 0.598554
+//
+//   a   wye
+//   hat 0.031442
+
+// * pkeys reaches non-terminal levels: prefixed:
+//
+//   $ mlr --opprint put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' ../data/small
+//   a   sum:pan  sum:wye
+//   pan 0.346790 0.502626
+//
+//   a   sum:pan  sum:wye  sum:zee
+//   eks 0.758680 0.381399 0.611784
+//
+//   a   sum:wye  sum:pan
+//   wye 0.204603 0.573289
+//
+//   a   sum:pan  sum:wye
+//   zee 0.527126 0.598554
+//
+//   a   sum:wye
+//   hat 0.031442
+
+void mlhmmv_root_partial_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing,
+	char* flatten_separator)
+{
+	// There should be at least the oosvar basename, e.g. '@a[b][c]' or '@a[b]' or '@a' but not '@'.
+	MLR_INTERNAL_CODING_ERROR_IF(pkeys->phead == NULL);
+	mv_t* pfirstkey = &pkeys->phead->value;
+
+	mlhmmv_level_entry_t* ptop_entry = mlhmmv_level_look_up_and_ref_entry(pmap->proot_level, pkeys->phead, NULL);
+
+	if (ptop_entry == NULL) {
+		// No such entry in the mlhmmv results in no output records
+	} else if (ptop_entry->level_value.is_terminal) {
+		// E.g. '@v = 3' at the top level of the mlhmmv.
+		lrec_t* poutrec = lrec_unbacked_alloc();
+		lrec_put(poutrec,
+			mv_alloc_format_val(pfirstkey),
+			mv_alloc_format_val(&ptop_entry->level_value.terminal_mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		sllv_append(poutrecs, poutrec);
+	} else {
+		// E.g. '@v = {...}' at the top level of the mlhmmv: the map value keyed by oosvar-name 'v' is itself a hashmap.
+		// This needs to be flattened down to an lrec which is a list of key-value pairs.  We recursively invoke
+		// mlhmmv_level_to_lrecs_across_records for each of the name-list entries, one map level deeper each call, then
+		// from there invoke mlhmmv_level_to_lrec_within_record on any remaining map levels.
+		lrec_t* ptemplate = lrec_unbacked_alloc();
+		char* oosvar_name = mv_alloc_format_val(pfirstkey);
+		mlhmmv_level_to_lrecs_across_records(ptop_entry->level_value.pnext_level, oosvar_name, pnames->phead,
+			ptemplate, poutrecs, do_full_prefixing, flatten_separator);
+		free(oosvar_name);
+		lrec_free(ptemplate);
+	}
+}
+
+// ----------------------------------------------------------------
+// This is simply JSON. Example output:
+// {
+//   "0":  {
+//     "fghij":  {
+//       "0":  17
+//     }
+//   },
+//   "3":  4,
+//   "abcde":  {
+//     "-6":  7
+//   }
+// }
+
+void mlhmmv_root_print_json_stacked(mlhmmv_root_t* pmap, int quote_values_always, char* line_indent, FILE* ostream) {
+	mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, quote_values_always, line_indent, ostream);
+}
+
+// ----------------------------------------------------------------
+void mlhmmv_root_print_json_single_lines(mlhmmv_root_t* pmap, int quote_values_always, FILE* ostream) {
+	mlhmmv_level_print_single_line(pmap->proot_level, 0, FALSE, quote_values_always, ostream);
+	fprintf(ostream, "\n");
 }
 
 // ================================================================
@@ -718,13 +1076,7 @@ static void mlhmmv_level_move(mlhmmv_level_t* plevel, mv_t* plevel_key, mlhmmv_x
 
 static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
 
-static void mlhmmv_put_value_at_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mlhmmv_xvalue_t* pvalue);
 
-
-static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* pemptied, int depth);
-
-static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
-	int do_final_comma, int quote_values_always, FILE* ostream);
 
 static void json_decimal_print(FILE* ostream, char* s);
 
@@ -1040,170 +1392,6 @@ static mlhmmv_xvalue_t* mlhmmv_level_get_next_level_xvalue(mlhmmv_level_t* pleve
 		return &pentry->level_value;
 }
 
-// ----------------------------------------------------------------
-// Removes entries from a specified level downward, unsetting any maps which become empty as a result.  For example, if
-// e.g. a=>b=>c=>4 and the c level is to be removed, then all up-nodes are emptied out & should be pruned.
-// * If restkeys too long (e.g. 'unset $a["b"]["c"]' with data "a":"b":3): do nothing.
-// * If restkeys just right: (e.g. 'unset $a["b"]' with data "a":"b":3) remove the terminal mlrval.
-// * If restkeys is too short: (e.g. 'unset $a["b"]' with data "a":"b":"c":4): remove the level and all below.
-
-void mlhmmv_root_remove(mlhmmv_root_t* pmap, sllmv_t* prestkeys) {
-	if (prestkeys == NULL) {
-		return;
-	} else if (prestkeys->phead == NULL) {
-		mlhmmv_level_free(pmap->proot_level);
-		pmap->proot_level = mlhmmv_level_alloc();
-		return;
-	} else {
-		int unused = FALSE;
-		mlhmmv_remove_aux(pmap->proot_level, prestkeys->phead, &unused, 0);
-	}
-}
-
-static void mlhmmv_remove_aux(mlhmmv_level_t* plevel, sllmve_t* prestkeys, int* pemptied, int depth) {
-	*pemptied = FALSE;
-
-	if (prestkeys == NULL) // restkeys too short
-		return;
-
-	int index = -1;
-	mlhmmv_level_entry_t* pentry = mlhmmv_level_get_next_level_entry(plevel, &prestkeys->value, &index);
-	if (pentry == NULL)
-		return;
-
-	if (prestkeys->pnext != NULL) {
-		// Keep recursing until end of restkeys.
-		if (pentry->level_value.is_terminal) // restkeys too long
-			return;
-		int descendant_emptied = FALSE;
-		mlhmmv_remove_aux(pentry->level_value.pnext_level, prestkeys->pnext, &descendant_emptied, depth+1);
-
-		// If the recursive call emptied the next-level slot, remove it from our level as well. This may continue all
-		// the way back up. Example: the map is '{"a":{"b":{"c":4}}}' and we're asked to remove keylist ["a", "b", "c"].
-		// The recursive call to the terminal will leave '{"a":{"b":{}}}' -- note the '{}'. Then we remove
-		// that to leave '{"a":{}}'. Since this leaves another '{}', passing emptied==TRUE back to our caller
-		// leaves empty top-level map '{}'.
-		if (descendant_emptied) {
-			plevel->num_occupied--;
-			plevel->num_freed++;
-			plevel->states[index] = DELETED;
-			pentry->ideal_index = -1;
-			mv_free(&pentry->level_key);
-			pentry->level_key = mv_error();
-
-			if (pentry == plevel->phead) {
-				if (pentry == plevel->ptail) {
-					plevel->phead = NULL;
-					plevel->ptail = NULL;
-					*pemptied = TRUE;
-				} else {
-					plevel->phead = pentry->pnext;
-					pentry->pnext->pprev = NULL;
-				}
-			} else if (pentry == plevel->ptail) {
-					plevel->ptail = pentry->pprev;
-					pentry->pprev->pnext = NULL;
-			} else {
-				pentry->pprev->pnext = pentry->pnext;
-				pentry->pnext->pprev = pentry->pprev;
-			}
-			if (pentry->level_value.is_terminal) {
-				mv_free(&pentry->level_value.terminal_mlrval);
-			} else {
-				mlhmmv_level_free(pentry->level_value.pnext_level);
-			}
-		}
-
-	} else {
-		// End of restkeys. Deletion & free logic goes here. Set *pemptied if the level was emptied out.
-
-		// 1. Excise the node and its descendants from the storage tree
-		if (plevel->states[index] != OCCUPIED) {
-			fprintf(stderr, "%s: mlhmmv_root_remove: did not find end of chain.\n", MLR_GLOBALS.bargv0);
-			exit(1);
-		}
-
-		mv_free(&pentry->level_key);
-		pentry->ideal_index = -1;
-		plevel->states[index] = DELETED;
-
-		if (pentry == plevel->phead) {
-			if (pentry == plevel->ptail) {
-				plevel->phead = NULL;
-				plevel->ptail = NULL;
-				*pemptied = TRUE;
-			} else {
-				plevel->phead = pentry->pnext;
-				pentry->pnext->pprev = NULL;
-			}
-		} else if (pentry == plevel->ptail) {
-				plevel->ptail = pentry->pprev;
-				pentry->pprev->pnext = NULL;
-		} else {
-			pentry->pprev->pnext = pentry->pnext;
-			pentry->pnext->pprev = pentry->pprev;
-		}
-
-		plevel->num_freed++;
-		plevel->num_occupied--;
-
-		// 2. Free the memory for the node and its descendants
-		if (pentry->level_value.is_terminal) {
-			mv_free(&pentry->level_value.terminal_mlrval);
-		} else {
-			mlhmmv_level_free(pentry->level_value.pnext_level);
-		}
-	}
-
-}
-
-// ----------------------------------------------------------------
-mlhmmv_xvalue_t mlhmmv_root_copy_xvalue(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
-	int error;
-	if (pmvkeys == NULL || pmvkeys->length == 0) {
-		mlhmmv_xvalue_t root_value = (mlhmmv_xvalue_t) {
-			.is_terminal = FALSE,
-			.pnext_level = pmap->proot_level,
-		};
-		return mlhmmv_xvalue_copy(&root_value);
-	} else {
-		mlhmmv_level_entry_t* pfromentry = mlhmmv_level_look_up_and_ref_entry(pmap->proot_level, pmvkeys->phead, &error);
-		if (pfromentry != NULL) {
-			return mlhmmv_xvalue_copy(&pfromentry->level_value);
-		} else {
-			return (mlhmmv_xvalue_t) {
-				.is_terminal = FALSE,
-				.terminal_mlrval = mv_absent(),
-				.pnext_level = NULL,
-			};
-		}
-	}
-}
-
-// ----------------------------------------------------------------
-sllv_t* mlhmmv_root_copy_keys_from_submap(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
-	int error;
-	if (pmvkeys->length == 0) {
-		mlhmmv_xvalue_t root_value = (mlhmmv_xvalue_t) {
-			.is_terminal = FALSE,
-			.pnext_level = pmap->proot_level,
-		};
-		return mlhmmv_xvalue_copy_keys_nonindexed(&root_value);
-	} else {
-		mlhmmv_level_entry_t* pfromentry = mlhmmv_level_look_up_and_ref_entry(pmap->proot_level, pmvkeys->phead, &error);
-		if (pfromentry != NULL) {
-			return mlhmmv_xvalue_copy_keys_nonindexed(&pfromentry->level_value);
-		} else {
-			return sllv_alloc();
-		}
-	}
-}
-
-// ----------------------------------------------------------------
-static void mlhmmv_put_value_at_level(mlhmmv_root_t* pmap, sllmv_t* pmvkeys, mlhmmv_xvalue_t* pvalue) {
-	mlhmmv_level_put_xvalue(pmap->proot_level, pmvkeys->phead, pvalue);
-}
-
 static void mlhmmv_level_put_xvalue_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys,
 	mlhmmv_xvalue_t* pvalue)
 {
@@ -1280,119 +1468,6 @@ static void mlhmmv_level_enlarge(mlhmmv_level_t* plevel) {
 	}
 	free(old_entries);
 	free(old_states);
-}
-
-// ----------------------------------------------------------------
-// For 'emit all' and 'emitp all'.
-void mlhmmv_root_all_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing,
-	char* flatten_separator)
-{
-	for (mlhmmv_level_entry_t* pentry = pmap->proot_level->phead; pentry != NULL; pentry = pentry->pnext) {
-		sllmv_t* pkey = sllmv_single_no_free(&pentry->level_key);
-		mlhmmv_root_partial_to_lrecs(pmap, pkey, pnames, poutrecs, do_full_prefixing, flatten_separator);
-		sllmv_free(pkey);
-	}
-}
-
-// ----------------------------------------------------------------
-// For 'emit' and 'emitp': the latter has do_full_prefixing == TRUE.  These allocate lrecs, appended to the poutrecs
-// list.
-
-// * pmap is the base-level oosvar multi-level hashmap.
-// * pkeys specify the level in the mlhmmv at which to produce data.
-// * pnames is used to pull subsequent-level keys out into separate fields.
-// * In case pnames isn't long enough to reach a terminal mlrval level in the mlhmmv,
-//   do_full_prefixing specifies whether to concatenate nested mlhmmv keys into single lrec keys.
-//
-// Examples:
-
-// * pkeys reaches a terminal level:
-//
-//   $ mlr --opprint put -q '@sum += $x; end { emit @sum }' ../data/small
-//   sum
-//   4.536294
-
-// * pkeys reaches terminal levels:
-//
-//   $ mlr --opprint put -q '@sum[$a][$b] += $x; end { emit @sum, "a", "b" }' ../data/small
-//   a   b   sum
-//   pan pan 0.346790
-//   pan wye 0.502626
-//   eks pan 0.758680
-//   eks wye 0.381399
-//   eks zee 0.611784
-//   wye wye 0.204603
-//   wye pan 0.573289
-//   zee pan 0.527126
-//   zee wye 0.598554
-//   hat wye 0.031442
-
-// * pkeys reaches non-terminal levels: non-prefixed:
-//
-//   $ mlr --opprint put -q '@sum[$a][$b] += $x; end { emit @sum, "a" }' ../data/small
-//   a   pan      wye
-//   pan 0.346790 0.502626
-//
-//   a   pan      wye      zee
-//   eks 0.758680 0.381399 0.611784
-//
-//   a   wye      pan
-//   wye 0.204603 0.573289
-//
-//   a   pan      wye
-//   zee 0.527126 0.598554
-//
-//   a   wye
-//   hat 0.031442
-
-// * pkeys reaches non-terminal levels: prefixed:
-//
-//   $ mlr --opprint put -q '@sum[$a][$b] += $x; end { emitp @sum, "a" }' ../data/small
-//   a   sum:pan  sum:wye
-//   pan 0.346790 0.502626
-//
-//   a   sum:pan  sum:wye  sum:zee
-//   eks 0.758680 0.381399 0.611784
-//
-//   a   sum:wye  sum:pan
-//   wye 0.204603 0.573289
-//
-//   a   sum:pan  sum:wye
-//   zee 0.527126 0.598554
-//
-//   a   sum:wye
-//   hat 0.031442
-
-void mlhmmv_root_partial_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs, int do_full_prefixing,
-	char* flatten_separator)
-{
-	// There should be at least the oosvar basename, e.g. '@a[b][c]' or '@a[b]' or '@a' but not '@'.
-	MLR_INTERNAL_CODING_ERROR_IF(pkeys->phead == NULL);
-	mv_t* pfirstkey = &pkeys->phead->value;
-
-	mlhmmv_level_entry_t* ptop_entry = mlhmmv_level_look_up_and_ref_entry(pmap->proot_level, pkeys->phead, NULL);
-
-	if (ptop_entry == NULL) {
-		// No such entry in the mlhmmv results in no output records
-	} else if (ptop_entry->level_value.is_terminal) {
-		// E.g. '@v = 3' at the top level of the mlhmmv.
-		lrec_t* poutrec = lrec_unbacked_alloc();
-		lrec_put(poutrec,
-			mv_alloc_format_val(pfirstkey),
-			mv_alloc_format_val(&ptop_entry->level_value.terminal_mlrval), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
-		sllv_append(poutrecs, poutrec);
-	} else {
-		// E.g. '@v = {...}' at the top level of the mlhmmv: the map value keyed by oosvar-name 'v' is itself a hashmap.
-		// This needs to be flattened down to an lrec which is a list of key-value pairs.  We recursively invoke
-		// mlhmmv_level_to_lrecs_across_records for each of the name-list entries, one map level deeper each call, then
-		// from there invoke mlhmmv_level_to_lrec_within_record on any remaining map levels.
-		lrec_t* ptemplate = lrec_unbacked_alloc();
-		char* oosvar_name = mv_alloc_format_val(pfirstkey);
-		mlhmmv_level_to_lrecs_across_records(ptop_entry->level_value.pnext_level, oosvar_name, pnames->phead,
-			ptemplate, poutrecs, do_full_prefixing, flatten_separator);
-		free(oosvar_name);
-		lrec_free(ptemplate);
-	}
 }
 
 static void mlhmmv_level_to_lrecs_across_records(
@@ -1486,75 +1561,6 @@ static void mlhmmv_level_to_lrec_within_record(
 			free(next_prefix);
 		}
 	}
-}
-
-// ----------------------------------------------------------------
-// This is simply JSON. Example output:
-// {
-//   "0":  {
-//     "fghij":  {
-//       "0":  17
-//     }
-//   },
-//   "3":  4,
-//   "abcde":  {
-//     "-6":  7
-//   }
-// }
-
-void mlhmmv_root_print_json_stacked(mlhmmv_root_t* pmap, int quote_values_always, char* line_indent, FILE* ostream) {
-	mlhmmv_level_print_stacked(pmap->proot_level, 0, FALSE, quote_values_always, line_indent, ostream);
-}
-
-// ----------------------------------------------------------------
-void mlhmmv_root_print_json_single_lines(mlhmmv_root_t* pmap, int quote_values_always, FILE* ostream) {
-	mlhmmv_level_print_single_line(pmap->proot_level, 0, FALSE, quote_values_always, ostream);
-	fprintf(ostream, "\n");
-}
-
-static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
-	int do_final_comma, int quote_values_always, FILE* ostream)
-{
-	// Top-level opening brace goes on a line by itself; subsequents on the same line after the level key.
-	if (depth == 0)
-		fprintf(ostream, "{ ");
-	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
-		char* level_key_string = mv_alloc_format_val(&pentry->level_key);
-		json_print_string_escaped(ostream, level_key_string);
-		free(level_key_string);
-		fprintf(ostream, ": ");
-
-		if (pentry->level_value.is_terminal) {
-			char* level_value_string = mv_alloc_format_val(&pentry->level_value.terminal_mlrval);
-
-			if (quote_values_always) {
-				fprintf(ostream, "\"%s\"", level_value_string);
-			} else if (pentry->level_value.terminal_mlrval.type == MT_STRING) {
-				double unused;
-				if (mlr_try_float_from_string(level_value_string, &unused)) {
-					fprintf(ostream, "%s", level_value_string);
-				} else if (streq(level_value_string, "true") || streq(level_value_string, "false")) {
-					fprintf(ostream, "%s", level_value_string);
-				} else {
-					json_print_string_escaped(ostream,level_value_string);
-				}
-			} else {
-				fprintf(ostream, "%s", level_value_string);
-			}
-
-			free(level_value_string);
-			if (pentry->pnext != NULL)
-				fprintf(ostream, ", ");
-		} else {
-			fprintf(ostream, "{");
-			mlhmmv_level_print_single_line(pentry->level_value.pnext_level, depth + 1,
-				pentry->pnext != NULL, quote_values_always, ostream);
-		}
-	}
-	if (do_final_comma)
-		fprintf(ostream, " },");
-	else
-		fprintf(ostream, " }");
 }
 
 // ----------------------------------------------------------------
