@@ -381,6 +381,43 @@ void mlhmmv_level_clear(mlhmmv_level_t* plevel) {
 }
 
 // ----------------------------------------------------------------
+// Returns >=0 for where the key is *or* should go (end of chain).
+
+static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pideal_index) {
+	int hash = mlhmmv_hash_func(plevel_key);
+	int index = mlr_canonical_mod(hash, plevel->array_length);
+	*pideal_index = index;
+	int num_tries = 0;
+
+	while (TRUE) {
+		mlhmmv_level_entry_t* pentry = &plevel->entries[index];
+		if (plevel->states[index] == OCCUPIED) {
+			mv_t* ekey = &pentry->level_key;
+			// Existing key found in chain.
+			if (mv_equals_si(plevel_key, ekey))
+				return index;
+		} else if (plevel->states[index] == EMPTY) {
+			return index;
+		}
+
+		// If the current entry has been freed, i.e. previously occupied,
+		// the sought index may be further down the chain.  So we must
+		// continue looking.
+		if (++num_tries >= plevel->array_length) {
+			fprintf(stderr,
+				"%s: Coding error:  table full even after enlargement.\n", MLR_GLOBALS.bargv0);
+			exit(1);
+		}
+
+		// Linear probing.
+		if (++index >= plevel->array_length)
+			index = 0;
+	}
+	MLR_INTERNAL_CODING_ERROR();
+	return -1; // not reached
+}
+
+// ----------------------------------------------------------------
 static mlhmmv_level_entry_t* mlhmmv_level_look_up_and_ref_entry(mlhmmv_level_t* plevel,
 	sllmve_t* prestkeys, int* perror)
 {
@@ -607,6 +644,70 @@ void mlhmmv_level_put_terminal(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_
 	if ((plevel->num_occupied + plevel->num_freed) >= (plevel->array_length * LOAD_FACTOR))
 		mlhmmv_level_enlarge(plevel);
 	mlhmmv_level_put_terminal_no_enlarge(plevel, prest_keys, pterminal_value);
+}
+
+// ----------------------------------------------------------------
+static void mlhmmv_level_put_terminal_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value) {
+	mv_t* plevel_key = &prest_keys->value;
+	int ideal_index = 0;
+	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
+	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
+
+	if (plevel->states[index] == EMPTY) { // End of chain.
+		pentry->ideal_index = ideal_index;
+		pentry->level_key = mv_copy(plevel_key);
+
+		if (prest_keys->pnext == NULL) {
+			pentry->level_value.is_terminal = TRUE;
+			pentry->level_value.terminal_mlrval = mv_copy(pterminal_value);
+		} else {
+			pentry->level_value.is_terminal = FALSE;
+			pentry->level_value.pnext_level = mlhmmv_level_alloc();
+		}
+		plevel->states[index] = OCCUPIED;
+
+		if (plevel->phead == NULL) { // First entry at this level
+			pentry->pprev = NULL;
+			pentry->pnext = NULL;
+			plevel->phead = pentry;
+			plevel->ptail = pentry;
+		} else {                     // Subsequent entry at this level
+			pentry->pprev = plevel->ptail;
+			pentry->pnext = NULL;
+			plevel->ptail->pnext = pentry;
+			plevel->ptail = pentry;
+		}
+
+		plevel->num_occupied++;
+		if (prest_keys->pnext != NULL) {
+			// RECURSE
+			mlhmmv_level_put_terminal(pentry->level_value.pnext_level, prest_keys->pnext, pterminal_value);
+		}
+
+	} else if (plevel->states[index] == OCCUPIED) { // Existing key found in chain
+		if (prest_keys->pnext == NULL) { // Place the terminal at this level
+			if (pentry->level_value.is_terminal) {
+				mv_free(&pentry->level_value.terminal_mlrval);
+			} else {
+				mlhmmv_level_free(pentry->level_value.pnext_level);
+			}
+			pentry->level_value.is_terminal = TRUE;
+			pentry->level_value.terminal_mlrval = mv_copy(pterminal_value);
+
+		} else { // The terminal will be placed at a deeper level
+			if (pentry->level_value.is_terminal) {
+				mv_free(&pentry->level_value.terminal_mlrval);
+				pentry->level_value.is_terminal = FALSE;
+				pentry->level_value.pnext_level = mlhmmv_level_alloc();
+			}
+			// RECURSE
+			mlhmmv_level_put_terminal(pentry->level_value.pnext_level, prest_keys->pnext, pterminal_value);
+		}
+
+	} else {
+		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.bargv0);
+		exit(1);
+	}
 }
 
 // ----------------------------------------------------------------
@@ -1375,107 +1476,6 @@ void mlhmmv_root_print_json_single_lines(mlhmmv_root_t* pmap, int quote_values_a
 // xxx reorganize to reflect the ordering in the header file. and, maybe split up into separate source files.
 
 static mlhmmv_level_t* mlhmmv_get_or_create_level_aux_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys);
-
-// ----------------------------------------------------------------
-// Used by get() and remove().
-// Returns >=0 for where the key is *or* should go (end of chain).
-static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pideal_index) {
-	int hash = mlhmmv_hash_func(plevel_key);
-	int index = mlr_canonical_mod(hash, plevel->array_length);
-	*pideal_index = index;
-	int num_tries = 0;
-
-	while (TRUE) {
-		mlhmmv_level_entry_t* pentry = &plevel->entries[index];
-		if (plevel->states[index] == OCCUPIED) {
-			mv_t* ekey = &pentry->level_key;
-			// Existing key found in chain.
-			if (mv_equals_si(plevel_key, ekey))
-				return index;
-		} else if (plevel->states[index] == EMPTY) {
-			return index;
-		}
-
-		// If the current entry has been freed, i.e. previously occupied,
-		// the sought index may be further down the chain.  So we must
-		// continue looking.
-		if (++num_tries >= plevel->array_length) {
-			fprintf(stderr,
-				"%s: Coding error:  table full even after enlargement.\n", MLR_GLOBALS.bargv0);
-			exit(1);
-		}
-
-		// Linear probing.
-		if (++index >= plevel->array_length)
-			index = 0;
-	}
-	MLR_INTERNAL_CODING_ERROR();
-	return -1; // not reached
-}
-
-// ----------------------------------------------------------------
-static void mlhmmv_level_put_terminal_no_enlarge(mlhmmv_level_t* plevel, sllmve_t* prest_keys, mv_t* pterminal_value) {
-	mv_t* plevel_key = &prest_keys->value;
-	int ideal_index = 0;
-	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
-	mlhmmv_level_entry_t* pentry = &plevel->entries[index];
-
-	if (plevel->states[index] == EMPTY) { // End of chain.
-		pentry->ideal_index = ideal_index;
-		pentry->level_key = mv_copy(plevel_key);
-
-		if (prest_keys->pnext == NULL) {
-			pentry->level_value.is_terminal = TRUE;
-			pentry->level_value.terminal_mlrval = mv_copy(pterminal_value);
-		} else {
-			pentry->level_value.is_terminal = FALSE;
-			pentry->level_value.pnext_level = mlhmmv_level_alloc();
-		}
-		plevel->states[index] = OCCUPIED;
-
-		if (plevel->phead == NULL) { // First entry at this level
-			pentry->pprev = NULL;
-			pentry->pnext = NULL;
-			plevel->phead = pentry;
-			plevel->ptail = pentry;
-		} else {                     // Subsequent entry at this level
-			pentry->pprev = plevel->ptail;
-			pentry->pnext = NULL;
-			plevel->ptail->pnext = pentry;
-			plevel->ptail = pentry;
-		}
-
-		plevel->num_occupied++;
-		if (prest_keys->pnext != NULL) {
-			// RECURSE
-			mlhmmv_level_put_terminal(pentry->level_value.pnext_level, prest_keys->pnext, pterminal_value);
-		}
-
-	} else if (plevel->states[index] == OCCUPIED) { // Existing key found in chain
-		if (prest_keys->pnext == NULL) { // Place the terminal at this level
-			if (pentry->level_value.is_terminal) {
-				mv_free(&pentry->level_value.terminal_mlrval);
-			} else {
-				mlhmmv_level_free(pentry->level_value.pnext_level);
-			}
-			pentry->level_value.is_terminal = TRUE;
-			pentry->level_value.terminal_mlrval = mv_copy(pterminal_value);
-
-		} else { // The terminal will be placed at a deeper level
-			if (pentry->level_value.is_terminal) {
-				mv_free(&pentry->level_value.terminal_mlrval);
-				pentry->level_value.is_terminal = FALSE;
-				pentry->level_value.pnext_level = mlhmmv_level_alloc();
-			}
-			// RECURSE
-			mlhmmv_level_put_terminal(pentry->level_value.pnext_level, prest_keys->pnext, pterminal_value);
-		}
-
-	} else {
-		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.bargv0);
-		exit(1);
-	}
-}
 
 // ----------------------------------------------------------------
 static mlhmmv_level_t* mlhmmv_level_ref_or_create(mlhmmv_level_t* plevel, sllmve_t* prest_keys) {
