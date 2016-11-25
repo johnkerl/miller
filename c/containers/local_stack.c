@@ -14,8 +14,7 @@ static local_stack_frame_t* _local_stack_alloc(int size, int ephemeral) {
 	pframe->pvars = mlr_malloc_or_die(size * sizeof(local_stack_frame_entry_t));
 	for (int i = 0; i < size; i++) {
 		local_stack_frame_entry_t* pentry = &pframe->pvars[i];
-		pentry->xvalue.terminal_mlrval = mv_absent(); // xxx make method
-		pentry->xvalue.pnext_level = NULL; // xxx make method
+		pentry->xvalue = mlhmmv_xvalue_wrap_terminal(mv_absent());
 		pentry->name = NULL;
 		// Any type can be written here, unless otherwise specified by a typed definition
 		pentry->type_mask = TYPE_MASK_ANY;
