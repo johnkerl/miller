@@ -266,7 +266,6 @@ void local_stack_frame_assign_extended_nonindexed(local_stack_frame_t* pframe,
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "ASSIGN", TRUE, vardef_frame_relative_index);
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 
-	// xxx subroutineize
 	if (xval.is_terminal) {
 		if (!(type_mask_from_mv(&xval.terminal_mlrval) & pentry->type_mask)) {
 			local_stack_frame_throw_type_mismatch(pentry, &xval.terminal_mlrval);
@@ -334,10 +333,10 @@ void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, in
 // ----------------------------------------------------------------
 void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv_t* pval) {
 	MLR_INTERNAL_CODING_ERROR_IF(pentry->name == NULL);
-	char* sval = mv_alloc_format_val_quoting_strings(pval); // xxx temp
+	char* sval = mv_alloc_format_val_quoting_strings(pval);
 	fprintf(stderr, "%s: %s type assertion for variable %s unmet by value %s with type %s.\n",
 		MLR_GLOBALS.bargv0, type_mask_to_desc(pentry->type_mask), pentry->name,
-		sval, mt_describe_type_simple(pval->type)); // xxx temp
+		sval, mt_describe_type_simple(pval->type));
 	free(sval);
 	exit(1);
 }

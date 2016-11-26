@@ -597,7 +597,7 @@ mlhmmv_level_t* mlhmmv_level_put_empty_map(mlhmmv_level_t* plevel, mv_t* pkey) {
 		.pnext      = NULL
 	};
 	mlhmmv_level_put_terminal(plevel, &e, &absent); // xxx optimize to avoid 2nd lookup
-	sllmv_t s = { // xxx simplify API
+	sllmv_t s = {
 		.phead = &e,
 		.ptail = &e,
 		.length = 1

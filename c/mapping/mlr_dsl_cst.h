@@ -167,6 +167,12 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc_with_block(
 	mlr_dsl_cst_statement_freer_t*         pstatement_freer,
 	void*                                  pvstate);
 
+sllv_t* allocate_keylist_evaluators_from_ast_node(
+	mlr_dsl_ast_node_t* pnode,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags);
+
 // ----------------------------------------------------------------
 // MLR_DSL_CST OBJECT
 
@@ -413,11 +419,5 @@ mlr_dsl_cst_statement_allocator_t alloc_dump;
 // Hence the two-step process, with the second step being an object-binding step.
 mlr_dsl_cst_statement_allocator_t alloc_subr_callsite_statement;
 void mlr_dsl_cst_resolve_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl_cst_statement_t* pstatement);
-
-sllv_t* allocate_keylist_evaluators_from_ast_node( // xxx move to another header
-	mlr_dsl_ast_node_t* pnode,
-	fmgr_t*             pfmgr,
-	int                 type_inferencing,
-	int                 context_flags);
 
 #endif // MLR_DSL_CST_H
