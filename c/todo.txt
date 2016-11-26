@@ -36,7 +36,6 @@ MAPVAR CHECKLIST:
   ? free vs. free_contents names ?
 * func/subr mapvar args; func mapvar retval
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
-* allow empty maps/levels in oosvars as well as map-literals
 * print mapvar; dump scalarvar
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -369,6 +368,7 @@ To file:
 * mlh/mld func/subr @ filter
 * absent vs. empty; unset $x vs. $x="". no null keyword.
 * env lhs expr
+* allow empty maps/levels in oosvars as well as map-literals
 
 filter expansion:
 * mlh
@@ -411,6 +411,7 @@ perf note:
 
 MAJOR BECAUSE:
 * new keywords
+* unset of oosvar doesn't clear empty levels
 * no type-inference on literals: "3"+4 != 7
 * note this isn't huge. as w/ previous majors.
 
