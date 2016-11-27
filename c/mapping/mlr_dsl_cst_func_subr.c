@@ -4,7 +4,7 @@
 #include "mlr_dsl_cst.h"
 #include "context_flags.h"
 
-static mlhmmv_xvalue_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, variables_t* pvars);
+static boxed_xval_t cst_udf_process_callback(void* pvstate, int arity, boxed_xval_t* args, variables_t* pvars);
 static void cst_udf_free_callback(void* pvstate);
 
 // ----------------------------------------------------------------
@@ -127,7 +127,7 @@ void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate) {
 // ----------------------------------------------------------------
 // Callback function for the function manager to invoke into here
 
-static mlhmmv_xvalue_t cst_udf_process_callback(void* pvstate, int arity, mv_t* args, variables_t* pvars) {
+static boxed_xval_t cst_udf_process_callback(void* pvstate, int arity, boxed_xval_t* args, variables_t* pvars) {
 	cst_udf_state_t* pstate = pvstate;
 	cst_top_level_statement_block_t* ptop_level_block = pstate->ptop_level_block;
 	mlhmmv_xvalue_t retval = mlhmmv_xvalue_wrap_terminal(mv_absent());
@@ -142,8 +142,8 @@ static mlhmmv_xvalue_t cst_udf_process_callback(void* pvstate, int arity, mv_t* 
 	for (int i = 0; i < arity; i++) {
 		// Absent-null is by convention at slot 0 of the frame, and arguments are next.
 		// Hence starting the loop at 1.
-		local_stack_frame_define_terminal(pframe, pstate->parameter_names[i], i+1,
-			pstate->parameter_type_masks[i], args[i]); // xxx mapvars
+		local_stack_frame_define_extended(pframe, pstate->parameter_names[i], i+1,
+			pstate->parameter_type_masks[i], mlhmmv_xvalue_copy(&args[i].xval)); // xxx copy/ref ...
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -189,7 +189,10 @@ static mlhmmv_xvalue_t cst_udf_process_callback(void* pvstate, int arity, mv_t* 
 	local_stack_subframe_exit(pframe, ptop_level_block->pblock->subframe_var_count);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 
-	return retval;
+	return (boxed_xval_t) { // xxx make ctor
+		.xval = retval,
+		.is_ephemeral = TRUE,
+	};
 }
 
 // ----------------------------------------------------------------

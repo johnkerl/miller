@@ -434,8 +434,8 @@ void fmgr_list_all_functions_raw(fmgr_t* pfmgr, FILE* output_stream) {
 // xxx code dup w/ rxval_expr_evaluators.c
 typedef struct _rval_evaluator_udf_callsite_state_t {
 	int arity;
-	rval_evaluator_t** pevals;
-	mv_t* args;
+	rxval_evaluator_t** pevals;
+	boxed_xval_t* args;
 	udf_defsite_state_t* pdefsite_state;
 } rval_evaluator_udf_callsite_state_t;
 
@@ -449,11 +449,11 @@ static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvar
 	// Functions returning map values in a scalar context get their return values treated as
 	// absent-null. (E.g. f() returns a map and g() returns an int and the statement is '$x
 	// = f() + g()'.) Non-scalar-context return values are handled separately (not here).
-	mlhmmv_xvalue_t retval = pstate->pdefsite_state->pprocess_func(
+	boxed_xval_t retval = pstate->pdefsite_state->pprocess_func(
 		pstate->pdefsite_state->pvstate, pstate->arity, pstate->args, pvars);
 
-	if (retval.is_terminal) {
-		return retval.terminal_mlrval;
+	if (retval.xval.is_terminal) {
+		return retval.xval.terminal_mlrval;
 	} else {
 		return mv_absent();
 	}
@@ -462,9 +462,9 @@ static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvar
 static void rval_evaluator_udf_callsite_free(rval_evaluator_t* pevaluator) {
 	rval_evaluator_udf_callsite_state_t* pstate = pevaluator->pvstate;
 	for (int i = 0; i < pstate->arity; i++) {
-		rval_evaluator_t* peval = pstate->pevals[i];
+		rxval_evaluator_t* peval = pstate->pevals[i];
 		peval->pfree_func(peval);
-		mv_free(&pstate->args[i]);
+		// xxx mv_free(&pstate->args[i]);
 	}
 	free(pstate->pevals);
 	free(pstate->args);
@@ -482,17 +482,20 @@ static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite
 
 	pstate->arity = pnode->pchildren->length;
 
-	pstate->pevals = mlr_malloc_or_die(pstate->arity * sizeof(rval_evaluator_t*));
+	pstate->pevals = mlr_malloc_or_die(pstate->arity * sizeof(rxval_evaluator_t*));
 	int i = 0;
 	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* parg_node = pe->pvvalue;
-		pstate->pevals[i] = rval_evaluator_alloc_from_ast(parg_node,
+		pstate->pevals[i] = rxval_evaluator_alloc_from_ast(parg_node,
 			pfmgr, type_inferencing, context_flags);
 	}
 
-	pstate->args = mlr_malloc_or_die(pstate->arity * sizeof(mv_t));
+	pstate->args = mlr_malloc_or_die(pstate->arity * sizeof(boxed_xval_t));
 	for (i = 0; i < pstate->arity; i++) {
-		pstate->args[i] = mv_absent();
+		pstate->args[i] = (boxed_xval_t) {
+			.xval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
+			.is_ephemeral = TRUE,
+		};
 	}
 
 	pstate->pdefsite_state = pdefsite_state;
