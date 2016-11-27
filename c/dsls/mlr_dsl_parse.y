@@ -184,51 +184,52 @@ md_statement_not_braced_end(A) ::= md_full_srec_assignment(B).             { A =
 md_statement_not_braced_end(A) ::= md_env_assignment(B).                   { A = B; }
 
 // Valid in begin/end since they don't refer to srecs (although the RHSs might):
-md_statement_not_braced_end(A) ::= md_do_while_block(B).      { A = B; }
-md_statement_not_braced_end(A) ::= md_bare_boolean(B).        { A = B; }
-md_statement_not_braced_end(A) ::= md_oosvar_assignment(B).   { A = B; }
-md_statement_not_braced_end(A) ::= md_filter(B).              { A = B; }
-md_statement_not_braced_end(A) ::= md_unset(B).               { A = B; }
+md_statement_not_braced_end(A) ::= md_do_while_block(B).         { A = B; }
+md_statement_not_braced_end(A) ::= md_bare_boolean(B).           { A = B; }
+md_statement_not_braced_end(A) ::= md_oosvar_assignment(B).      { A = B; }
+md_statement_not_braced_end(A) ::= md_full_oosvar_assignment(B). { A = B; }
+md_statement_not_braced_end(A) ::= md_filter(B).                 { A = B; }
+md_statement_not_braced_end(A) ::= md_unset(B).                  { A = B; }
 
-md_statement_not_braced_end(A) ::= md_tee_write(B).           { A = B; }
-md_statement_not_braced_end(A) ::= md_tee_append(B).          { A = B; }
-md_statement_not_braced_end(A) ::= md_tee_pipe(B).            { A = B; }
-md_statement_not_braced_end(A) ::= md_emitf(B).               { A = B; }
-md_statement_not_braced_end(A) ::= md_emitf_write(B).         { A = B; }
-md_statement_not_braced_end(A) ::= md_emitf_append(B).        { A = B; }
-md_statement_not_braced_end(A) ::= md_emitf_pipe(B).          { A = B; }
-md_statement_not_braced_end(A) ::= md_emitp(B).               { A = B; }
-md_statement_not_braced_end(A) ::= md_emitp_write(B).         { A = B; }
-md_statement_not_braced_end(A) ::= md_emitp_append(B).        { A = B; }
-md_statement_not_braced_end(A) ::= md_emitp_pipe(B).          { A = B; }
-md_statement_not_braced_end(A) ::= md_emit(B).                { A = B; }
-md_statement_not_braced_end(A) ::= md_emit_write(B).          { A = B; }
-md_statement_not_braced_end(A) ::= md_emit_append(B).         { A = B; }
-md_statement_not_braced_end(A) ::= md_emit_pipe(B).           { A = B; }
-md_statement_not_braced_end(A) ::= md_emitp_lashed(B).        { A = B; }
-md_statement_not_braced_end(A) ::= md_emitp_lashed_write(B).  { A = B; }
-md_statement_not_braced_end(A) ::= md_emitp_lashed_append(B). { A = B; }
-md_statement_not_braced_end(A) ::= md_emitp_lashed_pipe(B).   { A = B; }
-md_statement_not_braced_end(A) ::= md_emit_lashed(B).         { A = B; }
-md_statement_not_braced_end(A) ::= md_emit_lashed_write(B).   { A = B; }
-md_statement_not_braced_end(A) ::= md_emit_lashed_append(B).  { A = B; }
-md_statement_not_braced_end(A) ::= md_emit_lashed_pipe(B).    { A = B; }
+md_statement_not_braced_end(A) ::= md_tee_write(B).              { A = B; }
+md_statement_not_braced_end(A) ::= md_tee_append(B).             { A = B; }
+md_statement_not_braced_end(A) ::= md_tee_pipe(B).               { A = B; }
+md_statement_not_braced_end(A) ::= md_emitf(B).                  { A = B; }
+md_statement_not_braced_end(A) ::= md_emitf_write(B).            { A = B; }
+md_statement_not_braced_end(A) ::= md_emitf_append(B).           { A = B; }
+md_statement_not_braced_end(A) ::= md_emitf_pipe(B).             { A = B; }
+md_statement_not_braced_end(A) ::= md_emitp(B).                  { A = B; }
+md_statement_not_braced_end(A) ::= md_emitp_write(B).            { A = B; }
+md_statement_not_braced_end(A) ::= md_emitp_append(B).           { A = B; }
+md_statement_not_braced_end(A) ::= md_emitp_pipe(B).             { A = B; }
+md_statement_not_braced_end(A) ::= md_emit(B).                   { A = B; }
+md_statement_not_braced_end(A) ::= md_emit_write(B).             { A = B; }
+md_statement_not_braced_end(A) ::= md_emit_append(B).            { A = B; }
+md_statement_not_braced_end(A) ::= md_emit_pipe(B).              { A = B; }
+md_statement_not_braced_end(A) ::= md_emitp_lashed(B).           { A = B; }
+md_statement_not_braced_end(A) ::= md_emitp_lashed_write(B).     { A = B; }
+md_statement_not_braced_end(A) ::= md_emitp_lashed_append(B).    { A = B; }
+md_statement_not_braced_end(A) ::= md_emitp_lashed_pipe(B).      { A = B; }
+md_statement_not_braced_end(A) ::= md_emit_lashed(B).            { A = B; }
+md_statement_not_braced_end(A) ::= md_emit_lashed_write(B).      { A = B; }
+md_statement_not_braced_end(A) ::= md_emit_lashed_append(B).     { A = B; }
+md_statement_not_braced_end(A) ::= md_emit_lashed_pipe(B).       { A = B; }
 
-md_statement_not_braced_end(A) ::= md_dump(B).                { A = B; }
-md_statement_not_braced_end(A) ::= md_dump_write(B).          { A = B; }
-md_statement_not_braced_end(A) ::= md_dump_append(B).         { A = B; }
-md_statement_not_braced_end(A) ::= md_dump_pipe(B).           { A = B; }
-md_statement_not_braced_end(A) ::= md_edump(B).               { A = B; }
-md_statement_not_braced_end(A) ::= md_print(B).               { A = B; }
-md_statement_not_braced_end(A) ::= md_eprint(B).              { A = B; }
-md_statement_not_braced_end(A) ::= md_print_write(B).         { A = B; }
-md_statement_not_braced_end(A) ::= md_print_append(B).        { A = B; }
-md_statement_not_braced_end(A) ::= md_print_pipe(B).          { A = B; }
-md_statement_not_braced_end(A) ::= md_printn(B).              { A = B; }
-md_statement_not_braced_end(A) ::= md_eprintn(B).             { A = B; }
-md_statement_not_braced_end(A) ::= md_printn_write(B).        { A = B; }
-md_statement_not_braced_end(A) ::= md_printn_append(B).       { A = B; }
-md_statement_not_braced_end(A) ::= md_printn_pipe(B).         { A = B; }
+md_statement_not_braced_end(A) ::= md_dump(B).                   { A = B; }
+md_statement_not_braced_end(A) ::= md_dump_write(B).             { A = B; }
+md_statement_not_braced_end(A) ::= md_dump_append(B).            { A = B; }
+md_statement_not_braced_end(A) ::= md_dump_pipe(B).              { A = B; }
+md_statement_not_braced_end(A) ::= md_edump(B).                  { A = B; }
+md_statement_not_braced_end(A) ::= md_print(B).                  { A = B; }
+md_statement_not_braced_end(A) ::= md_eprint(B).                 { A = B; }
+md_statement_not_braced_end(A) ::= md_print_write(B).            { A = B; }
+md_statement_not_braced_end(A) ::= md_print_append(B).           { A = B; }
+md_statement_not_braced_end(A) ::= md_print_pipe(B).             { A = B; }
+md_statement_not_braced_end(A) ::= md_printn(B).                 { A = B; }
+md_statement_not_braced_end(A) ::= md_eprintn(B).                { A = B; }
+md_statement_not_braced_end(A) ::= md_printn_write(B).           { A = B; }
+md_statement_not_braced_end(A) ::= md_printn_append(B).          { A = B; }
+md_statement_not_braced_end(A) ::= md_printn_pipe(B).            { A = B; }
 
 // Valid only within for/while, but we accept them here syntactically and reject them in the AST-to-CST
 // conversion, where we can produce much more informative error messages:
@@ -909,6 +910,22 @@ md_oosvar_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_ASSIGN(O) md_map_lite
 
 md_oosvar_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_ASSIGN(O) MD_TOKEN_FULL_OOSVAR(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B, C);
+}
+
+md_full_oosvar_assignment(A)  ::= MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_OOSVAR_ASSIGNMENT, B, C);
+}
+
+md_full_oosvar_assignment(A)  ::= MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_ASSIGN(O) md_map_literal(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_OOSVAR_ASSIGNMENT, B, C);
+}
+
+md_full_oosvar_assignment(A)  ::= MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_ASSIGN(O) MD_TOKEN_FULL_OOSVAR(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_OOSVAR_ASSIGNMENT, B, C);
+}
+
+md_full_oosvar_assignment(A)  ::= MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_ASSIGN(O) MD_TOKEN_FULL_SREC(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_OOSVAR_FROM_FULL_SREC_ASSIGNMENT, B, C);
 }
 
 md_oosvar_from_full_srec_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_ASSIGN(O) MD_TOKEN_FULL_SREC(C). {

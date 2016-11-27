@@ -5430,6 +5430,9 @@ run_mlr --from $indir/xyz2 put -q 'c[1][2] = 3; o = c; dump o'
 # xxx not yet
 # run_mlr --from xyz2 put -q 'func map_valued_func() { return {"a":1,"b":2}} o = map_valued_func(); dump o'
 
+# ----------------------------------------------------------------
+announce MAPVAR EMIT
+
 run_mlr -n put 'end {
   @a[2][3] = 4;
   b[2][3] = 8;
