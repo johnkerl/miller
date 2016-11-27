@@ -5343,20 +5343,19 @@ run_mlr --from $indir/xyz2 put 'c[1][2] = 3; $* = c'
 # ----------------------------------------------------------------
 announce MAPVAR ASSIGNMENTS TO FULL OOSVAR
 
+run_mlr --from $indir/xyz2 put '@* = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump'
+run_mlr --from $indir/xyz2 put '@* = @*; dump'
+run_mlr --from $indir/xyz2 put '@a = 1; @* = @a; dump'
+run_mlr --from $indir/xyz2 put '@b[1] = 2; @* = @b; dump'
+run_mlr --from $indir/xyz2 put '@c[1][2] = 3; @* = @c; dump'
+run_mlr --from $indir/xyz2 put '@a = 1; @* = @*; dump'
+run_mlr --from $indir/xyz2 put '@b[1] = 2; @* = @*; dump'
+run_mlr --from $indir/xyz2 put '@c[1][2] = 3; @* = @*; dump'
+run_mlr --from $indir/xyz2 put 'a = 1; @* = a; dump'
+run_mlr --from $indir/xyz2 put 'b[1] = 2; @* = b; dump'
+run_mlr --from $indir/xyz2 put 'c[1][2] = 3; @* = c; dump'
 # xxx not yet
-#run_mlr --from $indir/xyz2 put '@* = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump'
-#run_mlr --from $indir/xyz2 put '@* = @*; dump'
-#run_mlr --from $indir/xyz2 put '@a = 1; @* = @a; dump'
-#run_mlr --from $indir/xyz2 put '@b[1] = 2; @* = @b; dump'
-#run_mlr --from $indir/xyz2 put '@c[1][2] = 3; @* = @c; dump'
-#run_mlr --from $indir/xyz2 put '@a = 1; @* = @*; dump'
-#run_mlr --from $indir/xyz2 put '@b[1] = 2; @* = @*; dump'
-#run_mlr --from $indir/xyz2 put '@c[1][2] = 3; @* = @*; dump'
-#run_mlr --from $indir/xyz2 put 'a = 1; @* = a; dump'
-#run_mlr --from $indir/xyz2 put 'b[1] = 2; @* = b; dump'
-#run_mlr --from $indir/xyz2 put 'c[1][2] = 3; @* = c; dump'
-## xxx not yet
-## run_mlr --from $indir/xyz2 put 'func map_valued_func() { return {"a":1,"b":2}} @* = map_valued_func(); dump a; dump'
+# run_mlr --from $indir/xyz2 put 'func map_valued_func() { return {"a":1,"b":2}} @* = map_valued_func(); dump a; dump'
 
 # ----------------------------------------------------------------
 announce MAPVAR ASSIGNMENTS TO OOSVAR

@@ -231,7 +231,7 @@ static void handle_for_oosvar_aux(
 				local_stack_frame_define_terminal(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
 					prest_for_k_type_masks[0], mv_copy(&pe->level_key));
 				// Recurse into the next-level submap:
-				handle_for_oosvar_aux(pstatement, pvars, pcst_outputs, pe->level_value,
+				handle_for_oosvar_aux(pstatement, pvars, pcst_outputs, pe->level_xvalue,
 					&prest_for_k_variable_names[1], &prest_for_k_frame_relative_indices[1], &prest_for_k_type_masks[1],
 					prest_for_k_count - 1);
 
@@ -583,7 +583,7 @@ static void handle_for_local_map_aux(
 				local_stack_frame_define_terminal(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
 					prest_for_k_type_masks[0], mv_copy(&pe->level_key));
 				// Recurse into the next-level submap:
-				handle_for_local_map_aux(pstatement, pvars, pcst_outputs, pe->level_value,
+				handle_for_local_map_aux(pstatement, pvars, pcst_outputs, pe->level_xvalue,
 					&prest_for_k_variable_names[1], &prest_for_k_frame_relative_indices[1], &prest_for_k_type_masks[1],
 					prest_for_k_count - 1);
 
@@ -927,7 +927,7 @@ static void handle_for_map_literal_aux(
 				local_stack_frame_define_terminal(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
 					prest_for_k_type_masks[0], mv_copy(&pe->level_key));
 				// Recurse into the next-level submap:
-				handle_for_map_literal_aux(pstatement, pvars, pcst_outputs, &pe->level_value,
+				handle_for_map_literal_aux(pstatement, pvars, pcst_outputs, &pe->level_xvalue,
 					&prest_for_k_variable_names[1], &prest_for_k_frame_relative_indices[1], &prest_for_k_type_masks[1],
 					prest_for_k_count - 1);
 

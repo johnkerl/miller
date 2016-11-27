@@ -79,7 +79,7 @@ static void handle_full_srec_assignment(
 	if (!boxed_xval.xval.is_terminal) {
 		for (mlhmmv_level_entry_t* pe = boxed_xval.xval.pnext_level->phead; pe != NULL; pe = pe->pnext) {
 			mv_t* pkey = &pe->level_key;
-			mlhmmv_xvalue_t* pval = &pe->level_value;
+			mlhmmv_xvalue_t* pval = &pe->level_xvalue;
 
 			if (pval->is_terminal) { // xxx else collapse-down using json separator?
 				char* skey = mv_alloc_format_val(pkey);
@@ -464,9 +464,10 @@ mlr_dsl_cst_statement_t* alloc_full_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_d
 
 	mlr_dsl_ast_node_t* plhs_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pnext->pvvalue;
+	MLR_INTERNAL_CODING_ERROR_UNLESS(plhs_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR);
 
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
-	if (plhs_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
+	if (prhs_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
 		pstatement_handler = handle_full_oosvar_assignment_nop;
 	} else {
 		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
@@ -499,16 +500,22 @@ static void handle_full_oosvar_assignment_from_xval(
 	cst_outputs_t*           pcst_outputs)
 {
 	full_oosvar_assignment_state_t* pstate = pstatement->pvstate;
-
 	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
 	boxed_xval_t boxed_xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
 
-	if (!boxed_xval.xval.is_terminal || mv_is_present(&boxed_xval.xval.terminal_mlrval)) {
+	if (boxed_xval.xval.is_terminal) {
+		mlhmmv_root_clear(pvars->poosvars);
+		mlhmmv_xvalue_free(&boxed_xval.xval);
+	} else {
 		if (boxed_xval.is_ephemeral) {
-			// xxx stub mlhmmv_level_put_xvalue(pvars->poosvars->proot_level, plhskeys->phead, &boxed_xval.xval);
+			mlhmmv_level_free(pvars->poosvars->proot_level);
+			pvars->poosvars->proot_level = boxed_xval.xval.pnext_level;
 		} else {
-			// xxx stub mlhmmv_xvalue_t copy_xval = mlhmmv_xvalue_copy(&boxed_xval.xval);
-			// xxx stub mlhmmv_level_put_xvalue(pvars->poosvars->proot_level, plhskeys->phead, &copy_xval);
+			mlhmmv_xvalue_t copy = mlhmmv_xvalue_copy(&boxed_xval.xval);
+			mlhmmv_root_clear(pvars->poosvars);
+			for (mlhmmv_level_entry_t* pe = copy.pnext_level->phead; pe != NULL; pe = pe->pnext) {
+				mlhmmv_level_put_xvalue_singly_keyed(pvars->poosvars->proot_level, &pe->level_key, &pe->level_xvalue);
+			}
 		}
 	}
 }

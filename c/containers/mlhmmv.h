@@ -72,7 +72,7 @@ void mlhmmv_xvalues_to_lrecs_lashed(
 typedef struct _mlhmmv_level_entry_t {
 	int     ideal_index;
 	mv_t    level_key;
-	mlhmmv_xvalue_t level_value; // terminal mlrval, or another hashmap
+	mlhmmv_xvalue_t level_xvalue; // terminal mlrval, or another hashmap
 	struct _mlhmmv_level_entry_t *pprev;
 	struct _mlhmmv_level_entry_t *pnext;
 } mlhmmv_level_entry_t;
@@ -127,6 +127,8 @@ typedef struct _mlhmmv_root_t {
 mlhmmv_root_t* mlhmmv_root_alloc();
 
 void mlhmmv_root_free(mlhmmv_root_t* pmap);
+
+void mlhmmv_root_clear(mlhmmv_root_t* pmap);
 
 // If the return value is non-null, error will be MLHMMV_ERROR_NONE.  If the
 // return value is null, the error will be MLHMMV_ERROR_KEYLIST_TOO_DEEP or

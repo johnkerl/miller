@@ -35,6 +35,7 @@ MAPVAR CHECKLIST:
   - prune unused functions
   ? free vs. free_contents names ?
 ! UT coverage for all up to func/subr map args/retvals
+! $* @ LHS
 * func/subr mapvar args; func mapvar retval
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
 * print mapvar; dump scalarvar

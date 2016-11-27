@@ -45898,6 +45898,84 @@ mlr --from ./reg_test/input/xyz2 put c[1][2] = 3; $* = c
 ================================================================
 MAPVAR ASSIGNMENTS TO FULL OOSVAR
 
+mlr --from ./reg_test/input/xyz2 put @* = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+x=3,y=4,z=5
+
+mlr --from ./reg_test/input/xyz2 put @* = @*; dump
+{
+}
+x=3,y=4,z=5
+
+mlr --from ./reg_test/input/xyz2 put @a = 1; @* = @a; dump
+{
+}
+x=3,y=4,z=5
+
+mlr --from ./reg_test/input/xyz2 put @b[1] = 2; @* = @b; dump
+{
+  "1": 2
+}
+x=3,y=4,z=5
+
+mlr --from ./reg_test/input/xyz2 put @c[1][2] = 3; @* = @c; dump
+{
+  "1": {
+    "2": 3
+  }
+}
+x=3,y=4,z=5
+
+mlr --from ./reg_test/input/xyz2 put @a = 1; @* = @*; dump
+{
+  "a": 1
+}
+x=3,y=4,z=5
+
+mlr --from ./reg_test/input/xyz2 put @b[1] = 2; @* = @*; dump
+{
+  "b": {
+    "1": 2
+  }
+}
+x=3,y=4,z=5
+
+mlr --from ./reg_test/input/xyz2 put @c[1][2] = 3; @* = @*; dump
+{
+  "c": {
+    "1": {
+      "2": 3
+    }
+  }
+}
+x=3,y=4,z=5
+
+mlr --from ./reg_test/input/xyz2 put a = 1; @* = a; dump
+{
+}
+x=3,y=4,z=5
+
+mlr --from ./reg_test/input/xyz2 put b[1] = 2; @* = b; dump
+{
+  "1": 2
+}
+x=3,y=4,z=5
+
+mlr --from ./reg_test/input/xyz2 put c[1][2] = 3; @* = c; dump
+{
+  "1": {
+    "2": 3
+  }
+}
+x=3,y=4,z=5
+
 
 ================================================================
 MAPVAR ASSIGNMENTS TO OOSVAR
