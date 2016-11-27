@@ -57,10 +57,8 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 		break;
 
 	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
-		// xxx XXX to do
-		//return rxval_evaluator_alloc_from_function_callsite(
-			//pnode, pfmgr, type_inferencing, context_flags);
-		return rxval_evaluator_alloc_wrapping_rval(pnode, pfmgr, type_inferencing, context_flags);
+		return rxval_evaluator_alloc_from_function_callsite(
+			pnode, pfmgr, type_inferencing, context_flags);
 		break;
 
 	default:
@@ -490,6 +488,47 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_full_srec(
 	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
 	prxval_evaluator->pprocess_func = rxval_evaluator_from_full_srec_func;
 	prxval_evaluator->pfree_func    = rxval_evaluator_from_full_srec_free;
+
+	return prxval_evaluator;
+}
+
+// ================================================================
+typedef struct _rxval_evaluator_from_function_callsite_state_t {
+	// xxx temp
+	rval_evaluator_t* prval_evaluator; // xxx temp
+} rxval_evaluator_from_function_callsite_state_t;
+
+static boxed_xval_t rxval_evaluator_from_function_callsite_func(void* pvstate, variables_t* pvars) {
+	rxval_evaluator_from_function_callsite_state_t* pstate = pvstate;
+
+	rval_evaluator_t* prval_evaluator = pstate->prval_evaluator;
+	mv_t val = prval_evaluator->pprocess_func(prval_evaluator->pvstate, pvars);
+	return (boxed_xval_t) {
+		.xval = mlhmmv_xvalue_wrap_terminal(val),
+		.is_ephemeral = FALSE, // verify reference semantics for RHS evaluators!
+	};
+}
+
+static void rxval_evaluator_from_function_callsite_free(rxval_evaluator_t* prxval_evaluator) {
+	rxval_evaluator_from_function_callsite_state_t* pstate = prxval_evaluator->pvstate;
+	pstate->prval_evaluator->pfree_func(pstate->prval_evaluator);
+	free(pstate);
+	free(prxval_evaluator);
+}
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_function_callsite(
+	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
+{
+	rxval_evaluator_from_function_callsite_state_t* pstate = mlr_malloc_or_die(
+		sizeof(rxval_evaluator_from_function_callsite_state_t));
+
+	pstate->prval_evaluator = rval_evaluator_alloc_from_ast(pnode, pfmgr, type_inferencing, context_flags);
+
+	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+
+	prxval_evaluator->pvstate       = pstate;
+	prxval_evaluator->pprocess_func = rxval_evaluator_from_function_callsite_func;
+	prxval_evaluator->pfree_func    = rxval_evaluator_from_function_callsite_free;
 
 	return prxval_evaluator;
 }

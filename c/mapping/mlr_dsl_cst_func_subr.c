@@ -166,7 +166,7 @@ static boxed_xval_t cst_udf_process_callback(void* pvstate, int arity, boxed_xva
 				break;
 			}
 			if (pvars->return_state.returned) {
-				retval = pvars->return_state.retval; // xxx mapvar
+				retval = pvars->return_state.retval;
 				pvars->return_state.retval = mlhmmv_xvalue_wrap_terminal(mv_absent());
 				pvars->return_state.returned = FALSE;
 				break;
@@ -181,7 +181,7 @@ static boxed_xval_t cst_udf_process_callback(void* pvstate, int arity, boxed_xva
 				break;
 			}
 			if (pvars->return_state.returned) {
-				retval = pvars->return_state.retval; // xxx mapvar
+				retval = pvars->return_state.retval;
 				pvars->return_state.retval = mlhmmv_xvalue_wrap_terminal(mv_absent());
 				pvars->return_state.returned = FALSE;
 				break;
@@ -196,7 +196,7 @@ static boxed_xval_t cst_udf_process_callback(void* pvstate, int arity, boxed_xva
 
 	return (boxed_xval_t) { // xxx make ctor
 		.xval = retval,
-		.is_ephemeral = TRUE,
+		.is_ephemeral = TRUE, // xxx check
 	};
 }
 
@@ -281,7 +281,7 @@ void mlr_dsl_cst_resolve_subr_callsite(mlr_dsl_cst_t* pcst, mlr_dsl_cst_statemen
 }
 
 // ----------------------------------------------------------------
-static void handle_subr_callsite_statement( // XXX
+static void handle_subr_callsite_statement(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -290,7 +290,7 @@ static void handle_subr_callsite_statement( // XXX
 
 	for (int i = 0; i < pstate->psubr_callsite->arity; i++) {
 		rxval_evaluator_t* pev = pstate->subr_callsite_argument_evaluators[i];
-		pstate->subr_callsite_arguments[i] = pev->pprocess_func(pev->pvstate, pvars); // xxx mapvars
+		pstate->subr_callsite_arguments[i] = pev->pprocess_func(pev->pvstate, pvars);
 	}
 
 	mlr_dsl_cst_execute_subroutine(pstate->psubr_defsite, pvars, pcst_outputs,
@@ -298,10 +298,9 @@ static void handle_subr_callsite_statement( // XXX
 }
 
 // ----------------------------------------------------------------
-static void free_subr_callsite_statement(mlr_dsl_cst_statement_t* pstatement) { // subr_callsite_statement
+static void free_subr_callsite_statement(mlr_dsl_cst_statement_t* pstatement) {
 	subr_callsite_statement_state_t* pstate = pstatement->pvstate;
 
-	// xxx pre-federation
 	if (pstate->subr_callsite_argument_evaluators != NULL) {
 		for (int i = 0; i < pstate->psubr_callsite->arity; i++) {
 			rxval_evaluator_t* phandler = pstate->subr_callsite_argument_evaluators[i];
