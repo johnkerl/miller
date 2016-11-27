@@ -142,8 +142,13 @@ static boxed_xval_t cst_udf_process_callback(void* pvstate, int arity, boxed_xva
 	for (int i = 0; i < arity; i++) {
 		// Absent-null is by convention at slot 0 of the frame, and arguments are next.
 		// Hence starting the loop at 1.
-		local_stack_frame_define_extended(pframe, pstate->parameter_names[i], i+1,
-			pstate->parameter_type_masks[i], mlhmmv_xvalue_copy(&args[i].xval)); // xxx copy/ref ...
+		if (args[i].is_ephemeral) {
+			local_stack_frame_define_extended(pframe, pstate->parameter_names[i], i+1,
+				pstate->parameter_type_masks[i], args[i].xval);
+		} else {
+			local_stack_frame_define_extended(pframe, pstate->parameter_names[i], i+1,
+				pstate->parameter_type_masks[i], mlhmmv_xvalue_copy(&args[i].xval));
+		}
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -429,8 +434,13 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 	for (int i = 0; i < pstate->arity; i++) {
 		// Absent-null is by convention at slot 0 of the frame, and arguments are next.
 		// Hence starting the loop at 1.
-		local_stack_frame_define_extended(pframe, pstate->parameter_names[i], i+1,
-			pstate->parameter_type_masks[i], mlhmmv_xvalue_copy(&args[i].xval)); // xxx copy/ref
+		if (args[i].is_ephemeral) {
+			local_stack_frame_define_extended(pframe, pstate->parameter_names[i], i+1,
+				pstate->parameter_type_masks[i], args[i].xval);
+		} else {
+			local_stack_frame_define_extended(pframe, pstate->parameter_names[i], i+1,
+				pstate->parameter_type_masks[i], mlhmmv_xvalue_copy(&args[i].xval));
+		}
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
