@@ -10,7 +10,7 @@
 
 // ----------------------------------------------------------------
 // Things a user-defined function (however it is implemented) needs in order to
-// be called: pvstate it its own state (whatever that is), and it defines its
+// be called: pvstate is its own state (whatever that is), and it defines its
 // own process and free functions implementing this interface.
 
 typedef mlhmmv_xvalue_t udf_defsite_process_func_t(void* pvstate, int arity, mv_t* pargs, variables_t* pvars);
