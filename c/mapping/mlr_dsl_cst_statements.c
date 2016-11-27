@@ -265,6 +265,19 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		return alloc_oosvar_assignment(pcst, pnode, type_inferencing, context_flags);
 		break;
 
+	case MD_AST_NODE_TYPE_FULL_OOSVAR_ASSIGNMENT:
+		return alloc_full_oosvar_assignment(pcst, pnode, type_inferencing, context_flags);
+		break;
+
+	case MD_AST_NODE_TYPE_FULL_OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+		if (context_flags & IN_BEGIN_OR_END) {
+			fprintf(stderr, "%s: assignments from $-variables are not valid within begin or end blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
+		return alloc_full_oosvar_assignment(pcst, pnode, type_inferencing, context_flags);
+		break;
+
 	case MD_AST_NODE_TYPE_FULL_SREC_ASSIGNMENT:
 		if (context_flags & IN_BEGIN_OR_END) {
 			fprintf(stderr, "%s: assignments to $-variables are not valid within begin or end blocks.\n",
@@ -417,6 +430,8 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_final_filter_statement(mlr_dsl_cst_t*
 	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:
 	case MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
+	case MD_AST_NODE_TYPE_FULL_OOSVAR_ASSIGNMENT:
+	case MD_AST_NODE_TYPE_FULL_OOSVAR_FROM_FULL_SREC_ASSIGNMENT:
 	case MD_AST_NODE_TYPE_FULL_SREC_ASSIGNMENT:
 	case MD_AST_NODE_TYPE_UNSET:
 	case MD_AST_NODE_TYPE_TEE:

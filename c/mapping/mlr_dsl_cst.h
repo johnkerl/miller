@@ -350,6 +350,7 @@ mlr_dsl_cst_statement_t* alloc_local_variable_definition(
 mlr_dsl_cst_statement_allocator_t alloc_nonindexed_local_variable_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_indexed_local_variable_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_oosvar_assignment;
+mlr_dsl_cst_statement_allocator_t alloc_full_oosvar_assignment;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // mapping/mlr_dsl_cst_unset_statements.c
