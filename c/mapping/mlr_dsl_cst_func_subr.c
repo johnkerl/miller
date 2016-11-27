@@ -205,10 +205,10 @@ static void cst_udf_free_callback(void* pvstate) {
 
 // ================================================================
 typedef struct _subr_callsite_statement_state_t {
-	rval_evaluator_t** subr_callsite_argument_evaluators; // xxx mapvar
-	mv_t*              subr_callsite_arguments;           // xxx mapvar
-	subr_callsite_t    *psubr_callsite;
-	subr_defsite_t     *psubr_defsite;
+	rxval_evaluator_t** subr_callsite_argument_evaluators;
+	boxed_xval_t*       subr_callsite_arguments;
+	subr_callsite_t*    psubr_callsite;
+	subr_defsite_t*     psubr_defsite;
 
 } subr_callsite_statement_state_t;
 
@@ -235,13 +235,13 @@ mlr_dsl_cst_statement_t* alloc_subr_callsite_statement(mlr_dsl_cst_t* pcst, mlr_
 	pstate->psubr_callsite = subr_callsite_alloc(pname_node->text, callsite_arity,
 		type_inferencing, context_flags);
 
-	pstate->subr_callsite_argument_evaluators = mlr_malloc_or_die(callsite_arity * sizeof(rval_evaluator_t*));
-	pstate->subr_callsite_arguments = mlr_malloc_or_die(callsite_arity * sizeof(mv_t));
+	pstate->subr_callsite_argument_evaluators = mlr_malloc_or_die(callsite_arity * sizeof(rxval_evaluator_t*));
+	pstate->subr_callsite_arguments = mlr_malloc_or_die(callsite_arity * sizeof(boxed_xval_t));
 
 	int i = 0;
 	for (sllve_t* pe = pname_node->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
 		mlr_dsl_ast_node_t* pargument_node = pe->pvvalue;
-		pstate->subr_callsite_argument_evaluators[i] = rval_evaluator_alloc_from_ast(pargument_node,
+		pstate->subr_callsite_argument_evaluators[i] = rxval_evaluator_alloc_from_ast(pargument_node,
 			pcst->pfmgr, type_inferencing, context_flags);
 	}
 
@@ -284,7 +284,7 @@ static void handle_subr_callsite_statement( // XXX
 	subr_callsite_statement_state_t* pstate = pstatement->pvstate;
 
 	for (int i = 0; i < pstate->psubr_callsite->arity; i++) {
-		rval_evaluator_t* pev = pstate->subr_callsite_argument_evaluators[i];
+		rxval_evaluator_t* pev = pstate->subr_callsite_argument_evaluators[i];
 		pstate->subr_callsite_arguments[i] = pev->pprocess_func(pev->pvstate, pvars); // xxx mapvars
 	}
 
@@ -299,7 +299,7 @@ static void free_subr_callsite_statement(mlr_dsl_cst_statement_t* pstatement) { 
 	// xxx pre-federation
 	if (pstate->subr_callsite_argument_evaluators != NULL) {
 		for (int i = 0; i < pstate->psubr_callsite->arity; i++) {
-			rval_evaluator_t* phandler = pstate->subr_callsite_argument_evaluators[i];
+			rxval_evaluator_t* phandler = pstate->subr_callsite_argument_evaluators[i];
 			phandler->pfree_func(phandler);
 		}
 		free(pstate->subr_callsite_argument_evaluators);
@@ -415,8 +415,8 @@ void mlr_dsl_cst_free_subroutine(subr_defsite_t* pstate) {
 }
 
 // ----------------------------------------------------------------
-void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars, // xxx mv_t -> mlhmmv_xvalue_t
-	cst_outputs_t* pcst_outputs, int callsite_arity, mv_t* args)
+void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
+	cst_outputs_t* pcst_outputs, int callsite_arity, boxed_xval_t* args)
 {
 	cst_top_level_statement_block_t* ptop_level_block = pstate->ptop_level_block;
 
@@ -429,8 +429,8 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars, 
 	for (int i = 0; i < pstate->arity; i++) {
 		// Absent-null is by convention at slot 0 of the frame, and arguments are next.
 		// Hence starting the loop at 1.
-		local_stack_frame_define_terminal(pframe, pstate->parameter_names[i], i+1,
-			pstate->parameter_type_masks[i], args[i]);
+		local_stack_frame_define_extended(pframe, pstate->parameter_names[i], i+1,
+			pstate->parameter_type_masks[i], mlhmmv_xvalue_copy(&args[i].xval)); // xxx copy/ref
 	}
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -

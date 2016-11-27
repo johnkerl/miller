@@ -298,7 +298,7 @@ void mlr_dsl_cst_free_subroutine(subr_defsite_t* psubr_defsite);
 // (Functions, by contrast, are invoked by callback from the right-hand-site-evaluator logic
 // -- hence no execute-function method here.)
 void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
-	cst_outputs_t* pcst_outputs, int callsite_arity, mv_t* args);
+	cst_outputs_t* pcst_outputs, int callsite_arity, boxed_xval_t* args);
 
 // ================================================================
 // For on-line help / manpage

@@ -5470,8 +5470,22 @@ run_mlr --from $indir/abixy put '
     }
     return sum
   }
-  @v[$i]=$a;
-  $y=f(@v)
+  @v[$i] = $a;
+  $y = f(@v)
+'
+
+run_mlr --from $indir/abixy put '
+  subr s(m) {
+    dump m;
+    sum = 0;
+    for (k, v in m) {
+      sum += k
+    }
+    @sum = sum;
+  }
+  @v[$i] = $a;
+  call s(@v);
+  $y = @sum;
 '
 
 # ================================================================

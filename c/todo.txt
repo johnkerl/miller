@@ -35,7 +35,9 @@ MAPVAR CHECKLIST:
   - prune unused functions
   ? free vs. free_contents names ?
   - copy/ref of keys vs. values in mlhmmv.c and callees -- ?!?
-* func/subr mapvar args; func mapvar retval
+~ xval args into UDFs
+* xval args into subrs
+* xval retvals from UDFs
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
 * print mapvar; dump scalarvar
 
