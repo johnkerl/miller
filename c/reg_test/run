@@ -5458,21 +5458,21 @@ run_mlr -n put 'end {
   emit  (@a, b, {2:{3:12}}), "t", "u";
 }'
 
-# ######################################################## def4a
-# subr s(a,b) {
-#     $[a] = b;
-#     $DID = "YES";
-# }
-#
-# ######################################################## def4b
-# func f(x,y,z) {
-#   return x + y + z
-# }
-#
-# ######################################################## def4c
-# $o = f($x, $y, $i);
-# call s("W", NR);
-#
+# ----------------------------------------------------------------
+announce MAPVARS/UDFs/SUBROUTINES
+
+run_mlr --from $indir/abixy put '
+  func f(m) {
+    dump m;
+    sum = 0;
+    for (k, v in m) {
+      sum += k
+    }
+    return sum
+  }
+  @v[$i]=$a;
+  $y=f(@v)
+'
 
 # ================================================================
 # A key feature of this regression script is that it can be invoked from any
