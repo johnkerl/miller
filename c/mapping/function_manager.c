@@ -434,16 +434,17 @@ void fmgr_list_all_functions_raw(fmgr_t* pfmgr, FILE* output_stream) {
 }
 
 // ================================================================
-// xxx code dup w/ rxval_expr_evaluators.c
-typedef struct _rval_rxval_evaluator_udf_callsite_state_t {
+typedef struct _udf_callsite_state_t {
 	int arity;
 	rxval_evaluator_t** pevals;
 	boxed_xval_t* args;
 	udf_defsite_state_t* pdefsite_state;
-} rval_rxval_evaluator_udf_callsite_state_t;
+} udf_callsite_state_t;
 
+// ----------------------------------------------------------------
+// xxx XXX common arg-marshal
 static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvars) {
-	rval_rxval_evaluator_udf_callsite_state_t* pstate = pvstate;
+	udf_callsite_state_t* pstate = pvstate;
 
 	for (int i = 0; i < pstate->arity; i++) {
 		pstate->args[i] = pstate->pevals[i]->pprocess_func(pstate->pevals[i]->pvstate, pvars);
@@ -464,7 +465,7 @@ static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvar
 
 // xxx merge code dup
 static boxed_xval_t rxval_evaluator_udf_xcallsite_process(void* pvstate, variables_t* pvars) {
-	rval_rxval_evaluator_udf_callsite_state_t* pstate = pvstate;
+	udf_callsite_state_t* pstate = pvstate;
 
 	for (int i = 0; i < pstate->arity; i++) {
 		pstate->args[i] = pstate->pevals[i]->pprocess_func(pstate->pevals[i]->pvstate, pvars);
@@ -476,7 +477,7 @@ static boxed_xval_t rxval_evaluator_udf_xcallsite_process(void* pvstate, variabl
 
 // xxx XXX factor out pstate stuff
 static void rval_evaluator_udf_callsite_free(rval_evaluator_t* pevaluator) {
-	rval_rxval_evaluator_udf_callsite_state_t* pstate = pevaluator->pvstate;
+	udf_callsite_state_t* pstate = pevaluator->pvstate;
 	for (int i = 0; i < pstate->arity; i++) {
 		rxval_evaluator_t* pxev = pstate->pevals[i];
 		pxev->pfree_func(pxev);
@@ -490,7 +491,7 @@ static void rval_evaluator_udf_callsite_free(rval_evaluator_t* pevaluator) {
 
 // xxx XXX factor out pstate stuff
 static void rxval_evaluator_udf_xcallsite_free(rxval_evaluator_t* pxevaluator) {
-	rval_rxval_evaluator_udf_callsite_state_t* pstate = pxevaluator->pvstate;
+	udf_callsite_state_t* pstate = pxevaluator->pvstate;
 	for (int i = 0; i < pstate->arity; i++) {
 		rxval_evaluator_t* pxev = pstate->pevals[i];
 		pxev->pfree_func(pxev);
@@ -508,8 +509,8 @@ static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite
 	// xxx XXX mapvar fmgr_alloc_from_udf_callsite. extend or clone.
 	// xxx libify the marshaling part ...
 	rval_evaluator_t* pudf_callsite_evaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
-	rval_rxval_evaluator_udf_callsite_state_t* pstate = mlr_malloc_or_die(
-		sizeof(rval_rxval_evaluator_udf_callsite_state_t));
+	udf_callsite_state_t* pstate = mlr_malloc_or_die(
+		sizeof(udf_callsite_state_t));
 
 	pstate->arity = pnode->pchildren->length;
 
@@ -543,7 +544,7 @@ static rxval_evaluator_t* fmgr_alloc_from_udf_xcallsite(fmgr_t* pfmgr, udf_defsi
 	mlr_dsl_ast_node_t* pnode, char* function_name, int arity, int type_inferencing, int context_flags)
 {
 	rxval_evaluator_t* pudf_xcallsite_evaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
-	rval_rxval_evaluator_udf_callsite_state_t* pstate = mlr_malloc_or_die(sizeof(rval_rxval_evaluator_udf_callsite_state_t));
+	udf_callsite_state_t* pstate = mlr_malloc_or_die(sizeof(udf_callsite_state_t));
 
 	pstate->arity = pnode->pchildren->length;
 
