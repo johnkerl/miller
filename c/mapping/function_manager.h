@@ -34,7 +34,8 @@ typedef struct _fmgr_t {
 	lhmsv_t* pudf_names_to_defsite_states;             // UDF bodies
 	// Function callsites, used to bootstrap (e.g. function f calls function g before the latter
 	// has been defined).
-	sllv_t* pfunc_callsite_evaluators_to_resolve;
+	sllv_t* pfunc_callsite_evaluators_to_resolve;  // return value in scalar context
+	sllv_t* pfunc_callsite_xevaluators_to_resolve; // return value in map context
 } fmgr_t;
 
 // ----------------------------------------------------------------

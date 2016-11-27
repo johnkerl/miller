@@ -55,7 +55,8 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_func_name(char* fnnm,
 static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_regex_arg2_func_name(char* fnnm,
 	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3);
 
-static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev);
+static void  resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t*  pev);
+static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev);
 
 // ----------------------------------------------------------------
 fmgr_t* fmgr_alloc() {
@@ -74,7 +75,8 @@ fmgr_t* fmgr_alloc() {
 
 	pfmgr->pudf_names_to_defsite_states = lhmsv_alloc();
 
-	pfmgr->pfunc_callsite_evaluators_to_resolve = sllv_alloc();
+	pfmgr->pfunc_callsite_evaluators_to_resolve  = sllv_alloc();
+	pfmgr->pfunc_callsite_xevaluators_to_resolve = sllv_alloc();
 
 	return pfmgr;
 }
@@ -92,6 +94,7 @@ void fmgr_free(fmgr_t* pfmgr) {
 	}
 	lhmsv_free(pfmgr->pudf_names_to_defsite_states);
 	sllv_free(pfmgr->pfunc_callsite_evaluators_to_resolve);
+	sllv_free(pfmgr->pfunc_callsite_xevaluators_to_resolve);
 	hss_free(pfmgr->built_in_function_names);
 	free(pfmgr);
 }
@@ -459,30 +462,44 @@ static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvar
 	}
 }
 
-// xxx XXX incorp
-//static boxed_xval_t rxval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvars) {
-//	rval_rxval_evaluator_udf_callsite_state_t* pstate = pvstate;
-//
-//	for (int i = 0; i < pstate->arity; i++) {
-//		pstate->args[i] = pstate->pevals[i]->pprocess_func(pstate->pevals[i]->pvstate, pvars);
-//	}
-//
-//	return pstate->pdefsite_state->pprocess_func(
-//		pstate->pdefsite_state->pvstate, pstate->arity, pstate->args, pvars);
-//}
+// xxx merge code dup
+static boxed_xval_t rxval_evaluator_udf_xcallsite_process(void* pvstate, variables_t* pvars) {
+	rval_rxval_evaluator_udf_callsite_state_t* pstate = pvstate;
+
+	for (int i = 0; i < pstate->arity; i++) {
+		pstate->args[i] = pstate->pevals[i]->pprocess_func(pstate->pevals[i]->pvstate, pvars);
+	}
+
+	return pstate->pdefsite_state->pprocess_func(
+		pstate->pdefsite_state->pvstate, pstate->arity, pstate->args, pvars);
+}
 
 // xxx XXX factor out pstate stuff
-static void rval_rxval_evaluator_udf_callsite_free(rval_evaluator_t* pevaluator) {
+static void rval_evaluator_udf_callsite_free(rval_evaluator_t* pevaluator) {
 	rval_rxval_evaluator_udf_callsite_state_t* pstate = pevaluator->pvstate;
 	for (int i = 0; i < pstate->arity; i++) {
-		rxval_evaluator_t* peval = pstate->pevals[i];
-		peval->pfree_func(peval);
+		rxval_evaluator_t* pxev = pstate->pevals[i];
+		pxev->pfree_func(pxev);
 		// xxx mv_free(&pstate->args[i]);
 	}
 	free(pstate->pevals);
 	free(pstate->args);
 	free(pstate);
 	free(pevaluator);
+}
+
+// xxx XXX factor out pstate stuff
+static void rxval_evaluator_udf_xcallsite_free(rxval_evaluator_t* pxevaluator) {
+	rval_rxval_evaluator_udf_callsite_state_t* pstate = pxevaluator->pvstate;
+	for (int i = 0; i < pstate->arity; i++) {
+		rxval_evaluator_t* pxev = pstate->pevals[i];
+		pxev->pfree_func(pxev);
+		// xxx mv_free(&pstate->args[i]);
+	}
+	free(pstate->pevals);
+	free(pstate->args);
+	free(pstate);
+	free(pxevaluator);
 }
 
 static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite_state_t* pdefsite_state, // XXX
@@ -516,44 +533,44 @@ static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite
 
 	pudf_callsite_evaluator->pvstate = pstate;
 	pudf_callsite_evaluator->pprocess_func = rval_evaluator_udf_callsite_process;
-	pudf_callsite_evaluator->pfree_func = rval_rxval_evaluator_udf_callsite_free;
+	pudf_callsite_evaluator->pfree_func = rval_evaluator_udf_callsite_free;
 
 	return pudf_callsite_evaluator;
 }
 
 // xxx XXX incorp
-//static rxval_evaluator_t* fmgr_alloc_from_udf_xval_callsite(fmgr_t* pfmgr, udf_defsite_state_t* pdefsite_state,
-//	mlr_dsl_ast_node_t* pnode, char* function_name, int arity, int type_inferencing, int context_flags)
-//{
-//	rval_evaluator_t* pudf_xval_callsite_evaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
-//	rval_rxval_evaluator_udf_callsite_state_t* pstate = mlr_malloc_or_die(sizeof(rval_rxval_evaluator_udf_callsite_state_t));
-//
-//	pstate->arity = pnode->pchildren->length;
-//
-//	pstate->pevals = mlr_malloc_or_die(pstate->arity * sizeof(rxval_evaluator_t*));
-//	int i = 0;
-//	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
-//		mlr_dsl_ast_node_t* parg_node = pe->pvvalue;
-//		pstate->pevals[i] = rxval_evaluator_alloc_from_ast(parg_node,
-//			pfmgr, type_inferencing, context_flags);
-//	}
-//
-//	pstate->args = mlr_malloc_or_die(pstate->arity * sizeof(boxed_xval_t));
-//	for (i = 0; i < pstate->arity; i++) {
-//		pstate->args[i] = (boxed_xval_t) {
-//			.xval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
-//			.is_ephemeral = TRUE,
-//		};
-//	}
-//
-//	pstate->pdefsite_state = pdefsite_state;
-//
-//	pudf_xval_callsite_evaluator->pvstate = pstate;
-//	pudf_xval_callsite_evaluator->pprocess_func = rval_evaluator_udf_xval_callsite_process;
-//	pudf_xval_callsite_evaluator->pfree_func = rval_rxval_evaluator_udf_xval_callsite_free;
-//
-//	return pudf_xval_callsite_evaluator;
-//}
+static rxval_evaluator_t* fmgr_alloc_from_udf_xcallsite(fmgr_t* pfmgr, udf_defsite_state_t* pdefsite_state,
+	mlr_dsl_ast_node_t* pnode, char* function_name, int arity, int type_inferencing, int context_flags)
+{
+	rxval_evaluator_t* pudf_xcallsite_evaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	rval_rxval_evaluator_udf_callsite_state_t* pstate = mlr_malloc_or_die(sizeof(rval_rxval_evaluator_udf_callsite_state_t));
+
+	pstate->arity = pnode->pchildren->length;
+
+	pstate->pevals = mlr_malloc_or_die(pstate->arity * sizeof(rxval_evaluator_t*));
+	int i = 0;
+	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+		mlr_dsl_ast_node_t* parg_node = pe->pvvalue;
+		pstate->pevals[i] = rxval_evaluator_alloc_from_ast(parg_node,
+			pfmgr, type_inferencing, context_flags);
+	}
+
+	pstate->args = mlr_malloc_or_die(pstate->arity * sizeof(boxed_xval_t));
+	for (i = 0; i < pstate->arity; i++) {
+		pstate->args[i] = (boxed_xval_t) {
+			.xval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
+			.is_ephemeral = TRUE,
+		};
+	}
+
+	pstate->pdefsite_state = pdefsite_state;
+
+	pudf_xcallsite_evaluator->pvstate = pstate;
+	pudf_xcallsite_evaluator->pprocess_func = rxval_evaluator_udf_xcallsite_process;
+	pudf_xcallsite_evaluator->pfree_func = rxval_evaluator_udf_xcallsite_free;
+
+	return pudf_xcallsite_evaluator;
+}
 
 // ================================================================
 typedef struct _unresolved_func_callsite_state_t {
@@ -622,19 +639,28 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_d
 //
 //	// Remember this callsite to a function which may or may not have been defined yet.
 //	// Then later we can resolve them to point to UDF bodies which have been defined.
-//	sllv_append(pfmgr->pfunc_callsite_evaluators_to_resolve, pev);
+//	sllv_append(pfmgr->pfunc_callsite_xevaluators_to_resolve, pev);
 //
 //	return pev;
 //}
 
 // ----------------------------------------------------------------
 void fmgr_resolve_func_callsites(fmgr_t* pfmgr) {
+
 	while (pfmgr->pfunc_callsite_evaluators_to_resolve->phead != NULL) {
 		rval_evaluator_t* pev = sllv_pop(pfmgr->pfunc_callsite_evaluators_to_resolve);
 		unresolved_func_callsite_state_t* ptemp_state = pev->pvstate;
 		resolve_func_callsite(pfmgr, pev);
 		unresolved_callsite_free(ptemp_state);
 	}
+
+	while (pfmgr->pfunc_callsite_xevaluators_to_resolve->phead != NULL) {
+		rxval_evaluator_t* pxev = sllv_pop(pfmgr->pfunc_callsite_xevaluators_to_resolve);
+		unresolved_func_callsite_state_t* ptemp_state = pxev->pvstate;
+		resolve_func_xcallsite(pfmgr, pxev);
+		unresolved_callsite_free(ptemp_state);
+	}
+
 }
 
 // ----------------------------------------------------------------
@@ -760,33 +786,33 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 	free(pevaluator);
 }
 
-//static void resolve_func_callsite(fmgr_t* pfmgr, rxval_evaluator_t* pev) {
-//	unresolved_func_callsite_state_t* pstate = pev->pvstate;
-//	char* function_name       = pstate->function_name;
-//	int   user_provided_arity = pstate->arity;
-//	int   type_inferencing    = pstate->type_inferencing;
-//	int   context_flags       = pstate->context_flags;
-//	mlr_dsl_ast_node_t* pnode = pstate->pnode;
-//
-//	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states, pstate->function_name);
-//	if (pudf_defsite_state != NULL) {
-//		int udf_arity = pudf_defsite_state->arity;
-//		if (user_provided_arity != udf_arity) {
-//			fprintf(stderr, "Function named \"%s\" takes %d argument%s; got %d.\n",
-//				function_name, udf_arity, (udf_arity == 1) ? "" : "s", user_provided_arity);
-//			exit(1);
-//		}
-//
-//		rval_evaluator_t* pcallsite_evaluator = fmgr_alloc_from_udf_xval_callsite(pfmgr, pudf_defsite_state,
-//			pnode, function_name, user_provided_arity, type_inferencing, context_flags);
-//
-//		// Struct assignment into the callsite space
-//		*pev = *pcallsite_evaluator;
-//		free(pcallsite_evaluator);
-//
-//		return;
-//	}
-//}
+static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
+	unresolved_func_callsite_state_t* pstate = pxev->pvstate;
+	char* function_name       = pstate->function_name;
+	int   user_provided_arity = pstate->arity;
+	int   type_inferencing    = pstate->type_inferencing;
+	int   context_flags       = pstate->context_flags;
+	mlr_dsl_ast_node_t* pnode = pstate->pnode;
+
+	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states, pstate->function_name);
+	if (pudf_defsite_state != NULL) {
+		int udf_arity = pudf_defsite_state->arity;
+		if (user_provided_arity != udf_arity) {
+			fprintf(stderr, "Function named \"%s\" takes %d argument%s; got %d.\n",
+				function_name, udf_arity, (udf_arity == 1) ? "" : "s", user_provided_arity);
+			exit(1);
+		}
+
+		rxval_evaluator_t* pcallsite_xevaluator = fmgr_alloc_from_udf_xcallsite(pfmgr, pudf_defsite_state,
+			pnode, function_name, user_provided_arity, type_inferencing, context_flags);
+
+		// Struct assignment into the callsite space
+		*pxev = *pcallsite_xevaluator;
+		free(pcallsite_xevaluator);
+
+		return;
+	}
+}
 
 // ================================================================
 static rval_evaluator_t* fmgr_alloc_evaluator_from_variadic_func_name(char* fnnm, rval_evaluator_t** pargs, int nargs) {
