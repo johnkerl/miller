@@ -34,6 +34,7 @@ MAPVAR CHECKLIST:
   ! ref terminals as well as non-terminals
   - prune unused functions
   ? free vs. free_contents names ?
+  - copy/ref of keys vs. values in mlhmmv.c and callees -- ?!?
 * func/subr mapvar args; func mapvar retval
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
 * print mapvar; dump scalarvar
