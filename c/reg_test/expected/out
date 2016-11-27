@@ -45940,6 +45940,27 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; @o = @c; dump @o
   }
 }
 
+mlr --from ./reg_test/input/xyz2 put -q @a = 1; @o = @*; dump @o
+{
+  "a": 1
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; @o = @*; dump @o
+{
+  "b": {
+    "1": 2
+  }
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; @o = @*; dump @o
+{
+  "c": {
+    "1": {
+      "2": 3
+    }
+  }
+}
+
 mlr --from ./reg_test/input/xyz2 put -q a = 1; @o = a; dump @o
 1
 
@@ -45994,6 +46015,27 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; map o = @c; dump o
 {
   "1": {
     "2": 3
+  }
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @a = 1; map o = @*; dump o
+{
+  "a": 1
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; map o = @*; dump o
+{
+  "b": {
+    "1": 2
+  }
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; map o = @*; dump o
+{
+  "c": {
+    "1": {
+      "2": 3
+    }
   }
 }
 
@@ -46054,6 +46096,27 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; var o = @c; dump o
   }
 }
 
+mlr --from ./reg_test/input/xyz2 put -q @a = 1; var o = @*; dump o
+{
+  "a": 1
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; var o = @*; dump o
+{
+  "b": {
+    "1": 2
+  }
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; var o = @*; dump o
+{
+  "c": {
+    "1": {
+      "2": 3
+    }
+  }
+}
+
 mlr --from ./reg_test/input/xyz2 put -q a = 1; var o = a; dump o
 1
 
@@ -46108,6 +46171,27 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; o = @c; dump o
 {
   "1": {
     "2": 3
+  }
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @a = 1; o = @*; dump o
+{
+  "a": 1
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; o = @*; dump o
+{
+  "b": {
+    "1": 2
+  }
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; o = @*; dump o
+{
+  "c": {
+    "1": {
+      "2": 3
+    }
   }
 }
 
