@@ -451,6 +451,7 @@ typedef struct _full_oosvar_assignment_state_t {
 } full_oosvar_assignment_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_full_oosvar_assignment_from_xval;
+static mlr_dsl_cst_statement_handler_t handle_full_oosvar_assignment_nop;
 static mlr_dsl_cst_statement_freer_t free_full_oosvar_assignment;
 
 // ----------------------------------------------------------------
@@ -459,19 +460,19 @@ mlr_dsl_cst_statement_t* alloc_full_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_d
 {
 	full_oosvar_assignment_state_t* pstate = mlr_malloc_or_die(sizeof(full_oosvar_assignment_state_t));
 
-	// xxx special-case @* = @* nop
 	pstate->prhs_xevaluator = NULL;
 
 	mlr_dsl_ast_node_t* plhs_node = pnode->pchildren->phead->pvvalue;
 	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pnext->pvvalue;
 
-	MLR_INTERNAL_CODING_ERROR_IF(plhs_node->type != MD_AST_NODE_TYPE_OOSVAR_KEYLIST);
-
 	mlr_dsl_cst_statement_handler_t* pstatement_handler = NULL;
-
-	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
-		prhs_node, pcst->pfmgr, type_inferencing, context_flags);
-	pstatement_handler = handle_full_oosvar_assignment_from_xval;
+	if (plhs_node->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
+		pstatement_handler = handle_full_oosvar_assignment_nop;
+	} else {
+		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
+			prhs_node, pcst->pfmgr, type_inferencing, context_flags);
+		pstatement_handler = handle_full_oosvar_assignment_from_xval;
+	}
 
 	return mlr_dsl_cst_statement_valloc(
 		pnode,
@@ -510,4 +511,13 @@ static void handle_full_oosvar_assignment_from_xval(
 			// xxx stub mlhmmv_level_put_xvalue(pvars->poosvars->proot_level, plhskeys->phead, &copy_xval);
 		}
 	}
+}
+
+// ----------------------------------------------------------------
+// @* = @*
+static void handle_full_oosvar_assignment_nop(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
 }
