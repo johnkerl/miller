@@ -57,9 +57,9 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 		break;
 
 	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
-		return rxval_evaluator_alloc_from_function_callsite(pnode, pfmgr, type_inferencing, context_flags);
+		// return rxval_evaluator_alloc_from_function_callsite(pnode, pfmgr, type_inferencing, context_flags);
 		// xxx temp
-		// return fmgr_xalloc_provisional_from_operator_or_function_call(pfmgr, pnode, type_inferencing, context_flags);
+		return fmgr_xalloc_provisional_from_operator_or_function_call(pfmgr, pnode, type_inferencing, context_flags);
 		break;
 
 	default:
