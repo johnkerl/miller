@@ -57,6 +57,7 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_regex_arg2_func_name(
 
 static void  resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t*  pev);
 static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev);
+static rxval_evaluator_t* fmgr_alloc_xeval_wrapping_eval(rval_evaluator_t* pevaluator);
 
 // ----------------------------------------------------------------
 fmgr_t* fmgr_alloc() {
@@ -807,6 +808,129 @@ static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
 		return;
 	}
 	// xxx XXX more to do for non-UDF functions invoked in map-retval contexts
+
+	// xxx XXX reduce code-dup
+	int variadic = FALSE;
+	fmgr_check_arity_with_report(pfmgr, function_name, user_provided_arity, &variadic);
+
+	rval_evaluator_t* pevaluator = NULL;
+	if (variadic) {
+		int nargs = pnode->pchildren->length;
+		rval_evaluator_t** pargs = mlr_malloc_or_die(nargs * sizeof(rval_evaluator_t*));
+		int i = 0;
+		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+			pargs[i] = rval_evaluator_alloc_from_ast(pchild, pfmgr, type_inferencing, context_flags);
+		}
+		pevaluator = fmgr_alloc_evaluator_from_variadic_func_name(function_name, pargs, nargs);
+
+	} else if (user_provided_arity == 0) {
+		pevaluator = fmgr_alloc_evaluator_from_zary_func_name(function_name);
+	} else if (user_provided_arity == 1) {
+		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
+		rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+		pevaluator = fmgr_alloc_evaluator_from_unary_func_name(function_name, parg1);
+	} else if (user_provided_arity == 2) {
+		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
+		mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
+		int type2 = parg2_node->type;
+
+		if ((streq(function_name, "=~") || streq(function_name, "!=~")) && type2 == MD_AST_NODE_TYPE_STRING_LITERAL) {
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+			pevaluator = fmgr_alloc_evaluator_from_binary_regex_arg2_func_name(function_name,
+				parg1, parg2_node->text, FALSE);
+		} else if ((streq(function_name, "=~") || streq(function_name, "!=~")) && type2 == MD_AST_NODE_TYPE_REGEXI) {
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+			pevaluator = fmgr_alloc_evaluator_from_binary_regex_arg2_func_name(function_name, parg1, parg2_node->text,
+				TYPE_INFER_STRING_FLOAT_INT);
+		} else {
+			// regexes can still be applied here, e.g. if the 2nd argument is a non-terminal AST: however
+			// the regexes will be compiled record-by-record rather than once at alloc time, which will
+			// be slower.
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+			rval_evaluator_t* parg2 = rval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
+			pevaluator = fmgr_alloc_evaluator_from_binary_func_name(function_name, parg1, parg2);
+		}
+
+	} else if (user_provided_arity == 3) {
+		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
+		mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
+		mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvvalue;
+		int type2 = parg2_node->type;
+
+		if ((streq(function_name, "sub") || streq(function_name, "gsub")) && type2 == MD_AST_NODE_TYPE_STRING_LITERAL) {
+			// sub/gsub-regex special case:
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast(parg3_node, pfmgr, type_inferencing, context_flags);
+			pevaluator = fmgr_alloc_evaluator_from_ternary_regex_arg2_func_name(function_name, parg1, parg2_node->text,
+				FALSE, parg3);
+
+		} else if ((streq(function_name, "sub") || streq(function_name, "gsub")) && type2 == MD_AST_NODE_TYPE_REGEXI) {
+			// sub/gsub-regex special case:
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast(parg3_node, pfmgr, type_inferencing, context_flags);
+			pevaluator = fmgr_alloc_evaluator_from_ternary_regex_arg2_func_name(function_name, parg1, parg2_node->text,
+				TYPE_INFER_STRING_FLOAT_INT, parg3);
+
+		} else {
+			// regexes can still be applied here, e.g. if the 2nd argument is a non-terminal AST: however
+			// the regexes will be compiled record-by-record rather than once at alloc time, which will
+			// be slower.
+			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+			rval_evaluator_t* parg2 = rval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
+			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast(parg3_node, pfmgr, type_inferencing, context_flags);
+			pevaluator = fmgr_alloc_evaluator_from_ternary_func_name(function_name, parg1, parg2, parg3);
+		}
+	} else {
+		fprintf(stderr, "Miller: internal coding error:  arity for function name \"%s\" misdetected.\n",
+			function_name);
+		exit(1);
+	}
+	if (pevaluator == NULL) {
+		fprintf(stderr, "Miller: unrecognized function name \"%s\".\n", function_name);
+		exit(1);
+	}
+
+	rxval_evaluator_t* pxevaluator = fmgr_alloc_xeval_wrapping_eval(pevaluator);
+
+	// Struct assignment into callsite space
+	*pxev = *pxevaluator;
+	free(pxevaluator);
+}
+
+// ----------------------------------------------------------------
+typedef struct _xeval_wrapping_eval_state_t {
+	rval_evaluator_t* pevaluator;
+} xeval_wrapping_eval_state_t;
+
+static boxed_xval_t xeval_wrapping_eval_func(void* pvstate, variables_t* pvars) {
+	xeval_wrapping_eval_state_t* pstate = pvstate;
+	rval_evaluator_t* pevaluator = pstate->pevaluator;
+	mv_t val = pevaluator->pprocess_func(pevaluator->pvstate, pvars);
+	return (boxed_xval_t) {
+		.xval = mlhmmv_xvalue_wrap_terminal(val),
+		.is_ephemeral = FALSE, // verify reference semantics for RHS evaluators!
+	};
+}
+
+static void xeval_wrapping_eval_free(rxval_evaluator_t* pxevaluator) {
+	xeval_wrapping_eval_state_t* pstate = pxevaluator->pvstate;
+	pstate->pevaluator->pfree_func(pstate->pevaluator);
+	free(pstate);
+	free(pxevaluator);
+}
+
+static rxval_evaluator_t* fmgr_alloc_xeval_wrapping_eval(rval_evaluator_t* pevaluator) {
+	rxval_evaluator_t* pxevaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+
+	xeval_wrapping_eval_state_t* pstate = mlr_malloc_or_die(sizeof(xeval_wrapping_eval_state_t));
+	pstate->pevaluator = pevaluator;
+
+	pxevaluator->pvstate       = pstate;
+	pxevaluator->pprocess_func = xeval_wrapping_eval_func;
+	pxevaluator->pfree_func    = xeval_wrapping_eval_free;
+
+	return pxevaluator;
 }
 
 // ================================================================
