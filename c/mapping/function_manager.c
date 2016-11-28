@@ -601,7 +601,7 @@ static void unresolved_callsite_free(unresolved_func_callsite_state_t* pstate) {
 }
 
 // ----------------------------------------------------------------
-rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
+rval_evaluator_t* fmgr_alloc_provisional_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
 	char* function_name = pnode->text;
@@ -623,7 +623,7 @@ rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_d
 }
 
 // xxx XXX merge code dup
-rxval_evaluator_t* fmgr_xalloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
+rxval_evaluator_t* fmgr_xalloc_provisional_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
 	char* function_name = pnode->text;
@@ -636,6 +636,8 @@ rxval_evaluator_t* fmgr_xalloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr
 	pxev->pvstate       = pstate;
 	pxev->pprocess_func = NULL;
 	pxev->pfree_func    = NULL;
+
+	// xxx needs a wrapping-rval here
 
 	// Remember this callsite to a function which may or may not have been defined yet.
 	// Then later we can resolve them to point to UDF bodies which have been defined.

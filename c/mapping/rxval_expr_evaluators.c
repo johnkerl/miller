@@ -57,8 +57,9 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 		break;
 
 	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
-		return rxval_evaluator_alloc_from_function_callsite(
-			pnode, pfmgr, type_inferencing, context_flags);
+		return rxval_evaluator_alloc_from_function_callsite(pnode, pfmgr, type_inferencing, context_flags);
+		// xxx temp
+		// return fmgr_xalloc_provisional_from_operator_or_function_call(pfmgr, pnode, type_inferencing, context_flags);
 		break;
 
 	default:
@@ -497,7 +498,6 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_full_srec(
 // ================================================================
 typedef struct _rxval_evaluator_from_function_callsite_state_t {
 	rval_evaluator_t* prval_evaluator; // xxx temp
-	// xxx temp rxval_evaluator_t* pxevaluator;
 } rxval_evaluator_from_function_callsite_state_t;
 
 static boxed_xval_t rxval_evaluator_from_function_callsite_func(void* pvstate, variables_t* pvars) {
@@ -514,7 +514,6 @@ static boxed_xval_t rxval_evaluator_from_function_callsite_func(void* pvstate, v
 static void rxval_evaluator_from_function_callsite_free(rxval_evaluator_t* prxval_evaluator) {
 	rxval_evaluator_from_function_callsite_state_t* pstate = prxval_evaluator->pvstate;
 	pstate->prval_evaluator->pfree_func(pstate->prval_evaluator);
-	// xxx temp pstate->pxevaluator->pfree_func(pstate->pxevaluator);
 	free(pstate);
 	free(prxval_evaluator);
 }
@@ -526,8 +525,6 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_function_callsite(
 		sizeof(rxval_evaluator_from_function_callsite_state_t));
 
 	pstate->prval_evaluator = rval_evaluator_alloc_from_ast(pnode, pfmgr, type_inferencing, context_flags);
-	// xxx temp pstate->pxevaluator = fmgr_xalloc_from_operator_or_function_call(pfmgr, pnode,
-		// xxx temp type_inferencing, context_flags);
 
 	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
 
