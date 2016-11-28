@@ -45,8 +45,11 @@ void fmgr_free(fmgr_t* pfmgr);
 
 void fmgr_install_udf(fmgr_t* pfmgr, udf_defsite_state_t* pdefsitate_state);
 
-// Callsites as defined by AST nodes
+// Callsites as defined by AST nodes, with scalar-context return values
 rval_evaluator_t* fmgr_alloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags);
+// Callsites as defined by AST nodes, with map-context return values
+rxval_evaluator_t* fmgr_xalloc_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags);
 
 // xxx make a mark-callsite-for-resolve method
