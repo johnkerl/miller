@@ -777,6 +777,7 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 	free(pevaluator);
 }
 
+// xxx XXX merge code dup
 static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
 	unresolved_func_callsite_state_t* pstate = pxev->pvstate;
 	char* function_name       = pstate->function_name;
@@ -803,6 +804,7 @@ static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
 
 		return;
 	}
+	// xxx XXX more to do for non-UDF functions invoked in map-retval contexts
 }
 
 // ================================================================
