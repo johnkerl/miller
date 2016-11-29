@@ -31,6 +31,7 @@ typedef struct _return_value_state_t {
 	rxval_evaluator_t* preturn_value_xevaluator;
 } return_value_state_t;
 
+// ----------------------------------------------------------------
 static void return_value_func(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
@@ -48,6 +49,7 @@ static void return_value_func(
 	pvars->return_state.returned = TRUE;
 }
 
+// ----------------------------------------------------------------
 static void return_value_free(mlr_dsl_cst_statement_t* pstatement) {
 	return_value_state_t* pstate = pstatement->pvstate;
 	rxval_evaluator_t* pxev = pstate->preturn_value_xevaluator;
@@ -55,6 +57,7 @@ static void return_value_free(mlr_dsl_cst_statement_t* pstatement) {
 	free(pstate);
 }
 
+// ----------------------------------------------------------------
 mlr_dsl_cst_statement_t* alloc_return_value(
 	mlr_dsl_cst_t*      pcst,
 	mlr_dsl_ast_node_t* pnode,

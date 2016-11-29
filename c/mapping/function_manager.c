@@ -602,6 +602,23 @@ static void unresolved_callsite_free(unresolved_func_callsite_state_t* pstate) {
 }
 
 // ----------------------------------------------------------------
+static mv_t provisional_call_func(void* pvstate, variables_t* pvars) {
+	unresolved_func_callsite_state_t* pstate = pvstate;
+	fprintf(stderr,
+		"%s: internal coding error: unresolved scalar-return-value callsite \"%s\".\n",
+		MLR_GLOBALS.bargv0, pstate->function_name);
+	exit(1);
+}
+
+static void provisional_call_free(rval_evaluator_t* pevaluator) {
+	unresolved_func_callsite_state_t* pstate = pevaluator->pvstate;
+	fprintf(stderr,
+		"%s: internal coding error: unresolved scalar-return-value callsite \"%s\".\n",
+		MLR_GLOBALS.bargv0, pstate->function_name);
+	exit(1);
+}
+
+// ----------------------------------------------------------------
 rval_evaluator_t* fmgr_alloc_provisional_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
@@ -613,14 +630,31 @@ rval_evaluator_t* fmgr_alloc_provisional_from_operator_or_function_call(fmgr_t* 
 
 	rval_evaluator_t* pev = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 	pev->pvstate       = pstate;
-	pev->pprocess_func = NULL;
-	pev->pfree_func    = NULL;
+	pev->pprocess_func = provisional_call_func;
+	pev->pfree_func    = provisional_call_free;
 
 	// Remember this callsite to a function which may or may not have been defined yet.
 	// Then later we can resolve them to point to UDF bodies which have been defined.
 	sllv_append(pfmgr->pfunc_callsite_evaluators_to_resolve, pev);
 
 	return pev;
+}
+
+// ----------------------------------------------------------------
+static boxed_xval_t provisional_xcall_func(void* pvstate, variables_t* pvars) {
+	unresolved_func_callsite_state_t* pstate = pvstate;
+	fprintf(stderr,
+		"%s: internal coding error: unresolved map-return-value callsite \"%s\".\n",
+		MLR_GLOBALS.bargv0, pstate->function_name);
+	exit(1);
+}
+
+static void provisional_xcall_free(rxval_evaluator_t* pxevaluator) {
+	unresolved_func_callsite_state_t* pstate = pxevaluator->pvstate;
+	fprintf(stderr,
+		"%s: internal coding error: unresolved map-return-value callsite \"%s\".\n",
+		MLR_GLOBALS.bargv0, pstate->function_name);
+	exit(1);
 }
 
 // xxx XXX merge code dup
@@ -635,8 +669,8 @@ rxval_evaluator_t* fmgr_xalloc_provisional_from_operator_or_function_call(fmgr_t
 
 	rxval_evaluator_t* pxev = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
 	pxev->pvstate       = pstate;
-	pxev->pprocess_func = NULL;
-	pxev->pfree_func    = NULL;
+	pxev->pprocess_func = provisional_xcall_func;
+	pxev->pfree_func    = provisional_xcall_free;
 
 	// xxx needs a wrapping-rval here
 
@@ -650,17 +684,18 @@ rxval_evaluator_t* fmgr_xalloc_provisional_from_operator_or_function_call(fmgr_t
 // ----------------------------------------------------------------
 void fmgr_resolve_func_callsites(fmgr_t* pfmgr) {
 
-	while (pfmgr->pfunc_callsite_evaluators_to_resolve->phead != NULL) {
-		rval_evaluator_t* pev = sllv_pop(pfmgr->pfunc_callsite_evaluators_to_resolve);
-		unresolved_func_callsite_state_t* ptemp_state = pev->pvstate;
-		resolve_func_callsite(pfmgr, pev);
-		unresolved_callsite_free(ptemp_state);
-	}
-
+	// xxx comment order
 	while (pfmgr->pfunc_callsite_xevaluators_to_resolve->phead != NULL) {
 		rxval_evaluator_t* pxev = sllv_pop(pfmgr->pfunc_callsite_xevaluators_to_resolve);
 		unresolved_func_callsite_state_t* ptemp_state = pxev->pvstate;
 		resolve_func_xcallsite(pfmgr, pxev);
+		unresolved_callsite_free(ptemp_state);
+	}
+
+	while (pfmgr->pfunc_callsite_evaluators_to_resolve->phead != NULL) {
+		rval_evaluator_t* pev = sllv_pop(pfmgr->pfunc_callsite_evaluators_to_resolve);
+		unresolved_func_callsite_state_t* ptemp_state = pev->pvstate;
+		resolve_func_callsite(pfmgr, pev);
 		unresolved_callsite_free(ptemp_state);
 	}
 
