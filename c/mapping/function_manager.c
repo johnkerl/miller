@@ -684,21 +684,29 @@ rxval_evaluator_t* fmgr_xalloc_provisional_from_operator_or_function_call(fmgr_t
 // ----------------------------------------------------------------
 void fmgr_resolve_func_callsites(fmgr_t* pfmgr) {
 
-	// xxx comment order
-	while (pfmgr->pfunc_callsite_xevaluators_to_resolve->phead != NULL) {
-		rxval_evaluator_t* pxev = sllv_pop(pfmgr->pfunc_callsite_xevaluators_to_resolve);
-		unresolved_func_callsite_state_t* ptemp_state = pxev->pvstate;
-		resolve_func_xcallsite(pfmgr, pxev);
-		unresolved_callsite_free(ptemp_state);
-	}
+	// xxx comment: resolving a callsite involves treewalking the AST which may find more
+	// callsites to resolve.
+	while (TRUE) {
+		int did = FALSE;
+		while (pfmgr->pfunc_callsite_xevaluators_to_resolve->phead != NULL) {
+			did = TRUE;
+			rxval_evaluator_t* pxev = sllv_pop(pfmgr->pfunc_callsite_xevaluators_to_resolve);
+			unresolved_func_callsite_state_t* ptemp_state = pxev->pvstate;
+			resolve_func_xcallsite(pfmgr, pxev);
+			unresolved_callsite_free(ptemp_state);
+		}
 
-	while (pfmgr->pfunc_callsite_evaluators_to_resolve->phead != NULL) {
-		rval_evaluator_t* pev = sllv_pop(pfmgr->pfunc_callsite_evaluators_to_resolve);
-		unresolved_func_callsite_state_t* ptemp_state = pev->pvstate;
-		resolve_func_callsite(pfmgr, pev);
-		unresolved_callsite_free(ptemp_state);
+		while (pfmgr->pfunc_callsite_evaluators_to_resolve->phead != NULL) {
+			did = TRUE;
+			rval_evaluator_t* pev = sllv_pop(pfmgr->pfunc_callsite_evaluators_to_resolve);
+			unresolved_func_callsite_state_t* ptemp_state = pev->pvstate;
+			resolve_func_callsite(pfmgr, pev);
+			unresolved_callsite_free(ptemp_state);
+		}
+		if (!did) {
+			break;
+		}
 	}
-
 }
 
 // xxx merge code dup
