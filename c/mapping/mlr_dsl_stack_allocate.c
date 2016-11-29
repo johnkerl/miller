@@ -789,7 +789,7 @@ static void stkalc_subframe_group_mutate_node_for_write(stkalc_subframe_group_t*
 		}
 	}
 
-	// If not found, define locally.
+	// If not found, define locally. xxx or: here is where we would disallow implicit definitions.
 	if (!found) {
 		pnode->vardef_subframe_index = pframe_group->plist->length - 1;
 		stkalc_subframe_t* pframe = pframe_group->plist->phead->pvvalue;
