@@ -35,6 +35,7 @@ MAPVAR CHECKLIST:
   - prune unused functions
   ? free vs. free_contents names ?
   - copy/ref of keys vs. values in mlhmmv.c and callees -- ?!?
+  - code dedupe in fcnmgr
 ~ xval args into UDFs
 ~ xval args into subrs
 ~ xval retvals from UDFs
@@ -44,6 +45,7 @@ MAPVAR CHECKLIST:
 * print mapvar; dump scalarvar
 * f($*)
 * absent-null map-keys -- do what?
+!!?? disallow implicit assignment? force w/ var at least??
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 things which are always maps:
