@@ -69,6 +69,21 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 			return rval_evaluator_alloc_from_local_variable(pnode->vardef_frame_relative_index);
 			break;
 
+		case MD_AST_NODE_TYPE_FULL_SREC:
+			fprintf(stderr, "%s: $* is not valid within scalar contexts.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+
+		case MD_AST_NODE_TYPE_FULL_OOSVAR:
+			fprintf(stderr, "%s: @* is not valid within scalar contexts.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+
+		case MD_AST_NODE_TYPE_MAP_LITERAL:
+			fprintf(stderr, "%s: map-literals are not valid within scalar contexts.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+
 		default:
 			MLR_INTERNAL_CODING_ERROR();
 			return NULL; // not reached
@@ -99,6 +114,21 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	} else if ((pnode->type == MD_AST_NODE_TYPE_FUNCTION_CALLSITE) || (pnode->type == MD_AST_NODE_TYPE_OPERATOR)) {
 		return fmgr_alloc_provisional_from_operator_or_function_call(pfmgr, pnode, type_inferencing, context_flags);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_FULL_SREC) {
+		fprintf(stderr, "%s: $* is not valid within scalar contexts.\n",
+			MLR_GLOBALS.bargv0);
+		exit(1);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_FULL_OOSVAR) {
+		fprintf(stderr, "%s: @* is not valid within scalar contexts.\n",
+			MLR_GLOBALS.bargv0);
+		exit(1);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
+		fprintf(stderr, "%s: map-literals are not valid within scalar contexts.\n",
+			MLR_GLOBALS.bargv0);
+		exit(1);
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// This is the fall-through which typically gets hit when you update the AST-producing grammar but
