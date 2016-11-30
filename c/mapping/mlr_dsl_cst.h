@@ -259,6 +259,8 @@ typedef struct _cst_udf_state_t {
 	char**    parameter_names;
 	int*      parameter_type_masks;
 	cst_top_level_statement_block_t* ptop_level_block;
+	char*     return_value_type_name;
+	int       return_value_type_mask;
 } cst_udf_state_t;
 
 udf_defsite_state_t* mlr_dsl_cst_alloc_udf(
