@@ -45,6 +45,7 @@ MAPVAR CHECKLIST:
 * f($*)
 * absent-null map-keys -- do what?
 !!?? disallow implicit assignment? force w/ var at least??
+* perf profile
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 things which are always maps:

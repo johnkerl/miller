@@ -256,6 +256,17 @@ md_func_block(C) ::= MD_TOKEN_FUNC_DEF
 	mlr_dsl_ast_node_replace_text(B, "func_block");
 	C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_FUNC_DEF, A, B);
 }
+
+md_func_block(C) ::= MD_TOKEN_FUNC_DEF
+	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_func_args(A) MD_TOKEN_RPAREN
+	MD_TOKEN_COLON md_typedecl(M)
+	MD_TOKEN_LBRACE md_statement_block(B) MD_TOKEN_RBRACE.
+{
+	A = mlr_dsl_ast_node_set_function_name(A, F->text);
+	mlr_dsl_ast_node_replace_text(B, "func_block");
+	C = mlr_dsl_ast_node_alloc_ternary(F->text, MD_AST_NODE_TYPE_FUNC_DEF, A, B, M);
+}
+
 // Need to invalidate "f(10,)" -- use some non-empty-args expr.
 md_func_args(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
