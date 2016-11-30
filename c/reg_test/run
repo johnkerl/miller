@@ -5418,7 +5418,7 @@ run_mlr --from $indir/xyz2 put -q '@c[1][2] = 3; var o = @*; dump o'
 run_mlr --from $indir/xyz2 put -q 'a = 1; var o = a; dump o'
 run_mlr --from $indir/xyz2 put -q 'b[1] = 2; var o = b; dump o'
 run_mlr --from $indir/xyz2 put -q 'c[1][2] = 3; var o = c; dump o'
-run_mlr --from xyz2 put -q 'func map_valued_func() { return {"a":1,"b":2}} var o = map_valued_func(); dump o'
+run_mlr --from $indir/xyz2 put -q 'func map_valued_func() { return {"a":1,"b":2}} var o = map_valued_func(); dump o'
 
 # ----------------------------------------------------------------
 announce MAPVAR ASSIGNMENTS TO UNTYPED LOCAL
@@ -5435,7 +5435,7 @@ run_mlr --from $indir/xyz2 put -q '@c[1][2] = 3; o = @*; dump o'
 run_mlr --from $indir/xyz2 put -q 'a = 1; o = a; dump o'
 run_mlr --from $indir/xyz2 put -q 'b[1] = 2; o = b; dump o'
 run_mlr --from $indir/xyz2 put -q 'c[1][2] = 3; o = c; dump o'
-run_mlr --from xyz2 put -q 'func map_valued_func() { return {"a":1,"b":2}} o = map_valued_func(); dump o'
+run_mlr --from $indir/xyz2 put -q 'func map_valued_func() { return {"a":1,"b":2}} o = map_valued_func(); dump o'
 
 # ----------------------------------------------------------------
 announce MAPVAR EMIT
