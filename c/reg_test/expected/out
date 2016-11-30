@@ -46247,11 +46247,7 @@ mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; var o = c; dump o
   }
 }
 
-mlr --from xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} var o = map_valued_func(); dump o
-{
-  "a": 1,
-  "b": 2
-}
+mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} var o = map_valued_func(); dump o
 {
   "a": 1,
   "b": 2
@@ -46335,11 +46331,7 @@ mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; o = c; dump o
   }
 }
 
-mlr --from xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} o = map_valued_func(); dump o
-{
-  "a": 1,
-  "b": 2
-}
+mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} o = map_valued_func(); dump o
 {
   "a": 1,
   "b": 2
