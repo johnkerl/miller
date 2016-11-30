@@ -1,0 +1,1 @@
+mlr --nidx --from gsl-2000.txt put -q -f ngfuncs.mlr -f ng1.mlr
