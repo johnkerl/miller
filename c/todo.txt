@@ -37,6 +37,8 @@ MAPVAR CHECKLIST:
   - copy/ref of keys vs. values in mlhmmv.c and callees -- ?!?
   - code dedupe in fcnmgr
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
+* isabsent, ispresent are nonsensical now that maps can be func args
+* ismap predicate; isscalar?
 * print mapvar; dump scalarvar
 * absent-null map-keys -- do what?
 !!?? disallow implicit assignment? force w/ var at least??
@@ -135,6 +137,22 @@ emit
   - variadic map-cat function ...
   - ?
 
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+this is awkward:
+  func deepcount(map m) : int {
+    int sum = 0;
+    for (k in m) {
+      sum += 1;
+      if (isabsent(m[k])) {
+        sum += deepcount(m[k])
+      }
+    }
+    return sum;
+  }
+* isabsent is goofy in the negative use
+* also, isabsent should return false
+* needs ismap(m[k])
+
 ----------------------------------------------------------------
 * needs assert_scalar in userspace
 
@@ -199,6 +217,9 @@ UT FOR 5.0.0:
 
 * all assert_X() cases
 * all type-decl cases: local/forbind/argpass; initial assign & reuse thereafter.
+
+* mlr --from s put '$y=strlen($*)'
+* mlr --from s put '$y=strlen({})'
 
 * UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
 * env lhs expr
