@@ -97,10 +97,15 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 		return rval_evaluator_alloc_from_environment(pnode, pfmgr, type_inferencing, context_flags);
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	} else {
-		MLR_INTERNAL_CODING_ERROR_IF((pnode->type != MD_AST_NODE_TYPE_FUNCTION_CALLSITE)
-			&& (pnode->type != MD_AST_NODE_TYPE_OPERATOR));
+	} else if ((pnode->type == MD_AST_NODE_TYPE_FUNCTION_CALLSITE) || (pnode->type == MD_AST_NODE_TYPE_OPERATOR)) {
 		return fmgr_alloc_provisional_from_operator_or_function_call(pfmgr, pnode, type_inferencing, context_flags);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	// This is the fall-through which typically gets hit when you update the AST-producing grammar but
+	// haven't yet implemented the CST handler for it.
+	} else {
+		MLR_INTERNAL_CODING_ERROR();
+		return NULL; // not reached
 	}
 }
 
