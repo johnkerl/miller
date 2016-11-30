@@ -2346,6 +2346,16 @@ md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
+md_fcn_or_subr_call(A) ::= MD_TOKEN_NON_SIGIL_NAME(O) MD_TOKEN_LPAREN MD_TOKEN_FULL_SREC(B) MD_TOKEN_RPAREN. {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FUNCTION_CALLSITE, B);
+}
+md_fcn_or_subr_call(A) ::= MD_TOKEN_NON_SIGIL_NAME(O) MD_TOKEN_LPAREN MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_RPAREN. {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FUNCTION_CALLSITE, B);
+}
+md_fcn_or_subr_call(A) ::= MD_TOKEN_NON_SIGIL_NAME(O) MD_TOKEN_LPAREN md_map_literal(B) MD_TOKEN_RPAREN. {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_FUNCTION_CALLSITE, B);
+}
+
 // ----------------------------------------------------------------
 // Map-literals in Miller are JSON-ish.
 

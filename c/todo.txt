@@ -38,9 +38,10 @@ MAPVAR CHECKLIST:
   - code dedupe in fcnmgr
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
 * print mapvar; dump scalarvar
-* f($*)
 * absent-null map-keys -- do what?
 !!?? disallow implicit assignment? force w/ var at least??
+  - w/  implicit: for (...) {sum += x} FUBAR
+  - w/o implicit: sad panda cannot type 'x=1'
 * perf profile
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
