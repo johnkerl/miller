@@ -442,14 +442,28 @@ typedef struct _udf_callsite_state_t {
 	udf_defsite_state_t* pdefsite_state;
 } udf_callsite_state_t;
 
-// ----------------------------------------------------------------
-// xxx XXX common arg-marshal
-static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvars) {
-	udf_callsite_state_t* pstate = pvstate;
-
+static void udf_callsite_state_eval_args(udf_callsite_state_t* pstate, variables_t* pvars) {
 	for (int i = 0; i < pstate->arity; i++) {
 		pstate->args[i] = pstate->pevals[i]->pprocess_func(pstate->pevals[i]->pvstate, pvars);
 	}
+}
+
+static void udf_callsite_state_free(udf_callsite_state_t* pstate) {
+	for (int i = 0; i < pstate->arity; i++) {
+		rxval_evaluator_t* pxev = pstate->pevals[i];
+		pxev->pfree_func(pxev);
+		// xxx mv_free(&pstate->args[i]);
+	}
+	free(pstate->pevals);
+	free(pstate->args);
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
+static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvars) {
+	udf_callsite_state_t* pstate = pvstate;
+
+	udf_callsite_state_eval_args(pstate, pvars);
 
 	// Functions returning map values in a scalar context get their return values treated as
 	// absent-null. (E.g. f() returns a map and g() returns an int and the statement is '$x
@@ -468,39 +482,21 @@ static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvar
 static boxed_xval_t rxval_evaluator_udf_xcallsite_process(void* pvstate, variables_t* pvars) {
 	udf_callsite_state_t* pstate = pvstate;
 
-	for (int i = 0; i < pstate->arity; i++) {
-		pstate->args[i] = pstate->pevals[i]->pprocess_func(pstate->pevals[i]->pvstate, pvars);
-	}
+	udf_callsite_state_eval_args(pstate, pvars);
 
 	return pstate->pdefsite_state->pprocess_func(
 		pstate->pdefsite_state->pvstate, pstate->arity, pstate->args, pvars);
 }
 
-// xxx XXX factor out pstate stuff
 static void rval_evaluator_udf_callsite_free(rval_evaluator_t* pevaluator) {
 	udf_callsite_state_t* pstate = pevaluator->pvstate;
-	for (int i = 0; i < pstate->arity; i++) {
-		rxval_evaluator_t* pxev = pstate->pevals[i];
-		pxev->pfree_func(pxev);
-		// xxx mv_free(&pstate->args[i]);
-	}
-	free(pstate->pevals);
-	free(pstate->args);
-	free(pstate);
+	udf_callsite_state_free(pstate);
 	free(pevaluator);
 }
 
-// xxx XXX factor out pstate stuff
 static void rxval_evaluator_udf_xcallsite_free(rxval_evaluator_t* pxevaluator) {
 	udf_callsite_state_t* pstate = pxevaluator->pvstate;
-	for (int i = 0; i < pstate->arity; i++) {
-		rxval_evaluator_t* pxev = pstate->pevals[i];
-		pxev->pfree_func(pxev);
-		// xxx mv_free(&pstate->args[i]);
-	}
-	free(pstate->pevals);
-	free(pstate->args);
-	free(pstate);
+	udf_callsite_state_free(pstate);
 	free(pxevaluator);
 }
 

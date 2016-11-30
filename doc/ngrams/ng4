@@ -1,1 +1,2 @@
-mlr --nidx --from gsl-2000.txt put -q -f ngfuncs.mlr -f ng4.mlr
+ourdir=$(dirname $0)
+mlr --nidx --from $ourdir/gsl-2000.txt put -q -f $ourdir/ngfuncs.mlr -f $ourdir/ng4.mlr

@@ -36,9 +36,18 @@ MAPVAR CHECKLIST:
   ? free vs. free_contents names ?
   - copy/ref of keys vs. values in mlhmmv.c and callees -- ?!?
   - code dedupe in fcnmgr
+
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
-* isabsent, ispresent are nonsensical now that maps can be func args
-* ismap predicate; isscalar?
+  - isabsent, ispresent are nonsensical now that maps can be func args
+  - ismap and isscalar predicates
+  - length(@map) and length(map), proxy for NF. make it work with length({...}) and length($*).
+  - typeof(@map) and typeof(map) = "map"; typeof($*) = "srec".
+  - depth on maps
+  - deepcount on maps
+  ? split/join: but these are on lists. and would benefit from infix operators?
+  ? variadic list-cat function ...
+  ? variadic map-cat function ...
+
 * print mapvar; dump scalarvar
 * absent-null map-keys -- do what?
 !!?? disallow implicit assignment? force w/ var at least??
@@ -125,17 +134,6 @@ mlr_dsl_cst_output_statements.c:
 dump
 print
 emit
-
-----------------------------------------------------------------
-! we are going to need builtin functions which deal with maps.
-  - length(@map) and length(map), proxy for NF. make it work with length({...}) and length($*).
-  - typeof(@map) and typeof(map) = "map"; typeof($*) = "srec".
-  - depth on maps
-  - deepcount on maps
-  - split/join: but these are on lists. and would benefit from infix operators?
-  - variadic list-cat function ...
-  - variadic map-cat function ...
-  - ?
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 this is awkward:
