@@ -45894,6 +45894,15 @@ mlr --from ./reg_test/input/xyz2 put b[1] = 2; $* = b
 mlr --from ./reg_test/input/xyz2 put c[1][2] = 3; $* = c
 
 
+mlr --from ./reg_test/input/xyz2 put 
+  func map_valued_func() {
+    return {"a":1,"b":2}
+  }
+  map m = map_valued_func();
+  $* = m;
+
+a=1,b=2
+
 
 ================================================================
 MAPVAR ASSIGNMENTS TO FULL OOSVAR
