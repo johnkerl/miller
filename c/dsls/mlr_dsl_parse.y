@@ -289,6 +289,9 @@ md_subr_args(A) ::= md_subr_args(B) MD_TOKEN_COMMA md_func_or_subr_arg(C). {
 md_func_or_subr_arg(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION);
 }
+md_func_or_subr_arg(A) ::= MD_TOKEN_VAR MD_TOKEN_NON_SIGIL_NAME(B). {
+	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION);
+}
 md_func_or_subr_arg(A) ::= MD_TOKEN_NUMERIC MD_TOKEN_NON_SIGIL_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_NUMERIC_PARAMETER_DEFINITION);
 }
@@ -303,6 +306,9 @@ md_func_or_subr_arg(A) ::= MD_TOKEN_STRING MD_TOKEN_NON_SIGIL_NAME(B). {
 }
 md_func_or_subr_arg(A) ::= MD_TOKEN_BOOLEAN MD_TOKEN_NON_SIGIL_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_BOOLEAN_PARAMETER_DEFINITION);
+}
+md_func_or_subr_arg(A) ::= MD_TOKEN_MAP MD_TOKEN_NON_SIGIL_NAME(B). {
+	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_MAP_PARAMETER_DEFINITION);
 }
 
 // ================================================================

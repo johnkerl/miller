@@ -155,6 +155,7 @@ int mlr_dsl_ast_node_type_to_type_mask(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FLOAT_PARAMETER_DEFINITION:   return TYPE_MASK_FLOAT;
 	case MD_AST_NODE_TYPE_BOOLEAN_PARAMETER_DEFINITION: return TYPE_MASK_BOOLEAN;
 	case MD_AST_NODE_TYPE_STRING_PARAMETER_DEFINITION:  return TYPE_MASK_STRING;
+	case MD_AST_NODE_TYPE_MAP_PARAMETER_DEFINITION:     return TYPE_MASK_MAP;
 
 	default: MLR_INTERNAL_CODING_ERROR();               return 0; // not reached
 	}
@@ -280,6 +281,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_FLOAT_PARAMETER_DEFINITION:            return "FLOAT_PARAMETER_DEFINITION";            break;
 	case MD_AST_NODE_TYPE_BOOLEAN_PARAMETER_DEFINITION:          return "BOOLEAN_PARAMETER_DEFINITION";          break;
 	case MD_AST_NODE_TYPE_STRING_PARAMETER_DEFINITION:           return "STRING_PARAMETER_DEFINITION";           break;
+	case MD_AST_NODE_TYPE_MAP_PARAMETER_DEFINITION:              return "MAP_PARAMETER_DEFINITION";              break;
 	case MD_AST_NODE_TYPE_RETURN_VALUE:                          return "RETURN_VALUE";                          break;
 	case MD_AST_NODE_TYPE_RETURN_VOID:                           return "RETURN_VOID";                           break;
 	case MD_AST_NODE_TYPE_BEGIN:                                 return "BEGIN";                                 break;
