@@ -45903,6 +45903,14 @@ mlr --from ./reg_test/input/xyz2 put
 
 a=1,b=2
 
+mlr --from ./reg_test/input/xyz2 put 
+  func map_valued_func() {
+    return {"a":1,"b":2}
+  }
+  $* = map_valued_func();
+
+a=1,b=2
+
 
 ================================================================
 MAPVAR ASSIGNMENTS TO FULL OOSVAR
@@ -45985,6 +45993,14 @@ mlr --from ./reg_test/input/xyz2 put c[1][2] = 3; @* = c; dump
 }
 x=3,y=4,z=5
 
+mlr --from ./reg_test/input/xyz2 put func map_valued_func() { return {"a":1,"b":2}} @* = map_valued_func(); dump a; dump
+
+{
+  "a": 1,
+  "b": 2
+}
+x=3,y=4,z=5
+
 
 ================================================================
 MAPVAR ASSIGNMENTS TO OOSVAR
@@ -46061,6 +46077,12 @@ mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; @o = c; dump @o
   "1": {
     "2": 3
   }
+}
+
+mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} @o = map_valued_func(); dump @o
+{
+  "a": 1,
+  "b": 2
 }
 
 
@@ -46141,6 +46163,12 @@ mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; map o = c; dump o
   }
 }
 
+mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} map o = map_valued_func(); dump o
+{
+  "a": 1,
+  "b": 2
+}
+
 
 ================================================================
 MAPVAR ASSIGNMENTS TO VAR-TYPED LOCAL
@@ -46219,6 +46247,16 @@ mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; var o = c; dump o
   }
 }
 
+mlr --from xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} var o = map_valued_func(); dump o
+{
+  "a": 1,
+  "b": 2
+}
+{
+  "a": 1,
+  "b": 2
+}
+
 
 ================================================================
 MAPVAR ASSIGNMENTS TO UNTYPED LOCAL
@@ -46295,6 +46333,16 @@ mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; o = c; dump o
   "1": {
     "2": 3
   }
+}
+
+mlr --from xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} o = map_valued_func(); dump o
+{
+  "a": 1,
+  "b": 2
+}
+{
+  "a": 1,
+  "b": 2
 }
 
 

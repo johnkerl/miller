@@ -146,6 +146,12 @@ md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN md_rhs(B). {
 md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN md_map_literal(B). {
 	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
 }
+md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN MD_TOKEN_FULL_SREC(B). {
+	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
+}
+md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN MD_TOKEN_FULL_OOSVAR(B). {
+	A = mlr_dsl_ast_node_alloc_unary("return_value", MD_AST_NODE_TYPE_RETURN_VALUE, B);
+}
 // For user-defined subroutines
 md_statement_not_braced_end(A) ::= MD_TOKEN_RETURN. {
 	A = mlr_dsl_ast_node_alloc_zary("return_void", MD_AST_NODE_TYPE_RETURN_VOID);
@@ -935,6 +941,10 @@ md_full_oosvar_assignment(A)  ::= MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_ASSIGN(O) MD_
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_OOSVAR_FROM_FULL_SREC_ASSIGNMENT, B, C);
 }
 
+md_full_oosvar_assignment(A)  ::= MD_TOKEN_FULL_OOSVAR(B) MD_TOKEN_ASSIGN(O) md_fcn_or_subr_call(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_OOSVAR_FROM_FULL_SREC_ASSIGNMENT, B, C);
+}
+
 md_oosvar_from_full_srec_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_ASSIGN(O) MD_TOKEN_FULL_SREC(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT, B, C);
 }
@@ -957,6 +967,9 @@ md_full_srec_assignment(A)  ::= MD_TOKEN_FULL_SREC(B) MD_TOKEN_ASSIGN(O) MD_TOKE
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_SREC_ASSIGNMENT, B, C);
 }
 md_full_srec_assignment(A)  ::= MD_TOKEN_FULL_SREC(B) MD_TOKEN_ASSIGN(O) MD_TOKEN_FULL_OOSVAR(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_SREC_ASSIGNMENT, B, C);
+}
+md_full_srec_assignment(A)  ::= MD_TOKEN_FULL_SREC(B) MD_TOKEN_ASSIGN(O) md_fcn_or_subr_call(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_FULL_SREC_ASSIGNMENT, B, C);
 }
 

@@ -196,8 +196,6 @@ SYNTAX ERROR IMPROVEMENT:
 ================================================================
 UT FOR 5.0.0:
 
-! 'not yet' UT cases
-
 * all assert_X() cases
 * all type-decl cases: local/forbind/argpass; initial assign & reuse thereafter.
 
