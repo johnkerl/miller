@@ -39,7 +39,6 @@ MAPVAR CHECKLIST:
 ~ xval args into UDFs
 ~ xval args into subrs
 ~ xval retvals from UDFs
-* allow func/subr arg typedecls
 * allow func retval typedecls
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
 * print mapvar; dump scalarvar
