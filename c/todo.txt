@@ -56,13 +56,6 @@ things which can be maps:
 * func args
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-! func retval typedecl: 'f(int a): map {...}' ?
-  -> typedecls for TYPE_MASK_INT|TYPE_MASK_ABSENT ? e.g. '?int' or some such?
-
-w lashed -- code-renames/debt-reduction/valgrinds first, before digging further
-
-! reg_test/run to-do items
-
 mlr_dsl_cst_output_statements.c:
 k dump w/ no args
 k dump localvar -- ensure scalar-out is printed    > ref only
@@ -89,9 +82,6 @@ k for-loop over oosvar                        > ref the rhs
 k for-loop over localvar                      > ref the rhs
 - for-loop over func retval                   > alloc & free the ephemeral
 k for-loop over maplit                        > alloc & free the ephemeral
-
-function_manager.c:
-? - parameter marshaling in general rval context
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 mlr_dsl_cst_{scalar,map}_assignment_statements.c:
@@ -133,24 +123,6 @@ dump
 print
 emit
 
-all should ref & copy except for fcnretval & maplit which need alloc-copy
-
- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-./mapping/mlr_dsl_cst_for_map_statements.c
-
-all should ref & except for fcnretval & maplit which need alloc -- ?
--> what about protection against modifying the map while iterating?
--> single-fors: copy keylist first.
--> multi-fors: imitate existing for-oosvar
--> make an xval_ref_evaluator & use that to reduce code-dupe across for-types
-
- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-* typedecl annotation for func retvals: 'func f(): bool'
-
-----------------------------------------------------------------
-* 'not yet' UT cases
-
 ----------------------------------------------------------------
 ! we are going to need builtin functions which deal with maps.
   - length(@map) and length(map), proxy for NF. make it work with length({...}) and length($*).
@@ -163,56 +135,6 @@ all should ref & except for fcnretval & maplit which need alloc -- ?
   - ?
 
 ----------------------------------------------------------------
-
-* steps:
-
-  ! parameter marshal
-    - all UDFs need multiplexed marshaling: compound vs. scalar types
-    - so all (even internally defined) functions do
-    - at internally defined functions, check is_terminal
-
-    > $x = f(a, b)
-    > $x = f($a, b)
-
-  ! @v=@* is a syntax error
-
-  - LHS define/assign special cases:
-
-    > assign local from xxx:
-      a = {...}
-      a = $*
-      a = @*
-      a = @b
-      a = @b[c]
-      a = b
-      a = b[c]
-      a = f(...)
-      a[b] = f(...)
-
-    > assign srec from local or function call:
-      $* = {...}
-      $* = a
-      $* = f(...)
-    > assign full oosvar from local or function call:
-      @* = {...}
-      @* = a
-      @* = f(...)
-    > assign oosvar from local or function call:
-      @b = {...}
-      @b = a
-      @b[c] = a
-      @b = f(...)
-      @b[c] = f(...)
-
-  k all other (non-special-case) LHS situations
-    > coded; just need more UT coverage.
-
-  k RHS expr eval: terminality as already for oosvars
-    > coded; just need more UT coverage.
-
-  k for-local -- with keylist etc. just as for oosvars
-    > coded; just need more UT coverage.
-
 * needs assert_scalar in userspace
 
 * iterating:
@@ -227,13 +149,6 @@ all should ref & except for fcnretval & maplit which need alloc -- ?
 * type-decl assert RHS for map/non-map reads, and doc that:
   this should throw an error:
     mlr --from s put 'int a=1;var b=a[2]'
-
-* type-decl assert:
-  map a;
-  a[1][2] = 3;
-  map b = a;
-  map c = a[1];
-  int d = a[1][2];
 
 ================================================================
 FUNCTIONALITY FOR 5.0.0:
@@ -280,6 +195,8 @@ SYNTAX ERROR IMPROVEMENT:
 
 ================================================================
 UT FOR 5.0.0:
+
+! 'not yet' UT cases
 
 * all assert_X() cases
 * all type-decl cases: local/forbind/argpass; initial assign & reuse thereafter.
