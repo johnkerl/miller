@@ -698,8 +698,67 @@ void fmgr_resolve_func_callsites(fmgr_t* pfmgr) {
 	}
 }
 
+// ----------------------------------------------------------------
+static rval_evaluator_t* construct_udf_callsite_evaluator(
+	fmgr_t* pfmgr,
+	unresolved_func_callsite_state_t* pcallsite)
+{
+	char* function_name       = pcallsite->function_name;
+	int   user_provided_arity = pcallsite->arity;
+	int   type_inferencing    = pcallsite->type_inferencing;
+	int   context_flags       = pcallsite->context_flags;
+	mlr_dsl_ast_node_t* pnode = pcallsite->pnode;
 
-static rval_evaluator_t* construct_builtin_function_defsite_evaluator(
+	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states,
+		pcallsite->function_name);
+
+	if (pudf_defsite_state != NULL) {
+		int udf_arity = pudf_defsite_state->arity;
+		if (user_provided_arity != udf_arity) {
+			fprintf(stderr, "Function named \"%s\" takes %d argument%s; got %d.\n",
+				function_name, udf_arity, (udf_arity == 1) ? "" : "s", user_provided_arity);
+			exit(1);
+		}
+
+		return fmgr_alloc_from_udf_callsite(pfmgr, pudf_defsite_state,
+			pnode, function_name, user_provided_arity, type_inferencing, context_flags);
+	} else {
+		return NULL;
+	}
+}
+
+// xxx under construction
+
+//static rxval_evaluator_t* construct_udf_defsite_xevaluator(
+//	fmgr_t* pfmgr,
+//	unresolved_func_callsite_state_t* pcallsite)
+//{
+//	char* function_name       = pcallsite->function_name;
+//	int   user_provided_arity = pcallsite->arity;
+//	int   type_inferencing    = pcallsite->type_inferencing;
+//	int   context_flags       = pcallsite->context_flags;
+//	mlr_dsl_ast_node_t* pnode = pcallsite->pnode;
+//
+//	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states,
+//		pcallsite->function_name);
+//
+//	if (pudf_defsite_state != NULL) {
+//		int udf_arity = pudf_defsite_state->arity;
+//		if (user_provided_arity != udf_arity) {
+//			fprintf(stderr, "Function named \"%s\" takes %d argument%s; got %d.\n",
+//				function_name, udf_arity, (udf_arity == 1) ? "" : "s", user_provided_arity);
+//			exit(1);
+//		}
+//
+//		return fmgr_alloc_from_udf_xcallsite(pfmgr, pudf_defsite_state,
+//			pnode, function_name, user_provided_arity, type_inferencing, context_flags);
+//	} else {
+//		return NULL;
+//	}
+//}
+
+// ----------------------------------------------------------------
+static rval_evaluator_t* construct_builtin_function_callsite_evaluator(
 	fmgr_t* pfmgr,
 	unresolved_func_callsite_state_t* pcallsite)
 {
@@ -793,45 +852,32 @@ static rval_evaluator_t* construct_builtin_function_defsite_evaluator(
 	return pevaluator;
 }
 
-// xxx merge code dup
+// ----------------------------------------------------------------
+// Return value is in map context.
 static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 	unresolved_func_callsite_state_t* pcallsite = pev->pvstate;
-	char* function_name       = pcallsite->function_name;
-	int   user_provided_arity = pcallsite->arity;
-	int   type_inferencing    = pcallsite->type_inferencing;
-	int   context_flags       = pcallsite->context_flags;
-	mlr_dsl_ast_node_t* pnode = pcallsite->pnode;
 
-	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states,
-		pcallsite->function_name);
+	rval_evaluator_t* pevaluator = construct_udf_callsite_evaluator(pfmgr, pcallsite);
 
-	if (pudf_defsite_state != NULL) {
-		int udf_arity = pudf_defsite_state->arity;
-		if (user_provided_arity != udf_arity) {
-			fprintf(stderr, "Function named \"%s\" takes %d argument%s; got %d.\n",
-				function_name, udf_arity, (udf_arity == 1) ? "" : "s", user_provided_arity);
-			exit(1);
-		}
-
-		rval_evaluator_t* pcallsite_evaluator = fmgr_alloc_from_udf_callsite(pfmgr, pudf_defsite_state,
-			pnode, function_name, user_provided_arity, type_inferencing, context_flags);
-
+	if (pevaluator != NULL) {
 		// Struct assignment into the callsite space
-		*pev = *pcallsite_evaluator;
-		free(pcallsite_evaluator);
+		*pev = *pevaluator;
+		free(pevaluator);
+		return;
+	}
 
+	pevaluator = construct_builtin_function_callsite_evaluator(pfmgr, pcallsite);
+	if (pevaluator != NULL) {
+		*pev = *pevaluator;
+		free(pevaluator);
 		return;
 	}
 
 	// xxx push is-null check here, w/ 'no such' abend here.
-	rval_evaluator_t* pevaluator = construct_builtin_function_defsite_evaluator(pfmgr, pcallsite);
-
-	// Struct assignment into callsite space
-	*pev = *pevaluator;
-	free(pevaluator);
 }
 
-// xxx XXX merge code dup
+// ----------------------------------------------------------------
+// Return value is in scalar context.
 static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
 	unresolved_func_callsite_state_t* pcallsite = pxev->pvstate;
 	char* function_name       = pcallsite->function_name;
@@ -842,6 +888,7 @@ static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
 
 	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states,
 		pcallsite->function_name);
+
 	if (pudf_defsite_state != NULL) {
 		int udf_arity = pudf_defsite_state->arity;
 		if (user_provided_arity != udf_arity) {
@@ -861,7 +908,7 @@ static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
 	}
 	// xxx XXX more to do for non-UDF functions invoked in map-retval contexts
 
-	rval_evaluator_t* pevaluator = construct_builtin_function_defsite_evaluator(pfmgr, pcallsite);
+	rval_evaluator_t* pevaluator = construct_builtin_function_callsite_evaluator(pfmgr, pcallsite);
 
 	rxval_evaluator_t* pxevaluator = fmgr_alloc_xeval_wrapping_eval(pevaluator);
 
