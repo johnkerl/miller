@@ -442,12 +442,48 @@ typedef struct _udf_callsite_state_t {
 	udf_defsite_state_t* pdefsite_state;
 } udf_callsite_state_t;
 
+// ----------------------------------------------------------------
+static udf_callsite_state_t* udf_callsite_state_alloc(
+	fmgr_t*              pfmgr,
+	udf_defsite_state_t* pdefsite_state,
+	mlr_dsl_ast_node_t*  pnode,
+	int                  arity,
+	int                  type_inferencing,
+	int                  context_flags)
+{
+	udf_callsite_state_t* pstate = mlr_malloc_or_die(sizeof(udf_callsite_state_t));
+
+	pstate->arity = pnode->pchildren->length;
+
+	pstate->pevals = mlr_malloc_or_die(pstate->arity * sizeof(rxval_evaluator_t*));
+	int i = 0;
+	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+		mlr_dsl_ast_node_t* parg_node = pe->pvvalue;
+		pstate->pevals[i] = rxval_evaluator_alloc_from_ast(parg_node,
+			pfmgr, type_inferencing, context_flags);
+	}
+
+	pstate->args = mlr_malloc_or_die(pstate->arity * sizeof(boxed_xval_t));
+	for (i = 0; i < pstate->arity; i++) {
+		pstate->args[i] = (boxed_xval_t) { // xxx make ctor
+			.xval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
+			.is_ephemeral = TRUE,
+		};
+	}
+
+	pstate->pdefsite_state = pdefsite_state;
+
+	return pstate;
+}
+
+// ----------------------------------------------------------------
 static void udf_callsite_state_eval_args(udf_callsite_state_t* pstate, variables_t* pvars) {
 	for (int i = 0; i < pstate->arity; i++) {
 		pstate->args[i] = pstate->pevals[i]->pprocess_func(pstate->pevals[i]->pvstate, pvars);
 	}
 }
 
+// ----------------------------------------------------------------
 static void udf_callsite_state_free(udf_callsite_state_t* pstate) {
 	for (int i = 0; i < pstate->arity; i++) {
 		rxval_evaluator_t* pxev = pstate->pevals[i];
@@ -478,12 +514,9 @@ static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvar
 	}
 }
 
-// xxx merge code dup
 static boxed_xval_t rxval_evaluator_udf_xcallsite_process(void* pvstate, variables_t* pvars) {
 	udf_callsite_state_t* pstate = pvstate;
-
 	udf_callsite_state_eval_args(pstate, pvars);
-
 	return pstate->pdefsite_state->pprocess_func(
 		pstate->pdefsite_state->pvstate, pstate->arity, pstate->args, pvars);
 }
@@ -500,33 +533,13 @@ static void rxval_evaluator_udf_xcallsite_free(rxval_evaluator_t* pxevaluator) {
 	free(pxevaluator);
 }
 
-// xxx XXX factor out pstate stuff
 static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite_state_t* pdefsite_state,
 	mlr_dsl_ast_node_t* pnode, char* function_name, int arity, int type_inferencing, int context_flags)
 {
 	rval_evaluator_t* pudf_callsite_evaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
-	udf_callsite_state_t* pstate = mlr_malloc_or_die(
-		sizeof(udf_callsite_state_t));
 
-	pstate->arity = pnode->pchildren->length;
-
-	pstate->pevals = mlr_malloc_or_die(pstate->arity * sizeof(rxval_evaluator_t*));
-	int i = 0;
-	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
-		mlr_dsl_ast_node_t* parg_node = pe->pvvalue;
-		pstate->pevals[i] = rxval_evaluator_alloc_from_ast(parg_node,
-			pfmgr, type_inferencing, context_flags);
-	}
-
-	pstate->args = mlr_malloc_or_die(pstate->arity * sizeof(boxed_xval_t));
-	for (i = 0; i < pstate->arity; i++) {
-		pstate->args[i] = (boxed_xval_t) { // xxx make ctor
-			.xval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
-			.is_ephemeral = TRUE,
-		};
-	}
-
-	pstate->pdefsite_state = pdefsite_state;
+	udf_callsite_state_t* pstate = udf_callsite_state_alloc(pfmgr, pdefsite_state, pnode,
+		arity, type_inferencing, context_flags);
 
 	pudf_callsite_evaluator->pvstate = pstate;
 	pudf_callsite_evaluator->pprocess_func = rval_evaluator_udf_callsite_process;
@@ -535,32 +548,13 @@ static rval_evaluator_t* fmgr_alloc_from_udf_callsite(fmgr_t* pfmgr, udf_defsite
 	return pudf_callsite_evaluator;
 }
 
-// xxx XXX factor out pstate stuff
 static rxval_evaluator_t* fmgr_alloc_from_udf_xcallsite(fmgr_t* pfmgr, udf_defsite_state_t* pdefsite_state,
 	mlr_dsl_ast_node_t* pnode, char* function_name, int arity, int type_inferencing, int context_flags)
 {
 	rxval_evaluator_t* pudf_xcallsite_evaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
-	udf_callsite_state_t* pstate = mlr_malloc_or_die(sizeof(udf_callsite_state_t));
 
-	pstate->arity = pnode->pchildren->length;
-
-	pstate->pevals = mlr_malloc_or_die(pstate->arity * sizeof(rxval_evaluator_t*));
-	int i = 0;
-	for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
-		mlr_dsl_ast_node_t* parg_node = pe->pvvalue;
-		pstate->pevals[i] = rxval_evaluator_alloc_from_ast(parg_node,
-			pfmgr, type_inferencing, context_flags);
-	}
-
-	pstate->args = mlr_malloc_or_die(pstate->arity * sizeof(boxed_xval_t));
-	for (i = 0; i < pstate->arity; i++) {
-		pstate->args[i] = (boxed_xval_t) {
-			.xval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
-			.is_ephemeral = TRUE,
-		};
-	}
-
-	pstate->pdefsite_state = pdefsite_state;
+	udf_callsite_state_t* pstate = udf_callsite_state_alloc(pfmgr, pdefsite_state, pnode,
+		arity, type_inferencing, context_flags);
 
 	pudf_xcallsite_evaluator->pvstate = pstate;
 	pudf_xcallsite_evaluator->pprocess_func = rxval_evaluator_udf_xcallsite_process;
@@ -653,7 +647,6 @@ static void provisional_xcall_free(rxval_evaluator_t* pxevaluator) {
 	exit(1);
 }
 
-// xxx XXX merge code dup
 rxval_evaluator_t* fmgr_xalloc_provisional_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
@@ -667,8 +660,6 @@ rxval_evaluator_t* fmgr_xalloc_provisional_from_operator_or_function_call(fmgr_t
 	pxev->pvstate       = pstate;
 	pxev->pprocess_func = provisional_xcall_func;
 	pxev->pfree_func    = provisional_xcall_free;
-
-	// xxx needs a wrapping-rval here
 
 	// Remember this callsite to a function which may or may not have been defined yet.
 	// Then later we can resolve them to point to UDF bodies which have been defined.
