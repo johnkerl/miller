@@ -669,10 +669,12 @@ rxval_evaluator_t* fmgr_xalloc_provisional_from_operator_or_function_call(fmgr_t
 }
 
 // ----------------------------------------------------------------
+// Resolving a callsite involves treewalking the AST which may find more callsites to
+// resolve. E.g. in '$y = f(g($x))', f is initially unresolved (f and/or g perhaps as yet
+// undefined as of when the callsite is parsed), then at resolution time for f, its
+// argument 'g($x)' is encountered, initially unresolved, then resolved.
+// Hence the outer loop.
 void fmgr_resolve_func_callsites(fmgr_t* pfmgr) {
-
-	// xxx comment: resolving a callsite involves treewalking the AST which may find more
-	// callsites to resolve.
 	while (TRUE) {
 		int did = FALSE;
 		while (pfmgr->pfunc_callsite_xevaluators_to_resolve->phead != NULL) {
@@ -696,33 +698,16 @@ void fmgr_resolve_func_callsites(fmgr_t* pfmgr) {
 	}
 }
 
-// xxx merge code dup
-static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
-	unresolved_func_callsite_state_t* pstate = pev->pvstate;
-	char* function_name       = pstate->function_name;
-	int   user_provided_arity = pstate->arity;
-	int   type_inferencing    = pstate->type_inferencing;
-	int   context_flags       = pstate->context_flags;
-	mlr_dsl_ast_node_t* pnode = pstate->pnode;
 
-	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states, pstate->function_name);
-	if (pudf_defsite_state != NULL) {
-		int udf_arity = pudf_defsite_state->arity;
-		if (user_provided_arity != udf_arity) {
-			fprintf(stderr, "Function named \"%s\" takes %d argument%s; got %d.\n",
-				function_name, udf_arity, (udf_arity == 1) ? "" : "s", user_provided_arity);
-			exit(1);
-		}
-
-		rval_evaluator_t* pcallsite_evaluator = fmgr_alloc_from_udf_callsite(pfmgr, pudf_defsite_state,
-			pnode, function_name, user_provided_arity, type_inferencing, context_flags);
-
-		// Struct assignment into the callsite space
-		*pev = *pcallsite_evaluator;
-		free(pcallsite_evaluator);
-
-		return;
-	}
+static rval_evaluator_t* construct_builtin_function_defsite_evaluator(
+	fmgr_t* pfmgr,
+	unresolved_func_callsite_state_t* pcallsite)
+{
+	char* function_name       = pcallsite->function_name;
+	int   user_provided_arity = pcallsite->arity;
+	int   type_inferencing    = pcallsite->type_inferencing;
+	int   context_flags       = pcallsite->context_flags;
+	mlr_dsl_ast_node_t* pnode = pcallsite->pnode;
 
 	int variadic = FALSE;
 	fmgr_check_arity_with_report(pfmgr, function_name, user_provided_arity, &variadic);
@@ -805,6 +790,42 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 		exit(1);
 	}
 
+	return pevaluator;
+}
+
+// xxx merge code dup
+static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
+	unresolved_func_callsite_state_t* pcallsite = pev->pvstate;
+	char* function_name       = pcallsite->function_name;
+	int   user_provided_arity = pcallsite->arity;
+	int   type_inferencing    = pcallsite->type_inferencing;
+	int   context_flags       = pcallsite->context_flags;
+	mlr_dsl_ast_node_t* pnode = pcallsite->pnode;
+
+	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states,
+		pcallsite->function_name);
+
+	if (pudf_defsite_state != NULL) {
+		int udf_arity = pudf_defsite_state->arity;
+		if (user_provided_arity != udf_arity) {
+			fprintf(stderr, "Function named \"%s\" takes %d argument%s; got %d.\n",
+				function_name, udf_arity, (udf_arity == 1) ? "" : "s", user_provided_arity);
+			exit(1);
+		}
+
+		rval_evaluator_t* pcallsite_evaluator = fmgr_alloc_from_udf_callsite(pfmgr, pudf_defsite_state,
+			pnode, function_name, user_provided_arity, type_inferencing, context_flags);
+
+		// Struct assignment into the callsite space
+		*pev = *pcallsite_evaluator;
+		free(pcallsite_evaluator);
+
+		return;
+	}
+
+	// xxx push is-null check here, w/ 'no such' abend here.
+	rval_evaluator_t* pevaluator = construct_builtin_function_defsite_evaluator(pfmgr, pcallsite);
+
 	// Struct assignment into callsite space
 	*pev = *pevaluator;
 	free(pevaluator);
@@ -812,14 +833,15 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 
 // xxx XXX merge code dup
 static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
-	unresolved_func_callsite_state_t* pstate = pxev->pvstate;
-	char* function_name       = pstate->function_name;
-	int   user_provided_arity = pstate->arity;
-	int   type_inferencing    = pstate->type_inferencing;
-	int   context_flags       = pstate->context_flags;
-	mlr_dsl_ast_node_t* pnode = pstate->pnode;
+	unresolved_func_callsite_state_t* pcallsite = pxev->pvstate;
+	char* function_name       = pcallsite->function_name;
+	int   user_provided_arity = pcallsite->arity;
+	int   type_inferencing    = pcallsite->type_inferencing;
+	int   context_flags       = pcallsite->context_flags;
+	mlr_dsl_ast_node_t* pnode = pcallsite->pnode;
 
-	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states, pstate->function_name);
+	udf_defsite_state_t* pudf_defsite_state = lhmsv_get(pfmgr->pudf_names_to_defsite_states,
+		pcallsite->function_name);
 	if (pudf_defsite_state != NULL) {
 		int udf_arity = pudf_defsite_state->arity;
 		if (user_provided_arity != udf_arity) {
@@ -839,87 +861,7 @@ static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
 	}
 	// xxx XXX more to do for non-UDF functions invoked in map-retval contexts
 
-	// xxx XXX reduce code-dup
-	int variadic = FALSE;
-	fmgr_check_arity_with_report(pfmgr, function_name, user_provided_arity, &variadic);
-
-	rval_evaluator_t* pevaluator = NULL;
-	if (variadic) {
-		int nargs = pnode->pchildren->length;
-		rval_evaluator_t** pargs = mlr_malloc_or_die(nargs * sizeof(rval_evaluator_t*));
-		int i = 0;
-		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
-			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-			pargs[i] = rval_evaluator_alloc_from_ast(pchild, pfmgr, type_inferencing, context_flags);
-		}
-		pevaluator = fmgr_alloc_evaluator_from_variadic_func_name(function_name, pargs, nargs);
-
-	} else if (user_provided_arity == 0) {
-		pevaluator = fmgr_alloc_evaluator_from_zary_func_name(function_name);
-	} else if (user_provided_arity == 1) {
-		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
-		rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
-		pevaluator = fmgr_alloc_evaluator_from_unary_func_name(function_name, parg1);
-	} else if (user_provided_arity == 2) {
-		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
-		mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
-		int type2 = parg2_node->type;
-
-		if ((streq(function_name, "=~") || streq(function_name, "!=~")) && type2 == MD_AST_NODE_TYPE_STRING_LITERAL) {
-			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
-			pevaluator = fmgr_alloc_evaluator_from_binary_regex_arg2_func_name(function_name,
-				parg1, parg2_node->text, FALSE);
-		} else if ((streq(function_name, "=~") || streq(function_name, "!=~")) && type2 == MD_AST_NODE_TYPE_REGEXI) {
-			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
-			pevaluator = fmgr_alloc_evaluator_from_binary_regex_arg2_func_name(function_name, parg1, parg2_node->text,
-				TYPE_INFER_STRING_FLOAT_INT);
-		} else {
-			// regexes can still be applied here, e.g. if the 2nd argument is a non-terminal AST: however
-			// the regexes will be compiled record-by-record rather than once at alloc time, which will
-			// be slower.
-			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
-			rval_evaluator_t* parg2 = rval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
-			pevaluator = fmgr_alloc_evaluator_from_binary_func_name(function_name, parg1, parg2);
-		}
-
-	} else if (user_provided_arity == 3) {
-		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
-		mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
-		mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvvalue;
-		int type2 = parg2_node->type;
-
-		if ((streq(function_name, "sub") || streq(function_name, "gsub")) && type2 == MD_AST_NODE_TYPE_STRING_LITERAL) {
-			// sub/gsub-regex special case:
-			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
-			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast(parg3_node, pfmgr, type_inferencing, context_flags);
-			pevaluator = fmgr_alloc_evaluator_from_ternary_regex_arg2_func_name(function_name, parg1, parg2_node->text,
-				FALSE, parg3);
-
-		} else if ((streq(function_name, "sub") || streq(function_name, "gsub")) && type2 == MD_AST_NODE_TYPE_REGEXI) {
-			// sub/gsub-regex special case:
-			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
-			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast(parg3_node, pfmgr, type_inferencing, context_flags);
-			pevaluator = fmgr_alloc_evaluator_from_ternary_regex_arg2_func_name(function_name, parg1, parg2_node->text,
-				TYPE_INFER_STRING_FLOAT_INT, parg3);
-
-		} else {
-			// regexes can still be applied here, e.g. if the 2nd argument is a non-terminal AST: however
-			// the regexes will be compiled record-by-record rather than once at alloc time, which will
-			// be slower.
-			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
-			rval_evaluator_t* parg2 = rval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
-			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast(parg3_node, pfmgr, type_inferencing, context_flags);
-			pevaluator = fmgr_alloc_evaluator_from_ternary_func_name(function_name, parg1, parg2, parg3);
-		}
-	} else {
-		fprintf(stderr, "Miller: internal coding error:  arity for function name \"%s\" misdetected.\n",
-			function_name);
-		exit(1);
-	}
-	if (pevaluator == NULL) {
-		fprintf(stderr, "Miller: unrecognized function name \"%s\".\n", function_name);
-		exit(1);
-	}
+	rval_evaluator_t* pevaluator = construct_builtin_function_defsite_evaluator(pfmgr, pcallsite);
 
 	rxval_evaluator_t* pxevaluator = fmgr_alloc_xeval_wrapping_eval(pevaluator);
 
