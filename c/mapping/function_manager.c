@@ -842,10 +842,6 @@ static rval_evaluator_t* construct_builtin_function_callsite_evaluator(
 			function_name);
 		exit(1);
 	}
-	if (pevaluator == NULL) {
-		fprintf(stderr, "Miller: unrecognized function name \"%s\".\n", function_name);
-		exit(1);
-	}
 
 	return pevaluator;
 }
@@ -856,7 +852,6 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 	unresolved_func_callsite_state_t* pcallsite = pev->pvstate;
 
 	rval_evaluator_t* pevaluator = construct_udf_callsite_evaluator(pfmgr, pcallsite);
-
 	if (pevaluator != NULL) {
 		// Struct assignment into the callsite space
 		*pev = *pevaluator;
@@ -871,7 +866,8 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 		return;
 	}
 
-	// xxx push is-null check here, w/ 'no such' abend here.
+	fprintf(stderr, "Miller: unrecognized function name \"%s\".\n", pcallsite->function_name);
+	exit(1);
 }
 
 // ----------------------------------------------------------------
@@ -880,7 +876,6 @@ static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
 	unresolved_func_callsite_state_t* pcallsite = pxev->pvstate;
 
 	rxval_evaluator_t* pxevaluator = construct_udf_defsite_xevaluator(pfmgr, pcallsite);
-
 	if (pxevaluator != NULL) {
 		// Struct assignment into the callsite space
 		*pxev = *pxevaluator;
@@ -891,11 +886,15 @@ static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
 	// xxx XXX more to do for non-UDF functions invoked in map-retval contexts
 
 	rval_evaluator_t* pevaluator = construct_builtin_function_callsite_evaluator(pfmgr, pcallsite);
-
 	pxevaluator = fmgr_alloc_xeval_wrapping_eval(pevaluator);
+	if (pxevaluator != NULL) {
+		*pxev = *pxevaluator;
+		free(pxevaluator);
+		return;
+	}
 
-	*pxev = *pxevaluator;
-	free(pxevaluator);
+	fprintf(stderr, "Miller: unrecognized function name \"%s\".\n", pcallsite->function_name);
+	exit(1);
 }
 
 // ----------------------------------------------------------------
