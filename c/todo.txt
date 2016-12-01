@@ -29,15 +29,18 @@ OTHER:
 MAPVAR CHECKLIST:
 
 * debt-reduction
+  ! naming conventions to clarify transfer/copy semantics
+  - copy/ref of keys vs. values in mlhmmv, local_stack, and callees -- ?!?
   - valgrinds
   - xxxes
   ! ref terminals as well as non-terminals
   - prune unused functions
   ? free vs. free_contents names ?
-  - copy/ref of keys vs. values in mlhmmv.c and callees -- ?!?
-  - code dedupe in fcnmgr
 
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
+  - map-in: isabsent, ispresent, ismap, isscalar, length, typeof, depth, deepcount. haskey.
+  ? map-out: a plus b? a minus b? ... various collections-api stuff ...
+
   - isabsent, ispresent are nonsensical now that maps can be func args
   - ismap and isscalar predicates
   - length(@map) and length(map), proxy for NF. make it work with length({...}) and length($*).
@@ -55,7 +58,6 @@ MAPVAR CHECKLIST:
   - w/o implicit: sad panda cannot type 'x=1'
 * perf profile
 
-* box ctors -> more callsites
 * bool_t typedef
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
