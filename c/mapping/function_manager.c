@@ -465,10 +465,7 @@ static udf_callsite_state_t* udf_callsite_state_alloc(
 
 	pstate->args = mlr_malloc_or_die(pstate->arity * sizeof(boxed_xval_t));
 	for (i = 0; i < pstate->arity; i++) {
-		pstate->args[i] = (boxed_xval_t) { // xxx make ctor
-			.xval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
-			.is_ephemeral = TRUE,
-		};
+		pstate->args[i] = box_ephemeral_val(mv_absent());
 	}
 
 	pstate->pdefsite_state = pdefsite_state;

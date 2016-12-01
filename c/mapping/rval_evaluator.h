@@ -86,6 +86,35 @@ typedef struct _boxed_xval_t {
 	int is_ephemeral;
 } boxed_xval_t;
 
+static inline boxed_xval_t box_ephemeral_val(mv_t val) {
+	return (boxed_xval_t) {
+		.xval = mlhmmv_xvalue_wrap_terminal(val),
+		.is_ephemeral = TRUE,
+	};
+}
+
+static inline boxed_xval_t box_non_ephemeral_val(mv_t val) {
+	return (boxed_xval_t) {
+		.xval = mlhmmv_xvalue_wrap_terminal(val),
+		.is_ephemeral = FALSE,
+	};
+}
+
+static inline boxed_xval_t box_ephemeral_xval(mlhmmv_xvalue_t xval) {
+	return (boxed_xval_t) {
+		.xval = xval,
+		.is_ephemeral = TRUE,
+	};
+}
+
+static inline boxed_xval_t box_non_ephemeral_xval(mlhmmv_xvalue_t xval) {
+	return (boxed_xval_t) {
+		.xval = xval,
+		.is_ephemeral = FALSE,
+	};
+}
+
+// ----------------------------------------------------------------
 struct _rxval_evaluator_t;  // forward reference for method declarations
 
 typedef boxed_xval_t rxval_evaluator_process_func_t(void* pvstate, variables_t* pvars);

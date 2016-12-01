@@ -55,6 +55,9 @@ MAPVAR CHECKLIST:
   - w/o implicit: sad panda cannot type 'x=1'
 * perf profile
 
+* box ctors -> more callsites
+* bool_t typedef
+
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 things which are always maps:
 * maplit
