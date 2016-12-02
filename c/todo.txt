@@ -38,8 +38,8 @@ MAPVAR CHECKLIST:
   ? free vs. free_contents names ?
 
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
-  - map-in: isabsent, ispresent, ismap, isscalar, length, typeof, depth, deepcount. haskey.
-  ? map-out: a plus b? a minus b? ... various collections-api stuff ...
+  - map-in: isabsent, ispresent, ismap, isscalar, length, typeof, depth, deepcount, haskey.
+  ? map-out: a plus b? a minus b? stdlib.mlr ?
 
   - isabsent, ispresent are nonsensical now that maps can be func args
   - ismap and isscalar predicates
