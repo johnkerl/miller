@@ -145,10 +145,10 @@ mv_t get_srec_value_string_float(char* field_name, lrec_t* pinrec, lhmsmv_t* pty
 mv_t get_srec_value_string_float_int(char* field_name, lrec_t* pinrec, lhmsmv_t* ptyped_overlay);
 
 // For boundvars in for-srec:
-typedef mv_t type_inferenced_srec_field_getter_t(lrece_t* pentry, lhmsmv_t* ptyped_overlay);
-mv_t get_srec_value_string_only_aux(lrece_t* pentry, lhmsmv_t* ptyped_overlay);
-mv_t get_srec_value_string_float_aux(lrece_t* pentry, lhmsmv_t* ptyped_overlay);
-mv_t get_srec_value_string_float_int_aux(lrece_t* pentry, lhmsmv_t* ptyped_overlay);
+typedef mv_t type_inferenced_srec_field_copy_getter_t(lrece_t* pentry, lhmsmv_t* ptyped_overlay);
+mv_t get_copy_srec_value_string_only_aux(lrece_t* pentry, lhmsmv_t* ptyped_overlay);
+mv_t get_copy_srec_value_string_float_aux(lrece_t* pentry, lhmsmv_t* ptyped_overlay);
+mv_t get_copy_srec_value_string_float_int_aux(lrece_t* pentry, lhmsmv_t* ptyped_overlay);
 
 // ================================================================
 // rxval_expr_evaluators.c // xxx make separate header file for these

@@ -18,7 +18,7 @@ typedef struct _for_srec_state_t {
 	int   v_frame_relative_index;
 	int   v_type_mask;
 
-	type_inferenced_srec_field_getter_t* ptype_inferenced_srec_field_getter;
+	type_inferenced_srec_field_copy_getter_t* ptype_inferenced_srec_field_copy_getter;
 
 } for_srec_state_t;
 
@@ -49,7 +49,7 @@ mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t*
 	pstate->v_variable_name        = NULL;
 	pstate->v_frame_relative_index = 0;
 	pstate->v_type_mask            = TYPE_MASK_ANY;
-	pstate-> ptype_inferenced_srec_field_getter = NULL;
+	pstate-> ptype_inferenced_srec_field_copy_getter = NULL;
 
 	// Left child node is list of bound variables.
 	// Right child node is the list of statements in the body.
@@ -83,12 +83,12 @@ mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t*
 			type_inferencing, context_flags));
 	}
 
-	pstate->ptype_inferenced_srec_field_getter =
-		(type_inferencing == TYPE_INFER_STRING_ONLY)      ? get_srec_value_string_only_aux :
-		(type_inferencing == TYPE_INFER_STRING_FLOAT)     ? get_srec_value_string_float_aux :
-		(type_inferencing == TYPE_INFER_STRING_FLOAT_INT) ? get_srec_value_string_float_int_aux :
+	pstate->ptype_inferenced_srec_field_copy_getter =
+		(type_inferencing == TYPE_INFER_STRING_ONLY)      ? get_copy_srec_value_string_only_aux :
+		(type_inferencing == TYPE_INFER_STRING_FLOAT)     ? get_copy_srec_value_string_float_aux :
+		(type_inferencing == TYPE_INFER_STRING_FLOAT_INT) ? get_copy_srec_value_string_float_int_aux :
 		NULL;
-	MLR_INTERNAL_CODING_ERROR_IF(pstate->ptype_inferenced_srec_field_getter == NULL);
+	MLR_INTERNAL_CODING_ERROR_IF(pstate->ptype_inferenced_srec_field_copy_getter == NULL);
 
 	return mlr_dsl_cst_statement_valloc_with_block(
 		pnode,
@@ -125,8 +125,8 @@ static void handle_for_srec(
 
 	for (lrece_t* pe = pcopyrec->phead; pe != NULL; pe = pe->pnext) {
 
-		mv_t mvval = pstate->ptype_inferenced_srec_field_getter(pe, pcopyoverlay);
 		mv_t mvkey = mv_from_string_no_free(pe->key);
+		mv_t mvval = pstate->ptype_inferenced_srec_field_copy_getter(pe, pcopyoverlay);
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 		local_stack_frame_define_terminal(pframe,

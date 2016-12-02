@@ -228,12 +228,12 @@ static void handle_for_oosvar_aux(
 			for (mlhmmv_level_entry_t* pe = submap.pnext_level->phead; pe != NULL; pe = pe->pnext) {
 				// Bind the k-name to the entry-key mlrval:
 				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-				local_stack_frame_define_terminal(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
-					prest_for_k_type_masks[0], mv_copy(&pe->level_key));
+				local_stack_frame_define_terminal(pframe, prest_for_k_variable_names[0],
+					prest_for_k_frame_relative_indices[0], prest_for_k_type_masks[0], mv_copy(&pe->level_key));
 				// Recurse into the next-level submap:
 				handle_for_oosvar_aux(pstatement, pvars, pcst_outputs, pe->level_xvalue,
-					&prest_for_k_variable_names[1], &prest_for_k_frame_relative_indices[1], &prest_for_k_type_masks[1],
-					prest_for_k_count - 1);
+					&prest_for_k_variable_names[1], &prest_for_k_frame_relative_indices[1],
+					&prest_for_k_type_masks[1], prest_for_k_count - 1);
 
 				if (loop_stack_get(pvars->ploop_stack) & LOOP_BROKEN) {
 					// Bit cleared in recursive caller
@@ -257,7 +257,6 @@ static void handle_for_oosvar_aux(
 			// Execute the loop-body statements:
 			pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
 		}
-
 	}
 }
 
