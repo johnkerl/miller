@@ -6,11 +6,11 @@
 #include "lib/mlrutil.h"
 #include "lib/mlrregex.h"
 #include "lib/mtrand.h"
+#include "dsl/mlr_dsl_cst.h" // xxx only for allocate_keylist_evaluators_from_ast_node -- xxx move
+#include "dsl/context_flags.h"
+#include "dsl/rval_evaluators.h"
+#include "dsl/function_manager.h"
 #include "mapping/mapper.h"
-#include "mapping/rval_evaluators.h"
-#include "mapping/function_manager.h"
-#include "mapping/mlr_dsl_cst.h" // xxx only for allocate_keylist_evaluators_from_ast_node -- xxx move
-#include "mapping/context_flags.h"
 
 // ================================================================
 // See comments in rval_evaluators.h

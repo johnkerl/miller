@@ -8,5 +8,5 @@ export     DSLCC="clang"
 #export DSLCFLAGS="-I.. -Wall -O2"
 export DSLCFLAGS="-I.. -Wall -O2 -g"
 
-make -e -f Makefile.no-autoconfig -C dsls clean
+make -e -f Makefile.no-autoconfig -C parsing clean
 make -e -f Makefile.no-autoconfig mlr mlrg

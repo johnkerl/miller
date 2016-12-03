@@ -1,7 +1,7 @@
 #include "lib/mlr_globals.h"
 #include "lib/minunit.h"
-#include "mapping/rval_evaluators.h"
-#include "mapping/function_manager.h"
+#include "dsl/rval_evaluators.h"
+#include "dsl/function_manager.h"
 
 // ----------------------------------------------------------------
 int tests_run         = 0;

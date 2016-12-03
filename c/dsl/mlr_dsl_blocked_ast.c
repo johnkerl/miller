@@ -1,6 +1,6 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
-#include "mapping/mlr_dsl_blocked_ast.h"
+#include "dsl/mlr_dsl_blocked_ast.h"
 
 // ----------------------------------------------------------------
 blocked_ast_t* blocked_ast_alloc(mlr_dsl_ast_t* past) {

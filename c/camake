@@ -7,5 +7,5 @@ export   CCDEBUG="clang -fsanitize=address -std=gnu99 -I. -I.. -Wall -Werror -g 
 export     DSLCC="clang"
 export DSLCFLAGS="-I.. -Wall -O2 -fsanitize=address"
 
-make -e -f Makefile.no-autoconfig -C dsls clean
+make -e -f Makefile.no-autoconfig -C parsing clean
 make -e -f Makefile.no-autoconfig mlr mlrg

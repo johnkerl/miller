@@ -2,14 +2,14 @@
 #define MLR_DSL_CST_H
 
 #include "cli/mlrcli.h"
-#include "mapping/mlr_dsl_ast.h"
-#include "containers/type_decl.h"
 #include "containers/lhmsmv.h"
 #include "containers/local_stack.h"
 #include "containers/loop_stack.h"
-#include "mapping/mlr_dsl_blocked_ast.h"
-#include "mapping/rval_evaluators.h"
-#include "mapping/function_manager.h"
+#include "containers/type_decl.h"
+#include "dsl/mlr_dsl_ast.h"
+#include "dsl/mlr_dsl_blocked_ast.h"
+#include "dsl/rval_evaluators.h"
+#include "dsl/function_manager.h"
 #include "output/multi_out.h"
 #include "output/multi_lrec_writer.h"
 
@@ -53,7 +53,7 @@
 // ================================================================
 
 // ----------------------------------------------------------------
-// mapping/mlr_dsl_stack_allocate.c
+// dsl/mlr_dsl_stack_allocate.c
 // Two-pass stack allocator which operates on the block-structured AST
 // before the CST is build (mlr_dsl_stack_allocate.c).
 void blocked_ast_allocate_locals(blocked_ast_t* paast, int trace);
@@ -248,7 +248,7 @@ void mlr_dsl_cst_handle_statement_list(
 	cst_outputs_t* pcst_outputs);
 
 // ================================================================
-// mapping/mlr_dsl_cst_func_subr.c
+// dsl/mlr_dsl_cst_func_subr.c
 
 // ----------------------------------------------------------------
 // cst_udf_state_t is data needed to execute the body of a user-defined function which is implemented by CST statements.
@@ -304,7 +304,7 @@ void mlr_dsl_cst_execute_subroutine(subr_defsite_t* pstate, variables_t* pvars,
 
 // ================================================================
 // For on-line help / manpage
-// mapping/mlr_dsl_cst_keywords.c
+// dsl/mlr_dsl_cst_keywords.c
 
 void mlr_dsl_list_all_keywords_raw(FILE* output_stream);
 
@@ -315,7 +315,7 @@ void mlr_dsl_keyword_usage(FILE* output_stream, char* keyword);
 // Specific CST-statement subclasses
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// mapping/mlr_dsl_cst_condish_statements.c
+// dsl/mlr_dsl_cst_condish_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_conditional_block;
 mlr_dsl_cst_statement_allocator_t alloc_if_head;
 mlr_dsl_cst_statement_allocator_t alloc_while;
@@ -336,12 +336,12 @@ mlr_dsl_cst_statement_t* alloc_final_filter(
 	int                 context_flags);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// mapping/mlr_dsl_cst_terminal_assignment_statements.c
+// dsl/mlr_dsl_cst_terminal_assignment_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_srec_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_indirect_srec_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_env_assignment;
 
-// mapping/mlr_dsl_cst_map_assignment_statements.c
+// dsl/mlr_dsl_cst_map_assignment_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_full_srec_assignment;
 mlr_dsl_cst_statement_t* alloc_local_variable_definition(
 	mlr_dsl_cst_t*      pcst,
@@ -355,15 +355,15 @@ mlr_dsl_cst_statement_allocator_t alloc_oosvar_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_full_oosvar_assignment;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// mapping/mlr_dsl_cst_unset_statements.c
+// dsl/mlr_dsl_cst_unset_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_unset;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// mapping/mlr_dsl_cst_for_srec_statements.c
+// dsl/mlr_dsl_cst_for_srec_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_for_srec;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// mapping/mlr_dsl_cst_for_map_statements.c
+// dsl/mlr_dsl_cst_for_map_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_for_oosvar;
 mlr_dsl_cst_statement_allocator_t alloc_for_oosvar_key_only;
 mlr_dsl_cst_statement_allocator_t alloc_for_local_map;
@@ -372,21 +372,21 @@ mlr_dsl_cst_statement_allocator_t alloc_for_map_literal;
 mlr_dsl_cst_statement_allocator_t alloc_for_map_literal_key_only;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// mapping/mlr_dsl_cst_triple_for_statements.c
+// dsl/mlr_dsl_cst_triple_for_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_triple_for;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// mapping/mlr_dsl_cst_loop_control_statements.c
+// dsl/mlr_dsl_cst_loop_control_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_break;
 mlr_dsl_cst_statement_allocator_t alloc_continue;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// mapping/mlr_dsl_cst_return_statements.c
+// dsl/mlr_dsl_cst_return_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_return_void;  // For subroutines
 mlr_dsl_cst_statement_allocator_t alloc_return_value; // For UDFs
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// mapping/mlr_dsl_cst_output_statements.c
+// dsl/mlr_dsl_cst_output_statements.c
 
 mlr_dsl_cst_statement_t* alloc_print(
 	mlr_dsl_cst_t*      pcst,
@@ -416,7 +416,7 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(
 mlr_dsl_cst_statement_allocator_t alloc_dump;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// mapping/mlr_dsl_cst_func_subr.c
+// dsl/mlr_dsl_cst_func_subr.c
 
 // When we allocate a callsite we can do so before the callee has been defined.
 // Hence the two-step process, with the second step being an object-binding step.

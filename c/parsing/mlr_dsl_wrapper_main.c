@@ -3,9 +3,9 @@
 #include "mlr_dsl_wrapper.h"
 #include "mlr_dsl_lexer.h"
 #include "mlr_dsl_parse.h"
-#include "../lib/mlrutil.h"
-#include "../mapping/mlr_dsl_ast.h"
 #include "../containers/sllv.h"
+#include "../lib/mlrutil.h"
+#include "../dsl/mlr_dsl_ast.h"
 
 // ----------------------------------------------------------------
 int main(int argc, char** argv) {

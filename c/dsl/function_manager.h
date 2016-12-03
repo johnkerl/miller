@@ -4,9 +4,9 @@
 #include "containers/mlrval.h"
 #include "containers/lhmsv.h"
 #include "containers/hss.h"
-#include "mapping/mlr_dsl_ast.h"
-#include "mapping/rval_evaluator.h"
-#include "mapping/type_inference.h"
+#include "dsl/mlr_dsl_ast.h"
+#include "dsl/rval_evaluator.h"
+#include "dsl/type_inference.h"
 
 // ----------------------------------------------------------------
 // Things a user-defined function (however it is implemented) needs in order to

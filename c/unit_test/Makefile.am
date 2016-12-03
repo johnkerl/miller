@@ -19,9 +19,10 @@ AM_CFLAGS=		-Wall -std=gnu99
 all_ldadd=		\
 			../lib/libmlr.la \
 			../containers/libcontainers.la \
-			../dsls/libdsl.la \
+			../parsing/libdsl.la \
 			../cli/libcli.la \
 			../input/libinput.la \
+			../dsl/libdsl.la \
 			../mapping/libmapping.la \
 			../output/liboutput.la \
 			../stream/libstream.la \

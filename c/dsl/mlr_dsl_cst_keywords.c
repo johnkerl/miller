@@ -16,7 +16,7 @@ typedef void keyword_usage_func_t(FILE* ostream);
 // NR
 // PI
 
-// Should match the keywords defined in dsls/mlr_dsl_lexer.l.
+// Should match the keywords defined in parsing/mlr_dsl_lexer.l.
 
 static keyword_usage_func_t mlr_dsl_all_keyword_usage;
 static keyword_usage_func_t mlr_dsl_begin_keyword_usage;
@@ -109,7 +109,7 @@ static int KEYWORD_USAGE_TABLE_SIZE = sizeof(KEYWORD_USAGE_TABLE)/sizeof(KEYWORD
 
 // ================================================================
 // Pass function_name == NULL to get usage for all keywords.
-// Note keywords are defined in dsls/mlr_dsl_lexer.l.
+// Note keywords are defined in parsing/mlr_dsl_lexer.l.
 void mlr_dsl_keyword_usage(FILE* ostream, char* keyword) {
 	if (keyword == NULL) {
 		for (int i = 0; i < KEYWORD_USAGE_TABLE_SIZE; i++) {

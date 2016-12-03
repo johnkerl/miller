@@ -3,8 +3,8 @@
 #include "lib/mlrutil.h"
 #include "containers/free_flags.h"
 #include "containers/lhmsi.h"
-#include "mapping/mlr_dsl_blocked_ast.h"
-#include "mapping/context_flags.h"
+#include "dsl/mlr_dsl_blocked_ast.h"
+#include "dsl/context_flags.h"
 
 // ================================================================
 // This is a two-pass stack allocator for the Miller DSL.

@@ -7,7 +7,7 @@
 #include "lib/mlrregex.h"
 #include "lib/mtrand.h"
 #include "mapping/mapper.h"
-#include "mapping/rval_evaluators.h"
+#include "dsl/rval_evaluators.h"
 
 // ================================================================
 // See comments in rval_evaluators.h

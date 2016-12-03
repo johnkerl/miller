@@ -17,13 +17,14 @@ LT_INIT
 
 # TODO: better source handling for lemon sources?
 # perhaps lemon can be improved to survive being called from the build dir
-AC_CONFIG_LINKS([c/dsls/lempar.c:c/dsls/lempar.c])
-AC_CONFIG_LINKS([c/dsls/mlr_dsl_parse.y:c/dsls/mlr_dsl_parse.y])
+AC_CONFIG_LINKS([c/parsing/lempar.c:c/parsing/lempar.c])
+AC_CONFIG_LINKS([c/parsing/mlr_dsl_parse.y:c/parsing/mlr_dsl_parse.y])
 
 AC_CONFIG_FILES([Makefile
 		c/cli/Makefile
 		c/containers/Makefile
-		c/dsls/Makefile
+		c/parsing/Makefile
+		c/dsl/Makefile
 		c/experimental/Makefile
 		c/input/Makefile
 		c/lib/Makefile

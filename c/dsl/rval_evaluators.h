@@ -2,9 +2,9 @@
 #define RVAL_EVALUATORS_H
 
 #include <stdio.h>
-#include "mapping/mlr_dsl_ast.h"
-#include "mapping/rval_evaluator.h"
-#include "mapping/function_manager.h"
+#include "dsl/mlr_dsl_ast.h"
+#include "dsl/rval_evaluator.h"
+#include "dsl/function_manager.h"
 
 // ================================================================
 // NOTES:

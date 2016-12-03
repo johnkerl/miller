@@ -7,9 +7,9 @@
 #include "lib/mlrregex.h"
 #include "lib/mtrand.h"
 #include "mapping/mapper.h"
-#include "mapping/rval_evaluators.h"
-#include "mapping/function_manager.h"
-#include "mapping/context_flags.h"
+#include "dsl/rval_evaluators.h"
+#include "dsl/function_manager.h"
+#include "dsl/context_flags.h"
 
 // ================================================================
 // See comments in rval_evaluators.h

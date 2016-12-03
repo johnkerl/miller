@@ -7,8 +7,8 @@
 #include "lib/mlrregex.h"
 #include "lib/mtrand.h"
 #include "mapping/mapper.h"
-#include "mapping/context_flags.h"
-#include "mapping/rval_evaluators.h"
+#include "dsl/context_flags.h"
+#include "dsl/rval_evaluators.h"
 
 // ----------------------------------------------------------------
 typedef struct _rval_evaluator_variadic_state_t {

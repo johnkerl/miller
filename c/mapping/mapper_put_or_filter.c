@@ -6,10 +6,10 @@
 #include "containers/sllv.h"
 #include "containers/lhmsv.h"
 #include "containers/mlhmmv.h"
+#include "parsing/mlr_dsl_wrapper.h"
+#include "dsl/rval_evaluators.h"
+#include "dsl/mlr_dsl_cst.h"
 #include "mapping/mappers.h"
-#include "mapping/rval_evaluators.h"
-#include "dsls/mlr_dsl_wrapper.h"
-#include "mlr_dsl_cst.h"
 
 #define DEFAULT_OOSVAR_FLATTEN_SEPARATOR ":"
 

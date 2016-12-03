@@ -1,8 +1,8 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
-#include "mapping/function_manager.h"
-#include "mapping/context_flags.h"
-#include "mapping/rval_evaluators.h"
+#include "dsl/function_manager.h"
+#include "dsl/context_flags.h"
+#include "dsl/rval_evaluators.h"
 
 // ----------------------------------------------------------------
 typedef enum _func_class_t {

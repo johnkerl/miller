@@ -18,11 +18,11 @@ NON-RELEASE:
 OTHER:
 
 ! linepart/parapart -> gh.jk/scx
+! non-string =~ regex: coerce LHS to string
 
 * mlr paste (sjackman)
 
 * don't dump full help on unrecognized flag. WAY too much info. just print short, w/ info on how to get long.
-* typeof -> include 'map' and 'srec'
 * dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d
 * rename dsls/ to parsers; mapping -> mappers & dsl ?
 ! 'Error code 1' -> clearer on regdiff fail
