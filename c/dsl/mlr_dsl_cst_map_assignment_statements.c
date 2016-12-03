@@ -97,10 +97,7 @@ static void handle_full_srec_assignment(
 				// lrec would result in double frees, or awkward bookkeeping. However, the NR
 				// variable evaluator reads prec->field_count, so we need to put something here.
 				// And putting something statically allocated minimizes copying/freeing.
-				//mv_t xxx_temp = mv_copy(&val);
-				lhmsmv_put(pout_typed_overlay, mlr_strdup_or_die(skey),
-					&val,
-					//&xxx_temp,
+				lhmsmv_put(pout_typed_overlay, mlr_strdup_or_die(skey), &val,
 					FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
 				lrec_put(poutrec, skey, "bug", FREE_ENTRY_KEY);
 			}
