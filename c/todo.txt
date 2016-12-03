@@ -24,7 +24,6 @@ OTHER:
 
 * don't dump full help on unrecognized flag. WAY too much info. just print short, w/ info on how to get long.
 * dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d
-* rename dsls/ to parsers; mapping -> mappers & dsl ?
 ! 'Error code 1' -> clearer on regdiff fail
 
 ----------------------------------------------------------------

@@ -255,7 +255,7 @@ md_statement_not_braced_end(A) ::= MD_TOKEN_CONTINUE(O). {
 // * On the "f" we change the function name to get "f(a,b,c)".
 
 md_func_block(C) ::= MD_TOKEN_FUNC_DEF
-	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_func_args(A) MD_TOKEN_RPAREN
+	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_func_or_subr_parameters(A) MD_TOKEN_RPAREN
 	MD_TOKEN_LBRACE md_statement_block(B) MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_set_function_name(A, F->text);
@@ -264,7 +264,7 @@ md_func_block(C) ::= MD_TOKEN_FUNC_DEF
 }
 
 md_func_block(C) ::= MD_TOKEN_FUNC_DEF
-	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_func_args(A) MD_TOKEN_RPAREN
+	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_func_or_subr_parameters(A) MD_TOKEN_RPAREN
 	MD_TOKEN_COLON md_typedecl(M)
 	MD_TOKEN_LBRACE md_statement_block(B) MD_TOKEN_RBRACE.
 {
@@ -274,13 +274,13 @@ md_func_block(C) ::= MD_TOKEN_FUNC_DEF
 }
 
 // Need to invalidate "f(10,)" -- use some non-empty-args expr.
-md_func_args(A) ::= . {
+md_func_or_subr_parameters(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
 }
-md_func_args(A) ::= md_func_or_subr_arg(B). {
+md_func_or_subr_parameters(A) ::= md_func_or_subr_parameter(B). {
 	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
 }
-md_func_args(A) ::= md_func_args(B) MD_TOKEN_COMMA md_func_or_subr_arg(C). {
+md_func_or_subr_parameters(A) ::= md_func_or_subr_parameters(B) MD_TOKEN_COMMA md_func_or_subr_parameter(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
@@ -296,17 +296,17 @@ md_subr_block(C) ::= MD_TOKEN_SUBR_DEF
 md_subr_args(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
 }
-md_subr_args(A) ::= md_func_or_subr_arg(B). {
+md_subr_args(A) ::= md_func_or_subr_parameter(B). {
 	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
 }
-md_subr_args(A) ::= md_subr_args(B) MD_TOKEN_COMMA md_func_or_subr_arg(C). {
+md_subr_args(A) ::= md_subr_args(B) MD_TOKEN_COMMA md_func_or_subr_parameter(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
-md_func_or_subr_arg(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
+md_func_or_subr_parameter(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION);
 }
-md_func_or_subr_arg(A) ::= md_typedecl MD_TOKEN_NON_SIGIL_NAME(B). {
+md_func_or_subr_parameter(A) ::= md_typedecl MD_TOKEN_NON_SIGIL_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_UNTYPED_PARAMETER_DEFINITION);
 }
 
@@ -2343,6 +2343,15 @@ md_fcn_args(A) ::= md_rhs(B). {
 	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
 }
 md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA md_rhs(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA MD_TOKEN_FULL_OOSVAR(C). {
+	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA md_map_literal(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
