@@ -29,8 +29,6 @@ OTHER:
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
-! stdlib.mlr/foo.mlr bug
-
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
   - copy/ref of keys vs. values in mlhmmv, local_stack, and callees -- ?!?
@@ -39,6 +37,7 @@ MAPVAR CHECKLIST:
   ! ref terminals as well as non-terminals
   - prune unused functions
   ? free vs. free_contents names ?
+  - mapsum UT cases, and valgrind
 
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
   - map-in: isabsent, ispresent, ismap, isscalar, length, typeof, depth, deepcount, haskey.
@@ -55,7 +54,9 @@ MAPVAR CHECKLIST:
   ? variadic map-cat function ...
 
 * print mapvar; dump scalarvar
-* absent-null map-keys -- do what?
+* absent-null map-keys -- do what? document.
+  - mlr: map keys must be of type MT_STRING or MT_INT; got MT_ABSENT.
+  - maybe change to skip-assign, as with assignment statements?
 !!?? disallow implicit assignment? force w/ var at least??
   - w/  implicit: for (...) {sum += x} FUBAR
   - w/o implicit: sad panda cannot type 'x=1'
