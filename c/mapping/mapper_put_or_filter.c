@@ -579,28 +579,28 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 
 	if (should_emit_rec && !pstate->put_output_disabled) {
 		// Write the output fields from the typed overlay back to the lrec.
-		for (lhmsmve_t* pe = ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
+		for (lhmsmve_t* pe = variables.ptyped_overlay->phead; pe != NULL; pe = pe->pnext) {
 			char* output_field_name = pe->key;
 			mv_t* pval = &pe->value;
 
 			// Ownership transfer from mv_t to lrec.
 			if (pval->type == MT_STRING) {
-				lrec_put(pinrec, output_field_name, pval->u.strv, pval->free_flags);
+				lrec_put(variables.pinrec, output_field_name, pval->u.strv, pval->free_flags);
 			} else {
 				char free_flags = NO_FREE;
 				char* string = mv_format_val(pval, &free_flags);
-				lrec_put(pinrec, output_field_name, string, pval->free_flags | free_flags);
+				lrec_put(variables.pinrec, output_field_name, string, pval->free_flags | free_flags);
 			}
 			pval->free_flags = NO_FREE;
 		}
 	}
-	lhmsmv_free(ptyped_overlay);
+	lhmsmv_free(variables.ptyped_overlay);
 	string_array_free(pregex_captures);
 
 	if (should_emit_rec && !pstate->put_output_disabled) {
-		sllv_append(poutrecs, pinrec);
+		sllv_append(poutrecs, variables.pinrec);
 	} else {
-		lrec_free(pinrec);
+		lrec_free(variables.pinrec); // xxx variables.pinrec mess from reassign in #* = ...
 	}
 	return poutrecs;
 }

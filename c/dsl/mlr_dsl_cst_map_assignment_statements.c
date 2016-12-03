@@ -70,8 +70,8 @@ static void handle_full_srec_assignment(
 {
 	full_srec_assignment_state_t* pstate = pstatement->pvstate;
 
-	lrec_clear(pvars->pinrec);
-	lhmsmv_clear(pvars->ptyped_overlay);
+	lrec_t* poutrec = lrec_unbacked_alloc(); // pinrec might be part of the RHS.
+	lhmsmv_t* pout_typed_overlay = lhmsmv_alloc();
 
 	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
 	boxed_xval_t boxed_xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
@@ -97,9 +97,10 @@ static void handle_full_srec_assignment(
 				// lrec would result in double frees, or awkward bookkeeping. However, the NR
 				// variable evaluator reads prec->field_count, so we need to put something here.
 				// And putting something statically allocated minimizes copying/freeing.
-				lhmsmv_put(pvars->ptyped_overlay, mlr_strdup_or_die(skey), &val,
+				mv_t xxx_temp = mv_copy(&val);
+				lhmsmv_put(pout_typed_overlay, mlr_strdup_or_die(skey), /*&val*/&xxx_temp,
 					FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
-				lrec_put(pvars->pinrec, skey, "bug", FREE_ENTRY_KEY);
+				lrec_put(poutrec, skey, "bug", FREE_ENTRY_KEY);
 			}
 		}
 		if (boxed_xval.is_ephemeral) {
@@ -108,6 +109,11 @@ static void handle_full_srec_assignment(
 	} else {
 		mlhmmv_xvalue_free(&boxed_xval.xval);
 	}
+	// xxx needs a clear-and-move-all ...
+	lrec_free(pvars->pinrec);
+	lhmsmv_free(pvars->ptyped_overlay);
+	pvars->pinrec = poutrec;
+	pvars->ptyped_overlay = pout_typed_overlay;
 }
 
 // ================================================================

@@ -29,6 +29,8 @@ OTHER:
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
+! stdlib.mlr/foo.mlr bug
+
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
   - copy/ref of keys vs. values in mlhmmv, local_stack, and callees -- ?!?
@@ -60,6 +62,8 @@ MAPVAR CHECKLIST:
 * perf profile
 
 * bool_t typedef
+
+? if (k in m) { ... }
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 things which are always maps:
