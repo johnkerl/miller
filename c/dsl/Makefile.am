@@ -28,7 +28,8 @@ libdsl_la_SOURCES=	\
 			mlr_dsl_cst_loop_control_statements.c \
 			mlr_dsl_cst_return_statements.c \
 			mlr_dsl_cst_output_statements.c \
-			mlr_dsl_stack_allocate.c
+			mlr_dsl_stack_allocate.c \
+			type_inference.h
 libdsl_la_LIBADD=	../lib/libmlr.la ../cli/libcli.la ../input/libinput.la
 
 # TODO: replace the interesting content with unit tests; jettison the rest
