@@ -6,7 +6,6 @@
 // stats1/stats2, etc.
 // ================================================================
 
-
 #include "../lib/mlrmath.h"
 #include "../lib/mlrutil.h"
 #include "../lib/mtrand.h"
@@ -20,8 +19,6 @@
 #define ISO8601_DATE_FORMAT "%Y-%m-%d"
 
 // ----------------------------------------------------------------
-// FUNCTION-OF-MLRVAL TYPES
-
 typedef mv_t mv_variadic_func_t(mv_t* pvals, int nvals);
 typedef mv_t mv_zary_func_t();
 typedef mv_t mv_unary_func_t(mv_t* pval1);
@@ -32,8 +29,6 @@ typedef mv_t mv_ternary_func_t(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 typedef mv_t mv_ternary_arg2_regex_func_t(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3);
 
 // ----------------------------------------------------------------
-// FUNCTIONS OF MLRVALS
-
 static inline mv_t b_b_not_func(mv_t* pval1) {
 	return mv_from_bool(!pval1->u.boolv);
 }

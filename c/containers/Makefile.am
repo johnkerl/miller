@@ -54,7 +54,9 @@ libcontainers_la_SOURCES=	\
 			top_keeper.c \
 			top_keeper.h \
 			type_decl.c \
-			type_decl.h
+			type_decl.h \
+			xvfuncs.c \
+			xvfuncs.h
 
 libcontainers_la_LIBADD=	\
 			../lib/libmlr.la \
