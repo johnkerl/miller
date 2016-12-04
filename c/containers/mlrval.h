@@ -208,6 +208,18 @@ static inline int mv_is_string_or_empty(mv_t* pval) {
 static inline int mv_is_numeric(mv_t* pval) {
 	return pval->type == MT_INT || pval->type == MT_FLOAT;
 }
+static inline int mv_is_int(mv_t* pval) {
+	return pval->type == MT_INT;
+}
+static inline int mv_is_float(mv_t* pval) {
+	return pval->type == MT_FLOAT;
+}
+static inline int mv_is_boolean(mv_t* pval) {
+	return pval->type == MT_BOOLEAN;
+}
+static inline int mv_is_string(mv_t* pval) {
+	return pval->type == MT_STRING || pval->type == MT_EMPTY;
+}
 static inline int mv_is_null(mv_t* pval) {
 	return MT_ERROR < pval->type && pval->type <= MT_EMPTY;
 }
