@@ -41,13 +41,26 @@ MAPVAR CHECKLIST:
 
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
 
-  - unary m->b ispresent isabsent ismap isscalar
-  - unary m->i length depth deepcount
-  - unary x->s typeof
-  - unary m->b haskey
-  - binary/variadic m,m->m mapsum mapdiff
-  - binary s,s->m split
-  - binary m,s->s join
+  - calltree:
+    ! separate mlrval.[ch] per se from mv_funcs.[ch]; new xv_funcs.[ch]
+    > mv_unary_func_t                               xv_unary_func_t
+    > rval_evaluator_alloc_from_b_b_func            rxval_evaluator_alloc_from_m_b_func
+    > fmgr_alloc_evaluator_from_unary_func_name     fmgr_alloc_xevaluator_from_unary_func_name
+    > construct_builtin_function_callsite_evaluator construct_builtin_function_callsite_xevaluator
+    > construct_udf_callsite_evaluator              construct_udf_defsite_xevaluator
+    > resolve_func_callsite                         resolve_func_xcallsite
+    > fmgr_resolve_func_callsites
+    > fmgr_alloc_provisional_from_operator_or_function_call fmgr_xalloc_provisional_from_operator_or_function_call
+    > rval_evaluator_alloc_from_ast rxval_evaluator_alloc_from_ast
+
+  - unary m->b ISPRESENT ISABSENT ISMAP ISSCALAR
+  - unary m->b HASKEY
+  - unary m->i LENGTH DEPTH DEEPCOUNT
+  - unary x->s TYPEOF
+  - binary m,s->s JOIN
+
+  - binary s,s->m SPLIT
+  - binary/variadic m,m->m MAPSUM MAPDIFF
 
   - isabsent, ispresent are nonsensical now that maps can be func args
   - length(@map) and length(map), proxy for NF. make it work with length({...}) and length($*).

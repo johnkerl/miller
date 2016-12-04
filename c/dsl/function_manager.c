@@ -856,6 +856,8 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 		return;
 	}
 
+	// xxx XXX builtin xev
+
 	pevaluator = construct_builtin_function_callsite_evaluator(pfmgr, pcallsite);
 	if (pevaluator != NULL) {
 		*pev = *pevaluator;
@@ -880,7 +882,7 @@ static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
 		return;
 	}
 
-	// xxx XXX more to do for non-UDF functions invoked in map-retval contexts
+	// xxx XXX builtin xev
 
 	rval_evaluator_t* pevaluator = construct_builtin_function_callsite_evaluator(pfmgr, pcallsite);
 	pxevaluator = fmgr_alloc_xeval_wrapping_eval(pevaluator);
