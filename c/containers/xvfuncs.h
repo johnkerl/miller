@@ -10,8 +10,8 @@
 
 // ----------------------------------------------------------------
 typedef mlhmmv_xvalue_t mv_variadic_func_t(
-	mlhmmv_value_t* pxvals,
-	int             nxvals);
+	mlhmmv_xvalue_t* pxvals,
+	int              nxvals);
 
 typedef mlhmmv_xvalue_t mv_zary_func_t();
 
