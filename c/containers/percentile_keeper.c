@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "lib/mlrutil.h"
 #include "containers/percentile_keeper.h"
+#include "containers/mvfuncs.h"
 
 #define INITIAL_CAPACITY 10000
 #define GROWTH_FACTOR    2.0

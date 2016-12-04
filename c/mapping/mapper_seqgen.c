@@ -3,7 +3,7 @@
 #include "cli/argparse.h"
 #include "mapping/mappers.h"
 #include "containers/sllv.h"
-#include "containers/mlrval.h"
+#include "containers/mvfuncs.h"
 
 typedef struct _mapper_seqgen_state_t {
 	ap_state_t* pargp;

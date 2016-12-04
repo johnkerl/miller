@@ -32,7 +32,7 @@
 #include "containers/lrec.h"
 #include "containers/lhmsmv.h"
 #include "containers/mlhmmv.h"
-#include "containers/mlrval.h"
+#include "containers/mvfuncs.h"
 #include "containers/local_stack.h"
 #include "containers/loop_stack.h"
 #include "lib/string_array.h"

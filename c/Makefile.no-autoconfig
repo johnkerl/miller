@@ -91,6 +91,7 @@ TEST_LREC_SRCS = \
   lib/string_builder.c \
   lib/string_array.c \
   containers/mlrval.c \
+  containers/mvfuncs.c \
   containers/lrec.c \
   containers/header_keeper.c \
   containers/sllv.c \
@@ -132,6 +133,7 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
   lib/string_array.c \
   containers/hss.c \
   containers/mlrval.c \
+  containers/mvfuncs.c \
   containers/lhmsi.c \
   containers/lhmsll.c \
   containers/lhmss.c \
@@ -168,6 +170,7 @@ TEST_MLHMMV_SRCS = \
   lib/mlrregex.c \
   lib/mlr_globals.c \
   containers/mlrval.c \
+  containers/mvfuncs.c \
   containers/mlhmmv.c \
   containers/sllmv.c \
   containers/sllv.c \
@@ -211,6 +214,7 @@ TEST_RVAL_EVALUATORS_SRCS = \
   lib/string_builder.c \
   lib/string_array.c \
   containers/mlrval.c \
+  containers/mvfuncs.c \
   containers/sllv.c \
   containers/slls.c \
   containers/sllmv.c \
