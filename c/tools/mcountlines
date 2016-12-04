@@ -5,6 +5,7 @@ wc -l \
   containers/*.[ch] \
   input/*.[ch] \
   lib/*.[ch] \
+  dsl/*.[ch] \
   mapping/*.[ch] \
   output/*.[ch] \
   stream/*.[ch] \
@@ -19,6 +20,7 @@ wc -c \
   containers/*.[ch] \
   input/*.[ch] \
   lib/*.[ch] \
+  dsl/*.[ch] \
   mapping/*.[ch] \
   output/*.[ch] \
   stream/*.[ch] \

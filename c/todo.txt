@@ -40,18 +40,18 @@ MAPVAR CHECKLIST:
   - mapsum UT cases, and valgrind
 
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
-  - map-in: isabsent, ispresent, ismap, isscalar, length, typeof, depth, deepcount, haskey.
-  ? map-out: a plus b? a minus b? stdlib.mlr ?
+
+  - unary m->b ispresent isabsent ismap isscalar
+  - unary m->i length depth deepcount
+  - unary x->s typeof
+  - unary m->b haskey
+  - binary/variadic m,m->m mapsum mapdiff
+  - binary s,s->m split
+  - binary m,s->s join
 
   - isabsent, ispresent are nonsensical now that maps can be func args
-  - ismap and isscalar predicates
   - length(@map) and length(map), proxy for NF. make it work with length({...}) and length($*).
   - typeof(@map) and typeof(map) = "map"; typeof($*) = "srec".
-  - depth on maps
-  - deepcount on maps
-  ? split/join: but these are on lists. and would benefit from infix operators?
-  ? variadic list-cat function ...
-  ? variadic map-cat function ...
 
 * print mapvar; dump scalarvar
 * absent-null map-keys -- do what? document.
