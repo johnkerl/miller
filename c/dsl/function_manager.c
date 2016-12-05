@@ -66,6 +66,7 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_binary_func_name(char* fnnm
 static void  resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t*  pev);
 static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev);
 static rxval_evaluator_t* fmgr_alloc_xeval_wrapping_eval(rval_evaluator_t* pevaluator);
+static rval_evaluator_t* fmgr_alloc_eval_wrapping_xeval(rxval_evaluator_t* pxevaluator);
 
 // ----------------------------------------------------------------
 fmgr_t* fmgr_alloc() {
@@ -863,6 +864,7 @@ static rval_evaluator_t* construct_builtin_function_callsite_evaluator(
 }
 
 // ----------------------------------------------------------------
+// xxx comment why
 typedef struct _xeval_wrapping_eval_state_t {
 	rval_evaluator_t* pevaluator;
 } xeval_wrapping_eval_state_t;
@@ -895,6 +897,53 @@ static rxval_evaluator_t* fmgr_alloc_xeval_wrapping_eval(rval_evaluator_t* peval
 	pxevaluator->pfree_func    = xeval_wrapping_eval_free;
 
 	return pxevaluator;
+}
+
+// ----------------------------------------------------------------
+// xxx comment why
+typedef struct _eval_wrapping_xeval_state_t {
+	rxval_evaluator_t* pxevaluator;
+} eval_wrapping_xeval_state_t;
+
+static mv_t eval_wrapping_xeval_func(void* pvstate, variables_t* pvars) {
+	eval_wrapping_xeval_state_t* pstate = pvstate;
+	rxval_evaluator_t* pxevaluator = pstate->pxevaluator;
+	boxed_xval_t bxval = pxevaluator->pprocess_func(pxevaluator->pvstate, pvars);
+
+	if (bxval.xval.is_terminal) {
+		if (bxval.is_ephemeral) {
+			return bxval.xval.terminal_mlrval;
+		} else {
+			return mv_copy(&bxval.xval.terminal_mlrval);
+		}
+
+	} else {
+		if (bxval.is_ephemeral) {
+			mlhmmv_xvalue_free(&bxval.xval);
+		}
+		return mv_error();
+	}
+
+}
+
+static void eval_wrapping_xeval_free(rval_evaluator_t* pevaluator) {
+	eval_wrapping_xeval_state_t* pstate = pevaluator->pvstate;
+	pstate->pxevaluator->pfree_func(pstate->pxevaluator);
+	free(pstate);
+	free(pevaluator);
+}
+
+static rval_evaluator_t* fmgr_alloc_eval_wrapping_xeval(rxval_evaluator_t* pxevaluator) {
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+
+	eval_wrapping_xeval_state_t* pstate = mlr_malloc_or_die(sizeof(eval_wrapping_xeval_state_t));
+	pstate->pxevaluator = pxevaluator;
+
+	pevaluator->pvstate       = pstate;
+	pevaluator->pprocess_func = eval_wrapping_xeval_func;
+	pevaluator->pfree_func    = eval_wrapping_xeval_free;
+
+	return pevaluator;
 }
 
 // ================================================================
@@ -1194,9 +1243,15 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 		return;
 	}
 
-	// xxx XXX builtin xev
-
-	// xxx XXX need to differentiate between map-in,map-out, map-in,scalar-out, and scalar-in,scalar-out
+	// xxx comment to differentiate between map-in,map-out, map-in,scalar-out, and scalar-in,scalar-out.
+	// xxx names are confusing and perhaps should be changed as well.
+	rxval_evaluator_t* pxevaluator = construct_builtin_function_callsite_xevaluator(pfmgr, pcallsite);
+	if (pxevaluator != NULL) {
+		pevaluator = fmgr_alloc_eval_wrapping_xeval(pxevaluator);
+		*pev = *pevaluator;
+		free(pevaluator);
+		return;
+	}
 
 	pevaluator = construct_builtin_function_callsite_evaluator(pfmgr, pcallsite);
 	if (pevaluator != NULL) {
@@ -1239,4 +1294,4 @@ static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
 
 	fprintf(stderr, "Miller: unrecognized function name \"%s\".\n", pcallsite->function_name);
 	exit(1);
-	}
+}

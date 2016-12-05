@@ -77,6 +77,8 @@ MAPVAR CHECKLIST:
 
 * bool_t typedef
 
+* mv_error retvals vs. exitthrows vs. absentskips ... bleah
+
 ? if (k in m) { ... }
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
