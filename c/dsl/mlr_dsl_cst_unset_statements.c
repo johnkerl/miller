@@ -228,6 +228,7 @@ static void handle_unset_indexed_local_variable(
 	sllmv_t* pmvkeys = evaluate_list(punset_item->pkeylist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+		// xxx check is-absent-slot @ local-stack method in case of 'unset nonesuch[xyz]'
 		local_stack_frame_assign_terminal_indexed(pframe, punset_item->local_variable_frame_relative_index,
 			pmvkeys, mv_absent());
 	}
