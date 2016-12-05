@@ -395,6 +395,20 @@ void mlhmmv_level_clear(mlhmmv_level_t* plevel) {
 }
 
 // ----------------------------------------------------------------
+int mlhmmv_level_has_key(mlhmmv_level_t* plevel, mv_t* plevel_key) {
+	int ideal_index = 0;
+	int index = mlhmmv_level_find_index_for_key(plevel, plevel_key, &ideal_index);
+	if (plevel->states[index] == OCCUPIED)
+		return TRUE;
+	else if (plevel->states[index] == EMPTY)
+		return FALSE;
+	else {
+		fprintf(stderr, "%s: mlhmmv_level_find_index_for_key did not find end of chain\n", MLR_GLOBALS.bargv0);
+		exit(1);
+	}
+}
+
+// ----------------------------------------------------------------
 // Returns >=0 for where the key is *or* should go (end of chain).
 
 static int mlhmmv_level_find_index_for_key(mlhmmv_level_t* plevel, mv_t* plevel_key, int* pideal_index) {

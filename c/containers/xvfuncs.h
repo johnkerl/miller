@@ -151,9 +151,20 @@ static inline mlhmmv_xvalue_t b_x_isnotemptymap_xfunc(mlhmmv_xvalue_t* pxval1) {
 	);
 }
 
-//mlhmmv_xvalue_t b_m_haskey_xfunc(mlhmmv_xvalue_t* pxval1);
-//mlhmmv_xvalue_t s_x_typeof_xfunc(mlhmmv_xvalue_t* pxval1);
-//mlhmmv_xvalue_t i_m_length_xfunc(mlhmmv_xvalue_t* pxval1);
+static inline mlhmmv_xvalue_t b_x_typeof_xfunc(mlhmmv_xvalue_t* pxval1) {
+	return mlhmmv_xvalue_wrap_terminal(
+	    mv_from_string(
+			mlhmmv_xvalue_describe_type_simple(pxval1), NO_FREE
+		)
+	);
+}
+
+// ----------------------------------------------------------------
+mlhmmv_xvalue_t b_x_haskey_xfunc(mlhmmv_xvalue_t* pmapval, mlhmmv_xvalue_t* pkeyval);
+
+mlhmmv_xvalue_t b_x_length_xfunc(mlhmmv_xvalue_t* pxval1);
+
+// xxx to do (non-inline):
 //mlhmmv_xvalue_t i_m_depth_xfunc(mlhmmv_xvalue_t* pxval1);
 //mlhmmv_xvalue_t i_m_deepcount_xfunc(mlhmmv_xvalue_t* pxval1);
 //mlhmmv_xvalue_t m_mm_mapsum_xfunc(mlhmmv_xvalue_t* pxval1, mlhmmv_xvalue_t* pxval2);

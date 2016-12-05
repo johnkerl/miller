@@ -105,6 +105,7 @@ void mlhmmv_level_free(mlhmmv_level_t* plevel);
 
 void mlhmmv_level_clear(mlhmmv_level_t* plevel);
 void mlhmmv_level_remove(mlhmmv_level_t* plevel, sllmve_t* prestkeys);
+int mlhmmv_level_has_key(mlhmmv_level_t* plevel, mv_t* plevel_key);
 
 mv_t* mlhmmv_level_look_up_and_ref_terminal(
 	mlhmmv_level_t* plevel,
