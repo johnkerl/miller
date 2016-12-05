@@ -62,12 +62,6 @@ static inline mlhmmv_xvalue_t b_x_isscalar_xfunc(mlhmmv_xvalue_t* pxval1) {
 	);
 }
 
-// xxx to do
-// isnull
-// isnotnull
-// isempty
-// isnotempty
-
 static inline mlhmmv_xvalue_t b_x_isnumeric_xfunc(mlhmmv_xvalue_t* pxval1) {
 	return mlhmmv_xvalue_wrap_terminal(
 		mv_from_bool(
@@ -104,6 +98,39 @@ static inline mlhmmv_xvalue_t b_x_isstring_xfunc(mlhmmv_xvalue_t* pxval1) {
 	return mlhmmv_xvalue_wrap_terminal(
 		mv_from_bool(
 			pxval1->is_terminal && mv_is_string(&pxval1->terminal_mlrval)
+		)
+	);
+}
+
+static inline mlhmmv_xvalue_t b_x_isnull_xfunc(mlhmmv_xvalue_t* pxval1) {
+	return mlhmmv_xvalue_wrap_terminal(
+		mv_from_bool(
+			pxval1->is_terminal && mv_is_null(&pxval1->terminal_mlrval)
+		)
+	);
+}
+
+static inline mlhmmv_xvalue_t b_x_isnotnull_xfunc(mlhmmv_xvalue_t* pxval1) {
+	return mlhmmv_xvalue_wrap_terminal(
+		mv_from_bool(
+			!(pxval1->is_terminal && mv_is_null(&pxval1->terminal_mlrval))
+		)
+	);
+}
+
+// xxx what about empty maps!?!? the name 'empty' is ambiguous now that map contexts exist.
+static inline mlhmmv_xvalue_t b_x_isempty_xfunc(mlhmmv_xvalue_t* pxval1) {
+	return mlhmmv_xvalue_wrap_terminal(
+		mv_from_bool(
+			pxval1->is_terminal && mv_is_empty(&pxval1->terminal_mlrval)
+		)
+	);
+}
+
+static inline mlhmmv_xvalue_t b_x_isnotempty_xfunc(mlhmmv_xvalue_t* pxval1) {
+	return mlhmmv_xvalue_wrap_terminal(
+		mv_from_bool(
+			!(pxval1->is_terminal && mv_is_empty(&pxval1->terminal_mlrval))
 		)
 	);
 }

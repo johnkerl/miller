@@ -239,7 +239,7 @@ static inline int mv_is_present(mv_t* pval) {
 	return pval->type != MT_ABSENT;
 }
 static inline int mv_is_empty(mv_t* pval) {
-	return pval->type == MT_EMPTY;
+	return pval->type == MT_EMPTY || (pval->type == MT_STRING && *pval->u.strv == 0);
 }
 static inline int mv_is_not_empty(mv_t* pval) {
 	return pval->type != MT_EMPTY;
