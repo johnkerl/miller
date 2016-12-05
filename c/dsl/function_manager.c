@@ -1023,18 +1023,7 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_unary_func_name(char* fnnm, r
 	} else if (streq(fnnm, "hms2sec"))         { return rval_evaluator_alloc_from_f_s_func(i_s_hms2sec_func,     parg1);
 	} else if (streq(fnnm, "int"))             { return rval_evaluator_alloc_from_x_x_func(i_x_int_func,         parg1);
 	} else if (streq(fnnm, "invqnorm"))        { return rval_evaluator_alloc_from_f_f_func(f_f_invqnorm_func,    parg1);
-	} else if (streq(fnnm, "isabsent"))        { return rval_evaluator_alloc_from_x_x_func(b_x_isabsent_func,    parg1);
-	} else if (streq(fnnm, "isempty"))         { return rval_evaluator_alloc_from_x_x_func(b_x_isempty_func,     parg1);
-	} else if (streq(fnnm, "isnotempty"))      { return rval_evaluator_alloc_from_x_x_func(b_x_isnotempty_func,  parg1);
-	} else if (streq(fnnm, "isnotnull"))       { return rval_evaluator_alloc_from_x_x_func(b_x_isnotnull_func,   parg1);
-	} else if (streq(fnnm, "isnull"))          { return rval_evaluator_alloc_from_x_x_func(b_x_isnull_func,      parg1);
-	} else if (streq(fnnm, "ispresent"))       { return rval_evaluator_alloc_from_x_x_func(b_x_ispresent_func,   parg1);
-	} else if (streq(fnnm, "isnumeric"))       { return rval_evaluator_alloc_from_x_x_func(b_x_isnumeric_func,   parg1);
-	} else if (streq(fnnm, "isint"))           { return rval_evaluator_alloc_from_x_x_func(b_x_isint_func,       parg1);
-	} else if (streq(fnnm, "isfloat"))         { return rval_evaluator_alloc_from_x_x_func(b_x_isfloat_func,     parg1);
-	} else if (streq(fnnm, "isbool"))          { return rval_evaluator_alloc_from_x_x_func(b_x_isboolean_func,   parg1);
-	} else if (streq(fnnm, "isboolean"))       { return rval_evaluator_alloc_from_x_x_func(b_x_isboolean_func,   parg1);
-	} else if (streq(fnnm, "isstring"))        { return rval_evaluator_alloc_from_x_x_func(b_x_isstring_func,    parg1);
+
 	} else if (streq(fnnm, "log"))             { return rval_evaluator_alloc_from_f_f_func(f_f_log_func,         parg1);
 	} else if (streq(fnnm, "log10"))           { return rval_evaluator_alloc_from_f_f_func(f_f_log10_func,       parg1);
 	} else if (streq(fnnm, "log1p"))           { return rval_evaluator_alloc_from_f_f_func(f_f_log1p_func,       parg1);
@@ -1199,14 +1188,42 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(
 
 // ----------------------------------------------------------------
 static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm, rxval_evaluator_t* parg1) {
+
 	if (streq(fnnm, "ismap")) {
 		return rxval_evaluator_alloc_from_x_x_func(b_x_ismap_xfunc, parg1);
 	} else if (streq(fnnm, "isscalar")) {
 		return rxval_evaluator_alloc_from_x_x_func(b_x_isscalar_xfunc, parg1);
+
 	} else if (streq(fnnm, "isemptymap")) {
 		return rxval_evaluator_alloc_from_x_x_func(b_x_isemptymap_xfunc, parg1);
 	} else if (streq(fnnm, "isnonemptymap")) {
 		return rxval_evaluator_alloc_from_x_x_func(b_x_isnonemptymap_xfunc, parg1);
+
+	} else if (streq(fnnm, "isabsent")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isabsent_xfunc, parg1);
+	} else if (streq(fnnm, "isbool")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isboolean_xfunc, parg1);
+	} else if (streq(fnnm, "isboolean")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isboolean_xfunc, parg1);
+	} else if (streq(fnnm, "isempty")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isempty_xfunc, parg1);
+	} else if (streq(fnnm, "isfloat")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isfloat_xfunc, parg1);
+	} else if (streq(fnnm, "isint")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isint_xfunc, parg1);
+	} else if (streq(fnnm, "isnotempty")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isnotempty_xfunc, parg1); // xxx rename not->non
+	} else if (streq(fnnm, "isnotnull")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isnotnull_xfunc, parg1);
+	} else if (streq(fnnm, "isnull")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isnull_xfunc, parg1);
+	} else if (streq(fnnm, "isnumeric")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isnumeric_xfunc, parg1);
+	} else if (streq(fnnm, "ispresent")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_ispresent_xfunc, parg1);
+	} else if (streq(fnnm, "isstring")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isstring_xfunc, parg1);
+
 	} else if (streq(fnnm, "length")) {
 		return rxval_evaluator_alloc_from_x_x_func(i_x_length_xfunc, parg1);
 	} else {

@@ -55,10 +55,9 @@ MAPVAR CHECKLIST:
 
   - unary m->b ISPRESENT ISABSENT ISMAP ISSCALAR
   - unary m->b HASKEY
-  - unary m->i LENGTH DEPTH DEEPCOUNT
+  - unary m->i LENGTH (DEPTH DEEPCOUNT)
   - unary x->s TYPEOF
   - binary m,s->s JOIN
-
   - binary s,s->m SPLIT
   - binary/variadic m,m->m MAPSUM MAPDIFF
 
