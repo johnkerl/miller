@@ -162,11 +162,13 @@ boxed_xval_t b_x_haskey_xfunc(boxed_xval_t* pmapval, boxed_xval_t* pkeyval);
 
 boxed_xval_t i_x_length_xfunc(boxed_xval_t* pbxval1);
 
+boxed_xval_t variadic_mapsum_xfunc(boxed_xval_t* pbxvals, int nxvals);
+
+boxed_xval_t variadic_mapdiff_xfunc(boxed_xval_t* pbxvals, int nxvals);
+
 // xxx to do (non-inline):
 //boxed_xval_t i_m_depth_xfunc(boxed_xval_t* pbxval1);
 //boxed_xval_t i_m_deepcount_xfunc(boxed_xval_t* pbxval1);
-//boxed_xval_t m_mm_mapsum_xfunc(boxed_xval_t* pbxval1, boxed_xval_t* pbxval2);
-//boxed_xval_t m_mm_mapdiff_xfunc(boxed_xval_t* pbxval1, boxed_xval_t* pbxval2);
 //boxed_xval_t m_ss_split_xfunc(boxed_xval_t* pbxval1, boxed_xval_t* pbxval2);
 //boxed_xval_t s_ms_join_xfunc(boxed_xval_t* pbxval1, boxed_xval_t* pbxval2);
 

@@ -309,6 +309,8 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 
 	{FUNC_CLASS_MAPS, "haskey",        2,0, "xxx temp."},
 	{FUNC_CLASS_MAPS, "length",        1,0, "xxx temp."},
+	{FUNC_CLASS_MAPS, "mapsum",        0,1, "xxx temp."},
+	{FUNC_CLASS_MAPS, "mapdiff",       0,1, "xxx temp."},
 
 	{0, NULL, -1 , -1, NULL}, // table terminator
 };
@@ -1182,7 +1184,13 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(
 	rxval_evaluator_t** pargs,
 	int                 nargs)
 {
-	return NULL; // xxx stub
+	if (streq(function_name, "mapsum")) {
+		return rxval_evaluator_alloc_from_variadic_func(variadic_mapsum_xfunc, pargs, nargs);
+	} else if (streq(function_name, "mapdiff")) {
+		return rxval_evaluator_alloc_from_variadic_func(variadic_mapdiff_xfunc, pargs, nargs);
+	} else {
+		return NULL; // xxx stub
+	}
 }
 
 // ----------------------------------------------------------------
