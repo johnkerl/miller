@@ -254,7 +254,7 @@ TYPE-CHECKING:
 * assert_X() functions
 * doc unset of localvars along w/ unset elsewheredoc
 * func retval typedecls
-* typeof now includes 'map'
+* typeof now includes 'map'; MT_STRING -> string etc.
 
 MAPVARS:
 * map typedecl
@@ -369,6 +369,7 @@ MAJOR BECAUSE:
 * new keywords
 * unset of oosvar doesn't clear empty levels
 * no type-inference on literals: "3"+4 != 7
+* typeof MT_STRING -> string etc.
 * note this isn't huge. as w/ previous majors.
 
 DSL:
