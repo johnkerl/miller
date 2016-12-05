@@ -10,61 +10,62 @@
 #include "dsl/rval_evaluators.h"
 
 // ----------------------------------------------------------------
-//typedef struct _rxval_evaluator_variadic_state_t {
-//	xv_variadic_func_t*  pfunc;
-//	rxval_evaluator_t**  pargs;
-//	mv_t*                pmvs;
-//	int                  nargs;
-//} rxval_evaluator_variadic_state_t;
+typedef struct _rxval_evaluator_variadic_state_t {
+	xv_variadic_func_t*  pfunc;
+	rxval_evaluator_t**  pargs;
+	boxed_xval_t*        pbxvals;
+	int                  nargs;
+} rxval_evaluator_variadic_state_t;
 
-//static mv_t rxval_evaluator_variadic_func(void* pvstate, variables_t* pvars) {
-//	rxval_evaluator_variadic_state_t* pstate = pvstate;
-//	int nargs = pstate->nargs;
-//
-//	for (int i = 0; i < nargs; i++) {
-//		rxval_evaluator_t* parg = pstate->pargs[i];
-//		mv_t* pmv = &pstate->pmvs[i];
-//		*pmv = parg->pprocess_func(parg->pvstate, pvars);
-//	    mv_set_number_nullable(pmv);
-//	}
-//
-//	return pstate->pfunc(pstate->pmvs, nargs);
-//}
+static boxed_xval_t rxval_evaluator_variadic_func(void* pvstate, variables_t* pvars) {
+	rxval_evaluator_variadic_state_t* pstate = pvstate;
+	int nargs = pstate->nargs;
 
-//static void rxval_evaluator_variadic_free(rxval_evaluator_t* pxevaluator) {
-//	rxval_evaluator_variadic_state_t* pstate = pxevaluator->pvstate;
-//
-//	for (int i = 0; i < pstate->nargs; i++)
-//		pstate->pargs[i]->pfree_func(pstate->pargs[i]);
-//	free(pstate->pargs);
-//
-//	for (int i = 0; i < pstate->nargs; i++)
-//		mv_free(&pstate->pmvs[i]);
-//	free(pstate->pmvs);
-//
-//	free(pstate);
-//
-//	free(pxevaluator);
-//}
+	for (int i = 0; i < nargs; i++) {
+		rxval_evaluator_t* parg = pstate->pargs[i];
+		boxed_xval_t* pbxval = &pstate->pbxvals[i];
+		*pbxval = parg->pprocess_func(parg->pvstate, pvars);
+		// xxx map-check ...
+	}
 
-//rxval_evaluator_t* rxval_evaluator_alloc_from_variadic_func(
-//	xv_variadic_func_t* pfunc,
-//	rxval_evaluator_t** pargs,
-//	int nargs)
-//{
-//	rxval_evaluator_variadic_state_t* pstate = mlr_malloc_or_die(sizeof(rxval_evaluator_variadic_state_t));
-//	pstate->pfunc = pfunc;
-//	pstate->pargs = pargs;
-//	pstate->nargs = nargs;
-//	pstate->pmvs  = mlr_malloc_or_die(nargs * sizeof(mv_t));
-//
-//	rxval_evaluator_t* pxevaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
-//	pxevaluator->pvstate       = pstate;
-//	pxevaluator->pprocess_func = rxval_evaluator_variadic_func;
-//	pxevaluator->pfree_func    = rxval_evaluator_variadic_free;
-//
-//	return pxevaluator;
-//}
+	return pstate->pfunc(pstate->pbxvals, nargs);
+}
+
+static void rxval_evaluator_variadic_free(rxval_evaluator_t* pxevaluator) {
+	rxval_evaluator_variadic_state_t* pstate = pxevaluator->pvstate;
+
+	for (int i = 0; i < pstate->nargs; i++)
+		pstate->pargs[i]->pfree_func(pstate->pargs[i]);
+	free(pstate->pargs);
+
+	// xxx check ephemeral ...
+	for (int i = 0; i < pstate->nargs; i++)
+		mlhmmv_xvalue_free(&pstate->pbxvals[i].xval);
+	free(pstate->pbxvals);
+
+	free(pstate);
+
+	free(pxevaluator);
+}
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_variadic_func(
+	xv_variadic_func_t* pfunc,
+	rxval_evaluator_t** pargs,
+	int nargs)
+{
+	rxval_evaluator_variadic_state_t* pstate = mlr_malloc_or_die(sizeof(rxval_evaluator_variadic_state_t));
+	pstate->pfunc = pfunc;
+	pstate->pargs = pargs;
+	pstate->nargs = nargs;
+	pstate->pbxvals  = mlr_malloc_or_die(nargs * sizeof(boxed_xval_t));
+
+	rxval_evaluator_t* pxevaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	pxevaluator->pvstate       = pstate;
+	pxevaluator->pprocess_func = rxval_evaluator_variadic_func;
+	pxevaluator->pfree_func    = rxval_evaluator_variadic_free;
+
+	return pxevaluator;
+}
 
 // ----------------------------------------------------------------
 typedef struct _rxval_evaluator_b_m_state_t {

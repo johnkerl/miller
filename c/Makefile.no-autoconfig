@@ -234,6 +234,7 @@ TEST_RVAL_EVALUATORS_SRCS = \
   dsl/rval_expr_evaluators.c \
   dsl/rxval_expr_evaluators.c \
   dsl/rval_func_evaluators.c \
+  dsl/rxval_func_evaluators.c \
   dsl/rval_list_evaluators.c \
   dsl/mlr_dsl_stack_allocate.c \
   dsl/mlr_dsl_blocked_ast.c \

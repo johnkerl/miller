@@ -34,6 +34,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[];
 // ----------------------------------------------------------------
 // See also comments in rval_evaluators.h
 
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static void fmgr_check_arity_with_report(fmgr_t* pfmgr, char* function_name,
 	int user_provided_arity, int* pvariadic);
 
@@ -55,6 +56,11 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_func_name(char* fnnm,
 static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_regex_arg2_func_name(char* fnnm,
 	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3);
 
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(char* function_name, rxval_evaluator_t** pargs, int nargs);
+static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm, rxval_evaluator_t* parg1);
+
+//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static void  resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t*  pev);
 static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev);
 static rxval_evaluator_t* fmgr_alloc_xeval_wrapping_eval(rval_evaluator_t* pevaluator);
@@ -834,6 +840,7 @@ static rval_evaluator_t* construct_builtin_function_callsite_evaluator(
 			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast(parg3_node, pfmgr, type_inferencing, context_flags);
 			pevaluator = fmgr_alloc_evaluator_from_ternary_func_name(function_name, parg1, parg2, parg3);
 		}
+
 	} else {
 		fprintf(stderr, "Miller: internal coding error:  arity for function name \"%s\" misdetected.\n",
 			function_name);
@@ -841,59 +848,6 @@ static rval_evaluator_t* construct_builtin_function_callsite_evaluator(
 	}
 
 	return pevaluator;
-}
-
-// ----------------------------------------------------------------
-// Return value is in scalar context.
-static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
-	unresolved_func_callsite_state_t* pcallsite = pev->pvstate;
-
-	rval_evaluator_t* pevaluator = construct_udf_callsite_evaluator(pfmgr, pcallsite);
-	if (pevaluator != NULL) {
-		// Struct assignment into the callsite space
-		*pev = *pevaluator;
-		free(pevaluator);
-		return;
-	}
-
-	// xxx XXX builtin xev
-
-	pevaluator = construct_builtin_function_callsite_evaluator(pfmgr, pcallsite);
-	if (pevaluator != NULL) {
-		*pev = *pevaluator;
-		free(pevaluator);
-		return;
-	}
-
-	fprintf(stderr, "Miller: unrecognized function name \"%s\".\n", pcallsite->function_name);
-	exit(1);
-}
-
-// ----------------------------------------------------------------
-// Return value is in map context.
-static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
-	unresolved_func_callsite_state_t* pcallsite = pxev->pvstate;
-
-	rxval_evaluator_t* pxevaluator = construct_udf_defsite_xevaluator(pfmgr, pcallsite);
-	if (pxevaluator != NULL) {
-		// Struct assignment into the callsite space
-		*pxev = *pxevaluator;
-		free(pxevaluator);
-		return;
-	}
-
-	// xxx XXX builtin xev
-
-	rval_evaluator_t* pevaluator = construct_builtin_function_callsite_evaluator(pfmgr, pcallsite);
-	pxevaluator = fmgr_alloc_xeval_wrapping_eval(pevaluator);
-	if (pxevaluator != NULL) {
-		*pxev = *pxevaluator;
-		free(pxevaluator);
-		return;
-	}
-
-	fprintf(stderr, "Miller: unrecognized function name \"%s\".\n", pcallsite->function_name);
-	exit(1);
 }
 
 // ----------------------------------------------------------------
@@ -1125,4 +1079,116 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_regex_arg2_func_name(
 	} else if (streq(fnnm, "gsub"))  {
 		return rval_evaluator_alloc_from_x_srs_func(gsub_precomp_func, parg1, regex_string, ignore_case, parg3);
 	} else  { return NULL; }
+}
+
+// ================================================================
+static rxval_evaluator_t* construct_builtin_function_callsite_xevaluator(
+	fmgr_t* pfmgr,
+	unresolved_func_callsite_state_t* pcallsite)
+{
+	char* function_name       = pcallsite->function_name;
+	int   user_provided_arity = pcallsite->arity;
+	int   type_inferencing    = pcallsite->type_inferencing;
+	int   context_flags       = pcallsite->context_flags;
+	mlr_dsl_ast_node_t* pnode = pcallsite->pnode;
+
+	int variadic = FALSE;
+	fmgr_check_arity_with_report(pfmgr, function_name, user_provided_arity, &variadic);
+
+	rxval_evaluator_t* pxevaluator = NULL;
+	if (variadic) {
+		int nargs = pnode->pchildren->length;
+		rxval_evaluator_t** pargs = mlr_malloc_or_die(nargs * sizeof(rxval_evaluator_t*));
+		int i = 0;
+		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
+			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
+			pargs[i] = rxval_evaluator_alloc_from_ast(pchild, pfmgr, type_inferencing, context_flags);
+		}
+		pxevaluator = fmgr_alloc_xevaluator_from_variadic_func_name(function_name, pargs, nargs);
+
+	} else if (user_provided_arity == 1) {
+		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
+		rxval_evaluator_t* parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+		pxevaluator = fmgr_alloc_xevaluator_from_unary_func_name(function_name, parg1);
+	}
+
+	// xxx arity check ...
+
+	return pxevaluator;
+}
+
+// ----------------------------------------------------------------
+static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(
+	char*               function_name,
+	rxval_evaluator_t** pargs,
+	int                 nargs)
+{
+	return NULL; // xxx stub
+}
+
+// ----------------------------------------------------------------
+static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm, rxval_evaluator_t* parg1) {
+	if (streq(fnnm, "haskey")) {
+		return rxval_evaluator_alloc_from_b_m_func(NULL/*xxx temp*/, parg1);
+	} else {
+		return NULL;
+	}
+}
+
+// ================================================================
+// Return value is in scalar context.
+static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
+	unresolved_func_callsite_state_t* pcallsite = pev->pvstate;
+
+	rval_evaluator_t* pevaluator = construct_udf_callsite_evaluator(pfmgr, pcallsite);
+	if (pevaluator != NULL) {
+		// Struct assignment into the callsite space
+		*pev = *pevaluator;
+		free(pevaluator);
+		return;
+	}
+
+	// xxx XXX builtin xev
+
+	pevaluator = construct_builtin_function_callsite_evaluator(pfmgr, pcallsite);
+	if (pevaluator != NULL) {
+		*pev = *pevaluator;
+		free(pevaluator);
+		return;
+	}
+
+	fprintf(stderr, "Miller: unrecognized function name \"%s\".\n", pcallsite->function_name);
+	exit(1);
+}
+
+// ----------------------------------------------------------------
+// Return value is in map context.
+static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
+	unresolved_func_callsite_state_t* pcallsite = pxev->pvstate;
+
+	rxval_evaluator_t* pxevaluator = construct_udf_defsite_xevaluator(pfmgr, pcallsite);
+	if (pxevaluator != NULL) {
+		// Struct assignment into the callsite space
+		*pxev = *pxevaluator;
+		free(pxevaluator);
+		return;
+	}
+
+	pxevaluator = construct_builtin_function_callsite_xevaluator(pfmgr, pcallsite);
+	if (pxevaluator != NULL) {
+		*pxev = *pxevaluator;
+		free(pxevaluator);
+		return;
+	}
+
+	rval_evaluator_t* pevaluator = construct_builtin_function_callsite_evaluator(pfmgr, pcallsite);
+	pxevaluator = fmgr_alloc_xeval_wrapping_eval(pevaluator);
+	if (pxevaluator != NULL) {
+		*pxev = *pxevaluator;
+		free(pxevaluator);
+		return;
+	}
+
+	fprintf(stderr, "Miller: unrecognized function name \"%s\".\n", pcallsite->function_name);
+	exit(1);
 }
