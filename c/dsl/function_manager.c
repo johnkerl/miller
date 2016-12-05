@@ -1149,17 +1149,15 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(
 // ----------------------------------------------------------------
 static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm, rxval_evaluator_t* parg1) {
 	if (streq(fnnm, "ismap")) {
-		return rxval_evaluator_alloc_from_b_m_func(NULL/*xxx temp*/, parg1);
+		return rxval_evaluator_alloc_from_b_x_func(b_x_ismap_xfunc, parg1);
 	} else if (streq(fnnm, "isscalar")) {
-		return rxval_evaluator_alloc_from_b_m_func(NULL/*xxx temp*/, parg1);
+		return rxval_evaluator_alloc_from_b_m_func(b_x_isscalar_xfunc, parg1);
 	} else if (streq(fnnm, "isemptymap")) {
-		return rxval_evaluator_alloc_from_b_m_func(NULL/*xxx temp*/, parg1);
+		return rxval_evaluator_alloc_from_b_m_func(b_x_isemptymap_xfunc, parg1);
 	} else if (streq(fnnm, "isnonemptymap")) {
-		return rxval_evaluator_alloc_from_b_m_func(NULL/*xxx temp*/, parg1);
-	} else if (streq(fnnm, "haskey")) {
-		return rxval_evaluator_alloc_from_b_m_func(NULL/*xxx temp*/, parg1);
+		return rxval_evaluator_alloc_from_b_m_func(b_x_isnonemptymap_xfunc, parg1);
 	} else if (streq(fnnm, "length")) {
-		return rxval_evaluator_alloc_from_b_m_func(NULL/*xxx temp*/, parg1);
+		return rxval_evaluator_alloc_from_b_m_func(i_x_length_xfunc, parg1);
 	} else {
 		return NULL;
 	}
@@ -1170,7 +1168,7 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_binary_func_name(char* fnnm
 	rxval_evaluator_t* parg2)
 {
 	if (streq(fnnm, "haskey")) {
-		return rxval_evaluator_alloc_from_b_mx_func(NULL/*xxx temp*/, parg1, parg2);
+		return rxval_evaluator_alloc_from_b_mx_func(b_x_haskey_xfunc, parg1, parg2);
 	} else {
 		return NULL;
 	}
@@ -1197,6 +1195,8 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 	}
 
 	// xxx XXX builtin xev
+
+	// xxx XXX need to differentiate between map-in,map-out, map-in,scalar-out, and scalar-in,scalar-out
 
 	pevaluator = construct_builtin_function_callsite_evaluator(pfmgr, pcallsite);
 	if (pevaluator != NULL) {

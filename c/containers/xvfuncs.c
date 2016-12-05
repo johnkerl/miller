@@ -16,7 +16,7 @@ boxed_xval_t b_x_haskey_xfunc(boxed_xval_t* pmapval, boxed_xval_t* pkeyval) {
 }
 
 // ----------------------------------------------------------------
-boxed_xval_t b_x_length_xfunc(boxed_xval_t* pxval1) {
+boxed_xval_t i_x_length_xfunc(boxed_xval_t* pxval1) {
 	if (pxval1->xval.is_terminal) {
 		return box_ephemeral_val(
 			mv_from_int(1)

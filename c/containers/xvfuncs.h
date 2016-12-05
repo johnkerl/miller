@@ -160,7 +160,7 @@ static inline boxed_xval_t b_x_typeof_xfunc(boxed_xval_t* pbxval1) {
 // ----------------------------------------------------------------
 boxed_xval_t b_x_haskey_xfunc(boxed_xval_t* pmapval, boxed_xval_t* pkeyval);
 
-boxed_xval_t b_x_length_xfunc(boxed_xval_t* pbxval1);
+boxed_xval_t i_x_length_xfunc(boxed_xval_t* pbxval1);
 
 // xxx to do (non-inline):
 //boxed_xval_t i_m_depth_xfunc(boxed_xval_t* pbxval1);

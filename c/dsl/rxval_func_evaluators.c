@@ -68,6 +68,39 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_variadic_func(
 }
 
 // ----------------------------------------------------------------
+typedef struct _rxval_evaluator_b_x_state_t {
+	xv_unary_func_t*  pfunc;
+	rxval_evaluator_t* parg1;
+} rxval_evaluator_b_x_state_t;
+
+static boxed_xval_t rxval_evaluator_b_x_func(void* pvstate, variables_t* pvars) {
+	rxval_evaluator_b_x_state_t* pstate = pvstate;
+	boxed_xval_t bxval1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
+
+	return pstate->pfunc(&bxval1);
+}
+
+static void rxval_evaluator_b_x_free(rxval_evaluator_t* pxevaluator) {
+	rxval_evaluator_b_x_state_t* pstate = pxevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	free(pstate);
+	free(pxevaluator);
+}
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_b_x_func(xv_unary_func_t* pfunc, rxval_evaluator_t* parg1) {
+	rxval_evaluator_b_x_state_t* pstate = mlr_malloc_or_die(sizeof(rxval_evaluator_b_x_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+
+	rxval_evaluator_t* pxevaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	pxevaluator->pvstate       = pstate;
+	pxevaluator->pprocess_func = rxval_evaluator_b_x_func;
+	pxevaluator->pfree_func    = rxval_evaluator_b_x_free;
+
+	return pxevaluator;
+}
+
+// ----------------------------------------------------------------
 typedef struct _rxval_evaluator_b_m_state_t {
 	xv_unary_func_t*  pfunc;
 	rxval_evaluator_t* parg1;
