@@ -219,6 +219,8 @@ static void handle_unset_nonindexed_local_variable(
 	local_stack_frame_assign_terminal_nonindexed(pframe, punset_item->local_variable_frame_relative_index, mv_absent());
 }
 
+// As with oosvars, unset removes the key. E.g. if 'v = { 1:2, 3:4 }' then 'unset v[1]' results // <-- xxx UT that
+// in 'v = { 3:4 }'.
 static void handle_unset_indexed_local_variable(
 	unset_item_t*  punset_item,
 	variables_t*   pvars,
@@ -228,9 +230,14 @@ static void handle_unset_indexed_local_variable(
 	sllmv_t* pmvkeys = evaluate_list(punset_item->pkeylist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error) {
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-		// xxx check is-absent-slot @ local-stack method in case of 'unset nonesuch[xyz]'
-		local_stack_frame_assign_terminal_indexed(pframe, punset_item->local_variable_frame_relative_index,
-			pmvkeys, mv_absent());
+
+		// 'unset nonesuch[someindex]' requires the existence check first: else we'd be poking data
+		// into the absent-value stack-frame-index-0 slot.
+		mlhmmv_xvalue_t* pxval = local_stack_frame_ref_extended_from_indexed(pframe,
+			punset_item->local_variable_frame_relative_index, NULL);
+		if (pxval != NULL) {
+			mlhmmv_level_remove(pxval->pnext_level, pmvkeys->phead);
+		}
 	}
 	sllmv_free(pmvkeys);
 }

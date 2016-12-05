@@ -30,9 +30,10 @@ OTHER:
 MAPVAR CHECKLIST:
 
 ! fix (mapdiff in stdlib.mlr):
-  $ mlr --from s put -f stdlib.mlr -e '$*=mapdiff({1:2,8:9},{1:4})'
+    mlr --from s put -f stdlib.mlr -e '$*=mapdiff({1:2,8:9},{1:4})'
   mlr: unset statements are not valid within func blocks.
 ! 'unset a[k]': means a -> absent, or remove the key?
+  -> for oosvars it removes the key
 
 * new functions:
   ? unary m->i DEPTH, DEEPCOUNT

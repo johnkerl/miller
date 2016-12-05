@@ -1251,6 +1251,8 @@ static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 
 // ----------------------------------------------------------------
 void mlhmmv_level_remove(mlhmmv_level_t* plevel, sllmve_t* prestkeys) {
+	if (plevel == NULL) // nonesuch
+		return;
 	if (prestkeys == NULL) // restkeys too short
 		return;
 
