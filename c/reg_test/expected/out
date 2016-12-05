@@ -18414,17 +18414,17 @@ x=	b=	sy=3	xt=	st=7
 DSL TYPE PREDICATES
 
 mlr --from ./reg_test/input/abixy --opprint put  for (k, v in $*) { $[k."_type"]      = typeof(v)     } 
-a   b   i  x                   y                   a_type    b_type    i_type x_type   y_type
-pan pan 1  0.3467901443380824  0.7268028627434533  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-eks pan 2  0.7586799647899636  0.5221511083334797  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-wye wye 3  0.20460330576630303 0.33831852551664776 MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-eks wye 4  0.38139939387114097 0.13418874328430463 MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-wye pan 5  0.5732889198020006  0.8636244699032729  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-zee pan 6  0.5271261600918548  0.49322128674835697 MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-eks zee 7  0.6117840605678454  0.1878849191181694  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-zee wye 8  0.5985540091064224  0.976181385699006   MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-hat wye 9  0.03144187646093577 0.7495507603507059  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-pan wye 10 0.5026260055412137  0.9526183602969864  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
+a   b   i  x                   y                   a_type b_type i_type x_type y_type
+pan pan 1  0.3467901443380824  0.7268028627434533  string string int    float  float
+eks pan 2  0.7586799647899636  0.5221511083334797  string string int    float  float
+wye wye 3  0.20460330576630303 0.33831852551664776 string string int    float  float
+eks wye 4  0.38139939387114097 0.13418874328430463 string string int    float  float
+wye pan 5  0.5732889198020006  0.8636244699032729  string string int    float  float
+zee pan 6  0.5271261600918548  0.49322128674835697 string string int    float  float
+eks zee 7  0.6117840605678454  0.1878849191181694  string string int    float  float
+zee wye 8  0.5985540091064224  0.976181385699006   string string int    float  float
+hat wye 9  0.03144187646093577 0.7495507603507059  string string int    float  float
+pan wye 10 0.5026260055412137  0.9526183602969864  string string int    float  float
 
 mlr --from ./reg_test/input/abixy-het put -q for (k,v in $*) {if (isfloat(v))    {@float[NR][k]   = v}}    end{ emit @float,   "NR", "k" }
 NR=1,k=x,float=0.346790
@@ -33376,29 +33376,29 @@ aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 mlr put -q @sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emitp @sum} ./reg_test/input/abixy
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=0.346790
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=1.105470
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=1.310073
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=1.691473
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=2.264762
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=2.791888
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=3.403672
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=4.002226
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=4.033668
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=4.536294
+sumtype=float,xtype=float,sum=0.346790
+sumtype=float,xtype=float,sum=1.105470
+sumtype=float,xtype=float,sum=1.310073
+sumtype=float,xtype=float,sum=1.691473
+sumtype=float,xtype=float,sum=2.264762
+sumtype=float,xtype=float,sum=2.791888
+sumtype=float,xtype=float,sum=3.403672
+sumtype=float,xtype=float,sum=4.002226
+sumtype=float,xtype=float,sum=4.033668
+sumtype=float,xtype=float,sum=4.536294
 sum=4.536294
 
 mlr put -q @sum += $x; @sumtype = typeof(@sum); @xtype = typeof($x); emitf @sumtype, @xtype, @sum; end{emitp @sum} ./reg_test/input/abixy-het
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=0.346790
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=1.105470
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=1.310073
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=1.691473
-sumtype=MT_FLOAT,xtype=MT_ABSENT,sum=1.691473
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=2.218599
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=2.830383
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=3.428937
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=3.460379
-sumtype=MT_FLOAT,xtype=MT_FLOAT,sum=3.963005
+sumtype=float,xtype=float,sum=0.346790
+sumtype=float,xtype=float,sum=1.105470
+sumtype=float,xtype=float,sum=1.310073
+sumtype=float,xtype=float,sum=1.691473
+sumtype=float,xtype=absent,sum=1.691473
+sumtype=float,xtype=float,sum=2.218599
+sumtype=float,xtype=float,sum=2.830383
+sumtype=float,xtype=float,sum=3.428937
+sumtype=float,xtype=float,sum=3.460379
+sumtype=float,xtype=float,sum=3.963005
 sum=3.963005
 
 mlr put $z = $x + $y ./reg_test/input/typeof.dkvp
@@ -33470,60 +33470,60 @@ x=,b=2
 x=,b=
 
 mlr put $z = $x + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg_test/input/typeof.dkvp
-x=MT_INT,y=MT_INT,z=MT_INT
-x=MT_INT,y=MT_EMPTY,z=MT_EMPTY
-x=MT_EMPTY,y=MT_INT,z=MT_EMPTY
-x=MT_EMPTY,y=MT_EMPTY,z=MT_EMPTY
-a=1,y=MT_INT,z=MT_INT,x=MT_ABSENT
-a=1,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT
-a=,y=MT_INT,z=MT_INT,x=MT_ABSENT
-a=,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT
-x=MT_INT,b=2,z=MT_INT,y=MT_ABSENT
-x=MT_INT,b=,z=MT_INT,y=MT_ABSENT
-x=MT_EMPTY,b=2,y=MT_ABSENT,z=MT_ABSENT
-x=MT_EMPTY,b=,y=MT_ABSENT,z=MT_ABSENT
+x=int,y=int,z=int
+x=int,y=empty,z=empty
+x=empty,y=int,z=empty
+x=empty,y=empty,z=empty
+a=1,y=int,z=int,x=absent
+a=1,y=empty,x=absent,z=absent
+a=,y=int,z=int,x=absent
+a=,y=empty,x=absent,z=absent
+x=int,b=2,z=int,y=absent
+x=int,b=,z=int,y=absent
+x=empty,b=2,y=absent,z=absent
+x=empty,b=,y=absent,z=absent
 
 mlr put $z = $x + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z) ./reg_test/input/typeof.dkvp
-x=MT_INT,y=MT_INT,z=MT_INT
-x=MT_INT,y=MT_EMPTY,z=MT_INT
-x=MT_EMPTY,y=MT_INT,z=MT_ABSENT
-x=MT_EMPTY,y=MT_EMPTY,z=MT_ABSENT
-a=1,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT
-a=1,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT
-a=,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT
-a=,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT
-x=MT_INT,b=2,z=MT_INT,y=MT_ABSENT
-x=MT_INT,b=,z=MT_INT,y=MT_ABSENT
-x=MT_EMPTY,b=2,y=MT_ABSENT,z=MT_ABSENT
-x=MT_EMPTY,b=,y=MT_ABSENT,z=MT_ABSENT
+x=int,y=int,z=int
+x=int,y=empty,z=int
+x=empty,y=int,z=absent
+x=empty,y=empty,z=absent
+a=1,y=int,x=absent,z=absent
+a=1,y=empty,x=absent,z=absent
+a=,y=int,x=absent,z=absent
+a=,y=empty,x=absent,z=absent
+x=int,b=2,z=int,y=absent
+x=int,b=,z=int,y=absent
+x=empty,b=2,y=absent,z=absent
+x=empty,b=,y=absent,z=absent
 
 mlr put @s = @s + $y; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg_test/input/typeof.dkvp
-x=MT_INT,y=MT_INT,z=MT_ABSENT,s=MT_INT
-x=MT_INT,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
-x=MT_EMPTY,y=MT_INT,z=MT_ABSENT,s=MT_EMPTY
-x=MT_EMPTY,y=MT_EMPTY,z=MT_ABSENT,s=MT_EMPTY
-a=1,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
-a=1,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
-a=,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
-a=,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
-x=MT_INT,b=2,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
-x=MT_INT,b=,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
-x=MT_EMPTY,b=2,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
-x=MT_EMPTY,b=,y=MT_ABSENT,z=MT_ABSENT,s=MT_EMPTY
+x=int,y=int,z=absent,s=int
+x=int,y=empty,z=absent,s=empty
+x=empty,y=int,z=absent,s=empty
+x=empty,y=empty,z=absent,s=empty
+a=1,y=int,x=absent,z=absent,s=empty
+a=1,y=empty,x=absent,z=absent,s=empty
+a=,y=int,x=absent,z=absent,s=empty
+a=,y=empty,x=absent,z=absent,s=empty
+x=int,b=2,y=absent,z=absent,s=empty
+x=int,b=,y=absent,z=absent,s=empty
+x=empty,b=2,y=absent,z=absent,s=empty
+x=empty,b=,y=absent,z=absent,s=empty
 
 mlr put @s = @s + $u; $x=typeof($x);$y=typeof($y);$z=typeof($z);$s=typeof(@s) ./reg_test/input/typeof.dkvp
-x=MT_INT,y=MT_INT,z=MT_ABSENT,s=MT_ABSENT
-x=MT_INT,y=MT_EMPTY,z=MT_ABSENT,s=MT_ABSENT
-x=MT_EMPTY,y=MT_INT,z=MT_ABSENT,s=MT_ABSENT
-x=MT_EMPTY,y=MT_EMPTY,z=MT_ABSENT,s=MT_ABSENT
-a=1,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
-a=1,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
-a=,y=MT_INT,x=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
-a=,y=MT_EMPTY,x=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
-x=MT_INT,b=2,y=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
-x=MT_INT,b=,y=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
-x=MT_EMPTY,b=2,y=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
-x=MT_EMPTY,b=,y=MT_ABSENT,z=MT_ABSENT,s=MT_ABSENT
+x=int,y=int,z=absent,s=absent
+x=int,y=empty,z=absent,s=absent
+x=empty,y=int,z=absent,s=absent
+x=empty,y=empty,z=absent,s=absent
+a=1,y=int,x=absent,z=absent,s=absent
+a=1,y=empty,x=absent,z=absent,s=absent
+a=,y=int,x=absent,z=absent,s=absent
+a=,y=empty,x=absent,z=absent,s=absent
+x=int,b=2,y=absent,z=absent,s=absent
+x=int,b=,y=absent,z=absent,s=absent
+x=empty,b=2,y=absent,z=absent,s=absent
+x=empty,b=,y=absent,z=absent,s=absent
 
 mlr cat
 x=1
@@ -33531,15 +33531,15 @@ x=
 x=7
 
 mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum+=$x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
-x=1	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
-x=	osum=1	ostype=MT_INT	xtype=MT_EMPTY	nstype=MT_EMPTY	nsum=
-x=7	osum=	ostype=MT_EMPTY	xtype=MT_INT	nstype=MT_EMPTY	nsum=
+x=1	ostype=absent	xtype=int	nstype=int	nsum=1
+x=	osum=1	ostype=int	xtype=empty	nstype=empty	nsum=
+x=7	osum=	ostype=empty	xtype=int	nstype=empty	nsum=
 sum=
 
 mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);ispresent($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
-x=1	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
-x=	osum=1	ostype=MT_INT	xtype=MT_EMPTY	nstype=MT_EMPTY	nsum=
-x=7	osum=	ostype=MT_EMPTY	xtype=MT_INT	nstype=MT_EMPTY	nsum=
+x=1	ostype=absent	xtype=int	nstype=int	nsum=1
+x=	osum=1	ostype=int	xtype=empty	nstype=empty	nsum=
+x=7	osum=	ostype=empty	xtype=int	nstype=empty	nsum=
 sum=
 
 mlr cat
@@ -33548,15 +33548,15 @@ xxx=
 x=7
 
 mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);@sum+=$x; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
-x=1	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
-xxx=	osum=1	ostype=MT_INT	xtype=MT_ABSENT	nstype=MT_INT	nsum=1
-x=7	osum=1	ostype=MT_INT	xtype=MT_INT	nstype=MT_INT	nsum=8
+x=1	ostype=absent	xtype=int	nstype=int	nsum=1
+xxx=	osum=1	ostype=int	xtype=absent	nstype=int	nsum=1
+x=7	osum=1	ostype=int	xtype=int	nstype=int	nsum=8
 sum=8
 
 mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);ispresent($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
-x=1	ostype=MT_ABSENT	xtype=MT_INT	nstype=MT_INT	nsum=1
-xxx=	osum=1	ostype=MT_INT	xtype=MT_ABSENT	nstype=MT_INT	nsum=1
-x=7	osum=1	ostype=MT_INT	xtype=MT_INT	nstype=MT_INT	nsum=8
+x=1	ostype=absent	xtype=int	nstype=int	nsum=1
+xxx=	osum=1	ostype=int	xtype=absent	nstype=int	nsum=1
+x=7	osum=1	ostype=int	xtype=int	nstype=int	nsum=8
 sum=8
 
 mlr cat
@@ -33566,16 +33566,16 @@ y=
 x=7
 
 mlr --ofs tab put $xtype=typeof($x);$sum = $x + 10; $stype=typeof($sum)
-x=1	xtype=MT_INT	sum=11	stype=MT_INT
-x=	xtype=MT_EMPTY	sum=	stype=MT_EMPTY
-y=	xtype=MT_ABSENT	sum=10	stype=MT_INT
-x=7	xtype=MT_INT	sum=17	stype=MT_INT
+x=1	xtype=int	sum=11	stype=int
+x=	xtype=empty	sum=	stype=empty
+y=	xtype=absent	sum=10	stype=int
+x=7	xtype=int	sum=17	stype=int
 
 mlr --ofs tab put $xtype=typeof($x);$sum = ispresent($x) ? $x + 10 : 999; $stype=typeof($sum)
-x=1	xtype=MT_INT	sum=11	stype=MT_INT
-x=	xtype=MT_EMPTY	sum=	stype=MT_EMPTY
-y=	xtype=MT_ABSENT	sum=999	stype=MT_INT
-x=7	xtype=MT_INT	sum=17	stype=MT_INT
+x=1	xtype=int	sum=11	stype=int
+x=	xtype=empty	sum=	stype=empty
+y=	xtype=absent	sum=999	stype=int
+x=7	xtype=int	sum=17	stype=int
 
 
 ================================================================
