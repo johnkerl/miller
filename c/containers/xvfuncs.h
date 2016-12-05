@@ -27,7 +27,8 @@ typedef boxed_xval_t xv_binary_func_t(
 	boxed_xval_t* pbxval2);
 
 // ----------------------------------------------------------------
-// xxx box x all
+// xxx hook all into fmgr
+
 static inline boxed_xval_t b_x_ispresent_xfunc(boxed_xval_t* pbxval1) {
 	return box_ephemeral_val(
 		mv_from_bool(
@@ -140,7 +141,7 @@ static inline boxed_xval_t b_x_isemptymap_xfunc(boxed_xval_t* pbxval1) {
 	);
 }
 
-static inline boxed_xval_t b_x_isnotemptymap_xfunc(boxed_xval_t* pbxval1) {
+static inline boxed_xval_t b_x_isnonemptymap_xfunc(boxed_xval_t* pbxval1) {
 	return box_ephemeral_val(
 		mv_from_bool(
 			pbxval1->xval.is_terminal || pbxval1->xval.pnext_level->num_occupied != 0

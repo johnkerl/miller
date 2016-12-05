@@ -59,6 +59,8 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_regex_arg2_func_name(
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(char* function_name, rxval_evaluator_t** pargs, int nargs);
 static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm, rxval_evaluator_t* parg1);
+static rxval_evaluator_t* fmgr_alloc_xevaluator_from_binary_func_name(char* fnnm, rxval_evaluator_t* parg1,
+	rxval_evaluator_t* pargs2);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static void  resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t*  pev);
@@ -296,6 +298,16 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_TIME, "systime",   0,0,
 		"Floating-point seconds since the epoch,\n"
 		"e.g. 1440768801.748936." },
+
+	// xxx need map-in/map-out flags or some such ...
+	// xxx need new func class(es) for maps ...
+
+	{FUNC_CLASS_ARITHMETIC, "ismap",         1,0, "xxx temp."},
+	{FUNC_CLASS_ARITHMETIC, "isscalar",      1,0, "xxx temp."},
+	{FUNC_CLASS_ARITHMETIC, "isemptymap",    1,0, "xxx temp."},
+	{FUNC_CLASS_ARITHMETIC, "isnonemptymap", 1,0, "xxx temp."},
+	{FUNC_CLASS_ARITHMETIC, "haskey",        2,0, "xxx temp."},
+	{FUNC_CLASS_ARITHMETIC, "length",        1,0, "xxx temp."},
 
 	{0, NULL, -1 , -1, NULL}, // table terminator
 };
@@ -1110,6 +1122,14 @@ static rxval_evaluator_t* construct_builtin_function_callsite_xevaluator(
 		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
 		rxval_evaluator_t* parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
 		pxevaluator = fmgr_alloc_xevaluator_from_unary_func_name(function_name, parg1);
+
+	} else if (user_provided_arity == 2) {
+		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
+		mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
+		rxval_evaluator_t* parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+		rxval_evaluator_t* parg2 = rxval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
+		pxevaluator = fmgr_alloc_xevaluator_from_binary_func_name(function_name, parg1, parg2);
+
 	}
 
 	// xxx arity check ...
@@ -1128,12 +1148,40 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(
 
 // ----------------------------------------------------------------
 static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm, rxval_evaluator_t* parg1) {
-	if (streq(fnnm, "haskey")) {
+	if (streq(fnnm, "ismap")) {
+		return rxval_evaluator_alloc_from_b_m_func(NULL/*xxx temp*/, parg1);
+	} else if (streq(fnnm, "isscalar")) {
+		return rxval_evaluator_alloc_from_b_m_func(NULL/*xxx temp*/, parg1);
+	} else if (streq(fnnm, "isemptymap")) {
+		return rxval_evaluator_alloc_from_b_m_func(NULL/*xxx temp*/, parg1);
+	} else if (streq(fnnm, "isnonemptymap")) {
+		return rxval_evaluator_alloc_from_b_m_func(NULL/*xxx temp*/, parg1);
+	} else if (streq(fnnm, "haskey")) {
+		return rxval_evaluator_alloc_from_b_m_func(NULL/*xxx temp*/, parg1);
+	} else if (streq(fnnm, "length")) {
 		return rxval_evaluator_alloc_from_b_m_func(NULL/*xxx temp*/, parg1);
 	} else {
 		return NULL;
 	}
 }
+
+// ----------------------------------------------------------------
+static rxval_evaluator_t* fmgr_alloc_xevaluator_from_binary_func_name(char* fnnm, rxval_evaluator_t* parg1,
+	rxval_evaluator_t* parg2)
+{
+	if (streq(fnnm, "haskey")) {
+		return rxval_evaluator_alloc_from_b_mx_func(NULL/*xxx temp*/, parg1, parg2);
+	} else {
+		return NULL;
+	}
+}
+
+//	{FUNC_CLASS_ARITHMETIC, "ismap",         1,0, "xxx temp."},
+//	{FUNC_CLASS_ARITHMETIC, "isscalar",      1,0, "xxx temp."},
+//	{FUNC_CLASS_ARITHMETIC, "isemptymap",    1,0, "xxx temp."},
+//	{FUNC_CLASS_ARITHMETIC, "isnonemptymap", 1,0, "xxx temp."},
+//	{FUNC_CLASS_ARITHMETIC, "haskey",        1,0, "xxx temp."},
+//	{FUNC_CLASS_ARITHMETIC, "length",        1,0, "xxx temp."},
 
 // ================================================================
 // Return value is in scalar context.
@@ -1191,4 +1239,4 @@ static void resolve_func_xcallsite(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
 
 	fprintf(stderr, "Miller: unrecognized function name \"%s\".\n", pcallsite->function_name);
 	exit(1);
-}
+	}
