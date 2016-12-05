@@ -5,6 +5,7 @@
 // Functions on extended values, namely, mlrvals/hashmaps.
 // ================================================================
 
+// xxx need memory-transfer semantics
 // xxx make the xvfuncs API entirely in terms of boxed_xval_t's?
 
 #include "../lib/mlrutil.h"
@@ -118,7 +119,6 @@ static inline mlhmmv_xvalue_t b_x_isnotnull_xfunc(mlhmmv_xvalue_t* pxval1) {
 	);
 }
 
-// xxx what about empty maps!?!? the name 'empty' is ambiguous now that map contexts exist.
 static inline mlhmmv_xvalue_t b_x_isempty_xfunc(mlhmmv_xvalue_t* pxval1) {
 	return mlhmmv_xvalue_wrap_terminal(
 		mv_from_bool(
@@ -131,6 +131,22 @@ static inline mlhmmv_xvalue_t b_x_isnotempty_xfunc(mlhmmv_xvalue_t* pxval1) {
 	return mlhmmv_xvalue_wrap_terminal(
 		mv_from_bool(
 			!(pxval1->is_terminal && mv_is_empty(&pxval1->terminal_mlrval))
+		)
+	);
+}
+
+static inline mlhmmv_xvalue_t b_x_isemptymap_xfunc(mlhmmv_xvalue_t* pxval1) {
+	return mlhmmv_xvalue_wrap_terminal(
+		mv_from_bool(
+			!pxval1->is_terminal && pxval1->pnext_level->num_occupied == 0
+		)
+	);
+}
+
+static inline mlhmmv_xvalue_t b_x_isnotemptymap_xfunc(mlhmmv_xvalue_t* pxval1) {
+	return mlhmmv_xvalue_wrap_terminal(
+		mv_from_bool(
+			pxval1->is_terminal || pxval1->pnext_level->num_occupied != 0
 		)
 	);
 }
