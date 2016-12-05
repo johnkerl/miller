@@ -16,14 +16,19 @@ typedef struct _unset_item_t {
 	unset_item_handler_t* punset_item_handler;
 	int                   local_variable_frame_relative_index;
 	char*                 srec_field_name;
-	sllv_t*               poosvar_keylist_evaluators;
+	sllv_t*               pkeylist_evaluators;
 	rval_evaluator_t*     psrec_field_name_evaluator;
 } unset_item_t;
 
 static unset_item_t* alloc_blank_unset_item();
 static void free_unset_item(unset_item_t* punset_item);
 
-static void handle_unset_local_variable(
+static void handle_unset_nonindexed_local_variable(
+	unset_item_t*  punset_item,
+	variables_t*   pvars,
+	cst_outputs_t* pcst_outputs);
+
+static void handle_unset_indexed_local_variable(
 	unset_item_t*  punset_item,
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs);
@@ -112,15 +117,24 @@ mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 		} else if (pchild->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 			unset_item_t* punset_item = alloc_blank_unset_item();
 			punset_item->punset_item_handler = handle_unset_oosvar;
-			punset_item->poosvar_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+			punset_item->pkeylist_evaluators = allocate_keylist_evaluators_from_ast_node(
 				pchild, pcst->pfmgr, type_inferencing, context_flags);
 			sllv_append(pstate->punset_items, punset_item);
 
 		} else if (pchild->type == MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE) {
 			MLR_INTERNAL_CODING_ERROR_IF(pchild->vardef_frame_relative_index == MD_UNUSED_INDEX);
 			unset_item_t* punset_item = alloc_blank_unset_item();
-			punset_item->punset_item_handler = handle_unset_local_variable;
+			punset_item->punset_item_handler = handle_unset_nonindexed_local_variable;
 			punset_item->local_variable_frame_relative_index = pchild->vardef_frame_relative_index;
+			sllv_append(pstate->punset_items, punset_item);
+
+		} else if (pchild->type == MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE) {
+			MLR_INTERNAL_CODING_ERROR_IF(pchild->vardef_frame_relative_index == MD_UNUSED_INDEX);
+			unset_item_t* punset_item = alloc_blank_unset_item();
+			punset_item->punset_item_handler = handle_unset_indexed_local_variable;
+			punset_item->local_variable_frame_relative_index = pchild->vardef_frame_relative_index;
+			punset_item->pkeylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+				pchild, pcst->pfmgr, type_inferencing, context_flags);
 			sllv_append(pstate->punset_items, punset_item);
 
 		} else {
@@ -176,19 +190,19 @@ static unset_item_t* alloc_blank_unset_item() {
 	punset_item->punset_item_handler                 = NULL;
 	punset_item->local_variable_frame_relative_index = MD_UNUSED_INDEX;
 	punset_item->srec_field_name                     = NULL;
-	punset_item->poosvar_keylist_evaluators          = NULL;
+	punset_item->pkeylist_evaluators                 = NULL;
 	punset_item->psrec_field_name_evaluator          = NULL;
 
 	return punset_item;
 }
 
 static void free_unset_item(unset_item_t* punset_item) {
-	if (punset_item->poosvar_keylist_evaluators != NULL) {
-		for (sllve_t* pe = punset_item->poosvar_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+	if (punset_item->pkeylist_evaluators != NULL) {
+		for (sllve_t* pe = punset_item->pkeylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
 			rval_evaluator_t* phandler = pe->pvvalue;
 			phandler->pfree_func(phandler);
 		}
-		sllv_free(punset_item->poosvar_keylist_evaluators);
+		sllv_free(punset_item->pkeylist_evaluators);
 	}
 	if (punset_item->psrec_field_name_evaluator != NULL) {
 		punset_item->psrec_field_name_evaluator->pfree_func(punset_item->psrec_field_name_evaluator);
@@ -196,7 +210,7 @@ static void free_unset_item(unset_item_t* punset_item) {
 	free(punset_item);
 }
 
-static void handle_unset_local_variable(
+static void handle_unset_nonindexed_local_variable(
 	unset_item_t*  punset_item,
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs)
@@ -205,13 +219,28 @@ static void handle_unset_local_variable(
 	local_stack_frame_assign_terminal_nonindexed(pframe, punset_item->local_variable_frame_relative_index, mv_absent());
 }
 
+static void handle_unset_indexed_local_variable(
+	unset_item_t*  punset_item,
+	variables_t*   pvars,
+	cst_outputs_t* pcst_outputs)
+{
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(punset_item->pkeylist_evaluators, pvars, &all_non_null_or_error);
+	if (all_non_null_or_error) {
+		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+		local_stack_frame_assign_terminal_indexed(pframe, punset_item->local_variable_frame_relative_index,
+			pmvkeys, mv_absent());
+	}
+	sllmv_free(pmvkeys);
+}
+
 static void handle_unset_oosvar(
 	unset_item_t*  punset_item,
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs)
 {
 	int all_non_null_or_error = TRUE;
-	sllmv_t* pmvkeys = evaluate_list(punset_item->poosvar_keylist_evaluators, pvars, &all_non_null_or_error);
+	sllmv_t* pmvkeys = evaluate_list(punset_item->pkeylist_evaluators, pvars, &all_non_null_or_error);
 	if (all_non_null_or_error)
 		mlhmmv_root_remove(pvars->poosvars, pmvkeys);
 	sllmv_free(pmvkeys);

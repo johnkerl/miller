@@ -297,11 +297,6 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		break;
 
 	case MD_AST_NODE_TYPE_UNSET:
-		if (context_flags & IN_FUNC_DEF) {
-			fprintf(stderr, "%s: unset statements are not valid within func blocks.\n",
-				MLR_GLOBALS.bargv0);
-			exit(1);
-		}
 		return alloc_unset(pcst, pnode, type_inferencing, context_flags);
 		break;
 

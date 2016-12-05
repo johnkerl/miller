@@ -29,17 +29,16 @@ OTHER:
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
+! fix (mapdiff in stdlib.mlr):
+  $ mlr --from s put -f stdlib.mlr -e '$*=mapdiff({1:2,8:9},{1:4})'
+  mlr: unset statements are not valid within func blocks.
+
 * new functions:
   ? unary m->i DEPTH, DEEPCOUNT
     mlr --from s put -f stdlib.mlr -e 'begin{@u=999}@v[NR]=@*; $n=deepcount(@v);dump'
   - binary m,s->s JOIN
   - binary s,s->m SPLIT
   - binary/variadic m,m->m MAPSUM MAPDIFF
-
-* fix (mapdiff in stdlib.mlr):
-  $ mlr --from s put -f stdlib.mlr -e '$*=mapdiff({1:2,8:9},{1:4})'
-  mlr: unset statements are not valid within func blocks.
-
 
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
