@@ -42,8 +42,8 @@ MAPVAR CHECKLIST:
 * apply mapvar contexts to some built-ins: length, typeof, ... ?
 
   - calltree:
-    ! separate mlrval.[ch] per se from mv_funcs.[ch]; new xv_funcs.[ch]
-    > mv_unary_func_t                               xv_unary_func_t
+    k separate mlrval.[ch] per se from mv_funcs.[ch]; new xv_funcs.[ch]
+    k mv_unary_func_t                               xv_unary_func_t
     > rval_evaluator_alloc_from_b_b_func            rxval_evaluator_alloc_from_m_b_func
     > fmgr_alloc_evaluator_from_unary_func_name     fmgr_alloc_xevaluator_from_unary_func_name
     > construct_builtin_function_callsite_evaluator construct_builtin_function_callsite_xevaluator

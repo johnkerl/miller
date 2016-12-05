@@ -2,6 +2,8 @@
 #define RVAL_EVALUATORS_H
 
 #include <stdio.h>
+#include "containers/mvfuncs.h"
+#include "containers/xvfuncs.h"
 #include "dsl/mlr_dsl_ast.h"
 #include "dsl/rval_evaluator.h"
 #include "dsl/function_manager.h"
@@ -81,7 +83,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_mlrval(mv_t* pval);
 // rval_func_evaluators.c
 // ================================================================
 
-// These have some shared code that would otherwise be duplicated per-function in containers/mlrval.c.
+// These have some shared code that would otherwise be duplicated per-function in containers/mvfuncs.c.
 rval_evaluator_t* rval_evaluator_alloc_from_variadic_func(mv_variadic_func_t* pfunc, rval_evaluator_t** pargs, int nargs);
 rval_evaluator_t* rval_evaluator_alloc_from_b_b_func(mv_unary_func_t* pfunc, rval_evaluator_t* parg1);
 rval_evaluator_t* rval_evaluator_alloc_from_b_bb_and_func(rval_evaluator_t* parg1, rval_evaluator_t* parg2);
@@ -184,5 +186,11 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_full_srec(
 
 rxval_evaluator_t* rxval_evaluator_alloc_wrapping_rval(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
+// ================================================================
+// rxval_func_evaluators.c
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_variadic_func(xv_variadic_func_t* pfunc, rxval_evaluator_t** pargs, int nargs);
+rxval_evaluator_t* rxval_evaluator_alloc_from_b_m_func(xv_unary_func_t* pfunc, rxval_evaluator_t* parg1);
 
 #endif // LREC_FEVALUATORS_H

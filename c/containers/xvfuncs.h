@@ -12,23 +12,18 @@
 #include "../containers/mlhmmv.h"
 
 // ----------------------------------------------------------------
-typedef mlhmmv_xvalue_t mv_variadic_func_t(
+typedef mlhmmv_xvalue_t xv_variadic_func_t(
 	mlhmmv_xvalue_t* pxvals,
 	int              nxvals);
 
-typedef mlhmmv_xvalue_t mv_zary_func_t();
+typedef mlhmmv_xvalue_t xv_zary_func_t();
 
-typedef mlhmmv_xvalue_t mv_unary_func_t(
+typedef mlhmmv_xvalue_t xv_unary_func_t(
 	mlhmmv_xvalue_t* pxval1);
 
-typedef mlhmmv_xvalue_t mv_binary_func_t(
+typedef mlhmmv_xvalue_t xv_binary_func_t(
 	mlhmmv_xvalue_t* pxval1,
 	mlhmmv_xvalue_t* pxval2);
-
-typedef mlhmmv_xvalue_t mv_ternary_func_t(
-	mlhmmv_xvalue_t* pxval1,
-	mlhmmv_xvalue_t* pxval2,
-	mlhmmv_xvalue_t* pxval3);
 
 // ----------------------------------------------------------------
 static inline mlhmmv_xvalue_t b_x_ispresent_xfunc(mlhmmv_xvalue_t* pxval1) {
