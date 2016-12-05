@@ -36,6 +36,11 @@ MAPVAR CHECKLIST:
   - binary s,s->m SPLIT
   - binary/variadic m,m->m MAPSUM MAPDIFF
 
+* fix (mapdiff in stdlib.mlr):
+  $ mlr --from s put -f stdlib.mlr -e '$*=mapdiff({1:2,8:9},{1:4})'
+  mlr: unset statements are not valid within func blocks.
+
+
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
   - copy/ref of keys vs. values in mlhmmv, local_stack, and callees -- ?!?
