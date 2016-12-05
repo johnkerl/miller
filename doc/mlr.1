@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-12-02
+.\"      Date: 2016-12-05
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-12-02" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-12-05" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -185,7 +185,8 @@ output separator to the given value.
  cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd max
  mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand
  urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec
- hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime
+ hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime ismap
+ isscalar isemptymap isnonemptymap haskey length
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -2508,6 +2509,60 @@ e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.
 .nf
 (class=time #args=0): Floating-point seconds since the epoch,
 e.g. 1440768801.748936.
+.fi
+.if n \{\
+.RE
+.SS "ismap"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=typing #args=1): xxx temp.
+.fi
+.if n \{\
+.RE
+.SS "isscalar"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=typing #args=1): xxx temp.
+.fi
+.if n \{\
+.RE
+.SS "isemptymap"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=typing #args=1): xxx temp.
+.fi
+.if n \{\
+.RE
+.SS "isnonemptymap"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=typing #args=1): xxx temp.
+.fi
+.if n \{\
+.RE
+.SS "haskey"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=maps #args=2): xxx temp.
+.fi
+.if n \{\
+.RE
+.SS "length"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=maps #args=1): xxx temp.
 .fi
 .if n \{\
 .RE

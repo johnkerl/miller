@@ -136,7 +136,8 @@ OPTIONS
 	cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd max
 	mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand
 	urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec
-	hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime
+	hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime ismap
+	isscalar isemptymap isnonemptymap haskey length
        Please use "mlr --help-function {function name}" for function-specific help.
        Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
        Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -1460,6 +1461,24 @@ FUNCTIONS FOR FILTER/PUT
        (class=time #args=0): Floating-point seconds since the epoch,
        e.g. 1440768801.748936.
 
+   ismap
+       (class=typing #args=1): xxx temp.
+
+   isscalar
+       (class=typing #args=1): xxx temp.
+
+   isemptymap
+       (class=typing #args=1): xxx temp.
+
+   isnonemptymap
+       (class=typing #args=1): xxx temp.
+
+   haskey
+       (class=maps #args=2): xxx temp.
+
+   length
+       (class=maps #args=1): xxx temp.
+
 KEYWORDS FOR PUT AND FILTER
    all
        all: used in "emit", "emitp", and "unset" as a synonym for @*
@@ -1762,4 +1781,4 @@ SEE ALSO
 
 
 
-				  2016-12-02			     MILLER(1)
+				  2016-12-05			     MILLER(1)

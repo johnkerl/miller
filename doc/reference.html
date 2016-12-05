@@ -441,7 +441,7 @@ Functions for the filter and put verbs:
    logifit madd max mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt
    tan tanh urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms
    gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime
-   strptime systime
+   strptime systime ismap isscalar isemptymap isnonemptymap haskey length
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -5129,12 +5129,12 @@ yellow blue   140 0   240 380  380  380
 <div class="pokipanel">
 <pre>
 $ mlr --from data/small --opprint put 'for (k,v in $*) { $[k."_type"] = typeof(v) }'
-a   b   i x                   y                   a_type    b_type    i_type x_type   y_type
-pan pan 1 0.3467901443380824  0.7268028627434533  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-eks pan 2 0.7586799647899636  0.5221511083334797  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-wye wye 3 0.20460330576630303 0.33831852551664776 MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-eks wye 4 0.38139939387114097 0.13418874328430463 MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
-wye pan 5 0.5732889198020006  0.8636244699032729  MT_STRING MT_STRING MT_INT MT_FLOAT MT_FLOAT
+a   b   i x                   y                   a_type b_type i_type x_type y_type
+pan pan 1 0.3467901443380824  0.7268028627434533  string string int    float  float
+eks pan 2 0.7586799647899636  0.5221511083334797  string string int    float  float
+wye wye 3 0.20460330576630303 0.33831852551664776 string string int    float  float
+eks wye 4 0.38139939387114097 0.13418874328430463 string string int    float  float
+wye pan 5 0.5732889198020006  0.8636244699032729  string string int    float  float
 </pre>
 </div>
 <p/>
@@ -6598,6 +6598,18 @@ e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.
 
 systime (class=time #args=0): Floating-point seconds since the epoch,
 e.g. 1440768801.748936.
+
+ismap (class=typing #args=1): xxx temp.
+
+isscalar (class=typing #args=1): xxx temp.
+
+isemptymap (class=typing #args=1): xxx temp.
+
+isnonemptymap (class=typing #args=1): xxx temp.
+
+haskey (class=maps #args=2): xxx temp.
+
+length (class=maps #args=1): xxx temp.
 
 To set the seed for urand, you may specify decimal or hexadecimal 32-bit
 numbers of the form "mlr --seed 123456789" or "mlr --seed 0xcafefeed".
