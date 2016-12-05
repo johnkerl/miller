@@ -1043,7 +1043,6 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_unary_func_name(char* fnnm, r
 	} else if (streq(fnnm, "tanh"))            { return rval_evaluator_alloc_from_f_f_func(f_f_tanh_func,        parg1);
 	} else if (streq(fnnm, "tolower"))         { return rval_evaluator_alloc_from_s_s_func(s_s_tolower_func,     parg1);
 	} else if (streq(fnnm, "toupper"))         { return rval_evaluator_alloc_from_s_s_func(s_s_toupper_func,     parg1);
-	} else if (streq(fnnm, "typeof"))          { return rval_evaluator_alloc_from_x_x_func(s_x_typeof_func,      parg1);
 	} else if (streq(fnnm, "~"))               { return rval_evaluator_alloc_from_i_i_func(i_i_bitwise_not_func, parg1);
 
 	} else return NULL;
@@ -1224,6 +1223,8 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm,
 	} else if (streq(fnnm, "isstring")) {
 		return rxval_evaluator_alloc_from_x_x_func(b_x_isstring_xfunc, parg1);
 
+	} else if (streq(fnnm, "typeof")) {
+		return rxval_evaluator_alloc_from_x_x_func(s_x_typeof_xfunc, parg1);
 	} else if (streq(fnnm, "length")) {
 		return rxval_evaluator_alloc_from_x_x_func(i_x_length_xfunc, parg1);
 	} else {
@@ -1241,13 +1242,6 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_binary_func_name(char* fnnm
 		return NULL;
 	}
 }
-
-//	{FUNC_CLASS_ARITHMETIC, "ismap",         1,0, "xxx temp."},
-//	{FUNC_CLASS_ARITHMETIC, "isscalar",      1,0, "xxx temp."},
-//	{FUNC_CLASS_ARITHMETIC, "isemptymap",    1,0, "xxx temp."},
-//	{FUNC_CLASS_ARITHMETIC, "isnonemptymap", 1,0, "xxx temp."},
-//	{FUNC_CLASS_ARITHMETIC, "haskey",        1,0, "xxx temp."},
-//	{FUNC_CLASS_ARITHMETIC, "length",        1,0, "xxx temp."},
 
 // ================================================================
 // Return value is in scalar context.

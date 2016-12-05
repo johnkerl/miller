@@ -149,7 +149,7 @@ static inline boxed_xval_t b_x_isnonemptymap_xfunc(boxed_xval_t* pbxval1) {
 	);
 }
 
-static inline boxed_xval_t b_x_typeof_xfunc(boxed_xval_t* pbxval1) {
+static inline boxed_xval_t s_x_typeof_xfunc(boxed_xval_t* pbxval1) {
 	return box_ephemeral_val(
 	    mv_from_string(
 			mlhmmv_xvalue_describe_type_simple(&pbxval1->xval), NO_FREE
