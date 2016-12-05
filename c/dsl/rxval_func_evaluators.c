@@ -96,9 +96,9 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_b_m_func(xv_unary_func_t* pfunc, r
 	pstate->parg1 = parg1;
 
 	rxval_evaluator_t* pxevaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
-	pxevaluator->pvstate = pstate;
+	pxevaluator->pvstate       = pstate;
 	pxevaluator->pprocess_func = rxval_evaluator_b_m_func;
-	pxevaluator->pfree_func = rxval_evaluator_b_m_free;
+	pxevaluator->pfree_func    = rxval_evaluator_b_m_free;
 
 	return pxevaluator;
 }
