@@ -10,22 +10,24 @@
 
 #include "../lib/mlrutil.h"
 #include "../containers/mlhmmv.h"
+#include "../containers/boxed_xval.h"
 
 // ----------------------------------------------------------------
-typedef mlhmmv_xvalue_t xv_variadic_func_t(
-	mlhmmv_xvalue_t* pxvals,
-	int              nxvals);
+typedef boxed_xval_t xv_variadic_func_t(
+	boxed_xval_t* pxvals,
+	int           nxvals);
 
-typedef mlhmmv_xvalue_t xv_zary_func_t();
+typedef boxed_xval_t xv_zary_func_t();
 
-typedef mlhmmv_xvalue_t xv_unary_func_t(
-	mlhmmv_xvalue_t* pxval1);
+typedef boxed_xval_t xv_unary_func_t(
+	boxed_xval_t* pxval1);
 
-typedef mlhmmv_xvalue_t xv_binary_func_t(
-	mlhmmv_xvalue_t* pxval1,
-	mlhmmv_xvalue_t* pxval2);
+typedef boxed_xval_t xv_binary_func_t(
+	boxed_xval_t* pxval1,
+	boxed_xval_t* pxval2);
 
 // ----------------------------------------------------------------
+// xxx box x all
 static inline mlhmmv_xvalue_t b_x_ispresent_xfunc(mlhmmv_xvalue_t* pxval1) {
 	return mlhmmv_xvalue_wrap_terminal(
 		mv_from_bool(

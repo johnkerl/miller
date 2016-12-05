@@ -33,6 +33,7 @@
 #include "containers/lhmsmv.h"
 #include "containers/mlhmmv.h"
 #include "containers/mvfuncs.h"
+#include "containers/boxed_xval.h"
 #include "containers/local_stack.h"
 #include "containers/loop_stack.h"
 #include "lib/string_array.h"
@@ -73,46 +74,6 @@ typedef struct _rval_evaluator_t {
 	rval_evaluator_process_func_t* pprocess_func;
 	rval_evaluator_free_func_t*    pfree_func;
 } rval_evaluator_t;
-
-// ----------------------------------------------------------------
-// This is for map-valued contexts: LHS/RHS of assignments,
-// UDF/subroutine arguments, and UDF return values.
-
-// The is_ephemeral flag is TRUE for map-literals, function return values, and
-// data copied out of srecs.  It is FALSE when the pointer is into an existing
-// data structure's memory (e.g. oosvars or locals).
-typedef struct _boxed_xval_t {
-	mlhmmv_xvalue_t xval;
-	int is_ephemeral;
-} boxed_xval_t;
-
-static inline boxed_xval_t box_ephemeral_val(mv_t val) {
-	return (boxed_xval_t) {
-		.xval = mlhmmv_xvalue_wrap_terminal(val),
-		.is_ephemeral = TRUE,
-	};
-}
-
-static inline boxed_xval_t box_non_ephemeral_val(mv_t val) {
-	return (boxed_xval_t) {
-		.xval = mlhmmv_xvalue_wrap_terminal(val),
-		.is_ephemeral = FALSE,
-	};
-}
-
-static inline boxed_xval_t box_ephemeral_xval(mlhmmv_xvalue_t xval) {
-	return (boxed_xval_t) {
-		.xval = xval,
-		.is_ephemeral = TRUE,
-	};
-}
-
-static inline boxed_xval_t box_non_ephemeral_xval(mlhmmv_xvalue_t xval) {
-	return (boxed_xval_t) {
-		.xval = xval,
-		.is_ephemeral = FALSE,
-	};
-}
 
 // ----------------------------------------------------------------
 struct _rxval_evaluator_t;  // forward reference for method declarations

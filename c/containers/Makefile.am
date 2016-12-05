@@ -1,5 +1,6 @@
 noinst_LTLIBRARIES=	libcontainers.la
 libcontainers_la_SOURCES=	\
+			boxed_xval.h \
 			dheap.c \
 			dheap.h \
 			dvector.c \
