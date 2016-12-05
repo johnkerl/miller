@@ -234,7 +234,7 @@ UT FOR 5.0.0:
 * all assert_X() cases
 * all type-decl cases: local/forbind/argpass; initial assign & reuse thereafter.
 
-* unset of localvars, both non-indexed and indexed
+* unset of localvars, both non-indexed and indexed; various present/absent at name & indices; too shallow/deep
 
 * mlr --from s put '$y=strlen($*)'
 * mlr --from s put '$y=strlen({})'
