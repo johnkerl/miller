@@ -29,29 +29,36 @@ OTHER:
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
-* debt-reduction
-  ! naming conventions to clarify transfer/copy semantics
-  - copy/ref of keys vs. values in mlhmmv, local_stack, and callees -- ?!?
-  - valgrinds
-  - xxxes
-  ! ref terminals as well as non-terminals
-  - prune unused functions
-  ? free vs. free_contents names ?
-  - mapsum UT cases, and valgrind
-
 * new functions:
+  ? unary m->i DEPTH, DEEPCOUNT
+    mlr --from s put -f stdlib.mlr -e 'begin{@u=999}@v[NR]=@*; $n=deepcount(@v);dump'
   - binary m,s->s JOIN
   - binary s,s->m SPLIT
   - binary/variadic m,m->m MAPSUM MAPDIFF
 
+* debt-reduction
+  ! naming conventions to clarify transfer/copy semantics
+  - copy/ref of keys vs. values in mlhmmv, local_stack, and callees -- ?!?
+  ! UT cases for xfuncs x all
+  ! xvfuncs mem-mgt
+  ! valgrinds
+  - xxxes
+  ! ref terminals as well as non-terminals
+  - prune unused functions
+  ? free vs. free_contents names ?
+  - mapsum-in-mlr UT cases, and valgrind
+
 * print mapvar; dump scalarvar
+
 * absent-null map-keys -- do what? document.
   - mlr: map keys must be of type MT_STRING or MT_INT; got MT_ABSENT.
   - maybe change to skip-assign, as with assignment statements?
   - or to (error)?
+
 !!?? disallow implicit assignment? force w/ var at least??
   - w/  implicit: for (...) {sum += x} FUBAR
   - w/o implicit: sad panda cannot type 'x=1'
+
 * perf profile
 
 * bool_t typedef
