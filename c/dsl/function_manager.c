@@ -11,6 +11,8 @@ typedef enum _func_class_t {
 	FUNC_CLASS_BOOLEAN,
 	FUNC_CLASS_STRING,
 	FUNC_CLASS_CONVERSION,
+	FUNC_CLASS_TYPING,
+	FUNC_CLASS_MAPS,
 	FUNC_CLASS_TIME
 } func_class_t;
 
@@ -300,15 +302,13 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"Floating-point seconds since the epoch,\n"
 		"e.g. 1440768801.748936." },
 
-	// xxx need map-in/map-out flags or some such ...
-	// xxx need new func class(es) for maps ...
+	{FUNC_CLASS_TYPING, "ismap",         1,0, "xxx temp."},
+	{FUNC_CLASS_TYPING, "isscalar",      1,0, "xxx temp."},
+	{FUNC_CLASS_TYPING, "isemptymap",    1,0, "xxx temp."},
+	{FUNC_CLASS_TYPING, "isnonemptymap", 1,0, "xxx temp."},
 
-	{FUNC_CLASS_ARITHMETIC, "ismap",         1,0, "xxx temp."},
-	{FUNC_CLASS_ARITHMETIC, "isscalar",      1,0, "xxx temp."},
-	{FUNC_CLASS_ARITHMETIC, "isemptymap",    1,0, "xxx temp."},
-	{FUNC_CLASS_ARITHMETIC, "isnonemptymap", 1,0, "xxx temp."},
-	{FUNC_CLASS_ARITHMETIC, "haskey",        2,0, "xxx temp."},
-	{FUNC_CLASS_ARITHMETIC, "length",        1,0, "xxx temp."},
+	{FUNC_CLASS_MAPS, "haskey",        2,0, "xxx temp."},
+	{FUNC_CLASS_MAPS, "length",        1,0, "xxx temp."},
 
 	{0, NULL, -1 , -1, NULL}, // table terminator
 };
@@ -375,6 +375,8 @@ static char* function_class_to_desc(func_class_t function_class) {
 	case FUNC_CLASS_BOOLEAN:    return "boolean";    break;
 	case FUNC_CLASS_STRING:     return "string";     break;
 	case FUNC_CLASS_CONVERSION: return "conversion"; break;
+	case FUNC_CLASS_TYPING:     return "typing";     break;
+	case FUNC_CLASS_MAPS:       return "maps";       break;
 	case FUNC_CLASS_TIME:       return "time";       break;
 	default:                    return "???";        break;
 	}
@@ -1198,15 +1200,15 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(
 // ----------------------------------------------------------------
 static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm, rxval_evaluator_t* parg1) {
 	if (streq(fnnm, "ismap")) {
-		return rxval_evaluator_alloc_from_b_x_func(b_x_ismap_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_ismap_xfunc, parg1);
 	} else if (streq(fnnm, "isscalar")) {
-		return rxval_evaluator_alloc_from_b_m_func(b_x_isscalar_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isscalar_xfunc, parg1);
 	} else if (streq(fnnm, "isemptymap")) {
-		return rxval_evaluator_alloc_from_b_m_func(b_x_isemptymap_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isemptymap_xfunc, parg1);
 	} else if (streq(fnnm, "isnonemptymap")) {
-		return rxval_evaluator_alloc_from_b_m_func(b_x_isnonemptymap_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isnonemptymap_xfunc, parg1);
 	} else if (streq(fnnm, "length")) {
-		return rxval_evaluator_alloc_from_b_m_func(i_x_length_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(i_x_length_xfunc, parg1);
 	} else {
 		return NULL;
 	}
@@ -1217,7 +1219,7 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_binary_func_name(char* fnnm
 	rxval_evaluator_t* parg2)
 {
 	if (streq(fnnm, "haskey")) {
-		return rxval_evaluator_alloc_from_b_mx_func(b_x_haskey_xfunc, parg1, parg2);
+		return rxval_evaluator_alloc_from_x_mx_func(b_x_haskey_xfunc, parg1, parg2);
 	} else {
 		return NULL;
 	}
