@@ -37,9 +37,23 @@ boxed_xval_t i_x_depth_xfunc(boxed_xval_t* pbxval1) {
 	);
 }
 
+static int leafcount_aux(mlhmmv_xvalue_t* pxval) {
+	if (pxval->is_terminal) {
+		return 1;
+	} else {
+		int sum = 0;
+		for (mlhmmv_level_entry_t* pe = pxval->pnext_level->phead; pe != NULL; pe = pe->pnext) {
+			sum += leafcount_aux(&pe->level_xvalue);
+		}
+		return sum;
+	}
+}
+// xxx memmgt
 boxed_xval_t i_x_leafcount_xfunc(boxed_xval_t* pbxval1) {
 	return box_ephemeral_val(
-		mv_from_int(888) // xxx stub
+		mv_from_int(
+			leafcount_aux(&pbxval1->xval)
+		)
 	);
 }
 
