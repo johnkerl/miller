@@ -26,6 +26,11 @@ typedef boxed_xval_t xv_binary_func_t(
 	boxed_xval_t* pbxval1,
 	boxed_xval_t* pbxval2);
 
+typedef boxed_xval_t xv_ternary_func_t(
+	boxed_xval_t* pbxval1,
+	boxed_xval_t* pbxval2,
+	boxed_xval_t* pbxval3);
+
 // ----------------------------------------------------------------
 // xxx hook all into fmgr
 
@@ -158,7 +163,7 @@ static inline boxed_xval_t s_x_typeof_xfunc(boxed_xval_t* pbxval1) {
 }
 
 // ----------------------------------------------------------------
-boxed_xval_t b_x_haskey_xfunc(boxed_xval_t* pmapval, boxed_xval_t* pkeyval);
+boxed_xval_t b_xx_haskey_xfunc(boxed_xval_t* pmapval, boxed_xval_t* pkeyval);
 
 boxed_xval_t i_x_length_xfunc(boxed_xval_t* pbxval1);
 boxed_xval_t i_x_depth_xfunc(boxed_xval_t* pbxval1);
@@ -168,10 +173,11 @@ boxed_xval_t variadic_mapsum_xfunc(boxed_xval_t* pbxvals, int nxvals);
 
 boxed_xval_t variadic_mapdiff_xfunc(boxed_xval_t* pbxvals, int nxvals);
 
-// xxx to do (non-inline):
-//boxed_xval_t i_m_depth_xfunc(boxed_xval_t* pbxval1);
-//boxed_xval_t i_m_deepcount_xfunc(boxed_xval_t* pbxval1);
-//boxed_xval_t m_ss_split_xfunc(boxed_xval_t* pbxval1, boxed_xval_t* pbxval2);
-//boxed_xval_t s_ms_join_xfunc(boxed_xval_t* pbxval1, boxed_xval_t* pbxval2);
+boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval);
+boxed_xval_t m_ss_splitkv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval);
+
+boxed_xval_t s_ms_joink_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval);
+boxed_xval_t s_ms_joinv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval);
+boxed_xval_t s_mss_joinkv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* ppairsepval, boxed_xval_t* plistsepval);
 
 #endif // XVFUNCS_H

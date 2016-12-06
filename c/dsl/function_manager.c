@@ -63,6 +63,8 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(char* fu
 static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm, rxval_evaluator_t* parg1);
 static rxval_evaluator_t* fmgr_alloc_xevaluator_from_binary_func_name(char* fnnm, rxval_evaluator_t* parg1,
 	rxval_evaluator_t* pargs2);
+static rxval_evaluator_t* fmgr_alloc_xevaluator_from_ternary_func_name(char* fnnm, rxval_evaluator_t* parg1,
+	rxval_evaluator_t* pargs2, rxval_evaluator_t* pargs3);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static void  resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t*  pev);
@@ -313,6 +315,11 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_MAPS, "leafcount",     1,0, "xxx temp."},
 	{FUNC_CLASS_MAPS, "mapsum",        0,1, "xxx temp."},
 	{FUNC_CLASS_MAPS, "mapdiff",       0,1, "xxx temp."},
+	{FUNC_CLASS_MAPS, "splitnv",       2,0, "xxx temp."},
+	{FUNC_CLASS_MAPS, "splitkv",       2,0, "xxx temp."},
+	{FUNC_CLASS_MAPS, "joink",         2,0, "xxx temp."},
+	{FUNC_CLASS_MAPS, "joinv",         2,0, "xxx temp."},
+	{FUNC_CLASS_MAPS, "joinkv",        2,0, "xxx temp."},
 
 	{0, NULL, -1 , -1, NULL}, // table terminator
 };
@@ -1173,6 +1180,15 @@ static rxval_evaluator_t* construct_builtin_function_callsite_xevaluator(
 		rxval_evaluator_t* parg2 = rxval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
 		pxevaluator = fmgr_alloc_xevaluator_from_binary_func_name(function_name, parg1, parg2);
 
+	} else if (user_provided_arity == 3) {
+		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
+		mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
+		mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvvalue;
+		rxval_evaluator_t* parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+		rxval_evaluator_t* parg2 = rxval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
+		rxval_evaluator_t* parg3 = rxval_evaluator_alloc_from_ast(parg3_node, pfmgr, type_inferencing, context_flags);
+		pxevaluator = fmgr_alloc_xevaluator_from_ternary_func_name(function_name, parg1, parg2, parg3);
+
 	}
 
 	// xxx arity check ...
@@ -1251,7 +1267,26 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_binary_func_name(char* fnnm
 	rxval_evaluator_t* parg2)
 {
 	if (streq(fnnm, "haskey")) {
-		return rxval_evaluator_alloc_from_x_mx_func(b_x_haskey_xfunc, parg1, parg2);
+		return rxval_evaluator_alloc_from_x_mx_func(b_xx_haskey_xfunc, parg1, parg2);
+	} else if (streq(fnnm, "splitnv")) {
+		return rxval_evaluator_alloc_from_x_ms_func(m_ss_splitnv_xfunc, parg1, parg2);
+	} else if (streq(fnnm, "splitkv")) {
+		return rxval_evaluator_alloc_from_x_ms_func(m_ss_splitkv_xfunc, parg1, parg2);
+	} else if (streq(fnnm, "joink")) {
+		return rxval_evaluator_alloc_from_x_ms_func(s_ms_joink_xfunc, parg1, parg2);
+	} else if (streq(fnnm, "joinv")) {
+		return rxval_evaluator_alloc_from_x_ms_func(s_ms_joinv_xfunc, parg1, parg2);
+	} else {
+		return NULL;
+	}
+}
+
+// ----------------------------------------------------------------
+static rxval_evaluator_t* fmgr_alloc_xevaluator_from_ternary_func_name(char* fnnm, rxval_evaluator_t* parg1,
+	rxval_evaluator_t* parg2, rxval_evaluator_t* parg3)
+{
+	if (streq(fnnm, "joinkv")) {
+		return rxval_evaluator_alloc_from_x_mss_func(s_mss_joinkv_xfunc, parg1, parg2, parg3);
 	} else {
 		return NULL;
 	}

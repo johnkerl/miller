@@ -30,10 +30,8 @@ OTHER:
 MAPVAR CHECKLIST:
 
 * new functions:
-  ? unary m->i DEPTH
-    mlr --from s put -f stdlib.mlr -e 'begin{@u=999}@v[NR]=@*; $n=deepcount(@v);dump'
-  - binary m,s->s JOIN
-  - binary s,s->m SPLIT
+  - binary m,s->s JOINK JOINV JOINKV
+  - binary s,s->m SPLITNV SPLITKV
 
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
@@ -248,7 +246,7 @@ UT FOR 5.0.0:
 * UT xfuncs:
   - ispresent isabsent ismap isscalar & all other predicates
   - haskey
-  - length leafcount
+  - length depth leafcount
   - typeof
   ~ mapsum mapdiff
 

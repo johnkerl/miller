@@ -197,5 +197,9 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_x_x_func(xv_unary_func_t* pfunc, r
 rxval_evaluator_t* rxval_evaluator_alloc_from_x_m_func(xv_unary_func_t* pfunc, rxval_evaluator_t* parg1);
 rxval_evaluator_t* rxval_evaluator_alloc_from_x_mx_func(xv_binary_func_t* pfunc, rxval_evaluator_t* parg1,
 	rxval_evaluator_t* parg2);
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_ms_func(xv_binary_func_t* pfunc, rxval_evaluator_t* parg1,
+	rxval_evaluator_t* parg2);
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_mss_func(xv_ternary_func_t* pfunc, rxval_evaluator_t* parg1,
+	rxval_evaluator_t* parg2, rxval_evaluator_t* parg3);
 
 #endif // LREC_FEVALUATORS_H

@@ -1,7 +1,7 @@
 #include "../containers/xvfuncs.h"
 
 // ----------------------------------------------------------------
-boxed_xval_t b_x_haskey_xfunc(boxed_xval_t* pmapval, boxed_xval_t* pkeyval) {
+boxed_xval_t b_xx_haskey_xfunc(boxed_xval_t* pmapval, boxed_xval_t* pkeyval) {
 	if (pmapval->xval.is_terminal) {
 		return box_ephemeral_val(mv_from_bool(FALSE));
 	} else if (!pkeyval->xval.is_terminal) {
@@ -31,12 +31,28 @@ boxed_xval_t i_x_length_xfunc(boxed_xval_t* pxval1) {
 }
 
 // ----------------------------------------------------------------
+static int depth_aux(mlhmmv_xvalue_t* pxval) {
+	if (pxval->is_terminal) {
+		return 0;
+	} else {
+		int max = 0;
+		for (mlhmmv_level_entry_t* pe = pxval->pnext_level->phead; pe != NULL; pe = pe->pnext) {
+			int curr = depth_aux(&pe->level_xvalue);
+			max = (curr > max) ? curr : max;
+		}
+		return 1 + max;
+	}
+}
+
 boxed_xval_t i_x_depth_xfunc(boxed_xval_t* pbxval1) {
 	return box_ephemeral_val(
-		mv_from_int(777) // xxx stub
+		mv_from_int(
+			depth_aux(&pbxval1->xval)
+		)
 	);
 }
 
+// ----------------------------------------------------------------
 static int leafcount_aux(mlhmmv_xvalue_t* pxval) {
 	if (pxval->is_terminal) {
 		return 1;
@@ -48,6 +64,7 @@ static int leafcount_aux(mlhmmv_xvalue_t* pxval) {
 		return sum;
 	}
 }
+
 // xxx memmgt
 boxed_xval_t i_x_leafcount_xfunc(boxed_xval_t* pbxval1) {
 	return box_ephemeral_val(
@@ -106,4 +123,29 @@ boxed_xval_t variadic_mapdiff_xfunc(boxed_xval_t* pbxvals, int nxvals) {
 	}
 
 	return box_ephemeral_xval(diff);
+}
+
+// ----------------------------------------------------------------
+boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
+	return box_ephemeral_val(mv_absent()); // xxx stub
+}
+
+// ----------------------------------------------------------------
+boxed_xval_t m_ss_splitkv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
+	return box_ephemeral_val(mv_absent()); // xxx stub
+}
+
+// ----------------------------------------------------------------
+boxed_xval_t s_ms_joink_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
+	return box_ephemeral_val(mv_absent()); // xxx stub
+}
+
+// ----------------------------------------------------------------
+boxed_xval_t s_ms_joinv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
+	return box_ephemeral_val(mv_absent()); // xxx stub
+}
+
+// ----------------------------------------------------------------
+boxed_xval_t s_mss_joinkv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* ppairsepval, boxed_xval_t* plistsepval) {
+	return box_ephemeral_val(mv_absent()); // xxx stub
 }
