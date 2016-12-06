@@ -34,7 +34,6 @@ MAPVAR CHECKLIST:
     mlr --from s put -f stdlib.mlr -e 'begin{@u=999}@v[NR]=@*; $n=deepcount(@v);dump'
   - binary m,s->s JOIN
   - binary s,s->m SPLIT
-  - binary/variadic m,m->m MAPSUM MAPDIFF
 
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
@@ -246,7 +245,12 @@ UT FOR 5.0.0:
 
 * mapvar matrix above
 
-* UT xfuncs: ispresent isabsent ismap isscalar & all other predicates; haskey; length; typeof
+* UT xfuncs:
+  - ispresent isabsent ismap isscalar & all other predicates
+  - haskey
+  - length
+  - typeof
+  ~ mapsum mapdiff
 
 ================================================================
 HYGIENE FOR 5.0.0:
