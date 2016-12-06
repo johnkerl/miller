@@ -31,6 +31,19 @@ boxed_xval_t i_x_length_xfunc(boxed_xval_t* pxval1) {
 }
 
 // ----------------------------------------------------------------
+boxed_xval_t i_x_depth_xfunc(boxed_xval_t* pbxval1) {
+	return box_ephemeral_val(
+		mv_from_int(777) // xxx stub
+	);
+}
+
+boxed_xval_t i_x_leafcount_xfunc(boxed_xval_t* pbxval1) {
+	return box_ephemeral_val(
+		mv_from_int(888) // xxx stub
+	);
+}
+
+// ----------------------------------------------------------------
 boxed_xval_t variadic_mapsum_xfunc(boxed_xval_t* pbxvals, int nxvals) {
 	// xxx to-do optmization: transfer arg 1 if it's ephemeral
 	mlhmmv_xvalue_t sum = mlhmmv_xvalue_alloc_empty_map();

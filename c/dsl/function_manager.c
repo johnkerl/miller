@@ -309,6 +309,8 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 
 	{FUNC_CLASS_MAPS, "haskey",        2,0, "xxx temp."},
 	{FUNC_CLASS_MAPS, "length",        1,0, "xxx temp."},
+	{FUNC_CLASS_MAPS, "depth",         1,0, "xxx temp."},
+	{FUNC_CLASS_MAPS, "leafcount",     1,0, "xxx temp."},
 	{FUNC_CLASS_MAPS, "mapsum",        0,1, "xxx temp."},
 	{FUNC_CLASS_MAPS, "mapdiff",       0,1, "xxx temp."},
 
@@ -1235,6 +1237,10 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm,
 		return rxval_evaluator_alloc_from_x_x_func(s_x_typeof_xfunc, parg1);
 	} else if (streq(fnnm, "length")) {
 		return rxval_evaluator_alloc_from_x_x_func(i_x_length_xfunc, parg1);
+	} else if (streq(fnnm, "depth")) {
+		return rxval_evaluator_alloc_from_x_x_func(i_x_depth_xfunc, parg1);
+	} else if (streq(fnnm, "leafcount")) {
+		return rxval_evaluator_alloc_from_x_x_func(i_x_leafcount_xfunc, parg1);
 	} else {
 		return NULL;
 	}
