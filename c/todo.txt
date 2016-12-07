@@ -34,6 +34,8 @@ MAPVAR CHECKLIST:
   - binary s,s->m SPLITNV SPLITKV
   ! splitnv/splitkv how/whether to type-infer the v's?!?
 
+! IPS IFS IRS OPS OPS ORS into the grammar !
+
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
   - copy/ref of keys vs. values in mlhmmv, local_stack, and callees -- ?!?

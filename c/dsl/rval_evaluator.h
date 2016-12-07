@@ -50,7 +50,7 @@ typedef struct _return_state_t {
 typedef struct _variables_t {
 	lrec_t*          pinrec;
 	lhmsmv_t*        ptyped_overlay;
-	mlhmmv_root_t*        poosvars;
+	mlhmmv_root_t*   poosvars;
 	string_array_t** ppregex_captures;
 	context_t*       pctx;
 	local_stack_t*   plocal_stack;
