@@ -442,7 +442,7 @@ Functions for the filter and put verbs:
    tan tanh urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms
    gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime
    strptime systime ismap isscalar isemptymap isnonemptymap haskey length depth
-   leafcount mapsum mapdiff
+   leafcount mapsum mapdiff splitnv splitkv joink joinv joinkv
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -6619,6 +6619,16 @@ leafcount (class=maps #args=1): xxx temp.
 mapsum (class=maps variadic): xxx temp.
 
 mapdiff (class=maps variadic): xxx temp.
+
+splitnv (class=maps #args=2): xxx temp.
+
+splitkv (class=maps #args=2): xxx temp.
+
+joink (class=maps #args=2): xxx temp.
+
+joinv (class=maps #args=2): xxx temp.
+
+joinkv (class=maps #args=3): xxx temp.
 
 To set the seed for urand, you may specify decimal or hexadecimal 32-bit
 numbers of the form "mlr --seed 123456789" or "mlr --seed 0xcafefeed".

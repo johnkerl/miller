@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-12-06
+.\"      Date: 2016-12-07
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-12-06" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-12-07" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -187,6 +187,7 @@ output separator to the given value.
  urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec
  hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime ismap
  isscalar isemptymap isnonemptymap haskey length depth leafcount mapsum mapdiff
+ splitnv splitkv joink joinv joinkv
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -2599,6 +2600,51 @@ e.g. 1440768801.748936.
 .\}
 .nf
 (class=maps variadic): xxx temp.
+.fi
+.if n \{\
+.RE
+.SS "splitnv"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=maps #args=2): xxx temp.
+.fi
+.if n \{\
+.RE
+.SS "splitkv"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=maps #args=2): xxx temp.
+.fi
+.if n \{\
+.RE
+.SS "joink"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=maps #args=2): xxx temp.
+.fi
+.if n \{\
+.RE
+.SS "joinv"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=maps #args=2): xxx temp.
+.fi
+.if n \{\
+.RE
+.SS "joinkv"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=maps #args=3): xxx temp.
 .fi
 .if n \{\
 .RE

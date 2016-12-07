@@ -285,6 +285,7 @@ OPTIONS
 	urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec
 	hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime ismap
 	isscalar isemptymap isnonemptymap haskey length depth leafcount mapsum mapdiff
+	splitnv splitkv joink joinv joinkv
        Please use "mlr --help-function {function name}" for function-specific help.
        Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
        Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -1638,6 +1639,21 @@ FUNCTIONS FOR FILTER/PUT
    mapdiff
        (class=maps variadic): xxx temp.
 
+   splitnv
+       (class=maps #args=2): xxx temp.
+
+   splitkv
+       (class=maps #args=2): xxx temp.
+
+   joink
+       (class=maps #args=2): xxx temp.
+
+   joinv
+       (class=maps #args=2): xxx temp.
+
+   joinkv
+       (class=maps #args=3): xxx temp.
+
 KEYWORDS FOR PUT AND FILTER
    all
        all: used in "emit", "emitp", and "unset" as a synonym for @*
@@ -1940,7 +1956,7 @@ SEE ALSO
 
 
 
-				  2016-12-06			     MILLER(1)
+				  2016-12-07			     MILLER(1)
 </pre>
 </div>
 <p/>
