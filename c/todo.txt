@@ -32,6 +32,7 @@ MAPVAR CHECKLIST:
 * new functions:
   - binary m,s->s JOINK JOINV JOINKV
   - binary s,s->m SPLITNV SPLITKV
+  ! splitnv/splitkv how/whether to type-infer the v's?!?
 
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
