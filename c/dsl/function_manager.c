@@ -316,7 +316,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_MAPS, "mapsum",        0,1, "xxx temp."},
 	{FUNC_CLASS_MAPS, "mapdiff",       0,1, "xxx temp."},
 	{FUNC_CLASS_MAPS, "splitnv",       2,0, "xxx temp."},
-	{FUNC_CLASS_MAPS, "splitkv",       2,0, "xxx temp."},
+	{FUNC_CLASS_MAPS, "splitkv",       3,0, "xxx temp."},
 	{FUNC_CLASS_MAPS, "joink",         2,0, "xxx temp."},
 	{FUNC_CLASS_MAPS, "joinv",         2,0, "xxx temp."},
 	{FUNC_CLASS_MAPS, "joinkv",        3,0, "xxx temp."},
@@ -1270,8 +1270,6 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_binary_func_name(char* fnnm
 		return rxval_evaluator_alloc_from_x_mx_func(b_xx_haskey_xfunc, parg1, parg2);
 	} else if (streq(fnnm, "splitnv")) {
 		return rxval_evaluator_alloc_from_x_ss_func(m_ss_splitnv_xfunc, parg1, parg2);
-	} else if (streq(fnnm, "splitkv")) {
-		return rxval_evaluator_alloc_from_x_ss_func(m_ss_splitkv_xfunc, parg1, parg2);
 	} else if (streq(fnnm, "joink")) {
 		return rxval_evaluator_alloc_from_x_ms_func(s_ms_joink_xfunc, parg1, parg2);
 	} else if (streq(fnnm, "joinv")) {
@@ -1287,6 +1285,8 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_ternary_func_name(char* fnn
 {
 	if (streq(fnnm, "joinkv")) {
 		return rxval_evaluator_alloc_from_x_mss_func(s_mss_joinkv_xfunc, parg1, parg2, parg3);
+	} else if (streq(fnnm, "splitkv")) {
+		return rxval_evaluator_alloc_from_x_sss_func(m_sss_splitkv_xfunc, parg1, parg2, parg3);
 	} else {
 		return NULL;
 	}

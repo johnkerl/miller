@@ -129,16 +129,19 @@ boxed_xval_t variadic_mapdiff_xfunc(boxed_xval_t* pbxvals, int nxvals) {
 
 // ----------------------------------------------------------------
 // Precondition: the caller has ensured that both arguments are string-valued terminals.
-boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
+boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval) {
 	mlhmmv_xvalue_t map = mlhmmv_xvalue_alloc_empty_map();
-	char* input = mlr_strdup_or_die(pmapval->xval.terminal_mlrval.u.strv);
+	char* input = mlr_strdup_or_die(pstringval->xval.terminal_mlrval.u.strv);
 	char* sep = psepval->xval.terminal_mlrval.u.strv;
 
 	int i = 1;
-	for (char* piece = strtok(input, sep); piece != NULL; piece = strtok(NULL, sep), i++) {
+	char* walker = input;
+	char* piece;
+	while ((piece = strsep(&walker, sep)) != NULL) {
 		mv_t key = mv_from_int(i);
 		mv_t val = mv_from_string(mlr_strdup_or_die(piece), FREE_ENTRY_VALUE);
 		mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
+		i++;
 	}
 
 	free(input);
@@ -146,17 +149,34 @@ boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
 }
 
 // ----------------------------------------------------------------
-// Precondition: the caller has ensured that both arguments are string-valued terminals.
-boxed_xval_t m_ss_splitkv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
-	char* input = mlr_strdup_or_die(pmapval->xval.terminal_mlrval.u.strv);
-	char* sep = psepval->xval.terminal_mlrval.u.strv;
+// Precondition: the caller has ensured that all arguments are string-valued terminals.
+boxed_xval_t m_sss_splitkv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* ppairsepval, boxed_xval_t* plistsepval) {
+	mlhmmv_xvalue_t map = mlhmmv_xvalue_alloc_empty_map();
+	char* input = mlr_strdup_or_die(pstringval->xval.terminal_mlrval.u.strv);
+	char* listsep = plistsepval->xval.terminal_mlrval.u.strv;
+	char* pairsep = ppairsepval->xval.terminal_mlrval.u.strv;
 
-	for (char* piece = strtok(input, sep); piece != NULL; piece = strtok(NULL, sep)) {
-		// xxx to do next
+	int i = 1;
+	char* walker = input;
+	char* piece;
+	while ((piece = strsep(&walker, listsep)) != NULL) {
+		char* xxx_rename = piece;
+		char* left = strsep(&xxx_rename, pairsep);
+		if (xxx_rename == NULL) {
+			mv_t key = mv_from_int(i);
+			mv_t val = mv_from_string(mlr_strdup_or_die(piece), FREE_ENTRY_VALUE);
+			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
+		} else {
+			char* right = strsep(&xxx_rename, pairsep);
+			mv_t key = mv_from_string(mlr_strdup_or_die(left), FREE_ENTRY_VALUE);
+			mv_t val = mv_from_string(mlr_strdup_or_die(right), FREE_ENTRY_VALUE);
+			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
+		}
+		i++;
 	}
 
 	free(input);
-	return box_ephemeral_val(mv_absent()); // xxx stub
+	return box_ephemeral_xval(map);
 }
 
 // ----------------------------------------------------------------

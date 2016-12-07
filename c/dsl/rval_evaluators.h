@@ -192,16 +192,44 @@ rxval_evaluator_t* rxval_evaluator_alloc_wrapping_rval(
 // ================================================================
 // rxval_func_evaluators.c
 
-rxval_evaluator_t* rxval_evaluator_alloc_from_variadic_func(xv_variadic_func_t* pfunc, rxval_evaluator_t** pargs, int nargs);
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_x_func(xv_unary_func_t* pfunc, rxval_evaluator_t* parg1);
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_m_func(xv_unary_func_t* pfunc, rxval_evaluator_t* parg1);
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_mx_func(xv_binary_func_t* pfunc, rxval_evaluator_t* parg1,
+rxval_evaluator_t* rxval_evaluator_alloc_from_variadic_func(
+	xv_variadic_func_t* pfunc,
+	rxval_evaluator_t** pargs,
+	int                 nargs);
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_x_func(
+	xv_unary_func_t*   pfunc,
+	rxval_evaluator_t* parg1);
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_m_func(
+	xv_unary_func_t*   pfunc,
+	rxval_evaluator_t* parg1);
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_mx_func(
+	xv_binary_func_t*  pfunc,
+	rxval_evaluator_t* parg1,
 	rxval_evaluator_t* parg2);
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_ms_func(xv_binary_func_t* pfunc, rxval_evaluator_t* parg1,
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_ms_func(
+	xv_binary_func_t*  pfunc,
+	rxval_evaluator_t* parg1,
 	rxval_evaluator_t* parg2);
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_ss_func(xv_binary_func_t* pfunc, rxval_evaluator_t* parg1,
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_ss_func(
+	xv_binary_func_t*  pfunc,
+	rxval_evaluator_t* parg1,
 	rxval_evaluator_t* parg2);
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_mss_func(xv_ternary_func_t* pfunc, rxval_evaluator_t* parg1,
-	rxval_evaluator_t* parg2, rxval_evaluator_t* parg3);
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_mss_func(
+	xv_ternary_func_t* pfunc,
+	rxval_evaluator_t* parg1,
+	rxval_evaluator_t* parg2,
+	rxval_evaluator_t* parg3);
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_sss_func(
+	xv_ternary_func_t* pfunc,
+	rxval_evaluator_t* parg1,
+	rxval_evaluator_t* parg2,
+	rxval_evaluator_t* parg3);
 
 #endif // LREC_FEVALUATORS_H

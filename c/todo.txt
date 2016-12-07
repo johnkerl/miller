@@ -45,6 +45,7 @@ MAPVAR CHECKLIST:
   - prune unused functions
   ? free vs. free_contents names ?
   - mapsum-in-mlr UT cases, and valgrind
+  - strtok -> strsep throughout
 
 * print mapvar; dump scalarvar
 

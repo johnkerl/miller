@@ -163,21 +163,45 @@ static inline boxed_xval_t s_x_typeof_xfunc(boxed_xval_t* pbxval1) {
 }
 
 // ----------------------------------------------------------------
-boxed_xval_t b_xx_haskey_xfunc(boxed_xval_t* pmapval, boxed_xval_t* pkeyval);
+boxed_xval_t b_xx_haskey_xfunc(
+	boxed_xval_t* pmapval,
+	boxed_xval_t* pkeyval);
 
-boxed_xval_t i_x_length_xfunc(boxed_xval_t* pbxval1);
-boxed_xval_t i_x_depth_xfunc(boxed_xval_t* pbxval1);
-boxed_xval_t i_x_leafcount_xfunc(boxed_xval_t* pbxval1);
+boxed_xval_t i_x_length_xfunc(
+	boxed_xval_t* pbxval1);
 
-boxed_xval_t variadic_mapsum_xfunc(boxed_xval_t* pbxvals, int nxvals);
+boxed_xval_t i_x_depth_xfunc(
+	boxed_xval_t* pbxval1);
 
-boxed_xval_t variadic_mapdiff_xfunc(boxed_xval_t* pbxvals, int nxvals);
+boxed_xval_t i_x_leafcount_xfunc(
+	boxed_xval_t* pbxval1);
 
-boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval);
-boxed_xval_t m_ss_splitkv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval);
+boxed_xval_t variadic_mapsum_xfunc(
+	boxed_xval_t* pbxvals, int nxvals);
 
-boxed_xval_t s_ms_joink_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval);
-boxed_xval_t s_ms_joinv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval);
-boxed_xval_t s_mss_joinkv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* ppairsepval, boxed_xval_t* plistsepval);
+boxed_xval_t variadic_mapdiff_xfunc(
+	boxed_xval_t* pbxvals, int nxvals);
+
+boxed_xval_t m_ss_splitnv_xfunc(
+	boxed_xval_t* pstringval,
+	boxed_xval_t* psepval);
+
+boxed_xval_t m_sss_splitkv_xfunc(
+	boxed_xval_t* pstringval,
+	boxed_xval_t* ppairsepval,
+	boxed_xval_t* plistsepval);
+
+boxed_xval_t s_ms_joink_xfunc(
+	boxed_xval_t* pmapval,
+	boxed_xval_t* psepval);
+
+boxed_xval_t s_ms_joinv_xfunc(
+	boxed_xval_t* pmapval,
+	boxed_xval_t* psepval);
+
+boxed_xval_t s_mss_joinkv_xfunc(
+	boxed_xval_t* pmapval,
+	boxed_xval_t* ppairsepval,
+	boxed_xval_t* plistsepval);
 
 #endif // XVFUNCS_H
