@@ -5,7 +5,6 @@ libcontainers_la_SOURCES=	\
 			dheap.h \
 			dvector.c \
 			dvector.h \
-			free_flags.h \
 			header_keeper.c \
 			header_keeper.h \
 			hss.c \

@@ -1269,9 +1269,9 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_binary_func_name(char* fnnm
 	if (streq(fnnm, "haskey")) {
 		return rxval_evaluator_alloc_from_x_mx_func(b_xx_haskey_xfunc, parg1, parg2);
 	} else if (streq(fnnm, "splitnv")) {
-		return rxval_evaluator_alloc_from_x_ms_func(m_ss_splitnv_xfunc, parg1, parg2);
+		return rxval_evaluator_alloc_from_x_ss_func(m_ss_splitnv_xfunc, parg1, parg2);
 	} else if (streq(fnnm, "splitkv")) {
-		return rxval_evaluator_alloc_from_x_ms_func(m_ss_splitkv_xfunc, parg1, parg2);
+		return rxval_evaluator_alloc_from_x_ss_func(m_ss_splitkv_xfunc, parg1, parg2);
 	} else if (streq(fnnm, "joink")) {
 		return rxval_evaluator_alloc_from_x_ms_func(s_ms_joink_xfunc, parg1, parg2);
 	} else if (streq(fnnm, "joinv")) {

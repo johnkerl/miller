@@ -109,6 +109,10 @@ long long mlr_int_from_string_or_die(char* string);
 int    mlr_try_float_from_string(char* string, double* pval);
 int    mlr_try_int_from_string(char* string, long long* pval);
 
+// For small integers (as of this writing, 0 .. 100) returns a static string representation.
+// For other values, returns a dynamically allocated string representation.
+char* low_int_to_string(int idx, char* pfree_flags);
+
 // Inefficient and intended for call-rarely use. The caller should free the return values.
 char* mlr_paste_2_strings(char* s1, char* s2);
 char* mlr_paste_3_strings(char* s1, char* s2, char* s3);

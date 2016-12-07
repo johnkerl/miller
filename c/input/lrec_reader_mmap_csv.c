@@ -338,7 +338,7 @@ static lrec_t* paste_indices_and_data(lrec_reader_mmap_csv_state_t* pstate, rsll
 	for (rsllse_t* pd = pdata_fields->phead; idx < pdata_fields->length && pd != NULL; pd = pd->pnext) {
 		idx++;
 		char free_flags = pd->free_flag;
-		char* key = make_nidx_key(idx, &free_flags);
+		char* key = low_int_to_string(idx, &free_flags);
 		// Transfer pointer-free responsibility from the rslls to the lrec object
 		lrec_put_ext(prec, key, pd->value, free_flags, pd->quote_flag);
 		pd->free_flag = 0;

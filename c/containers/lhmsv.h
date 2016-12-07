@@ -17,7 +17,7 @@
 #define LHMSV_H
 
 #include "containers/sllv.h"
-#include "containers/free_flags.h"
+#include "lib/free_flags.h"
 
 // ----------------------------------------------------------------
 typedef struct _lhmsve_t {

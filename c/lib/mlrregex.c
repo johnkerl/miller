@@ -6,7 +6,7 @@
 #include "lib/mlrutil.h"
 #include "lib/mlrregex.h"
 #include "lib/mlr_globals.h"
-#include "containers/free_flags.h"
+#include "lib/free_flags.h"
 
 // ----------------------------------------------------------------
 // Succeeds or aborts the process. cflag REG_EXTENDED is already included.

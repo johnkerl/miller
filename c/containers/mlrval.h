@@ -6,7 +6,7 @@
 #include <ctype.h>
 #include <regex.h>
 #include "../lib/mlrutil.h"
-#include "../containers/free_flags.h"
+#include "../lib/free_flags.h"
 
 // ================================================================
 // MT for Miller type -- highly abbreviated here since these are

@@ -16,7 +16,7 @@
 #ifndef LHMS2V_H
 #define LHMS2V_H
 
-#include "containers/free_flags.h"
+#include "lib/free_flags.h"
 
 // ----------------------------------------------------------------
 typedef struct _lhms2ve_t {

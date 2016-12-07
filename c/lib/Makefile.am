@@ -1,5 +1,6 @@
 noinst_LTLIBRARIES=	libmlr.la
-libmlr_la_SOURCES=	minunit.h \
+libmlr_la_SOURCES=	free_flags.h \
+			minunit.c \
 			mlr_globals.c \
 			mlr_globals.h \
 			mlrescape.c \

@@ -199,6 +199,8 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_x_mx_func(xv_binary_func_t* pfunc,
 	rxval_evaluator_t* parg2);
 rxval_evaluator_t* rxval_evaluator_alloc_from_x_ms_func(xv_binary_func_t* pfunc, rxval_evaluator_t* parg1,
 	rxval_evaluator_t* parg2);
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_ss_func(xv_binary_func_t* pfunc, rxval_evaluator_t* parg1,
+	rxval_evaluator_t* parg2);
 rxval_evaluator_t* rxval_evaluator_alloc_from_x_mss_func(xv_ternary_func_t* pfunc, rxval_evaluator_t* parg1,
 	rxval_evaluator_t* parg2, rxval_evaluator_t* parg3);
 

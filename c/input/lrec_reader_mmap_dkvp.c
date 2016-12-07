@@ -139,7 +139,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
 				char free_flags = NO_FREE;
-				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), value, free_flags);
 			}
 			else {
 				lrec_put(prec, key, value, NO_FREE);
@@ -175,9 +175,9 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 		if (*key == 0 || value <= key) {
 			char free_flags = NO_FREE;
 			if (value >= phandle->eof)
-				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), "", free_flags);
 			else
-				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), value, free_flags);
 		}
 		else {
 			if (value >= phandle->eof)
@@ -193,10 +193,10 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 		if (*key == 0 || value <= key) {
 			char free_flags = NO_FREE;
 			if (value >= phandle->eof) {
-				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), "", free_flags);
 			} else {
 				char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
-				lrec_put(prec, make_nidx_key(idx, &free_flags), copy, free_flags | FREE_ENTRY_VALUE);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), copy, free_flags | FREE_ENTRY_VALUE);
 			}
 		}
 		else {
@@ -247,7 +247,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
 				char free_flags = NO_FREE;
-				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), value, free_flags);
 			}
 			else {
 				lrec_put(prec, key, value, NO_FREE);
@@ -283,9 +283,9 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 		if (*key == 0 || value <= key) {
 			char free_flags = NO_FREE;
 			if (value >= phandle->eof)
-				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), "", free_flags);
 			else
-				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), value, free_flags);
 		}
 		else {
 			if (value >= phandle->eof)
@@ -301,10 +301,10 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 		if (*key == 0 || value <= key) {
 			char free_flags = NO_FREE;
 			if (value >= phandle->eof) {
-				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), "", free_flags);
 			} else {
 				char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
-				lrec_put(prec, make_nidx_key(idx, &free_flags), copy, free_flags | FREE_ENTRY_VALUE);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), copy, free_flags | FREE_ENTRY_VALUE);
 			}
 		}
 		else {
@@ -355,7 +355,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
 				char free_flags = NO_FREE;
-				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), value, free_flags);
 			}
 			else {
 				lrec_put(prec, key, value, NO_FREE);
@@ -392,9 +392,9 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 		if (*key == 0 || value <= key) {
 			char free_flags = NO_FREE;
 			if (value >= phandle->eof)
-				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), "", free_flags);
 			else
-				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), value, free_flags);
 		}
 		else {
 			if (value >= phandle->eof)
@@ -410,10 +410,10 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 		if (*key == 0 || value <= key) {
 			char free_flags = NO_FREE;
 			if (value >= phandle->eof) {
-				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), "", free_flags);
 			} else {
 				char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
-				lrec_put(prec, make_nidx_key(idx, &free_flags), copy, free_flags | FREE_ENTRY_VALUE);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), copy, free_flags | FREE_ENTRY_VALUE);
 			}
 		}
 		else {
@@ -464,7 +464,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
 				char free_flags = NO_FREE;
-				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), value, free_flags);
 			}
 			else {
 				lrec_put(prec, key, value, NO_FREE);
@@ -500,9 +500,9 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 		if (*key == 0 || value <= key) {
 			char free_flags = NO_FREE;
 			if (value >= phandle->eof)
-				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), "", free_flags);
 			else
-				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), value, free_flags);
 		}
 		else {
 			if (value >= phandle->eof)
@@ -518,10 +518,10 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 		if (*key == 0 || value <= key) {
 			char free_flags = NO_FREE;
 			if (value >= phandle->eof) {
-				lrec_put(prec, make_nidx_key(idx, &free_flags), "", free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), "", free_flags);
 			} else {
 				char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
-				lrec_put(prec, make_nidx_key(idx, &free_flags), copy, free_flags | FREE_ENTRY_VALUE);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), copy, free_flags | FREE_ENTRY_VALUE);
 			}
 		}
 		else {

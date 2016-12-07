@@ -6,7 +6,7 @@
 #define SLLS_H
 
 #include <stdio.h>
-#include "containers/free_flags.h"
+#include "lib/free_flags.h"
 
 typedef struct _sllse_t {
 	char* value;

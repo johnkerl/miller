@@ -143,7 +143,7 @@ lrec_t* lrec_parse_stdio_dkvp_single_sep(char* line, char ifs, char ips, int all
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
 				char  free_flags = 0;
-				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), value, free_flags);
 			}
 			else {
 				lrec_put(prec, key, value, NO_FREE);
@@ -172,7 +172,7 @@ lrec_t* lrec_parse_stdio_dkvp_single_sep(char* line, char ifs, char ips, int all
 	} else {
 		if (*key == 0 || value <= key) {
 			char  free_flags = 0;
-			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+			lrec_put(prec, low_int_to_string(idx, &free_flags), value, free_flags);
 		}
 		else {
 			lrec_put(prec, key, value, NO_FREE);
@@ -212,7 +212,7 @@ lrec_t* lrec_parse_stdio_dkvp_multi_sep(char* line, char* ifs, char* ips, int if
 				// "a=".  Here we use the positional index as the key. This way
 				// DKVP is a generalization of NIDX.
 				char  free_flags = 0;
-				lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+				lrec_put(prec, low_int_to_string(idx, &free_flags), value, free_flags);
 			}
 			else {
 				lrec_put(prec, key, value, NO_FREE);
@@ -241,7 +241,7 @@ lrec_t* lrec_parse_stdio_dkvp_multi_sep(char* line, char* ifs, char* ips, int if
 	} else {
 		if (*key == 0 || value <= key) {
 			char  free_flags = 0;
-			lrec_put(prec, make_nidx_key(idx, &free_flags), value, free_flags);
+			lrec_put(prec, low_int_to_string(idx, &free_flags), value, free_flags);
 		}
 		else {
 			lrec_put(prec, key, value, NO_FREE);

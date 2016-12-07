@@ -7,7 +7,7 @@
 #define SLLMV_H
 
 #include "mlrval.h"
-#include "free_flags.h"
+#include "../lib/free_flags.h"
 
 // ----------------------------------------------------------------
 typedef struct _sllmve_t {

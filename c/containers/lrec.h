@@ -43,7 +43,7 @@
 #ifndef LREC_H
 #define LREC_H
 
-#include "containers/free_flags.h"
+#include "lib/free_flags.h"
 #include "containers/sllv.h"
 #include "containers/header_keeper.h"
 
@@ -163,7 +163,7 @@ char* lrec_sprint(lrec_t* prec, char* ors, char* ofs, char* ops);
 // allocation for most-used keys such as "1", "2", ... up to 100 or so. In case
 // of large idx, free_flags & FREE_ENTRY_KEY will indicate that the key
 // was dynamically allocated.
-char* make_nidx_key(int idx, char* pfree_flags);
+char* low_int_to_string(int idx, char* pfree_flags);
 
 // For unit-test.
 lrec_t* lrec_literal_1(char* k1, char* v1);

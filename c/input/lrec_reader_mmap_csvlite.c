@@ -544,7 +544,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 			break;
 		} else if (*p == ifs) {
 			*p = 0;
-			key = make_nidx_key(++idx, &free_flags);
+			key = low_int_to_string(++idx, &free_flags);
 			lrec_put(prec, key, value, free_flags);
 			p++;
 			if (allow_repeat_ifs) {
@@ -562,7 +562,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 	if (allow_repeat_ifs && *value == 0)
 		return prec;
 
-	key = make_nidx_key(++idx, &free_flags);
+	key = low_int_to_string(++idx, &free_flags);
 
 	if (saw_rs) {
 		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
@@ -620,7 +620,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(fi
 			break;
 		} else if (streqn(p, ifs, ifslen)) {
 			*p = 0;
-			key = make_nidx_key(++idx, &free_flags);
+			key = low_int_to_string(++idx, &free_flags);
 			lrec_put(prec, key, value, free_flags);
 
 			p += ifslen;
@@ -639,7 +639,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(fi
 	if (allow_repeat_ifs && *value == 0)
 		return prec;
 
-	key = make_nidx_key(++idx, &free_flags);
+	key = low_int_to_string(++idx, &free_flags);
 
 	if (saw_rs) {
 		// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the

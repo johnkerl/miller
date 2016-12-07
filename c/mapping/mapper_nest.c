@@ -253,7 +253,7 @@ static sllv_t* mapper_nest_explode_values_across_fields(lrec_t* pinrec, context_
 	int i = 1;
 	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep), i++) {
 		char  istring_free_flags;
-		char* istring = make_nidx_key(i, &istring_free_flags);
+		char* istring = low_int_to_string(i, &istring_free_flags);
 		char* new_key = mlr_paste_3_strings(pstate->field_name, "_", istring);
 		if (istring_free_flags & FREE_ENTRY_KEY)
 			free(istring);

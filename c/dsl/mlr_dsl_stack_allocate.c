@@ -1,7 +1,7 @@
 #include <stdlib.h>
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
-#include "containers/free_flags.h"
+#include "lib/free_flags.h"
 #include "containers/lhmsi.h"
 #include "dsl/mlr_dsl_blocked_ast.h"
 #include "dsl/context_flags.h"

@@ -380,7 +380,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs_implicit_header(header_kee
 		if (*p == ifs) {
 			*p = 0;
 
-			key = make_nidx_key(++idx, &free_flags);
+			key = low_int_to_string(++idx, &free_flags);
 			lrec_put(prec, key, value, free_flags);
 
 			p++;
@@ -396,7 +396,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs_implicit_header(header_kee
 	if (allow_repeat_ifs && *value == 0) {
 		; // OK
 	} else {
-		key = make_nidx_key(++idx, &free_flags);
+		key = low_int_to_string(++idx, &free_flags);
 		lrec_put(prec, key, value, NO_FREE);
 		lrec_put(prec, key, value, free_flags);
 	}
@@ -422,7 +422,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs_implicit_header(header_keep
 	for ( ; *p; ) {
 		if (streqn(p, ifs, ifslen)) {
 			*p = 0;
-			key = make_nidx_key(++idx, &free_flags);
+			key = low_int_to_string(++idx, &free_flags);
 			lrec_put(prec, key, value, free_flags);
 
 			p += ifslen;
@@ -438,7 +438,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs_implicit_header(header_keep
 	if (allow_repeat_ifs && *value == 0) {
 		; // OK
 	} else {
-		key = make_nidx_key(++idx, &free_flags);
+		key = low_int_to_string(++idx, &free_flags);
 		lrec_put(prec, key, value, free_flags);
 	}
 

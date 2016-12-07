@@ -1,6 +1,6 @@
 #include "../containers/xvfuncs.h"
 #include "../lib/string_builder.h"
-#include "../containers/free_flags.h"
+#include "../lib/free_flags.h"
 
 // ----------------------------------------------------------------
 boxed_xval_t b_xx_haskey_xfunc(boxed_xval_t* pmapval, boxed_xval_t* pkeyval) {
@@ -128,17 +128,21 @@ boxed_xval_t variadic_mapdiff_xfunc(boxed_xval_t* pbxvals, int nxvals) {
 }
 
 // ----------------------------------------------------------------
-// Precondition: the caller has ensured the separator is a string-valued terminal.
+// Precondition: the caller has ensured that both arguments are string-valued terminals.
 boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
+	char* input = mlr_strdup_or_die(pmapval->xval.terminal_mlrval.u.strv);
 	// xxx strtok
 	// xxx same index-to-string method as in the nidx lrec reader
+	free(input);
 	return box_ephemeral_val(mv_absent()); // xxx stub
 }
 
 // ----------------------------------------------------------------
-// Precondition: the caller has ensured the separator is a string-valued terminal.
+// Precondition: the caller has ensured that both arguments are string-valued terminals.
 boxed_xval_t m_ss_splitkv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
+	char* input = mlr_strdup_or_die(pmapval->xval.terminal_mlrval.u.strv);
 	// xxx strtok
+	free(input);
 	return box_ephemeral_val(mv_absent()); // xxx stub
 }
 
@@ -146,7 +150,7 @@ boxed_xval_t m_ss_splitkv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
 #define SB_JOIN_ALLOC_SIZE 128
 
 // ----------------------------------------------------------------
-// Precondition: the caller has ensured the separator is a string-valued terminal.
+// Precondition: the caller has ensured that the separator is a string-valued terminal.
 boxed_xval_t s_ms_joink_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
 	if (pmapval->xval.is_terminal)
 		return box_ephemeral_val(mv_absent()); // xxx stub
@@ -173,7 +177,7 @@ boxed_xval_t s_ms_joink_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
 }
 
 // ----------------------------------------------------------------
-// Precondition: the caller has ensured the separator is a string-valued terminal.
+// Precondition: the caller has ensured that the separator is a string-valued terminal.
 boxed_xval_t s_ms_joinv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
 	if (pmapval->xval.is_terminal)
 		return box_ephemeral_val(mv_absent()); // xxx stub
@@ -202,7 +206,7 @@ boxed_xval_t s_ms_joinv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
 }
 
 // ----------------------------------------------------------------
-// Precondition: the caller has ensured the separators are string-valued terminals.
+// Precondition: the caller has ensured that the separators are string-valued terminals.
 boxed_xval_t s_mss_joinkv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* ppairsepval, boxed_xval_t* plistsepval) {
 	if (pmapval->xval.is_terminal)
 		return box_ephemeral_val(mv_absent()); // xxx stub

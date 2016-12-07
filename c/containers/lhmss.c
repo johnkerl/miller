@@ -22,7 +22,7 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/lhmss.h"
-#include "containers/free_flags.h"
+#include "lib/free_flags.h"
 
 // ----------------------------------------------------------------
 // Allow compile-time override, e.g using gcc -D.
