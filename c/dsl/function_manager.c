@@ -319,7 +319,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_MAPS, "splitkv",       2,0, "xxx temp."},
 	{FUNC_CLASS_MAPS, "joink",         2,0, "xxx temp."},
 	{FUNC_CLASS_MAPS, "joinv",         2,0, "xxx temp."},
-	{FUNC_CLASS_MAPS, "joinkv",        2,0, "xxx temp."},
+	{FUNC_CLASS_MAPS, "joinkv",        3,0, "xxx temp."},
 
 	{0, NULL, -1 , -1, NULL}, // table terminator
 };

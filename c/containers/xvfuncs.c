@@ -1,4 +1,6 @@
 #include "../containers/xvfuncs.h"
+#include "../lib/string_builder.h"
+#include "../containers/free_flags.h"
 
 // ----------------------------------------------------------------
 boxed_xval_t b_xx_haskey_xfunc(boxed_xval_t* pmapval, boxed_xval_t* pkeyval) {
@@ -126,26 +128,114 @@ boxed_xval_t variadic_mapdiff_xfunc(boxed_xval_t* pbxvals, int nxvals) {
 }
 
 // ----------------------------------------------------------------
+// Precondition: the caller has ensured the separator is a string-valued terminal.
 boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
+	// xxx strtok
+	// xxx same index-to-string method as in the nidx lrec reader
 	return box_ephemeral_val(mv_absent()); // xxx stub
 }
 
 // ----------------------------------------------------------------
+// Precondition: the caller has ensured the separator is a string-valued terminal.
 boxed_xval_t m_ss_splitkv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
+	// xxx strtok
 	return box_ephemeral_val(mv_absent()); // xxx stub
 }
 
 // ----------------------------------------------------------------
+#define SB_JOIN_ALLOC_SIZE 128
+
+// ----------------------------------------------------------------
+// Precondition: the caller has ensured the separator is a string-valued terminal.
 boxed_xval_t s_ms_joink_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
-	return box_ephemeral_val(mv_absent()); // xxx stub
+	if (pmapval->xval.is_terminal)
+		return box_ephemeral_val(mv_absent()); // xxx stub
+
+	string_builder_t* psb = sb_alloc(SB_JOIN_ALLOC_SIZE);
+	for (mlhmmv_level_entry_t* pentry = pmapval->xval.pnext_level->phead; pentry != NULL; pentry = pentry->pnext) {
+		// The string_builder object will copy the string so we can point into source string space,
+		// without a copy here, when possible.
+		char free_flags = 0;
+		char* sval = mv_maybe_alloc_format_val(&pentry->level_key, &free_flags);
+		sb_append_string(psb, sval);
+		if (free_flags)
+			free(sval);
+		if (pentry->pnext != NULL) {
+			sb_append_string(psb, psepval->xval.terminal_mlrval.u.strv);
+		}
+	}
+
+	char* sretval = sb_finish(psb);
+	sb_free(psb);
+	return box_ephemeral_val(
+		mv_from_string(sretval, FREE_ENTRY_VALUE)
+	);
 }
 
 // ----------------------------------------------------------------
+// Precondition: the caller has ensured the separator is a string-valued terminal.
 boxed_xval_t s_ms_joinv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
-	return box_ephemeral_val(mv_absent()); // xxx stub
+	if (pmapval->xval.is_terminal)
+		return box_ephemeral_val(mv_absent()); // xxx stub
+
+	string_builder_t* psb = sb_alloc(SB_JOIN_ALLOC_SIZE);
+	for (mlhmmv_level_entry_t* pentry = pmapval->xval.pnext_level->phead; pentry != NULL; pentry = pentry->pnext) {
+		if (pentry->level_xvalue.is_terminal) {
+			// The string_builder object will copy the string so we can point into source string space,
+			// without a copy here, when possible.
+			char free_flags = 0;
+			char* sval = mv_maybe_alloc_format_val(&pentry->level_xvalue.terminal_mlrval, &free_flags);
+			sb_append_string(psb, sval);
+			if (free_flags)
+				free(sval);
+			if (pentry->pnext != NULL) {
+				sb_append_string(psb, psepval->xval.terminal_mlrval.u.strv);
+			}
+		}
+	}
+
+	char* sretval = sb_finish(psb);
+	sb_free(psb);
+	return box_ephemeral_val(
+		mv_from_string(sretval, FREE_ENTRY_VALUE)
+	);
 }
 
 // ----------------------------------------------------------------
+// Precondition: the caller has ensured the separators are string-valued terminals.
 boxed_xval_t s_mss_joinkv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* ppairsepval, boxed_xval_t* plistsepval) {
-	return box_ephemeral_val(mv_absent()); // xxx stub
+	if (pmapval->xval.is_terminal)
+		return box_ephemeral_val(mv_absent()); // xxx stub
+
+	string_builder_t* psb = sb_alloc(SB_JOIN_ALLOC_SIZE);
+	for (mlhmmv_level_entry_t* pentry = pmapval->xval.pnext_level->phead; pentry != NULL; pentry = pentry->pnext) {
+		if (pentry->level_xvalue.is_terminal) {
+			// The string_builder object will copy the string so we can point into source string space,
+			// without a copy here, when possible.
+
+			char kfree_flags = 0;
+			char* skval = mv_maybe_alloc_format_val(&pentry->level_key, &kfree_flags);
+			sb_append_string(psb, skval);
+			if (kfree_flags)
+				free(skval);
+
+			sb_append_string(psb, ppairsepval->xval.terminal_mlrval.u.strv);
+
+			char vfree_flags = 0;
+			char* svval = mv_maybe_alloc_format_val(&pentry->level_xvalue.terminal_mlrval, &vfree_flags);
+			sb_append_string(psb, svval);
+			if (vfree_flags)
+				free(skval);
+
+			if (pentry->pnext != NULL) {
+				sb_append_string(psb, plistsepval->xval.terminal_mlrval.u.strv);
+			}
+		}
+	}
+
+	char* sretval = sb_finish(psb);
+	sb_free(psb);
+	return box_ephemeral_val(
+		mv_from_string(sretval, FREE_ENTRY_VALUE)
+	);
 }
