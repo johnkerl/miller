@@ -83,7 +83,11 @@ static void handle_full_srec_assignment(
 
 			if (pval->is_terminal) { // xxx else collapse-down using json separator?
 				char* skey = mv_alloc_format_val(pkey);
-				mv_t val = boxed_xval.is_ephemeral ? pval->terminal_mlrval : mv_copy(&pval->terminal_mlrval);
+				// xxx if we're going to transfer here *and* free below, this needs a nullptr poke
+				// at the copy-from site
+				//mv_t val = boxed_xval.is_ephemeral ? pval->terminal_mlrval : mv_copy(&pval->terminal_mlrval);
+				mv_t val = mv_copy(&pval->terminal_mlrval);
+
 				// Write typed mlrval output to the typed overlay rather than into the lrec
 				// (which holds only string values).
 				//
