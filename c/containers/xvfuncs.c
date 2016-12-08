@@ -262,7 +262,7 @@ boxed_xval_t s_mss_joinkv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* ppairsepval
 			char* svval = mv_maybe_alloc_format_val(&pentry->level_xvalue.terminal_mlrval, &vfree_flags);
 			sb_append_string(psb, svval);
 			if (vfree_flags)
-				free(skval);
+				free(svval);
 
 			if (pentry->pnext != NULL) {
 				sb_append_string(psb, plistsepval->xval.terminal_mlrval.u.strv);
