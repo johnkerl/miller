@@ -29,12 +29,7 @@ OTHER:
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
-* new functions:
-  - binary m,s->s JOINK JOINV JOINKV
-  - binary s,s->m SPLITNV SPLITKV
-  ! splitnv/splitkv how/whether to type-infer the v's?!?
-
-! IPS IFS IRS OPS OPS ORS into the grammar !
+* splitnv/splitkv how/whether to type-infer the v's?!?
 
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
@@ -65,8 +60,6 @@ MAPVAR CHECKLIST:
 * bool_t typedef
 
 * mv_error retvals vs. exitthrows vs. absentskips ... bleah
-
-? if (k in m) { ... }
 
  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 things which are always maps:
@@ -225,6 +218,9 @@ SYNTAX ERROR IMPROVEMENT:
 
 ================================================================
 UT FOR 5.0.0:
+
+* joink joinv joinkv splitnv splitkv test in various contexts esp free-and-replace.
+* joink joinv joinkv splitnv splitkv memmgt / valgrinds !
 
 * all assert_X() cases
 * all type-decl cases: local/forbind/argpass; initial assign & reuse thereafter.
