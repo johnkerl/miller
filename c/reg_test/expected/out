@@ -46339,6 +46339,313 @@ mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"
 
 
 ================================================================
+SPLIT/JOIN
+
+mlr --from ./reg_test/input/abixy-het put -q o = joink($*, ":"); print o
+a:b:i:x:y
+a:b:i:x:y
+aaa:b:i:x:y
+a:bbb:i:x:y
+a:b:i:xxx:y
+a:b:i:x:y
+a:b:iii:x:y
+a:b:i:x:yyy
+aaa:bbb:i:x:y
+a:b:i:x:y
+
+mlr --from ./reg_test/input/abixy-het put -q o = joinv($*, ":"); print o
+pan:pan:1:0.3467901443380824:0.7268028627434533
+eks:pan:2:0.7586799647899636:0.5221511083334797
+wye:wye:3:0.20460330576630303:0.33831852551664776
+eks:wye:4:0.38139939387114097:0.13418874328430463
+wye:pan:5:0.5732889198020006:0.8636244699032729
+zee:pan:6:0.5271261600918548:0.49322128674835697
+eks:zee:7:0.6117840605678454:0.1878849191181694
+zee:wye:8:0.5985540091064224:0.976181385699006
+hat:wye:9:0.03144187646093577:0.7495507603507059
+pan:wye:10:0.5026260055412137:0.9526183602969864
+
+mlr --from ./reg_test/input/abixy-het put -q o = joinkv($*, ":", ";"); print o
+a:pan;b:pan;i:1;x:0.3467901443380824;y:0.7268028627434533
+a:eks;b:pan;i:2;x:0.7586799647899636;y:0.5221511083334797
+aaa:wye;b:wye;i:3;x:0.20460330576630303;y:0.33831852551664776
+a:eks;bbb:wye;i:4;x:0.38139939387114097;y:0.13418874328430463
+a:wye;b:pan;i:5;xxx:0.5732889198020006;y:0.8636244699032729
+a:zee;b:pan;i:6;x:0.5271261600918548;y:0.49322128674835697
+a:eks;b:zee;iii:7;x:0.6117840605678454;y:0.1878849191181694
+a:zee;b:wye;i:8;x:0.5985540091064224;yyy:0.976181385699006
+aaa:hat;bbb:wye;i:9;x:0.03144187646093577;y:0.7495507603507059
+a:pan;b:wye;i:10;x:0.5026260055412137;y:0.9526183602969864
+
+mlr --from ./reg_test/input/abixy-het put -q o = joink({1:2,  "abc":4, 5:"xyz"}, ":"); print o
+1:abc:5
+1:abc:5
+1:abc:5
+1:abc:5
+1:abc:5
+1:abc:5
+1:abc:5
+1:abc:5
+1:abc:5
+1:abc:5
+
+mlr --from ./reg_test/input/abixy-het put -q o = joinv({1:2,  "abc":4, 5:"xyz"}, ":"); print o
+2:4:xyz
+2:4:xyz
+2:4:xyz
+2:4:xyz
+2:4:xyz
+2:4:xyz
+2:4:xyz
+2:4:xyz
+2:4:xyz
+2:4:xyz
+
+mlr --from ./reg_test/input/abixy-het put -q o = joinkv({1:2, "abc":4, 5:"xyz"}, ":", ";"); print o
+1:2;abc:4;5:xyz
+1:2;abc:4;5:xyz
+1:2;abc:4;5:xyz
+1:2;abc:4;5:xyz
+1:2;abc:4;5:xyz
+1:2;abc:4;5:xyz
+1:2;abc:4;5:xyz
+1:2;abc:4;5:xyz
+1:2;abc:4;5:xyz
+1:2;abc:4;5:xyz
+
+mlr --from ./reg_test/input/abixy-het put $* = splitnv("a,b,c" , ",")
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+
+mlr --from ./reg_test/input/abixy-het put $* = splitkv("a=1,b=2,c", "=", ",")
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+
+mlr --from ./reg_test/input/abixy-het put $* = splitnv("a,b,c", IFS)
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+1=a,2=b,3=c
+
+mlr --from ./reg_test/input/abixy-het put $* = splitkv("a=1,b=2,c", IPS, IFS)
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+a=1,b=2,3=c
+
+mlr --oxtab --from ./reg_test/input/abixy-het put s = joink($*, ":"); $* = splitnv(s, ":")
+1 a
+2 b
+3 i
+4 x
+5 y
+
+1 a
+2 b
+3 i
+4 x
+5 y
+
+1 aaa
+2 b
+3 i
+4 x
+5 y
+
+1 a
+2 bbb
+3 i
+4 x
+5 y
+
+1 a
+2 b
+3 i
+4 xxx
+5 y
+
+1 a
+2 b
+3 i
+4 x
+5 y
+
+1 a
+2 b
+3 iii
+4 x
+5 y
+
+1 a
+2 b
+3 i
+4 x
+5 yyy
+
+1 aaa
+2 bbb
+3 i
+4 x
+5 y
+
+1 a
+2 b
+3 i
+4 x
+5 y
+
+mlr --oxtab --from ./reg_test/input/abixy-het put s = joinv($*, ":"); $* = splitnv(s, ":")
+1 pan
+2 pan
+3 1
+4 0.3467901443380824
+5 0.7268028627434533
+
+1 eks
+2 pan
+3 2
+4 0.7586799647899636
+5 0.5221511083334797
+
+1 wye
+2 wye
+3 3
+4 0.20460330576630303
+5 0.33831852551664776
+
+1 eks
+2 wye
+3 4
+4 0.38139939387114097
+5 0.13418874328430463
+
+1 wye
+2 pan
+3 5
+4 0.5732889198020006
+5 0.8636244699032729
+
+1 zee
+2 pan
+3 6
+4 0.5271261600918548
+5 0.49322128674835697
+
+1 eks
+2 zee
+3 7
+4 0.6117840605678454
+5 0.1878849191181694
+
+1 zee
+2 wye
+3 8
+4 0.5985540091064224
+5 0.976181385699006
+
+1 hat
+2 wye
+3 9
+4 0.03144187646093577
+5 0.7495507603507059
+
+1 pan
+2 wye
+3 10
+4 0.5026260055412137
+5 0.9526183602969864
+
+mlr --oxtab --from ./reg_test/input/abixy-het put s = joinkv($*, ":", ";"); $* = splitkv(s, ":", ";")
+a pan
+b pan
+i 1
+x 0.3467901443380824
+y 0.7268028627434533
+
+a eks
+b pan
+i 2
+x 0.7586799647899636
+y 0.5221511083334797
+
+aaa wye
+b   wye
+i   3
+x   0.20460330576630303
+y   0.33831852551664776
+
+a   eks
+bbb wye
+i   4
+x   0.38139939387114097
+y   0.13418874328430463
+
+a   wye
+b   pan
+i   5
+xxx 0.5732889198020006
+y   0.8636244699032729
+
+a zee
+b pan
+i 6
+x 0.5271261600918548
+y 0.49322128674835697
+
+a   eks
+b   zee
+iii 7
+x   0.6117840605678454
+y   0.1878849191181694
+
+a   zee
+b   wye
+i   8
+x   0.5985540091064224
+yyy 0.976181385699006
+
+aaa hat
+bbb wye
+i   9
+x   0.03144187646093577
+y   0.7495507603507059
+
+a pan
+b wye
+i 10
+x 0.5026260055412137
+y 0.9526183602969864
+
+
+================================================================
 MAPVAR EMIT
 
 mlr -n put end {
@@ -46382,6 +46689,10 @@ t=2,3=12
 
 t=2,u=3,a=4,b=8,_=12
 t=2,u=3,a=4,b=8,_=12
+
+
+================================================================
+MAPVAR FOR-LOOPS
 
 
 ================================================================

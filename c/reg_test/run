@@ -5438,6 +5438,26 @@ run_mlr --from $indir/xyz2 put -q 'c[1][2] = 3; o = c; dump o'
 run_mlr --from $indir/xyz2 put -q 'func map_valued_func() { return {"a":1,"b":2}} o = map_valued_func(); dump o'
 
 # ----------------------------------------------------------------
+announce SPLIT/JOIN
+
+run_mlr --from $indir/abixy-het put -q 'o = joink($*, ":"); print o'
+run_mlr --from $indir/abixy-het put -q 'o = joinv($*, ":"); print o'
+run_mlr --from $indir/abixy-het put -q 'o = joinkv($*, ":", ";"); print o'
+
+run_mlr --from $indir/abixy-het put -q 'o = joink({1:2,  "abc":4, 5:"xyz"}, ":"); print o'
+run_mlr --from $indir/abixy-het put -q 'o = joinv({1:2,  "abc":4, 5:"xyz"}, ":"); print o'
+run_mlr --from $indir/abixy-het put -q 'o = joinkv({1:2, "abc":4, 5:"xyz"}, ":", ";"); print o'
+
+run_mlr --from $indir/abixy-het put '$* = splitnv("a,b,c" , ",")'
+run_mlr --from $indir/abixy-het put '$* = splitkv("a=1,b=2,c", "=", ",")'
+run_mlr --from $indir/abixy-het put '$* = splitnv("a,b,c", IFS)'
+run_mlr --from $indir/abixy-het put '$* = splitkv("a=1,b=2,c", IPS, IFS)'
+
+run_mlr --oxtab --from $indir/abixy-het put 's = joink($*, ":"); $* = splitnv(s, ":")'
+run_mlr --oxtab --from $indir/abixy-het put 's = joinv($*, ":"); $* = splitnv(s, ":")'
+run_mlr --oxtab --from $indir/abixy-het put 's = joinkv($*, ":", ";"); $* = splitkv(s, ":", ";")'
+
+# ----------------------------------------------------------------
 announce MAPVAR EMIT
 
 run_mlr -n put 'end {
@@ -5465,6 +5485,16 @@ run_mlr -n put 'end {
   emitp (@a, b, {2:{3:12}}), "t", "u";
   emit  (@a, b, {2:{3:12}}), "t", "u";
 }'
+
+# ----------------------------------------------------------------
+announce MAPVAR FOR-LOOPS
+
+# run_mlr --from s put -q 'func f() { return {1:2,3:4}} emit f()'
+# run_mlr --from s put -q 'func f() { return {1:2,3:4}};  emit f()'
+# run_mlr --from s put -q 'func f() { return {1:2,3:4}};  for (k,v in f()){}'
+#
+# run_mlr --from s put 'for (k in $*) { print k}'
+# run_mlr --from s put 'm=$*; for (k in m) { print k}'
 
 # ----------------------------------------------------------------
 announce MAPVARS/UDFs/SUBROUTINES
