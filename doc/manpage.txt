@@ -1496,7 +1496,7 @@ FUNCTIONS FOR FILTER/PUT
        (class=maps #args=2): xxx temp.
 
    splitkv
-       (class=maps #args=2): xxx temp.
+       (class=maps #args=3): xxx temp.
 
    joink
        (class=maps #args=2): xxx temp.
@@ -1809,4 +1809,4 @@ SEE ALSO
 
 
 
-				  2016-12-07			     MILLER(1)
+				  2016-12-08			     MILLER(1)
