@@ -647,6 +647,8 @@ mlr_dsl_cst_statement_t* alloc_emit(
 	// Name note: difference between keylist and namelist: in emit @a[$b]["c"], "d", @e,
 	// the keylist is ["a", $b, "c"] and the namelist is ["d", @e].
 
+	// xxx why not rxval_evaluator here??
+
 	int output_all = FALSE;
 	// The grammar allows only 'emit all', not 'emit @x, all, $y'.
 	// So if 'all' appears at all, it's the only name.

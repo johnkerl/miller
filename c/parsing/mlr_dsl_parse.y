@@ -1576,6 +1576,9 @@ md_emittable(A) ::= MD_TOKEN_FULL_SREC(B). {
 md_emittable(A) ::= md_map_literal(B). {
 	A = B;
 }
+md_emittable(A) ::= md_rhs(B). {
+	A = B;
+}
 
 // ----------------------------------------------------------------
 md_emit_namelist(A) ::= md_rhs(B). {
