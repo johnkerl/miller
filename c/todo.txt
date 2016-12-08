@@ -254,6 +254,8 @@ UT FOR 5.0.0:
   - typeof
   ~ mapsum mapdiff
 
+* [IO][PFS]S variables
+
 ================================================================
 HYGIENE FOR 5.0.0:
 
@@ -325,7 +327,7 @@ PERF:
 KW autodoc:
 * kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
 
-  E ENV FILENAME FILENUM FNR NF NR PI
+  E ENV FILENAME FILENUM FNR NF NR PI [IO][PFS]S
 
 COMPARES:
 * https://github.com/shenwei356/csvtk
@@ -340,6 +342,7 @@ To file:
 * absent vs. empty; unset $x vs. $x="". no null keyword.
 * env lhs expr
 * allow empty maps/levels in oosvars as well as map-literals
+* [IO][PFS]S variables
 
 filter expansion:
 * mlh
