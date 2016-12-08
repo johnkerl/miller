@@ -30,6 +30,7 @@ OTHER:
 MAPVAR CHECKLIST:
 
 ! for-over & emit of func retvals
+! emittable/dumpable/etc md_rhs -> more specific fcn-call.
 
 * splitnv/splitkv how/whether to type-infer the v's?!?
 
