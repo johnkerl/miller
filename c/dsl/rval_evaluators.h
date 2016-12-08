@@ -75,6 +75,12 @@ rval_evaluator_t* rval_evaluator_alloc_from_FILENAME();
 rval_evaluator_t* rval_evaluator_alloc_from_FILENUM();
 rval_evaluator_t* rval_evaluator_alloc_from_PI();
 rval_evaluator_t* rval_evaluator_alloc_from_E();
+rval_evaluator_t* rval_evaluator_alloc_from_IPS();
+rval_evaluator_t* rval_evaluator_alloc_from_IFS();
+rval_evaluator_t* rval_evaluator_alloc_from_IRS();
+rval_evaluator_t* rval_evaluator_alloc_from_OPS();
+rval_evaluator_t* rval_evaluator_alloc_from_OFS();
+rval_evaluator_t* rval_evaluator_alloc_from_ORS();
 rval_evaluator_t* rval_evaluator_alloc_from_context_variable(char* variable_name);
 rval_evaluator_t* rval_evaluator_alloc_from_local_variable(int vardef_frame_relative_index);
 

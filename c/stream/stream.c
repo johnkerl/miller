@@ -12,7 +12,7 @@
 
 static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
 	lrec_reader_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream,
-	long long nr_progress_mod);
+	cli_opts_t* popts);
 
 static sllv_t* chain_map(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_head);
 
@@ -25,13 +25,26 @@ static void stderr_progress_indicator(context_t* pctx, long long nr_progress_mod
 
 // ----------------------------------------------------------------
 int do_stream_chained(char* prepipe, slls_t* filenames, lrec_reader_t* plrec_reader, sllv_t* pmapper_list,
-	lrec_writer_t* plrec_writer, char* ofmt, long long nr_progress_mod)
+	lrec_writer_t* plrec_writer, cli_opts_t* popts)
 {
 	FILE* output_stream = stdout;
 
 	MLR_INTERNAL_CODING_ERROR_IF(pmapper_list->length < 1); // Should not have been allowed by the CLI parser.
 
-	context_t ctx = { .nr = 0, .fnr = 0, .filenum = 0, .filename = NULL, .force_eof = FALSE };
+	context_t ctx = {
+		.nr        = 0,
+		.fnr       = 0,
+		.filenum   = 0,
+		.filename  = NULL,
+		.force_eof = FALSE,
+
+		.ips       = popts->reader_opts.ips,
+		.ifs       = popts->reader_opts.ifs,
+		.irs       = popts->reader_opts.irs,
+		.ops       = popts->writer_opts.ops,
+		.ofs       = popts->writer_opts.ofs,
+		.ors       = popts->writer_opts.ors
+	};
 	int ok = 1;
 	if (filenames == NULL) {
 		// No input at all
@@ -40,8 +53,8 @@ int do_stream_chained(char* prepipe, slls_t* filenames, lrec_reader_t* plrec_rea
 		ctx.filenum++;
 		ctx.filename = "(stdin)";
 		ctx.fnr = 0;
-		ok = do_file_chained(prepipe, "-", &ctx, plrec_reader, pmapper_list, plrec_writer, output_stream,
-			nr_progress_mod) && ok;
+		ok = do_file_chained(prepipe, "-", &ctx, plrec_reader, pmapper_list, plrec_writer,
+			output_stream, popts) && ok;
 	} else {
 		// Read from each file name in turn
 		for (sllse_t* pe = filenames->phead; pe != NULL; pe = pe->pnext) {
@@ -49,8 +62,8 @@ int do_stream_chained(char* prepipe, slls_t* filenames, lrec_reader_t* plrec_rea
 			ctx.filenum++;
 			ctx.filename = filename;
 			ctx.fnr = 0;
-			ok = do_file_chained(prepipe, filename, &ctx, plrec_reader, pmapper_list,
-				plrec_writer, output_stream, nr_progress_mod) && ok;
+			ok = do_file_chained(prepipe, filename, &ctx, plrec_reader, pmapper_list, plrec_writer,
+				output_stream, popts) && ok;
 			if (ctx.force_eof == TRUE) // e.g. mlr head
 				break;
 		}
@@ -69,10 +82,12 @@ int do_stream_chained(char* prepipe, slls_t* filenames, lrec_reader_t* plrec_rea
 // ----------------------------------------------------------------
 static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
 	lrec_reader_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream,
-	long long nr_progress_mod)
+	cli_opts_t* popts)
 {
 	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, prepipe, filename);
-	progress_indicator_t* pindicator = nr_progress_mod == 0LL ? null_progress_indicator : stderr_progress_indicator;
+	progress_indicator_t* pindicator = popts->nr_progress_mod == 0LL
+		? null_progress_indicator
+		: stderr_progress_indicator;
 
 	// Start-of-file hook, e.g. expecting CSV headers on input.
 	plrec_reader->psof_func(plrec_reader->pvstate, pvhandle);
@@ -88,7 +103,7 @@ static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
 		pctx->nr++;
 		pctx->fnr++;
 
-		pindicator(pctx, nr_progress_mod);
+		pindicator(pctx, popts->nr_progress_mod);
 
 		drive_lrec(pinrec, pctx, pmapper_list->phead, plrec_writer, output_stream);
 	}

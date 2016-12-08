@@ -24,8 +24,7 @@ int main(int argc, char** argv) {
 	lrec_writer_t* plrec_writer = popts->plrec_writer;
 	slls_t*        filenames    = popts->filenames;
 
-	int ok = do_stream_chained(prepipe, filenames, plrec_reader, pmapper_list, plrec_writer, popts->ofmt,
-		popts->nr_progress_mod);
+	int ok = do_stream_chained(prepipe, filenames, plrec_reader, pmapper_list, plrec_writer, popts);
 
 	cli_opts_free(popts);
 

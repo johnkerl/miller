@@ -777,6 +777,96 @@ rval_evaluator_t* rval_evaluator_alloc_from_E() {
 	return pevaluator;
 }
 
+// ----------------------------------------------------------------
+mv_t rval_evaluator_IPS_func(void* pvstate, variables_t* pvars) {
+	return mv_from_string_no_free(pvars->pctx->ips);
+}
+static void rval_evaluator_IPS_free(rval_evaluator_t* pevaluator) {
+	free(pevaluator);
+}
+rval_evaluator_t* rval_evaluator_alloc_from_IPS() {
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pevaluator->pvstate = NULL;
+	pevaluator->pprocess_func = rval_evaluator_IPS_func;
+	pevaluator->pfree_func = rval_evaluator_IPS_free;
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
+mv_t rval_evaluator_IFS_func(void* pvstate, variables_t* pvars) {
+	return mv_from_string_no_free(pvars->pctx->ifs);
+}
+static void rval_evaluator_IFS_free(rval_evaluator_t* pevaluator) {
+	free(pevaluator);
+}
+rval_evaluator_t* rval_evaluator_alloc_from_IFS() {
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pevaluator->pvstate = NULL;
+	pevaluator->pprocess_func = rval_evaluator_IFS_func;
+	pevaluator->pfree_func = rval_evaluator_IFS_free;
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
+mv_t rval_evaluator_IRS_func(void* pvstate, variables_t* pvars) {
+	return mv_from_string_no_free(pvars->pctx->irs);
+}
+static void rval_evaluator_IRS_free(rval_evaluator_t* pevaluator) {
+	free(pevaluator);
+}
+rval_evaluator_t* rval_evaluator_alloc_from_IRS() {
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pevaluator->pvstate = NULL;
+	pevaluator->pprocess_func = rval_evaluator_IRS_func;
+	pevaluator->pfree_func = rval_evaluator_IRS_free;
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
+mv_t rval_evaluator_OPS_func(void* pvstate, variables_t* pvars) {
+	return mv_from_string_no_free(pvars->pctx->ops);
+}
+static void rval_evaluator_OPS_free(rval_evaluator_t* pevaluator) {
+	free(pevaluator);
+}
+rval_evaluator_t* rval_evaluator_alloc_from_OPS() {
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pevaluator->pvstate = NULL;
+	pevaluator->pprocess_func = rval_evaluator_OPS_func;
+	pevaluator->pfree_func = rval_evaluator_OPS_free;
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
+mv_t rval_evaluator_OFS_func(void* pvstate, variables_t* pvars) {
+	return mv_from_string_no_free(pvars->pctx->ofs);
+}
+static void rval_evaluator_OFS_free(rval_evaluator_t* pevaluator) {
+	free(pevaluator);
+}
+rval_evaluator_t* rval_evaluator_alloc_from_OFS() {
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pevaluator->pvstate = NULL;
+	pevaluator->pprocess_func = rval_evaluator_OFS_func;
+	pevaluator->pfree_func = rval_evaluator_OFS_free;
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
+mv_t rval_evaluator_ORS_func(void* pvstate, variables_t* pvars) {
+	return mv_from_string_no_free(pvars->pctx->ors);
+}
+static void rval_evaluator_ORS_free(rval_evaluator_t* pevaluator) {
+	free(pevaluator);
+}
+rval_evaluator_t* rval_evaluator_alloc_from_ORS() {
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pevaluator->pvstate = NULL;
+	pevaluator->pprocess_func = rval_evaluator_ORS_func;
+	pevaluator->pfree_func = rval_evaluator_ORS_free;
+	return pevaluator;
+}
+
 // ================================================================
 rval_evaluator_t* rval_evaluator_alloc_from_context_variable(char* variable_name) {
 	if        (streq(variable_name, "NF"))       { return rval_evaluator_alloc_from_NF();
@@ -786,6 +876,12 @@ rval_evaluator_t* rval_evaluator_alloc_from_context_variable(char* variable_name
 	} else if (streq(variable_name, "FILENUM"))  { return rval_evaluator_alloc_from_FILENUM();
 	} else if (streq(variable_name, "PI"))       { return rval_evaluator_alloc_from_PI();
 	} else if (streq(variable_name, "E"))        { return rval_evaluator_alloc_from_E();
+	} else if (streq(variable_name, "IPS"))      { return rval_evaluator_alloc_from_IPS();
+	} else if (streq(variable_name, "IFS"))      { return rval_evaluator_alloc_from_IFS();
+	} else if (streq(variable_name, "IRS"))      { return rval_evaluator_alloc_from_IRS();
+	} else if (streq(variable_name, "OPS"))      { return rval_evaluator_alloc_from_OPS();
+	} else if (streq(variable_name, "OFS"))      { return rval_evaluator_alloc_from_OFS();
+	} else if (streq(variable_name, "ORS"))      { return rval_evaluator_alloc_from_ORS();
 	} else  { return NULL;
 	}
 }

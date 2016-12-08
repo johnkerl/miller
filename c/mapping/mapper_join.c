@@ -534,7 +534,13 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 		.fnr       = 0,
 		.filenum   = 1,
 		.filename  = pstate->popts->left_file_name,
-		.force_eof = FALSE
+		.force_eof = FALSE,
+		.ips       = NULL,
+		.ifs       = NULL,
+		.irs       = NULL,
+		.ops       = NULL,
+		.ofs       = NULL,
+		.ors       = NULL,
 	};
 	context_t* pctx = &ctx;
 

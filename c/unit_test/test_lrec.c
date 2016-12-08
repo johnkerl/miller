@@ -71,7 +71,9 @@ static char* test_lrec_unbacked_api() {
 // ----------------------------------------------------------------
 static char* test_lrec_dkvp_api() {
 	char* line = mlr_strdup_or_die("w=2,x=3,y=4,z=5");
-	context_t ctx = { .nr = 777, .fnr = 888, .filenum = 999, .filename = "test-file" };
+	context_t ctx = { .nr = 777, .fnr = 888, .filenum = 999, .filename = "test-file",
+		.ips = "=", .ifs = ",", .irs = "\n", .ops = "=", .ofs = ",", .ors = "\n",
+	};
 
 	lrec_t* prec = lrec_parse_stdio_dkvp_single_sep(line, ',', '=', FALSE, &ctx);
 	mu_assert_lf(prec->field_count == 4);

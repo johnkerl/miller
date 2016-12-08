@@ -464,6 +464,31 @@
 	return MD_TOKEN_FALSE;
 }
 
+"IPS" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
+	return MD_TOKEN_CONTEXT_VARIABLE;
+}
+"IFS" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
+	return MD_TOKEN_CONTEXT_VARIABLE;
+}
+"IRS" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
+	return MD_TOKEN_CONTEXT_VARIABLE;
+}
+"OPS" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
+	return MD_TOKEN_CONTEXT_VARIABLE;
+}
+"OFS" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
+	return MD_TOKEN_CONTEXT_VARIABLE;
+}
+"ORS" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
+	return MD_TOKEN_CONTEXT_VARIABLE;
+}
+
 "NF" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
 	return MD_TOKEN_CONTEXT_VARIABLE;
