@@ -5457,6 +5457,10 @@ run_mlr --oxtab --from $indir/abixy-het put 's = joink($*, ":"); $* = splitnv(s,
 run_mlr --oxtab --from $indir/abixy-het put 's = joinv($*, ":"); $* = splitnv(s, ":")'
 run_mlr --oxtab --from $indir/abixy-het put 's = joinkv($*, ":", ";"); $* = splitkv(s, ":", ";")'
 
+run_mlr --oxtab --from $indir/abixy-het put 's = joink({1:2, "abc":4, 5:"xyz"}, ":"); $* = splitnv(s, ":")'
+run_mlr --oxtab --from $indir/abixy-het put 's = joinv({1:2, "abc":4, 5:"xyz"}, ":"); $* = splitnv(s, ":")'
+run_mlr --oxtab --from $indir/abixy-het put 's = joinkv({1:2, "abc":4, 5:"xyz"}, ":", ";"); $* = splitkv(s, ":", ";")'
+
 # ----------------------------------------------------------------
 announce MAPVAR EMIT
 

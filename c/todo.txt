@@ -222,9 +222,6 @@ SYNTAX ERROR IMPROVEMENT:
 ================================================================
 UT FOR 5.0.0:
 
-* joink joinv joinkv splitnv splitkv test in various contexts esp free-and-replace.
-* joink joinv joinkv splitnv splitkv memmgt / valgrinds !
-
 * all assert_X() cases
 * all type-decl cases: local/forbind/argpass; initial assign & reuse thereafter.
 

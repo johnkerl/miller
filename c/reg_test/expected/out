@@ -46644,6 +46644,129 @@ i 10
 x 0.5026260055412137
 y 0.9526183602969864
 
+mlr --oxtab --from ./reg_test/input/abixy-het put s = joink({1:2, "abc":4, 5:"xyz"}, ":"); $* = splitnv(s, ":")
+1 1
+2 abc
+3 5
+
+1 1
+2 abc
+3 5
+
+1 1
+2 abc
+3 5
+
+1 1
+2 abc
+3 5
+
+1 1
+2 abc
+3 5
+
+1 1
+2 abc
+3 5
+
+1 1
+2 abc
+3 5
+
+1 1
+2 abc
+3 5
+
+1 1
+2 abc
+3 5
+
+1 1
+2 abc
+3 5
+
+mlr --oxtab --from ./reg_test/input/abixy-het put s = joinv({1:2, "abc":4, 5:"xyz"}, ":"); $* = splitnv(s, ":")
+1 2
+2 4
+3 xyz
+
+1 2
+2 4
+3 xyz
+
+1 2
+2 4
+3 xyz
+
+1 2
+2 4
+3 xyz
+
+1 2
+2 4
+3 xyz
+
+1 2
+2 4
+3 xyz
+
+1 2
+2 4
+3 xyz
+
+1 2
+2 4
+3 xyz
+
+1 2
+2 4
+3 xyz
+
+1 2
+2 4
+3 xyz
+
+mlr --oxtab --from ./reg_test/input/abixy-het put s = joinkv({1:2, "abc":4, 5:"xyz"}, ":", ";"); $* = splitkv(s, ":", ";")
+1   2
+abc 4
+5   xyz
+
+1   2
+abc 4
+5   xyz
+
+1   2
+abc 4
+5   xyz
+
+1   2
+abc 4
+5   xyz
+
+1   2
+abc 4
+5   xyz
+
+1   2
+abc 4
+5   xyz
+
+1   2
+abc 4
+5   xyz
+
+1   2
+abc 4
+5   xyz
+
+1   2
+abc 4
+5   xyz
+
+1   2
+abc 4
+5   xyz
+
 
 ================================================================
 MAPVAR EMIT
