@@ -250,7 +250,6 @@ UT FOR 5.0.0:
 
 * UT xfuncs:
   - ispresent isabsent ismap isscalar & all other predicates
-  - haskey
   - length depth leafcount
 
 * [IO][PFS]S variables
