@@ -127,18 +127,18 @@ OPTIONS
 	uniq
 
    FUNCTION LIST
-	+ + - - * / // % ** | ^ & ~ << >> == != =~ !=~ > >= < <= && || ^^ ! ? : isnull
-	isnotnull isabsent ispresent isempty isnotempty isnumeric isint isfloat isbool
-	isboolean isstring assert_notnull assert_present assert_empty assert_notempty
-	assert_numeric assert_int assert_float assert_bool assert_boolean
-	assert_string boolean float fmtnum hexfmt int string typeof . gsub strlen sub
-	substr tolower toupper abs acos acosh asin asinh atan atan2 atanh cbrt ceil
-	cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd max
-	mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand
-	urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec
-	hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime ismap
-	isscalar isemptymap isnonemptymap haskey length depth leafcount mapsum mapdiff
-	splitnv splitkv joink joinv joinkv
+	+ + - - * / // % ** | ^ & ~ << >> == != =~ !=~ > >= < <= && || ^^ ! ? : . gsub
+	strlen sub substr tolower toupper abs acos acosh asin asinh atan atan2 atanh
+	cbrt ceil cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p logifit
+	madd max mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh
+	urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec
+	hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime
+	isabsent isbool isboolean isempty isemptymap isfloat isint ismap isnonemptymap
+	isnotempty isnotnull isnull isnumeric ispresent isscalar isstring
+	assert_notnull assert_present assert_empty assert_notempty assert_numeric
+	assert_int assert_float assert_bool assert_boolean assert_string boolean float
+	fmtnum hexfmt int string typeof depth haskey joink joinkv joinv leafcount
+	length mapdiff mapsum splitkv splitnv
        Please use "mlr --help-function {function name}" for function-specific help.
        Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
        Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -1160,95 +1160,6 @@ FUNCTIONS FOR FILTER/PUT
    ? :
        (class=boolean #args=3): Ternary operator.
 
-   isnull
-       (class=conversion #args=1): True if argument is null (empty or absent), false otherwise.
-
-   isnotnull
-       (class=conversion #args=1): False if argument is null (empty or absent), true otherwise.
-
-   isabsent
-       (class=conversion #args=1): False if field is present in input, false otherwise
-
-   ispresent
-       (class=conversion #args=1): True if field is present in input, false otherwise.
-
-   isempty
-       (class=conversion #args=1): True if field is present in input with empty value, false otherwise.
-
-   isnotempty
-       (class=conversion #args=1): False if field is present in input with empty value, false otherwise
-
-   isnumeric
-       (class=conversion #args=1): True if field is present with value inferred to be int or float
-
-   isint
-       (class=conversion #args=1): True if field is present with value inferred to be int
-
-   isfloat
-       (class=conversion #args=1): True if field is present with value inferred to be float
-
-   isbool
-       (class=conversion #args=1): True if field is present with boolean value. Synonymous with isboolean.
-
-   isboolean
-       (class=conversion #args=1): True if field is present with boolean value. Synonymous with isbool.
-
-   isstring
-       (class=conversion #args=1): True if field is present with string (including empty-string) value
-
-   assert_notnull
-       (class=conversion #args=1): Returns argument if non-null (non-empty and non-absent), else throws an error.
-
-   assert_present
-       (class=conversion #args=1): Returns argument if present in input, else throws an error.
-
-   assert_empty
-       (class=conversion #args=1): Returns argument if present in input with empty value, else throws an error.
-
-   assert_notempty
-       (class=conversion #args=1): Returns argument if present in input with non-empty value, else throws an error.
-
-   assert_numeric
-       (class=conversion #args=1): Returns argument if present with int or float value, else throws an error.
-
-   assert_int
-       (class=conversion #args=1): Returns argument if present with int value, else throws an error.
-
-   assert_float
-       (class=conversion #args=1): Returns argument if present with float value, else throws an error.
-
-   assert_bool
-       (class=conversion #args=1): Returns argument if present with boolean value, else throws an error.
-
-   assert_boolean
-       (class=conversion #args=1): Returns argument if present with boolean value, else throws an error.
-
-   assert_string
-       (class=conversion #args=1): Returns argument if present with string (including empty-string) value, else throws an error.
-
-   boolean
-       (class=conversion #args=1): Convert int/float/bool/string to boolean.
-
-   float
-       (class=conversion #args=1): Convert int/float/bool/string to float.
-
-   fmtnum
-       (class=conversion #args=2): Convert int/float/bool to string using
-       printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
-
-   hexfmt
-       (class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
-
-   int
-       (class=conversion #args=1): Convert int/float/bool/string to int.
-
-   string
-       (class=conversion #args=1): Convert int/float/bool/string to string.
-
-   typeof
-       (class=conversion #args=1): Convert argument to type of argument (e.g.
-       MT_STRING). For debug.
-
    .
        (class=string #args=2): String concatenation.
 
@@ -1462,50 +1373,139 @@ FUNCTIONS FOR FILTER/PUT
        (class=time #args=0): Floating-point seconds since the epoch,
        e.g. 1440768801.748936.
 
-   ismap
-       (class=typing #args=1): xxx temp.
+   isabsent
+       (class=typing #args=1): False if field is present in input, false otherwise
 
-   isscalar
-       (class=typing #args=1): xxx temp.
+   isbool
+       (class=typing #args=1): True if field is present with boolean value. Synonymous with isboolean.
+
+   isboolean
+       (class=typing #args=1): True if field is present with boolean value. Synonymous with isbool.
+
+   isempty
+       (class=typing #args=1): True if field is present in input with empty string value, false otherwise.
 
    isemptymap
-       (class=typing #args=1): xxx temp.
+       (class=typing #args=1): True if argument is a map which is empty.
+
+   isfloat
+       (class=typing #args=1): True if field is present with value inferred to be float
+
+   isint
+       (class=typing #args=1): True if field is present with value inferred to be int
+
+   ismap
+       (class=typing #args=1): True if argument is a map.
 
    isnonemptymap
-       (class=typing #args=1): xxx temp.
+       (class=typing #args=1): True if argument is a map which is non-empty.
 
-   haskey
-       (class=maps #args=2): xxx temp.
+   isnotempty
+       (class=typing #args=1): False if field is present in input with empty value, false otherwise
 
-   length
-       (class=maps #args=1): xxx temp.
+   isnotnull
+       (class=typing #args=1): False if argument is null (empty or absent), true otherwise.
+
+   isnull
+       (class=typing #args=1): True if argument is null (empty or absent), false otherwise.
+
+   isnumeric
+       (class=typing #args=1): True if field is present with value inferred to be int or float
+
+   ispresent
+       (class=typing #args=1): True if field is present in input, false otherwise.
+
+   isscalar
+       (class=typing #args=1): True if argument is not a map.
+
+   isstring
+       (class=typing #args=1): True if field is present with string (including empty-string) value
+
+   assert_notnull
+       (class=typing #args=1): Returns argument if non-null (non-empty and non-absent), else throws an error.
+
+   assert_present
+       (class=typing #args=1): Returns argument if present in input, else throws an error.
+
+   assert_empty
+       (class=typing #args=1): Returns argument if present in input with empty value, else throws an error.
+
+   assert_notempty
+       (class=typing #args=1): Returns argument if present in input with non-empty value, else throws an error.
+
+   assert_numeric
+       (class=typing #args=1): Returns argument if present with int or float value, else throws an error.
+
+   assert_int
+       (class=typing #args=1): Returns argument if present with int value, else throws an error.
+
+   assert_float
+       (class=typing #args=1): Returns argument if present with float value, else throws an error.
+
+   assert_bool
+       (class=typing #args=1): Returns argument if present with boolean value, else throws an error.
+
+   assert_boolean
+       (class=typing #args=1): Returns argument if present with boolean value, else throws an error.
+
+   assert_string
+       (class=typing #args=1): Returns argument if present with string (including empty-string) value, else throws an error.
+
+   boolean
+       (class=conversion #args=1): Convert int/float/bool/string to boolean.
+
+   float
+       (class=conversion #args=1): Convert int/float/bool/string to float.
+
+   fmtnum
+       (class=conversion #args=2): Convert int/float/bool to string using
+       printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
+
+   hexfmt
+       (class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
+
+   int
+       (class=conversion #args=1): Convert int/float/bool/string to int.
+
+   string
+       (class=conversion #args=1): Convert int/float/bool/string to string.
+
+   typeof
+       (class=conversion #args=1): Convert argument to type of argument (e.g.
+       MT_STRING). For debug.
 
    depth
        (class=maps #args=1): xxx temp.
 
-   leafcount
-       (class=maps #args=1): xxx temp.
-
-   mapsum
-       (class=maps variadic): xxx temp.
-
-   mapdiff
-       (class=maps variadic): xxx temp.
-
-   splitnv
+   haskey
        (class=maps #args=2): xxx temp.
-
-   splitkv
-       (class=maps #args=3): xxx temp.
 
    joink
        (class=maps #args=2): xxx temp.
 
+   joinkv
+       (class=maps #args=3): xxx temp.
+
    joinv
        (class=maps #args=2): xxx temp.
 
-   joinkv
+   leafcount
+       (class=maps #args=1): xxx temp.
+
+   length
+       (class=maps #args=1): xxx temp.
+
+   mapdiff
+       (class=maps variadic): xxx temp.
+
+   mapsum
+       (class=maps variadic): xxx temp.
+
+   splitkv
        (class=maps #args=3): xxx temp.
+
+   splitnv
+       (class=maps #args=2): xxx temp.
 
 KEYWORDS FOR PUT AND FILTER
    all
@@ -1809,4 +1809,4 @@ SEE ALSO
 
 
 
-				  2016-12-08			     MILLER(1)
+				  2016-12-09			     MILLER(1)

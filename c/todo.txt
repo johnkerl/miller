@@ -37,6 +37,8 @@ MAPVAR CHECKLIST:
 
 ! splitnv/splitkv how/whether to type-infer the v's?!? splitnvx/splitkvx?
 
+! assert_map/assert_scalar/etc. is_scalar ...
+
 * mlr -f output for new mapfuncs. and, modify isx() predicates
 
 * debt-reduction
@@ -166,8 +168,6 @@ this is awkward:
 * needs ismap(m[k])
 
 ----------------------------------------------------------------
-* needs assert_scalar in userspace
-
 * iterating:
   k save off a copy of the mlr exe before this for timings later
   k put mv_t -> mlhmmv_value_t @ localstack etc. but keep using u.mlrval and assume u.is_terminal
