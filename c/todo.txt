@@ -35,8 +35,9 @@ MAPVAR CHECKLIST:
 ! death knell for mv-only evaluators:
   put -q 'o = haskey(NR==4 ? {"a": NF} : {"b": NF}, "a"); print "NR=".NR.",haskeya=".o'
 
-
 ! splitnv/splitkv how/whether to type-infer the v's?!? splitnvx/splitkvx?
+
+* mlr -f output for new mapfuncs. and, modify isx() predicates
 
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
@@ -251,7 +252,6 @@ UT FOR 5.0.0:
   - ispresent isabsent ismap isscalar & all other predicates
   - haskey
   - length depth leafcount
-  - typeof
 
 * [IO][PFS]S variables
 
