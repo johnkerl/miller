@@ -47493,6 +47493,34 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapdiff({"a":999}, $*, {"b": 44
 
 
 ================================================================
+HASKEY
+
+mlr --from ./reg_test/input/abixy-het put -q o = haskey($*, "a"); print "NR=".NR.",haskeya=".o
+NR=1,haskeya=true
+NR=2,haskeya=true
+NR=3,haskeya=false
+NR=4,haskeya=true
+NR=5,haskeya=true
+NR=6,haskeya=true
+NR=7,haskeya=true
+NR=8,haskeya=true
+NR=9,haskeya=false
+NR=10,haskeya=true
+
+mlr --from ./reg_test/input/abixy-het put -q o = haskey($*, 3); print "NR=".NR.",haskeya=".o
+NR=1,haskeya=false
+NR=2,haskeya=false
+NR=3,haskeya=false
+NR=4,haskeya=false
+NR=5,haskeya=false
+NR=6,haskeya=false
+NR=7,haskeya=false
+NR=8,haskeya=false
+NR=9,haskeya=false
+NR=10,haskeya=false
+
+
+================================================================
 MAPVAR EMIT
 
 mlr -n put end {

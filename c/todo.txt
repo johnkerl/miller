@@ -32,6 +32,10 @@ MAPVAR CHECKLIST:
 ! for-over & emit of func retvals
 ! emittable/dumpable/etc md_rhs -> more specific fcn-call.
 
+! death knell for mv-only evaluators:
+  put -q 'o = haskey(NR==4 ? {"a": NF} : {"b": NF}, "a"); print "NR=".NR.",haskeya=".o'
+
+
 ! splitnv/splitkv how/whether to type-infer the v's?!? splitnvx/splitkvx?
 
 * debt-reduction
@@ -248,7 +252,6 @@ UT FOR 5.0.0:
   - haskey
   - length depth leafcount
   - typeof
-  ~ mapsum mapdiff
 
 * [IO][PFS]S variables
 
