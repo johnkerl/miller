@@ -513,7 +513,7 @@ typedef struct _for_map_state_t {
 	int    v_frame_relative_index;
 	int    v_type_mask;
 
-    sllv_t* ptarget_keylist_evaluators;
+	rxval_evaluator_t* ptarget_xevaluator;
 } for_map_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_for_map;
@@ -556,7 +556,7 @@ mlr_dsl_cst_statement_t* alloc_for_map(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* 
 	pstate->v_frame_relative_index     = MD_UNUSED_INDEX;
 	pstate->v_type_mask                = 0;
 
-	pstate->ptarget_keylist_evaluators = NULL;
+	pstate->ptarget_xevaluator = NULL;
 
 	// Left child node is list of bound variables.
 	// - Left subnode is namelist for key boundvars.
@@ -586,7 +586,7 @@ mlr_dsl_cst_statement_t* alloc_for_map(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* 
 	pstate->v_frame_relative_index = psubright->vardef_frame_relative_index;
 	pstate->v_type_mask = mlr_dsl_ast_node_type_to_type_mask(psubright->type);
 
-	pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+	pstate->ptarget_xevaluator = rxval_evaluator_alloc_from_ast(
 		pmiddle, pcst->pfmgr, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
@@ -614,11 +614,8 @@ static void free_for_map(mlr_dsl_cst_statement_t* pstatement) {
 	free(pstate->k_variable_names);
 	free(pstate->k_frame_relative_indices);
 	free(pstate->k_type_masks);
-	for (sllve_t* pe = pstate->ptarget_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-		rval_evaluator_t* pev = pe->pvvalue;
-		pev->pfree_func(pev);
-	}
-	sllv_free(pstate->ptarget_keylist_evaluators);
+
+	pstate->ptarget_xevaluator->pfree_func(pstate->ptarget_xevaluator);
 
 	free(pstate);
 }
@@ -631,31 +628,36 @@ static void handle_for_map( // xxx under construction to consolidate the above t
 {
 	for_map_state_t* pstate = pstatement->pvstate;
 
-	// Evaluate the keylist: e.g. in 'for ((k1, k2), v in @a[$3][x]) { ... }', find the values of $3
-	// and x for the current record and stack frame. The keylist bindings are outside the scope
-	// of the for-loop, while the k1/k2/v are bound within the for-loop.
+	rxval_evaluator_t* ptarget_xevaluator = pstate->ptarget_xevaluator;
 
-	int keys_all_non_null_or_error = FALSE;
-	sllmv_t* ptarget_keylist = evaluate_list(pstate->ptarget_keylist_evaluators, pvars,
-		&keys_all_non_null_or_error);
-	if (keys_all_non_null_or_error) {
+	// Evaluate the keylist: e.g. in 'for (k,v in @a[$3][x]) { ... }', find the values of $3
+	// and x for the current record and stack frame. The keylist bindings are outside the scope
+	// of the for-loop, while the k is bound within the for-loop.
+	boxed_xval_t boxed_xval = ptarget_xevaluator->pprocess_func(ptarget_xevaluator->pvstate, pvars);
+
+	if (!boxed_xval.xval.is_terminal) { // is a map
+
+		// Copy the map for the very likely case that it is being updated inside the for-loop.
+		// But ephemerals (map-literals, function return values) aren't named and so can't
+		// be modified and so don't need to be copied.
+		mlhmmv_xvalue_t* pmap = &boxed_xval.xval;
+		mlhmmv_xvalue_t  copy;
+		if (!boxed_xval.is_ephemeral) {
+			copy = mlhmmv_xvalue_copy(&boxed_xval.xval);
+			pmap = &copy;
+		}
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 		local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 		loop_stack_push(pvars->ploop_stack);
 
-		// Locate and copy the submap indexed by the keylist. E.g. in 'for ((k1, k2), v in @a[3][$4]) { ... }', the
-		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
-		// for-loop.
-		mlhmmv_xvalue_t submap = mlhmmv_root_copy_xvalue(pvars->poosvars, ptarget_keylist);
-
-		if (!submap.is_terminal && submap.pnext_level != NULL) {
+		if (!pmap->is_terminal && pmap->pnext_level != NULL) {
 			// Recurse over the for-k-names, e.g. ["k1", "k2"], on each call descending one level
-			// deeper into the submap.  Note there must be at least one k-name so we are assuming
+			// deeper into the map.  Note there must be at least one k-name so we are assuming
 			// the for-loop within handle_for_map_aux was gone through once & thus
 			// mlr_dsl_cst_handle_statement_block_with_break_continue was called through there.
 
-			handle_for_map_aux(pstatement, pvars, pcst_outputs, &submap,
+			handle_for_map_aux(pstatement, pvars, pcst_outputs, pmap,
 				pstate->k_variable_names, pstate->k_frame_relative_indices,
 				pstate->k_type_masks, pstate->k_count);
 
@@ -667,12 +669,13 @@ static void handle_for_map( // xxx under construction to consolidate the above t
 			}
 		}
 
-		mlhmmv_xvalue_free(&submap);
-
 		loop_stack_pop(pvars->ploop_stack);
 		local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
 	}
-	sllmv_free(ptarget_keylist);
+
+	if (boxed_xval.is_ephemeral) {
+		mlhmmv_xvalue_free(&boxed_xval.xval);
+	}
 }
 
 static void handle_for_map_aux(
@@ -735,7 +738,6 @@ typedef struct _for_map_key_only_state_t {
 	int   k_frame_relative_index;
 	int   k_type_mask;
 
-    sllv_t* ptarget_keylist_evaluators;
 	rxval_evaluator_t* ptarget_xevaluator;
 } for_map_key_only_state_t;
 
@@ -752,7 +754,6 @@ mlr_dsl_cst_statement_t* alloc_for_map_key_only(mlr_dsl_cst_t* pcst, mlr_dsl_ast
 	pstate->k_frame_relative_index     = MD_UNUSED_INDEX;
 	pstate->k_type_mask                = 0;
 
-	pstate->ptarget_keylist_evaluators = NULL;
 	pstate->ptarget_xevaluator         = NULL;
 
 	// Left child node is single bound variable
@@ -767,8 +768,6 @@ mlr_dsl_cst_statement_t* alloc_for_map_key_only(mlr_dsl_cst_t* pcst, mlr_dsl_ast
 	pstate->k_frame_relative_index = pleft->vardef_frame_relative_index;
 	pstate->k_type_mask = mlr_dsl_ast_node_type_to_type_mask(pleft->type);
 
-	pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
-		pmiddle, pcst->pfmgr, type_inferencing, context_flags);
 	pstate->ptarget_xevaluator = rxval_evaluator_alloc_from_ast(
 		pmiddle, pcst->pfmgr, type_inferencing, context_flags);
 
@@ -793,12 +792,6 @@ mlr_dsl_cst_statement_t* alloc_for_map_key_only(mlr_dsl_cst_t* pcst, mlr_dsl_ast
 // ----------------------------------------------------------------
 static void free_for_map_key_only(mlr_dsl_cst_statement_t* pstatement) {
 	for_map_key_only_state_t* pstate = pstatement->pvstate;
-
-	for (sllve_t* pe = pstate->ptarget_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
-		rval_evaluator_t* pev = pe->pvvalue;
-		pev->pfree_func(pev);
-	}
-	sllv_free(pstate->ptarget_keylist_evaluators);
 
 	pstate->ptarget_xevaluator->pfree_func(pstate->ptarget_xevaluator);
 
