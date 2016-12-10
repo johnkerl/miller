@@ -26,20 +26,27 @@ OTHER:
 * dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d
 ! 'Error code 1' -> clearer on regdiff fail
 
+! cat -n -g
+
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
+! splitnv/splitkv how/whether to type-infer the v's. splitnvx/splitkvx.
+
 ! for-over & emit of func retvals
-! emittable/dumpable/etc md_rhs -> more specific fcn-call.
 
-! death knell for mv-only evaluators:
-  put -q 'o = haskey(NR==4 ? {"a": NF} : {"b": NF}, "a"); print "NR=".NR.",haskeya=".o'
+! assert_map/assert_scalar/etc.
 
-! splitnv/splitkv how/whether to type-infer the v's?!? splitnvx/splitkvx?
+! rename isscalar to isnotmap
 
-! assert_map/assert_scalar/etc. is_scalar ...
+! this should throw an error: mlr --from s put 'int a=1;var b=a[2]'
 
-* mlr -f output for new mapfuncs. and, modify isx() predicates
+* emittable/dumpable/etc md_rhs -> more specific fcn-call.
+
+* death knell for mv-only evaluators: this is a syntax error:
+  mlr put -q 'o = haskey(NR==4 ? {"a": NF} : {"b": NF}, "a"); print "NR=".NR.",haskeya=".o'
+
+* modify isx() predicate doc @ mlr -f to acknowledge maps. also, UT.
 
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
@@ -61,13 +68,20 @@ MAPVAR CHECKLIST:
   - maybe change to skip-assign, as with assignment statements?
   - or to (error)?
 
+* more generally, audit error-handling for consistency:
+  - absent/skip
+  - '(error)'
+  - abend
+  -> doc smoothouts for 5.0.0 incompat notes
+
 !!?? disallow implicit assignment? force w/ var at least??
   - w/  implicit: for (...) {sum += x} FUBAR
   - w/o implicit: sad panda cannot type 'x=1'
+  -> at least make an mld:ref note about it.
 
 * perf profile
 
-* bool_t typedef
+* bool_t:uchar typedef & perf check
 
 * mv_error retvals vs. exitthrows vs. absentskips ... bleah
 
@@ -82,6 +96,8 @@ MAPVAR CHECKLIST:
     - func retval
     - func args
   o what funcs are available
+  o keywords print, dump, emit, for-kv, for-k
+  o copy semantics
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 mlr_dsl_cst_output_statements.c:
@@ -144,73 +160,10 @@ k assign LHS full-srec          from RHS full-srec          no-op
 k assign LHS full-srec          from RHS maplit             alloc ephem & write elementwise
 - assign LHS full-srec          from RHS func-retval        alloc ephem & move
 
- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-mlr_dsl_cst_output_statements.c:
-
-dump
-print
-emit
-
-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-this is awkward:
-  func deepcount(map m) : int {
-    int sum = 0;
-    for (k in m) {
-      sum += 1;
-      if (isabsent(m[k])) {
-        sum += deepcount(m[k])
-      }
-    }
-    return sum;
-  }
-* isabsent is goofy in the negative use
-* also, isabsent should return false
-* needs ismap(m[k])
-
-----------------------------------------------------------------
-* iterating:
-  k save off a copy of the mlr exe before this for timings later
-  k put mv_t -> mlhmmv_value_t @ localstack etc. but keep using u.mlrval and assume u.is_terminal
-  ~ add in the grammar mods for each case one at a time & stub out the alloc/handle sites one at a time
-  ~ fullimpl the alloc/handle sites one at a time
-  ! timings before & after ! really i don't want to ship without the map feature but its cost
-    should be known.
-  - doc re what you can do: @-vars and locals are scalars except for the enumerated contexts
-
-* type-decl assert RHS for map/non-map reads, and doc that:
-  this should throw an error:
-    mlr --from s put 'int a=1;var b=a[2]'
-
-================================================================
-FUNCTIONALITY FOR 5.0.0:
-
-* cat -n -g
-
-? map-literal grammar as separate parser?
-  - replace existing json parser?
-  - use this for streaming parser?
-  - implement byte-getter with fgetc to keep reading until closing bracket?
-
-? 'null' JSON syntax -- what syntactic meaning for miller? mv_absent or mv_empty, neither would render back as 'null'
-  on output. yet i also don't want another null-type.
-
-? support JSON arrays:
-  - allow them in map-literal input
-  - allow them in JSON record input
-  - add mlhmmv array type, complementing map type
-  - negative-index read semantics (backwards index)
-  - out-of-bounds read semantics (mv_absent)
-  - -out-of-bounds write semantics (array extend)
-  - for srec-to-mlhmmv: loop over level & if all integer keys & all in sequence, treat as array
-
-? array/list types? [a,b,c]
-? set types? {a,b,c} (vs. map {a:1,b:2,c:3})
-? maybe overkill (map covers array & set) but with those there would be solid collections coverage.
-
 ----------------------------------------------------------------
 EXECUTION TRACE:
 
-! trace assignments (mutations of pvars state)
+! trace *assignments* (mutations of pvars state)
 
 * work through the grammar & neaten up pnode->text instances, now that these names are user-visible.
 * mld. note it's an AST dump, not source-level.
@@ -258,7 +211,6 @@ HYGIENE FOR 5.0.0:
 * leading-whitespace cleanup
 * xxxes
 * valgrinds
-* u. x 2 from union to struct & retest
 
 ================================================================
 DOC FOR 5.0.0:
@@ -285,11 +237,12 @@ OOSVAR SINGLE FOR:
 * find & update cookbook/ref/whateveritwas ...
 
 COOK:
-* n-grams ... post these once mapvars are in place.
+* n-grams
 * mlr --from ~/misc/words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 * use: https://github.com/petewarden/dstkdata
 * for-records-counts example
 * ./se/ examples
+* stdlib.mlr examples
 
 DEBUGGING:
 * disclaimer about the Miller DSL having the usual plusses and minuses of a dynamically typed language:
@@ -420,11 +373,6 @@ DOC:
 * final valgrind check
 
 ================================================================
-5.1.0: TRACE // SYNTAXERROR // **ALLRECAGG** // FCNALS
-
-? maybe some sort of collections logic to complement for-loops? important, or just fun to code up?
-
-----------------------------------------------------------------
 5.1.0 ideas:
 
 !!! multi-field x many verbs
@@ -451,6 +399,9 @@ DOC:
 
 ! more than 'syntax error' from lemon-parse failures ... lemon API research
 
+* stats1 for strings: min/max/percentiles. note count/mode already work.
+  -> how to handle mixed string/number columns ...
+
 ? some sort of debug/single-step/trace ... include the AST in the CST & reverse-generate ?
 
 ? formalize _ for skipvars?
@@ -474,6 +425,32 @@ DOC:
 
 ? mlr step -a shift --by {n}
 ? --imd ?
+
+================================================================
+5.2.0 MAYBE IDEAS:
+
+? maybe some sort of collections-API logic to complement for-loops? important, or just fun to code up?
+
+? map-literal grammar as separate parser?
+  - replace existing json parser?
+  - use this for streaming parser?
+  - implement byte-getter with fgetc to keep reading until closing bracket?
+
+? 'null' JSON syntax -- what syntactic meaning for miller? mv_absent or mv_empty, neither would render back as 'null'
+  on output. yet i also don't want another null-type.
+
+? support JSON arrays:
+  - allow them in map-literal input
+  - allow them in JSON record input
+  - add mlhmmv array type, complementing map type
+  - negative-index read semantics (backwards index)
+  - out-of-bounds read semantics (mv_absent)
+  - -out-of-bounds write semantics (array extend)
+  - for srec-to-mlhmmv: loop over level & if all integer keys & all in sequence, treat as array
+
+? array/list types? [a,b,c]
+? set types? {a,b,c} (vs. map {a:1,b:2,c:3})
+? maybe overkill (map covers array & set) but with those there would be solid collections coverage.
 
 ----------------------------------------------------------------
 ? double-quote-aware (non-lite) nidx & dkvp options?
