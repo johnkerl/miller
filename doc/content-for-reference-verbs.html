@@ -1,0 +1,644 @@
+POKI_PUT_TOC_HERE
+
+<!-- ================================================================ -->
+<h1>bar</h1>
+
+<p/> Cheesy bar-charting.
+
+POKI_RUN_COMMAND{{mlr bar -h}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint bar --lo 0 --hi 1 -f x,y data/small}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint bar --lo 0.4 --hi 0.6 -f x,y data/small}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint bar --auto -f x,y data/small}}HERE
+
+<!-- ================================================================ -->
+<h1>bootstrap</h1>
+
+POKI_RUN_COMMAND{{mlr bootstrap --help}}HERE
+
+<p/> The canonical use for bootstrap sampling is to put error bars on statistical quantities, such as mean. For example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
+color  u_mean   u_count
+yellow 0.497129 1413
+red    0.492560 4641
+purple 0.494005 1142
+green  0.504861 1109
+blue   0.517717 1470
+orange 0.490532 303
+
+$ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
+color  u_mean   u_count
+yellow 0.500651 1380
+purple 0.501556 1111
+green  0.503272 1068
+red    0.493895 4702
+blue   0.512529 1496
+orange 0.521030 321
+
+$ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
+color  u_mean   u_count
+yellow 0.498046 1485
+blue   0.513576 1417
+red    0.492870 4595
+orange 0.507697 307
+green  0.496803 1075
+purple 0.486337 1199
+
+$ mlr --opprint bootstrap then stats1 -a mean,count -f u -g color data/colored-shapes.dkvp
+color  u_mean   u_count
+blue   0.522921 1447
+red    0.490717 4617
+yellow 0.496450 1419
+purple 0.496523 1192
+green  0.507569 1111
+orange 0.468014 292
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<h1>cat</h1>
+
+<p/> Most useful for format conversions (see
+POKI_PUT_LINK_FOR_PAGE(file-formats.html)HERE), and concatenating multiple
+same-schema CSV files to have the same header:
+
+POKI_RUN_COMMAND{{mlr cat -h}}HERE
+
+<table><tr><td>
+POKI_RUN_COMMAND{{cat data/a.csv}}HERE
+</td> <td>
+POKI_RUN_COMMAND{{cat data/b.csv}}HERE
+</td> <td>
+POKI_RUN_COMMAND{{mlr --csv cat data/a.csv data/b.csv}}HERE
+</td></tr></table>
+
+<table><tr><td>
+</td> <td>
+POKI_RUN_COMMAND{{mlr --icsv --oxtab cat data/a.csv data/b.csv}}HERE
+</td> <td>
+POKI_RUN_COMMAND{{mlr --csv cat -n data/a.csv data/b.csv}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h1>check</h1>
+
+POKI_RUN_COMMAND{{mlr check --help}}HERE
+
+<!-- ================================================================ -->
+<h1>count-distinct</h1>
+
+POKI_RUN_COMMAND{{mlr count-distinct --help}}HERE
+
+POKI_RUN_COMMAND{{mlr count-distinct -f a,b then sort -nr count data/medium}}HERE
+
+POKI_RUN_COMMAND{{mlr count-distinct -n -f a,b data/medium}}HERE
+
+<!-- ================================================================ -->
+<h1>cut</h1>
+
+POKI_RUN_COMMAND{{mlr cut --help}}HERE
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --opprint cut -f y,x,i data/small}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{echo 'a=1,b=2,c=3' | mlr cut -f b,c,a}}HERE
+</td><td>
+POKI_RUN_COMMAND{{echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h1>decimate</h1>
+
+POKI_RUN_COMMAND{{mlr decimate --help}}HERE
+
+<p/>
+<!-- ================================================================ -->
+<h1>filter</h1>
+
+POKI_RUN_COMMAND{{mlr filter --help}}HERE
+
+<h2>Features which filter shares with put</h2>
+
+<p/>Please see <a href="#Expression_language_for_filter_and_put">Expression
+language for filter and put</a> for more information about the expression
+language for <tt>mlr filter</tt>.
+
+<!-- ================================================================ -->
+<h1>grep</h1>
+
+POKI_RUN_COMMAND{{mlr grep -h}}HERE
+
+<!-- ================================================================ -->
+<h1>group-by</h1>
+
+POKI_RUN_COMMAND{{mlr group-by --help}}HERE
+
+<p/>This is similar to <tt>sort</tt> but with less work. Namely, Miller&rsquo;s
+sort has three steps: read through the data and append linked lists of records,
+one for each unique combination of the key-field values; after all records
+are read, sort the key-field values; then print each record-list. The group-by
+operation simply omits the middle sort.  An example should make this more
+clear.
+
+<table><tr> <td>
+POKI_RUN_COMMAND{{mlr --opprint group-by a data/small}}HERE
+</td> <td>
+POKI_RUN_COMMAND{{mlr --opprint sort -f a data/small}}HERE
+</td> </tr></table>
+
+<p/>In this example, since the sort is on field <tt>a</tt>, the first step is
+to group together all records having the same value for field <tt>a</tt>; the
+second step is to sort the distinct <tt>a</tt>-field values <tt>pan</tt>,
+<tt>eks</tt>, and <tt>wye</tt> into <tt>eks</tt>, <tt>pan</tt>, and
+<tt>wye</tt>; the third step is to print out the record-list for
+<tt>a=eks</tt>, then the record-list for <tt>a=pan</tt>, then the record-list
+for <tt>a=wye</tt>.  The group-by operation omits the middle sort and just puts
+like records together, for those times when a sort isn&rsquo;t desired. In
+particular, the ordering of group-by fields for group-by is the order in which
+they were encountered in the data stream, which in some cases may be more interesting
+to you.
+
+<!-- ================================================================ -->
+<h1>group-like</h1>
+
+POKI_RUN_COMMAND{{mlr group-like --help}}HERE
+
+<p/> This groups together records having the same schema (i.e. same ordered list of field names)
+which is useful for making sense of time-ordered output as described in
+POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE &mdash; in particular, in
+preparation for CSV or pretty-print output.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr cat data/het.dkvp}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --opprint group-like data/het.dkvp}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h1>having-fields</h1>
+
+POKI_RUN_COMMAND{{mlr having-fields --help}}HERE
+
+<p/> Similar to <a href="#group-like"><tt>group-like</tt></a>, this retains records with specified schema.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr cat data/het.dkvp}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr having-fields --at-least resource data/het.dkvp}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr having-fields --which-are resource,ok,loadsec data/het.dkvp}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h1>head</h1>
+
+POKI_RUN_COMMAND{{mlr head --help}}HERE
+
+Note that <tt>head</tt> is distinct from <a href="#top"><tt>top</tt></a>
+&mdash; <tt>head</tt> shows fields which appear first in the data stream;
+<tt>top</tt> shows fields which are numerically largest (or smallest).
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint head -n 4 data/medium}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --opprint head -n 1 -g b data/medium}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h1>histogram</h1>
+
+POKI_RUN_COMMAND{{mlr histogram --help}}HERE
+
+This is just a histogram; there&rsquo;s not too much to say here. A note about
+binning, by example: Suppose you use <tt>--lo 0.0 --hi 1.0 --nbins 10 -f
+x</tt>.  The input numbers less than 0 or greater than 1 aren&rsquo;t counted
+in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin
+0 has <tt>0.0 &le; x &lt; 0.1</tt>, bin 1 has <tt>0.1 &le; x &lt; 0.2</tt>,
+etc., but bin 9 has <tt>0.9 &le; x &le; 1.0</tt>.
+
+POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 data/medium}}HERE
+
+<!-- ================================================================ -->
+<h1>join</h1>
+
+POKI_RUN_COMMAND{{mlr join --help}}HERE
+
+Examples:
+
+<p/>Join larger table with IDs with smaller ID-to-name lookup table, showing only paired records:
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint cat data/join-left-example.csv}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint cat data/join-right-example.csv}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint join -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
+</td></tr></table>
+
+<p/>Same, but with sorting the input first:
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint sort -f idcode then join -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
+</td></tr></table>
+
+<p/>Same, but showing only unpaired records:
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint join --np --ul --ur -u -j id -r idcode -f data/join-left-example.csv data/join-right-example.csv}}HERE
+</td></tr></table>
+
+<p/>Use prefixing options to disambiguate between otherwise identical non-join field names:
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --csvlite --opprint cat data/self-join.csv data/self-join.csv}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --csvlite --opprint join -j a --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv}}HERE
+</td></tr></table>
+
+<p/>Use zero join columns:
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --csvlite --opprint join -j "" --lp left_ --rp right_ -f data/self-join.csv data/self-join.csv}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h1>label</h1>
+
+POKI_RUN_COMMAND{{mlr label --help}}HERE
+
+See also <a href="#rename"><tt>rename</tt></a>.
+
+<p/>Example: Files such as <tt>/etc/passwd</tt>, <tt>/etc/group</tt>, and so on
+have implicit field names which are found in section-5 manpages. These field names may be made explicit as follows:
+
+POKI_INCLUDE_ESCAPED(data/label-example.txt)HERE
+
+<p/>Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of its header line, you can re-add a header line using <tt>--implicit-csv-header</tt> and <tt>label</tt>:
+
+POKI_RUN_COMMAND{{cat data/headerless.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv --rs lf --implicit-csv-header cat data/headerless.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv --rs lf --implicit-csv-header label name,age,status data/headerless.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --rs lf --implicit-csv-header --opprint label name,age,status data/headerless.csv}}HERE
+
+<!-- ================================================================ -->
+<h1>least-frequent</h1>
+
+POKI_RUN_COMMAND{{mlr least-frequent -h}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape -n 5}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp least-frequent -f shape,color -n 5 -b}}HERE
+
+See also <a href="#most-frequent">most-frequent</a>.
+
+<!-- ================================================================ -->
+<h1>merge-fields</h1>
+
+POKI_RUN_COMMAND{{mlr merge-fields --help}}HERE
+
+<p/>This is like <tt>mlr stats1</tt> but all accumulation is done across fields
+within each given record: horizontal rather than vertical statistics, if you
+will.
+
+<p/>Examples:
+
+POKI_RUN_COMMAND{{mlr --csvlite --opprint cat data/inout.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csvlite --opprint merge-fields -a min,max,sum -c _in,_out data/inout.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out data/inout.csv}}HERE
+
+<!-- ================================================================ -->
+<h1>most-frequent</h1>
+
+POKI_RUN_COMMAND{{mlr most-frequent -h}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape -n 5}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint --from data/colored-shapes.dkvp most-frequent -f shape,color -n 5 -b}}HERE
+
+See also <a href="#least-frequent">least-frequent</a>.
+
+<!-- ================================================================ -->
+<h1>nest</h1>
+
+POKI_RUN_COMMAND{{mlr nest -h}}HERE
+
+<!-- ================================================================ -->
+<h1>nothing</h1>
+
+POKI_RUN_COMMAND{{mlr nothing -h}}HERE
+
+<!-- ================================================================ -->
+<h1>put</h1>
+
+POKI_RUN_COMMAND{{mlr put --help}}HERE
+
+<h2>Features which put shares with filter</h2>
+
+<p/>Please see <a href="#Expression_language_for_filter_and_put">Expression
+language for filter and put</a> for more information about the expression
+language for <tt>mlr put</tt>.
+
+<!-- ================================================================ -->
+<h1>regularize</h1>
+
+POKI_RUN_COMMAND{{mlr regularize --help}}HERE
+
+<p/>This exists since hash-map software in various languages and tools
+encountered in the wild does not always print similar rows with fields in the
+same order: <tt>mlr regularize</tt> helps clean that up.
+
+<p/>See also <a href="#reorder"><tt>reorder</tt></a>.
+
+<!-- ================================================================ -->
+<h1>rename</h1>
+
+POKI_RUN_COMMAND{{mlr rename --help}}HERE
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --opprint rename i,INDEX,b,COLUMN2 data/small}}HERE
+</td></tr></table>
+
+<p/>As discussed in POKI_PUT_LINK_FOR_PAGE(performance.html)HERE, <tt>sed</tt>
+is significantly faster than Miller at doing this. However, Miller is
+format-aware, so it knows to do renames only within specified field keys and
+not any others, nor in field values which may happen to contain the same
+pattern. Example:
+
+<table><tr><td>
+POKI_RUN_COMMAND{{sed 's/y/COLUMN5/g' data/small}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr rename y,COLUMN5 data/small}}HERE
+</td></tr></table>
+
+See also <a href="#label"><tt>label</tt></a>.
+
+<!-- ================================================================ -->
+<h1>reorder</h1>
+
+POKI_RUN_COMMAND{{mlr reorder --help}}HERE
+
+This pivots specified field names to the start or end of the record &mdash; for
+example when you have highly multi-column data and you want to bring a field or
+two to the front of line where you can give a quick visual scan.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint reorder -f i,b data/small}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --opprint reorder -e -f i,b data/small}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h1>repeat</h1>
+
+POKI_RUN_COMMAND{{mlr repeat --help}}HERE
+
+<p>This is useful in at least two ways: one, as a data-generator as in the
+above example using <tt>urand()</tt>; two, for reconstructing individual
+samples from data which has been count-aggregated:
+
+POKI_RUN_COMMAND{{cat data/repeat-example.dat}}HERE
+
+POKI_RUN_COMMAND{{mlr repeat -f count then cut -x -f count data/repeat-example.dat}}HERE
+
+<p>After expansion with <tt>repeat</tt>, such data can then be sent on to
+<tt>stats1 -a mode</tt>, or (if the data are numeric) to <tt>stats1 -a
+p10,p50,p90</tt>, etc.
+
+<!-- ================================================================ -->
+<h1>reshape</h1>
+
+POKI_RUN_COMMAND{{mlr reshape --help}}HERE
+
+<!-- ================================================================ -->
+<h1>sample</h1>
+
+POKI_RUN_COMMAND{{mlr sample --help}}HERE
+
+<p/>This is reservoir-sampling: select <i>k</i> items from <i>n</i> with
+uniform probability and no repeats in the sample. (If <i>n</i> is less than
+<i>k</i>, then of course only <i>n</i> samples are produced.) With <tt>-g
+{field names}</tt>, produce a <i>k</i>-sample for each distinct value of the
+specified field names.
+
+POKI_INCLUDE_ESCAPED(data/sample-example.txt)HERE
+
+<p/>Note that no output is produced until all inputs are in. Another way to do
+sampling, which works in the streaming case, is <tt>mlr filter 'urand() &amp;
+0.001'</tt> where you tune the 0.001 to meet your needs.
+
+<!-- ================================================================ -->
+<h1>sec2gmt</h1>
+
+POKI_RUN_COMMAND{{mlr sec2gmt -h}}HERE
+
+<!-- ================================================================ -->
+<h1>sec2gmtdate</h1>
+
+POKI_RUN_COMMAND{{mlr sec2gmtdate -h}}HERE
+
+<!-- ================================================================ -->
+<h1>seqgen</h1>
+
+POKI_RUN_COMMAND{{mlr seqgen -h}}HERE
+
+POKI_RUN_COMMAND{{mlr seqgen --stop 10}}HERE
+POKI_RUN_COMMAND{{mlr seqgen --start 20 --stop 40 --step 4}}HERE
+POKI_RUN_COMMAND{{mlr seqgen --start 40 --stop 20 --step -4}}HERE
+
+<!-- ================================================================ -->
+<h1>shuffle</h1>
+
+POKI_RUN_COMMAND{{mlr shuffle -h}}HERE
+
+<!-- ================================================================ -->
+<h1>sort</h1>
+
+POKI_RUN_COMMAND{{mlr sort --help}}HERE
+
+<p/>Example:
+POKI_RUN_COMMAND{{mlr --opprint sort -f a -nr x data/small}}HERE
+
+<p/>Here&rsquo;s an example filtering log data: suppose multiple threads (labeled here by color) are all logging progress counts to a single log file. The log file is (by nature) chronological, so the progress of various threads is interleaved:
+
+POKI_RUN_COMMAND{{head -n 10 data/multicountdown.dat}}HERE
+
+<p/> We can group these by thread by sorting on the thread ID (here,
+<tt>color</tt>). Since Miller&rsquo;s sort is stable, this means that
+timestamps within each thread&rsquo;s log data are still chronological:
+
+POKI_RUN_COMMAND{{head -n 20 data/multicountdown.dat | mlr --opprint sort -f color}}HERE
+
+<p/>Any records not having all specified sort keys will appear at the end of the output, in the order they
+were encountered, regardless of the specified sort order:
+
+POKI_RUN_COMMAND{{mlr sort -n  x data/sort-missing.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr sort -nr x data/sort-missing.dkvp}}HERE
+
+<!-- ================================================================ -->
+<h1>stats1</h1>
+
+POKI_RUN_COMMAND{{mlr stats1 --help}}HERE
+
+These are simple univariate statistics on one or more number-valued fields
+(<tt>count</tt> and <tt>mode</tt> apply to non-numeric fields as well),
+optionally categorized by one or more other fields.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --oxtab stats1 -a count,sum,min,p10,p50,mean,p90,max -f x,y data/medium}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint stats1 -a mean -f x,y -g b then sort -f b data/medium}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint stats1 -a p50,p99 -f u,v -g color then put '$ur=$u_p99/$u_p50;$vr=$v_p99/$v_p50' data/colored-shapes.dkvp}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint count-distinct -f shape then sort -nr count data/colored-shapes.dkvp}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint stats1 -a mode -f color -g shape data/colored-shapes.dkvp}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h1>stats2</h1>
+
+POKI_RUN_COMMAND{{mlr stats2 --help}}HERE
+
+These are simple bivariate statistics on one or more pairs of number-valued
+fields, optionally categorized by one or more fields.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a cov,corr -f x,y,y,y,x2,xy,x2,y2 data/medium}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a data/medium}}HERE
+</td></tr></table>
+
+<p/>Here&rsquo;s an example simple line-fit. The <tt>x</tt> and <tt>y</tt>
+fields of the <tt>data/medium</tt> dataset are just independent uniformly
+distributed on the unit interval. Here we remove half the data and fit a line to it.
+
+POKI_INCLUDE_ESCAPED(data/linreg-example.txt)HERE
+
+<p/>I use <a href="https://github.com/johnkerl/pgr"><tt>pgr</tt></a> for
+plotting; here&rsquo;s a screenshot.
+
+<center>
+<img src="data/linreg-example.jpg"/>
+</center>
+
+<p/> (Thanks Drew Kunas for a good conversation about PCA!)
+
+<p/> Here&rsquo;s an example estimating time-to-completion for a set of jobs.
+Input data comes from a log file, with number of work units left to do in the
+<tt>count</tt> field and accumulated seconds in the <tt>upsec</tt> field,
+labeled by the <tt>color</tt> field:
+
+POKI_RUN_COMMAND{{head -n 10 data/multicountdown.dat}}HERE
+
+We can do a linear regression on count remaining as a function of time: with <tt>c = m*u+b</tt> we want to find the
+time when the count goes to zero, i.e. <tt>u=-b/m</tt>.
+
+POKI_RUN_COMMAND{{mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' data/multicountdown.dat}}HERE
+
+<!-- ================================================================ -->
+<h1>step</h1>
+
+POKI_RUN_COMMAND{{mlr step --help}}HERE
+
+Most Miller commands are record-at-a-time, with the exception of <tt>stats1</tt>,
+<tt>stats2</tt>, and <tt>histogram</tt> which compute aggregate output. The
+<tt>step</tt> command is intermediate: it allows the option of adding fields
+which are functions of fields from previous records. Rsum is short for <i>running sum</i>.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint step -a shift,delta,rsum,counter -f x data/medium | head -15}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint step -a shift,delta,rsum,counter -f x -g a data/medium | head -15}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint step -a ewma -f x -d 0.1,0.9 ../doc/data/medium | head -15}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint step -a ewma -f x -d 0.1,0.9 -o smooth,rough ../doc/data/medium | head -15}}HERE
+</td></tr></table>
+
+Example deriving uptime-delta from system uptime:
+
+POKI_INCLUDE_ESCAPED(data/ping-delta-example.txt)HERE
+
+<!-- ================================================================ -->
+<h1>tac</h1>
+
+POKI_RUN_COMMAND{{mlr tac --help}}HERE
+
+<p/>Prints the records in the input stream in reverse order. Note: this
+requires Miller to retain all input records in memory before any output records
+are produced.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --icsv --opprint cat data/a.csv}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --icsv --opprint cat data/b.csv}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --icsv --opprint tac data/a.csv data/b.csv}}HERE
+</td></tr></table>
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --icsv --opprint put '$filename=FILENAME' then tac data/a.csv data/b.csv}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h1>tail</h1>
+
+POKI_RUN_COMMAND{{mlr tail --help}}HERE
+
+<p/> Prints the last <i>n</i> records in the input stream, optionally by category.
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint tail -n 4 data/colored-shapes.dkvp}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h1>tee</h1>
+
+POKI_RUN_COMMAND{{mlr tee --help}}HERE
+
+<!-- ================================================================ -->
+<h1>top</h1>
+
+POKI_RUN_COMMAND{{mlr top --help}}HERE
+
+Note that <tt>top</tt> is distinct from <a href="#head"><tt>head</tt></a>
+&mdash; <tt>head</tt> shows fields which appear first in the data stream;
+<tt>top</tt> shows fields which are numerically largest (or smallest).
+
+<table><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint top -n 4 -f x data/medium}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --opprint top -n 2 -f x -g a then sort -f a data/medium}}HERE
+</td></tr></table>
+
+<!-- ================================================================ -->
+<h1>uniq</h1>
+
+POKI_RUN_COMMAND{{mlr uniq --help}}HERE
+
+<table><tr><td>
+POKI_RUN_COMMAND{{wc -l data/colored-shapes.dkvp}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr uniq -g color,shape data/colored-shapes.dkvp}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint uniq -g color,shape -c then sort -f color,shape data/colored-shapes.dkvp}}HERE
+</td></tr><tr><td>
+POKI_RUN_COMMAND{{mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp}}HERE
+</td></tr></table>
