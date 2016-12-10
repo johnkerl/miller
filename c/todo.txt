@@ -33,8 +33,7 @@ MAPVAR CHECKLIST:
 ! splitnv/splitkv how/whether to type-infer the v's. splitnvx/splitkvx.
 
 ! for-over & emit of func retvals
-! make for-single for srec
-! separate for-single and for-multiple .c files
+? separate for-single and for-multiple .c files
 
 ! assert_map/assert_scalar/etc.
 
@@ -182,6 +181,7 @@ UT FOR 5.0.0:
 
 * all assert_X() cases
 * all type-decl cases: local/forbind/argpass; initial assign & reuse thereafter.
+* for-srec-single
 
 * unset of localvars, both non-indexed and indexed; various present/absent at name & indices; too shallow/deep
 
@@ -235,9 +235,9 @@ MAPVARS:
 * xval retvals from UDFs
 * ispresent isabsent ismap isscalar & all other predicates; haskey; length; typeof
 
-OOSVAR SINGLE FOR:
-* oosvar-single-for mlh
-* oosvar-single-for mld
+SINGLE-FOR:
+* srec/oosvar-single-for mlh
+* srec/oosvar-single-for mld
 * find & update cookbook/ref/whateveritwas ...
 
 COOK:

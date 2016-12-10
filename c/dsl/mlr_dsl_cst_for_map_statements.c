@@ -266,10 +266,6 @@ typedef struct _for_oosvar_key_only_state_t {
 	int   k_frame_relative_index;
 	int   k_type_mask;
 
-	char* v_variable_name;
-	int   v_frame_relative_index;
-	int   v_type_mask;
-
     sllv_t* ptarget_keylist_evaluators;
 } for_oosvar_key_only_state_t;
 
@@ -285,10 +281,6 @@ mlr_dsl_cst_statement_t* alloc_for_oosvar_key_only(mlr_dsl_cst_t* pcst, mlr_dsl_
 	pstate->k_variable_name            = NULL;
 	pstate->k_frame_relative_index     = MD_UNUSED_INDEX;
 	pstate->k_type_mask                = 0;
-
-	pstate->v_variable_name            = NULL;
-	pstate->v_frame_relative_index     = MD_UNUSED_INDEX;
-	pstate->v_type_mask                = 0;
 
 	pstate->ptarget_keylist_evaluators = NULL;
 
@@ -618,10 +610,6 @@ typedef struct _for_local_map_key_only_state_t {
 	int   k_frame_relative_index;
 	int   k_type_mask;
 
-	char* v_variable_name;
-	int   v_frame_relative_index;
-	int   v_type_mask;
-
 	int   target_frame_relative_index;
     sllv_t* ptarget_keylist_evaluators;
 } for_local_map_key_only_state_t;
@@ -638,10 +626,6 @@ mlr_dsl_cst_statement_t* alloc_for_local_map_key_only(mlr_dsl_cst_t* pcst, mlr_d
 	pstate->k_variable_name             = NULL;
 	pstate->k_frame_relative_index      = MD_UNUSED_INDEX;
 	pstate->k_type_mask                 = 0;
-
-	pstate->v_variable_name             = NULL;
-	pstate->v_frame_relative_index      = MD_UNUSED_INDEX;
-	pstate->v_type_mask                 = 0;
 
 	pstate->target_frame_relative_index = MD_UNUSED_INDEX;
 	pstate->ptarget_keylist_evaluators  = NULL;
