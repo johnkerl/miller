@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-12-09
+.\"      Date: 2016-12-10
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-12-09" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-12-10" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2554,7 +2554,7 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=1): xxx temp.
+(class=maps #args=1): Prints maximum depth of hashmap: ''. Scalars have depth 0.
 .fi
 .if n \{\
 .RE
@@ -2563,7 +2563,7 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=2): xxx temp.
+(class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)'. Error if 1st argument is not a map.
 .fi
 .if n \{\
 .RE
@@ -2572,7 +2572,7 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=2): xxx temp.
+(class=maps #args=2): Makes string from map keys. E.g. 'joink($*, ",")'.
 .fi
 .if n \{\
 .RE
@@ -2581,7 +2581,7 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=3): xxx temp.
+(class=maps #args=3): Makes string from map key-value pairs. E.g. 'joinkv(@v[2], "=", ",")'
 .fi
 .if n \{\
 .RE
@@ -2590,7 +2590,7 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=2): xxx temp.
+(class=maps #args=2): Makes string from map keys. E.g. 'joinv(mymap, ",")'.
 .fi
 .if n \{\
 .RE
@@ -2599,7 +2599,7 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=1): xxx temp.
+(class=maps #args=1): Counts total number of terminal values in hashmap. For single-level maps, same as length.
 .fi
 .if n \{\
 .RE
@@ -2608,7 +2608,7 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=1): xxx temp.
+(class=maps #args=1): Counts number of top-level entries in hashmap. Scalars have length 1.
 .fi
 .if n \{\
 .RE
@@ -2617,7 +2617,7 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps variadic): xxx temp.
+(class=maps variadic): With 0 args, returns empty map. With 1 arg, returns copy of arg. With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
 .fi
 .if n \{\
 .RE
@@ -2626,7 +2626,7 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps variadic): xxx temp.
+(class=maps variadic): With 0 args, returns empty map. With >= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'.
 .fi
 .if n \{\
 .RE
@@ -2635,7 +2635,7 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=3): xxx temp.
+(class=maps #args=3): Splits string by separators into map. E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
 .fi
 .if n \{\
 .RE
@@ -2644,7 +2644,7 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=2): xxx temp.
+(class=maps #args=2): Splits string by separator into integer-indexed map. E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
 .fi
 .if n \{\
 .RE

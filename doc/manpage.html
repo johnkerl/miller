@@ -1622,37 +1622,37 @@ FUNCTIONS FOR FILTER/PUT
        MT_STRING). For debug.
 
    depth
-       (class=maps #args=1): xxx temp.
+       (class=maps #args=1): Prints maximum depth of hashmap: ''. Scalars have depth 0.
 
    haskey
-       (class=maps #args=2): xxx temp.
+       (class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)'. Error if 1st argument is not a map.
 
    joink
-       (class=maps #args=2): xxx temp.
+       (class=maps #args=2): Makes string from map keys. E.g. 'joink($*, ",")'.
 
    joinkv
-       (class=maps #args=3): xxx temp.
+       (class=maps #args=3): Makes string from map key-value pairs. E.g. 'joinkv(@v[2], "=", ",")'
 
    joinv
-       (class=maps #args=2): xxx temp.
+       (class=maps #args=2): Makes string from map keys. E.g. 'joinv(mymap, ",")'.
 
    leafcount
-       (class=maps #args=1): xxx temp.
+       (class=maps #args=1): Counts total number of terminal values in hashmap. For single-level maps, same as length.
 
    length
-       (class=maps #args=1): xxx temp.
+       (class=maps #args=1): Counts number of top-level entries in hashmap. Scalars have length 1.
 
    mapdiff
-       (class=maps variadic): xxx temp.
+       (class=maps variadic): With 0 args, returns empty map. With 1 arg, returns copy of arg. With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
 
    mapsum
-       (class=maps variadic): xxx temp.
+       (class=maps variadic): With 0 args, returns empty map. With &gt;= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'.
 
    splitkv
-       (class=maps #args=3): xxx temp.
+       (class=maps #args=3): Splits string by separators into map. E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
 
    splitnv
-       (class=maps #args=2): xxx temp.
+       (class=maps #args=2): Splits string by separator into integer-indexed map. E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
 
 KEYWORDS FOR PUT AND FILTER
    all
@@ -1956,7 +1956,7 @@ SEE ALSO
 
 
 
-				  2016-12-09			     MILLER(1)
+				  2016-12-10			     MILLER(1)
 </pre>
 </div>
 <p/>

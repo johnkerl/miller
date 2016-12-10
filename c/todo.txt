@@ -71,17 +71,17 @@ MAPVAR CHECKLIST:
 
 * mv_error retvals vs. exitthrows vs. absentskips ... bleah
 
- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-things which are always maps:
-* maplit
-* full srec
-* full oosvar
-
-things which can be maps:
-* oosvar
-* localvar
-* func retval
-* func args
+* man mlr section on maps
+  o things which are always maps:
+    - maplit
+    - full srec
+    - full oosvar
+  o things which can be maps:
+    - oosvar
+    - localvar
+    - func retval
+    - func args
+  o what funcs are available
 
 - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 mlr_dsl_cst_output_statements.c:
@@ -251,8 +251,6 @@ UT FOR 5.0.0:
 * UT xfuncs:
   - ispresent isabsent ismap isscalar & all other predicates
   - length depth leafcount
-
-* [IO][PFS]S variables
 
 ================================================================
 HYGIENE FOR 5.0.0:
