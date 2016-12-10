@@ -5450,8 +5450,10 @@ run_mlr --from $indir/abixy-het put -q 'o = joinkv({1:2, "abc":4, 5:"xyz"}, ":",
 
 run_mlr --from $indir/abixy-het put '$* = splitnv("a,b,c" , ",")'
 run_mlr --from $indir/abixy-het put '$* = splitkv("a=1,b=2,c", "=", ",")'
-run_mlr --from $indir/abixy-het put '$* = splitnv("a,b,c", IFS)'
-run_mlr --from $indir/abixy-het put '$* = splitkv("a=1,b=2,c", IPS, IFS)'
+run_mlr --from $indir/abixy-het put '$* = splitnv("a,b,c", IFS); print ">>".IRS."<<"'
+run_mlr --from $indir/abixy-het put '$* = splitkv("a=1,b=2,c", IPS, IFS); print ">>".IRS."<<"'
+run_mlr --from $indir/abixy-het put '$* = splitnv("a,b,c", OFS); print ">>".ORS."<<"'
+run_mlr --from $indir/abixy-het put '$* = splitkv("a=1,b=2,c", OPS, OFS); print ">>".ORS."<<"'
 
 run_mlr --oxtab --from $indir/abixy-het put 's = joink($*, ":"); $* = splitnv(s, ":")'
 run_mlr --oxtab --from $indir/abixy-het put 's = joinv($*, ":"); $* = splitnv(s, ":")'
