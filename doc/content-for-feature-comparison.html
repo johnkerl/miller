@@ -40,23 +40,33 @@ $3</tt> (adapted to name-based indexing), as are the variables <tt>FS</tt>,
 functions, if you like) are stream-based: each of them maps a stream of records
 into another stream of records.
 
-<li/> Unlike <tt>awk</tt>, Miller doesn&rsquo;t allow you to define new functions.
-Its domain-specific languages are limited to the <tt>filter</tt> and
-<tt>put</tt> syntax. Futher programmability comes from chaining with
-<tt>then</tt>.
+<li/> Like <tt>awk</tt>, Miller (as of v5.0.0) allows you to define new
+functions within its <tt>put</tt> and <tt>filter</tt> expression language.
+Further programmability comes from chaining with <tt>then</tt>.
 
-<li/> Unlike with <tt>awk</tt>, all variables are stream variables and all
-functions are stream functions.  This means <tt>NF</tt>, <tt>NR</tt>, etc.
-change from one line to another, <tt>$x</tt> is a label for field <tt>x</tt> in
-the current record, and the input to <tt>sqrt($x)</tt> changes from one record
-to the next.  Miller doesn&rsquo;t let you set <tt>sum=0</tt> before
-records are read, then update that sum on each record, then print its value at the
-end. (However, do see <tt>mlr step -a rsum</tt> in the
-POKI_PUT_LINK_FOR_PAGE(reference.html)HERE) page.)
+<li/> As with <tt>awk</tt>, <tt>$</tt>-variables are stream variables and all
+verbs (such as <tt>cut</tt>, <tt>stats1</tt>, <tt>put</tt>, etc.) as well as
+<tt>put</tt>/<tt>filter</tt> statements operate on streams.  This means that
+you define actions to be done on each record and then stream your data through
+those actions.  The built-in variables <tt>NF</tt>, <tt>NR</tt>, etc.  change
+from one line to another, <tt>$x</tt> is a label for field <tt>x</tt> in the
+current record, and the input to <tt>sqrt($x)</tt> changes from one record to
+the next.  The expression language for the <tt>put</tt> and <tt>filter</tt>
+verbs additionally allows you to define <tt>begin {...}</tt> and
+<tt>end {...}</tt> blocks for actions to be taken before and after records are
+processed, respectively.
 
-<li/> Miller is faster than <tt>awk</tt>, <tt>cut</tt>, and so on (depending on
-platform; see also POKI_PUT_LINK_FOR_PAGE(performance.html)HERE). In
-particular, Miller&rsquo;s DSL syntax is parsed into C control structures at
+<li/> As with <tt>awk</tt>, Miller&rsquo;s <tt>put</tt>/<tt>filter</tt>
+language lets you set <tt>@sum=0</tt> before records are read, then update that
+sum on each record, then print its value at the end.  Unlike <tt>awk</tt>,
+Miller makes syntactically explicit the difference between variables with
+extent across all records (names starting with <tt>@</tt>, such as
+<tt>@sum</tt>) and variables which are local to the current expression (names
+starting without <tt>@</tt>, such as <tt>sum</tt>).
+
+<li/> Miller can be faster than <tt>awk</tt>, <tt>cut</tt>, and so on,
+depending on platform; see also POKI_PUT_LINK_FOR_PAGE(performance.html)HERE).
+In particular, Miller&rsquo;s DSL syntax is parsed into C control structures at
 startup time, with the bulk data-stream processing all done in C.
 
 </ul>

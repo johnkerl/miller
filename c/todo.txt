@@ -22,7 +22,6 @@ OTHER:
 
 * mlr paste (sjackman)
 
-* don't dump full help on unrecognized flag. WAY too much info. just print short, w/ info on how to get long.
 * dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d
 ! 'Error code 1' -> clearer on regdiff fail
 
@@ -41,12 +40,14 @@ MAPVAR CHECKLIST:
 
 ! this should throw an error: mlr --from s put 'int a=1;var b=a[2]'
 
+? on-line help to separate web page, as w/ manpage output?
+
 * emittable/dumpable/etc md_rhs -> more specific fcn-call.
+
+* modify isx()-predicate-doc @ mlr -f to acknowledge maps. also, UT.
 
 * death knell for mv-only evaluators: this is a syntax error:
   mlr put -q 'o = haskey(NR==4 ? {"a": NF} : {"b": NF}, "a"); print "NR=".NR.",haskeya=".o'
-
-* modify isx() predicate doc @ mlr -f to acknowledge maps. also, UT.
 
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
@@ -83,8 +84,6 @@ MAPVAR CHECKLIST:
 
 * bool_t:uchar typedef & perf check
 
-* mv_error retvals vs. exitthrows vs. absentskips ... bleah
-
 * man mlr section on maps
   o things which are always maps:
     - maplit
@@ -96,6 +95,7 @@ MAPVAR CHECKLIST:
     - func retval
     - func args
   o what funcs are available
+  o scalar contexts vs. map contexts
   o keywords print, dump, emit, for-kv, for-k
   o copy semantics
 

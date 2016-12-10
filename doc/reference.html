@@ -6322,7 +6322,7 @@ reference.
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --help-all-functions
+$ mlr --help-all-functions | fmt -80
 + (class=arithmetic #args=2): Addition.
 
 + (class=arithmetic #args=1): Unary plus.
@@ -6391,16 +6391,16 @@ and string results in string compare.
 
 . (class=string #args=2): String concatenation.
 
-gsub (class=string #args=3): Example: '$name=gsub($name, "old", "new")'
-(replace all).
+gsub (class=string #args=3): Example: '$name=gsub($name, "old", "new")' (replace
+all).
 
 strlen (class=string #args=1): String length.
 
-sub (class=string #args=3): Example: '$name=sub($name, "old", "new")'
-(replace once).
+sub (class=string #args=3): Example: '$name=sub($name, "old", "new")' (replace
+once).
 
-substr (class=string #args=3): substr(s,m,n) gives substring of s from 0-up position m to n
-inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
+substr (class=string #args=3): substr(s,m,n) gives substring of s from 0-up
+position m to n inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
 
 tolower (class=string #args=1): Convert string to lowercase.
 
@@ -6507,90 +6507,113 @@ fsec2dhms(500000.25) = "5d18h53m20.250000s"
 fsec2hms (class=time #args=1): Formats floating-point seconds as in
 fsec2hms(5000.25) = "01:23:20.250000"
 
-gmt2sec (class=time #args=1): Parses GMT timestamp as integer seconds since
-the epoch.
+gmt2sec (class=time #args=1): Parses GMT timestamp as integer seconds since the
+epoch.
 
 hms2fsec (class=time #args=1): Recovers floating-point seconds as in
 hms2fsec("01:23:20.250000") = 5000.250000
 
-hms2sec (class=time #args=1): Recovers integer seconds as in
-hms2sec("01:23:20") = 5000
+hms2sec (class=time #args=1): Recovers integer seconds as in hms2sec("01:23:20")
+= 5000
 
-sec2dhms (class=time #args=1): Formats integer seconds as in sec2dhms(500000)
-= "5d18h53m20s"
+sec2dhms (class=time #args=1): Formats integer seconds as in sec2dhms(500000) =
+"5d18h53m20s"
 
-sec2gmt (class=time #args=1): Formats seconds since epoch (integer part)
-as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
-Leaves non-numbers as-is.
+sec2gmt (class=time #args=1): Formats seconds since epoch (integer part) as GMT
+timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".  Leaves
+non-numbers as-is.
 
-sec2gmtdate (class=time #args=1): Formats seconds since epoch (integer part)
-as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
-Leaves non-numbers as-is.
+sec2gmtdate (class=time #args=1): Formats seconds since epoch (integer part) as
+GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) =
+"2015-08-28".  Leaves non-numbers as-is.
 
-sec2hms (class=time #args=1): Formats integer seconds as in
-sec2hms(5000) = "01:23:20"
+sec2hms (class=time #args=1): Formats integer seconds as in sec2hms(5000) =
+"01:23:20"
 
-strftime (class=time #args=2): Formats seconds since epoch (integer part)
-as timestamp, e.g.
-strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z".
+strftime (class=time #args=2): Formats seconds since epoch (integer part) as
+timestamp, e.g.  strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") =
+"2015-08-28T13:33:21Z".
 
 strptime (class=time #args=2): Parses timestamp as integer seconds since epoch,
 e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.
 
-systime (class=time #args=0): Floating-point seconds since the epoch,
-e.g. 1440768801.748936.
+systime (class=time #args=0): Floating-point seconds since the epoch, e.g.
+1440768801.748936.
 
-isabsent (class=typing #args=1): False if field is present in input, false otherwise
+isabsent (class=typing #args=1): False if field is present in input, false
+otherwise
 
-isbool (class=typing #args=1): True if field is present with boolean value. Synonymous with isboolean.
+isbool (class=typing #args=1): True if field is present with boolean value.
+Synonymous with isboolean.
 
-isboolean (class=typing #args=1): True if field is present with boolean value. Synonymous with isbool.
+isboolean (class=typing #args=1): True if field is present with boolean value.
+Synonymous with isbool.
 
-isempty (class=typing #args=1): True if field is present in input with empty string value, false otherwise.
+isempty (class=typing #args=1): True if field is present in input with empty
+string value, false otherwise.
 
 isemptymap (class=typing #args=1): True if argument is a map which is empty.
 
-isfloat (class=typing #args=1): True if field is present with value inferred to be float
+isfloat (class=typing #args=1): True if field is present with value inferred to
+be float
 
-isint (class=typing #args=1): True if field is present with value inferred to be int
+isint (class=typing #args=1): True if field is present with value inferred to be
+int
 
 ismap (class=typing #args=1): True if argument is a map.
 
-isnonemptymap (class=typing #args=1): True if argument is a map which is non-empty.
+isnonemptymap (class=typing #args=1): True if argument is a map which is
+non-empty.
 
-isnotempty (class=typing #args=1): False if field is present in input with empty value, false otherwise
+isnotempty (class=typing #args=1): False if field is present in input with empty
+value, false otherwise
 
-isnotnull (class=typing #args=1): False if argument is null (empty or absent), true otherwise.
+isnotnull (class=typing #args=1): False if argument is null (empty or absent),
+true otherwise.
 
-isnull (class=typing #args=1): True if argument is null (empty or absent), false otherwise.
+isnull (class=typing #args=1): True if argument is null (empty or absent), false
+otherwise.
 
-isnumeric (class=typing #args=1): True if field is present with value inferred to be int or float
+isnumeric (class=typing #args=1): True if field is present with value inferred
+to be int or float
 
-ispresent (class=typing #args=1): True if field is present in input, false otherwise.
+ispresent (class=typing #args=1): True if field is present in input, false
+otherwise.
 
 isscalar (class=typing #args=1): True if argument is not a map.
 
-isstring (class=typing #args=1): True if field is present with string (including empty-string) value
+isstring (class=typing #args=1): True if field is present with string (including
+empty-string) value
 
-assert_notnull (class=typing #args=1): Returns argument if non-null (non-empty and non-absent), else throws an error.
+assert_notnull (class=typing #args=1): Returns argument if non-null (non-empty
+and non-absent), else throws an error.
 
-assert_present (class=typing #args=1): Returns argument if present in input, else throws an error.
+assert_present (class=typing #args=1): Returns argument if present in input,
+else throws an error.
 
-assert_empty (class=typing #args=1): Returns argument if present in input with empty value, else throws an error.
+assert_empty (class=typing #args=1): Returns argument if present in input with
+empty value, else throws an error.
 
-assert_notempty (class=typing #args=1): Returns argument if present in input with non-empty value, else throws an error.
+assert_notempty (class=typing #args=1): Returns argument if present in input
+with non-empty value, else throws an error.
 
-assert_numeric (class=typing #args=1): Returns argument if present with int or float value, else throws an error.
+assert_numeric (class=typing #args=1): Returns argument if present with int or
+float value, else throws an error.
 
-assert_int (class=typing #args=1): Returns argument if present with int value, else throws an error.
+assert_int (class=typing #args=1): Returns argument if present with int value,
+else throws an error.
 
-assert_float (class=typing #args=1): Returns argument if present with float value, else throws an error.
+assert_float (class=typing #args=1): Returns argument if present with float
+value, else throws an error.
 
-assert_bool (class=typing #args=1): Returns argument if present with boolean value, else throws an error.
+assert_bool (class=typing #args=1): Returns argument if present with boolean
+value, else throws an error.
 
-assert_boolean (class=typing #args=1): Returns argument if present with boolean value, else throws an error.
+assert_boolean (class=typing #args=1): Returns argument if present with boolean
+value, else throws an error.
 
-assert_string (class=typing #args=1): Returns argument if present with string (including empty-string) value, else throws an error.
+assert_string (class=typing #args=1): Returns argument if present with string
+(including empty-string) value, else throws an error.
 
 boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
 
@@ -6608,32 +6631,44 @@ string (class=conversion #args=1): Convert int/float/bool/string to string.
 typeof (class=conversion #args=1): Convert argument to type of argument (e.g.
 MT_STRING). For debug.
 
-depth (class=maps #args=1): Prints maximum depth of hashmap: ''. Scalars have depth 0.
+depth (class=maps #args=1): Prints maximum depth of hashmap: ''. Scalars have
+depth 0.
 
-haskey (class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)'. Error if 1st argument is not a map.
+haskey (class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*,
+"a")' or 'haskey(mymap, mykey)'. Error if 1st argument is not a map.
 
 joink (class=maps #args=2): Makes string from map keys. E.g. 'joink($*, ",")'.
 
-joinkv (class=maps #args=3): Makes string from map key-value pairs. E.g. 'joinkv(@v[2], "=", ",")'
+joinkv (class=maps #args=3): Makes string from map key-value pairs. E.g.
+'joinkv(@v[2], "=", ",")'
 
-joinv (class=maps #args=2): Makes string from map keys. E.g. 'joinv(mymap, ",")'.
+joinv (class=maps #args=2): Makes string from map keys. E.g. 'joinv(mymap,
+",")'.
 
-leafcount (class=maps #args=1): Counts total number of terminal values in hashmap. For single-level maps, same as length.
+leafcount (class=maps #args=1): Counts total number of terminal values in
+hashmap. For single-level maps, same as length.
 
-length (class=maps #args=1): Counts number of top-level entries in hashmap. Scalars have length 1.
+length (class=maps #args=1): Counts number of top-level entries in hashmap.
+Scalars have length 1.
 
-mapdiff (class=maps variadic): With 0 args, returns empty map. With 1 arg, returns copy of arg. With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
+mapdiff (class=maps variadic): With 0 args, returns empty map. With 1 arg,
+returns copy of arg. With 2 or more, returns copy of arg 1 with all keys from
+any of remaining argument maps removed.
 
-mapsum (class=maps variadic): With 0 args, returns empty map. With &gt;= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'.
+mapsum (class=maps variadic): With 0 args, returns empty map. With &gt;= 1 arg,
+returns a map with key-value pairs from all arguments. Rightmost collisions win,
+e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'.
 
-splitkv (class=maps #args=3): Splits string by separators into map. E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
+splitkv (class=maps #args=3): Splits string by separators into map. E.g.
+'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
 
-splitnv (class=maps #args=2): Splits string by separator into integer-indexed map. E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
+splitnv (class=maps #args=2): Splits string by separator into integer-indexed
+map. E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
 
-To set the seed for urand, you may specify decimal or hexadecimal 32-bit
-numbers of the form "mlr --seed 123456789" or "mlr --seed 0xcafefeed".
-Miller's built-in variables are NF, NR, FNR, FILENUM, and FILENAME (awk-like)
-along with the mathematical constants PI and E.
+To set the seed for urand, you may specify decimal or hexadecimal 32-bit numbers
+of the form "mlr --seed 123456789" or "mlr --seed 0xcafefeed".  Miller's
+built-in variables are NF, NR, FNR, FILENUM, and FILENAME (awk-like) along with
+the mathematical constants PI and E.
 </pre>
 </div>
 <p/>
