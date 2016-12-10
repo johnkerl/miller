@@ -339,6 +339,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_WHILE:                                 return "WHILE";                                 break;
 	case MD_AST_NODE_TYPE_DO_WHILE:                              return "DO_WHILE";                              break;
 	case MD_AST_NODE_TYPE_FOR_SREC:                              return "FOR_SREC";                              break;
+	case MD_AST_NODE_TYPE_FOR_SREC_KEY_ONLY:                     return "FOR_SREC_KEY_ONLY";                     break;
 	case MD_AST_NODE_TYPE_FOR_OOSVAR:                            return "FOR_OOSVAR";                            break;
 	case MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY:                   return "FOR_OOSVAR_KEY_ONLY";                   break;
 	case MD_AST_NODE_TYPE_FOR_LOCAL_MAP:                         return "FOR_LOCAL_MAP";                         break;

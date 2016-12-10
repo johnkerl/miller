@@ -167,6 +167,7 @@ md_statement_braced_end(A) ::= md_end_block(B).   { A = B; }
 md_statement_braced_end(A) ::= md_cond_block(B).                    { A = B; }
 md_statement_braced_end(A) ::= md_while_block(B).                   { A = B; }
 md_statement_braced_end(A) ::= md_for_loop_full_srec(B).            { A = B; }
+md_statement_braced_end(A) ::= md_for_loop_full_srec_key_only(B).   { A = B; }
 md_statement_braced_end(A) ::= md_for_loop_full_oosvar(B).          { A = B; }
 md_statement_braced_end(A) ::= md_for_loop_full_oosvar_key_only(B). { A = B; }
 md_statement_braced_end(A) ::= md_for_loop_oosvar(B).               { A = B; }
@@ -375,6 +376,28 @@ md_for_loop_full_srec(A) ::=
 			MD_AST_NODE_TYPE_FOR_VARIABLES,
 			K,
 			V
+		),
+		S
+	);
+}
+
+// for(k in $*) { ... }
+md_for_loop_full_srec_key_only(A) ::=
+	MD_TOKEN_FOR(F) MD_TOKEN_LPAREN
+		md_for_loop_index(K) MD_TOKEN_IN MD_TOKEN_FULL_SREC
+	MD_TOKEN_RPAREN
+	MD_TOKEN_LBRACE
+		md_statement_block(S)
+	MD_TOKEN_RBRACE.
+{
+	mlr_dsl_ast_node_replace_text(S, "for_full_srec_block");
+	A = mlr_dsl_ast_node_alloc_binary(
+		F->text,
+		MD_AST_NODE_TYPE_FOR_SREC_KEY_ONLY,
+		mlr_dsl_ast_node_alloc_unary(
+			"variables",
+			MD_AST_NODE_TYPE_FOR_VARIABLES,
+			K
 		),
 		S
 	);

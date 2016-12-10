@@ -361,6 +361,7 @@ mlr_dsl_cst_statement_allocator_t alloc_unset;
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // dsl/mlr_dsl_cst_for_srec_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_for_srec;
+mlr_dsl_cst_statement_allocator_t alloc_for_srec_key_only;
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // dsl/mlr_dsl_cst_for_map_statements.c

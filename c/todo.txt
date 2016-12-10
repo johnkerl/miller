@@ -33,6 +33,7 @@ MAPVAR CHECKLIST:
 ! splitnv/splitkv how/whether to type-infer the v's. splitnvx/splitkvx.
 
 ! for-over & emit of func retvals
+! make for-single for srec
 ! separate for-single and for-multiple .c files
 
 ! assert_map/assert_scalar/etc.

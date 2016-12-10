@@ -196,6 +196,9 @@ static void pass_1_for_local_read(mlr_dsl_ast_node_t* pnode, stkalc_subframe_gro
 static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
 
+static void pass_1_for_srec_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace);
+
 static void pass_1_for_map_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
 	int* pmax_subframe_depth, int trace);
 
@@ -405,6 +408,9 @@ static void pass_1_for_node(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* 
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC) {
 		pass_1_for_srec_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
 
+	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_SREC_KEY_ONLY) {
+		pass_1_for_srec_key_only_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
+
 	} else if (pnode->type == MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY) {
 		pass_1_for_map_key_only_for_loop(pnode, pframe_group, pmax_subframe_depth, trace);
 
@@ -510,6 +516,37 @@ static void pass_1_for_srec_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_
 	mlr_dsl_ast_node_t* pvnode = pvarsnode->pchildren->phead->pnext->pvvalue;
 	stkalc_subframe_group_mutate_node_for_define(pframe_group, pknode, "FOR-BIND", trace);
 	stkalc_subframe_group_mutate_node_for_define(pframe_group, pvnode, "FOR-BIND", trace);
+
+	pass_1_for_statement_block(pblocknode, pframe_group, pmax_subframe_depth, trace);
+	pnode->subframe_var_count = pnext_subframe->var_count;
+
+	stkalc_subframe_free(stkalc_subframe_group_pop(pframe_group));
+
+	if (trace) {
+		leader_print(pframe_group->plist->length);
+		printf("POP SUBFRAME %s subframe_var_count=%d\n", pnode->text, pnode->subframe_var_count);
+	}
+}
+
+// ----------------------------------------------------------------
+// for (k in $*) { ... }: k is scoped to the curly-brace block.
+static void pass_1_for_srec_key_only_for_loop(mlr_dsl_ast_node_t* pnode, stkalc_subframe_group_t* pframe_group,
+	int* pmax_subframe_depth, int trace)
+{
+	if (trace) {
+		leader_print(pframe_group->plist->length);
+		printf("PUSH SUBFRAME %s\n", pnode->text);
+	}
+	stkalc_subframe_t* pnext_subframe = stkalc_subframe_alloc();
+	stkalc_subframe_group_push(pframe_group, pnext_subframe);
+	if (*pmax_subframe_depth < pframe_group->plist->length)
+		*pmax_subframe_depth = pframe_group->plist->length;
+
+	mlr_dsl_ast_node_t* pvarsnode  = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* pblocknode = pnode->pchildren->phead->pnext->pvvalue;
+
+	mlr_dsl_ast_node_t* pknode = pvarsnode->pchildren->phead->pvvalue;
+	stkalc_subframe_group_mutate_node_for_define(pframe_group, pknode, "FOR-BIND", trace);
 
 	pass_1_for_statement_block(pblocknode, pframe_group, pmax_subframe_depth, trace);
 	pnode->subframe_var_count = pnext_subframe->var_count;
