@@ -1251,6 +1251,61 @@ POKI_RUN_COMMAND{{mlr --opprint put -q 'isnull(@xmax) || $x > @xmax {@xmax=$x; @
 POKI_RUN_COMMAND{{mlr --help-all-keywords}}HERE
 
 <!-- ================================================================ -->
+<h2>Operator precedence</h2>
+
+<p/>Operators are listed in order of decreasing precedence, highest first.
+
+<p/>
+<div class="pokipanel">
+<pre>
+Operators              Associativity
+---------              -------------
+()                     left to right
+**                     right to left
+! ~ unary+ unary- &amp;    right to left
+binary* / // %         left to right
+binary+ binary- .      left to right
+&lt;&lt; &gt;&gt;                  left to right
+&amp;                      left to right
+^                      left to right
+|                      left to right
+&lt; &lt;= &gt; &gt;=              left to right
+== != =~ !=~           left to right
+&amp;&amp;                     left to right
+^^                     left to right
+||                     left to right
+? :                    right to left
+=                      N/A for Miller (there is no $a=$b=$c)
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<h2>Operator and function semantics</h2>
+
+<ul>
+
+<li/> Functions are in general pass-throughs straight to the system-standard C
+library.
+
+<li/> The <tt>min</tt> and <tt>max</tt> functions are different from other
+multi-argument functions which return null if any of their inputs are null: for
+<tt>min</tt> and <tt>max</tt>, by contrast, if one argument is null, the other
+is returned.
+
+<li/> Symmetrically with respect to the bitwise OR, XOR, and AND operators
+<tt>|</tt>, <tt>^</tt>, <tt>&amp;</tt>, Miller has logical operators
+<tt>||</tt>, <tt>^^</tt>, <tt>&amp;&amp;</tt>: the logical XOR not existing in
+C.
+
+<li/> The exponentiation operator <tt>**</tt> is familiar from many languages.
+
+<li/> The regex-match and regex-not-match operators <tt>=~</tt> and
+<tt>!=~</tt> are similar to those in Ruby and Perl.
+
+</ul>
+
+<!-- ================================================================ -->
 <h2>Control structures</h2>
 
 <!-- ================================================================ -->
@@ -2127,61 +2182,6 @@ mlr filter '$a =~ "(..)_(....)'
 <li/> Up to nine matches are supported: <tt>\1</tt> through <tt>\9</tt>, while
 <tt>\0</tt> is the entire match string; <tt>\15</tt> is treated as <tt>\1</tt>
 followed by an unrelated <tt>5</tt>.
-</ul>
-
-<!-- ================================================================ -->
-<h1>Operator precedence</h1>
-
-<p/>Operators are listed in order of decreasing precedence, highest first.
-
-<p/>
-<div class="pokipanel">
-<pre>
-Operators              Associativity
----------              -------------
-()                     left to right
-**                     right to left
-! ~ unary+ unary- &amp;    right to left
-binary* / // %         left to right
-binary+ binary- .      left to right
-&lt;&lt; &gt;&gt;                  left to right
-&amp;                      left to right
-^                      left to right
-|                      left to right
-&lt; &lt;= &gt; &gt;=              left to right
-== != =~ !=~           left to right
-&amp;&amp;                     left to right
-^^                     left to right
-||                     left to right
-? :                    right to left
-=                      N/A for Miller (there is no $a=$b=$c)
-</pre>
-</div>
-<p/>
-
-<!-- ================================================================ -->
-<h1>Operator and function semantics</h1>
-
-<ul>
-
-<li/> Functions are in general pass-throughs straight to the system-standard C
-library.
-
-<li/> The <tt>min</tt> and <tt>max</tt> functions are different from other
-multi-argument functions which return null if any of their inputs are null: for
-<tt>min</tt> and <tt>max</tt>, by contrast, if one argument is null, the other
-is returned.
-
-<li/> Symmetrically with respect to the bitwise OR, XOR, and AND operators
-<tt>|</tt>, <tt>^</tt>, <tt>&amp;</tt>, Miller has logical operators
-<tt>||</tt>, <tt>^^</tt>, <tt>&amp;&amp;</tt>: the logical XOR not existing in
-C.
-
-<li/> The exponentiation operator <tt>**</tt> is familiar from many languages.
-
-<li/> The regex-match and regex-not-match operators <tt>=~</tt> and
-<tt>!=~</tt> are similar to those in Ruby and Perl.
-
 </ul>
 
 <!-- ================================================================ -->

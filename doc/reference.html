@@ -205,6 +205,8 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables">Indexed out-of-stream variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Aggregate_variable_assignments">Aggregate variable assignments</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keywords_for_filter_and_put">Keywords for filter and put</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Operator_precedence">Operator precedence</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Operator_and_function_semantics">Operator and function semantics</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Control_structures">Control structures</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Pattern-action_blocks">Pattern-action blocks</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#If-statements">If-statements</a><br/>
@@ -229,8 +231,6 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#String_literals">String literals</a><br/>
 &bull;&nbsp;<a href="#Regular_expressions">Regular expressions</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Regex_captures">Regex captures</a><br/>
-&bull;&nbsp;<a href="#Operator_precedence">Operator precedence</a><br/>
-&bull;&nbsp;<a href="#Operator_and_function_semantics">Operator and function semantics</a><br/>
 &bull;&nbsp;<a href="#Arithmetic">Arithmetic</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Input_scanning">Input scanning</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Conversion_by_math_routines">Conversion by math routines</a><br/>
@@ -4895,6 +4895,61 @@ The body statements must be wrapped in curly braces.
 <p/>
 
 <!-- ================================================================ -->
+<a id="Operator_precedence"/><h2>Operator precedence</h2>
+
+<p/>Operators are listed in order of decreasing precedence, highest first.
+
+<p/>
+<div class="pokipanel">
+<pre>
+Operators              Associativity
+---------              -------------
+()                     left to right
+**                     right to left
+! ~ unary+ unary- &amp;    right to left
+binary* / // %         left to right
+binary+ binary- .      left to right
+&lt;&lt; &gt;&gt;                  left to right
+&amp;                      left to right
+^                      left to right
+|                      left to right
+&lt; &lt;= &gt; &gt;=              left to right
+== != =~ !=~           left to right
+&amp;&amp;                     left to right
+^^                     left to right
+||                     left to right
+? :                    right to left
+=                      N/A for Miller (there is no $a=$b=$c)
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Operator_and_function_semantics"/><h2>Operator and function semantics</h2>
+
+<ul>
+
+<li/> Functions are in general pass-throughs straight to the system-standard C
+library.
+
+<li/> The <tt>min</tt> and <tt>max</tt> functions are different from other
+multi-argument functions which return null if any of their inputs are null: for
+<tt>min</tt> and <tt>max</tt>, by contrast, if one argument is null, the other
+is returned.
+
+<li/> Symmetrically with respect to the bitwise OR, XOR, and AND operators
+<tt>|</tt>, <tt>^</tt>, <tt>&amp;</tt>, Miller has logical operators
+<tt>||</tt>, <tt>^^</tt>, <tt>&amp;&amp;</tt>: the logical XOR not existing in
+C.
+
+<li/> The exponentiation operator <tt>**</tt> is familiar from many languages.
+
+<li/> The regex-match and regex-not-match operators <tt>=~</tt> and
+<tt>!=~</tt> are similar to those in Ruby and Perl.
+
+</ul>
+
+<!-- ================================================================ -->
 <a id="Control_structures"/><h2>Control structures</h2>
 
 <!-- ================================================================ -->
@@ -7367,61 +7422,6 @@ mlr filter '$a =~ "(..)_(....)'
 <li/> Up to nine matches are supported: <tt>\1</tt> through <tt>\9</tt>, while
 <tt>\0</tt> is the entire match string; <tt>\15</tt> is treated as <tt>\1</tt>
 followed by an unrelated <tt>5</tt>.
-</ul>
-
-<!-- ================================================================ -->
-<a id="Operator_precedence"/><h1>Operator precedence</h1>
-
-<p/>Operators are listed in order of decreasing precedence, highest first.
-
-<p/>
-<div class="pokipanel">
-<pre>
-Operators              Associativity
----------              -------------
-()                     left to right
-**                     right to left
-! ~ unary+ unary- &amp;    right to left
-binary* / // %         left to right
-binary+ binary- .      left to right
-&lt;&lt; &gt;&gt;                  left to right
-&amp;                      left to right
-^                      left to right
-|                      left to right
-&lt; &lt;= &gt; &gt;=              left to right
-== != =~ !=~           left to right
-&amp;&amp;                     left to right
-^^                     left to right
-||                     left to right
-? :                    right to left
-=                      N/A for Miller (there is no $a=$b=$c)
-</pre>
-</div>
-<p/>
-
-<!-- ================================================================ -->
-<a id="Operator_and_function_semantics"/><h1>Operator and function semantics</h1>
-
-<ul>
-
-<li/> Functions are in general pass-throughs straight to the system-standard C
-library.
-
-<li/> The <tt>min</tt> and <tt>max</tt> functions are different from other
-multi-argument functions which return null if any of their inputs are null: for
-<tt>min</tt> and <tt>max</tt>, by contrast, if one argument is null, the other
-is returned.
-
-<li/> Symmetrically with respect to the bitwise OR, XOR, and AND operators
-<tt>|</tt>, <tt>^</tt>, <tt>&amp;</tt>, Miller has logical operators
-<tt>||</tt>, <tt>^^</tt>, <tt>&amp;&amp;</tt>: the logical XOR not existing in
-C.
-
-<li/> The exponentiation operator <tt>**</tt> is familiar from many languages.
-
-<li/> The regex-match and regex-not-match operators <tt>=~</tt> and
-<tt>!=~</tt> are similar to those in Ruby and Perl.
-
 </ul>
 
 <!-- ================================================================ -->
