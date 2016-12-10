@@ -87,7 +87,8 @@ static lhmss_t* get_default_rses();
 static void free_opt_singletons();
 static char* rebackslash(char* sep);
 
-static void main_usage(FILE* o, char* argv0);
+static void main_usage_long(FILE* o, char* argv0);
+static void main_usage_short(FILE* o, char* argv0);
 static void main_usage_synopsis(FILE* o, char* argv0);
 static void main_usage_examples(FILE* o, char* argv0, char* leader);
 static void list_all_verbs_raw(FILE* o);
@@ -157,11 +158,17 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (streq(argv[argi], "--nr-progress-mod")) {
 			check_arg_count(argv, argi, argc, 2);
 			if (sscanf(argv[argi+1], "%lld", &popts->nr_progress_mod) != 1) {
-				main_usage(stderr, argv[0]);
+				fprintf(stderr,
+					"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
+					argv[0], argv[argi+1]);
+				main_usage_short(stderr, argv[0]);
 				exit(1);
 			}
 			if (popts->nr_progress_mod <= 0) {
-				main_usage(stderr, argv[0]);
+				fprintf(stderr,
+					"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
+					argv[0], argv[argi+1]);
+				main_usage_short(stderr, argv[0]);
 				exit(1);
 			}
 			argi += 2;
@@ -173,7 +180,10 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 			} else if (sscanf(argv[argi+1], "%u", &rand_seed) == 1) {
 				have_rand_seed = TRUE;
 			} else {
-				main_usage(stderr, argv[0]);
+				fprintf(stderr,
+					"%s: --seed argument must be a decimal or hexadecimal integer; got \"%s\".\n",
+					argv[0], argv[argi+1]);
+				main_usage_short(stderr, argv[0]);
 				exit(1);
 			}
 			argi += 2;
@@ -222,7 +232,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
 
 	if ((argc - argi) < 1) {
-		main_usage(stderr, argv[0]);
+		fprintf(stderr, "%s: no verb supplied.\n", argv[0]);
+		main_usage_short(stderr, argv[0]);
 		exit(1);
 	}
 	while (TRUE) {
@@ -278,7 +289,8 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 	popts->plrec_reader = lrec_reader_alloc(&popts->reader_opts);
 	if (popts->plrec_reader == NULL) {
-		main_usage(stderr, argv[0]);
+		fprintf(stderr, "%s: unrecognized input-file format \"%s\".\n", argv[0], popts->reader_opts.ifile_fmt);
+		main_usage_short(stderr, argv[0]);
 		exit(1);
 	}
 
@@ -461,10 +473,16 @@ static char* rebackslash(char* sep) {
 }
 
 // ----------------------------------------------------------------
-// The main_usage() function is split out into subroutines in support of the
+static void main_usage_short(FILE* fp, char* argv0) {
+	fprintf(stderr, "Please run \"%s --help\" for detailed usage information.\n", argv0);
+	exit(1);
+}
+
+// ----------------------------------------------------------------
+// The main_usage_long() function is split out into subroutines in support of the
 // manpage autogenerator.
 
-static void main_usage(FILE* o, char* argv0) {
+static void main_usage_long(FILE* o, char* argv0) {
 	main_usage_synopsis(o, argv0);
 	fprintf(o, "\n");
 
@@ -896,7 +914,8 @@ static void usage_unrecognized_verb(char* argv0, char* arg) {
 
 static void check_arg_count(char** argv, int argi, int argc, int n) {
 	if ((argc - argi) < n) {
-		main_usage(stderr, argv[0]);
+		fprintf(stderr, "%s: option \"%s\" missing argument(s).\n", argv[0], argv[argi]);
+		main_usage_short(stderr, argv[0]);
 		exit(1);
 	}
 }
@@ -1155,10 +1174,10 @@ static int handle_terminal_usage(char** argv, int argc, int argi) {
 		printf("Miller %s\n", VERSION_STRING);
 		return TRUE;
 	} else if (streq(argv[argi], "-h")) {
-		main_usage(stdout, argv[0]);
+		main_usage_long(stdout, argv[0]);
 		return TRUE;
 	} else if (streq(argv[argi], "--help")) {
-		main_usage(stdout, argv[0]);
+		main_usage_long(stdout, argv[0]);
 		return TRUE;
 	} else if (streq(argv[argi], "--print-type-arithmetic-info")) {
 		print_type_arithmetic_info(stdout, argv[0]);

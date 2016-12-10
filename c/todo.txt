@@ -348,6 +348,7 @@ MAJOR BECAUSE:
 DSL:
 * func & subr. acknowledge awk yet again.
 * triple-fors
+* single-fkeors
 * multiple filter/put -f with examples @ new mld section.
 * variadic min & max
 * unset for locals
