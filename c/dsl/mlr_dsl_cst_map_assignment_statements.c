@@ -443,10 +443,10 @@ static void handle_oosvar_assignment_from_xval(
 
 		if (!boxed_xval.xval.is_terminal || mv_is_present(&boxed_xval.xval.terminal_mlrval)) {
 			if (boxed_xval.is_ephemeral) {
-				mlhmmv_level_put_xvalue(pvars->poosvars->proot_level, plhskeys->phead, &boxed_xval.xval);
+				mlhmmv_level_put_xvalue(pvars->poosvars->root_xvalue.pnext_level, plhskeys->phead, &boxed_xval.xval);
 			} else {
 				mlhmmv_xvalue_t copy_xval = mlhmmv_xvalue_copy(&boxed_xval.xval);
-				mlhmmv_level_put_xvalue(pvars->poosvars->proot_level, plhskeys->phead, &copy_xval);
+				mlhmmv_level_put_xvalue(pvars->poosvars->root_xvalue.pnext_level, plhskeys->phead, &copy_xval);
 			}
 		}
 	}
@@ -517,13 +517,13 @@ static void handle_full_oosvar_assignment_from_xval(
 		mlhmmv_xvalue_free(&boxed_xval.xval);
 	} else {
 		if (boxed_xval.is_ephemeral) {
-			mlhmmv_level_free(pvars->poosvars->proot_level);
-			pvars->poosvars->proot_level = boxed_xval.xval.pnext_level;
+			mlhmmv_level_free(pvars->poosvars->root_xvalue.pnext_level);
+			pvars->poosvars->root_xvalue.pnext_level = boxed_xval.xval.pnext_level;
 		} else {
 			mlhmmv_xvalue_t copy = mlhmmv_xvalue_copy(&boxed_xval.xval);
 			mlhmmv_root_clear(pvars->poosvars);
 			for (mlhmmv_level_entry_t* pe = copy.pnext_level->phead; pe != NULL; pe = pe->pnext) {
-				mlhmmv_level_put_xvalue_singly_keyed(pvars->poosvars->proot_level, &pe->level_key, &pe->level_xvalue);
+				mlhmmv_level_put_xvalue_singly_keyed(pvars->poosvars->root_xvalue.pnext_level, &pe->level_key, &pe->level_xvalue);
 			}
 		}
 	}

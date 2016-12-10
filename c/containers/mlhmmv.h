@@ -159,7 +159,7 @@ void mlhmmv_level_print_stacked(
 
 // ----------------------------------------------------------------
 typedef struct _mlhmmv_root_t {
-	mlhmmv_level_t* proot_level;
+	mlhmmv_xvalue_t root_xvalue;
 } mlhmmv_root_t;
 
 mlhmmv_root_t* mlhmmv_root_alloc();

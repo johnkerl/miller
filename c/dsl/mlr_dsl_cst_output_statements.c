@@ -878,11 +878,14 @@ static void record_emitter_from_local_variable(
 				// in a parent map whose single key is the variable name.
 				mv_t name = mv_from_string(pstate->localvar_name, NO_FREE);
 
+				// xxx libify
 				mlhmmv_level_t* proot_level = mlhmmv_level_alloc();
 				mlhmmv_level_put_xvalue_singly_keyed(proot_level, &name, pmval);
 
 				mlhmmv_root_t map;
-				map.proot_level = proot_level;
+				map.root_xvalue.is_terminal = FALSE;
+				map.root_xvalue.terminal_mlrval = mv_absent();
+				map.root_xvalue.pnext_level = proot_level;
 				sllmv_prepend_no_free(pmvkeys, &name);
 				mlhmmv_root_partial_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
 					pstate->do_full_prefixing, oosvar_flatten_separator);
@@ -927,7 +930,9 @@ static void record_emitter_from_map_literal(
 			mlhmmv_level_put_xvalue_singly_keyed(proot_level, &name, &boxed_xval.xval);
 
 			mlhmmv_root_t map;
-			map.proot_level = proot_level;
+			map.root_xvalue.is_terminal = FALSE;
+			map.root_xvalue.terminal_mlrval = mv_absent();
+			map.root_xvalue.pnext_level = proot_level;
 			sllmv_prepend_no_free(pmvkeys, &name);
 			mlhmmv_root_partial_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
 				pstate->do_full_prefixing, oosvar_flatten_separator);

@@ -381,7 +381,7 @@ static boxed_xval_t rxval_evaluator_from_oosvar_keylist_func(void* pvstate, vari
 
 	if (all_non_null_or_error) {
 		int lookup_error = FALSE;
-		mlhmmv_xvalue_t* pxval = mlhmmv_level_look_up_and_ref_xvalue(pvars->poosvars->proot_level,
+		mlhmmv_xvalue_t* pxval = mlhmmv_level_look_up_and_ref_xvalue(pvars->poosvars->root_xvalue.pnext_level,
 			pmvkeys, &lookup_error);
 		sllmv_free(pmvkeys);
 		if (pxval != NULL) {
@@ -437,7 +437,7 @@ static boxed_xval_t rxval_evaluator_from_full_oosvar_func(void* pvstate, variabl
 		.is_ephemeral = FALSE,
 		.xval = (mlhmmv_xvalue_t) {
 			.is_terminal = FALSE,
-			.pnext_level = pvars->poosvars->proot_level,
+			.pnext_level = pvars->poosvars->root_xvalue.pnext_level,
 		},
 	};
 }
