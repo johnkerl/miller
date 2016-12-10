@@ -30,6 +30,8 @@ OTHER:
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
+! debug for-$* bug: need xvalue for oosvar-root
+
 ! splitnv/splitkv how/whether to type-infer the v's. splitnvx/splitkvx.
 
 ! for-over & emit of func retvals
