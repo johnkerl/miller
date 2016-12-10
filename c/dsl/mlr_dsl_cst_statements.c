@@ -160,21 +160,21 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		return alloc_for_oosvar(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
 	case MD_AST_NODE_TYPE_FOR_OOSVAR_KEY_ONLY:
-		return alloc_for_oosvar_key_only(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
+		return alloc_for_map_key_only(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
 
 	case MD_AST_NODE_TYPE_FOR_LOCAL_MAP:
 		return alloc_for_local_map(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
 	case MD_AST_NODE_TYPE_FOR_LOCAL_MAP_KEY_ONLY:
-		return alloc_for_local_map_key_only(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
+		return alloc_for_map_key_only(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
 
 	case MD_AST_NODE_TYPE_FOR_MAP_LITERAL:
 		return alloc_for_map_literal(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
 	case MD_AST_NODE_TYPE_FOR_MAP_LITERAL_KEY_ONLY:
-		return alloc_for_map_literal_key_only(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
+		return alloc_for_map_key_only(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
 
 	case MD_AST_NODE_TYPE_TRIPLE_FOR:
