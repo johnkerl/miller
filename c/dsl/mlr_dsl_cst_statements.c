@@ -166,8 +166,6 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		break;
 
 	case MD_AST_NODE_TYPE_FOR_LOCAL_MAP:
-		// xxx temp
-		//return alloc_for_local_map(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		return alloc_for_map(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
 	case MD_AST_NODE_TYPE_FOR_LOCAL_MAP_KEY_ONLY:
@@ -175,8 +173,6 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		break;
 
 	case MD_AST_NODE_TYPE_FOR_MAP_LITERAL:
-		// xxx temp
-		//return alloc_for_map_literal(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		return alloc_for_map(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
 	case MD_AST_NODE_TYPE_FOR_MAP_LITERAL_KEY_ONLY:
