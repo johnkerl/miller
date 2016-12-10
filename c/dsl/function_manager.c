@@ -278,11 +278,11 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_TYPING, "ismap",         1,0, "True if argument is a map."},
 	{FUNC_CLASS_TYPING, "isnonemptymap", 1,0, "True if argument is a map which is non-empty."},
 	{FUNC_CLASS_TYPING, "isnotempty",    1,0, "False if field is present in input with empty value, false otherwise"},
+	{FUNC_CLASS_TYPING, "isnotmap",      1,0, "True if argument is not a map."},
 	{FUNC_CLASS_TYPING, "isnotnull",     1,0, "False if argument is null (empty or absent), true otherwise."},
 	{FUNC_CLASS_TYPING, "isnull",        1,0, "True if argument is null (empty or absent), false otherwise."},
 	{FUNC_CLASS_TYPING, "isnumeric",     1,0, "True if field is present with value inferred to be int or float"},
 	{FUNC_CLASS_TYPING, "ispresent",     1,0, "True if field is present in input, false otherwise."},
-	{FUNC_CLASS_TYPING, "isscalar",      1,0, "True if argument is not a map."},
 	{FUNC_CLASS_TYPING, "isstring",      1,0, "True if field is present with string (including empty-string) value"},
 
 	{FUNC_CLASS_TYPING, "assert_notnull",   1,0, "Returns argument if non-null (non-empty and non-absent), else throws an error."},
@@ -1215,8 +1215,8 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm,
 
 	if (streq(fnnm, "ismap")) {
 		return rxval_evaluator_alloc_from_x_x_func(b_x_ismap_xfunc, parg1);
-	} else if (streq(fnnm, "isscalar")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isscalar_xfunc, parg1);
+	} else if (streq(fnnm, "isnotmap")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isnotmap_xfunc, parg1);
 
 	} else if (streq(fnnm, "isemptymap")) {
 		return rxval_evaluator_alloc_from_x_x_func(b_x_isemptymap_xfunc, parg1);

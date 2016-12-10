@@ -283,7 +283,7 @@ OPTIONS
 	urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec
 	hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime
 	isabsent isbool isboolean isempty isemptymap isfloat isint ismap isnonemptymap
-	isnotempty isnotnull isnull isnumeric ispresent isscalar isstring
+	isnotempty isnotmap isnotnull isnull isnumeric ispresent isstring
 	assert_notnull assert_present assert_empty assert_notempty assert_numeric
 	assert_int assert_float assert_bool assert_boolean assert_string boolean float
 	fmtnum hexfmt int string typeof depth haskey joink joinkv joinv leafcount
@@ -1552,6 +1552,9 @@ FUNCTIONS FOR FILTER/PUT
    isnotempty
        (class=typing #args=1): False if field is present in input with empty value, false otherwise
 
+   isnotmap
+       (class=typing #args=1): True if argument is not a map.
+
    isnotnull
        (class=typing #args=1): False if argument is null (empty or absent), true otherwise.
 
@@ -1563,9 +1566,6 @@ FUNCTIONS FOR FILTER/PUT
 
    ispresent
        (class=typing #args=1): True if field is present in input, false otherwise.
-
-   isscalar
-       (class=typing #args=1): True if argument is not a map.
 
    isstring
        (class=typing #args=1): True if field is present with string (including empty-string) value

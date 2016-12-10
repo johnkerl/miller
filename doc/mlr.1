@@ -183,7 +183,7 @@ output separator to the given value.
  urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec
  hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime
  isabsent isbool isboolean isempty isemptymap isfloat isint ismap isnonemptymap
- isnotempty isnotnull isnull isnumeric ispresent isscalar isstring
+ isnotempty isnotmap isnotnull isnull isnumeric ispresent isstring
  assert_notnull assert_present assert_empty assert_notempty assert_numeric
  assert_int assert_float assert_bool assert_boolean assert_string boolean float
  fmtnum hexfmt int string typeof depth haskey joink joinkv joinv leafcount
@@ -2340,6 +2340,15 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
+.SS "isnotmap"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=typing #args=1): True if argument is not a map.
+.fi
+.if n \{\
+.RE
 .SS "isnotnull"
 .if n \{\
 .RS 0
@@ -2373,15 +2382,6 @@ e.g. 1440768801.748936.
 .\}
 .nf
 (class=typing #args=1): True if field is present in input, false otherwise.
-.fi
-.if n \{\
-.RE
-.SS "isscalar"
-.if n \{\
-.RS 0
-.\}
-.nf
-(class=typing #args=1): True if argument is not a map.
 .fi
 .if n \{\
 .RE
