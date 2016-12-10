@@ -214,6 +214,10 @@ HYGIENE FOR 5.0.0:
 ================================================================
 DOC FOR 5.0.0:
 
+EDIT THOROUGHLY:
+* ref-not-dsl and ref-dsl: make sure the right things are in the right places
+* check for anachronisms
+
 TYPE-CHECKING:
 * assert_X() functions
 * doc unset of localvars along w/ unset elsewheredoc
