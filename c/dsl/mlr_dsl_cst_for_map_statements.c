@@ -1115,6 +1115,7 @@ typedef struct _for_map_key_only_state_t {
 	int   k_type_mask;
 
     sllv_t* ptarget_keylist_evaluators;
+	rxval_evaluator_t* ptarget_xevaluator;
 } for_map_key_only_state_t;
 
 static mlr_dsl_cst_statement_handler_t handle_for_map_key_only;
@@ -1131,6 +1132,7 @@ mlr_dsl_cst_statement_t* alloc_for_map_key_only(mlr_dsl_cst_t* pcst, mlr_dsl_ast
 	pstate->k_type_mask                = 0;
 
 	pstate->ptarget_keylist_evaluators = NULL;
+	pstate->ptarget_xevaluator         = NULL;
 
 	// Left child node is single bound variable
 	// Middle child node is keylist for basepoint in the oosvar mlhmmv.
@@ -1145,6 +1147,8 @@ mlr_dsl_cst_statement_t* alloc_for_map_key_only(mlr_dsl_cst_t* pcst, mlr_dsl_ast
 	pstate->k_type_mask = mlr_dsl_ast_node_type_to_type_mask(pleft->type);
 
 	pstate->ptarget_keylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+		pmiddle, pcst->pfmgr, type_inferencing, context_flags);
+	pstate->ptarget_xevaluator = rxval_evaluator_alloc_from_ast(
 		pmiddle, pcst->pfmgr, type_inferencing, context_flags);
 
 	MLR_INTERNAL_CODING_ERROR_IF(pnode->subframe_var_count == MD_UNUSED_INDEX);
@@ -1174,6 +1178,8 @@ static void free_for_map_key_only(mlr_dsl_cst_statement_t* pstatement) {
 		pev->pfree_func(pev);
 	}
 	sllv_free(pstate->ptarget_keylist_evaluators);
+
+	pstate->ptarget_xevaluator->pfree_func(pstate->ptarget_xevaluator);
 
 	free(pstate);
 }
