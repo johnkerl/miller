@@ -381,8 +381,9 @@ static boxed_xval_t rxval_evaluator_from_oosvar_keylist_func(void* pvstate, vari
 
 	if (all_non_null_or_error) {
 		int lookup_error = FALSE;
-		mlhmmv_xvalue_t* pxval = mlhmmv_level_look_up_and_ref_xvalue(pvars->poosvars->root_xvalue.pnext_level,
-			pmvkeys, &lookup_error);
+		mlhmmv_xvalue_t* pxval = pmvkeys->phead == NULL
+			? &pvars->poosvars->root_xvalue
+			: mlhmmv_level_look_up_and_ref_xvalue(pvars->poosvars->root_xvalue.pnext_level, pmvkeys, &lookup_error);
 		sllmv_free(pmvkeys);
 		if (pxval != NULL) {
 			return (boxed_xval_t) {
