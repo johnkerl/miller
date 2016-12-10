@@ -366,11 +366,10 @@ mlr_dsl_cst_statement_allocator_t alloc_for_srec_key_only;
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // dsl/mlr_dsl_cst_for_map_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_for_map;
+mlr_dsl_cst_statement_allocator_t alloc_for_oosvar; // xxx temp
+mlr_dsl_cst_statement_allocator_t alloc_for_local_map; // xxx temp
+mlr_dsl_cst_statement_allocator_t alloc_for_map_literal; // xxx temp
 mlr_dsl_cst_statement_allocator_t alloc_for_map_key_only;
-
-mlr_dsl_cst_statement_allocator_t alloc_for_oosvar; // xxx rm
-mlr_dsl_cst_statement_allocator_t alloc_for_local_map; // xxx rm
-mlr_dsl_cst_statement_allocator_t alloc_for_map_literal; // xxx rm
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 // dsl/mlr_dsl_cst_triple_for_statements.c

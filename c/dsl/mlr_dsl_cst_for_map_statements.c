@@ -682,7 +682,7 @@ static void handle_for_map_aux(
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs,
-	mlhmmv_xvalue_t*          psubmap,
+	mlhmmv_xvalue_t*         psubmap,
 	char**                   prest_for_k_variable_names,
 	int*                     prest_for_k_frame_relative_indices,
 	int*                     prest_for_k_type_masks,
@@ -699,6 +699,7 @@ static void handle_for_map_aux(
 			for (mlhmmv_level_entry_t* pe = psubmap->pnext_level->phead; pe != NULL; pe = pe->pnext) {
 				// Bind the k-name to the entry-key mlrval:
 				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+				// xxx printf("K %s\n", mv_alloc_format_val(&pe->level_key));
 				local_stack_frame_define_terminal(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
 					prest_for_k_type_masks[0], mv_copy(&pe->level_key));
 				// Recurse into the next-level submap:
@@ -723,6 +724,7 @@ static void handle_for_map_aux(
 		} else {
 			// Bind the v-name to the terminal mlrval:
 			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+			// xxx printf("V %s\n", mv_alloc_format_val(&psubmap->terminal_mlrval));
 			local_stack_frame_define_terminal(pframe, pstate->v_variable_name, pstate->v_frame_relative_index,
 				pstate->v_type_mask, mv_copy(&psubmap->terminal_mlrval));
 			// Execute the loop-body statements:

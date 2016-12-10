@@ -523,6 +523,7 @@ mlhmmv_xvalue_t* mlhmmv_level_look_up_and_ref_xvalue(mlhmmv_level_t* pstart_leve
 	sllmve_t* prest_keys = pmvkeys->phead;
 	if (prest_keys == NULL) {
 		*perror = MLHMMV_ERROR_KEYLIST_TOO_SHALLOW;
+		return NULL;
 	}
 	mlhmmv_level_t* plevel = pstart_level;
 	if (plevel == NULL) {
