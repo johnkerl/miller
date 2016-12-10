@@ -852,7 +852,7 @@ static void handle_for_map_literal_key_only(
 	loop_stack_push(pvars->ploop_stack);
 
 	for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
-		// Bind the v-name to the terminal mlrval:
+		// Bind the k-name to the terminal mlrval:
 		local_stack_frame_define_terminal(pframe,
 			pstate->k_variable_name, pstate->k_frame_relative_index,
 			pstate->k_type_mask, mv_copy(pe->pvvalue));
@@ -1003,7 +1003,7 @@ static void free_for_map(mlr_dsl_cst_statement_t* pstatement) {
 }
 
 // ----------------------------------------------------------------
-static void handle_for_map(
+static void handle_for_map( // xxx under construction to consolidate the above typedefs
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
@@ -1185,33 +1185,39 @@ static void free_for_map_key_only(mlr_dsl_cst_statement_t* pstatement) {
 }
 
 // ----------------------------------------------------------------
-static void handle_for_map_key_only(
+static void handle_for_map_key_only( // xxx under construction to consolidate the above typedefs
 	mlr_dsl_cst_statement_t* pstatement,
 	variables_t*             pvars,
 	cst_outputs_t*           pcst_outputs)
 {
 	for_map_key_only_state_t* pstate = pstatement->pvstate;
+	rxval_evaluator_t* ptarget_xevaluator = pstate->ptarget_xevaluator;
 
 	// Evaluate the keylist: e.g. in 'for (k in @a[$3][x]) { ... }', find the values of $3
 	// and x for the current record and stack frame. The keylist bindings are outside the scope
 	// of the for-loop, while the k is bound within the for-loop.
+	boxed_xval_t boxed_xval = ptarget_xevaluator->pprocess_func(ptarget_xevaluator->pvstate, pvars);
 
-	int keys_all_non_null_or_error = FALSE;
-	sllmv_t* ptarget_keylist = evaluate_list(pstate->ptarget_keylist_evaluators, pvars,
-		&keys_all_non_null_or_error);
-	if (keys_all_non_null_or_error) {
-		// Locate the submap indexed by the keylist and copy its keys. E.g. in 'for (k1 in @a[3][$4]) { ... }', the
-		// submap is indexed by ["a", 3, $4].  Copy it for the very likely case that it is being updated inside the
-		// for-loop.
+	if (!boxed_xval.xval.is_terminal) { // is a map
+
+		// Copy the map for the very likely case that it is being updated inside the for-loop.
+		// But ephemerals (map-literals, function return values) aren't named and so can't
+		// be modified and so don't need to be copied.
+		mlhmmv_xvalue_t* pmap = &boxed_xval.xval;
+		mlhmmv_xvalue_t  copy;
+		if (!boxed_xval.is_ephemeral) {
+			copy = mlhmmv_xvalue_copy(&boxed_xval.xval);
+			pmap = &copy;
+		}
 
 		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 		local_stack_subframe_enter(pframe, pstatement->pblock->subframe_var_count);
 		loop_stack_push(pvars->ploop_stack);
 
-		sllv_t* pkeys = mlhmmv_root_copy_keys_from_submap(pvars->poosvars, ptarget_keylist);
+		sllv_t* pkeys = mlhmmv_xvalue_copy_keys_nonindexed(pmap);
 
 		for (sllve_t* pe = pkeys->phead; pe != NULL; pe = pe->pnext) {
-			// Bind the v-name to the terminal mlrval:
+			// Bind the k-name to the current key:
 			local_stack_frame_define_terminal(pframe,
 				pstate->k_variable_name, pstate->k_frame_relative_index,
 				pstate->k_type_mask, mv_copy(pe->pvvalue));
@@ -1232,8 +1238,9 @@ static void handle_for_map_key_only(
 
 		loop_stack_pop(pvars->ploop_stack);
 		local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
-
-		sllv_free(pkeys);
 	}
-	sllmv_free(ptarget_keylist);
+
+	if (boxed_xval.is_ephemeral) {
+		mlhmmv_xvalue_free(&boxed_xval.xval);
+	}
 }
