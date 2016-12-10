@@ -435,10 +435,7 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_oosvar_keylist(
 static boxed_xval_t rxval_evaluator_from_full_oosvar_func(void* pvstate, variables_t* pvars) {
 	return (boxed_xval_t) {
 		.is_ephemeral = FALSE,
-		.xval = (mlhmmv_xvalue_t) {
-			.is_terminal = FALSE,
-			.pnext_level = pvars->poosvars->root_xvalue.pnext_level,
-		},
+		.xval = pvars->poosvars->root_xvalue,
 	};
 }
 
