@@ -177,6 +177,13 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 		return alloc_for_map_key_only(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
 
+	case MD_AST_NODE_TYPE_FOR_FUNC_RETVAL:
+		return alloc_for_map(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
+		break;
+	case MD_AST_NODE_TYPE_FOR_FUNC_RETVAL_KEY_ONLY:
+		return alloc_for_map_key_only(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
+		break;
+
 	case MD_AST_NODE_TYPE_TRIPLE_FOR:
 		return alloc_triple_for(pcst, pnode, type_inferencing, context_flags | IN_BREAKABLE);
 		break;
