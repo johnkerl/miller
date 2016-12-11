@@ -3204,11 +3204,21 @@ mapsum (class=maps variadic): With 0 args, returns empty map. With &gt;= 1 arg,
 returns a map with key-value pairs from all arguments. Rightmost collisions win,
 e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'.
 
-splitkv (class=maps #args=3): Splits string by separators into map. E.g.
-'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
+splitkv (class=maps #args=3): Splits string by separators into map with type
+inference. E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c"
+: 3}'.
+
+splitkvx (class=maps #args=3): Splits string by separators into map without type
+inference (keys and values are strings). E.g. 'splitkv("a=1,b=2,c=3", "=", ",")'
+gives '{"a" : "1", "b" : "2", "c" : "3"}'.
 
 splitnv (class=maps #args=2): Splits string by separator into integer-indexed
-map. E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
+map with type inference. E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b",
+3 : "c"}'.
+
+splitnvx (class=maps #args=2): Splits string by separator into integer-indexed
+map without type inference (values are strings). E.g. 'splitnv("4,5,6" , ",")'
+gives '{1 : "4", 2 : "5", 3 : "6"}'.
 
 To set the seed for urand, you may specify decimal or hexadecimal 32-bit numbers
 of the form "mlr --seed 123456789" or "mlr --seed 0xcafefeed".  Miller's

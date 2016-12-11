@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-12-10
+.\"      Date: 2016-12-11
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-12-10" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-12-11" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -187,7 +187,7 @@ output separator to the given value.
  assert_notnull assert_present assert_empty assert_notempty assert_numeric
  assert_int assert_float assert_bool assert_boolean assert_string boolean float
  fmtnum hexfmt int string typeof depth haskey joink joinkv joinv leafcount
- length mapdiff mapsum splitkv splitnv
+ length mapdiff mapsum splitkv splitkvx splitnv splitnvx
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -2635,7 +2635,16 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=3): Splits string by separators into map. E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
+(class=maps #args=3): Splits string by separators into map with type inference. E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
+.fi
+.if n \{\
+.RE
+.SS "splitkvx"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=maps #args=3): Splits string by separators into map without type inference (keys and values are strings). E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : "1", "b" : "2", "c" : "3"}'.
 .fi
 .if n \{\
 .RE
@@ -2644,7 +2653,16 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=2): Splits string by separator into integer-indexed map. E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
+(class=maps #args=2): Splits string by separator into integer-indexed map with type inference. E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
+.fi
+.if n \{\
+.RE
+.SS "splitnvx"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=maps #args=2): Splits string by separator into integer-indexed map without type inference (values are strings). E.g. 'splitnv("4,5,6" , ",")' gives '{1 : "4", 2 : "5", 3 : "6"}'.
 .fi
 .if n \{\
 .RE

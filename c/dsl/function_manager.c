@@ -317,8 +317,10 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_MAPS, "length",        1,0, "Counts number of top-level entries in hashmap. Scalars have length 1."},
 	{FUNC_CLASS_MAPS, "mapdiff",       0,1, "With 0 args, returns empty map. With 1 arg, returns copy of arg. With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed."},
 	{FUNC_CLASS_MAPS, "mapsum",        0,1, "With 0 args, returns empty map. With >= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'."},
-	{FUNC_CLASS_MAPS, "splitkv",       3,0, "Splits string by separators into map. E.g. 'splitkv(\"a=1,b=2,c=3\", \"=\", \",\")' gives '{\"a\" : 1, \"b\" : 2, \"c\" : 3}'."},
-	{FUNC_CLASS_MAPS, "splitnv",       2,0, "Splits string by separator into integer-indexed map. E.g. 'splitnv(\"a,b,c\" , \",\")' gives '{1 : \"a\", 2 : \"b\", 3 : \"c\"}'."},
+	{FUNC_CLASS_MAPS, "splitkv",       3,0, "Splits string by separators into map with type inference. E.g. 'splitkv(\"a=1,b=2,c=3\", \"=\", \",\")' gives '{\"a\" : 1, \"b\" : 2, \"c\" : 3}'."},
+	{FUNC_CLASS_MAPS, "splitkvx",      3,0, "Splits string by separators into map without type inference (keys and values are strings). E.g. 'splitkv(\"a=1,b=2,c=3\", \"=\", \",\")' gives '{\"a\" : \"1\", \"b\" : \"2\", \"c\" : \"3\"}'."},
+	{FUNC_CLASS_MAPS, "splitnv",       2,0, "Splits string by separator into integer-indexed map with type inference. E.g. 'splitnv(\"a,b,c\" , \",\")' gives '{1 : \"a\", 2 : \"b\", 3 : \"c\"}'."},
+	{FUNC_CLASS_MAPS, "splitnvx",      2,0, "Splits string by separator into integer-indexed map without type inference (values are strings). E.g. 'splitnv(\"4,5,6\" , \",\")' gives '{1 : \"4\", 2 : \"5\", 3 : \"6\"}'."},
 
 	{0, NULL, -1 , -1, NULL}, // table terminator
 };
@@ -1269,6 +1271,8 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_binary_func_name(char* fnnm
 		return rxval_evaluator_alloc_from_x_mx_func(b_xx_haskey_xfunc, parg1, parg2);
 	} else if (streq(fnnm, "splitnv")) {
 		return rxval_evaluator_alloc_from_x_ss_func(m_ss_splitnv_xfunc, parg1, parg2);
+	} else if (streq(fnnm, "splitnvx")) {
+		return rxval_evaluator_alloc_from_x_ss_func(m_ss_splitnvx_xfunc, parg1, parg2);
 	} else if (streq(fnnm, "joink")) {
 		return rxval_evaluator_alloc_from_x_ms_func(s_ms_joink_xfunc, parg1, parg2);
 	} else if (streq(fnnm, "joinv")) {
@@ -1286,6 +1290,8 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_ternary_func_name(char* fnn
 		return rxval_evaluator_alloc_from_x_mss_func(s_mss_joinkv_xfunc, parg1, parg2, parg3);
 	} else if (streq(fnnm, "splitkv")) {
 		return rxval_evaluator_alloc_from_x_sss_func(m_sss_splitkv_xfunc, parg1, parg2, parg3);
+	} else if (streq(fnnm, "splitkvx")) {
+		return rxval_evaluator_alloc_from_x_sss_func(m_sss_splitkvx_xfunc, parg1, parg2, parg3);
 	} else {
 		return NULL;
 	}

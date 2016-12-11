@@ -186,7 +186,16 @@ boxed_xval_t m_ss_splitnv_xfunc(
 	boxed_xval_t* pstringval,
 	boxed_xval_t* psepval);
 
+boxed_xval_t m_ss_splitnvx_xfunc(
+	boxed_xval_t* pstringval,
+	boxed_xval_t* psepval);
+
 boxed_xval_t m_sss_splitkv_xfunc(
+	boxed_xval_t* pstringval,
+	boxed_xval_t* ppairsepval,
+	boxed_xval_t* plistsepval);
+
+boxed_xval_t m_sss_splitkvx_xfunc(
 	boxed_xval_t* pstringval,
 	boxed_xval_t* ppairsepval,
 	boxed_xval_t* plistsepval);
