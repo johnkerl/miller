@@ -43,6 +43,9 @@ MAPVAR CHECKLIST:
 * death knell for mv-only evaluators: this is a syntax error:
   mlr put -q 'o = haskey(NR==4 ? {"a": NF} : {"b": NF}, "a"); print "NR=".NR.",haskeya=".o'
 
+* gross: $*=splitkv(...) results in string keys always. strengthen the typed overlay for filter/put?
+  lhmsmv -> mlhmmv?? need to be careful with int-key gets ... char* field_name in many places ...
+
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
   - copy/ref of keys vs. values in mlhmmv, local_stack, and callees -- ?!?
