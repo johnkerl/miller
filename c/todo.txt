@@ -218,6 +218,7 @@ DOC FOR 5.0.0:
 EDIT THOROUGHLY:
 * ref-not-dsl and ref-dsl: make sure the right things are in the right places
 * check for anachronisms
+! link-check all, especially w/ ref-dsl split x 3.
 
 TYPE-CHECKING:
 * assert_X() functions
@@ -247,6 +248,8 @@ COOK:
 * for-records-counts example
 * ./se/ examples
 * stdlib.mlr examples
+* seqgen vs.
+  mlr -n put 'begin{for (int i = 0; i < 10; i += 1) {emit {"a":i,"b":i**2} }}' then sort -nr a
 
 DEBUGGING:
 * disclaimer about the Miller DSL having the usual plusses and minuses of a dynamically typed language:
