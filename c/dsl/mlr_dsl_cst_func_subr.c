@@ -207,6 +207,12 @@ static boxed_xval_t cst_udf_process_callback(void* pvstate, int arity, boxed_xva
 		}
 	}
 
+	if (!pvars->return_state.returned) {
+		if (pstate->return_value_type_mask != TYPE_MASK_ANY) {
+			cst_udf_type_check_return_value(pstate, &retval);
+		}
+	}
+
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Pop stack
 	local_stack_subframe_exit(pframe, ptop_level_block->pblock->subframe_var_count);

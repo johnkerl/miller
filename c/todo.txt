@@ -27,6 +27,8 @@ OTHER:
 
 ! cat -n -g
 
+* poki-run no '$ ' for comment lines
+
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
@@ -36,9 +38,13 @@ MAPVAR CHECKLIST:
 
 ! this should throw an error: mlr --from s put 'int a=1;var b=a[2]'
 
+! 'Local variables' 'Notes:' split into surprising and unsurprising
+
 ? on-line help to separate web page, as w/ manpage output?
 
 * emittable/dumpable/etc md_rhs -> more specific fcn-call.
+
+* fall-through absent-retval from UDF with typedecl retval: make sure this abends
 
 * modify isx()-predicate-doc @ mlr -f to acknowledge maps. also, UT.
 
@@ -47,6 +53,8 @@ MAPVAR CHECKLIST:
 
 * gross: $*=splitkv(...) results in string keys always. strengthen the typed overlay for filter/put?
   lhmsmv -> mlhmmv?? need to be careful with int-key gets ... char* field_name in many places ...
+
+! sortk sortv sortf
 
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics

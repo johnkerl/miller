@@ -218,13 +218,13 @@ are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
 functions/subroutines, <b>variables bound within for-loops</b>, and
 <b>locals</b> defined within control blocks. They may be untyped using
 <tt>var</tt>, or typed using <tt>num</tt>, <tt>int</tt>, <tt>float</tt>,
-<tt>str</tt>, and <tt>bool</tt>.
+<tt>str</tt>, <tt>bool</tt>, and <tt>map</tt>.
 
 <p/>For example:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/local-example-1.sh)HERE
 
-<p/>Notes:
+<p/>Things which are completely unsurprising, resembling many other languages:
 
 <ul>
 
@@ -236,19 +236,9 @@ if there is a parameter named <tt>a</tt> then you can reassign the value of
 <tt>var a=1; var a=2</tt> is an error but
 <tt>var a=1;  a=2</tt> is OK.
 
-<li/> Type declarations using <tt>var</tt>, or typed using <tt>num</tt>,
-<tt>int</tt>, <tt>float</tt>, <tt>str</tt>, and <tt>bool</tt> are necessary to
-declare local variables.  Function arguments and variables bound in for-loops
-over stream records and out-of-stream variables are <i>implicitly</i> declared
-using <tt>var</tt>. (Some examples are shown below.)
-
-<li/> Type-checking is done at assignment time. For example, <tt>float f =
-0</tt> is an error (since <tt>0</tt> is an integer), as is <tt>float f = 0.0; f
-= 1</tt>. For this reason I prefer to use <tt>num</tt> over <tt>float</tt>
-since <tt>num</tt> encompasses integer and floating-point values.
-
 <li/> All argument-passing is positional rather than by name; arguments are
-passed by value, not by reference.
+passed by value, not by reference. (This is also true for map-valued variables:
+they are not, and cannot be, passed by reference)
 
 <li/> You can define locals (using <tt>var</tt>, <tt>num</tt>, etc.) at any
 scope (if-statements, else-statements, while-loops, for-loops, or the top-level
@@ -259,11 +249,30 @@ scope, then a new variable is created with the narrower scope.
 <li/> If you assign to a local variable for the first time in a scope without
 declaring it as <tt>var</tt>, <tt>num</tt>, etc. then: if it exists in an outer
 scope, that outer-scope variable will be updated; if not, it will be defined in
-the current scope as if <tt>var</tt> had been used. I recommend always
-declaring variables explicitly to make the intended scoping clear.
+the current scope as if <tt>var</tt> had been used. (See also <a
+href="#Type-checking">here</a> for an example.) I recommend always declaring
+variables explicitly to make the intended scoping clear.
 
 <li/> Functions and subroutines never have access to locals from their callee
 (unless passed by value as arguments).
+
+</ul>
+
+<p/>Things which are perhaps surprising compared to other languages:
+
+<ul>
+
+<li/> Type declarations using <tt>var</tt>, or typed using <tt>num</tt>,
+<tt>int</tt>, <tt>float</tt>, <tt>str</tt>, and <tt>bool</tt> are necessary to
+declare local variables.  Function arguments and variables bound in for-loops
+over stream records and out-of-stream variables are <i>implicitly</i> declared
+using <tt>var</tt>. (Some examples are shown below.)
+
+<li/> Type-checking is done at assignment time. For example, <tt>float f =
+0</tt> is an error (since <tt>0</tt> is an integer), as is <tt>float f = 0.0; f
+= 1</tt>. For this reason I prefer to use <tt>num</tt> over <tt>float</tt> in
+most contexts since <tt>num</tt> encompasses integer and floating-point values.
+More information about type-checking is <a href="#Type-checking">here</a>.
 
 <li/> Bound variables in for-loops over stream records and out-of-stream
 variables are implicitly local to that block. E.g. in
@@ -276,8 +285,11 @@ end of the loop.
 
 <li/> For C-style triple-for loops, if a for-loop variable is defined using
 <tt>var</tt>, <tt>int</tt>, etc. then it is scoped to that for-loop. E.g.
-<tt>for (i = 0; i < 10; i += 1) { ... }</tt> and
-<tt>for (int i = 0; i < 10; i += 1) { ... }</tt>.
+<tt>for (i = 0; i < 10; i += 1) { ... }</tt> and <tt>for (int i = 0; i < 10; i
++= 1) { ... }</tt>. (This is unsurprising.). If there is no typedecl and an
+outer-scope variable of that name exists, then it is used. (This is also
+unsurprising.) But of there is no outer-scope variable of that name then the
+variable is scoped to the for-loop only.
 
 </ul>
 
@@ -307,8 +319,6 @@ misspellings in your DSL code or unexpected irregularities in your input data.
 <!-- ================================================================ -->
 <h3>Type-declarations for local variables, function parameter, and function return values</h3>
 
-<p/> xxx under construction
-
 <p/> Local variables can be defined either untyped as in <tt>x = 1</tt>, or
 typed as in <tt>int x = 1</tt>. Types include <b>var</b> (explicitly untyped),
 <b>int</b>, <b>float</b>, <b>num</b> (int or float), <b>str</b>, <b>bool</b>,
@@ -317,14 +327,29 @@ values are assigned to variables: whether at the initial value assignment as in
 <tt>int x = 1</tt> or in any subsequent assignments to the same variable
 farther down in the scope.
 
-<p/> xxx note ablut num vs. int/float and why (float x = 0 for example).
+<p/> The reason for <tt>num</tt> is that <tt>int</tt> and <tt>float</tt> typedecls are very precise:
 
-<p/> The <tt>var</tt> type declaration indicates no type restrictions, e.g. <tt>var x = 1</tt> has the
-same type restrictions on <tt>x</tt> as <tt>x = 1</tt>. The difference is in intentional shadowing:
-if you have <tt>x = 1</tt> in outer scope and <tt>x = 2</tt> in inner scope (e.g. within a for-loop
-or an if-statement) then outer-scope <tt>x</tt> has value 2 after the second assignment.
-But if you have <tt>var x = 2</tt> in the inner scope, then you are declaring a variable
-scoped to the inner block.) xxx include an example there.
+<div class="pokipanel">
+<pre>
+  float a = 0;   # Runtime error since 0 is int not float
+  int   b = 1.0; # Runtime error since 1.0 is float not int
+  num   c = 0;   # OK
+  num   d = 1.0; # OK
+</pre>
+</div>
+
+<p/> A suggestion is to use <tt>num</tt> for general use when you want numeric
+content, and use <tt>int</tt> when you genuinely want integer-only values, e.g.
+in loop indices or map keys (since Miller map keys can only be strings or
+ints).
+
+<p/> The <tt>var</tt> type declaration indicates no type restrictions, e.g.
+<tt>var x = 1</tt> has the same type restrictions on <tt>x</tt> as <tt>x =
+1</tt>. The difference is in intentional shadowing: if you have <tt>x = 1</tt>
+in outer scope and <tt>x = 2</tt> in inner scope (e.g. within a for-loop or an
+if-statement) then outer-scope <tt>x</tt> has value 2 after the second
+assignment.  But if you have <tt>var x = 2</tt> in the inner scope, then you
+are declaring a variable scoped to the inner block.) For example:
 
 <div class="pokipanel">
 <pre>
@@ -346,11 +371,48 @@ scoped to the inner block.) xxx include an example there.
 </div>
 
 <p/> Likewise function arguments can optionally be typed, with type enforced
-when the function is called: <tt>func g(int i)</tt>. xxx include an example there
+when the function is called:
+
+<div class="pokipanel">
+<pre>
+  func f(map m, int i) {
+    ...
+  }
+  $a = f({1:2, 3:4}, 5);     # OK
+  $b = f({1:2, 3:4}, "abc"); # Runtime error
+  $c = f({1:2, 3:4}, $x);    # Runtime error for records with non-integer field named x
+  if (NR == 4) {
+    var x = 2; # Defines a new inner-scope x with value 2
+  }
+  print x;     # Value of this x is still 1
+</pre>
+</div>
 
 <p/> Thirdly, function return values can be type-checked at the point of
-<tt>return</tt> using <tt>:</tt> and a typedecl after the parameter list: e.g.
-<tt>func f(num x, num y): num { return x**2 + y**2 }</tt>.
+<tt>return</tt> using <tt>:</tt> and a typedecl after the parameter list:
+
+<div class="pokipanel">
+<pre>
+  func f(map m, int i): bool {
+    ...
+    ...
+    if (...) {
+      return "false"; # Runtime error if this branch is taken
+    }
+    ...
+    ...
+    if (...) {
+      return retval; # Runtime error if this function doesn't have an in-scope
+                     # boolean-valued variable named retval
+    }
+    ...
+    ...
+    # In Miller if your functions don't explicitly return a value, they return absent-null.
+    # So it would also be a runtime error on reaching the end of this function without
+    # an explicit return statement.
+  }
+</pre>
+</div>
 
 <!-- ================================================================ -->
 <h3>Type-assertion expressions</h3>
@@ -359,6 +421,7 @@ when the function is called: <tt>func g(int i)</tt>. xxx include an example ther
 <tt>assert...</tt> which can be used to for optional type-checking within
 expressions: <tt>$o = assert_num($x)**2</tt> means that a numeric value will be
 squared and stored, while a non-numeric value will result in a fatal error.
+xxx need full list, and examples here
 
 <!-- ================================================================ -->
 <h2>Out-of-stream variables</h2>
