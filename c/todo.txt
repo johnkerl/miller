@@ -61,6 +61,9 @@ MAPVAR CHECKLIST:
   - mapsum-in-mlr UT cases, and valgrind
   - strtok -> strsep throughout
 
+? compile-time checks between locals, fcnargs, fcnretvals -- if unsatisfiable by typing (irrespective
+  of later stream data) then throw at compile time.
+
 * print mapvar; dump scalarvar
 
 * absent-null map-keys -- do what? document.
