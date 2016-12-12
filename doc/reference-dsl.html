@@ -152,6 +152,9 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables">Built-in variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names">Field names</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Local_variables">Local variables</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-checking">Type-checking</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-declarations_for_local_variables,_function_parameter,_and_function_return_values">Type-declarations for local variables, function parameter, and function return values</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-assertion_expressions">Type-assertion expressions</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables">Out-of-stream variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables">Indexed out-of-stream variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Aggregate_variable_assignments">Aggregate variable assignments</a><br/>
@@ -870,6 +873,75 @@ print "outer j =" . j;                            # j is undefined in this scope
 </pre>
 </div>
 <p/>
+
+<!-- ================================================================ -->
+<a id="Type-checking"/><h2>Type-checking</h2>
+
+<p/> Miller&rsquo;s <tt>put</tt>/<tt>filter</tt> DSLs support two optional
+kinds of type-checking: one is <b>type declaration</b> for assignments to local
+variables, binding of arguments to user-defined functions, and return values
+from user-defined functions, and the other is inline <b>assertions</b> within
+expressions. These are discussed in the following subsections.
+
+<p/> Use of type-checking is entirely up to you: omit it if you want
+flexibility with heterogeneous data; use it if you want to help catch
+misspellings in your DSL code or unexpected irregularities in your input data.
+
+<!-- ================================================================ -->
+<a id="Type-declarations_for_local_variables,_function_parameter,_and_function_return_values"/><h3>Type-declarations for local variables, function parameter, and function return values</h3>
+
+<p/> xxx under construction
+
+<p/> Local variables can be defined either untyped as in <tt>x = 1</tt>, or
+typed as in <tt>int x = 1</tt>. Types include <b>var</b> (explicitly untyped),
+<b>int</b>, <b>float</b>, <b>num</b> (int or float), <b>str</b>, <b>bool</b>,
+and <b>map</b>. These optional type declarations are enforced at the time
+values are assigned to variables: whether at the initial value assignment as in
+<tt>int x = 1</tt> or in any subsequent assignments to the same variable
+farther down in the scope.
+
+<p/> xxx note ablut num vs. int/float and why (float x = 0 for example).
+
+<p/> The <tt>var</tt> type declaration indicates no type restrictions, e.g. <tt>var x = 1</tt> has the
+same type restrictions on <tt>x</tt> as <tt>x = 1</tt>. The difference is in intentional shadowing:
+if you have <tt>x = 1</tt> in outer scope and <tt>x = 2</tt> in inner scope (e.g. within a for-loop
+or an if-statement) then outer-scope <tt>x</tt> has value 2 after the second assignment.
+But if you have <tt>var x = 2</tt> in the inner scope, then you are declaring a variable
+scoped to the inner block.) xxx include an example there.
+
+<div class="pokipanel">
+<pre>
+  x = 1;
+  if (NR == 4) {
+    x = 2; # Refers to outer-scope x: value changes from 1 to 2.
+  }
+  print x; # Value of x is now two
+</pre>
+</div>
+<div class="pokipanel">
+<pre>
+  x = 1;
+  if (NR == 4) {
+    var x = 2; # Defines a new inner-scope x with value 2
+  }
+  print x;     # Value of this x is still 1
+</pre>
+</div>
+
+<p/> Likewise function arguments can optionally be typed, with type enforced
+when the function is called: <tt>func g(int i)</tt>. xxx include an example there
+
+<p/> Thirdly, function return values can be type-checked at the point of
+<tt>return</tt> using <tt>:</tt> and a typedecl after the parameter list: e.g.
+<tt>func f(num x, num y): num { return x**2 + y**2 }</tt>.
+
+<!-- ================================================================ -->
+<a id="Type-assertion_expressions"/><h3>Type-assertion expressions</h3>
+
+<p/> Similarly to type declarations, there are pass-through functions named with
+<tt>assert...</tt> which can be used to for optional type-checking within
+expressions: <tt>$o = assert_num($x)**2</tt> means that a numeric value will be
+squared and stored, while a non-numeric value will result in a fatal error.
 
 <!-- ================================================================ -->
 <a id="Out-of-stream_variables"/><h2>Out-of-stream variables</h2>

@@ -251,7 +251,7 @@ COOK:
 * seqgen vs.
   mlr -n put 'begin{for (int i = 0; i < 10; i += 1) {emit {"a":i,"b":i**2} }}' then sort -nr a
 
-DEBUGGING:
+TRANSPARENCY:
 * disclaimer about the Miller DSL having the usual plusses and minuses of a dynamically typed language:
   rapid prototyping and rapid access to data -- e.g. '$y=$x**2' should be free of syntactic bric-a-brac
   & the miller dsl is a place to get just that. but type-mixing can be unintentional (things really are
