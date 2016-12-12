@@ -29,6 +29,8 @@ OTHER:
 
 * poki-run no '$ ' for comment lines
 
+! --c2x et al. on file-formats page
+
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 

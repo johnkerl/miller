@@ -156,6 +156,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#PPRINT:_Pretty-printed_tabular">PPRINT: Pretty-printed tabular</a><br/>
 &bull;&nbsp;<a href="#XTAB:_Vertical_tabular">XTAB: Vertical tabular</a><br/>
 &bull;&nbsp;<a href="#Markdown_tabular">Markdown tabular</a><br/>
+&bull;&nbsp;<a href="#Data-conversion_keystroke-savers">Data-conversion keystroke-savers</a><br/>
 </div>
 <p/>
 
@@ -163,7 +164,7 @@ Miller commands were run with pretty-print-tabular output format.
 
 <p/>Miller handles name-indexed data using several formats: some you probably
 know by name, such as CSV, TSV, and JSON &mdash; and other formats you&rsquo;re
-likely already seeing in structured data.
+likely already seeing and using in your structured data.
 
 <a id="Examples"/><h1>Examples</h1>
 
@@ -780,6 +781,75 @@ which renders like this when dropped into various web tools (e.g. github comment
 <img src="pix/omd.png"/>
 
 <p/> As of Miller 4.3.0, markdown format is supported only for output, not input.
+
+<a id="Data-conversion_keystroke-savers"/><h1>Data-conversion keystroke-savers</h1>
+
+<p/>While you can do format conversion using <tt>mlr --icsv --ojson cat myfile.csv</tt>,
+there are also keystroke-savers for this purpose, such as <tt>mlr --c2j cat myfile.csv</tt>.
+For a complete list:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --usage-data-format-options
+  --idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
+                                  (this is Miller's default format).
+
+  --inidx   --onidx   --nidx      Implicitly-integer-indexed fields
+                                  (Unix-toolkit style).
+
+  --icsv    --ocsv    --csv       Comma-separated value (or tab-separated
+                                  with --fs tab, etc.)
+
+  --itsv    --otsv    --tsv       Keystroke-savers for "--icsv --ifs tab",
+                                  "--ocsv --ofs tab", "--csv --fs tab".
+
+  --ipprint --opprint --pprint    Pretty-printed tabular (produces no
+                                  output until all input is in).
+                      --right     Right-justifies all fields for PPRINT output.
+                      --barred    Prints a border around PPRINT output
+                                  (only available for output).
+
+            --omd                 Markdown-tabular (only available for output).
+
+  --ixtab   --oxtab   --xtab      Pretty-printed vertical-tabular.
+                      --xvright   Right-justifies values for XTAB format.
+
+  --ijson   --ojson   --json      JSON tabular: sequence or list of one-level
+                                  maps: {...}{...} or [{...},{...}].
+                      --jvstack   Put one key-value pair per line for JSON
+                                  output.
+                      --jlistwrap Wrap JSON output in outermost [ ].
+                      --jquoteall Quote map keys in JSON output, even if they're
+                                  numeric.
+              --jflatsep {string} Separator for flattening multi-level JSON keys,
+                                  e.g. '{"a":{"b":3}}' becomes a:b =&gt; 3 for
+                                  non-JSON formats. Defaults to :.
+
+  -p is a keystroke-saver for --nidx --fs space --repifs
+
+  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for
+  DKVP-formatted input and pretty-printed output.
+
+  PLEASE USE "mlr --csv --rs lf" FOR NATIVE UN*X (LINEFEED-TERMINATED) CSV FILES.
+  You can also have MLR_CSV_DEFAULT_RS=lf in your shell environment, e.g.
+  "export MLR_CSV_DEFAULT_RS=lf" or "setenv MLR_CSV_DEFAULT_RS lf" depending on
+  which shell you use.
+
+As keystroke-savers for format-conversion you may use the following:
+  --c2t --c2d --c2n --c2j --c2x --c2p --c2m
+  --t2c       --t2d --t2n --t2j --t2x --t2p --t2m
+  --d2c --d2t       --d2n --d2j --d2x --d2p --d2m
+  --n2c --n2t --n2d       --n2j --n2x --n2p --n2m
+  --j2c --j2t --j2d --j2n       --j2x --j2p --j2m
+  --x2c --x2t --x2d --x2n --x2j       --x2p --x2m
+  --p2c --p2t --p2d --p2n --p2j --p2x       --p2m
+The letters c t d n j x p m refer to formats CSV with LF, TSV with LF, DKVP,
+NIDX, JSON, XTAB, PPRINT, and markdown, respectively. Note that markdown format
+is available for output only.
+</pre>
+</div>
+<p/>
     </div>
   </td>
 

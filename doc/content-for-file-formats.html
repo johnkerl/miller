@@ -4,7 +4,7 @@ POKI_PUT_TOC_HERE
 
 <p/>Miller handles name-indexed data using several formats: some you probably
 know by name, such as CSV, TSV, and JSON &mdash; and other formats you&rsquo;re
-likely already seeing in structured data.
+likely already seeing and using in your structured data.
 
 <h1>Examples</h1>
 
@@ -265,3 +265,11 @@ which renders like this when dropped into various web tools (e.g. github comment
 <img src="pix/omd.png"/>
 
 <p/> As of Miller 4.3.0, markdown format is supported only for output, not input.
+
+<h1>Data-conversion keystroke-savers</h1>
+
+<p/>While you can do format conversion using <tt>mlr --icsv --ojson cat myfile.csv</tt>,
+there are also keystroke-savers for this purpose, such as <tt>mlr --c2j cat myfile.csv</tt>.
+For a complete list:
+
+POKI_RUN_COMMAND{{mlr --usage-data-format-options}}HERE

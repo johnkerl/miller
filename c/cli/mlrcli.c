@@ -696,7 +696,8 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "  --ipprint --opprint --pprint    Pretty-printed tabular (produces no\n");
 	fprintf(o, "                                  output until all input is in).\n");
 	fprintf(o, "                      --right     Right-justifies all fields for PPRINT output.\n");
-	fprintf(o, "                      --barred    Prints a border around PPRINT output.\n");
+	fprintf(o, "                      --barred    Prints a border around PPRINT output\n");
+	fprintf(o, "                                  (only available for output).\n");
 	fprintf(o, "\n");
 	fprintf(o, "            --omd                 Markdown-tabular (only available for output).\n");
 	fprintf(o, "\n");
