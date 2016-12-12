@@ -1,8 +1,6 @@
-<p/>Miller is like awk, sed, cut, join, and sort for name-indexed data such as
-CSV, TSV, and tabular JSON. You get to use named fields without needing to
-count positional indices. For example:
-
-POKI_INCLUDE_ESCAPED(index-snippet.txt)HERE
+<p/>Miller is like awk, sed, cut, join, and sort for <b>name-indexed data such as
+CSV, TSV, and tabular JSON</b>. You get to work with your data using named
+fields, without needing to count positional column indices.
 
 <p/>This is something the Unix toolkit always could have done, and arguably
 always should have done.  It operates on key-value-pair data while the familiar
@@ -70,3 +68,117 @@ machine, and expect it to work.
 
 <p>Releases and release notes:
 <a href="https://github.com/johnkerl/miller/releases">https://github.com/johnkerl/miller/releases</a>.
+
+<p/> Examples:
+
+<div class="pokipanel">
+<pre>
+# Column select
+% mlr --csv cut -f hostname,uptime mydata.csv
+</pre>
+</div>
+
+<div class="pokipanel">
+<pre>
+# Add new columns as function of other columns
+% mlr --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
+</pre>
+</div>
+
+<div class="pokipanel">
+<pre>
+# Row filter
+% mlr --csv --rs lf filter '$status != "down" && $upsec >= 10000' *.csv
+</pre>
+</div>
+
+<div class="pokipanel">
+<pre>
+# Apply column labels and pretty-print
+% grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
+</pre>
+</div>
+
+<div class="pokipanel">
+<pre>
+# Join multiple data sources on key columns
+% mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
+</pre>
+</div>
+
+<div class="pokipanel">
+<pre>
+# Multiple formats including JSON
+% mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
+</pre>
+</div>
+
+<div class="pokipanel">
+<pre>
+# Aggregate per-column statistics
+% mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
+</pre>
+</div>
+
+<div class="pokipanel">
+<pre>
+# Linear regression
+% mlr stats2 -a linreg-pca -f u,v -g shape data/*
+</pre>
+</div>
+
+<div class="pokipanel">
+<pre>
+# Aggregate custom per-column statistics
+% mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
+</pre>
+</div>
+
+<div class="pokipanel">
+<pre>
+# Iterate over data using DSL expressions
+% mlr --from estimates.tbl put '
+  for (k,v in $*) {
+    if (isnumeric(v) && k =~ "^[t-z].*$") {
+      $sum += v; $count += 1
+    }
+  }
+  $mean = $sum / $count # no assignment if count unset
+'
+</pre>
+</div>
+
+<div class="pokipanel">
+<pre>
+# Run DSL expressions from a script file
+% mlr --from infile.dat put -f analyze.mlr
+</pre>
+</div>
+
+<div class="pokipanel">
+<pre>
+# Split/reduce output to multiple filenames
+% mlr --from infile.dat put 'tee > "./taps/data-".$a."-".$b, $*'
+</pre>
+</div>
+
+<div class="pokipanel">
+<pre>
+# Compressed I/O
+% mlr --from infile.dat put 'tee | "gzip > ./taps/data-".$a."-".$b.".gz", $*'
+</pre>
+</div>
+
+<div class="pokipanel">
+<pre>
+# Interoperate with other data-processing tools using standard pipes
+% mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'
+</pre>
+</div>
+
+<div class="pokipanel">
+<pre>
+# Tap/trace
+% mlr --from infile.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
+</pre>
+</div>
