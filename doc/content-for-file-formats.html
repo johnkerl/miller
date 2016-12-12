@@ -1,77 +1,14 @@
 POKI_PUT_TOC_HERE
 
+<h1>Overview</h1>
+
+<p/>Miller handles name-indexed data using several formats: some you probably
+know by name, such as CSV, TSV, and JSON &mdash; and other formats you&rsquo;re
+likely already seeing in structured data.
+
 <h1>Examples</h1>
 
 POKI_RUN_COMMAND{{mlr --usage-data-format-examples}}HERE
-
-<h1>DKVP: Key-value pairs</h1>
-Miller&rsquo;s default file format is DKVP, for <b>delimited key-value pairs</b>. Example:
-
-POKI_RUN_COMMAND{{mlr cat data/small}}HERE
-
-Such data are easy to generate, e.g. in Ruby with
-POKI_CARDIFY(puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}")HERE
-POKI_CARDIFY{{puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')}}HERE
-or <tt>print</tt> statements in various languages, e.g.
-POKI_CARDIFY(echo "type=3,user=$USER,date=$date\n";)HERE
-POKI_CARDIFY{{logger.log("type=3,user=$USER,date=$date\n");}}HERE
-
-<p/>Fields lacking an IPS will have positional index (starting at 1) used as
-the key, as in NIDX format. For example, <tt>dish=7,egg=8,flint</tt> is parsed
-as <tt>"dish" =&gt; "7", "egg" =&gt; "8", "3" =&gt; "flint"</tt> and
-<tt>dish,egg,flint</tt> is parsed as <tt>"1" =&gt; "dish", "2" =&gt; "egg", "3"
-=&gt; "flint"</tt>.
-
-<p/> As discussed in POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE,
-Miller handles changes of field names within the same data stream. But using
-DKVP format this is particularly natural. One of my favorite use-cases for
-Miller is in application/server logs, where I log all sorts of lines such as
-
-<p/>
-<div class="pokipanel">
-<pre>
-resource=/path/to/file,loadsec=0.45,ok=true
-record_count=100, resource=/path/to/file
-resource=/some/other/path,loadsec=0.97,ok=false
-</pre>
-</div>
-<p/>
-
-etc. and I just log them as needed. Then later, I can use <tt>grep</tt>, <tt>mlr --opprint group-like</tt>, etc.
-to analyze my logs.
-
-<p/>See POKI_PUT_LINK_FOR_PAGE(reference.html)HERE regarding how to specify separators other than
-the default equals-sign and comma.
-
-<h1>NIDX: Index-numbered (toolkit style)</h1>
-
-With <tt>--inidx --ifs ' ' --repifs</tt>, Miller splits lines on whitespace and
-assigns integer field names starting with 1. This recapitulates Unix-toolkit
-behavior.
-
-<p/> Example with index-numbered output:
-
-<table><tr> <td>
-POKI_RUN_COMMAND{{cat data/small}}HERE
-</td> <td>
-POKI_RUN_COMMAND{{mlr --onidx --ofs ' ' cat data/small}}HERE
-</td> </tr></table>
-
-<p/> Example with index-numbered input:
-
-<table><tr> <td>
-POKI_RUN_COMMAND{{cat data/mydata.txt}}HERE
-</td> <td>
-POKI_RUN_COMMAND{{mlr --inidx --ifs ' ' --odkvp cat data/mydata.txt}}HERE
-</td> </tr></table>
-
-<p/> Example with index-numbered input and output:
-
-<table><tr> <td>
-POKI_RUN_COMMAND{{cat data/mydata.txt}}HERE
-</td> <td>
-POKI_RUN_COMMAND{{mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt}}HERE
-</td> </tr></table>
 
 <h1>CSV/TSV/etc.</h1>
 When <tt>mlr</tt> is invoked with the <tt>--csv</tt> or <tt>--csvlite</tt> option,
@@ -148,6 +85,75 @@ e.g. CR-LF vs. LF, or tab instead of comma for TSV, and so on.
 
 </ul>
 
+<h1>DKVP: Key-value pairs</h1>
+Miller&rsquo;s default file format is DKVP, for <b>delimited key-value pairs</b>. Example:
+
+POKI_RUN_COMMAND{{mlr cat data/small}}HERE
+
+Such data are easy to generate, e.g. in Ruby with
+POKI_CARDIFY(puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}")HERE
+POKI_CARDIFY{{puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')}}HERE
+or <tt>print</tt> statements in various languages, e.g.
+POKI_CARDIFY(echo "type=3,user=$USER,date=$date\n";)HERE
+POKI_CARDIFY{{logger.log("type=3,user=$USER,date=$date\n");}}HERE
+
+<p/>Fields lacking an IPS will have positional index (starting at 1) used as
+the key, as in NIDX format. For example, <tt>dish=7,egg=8,flint</tt> is parsed
+as <tt>"dish" =&gt; "7", "egg" =&gt; "8", "3" =&gt; "flint"</tt> and
+<tt>dish,egg,flint</tt> is parsed as <tt>"1" =&gt; "dish", "2" =&gt; "egg", "3"
+=&gt; "flint"</tt>.
+
+<p/> As discussed in POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE,
+Miller handles changes of field names within the same data stream. But using
+DKVP format this is particularly natural. One of my favorite use-cases for
+Miller is in application/server logs, where I log all sorts of lines such as
+
+<p/>
+<div class="pokipanel">
+<pre>
+resource=/path/to/file,loadsec=0.45,ok=true
+record_count=100, resource=/path/to/file
+resource=/some/other/path,loadsec=0.97,ok=false
+</pre>
+</div>
+<p/>
+
+etc. and I just log them as needed. Then later, I can use <tt>grep</tt>, <tt>mlr --opprint group-like</tt>, etc.
+to analyze my logs.
+
+<p/>See POKI_PUT_LINK_FOR_PAGE(reference.html)HERE regarding how to specify separators other than
+the default equals-sign and comma.
+
+<h1>NIDX: Index-numbered (toolkit style)</h1>
+
+With <tt>--inidx --ifs ' ' --repifs</tt>, Miller splits lines on whitespace and
+assigns integer field names starting with 1. This recapitulates Unix-toolkit
+behavior.
+
+<p/> Example with index-numbered output:
+
+<table><tr> <td>
+POKI_RUN_COMMAND{{cat data/small}}HERE
+</td> <td>
+POKI_RUN_COMMAND{{mlr --onidx --ofs ' ' cat data/small}}HERE
+</td> </tr></table>
+
+<p/> Example with index-numbered input:
+
+<table><tr> <td>
+POKI_RUN_COMMAND{{cat data/mydata.txt}}HERE
+</td> <td>
+POKI_RUN_COMMAND{{mlr --inidx --ifs ' ' --odkvp cat data/mydata.txt}}HERE
+</td> </tr></table>
+
+<p/> Example with index-numbered input and output:
+
+<table><tr> <td>
+POKI_RUN_COMMAND{{cat data/mydata.txt}}HERE
+</td> <td>
+POKI_RUN_COMMAND{{mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt}}HERE
+</td> </tr></table>
+
 <h1>Tabular JSON</h1>
 
 <p/>JSON is a format which supports arbitrarily deep nesting of
@@ -163,7 +169,7 @@ href="http://stedolan.github.io/jq/">jq</a>.)
 An <boldmaroon>array of single-level objects</boldmaroon> is, quite simply,
 <boldmaroon>a table:</boldmaroon>
 
-POKI_RUN_COMMAND{{mlr --json head -n 2 data/json-example-1.json}}HERE
+POKI_RUN_COMMAND{{mlr --json head -n 2 then cut -f color,shape data/json-example-1.json}}HERE
 POKI_RUN_COMMAND{{mlr --json --jvstack head -n 2 then cut -f color,u,v data/json-example-1.json}}HERE
 POKI_RUN_COMMAND{{mlr --ijson --opprint stats1 -a mean,stddev,count -f u -g shape data/json-example-1.json}}HERE
 

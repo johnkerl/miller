@@ -143,10 +143,11 @@ Miller commands were run with pretty-print-tabular output format.
 <!-- BODY COPIED FROM content-for-file-formats.html BY poki -->
 <div class="pokitoc">
 <center><b>Contents:</b></center>
+&bull;&nbsp;<a href="#Overview">Overview</a><br/>
 &bull;&nbsp;<a href="#Examples">Examples</a><br/>
+&bull;&nbsp;<a href="#CSV/TSV/etc.">CSV/TSV/etc.</a><br/>
 &bull;&nbsp;<a href="#DKVP:_Key-value_pairs">DKVP: Key-value pairs</a><br/>
 &bull;&nbsp;<a href="#NIDX:_Index-numbered_(toolkit_style)">NIDX: Index-numbered (toolkit style)</a><br/>
-&bull;&nbsp;<a href="#CSV/TSV/etc.">CSV/TSV/etc.</a><br/>
 &bull;&nbsp;<a href="#Tabular_JSON">Tabular JSON</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Single-level_JSON_objects">Single-level JSON objects</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Nested_JSON_objects">Nested JSON objects</a><br/>
@@ -157,6 +158,12 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Markdown_tabular">Markdown tabular</a><br/>
 </div>
 <p/>
+
+<a id="Overview"/><h1>Overview</h1>
+
+<p/>Miller handles name-indexed data using several formats: some you probably
+know by name, such as CSV, TSV, and JSON &mdash; and other formats you&rsquo;re
+likely already seeing in structured data.
 
 <a id="Examples"/><h1>Examples</h1>
 
@@ -226,6 +233,81 @@ $ mlr --usage-data-format-examples
 </pre>
 </div>
 <p/>
+
+<a id="CSV/TSV/etc."/><h1>CSV/TSV/etc.</h1>
+When <tt>mlr</tt> is invoked with the <tt>--csv</tt> or <tt>--csvlite</tt> option,
+key names are found on the first record and values are taken from subsequent
+records.  This includes the case of CSV-formatted files.  See
+<a href="record-heterogeneity.html">Record-heterogeneity</a> for how Miller handles
+changes of field names within a single data stream.
+
+<p/> Miller has record separator <tt>RS</tt> and field separator <tt>FS</tt>,
+just as <tt>awk</tt> does.  For TSV, use <tt>--fs tab</tt>; to convert TSV to
+CSV, use <tt>--ifs tab --ofs comma</tt>, etc.  (See also
+<a href="reference.html">Reference</a>.)
+
+<p/> The following are synonymous pairs:
+<ul>
+<li/> <tt>--tsv</tt> and <tt>--csv --fs tab</tt>
+<li/> <tt>--itsv</tt> and <tt>--icsv --ifs tab</tt>
+<li/> <tt>--otsv</tt> and <tt>--ocsv --ofs tab</tt>
+<li/> <tt>--tsvlite</tt> and <tt>--csvlite --fs tab</tt>
+<li/> <tt>--itsvlite</tt> and <tt>--icsvlite --ifs tab</tt>
+<li/> <tt>--otsvlite</tt> and <tt>--ocsvlite --ofs tab</tt>
+</ul>
+
+<p/>Miller&rsquo;s <tt>--csv</tt> flag supports RFC-4180 CSV (<a href="https://tools.ietf.org/html/rfc4180">
+https://tools.ietf.org/html/rfc4180</a>). This includes CRLF line-terminators by default, regardless
+of platform.
+
+<p/>
+<b>
+Please use <tt>mlr --csv --rs lf</tt> for native Un*x (linefeed-terminated) CSV files.
+</b>
+
+<p/>Instead of specifying <tt>--rs lf</tt> on each invocation, you can instead
+have <tt>MLR_CSV_DEFAULT_RS=lf</tt> in your shell environment: e.g. put
+<tt>export MLR_CSV_DEFAULT_RS=lf</tt> in your <tt>~/.bashrc</tt> or
+<tt>~/.zshrc</tt>, or <tt>setenv MLR_CSV_DEFAULT_RS lf</tt> in your
+<tt>~/.cshrc</tt>, as a one-time setup step.
+
+<p/>The RFC says, somewhat briefly, that &ldquo;there may be a header
+line&rdquo;. Miller&rsquo;s <tt>--implicit-csv-header</tt> option allows you to
+read CSV data which lacks a header line, applying column labels <tt>1</tt>,
+<tt>2</tt>, <tt>3</tt>, etc. for you. You may also use Miller&rsquo;s
+<tt>label</tt> to replace those numerical column names with labels of your
+choosing.
+
+<p/>Here are the differences between CSV and CSV-lite:
+
+<ul>
+
+<li/>CSV supports <a href="https://tools.ietf.org/html/rfc4180">
+RFC-4180</a>)-style double-quoting, including the ability to have commas and/or
+CR-LF line-endings contained within an input field; CSV-lite does not.
+
+<li/>Default record separator for CSV is CR-LF; default record separator for
+CSV-lite is LF.
+
+<li/>CSV does not allow heterogeneous data; CSV-lite does (see also <a
+href="record-heterogeneity.html">here</a>).
+
+<li/>The CSV-lite input-reading code is more efficient than the CSV
+input-reader.
+
+</ul>
+
+<p/>Here are things they have in common:
+
+<ul>
+
+<li/>The ability to specify record/field separators other than the default,
+e.g. CR-LF vs. LF, or tab instead of comma for TSV, and so on.
+
+<li/>The <tt>--implicit-csv-header</tt> flag for input and the
+<tt>--headerless-csv-output</tt> flag for output.
+
+</ul>
 
 <a id="DKVP:_Key-value_pairs"/><h1>DKVP: Key-value pairs</h1>
 Miller&rsquo;s default file format is DKVP, for <b>delimited key-value pairs</b>. Example:
@@ -389,81 +471,6 @@ light
 <p/>
 </td> </tr></table>
 
-<a id="CSV/TSV/etc."/><h1>CSV/TSV/etc.</h1>
-When <tt>mlr</tt> is invoked with the <tt>--csv</tt> or <tt>--csvlite</tt> option,
-key names are found on the first record and values are taken from subsequent
-records.  This includes the case of CSV-formatted files.  See
-<a href="record-heterogeneity.html">Record-heterogeneity</a> for how Miller handles
-changes of field names within a single data stream.
-
-<p/> Miller has record separator <tt>RS</tt> and field separator <tt>FS</tt>,
-just as <tt>awk</tt> does.  For TSV, use <tt>--fs tab</tt>; to convert TSV to
-CSV, use <tt>--ifs tab --ofs comma</tt>, etc.  (See also
-<a href="reference.html">Reference</a>.)
-
-<p/> The following are synonymous pairs:
-<ul>
-<li/> <tt>--tsv</tt> and <tt>--csv --fs tab</tt>
-<li/> <tt>--itsv</tt> and <tt>--icsv --ifs tab</tt>
-<li/> <tt>--otsv</tt> and <tt>--ocsv --ofs tab</tt>
-<li/> <tt>--tsvlite</tt> and <tt>--csvlite --fs tab</tt>
-<li/> <tt>--itsvlite</tt> and <tt>--icsvlite --ifs tab</tt>
-<li/> <tt>--otsvlite</tt> and <tt>--ocsvlite --ofs tab</tt>
-</ul>
-
-<p/>Miller&rsquo;s <tt>--csv</tt> flag supports RFC-4180 CSV (<a href="https://tools.ietf.org/html/rfc4180">
-https://tools.ietf.org/html/rfc4180</a>). This includes CRLF line-terminators by default, regardless
-of platform.
-
-<p/>
-<b>
-Please use <tt>mlr --csv --rs lf</tt> for native Un*x (linefeed-terminated) CSV files.
-</b>
-
-<p/>Instead of specifying <tt>--rs lf</tt> on each invocation, you can instead
-have <tt>MLR_CSV_DEFAULT_RS=lf</tt> in your shell environment: e.g. put
-<tt>export MLR_CSV_DEFAULT_RS=lf</tt> in your <tt>~/.bashrc</tt> or
-<tt>~/.zshrc</tt>, or <tt>setenv MLR_CSV_DEFAULT_RS lf</tt> in your
-<tt>~/.cshrc</tt>, as a one-time setup step.
-
-<p/>The RFC says, somewhat briefly, that &ldquo;there may be a header
-line&rdquo;. Miller&rsquo;s <tt>--implicit-csv-header</tt> option allows you to
-read CSV data which lacks a header line, applying column labels <tt>1</tt>,
-<tt>2</tt>, <tt>3</tt>, etc. for you. You may also use Miller&rsquo;s
-<tt>label</tt> to replace those numerical column names with labels of your
-choosing.
-
-<p/>Here are the differences between CSV and CSV-lite:
-
-<ul>
-
-<li/>CSV supports <a href="https://tools.ietf.org/html/rfc4180">
-RFC-4180</a>)-style double-quoting, including the ability to have commas and/or
-CR-LF line-endings contained within an input field; CSV-lite does not.
-
-<li/>Default record separator for CSV is CR-LF; default record separator for
-CSV-lite is LF.
-
-<li/>CSV does not allow heterogeneous data; CSV-lite does (see also <a
-href="record-heterogeneity.html">here</a>).
-
-<li/>The CSV-lite input-reading code is more efficient than the CSV
-input-reader.
-
-</ul>
-
-<p/>Here are things they have in common:
-
-<ul>
-
-<li/>The ability to specify record/field separators other than the default,
-e.g. CR-LF vs. LF, or tab instead of comma for TSV, and so on.
-
-<li/>The <tt>--implicit-csv-header</tt> flag for input and the
-<tt>--headerless-csv-output</tt> flag for output.
-
-</ul>
-
 <a id="Tabular_JSON"/><h1>Tabular JSON</h1>
 
 <p/>JSON is a format which supports arbitrarily deep nesting of
@@ -482,9 +489,9 @@ An <boldmaroon>array of single-level objects</boldmaroon> is, quite simply,
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --json head -n 2 data/json-example-1.json
-{ "color": "yellow", "shape": "triangle", "flag": 1, "i": 11, "u": 0.6321695890307647, "v": 0.9887207810889004, "w": 0.4364983936735774, "x": 5.7981881667050565 }
-{ "color": "red", "shape": "square", "flag": 1, "i": 15, "u": 0.21966833570651523, "v": 0.001257332190235938, "w": 0.7927778364718627, "x": 2.944117399716207 }
+$ mlr --json head -n 2 then cut -f color,shape data/json-example-1.json
+{ "color": "yellow", "shape": "triangle" }
+{ "color": "red", "shape": "square" }
 </pre>
 </div>
 <p/>
