@@ -35,6 +35,10 @@ MAPVAR CHECKLIST:
 ! UT cases detailed below
 
 ! assert_map/assert_scalar/etc.
+  - impl
+  - UTs
+  - mlh
+  - mld
 
 * emittable/dumpable/etc md_rhs -> more specific fcn-call.
 
