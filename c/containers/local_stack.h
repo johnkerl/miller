@@ -119,11 +119,21 @@ static inline void local_stack_frame_assign_terminal_nonindexed(local_stack_fram
 }
 
 // ----------------------------------------------------------------
+static inline mlhmmv_xvalue_t* local_stack_frame_ref_extended_from_nonindexed(local_stack_frame_t* pframe,
+	int vardef_frame_relative_index)
+{
+	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
+	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
+
+	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
+	mlhmmv_xvalue_t* pmvalue = &pentry->xvalue;
+
+	return pmvalue;
+}
+
+// ----------------------------------------------------------------
 mv_t local_stack_frame_ref_terminal_from_indexed(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, sllmv_t* pmvkeys);
-
-mlhmmv_xvalue_t* local_stack_frame_ref_extended_from_nonindexed(local_stack_frame_t* pframe,
-	int vardef_frame_relative_index);
 
 mlhmmv_xvalue_t* local_stack_frame_ref_extended_from_indexed(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, sllmv_t* pmvkeys);

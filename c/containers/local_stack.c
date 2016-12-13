@@ -150,36 +150,6 @@ mv_t local_stack_frame_ref_terminal_from_indexed(local_stack_frame_t* pframe,
 }
 
 // ----------------------------------------------------------------
-mlhmmv_xvalue_t* local_stack_frame_ref_extended_from_nonindexed(local_stack_frame_t* pframe,
-	int vardef_frame_relative_index)
-{
-	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
-	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
-
-	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
-	mlhmmv_xvalue_t* pmvalue = &pentry->xvalue;
-
-#ifdef LOCAL_STACK_TRACE_ENABLE
-	// xxx needs an mlhmmv_xvalue_print
-	if (pmvalue == NULL) {
-		printf("VALUE IS NULL\n");
-	} else if (pmvalue->is_terminal) {
-		char* s = mv_alloc_format_val(&pmvalue->terminal_mlrval);
-		printf("VALUE IS %s\n", s);
-		free(s);
-	} else if (pmvalue->pnext_level == NULL) {
-		LOCAL_STACK_TRACE(printf("VALUE IS EMPTY\n"));
-	} else {
-		printf("VALUE IS:\n");
-		printf("PTR IS %p\n", pmvalue->pnext_level);
-		mlhmmv_level_print_stacked(pmvalue->pnext_level, 0, TRUE, TRUE, "", stdout);
-	}
-#endif
-
-	return pmvalue;
-}
-
-// ----------------------------------------------------------------
 mlhmmv_xvalue_t* local_stack_frame_ref_extended_from_indexed(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, sllmv_t* pmvkeys)
 {
