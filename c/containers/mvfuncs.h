@@ -110,37 +110,6 @@ mv_t x_xx_min_func(mv_t* pval1, mv_t* pval2);
 mv_t x_xx_max_func(mv_t* pval1, mv_t* pval2);
 mv_t x_xx_roundm_func(mv_t* pval1, mv_t* pval2);
 
-mv_t b_x_isnull_func(mv_t* pval1);
-mv_t b_x_isnotnull_func(mv_t* pval1);
-mv_t b_x_isabsent_func(mv_t* pval1);
-mv_t b_x_ispresent_func(mv_t* pval1);
-mv_t b_x_isempty_func(mv_t* pval1);
-mv_t b_x_isnotempty_func(mv_t* pval1);
-mv_t b_x_isnumeric_func(mv_t* pval1);
-mv_t b_x_isint_func(mv_t* pval1);
-mv_t b_x_isfloat_func(mv_t* pval1);
-mv_t b_x_isboolean_func(mv_t* pval1);
-mv_t b_x_isstring_func(mv_t* pval1);
-
-// Most functions here free their inputs. E.g. for string concatenation, the
-// output which is returned is the concatenation of the two inputs which are
-// freed. For another example, isstring frees its input and returns the boolean
-// value of the result. These functions, by contrast, only return a boolean for
-// the outcome of the test but do not free the inputs. The intended usage is for
-// type-assertion checks.  E.g. in '$b = assert_string($a)', if $a is a string
-// it is assigned to $b, else an error is thrown.
-mv_t b_x_isnull_no_free_func(mv_t* pval1);
-mv_t b_x_isnotnull_no_free_func(mv_t* pval1);
-mv_t b_x_isabsent_no_free_func(mv_t* pval1);
-mv_t b_x_ispresent_no_free_func(mv_t* pval1);
-mv_t b_x_isempty_no_free_func(mv_t* pval1);
-mv_t b_x_isnotempty_no_free_func(mv_t* pval1);
-mv_t b_x_isnumeric_no_free_func(mv_t* pval1);
-mv_t b_x_isint_no_free_func(mv_t* pval1);
-mv_t b_x_isfloat_no_free_func(mv_t* pval1);
-mv_t b_x_isboolean_no_free_func(mv_t* pval1);
-mv_t b_x_isstring_no_free_func(mv_t* pval1);
-
 mv_t i_x_int_func(mv_t* pval1);
 mv_t f_x_float_func(mv_t* pval1);
 mv_t b_x_boolean_func(mv_t* pval1);

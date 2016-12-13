@@ -939,51 +939,6 @@ rval_evaluator_t* rval_evaluator_alloc_from_x_x_func(mv_unary_func_t* pfunc, rva
 }
 
 // ----------------------------------------------------------------
-// Does type-check assertion on the argument and returns it unmodified if the
-// test passes.  Else throws an error.
-typedef struct _rval_evaluator_A_x_state_t {
-	mv_unary_func_t*  pfunc;
-	rval_evaluator_t* parg1;
-	char*             desc;
-} rval_evaluator_A_x_state_t;
-
-static mv_t rval_evaluator_A_x_func(void* pvstate, variables_t* pvars) {
-	rval_evaluator_A_x_state_t* pstate = pvstate;
-	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
-
-	mv_t ok = pstate->pfunc(&val1);
-
-	if (!ok.u.boolv) {
-		fprintf(stderr, "%s: %s type-assertion failed at NR=%lld FNR=%lld FILENAME=%s\n",
-			MLR_GLOBALS.bargv0, pstate->desc, pvars->pctx->nr, pvars->pctx->fnr, pvars->pctx->filename);
-		exit(1);
-	}
-
-	return val1;
-}
-static void rval_evaluator_A_x_free(rval_evaluator_t* pevaluator) {
-	rval_evaluator_A_x_state_t* pstate = pevaluator->pvstate;
-	pstate->parg1->pfree_func(pstate->parg1);
-	free(pstate->desc);
-	free(pstate);
-	free(pevaluator);
-}
-
-rval_evaluator_t* rval_evaluator_alloc_from_A_x_func(mv_unary_func_t* pfunc, rval_evaluator_t* parg1, char* desc) {
-	rval_evaluator_A_x_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_A_x_state_t));
-	pstate->pfunc = pfunc;
-	pstate->parg1 = parg1;
-	pstate->desc  = mlr_strdup_or_die(desc);
-
-	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
-	pevaluator->pvstate = pstate;
-	pevaluator->pprocess_func = rval_evaluator_A_x_func;
-	pevaluator->pfree_func = rval_evaluator_A_x_free;
-
-	return pevaluator;
-}
-
-// ----------------------------------------------------------------
 typedef struct _rval_evaluator_x_ns_state_t {
 	mv_binary_func_t* pfunc;
 	rval_evaluator_t* parg1;

@@ -117,13 +117,14 @@ rval_evaluator_t* rval_evaluator_alloc_from_s_sii_func(mv_ternary_func_t* pfunc,
 	rval_evaluator_t* parg1, rval_evaluator_t* parg2, rval_evaluator_t* parg3);
 rval_evaluator_t* rval_evaluator_alloc_from_ternop(rval_evaluator_t* parg1, rval_evaluator_t* parg2,
 	rval_evaluator_t* parg3);
+
 rval_evaluator_t* rval_evaluator_alloc_from_s_s_func(mv_unary_func_t* pfunc, rval_evaluator_t* parg1);
 rval_evaluator_t* rval_evaluator_alloc_from_s_f_func(mv_unary_func_t* pfunc, rval_evaluator_t* parg1);
 rval_evaluator_t* rval_evaluator_alloc_from_s_i_func(mv_unary_func_t* pfunc, rval_evaluator_t* parg1);
 rval_evaluator_t* rval_evaluator_alloc_from_f_s_func(mv_unary_func_t* pfunc, rval_evaluator_t* parg1);
 rval_evaluator_t* rval_evaluator_alloc_from_i_s_func(mv_unary_func_t* pfunc, rval_evaluator_t* parg1);
 rval_evaluator_t* rval_evaluator_alloc_from_x_x_func(mv_unary_func_t* pfunc, rval_evaluator_t* parg1);
-rval_evaluator_t* rval_evaluator_alloc_from_A_x_func(mv_unary_func_t* pfunc, rval_evaluator_t* parg1, char* desc);
+
 rval_evaluator_t* rval_evaluator_alloc_from_x_ns_func(mv_binary_func_t* pfunc,
 	rval_evaluator_t* parg1, rval_evaluator_t* parg2);
 rval_evaluator_t* rval_evaluator_alloc_from_x_ss_func(mv_binary_func_t* pfunc,
@@ -237,5 +238,9 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_x_sss_func(
 	rxval_evaluator_t* parg1,
 	rxval_evaluator_t* parg2,
 	rxval_evaluator_t* parg3);
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_A_x_func(
+	xv_unary_func_t*   pfunc,
+	rxval_evaluator_t* parg1, char* desc);
 
 #endif // LREC_FEVALUATORS_H
