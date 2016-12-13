@@ -97,6 +97,7 @@ static void main_usage_help_options(FILE* o, char* argv0);
 static void main_usage_functions(FILE* o, char* argv0, char* leader);
 static void main_usage_data_format_examples(FILE* o, char* argv0);
 static void main_usage_data_format_options(FILE* o, char* argv0);
+static void main_usage_format_conversion_keystroke_saver_options(FILE* o, char* argv0);
 static void main_usage_compressed_data_options(FILE* o, char* argv0);
 static void main_usage_separator_options(FILE* o, char* argv0);
 static void main_usage_csv_options(FILE* o, char* argv0);
@@ -510,6 +511,10 @@ static void main_usage_long(FILE* o, char* argv0) {
 	main_usage_data_format_options(o, argv0);
 	fprintf(o, "\n");
 
+	fprintf(o, "Format-conversion keystroke-saver options, for input, output, or both:\n");
+	main_usage_format_conversion_keystroke_saver_options(o, argv0);
+	fprintf(o, "\n");
+
 	fprintf(o, "Compressed-data options:\n");
 	main_usage_compressed_data_options(o, argv0);
 	fprintf(o, "\n");
@@ -725,7 +730,9 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "  You can also have MLR_CSV_DEFAULT_RS=lf in your shell environment, e.g.\n");
 	fprintf(o, "  \"export MLR_CSV_DEFAULT_RS=lf\" or \"setenv MLR_CSV_DEFAULT_RS lf\" depending on\n");
 	fprintf(o, "  which shell you use.\n");
-	fprintf(o, "\n");
+}
+
+static void main_usage_format_conversion_keystroke_saver_options(FILE* o, char* argv0) {
 	fprintf(o, "As keystroke-savers for format-conversion you may use the following:\n");
 	fprintf(o, "  --c2t --c2d --c2n --c2j --c2x --c2p --c2m\n");
 	fprintf(o, "  --t2c       --t2d --t2n --t2j --t2x --t2p --t2m\n");
@@ -1243,6 +1250,9 @@ static int handle_terminal_usage(char** argv, int argc, int argi) {
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-data-format-options")) {
 		main_usage_data_format_options(stdout, argv[0]);
+		return TRUE;
+	} else if (streq(argv[argi], "--usage-format-conversion-keystroke-saver-options")) {
+		main_usage_format_conversion_keystroke_saver_options(stdout, argv[0]);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-compressed-data-options")) {
 		main_usage_compressed_data_options(stdout, argv[0]);

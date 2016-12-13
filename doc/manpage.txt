@@ -188,6 +188,7 @@ OPTIONS
 	 "export MLR_CSV_DEFAULT_RS=lf" or "setenv MLR_CSV_DEFAULT_RS lf" depending on
 	 which shell you use.
 
+   FORMAT-CONVERSION KEYSTROKE-SAVERS
        As keystroke-savers for format-conversion you may use the following:
 	 --c2t --c2d --c2n --c2j --c2x --c2p --c2m
 	 --t2c	     --t2d --t2n --t2j --t2x --t2p --t2m
@@ -1816,4 +1817,4 @@ SEE ALSO
 
 
 
-				  2016-12-12			     MILLER(1)
+				  2016-12-13			     MILLER(1)
