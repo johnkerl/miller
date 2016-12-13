@@ -318,7 +318,7 @@ flexibility with heterogeneous data; use it if you want to help catch
 misspellings in your DSL code or unexpected irregularities in your input data.
 
 <!-- ================================================================ -->
-<h3>Type-test expressions and type-assertion expressions</h3>
+<h3>Type-test and type-assertion expressions</h3>
 
 <p/> The following <tt>is...</tt> functions take a value and return a boolean
 indicating whether the argument is of the indicated type. The
@@ -348,11 +348,19 @@ POKI_RUN_COMMAND{{cat data/het-bool.csv}}HERE
 POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$reachable = boolean($reachable)' data/het-bool.csv}}HERE
 POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv}}HERE
 
-<p/> A second option is to flag badly formatted data:
+<p/> A second option is to flag badly formatted data within the output stream:
 
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$format_ok = isboolean($reachable)' data/het-bool.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$format_ok = isstring($reachable)' data/het-bool.csv}}HERE
 
-<p/> xxx under construction
+<p/> Or perhaps to flag badly formatted data outside the output stream:
+
+<p/> xxx need a way to trap stderr within poki
+
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint put 'if (!isstring($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv}}HERE
+
+<p/> A third way is to abort the process on first instance of bad data:
+
+POKI_RUN_COMMAND_TOLERATING_ERROR{{mlr --csvlite put '$reachable = assert_string($reachable)' data/het-bool.csv}}HERE
 
 <!-- ================================================================ -->
 <h3>Type-declarations for local variables, function parameter, and function return values</h3>

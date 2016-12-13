@@ -153,7 +153,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names">Field names</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Local_variables">Local variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-checking">Type-checking</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-test_expressions_and_type-assertion_expressions">Type-test expressions and type-assertion expressions</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-test_and_type-assertion_expressions">Type-test and type-assertion expressions</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-declarations_for_local_variables,_function_parameter,_and_function_return_values">Type-declarations for local variables, function parameter, and function return values</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables">Out-of-stream variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables">Indexed out-of-stream variables</a><br/>
@@ -901,7 +901,7 @@ flexibility with heterogeneous data; use it if you want to help catch
 misspellings in your DSL code or unexpected irregularities in your input data.
 
 <!-- ================================================================ -->
-<a id="Type-test_expressions_and_type-assertion_expressions"/><h3>Type-test expressions and type-assertion expressions</h3>
+<a id="Type-test_and_type-assertion_expressions"/><h3>Type-test and type-assertion expressions</h3>
 
 <p/> The following <tt>is...</tt> functions take a value and return a boolean
 indicating whether the argument is of the indicated type. The
@@ -1008,17 +1008,50 @@ wilma  1
 </div>
 <p/>
 
-<p/> A second option is to flag badly formatted data:
+<p/> A second option is to flag badly formatted data within the output stream:
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsvlite --opprint put '$format_ok = isboolean($reachable)' data/het-bool.csv
+$ mlr --icsvlite --opprint put '$format_ok = isstring($reachable)' data/het-bool.csv
 name   reachable format_ok
-barney false     false
-betty  true      false
-fred   true      false
+barney false     true
+betty  true      true
+fred   true      true
 wilma  1         false
+</pre>
+</div>
+<p/>
+
+<p/> Or perhaps to flag badly formatted data outside the output stream:
+
+<p/> xxx need a way to trap stderr within poki
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsvlite --opprint put 'if (!isstring($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv
+Malformed at NR=4
+name   reachable
+barney false
+betty  true
+fred   true
+wilma  1
+</pre>
+</div>
+<p/>
+
+<p/> A third way is to abort the process on first instance of bad data:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csvlite put '$reachable = assert_string($reachable)' data/het-bool.csv
+mlr: string type-assertion failed at NR=4 FNR=4 FILENAME=data/het-bool.csv
+name,reachable
+barney,false
+betty,true
+fred,true
 </pre>
 </div>
 <p/>
