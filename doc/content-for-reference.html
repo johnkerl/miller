@@ -17,14 +17,16 @@ POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)HERE
   </tr>
   <tr>
     <td>
-      <a href="#cat"><tt>cat</tt></a>,
-      <a href="#cut"><tt>cut</tt></a>,
-      <a href="#head"><tt>head</tt></a>,
-      <a href="#sort"><tt>sort</tt></a>,
-      <a href="#tac"><tt>tac</tt></a>,
-      <a href="#tail"><tt>tail</tt></a>,
-      <a href="#top"><tt>top</tt></a>,
-      <a href="#uniq"><tt>uniq</tt></a>
+      <a href="reference-verbs.html#cat"><tt>cat</tt></a>,
+      <a href="reference-verbs.html#cut"><tt>cut</tt></a>,
+      <a href="reference-verbs.html#grep"><tt>grep</tt></a>,
+      <a href="reference-verbs.html#head"><tt>head</tt></a>,
+      <a href="reference-verbs.html#join"><tt>join</tt></a>,
+      <a href="reference-verbs.html#sort"><tt>sort</tt></a>,
+      <a href="reference-verbs.html#tac"><tt>tac</tt></a>,
+      <a href="reference-verbs.html#tail"><tt>tail</tt></a>,
+      <a href="reference-verbs.html#top"><tt>top</tt></a>,
+      <a href="reference-verbs.html#uniq"><tt>uniq</tt></a>
     </td>
     <td> Analogs of their Unix-toolkit namesakes, discussed below as well as in
     POKI_PUT_LINK_FOR_PAGE(feature-comparison.html)HERE </td>
@@ -32,27 +34,37 @@ POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)HERE
 
   <tr>
     <td>
-      <a href="#filter"><tt>filter</tt></a>,
-      <a href="#put"><tt>put</tt></a>,
-      <a href="#step"><tt>step</tt></a>
+      <a href="reference-verbs.html#filter"><tt>filter</tt></a>,
+      <a href="reference-verbs.html#put"><tt>put</tt></a>,
+      <a href="reference-verbs.html#sec2gmt"><tt>sec2gmt</tt></a>,
+      <a href="reference-verbs.html#sec2gmtdate"><tt>sec2gmtdate</tt></a>,
+      <a href="reference-verbs.html#step"><tt>step</tt></a>,
+      <a href="reference-verbs.html#tee"><tt>tee</tt></a>
     </td>
     <td> <tt>awk</tt>-like functionality </td>
   </tr>
 
   <tr>
     <td>
-      <a href="#histogram"><tt>histogram</tt></a>,
-      <a href="#stats1"><tt>stats1</tt></a>,
-      <a href="#stats2"><tt>stats2</tt></a>
+      <a href="reference-verbs.html#bar"><tt>bar</tt></a>,
+      <a href="reference-verbs.html#bootstrap"><tt>bootstrap</tt></a>,
+      <a href="reference-verbs.html#decimate"><tt>decimate</tt></a>,
+      <a href="reference-verbs.html#histogram"><tt>histogram</tt></a>,
+      <a href="reference-verbs.html#least-frequent"><tt>least-frequent</tt></a>,
+      <a href="reference-verbs.html#most-frequent"><tt>most-frequent</tt></a>,
+      <a href="reference-verbs.html#sample"><tt>sample</tt></a>,
+      <a href="reference-verbs.html#shuffle"><tt>shuffle</tt></a>,
+      <a href="reference-verbs.html#stats1"><tt>stats1</tt></a>,
+      <a href="reference-verbs.html#stats2"><tt>stats2</tt></a>
     </td>
     <td> Statistically oriented </td>
   </tr>
 
   <tr>
     <td>
-      <a href="#group-by"><tt>group-by</tt></a>,
-      <a href="#group-like"><tt>group-like</tt></a>,
-      <a href="#having-fields"><tt>having-fields</tt></a>
+      <a href="reference-verbs.html#group-by"><tt>group-by</tt></a>,
+      <a href="reference-verbs.html#group-like"><tt>group-like</tt></a>,
+      <a href="reference-verbs.html#having-fields"><tt>having-fields</tt></a>
     </td>
     <td> Particularly oriented toward POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE, although
       all Miller commands can handle heterogeneous records
@@ -60,15 +72,21 @@ POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)HERE
 
   <tr>
     <td>
-      <a href="#count-distinct"><tt>count-distinct</tt></a>,
-      <a href="#label"><tt>label</tt></a>,
-      <a href="#regularize"><tt>rename</tt></a>,
-      <a href="#rename"><tt>rename</tt></a>,
-      <a href="#reorder"><tt>reorder</tt></a>
+      <a href="reference-verbs.html#check"><tt>check</tt></a>,
+      <a href="reference-verbs.html#count-distinct"><tt>count-distinct</tt></a>,
+      <a href="reference-verbs.html#label"><tt>label</tt></a>,
+      <a href="reference-verbs.html#merge-fields"><tt>merge-fields</tt></a>,
+      <a href="reference-verbs.html#nest"><tt>nest</tt></a>,
+      <a href="reference-verbs.html#nothing"><tt>nothing</tt></a>,
+      <a href="reference-verbs.html#regularize"><tt>rename</tt></a>,
+      <a href="reference-verbs.html#rename"><tt>rename</tt></a>,
+      <a href="reference-verbs.html#reorder"><tt>reorder</tt></a>,
+      <a href="reference-verbs.html#reshape"><tt>reshape</tt></a>,
+      <a href="reference-verbs.html#seqgen"><tt>seqgen</tt></a>
     </td>
     <td> These draw from other sources (see also POKI_PUT_LINK_FOR_PAGE(originality.html)HERE):
-      <a href="#count-distinct"><tt>count-distinct</tt></a> is SQL-ish, and
-      <a href="#rename"><tt>rename</tt></a> can be done by <tt>sed</tt> (which does it faster:
+      <a href="reference-verbs.html#count-distinct"><tt>count-distinct</tt></a> is SQL-ish, and
+      <a href="reference-verbs.html#rename"><tt>rename</tt></a> can be done by <tt>sed</tt> (which does it faster:
         see POKI_PUT_LINK_FOR_PAGE(performance.html)HERE).
     </td>
   </tr>

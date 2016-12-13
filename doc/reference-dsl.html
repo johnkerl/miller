@@ -72,9 +72,9 @@ Miller commands were run with pretty-print-tabular output format.
 <br/>&bull;&nbsp;<a href="internationalization.html">Internationalization</a>
 <br/><b>Using Miller:</b>
 <br/>&bull;&nbsp;<a href="faq.html">FAQ</a>
-<br/>&bull;&nbsp;<a href="manpage.html">Manpage</a>
 <br/>&bull;&nbsp;<a href="data-examples.html">Data-diving examples</a>
 <br/>&bull;&nbsp;<a href="cookbook.html">Cookbook</a>
+<br/>&bull;&nbsp;<a href="manpage.html">Manpage</a>
 <br/>&bull;&nbsp;<a href="reference.html">Reference</a>
 <br/>&bull;&nbsp;<a href="reference-verbs.html">Reference: Verbs</a>
 <br/>&bull;&nbsp;<a href="reference-dsl.html"><b>Reference: DSL</b></a>
@@ -520,7 +520,7 @@ cannot use these names for local variables.
 defined by Miller.
 
 <p/>Miller supports the following five built-in variables for <a
-href="#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
+href="reference-verbs.html#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
 <tt>NF</tt>, <tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and
 <tt>FILENAME</tt>, as well as the mathematical constants <tt>PI</tt> and
 <tt>E</tt>.  Lastly, the <tt>ENV</tt> hashmap allows read access to environment
@@ -610,7 +610,7 @@ not be assigned to: <tt>NR=100</tt> is a syntax error.
 <a id="Field_names"/><h2>Field names</h2>
 
 <p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> and <a
-href="#put"><tt>put</tt></a> expressions, even though the dollar signs
+href="reference-verbs.html#put"><tt>put</tt></a> expressions, even though the dollar signs
 don&rsquo;t appear in the data stream. For integer-indexed data, this looks
 like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>, except that Miller allows
 non-numeric names such as <tt>$quantity</tt> or <tt>$hostname</tt>.  (Likewise,

@@ -419,6 +419,8 @@ DOC:
     ? tail -g
     - uniq -g
 
+! stats1 antimode
+
 ! more than 'syntax error' from lemon-parse failures ... lemon API research
 
 * stats1 for strings: min/max/percentiles. note count/mode already work.
