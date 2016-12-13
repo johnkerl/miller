@@ -47,6 +47,7 @@ MAPVAR CHECKLIST:
   lhmsmv -> mlhmmv?? need to be careful with int-key gets ... char* field_name in many places ...
 
 ! sortk sortv sortf
+  -> how to compare map-valued keys? recurse?
 
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
@@ -302,7 +303,7 @@ COMPARES:
 * https://www.gnu.org/software/datamash/manual/datamash.html
 
 To file:
-* note mlr -l -L -f -F -k -K rather prominently at mlh.
+* note mlr -l -L -f -F -k -K rather prominently at mlh, as well as mld.
 * mlh/mld func/subr @ filter
 * absent vs. empty; unset $x vs. $x="". no null keyword.
 * env lhs expr
