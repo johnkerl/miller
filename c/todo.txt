@@ -36,13 +36,6 @@ MAPVAR CHECKLIST:
 
 ! assert_map/assert_scalar/etc.
 
-! this should throw an error:
-  mlr --from ../c/s put 'int a=1;var b=a[2]'
-
-! 'Local variables' 'Notes:' split into surprising and unsurprising
-
-? on-line help to separate web page, as w/ manpage output?
-
 * emittable/dumpable/etc md_rhs -> more specific fcn-call.
 
 * modify isx()-predicate-doc @ mlr -f to acknowledge maps. also, UT.

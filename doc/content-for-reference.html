@@ -315,9 +315,11 @@ otherwise type-specific) operations.
 
 <ul>
 
-<li/> Miller&rsquo;s types for function processing are <b>null</b> (empty
-string), <b>error</b>, <b>string</b>, <b>float</b> (double-precision),
-<b>int</b> (64-bit signed), and <b>boolean</b>.
+<li/> Miller&rsquo;s types for function processing are <b>empty-null</b> (empty
+string), <b>absent-null</b> (reads of unset right-hand sides, or fall-through
+non-explicit return values from user-defined functions), <b>error</b>,
+<b>string</b>, <b>float</b> (double-precision), <b>int</b> (64-bit signed), and
+<b>boolean</b>.
 
 <li/> On input, string values representable as numbers, e.g. "3" or "3.1", are
 treated as int or float, respectively. If a record has <tt>x=1,y=2</tt> then
