@@ -1200,26 +1200,38 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(
 // ----------------------------------------------------------------
 static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm, rxval_evaluator_t* parg1) {
 
-	if (streq(fnnm, "assert_bool")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isboolean_no_free_xfunc,  parg1, "boolean");
+	if (streq(fnnm, "assert_absent")) {
+		return rxval_evaluator_alloc_from_A_x_func(b_x_isabsent_no_free_xfunc, parg1, "absent");
+	} else if (streq(fnnm, "assert_bool")) {
+		return rxval_evaluator_alloc_from_A_x_func(b_x_isboolean_no_free_xfunc, parg1, "boolean");
 	} else if (streq(fnnm, "assert_boolean")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isboolean_no_free_xfunc,  parg1, "boolean");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_isboolean_no_free_xfunc, parg1, "boolean");
 	} else if (streq(fnnm, "assert_empty")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isempty_no_free_xfunc,    parg1, "empty");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_isempty_no_free_xfunc, parg1, "empty");
+	} else if (streq(fnnm, "assert_emptymap")) {
+		return rxval_evaluator_alloc_from_A_x_func(b_x_isemptymap_no_free_xfunc, parg1, "emptymap");
 	} else if (streq(fnnm, "assert_float")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isfloat_no_free_xfunc,    parg1, "float");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_isfloat_no_free_xfunc, parg1, "float");
 	} else if (streq(fnnm, "assert_int")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isint_no_free_xfunc,      parg1, "int");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_isint_no_free_xfunc, parg1, "int");
+	} else if (streq(fnnm, "assert_map")) {
+		return rxval_evaluator_alloc_from_A_x_func(b_x_ismap_no_free_xfunc, parg1, "map");
+	} else if (streq(fnnm, "assert_nonemptymap")) {
+		return rxval_evaluator_alloc_from_A_x_func(b_x_isnonemptymap_no_free_xfunc, parg1, "nonemptymap");
 	} else if (streq(fnnm, "assert_notempty")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isnotempty_no_free_xfunc, parg1, "notempty");
+	} else if (streq(fnnm, "assert_notmap")) {
+		return rxval_evaluator_alloc_from_A_x_func(b_x_isnotmap_no_free_xfunc, parg1, "notmap");
 	} else if (streq(fnnm, "assert_notnull")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isnotnull_no_free_xfunc,  parg1, "notnull");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_isnotnull_no_free_xfunc, parg1, "notnull");
+	} else if (streq(fnnm, "assert_null")) {
+		return rxval_evaluator_alloc_from_A_x_func(b_x_isnull_no_free_xfunc, parg1, "notnull");
 	} else if (streq(fnnm, "assert_numeric")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isnumeric_no_free_xfunc,  parg1, "numeric");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_isnumeric_no_free_xfunc, parg1, "numeric");
 	} else if (streq(fnnm, "assert_present")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_ispresent_no_free_xfunc,  parg1, "present");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_ispresent_no_free_xfunc, parg1, "present");
 	} else if (streq(fnnm, "assert_string")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isstring_no_free_xfunc,   parg1, "string");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_isstring_no_free_xfunc, parg1, "string");
 
 	} else if (streq(fnnm, "isabsent")) {
 		return rxval_evaluator_alloc_from_x_x_func(b_x_isabsent_xfunc, parg1);
@@ -1240,7 +1252,7 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm,
 	} else if (streq(fnnm, "isnonemptymap")) {
 		return rxval_evaluator_alloc_from_x_x_func(b_x_isnonemptymap_xfunc, parg1);
 	} else if (streq(fnnm, "isnotempty")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isnotempty_xfunc, parg1); // xxx rename not->non
+		return rxval_evaluator_alloc_from_x_x_func(b_x_isnotempty_xfunc, parg1);
 	} else if (streq(fnnm, "isnotmap")) {
 		return rxval_evaluator_alloc_from_x_x_func(b_x_isnotmap_xfunc, parg1);
 	} else if (streq(fnnm, "isnotnull")) {
