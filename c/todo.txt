@@ -38,8 +38,6 @@ MAPVAR CHECKLIST:
 
 * emittable/dumpable/etc md_rhs -> more specific fcn-call.
 
-* modify isx()-predicate-doc @ mlr -f to acknowledge maps. also, UT.
-
 * death knell for mv-only evaluators: this is a syntax error:
   mlr put -q 'o = haskey(NR==4 ? {"a": NF} : {"b": NF}, "a"); print "NR=".NR.",haskeya=".o'
 
@@ -209,10 +207,6 @@ UT FOR 5.0.0:
 * func retval typedecls
 
 * mapvar matrix above
-
-* UT xfuncs:
-  - ispresent isabsent ismap isscalar & all other predicates
-  - length depth leafcount
 
 ================================================================
 HYGIENE FOR 5.0.0:
