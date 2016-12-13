@@ -29,8 +29,6 @@ OTHER:
 
 * poki-run no '$ ' for comment lines
 
-! --c2x et al. on file-formats page
-
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
@@ -45,8 +43,6 @@ MAPVAR CHECKLIST:
 ? on-line help to separate web page, as w/ manpage output?
 
 * emittable/dumpable/etc md_rhs -> more specific fcn-call.
-
-* fall-through absent-retval from UDF with typedecl retval: make sure this abends
 
 * modify isx()-predicate-doc @ mlr -f to acknowledge maps. also, UT.
 
@@ -238,6 +234,7 @@ TYPE-CHECKING:
 * doc unset of localvars along w/ unset elsewheredoc
 * func retval typedecls
 * typeof now includes 'map'; MT_STRING -> string etc.
+* fall-through absent-retval from UDF with typedecl retval abends
 
 MAPVARS:
 * map typedecl

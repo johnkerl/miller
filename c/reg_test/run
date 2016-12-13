@@ -5690,6 +5690,13 @@ run_mlr --from $indir/abixy put '
   $y=f($x)
 '
 
+mlr_expect_fail --from $indir/abixy put '
+  func f(x): int {
+    # fall-through return value is absent-null
+  }
+  $y=f($x)
+'
+
 
 # ================================================================
 # A key feature of this regression script is that it can be invoked from any
