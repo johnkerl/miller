@@ -82,8 +82,10 @@ void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, in
 
 local_stack_frame_t* local_stack_frame_enter(local_stack_frame_t* pframe);
 void local_stack_frame_exit(local_stack_frame_t* pframe);
-void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv_t* pval);
-void local_stack_frame_throw_type_xmismatch(local_stack_frame_entry_t* pentry, mlhmmv_xvalue_t* pxval);
+void local_stack_frame_throw_type_mismatch_for_write(local_stack_frame_entry_t* pentry, mv_t* pval);
+void local_stack_frame_throw_type_xmismatch_for_write(local_stack_frame_entry_t* pentry, mlhmmv_xvalue_t* pxval);
+void local_stack_frame_throw_type_mismatch_for_read(local_stack_frame_entry_t* pentry);
+void local_stack_frame_throw_type_xmismatch_for_read(local_stack_frame_entry_t* pentry);
 
 // ----------------------------------------------------------------
 static inline mv_t local_stack_frame_get_terminal_from_nonindexed(local_stack_frame_t* pframe, // move to reference semantics
@@ -109,7 +111,7 @@ static inline void local_stack_frame_assign_terminal_nonindexed(local_stack_fram
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 
 	if (!(type_mask_from_mv(&val) & pentry->type_mask)) { // xxx temp
-		local_stack_frame_throw_type_mismatch(pentry, &val);
+		local_stack_frame_throw_type_mismatch_for_write(pentry, &val);
 	}
 
 	mlhmmv_xvalue_free(&pentry->xvalue);
@@ -119,6 +121,9 @@ static inline void local_stack_frame_assign_terminal_nonindexed(local_stack_fram
 // ----------------------------------------------------------------
 mv_t local_stack_frame_ref_terminal_from_indexed(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, sllmv_t* pmvkeys);
+
+mlhmmv_xvalue_t* local_stack_frame_ref_extended_from_nonindexed(local_stack_frame_t* pframe,
+	int vardef_frame_relative_index);
 
 mlhmmv_xvalue_t* local_stack_frame_ref_extended_from_indexed(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, sllmv_t* pmvkeys);

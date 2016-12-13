@@ -240,27 +240,6 @@ static void cst_udf_type_check_return_value(cst_udf_state_t* pstate, mlhmmv_xval
 	}
 }
 
-// xxx incorp
-//void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv_t* pval) {
-//	MLR_INTERNAL_CODING_ERROR_IF(pentry->name == NULL);
-//	char* sval = mv_alloc_format_val_quoting_strings(pval);
-//	fprintf(stderr, "%s: %s type assertion for variable %s unmet by value %s with type %s.\n",
-//		MLR_GLOBALS.bargv0, type_mask_to_desc(pentry->type_mask), pentry->name,
-//		sval, mt_describe_type_simple(pval->type));
-//	free(sval);
-//	exit(1);
-//}
-//
-//void local_stack_frame_throw_type_xmismatch(local_stack_frame_entry_t* pentry, mlhmmv_xvalue_t* pxval) {
-//	MLR_INTERNAL_CODING_ERROR_IF(pentry->name == NULL);
-//	char* sval = mv_alloc_format_val_quoting_strings(&pxval->terminal_mlrval); // xxx temp
-//	fprintf(stderr, "%s: %s type assertion for variable %s unmet by value %s with type %s.\n",
-//		MLR_GLOBALS.bargv0, type_mask_to_desc(pentry->type_mask), pentry->name,
-//		sval, mlhmmv_xvalue_describe_type_simple(pxval));
-//	free(sval);
-//	exit(1);
-//}
-
 // ----------------------------------------------------------------
 // Callback function for the function manager to invoke into here
 

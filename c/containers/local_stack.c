@@ -106,6 +106,10 @@ mv_t local_stack_frame_ref_terminal_from_indexed(local_stack_frame_t* pframe,
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 	mlhmmv_xvalue_t* pbase_xval = &pentry->xvalue;
 
+	if (!(TYPE_MASK_MAP & pentry->type_mask)) {
+		local_stack_frame_throw_type_mismatch_for_read(pentry);
+	}
+
 #ifdef LOCAL_STACK_TRACE_ENABLE
 	// xxx needs an mlhmmv_xvalue_print
 	if (pbase_xval == NULL) {
@@ -146,8 +150,8 @@ mv_t local_stack_frame_ref_terminal_from_indexed(local_stack_frame_t* pframe,
 }
 
 // ----------------------------------------------------------------
-mlhmmv_xvalue_t* local_stack_frame_ref_extended_from_indexed(local_stack_frame_t* pframe,
-	int vardef_frame_relative_index, sllmv_t* pmvkeys)
+mlhmmv_xvalue_t* local_stack_frame_ref_extended_from_nonindexed(local_stack_frame_t* pframe,
+	int vardef_frame_relative_index)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
@@ -172,14 +176,43 @@ mlhmmv_xvalue_t* local_stack_frame_ref_extended_from_indexed(local_stack_frame_t
 	}
 #endif
 
-	int error = 0;
-	// Maybe null
-	if (pmvkeys == NULL || pmvkeys->length == 0) {
-		return pmvalue;
-	} else {
-		return mlhmmv_level_look_up_and_ref_xvalue(pmvalue->pnext_level, pmvkeys, &error);
+	return pmvalue;
+}
+
+// ----------------------------------------------------------------
+mlhmmv_xvalue_t* local_stack_frame_ref_extended_from_indexed(local_stack_frame_t* pframe,
+	int vardef_frame_relative_index, sllmv_t* pmvkeys)
+{
+	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p GET %d\n", pframe, vardef_frame_relative_index));
+	LOCAL_STACK_BOUNDS_CHECK(pframe, "GET", FALSE, vardef_frame_relative_index);
+
+	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
+	mlhmmv_xvalue_t* pmvalue = &pentry->xvalue;
+
+	if (!(TYPE_MASK_MAP & pentry->type_mask)) {
+		local_stack_frame_throw_type_mismatch_for_read(pentry);
 	}
 
+#ifdef LOCAL_STACK_TRACE_ENABLE
+	// xxx needs an mlhmmv_xvalue_print
+	if (pmvalue == NULL) {
+		printf("VALUE IS NULL\n");
+	} else if (pmvalue->is_terminal) {
+		char* s = mv_alloc_format_val(&pmvalue->terminal_mlrval);
+		printf("VALUE IS %s\n", s);
+		free(s);
+	} else if (pmvalue->pnext_level == NULL) {
+		LOCAL_STACK_TRACE(printf("VALUE IS EMPTY\n"));
+	} else {
+		printf("VALUE IS:\n");
+		printf("PTR IS %p\n", pmvalue->pnext_level);
+		mlhmmv_level_print_stacked(pmvalue->pnext_level, 0, TRUE, TRUE, "", stdout);
+	}
+#endif
+
+	int error = 0;
+	// Maybe null
+	return mlhmmv_level_look_up_and_ref_xvalue(pmvalue->pnext_level, pmvkeys, &error);
 }
 
 // ----------------------------------------------------------------
@@ -194,7 +227,7 @@ void local_stack_frame_define_terminal(local_stack_frame_t* pframe, char* variab
 	pentry->type_mask = type_mask;
 
 	if (!(type_mask_from_mv(&val) & pentry->type_mask)) {
-		local_stack_frame_throw_type_mismatch(pentry, &val);
+		local_stack_frame_throw_type_mismatch_for_write(pentry, &val);
 	}
 
 	mlhmmv_xvalue_free(&pentry->xvalue);
@@ -219,11 +252,11 @@ void local_stack_frame_define_extended(local_stack_frame_t* pframe, char* variab
 
 	if (xval.is_terminal) {
 		if (!(type_mask_from_mv(&xval.terminal_mlrval) & pentry->type_mask)) {
-			local_stack_frame_throw_type_mismatch(pentry, &xval.terminal_mlrval);
+			local_stack_frame_throw_type_mismatch_for_write(pentry, &xval.terminal_mlrval);
 		}
 	} else {
 		if (!(TYPE_MASK_MAP & pentry->type_mask)) {
-			local_stack_frame_throw_type_mismatch(pentry, &xval.terminal_mlrval);
+			local_stack_frame_throw_type_mismatch_for_write(pentry, &xval.terminal_mlrval);
 		}
 	}
 
@@ -243,7 +276,7 @@ void local_stack_frame_assign_terminal_indexed(local_stack_frame_t* pframe,
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 
 	if (!(TYPE_MASK_MAP & pentry->type_mask)) {
-		local_stack_frame_throw_type_mismatch(pentry, &terminal_value);
+		local_stack_frame_throw_type_mismatch_for_write(pentry, &terminal_value);
 	}
 
 	mlhmmv_xvalue_t* pmvalue = &pentry->xvalue;
@@ -268,11 +301,11 @@ void local_stack_frame_assign_extended_nonindexed(local_stack_frame_t* pframe,
 
 	if (xval.is_terminal) {
 		if (!(type_mask_from_mv(&xval.terminal_mlrval) & pentry->type_mask)) {
-			local_stack_frame_throw_type_mismatch(pentry, &xval.terminal_mlrval);
+			local_stack_frame_throw_type_mismatch_for_write(pentry, &xval.terminal_mlrval);
 		}
 	} else {
 		if (!(TYPE_MASK_MAP & pentry->type_mask)) {
-			local_stack_frame_throw_type_mismatch(pentry, &xval.terminal_mlrval);
+			local_stack_frame_throw_type_mismatch_for_write(pentry, &xval.terminal_mlrval);
 		}
 	}
 
@@ -290,7 +323,7 @@ void local_stack_frame_assign_extended_indexed(local_stack_frame_t* pframe,
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 
 	if (!(TYPE_MASK_MAP & pentry->type_mask)) {
-		local_stack_frame_throw_type_xmismatch(pentry, &new_value);
+		local_stack_frame_throw_type_xmismatch_for_write(pentry, &new_value);
 	}
 
 	mlhmmv_xvalue_t* pmvalue = &pentry->xvalue;
@@ -331,7 +364,7 @@ void local_stack_bounds_check(local_stack_frame_t* pframe, char* op, int set, in
 }
 
 // ----------------------------------------------------------------
-void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv_t* pval) {
+void local_stack_frame_throw_type_mismatch_for_write(local_stack_frame_entry_t* pentry, mv_t* pval) {
 	MLR_INTERNAL_CODING_ERROR_IF(pentry->name == NULL);
 	char* sval = mv_alloc_format_val_quoting_strings(pval);
 	fprintf(stderr, "%s: %s type assertion for variable %s unmet by value %s with type %s.\n",
@@ -341,12 +374,27 @@ void local_stack_frame_throw_type_mismatch(local_stack_frame_entry_t* pentry, mv
 	exit(1);
 }
 
-void local_stack_frame_throw_type_xmismatch(local_stack_frame_entry_t* pentry, mlhmmv_xvalue_t* pxval) {
+void local_stack_frame_throw_type_xmismatch_for_write(local_stack_frame_entry_t* pentry, mlhmmv_xvalue_t* pxval) {
 	MLR_INTERNAL_CODING_ERROR_IF(pentry->name == NULL);
 	char* sval = mv_alloc_format_val_quoting_strings(&pxval->terminal_mlrval); // xxx temp
 	fprintf(stderr, "%s: %s type assertion for variable %s unmet by value %s with type %s.\n",
 		MLR_GLOBALS.bargv0, type_mask_to_desc(pentry->type_mask), pentry->name,
 		sval, mlhmmv_xvalue_describe_type_simple(pxval));
 	free(sval);
+	exit(1);
+}
+
+// ----------------------------------------------------------------
+void local_stack_frame_throw_type_mismatch_for_read(local_stack_frame_entry_t* pentry) {
+	MLR_INTERNAL_CODING_ERROR_IF(pentry->name == NULL);
+	fprintf(stderr, "%s: %s type assertion for variable %s unmet on read.\n",
+		MLR_GLOBALS.bargv0, type_mask_to_desc(pentry->type_mask), pentry->name);
+	exit(1);
+}
+
+void local_stack_frame_throw_type_xmismatch_for_read(local_stack_frame_entry_t* pentry) {
+	MLR_INTERNAL_CODING_ERROR_IF(pentry->name == NULL);
+	fprintf(stderr, "%s: %s type assertion for variable %s unmet on read.\n",
+		MLR_GLOBALS.bargv0, type_mask_to_desc(pentry->type_mask), pentry->name);
 	exit(1);
 }

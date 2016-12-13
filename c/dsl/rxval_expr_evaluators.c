@@ -265,8 +265,8 @@ typedef struct _rxval_evaluator_from_nonindexed_local_variable_state_t {
 static boxed_xval_t rxval_evaluator_from_nonindexed_local_variable_func(void* pvstate, variables_t* pvars) {
 	rxval_evaluator_from_nonindexed_local_variable_state_t* pstate = pvstate;
 	local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-	mlhmmv_xvalue_t* pxval = local_stack_frame_ref_extended_from_indexed(
-		pframe, pstate->vardef_frame_relative_index, NULL);
+	mlhmmv_xvalue_t* pxval = local_stack_frame_ref_extended_from_nonindexed(
+		pframe, pstate->vardef_frame_relative_index);
 	if (pxval == NULL) {
 		return (boxed_xval_t) {
 			.xval = mlhmmv_xvalue_wrap_terminal(mv_absent()),

@@ -36,7 +36,8 @@ MAPVAR CHECKLIST:
 
 ! assert_map/assert_scalar/etc.
 
-! this should throw an error: mlr --from s put 'int a=1;var b=a[2]'
+! this should throw an error:
+  mlr --from ../c/s put 'int a=1;var b=a[2]'
 
 ! 'Local variables' 'Notes:' split into surprising and unsurprising
 
@@ -170,6 +171,11 @@ k assign LHS full-srec          from RHS func-retval        alloc ephem & move
 
 ----------------------------------------------------------------
 EXECUTION TRACE:
+
+! missing operators
+  $ mlr --from ../c/s put -T 'int a=1;var b=a[2]'
+  TRACE (int a 1)
+  TRACE (var b (a 2))
 
 ! trace *assignments* (mutations of pvars state)
 
