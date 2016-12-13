@@ -5697,6 +5697,10 @@ mlr_expect_fail --from $indir/abixy put '
   $y=f($x)
 '
 
+mlr_expect_fail --from $indir/abixy put '
+  int a = 1;
+  var b = a[2]; # cannot index localvar declared non-map
+'
 
 # ================================================================
 # A key feature of this regression script is that it can be invoked from any
