@@ -6,21 +6,38 @@ POKI_PUT_TOC_HERE
 <p/>
 
 The essential usages of <tt>mlr filter</tt> and <tt>mlr put</tt> are for
-record-selection and record-updating expressions, respectively. For example:
+record-selection and record-updating expressions, respectively. For example, given the following input data:
 
 POKI_RUN_COMMAND{{cat data/small}}HERE
+
+<p/> you might retain only the records whose <tt>a</tt> field has value <tt>eks</tt>:
+
 POKI_RUN_COMMAND{{mlr filter '$a == "eks"' data/small}}HERE
+
+<p/> or you might add a new field which is a function of existing fields:
+
 POKI_RUN_COMMAND{{mlr put '$ab = $a . "_" . $b ' data/small}}HERE
 
-<p/>The two are essentially the same command. The only differences are:
-expressions sent to <tt>mlr filter</tt> must end with a boolean expression,
-which is the filtering criterion; <tt>mlr filter</tt> expressions may not
-reference the <tt>filter</tt> keyword within them; and <tt>mlr filter</tt>
-expressions may not use <tt>tee</tt>, <tt>emit</tt>, <tt>emitp</tt>, or
-<tt>emitf</tt>.  All the rest is the same: in particular, you can define and
-invoke functions and subroutines to help produce the final boolean statement,
-and record fields may be assigned to in the statements preceding the final
-boolean statement.
+<p/>The two verbs <tt>mlr filter</tt> and <tt>mlr put</tt> are essentially the
+same. The only differences are:
+
+<ul>
+
+<li/> Expressions sent to <tt>mlr filter</tt> must end with a boolean expression,
+which is the filtering criterion;
+
+<li/> <tt>mlr filter</tt> expressions may not
+reference the <tt>filter</tt> keyword within them; and
+
+<li/> <tt>mlr filter</tt> expressions may not use <tt>tee</tt>, <tt>emit</tt>,
+<tt>emitp</tt>, or <tt>emitf</tt>.
+
+</ul>
+
+<p/> All the rest is the same: in particular, you can define and invoke
+functions and subroutines to help produce the final boolean statement, and
+record fields may be assigned to in the statements preceding the final boolean
+statement.
 
 <p/>There are more details and more choices, of course, as detailed in the following sections.
 
@@ -353,8 +370,6 @@ POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$reachable = int(boolean($reacha
 POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$format_ok = isstring($reachable)' data/het-bool.csv}}HERE
 
 <p/> Or perhaps to flag badly formatted data outside the output stream:
-
-<p/> xxx need a way to trap stderr within poki
 
 POKI_RUN_COMMAND{{mlr --icsvlite --opprint put 'if (!isstring($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv}}HERE
 

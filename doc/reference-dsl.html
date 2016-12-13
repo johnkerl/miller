@@ -188,7 +188,7 @@ Miller commands were run with pretty-print-tabular output format.
 <p/>
 
 The essential usages of <tt>mlr filter</tt> and <tt>mlr put</tt> are for
-record-selection and record-updating expressions, respectively. For example:
+record-selection and record-updating expressions, respectively. For example, given the following input data:
 
 <p/>
 <div class="pokipanel">
@@ -202,6 +202,9 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </pre>
 </div>
 <p/>
+
+<p/> you might retain only the records whose <tt>a</tt> field has value <tt>eks</tt>:
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -211,6 +214,9 @@ a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
 </pre>
 </div>
 <p/>
+
+<p/> or you might add a new field which is a function of existing fields:
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -224,15 +230,26 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,ab=wye_pan
 </div>
 <p/>
 
-<p/>The two are essentially the same command. The only differences are:
-expressions sent to <tt>mlr filter</tt> must end with a boolean expression,
-which is the filtering criterion; <tt>mlr filter</tt> expressions may not
-reference the <tt>filter</tt> keyword within them; and <tt>mlr filter</tt>
-expressions may not use <tt>tee</tt>, <tt>emit</tt>, <tt>emitp</tt>, or
-<tt>emitf</tt>.  All the rest is the same: in particular, you can define and
-invoke functions and subroutines to help produce the final boolean statement,
-and record fields may be assigned to in the statements preceding the final
-boolean statement.
+<p/>The two verbs <tt>mlr filter</tt> and <tt>mlr put</tt> are essentially the
+same. The only differences are:
+
+<ul>
+
+<li/> Expressions sent to <tt>mlr filter</tt> must end with a boolean expression,
+which is the filtering criterion;
+
+<li/> <tt>mlr filter</tt> expressions may not
+reference the <tt>filter</tt> keyword within them; and
+
+<li/> <tt>mlr filter</tt> expressions may not use <tt>tee</tt>, <tt>emit</tt>,
+<tt>emitp</tt>, or <tt>emitf</tt>.
+
+</ul>
+
+<p/> All the rest is the same: in particular, you can define and invoke
+functions and subroutines to help produce the final boolean statement, and
+record fields may be assigned to in the statements preceding the final boolean
+statement.
 
 <p/>There are more details and more choices, of course, as detailed in the following sections.
 
@@ -1025,8 +1042,6 @@ wilma  1         false
 
 <p/> Or perhaps to flag badly formatted data outside the output stream:
 
-<p/> xxx need a way to trap stderr within poki
-
 <p/>
 <div class="pokipanel">
 <pre>
@@ -1055,8 +1070,6 @@ fred,true
 </pre>
 </div>
 <p/>
-
-<p/> xxx under construction
 
 <!-- ================================================================ -->
 <a id="Type-declarations_for_local_variables,_function_parameter,_and_function_return_values"/><h3>Type-declarations for local variables, function parameter, and function return values</h3>
