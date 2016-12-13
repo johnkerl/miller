@@ -307,14 +307,50 @@ POKI_RUN_COMMAND{{cat data/type-decl-example.mlr}}HERE
 <h2>Type-checking</h2>
 
 <p/> Miller&rsquo;s <tt>put</tt>/<tt>filter</tt> DSLs support two optional
-kinds of type-checking: one is <b>type declaration</b> for assignments to local
-variables, binding of arguments to user-defined functions, and return values
-from user-defined functions, and the other is inline <b>assertions</b> within
-expressions. These are discussed in the following subsections.
+kinds of type-checking.  One is inline <b>type-tests</b> and
+<b>type-assertions</b> within expressions.  The other is <b>type
+declarations</b> for assignments to local variables, binding of arguments to
+user-defined functions, and return values from user-defined functions, These
+are discussed in the following subsections.
 
 <p/> Use of type-checking is entirely up to you: omit it if you want
 flexibility with heterogeneous data; use it if you want to help catch
 misspellings in your DSL code or unexpected irregularities in your input data.
+
+<!-- ================================================================ -->
+<h3>Type-test expressions and type-assertion expressions</h3>
+
+<p/> The following <tt>is...</tt> functions take a value and return a boolean
+indicating whether the argument is of the indicated type. The
+<tt>assert_...</tt> functions return their argument if it is of the specified
+type, and cause a fatal error otherwise:
+
+<table>
+<tr>
+<td>
+POKI_RUN_COMMAND{{mlr -F | grep ^is}}HERE
+</td>
+<td>
+POKI_RUN_COMMAND{{mlr -F | grep ^assert}}HERE
+</td>
+</tr>
+</table>
+
+<p/> Here are some ways to use them. Suppose you have the following data file,
+with inconsistent typing for boolean. (Also imagine that, for the sake of
+discussion, we have a million-line file rather than a four-line file, so we
+can&rsquo;t see it all at once and some automation is called for.)
+
+POKI_RUN_COMMAND{{cat data/het-bool.csv}}HERE
+
+<p/> One option is to coerce everything to boolean, or integer:
+
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$reachable = boolean($reachable)' data/het-bool.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv}}HERE
+
+<p/> A second option is to flag badly formatted data:
+
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$format_ok = isboolean($reachable)' data/het-bool.csv}}HERE
 
 <!-- ================================================================ -->
 <h3>Type-declarations for local variables, function parameter, and function return values</h3>
@@ -413,15 +449,6 @@ when the function is called:
   }
 </pre>
 </div>
-
-<!-- ================================================================ -->
-<h3>Type-assertion expressions</h3>
-
-<p/> Similarly to type declarations, there are pass-through functions named with
-<tt>assert...</tt> which can be used to for optional type-checking within
-expressions: <tt>$o = assert_num($x)**2</tt> means that a numeric value will be
-squared and stored, while a non-numeric value will result in a fatal error.
-xxx need full list, and examples here
 
 <!-- ================================================================ -->
 <h2>Out-of-stream variables</h2>

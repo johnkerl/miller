@@ -153,8 +153,8 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names">Field names</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Local_variables">Local variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-checking">Type-checking</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-test_expressions_and_type-assertion_expressions">Type-test expressions and type-assertion expressions</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-declarations_for_local_variables,_function_parameter,_and_function_return_values">Type-declarations for local variables, function parameter, and function return values</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-assertion_expressions">Type-assertion expressions</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables">Out-of-stream variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables">Indexed out-of-stream variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Aggregate_variable_assignments">Aggregate variable assignments</a><br/>
@@ -890,14 +890,138 @@ print "outer j =" . j;                            # j is undefined in this scope
 <a id="Type-checking"/><h2>Type-checking</h2>
 
 <p/> Miller&rsquo;s <tt>put</tt>/<tt>filter</tt> DSLs support two optional
-kinds of type-checking: one is <b>type declaration</b> for assignments to local
-variables, binding of arguments to user-defined functions, and return values
-from user-defined functions, and the other is inline <b>assertions</b> within
-expressions. These are discussed in the following subsections.
+kinds of type-checking.  One is inline <b>type-tests</b> and
+<b>type-assertions</b> within expressions.  The other is <b>type
+declarations</b> for assignments to local variables, binding of arguments to
+user-defined functions, and return values from user-defined functions, These
+are discussed in the following subsections.
 
 <p/> Use of type-checking is entirely up to you: omit it if you want
 flexibility with heterogeneous data; use it if you want to help catch
 misspellings in your DSL code or unexpected irregularities in your input data.
+
+<!-- ================================================================ -->
+<a id="Type-test_expressions_and_type-assertion_expressions"/><h3>Type-test expressions and type-assertion expressions</h3>
+
+<p/> The following <tt>is...</tt> functions take a value and return a boolean
+indicating whether the argument is of the indicated type. The
+<tt>assert_...</tt> functions return their argument if it is of the specified
+type, and cause a fatal error otherwise:
+
+<table>
+<tr>
+<td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr -F | grep ^is
+isabsent
+isbool
+isboolean
+isempty
+isemptymap
+isfloat
+isint
+ismap
+isnonemptymap
+isnotempty
+isnotmap
+isnotnull
+isnull
+isnumeric
+ispresent
+isstring
+</pre>
+</div>
+<p/>
+</td>
+<td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr -F | grep ^assert
+assert_absent
+assert_bool
+assert_boolean
+assert_empty
+assert_emptymap
+assert_float
+assert_int
+assert_map
+assert_nonemptymap
+assert_notempty
+assert_notmap
+assert_notnull
+assert_null
+assert_numeric
+assert_present
+assert_string
+</pre>
+</div>
+<p/>
+</td>
+</tr>
+</table>
+
+<p/> Here are some ways to use them. Suppose you have the following data file,
+with inconsistent typing for boolean. (Also imagine that, for the sake of
+discussion, we have a million-line file rather than a four-line file, so we
+can&rsquo;t see it all at once and some automation is called for.)
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/het-bool.csv
+name,reachable
+barney,false
+betty,true
+fred,true
+wilma,1
+</pre>
+</div>
+<p/>
+
+<p/> One option is to coerce everything to boolean, or integer:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsvlite --opprint put '$reachable = boolean($reachable)' data/het-bool.csv
+name   reachable
+barney false
+betty  true
+fred   true
+wilma  true
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsvlite --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv
+name   reachable
+barney 0
+betty  1
+fred   1
+wilma  1
+</pre>
+</div>
+<p/>
+
+<p/> A second option is to flag badly formatted data:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsvlite --opprint put '$format_ok = isboolean($reachable)' data/het-bool.csv
+name   reachable format_ok
+barney false     false
+betty  true      false
+fred   true      false
+wilma  1         false
+</pre>
+</div>
+<p/>
 
 <!-- ================================================================ -->
 <a id="Type-declarations_for_local_variables,_function_parameter,_and_function_return_values"/><h3>Type-declarations for local variables, function parameter, and function return values</h3>
@@ -996,15 +1120,6 @@ when the function is called:
   }
 </pre>
 </div>
-
-<!-- ================================================================ -->
-<a id="Type-assertion_expressions"/><h3>Type-assertion expressions</h3>
-
-<p/> Similarly to type declarations, there are pass-through functions named with
-<tt>assert...</tt> which can be used to for optional type-checking within
-expressions: <tt>$o = assert_num($x)**2</tt> means that a numeric value will be
-squared and stored, while a non-numeric value will result in a fatal error.
-xxx need full list, and examples here
 
 <!-- ================================================================ -->
 <a id="Out-of-stream_variables"/><h2>Out-of-stream variables</h2>
@@ -3265,35 +3380,53 @@ otherwise.
 isstring (class=typing #args=1): True if field is present with string (including
 empty-string) value
 
-assert_notnull (class=typing #args=1): Returns argument if non-null (non-empty
-and non-absent), else throws an error.
+assert_absent (class=typing #args=1): Returns argument if it is absent in the
+input ata, else throws an error.
 
-assert_present (class=typing #args=1): Returns argument if present in input,
-else throws an error.
+assert_bool (class=typing #args=1): Returns argument if it is present with
+boolean value, else throws an error.
 
-assert_empty (class=typing #args=1): Returns argument if present in input with
+assert_boolean (class=typing #args=1): Returns argument if it is present with
+boolean value, else throws an error.
+
+assert_empty (class=typing #args=1): Returns argument if it is present in input
+with empty value, else throws an error.
+
+assert_emptymap (class=typing #args=1): Returns argument if it is a map with
 empty value, else throws an error.
 
-assert_notempty (class=typing #args=1): Returns argument if present in input
-with non-empty value, else throws an error.
-
-assert_numeric (class=typing #args=1): Returns argument if present with int or
+assert_float (class=typing #args=1): Returns argument if it is present with
 float value, else throws an error.
 
-assert_int (class=typing #args=1): Returns argument if present with int value,
-else throws an error.
-
-assert_float (class=typing #args=1): Returns argument if present with float
+assert_int (class=typing #args=1): Returns argument if it is present with int
 value, else throws an error.
 
-assert_bool (class=typing #args=1): Returns argument if present with boolean
-value, else throws an error.
+assert_map (class=typing #args=1): Returns argument if it is a map, else throws
+an error.
 
-assert_boolean (class=typing #args=1): Returns argument if present with boolean
-value, else throws an error.
+assert_nonemptymap (class=typing #args=1): Returns argument if it is a non-empty
+map, else throws an error.
 
-assert_string (class=typing #args=1): Returns argument if present with string
-(including empty-string) value, else throws an error.
+assert_notempty (class=typing #args=1): Returns argument if it is present in
+input with non-empty value, else throws an error.
+
+assert_notmap (class=typing #args=1): Returns argument if it is not a map, else
+throws an error.
+
+assert_notnull (class=typing #args=1): Returns argument if it is non-null
+(non-empty and non-absent), else throws an error.
+
+assert_null (class=typing #args=1): Returns argument if it is null (empty or
+absent), else throws an error.
+
+assert_numeric (class=typing #args=1): Returns argument if it is present with
+int or float value, else throws an error.
+
+assert_present (class=typing #args=1): Returns argument if it is present in
+input, else throws an error.
+
+assert_string (class=typing #args=1): Returns argument if it is present with
+string (including empty-string) value, else throws an error.
 
 boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
 

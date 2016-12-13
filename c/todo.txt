@@ -35,7 +35,6 @@ MAPVAR CHECKLIST:
 ! UT cases detailed below
 
 ! assert_map/assert_scalar/etc.
-  - impl
   - UTs
   - mlh
   - mld

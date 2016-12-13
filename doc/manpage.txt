@@ -135,10 +135,11 @@ OPTIONS
 	hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime
 	isabsent isbool isboolean isempty isemptymap isfloat isint ismap isnonemptymap
 	isnotempty isnotmap isnotnull isnull isnumeric ispresent isstring
-	assert_notnull assert_present assert_empty assert_notempty assert_numeric
-	assert_int assert_float assert_bool assert_boolean assert_string boolean float
-	fmtnum hexfmt int string typeof depth haskey joink joinkv joinv leafcount
-	length mapdiff mapsum splitkv splitkvx splitnv splitnvx
+	assert_absent assert_bool assert_boolean assert_empty assert_emptymap
+	assert_float assert_int assert_map assert_nonemptymap assert_notempty
+	assert_notmap assert_notnull assert_null assert_numeric assert_present
+	assert_string boolean float fmtnum hexfmt int string typeof depth haskey joink
+	joinkv joinv leafcount length mapdiff mapsum splitkv splitkvx splitnv splitnvx
        Please use "mlr --help-function {function name}" for function-specific help.
        Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
        Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -1423,35 +1424,53 @@ FUNCTIONS FOR FILTER/PUT
    isstring
        (class=typing #args=1): True if field is present with string (including empty-string) value
 
-   assert_notnull
-       (class=typing #args=1): Returns argument if non-null (non-empty and non-absent), else throws an error.
-
-   assert_present
-       (class=typing #args=1): Returns argument if present in input, else throws an error.
-
-   assert_empty
-       (class=typing #args=1): Returns argument if present in input with empty value, else throws an error.
-
-   assert_notempty
-       (class=typing #args=1): Returns argument if present in input with non-empty value, else throws an error.
-
-   assert_numeric
-       (class=typing #args=1): Returns argument if present with int or float value, else throws an error.
-
-   assert_int
-       (class=typing #args=1): Returns argument if present with int value, else throws an error.
-
-   assert_float
-       (class=typing #args=1): Returns argument if present with float value, else throws an error.
+   assert_absent
+       (class=typing #args=1): Returns argument if it is absent in the input ata, else throws an error.
 
    assert_bool
-       (class=typing #args=1): Returns argument if present with boolean value, else throws an error.
+       (class=typing #args=1): Returns argument if it is present with boolean value, else throws an error.
 
    assert_boolean
-       (class=typing #args=1): Returns argument if present with boolean value, else throws an error.
+       (class=typing #args=1): Returns argument if it is present with boolean value, else throws an error.
+
+   assert_empty
+       (class=typing #args=1): Returns argument if it is present in input with empty value, else throws an error.
+
+   assert_emptymap
+       (class=typing #args=1): Returns argument if it is a map with empty value, else throws an error.
+
+   assert_float
+       (class=typing #args=1): Returns argument if it is present with float value, else throws an error.
+
+   assert_int
+       (class=typing #args=1): Returns argument if it is present with int value, else throws an error.
+
+   assert_map
+       (class=typing #args=1): Returns argument if it is a map, else throws an error.
+
+   assert_nonemptymap
+       (class=typing #args=1): Returns argument if it is a non-empty map, else throws an error.
+
+   assert_notempty
+       (class=typing #args=1): Returns argument if it is present in input with non-empty value, else throws an error.
+
+   assert_notmap
+       (class=typing #args=1): Returns argument if it is not a map, else throws an error.
+
+   assert_notnull
+       (class=typing #args=1): Returns argument if it is non-null (non-empty and non-absent), else throws an error.
+
+   assert_null
+       (class=typing #args=1): Returns argument if it is null (empty or absent), else throws an error.
+
+   assert_numeric
+       (class=typing #args=1): Returns argument if it is present with int or float value, else throws an error.
+
+   assert_present
+       (class=typing #args=1): Returns argument if it is present in input, else throws an error.
 
    assert_string
-       (class=typing #args=1): Returns argument if present with string (including empty-string) value, else throws an error.
+       (class=typing #args=1): Returns argument if it is present with string (including empty-string) value, else throws an error.
 
    boolean
        (class=conversion #args=1): Convert int/float/bool/string to boolean.
