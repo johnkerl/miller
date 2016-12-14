@@ -52,7 +52,7 @@ outfile=$outdir/out
 expfile=$expdir/out
 mkdir -p $outdir
 
-rm -rvf $outdir
+rm -rf $outdir
 mkdir -p $outdir
 touch $outfile
 echo
