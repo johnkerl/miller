@@ -456,12 +456,13 @@ json-vg-mem: .always
 	$(CCDEBUG) $(EXPERIMENTAL_JSON_VG_MEM_SRCS) -o json-vg-mem
 
 # ================================================================
+# BSD can't handle rm -v, alas
 clean:
-	@rm -vf mlr mlrd mlrg mlrp tester
+	@rm -f mlr mlrd mlrg mlrp tester
 	@make -C parsing -f Makefile.no-autoconfig clean
 
 perfclean profclean:
-	@rm -vf gmon.out perf.data perf.data.old
+	@rm -f gmon.out perf.data perf.data.old
 
 .always:
 	@true
