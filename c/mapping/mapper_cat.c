@@ -20,7 +20,8 @@ static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* coun
 	slls_t* pgroup_by_field_names);
 static void      mapper_cat_free(mapper_t* pmapper);
 static sllv_t*   mapper_cat_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t*   mapper_catn_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_catn_process_ungrouped(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static sllv_t*   mapper_catn_process_grouped(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_cat_setup = {
@@ -86,12 +87,24 @@ static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* coun
 	pstate->counter_field_name    = counter_field_name;
 	pstate->counter               = 0LL;
 	pmapper->pvstate              = pstate;
-	pmapper->pprocess_func        = do_counters ? mapper_catn_process : mapper_cat_process;
+
+	pmapper->pprocess_func = NULL;
+	if (do_counters) {
+		if (pgroup_by_field_names->length == 0) {
+			pmapper->pprocess_func = mapper_catn_process_ungrouped;
+		} else {
+			pmapper->pprocess_func = mapper_catn_process_grouped;
+		}
+	} else {
+		pmapper->pprocess_func = mapper_cat_process;
+	}
+
 	pmapper->pfree_func           = mapper_cat_free;
 	return pmapper;
 }
 static void mapper_cat_free(mapper_t* pmapper) {
 	mapper_cat_state_t* pstate = pmapper->pvstate;
+	slls_free(pstate->pgroup_by_field_names);
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
@@ -106,7 +119,19 @@ static sllv_t* mapper_cat_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_catn_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_catn_process_ungrouped(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_cat_state_t* pstate = (mapper_cat_state_t*)pvstate;
+	if (pinrec != NULL) {
+		char* counter_field_value = mlr_alloc_string_from_ull(++pstate->counter);
+		lrec_prepend(pinrec, pstate->counter_field_name, counter_field_value, FREE_ENTRY_VALUE);
+		return sllv_single(pinrec);
+	} else {
+		return sllv_single(NULL);
+	}
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_catn_process_grouped(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_cat_state_t* pstate = (mapper_cat_state_t*)pvstate;
 	if (pinrec != NULL) {
 		char* counter_field_value = mlr_alloc_string_from_ull(++pstate->counter);
