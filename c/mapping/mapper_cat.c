@@ -7,6 +7,8 @@ typedef struct _mapper_cat_state_t {
 	ap_state_t* pargp;
 	char* counter_field_name;
 	unsigned long long counter;
+	slls_t* pgroup_by_field_names;
+	lhmsll_t* pcounters_by_group;
 } mapper_cat_state_t;
 
 #define DEFAULT_COUNTER_FIELD_NAME "n"
@@ -14,7 +16,8 @@ typedef struct _mapper_cat_state_t {
 static void      mapper_cat_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
-static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* counter_field_name);
+static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* counter_field_name,
+	slls_t* pgroup_by_field_names);
 static void      mapper_cat_free(mapper_t* pmapper);
 static sllv_t*   mapper_cat_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_catn_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -34,6 +37,7 @@ static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv,
 	char* default_counter_field_name = DEFAULT_COUNTER_FIELD_NAME;
 	char* counter_field_name = NULL;
 	int   do_counters = FALSE;
+	slls_t* pgroup_by_field_names = slls_alloc();
 
 	if ((argc - *pargi) < 1) {
 		mapper_cat_usage(stderr, argv[0], argv[*pargi]);
@@ -45,6 +49,7 @@ static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv,
 	ap_state_t* pstate = ap_alloc();
 	ap_define_true_flag(pstate, "-n",   &do_counters);
 	ap_define_string_flag(pstate, "-N", &counter_field_name);
+	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_cat_usage(stderr, argv[0], verb);
@@ -57,7 +62,7 @@ static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv,
 		counter_field_name = default_counter_field_name;
 	}
 
-	mapper_t* pmapper = mapper_cat_alloc(pstate, do_counters, counter_field_name);
+	mapper_t* pmapper = mapper_cat_alloc(pstate, do_counters, counter_field_name, pgroup_by_field_names);
 	return pmapper;
 }
 
@@ -71,15 +76,18 @@ static void mapper_cat_usage(FILE* o, char* argv0, char* verb) {
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* counter_field_name) {
+static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* counter_field_name,
+	slls_t* pgroup_by_field_names)
+{
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-	mapper_cat_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_cat_state_t));
-	pstate->pargp              = pargp;
-	pstate->counter_field_name = counter_field_name;
-	pstate->counter            = 0LL;
-	pmapper->pvstate           = pstate;
-	pmapper->pprocess_func     = do_counters ? mapper_catn_process : mapper_cat_process;
-	pmapper->pfree_func        = mapper_cat_free;
+	mapper_cat_state_t* pstate    = mlr_malloc_or_die(sizeof(mapper_cat_state_t));
+	pstate->pargp                 = pargp;
+	pstate->pgroup_by_field_names = pgroup_by_field_names;
+	pstate->counter_field_name    = counter_field_name;
+	pstate->counter               = 0LL;
+	pmapper->pvstate              = pstate;
+	pmapper->pprocess_func        = do_counters ? mapper_catn_process : mapper_cat_process;
+	pmapper->pfree_func           = mapper_cat_free;
 	return pmapper;
 }
 static void mapper_cat_free(mapper_t* pmapper) {
