@@ -237,8 +237,9 @@ boxed_xval_t m_sss_splitkvx_xfunc(boxed_xval_t* pstringval, boxed_xval_t* ppairs
 // ----------------------------------------------------------------
 // Precondition: the caller has ensured that the separator is a string-valued terminal.
 boxed_xval_t s_ms_joink_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
-	if (pmapval->xval.is_terminal)
-		return box_ephemeral_val(mv_absent()); // xxx stub
+	if (pmapval->xval.is_terminal) {
+		return box_ephemeral_val(mv_absent());
+	}
 
 	string_builder_t* psb = sb_alloc(SB_JOIN_ALLOC_SIZE);
 	for (mlhmmv_level_entry_t* pentry = pmapval->xval.pnext_level->phead; pentry != NULL; pentry = pentry->pnext) {
@@ -264,8 +265,9 @@ boxed_xval_t s_ms_joink_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
 // ----------------------------------------------------------------
 // Precondition: the caller has ensured that the separator is a string-valued terminal.
 boxed_xval_t s_ms_joinv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
-	if (pmapval->xval.is_terminal)
-		return box_ephemeral_val(mv_absent()); // xxx stub
+	if (pmapval->xval.is_terminal) {
+		return box_ephemeral_val(mv_absent());
+	}
 
 	string_builder_t* psb = sb_alloc(SB_JOIN_ALLOC_SIZE);
 	for (mlhmmv_level_entry_t* pentry = pmapval->xval.pnext_level->phead; pentry != NULL; pentry = pentry->pnext) {
@@ -293,8 +295,9 @@ boxed_xval_t s_ms_joinv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
 // ----------------------------------------------------------------
 // Precondition: the caller has ensured that the separators are string-valued terminals.
 boxed_xval_t s_mss_joinkv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* ppairsepval, boxed_xval_t* plistsepval) {
-	if (pmapval->xval.is_terminal)
-		return box_ephemeral_val(mv_absent()); // xxx stub
+	if (pmapval->xval.is_terminal) {
+		return box_ephemeral_val(mv_absent());
+	}
 
 	string_builder_t* psb = sb_alloc(SB_JOIN_ALLOC_SIZE);
 	for (mlhmmv_level_entry_t* pentry = pmapval->xval.pnext_level->phead; pentry != NULL; pentry = pentry->pnext) {
