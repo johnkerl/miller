@@ -2,13 +2,15 @@
 #include "mapping/mappers.h"
 #include "lib/mlrutil.h"
 #include "containers/sllv.h"
+#include "containers/lhmslv.h"
+#include "containers/mixutil.h"
 
 typedef struct _mapper_cat_state_t {
 	ap_state_t* pargp;
 	char* counter_field_name;
 	unsigned long long counter;
 	slls_t* pgroup_by_field_names;
-	lhmsll_t* pcounters_by_group;
+	lhmslv_t* pcounters_by_group;
 } mapper_cat_state_t;
 
 #define DEFAULT_COUNTER_FIELD_NAME "n"
@@ -74,6 +76,7 @@ static void mapper_cat_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-n        Prepend field \"%s\" to each record with record-counter starting at 1\n",
 		DEFAULT_COUNTER_FIELD_NAME);
 	fprintf(o, "-N {name} Prepend field {name} to each record with record-counter starting at 1\n");
+	// xxx -g info here
 }
 
 // ----------------------------------------------------------------
@@ -86,6 +89,7 @@ static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* coun
 	pstate->pgroup_by_field_names = pgroup_by_field_names;
 	pstate->counter_field_name    = counter_field_name;
 	pstate->counter               = 0LL;
+	pstate->pcounters_by_group    = lhmslv_alloc();
 	pmapper->pvstate              = pstate;
 
 	pmapper->pprocess_func = NULL;
@@ -105,6 +109,7 @@ static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* coun
 static void mapper_cat_free(mapper_t* pmapper) {
 	mapper_cat_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->pgroup_by_field_names);
+	lhmslv_free(pstate->pcounters_by_group);
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
@@ -134,7 +139,27 @@ static sllv_t* mapper_catn_process_ungrouped(lrec_t* pinrec, context_t* pctx, vo
 static sllv_t* mapper_catn_process_grouped(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_cat_state_t* pstate = (mapper_cat_state_t*)pvstate;
 	if (pinrec != NULL) {
-		char* counter_field_value = mlr_alloc_string_from_ull(++pstate->counter);
+
+		unsigned long long counter = 0LL;
+
+		slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(pinrec,
+			pstate->pgroup_by_field_names);
+		if (pgroup_by_field_values == NULL) { // Treat as unkeyed
+			counter = ++pstate->counter;
+		} else {
+			unsigned long long* pcount_for_group = lhmslv_get(pstate->pcounters_by_group,
+				pgroup_by_field_values);
+			if (pcount_for_group == NULL) {
+				pcount_for_group = mlr_malloc_or_die(sizeof(unsigned long long));
+				*pcount_for_group = 0LL;
+				lhmslv_put(pstate->pcounters_by_group, slls_copy(pgroup_by_field_values),
+					pcount_for_group, FREE_ENTRY_KEY);
+			}
+			slls_free(pgroup_by_field_values);
+			(*pcount_for_group)++;
+			counter = *pcount_for_group;
+		}
+		char* counter_field_value = mlr_alloc_string_from_ull(counter);
 		lrec_prepend(pinrec, pstate->counter_field_name, counter_field_value, FREE_ENTRY_VALUE);
 		return sllv_single(pinrec);
 	} else {
