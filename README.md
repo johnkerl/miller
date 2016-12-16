@@ -1,6 +1,10 @@
 **Miller is like awk, sed, cut, join, and sort for name-indexed data such as CSV and tabular JSON.**
 
-[![Build Status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller) [![License](http://img.shields.io/badge/license-BSD2-blue.svg)](https://github.com/johnkerl/miller/blob/master/LICENSE.txt) [![Docs](https://img.shields.io/badge/docs-here-yellow.svg)](http://johnkerl.org/miller/doc)
+[![Build Status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller)
+[![Appveyor (alpha)](https://ci.appveyor.com/project/johnkerl/miller)](https://ci.appveyor.com/project/johnkerl/miller)
+[![License](http://img.shields.io/badge/license-BSD2-blue.svg)](https://github.com/johnkerl/miller/blob/master/LICENSE.txt) [![Docs](https://img.shields.io/badge/docs-here-yellow.svg)](http://johnkerl.org/miller/doc)
+
+
 
 [![Xenial](https://img.shields.io/badge/distros-ubuntu-db4923.svg)](https://launchpad.net/ubuntu/xenial/+package/miller)
 [![Ubuntu 16.04 LTS](https://img.shields.io/badge/distros-ubuntu1604lts-db4923.svg)](http://installion.co.uk/ubuntu/xenial/universe/m/miller/install/index.html)
