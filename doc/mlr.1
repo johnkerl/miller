@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-12-13
+.\"      Date: 2016-12-16
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-12-13" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-12-16" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -462,6 +462,8 @@ Usage: mlr cat [options]
 Passes input records directly to output. Most useful for format conversion.
 Options:
 -n        Prepend field "n" to each record with record-counter starting at 1
+-g {comma-separated field name(s)} When used with -n/-N, writes record-counters
+          keyed by specified field name(s).
 -N {name} Prepend field {name} to each record with record-counter starting at 1
 .fi
 .if n \{\

@@ -25,8 +25,6 @@ OTHER:
 * dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d
 ! 'Error code 1' -> clearer on regdiff fail
 
-! cat -n -g
-
 * poki-run no '$ ' for comment lines
 
 ----------------------------------------------------------------
@@ -368,6 +366,7 @@ DSL:
 VERBS:
 * most-frequent/least-frequent
 * seqgen
+* cat -n -g
 
 I/O:
 * bare print/printn

@@ -75,8 +75,9 @@ static void mapper_cat_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Options:\n");
 	fprintf(o, "-n        Prepend field \"%s\" to each record with record-counter starting at 1\n",
 		DEFAULT_COUNTER_FIELD_NAME);
+	fprintf(o, "-g {comma-separated field name(s)} When used with -n/-N, writes record-counters\n");
+	fprintf(o, "          keyed by specified field name(s).\n");
 	fprintf(o, "-N {name} Prepend field {name} to each record with record-counter starting at 1\n");
-	// xxx -g info here
 }
 
 // ----------------------------------------------------------------
