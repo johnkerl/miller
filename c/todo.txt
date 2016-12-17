@@ -47,6 +47,7 @@ MAPVAR CHECKLIST:
 
 ! sortk sortv sortf
   -> how to compare map-valued keys? recurse?
+  -> string keys before/after int?
 
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
