@@ -32,6 +32,10 @@ MAPVAR CHECKLIST:
 
 ! UT cases detailed below
 
+! memmgt for ephemeral boxed xvals
+
+! allow trailing commas in map-literals
+
 ! assert_map/assert_scalar/etc.
   - UTs
   - mlh
@@ -48,6 +52,7 @@ MAPVAR CHECKLIST:
 ! sortk sortv sortf
   -> how to compare map-valued keys? recurse?
   -> string keys before/after int?
+  -> how to incorporate numeric & lexical flags
 
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
@@ -248,6 +253,8 @@ SINGLE-FOR:
 * find & update cookbook/ref/whateveritwas ...
 
 COOK:
+* here and/or in the mld:ref:cut, show mlr put '$*={...}' a full-featured cut/reorder/rename/label
+* full section about verbs implemented in the dsl??
 * n-grams
 * mlr --from ~/misc/words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 * use: https://github.com/petewarden/dstkdata
