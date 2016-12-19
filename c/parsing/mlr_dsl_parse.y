@@ -258,7 +258,7 @@ md_statement_not_braced_end(A) ::= MD_TOKEN_CONTINUE(O). {
 // * On the "f" we change the function name to get "f(a,b,c)".
 
 md_func_block(C) ::= MD_TOKEN_FUNC_DEF
-	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_func_or_subr_parameters(A) MD_TOKEN_RPAREN
+	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_func_or_subr_parameter_list(A) MD_TOKEN_RPAREN
 	MD_TOKEN_LBRACE md_statement_block(B) MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_set_function_name(A, F->text);
@@ -267,7 +267,7 @@ md_func_block(C) ::= MD_TOKEN_FUNC_DEF
 }
 
 md_func_block(C) ::= MD_TOKEN_FUNC_DEF
-	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_func_or_subr_parameters(A) MD_TOKEN_RPAREN
+	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_func_or_subr_parameter_list(A) MD_TOKEN_RPAREN
 	MD_TOKEN_COLON md_typedecl(M)
 	MD_TOKEN_LBRACE md_statement_block(B) MD_TOKEN_RBRACE.
 {
@@ -276,34 +276,31 @@ md_func_block(C) ::= MD_TOKEN_FUNC_DEF
 	C = mlr_dsl_ast_node_alloc_ternary(F->text, MD_AST_NODE_TYPE_FUNC_DEF, A, B, M);
 }
 
-// Need to invalidate "f(10,)" -- use some non-empty-args expr.
-md_func_or_subr_parameters(A) ::= . {
-	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
-}
-md_func_or_subr_parameters(A) ::= md_func_or_subr_parameter(B). {
-	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
-}
-md_func_or_subr_parameters(A) ::= md_func_or_subr_parameters(B) MD_TOKEN_COMMA md_func_or_subr_parameter(C). {
-	A = mlr_dsl_ast_node_append_arg(B, C);
-}
-
 md_subr_block(C) ::= MD_TOKEN_SUBR_DEF
-	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_subr_args(A) MD_TOKEN_RPAREN
+	MD_TOKEN_NON_SIGIL_NAME(F) MD_TOKEN_LPAREN md_func_or_subr_parameter_list(A) MD_TOKEN_RPAREN
 	MD_TOKEN_LBRACE md_statement_block(B) MD_TOKEN_RBRACE.
 {
 	A = mlr_dsl_ast_node_set_function_name(A, F->text);
 	mlr_dsl_ast_node_replace_text(B, "subr_block");
 	C = mlr_dsl_ast_node_alloc_binary(F->text, MD_AST_NODE_TYPE_SUBR_DEF, A, B);
 }
-// Need to invalidate "f(10,)" -- use some non-empty-args expr.
-md_subr_args(A) ::= . {
+
+md_func_or_subr_parameter_list(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
 }
-md_subr_args(A) ::= md_func_or_subr_parameter(B). {
+md_func_or_subr_parameter_list(A) ::= md_func_or_subr_non_empty_parameter_list(B). {
+	A = B;
+}
+md_func_or_subr_non_empty_parameter_list(A) ::= md_func_or_subr_parameter(B). {
 	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
 }
-md_subr_args(A) ::= md_subr_args(B) MD_TOKEN_COMMA md_func_or_subr_parameter(C). {
-	A = mlr_dsl_ast_node_append_arg(B, C);
+md_func_or_subr_non_empty_parameter_list(A) ::= md_func_or_subr_parameter(B) MD_TOKEN_COMMA. {
+	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
+}
+md_func_or_subr_non_empty_parameter_list(A) ::= md_func_or_subr_parameter(B) MD_TOKEN_COMMA
+	md_func_or_subr_non_empty_parameter_list(C).
+{
+	A = mlr_dsl_ast_node_prepend_arg(C, B);
 }
 
 md_func_or_subr_parameter(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
@@ -2422,13 +2419,6 @@ md_atom_or_fcn(A) ::= md_fcn_or_subr_call(B). {
 // * On the "b" we append the next argument to get "anon(a,b)".
 // * On the "c" we append the next argument to get "anon(a,b,c)".
 // * On the "f" we change the function name to get "f(a,b,c)".
-
-// xxx temp
-// NAME LPAREN LIST RPAREN
-// LIST ->
-// LIST -> ARG
-// LIST -> ARG ,
-// LIST -> ARG , LIST
 
 md_fcn_or_subr_call(A) ::= MD_TOKEN_NON_SIGIL_NAME(O) MD_TOKEN_LPAREN md_fcn_arg_list(B) MD_TOKEN_RPAREN. {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
