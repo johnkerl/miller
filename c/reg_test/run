@@ -1217,6 +1217,25 @@ run_mlr --opprint put    '$f=isnotempty($*)'                    $indir/nullvals.
 run_mlr --opprint put    '$f=isnotempty({1:2})'                 $indir/nullvals.dkvp
 run_mlr --opprint put    '@somesuch=1;$f=isnotempty(@somesuch)' $indir/nullvals.dkvp
 
+run_mlr --opprint put    '$f=ismap($x)'                         $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=ismap($y)'                         $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=ismap($z)'                         $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=ismap($nosuch)'                    $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=ismap(@nosuch)'                    $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=ismap($*)'                         $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=ismap({1:2})'                      $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=ismap({})'                         $indir/nullvals.dkvp
+run_mlr --opprint put    '@somesuch=1;$f=ismap(@somesuch)'      $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotmap($x)'                      $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotmap($y)'                      $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotmap($z)'                      $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotmap($nosuch)'                 $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotmap(@nosuch)'                 $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotmap($*)'                      $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotmap({1:2})'                   $indir/nullvals.dkvp
+run_mlr --opprint put    '$f=isnotmap({})'                      $indir/nullvals.dkvp
+run_mlr --opprint put    '@somesuch=1;$f=isnotmap(@somesuch)'   $indir/nullvals.dkvp
+
 run_mlr --opprint put    '$f=isemptymap($x)'                       $indir/nullvals.dkvp
 run_mlr --opprint put    '$f=isemptymap($y)'                       $indir/nullvals.dkvp
 run_mlr --opprint put    '$f=isemptymap($z)'                       $indir/nullvals.dkvp

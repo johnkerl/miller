@@ -18063,6 +18063,150 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
+mlr --opprint put $f=ismap($x) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - false
+b 3 4 - false
+b 5 - - false
+b - 6 - false
+b - - - false
+
+mlr --opprint put $f=ismap($y) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - false
+b 3 4 - false
+b 5 - - false
+b - 6 - false
+b - - - false
+
+mlr --opprint put $f=ismap($z) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - false
+b 3 4 - false
+b 5 - - false
+b - 6 - false
+b - - - false
+
+mlr --opprint put $f=ismap($nosuch) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - false
+b 3 4 - false
+b 5 - - false
+b - 6 - false
+b - - - false
+
+mlr --opprint put $f=ismap(@nosuch) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - false
+b 3 4 - false
+b 5 - - false
+b - 6 - false
+b - - - false
+
+mlr --opprint put $f=ismap($*) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - true
+b 3 4 - true
+b 5 - - true
+b - 6 - true
+b - - - true
+
+mlr --opprint put $f=ismap({1:2}) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - true
+b 3 4 - true
+b 5 - - true
+b - 6 - true
+b - - - true
+
+mlr --opprint put $f=ismap({}) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - true
+b 3 4 - true
+b 5 - - true
+b - 6 - true
+b - - - true
+
+mlr --opprint put @somesuch=1;$f=ismap(@somesuch) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - false
+b 3 4 - false
+b 5 - - false
+b - 6 - false
+b - - - false
+
+mlr --opprint put $f=isnotmap($x) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - true
+b 3 4 - true
+b 5 - - true
+b - 6 - true
+b - - - true
+
+mlr --opprint put $f=isnotmap($y) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - true
+b 3 4 - true
+b 5 - - true
+b - 6 - true
+b - - - true
+
+mlr --opprint put $f=isnotmap($z) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - true
+b 3 4 - true
+b 5 - - true
+b - 6 - true
+b - - - true
+
+mlr --opprint put $f=isnotmap($nosuch) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - true
+b 3 4 - true
+b 5 - - true
+b - 6 - true
+b - - - true
+
+mlr --opprint put $f=isnotmap(@nosuch) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - true
+b 3 4 - true
+b 5 - - true
+b - 6 - true
+b - - - true
+
+mlr --opprint put $f=isnotmap($*) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - false
+b 3 4 - false
+b 5 - - false
+b - 6 - false
+b - - - false
+
+mlr --opprint put $f=isnotmap({1:2}) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - false
+b 3 4 - false
+b 5 - - false
+b - 6 - false
+b - - - false
+
+mlr --opprint put $f=isnotmap({}) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - false
+b 3 4 - false
+b 5 - - false
+b - 6 - false
+b - - - false
+
+mlr --opprint put @somesuch=1;$f=isnotmap(@somesuch) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - true
+b 3 4 - true
+b 5 - - true
+b - 6 - true
+b - - - true
+
 mlr --opprint put $f=isemptymap($x) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false

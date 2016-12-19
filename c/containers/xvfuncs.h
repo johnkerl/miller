@@ -59,7 +59,7 @@ static inline boxed_xval_t b_x_ismap_xfunc(boxed_xval_t* pbxval1) {
 static inline boxed_xval_t b_x_isnotmap_xfunc(boxed_xval_t* pbxval1) {
 	return box_ephemeral_val(
 		mv_from_bool(
-			pbxval1->xval.is_terminal && mv_is_present(&pbxval1->xval.terminal_mlrval)
+			pbxval1->xval.is_terminal
 		)
 	);
 }

@@ -31,6 +31,7 @@ OTHER:
 MAPVAR CHECKLIST:
 
 ! UT cases detailed below
+  -> ismap(absent) & isnotmap(absent) both false ?!?
 
 ! memmgt for ephemeral boxed xvals
 
