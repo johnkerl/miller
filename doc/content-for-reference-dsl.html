@@ -229,6 +229,63 @@ are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
 <tt>put -q</tt>, etc. Simply assign a value to a field and it will be output.
 
 <!-- ================================================================ -->
+<h2>Out-of-stream variables</h2>
+
+<p/> These are prefixed with an at-sign, e.g. <tt>@sum</tt>.  Furthermore,
+unlike built-in variables and stream-record fields, they are maintained in an
+arbitrarily nested hashmap: you can do <tt>@sum += $quanity</tt>, or
+<tt>@sum[$color] += $quanity</tt>, or <tt>@sum[$color][$shape] +=
+$quanity</tt>. The keys for the multi-level hashmap can be any expression which
+evaluates to string or integer: e.g.  <tt>@sum[NR] = $a + $b</tt>,
+<tt>@sum[$a."-".$b] = $x</tt>, etc.
+
+<p/> Their names and their values are entirely under your control; they change
+only when you assign to them.
+
+<p/> Just as for field names in stream records, if you want to define out-of-stream variables
+with <b>special characters</b> such as <tt>.</tt> then you can use braces, e.g. <tt>'@{variable.name}["index"]'</tt>.
+
+<p/>You may use a <b>computed key </b> in square brackets, e.g.
+
+POKI_RUN_COMMAND{{echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'}}HERE
+
+<p/> Out-of-stream variables are <b>scoped</b> to the <tt>put</tt> command in
+which they appear.  In particular, if you have two or more <tt>put</tt>
+commands separated by <tt>then</tt>, each put will have its own set of
+out-of-stream variables:
+
+POKI_RUN_COMMAND{{cat data/a.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr put '@sum += $a; end {emit @sum}' then put 'ispresent($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp}}HERE
+
+<p/> Out-of-stream variables&rsquo; <b>extent</b> is from the start to the end of the record stream,
+i.e. every time the <tt>put</tt> or <tt>filter</tt> statement referring to them is executed.
+
+<p/> Out-of-stream variables are <b>read-write</b>: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
+etc.
+
+<!-- ================================================================ -->
+<h2>Indexed out-of-stream variables</h2>
+
+<p/>Using an index on the <tt>@count</tt> and <tt>@sum</tt> variables, we get the benefit of the
+<tt>-g</tt> (group-by) option which <tt>mlr stats1</tt> and various other Miller commands have:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7.sh)HERE
+
+<p/>Indices can be arbitrarily deep &mdash; here there are two or more of them:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6a.sh)HERE
+
+The idea is that <tt>stats1</tt>, and other Miller commands, encapsulate
+frequently-used patterns with a minimum of keystroking (and run a little
+faster), whereas using out-of-stream variables you have more flexibility and
+control in what you do.
+
+<p/>Begin/end blocks can be mixed with pattern/action blocks. For example:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-8.sh)HERE
+
+<!-- ================================================================ -->
 <h2>Local variables</h2>
 
 <p/>There are three kinds of local variables: <b>arguments</b> to
@@ -474,60 +531,6 @@ when the function is called:
   }
 </pre>
 </div>
-
-<!-- ================================================================ -->
-<h2>Out-of-stream variables</h2>
-
-<p/> These are prefixed with an at-sign, e.g. <tt>@sum</tt>.  Furthermore,
-unlike built-in variables and stream-record fields, they are maintained in an
-arbitrarily nested hashmap: you can do <tt>@sum += $quanity</tt>, or
-<tt>@sum[$color] += $quanity</tt>, or <tt>@sum[$color][$shape] +=
-$quanity</tt>. The keys for the multi-level hashmap can be any expression which
-evaluates to string or integer: e.g.  <tt>@sum[NR] = $a + $b</tt>,
-<tt>@sum[$a."-".$b] = $x</tt>, etc.
-
-<p/> Their names and their values are entirely under your control; they change
-only when you assign to them.
-
-<p/> Just as for field names in stream records, if you want to define out-of-stream variables
-with <b>special characters</b> such as <tt>.</tt> then you can use braces, e.g. <tt>'@{variable.name}["index"]'</tt>.
-
-<p/>You may use a <b>computed key </b> in square brackets, e.g.
-
-POKI_RUN_COMMAND{{echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'}}HERE
-
-<p/> Out-of-stream variables are <b>scoped</b> to the <tt>put</tt> command in
-which they appear.  In particular, if you have two or more <tt>put</tt>
-commands separated by <tt>then</tt>, each put will have its own set of
-out-of-stream variables:
-
-POKI_RUN_COMMAND{{cat data/a.dkvp}}HERE
-POKI_RUN_COMMAND{{mlr put '@sum += $a; end {emit @sum}' then put 'ispresent($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp}}HERE
-
-<p/> Out-of-stream variables are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
-etc.
-
-<!-- ================================================================ -->
-<h2>Indexed out-of-stream variables</h2>
-
-<p/>Using an index on the <tt>@count</tt> and <tt>@sum</tt> variables, we get the benefit of the
-<tt>-g</tt> (group-by) option which <tt>mlr stats1</tt> and various other Miller commands have:
-
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6.sh)HERE
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7.sh)HERE
-
-<p/>Indices can be arbitrarily deep &mdash; here there are two or more of them:
-
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6a.sh)HERE
-
-The idea is that <tt>stats1</tt>, and other Miller commands, encapsulate
-frequently-used patterns with a minimum of keystroking (and run a little
-faster), whereas using out-of-stream variables you have more flexibility and
-control in what you do.
-
-<p/>Begin/end blocks can be mixed with pattern/action blocks. For example:
-
-POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-8.sh)HERE
 
 <!-- ================================================================ -->
 <h2>Aggregate variable assignments</h2>

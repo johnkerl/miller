@@ -151,12 +151,12 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Variables">Variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables">Built-in variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names">Field names</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables">Out-of-stream variables</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables">Indexed out-of-stream variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Local_variables">Local variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-checking">Type-checking</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-test_and_type-assertion_expressions">Type-test and type-assertion expressions</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-declarations_for_local_variables,_function_parameter,_and_function_return_values">Type-declarations for local variables, function parameter, and function return values</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables">Out-of-stream variables</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables">Indexed out-of-stream variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Aggregate_variable_assignments">Aggregate variable assignments</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keywords_for_filter_and_put">Keywords for filter and put</a><br/>
 &bull;&nbsp;<a href="#Operator_precedence">Operator precedence</a><br/>
@@ -673,6 +673,184 @@ are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
 <tt>put -q</tt>, etc. Simply assign a value to a field and it will be output.
 
 <!-- ================================================================ -->
+<a id="Out-of-stream_variables"/><h2>Out-of-stream variables</h2>
+
+<p/> These are prefixed with an at-sign, e.g. <tt>@sum</tt>.  Furthermore,
+unlike built-in variables and stream-record fields, they are maintained in an
+arbitrarily nested hashmap: you can do <tt>@sum += $quanity</tt>, or
+<tt>@sum[$color] += $quanity</tt>, or <tt>@sum[$color][$shape] +=
+$quanity</tt>. The keys for the multi-level hashmap can be any expression which
+evaluates to string or integer: e.g.  <tt>@sum[NR] = $a + $b</tt>,
+<tt>@sum[$a."-".$b] = $x</tt>, etc.
+
+<p/> Their names and their values are entirely under your control; they change
+only when you assign to them.
+
+<p/> Just as for field names in stream records, if you want to define out-of-stream variables
+with <b>special characters</b> such as <tt>.</tt> then you can use braces, e.g. <tt>'@{variable.name}["index"]'</tt>.
+
+<p/>You may use a <b>computed key </b> in square brackets, e.g.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'
+green_blue=12
+</pre>
+</div>
+<p/>
+
+<p/> Out-of-stream variables are <b>scoped</b> to the <tt>put</tt> command in
+which they appear.  In particular, if you have two or more <tt>put</tt>
+commands separated by <tt>then</tt>, each put will have its own set of
+out-of-stream variables:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/a.dkvp
+a=1,b=2,c=3
+a=4,b=5,c=6
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '@sum += $a; end {emit @sum}' then put 'ispresent($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp
+a=10,b=2,c=3
+a=40,b=5,c=6
+sum=5
+sum=50
+</pre>
+</div>
+<p/>
+
+<p/> Out-of-stream variables&rsquo; <b>extent</b> is from the start to the end of the record stream,
+i.e. every time the <tt>put</tt> or <tt>filter</tt> statement referring to them is executed.
+
+<p/> Out-of-stream variables are <b>read-write</b>: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
+etc.
+
+<!-- ================================================================ -->
+<a id="Indexed_out-of-stream_variables"/><h2>Indexed out-of-stream variables</h2>
+
+<p/>Using an index on the <tt>@count</tt> and <tt>@sum</tt> variables, we get the benefit of the
+<tt>-g</tt> (group-by) option which <tt>mlr stats1</tt> and various other Miller commands have:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put -q '
+  @x_count[$a] += 1;
+  @x_sum[$a] += $x;
+  end {
+    emit @x_count, "a";
+    emit @x_sum, "a";
+  }
+' ../data/small
+a=pan,x_count=2
+a=eks,x_count=3
+a=wye,x_count=2
+a=zee,x_count=2
+a=hat,x_count=1
+a=pan,x_sum=0.849416
+a=eks,x_sum=1.751863
+a=wye,x_sum=0.777892
+a=zee,x_sum=1.125680
+a=hat,x_sum=0.031442
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr stats1 -a count,sum -f x -g a ../data/small
+a=pan,x_count=2,x_sum=0.849416
+a=eks,x_count=3,x_sum=1.751863
+a=wye,x_count=2,x_sum=0.777892
+a=zee,x_count=2,x_sum=1.125680
+a=hat,x_count=1,x_sum=0.031442
+</pre>
+</div>
+<p/>
+
+<p/>Indices can be arbitrarily deep &mdash; here there are two or more of them:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/medium put -q '
+  @x_count[$a][$b] += 1;
+  @x_sum[$a][$b] += $x;
+  end {
+    emit (@x_count, @x_sum), "a", "b";
+  }
+'
+a=pan,b=pan,x_count=427,x_sum=219.185129
+a=pan,b=wye,x_count=395,x_sum=198.432931
+a=pan,b=eks,x_count=429,x_sum=216.075228
+a=pan,b=hat,x_count=417,x_sum=205.222776
+a=pan,b=zee,x_count=413,x_sum=205.097518
+a=eks,b=pan,x_count=371,x_sum=179.963030
+a=eks,b=wye,x_count=407,x_sum=196.945286
+a=eks,b=zee,x_count=357,x_sum=176.880365
+a=eks,b=eks,x_count=413,x_sum=215.916097
+a=eks,b=hat,x_count=417,x_sum=208.783171
+a=wye,b=wye,x_count=377,x_sum=185.295850
+a=wye,b=pan,x_count=392,x_sum=195.847900
+a=wye,b=hat,x_count=426,x_sum=212.033183
+a=wye,b=zee,x_count=385,x_sum=194.774048
+a=wye,b=eks,x_count=386,x_sum=204.812961
+a=zee,b=pan,x_count=389,x_sum=202.213804
+a=zee,b=wye,x_count=455,x_sum=233.991394
+a=zee,b=eks,x_count=391,x_sum=190.961778
+a=zee,b=zee,x_count=403,x_sum=206.640635
+a=zee,b=hat,x_count=409,x_sum=191.300006
+a=hat,b=wye,x_count=423,x_sum=208.883010
+a=hat,b=zee,x_count=385,x_sum=196.349450
+a=hat,b=eks,x_count=389,x_sum=189.006793
+a=hat,b=hat,x_count=381,x_sum=182.853532
+a=hat,b=pan,x_count=363,x_sum=168.553807
+</pre>
+</div>
+<p/>
+
+The idea is that <tt>stats1</tt>, and other Miller commands, encapsulate
+frequently-used patterns with a minimum of keystroking (and run a little
+faster), whereas using out-of-stream variables you have more flexibility and
+control in what you do.
+
+<p/>Begin/end blocks can be mixed with pattern/action blocks. For example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '
+  begin {
+    @num_total = 0;
+    @num_positive = 0;
+  };
+  @num_total += 1;
+  $x &gt; 0.0 {
+    @num_positive += 1;
+    $y = log10($x); $z = sqrt($y)
+  };
+  end {
+    emitf @num_total, @num_positive
+  }
+' data/put-gating-example-1.dkvp
+x=-1
+x=0
+x=1,y=0.000000,z=0.000000
+x=2,y=0.301030,z=0.548662
+x=3,y=0.477121,z=0.690740
+num_total=5,num_positive=3
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
 <a id="Local_variables"/><h2>Local variables</h2>
 
 <p/>There are three kinds of local variables: <b>arguments</b> to
@@ -1168,181 +1346,6 @@ when the function is called:
   }
 </pre>
 </div>
-
-<!-- ================================================================ -->
-<a id="Out-of-stream_variables"/><h2>Out-of-stream variables</h2>
-
-<p/> These are prefixed with an at-sign, e.g. <tt>@sum</tt>.  Furthermore,
-unlike built-in variables and stream-record fields, they are maintained in an
-arbitrarily nested hashmap: you can do <tt>@sum += $quanity</tt>, or
-<tt>@sum[$color] += $quanity</tt>, or <tt>@sum[$color][$shape] +=
-$quanity</tt>. The keys for the multi-level hashmap can be any expression which
-evaluates to string or integer: e.g.  <tt>@sum[NR] = $a + $b</tt>,
-<tt>@sum[$a."-".$b] = $x</tt>, etc.
-
-<p/> Their names and their values are entirely under your control; they change
-only when you assign to them.
-
-<p/> Just as for field names in stream records, if you want to define out-of-stream variables
-with <b>special characters</b> such as <tt>.</tt> then you can use braces, e.g. <tt>'@{variable.name}["index"]'</tt>.
-
-<p/>You may use a <b>computed key </b> in square brackets, e.g.
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo s=green,t=blue,a=3,b=4 | mlr put -q '@[$s."_".$t] = $a * $b; emit all'
-green_blue=12
-</pre>
-</div>
-<p/>
-
-<p/> Out-of-stream variables are <b>scoped</b> to the <tt>put</tt> command in
-which they appear.  In particular, if you have two or more <tt>put</tt>
-commands separated by <tt>then</tt>, each put will have its own set of
-out-of-stream variables:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat data/a.dkvp
-a=1,b=2,c=3
-a=4,b=5,c=6
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '@sum += $a; end {emit @sum}' then put 'ispresent($a) {$a=10*$a; @sum += $a}; end {emit @sum}' data/a.dkvp
-a=10,b=2,c=3
-a=40,b=5,c=6
-sum=5
-sum=50
-</pre>
-</div>
-<p/>
-
-<p/> Out-of-stream variables are read-write: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
-etc.
-
-<!-- ================================================================ -->
-<a id="Indexed_out-of-stream_variables"/><h2>Indexed out-of-stream variables</h2>
-
-<p/>Using an index on the <tt>@count</tt> and <tt>@sum</tt> variables, we get the benefit of the
-<tt>-g</tt> (group-by) option which <tt>mlr stats1</tt> and various other Miller commands have:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put -q '
-  @x_count[$a] += 1;
-  @x_sum[$a] += $x;
-  end {
-    emit @x_count, "a";
-    emit @x_sum, "a";
-  }
-' ../data/small
-a=pan,x_count=2
-a=eks,x_count=3
-a=wye,x_count=2
-a=zee,x_count=2
-a=hat,x_count=1
-a=pan,x_sum=0.849416
-a=eks,x_sum=1.751863
-a=wye,x_sum=0.777892
-a=zee,x_sum=1.125680
-a=hat,x_sum=0.031442
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr stats1 -a count,sum -f x -g a ../data/small
-a=pan,x_count=2,x_sum=0.849416
-a=eks,x_count=3,x_sum=1.751863
-a=wye,x_count=2,x_sum=0.777892
-a=zee,x_count=2,x_sum=1.125680
-a=hat,x_count=1,x_sum=0.031442
-</pre>
-</div>
-<p/>
-
-<p/>Indices can be arbitrarily deep &mdash; here there are two or more of them:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/medium put -q '
-  @x_count[$a][$b] += 1;
-  @x_sum[$a][$b] += $x;
-  end {
-    emit (@x_count, @x_sum), "a", "b";
-  }
-'
-a=pan,b=pan,x_count=427,x_sum=219.185129
-a=pan,b=wye,x_count=395,x_sum=198.432931
-a=pan,b=eks,x_count=429,x_sum=216.075228
-a=pan,b=hat,x_count=417,x_sum=205.222776
-a=pan,b=zee,x_count=413,x_sum=205.097518
-a=eks,b=pan,x_count=371,x_sum=179.963030
-a=eks,b=wye,x_count=407,x_sum=196.945286
-a=eks,b=zee,x_count=357,x_sum=176.880365
-a=eks,b=eks,x_count=413,x_sum=215.916097
-a=eks,b=hat,x_count=417,x_sum=208.783171
-a=wye,b=wye,x_count=377,x_sum=185.295850
-a=wye,b=pan,x_count=392,x_sum=195.847900
-a=wye,b=hat,x_count=426,x_sum=212.033183
-a=wye,b=zee,x_count=385,x_sum=194.774048
-a=wye,b=eks,x_count=386,x_sum=204.812961
-a=zee,b=pan,x_count=389,x_sum=202.213804
-a=zee,b=wye,x_count=455,x_sum=233.991394
-a=zee,b=eks,x_count=391,x_sum=190.961778
-a=zee,b=zee,x_count=403,x_sum=206.640635
-a=zee,b=hat,x_count=409,x_sum=191.300006
-a=hat,b=wye,x_count=423,x_sum=208.883010
-a=hat,b=zee,x_count=385,x_sum=196.349450
-a=hat,b=eks,x_count=389,x_sum=189.006793
-a=hat,b=hat,x_count=381,x_sum=182.853532
-a=hat,b=pan,x_count=363,x_sum=168.553807
-</pre>
-</div>
-<p/>
-
-The idea is that <tt>stats1</tt>, and other Miller commands, encapsulate
-frequently-used patterns with a minimum of keystroking (and run a little
-faster), whereas using out-of-stream variables you have more flexibility and
-control in what you do.
-
-<p/>Begin/end blocks can be mixed with pattern/action blocks. For example:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr put '
-  begin {
-    @num_total = 0;
-    @num_positive = 0;
-  };
-  @num_total += 1;
-  $x &gt; 0.0 {
-    @num_positive += 1;
-    $y = log10($x); $z = sqrt($y)
-  };
-  end {
-    emitf @num_total, @num_positive
-  }
-' data/put-gating-example-1.dkvp
-x=-1
-x=0
-x=1,y=0.000000,z=0.000000
-x=2,y=0.301030,z=0.548662
-x=3,y=0.477121,z=0.690740
-num_total=5,num_positive=3
-</pre>
-</div>
-<p/>
 
 <!-- ================================================================ -->
 <a id="Aggregate_variable_assignments"/><h2>Aggregate variable assignments</h2>

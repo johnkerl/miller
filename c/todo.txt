@@ -54,6 +54,11 @@ MAPVAR CHECKLIST:
   -> string keys before/after int?
   -> how to incorporate numeric & lexical flags
 
+* cookbook x 3:
+  - simple stuff like headerless csv
+  - verbs vs dsl list
+  - weird stuff
+
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
   - copy/ref of keys vs. values in mlhmmv, local_stack, and callees -- ?!?
