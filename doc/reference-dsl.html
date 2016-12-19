@@ -147,7 +147,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Syntax">Syntax</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Expression_formatting">Expression formatting</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Expressions_from_files">Expressions from files</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Semicolons,_newlines,_and_curly_braces">Semicolons, newlines, and curly braces</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Semicolons,_commas,_newlines,_and_curly_braces">Semicolons, commas, newlines, and curly braces</a><br/>
 &bull;&nbsp;<a href="#Variables">Variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables">Built-in variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names">Field names</a><br/>
@@ -415,9 +415,9 @@ not <tt>mlr put -e '$x=1' -e '$y=2 ...'</tt> but rather <tt>mlr put -e '$x=1;' -
 '$y=2' ...</tt>.)
 
 <!-- ================================================================ -->
-<a id="Semicolons,_newlines,_and_curly_braces"/><h2>Semicolons, newlines, and curly braces</h2>
+<a id="Semicolons,_commas,_newlines,_and_curly_braces"/><h2>Semicolons, commas, newlines, and curly braces</h2>
 
-<p/>Miller uses semicolons as statement separators, not statement terminators. This means you can write:
+<p/>Miller uses <b>semicolons as statement separators</b>, not statement terminators. This means you can write:
 
 <p/>
 <div class="pokipanel">
@@ -450,7 +450,7 @@ x=1,y=2,3=,4=,5=,6=,7=,8=,9=,10=,foo=bar
 <p/>
 
 <p/>Semicolons are required between statements even if those statements are on
-separate lines.  Newlines are for your convenience but have no syntactic
+separate lines.  <b>Newlines</b> are for your convenience but have no syntactic
 meaning: line endings do not terminate statements. For example, adjacent
 assignment statements must be separated by semicolons even if those statements
 are on separate lines:
@@ -471,7 +471,38 @@ mlr put '
 </div>
 <p/>
 
-<p/>Bodies for all compound statements must be enclosed in curly braces, even if the body is a single statement:
+<p/><b>Trailing commas</b> are allowed in function/subroutine definitions,
+function/subroutine callsites, and map literals. This is intended for (although
+not restricted to) the multi-line case:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csvlite --from data/a.csv put '
+  func f(
+    num a,
+    num b,
+  ): num {
+    return a**2 + b**2;
+  }
+  $* = {
+    "s": $a + $b,
+    "t": $a - $b,
+    "u": f(
+      $a,
+      $b,
+    ),
+    "v": NR,
+  }
+'
+s,t,u,v
+3,-1,5.000000,1
+9,-1,41.000000,2
+</pre>
+</div>
+<p/>
+
+<p/>Bodies for all compound statements must be enclosed in <b>curly braces</b>, even if the body is a single statement:
 <p/>
 <div class="pokipanel">
 <pre>

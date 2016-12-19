@@ -92,9 +92,9 @@ not <tt>mlr put -e '$x=1' -e '$y=2 ...'</tt> but rather <tt>mlr put -e '$x=1;' -
 '$y=2' ...</tt>.)
 
 <!-- ================================================================ -->
-<h2>Semicolons, newlines, and curly braces</h2>
+<h2>Semicolons, commas, newlines, and curly braces</h2>
 
-<p/>Miller uses semicolons as statement separators, not statement terminators. This means you can write:
+<p/>Miller uses <b>semicolons as statement separators</b>, not statement terminators. This means you can write:
 
 POKI_INCLUDE_ESCAPED(data/semicolon-example.txt)HERE
 
@@ -104,14 +104,20 @@ POKI_RUN_COMMAND{{echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}  $foo 
 POKI_RUN_COMMAND{{echo x=1,y=2 | mlr put 'while (NF < 10) { $[NF+1] = ""}; $foo = "bar"'}}HERE
 
 <p/>Semicolons are required between statements even if those statements are on
-separate lines.  Newlines are for your convenience but have no syntactic
+separate lines.  <b>Newlines</b> are for your convenience but have no syntactic
 meaning: line endings do not terminate statements. For example, adjacent
 assignment statements must be separated by semicolons even if those statements
 are on separate lines:
 
 POKI_INCLUDE_ESCAPED(data/newline-example.txt)HERE
 
-<p/>Bodies for all compound statements must be enclosed in curly braces, even if the body is a single statement:
+<p/><b>Trailing commas</b> are allowed in function/subroutine definitions,
+function/subroutine callsites, and map literals. This is intended for (although
+not restricted to) the multi-line case:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/trailing-commas.sh)HERE
+
+<p/>Bodies for all compound statements must be enclosed in <b>curly braces</b>, even if the body is a single statement:
 POKI_CARDIFY{{mlr put 'if ($x == 1) $y = 2' # Syntax error}}HERE
 POKI_CARDIFY{{mlr put 'if ($x == 1) { $y = 2 }' # This is OK}}HERE
 

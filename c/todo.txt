@@ -34,11 +34,6 @@ MAPVAR CHECKLIST:
 
 ! memmgt for ephemeral boxed xvals
 
-! allow trailing commas in map-literals, func/subr calls, func/subr defs
-  -> but don't allow multiples :(
-  -> UT
-  -> doc
-
 ! assert_map/assert_scalar/etc.
   - UTs
   - mlh
@@ -209,6 +204,8 @@ UT FOR 5.0.0:
 
 * mlr --from s put '$y=strlen($*)'
 * mlr --from s put '$y=strlen({})'
+
+* allow single trailing commas in map-literals, func/subr calls, func/subr defs
 
 * UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
 * env lhs expr
