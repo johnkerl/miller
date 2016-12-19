@@ -2485,6 +2485,10 @@ md_ap_literals_pairs(A) ::= md_map_literal_pair(B). {
 md_ap_literals_pairs(A) ::= md_ap_literals_pairs(B) MD_TOKEN_COMMA md_map_literal_pair(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
+// Allow trailing final comma, especially for multiline map literals
+md_ap_literals_pairs(A) ::= md_ap_literals_pairs(B) MD_TOKEN_COMMA. {
+	A = B;
+}
 md_map_literal_pair(A) ::= md_map_literal_key(B) MD_TOKEN_COLON md_map_literal_value(C). {
 	A = mlr_dsl_ast_node_alloc_binary("mappair", MD_AST_NODE_TYPE_MAP_LITERAL_PAIR, B, C);
 }
