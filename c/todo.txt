@@ -36,6 +36,8 @@ MAPVAR CHECKLIST:
 
 ! allow trailing commas in map-literals, func/subr calls, func/subr defs
   -> but don't allow multiples :(
+  -> UT
+  -> doc
 
 ! assert_map/assert_scalar/etc.
   - UTs

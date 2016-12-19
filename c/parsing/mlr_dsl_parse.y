@@ -2482,20 +2482,21 @@ md_fcn_arg(A) ::= md_map_literal(B). {
 md_map_literal(A) ::= MD_TOKEN_LBRACE MD_TOKEN_RBRACE. {
 	A = mlr_dsl_ast_node_alloc_zary("map_literal", MD_AST_NODE_TYPE_MAP_LITERAL);
 }
-md_map_literal(A) ::= MD_TOKEN_LBRACE md_ap_literals_pairs(B) MD_TOKEN_RBRACE. {
+md_map_literal(A) ::= MD_TOKEN_LBRACE md_map_literal_kv_pairs(B) MD_TOKEN_RBRACE. {
 	A = B;
 }
-md_ap_literals_pairs(A) ::= md_map_literal_pair(B). {
+md_map_literal_kv_pairs(A) ::= md_map_literal_kv_pair(B). {
 	A = mlr_dsl_ast_node_alloc_unary("map_literal", MD_AST_NODE_TYPE_MAP_LITERAL, B);
 }
-md_ap_literals_pairs(A) ::= md_ap_literals_pairs(B) MD_TOKEN_COMMA md_map_literal_pair(C). {
-	A = mlr_dsl_ast_node_append_arg(B, C);
-}
 // Allow trailing final comma, especially for multiline map literals
-md_ap_literals_pairs(A) ::= md_ap_literals_pairs(B) MD_TOKEN_COMMA. {
-	A = B;
+md_map_literal_kv_pairs(A) ::= md_map_literal_kv_pair(B) MD_TOKEN_COMMA. {
+	A = mlr_dsl_ast_node_alloc_unary("map_literal", MD_AST_NODE_TYPE_MAP_LITERAL, B);
 }
-md_map_literal_pair(A) ::= md_map_literal_key(B) MD_TOKEN_COLON md_map_literal_value(C). {
+md_map_literal_kv_pairs(A) ::= md_map_literal_kv_pair(B) MD_TOKEN_COMMA md_map_literal_kv_pairs(C). {
+	A = mlr_dsl_ast_node_prepend_arg(C, B);
+}
+
+md_map_literal_kv_pair(A) ::= md_map_literal_key(B) MD_TOKEN_COLON md_map_literal_value(C). {
 	A = mlr_dsl_ast_node_alloc_binary("mappair", MD_AST_NODE_TYPE_MAP_LITERAL_PAIR, B, C);
 }
 md_map_literal_key(A) ::= md_rhs(B). {
