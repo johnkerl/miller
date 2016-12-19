@@ -2423,54 +2423,57 @@ md_atom_or_fcn(A) ::= md_fcn_or_subr_call(B). {
 // * On the "c" we append the next argument to get "anon(a,b,c)".
 // * On the "f" we change the function name to get "f(a,b,c)".
 
-md_fcn_or_subr_call(A) ::= MD_TOKEN_NON_SIGIL_NAME(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
+// xxx temp
+// NAME LPAREN LIST RPAREN
+// LIST ->
+// LIST -> ARG
+// LIST -> ARG ,
+// LIST -> ARG , LIST
+
+md_fcn_or_subr_call(A) ::= MD_TOKEN_NON_SIGIL_NAME(O) MD_TOKEN_LPAREN md_fcn_arg_list(B) MD_TOKEN_RPAREN. {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
 }
 // For most functions it suffices to use the MD_TOKEN_NON_SIGIL_NAME pattern. But
 // int and float are keywords in the lexer so we need to spell those out explicitly.
 // (They're type-decl keywords but they're also the names of type-conversion functions.)
-md_fcn_or_subr_call(A) ::= MD_TOKEN_INT(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
+md_fcn_or_subr_call(A) ::= MD_TOKEN_INT(O) MD_TOKEN_LPAREN md_fcn_arg_list(B) MD_TOKEN_RPAREN. {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
 }
-md_fcn_or_subr_call(A) ::= MD_TOKEN_FLOAT(O) MD_TOKEN_LPAREN md_fcn_args(B) MD_TOKEN_RPAREN. {
+md_fcn_or_subr_call(A) ::= MD_TOKEN_FLOAT(O) MD_TOKEN_LPAREN md_fcn_arg_list(B) MD_TOKEN_RPAREN. {
 	A = mlr_dsl_ast_node_set_function_name(B, O->text);
 	A->type = MD_AST_NODE_TYPE_FUNCTION_CALLSITE;
 }
 
-// Need to invalidate "f(10,)" -- use some non-empty-args expr.
-md_fcn_args(A) ::= . {
+md_fcn_arg_list(A) ::= . {
 	A = mlr_dsl_ast_node_alloc_zary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME);
 }
-
-md_fcn_args(A) ::= md_rhs(B). {
-	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
-}
-md_fcn_args(A) ::= MD_TOKEN_FULL_SREC(B). {
-	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
-}
-md_fcn_args(A) ::= MD_TOKEN_FULL_OOSVAR(B). {
-	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
-}
-md_fcn_args(A) ::= md_map_literal(B). {
-	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
-}
-
-md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA md_rhs(C). {
-	A = mlr_dsl_ast_node_append_arg(B, C);
-}
-md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA. {
+md_fcn_arg_list(A) ::= md_fcn_non_empty_arg_list(B). {
 	A = B;
 }
-md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC(C). {
-	A = mlr_dsl_ast_node_append_arg(B, C);
+
+md_fcn_non_empty_arg_list(A) ::= md_fcn_arg(B). {
+	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
 }
-md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA MD_TOKEN_FULL_OOSVAR(C). {
-	A = mlr_dsl_ast_node_append_arg(B, C);
+md_fcn_non_empty_arg_list(A) ::= md_fcn_arg(B) MD_TOKEN_COMMA. {
+	A = mlr_dsl_ast_node_alloc_unary("anon", MD_AST_NODE_TYPE_NON_SIGIL_NAME, B);
 }
-md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA md_map_literal(C). {
-	A = mlr_dsl_ast_node_append_arg(B, C);
+md_fcn_non_empty_arg_list(A) ::= md_fcn_arg(B) MD_TOKEN_COMMA md_fcn_non_empty_arg_list(C). {
+	A = mlr_dsl_ast_node_prepend_arg(C, B);
+}
+
+md_fcn_arg(A) ::= md_rhs(B). {
+	A = B;
+}
+md_fcn_arg(A) ::= MD_TOKEN_FULL_SREC(B). {
+	A = B;
+}
+md_fcn_arg(A) ::= MD_TOKEN_FULL_OOSVAR(B). {
+	A = B;
+}
+md_fcn_arg(A) ::= md_map_literal(B). {
+	A = B;
 }
 
 // ----------------------------------------------------------------
