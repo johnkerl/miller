@@ -34,7 +34,8 @@ MAPVAR CHECKLIST:
 
 ! memmgt for ephemeral boxed xvals
 
-! allow trailing commas in map-literals
+! allow trailing commas in map-literals, func/subr calls, func/subr defs
+  -> but don't allow multiples :(
 
 ! assert_map/assert_scalar/etc.
   - UTs
