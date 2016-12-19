@@ -2460,6 +2460,9 @@ md_fcn_args(A) ::= md_map_literal(B). {
 md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA md_rhs(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
+md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA. {
+	A = B;
+}
 md_fcn_args(A) ::= md_fcn_args(B) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
