@@ -29,6 +29,8 @@ OTHER:
 
 ! sort --fold !
 
+! true/false/1/0 data-cleaning cookbook section. include filter x 2 (preceded by put $nr=NR), & tee x 2.
+
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 

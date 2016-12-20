@@ -1303,7 +1303,7 @@ mlr_expect_fail --opprint put '$y = asserting_numeric($y)'                   $in
 mlr_expect_fail --opprint put '$z = asserting_numeric($z)'                   $indir/nullvals.dkvp
 mlr_expect_fail --opprint put '$nosuch = asserting_numeric($nosuch)'         $indir/nullvals.dkvp
 mlr_expect_fail --opprint put '$* = asserting_numeric($*)'                   $indir/nullvals.dkvp
-mlr_expect_fail --opprint put '$* asserting_numeric({1:2})'                  $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$* = asserting_numeric({1:2})'                $indir/nullvals.dkvp
 mlr_expect_fail --opprint put '$x = asserting_string($x)'                    $indir/nullvals.dkvp
 mlr_expect_fail --opprint put '$y = asserting_string($y)'                    $indir/nullvals.dkvp
 run_mlr         --opprint put '$z = asserting_string($z)'                    $indir/nullvals.dkvp

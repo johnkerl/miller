@@ -18582,9 +18582,8 @@ mlr: numeric type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullv
 mlr --opprint put $* = asserting_numeric($*) ./reg_test/input/nullvals.dkvp
 mlr: numeric type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $* asserting_numeric({1:2}) ./reg_test/input/nullvals.dkvp
-mlr DSL: syntax error at "asserting_numeric"
-./reg_test/../../c/mlr put: syntax error on DSL parse of '$* asserting_numeric({1:2})'
+mlr --opprint put $* = asserting_numeric({1:2}) ./reg_test/input/nullvals.dkvp
+mlr: numeric type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
 mlr --opprint put $x = asserting_string($x) ./reg_test/input/nullvals.dkvp
 mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
