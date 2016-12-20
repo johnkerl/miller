@@ -18567,6 +18567,48 @@ b 5 - -
 b - 6 -
 b - - -
 
+mlr --opprint put $x = asserting_numeric($x) ./reg_test/input/nullvals.dkvp
+mlr: numeric type-assertion failed at NR=4 FNR=4 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $y = asserting_numeric($y) ./reg_test/input/nullvals.dkvp
+mlr: numeric type-assertion failed at NR=3 FNR=3 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $z = asserting_numeric($z) ./reg_test/input/nullvals.dkvp
+mlr: numeric type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $nosuch = asserting_numeric($nosuch) ./reg_test/input/nullvals.dkvp
+mlr: numeric type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $* = asserting_numeric($*) ./reg_test/input/nullvals.dkvp
+mlr: numeric type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $* asserting_numeric({1:2}) ./reg_test/input/nullvals.dkvp
+mlr DSL: syntax error at "asserting_numeric"
+./reg_test/../../c/mlr put: syntax error on DSL parse of '$* asserting_numeric({1:2})'
+
+mlr --opprint put $x = asserting_string($x) ./reg_test/input/nullvals.dkvp
+mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $y = asserting_string($y) ./reg_test/input/nullvals.dkvp
+mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $z = asserting_string($z) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put $nosuch = asserting_string($nosuch) ./reg_test/input/nullvals.dkvp
+mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $* = asserting_string($*) ./reg_test/input/nullvals.dkvp
+mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $* = asserting_string({1:2}) ./reg_test/input/nullvals.dkvp
+mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
 mlr put -q @v=1; @nonesuch       {emit @v} ./reg_test/input/abixy
 
 mlr put -q @v=1; @nonesuch==true {emit @v} ./reg_test/input/abixy
