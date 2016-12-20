@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-12-19
+.\"      Date: 2016-12-20
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-12-19" "\ \&" "\ \&"
+.TH "MILLER" "1" "2016-12-20" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -184,11 +184,13 @@ output separator to the given value.
  hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime
  isabsent isbool isboolean isempty isemptymap isfloat isint ismap isnonemptymap
  isnotempty isnotmap isnotnull isnull isnumeric ispresent isstring
- assert_absent assert_bool assert_boolean assert_empty assert_emptymap
- assert_float assert_int assert_map assert_nonemptymap assert_notempty
- assert_notmap assert_notnull assert_null assert_numeric assert_present
- assert_string boolean float fmtnum hexfmt int string typeof depth haskey joink
- joinkv joinv leafcount length mapdiff mapsum splitkv splitkvx splitnv splitnvx
+ asserting_absent asserting_bool asserting_boolean asserting_empty
+ asserting_empty_map asserting_float asserting_int asserting_map
+ asserting_nonempty_map asserting_not_empty asserting_not_map
+ asserting_not_null asserting_null asserting_numeric asserting_present
+ asserting_string boolean float fmtnum hexfmt int string typeof depth haskey
+ joink joinkv joinv leafcount length mapdiff mapsum splitkv splitkvx splitnv
+ splitnvx
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -2405,7 +2407,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_absent"
+.SS "asserting_absent"
 .if n \{\
 .RS 0
 .\}
@@ -2414,7 +2416,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_bool"
+.SS "asserting_bool"
 .if n \{\
 .RS 0
 .\}
@@ -2423,7 +2425,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_boolean"
+.SS "asserting_boolean"
 .if n \{\
 .RS 0
 .\}
@@ -2432,7 +2434,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_empty"
+.SS "asserting_empty"
 .if n \{\
 .RS 0
 .\}
@@ -2441,7 +2443,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_emptymap"
+.SS "asserting_empty_map"
 .if n \{\
 .RS 0
 .\}
@@ -2450,7 +2452,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_float"
+.SS "asserting_float"
 .if n \{\
 .RS 0
 .\}
@@ -2459,7 +2461,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_int"
+.SS "asserting_int"
 .if n \{\
 .RS 0
 .\}
@@ -2468,7 +2470,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_map"
+.SS "asserting_map"
 .if n \{\
 .RS 0
 .\}
@@ -2477,7 +2479,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_nonemptymap"
+.SS "asserting_nonempty_map"
 .if n \{\
 .RS 0
 .\}
@@ -2486,7 +2488,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_notempty"
+.SS "asserting_not_empty"
 .if n \{\
 .RS 0
 .\}
@@ -2495,7 +2497,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_notmap"
+.SS "asserting_not_map"
 .if n \{\
 .RS 0
 .\}
@@ -2504,7 +2506,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_notnull"
+.SS "asserting_not_null"
 .if n \{\
 .RS 0
 .\}
@@ -2513,7 +2515,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_null"
+.SS "asserting_null"
 .if n \{\
 .RS 0
 .\}
@@ -2522,7 +2524,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_numeric"
+.SS "asserting_numeric"
 .if n \{\
 .RS 0
 .\}
@@ -2531,7 +2533,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_present"
+.SS "asserting_present"
 .if n \{\
 .RS 0
 .\}
@@ -2540,7 +2542,7 @@ e.g. 1440768801.748936.
 .fi
 .if n \{\
 .RE
-.SS "assert_string"
+.SS "asserting_string"
 .if n \{\
 .RS 0
 .\}

@@ -285,22 +285,22 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_TYPING, "ispresent",     1,0, "True if field is present in input, false otherwise."},
 	{FUNC_CLASS_TYPING, "isstring",      1,0, "True if field is present with string (including empty-string) value"},
 
-	{FUNC_CLASS_TYPING, "assert_absent",      1,0, "Returns argument if it is absent in the input ata, else throws an error."},
-	{FUNC_CLASS_TYPING, "assert_bool",        1,0, "Returns argument if it is present with boolean value, else throws an error."},
-	{FUNC_CLASS_TYPING, "assert_boolean",     1,0, "Returns argument if it is present with boolean value, else throws an error."},
-	{FUNC_CLASS_TYPING, "assert_empty",       1,0, "Returns argument if it is present in input with empty value, else throws an error."},
-	{FUNC_CLASS_TYPING, "assert_emptymap",    1,0, "Returns argument if it is a map with empty value, else throws an error."},
-	{FUNC_CLASS_TYPING, "assert_float",       1,0, "Returns argument if it is present with float value, else throws an error."},
-	{FUNC_CLASS_TYPING, "assert_int",         1,0, "Returns argument if it is present with int value, else throws an error."},
-	{FUNC_CLASS_TYPING, "assert_map",         1,0, "Returns argument if it is a map, else throws an error."},
-	{FUNC_CLASS_TYPING, "assert_nonemptymap", 1,0, "Returns argument if it is a non-empty map, else throws an error."},
-	{FUNC_CLASS_TYPING, "assert_notempty",    1,0, "Returns argument if it is present in input with non-empty value, else throws an error."},
-	{FUNC_CLASS_TYPING, "assert_notmap",      1,0, "Returns argument if it is not a map, else throws an error."},
-	{FUNC_CLASS_TYPING, "assert_notnull",     1,0, "Returns argument if it is non-null (non-empty and non-absent), else throws an error."},
-	{FUNC_CLASS_TYPING, "assert_null",        1,0, "Returns argument if it is null (empty or absent), else throws an error."},
-	{FUNC_CLASS_TYPING, "assert_numeric",     1,0, "Returns argument if it is present with int or float value, else throws an error."},
-	{FUNC_CLASS_TYPING, "assert_present",     1,0, "Returns argument if it is present in input, else throws an error."},
-	{FUNC_CLASS_TYPING, "assert_string",      1,0, "Returns argument if it is present with string (including empty-string) value, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_absent",      1,0, "Returns argument if it is absent in the input ata, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_bool",        1,0, "Returns argument if it is present with boolean value, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_boolean",     1,0, "Returns argument if it is present with boolean value, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_empty",       1,0, "Returns argument if it is present in input with empty value, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_empty_map",    1,0, "Returns argument if it is a map with empty value, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_float",       1,0, "Returns argument if it is present with float value, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_int",         1,0, "Returns argument if it is present with int value, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_map",         1,0, "Returns argument if it is a map, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_nonempty_map", 1,0, "Returns argument if it is a non-empty map, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_not_empty",    1,0, "Returns argument if it is present in input with non-empty value, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_not_map",      1,0, "Returns argument if it is not a map, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_not_null",     1,0, "Returns argument if it is non-null (non-empty and non-absent), else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_null",        1,0, "Returns argument if it is null (empty or absent), else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_numeric",     1,0, "Returns argument if it is present with int or float value, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_present",     1,0, "Returns argument if it is present in input, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_string",      1,0, "Returns argument if it is present with string (including empty-string) value, else throws an error."},
 
 	{FUNC_CLASS_CONVERSION, "boolean",     1,0, "Convert int/float/bool/string to boolean."},
 	{FUNC_CLASS_CONVERSION, "float",       1,0, "Convert int/float/bool/string to float."},
@@ -1200,37 +1200,37 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(
 // ----------------------------------------------------------------
 static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm, rxval_evaluator_t* parg1) {
 
-	if (streq(fnnm, "assert_absent")) {
+	if (streq(fnnm, "asserting_absent")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isabsent_no_free_xfunc, parg1, "absent");
-	} else if (streq(fnnm, "assert_bool")) {
+	} else if (streq(fnnm, "asserting_bool")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isboolean_no_free_xfunc, parg1, "boolean");
-	} else if (streq(fnnm, "assert_boolean")) {
+	} else if (streq(fnnm, "asserting_boolean")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isboolean_no_free_xfunc, parg1, "boolean");
-	} else if (streq(fnnm, "assert_empty")) {
+	} else if (streq(fnnm, "asserting_empty")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isempty_no_free_xfunc, parg1, "empty");
-	} else if (streq(fnnm, "assert_emptymap")) {
+	} else if (streq(fnnm, "asserting_empty_map")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isemptymap_no_free_xfunc, parg1, "emptymap");
-	} else if (streq(fnnm, "assert_float")) {
+	} else if (streq(fnnm, "asserting_float")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isfloat_no_free_xfunc, parg1, "float");
-	} else if (streq(fnnm, "assert_int")) {
+	} else if (streq(fnnm, "asserting_int")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isint_no_free_xfunc, parg1, "int");
-	} else if (streq(fnnm, "assert_map")) {
+	} else if (streq(fnnm, "asserting_map")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_ismap_no_free_xfunc, parg1, "map");
-	} else if (streq(fnnm, "assert_nonemptymap")) {
+	} else if (streq(fnnm, "asserting_nonempty_map")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isnonemptymap_no_free_xfunc, parg1, "nonemptymap");
-	} else if (streq(fnnm, "assert_notempty")) {
+	} else if (streq(fnnm, "asserting_not_empty")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isnotempty_no_free_xfunc, parg1, "notempty");
-	} else if (streq(fnnm, "assert_notmap")) {
+	} else if (streq(fnnm, "asserting_not_map")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isnotmap_no_free_xfunc, parg1, "notmap");
-	} else if (streq(fnnm, "assert_notnull")) {
+	} else if (streq(fnnm, "asserting_not_null")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isnotnull_no_free_xfunc, parg1, "notnull");
-	} else if (streq(fnnm, "assert_null")) {
+	} else if (streq(fnnm, "asserting_null")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isnull_no_free_xfunc, parg1, "notnull");
-	} else if (streq(fnnm, "assert_numeric")) {
+	} else if (streq(fnnm, "asserting_numeric")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isnumeric_no_free_xfunc, parg1, "numeric");
-	} else if (streq(fnnm, "assert_present")) {
+	} else if (streq(fnnm, "asserting_present")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_ispresent_no_free_xfunc, parg1, "present");
-	} else if (streq(fnnm, "assert_string")) {
+	} else if (streq(fnnm, "asserting_string")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isstring_no_free_xfunc, parg1, "string");
 
 	} else if (streq(fnnm, "isabsent")) {

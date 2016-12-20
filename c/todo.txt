@@ -32,15 +32,10 @@ OTHER:
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
-! rename asserts -- it sounds like they return boolean but they don't
 ! UT cases detailed below
+  -> asserting_* in progress
 
 ! memmgt for ephemeral boxed xvals
-
-! assert_map/assert_scalar/etc.
-  - UTs
-  - mlh
-  - mld
 
 * emittable/dumpable/etc md_rhs -> more specific fcn-call.
 

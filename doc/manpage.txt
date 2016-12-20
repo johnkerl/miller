@@ -135,11 +135,13 @@ OPTIONS
 	hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime
 	isabsent isbool isboolean isempty isemptymap isfloat isint ismap isnonemptymap
 	isnotempty isnotmap isnotnull isnull isnumeric ispresent isstring
-	assert_absent assert_bool assert_boolean assert_empty assert_emptymap
-	assert_float assert_int assert_map assert_nonemptymap assert_notempty
-	assert_notmap assert_notnull assert_null assert_numeric assert_present
-	assert_string boolean float fmtnum hexfmt int string typeof depth haskey joink
-	joinkv joinv leafcount length mapdiff mapsum splitkv splitkvx splitnv splitnvx
+	asserting_absent asserting_bool asserting_boolean asserting_empty
+	asserting_empty_map asserting_float asserting_int asserting_map
+	asserting_nonempty_map asserting_not_empty asserting_not_map
+	asserting_not_null asserting_null asserting_numeric asserting_present
+	asserting_string boolean float fmtnum hexfmt int string typeof depth haskey
+	joink joinkv joinv leafcount length mapdiff mapsum splitkv splitkvx splitnv
+	splitnvx
        Please use "mlr --help-function {function name}" for function-specific help.
        Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
        Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -1426,52 +1428,52 @@ FUNCTIONS FOR FILTER/PUT
    isstring
        (class=typing #args=1): True if field is present with string (including empty-string) value
 
-   assert_absent
+   asserting_absent
        (class=typing #args=1): Returns argument if it is absent in the input ata, else throws an error.
 
-   assert_bool
+   asserting_bool
        (class=typing #args=1): Returns argument if it is present with boolean value, else throws an error.
 
-   assert_boolean
+   asserting_boolean
        (class=typing #args=1): Returns argument if it is present with boolean value, else throws an error.
 
-   assert_empty
+   asserting_empty
        (class=typing #args=1): Returns argument if it is present in input with empty value, else throws an error.
 
-   assert_emptymap
+   asserting_empty_map
        (class=typing #args=1): Returns argument if it is a map with empty value, else throws an error.
 
-   assert_float
+   asserting_float
        (class=typing #args=1): Returns argument if it is present with float value, else throws an error.
 
-   assert_int
+   asserting_int
        (class=typing #args=1): Returns argument if it is present with int value, else throws an error.
 
-   assert_map
+   asserting_map
        (class=typing #args=1): Returns argument if it is a map, else throws an error.
 
-   assert_nonemptymap
+   asserting_nonempty_map
        (class=typing #args=1): Returns argument if it is a non-empty map, else throws an error.
 
-   assert_notempty
+   asserting_not_empty
        (class=typing #args=1): Returns argument if it is present in input with non-empty value, else throws an error.
 
-   assert_notmap
+   asserting_not_map
        (class=typing #args=1): Returns argument if it is not a map, else throws an error.
 
-   assert_notnull
+   asserting_not_null
        (class=typing #args=1): Returns argument if it is non-null (non-empty and non-absent), else throws an error.
 
-   assert_null
+   asserting_null
        (class=typing #args=1): Returns argument if it is null (empty or absent), else throws an error.
 
-   assert_numeric
+   asserting_numeric
        (class=typing #args=1): Returns argument if it is present with int or float value, else throws an error.
 
-   assert_present
+   asserting_present
        (class=typing #args=1): Returns argument if it is present in input, else throws an error.
 
-   assert_string
+   asserting_string
        (class=typing #args=1): Returns argument if it is present with string (including empty-string) value, else throws an error.
 
    boolean
@@ -1838,4 +1840,4 @@ SEE ALSO
 
 
 
-				  2016-12-19			     MILLER(1)
+				  2016-12-20			     MILLER(1)

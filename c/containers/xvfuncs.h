@@ -168,7 +168,7 @@ static inline boxed_xval_t s_x_typeof_xfunc(boxed_xval_t* pbxval1) {
 // freed. For another example, isstring frees its input and returns the boolean
 // value of the result. These functions, by contrast, only return a boolean for
 // the outcome of the test but do not free the inputs. The intended usage is for
-// type-assertion checks.  E.g. in '$b = assert_string($a)', if $a is a string
+// type-assertion checks.  E.g. in '$b = asserting_string($a)', if $a is a string
 // it is assigned to $b, else an error is thrown.
 
 static inline boxed_xval_t b_x_ispresent_no_free_xfunc(boxed_xval_t* pbxval1) {

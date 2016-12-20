@@ -438,7 +438,7 @@ POKI_RUN_COMMAND{{mlr --icsvlite --opprint put 'if (!isstring($reachable)) {epri
 
 <p/> A third way is to abort the process on first instance of bad data:
 
-POKI_RUN_COMMAND_TOLERATING_ERROR{{mlr --csvlite put '$reachable = assert_string($reachable)' data/het-bool.csv}}HERE
+POKI_RUN_COMMAND_TOLERATING_ERROR{{mlr --csvlite put '$reachable = asserting_string($reachable)' data/het-bool.csv}}HERE
 
 <!-- ================================================================ -->
 <h3>Type-declarations for local variables, function parameter, and function return values</h3>

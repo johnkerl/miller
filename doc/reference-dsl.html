@@ -1166,22 +1166,22 @@ isstring
 <div class="pokipanel">
 <pre>
 $ mlr -F | grep ^assert
-assert_absent
-assert_bool
-assert_boolean
-assert_empty
-assert_emptymap
-assert_float
-assert_int
-assert_map
-assert_nonemptymap
-assert_notempty
-assert_notmap
-assert_notnull
-assert_null
-assert_numeric
-assert_present
-assert_string
+asserting_absent
+asserting_bool
+asserting_boolean
+asserting_empty
+asserting_empty_map
+asserting_float
+asserting_int
+asserting_map
+asserting_nonempty_map
+asserting_not_empty
+asserting_not_map
+asserting_not_null
+asserting_null
+asserting_numeric
+asserting_present
+asserting_string
 </pre>
 </div>
 <p/>
@@ -1270,7 +1270,7 @@ wilma  1
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --csvlite put '$reachable = assert_string($reachable)' data/het-bool.csv
+$ mlr --csvlite put '$reachable = asserting_string($reachable)' data/het-bool.csv
 mlr: string type-assertion failed at NR=4 FNR=4 FILENAME=data/het-bool.csv
 name,reachable
 barney,false
@@ -3462,52 +3462,52 @@ otherwise.
 isstring (class=typing #args=1): True if field is present with string (including
 empty-string) value
 
-assert_absent (class=typing #args=1): Returns argument if it is absent in the
+asserting_absent (class=typing #args=1): Returns argument if it is absent in the
 input ata, else throws an error.
 
-assert_bool (class=typing #args=1): Returns argument if it is present with
+asserting_bool (class=typing #args=1): Returns argument if it is present with
 boolean value, else throws an error.
 
-assert_boolean (class=typing #args=1): Returns argument if it is present with
+asserting_boolean (class=typing #args=1): Returns argument if it is present with
 boolean value, else throws an error.
 
-assert_empty (class=typing #args=1): Returns argument if it is present in input
-with empty value, else throws an error.
+asserting_empty (class=typing #args=1): Returns argument if it is present in
+input with empty value, else throws an error.
 
-assert_emptymap (class=typing #args=1): Returns argument if it is a map with
+asserting_empty_map (class=typing #args=1): Returns argument if it is a map with
 empty value, else throws an error.
 
-assert_float (class=typing #args=1): Returns argument if it is present with
+asserting_float (class=typing #args=1): Returns argument if it is present with
 float value, else throws an error.
 
-assert_int (class=typing #args=1): Returns argument if it is present with int
+asserting_int (class=typing #args=1): Returns argument if it is present with int
 value, else throws an error.
 
-assert_map (class=typing #args=1): Returns argument if it is a map, else throws
-an error.
-
-assert_nonemptymap (class=typing #args=1): Returns argument if it is a non-empty
-map, else throws an error.
-
-assert_notempty (class=typing #args=1): Returns argument if it is present in
-input with non-empty value, else throws an error.
-
-assert_notmap (class=typing #args=1): Returns argument if it is not a map, else
+asserting_map (class=typing #args=1): Returns argument if it is a map, else
 throws an error.
 
-assert_notnull (class=typing #args=1): Returns argument if it is non-null
+asserting_nonempty_map (class=typing #args=1): Returns argument if it is a
+non-empty map, else throws an error.
+
+asserting_not_empty (class=typing #args=1): Returns argument if it is present in
+input with non-empty value, else throws an error.
+
+asserting_not_map (class=typing #args=1): Returns argument if it is not a map,
+else throws an error.
+
+asserting_not_null (class=typing #args=1): Returns argument if it is non-null
 (non-empty and non-absent), else throws an error.
 
-assert_null (class=typing #args=1): Returns argument if it is null (empty or
+asserting_null (class=typing #args=1): Returns argument if it is null (empty or
 absent), else throws an error.
 
-assert_numeric (class=typing #args=1): Returns argument if it is present with
+asserting_numeric (class=typing #args=1): Returns argument if it is present with
 int or float value, else throws an error.
 
-assert_present (class=typing #args=1): Returns argument if it is present in
+asserting_present (class=typing #args=1): Returns argument if it is present in
 input, else throws an error.
 
-assert_string (class=typing #args=1): Returns argument if it is present with
+asserting_string (class=typing #args=1): Returns argument if it is present with
 string (including empty-string) value, else throws an error.
 
 boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
