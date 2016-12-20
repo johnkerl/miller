@@ -18608,6 +18608,72 @@ mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullva
 mlr --opprint put $* = asserting_string({1:2}) ./reg_test/input/nullvals.dkvp
 mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
+mlr --opprint put $f=asserting_absent($x) ./reg_test/input/nullvals.dkvp
+mlr: absent type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $f=asserting_absent($y) ./reg_test/input/nullvals.dkvp
+mlr: absent type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $f=asserting_absent($z) ./reg_test/input/nullvals.dkvp
+mlr: absent type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $f=asserting_absent($nosuch) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put $f=asserting_absent(@nosuch) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put @somesuch=1;$f=asserting_absent(@somesuch) ./reg_test/input/nullvals.dkvp
+mlr: absent type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $f=asserting_present($x) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - 1
+b 3 4 - 3
+b 5 - - 5
+b - 6 - -
+b - - - -
+
+mlr --opprint put $f=asserting_present($y) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - 2
+b 3 4 - 4
+b 5 - - -
+b - 6 - 6
+b - - - -
+
+mlr --opprint put $f=asserting_present($z) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - -
+b 3 4 - -
+b 5 - - -
+b - 6 - -
+b - - - -
+
+mlr --opprint put $f=asserting_present($nosuch) ./reg_test/input/nullvals.dkvp
+mlr: present type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $f=asserting_present(@nosuch) ./reg_test/input/nullvals.dkvp
+mlr: present type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put @somesuch=1;$f=asserting_present(@somesuch) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - 1
+b 3 4 - 1
+b 5 - - 1
+b - 6 - 1
+b - - - 1
+
 mlr put -q @v=1; @nonesuch       {emit @v} ./reg_test/input/abixy
 
 mlr put -q @v=1; @nonesuch==true {emit @v} ./reg_test/input/abixy

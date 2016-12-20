@@ -1311,18 +1311,20 @@ mlr_expect_fail --opprint put '$nosuch = asserting_string($nosuch)'          $in
 mlr_expect_fail --opprint put '$* = asserting_string($*)'                    $indir/nullvals.dkvp
 mlr_expect_fail --opprint put '$* = asserting_string({1:2})'                 $indir/nullvals.dkvp
 
-#run_mlr --opprint put '$f=asserting_absent($x)'                         $indir/nullvals.dkvp
-#run_mlr --opprint put '$f=asserting_absent($y)'                         $indir/nullvals.dkvp
-#run_mlr --opprint put '$f=asserting_absent($z)'                         $indir/nullvals.dkvp
-#run_mlr --opprint put '$f=asserting_absent($nosuch)'                    $indir/nullvals.dkvp
-#run_mlr --opprint put '$f=asserting_absent(@nosuch)'                    $indir/nullvals.dkvp
-#run_mlr --opprint put '@somesuch=1;$f=asserting_absent(@somesuch)'      $indir/nullvals.dkvp
-#run_mlr --opprint put '$f=asserting_present($x)'                        $indir/nullvals.dkvp
-#run_mlr --opprint put '$f=asserting_present($y)'                        $indir/nullvals.dkvp
-#run_mlr --opprint put '$f=asserting_present($z)'                        $indir/nullvals.dkvp
-#run_mlr --opprint put '$f=asserting_present($nosuch)'                   $indir/nullvals.dkvp
-#run_mlr --opprint put '$f=asserting_present(@nosuch)'                   $indir/nullvals.dkvp
-#run_mlr --opprint put '@somesuch=1;$f=asserting_present(@somesuch)'     $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$f=asserting_absent($x)'                     $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$f=asserting_absent($y)'                     $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$f=asserting_absent($z)'                     $indir/nullvals.dkvp
+
+run_mlr         --opprint put '$f=asserting_absent($nosuch)'                $indir/nullvals.dkvp
+run_mlr         --opprint put '$f=asserting_absent(@nosuch)'                $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '@somesuch=1;$f=asserting_absent(@somesuch)'  $indir/nullvals.dkvp
+
+run_mlr         --opprint put '$f=asserting_present($x)'                    $indir/nullvals.dkvp
+run_mlr         --opprint put '$f=asserting_present($y)'                    $indir/nullvals.dkvp
+run_mlr         --opprint put '$f=asserting_present($z)'                    $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$f=asserting_present($nosuch)'               $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$f=asserting_present(@nosuch)'               $indir/nullvals.dkvp
+run_mlr         --opprint put '@somesuch=1;$f=asserting_present(@somesuch)' $indir/nullvals.dkvp
 
 #run_mlr --opprint put 'asserting_empty($x)'                             $indir/nullvals.dkvp
 #run_mlr --opprint put 'asserting_empty($y)'                             $indir/nullvals.dkvp
