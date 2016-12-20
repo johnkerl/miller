@@ -1284,18 +1284,19 @@ mlr_expect_fail --opprint put '$f=assert_notnull($nosuch)'               $indir/
 mlr_expect_fail --opprint put '$f=assert_notnull(@nosuch)'               $indir/nullvals.dkvp
 run_mlr         --opprint put '@somesuch=1;$f=assert_notnull(@somesuch)' $indir/nullvals.dkvp
 
-#run_mlr --opprint put 'assert_absent($x)'                            $indir/nullvals.dkvp
-#run_mlr --opprint put 'assert_absent($y)'                            $indir/nullvals.dkvp
-#run_mlr --opprint put 'assert_absent($z)'                            $indir/nullvals.dkvp
-#run_mlr --opprint put 'assert_absent($nosuch)'                       $indir/nullvals.dkvp
-#run_mlr --opprint put 'assert_absent($*)'                            $indir/nullvals.dkvp
-#run_mlr --opprint put 'assert_absent({1:2})'                         $indir/nullvals.dkvp
-#run_mlr --opprint put 'assert_present($x)'                           $indir/nullvals.dkvp
-#run_mlr --opprint put 'assert_present($y)'                           $indir/nullvals.dkvp
-#run_mlr --opprint put 'assert_present($z)'                           $indir/nullvals.dkvp
-#run_mlr --opprint put 'assert_present($nosuch)'                      $indir/nullvals.dkvp
-#run_mlr --opprint put 'assert_present($*)'                           $indir/nullvals.dkvp
-#run_mlr --opprint put 'assert_present({1:2})'                        $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$x = assert_absent($x)'                   $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$y = assert_absent($y)'                   $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$z = assert_absent($z)'                   $indir/nullvals.dkvp
+run_mlr --opprint put '$nosuch = assert_absent($nosuch)'                 $indir/nullvals.dkvp
+mlr_expect_fail --opprint put 'foo = assert_absent($*)'                  $indir/nullvals.dkvp
+mlr_expect_fail --opprint put 'assert_absent({1:2})'                     $indir/nullvals.dkvp
+
+run_mlr         --opprint put '$x = assert_present($x)'                  $indir/nullvals.dkvp
+run_mlr         --opprint put '$y = assert_present($y)'                  $indir/nullvals.dkvp
+run_mlr         --opprint put '$z = assert_present($z)'                  $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$nosuch = assert_present($nosuch)'        $indir/nullvals.dkvp
+run_mlr         --opprint put 'foo = assert_present($*)'                 $indir/nullvals.dkvp
+run_mlr         --opprint put 'foo = assert_present({1:2})'              $indir/nullvals.dkvp
 
 #run_mlr --opprint put 'assert_numeric($x)'                           $indir/nullvals.dkvp
 #run_mlr --opprint put 'assert_numeric($y)'                           $indir/nullvals.dkvp

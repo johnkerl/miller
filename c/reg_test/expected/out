@@ -18501,6 +18501,72 @@ b 5 - - 1
 b - 6 - 1
 b - - - 1
 
+mlr --opprint put $x = assert_absent($x) ./reg_test/input/nullvals.dkvp
+mlr: absent type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $y = assert_absent($y) ./reg_test/input/nullvals.dkvp
+mlr: absent type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $z = assert_absent($z) ./reg_test/input/nullvals.dkvp
+mlr: absent type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $nosuch = assert_absent($nosuch) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put foo = assert_absent($*) ./reg_test/input/nullvals.dkvp
+mlr: absent type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put assert_absent({1:2}) ./reg_test/input/nullvals.dkvp
+mlr: absent type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $x = assert_present($x) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put $y = assert_present($y) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put $z = assert_present($z) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put $nosuch = assert_present($nosuch) ./reg_test/input/nullvals.dkvp
+mlr: present type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put foo = assert_present($*) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put foo = assert_present({1:2}) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
 mlr put -q @v=1; @nonesuch       {emit @v} ./reg_test/input/abixy
 
 mlr put -q @v=1; @nonesuch==true {emit @v} ./reg_test/input/abixy
