@@ -18358,10 +18358,10 @@ b - - - true
 mlr --opprint put $x = assert_null($x) ./reg_test/input/nullvals.dkvp
 mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put assert_null($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $y = assert_null($y) ./reg_test/input/nullvals.dkvp
 mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put assert_null($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $z = assert_null($z) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
@@ -18369,7 +18369,7 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint put assert_null($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $nosuch = assert_null($nosuch) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
@@ -18377,10 +18377,10 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint put assert_null($*) ./reg_test/input/nullvals.dkvp
+mlr --opprint put foo = assert_null($*) ./reg_test/input/nullvals.dkvp
 mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put assert_null({1:2}) ./reg_test/input/nullvals.dkvp
+mlr --opprint put foo = assert_null({1:2}) ./reg_test/input/nullvals.dkvp
 mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
 mlr --opprint put $x == assert_notnull($x) ./reg_test/input/nullvals.dkvp
@@ -18455,6 +18455,28 @@ b 3 4 -
 b 5 - -
 b - 6 -
 b - - -
+
+mlr --opprint put $f=assert_null($nosuch) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put $f=assert_null(@nosuch) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put @somesuch=1;$f=assert_null(@somesuch) ./reg_test/input/nullvals.dkvp
+mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $f=assert_notnull($x) ./reg_test/input/nullvals.dkvp
+mlr: notnull type-assertion failed at NR=4 FNR=4 FILENAME=./reg_test/input/nullvals.dkvp
 
 mlr put -q @v=1; @nonesuch       {emit @v} ./reg_test/input/abixy
 

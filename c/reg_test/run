@@ -1260,11 +1260,11 @@ run_mlr --opprint put    '@somesuch=1;$f=isnonemptymap(@somesuch)' $indir/nullva
 mention ASSERTION PASS-THROUGHS
 
 mlr_expect_fail --opprint put '$x = assert_null($x)'                    $indir/nullvals.dkvp
-mlr_expect_fail --opprint put 'assert_null($y)'                         $indir/nullvals.dkvp
-run_mlr         --opprint put 'assert_null($z)'                         $indir/nullvals.dkvp
-run_mlr         --opprint put 'assert_null($nosuch)'                    $indir/nullvals.dkvp
-mlr_expect_fail --opprint put 'assert_null($*)'                         $indir/nullvals.dkvp
-mlr_expect_fail --opprint put 'assert_null({1:2})'                      $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$y = assert_null($y)'                    $indir/nullvals.dkvp
+run_mlr         --opprint put '$z = assert_null($z)'                    $indir/nullvals.dkvp
+run_mlr         --opprint put '$nosuch = assert_null($nosuch)'          $indir/nullvals.dkvp
+mlr_expect_fail --opprint put 'foo = assert_null($*)'                   $indir/nullvals.dkvp
+mlr_expect_fail --opprint put 'foo = assert_null({1:2})'                $indir/nullvals.dkvp
 mlr_expect_fail --opprint put '$x == assert_notnull($x)'                $indir/nullvals.dkvp
 mlr_expect_fail --opprint put '$y == assert_notnull($y)'                $indir/nullvals.dkvp
 mlr_expect_fail --opprint put '$z == assert_notnull($z)'                $indir/nullvals.dkvp
@@ -1272,13 +1272,10 @@ mlr_expect_fail --opprint put '$nosuch == assert_notnull($nosuch)'      $indir/n
 run_mlr         --opprint put 'foo = assert_notnull($*); dump foo'      $indir/nullvals.dkvp
 run_mlr         --opprint put 'o = assert_notnull({1:2}); dump o; true' $indir/nullvals.dkvp
 
-#mlr_expect_fail --opprint put    '$f=assert_null($x)'                        $indir/nullvals.dkvp
-#mlr_expect_fail --opprint put    '$f=assert_null($y)'                        $indir/nullvals.dkvp
-#mlr_expect_fail --opprint put    '$f=assert_null($z)'                        $indir/nullvals.dkvp
-#run_mlr --opprint put    '$f=assert_null($nosuch)'                   $indir/nullvals.dkvp
-#run_mlr --opprint put    '$f=assert_null(@nosuch)'                   $indir/nullvals.dkvp
-#mlr_expect_fail --opprint put    '@somesuch=1;$f=assert_null(@somesuch)'     $indir/nullvals.dkvp
-#run_mlr --opprint put    '$f=assert_notnull($x)'                     $indir/nullvals.dkvp
+run_mlr         --opprint put '$f=assert_null($nosuch)'                 $indir/nullvals.dkvp
+run_mlr         --opprint put '$f=assert_null(@nosuch)'                 $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '@somesuch=1;$f=assert_null(@somesuch)'   $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$f=assert_notnull($x)'                   $indir/nullvals.dkvp
 
 #run_mlr --opprint put '$f=assert_notnull($y)'                        $indir/nullvals.dkvp
 #run_mlr --opprint put '$f=assert_notnull($z)'                        $indir/nullvals.dkvp
