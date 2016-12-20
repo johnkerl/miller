@@ -5921,7 +5921,7 @@ mlr_expect_fail --from $indir/abixy put '
 echo
 echo ================================================================
 echo "Differences between $expfile and $outfile:"
-diff -I '^mlr ' -C5 $expfile $outfile
+diff -I '^mlr' -C5 $expfile $outfile
 echo "No differences found between $expfile and $outfile" # since set -e
 echo ================================================================
 echo
