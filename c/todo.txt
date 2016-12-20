@@ -27,11 +27,13 @@ OTHER:
 
 * poki-run no '$ ' for comment lines
 
+! sort --fold !
+
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
+! rename asserts -- it sounds like they return boolean but they don't
 ! UT cases detailed below
-  -> ismap(absent) & isnotmap(absent) both false ?!?
 
 ! memmgt for ephemeral boxed xvals
 

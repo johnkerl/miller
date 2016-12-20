@@ -17515,6 +17515,8 @@ x=1,y=2,s=hello
 x=1,y=,s=
 x=,y=,s=hurrah
 
+
+---------------------------------------------------------------- IS-PREDICATES
 mlr --opprint filter isnull($x) ./reg_test/input/nullvals.dkvp
 a x y z
 b - 6 -
@@ -18351,6 +18353,8 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
+
+---------------------------------------------------------------- ASSERTION PASS-THROUGHS
 mlr put -q @v=1; @nonesuch       {emit @v} ./reg_test/input/abixy
 
 mlr put -q @v=1; @nonesuch==true {emit @v} ./reg_test/input/abixy
