@@ -18478,6 +18478,29 @@ mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullv
 mlr --opprint put $f=assert_notnull($x) ./reg_test/input/nullvals.dkvp
 mlr: notnull type-assertion failed at NR=4 FNR=4 FILENAME=./reg_test/input/nullvals.dkvp
 
+mlr --opprint put $x=assert_notnull($x) ./reg_test/input/nullvals.dkvp
+mlr: notnull type-assertion failed at NR=4 FNR=4 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $y=assert_notnull($y) ./reg_test/input/nullvals.dkvp
+mlr: notnull type-assertion failed at NR=3 FNR=3 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $y=assert_notnull($z) ./reg_test/input/nullvals.dkvp
+mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $f=assert_notnull($nosuch) ./reg_test/input/nullvals.dkvp
+mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $f=assert_notnull(@nosuch) ./reg_test/input/nullvals.dkvp
+mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put @somesuch=1;$f=assert_notnull(@somesuch) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - 1
+b 3 4 - 1
+b 5 - - 1
+b - 6 - 1
+b - - - 1
+
 mlr put -q @v=1; @nonesuch       {emit @v} ./reg_test/input/abixy
 
 mlr put -q @v=1; @nonesuch==true {emit @v} ./reg_test/input/abixy

@@ -1277,11 +1277,12 @@ run_mlr         --opprint put '$f=assert_null(@nosuch)'                 $indir/n
 mlr_expect_fail --opprint put '@somesuch=1;$f=assert_null(@somesuch)'   $indir/nullvals.dkvp
 mlr_expect_fail --opprint put '$f=assert_notnull($x)'                   $indir/nullvals.dkvp
 
-#run_mlr --opprint put '$f=assert_notnull($y)'                        $indir/nullvals.dkvp
-#run_mlr --opprint put '$f=assert_notnull($z)'                        $indir/nullvals.dkvp
-#run_mlr --opprint put '$f=assert_notnull($nosuch)'                   $indir/nullvals.dkvp
-#run_mlr --opprint put '$f=assert_notnull(@nosuch)'                   $indir/nullvals.dkvp
-#run_mlr --opprint put '@somesuch=1;$f=assert_notnull(@somesuch)'     $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$x=assert_notnull($x)'                    $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$y=assert_notnull($y)'                    $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$y=assert_notnull($z)'                    $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$f=assert_notnull($nosuch)'               $indir/nullvals.dkvp
+mlr_expect_fail --opprint put '$f=assert_notnull(@nosuch)'               $indir/nullvals.dkvp
+run_mlr         --opprint put '@somesuch=1;$f=assert_notnull(@somesuch)' $indir/nullvals.dkvp
 
 #run_mlr --opprint put 'assert_absent($x)'                            $indir/nullvals.dkvp
 #run_mlr --opprint put 'assert_absent($y)'                            $indir/nullvals.dkvp
