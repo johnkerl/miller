@@ -18674,6 +18674,78 @@ b 5 - - 1
 b - 6 - 1
 b - - - 1
 
+mlr --opprint put asserting_empty($x) ./reg_test/input/nullvals.dkvp
+mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put asserting_empty($y) ./reg_test/input/nullvals.dkvp
+mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put asserting_empty($z) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put asserting_empty($nosuch) ./reg_test/input/nullvals.dkvp
+mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put asserting_empty($*) ./reg_test/input/nullvals.dkvp
+mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put asserting_empty({1:2}) ./reg_test/input/nullvals.dkvp
+mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put asserting_not_empty($x) ./reg_test/input/nullvals.dkvp
+Expression does not evaluate to boolean: got MT_INT.
+
+mlr --opprint put asserting_not_empty($y) ./reg_test/input/nullvals.dkvp
+Expression does not evaluate to boolean: got MT_INT.
+
+mlr --opprint put asserting_not_empty($z) ./reg_test/input/nullvals.dkvp
+mlr: notempty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $x=asserting_empty($x) ./reg_test/input/nullvals.dkvp
+mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $y=asserting_empty($y) ./reg_test/input/nullvals.dkvp
+mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $z=asserting_empty($z) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put $nosuch=asserting_empty($nosuch) ./reg_test/input/nullvals.dkvp
+mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put foo=asserting_empty($*) ./reg_test/input/nullvals.dkvp
+mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put foo=asserting_empty({1:2}) ./reg_test/input/nullvals.dkvp
+mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put asserting_not_empty($x) ./reg_test/input/nullvals.dkvp
+Expression does not evaluate to boolean: got MT_INT.
+
+mlr --opprint put asserting_not_empty($y) ./reg_test/input/nullvals.dkvp
+Expression does not evaluate to boolean: got MT_INT.
+
+mlr --opprint put asserting_not_empty($z) ./reg_test/input/nullvals.dkvp
+mlr: notempty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $nosuch=asserting_not_empty($nosuch) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
 mlr put -q @v=1; @nonesuch       {emit @v} ./reg_test/input/abixy
 
 mlr put -q @v=1; @nonesuch==true {emit @v} ./reg_test/input/abixy
