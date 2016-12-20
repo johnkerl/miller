@@ -18355,6 +18355,107 @@ b - - - true
 
 
 ---------------------------------------------------------------- ASSERTION PASS-THROUGHS
+mlr --opprint put $x = assert_null($x) ./reg_test/input/nullvals.dkvp
+mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put assert_null($y) ./reg_test/input/nullvals.dkvp
+mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put assert_null($z) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put assert_null($nosuch) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put assert_null($*) ./reg_test/input/nullvals.dkvp
+mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put assert_null({1:2}) ./reg_test/input/nullvals.dkvp
+mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $x == assert_notnull($x) ./reg_test/input/nullvals.dkvp
+mlr: notnull type-assertion failed at NR=4 FNR=4 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $y == assert_notnull($y) ./reg_test/input/nullvals.dkvp
+mlr: notnull type-assertion failed at NR=3 FNR=3 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $z == assert_notnull($z) ./reg_test/input/nullvals.dkvp
+mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $nosuch == assert_notnull($nosuch) ./reg_test/input/nullvals.dkvp
+mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put foo = assert_notnull($*); dump foo ./reg_test/input/nullvals.dkvp
+{
+  "a": "b",
+  "x": 1,
+  "y": 2,
+  "z": ""
+}
+{
+  "a": "b",
+  "x": 3,
+  "y": 4,
+  "z": ""
+}
+{
+  "a": "b",
+  "x": 5,
+  "y": "",
+  "z": ""
+}
+{
+  "a": "b",
+  "x": "",
+  "y": 6,
+  "z": ""
+}
+{
+  "a": "b",
+  "x": "",
+  "y": "",
+  "z": ""
+}
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put o = assert_notnull({1:2}); dump o; true ./reg_test/input/nullvals.dkvp
+{
+  "1": 2
+}
+{
+  "1": 2
+}
+{
+  "1": 2
+}
+{
+  "1": 2
+}
+{
+  "1": 2
+}
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
 mlr put -q @v=1; @nonesuch       {emit @v} ./reg_test/input/abixy
 
 mlr put -q @v=1; @nonesuch==true {emit @v} ./reg_test/input/abixy
