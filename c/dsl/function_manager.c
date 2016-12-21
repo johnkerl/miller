@@ -277,7 +277,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_TYPING, "is_int",         1,0, "True if field is present with value inferred to be int "},
 	{FUNC_CLASS_TYPING, "is_map",         1,0, "True if argument is a map."},
 	{FUNC_CLASS_TYPING, "is_nonempty_map", 1,0, "True if argument is a map which is non-empty."},
-	{FUNC_CLASS_TYPING, "isnotempty",    1,0, "False if field is present in input with empty value, false otherwise"},
+	{FUNC_CLASS_TYPING, "is_not_empty",    1,0, "False if field is present in input with empty value, false otherwise"},
 	{FUNC_CLASS_TYPING, "is_not_map",      1,0, "True if argument is not a map."},
 	{FUNC_CLASS_TYPING, "is_not_null",     1,0, "False if argument is null (empty or absent), true otherwise."},
 	{FUNC_CLASS_TYPING, "is_null",        1,0, "True if argument is null (empty or absent), false otherwise."},
@@ -1219,7 +1219,7 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm,
 	} else if (streq(fnnm, "asserting_nonempty_map")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_is_nonempty_map_no_free_xfunc, parg1, "nonemptymap");
 	} else if (streq(fnnm, "asserting_not_empty")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isnotempty_no_free_xfunc, parg1, "notempty");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_empty_no_free_xfunc, parg1, "notempty");
 	} else if (streq(fnnm, "asserting_not_map")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_map_no_free_xfunc, parg1, "notmap");
 	} else if (streq(fnnm, "asserting_not_null")) {
@@ -1251,8 +1251,8 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm,
 		return rxval_evaluator_alloc_from_x_x_func(b_x_is_map_xfunc, parg1);
 	} else if (streq(fnnm, "is_nonempty_map")) {
 		return rxval_evaluator_alloc_from_x_x_func(b_x_is_nonempty_map_xfunc, parg1);
-	} else if (streq(fnnm, "isnotempty")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isnotempty_xfunc, parg1);
+	} else if (streq(fnnm, "is_not_empty")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_not_empty_xfunc, parg1);
 	} else if (streq(fnnm, "is_not_map")) {
 		return rxval_evaluator_alloc_from_x_x_func(b_x_is_not_map_xfunc, parg1);
 	} else if (streq(fnnm, "is_not_null")) {

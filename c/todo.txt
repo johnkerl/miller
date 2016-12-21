@@ -56,6 +56,9 @@ cook 4: weird stuff
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
+!!! RONG
+  mlr --opprint put '$f=is_nonempty_map($x)' ./reg_test/input/nullvals.dkvp
+
 ! UT cases detailed below
   -> asserting_* in progress
   -> rm dups!!
