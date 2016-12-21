@@ -32,6 +32,28 @@ OTHER:
 ! true/false/1/0 data-cleaning cookbook section. include filter x 2 (preceded by put $nr=NR), & tee x 2.
 
 ----------------------------------------------------------------
+COOKBOOK CHECKLIST:
+
+cook 1:
+* simple stuff like headerless csv
+* ./se/ examples
+* memoization
+
+cook 2: verbs vs. dsl/func list
+* stdlib.mlr examples
+* show mlr put '$*={...}' a full-featured cut/reorder/rename/label
+* seqgen vs.
+  mlr -n put 'begin{for (int i = 0; i < 10; i += 1) {emit {"a":i,"b":i**2} }}' then sort -nr a
+
+cook 3: fun stuff:
+* mand
+* sieve
+* ngrams
+* mlr --from ~/misc/words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
+
+cook 4: weird stuff
+
+----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
 ! UT cases detailed below
@@ -54,11 +76,6 @@ MAPVAR CHECKLIST:
   -> how to compare map-valued keys? recurse?
   -> string keys before/after int?
   -> how to incorporate numeric & lexical flags
-
-* cookbook x 3:
-  - simple stuff like headerless csv
-  - verbs vs dsl list
-  - weird stuff
 
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
@@ -261,16 +278,8 @@ SINGLE-FOR:
 * find & update cookbook/ref/whateveritwas ...
 
 COOK:
-* here and/or in the mld:ref:cut, show mlr put '$*={...}' a full-featured cut/reorder/rename/label
-* full section about verbs implemented in the dsl??
-* n-grams
-* mlr --from ~/misc/words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 * use: https://github.com/petewarden/dstkdata
 * for-records-counts example
-* ./se/ examples
-* stdlib.mlr examples
-* seqgen vs.
-  mlr -n put 'begin{for (int i = 0; i < 10; i += 1) {emit {"a":i,"b":i**2} }}' then sort -nr a
 
 TRANSPARENCY:
 * disclaimer about the Miller DSL having the usual plusses and minuses of a dynamically typed language:
@@ -395,7 +404,6 @@ BUGFIXES:
 DOC:
 * 10-min
 * inverse-transform-sampling example at cookbook.
-* http://johnkerl.org/miller/doc/cookbook.html#Memoization_with_out-of-stream_variables
 * mlr -F and -K. Note -l -L -f -F -k -K.
 * go/d/rust cmps @ getline
 * ruby/python cmps @ mand
