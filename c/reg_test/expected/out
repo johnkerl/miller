@@ -17448,75 +17448,8 @@ foobar
 
 
 ================================================================
-DSL NULL/EMPTY HANDLING
+IS-PREDICATES
 
-mlr put $z = $s . $s ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello,z=hellohello
-x=1,y=,s=,z=
-x=,y=,s=hurrah,z=hurrahhurrah
-
-mlr put $z = $s == "" ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello,z=false
-x=1,y=,s=,z=true
-x=,y=,s=hurrah,z=false
-
-mlr put $z = $s == $s ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello,z=true
-x=1,y=,s=,z=true
-x=,y=,s=hurrah,z=true
-
-mlr put $z = isempty($s) ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello,z=false
-x=1,y=,s=,z=true
-x=,y=,s=hurrah,z=false
-
-mlr put $z = $x + $y ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello,z=3
-x=1,y=,s=,z=
-x=,y=,s=hurrah,z=
-
-mlr put $z = $y + $y ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello,z=4
-x=1,y=,s=,z=
-x=,y=,s=hurrah,z=
-
-mlr put $z = $x + $nosuch ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello,z=1
-x=1,y=,s=,z=1
-x=,y=,s=hurrah
-
-mlr put $t = sub($s,       "ell", "X") ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello,t=hXo
-x=1,y=,s=,t=
-x=,y=,s=hurrah,t=hurrah
-
-mlr put $t = sub($s,       "ell", "") ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello,t=ho
-x=1,y=,s=,t=
-x=,y=,s=hurrah,t=hurrah
-
-mlr put $t = sub($nosuch,  "ell", "X") ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello
-x=1,y=,s=
-x=,y=,s=hurrah
-
-mlr put $t = gsub($s,      "l",   "X") ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello,t=heXXo
-x=1,y=,s=,t=
-x=,y=,s=hurrah,t=hurrah
-
-mlr put $t = gsub($s,      "l",   "") ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello,t=heo
-x=1,y=,s=,t=
-x=,y=,s=hurrah,t=hurrah
-
-mlr put $t = gsub($nosuch, "l",   "X") ./reg_test/input/null-vs-empty.dkvp
-x=1,y=2,s=hello
-x=1,y=,s=
-x=,y=,s=hurrah
-
-
----------------------------------------------------------------- IS-PREDICATES
 mlr --opprint filter isnull($x) ./reg_test/input/nullvals.dkvp
 a x y z
 b - 6 -
@@ -18354,7 +18287,9 @@ b - 6 - true
 b - - - true
 
 
----------------------------------------------------------------- ASSERTION PASS-THROUGHS
+================================================================
+ASSERTION PASS-THROUGHS
+
 mlr --opprint put $x=asserting_null($x) ./reg_test/input/nullvals.dkvp
 mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
@@ -19052,6 +18987,75 @@ mlr: nonemptymap type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/n
 
 mlr --opprint put @somesuch=1;$f=asserting_nonempty_map(@somesuch) ./reg_test/input/nullvals.dkvp
 mlr: nonemptymap type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+
+================================================================
+DSL NULL/EMPTY HANDLING
+
+mlr put $z = $s . $s ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,z=hellohello
+x=1,y=,s=,z=
+x=,y=,s=hurrah,z=hurrahhurrah
+
+mlr put $z = $s == "" ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,z=false
+x=1,y=,s=,z=true
+x=,y=,s=hurrah,z=false
+
+mlr put $z = $s == $s ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,z=true
+x=1,y=,s=,z=true
+x=,y=,s=hurrah,z=true
+
+mlr put $z = isempty($s) ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,z=false
+x=1,y=,s=,z=true
+x=,y=,s=hurrah,z=false
+
+mlr put $z = $x + $y ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,z=3
+x=1,y=,s=,z=
+x=,y=,s=hurrah,z=
+
+mlr put $z = $y + $y ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,z=4
+x=1,y=,s=,z=
+x=,y=,s=hurrah,z=
+
+mlr put $z = $x + $nosuch ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,z=1
+x=1,y=,s=,z=1
+x=,y=,s=hurrah
+
+mlr put $t = sub($s,       "ell", "X") ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,t=hXo
+x=1,y=,s=,t=
+x=,y=,s=hurrah,t=hurrah
+
+mlr put $t = sub($s,       "ell", "") ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,t=ho
+x=1,y=,s=,t=
+x=,y=,s=hurrah,t=hurrah
+
+mlr put $t = sub($nosuch,  "ell", "X") ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello
+x=1,y=,s=
+x=,y=,s=hurrah
+
+mlr put $t = gsub($s,      "l",   "X") ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,t=heXXo
+x=1,y=,s=,t=
+x=,y=,s=hurrah,t=hurrah
+
+mlr put $t = gsub($s,      "l",   "") ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello,t=heo
+x=1,y=,s=,t=
+x=,y=,s=hurrah,t=hurrah
+
+mlr put $t = gsub($nosuch, "l",   "X") ./reg_test/input/null-vs-empty.dkvp
+x=1,y=2,s=hello
+x=1,y=,s=
+x=,y=,s=hurrah
 
 
 ---------------------------------------------------------------- EMIT

@@ -1105,24 +1105,7 @@ run_mlr put '$x = ENV["X"]; $y = ENV[$name]' $indir/env-var.dkvp
 run_mlr -n put 'begin{ENV["HOME"]="foobar"} end{print ENV["HOME"]}'
 
 # ----------------------------------------------------------------
-announce DSL NULL/EMPTY HANDLING
-
-run_mlr put '$z = $s . $s'     $indir/null-vs-empty.dkvp
-run_mlr put '$z = $s == ""'    $indir/null-vs-empty.dkvp
-run_mlr put '$z = $s == $s'    $indir/null-vs-empty.dkvp
-run_mlr put '$z = isempty($s)' $indir/null-vs-empty.dkvp
-
-run_mlr put '$z = $x + $y'      $indir/null-vs-empty.dkvp
-run_mlr put '$z = $y + $y'      $indir/null-vs-empty.dkvp
-run_mlr put '$z = $x + $nosuch' $indir/null-vs-empty.dkvp
-run_mlr put '$t = sub($s,       "ell", "X")' $indir/null-vs-empty.dkvp
-run_mlr put '$t = sub($s,       "ell", "")'  $indir/null-vs-empty.dkvp
-run_mlr put '$t = sub($nosuch,  "ell", "X")' $indir/null-vs-empty.dkvp
-run_mlr put '$t = gsub($s,      "l",   "X")' $indir/null-vs-empty.dkvp
-run_mlr put '$t = gsub($s,      "l",   "")'  $indir/null-vs-empty.dkvp
-run_mlr put '$t = gsub($nosuch, "l",   "X")' $indir/null-vs-empty.dkvp
-
-mention IS-PREDICATES
+announce IS-PREDICATES
 
 run_mlr --opprint filter 'isnull($x)'                           $indir/nullvals.dkvp
 run_mlr --opprint filter 'isnull($y)'                           $indir/nullvals.dkvp
@@ -1257,7 +1240,8 @@ run_mlr --opprint put    '$f=isnonemptymap({1:2})'                 $indir/nullva
 run_mlr --opprint put    '$f=isnonemptymap({})'                    $indir/nullvals.dkvp
 run_mlr --opprint put    '@somesuch=1;$f=isnonemptymap(@somesuch)' $indir/nullvals.dkvp
 
-mention ASSERTION PASS-THROUGHS
+# ----------------------------------------------------------------
+announce ASSERTION PASS-THROUGHS
 
 mlr_expect_fail --opprint put '$x=asserting_null($x)'                        $indir/nullvals.dkvp
 mlr_expect_fail --opprint put '$y=asserting_null($y)'                        $indir/nullvals.dkvp
@@ -1406,6 +1390,24 @@ run_mlr         --opprint put '$f=asserting_nonempty_map($*)'                   
 run_mlr         --opprint put '$f=asserting_nonempty_map({1:2})'                 $indir/nullvals.dkvp
 mlr_expect_fail --opprint put '$f=asserting_nonempty_map({})'                    $indir/nullvals.dkvp
 mlr_expect_fail --opprint put '@somesuch=1;$f=asserting_nonempty_map(@somesuch)' $indir/nullvals.dkvp
+
+# ----------------------------------------------------------------
+announce DSL NULL/EMPTY HANDLING
+
+run_mlr put '$z = $s . $s'     $indir/null-vs-empty.dkvp
+run_mlr put '$z = $s == ""'    $indir/null-vs-empty.dkvp
+run_mlr put '$z = $s == $s'    $indir/null-vs-empty.dkvp
+run_mlr put '$z = isempty($s)' $indir/null-vs-empty.dkvp
+
+run_mlr put '$z = $x + $y'      $indir/null-vs-empty.dkvp
+run_mlr put '$z = $y + $y'      $indir/null-vs-empty.dkvp
+run_mlr put '$z = $x + $nosuch' $indir/null-vs-empty.dkvp
+run_mlr put '$t = sub($s,       "ell", "X")' $indir/null-vs-empty.dkvp
+run_mlr put '$t = sub($s,       "ell", "")'  $indir/null-vs-empty.dkvp
+run_mlr put '$t = sub($nosuch,  "ell", "X")' $indir/null-vs-empty.dkvp
+run_mlr put '$t = gsub($s,      "l",   "X")' $indir/null-vs-empty.dkvp
+run_mlr put '$t = gsub($s,      "l",   "")'  $indir/null-vs-empty.dkvp
+run_mlr put '$t = gsub($nosuch, "l",   "X")' $indir/null-vs-empty.dkvp
 
 mention EMIT
 run_mlr put -q '@v=1; @nonesuch       {emit @v}' $indir/abixy
