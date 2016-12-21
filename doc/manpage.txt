@@ -33,7 +33,7 @@ EXAMPLES
        mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
        mlr --from estimates.tbl put '
 	 for (k,v in $*) {
-	   if (isnumeric(v) && k =~ "^[t-z].*$") {
+	   if (is_numeric(v) && k =~ "^[t-z].*$") {
 	     $sum += v; $count += 1
 	   }
 	 }
@@ -133,11 +133,11 @@ OPTIONS
 	madd max mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh
 	urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec
 	hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime
-	isabsent isbool isboolean isempty isemptymap isfloat isint ismap isnonemptymap
-	isnotempty isnotmap isnotnull isnull isnumeric ispresent isstring
-	asserting_absent asserting_bool asserting_boolean asserting_empty
-	asserting_empty_map asserting_float asserting_int asserting_map
-	asserting_nonempty_map asserting_not_empty asserting_not_map
+	is_absent is_bool is_boolean is_empty is_empty_map is_float is_int is_map
+	is_nonempty_map isnotempty is_not_map is_not_null is_null is_numeric
+	is_present is_string asserting_absent asserting_bool asserting_boolean
+	asserting_empty asserting_empty_map asserting_float asserting_int
+	asserting_map asserting_nonempty_map asserting_not_empty asserting_not_map
 	asserting_not_null asserting_null asserting_numeric asserting_present
 	asserting_string boolean float fmtnum hexfmt int string typeof depth haskey
 	joink joinkv joinv leafcount length mapdiff mapsum splitkv splitkvx splitnv
@@ -735,7 +735,7 @@ VERBS
 	 mlr put -q '@sum[$a] += $x; end {emit @sum, "a"}'
 	 mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}'
 	 mlr put -q '@min=min(@min,$x);@max=max(@max,$x); end{emitf @min, @max}'
-	 mlr put -q 'isnull(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}'
+	 mlr put -q 'is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}'
 	 mlr put '
 	   $x = 1;
 	  #$y = 2;
@@ -1380,52 +1380,52 @@ FUNCTIONS FOR FILTER/PUT
        (class=time #args=0): Floating-point seconds since the epoch,
        e.g. 1440768801.748936.
 
-   isabsent
+   is_absent
        (class=typing #args=1): False if field is present in input, false otherwise
 
-   isbool
-       (class=typing #args=1): True if field is present with boolean value. Synonymous with isboolean.
+   is_bool
+       (class=typing #args=1): True if field is present with boolean value. Synonymous with is_boolean.
 
-   isboolean
-       (class=typing #args=1): True if field is present with boolean value. Synonymous with isbool.
+   is_boolean
+       (class=typing #args=1): True if field is present with boolean value. Synonymous with is_bool.
 
-   isempty
+   is_empty
        (class=typing #args=1): True if field is present in input with empty string value, false otherwise.
 
-   isemptymap
+   is_empty_map
        (class=typing #args=1): True if argument is a map which is empty.
 
-   isfloat
+   is_float
        (class=typing #args=1): True if field is present with value inferred to be float
 
-   isint
+   is_int
        (class=typing #args=1): True if field is present with value inferred to be int
 
-   ismap
+   is_map
        (class=typing #args=1): True if argument is a map.
 
-   isnonemptymap
+   is_nonempty_map
        (class=typing #args=1): True if argument is a map which is non-empty.
 
    isnotempty
        (class=typing #args=1): False if field is present in input with empty value, false otherwise
 
-   isnotmap
+   is_not_map
        (class=typing #args=1): True if argument is not a map.
 
-   isnotnull
+   is_not_null
        (class=typing #args=1): False if argument is null (empty or absent), true otherwise.
 
-   isnull
+   is_null
        (class=typing #args=1): True if argument is null (empty or absent), false otherwise.
 
-   isnumeric
+   is_numeric
        (class=typing #args=1): True if field is present with value inferred to be int or float
 
-   ispresent
+   is_present
        (class=typing #args=1): True if field is present in input, false otherwise.
 
-   isstring
+   is_string
        (class=typing #args=1): True if field is present with string (including empty-string) value
 
    asserting_absent
@@ -1840,4 +1840,4 @@ SEE ALSO
 
 
 
-				  2016-12-20			     MILLER(1)
+				  2016-12-21			     MILLER(1)

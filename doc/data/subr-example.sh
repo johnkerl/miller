@@ -4,7 +4,7 @@ mlr --opprint --from data/small put -q '
   }
   subr s(n) {
     @call_count += 1;
-    if (isnumeric(n)) {
+    if (is_numeric(n)) {
       if (n > 1) {
         call s(n-1);
       } else {

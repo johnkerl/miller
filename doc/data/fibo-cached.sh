@@ -1,7 +1,7 @@
 mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
   func f(n) {
       @fcount += 1;               # count number of calls to the function
-    if (ispresent(@fcache[n])) {  # cache hit
+    if (is_present(@fcache[n])) {  # cache hit
       return @fcache[n]
     } else {                      # cache miss
       num rv = 1;

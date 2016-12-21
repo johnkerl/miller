@@ -1,7 +1,7 @@
 mlr --from data/small --opprint put '
   @sum = 0;
   for (k,v in $*) {
-    if (isnumeric(v)) {
+    if (is_numeric(v)) {
       @sum += $[k];
     }
   }

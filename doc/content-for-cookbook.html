@@ -309,13 +309,13 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/keyed-min-max-with-oosvars.sh)HERE
 
 POKI_RUN_COMMAND{{mlr --opprint step -a delta -f x data/small}}HERE
 
-POKI_RUN_COMMAND{{mlr --opprint put '$x_delta = ispresent(@last) ? $x - @last : 0; @last = $x' data/small}}HERE
+POKI_RUN_COMMAND{{mlr --opprint put '$x_delta = is_present(@last) ? $x - @last : 0; @last = $x' data/small}}HERE
 
 <h2>Keyed delta without/with oosvars</h2>
 
 POKI_RUN_COMMAND{{mlr --opprint step -a delta -f x -g a data/small}}HERE
 
-POKI_RUN_COMMAND{{mlr --opprint put '$x_delta = ispresent(@last[$a]) ? $x - @last[$a] : 0; @last[$a]=$x' data/small}}HERE
+POKI_RUN_COMMAND{{mlr --opprint put '$x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0; @last[$a]=$x' data/small}}HERE
 
 <h2>Exponentially weighted moving averages without/with oosvars</h2>
 

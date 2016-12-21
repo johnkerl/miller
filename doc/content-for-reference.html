@@ -374,8 +374,8 @@ e.g.  <tt>mlr put -q '@sum += $x'; end{emit @sum}'</tt> or <tt>mlr put -q
 </ul>
 
 <p/>You can test these programatically using the functions
-<tt>isempty</tt>/<tt>isnotempty</tt>, <tt>isabsent</tt>/<tt>ispresent</tt>, and
-<tt>isnull</tt>/<tt>isnotnull</tt>. For the last pair, note that null means
+<tt>is_empty</tt>/<tt>isnotempty</tt>, <tt>is_absent</tt>/<tt>is_present</tt>, and
+<tt>is_null</tt>/<tt>is_not_null</tt>. For the last pair, note that null means
 either empty or absent.
 
 <p/>
@@ -420,8 +420,8 @@ The reasoning is as follows:
 should accumulate numeric <tt>x</tt> values into the sum but an empty
 <tt>x</tt>, when encountered in the input data stream, should make the sum
 non-numeric. To work around this you can use the
-<tt>isnotnull</tt> function as follows:
-<tt>mlr put 'isnotnull($x) { @sum += $x }'</tt>
+<tt>is_not_null</tt> function as follows:
+<tt>mlr put 'is_not_null($x) { @sum += $x }'</tt>
 
 <li/> Absent stream-record values should not break accumulations, since Miller
 by design handles heterogenous data: the running <tt>@sum</tt> in
@@ -449,11 +449,11 @@ as do within-record formulas if both operands are absent. If one operand is
 present, you may get behavior you don&rsquo;t desire.  To work around this
 &mdash; namely, to set an output field only for records which have all the
 inputs present &mdash; you can use a pattern-action block with
-<tt>ispresent</tt>:
+<tt>is_present</tt>:
 
 POKI_RUN_COMMAND{{mlr cat data/het.dkvp}}HERE
-POKI_RUN_COMMAND{{mlr put 'ispresent($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp}}HERE
-POKI_RUN_COMMAND{{mlr put '$loadmillis = (ispresent($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr put 'is_present($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp}}HERE
+POKI_RUN_COMMAND{{mlr put '$loadmillis = (is_present($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp}}HERE
 
 <p/> If you&rsquo;re interested in a formal description of how empty and absent
 fields participate in arithmetic, here&rsquo;s a table for plus (other

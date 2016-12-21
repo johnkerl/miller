@@ -563,7 +563,7 @@ static void main_usage_examples(FILE* o, char* argv0, char* leader) {
 	fprintf(o, "%s%s put -q '@sum[$a][$b] += $x; end {emit @sum, \"a\", \"b\"}' data/*\n", leader, argv0);
 	fprintf(o, "%s%s --from estimates.tbl put '\n", leader, argv0);
 	fprintf(o, "  for (k,v in $*) {\n");
-	fprintf(o, "    if (isnumeric(v) && k =~ \"^[t-z].*$\") {\n");
+	fprintf(o, "    if (is_numeric(v) && k =~ \"^[t-z].*$\") {\n");
 	fprintf(o, "      $sum += v; $count += 1\n");
 	fprintf(o, "    }\n");
 	fprintf(o, "  }\n");

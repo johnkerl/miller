@@ -1665,7 +1665,7 @@ Examples:
   mlr put -q '@sum[$a] += $x; end {emit @sum, "a"}'
   mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}'
   mlr put -q '@min=min(@min,$x);@max=max(@max,$x); end{emitf @min, @max}'
-  mlr put -q 'isnull(@xmax) || $x &gt; @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}'
+  mlr put -q 'is_null(@xmax) || $x &gt; @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}'
   mlr put '
     $x = 1;
    #$y = 2;

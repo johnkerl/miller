@@ -1,6 +1,6 @@
 mlr --opprint --from data/small put '
     func f(n) {
-        if (isnumeric(n)) {
+        if (is_numeric(n)) {
             if (n > 0) {
                 return n * f(n-1);
             } else {

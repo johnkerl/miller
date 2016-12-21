@@ -268,22 +268,22 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"Floating-point seconds since the epoch,\n"
 		"e.g. 1440768801.748936." },
 
-	{FUNC_CLASS_TYPING, "isabsent",      1,0, "False if field is present in input, false otherwise"},
-	{FUNC_CLASS_TYPING, "isbool",        1,0, "True if field is present with boolean value. Synonymous with isboolean."},
-	{FUNC_CLASS_TYPING, "isboolean",     1,0, "True if field is present with boolean value. Synonymous with isbool."},
-	{FUNC_CLASS_TYPING, "isempty",       1,0, "True if field is present in input with empty string value, false otherwise."},
-	{FUNC_CLASS_TYPING, "isemptymap",    1,0, "True if argument is a map which is empty."},
-	{FUNC_CLASS_TYPING, "isfloat",       1,0, "True if field is present with value inferred to be float"},
-	{FUNC_CLASS_TYPING, "isint",         1,0, "True if field is present with value inferred to be int "},
-	{FUNC_CLASS_TYPING, "ismap",         1,0, "True if argument is a map."},
-	{FUNC_CLASS_TYPING, "isnonemptymap", 1,0, "True if argument is a map which is non-empty."},
+	{FUNC_CLASS_TYPING, "is_absent",      1,0, "False if field is present in input, false otherwise"},
+	{FUNC_CLASS_TYPING, "is_bool",        1,0, "True if field is present with boolean value. Synonymous with is_boolean."},
+	{FUNC_CLASS_TYPING, "is_boolean",     1,0, "True if field is present with boolean value. Synonymous with is_bool."},
+	{FUNC_CLASS_TYPING, "is_empty",       1,0, "True if field is present in input with empty string value, false otherwise."},
+	{FUNC_CLASS_TYPING, "is_empty_map",    1,0, "True if argument is a map which is empty."},
+	{FUNC_CLASS_TYPING, "is_float",       1,0, "True if field is present with value inferred to be float"},
+	{FUNC_CLASS_TYPING, "is_int",         1,0, "True if field is present with value inferred to be int "},
+	{FUNC_CLASS_TYPING, "is_map",         1,0, "True if argument is a map."},
+	{FUNC_CLASS_TYPING, "is_nonempty_map", 1,0, "True if argument is a map which is non-empty."},
 	{FUNC_CLASS_TYPING, "isnotempty",    1,0, "False if field is present in input with empty value, false otherwise"},
-	{FUNC_CLASS_TYPING, "isnotmap",      1,0, "True if argument is not a map."},
-	{FUNC_CLASS_TYPING, "isnotnull",     1,0, "False if argument is null (empty or absent), true otherwise."},
-	{FUNC_CLASS_TYPING, "isnull",        1,0, "True if argument is null (empty or absent), false otherwise."},
-	{FUNC_CLASS_TYPING, "isnumeric",     1,0, "True if field is present with value inferred to be int or float"},
-	{FUNC_CLASS_TYPING, "ispresent",     1,0, "True if field is present in input, false otherwise."},
-	{FUNC_CLASS_TYPING, "isstring",      1,0, "True if field is present with string (including empty-string) value"},
+	{FUNC_CLASS_TYPING, "is_not_map",      1,0, "True if argument is not a map."},
+	{FUNC_CLASS_TYPING, "is_not_null",     1,0, "False if argument is null (empty or absent), true otherwise."},
+	{FUNC_CLASS_TYPING, "is_null",        1,0, "True if argument is null (empty or absent), false otherwise."},
+	{FUNC_CLASS_TYPING, "is_numeric",     1,0, "True if field is present with value inferred to be int or float"},
+	{FUNC_CLASS_TYPING, "is_present",     1,0, "True if field is present in input, false otherwise."},
+	{FUNC_CLASS_TYPING, "is_string",      1,0, "True if field is present with string (including empty-string) value"},
 
 	{FUNC_CLASS_TYPING, "asserting_absent",      1,0, "Returns argument if it is absent in the input ata, else throws an error."},
 	{FUNC_CLASS_TYPING, "asserting_bool",        1,0, "Returns argument if it is present with boolean value, else throws an error."},
@@ -1201,70 +1201,70 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(
 static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm, rxval_evaluator_t* parg1) {
 
 	if (streq(fnnm, "asserting_absent")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isabsent_no_free_xfunc, parg1, "absent");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_absent_no_free_xfunc, parg1, "absent");
 	} else if (streq(fnnm, "asserting_bool")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isboolean_no_free_xfunc, parg1, "boolean");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_boolean_no_free_xfunc, parg1, "boolean");
 	} else if (streq(fnnm, "asserting_boolean")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isboolean_no_free_xfunc, parg1, "boolean");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_boolean_no_free_xfunc, parg1, "boolean");
 	} else if (streq(fnnm, "asserting_empty")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isempty_no_free_xfunc, parg1, "empty");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_empty_no_free_xfunc, parg1, "empty");
 	} else if (streq(fnnm, "asserting_empty_map")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isemptymap_no_free_xfunc, parg1, "emptymap");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_empty_map_no_free_xfunc, parg1, "emptymap");
 	} else if (streq(fnnm, "asserting_float")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isfloat_no_free_xfunc, parg1, "float");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_float_no_free_xfunc, parg1, "float");
 	} else if (streq(fnnm, "asserting_int")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isint_no_free_xfunc, parg1, "int");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_int_no_free_xfunc, parg1, "int");
 	} else if (streq(fnnm, "asserting_map")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_ismap_no_free_xfunc, parg1, "map");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_map_no_free_xfunc, parg1, "map");
 	} else if (streq(fnnm, "asserting_nonempty_map")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isnonemptymap_no_free_xfunc, parg1, "nonemptymap");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_nonempty_map_no_free_xfunc, parg1, "nonemptymap");
 	} else if (streq(fnnm, "asserting_not_empty")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_isnotempty_no_free_xfunc, parg1, "notempty");
 	} else if (streq(fnnm, "asserting_not_map")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isnotmap_no_free_xfunc, parg1, "notmap");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_map_no_free_xfunc, parg1, "notmap");
 	} else if (streq(fnnm, "asserting_not_null")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isnotnull_no_free_xfunc, parg1, "notnull");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_null_no_free_xfunc, parg1, "notnull");
 	} else if (streq(fnnm, "asserting_null")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isnull_no_free_xfunc, parg1, "notnull");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_null_no_free_xfunc, parg1, "notnull");
 	} else if (streq(fnnm, "asserting_numeric")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isnumeric_no_free_xfunc, parg1, "numeric");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_numeric_no_free_xfunc, parg1, "numeric");
 	} else if (streq(fnnm, "asserting_present")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_ispresent_no_free_xfunc, parg1, "present");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_present_no_free_xfunc, parg1, "present");
 	} else if (streq(fnnm, "asserting_string")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_isstring_no_free_xfunc, parg1, "string");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_string_no_free_xfunc, parg1, "string");
 
-	} else if (streq(fnnm, "isabsent")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isabsent_xfunc, parg1);
-	} else if (streq(fnnm, "isbool")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isboolean_xfunc, parg1);
-	} else if (streq(fnnm, "isboolean")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isboolean_xfunc, parg1);
-	} else if (streq(fnnm, "isempty")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isempty_xfunc, parg1);
-	} else if (streq(fnnm, "isemptymap")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isemptymap_xfunc, parg1);
-	} else if (streq(fnnm, "isfloat")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isfloat_xfunc, parg1);
-	} else if (streq(fnnm, "isint")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isint_xfunc, parg1);
-	} else if (streq(fnnm, "ismap")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_ismap_xfunc, parg1);
-	} else if (streq(fnnm, "isnonemptymap")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isnonemptymap_xfunc, parg1);
+	} else if (streq(fnnm, "is_absent")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_absent_xfunc, parg1);
+	} else if (streq(fnnm, "is_bool")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_boolean_xfunc, parg1);
+	} else if (streq(fnnm, "is_boolean")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_boolean_xfunc, parg1);
+	} else if (streq(fnnm, "is_empty")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_empty_xfunc, parg1);
+	} else if (streq(fnnm, "is_empty_map")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_empty_map_xfunc, parg1);
+	} else if (streq(fnnm, "is_float")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_float_xfunc, parg1);
+	} else if (streq(fnnm, "is_int")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_int_xfunc, parg1);
+	} else if (streq(fnnm, "is_map")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_map_xfunc, parg1);
+	} else if (streq(fnnm, "is_nonempty_map")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_nonempty_map_xfunc, parg1);
 	} else if (streq(fnnm, "isnotempty")) {
 		return rxval_evaluator_alloc_from_x_x_func(b_x_isnotempty_xfunc, parg1);
-	} else if (streq(fnnm, "isnotmap")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isnotmap_xfunc, parg1);
-	} else if (streq(fnnm, "isnotnull")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isnotnull_xfunc, parg1);
-	} else if (streq(fnnm, "isnull")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isnull_xfunc, parg1);
-	} else if (streq(fnnm, "isnumeric")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isnumeric_xfunc, parg1);
-	} else if (streq(fnnm, "ispresent")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_ispresent_xfunc, parg1);
-	} else if (streq(fnnm, "isstring")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_isstring_xfunc, parg1);
+	} else if (streq(fnnm, "is_not_map")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_not_map_xfunc, parg1);
+	} else if (streq(fnnm, "is_not_null")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_not_null_xfunc, parg1);
+	} else if (streq(fnnm, "is_null")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_null_xfunc, parg1);
+	} else if (streq(fnnm, "is_numeric")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_numeric_xfunc, parg1);
+	} else if (streq(fnnm, "is_present")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_present_xfunc, parg1);
+	} else if (streq(fnnm, "is_string")) {
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_string_xfunc, parg1);
 
 	} else if (streq(fnnm, "typeof")) {
 		return rxval_evaluator_alloc_from_x_x_func(s_x_typeof_xfunc, parg1);

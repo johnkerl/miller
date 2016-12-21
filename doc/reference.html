@@ -289,7 +289,7 @@ Command-line-syntax examples:
   mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
   mlr --from estimates.tbl put '
   for (k,v in $*) {
-    if (isnumeric(v) &amp;&amp; k =~ "^[t-z].*$") {
+    if (is_numeric(v) &amp;&amp; k =~ "^[t-z].*$") {
       $sum += v; $count += 1
     }
   }
@@ -382,15 +382,15 @@ Functions for the filter and put verbs:
    logifit madd max mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt
    tan tanh urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms
    gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime
-   strptime systime isabsent isbool isboolean isempty isemptymap isfloat isint
-   ismap isnonemptymap isnotempty isnotmap isnotnull isnull isnumeric ispresent
-   isstring asserting_absent asserting_bool asserting_boolean asserting_empty
-   asserting_empty_map asserting_float asserting_int asserting_map
-   asserting_nonempty_map asserting_not_empty asserting_not_map
-   asserting_not_null asserting_null asserting_numeric asserting_present
-   asserting_string boolean float fmtnum hexfmt int string typeof depth haskey
-   joink joinkv joinv leafcount length mapdiff mapsum splitkv splitkvx splitnv
-   splitnvx
+   strptime systime is_absent is_bool is_boolean is_empty is_empty_map is_float
+   is_int is_map is_nonempty_map isnotempty is_not_map is_not_null is_null
+   is_numeric is_present is_string asserting_absent asserting_bool
+   asserting_boolean asserting_empty asserting_empty_map asserting_float
+   asserting_int asserting_map asserting_nonempty_map asserting_not_empty
+   asserting_not_map asserting_not_null asserting_null asserting_numeric
+   asserting_present asserting_string boolean float fmtnum hexfmt int string
+   typeof depth haskey joink joinkv joinv leafcount length mapdiff mapsum
+   splitkv splitkvx splitnv splitnvx
 Please use "mlr --help-function {function name}" for function-specific help.
 Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
 Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
@@ -947,8 +947,8 @@ e.g.  <tt>mlr put -q '@sum += $x'; end{emit @sum}'</tt> or <tt>mlr put -q
 </ul>
 
 <p/>You can test these programatically using the functions
-<tt>isempty</tt>/<tt>isnotempty</tt>, <tt>isabsent</tt>/<tt>ispresent</tt>, and
-<tt>isnull</tt>/<tt>isnotnull</tt>. For the last pair, note that null means
+<tt>is_empty</tt>/<tt>isnotempty</tt>, <tt>is_absent</tt>/<tt>is_present</tt>, and
+<tt>is_null</tt>/<tt>is_not_null</tt>. For the last pair, note that null means
 either empty or absent.
 
 <p/>
@@ -1068,8 +1068,8 @@ The reasoning is as follows:
 should accumulate numeric <tt>x</tt> values into the sum but an empty
 <tt>x</tt>, when encountered in the input data stream, should make the sum
 non-numeric. To work around this you can use the
-<tt>isnotnull</tt> function as follows:
-<tt>mlr put 'isnotnull($x) { @sum += $x }'</tt>
+<tt>is_not_null</tt> function as follows:
+<tt>mlr put 'is_not_null($x) { @sum += $x }'</tt>
 
 <li/> Absent stream-record values should not break accumulations, since Miller
 by design handles heterogenous data: the running <tt>@sum</tt> in
@@ -1097,7 +1097,7 @@ as do within-record formulas if both operands are absent. If one operand is
 present, you may get behavior you don&rsquo;t desire.  To work around this
 &mdash; namely, to set an output field only for records which have all the
 inputs present &mdash; you can use a pattern-action block with
-<tt>ispresent</tt>:
+<tt>is_present</tt>:
 
 <p/>
 <div class="pokipanel">
@@ -1114,7 +1114,7 @@ resource=/some/other/path,loadsec=0.97,ok=false
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr put 'ispresent($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp
+$ mlr put 'is_present($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp
 resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450.000000
 record_count=100,resource=/path/to/file
 resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320.000000
@@ -1126,7 +1126,7 @@ resource=/some/other/path,loadsec=0.97,ok=false,loadmillis=970.000000
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr put '$loadmillis = (ispresent($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp
+$ mlr put '$loadmillis = (is_present($loadsec) ? $loadsec : 0.0) * 1000' data/het.dkvp
 resource=/path/to/file,loadsec=0.45,ok=true,loadmillis=450.000000
 record_count=100,resource=/path/to/file,loadmillis=0.000000
 resource=/path/to/second/file,loadsec=0.32,ok=true,loadmillis=320.000000

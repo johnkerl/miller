@@ -139,7 +139,7 @@ machine, and expect it to work.
 # Iterate over data using DSL expressions
 % mlr --from estimates.tbl put '
   for (k,v in $*) {
-    if (isnumeric(v) && k =~ "^[t-z].*$") {
+    if (is_numeric(v) && k =~ "^[t-z].*$") {
       $sum += v; $count += 1
     }
   }

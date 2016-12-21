@@ -17450,17 +17450,17 @@ foobar
 ================================================================
 IS-PREDICATES
 
-mlr --opprint filter isnull($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_null($x) ./reg_test/input/nullvals.dkvp
 a x y z
 b - 6 -
 b - - -
 
-mlr --opprint filter isnull($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_null($y) ./reg_test/input/nullvals.dkvp
 a x y z
 b 5 - -
 b - - -
 
-mlr --opprint filter isnull($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_null($z) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
@@ -17468,7 +17468,7 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint filter isnull($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_null($nosuch) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
@@ -17476,35 +17476,27 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint filter isnull($*) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_null($*) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isnull({1:2}) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_null({1:2}) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isnotnull($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_not_null($x) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
 b 5 - -
 
-mlr --opprint filter isnotnull($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_not_null($y) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
 b - 6 -
 
-mlr --opprint filter isnotnull($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_not_null($z) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isnotnull($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_not_null($nosuch) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isnotnull($*) ./reg_test/input/nullvals.dkvp
-a x y z
-b 1 2 -
-b 3 4 -
-b 5 - -
-b - 6 -
-b - - -
-
-mlr --opprint filter isnotnull({1:2}) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_not_null($*) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
@@ -17512,7 +17504,15 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint put $f=isnull($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_not_null({1:2}) ./reg_test/input/nullvals.dkvp
+a x y z
+b 1 2 -
+b 3 4 -
+b 5 - -
+b - 6 -
+b - - -
+
+mlr --opprint put $f=is_null($x) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17520,7 +17520,7 @@ b 5 - - false
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isnull($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_null($y) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17528,7 +17528,7 @@ b 5 - - true
 b - 6 - false
 b - - - true
 
-mlr --opprint put $f=isnull($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_null($z) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -17536,7 +17536,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isnull($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_null($nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -17544,7 +17544,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isnull(@nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_null(@nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -17552,7 +17552,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put @somesuch=1;$f=isnull(@somesuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put @somesuch=1;$f=is_null(@somesuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17560,7 +17560,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isnotnull($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_not_null($x) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -17568,7 +17568,7 @@ b 5 - - true
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isnotnull($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_not_null($y) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -17576,7 +17576,7 @@ b 5 - - false
 b - 6 - true
 b - - - false
 
-mlr --opprint put $f=isnotnull($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_not_null($z) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17584,7 +17584,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isnotnull($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_not_null($nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17592,7 +17592,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isnotnull(@nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_not_null(@nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17600,7 +17600,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put @somesuch=1;$f=isnotnull(@somesuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put @somesuch=1;$f=is_not_null(@somesuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -17608,13 +17608,13 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint filter isabsent($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_absent($x) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isabsent($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_absent($y) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isabsent($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_absent($z) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isabsent($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_absent($nosuch) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
@@ -17622,11 +17622,11 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint filter isabsent($*) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_absent($*) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isabsent({1:2}) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_absent({1:2}) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter ispresent($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_present($x) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
@@ -17634,7 +17634,7 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint filter ispresent($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_present($y) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
@@ -17642,7 +17642,7 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint filter ispresent($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_present($z) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
@@ -17650,9 +17650,9 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint filter ispresent($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_present($nosuch) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter ispresent($*) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_present($*) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
@@ -17660,7 +17660,7 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint filter ispresent({1:2}) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_present({1:2}) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
@@ -17668,37 +17668,37 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint filter isnumeric($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_numeric($x) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
 b 5 - -
 
-mlr --opprint filter isnumeric($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_numeric($y) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
 b - 6 -
 
-mlr --opprint filter isnumeric($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_numeric($z) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isnumeric($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_numeric($nosuch) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isnumeric($*) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_numeric($*) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isnumeric({1:2}) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_numeric({1:2}) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isstring($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_string($x) ./reg_test/input/nullvals.dkvp
 a x y z
 b - 6 -
 b - - -
 
-mlr --opprint filter isstring($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_string($y) ./reg_test/input/nullvals.dkvp
 a x y z
 b 5 - -
 b - - -
 
-mlr --opprint filter isstring($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_string($z) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
@@ -17706,13 +17706,13 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint filter isstring($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_string($nosuch) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isstring($*) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_string($*) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isstring({1:2}) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_string({1:2}) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $f=isabsent($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_absent($x) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17720,7 +17720,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isabsent($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_absent($y) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17728,7 +17728,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isabsent($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_absent($z) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17736,7 +17736,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isabsent($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_absent($nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -17744,7 +17744,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isabsent(@nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_absent(@nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -17752,7 +17752,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put @somesuch=1;$f=isabsent(@somesuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put @somesuch=1;$f=is_absent(@somesuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17760,7 +17760,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=ispresent($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_present($x) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -17768,7 +17768,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=ispresent($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_present($y) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -17776,7 +17776,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=ispresent($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_present($z) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -17784,7 +17784,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=ispresent($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_present($nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17792,7 +17792,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=ispresent(@nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_present(@nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17800,7 +17800,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put @somesuch=1;$f=ispresent(@somesuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put @somesuch=1;$f=is_present(@somesuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -17808,17 +17808,17 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint filter isempty($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_empty($x) ./reg_test/input/nullvals.dkvp
 a x y z
 b - 6 -
 b - - -
 
-mlr --opprint filter isempty($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_empty($y) ./reg_test/input/nullvals.dkvp
 a x y z
 b 5 - -
 b - - -
 
-mlr --opprint filter isempty($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_empty($z) ./reg_test/input/nullvals.dkvp
 a x y z
 b 1 2 -
 b 3 4 -
@@ -17826,11 +17826,11 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint filter isempty($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_empty($nosuch) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isempty($*) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_empty($*) ./reg_test/input/nullvals.dkvp
 
-mlr --opprint filter isempty({1:2}) ./reg_test/input/nullvals.dkvp
+mlr --opprint filter is_empty({1:2}) ./reg_test/input/nullvals.dkvp
 
 mlr --opprint filter isnotempty($x) ./reg_test/input/nullvals.dkvp
 a x y z
@@ -17870,7 +17870,7 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint put $f=isempty($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_empty($x) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17878,7 +17878,7 @@ b 5 - - false
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isempty($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_empty($y) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17886,7 +17886,7 @@ b 5 - - true
 b - 6 - false
 b - - - true
 
-mlr --opprint put $f=isempty($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_empty($z) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -17894,7 +17894,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isempty($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_empty($nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17902,7 +17902,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isempty(@nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_empty(@nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17910,7 +17910,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isempty($*) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_empty($*) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17918,7 +17918,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isempty({1:2}) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_empty({1:2}) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17926,7 +17926,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put @somesuch=1;$f=isempty(@somesuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put @somesuch=1;$f=is_empty(@somesuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -17998,7 +17998,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=ismap($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_map($x) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18006,7 +18006,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=ismap($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_map($y) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18014,7 +18014,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=ismap($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_map($z) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18022,7 +18022,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=ismap($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_map($nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18030,7 +18030,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=ismap(@nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_map(@nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18038,7 +18038,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=ismap($*) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_map($*) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18046,7 +18046,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=ismap({1:2}) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_map({1:2}) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18054,7 +18054,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=ismap({}) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_map({}) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18062,7 +18062,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put @somesuch=1;$f=ismap(@somesuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put @somesuch=1;$f=is_map(@somesuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18070,7 +18070,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isnotmap($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_not_map($x) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18078,7 +18078,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isnotmap($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_not_map($y) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18086,7 +18086,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isnotmap($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_not_map($z) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18094,7 +18094,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isnotmap($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_not_map($nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18102,7 +18102,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isnotmap(@nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_not_map(@nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18110,7 +18110,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isnotmap($*) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_not_map($*) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18118,7 +18118,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isnotmap({1:2}) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_not_map({1:2}) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18126,7 +18126,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isnotmap({}) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_not_map({}) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18134,7 +18134,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put @somesuch=1;$f=isnotmap(@somesuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put @somesuch=1;$f=is_not_map(@somesuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18142,7 +18142,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isemptymap($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_empty_map($x) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18150,7 +18150,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isemptymap($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_empty_map($y) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18158,7 +18158,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isemptymap($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_empty_map($z) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18166,7 +18166,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isemptymap($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_empty_map($nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18174,7 +18174,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isemptymap(@nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_empty_map(@nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18182,7 +18182,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isemptymap($*) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_empty_map($*) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18190,7 +18190,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isemptymap({1:2}) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_empty_map({1:2}) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18198,7 +18198,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isemptymap({}) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_empty_map({}) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18206,7 +18206,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put @somesuch=1;$f=isemptymap(@somesuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put @somesuch=1;$f=is_empty_map(@somesuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18214,7 +18214,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put $f=isnonemptymap($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_nonempty_map($x) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18222,7 +18222,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isnonemptymap($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_nonempty_map($y) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18230,7 +18230,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isnonemptymap($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_nonempty_map($z) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18238,7 +18238,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isnonemptymap($nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_nonempty_map($nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18246,7 +18246,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isnonemptymap(@nosuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_nonempty_map(@nosuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18254,7 +18254,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isnonemptymap($*) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_nonempty_map($*) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18262,7 +18262,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isnonemptymap({1:2}) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_nonempty_map({1:2}) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18270,7 +18270,7 @@ b 5 - - true
 b - 6 - true
 b - - - true
 
-mlr --opprint put $f=isnonemptymap({}) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=is_nonempty_map({}) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - false
 b 3 4 - false
@@ -18278,7 +18278,7 @@ b 5 - - false
 b - 6 - false
 b - - - false
 
-mlr --opprint put @somesuch=1;$f=isnonemptymap(@somesuch) ./reg_test/input/nullvals.dkvp
+mlr --opprint put @somesuch=1;$f=is_nonempty_map(@somesuch) ./reg_test/input/nullvals.dkvp
 a x y z f
 b 1 2 - true
 b 3 4 - true
@@ -18834,7 +18834,7 @@ x=1,y=2,s=hello,z=true
 x=1,y=,s=,z=true
 x=,y=,s=hurrah,z=true
 
-mlr put $z = isempty($s) ./reg_test/input/null-vs-empty.dkvp
+mlr put $z = is_empty($s) ./reg_test/input/null-vs-empty.dkvp
 x=1,y=2,s=hello,z=false
 x=1,y=,s=,z=true
 x=,y=,s=hurrah,z=false
@@ -19433,7 +19433,7 @@ zee wye 8  0.5985540091064224  0.976181385699006   string string int    float  f
 hat wye 9  0.03144187646093577 0.7495507603507059  string string int    float  float
 pan wye 10 0.5026260055412137  0.9526183602969864  string string int    float  float
 
-mlr --from ./reg_test/input/abixy-het put -q for (k,v in $*) {if (isfloat(v))    {@float[NR][k]   = v}}    end{ emit @float,   "NR", "k" }
+mlr --from ./reg_test/input/abixy-het put -q for (k,v in $*) {if (is_float(v))    {@float[NR][k]   = v}}    end{ emit @float,   "NR", "k" }
 NR=1,k=x,float=0.346790
 NR=1,k=y,float=0.726803
 NR=2,k=x,float=0.758680
@@ -19455,7 +19455,7 @@ NR=9,k=y,float=0.749551
 NR=10,k=x,float=0.502626
 NR=10,k=y,float=0.952618
 
-mlr --from ./reg_test/input/abixy-het put -q for (k,v in $*) {if (isint(v))      {@int[NR][k]     = v}}    end{ emit @int,     "NR", "k" }
+mlr --from ./reg_test/input/abixy-het put -q for (k,v in $*) {if (is_int(v))      {@int[NR][k]     = v}}    end{ emit @int,     "NR", "k" }
 NR=1,k=i,int=1
 NR=2,k=i,int=2
 NR=3,k=i,int=3
@@ -19467,7 +19467,7 @@ NR=8,k=i,int=8
 NR=9,k=i,int=9
 NR=10,k=i,int=10
 
-mlr --from ./reg_test/input/abixy-het put -q for (k,v in $*) {if (isnumeric(v))  {@numeric[NR][k] = v}}    end{ emit @numeric, "NR", "k" }
+mlr --from ./reg_test/input/abixy-het put -q for (k,v in $*) {if (is_numeric(v))  {@numeric[NR][k] = v}}    end{ emit @numeric, "NR", "k" }
 NR=1,k=i,numeric=1
 NR=1,k=x,numeric=0.346790
 NR=1,k=y,numeric=0.726803
@@ -19499,7 +19499,7 @@ NR=10,k=i,numeric=10
 NR=10,k=x,numeric=0.502626
 NR=10,k=y,numeric=0.952618
 
-mlr --from ./reg_test/input/abixy-het put -q for (k,v in $*) {if (isstring(v))   {@string[NR][k]  = v}}    end{ emit @string,  "NR", "k" }
+mlr --from ./reg_test/input/abixy-het put -q for (k,v in $*) {if (is_string(v))   {@string[NR][k]  = v}}    end{ emit @string,  "NR", "k" }
 NR=1,k=a,string=pan
 NR=1,k=b,string=pan
 NR=2,k=a,string=eks
@@ -19521,9 +19521,9 @@ NR=9,k=bbb,string=wye
 NR=10,k=a,string=pan
 NR=10,k=b,string=wye
 
-mlr --from ./reg_test/input/abixy-het put -q for (k,v in $*) {if (isbool(v))     {@bool[NR][k]    = v}}    end{ emit @bool,    "NR", "k" }
+mlr --from ./reg_test/input/abixy-het put -q for (k,v in $*) {if (is_bool(v))     {@bool[NR][k]    = v}}    end{ emit @bool,    "NR", "k" }
 
-mlr --from ./reg_test/input/abixy-het put -q for (k,v in $*) {if (isbool(NR==2)) {@bool[NR][k]    = "NR==2"}} end{ emit @bool,    "NR", "k" }
+mlr --from ./reg_test/input/abixy-het put -q for (k,v in $*) {if (is_bool(NR==2)) {@bool[NR][k]    = "NR==2"}} end{ emit @bool,    "NR", "k" }
 NR=1,k=a,bool=NR==2
 NR=1,k=b,bool=NR==2
 NR=1,k=i,bool=NR==2
@@ -34659,7 +34659,7 @@ x=	osum=1	ostype=int	xtype=empty	nstype=empty	nsum=
 x=7	osum=	ostype=empty	xtype=int	nstype=empty	nsum=
 sum=
 
-mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);ispresent($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
+mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);is_present($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
 x=1	ostype=absent	xtype=int	nstype=int	nsum=1
 x=	osum=1	ostype=int	xtype=empty	nstype=empty	nsum=
 x=7	osum=	ostype=empty	xtype=int	nstype=empty	nsum=
@@ -34676,7 +34676,7 @@ xxx=	osum=1	ostype=int	xtype=absent	nstype=int	nsum=1
 x=7	osum=1	ostype=int	xtype=int	nstype=int	nsum=8
 sum=8
 
-mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);ispresent($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
+mlr --ofs tab put $osum=@sum; $ostype=typeof(@sum);$xtype=typeof($x);is_present($x){@sum+=$x}; $nstype=typeof(@sum);$nsum=@sum; end { emit @sum }
 x=1	ostype=absent	xtype=int	nstype=int	nsum=1
 xxx=	osum=1	ostype=int	xtype=absent	nstype=int	nsum=1
 x=7	osum=1	ostype=int	xtype=int	nstype=int	nsum=8
@@ -34694,7 +34694,7 @@ x=	xtype=empty	sum=	stype=empty
 y=	xtype=absent	sum=10	stype=int
 x=7	xtype=int	sum=17	stype=int
 
-mlr --ofs tab put $xtype=typeof($x);$sum = ispresent($x) ? $x + 10 : 999; $stype=typeof($sum)
+mlr --ofs tab put $xtype=typeof($x);$sum = is_present($x) ? $x + 10 : 999; $stype=typeof($sum)
 x=1	xtype=int	sum=11	stype=int
 x=	xtype=empty	sum=	stype=empty
 y=	xtype=absent	sum=999	stype=int
@@ -45297,7 +45297,7 @@ pan wye 10 0.5026260055412137  0.9526183602969864  1010 2010
 
 mlr --opprint --from ./reg_test/input/abixy put 
     func f(n) {
-        if (isnumeric(n)) {
+        if (is_numeric(n)) {
             if (n > 0) {
                 return n * f(n-1)
             } else {
@@ -45323,7 +45323,7 @@ pan wye 10 0.5026260055412137  0.9526183602969864  3628800
 mlr --opprint --from ./reg_test/input/abixy head -n 5 then put 
     subr s(n) {
         print "n = " . n;
-        if (isnumeric(n)) {
+        if (is_numeric(n)) {
             if (n > 0) {
                 call s(n-1)
             }
@@ -45411,7 +45411,7 @@ pan wye 10 0.5026260055412137  0.9526183602969864  89
 
 mlr --from ./reg_test/input/abixy --opprint put 
   func f(n) {
-    if (ispresent(@fcache[n])) {
+    if (is_present(@fcache[n])) {
       return @fcache[n]
     } else {
       num rv = 1;

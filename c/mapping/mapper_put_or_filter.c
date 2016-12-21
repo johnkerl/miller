@@ -116,7 +116,7 @@ static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  %s %s -q '@sum[$a] += $x; end {emit @sum, \"a\"}'\n", argv0, verb);
 	fprintf(o, "  %s %s -q '@sum[$a][$b] += $x; end {emit @sum, \"a\", \"b\"}'\n", argv0, verb);
 	fprintf(o, "  %s %s -q '@min=min(@min,$x);@max=max(@max,$x); end{emitf @min, @max}'\n", argv0, verb);
-	fprintf(o, "  %s %s -q 'isnull(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}'\n", argv0, verb);
+	fprintf(o, "  %s %s -q 'is_null(@xmax) || $x > @xmax {@xmax=$x; @recmax=$*}; end {emit @recmax}'\n", argv0, verb);
 	fprintf(o, "  %s %s '\n", argv0, verb);
 	fprintf(o, "    $x = 1;\n");
 	fprintf(o, "   #$y = 2;\n");
