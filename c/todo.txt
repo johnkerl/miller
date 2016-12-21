@@ -36,7 +36,9 @@ MAPVAR CHECKLIST:
 
 ! UT cases detailed below
   -> asserting_* in progress
+  -> rm dups!!
 
+! underscores in is* predicates
 ! memmgt for ephemeral boxed xvals
 
 * emittable/dumpable/etc md_rhs -> more specific fcn-call.
