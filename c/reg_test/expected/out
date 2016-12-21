@@ -18309,19 +18309,10 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint put $x=asserting_absent($x) ./reg_test/input/nullvals.dkvp
-mlr: absent type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
-
 mlr --opprint put $f=asserting_absent($x) ./reg_test/input/nullvals.dkvp
 mlr: absent type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $y=asserting_absent($y) ./reg_test/input/nullvals.dkvp
-mlr: absent type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
-
 mlr --opprint put $f=asserting_absent($y) ./reg_test/input/nullvals.dkvp
-mlr: absent type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
-
-mlr --opprint put $z=asserting_absent($z) ./reg_test/input/nullvals.dkvp
 mlr: absent type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
 mlr --opprint put $f=asserting_absent($z) ./reg_test/input/nullvals.dkvp
@@ -18347,42 +18338,28 @@ mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullval
 mlr --opprint put foo=asserting_empty($*) ./reg_test/input/nullvals.dkvp
 mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put foo=asserting_empty($*) ./reg_test/input/nullvals.dkvp
-mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
-
 mlr --opprint put $f=asserting_empty($nosuch) ./reg_test/input/nullvals.dkvp
 mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
 mlr --opprint put $nosuch=asserting_empty($nosuch) ./reg_test/input/nullvals.dkvp
 mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $x=asserting_empty($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint put @somesuch=1;$f=asserting_empty(@somesuch) ./reg_test/input/nullvals.dkvp
 mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $x=asserting_empty($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=asserting_empty($x) ./reg_test/input/nullvals.dkvp
 mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $y=asserting_empty($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=asserting_empty($y) ./reg_test/input/nullvals.dkvp
 mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $y=asserting_empty($y) ./reg_test/input/nullvals.dkvp
-mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
-
-mlr --opprint put $z=asserting_empty($z) ./reg_test/input/nullvals.dkvp
-a x y z
-b 1 2 -
-b 3 4 -
-b 5 - -
-b - 6 -
-b - - -
-
-mlr --opprint put $z=asserting_empty($z) ./reg_test/input/nullvals.dkvp
-a x y z
-b 1 2 -
-b 3 4 -
-b 5 - -
-b - 6 -
-b - - -
+mlr --opprint put $f=asserting_empty($z) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - -
+b 3 4 - -
+b 5 - - -
+b - 6 - -
+b - - - -
 
 mlr --opprint put $f=asserting_empty(@nosuch) ./reg_test/input/nullvals.dkvp
 mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
@@ -18391,12 +18368,6 @@ mlr --opprint put $f=asserting_empty({1:2}) ./reg_test/input/nullvals.dkvp
 mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
 mlr --opprint put foo=asserting_empty({1:2}) ./reg_test/input/nullvals.dkvp
-mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
-
-mlr --opprint put foo=asserting_empty({1:2}) ./reg_test/input/nullvals.dkvp
-mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
-
-mlr --opprint put @somesuch=1;$f=asserting_empty(@somesuch) ./reg_test/input/nullvals.dkvp
 mlr: empty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
 mlr --opprint put $f=asserting_empty_map($*) ./reg_test/input/nullvals.dkvp
@@ -18575,28 +18546,10 @@ b - - -
 mlr --opprint put $f=asserting_not_empty($x) ./reg_test/input/nullvals.dkvp
 mlr: notempty type-assertion failed at NR=4 FNR=4 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $x=asserting_not_empty($x) ./reg_test/input/nullvals.dkvp
-mlr: notempty type-assertion failed at NR=4 FNR=4 FILENAME=./reg_test/input/nullvals.dkvp
-
-mlr --opprint put $x=asserting_not_empty($x) ./reg_test/input/nullvals.dkvp
-mlr: notempty type-assertion failed at NR=4 FNR=4 FILENAME=./reg_test/input/nullvals.dkvp
-
 mlr --opprint put $f=asserting_not_empty($y) ./reg_test/input/nullvals.dkvp
 mlr: notempty type-assertion failed at NR=3 FNR=3 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $y=asserting_not_empty($y) ./reg_test/input/nullvals.dkvp
-mlr: notempty type-assertion failed at NR=3 FNR=3 FILENAME=./reg_test/input/nullvals.dkvp
-
-mlr --opprint put $y=asserting_not_empty($y) ./reg_test/input/nullvals.dkvp
-mlr: notempty type-assertion failed at NR=3 FNR=3 FILENAME=./reg_test/input/nullvals.dkvp
-
 mlr --opprint put $f=asserting_not_empty($z) ./reg_test/input/nullvals.dkvp
-mlr: notempty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
-
-mlr --opprint put $z=asserting_not_empty($z) ./reg_test/input/nullvals.dkvp
-mlr: notempty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
-
-mlr --opprint put $z=asserting_not_empty($z) ./reg_test/input/nullvals.dkvp
 mlr: notempty type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
 mlr --opprint put $f=asserting_not_empty(@nosuch) ./reg_test/input/nullvals.dkvp
@@ -18750,16 +18703,10 @@ mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullv
 mlr --opprint put $f=asserting_not_null($x) ./reg_test/input/nullvals.dkvp
 mlr: notnull type-assertion failed at NR=4 FNR=4 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $x=asserting_not_null($x) ./reg_test/input/nullvals.dkvp
-mlr: notnull type-assertion failed at NR=4 FNR=4 FILENAME=./reg_test/input/nullvals.dkvp
-
-mlr --opprint put $y=asserting_not_null($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=asserting_not_null($y) ./reg_test/input/nullvals.dkvp
 mlr: notnull type-assertion failed at NR=3 FNR=3 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $y=asserting_not_null($z) ./reg_test/input/nullvals.dkvp
-mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
-
-mlr --opprint put $z=asserting_not_null($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=asserting_not_null($z) ./reg_test/input/nullvals.dkvp
 mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
 mlr --opprint put $f=asserting_not_null(@nosuch) ./reg_test/input/nullvals.dkvp
@@ -18815,19 +18762,19 @@ b 5 - -
 b - 6 -
 b - - -
 
-mlr --opprint put $x=asserting_null($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=asserting_null($x) ./reg_test/input/nullvals.dkvp
 mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $y=asserting_null($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=asserting_null($y) ./reg_test/input/nullvals.dkvp
 mlr: notnull type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $z=asserting_null($z) ./reg_test/input/nullvals.dkvp
-a x y z
-b 1 2 -
-b 3 4 -
-b 5 - -
-b - 6 -
-b - - -
+mlr --opprint put $f=asserting_null($z) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - -
+b 3 4 - -
+b 5 - - -
+b - 6 - -
+b - - - -
 
 mlr --opprint put $f=asserting_null(@nosuch) ./reg_test/input/nullvals.dkvp
 a x y z
@@ -18849,13 +18796,13 @@ mlr: numeric type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullv
 mlr --opprint put $nosuch=asserting_numeric($nosuch) ./reg_test/input/nullvals.dkvp
 mlr: numeric type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $x=asserting_numeric($x) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=asserting_numeric($x) ./reg_test/input/nullvals.dkvp
 mlr: numeric type-assertion failed at NR=4 FNR=4 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $y=asserting_numeric($y) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=asserting_numeric($y) ./reg_test/input/nullvals.dkvp
 mlr: numeric type-assertion failed at NR=3 FNR=3 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $z=asserting_numeric($z) ./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=asserting_numeric($z) ./reg_test/input/nullvals.dkvp
 mlr: numeric type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
 mlr --opprint put $*=asserting_numeric({1:2}) ./reg_test/input/nullvals.dkvp
@@ -18875,13 +18822,13 @@ mlr: present type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullv
 mlr --opprint put $nosuch=asserting_present($nosuch) ./reg_test/input/nullvals.dkvp
 mlr: present type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $x=asserting_present($x) ./reg_test/input/nullvals.dkvp
-a x y z
-b 1 2 -
-b 3 4 -
-b 5 - -
-b - 6 -
-b - - -
+mlr --opprint put $f=asserting_present($x) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - 1
+b 3 4 - 3
+b 5 - - 5
+b - 6 - -
+b - - - -
 
 mlr --opprint put $f=asserting_present($x) ./reg_test/input/nullvals.dkvp
 a x y z f
@@ -18891,13 +18838,13 @@ b 5 - - 5
 b - 6 - -
 b - - - -
 
-mlr --opprint put $y=asserting_present($y) ./reg_test/input/nullvals.dkvp
-a x y z
-b 1 2 -
-b 3 4 -
-b 5 - -
-b - 6 -
-b - - -
+mlr --opprint put $f=asserting_present($y) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - 2
+b 3 4 - 4
+b 5 - - -
+b - 6 - 6
+b - - - -
 
 mlr --opprint put $f=asserting_present($y) ./reg_test/input/nullvals.dkvp
 a x y z f
@@ -18907,13 +18854,13 @@ b 5 - - -
 b - 6 - 6
 b - - - -
 
-mlr --opprint put $z=asserting_present($z) ./reg_test/input/nullvals.dkvp
-a x y z
-b 1 2 -
-b 3 4 -
-b 5 - -
-b - 6 -
-b - - -
+mlr --opprint put $f=asserting_present($z) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - -
+b 3 4 - -
+b 5 - - -
+b - 6 - -
+b - - - -
 
 mlr --opprint put $f=asserting_present($z) ./reg_test/input/nullvals.dkvp
 a x y z f
@@ -18945,25 +18892,25 @@ b - - - 1
 mlr --opprint put $*=asserting_string($*) ./reg_test/input/nullvals.dkvp
 mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
+mlr --opprint put $*=asserting_string({1:2}) ./reg_test/input/nullvals.dkvp
+mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $f=asserting_string($x) ./reg_test/input/nullvals.dkvp
+mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
+mlr --opprint put $f=asserting_string($y) ./reg_test/input/nullvals.dkvp
+mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+
 mlr --opprint put $nosuch=asserting_string($nosuch) ./reg_test/input/nullvals.dkvp
 mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
 
-mlr --opprint put $x=asserting_string($x) ./reg_test/input/nullvals.dkvp
-mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
-
-mlr --opprint put $y=asserting_string($y) ./reg_test/input/nullvals.dkvp
-mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
-
-mlr --opprint put $z=asserting_string($z) ./reg_test/input/nullvals.dkvp
-a x y z
-b 1 2 -
-b 3 4 -
-b 5 - -
-b - 6 -
-b - - -
-
-mlr --opprint put $*=asserting_string({1:2}) ./reg_test/input/nullvals.dkvp
-mlr: string type-assertion failed at NR=1 FNR=1 FILENAME=./reg_test/input/nullvals.dkvp
+mlr --opprint put $f=asserting_string($z) ./reg_test/input/nullvals.dkvp
+a x y z f
+b 1 2 - -
+b 3 4 - -
+b 5 - - -
+b - 6 - -
+b - - - -
 
 
 ================================================================
