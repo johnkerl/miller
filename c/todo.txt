@@ -31,6 +31,8 @@ OTHER:
 
 ! true/false/1/0 data-cleaning cookbook section. include filter x 2 (preceded by put $nr=NR), & tee x 2.
 
+! mlr step rsum int-to-int
+
 ----------------------------------------------------------------
 COOKBOOK CHECKLIST:
 
