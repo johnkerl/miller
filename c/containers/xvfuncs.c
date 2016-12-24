@@ -160,7 +160,7 @@ boxed_xval_t m_ss_splitnvx_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval
 	char* piece;
 	while ((piece = strsep(&walker, sep)) != NULL) {
 		mv_t key = mv_from_int(i);
-		mv_t val = mv_type_infer_string(mlr_strdup_or_die(piece), FREE_ENTRY_VALUE);
+		mv_t val = mv_type_infer_string(piece, NO_FREE);
 		mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		i++;
 	}
@@ -185,12 +185,12 @@ boxed_xval_t m_sss_splitkv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* ppairse
 		char* left = strsep(&xxx_rename, pairsep);
 		if (xxx_rename == NULL) {
 			mv_t key = mv_from_int(i);
-			mv_t val = mv_type_infer_string_or_float_or_int(mlr_strdup_or_die(left), FREE_ENTRY_VALUE);
+			mv_t val = mv_type_infer_string_or_float_or_int(left, NO_FREE);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		} else {
 			char* right = strsep(&xxx_rename, pairsep);
-			mv_t key = mv_from_string(mlr_strdup_or_die(left), FREE_ENTRY_VALUE);
-			mv_t val = mv_type_infer_string_or_float_or_int(mlr_strdup_or_die(right), FREE_ENTRY_VALUE);
+			mv_t key = mv_from_string(left, NO_FREE);
+			mv_t val = mv_type_infer_string_or_float_or_int(right, NO_FREE);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		}
 		i++;
@@ -216,12 +216,12 @@ boxed_xval_t m_sss_splitkvx_xfunc(boxed_xval_t* pstringval, boxed_xval_t* ppairs
 		char* left = strsep(&xxx_rename, pairsep);
 		if (xxx_rename == NULL) {
 			mv_t key = mv_from_int(i);
-			mv_t val = mv_type_infer_string(mlr_strdup_or_die(left), FREE_ENTRY_VALUE);
+			mv_t val = mv_type_infer_string(left, NO_FREE);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		} else {
 			char* right = strsep(&xxx_rename, pairsep);
-			mv_t key = mv_from_string(mlr_strdup_or_die(left), FREE_ENTRY_VALUE);
-			mv_t val = mv_type_infer_string(mlr_strdup_or_die(right), FREE_ENTRY_VALUE);
+			mv_t key = mv_from_string(left, NO_FREE);
+			mv_t val = mv_type_infer_string(right, NO_FREE);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		}
 		i++;

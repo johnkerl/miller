@@ -356,6 +356,7 @@ mv_t mv_scan_number_or_die(char* string) {
 }
 
 // ----------------------------------------------------------------
+// xxx comment semantics at header file. esp b/c free flags means two things.
 mv_t mv_type_infer_string(char* string, char free_flags) {
 	if (string == NULL) {
 		return mv_absent();
