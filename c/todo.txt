@@ -30,6 +30,10 @@ OTHER:
 
 ! mlr step rsum int-to-int
 
+! key point (put at top of ref-dsl, ref-verb, and elsewhere -- esp cover page in bold):
+  there is a DSL so you *can* loops things out w/ variables etc etc etc but also verbs for
+  often-used idioms so you don't *have* to. then show a concise and convincing example.
+
 ----------------------------------------------------------------
 COOKBOOK CHECKLIST:
 
