@@ -797,11 +797,11 @@ static void mlhmmv_level_put_terminal_no_enlarge(mlhmmv_level_t* plevel, sllmve_
 
 	if (plevel->states[index] == EMPTY) { // End of chain.
 		pentry->ideal_index = ideal_index;
-		pentry->level_key = mv_copy(plevel_key);
+		pentry->level_key = mv_copy(plevel_key); // <------------------------- copy key
 
 		if (prest_keys->pnext == NULL) {
 			pentry->level_xvalue.is_terminal = TRUE;
-			pentry->level_xvalue.terminal_mlrval = mv_copy(pterminal_value);
+			pentry->level_xvalue.terminal_mlrval = mv_copy(pterminal_value); // <--------------- copy value
 		} else {
 			pentry->level_xvalue.is_terminal = FALSE;
 			pentry->level_xvalue.pnext_level = mlhmmv_level_alloc();
@@ -834,7 +834,7 @@ static void mlhmmv_level_put_terminal_no_enlarge(mlhmmv_level_t* plevel, sllmve_
 				mlhmmv_level_free(pentry->level_xvalue.pnext_level);
 			}
 			pentry->level_xvalue.is_terminal = TRUE;
-			pentry->level_xvalue.terminal_mlrval = mv_copy(pterminal_value);
+			pentry->level_xvalue.terminal_mlrval = mv_copy(pterminal_value); // <--------------- copy value
 
 		} else { // The terminal will be placed at a deeper level
 			if (pentry->level_xvalue.is_terminal) {
