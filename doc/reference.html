@@ -383,7 +383,7 @@ Functions for the filter and put verbs:
    tan tanh urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms
    gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime
    strptime systime is_absent is_bool is_boolean is_empty is_empty_map is_float
-   is_int is_map is_nonempty_map isnotempty is_not_map is_not_null is_null
+   is_int is_map is_nonempty_map is_not_empty is_not_map is_not_null is_null
    is_numeric is_present is_string asserting_absent asserting_bool
    asserting_boolean asserting_empty asserting_empty_map asserting_float
    asserting_int asserting_map asserting_nonempty_map asserting_not_empty
@@ -947,7 +947,7 @@ e.g.  <tt>mlr put -q '@sum += $x'; end{emit @sum}'</tt> or <tt>mlr put -q
 </ul>
 
 <p/>You can test these programatically using the functions
-<tt>is_empty</tt>/<tt>isnotempty</tt>, <tt>is_absent</tt>/<tt>is_present</tt>, and
+<tt>is_empty</tt>/<tt>is_not_empty</tt>, <tt>is_absent</tt>/<tt>is_present</tt>, and
 <tt>is_null</tt>/<tt>is_not_null</tt>. For the last pair, note that null means
 either empty or absent.
 

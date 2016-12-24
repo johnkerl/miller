@@ -58,14 +58,10 @@ cook 4: weird stuff
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
-!!! RONG
-  mlr --opprint put '$f=is_nonempty_map($x)' ./reg_test/input/nullvals.dkvp
-
 ! UT cases detailed below
-  -> asserting_* in progress
-  -> rm dups!!
   -> underscores in is* predicates
   -> likewise "notnull type-assertion failed"
+  -> console is/assert impls x 2
 
 ! memmgt for ephemeral boxed xvals
 

@@ -134,7 +134,7 @@ OPTIONS
 	urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec
 	hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime
 	is_absent is_bool is_boolean is_empty is_empty_map is_float is_int is_map
-	is_nonempty_map isnotempty is_not_map is_not_null is_null is_numeric
+	is_nonempty_map is_not_empty is_not_map is_not_null is_null is_numeric
 	is_present is_string asserting_absent asserting_bool asserting_boolean
 	asserting_empty asserting_empty_map asserting_float asserting_int
 	asserting_map asserting_nonempty_map asserting_not_empty asserting_not_map
@@ -1407,7 +1407,7 @@ FUNCTIONS FOR FILTER/PUT
    is_nonempty_map
        (class=typing #args=1): True if argument is a map which is non-empty.
 
-   isnotempty
+   is_not_empty
        (class=typing #args=1): False if field is present in input with empty value, false otherwise
 
    is_not_map
@@ -1840,4 +1840,4 @@ SEE ALSO
 
 
 
-				  2016-12-21			     MILLER(1)
+				  2016-12-24			     MILLER(1)
