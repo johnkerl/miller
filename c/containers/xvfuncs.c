@@ -139,7 +139,7 @@ boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval)
 	char* piece;
 	while ((piece = strsep(&walker, sep)) != NULL) {
 		mv_t key = mv_from_int(i);
-		mv_t val = mv_type_infer_string_or_float_or_int(mlr_strdup_or_die(piece), FREE_ENTRY_VALUE);
+		mv_t val = mv_type_infer_string_or_float_or_int(piece, NO_FREE);
 		mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		i++;
 	}
