@@ -1175,7 +1175,6 @@ run_mlr --opprint put '$f=is_map({1:2})'                          $indir/nullval
 run_mlr --opprint put '$f=is_map({})'                             $indir/nullvals.dkvp
 run_mlr --opprint put '@somesuch=1;$f=is_map(@somesuch)'          $indir/nullvals.dkvp
 
-# xxx RONG
 run_mlr --opprint put '$f=is_nonempty_map($x)'                    $indir/nullvals.dkvp
 run_mlr --opprint put '$f=is_nonempty_map($y)'                    $indir/nullvals.dkvp
 run_mlr --opprint put '$f=is_nonempty_map($z)'                    $indir/nullvals.dkvp

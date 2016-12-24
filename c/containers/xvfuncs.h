@@ -275,6 +275,7 @@ static inline boxed_xval_t b_x_is_not_empty_no_free_xfunc(boxed_xval_t* pbxval1)
 	);
 }
 
+// xxx consol the no_free funcs & the xfuncs
 static inline boxed_xval_t b_x_is_empty_map_no_free_xfunc(boxed_xval_t* pbxval1) {
 	return box_ephemeral_val(
 		mv_from_bool(
