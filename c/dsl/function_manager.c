@@ -1209,7 +1209,7 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm,
 	} else if (streq(fnnm, "asserting_empty")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_is_empty_no_free_xfunc, parg1, "empty");
 	} else if (streq(fnnm, "asserting_empty_map")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_empty_map_no_free_xfunc, parg1, "emptymap");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_empty_map_no_free_xfunc, parg1, "empty_map");
 	} else if (streq(fnnm, "asserting_float")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_is_float_no_free_xfunc, parg1, "float");
 	} else if (streq(fnnm, "asserting_int")) {
@@ -1217,15 +1217,15 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm,
 	} else if (streq(fnnm, "asserting_map")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_is_map_no_free_xfunc, parg1, "map");
 	} else if (streq(fnnm, "asserting_nonempty_map")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_nonempty_map_no_free_xfunc, parg1, "nonemptymap");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_nonempty_map_no_free_xfunc, parg1, "nonempty_map");
 	} else if (streq(fnnm, "asserting_not_empty")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_empty_no_free_xfunc, parg1, "notempty");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_empty_no_free_xfunc, parg1, "not_empty");
 	} else if (streq(fnnm, "asserting_not_map")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_map_no_free_xfunc, parg1, "notmap");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_map_no_free_xfunc, parg1, "not_map");
 	} else if (streq(fnnm, "asserting_not_null")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_null_no_free_xfunc, parg1, "notnull");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_null_no_free_xfunc, parg1, "not_null");
 	} else if (streq(fnnm, "asserting_null")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_null_no_free_xfunc, parg1, "notnull");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_null_no_free_xfunc, parg1, "null");
 	} else if (streq(fnnm, "asserting_numeric")) {
 		return rxval_evaluator_alloc_from_A_x_func(b_x_is_numeric_no_free_xfunc, parg1, "numeric");
 	} else if (streq(fnnm, "asserting_present")) {
