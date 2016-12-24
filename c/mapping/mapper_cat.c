@@ -110,6 +110,9 @@ static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* coun
 static void mapper_cat_free(mapper_t* pmapper) {
 	mapper_cat_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->pgroup_by_field_names);
+	for (lhmslve_t* pe = pstate->pcounters_by_group->phead; pe != NULL; pe = pe->pnext) {
+		free(pe->pvvalue);
+	}
 	lhmslv_free(pstate->pcounters_by_group);
 	ap_free(pstate->pargp);
 	free(pstate);
