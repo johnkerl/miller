@@ -937,6 +937,7 @@ static void record_emitter_from_map_literal(
 			mlhmmv_root_partial_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
 				pstate->do_full_prefixing, oosvar_flatten_separator);
 
+			free(proot_level); // xxx more to free ... needs to be unhacked first.
 		}
 		sllmv_free(pmvnames);
 	}
