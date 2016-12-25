@@ -60,6 +60,9 @@ cook 4: weird stuff
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
+* movefirst/movelast funcs? as in-place subrs or not?
+* like sort funcs -- as in-place subrs?
+
 * consol is/assert impls x 2
 
 ! memmgt for ephemeral boxed xvals
