@@ -1154,7 +1154,10 @@ static rxval_evaluator_t* construct_builtin_function_callsite_xevaluator(
 		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
 		rxval_evaluator_t* parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
 		pxevaluator = fmgr_alloc_xevaluator_from_unary_func_name(function_name, parg1);
-//		if (pxevaluator == NULL) { // xxx gross to alloc & free right away like this ...
+// xxx gross to alloc & free right away like this ...
+// xxx can't free since unresolved callsites may point in here.
+// xxx better to pass args as ASTs here and let them be constructed only on function-name match.
+//		if (pxevaluator == NULL) {
 //			parg1->pfree_func(parg1);
 //		}
 
@@ -1164,7 +1167,10 @@ static rxval_evaluator_t* construct_builtin_function_callsite_xevaluator(
 		rxval_evaluator_t* parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
 		rxval_evaluator_t* parg2 = rxval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
 		pxevaluator = fmgr_alloc_xevaluator_from_binary_func_name(function_name, parg1, parg2);
-//		if (pxevaluator == NULL) { // xxx gross to alloc & free right away like this ...
+// xxx gross to alloc & free right away like this ...
+// xxx can't free since unresolved callsites may point in here.
+// xxx better to pass args as ASTs here and let them be constructed only on function-name match.
+//		if (pxevaluator == NULL) {
 //			parg1->pfree_func(parg1);
 //			parg2->pfree_func(parg2);
 //		}
@@ -1177,7 +1183,10 @@ static rxval_evaluator_t* construct_builtin_function_callsite_xevaluator(
 		rxval_evaluator_t* parg2 = rxval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
 		rxval_evaluator_t* parg3 = rxval_evaluator_alloc_from_ast(parg3_node, pfmgr, type_inferencing, context_flags);
 		pxevaluator = fmgr_alloc_xevaluator_from_ternary_func_name(function_name, parg1, parg2, parg3);
-//		if (pxevaluator == NULL) { // xxx gross to alloc & free right away like this ...
+// xxx gross to alloc & free right away like this ...
+// xxx can't free since unresolved callsites may point in here.
+// xxx better to pass args as ASTs here and let them be constructed only on function-name match.
+//		if (pxevaluator == NULL) {
 //			parg1->pfree_func(parg1);
 //			parg2->pfree_func(parg2);
 //			parg3->pfree_func(parg3);
