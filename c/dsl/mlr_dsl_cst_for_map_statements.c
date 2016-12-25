@@ -181,6 +181,10 @@ static void handle_for_map( // xxx under construction to consolidate the above t
 			}
 		}
 
+		if (!boxed_xval.is_ephemeral) {
+			mlhmmv_xvalue_free(&copy);
+		}
+
 		loop_stack_pop(pvars->ploop_stack);
 		local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
 	}
