@@ -367,6 +367,9 @@ static void handle_for_map_key_only( // xxx under construction to consolidate th
 			mv_free(pe->pvvalue);
 			free(pe->pvvalue);
 		}
+		if (!boxed_xval.is_ephemeral) {
+			mlhmmv_xvalue_free(&copy);
+		}
 
 		loop_stack_pop(pvars->ploop_stack);
 		local_stack_subframe_exit(pframe, pstatement->pblock->subframe_var_count);
