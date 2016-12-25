@@ -638,13 +638,10 @@ static mv_t provisional_call_func(void* pvstate, variables_t* pvars) {
 
 static void provisional_call_free(rval_evaluator_t* pevaluator) {
 	unresolved_func_callsite_state_t* pstate = pevaluator->pvstate;
-	fprintf(stderr,
-		"%s: internal coding error: unresolved scalar-return-value callsite \"%s\".\n",
-		MLR_GLOBALS.bargv0, pstate->function_name);
-	exit(1);
+	unresolved_callsite_free(pstate);
+	free(pevaluator);
 }
 
-// ----------------------------------------------------------------
 rval_evaluator_t* fmgr_alloc_provisional_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags)
 {
@@ -677,10 +674,8 @@ static boxed_xval_t provisional_xcall_func(void* pvstate, variables_t* pvars) {
 
 static void provisional_xcall_free(rxval_evaluator_t* pxevaluator) {
 	unresolved_func_callsite_state_t* pstate = pxevaluator->pvstate;
-	fprintf(stderr,
-		"%s: internal coding error: unresolved map-return-value callsite \"%s\".\n",
-		MLR_GLOBALS.bargv0, pstate->function_name);
-	exit(1);
+	unresolved_callsite_free(pstate);
+	free(pxevaluator);
 }
 
 rxval_evaluator_t* fmgr_xalloc_provisional_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
