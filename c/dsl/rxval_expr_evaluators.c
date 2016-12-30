@@ -457,7 +457,7 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_full_oosvar(
 // ================================================================
 static boxed_xval_t rxval_evaluator_from_full_srec_func(void* pvstate, variables_t* pvars) {
 	boxed_xval_t boxed_xval;
-	boxed_xval.is_ephemeral = TRUE;
+	boxed_xval.is_ephemeral = TRUE; // xxx invoke boxed_xval ctor
 	boxed_xval.xval = mlhmmv_xvalue_alloc_empty_map();
 
 	for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {

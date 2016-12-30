@@ -28,7 +28,15 @@ static boxed_xval_t rxval_evaluator_variadic_func(void* pvstate, variables_t* pv
 		// xxx map-check ...
 	}
 
-	return pstate->pfunc(pstate->pbxvals, nargs);
+	boxed_xval_t bxrv = pstate->pfunc(pstate->pbxvals, nargs);
+
+	for (int i = 0; i < nargs; i++) {
+		boxed_xval_t* pbxval = &pstate->pbxvals[i];
+		if (pbxval->is_ephemeral) {
+			mlhmmv_xvalue_free(&pbxval->xval);
+		}
+	}
+	return bxrv;
 }
 
 static void rxval_evaluator_variadic_free(rxval_evaluator_t* pxevaluator) {
