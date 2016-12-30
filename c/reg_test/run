@@ -5311,6 +5311,9 @@ run_mlr --from $indir/abixy put '
   $c = a;
 '
 
+# ----------------------------------------------------------------
+announce FORBIND TYPEDECLs
+
 run_mlr --from $indir/abixy put '
   for (int i = 0; i < $i; i += 1) {
     $c = i * 10;
@@ -5350,6 +5353,47 @@ run_mlr --from $indir/abixy put '
     $c = i;
   }
 '
+
+# ----------------------------------------------------------------
+announce ARGPASS TYPEDECLs
+
+run_mlr --from $indir/abixy put '
+  func f(int i) {
+    return i+3;
+  }
+  $c = f($i);
+'
+
+## xxx fix !!
+#mlr_expect_fail --from $indir/abixy put '
+#  func f(int i) {
+#    return i+3;
+#  }
+#  $c = f($x);
+#'
+
+mlr_expect_fail --from $indir/abixy put '
+  func f(num i): int {
+    return i+3.45;
+  }
+  $c = f($x);
+'
+
+mlr_expect_fail --from $indir/abixy put '
+  func f(num i): int {
+    return i+3.45;
+  }
+  $c = f($i);
+'
+
+## xxx fix !!
+#mlr_expect_fail --from $indir/abixy put '
+#  func f(num i): int {
+#    i = "a";
+#    return 2;
+#  }
+#  $c = f($x);
+#'
 
 # ----------------------------------------------------------------
 announce LOCAL MAP-VARIABLE WRITE/READ

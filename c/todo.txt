@@ -37,8 +37,6 @@ OTHER:
 ================================================================
 UT FOR 5.0.0:
 
-* all assert_X() cases
-
 * all type-decl cases:
   - argpass
   - initial assign & reuse thereafter.
