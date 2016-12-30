@@ -523,8 +523,13 @@ static void handle_full_oosvar_assignment_from_xval(
 			mlhmmv_xvalue_t copy = mlhmmv_xvalue_copy(&boxed_xval.xval);
 			mlhmmv_root_clear(pvars->poosvars);
 			for (mlhmmv_level_entry_t* pe = copy.pnext_level->phead; pe != NULL; pe = pe->pnext) {
+				// xxx comment: value transfer not copy.
 				mlhmmv_level_put_xvalue_singly_keyed(pvars->poosvars->root_xvalue.pnext_level, &pe->level_key, &pe->level_xvalue);
+				pe->level_xvalue.terminal_mlrval = mv_absent();
+				pe->level_xvalue.pnext_level = NULL;
+				pe->level_xvalue.is_terminal = TRUE;
 			}
+			mlhmmv_xvalue_free(&copy);
 		}
 	}
 }
