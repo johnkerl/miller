@@ -365,6 +365,7 @@ static void handle_for_map_key_only(
 			mv_free(pe->pvvalue);
 			free(pe->pvvalue);
 		}
+		sllv_free(pkeys);
 		if (!boxed_xval.is_ephemeral) {
 			mlhmmv_xvalue_free(&copy);
 		}
