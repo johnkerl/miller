@@ -34,6 +34,32 @@ OTHER:
   there is a DSL so you *can* loops things out w/ variables etc etc etc but also verbs for
   often-used idioms so you don't *have* to. then show a concise and convincing example.
 
+================================================================
+UT FOR 5.0.0:
+
+* all assert_X() cases
+* all type-decl cases: local/forbind/argpass; initial assign & reuse thereafter.
+
+* unset of localvars, both non-indexed and indexed; various present/absent at name & indices; too shallow/deep
+
+* mlr --from s put '$y=strlen($*)'
+* mlr --from s put '$y=strlen({})'
+
+* allow single trailing commas in map-literals, func/subr calls, func/subr defs
+
+* UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
+* env lhs expr
+* dump locals & named/subscripted oosvars
+* emit locals & named/subscripted oosvars
+* for-records-counts example
+
+* xval args into UDFs
+* xval args into subrs
+* xval retvals from UDFs
+* func retval typedecls
+
+* mapvar matrix above
+
 ----------------------------------------------------------------
 COOKBOOK CHECKLIST:
 
@@ -215,33 +241,6 @@ SYNTAX ERROR IMPROVEMENT:
 
 * try to get some source-level info in there.
   http://archive.oreilly.com/pub/a/linux/excerpts/9780596155971/error-reporting-recovery.html
-
-================================================================
-UT FOR 5.0.0:
-
-* all assert_X() cases
-* all type-decl cases: local/forbind/argpass; initial assign & reuse thereafter.
-* for-srec-single
-
-* unset of localvars, both non-indexed and indexed; various present/absent at name & indices; too shallow/deep
-
-* mlr --from s put '$y=strlen($*)'
-* mlr --from s put '$y=strlen({})'
-
-* allow single trailing commas in map-literals, func/subr calls, func/subr defs
-
-* UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
-* env lhs expr
-* dump locals & named/subscripted oosvars
-* emit locals & named/subscripted oosvars
-* for-records-counts example
-
-* xval args into UDFs
-* xval args into subrs
-* xval retvals from UDFs
-* func retval typedecls
-
-* mapvar matrix above
 
 ================================================================
 HYGIENE FOR 5.0.0:
