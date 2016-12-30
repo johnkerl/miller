@@ -5949,7 +5949,7 @@ announce MAPVAR FOR-LOOPS
 # ----------------------------------------------------------------
 announce TRAILING COMMAS
 
-run_mlr --from s put '
+run_mlr --from $indir/abixy put '
   $* = {
     "a": $a,
     "x": $x,
