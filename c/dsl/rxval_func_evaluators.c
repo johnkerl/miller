@@ -77,7 +77,13 @@ static boxed_xval_t rxval_evaluator_x_x_func(void* pvstate, variables_t* pvars) 
 	rxval_evaluator_x_x_state_t* pstate = pvstate;
 	boxed_xval_t bxval1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
 
-	return pstate->pfunc(&bxval1);
+	boxed_xval_t bxrv = pstate->pfunc(&bxval1);
+
+	if (bxval1.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+		mlhmmv_xvalue_free(&bxval1.xval);
+	}
+
+	return bxrv;
 }
 
 static void rxval_evaluator_x_x_free(rxval_evaluator_t* pxevaluator) {
@@ -114,7 +120,12 @@ static boxed_xval_t rxval_evaluator_x_m_func(void* pvstate, variables_t* pvars) 
 		return box_ephemeral_val(mv_error());
 	}
 
-	return pstate->pfunc(&bxval1);
+	boxed_xval_t bxrv = pstate->pfunc(&bxval1);
+
+	if (bxval1.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+		mlhmmv_xvalue_free(&bxval1.xval);
+	}
+	return bxrv;
 }
 
 static void rxval_evaluator_x_m_free(rxval_evaluator_t* pxevaluator) {
@@ -157,7 +168,15 @@ static boxed_xval_t rxval_evaluator_x_mx_func(void* pvstate, variables_t* pvars)
 		return box_ephemeral_val(mv_error());
 	}
 
-	return pstate->pfunc(&bxval1, &bxval2);
+	boxed_xval_t bxrv = pstate->pfunc(&bxval1, &bxval2);
+
+	if (bxval1.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+		mlhmmv_xvalue_free(&bxval1.xval);
+	}
+	if (bxval2.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+		mlhmmv_xvalue_free(&bxval2.xval);
+	}
+	return bxrv;
 }
 
 static void rxval_evaluator_x_mx_free(rxval_evaluator_t* pxevaluator) {
@@ -206,7 +225,15 @@ static boxed_xval_t rxval_evaluator_x_ms_func(void* pvstate, variables_t* pvars)
 
 	// xxx to-string ...
 
-	return pstate->pfunc(&bxval1, &bxval2);
+	boxed_xval_t bxrv = pstate->pfunc(&bxval1, &bxval2);
+
+	if (bxval1.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+		mlhmmv_xvalue_free(&bxval1.xval);
+	}
+	if (bxval2.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+		mlhmmv_xvalue_free(&bxval2.xval);
+	}
+	return bxrv;
 }
 
 static void rxval_evaluator_x_ms_free(rxval_evaluator_t* pxevaluator) {
@@ -255,7 +282,15 @@ static boxed_xval_t rxval_evaluator_x_ss_func(void* pvstate, variables_t* pvars)
 	}
 	// xxx to-string ...
 
-	return pstate->pfunc(&bxval1, &bxval2);
+	boxed_xval_t bxrv = pstate->pfunc(&bxval1, &bxval2);
+
+	if (bxval1.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+		mlhmmv_xvalue_free(&bxval1.xval);
+	}
+	if (bxval2.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+		mlhmmv_xvalue_free(&bxval2.xval);
+	}
+	return bxrv;
 }
 
 static void rxval_evaluator_x_ss_free(rxval_evaluator_t* pxevaluator) {
@@ -310,7 +345,15 @@ static boxed_xval_t rxval_evaluator_x_mss_func(void* pvstate, variables_t* pvars
 
 	// xxx to-string ...
 
-	return pstate->pfunc(&bxval1, &bxval2, &bxval3);
+	boxed_xval_t bxrv = pstate->pfunc(&bxval1, &bxval2, &bxval3);
+
+	if (bxval1.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+		mlhmmv_xvalue_free(&bxval1.xval);
+	}
+	if (bxval2.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+		mlhmmv_xvalue_free(&bxval2.xval);
+	}
+	return bxrv;
 }
 
 static void rxval_evaluator_x_mss_free(rxval_evaluator_t* pxevaluator) {
@@ -367,7 +410,18 @@ static boxed_xval_t rxval_evaluator_x_sss_func(void* pvstate, variables_t* pvars
 
 	// xxx to-string ...
 
-	return pstate->pfunc(&bxval1, &bxval2, &bxval3);
+	boxed_xval_t bxrv = pstate->pfunc(&bxval1, &bxval2, &bxval3);
+
+	if (bxval1.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+		mlhmmv_xvalue_free(&bxval1.xval);
+	}
+	if (bxval2.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+		mlhmmv_xvalue_free(&bxval2.xval);
+	}
+	if (bxval3.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+		mlhmmv_xvalue_free(&bxval3.xval);
+	}
+	return bxrv;
 }
 
 static void rxval_evaluator_x_sss_free(rxval_evaluator_t* pxevaluator) {
@@ -440,4 +494,3 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_A_x_func(xv_unary_func_t* pfunc, r
 
 	return pevaluator;
 }
-
