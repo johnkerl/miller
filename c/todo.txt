@@ -37,10 +37,6 @@ OTHER:
 ================================================================
 UT FOR 5.0.0:
 
-* all type-decl cases:
-  - argpass
-  - initial assign & reuse thereafter.
-
 * unset of localvars, both non-indexed and indexed; various present/absent at name & indices; too shallow/deep
 
 * mlr --from s put '$y=strlen($*)'
@@ -48,18 +44,10 @@ UT FOR 5.0.0:
 
 * allow single trailing commas in map-literals, func/subr calls, func/subr defs
 
-* UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
 * env lhs expr
-* dump locals & named/subscripted oosvars
-* emit locals & named/subscripted oosvars
 * for-records-counts example
 
-* xval args into UDFs
-* xval args into subrs
-* xval retvals from UDFs
-* func retval typedecls
-
-* mapvar matrix above
+* UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
 
 ----------------------------------------------------------------
 COOKBOOK CHECKLIST:
