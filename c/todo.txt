@@ -42,8 +42,6 @@ UT FOR 5.0.0:
 * mlr --from s put '$y=strlen($*)'
 * mlr --from s put '$y=strlen({})'
 
-* allow single trailing commas in map-literals, func/subr calls, func/subr defs
-
 * env lhs expr
 * for-records-counts example
 
