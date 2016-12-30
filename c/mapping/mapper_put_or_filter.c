@@ -357,7 +357,7 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	mlr_dsl_ast_t* past = mlr_dsl_parse(mlr_dsl_expression, trace_parse);
 	if (past == NULL) {
 		fprintf(stderr, "%s %s: syntax error on DSL parse of '%s'\n",
-			argv[0], verb, mlr_dsl_expression);
+			MLR_GLOBALS.bargv0, verb, mlr_dsl_expression);
 		return NULL;
 	}
 
