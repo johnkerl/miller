@@ -180,9 +180,13 @@ mlhmmv_xvalue_t* local_stack_frame_ref_extended_from_indexed(local_stack_frame_t
 	}
 #endif
 
-	int error = 0;
-	// Maybe null
-	return mlhmmv_level_look_up_and_ref_xvalue(pmvalue->pnext_level, pmvkeys, &error);
+	if (pmvkeys == NULL) { // base-level access
+		return pmvalue;
+	} else {
+		int error = 0;
+		// Maybe null
+		return mlhmmv_level_look_up_and_ref_xvalue(pmvalue->pnext_level, pmvkeys, &error);
+	}
 }
 
 // ----------------------------------------------------------------

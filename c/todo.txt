@@ -37,8 +37,6 @@ OTHER:
 ================================================================
 UT FOR 5.0.0:
 
-* unset of localvars, both non-indexed and indexed; various present/absent at name & indices; too shallow/deep
-
 * mlr --from s put '$y=strlen($*)'
 * mlr --from s put '$y=strlen({})'
 
@@ -46,6 +44,8 @@ UT FOR 5.0.0:
 * for-records-counts example
 
 * UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
+
+* xxx @ reg_test/run
 
 ----------------------------------------------------------------
 COOKBOOK CHECKLIST:
