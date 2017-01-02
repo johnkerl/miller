@@ -39,8 +39,6 @@ UT FOR 5.0.0:
 
 * UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
 
-* xxx @ reg_test/run
-
 * matrix coverage
 
 ----------------------------------------------------------------

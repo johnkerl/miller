@@ -914,7 +914,7 @@ static void record_emitter_from_full_srec(
 	sllv_t*       poutrecs,
 	char*         oosvar_flatten_separator)
 {
-	sllv_append(poutrecs, lrec_copy(pvars->pinrech);
+	sllv_append(poutrecs, lrec_copy(pvars->pinrec));
 }
 
 // xxx rm code dup -- *identical* function bodies here
@@ -961,7 +961,7 @@ static void record_emitter_from_function_callsite(
 	sllmv_free(pmvkeys);
 }
 
-static void Mecord_emitter_from_map_literal(
+static void record_emitter_from_map_literal(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,
