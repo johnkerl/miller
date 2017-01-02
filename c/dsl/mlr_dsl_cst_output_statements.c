@@ -580,6 +580,12 @@ static void record_emitter_from_full_srec(
 	sllv_t*       poutrecs,
 	char*         oosvar_flatten_separator);
 
+static void record_emitter_from_function_callsite(
+	emit_state_t* pstate,
+	variables_t*  pvars,
+	sllv_t*       poutrecs,
+	char*         oosvar_flatten_separator);
+
 static void record_emitter_from_map_literal(
 	emit_state_t* pstate,
 	variables_t*  pvars,
@@ -683,6 +689,11 @@ mlr_dsl_cst_statement_t* alloc_emit(
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_FULL_SREC) {
 		pstate->precord_emitter = record_emitter_from_full_srec;
+
+	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_FUNCTION_CALLSITE) {
+		pstate->precord_emitter = record_emitter_from_function_callsite;
+		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
+			pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
 
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
 		pstate->precord_emitter = record_emitter_from_map_literal;
@@ -903,10 +914,54 @@ static void record_emitter_from_full_srec(
 	sllv_t*       poutrecs,
 	char*         oosvar_flatten_separator)
 {
-	sllv_append(poutrecs, lrec_copy(pvars->pinrec));
+	sllv_append(poutrecs, lrec_copy(pvars->pinrech);
 }
 
-static void record_emitter_from_map_literal(
+// xxx rm code dup -- *identical* function bodies here
+static void record_emitter_from_function_callsite(
+	emit_state_t* pstate,
+	variables_t*  pvars,
+	sllv_t*       poutrecs,
+	char*         oosvar_flatten_separator)
+{
+	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+	boxed_xval_t boxed_xval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+	sllmv_t* pmvkeys = sllmv_alloc();
+
+	if (!boxed_xval.xval.is_terminal) {
+		int names_all_non_null_or_error = TRUE;
+		sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars,
+			&names_all_non_null_or_error);
+		if (names_all_non_null_or_error) {
+
+			// xxx this is an unpleasant hack. The idea is to temporarily wrap the localvar
+			// in a parent map whose single key is the variable name.
+			mv_t name = mv_from_string("_", NO_FREE);
+
+			mlhmmv_level_t* proot_level = mlhmmv_level_alloc();
+			mlhmmv_level_put_xvalue_singly_keyed(proot_level, &name, &boxed_xval.xval);
+
+			mlhmmv_root_t map;
+			map.root_xvalue.is_terminal = FALSE;
+			map.root_xvalue.terminal_mlrval = mv_absent();
+			map.root_xvalue.pnext_level = proot_level;
+			sllmv_prepend_no_free(pmvkeys, &name);
+			mlhmmv_root_partial_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
+				pstate->do_full_prefixing, oosvar_flatten_separator);
+
+			free(proot_level); // xxx more to free ... needs to be unhacked first.
+		}
+		sllmv_free(pmvnames);
+	}
+
+	if (boxed_xval.is_ephemeral) {
+		mlhmmv_xvalue_free(&boxed_xval.xval);
+	}
+
+	sllmv_free(pmvkeys);
+}
+
+static void Mecord_emitter_from_map_literal(
 	emit_state_t* pstate,
 	variables_t*  pvars,
 	sllv_t*       poutrecs,

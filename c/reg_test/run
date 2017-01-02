@@ -5964,8 +5964,20 @@ run_mlr -n put 'end {
 # ----------------------------------------------------------------
 announce MAPVAR FOR-LOOPS
 
-# xxx fix !!
-# run_mlr --from s put -q 'func f() { return {1:2,3:4}}; emit f()'
+run_mlr --from s put -q '
+  func f() {
+    return {
+      "a:".$a: $i,
+      "b:".$b: $y,
+      NR: NF,
+    }
+  }
+  for (k,v in f()) {
+    print "k=".k;
+    print "v=".v;
+  }
+  print
+'
 
 # ----------------------------------------------------------------
 announce TRAILING COMMAS

@@ -11,9 +11,6 @@ NON-RELEASE:
 * windows port?
 ? msort.o wt?
 
-* benchmark lua per se
-* benchmark lua-jit
-
 ================================================================
 OTHER:
 
@@ -46,6 +43,8 @@ UT FOR 5.0.0:
 * UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
 
 * xxx @ reg_test/run
+
+* matrix coverage
 
 ----------------------------------------------------------------
 COOKBOOK CHECKLIST:
@@ -533,6 +532,9 @@ MORE
 * valgrind note @ new dev page/section
 * join: final sllv_free in destructor (lo-pri)
 * anim ref https://github.com/edi9999/path-extractor
+
+* benchmark lua per se
+* benchmark lua-jit
 
 ----------------------------------------------------------------
 COOKBOOK/FAQ/ETC.:
