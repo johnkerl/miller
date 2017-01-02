@@ -93,7 +93,8 @@ static mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv,
 	}
 	lhmss_t* pold_to_new = lhmss_alloc();
 	for (sllse_t* pe = pnames->phead; pe != NULL; pe = pe->pnext->pnext) {
-		lhmss_put(pold_to_new, mlr_strdup_or_die(pe->value), mlr_strdup_or_die(pe->pnext->value), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		lhmss_put(pold_to_new, mlr_strdup_or_die(pe->value), mlr_strdup_or_die(pe->pnext->value),
+			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
 	slls_free(pnames);
 
