@@ -14,7 +14,7 @@
 // ----------------------------------------------------------------
 typedef struct _boxed_xval_t {
 	mlhmmv_xvalue_t xval;
-	int is_ephemeral;
+	char is_ephemeral; // xxx bool_t
 } boxed_xval_t;
 
 // ----------------------------------------------------------------
