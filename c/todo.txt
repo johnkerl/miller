@@ -34,9 +34,6 @@ OTHER:
 ================================================================
 UT FOR 5.0.0:
 
-* mlr --from s put '$y=strlen($*)'
-* mlr --from s put '$y=strlen({})'
-
 * env lhs expr
 * for-records-counts example
 
