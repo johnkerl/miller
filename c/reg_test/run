@@ -1104,6 +1104,9 @@ run_mlr put '$x = ENV["X"]; $y = ENV[$name]' $indir/env-var.dkvp
 
 run_mlr -n put 'begin{ENV["HOME"]="foobar"} end{print ENV["HOME"]}'
 
+mention LHS value on first record should result in ZYX for process creation
+export indir; run_mlr --from $indir/abixy put 'ENV["ZYX"]="CBA".NR; print | ENV["indir"]."/env-assign.sh" , "a is " . $a'
+
 # ----------------------------------------------------------------
 announce IS-PREDICATES
 
@@ -5971,7 +5974,7 @@ run_mlr -n put 'end {
 # ----------------------------------------------------------------
 announce MAPVAR FOR-LOOPS
 
-run_mlr --from s put -q '
+run_mlr --from $indir/abixy put -q '
   func f() {
     return {
       "a:".$a: $i,

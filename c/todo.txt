@@ -34,7 +34,6 @@ OTHER:
 ================================================================
 UT FOR 5.0.0:
 
-* env lhs expr
 * for-records-counts example
 
 * UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
