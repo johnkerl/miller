@@ -35,9 +35,9 @@ struct _mlhmmv_level_t; // forward reference
 
 // The 'x' is for extended: this can hold a scalar or a map.
 typedef struct _mlhmmv_xvalue_t {
-	int is_terminal;
-	mv_t terminal_mlrval; // xxx audit for absent/null initters respectively in the .c file
 	struct _mlhmmv_level_t* pnext_level;
+	mv_t terminal_mlrval; // xxx audit for absent/null initters respectively in the .c file
+	char is_terminal; // xxx typedef bool_t throughout
 } mlhmmv_xvalue_t;
 
 void            mlhmmv_xvalue_reset(mlhmmv_xvalue_t* pxvalue);

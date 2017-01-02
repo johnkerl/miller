@@ -34,8 +34,6 @@ OTHER:
 ================================================================
 UT FOR 5.0.0:
 
-* for-records-counts example
-
 * UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
 
 * matrix coverage
@@ -45,9 +43,10 @@ COOKBOOK CHECKLIST:
 
 cook 1:
 * simple stuff like headerless csv
-* ./se/ examples
-* memoization
 * true/false/1/0 data-cleaning cookbook section. include filter x 2 (preceded by put $nr=NR), & tee x 2.
+* ./se/ examples
+* for-records-counts example
+* memoization
 
 cook 2: verbs vs. dsl/func list
 * stdlib.mlr examples
