@@ -16,6 +16,8 @@ OTHER:
 
 ! non-string =~ regex: coerce LHS to string
 
+! expose strcmp & strcasecmp for lhm sorting
+
 * mlr paste (sjackman)
 
 * dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d
@@ -23,7 +25,7 @@ OTHER:
 
 * poki-run no '$ ' for comment lines
 
-! sort --fold !
+! mlr sort --fold !
 
 ! mlr step rsum int-to-int
 
@@ -52,7 +54,7 @@ cook 2: verbs vs. dsl/func list
 * stdlib.mlr examples
 * show mlr put '$*={...}' a full-featured cut/reorder/rename/label
 * seqgen vs.
-  mlr -n put 'begin{for (int i = 0; i < 10; i += 1) {emit {"a":i,"b":i**2} }}' then sort -nr a
+  mlr -n put 'begin {for (int i = 0; i < 10; i += 1) {emit {"a":i,"b":i**2} }}' then sort -nr a
 
 cook 3: fun stuff:
 * mand
@@ -81,9 +83,9 @@ MAPVAR CHECKLIST:
   lhmsmv -> mlhmmv?? need to be careful with int-key gets ... char* field_name in many places ...
 
 ! sortk sortv sortf
-  -> how to compare map-valued keys? recurse?
+  -> how to compare map-valued keys on sortv? recurse?
   -> string keys before/after int?
-  -> how to incorporate numeric & lexical flags
+  -> how to incorporate numeric & lexical flags -- defer all complexity to sortf?
 
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
