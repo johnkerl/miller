@@ -92,7 +92,7 @@ static void free_triple_for(mlr_dsl_cst_statement_t* pstatement) {
 
 	triple_for_state_t* pstate = pstatement->pvstate;
 
-    if (pstate->ptriple_for_start_statements != NULL) {
+	if (pstate->ptriple_for_start_statements != NULL) {
 		for (sllve_t* pe = pstate->ptriple_for_start_statements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* ps = pe->pvvalue;
 			mlr_dsl_cst_statement_free(ps);
@@ -100,7 +100,7 @@ static void free_triple_for(mlr_dsl_cst_statement_t* pstatement) {
 		sllv_free(pstate->ptriple_for_start_statements);
 	}
 
-    if (pstate->ptriple_for_pre_continuation_statements != NULL) {
+	if (pstate->ptriple_for_pre_continuation_statements != NULL) {
 		for (sllve_t* pe = pstate->ptriple_for_pre_continuation_statements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* ps = pe->pvvalue;
 			mlr_dsl_cst_statement_free(ps);
@@ -112,7 +112,7 @@ static void free_triple_for(mlr_dsl_cst_statement_t* pstatement) {
 		pstate->ptriple_for_continuation_evaluator->pfree_func(pstate->ptriple_for_continuation_evaluator);
 	}
 
-    if (pstate->ptriple_for_update_statements != NULL) {
+	if (pstate->ptriple_for_update_statements != NULL) {
 		for (sllve_t* pe = pstate->ptriple_for_update_statements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* ps = pe->pvvalue;
 			mlr_dsl_cst_statement_free(ps);
