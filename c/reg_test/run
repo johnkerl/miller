@@ -5687,6 +5687,13 @@ run_mlr --opprint --from $indir/abixy put '
 '
 
 # ----------------------------------------------------------------
+announce MAPVARS IN SCALAR FUNCTION-CALL CONTEXTS
+
+mlr_expect_fail --from $indir/abixy put '$z=strlen($*)'
+mlr_expect_fail --from $indir/abixy put '$z=strlen({})'
+run_mlr --from $indir/abixy put 'a={}; $z=strlen(a)'
+
+# ----------------------------------------------------------------
 announce MAPVAR ASSIGNMENTS TO FULL SREC
 
 run_mlr --from $indir/xyz2 put '$* = {"a":1, "b": {"x":8,"y":9}, "c":3}'
@@ -5700,6 +5707,7 @@ run_mlr --from $indir/xyz2 put '@c[1][2] = 3; $* = @*'
 run_mlr --from $indir/xyz2 put 'a = 1; $* = a'
 run_mlr --from $indir/xyz2 put 'b[1] = 2; $* = b'
 run_mlr --from $indir/xyz2 put 'c[1][2] = 3; $* = c'
+mlr_expect_fail --from $indir/xyz2 put '$* = 3'
 
 run_mlr --from $indir/xyz2 put '
   func map_valued_func() {
@@ -5715,13 +5723,6 @@ run_mlr --from $indir/xyz2 put '
   }
   $* = map_valued_func();
 '
-
-# ----------------------------------------------------------------
-announce MAPVARS IN SCALAR CONTEXTS
-
-mlr_expect_fail --from $indir/abixy put '$z=strlen($*)'
-mlr_expect_fail --from $indir/abixy put '$z=strlen({})'
-run_mlr --from $indir/abixy put 'a={}; $z=strlen(a)'
 
 # ----------------------------------------------------------------
 announce MAPVAR ASSIGNMENTS TO FULL OOSVAR
