@@ -1,7 +1,7 @@
 ================================================================
 BUGFIXES
 
-:D
+* mlr --from x --itsvlite --oxtab put -q 'o=splitnv($foo, ":"); for (k,v in o) {emit mapsum($*, {"fp":v})}'
 
 ================================================================
 NON-RELEASE:
@@ -55,6 +55,10 @@ cook 1:
 * ./se/ examples
 * for-records-counts example
 * memoization
+* make this easier:
+  mlr --from x --itsvlite --oxtab put 'o=splitnv($foo, ":"); for (k,v in o) {$["p".k]=v}'
+  mlr --from x --itsvlite --oxtab put 'o=splitnv($foo, ":"); $*=mapsum($*,o)'
+  mlr --from x --itsvlite --oxtab put -q 'o=splitnv($foo, ":"); for (k,v in o) {emit mapsum($*, {"fp":v})}'
 
 cook 2: verbs vs. dsl/func list
 * stdlib.mlr examples
