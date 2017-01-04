@@ -47962,7 +47962,29 @@ mlr --from ./reg_test/input/xyz2 put c[1][2] = 3; @* = c; dump
 }
 x=3,y=4,z=5
 
-mlr --from ./reg_test/input/xyz2 put func map_valued_func() { return {"a":1,"b":2}} @* = map_valued_func(); dump a; dump
+mlr --from ./reg_test/input/xyz2 put @* = 3
+x=3,y=4,z=5
+
+mlr --from ./reg_test/input/xyz2 put 
+  func map_valued_func() {
+    return {"a":1,"b":2}
+  }
+  map m = map_valued_func();
+  @* = m;
+  dump
+
+{
+  "a": 1,
+  "b": 2
+}
+x=3,y=4,z=5
+
+mlr --from ./reg_test/input/xyz2 put 
+  func map_valued_func() {
+    return {"a":1,"b":2}
+  }
+  @* = map_valued_func();
+  dump
 
 {
   "a": 1,

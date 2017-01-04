@@ -73,6 +73,8 @@ cook 4: weird stuff
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
 
+!!! MT_ERROR vs. fatal vs. skip assign. iron it out!
+
 * movefirst/movelast funcs? as in-place subrs or not?
 * like sort funcs -- as in-place subrs?
 
@@ -80,7 +82,7 @@ MAPVAR CHECKLIST:
 
 ! memmgt for ephemeral boxed xvals
 
-* feels weird: '$*=3' is a syntax error but 'o=3;$*=o' is not.
+* feels weird: '$*=3' is a syntax error but 'o=3;$*=o' is not. also '@*=3' is not a syntax error.
 
 * emittable/dumpable/etc md_rhs -> more specific fcn-call.
 
