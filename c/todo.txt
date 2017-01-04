@@ -1,7 +1,11 @@
 ================================================================
 BUGFIXES
 
-* mlr --from x --itsvlite --oxtab put -q 'o=splitnv($foo, ":"); for (k,v in o) {emit mapsum($*, {"fp":v})}'
+* segv:
+  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ":"); for (k,v in o) {$["b".k]=v}'
+  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ","); for (k,v in o) {$["b".k]=v}'
+  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ","); for (k,v in o) {emit mapsum($*, {"b":v})}'
+  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'
 
 ================================================================
 NON-RELEASE:
@@ -56,9 +60,10 @@ cook 1:
 * for-records-counts example
 * memoization
 * make this easier:
-  mlr --from x --itsvlite --oxtab put 'o=splitnv($foo, ":"); for (k,v in o) {$["p".k]=v}'
-  mlr --from x --itsvlite --oxtab put 'o=splitnv($foo, ":"); $*=mapsum($*,o)'
-  mlr --from x --itsvlite --oxtab put -q 'o=splitnv($foo, ":"); for (k,v in o) {emit mapsum($*, {"fp":v})}'
+
+  mlr --from segv.tsv --itsvlite --oxtab put 'o=splitnv($b, ","); for (k,v in o) {$["p".k]=v}'
+  mlr --from segv.tsv --itsvlite --oxtab put 'o=splitnv($b, ","); $*=mapsum($*,o)'
+  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ","); for (k,v in o) {emit mapsum($*, {"fp":v})}'
 
 cook 2: verbs vs. dsl/func list
 * stdlib.mlr examples
