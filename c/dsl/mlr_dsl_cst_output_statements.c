@@ -1464,7 +1464,7 @@ static void handle_dump(
 		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE, FALSE, "", pstate->stdfp); // xxx mk simpler call w/ dfl args
 	}
 
-	if (!boxed_xval.xval.is_terminal && boxed_xval.is_ephemeral) {
+	if (boxed_xval.is_ephemeral) {
 		mlhmmv_xvalue_free(&boxed_xval.xval);
 	}
 }
@@ -1500,7 +1500,7 @@ static void handle_dump_to_file(
 		free(filename);
 	mv_free(&filename_mv);
 
-	if (!boxed_xval.xval.is_terminal && boxed_xval.is_ephemeral) {
+	if (boxed_xval.is_ephemeral) {
 		mlhmmv_xvalue_free(&boxed_xval.xval);
 	}
 }

@@ -190,11 +190,11 @@ static void rxval_evaluator_from_map_literal_aux(
 		if (pkvpair->is_terminal) {
 			boxed_xval_t boxed_xval = pkvpair->pxval_evaluator->pprocess_func(
 				pkvpair->pxval_evaluator->pvstate, pvars);
-			if (!boxed_xval.xval.is_terminal && !boxed_xval.is_ephemeral) {
+			if (boxed_xval.is_ephemeral) {
+				mlhmmv_level_put_xvalue_singly_keyed(plevel, &mvkey, &boxed_xval.xval);
+			} else {
 				mlhmmv_xvalue_t copy_xval = mlhmmv_xvalue_copy(&boxed_xval.xval);
 				mlhmmv_level_put_xvalue_singly_keyed(plevel, &mvkey, &copy_xval);
-			} else {
-				mlhmmv_level_put_xvalue_singly_keyed(plevel, &mvkey, &boxed_xval.xval);
 			}
 		} else {
 			mlhmmv_level_t* pnext_level = mlhmmv_level_put_empty_map(plevel, &mvkey);

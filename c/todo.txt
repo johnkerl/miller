@@ -1,13 +1,6 @@
 ================================================================
 BUGFIXES
 
-* segv:
-k mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ":"); for (k,v in o) {$["b".k]=v}'
-k mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ","); for (k,v in o) {$["b".k]=v}'
-k mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ","); for (k,v in o) {emit mapsum($*, {"b":v})}'
-  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'
-  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit {k:v}}'
-
 * non-strings should be non-split (length-1 omap). or, coerced to string.
 
 ================================================================
@@ -73,6 +66,16 @@ cook 2: verbs vs. dsl/func list
 * show mlr put '$*={...}' a full-featured cut/reorder/rename/label
 * seqgen vs.
   mlr -n put 'begin {for (int i = 0; i < 10; i += 1) {emit {"a":i,"b":i**2} }}' then sort -nr a
+
+* xxx:
+  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ":"); for (k,v in o) {$["b".k]=v}'
+  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ","); for (k,v in o) {$["b".k]=v}'
+  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ","); for (k,v in o) {emit mapsum($*, {"b":v})}'
+  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'
+  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit {k:v}}'
+  mlr --from segv.tsv --itsvlite --oxtab put -q '                   for (k,v in $*) {emit {k:v}}'
+  mlr --from segv.tsv --itsvlite --oxtab put -q 'o={}; for (k,v in $*) {o[k]=v}; emit o'
+  mlr --from segv.tsv --itsvlite --oxtab put -q '                for (k,v in {1:2}) {emit {k:v}}'
 
 cook 3: fun stuff:
 * mand
