@@ -143,7 +143,6 @@ boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval)
 		mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		i++;
 	}
-
 	free(input);
 	return box_ephemeral_xval(map);
 }

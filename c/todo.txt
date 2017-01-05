@@ -7,6 +7,8 @@ BUGFIXES
   mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ","); for (k,v in o) {emit mapsum($*, {"b":v})}'
   mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'
 
+  -> non-strings should be non-split (length-1 omap)
+
 ================================================================
 NON-RELEASE:
 

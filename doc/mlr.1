@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2016-12-24
+.\"      Date: 2017-01-05
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2016-12-24" "\ \&" "\ \&"
+.TH "MILLER" "1" "2017-01-05" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1021,8 +1021,8 @@ Options:
 -g         Do global replacement within each field name rather than
            first-match replacement.
 Examples:
-mlr rename -f old_name,new_name'
-mlr rename -f old_name_1,new_name_1,old_name_2,new_name_2'
+mlr rename old_name,new_name'
+mlr rename old_name_1,new_name_1,old_name_2,new_name_2'
 mlr rename -r 'Date_[0-9]+,Date,'  Rename all such fields to be "Date"
 mlr rename -r '"Date_[0-9]+",Date' Same
 mlr rename -r 'Date_([0-9]+).*,\e1' Rename all such fields to be of the form 20151015

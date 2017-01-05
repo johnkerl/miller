@@ -281,14 +281,24 @@ static boxed_xval_t rxval_evaluator_x_ss_func(void* pvstate, variables_t* pvars)
 	boxed_xval_t bxval2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
 
 	if (!bxval1.xval.is_terminal) {
+		mv_free(&bxval1.xval.terminal_mlrval);
 		return box_ephemeral_val(mv_error());
 	}
 	// xxx to-string ...
+	if (!mv_is_string_or_empty(&bxval1.xval.terminal_mlrval)) {
+		mv_free(&bxval1.xval.terminal_mlrval);
+		return box_ephemeral_val(mv_error());
+	}
 
 	if (!bxval2.xval.is_terminal) {
+		mv_free(&bxval2.xval.terminal_mlrval);
 		return box_ephemeral_val(mv_error());
 	}
 	// xxx to-string ...
+	if (!mv_is_string_or_empty(&bxval2.xval.terminal_mlrval)) {
+		mv_free(&bxval2.xval.terminal_mlrval);
+		return box_ephemeral_val(mv_error());
+	}
 
 	boxed_xval_t bxrv = pstate->pfunc(&bxval1, &bxval2);
 
