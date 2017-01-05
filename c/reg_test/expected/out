@@ -47860,8 +47860,7 @@ mlr --from ./reg_test/input/xyz2 put c[1][2] = 3; $* = c
 
 
 mlr --from ./reg_test/input/xyz2 put $* = 3
-mlr DSL: syntax error at "3"
-mlr put: syntax error on DSL parse of '$* = 3'
+
 
 mlr --from ./reg_test/input/xyz2 put 
   func map_valued_func() {
