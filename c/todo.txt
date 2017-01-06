@@ -211,12 +211,12 @@ MAPVARS UT MATRIX *** matrix
 ? assign LHS localvar           from RHS maplit             alloc ephem & move
 ? assign LHS localvar           from RHS func-retval        alloc ephem & move
 
-? assign LHS oosvar             from RHS localvar           ref & copy
-? assign LHS oosvar             from RHS oosvar             ref & copy
-? assign LHS oosvar             from RHS full-oosvar        ref & copy
-? assign LHS oosvar             from RHS full-srec          copy elementwise
-? assign LHS oosvar             from RHS maplit             elloc ephem & move
-? assign LHS oosvar             from RHS func-retval        alloc ephem & move
+k assign LHS oosvar             from RHS localvar           ref & copy
+k assign LHS oosvar             from RHS oosvar             ref & copy
+k assign LHS oosvar             from RHS full-oosvar        ref & copy
+k assign LHS oosvar             from RHS full-srec          copy elementwise
+k assign LHS oosvar             from RHS maplit             elloc ephem & move
+k assign LHS oosvar             from RHS func-retval        alloc ephem & move
 
 k assign LHS full-oosvar        from RHS localvar           ref & copy & move
 k assign LHS full-oosvar        from RHS oosvar             ref & copy & move

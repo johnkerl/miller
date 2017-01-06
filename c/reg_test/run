@@ -5763,6 +5763,9 @@ announce MAPVAR ASSIGNMENTS TO OOSVAR
 
 run_mlr --from $indir/xyz2 put -q '@o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump @o'
 run_mlr --from $indir/xyz2 put -q '@o = @o; dump @o'
+run_mlr --from $indir/xyz2 put -q '@o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump; @o = @*; dump'
+run_mlr --from $indir/xyz2 put -q '@o = $*; dump @o'
+run_mlr --from $indir/xyz2 put -q '@o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump @o; @o = @o; dump @o'
 run_mlr --from $indir/xyz2 put -q '@o = {"a":1, "b": {"x":8,"y":9}, "c":3}; @o = @o; dump @o'
 run_mlr --from $indir/xyz2 put -q '@a = 1; @o = @a; dump @o'
 run_mlr --from $indir/xyz2 put -q '@b[1] = 2; @o = @b; dump @o'

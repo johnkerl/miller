@@ -48030,6 +48030,55 @@ mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3};
 mlr --from ./reg_test/input/xyz2 put -q @o = @o; dump @o
 
 
+mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump; @o = @*; dump
+{
+  "o": {
+    "a": 1,
+    "b": {
+      "x": 8,
+      "y": 9
+    },
+    "c": 3
+  }
+}
+{
+  "o": {
+    "o": {
+      "a": 1,
+      "b": {
+        "x": 8,
+        "y": 9
+      },
+      "c": 3
+    }
+  }
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @o = $*; dump @o
+{
+  "x": 3,
+  "y": 4,
+  "z": 5
+}
+
+mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump @o; @o = @o; dump @o
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+
 mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; @o = @o; dump @o
 {
   "a": 1,
