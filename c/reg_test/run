@@ -5783,6 +5783,7 @@ announce MAPVAR ASSIGNMENTS TO MAP-TYPED LOCAL
 
 run_mlr         --from $indir/xyz2 put -q 'map o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump o'
 mlr_expect_fail --from $indir/xyz2 put -q 'map o = @o; dump o'
+run_mlr         --from $indir/xyz2 put -q 'map o = $*; dump o'
 run_mlr         --from $indir/xyz2 put -q 'map o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o'
 mlr_expect_fail --from $indir/xyz2 put -q '@a = 1; map o = @a; dump o'
 run_mlr         --from $indir/xyz2 put -q '@b[1] = 2; map o = @b; dump o'
@@ -5800,6 +5801,7 @@ announce MAPVAR ASSIGNMENTS TO VAR-TYPED LOCAL
 
 run_mlr --from $indir/xyz2 put -q 'var o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump o'
 run_mlr --from $indir/xyz2 put -q 'var o = @o; dump o'
+run_mlr --from $indir/xyz2 put -q 'var o = $*; dump o'
 run_mlr --from $indir/xyz2 put -q 'var o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o'
 run_mlr --from $indir/xyz2 put -q '@a = 1; var o = @a; dump o'
 run_mlr --from $indir/xyz2 put -q '@b[1] = 2; var o = @b; dump o'
@@ -5817,6 +5819,7 @@ announce MAPVAR ASSIGNMENTS TO UNTYPED LOCAL
 
 run_mlr --from $indir/xyz2 put -q 'o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump o'
 run_mlr --from $indir/xyz2 put -q 'o = @o; dump o'
+run_mlr --from $indir/xyz2 put -q 'o = $*; dump o'
 run_mlr --from $indir/xyz2 put -q 'o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o'
 run_mlr --from $indir/xyz2 put -q '@a = 1; o = @a; dump o'
 run_mlr --from $indir/xyz2 put -q '@b[1] = 2; o = @b; dump o'

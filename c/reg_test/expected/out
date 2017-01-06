@@ -48394,6 +48394,18 @@ mlr --from ./reg_test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":
 mlr --from ./reg_test/input/xyz2 put -q map o = @o; dump o
 mlr: map type assertion for variable o unmet by value "" with type absent.
 
+mlr --from ./reg_test/input/xyz2 put -q map o = $*; dump o
+{
+  "x": 3,
+  "y": 4,
+  "z": 5
+}
+{
+  "x": 6,
+  "y": 7,
+  "u": 8
+}
+
 mlr --from ./reg_test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
 {
   "a": 1,
@@ -48529,6 +48541,18 @@ mlr --from ./reg_test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":
 mlr --from ./reg_test/input/xyz2 put -q var o = @o; dump o
 
 
+
+mlr --from ./reg_test/input/xyz2 put -q var o = $*; dump o
+{
+  "x": 3,
+  "y": 4,
+  "z": 5
+}
+{
+  "x": 6,
+  "y": 7,
+  "u": 8
+}
 
 mlr --from ./reg_test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
 {
@@ -48667,6 +48691,18 @@ mlr --from ./reg_test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; 
 mlr --from ./reg_test/input/xyz2 put -q o = @o; dump o
 
 
+
+mlr --from ./reg_test/input/xyz2 put -q o = $*; dump o
+{
+  "x": 3,
+  "y": 4,
+  "z": 5
+}
+{
+  "x": 6,
+  "y": 7,
+  "u": 8
+}
 
 mlr --from ./reg_test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
 {

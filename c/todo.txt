@@ -204,12 +204,12 @@ MAPVARS UT MATRIX *** matrix
 
 ? parameter marshaling in single-rhs-assign-to-map-lhs context
 
-? assign LHS localvar           from RHS localvar           ref & copy
-? assign LHS localvar           from RHS oosvar             ref & copy
-? assign LHS localvar           from RHS full-oosvar        ref & copy
-? assign LHS localvar           from RHS full-srec          copy elementwise
-? assign LHS localvar           from RHS maplit             alloc ephem & move
-? assign LHS localvar           from RHS func-retval        alloc ephem & move
+k assign LHS localvar           from RHS localvar           ref & copy
+k assign LHS localvar           from RHS oosvar             ref & copy
+k assign LHS localvar           from RHS full-oosvar        ref & copy
+k assign LHS localvar           from RHS full-srec          copy elementwise
+k assign LHS localvar           from RHS maplit             alloc ephem & move
+k assign LHS localvar           from RHS func-retval        alloc ephem & move
 
 k assign LHS oosvar             from RHS localvar           ref & copy
 k assign LHS oosvar             from RHS oosvar             ref & copy
