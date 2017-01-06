@@ -30521,18 +30521,28 @@ text="block", type=STATEMENT_BLOCK:
 mlr --from ./reg_test/input/xyz2 put -q func f() { return {1:2,3:4}}; for (k,v in f()){print "k=".k.",v=".v}
 k=1,v=2
 k=3,v=4
+k=1,v=2
+k=3,v=4
 
 mlr --from ./reg_test/input/xyz2 put for (k in $*) { print k}
 x
 y
 z
 x=3,y=4,z=5
+x
+y
+u
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put m=$*; for (k in m) { print k}
 x
 y
 z
 x=3,y=4,z=5
+x
+y
+u
+x=6,y=7,u=8
 
 
 ================================================================
@@ -47828,38 +47838,50 @@ MAPVAR ASSIGNMENTS TO FULL SREC
 
 mlr --from ./reg_test/input/xyz2 put $* = {"a":1, "b": {"x":8,"y":9}, "c":3}
 a=1,c=3
+a=1,c=3
 
 mlr --from ./reg_test/input/xyz2 put $* = $*
 x=3,y=4,z=5
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put @a = 1; $* = @a
 
 
+
 mlr --from ./reg_test/input/xyz2 put @b[1] = 2; $* = @b
+1=2
 1=2
 
 mlr --from ./reg_test/input/xyz2 put @c[1][2] = 3; $* = @c
 
 
+
 mlr --from ./reg_test/input/xyz2 put @a = 1; $* = @*
+a=1
 a=1
 
 mlr --from ./reg_test/input/xyz2 put @b[1] = 2; $* = @*
 
 
+
 mlr --from ./reg_test/input/xyz2 put @c[1][2] = 3; $* = @*
+
 
 
 mlr --from ./reg_test/input/xyz2 put a = 1; $* = a
 
 
+
 mlr --from ./reg_test/input/xyz2 put b[1] = 2; $* = b
+1=2
 1=2
 
 mlr --from ./reg_test/input/xyz2 put c[1][2] = 3; $* = c
 
 
+
 mlr --from ./reg_test/input/xyz2 put $* = 3
+
 
 
 mlr --from ./reg_test/input/xyz2 put 
@@ -47870,6 +47892,7 @@ mlr --from ./reg_test/input/xyz2 put
   $* = m;
 
 a=1,b=2
+a=1,b=2
 
 mlr --from ./reg_test/input/xyz2 put 
   func map_valued_func() {
@@ -47877,6 +47900,7 @@ mlr --from ./reg_test/input/xyz2 put
   }
   $* = map_valued_func();
 
+a=1,b=2
 a=1,b=2
 
 
@@ -47893,6 +47917,15 @@ mlr --from ./reg_test/input/xyz2 put @* = {"a":1, "b": {"x":8,"y":9}, "c":3}; du
   "c": 3
 }
 x=3,y=4,z=5
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put @* = $*; dump
 {
@@ -47901,6 +47934,12 @@ mlr --from ./reg_test/input/xyz2 put @* = $*; dump
   "z": 5
 }
 x=3,y=4,z=5
+{
+  "x": 6,
+  "y": 7,
+  "u": 8
+}
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put @* = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump; @* = @*; dump
 {
@@ -47920,17 +47959,41 @@ mlr --from ./reg_test/input/xyz2 put @* = {"a":1, "b": {"x":8,"y":9}, "c":3}; du
   "c": 3
 }
 x=3,y=4,z=5
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put @a = 1; @* = @a; dump
 {
 }
 x=3,y=4,z=5
+{
+}
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put @b[1] = 2; @* = @b; dump
 {
   "1": 2
 }
 x=3,y=4,z=5
+{
+  "1": 2
+}
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put @c[1][2] = 3; @* = @c; dump
 {
@@ -47939,12 +48002,22 @@ mlr --from ./reg_test/input/xyz2 put @c[1][2] = 3; @* = @c; dump
   }
 }
 x=3,y=4,z=5
+{
+  "1": {
+    "2": 3
+  }
+}
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put @a = 1; @* = @*; dump
 {
   "a": 1
 }
 x=3,y=4,z=5
+{
+  "a": 1
+}
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put @b[1] = 2; @* = @*; dump
 {
@@ -47953,6 +48026,12 @@ mlr --from ./reg_test/input/xyz2 put @b[1] = 2; @* = @*; dump
   }
 }
 x=3,y=4,z=5
+{
+  "b": {
+    "1": 2
+  }
+}
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put @c[1][2] = 3; @* = @*; dump
 {
@@ -47963,17 +48042,32 @@ mlr --from ./reg_test/input/xyz2 put @c[1][2] = 3; @* = @*; dump
   }
 }
 x=3,y=4,z=5
+{
+  "c": {
+    "1": {
+      "2": 3
+    }
+  }
+}
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put a = 1; @* = a; dump
 {
 }
 x=3,y=4,z=5
+{
+}
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put b[1] = 2; @* = b; dump
 {
   "1": 2
 }
 x=3,y=4,z=5
+{
+  "1": 2
+}
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put c[1][2] = 3; @* = c; dump
 {
@@ -47982,9 +48076,16 @@ mlr --from ./reg_test/input/xyz2 put c[1][2] = 3; @* = c; dump
   }
 }
 x=3,y=4,z=5
+{
+  "1": {
+    "2": 3
+  }
+}
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put @* = 3
 x=3,y=4,z=5
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put 
   func map_valued_func() {
@@ -47999,6 +48100,11 @@ mlr --from ./reg_test/input/xyz2 put
   "b": 2
 }
 x=3,y=4,z=5
+{
+  "a": 1,
+  "b": 2
+}
+x=6,y=7,u=8
 
 mlr --from ./reg_test/input/xyz2 put 
   func map_valued_func() {
@@ -48012,6 +48118,11 @@ mlr --from ./reg_test/input/xyz2 put
   "b": 2
 }
 x=3,y=4,z=5
+{
+  "a": 1,
+  "b": 2
+}
+x=6,y=7,u=8
 
 
 ================================================================
@@ -48026,11 +48137,42 @@ mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3};
   },
   "c": 3
 }
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
 
 mlr --from ./reg_test/input/xyz2 put -q @o = @o; dump @o
 
 
+
 mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump; @o = @*; dump
+{
+  "o": {
+    "a": 1,
+    "b": {
+      "x": 8,
+      "y": 9
+    },
+    "c": 3
+  }
+}
+{
+  "o": {
+    "o": {
+      "a": 1,
+      "b": {
+        "x": 8,
+        "y": 9
+      },
+      "c": 3
+    }
+  }
+}
 {
   "o": {
     "a": 1,
@@ -48060,8 +48202,29 @@ mlr --from ./reg_test/input/xyz2 put -q @o = $*; dump @o
   "y": 4,
   "z": 5
 }
+{
+  "x": 6,
+  "y": 7,
+  "u": 8
+}
 
 mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump @o; @o = @o; dump @o
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
 {
   "a": 1,
   "b": {
@@ -48088,11 +48251,23 @@ mlr --from ./reg_test/input/xyz2 put -q @o = {"a":1, "b": {"x":8,"y":9}, "c":3};
   },
   "c": 3
 }
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
 
 mlr --from ./reg_test/input/xyz2 put -q @a = 1; @o = @a; dump @o
 1
+1
 
 mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; @o = @b; dump @o
+{
+  "1": 2
+}
 {
   "1": 2
 }
@@ -48103,16 +48278,37 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; @o = @c; dump @o
     "2": 3
   }
 }
+{
+  "1": {
+    "2": 3
+  }
+}
 
 mlr --from ./reg_test/input/xyz2 put -q @a = 1; @o = @*; dump @o
 {
   "a": 1
+}
+{
+  "a": 1,
+  "o": {
+    "a": 1
+  }
 }
 
 mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; @o = @*; dump @o
 {
   "b": {
     "1": 2
+  }
+}
+{
+  "b": {
+    "1": 2
+  },
+  "o": {
+    "b": {
+      "1": 2
+    }
   }
 }
 
@@ -48124,16 +48320,39 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; @o = @*; dump @o
     }
   }
 }
+{
+  "c": {
+    "1": {
+      "2": 3
+    }
+  },
+  "o": {
+    "c": {
+      "1": {
+        "2": 3
+      }
+    }
+  }
+}
 
 mlr --from ./reg_test/input/xyz2 put -q a = 1; @o = a; dump @o
+1
 1
 
 mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; @o = b; dump @o
 {
   "1": 2
 }
+{
+  "1": 2
+}
 
 mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; @o = c; dump @o
+{
+  "1": {
+    "2": 3
+  }
+}
 {
   "1": {
     "2": 3
@@ -48145,12 +48364,24 @@ mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"
   "a": 1,
   "b": 2
 }
+{
+  "a": 1,
+  "b": 2
+}
 
 
 ================================================================
 MAPVAR ASSIGNMENTS TO MAP-TYPED LOCAL
 
 mlr --from ./reg_test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump o
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
 {
   "a": 1,
   "b": {
@@ -48172,11 +48403,22 @@ mlr --from ./reg_test/input/xyz2 put -q map o = {"a":1, "b": {"x":8,"y":9}, "c":
   },
   "c": 3
 }
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
 
 mlr --from ./reg_test/input/xyz2 put -q @a = 1; map o = @a; dump o
 mlr: map type assertion for variable o unmet by value 1 with type int.
 
 mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; map o = @b; dump o
+{
+  "1": 2
+}
 {
   "1": 2
 }
@@ -48187,8 +48429,16 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; map o = @c; dump o
     "2": 3
   }
 }
+{
+  "1": {
+    "2": 3
+  }
+}
 
 mlr --from ./reg_test/input/xyz2 put -q @a = 1; map o = @*; dump o
+{
+  "a": 1
+}
 {
   "a": 1
 }
@@ -48199,8 +48449,20 @@ mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; map o = @*; dump o
     "1": 2
   }
 }
+{
+  "b": {
+    "1": 2
+  }
+}
 
 mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; map o = @*; dump o
+{
+  "c": {
+    "1": {
+      "2": 3
+    }
+  }
+}
 {
   "c": {
     "1": {
@@ -48216,6 +48478,9 @@ mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; map o = b; dump o
 {
   "1": 2
 }
+{
+  "1": 2
+}
 
 mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; map o = c; dump o
 {
@@ -48223,8 +48488,17 @@ mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; map o = c; dump o
     "2": 3
   }
 }
+{
+  "1": {
+    "2": 3
+  }
+}
 
 mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} map o = map_valued_func(); dump o
+{
+  "a": 1,
+  "b": 2
+}
 {
   "a": 1,
   "b": 2
@@ -48243,8 +48517,17 @@ mlr --from ./reg_test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":
   },
   "c": 3
 }
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
 
 mlr --from ./reg_test/input/xyz2 put -q var o = @o; dump o
+
 
 
 mlr --from ./reg_test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
@@ -48256,11 +48539,23 @@ mlr --from ./reg_test/input/xyz2 put -q var o = {"a":1, "b": {"x":8,"y":9}, "c":
   },
   "c": 3
 }
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
 
 mlr --from ./reg_test/input/xyz2 put -q @a = 1; var o = @a; dump o
 1
+1
 
 mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; var o = @b; dump o
+{
+  "1": 2
+}
 {
   "1": 2
 }
@@ -48271,13 +48566,26 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; var o = @c; dump o
     "2": 3
   }
 }
+{
+  "1": {
+    "2": 3
+  }
+}
 
 mlr --from ./reg_test/input/xyz2 put -q @a = 1; var o = @*; dump o
 {
   "a": 1
 }
+{
+  "a": 1
+}
 
 mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; var o = @*; dump o
+{
+  "b": {
+    "1": 2
+  }
+}
 {
   "b": {
     "1": 2
@@ -48292,11 +48600,22 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; var o = @*; dump o
     }
   }
 }
+{
+  "c": {
+    "1": {
+      "2": 3
+    }
+  }
+}
 
 mlr --from ./reg_test/input/xyz2 put -q a = 1; var o = a; dump o
 1
+1
 
 mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; var o = b; dump o
+{
+  "1": 2
+}
 {
   "1": 2
 }
@@ -48307,8 +48626,17 @@ mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; var o = c; dump o
     "2": 3
   }
 }
+{
+  "1": {
+    "2": 3
+  }
+}
 
 mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} var o = map_valued_func(); dump o
+{
+  "a": 1,
+  "b": 2
+}
 {
   "a": 1,
   "b": 2
@@ -48327,8 +48655,17 @@ mlr --from ./reg_test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; 
   },
   "c": 3
 }
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
 
 mlr --from ./reg_test/input/xyz2 put -q o = @o; dump o
+
 
 
 mlr --from ./reg_test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; o = o; dump o
@@ -48340,11 +48677,23 @@ mlr --from ./reg_test/input/xyz2 put -q o = {"a":1, "b": {"x":8,"y":9}, "c":3}; 
   },
   "c": 3
 }
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
 
 mlr --from ./reg_test/input/xyz2 put -q @a = 1; o = @a; dump o
 1
+1
 
 mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; o = @b; dump o
+{
+  "1": 2
+}
 {
   "1": 2
 }
@@ -48355,13 +48704,26 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; o = @c; dump o
     "2": 3
   }
 }
+{
+  "1": {
+    "2": 3
+  }
+}
 
 mlr --from ./reg_test/input/xyz2 put -q @a = 1; o = @*; dump o
 {
   "a": 1
 }
+{
+  "a": 1
+}
 
 mlr --from ./reg_test/input/xyz2 put -q @b[1] = 2; o = @*; dump o
+{
+  "b": {
+    "1": 2
+  }
+}
 {
   "b": {
     "1": 2
@@ -48376,11 +48738,22 @@ mlr --from ./reg_test/input/xyz2 put -q @c[1][2] = 3; o = @*; dump o
     }
   }
 }
+{
+  "c": {
+    "1": {
+      "2": 3
+    }
+  }
+}
 
 mlr --from ./reg_test/input/xyz2 put -q a = 1; o = a; dump o
 1
+1
 
 mlr --from ./reg_test/input/xyz2 put -q b[1] = 2; o = b; dump o
+{
+  "1": 2
+}
 {
   "1": 2
 }
@@ -48391,8 +48764,17 @@ mlr --from ./reg_test/input/xyz2 put -q c[1][2] = 3; o = c; dump o
     "2": 3
   }
 }
+{
+  "1": {
+    "2": 3
+  }
+}
 
 mlr --from ./reg_test/input/xyz2 put -q func map_valued_func() { return {"a":1,"b":2}} o = map_valued_func(); dump o
+{
+  "a": 1,
+  "b": 2
+}
 {
   "a": 1,
   "b": 2
@@ -50484,6 +50866,27 @@ tsa absent
 tsx int
 ts  map
 
+x   6
+y   7
+u   8
+ta  map
+ta1 int
+ta7 absent
+tb  map
+tb1 map
+tb7 absent
+tc  map
+tc1 int
+tc7 absent
+td  map
+td1 map
+td7 absent
+te1 int
+te2 map
+tsa absent
+tsx int
+ts  map
+
 
 ================================================================
 HASKEY
@@ -50514,39 +50917,51 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,haskey3=false
 
 mlr --from ./reg_test/input/xyz2 put $haskeya = haskey({3:4}, "a")
 x=3,y=4,z=5,haskeya=false
+x=6,y=7,u=8,haskeya=false
 
 mlr --from ./reg_test/input/xyz2 put $haskey3 = haskey({3:4}, 3)
 x=3,y=4,z=5,haskey3=true
+x=6,y=7,u=8,haskey3=true
 
 mlr --from ./reg_test/input/xyz2 put $haskey3 = haskey({3:4}, 4)
 x=3,y=4,z=5,haskey3=false
+x=6,y=7,u=8,haskey3=false
 
 mlr --from ./reg_test/input/xyz2 put o = {3:4}; $haskeya = haskey(o, "a")
 x=3,y=4,z=5,haskeya=false
+x=6,y=7,u=8,haskeya=false
 
 mlr --from ./reg_test/input/xyz2 put o = {3:4}; $haskey3 = haskey(o, 3)
 x=3,y=4,z=5,haskey3=true
+x=6,y=7,u=8,haskey3=true
 
 mlr --from ./reg_test/input/xyz2 put o = {3:4}; $haskey3 = haskey(o, 4)
 x=3,y=4,z=5,haskey3=false
+x=6,y=7,u=8,haskey3=false
 
 mlr --from ./reg_test/input/xyz2 put @o = {3:4}; $haskeya = haskey(@o, "a")
 x=3,y=4,z=5,haskeya=false
+x=6,y=7,u=8,haskeya=false
 
 mlr --from ./reg_test/input/xyz2 put @o = {3:4}; $haskey3 = haskey(@o, 3)
 x=3,y=4,z=5,haskey3=true
+x=6,y=7,u=8,haskey3=true
 
 mlr --from ./reg_test/input/xyz2 put @o = {3:4}; $haskey3 = haskey(@o, 4)
 x=3,y=4,z=5,haskey3=false
+x=6,y=7,u=8,haskey3=false
 
 mlr --from ./reg_test/input/xyz2 put o = "3:4"; $haskeya = haskey(@o, "a")
 x=3,y=4,z=5,haskeya=(error)
+x=6,y=7,u=8,haskeya=(error)
 
 mlr --from ./reg_test/input/xyz2 put o = "3:4"; $haskey3 = haskey(@o, 3)
 x=3,y=4,z=5,haskey3=(error)
+x=6,y=7,u=8,haskey3=(error)
 
 mlr --from ./reg_test/input/xyz2 put o = "3:4"; $haskey3 = haskey(@o, 4)
 x=3,y=4,z=5,haskey3=(error)
+x=6,y=7,u=8,haskey3=(error)
 
 
 ================================================================
@@ -50578,12 +50993,15 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,length=5
 
 mlr --from ./reg_test/input/xyz2 put $length= length({3:4, 5:{6:7}, 8:{9:{10:11}}})
 x=3,y=4,z=5,length=3
+x=6,y=7,u=8,length=3
 
 mlr --from ./reg_test/input/xyz2 put o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $length = length(o)
 x=3,y=4,z=5,length=3
+x=6,y=7,u=8,length=3
 
 mlr --from ./reg_test/input/xyz2 put @o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $length = length(@o)
 x=3,y=4,z=5,length=3
+x=6,y=7,u=8,length=3
 
 mlr --from ./reg_test/input/abixy-het put $depth = depth($a)
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,depth=0
@@ -50611,12 +51029,15 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,depth=1
 
 mlr --from ./reg_test/input/xyz2 put $depth= depth({3:4, 5:{6:7}, 8:{9:{10:11}}})
 x=3,y=4,z=5,depth=3
+x=6,y=7,u=8,depth=3
 
 mlr --from ./reg_test/input/xyz2 put o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $depth = depth(o)
 x=3,y=4,z=5,depth=3
+x=6,y=7,u=8,depth=3
 
 mlr --from ./reg_test/input/xyz2 put @o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $depth = depth(@o)
 x=3,y=4,z=5,depth=3
+x=6,y=7,u=8,depth=3
 
 mlr --from ./reg_test/input/abixy-het put $leafcount = leafcount($a)
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,leafcount=1
@@ -50644,12 +51065,15 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,leafcount=5
 
 mlr --from ./reg_test/input/xyz2 put $leafcount= leafcount({3:4, 5:{6:7}, 8:{9:{10:11}}})
 x=3,y=4,z=5,leafcount=3
+x=6,y=7,u=8,leafcount=3
 
 mlr --from ./reg_test/input/xyz2 put o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $leafcount = leafcount(o)
 x=3,y=4,z=5,leafcount=3
+x=6,y=7,u=8,leafcount=3
 
 mlr --from ./reg_test/input/xyz2 put @o = {3:4, 5:{6:7}, 8:{9:{10:11}}}; $leafcount = leafcount(@o)
 x=3,y=4,z=5,leafcount=3
+x=6,y=7,u=8,leafcount=3
 
 
 ================================================================
