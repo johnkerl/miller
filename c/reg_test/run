@@ -5728,7 +5728,8 @@ run_mlr --from $indir/xyz2 put '
 announce MAPVAR ASSIGNMENTS TO FULL OOSVAR
 
 run_mlr --from $indir/xyz2 put '@* = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump'
-run_mlr --from $indir/xyz2 put '@* = @*; dump'
+run_mlr --from $indir/xyz2 put '@* = $*; dump'
+run_mlr --from $indir/xyz2 put '@* = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump; @* = @*; dump'
 run_mlr --from $indir/xyz2 put '@a = 1; @* = @a; dump'
 run_mlr --from $indir/xyz2 put '@b[1] = 2; @* = @b; dump'
 run_mlr --from $indir/xyz2 put '@c[1][2] = 3; @* = @c; dump'

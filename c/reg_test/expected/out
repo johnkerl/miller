@@ -47894,8 +47894,30 @@ mlr --from ./reg_test/input/xyz2 put @* = {"a":1, "b": {"x":8,"y":9}, "c":3}; du
 }
 x=3,y=4,z=5
 
-mlr --from ./reg_test/input/xyz2 put @* = @*; dump
+mlr --from ./reg_test/input/xyz2 put @* = $*; dump
 {
+  "x": 3,
+  "y": 4,
+  "z": 5
+}
+x=3,y=4,z=5
+
+mlr --from ./reg_test/input/xyz2 put @* = {"a":1, "b": {"x":8,"y":9}, "c":3}; dump; @* = @*; dump
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
+}
+{
+  "a": 1,
+  "b": {
+    "x": 8,
+    "y": 9
+  },
+  "c": 3
 }
 x=3,y=4,z=5
 

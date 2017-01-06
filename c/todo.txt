@@ -42,9 +42,9 @@ OTHER:
 ================================================================
 UT FOR 5.0.0:
 
-* UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
-
 * matrix coverage
+
+? UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
 
 ----------------------------------------------------------------
 COOKBOOK CHECKLIST:
@@ -175,7 +175,7 @@ MAPVAR CHECKLIST:
   o copy semantics
 
 ----------------------------------------------------------------
-MAPVARS UT MATRIX
+MAPVARS UT MATRIX *** matrix
 
 ? dump w/ no args
 ? dump localvar    -- ensure scalar-out is printed > ref only
@@ -218,12 +218,12 @@ MAPVARS UT MATRIX
 ? assign LHS oosvar             from RHS maplit             elloc ephem & move
 ? assign LHS oosvar             from RHS func-retval        alloc ephem & move
 
-? assign LHS full-oosvar        from RHS localvar           ref & copy & move
-? assign LHS full-oosvar        from RHS oosvar             ref & copy & move
-? assign LHS full-oosvar        from RHS full-oosvar        no-op
-? assign LHS full-oosvar        from RHS full-srec          copy & move
-? assign LHS full-oosvar        from RHS maplit             alloc ephem & move
-? assign LHS full-oosvar        from RHS func-retval        alloc ephem & move
+k assign LHS full-oosvar        from RHS localvar           ref & copy & move
+k assign LHS full-oosvar        from RHS oosvar             ref & copy & move
+k assign LHS full-oosvar        from RHS full-oosvar        no-op
+k assign LHS full-oosvar        from RHS full-srec          copy & move
+k assign LHS full-oosvar        from RHS maplit             alloc ephem & move
+k assign LHS full-oosvar        from RHS func-retval        alloc ephem & move
 
 k assign LHS full-srec          from RHS localvar           ref & copy & move
 k assign LHS full-srec          from RHS oosvar             ref & write elementwise
