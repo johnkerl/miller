@@ -129,6 +129,7 @@ boxed_xval_t variadic_mapdiff_xfunc(boxed_xval_t* pbxvals, int nxvals) {
 
 // ----------------------------------------------------------------
 // Precondition: the caller has ensured that both arguments are string-valued terminals.
+// xxx XXX here
 boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval) {
 	mlhmmv_xvalue_t map = mlhmmv_xvalue_alloc_empty_map();
 	char* input = mlr_strdup_or_die(pstringval->xval.terminal_mlrval.u.strv);
