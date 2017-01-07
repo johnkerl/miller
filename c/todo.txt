@@ -20,7 +20,7 @@ OTHER:
 
 ! expose movefirst/movelast funcs
 
-! mlr sort --fold !
+! mlr sort --fold!
 
 ! mlr step rsum int-to-int
 
