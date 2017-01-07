@@ -105,7 +105,7 @@ compile a single binary, `scp` it to a faraway machine, and expect it to work.
 Documentation:
 
 * **For full documentation, please visit** http://johnkerl.org/miller/doc
-* Note: head docs at http://johnkerl.org/miller/doc/index.html match head code
+* Note: head docs at http://johnkerl.org/miller-releases/miller-head/doc/index.html match head code
 at https://github.com/johnkerl/miller.  Release-specific docs at
 http://johnkerl.org/miller/doc/release-docs.html match release-specific code at
 https://github.com/johnkerl/miller/tags.
