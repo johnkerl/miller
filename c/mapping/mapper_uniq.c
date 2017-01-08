@@ -10,12 +10,15 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
+#define DEFAULT_OUTPUT_FIELD_NAME "count"
+
 typedef struct _mapper_uniq_state_t {
 	ap_state_t* pargp;
 	slls_t* pgroup_by_field_names;
 	int show_counts;
 	int show_num_distinct_only;
 	lhmslv_t* pcounts_by_group;
+	char* output_field_name;
 } mapper_uniq_state_t;
 
 static void      mapper_uniq_usage(FILE* o, char* argv0, char* verb);
@@ -25,7 +28,7 @@ static void      mapper_count_distinct_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_uniq_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
-	int show_counts, int show_num_distinct_only);
+	int show_counts, int show_num_distinct_only, char* output_field_name);
 static void      mapper_uniq_free(mapper_t* pmapper);
 
 static sllv_t* mapper_uniq_process_num_distinct_only(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -52,6 +55,7 @@ static void mapper_count_distinct_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "-f {a,b,c}    Field names for distinct count.\n");
 	fprintf(o, "-n            Show only the number of distinct values.\n");
+	fprintf(o, "-o {name}     Field name for output count. Default \"%s\".\n", DEFAULT_OUTPUT_FIELD_NAME);
 	fprintf(o, "Prints number of records having distinct values for specified field names.\n");
 	fprintf(o, "Same as uniq -c.\n");
 }
@@ -62,12 +66,14 @@ static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** ar
 {
 	slls_t* pfield_names = NULL;
 	int     show_num_distinct_only = FALSE;
+	char*   output_field_name = DEFAULT_OUTPUT_FIELD_NAME;
 
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_list_flag(pstate, "-f", &pfield_names);
 	ap_define_true_flag(pstate,        "-n", &show_num_distinct_only);
+	ap_define_string_flag(pstate,      "-o", &output_field_name);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_count_distinct_usage(stderr, argv[0], verb);
@@ -79,7 +85,8 @@ static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** ar
 		return NULL;
 	}
 
-	return mapper_uniq_alloc(pstate, pfield_names, TRUE, show_num_distinct_only);
+	return mapper_uniq_alloc(pstate, pfield_names, TRUE, show_num_distinct_only,
+		output_field_name);
 }
 
 // ----------------------------------------------------------------
@@ -98,6 +105,7 @@ static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv,
 	slls_t* pgroup_by_field_names = NULL;
 	int     show_counts = FALSE;
 	int     show_num_distinct_only = FALSE;
+	char*   output_field_name = DEFAULT_OUTPUT_FIELD_NAME;
 
 	char* verb = argv[(*pargi)++];
 
@@ -106,6 +114,7 @@ static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv,
 	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
 	ap_define_true_flag(pstate,        "-c", &show_counts);
 	ap_define_true_flag(pstate,        "-n", &show_num_distinct_only);
+	ap_define_string_flag(pstate,      "-o", &output_field_name);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_uniq_usage(stderr, argv[0], verb);
@@ -117,12 +126,13 @@ static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv,
 		return NULL;
 	}
 
-	return mapper_uniq_alloc(pstate, pgroup_by_field_names, show_counts, show_num_distinct_only);
+	return mapper_uniq_alloc(pstate, pgroup_by_field_names, show_counts, show_num_distinct_only,
+		output_field_name);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_uniq_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
-	int show_counts, int show_num_distinct_only)
+	int show_counts, int show_num_distinct_only, char* output_field_name)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
@@ -133,6 +143,7 @@ static mapper_t* mapper_uniq_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_na
 	pstate->show_counts            = show_counts;
 	pstate->show_num_distinct_only = show_num_distinct_only;
 	pstate->pcounts_by_group       = lhmslv_alloc();
+	pstate->output_field_name      = output_field_name;
 
 	pmapper->pvstate = pstate;
 	if (show_num_distinct_only)
@@ -227,7 +238,7 @@ static sllv_t* mapper_uniq_process_with_counts(lrec_t* pinrec, context_t* pctx, 
 
 			if (pstate->show_counts) {
 				unsigned long long* pcount = pa->pvvalue;
-				lrec_put(poutrec, "count", mlr_alloc_string_from_ull(*pcount), FREE_ENTRY_VALUE);
+				lrec_put(poutrec, pstate->output_field_name, mlr_alloc_string_from_ull(*pcount), FREE_ENTRY_VALUE);
 			}
 
 			sllv_append(poutrecs, poutrec);

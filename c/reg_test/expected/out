@@ -889,6 +889,76 @@ count=5
 mlr count-distinct -f a,b -n ./reg_test/input/small ./reg_test/input/abixy
 count=10
 
+mlr uniq -g a -o foo ./reg_test/input/abixy-het
+a=pan
+a=eks
+a=wye
+a=zee
+
+mlr uniq -g a,b -o foo ./reg_test/input/abixy-het
+a=pan,b=pan
+a=eks,b=pan
+a=wye,b=pan
+a=zee,b=pan
+a=eks,b=zee
+a=zee,b=wye
+a=pan,b=wye
+
+mlr uniq -f a -o foo ./reg_test/input/abixy-het
+a=pan
+a=eks
+a=wye
+a=zee
+
+mlr uniq -f a,b -o foo ./reg_test/input/abixy-het
+a=pan,b=pan
+a=eks,b=pan
+a=wye,b=pan
+a=zee,b=pan
+a=eks,b=zee
+a=zee,b=wye
+a=pan,b=wye
+
+mlr uniq -c -g a -o foo ./reg_test/input/abixy-het
+a=pan,foo=2
+a=eks,foo=3
+a=wye,foo=1
+a=zee,foo=2
+
+mlr uniq -c -g a,b -o foo ./reg_test/input/abixy-het
+a=pan,b=pan,foo=1
+a=eks,b=pan,foo=1
+a=wye,b=pan,foo=1
+a=zee,b=pan,foo=1
+a=eks,b=zee,foo=1
+a=zee,b=wye,foo=1
+a=pan,b=wye,foo=1
+
+mlr count-distinct -f a -o foo ./reg_test/input/small ./reg_test/input/abixy
+a=pan,foo=4
+a=eks,foo=6
+a=wye,foo=4
+a=zee,foo=4
+a=hat,foo=2
+
+mlr count-distinct -f a,b -o foo ./reg_test/input/small ./reg_test/input/abixy
+a=pan,b=pan,foo=2
+a=eks,b=pan,foo=2
+a=wye,b=wye,foo=2
+a=eks,b=wye,foo=2
+a=wye,b=pan,foo=2
+a=zee,b=pan,foo=2
+a=eks,b=zee,foo=2
+a=zee,b=wye,foo=2
+a=hat,b=wye,foo=2
+a=pan,b=wye,foo=2
+
+mlr count-distinct -f a -n -o foo ./reg_test/input/small ./reg_test/input/abixy
+count=5
+
+mlr count-distinct -f a,b -n -o foo ./reg_test/input/small ./reg_test/input/abixy
+count=10
+
 mlr grep pan ./reg_test/input/abixy-het
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797

@@ -8,11 +8,21 @@ FEATURE REQUESTS
 
 * strptime w/ fractional seconds; what about strftime?
 
-* stable sort: mld:ref:sort
-  'The sort is stable; records that compare equal will sort together in the order they were encountered.'
-
 * count-distinct: specify output column name.
   -> what other verbs as well?
+
+  mapping/mapper_histogram.c: lrec_put(poutrec, "bin_lo", value, FREE_ENTRY_VALUE);
+  mapping/mapper_histogram.c: lrec_put(poutrec, "bin_hi", value, FREE_ENTRY_VALUE);
+  mapping/mapper_histogram.c: lrec_put(poutrec, "bin_lo", value, FREE_ENTRY_VALUE);
+  mapping/mapper_histogram.c: lrec_put(poutrec, "bin_hi", value, FREE_ENTRY_VALUE);
+
+  mapping/mapper_most_or_least_frequent.c: lrec_put(poutrec, "count", mlr_alloc_string_fro...
+
+  mapping/mapper_top.c: lrec_put(poutrec, "top_idx", mlr_alloc_string_from_ull(i+1), FREE_ENTRY_VALUE);
+  mapping/mapper_top.c: lrec_put(poutrec, "top_idx", mlr_alloc_string_from_ull(i+1), FREE_ENTRY_VALUE);
+
+  mapping/mapper_uniq.c: lrec_put(poutrec, "count", mlr_alloc_string_from_int(count), FREE_ENTRY_VALUE);
+  mapping/mapper_uniq.c: lrec_put(poutrec, "count", mlr_alloc_string_from_ull(*pcount), FREE_ENTRY_VALUE);
 
 ================================================================
 OTHER:
