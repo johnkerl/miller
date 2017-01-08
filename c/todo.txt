@@ -4,12 +4,15 @@ BUGFIXES
 * non-strings should be non-split (length-1 omap). or, coerced to string.
 
 ================================================================
-NON-RELEASE:
+FEATURE REQUESTS
 
-! rh/fedora/centos
-* go through lmag article & clarify all unclears
-* windows port?
-? msort.o wt?
+* strptime w/ fractional seconds; what about strftime?
+
+* stable sort: mld:ref:sort
+  'The sort is stable; records that compare equal will sort together in the order they were encountered.'
+
+* count-distinct: specify output column name.
+  -> what other verbs as well?
 
 ================================================================
 OTHER:
@@ -423,6 +426,14 @@ DOC:
 
 * final xxx check
 * final valgrind check
+
+================================================================
+NON-RELEASE:
+
+! rh/fedora/centos
+* go through lmag article & clarify all unclears
+* windows port?
+? msort.o wt?
 
 ================================================================
 5.1.0 ideas:
