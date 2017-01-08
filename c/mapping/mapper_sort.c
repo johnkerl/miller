@@ -123,10 +123,11 @@ static void mapper_sort_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  -r  {comma-separated field names}  Lexical descending\n");
 	fprintf(o, "  -nr {comma-separated field names}  Numerical descending; nulls sort first\n");
 	fprintf(o, "Sorts records primarily by the first specified field, secondarily by the second\n");
-	fprintf(o, "field, and so on.  Any records not having all specified sort keys will appear\n");
+	fprintf(o, "field, and so on.  (Any records not having all specified sort keys will appear\n");
 	fprintf(o, "at the end of the output, in the order they were encountered, regardless of the\n");
-	fprintf(o, "specified sort order.\n");
-
+	fprintf(o, "specified sort order.) The sort is stable: records that compare equal will sort\n");
+	fprintf(o, "in the order they were encountered in the input record stream.\n");
+	fprintf(o, "\n");
 	fprintf(o, "Example:\n");
 	fprintf(o, "  %s %s -f a,b -nr x,y,z\n", argv0, verb);
 	fprintf(o, "which is the same as:\n");

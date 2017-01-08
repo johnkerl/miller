@@ -923,9 +923,11 @@ VERBS
 	 -r  {comma-separated field names}  Lexical descending
 	 -nr {comma-separated field names}  Numerical descending; nulls sort first
        Sorts records primarily by the first specified field, secondarily by the second
-       field, and so on.  Any records not having all specified sort keys will appear
+       field, and so on.  (Any records not having all specified sort keys will appear
        at the end of the output, in the order they were encountered, regardless of the
-       specified sort order.
+       specified sort order.) The sort is stable: records that compare equal will sort
+       in the order they were encountered in the input record stream.
+
        Example:
 	 mlr sort -f a,b -nr x,y,z
        which is the same as:
@@ -1840,4 +1842,4 @@ SEE ALSO
 
 
 
-				  2017-01-07			     MILLER(1)
+				  2017-01-08			     MILLER(1)
