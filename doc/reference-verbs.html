@@ -526,6 +526,39 @@ a=eks,b=zee,count=357
 <p/>
 <div class="pokipanel">
 <pre>
+$ mlr count-distinct -f a,b -o someothername then sort -nr someothername data/medium
+a=zee,b=wye,someothername=455
+a=pan,b=eks,someothername=429
+a=pan,b=pan,someothername=427
+a=wye,b=hat,someothername=426
+a=hat,b=wye,someothername=423
+a=pan,b=hat,someothername=417
+a=eks,b=hat,someothername=417
+a=eks,b=eks,someothername=413
+a=pan,b=zee,someothername=413
+a=zee,b=hat,someothername=409
+a=eks,b=wye,someothername=407
+a=zee,b=zee,someothername=403
+a=pan,b=wye,someothername=395
+a=wye,b=pan,someothername=392
+a=zee,b=eks,someothername=391
+a=zee,b=pan,someothername=389
+a=hat,b=eks,someothername=389
+a=wye,b=eks,someothername=386
+a=hat,b=zee,someothername=385
+a=wye,b=zee,someothername=385
+a=hat,b=hat,someothername=381
+a=wye,b=wye,someothername=377
+a=eks,b=pan,someothername=371
+a=hat,b=pan,someothername=363
+a=eks,b=zee,someothername=357
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
 $ mlr count-distinct -n -f a,b data/medium
 count=25
 </pre>
@@ -3065,6 +3098,33 @@ red    triangle 1560
 yellow circle   356
 yellow square   589
 yellow triangle 468
+</pre>
+</div>
+<p/>
+</td></tr><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint uniq -g color,shape -c -o someothername then sort -nr someothername data/colored-shapes.dkvp
+color  shape    someothername
+red    square   1874
+red    triangle 1560
+red    circle   1207
+yellow square   589
+blue   square   589
+blue   triangle 497
+purple square   481
+yellow triangle 468
+green  square   454
+blue   circle   384
+purple triangle 372
+green  triangle 368
+yellow circle   356
+purple circle   289
+green  circle   287
+orange square   128
+orange triangle 107
+orange circle   68
 </pre>
 </div>
 <p/>
