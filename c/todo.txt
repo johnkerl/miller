@@ -16,9 +16,6 @@ FEATURE REQUESTS
   mapping/mapper_histogram.c: lrec_put(poutrec, "bin_lo", value, FREE_ENTRY_VALUE);
   mapping/mapper_histogram.c: lrec_put(poutrec, "bin_hi", value, FREE_ENTRY_VALUE);
 
-  mapping/mapper_top.c: lrec_put(poutrec, "top_idx", mlr_alloc_string_from_ull(i+1), FREE_ENTRY_VALUE);
-  mapping/mapper_top.c: lrec_put(poutrec, "top_idx", mlr_alloc_string_from_ull(i+1), FREE_ENTRY_VALUE);
-
 ================================================================
 OTHER:
 

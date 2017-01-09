@@ -23,13 +23,14 @@ typedef struct _mapper_histogram_state_t {
 	double mul;
 	lhmsv_t* pcounts_by_field;
 	lhmsv_t* pvectors_by_field; // For auto-mode
+	char*  output_prefix;
 } mapper_histogram_state_t;
 
 static void      mapper_histogram_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_histogram_alloc(ap_state_t* pargp, slls_t* value_field_names, double lo, int nbins, double hi,
-	int do_auto);
+	int do_auto, char* output_prefix);
 static void      mapper_histogram_free(mapper_t* pmapper);
 
 static void      mapper_histogram_ingest(lrec_t* pinrec, mapper_histogram_state_t* pstate);
@@ -57,6 +58,7 @@ static void mapper_histogram_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "--nbins {n}   Number of histogram bins\n");
 	fprintf(o, "--auto        Automatically computes limits, ignoring --lo and --hi.\n");
 	fprintf(o, "              Holds all values in memory before producing any output.\n");
+	fprintf(o, "-p {prefix}   Prefix for output field name. Default: no prefix.\n");
 	fprintf(o, "Just a histogram. Input values < lo or > hi are not counted.\n");
 }
 
@@ -68,6 +70,7 @@ static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv,
 	double hi = 0.0;
 	int nbins = 0;
 	int do_auto = FALSE;
+	char* output_prefix = NULL;
 
 	char* verb = argv[(*pargi)++];
 
@@ -77,6 +80,7 @@ static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv,
 	ap_define_float_flag(pstate, "--hi",     &hi);
 	ap_define_int_flag(pstate,   "--nbins",  &nbins);
 	ap_define_true_flag(pstate,  "--auto",   &do_auto);
+	ap_define_string_flag(pstate,  "-p",     &output_prefix);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_histogram_usage(stderr, argv[0], verb);
@@ -98,12 +102,12 @@ static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv,
 		return NULL;
 	}
 
-	return mapper_histogram_alloc(pstate, value_field_names, lo, nbins, hi, do_auto);
+	return mapper_histogram_alloc(pstate, value_field_names, lo, nbins, hi, do_auto, output_prefix);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_histogram_alloc(ap_state_t* pargp, slls_t* value_field_names,
-	double lo, int nbins, double hi, int do_auto)
+	double lo, int nbins, double hi, int do_auto, char* output_prefix)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
@@ -133,6 +137,7 @@ static mapper_t* mapper_histogram_alloc(ap_state_t* pargp, slls_t* value_field_n
 		pstate->hi  = hi;
 		pstate->mul = nbins / (hi - lo);
 	}
+	pstate->output_prefix = output_prefix;
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = do_auto ? mapper_histogram_process_auto : mapper_histogram_process;
@@ -200,7 +205,9 @@ static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate) {
 	lhmss_t* pcount_field_names = lhmss_alloc();
 	for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
 		char* value_field_name = pe->value;
-		char* count_field_name = mlr_paste_3_strings(value_field_name, "_", "count");
+		char* count_field_name = (pstate->output_prefix == NULL)
+			? mlr_paste_3_strings(value_field_name, "_", "count")
+			: mlr_paste_4_strings(pstate->output_prefix, value_field_name, "_", "count");
 		lhmss_put(pcount_field_names, mlr_strdup_or_die(value_field_name), count_field_name,
 			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
@@ -209,10 +216,20 @@ static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate) {
 		lrec_t* poutrec = lrec_unbacked_alloc();
 
 		char* value = mlr_alloc_string_from_double(pstate->lo + i / pstate->mul, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, "bin_lo", value, FREE_ENTRY_VALUE);
+		if (pstate->output_prefix == NULL) {
+			lrec_put(poutrec, "bin_lo", value, FREE_ENTRY_VALUE);
+		} else {
+			lrec_put(poutrec, mlr_paste_2_strings(pstate->output_prefix, "bin_lo"), value,
+				FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
+		}
 
 		value = mlr_alloc_string_from_double(pstate->lo + (i+1) / pstate->mul, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, "bin_hi", value, FREE_ENTRY_VALUE);
+		if (pstate->output_prefix == NULL) {
+			lrec_put(poutrec, "bin_hi", value, FREE_ENTRY_VALUE);
+		} else {
+			lrec_put(poutrec, mlr_paste_2_strings(pstate->output_prefix, "bin_hi"), value,
+				FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
+		}
 
 		for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
 			char* value_field_name = pe->value;
@@ -221,7 +238,8 @@ static sllv_t* mapper_histogram_emit(mapper_histogram_state_t* pstate) {
 			char* count_field_name = lhmss_get(pcount_field_names, value_field_name);
 
 			value = mlr_alloc_string_from_ull(pcounts[i]);
-			lrec_put(poutrec, mlr_strdup_or_die(count_field_name), value, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			lrec_put(poutrec, mlr_strdup_or_die(count_field_name), value,
+				FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 		}
 
 		sllv_append(poutrecs, poutrec);
@@ -303,19 +321,26 @@ static sllv_t* mapper_histogram_emit_auto(mapper_histogram_state_t* pstate) {
 
 	// Emission pass
 	sllv_t* poutrecs = sllv_alloc();
-
 	lhmss_t* pcount_field_names = lhmss_alloc();
 	for (sllse_t* pe = pstate->value_field_names->phead; pe != NULL; pe = pe->pnext) {
 		char* value_field_name = pe->value;
-		char* count_field_name = mlr_paste_3_strings(value_field_name, "_", "count");
-		lhmss_put(pcount_field_names, mlr_strdup_or_die(value_field_name), count_field_name, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		char* count_field_name = (pstate->output_prefix == NULL)
+			? mlr_paste_3_strings(value_field_name, "_", "count")
+			: mlr_paste_4_strings(pstate->output_prefix, value_field_name, "_", "count");
+		lhmss_put(pcount_field_names, mlr_strdup_or_die(value_field_name), count_field_name,
+			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	}
 
 	for (int i = 0; i < nbins; i++) {
 		lrec_t* poutrec = lrec_unbacked_alloc();
 
 		char* value = mlr_alloc_string_from_double(lo + i / mul, MLR_GLOBALS.ofmt);
-		lrec_put(poutrec, "bin_lo", value, FREE_ENTRY_VALUE);
+		if (pstate->output_prefix == NULL) {
+			lrec_put(poutrec, "bin_lo", value, FREE_ENTRY_VALUE);
+		} else {
+			lrec_put(poutrec, mlr_paste_2_strings(pstate->output_prefix, "bin_lo"), value,
+				FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
+		}
 
 		value = mlr_alloc_string_from_double(lo + (i+1) / mul, MLR_GLOBALS.ofmt);
 		lrec_put(poutrec, "bin_hi", value, FREE_ENTRY_VALUE);
