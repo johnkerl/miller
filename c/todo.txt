@@ -415,6 +415,7 @@ VERBS:
 * most-frequent/least-frequent
 * seqgen
 * cat -n -g
+* -o for count-distinct, uniq, most-frequent, least-frequent, top, histogram
 
 I/O:
 * bare print/printn

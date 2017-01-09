@@ -95,6 +95,7 @@ static void mapper_uniq_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-g {d,e,f}    Group-by-field names for uniq counts.\n");
 	fprintf(o, "-c            Show repeat counts in addition to unique values.\n");
 	fprintf(o, "-n            Show only the number of distinct values.\n");
+	fprintf(o, "-o {name}     Field name for output count. Default \"%s\".\n", DEFAULT_OUTPUT_FIELD_NAME);
 	fprintf(o, "Prints distinct values for specified field names. With -c, same as\n");
 	fprintf(o, "count-distinct. For uniq, -f is a synonym for -g.\n");
 }

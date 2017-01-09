@@ -718,7 +718,8 @@ VERBS
        -f {one or more comma-separated field names}. Required flag.
        -n {count}. Optional flag defaulting to 10.
        -b	   Suppress counts; show only field values.
-       See also "mlr most".
+       -o {name}   Field name for output count. Default "count".
+       See also "mlr most-frequent".
 
    merge-fields
        Usage: mlr merge-fields [options]
@@ -767,7 +768,8 @@ VERBS
        -f {one or more comma-separated field names}. Required flag.
        -n {count}. Optional flag defaulting to 10.
        -b	   Suppress counts; show only field values.
-       See also "mlr least".
+       -o {name}   Field name for output count. Default "count".
+       See also "mlr least-frequent".
 
    nest
        Usage: mlr nest [options]
@@ -1225,6 +1227,7 @@ VERBS
        -g {d,e,f}    Group-by-field names for uniq counts.
        -c	     Show repeat counts in addition to unique values.
        -n	     Show only the number of distinct values.
+       -o {name}     Field name for output count. Default "count".
        Prints distinct values for specified field names. With -c, same as
        count-distinct. For uniq, -f is a synonym for -g.
 
@@ -1992,7 +1995,7 @@ SEE ALSO
 
 
 
-				  2017-01-08			     MILLER(1)
+				  2017-01-09			     MILLER(1)
 </pre>
 </div>
 <p/>

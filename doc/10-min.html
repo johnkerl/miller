@@ -790,9 +790,16 @@ A9   0.090909
 <div class="pokipanel">
 <pre>
 $ mlr --from log.txt --opprint \
-  filter 'ispresent($batch_size)' \
+  filter 'is_present($batch_size)' \
   then step -a delta -f time,num_filtered \
   then sec2gmt time
+time                 batch_size num_filtered time_delta num_filtered_delta
+2016-09-02T12:34:50Z 100        237          0          0
+2016-09-02T12:35:05Z 100        348          15         111
+2016-09-02T12:35:13Z 100        493          8          145
+2016-09-02T12:35:20Z 100        554          7          61
+2016-09-02T12:35:36Z 100        612          16         58
+2016-09-02T12:35:42Z 100        728          6          116
 </pre>
 </div>
 <p/>
