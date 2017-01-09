@@ -8,14 +8,6 @@ FEATURE REQUESTS
 
 * strptime w/ fractional seconds; what about strftime?
 
-* count-distinct: specify output column name.
-  -> what other verbs as well?
-
-  mapping/mapper_histogram.c: lrec_put(poutrec, "bin_lo", value, FREE_ENTRY_VALUE);
-  mapping/mapper_histogram.c: lrec_put(poutrec, "bin_hi", value, FREE_ENTRY_VALUE);
-  mapping/mapper_histogram.c: lrec_put(poutrec, "bin_lo", value, FREE_ENTRY_VALUE);
-  mapping/mapper_histogram.c: lrec_put(poutrec, "bin_hi", value, FREE_ENTRY_VALUE);
-
 ================================================================
 OTHER:
 
