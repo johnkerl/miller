@@ -57,7 +57,7 @@ mkdir -p $outdir
 touch $outfile
 echo
 
-num_passed=0
+num_completed=0
 
 announce() {
   echo >> $outfile
@@ -83,7 +83,7 @@ run_mlr() {
   $path_to_mlr "$@" >> $outfile
   echo >> $outfile
   # since set -e
-  num_passed=`expr $num_passed + 1`
+  num_completed=`expr $num_completed + 1`
 }
 
 # Just cats a file while also announcing that fact.
@@ -110,7 +110,7 @@ mlr_expect_fail() {
   echo >> $outfile
   test $status -eq 1
   # since set -e
-  num_passed=`expr $num_passed + 1`
+  num_completed=`expr $num_completed + 1`
 }
 
 # ================================================================
@@ -6201,11 +6201,26 @@ run_mlr --oxtab --from $indir/abixy-het put '
 echo
 echo ================================================================
 echo "Differences between $expfile and $outfile:"
-diff -I '^mlr' -C5 $expfile $outfile
-echo "No differences found between $expfile and $outfile" # since set -e
-echo ================================================================
-echo
 
-# ================================================================
-echo ALL REGRESSION TESTS PASSED
-echo Tests completed: $num_passed
+# We run with 'set -e' all the way through this script, to die on error -- but
+# for the diff command we want to trap the error and die with a message, especially
+# when the diff is long.
+
+set +e
+diff -I '^mlr' -C5 $expfile $outfile
+status=$?
+
+if [ $status -eq 0 ]; then
+  echo "No differences were found between $expfile and $outfile"
+  echo ================================================================
+  echo
+  echo ALL REGRESSION TESTS PASSED
+  echo Tests completed: $num_completed
+  exit 0
+else
+  echo
+  echo "Differences were found between $expfile and $outfile !"
+  echo
+  echo Tests completed: $num_completed
+  exit 1
+fi
