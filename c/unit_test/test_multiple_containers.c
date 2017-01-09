@@ -42,13 +42,11 @@ static char* test_slls() {
 	mu_assert_lf(plist->length == 0);
 
 	plist = slls_from_line(mlr_strdup_or_die("a"), ',', FALSE);
-	mu_assert_lf(plist->length == 1);
 
+	mu_assert_lf(plist->length == 1);
 	plist = slls_from_line(mlr_strdup_or_die("c,d,a,e,b"), ',', FALSE);
 	mu_assert_lf(plist->length == 5);
-
 	sllse_t* pe = plist->phead;
-
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "c")); pe = pe->pnext;
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "d")); pe = pe->pnext;
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "a")); pe = pe->pnext;
@@ -60,13 +58,38 @@ static char* test_slls() {
 
 	mu_assert_lf(plist->length == 5);
 	pe = plist->phead;
-
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "a")); pe = pe->pnext;
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "b")); pe = pe->pnext;
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "c")); pe = pe->pnext;
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "d")); pe = pe->pnext;
 	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "e")); pe = pe->pnext;
 	mu_assert_lf(pe == NULL);
+
+
+	plist = slls_from_line(mlr_strdup_or_die(","), ',', FALSE);
+	slls_print_quoted(plist);printf("\n");
+	mu_assert_lf(plist->length == 2);
+	pe = plist->phead;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "")); pe = pe->pnext;
+
+	plist = slls_from_line(mlr_strdup_or_die("a,b,c,"), ',', FALSE);
+	slls_print_quoted(plist);printf("\n");
+	mu_assert_lf(plist->length == 4);
+	pe = plist->phead;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "a")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "b")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "c")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, ""));  pe = pe->pnext;
+
+	plist = slls_from_line(mlr_strdup_or_die("a,,c,d"), ',', FALSE);
+	slls_print_quoted(plist);printf("\n");
+	mu_assert_lf(plist->length == 4);
+	pe = plist->phead;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "a")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, ""));  pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "c")); pe = pe->pnext;
+	mu_assert_lf(pe != NULL); mu_assert_lf(streq(pe->value, "d")); pe = pe->pnext;
 
 	return NULL;
 }
@@ -860,6 +883,7 @@ static char * run_all_tests() {
 
 int main(int argc, char **argv) {
 	mlr_global_init(argv[0], NULL);
+
 	printf("TEST_MULTIPLE_CONTAINERS ENTER\n");
 	char *result = run_all_tests();
 	printf("\n");

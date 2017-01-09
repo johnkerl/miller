@@ -1,7 +1,7 @@
 ================================================================
 BUGFIXES
 
-* non-strings should be non-split (length-1 omap). or, coerced to string.
+* mlr rename -r w/multiple empty newvals
 
 ================================================================
 FEATURE REQUESTS
@@ -11,24 +11,15 @@ FEATURE REQUESTS
 ================================================================
 OTHER:
 
-! non-string =~ regex: coerce LHS to string
-
-! expose strcmp & strcasecmp for lhm sorting
-
-! expose movefirst/movelast funcs
-
-! mlr sort --fold!
-
-! mlr step rsum int-to-int
-
+* expose strcmp & strcasecmp for lhm sorting
+* expose movefirst/movelast funcs
+* mlr sort --fold!
 * mlr paste (sjackman)
+* dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d. make a cliopt.
 
-* dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d
 ! 'Error code 1' -> clearer on regdiff fail
 
 * poki-run no '$ ' for comment lines
-
-* mlr rename -r w/multiple empty newvals
 
 ! key point (put at top of ref-dsl, ref-verb, and elsewhere -- esp cover page in bold):
   there is a DSL so you *can* loop things out w/ variables etc etc etc but also verbs for
@@ -145,7 +136,9 @@ MAPVAR CHECKLIST:
   - absent/skip
   - '(error)'
   - abend
+  - coerce
   -> doc smoothouts for 5.0.0 incompat notes
+  - e.g. non-string =~ regex: coerce LHS to string?
 
 !!?? disallow implicit assignment? force w/ var at least??
   - w/  implicit: for (...) {sum += x} FUBAR
@@ -256,6 +249,7 @@ HYGIENE FOR 5.0.0:
 
 * xxxes
 * valgrinds
+* strtok -> strsep ?
 
 ================================================================
 DOC FOR 5.0.0:

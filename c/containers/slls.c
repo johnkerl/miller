@@ -96,20 +96,13 @@ slls_t* slls_from_line(char* line, char ifs, int allow_repeat_ifs) {
 	if (*line == 0) // empty string splits to empty list
 		return plist;
 
-	char* start = line;
-	for (char* p = line; *p; p++) {
-		if (*p == ifs) {
-			*p = 0;
-			p++;
-			if (allow_repeat_ifs) {
-				while (*p == ifs)
-					p++;
-			}
-			slls_append_no_free(plist, start);
-			start = p;
-		}
+	char seps[2] = {ifs, 0};
+	char* sep = &seps[0];
+	char* walker = line;
+	char* piece;
+	while ((piece = strsep(&walker, sep)) != NULL) {
+		slls_append_no_free(plist, piece);
 	}
-	slls_append_no_free(plist, start);
 
 	return plist;
 }
@@ -141,6 +134,19 @@ void slls_print(slls_t* plist) {
 			if (i > 0)
 				printf(",");
 			printf("%s", pe->value);
+		}
+	}
+}
+
+void slls_print_quoted(slls_t* plist) {
+	if (plist == NULL) {
+		printf("NULL");
+	} else {
+		unsigned long long i = 0;
+		for (sllse_t* pe = plist->phead; pe != NULL; pe = pe->pnext, i++) {
+			if (i > 0)
+				printf(" ");
+			printf("\"%s\"", pe->value);
 		}
 	}
 }

@@ -40,5 +40,6 @@ void    slls_sort(slls_t* plist);
 // Debug routines:
 char*   slls_join(slls_t* plist, char* ofs);
 void    slls_print(slls_t* plist);
+void    slls_print_quoted(slls_t* plist);
 
 #endif // SLLS_H
