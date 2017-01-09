@@ -243,7 +243,7 @@ etc., but bin 9 has <tt>0.9 &le; x &le; 1.0</tt>.
 
 POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 data/medium}}HERE
 
-POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -p "my_" data/medium}}HERE
+POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -o my_ data/medium}}HERE
 
 <!-- ================================================================ -->
 <h1>join</h1>

@@ -572,8 +572,10 @@ run_mlr --icsvlite --opprint step -a from-first -f x      $indir/from-first.csv
 run_mlr --icsvlite --opprint step -a from-first -f x -g g $indir/from-first.csv
 
 run_mlr --opprint histogram -f x,y --lo 0 --hi 1 --nbins 20 $indir/small
+run_mlr --opprint histogram -f x,y --lo 0 --hi 1 --nbins 20 -o foo_ $indir/small
 
 run_mlr --opprint histogram --nbins 9 --auto -f x,y $indir/ints.dkvp
+run_mlr --opprint histogram --nbins 9 --auto -f x,y -o foo_ $indir/ints.dkvp
 
 run_mlr --csvlite --opprint merge-fields    -a p0,min,p29,max,p100,sum -c _in,_out $indir/merge-fields-in-out.csv
 run_mlr --csvlite --opprint merge-fields -k -a p0,min,p29,max,p100,sum -c _in,_out $indir/merge-fields-in-out.csv
@@ -4731,6 +4733,12 @@ run_mlr --opprint top -a -n 5 -f z          $indir/nullvals.dkvp
 run_mlr --opprint top -a -n 5 -f x     -g a $indir/nullvals.dkvp
 run_mlr --opprint top -a -n 5 -f y     -g a $indir/nullvals.dkvp
 run_mlr --opprint top -a -n 5 -f z     -g a $indir/nullvals.dkvp
+
+run_mlr --opprint top    -n 5 -f x          -o foo $indir/nullvals.dkvp
+run_mlr --opprint top    -n 5 -f x     -g a -o foo $indir/nullvals.dkvp
+
+run_mlr --opprint top -a -n 5 -f x -o foo      $indir/nullvals.dkvp
+run_mlr --opprint top -a -n 5 -f z -o foo -g a $indir/nullvals.dkvp
 
 run_mlr --opprint step -a counter,rsum -f x          $indir/nullvals.dkvp
 run_mlr --opprint step -a counter,rsum -f y          $indir/nullvals.dkvp

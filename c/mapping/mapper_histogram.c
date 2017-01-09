@@ -58,7 +58,7 @@ static void mapper_histogram_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "--nbins {n}   Number of histogram bins\n");
 	fprintf(o, "--auto        Automatically computes limits, ignoring --lo and --hi.\n");
 	fprintf(o, "              Holds all values in memory before producing any output.\n");
-	fprintf(o, "-p {prefix}   Prefix for output field name. Default: no prefix.\n");
+	fprintf(o, "-o {prefix}   Prefix for output field name. Default: no prefix.\n");
 	fprintf(o, "Just a histogram. Input values < lo or > hi are not counted.\n");
 }
 
@@ -80,7 +80,7 @@ static mapper_t* mapper_histogram_parse_cli(int* pargi, int argc, char** argv,
 	ap_define_float_flag(pstate, "--hi",     &hi);
 	ap_define_int_flag(pstate,   "--nbins",  &nbins);
 	ap_define_true_flag(pstate,  "--auto",   &do_auto);
-	ap_define_string_flag(pstate,  "-p",     &output_prefix);
+	ap_define_string_flag(pstate,  "-o",     &output_prefix);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_histogram_usage(stderr, argv[0], verb);

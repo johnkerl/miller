@@ -1006,7 +1006,7 @@ Usage: mlr histogram [options]
 --nbins {n}   Number of histogram bins
 --auto        Automatically computes limits, ignoring --lo and --hi.
               Holds all values in memory before producing any output.
--p {prefix}   Prefix for output field name. Default: no prefix.
+-o {prefix}   Prefix for output field name. Default: no prefix.
 Just a histogram. Input values &lt; lo or &gt; hi are not counted.
 </pre>
 </div>
@@ -1041,7 +1041,7 @@ bin_lo   bin_hi   x_count x2_count x3_count
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -p "my_" data/medium
+$ mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 -o my_ data/medium
 my_bin_lo my_bin_hi my_x_count my_x2_count my_x3_count
 0.000000  0.100000  1072       3231        4661
 0.100000  0.200000  938        1254        1184
