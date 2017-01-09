@@ -15,6 +15,8 @@
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
+#define DEFAULT_OUTPUT_FIELD_NAME "top_idx"
+
 typedef mv_t maybe_sign_flipper_t(mv_t* pval1);
 
 typedef struct _mapper_top_state_t {
@@ -26,13 +28,14 @@ typedef struct _mapper_top_state_t {
 	int allow_int_float;
 	maybe_sign_flipper_t* pmaybe_sign_flipper;
 	lhmslv_t* groups;
+	char* output_field_name;
 } mapper_top_state_t;
 
 static void      mapper_top_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_top_alloc(ap_state_t* pargp, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
-	int top_count, int do_max, int show_full_records, int allow_int_float);
+	int top_count, int do_max, int show_full_records, int allow_int_float, char* output_field_name);
 static void      mapper_top_free(mapper_t* pmapper);
 static sllv_t*   mapper_top_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate);
@@ -57,6 +60,7 @@ static void mapper_top_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "              value-field name only.\n");
 	fprintf(o, "--min         Print top smallest values; default is top largest values.\n");
 	fprintf(o, "-F            Keep top values as floats even if they look like integers.\n");
+	fprintf(o, "-o {name}     Field name for output indices. Default \"%s\".\n", DEFAULT_OUTPUT_FIELD_NAME);
 
 	fprintf(o, "Prints the n records with smallest/largest values at specified fields,\n");
 	fprintf(o, "optionally by category.\n");
@@ -71,6 +75,7 @@ static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv,
 	int     show_full_records     = FALSE;
 	int     do_max                = TRUE;
 	int     allow_int_float       = TRUE;
+	char*   output_field_name     = DEFAULT_OUTPUT_FIELD_NAME;
 
 	char* verb = argv[(*pargi)++];
 
@@ -82,6 +87,7 @@ static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv,
 	ap_define_true_flag(pstate,        "--max", &do_max);
 	ap_define_false_flag(pstate,       "--min", &do_max);
 	ap_define_false_flag(pstate,       "-F",    &allow_int_float);
+	ap_define_string_flag(pstate,      "-o",    &output_field_name);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_top_usage(stderr, argv[0], verb);
@@ -97,12 +103,12 @@ static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv,
 	}
 
 	return mapper_top_alloc(pstate, pvalue_field_names, pgroup_by_field_names,
-		top_count, do_max, show_full_records, allow_int_float);
+		top_count, do_max, show_full_records, allow_int_float, output_field_name);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_top_alloc(ap_state_t* pargp, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
-	int top_count, int do_max, int show_full_records, int allow_int_float)
+	int top_count, int do_max, int show_full_records, int allow_int_float, char* output_field_name)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
@@ -116,6 +122,7 @@ static mapper_t* mapper_top_alloc(ap_state_t* pargp, slls_t* pvalue_field_names,
 	pstate->top_count             = top_count;
 	pstate->pmaybe_sign_flipper   = do_max ? x_x_upos_func : x_x_uneg_func;
 	pstate->groups                = lhmslv_alloc();
+	pstate->output_field_name     = output_field_name;
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_top_process;
@@ -267,10 +274,10 @@ static sllv_t* mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx) {
 					if (i < ptop_keeper_for_group->size) {
 						mv_t numv = pstate->pmaybe_sign_flipper(&ptop_keeper_for_group->top_values[i]);
 						char* strv = mv_alloc_format_val(&numv);
-						lrec_put(poutrec, "top_idx", mlr_alloc_string_from_ull(i+1), FREE_ENTRY_VALUE);
+						lrec_put(poutrec, pstate->output_field_name, mlr_alloc_string_from_ull(i+1), FREE_ENTRY_VALUE);
 						lrec_put(poutrec, key, strv, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 					} else {
-						lrec_put(poutrec, "top_idx", mlr_alloc_string_from_ull(i+1), FREE_ENTRY_VALUE);
+						lrec_put(poutrec, pstate->output_field_name, mlr_alloc_string_from_ull(i+1), FREE_ENTRY_VALUE);
 						lrec_put(poutrec, key, "", FREE_ENTRY_KEY);
 					}
 				}

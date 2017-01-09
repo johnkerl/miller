@@ -3008,6 +3008,7 @@ Usage: mlr top [options]
               value-field name only.
 --min         Print top smallest values; default is top largest values.
 -F            Keep top values as floats even if they look like integers.
+-o {name}     Field name for output indices. Default "top_idx".
 Prints the n records with smallest/largest values at specified fields,
 optionally by category.
 </pre>
@@ -3028,6 +3029,19 @@ top_idx x_top
 2       0.999823
 3       0.999733
 4       0.999563
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint top -n 4 -f x -o someothername data/medium
+someothername x_top
+1             0.999953
+2             0.999823
+3             0.999733
+4             0.999563
 </pre>
 </div>
 <p/>
