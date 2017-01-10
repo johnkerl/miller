@@ -28,7 +28,7 @@
 #define MLHMMV_INITIAL_ARRAY_LENGTH 16
 
 // ----------------------------------------------------------------
-void mlhmmv_print_terminal(mv_t* pmv, int quote_values_always, FILE* ostream);
+void mlhmmv_print_terminal(mv_t* pmv, int quote_keys_always, int quote_values_always, FILE* ostream);
 
 // ----------------------------------------------------------------
 struct _mlhmmv_level_t; // forward reference
@@ -153,6 +153,7 @@ void mlhmmv_level_print_stacked(
 	mlhmmv_level_t* plevel,
 	int             depth,
 	int             do_final_comma,
+	int             quote_keys_always,
 	int             quote_values_always,
 	char*           line_indent,
 	FILE*           ostream);
@@ -300,7 +301,9 @@ void mlhmmv_root_partial_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pkeys, sllmv_t* 
 	int do_full_prefixing, char* flatten_separator);
 
 // For 'dump' in the DSL; also used by the lrec-to-JSON writer.
-void mlhmmv_root_print_json_stacked(mlhmmv_root_t* pmap, int quote_values_always, char* line_indent, FILE* ostream);
-void mlhmmv_root_print_json_single_lines(mlhmmv_root_t* pmap, int quote_values_always, FILE* ostream);
+void mlhmmv_root_print_json_stacked(mlhmmv_root_t* pmap,
+	int quote_keys_always, int quote_values_always, char* line_indent, FILE* ostream);
+void mlhmmv_root_print_json_single_lines(mlhmmv_root_t* pmap, int quote_keys_always, int quote_values_always,
+	FILE* ostream);
 
 #endif // MLHMMV_H

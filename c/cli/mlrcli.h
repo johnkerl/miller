@@ -47,6 +47,7 @@ typedef struct _cli_writer_opts_t {
 	int   pprint_barred;
 	int   stack_json_output_vertically;
 	int   wrap_json_output_in_outer_list;
+	int   quote_json_keys_always;
 	int   quote_json_values_always;
 	char* output_json_flatten_separator;
 	char* oosvar_flatten_separator;

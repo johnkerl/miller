@@ -714,7 +714,7 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "                      --jvstack   Put one key-value pair per line for JSON\n");
 	fprintf(o, "                                  output.\n");
 	fprintf(o, "                      --jlistwrap Wrap JSON output in outermost [ ].\n");
-	fprintf(o, "                      --jquoteall Quote map keys in JSON output, even if they're\n");
+	fprintf(o, "                      --jquoteall Quote map values in JSON output, even if they're\n");
 	fprintf(o, "                                  numeric.\n");
 	fprintf(o, "              --jflatsep {string} Separator for flattening multi-level JSON keys,\n");
 	fprintf(o, "                                  e.g. '{\"a\":{\"b\":3}}' becomes a:b => 3 for\n");
@@ -981,6 +981,7 @@ void cli_writer_opts_init(cli_writer_opts_t* pwriter_opts) {
 	pwriter_opts->pprint_barred                  = NEITHER_TRUE_NOR_FALSE;
 	pwriter_opts->stack_json_output_vertically   = NEITHER_TRUE_NOR_FALSE;
 	pwriter_opts->wrap_json_output_in_outer_list = NEITHER_TRUE_NOR_FALSE;
+	pwriter_opts->quote_json_keys_always         = NEITHER_TRUE_NOR_FALSE;
 	pwriter_opts->quote_json_values_always       = NEITHER_TRUE_NOR_FALSE;
 
 	pwriter_opts->output_json_flatten_separator  = NULL;
@@ -1034,6 +1035,9 @@ void cli_apply_writer_defaults(cli_writer_opts_t* pwriter_opts) {
 
 	if (pwriter_opts->wrap_json_output_in_outer_list == NEITHER_TRUE_NOR_FALSE)
 		pwriter_opts->wrap_json_output_in_outer_list = FALSE;
+
+	if (pwriter_opts->quote_json_keys_always == NEITHER_TRUE_NOR_FALSE)
+		pwriter_opts->quote_json_keys_always = FALSE;
 
 	if (pwriter_opts->quote_json_values_always == NEITHER_TRUE_NOR_FALSE)
 		pwriter_opts->quote_json_values_always = FALSE;
@@ -1162,6 +1166,9 @@ void cli_merge_writer_opts(cli_writer_opts_t* pfunc_opts, cli_writer_opts_t* pma
 
 	if (pfunc_opts->wrap_json_output_in_outer_list == NEITHER_TRUE_NOR_FALSE)
 		pfunc_opts->wrap_json_output_in_outer_list = pmain_opts->wrap_json_output_in_outer_list;
+
+	if (pfunc_opts->quote_json_keys_always == NEITHER_TRUE_NOR_FALSE)
+		pfunc_opts->quote_json_keys_always = pmain_opts->quote_json_keys_always;
 
 	if (pfunc_opts->quote_json_values_always == NEITHER_TRUE_NOR_FALSE)
 		pfunc_opts->quote_json_values_always = pmain_opts->quote_json_values_always;
@@ -1413,6 +1420,10 @@ int cli_handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts
 
 	} else if (streq(argv[argi], "--jlistwrap")) {
 		pwriter_opts->wrap_json_output_in_outer_list = TRUE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--jquotexxxrename")) {
+		pwriter_opts->quote_json_keys_always = TRUE;
 		argi += 1;
 
 	} else if (streq(argv[argi], "--jquoteall")) {

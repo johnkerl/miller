@@ -8,6 +8,7 @@ typedef struct _lrec_writer_json_state_t {
 	unsigned long long counter;
 	char* output_json_flatten_separator;
 
+	int quote_json_keys_always;
 	int quote_json_values_always;
 	char* line_indent;
 	char* before_records_at_start_of_stream;
@@ -22,11 +23,12 @@ static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t*
 
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_json_alloc(int stack_vertically, int wrap_json_output_in_outer_list,
-	int quote_json_values_always, char* output_json_flatten_separator)
+	int quote_json_keys_always, int quote_json_values_always, char* output_json_flatten_separator)
 {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
 	lrec_writer_json_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_json_state_t));
+	pstate->quote_json_keys_always = quote_json_keys_always;
 	pstate->quote_json_values_always = quote_json_values_always;
 	pstate->counter = 0;
 	pstate->output_json_flatten_separator = output_json_flatten_separator;
@@ -85,9 +87,11 @@ static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t*
 		}
 
 		if (pstate->stack_vertically)
-			mlhmmv_root_print_json_stacked(pmap, pstate->quote_json_values_always, pstate->line_indent, output_stream);
+			mlhmmv_root_print_json_stacked(pmap, pstate->quote_json_keys_always, pstate->quote_json_values_always,
+				pstate->line_indent, output_stream);
 		else
-			mlhmmv_root_print_json_single_lines(pmap, pstate->quote_json_values_always, output_stream);
+			mlhmmv_root_print_json_single_lines(pmap, pstate->quote_json_keys_always,
+				pstate->quote_json_values_always, output_stream);
 
 		mlhmmv_root_free(pmap);
 
