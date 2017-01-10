@@ -6,11 +6,18 @@ BUGFIXES
 ================================================================
 FEATURE REQUESTS
 
-* strptime w/ fractional seconds. maybe %OS?
-* strftime: %OS1-%OS9?
+* strptime/strftime:
+  - strptime w/ fractional seconds. maybe %OS?
+  - strftime: %OS1-%OS9?
+  - use stddlib vers w/ strpokes/hacks, or reimpl stdlib vers?
+  - 1st write a mlrlib vers?!?
 
 ================================================================
 OTHER:
+
+* option to inhibit dquot of int map keys on dump
+  - hook dump into jflags
+  - doc as incompact @ relnotes
 
 * expose strcmp & strcasecmp for lhm sorting
 * expose movefirst/movelast funcs
@@ -23,8 +30,6 @@ OTHER:
 ! key point (put at top of ref-dsl, ref-verb, and elsewhere -- esp cover page in bold):
   there is a DSL so you *can* loop things out w/ variables etc etc etc but also verbs for
   often-used idioms so you don't *have* to. then show a concise and convincing example.
-
-* option to inhibit dquot of int map keys on dump
 
 ================================================================
 UT FOR 5.0.0:
