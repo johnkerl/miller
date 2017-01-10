@@ -1458,6 +1458,9 @@ static void handle_dump(
 	boxed_xval_t boxed_xval = ptarget_xevaluator->pprocess_func(ptarget_xevaluator->pvstate, pvars);
 
 	if (boxed_xval.xval.is_terminal) {
+	// xxx int     json_quote_int_keys      = TRUE; // JSON standard
+	// xxx int     json_quote_non_string_values = FALSE; // JSON standard
+
 		mlhmmv_print_terminal(&boxed_xval.xval.terminal_mlrval, TRUE/*xxx*/, FALSE, pstate->stdfp);
 		fprintf(pstate->stdfp, "\n");
 	} else {
