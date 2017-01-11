@@ -175,7 +175,7 @@ OPTIONS
 			     --jvstack	 Put one key-value pair per line for JSON
 					 output.
 			     --jlistwrap Wrap JSON output in outermost [ ].
-			     --jquoteall Quote map keys in JSON output, even if they're
+			     --jquoteall Quote map values in JSON output, even if they're
 					 numeric.
 		     --jflatsep {string} Separator for flattening multi-level JSON keys,
 					 e.g. '{"a":{"b":3}}' becomes a:b => 3 for
@@ -404,6 +404,8 @@ VERBS
 	   with no inference to int.
        --oflatsep {string}: Separator to use when flattening multi-level @-variables
 	   to output records for emit. Default ":".
+       --jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.
+       --jvquoteall: For dump output (JSON-formatted), quote map values even if non-string.
        -f {filename}: the DSL expression is taken from the specified file rather
 	   than from the command line. Outer single quotes wrapping the expression
 	   should not be placed in the file. If -f is specified more than once,
@@ -698,6 +700,8 @@ VERBS
 	   with no inference to int.
        --oflatsep {string}: Separator to use when flattening multi-level @-variables
 	   to output records for emit. Default ":".
+       --jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.
+       --jvquoteall: For dump output (JSON-formatted), quote map values even if non-string.
        -f {filename}: the DSL expression is taken from the specified file rather
 	   than from the command line. Outer single quotes wrapping the expression
 	   should not be placed in the file. If -f is specified more than once,
@@ -1848,4 +1852,4 @@ SEE ALSO
 
 
 
-				  2017-01-09			     MILLER(1)
+				  2017-01-11			     MILLER(1)

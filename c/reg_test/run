@@ -4973,14 +4973,22 @@ run_mlr --ijson --opprint cat $indir/small-non-nested.json
 run_mlr --ijson --opprint cat $indir/small-non-nested-wrapped.json
 run_mlr --ijson --oxtab   cat $indir/small-nested.json
 
-run_mlr --ojson                                     cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvstack                           cat $indir/json-output-options.dkvp
-run_mlr --ojson             --jlistwrap             cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvstack   --jlistwrap             cat $indir/json-output-options.dkvp
-run_mlr --ojson                         --jquoteall cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvstack               --jquoteall cat $indir/json-output-options.dkvp
-run_mlr --ojson             --jlistwrap --jquoteall cat $indir/json-output-options.dkvp
-run_mlr --ojson --jvstack   --jlistwrap --jquoteall cat $indir/json-output-options.dkvp
+run_mlr --ojson                                       cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack                             cat $indir/json-output-options.dkvp
+run_mlr --ojson             --jlistwrap               cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack   --jlistwrap               cat $indir/json-output-options.dkvp
+run_mlr --ojson                         --jquoteall   cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack               --jquoteall   cat $indir/json-output-options.dkvp
+run_mlr --ojson             --jlistwrap --jquoteall   cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack   --jlistwrap --jquoteall   cat $indir/json-output-options.dkvp
+run_mlr --ojson                         --jvquoteall  cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack               --jvquoteall  cat $indir/json-output-options.dkvp
+run_mlr --ojson             --jlistwrap --jvquoteall  cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack   --jlistwrap --jvquoteall  cat $indir/json-output-options.dkvp
+run_mlr --ojson                         --jknquoteint cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack               --jknquoteint cat $indir/json-output-options.dkvp
+run_mlr --ojson             --jlistwrap --jknquoteint cat $indir/json-output-options.dkvp
+run_mlr --ojson --jvstack   --jlistwrap --jknquoteint cat $indir/json-output-options.dkvp
 
 run_mlr           --ijson --opprint cat $indir/small-non-nested-wrapped.json $indir/small-non-nested-wrapped.json
 run_mlr --no-mmap --ijson --opprint cat $indir/small-non-nested-wrapped.json $indir/small-non-nested-wrapped.json

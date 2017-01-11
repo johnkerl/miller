@@ -44291,7 +44291,7 @@ z:hat:1 0.749551
 mlr --ojson cat ./reg_test/input/json-output-options.dkvp
 { "a": 1, "b": "x", "c": 3 }
 { "d": 4 }
-{ "e": 5, "f": 6 }
+{ "1": 5, "f": 6 }
 
 mlr --ojson --jvstack cat ./reg_test/input/json-output-options.dkvp
 {
@@ -44303,7 +44303,7 @@ mlr --ojson --jvstack cat ./reg_test/input/json-output-options.dkvp
   "d": 4
 }
 {
-  "e": 5,
+  "1": 5,
   "f": 6
 }
 
@@ -44311,7 +44311,7 @@ mlr --ojson --jlistwrap cat ./reg_test/input/json-output-options.dkvp
 [
 { "a": 1, "b": "x", "c": 3 }
 ,{ "d": 4 }
-,{ "e": 5, "f": 6 }
+,{ "1": 5, "f": 6 }
 ]
 
 mlr --ojson --jvstack --jlistwrap cat ./reg_test/input/json-output-options.dkvp
@@ -44325,7 +44325,7 @@ mlr --ojson --jvstack --jlistwrap cat ./reg_test/input/json-output-options.dkvp
   "d": 4
 }
 ,{
-  "e": 5,
+  "1": 5,
   "f": 6
 }
 ]
@@ -44333,7 +44333,7 @@ mlr --ojson --jvstack --jlistwrap cat ./reg_test/input/json-output-options.dkvp
 mlr --ojson --jquoteall cat ./reg_test/input/json-output-options.dkvp
 { "a": "1", "b": "x", "c": "3" }
 { "d": "4" }
-{ "e": "5", "f": "6" }
+{ "1": "5", "f": "6" }
 
 mlr --ojson --jvstack --jquoteall cat ./reg_test/input/json-output-options.dkvp
 {
@@ -44345,7 +44345,7 @@ mlr --ojson --jvstack --jquoteall cat ./reg_test/input/json-output-options.dkvp
   "d": "4"
 }
 {
-  "e": "5",
+  "1": "5",
   "f": "6"
 }
 
@@ -44353,7 +44353,7 @@ mlr --ojson --jlistwrap --jquoteall cat ./reg_test/input/json-output-options.dkv
 [
 { "a": "1", "b": "x", "c": "3" }
 ,{ "d": "4" }
-,{ "e": "5", "f": "6" }
+,{ "1": "5", "f": "6" }
 ]
 
 mlr --ojson --jvstack --jlistwrap --jquoteall cat ./reg_test/input/json-output-options.dkvp
@@ -44367,8 +44367,92 @@ mlr --ojson --jvstack --jlistwrap --jquoteall cat ./reg_test/input/json-output-o
   "d": "4"
 }
 ,{
-  "e": "5",
+  "1": "5",
   "f": "6"
+}
+]
+
+mlr --ojson --jvquoteall cat ./reg_test/input/json-output-options.dkvp
+{ "a": "1", "b": "x", "c": "3" }
+{ "d": "4" }
+{ "1": "5", "f": "6" }
+
+mlr --ojson --jvstack --jvquoteall cat ./reg_test/input/json-output-options.dkvp
+{
+  "a": "1",
+  "b": "x",
+  "c": "3"
+}
+{
+  "d": "4"
+}
+{
+  "1": "5",
+  "f": "6"
+}
+
+mlr --ojson --jlistwrap --jvquoteall cat ./reg_test/input/json-output-options.dkvp
+[
+{ "a": "1", "b": "x", "c": "3" }
+,{ "d": "4" }
+,{ "1": "5", "f": "6" }
+]
+
+mlr --ojson --jvstack --jlistwrap --jvquoteall cat ./reg_test/input/json-output-options.dkvp
+[
+{
+  "a": "1",
+  "b": "x",
+  "c": "3"
+}
+,{
+  "d": "4"
+}
+,{
+  "1": "5",
+  "f": "6"
+}
+]
+
+mlr --ojson --jknquoteint cat ./reg_test/input/json-output-options.dkvp
+{ "a": 1, "b": "x", "c": 3 }
+{ "d": 4 }
+{ "1": 5, "f": 6 }
+
+mlr --ojson --jvstack --jknquoteint cat ./reg_test/input/json-output-options.dkvp
+{
+  "a": 1,
+  "b": "x",
+  "c": 3
+}
+{
+  "d": 4
+}
+{
+  "1": 5,
+  "f": 6
+}
+
+mlr --ojson --jlistwrap --jknquoteint cat ./reg_test/input/json-output-options.dkvp
+[
+{ "a": 1, "b": "x", "c": 3 }
+,{ "d": 4 }
+,{ "1": 5, "f": 6 }
+]
+
+mlr --ojson --jvstack --jlistwrap --jknquoteint cat ./reg_test/input/json-output-options.dkvp
+[
+{
+  "a": 1,
+  "b": "x",
+  "c": 3
+}
+,{
+  "d": 4
+}
+,{
+  "1": 5,
+  "f": 6
 }
 ]
 

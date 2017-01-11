@@ -684,6 +684,8 @@ Options:
     with no inference to int.
 --oflatsep {string}: Separator to use when flattening multi-level @-variables
     to output records for emit. Default ":".
+--jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.
+--jvquoteall: For dump output (JSON-formatted), quote map values even if non-string.
 -f {filename}: the DSL expression is taken from the specified file rather
     than from the command line. Outer single quotes wrapping the expression
     should not be placed in the file. If -f is specified more than once,
@@ -1708,6 +1710,8 @@ Options:
     with no inference to int.
 --oflatsep {string}: Separator to use when flattening multi-level @-variables
     to output records for emit. Default ":".
+--jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.
+--jvquoteall: For dump output (JSON-formatted), quote map values even if non-string.
 -f {filename}: the DSL expression is taken from the specified file rather
     than from the command line. Outer single quotes wrapping the expression
     should not be placed in the file. If -f is specified more than once,

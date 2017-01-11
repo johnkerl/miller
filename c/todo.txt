@@ -16,8 +16,7 @@ FEATURE REQUESTS
 OTHER:
 
 * option to inhibit dquot of int map keys on dump
-  - hook dump into jflags
-  - doc as incompact @ relnotes
+  ! fix for srec keys !
 
 * expose strcmp & strcasecmp for lhm sorting
 * expose movefirst/movelast funcs
@@ -34,6 +33,7 @@ OTHER:
 ================================================================
 UT FOR 5.0.0:
 
+* jknquoteint/jvquoteall x main/put
 * matrix coverage
 
 ? UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
@@ -401,11 +401,13 @@ VERBS:
 * seqgen
 * cat -n -g
 * -o for count-distinct, uniq, most-frequent, least-frequent, top, histogram
+* --jknquoteint/--jvquoteall @ put dump
 
 I/O:
 * bare print/printn
 * --c2p et al.
 * --pprint --barred
+* --jknquoteint/--jvquoteall @ put dump, and JSON output
 
 BUGFIXES:
 * b.tsv bug -- to relnotes
