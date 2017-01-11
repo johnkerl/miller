@@ -1180,7 +1180,11 @@ void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 		for (int i = 0; i <= depth; i++)
 			fprintf(ostream, "%s", leader);
 		char* level_key_string = mv_alloc_format_val(&pentry->level_key);
-		json_print_string_escaped(ostream, level_key_string);
+		if (quote_keys_always || mv_is_string_or_empty(&pentry->level_key)) {
+			json_print_string_escaped(ostream, level_key_string);
+		} else {
+			fputs(level_key_string, ostream);
+		}
 		free(level_key_string);
 		fprintf(ostream, ": ");
 
@@ -1215,7 +1219,11 @@ static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 		fprintf(ostream, "{ ");
 	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
 		char* level_key_string = mv_alloc_format_val(&pentry->level_key);
-		json_print_string_escaped(ostream, level_key_string);
+		if (quote_keys_always || mv_is_string_or_empty(&pentry->level_key)) {
+			json_print_string_escaped(ostream, level_key_string);
+		} else {
+			fputs(level_key_string, ostream);
+		}
 		free(level_key_string);
 		fprintf(ostream, ": ");
 
