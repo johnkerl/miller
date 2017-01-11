@@ -9,7 +9,7 @@ FEATURE REQUESTS
 * strptime/strftime:
   - strptime w/ fractional seconds. maybe %OS?
   - strftime: %OS1-%OS9?
-  - use stddlib vers w/ strpokes/hacks, or reimpl stdlib vers?
+  - use stdlib vers w/ strpokes/hacks, or reimpl stdlib vers?
   - 1st write a mlrlib vers?!?
 
 ================================================================

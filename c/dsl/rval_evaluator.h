@@ -57,6 +57,8 @@ typedef struct _variables_t {
 	loop_stack_t*    ploop_stack;
 	return_state_t   return_state;
 	int              trace_execution;
+	int              json_quote_int_keys;
+	int              json_quote_non_string_values;
 } variables_t;
 
 // ----------------------------------------------------------------

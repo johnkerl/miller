@@ -522,14 +522,14 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 				.returned = FALSE,
 				.retval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
 			},
-			.trace_execution          = pstate->trace_execution,
+			.trace_execution              = pstate->trace_execution,
+			.json_quote_int_keys          = pstate->json_quote_int_keys,
+			.json_quote_non_string_values = pstate->json_quote_non_string_values,
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
 			.pshould_emit_rec             = &should_emit_rec,
 			.poutrecs                     = poutrecs,
 			.oosvar_flatten_separator     = pstate->oosvar_flatten_separator,
-			.json_quote_int_keys          = pstate->json_quote_int_keys,
-			.json_quote_non_string_values = pstate->json_quote_non_string_values,
 			.pwriter_opts                 = pstate->pwriter_opts,
 		};
 
@@ -553,14 +553,14 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 				.returned = FALSE,
 				.retval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
 			},
-			.trace_execution          = pstate->trace_execution,
+			.trace_execution              = pstate->trace_execution,
+			.json_quote_int_keys          = pstate->json_quote_int_keys,
+			.json_quote_non_string_values = pstate->json_quote_non_string_values,
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
 			.pshould_emit_rec             = &should_emit_rec,
 			.poutrecs                     = poutrecs,
 			.oosvar_flatten_separator     = pstate->oosvar_flatten_separator,
-			.json_quote_int_keys          = pstate->json_quote_int_keys,
-			.json_quote_non_string_values = pstate->json_quote_non_string_values,
 			.pwriter_opts                 = pstate->pwriter_opts,
 		};
 
@@ -588,14 +588,14 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.returned = FALSE,
 			.retval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
 		},
-		.trace_execution          = pstate->trace_execution,
+		.trace_execution              = pstate->trace_execution,
+		.json_quote_int_keys          = pstate->json_quote_int_keys,
+		.json_quote_non_string_values = pstate->json_quote_non_string_values,
 	};
 	cst_outputs_t cst_outputs = (cst_outputs_t) {
 		.pshould_emit_rec             = &should_emit_rec,
 		.poutrecs                     = poutrecs,
 		.oosvar_flatten_separator     = pstate->oosvar_flatten_separator,
-		.json_quote_int_keys          = pstate->json_quote_int_keys,
-		.json_quote_non_string_values = pstate->json_quote_non_string_values,
 		.pwriter_opts                 = pstate->pwriter_opts,
 	};
 

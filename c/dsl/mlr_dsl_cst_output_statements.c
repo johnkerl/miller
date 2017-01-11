@@ -1458,14 +1458,14 @@ static void handle_dump(
 	boxed_xval_t boxed_xval = ptarget_xevaluator->pprocess_func(ptarget_xevaluator->pvstate, pvars);
 
 	if (boxed_xval.xval.is_terminal) {
-	// xxx int     json_quote_int_keys      = TRUE; // JSON standard
-	// xxx int     json_quote_non_string_values = FALSE; // JSON standard
-
-		mlhmmv_print_terminal(&boxed_xval.xval.terminal_mlrval, TRUE/*xxx*/, FALSE, pstate->stdfp);
+		mlhmmv_print_terminal(&boxed_xval.xval.terminal_mlrval,
+			pvars->json_quote_int_keys, pvars->json_quote_non_string_values,
+			pstate->stdfp);
 		fprintf(pstate->stdfp, "\n");
 	} else {
-		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE, TRUE/*xxx*/, FALSE,
-			"", pstate->stdfp); // xxx mk simpler call w/ dfl args
+		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE,
+			pvars->json_quote_int_keys, pvars->json_quote_non_string_values,
+			"", pstate->stdfp);
 	}
 
 	if (boxed_xval.is_ephemeral) {
@@ -1491,11 +1491,13 @@ static void handle_dump_to_file(
 	boxed_xval_t boxed_xval = ptarget_xevaluator->pprocess_func(ptarget_xevaluator->pvstate, pvars);
 
 	if (boxed_xval.xval.is_terminal) {
-		mlhmmv_print_terminal(&boxed_xval.xval.terminal_mlrval, TRUE/*xxx*/, FALSE, outfp);
+		mlhmmv_print_terminal(&boxed_xval.xval.terminal_mlrval,
+			pvars->json_quote_int_keys, pvars->json_quote_non_string_values, outfp);
 		fprintf(outfp, "\n");
 	} else if (boxed_xval.xval.pnext_level != NULL) {
-		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE, TRUE/*xxx*/, FALSE,
-			"", outfp); // xxx mk simpler call w/ dfl args
+		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE,
+			pvars->json_quote_int_keys, pvars->json_quote_non_string_values,
+			"", outfp);
 	}
 
 	if (pstate->flush_every_record)

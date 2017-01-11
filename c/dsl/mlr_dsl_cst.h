@@ -69,8 +69,6 @@ typedef struct _cst_outputs_t {
 	int*    pshould_emit_rec;
 	sllv_t* poutrecs;
 	char*   oosvar_flatten_separator;
-	int     json_quote_int_keys;
-	int     json_quote_non_string_values;
 	cli_writer_opts_t* pwriter_opts;
 } cst_outputs_t;
 
