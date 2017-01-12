@@ -4990,6 +4990,11 @@ run_mlr --ojson --jvstack               --jknquoteint cat $indir/json-output-opt
 run_mlr --ojson             --jlistwrap --jknquoteint cat $indir/json-output-options.dkvp
 run_mlr --ojson --jvstack   --jlistwrap --jknquoteint cat $indir/json-output-options.dkvp
 
+run_mlr put -q --jvquoteall 'dump $*'                   $indir/json-output-options.dkvp
+run_mlr put -q --jvquoteall 'o = $*; o[7] = 8; dump o'  $indir/json-output-options.dkvp
+run_mlr put -q --jknquoteint 'dump $*'                  $indir/json-output-options.dkvp
+run_mlr put -q --jknquoteint 'o = $*; o[7] = 8; dump o' $indir/json-output-options.dkvp
+
 run_mlr           --ijson --opprint cat $indir/small-non-nested-wrapped.json $indir/small-non-nested-wrapped.json
 run_mlr --no-mmap --ijson --opprint cat $indir/small-non-nested-wrapped.json $indir/small-non-nested-wrapped.json
 
