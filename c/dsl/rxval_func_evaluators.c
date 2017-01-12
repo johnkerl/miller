@@ -87,7 +87,7 @@ static boxed_xval_t rxval_evaluator_x_x_func(void* pvstate, variables_t* pvars) 
 
 	boxed_xval_t bxrv = pstate->pfunc(&bxval1);
 
-	if (bxval1.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+	if (bxval1.is_ephemeral) {
 		mlhmmv_xvalue_free(&bxval1.xval);
 	}
 
@@ -130,7 +130,7 @@ static boxed_xval_t rxval_evaluator_x_m_func(void* pvstate, variables_t* pvars) 
 
 	boxed_xval_t bxrv = pstate->pfunc(&bxval1);
 
-	if (bxval1.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+	if (bxval1.is_ephemeral) {
 		mlhmmv_xvalue_free(&bxval1.xval);
 	}
 	return bxrv;
@@ -178,10 +178,10 @@ static boxed_xval_t rxval_evaluator_x_mx_func(void* pvstate, variables_t* pvars)
 
 	boxed_xval_t bxrv = pstate->pfunc(&bxval1, &bxval2);
 
-	if (bxval1.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+	if (bxval1.is_ephemeral) {
 		mlhmmv_xvalue_free(&bxval1.xval);
 	}
-	if (bxval2.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+	if (bxval2.is_ephemeral) {
 		mlhmmv_xvalue_free(&bxval2.xval);
 	}
 	return bxrv;
@@ -235,10 +235,10 @@ static boxed_xval_t rxval_evaluator_x_ms_func(void* pvstate, variables_t* pvars)
 
 	boxed_xval_t bxrv = pstate->pfunc(&bxval1, &bxval2);
 
-	if (bxval1.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+	if (bxval1.is_ephemeral) {
 		mlhmmv_xvalue_free(&bxval1.xval);
 	}
-	if (bxval2.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+	if (bxval2.is_ephemeral) {
 		mlhmmv_xvalue_free(&bxval2.xval);
 	}
 	return bxrv;
@@ -302,10 +302,10 @@ static boxed_xval_t rxval_evaluator_x_ss_func(void* pvstate, variables_t* pvars)
 
 	boxed_xval_t bxrv = pstate->pfunc(&bxval1, &bxval2);
 
-	if (bxval1.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+	if (bxval1.is_ephemeral) {
 		mlhmmv_xvalue_free(&bxval1.xval);
 	}
-	if (bxval2.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+	if (bxval2.is_ephemeral) {
 		mlhmmv_xvalue_free(&bxval2.xval);
 	}
 	return bxrv;
@@ -365,10 +365,10 @@ static boxed_xval_t rxval_evaluator_x_mss_func(void* pvstate, variables_t* pvars
 
 	boxed_xval_t bxrv = pstate->pfunc(&bxval1, &bxval2, &bxval3);
 
-	if (bxval1.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+	if (bxval1.is_ephemeral) {
 		mlhmmv_xvalue_free(&bxval1.xval);
 	}
-	if (bxval2.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+	if (bxval2.is_ephemeral) {
 		mlhmmv_xvalue_free(&bxval2.xval);
 	}
 	return bxrv;
@@ -430,13 +430,13 @@ static boxed_xval_t rxval_evaluator_x_sss_func(void* pvstate, variables_t* pvars
 
 	boxed_xval_t bxrv = pstate->pfunc(&bxval1, &bxval2, &bxval3);
 
-	if (bxval1.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+	if (bxval1.is_ephemeral) {
 		mlhmmv_xvalue_free(&bxval1.xval);
 	}
-	if (bxval2.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+	if (bxval2.is_ephemeral) {
 		mlhmmv_xvalue_free(&bxval2.xval);
 	}
-	if (bxval3.is_ephemeral) { // xxx funcify as bxval_free_if_ephemeral or some such
+	if (bxval3.is_ephemeral) {
 		mlhmmv_xvalue_free(&bxval3.xval);
 	}
 	return bxrv;
