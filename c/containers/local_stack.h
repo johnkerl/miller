@@ -110,7 +110,7 @@ static inline void local_stack_frame_assign_terminal_nonindexed(local_stack_fram
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "ASSIGN", TRUE, vardef_frame_relative_index);
 	local_stack_frame_entry_t* pentry = &pframe->pvars[vardef_frame_relative_index];
 
-	if (!(type_mask_from_mv(&val) & pentry->type_mask)) { // xxx temp
+	if (!(type_mask_from_mv(&val) & pentry->type_mask)) {
 		local_stack_frame_throw_type_mismatch_for_write(pentry, &val);
 	}
 

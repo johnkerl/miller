@@ -180,14 +180,14 @@ boxed_xval_t m_sss_splitkv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* ppairse
 	char* walker = input;
 	char* piece;
 	while ((piece = strsep(&walker, listsep)) != NULL) {
-		char* xxx_rename = piece;
-		char* left = strsep(&xxx_rename, pairsep);
-		if (xxx_rename == NULL) {
+		char* pair = piece;
+		char* left = strsep(&pair, pairsep);
+		if (pair == NULL) {
 			mv_t key = mv_from_int(i);
 			mv_t val = mv_type_infer_string_or_float_or_int(left, NO_FREE);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		} else {
-			char* right = strsep(&xxx_rename, pairsep);
+			char* right = strsep(&pair, pairsep);
 			mv_t key = mv_from_string(left, NO_FREE);
 			mv_t val = mv_type_infer_string_or_float_or_int(right, NO_FREE);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
@@ -211,14 +211,14 @@ boxed_xval_t m_sss_splitkvx_xfunc(boxed_xval_t* pstringval, boxed_xval_t* ppairs
 	char* walker = input;
 	char* piece;
 	while ((piece = strsep(&walker, listsep)) != NULL) {
-		char* xxx_rename = piece;
-		char* left = strsep(&xxx_rename, pairsep);
-		if (xxx_rename == NULL) {
+		char* pair = piece;
+		char* left = strsep(&pair, pairsep);
+		if (pair == NULL) {
 			mv_t key = mv_from_int(i);
 			mv_t val = mv_type_infer_string(left, NO_FREE);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		} else {
-			char* right = strsep(&xxx_rename, pairsep);
+			char* right = strsep(&pair, pairsep);
 			mv_t key = mv_from_string(left, NO_FREE);
 			mv_t val = mv_type_infer_string(right, NO_FREE);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);

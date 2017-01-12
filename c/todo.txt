@@ -1,7 +1,7 @@
 ================================================================
 BUGFIXES
 
-* mlr rename -r w/multiple empty newvals
+:D
 
 ================================================================
 FEATURE REQUESTS
@@ -33,7 +33,7 @@ OTHER:
 ================================================================
 UT FOR 5.0.0:
 
-* jknquoteint/jvquoteall x main/put
+* jknquoteint/jvquoteall x main/put (redo w/ $1)
 * matrix coverage
 
 ? UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
@@ -410,6 +410,7 @@ I/O:
 * --jknquoteint/--jvquoteall @ put dump, and JSON output
 
 BUGFIXES:
+* mlr rename -r w/multiple empty newvals
 * b.tsv bug -- to relnotes
 
 DOC:
