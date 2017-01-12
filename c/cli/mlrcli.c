@@ -982,8 +982,8 @@ void cli_writer_opts_init(cli_writer_opts_t* pwriter_opts) {
 	pwriter_opts->pprint_barred                  = NEITHER_TRUE_NOR_FALSE;
 	pwriter_opts->stack_json_output_vertically   = NEITHER_TRUE_NOR_FALSE;
 	pwriter_opts->wrap_json_output_in_outer_list = NEITHER_TRUE_NOR_FALSE;
-	pwriter_opts->quote_json_keys_always         = NEITHER_TRUE_NOR_FALSE;
-	pwriter_opts->quote_json_values_always       = NEITHER_TRUE_NOR_FALSE;
+	pwriter_opts->json_quote_int_keys         = NEITHER_TRUE_NOR_FALSE;
+	pwriter_opts->json_quote_non_string_values       = NEITHER_TRUE_NOR_FALSE;
 
 	pwriter_opts->output_json_flatten_separator  = NULL;
 	pwriter_opts->oosvar_flatten_separator       = NULL;
@@ -1037,11 +1037,11 @@ void cli_apply_writer_defaults(cli_writer_opts_t* pwriter_opts) {
 	if (pwriter_opts->wrap_json_output_in_outer_list == NEITHER_TRUE_NOR_FALSE)
 		pwriter_opts->wrap_json_output_in_outer_list = FALSE;
 
-	if (pwriter_opts->quote_json_keys_always == NEITHER_TRUE_NOR_FALSE)
-		pwriter_opts->quote_json_keys_always = FALSE;
+	if (pwriter_opts->json_quote_int_keys == NEITHER_TRUE_NOR_FALSE)
+		pwriter_opts->json_quote_int_keys = TRUE;
 
-	if (pwriter_opts->quote_json_values_always == NEITHER_TRUE_NOR_FALSE)
-		pwriter_opts->quote_json_values_always = FALSE;
+	if (pwriter_opts->json_quote_non_string_values == NEITHER_TRUE_NOR_FALSE)
+		pwriter_opts->json_quote_non_string_values = FALSE;
 
 	if (pwriter_opts->output_json_flatten_separator == NULL)
 		pwriter_opts->output_json_flatten_separator = DEFAULT_JSON_FLATTEN_SEPARATOR;
@@ -1168,11 +1168,11 @@ void cli_merge_writer_opts(cli_writer_opts_t* pfunc_opts, cli_writer_opts_t* pma
 	if (pfunc_opts->wrap_json_output_in_outer_list == NEITHER_TRUE_NOR_FALSE)
 		pfunc_opts->wrap_json_output_in_outer_list = pmain_opts->wrap_json_output_in_outer_list;
 
-	if (pfunc_opts->quote_json_keys_always == NEITHER_TRUE_NOR_FALSE)
-		pfunc_opts->quote_json_keys_always = pmain_opts->quote_json_keys_always;
+	if (pfunc_opts->json_quote_int_keys == NEITHER_TRUE_NOR_FALSE)
+		pfunc_opts->json_quote_int_keys = pmain_opts->json_quote_int_keys;
 
-	if (pfunc_opts->quote_json_values_always == NEITHER_TRUE_NOR_FALSE)
-		pfunc_opts->quote_json_values_always = pmain_opts->quote_json_values_always;
+	if (pfunc_opts->json_quote_non_string_values == NEITHER_TRUE_NOR_FALSE)
+		pfunc_opts->json_quote_non_string_values = pmain_opts->json_quote_non_string_values;
 
 	if (pfunc_opts->output_json_flatten_separator == NULL)
 		pfunc_opts->output_json_flatten_separator = pmain_opts->output_json_flatten_separator;
@@ -1424,13 +1424,13 @@ int cli_handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts
 		argi += 1;
 
 	} else if (streq(argv[argi], "--jknquoteint")) {
-		pwriter_opts->quote_json_keys_always = TRUE;
+		pwriter_opts->json_quote_int_keys = FALSE;
 		argi += 1;
 	} else if (streq(argv[argi], "--jquoteall")) {
-		pwriter_opts->quote_json_values_always = TRUE;
+		pwriter_opts->json_quote_non_string_values = TRUE;
 		argi += 1;
 	} else if (streq(argv[argi], "--jvquoteall")) {
-		pwriter_opts->quote_json_values_always = TRUE;
+		pwriter_opts->json_quote_non_string_values = TRUE;
 		argi += 1;
 
 	} else if (streq(argv[argi], "--vflatsep")) {

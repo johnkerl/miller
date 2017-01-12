@@ -44456,6 +44456,68 @@ mlr --ojson --jvstack --jlistwrap --jknquoteint cat ./reg_test/input/json-output
 }
 ]
 
+mlr put -q --jvquoteall dump $* ./reg_test/input/json-output-options.dkvp
+{
+  "a": "1",
+  "b": "x",
+  "c": "3"
+}
+{
+  "d": "4"
+}
+{
+  "1": "5",
+  "f": "6"
+}
+
+mlr put -q --jvquoteall o = $*; o[7] = 8; dump o ./reg_test/input/json-output-options.dkvp
+{
+  "a": "1",
+  "b": "x",
+  "c": "3",
+  "7": "8"
+}
+{
+  "d": "4",
+  "7": "8"
+}
+{
+  "1": "5",
+  "f": "6",
+  "7": "8"
+}
+
+mlr put -q --jknquoteint dump $* ./reg_test/input/json-output-options.dkvp
+{
+  "a": 1,
+  "b": "x",
+  "c": 3
+}
+{
+  "d": 4
+}
+{
+  "1": 5,
+  "f": 6
+}
+
+mlr put -q --jknquoteint o = $*; o[7] = 8; dump o ./reg_test/input/json-output-options.dkvp
+{
+  "a": 1,
+  "b": "x",
+  "c": 3,
+  7: 8
+}
+{
+  "d": 4,
+  7: 8
+}
+{
+  "1": 5,
+  "f": 6,
+  7: 8
+}
+
 mlr --ijson --opprint cat ./reg_test/input/small-non-nested-wrapped.json ./reg_test/input/small-non-nested-wrapped.json
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533

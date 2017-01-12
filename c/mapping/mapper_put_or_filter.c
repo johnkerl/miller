@@ -25,8 +25,6 @@ typedef struct _mapper_put_or_filter_state_t {
 
 	int            trace_execution;
 	char*          oosvar_flatten_separator;
-	int            json_quote_int_keys;
-	int            json_quote_non_string_values;
 	int            flush_every_record;
 	cli_writer_opts_t* pwriter_opts;
 
@@ -68,8 +66,6 @@ static mapper_t* mapper_put_or_filter_alloc(
 	int                negate_final_filter, // mlr filter -x
 	int                type_inferencing,
 	char*              oosvar_flatten_separator,
-	int                json_quote_int_keys,
-	int                json_quote_non_string_values,
 	int                flush_every_record,
 	cli_writer_opts_t* pwriter_opts,
 	cli_writer_opts_t* pmain_writer_opts);
@@ -245,8 +241,6 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	int     trace_parse              = FALSE;
 	int     trace_execution          = FALSE;
 	char*   oosvar_flatten_separator = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
-	int     json_quote_int_keys      = TRUE; // JSON standard
-	int     json_quote_non_string_values = FALSE; // JSON standard
 	int     flush_every_record       = TRUE;
 
 	cli_writer_opts_t* pwriter_opts = mlr_malloc_or_die(sizeof(cli_writer_opts_t));
@@ -326,12 +320,6 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 			}
 			oosvar_flatten_separator = argv[argi+1];
 			argi += 2;
-		} else if (streq(argv[argi], "--jknquoteint")) {
-			json_quote_int_keys = FALSE;
-			argi += 1;
-		} else if (streq(argv[argi], "--jvquoteall")) {
-			json_quote_non_string_values = TRUE;
-			argi += 1;
 		} else if (streq(argv[argi], "--no-fflush") || streq(argv[argi], "--no-flush")) {
 			flush_every_record = FALSE;
 			argi += 1;
@@ -386,7 +374,7 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	*pargi = argi;
 	return mapper_put_or_filter_alloc(mlr_dsl_expression, print_ast, trace_stack_allocation, trace_execution,
 		past, put_output_disabled, do_final_filter, negate_final_filter, type_inferencing, oosvar_flatten_separator,
-			json_quote_int_keys, json_quote_non_string_values, flush_every_record, pwriter_opts, pmain_writer_opts);
+			flush_every_record, pwriter_opts, pmain_writer_opts);
 }
 
 // ----------------------------------------------------------------
@@ -401,8 +389,6 @@ static mapper_t* mapper_put_or_filter_alloc(
 	int                negate_final_filter, // mlr filter -x
 	int                type_inferencing,
 	char*              oosvar_flatten_separator,
-	int                json_quote_int_keys,
-	int                json_quote_non_string_values,
 	int                flush_every_record,
 	cli_writer_opts_t* pwriter_opts,
 	cli_writer_opts_t* pmain_writer_opts)
@@ -418,8 +404,6 @@ static mapper_t* mapper_put_or_filter_alloc(
 	pstate->poosvars                     = mlhmmv_root_alloc();
 	pstate->trace_execution              = trace_execution;
 	pstate->oosvar_flatten_separator     = oosvar_flatten_separator;
-	pstate->json_quote_int_keys          = json_quote_int_keys;
-	pstate->json_quote_non_string_values = json_quote_non_string_values;
 	pstate->flush_every_record           = flush_every_record;
 	pstate->plocal_stack                 = local_stack_alloc();
 	pstate->ploop_stack                  = loop_stack_alloc();
@@ -523,8 +507,8 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 				.retval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
 			},
 			.trace_execution              = pstate->trace_execution,
-			.json_quote_int_keys          = pstate->json_quote_int_keys,
-			.json_quote_non_string_values = pstate->json_quote_non_string_values,
+			.json_quote_int_keys          = pstate->pwriter_opts->json_quote_int_keys,
+			.json_quote_non_string_values = pstate->pwriter_opts->json_quote_non_string_values,
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
 			.pshould_emit_rec             = &should_emit_rec,
@@ -554,8 +538,8 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 				.retval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
 			},
 			.trace_execution              = pstate->trace_execution,
-			.json_quote_int_keys          = pstate->json_quote_int_keys,
-			.json_quote_non_string_values = pstate->json_quote_non_string_values,
+			.json_quote_int_keys          = pstate->pwriter_opts->json_quote_int_keys,
+			.json_quote_non_string_values = pstate->pwriter_opts->json_quote_non_string_values,
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
 			.pshould_emit_rec             = &should_emit_rec,
@@ -589,8 +573,8 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.retval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
 		},
 		.trace_execution              = pstate->trace_execution,
-		.json_quote_int_keys          = pstate->json_quote_int_keys,
-		.json_quote_non_string_values = pstate->json_quote_non_string_values,
+		.json_quote_int_keys          = pstate->pwriter_opts->json_quote_int_keys,
+		.json_quote_non_string_values = pstate->pwriter_opts->json_quote_non_string_values,
 	};
 	cst_outputs_t cst_outputs = (cst_outputs_t) {
 		.pshould_emit_rec             = &should_emit_rec,
