@@ -151,8 +151,6 @@ MAPVAR CHECKLIST:
 
 * perf profile
 
-* bool_t:uchar typedef & perf check
-
 * man mlr section on maps
   o things which are always maps:
     - maplit
@@ -486,6 +484,8 @@ NON-RELEASE:
 
 ? mlr step -a shift --by {n}
 ? --imd ?
+
+* bool_t:uchar typedef & perf check?
 
 ================================================================
 5.2.0 MAYBE IDEAS:

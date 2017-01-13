@@ -57,8 +57,6 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 		break;
 
 	case MD_AST_NODE_TYPE_FUNCTION_CALLSITE:
-		// return rxval_evaluator_alloc_from_function_callsite(pnode, pfmgr, type_inferencing, context_flags);
-		// xxx temp
 		return fmgr_xalloc_provisional_from_operator_or_function_call(pfmgr, pnode, type_inferencing, context_flags);
 		break;
 
@@ -456,9 +454,7 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_full_oosvar(
 
 // ================================================================
 static boxed_xval_t rxval_evaluator_from_full_srec_func(void* pvstate, variables_t* pvars) {
-	boxed_xval_t boxed_xval;
-	boxed_xval.is_ephemeral = TRUE; // xxx invoke boxed_xval ctor
-	boxed_xval.xval = mlhmmv_xvalue_alloc_empty_map();
+	boxed_xval_t boxed_xval = box_ephemeral_xval(mlhmmv_xvalue_alloc_empty_map());
 
 	for (lrece_t* pe = pvars->pinrec->phead; pe != NULL; pe = pe->pnext) {
 		// mlhmmv_level_put_terminal will copy mv keys and values so we needn't (and shouldn't)
@@ -495,7 +491,7 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_full_srec(
 
 // ================================================================
 typedef struct _rxval_evaluator_from_function_callsite_state_t {
-	rval_evaluator_t* prval_evaluator; // xxx temp
+	rval_evaluator_t* prval_evaluator;
 } rxval_evaluator_from_function_callsite_state_t;
 
 static boxed_xval_t rxval_evaluator_from_function_callsite_func(void* pvstate, variables_t* pvars) {

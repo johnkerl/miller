@@ -1195,8 +1195,6 @@ static rxval_evaluator_t* construct_builtin_function_callsite_xevaluator(
 
 	}
 
-	// xxx arity check ...
-
 	return pxevaluator;
 }
 
