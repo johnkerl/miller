@@ -514,7 +514,6 @@ static udf_callsite_state_t* udf_callsite_state_alloc(
 
 // ----------------------------------------------------------------
 static void udf_callsite_state_eval_args(udf_callsite_state_t* pstate, variables_t* pvars) {
-	// xxx XXX typedecl check!
 	for (int i = 0; i < pstate->arity; i++) {
 		pstate->args[i] = pstate->pevals[i]->pprocess_func(pstate->pevals[i]->pvstate, pvars);
 	}
