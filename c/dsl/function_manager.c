@@ -1218,7 +1218,7 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(
 	} else if (streq(function_name, "mapdiff")) {
 		return rxval_evaluator_alloc_from_variadic_func(variadic_mapdiff_xfunc, pargs, nargs);
 	} else {
-		return NULL; // xxx stub
+		return NULL;
 	}
 }
 
