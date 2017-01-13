@@ -11,7 +11,7 @@
 typedef struct _dheap_t {
 	int  n;
 	int  alloc_size;
-	char  is_malloced; // xxx bool_t
+	char  is_malloced;
 	double *elements;
 } dheap_t;
 

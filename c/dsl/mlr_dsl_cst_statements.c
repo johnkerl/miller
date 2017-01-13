@@ -553,7 +553,7 @@ void mlr_dsl_cst_handle_statement_block(
 	variables_t*           pvars,
 	cst_outputs_t*         pcst_outputs)
 {
-	if (pvars->trace_execution) { // xxx find a better way to control this ...
+	if (pvars->trace_execution) {
 		for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 			fprintf(stdout, "TRACE ");
@@ -583,7 +583,7 @@ void mlr_dsl_cst_handle_statement_block_with_break_continue(
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs)
 {
-	if (pvars->trace_execution) { // xxx find a better way to control this ...
+	if (pvars->trace_execution) {
 		for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 			fprintf(stdout, "TRACE ");
@@ -618,7 +618,7 @@ void mlr_dsl_cst_handle_statement_list(
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs)
 {
-	if (pvars->trace_execution) { // xxx find a better way to control this ...
+	if (pvars->trace_execution) {
 		for (sllve_t* pe = pstatements->phead; pe != NULL; pe = pe->pnext) {
 			mlr_dsl_cst_statement_t* pstatement = pe->pvvalue;
 			fprintf(stdout, "TRACE ");
