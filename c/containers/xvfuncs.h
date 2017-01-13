@@ -5,9 +5,6 @@
 // Functions on extended values, namely, mlrvals/hashmaps.
 // ================================================================
 
-// xxx need memory-transfer semantics
-// xxx make the xvfuncs API entirely in terms of boxed_xval_t's?
-
 #include "../lib/mlrutil.h"
 #include "../containers/mlhmmv.h"
 #include "../containers/boxed_xval.h"
