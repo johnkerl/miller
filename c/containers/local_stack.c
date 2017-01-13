@@ -111,7 +111,6 @@ mv_t local_stack_frame_ref_terminal_from_indexed(local_stack_frame_t* pframe,
 	}
 
 #ifdef LOCAL_STACK_TRACE_ENABLE
-	// xxx needs an mlhmmv_xvalue_print
 	if (pbase_xval == NULL) {
 		printf("VALUE IS NULL\n");
 	} else if (pbase_xval->is_terminal) {
@@ -164,7 +163,6 @@ mlhmmv_xvalue_t* local_stack_frame_ref_extended_from_indexed(local_stack_frame_t
 	}
 
 #ifdef LOCAL_STACK_TRACE_ENABLE
-	// xxx needs an mlhmmv_xvalue_print
 	if (pmvalue == NULL) {
 		printf("VALUE IS NULL\n");
 	} else if (pmvalue->is_terminal) {
