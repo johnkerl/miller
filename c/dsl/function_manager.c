@@ -880,7 +880,12 @@ static rval_evaluator_t* construct_builtin_function_callsite_evaluator(
 }
 
 // ----------------------------------------------------------------
-// xxx comment why
+// At callsites, arguments can be scalars or maps; return values can be scalars
+// or maps.  At the user level, a function take map input and produce scalar
+// output or vice versa. As of this writing, though, *internally* functions
+// go from scalars to scalar or maps to map. This wrapper wraps scalar input
+// to functions which know about maps.
+
 typedef struct _xeval_wrapping_eval_state_t {
 	rval_evaluator_t* pevaluator;
 } xeval_wrapping_eval_state_t;
@@ -916,7 +921,12 @@ static rxval_evaluator_t* fmgr_alloc_xeval_wrapping_eval(rval_evaluator_t* peval
 }
 
 // ----------------------------------------------------------------
-// xxx comment why
+// At callsites, arguments can be scalars or maps; return values can be scalars
+// or maps.  At the user level, a function take map input and produce scalar
+// output or vice versa. As of this writing, though, *internally* functions go
+// from scalars to scalar or maps to map. This wrapper wraps maybe-map input to
+// functions which do not know about maps.
+
 typedef struct _eval_wrapping_xeval_state_t {
 	rxval_evaluator_t* pxevaluator;
 } eval_wrapping_xeval_state_t;
