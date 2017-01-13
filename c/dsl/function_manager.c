@@ -1351,8 +1351,11 @@ static void resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t* pev) {
 		return;
 	}
 
-	// xxx comment to differentiate between map-in,map-out, map-in,scalar-out, and scalar-in,scalar-out.
-	// xxx names are confusing and perhaps should be changed as well.
+	// Really there are map-in,map-out, map-in,scalar-out, and
+	// scalar-in,scalar-out: and actually even more subtle, e.g. the join
+	// functions take a mix of map and string arguments.  What we have
+	// internally are builtin function evaluators (scalars only) and builtin
+	// function xevaluators (at least one argument, and/or retval, is a map).
 	rxval_evaluator_t* pxevaluator = construct_builtin_function_callsite_xevaluator(pfmgr, pcallsite);
 	if (pxevaluator != NULL) {
 		pevaluator = fmgr_alloc_eval_wrapping_xeval(pxevaluator);
