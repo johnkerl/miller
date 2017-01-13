@@ -230,8 +230,10 @@ static boxed_xval_t rxval_evaluator_x_ms_func(void* pvstate, variables_t* pvars)
 	if (!bxval2.xval.is_terminal) {
 		return box_ephemeral_val(mv_error());
 	}
-
-	// xxx to-string ...
+	if (!mv_is_string_or_empty(&bxval2.xval.terminal_mlrval)) {
+		mv_free(&bxval2.xval.terminal_mlrval);
+		return box_ephemeral_val(mv_error());
+	}
 
 	boxed_xval_t bxrv = pstate->pfunc(&bxval1, &bxval2);
 
@@ -284,7 +286,6 @@ static boxed_xval_t rxval_evaluator_x_ss_func(void* pvstate, variables_t* pvars)
 		mv_free(&bxval1.xval.terminal_mlrval);
 		return box_ephemeral_val(mv_error());
 	}
-	// xxx to-string ...
 	if (!mv_is_string_or_empty(&bxval1.xval.terminal_mlrval)) {
 		mv_free(&bxval1.xval.terminal_mlrval);
 		return box_ephemeral_val(mv_error());
@@ -294,7 +295,6 @@ static boxed_xval_t rxval_evaluator_x_ss_func(void* pvstate, variables_t* pvars)
 		mv_free(&bxval2.xval.terminal_mlrval);
 		return box_ephemeral_val(mv_error());
 	}
-	// xxx to-string ...
 	if (!mv_is_string_or_empty(&bxval2.xval.terminal_mlrval)) {
 		mv_free(&bxval2.xval.terminal_mlrval);
 		return box_ephemeral_val(mv_error());
@@ -356,12 +356,18 @@ static boxed_xval_t rxval_evaluator_x_mss_func(void* pvstate, variables_t* pvars
 	if (!bxval2.xval.is_terminal) {
 		return box_ephemeral_val(mv_error());
 	}
+	if (!mv_is_string_or_empty(&bxval2.xval.terminal_mlrval)) {
+		mv_free(&bxval2.xval.terminal_mlrval);
+		return box_ephemeral_val(mv_error());
+	}
 
 	if (!bxval3.xval.is_terminal) {
 		return box_ephemeral_val(mv_error());
 	}
-
-	// xxx to-string ...
+	if (!mv_is_string_or_empty(&bxval3.xval.terminal_mlrval)) {
+		mv_free(&bxval3.xval.terminal_mlrval);
+		return box_ephemeral_val(mv_error());
+	}
 
 	boxed_xval_t bxrv = pstate->pfunc(&bxval1, &bxval2, &bxval3);
 
@@ -417,16 +423,26 @@ static boxed_xval_t rxval_evaluator_x_sss_func(void* pvstate, variables_t* pvars
 	if (!bxval1.xval.is_terminal) {
 		return box_ephemeral_val(mv_error());
 	}
+	if (!mv_is_string_or_empty(&bxval1.xval.terminal_mlrval)) {
+		mv_free(&bxval1.xval.terminal_mlrval);
+		return box_ephemeral_val(mv_error());
+	}
 
 	if (!bxval2.xval.is_terminal) {
+		return box_ephemeral_val(mv_error());
+	}
+	if (!mv_is_string_or_empty(&bxval2.xval.terminal_mlrval)) {
+		mv_free(&bxval2.xval.terminal_mlrval);
 		return box_ephemeral_val(mv_error());
 	}
 
 	if (!bxval3.xval.is_terminal) {
 		return box_ephemeral_val(mv_error());
 	}
-
-	// xxx to-string ...
+	if (!mv_is_string_or_empty(&bxval3.xval.terminal_mlrval)) {
+		mv_free(&bxval3.xval.terminal_mlrval);
+		return box_ephemeral_val(mv_error());
+	}
 
 	boxed_xval_t bxrv = pstate->pfunc(&bxval1, &bxval2, &bxval3);
 
