@@ -29,137 +29,6 @@ typedef boxed_xval_t xv_ternary_func_t(
 	boxed_xval_t* pbxval3);
 
 // ----------------------------------------------------------------
-// xxx merge the two groups, or make them different ...
-
-static inline boxed_xval_t b_x_is_present_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-		mv_from_bool(
-			!pbxval1->xval.is_terminal || mv_is_present(&pbxval1->xval.terminal_mlrval)
-		)
-	);
-}
-
-static inline boxed_xval_t b_x_is_absent_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-		mv_from_bool(
-			pbxval1->xval.is_terminal && mv_is_absent(&pbxval1->xval.terminal_mlrval)
-		)
-	);
-}
-
-static inline boxed_xval_t b_x_is_map_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-		mv_from_bool(
-			!pbxval1->xval.is_terminal
-		)
-	);
-}
-
-static inline boxed_xval_t b_x_is_not_map_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-		mv_from_bool(
-			pbxval1->xval.is_terminal
-		)
-	);
-}
-
-static inline boxed_xval_t b_x_is_numeric_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-		mv_from_bool(
-			pbxval1->xval.is_terminal && mv_is_numeric(&pbxval1->xval.terminal_mlrval)
-		)
-	);
-}
-
-static inline boxed_xval_t b_x_is_int_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-		mv_from_bool(
-			pbxval1->xval.is_terminal && mv_is_int(&pbxval1->xval.terminal_mlrval)
-		)
-	);
-}
-
-static inline boxed_xval_t b_x_is_float_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-		mv_from_bool(
-			pbxval1->xval.is_terminal && mv_is_float(&pbxval1->xval.terminal_mlrval)
-		)
-	);
-}
-
-static inline boxed_xval_t b_x_is_boolean_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-		mv_from_bool(
-			pbxval1->xval.is_terminal && mv_is_boolean(&pbxval1->xval.terminal_mlrval)
-		)
-	);
-}
-
-static inline boxed_xval_t b_x_is_string_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-		mv_from_bool(
-			pbxval1->xval.is_terminal && mv_is_string(&pbxval1->xval.terminal_mlrval)
-		)
-	);
-}
-
-static inline boxed_xval_t b_x_is_null_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-		mv_from_bool(
-			pbxval1->xval.is_terminal && mv_is_null(&pbxval1->xval.terminal_mlrval)
-		)
-	);
-}
-
-static inline boxed_xval_t b_x_is_not_null_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-		mv_from_bool(
-			!(pbxval1->xval.is_terminal && mv_is_null(&pbxval1->xval.terminal_mlrval))
-		)
-	);
-}
-
-static inline boxed_xval_t b_x_is_empty_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-		mv_from_bool(
-			pbxval1->xval.is_terminal && mv_is_empty(&pbxval1->xval.terminal_mlrval)
-		)
-	);
-}
-
-static inline boxed_xval_t b_x_is_not_empty_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-		mv_from_bool(
-			!(pbxval1->xval.is_terminal && mv_is_empty(&pbxval1->xval.terminal_mlrval))
-		)
-	);
-}
-
-static inline boxed_xval_t b_x_is_empty_map_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-		mv_from_bool(
-			!pbxval1->xval.is_terminal && pbxval1->xval.pnext_level->num_occupied == 0
-		)
-	);
-}
-
-static inline boxed_xval_t b_x_is_nonempty_map_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-		mv_from_bool(
-			!pbxval1->xval.is_terminal && pbxval1->xval.pnext_level->num_occupied != 0
-		)
-	);
-}
-
-static inline boxed_xval_t s_x_typeof_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
-	    mv_from_string(
-			mlhmmv_xvalue_describe_type_simple(&pbxval1->xval), NO_FREE
-		)
-	);
-}
-
-// ----------------------------------------------------------------
 // xxx update comment
 
 // Most functions here free their inputs. E.g. for string concatenation, the
@@ -297,6 +166,119 @@ static inline boxed_xval_t s_x_typeof_no_free_xfunc(boxed_xval_t* pbxval1) {
 			mlhmmv_xvalue_describe_type_simple(&pbxval1->xval), NO_FREE
 		)
 	);
+}
+
+// ----------------------------------------------------------------
+static inline boxed_xval_t b_x_is_present_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = b_x_is_present_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
+}
+
+static inline boxed_xval_t b_x_is_absent_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = b_x_is_absent_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
+}
+
+static inline boxed_xval_t b_x_is_map_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = b_x_is_map_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
+}
+
+static inline boxed_xval_t b_x_is_not_map_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = b_x_is_not_map_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
+}
+
+static inline boxed_xval_t b_x_is_numeric_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = b_x_is_numeric_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
+}
+
+static inline boxed_xval_t b_x_is_int_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = b_x_is_int_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
+}
+
+static inline boxed_xval_t b_x_is_float_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = b_x_is_float_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
+}
+
+static inline boxed_xval_t b_x_is_boolean_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = b_x_is_boolean_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
+}
+
+static inline boxed_xval_t b_x_is_string_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = b_x_is_string_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
+}
+
+static inline boxed_xval_t b_x_is_null_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = b_x_is_null_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
+}
+
+static inline boxed_xval_t b_x_is_not_null_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = b_x_is_not_null_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
+}
+
+static inline boxed_xval_t b_x_is_empty_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = b_x_is_empty_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
+}
+
+static inline boxed_xval_t b_x_is_not_empty_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = b_x_is_not_empty_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
+}
+
+static inline boxed_xval_t b_x_is_empty_map_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = b_x_is_empty_map_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
+}
+
+static inline boxed_xval_t b_x_is_nonempty_map_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = b_x_is_nonempty_map_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
+}
+
+static inline boxed_xval_t s_x_typeof_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv = s_x_typeof_no_free_xfunc(pbxval1);
+	if (pbxval1->is_ephemeral)
+	  mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
 }
 
 // ----------------------------------------------------------------
