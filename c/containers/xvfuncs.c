@@ -4,32 +4,43 @@
 
 // ----------------------------------------------------------------
 boxed_xval_t b_xx_haskey_xfunc(boxed_xval_t* pmapval, boxed_xval_t* pkeyval) {
+	boxed_xval_t rv;
 	if (pmapval->xval.is_terminal) {
-		return box_ephemeral_val(mv_from_bool(FALSE));
+		rv = box_ephemeral_val(mv_from_bool(FALSE));
 	} else if (!pkeyval->xval.is_terminal) {
-		return box_ephemeral_val(mv_from_bool(FALSE));
+		rv = box_ephemeral_val(mv_from_bool(FALSE));
 	} else {
-		return box_ephemeral_val(
+		rv = box_ephemeral_val(
 			mv_from_bool(
 				mlhmmv_level_has_key(pmapval->xval.pnext_level, &pkeyval->xval.terminal_mlrval)
 			)
 		);
 	}
+	if (pmapval->is_ephemeral)
+		mlhmmv_xvalue_free(&pmapval->xval);
+	if (pkeyval->is_ephemeral)
+		mlhmmv_xvalue_free(&pkeyval->xval);
+	return rv;
 }
 
 // ----------------------------------------------------------------
-boxed_xval_t i_x_length_xfunc(boxed_xval_t* pxval1) {
-	if (pxval1->xval.is_terminal) {
-		return box_ephemeral_val(
+// xxx memmgt
+boxed_xval_t i_x_length_xfunc(boxed_xval_t* pbxval1) {
+	boxed_xval_t rv;
+	if (pbxval1->xval.is_terminal) {
+		rv = box_ephemeral_val(
 			mv_from_int(1)
 		);
 	} else {
-		return box_ephemeral_val(
+		rv = box_ephemeral_val(
 			mv_from_int(
-				pxval1->xval.pnext_level->num_occupied
+				pbxval1->xval.pnext_level->num_occupied
 			)
 		);
 	}
+	if (pbxval1->is_ephemeral)
+		mlhmmv_xvalue_free(&pbxval1->xval);
+	return rv;
 }
 
 // ----------------------------------------------------------------
@@ -47,11 +58,16 @@ static int depth_aux(mlhmmv_xvalue_t* pxval) {
 }
 
 boxed_xval_t i_x_depth_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
+	boxed_xval_t rv = box_ephemeral_val(
 		mv_from_int(
 			depth_aux(&pbxval1->xval)
 		)
 	);
+
+	if (pbxval1->is_ephemeral)
+		mlhmmv_xvalue_free(&pbxval1->xval);
+
+	return rv;
 }
 
 // ----------------------------------------------------------------
@@ -67,16 +83,21 @@ static int leafcount_aux(mlhmmv_xvalue_t* pxval) {
 	}
 }
 
-// xxx memmgt
 boxed_xval_t i_x_leafcount_xfunc(boxed_xval_t* pbxval1) {
-	return box_ephemeral_val(
+	boxed_xval_t rv = box_ephemeral_val(
 		mv_from_int(
 			leafcount_aux(&pbxval1->xval)
 		)
 	);
+
+	if (pbxval1->is_ephemeral)
+		mlhmmv_xvalue_free(&pbxval1->xval);
+
+	return rv;
 }
 
 // ----------------------------------------------------------------
+// xxx memmgt
 boxed_xval_t variadic_mapsum_xfunc(boxed_xval_t* pbxvals, int nxvals) {
 	// xxx to-do optmization: transfer arg 1 if it's ephemeral
 	mlhmmv_xvalue_t sum = mlhmmv_xvalue_alloc_empty_map();
@@ -95,6 +116,7 @@ boxed_xval_t variadic_mapsum_xfunc(boxed_xval_t* pbxvals, int nxvals) {
 }
 
 // ----------------------------------------------------------------
+// xxx memmgt
 boxed_xval_t variadic_mapdiff_xfunc(boxed_xval_t* pbxvals, int nxvals) {
 	mlhmmv_xvalue_t diff = mlhmmv_xvalue_alloc_empty_map();
 	if (nxvals == 0) {
@@ -128,6 +150,7 @@ boxed_xval_t variadic_mapdiff_xfunc(boxed_xval_t* pbxvals, int nxvals) {
 }
 
 // ----------------------------------------------------------------
+// xxx memmgt
 // Precondition: the caller has ensured that both arguments are string-valued terminals.
 boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval) {
 	mlhmmv_xvalue_t map = mlhmmv_xvalue_alloc_empty_map();
@@ -148,6 +171,7 @@ boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval)
 }
 
 // ----------------------------------------------------------------
+// xxx memmgt
 // Precondition: the caller has ensured that both arguments are string-valued terminals.
 boxed_xval_t m_ss_splitnvx_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval) {
 	mlhmmv_xvalue_t map = mlhmmv_xvalue_alloc_empty_map();
@@ -169,6 +193,7 @@ boxed_xval_t m_ss_splitnvx_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval
 }
 
 // ----------------------------------------------------------------
+// xxx memmgt
 // Precondition: the caller has ensured that all arguments are string-valued terminals.
 boxed_xval_t m_sss_splitkv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* ppairsepval, boxed_xval_t* plistsepval) {
 	mlhmmv_xvalue_t map = mlhmmv_xvalue_alloc_empty_map();
@@ -200,6 +225,7 @@ boxed_xval_t m_sss_splitkv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* ppairse
 }
 
 // ----------------------------------------------------------------
+// xxx memmgt
 // Precondition: the caller has ensured that all arguments are string-valued terminals.
 boxed_xval_t m_sss_splitkvx_xfunc(boxed_xval_t* pstringval, boxed_xval_t* ppairsepval, boxed_xval_t* plistsepval) {
 	mlhmmv_xvalue_t map = mlhmmv_xvalue_alloc_empty_map();
@@ -234,6 +260,7 @@ boxed_xval_t m_sss_splitkvx_xfunc(boxed_xval_t* pstringval, boxed_xval_t* ppairs
 #define SB_JOIN_ALLOC_SIZE 128
 
 // ----------------------------------------------------------------
+// xxx memmgt
 // Precondition: the caller has ensured that the separator is a string-valued terminal.
 boxed_xval_t s_ms_joink_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
 	if (pmapval->xval.is_terminal) {
@@ -262,6 +289,7 @@ boxed_xval_t s_ms_joink_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
 }
 
 // ----------------------------------------------------------------
+// xxx memmgt
 // Precondition: the caller has ensured that the separator is a string-valued terminal.
 boxed_xval_t s_ms_joinv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
 	if (pmapval->xval.is_terminal) {
@@ -292,6 +320,7 @@ boxed_xval_t s_ms_joinv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* psepval) {
 }
 
 // ----------------------------------------------------------------
+// xxx memmgt
 // Precondition: the caller has ensured that the separators are string-valued terminals.
 boxed_xval_t s_mss_joinkv_xfunc(boxed_xval_t* pmapval, boxed_xval_t* ppairsepval, boxed_xval_t* plistsepval) {
 	if (pmapval->xval.is_terminal) {

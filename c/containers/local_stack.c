@@ -288,7 +288,7 @@ void local_stack_frame_assign_extended_nonindexed(local_stack_frame_t* pframe,
 // ----------------------------------------------------------------
 void local_stack_frame_assign_extended_indexed(local_stack_frame_t* pframe,
 	int vardef_frame_relative_index, sllmv_t* pmvkeys,
-	mlhmmv_xvalue_t new_value) // xxx by ptr
+	mlhmmv_xvalue_t new_value)
 {
 	LOCAL_STACK_TRACE(printf("LOCAL STACK FRAME %p SET %d\n", pframe, vardef_frame_relative_index));
 	LOCAL_STACK_BOUNDS_CHECK(pframe, "ASSIGN", TRUE, vardef_frame_relative_index);
