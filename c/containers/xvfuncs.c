@@ -24,7 +24,6 @@ boxed_xval_t b_xx_haskey_xfunc(boxed_xval_t* pmapval, boxed_xval_t* pkeyval) {
 }
 
 // ----------------------------------------------------------------
-// xxx memmgt
 boxed_xval_t i_x_length_xfunc(boxed_xval_t* pbxval1) {
 	boxed_xval_t rv;
 	if (pbxval1->xval.is_terminal) {
@@ -112,7 +111,14 @@ boxed_xval_t variadic_mapsum_xfunc(boxed_xval_t* pbxvals, int nxvals) {
 			mlhmmv_level_put_xvalue(sum.pnext_level, &e, &xval_copy);
 		}
 	}
-	return box_ephemeral_xval(sum);
+	boxed_xval_t rv = box_ephemeral_xval(sum);
+
+	for (int i = 0; i < nxvals; i++) {
+		if (pbxvals[i].is_ephemeral)
+			mlhmmv_xvalue_free(&pbxvals[i].xval);
+	}
+
+	return rv;
 }
 
 // ----------------------------------------------------------------
