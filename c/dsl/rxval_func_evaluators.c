@@ -46,9 +46,11 @@ static void rxval_evaluator_variadic_free(rxval_evaluator_t* pxevaluator) {
 		pstate->pargs[i]->pfree_func(pstate->pargs[i]);
 	free(pstate->pargs);
 
-	// xxx check ephemeral ...
-	for (int i = 0; i < pstate->nargs; i++)
-		mlhmmv_xvalue_free(&pstate->pbxvals[i].xval);
+	for (int i = 0; i < pstate->nargs; i++) {
+		if (pstate->pbxvals[i].is_ephemeral) {
+			mlhmmv_xvalue_free(&pstate->pbxvals[i].xval);
+		}
+	}
 	free(pstate->pbxvals);
 
 	free(pstate);
