@@ -29,6 +29,8 @@ typedef boxed_xval_t xv_ternary_func_t(
 	boxed_xval_t* pbxval3);
 
 // ----------------------------------------------------------------
+// xxx merge the two groups, or make them different ...
+
 static inline boxed_xval_t b_x_is_present_xfunc(boxed_xval_t* pbxval1) {
 	return box_ephemeral_val(
 		mv_from_bool(
