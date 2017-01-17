@@ -49,8 +49,11 @@ cook 1:
 * memoization
 * make this easier:
   mlr --from segv.tsv --itsvlite --oxtab put 'o=splitnv($b, ","); for (k,v in o) {$["p".k]=v}'
+  mlr --from segv.tsv --itsvlite --oxtab put 'o=splitnv($b, ":"); for (k,v in o) {$["p".k]=v}'
   mlr --from segv.tsv --itsvlite --oxtab put 'o=splitnv($b, ","); $*=mapsum($*,o)'
+  mlr --from segv.tsv --itsvlite --oxtab put 'o=splitnv($b, ":"); $*=mapsum($*,o)'
   mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ","); for (k,v in o) {emit mapsum($*, {"fp":v})}'
+  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"fp":v})}'
 
 * xxx:
   mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ":"); for (k,v in o) {$["b".k]=v}'
