@@ -3,6 +3,8 @@ libmlr_la_SOURCES=	free_flags.h \
 			minunit.h \
 			mlr_globals.c \
 			mlr_globals.h \
+			mlrdatetime.c \
+			mlrdatetime.h \
 			mlrescape.c \
 			mlrescape.h \
 			mlrmath.c \

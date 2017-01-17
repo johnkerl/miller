@@ -8,6 +8,7 @@
 
 #include "../lib/mlrmath.h"
 #include "../lib/mlrutil.h"
+#include "../lib/mlrdatetime.h"
 #include "../lib/mtrand.h"
 #include "../lib/string_builder.h"
 #include "../lib/string_array.h"

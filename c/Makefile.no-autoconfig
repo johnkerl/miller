@@ -85,6 +85,7 @@ TEST_PEEK_FILE_READER_SRCS = \
 
 TEST_LREC_SRCS = \
   lib/mlrutil.c \
+  lib/mlrdatetime.c \
   lib/mlrescape.c \
   lib/mlrregex.c \
   lib/mlr_globals.c \
@@ -121,6 +122,7 @@ TEST_LREC_SRCS = \
 
 TEST_MULTIPLE_CONTAINERS_SRCS = \
   lib/mlrutil.c \
+  lib/mlrdatetime.c \
   lib/mlrescape.c \
   lib/mlrregex.c \
   lib/mlr_globals.c \
@@ -165,6 +167,7 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
 
 TEST_MLHMMV_SRCS = \
   lib/mlrutil.c \
+  lib/mlrdatetime.c \
   lib/string_builder.c \
   lib/string_array.c \
   lib/mlrregex.c \
@@ -208,6 +211,7 @@ TEST_PARSE_TRIE_SRCS = \
 TEST_RVAL_EVALUATORS_SRCS = \
   lib/mlr_globals.c \
   lib/mlrutil.c \
+  lib/mlrdatetime.c \
   lib/mlrregex.c \
   lib/mtrand.c \
   lib/mlrmath.c \

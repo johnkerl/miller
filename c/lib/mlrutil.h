@@ -75,9 +75,6 @@ static inline int streqn(char* a, char* b, int n) {
 // ----------------------------------------------------------------
 int mlr_bsearch_double_for_insert(double* array, int size, double value);
 
-// seconds since the epoch
-double get_systime();
-
 void*  mlr_malloc_or_die(size_t size);
 void*  mlr_realloc_or_die(void *ptr, size_t size);
 static inline char * mlr_strdup_or_die(const char *s1) {
@@ -121,9 +118,6 @@ char* mlr_paste_5_strings(char* s1, char* s2, char* s3, char* s4, char* s5);
 
 int mlr_string_hash_func(char *str);
 int mlr_string_pair_hash_func(char* str1, char* str2);
-
-// portable timegm replacement
-time_t mlr_timegm (struct tm *ptm);
 
 int strlen_for_utf8_display(char* str);
 int string_starts_with(char* string, char* prefix);
