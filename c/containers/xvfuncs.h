@@ -2,7 +2,21 @@
 #define XVFUNCS_H
 
 // ================================================================
-// Functions on extended values, namely, mlrvals/hashmaps.
+// Functions on extended values, namely, scalars and maps.
+//
+// NOTE ON EPHEMERALITY OF MAPS:
+//
+// Most functions here free their inputs. E.g. for string concatenation, the
+// output which is returned is the concatenation of the two inputs which are
+// freed. This is true for functions on scalars as well as functions on maps
+// (the latter in this header file).
+//
+// However, maps are treated differently from scalars in that some maps are
+// referenced, rather than copied, within the concrete syntax tree.  E.g. in
+// 'mapsum({3:4},@v)', the map literal {3:4} is ephemeral to the expression and
+// must be freed during evaluation, but the @v part is referenced to the @v data
+// structure and is only copied on write.  The boxed_xval_t's is_ephemeral flag
+// tracks the difference between the two cases.
 // ================================================================
 
 #include "../lib/mlrutil.h"
@@ -34,8 +48,8 @@ typedef boxed_xval_t xv_ternary_func_t(
 // freed. For another example, is_string frees its input and returns the boolean
 // value of the result. These functions, by contrast, only return a boolean for
 // the outcome of the test but do not free the inputs. The intended usage is for
-// type-assertion checks.  E.g. in '$b = asserting_string($a)', if $a is a string
-// it is assigned to $b, else an error is thrown.
+// type-assertion checks.  E.g. in '$b = asserting_string($a)', if $a is a
+// string it is assigned to $b, else an error is thrown.
 
 static inline boxed_xval_t b_x_is_present_no_free_xfunc(boxed_xval_t* pbxval1) {
 	return box_ephemeral_val(
