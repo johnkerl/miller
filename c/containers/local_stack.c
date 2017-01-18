@@ -139,9 +139,7 @@ mv_t local_stack_frame_ref_terminal_from_indexed(local_stack_frame_t* pframe,
 			pxval = mlhmmv_level_look_up_and_ref_xvalue(pbase_xval->pnext_level, pmvkeys, &error);
 		}
 	}
-	if (pxval == NULL) {
-		return mv_absent();
-	} else if (pxval->is_terminal) {
+	if (pxval != NULL && pxval->is_terminal) {
 		return mv_copy(&pxval->terminal_mlrval);
 	} else {
 		return mv_absent();
