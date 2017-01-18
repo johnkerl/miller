@@ -29,8 +29,6 @@ typedef boxed_xval_t xv_ternary_func_t(
 	boxed_xval_t* pbxval3);
 
 // ----------------------------------------------------------------
-// xxx update comment
-
 // Most functions here free their inputs. E.g. for string concatenation, the
 // output which is returned is the concatenation of the two inputs which are
 // freed. For another example, is_string frees its input and returns the boolean
