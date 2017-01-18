@@ -219,8 +219,8 @@ static void handle_unset_nonindexed_local_variable(
 	local_stack_frame_assign_terminal_nonindexed(pframe, punset_item->local_variable_frame_relative_index, mv_absent());
 }
 
-// As with oosvars, unset removes the key. E.g. if 'v = { 1:2, 3:4 }' then 'unset v[1]' results // <-- xxx UT that
-// in 'v = { 3:4 }'.
+// As with oosvars, unset removes the key. E.g. if 'v = { 1:2, 3:4 }' then
+// 'unset v[1]' results in 'v = { 3:4 }'.
 static void handle_unset_indexed_local_variable(
 	unset_item_t*  punset_item,
 	variables_t*   pvars,
