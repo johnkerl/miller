@@ -1373,32 +1373,6 @@ void mlhmmv_root_copy_submap(mlhmmv_root_t* pmap, sllmv_t* ptokeys, sllmv_t* pfr
 }
 
 // ----------------------------------------------------------------
-// xxx rm?
-mlhmmv_xvalue_t mlhmmv_root_copy_xvalue(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
-	int error;
-	if (pmvkeys == NULL || pmvkeys->length == 0) {
-		mlhmmv_xvalue_t root_value = (mlhmmv_xvalue_t) {
-			.is_terminal = FALSE,
-			.terminal_mlrval = mv_absent(),
-			.pnext_level = pmap->root_xvalue.pnext_level,
-		};
-		return mlhmmv_xvalue_copy(&root_value);
-	} else {
-		mlhmmv_level_entry_t* pfromentry = mlhmmv_level_look_up_and_ref_entry(
-			pmap->root_xvalue.pnext_level, pmvkeys->phead, &error);
-		if (pfromentry != NULL) {
-			return mlhmmv_xvalue_copy(&pfromentry->level_xvalue);
-		} else {
-			return (mlhmmv_xvalue_t) {
-				.is_terminal = FALSE,
-				.terminal_mlrval = mv_absent(),
-				.pnext_level = NULL,
-			};
-		}
-	}
-}
-
-// ----------------------------------------------------------------
 sllv_t* mlhmmv_root_copy_keys_from_submap(mlhmmv_root_t* pmap, sllmv_t* pmvkeys) {
 	int error;
 	if (pmvkeys->length == 0) {
