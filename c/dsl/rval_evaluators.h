@@ -6,6 +6,7 @@
 #include "containers/xvfuncs.h"
 #include "dsl/mlr_dsl_ast.h"
 #include "dsl/rval_evaluator.h"
+#include "dsl/rxval_evaluator.h"
 #include "dsl/function_manager.h"
 
 // ================================================================

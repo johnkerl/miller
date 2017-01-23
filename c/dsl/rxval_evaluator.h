@@ -25,8 +25,8 @@
 // See also the comments above mapper_put.c for more information about left-hand sides (lvals).
 // ================================================================
 
-#ifndef RVAL_EVALUATOR_H
-#define RVAL_EVALUATOR_H
+#ifndef RXVAL_EVALUATOR_H
+#define RXVAL_EVALUATOR_H
 
 #include "lib/context.h"
 #include "containers/lrec.h"
@@ -39,42 +39,16 @@
 #include "lib/string_array.h"
 
 // ----------------------------------------------------------------
-// xxx needs to be in a different header file
-typedef struct _return_state_t {
-	mlhmmv_xvalue_t retval;
-	int returned;
-} return_state_t;
+struct _rxval_evaluator_t;  // forward reference for method declarations
 
-// ----------------------------------------------------------------
-// xxx needs to be in a different header file
-typedef struct _variables_t {
-	lrec_t*          pinrec;
-	lhmsmv_t*        ptyped_overlay;
-	mlhmmv_root_t*   poosvars;
-	string_array_t** ppregex_captures;
-	context_t*       pctx;
-	local_stack_t*   plocal_stack;
-	loop_stack_t*    ploop_stack;
-	return_state_t   return_state;
-	int              trace_execution;
-	int              json_quote_int_keys;
-	int              json_quote_non_string_values;
-} variables_t;
+typedef boxed_xval_t rxval_evaluator_process_func_t(void* pvstate, variables_t* pvars);
 
-// ----------------------------------------------------------------
-// This is for scalar-valued contexts: almost all expressions except
-// for rxval contexts.
+typedef void rxval_evaluator_free_func_t(struct _rxval_evaluator_t*);
 
-struct _rval_evaluator_t;  // forward reference for method declarations
-
-typedef mv_t rval_evaluator_process_func_t(void* pvstate, variables_t* pvars);
-
-typedef void rval_evaluator_free_func_t(struct _rval_evaluator_t*);
-
-typedef struct _rval_evaluator_t {
+typedef struct _rxval_evaluator_t {
 	void* pvstate;
-	rval_evaluator_process_func_t* pprocess_func;
-	rval_evaluator_free_func_t*    pfree_func;
-} rval_evaluator_t;
+	rxval_evaluator_process_func_t* pprocess_func;
+	rxval_evaluator_free_func_t*    pfree_func;
+} rxval_evaluator_t;
 
-#endif // RVAL_EVALUATOR_H
+#endif // RXVAL_EVALUATOR_H

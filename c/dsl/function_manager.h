@@ -6,6 +6,7 @@
 #include "containers/hss.h"
 #include "dsl/mlr_dsl_ast.h"
 #include "dsl/rval_evaluator.h"
+#include "dsl/rxval_evaluator.h"
 #include "dsl/type_inference.h"
 
 // ----------------------------------------------------------------

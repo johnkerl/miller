@@ -24,6 +24,7 @@ libdsl_la_SOURCES=	\
 			mlr_dsl_cst_unset_statements.c \
 			mlr_dsl_stack_allocate.c \
 			rval_evaluator.h \
+			rxval_evaluator.h \
 			rval_evaluators.h \
 			rval_expr_evaluators.c \
 			rval_func_evaluators.c \
