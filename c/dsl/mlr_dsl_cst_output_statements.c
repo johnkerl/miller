@@ -1232,7 +1232,7 @@ static void handle_emit_lashed_to_stdfp(
 {
 	emit_lashed_state_t* pstate = pstatement->pvstate;
 
-	// The opts aren't complete at alloc time so we need to handle them on first use. // xxx still true?
+	// The opts aren't complete at alloc time so we need to handle them on first use.
 	if (pstate->psingle_lrec_writer == NULL)
 		pstate->psingle_lrec_writer = lrec_writer_alloc_or_die(pcst_outputs->pwriter_opts);
 
