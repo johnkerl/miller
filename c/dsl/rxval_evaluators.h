@@ -1,3 +1,22 @@
+// ================================================================
+// These evaluate right-hand-side extended values (rxvals) and return the same.
+//
+// For scalar (non-extended) right-hand side values, everything is ephemeral as
+// it propagates up through the concrete syntax tree: e.g. in '$c = $a . $b' the
+// $a and $b are copied out as ephemerals; in the concat function their
+// concatenation is computed and the ephemeral input arguments are freed; then
+// the result is stored in field $c.
+//
+// But for extended values (here) everything is copy-on-write:
+// expression-intermediate values are not always ephemeral.  This is due to the
+// size of the data involved. We can do dump or emit of a nested hashmap stored
+// in an oosvar or local without copying it; we can do mapdiff of two map-valued
+// variables while not modifying or copying either argument.
+//
+// The boxed_xval_t decorates mlhmmv_value_t (extended value) with an
+// is_ephemeral flag.  The mlhmmv_value_t in turn has a map or a scalar.
+// ================================================================
+
 #ifndef RXVAL_EVALUATORS_H
 #define RXVAL_EVALUATORS_H
 
@@ -8,33 +27,6 @@
 #include "dsl/rval_evaluator.h"
 #include "dsl/rxval_evaluator.h"
 #include "dsl/function_manager.h"
-
-// ================================================================
-// NOTES:
-//
-// * Code here evaluates right-hand-side values (rvals) and return mlrvals (mv_t).
-//
-// * This is used by mlr filter and mlr put.
-//
-// * Unlike most files in Miller which are read top-down (with sufficient
-//   static prototypes at the top of the file to keep the compiler happy),
-//   please read this one from the bottom up.
-//
-// * Comparison to mlrval.c: the latter is functions from mlrval(s) to
-//   mlrval; in this file we have the higher-level notion of evaluating lrec
-//   objects, using mlrval.c to do so.
-//
-// * There are two kinds of lrec-evaluators here: those with _x_ in their names
-//   which accept various types of mlrval, with disposition-matrices in
-//   mlrval.c functions, and those with _i_/_f_/_b_/_s_ (int, float, boolean,
-//   string) which either type-check or type-coerce their arguments, invoking
-//   type-specific functions in mlrval.c.  Those with _n_ take int or float
-//   and also use disposition matrices.  In all cases it's the job of
-//   rval_evaluators.c to invoke functions here with mlrvals of the correct
-//   type(s). See also comments in containers/mlrval.h.
-//
-// xxx update comment w/r/t rxvals
-// ================================================================
 
 // ================================================================
 // rxval_expr_evaluators.c

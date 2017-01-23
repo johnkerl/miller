@@ -5,13 +5,22 @@
 //
 // * This is used by mlr filter and mlr put.
 //
-// * Unlike most files in Miller which are read top-down (with sufficient
-//   static prototypes at the top of the file to keep the compiler happy),
-//   please read this one from the bottom up.
+// * Comparison to mlrval.c: the latter is functions from mlrval(s) to mlrval;
+//   in this file we have the higher-level notion of evaluating lrec objects,
+//   using mlrval.c to do so.
 //
-// * Comparison to mlrval.c: the latter is functions from mlrval(s) to
-//   mlrval; in this file we have the higher-level notion of evaluating lrec
-//   objects, using mlrval.c to do so.
+// * Functions prototyped here evaluate right-hand-side values (rvals) and
+//   return mlrvals (mv_t).  This is for scalar-valued contexts: almost all
+//   expressions except for rxval contexts.
+//
+//   Values propagating up through the concrete syntax tree are always
+//   dynamically allocated: e.g. in '$c = $a . $b' the $a and $b are copied out
+//   as ephemerals; in the concat function their concatenation is computed and
+//   the ephemeral input arguments are freed; then the result is stored in field
+//   $c.
+//
+//   This is distinct from rxvals which are copy-on-write:
+//   expression-intermediate values are not always ephemeral.
 //
 // * There are two kinds of lrec-evaluators here: those with _x_ in their names
 //   which accept various types of mlrval, with disposition-matrices in
@@ -22,7 +31,6 @@
 //   rval_evaluators.c to invoke functions here with mlrvals of the correct
 //   type(s). See also comments in containers/mlrval.h.
 //
-// xxx update comment w/r/t rxvals
 // ================================================================
 
 #ifndef RVAL_EVALUATORS_H

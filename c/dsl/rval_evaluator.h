@@ -2,6 +2,14 @@
 // These evaluate right-hand-side values (rvals) and return mlrvals (mv_t).
 // This is for scalar-valued contexts: almost all expressions except for rxval
 // contexts.
+//
+// Values propagating up through the concrete syntax tree are always dynamically
+// allocated: e.g. in '$c = $a . $b' the $a and $b are copied out as ephemerals;
+// in the concat function their concatenation is computed and the ephemeral
+// input arguments are freed; then the result is stored in field $c.
+//
+// (This is distinct from rxvals which are copy-on-write:
+// expression-intermediate values are not always ephemeral.)
 // ================================================================
 
 #ifndef RVAL_EVALUATOR_H
