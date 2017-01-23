@@ -23,15 +23,17 @@ libdsl_la_SOURCES=	\
 			mlr_dsl_cst_triple_for_statements.c \
 			mlr_dsl_cst_unset_statements.c \
 			mlr_dsl_stack_allocate.c \
+			return_state.h \
 			rval_evaluator.h \
-			rxval_evaluator.h \
 			rval_evaluators.h \
 			rval_expr_evaluators.c \
 			rval_func_evaluators.c \
 			rval_list_evaluators.c \
+			rxval_evaluator.h \
 			rxval_expr_evaluators.c \
 			rxval_func_evaluators.c \
-			type_inference.h
+			type_inference.h \
+			variables.h
 libdsl_la_LIBADD=	../lib/libmlr.la ../cli/libcli.la ../input/libinput.la
 
 # TODO: replace the interesting content with unit tests; jettison the rest
