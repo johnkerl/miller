@@ -288,9 +288,10 @@ mv_t mv_scan_number_or_die(char* string);
 // In common to all three:
 // * Null string -> mv_absent
 // * Empty string -> mv_empty
-// * Non-numeric -> string-valued mlrval with specified free_flags.
-mv_t mv_type_infer_string(char* string, char free_flags);
-mv_t mv_type_infer_string_or_float(char* string, char free_flags);
-mv_t mv_type_infer_string_or_float_or_int(char* string, char free_flags);
+// * Non-numeric -> string-valued mlrval with storage pointing
+//   to the char* (no copy is done).
+mv_t mv_ref_type_infer_string(char* string);
+mv_t mv_ref_type_infer_string_or_float(char* string);
+mv_t mv_ref_type_infer_string_or_float_or_int(char* string);
 
 #endif // MLRVAL_H

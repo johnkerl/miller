@@ -169,7 +169,7 @@ boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval)
 	char* piece;
 	while ((piece = strsep(&walker, sep)) != NULL) {
 		mv_t key = mv_from_int(i);
-		mv_t val = mv_type_infer_string_or_float_or_int(piece, NO_FREE);
+		mv_t val = mv_ref_type_infer_string_or_float_or_int(piece);
 		mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		i++;
 	}
@@ -195,7 +195,7 @@ boxed_xval_t m_ss_splitnvx_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval
 	char* piece;
 	while ((piece = strsep(&walker, sep)) != NULL) {
 		mv_t key = mv_from_int(i);
-		mv_t val = mv_type_infer_string(piece, NO_FREE);
+		mv_t val = mv_ref_type_infer_string(piece);
 		mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		i++;
 	}
@@ -226,12 +226,12 @@ boxed_xval_t m_sss_splitkv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* ppairse
 		char* left = strsep(&pair, pairsep);
 		if (pair == NULL) {
 			mv_t key = mv_from_int(i);
-			mv_t val = mv_type_infer_string_or_float_or_int(left, NO_FREE);
+			mv_t val = mv_ref_type_infer_string_or_float_or_int(left);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		} else {
 			char* right = strsep(&pair, pairsep);
 			mv_t key = mv_from_string(left, NO_FREE);
-			mv_t val = mv_type_infer_string_or_float_or_int(right, NO_FREE);
+			mv_t val = mv_ref_type_infer_string_or_float_or_int(right);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		}
 		i++;
@@ -265,12 +265,12 @@ boxed_xval_t m_sss_splitkvx_xfunc(boxed_xval_t* pstringval, boxed_xval_t* ppairs
 		char* left = strsep(&pair, pairsep);
 		if (pair == NULL) {
 			mv_t key = mv_from_int(i);
-			mv_t val = mv_type_infer_string(left, NO_FREE);
+			mv_t val = mv_ref_type_infer_string(left);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		} else {
 			char* right = strsep(&pair, pairsep);
 			mv_t key = mv_from_string(left, NO_FREE);
-			mv_t val = mv_type_infer_string(right, NO_FREE);
+			mv_t val = mv_ref_type_infer_string(right);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		}
 		i++;

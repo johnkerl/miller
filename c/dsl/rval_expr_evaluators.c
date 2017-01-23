@@ -962,7 +962,7 @@ mv_t get_srec_value_string_only(char* field_name, lrec_t* pinrec, lhmsmv_t* ptyp
 		rv = mv_copy(poverlay);
 	} else {
 		// No strdup: string value points into lrec memory and is valid as long as the lrec is.
-		rv = mv_type_infer_string(lrec_get(pinrec, field_name), NO_FREE);
+		rv = mv_ref_type_infer_string(lrec_get(pinrec, field_name));
 	}
 	return rv;
 }
@@ -979,7 +979,7 @@ mv_t get_srec_value_string_float(char* field_name, lrec_t* pinrec, lhmsmv_t* pty
 		rv = mv_copy(poverlay);
 	} else {
 		// No strdup: string value points into lrec memory and is valid as long as the lrec is.
-		rv = mv_type_infer_string_or_float(lrec_get(pinrec, field_name), NO_FREE);
+		rv = mv_ref_type_infer_string_or_float(lrec_get(pinrec, field_name));
 	}
 	return rv;
 }
@@ -996,7 +996,7 @@ mv_t get_srec_value_string_float_int(char* field_name, lrec_t* pinrec, lhmsmv_t*
 		rv = mv_copy(poverlay);
 	} else {
 		// No strdup: string value points into lrec memory and is valid as long as the lrec is.
-		rv = mv_type_infer_string_or_float_or_int(lrec_get(pinrec, field_name), NO_FREE);
+		rv = mv_ref_type_infer_string_or_float_or_int(lrec_get(pinrec, field_name));
 	}
 	return rv;
 }
