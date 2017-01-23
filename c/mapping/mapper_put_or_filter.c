@@ -561,7 +561,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 	should_emit_rec = TRUE;
 
 	variables_t variables = (variables_t) {
-		.pinrec           = pinrec,
+		.pinrec           = pinrec, // Note variables.pinrec pointer can update on '$* = ...'
 		.ptyped_overlay   = ptyped_overlay,
 		.poosvars         = pstate->poosvars,
 		.ppregex_captures = &pregex_captures,
@@ -605,10 +605,11 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 	lhmsmv_free(variables.ptyped_overlay);
 	string_array_free(pregex_captures);
 
+	// Note variables.pinrec pointer can update on '$* = ...'
 	if (should_emit_rec && !pstate->put_output_disabled) {
 		sllv_append(poutrecs, variables.pinrec);
 	} else {
-		lrec_free(variables.pinrec); // xxx variables.pinrec mess from reassign in #* = ...
+		lrec_free(variables.pinrec);
 	}
 	return poutrecs;
 }

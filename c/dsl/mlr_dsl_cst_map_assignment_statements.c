@@ -112,7 +112,6 @@ static void handle_full_srec_assignment(
 	} else {
 		mlhmmv_xvalue_free(&boxed_xval.xval);
 	}
-	// xxx needs a clear-and-move-all ...
 	lrec_free(pvars->pinrec);
 	lhmsmv_free(pvars->ptyped_overlay);
 	pvars->pinrec = poutrec;
