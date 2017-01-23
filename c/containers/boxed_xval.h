@@ -1,15 +1,17 @@
-#ifndef BOXED_XVAL_H
-#define BOXED_XVAL_H
-
-#include "../containers/mlrval.h"
-#include "../containers/mlhmmv.h"
-
+// ================================================================
 // This is for map-valued contexts: LHS/RHS of assignments,
 // UDF/subroutine arguments, and UDF return values.
 
 // The is_ephemeral flag is TRUE for map-literals, function return values, and
 // data copied out of srecs.  It is FALSE when the pointer is into an existing
 // data structure's memory (e.g. oosvars or locals).
+// ================================================================
+
+#ifndef BOXED_XVAL_H
+#define BOXED_XVAL_H
+
+#include "../containers/mlrval.h"
+#include "../containers/mlhmmv.h"
 
 // ----------------------------------------------------------------
 typedef struct _boxed_xval_t {

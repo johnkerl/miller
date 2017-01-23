@@ -1,13 +1,3 @@
-#ifndef RVAL_EVALUATORS_H
-#define RVAL_EVALUATORS_H
-
-#include <stdio.h>
-#include "containers/mvfuncs.h"
-#include "containers/xvfuncs.h"
-#include "dsl/mlr_dsl_ast.h"
-#include "dsl/rval_evaluator.h"
-#include "dsl/function_manager.h"
-
 // ================================================================
 // NOTES:
 //
@@ -35,7 +25,15 @@
 // xxx update comment w/r/t rxvals
 // ================================================================
 
-// xxx split out into multiple header files
+#ifndef RVAL_EVALUATORS_H
+#define RVAL_EVALUATORS_H
+
+#include <stdio.h>
+#include "containers/mvfuncs.h"
+#include "containers/xvfuncs.h"
+#include "dsl/mlr_dsl_ast.h"
+#include "dsl/rval_evaluator.h"
+#include "dsl/function_manager.h"
 
 // ================================================================
 // rval_expr_evaluators.c
