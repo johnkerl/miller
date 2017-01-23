@@ -30,6 +30,8 @@ OTHER:
   there is a DSL so you *can* loop things out w/ variables etc etc etc but also verbs for
   often-used idioms so you don't *have* to. then show a concise and convincing example.
 
+* 'data prep' <-> 'data cleaning' at covers
+
 ================================================================
 UT FOR 5.0.0:
 

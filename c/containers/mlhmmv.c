@@ -856,16 +856,6 @@ static void mlhmmv_level_put_terminal_no_enlarge(mlhmmv_level_t* plevel, sllmve_
 void mlhmmv_level_to_lrecs(mlhmmv_level_t* plevel, sllmv_t* pkeys, sllmv_t* pnames, sllv_t* poutrecs,
 	int do_full_prefixing, char* flatten_separator)
 {
-	// xxx gross hack. fix this.
-	if (pkeys == NULL || pkeys->phead == NULL) {
-		for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
-			sllmv_t* pkey = sllmv_single_no_free(&pentry->level_key);
-			mlhmmv_level_to_lrecs(plevel, pkey, pnames, poutrecs, do_full_prefixing, flatten_separator);
-			sllmv_free(pkey);
-		}
-		return;
-	}
-
 	mv_t* pfirstkey = &pkeys->phead->value;
 
 	mlhmmv_level_entry_t* ptop_entry = mlhmmv_level_look_up_and_ref_entry(plevel, pkeys->phead, NULL);
@@ -1533,6 +1523,7 @@ void mlhmmv_root_partial_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pkeys, sllmv_t* 
 	int do_full_prefixing, char* flatten_separator)
 {
 	// There should be at least the oosvar basename, e.g. '@a[b][c]' or '@a[b]' or '@a' but not '@'.
+	MLR_INTERNAL_CODING_ERROR_IF(pkeys == NULL);
 	MLR_INTERNAL_CODING_ERROR_IF(pkeys->phead == NULL);
 
 	mlhmmv_level_to_lrecs(pmap->root_xvalue.pnext_level, pkeys, pnames, poutrecs, do_full_prefixing,

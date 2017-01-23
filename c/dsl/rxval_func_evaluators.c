@@ -25,7 +25,6 @@ static boxed_xval_t rxval_evaluator_variadic_func(void* pvstate, variables_t* pv
 		rxval_evaluator_t* parg = pstate->pargs[i];
 		boxed_xval_t* pbxval = &pstate->pbxvals[i];
 		*pbxval = parg->pprocess_func(parg->pvstate, pvars);
-		// xxx map-check ...
 	}
 
 	boxed_xval_t bxrv = pstate->pfunc(pstate->pbxvals, nargs);
