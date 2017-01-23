@@ -7,7 +7,7 @@
 #include "lib/mtrand.h"
 #include "mapping/mapper.h"
 #include "dsl/context_flags.h"
-#include "dsl/rval_evaluators.h"
+#include "dsl/rxval_evaluators.h"
 
 // ----------------------------------------------------------------
 typedef struct _rxval_evaluator_variadic_state_t {

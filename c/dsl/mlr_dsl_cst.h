@@ -9,6 +9,7 @@
 #include "dsl/mlr_dsl_ast.h"
 #include "dsl/mlr_dsl_blocked_ast.h"
 #include "dsl/rval_evaluators.h"
+#include "dsl/rxval_evaluators.h"
 #include "dsl/function_manager.h"
 #include "output/multi_out.h"
 #include "output/multi_lrec_writer.h"

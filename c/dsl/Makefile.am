@@ -30,6 +30,7 @@ libdsl_la_SOURCES=	\
 			rval_func_evaluators.c \
 			rval_list_evaluators.c \
 			rxval_evaluator.h \
+			rxval_evaluators.h \
 			rxval_expr_evaluators.c \
 			rxval_func_evaluators.c \
 			type_inference.h \

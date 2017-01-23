@@ -8,7 +8,7 @@
 #include "lib/mtrand.h"
 #include "dsl/mlr_dsl_cst.h" // xxx only for allocate_keylist_evaluators_from_ast_node -- xxx move
 #include "dsl/context_flags.h"
-#include "dsl/rval_evaluators.h"
+#include "dsl/rxval_evaluators.h"
 #include "dsl/function_manager.h"
 #include "mapping/mapper.h"
 

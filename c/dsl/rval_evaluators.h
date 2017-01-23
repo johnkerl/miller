@@ -6,7 +6,6 @@
 #include "containers/xvfuncs.h"
 #include "dsl/mlr_dsl_ast.h"
 #include "dsl/rval_evaluator.h"
-#include "dsl/rxval_evaluator.h"
 #include "dsl/function_manager.h"
 
 // ================================================================
@@ -32,6 +31,8 @@
 //   and also use disposition matrices.  In all cases it's the job of
 //   rval_evaluators.c to invoke functions here with mlrvals of the correct
 //   type(s). See also comments in containers/mlrval.h.
+//
+// xxx update comment w/r/t rxvals
 // ================================================================
 
 // xxx split out into multiple header files
@@ -162,86 +163,4 @@ mv_t get_copy_srec_value_string_only_aux(lrece_t* pentry, lhmsmv_t* ptyped_overl
 mv_t get_copy_srec_value_string_float_aux(lrece_t* pentry, lhmsmv_t* ptyped_overlay);
 mv_t get_copy_srec_value_string_float_int_aux(lrece_t* pentry, lhmsmv_t* ptyped_overlay);
 
-// ================================================================
-// rxval_expr_evaluators.c // xxx make separate header file for these
-// ================================================================
-
-// ----------------------------------------------------------------
-// Topmost functions:
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_ast(
-	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
-
-// Next level:
-rxval_evaluator_t* rxval_evaluator_alloc_from_map_literal(
-	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_function_callsite(
-	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_nonindexed_local_variable(
-	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_indexed_local_variable(
-	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_oosvar_keylist(
-	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_full_oosvar(
-	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_full_srec(
-	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
-
-rxval_evaluator_t* rxval_evaluator_alloc_wrapping_rval(
-	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
-
-// ================================================================
-// rxval_func_evaluators.c
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_variadic_func(
-	xv_variadic_func_t* pfunc,
-	rxval_evaluator_t** pargs,
-	int                 nargs);
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_x_func(
-	xv_unary_func_t*   pfunc,
-	rxval_evaluator_t* parg1);
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_m_func(
-	xv_unary_func_t*   pfunc,
-	rxval_evaluator_t* parg1);
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_mx_func(
-	xv_binary_func_t*  pfunc,
-	rxval_evaluator_t* parg1,
-	rxval_evaluator_t* parg2);
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_ms_func(
-	xv_binary_func_t*  pfunc,
-	rxval_evaluator_t* parg1,
-	rxval_evaluator_t* parg2);
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_ss_func(
-	xv_binary_func_t*  pfunc,
-	rxval_evaluator_t* parg1,
-	rxval_evaluator_t* parg2);
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_mss_func(
-	xv_ternary_func_t* pfunc,
-	rxval_evaluator_t* parg1,
-	rxval_evaluator_t* parg2,
-	rxval_evaluator_t* parg3);
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_sss_func(
-	xv_ternary_func_t* pfunc,
-	rxval_evaluator_t* parg1,
-	rxval_evaluator_t* parg2,
-	rxval_evaluator_t* parg3);
-
-rxval_evaluator_t* rxval_evaluator_alloc_from_A_x_func(
-	xv_unary_func_t*   pfunc,
-	rxval_evaluator_t* parg1, char* desc);
-
-#endif // LREC_FEVALUATORS_H
+#endif // RVAL_EVALUATORS_H

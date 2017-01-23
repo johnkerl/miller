@@ -3,6 +3,7 @@
 #include "dsl/function_manager.h"
 #include "dsl/context_flags.h"
 #include "dsl/rval_evaluators.h"
+#include "dsl/rxval_evaluators.h"
 
 // ----------------------------------------------------------------
 typedef enum _func_class_t {
