@@ -909,7 +909,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_local_variable(int vardef_frame_rela
 		sizeof(rval_evaluator_from_local_variable_state_t));
 	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 
-	MLR_INTERNAL_CODING_ERROR_IF(vardef_frame_relative_index == MD_UNUSED_INDEX); // xxx to more places
+	MLR_INTERNAL_CODING_ERROR_IF(vardef_frame_relative_index == MD_UNUSED_INDEX);
 	pstate->vardef_frame_relative_index = vardef_frame_relative_index;
 	pevaluator->pprocess_func    = rval_evaluator_from_local_variable_func;
 	pevaluator->pfree_func       = rval_evaluator_from_local_variable_free;
