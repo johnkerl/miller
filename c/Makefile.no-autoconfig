@@ -236,6 +236,7 @@ TEST_RVAL_EVALUATORS_SRCS = \
   containers/type_decl.c \
   dsl/mlr_dsl_ast.c \
   dsl/function_manager.c \
+  dsl/keylist_evaluators.c \
   dsl/rval_expr_evaluators.c \
   dsl/rxval_expr_evaluators.c \
   dsl/rval_func_evaluators.c \

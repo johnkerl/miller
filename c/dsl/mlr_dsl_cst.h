@@ -168,12 +168,6 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc_with_block(
 	mlr_dsl_cst_statement_freer_t*         pstatement_freer,
 	void*                                  pvstate);
 
-sllv_t* allocate_keylist_evaluators_from_ast_node(
-	mlr_dsl_ast_node_t* pnode,
-	fmgr_t*             pfmgr,
-	int                 type_inferencing,
-	int                 context_flags);
-
 // ----------------------------------------------------------------
 // MLR_DSL_CST OBJECT
 

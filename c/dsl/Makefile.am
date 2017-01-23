@@ -3,6 +3,8 @@ libdsl_la_SOURCES=	\
 			context_flags.h \
 			function_manager.c \
 			function_manager.h \
+			keylist_evaluators.c \
+			keylist_evaluators.h \
 			mlr_dsl_ast.c \
 			mlr_dsl_ast.h \
 			mlr_dsl_blocked_ast.c \
