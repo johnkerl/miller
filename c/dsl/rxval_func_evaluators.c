@@ -58,12 +58,23 @@ static void rxval_evaluator_variadic_free(rxval_evaluator_t* pxevaluator) {
 }
 
 rxval_evaluator_t* rxval_evaluator_alloc_from_variadic_func(
-	xv_variadic_func_t* pfunc,
-	rxval_evaluator_t** pargs,
-	int nargs)
+	xv_variadic_func_t*  pfunc,
+	sllv_t*              parg_nodes,
+	fmgr_t*              pfmgr,
+	int                  type_inferencing,
+	int                  context_flags)
 {
 	rxval_evaluator_variadic_state_t* pstate = mlr_malloc_or_die(sizeof(rxval_evaluator_variadic_state_t));
 	pstate->pfunc = pfunc;
+
+	int nargs = parg_nodes->length;
+	rxval_evaluator_t** pargs = mlr_malloc_or_die(nargs * sizeof(rxval_evaluator_t*));
+	int i = 0;
+	for (sllve_t* pe = parg_nodes->phead; pe != NULL; pe = pe->pnext, i++) {
+		mlr_dsl_ast_node_t* pnode = pe->pvvalue;
+		pargs[i] = rxval_evaluator_alloc_from_ast(pnode, pfmgr, type_inferencing, context_flags);
+	}
+
 	pstate->pargs = pargs;
 	pstate->nargs = nargs;
 	pstate->pbxvals  = mlr_malloc_or_die(nargs * sizeof(boxed_xval_t));
@@ -102,10 +113,16 @@ static void rxval_evaluator_x_x_free(rxval_evaluator_t* pxevaluator) {
 	free(pxevaluator);
 }
 
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_x_func(xv_unary_func_t* pfunc, rxval_evaluator_t* parg1) {
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_x_func(
+	xv_unary_func_t*    pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags)
+{
 	rxval_evaluator_x_x_state_t* pstate = mlr_malloc_or_die(sizeof(rxval_evaluator_x_x_state_t));
 	pstate->pfunc = pfunc;
-	pstate->parg1 = parg1;
+	pstate->parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
 
 	rxval_evaluator_t* pxevaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
 	pxevaluator->pvstate       = pstate;
@@ -144,10 +161,16 @@ static void rxval_evaluator_x_m_free(rxval_evaluator_t* pxevaluator) {
 	free(pxevaluator);
 }
 
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_m_func(xv_unary_func_t* pfunc, rxval_evaluator_t* parg1) {
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_m_func(
+	xv_unary_func_t*    pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags)
+{
 	rxval_evaluator_x_m_state_t* pstate = mlr_malloc_or_die(sizeof(rxval_evaluator_x_m_state_t));
 	pstate->pfunc = pfunc;
-	pstate->parg1 = parg1;
+	pstate->parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
 
 	rxval_evaluator_t* pxevaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
 	pxevaluator->pvstate       = pstate;
@@ -196,13 +219,18 @@ static void rxval_evaluator_x_mx_free(rxval_evaluator_t* pxevaluator) {
 	free(pxevaluator);
 }
 
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_mx_func(xv_binary_func_t* pfunc,
-	rxval_evaluator_t* parg1, rxval_evaluator_t* parg2)
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_mx_func(
+	xv_binary_func_t*   pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	mlr_dsl_ast_node_t* parg2_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags)
 {
 	rxval_evaluator_x_mx_state_t* pstate = mlr_malloc_or_die(sizeof(rxval_evaluator_x_mx_state_t));
 	pstate->pfunc = pfunc;
-	pstate->parg1 = parg1;
-	pstate->parg2 = parg2;
+	pstate->parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags); // xxx arg ord unif thru api
+	pstate->parg2 = rxval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags); 
 
 	rxval_evaluator_t* pxevaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
 	pxevaluator->pvstate       = pstate;
@@ -255,13 +283,18 @@ static void rxval_evaluator_x_ms_free(rxval_evaluator_t* pxevaluator) {
 	free(pxevaluator);
 }
 
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_ms_func(xv_binary_func_t* pfunc,
-	rxval_evaluator_t* parg1, rxval_evaluator_t* parg2)
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_ms_func(
+	xv_binary_func_t*   pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	mlr_dsl_ast_node_t* parg2_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags)
 {
 	rxval_evaluator_x_ms_state_t* pstate = mlr_malloc_or_die(sizeof(rxval_evaluator_x_ms_state_t));
 	pstate->pfunc = pfunc;
-	pstate->parg1 = parg1;
-	pstate->parg2 = parg2;
+	pstate->parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+	pstate->parg2 = rxval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
 
 	rxval_evaluator_t* pxevaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
 	pxevaluator->pvstate       = pstate;
@@ -320,13 +353,18 @@ static void rxval_evaluator_x_ss_free(rxval_evaluator_t* pxevaluator) {
 	free(pxevaluator);
 }
 
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_ss_func(xv_binary_func_t* pfunc,
-	rxval_evaluator_t* parg1, rxval_evaluator_t* parg2)
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_ss_func(
+	xv_binary_func_t*   pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	mlr_dsl_ast_node_t* parg2_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags)
 {
 	rxval_evaluator_x_ss_state_t* pstate = mlr_malloc_or_die(sizeof(rxval_evaluator_x_ss_state_t));
 	pstate->pfunc = pfunc;
-	pstate->parg1 = parg1;
-	pstate->parg2 = parg2;
+	pstate->parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+	pstate->parg2 = rxval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
 
 	rxval_evaluator_t* pxevaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
 	pxevaluator->pvstate       = pstate;
@@ -390,14 +428,20 @@ static void rxval_evaluator_x_mss_free(rxval_evaluator_t* pxevaluator) {
 	free(pxevaluator);
 }
 
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_mss_func(xv_ternary_func_t* pfunc,
-	rxval_evaluator_t* parg1, rxval_evaluator_t* parg2, rxval_evaluator_t* parg3)
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_mss_func(
+	xv_ternary_func_t*  pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	mlr_dsl_ast_node_t* parg2_node,
+	mlr_dsl_ast_node_t* parg3_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags)
 {
 	rxval_evaluator_x_mss_state_t* pstate = mlr_malloc_or_die(sizeof(rxval_evaluator_x_mss_state_t));
 	pstate->pfunc = pfunc;
-	pstate->parg1 = parg1;
-	pstate->parg2 = parg2;
-	pstate->parg3 = parg3;
+	pstate->parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+	pstate->parg2 = rxval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
+	pstate->parg3 = rxval_evaluator_alloc_from_ast(parg3_node, pfmgr, type_inferencing, context_flags);
 
 	rxval_evaluator_t* pxevaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
 	pxevaluator->pvstate       = pstate;
@@ -468,14 +512,20 @@ static void rxval_evaluator_x_sss_free(rxval_evaluator_t* pxevaluator) {
 	free(pxevaluator);
 }
 
-rxval_evaluator_t* rxval_evaluator_alloc_from_x_sss_func(xv_ternary_func_t* pfunc,
-	rxval_evaluator_t* parg1, rxval_evaluator_t* parg2, rxval_evaluator_t* parg3)
+rxval_evaluator_t* rxval_evaluator_alloc_from_x_sss_func(
+	xv_ternary_func_t*  pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	mlr_dsl_ast_node_t* parg2_node,
+	mlr_dsl_ast_node_t* parg3_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags)
 {
 	rxval_evaluator_x_sss_state_t* pstate = mlr_malloc_or_die(sizeof(rxval_evaluator_x_sss_state_t));
 	pstate->pfunc = pfunc;
-	pstate->parg1 = parg1;
-	pstate->parg2 = parg2;
-	pstate->parg3 = parg3;
+	pstate->parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+	pstate->parg2 = rxval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
+	pstate->parg3 = rxval_evaluator_alloc_from_ast(parg3_node, pfmgr, type_inferencing, context_flags);
 
 	rxval_evaluator_t* pxevaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
 	pxevaluator->pvstate       = pstate;
@@ -516,10 +566,18 @@ static void rxval_evaluator_A_x_free(rxval_evaluator_t* pevaluator) {
 	free(pevaluator);
 }
 
-rxval_evaluator_t* rxval_evaluator_alloc_from_A_x_func(xv_unary_func_t* pfunc, rxval_evaluator_t* parg1, char* desc) {
+rxval_evaluator_t* rxval_evaluator_alloc_from_A_x_func(
+	xv_unary_func_t*    pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags,
+	char*               desc)
+{
+
 	rxval_evaluator_A_x_state_t* pstate = mlr_malloc_or_die(sizeof(rxval_evaluator_A_x_state_t));
 	pstate->pfunc = pfunc;
-	pstate->parg1 = parg1;
+	pstate->parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
 	pstate->desc  = mlr_strdup_or_die(desc);
 
 	rxval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));

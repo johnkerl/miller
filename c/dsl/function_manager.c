@@ -41,31 +41,51 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[];
 static void fmgr_check_arity_with_report(fmgr_t* pfmgr, char* function_name,
 	int user_provided_arity, int* pvariadic);
 
-static rval_evaluator_t* fmgr_alloc_evaluator_from_variadic_func_name(char* function_name, rval_evaluator_t** pargs, int nargs);
+static rval_evaluator_t* fmgr_alloc_evaluator_from_variadic_func_name(
+	char* function_name, rval_evaluator_t** pargs, int nargs);
 
-static rval_evaluator_t* fmgr_alloc_evaluator_from_zary_func_name(char* function_name);
+static rval_evaluator_t* fmgr_alloc_evaluator_from_zary_func_name(
+	char* function_name);
 
-static rval_evaluator_t* fmgr_alloc_evaluator_from_unary_func_name(char* fnnm, rval_evaluator_t* parg1);
+static rval_evaluator_t* fmgr_alloc_evaluator_from_unary_func_name(
+	char* function_name, rval_evaluator_t* parg1);
 
-static rval_evaluator_t* fmgr_alloc_evaluator_from_binary_func_name(char* fnnm,
+static rval_evaluator_t* fmgr_alloc_evaluator_from_binary_func_name(
+	char* function_name,
 	rval_evaluator_t* parg1, rval_evaluator_t* parg2);
 
-static rval_evaluator_t* fmgr_alloc_evaluator_from_binary_regex_arg2_func_name(char* fnnm,
+static rval_evaluator_t* fmgr_alloc_evaluator_from_binary_regex_arg2_func_name(
+	char* function_name,
 	rval_evaluator_t* parg1, char* regex_string, int ignore_case);
 
-static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_func_name(char* fnnm,
+static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_func_name(
+	char* function_name,
 	rval_evaluator_t* parg1, rval_evaluator_t* parg2, rval_evaluator_t* parg3);
 
-static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_regex_arg2_func_name(char* fnnm,
+static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_regex_arg2_func_name(
+	char* function_name,
 	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(char* function_name, rxval_evaluator_t** pargs, int nargs);
-static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm, rxval_evaluator_t* parg1);
-static rxval_evaluator_t* fmgr_alloc_xevaluator_from_binary_func_name(char* fnnm, rxval_evaluator_t* parg1,
-	rxval_evaluator_t* pargs2);
-static rxval_evaluator_t* fmgr_alloc_xevaluator_from_ternary_func_name(char* fnnm, rxval_evaluator_t* parg1,
-	rxval_evaluator_t* pargs2, rxval_evaluator_t* pargs3);
+// xxx cmt why ASTs here
+static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(
+	char* function_name, sllv_t* parg_nodes,
+	fmgr_t* pf, int ti /*type_inferencing*/, int cf /*context_flags*/);
+
+static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(
+	char* function_name,
+	mlr_dsl_ast_node_t* parg1,
+	fmgr_t* pf, int ti /*type_inferencing*/, int cf /*context_flags*/);
+
+static rxval_evaluator_t* fmgr_alloc_xevaluator_from_binary_func_name(
+	char* function_name,
+	mlr_dsl_ast_node_t* parg1, mlr_dsl_ast_node_t* pargs2,
+	fmgr_t* pf, int ti /*type_inferencing*/, int cf /*context_flags*/);
+
+static rxval_evaluator_t* fmgr_alloc_xevaluator_from_ternary_func_name(
+	char* function_name,
+	mlr_dsl_ast_node_t* parg1, mlr_dsl_ast_node_t* pargs2, mlr_dsl_ast_node_t* pargs3,
+	fmgr_t* pf, int ti /*type_inferencing*/, int cf /*context_flags*/);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 static void  resolve_func_callsite(fmgr_t* pfmgr, rval_evaluator_t*  pev);
@@ -1151,58 +1171,26 @@ static rxval_evaluator_t* construct_builtin_function_callsite_xevaluator(
 
 	rxval_evaluator_t* pxevaluator = NULL;
 	if (variadic) {
-		int nargs = pnode->pchildren->length;
-		rxval_evaluator_t** pargs = mlr_malloc_or_die(nargs * sizeof(rxval_evaluator_t*));
-		int i = 0;
-		for (sllve_t* pe = pnode->pchildren->phead; pe != NULL; pe = pe->pnext, i++) {
-			mlr_dsl_ast_node_t* pchild = pe->pvvalue;
-			pargs[i] = rxval_evaluator_alloc_from_ast(pchild, pfmgr, type_inferencing, context_flags);
-		}
-		pxevaluator = fmgr_alloc_xevaluator_from_variadic_func_name(function_name, pargs, nargs);
-		// xxx free args if xeval is null
+		pxevaluator = fmgr_alloc_xevaluator_from_variadic_func_name(function_name, pnode->pchildren,
+			pfmgr, type_inferencing, context_flags);
 
 	} else if (user_provided_arity == 1) {
 		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
-		rxval_evaluator_t* parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
-		pxevaluator = fmgr_alloc_xevaluator_from_unary_func_name(function_name, parg1);
-// xxx gross to alloc & free right away like this ...
-// xxx can't free since unresolved callsites may point in here.
-// xxx better to pass args as ASTs here and let them be constructed only on function-name match.
-//		if (pxevaluator == NULL) {
-//			parg1->pfree_func(parg1);
-//		}
+		pxevaluator = fmgr_alloc_xevaluator_from_unary_func_name(function_name, parg1_node,
+			pfmgr, type_inferencing, context_flags);
 
 	} else if (user_provided_arity == 2) {
 		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
 		mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
-		rxval_evaluator_t* parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
-		rxval_evaluator_t* parg2 = rxval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
-		pxevaluator = fmgr_alloc_xevaluator_from_binary_func_name(function_name, parg1, parg2);
-// xxx gross to alloc & free right away like this ...
-// xxx can't free since unresolved callsites may point in here.
-// xxx better to pass args as ASTs here and let them be constructed only on function-name match.
-//		if (pxevaluator == NULL) {
-//			parg1->pfree_func(parg1);
-//			parg2->pfree_func(parg2);
-//		}
+		pxevaluator = fmgr_alloc_xevaluator_from_binary_func_name(function_name, parg1_node, parg2_node,
+			pfmgr, type_inferencing, context_flags);
 
 	} else if (user_provided_arity == 3) {
 		mlr_dsl_ast_node_t* parg1_node = pnode->pchildren->phead->pvvalue;
 		mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
 		mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvvalue;
-		rxval_evaluator_t* parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
-		rxval_evaluator_t* parg2 = rxval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
-		rxval_evaluator_t* parg3 = rxval_evaluator_alloc_from_ast(parg3_node, pfmgr, type_inferencing, context_flags);
-		pxevaluator = fmgr_alloc_xevaluator_from_ternary_func_name(function_name, parg1, parg2, parg3);
-// xxx gross to alloc & free right away like this ...
-// xxx can't free since unresolved callsites may point in here.
-// xxx better to pass args as ASTs here and let them be constructed only on function-name match.
-//		if (pxevaluator == NULL) {
-//			parg1->pfree_func(parg1);
-//			parg2->pfree_func(parg2);
-//			parg3->pfree_func(parg3);
-//		}
-
+		pxevaluator = fmgr_alloc_xevaluator_from_ternary_func_name(function_name, parg1_node, parg2_node, parg3_node,
+			pfmgr, type_inferencing, context_flags);
 	}
 
 	return pxevaluator;
@@ -1211,129 +1199,139 @@ static rxval_evaluator_t* construct_builtin_function_callsite_xevaluator(
 // ----------------------------------------------------------------
 static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(
 	char*               function_name,
-	rxval_evaluator_t** pargs,
-	int                 nargs)
+	sllv_t*             parg_nodes,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags)
 {
 	if (streq(function_name, "mapsum")) {
-		return rxval_evaluator_alloc_from_variadic_func(variadic_mapsum_xfunc, pargs, nargs);
+		return rxval_evaluator_alloc_from_variadic_func(variadic_mapsum_xfunc, parg_nodes,
+			pfmgr, type_inferencing, context_flags);
 	} else if (streq(function_name, "mapdiff")) {
-		return rxval_evaluator_alloc_from_variadic_func(variadic_mapdiff_xfunc, pargs, nargs);
+		return rxval_evaluator_alloc_from_variadic_func(variadic_mapdiff_xfunc, parg_nodes,
+			pfmgr, type_inferencing, context_flags);
 	} else {
 		return NULL;
 	}
 }
 
 // ----------------------------------------------------------------
-static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm, rxval_evaluator_t* parg1) {
+static rxval_evaluator_t* fmgr_alloc_xevaluator_from_unary_func_name(char* fnnm,
+	mlr_dsl_ast_node_t* parg1,
+	fmgr_t* pf, int ti /*type_inferencing*/, int cf /*context_flags*/)
+{
 
 	if (streq(fnnm, "asserting_absent")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_absent_no_free_xfunc, parg1, "absent");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_absent_no_free_xfunc, parg1, pf, ti, cf, "absent");
 	} else if (streq(fnnm, "asserting_bool")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_boolean_no_free_xfunc, parg1, "boolean");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_boolean_no_free_xfunc, parg1, pf, ti, cf, "boolean");
 	} else if (streq(fnnm, "asserting_boolean")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_boolean_no_free_xfunc, parg1, "boolean");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_boolean_no_free_xfunc, parg1, pf, ti, cf, "boolean");
 	} else if (streq(fnnm, "asserting_empty")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_empty_no_free_xfunc, parg1, "empty");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_empty_no_free_xfunc, parg1, pf, ti, cf, "empty");
 	} else if (streq(fnnm, "asserting_empty_map")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_empty_map_no_free_xfunc, parg1, "empty_map");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_empty_map_no_free_xfunc, parg1, pf, ti, cf, "empty_map");
 	} else if (streq(fnnm, "asserting_float")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_float_no_free_xfunc, parg1, "float");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_float_no_free_xfunc, parg1, pf, ti, cf, "float");
 	} else if (streq(fnnm, "asserting_int")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_int_no_free_xfunc, parg1, "int");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_int_no_free_xfunc, parg1, pf, ti, cf, "int");
 	} else if (streq(fnnm, "asserting_map")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_map_no_free_xfunc, parg1, "map");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_map_no_free_xfunc, parg1, pf, ti, cf, "map");
 	} else if (streq(fnnm, "asserting_nonempty_map")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_nonempty_map_no_free_xfunc, parg1, "nonempty_map");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_nonempty_map_no_free_xfunc, parg1, pf, ti, cf,
+			"nonempty_map");
 	} else if (streq(fnnm, "asserting_not_empty")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_empty_no_free_xfunc, parg1, "not_empty");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_empty_no_free_xfunc, parg1, pf, ti, cf, "not_empty");
 	} else if (streq(fnnm, "asserting_not_map")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_map_no_free_xfunc, parg1, "not_map");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_map_no_free_xfunc, parg1, pf, ti, cf, "not_map");
 	} else if (streq(fnnm, "asserting_not_null")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_null_no_free_xfunc, parg1, "not_null");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_not_null_no_free_xfunc, parg1, pf, ti, cf, "not_null");
 	} else if (streq(fnnm, "asserting_null")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_null_no_free_xfunc, parg1, "null");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_null_no_free_xfunc, parg1, pf, ti, cf, "null");
 	} else if (streq(fnnm, "asserting_numeric")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_numeric_no_free_xfunc, parg1, "numeric");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_numeric_no_free_xfunc, parg1, pf, ti, cf, "numeric");
 	} else if (streq(fnnm, "asserting_present")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_present_no_free_xfunc, parg1, "present");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_present_no_free_xfunc, parg1, pf, ti, cf, "present");
 	} else if (streq(fnnm, "asserting_string")) {
-		return rxval_evaluator_alloc_from_A_x_func(b_x_is_string_no_free_xfunc, parg1, "string");
+		return rxval_evaluator_alloc_from_A_x_func(b_x_is_string_no_free_xfunc, parg1, pf, ti, cf, "string");
 
 	} else if (streq(fnnm, "is_absent")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_absent_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_absent_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "is_bool")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_boolean_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_boolean_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "is_boolean")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_boolean_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_boolean_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "is_empty")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_empty_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_empty_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "is_empty_map")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_empty_map_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_empty_map_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "is_float")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_float_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_float_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "is_int")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_int_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_int_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "is_map")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_map_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_map_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "is_nonempty_map")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_nonempty_map_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_nonempty_map_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "is_not_empty")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_not_empty_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_not_empty_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "is_not_map")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_not_map_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_not_map_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "is_not_null")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_not_null_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_not_null_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "is_null")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_null_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_null_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "is_numeric")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_numeric_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_numeric_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "is_present")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_present_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_present_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "is_string")) {
-		return rxval_evaluator_alloc_from_x_x_func(b_x_is_string_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(b_x_is_string_xfunc, parg1, pf, ti, cf);
 
 	} else if (streq(fnnm, "typeof")) {
-		return rxval_evaluator_alloc_from_x_x_func(s_x_typeof_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(s_x_typeof_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "length")) {
-		return rxval_evaluator_alloc_from_x_x_func(i_x_length_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(i_x_length_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "depth")) {
-		return rxval_evaluator_alloc_from_x_x_func(i_x_depth_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(i_x_depth_xfunc, parg1, pf, ti, cf);
 	} else if (streq(fnnm, "leafcount")) {
-		return rxval_evaluator_alloc_from_x_x_func(i_x_leafcount_xfunc, parg1);
+		return rxval_evaluator_alloc_from_x_x_func(i_x_leafcount_xfunc, parg1, pf, ti, cf);
 	} else {
 		return NULL;
 	}
 }
 
 // ----------------------------------------------------------------
-static rxval_evaluator_t* fmgr_alloc_xevaluator_from_binary_func_name(char* fnnm, rxval_evaluator_t* parg1,
-	rxval_evaluator_t* parg2)
+static rxval_evaluator_t* fmgr_alloc_xevaluator_from_binary_func_name(char* fnnm,
+	mlr_dsl_ast_node_t* parg1, mlr_dsl_ast_node_t* parg2,
+	fmgr_t* pf, int ti /*type_inferencing*/, int cf /*context_flags*/)
 {
 	if (streq(fnnm, "haskey")) {
-		return rxval_evaluator_alloc_from_x_mx_func(b_xx_haskey_xfunc, parg1, parg2);
+		return rxval_evaluator_alloc_from_x_mx_func(b_xx_haskey_xfunc, parg1, parg2, pf, ti, cf);
 	} else if (streq(fnnm, "splitnv")) {
-		return rxval_evaluator_alloc_from_x_ss_func(m_ss_splitnv_xfunc, parg1, parg2);
+		return rxval_evaluator_alloc_from_x_ss_func(m_ss_splitnv_xfunc, parg1, parg2, pf, ti, cf);
 	} else if (streq(fnnm, "splitnvx")) {
-		return rxval_evaluator_alloc_from_x_ss_func(m_ss_splitnvx_xfunc, parg1, parg2);
+		return rxval_evaluator_alloc_from_x_ss_func(m_ss_splitnvx_xfunc, parg1, parg2, pf, ti, cf);
 	} else if (streq(fnnm, "joink")) {
-		return rxval_evaluator_alloc_from_x_ms_func(s_ms_joink_xfunc, parg1, parg2);
+		return rxval_evaluator_alloc_from_x_ms_func(s_ms_joink_xfunc, parg1, parg2, pf, ti, cf);
 	} else if (streq(fnnm, "joinv")) {
-		return rxval_evaluator_alloc_from_x_ms_func(s_ms_joinv_xfunc, parg1, parg2);
+		return rxval_evaluator_alloc_from_x_ms_func(s_ms_joinv_xfunc, parg1, parg2, pf, ti, cf);
 	} else {
 		return NULL;
 	}
 }
 
 // ----------------------------------------------------------------
-static rxval_evaluator_t* fmgr_alloc_xevaluator_from_ternary_func_name(char* fnnm, rxval_evaluator_t* parg1,
-	rxval_evaluator_t* parg2, rxval_evaluator_t* parg3)
+static rxval_evaluator_t* fmgr_alloc_xevaluator_from_ternary_func_name(char* fnnm,
+	mlr_dsl_ast_node_t* parg1, mlr_dsl_ast_node_t* parg2, mlr_dsl_ast_node_t* parg3,
+	fmgr_t* pf, int ti /*type_inferencing*/, int cf /*context_flags*/)
 {
 	if (streq(fnnm, "joinkv")) {
-		return rxval_evaluator_alloc_from_x_mss_func(s_mss_joinkv_xfunc, parg1, parg2, parg3);
+		return rxval_evaluator_alloc_from_x_mss_func(s_mss_joinkv_xfunc, parg1, parg2, parg3, pf, ti, cf);
 	} else if (streq(fnnm, "splitkv")) {
-		return rxval_evaluator_alloc_from_x_sss_func(m_sss_splitkv_xfunc, parg1, parg2, parg3);
+		return rxval_evaluator_alloc_from_x_sss_func(m_sss_splitkv_xfunc, parg1, parg2, parg3, pf, ti, cf);
 	} else if (streq(fnnm, "splitkvx")) {
-		return rxval_evaluator_alloc_from_x_sss_func(m_sss_splitkvx_xfunc, parg1, parg2, parg3);
+		return rxval_evaluator_alloc_from_x_sss_func(m_sss_splitkvx_xfunc, parg1, parg2, parg3, pf, ti, cf);
 	} else {
 		return NULL;
 	}

@@ -218,7 +218,7 @@ static boxed_xval_t cst_udf_process_callback(void* pvstate, int arity, boxed_xva
 	local_stack_subframe_exit(pframe, ptop_level_block->pblock->subframe_var_count);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 
-	return box_ephemeral_xval(retval); // xxx check ephemeral
+	return box_ephemeral_xval(retval); // xxx check ephemeral, once these are boxed through the call chain
 }
 
 static void cst_udf_type_check_return_value(cst_udf_state_t* pstate, mlhmmv_xvalue_t* pretval) {

@@ -66,47 +66,74 @@ rxval_evaluator_t* rxval_evaluator_alloc_wrapping_rval(
 // rxval_func_evaluators.c
 
 rxval_evaluator_t* rxval_evaluator_alloc_from_variadic_func(
-	xv_variadic_func_t* pfunc,
-	rxval_evaluator_t** pargs,
-	int                 nargs);
+	xv_variadic_func_t*  pfunc,
+	sllv_t*              parg_nodes,
+	fmgr_t*              pfmgr,
+	int                  type_inferencing,
+	int                  context_flags);
 
 rxval_evaluator_t* rxval_evaluator_alloc_from_x_x_func(
-	xv_unary_func_t*   pfunc,
-	rxval_evaluator_t* parg1);
+	xv_unary_func_t*    pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags);
 
 rxval_evaluator_t* rxval_evaluator_alloc_from_x_m_func(
-	xv_unary_func_t*   pfunc,
-	rxval_evaluator_t* parg1);
+	xv_unary_func_t*    pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags);
 
 rxval_evaluator_t* rxval_evaluator_alloc_from_x_mx_func(
-	xv_binary_func_t*  pfunc,
-	rxval_evaluator_t* parg1,
-	rxval_evaluator_t* parg2);
+	xv_binary_func_t*   pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	mlr_dsl_ast_node_t* parg2_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags);
 
 rxval_evaluator_t* rxval_evaluator_alloc_from_x_ms_func(
-	xv_binary_func_t*  pfunc,
-	rxval_evaluator_t* parg1,
-	rxval_evaluator_t* parg2);
+	xv_binary_func_t*   pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	mlr_dsl_ast_node_t* parg2_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags);
 
 rxval_evaluator_t* rxval_evaluator_alloc_from_x_ss_func(
-	xv_binary_func_t*  pfunc,
-	rxval_evaluator_t* parg1,
-	rxval_evaluator_t* parg2);
+	xv_binary_func_t*   pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	mlr_dsl_ast_node_t* parg2_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags);
 
 rxval_evaluator_t* rxval_evaluator_alloc_from_x_mss_func(
-	xv_ternary_func_t* pfunc,
-	rxval_evaluator_t* parg1,
-	rxval_evaluator_t* parg2,
-	rxval_evaluator_t* parg3);
+	xv_ternary_func_t*  pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	mlr_dsl_ast_node_t* parg2_node,
+	mlr_dsl_ast_node_t* parg3_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags);
 
 rxval_evaluator_t* rxval_evaluator_alloc_from_x_sss_func(
-	xv_ternary_func_t* pfunc,
-	rxval_evaluator_t* parg1,
-	rxval_evaluator_t* parg2,
-	rxval_evaluator_t* parg3);
+	xv_ternary_func_t*  pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	mlr_dsl_ast_node_t* parg2_node,
+	mlr_dsl_ast_node_t* parg3_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags);
 
 rxval_evaluator_t* rxval_evaluator_alloc_from_A_x_func(
-	xv_unary_func_t*   pfunc,
-	rxval_evaluator_t* parg1, char* desc);
+	xv_unary_func_t*    pfunc,
+	mlr_dsl_ast_node_t* parg1_node,
+	fmgr_t*             pfmgr,
+	int                 type_inferencing,
+	int                 context_flags,
+	char*               desc);
 
 #endif // RXVAL_EVALUATORS_H
