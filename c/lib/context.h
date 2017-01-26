@@ -16,6 +16,11 @@ typedef struct _context_t {
 	char*     ops;
 	char*     ofs;
 	char*     ors;
+
+	// For autodetect between LF and CRLF line endings: the lrec reader
+	// (when in --auto mode) can place here the line ending which was
+	// encountered.
+	char*     auto_irs;
 } context_t;
 
 void context_init(context_t* pctx, char* first_file_name);

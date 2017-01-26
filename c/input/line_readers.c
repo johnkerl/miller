@@ -6,6 +6,7 @@
 #define INITIAL_SIZE 128
 
 // ----------------------------------------------------------------
+// xxx return linelen by reference for line-ending autodetect
 char* mlr_get_cline(FILE* fp, char irs) {
 	char* line = NULL;
 	size_t linecap = 0;

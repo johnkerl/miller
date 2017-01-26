@@ -43,7 +43,8 @@ int do_stream_chained(char* prepipe, slls_t* filenames, lrec_reader_t* plrec_rea
 		.irs       = popts->reader_opts.irs,
 		.ops       = popts->writer_opts.ops,
 		.ofs       = popts->writer_opts.ofs,
-		.ors       = popts->writer_opts.ors
+		.ors       = popts->writer_opts.ors,
+		.auto_irs  = popts->reader_opts.irs,
 	};
 	int ok = 1;
 	if (filenames == NULL) {
