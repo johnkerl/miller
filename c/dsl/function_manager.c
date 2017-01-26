@@ -67,7 +67,30 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_regex_arg2_func_name(
 	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3);
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-// xxx cmt why ASTs here
+// For rval functions, we pass rval_evaluator_t* (CST); for rxval functions, we pass
+// mlr_dsl_ast_node_t* (AST). It's easy to construct the former from the latter, of
+// course. The difference is that we look up map-enabled functions by name first,
+// then non-map-enabled functions by name second.
+//
+// * AST nodes are passed to try to look up a map-enabled function given a function name.
+// * If those exist, they construct CST structures and return.
+// * But if not, we look up a non-map-enabled function for the same function name.
+// * If that doesn't exist either, then it's a fatal error. So we go ahead and
+//   construct an rval_evaluator_t* CST structure from the AST node simply to
+//   save keystrokes, passing that to the function-lookup routines.
+//
+// It would simpler to always construct CST structures before looking up
+// function names, but the only problem is that it's hard to unconstruct CST
+// structures in case the name lookup fails. (The function-manager
+// as-yet-unresolved-name list points into them, whenever function arguments
+// themselves include function calls). Namely, the following scenario is to be
+// avoided:
+//
+// * Construct rxval_evaluator_t* CST structure.
+// * Look up map-enabled function with a given name.
+// * That doesn't exist.
+// * Now the rxval_evaluator_t* can't be torn down since the fmgr points into it.
+
 static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(
 	char* function_name, sllv_t* parg_nodes,
 	fmgr_t* pf, int ti /*type_inferencing*/, int cf /*context_flags*/);
