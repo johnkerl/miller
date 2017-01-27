@@ -40,6 +40,8 @@ AUTOTERM
 * non-csv stdio readers
 * csv mmap reader
 * csv stdio reader
+* json reader !?!
+* all writers
 * test w/ join as well
 
 ================================================================

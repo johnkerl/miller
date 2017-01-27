@@ -203,6 +203,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	lhmsll_t* default_repeat_ifses = get_default_repeat_ifses();
 	lhmsll_t* default_repeat_ipses = get_default_repeat_ipses();
 
+	// xxx auto: (irs == NULL && ors == NULL) || (irs == "auto" && ors == "auto")
 	if (popts->reader_opts.irs == NULL)
 		popts->reader_opts.irs = lhmss_get_or_die(default_rses, popts->reader_opts.ifile_fmt, argv[0]);
 	if (popts->reader_opts.ifs == NULL)
@@ -217,6 +218,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		popts->reader_opts.allow_repeat_ips = lhmsll_get_or_die(default_repeat_ipses,
 			popts->reader_opts.ifile_fmt, argv[0]);
 
+	// xxx auto: (irs == NULL && ors == NULL) || (irs == "auto" && ors == "auto")
 	if (popts->writer_opts.ors == NULL)
 		popts->writer_opts.ors = lhmss_get_or_die(default_rses, popts->writer_opts.ofile_fmt, argv[0]);
 	if (popts->writer_opts.ofs == NULL)

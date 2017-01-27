@@ -23,6 +23,7 @@ static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_single_others(void* pvsta
 static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx);
 
 // ----------------------------------------------------------------
+// xxx autors arg?
 lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
@@ -38,6 +39,7 @@ lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
 	plrec_reader->pclose_func   = file_reader_mmap_vclose;
+	// xxx if autors ... else if ...
 	if (pstate->irslen == 1) {
 		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
 			? lrec_reader_mmap_dkvp_process_single_irs_single_others
