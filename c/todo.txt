@@ -33,6 +33,16 @@ OTHER:
 * 'data prep' <-> 'data cleaning' at covers
 
 ================================================================
+AUTOTERM
+
+* --auto at cli
+* non-csv mmap readers
+* non-csv stdio readers
+* csv mmap reader
+* csv stdio reader
+* test w/ join as well
+
+================================================================
 UT FOR 5.0.0:
 
 * jknquoteint/jvquoteall x main/put (redo w/ $1)
