@@ -143,7 +143,8 @@ lrec_t* lrec_parse_mmap_nidx_single_irs_single_ifs(file_reader_mmap_state_t *pha
 		if (*p == irs) {
 			*p = 0;
 			if (do_auto_irs && !pctx->auto_irs_detected) {
-				if (p > line && *p == '\r') {
+				if (p > line && p[1] == '\r') {
+					p[-1] = 0;
 					pctx->auto_irs = "\r\n";
 				} else {
 					pctx->auto_irs = "\n";
@@ -216,7 +217,8 @@ lrec_t* lrec_parse_mmap_nidx_single_irs_multi_ifs(file_reader_mmap_state_t *phan
 		if (*p == irs) {
 			*p = 0;
 			if (do_auto_irs && !pctx->auto_irs_detected) {
-				if (p > line && *p == '\r') {
+				if (p > line && p[-1] == '\r') {
+					p[-1] = 0;
 					pctx->auto_irs = "\r\n";
 				} else {
 					pctx->auto_irs = "\n";

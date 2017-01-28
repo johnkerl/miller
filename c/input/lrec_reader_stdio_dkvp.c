@@ -108,6 +108,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_irs(
 			// mlr_get_cline_with_length will have already chomped the trailing '\n',
 			// and it won't be included in the line length.
 			if (line_length > 0 && line[line_length-1] == '\r') {
+				line[line_length-1] = 0;
 				pctx->auto_irs = "\r\n";
 			} else {
 				pctx->auto_irs = "\n";
@@ -132,6 +133,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_irs(
 			// mlr_get_cline_with_length will have already chomped the trailing '\n',
 			// and it won't be included in the line length.
 			if (line_length > 0 && line[line_length-1] == '\r') {
+				line[line_length-1] = 0;
 				pctx->auto_irs = "\r\n";
 			} else {
 				pctx->auto_irs = "\n";
