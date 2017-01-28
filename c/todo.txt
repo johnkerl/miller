@@ -35,22 +35,14 @@ OTHER:
 ================================================================
 AUTOTERM
 
-* --auto at cli
-* non-csv mmap readers
-* non-csv stdio readers
-* csv mmap reader
-* csv stdio reader
-* json reader !?!
-* all writers
-* test w/ join as well
+* default auto into mlrcli.c
 
-* in/out    | default          auto       specified
+* code up this matrix in mlrcli.c:
+  in/out    | default          auto       specified
   --------- + ---------        ---------- -----------
   default   | auto/auto        auto/auto  auto/spec
   auto      | auto/auto        auto/auto  auto/spec
   specified | LF@*nix;CRLF@Win in=out     spec/spec
-
-! code-dup why-is-this comments @ top of each lrec-reader .c file
 
 * irs=auto means:
   - read with LF line-term
@@ -91,6 +83,8 @@ AUTOTERM
   k output/lrec_writer_pprint.c
   ~ output/lrec_writer_json.c -- manpage re ORS selectable now
   ~ output/lrec_writer_xtab.c -- needs ors=auto -> ofs=auto transmutate @ caller
+
+* test w/ join as well
 
 ================================================================
 UT FOR 5.0.0:
