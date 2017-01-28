@@ -44,6 +44,22 @@ AUTOTERM
 * all writers
 * test w/ join as well
 
+* in/out    | default          auto       specified
+  --------- + ---------        ---------- -----------
+  default   | auto/auto        auto/auto  auto/spec
+  auto      | auto/auto        auto/auto  auto/spec
+  specified | LF@*nix;CRLF@Win in=out     spec/spec
+
+* irs=auto means:
+  - read with LF line-term
+  - see if end-1 is CR
+  - null it out if so
+  - update pctx->autoirs
+  - default to LF@*nix;CFLF@win in case of zero input (e.g. seqgen)
+
+* ors=auto means:
+  - use pctx->autoirs on first record emitted
+
 ================================================================
 UT FOR 5.0.0:
 
