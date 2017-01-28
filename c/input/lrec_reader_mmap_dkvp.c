@@ -92,7 +92,7 @@ static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_single_others(void* pvst
 		return NULL;
 	else
 		return lrec_parse_mmap_dkvp_single_irs_single_others(phandle, pstate->irs[0], pstate->ifs[0], pstate->ips[0],
-			pstate->allow_repeat_ifs, pctx, pstate->do_auto_irs);
+			pstate->allow_repeat_ifs, pstate->do_auto_irs, pctx);
 }
 
 static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -102,7 +102,7 @@ static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_multi_others(void* pvsta
 		return NULL;
 	else
 		return lrec_parse_mmap_dkvp_single_irs_multi_others(phandle, pstate->irs[0], pstate->ifs, pstate->ips,
-			pstate->ifslen, pstate->ipslen, pstate->allow_repeat_ifs, pctx, pstate->do_auto_irs);
+			pstate->ifslen, pstate->ipslen, pstate->allow_repeat_ifs, pstate->do_auto_irs, pctx);
 }
 
 static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -127,7 +127,7 @@ static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_multi_others(void* pvstat
 
 // ----------------------------------------------------------------
 lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *phandle,
-	char irs, char ifs, char ips, int allow_repeat_ifs, context_t* pctx, int do_auto_irs)
+	char irs, char ifs, char ips, int allow_repeat_ifs, int do_auto_irs, context_t* pctx)
 {
 	lrec_t* prec = lrec_unbacked_alloc();
 
@@ -351,7 +351,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 }
 
 lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *phandle, char irs, char* ifs, char* ips,
-	int ifslen, int ipslen, int allow_repeat_ifs, context_t* pctx, int do_auto_irs)
+	int ifslen, int ipslen, int allow_repeat_ifs, int do_auto_irs, context_t* pctx)
 {
 	lrec_t* prec = lrec_unbacked_alloc();
 

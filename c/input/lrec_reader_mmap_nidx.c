@@ -18,6 +18,7 @@ typedef struct _lrec_reader_mmap_nidx_state_t {
 	int   irslen;
 	int   ifslen;
 	int   allow_repeat_ifs;
+	int   do_auto_irs;
 } lrec_reader_mmap_nidx_state_t;
 
 static void    lrec_reader_mmap_nidx_free(lrec_reader_t* preader);
@@ -37,12 +38,24 @@ lrec_reader_t* lrec_reader_mmap_nidx_alloc(char* irs, char* ifs, int allow_repea
 	pstate->irslen                   = strlen(pstate->irs);
 	pstate->ifslen                   = strlen(pstate->ifs);
 	pstate->allow_repeat_ifs         = allow_repeat_ifs;
+	pstate->do_auto_irs      = FALSE;
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
 	plrec_reader->pclose_func   = file_reader_mmap_vclose;
 
-	if (pstate->irslen == 1) {
+	if (streq(irs, "auto")) {
+		// Auto means either lines end in "\n" or "\r\n" (LF or CRLF).  In
+		// either case the final character is "\n". Then for autodetect we
+		// simply check if there's a character in the line before the '\n', and
+		// if that is '\r'.
+		pstate->do_auto_irs = TRUE;
+		pstate->irs = "\n";
+		pstate->irslen = 1;
+		plrec_reader->pprocess_func = (pstate->ifslen == 1)
+			? lrec_reader_mmap_nidx_process_single_irs_single_ifs
+			: lrec_reader_mmap_nidx_process_single_irs_multi_ifs;
+	} else if (pstate->irslen == 1) {
 		plrec_reader->pprocess_func = (pstate->ifslen == 1)
 			? lrec_reader_mmap_nidx_process_single_irs_single_ifs
 			: lrec_reader_mmap_nidx_process_single_irs_multi_ifs;
@@ -75,7 +88,7 @@ static lrec_t* lrec_reader_mmap_nidx_process_single_irs_single_ifs(void* pvstate
 		return NULL;
 	else
 		return lrec_parse_mmap_nidx_single_irs_single_ifs(phandle, pstate->irs[0], pstate->ifs[0],
-			pstate->allow_repeat_ifs);
+			pstate->allow_repeat_ifs, pstate->do_auto_irs, pctx);
 }
 
 static lrec_t* lrec_reader_mmap_nidx_process_single_irs_multi_ifs(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -85,7 +98,7 @@ static lrec_t* lrec_reader_mmap_nidx_process_single_irs_multi_ifs(void* pvstate,
 		return NULL;
 	else
 		return lrec_parse_mmap_nidx_single_irs_multi_ifs(phandle, pstate->irs[0], pstate->ifs,
-			pstate->ifslen, pstate->allow_repeat_ifs);
+			pstate->ifslen, pstate->allow_repeat_ifs, pstate->do_auto_irs, pctx);
 }
 
 static lrec_t* lrec_reader_mmap_nidx_process_multi_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -110,7 +123,7 @@ static lrec_t* lrec_reader_mmap_nidx_process_multi_irs_multi_ifs(void* pvstate, 
 
 // ----------------------------------------------------------------
 lrec_t* lrec_parse_mmap_nidx_single_irs_single_ifs(file_reader_mmap_state_t *phandle,
-	char irs, char ifs, int allow_repeat_ifs)
+	char irs, char ifs, int allow_repeat_ifs, int do_auto_irs, context_t* pctx)
 {
 	lrec_t* prec = lrec_unbacked_alloc();
 
@@ -129,6 +142,14 @@ lrec_t* lrec_parse_mmap_nidx_single_irs_single_ifs(file_reader_mmap_state_t *pha
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
+			if (do_auto_irs && !pctx->auto_irs_detected) {
+				if (p > line && *p == '\r') {
+					pctx->auto_irs = "\r\n";
+				} else {
+					pctx->auto_irs = "\n";
+				}
+				pctx->auto_irs_detected = TRUE;
+			}
 			phandle->sol = p+1;
 			saw_rs = TRUE;
 			break;
@@ -175,7 +196,7 @@ lrec_t* lrec_parse_mmap_nidx_single_irs_single_ifs(file_reader_mmap_state_t *pha
 }
 
 lrec_t* lrec_parse_mmap_nidx_single_irs_multi_ifs(file_reader_mmap_state_t *phandle,
-	char irs, char* ifs, int ifslen, int allow_repeat_ifs)
+	char irs, char* ifs, int ifslen, int allow_repeat_ifs, int do_auto_irs, context_t* pctx)
 {
 	lrec_t* prec = lrec_unbacked_alloc();
 
@@ -194,6 +215,14 @@ lrec_t* lrec_parse_mmap_nidx_single_irs_multi_ifs(file_reader_mmap_state_t *phan
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
+			if (do_auto_irs && !pctx->auto_irs_detected) {
+				if (p > line && *p == '\r') {
+					pctx->auto_irs = "\r\n";
+				} else {
+					pctx->auto_irs = "\n";
+				}
+				pctx->auto_irs_detected = TRUE;
+			}
 			phandle->sol = p+1;
 			saw_rs = TRUE;
 			break;

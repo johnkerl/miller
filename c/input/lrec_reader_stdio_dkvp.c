@@ -114,7 +114,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_irs(
 			}
 			pctx->auto_irs_detected = TRUE;
 		}
-		return lrec_parse_stdio_dkvp_single_sep(line, pstate->ifs[0], pstate->ips[0], pstate->allow_repeat_ifs, pctx);
+		return lrec_parse_stdio_dkvp_single_sep(line, pstate->ifs[0], pstate->ips[0], pstate->allow_repeat_ifs);
 	}
 }
 
@@ -139,7 +139,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_irs(
 			pctx->auto_irs_detected = TRUE;
 		}
 		return lrec_parse_stdio_dkvp_multi_sep(line, pstate->ifs, pstate->ips, pstate->ifslen, pstate->ipslen,
-			pstate->allow_repeat_ifs, pctx);
+			pstate->allow_repeat_ifs);
 	}
 }
 
@@ -150,7 +150,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others(void* pvs
 	if (line == NULL)
 		return NULL;
 	else
-		return lrec_parse_stdio_dkvp_single_sep(line, pstate->ifs[0], pstate->ips[0], pstate->allow_repeat_ifs, pctx);
+		return lrec_parse_stdio_dkvp_single_sep(line, pstate->ifs[0], pstate->ips[0], pstate->allow_repeat_ifs);
 }
 
 static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -161,7 +161,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others(void* pvst
 		return NULL;
 	else
 		return lrec_parse_stdio_dkvp_multi_sep(line, pstate->ifs, pstate->ips, pstate->ifslen, pstate->ipslen,
-			pstate->allow_repeat_ifs, pctx);
+			pstate->allow_repeat_ifs);
 }
 
 static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -171,7 +171,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_single_others(void* pvst
 	if (line == NULL)
 		return NULL;
 	else
-		return lrec_parse_stdio_dkvp_single_sep(line, pstate->ifs[0], pstate->ips[0], pstate->allow_repeat_ifs, pctx);
+		return lrec_parse_stdio_dkvp_single_sep(line, pstate->ifs[0], pstate->ips[0], pstate->allow_repeat_ifs);
 }
 
 static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -182,7 +182,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_multi_others(void* pvsta
 		return NULL;
 	else
 		return lrec_parse_stdio_dkvp_multi_sep(line, pstate->ifs, pstate->ips, pstate->ifslen, pstate->ipslen,
-			pstate->allow_repeat_ifs, pctx);
+			pstate->allow_repeat_ifs);
 }
 
 // ----------------------------------------------------------------
@@ -194,8 +194,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_multi_others(void* pvsta
 // I couldn't find a performance gain using stdlib index(3) ... *maybe* even a
 // fraction of a percent *slower*.
 
-lrec_t* lrec_parse_stdio_dkvp_single_sep(char* line, char ifs, char ips, int allow_repeat_ifs, context_t* pctx)
-{
+lrec_t* lrec_parse_stdio_dkvp_single_sep(char* line, char ifs, char ips, int allow_repeat_ifs) {
 	lrec_t* prec = lrec_dkvp_alloc(line);
 
 	// It would be easier to split the line on field separator (e.g. ","), then
@@ -265,7 +264,7 @@ lrec_t* lrec_parse_stdio_dkvp_single_sep(char* line, char ifs, char ips, int all
 }
 
 lrec_t* lrec_parse_stdio_dkvp_multi_sep(char* line, char* ifs, char* ips, int ifslen, int ipslen,
-	int allow_repeat_ifs, context_t* pctx)
+	int allow_repeat_ifs)
 {
 	lrec_t* prec = lrec_dkvp_alloc(line);
 

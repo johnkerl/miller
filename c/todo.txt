@@ -45,22 +45,17 @@ AUTOTERM
   specified | LF@*nix;CRLF@Win in=out     spec/spec
 
 * irs=auto means:
-  - read with LF line-term
-  - see if end-1 is CR
-  - null it out if so
-  - update pctx->autoirs
   - default to LF@*nix;CFLF@win in case of zero input (e.g. seqgen)
-
-  ! needs did-auto flag in pctx
+    > add a comment about that in lib/context.c
 
   k input/lrec_reader_mmap_dkvp.c
-  ? input/lrec_reader_stdio_dkvp.c
-
-  ? input/lrec_reader_mmap_csvlite.c
-  ? input/lrec_reader_stdio_csvlite.c
+  k input/lrec_reader_stdio_dkvp.c
 
   ? input/lrec_reader_mmap_nidx.c
   ? input/lrec_reader_stdio_nidx.c
+
+  ? input/lrec_reader_mmap_csvlite.c
+  ? input/lrec_reader_stdio_csvlite.c
 
   ? input/lrec_reader_mmap_xtab.c
   ? input/lrec_reader_stdio_xtab.c
