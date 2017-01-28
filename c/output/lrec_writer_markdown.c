@@ -11,7 +11,9 @@ typedef struct _lrec_writer_markdown_state_t {
 } lrec_writer_markdown_state_t;
 
 static void lrec_writer_markdown_free(lrec_writer_t* pwriter, context_t* pctx);
-static void lrec_writer_markdown_process(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
+static void lrec_writer_markdown_process(void* pvstate, FILE* output_stream, lrec_t* prec, char* ors);
+static void lrec_writer_markdown_process_auto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
+static void lrec_writer_markdown_process_nonauto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
 
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_markdown_alloc(char* ors) {
@@ -24,7 +26,9 @@ lrec_writer_t* lrec_writer_markdown_alloc(char* ors) {
 	pstate->plast_header_output     = NULL;
 
 	plrec_writer->pvstate       = (void*)pstate;
-	plrec_writer->pprocess_func = lrec_writer_markdown_process;
+	plrec_writer->pprocess_func = streq(ors, "auto")
+		? lrec_writer_markdown_process_auto_ors
+		: lrec_writer_markdown_process_nonauto_ors;
 	plrec_writer->pfree_func    = lrec_writer_markdown_free;
 
 	return plrec_writer;
@@ -38,11 +42,22 @@ static void lrec_writer_markdown_free(lrec_writer_t* pwriter, context_t* pctx) {
 }
 
 // ----------------------------------------------------------------
-static void lrec_writer_markdown_process(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+static void lrec_writer_markdown_process_auto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+	lrec_writer_markdown_process(pvstate, output_stream, prec, pctx->auto_irs);
+}
+
+static void lrec_writer_markdown_process_nonauto_ors(void* pvstate, FILE* output_stream, lrec_t* prec,
+	context_t* pctx)
+{
+	lrec_writer_markdown_state_t* pstate = pvstate;
+	lrec_writer_markdown_process(pvstate, output_stream, prec, pstate->ors);
+}
+
+
+static void lrec_writer_markdown_process(void* pvstate, FILE* output_stream, lrec_t* prec, char* ors) {
 	if (prec == NULL)
 		return;
 	lrec_writer_markdown_state_t* pstate = pvstate;
-	char* ors = pstate->ors;
 
 	if (pstate->plast_header_output != NULL) {
 		if (!lrec_keys_equal_list(prec, pstate->plast_header_output)) {
