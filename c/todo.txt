@@ -61,8 +61,8 @@ AUTOTERM
   - writer API needs pctx
   - use pctx->autoirs on first record emitted
 
-  ? output/lrec_writer_csv.c
   ? output/lrec_writer_json.c
+  k output/lrec_writer_csv.c
   k output/lrec_writer_csvlite.c
   k output/lrec_writer_dkvp.c
   k output/lrec_writer_markdown.c
