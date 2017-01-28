@@ -22,7 +22,7 @@ static void      mapper_shuffle_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_shuffle_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_shuffle_alloc(ap_state_t* pargp);
-static void      mapper_shuffle_free(mapper_t* pmapper);
+static void      mapper_shuffle_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_shuffle_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
@@ -72,7 +72,7 @@ static mapper_t* mapper_shuffle_alloc(ap_state_t* pargp) {
 	return pmapper;
 }
 
-static void mapper_shuffle_free(mapper_t* pmapper) {
+static void mapper_shuffle_free(mapper_t* pmapper, context_t* _) {
 	mapper_shuffle_state_t* pstate = pmapper->pvstate;
 	// Records will have been freed by the emitter; here, free the list structure.
 	sllv_free(pstate->precs);

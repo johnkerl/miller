@@ -23,7 +23,7 @@ static void      mapper_seqgen_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_seqgen_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_seqgen_alloc(ap_state_t* pargp, char* field_name, mv_t start, mv_t stop, mv_t step);
-static void      mapper_seqgen_free(mapper_t* pmapper);
+static void      mapper_seqgen_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_seqgen_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
@@ -107,7 +107,7 @@ static mapper_t* mapper_seqgen_alloc(ap_state_t* pargp, char* field_name, mv_t s
 
 	return pmapper;
 }
-static void mapper_seqgen_free(mapper_t* pmapper) {
+static void mapper_seqgen_free(mapper_t* pmapper, context_t* _) {
 	mapper_seqgen_state_t* pstate = pmapper->pvstate;
 	ap_free(pstate->pargp);
 	free(pstate);

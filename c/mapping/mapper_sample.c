@@ -36,7 +36,7 @@ static mapper_t* mapper_sample_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_sample_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
 	unsigned long long sample_count);
-static void      mapper_sample_free(mapper_t* pmapper);
+static void      mapper_sample_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_sample_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
@@ -100,7 +100,7 @@ static mapper_t* mapper_sample_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_
 	return pmapper;
 }
 
-static void mapper_sample_free(mapper_t* pmapper) {
+static void mapper_sample_free(mapper_t* pmapper, context_t* _) {
 	mapper_sample_state_t* pstate = pmapper->pvstate;
 	if (pstate->pgroup_by_field_names != NULL)
 		slls_free(pstate->pgroup_by_field_names);

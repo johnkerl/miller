@@ -34,7 +34,7 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_names, string_array_t* pvalue_field_names,
 	slls_t* pgroup_by_field_names, int do_iterative_stats, int allow_int_float, int do_interpolated_percentiles);
-static void      mapper_stats1_free(mapper_t* pmapper);
+static void      mapper_stats1_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
 static sllv_t*   mapper_stats1_emit_all(mapper_stats1_state_t* pstate);
@@ -143,7 +143,7 @@ static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_nam
 	return pmapper;
 }
 
-static void mapper_stats1_free(mapper_t* pmapper) {
+static void mapper_stats1_free(mapper_t* pmapper, context_t* _) {
 	mapper_stats1_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->paccumulator_names);
 	string_array_free(pstate->pvalue_field_names);

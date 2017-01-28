@@ -13,7 +13,7 @@ static void handle_return_void(
 	pvars->return_state.returned = TRUE;
 }
 
-static void free_return_void(mlr_dsl_cst_statement_t* pstatement) {
+static void free_return_void(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 }
 
 mlr_dsl_cst_statement_t* alloc_return_void(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
@@ -50,7 +50,7 @@ static void return_value_func(
 }
 
 // ----------------------------------------------------------------
-static void return_value_free(mlr_dsl_cst_statement_t* pstatement) {
+static void return_value_free(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	return_value_state_t* pstate = pstatement->pvstate;
 	rxval_evaluator_t* pxev = pstate->preturn_value_xevaluator;
 	pxev->pfree_func(pxev);

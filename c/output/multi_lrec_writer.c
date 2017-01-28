@@ -12,13 +12,13 @@ multi_lrec_writer_t* multi_lrec_writer_alloc(cli_writer_opts_t* pwriter_opts) {
 }
 
 // ----------------------------------------------------------------
-void multi_lrec_writer_free(multi_lrec_writer_t* pmlw) {
+void multi_lrec_writer_free(multi_lrec_writer_t* pmlw, context_t* pctx) {
 	if (pmlw == NULL)
 		return;
 
 	for (lhmsve_t* pe = pmlw->pnames_to_lrec_writers_and_fps->phead; pe != NULL; pe = pe->pnext) {
 		lrec_writer_and_fp_t* pstate = pe->pvvalue;
-		pstate->plrec_writer->pfree_func(pstate->plrec_writer);
+		pstate->plrec_writer->pfree_func(pstate->plrec_writer, pctx);
 		free(pstate->filename_or_command);
 		free(pstate);
 	}
@@ -29,7 +29,7 @@ void multi_lrec_writer_free(multi_lrec_writer_t* pmlw) {
 
 // ----------------------------------------------------------------
 void multi_lrec_writer_output_srec(multi_lrec_writer_t* pmlw, lrec_t* poutrec, char* filename_or_command,
-	file_output_mode_t file_output_mode, int flush_every_record)
+	file_output_mode_t file_output_mode, int flush_every_record, context_t* pctx)
 {
 	lrec_writer_and_fp_t* pstate = lhmsv_get(pmlw->pnames_to_lrec_writers_and_fps, filename_or_command);
 	if (pstate == NULL) {
@@ -62,7 +62,7 @@ void multi_lrec_writer_output_srec(multi_lrec_writer_t* pmlw, lrec_t* poutrec, c
 		lhmsv_put(pmlw->pnames_to_lrec_writers_and_fps, mlr_strdup_or_die(filename_or_command), pstate, FREE_ENTRY_KEY);
 	}
 
-	pstate->plrec_writer->pprocess_func(pstate->plrec_writer->pvstate, pstate->output_stream, poutrec);
+	pstate->plrec_writer->pprocess_func(pstate->plrec_writer->pvstate, pstate->output_stream, poutrec, pctx);
 
 	if (poutrec != NULL) {
 		if (flush_every_record)
@@ -88,21 +88,22 @@ void multi_lrec_writer_output_srec(multi_lrec_writer_t* pmlw, lrec_t* poutrec, c
 }
 
 void multi_lrec_writer_output_list(multi_lrec_writer_t* pmlw, sllv_t* poutrecs, char* filename_or_command,
-	file_output_mode_t file_output_mode, int flush_every_record)
+	file_output_mode_t file_output_mode, int flush_every_record, context_t* pctx)
 {
 	if (poutrecs == NULL) // synonym for empty record-list
 		return;
 
 	while (poutrecs->phead) {
 		lrec_t* poutrec = sllv_pop(poutrecs);
-		multi_lrec_writer_output_srec(pmlw, poutrec, filename_or_command, file_output_mode, flush_every_record);
+		multi_lrec_writer_output_srec(pmlw, poutrec, filename_or_command, file_output_mode,
+			flush_every_record, pctx);
 	}
 }
 
-void multi_lrec_writer_drain(multi_lrec_writer_t* pmlw) {
+void multi_lrec_writer_drain(multi_lrec_writer_t* pmlw, context_t* pctx) {
 	for (lhmsve_t* pe = pmlw->pnames_to_lrec_writers_and_fps->phead; pe != NULL; pe = pe->pnext) {
 		lrec_writer_and_fp_t* pstate = pe->pvvalue;
-		pstate->plrec_writer->pprocess_func(pstate->plrec_writer->pvstate, pstate->output_stream, NULL);
+		pstate->plrec_writer->pprocess_func(pstate->plrec_writer->pvstate, pstate->output_stream, NULL, pctx);
 		fflush(pstate->output_stream);
 		if (pstate->is_popen) {
 			// Sadly, pclose returns an error even on well-formed commands. For example, if the popened

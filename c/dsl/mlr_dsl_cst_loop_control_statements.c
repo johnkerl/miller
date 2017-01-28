@@ -19,7 +19,7 @@ mlr_dsl_cst_statement_t* alloc_break(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 		NULL);
 }
 
-static void free_break(mlr_dsl_cst_statement_t* pstatement) {
+static void free_break(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 }
 
 // ----------------------------------------------------------------
@@ -55,5 +55,5 @@ static void handle_continue(
 	loop_stack_set(pvars->ploop_stack, LOOP_CONTINUED);
 }
 
-static void free_continue(mlr_dsl_cst_statement_t* pstatement) {
+static void free_continue(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 }

@@ -203,27 +203,27 @@ mlr_dsl_cst_t* mlr_dsl_cst_alloc(mlr_dsl_ast_t* past, int print_ast, int trace_s
 }
 
 // ----------------------------------------------------------------
-void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
+void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst, context_t* pctx) {
 	if (pcst == NULL)
 		return;
 
 	if (pcst->pbegin_blocks != NULL) {
 		for (sllve_t* pe = pcst->pbegin_blocks->phead; pe != NULL; pe = pe->pnext) {
-			cst_top_level_statement_block_free(pe->pvvalue);
+			cst_top_level_statement_block_free(pe->pvvalue, pctx);
 		}
 		sllv_free(pcst->pbegin_blocks);
 	}
 
-	cst_top_level_statement_block_free(pcst->pmain_block);
+	cst_top_level_statement_block_free(pcst->pmain_block, pctx);
 
 	if (pcst->pend_blocks != NULL) {
 		for (sllve_t* pe = pcst->pend_blocks->phead; pe != NULL; pe = pe->pnext) {
-			cst_top_level_statement_block_free(pe->pvvalue);
+			cst_top_level_statement_block_free(pe->pvvalue, pctx);
 		}
 		sllv_free(pcst->pend_blocks);
 	}
 
-	fmgr_free(pcst->pfmgr);
+	fmgr_free(pcst->pfmgr, pctx);
 
 	// Void-star payloads already popped and freed during symbol-resolution phase of CST alloc
 	sllv_free(pcst->psubr_callsite_statements_to_resolve);
@@ -231,7 +231,7 @@ void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst) {
 	if (pcst->psubr_defsites != NULL) {
 		for (lhmsve_t* pe = pcst->psubr_defsites->phead; pe != NULL; pe = pe->pnext) {
 			subr_defsite_t* psubr_defsite = pe->pvvalue;
-			mlr_dsl_cst_free_subroutine(psubr_defsite);
+			mlr_dsl_cst_free_subroutine(psubr_defsite, pctx);
 		}
 		lhmsv_free(pcst->psubr_defsites);
 	}

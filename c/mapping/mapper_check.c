@@ -6,7 +6,7 @@ static void      mapper_check_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_check_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_check_alloc();
-static void      mapper_check_free(mapper_t* pmapper);
+static void      mapper_check_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_check_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
@@ -44,7 +44,7 @@ static mapper_t* mapper_check_alloc() {
 	pmapper->pfree_func    = mapper_check_free;
 	return pmapper;
 }
-static void mapper_check_free(mapper_t* pmapper) {
+static void mapper_check_free(mapper_t* pmapper, context_t* _) {
 	free(pmapper);
 }
 

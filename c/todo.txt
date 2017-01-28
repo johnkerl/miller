@@ -58,6 +58,7 @@ AUTOTERM
   - default to LF@*nix;CFLF@win in case of zero input (e.g. seqgen)
 
 * ors=auto means:
+  - writer API needs pctx
   - use pctx->autoirs on first record emitted
 
 ================================================================

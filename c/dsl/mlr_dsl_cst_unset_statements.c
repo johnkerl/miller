@@ -150,7 +150,7 @@ mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 }
 
 // ----------------------------------------------------------------
-static void free_unset(mlr_dsl_cst_statement_t* pstatement) {
+static void free_unset(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	unset_state_t* pstate = pstatement->pvstate;
 
 	for (sllve_t* pe = pstate->punset_items->phead; pe != NULL; pe = pe->pnext) {

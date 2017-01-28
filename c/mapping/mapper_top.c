@@ -36,7 +36,7 @@ static mapper_t* mapper_top_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_top_alloc(ap_state_t* pargp, slls_t* pvalue_field_names, slls_t* pgroup_by_field_names,
 	int top_count, int do_max, int show_full_records, int allow_int_float, char* output_field_name);
-static void      mapper_top_free(mapper_t* pmapper);
+static void      mapper_top_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_top_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_top_ingest(lrec_t* pinrec, mapper_top_state_t* pstate);
 static sllv_t*   mapper_top_emit(mapper_top_state_t* pstate, context_t* pctx);
@@ -131,7 +131,7 @@ static mapper_t* mapper_top_alloc(ap_state_t* pargp, slls_t* pvalue_field_names,
 	return pmapper;
 }
 
-static void mapper_top_free(mapper_t* pmapper) {
+static void mapper_top_free(mapper_t* pmapper, context_t* _) {
 	mapper_top_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->pvalue_field_names);
 	slls_free(pstate->pgroup_by_field_names);

@@ -101,7 +101,7 @@ mlr_dsl_cst_statement_t* alloc_for_srec(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t*
 }
 
 // ----------------------------------------------------------------
-static void free_for_srec(mlr_dsl_cst_statement_t* pstatement) {
+static void free_for_srec(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	for_srec_state_t* pstate = pstatement->pvstate;
 	free(pstate->k_variable_name);
 	free(pstate->v_variable_name);
@@ -231,7 +231,7 @@ mlr_dsl_cst_statement_t* alloc_for_srec_key_only(mlr_dsl_cst_t* pcst, mlr_dsl_as
 }
 
 // ----------------------------------------------------------------
-static void free_for_srec_key_only(mlr_dsl_cst_statement_t* pstatement) {
+static void free_for_srec_key_only(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	for_srec_key_only_state_t* pstate = pstatement->pvstate;
 	free(pstate->k_variable_name);
 	free(pstate);

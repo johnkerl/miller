@@ -67,7 +67,7 @@ static mapper_t* mapper_reshape_alloc(
 	char*   output_value_field_name,
 	char*   split_out_key_field_name,
 	char*   split_out_value_field_name);
-static void      mapper_reshape_free(mapper_t* pmapper);
+static void      mapper_reshape_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_reshape_wide_to_long_no_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_reshape_wide_to_long_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_reshape_long_to_wide_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -253,7 +253,7 @@ static mapper_t* mapper_reshape_alloc(
 	return pmapper;
 }
 
-static void mapper_reshape_free(mapper_t* pmapper) {
+static void mapper_reshape_free(mapper_t* pmapper, context_t* _) {
 	mapper_reshape_state_t* pstate = pmapper->pvstate;
 
 	slls_free(pstate->input_field_names);

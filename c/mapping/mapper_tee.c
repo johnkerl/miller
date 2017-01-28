@@ -20,7 +20,7 @@ static mapper_t* mapper_tee_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_tee_alloc(int do_append, int flush_every_record,
 	char* output_file_name, cli_writer_opts_t* pwriter_opts, cli_writer_opts_t* pmain_writer_opts);
-static void      mapper_tee_free(mapper_t* pmapper);
+static void      mapper_tee_free(mapper_t* pmapper, context_t* pctx);
 static sllv_t*   mapper_tee_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
@@ -127,9 +127,9 @@ static mapper_t* mapper_tee_alloc(int do_append, int flush_every_record,
 	pmapper->pfree_func        = mapper_tee_free;
 	return pmapper;
 }
-static void mapper_tee_free(mapper_t* pmapper) {
+static void mapper_tee_free(mapper_t* pmapper, context_t* pctx) {
 	mapper_tee_state_t* pstate = pmapper->pvstate;
-	pstate->plrec_writer->pfree_func(pstate->plrec_writer);
+	pstate->plrec_writer->pfree_func(pstate->plrec_writer, pctx);
 	free(pstate->pwriter_opts);
 	free(pstate);
 	free(pmapper);
@@ -143,12 +143,12 @@ static sllv_t* mapper_tee_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 		// Copy the record since the lrec-writer will free it, and we need the original
 		// to return as stream output.
 		lrec_t* pcopy = lrec_copy(pinrec);
-		pstate->plrec_writer->pprocess_func(pstate->plrec_writer->pvstate, pstate->output_stream, pcopy);
+		pstate->plrec_writer->pprocess_func(pstate->plrec_writer->pvstate, pstate->output_stream, pcopy, pctx);
 		if (pstate->flush_every_record)
 			fflush(pstate->output_stream);
 		return sllv_single(pinrec);
 	} else {
-		pstate->plrec_writer->pprocess_func(pstate->plrec_writer->pvstate, pstate->output_stream, NULL);
+		pstate->plrec_writer->pprocess_func(pstate->plrec_writer->pvstate, pstate->output_stream, NULL, pctx);
 		if (fclose(pstate->output_stream) != 0) {
 			perror("fclose");
 			fprintf(stderr, "%s: fclose error on \"%s\".\n", MLR_GLOBALS.bargv0, pstate->output_file_name);

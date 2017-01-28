@@ -120,7 +120,7 @@ mlr_dsl_cst_statement_t* alloc_for_map(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* 
 }
 
 // ----------------------------------------------------------------
-static void free_for_map(mlr_dsl_cst_statement_t* pstatement) {
+static void free_for_map(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	for_map_state_t* pstate = pstatement->pvstate;
 
 	free(pstate->k_variable_names);
@@ -306,7 +306,7 @@ mlr_dsl_cst_statement_t* alloc_for_map_key_only(mlr_dsl_cst_t* pcst, mlr_dsl_ast
 }
 
 // ----------------------------------------------------------------
-static void free_for_map_key_only(mlr_dsl_cst_statement_t* pstatement) {
+static void free_for_map_key_only(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	for_map_key_only_state_t* pstate = pstatement->pvstate;
 
 	pstate->ptarget_xevaluator->pfree_func(pstate->ptarget_xevaluator);

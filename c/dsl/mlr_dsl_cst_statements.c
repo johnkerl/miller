@@ -25,11 +25,11 @@ cst_statement_block_t* cst_statement_block_alloc(int subframe_var_count) {
 }
 
 // ----------------------------------------------------------------
-void cst_statement_block_free(cst_statement_block_t* pblock) {
+void cst_statement_block_free(cst_statement_block_t* pblock, context_t* pctx) {
 	if (pblock == NULL)
 		return;
 	for (sllve_t* pe = pblock->pstatements->phead; pe != NULL; pe = pe->pnext) {
-		mlr_dsl_cst_statement_free(pe->pvvalue);
+		mlr_dsl_cst_statement_free(pe->pvvalue, pctx);
 	}
 	sllv_free(pblock->pstatements);
 	free(pblock);
@@ -49,11 +49,11 @@ cst_top_level_statement_block_t* cst_top_level_statement_block_alloc(int max_var
 }
 
 // ----------------------------------------------------------------
-void cst_top_level_statement_block_free(cst_top_level_statement_block_t* ptop_level_block) {
+void cst_top_level_statement_block_free(cst_top_level_statement_block_t* ptop_level_block, context_t* pctx) {
 	if (ptop_level_block == NULL)
 		return;
 	local_stack_frame_free(ptop_level_block->pframe);
-	cst_statement_block_free(ptop_level_block->pblock);
+	cst_statement_block_free(ptop_level_block->pblock, pctx);
 	free(ptop_level_block);
 }
 
@@ -503,13 +503,13 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_statement_valloc_with_block(
 }
 
 // ----------------------------------------------------------------
-void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement) {
+void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement, context_t* pctx) {
 
 	if (pstatement->pstatement_freer != NULL) {
-		pstatement->pstatement_freer(pstatement);
+		pstatement->pstatement_freer(pstatement, pctx);
 	}
 
-	cst_statement_block_free(pstatement->pblock);
+	cst_statement_block_free(pstatement->pblock, pctx);
 
 	free(pstatement);
 }

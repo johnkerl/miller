@@ -5,7 +5,7 @@
 #include "context_flags.h"
 
 static boxed_xval_t cst_udf_process_callback(void* pvstate, int arity, boxed_xval_t* args, variables_t* pvars);
-static void cst_udf_free_callback(void* pvstate);
+static void cst_udf_free_callback(void* pvstate, context_t* pctx);
 static void cst_udf_type_check_return_value(cst_udf_state_t* pstate, mlhmmv_xvalue_t* pretval);
 
 // ----------------------------------------------------------------
@@ -121,7 +121,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 	return pdefsite_state;
 }
 
-void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate) {
+void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate, context_t* pctx) {
 	if (pstate == NULL)
 		return;
 
@@ -131,7 +131,7 @@ void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate) {
 	free(pstate->parameter_names);
 	free(pstate->parameter_type_masks);
 
-	cst_top_level_statement_block_free(pstate->ptop_level_block);
+	cst_top_level_statement_block_free(pstate->ptop_level_block, pctx);
 
 	free(pstate);
 }
@@ -243,9 +243,9 @@ static void cst_udf_type_check_return_value(cst_udf_state_t* pstate, mlhmmv_xval
 // ----------------------------------------------------------------
 // Callback function for the function manager to invoke into here
 
-static void cst_udf_free_callback(void* pvstate) {
+static void cst_udf_free_callback(void* pvstate, context_t* pctx) {
 	cst_udf_state_t* pstate = pvstate;
-	mlr_dsl_cst_free_udf(pstate);
+	mlr_dsl_cst_free_udf(pstate, pctx);
 }
 
 // ================================================================
@@ -338,7 +338,7 @@ static void handle_subr_callsite_statement(
 }
 
 // ----------------------------------------------------------------
-static void free_subr_callsite_statement(mlr_dsl_cst_statement_t* pstatement) {
+static void free_subr_callsite_statement(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	subr_callsite_statement_state_t* pstate = pstatement->pvstate;
 
 	if (pstate->subr_callsite_argument_evaluators != NULL) {
@@ -442,7 +442,7 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(mlr_dsl_cst_t* pcst, mlr_dsl_ast_no
 }
 
 // ----------------------------------------------------------------
-void mlr_dsl_cst_free_subroutine(subr_defsite_t* pstate) {
+void mlr_dsl_cst_free_subroutine(subr_defsite_t* pstate, context_t* pctx) {
 	if (pstate == NULL)
 		return;
 
@@ -453,7 +453,7 @@ void mlr_dsl_cst_free_subroutine(subr_defsite_t* pstate) {
 	free(pstate->parameter_names);
 	free(pstate->parameter_type_masks);
 
-	cst_top_level_statement_block_free(pstate->ptop_level_block);
+	cst_top_level_statement_block_free(pstate->ptop_level_block, pctx);
 
 	free(pstate);
 }

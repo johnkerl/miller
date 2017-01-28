@@ -77,7 +77,7 @@ mlr_dsl_cst_statement_t* alloc_print(
 }
 
 // ----------------------------------------------------------------
-static void free_print(mlr_dsl_cst_statement_t* pstatement) { // print
+static void free_print(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	print_state_t* pstate = pstatement->pvstate;
 
 	if (pstate->prhs_evaluator != NULL) {
@@ -190,7 +190,7 @@ mlr_dsl_cst_statement_t* alloc_tee(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnod
 }
 
 // ----------------------------------------------------------------
-static void free_tee(mlr_dsl_cst_statement_t* pstatement) {
+static void free_tee(mlr_dsl_cst_statement_t* pstatement, context_t* pctx) {
 	tee_state_t* pstate = pstatement->pvstate;
 
 	if (pstate->poutput_filename_evaluator != NULL) {
@@ -198,12 +198,12 @@ static void free_tee(mlr_dsl_cst_statement_t* pstatement) {
 	}
 
 	if (pstate->psingle_lrec_writer != NULL) {
-		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer);
+		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer, pctx);
 	}
 
 	if (pstate->pmulti_lrec_writer != NULL) {
-		multi_lrec_writer_drain(pstate->pmulti_lrec_writer);
-		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
+		multi_lrec_writer_drain(pstate->pmulti_lrec_writer, pctx);
+		multi_lrec_writer_free(pstate->pmulti_lrec_writer, pctx);
 	}
 
 	free(pstate);
@@ -225,7 +225,7 @@ static void handle_tee_to_stdfp(
 
 	// The writer frees the lrec
 	pstate->psingle_lrec_writer->pprocess_func(pstate->psingle_lrec_writer->pvstate,
-		pstate->stdfp, pcopy);
+		pstate->stdfp, pcopy, pvars->pctx);
 	if (pstate->flush_every_record)
 		fflush(pstate->stdfp);
 }
@@ -251,7 +251,7 @@ static void handle_tee_to_file(
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 	// The writer frees the lrec
 	multi_lrec_writer_output_srec(pstate->pmulti_lrec_writer, pcopy, filename,
-		pstate->file_output_mode, pstate->flush_every_record);
+		pstate->file_output_mode, pstate->flush_every_record, pvars->pctx);
 
 	if (fn_free_flags)
 		free(filename);
@@ -413,7 +413,7 @@ static void free_emitf_item(emitf_item_t* pemitf_item) {
 	free(pemitf_item);
 }
 
-static void free_emitf(mlr_dsl_cst_statement_t* pstatement) {
+static void free_emitf(mlr_dsl_cst_statement_t* pstatement, context_t* pctx) {
 	emitf_state_t* pstate = pstatement->pvstate;
 
 	if (pstate->poutput_filename_evaluator != NULL) {
@@ -421,12 +421,12 @@ static void free_emitf(mlr_dsl_cst_statement_t* pstatement) {
 	}
 
 	if (pstate->psingle_lrec_writer != NULL) {
-		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer);
+		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer, pctx);
 	}
 
 	if (pstate->pmulti_lrec_writer != NULL) {
-		multi_lrec_writer_drain(pstate->pmulti_lrec_writer);
-		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
+		multi_lrec_writer_drain(pstate->pmulti_lrec_writer, pctx);
+		multi_lrec_writer_free(pstate->pmulti_lrec_writer, pctx);
 	}
 
 	if (pstate->pemitf_items != NULL) {
@@ -463,7 +463,7 @@ static void handle_emitf_to_stdfp(
 
 	handle_emitf_common(pstate, pvars, poutrecs);
 
-	lrec_writer_print_all(pstate->psingle_lrec_writer, pstate->stdfp, poutrecs);
+	lrec_writer_print_all(pstate->psingle_lrec_writer, pstate->stdfp, poutrecs, pvars->pctx);
 	if (pstate->flush_every_record)
 		fflush(pstate->stdfp);
 	sllv_free(poutrecs);
@@ -490,7 +490,7 @@ static void handle_emitf_to_file(
 	char fn_free_flags = 0;
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 	multi_lrec_writer_output_list(pstate->pmulti_lrec_writer, poutrecs, filename,
-		pstate->file_output_mode, pstate->flush_every_record);
+		pstate->file_output_mode, pstate->flush_every_record, pvars->pctx);
 
 	sllv_free(poutrecs);
 	if (fn_free_flags)
@@ -738,7 +738,7 @@ mlr_dsl_cst_statement_t* alloc_emit(
 }
 
 // ----------------------------------------------------------------
-static void free_emit(mlr_dsl_cst_statement_t* pstatement) {
+static void free_emit(mlr_dsl_cst_statement_t* pstatement, context_t* pctx) {
 	emit_state_t* pstate = pstatement->pvstate;
 
 	if (pstate->poutput_filename_evaluator != NULL) {
@@ -766,12 +766,12 @@ static void free_emit(mlr_dsl_cst_statement_t* pstatement) {
 	}
 
 	if (pstate->psingle_lrec_writer != NULL) {
-		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer);
+		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer, pctx);
 	}
 
 	if (pstate->pmulti_lrec_writer != NULL) {
-		multi_lrec_writer_drain(pstate->pmulti_lrec_writer);
-		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
+		multi_lrec_writer_drain(pstate->pmulti_lrec_writer, pctx);
+		multi_lrec_writer_free(pstate->pmulti_lrec_writer, pctx);
 	}
 
 	free(pstate);
@@ -802,7 +802,7 @@ static void handle_emit_to_stdfp(
 	if (pstate->psingle_lrec_writer == NULL)
 		pstate->psingle_lrec_writer = lrec_writer_alloc_or_die(pcst_outputs->pwriter_opts);
 
-	lrec_writer_print_all(pstate->psingle_lrec_writer, pstate->stdfp, poutrecs);
+	lrec_writer_print_all(pstate->psingle_lrec_writer, pstate->stdfp, poutrecs, pvars->pctx);
 	if (pstate->flush_every_record)
 		fflush(pstate->stdfp);
 
@@ -831,7 +831,7 @@ static void handle_emit_to_file(
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 
 	multi_lrec_writer_output_list(pstate->pmulti_lrec_writer, poutrecs, filename,
-		pstate->file_output_mode, pstate->flush_every_record);
+		pstate->file_output_mode, pstate->flush_every_record, pvars->pctx);
 	sllv_free(poutrecs);
 
 	if (fn_free_flags)
@@ -992,7 +992,7 @@ static void handle_emit_all_to_stdfp(
 	}
 	sllmv_free(pmvnames);
 
-	lrec_writer_print_all(pstate->psingle_lrec_writer, pstate->stdfp, poutrecs);
+	lrec_writer_print_all(pstate->psingle_lrec_writer, pstate->stdfp, poutrecs, pvars->pctx);
 	if (pstate->flush_every_record)
 		fflush(pstate->stdfp);
 	sllv_free(poutrecs);
@@ -1023,7 +1023,7 @@ static void handle_emit_all_to_file(
 	char fn_free_flags = 0;
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 	multi_lrec_writer_output_list(pstate->pmulti_lrec_writer, poutrecs, filename,
-		pstate->file_output_mode, pstate->flush_every_record);
+		pstate->file_output_mode, pstate->flush_every_record, pvars->pctx);
 	sllv_free(poutrecs);
 
 	if (fn_free_flags)
@@ -1085,7 +1085,7 @@ static void handle_emit_lashed_common(
 	variables_t*         pvars,
 	sllv_t*              poutrecs,
 	char*                oosvar_flatten_separator);
-static void free_emit_lashed(mlr_dsl_cst_statement_t* pstatement);
+static void free_emit_lashed(mlr_dsl_cst_statement_t* pstatement, context_t* pctx);
 
 // ----------------------------------------------------------------
 mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
@@ -1177,7 +1177,7 @@ mlr_dsl_cst_statement_t* alloc_emit_lashed(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node
 }
 
 // ----------------------------------------------------------------
-static void free_emit_lashed(mlr_dsl_cst_statement_t* pstatement) {
+static void free_emit_lashed(mlr_dsl_cst_statement_t* pstatement, context_t* pctx) {
 	emit_lashed_state_t* pstate = pstatement->pvstate;
 
 	if (pstate->ppitems != NULL) {
@@ -1204,12 +1204,12 @@ static void free_emit_lashed(mlr_dsl_cst_statement_t* pstatement) {
 	free(pstate->ptop_values);
 
 	if (pstate->psingle_lrec_writer != NULL) {
-		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer);
+		pstate->psingle_lrec_writer->pfree_func(pstate->psingle_lrec_writer, pctx);
 	}
 
 	if (pstate->pmulti_lrec_writer != NULL) {
-		multi_lrec_writer_drain(pstate->pmulti_lrec_writer);
-		multi_lrec_writer_free(pstate->pmulti_lrec_writer);
+		multi_lrec_writer_drain(pstate->pmulti_lrec_writer, pctx);
+		multi_lrec_writer_free(pstate->pmulti_lrec_writer, pctx);
 	}
 
 	free(pstate);
@@ -1240,7 +1240,7 @@ static void handle_emit_lashed_to_stdfp(
 
 	handle_emit_lashed_common(pstate, pvars, poutrecs, pcst_outputs->oosvar_flatten_separator);
 
-	lrec_writer_print_all(pstate->psingle_lrec_writer, pstate->stdfp, poutrecs);
+	lrec_writer_print_all(pstate->psingle_lrec_writer, pstate->stdfp, poutrecs, pvars->pctx);
 	if (pstate->flush_every_record)
 		fflush(pstate->stdfp);
 
@@ -1269,7 +1269,7 @@ static void handle_emit_lashed_to_file(
 	char* filename = mv_format_val(&filename_mv, &fn_free_flags);
 
 	multi_lrec_writer_output_list(pstate->pmulti_lrec_writer, poutrecs, filename,
-		pstate->file_output_mode, pstate->flush_every_record);
+		pstate->file_output_mode, pstate->flush_every_record, pvars->pctx);
 
 	sllv_free(poutrecs);
 
@@ -1380,7 +1380,7 @@ mlr_dsl_cst_statement_t* alloc_dump(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pno
 }
 
 // ----------------------------------------------------------------
-static void free_dump(mlr_dsl_cst_statement_t* pstatement) {
+static void free_dump(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	dump_state_t* pstate = pstatement->pvstate;
 
 	if (pstate->ptarget_xevaluator != NULL) {

@@ -154,7 +154,7 @@ static char * test_numbers() {
 	fmgr_t* pfmgr = fmgr_alloc();
 	rval_evaluator_t*  pastr = rval_evaluator_alloc_from_ast(p2logxnode, pfmgr, TYPE_INFER_STRING_FLOAT_INT, 0);
 	fmgr_resolve_func_callsites(pfmgr);
-	fmgr_free(pfmgr);
+	fmgr_free(pfmgr, &ctx);
 
 	lrec_t* prec = lrec_unbacked_alloc();
 	lhmsmv_t* ptyped_overlay = lhmsmv_alloc();

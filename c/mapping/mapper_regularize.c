@@ -12,7 +12,7 @@ static void      mapper_regularize_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_regularize_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_regularize_alloc();
-static void      mapper_regularize_free(mapper_t* pmapper);
+static void      mapper_regularize_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_regularize_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
@@ -54,7 +54,7 @@ static mapper_t* mapper_regularize_alloc() {
 	return pmapper;
 }
 
-static void mapper_regularize_free(mapper_t* pmapper) {
+static void mapper_regularize_free(mapper_t* pmapper, context_t* _) {
 	mapper_regularize_state_t* pstate = pmapper->pvstate;
 	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
 	for (lhmslve_t* pe = pstate->psorted_to_original->phead; pe != NULL; pe = pe->pnext) {

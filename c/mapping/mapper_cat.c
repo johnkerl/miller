@@ -20,7 +20,7 @@ static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* counter_field_name,
 	slls_t* pgroup_by_field_names);
-static void      mapper_cat_free(mapper_t* pmapper);
+static void      mapper_cat_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_cat_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_catn_process_ungrouped(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_catn_process_grouped(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -107,7 +107,7 @@ static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* coun
 	pmapper->pfree_func           = mapper_cat_free;
 	return pmapper;
 }
-static void mapper_cat_free(mapper_t* pmapper) {
+static void mapper_cat_free(mapper_t* pmapper, context_t* _) {
 	mapper_cat_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->pgroup_by_field_names);
 	for (lhmslve_t* pe = pstate->pcounters_by_group->phead; pe != NULL; pe = pe->pnext) {

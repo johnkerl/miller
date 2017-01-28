@@ -1,6 +1,7 @@
 #ifndef FUNCTION_MANAGER_H
 #define FUNCTION_MANAGER_H
 
+#include "lib/context.h"
 #include "containers/mlrval.h"
 #include "containers/lhmsv.h"
 #include "containers/hss.h"
@@ -15,7 +16,7 @@
 // own process and free functions implementing this interface.
 
 typedef boxed_xval_t udf_defsite_process_func_t(void* pvstate, int arity, boxed_xval_t* pargs, variables_t* pvars);
-typedef void udf_defsite_free_func_t(void* pvstate);
+typedef void udf_defsite_free_func_t(void* pvstate, context_t* pctx);
 
 typedef struct _udf_defsite_state_t {
 	void* pvstate;
@@ -42,7 +43,7 @@ typedef struct _fmgr_t {
 // ----------------------------------------------------------------
 fmgr_t* fmgr_alloc();
 
-void fmgr_free(fmgr_t* pfmgr);
+void fmgr_free(fmgr_t* pfmgr, context_t* pctx);
 
 void fmgr_install_udf(fmgr_t* pfmgr, udf_defsite_state_t* pdefsitate_state);
 

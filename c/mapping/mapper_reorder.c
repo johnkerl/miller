@@ -15,7 +15,7 @@ static void      mapper_reorder_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_reorder_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_reorder_alloc(ap_state_t* pargp, slls_t* pfield_name_list, int put_at_end);
-static void      mapper_reorder_free(mapper_t* pmapper);
+static void      mapper_reorder_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_reorder_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
@@ -83,7 +83,7 @@ static mapper_t* mapper_reorder_alloc(ap_state_t* pargp, slls_t* pfield_name_lis
 	return pmapper;
 }
 
-static void mapper_reorder_free(mapper_t* pmapper) {
+static void mapper_reorder_free(mapper_t* pmapper, context_t* _) {
 	mapper_reorder_state_t* pstate = pmapper->pvstate;
 	if (pstate->pfield_name_list != NULL)
 		slls_free(pstate->pfield_name_list);

@@ -93,7 +93,11 @@ void cli_merge_reader_opts(cli_reader_opts_t* pfunc_opts, cli_reader_opts_t* pma
 // For mapper tee & mapper put which have their separate output-format overrides:
 void cli_merge_writer_opts(cli_writer_opts_t* pfunc_opts, cli_writer_opts_t* pmain_opts);
 
-void cli_opts_free(cli_opts_t* popts);
+// Stream context is for lrec-writer drain on tee et al. when using aggregated
+// output.  E.g. pretty-print output has column widths which are only computable
+// after all output records have been retained. The free methods are used as
+// drain triggers.
+void cli_opts_free(cli_opts_t* popts, context_t* pctx);
 
 // The caller can unconditionally free the return value
 char* cli_sep_from_arg(char* arg);

@@ -22,7 +22,7 @@ static void      mapper_head_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_head_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_head_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names, unsigned long long head_count);
-static void      mapper_head_free(mapper_t* pmapper);
+static void      mapper_head_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_head_process_unkeyed(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_head_process_keyed(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -85,7 +85,7 @@ static mapper_t* mapper_head_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_na
 	return pmapper;
 }
 
-static void mapper_head_free(mapper_t* pmapper) {
+static void mapper_head_free(mapper_t* pmapper, context_t* _) {
 	mapper_head_state_t* pstate = pmapper->pvstate;
 	if (pstate->pgroup_by_field_names != NULL)
 		slls_free(pstate->pgroup_by_field_names);

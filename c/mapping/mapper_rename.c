@@ -25,7 +25,7 @@ static void      mapper_rename_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_rename_alloc(ap_state_t* pargp, lhmss_t* pold_to_new, int do_regexes, int do_gsub);
-static void      mapper_rename_free(mapper_t* pmapper);
+static void      mapper_rename_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_rename_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_rename_regex_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -139,7 +139,7 @@ static mapper_t* mapper_rename_alloc(ap_state_t* pargp, lhmss_t* pold_to_new, in
 	return pmapper;
 }
 
-static void mapper_rename_free(mapper_t* pmapper) {
+static void mapper_rename_free(mapper_t* pmapper, context_t* _) {
 	mapper_rename_state_t* pstate = pmapper->pvstate;
 	lhmss_free(pstate->pold_to_new);
 	if (pstate->pregex_pairs != NULL) {

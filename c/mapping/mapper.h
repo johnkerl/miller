@@ -17,7 +17,7 @@ struct _mapper_t; // forward reference for method declarations
 // Returns linked list of records (lrec_t*).
 typedef sllv_t* mapper_process_func_t(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
-typedef void mapper_free_func_t(struct _mapper_t* pmapper);
+typedef void mapper_free_func_t(struct _mapper_t* pmapper, context_t* pctx);
 
 typedef struct _mapper_t {
 	void* pvstate;

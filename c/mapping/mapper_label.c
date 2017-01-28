@@ -11,7 +11,7 @@ static void      mapper_label_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_label_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_label_alloc(slls_t* pnames);
-static void      mapper_label_free(mapper_t* pmapper);
+static void      mapper_label_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_label_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
@@ -63,7 +63,7 @@ static mapper_t* mapper_label_alloc(slls_t* pnames) {
 	return pmapper;
 }
 
-static void mapper_label_free(mapper_t* pmapper) {
+static void mapper_label_free(mapper_t* pmapper, context_t* _) {
 	mapper_label_state_t* pstate = pmapper->pvstate;
 	if (pstate->pnames != NULL)
 		slls_free(pstate->pnames);

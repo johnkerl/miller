@@ -140,14 +140,14 @@ fmgr_t* fmgr_alloc() {
 }
 
 // ----------------------------------------------------------------
-void fmgr_free(fmgr_t* pfmgr) {
+void fmgr_free(fmgr_t* pfmgr, context_t* pctx) {
 	if (pfmgr == NULL)
 		return;
 
 	for (lhmsve_t* pe = pfmgr->pudf_names_to_defsite_states->phead; pe != NULL; pe = pe->pnext) {
 		udf_defsite_state_t * pdefsite_state = pe->pvvalue;
 		free(pdefsite_state->name);
-		pdefsite_state->pfree_func(pdefsite_state->pvstate);
+		pdefsite_state->pfree_func(pdefsite_state->pvstate, pctx);
 		free(pdefsite_state);
 	}
 	lhmsv_free(pfmgr->pudf_names_to_defsite_states);

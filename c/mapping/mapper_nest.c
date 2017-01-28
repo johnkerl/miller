@@ -36,7 +36,7 @@ static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv,
 static mapper_t* mapper_nest_alloc(ap_state_t* pargp, char* argv0,
 	char* field_name, char* nested_fs, char* nested_ps,
 	int do_explode, int do_pairs, int do_across_fields);
-static void    mapper_nest_free(mapper_t* pmapper);
+static void    mapper_nest_free(mapper_t* pmapper, context_t* _);
 
 static sllv_t* mapper_nest_explode_values_across_fields  (lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t* mapper_nest_implode_values_across_fields  (lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -212,7 +212,7 @@ static mapper_t* mapper_nest_alloc(ap_state_t* pargp, char* argv0,
 	return pmapper;
 }
 
-static void mapper_nest_free(mapper_t* pmapper) {
+static void mapper_nest_free(mapper_t* pmapper, context_t* _) {
 	mapper_nest_state_t* pstate = pmapper->pvstate;
 
 	if (pstate->other_keys_to_other_values_to_buckets != NULL) {

@@ -70,7 +70,7 @@ static mapper_t* mapper_put_or_filter_alloc(
 	cli_writer_opts_t* pwriter_opts,
 	cli_writer_opts_t* pmain_writer_opts);
 
-static void      mapper_put_or_filter_free(mapper_t* pmapper);
+static void      mapper_put_or_filter_free(mapper_t* pmapper, context_t* pctx);
 
 static sllv_t*   mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -419,14 +419,14 @@ static mapper_t* mapper_put_or_filter_alloc(
 	return pmapper;
 }
 
-static void mapper_put_or_filter_free(mapper_t* pmapper) {
+static void mapper_put_or_filter_free(mapper_t* pmapper, context_t* pctx) {
 	mapper_put_or_filter_state_t* pstate = pmapper->pvstate;
 
 	free(pstate->mlr_dsl_expression);
 	mlhmmv_root_free(pstate->poosvars);
 	local_stack_free(pstate->plocal_stack);
 	loop_stack_free(pstate->ploop_stack);
-	mlr_dsl_cst_free(pstate->pcst);
+	mlr_dsl_cst_free(pstate->pcst, pctx);
 	// Free what's left of the stripped AST after the CST reorganized it.
 	mlr_dsl_ast_free(pstate->past);
 

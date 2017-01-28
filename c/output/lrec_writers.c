@@ -50,9 +50,9 @@ lrec_writer_t* lrec_writer_alloc_or_die(cli_writer_opts_t* popts) {
 }
 
 // ----------------------------------------------------------------
-void lrec_writer_print_all(lrec_writer_t* pwriter, FILE* fp, sllv_t* poutrecs) {
+void lrec_writer_print_all(lrec_writer_t* pwriter, FILE* fp, sllv_t* poutrecs, context_t* pctx) {
 	while (poutrecs->phead != NULL) {
 		lrec_t* poutrec = sllv_pop(poutrecs);
-		pwriter->pprocess_func(pwriter->pvstate, fp, poutrec);
+		pwriter->pprocess_func(pwriter->pvstate, fp, poutrec, pctx);
 	}
 }

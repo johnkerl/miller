@@ -16,7 +16,7 @@ static void      mapper_bootstrap_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_bootstrap_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_bootstrap_alloc(int nout, ap_state_t* pargp);
-static void      mapper_bootstrap_free(mapper_t* pmapper);
+static void      mapper_bootstrap_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_bootstrap_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
@@ -82,7 +82,7 @@ static mapper_t* mapper_bootstrap_alloc(int nout, ap_state_t* pargp) {
 	return pmapper;
 }
 
-static void mapper_bootstrap_free(mapper_t* pmapper) {
+static void mapper_bootstrap_free(mapper_t* pmapper, context_t* _) {
 	mapper_bootstrap_state_t* pstate = pmapper->pvstate;
 	// Free the container
 	sllv_free(pstate->records);

@@ -7,8 +7,8 @@ typedef struct _lrec_writer_nidx_state_t {
 	char* ofs;
 } lrec_writer_nidx_state_t;
 
-static void lrec_writer_nidx_free(lrec_writer_t* pwriter);
-static void lrec_writer_nidx_process(void* pvstate, FILE* output_stream, lrec_t* prec);
+static void lrec_writer_nidx_free(lrec_writer_t* pwriter, context_t* pctx);
+static void lrec_writer_nidx_process(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
 
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_nidx_alloc(char* ors, char* ofs) {
@@ -25,13 +25,13 @@ lrec_writer_t* lrec_writer_nidx_alloc(char* ors, char* ofs) {
 	return plrec_writer;
 }
 
-static void lrec_writer_nidx_free(lrec_writer_t* pwriter) {
+static void lrec_writer_nidx_free(lrec_writer_t* pwriter, context_t* pctx) {
 	free(pwriter->pvstate);
 	free(pwriter);
 }
 
 // ----------------------------------------------------------------
-static void lrec_writer_nidx_process(void* pvstate, FILE* output_stream, lrec_t* prec) {
+static void lrec_writer_nidx_process(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
 	if (prec == NULL)
 		return;
 	lrec_writer_nidx_state_t* pstate = pvstate;

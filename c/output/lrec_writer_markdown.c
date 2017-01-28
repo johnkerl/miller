@@ -10,8 +10,8 @@ typedef struct _lrec_writer_markdown_state_t {
 	slls_t* plast_header_output;
 } lrec_writer_markdown_state_t;
 
-static void lrec_writer_markdown_free(lrec_writer_t* pwriter);
-static void lrec_writer_markdown_process(void* pvstate, FILE* output_stream, lrec_t* prec);
+static void lrec_writer_markdown_free(lrec_writer_t* pwriter, context_t* pctx);
+static void lrec_writer_markdown_process(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
 
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_markdown_alloc(char* ors) {
@@ -30,7 +30,7 @@ lrec_writer_t* lrec_writer_markdown_alloc(char* ors) {
 	return plrec_writer;
 }
 
-static void lrec_writer_markdown_free(lrec_writer_t* pwriter) {
+static void lrec_writer_markdown_free(lrec_writer_t* pwriter, context_t* pctx) {
 	lrec_writer_markdown_state_t* pstate = pwriter->pvstate;
 	slls_free(pstate->plast_header_output);
 	free(pstate);
@@ -38,7 +38,7 @@ static void lrec_writer_markdown_free(lrec_writer_t* pwriter) {
 }
 
 // ----------------------------------------------------------------
-static void lrec_writer_markdown_process(void* pvstate, FILE* output_stream, lrec_t* prec) {
+static void lrec_writer_markdown_process(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
 	if (prec == NULL)
 		return;
 	lrec_writer_markdown_state_t* pstate = pvstate;

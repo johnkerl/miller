@@ -307,7 +307,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 }
 
 // ----------------------------------------------------------------
-void cli_opts_free(cli_opts_t* popts) {
+void cli_opts_free(cli_opts_t* popts, context_t* pctx) {
 	if (popts == NULL)
 		return;
 
@@ -315,11 +315,11 @@ void cli_opts_free(cli_opts_t* popts) {
 
 	for (sllve_t* pe = popts->pmapper_list->phead; pe != NULL; pe = pe->pnext) {
 		mapper_t* pmapper = pe->pvvalue;
-		pmapper->pfree_func(pmapper);
+		pmapper->pfree_func(pmapper, pctx);
 	}
 	sllv_free(popts->pmapper_list);
 
-	popts->plrec_writer->pfree_func(popts->plrec_writer);
+	popts->plrec_writer->pfree_func(popts->plrec_writer, pctx);
 
 	slls_free(popts->filenames);
 
@@ -618,7 +618,7 @@ static void main_usage_help_options(FILE* o, char* argv0) {
 static void main_usage_functions(FILE* o, char* argv0, char* leader) {
 	fmgr_t* pfmgr = fmgr_alloc();
 	fmgr_list_functions(pfmgr, o, leader);
-	fmgr_free(pfmgr);
+	fmgr_free(pfmgr, NULL);
 	fprintf(o, "Please use \"%s --help-function {function name}\" for function-specific help.\n", argv0);
 	fprintf(o, "Please use \"%s --help-all-functions\" or \"%s -f\" for help on all functions.\n", argv0, argv0);
 	fprintf(o, "Please use \"%s --help-all-keywords\" or \"%s -k\" for help on all keywords.\n", argv0, argv0);
@@ -1213,18 +1213,18 @@ static int handle_terminal_usage(char** argv, int argc, int argi) {
 	} else if (streq(argv[argi], "--list-all-functions-raw") || streq(argv[argi], "-F")) {
 		fmgr_t* pfmgr = fmgr_alloc();
 		fmgr_list_all_functions_raw(pfmgr, stdout);
-		fmgr_free(pfmgr);
+		fmgr_free(pfmgr, NULL);
 		return TRUE;
 	} else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "-f")) {
 		fmgr_t* pfmgr = fmgr_alloc();
 		fmgr_function_usage(pfmgr, stdout, NULL);
-		fmgr_free(pfmgr);
+		fmgr_free(pfmgr, NULL);
 		return TRUE;
 	} else if (streq(argv[argi], "--help-function") || streq(argv[argi], "--hf")) {
 		check_arg_count(argv, argi, argc, 2);
 		fmgr_t* pfmgr = fmgr_alloc();
 		fmgr_function_usage(pfmgr, stdout, argv[argi+1]);
-		fmgr_free(pfmgr);
+		fmgr_free(pfmgr, NULL);
 		return TRUE;
 
 	} else if (streq(argv[argi], "--list-all-keywords-raw") || streq(argv[argi], "-K")) {

@@ -60,7 +60,7 @@ static mapper_t* mapper_merge_fields_parse_cli(int* pargi, int argc, char** argv
 static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names, merge_by_t do_which,
 	slls_t* pvalue_field_names, char* output_field_basename, int allow_int_float, int do_interpolated_percentiles,
 	int keep_input_fields);
-static void      mapper_merge_fields_free(mapper_t* pmapper);
+static void      mapper_merge_fields_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_merge_fields_process_by_name_list(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_merge_fields_process_by_name_regex(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -244,7 +244,7 @@ static mapper_t* mapper_merge_fields_alloc(slls_t* paccumulator_names, merge_by_
 	return pmapper;
 }
 
-static void mapper_merge_fields_free(mapper_t* pmapper) {
+static void mapper_merge_fields_free(mapper_t* pmapper, context_t* _) {
 	mapper_merge_fields_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->paccumulator_names);
 	slls_free(pstate->pvalue_field_names);

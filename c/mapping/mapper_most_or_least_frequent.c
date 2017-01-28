@@ -32,7 +32,7 @@ static mapper_t* mapper_most_or_least_frequent_parse_cli(int* pargi, int argc, c
 
 static mapper_t* mapper_most_or_least_frequent_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
 	long long max_output_length, int descending, int show_counts, char* output_field_name);
-static void      mapper_most_or_least_frequent_free(mapper_t* pmapper);
+static void      mapper_most_or_least_frequent_free(mapper_t* pmapper, context_t* _);
 
 static sllv_t*   mapper_most_or_least_frequent_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -148,7 +148,7 @@ static mapper_t* mapper_most_or_least_frequent_alloc(ap_state_t* pargp, slls_t* 
 	return pmapper;
 }
 
-static void mapper_most_or_least_frequent_free(mapper_t* pmapper) {
+static void mapper_most_or_least_frequent_free(mapper_t* pmapper, context_t* _) {
 	mapper_most_or_least_frequent_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->pgroup_by_field_names);
 	// lhmslv_free will free the keys: we only need to free the void-star values.

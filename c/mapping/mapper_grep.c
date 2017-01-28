@@ -19,7 +19,7 @@ static mapper_t* mapper_grep_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_grep_alloc(ap_state_t* pargp, char* regex_string, int exclude, int ignore_case,
 	cli_writer_opts_t* pwriter_opts);
-static void      mapper_grep_free(mapper_t* pmapper);
+static void      mapper_grep_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_grep_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
@@ -103,7 +103,7 @@ static mapper_t* mapper_grep_alloc(ap_state_t* pargp, char* regex_string, int ex
 	pmapper->pfree_func    = mapper_grep_free;
 	return pmapper;
 }
-static void mapper_grep_free(mapper_t* pmapper) {
+static void mapper_grep_free(mapper_t* pmapper, context_t* _) {
 	mapper_grep_state_t* pstate = pmapper->pvstate;
 	regfree(&pstate->regex);
 	ap_free(pstate->pargp);

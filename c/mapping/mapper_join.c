@@ -52,7 +52,7 @@ static void mapper_join_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts);
-static void mapper_join_free(mapper_t* pmapper);
+static void mapper_join_free(mapper_t* pmapper, context_t* _);
 static void ingest_left_file(mapper_join_state_t* pstate);
 static void mapper_join_form_pairs(sllv_t* pleft_records, lrec_t* pright_rec, mapper_join_state_t* pstate,
 	sllv_t* pout_recs);
@@ -302,7 +302,7 @@ static mapper_t* mapper_join_alloc(mapper_join_opts_t* popts) {
 }
 
 // ----------------------------------------------------------------
-static void mapper_join_free(mapper_t* pmapper) {
+static void mapper_join_free(mapper_t* pmapper, context_t* _) {
 	mapper_join_state_t* pstate = pmapper->pvstate;
 
 	if (pstate->pleft_buckets_by_join_field_values != NULL) {

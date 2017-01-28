@@ -24,9 +24,25 @@ int main(int argc, char** argv) {
 	lrec_writer_t* plrec_writer = popts->plrec_writer;
 	slls_t*        filenames    = popts->filenames;
 
-	int ok = do_stream_chained(prepipe, filenames, plrec_reader, pmapper_list, plrec_writer, popts);
+	context_t ctx = {
+		.nr        = 0,
+		.fnr       = 0,
+		.filenum   = 0,
+		.filename  = NULL,
+		.force_eof = FALSE,
 
-	cli_opts_free(popts);
+		.ips       = popts->reader_opts.ips,
+		.ifs       = popts->reader_opts.ifs,
+		.irs       = popts->reader_opts.irs,
+		.ops       = popts->writer_opts.ops,
+		.ofs       = popts->writer_opts.ofs,
+		.ors       = popts->writer_opts.ors,
+		.auto_irs  = popts->reader_opts.irs,
+	};
+
+	int ok = do_stream_chained(prepipe, filenames, plrec_reader, pmapper_list, plrec_writer, &ctx, popts);
+
+	cli_opts_free(popts, &ctx);
 
 	return ok ? 0 : 1;
 }

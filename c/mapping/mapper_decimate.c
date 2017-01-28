@@ -23,7 +23,7 @@ static mapper_t* mapper_decimate_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_decimate_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names,
 	unsigned long long decimate_count, int keep_last);
-static void      mapper_decimate_free(mapper_t* pmapper);
+static void      mapper_decimate_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_decimate_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
@@ -88,7 +88,7 @@ static mapper_t* mapper_decimate_alloc(ap_state_t* pargp, slls_t* pgroup_by_fiel
 	return pmapper;
 }
 
-static void mapper_decimate_free(mapper_t* pmapper) {
+static void mapper_decimate_free(mapper_t* pmapper, context_t* _) {
 	mapper_decimate_state_t* pstate = pmapper->pvstate;
 	if (pstate->pgroup_by_field_names != NULL)
 		slls_free(pstate->pgroup_by_field_names);

@@ -25,7 +25,7 @@ static mapper_t* mapper_bar_parse_cli(int* pargi, int argc, char** argv,
 static mapper_t* mapper_bar_alloc(ap_state_t* pargp, string_array_t* pfield_names,
 	char fill_char, char oob_char, char blank_char, double lo, double hi,
 	int width, int do_auto);
-static void      mapper_bar_free(mapper_t* pmapper);
+static void      mapper_bar_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_bar_process_no_auto(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_bar_process_auto(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -173,7 +173,7 @@ static mapper_t* mapper_bar_alloc(ap_state_t* pargp, string_array_t* pfield_name
 	return pmapper;
 }
 
-static void mapper_bar_free(mapper_t* pmapper) {
+static void mapper_bar_free(mapper_t* pmapper, context_t* _) {
 	mapper_bar_state_t* pstate = (mapper_bar_state_t*)pmapper->pvstate;
 	string_array_free(pstate->pfield_names);
 	for (int i = 0; i <= pstate->width; i++)

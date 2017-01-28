@@ -45,7 +45,7 @@ mlr_dsl_cst_statement_t* alloc_full_srec_assignment(mlr_dsl_cst_t* pcst, mlr_dsl
 }
 
 // ----------------------------------------------------------------
-static void free_full_srec_assignment(mlr_dsl_cst_statement_t* pstatement) {
+static void free_full_srec_assignment(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	full_srec_assignment_state_t* pstate = pstatement->pvstate;
 
 	if (pstate->prhs_xevaluator != NULL) {
@@ -166,7 +166,7 @@ mlr_dsl_cst_statement_t* alloc_local_variable_definition(
 }
 
 // ----------------------------------------------------------------
-static void free_local_variable_definition(mlr_dsl_cst_statement_t* pstatement) {
+static void free_local_variable_definition(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	local_variable_definition_state_t* pstate = pstatement->pvstate;
 
 	pstate->prhs_xevaluator->pfree_func(pstate->prhs_xevaluator);
@@ -243,7 +243,7 @@ mlr_dsl_cst_statement_t* alloc_nonindexed_local_variable_assignment(mlr_dsl_cst_
 }
 
 // ----------------------------------------------------------------
-static void free_nonindexed_local_variable_assignment(mlr_dsl_cst_statement_t* pstatement) {
+static void free_nonindexed_local_variable_assignment(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	nonindexed_local_variable_assignment_state_t* pstate = pstatement->pvstate;
 
 	if (pstate->prhs_xevaluator != NULL) {
@@ -325,7 +325,7 @@ mlr_dsl_cst_statement_t* alloc_indexed_local_variable_assignment(mlr_dsl_cst_t* 
 }
 
 // ----------------------------------------------------------------
-static void free_indexed_local_variable_assignment(mlr_dsl_cst_statement_t* pstatement) {
+static void free_indexed_local_variable_assignment(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	indexed_local_variable_assignment_state_t* pstate = pstatement->pvstate;
 
 	for (sllve_t* pe = pstate->plhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
@@ -410,7 +410,7 @@ mlr_dsl_cst_statement_t* alloc_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_as
 }
 
 // ----------------------------------------------------------------
-static void free_oosvar_assignment(mlr_dsl_cst_statement_t* pstatement) {
+static void free_oosvar_assignment(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	oosvar_assignment_state_t* pstate = pstatement->pvstate;
 
 	for (sllve_t* pe = pstate->plhs_keylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
@@ -492,7 +492,7 @@ mlr_dsl_cst_statement_t* alloc_full_oosvar_assignment(mlr_dsl_cst_t* pcst, mlr_d
 }
 
 // ----------------------------------------------------------------
-static void free_full_oosvar_assignment(mlr_dsl_cst_statement_t* pstatement) {
+static void free_full_oosvar_assignment(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	full_oosvar_assignment_state_t* pstate = pstatement->pvstate;
 
 	if (pstate->prhs_xevaluator != NULL) {

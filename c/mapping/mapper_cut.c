@@ -22,7 +22,7 @@ static mapper_t* mapper_cut_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_cut_alloc(ap_state_t* pargp, slls_t* pfield_name_list,
 	int do_arg_order, int do_complement, int do_regexes);
-static void      mapper_cut_free(mapper_t* pmapper);
+static void      mapper_cut_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_cut_process_no_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_cut_process_with_regexes(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -123,7 +123,7 @@ static mapper_t* mapper_cut_alloc(ap_state_t* pargp, slls_t* pfield_name_list,
 	return pmapper;
 }
 
-static void mapper_cut_free(mapper_t* pmapper) {
+static void mapper_cut_free(mapper_t* pmapper, context_t* _) {
 	mapper_cut_state_t* pstate = pmapper->pvstate;
 	slls_free(pstate->pfield_name_list);
 	hss_free(pstate->pfield_name_set);

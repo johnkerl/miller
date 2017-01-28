@@ -25,57 +25,42 @@ static void stderr_progress_indicator(context_t* pctx, long long nr_progress_mod
 
 // ----------------------------------------------------------------
 int do_stream_chained(char* prepipe, slls_t* filenames, lrec_reader_t* plrec_reader, sllv_t* pmapper_list,
-	lrec_writer_t* plrec_writer, cli_opts_t* popts)
+	lrec_writer_t* plrec_writer, context_t* pctx, cli_opts_t* popts)
 {
 	FILE* output_stream = stdout;
 
 	MLR_INTERNAL_CODING_ERROR_IF(pmapper_list->length < 1); // Should not have been allowed by the CLI parser.
 
-	context_t ctx = {
-		.nr        = 0,
-		.fnr       = 0,
-		.filenum   = 0,
-		.filename  = NULL,
-		.force_eof = FALSE,
-
-		.ips       = popts->reader_opts.ips,
-		.ifs       = popts->reader_opts.ifs,
-		.irs       = popts->reader_opts.irs,
-		.ops       = popts->writer_opts.ops,
-		.ofs       = popts->writer_opts.ofs,
-		.ors       = popts->writer_opts.ors,
-		.auto_irs  = popts->reader_opts.irs,
-	};
 	int ok = 1;
 	if (filenames == NULL) {
 		// No input at all
 	} else if (filenames->length == 0) {
 		// Zero file names means read from standard input
-		ctx.filenum++;
-		ctx.filename = "(stdin)";
-		ctx.fnr = 0;
-		ok = do_file_chained(prepipe, "-", &ctx, plrec_reader, pmapper_list, plrec_writer,
+		pctx->filenum++;
+		pctx->filename = "(stdin)";
+		pctx->fnr = 0;
+		ok = do_file_chained(prepipe, "-", pctx, plrec_reader, pmapper_list, plrec_writer,
 			output_stream, popts) && ok;
 	} else {
 		// Read from each file name in turn
 		for (sllse_t* pe = filenames->phead; pe != NULL; pe = pe->pnext) {
 			char* filename = pe->value;
-			ctx.filenum++;
-			ctx.filename = filename;
-			ctx.fnr = 0;
-			ok = do_file_chained(prepipe, filename, &ctx, plrec_reader, pmapper_list, plrec_writer,
+			pctx->filenum++;
+			pctx->filename = filename;
+			pctx->fnr = 0;
+			ok = do_file_chained(prepipe, filename, pctx, plrec_reader, pmapper_list, plrec_writer,
 				output_stream, popts) && ok;
-			if (ctx.force_eof == TRUE) // e.g. mlr head
+			if (pctx->force_eof == TRUE) // e.g. mlr head
 				break;
 		}
 	}
 
 	// Mappers and writers receive end-of-stream notifications via null input record.
 	// Do that, now that data from all input file(s) have been exhausted.
-	drive_lrec(NULL, &ctx, pmapper_list->phead, plrec_writer, output_stream);
+	drive_lrec(NULL, pctx, pmapper_list->phead, plrec_writer, output_stream);
 
 	// Drain the pretty-printer.
-	plrec_writer->pprocess_func(plrec_writer->pvstate, output_stream, NULL);
+	plrec_writer->pprocess_func(plrec_writer->pvstate, output_stream, NULL, pctx);
 
 	return ok;
 }
@@ -122,7 +107,7 @@ static void drive_lrec(lrec_t* pinrec, context_t* pctx, sllve_t* pmapper_list_he
 		for (sllve_t* pe = outrecs->phead; pe != NULL; pe = pe->pnext) {
 			lrec_t* poutrec = pe->pvvalue;
 			if (poutrec != NULL) // writer frees records (sllv void-star payload)
-				plrec_writer->pprocess_func(plrec_writer->pvstate, output_stream, poutrec);
+				plrec_writer->pprocess_func(plrec_writer->pvstate, output_stream, poutrec, pctx);
 		}
 		sllv_free(outrecs); // we free the list
 	}

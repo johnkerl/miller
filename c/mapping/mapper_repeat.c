@@ -25,7 +25,7 @@ static void      mapper_repeat_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_repeat_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_repeat_alloc(ap_state_t* pargp, long long repeat_count, char* repeat_count_field_name);
-static void      mapper_repeat_free(mapper_t* pmapper);
+static void      mapper_repeat_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_repeat_process_nop(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_repeat_process_by_positive_count(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static sllv_t*   mapper_repeat_process_by_field_name(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -119,7 +119,7 @@ static mapper_t* mapper_repeat_alloc(ap_state_t* pargp, long long repeat_count, 
 	return pmapper;
 }
 
-static void mapper_repeat_free(mapper_t* pmapper) {
+static void mapper_repeat_free(mapper_t* pmapper, context_t* _) {
 	mapper_repeat_state_t* pstate = pmapper->pvstate;
 	ap_free(pstate->pargp);
 	free(pstate);

@@ -40,7 +40,7 @@ mlr_dsl_cst_statement_t* alloc_srec_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 }
 
 // ----------------------------------------------------------------
-static void free_srec_assignment(mlr_dsl_cst_statement_t* pstatement) {
+static void free_srec_assignment(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	srec_assignment_state_t* pstate = pstatement->pvstate;
 
 	pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
@@ -113,7 +113,7 @@ mlr_dsl_cst_statement_t* alloc_indirect_srec_assignment(mlr_dsl_cst_t* pcst, mlr
 }
 
 // ----------------------------------------------------------------
-static void free_indirect_srec_assignment(mlr_dsl_cst_statement_t* pstatement) {
+static void free_indirect_srec_assignment(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	indirect_srec_assignment_state_t* pstate = pstatement->pvstate;
 
 	pstate->plhs_evaluator->pfree_func(pstate->plhs_evaluator);
@@ -200,7 +200,7 @@ mlr_dsl_cst_statement_t* alloc_env_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_n
 }
 
 // ----------------------------------------------------------------
-static void free_env_assignment(mlr_dsl_cst_statement_t* pstatement) {
+static void free_env_assignment(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	env_assignment_state_t* pstate = pstatement->pvstate;
 
 	pstate->plhs_evaluator->pfree_func(pstate->plhs_evaluator);

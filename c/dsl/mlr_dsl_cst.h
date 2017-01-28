@@ -2,6 +2,7 @@
 #define MLR_DSL_CST_H
 
 #include "cli/mlrcli.h"
+#include "lib/context.h"
 #include "containers/lhmsmv.h"
 #include "containers/local_stack.h"
 #include "containers/loop_stack.h"
@@ -80,7 +81,7 @@ typedef struct _cst_statement_block_t {
 } cst_statement_block_t;
 
 cst_statement_block_t* cst_statement_block_alloc(int subframe_var_count);
-void cst_statement_block_free(cst_statement_block_t* pblock);
+void cst_statement_block_free(cst_statement_block_t* pblock, context_t* pctx);
 
 // ----------------------------------------------------------------
 typedef struct _cst_top_level_statement_block_t {
@@ -90,7 +91,7 @@ typedef struct _cst_top_level_statement_block_t {
 } cst_top_level_statement_block_t;
 
 cst_top_level_statement_block_t* cst_top_level_statement_block_alloc(int max_var_depth, int subframe_var_count);
-void cst_top_level_statement_block_free(cst_top_level_statement_block_t* pblock);
+void cst_top_level_statement_block_free(cst_top_level_statement_block_t* pblock, context_t* pctx);
 
 // ----------------------------------------------------------------
 // Generic handler for a statement.
@@ -116,7 +117,8 @@ typedef void mlr_dsl_cst_statement_handler_t(
 	cst_outputs_t*                   pcst_outputs);
 
 typedef void mlr_dsl_cst_statement_freer_t(
-	struct _mlr_dsl_cst_statement_t* pstatement);
+	struct _mlr_dsl_cst_statement_t* pstatement,
+	context_t* pctx);
 
 // ----------------------------------------------------------------
 // MLR_DSL_CST_STATEMENT OBJECT
@@ -211,8 +213,8 @@ mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_statement(mlr_dsl_cst_t* pcst, mlr_ds
 mlr_dsl_cst_statement_t* mlr_dsl_cst_alloc_final_filter_statement(mlr_dsl_cst_t* pcst,
 	mlr_dsl_ast_node_t* pnode, int negate_final_filter, int type_inferencing, int context_flags);
 
-void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst);
-void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement);
+void mlr_dsl_cst_free(mlr_dsl_cst_t* pcst, context_t* pctx);
+void mlr_dsl_cst_statement_free(mlr_dsl_cst_statement_t* pstatement, context_t* pctx);
 
 // Top-level entry point, e.g. from mapper_put.
 void mlr_dsl_cst_handle_top_level_statement_blocks(
@@ -264,7 +266,7 @@ udf_defsite_state_t* mlr_dsl_cst_alloc_udf(
 	int                 type_inferencing,
 	int                 context_flags);
 
-void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate);
+void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate, context_t* pctx);
 
 // ----------------------------------------------------------------
 
@@ -289,7 +291,7 @@ subr_defsite_t* mlr_dsl_cst_alloc_subroutine(
 	int                 type_inferencing,
 	int                 context_flags);
 
-void mlr_dsl_cst_free_subroutine(subr_defsite_t* psubr_defsite);
+void mlr_dsl_cst_free_subroutine(subr_defsite_t* psubr_defsite, context_t* pctx);
 
 // Invoked directly from the CST statement handler for a subroutine callsite.
 // (Functions, by contrast, are invoked by callback from the right-hand-site-evaluator logic

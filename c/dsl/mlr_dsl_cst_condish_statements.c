@@ -51,7 +51,7 @@ mlr_dsl_cst_statement_t* alloc_conditional_block(mlr_dsl_cst_t* pcst, mlr_dsl_as
 }
 
 // ----------------------------------------------------------------
-static void free_conditional_block(mlr_dsl_cst_statement_t* pstatement) {
+static void free_conditional_block(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	conditional_block_state_t* pstate = pstatement->pvstate;
 
 	pstate->pexpression_evaluator->pfree_func(pstate->pexpression_evaluator);
@@ -224,19 +224,19 @@ static mlr_dsl_cst_statement_t* alloc_if_item(mlr_dsl_cst_t* pcst,
 }
 
 // ----------------------------------------------------------------
-static void free_if_head(mlr_dsl_cst_statement_t* pstatement) {
+static void free_if_head(mlr_dsl_cst_statement_t* pstatement, context_t* pctx) {
 	if_head_state_t* pstate = pstatement->pvstate;
 
 	if (pstate->pif_chain_statements != NULL) {
 		for (sllve_t* pe = pstate->pif_chain_statements->phead; pe != NULL; pe = pe->pnext)
-			mlr_dsl_cst_statement_free(pe->pvvalue);
+			mlr_dsl_cst_statement_free(pe->pvvalue, pctx);
 		sllv_free(pstate->pif_chain_statements);
 	}
 
 	free(pstate);
 }
 
-static void free_if_item(mlr_dsl_cst_statement_t* pstatement) {
+static void free_if_item(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	if_item_state_t* pstate = pstatement->pvstate;
 
 	pstate->pexpression_evaluator->pfree_func(pstate->pexpression_evaluator);
@@ -317,7 +317,7 @@ mlr_dsl_cst_statement_t* alloc_while(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 }
 
 // ----------------------------------------------------------------
-static void free_while(mlr_dsl_cst_statement_t* pstatement) {
+static void free_while(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	while_state_t* pstate = pstatement->pvstate;
 
 	pstate->pexpression_evaluator->pfree_func(pstate->pexpression_evaluator);
@@ -408,7 +408,7 @@ mlr_dsl_cst_statement_t* alloc_do_while(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t*
 }
 
 // ----------------------------------------------------------------
-static void free_do_while(mlr_dsl_cst_statement_t* pstatement) {
+static void free_do_while(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	do_while_state_t* pstate = pstatement->pvstate;
 
 	pstate->pexpression_evaluator->pfree_func(pstate->pexpression_evaluator);
@@ -482,7 +482,7 @@ mlr_dsl_cst_statement_t* alloc_bare_boolean(mlr_dsl_cst_t* pcst, mlr_dsl_ast_nod
 }
 
 // ----------------------------------------------------------------
-static void free_bare_boolean(mlr_dsl_cst_statement_t* pstatement) {
+static void free_bare_boolean(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	bare_boolean_state_t* pstate = pstatement->pvstate;
 
 	pstate->pexpression_evaluator->pfree_func(pstate->pexpression_evaluator);
@@ -534,7 +534,7 @@ mlr_dsl_cst_statement_t* alloc_filter(
 }
 
 // ----------------------------------------------------------------
-static void free_filter(mlr_dsl_cst_statement_t* pstatement) {
+static void free_filter(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	filter_state_t* pstate = pstatement->pvstate;
 
 	pstate->pexpression_evaluator->pfree_func(pstate->pexpression_evaluator);
@@ -593,7 +593,7 @@ mlr_dsl_cst_statement_t* alloc_final_filter(
 }
 
 // ----------------------------------------------------------------
-static void free_final_filter(mlr_dsl_cst_statement_t* pstatement) {
+static void free_final_filter(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	final_filter_state_t* pstate = pstatement->pvstate;
 
 	pstate->pexpression_evaluator->pfree_func(pstate->pexpression_evaluator);
