@@ -11,9 +11,11 @@ typedef struct _lrec_writer_json_state_t {
 	int json_quote_int_keys;
 	int json_quote_non_string_values;
 	char* line_indent;
-	char* before_records_at_start_of_stream;
+	char* before_records_at_start_of_stream1;
+	char* before_records_at_start_of_stream2;
 	char* between_records_after_start_of_stream;
-	char* after_records_at_end_of_stream;
+	char* after_records_at_end_of_stream1;
+	char* after_records_at_end_of_stream2;
 	int stack_vertically;
 
 } lrec_writer_json_state_t;
@@ -23,7 +25,7 @@ static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t*
 
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_json_alloc(int stack_vertically, int wrap_json_output_in_outer_list,
-	int json_quote_int_keys, int json_quote_non_string_values, char* output_json_flatten_separator)
+	int json_quote_int_keys, int json_quote_non_string_values, char* output_json_flatten_separator, char* line_term)
 {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
 
@@ -37,9 +39,11 @@ lrec_writer_t* lrec_writer_json_alloc(int stack_vertically, int wrap_json_output
 	// to be implemented someday if ever. Workaround: pipe output to "jq .".
 	//pstate->line_indent                           = wrap_json_output_in_outer_list ? "  "  : "";
 	pstate->line_indent                           = wrap_json_output_in_outer_list ? ""  : "";
-	pstate->before_records_at_start_of_stream     = wrap_json_output_in_outer_list ? "[\n" : "";
+	pstate->before_records_at_start_of_stream1    = wrap_json_output_in_outer_list ? "[" : "";
+	pstate->before_records_at_start_of_stream2    = wrap_json_output_in_outer_list ? "\n" : "";
 	pstate->between_records_after_start_of_stream = wrap_json_output_in_outer_list ? ","   : "";
-	pstate->after_records_at_end_of_stream        = wrap_json_output_in_outer_list ? "]\n" : "";
+	pstate->after_records_at_end_of_stream1       = wrap_json_output_in_outer_list ? "]" : "";
+	pstate->after_records_at_end_of_stream2       = wrap_json_output_in_outer_list ? "\n" : "";
 	pstate->stack_vertically                      = stack_vertically;
 
 	plrec_writer->pvstate       = (void*)pstate;
@@ -58,10 +62,12 @@ static void lrec_writer_json_free(lrec_writer_t* pwriter, context_t* pctx) {
 static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
 	lrec_writer_json_state_t* pstate = pvstate;
 	if (prec != NULL) { // not end of record stream
-		if (pstate->counter++ == 0)
-			printf("%s", pstate->before_records_at_start_of_stream);
-		else
+		if (pstate->counter++ == 0) {
+			printf("%s", pstate->before_records_at_start_of_stream1);
+			printf("%s", pstate->before_records_at_start_of_stream2);
+		} else {
 			printf("%s", pstate->between_records_after_start_of_stream);
+		}
 
 		// Use the mlhmmv printer since it naturally handles Miller-to-JSON key deconcatenation:
 		// e.g. 'a:x=1,a:y=2' maps to '{"a":{"x":1,"y":2}}'.
@@ -98,6 +104,7 @@ static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t*
 		lrec_free(prec); // end of baton-pass
 
 	} else { // end of record stream
-		fputs(pstate->after_records_at_end_of_stream, output_stream);
+		fputs(pstate->after_records_at_end_of_stream1, output_stream);
+		fputs(pstate->after_records_at_end_of_stream2, output_stream);
 	}
 }
