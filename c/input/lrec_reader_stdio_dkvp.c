@@ -28,10 +28,18 @@ typedef struct _lrec_reader_stdio_dkvp_state_t {
 
 static void    lrec_reader_stdio_dkvp_free(lrec_reader_t* preader);
 static void    lrec_reader_stdio_dkvp_sof(void* pvstate, void* pvhandle);
-static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx);
-static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx);
-static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx);
-static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx);
+static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_irs(void* pvstate, void* pvhandle,
+	context_t* pctx);
+static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_irs(void* pvstate, void* pvhandle,
+	context_t* pctx);
+static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others(void* pvstate, void* pvhandle,
+	context_t* pctx);
+static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others(void* pvstate, void* pvhandle,
+	context_t* pctx);
+static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_single_others(void* pvstate, void* pvhandle,
+	context_t* pctx);
+static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_multi_others(void* pvstate, void* pvhandle,
+	context_t* pctx);
 
 // ----------------------------------------------------------------
 lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs) {
@@ -59,8 +67,8 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char* ifs, char* ips, int
 		pstate->irs = "\n";
 		pstate->irslen = 1;
 		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
-			? lrec_reader_stdio_dkvp_process_single_irs_single_others
-			: lrec_reader_stdio_dkvp_process_single_irs_multi_others;
+			? lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_irs
+			: lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_irs;
 	} else if (pstate->irslen == 1) {
 		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
 			? &lrec_reader_stdio_dkvp_process_single_irs_single_others
@@ -86,8 +94,34 @@ static void lrec_reader_stdio_dkvp_sof(void* pvstate, void* pvhandle) {
 }
 
 // ----------------------------------------------------------------
-static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx) {
+static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_irs(
+	void* pvstate, void* pvhandle, context_t* pctx)
+{
 	// xxx autoirs
+	FILE* input_stream = pvhandle;
+	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
+	char* line = mlr_get_cline(input_stream, pstate->irs[0]);
+	if (line == NULL)
+		return NULL;
+	else
+		return lrec_parse_stdio_dkvp_single_sep(line, pstate->ifs[0], pstate->ips[0], pstate->allow_repeat_ifs, pctx);
+}
+
+static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_irs(
+	void* pvstate, void* pvhandle, context_t* pctx)
+{
+	// xxx autoirs
+	FILE* input_stream = pvhandle;
+	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
+	char* line = mlr_get_cline(input_stream, pstate->irs[0]);
+	if (line == NULL)
+		return NULL;
+	else
+		return lrec_parse_stdio_dkvp_multi_sep(line, pstate->ifs, pstate->ips, pstate->ifslen, pstate->ipslen,
+			pstate->allow_repeat_ifs, pctx);
+}
+
+static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
 	char* line = mlr_get_cline(input_stream, pstate->irs[0]);
