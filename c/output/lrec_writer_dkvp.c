@@ -9,7 +9,9 @@ typedef struct _lrec_writer_dkvp_state_t {
 } lrec_writer_dkvp_state_t;
 
 static void lrec_writer_dkvp_free(lrec_writer_t* pwriter, context_t* pctx);
-static void lrec_writer_dkvp_process(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
+static void lrec_writer_dkvp_process(void* pvstate, FILE* output_stream, lrec_t* prec, char* ors);
+static void lrec_writer_dkvp_process_auto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
+static void lrec_writer_dkvp_process_nonauto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
 
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_dkvp_alloc(char* ors, char* ofs, char* ops) {
@@ -21,7 +23,9 @@ lrec_writer_t* lrec_writer_dkvp_alloc(char* ors, char* ofs, char* ops) {
 	pstate->ops = ops;
 
 	plrec_writer->pvstate       = (void*)pstate;
-	plrec_writer->pprocess_func = lrec_writer_dkvp_process;
+	plrec_writer->pprocess_func = streq(ors, "auto")
+		? lrec_writer_dkvp_process_auto_ors
+		: lrec_writer_dkvp_process_nonauto_ors;
 	plrec_writer->pfree_func    = lrec_writer_dkvp_free;
 
 	return plrec_writer;
@@ -33,12 +37,19 @@ static void lrec_writer_dkvp_free(lrec_writer_t* pwriter, context_t* pctx) {
 }
 
 // ----------------------------------------------------------------
-// xxx needs context_t
-static void lrec_writer_dkvp_process(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+static void lrec_writer_dkvp_process_auto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+	lrec_writer_dkvp_process(pvstate, output_stream, prec, pctx->auto_irs);
+}
+
+static void lrec_writer_dkvp_process_nonauto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+	lrec_writer_dkvp_state_t* pstate = pvstate;
+	lrec_writer_dkvp_process(pvstate, output_stream, prec, pstate->ors);
+}
+
+static void lrec_writer_dkvp_process(void* pvstate, FILE* output_stream, lrec_t* prec, char* ors) {
 	if (prec == NULL)
 		return;
 	lrec_writer_dkvp_state_t* pstate = pvstate;
-	char* ors = pstate->ors;
 	char* ofs = pstate->ofs;
 	char* ops = pstate->ops;
 
@@ -54,3 +65,4 @@ static void lrec_writer_dkvp_process(void* pvstate, FILE* output_stream, lrec_t*
 	fputs(ors, output_stream);
 	lrec_free(prec); // end of baton-pass
 }
+
