@@ -58,16 +58,16 @@ AUTOTERM
   - default to LF@*nix;CFLF@win in case of zero input (e.g. seqgen)
 
 * ors=auto means:
-  - writer API needs pctx
-  - use pctx->autoirs on first record emitted
+  k writer API needs pctx
+  k use pctx->autoirs on first record emitted
 
-  ? output/lrec_writer_json.c
   k output/lrec_writer_csv.c
   k output/lrec_writer_csvlite.c
   k output/lrec_writer_dkvp.c
   k output/lrec_writer_markdown.c
   k output/lrec_writer_nidx.c
   k output/lrec_writer_pprint.c
+  ~ output/lrec_writer_json.c -- manpage re ORS selectable now
   ~ output/lrec_writer_xtab.c -- needs ors=auto -> ofs=auto transmutate @ caller
 
 ================================================================
