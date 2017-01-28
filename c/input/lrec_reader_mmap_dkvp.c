@@ -41,7 +41,13 @@ lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int 
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
 	plrec_reader->pclose_func   = file_reader_mmap_vclose;
 	if (streq(irs, "auto")) {
+		// Auto means either lines end in "\n" or "\r\n" (LF or CRLF).  In
+		// either case the final character is "\n". Then for autodetect we
+		// simply check if there's a character in the line before the '\n', and
+		// if that is '\r'.
 		pstate->do_auto_irs = TRUE;
+		pstate->irs = "\n";
+		pstate->irslen = 1;
 		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
 			? lrec_reader_mmap_dkvp_process_single_irs_single_others
 			: lrec_reader_mmap_dkvp_process_single_irs_multi_others;
@@ -134,7 +140,11 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 		if (*p == irs) {
 			*p = 0;
 			if (do_auto_irs) {
-				// xxx
+				if (p > line && *p == '\r') {
+					pctx->auto_irs = "\r\n";
+				} else {
+					pctx->auto_irs = "\n";
+				}
 			}
 			phandle->sol = p+1;
 			saw_rs = TRUE;
@@ -353,7 +363,11 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 		if (*p == irs) {
 			*p = 0;
 			if (do_auto_irs) {
-				// xxx
+				if (p > line && *p == '\r') {
+					pctx->auto_irs = "\r\n";
+				} else {
+					pctx->auto_irs = "\n";
+				}
 			}
 			phandle->sol = p+1;
 			saw_rs = TRUE;
