@@ -1,3 +1,12 @@
+// ================================================================
+// Note: there are multiple process methods with a lot of code duplication.
+// This is intentional. Much of Miller's measured processing time is in the
+// lrec-reader process methods. This is code which needs to execute on every
+// byte of input and even moving a single runtime if-statement into a
+// function-pointer assignment at alloc time can have noticeable effects on
+// performance (5-10% in some cases).
+// ================================================================
+
 #include <stdlib.h>
 #include "lib/mlrutil.h"
 #include "input/file_reader_mmap.h"

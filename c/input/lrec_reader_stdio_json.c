@@ -1,4 +1,13 @@
 // ================================================================
+// Note: there are multiple process methods with a lot of code duplication.
+// This is intentional. Much of Miller's measured processing time is in the
+// lrec-reader process methods. This is code which needs to execute on every
+// byte of input and even moving a single runtime if-statement into a
+// function-pointer assignment at alloc time can have noticeable effects on
+// performance (5-10% in some cases).
+// ================================================================
+
+// ================================================================
 // This has at present a lot of code duplication with lrec_reader_mmap_json.
 // This is because we read the entire input file into memory and get a pointer
 // to it, which is a lot like mmap.  At some future point we may implement a

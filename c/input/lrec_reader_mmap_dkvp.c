@@ -1,3 +1,12 @@
+// ================================================================
+// Note: there are multiple process methods with a lot of code duplication.
+// This is intentional. Much of Miller's measured processing time is in the
+// lrec-reader process methods. This is code which needs to execute on every
+// byte of input and even moving a single runtime if-statement into a
+// function-pointer assignment at alloc time can have noticeable effects on
+// performance (5-10% in some cases).
+// ================================================================
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "lib/mlr_globals.h"
@@ -139,12 +148,13 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
-			if (do_auto_irs) {
+			if (do_auto_irs && !pctx->auto_irs_detected) {
 				if (p > line && *p == '\r') {
 					pctx->auto_irs = "\r\n";
 				} else {
 					pctx->auto_irs = "\n";
 				}
+				pctx->auto_irs_detected = TRUE;
 			}
 			phandle->sol = p+1;
 			saw_rs = TRUE;
@@ -362,12 +372,13 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
-			if (do_auto_irs) {
+			if (do_auto_irs && !pctx->auto_irs_detected) {
 				if (p > line && *p == '\r') {
 					pctx->auto_irs = "\r\n";
 				} else {
 					pctx->auto_irs = "\n";
 				}
+				pctx->auto_irs_detected = TRUE;
 			}
 			phandle->sol = p+1;
 			saw_rs = TRUE;

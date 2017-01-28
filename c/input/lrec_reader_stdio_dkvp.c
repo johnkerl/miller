@@ -1,3 +1,12 @@
+// ================================================================
+// Note: there are multiple process methods with a lot of code duplication.
+// This is intentional. Much of Miller's measured processing time is in the
+// lrec-reader process methods. This is code which needs to execute on every
+// byte of input and even moving a single runtime if-statement into a
+// function-pointer assignment at alloc time can have noticeable effects on
+// performance (5-10% in some cases).
+// ================================================================
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "lib/mlr_globals.h"
@@ -24,7 +33,6 @@ static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_single_others(void* pvst
 static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx);
 
 // ----------------------------------------------------------------
-// xxx autors flag?
 lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 

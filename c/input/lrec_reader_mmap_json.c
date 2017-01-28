@@ -1,4 +1,13 @@
 // ================================================================
+// Note: there are multiple process methods with a lot of code duplication.
+// This is intentional. Much of Miller's measured processing time is in the
+// lrec-reader process methods. This is code which needs to execute on every
+// byte of input and even moving a single runtime if-statement into a
+// function-pointer assignment at alloc time can have noticeable effects on
+// performance (5-10% in some cases).
+// ================================================================
+
+// ================================================================
 // Unlike other Miller record-readers, there is no streaming for JSON input: no
 // records are processed until EOF is seen. See also
 // https://github.com/johnkerl/miller/issues/99.

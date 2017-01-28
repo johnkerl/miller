@@ -50,12 +50,31 @@ AUTOTERM
   auto      | auto/auto        auto/auto  auto/spec
   specified | LF@*nix;CRLF@Win in=out     spec/spec
 
+! code-dup why-is-this comments @ top of each lrec-reader .c file
+
 * irs=auto means:
   - read with LF line-term
   - see if end-1 is CR
   - null it out if so
   - update pctx->autoirs
   - default to LF@*nix;CFLF@win in case of zero input (e.g. seqgen)
+
+  ! needs did-auto flag in pctx
+
+  ? input/lrec_reader_in_memory.c
+  ? input/lrec_reader_mmap_csv.c
+  ? input/lrec_reader_mmap_csvlite.c
+  ~ input/lrec_reader_mmap_dkvp.c -- needs did-auto flag
+  ? input/lrec_reader_mmap_json.c
+  ? input/lrec_reader_mmap_nidx.c
+  ? input/lrec_reader_mmap_xtab.c
+  ? input/lrec_reader_stdio_csv.c
+  ? input/lrec_reader_stdio_csvlite.c
+  ? input/lrec_reader_stdio_dkvp.c
+  ? input/lrec_reader_stdio_json.c
+  ? input/lrec_reader_stdio_nidx.c
+  ? input/lrec_reader_stdio_xtab.c
+  ? input/lrec_readers.c
 
 * ors=auto means:
   k writer API needs pctx

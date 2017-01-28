@@ -7,6 +7,7 @@ void context_init(context_t* pctx, char* first_file_name) {
 	pctx->filenum  = 1;
 	pctx->filename = first_file_name;
 	pctx->auto_irs = "\n"; // xxx default to "\r\n" on Windows
+	pctx->auto_irs_detected = 0;
 }
 
 void context_print(context_t* pctx, char* indent) {
