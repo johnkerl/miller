@@ -13,7 +13,9 @@ typedef struct _lrec_writer_csvlite_state_t {
 } lrec_writer_csvlite_state_t;
 
 static void lrec_writer_csvlite_free(lrec_writer_t* pwriter, context_t* pctx);
-static void lrec_writer_csvlite_process(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
+static void lrec_writer_csvlite_process(void* pvstate, FILE* output_stream, lrec_t* prec, char* ors);
+static void lrec_writer_csvlite_process_auto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
+static void lrec_writer_csvlite_process_nonauto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
 
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_csvlite_alloc(char* ors, char* ofs, int headerless_csv_output) {
@@ -28,7 +30,9 @@ lrec_writer_t* lrec_writer_csvlite_alloc(char* ors, char* ofs, int headerless_cs
 	pstate->headerless_csv_output   = headerless_csv_output;
 
 	plrec_writer->pvstate       = (void*)pstate;
-	plrec_writer->pprocess_func = lrec_writer_csvlite_process;
+	plrec_writer->pprocess_func = streq(ors, "auto")
+		? lrec_writer_csvlite_process_auto_ors
+		: lrec_writer_csvlite_process_nonauto_ors;
 	plrec_writer->pfree_func    = lrec_writer_csvlite_free;
 
 	return plrec_writer;
@@ -42,11 +46,20 @@ static void lrec_writer_csvlite_free(lrec_writer_t* pwriter, context_t* pctx) {
 }
 
 // ----------------------------------------------------------------
-static void lrec_writer_csvlite_process(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+static void lrec_writer_csvlite_process_auto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+	lrec_writer_csvlite_process(pvstate, output_stream, prec, pctx->auto_irs);
+}
+
+static void lrec_writer_csvlite_process_nonauto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+	lrec_writer_csvlite_state_t* pstate = pvstate;
+	lrec_writer_csvlite_process(pvstate, output_stream, prec, pstate->ors);
+}
+
+
+static void lrec_writer_csvlite_process(void* pvstate, FILE* output_stream, lrec_t* prec, char* ors) {
 	if (prec == NULL)
 		return;
 	lrec_writer_csvlite_state_t* pstate = pvstate;
-	char* ors = pstate->ors;
 	char* ofs = pstate->ofs;
 
 	if (pstate->plast_header_output != NULL) {

@@ -63,12 +63,12 @@ AUTOTERM
 
   ? output/lrec_writer_csv.c
   ? output/lrec_writer_csvlite.c
-  k output/lrec_writer_dkvp.c
   ? output/lrec_writer_json.c
-  ? output/lrec_writer_markdown.c
+  ? output/lrec_writer_xtab.c
+  k output/lrec_writer_dkvp.c
+  k output/lrec_writer_markdown.c
   k output/lrec_writer_nidx.c
   k output/lrec_writer_pprint.c
-  ? output/lrec_writer_xtab.c
 
 ================================================================
 UT FOR 5.0.0:
