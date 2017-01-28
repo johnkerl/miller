@@ -97,28 +97,50 @@ static void lrec_reader_stdio_dkvp_sof(void* pvstate, void* pvhandle) {
 static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_irs(
 	void* pvstate, void* pvhandle, context_t* pctx)
 {
-	// xxx autoirs
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
-	char* line = mlr_get_cline(input_stream, pstate->irs[0]);
-	if (line == NULL)
+	int line_length;
+	char* line = mlr_get_cline_with_length(input_stream, pstate->irs[0], &line_length);
+	if (line == NULL) {
 		return NULL;
-	else
+	} else {
+		if (!pctx->auto_irs_detected) {
+			// mlr_get_cline_with_length will have already chomped the trailing '\n',
+			// and it won't be included in the line length.
+			if (line_length > 0 && line[line_length-1] == '\r') {
+				pctx->auto_irs = "\r\n";
+			} else {
+				pctx->auto_irs = "\n";
+			}
+			pctx->auto_irs_detected = TRUE;
+		}
 		return lrec_parse_stdio_dkvp_single_sep(line, pstate->ifs[0], pstate->ips[0], pstate->allow_repeat_ifs, pctx);
+	}
 }
 
 static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_irs(
 	void* pvstate, void* pvhandle, context_t* pctx)
 {
-	// xxx autoirs
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
-	char* line = mlr_get_cline(input_stream, pstate->irs[0]);
-	if (line == NULL)
+	int line_length;
+	char* line = mlr_get_cline_with_length(input_stream, pstate->irs[0], &line_length);
+	if (line == NULL) {
 		return NULL;
-	else
+	} else {
+		if (!pctx->auto_irs_detected) {
+			// mlr_get_cline_with_length will have already chomped the trailing '\n',
+			// and it won't be included in the line length.
+			if (line_length > 0 && line[line_length-1] == '\r') {
+				pctx->auto_irs = "\r\n";
+			} else {
+				pctx->auto_irs = "\n";
+			}
+			pctx->auto_irs_detected = TRUE;
+		}
 		return lrec_parse_stdio_dkvp_multi_sep(line, pstate->ifs, pstate->ips, pstate->ifslen, pstate->ipslen,
 			pstate->allow_repeat_ifs, pctx);
+	}
 }
 
 static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx) {
