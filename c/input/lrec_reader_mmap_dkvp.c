@@ -13,6 +13,7 @@ typedef struct _lrec_reader_mmap_dkvp_state_t {
 	int   ifslen;
 	int   ipslen;
 	int   allow_repeat_ifs;
+	int   do_auto_irs;
 } lrec_reader_mmap_dkvp_state_t;
 
 static void    lrec_reader_mmap_dkvp_free(lrec_reader_t* preader);
@@ -23,7 +24,6 @@ static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_single_others(void* pvsta
 static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx);
 
 // ----------------------------------------------------------------
-// xxx autors arg?
 lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
@@ -35,12 +35,17 @@ lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int 
 	pstate->ifslen           = strlen(ifs);
 	pstate->ipslen           = strlen(ips);
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
+	pstate->do_auto_irs      = FALSE;
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
 	plrec_reader->pclose_func   = file_reader_mmap_vclose;
-	// xxx if autors ... else if ...
-	if (pstate->irslen == 1) {
+	if (streq(irs, "auto")) {
+		pstate->do_auto_irs = TRUE;
+		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
+			? lrec_reader_mmap_dkvp_process_single_irs_single_others
+			: lrec_reader_mmap_dkvp_process_single_irs_multi_others;
+	} else if (pstate->irslen == 1) {
 		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
 			? lrec_reader_mmap_dkvp_process_single_irs_single_others
 			: lrec_reader_mmap_dkvp_process_single_irs_multi_others;
@@ -72,7 +77,7 @@ static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_single_others(void* pvst
 		return NULL;
 	else
 		return lrec_parse_mmap_dkvp_single_irs_single_others(phandle, pstate->irs[0], pstate->ifs[0], pstate->ips[0],
-			pstate->allow_repeat_ifs, pctx);
+			pstate->allow_repeat_ifs, pctx, pstate->do_auto_irs);
 }
 
 static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -82,7 +87,7 @@ static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_multi_others(void* pvsta
 		return NULL;
 	else
 		return lrec_parse_mmap_dkvp_single_irs_multi_others(phandle, pstate->irs[0], pstate->ifs, pstate->ips,
-			pstate->ifslen, pstate->ipslen, pstate->allow_repeat_ifs, pctx);
+			pstate->ifslen, pstate->ipslen, pstate->allow_repeat_ifs, pctx, pstate->do_auto_irs);
 }
 
 static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -107,7 +112,7 @@ static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_multi_others(void* pvstat
 
 // ----------------------------------------------------------------
 lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *phandle,
-	char irs, char ifs, char ips, int allow_repeat_ifs, context_t* pctx)
+	char irs, char ifs, char ips, int allow_repeat_ifs, context_t* pctx, int do_auto_irs)
 {
 	lrec_t* prec = lrec_unbacked_alloc();
 
@@ -128,6 +133,9 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
+			if (do_auto_irs) {
+				// xxx
+			}
 			phandle->sol = p+1;
 			saw_rs = TRUE;
 			break;
@@ -323,7 +331,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 }
 
 lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *phandle, char irs, char* ifs, char* ips,
-	int ifslen, int ipslen, int allow_repeat_ifs, context_t* pctx)
+	int ifslen, int ipslen, int allow_repeat_ifs, context_t* pctx, int do_auto_irs)
 {
 	lrec_t* prec = lrec_unbacked_alloc();
 
@@ -344,6 +352,9 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
+			if (do_auto_irs) {
+				// xxx
+			}
 			phandle->sol = p+1;
 			saw_rs = TRUE;
 			break;

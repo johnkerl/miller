@@ -60,9 +60,11 @@ lrec_t* lrec_parse_mmap_nidx_multi_irs_multi_ifs(file_reader_mmap_state_t *phand
 	char* irs, char* ifs, int irslen, int ifslen, int allow_repeat_ifs);
 
 lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *phandle,
-	char irs, char ifs, char ips, int allow_repeat_ifs, context_t* pctx);
+	char irs, char ifs, char ips, int allow_repeat_ifs, context_t* pctx,
+	int do_auto_irs);
 lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *phandle,
-	char irs, char* ifs, char* ips, int ifslen, int ipslen, int allow_repeat_ifs, context_t* pctx);
+	char irs, char* ifs, char* ips, int ifslen, int ipslen, int allow_repeat_ifs, context_t* pctx,
+	int do_auto_irs);
 lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *phandle,
 	char* irs, char ifs, char ips, int irslen, int allow_repeat_ifs, context_t* pctx);
 lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *phandle,
