@@ -17,7 +17,9 @@ typedef struct _lrec_writer_pprint_state_t {
 } lrec_writer_pprint_state_t;
 
 static void lrec_writer_pprint_free(lrec_writer_t* pwriter, context_t* pctx);
-static void lrec_writer_pprint_process(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
+static void lrec_writer_pprint_process(void* pvstate, FILE* output_stream, lrec_t* prec, char* ors);
+static void lrec_writer_pprint_process_auto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
+static void lrec_writer_pprint_process_nonauto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
 static void print_and_free_record_list(sllv_t* precords, FILE* output_stream, char* ors, char ofs,
 	int right_align);
 static void print_and_free_record_list_barred(sllv_t* precords, FILE* output_stream, char* ors, char ofs,
@@ -37,7 +39,9 @@ lrec_writer_t* lrec_writer_pprint_alloc(char* ors, char ofs, int right_align, in
 	pstate->num_blocks_written = 0LL;
 
 	plrec_writer->pvstate       = pstate;
-	plrec_writer->pprocess_func = lrec_writer_pprint_process;
+	plrec_writer->pprocess_func = streq(ors, "auto")
+		? lrec_writer_pprint_process_auto_ors
+		: lrec_writer_pprint_process_nonauto_ors;
 	plrec_writer->pfree_func    = lrec_writer_pprint_free;
 
 	return plrec_writer;
@@ -58,7 +62,16 @@ static void lrec_writer_pprint_free(lrec_writer_t* pwriter, context_t* pctx) {
 }
 
 // ----------------------------------------------------------------
-static void lrec_writer_pprint_process(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+static void lrec_writer_pprint_process_auto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+	lrec_writer_pprint_process(pvstate, output_stream, prec, pctx->auto_irs);
+}
+
+static void lrec_writer_pprint_process_nonauto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+	lrec_writer_pprint_state_t* pstate = pvstate;
+	lrec_writer_pprint_process(pvstate, output_stream, prec, pstate->ors);
+}
+
+static void lrec_writer_pprint_process(void* pvstate, FILE* output_stream, lrec_t* prec, char* ors) {
 	lrec_writer_pprint_state_t* pstate = pvstate;
 
 	int drain = FALSE;
@@ -73,12 +86,12 @@ static void lrec_writer_pprint_process(void* pvstate, FILE* output_stream, lrec_
 
 	if (drain) {
 		if (pstate->num_blocks_written > 0LL) // separate blocks with empty line
-			fputs(pstate->ors, output_stream);
+			fputs(ors, output_stream);
 		if (pstate->barred) {
-			print_and_free_record_list_barred(pstate->precords, output_stream, pstate->ors, pstate->ofs,
+			print_and_free_record_list_barred(pstate->precords, output_stream, ors, pstate->ofs,
 				pstate->right_align);
 		} else {
-			print_and_free_record_list(pstate->precords, output_stream, pstate->ors, pstate->ofs,
+			print_and_free_record_list(pstate->precords, output_stream, ors, pstate->ofs,
 				pstate->right_align);
 		}
 		if (pstate->pprev_keys != NULL) {
