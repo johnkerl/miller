@@ -145,14 +145,14 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 			phandle->sol = p+1;
 
 		if (saw_eol) {
-	        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
-	        // C string so it's OK to retain a pointer to that.
+			// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate
+			// the C string so it's OK to retain a pointer to that.
 			lrec_put(prec, key, value, NO_FREE);
 		} else {
-			// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
-			// to terminate the C string: if the file size is not a multiple of the OS page size it'll work (it's our
-			// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
-			// byte past the page and that will segv us.
+			// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null
+			// character to terminate the C string: if the file size is not a multiple of the OS page size it'll work
+			// (it's our copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at
+			// EOF is one byte past the page and that will segv us.
 			char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
 			lrec_put(prec, key, copy, FREE_ENTRY_VALUE);
 		}
@@ -212,14 +212,14 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phan
 			phandle->sol = p+1;
 
 		if (saw_eol) {
-	        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
-	        // C string so it's OK to retain a pointer to that.
+			// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate
+			// the C string so it's OK to retain a pointer to that.
 			lrec_put(prec, key, value, NO_FREE);
 		} else {
-			// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
-			// to terminate the C string: if the file size is not a multiple of the OS page size it'll work (it's our
-			// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
-			// byte past the page and that will segv us.
+			// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null
+			// character to terminate the C string: if the file size is not a multiple of the OS page size it'll work
+			// (it's our copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at
+			// EOF is one byte past the page and that will segv us.
 			char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
 			lrec_put(prec, key, copy, FREE_ENTRY_VALUE);
 		}
@@ -279,14 +279,14 @@ lrec_t* lrec_parse_mmap_xtab_multi_ifs_single_ips(file_reader_mmap_state_t* phan
 			phandle->sol = p+1;
 
 		if (saw_eol) {
-	        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
-	        // C string so it's OK to retain a pointer to that.
+			// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate
+			// the C string so it's OK to retain a pointer to that.
 			lrec_put(prec, key, value, NO_FREE);
 		} else {
-			// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
-			// to terminate the C string: if the file size is not a multiple of the OS page size it'll work (it's our
-			// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
-			// byte past the page and that will segv us.
+			// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null
+			// character to terminate the C string: if the file size is not a multiple of the OS page size it'll work
+			// (it's our copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at
+			// EOF is one byte past the page and that will segv us.
 			char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
 			lrec_put(prec, key, copy, FREE_ENTRY_VALUE);
 		}
@@ -346,14 +346,14 @@ lrec_t* lrec_parse_mmap_xtab_multi_ifs_multi_ips(file_reader_mmap_state_t* phand
 			phandle->sol = p+1;
 
 		if (saw_eol) {
-	        // Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate the
-	        // C string so it's OK to retain a pointer to that.
+			// Easy and simple case: we read until end of line.  We zero-poked the irs to a null character to terminate
+			// the C string so it's OK to retain a pointer to that.
 			lrec_put(prec, key, value, NO_FREE);
 		} else {
-			// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null character
-			// to terminate the C string: if the file size is not a multiple of the OS page size it'll work (it's our
-			// copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at EOF is one
-			// byte past the page and that will segv us.
+			// Messier case: we read to end of file without seeing end of line.  We can't always zero-poke a null
+			// character to terminate the C string: if the file size is not a multiple of the OS page size it'll work
+			// (it's our copy-on-write memory). But if the file size is a multiple of the page size, then zero-poking at
+			// EOF is one byte past the page and that will segv us.
 			char* copy = mlr_alloc_string_from_char_range(value, phandle->eof - value);
 			lrec_put(prec, key, copy, FREE_ENTRY_VALUE);
 		}

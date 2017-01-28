@@ -28,8 +28,12 @@ typedef struct _lrec_writer_xtab_state_t {
 } lrec_writer_xtab_state_t;
 
 static void lrec_writer_xtab_free(lrec_writer_t* pwriter, context_t* pctx);
-static void lrec_writer_xtab_process_aligned(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
-static void lrec_writer_xtab_process_unaligned(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
+static void lrec_writer_xtab_process_aligned(void* pvstate, FILE* output_stream, lrec_t* prec, char* ofs);
+static void lrec_writer_xtab_process_aligned_auto_ofs(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
+static void lrec_writer_xtab_process_aligned_nonauto_ofs(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
+static void lrec_writer_xtab_process_unaligned(void* pvstate, FILE* output_stream, lrec_t* prec, char* ofs);
+static void lrec_writer_xtab_process_unaligned_auto_ofs(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
+static void lrec_writer_xtab_process_unaligned_nonauto_ofs(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
 
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_xtab_alloc(char* ofs, char* ops, int right_justify_value) {
@@ -42,11 +46,17 @@ lrec_writer_t* lrec_writer_xtab_alloc(char* ofs, char* ops, int right_justify_va
 	pstate->record_count = 0LL;
 	pstate->right_justify_value = right_justify_value;
 
-	plrec_writer->pvstate       = pstate;
-	plrec_writer->pprocess_func = (pstate->opslen == 1)
-		? lrec_writer_xtab_process_aligned
-		: lrec_writer_xtab_process_unaligned;
-	plrec_writer->pfree_func    = lrec_writer_xtab_free;
+	plrec_writer->pvstate = pstate;
+	if (pstate->opslen == 1) {
+		plrec_writer->pprocess_func = streq(ofs, "auto")
+			? lrec_writer_xtab_process_aligned_auto_ofs
+			: lrec_writer_xtab_process_aligned_nonauto_ofs;
+	} else {
+		plrec_writer->pprocess_func = streq(ofs, "auto")
+			? lrec_writer_xtab_process_unaligned_auto_ofs
+			: lrec_writer_xtab_process_unaligned_nonauto_ofs;
+	}
+	plrec_writer->pfree_func = lrec_writer_xtab_free;
 
 	return plrec_writer;
 }
@@ -57,12 +67,21 @@ static void lrec_writer_xtab_free(lrec_writer_t* pwriter, context_t* pctx) {
 }
 
 // ----------------------------------------------------------------
-static void lrec_writer_xtab_process_aligned(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+static void lrec_writer_xtab_process_aligned_auto_ofs(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+	lrec_writer_xtab_process_aligned(pvstate, output_stream, prec, pctx->auto_irs);
+}
+
+static void lrec_writer_xtab_process_aligned_nonauto_ofs(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+	lrec_writer_xtab_state_t* pstate = pvstate;
+	lrec_writer_xtab_process_aligned(pvstate, output_stream, prec, pstate->ofs);
+}
+
+static void lrec_writer_xtab_process_aligned(void* pvstate, FILE* output_stream, lrec_t* prec, char* ofs) {
 	if (prec == NULL)
 		return;
 	lrec_writer_xtab_state_t* pstate = pvstate;
 	if (pstate->record_count > 0LL)
-		fputs(pstate->ofs, output_stream);
+		fputs(ofs, output_stream);
 	pstate->record_count++;
 
 	int max_key_width = 1;
@@ -88,12 +107,22 @@ static void lrec_writer_xtab_process_aligned(void* pvstate, FILE* output_stream,
 			for (int i = 0; i < d; i++)
 				fputs(pstate->ops, output_stream);
 		}
-		fprintf(output_stream, "%s%s%s", pstate->ops, pe->value, pstate->ofs);
+		fprintf(output_stream, "%s%s%s", pstate->ops, pe->value, ofs);
 	}
 	lrec_free(prec); // end of baton-pass
 }
 
-static void lrec_writer_xtab_process_unaligned(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+// ----------------------------------------------------------------
+static void lrec_writer_xtab_process_unaligned_auto_ofs(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+	lrec_writer_xtab_process_unaligned(pvstate, output_stream, prec, pctx->auto_irs);
+}
+
+static void lrec_writer_xtab_process_unaligned_nonauto_ofs(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+	lrec_writer_xtab_state_t* pstate = pvstate;
+	lrec_writer_xtab_process_unaligned(pvstate, output_stream, prec, pstate->ofs);
+}
+
+static void lrec_writer_xtab_process_unaligned(void* pvstate, FILE* output_stream, lrec_t* prec, char* ofs) {
 	if (prec == NULL)
 		return;
 	lrec_writer_xtab_state_t* pstate = pvstate;
@@ -103,7 +132,7 @@ static void lrec_writer_xtab_process_unaligned(void* pvstate, FILE* output_strea
 
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
 		// "%-*s" fprintf format isn't correct for non-ASCII UTF-8
-		fprintf(output_stream, "%s%s%s%s", pe->key, pstate->ops, pe->value, pstate->ofs);
+		fprintf(output_stream, "%s%s%s%s", pe->key, pstate->ops, pe->value, ofs);
 	}
 	lrec_free(prec); // end of baton-pass
 }
