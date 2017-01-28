@@ -61,20 +61,23 @@ AUTOTERM
 
   ! needs did-auto flag in pctx
 
-  ? input/lrec_reader_in_memory.c
-  ? input/lrec_reader_mmap_csv.c
-  ? input/lrec_reader_mmap_csvlite.c
-  ~ input/lrec_reader_mmap_dkvp.c -- needs did-auto flag
-  ? input/lrec_reader_mmap_json.c
-  ? input/lrec_reader_mmap_nidx.c
-  ? input/lrec_reader_mmap_xtab.c
-  ? input/lrec_reader_stdio_csv.c
-  ? input/lrec_reader_stdio_csvlite.c
+  k input/lrec_reader_mmap_dkvp.c
   ? input/lrec_reader_stdio_dkvp.c
-  ? input/lrec_reader_stdio_json.c
+
+  ? input/lrec_reader_mmap_csvlite.c
+  ? input/lrec_reader_stdio_csvlite.c
+
+  ? input/lrec_reader_mmap_nidx.c
   ? input/lrec_reader_stdio_nidx.c
+
+  ? input/lrec_reader_mmap_xtab.c
   ? input/lrec_reader_stdio_xtab.c
-  ? input/lrec_readers.c
+
+  ? input/lrec_reader_mmap_json.c
+  ? input/lrec_reader_stdio_json.c
+
+  ? input/lrec_reader_mmap_csv.c
+  ? input/lrec_reader_stdio_csv.c
 
 * ors=auto means:
   k writer API needs pctx
