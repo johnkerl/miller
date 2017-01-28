@@ -372,7 +372,7 @@ static lhmss_t* get_default_rses() {
 	if (singleton_default_rses == NULL) {
 		singleton_default_rses = lhmss_alloc();
 		lhmss_put(singleton_default_rses, "dkvp",     "\n",    NO_FREE);
-		lhmss_put(singleton_default_rses, "json",     "(N/A)", NO_FREE);
+		lhmss_put(singleton_default_rses, "json",     "\n",    NO_FREE);
 		lhmss_put(singleton_default_rses, "nidx",     "\n",    NO_FREE);
 		lhmss_put(singleton_default_rses, "csv",      "\r\n",  NO_FREE);
 

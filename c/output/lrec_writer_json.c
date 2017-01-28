@@ -12,16 +12,23 @@ typedef struct _lrec_writer_json_state_t {
 	int json_quote_non_string_values;
 	char* line_indent;
 	char* before_records_at_start_of_stream1;
-	char* before_records_at_start_of_stream2;
 	char* between_records_after_start_of_stream;
 	char* after_records_at_end_of_stream1;
-	char* after_records_at_end_of_stream2;
+	char* line_term;
 	int stack_vertically;
 
 } lrec_writer_json_state_t;
 
 static void lrec_writer_json_free(lrec_writer_t* pwriter, context_t* pctx);
-static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx);
+static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t* prec, char* line_term);
+static void lrec_writer_json_process_auto_line_term_wrap(void* pvstate, FILE* output_stream, lrec_t* prec,
+	context_t* pctx);
+static void lrec_writer_json_process_auto_line_term_no_wrap(void* pvstate, FILE* output_stream, lrec_t* prec,
+	context_t* pctx);
+static void lrec_writer_json_process_nonauto_line_term_wrap(void* pvstate, FILE* output_stream, lrec_t* prec,
+	context_t* pctx);
+static void lrec_writer_json_process_nonauto_line_term_no_wrap(void* pvstate, FILE* output_stream, lrec_t* prec,
+	context_t* pctx);
 
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_json_alloc(int stack_vertically, int wrap_json_output_in_outer_list,
@@ -40,14 +47,21 @@ lrec_writer_t* lrec_writer_json_alloc(int stack_vertically, int wrap_json_output
 	//pstate->line_indent                           = wrap_json_output_in_outer_list ? "  "  : "";
 	pstate->line_indent                           = wrap_json_output_in_outer_list ? ""  : "";
 	pstate->before_records_at_start_of_stream1    = wrap_json_output_in_outer_list ? "[" : "";
-	pstate->before_records_at_start_of_stream2    = wrap_json_output_in_outer_list ? "\n" : "";
 	pstate->between_records_after_start_of_stream = wrap_json_output_in_outer_list ? ","   : "";
 	pstate->after_records_at_end_of_stream1       = wrap_json_output_in_outer_list ? "]" : "";
-	pstate->after_records_at_end_of_stream2       = wrap_json_output_in_outer_list ? "\n" : "";
+	pstate->line_term                             = line_term;
 	pstate->stack_vertically                      = stack_vertically;
 
-	plrec_writer->pvstate       = (void*)pstate;
-	plrec_writer->pprocess_func = lrec_writer_json_process;
+	plrec_writer->pvstate = (void*)pstate;
+	if (streq(line_term, "auto")) {
+		plrec_writer->pprocess_func = wrap_json_output_in_outer_list
+			? lrec_writer_json_process_auto_line_term_wrap
+			: lrec_writer_json_process_auto_line_term_no_wrap;
+	} else {
+		plrec_writer->pprocess_func = wrap_json_output_in_outer_list
+			? lrec_writer_json_process_nonauto_line_term_wrap
+			: lrec_writer_json_process_nonauto_line_term_no_wrap;
+	}
 	plrec_writer->pfree_func    = lrec_writer_json_free;
 
 	return plrec_writer;
@@ -59,12 +73,37 @@ static void lrec_writer_json_free(lrec_writer_t* pwriter, context_t* pctx) {
 }
 
 // ----------------------------------------------------------------
-static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
+static void lrec_writer_json_process_auto_line_term_wrap(void* pvstate, FILE* output_stream, lrec_t* prec,
+	context_t* pctx)
+{
+	lrec_writer_json_process(pvstate, output_stream, prec, pctx->auto_irs);
+}
+
+static void lrec_writer_json_process_auto_line_term_no_wrap(void* pvstate, FILE* output_stream, lrec_t* prec,
+	context_t* pctx)
+{
+	lrec_writer_json_process(pvstate, output_stream, prec, "");
+}
+
+static void lrec_writer_json_process_nonauto_line_term_wrap(void* pvstate, FILE* output_stream, lrec_t* prec,
+	context_t* pctx)
+{
+	lrec_writer_json_state_t* pstate = pvstate;
+	lrec_writer_json_process(pvstate, output_stream, prec, pstate->line_term);
+}
+
+static void lrec_writer_json_process_nonauto_line_term_no_wrap(void* pvstate, FILE* output_stream, lrec_t* prec,
+	context_t* pctx)
+{
+	lrec_writer_json_process(pvstate, output_stream, prec, "");
+}
+
+static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t* prec, char* line_term) {
 	lrec_writer_json_state_t* pstate = pvstate;
 	if (prec != NULL) { // not end of record stream
 		if (pstate->counter++ == 0) {
 			printf("%s", pstate->before_records_at_start_of_stream1);
-			printf("%s", pstate->before_records_at_start_of_stream2);
+			printf("%s", line_term);
 		} else {
 			printf("%s", pstate->between_records_after_start_of_stream);
 		}
@@ -105,6 +144,6 @@ static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t*
 
 	} else { // end of record stream
 		fputs(pstate->after_records_at_end_of_stream1, output_stream);
-		fputs(pstate->after_records_at_end_of_stream2, output_stream);
+		fputs(line_term, output_stream);
 	}
 }
