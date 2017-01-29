@@ -81,6 +81,8 @@ AUTOTERM
 
 * test w/ join as well
 
+* doc: emph w/ 1st line's ending used for all
+
 ================================================================
 UT FOR 5.0.0:
 

@@ -23,7 +23,6 @@ typedef struct _lrec_reader_stdio_dkvp_state_t {
 	int   ifslen;
 	int   ipslen;
 	int   allow_repeat_ifs;
-	int   do_auto_irs;
 } lrec_reader_stdio_dkvp_state_t;
 
 static void    lrec_reader_stdio_dkvp_free(lrec_reader_t* preader);
@@ -53,7 +52,6 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char* ifs, char* ips, int
 	pstate->ifslen           = strlen(ifs);
 	pstate->ipslen           = strlen(ips);
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
-	pstate->do_auto_irs      = FALSE;
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_stdio_vopen;
@@ -63,18 +61,17 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char* ifs, char* ips, int
 		// either case the final character is "\n". Then for autodetect we
 		// simply check if there's a character in the line before the '\n', and
 		// if that is '\r'.
-		pstate->do_auto_irs = TRUE;
 		pstate->irs = "\n";
 		pstate->irslen = 1;
 		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
 			? lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_irs
 			: lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_irs;
 	} else if (pstate->irslen == 1) {
-		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
+		plrec_reader->pprocess_func = (pstate->ifslen == 1)
 			? &lrec_reader_stdio_dkvp_process_single_irs_single_others
 			: &lrec_reader_stdio_dkvp_process_single_irs_multi_others;
 	} else {
-		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
+		plrec_reader->pprocess_func = (pstate->ifslen == 1)
 			? &lrec_reader_stdio_dkvp_process_multi_irs_single_others
 			: &lrec_reader_stdio_dkvp_process_multi_irs_multi_others;
 	}
@@ -104,17 +101,22 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_irs(
 	if (line == NULL) {
 		return NULL;
 	} else {
-		if (!pctx->auto_irs_detected) {
-			// mlr_get_cline_with_length will have already chomped the trailing '\n',
-			// and it won't be included in the line length.
-			if (line_length > 0 && line[line_length-1] == '\r') {
-				line[line_length-1] = 0;
+
+		// mlr_get_cline_with_length will have already chomped the trailing '\n',
+		// and it won't be included in the line length.
+		if (line_length > 0 && line[line_length-1] == '\r') {
+			line[line_length-1] = 0;
+			if (!pctx->auto_irs_detected) {
+				pctx->auto_irs_detected = TRUE;
 				pctx->auto_irs = "\r\n";
-			} else {
+			}
+		} else {
+			if (!pctx->auto_irs_detected) {
+				pctx->auto_irs_detected = TRUE;
 				pctx->auto_irs = "\n";
 			}
-			pctx->auto_irs_detected = TRUE;
 		}
+
 		return lrec_parse_stdio_dkvp_single_sep(line, pstate->ifs[0], pstate->ips[0], pstate->allow_repeat_ifs);
 	}
 }
@@ -129,17 +131,22 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_irs(
 	if (line == NULL) {
 		return NULL;
 	} else {
-		if (!pctx->auto_irs_detected) {
-			// mlr_get_cline_with_length will have already chomped the trailing '\n',
-			// and it won't be included in the line length.
-			if (line_length > 0 && line[line_length-1] == '\r') {
-				line[line_length-1] = 0;
+
+		// mlr_get_cline_with_length will have already chomped the trailing '\n',
+		// and it won't be included in the line length.
+		if (line_length > 0 && line[line_length-1] == '\r') {
+			line[line_length-1] = 0;
+			if (!pctx->auto_irs_detected) {
+				pctx->auto_irs_detected = TRUE;
 				pctx->auto_irs = "\r\n";
-			} else {
+			}
+		} else {
+			if (!pctx->auto_irs_detected) {
+				pctx->auto_irs_detected = TRUE;
 				pctx->auto_irs = "\n";
 			}
-			pctx->auto_irs_detected = TRUE;
 		}
+
 		return lrec_parse_stdio_dkvp_multi_sep(line, pstate->ifs, pstate->ips, pstate->ifslen, pstate->ipslen,
 			pstate->allow_repeat_ifs);
 	}

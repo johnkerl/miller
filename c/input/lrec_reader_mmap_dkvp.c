@@ -148,15 +148,22 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
-			if (do_auto_irs && !pctx->auto_irs_detected) {
+
+			if (do_auto_irs) {
 				if (p > line && p[-1] == '\r') {
 					p[-1] = 0;
-					pctx->auto_irs = "\r\n";
+					if (!pctx->auto_irs_detected) {
+						pctx->auto_irs = "\r\n";
+						pctx->auto_irs_detected = TRUE;
+					}
 				} else {
-					pctx->auto_irs = "\n";
+					if (!pctx->auto_irs_detected) {
+						pctx->auto_irs = "\n";
+						pctx->auto_irs_detected = TRUE;
+					}
 				}
-				pctx->auto_irs_detected = TRUE;
 			}
+
 			phandle->sol = p+1;
 			saw_rs = TRUE;
 			break;
@@ -373,15 +380,22 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
-			if (do_auto_irs && !pctx->auto_irs_detected) {
+
+			if (do_auto_irs) {
 				if (p > line && p[-1] == '\r') {
 					p[-1] = 0;
-					pctx->auto_irs = "\r\n";
+					if (!pctx->auto_irs_detected) {
+						pctx->auto_irs = "\r\n";
+						pctx->auto_irs_detected = TRUE;
+					}
 				} else {
-					pctx->auto_irs = "\n";
+					if (!pctx->auto_irs_detected) {
+						pctx->auto_irs = "\n";
+						pctx->auto_irs_detected = TRUE;
+					}
 				}
-				pctx->auto_irs_detected = TRUE;
 			}
+
 			phandle->sol = p+1;
 			saw_rs = TRUE;
 			break;

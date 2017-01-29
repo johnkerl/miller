@@ -23,6 +23,8 @@ typedef struct _lrec_reader_stdio_nidx_state_t {
 
 static void    lrec_reader_stdio_nidx_free(lrec_reader_t* preader);
 static void    lrec_reader_stdio_nidx_sof(void* pvstate, void* pvhandle);
+static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs_auto_irs(void* pvstate, void* pvhandle, context_t* pctx);
+static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs_auto_irs(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_stdio_nidx_process_multi_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx);
@@ -42,7 +44,17 @@ lrec_reader_t* lrec_reader_stdio_nidx_alloc(char* irs, char* ifs, int allow_repe
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_stdio_vopen;
 	plrec_reader->pclose_func   = file_reader_stdio_vclose;
-	if (pstate->irslen == 1) {
+	if (streq(irs, "auto")) {
+		// Auto means either lines end in "\n" or "\r\n" (LF or CRLF).  In
+		// either case the final character is "\n". Then for autodetect we
+		// simply check if there's a character in the line before the '\n', and
+		// if that is '\r'.
+		pstate->irs = "\n";
+		pstate->irslen = 1;
+		plrec_reader->pprocess_func = (pstate->ifslen == 1)
+			? lrec_reader_stdio_nidx_process_single_irs_single_ifs_auto_irs
+			: lrec_reader_stdio_nidx_process_single_irs_multi_ifs_auto_irs;
+	} else if (pstate->irslen == 1) {
 		plrec_reader->pprocess_func = (pstate->ifslen == 1)
 			? &lrec_reader_stdio_nidx_process_single_irs_single_ifs
 			: &lrec_reader_stdio_nidx_process_single_irs_multi_ifs;
@@ -67,6 +79,62 @@ static void lrec_reader_stdio_nidx_sof(void* pvstate, void* pvhandle) {
 }
 
 // ----------------------------------------------------------------
+static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs_auto_irs(void* pvstate, void* pvhandle, context_t* pctx) {
+	FILE* input_stream = pvhandle;
+	lrec_reader_stdio_nidx_state_t* pstate = pvstate;
+	int line_length;
+	char* line = mlr_get_cline_with_length(input_stream, pstate->irs[0], &line_length);
+	if (line == NULL) {
+		return NULL;
+	} else {
+
+		// mlr_get_cline_with_length will have already chomped the trailing '\n',
+		// and it won't be included in the line length.
+		if (line_length > 0 && line[line_length-1] == '\r') {
+			line[line_length-1] = 0;
+			if (!pctx->auto_irs_detected) {
+				pctx->auto_irs_detected = TRUE;
+				pctx->auto_irs = "\r\n";
+			}
+		} else {
+			if (!pctx->auto_irs_detected) {
+				pctx->auto_irs_detected = TRUE;
+				pctx->auto_irs = "\n";
+			}
+		}
+
+		return lrec_parse_stdio_nidx_single_sep(line, pstate->ifs[0], pstate->allow_repeat_ifs);
+	}
+}
+
+static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs_auto_irs(void* pvstate, void* pvhandle, context_t* pctx) {
+	FILE* input_stream = pvhandle;
+	lrec_reader_stdio_nidx_state_t* pstate = pvstate;
+	int line_length;
+	char* line = mlr_get_cline_with_length(input_stream, pstate->irs[0], &line_length);
+	if (line == NULL) {
+		return NULL;
+	} else {
+
+		// mlr_get_cline_with_length will have already chomped the trailing '\n',
+		// and it won't be included in the line length.
+		if (line_length > 0 && line[line_length-1] == '\r') {
+			line[line_length-1] = 0;
+			if (!pctx->auto_irs_detected) {
+				pctx->auto_irs_detected = TRUE;
+				pctx->auto_irs = "\r\n";
+			}
+		} else {
+			if (!pctx->auto_irs_detected) {
+				pctx->auto_irs_detected = TRUE;
+				pctx->auto_irs = "\n";
+			}
+		}
+
+		return lrec_parse_stdio_nidx_multi_sep(line, pstate->ifs, pstate->ifslen, pstate->allow_repeat_ifs);
+	}
+}
+
 static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_nidx_state_t* pstate = pvstate;
