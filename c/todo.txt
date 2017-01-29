@@ -51,8 +51,8 @@ AUTOTERM
   k input/lrec_reader_mmap_dkvp.c
   k input/lrec_reader_stdio_dkvp.c
 
-  ? input/lrec_reader_mmap_nidx.c
-  ? input/lrec_reader_stdio_nidx.c
+  k input/lrec_reader_mmap_nidx.c
+  k input/lrec_reader_stdio_nidx.c
 
   ? input/lrec_reader_mmap_csvlite.c
   ? input/lrec_reader_stdio_csvlite.c

@@ -44,6 +44,7 @@ typedef struct _lrec_reader_mmap_csvlite_state_t {
 	int   irslen;
 	int   ifslen;
 	int   allow_repeat_ifs;
+	int   do_auto_irs;
 	int   use_implicit_header;
 
 	int  expect_header_line_next;
@@ -57,7 +58,7 @@ static lrec_t* lrec_reader_mmap_csvlite_process_single_seps(void* pvstate, void*
 static lrec_t* lrec_reader_mmap_csvlite_process_multi_seps(void* pvstate, void* pvhandle, context_t* pctx);
 
 static slls_t* lrec_reader_mmap_csvlite_get_header_single_seps(file_reader_mmap_state_t* phandle,
-	lrec_reader_mmap_csvlite_state_t* pstate);
+	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx);
 
 static slls_t* lrec_reader_mmap_csvlite_get_header_multi_seps(file_reader_mmap_state_t* phandle,
 	lrec_reader_mmap_csvlite_state_t* pstate);
@@ -86,6 +87,7 @@ lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_re
 	pstate->irslen                   = strlen(irs);
 	pstate->ifslen                   = strlen(ifs);
 	pstate->allow_repeat_ifs         = allow_repeat_ifs;
+	pstate->do_auto_irs              = FALSE;
 	pstate->use_implicit_header      = use_implicit_header;
 	pstate->expect_header_line_next  = use_implicit_header ? FALSE : TRUE;
 	pstate->pheader_keeper           = NULL;
@@ -95,9 +97,22 @@ lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_re
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
 	plrec_reader->pclose_func   = file_reader_mmap_vclose;
 
-	plrec_reader->pprocess_func = (pstate->irslen == 1 && pstate->ifslen == 1)
-		? lrec_reader_mmap_csvlite_process_single_seps
-		: lrec_reader_mmap_csvlite_process_multi_seps;
+	if (streq(irs, "auto")) {
+		// Auto means either lines end in "\n" or "\r\n" (LF or CRLF).  In
+		// either case the final character is "\n". Then for autodetect we
+		// simply check if there's a character in the line before the '\n', and
+		// if that is '\r'.
+		pstate->do_auto_irs = TRUE;
+		pstate->irs = "\n";
+		pstate->irslen = 1;
+		plrec_reader->pprocess_func = (pstate->ifslen == 1)
+			? lrec_reader_mmap_csvlite_process_single_seps
+			: lrec_reader_mmap_csvlite_process_multi_seps;
+	} else {
+		plrec_reader->pprocess_func = (pstate->irslen == 1 && pstate->ifslen == 1)
+			? lrec_reader_mmap_csvlite_process_single_seps
+			: lrec_reader_mmap_csvlite_process_multi_seps;
+	}
 
 	plrec_reader->psof_func     = lrec_reader_mmap_csvlite_sof;
 	plrec_reader->pfree_func    = lrec_reader_mmap_csvlite_free;
@@ -132,7 +147,7 @@ static lrec_t* lrec_reader_mmap_csvlite_process_single_seps(void* pvstate, void*
 	while (TRUE) {
 		if (pstate->expect_header_line_next) {
 
-			slls_t* pheader_fields = lrec_reader_mmap_csvlite_get_header_single_seps(phandle, pstate);
+			slls_t* pheader_fields = lrec_reader_mmap_csvlite_get_header_single_seps(phandle, pstate, pctx);
 			if (pheader_fields == NULL) { // EOF
 				return NULL;
 			}
@@ -220,7 +235,7 @@ static lrec_t* lrec_reader_mmap_csvlite_process_multi_seps(void* pvstate, void* 
 
 // ----------------------------------------------------------------
 static slls_t* lrec_reader_mmap_csvlite_get_header_single_seps(file_reader_mmap_state_t* phandle,
-	lrec_reader_mmap_csvlite_state_t* pstate)
+	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx)
 {
 	char irs = pstate->irs[0];
 	char ifs = pstate->ifs[0];
@@ -244,6 +259,22 @@ static slls_t* lrec_reader_mmap_csvlite_get_header_single_seps(file_reader_mmap_
 	for ( ; p < phandle->eof && *p; ) {
 		if (*p == irs) {
 			*p = 0;
+
+			if (pstate->do_auto_irs) {
+				if (p > phandle->sol && p[-1] == '\r') {
+					p[-1] = 0;
+					if (!pctx->auto_irs_detected) {
+						pctx->auto_irs = "\r\n";
+						pctx->auto_irs_detected = TRUE;
+					}
+				} else {
+					if (!pctx->auto_irs_detected) {
+						pctx->auto_irs = "\n";
+						pctx->auto_irs_detected = TRUE;
+					}
+				}
+			}
+
 			phandle->sol = p+1;
 			pstate->ilno++;
 			break;
@@ -361,6 +392,22 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 				return NULL;
 			}
 			*p = 0;
+
+			if (pstate->do_auto_irs) {
+				if (p > line && p[-1] == '\r') {
+					p[-1] = 0;
+					if (!pctx->auto_irs_detected) {
+						pctx->auto_irs = "\r\n";
+						pctx->auto_irs_detected = TRUE;
+					}
+				} else {
+					if (!pctx->auto_irs_detected) {
+						pctx->auto_irs = "\n";
+						pctx->auto_irs_detected = TRUE;
+					}
+				}
+			}
+
 			phandle->sol = p+1;
 			pstate->ilno++;
 			saw_rs = TRUE;
@@ -547,6 +594,22 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 				return NULL;
 			}
 			*p = 0;
+
+			if (pstate->do_auto_irs) {
+				if (p > line && p[-1] == '\r') {
+					p[-1] = 0;
+					if (!pctx->auto_irs_detected) {
+						pctx->auto_irs = "\r\n";
+						pctx->auto_irs_detected = TRUE;
+					}
+				} else {
+					if (!pctx->auto_irs_detected) {
+						pctx->auto_irs = "\n";
+						pctx->auto_irs_detected = TRUE;
+					}
+				}
+			}
+
 			phandle->sol = p+1;
 			pstate->ilno++;
 			saw_rs = TRUE;
