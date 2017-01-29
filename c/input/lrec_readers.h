@@ -69,8 +69,10 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *phandle,
 	char* irs, char* ifs, char* ips, int irslen, int ifslen, int ipslen, int allow_repeat_ifs, context_t* pctx);
 
-lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* phandle, char ifs, char ips, int allow_repeat_ips);
-lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phandle, char ifs, char* ips, int ipslen, int allow_repeat_ips);
+lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* phandle, char ifs, char ips, int allow_repeat_ips,
+	int do_auto_line_term, context_t* pctx);
+lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phandle, char ifs, char* ips, int ipslen, int allow_repeat_ips,
+	int do_auto_line_term, context_t* pctx);
 lrec_t* lrec_parse_mmap_xtab_multi_ifs_single_ips(file_reader_mmap_state_t* phandle, char* ifs, char ips, int ifslen, int allow_repeat_ips);
 lrec_t* lrec_parse_mmap_xtab_multi_ifs_multi_ips(file_reader_mmap_state_t* phandle, char* ifs, char* ips, int ipslen, int ifslen, int allow_repeat_ips);
 

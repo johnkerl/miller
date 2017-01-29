@@ -59,8 +59,8 @@ AUTOTERM
   k input/lrec_reader_mmap_csvlite.c
   k input/lrec_reader_stdio_csvlite.c
 
-  ? input/lrec_reader_mmap_xtab.c
-  ? input/lrec_reader_stdio_xtab.c
+  ? input/lrec_reader_mmap_xtab.c -- needs ifs=auto -> ifs=auto transmutate @ caller
+  ? input/lrec_reader_stdio_xtab.c -- needs ifs=auto -> ifs=auto transmutate @ caller
 
   ? input/lrec_reader_mmap_json.c
   ? input/lrec_reader_stdio_json.c

@@ -19,6 +19,7 @@ typedef struct _lrec_reader_mmap_xtab_state_t {
 	int   ifslen;
 	int   ipslen;
 	int   allow_repeat_ips;
+	int   do_auto_line_term;
 } lrec_reader_mmap_xtab_state_t;
 
 static void    lrec_reader_mmap_xtab_free(lrec_reader_t* preader);
@@ -38,12 +39,24 @@ lrec_reader_t* lrec_reader_mmap_xtab_alloc(char* ifs, char* ips, int allow_repea
 	pstate->ifslen              = strlen(pstate->ifs);
 	pstate->ipslen              = strlen(pstate->ips);
 	pstate->allow_repeat_ips    = allow_repeat_ips;
+	pstate->do_auto_line_term   = FALSE;
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
 	plrec_reader->pclose_func   = file_reader_mmap_vclose;
 
-	if (pstate->ifslen == 1) {
+	if (streq(ifs, "auto")) {
+		// Auto means either lines end in "\n" or "\r\n" (LF or CRLF).  In
+		// either case the final character is "\n". Then for autodetect we
+		// simply check if there's a character in the line before the '\n', and
+		// if that is '\r'.
+		pstate->do_auto_line_term   = TRUE;
+		pstate->ifs = "\n";
+		pstate->ifslen = 1;
+		plrec_reader->pprocess_func = (pstate->ipslen == 1)
+			? lrec_reader_mmap_xtab_process_single_ifs_single_ips
+			: lrec_reader_mmap_xtab_process_single_ifs_multi_ips;
+	} else if (pstate->ifslen == 1) {
 		plrec_reader->pprocess_func = (pstate->ipslen == 1)
 			? lrec_reader_mmap_xtab_process_single_ifs_single_ips
 			: lrec_reader_mmap_xtab_process_single_ifs_multi_ips;
@@ -76,7 +89,7 @@ static lrec_t* lrec_reader_mmap_xtab_process_single_ifs_single_ips(void* pvstate
 		return NULL;
 	else
 		return lrec_parse_mmap_xtab_single_ifs_single_ips(phandle, pstate->ifs[0], pstate->ips[0],
-			pstate->allow_repeat_ips);
+			pstate->allow_repeat_ips, pstate->do_auto_line_term, pctx);
 }
 
 static lrec_t* lrec_reader_mmap_xtab_process_single_ifs_multi_ips(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -86,7 +99,7 @@ static lrec_t* lrec_reader_mmap_xtab_process_single_ifs_multi_ips(void* pvstate,
 		return NULL;
 	else
 		return lrec_parse_mmap_xtab_single_ifs_multi_ips(phandle, pstate->ifs[0], pstate->ips, pstate->ipslen,
-			pstate->allow_repeat_ips);
+			pstate->allow_repeat_ips, pstate->do_auto_line_term, pctx);
 }
 
 static lrec_t* lrec_reader_mmap_xtab_process_multi_ifs_single_ips(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -111,8 +124,9 @@ static lrec_t* lrec_reader_mmap_xtab_process_multi_ifs_multi_ips(void* pvstate, 
 
 // ----------------------------------------------------------------
 lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* phandle, char ifs, char ips,
-	int allow_repeat_ips)
+	int allow_repeat_ips, int do_auto_line_term, context_t* pctx)
 {
+	// xxx autolineterm ....
 	while (phandle->sol < phandle->eof && *phandle->sol == ifs)
 		phandle->sol++;
 
@@ -134,20 +148,20 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 			if (*p == ifs) {
 				*p = 0;
 
-//				if (pstate->do_auto_line_term) {
-//					if (p > line && p[-1] == '\r') {
-//						p[-1] = 0;
-//						if (!pctx->auto_line_term_detected) {
-//							pctx->auto_line_term = "\r\n";
-//							pctx->auto_line_term_detected = TRUE;
-//						}
-//					} else {
-//						if (!pctx->auto_line_term_detected) {
-//							pctx->auto_line_term = "\n";
-//							pctx->auto_line_term_detected = TRUE;
-//						}
-//					}
-//				}
+				if (do_auto_line_term) {
+					if (p > line && p[-1] == '\r') {
+						p[-1] = 0;
+						if (!pctx->auto_line_term_detected) {
+							pctx->auto_line_term = "\r\n";
+							pctx->auto_line_term_detected = TRUE;
+						}
+					} else {
+						if (!pctx->auto_line_term_detected) {
+							pctx->auto_line_term = "\n";
+							pctx->auto_line_term_detected = TRUE;
+						}
+					}
+				}
 
 				phandle->sol = p+1;
 				saw_eol = TRUE;
@@ -194,8 +208,9 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 }
 
 lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phandle, char ifs, char* ips, int ipslen,
-	int allow_repeat_ips)
+	int allow_repeat_ips, int do_auto_line_term, context_t* pctx)
 {
+	// xxx autolineterm ....
 	while (phandle->sol < phandle->eof && *phandle->sol == ifs)
 		phandle->sol++;
 
@@ -217,21 +232,20 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phan
 			if (*p == ifs) {
 				*p = 0;
 
-				// xxx auto irs
-//				if (pstate->do_auto_line_term) {
-//					if (p > line && p[-1] == '\r') {
-//						p[-1] = 0;
-//						if (!pctx->auto_line_term_detected) {
-//							pctx->auto_line_term = "\r\n";
-//							pctx->auto_line_term_detected = TRUE;
-//						}
-//					} else {
-//						if (!pctx->auto_line_term_detected) {
-//							pctx->auto_line_term = "\n";
-//							pctx->auto_line_term_detected = TRUE;
-//						}
-//					}
-//				}
+				if (do_auto_line_term) {
+					if (p > line && p[-1] == '\r') {
+						p[-1] = 0;
+						if (!pctx->auto_line_term_detected) {
+							pctx->auto_line_term = "\r\n";
+							pctx->auto_line_term_detected = TRUE;
+						}
+					} else {
+						if (!pctx->auto_line_term_detected) {
+							pctx->auto_line_term = "\n";
+							pctx->auto_line_term_detected = TRUE;
+						}
+					}
+				}
 
 				phandle->sol = p+1;
 				saw_eol = TRUE;
