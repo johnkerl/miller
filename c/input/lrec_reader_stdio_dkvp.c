@@ -27,9 +27,9 @@ typedef struct _lrec_reader_stdio_dkvp_state_t {
 
 static void    lrec_reader_stdio_dkvp_free(lrec_reader_t* preader);
 static void    lrec_reader_stdio_dkvp_sof(void* pvstate, void* pvhandle);
-static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_irs(void* pvstate, void* pvhandle,
+static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line_term(void* pvstate, void* pvhandle,
 	context_t* pctx);
-static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_irs(void* pvstate, void* pvhandle,
+static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_line_term(void* pvstate, void* pvhandle,
 	context_t* pctx);
 static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others(void* pvstate, void* pvhandle,
 	context_t* pctx);
@@ -64,8 +64,8 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char* ifs, char* ips, int
 		pstate->irs = "\n";
 		pstate->irslen = 1;
 		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
-			? lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_irs
-			: lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_irs;
+			? lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line_term
+			: lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_line_term;
 	} else if (pstate->irslen == 1) {
 		plrec_reader->pprocess_func = (pstate->ifslen == 1)
 			? &lrec_reader_stdio_dkvp_process_single_irs_single_others
@@ -91,7 +91,7 @@ static void lrec_reader_stdio_dkvp_sof(void* pvstate, void* pvhandle) {
 }
 
 // ----------------------------------------------------------------
-static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_irs(
+static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line_term(
 	void* pvstate, void* pvhandle, context_t* pctx)
 {
 	FILE* input_stream = pvhandle;
@@ -106,14 +106,14 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_irs(
 		// and it won't be included in the line length.
 		if (line_length > 0 && line[line_length-1] == '\r') {
 			line[line_length-1] = 0;
-			if (!pctx->auto_irs_detected) {
-				pctx->auto_irs_detected = TRUE;
-				pctx->auto_irs = "\r\n";
+			if (!pctx->auto_line_term_detected) {
+				pctx->auto_line_term_detected = TRUE;
+				pctx->auto_line_term = "\r\n";
 			}
 		} else {
-			if (!pctx->auto_irs_detected) {
-				pctx->auto_irs_detected = TRUE;
-				pctx->auto_irs = "\n";
+			if (!pctx->auto_line_term_detected) {
+				pctx->auto_line_term_detected = TRUE;
+				pctx->auto_line_term = "\n";
 			}
 		}
 
@@ -121,7 +121,7 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_irs(
 	}
 }
 
-static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_irs(
+static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_line_term(
 	void* pvstate, void* pvhandle, context_t* pctx)
 {
 	FILE* input_stream = pvhandle;
@@ -136,14 +136,14 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_irs(
 		// and it won't be included in the line length.
 		if (line_length > 0 && line[line_length-1] == '\r') {
 			line[line_length-1] = 0;
-			if (!pctx->auto_irs_detected) {
-				pctx->auto_irs_detected = TRUE;
-				pctx->auto_irs = "\r\n";
+			if (!pctx->auto_line_term_detected) {
+				pctx->auto_line_term_detected = TRUE;
+				pctx->auto_line_term = "\r\n";
 			}
 		} else {
-			if (!pctx->auto_irs_detected) {
-				pctx->auto_irs_detected = TRUE;
-				pctx->auto_irs = "\n";
+			if (!pctx->auto_line_term_detected) {
+				pctx->auto_line_term_detected = TRUE;
+				pctx->auto_line_term = "\n";
 			}
 		}
 

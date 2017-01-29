@@ -53,7 +53,7 @@ typedef struct _lrec_reader_stdio_csvlite_state_t {
 	int   irslen;
 	int   ifslen;
 	int   allow_repeat_ifs;
-	int   do_auto_irs;
+	int   do_auto_line_term;
 	int   use_implicit_header;
 
 	int  expect_header_line_next;
@@ -76,7 +76,7 @@ lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_r
 	pstate->irslen                  = strlen(irs);
 	pstate->ifslen                  = strlen(ifs);
 	pstate->allow_repeat_ifs        = allow_repeat_ifs;
-	pstate->do_auto_irs             = FALSE;
+	pstate->do_auto_line_term             = FALSE;
 	pstate->use_implicit_header     = use_implicit_header;
 	pstate->expect_header_line_next = use_implicit_header  ? FALSE : TRUE;
 	pstate->pheader_keeper          = NULL;
@@ -92,7 +92,7 @@ lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_r
 		// if that is '\r'.
 		pstate->irs = "\n";
 		pstate->irslen = 1;
-		pstate->do_auto_irs = TRUE;
+		pstate->do_auto_line_term = TRUE;
 	}
 	plrec_reader->pprocess_func = lrec_reader_stdio_csvlite_process;
 	plrec_reader->psof_func     = lrec_reader_stdio_sof;
@@ -139,17 +139,17 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 
 				// mlr_get_cline_with_length will have already chomped the trailing '\n',
 				// and it won't be included in the line length.
-				if (pstate->do_auto_irs) {
+				if (pstate->do_auto_line_term) {
 					if (line_length > 0 && hline[line_length-1] == '\r') {
 						hline[line_length-1] = 0;
-						if (!pctx->auto_irs_detected) {
-							pctx->auto_irs_detected = TRUE;
-							pctx->auto_irs = "\r\n";
+						if (!pctx->auto_line_term_detected) {
+							pctx->auto_line_term_detected = TRUE;
+							pctx->auto_line_term = "\r\n";
 						}
 					} else {
-						if (!pctx->auto_irs_detected) {
-							pctx->auto_irs_detected = TRUE;
-							pctx->auto_irs = "\n";
+						if (!pctx->auto_line_term_detected) {
+							pctx->auto_line_term_detected = TRUE;
+							pctx->auto_line_term = "\n";
 						}
 					}
 				}
@@ -196,17 +196,17 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 
 		// mlr_get_cline_with_length will have already chomped the trailing '\n',
 		// and it won't be included in the line length.
-		if (pstate->do_auto_irs) {
+		if (pstate->do_auto_line_term) {
 			if (line_length > 0 && line[line_length-1] == '\r') {
 				line[line_length-1] = 0;
-				if (!pctx->auto_irs_detected) {
-					pctx->auto_irs_detected = TRUE;
-					pctx->auto_irs = "\r\n";
+				if (!pctx->auto_line_term_detected) {
+					pctx->auto_line_term_detected = TRUE;
+					pctx->auto_line_term = "\r\n";
 				}
 			} else {
-				if (!pctx->auto_irs_detected) {
-					pctx->auto_irs_detected = TRUE;
-					pctx->auto_irs = "\n";
+				if (!pctx->auto_line_term_detected) {
+					pctx->auto_line_term_detected = TRUE;
+					pctx->auto_line_term = "\n";
 				}
 			}
 		}

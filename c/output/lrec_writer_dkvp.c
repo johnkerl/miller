@@ -38,7 +38,7 @@ static void lrec_writer_dkvp_free(lrec_writer_t* pwriter, context_t* pctx) {
 
 // ----------------------------------------------------------------
 static void lrec_writer_dkvp_process_auto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
-	lrec_writer_dkvp_process(pvstate, output_stream, prec, pctx->auto_irs);
+	lrec_writer_dkvp_process(pvstate, output_stream, prec, pctx->auto_line_term);
 }
 
 static void lrec_writer_dkvp_process_nonauto_ors(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {

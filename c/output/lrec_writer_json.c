@@ -76,7 +76,7 @@ static void lrec_writer_json_free(lrec_writer_t* pwriter, context_t* pctx) {
 static void lrec_writer_json_process_auto_line_term_wrap(void* pvstate, FILE* output_stream, lrec_t* prec,
 	context_t* pctx)
 {
-	lrec_writer_json_process(pvstate, output_stream, prec, pctx->auto_irs);
+	lrec_writer_json_process(pvstate, output_stream, prec, pctx->auto_line_term);
 }
 
 static void lrec_writer_json_process_auto_line_term_no_wrap(void* pvstate, FILE* output_stream, lrec_t* prec,

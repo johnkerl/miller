@@ -68,7 +68,7 @@ static void lrec_writer_xtab_free(lrec_writer_t* pwriter, context_t* pctx) {
 
 // ----------------------------------------------------------------
 static void lrec_writer_xtab_process_aligned_auto_ofs(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
-	lrec_writer_xtab_process_aligned(pvstate, output_stream, prec, pctx->auto_irs);
+	lrec_writer_xtab_process_aligned(pvstate, output_stream, prec, pctx->auto_line_term);
 }
 
 static void lrec_writer_xtab_process_aligned_nonauto_ofs(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
@@ -114,7 +114,7 @@ static void lrec_writer_xtab_process_aligned(void* pvstate, FILE* output_stream,
 
 // ----------------------------------------------------------------
 static void lrec_writer_xtab_process_unaligned_auto_ofs(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {
-	lrec_writer_xtab_process_unaligned(pvstate, output_stream, prec, pctx->auto_irs);
+	lrec_writer_xtab_process_unaligned(pvstate, output_stream, prec, pctx->auto_line_term);
 }
 
 static void lrec_writer_xtab_process_unaligned_nonauto_ofs(void* pvstate, FILE* output_stream, lrec_t* prec, context_t* pctx) {

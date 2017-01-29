@@ -133,6 +133,22 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 		for (p = line; p < phandle->eof && *p; ) {
 			if (*p == ifs) {
 				*p = 0;
+
+//				if (pstate->do_auto_line_term) {
+//					if (p > line && p[-1] == '\r') {
+//						p[-1] = 0;
+//						if (!pctx->auto_line_term_detected) {
+//							pctx->auto_line_term = "\r\n";
+//							pctx->auto_line_term_detected = TRUE;
+//						}
+//					} else {
+//						if (!pctx->auto_line_term_detected) {
+//							pctx->auto_line_term = "\n";
+//							pctx->auto_line_term_detected = TRUE;
+//						}
+//					}
+//				}
+
 				phandle->sol = p+1;
 				saw_eol = TRUE;
 				break;
@@ -200,6 +216,23 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phan
 		for (p = line; p < phandle->eof && *p; ) {
 			if (*p == ifs) {
 				*p = 0;
+
+				// xxx auto irs
+//				if (pstate->do_auto_line_term) {
+//					if (p > line && p[-1] == '\r') {
+//						p[-1] = 0;
+//						if (!pctx->auto_line_term_detected) {
+//							pctx->auto_line_term = "\r\n";
+//							pctx->auto_line_term_detected = TRUE;
+//						}
+//					} else {
+//						if (!pctx->auto_line_term_detected) {
+//							pctx->auto_line_term = "\n";
+//							pctx->auto_line_term_detected = TRUE;
+//						}
+//					}
+//				}
+
 				phandle->sol = p+1;
 				saw_eol = TRUE;
 				break;

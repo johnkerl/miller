@@ -51,19 +51,19 @@ lrec_t* lrec_parse_stdio_xtab_single_ips(slls_t* pxtab_lines, char ips, int allo
 lrec_t* lrec_parse_stdio_xtab_multi_ips(slls_t* pxtab_lines, char* ips, int ipslen, int allow_repeat_ips);
 
 lrec_t* lrec_parse_mmap_nidx_single_irs_single_ifs(file_reader_mmap_state_t *phandle,
-	char irs, char ifs, int allow_repeat_ifs, int do_auto_irs, context_t* pctx);
+	char irs, char ifs, int allow_repeat_ifs, int do_auto_line_term, context_t* pctx);
 lrec_t* lrec_parse_mmap_nidx_single_irs_multi_ifs(file_reader_mmap_state_t *phandle,
-	char irs, char* ifs, int ifslen, int allow_repeat_ifs, int do_auto_irs, context_t* pctx);
+	char irs, char* ifs, int ifslen, int allow_repeat_ifs, int do_auto_line_term, context_t* pctx);
 lrec_t* lrec_parse_mmap_nidx_multi_irs_single_ifs(file_reader_mmap_state_t *phandle,
 	char* irs, char ifs, int irslen, int allow_repeat_ifs);
 lrec_t* lrec_parse_mmap_nidx_multi_irs_multi_ifs(file_reader_mmap_state_t *phandle,
 	char* irs, char* ifs, int irslen, int ifslen, int allow_repeat_ifs);
 
 lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *phandle,
-	char irs, char ifs, char ips, int allow_repeat_ifs, int do_auto_irs, context_t* pctx);
+	char irs, char ifs, char ips, int allow_repeat_ifs, int do_auto_line_term, context_t* pctx);
 lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *phandle,
 	char irs, char* ifs, char* ips, int ifslen, int ipslen, int allow_repeat_ifs,
-	int do_auto_irs, context_t* pctx);
+	int do_auto_line_term, context_t* pctx);
 lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *phandle,
 	char* irs, char ifs, char ips, int irslen, int allow_repeat_ifs, context_t* pctx);
 lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *phandle,

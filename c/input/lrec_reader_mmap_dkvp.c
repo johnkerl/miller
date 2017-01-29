@@ -22,7 +22,7 @@ typedef struct _lrec_reader_mmap_dkvp_state_t {
 	int   ifslen;
 	int   ipslen;
 	int   allow_repeat_ifs;
-	int   do_auto_irs;
+	int   do_auto_line_term;
 } lrec_reader_mmap_dkvp_state_t;
 
 static void    lrec_reader_mmap_dkvp_free(lrec_reader_t* preader);
@@ -44,7 +44,7 @@ lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int 
 	pstate->ifslen           = strlen(ifs);
 	pstate->ipslen           = strlen(ips);
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
-	pstate->do_auto_irs      = FALSE;
+	pstate->do_auto_line_term      = FALSE;
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
@@ -54,7 +54,7 @@ lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int 
 		// either case the final character is "\n". Then for autodetect we
 		// simply check if there's a character in the line before the '\n', and
 		// if that is '\r'.
-		pstate->do_auto_irs = TRUE;
+		pstate->do_auto_line_term = TRUE;
 		pstate->irs = "\n";
 		pstate->irslen = 1;
 		plrec_reader->pprocess_func = (pstate->ifslen == 1 && pstate->ipslen == 1)
@@ -92,7 +92,7 @@ static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_single_others(void* pvst
 		return NULL;
 	else
 		return lrec_parse_mmap_dkvp_single_irs_single_others(phandle, pstate->irs[0], pstate->ifs[0], pstate->ips[0],
-			pstate->allow_repeat_ifs, pstate->do_auto_irs, pctx);
+			pstate->allow_repeat_ifs, pstate->do_auto_line_term, pctx);
 }
 
 static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -102,7 +102,7 @@ static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_multi_others(void* pvsta
 		return NULL;
 	else
 		return lrec_parse_mmap_dkvp_single_irs_multi_others(phandle, pstate->irs[0], pstate->ifs, pstate->ips,
-			pstate->ifslen, pstate->ipslen, pstate->allow_repeat_ifs, pstate->do_auto_irs, pctx);
+			pstate->ifslen, pstate->ipslen, pstate->allow_repeat_ifs, pstate->do_auto_line_term, pctx);
 }
 
 static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -127,7 +127,7 @@ static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_multi_others(void* pvstat
 
 // ----------------------------------------------------------------
 lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *phandle,
-	char irs, char ifs, char ips, int allow_repeat_ifs, int do_auto_irs, context_t* pctx)
+	char irs, char ifs, char ips, int allow_repeat_ifs, int do_auto_line_term, context_t* pctx)
 {
 	lrec_t* prec = lrec_unbacked_alloc();
 
@@ -149,17 +149,17 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 		if (*p == irs) {
 			*p = 0;
 
-			if (do_auto_irs) {
+			if (do_auto_line_term) {
 				if (p > line && p[-1] == '\r') {
 					p[-1] = 0;
-					if (!pctx->auto_irs_detected) {
-						pctx->auto_irs = "\r\n";
-						pctx->auto_irs_detected = TRUE;
+					if (!pctx->auto_line_term_detected) {
+						pctx->auto_line_term = "\r\n";
+						pctx->auto_line_term_detected = TRUE;
 					}
 				} else {
-					if (!pctx->auto_irs_detected) {
-						pctx->auto_irs = "\n";
-						pctx->auto_irs_detected = TRUE;
+					if (!pctx->auto_line_term_detected) {
+						pctx->auto_line_term = "\n";
+						pctx->auto_line_term_detected = TRUE;
 					}
 				}
 			}
@@ -359,7 +359,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 }
 
 lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *phandle, char irs, char* ifs, char* ips,
-	int ifslen, int ipslen, int allow_repeat_ifs, int do_auto_irs, context_t* pctx)
+	int ifslen, int ipslen, int allow_repeat_ifs, int do_auto_line_term, context_t* pctx)
 {
 	lrec_t* prec = lrec_unbacked_alloc();
 
@@ -381,17 +381,17 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 		if (*p == irs) {
 			*p = 0;
 
-			if (do_auto_irs) {
+			if (do_auto_line_term) {
 				if (p > line && p[-1] == '\r') {
 					p[-1] = 0;
-					if (!pctx->auto_irs_detected) {
-						pctx->auto_irs = "\r\n";
-						pctx->auto_irs_detected = TRUE;
+					if (!pctx->auto_line_term_detected) {
+						pctx->auto_line_term = "\r\n";
+						pctx->auto_line_term_detected = TRUE;
 					}
 				} else {
-					if (!pctx->auto_irs_detected) {
-						pctx->auto_irs = "\n";
-						pctx->auto_irs_detected = TRUE;
+					if (!pctx->auto_line_term_detected) {
+						pctx->auto_line_term = "\n";
+						pctx->auto_line_term_detected = TRUE;
 					}
 				}
 			}

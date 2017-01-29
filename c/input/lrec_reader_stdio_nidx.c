@@ -23,8 +23,8 @@ typedef struct _lrec_reader_stdio_nidx_state_t {
 
 static void    lrec_reader_stdio_nidx_free(lrec_reader_t* preader);
 static void    lrec_reader_stdio_nidx_sof(void* pvstate, void* pvhandle);
-static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs_auto_irs(void* pvstate, void* pvhandle, context_t* pctx);
-static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs_auto_irs(void* pvstate, void* pvhandle, context_t* pctx);
+static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs_auto_line_term(void* pvstate, void* pvhandle, context_t* pctx);
+static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs_auto_line_term(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_stdio_nidx_process_multi_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx);
@@ -52,8 +52,8 @@ lrec_reader_t* lrec_reader_stdio_nidx_alloc(char* irs, char* ifs, int allow_repe
 		pstate->irs = "\n";
 		pstate->irslen = 1;
 		plrec_reader->pprocess_func = (pstate->ifslen == 1)
-			? lrec_reader_stdio_nidx_process_single_irs_single_ifs_auto_irs
-			: lrec_reader_stdio_nidx_process_single_irs_multi_ifs_auto_irs;
+			? lrec_reader_stdio_nidx_process_single_irs_single_ifs_auto_line_term
+			: lrec_reader_stdio_nidx_process_single_irs_multi_ifs_auto_line_term;
 	} else if (pstate->irslen == 1) {
 		plrec_reader->pprocess_func = (pstate->ifslen == 1)
 			? &lrec_reader_stdio_nidx_process_single_irs_single_ifs
@@ -79,7 +79,7 @@ static void lrec_reader_stdio_nidx_sof(void* pvstate, void* pvhandle) {
 }
 
 // ----------------------------------------------------------------
-static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs_auto_irs(void* pvstate, void* pvhandle, context_t* pctx) {
+static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs_auto_line_term(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_nidx_state_t* pstate = pvstate;
 	int line_length;
@@ -92,14 +92,14 @@ static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs_auto_irs(voi
 		// and it won't be included in the line length.
 		if (line_length > 0 && line[line_length-1] == '\r') {
 			line[line_length-1] = 0;
-			if (!pctx->auto_irs_detected) {
-				pctx->auto_irs_detected = TRUE;
-				pctx->auto_irs = "\r\n";
+			if (!pctx->auto_line_term_detected) {
+				pctx->auto_line_term_detected = TRUE;
+				pctx->auto_line_term = "\r\n";
 			}
 		} else {
-			if (!pctx->auto_irs_detected) {
-				pctx->auto_irs_detected = TRUE;
-				pctx->auto_irs = "\n";
+			if (!pctx->auto_line_term_detected) {
+				pctx->auto_line_term_detected = TRUE;
+				pctx->auto_line_term = "\n";
 			}
 		}
 
@@ -107,7 +107,7 @@ static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs_auto_irs(voi
 	}
 }
 
-static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs_auto_irs(void* pvstate, void* pvhandle, context_t* pctx) {
+static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs_auto_line_term(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_nidx_state_t* pstate = pvstate;
 	int line_length;
@@ -120,14 +120,14 @@ static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs_auto_irs(void
 		// and it won't be included in the line length.
 		if (line_length > 0 && line[line_length-1] == '\r') {
 			line[line_length-1] = 0;
-			if (!pctx->auto_irs_detected) {
-				pctx->auto_irs_detected = TRUE;
-				pctx->auto_irs = "\r\n";
+			if (!pctx->auto_line_term_detected) {
+				pctx->auto_line_term_detected = TRUE;
+				pctx->auto_line_term = "\r\n";
 			}
 		} else {
-			if (!pctx->auto_irs_detected) {
-				pctx->auto_irs_detected = TRUE;
-				pctx->auto_irs = "\n";
+			if (!pctx->auto_line_term_detected) {
+				pctx->auto_line_term_detected = TRUE;
+				pctx->auto_line_term = "\n";
 			}
 		}
 

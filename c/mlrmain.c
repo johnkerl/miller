@@ -37,7 +37,7 @@ int main(int argc, char** argv) {
 		.ops       = popts->writer_opts.ops,
 		.ofs       = popts->writer_opts.ofs,
 		.ors       = popts->writer_opts.ors,
-		.auto_irs  = popts->reader_opts.irs,
+		.auto_line_term  = popts->reader_opts.irs,
 	};
 
 	int ok = do_stream_chained(prepipe, filenames, plrec_reader, pmapper_list, plrec_writer, &ctx, popts);

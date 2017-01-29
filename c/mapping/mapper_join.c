@@ -541,7 +541,7 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 		.ops       = NULL,
 		.ofs       = NULL,
 		.ors       = NULL,
-		.auto_irs  = NULL, // xxx temp
+		.auto_line_term  = NULL, // xxx temp
 	};
 	context_t* pctx = &ctx;
 

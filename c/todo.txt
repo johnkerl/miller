@@ -44,6 +44,8 @@ AUTOTERM
   auto      | auto/auto        auto/auto  auto/spec
   specified | LF@*nix;CRLF@Win in=out     spec/spec
 
+* rename auto_irs.. to auto_line_term.. in the code
+
 * irs=auto means:
   - default to LF@*nix;CFLF@win in case of zero input (e.g. seqgen)
     > add a comment about that in lib/context.c
