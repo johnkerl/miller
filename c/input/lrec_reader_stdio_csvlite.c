@@ -53,6 +53,7 @@ typedef struct _lrec_reader_stdio_csvlite_state_t {
 	int   irslen;
 	int   ifslen;
 	int   allow_repeat_ifs;
+	int   do_auto_irs;
 	int   use_implicit_header;
 
 	int  expect_header_line_next;
@@ -69,20 +70,30 @@ lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_r
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_csvlite_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csvlite_state_t));
-	pstate->ifnr                      = 0LL;
-	pstate->irs                       = irs;
-	pstate->ifs                       = ifs;
-	pstate->irslen                    = strlen(irs);
-	pstate->ifslen                    = strlen(ifs);
-	pstate->allow_repeat_ifs          = allow_repeat_ifs;
-	pstate->use_implicit_header       = use_implicit_header;
-	pstate->expect_header_line_next   = use_implicit_header ? FALSE : TRUE;
-	pstate->pheader_keeper            = NULL;
-	pstate->pheader_keepers           = lhmslv_alloc();
+	pstate->ifnr                    = 0LL;
+	pstate->irs                     = irs;
+	pstate->ifs                     = ifs;
+	pstate->irslen                  = strlen(irs);
+	pstate->ifslen                  = strlen(ifs);
+	pstate->allow_repeat_ifs        = allow_repeat_ifs;
+	pstate->do_auto_irs             = FALSE;
+	pstate->use_implicit_header     = use_implicit_header;
+	pstate->expect_header_line_next = use_implicit_header  ? FALSE : TRUE;
+	pstate->pheader_keeper          = NULL;
+	pstate->pheader_keepers         = lhmslv_alloc();
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_stdio_vopen;
 	plrec_reader->pclose_func   = file_reader_stdio_vclose;
+	if (streq(irs, "auto")) {
+		// Auto means either lines end in "\n" or "\r\n" (LF or CRLF).  In
+		// either case the final character is "\n". Then for autodetect we
+		// simply check if there's a character in the line before the '\n', and
+		// if that is '\r'.
+		pstate->irs = "\n";
+		pstate->irslen = 1;
+		pstate->do_auto_irs = TRUE;
+	}
 	plrec_reader->pprocess_func = lrec_reader_stdio_csvlite_process;
 	plrec_reader->psof_func     = lrec_reader_stdio_sof;
 	plrec_reader->pfree_func    = lrec_reader_stdio_csvlite_free;
@@ -114,16 +125,34 @@ static void lrec_reader_stdio_sof(void* pvstate, void* pvhandle) {
 static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_csvlite_state_t* pstate = pvstate;
+	int line_length = 0;
 
 	while (TRUE) {
 		if (pstate->expect_header_line_next) {
 			while (TRUE) {
 				char* hline = (pstate->irslen == 1)
-					? mlr_get_cline(input_stream, pstate->irs[0])
+					? mlr_get_cline_with_length(input_stream, pstate->irs[0], &line_length)
 					: mlr_get_sline(input_stream, pstate->irs, pstate->irslen);
 				if (hline == NULL) // EOF
 					return NULL;
 				pstate->ilno++;
+
+				// mlr_get_cline_with_length will have already chomped the trailing '\n',
+				// and it won't be included in the line length.
+				if (pstate->do_auto_irs) {
+					if (line_length > 0 && hline[line_length-1] == '\r') {
+						hline[line_length-1] = 0;
+						if (!pctx->auto_irs_detected) {
+							pctx->auto_irs_detected = TRUE;
+							pctx->auto_irs = "\r\n";
+						}
+					} else {
+						if (!pctx->auto_irs_detected) {
+							pctx->auto_irs_detected = TRUE;
+							pctx->auto_irs = "\n";
+						}
+					}
+				}
 
 				slls_t* pheader_fields = (pstate->ifslen == 1)
 					? split_csvlite_header_line_single_ifs(hline, pstate->ifs[0], pstate->allow_repeat_ifs)
@@ -159,11 +188,28 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 		}
 
 		char* line = (pstate->irslen == 1)
-			? mlr_get_cline(input_stream, pstate->irs[0])
+			? mlr_get_cline_with_length(input_stream, pstate->irs[0], &line_length)
 			: mlr_get_sline(input_stream, pstate->irs, pstate->irslen);
 		if (line == NULL) // EOF
 			return NULL;
 		pstate->ilno++;
+
+		// mlr_get_cline_with_length will have already chomped the trailing '\n',
+		// and it won't be included in the line length.
+		if (pstate->do_auto_irs) {
+			if (line_length > 0 && line[line_length-1] == '\r') {
+				line[line_length-1] = 0;
+				if (!pctx->auto_irs_detected) {
+					pctx->auto_irs_detected = TRUE;
+					pctx->auto_irs = "\r\n";
+				}
+			} else {
+				if (!pctx->auto_irs_detected) {
+					pctx->auto_irs_detected = TRUE;
+					pctx->auto_irs = "\n";
+				}
+			}
+		}
 
 		if (!*line) {
 			if (pstate->pheader_keeper != NULL) {
