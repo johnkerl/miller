@@ -34,7 +34,8 @@ typedef struct _lrec_reader_mmap_json_state_t {
 	sllv_t* ptop_level_json_objects;
 	sllv_t* precords;
 	char* input_json_flatten_separator;
-	// xxx detected_line_term
+	int do_auto_line_term;
+	char* detected_line_term;
 } lrec_reader_mmap_json_state_t;
 
 static void    lrec_reader_mmap_json_free(lrec_reader_t* preader);
@@ -42,13 +43,19 @@ static void    lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle);
 static lrec_t* lrec_reader_mmap_json_process(void* pvstate, void* pvhandle, context_t* pctx);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_mmap_json_alloc(char* input_json_flatten_separator) {
+lrec_reader_t* lrec_reader_mmap_json_alloc(char* input_json_flatten_separator, char* line_term) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_json_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_json_state_t));
 	pstate->ptop_level_json_objects       = sllv_alloc();
 	pstate->precords                      = sllv_alloc();
 	pstate->input_json_flatten_separator  = input_json_flatten_separator;
+	pstate->do_auto_line_term             = FALSE;
+	pstate->detected_line_term            = "\n"; // xxx adapt to MLR_GLOBALS.... for Windows port
+
+	if (streq(line_term, "auto")) {
+		pstate->do_auto_line_term = TRUE;
+	}
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
@@ -118,6 +125,7 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 	int length = phandle->eof - phandle->sol;
 
 	while (TRUE) {
+		// xxx line_term
 		parsed_top_level_json = json_parse(item_start, length, error_buf, &item_start);
 		if (parsed_top_level_json == NULL) {
 			fprintf(stderr, "%s: Unable to parse JSON data: %s\n", MLR_GLOBALS.bargv0, error_buf);
@@ -147,5 +155,6 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_mmap_json_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_mmap_json_state_t* pstate = pvstate;
+	// xxx line term
 	return sllv_pop(pstate->precords);
 }

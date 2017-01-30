@@ -33,9 +33,9 @@ lrec_reader_t*  lrec_reader_alloc(cli_reader_opts_t* popts) {
 			return lrec_reader_stdio_xtab_alloc(popts->ifs, popts->ips, popts->allow_repeat_ips);
 	} else if (streq(popts->ifile_fmt, "json")) {
 		if (popts->use_mmap_for_read)
-			return lrec_reader_mmap_json_alloc(popts->input_json_flatten_separator);
+			return lrec_reader_mmap_json_alloc(popts->input_json_flatten_separator, popts->irs);
 		else
-			return lrec_reader_stdio_json_alloc(popts->input_json_flatten_separator);
+			return lrec_reader_stdio_json_alloc(popts->input_json_flatten_separator, popts->irs);
 	} else {
 		return NULL;
 	}

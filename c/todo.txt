@@ -35,7 +35,10 @@ OTHER:
 ================================================================
 AUTOTERM
 
-* default auto into mlrcli.c
+! default auto into mlrcli.c after modding all lrec-reader impls
+
+! all dump/print/etc. -- MLR_GLOBALS.default_line_term -- defer to Windows port
+  not 5.0.0
 
 * code up this matrix in mlrcli.c:
   in/out    | default          auto       specified
@@ -49,7 +52,6 @@ AUTOTERM
 * irs=auto means:
   - default to LF@*nix;CFLF@win in case of zero input (e.g. seqgen)
     > add a comment about that in lib/context.c
-
 
   ? input/lrec_reader_mmap_xtab.c
     - needs ifs=auto -> ifs=auto transmutate @ caller

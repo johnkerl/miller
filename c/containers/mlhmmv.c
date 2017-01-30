@@ -1531,5 +1531,6 @@ void mlhmmv_root_print_json_single_lines(mlhmmv_root_t* pmap, int quote_keys_alw
 {
 	mlhmmv_level_print_single_line(pmap->root_xvalue.pnext_level, 0, FALSE, quote_keys_always,
 		quote_values_always, ostream);
+	// xxx line term
 	fprintf(ostream, "\n");
 }
