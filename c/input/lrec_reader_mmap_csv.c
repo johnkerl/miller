@@ -56,6 +56,7 @@ typedef struct _lrec_reader_mmap_csv_state_t {
 	char* dquote_ifs;
 	char* dquote_eof;
 	char* dquote_dquote;
+	int   do_auto_line_term;
 
 	int   dquotelen;
 
@@ -76,7 +77,7 @@ static void    lrec_reader_mmap_csv_free(lrec_reader_t* preader);
 static void    lrec_reader_mmap_csv_sof(void* pvstate, void* pvhandle);
 static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, context_t* pctx);
 static int     lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
-	rslls_t* pfields, file_reader_mmap_state_t* phandle);
+	rslls_t* pfields, file_reader_mmap_state_t* phandle, context_t* pctx);
 static lrec_t* paste_indices_and_data(lrec_reader_mmap_csv_state_t* pstate, rslls_t* pdata_fields, context_t* pctx);
 static lrec_t* paste_header_and_data(lrec_reader_mmap_csv_state_t* pstate, rslls_t* pdata_fields, context_t* pctx);
 
@@ -86,6 +87,12 @@ lrec_reader_t* lrec_reader_mmap_csv_alloc(char* irs, char* ifs, int use_implicit
 
 	lrec_reader_mmap_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_csv_state_t));
 	pstate->ilno          = 0LL;
+
+	pstate->do_auto_line_term = FALSE;
+	if (streq(irs, "auto")) {
+		pstate->do_auto_line_term = TRUE;
+		irs = "\n";
+	}
 
 	pstate->eof           = "\xff";
 	pstate->irs           = irs;
@@ -160,7 +167,7 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 	file_reader_mmap_state_t* phandle = pvhandle;
 
 	if (pstate->expect_header_line_next) {
-		if (!lrec_reader_mmap_csv_get_fields(pstate, pstate->pfields, phandle))
+		if (!lrec_reader_mmap_csv_get_fields(pstate, pstate->pfields, phandle, pctx))
 			return NULL;
 		pstate->ilno++;
 
@@ -190,7 +197,7 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 
 		pstate->expect_header_line_next = FALSE;
 	}
-	int rc = lrec_reader_mmap_csv_get_fields(pstate, pstate->pfields, phandle);
+	int rc = lrec_reader_mmap_csv_get_fields(pstate, pstate->pfields, phandle, pctx);
 	pstate->ilno++;
 	if (rc == FALSE) // EOF
 		return NULL;
@@ -204,7 +211,7 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 }
 
 static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
-	rslls_t* pfields, file_reader_mmap_state_t* phandle)
+	rslls_t* pfields, file_reader_mmap_state_t* phandle, context_t* pctx)
 {
 	int rc, stridx, matchlen, record_done, field_done;
 	string_builder_t* psb = pstate->psb;
@@ -236,6 +243,22 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 						break;
 					case IRS_STRIDX: // end of record
 						*e = 0;
+
+						if (pstate->do_auto_line_term) {
+							if (e > p && e[-1] == '\r') {
+								e[-1] = 0;
+								if (!pctx->auto_line_term_detected) { // xxx libify this stanza in context.c
+									pctx->auto_line_term = "\r\n";
+									pctx->auto_line_term_detected = TRUE;
+								}
+							} else {
+								if (!pctx->auto_line_term_detected) { // xxx libify this stanza in context.c
+									pctx->auto_line_term = "\n";
+									pctx->auto_line_term_detected = TRUE;
+								}
+							}
+						}
+
 						rslls_append(pfields, p, NO_FREE, 0);
 						p = e + matchlen;
 						field_done  = TRUE;

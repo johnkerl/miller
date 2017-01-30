@@ -20,6 +20,7 @@ typedef struct _lrec_reader_stdio_xtab_state_t {
 	int   ifslen;
 	int   ipslen;
 	int   allow_repeat_ips;
+	int   do_auto_line_term;
 	int   at_eof;
 } lrec_reader_stdio_xtab_state_t;
 
@@ -32,12 +33,19 @@ lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repe
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_xtab_state_t));
-	pstate->ifs              = ifs;
-	pstate->ips              = ips;
-	pstate->ifslen           = strlen(ifs);
-	pstate->ipslen           = strlen(ips);
-	pstate->allow_repeat_ips = allow_repeat_ips;
-	pstate->at_eof           = FALSE;
+	pstate->ifs               = ifs;
+	pstate->ips               = ips;
+	pstate->ifslen            = strlen(ifs);
+	pstate->ipslen            = strlen(ips);
+	pstate->allow_repeat_ips  = allow_repeat_ips;
+	pstate->do_auto_line_term = FALSE;
+	pstate->at_eof            = FALSE;
+
+	if (streq(ifs, "auto")) {
+		pstate->do_auto_line_term = TRUE;
+		pstate->ifs = "\n";
+		pstate->ifslen = 1;
+	}
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_stdio_vopen;
@@ -70,8 +78,9 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 	slls_t* pxtab_lines = slls_alloc();
 
 	while (TRUE) {
+		int line_length = 0;
 		char* line = (pstate->ifslen == 1)
-			? mlr_get_cline(input_stream, pstate->ifs[0])
+			? mlr_get_cline_with_length(input_stream, pstate->ifs[0], &line_length)
 			: mlr_get_sline(input_stream, pstate->ifs, pstate->ifslen);
 		if (line == NULL) { // EOF
 			// EOF or blank line terminates the stanza.
@@ -82,16 +91,40 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 			} else {
 				return (pstate->ipslen == 1)
 					? lrec_parse_stdio_xtab_single_ips(pxtab_lines, pstate->ips[0], pstate->allow_repeat_ips)
-					: lrec_parse_stdio_xtab_multi_ips(pxtab_lines, pstate->ips, pstate->ipslen, pstate->allow_repeat_ips);
+					: lrec_parse_stdio_xtab_multi_ips(pxtab_lines, pstate->ips, pstate->ipslen,
+						pstate->allow_repeat_ips);
 			}
+
 		} else if (*line == '\0') {
 			free(line);
 			if (pxtab_lines->length > 0) {
 				return (pstate->ipslen == 1)
 					? lrec_parse_stdio_xtab_single_ips(pxtab_lines, pstate->ips[0], pstate->allow_repeat_ips)
-					: lrec_parse_stdio_xtab_multi_ips(pxtab_lines, pstate->ips, pstate->ipslen, pstate->allow_repeat_ips);
+					: lrec_parse_stdio_xtab_multi_ips(pxtab_lines, pstate->ips, pstate->ipslen,
+						pstate->allow_repeat_ips);
 			}
+
+		// xxx blank with "\r\n" -> "\r"
+		// xxx blank with "\n" -> ""
+
 		} else {
+			if (pstate->do_auto_line_term) {
+				// mlr_get_cline_with_length will have already chomped the trailing '\n',
+				// and it won't be included in the line length.
+		// xxx move all this into mlr_get_cline_auto_line_term
+				if (line_length > 0 && line[line_length-1] == '\r') {
+					line[line_length-1] = 0;
+					if (!pctx->auto_line_term_detected) {
+						pctx->auto_line_term_detected = TRUE;
+						pctx->auto_line_term = "\r\n";
+					}
+				} else {
+					if (!pctx->auto_line_term_detected) {
+						pctx->auto_line_term_detected = TRUE;
+						pctx->auto_line_term = "\n";
+					}
+				}
+			}
 			slls_append_with_free(pxtab_lines, line);
 		}
 	}
