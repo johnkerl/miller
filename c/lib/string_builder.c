@@ -59,6 +59,17 @@ char* sb_finish(string_builder_t* psb) {
 	return rv;
 }
 
+char* sb_finish_with_length(string_builder_t* psb, int* pline_length) {
+	sb_append_char(psb, '\0');
+	int alloc_length = (psb->used_length + BLOCK_LENGTH_MASK) & BLOCK_LENGTH_NMASK;
+	char* rv = mlr_malloc_or_die(alloc_length);
+	memcpy(rv, psb->buffer, psb->used_length);
+	// Line length doesn't include null terminator; used length does.
+	*pline_length = psb->used_length - 1;
+	psb->used_length  = 0;
+	return rv;
+}
+
 // ----------------------------------------------------------------
 void _sb_enlarge(string_builder_t* psb) {
 	int new_alloc_length = psb->alloc_length * 2;
