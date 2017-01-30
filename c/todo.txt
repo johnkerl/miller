@@ -61,9 +61,6 @@ AUTOTERM
   ? input/lrec_reader_mmap_json.c
   ? input/lrec_reader_stdio_json.c
 
-  ? input/lrec_reader_mmap_csv.c
-  ? input/lrec_reader_stdio_csv.c
-
 
   k input/lrec_reader_mmap_dkvp.c
   k input/lrec_reader_stdio_dkvp.c
@@ -73,6 +70,9 @@ AUTOTERM
 
   k input/lrec_reader_mmap_csvlite.c
   k input/lrec_reader_stdio_csvlite.c
+
+  k input/lrec_reader_mmap_csv.c
+  k input/lrec_reader_stdio_csv.c
 
 
 * ors=auto means:

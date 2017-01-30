@@ -34,6 +34,7 @@ typedef struct _lrec_reader_mmap_json_state_t {
 	sllv_t* ptop_level_json_objects;
 	sllv_t* precords;
 	char* input_json_flatten_separator;
+	// xxx detected_line_term
 } lrec_reader_mmap_json_state_t;
 
 static void    lrec_reader_mmap_json_free(lrec_reader_t* preader);
@@ -45,9 +46,9 @@ lrec_reader_t* lrec_reader_mmap_json_alloc(char* input_json_flatten_separator) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_json_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_json_state_t));
-	pstate->ptop_level_json_objects      = sllv_alloc();
-	pstate->precords                     = sllv_alloc();
-	pstate->input_json_flatten_separator = input_json_flatten_separator;
+	pstate->ptop_level_json_objects       = sllv_alloc();
+	pstate->precords                      = sllv_alloc();
+	pstate->input_json_flatten_separator  = input_json_flatten_separator;
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
