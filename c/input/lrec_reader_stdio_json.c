@@ -136,6 +136,9 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 			break;
 		length -= (item_start - json_input);
 		json_input = item_start;
+		if (length == 1 && *(char*)json_input == '\n') { // xxx comment
+			break;
+		}
 	}
 }
 
