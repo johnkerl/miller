@@ -92,6 +92,9 @@ AUTOTERM
   ~ output/lrec_writer_json.c -- manpage re ORS selectable now
   ~ output/lrec_writer_xtab.c -- needs ors=auto -> ofs=auto transmutate @ caller
 
+* json-reader bugfix: on blank-lines file:
+  mlr: Unable to parse JSON data: Line 5 column 0: Unexpected `0x00` when seeking value
+
 * test w/ join as well
 
 * doc: emph w/ 1st line's ending used for all
