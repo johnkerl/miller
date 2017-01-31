@@ -123,9 +123,23 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 
 	json_char* item_start = json_input;
 	int length = phandle->eof - phandle->sol;
+	char* detected_line_term = NULL;
 
 	while (TRUE) {
-		// xxx line_term
+		// xxx comment: find the first line-ending (if any)
+		if (detected_line_term == NULL) {
+			for (char* p = phandle->sol; p < phandle->eof; p++) { // xxx libify
+				if (p[0] == '\n') {
+					if (p > phandle->sol && p[-1] == '\r') {
+						detected_line_term = "\r\n";
+					} else {
+						detected_line_term = "\n";
+					}
+					break;
+				}
+			}
+		}
+
 		parsed_top_level_json = json_parse(item_start, length, error_buf, &item_start);
 		if (parsed_top_level_json == NULL) {
 			fprintf(stderr, "%s: Unable to parse JSON data: %s\n", MLR_GLOBALS.bargv0, error_buf);
@@ -149,6 +163,9 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 			break;
 		length -= (item_start - json_input);
 		json_input = item_start;
+	}
+	if (detected_line_term != NULL) {
+		pstate->detected_line_term = detected_line_term;
 	}
 }
 

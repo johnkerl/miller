@@ -644,8 +644,8 @@ json_value_t * json_parse(
 									flags |= FLAG_NUM_NEGATIVE;
 									continue;
 								} else {
-									sprintf(error, "Line %d column %d: Unexpected `%c` when seeking value",
-										LINE_AND_COL, b);
+									sprintf(error, "Line %d column %d: Unexpected `0x%02x` when seeking value",
+										LINE_AND_COL, (unsigned)b);
 									goto e_failed;
 								}
 						}
