@@ -1156,7 +1156,8 @@ static void mlhhmv_levels_to_lrecs_lashed_within_records(
 
 // ----------------------------------------------------------------
 void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
-	int do_final_comma, int quote_keys_always, int quote_values_always, char* line_indent, FILE* ostream)
+	int do_final_comma, int quote_keys_always, int quote_values_always, char* line_indent, char* line_term,
+	FILE* ostream)
 {
 	if (plevel == NULL) {
 		return;
@@ -1164,7 +1165,7 @@ void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 	static char* leader = "  ";
 	// Top-level opening brace goes on a line by itself; subsequents on the same line after the level key.
 	if (depth == 0)
-		fprintf(ostream, "%s{\n", line_indent);
+		fprintf(ostream, "%s{%s", line_indent, line_term);
 	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
 		fprintf(ostream, "%s", line_indent);
 		for (int i = 0; i <= depth; i++)
@@ -1183,21 +1184,22 @@ void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 				quote_values_always, ostream);
 
 			if (pentry->pnext != NULL)
-				fprintf(ostream, ",\n");
+				fprintf(ostream, ",%s", line_term);
 			else
-				fprintf(ostream, "\n");
+				fprintf(ostream, "%s", line_term);
 		} else {
-			fprintf(ostream, "%s{\n", line_indent);
+			fprintf(ostream, "%s{%s", line_indent, line_term);
 			mlhmmv_level_print_stacked(pentry->level_xvalue.pnext_level, depth + 1,
-				pentry->pnext != NULL, quote_keys_always, quote_values_always, line_indent, ostream);
+				pentry->pnext != NULL, quote_keys_always, quote_values_always, line_indent, line_term,
+				ostream);
 		}
 	}
 	for (int i = 0; i < depth; i++)
 		fprintf(ostream, "%s", leader);
 	if (do_final_comma)
-		fprintf(ostream, "%s},\n", line_indent);
+		fprintf(ostream, "%s},%s", line_indent, line_term);
 	else
-		fprintf(ostream, "%s}\n", line_indent);
+		fprintf(ostream, "%s}%s", line_indent, line_term);
 }
 
 // ----------------------------------------------------------------
@@ -1519,18 +1521,17 @@ void mlhmmv_root_partial_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pkeys, sllmv_t* 
 // }
 
 void mlhmmv_root_print_json_stacked(mlhmmv_root_t* pmap, int quote_keys_always, int quote_values_always,
-	char* line_indent, FILE* ostream)
+	char* line_indent, char* line_term, FILE* ostream)
 {
 	mlhmmv_level_print_stacked(pmap->root_xvalue.pnext_level, 0, FALSE, quote_keys_always,
-		quote_values_always, line_indent, ostream);
+		quote_values_always, line_indent, line_term, ostream);
 }
 
 // ----------------------------------------------------------------
 void mlhmmv_root_print_json_single_lines(mlhmmv_root_t* pmap, int quote_keys_always, int quote_values_always,
-	FILE* ostream)
+	char* line_term, FILE* ostream)
 {
 	mlhmmv_level_print_single_line(pmap->root_xvalue.pnext_level, 0, FALSE, quote_keys_always,
 		quote_values_always, ostream);
-	// xxx line term
-	fprintf(ostream, "\n");
+	fprintf(ostream, "%s", line_term);
 }

@@ -126,6 +126,7 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 	char* detected_line_term = NULL;
 
 	while (TRUE) {
+
 		// xxx comment: find the first line-ending (if any)
 		if (detected_line_term == NULL) {
 			for (char* p = phandle->sol; p < phandle->eof; p++) { // xxx libify
@@ -175,6 +176,8 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_mmap_json_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_mmap_json_state_t* pstate = pvstate;
-	// xxx line term
+	if (pstate->do_auto_line_term && !pctx->auto_line_term_detected) { // xxx comment
+		pctx->auto_line_term = pstate->detected_line_term;
+	}
 	return sllv_pop(pstate->precords);
 }

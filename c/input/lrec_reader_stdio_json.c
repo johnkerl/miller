@@ -35,6 +35,8 @@ typedef struct _lrec_reader_stdio_json_state_t {
 	sllv_t* ptop_level_json_objects;
 	sllv_t* precords;
 	char* input_json_flatten_separator;
+	int do_auto_line_term;
+	char* detected_line_term;
 } lrec_reader_stdio_json_state_t;
 
 static void    lrec_reader_stdio_json_free(lrec_reader_t* preader);
@@ -50,6 +52,12 @@ lrec_reader_t* lrec_reader_stdio_json_alloc(char* input_json_flatten_separator, 
 	pstate->ptop_level_json_objects      = sllv_alloc();
 	pstate->precords                     = sllv_alloc();
 	pstate->input_json_flatten_separator = input_json_flatten_separator;
+	pstate->do_auto_line_term             = FALSE;
+	pstate->detected_line_term            = "\n"; // xxx adapt to MLR_GLOBALS.... for Windows port
+
+	if (streq(line_term, "auto")) {
+		pstate->do_auto_line_term = TRUE;
+	}
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_ingestor_stdio_vopen;
@@ -117,8 +125,23 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 	json_char* item_start = json_input;
 	int length = phandle->eof - phandle->sof;
 
+	// xxx do this only if do_auto_line_term
+
+	// xxx comment: find the first line-ending (if any)
+	char* detected_line_term = NULL;
+	for (char* p = phandle->sof; p < phandle->eof; p++) { // xxx libify
+		if (p[0] == '\n') {
+			if (p > phandle->sof && p[-1] == '\r') {
+				detected_line_term = "\r\n";
+			} else {
+				detected_line_term = "\n";
+			}
+			break;
+		}
+	}
+
 	while (TRUE) {
-		// xxx line_term
+
 		parsed_top_level_json = json_parse(item_start, length, error_buf, &item_start);
 
 		if (parsed_top_level_json == NULL) {
@@ -140,10 +163,16 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 			break;
 		}
 	}
+	if (detected_line_term != NULL) {
+		pstate->detected_line_term = detected_line_term;
+	}
 }
 
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_stdio_json_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_stdio_json_state_t* pstate = pvstate;
+	if (pstate->do_auto_line_term && !pctx->auto_line_term_detected) { // xxx comment
+		pctx->auto_line_term = pstate->detected_line_term;
+	}
 	return sllv_pop(pstate->precords);
 }

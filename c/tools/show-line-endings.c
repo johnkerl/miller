@@ -15,7 +15,7 @@ static int do_stream(FILE* input_stream) {
 			printf(" [CR]");
 			printf("\033[0m");
 		} else if (c == '\n') {
-			printf("\033[31;01m");
+			printf("\033[32;01m"); // xterm green
 			printf(" [LF]\n");
 			printf("\033[0m");
 		} else {

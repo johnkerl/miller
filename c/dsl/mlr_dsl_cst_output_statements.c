@@ -1416,7 +1416,8 @@ static void handle_dump(
 	} else {
 		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE,
 			pvars->json_quote_int_keys, pvars->json_quote_non_string_values,
-			"", pstate->stdfp);
+			"", "\n", // xxx temp line-term
+			pstate->stdfp);
 	}
 
 	if (boxed_xval.is_ephemeral) {
@@ -1448,7 +1449,8 @@ static void handle_dump_to_file(
 	} else if (boxed_xval.xval.pnext_level != NULL) {
 		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE,
 			pvars->json_quote_int_keys, pvars->json_quote_non_string_values,
-			"", outfp);
+			"", "\n", // xxx temp line-term
+			outfp);
 	}
 
 	if (pstate->flush_every_record)
