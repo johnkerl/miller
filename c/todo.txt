@@ -38,7 +38,11 @@ OTHER:
 ================================================================
 AUTOTERM
 
-! default auto into mlrcli.c after modding all lrec-reader impls
+! doc updates x many ! incl. --irs auto.
+
+! libify much in context.c; xxx's; other hygiene
+
+! default auto into mlrcli.c after modding all lrec-reader impls: clean up
 
 ! all dump/print/etc. -- MLR_GLOBALS.default_line_term -- defer to Windows port
   not 5.0.0
@@ -46,15 +50,6 @@ AUTOTERM
 ! oo/lecat UTs
 
 ! xxx neatens / libifies / etc.
-
-* code up this matrix in mlrcli.c:
-  in/out    | default          auto       specified
-  --------- + ---------        ---------- -----------
-  default   | auto/auto        auto/auto  auto/spec
-  auto      | auto/auto        auto/auto  auto/spec
-  specified | LF@*nix;CRLF@Win in=out     spec/spec
-
-* rename auto_irs.. to auto_line_term.. in the code
 
 * irs=auto means:
   ! default to LF@*nix;CFLF@win in case of zero input (e.g. seqgen)
