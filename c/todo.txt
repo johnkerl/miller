@@ -43,6 +43,10 @@ AUTOTERM
 ! all dump/print/etc. -- MLR_GLOBALS.default_line_term -- defer to Windows port
   not 5.0.0
 
+! oo/lecat UTs
+
+! xxx neatens / libifies / etc.
+
 * code up this matrix in mlrcli.c:
   in/out    | default          auto       specified
   --------- + ---------        ---------- -----------
@@ -59,10 +63,8 @@ AUTOTERM
 
   ? input/lrec_reader_mmap_xtab.c
     - needs ifs=auto -> ifs=auto transmutate @ caller
-    - needs autoterm at empty-line-reader logic too
   ? input/lrec_reader_stdio_xtab.c
     - needs ifs=auto -> ifs=auto transmutate @ caller
-    - needs autoterm at empty-line-reader logic too
 
   k input/lrec_reader_mmap_dkvp.c
   k input/lrec_reader_stdio_dkvp.c
@@ -92,7 +94,7 @@ AUTOTERM
   ~ output/lrec_writer_json.c -- manpage re ORS selectable now
   ~ output/lrec_writer_xtab.c -- needs ors=auto -> ofs=auto transmutate @ caller
 
-* json-reader bugfix: on blank-lines file:
+k json-reader bugfix: on blank-lines file:
   mlr: Unable to parse JSON data: Line 5 column 0: Unexpected `0x00` when seeking value
 
 * test w/ join as well
