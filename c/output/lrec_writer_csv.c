@@ -56,11 +56,11 @@ lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, quoting_t oquoting, i
 	pstate->num_header_lines_output = 0LL;
 	pstate->plast_header_output     = NULL;
 
-	plrec_writer->pvstate       = (void*)pstate;
+	plrec_writer->pvstate = (void*)pstate;
 	plrec_writer->pprocess_func = streq(ors, "auto")
 		? lrec_writer_csv_process_auto_ors
 		: lrec_writer_csv_process_nonauto_ors;
-	plrec_writer->pfree_func    = lrec_writer_csv_free;
+	plrec_writer->pfree_func = lrec_writer_csv_free;
 
 	return plrec_writer;
 }
@@ -87,6 +87,7 @@ static void lrec_writer_csv_process(void* pvstate, FILE* output_stream, lrec_t* 
 		return;
 	lrec_writer_csv_state_t* pstate = pvstate;
 	char *ofs = pstate->ofs;
+	int orslen = strlen(ors);
 
 	if (pstate->plast_header_output != NULL) {
 		if (!lrec_keys_equal_list(prec, pstate->plast_header_output)) {
@@ -104,7 +105,7 @@ static void lrec_writer_csv_process(void* pvstate, FILE* output_stream, lrec_t* 
 				if (nf > 0)
 					fputs(ofs, output_stream);
 				pstate->pquoted_output_func(output_stream, pe->key, pstate->ors, pstate->ofs,
-					pstate->orslen, pstate->ofslen, 0);
+					orslen, pstate->ofslen, 0);
 				nf++;
 			}
 			fputs(ors, output_stream);
@@ -118,7 +119,7 @@ static void lrec_writer_csv_process(void* pvstate, FILE* output_stream, lrec_t* 
 		if (nf > 0)
 			fputs(ofs, output_stream);
 		pstate->pquoted_output_func(output_stream, pe->value, pstate->ors, pstate->ofs,
-			pstate->orslen, pstate->ofslen, pe->quote_flags);
+			orslen, pstate->ofslen, pe->quote_flags);
 		nf++;
 	}
 	fputs(ors, output_stream);

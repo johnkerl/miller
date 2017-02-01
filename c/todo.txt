@@ -63,8 +63,10 @@ AUTOTERM
 
   ! input/lrec_reader_mmap_xtab.c
     - needs ifs=auto -> ifs=auto transmutate @ caller
+      mlr --csv --ors auto cat reg_test/input/rfc-csv/quoted-crlf.csv
   ! input/lrec_reader_stdio_xtab.c
     - needs ifs=auto -> ifs=auto transmutate @ caller
+      mlr --csv --ors auto cat < reg_test/input/rfc-csv/quoted-crlf.csv
 
 
   k input/lrec_reader_mmap_csv.c
