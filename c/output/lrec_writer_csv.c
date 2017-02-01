@@ -130,15 +130,21 @@ static void lrec_writer_csv_process(void* pvstate, FILE* output_stream, lrec_t* 
 }
 
 // ----------------------------------------------------------------
-static void quote_all_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags) {
+static void quote_all_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen,
+	char quote_flags)
+{
 	quote_string(fp, string);
 }
 
-static void quote_none_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags) {
+static void quote_none_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen,
+	char quote_flags)
+{
 	fputs(string, fp);
 }
 
-static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags) {
+static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen,
+	char quote_flags)
+{
 	int output_quotes = FALSE;
 	for (char* p = string; *p; p++) {
 		if (streqn(p, ors, orslen) || streqn(p, ofs, ofslen)) {
@@ -157,7 +163,9 @@ static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* o
 	}
 }
 
-static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags) {
+static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen,
+	char quote_flags)
+{
 	double temp;
 	if (mlr_try_float_from_string(string, &temp)) {
 		quote_string(fp, string);
@@ -166,7 +174,9 @@ static void quote_numeric_output_func(FILE* fp, char* string, char* ors, char* o
 	}
 }
 
-static void quote_original_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen, char quote_flags) {
+static void quote_original_output_func(FILE* fp, char* string, char* ors, char* ofs, int orslen, int ofslen,
+	char quote_flags)
+{
 	if (quote_flags & FIELD_QUOTED_ON_INPUT) {
 		quote_string(fp, string);
 	} else {
