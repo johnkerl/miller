@@ -9,6 +9,7 @@ typedef void       quoted_output_func_t(FILE* fp,char*s,char*ors,char*ofs, int o
 static  void      quote_all_output_func(FILE* fp,char*s,char*ors,char*ofs, int orslen,int ofslen, char quote_flags);
 static  void     quote_none_output_func(FILE* fp,char*s,char*ors,char*ofs, int orslen,int ofslen, char quote_flags);
 static  void  quote_minimal_output_func(FILE* fp,char*s,char*ors,char*ofs, int orslen,int ofslen, char quote_flags);
+static  void  quote_minimal_auto_output_func(FILE* fp,char*s,char*ors,char*ofs, int orslen,int ofslen, char qf);
 static  void  quote_numeric_output_func(FILE* fp,char*s,char*ors,char*ofs, int orslen,int ofslen, char quote_flags);
 static  void quote_original_output_func(FILE* fp,char*s,char*ors,char*ofs, int orslen,int ofslen, char quote_flags);
 static void quote_string(FILE* fp, char* string);
@@ -57,9 +58,14 @@ lrec_writer_t* lrec_writer_csv_alloc(char* ors, char* ofs, quoting_t oquoting, i
 	pstate->plast_header_output     = NULL;
 
 	plrec_writer->pvstate = (void*)pstate;
-	plrec_writer->pprocess_func = streq(ors, "auto")
-		? lrec_writer_csv_process_auto_ors
-		: lrec_writer_csv_process_nonauto_ors;
+	if (streq(ors, "auto")) {
+		plrec_writer->pprocess_func = lrec_writer_csv_process_auto_ors;
+		if (oquoting == QUOTE_MINIMAL) {
+			pstate->pquoted_output_func = quote_minimal_auto_output_func;
+		}
+	} else {
+		plrec_writer->pprocess_func = lrec_writer_csv_process_nonauto_ors;
+	}
 	plrec_writer->pfree_func = lrec_writer_csv_free;
 
 	return plrec_writer;
@@ -148,6 +154,27 @@ static void quote_minimal_output_func(FILE* fp, char* string, char* ors, char* o
 	int output_quotes = FALSE;
 	for (char* p = string; *p; p++) {
 		if (streqn(p, ors, orslen) || streqn(p, ofs, ofslen)) {
+			output_quotes = TRUE;
+			break;
+		}
+		if (*p == '"') {
+			output_quotes = TRUE;
+			break;
+		}
+	}
+	if (output_quotes) {
+		quote_string(fp, string);
+	} else {
+		fputs(string, fp);
+	}
+}
+
+static void quote_minimal_auto_output_func(FILE* fp, char* string, char* _, char* ofs, int __, int ofslen,
+	char quote_flags)
+{
+	int output_quotes = FALSE;
+	for (char* p = string; *p; p++) {
+		if (streqn(p, "\n", 1) || streqn(p, "\r\n", 2) || streqn(p, ofs, ofslen)) {
 			output_quotes = TRUE;
 			break;
 		}
