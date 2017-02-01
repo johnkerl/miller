@@ -35,11 +35,12 @@
 
 // AKA "token"
 #define IRS_STRIDX           0x2001
-#define IFS_STRIDX           0x2003
-#define DQUOTE_STRIDX        0x2004
-#define DQUOTE_IRS_STRIDX    0x2005
+#define IFS_STRIDX           0x2002
+#define DQUOTE_STRIDX        0x2003
+#define DQUOTE_IRS_STRIDX    0x2004
+#define DQUOTE_IRS2_STRIDX   0x2005 // alternate line-ending for autodetect LF/CRLF
 #define DQUOTE_IFS_STRIDX    0x2006
-#define DQUOTE_DQUOTE_STRIDX 0x2008
+#define DQUOTE_DQUOTE_STRIDX 0x2007
 
 // ----------------------------------------------------------------
 typedef struct _lrec_reader_mmap_csv_state_t {
@@ -53,6 +54,7 @@ typedef struct _lrec_reader_mmap_csv_state_t {
 	char* ifs;
 	char* dquote;
 	char* dquote_irs;
+	char* dquote_irs2;
 	char* dquote_ifs;
 	char* dquote_eof;
 	char* dquote_dquote;
@@ -100,7 +102,6 @@ lrec_reader_t* lrec_reader_mmap_csv_alloc(char* irs, char* ifs, int use_implicit
 	pstate->ifs_eof       = mlr_paste_2_strings(pstate->ifs, "\xff");
 	pstate->dquote        = "\"";
 
-	pstate->dquote_irs    = mlr_paste_2_strings("\"", pstate->irs);
 	pstate->dquote_ifs    = mlr_paste_2_strings("\"", pstate->ifs);
 	pstate->dquote_eof    = "\"\xff";
 	pstate->dquote_dquote = "\"\"";
@@ -113,7 +114,16 @@ lrec_reader_t* lrec_reader_mmap_csv_alloc(char* irs, char* ifs, int use_implicit
 	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->dquote,  DQUOTE_STRIDX);
 
 	pstate->pdquote_parse_trie = parse_trie_alloc();
-	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_irs,    DQUOTE_IRS_STRIDX);
+	if (pstate->do_auto_line_term) {
+		pstate->dquote_irs  = mlr_paste_2_strings("\"", "\n");
+		pstate->dquote_irs2 = mlr_paste_2_strings("\"", "\r\n");
+		parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_irs,  DQUOTE_IRS_STRIDX);
+		parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_irs2, DQUOTE_IRS2_STRIDX);
+	} else {
+		pstate->dquote_irs  = mlr_paste_2_strings("\"", pstate->irs);
+		pstate->dquote_irs2 = NULL;
+		parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_irs, DQUOTE_IRS_STRIDX);
+	}
 	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_ifs,    DQUOTE_IFS_STRIDX);
 	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_dquote, DQUOTE_DQUOTE_STRIDX);
 
@@ -149,6 +159,7 @@ static void lrec_reader_mmap_csv_free(lrec_reader_t* preader) {
 	sb_free(pstate->psb);
 	free(pstate->ifs_eof);
 	free(pstate->dquote_irs);
+	free(pstate->dquote_irs2);
 	free(pstate->dquote_ifs);
 	free(pstate);
 	free(preader);
@@ -242,6 +253,7 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 						field_done  = TRUE;
 						break;
 					case IRS_STRIDX: // end of record
+					case IRS2_STRIDX: // end of record
 						*e = 0;
 
 						if (pstate->do_auto_line_term) {
@@ -326,7 +338,24 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 						field_done  = TRUE;
 						break;
 					case DQUOTE_IRS_STRIDX: // end of record
+					case DQUOTE_IRS2_STRIDX: // end of record
 						*e = 0;
+
+						if (pstate->do_auto_line_term) {
+							if (e > p && e[-1] == '\r') {
+								e[-1] = 0;
+								if (!pctx->auto_line_term_detected) { // xxx libify this stanza in context.c
+									pctx->auto_line_term = "\r\n";
+									pctx->auto_line_term_detected = TRUE;
+								}
+							} else {
+								if (!pctx->auto_line_term_detected) { // xxx libify this stanza in context.c
+									pctx->auto_line_term = "\n";
+									pctx->auto_line_term_detected = TRUE;
+								}
+							}
+						}
+
 						if (contiguous)
 							rslls_append(pfields, p, NO_FREE, FIELD_QUOTED_ON_INPUT);
 						else
