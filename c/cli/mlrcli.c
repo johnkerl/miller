@@ -384,8 +384,8 @@ static lhmss_t* get_default_rses() {
 //		lhmss_put(singleton_default_rses, "nidx",     "\n",    NO_FREE);
 		lhmss_put(singleton_default_rses, "nidx",     "auto",    NO_FREE);
 
-		char* csv_rs = "\r\n";
-//		char* csv_rs = "auto";
+//		char* csv_rs = "\r\n";
+		char* csv_rs = "auto";
 		char* env_default = getenv("MLR_CSV_DEFAULT_RS");
 		if (env_default != NULL && !streq(env_default, ""))
 			csv_rs = cli_sep_from_arg(env_default);

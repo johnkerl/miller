@@ -57,14 +57,21 @@ AUTOTERM
 * rename auto_irs.. to auto_line_term.. in the code
 
 * irs=auto means:
-  - default to LF@*nix;CFLF@win in case of zero input (e.g. seqgen)
+  ! default to LF@*nix;CFLF@win in case of zero input (e.g. seqgen)
     > add a comment about that in lib/context.c
 
 
-  ? input/lrec_reader_mmap_xtab.c
+  ! input/lrec_reader_mmap_xtab.c
     - needs ifs=auto -> ifs=auto transmutate @ caller
-  ? input/lrec_reader_stdio_xtab.c
+  ! input/lrec_reader_stdio_xtab.c
     - needs ifs=auto -> ifs=auto transmutate @ caller
+
+
+  k input/lrec_reader_mmap_csv.c
+    - dquote output b04k
+  k input/lrec_reader_stdio_csv.c
+    - dquote output b04k
+
 
   k input/lrec_reader_mmap_dkvp.c
   k input/lrec_reader_stdio_dkvp.c
@@ -74,9 +81,6 @@ AUTOTERM
 
   k input/lrec_reader_mmap_csvlite.c
   k input/lrec_reader_stdio_csvlite.c
-
-  k input/lrec_reader_mmap_csv.c
-  k input/lrec_reader_stdio_csv.c
 
   k input/lrec_reader_mmap_json.c
   k input/lrec_reader_stdio_json.c

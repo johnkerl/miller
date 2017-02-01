@@ -253,7 +253,6 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 						field_done  = TRUE;
 						break;
 					case IRS_STRIDX: // end of record
-					case IRS2_STRIDX: // end of record
 						*e = 0;
 
 						if (pstate->do_auto_line_term) {
