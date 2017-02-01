@@ -370,11 +370,12 @@ static lhmsll_t* singleton_default_repeat_ipses = NULL;
 
 static lhmss_t* get_default_rses() {
 	if (singleton_default_rses == NULL) {
-
-// xxx
-
 		singleton_default_rses = lhmss_alloc();
-		lhmss_put(singleton_default_rses, "dkvp",     "\n",    NO_FREE);
+
+// xxx to do
+
+
+//		lhmss_put(singleton_default_rses, "dkvp",     "\n",    NO_FREE);
 		lhmss_put(singleton_default_rses, "json",     "\n",    NO_FREE);
 		lhmss_put(singleton_default_rses, "nidx",     "\n",    NO_FREE);
 		lhmss_put(singleton_default_rses, "csv",      "\r\n",  NO_FREE);
@@ -390,8 +391,7 @@ static lhmss_t* get_default_rses() {
 		lhmss_put(singleton_default_rses, "pprint",   "\n",    NO_FREE);
 		lhmss_put(singleton_default_rses, "xtab",     "(N/A)", NO_FREE);
 
-//		singleton_default_rses = lhmss_alloc();
-//		lhmss_put(singleton_default_rses, "dkvp",     "auto",    NO_FREE);
+		lhmss_put(singleton_default_rses, "dkvp",     "auto",    NO_FREE);
 //		lhmss_put(singleton_default_rses, "json",     "auto",    NO_FREE);
 //		lhmss_put(singleton_default_rses, "nidx",     "auto",    NO_FREE);
 //		lhmss_put(singleton_default_rses, "csv",      "auto",  NO_FREE);
