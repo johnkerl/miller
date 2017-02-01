@@ -56,16 +56,13 @@ AUTOTERM
   - default to LF@*nix;CFLF@win in case of zero input (e.g. seqgen)
     > add a comment about that in lib/context.c
 
+
   ? input/lrec_reader_mmap_xtab.c
     - needs ifs=auto -> ifs=auto transmutate @ caller
     - needs autoterm at empty-line-reader logic too
   ? input/lrec_reader_stdio_xtab.c
     - needs ifs=auto -> ifs=auto transmutate @ caller
     - needs autoterm at empty-line-reader logic too
-
-  ? input/lrec_reader_mmap_json.c
-  ? input/lrec_reader_stdio_json.c
-
 
   k input/lrec_reader_mmap_dkvp.c
   k input/lrec_reader_stdio_dkvp.c
@@ -79,6 +76,8 @@ AUTOTERM
   k input/lrec_reader_mmap_csv.c
   k input/lrec_reader_stdio_csv.c
 
+  k input/lrec_reader_mmap_json.c
+  k input/lrec_reader_stdio_json.c
 
 * ors=auto means:
   k writer API needs pctx

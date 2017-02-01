@@ -79,6 +79,7 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 
 	while (TRUE) {
 		int line_length = 0;
+		// xxx move all this into mlr_get_cline_auto_line_term ?
 		char* line = (pstate->ifslen == 1)
 			? mlr_get_cline_with_length(input_stream, pstate->ifs[0], &line_length)
 			: mlr_get_sline(input_stream, pstate->ifs, pstate->ifslen);
@@ -97,6 +98,10 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 
 		} else if (*line == '\0') {
 			free(line);
+			if (!pctx->auto_line_term_detected) {
+				pctx->auto_line_term_detected = TRUE;
+				pctx->auto_line_term = "\n";
+			}
 			if (pxtab_lines->length > 0) {
 				return (pstate->ipslen == 1)
 					? lrec_parse_stdio_xtab_single_ips(pxtab_lines, pstate->ips[0], pstate->allow_repeat_ips)
@@ -104,14 +109,24 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 						pstate->allow_repeat_ips);
 			}
 
-		// xxx blank with "\r\n" -> "\r"
-		// xxx blank with "\n" -> ""
+		// xxx simplify
+		} else if (line[0] == '\r' && line[1] == '\0') {
+			free(line);
+			if (!pctx->auto_line_term_detected) {
+				pctx->auto_line_term_detected = TRUE;
+				pctx->auto_line_term = "\r\n";
+			}
+			if (pxtab_lines->length > 0) {
+				return (pstate->ipslen == 1)
+					? lrec_parse_stdio_xtab_single_ips(pxtab_lines, pstate->ips[0], pstate->allow_repeat_ips)
+					: lrec_parse_stdio_xtab_multi_ips(pxtab_lines, pstate->ips, pstate->ipslen,
+						pstate->allow_repeat_ips);
+			}
 
 		} else {
 			if (pstate->do_auto_line_term) {
 				// mlr_get_cline_with_length will have already chomped the trailing '\n',
 				// and it won't be included in the line length.
-		// xxx move all this into mlr_get_cline_auto_line_term
 				if (line_length > 0 && line[line_length-1] == '\r') {
 					line[line_length-1] = 0;
 					if (!pctx->auto_line_term_detected) {

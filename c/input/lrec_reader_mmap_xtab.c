@@ -50,7 +50,7 @@ lrec_reader_t* lrec_reader_mmap_xtab_alloc(char* ifs, char* ips, int allow_repea
 		// either case the final character is "\n". Then for autodetect we
 		// simply check if there's a character in the line before the '\n', and
 		// if that is '\r'.
-		pstate->do_auto_line_term   = TRUE;
+		pstate->do_auto_line_term = TRUE;
 		pstate->ifs = "\n";
 		pstate->ifslen = 1;
 		plrec_reader->pprocess_func = (pstate->ipslen == 1)
@@ -126,14 +126,41 @@ static lrec_t* lrec_reader_mmap_xtab_process_multi_ifs_multi_ips(void* pvstate, 
 lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* phandle, char ifs, char ips,
 	int allow_repeat_ips, int do_auto_line_term, context_t* pctx)
 {
-	// xxx autolineterm ....
-	while (phandle->sol < phandle->eof && *phandle->sol == ifs)
-		phandle->sol++;
+	// xxx comment all this
+	if (do_auto_line_term) {
+		while (phandle->sol < phandle->eof) {
+			if (*phandle->sol == '\n') {
+				if (!pctx->auto_line_term_detected) { // xxx funcify @ ctx.c
+					pctx->auto_line_term = "\n";
+					pctx->auto_line_term_detected = TRUE;
+				}
+				phandle->sol += 1;
+			} else if (*phandle->sol == '\r') {
+				char* q = phandle->sol + 1;
+				if (q < phandle->eof && *q == '\n') {
+					if (!pctx->auto_line_term_detected) { // xxx funcify @ ctx.c
+						pctx->auto_line_term = "\r\n";
+						pctx->auto_line_term_detected = TRUE;
+					}
+					phandle->sol += 2;
+				} else {
+					phandle->sol += 1;
+				}
+			} else {
+				break;
+			}
+		}
+	} else {
+		while (phandle->sol < phandle->eof && *phandle->sol == ifs)
+			phandle->sol++;
+	}
 
 	if (phandle->sol >= phandle->eof)
 		return NULL;
 
 	lrec_t* prec = lrec_unbacked_alloc();
+
+	//// xxx printf("ENTER\n");
 
 	// Loop over fields, one per line
 	while (TRUE) {
@@ -145,6 +172,7 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 		// Construct one field
 		int saw_eol = FALSE;
 		for (p = line; p < phandle->eof && *p; ) {
+			//// xxx printf("p %02x %c\n", (unsigned)*p, *p);
 			if (*p == ifs) {
 				*p = 0;
 
@@ -196,9 +224,22 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 			lrec_put(prec, key, copy, FREE_ENTRY_VALUE);
 		}
 
-		if (phandle->sol >= phandle->eof || *phandle->sol == ifs)
+		if (phandle->sol >= phandle->eof)
 			break;
+
+		if (do_auto_line_term) {
+			char* p = phandle->sol;
+			char* q = phandle->sol + 1;
+			if (*p == '\n')
+				break;
+			if (q < phandle->eof && *p == '\r' && *q == '\n')
+				break;
+		} else {
+			if (*phandle->sol == ifs)
+				break;
+		}
 	}
+	//// xxx printf("EXIT\n");
 	if (prec->field_count == 0) {
 		lrec_free(prec);
 		return NULL;
