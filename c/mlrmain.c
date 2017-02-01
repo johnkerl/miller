@@ -24,22 +24,8 @@ int main(int argc, char** argv) {
 	lrec_writer_t* plrec_writer = popts->plrec_writer;
 	slls_t*        filenames    = popts->filenames;
 
-	context_t ctx = {
-		.nr        = 0,
-		.fnr       = 0,
-		.filenum   = 0,
-		.filename  = NULL,
-		.force_eof = FALSE,
-
-		.ips       = popts->reader_opts.ips,
-		.ifs       = popts->reader_opts.ifs,
-		.irs       = popts->reader_opts.irs,
-		.ops       = popts->writer_opts.ops,
-		.ofs       = popts->writer_opts.ofs,
-		.ors       = popts->writer_opts.ors,
-		.auto_line_term = "\n", // xxx Windows default "\r\n"; libify
-		.auto_line_term_detected = FALSE,
-	};
+	context_t ctx;
+	context_init_from_opts(&ctx, popts);
 
 	int ok = do_stream_chained(prepipe, filenames, plrec_reader, pmapper_list, plrec_writer, &ctx, popts);
 

@@ -25,6 +25,7 @@ typedef struct _context_t {
 } context_t;
 
 void context_init_from_first_file_name(context_t* pctx, char* first_file_name);
+void context_init_from_opts(context_t* pctx, void* pvopts);
 void context_print(context_t* pctx, char* indent);
 
 #endif // CONTEXT_H
