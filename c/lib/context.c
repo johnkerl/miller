@@ -1,7 +1,8 @@
 #include <stdio.h>
 #include "lib/context.h"
 
-void context_init(context_t* pctx, char* first_file_name) {
+// ----------------------------------------------------------------
+void context_init_from_first_file_name(context_t* pctx, char* first_file_name) {
 	pctx->nr       = 0;
 	pctx->fnr      = 0;
 	pctx->filenum  = 1;
@@ -10,6 +11,7 @@ void context_init(context_t* pctx, char* first_file_name) {
 	pctx->auto_line_term_detected = 0;
 }
 
+// ----------------------------------------------------------------
 void context_print(context_t* pctx, char* indent) {
 	printf("%spctx at %p:\n", indent, pctx);
 	printf("%s  nr       = %lld\n", indent, pctx->nr);

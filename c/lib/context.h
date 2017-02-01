@@ -24,7 +24,7 @@ typedef struct _context_t {
 	int       auto_line_term_detected;
 } context_t;
 
-void context_init(context_t* pctx, char* first_file_name);
+void context_init_from_first_file_name(context_t* pctx, char* first_file_name);
 void context_print(context_t* pctx, char* indent);
 
 #endif // CONTEXT_H
