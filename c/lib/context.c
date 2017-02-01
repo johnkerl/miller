@@ -1,9 +1,11 @@
 #include <stdio.h>
+#include <string.h>
 #include "lib/context.h"
 #include "cli/mlrcli.h"
 
 // ----------------------------------------------------------------
 void context_init_from_first_file_name(context_t* pctx, char* first_file_name) {
+	memset(pctx, 0, sizeof(context_t));
 	pctx->nr       = 0;
 	pctx->fnr      = 0;
 	pctx->filenum  = 1;
