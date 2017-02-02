@@ -44,8 +44,6 @@ AUTOTERM
   - XTAB: --ifs/--ofs instead of --irs/--ors
   - emph w/ 1st line's ending used for all
 
-! oo/lecat UTs
-
 ================================================================
 UT FOR 5.0.0:
 
