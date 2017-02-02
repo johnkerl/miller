@@ -142,15 +142,9 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 				if (pstate->do_auto_line_term) {
 					if (line_length > 0 && hline[line_length-1] == '\r') {
 						hline[line_length-1] = 0;
-						if (!pctx->auto_line_term_detected) {
-							pctx->auto_line_term_detected = TRUE;
-							pctx->auto_line_term = "\r\n";
-						}
+						context_set_autodetected_crlf(pctx);
 					} else {
-						if (!pctx->auto_line_term_detected) {
-							pctx->auto_line_term_detected = TRUE;
-							pctx->auto_line_term = "\n";
-						}
+						context_set_autodetected_lf(pctx);
 					}
 				}
 
@@ -199,15 +193,9 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 		if (pstate->do_auto_line_term) {
 			if (line_length > 0 && line[line_length-1] == '\r') {
 				line[line_length-1] = 0;
-				if (!pctx->auto_line_term_detected) {
-					pctx->auto_line_term_detected = TRUE;
-					pctx->auto_line_term = "\r\n";
-				}
+				context_set_autodetected_crlf(pctx);
 			} else {
-				if (!pctx->auto_line_term_detected) {
-					pctx->auto_line_term_detected = TRUE;
-					pctx->auto_line_term = "\n";
-				}
+				context_set_autodetected_lf(pctx);
 			}
 		}
 

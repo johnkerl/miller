@@ -98,10 +98,7 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 
 		} else if (*line == '\0') {
 			free(line);
-			if (!pctx->auto_line_term_detected) {
-				pctx->auto_line_term_detected = TRUE;
-				pctx->auto_line_term = "\n";
-			}
+			context_set_autodetected_lf(pctx);
 			if (pxtab_lines->length > 0) {
 				return (pstate->ipslen == 1)
 					? lrec_parse_stdio_xtab_single_ips(pxtab_lines, pstate->ips[0], pstate->allow_repeat_ips)
@@ -112,10 +109,7 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 		// xxx simplify
 		} else if (line[0] == '\r' && line[1] == '\0') {
 			free(line);
-			if (!pctx->auto_line_term_detected) {
-				pctx->auto_line_term_detected = TRUE;
-				pctx->auto_line_term = "\r\n";
-			}
+			context_set_autodetected_crlf(pctx);
 			if (pxtab_lines->length > 0) {
 				return (pstate->ipslen == 1)
 					? lrec_parse_stdio_xtab_single_ips(pxtab_lines, pstate->ips[0], pstate->allow_repeat_ips)
@@ -129,15 +123,9 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 				// and it won't be included in the line length.
 				if (line_length > 0 && line[line_length-1] == '\r') {
 					line[line_length-1] = 0;
-					if (!pctx->auto_line_term_detected) {
-						pctx->auto_line_term_detected = TRUE;
-						pctx->auto_line_term = "\r\n";
-					}
+					context_set_autodetected_crlf(pctx);
 				} else {
-					if (!pctx->auto_line_term_detected) {
-						pctx->auto_line_term_detected = TRUE;
-						pctx->auto_line_term = "\n";
-					}
+					context_set_autodetected_lf(pctx);
 				}
 			}
 			slls_append_with_free(pxtab_lines, line);

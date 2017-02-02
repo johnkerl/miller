@@ -106,15 +106,9 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line
 		// and it won't be included in the line length.
 		if (line_length > 0 && line[line_length-1] == '\r') {
 			line[line_length-1] = 0;
-			if (!pctx->auto_line_term_detected) {
-				pctx->auto_line_term_detected = TRUE;
-				pctx->auto_line_term = "\r\n";
-			}
+			context_set_autodetected_crlf(pctx);
 		} else {
-			if (!pctx->auto_line_term_detected) {
-				pctx->auto_line_term_detected = TRUE;
-				pctx->auto_line_term = "\n";
-			}
+			context_set_autodetected_lf(pctx);
 		}
 
 		return lrec_parse_stdio_dkvp_single_sep(line, pstate->ifs[0], pstate->ips[0], pstate->allow_repeat_ifs);
@@ -136,15 +130,9 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_line_
 		// and it won't be included in the line length.
 		if (line_length > 0 && line[line_length-1] == '\r') {
 			line[line_length-1] = 0;
-			if (!pctx->auto_line_term_detected) {
-				pctx->auto_line_term_detected = TRUE;
-				pctx->auto_line_term = "\r\n";
-			}
+			context_set_autodetected_crlf(pctx);
 		} else {
-			if (!pctx->auto_line_term_detected) {
-				pctx->auto_line_term_detected = TRUE;
-				pctx->auto_line_term = "\n";
-			}
+			context_set_autodetected_lf(pctx);
 		}
 
 		return lrec_parse_stdio_dkvp_multi_sep(line, pstate->ifs, pstate->ips, pstate->ifslen, pstate->ipslen,

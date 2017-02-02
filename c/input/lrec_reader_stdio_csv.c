@@ -295,15 +295,9 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 						if (pstate->do_auto_line_term) {
 							if (field_length > 0 && field[field_length-1] == '\r') {
 								field[field_length-1] = 0;
-								if (!pctx->auto_line_term_detected) {
-									pctx->auto_line_term_detected = TRUE;
-									pctx->auto_line_term = "\r\n";
-								}
+								context_set_autodetected_crlf(pctx);
 							} else {
-								if (!pctx->auto_line_term_detected) {
-									pctx->auto_line_term_detected = TRUE;
-									pctx->auto_line_term = "\n";
-								}
+								context_set_autodetected_lf(pctx);
 							}
 						}
 
@@ -373,15 +367,9 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 						if (pstate->do_auto_line_term) {
 							if (field_length > 0 && field[field_length-1] == '\r') {
 								field[field_length-1] = 0;
-								if (!pctx->auto_line_term_detected) {
-									pctx->auto_line_term_detected = TRUE;
-									pctx->auto_line_term = "\r\n";
-								}
+								context_set_autodetected_crlf(pctx);
 							} else {
-								if (!pctx->auto_line_term_detected) {
-									pctx->auto_line_term_detected = TRUE;
-									pctx->auto_line_term = "\n";
-								}
+								context_set_autodetected_lf(pctx);
 							}
 						}
 

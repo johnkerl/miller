@@ -152,15 +152,9 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 			if (do_auto_line_term) {
 				if (p > line && p[-1] == '\r') {
 					p[-1] = 0;
-					if (!pctx->auto_line_term_detected) {
-						pctx->auto_line_term = "\r\n";
-						pctx->auto_line_term_detected = TRUE;
-					}
+					context_set_autodetected_crlf(pctx);
 				} else {
-					if (!pctx->auto_line_term_detected) {
-						pctx->auto_line_term = "\n";
-						pctx->auto_line_term_detected = TRUE;
-					}
+					context_set_autodetected_lf(pctx);
 				}
 			}
 
@@ -384,15 +378,9 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 			if (do_auto_line_term) {
 				if (p > line && p[-1] == '\r') {
 					p[-1] = 0;
-					if (!pctx->auto_line_term_detected) {
-						pctx->auto_line_term = "\r\n";
-						pctx->auto_line_term_detected = TRUE;
-					}
+					context_set_autodetected_crlf(pctx);
 				} else {
-					if (!pctx->auto_line_term_detected) {
-						pctx->auto_line_term = "\n";
-						pctx->auto_line_term_detected = TRUE;
-					}
+					context_set_autodetected_lf(pctx);
 				}
 			}
 

@@ -263,15 +263,9 @@ static slls_t* lrec_reader_mmap_csvlite_get_header_single_seps(file_reader_mmap_
 			if (pstate->do_auto_line_term) {
 				if (p > phandle->sol && p[-1] == '\r') {
 					p[-1] = 0;
-					if (!pctx->auto_line_term_detected) {
-						pctx->auto_line_term = "\r\n";
-						pctx->auto_line_term_detected = TRUE;
-					}
+					context_set_autodetected_crlf(pctx);
 				} else {
-					if (!pctx->auto_line_term_detected) {
-						pctx->auto_line_term = "\n";
-						pctx->auto_line_term_detected = TRUE;
-					}
+					context_set_autodetected_lf(pctx);
 				}
 			}
 
@@ -396,15 +390,9 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 			if (pstate->do_auto_line_term) {
 				if (p > line && p[-1] == '\r') {
 					p[-1] = 0;
-					if (!pctx->auto_line_term_detected) {
-						pctx->auto_line_term = "\r\n";
-						pctx->auto_line_term_detected = TRUE;
-					}
+					context_set_autodetected_crlf(pctx);
 				} else {
-					if (!pctx->auto_line_term_detected) {
-						pctx->auto_line_term = "\n";
-						pctx->auto_line_term_detected = TRUE;
-					}
+					context_set_autodetected_lf(pctx);
 				}
 			}
 
@@ -598,15 +586,9 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 			if (pstate->do_auto_line_term) {
 				if (p > line && p[-1] == '\r') {
 					p[-1] = 0;
-					if (!pctx->auto_line_term_detected) {
-						pctx->auto_line_term = "\r\n";
-						pctx->auto_line_term_detected = TRUE;
-					}
+					context_set_autodetected_crlf(pctx);
 				} else {
-					if (!pctx->auto_line_term_detected) {
-						pctx->auto_line_term = "\n";
-						pctx->auto_line_term_detected = TRUE;
-					}
+					context_set_autodetected_lf(pctx);
 				}
 			}
 

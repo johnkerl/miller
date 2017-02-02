@@ -26,6 +26,11 @@ typedef struct _context_t {
 
 void context_init_from_first_file_name(context_t* pctx, char* first_file_name);
 void context_init_from_opts(context_t* pctx, void* pvopts);
+
+void context_set_autodetected_crlf(context_t* pctx);
+void context_set_autodetected_lf(context_t* pctx);
+void context_set_autodetected_line_term(context_t* pctx, char* line_term);
+
 void context_print(context_t* pctx, char* indent);
 
 #endif // CONTEXT_H

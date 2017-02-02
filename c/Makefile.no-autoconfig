@@ -85,6 +85,7 @@ TEST_PEEK_FILE_READER_SRCS = \
 
 TEST_LREC_SRCS = \
   lib/mlrutil.c \
+  lib/context.c \
   lib/mlrdatetime.c \
   lib/mlrescape.c \
   lib/mlrregex.c \
@@ -122,6 +123,7 @@ TEST_LREC_SRCS = \
 
 TEST_MULTIPLE_CONTAINERS_SRCS = \
   lib/mlrutil.c \
+  lib/context.c \
   lib/mlrdatetime.c \
   lib/mlrescape.c \
   lib/mlrregex.c \

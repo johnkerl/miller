@@ -51,7 +51,7 @@ lrec_reader_t* lrec_reader_mmap_json_alloc(char* input_json_flatten_separator, c
 	pstate->precords                      = sllv_alloc();
 	pstate->input_json_flatten_separator  = input_json_flatten_separator;
 	pstate->do_auto_line_term             = FALSE;
-	pstate->detected_line_term            = "\n"; // xxx adapt to MLR_GLOBALS.... for Windows port
+	pstate->detected_line_term            = "\n"; // xxx adapt to MLR_GLOBALS/ctx-const for Windows port
 
 	if (streq(line_term, "auto")) {
 		pstate->do_auto_line_term = TRUE;
@@ -127,9 +127,9 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 
 	while (TRUE) {
 
-		// xxx comment: find the first line-ending (if any)
+		// Find the first line-ending sequence (if any): LF or CRLF.
 		if (detected_line_term == NULL) {
-			for (char* p = phandle->sol; p < phandle->eof; p++) { // xxx libify
+			for (char* p = phandle->sol; p < phandle->eof; p++) {
 				if (p[0] == '\n') {
 					if (p > phandle->sol && p[-1] == '\r') {
 						detected_line_term = "\r\n";
@@ -164,7 +164,12 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 			break;
 		length -= (item_start - json_input);
 		json_input = item_start;
-		if (length == 1 && *(char*)json_input == '\n') { // xxx comment
+		// json_parse goes up to the '\r' or '\n' (whichever is found first) on the first
+		// parse, then keeps going from there on the next. E.g. in the CRLF case it
+		// consumes the CR at the end of the first read and consumes the LF at the start
+		// of the second, and so on. After the very last parse, we need to here consume
+		// the final '\n' which is (by itself) a parse error.
+		if (length == 1 && *(char*)json_input == '\n') {
 			break;
 		}
 	}
@@ -176,8 +181,8 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 // ----------------------------------------------------------------
 static lrec_t* lrec_reader_mmap_json_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_mmap_json_state_t* pstate = pvstate;
-	if (pstate->do_auto_line_term && !pctx->auto_line_term_detected) { // xxx comment
-		pctx->auto_line_term = pstate->detected_line_term;
+	if (pstate->do_auto_line_term) {
+		context_set_autodetected_line_term(pctx, pstate->detected_line_term);
 	}
 	return sllv_pop(pstate->precords);
 }

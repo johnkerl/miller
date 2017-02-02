@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include "lib/mlrutil.h"
 #include "lib/context.h"
 #include "cli/mlrcli.h"
 
@@ -11,7 +12,7 @@ void context_init_from_first_file_name(context_t* pctx, char* first_file_name) {
 	pctx->filenum  = 1;
 	pctx->filename = first_file_name;
 	pctx->auto_line_term = "\n"; // xxx default to "\r\n" on Windows
-	pctx->auto_line_term_detected = 0;
+	pctx->auto_line_term_detected = FALSE;
 }
 
 // ----------------------------------------------------------------
@@ -31,7 +32,29 @@ void context_init_from_opts(context_t* pctx, void* pvopts) {
 	pctx->ofs       = popts->writer_opts.ofs;
 	pctx->ors       = popts->writer_opts.ors;
 	pctx->auto_line_term = "\n"; // xxx Windows default "\r\n"; libify
-	pctx->auto_line_term_detected = 0;
+	pctx->auto_line_term_detected = FALSE;
+}
+
+// ----------------------------------------------------------------
+void context_set_autodetected_crlf(context_t* pctx) {
+	if (!pctx->auto_line_term_detected) {
+		pctx->auto_line_term = "\r\n";
+		pctx->auto_line_term_detected = TRUE; // xxx TRUE/FALSE/etc (basics) to a header finer than mlrutil.h
+	}
+}
+
+void context_set_autodetected_lf(context_t* pctx) {
+	if (!pctx->auto_line_term_detected) {
+		pctx->auto_line_term = "\n";
+		pctx->auto_line_term_detected = TRUE;
+	}
+}
+
+void context_set_autodetected_line_term(context_t* pctx, char* line_term) {
+	if (!pctx->auto_line_term_detected) {
+		pctx->auto_line_term = line_term;
+		pctx->auto_line_term_detected = TRUE;
+	}
 }
 
 // ----------------------------------------------------------------

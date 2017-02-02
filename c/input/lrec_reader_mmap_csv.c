@@ -258,15 +258,9 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 						if (pstate->do_auto_line_term) {
 							if (e > p && e[-1] == '\r') {
 								e[-1] = 0;
-								if (!pctx->auto_line_term_detected) { // xxx libify this stanza in context.c
-									pctx->auto_line_term = "\r\n";
-									pctx->auto_line_term_detected = TRUE;
-								}
+								context_set_autodetected_crlf(pctx);
 							} else {
-								if (!pctx->auto_line_term_detected) { // xxx libify this stanza in context.c
-									pctx->auto_line_term = "\n";
-									pctx->auto_line_term_detected = TRUE;
-								}
+								context_set_autodetected_lf(pctx);
 							}
 						}
 
@@ -343,15 +337,9 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 						if (pstate->do_auto_line_term) {
 							if (e > p && e[-1] == '\r') {
 								e[-1] = 0;
-								if (!pctx->auto_line_term_detected) { // xxx libify this stanza in context.c
-									pctx->auto_line_term = "\r\n";
-									pctx->auto_line_term_detected = TRUE;
-								}
+								context_set_autodetected_crlf(pctx);
 							} else {
-								if (!pctx->auto_line_term_detected) { // xxx libify this stanza in context.c
-									pctx->auto_line_term = "\n";
-									pctx->auto_line_term_detected = TRUE;
-								}
+								context_set_autodetected_lf(pctx);
 							}
 						}
 
