@@ -85,18 +85,18 @@ EXTRA_DIST=	\
 		joina.dkvp \
 		joinb.dkvp \
 		json-output-options.dkvp \
-		reg_test/input/line-term-lf.dkvp \
-		reg_test/input/line-term-crlf.dkvp \
-		reg_test/input/line-term-lf.csv \
-		reg_test/input/line-term-crlf.csv \
-		reg_test/input/line-term-lf.json \
-		reg_test/input/line-term-crlf.json \
-		reg_test/input/line-term-lf-wrap.json \
-		reg_test/input/line-term-crlf-wrap.json \
-		reg_test/input/line-term-lf.pprint \
-		reg_test/input/line-term-crlf.pprint \
-		reg_test/input/line-term-lf.xtab \
-		reg_test/input/line-term-crlf.xtab \
+		line-term-lf.dkvp \
+		line-term-crlf.dkvp \
+		line-term-lf.csv \
+		line-term-crlf.csv \
+		line-term-lf.json \
+		line-term-crlf.json \
+		line-term-lf-wrap.json \
+		line-term-crlf-wrap.json \
+		line-term-lf.pprint \
+		line-term-crlf.pprint \
+		line-term-lf.xtab \
+		line-term-crlf.xtab \
 		logi.dkvp \
 		mand.mlr \
 		merge-fields-abxy.dkvp \
