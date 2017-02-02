@@ -160,8 +160,6 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 
 	lrec_t* prec = lrec_unbacked_alloc();
 
-	//// xxx printf("ENTER\n");
-
 	// Loop over fields, one per line
 	while (TRUE) {
 		char* line  = phandle->sol;
@@ -172,7 +170,6 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 		// Construct one field
 		int saw_eol = FALSE;
 		for (p = line; p < phandle->eof && *p; ) {
-			//// xxx printf("p %02x %c\n", (unsigned)*p, *p);
 			if (*p == ifs) {
 				*p = 0;
 
@@ -239,7 +236,6 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 				break;
 		}
 	}
-	//// xxx printf("EXIT\n");
 	if (prec->field_count == 0) {
 		lrec_free(prec);
 		return NULL;
