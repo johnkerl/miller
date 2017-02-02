@@ -11,6 +11,11 @@ void context_init_from_first_file_name(context_t* pctx, char* first_file_name) {
 	pctx->fnr      = 0;
 	pctx->filenum  = 1;
 	pctx->filename = first_file_name;
+	// Line-termination is by default autodetected from input, and the first output
+	// record is produced after the first is read ... except when there *are* no inputs,
+	// e.g. with 'mlr seqgen' or 'mlr put' with (perhaps looped) emit statements. For
+	// those cases, where there is no file input from which to autodetect, we default
+	// the line-termination to the platform-specific default.
 	pctx->auto_line_term = "\n"; // xxx default to "\r\n" on Windows
 	pctx->auto_line_term_detected = FALSE;
 }
