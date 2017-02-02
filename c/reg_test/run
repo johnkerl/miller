@@ -2,7 +2,6 @@
 
 # ================================================================
 set -e
-export MLR_CSV_DEFAULT_RS= # In case set in user's shell
 
 # For building with autoconf:
 # * in-directory build:
@@ -4885,16 +4884,6 @@ announce CSV/RS ENVIRONMENT DEFAULTS
 run_mlr --csv cut -f a $indir/rfc-csv/simple.csv
 run_mlr --csv --rs crlf cut -f a $indir/rfc-csv/simple.csv
 mlr_expect_fail --csv --rs lf cut -f a $indir/rfc-csv/simple.csv
-
-export MLR_CSV_DEFAULT_RS=lf; mlr_expect_fail --csv cut -f a $indir/rfc-csv/simple.csv
-export MLR_CSV_DEFAULT_RS=lf; run_mlr --csv --rs crlf cut -f a $indir/rfc-csv/simple.csv
-export MLR_CSV_DEFAULT_RS=lf; mlr_expect_fail --csv --rs lf cut -f a $indir/rfc-csv/simple.csv
-
-export MLR_CSV_DEFAULT_RS=crlf; run_mlr --csv cut -f a $indir/rfc-csv/simple.csv
-export MLR_CSV_DEFAULT_RS=crlf; run_mlr --csv --rs crlf cut -f a $indir/rfc-csv/simple.csv
-export MLR_CSV_DEFAULT_RS=crlf; mlr_expect_fail --csv --rs lf cut -f a $indir/rfc-csv/simple.csv
-
-export MLR_CSV_DEFAULT_RS=
 
 # ----------------------------------------------------------------
 announce MULTI-CHARACTER IRS/IFS/IPS FOR DKVP

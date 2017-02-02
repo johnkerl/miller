@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2017-01-11
+.\"      Date: 2017-02-02
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2017-01-11" "\ \&" "\ \&"
+.TH "MILLER" "1" "2017-02-02" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -230,7 +230,8 @@ Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
                       --jvstack   Put one key-value pair per line for JSON
                                   output.
                       --jlistwrap Wrap JSON output in outermost [ ].
-                      --jquoteall Quote map values in JSON output, even if they're
+                    --jknquoteint Do not quote non-string map keys in JSON output.
+                     --jvquoteall Quote map values in JSON output, even if they're
                                   numeric.
               --jflatsep {string} Separator for flattening multi-level JSON keys,
                                   e.g. '{"a":{"b":3}}' becomes a:b => 3 for
@@ -240,11 +241,6 @@ Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
 
   Examples: --csv for CSV-formatted input and output; --idkvp --opprint for
   DKVP-formatted input and pretty-printed output.
-
-  PLEASE USE "mlr --csv --rs lf" FOR NATIVE UN*X (LINEFEED-TERMINATED) CSV FILES.
-  You can also have MLR_CSV_DEFAULT_RS=lf in your shell environment, e.g.
-  "export MLR_CSV_DEFAULT_RS=lf" or "setenv MLR_CSV_DEFAULT_RS lf" depending on
-  which shell you use.
 .fi
 .if n \{\
 .RE
@@ -314,11 +310,6 @@ is available for output only.
     platform-native text data. In particular, this means LF line-terminators
     by default on Linux/OSX. You can use "--dkvp --rs crlf" for
     CRLF-terminated DKVP files, and so on.
-  * CSV is intended to handle RFC-4180-compliant data. In particular, this means
-    it uses CRLF line-terminators by default. You can use "--csv --rs lf" for
-    Linux-native CSV files.  You can also have "MLR_CSV_DEFAULT_RS=lf" in your
-    shell environment, e.g.  "export MLR_CSV_DEFAULT_RS=lf" or "setenv
-    MLR_CSV_DEFAULT_RS lf" depending on which shell you use.
   * TSV is simply CSV using tab as field separator ("--fs tab").
   * FS/PS are ignored for markdown format; RS is used.
   * All RS/FS/PS options are ignored for JSON format: JSON doesn't allow
@@ -331,14 +322,14 @@ is available for output only.
       cr crcr newline lf lflf crlf crlfcrlf tab space comma pipe slash colon semicolon equals
   * Default separators by format:
       File format  RS       FS       PS
-      dkvp         \en       ,        =
-      json         (N/A)    (N/A)    (N/A)
-      nidx         \en       space    (N/A)
-      csv          \er\en     ,        (N/A)
-      csvlite      \en       ,        (N/A)
-      markdown     \en       (N/A)    (N/A)
-      pprint       \en       space    (N/A)
-      xtab         (N/A)    \en       space
+      dkvp         auto     ,        =
+      json         auto     (N/A)    (N/A)
+      nidx         auto     space    (N/A)
+      csv          auto     ,        (N/A)
+      csvlite      auto     ,        (N/A)
+      markdown     auto     (N/A)    (N/A)
+      pprint       auto     space    (N/A)
+      xtab         (N/A)    auto     space
 .fi
 .if n \{\
 .RE

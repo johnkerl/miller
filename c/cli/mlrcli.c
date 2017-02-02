@@ -374,11 +374,7 @@ static lhmss_t* get_default_rses() {
 		lhmss_put(singleton_default_rses, "json",     "auto",  NO_FREE);
 		lhmss_put(singleton_default_rses, "nidx",     "auto",  NO_FREE);
 
-		char* csv_rs = "auto";
-		char* env_default = getenv("MLR_CSV_DEFAULT_RS");
-		if (env_default != NULL && !streq(env_default, ""))
-			csv_rs = cli_sep_from_arg(env_default);
-		lhmss_put(singleton_default_rses, "csv",       csv_rs, NO_FREE);
+		lhmss_put(singleton_default_rses, "csv",      "auto",  NO_FREE);
 		lhmss_put(singleton_default_rses, "csvlite",  "auto",  NO_FREE);
 		lhmss_put(singleton_default_rses, "markdown", "auto",  NO_FREE);
 		lhmss_put(singleton_default_rses, "pprint",   "auto",  NO_FREE);
@@ -397,7 +393,7 @@ static lhmss_t* get_default_fses() {
 		lhmss_put(singleton_default_fses, "csvlite",  ",",      NO_FREE);
 		lhmss_put(singleton_default_fses, "markdown", "(N/A)",  NO_FREE);
 		lhmss_put(singleton_default_fses, "pprint",   " ",      NO_FREE);
-		lhmss_put(singleton_default_fses, "xtab",     "\n",     NO_FREE);
+		lhmss_put(singleton_default_fses, "xtab",     "auto",   NO_FREE);
 	}
 	return singleton_default_fses;
 }
@@ -725,11 +721,6 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "\n");
 	fprintf(o, "  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for\n");
 	fprintf(o, "  DKVP-formatted input and pretty-printed output.\n");
-	fprintf(o, "\n");
-	fprintf(o, "  PLEASE USE \"%s --csv --rs lf\" FOR NATIVE UN*X (LINEFEED-TERMINATED) CSV FILES.\n", argv0);
-	fprintf(o, "  You can also have MLR_CSV_DEFAULT_RS=lf in your shell environment, e.g.\n");
-	fprintf(o, "  \"export MLR_CSV_DEFAULT_RS=lf\" or \"setenv MLR_CSV_DEFAULT_RS lf\" depending on\n");
-	fprintf(o, "  which shell you use.\n");
 }
 
 static void main_usage_format_conversion_keystroke_saver_options(FILE* o, char* argv0) {
@@ -785,11 +776,6 @@ static void main_usage_separator_options(FILE* o, char* argv0) {
 	fprintf(o, "    platform-native text data. In particular, this means LF line-terminators\n");
 	fprintf(o, "    by default on Linux/OSX. You can use \"--dkvp --rs crlf\" for\n");
 	fprintf(o, "    CRLF-terminated DKVP files, and so on.\n");
-	fprintf(o, "  * CSV is intended to handle RFC-4180-compliant data. In particular, this means\n");
-	fprintf(o, "    it uses CRLF line-terminators by default. You can use \"--csv --rs lf\" for\n");
-	fprintf(o, "    Linux-native CSV files.  You can also have \"MLR_CSV_DEFAULT_RS=lf\" in your\n");
-	fprintf(o, "    shell environment, e.g.  \"export MLR_CSV_DEFAULT_RS=lf\" or \"setenv\n");
-	fprintf(o, "    MLR_CSV_DEFAULT_RS lf\" depending on which shell you use.\n");
 	fprintf(o, "  * TSV is simply CSV using tab as field separator (\"--fs tab\").\n");
 	fprintf(o, "  * FS/PS are ignored for markdown format; RS is used.\n");
 	fprintf(o, "  * All RS/FS/PS options are ignored for JSON format: JSON doesn't allow\n");

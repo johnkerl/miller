@@ -299,9 +299,9 @@ POKI_INCLUDE_ESCAPED(data/label-example.txt)HERE
 <p/>Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of its header line, you can re-add a header line using <tt>--implicit-csv-header</tt> and <tt>label</tt>:
 
 POKI_RUN_COMMAND{{cat data/headerless.csv}}HERE
-POKI_RUN_COMMAND{{mlr --csv --rs lf --implicit-csv-header cat data/headerless.csv}}HERE
-POKI_RUN_COMMAND{{mlr --csv --rs lf --implicit-csv-header label name,age,status data/headerless.csv}}HERE
-POKI_RUN_COMMAND{{mlr --icsv --rs lf --implicit-csv-header --opprint label name,age,status data/headerless.csv}}HERE
+POKI_RUN_COMMAND{{mlr  --csv --implicit-csv-header cat data/headerless.csv}}HERE
+POKI_RUN_COMMAND{{mlr  --csv --implicit-csv-header label name,age,status data/headerless.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --implicit-csv-header --opprint label name,age,status data/headerless.csv}}HERE
 
 <!-- ================================================================ -->
 <h1>least-frequent</h1>

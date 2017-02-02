@@ -36,24 +36,6 @@ POKI_PUT_LINK_FOR_PAGE(reference.html)HERE.)
 https://tools.ietf.org/html/rfc4180</a>). This includes CRLF line-terminators by default, regardless
 of platform.
 
-<p/>
-<b>
-Please use <tt>mlr --csv --rs lf</tt> for native Un*x (linefeed-terminated) CSV files.
-</b>
-
-<p/>Instead of specifying <tt>--rs lf</tt> on each invocation, you can instead
-have <tt>MLR_CSV_DEFAULT_RS=lf</tt> in your shell environment: e.g. put
-<tt>export MLR_CSV_DEFAULT_RS=lf</tt> in your <tt>~/.bashrc</tt> or
-<tt>~/.zshrc</tt>, or <tt>setenv MLR_CSV_DEFAULT_RS lf</tt> in your
-<tt>~/.cshrc</tt>, as a one-time setup step.
-
-<p/>The RFC says, somewhat briefly, that &ldquo;there may be a header
-line&rdquo;. Miller&rsquo;s <tt>--implicit-csv-header</tt> option allows you to
-read CSV data which lacks a header line, applying column labels <tt>1</tt>,
-<tt>2</tt>, <tt>3</tt>, etc. for you. You may also use Miller&rsquo;s
-<tt>label</tt> to replace those numerical column names with labels of your
-choosing.
-
 <p/>Here are the differences between CSV and CSV-lite:
 
 <ul>

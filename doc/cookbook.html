@@ -322,7 +322,7 @@ a b c,def,g h i
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --csv --rs lf rename -r -g ' ,_'  data/spaces.csv
+$ mlr --csv rename -r -g ' ,_'  data/spaces.csv
 a_b_c,def,g_h_i
 123,4567,890
 2468,1357,3579
@@ -333,7 +333,7 @@ a_b_c,def,g_h_i
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --csv --irs lf --opprint rename -r -g ' ,_'  data/spaces.csv
+$ mlr --csv --opprint rename -r -g ' ,_'  data/spaces.csv
 a_b_c def  g_h_i
 123   4567 890
 2468  1357 3579
@@ -362,7 +362,7 @@ for (oldk,v in $*) {
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv
+$ mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv
 def  a_b_c g_h_i
 4567 123   890
 1357 2468  3579
@@ -393,7 +393,7 @@ Carol,45,present
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --csv --rs lf --implicit-csv-header cat data/headerless.csv
+$ mlr --csv --implicit-csv-header cat data/headerless.csv
 1,2,3
 John,23,present
 Fred,34,present
@@ -405,7 +405,7 @@ Carol,45,present
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --implicit-csv-header --opprint cat data/headerless.csv
+$ mlr --icsv --implicit-csv-header --opprint cat data/headerless.csv
 1     2  3
 John  23 present
 Fred  34 present
@@ -421,7 +421,7 @@ For example:
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --csv --rs lf --implicit-csv-header label name,age,status data/headerless.csv
+$ mlr --csv --implicit-csv-header label name,age,status data/headerless.csv
 name,age,status
 John,23,present
 Fred,34,present
@@ -433,7 +433,7 @@ Carol,45,present
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --rs lf --implicit-csv-header --opprint label name,age,status data/headerless.csv
+$ mlr --icsv --implicit-csv-header --opprint label name,age,status data/headerless.csv
 name  age status
 John  23  present
 Fred  34  present
@@ -607,33 +607,33 @@ $ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
 ' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
 i  o      fcount  seconds_delta
 1  1      1       0
-2  2      3       0.000036001
-3  3      5       0.000014067
-4  5      9       0.000016928
-5  8      15      0.000023127
-6  13     25      0.000033855
-7  21     41      0.000049114
-8  34     67      0.000073910
-9  55     109     0.000118017
-10 89     177     0.000186920
-11 144    287     0.000299215
-12 233    465     0.000472784
-13 377    753     0.000731230
-14 610    1219    0.001174927
-15 987    1973    0.001888990
-16 1597   3193    0.003062963
-17 2584   5167    0.004909039
-18 4181   8361    0.009054899
-19 6765   13529   0.013993025
-20 10946  21891   0.022313118
-21 17711  35421   0.035612822
-22 28657  57313   0.054386139
-23 46368  92735   0.094619989
-24 75025  150049  0.137188911
-25 121393 242785  0.219310045
-26 196418 392835  0.372972965
-27 317811 635621  0.564725161
-28 514229 1028457 0.906754971
+2  2      3       0.000031948
+3  3      5       0.000013113
+4  5      9       0.000015974
+5  8      15      0.000021935
+6  13     25      0.000030994
+7  21     41      0.000045061
+8  34     67      0.000071049
+9  55     109     0.000113010
+10 89     177     0.000178814
+11 144    287     0.000289202
+12 233    465     0.000463009
+13 377    753     0.000734806
+14 610    1219    0.001182079
+15 987    1973    0.001869917
+16 1597   3193    0.003251076
+17 2584   5167    0.005389929
+18 4181   8361    0.008499146
+19 6765   13529   0.014052868
+20 10946  21891   0.024805069
+21 17711  35421   0.038400888
+22 28657  57313   0.061202049
+23 46368  92735   0.093353987
+24 75025  150049  0.147068024
+25 121393 242785  0.288206100
+26 196418 392835  0.395586014
+27 317811 635621  0.595448971
+28 514229 1028457 0.958051920
 </pre>
 </div>
 <p/>
@@ -665,33 +665,33 @@ $ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
 ' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
 i  o      fcount seconds_delta
 1  1      1      0
-2  2      3      0.000036001
-3  3      3      0.000013113
-4  5      3      0.000010967
-5  8      3      0.000010967
-6  13     3      0.000010014
-7  21     3      0.000010014
+2  2      3      0.000037193
+3  3      3      0.000012875
+4  5      3      0.000011921
+5  8      3      0.000011206
+6  13     3      0.000010967
+7  21     3      0.000010967
 8  34     3      0.000010967
-9  55     3      0.000010967
-10 89     3      0.000010014
-11 144    3      0.000010014
-12 233    3      0.000014067
+9  55     3      0.000010014
+10 89     3      0.000013113
+11 144    3      0.000010967
+12 233    3      0.000015020
 13 377    3      0.000010967
 14 610    3      0.000010014
 15 987    3      0.000010967
 16 1597   3      0.000010014
-17 2584   3      0.000010014
+17 2584   3      0.000010967
 18 4181   3      0.000010014
 19 6765   3      0.000010014
-20 10946  3      0.000010014
-21 17711  3      0.000011921
+20 10946  3      0.000010967
+21 17711  3      0.000010014
 22 28657  3      0.000010014
-23 46368  3      0.000012159
-24 75025  3      0.000010967
+23 46368  3      0.000012875
+24 75025  3      0.000012159
 25 121393 3      0.000010014
-26 196418 3      0.000010014
-27 317811 3      0.000010967
-28 514229 3      0.000010014
+26 196418 3      0.000010967
+27 317811 3      0.000010014
+28 514229 3      0.000010967
 </pre>
 </div>
 <p/>
@@ -738,6 +738,16 @@ $ mlr --from data/miss-date.csv --icsv \
   then put '$datestamp = strptime($date, "%Y-%m-%d")' \
   then step -a delta -f datestamp \
 | head
+n=1,date=2012-03-05,qoh=10055,datestamp=1330905600,datestamp_delta=0
+n=2,date=2012-03-06,qoh=10486,datestamp=1330992000,datestamp_delta=86400
+n=3,date=2012-03-07,qoh=10430,datestamp=1331078400,datestamp_delta=86400
+n=4,date=2012-03-08,qoh=10674,datestamp=1331164800,datestamp_delta=86400
+n=5,date=2012-03-09,qoh=10880,datestamp=1331251200,datestamp_delta=86400
+n=6,date=2012-03-10,qoh=10718,datestamp=1331337600,datestamp_delta=86400
+n=7,date=2012-03-11,qoh=10795,datestamp=1331424000,datestamp_delta=86400
+n=8,date=2012-03-12,qoh=11043,datestamp=1331510400,datestamp_delta=86400
+n=9,date=2012-03-13,qoh=11177,datestamp=1331596800,datestamp_delta=86400
+n=10,date=2012-03-14,qoh=11498,datestamp=1331683200,datestamp_delta=86400
 </pre>
 </div>
 <p/>
@@ -752,6 +762,8 @@ $ mlr --from data/miss-date.csv --icsv \
   then put '$datestamp = strptime($date, "%Y-%m-%d")' \
   then step -a delta -f datestamp \
   then filter '$datestamp_delta != 86400 &amp;&amp; $n != 1'
+n=774,date=2014-04-19,qoh=130140,datestamp=1397865600,datestamp_delta=259200
+n=1119,date=2015-03-31,qoh=181625,datestamp=1427760000,datestamp_delta=172800
 </pre>
 </div>
 <p/>
@@ -994,7 +1006,7 @@ following data:
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --itsv --irs lf --opprint cat data/maxrows.tsv
+$ mlr --itsv --opprint cat data/maxrows.tsv
 a      b      n score
 purple red    5 0.743231
 blue   purple 2 0.093710
@@ -1062,7 +1074,7 @@ end {
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --itsv --irs lf --opprint put -q -f data/maxrows.mlr data/maxrows.tsv
+$ mlr --itsv --opprint put -q -f data/maxrows.mlr data/maxrows.tsv
 a      b      n score
 purple red    5 0.743231
 purple red    5 0.389055

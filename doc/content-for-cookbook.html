@@ -51,14 +51,14 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/rect.sh)HERE
 <h1>Bulk rename of field names</h1>
 
 POKI_RUN_COMMAND{{cat data/spaces.csv}}HERE
-POKI_RUN_COMMAND{{mlr --csv --rs lf rename -r -g ' ,_'  data/spaces.csv}}HERE
-POKI_RUN_COMMAND{{mlr --csv --irs lf --opprint rename -r -g ' ,_'  data/spaces.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv rename -r -g ' ,_'  data/spaces.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv --opprint rename -r -g ' ,_'  data/spaces.csv}}HERE
 
 <p/>You can also do this with a for-loop but it puts the modified fields after the unmodified fields:
 
 POKI_RUN_COMMAND{{cat data/bulk-rename-for-loop.mlr}}HERE
 
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv}}HERE
 
 <!-- ================================================================ -->
 <h1>Headerless CSV on input or output</h1>
@@ -69,14 +69,14 @@ POKI_RUN_COMMAND{{cat data/headerless.csv}}HERE
 
 <p/> You can use Miller to add a header: the <tt>--implicit-csv-header</tt> applies positionally indexed labels:
 
-POKI_RUN_COMMAND{{mlr --csv --rs lf --implicit-csv-header cat data/headerless.csv}}HERE
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --implicit-csv-header --opprint cat data/headerless.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv --implicit-csv-header cat data/headerless.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --implicit-csv-header --opprint cat data/headerless.csv}}HERE
 
 <p/> Following that, you can rename the positionally indexed labels to names with meaning for your context.
 For example:
 
-POKI_RUN_COMMAND{{mlr --csv --rs lf --implicit-csv-header label name,age,status data/headerless.csv}}HERE
-POKI_RUN_COMMAND{{mlr --icsv --rs lf --implicit-csv-header --opprint label name,age,status data/headerless.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv --implicit-csv-header label name,age,status data/headerless.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --implicit-csv-header --opprint label name,age,status data/headerless.csv}}HERE
 
 <p/> Likewise, if you need to produce CSV which is lacking its header, you can pipe Miller&rsquo;s output
 to the system command <tt>sed 1d</tt>, or you can use Miller&rsquo;s <tt>--headerless-csv-output</tt> option:
@@ -209,7 +209,7 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/two-pass-record-numbers.sh)HERE
 <p/>The idea is to retain records having the largest value of <tt>n</tt> in the
 following data:
 
-POKI_RUN_COMMAND{{mlr --itsv --irs lf --opprint cat data/maxrows.tsv}}HERE
+POKI_RUN_COMMAND{{mlr --itsv --opprint cat data/maxrows.tsv}}HERE
 
 <p/>Of course, the largest value of <tt>n</tt> isn&rsquo;t known until after
 all data have been read. Using an out-of-stream variable we can retain all
@@ -217,7 +217,7 @@ records as they are read, then filter them at the end:
 
 POKI_RUN_COMMAND{{cat data/maxrows.mlr}}HERE
 
-POKI_RUN_COMMAND{{mlr --itsv --irs lf --opprint put -q -f data/maxrows.mlr data/maxrows.tsv}}HERE
+POKI_RUN_COMMAND{{mlr --itsv --opprint put -q -f data/maxrows.mlr data/maxrows.tsv}}HERE
 
 <!-- ================================================================ -->
 <h1>Filtering paragraphs of text</h1>

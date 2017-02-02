@@ -179,7 +179,7 @@ purple,square,0,91,72.3735,8.2430
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --csv --rs lf cat example.csv
+$ mlr --csv cat example.csv
 color,shape,flag,index,quantity,rate
 yellow,triangle,1,11,43.6498,9.8870
 red,square,1,15,79.2778,0.0130
@@ -200,7 +200,7 @@ purple,square,0,91,72.3735,8.2430
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --opprint cat example.csv
+$ mlr --icsv --opprint cat example.csv
 color  shape    flag index quantity rate
 yellow triangle 1    11    43.6498  9.8870
 red    square   1    15    79.2778  0.0130
@@ -222,7 +222,7 @@ header is included either way:</boldmaroon>
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --csv --rs lf head -n 4 example.csv
+$ mlr --csv head -n 4 example.csv
 color,shape,flag,index,quantity,rate
 yellow,triangle,1,11,43.6498,9.8870
 red,square,1,15,79.2778,0.0130
@@ -234,7 +234,7 @@ red,square,0,48,77.5542,7.4670
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --csv --rs lf tail -n 4 example.csv
+$ mlr --csv tail -n 4 example.csv
 color,shape,flag,index,quantity,rate
 purple,triangle,0,65,80.1405,5.8240
 yellow,circle,1,73,63.9785,4.2370
@@ -250,7 +250,7 @@ numerically descending on another field: </boldmaroon>
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --opprint sort -f shape -nr index example.csv
+$ mlr --icsv --opprint sort -f shape -nr index example.csv
 color  shape    flag index quantity rate
 yellow circle   1    87    63.5058  8.3350
 yellow circle   1    73    63.9785  4.2370
@@ -271,7 +271,7 @@ yellow triangle 1    11    43.6498  9.8870
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --opprint cut -f flag,shape example.csv
+$ mlr --icsv --opprint cut -f flag,shape example.csv
 shape    flag
 triangle 1
 square   1
@@ -292,7 +292,7 @@ square   0
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --opprint cut -o -f flag,shape example.csv
+$ mlr --icsv --opprint cut -o -f flag,shape example.csv
 flag shape
 1    triangle
 1    square
@@ -313,7 +313,7 @@ flag shape
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --opprint cut -x -f flag,shape example.csv
+$ mlr --icsv --opprint cut -x -f flag,shape example.csv
 color  index quantity rate
 yellow 11    43.6498  9.8870
 red    15    79.2778  0.0130
@@ -334,7 +334,7 @@ purple 91    72.3735  8.2430
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --opprint filter '$color == "red"' example.csv
+$ mlr --icsv --opprint filter '$color == "red"' example.csv
 color shape  flag index quantity rate
 red   square 1    15    79.2778  0.0130
 red   circle 1    16    13.8103  2.9010
@@ -346,7 +346,7 @@ red   square 0    64    77.1991  9.5310
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --opprint filter '$color == "red" &amp;&amp; $flag == 1' example.csv
+$ mlr --icsv --opprint filter '$color == "red" &amp;&amp; $flag == 1' example.csv
 color shape  flag index quantity rate
 red   square 1    15    79.2778  0.0130
 red   circle 1    16    13.8103  2.9010
@@ -359,7 +359,7 @@ red   circle 1    16    13.8103  2.9010
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv
+$ mlr --icsv --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv
 color  shape    flag index quantity rate   ratio       color_shape
 yellow triangle 1    11    43.6498  9.8870 4.414868    yellow_triangle
 red    square   1    15    79.2778  0.0130 6098.292308 red_square
@@ -380,7 +380,7 @@ purple square   0    91    72.3735  8.2430 8.779995    purple_square
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' example.csv
+$ mlr --icsv --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' example.csv
 { "color": "yellow", "shape": "TRIANGLE", "flag": 1, "index": 11, "quantity": 43.6498, "rate": 9.8870, "ratio": 4.414868 }
 { "color": "red", "shape": "SQUARE", "flag": 1, "index": 15, "quantity": 79.2778, "rate": 0.0130, "ratio": 6098.292308 }
 { "color": "red", "shape": "CIRCLE", "flag": 1, "index": 16, "quantity": 13.8103, "rate": 2.9010, "ratio": 4.760531 }
@@ -397,7 +397,7 @@ $ mlr --icsv --irs lf --ojson put '$ratio = $quantity/$rate; $shape = toupper($s
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --ojson --jvstack --jlistwrap tail -n 2 example.csv
+$ mlr --icsv --ojson --jvstack --jlistwrap tail -n 2 example.csv
 [
 {
   "color": "yellow",
@@ -428,7 +428,7 @@ value of the <tt>shape</tt> field.</boldmaroon>
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --opprint sort -f shape -nr index then head -n 1 -g shape example.csv
+$ mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv
 color  shape    flag index quantity rate
 yellow circle   1    87    63.5058  8.3350
 purple square   0    91    72.3735  8.2430
@@ -444,7 +444,7 @@ have lots of columns:</boldmaroon>
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
+$ mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
 rate_p0   0.013000
 rate_p10  2.901000
 rate_p25  4.237000
@@ -459,7 +459,7 @@ rate_p100 9.887000
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape
+$ mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape
 shape    quantity_count quantity_min quantity_mean quantity_max
 triangle 3              43.649800    68.339767     81.229000
 square   4              72.373500    76.601150     79.277800
@@ -470,7 +470,7 @@ circle   3              13.810300    47.098200     63.978500
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --irs lf --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color
+$ mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color
 shape    color  quantity_count quantity_min quantity_mean quantity_max
 triangle yellow 1              43.649800    43.649800     43.649800
 square   red    3              77.199100    78.010367     79.277800
@@ -488,7 +488,7 @@ per one or more field names:</boldmaroon>
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --csv --rs lf --from example.csv put -q 'tee &gt; $shape.".csv", $*'
+$ mlr --csv --from example.csv put -q 'tee &gt; $shape.".csv", $*'
 </pre>
 </div>
 <p/>
@@ -590,7 +590,7 @@ different output format.
 
 <p/>I like to produce SQL-query output with header-column and tab delimiter:
 this is CSV but with a tab instead of a comma, also known as TSV. Then I
-post-process with <tt>mlr --tsv --rs lf</tt> or <tt>mlr --tsvlite</tt>.  This
+post-process with <tt>mlr --tsv</tt> or <tt>mlr --tsvlite</tt>.  This
 means I can do some (or all, or none) of my data processing within SQL queries,
 and some (or none, or all) of my data processing using Miller &mdash; whichever
 is most convenient for my needs at the moment.

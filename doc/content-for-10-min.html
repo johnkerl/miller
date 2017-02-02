@@ -8,68 +8,68 @@ POKI_RUN_COMMAND{{cat example.csv}}HERE
 
 <p/><boldmaroon> <tt>mlr cat</tt> is like cat ...</boldmaroon>
 
-POKI_RUN_COMMAND{{mlr --csv --rs lf cat example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv cat example.csv}}HERE
 
 <p/><boldmaroon>... but it can also do format conversion (here, to pretty-printed tabular format): </boldmaroon>
 
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint cat example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint cat example.csv}}HERE
 
 <p/><boldmaroon> <tt>mlr head</tt> and <tt>mlr tail</tt> count records. The CSV
 header is included either way:</boldmaroon>
 
-POKI_RUN_COMMAND{{mlr --csv --rs lf head -n 4 example.csv}}HERE
-POKI_RUN_COMMAND{{mlr --csv --rs lf tail -n 4 example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv head -n 4 example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv tail -n 4 example.csv}}HERE
 
 <p/><boldmaroon> Sort primarily alphabetically on one field, then secondarily
 numerically descending on another field: </boldmaroon>
 
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint sort -f shape -nr index example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f shape -nr index example.csv}}HERE
 
 <p/><boldmaroon> Use <tt>cut</tt> to retain only specified fields, in input-data order:</boldmaroon>
 
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint cut -f flag,shape example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint cut -f flag,shape example.csv}}HERE
 
 <p/><boldmaroon> Use <tt>cut -o</tt> to retain only specified fields, in your specified order:</boldmaroon>
 
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint cut -o -f flag,shape example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint cut -o -f flag,shape example.csv}}HERE
 
 <p/><boldmaroon> Use <tt>cut -x</tt> to omit specified fields:</boldmaroon>
 
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint cut -x -f flag,shape example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint cut -x -f flag,shape example.csv}}HERE
 
 <p/><boldmaroon> Use <tt>filter</tt> to retain specified records:</boldmaroon>
 
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint filter '$color == "red"' example.csv}}HERE
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint filter '$color == "red" && $flag == 1' example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint filter '$color == "red"' example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint filter '$color == "red" && $flag == 1' example.csv}}HERE
 
 <p/><boldmaroon> Use <tt>put</tt> to add/replace fields which are computed from other fields:</boldmaroon>
 
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv}}HERE
 
 <p/><boldmaroon> JSON output:</boldmaroon>
 
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' example.csv}}HERE
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --ojson --jvstack --jlistwrap tail -n 2 example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --ojson --jvstack --jlistwrap tail -n 2 example.csv}}HERE
 
 <p/><boldmaroon> Use <tt>then</tt> to pipe commands together. Also, the
 <tt>-g</tt> option for many Miller commands is for group-by: here,
 <tt>head -n 1 -g shape</tt> outputs the first record for each distinct
 value of the <tt>shape</tt> field.</boldmaroon>
 
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint sort -f shape -nr index then head -n 1 -g shape example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv}}HERE
 
 <p/><boldmaroon> Statistics can be computed with or without group-by field(s). Also, the first of these two
 examples uses <tt>--oxtab</tt> output format which is a nice alternative to <tt>--opprint</tt> when you
 have lots of columns:</boldmaroon>
 
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate}}HERE
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape}}HERE
-POKI_RUN_COMMAND{{mlr --icsv --irs lf --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color}}HERE
 
 <p/><boldmaroon> Using <tt>tee</tt> within <tt>put</tt>, you can split your input data into separate files
 per one or more field names:</boldmaroon>
 
-POKI_RUN_COMMAND{{mlr --csv --rs lf --from example.csv put -q 'tee > $shape.".csv", $*'}}HERE
+POKI_RUN_COMMAND{{mlr --csv --from example.csv put -q 'tee > $shape.".csv", $*'}}HERE
 <table><tr><td>
 POKI_RUN_COMMAND{{cat circle.csv}}HERE
 </td><td>
@@ -137,7 +137,7 @@ different output format.
 
 <p/>I like to produce SQL-query output with header-column and tab delimiter:
 this is CSV but with a tab instead of a comma, also known as TSV. Then I
-post-process with <tt>mlr --tsv --rs lf</tt> or <tt>mlr --tsvlite</tt>.  This
+post-process with <tt>mlr --tsv</tt> or <tt>mlr --tsvlite</tt>.  This
 means I can do some (or all, or none) of my data processing within SQL queries,
 and some (or none, or all) of my data processing using Miller &mdash; whichever
 is most convenient for my needs at the moment.
