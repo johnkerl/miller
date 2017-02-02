@@ -502,8 +502,8 @@ Separator options, for input, output, or both:
     disabled.
   * TSV is simply CSV using tab as field separator ("--fs tab").
   * FS/PS are ignored for markdown format; RS is used.
-  * All RS/FS/PS options are ignored for JSON format: JSON doesn't allow
-    changing these.
+  * All FS and PS options are ignored for JSON format, since they are not relevant
+    to the JSON format.
   * You can specify separators in any of the following ways, shown by example:
     - Type them out, quoting as necessary for shell escapes, e.g.
       "--fs '|' --ips :"
