@@ -222,21 +222,35 @@ OPTIONS
 	 --rs	  --irs     --ors	       Record separators, e.g. 'lf' or '\r\n'
 	 --fs	  --ifs     --ofs  --repifs    Field separators, e.g. comma
 	 --ps	  --ips     --ops	       Pair separators, e.g. equals sign
-	 Notes:
+
+	 Notes about line endings:
+	 * Default line endings (--irs and --ors) are "auto" which means autodetect from
+	   the input file format, as long as the input file(s) have lines ending in either
+	   LF (also known as linefeed, '\n', 0x0a, Unix-style) or CRLF (also known as
+	   carriage-return/linefeed pairs, '\r\n', 0x0d 0x0a, Windows style).
+	 * If both irs and ors are auto (which is the default) then LF input will lead to LF
+	   output and CRLF input will lead to CRLF output, regardless of the platform you're
+	   running on.
+	 * The line-ending autodetector triggers on the first line ending detected in the input
+	   stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
+	   LF-terminated file then autodetected line endings will be CRLF.
+	 * If you use --ors {something else} with (default or explicitly specified) --irs auto
+	   then line endings are autodetected on input and set to what you specify on output.
+	 * If you use --irs {something else} with (default or explicitly specified) --ors auto
+	   then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
 	 * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats
 	   do key-value pairs appear juxtaposed.
+
+	 Notes about all other separators:
 	 * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;
 	   XTAB records are separated by two or more consecutive IFS/OFS -- i.e.
-	   a blank line.
+	   a blank line. Everything above about --irs/--ors/--rs auto becomes --ifs/--ofs/--fs
+	   auto for XTAB format. (XTAB's default IFS/OFS are "auto".)
 	 * OFS must be single-character for PPRINT format. This is because it is used
 	   with repetition for alignment; multi-character separators would make
 	   alignment impossible.
 	 * OPS may be multi-character for XTAB format, in which case alignment is
 	   disabled.
-	 * DKVP, NIDX, CSVLITE, PPRINT, and XTAB formats are intended to handle
-	   platform-native text data. In particular, this means LF line-terminators
-	   by default on Linux/OSX. You can use "--dkvp --rs crlf" for
-	   CRLF-terminated DKVP files, and so on.
 	 * TSV is simply CSV using tab as field separator ("--fs tab").
 	 * FS/PS are ignored for markdown format; RS is used.
 	 * All RS/FS/PS options are ignored for JSON format: JSON doesn't allow
