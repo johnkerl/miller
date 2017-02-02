@@ -128,15 +128,17 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 	while (TRUE) {
 
 		// Find the first line-ending sequence (if any): LF or CRLF.
-		if (detected_line_term == NULL) {
-			for (char* p = phandle->sol; p < phandle->eof; p++) {
-				if (p[0] == '\n') {
-					if (p > phandle->sol && p[-1] == '\r') {
-						detected_line_term = "\r\n";
-					} else {
-						detected_line_term = "\n";
+		if (pstate->do_auto_line_term) {
+			if (detected_line_term == NULL) {
+				for (char* p = phandle->sol; p < phandle->eof; p++) {
+					if (p[0] == '\n') {
+						if (p > phandle->sol && p[-1] == '\r') {
+							detected_line_term = "\r\n";
+						} else {
+							detected_line_term = "\n";
+						}
+						break;
 					}
-					break;
 				}
 			}
 		}

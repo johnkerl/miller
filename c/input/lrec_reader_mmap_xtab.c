@@ -126,8 +126,8 @@ static lrec_t* lrec_reader_mmap_xtab_process_multi_ifs_multi_ips(void* pvstate, 
 lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* phandle, char ifs, char ips,
 	int allow_repeat_ips, int do_auto_line_term, context_t* pctx)
 {
-	// xxx comment all this
 	if (do_auto_line_term) {
+		// Skip over otherwise empty LF-only or CRLF-only lines.
 		while (phandle->sol < phandle->eof) {
 			if (*phandle->sol == '\n') {
 				context_set_autodetected_lf(pctx);
@@ -145,6 +145,7 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 			}
 		}
 	} else {
+		// Skip over otherwise empty IRS-only lines.
 		while (phandle->sol < phandle->eof && *phandle->sol == ifs)
 			phandle->sol++;
 	}
@@ -235,9 +236,29 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phandle, char ifs, char* ips, int ipslen,
 	int allow_repeat_ips, int do_auto_line_term, context_t* pctx)
 {
-	// xxx autolineterm ....
-	while (phandle->sol < phandle->eof && *phandle->sol == ifs)
-		phandle->sol++;
+	if (do_auto_line_term) {
+		// Skip over otherwise empty LF-only or CRLF-only lines.
+		while (phandle->sol < phandle->eof) {
+			if (*phandle->sol == '\n') {
+				context_set_autodetected_lf(pctx);
+				phandle->sol += 1;
+			} else if (*phandle->sol == '\r') {
+				char* q = phandle->sol + 1;
+				if (q < phandle->eof && *q == '\n') {
+					context_set_autodetected_crlf(pctx);
+					phandle->sol += 2;
+				} else {
+					phandle->sol += 1;
+				}
+			} else {
+				break;
+			}
+		}
+	} else {
+		// Skip over otherwise empty IRS-only lines.
+		while (phandle->sol < phandle->eof && *phandle->sol == ifs)
+			phandle->sol++;
+	}
 
 	if (phandle->sol >= phandle->eof)
 		return NULL;

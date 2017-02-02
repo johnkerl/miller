@@ -79,7 +79,6 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 
 	while (TRUE) {
 		int line_length = 0;
-		// xxx move all this into mlr_get_cline_auto_line_term ?
 		char* line = (pstate->ifslen == 1)
 			? mlr_get_cline_with_length(input_stream, pstate->ifs[0], &line_length)
 			: mlr_get_sline(input_stream, pstate->ifs, pstate->ifslen);
@@ -106,7 +105,6 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 						pstate->allow_repeat_ips);
 			}
 
-		// xxx simplify
 		} else if (line[0] == '\r' && line[1] == '\0') {
 			free(line);
 			context_set_autodetected_crlf(pctx);
