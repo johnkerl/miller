@@ -38,13 +38,6 @@ OTHER:
 ================================================================
 AUTOTERM
 
-! BUGFIX:
-  $ mlr --ifs auto --xtab --ips . --ops := cut -x -f b < ./reg_test/input/dots.xtab 
-  a:=1
-  c:=345
-  autodefg:=6
-  hi:=78
-
 ! doc updates x many ! incl. --irs auto.
   - automan etc. re auto; what about --ors auto
   - IRS/ORS variables in the DSL are from autodetect if that is in use

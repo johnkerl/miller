@@ -127,7 +127,7 @@ static void lrec_writer_xtab_process_unaligned(void* pvstate, FILE* output_strea
 		return;
 	lrec_writer_xtab_state_t* pstate = pvstate;
 	if (pstate->record_count > 0LL)
-		fputs(pstate->ofs, output_stream);
+		fputs(ofs, output_stream);
 	pstate->record_count++;
 
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {

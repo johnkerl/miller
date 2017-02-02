@@ -43980,7 +43980,8 @@ hi@@@78
 mlr --no-mmap --xtab --ips . --ops := cut -x -f b ./reg_test/input/dots.xtab
 a:=1
 c:=345
-autodefg:=6
+
+defg:=6
 hi:=78
 
 mlr --xtab --ips :  --ops @@@@ put $sum=int($a+$b) ./reg_test/input/multi-ips.dkvp
