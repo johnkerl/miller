@@ -39,7 +39,7 @@ void context_init_from_opts(context_t* pctx, void* pvopts) {
 void context_set_autodetected_crlf(context_t* pctx) {
 	if (!pctx->auto_line_term_detected) {
 		pctx->auto_line_term = "\r\n";
-		pctx->auto_line_term_detected = TRUE; // xxx TRUE/FALSE/etc (basics) to a header finer than mlrutil.h
+		pctx->auto_line_term_detected = TRUE;
 	}
 }
 

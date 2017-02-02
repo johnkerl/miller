@@ -809,7 +809,6 @@ rval_evaluator_t* rval_evaluator_alloc_from_IFS() {
 
 // ----------------------------------------------------------------
 mv_t rval_evaluator_IRS_func(void* pvstate, variables_t* pvars) {
-	//xxx temp return mv_from_string_no_free(pvars->pctx->irs);
 	context_t* pctx = pvars->pctx;
 	return mv_from_string_no_free(
 		pctx->auto_line_term_detected
@@ -860,8 +859,6 @@ rval_evaluator_t* rval_evaluator_alloc_from_OFS() {
 
 // ----------------------------------------------------------------
 mv_t rval_evaluator_ORS_func(void* pvstate, variables_t* pvars) {
-	// xxx auto line term ...
-	//return mv_from_string_no_free(pvars->pctx->ors);
 	context_t* pctx = pvars->pctx;
 	return mv_from_string_no_free(
 		pctx->auto_line_term_detected

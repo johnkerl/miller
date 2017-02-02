@@ -288,7 +288,6 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 						field_done  = TRUE;
 						break;
 					case IRS_STRIDX: // end of record
-						// xxx auto_line_term
 						field = sb_finish_with_length(psb, &field_length);
 
 						// The line-ending '\n' won't be included in the field buffer.

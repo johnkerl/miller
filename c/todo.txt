@@ -39,6 +39,7 @@ OTHER:
 AUTOTERM
 
 ! doc updates x many ! incl. --irs auto.
+  - IRS/ORS variables in the DSL are from autodetect if that is in use
 
 ! libify much in context.c; xxx's; other hygiene
 

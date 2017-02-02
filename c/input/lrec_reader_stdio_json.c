@@ -47,7 +47,6 @@ static lrec_t* lrec_reader_stdio_json_process(void* pvstate, void* pvhandle, con
 lrec_reader_t* lrec_reader_stdio_json_alloc(char* input_json_flatten_separator, char* line_term) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
-	// xxx auto line term
 	lrec_reader_stdio_json_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_json_state_t));
 	pstate->ptop_level_json_objects      = sllv_alloc();
 	pstate->precords                     = sllv_alloc();
