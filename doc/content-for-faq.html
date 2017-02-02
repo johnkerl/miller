@@ -2,15 +2,7 @@ POKI_PUT_TOC_HERE
 
 <h1>No output at all</h1>
 
-<p/>Check the line-terminators of the data, e.g. with the command-line
-<tt>file</tt> program. Example: for CSV, Miller&rsquo;s default line terminator
-is CR/LF (carriage return followed by linefeed, following
-<a href="https://tools.ietf.org/html/rfc4180">RFC4180</a>). Yet if your CSV has
-*nix-standard LF line endings, Miller will keep reading the file looking for a
-CR/LF which never appears. Solution in this case: tell Miller the input has LF line-terminator, e.g. <b>mlr --csv --rs
-lf {remaining arguments ...}</b>.
-
-<p/>Also try <tt>od -xcv</tt> and/or <tt>cat -e</tt> on your file to check for non-printable characters.
+<p/>Try <tt>od -xcv</tt> and/or <tt>cat -e</tt> on your file to check for non-printable characters.
 
 <h1>Fields not selected</h1>
 
