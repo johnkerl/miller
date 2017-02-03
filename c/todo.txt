@@ -4,39 +4,34 @@ BUGFIXES
 :D
 
 ================================================================
-FEATURE REQUESTS
-
-* strptime/strftime:
-  - strptime w/ fractional seconds. maybe %OS?
-  - strftime: %OS1-%OS9?
-  - use stdlib vers w/ strpokes/hacks, or reimpl stdlib vers?
-  - 1st write a mlrlib vers?!?
-
-================================================================
-OTHER:
-
-* option to inhibit dquot of int map keys on dump
-  ! fix for srec keys !
-
-* expose strcmp & strcasecmp for lhm sorting
-* expose movefirst/movelast funcs
-* mlr sort --fold!
-* mlr paste (sjackman)
-* dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d. make a cliopt.
-
-* poki-run no '$ ' for comment lines
-
-! key point (put at top of ref-dsl, ref-verb, and elsewhere -- esp cover page in bold):
-  there is a DSL so you *can* loop things out w/ variables etc etc etc but also verbs for
-  often-used idioms so you don't *have* to. then show a concise and convincing example.
-
-* 'data prep' <-> 'data cleaning' at covers
-
-================================================================
 UT FOR 5.0.0:
 
-* jknquoteint/jvquoteall x main/put (redo w/ $1)
-* matrix coverage
+? dump w/ no args
+? dump localvar    -- ensure scalar-out is printed > ref only
+? dump oosvar      -- ensure scalar-out is printed > ref only
+? dump full-oosvar -- ensure scalar-out is printed > ref only
+? dump full-srec   -- ensure scalar-out is printed > ref only
+? dump maplit      -- ensure scalar-out is printed > alloc & free the ephemeral
+? dump func-retval -- ensure scalar-out is printed > alloc & free the ephemeral
+
+? emit localvar -- check lashed; UTs          > ref the rhs
+? emit oosvar                                 > ref the rhs
+? emit full oosvar                            > ref the rhs
+? emit mapliteral -- check lashed; UTs        > alloc & free the ephemeral
+? emit func retval                            > alloc & free the ephemeral
+
+? emit-lashed localvar -- check lashed; UTs   > ref the rhs
+? emit-lashed oosvar                          > ref the rhs
+? emit-lashed full oosvar                     > ref the rhs
+? emit-lashed mapliteral -- check lashed; UTs > alloc & free the ephemeral
+? emit-lashed func retval                     > alloc & free the ephemeral
+
+? for-loop over oosvar                        > ref the rhs
+? for-loop over localvar                      > ref the rhs
+? for-loop over func retval                   > alloc & free the ephemeral
+? for-loop over maplit                        > alloc & free the ephemeral
+
+? parameter marshaling in single-rhs-assign-to-map-lhs context
 
 ----------------------------------------------------------------
 COOKBOOK CHECKLIST:
@@ -48,10 +43,10 @@ cook 1:
 * for-records-counts example
 * memoization
 * make this easier:
-  mlr --from segv.tsv --itsvlite --oxtab put 'o=splitnv($b, ","); for (k,v in o) {$["p".k]=v}'
-  mlr --from segv.tsv --itsvlite --oxtab put 'o=splitnv($b, ":"); for (k,v in o) {$["p".k]=v}'
-  mlr --from segv.tsv --itsvlite --oxtab put 'o=splitnv($b, ","); $*=mapsum($*,o)'
-  mlr --from segv.tsv --itsvlite --oxtab put 'o=splitnv($b, ":"); $*=mapsum($*,o)'
+  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ","); for (k,v in o) {$["p".k]=v}'
+  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ":"); for (k,v in o) {$["p".k]=v}'
+  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ","); $*=mapsum($*,o)'
+  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ":"); $*=mapsum($*,o)'
   mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ","); for (k,v in o) {emit mapsum($*, {"fp":v})}'
   mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"fp":v})}'
 
@@ -86,8 +81,18 @@ MAPVAR CHECKLIST:
 
 !!! MT_ERROR vs. fatal vs. skip assign. iron it out!
 
-* movefirst/movelast funcs? as in-place subrs or not?
-* like sort funcs -- as in-place subrs?
+* absent-null map-keys -- do what? document.
+  - mlr: map keys must be of type MT_STRING or MT_INT; got MT_ABSENT.
+  - maybe change to skip-assign, as with assignment statements?
+  - or to (error)?
+
+* more generally, audit error-handling for consistency:
+  - absent/skip
+  - '(error)'
+  - abend
+  - coerce
+  -> doc smoothouts for 5.0.0 incompat notes
+  - e.g. non-string =~ regex: coerce LHS to string?
 
 * consol is/assert impls x 2
 
@@ -103,19 +108,6 @@ MAPVAR CHECKLIST:
 * gross: $*=splitkv(...) results in string keys always. strengthen the typed overlay for filter/put?
   lhmsmv -> mlhmmv?? need to be careful with int-key gets ... char* field_name in many places ...
 
-! sortk sortv sortf
-  -> how to compare map-valued keys on sortv? recurse?
-  -> string keys before/after int?
-  -> keys: int before string before map
-  -> values?
-     o definitely intermix int & float
-     o definitely intermix empty & string
-     o definitely num before string.
-     o definitely maps after that.
-     o what about boolean?
-     o what about error/absent?
-  -> how to incorporate numeric & lexical flags -- defer all complexity to sortf?
-
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
   - copy/ref of keys vs. values in mlhmmv, local_stack, and callees -- ?!?
@@ -129,23 +121,7 @@ MAPVAR CHECKLIST:
   - mapsum-in-mlr UT cases, and valgrind
   - strtok -> strsep throughout
 
-? compile-time checks between locals, fcnargs, fcnretvals -- if unsatisfiable by typing (irrespective
-  of later stream data) then throw at compile time.
-
 * print mapvar; dump scalarvar
-
-* absent-null map-keys -- do what? document.
-  - mlr: map keys must be of type MT_STRING or MT_INT; got MT_ABSENT.
-  - maybe change to skip-assign, as with assignment statements?
-  - or to (error)?
-
-* more generally, audit error-handling for consistency:
-  - absent/skip
-  - '(error)'
-  - abend
-  - coerce
-  -> doc smoothouts for 5.0.0 incompat notes
-  - e.g. non-string =~ regex: coerce LHS to string?
 
 !!?? disallow implicit assignment? force w/ var at least??
   - w/  implicit: for (...) {sum += x} FUBAR
@@ -169,92 +145,11 @@ MAPVAR CHECKLIST:
   o keywords print, dump, emit, for-kv, for-k
   o copy semantics
 
-----------------------------------------------------------------
-MAPVARS UT MATRIX *** matrix
-
-? dump w/ no args
-? dump localvar    -- ensure scalar-out is printed > ref only
-? dump oosvar      -- ensure scalar-out is printed > ref only
-? dump full-oosvar -- ensure scalar-out is printed > ref only
-? dump full-srec   -- ensure scalar-out is printed > ref only
-? dump maplit      -- ensure scalar-out is printed > alloc & free the ephemeral
-? dump func-retval -- ensure scalar-out is printed > alloc & free the ephemeral
-
-? emit localvar -- check lashed; UTs          > ref the rhs
-? emit oosvar                                 > ref the rhs
-? emit full oosvar                            > ref the rhs
-? emit mapliteral -- check lashed; UTs        > alloc & free the ephemeral
-? emit func retval                            > alloc & free the ephemeral
-
-? emit-lashed localvar -- check lashed; UTs   > ref the rhs
-? emit-lashed oosvar                          > ref the rhs
-? emit-lashed full oosvar                     > ref the rhs
-? emit-lashed mapliteral -- check lashed; UTs > alloc & free the ephemeral
-? emit-lashed func retval                     > alloc & free the ephemeral
-
-? for-loop over oosvar                        > ref the rhs
-? for-loop over localvar                      > ref the rhs
-? for-loop over func retval                   > alloc & free the ephemeral
-? for-loop over maplit                        > alloc & free the ephemeral
-
-? parameter marshaling in single-rhs-assign-to-map-lhs context
-
-k assign LHS localvar           from RHS localvar           ref & copy
-k assign LHS localvar           from RHS oosvar             ref & copy
-k assign LHS localvar           from RHS full-oosvar        ref & copy
-k assign LHS localvar           from RHS full-srec          copy elementwise
-k assign LHS localvar           from RHS maplit             alloc ephem & move
-k assign LHS localvar           from RHS func-retval        alloc ephem & move
-
-k assign LHS oosvar             from RHS localvar           ref & copy
-k assign LHS oosvar             from RHS oosvar             ref & copy
-k assign LHS oosvar             from RHS full-oosvar        ref & copy
-k assign LHS oosvar             from RHS full-srec          copy elementwise
-k assign LHS oosvar             from RHS maplit             elloc ephem & move
-k assign LHS oosvar             from RHS func-retval        alloc ephem & move
-
-k assign LHS full-oosvar        from RHS localvar           ref & copy & move
-k assign LHS full-oosvar        from RHS oosvar             ref & copy & move
-k assign LHS full-oosvar        from RHS full-oosvar        no-op
-k assign LHS full-oosvar        from RHS full-srec          copy & move
-k assign LHS full-oosvar        from RHS maplit             alloc ephem & move
-k assign LHS full-oosvar        from RHS func-retval        alloc ephem & move
-
-k assign LHS full-srec          from RHS localvar           ref & copy & move
-k assign LHS full-srec          from RHS oosvar             ref & write elementwise
-k assign LHS full-srec          from RHS full-oosvar        ref & write elementwise
-k assign LHS full-srec          from RHS full-srec          no-op
-k assign LHS full-srec          from RHS maplit             alloc ephem & write elementwise
-k assign LHS full-srec          from RHS func-retval        alloc ephem & move
-
-----------------------------------------------------------------
-EXECUTION TRACE:
-
-! missing operators
-  $ mlr --from ../c/s put -T 'int a=1;var b=a[2]'
-  TRACE (int a 1)
-  TRACE (var b (a 2))
-
-! trace *assignments* (mutations of pvars state)
-
-* work through the grammar & neaten up pnode->text instances, now that these names are user-visible.
-* mld. note it's an AST dump, not source-level.
-* maybe go through and replace (...)-style with AST-to-source formatting ...
-* UT
-! this is all very cute tracing at source-level but would be significantly more useful with values shown.
-
-----------------------------------------------------------------
-SYNTAX ERROR IMPROVEMENT:
-
-* try to get some source-level info in there.
-  http://archive.oreilly.com/pub/a/linux/excerpts/9780596155971/error-reporting-recovery.html
-
 ================================================================
 HYGIENE FOR 5.0.0:
 
 * xxxes
 * valgrinds
-* strtok -> strsep ?
 
 ================================================================
 DOC FOR 5.0.0:
@@ -375,6 +270,12 @@ perf note:
 * C stuff performant w/r/t other compiled langs (put up getlines samples)
 * DSL stuff performant w/r/t ruby/python (mand bench & maybe others)
 
+* 'data prep' <-> 'data cleaning' at covers
+
+! key point (put at top of ref-dsl, ref-verb, and elsewhere -- esp cover page in bold):
+  there is a DSL so you *can* loop things out w/ variables etc etc etc but also verbs for
+  often-used idioms so you don't *have* to. then show a concise and convincing example.
+
 ================================================================
 5.0.0 RELEASE NOTES:
 
@@ -461,6 +362,8 @@ NON-RELEASE:
 
 ! more than 'syntax error' from lemon-parse failures ... lemon API research
 
+* strtok -> strsep ?
+
 * stats1 for strings: min/max/percentiles. note count/mode already work.
   -> how to handle mixed string/number columns ...
 
@@ -491,7 +394,40 @@ NON-RELEASE:
 * bool_t:uchar typedef & perf check?
 
 ================================================================
-5.2.0 MAYBE IDEAS:
+5.2.0 IDEAS:
+
+* strptime/strftime:
+  - strptime w/ fractional seconds. maybe %OS?
+  - strftime: %OS1-%OS9?
+  - use stdlib vers w/ strpokes/hacks, or reimpl stdlib vers?
+  - 1st write a mlrlib vers?!?
+
+* option to inhibit dquot of int map keys on dump
+  ! fix for srec keys !
+
+* expose strcmp & strcasecmp for lhm sorting
+* expose movefirst/movelast funcs
+* mlr sort --fold!
+* mlr paste (sjackman)
+* dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d. make a cliopt.
+
+! sortk sortv sortf
+  -> how to compare map-valued keys on sortv? recurse?
+  -> string keys before/after int?
+  -> keys: int before string before map
+  -> values?
+     o definitely intermix int & float
+     o definitely intermix empty & string
+     o definitely num before string.
+     o definitely maps after that.
+     o what about boolean?
+     o what about error/absent?
+  -> how to incorporate numeric & lexical flags -- defer all complexity to sortf?
+
+? compile-time checks between locals, fcnargs, fcnretvals -- if unsatisfiable by typing (irrespective
+  of later stream data) then throw at compile time.
+
+* poki-run no '$ ' for comment lines
 
 ? maybe some sort of collections-API logic to complement for-loops? important, or just fun to code up?
 
@@ -515,6 +451,28 @@ NON-RELEASE:
 ? array/list types? [a,b,c]
 ? set types? {a,b,c} (vs. map {a:1,b:2,c:3})
 ? maybe overkill (map covers array & set) but with those there would be solid collections coverage.
+
+----------------------------------------------------------------
+EXECUTION TRACE:
+
+! missing operators
+  $ mlr --from ../c/s put -T 'int a=1;var b=a[2]'
+  TRACE (int a 1)
+  TRACE (var b (a 2))
+
+! trace *assignments* (mutations of pvars state)
+
+* work through the grammar & neaten up pnode->text instances, now that these names are user-visible.
+* mld. note it's an AST dump, not source-level.
+* maybe go through and replace (...)-style with AST-to-source formatting ...
+* UT
+! this is all very cute tracing at source-level but would be significantly more useful with values shown.
+
+----------------------------------------------------------------
+SYNTAX ERROR IMPROVEMENT:
+
+* try to get some source-level info in there.
+  http://archive.oreilly.com/pub/a/linux/excerpts/9780596155971/error-reporting-recovery.html
 
 ----------------------------------------------------------------
 ? double-quote-aware (non-lite) nidx & dkvp options?
