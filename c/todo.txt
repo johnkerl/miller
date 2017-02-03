@@ -15,8 +15,6 @@ FEATURE REQUESTS
 ================================================================
 OTHER:
 
-! lecat to tools/fundam
-
 ! termcvt to auxentries
 
 * option to inhibit dquot of int map keys on dump
