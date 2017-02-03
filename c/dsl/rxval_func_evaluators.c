@@ -229,8 +229,8 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_x_mx_func(
 {
 	rxval_evaluator_x_mx_state_t* pstate = mlr_malloc_or_die(sizeof(rxval_evaluator_x_mx_state_t));
 	pstate->pfunc = pfunc;
-	pstate->parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags); // xxx arg ord unif thru api
-	pstate->parg2 = rxval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags); 
+	pstate->parg1 = rxval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
+	pstate->parg2 = rxval_evaluator_alloc_from_ast(parg2_node, pfmgr, type_inferencing, context_flags);
 
 	rxval_evaluator_t* pxevaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
 	pxevaluator->pvstate       = pstate;
