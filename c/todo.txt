@@ -15,8 +15,6 @@ FEATURE REQUESTS
 ================================================================
 OTHER:
 
-! termcvt to auxentries
-
 * option to inhibit dquot of int map keys on dump
   ! fix for srec keys !
 
@@ -39,8 +37,6 @@ UT FOR 5.0.0:
 
 * jknquoteint/jvquoteall x main/put (redo w/ $1)
 * matrix coverage
-
-? UT prog w/ LOCAL_STACK_TRACE & LOCAL_STACK_BOUNDS_CHECK enabled
 
 ----------------------------------------------------------------
 COOKBOOK CHECKLIST:
