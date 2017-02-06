@@ -4,13 +4,19 @@ BUGFIXES
 :D
 
 ================================================================
+5.0.0 RELEASE TO DO:
+
+* UT
+* cookbook
+* other doc
+* mt_error/fatal/skip-assign audit
+* xxxes
+* valgrinds
+* release notes
+
+================================================================
 UT FOR 5.0.0:
 
-? dump w/ no args
-? dump localvar    -- ensure scalar-out is printed > ref only
-? dump oosvar      -- ensure scalar-out is printed > ref only
-? dump full-oosvar -- ensure scalar-out is printed > ref only
-? dump full-srec   -- ensure scalar-out is printed > ref only
 ? dump maplit      -- ensure scalar-out is printed > alloc & free the ephemeral
 ? dump func-retval -- ensure scalar-out is printed > alloc & free the ephemeral
 
@@ -25,11 +31,6 @@ UT FOR 5.0.0:
 ? emit-lashed full oosvar                     > ref the rhs
 ? emit-lashed mapliteral -- check lashed; UTs > alloc & free the ephemeral
 ? emit-lashed func retval                     > alloc & free the ephemeral
-
-? for-loop over oosvar                        > ref the rhs
-? for-loop over localvar                      > ref the rhs
-? for-loop over func retval                   > alloc & free the ephemeral
-? for-loop over maplit                        > alloc & free the ephemeral
 
 ? parameter marshaling in single-rhs-assign-to-map-lhs context
 
