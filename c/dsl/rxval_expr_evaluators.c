@@ -199,6 +199,7 @@ static void rxval_evaluator_from_map_literal_aux(
 			mlhmmv_level_t* pnext_level = mlhmmv_level_put_empty_map(plevel, &mvkey);
 			rxval_evaluator_from_map_literal_aux(pstate, pkvpair->plist_evaluator, pnext_level, pvars);
 		}
+        mv_free(&mvkey);
 	}
 }
 

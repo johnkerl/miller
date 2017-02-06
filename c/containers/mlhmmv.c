@@ -358,12 +358,12 @@ static void mlhmmv_level_init(mlhmmv_level_t *plevel, int length) {
 // ----------------------------------------------------------------
 void mlhmmv_level_free(mlhmmv_level_t* plevel) {
 	for (mlhmmv_level_entry_t* pentry = plevel->phead; pentry != NULL; pentry = pentry->pnext) {
+		mv_free(&pentry->level_key);
 		if (pentry->level_xvalue.is_terminal) {
 			mv_free(&pentry->level_xvalue.terminal_mlrval);
 		} else {
 			mlhmmv_level_free(pentry->level_xvalue.pnext_level);
 		}
-		mv_free(&pentry->level_key);
 	}
 	free(plevel->entries);
 	free(plevel->states);
