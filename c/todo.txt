@@ -123,13 +123,6 @@ MAPVAR CHECKLIST:
 
 * print mapvar; dump scalarvar
 
-!!?? disallow implicit assignment? force w/ var at least??
-  - w/  implicit: for (...) {sum += x} FUBAR
-  - w/o implicit: sad panda cannot type 'x=1'
-  -> at least make an mld:ref note about it.
-
-* perf profile
-
 * man mlr section on maps
   o things which are always maps:
     - maplit
@@ -410,6 +403,13 @@ NON-RELEASE:
 * mlr sort --fold!
 * mlr paste (sjackman)
 * dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d. make a cliopt.
+
+!!?? disallow implicit assignment? force w/ var at least??
+  - w/  implicit: for (...) {sum += x} FUBAR
+  - w/o implicit: sad panda cannot type 'x=1'
+  -> at least make an mld:ref note about it.
+
+* perf profile
 
 ! sortk sortv sortf
   -> how to compare map-valued keys on sortv? recurse?
