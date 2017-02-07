@@ -1416,7 +1416,7 @@ static void handle_dump(
 	} else {
 		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE,
 			pvars->json_quote_int_keys, pvars->json_quote_non_string_values,
-			"", "\n", // xxx temp line-term
+			"", pvars->pctx->auto_line_term,
 			pstate->stdfp);
 	}
 
@@ -1449,7 +1449,7 @@ static void handle_dump_to_file(
 	} else if (boxed_xval.xval.pnext_level != NULL) {
 		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE,
 			pvars->json_quote_int_keys, pvars->json_quote_non_string_values,
-			"", "\n", // xxx temp line-term
+			"", pvars->pctx->auto_line_term,
 			outfp);
 	}
 
