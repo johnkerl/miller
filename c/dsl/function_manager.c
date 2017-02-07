@@ -704,7 +704,7 @@ rval_evaluator_t* fmgr_alloc_provisional_from_operator_or_function_call(fmgr_t* 
 
 	// Remember this callsite to a function which may or may not have been defined yet.
 	// Then later we can resolve them to point to UDF bodies which have been defined.
-	sllv_append(pfmgr->pfunc_callsite_evaluators_to_resolve, pev);
+	fmgr_mark_callsite_to_resolve(pfmgr, pev);
 
 	return pev;
 }
@@ -740,9 +740,18 @@ rxval_evaluator_t* fmgr_xalloc_provisional_from_operator_or_function_call(fmgr_t
 
 	// Remember this callsite to a function which may or may not have been defined yet.
 	// Then later we can resolve them to point to UDF bodies which have been defined.
-	sllv_append(pfmgr->pfunc_callsite_xevaluators_to_resolve, pxev);
+	fmgr_mark_xcallsite_to_resolve(pfmgr, pxev);
 
 	return pxev;
+}
+
+// ----------------------------------------------------------------
+void fmgr_mark_callsite_to_resolve(fmgr_t* pfmgr, rval_evaluator_t* pev) {
+	sllv_append(pfmgr->pfunc_callsite_evaluators_to_resolve, pev);
+}
+
+void fmgr_mark_xcallsite_to_resolve(fmgr_t* pfmgr, rxval_evaluator_t* pxev) {
+	sllv_append(pfmgr->pfunc_callsite_xevaluators_to_resolve, pxev);
 }
 
 // ----------------------------------------------------------------

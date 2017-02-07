@@ -54,7 +54,8 @@ rval_evaluator_t* fmgr_alloc_provisional_from_operator_or_function_call(fmgr_t* 
 rxval_evaluator_t* fmgr_xalloc_provisional_from_operator_or_function_call(fmgr_t* pfmgr, mlr_dsl_ast_node_t* pnode,
 	int type_inferencing, int context_flags);
 
-// xxx make a mark-callsite-for-resolve method
+void fmgr_mark_callsite_to_resolve(fmgr_t* pfmgr, rval_evaluator_t* pev);
+void fmgr_mark_xcallsite_to_resolve(fmgr_t* pfmgr, rxval_evaluator_t* pxev);
 // Update all function callsites to point to UDF bodies, once all the latter have been defined.
 void fmgr_resolve_func_callsites(fmgr_t* pfmgr);
 
