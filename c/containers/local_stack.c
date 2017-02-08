@@ -140,7 +140,7 @@ mv_t local_stack_frame_ref_terminal_from_indexed(local_stack_frame_t* pframe,
 		}
 	}
 	if (pxval != NULL && pxval->is_terminal) {
-		return mv_copy(&pxval->terminal_mlrval);
+		return pxval->terminal_mlrval;
 	} else {
 		return mv_absent();
 	}
