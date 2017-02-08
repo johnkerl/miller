@@ -17,6 +17,12 @@ BUGFIXES
 ================================================================
 UT FOR 5.0.0:
 
+* for-valgrind list of tests all with explicit dot operator to catch string mallocs.
+  - locals, both scalars & with dot-output values in hashmap keys
+  - oosvars, both scalars & with dot-output values in hashmap keys
+
+! along the way clarify ownership semantics in localstack & mlhmmv via function names, & top-of-file comments
+
 ? dump maplit      -- ensure scalar-out is printed > alloc & free the ephemeral
 ? dump func-retval -- ensure scalar-out is printed > alloc & free the ephemeral
 

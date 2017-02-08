@@ -15,6 +15,15 @@
 // A convention shared between the stack-allocator and this data structure is
 // that slot 0 is an absent-null which is used for reads of undefined (or
 // as-yet-undefined) local variables.
+//
+// Values assigned to a local-stack variable are owned by this container.
+// They will be freed:
+// * On overwrite, e.g. on 'x = oldval' then 'x = newval' the oldval
+//   will be freed on the newval assignment, and
+// * At stack-frame exit.
+// For this reason values assigned to locals may be passed in by reference
+// if they are ephemeral, i.e. if it is desired for this container to free
+// them. Otherwise, values should be copied before being passed in.
 // ================================================================
 
 // ================================================================
