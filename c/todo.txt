@@ -13,6 +13,8 @@ BUGFIXES
 * xxxes
 * valgrinds
 * release notes
+* start chain with 'then'
+? median, only if quick (else 5.1.0)
 
 ================================================================
 UT FOR 5.0.0:
