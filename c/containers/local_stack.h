@@ -189,6 +189,11 @@ static inline void local_stack_subframe_exit(local_stack_frame_t* pframe, int co
 	LOCAL_STACK_TRACE(printf("LOCAL STACK SUBFRAME %p EXIT  %d->%d\n",
 		pframe, pframe->subframe_base, pframe->subframe_base-count));
 	pframe->subframe_base -= count;
+	local_stack_frame_entry_t* psubframe = &pframe->pvars[pframe->subframe_base];
+	for (int i = 0; i < count; i++) {
+		local_stack_frame_entry_t* pentry = &psubframe[i];
+		mlhmmv_xvalue_free(&pentry->xvalue);
+	}
 }
 
 // ================================================================
