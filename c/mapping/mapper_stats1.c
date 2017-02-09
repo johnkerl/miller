@@ -76,7 +76,7 @@ static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Example: %s %s -a count,mode -f size\n", argv0, verb);
 	fprintf(o, "Example: %s %s -a count,mode -f size -g shape\n", argv0, verb);
 	fprintf(o, "Notes:\n");
-	fprintf(o, "* p50 is a synonym for median.\n");
+	fprintf(o, "* p50 and median are synonymous.\n");
 	fprintf(o, "* min and max output the same results as p0 and p100, respectively, but use\n");
 	fprintf(o, "  less memory.\n");
 	fprintf(o, "* count and mode allow text input; the rest require numeric input.\n");
