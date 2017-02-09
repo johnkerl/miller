@@ -232,6 +232,12 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 
 	popts->plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
 
+	// Allow then-chains to start with an initial 'then': 'mlr verb1 then verb2 then verb3' or
+	// 'mlr then verb1 then verb2 then verb3'. Particuarly useful in backslashy scripting contexts.
+	if ((argc - argi) >= 1 && streq(argv[argi], "then")) {
+		argi++;
+	}
+
 	if ((argc - argi) < 1) {
 		fprintf(stderr, "%s: no verb supplied.\n", argv[0]);
 		main_usage_short(stderr, argv[0]);
