@@ -70,6 +70,8 @@ stats1_acc_t* make_stats1_acc(char* value_field_name, char* stats1_acc_name, int
 }
 
 int is_percentile_acc_name(char* stats1_acc_name) {
+	if (streq(stats1_acc_name, "median"))
+		return TRUE;
 	double percentile;
 	// sscanf(stats1_acc_name, "p%lf", &percentile) allows "p74x" et al. which isn't ok.
 	if (stats1_acc_name[0] != 'p')
@@ -580,11 +582,17 @@ static void stats1_percentile_ningest(void* pvstate, mv_t* pval) {
 	stats1_percentile_state_t* pstate = pvstate;
 	percentile_keeper_ingest(pstate->ppercentile_keeper, *pval);
 }
+
 static void stats1_percentile_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_percentile_state_t* pstate = pvstate;
-
 	double p;
-	(void)sscanf(stats1_acc_name, "p%lf", &p); // Assuming this was range-checked earlier on to be in [0,100].
+
+	if (stats1_acc_name[0] == 'm') { // Pre-validated to be either p{number} or median.
+		p = 50.0;
+	} else {
+		// TODO: do the sscanf once at alloc time and store the double in the state struct for a minor perf gain.
+		(void)sscanf(stats1_acc_name, "p%lf", &p); // Assuming this was range-checked earlier on to be in [0,100].
+	}
 	mv_t v = pstate->ppercentile_keeper_emitter(pstate->ppercentile_keeper, p);
 	char* s = mv_alloc_format_val(&v);
 	// For this type, one accumulator tracks many stats1_names, but a single value_field_name.
@@ -596,6 +604,7 @@ static void stats1_percentile_emit(void* pvstate, char* value_field_name, char* 
 	}
 	lrec_put(poutrec, mlr_strdup_or_die(output_field_name), s, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 }
+
 static void stats1_percentile_free(stats1_acc_t* pstats1_acc) {
 	stats1_percentile_state_t* pstate = pstats1_acc->pvstate;
 	pstate->reference_count--;

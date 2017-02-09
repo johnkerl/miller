@@ -530,20 +530,20 @@ run_mlr --from $indir/abixy cat then seqgen --start 1 --stop 5
 # ----------------------------------------------------------------
 announce STATS
 
-run_mlr --opprint stats1    -a mean,sum,count,min,max,mode -f i,x,y $indir/abixy
-run_mlr --opprint stats1    -a min,p10,p50,mode,p90,max    -f i,x,y $indir/abixy
-run_mlr --opprint stats1    -a mean,meaneb,stddev          -f i,x,y $indir/abixy
-run_mlr --oxtab   stats1 -s -a mean,sum,count,min,max,mode -f i,x,y $indir/abixy
+run_mlr --opprint stats1    -a mean,sum,count,min,max,mode     -f i,x,y $indir/abixy
+run_mlr --opprint stats1    -a min,p10,p50,median,mode,p90,max -f i,x,y $indir/abixy
+run_mlr --opprint stats1    -a mean,meaneb,stddev              -f i,x,y $indir/abixy
+run_mlr --oxtab   stats1 -s -a mean,sum,count,min,max,mode     -f i,x,y $indir/abixy
 
-run_mlr --opprint stats1    -a mean,sum,count,min,max,mode -f i,x,y -g a $indir/abixy
-run_mlr --opprint stats1    -a min,p10,p50,mode,p90,max    -f i,x,y -g a $indir/abixy
-run_mlr --opprint stats1    -a mean,meaneb,stddev          -f i,x,y -g a $indir/abixy
-run_mlr --oxtab   stats1 -s -a mean,sum,count,min,max,mode -f i,x,y -g a $indir/abixy
+run_mlr --opprint stats1    -a mean,sum,count,min,max,mode     -f i,x,y -g a $indir/abixy
+run_mlr --opprint stats1    -a min,p10,p50,median,mode,p90,max -f i,x,y -g a $indir/abixy
+run_mlr --opprint stats1    -a mean,meaneb,stddev              -f i,x,y -g a $indir/abixy
+run_mlr --oxtab   stats1 -s -a mean,sum,count,min,max,mode     -f i,x,y -g a $indir/abixy
 
-run_mlr --opprint stats1    -a mean,sum,count,min,max,mode -f i,x,y -g a,b $indir/abixy
-run_mlr --opprint stats1    -a min,p10,p50,mode,p90,max    -f i,x,y -g a,b $indir/abixy
-run_mlr --opprint stats1    -a mean,meaneb,stddev          -f i,x,y -g a,b $indir/abixy
-run_mlr --oxtab   stats1 -s -a mean,sum,count,min,max,mode -f i,x,y -g a,b $indir/abixy
+run_mlr --opprint stats1    -a mean,sum,count,min,max,mode     -f i,x,y -g a,b $indir/abixy
+run_mlr --opprint stats1    -a min,p10,p50,median,mode,p90,max -f i,x,y -g a,b $indir/abixy
+run_mlr --opprint stats1    -a mean,meaneb,stddev              -f i,x,y -g a,b $indir/abixy
+run_mlr --oxtab   stats1 -s -a mean,sum,count,min,max,mode     -f i,x,y -g a,b $indir/abixy
 
 run_mlr --oxtab   stats1 -a mean -f x      $indir/abixy-het
 run_mlr --oxtab   stats1 -a mean -f x -g a $indir/abixy-het
