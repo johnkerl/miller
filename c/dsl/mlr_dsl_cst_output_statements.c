@@ -896,6 +896,7 @@ static void record_emitter_from_local_variable(
 				mlhmmv_root_partial_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
 					pstate->do_full_prefixing, oosvar_flatten_separator);
 
+				free(proot_level->entries); // xxx methodize
 				free(proot_level->states); // xxx methodize
 				free(proot_level); // xxx more to free ... needs to be unhacked first.
 			}
@@ -945,6 +946,7 @@ static void record_emitter_from_ephemeral_map(
 			mlhmmv_root_partial_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
 				pstate->do_full_prefixing, oosvar_flatten_separator);
 
+			free(proot_level->entries); // xxx methodize
 			free(proot_level->states); // xxx methodize
 			free(proot_level); // xxx more to free ... needs to be unhacked first.
 		}
