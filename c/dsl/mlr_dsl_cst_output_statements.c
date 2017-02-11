@@ -869,6 +869,10 @@ static void record_emitter_from_local_variable(
 {
 	int keys_all_non_null_or_error = TRUE;
 	sllmv_t* pmvkeys = evaluate_list(pstate->pemit_keylist_evaluators, pvars, &keys_all_non_null_or_error);
+
+	mv_t name = mv_from_string(pstate->localvar_name, NO_FREE);
+	sllmv_prepend_no_free(pmvkeys, &name);
+
 	if (keys_all_non_null_or_error) {
 		int names_all_non_null_or_error = TRUE;
 		sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars,
@@ -882,7 +886,6 @@ static void record_emitter_from_local_variable(
 
 				// xxx this is an unpleasant hack. The idea is to temporarily wrap the localvar
 				// in a parent map whose single key is the variable name.
-				mv_t name = mv_from_string(pstate->localvar_name, NO_FREE);
 
 				// xxx libify
 				mlhmmv_level_t* proot_level = mlhmmv_level_alloc();
@@ -893,7 +896,6 @@ static void record_emitter_from_local_variable(
 				map.root_xvalue.is_terminal = FALSE;
 				map.root_xvalue.terminal_mlrval = mv_absent();
 				map.root_xvalue.pnext_level = proot_level;
-				sllmv_prepend_no_free(pmvkeys, &name);
 
 				mlhmmv_root_partial_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
 					pstate->do_full_prefixing, oosvar_flatten_separator);

@@ -1535,3 +1535,34 @@ void mlhmmv_root_print_json_single_lines(mlhmmv_root_t* pmap, int quote_keys_alw
 		quote_values_always, ostream);
 	fprintf(ostream, "%s", line_term);
 }
+
+// xxx to do
+//// Temporarily wrap the localvar in a parent map whose single key is the variable name.
+//void mlhmmv_named_level_to_lrecs(
+//	sllmv_t*         pmvkeys,
+//	sllmv_t*         pmvnames,
+//	mv_t*            pname,
+//	xxx              pmvnames,
+//	mlhmmv_xvalue_t* pxval,
+//	sllv_t*          poutrecs,
+//	int              do_full_prefixing,
+//	char*            oosvar_flatten_separator)
+//{
+//	mlhmmv_root_t* pmap = mlhmmv_root_alloc();
+//	mlhmmv_level_put_xvalue_singly_keyed(pmap->root_xvalue.proot_level, &name, pmval);
+//
+//	mlhmmv_root_partial_to_lrecs(pmap, pmvkeys, pmvnames, poutrecs,
+//		pstate->do_full_prefixing, oosvar_flatten_separator);
+//
+//	mlhmmv_level_unreference_single_key(pmap->root_xvalue.proot_level);
+//
+//	mlhmmv_root_free(pmap);
+//}
+//
+//void mlhmmv_level_unreference_single_key(mlhmmv_t* plevel) {
+//	mlhmmv_level_entry_t* pentry = plevel->phead;
+//	mv_free(&pentry->level_key);
+//	plevel->phead = NULL;
+//	plevel->tail = NULL;
+//	plevel->num_occupied = 0;
+//}
