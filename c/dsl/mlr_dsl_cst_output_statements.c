@@ -883,27 +883,13 @@ static void record_emitter_from_local_variable(
 			mlhmmv_xvalue_t* pmval = local_stack_frame_ref_extended_from_indexed(pframe,
 				pstate->localvar_frame_relative_index, NULL);
 			if (pmval != NULL) {
+				// Temporarily wrap the localvar in a parent map whose single key is the variable name.
+				mlhmmv_root_t* pmap = mlhmmv_wrap_name_and_xvalue(&name, pmval);
 
-				// xxx this is an unpleasant hack. The idea is to temporarily wrap the localvar
-				// in a parent map whose single key is the variable name.
-
-				// xxx libify
-				mlhmmv_level_t* proot_level = mlhmmv_level_alloc();
-
-				mlhmmv_level_put_xvalue_singly_keyed(proot_level, &name, pmval);
-
-				mlhmmv_root_t map;
-				map.root_xvalue.is_terminal = FALSE;
-				map.root_xvalue.terminal_mlrval = mv_absent();
-				map.root_xvalue.pnext_level = proot_level;
-
-				mlhmmv_root_partial_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
+				mlhmmv_root_partial_to_lrecs(pmap, pmvkeys, pmvnames, poutrecs,
 					pstate->do_full_prefixing, oosvar_flatten_separator);
 
-				// xxx not: mlhmmv_level_free(proot_level);
-				free(proot_level->entries); // xxx methodize
-				free(proot_level->states); // xxx methodize
-				free(proot_level); // xxx more to free ... needs to be unhacked first.
+				mlhmmv_unwrap_name_and_xvalue(pmap);
 			}
 		}
 		sllmv_free(pmvnames);
@@ -935,28 +921,16 @@ static void record_emitter_from_ephemeral_map(
 		sllmv_t* pmvnames = evaluate_list(pstate->pemit_namelist_evaluators, pvars,
 			&names_all_non_null_or_error);
 		if (names_all_non_null_or_error) {
-
-			// xxx this is an unpleasant hack. The idea is to temporarily wrap the localvar
-			// in a parent map whose single key is the variable name.
 			mv_t name = mv_from_string("_", NO_FREE);
-
-			mlhmmv_level_t* proot_level = mlhmmv_level_alloc();
-
-			mlhmmv_level_put_xvalue_singly_keyed(proot_level, &name, &boxed_xval.xval);
-
-			mlhmmv_root_t map;
-			map.root_xvalue.is_terminal = FALSE;
-			map.root_xvalue.terminal_mlrval = mv_absent();
-			map.root_xvalue.pnext_level = proot_level;
 			sllmv_prepend_no_free(pmvkeys, &name);
 
-			mlhmmv_root_partial_to_lrecs(&map, pmvkeys, pmvnames, poutrecs,
+			// Temporarily wrap the localvar in a parent map whose single key is the variable name.
+			mlhmmv_root_t* pmap = mlhmmv_wrap_name_and_xvalue(&name, &boxed_xval.xval);
+
+			mlhmmv_root_partial_to_lrecs(pmap, pmvkeys, pmvnames, poutrecs,
 				pstate->do_full_prefixing, oosvar_flatten_separator);
 
-			// xxx not: mlhmmv_level_free(proot_level);
-			free(proot_level->entries); // xxx methodize
-			free(proot_level->states); // xxx methodize
-			free(proot_level); // xxx more to free ... needs to be unhacked first.
+			mlhmmv_unwrap_name_and_xvalue(pmap);
 		}
 		sllmv_free(pmvnames);
 	}

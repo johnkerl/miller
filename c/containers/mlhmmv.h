@@ -305,4 +305,13 @@ void mlhmmv_root_print_json_stacked(mlhmmv_root_t* pmap,
 void mlhmmv_root_print_json_single_lines(mlhmmv_root_t* pmap, int quote_keys_always, int quote_values_always,
 	char* line_term, FILE* ostream);
 
+// Used for emit of localvars. Puts the xvalue in a single-key-value-pair map
+// keyed by the specified name. The xvalue is referenced, not copied.
+mlhmmv_root_t* mlhmmv_wrap_name_and_xvalue(mv_t* pname, mlhmmv_xvalue_t* pxval);
+
+// Used for takedown of the temporary map returned by mlhmmv_wrap_name_and_xvalue. Since the xvalue there
+// is referenced, not copied, mlhmmv_xvalue_free would prematurely free the xvalue. This method releases
+// the xvalue so that the remaining, map-internal structures can be freed correctly.
+void mlhmmv_unwrap_name_and_xvalue(mlhmmv_root_t* pmap);
+
 #endif // MLHMMV_H
