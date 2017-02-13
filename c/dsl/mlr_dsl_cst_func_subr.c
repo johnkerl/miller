@@ -142,7 +142,7 @@ void mlr_dsl_cst_free_udf(cst_udf_state_t* pstate, context_t* pctx) {
 static boxed_xval_t cst_udf_process_callback(void* pvstate, int arity, boxed_xval_t* args, variables_t* pvars) {
 	cst_udf_state_t* pstate = pvstate;
 	cst_top_level_statement_block_t* ptop_level_block = pstate->ptop_level_block;
-	mlhmmv_xvalue_t retval = mlhmmv_xvalue_wrap_terminal(mv_absent());
+	boxed_xval_t retval = box_ephemeral_val(mv_absent());
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// Push stack and bind parameters to arguments
@@ -180,9 +180,9 @@ static boxed_xval_t cst_udf_process_callback(void* pvstate, int arity, boxed_xva
 			if (pvars->return_state.returned) {
 				retval = pvars->return_state.retval;
 				if (pstate->return_value_type_mask != TYPE_MASK_ANY) {
-					cst_udf_type_check_return_value(pstate, &retval);
+					cst_udf_type_check_return_value(pstate, &retval.xval);
 				}
-				pvars->return_state.retval = mlhmmv_xvalue_wrap_terminal(mv_absent());
+				pvars->return_state.retval = box_ephemeral_val(mv_absent());
 				pvars->return_state.returned = FALSE;
 				break;
 			}
@@ -198,9 +198,9 @@ static boxed_xval_t cst_udf_process_callback(void* pvstate, int arity, boxed_xva
 			if (pvars->return_state.returned) {
 				retval = pvars->return_state.retval;
 				if (pstate->return_value_type_mask != TYPE_MASK_ANY) {
-					cst_udf_type_check_return_value(pstate, &retval);
+					cst_udf_type_check_return_value(pstate, &retval.xval);
 				}
-				pvars->return_state.retval = mlhmmv_xvalue_wrap_terminal(mv_absent());
+				pvars->return_state.retval = box_ephemeral_val(mv_absent());
 				pvars->return_state.returned = FALSE;
 				break;
 			}
@@ -209,7 +209,7 @@ static boxed_xval_t cst_udf_process_callback(void* pvstate, int arity, boxed_xva
 
 	if (!pvars->return_state.returned) {
 		if (pstate->return_value_type_mask != TYPE_MASK_ANY) {
-			cst_udf_type_check_return_value(pstate, &retval);
+			cst_udf_type_check_return_value(pstate, &retval.xval);
 		}
 	}
 
@@ -218,7 +218,7 @@ static boxed_xval_t cst_udf_process_callback(void* pvstate, int arity, boxed_xva
 	local_stack_subframe_exit(pframe, ptop_level_block->pblock->subframe_var_count);
 	local_stack_frame_exit(local_stack_pop(pvars->plocal_stack));
 
-	return box_ephemeral_xval(retval); // xxx check ephemeral, once these are boxed through the call chain
+	return retval;
 }
 
 static void cst_udf_type_check_return_value(cst_udf_state_t* pstate, mlhmmv_xvalue_t* pretval) {

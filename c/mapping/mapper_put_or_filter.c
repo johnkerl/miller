@@ -504,7 +504,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.ploop_stack      = pstate->ploop_stack,
 			.return_state = {
 				.returned = FALSE,
-				.retval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
+				.retval = box_ephemeral_val(mv_absent()),
 			},
 			.trace_execution              = pstate->trace_execution,
 			.json_quote_int_keys          = pstate->pwriter_opts->json_quote_int_keys,
@@ -535,7 +535,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.ploop_stack      = pstate->ploop_stack,
 			.return_state = {
 				.returned = FALSE,
-				.retval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
+				.retval = box_ephemeral_val(mv_absent()),
 			},
 			.trace_execution              = pstate->trace_execution,
 			.json_quote_int_keys          = pstate->pwriter_opts->json_quote_int_keys,
@@ -570,7 +570,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 		.ploop_stack      = pstate->ploop_stack,
 		.return_state = {
 			.returned = FALSE,
-			.retval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
+			.retval = box_ephemeral_val(mv_absent()),
 		},
 		.trace_execution              = pstate->trace_execution,
 		.json_quote_int_keys          = pstate->pwriter_opts->json_quote_int_keys,

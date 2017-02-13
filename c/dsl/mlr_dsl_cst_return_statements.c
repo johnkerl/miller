@@ -39,13 +39,14 @@ static void return_value_func(
 {
 	return_value_state_t* pstate = pstatement->pvstate;
 	rxval_evaluator_t* pxev = pstate->preturn_value_xevaluator;
-	// xxx modify the API to box the retval throughout the call-chain
-	boxed_xval_t boxed_retval = pxev->pprocess_func(pxev->pvstate, pvars);
-	if (boxed_retval.is_ephemeral) {
-		pvars->return_state.retval = boxed_retval.xval;
+	boxed_xval_t retval = pxev->pprocess_func(pxev->pvstate, pvars);
+
+	if (retval.is_ephemeral) {
+		pvars->return_state.retval = retval;
 	} else {
-		pvars->return_state.retval = mlhmmv_xvalue_copy(&boxed_retval.xval);
+		pvars->return_state.retval = box_ephemeral_xval(mlhmmv_xvalue_copy(&retval.xval));
 	}
+
 	pvars->return_state.returned = TRUE;
 }
 

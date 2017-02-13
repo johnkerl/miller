@@ -4,7 +4,7 @@
 #include "containers/mlhmmv.h"
 
 typedef struct _return_state_t {
-	mlhmmv_xvalue_t retval;
+	boxed_xval_t retval;
 	int returned;
 } return_state_t;
 
