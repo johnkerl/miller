@@ -52,14 +52,8 @@ static int do_stream_chained_in_place(char* prepipe, slls_t* filenames, sllv_t* 
 	// Read from each file name in turn
 	for (sllse_t* pe = filenames->phead; pe != NULL; pe = pe->pnext) {
 
+		lrec_reader_t* plrec_reader = lrec_reader_alloc_or_die(&popts->reader_opts);
 		lrec_writer_t* plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
-		lrec_reader_t* plrec_reader = lrec_reader_alloc(&popts->reader_opts);
-		if (plrec_reader == NULL) { // xxx funcify
-			fprintf(stderr, "%s: unrecognized input-file format \"%s\".\n",
-				MLR_GLOBALS.bargv0, popts->reader_opts.ifile_fmt);
-			// xxx main_usage_short(stderr, MLR_GLOBALS.bargv0);
-			exit(1);
-		}
 
 		char* filename = pe->value;
 
@@ -111,14 +105,8 @@ static int do_stream_chained_to_stdout(char* prepipe, slls_t* filenames, sllv_t*
 {
 	FILE* output_stream = stdout;
 
+	lrec_reader_t* plrec_reader = lrec_reader_alloc_or_die(&popts->reader_opts);
 	lrec_writer_t* plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
-	lrec_reader_t* plrec_reader = lrec_reader_alloc(&popts->reader_opts);
-	if (plrec_reader == NULL) { // xxx funcify
-		fprintf(stderr, "%s: unrecognized input-file format \"%s\".\n",
-			MLR_GLOBALS.bargv0, popts->reader_opts.ifile_fmt);
-		// xxx main_usage_short(stderr, MLR_GLOBALS.bargv0);
-		exit(1);
-	}
 
 	MLR_INTERNAL_CODING_ERROR_IF(pmapper_list->length < 1); // Should not have been allowed by the CLI parser.
 
