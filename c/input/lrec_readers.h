@@ -7,6 +7,7 @@
 // Primary entry points
 
 lrec_reader_t*  lrec_reader_alloc(cli_reader_opts_t* popts);
+lrec_reader_t*  lrec_reader_alloc_or_die(cli_reader_opts_t* popts);
 
 lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs, int use_implicit_header);
 lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implicit_header);

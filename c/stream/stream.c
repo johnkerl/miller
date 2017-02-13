@@ -53,12 +53,6 @@ static int do_stream_chained_in_place(char* prepipe, slls_t* filenames, sllv_t* 
 	for (sllse_t* pe = filenames->phead; pe != NULL; pe = pe->pnext) {
 
 		lrec_writer_t* plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
-		if (plrec_writer == NULL) { // xxx funcify
-			fprintf(stderr, "%s: unrecognized output-file format \"%s\".\n",
-				MLR_GLOBALS.bargv0, popts->writer_opts.ofile_fmt);
-			// xxx main_usage_short(stderr, MLR_GLOBALS.bargv0);
-			exit(1);
-		}
 		lrec_reader_t* plrec_reader = lrec_reader_alloc(&popts->reader_opts);
 		if (plrec_reader == NULL) { // xxx funcify
 			fprintf(stderr, "%s: unrecognized input-file format \"%s\".\n",
@@ -118,12 +112,6 @@ static int do_stream_chained_to_stdout(char* prepipe, slls_t* filenames, sllv_t*
 	FILE* output_stream = stdout;
 
 	lrec_writer_t* plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
-	if (plrec_writer == NULL) { // xxx funcify
-		fprintf(stderr, "%s: unrecognized output-file format \"%s\".\n",
-			MLR_GLOBALS.bargv0, popts->writer_opts.ofile_fmt);
-		// xxx main_usage_short(stderr, MLR_GLOBALS.bargv0);
-		exit(1);
-	}
 	lrec_reader_t* plrec_reader = lrec_reader_alloc(&popts->reader_opts);
 	if (plrec_reader == NULL) { // xxx funcify
 		fprintf(stderr, "%s: unrecognized input-file format \"%s\".\n",

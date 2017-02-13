@@ -40,3 +40,13 @@ lrec_reader_t*  lrec_reader_alloc(cli_reader_opts_t* popts) {
 		return NULL;
 	}
 }
+
+lrec_reader_t* lrec_reader_alloc_or_die(cli_reader_opts_t* popts) {
+	lrec_reader_t* plrec_reader = lrec_reader_alloc(popts);
+	if (plrec_reader == NULL) {
+		fprintf(stderr, "%s: unrecognized input-file format \"%s\".\n",
+			MLR_GLOBALS.bargv0, popts->ifile_fmt);
+		exit(1);
+	}
+	return plrec_reader;
+}
