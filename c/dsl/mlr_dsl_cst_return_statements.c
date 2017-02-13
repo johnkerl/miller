@@ -41,11 +41,16 @@ static void return_value_func(
 	rxval_evaluator_t* pxev = pstate->preturn_value_xevaluator;
 	boxed_xval_t retval = pxev->pprocess_func(pxev->pvstate, pvars);
 
+#if 1
+	// xxx should not need to copy. find the errant callsite.
 	if (retval.is_ephemeral) {
 		pvars->return_state.retval = retval;
 	} else {
 		pvars->return_state.retval = box_ephemeral_xval(mlhmmv_xvalue_copy(&retval.xval));
 	}
+#else
+	pvars->return_state.retval = retval;
+#endif
 
 	pvars->return_state.returned = TRUE;
 }
