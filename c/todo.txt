@@ -6,6 +6,10 @@ BUGFIXES
 ================================================================
 5.0.0 RELEASE TO DO:
 
+!! non-ephemeral logic permits references to out-of-scopes ?
+
+! mlr -I
+
 * UT
 * cookbook
 * other doc

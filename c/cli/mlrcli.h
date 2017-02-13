@@ -5,13 +5,12 @@
 #ifndef MLRCLI_H
 #define MLRCLI_H
 
+#include "lib/context.h"
 #include "containers/slls.h"
 #include "containers/sllv.h"
 #include "cli/quoting.h"
 #include "containers/lhmsll.h"
 #include "containers/lhmss.h"
-#include "input/lrec_reader.h"
-#include "output/lrec_writer.h"
 
 // ----------------------------------------------------------------
 typedef struct _cli_reader_opts_t {
@@ -61,13 +60,13 @@ typedef struct _cli_opts_t {
 	cli_reader_opts_t reader_opts;
 	cli_writer_opts_t writer_opts;
 
-	lrec_reader_t* plrec_reader;
 	sllv_t*        pmapper_list;
-	lrec_writer_t* plrec_writer;
 	slls_t* filenames;
 
 	char* ofmt;
 	long long nr_progress_mod;
+
+	int do_in_place;
 
 } cli_opts_t;
 

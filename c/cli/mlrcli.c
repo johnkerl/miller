@@ -142,6 +142,10 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		} else if (cli_handle_reader_writer_options(argv, argc, &argi, &popts->reader_opts, &popts->writer_opts)) {
 			// handled
 
+		} else if (streq(argv[argi], "-I")) {
+			popts->do_in_place = TRUE;
+			argi += 1;
+
 		} else if (streq(argv[argi], "-n")) {
 			no_input = TRUE;
 			argi += 1;
@@ -230,8 +234,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		return NULL;
 	}
 
-	popts->plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
-
 	// Allow then-chains to start with an initial 'then': 'mlr verb1 then verb2 then verb3' or
 	// 'mlr then verb1 then verb2 then verb3'. Particuarly useful in backslashy scripting contexts.
 	if ((argc - argi) >= 1 && streq(argv[argi], "then")) {
@@ -294,13 +296,6 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		popts->reader_opts.use_mmap_for_read = FALSE;
 	}
 
-	popts->plrec_reader = lrec_reader_alloc(&popts->reader_opts);
-	if (popts->plrec_reader == NULL) {
-		fprintf(stderr, "%s: unrecognized input-file format \"%s\".\n", argv[0], popts->reader_opts.ifile_fmt);
-		main_usage_short(stderr, argv[0]);
-		exit(1);
-	}
-
 	if (have_rand_seed) {
 		mtrand_init(rand_seed);
 	} else {
@@ -311,19 +306,15 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 }
 
 // ----------------------------------------------------------------
-void cli_opts_free(cli_opts_t* popts, context_t* pctx) {
+void cli_opts_free(cli_opts_t* popts, context_t* pctx) { // xxx rm ctx arg when mapper-free move
 	if (popts == NULL)
 		return;
-
-	popts->plrec_reader->pfree_func(popts->plrec_reader);
 
 	for (sllve_t* pe = popts->pmapper_list->phead; pe != NULL; pe = pe->pnext) {
 		mapper_t* pmapper = pe->pvvalue;
 		pmapper->pfree_func(pmapper, pctx);
 	}
 	sllv_free(popts->pmapper_list);
-
-	popts->plrec_writer->pfree_func(popts->plrec_writer, pctx);
 
 	slls_free(popts->filenames);
 
@@ -951,13 +942,13 @@ void cli_opts_init(cli_opts_t* popts) {
 	cli_reader_opts_init(&popts->reader_opts);
 	cli_writer_opts_init(&popts->writer_opts);
 
-	popts->plrec_reader      = NULL;
 	popts->pmapper_list      = sllv_alloc();
-	popts->plrec_writer      = NULL;
 	popts->filenames         = slls_alloc();
 
 	popts->ofmt              = NULL;
 	popts->nr_progress_mod   = 0LL;
+
+	popts->do_in_place       = FALSE;
 }
 
 void cli_reader_opts_init(cli_reader_opts_t* preader_opts) {

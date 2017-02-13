@@ -10,6 +10,12 @@
 #include "mapping/mappers.h"
 #include "output/lrec_writers.h"
 
+static int do_stream_chained_in_place(char* prepipe, slls_t* filenames, sllv_t* pmapper_list,
+	context_t* pctx, cli_opts_t* popts);
+
+static int do_stream_chained_to_stdout(char* prepipe, slls_t* filenames, sllv_t* pmapper_list,
+	context_t* pctx, cli_opts_t* popts);
+
 static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
 	lrec_reader_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream,
 	cli_opts_t* popts);
@@ -24,10 +30,107 @@ static void null_progress_indicator(context_t* pctx, long long nr_progress_mod);
 static void stderr_progress_indicator(context_t* pctx, long long nr_progress_mod);
 
 // ----------------------------------------------------------------
-int do_stream_chained(char* prepipe, slls_t* filenames, lrec_reader_t* plrec_reader, sllv_t* pmapper_list,
-	lrec_writer_t* plrec_writer, context_t* pctx, cli_opts_t* popts)
+int do_stream_chained(char* prepipe, slls_t* filenames, sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts) {
+	if (popts->do_in_place) {
+		return do_stream_chained_in_place(prepipe, filenames, pmapper_list, pctx, popts);
+	} else {
+		return do_stream_chained_to_stdout(prepipe, filenames, pmapper_list, pctx, popts);
+	}
+}
+
+// ----------------------------------------------------------------
+static int do_stream_chained_in_place(char* prepipe, slls_t* filenames, sllv_t* pmapper_list,
+	context_t* pctx, cli_opts_t* popts)
+{
+	MLR_INTERNAL_CODING_ERROR_IF(pmapper_list->length < 1); // Should not have been allowed by the CLI parser.
+	// xxx make these more clear to the user.
+	MLR_INTERNAL_CODING_ERROR_IF(filenames == NULL);
+	MLR_INTERNAL_CODING_ERROR_IF(filenames->length == 0);
+
+	int ok = 1;
+
+	// Read from each file name in turn
+	for (sllse_t* pe = filenames->phead; pe != NULL; pe = pe->pnext) {
+
+		lrec_writer_t* plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
+		if (plrec_writer == NULL) { // xxx funcify
+			fprintf(stderr, "%s: unrecognized output-file format \"%s\".\n",
+				MLR_GLOBALS.bargv0, popts->writer_opts.ofile_fmt);
+			// xxx main_usage_short(stderr, MLR_GLOBALS.bargv0);
+			exit(1);
+		}
+		lrec_reader_t* plrec_reader = lrec_reader_alloc(&popts->reader_opts);
+		if (plrec_reader == NULL) { // xxx funcify
+			fprintf(stderr, "%s: unrecognized input-file format \"%s\".\n",
+				MLR_GLOBALS.bargv0, popts->reader_opts.ifile_fmt);
+			// xxx main_usage_short(stderr, MLR_GLOBALS.bargv0);
+			exit(1);
+		}
+
+		char* filename = pe->value;
+
+		char* foo = mlr_malloc_or_die(strlen(filename) + 32);
+		sprintf(foo, "%s.tmp", filename); // xxx needs uuid
+
+		FILE* output_stream = fopen(foo, "wb"); // xxx stub
+
+		pctx->filenum++;
+		pctx->filename = filename;
+		pctx->fnr = 0;
+		ok = do_file_chained(prepipe, filename, pctx, plrec_reader, pmapper_list, plrec_writer,
+			output_stream, popts) && ok;
+		if (pctx->force_eof == TRUE) // e.g. mlr head
+			continue;
+
+		// Mappers and writers receive end-of-stream notifications via null input record.
+		// Do that, now that data from all input file(s) have been exhausted.
+		drive_lrec(NULL, pctx, pmapper_list->phead, plrec_writer, output_stream);
+
+		// Drain the pretty-printer.
+		plrec_writer->pprocess_func(plrec_writer->pvstate, output_stream, NULL, pctx);
+
+		// xxx needs mapper-reset logic
+		// xxx needs writer-reset logic. or move reader/writer alloc/frees inside this file.
+
+		fclose(output_stream);
+
+		int rc = rename(foo, filename);
+		if (rc != 0) {
+			perror("rename");
+			fprintf(stderr, "%s: Could not rename \"%s\" to \"%s\".\n",
+				MLR_GLOBALS.bargv0, foo, filename);
+			exit(1);
+		}
+
+		free(foo);
+
+		plrec_reader->pfree_func(plrec_reader);
+		plrec_writer->pfree_func(plrec_writer, pctx);
+	}
+
+	return ok;
+}
+
+// ----------------------------------------------------------------
+static int do_stream_chained_to_stdout(char* prepipe, slls_t* filenames, sllv_t* pmapper_list,
+	context_t* pctx, cli_opts_t* popts)
 {
 	FILE* output_stream = stdout;
+
+	lrec_writer_t* plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
+	if (plrec_writer == NULL) { // xxx funcify
+		fprintf(stderr, "%s: unrecognized output-file format \"%s\".\n",
+			MLR_GLOBALS.bargv0, popts->writer_opts.ofile_fmt);
+		// xxx main_usage_short(stderr, MLR_GLOBALS.bargv0);
+		exit(1);
+	}
+	lrec_reader_t* plrec_reader = lrec_reader_alloc(&popts->reader_opts);
+	if (plrec_reader == NULL) { // xxx funcify
+		fprintf(stderr, "%s: unrecognized input-file format \"%s\".\n",
+			MLR_GLOBALS.bargv0, popts->reader_opts.ifile_fmt);
+		// xxx main_usage_short(stderr, MLR_GLOBALS.bargv0);
+		exit(1);
+	}
 
 	MLR_INTERNAL_CODING_ERROR_IF(pmapper_list->length < 1); // Should not have been allowed by the CLI parser.
 
@@ -61,6 +164,10 @@ int do_stream_chained(char* prepipe, slls_t* filenames, lrec_reader_t* plrec_rea
 
 	// Drain the pretty-printer.
 	plrec_writer->pprocess_func(plrec_writer->pvstate, output_stream, NULL, pctx);
+
+
+	plrec_reader->pfree_func(plrec_reader);
+	plrec_writer->pfree_func(plrec_writer, pctx);
 
 	return ok;
 }
