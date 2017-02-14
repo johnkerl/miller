@@ -10,13 +10,11 @@
 #include "mapping/mappers.h"
 #include "output/lrec_writers.h"
 
-static int do_stream_chained_in_place(char* prepipe, slls_t* filenames, sllv_t* pmapper_list,
-	context_t* pctx, cli_opts_t* popts);
+static int do_stream_chained_in_place(sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts);
 
-static int do_stream_chained_to_stdout(char* prepipe, slls_t* filenames, sllv_t* pmapper_list,
-	context_t* pctx, cli_opts_t* popts);
+static int do_stream_chained_to_stdout(sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts);
 
-static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
+static int do_file_chained(char* filename, context_t* pctx,
 	lrec_reader_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream,
 	cli_opts_t* popts);
 
@@ -30,27 +28,25 @@ static void null_progress_indicator(context_t* pctx, long long nr_progress_mod);
 static void stderr_progress_indicator(context_t* pctx, long long nr_progress_mod);
 
 // ----------------------------------------------------------------
-int do_stream_chained(char* prepipe, slls_t* filenames, sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts) {
+int do_stream_chained(sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts) {
 	if (popts->do_in_place) {
-		return do_stream_chained_in_place(prepipe, filenames, pmapper_list, pctx, popts);
+		return do_stream_chained_in_place(pmapper_list, pctx, popts);
 	} else {
-		return do_stream_chained_to_stdout(prepipe, filenames, pmapper_list, pctx, popts);
+		return do_stream_chained_to_stdout(pmapper_list, pctx, popts);
 	}
 }
 
 // ----------------------------------------------------------------
-static int do_stream_chained_in_place(char* prepipe, slls_t* filenames, sllv_t* pmapper_list,
-	context_t* pctx, cli_opts_t* popts)
-{
+static int do_stream_chained_in_place(sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts) {
 	MLR_INTERNAL_CODING_ERROR_IF(pmapper_list->length < 1); // Should not have been allowed by the CLI parser.
 	// xxx make these more clear to the user.
-	MLR_INTERNAL_CODING_ERROR_IF(filenames == NULL);
-	MLR_INTERNAL_CODING_ERROR_IF(filenames->length == 0);
+	MLR_INTERNAL_CODING_ERROR_IF(popts->filenames == NULL);
+	MLR_INTERNAL_CODING_ERROR_IF(popts->filenames->length == 0);
 
 	int ok = 1;
 
 	// Read from each file name in turn
-	for (sllse_t* pe = filenames->phead; pe != NULL; pe = pe->pnext) {
+	for (sllse_t* pe = popts->filenames->phead; pe != NULL; pe = pe->pnext) {
 		// xxx move ctx-init here
 
 		lrec_reader_t* plrec_reader = lrec_reader_alloc_or_die(&popts->reader_opts);
@@ -66,7 +62,7 @@ static int do_stream_chained_in_place(char* prepipe, slls_t* filenames, sllv_t* 
 		pctx->filenum++;
 		pctx->filename = filename;
 		pctx->fnr = 0;
-		ok = do_file_chained(prepipe, filename, pctx, plrec_reader, pmapper_list, plrec_writer,
+		ok = do_file_chained(filename, pctx, plrec_reader, pmapper_list, plrec_writer,
 			output_stream, popts) && ok;
 		if (pctx->force_eof == TRUE) // e.g. mlr head
 			continue;
@@ -100,9 +96,7 @@ static int do_stream_chained_in_place(char* prepipe, slls_t* filenames, sllv_t* 
 }
 
 // ----------------------------------------------------------------
-static int do_stream_chained_to_stdout(char* prepipe, slls_t* filenames, sllv_t* pmapper_list,
-	context_t* pctx, cli_opts_t* popts)
-{
+static int do_stream_chained_to_stdout(sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts) {
 	FILE* output_stream = stdout;
 
 	lrec_reader_t* plrec_reader = lrec_reader_alloc_or_die(&popts->reader_opts);
@@ -111,23 +105,23 @@ static int do_stream_chained_to_stdout(char* prepipe, slls_t* filenames, sllv_t*
 	MLR_INTERNAL_CODING_ERROR_IF(pmapper_list->length < 1); // Should not have been allowed by the CLI parser.
 
 	int ok = 1;
-	if (filenames == NULL) {
+	if (popts->filenames == NULL) {
 		// No input at all
-	} else if (filenames->length == 0) {
+	} else if (popts->filenames->length == 0) {
 		// Zero file names means read from standard input
 		pctx->filenum++;
 		pctx->filename = "(stdin)";
 		pctx->fnr = 0;
-		ok = do_file_chained(prepipe, "-", pctx, plrec_reader, pmapper_list, plrec_writer,
+		ok = do_file_chained("-", pctx, plrec_reader, pmapper_list, plrec_writer,
 			output_stream, popts) && ok;
 	} else {
 		// Read from each file name in turn
-		for (sllse_t* pe = filenames->phead; pe != NULL; pe = pe->pnext) {
+		for (sllse_t* pe = popts->filenames->phead; pe != NULL; pe = pe->pnext) {
 			char* filename = pe->value;
 			pctx->filenum++;
 			pctx->filename = filename;
 			pctx->fnr = 0;
-			ok = do_file_chained(prepipe, filename, pctx, plrec_reader, pmapper_list, plrec_writer,
+			ok = do_file_chained(filename, pctx, plrec_reader, pmapper_list, plrec_writer,
 				output_stream, popts) && ok;
 			if (pctx->force_eof == TRUE) // e.g. mlr head
 				break;
@@ -149,11 +143,11 @@ static int do_stream_chained_to_stdout(char* prepipe, slls_t* filenames, sllv_t*
 }
 
 // ----------------------------------------------------------------
-static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
+static int do_file_chained(char* filename, context_t* pctx,
 	lrec_reader_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream,
 	cli_opts_t* popts)
 {
-	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, prepipe, filename);
+	void* pvhandle = plrec_reader->popen_func(plrec_reader->pvstate, popts->reader_opts.prepipe, filename);
 	progress_indicator_t* pindicator = popts->nr_progress_mod == 0LL
 		? null_progress_indicator
 		: stderr_progress_indicator;
@@ -177,7 +171,7 @@ static int do_file_chained(char* prepipe, char* filename, context_t* pctx,
 		drive_lrec(pinrec, pctx, pmapper_list->phead, plrec_writer, output_stream);
 	}
 
-	plrec_reader->pclose_func(plrec_reader->pvstate, pvhandle, prepipe);
+	plrec_reader->pclose_func(plrec_reader->pvstate, pvhandle, popts->reader_opts.prepipe);
 	return 1;
 }
 
