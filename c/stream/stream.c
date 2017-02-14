@@ -51,6 +51,7 @@ static int do_stream_chained_in_place(char* prepipe, slls_t* filenames, sllv_t* 
 
 	// Read from each file name in turn
 	for (sllse_t* pe = filenames->phead; pe != NULL; pe = pe->pnext) {
+		// xxx move ctx-init here
 
 		lrec_reader_t* plrec_reader = lrec_reader_alloc_or_die(&popts->reader_opts);
 		lrec_writer_t* plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
@@ -78,7 +79,6 @@ static int do_stream_chained_in_place(char* prepipe, slls_t* filenames, sllv_t* 
 		plrec_writer->pprocess_func(plrec_writer->pvstate, output_stream, NULL, pctx);
 
 		// xxx needs mapper-reset logic
-		// xxx needs writer-reset logic. or move reader/writer alloc/frees inside this file.
 
 		fclose(output_stream);
 
