@@ -60,7 +60,14 @@ typedef struct _cli_opts_t {
 	cli_reader_opts_t reader_opts;
 	cli_writer_opts_t writer_opts;
 
-	sllv_t*        pmapper_list;
+	sllv_t* pmapper_list; // xxx pull out of popts
+
+	// These are used to construct the mapper list. In particular,
+	// for in-place mode they're reconstructed for each file.
+	char**  argv;
+	int     argc;
+	int     mapper_argb;
+
 	slls_t* filenames;
 
 	char* ofmt;

@@ -37,8 +37,7 @@ int do_stream_chained(sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts) 
 }
 
 // ----------------------------------------------------------------
-static int do_stream_chained_in_place(sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts) {
-	MLR_INTERNAL_CODING_ERROR_IF(pmapper_list->length < 1); // Should not have been allowed by the CLI parser.
+static int do_stream_chained_in_place(sllv_t* _, context_t* pctx, cli_opts_t* popts) {
 	// xxx make these more clear to the user. or move better check to CLI parser and simple-assert here.
 	MLR_INTERNAL_CODING_ERROR_IF(popts->filenames == NULL);
 	MLR_INTERNAL_CODING_ERROR_IF(popts->filenames->length == 0);
@@ -50,6 +49,21 @@ static int do_stream_chained_in_place(sllv_t* pmapper_list, context_t* pctx, cli
 
 		lrec_reader_t* plrec_reader = lrec_reader_alloc_or_die(&popts->reader_opts);
 		lrec_writer_t* plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
+
+		// For in-place mode, reeconstruct the mappers on each input file. E.g. 'mlr -I
+		// head -n 2 foo bar' should do head -n 2 on foo as well as on bar. I could have
+		// implemented this with a single construction of the mappers and having each
+		// mapper implement a virtual reset() method.  However, having effectively two
+		// initalizers per mapper -- constructor and reset method -- I'd surely miss some
+		// logic somewhere. With in-place mode being a less frequently used code path,
+		// this would likely lead to latent bugs. So while it seems inelegant to re-parse
+		// part of the command line over and over again to reconstruct mappers for each
+		// file, this approach leads to greater code stability.
+
+		int argi = popts->mapper_argb;
+		int unused;
+		sllv_t* pmapper_list = cli_parse_mappers(popts->argv, &argi, popts->argc, popts, &unused);
+		MLR_INTERNAL_CODING_ERROR_IF(pmapper_list->length < 1); // Should not have been allowed by the CLI parser.
 
 		char* filename = pe->value;
 		char* foo = mlr_malloc_or_die(strlen(filename) + 32);
@@ -63,8 +77,8 @@ static int do_stream_chained_in_place(sllv_t* pmapper_list, context_t* pctx, cli
 		ok = do_file_chained(filename, pctx, plrec_reader, pmapper_list, plrec_writer,
 			output_stream, popts) && ok;
 
-		// xxx fix for in-place
-		// xxx comment
+		// For in-place mode, there's no breaking from the loop over input files. Just an early
+		// return from the mapper chain, which has already just happened.
 		if (pctx->force_eof == TRUE) // e.g. mlr head
 			pctx->force_eof = FALSE;
 
@@ -73,8 +87,6 @@ static int do_stream_chained_in_place(sllv_t* pmapper_list, context_t* pctx, cli
 		drive_lrec(NULL, pctx, pmapper_list->phead, plrec_writer, output_stream);
 		// Drain the pretty-printer.
 		plrec_writer->pprocess_func(plrec_writer->pvstate, output_stream, NULL, pctx);
-
-		// xxx needs mapper-reset logic
 
 		fclose(output_stream);
 		int rc = rename(foo, filename);
@@ -88,6 +100,13 @@ static int do_stream_chained_in_place(sllv_t* pmapper_list, context_t* pctx, cli
 
 		plrec_reader->pfree_func(plrec_reader);
 		plrec_writer->pfree_func(plrec_writer, pctx);
+
+		// xxx funcify
+		for (sllve_t* pe = pmapper_list->phead; pe != NULL; pe = pe->pnext) {
+			mapper_t* pmapper = pe->pvvalue;
+			pmapper->pfree_func(pmapper, pctx);
+		}
+		sllv_free(pmapper_list);
 	}
 
 	return ok;

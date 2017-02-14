@@ -8,6 +8,8 @@ BUGFIXES
 
 !! non-ephemeral logic permits references to out-of-scopes ?
 
+* make a link : https://github.com/johnkerl/miller/wiki
+
 ! mlr -I
 
 * UT

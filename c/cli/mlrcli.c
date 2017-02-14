@@ -234,57 +234,13 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		return NULL;
 	}
 
-	//popts->pmapper_list = cli_parse_mappers(argv, &argi, argc, popts);
-
-	// Allow then-chains to start with an initial 'then': 'mlr verb1 then verb2 then verb3' or
-	// 'mlr then verb1 then verb2 then verb3'. Particuarly useful in backslashy scripting contexts.
-	if ((argc - argi) >= 1 && streq(argv[argi], "then")) {
-		argi++;
-	}
-
-	if ((argc - argi) < 1) {
-		fprintf(stderr, "%s: no verb supplied.\n", argv[0]);
-		main_usage_short(stderr, argv[0]);
-		exit(1);
-	}
-	while (TRUE) {
-		check_arg_count(argv, argi, argc, 1);
-		char* verb = argv[argi];
-
-		mapper_setup_t* pmapper_setup = look_up_mapper_setup(verb);
-		if (pmapper_setup == NULL) {
-			fprintf(stderr, "%s: verb \"%s\" not found. Please use \"%s --help\" for a list.\n",
-				argv[0], verb, argv[0]);
-			exit(1);
-		}
-
-		if ((argc - argi) >= 2) {
-			if (streq(argv[argi+1], "-h") || streq(argv[argi+1], "--help")) {
-				pmapper_setup->pusage_func(stdout, argv[0], verb);
-				exit(0);
-			}
-		}
-
-		// It's up to the parse func to print its usage on CLI-parse failure.
-		// Also note: this assumes main reader/writer opts are all parsed
-		// *before* mapper parse-CLI methods are invoked.
-		mapper_t* pmapper = pmapper_setup->pparse_func(&argi, argc, argv,
-			&popts->reader_opts, &popts->writer_opts);
-		if (pmapper == NULL) {
-			exit(1);
-		}
-
-		if (pmapper_setup->ignores_input && popts->pmapper_list->length == 0) {
-			// e.g. then-chain starts with seqgen
-			no_input = TRUE;
-		}
-
-		sllv_append(popts->pmapper_list, pmapper);
-
-		if (argi >= argc || !streq(argv[argi], "then"))
-			break;
-		argi++;
-	}
+	// Construct the mapper list for single use, e.g. the normal streaming case wherein the
+	// mappers operate on all input files. Also retain information needed to construct them
+	// for each input file, for in-place mode.
+	popts->mapper_argb = argi;
+	popts->argv = argv;
+	popts->argc = argc;
+	popts->pmapper_list = cli_parse_mappers(argv, &argi, argc, popts, &no_input);
 
 	for ( ; argi < argc; argi++) {
 		slls_append(popts->filenames, argv[argi], NO_FREE);
@@ -308,11 +264,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 }
 
 // ----------------------------------------------------------------
-// xxx comment
+// Returns a list of mappers, from the starting point in argv given by *pargi. Bumps *pargi to
+// point to remaining post-mapper-setup args, i.e. filenames.
 sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, int* pno_input) {
 	sllv_t* pmapper_list = sllv_alloc();
 	int argi = *pargi;
-	*pno_input = FALSE;
 
 	// Allow then-chains to start with an initial 'then': 'mlr verb1 then verb2 then verb3' or
 	// 'mlr then verb1 then verb2 then verb3'. Particuarly useful in backslashy scripting contexts.
@@ -1005,13 +961,14 @@ void cli_opts_init(cli_opts_t* popts) {
 	cli_reader_opts_init(&popts->reader_opts);
 	cli_writer_opts_init(&popts->writer_opts);
 
-	popts->pmapper_list      = sllv_alloc();
-	popts->filenames         = slls_alloc();
+	popts->pmapper_list    = sllv_alloc();
+	popts->mapper_argb     = 0;
+	popts->filenames       = slls_alloc();
 
-	popts->ofmt              = NULL;
-	popts->nr_progress_mod   = 0LL;
+	popts->ofmt            = NULL;
+	popts->nr_progress_mod = 0LL;
 
-	popts->do_in_place       = FALSE;
+	popts->do_in_place     = FALSE;
 }
 
 void cli_reader_opts_init(cli_reader_opts_t* preader_opts) {
