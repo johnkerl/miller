@@ -73,6 +73,9 @@ typedef struct _cli_opts_t {
 // ----------------------------------------------------------------
 cli_opts_t* parse_command_line(int argc, char** argv);
 
+// xxx cmt
+sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, int* pno_input);
+
 int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts_t* preader_opts);
 int cli_handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts_t* pwriter_opts);
 int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,

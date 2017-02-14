@@ -59,6 +59,7 @@ static int do_stream_chained_in_place(sllv_t* pmapper_list, context_t* pctx, cli
 		pctx->filenum++;
 		pctx->filename = filename;
 		pctx->fnr = 0;
+
 		ok = do_file_chained(filename, pctx, plrec_reader, pmapper_list, plrec_writer,
 			output_stream, popts) && ok;
 
@@ -70,7 +71,6 @@ static int do_stream_chained_in_place(sllv_t* pmapper_list, context_t* pctx, cli
 		// Mappers and writers receive end-of-stream notifications via null input record.
 		// Do that, now that data from all input file(s) have been exhausted.
 		drive_lrec(NULL, pctx, pmapper_list->phead, plrec_writer, output_stream);
-
 		// Drain the pretty-printer.
 		plrec_writer->pprocess_func(plrec_writer->pvstate, output_stream, NULL, pctx);
 
