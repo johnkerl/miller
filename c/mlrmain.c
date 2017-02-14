@@ -25,12 +25,10 @@ int main(int argc, char** argv) {
 	cli_opts_t* popts = parse_command_line(argc, argv);
 	mlr_global_init(argv[0], popts->ofmt);
 
-	sllv_t* pmapper_list = popts->pmapper_list;
-
 	context_t ctx;
 	context_init_from_opts(&ctx, popts);
 
-	int ok = do_stream_chained(pmapper_list, &ctx, popts);
+	int ok = do_stream_chained(&ctx, popts);
 
 	cli_opts_free(popts, &ctx);
 

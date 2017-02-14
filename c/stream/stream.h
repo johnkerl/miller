@@ -9,6 +9,6 @@
 #include "mapping/mappers.h"
 #include "output/lrec_writers.h"
 
-int do_stream_chained(sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts);
+int do_stream_chained(context_t* pctx, cli_opts_t* popts);
 
 #endif // STREAM_H

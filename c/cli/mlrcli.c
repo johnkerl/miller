@@ -329,11 +329,7 @@ void cli_opts_free(cli_opts_t* popts, context_t* pctx) { // xxx rm ctx arg when 
 	if (popts == NULL)
 		return;
 
-	for (sllve_t* pe = popts->pmapper_list->phead; pe != NULL; pe = pe->pnext) {
-		mapper_t* pmapper = pe->pvvalue;
-		pmapper->pfree_func(pmapper, pctx);
-	}
-	sllv_free(popts->pmapper_list);
+	mapper_chain_free(popts->pmapper_list, pctx);
 
 	slls_free(popts->filenames);
 

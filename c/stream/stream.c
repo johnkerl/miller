@@ -10,9 +10,9 @@
 #include "mapping/mappers.h"
 #include "output/lrec_writers.h"
 
-static int do_stream_chained_in_place(sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts);
+static int do_stream_chained_in_place(context_t* pctx, cli_opts_t* popts);
 
-static int do_stream_chained_to_stdout(sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts);
+static int do_stream_chained_to_stdout(context_t* pctx, cli_opts_t* popts);
 
 static int do_file_chained(char* filename, context_t* pctx,
 	lrec_reader_t* plrec_reader, sllv_t* pmapper_list, lrec_writer_t* plrec_writer, FILE* output_stream,
@@ -28,16 +28,16 @@ static void null_progress_indicator(context_t* pctx, long long nr_progress_mod);
 static void stderr_progress_indicator(context_t* pctx, long long nr_progress_mod);
 
 // ----------------------------------------------------------------
-int do_stream_chained(sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts) {
+int do_stream_chained(context_t* pctx, cli_opts_t* popts) {
 	if (popts->do_in_place) {
-		return do_stream_chained_in_place(pmapper_list, pctx, popts);
+		return do_stream_chained_in_place(pctx, popts);
 	} else {
-		return do_stream_chained_to_stdout(pmapper_list, pctx, popts);
+		return do_stream_chained_to_stdout(pctx, popts);
 	}
 }
 
 // ----------------------------------------------------------------
-static int do_stream_chained_in_place(sllv_t* _, context_t* pctx, cli_opts_t* popts) {
+static int do_stream_chained_in_place(context_t* pctx, cli_opts_t* popts) {
 	// xxx make these more clear to the user. or move better check to CLI parser and simple-assert here.
 	MLR_INTERNAL_CODING_ERROR_IF(popts->filenames == NULL);
 	MLR_INTERNAL_CODING_ERROR_IF(popts->filenames->length == 0);
@@ -101,23 +101,19 @@ static int do_stream_chained_in_place(sllv_t* _, context_t* pctx, cli_opts_t* po
 		plrec_reader->pfree_func(plrec_reader);
 		plrec_writer->pfree_func(plrec_writer, pctx);
 
-		// xxx funcify
-		for (sllve_t* pe = pmapper_list->phead; pe != NULL; pe = pe->pnext) {
-			mapper_t* pmapper = pe->pvvalue;
-			pmapper->pfree_func(pmapper, pctx);
-		}
-		sllv_free(pmapper_list);
+		mapper_chain_free(pmapper_list, pctx);
 	}
 
 	return ok;
 }
 
 // ----------------------------------------------------------------
-static int do_stream_chained_to_stdout(sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts) {
+static int do_stream_chained_to_stdout(context_t* pctx, cli_opts_t* popts) {
 	FILE* output_stream = stdout;
 
 	lrec_reader_t* plrec_reader = lrec_reader_alloc_or_die(&popts->reader_opts);
 	lrec_writer_t* plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
+	sllv_t* pmapper_list = popts->pmapper_list;
 
 	MLR_INTERNAL_CODING_ERROR_IF(pmapper_list->length < 1); // Should not have been allowed by the CLI parser.
 
