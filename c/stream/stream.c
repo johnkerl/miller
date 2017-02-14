@@ -39,7 +39,7 @@ int do_stream_chained(sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts) 
 // ----------------------------------------------------------------
 static int do_stream_chained_in_place(sllv_t* pmapper_list, context_t* pctx, cli_opts_t* popts) {
 	MLR_INTERNAL_CODING_ERROR_IF(pmapper_list->length < 1); // Should not have been allowed by the CLI parser.
-	// xxx make these more clear to the user.
+	// xxx make these more clear to the user. or move better check to CLI parser and simple-assert here.
 	MLR_INTERNAL_CODING_ERROR_IF(popts->filenames == NULL);
 	MLR_INTERNAL_CODING_ERROR_IF(popts->filenames->length == 0);
 
@@ -47,16 +47,13 @@ static int do_stream_chained_in_place(sllv_t* pmapper_list, context_t* pctx, cli
 
 	// Read from each file name in turn
 	for (sllse_t* pe = popts->filenames->phead; pe != NULL; pe = pe->pnext) {
-		// xxx move ctx-init here
 
 		lrec_reader_t* plrec_reader = lrec_reader_alloc_or_die(&popts->reader_opts);
 		lrec_writer_t* plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
 
 		char* filename = pe->value;
-
 		char* foo = mlr_malloc_or_die(strlen(filename) + 32);
 		sprintf(foo, "%s.tmp", filename); // xxx needs uuid
-
 		FILE* output_stream = fopen(foo, "wb"); // xxx stub
 
 		pctx->filenum++;
@@ -64,8 +61,11 @@ static int do_stream_chained_in_place(sllv_t* pmapper_list, context_t* pctx, cli
 		pctx->fnr = 0;
 		ok = do_file_chained(filename, pctx, plrec_reader, pmapper_list, plrec_writer,
 			output_stream, popts) && ok;
+
+		// xxx fix for in-place
+		// xxx comment
 		if (pctx->force_eof == TRUE) // e.g. mlr head
-			continue;
+			pctx->force_eof = FALSE;
 
 		// Mappers and writers receive end-of-stream notifications via null input record.
 		// Do that, now that data from all input file(s) have been exhausted.
@@ -77,7 +77,6 @@ static int do_stream_chained_in_place(sllv_t* pmapper_list, context_t* pctx, cli
 		// xxx needs mapper-reset logic
 
 		fclose(output_stream);
-
 		int rc = rename(foo, filename);
 		if (rc != 0) {
 			perror("rename");
@@ -85,7 +84,6 @@ static int do_stream_chained_in_place(sllv_t* pmapper_list, context_t* pctx, cli
 				MLR_GLOBALS.bargv0, foo, filename);
 			exit(1);
 		}
-
 		free(foo);
 
 		plrec_reader->pfree_func(plrec_reader);
