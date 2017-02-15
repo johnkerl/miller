@@ -78,7 +78,8 @@ typedef struct _cli_opts_t {
 // ----------------------------------------------------------------
 cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list);
 
-// xxx cmt
+// See stream.c. The idea is that the mapper-chain is constructed once for normal stream-over-all-files
+// mode, but per-file for in-place mode.
 sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, int* pno_input);
 
 int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts_t* preader_opts);
