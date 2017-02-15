@@ -119,7 +119,7 @@ static char* lhmss_get_or_die(lhmss_t* pmap, char* key, char* argv0);
 static int lhmsll_get_or_die(lhmsll_t* pmap, char* key, char* argv0);
 
 // ----------------------------------------------------------------
-cli_opts_t* parse_command_line(int argc, char** argv) {
+cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 	cli_opts_t* popts = mlr_malloc_or_die(sizeof(cli_opts_t));
 
 	cli_opts_init(popts);
@@ -240,7 +240,7 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 	popts->mapper_argb = argi;
 	popts->argv = argv;
 	popts->argc = argc;
-	popts->pmapper_list = cli_parse_mappers(argv, &argi, argc, popts, &no_input);
+	*ppmapper_list = cli_parse_mappers(argv, &argi, argc, popts, &no_input);
 
 	for ( ; argi < argc; argi++) {
 		slls_append(popts->filenames, argv[argi], NO_FREE);
@@ -330,16 +330,12 @@ sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, 
 }
 
 // ----------------------------------------------------------------
-void cli_opts_free(cli_opts_t* popts, context_t* pctx) { // xxx rm ctx arg when mapper-free move
+void cli_opts_free(cli_opts_t* popts) { // xxx rm ctx arg when mapper-free move
 	if (popts == NULL)
 		return;
 
-	mapper_chain_free(popts->pmapper_list, pctx);
-
 	slls_free(popts->filenames);
-
 	free(popts);
-
 	free_opt_singletons();
 }
 
@@ -962,7 +958,6 @@ void cli_opts_init(cli_opts_t* popts) {
 	cli_reader_opts_init(&popts->reader_opts);
 	cli_writer_opts_init(&popts->writer_opts);
 
-	popts->pmapper_list    = sllv_alloc();
 	popts->mapper_argb     = 0;
 	popts->filenames       = slls_alloc();
 

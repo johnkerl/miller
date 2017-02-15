@@ -22,15 +22,17 @@ int main(int argc, char** argv) {
 	// the handler instead.
 	do_aux_entries(argc, argv);
 
-	cli_opts_t* popts = parse_command_line(argc, argv);
+	sllv_t* pmapper_list = NULL;
+	cli_opts_t* popts = parse_command_line(argc, argv, &pmapper_list);
 	mlr_global_init(argv[0], popts->ofmt);
 
 	context_t ctx;
 	context_init_from_opts(&ctx, popts);
 
-	int ok = do_stream_chained(&ctx, popts);
+	int ok = do_stream_chained(&ctx, pmapper_list, popts);
 
-	cli_opts_free(popts, &ctx);
+	mapper_chain_free(pmapper_list, &ctx);
+	cli_opts_free(popts);
 
 	return ok ? 0 : 1;
 }

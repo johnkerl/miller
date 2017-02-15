@@ -60,8 +60,6 @@ typedef struct _cli_opts_t {
 	cli_reader_opts_t reader_opts;
 	cli_writer_opts_t writer_opts;
 
-	sllv_t* pmapper_list; // xxx pull out of popts
-
 	// These are used to construct the mapper list. In particular,
 	// for in-place mode they're reconstructed for each file.
 	char**  argv;
@@ -78,7 +76,7 @@ typedef struct _cli_opts_t {
 } cli_opts_t;
 
 // ----------------------------------------------------------------
-cli_opts_t* parse_command_line(int argc, char** argv);
+cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list);
 
 // xxx cmt
 sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, int* pno_input);
@@ -106,7 +104,7 @@ void cli_merge_writer_opts(cli_writer_opts_t* pfunc_opts, cli_writer_opts_t* pma
 // output.  E.g. pretty-print output has column widths which are only computable
 // after all output records have been retained. The free methods are used as
 // drain triggers.
-void cli_opts_free(cli_opts_t* popts, context_t* pctx);
+void cli_opts_free(cli_opts_t* popts);
 
 // The caller can unconditionally free the return value
 char* cli_sep_from_arg(char* arg);
