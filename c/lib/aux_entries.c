@@ -8,6 +8,8 @@ static int lecat_stream(FILE* input_stream, int do_color);
 
 static int termcvt_main(int argc, char** argv);
 
+static int show_temp_suffixes_main(int argc, char** argv);
+
 // ================================================================
 void do_aux_entries(int argc, char** argv) {
 	if (argc < 2) {
@@ -19,8 +21,10 @@ void do_aux_entries(int argc, char** argv) {
 	if (streq(argv[1], "termcvt")) {
 		exit(termcvt_main(argc, argv));
 	}
+	if (streq(argv[1], "show_temp_suffixes")) {
+		exit(show_temp_suffixes_main(argc, argv));
+	}
 }
-
 
 // ----------------------------------------------------------------
 static int lecat_main(int argc, char** argv) {
@@ -244,4 +248,17 @@ static int termcvt_main(int argc, char** argv) {
 		}
 	}
 	return ok ? 0 : 1;
+}
+
+// ----------------------------------------------------------------
+static int show_temp_suffixes_main(int argc, char** argv) {
+	// 'mlr' and 'lecat' are already argv[0] and argv[1].
+	for (int i = 0; i < 1000; i++) {
+		char* in = "a";
+		char* out = alloc_suffixed_temp_file_name(in);
+		printf("%s\n", out);
+		free(out);
+
+	}
+	return 0;
 }
