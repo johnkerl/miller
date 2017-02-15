@@ -144,6 +144,7 @@ Miller commands were run with pretty-print-tabular output format.
 <div class="pokitoc">
 <center><b>Contents:</b></center>
 &bull;&nbsp;<a href="#CSV-file_examples">CSV-file examples</a><br/>
+&bull;&nbsp;<a href="#Choices_for_printing_to_files">Choices for printing to files</a><br/>
 &bull;&nbsp;<a href="#Other-format_examples">Other-format examples</a><br/>
 &bull;&nbsp;<a href="#SQL-output_examples">SQL-output examples</a><br/>
 &bull;&nbsp;<a href="#Log-processing_examples">Log-processing examples</a><br/>
@@ -482,7 +483,86 @@ square   purple 1              72.373500    72.373500     72.373500
 </div>
 <p/>
 
-<p/><boldmaroon> Using <tt>tee</tt> within <tt>put</tt>, you can split your input data into separate files
+<a id="Choices_for_printing_to_files"/><h1>Choices for printing to files</h1>
+
+<p/>Often we want to print output <boldmaroon>to the screen</boldmaroon>. Miller does this by default, as we&rsquo;ve
+seen in the previous examples.
+
+<p/> Sometimes we want to print output to another file: <boldmaroon>just use '>
+outputfilenamegoeshere'</boldmaroon> at the end of your command:
+
+<table><tr><td>
+<div class="pokipanel"> <pre>
+% mlr --icsv --opprint cat example.csv &gt; newfile.csv
+# Output goes to the new file;
+# nothing is printed to the screen.
+</pre> </div>
+</td><td>
+<div class="pokipanel"> <pre>
+% cat newfile.csv 
+color  shape    flag index quantity rate
+yellow triangle 1    11    43.6498  9.8870
+red    square   1    15    79.2778  0.0130
+red    circle   1    16    13.8103  2.9010
+red    square   0    48    77.5542  7.4670
+purple triangle 0    51    81.2290  8.5910
+red    square   0    64    77.1991  9.5310
+purple triangle 0    65    80.1405  5.8240
+yellow circle   1    73    63.9785  4.2370
+yellow circle   1    87    63.5058  8.3350
+purple square   0    91    72.3735  8.2430
+</pre> </div>
+</td></tr></table>
+
+<p/> Other times we just want our files to be changed in-place: <boldmaroon>just use 'mlr -I'</boldmaroon>.
+
+<table><tr><td>
+<div class="pokipanel"> <pre>
+% cp example.csv newfile.txt
+
+% cat newfile.txt
+color,shape,flag,index,quantity,rate
+yellow,triangle,1,11,43.6498,9.8870
+red,square,1,15,79.2778,0.0130
+red,circle,1,16,13.8103,2.9010
+red,square,0,48,77.5542,7.4670
+purple,triangle,0,51,81.2290,8.5910
+red,square,0,64,77.1991,9.5310
+purple,triangle,0,65,80.1405,5.8240
+yellow,circle,1,73,63.9785,4.2370
+yellow,circle,1,87,63.5058,8.3350
+purple,square,0,91,72.3735,8.2430
+</pre> </div>
+</td><td>
+<div class="pokipanel"> <pre>
+% mlr -I --icsv --opprint cat newfile.txt
+
+% cat newfile.txt
+color  shape    flag index quantity rate
+yellow triangle 1    11    43.6498  9.8870
+red    square   1    15    79.2778  0.0130
+red    circle   1    16    13.8103  2.9010
+red    square   0    48    77.5542  7.4670
+purple triangle 0    51    81.2290  8.5910
+red    square   0    64    77.1991  9.5310
+purple triangle 0    65    80.1405  5.8240
+yellow circle   1    73    63.9785  4.2370
+yellow circle   1    87    63.5058  8.3350
+purple square   0    91    72.3735  8.2430
+</pre> </div>
+</td></tr></table>
+
+<p/> Also using <tt>mlr -I</tt> you can bulk-operate on lots of files: e.g.
+
+<table><tr><td>
+<div class="pokipanel"> <pre>
+mlr -I --csv cut -x -f unwanted_column_name *.csv
+</pre> </div>
+</td></tr></table>
+
+<p/> If you like, you can first copy off your original data somewhere else, before doing in-place operations.
+
+<p/><boldmaroon> Lastly, using <tt>tee</tt> within <tt>put</tt>, you can split your input data into separate files
 per one or more field names:</boldmaroon>
 
 <p/>
