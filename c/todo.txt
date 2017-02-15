@@ -9,9 +9,7 @@ BUGFIXES
 !! non-ephemeral logic permits references to out-of-scopes ?
   -> ensure either ephemeral-transfer, or final-copy, at assignment time
 
-! mlr -I
-  - expect-fail case w/o files; -n
-  - 10min notes: column-update; fmt-cvt
+* mlr -I expect-fail case w/o files; -n
 
 * UT
 * cookbook
@@ -89,6 +87,8 @@ cook 4: verbs vs. dsl/func list
   mlr -n put 'begin {for (int i = 0; i < 10; i += 1) {emit {"a":i,"b":i**2} }}' then sort -nr a
 
 cook 5: weird stuff
+
+Where to put in-place stuff? Any need beyond 10-min content?
 
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
