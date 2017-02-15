@@ -252,7 +252,6 @@ static int termcvt_main(int argc, char** argv) {
 
 // ----------------------------------------------------------------
 static int show_temp_suffixes_main(int argc, char** argv) {
-	// 'mlr' and 'lecat' are already argv[0] and argv[1].
 	for (int i = 0; i < 1000; i++) {
 		char* in = "a";
 		char* out = alloc_suffixed_temp_file_name(in);
