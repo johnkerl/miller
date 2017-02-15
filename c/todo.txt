@@ -7,11 +7,11 @@ BUGFIXES
 5.0.0 RELEASE TO DO:
 
 !! non-ephemeral logic permits references to out-of-scopes ?
-
-* make a link : https://github.com/johnkerl/miller/wiki
+  -> ensure either ephemeral-transfer, or final-copy, at assignment time
 
 ! mlr -I
   - expect-fail case w/o files; -n
+  - 10min notes: column-update; fmt-cvt
 
 * UT
 * cookbook
@@ -20,11 +20,6 @@ BUGFIXES
 * xxxes
 * valgrinds
 * release notes
-
-? mlr -i?
-
-k start chain with 'then'
-k median, only if quick (else 5.1.0)
 
 ================================================================
 UT FOR 5.0.0:
@@ -318,6 +313,8 @@ VERBS:
 * cat -n -g
 * -o for count-distinct, uniq, most-frequent, least-frequent, top, histogram
 * --jknquoteint/--jvquoteall @ put dump
+* start chain with 'then'
+k stats1 median
 
 I/O:
 * -I
