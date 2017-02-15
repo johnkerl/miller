@@ -8,8 +8,7 @@ BUGFIXES
 
 !! non-ephemeral logic permits references to out-of-scopes ?
   -> ensure either ephemeral-transfer, or final-copy, at assignment time
-
-* mlr -I expect-fail case w/o files; -n
+  -> ephemerals must live *only* in the eval-tree
 
 * UT
 * cookbook

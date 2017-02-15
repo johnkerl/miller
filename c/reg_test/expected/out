@@ -37993,6 +37993,18 @@ mlr cat then nothing then cat ./reg_test/input/abixy
 
 
 ================================================================
+IN-PLACE PROCESSING
+
+mlr -I --opprint head -n 2 /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1 /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
+
+mlr -I --opprint head -n 2
+./reg_test/../../c/mlr: -I option (in-place operation) requires input files.
+
+mlr -I --opprint -n head -n 2 /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
+./reg_test/../../c/mlr: -I option (in-place operation) requires input files.
+
+
+================================================================
 MAPPER TEE REDIRECTS
 
 mlr --from ./reg_test/input/abixy tee ./output-regtest/tee1/out then nothing
