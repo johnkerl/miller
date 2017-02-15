@@ -11,7 +11,6 @@
 #include "output/lrec_writers.h"
 
 static int do_stream_chained_in_place(context_t* pctx, cli_opts_t* popts);
-
 static int do_stream_chained_to_stdout(context_t* pctx, sllv_t* pmapper_list, cli_opts_t* popts);
 
 static int do_file_chained(char* filename, context_t* pctx,
@@ -37,6 +36,17 @@ int do_stream_chained(context_t* pctx, sllv_t* pmapper_list, cli_opts_t* popts) 
 }
 
 // ----------------------------------------------------------------
+// For in-place mode, reeconstruct the mappers on each input file. E.g. 'mlr -I head -n 2
+// foo bar' should do head -n 2 on foo as well as on bar.
+//
+// I could have implemented this with a single construction of the mappers and having each
+// mapper implement a virtual reset() method.  However, having effectively two initalizers
+// per mapper -- constructor and reset method -- I'd surely miss some logic somewhere.
+// With in-place mode being a less frequently used code path, this would likely lead to
+// latent bugs. So while it seems inelegant to re-parse part of the command line over and
+// over again to reconstruct mappers for each file, this approach leads to greater code
+// stability.
+
 static int do_stream_chained_in_place(context_t* pctx, cli_opts_t* popts) {
 	MLR_INTERNAL_CODING_ERROR_IF(popts->filenames == NULL);
 	MLR_INTERNAL_CODING_ERROR_IF(popts->filenames->length == 0);
@@ -46,18 +56,11 @@ static int do_stream_chained_in_place(context_t* pctx, cli_opts_t* popts) {
 	// Read from each file name in turn
 	for (sllse_t* pe = popts->filenames->phead; pe != NULL; pe = pe->pnext) {
 
+		// Allocate reader, mappers, and writer individually for each file name.
+		// This way CSV headers appear in each file, head -n 10 puts 10 rows for
+		// each output file, and so on.
 		lrec_reader_t* plrec_reader = lrec_reader_alloc_or_die(&popts->reader_opts);
 		lrec_writer_t* plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
-
-		// For in-place mode, reeconstruct the mappers on each input file. E.g. 'mlr -I
-		// head -n 2 foo bar' should do head -n 2 on foo as well as on bar. I could have
-		// implemented this with a single construction of the mappers and having each
-		// mapper implement a virtual reset() method.  However, having effectively two
-		// initalizers per mapper -- constructor and reset method -- I'd surely miss some
-		// logic somewhere. With in-place mode being a less frequently used code path,
-		// this would likely lead to latent bugs. So while it seems inelegant to re-parse
-		// part of the command line over and over again to reconstruct mappers for each
-		// file, this approach leads to greater code stability.
 
 		int argi = popts->mapper_argb;
 		int unused;
@@ -82,7 +85,7 @@ static int do_stream_chained_in_place(context_t* pctx, cli_opts_t* popts) {
 			pctx->force_eof = FALSE;
 
 		// Mappers and writers receive end-of-stream notifications via null input record.
-		// Do that, now that data from all input file(s) have been exhausted.
+		// Do that, now that data from the input file have been exhausted.
 		drive_lrec(NULL, pctx, pmapper_list->phead, plrec_writer, output_stream);
 		// Drain the pretty-printer.
 		plrec_writer->pprocess_func(plrec_writer->pvstate, output_stream, NULL, pctx);
@@ -145,7 +148,6 @@ static int do_stream_chained_to_stdout(context_t* pctx, sllv_t* pmapper_list, cl
 
 	// Drain the pretty-printer.
 	plrec_writer->pprocess_func(plrec_writer->pvstate, output_stream, NULL, pctx);
-
 
 	plrec_reader->pfree_func(plrec_reader);
 	plrec_writer->pfree_func(plrec_writer, pctx);

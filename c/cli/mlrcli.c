@@ -330,7 +330,7 @@ sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, 
 }
 
 // ----------------------------------------------------------------
-void cli_opts_free(cli_opts_t* popts) { // xxx rm ctx arg when mapper-free move
+void cli_opts_free(cli_opts_t* popts) {
 	if (popts == NULL)
 		return;
 
