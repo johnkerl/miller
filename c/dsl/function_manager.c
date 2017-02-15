@@ -592,6 +592,9 @@ static mv_t rval_evaluator_udf_callsite_process(void* pvstate, variables_t* pvar
 	if (retval.xval.is_terminal) {
 		return retval.xval.terminal_mlrval;
 	} else {
+		if (retval.is_ephemeral) {
+			mlhmmv_xvalue_free(&retval.xval);
+		}
 		return mv_absent();
 	}
 }
