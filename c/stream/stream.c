@@ -36,7 +36,7 @@ int do_stream_chained(context_t* pctx, sllv_t* pmapper_list, cli_opts_t* popts) 
 }
 
 // ----------------------------------------------------------------
-// For in-place mode, reeconstruct the mappers on each input file. E.g. 'mlr -I head -n 2
+// For in-place mode, reconstruct the mappers on each input file. E.g. 'mlr -I head -n 2
 // foo bar' should do head -n 2 on foo as well as on bar.
 //
 // I could have implemented this with a single construction of the mappers and having each
@@ -68,9 +68,14 @@ static int do_stream_chained_in_place(context_t* pctx, cli_opts_t* popts) {
 		MLR_INTERNAL_CODING_ERROR_IF(pmapper_list->length < 1); // Should not have been allowed by the CLI parser.
 
 		char* filename = pe->value;
-		char* foo = mlr_malloc_or_die(strlen(filename) + 32);
-		sprintf(foo, "%s.tmp", filename); // xxx needs uuid
-		FILE* output_stream = fopen(foo, "wb"); // xxx stub
+		char* tempname = alloc_suffixed_temp_file_name(filename);
+		FILE* output_stream = fopen(tempname, "wb");
+		if (output_stream == NULL) {
+			perror("fopen");
+			fprintf(stderr, "%s: Could not open \"%s\" for write.\n",
+				MLR_GLOBALS.bargv0, tempname);
+			exit(1);
+		}
 
 		pctx->filenum++;
 		pctx->filename = filename;
@@ -91,14 +96,14 @@ static int do_stream_chained_in_place(context_t* pctx, cli_opts_t* popts) {
 		plrec_writer->pprocess_func(plrec_writer->pvstate, output_stream, NULL, pctx);
 
 		fclose(output_stream);
-		int rc = rename(foo, filename);
+		int rc = rename(tempname, filename);
 		if (rc != 0) {
 			perror("rename");
 			fprintf(stderr, "%s: Could not rename \"%s\" to \"%s\".\n",
-				MLR_GLOBALS.bargv0, foo, filename);
+				MLR_GLOBALS.bargv0, tempname, filename);
 			exit(1);
 		}
-		free(foo);
+		free(tempname);
 
 		plrec_reader->pfree_func(plrec_reader);
 		plrec_writer->pfree_func(plrec_writer, pctx);

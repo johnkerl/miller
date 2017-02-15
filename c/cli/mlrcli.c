@@ -875,6 +875,12 @@ static void main_usage_other_options(FILE* o, char* argv0) {
 	fprintf(o, "                     for %s put with begin/end statements only. (Same as --from\n", argv0);
 	fprintf(o, "                     /dev/null.) Also useful in \"%s -n put -v '...'\" for\n", argv0);
 	fprintf(o, "                     analyzing abstract syntax trees (if that's your thing).\n");
+	fprintf(o, "  -I                 Process files in-place. For each file name on the command\n");
+	fprintf(o, "                     line, output is written to a temp file in the same\n");
+	fprintf(o, "                     directory, which is then renamed over the original. Each\n");
+	fprintf(o, "                     file is processed in isolation: if the output format is\n");
+	fprintf(o, "                     CSV, CSV headers will be present in each output file;\n");
+	fprintf(o, "                     statistics are only over each file's own records; and so on.\n");
 }
 
 static void main_usage_then_chaining(FILE* o, char* argv0) {

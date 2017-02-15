@@ -461,6 +461,12 @@ OPTIONS
 			    for mlr put with begin/end statements only. (Same as --from
 			    /dev/null.) Also useful in "mlr -n put -v '...'" for
 			    analyzing abstract syntax trees (if that's your thing).
+	 -I		    Process files in-place. For each file name on the command
+			    line, output is written to a temp file in the same
+			    directory, which is then renamed over the original. Each
+			    file is processed in isolation: if the output format is
+			    CSV, CSV headers will be present in each output file;
+			    statistics are only over each file's own records; and so on.
 
    THEN-CHAINING
        Output of one verb may be chained as input to another using "then", e.g.
@@ -2006,7 +2012,7 @@ SEE ALSO
 
 
 
-				  2017-02-13			     MILLER(1)
+				  2017-02-15			     MILLER(1)
 </pre>
 </div>
 <p/>

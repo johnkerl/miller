@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include "lib/mtrand.h"
 
 #define TRUE  1
 #define FALSE 0
@@ -165,5 +166,8 @@ char* mlr_alloc_double_backslash(char* input);
 char* read_file_into_memory(char* filename, size_t* psize);
 // The caller should free the return value.
 char* read_fp_into_memory(FILE* fp, size_t* psize);
+
+// Returns a copy of the filename with random characters attached to the end.
+char* alloc_suffixed_temp_file_name(char* filename);
 
 #endif // MLRUTIL_H

@@ -544,3 +544,23 @@ char* read_fp_into_memory(FILE* fp, size_t* psize) {
 	*psize = file_size;
 	return buffer;
 }
+
+// ----------------------------------------------------------------
+char* alloc_suffixed_temp_file_name(char* filename) {
+	const int suffix_length = 6;
+	static char bag[] = "abcdefghijklmnopqrstuvwxyz" "ABCDEFGHIJKLMNOPQRSTUVWXYZ" "0123456789";
+	const static int bag_length = sizeof(bag) - 1;
+
+	char* output = mlr_malloc_or_die(strlen(filename) + 2 + suffix_length);
+
+	int rand_start_index = sprintf(output, "%s.", filename);
+	char* rand_start_ptr = &output[rand_start_index];
+
+	int i = 0;
+	for ( ; i < suffix_length; i++) {
+		rand_start_ptr[i] = bag[get_mtrand_int32() % bag_length];
+	}
+	rand_start_ptr[i] = 0;
+
+	return output;
+}

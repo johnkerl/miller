@@ -188,6 +188,8 @@ MAPVARS:
 * xval retvals from UDFs
 * ispresent isabsent ismap isscalar & all other predicates; haskey; length; typeof
 
+IN-PLACE: simple example at ref; another at cookbook: one for put; another for format conversion.
+
 SINGLE-FOR:
 * srec/oosvar-single-for mlh
 * srec/oosvar-single-for mld
@@ -318,6 +320,7 @@ VERBS:
 * --jknquoteint/--jvquoteall @ put dump
 
 I/O:
+* -I
 * bare print/printn
 * --c2p et al.
 * --pprint --barred
