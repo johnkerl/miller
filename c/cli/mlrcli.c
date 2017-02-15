@@ -254,6 +254,11 @@ cli_opts_t* parse_command_line(int argc, char** argv) {
 		popts->reader_opts.use_mmap_for_read = FALSE;
 	}
 
+	if (popts->do_in_place && (popts->filenames == NULL || popts->filenames->length == 0)) {
+		fprintf(stderr, "%s: -I option (in-place operation) requires input files.\n", argv[0]);
+		exit(1);
+	}
+
 	if (have_rand_seed) {
 		mtrand_init(rand_seed);
 	} else {

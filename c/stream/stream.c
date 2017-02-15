@@ -38,7 +38,6 @@ int do_stream_chained(context_t* pctx, cli_opts_t* popts) {
 
 // ----------------------------------------------------------------
 static int do_stream_chained_in_place(context_t* pctx, cli_opts_t* popts) {
-	// xxx make these more clear to the user. or move better check to CLI parser and simple-assert here.
 	MLR_INTERNAL_CODING_ERROR_IF(popts->filenames == NULL);
 	MLR_INTERNAL_CODING_ERROR_IF(popts->filenames->length == 0);
 

@@ -11,6 +11,7 @@ BUGFIXES
 * make a link : https://github.com/johnkerl/miller/wiki
 
 ! mlr -I
+  - expect-fail case w/o files; -n
 
 * UT
 * cookbook
