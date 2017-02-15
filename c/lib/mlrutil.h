@@ -5,7 +5,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include "lib/mtrand.h"
+#include "mtrand.h"
 
 #define TRUE  1
 #define FALSE 0
