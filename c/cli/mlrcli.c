@@ -115,8 +115,8 @@ static mapper_setup_t* look_up_mapper_setup(char* verb);
 
 static int handle_terminal_usage(char** argv, int argc, int argi);
 
-static char* lhmss_get_or_die(lhmss_t* pmap, char* key, char* argv0);
-static int lhmsll_get_or_die(lhmsll_t* pmap, char* key, char* argv0);
+static char* lhmss_get_or_die(lhmss_t* pmap, char* key);
+static int lhmsll_get_or_die(lhmsll_t* pmap, char* key);
 
 // ----------------------------------------------------------------
 cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
@@ -165,15 +165,15 @@ cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 			if (sscanf(argv[argi+1], "%lld", &popts->nr_progress_mod) != 1) {
 				fprintf(stderr,
 					"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
-					argv[0], argv[argi+1]);
-				main_usage_short(stderr, argv[0]);
+					MLR_GLOBALS.bargv0, argv[argi+1]);
+				main_usage_short(stderr, MLR_GLOBALS.bargv0);
 				exit(1);
 			}
 			if (popts->nr_progress_mod <= 0) {
 				fprintf(stderr,
 					"%s: --nr-progress-mod argument must be a positive integer; got \"%s\".\n",
-					argv[0], argv[argi+1]);
-				main_usage_short(stderr, argv[0]);
+					MLR_GLOBALS.bargv0, argv[argi+1]);
+				main_usage_short(stderr, MLR_GLOBALS.bargv0);
 				exit(1);
 			}
 			argi += 2;
@@ -187,15 +187,15 @@ cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 			} else {
 				fprintf(stderr,
 					"%s: --seed argument must be a decimal or hexadecimal integer; got \"%s\".\n",
-					argv[0], argv[argi+1]);
-				main_usage_short(stderr, argv[0]);
+					MLR_GLOBALS.bargv0, argv[argi+1]);
+				main_usage_short(stderr, MLR_GLOBALS.bargv0);
 				exit(1);
 			}
 			argi += 2;
 
 		//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 		} else {
-			usage_unrecognized_verb(argv[0], argv[argi]);
+			usage_unrecognized_verb(MLR_GLOBALS.bargv0, argv[argi]);
 		}
 	}
 
@@ -208,29 +208,27 @@ cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 	lhmsll_t* default_repeat_ipses = get_default_repeat_ipses();
 
 	if (popts->reader_opts.irs == NULL)
-		popts->reader_opts.irs = lhmss_get_or_die(default_rses, popts->reader_opts.ifile_fmt, argv[0]);
+		popts->reader_opts.irs = lhmss_get_or_die(default_rses, popts->reader_opts.ifile_fmt);
 	if (popts->reader_opts.ifs == NULL)
-		popts->reader_opts.ifs = lhmss_get_or_die(default_fses, popts->reader_opts.ifile_fmt, argv[0]);
+		popts->reader_opts.ifs = lhmss_get_or_die(default_fses, popts->reader_opts.ifile_fmt);
 	if (popts->reader_opts.ips == NULL)
-		popts->reader_opts.ips = lhmss_get_or_die(default_pses, popts->reader_opts.ifile_fmt, argv[0]);
+		popts->reader_opts.ips = lhmss_get_or_die(default_pses, popts->reader_opts.ifile_fmt);
 
 	if (popts->reader_opts.allow_repeat_ifs == NEITHER_TRUE_NOR_FALSE)
-		popts->reader_opts.allow_repeat_ifs = lhmsll_get_or_die(default_repeat_ifses,
-			popts->reader_opts.ifile_fmt, argv[0]);
+		popts->reader_opts.allow_repeat_ifs = lhmsll_get_or_die(default_repeat_ifses, popts->reader_opts.ifile_fmt);
 	if (popts->reader_opts.allow_repeat_ips == NEITHER_TRUE_NOR_FALSE)
-		popts->reader_opts.allow_repeat_ips = lhmsll_get_or_die(default_repeat_ipses,
-			popts->reader_opts.ifile_fmt, argv[0]);
+		popts->reader_opts.allow_repeat_ips = lhmsll_get_or_die(default_repeat_ipses, popts->reader_opts.ifile_fmt);
 
 	if (popts->writer_opts.ors == NULL)
-		popts->writer_opts.ors = lhmss_get_or_die(default_rses, popts->writer_opts.ofile_fmt, argv[0]);
+		popts->writer_opts.ors = lhmss_get_or_die(default_rses, popts->writer_opts.ofile_fmt);
 	if (popts->writer_opts.ofs == NULL)
-		popts->writer_opts.ofs = lhmss_get_or_die(default_fses, popts->writer_opts.ofile_fmt, argv[0]);
+		popts->writer_opts.ofs = lhmss_get_or_die(default_fses, popts->writer_opts.ofile_fmt);
 	if (popts->writer_opts.ops == NULL)
-		popts->writer_opts.ops = lhmss_get_or_die(default_pses, popts->writer_opts.ofile_fmt, argv[0]);
+		popts->writer_opts.ops = lhmss_get_or_die(default_pses, popts->writer_opts.ofile_fmt);
 
 	if (streq(popts->writer_opts.ofile_fmt, "pprint") && strlen(popts->writer_opts.ofs) != 1) {
 		fprintf(stderr, "%s: OFS for PPRINT format must be single-character; got \"%s\".\n",
-			argv[0], popts->writer_opts.ofs);
+			MLR_GLOBALS.bargv0, popts->writer_opts.ofs);
 		return NULL;
 	}
 
@@ -255,7 +253,7 @@ cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 	}
 
 	if (popts->do_in_place && (popts->filenames == NULL || popts->filenames->length == 0)) {
-		fprintf(stderr, "%s: -I option (in-place operation) requires input files.\n", argv[0]);
+		fprintf(stderr, "%s: -I option (in-place operation) requires input files.\n", MLR_GLOBALS.bargv0);
 		exit(1);
 	}
 
@@ -282,8 +280,8 @@ sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, 
 	}
 
 	if ((argc - argi) < 1) {
-		fprintf(stderr, "%s: no verb supplied.\n", argv[0]);
-		main_usage_short(stderr, argv[0]);
+		fprintf(stderr, "%s: no verb supplied.\n", MLR_GLOBALS.bargv0);
+		main_usage_short(stderr, MLR_GLOBALS.bargv0);
 		exit(1);
 	}
 	while (TRUE) {
@@ -293,13 +291,13 @@ sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, 
 		mapper_setup_t* pmapper_setup = look_up_mapper_setup(verb);
 		if (pmapper_setup == NULL) {
 			fprintf(stderr, "%s: verb \"%s\" not found. Please use \"%s --help\" for a list.\n",
-				argv[0], verb, argv[0]);
+				MLR_GLOBALS.bargv0, verb, MLR_GLOBALS.bargv0);
 			exit(1);
 		}
 
 		if ((argc - argi) >= 2) {
 			if (streq(argv[argi+1], "-h") || streq(argv[argi+1], "--help")) {
-				pmapper_setup->pusage_func(stdout, argv[0], verb);
+				pmapper_setup->pusage_func(stdout, MLR_GLOBALS.bargv0, verb);
 				exit(0);
 			}
 		}
@@ -941,8 +939,8 @@ static void usage_unrecognized_verb(char* argv0, char* arg) {
 
 static void check_arg_count(char** argv, int argi, int argc, int n) {
 	if ((argc - argi) < n) {
-		fprintf(stderr, "%s: option \"%s\" missing argument(s).\n", argv[0], argv[argi]);
-		main_usage_short(stderr, argv[0]);
+		fprintf(stderr, "%s: option \"%s\" missing argument(s).\n", MLR_GLOBALS.bargv0, argv[argi]);
+		main_usage_short(stderr, MLR_GLOBALS.bargv0);
 		exit(1);
 	}
 }
@@ -1114,20 +1112,15 @@ void cli_merge_reader_opts(cli_reader_opts_t* pfunc_opts, cli_reader_opts_t* pma
 	} else {
 
 		if (pfunc_opts->irs == NULL)
-			pfunc_opts->irs = lhmss_get_or_die(get_default_rses(), pfunc_opts->ifile_fmt,
-				MLR_GLOBALS.bargv0);
+			pfunc_opts->irs = lhmss_get_or_die(get_default_rses(), pfunc_opts->ifile_fmt);
 		if (pfunc_opts->ifs == NULL)
-			pfunc_opts->ifs = lhmss_get_or_die(get_default_fses(), pfunc_opts->ifile_fmt,
-				MLR_GLOBALS.bargv0);
+			pfunc_opts->ifs = lhmss_get_or_die(get_default_fses(), pfunc_opts->ifile_fmt);
 		if (pfunc_opts->ips == NULL)
-			pfunc_opts->ips = lhmss_get_or_die(get_default_pses(), pfunc_opts->ifile_fmt,
-				MLR_GLOBALS.bargv0);
+			pfunc_opts->ips = lhmss_get_or_die(get_default_pses(), pfunc_opts->ifile_fmt);
 		if (pfunc_opts->allow_repeat_ifs  == NEITHER_TRUE_NOR_FALSE)
-			pfunc_opts->allow_repeat_ifs = lhmsll_get_or_die(get_default_repeat_ifses(), pfunc_opts->ifile_fmt,
-				MLR_GLOBALS.bargv0);
+			pfunc_opts->allow_repeat_ifs = lhmsll_get_or_die(get_default_repeat_ifses(), pfunc_opts->ifile_fmt);
 		if (pfunc_opts->allow_repeat_ips  == NEITHER_TRUE_NOR_FALSE)
-			pfunc_opts->allow_repeat_ips = lhmsll_get_or_die(get_default_repeat_ipses(), pfunc_opts->ifile_fmt,
-				MLR_GLOBALS.bargv0);
+			pfunc_opts->allow_repeat_ips = lhmsll_get_or_die(get_default_repeat_ipses(), pfunc_opts->ifile_fmt);
 
 	}
 
@@ -1158,14 +1151,11 @@ void cli_merge_writer_opts(cli_writer_opts_t* pfunc_opts, cli_writer_opts_t* pma
 			pfunc_opts->ops = pmain_opts->ops;
 	} else {
 		if (pfunc_opts->ors == NULL)
-			pfunc_opts->ors = lhmss_get_or_die(get_default_rses(), pfunc_opts->ofile_fmt,
-				MLR_GLOBALS.bargv0);
+			pfunc_opts->ors = lhmss_get_or_die(get_default_rses(), pfunc_opts->ofile_fmt);
 		if (pfunc_opts->ofs == NULL)
-			pfunc_opts->ofs = lhmss_get_or_die(get_default_fses(), pfunc_opts->ofile_fmt,
-				MLR_GLOBALS.bargv0);
+			pfunc_opts->ofs = lhmss_get_or_die(get_default_fses(), pfunc_opts->ofile_fmt);
 		if (pfunc_opts->ops == NULL)
-			pfunc_opts->ops = lhmss_get_or_die(get_default_pses(), pfunc_opts->ofile_fmt,
-				MLR_GLOBALS.bargv0);
+			pfunc_opts->ops = lhmss_get_or_die(get_default_pses(), pfunc_opts->ofile_fmt);
 	}
 
 	if (pfunc_opts->headerless_csv_output == NEITHER_TRUE_NOR_FALSE)
@@ -1208,17 +1198,17 @@ static int handle_terminal_usage(char** argv, int argc, int argi) {
 		printf("Miller %s\n", VERSION_STRING);
 		return TRUE;
 	} else if (streq(argv[argi], "-h")) {
-		main_usage_long(stdout, argv[0]);
+		main_usage_long(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--help")) {
-		main_usage_long(stdout, argv[0]);
+		main_usage_long(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--print-type-arithmetic-info")) {
-		print_type_arithmetic_info(stdout, argv[0]);
+		print_type_arithmetic_info(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 
 	} else if (streq(argv[argi], "--help-all-verbs")) {
-		usage_all_verbs(argv[0]);
+		usage_all_verbs(MLR_GLOBALS.bargv0);
 	} else if (streq(argv[argi], "--list-all-verbs") || streq(argv[argi], "-l")) {
 		list_all_verbs(stdout, "");
 		return TRUE;
@@ -1257,52 +1247,52 @@ static int handle_terminal_usage(char** argv, int argc, int argi) {
 	// main-usage subsections, individually accessible for the benefit of
 	// the manpage-autogenerator
 	} else if (streq(argv[argi], "--usage-synopsis")) {
-		main_usage_synopsis(stdout, argv[0]);
+		main_usage_synopsis(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-examples")) {
-		main_usage_examples(stdout, argv[0], "");
+		main_usage_examples(stdout, MLR_GLOBALS.bargv0, "");
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-list-all-verbs")) {
 		list_all_verbs(stdout, "");
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-help-options")) {
-		main_usage_help_options(stdout, argv[0]);
+		main_usage_help_options(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-functions")) {
-		main_usage_functions(stdout, argv[0], "");
+		main_usage_functions(stdout, MLR_GLOBALS.bargv0, "");
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-data-format-examples")) {
-		main_usage_data_format_examples(stdout, argv[0]);
+		main_usage_data_format_examples(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-data-format-options")) {
-		main_usage_data_format_options(stdout, argv[0]);
+		main_usage_data_format_options(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-format-conversion-keystroke-saver-options")) {
-		main_usage_format_conversion_keystroke_saver_options(stdout, argv[0]);
+		main_usage_format_conversion_keystroke_saver_options(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-compressed-data-options")) {
-		main_usage_compressed_data_options(stdout, argv[0]);
+		main_usage_compressed_data_options(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-separator-options")) {
-		main_usage_separator_options(stdout, argv[0]);
+		main_usage_separator_options(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-csv-options")) {
-		main_usage_csv_options(stdout, argv[0]);
+		main_usage_csv_options(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-double-quoting")) {
-		main_usage_double_quoting(stdout, argv[0]);
+		main_usage_double_quoting(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-numerical-formatting")) {
-		main_usage_numerical_formatting(stdout, argv[0]);
+		main_usage_numerical_formatting(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-other-options")) {
-		main_usage_other_options(stdout, argv[0]);
+		main_usage_other_options(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-then-chaining")) {
-		main_usage_then_chaining(stdout, argv[0]);
+		main_usage_then_chaining(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-see-also")) {
-		main_usage_see_also(stdout, argv[0]);
+		main_usage_see_also(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	}
 	return FALSE;
@@ -1340,7 +1330,7 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 		check_arg_count(argv, argi, argc, 2);
 		if (!lhmss_has_key(get_default_rses(), argv[argi+1])) {
 			fprintf(stderr, "%s: unrecognized input format \"%s\".\n",
-				argv[0], argv[argi+1]);
+				MLR_GLOBALS.bargv0, argv[argi+1]);
 			exit(1);
 		}
 		preader_opts->ifile_fmt = argv[argi+1];
@@ -1460,7 +1450,7 @@ int cli_handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts
 		check_arg_count(argv, argi, argc, 2);
 		if (!lhmss_has_key(get_default_rses(), argv[argi+1])) {
 			fprintf(stderr, "%s: unrecognized output format \"%s\".\n",
-				argv[0], argv[argi+1]);
+				MLR_GLOBALS.bargv0, argv[argi+1]);
 			exit(1);
 		}
 		pwriter_opts->ofile_fmt = argv[argi+1];
@@ -1584,7 +1574,7 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 		check_arg_count(argv, argi, argc, 2);
 		if (!lhmss_has_key(get_default_rses(), argv[argi+1])) {
 			fprintf(stderr, "%s: unrecognized I/O format \"%s\".\n",
-				argv[0], argv[argi+1]);
+				MLR_GLOBALS.bargv0, argv[argi+1]);
 			exit(1);
 		}
 		preader_opts->ifile_fmt = argv[argi+1];
@@ -1902,14 +1892,14 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 }
 
 // ----------------------------------------------------------------
-static char* lhmss_get_or_die(lhmss_t* pmap, char* key, char* argv0) {
+static char* lhmss_get_or_die(lhmss_t* pmap, char* key) {
 	char* value = lhmss_get(pmap, key);
 	MLR_INTERNAL_CODING_ERROR_IF(value == NULL);
 	return value;
 }
 
 // ----------------------------------------------------------------
-static int lhmsll_get_or_die(lhmsll_t* pmap, char* key, char* argv0) {
+static int lhmsll_get_or_die(lhmsll_t* pmap, char* key) {
 	MLR_INTERNAL_CODING_ERROR_UNLESS(lhmsll_has_key(pmap, key));
 	return lhmsll_get(pmap, key);
 }
