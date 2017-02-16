@@ -6,16 +6,12 @@ BUGFIXES
 ================================================================
 5.0.0 RELEASE TO DO:
 
-!! non-ephemeral logic permits references to out-of-scopes ?
-  -> ensure either ephemeral-transfer, or final-copy, at assignment time
-  -> ephemerals must live *only* in the eval-tree
-
 * UT
 * cookbook
 * other doc
 * mt_error/fatal/skip-assign audit
 * xxxes
-* valgrinds
+* re-valgrinds after UT expansion
 * release notes
 
 ================================================================
