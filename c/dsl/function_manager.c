@@ -953,7 +953,7 @@ static boxed_xval_t xeval_wrapping_eval_func(void* pvstate, variables_t* pvars) 
 	mv_t val = pevaluator->pprocess_func(pevaluator->pvstate, pvars);
 	return (boxed_xval_t) {
 		.xval = mlhmmv_xvalue_wrap_terminal(val),
-		.is_ephemeral = FALSE, // verify reference semantics for RHS evaluators!
+		.is_ephemeral = TRUE, // xxx verify reference semantics for RHS evaluators!
 	};
 }
 
