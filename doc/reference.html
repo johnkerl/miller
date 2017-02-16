@@ -147,6 +147,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#On-line_help">On-line help</a><br/>
 &bull;&nbsp;<a href="#I/O_options">I/O options</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Formats">Formats</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#In-place_mode">In-place mode</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Compression">Compression</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Record/field/pair_separators">Record/field/pair separators</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Number_formatting">Number formatting</a><br/>
@@ -666,6 +667,26 @@ wye pan 5  0.5732889198020006  0.8636244699032729
 <tt>--oxtab</tt> is the same as <tt>--idkvp --oxtab</tt>.
 
 </ul>
+
+<!-- ================================================================ -->
+<a id="In-place_mode"/><h2>In-place mode</h2>
+
+<p/> Use the <tt>mlr -I</tt> flag to process files in-place. For example,
+<tt>mlr -I --csv cut -x -f unwanted_column_name mydata/*.csv</tt> will remove
+<tt>unwanted_column_name</tt> from all your <tt>*.csv</tt> files in your
+<tt>mydata/</tt> subdirectory.
+
+<p/> By default, Miller output goes to the screen (or you can redirect a file
+using <tt>&gt;</tt> or to another process using <tt>|</tt>). With <tt>-I</tt>,
+for each file name on the command line, output is written to a temporary file
+in the same directory. Miller writes its output into that temp file, which is
+then renamed over the original.  Then, processing continues on the next file.
+Each file is processed in isolation: if the output format is CSV, CSV headers
+will be present in each output file; statistics are only over each file's own
+records; and so on.
+
+<p/> Please see <a href="10-min.html#Choices_for_printing_to_files">here</a>
+for examples.
 
 <!-- ================================================================ -->
 <a id="Compression"/><h2>Compression</h2>
