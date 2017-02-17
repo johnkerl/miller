@@ -14,8 +14,6 @@ BUGFIXES
 * re-valgrinds after UT expansion
 * release notes
 
-* whence-miller: cf. slpost
-
 * mlr hex -> auxes. and make an aux-list. and doc: olh as well as webdoc?
 * more other-tool cmps (many)
 
