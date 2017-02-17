@@ -1,6 +1,12 @@
 POKI_PUT_TOC_HERE
 
+<p/>
+<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+
 <h1>Command overview</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_overview" style="display: block">
 
 <p>
 Whereas the Unix toolkit is made of the separate executables <tt>cat</tt>, <tt>tail</tt>, <tt>cut</tt>,
@@ -93,7 +99,10 @@ POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)HERE
 
 </table>
 
+</div>
 <h1>On-line help</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_online_help');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_online_help" style="display: block">
 
 <p/>Examples:<p/>
 
@@ -102,7 +111,10 @@ POKI_RUN_COMMAND{{mlr --help}}HERE
 POKI_RUN_COMMAND{{mlr sort --help}}HERE
 
 <!-- ================================================================ -->
+</div>
 <h1>I/O options</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_io_options');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_io_options" style="display: block">
 
 <!-- ================================================================ -->
 <h2>Formats</h2>
@@ -269,17 +281,26 @@ Example:
 POKI_RUN_COMMAND{{echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'}}HERE
 
 <!-- ================================================================ -->
+</div>
 <h1>Data transformations</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_data_transformations');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_data_transformations" style="display: block">
 
 <p/> Please see <a href="reference-verbs.html">the separate page here</a>.
 
 <!-- ================================================================ -->
+</div>
 <h1>Expression language for filter and put</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_dsl_ref');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_dsl_ref" style="display: block">
 
 <p/> Please see <a href="reference-dsl.html">the separate page here</a>.
 
 <!-- ================================================================ -->
+</div>
 <h1>then-chaining</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_then_chaining');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_then_chaining" style="display: block">
 
 <p/>
 In accord with the
@@ -314,7 +335,10 @@ have re-type formatting flags (e.g. <tt>--csv --fs tab</tt>) at every
 pipeline stage.
 
 <!-- ================================================================ -->
+</div>
 <h1>Data types</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_data_types');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_data_types" style="display: block">
 
 <p/> Miller&rsquo;s input and output are all string-oriented: there is (as of
 August 2015 anyway) no support for binary record packing. In this sense,
@@ -368,7 +392,10 @@ integer as well as float input.
 </ul>
 
 <!-- ================================================================ -->
+</div>
 <h1>Null data: empty and absent</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_null_data');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_null_data" style="display: block">
 
 <p/> One of Miller&rsquo;s key features is its support for <b>heterogeneous</b>
 data.  For example, take <tt>mlr sort</tt>: if you try to sort on field
@@ -484,7 +511,10 @@ arithmetic/boolean/bitwise operators are similar):
 POKI_RUN_COMMAND{{mlr --print-type-arithmetic-info}}HERE
 
 <!-- ================================================================ -->
+</div>
 <h1>String literals</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_string_literals');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_string_literals" style="display: block">
 
 <p/>
 You can use the following backslash escapes for strings such as between the double quotes in contexts such as
@@ -516,7 +546,10 @@ replacements, you can do, for example, for a field named <tt>field</tt>, <tt> ml
 "\t")'</tt>. If you need to make such a replacement for all fields in your data, you should probably simply use the
 system <tt>sed</tt> command.
 
+</div>
 <h1>Regular expressions</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_regular_expressions');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_regular_expressions" style="display: block">
 
 <p/>Miller lets you use regular expressions (of type POSIX.2) in the following contexts:
 
@@ -624,7 +657,10 @@ followed by an unrelated <tt>5</tt>.
 </ul>
 
 <!-- ================================================================ -->
+</div>
 <h1>Arithmetic</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_arithmetic');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_arithmetic" style="display: block">
 
 <h2>Input scanning</h2>
 
@@ -709,3 +745,5 @@ pythonic</a>:
     This rounds toward the negative.
   <li/> Remainders are non-negative.
   </ul>
+
+</div>
