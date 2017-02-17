@@ -1,11 +1,20 @@
 POKI_PUT_TOC_HERE
 
+<p/>
+<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+
 <h1>Miller license</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_miller_license');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_miller_license" style="display: block">
 
 <p/>Two-clause BSD license <a href="https://github.com/johnkerl/miller/blob/master/LICENSE.txt">
 https://github.com/johnkerl/miller/blob/master/LICENSE.txt</a>.
 
+</div>
 <h1>Prebuilt executables</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_prebuilt_executables');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_prebuilt_executables" style="display: block">
 
 <p/> Please see <a href="https://github.com/johnkerl/miller/releases">
 https://github.com/johnkerl/miller/releases</a> where there are builds for OSX
@@ -22,7 +31,10 @@ For example, on Debian/Ubuntu, you can try
 
 POKI_CARDIFY(sudo apt-get install miller)HERE
 
+</div>
 <h1>Building from source</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_building_from_source');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_building_from_source" style="display: block">
 
 <h2>From release tarball using autoconfig</h2>
 
@@ -115,7 +127,10 @@ modern Linux/BSD-like systems: I&rsquo;m aware of successful use with
 <tt>gcc</tt> and <tt>clang</tt>, on Ubuntu 12.04 LTS, SELinux, Darwin (MacOS
 Yosemite), and FreeBSD.
 
+</div>
 <h1>In case of problems</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_in_case_of_problems');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_in_case_of_problems" style="display: block">
 
 <p/> If you have any build errors, feel free to contact me at <a
 href="mailto:kerl.john.r+miller@gmail.com">kerl.john.r+miller@gmail.com</a>,
@@ -123,7 +138,10 @@ href="mailto:kerl.john.r+miller@gmail.com">kerl.john.r+miller@gmail.com</a>,
 <a href="https://github.com/johnkerl/miller/issues">
 https://github.com/johnkerl/miller/issues</a>.
 
+</div>
 <h1>Dependencies</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_dependencies');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_dependencies" style="display: block">
 
 <h2>Required external dependencies</h2>
 
@@ -167,7 +185,10 @@ copyright</a>.
 <li/> The <a href="https://github.com/udp/json-parser">udp JSON parser</a>, with BSD2 license.
 </ul>
 
+</div>
 <h1>Creating a new release: for developers</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_creating_a_new_release');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_creating_a_new_release" style="display: block">
 
 <p/>At present I&rsquo;m the primary developer so this is just my checklist for making new releases.
 
@@ -242,3 +263,5 @@ git push -u origin miller-3.4.0
   </ul>
 
 </ul>
+
+</div>
