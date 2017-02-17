@@ -335,6 +335,7 @@ DOC:
 * 10-min
 * inverse-transform-sampling example at cookbook.
 * mlr -F and -K. Note -l -L -f -F -k -K.
+* section toggles
 * go/d/rust cmps @ getline
 * ruby/python cmps @ mand
 

@@ -193,7 +193,13 @@ Miller commands were run with pretty-print-tabular output format.
 </div>
 <p/>
 
+<p/>
+<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+
 <a id="CSV-file_examples"/><h1>CSV-file examples</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_csv_file_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_csv_file_examples" style="display: block">
 
 <p/><boldmaroon> Sample CSV data file: </boldmaroon>
 
@@ -524,7 +530,10 @@ square   purple 1              72.373500    72.373500     72.373500
 </div>
 <p/>
 
+</div>
 <a id="Choices_for_printing_to_files"/><h1>Choices for printing to files</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_printing_to_files');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_printing_to_files" style="display: block">
 
 <p/>Often we want to print output <boldmaroon>to the screen</boldmaroon>. Miller does this by default, as we&rsquo;ve
 seen in the previous examples.
@@ -652,7 +661,10 @@ purple,triangle,0,65,80.1405,5.8240
 <p/>
 </td></tr></table>
 
+</div>
 <a id="Other-format_examples"/><h1>Other-format examples</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_other_format_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_other_format_examples" style="display: block">
 
 <p/>What&rsquo;s a CSV file, really? It&rsquo;s an array of rows, or
 <i>records</i>, each being a list of key-value pairs, or <i>fields</i>: for CSV
@@ -707,7 +719,10 @@ other format input data.</boldmaroon>  And you can read from one format, do any
 record-processing, and output to the same format as the input, or to a
 different output format.
 
+</div>
 <a id="SQL-output_examples"/><h1>SQL-output examples</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sql_output_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_sql_output_examples" style="display: block">
 
 <p/>I like to produce SQL-query output with header-column and tab delimiter:
 this is CSV but with a tab instead of a comma, also known as TSV. Then I
@@ -820,7 +835,10 @@ standard 10009872    108
 <p/>Again, all the examples in the CSV section apply here &mdash; just change the input-format
 flags.
 
+</div>
 <a id="Log-processing_examples"/><h1>Log-processing examples</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_log_processing_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_log_processing_examples" style="display: block">
 
 <p/>Another of my favorite use-cases for Miller is doing ad-hoc processing of
 log-file data.  Here&rsquo;s where DKVP format really shines: one, since the
@@ -1038,11 +1056,16 @@ time                 batch_size num_filtered
 </div>
 <p/>
 
+</div>
 <a id="More"/><h1>More</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_more');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_more" style="display: block">
 
 <p/>Please see the <a href="reference.html">reference</a> for complete
 information, as well as the <a href="faq.html">FAQ</a> and the <a
 href="cookbook.html">cookbook</a> for more tips.
+
+</div>
     </div>
   </td>
 
