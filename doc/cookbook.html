@@ -27,16 +27,56 @@ pageTracker._trackPageview();
 } catch(err) {}
 </script>
 
+<!-- ================================================================ -->
 <script type="text/javascript">
-	function toggle(divName) {
-		var eleDiv = document.getElementById(divName);
-		if (eleDiv != null) {
-			if (eleDiv.style.display == "block") {
-				eleDiv.style.display = "none";
-			} else {
-				eleDiv.style.display = "block";
-			}
+	function toggle_div(div) {
+		if (div != null) {
+      if (div.id.startsWith("section_toggle_")) {
+			  var state = div.style.display;
+			  if (state == "block") {
+				  div.style.display = "none";
+			  } else {
+				  div.style.display = "block";
+			  }
+		  }
 		}
+	}
+	function expand_div(div) {
+		if (div != null) {
+      if (div.id.startsWith("section_toggle_")) {
+			  div.style.display = "block";
+      }
+		}
+	}
+	function collapse_div(div) {
+		if (div != null) {
+      if (div.id.startsWith("section_toggle_")) {
+			  div.style.display = "none";
+      }
+		}
+	}
+
+	function toggle_by_name(divName) {
+		toggle_div(document.getElementById(divName));
+	}
+	function expand_by_name(divName) {
+		expand_div(document.getElementById(divName));
+	}
+	function collapse_by_name(divName) {
+		collapse_div(document.getElementById(divName));
+	}
+
+	function expand_all() {
+    var divs = document.getElementsByTagName("div");
+    for(var i = 0; i < divs.length; i++) {
+      expand_div(divs[i]);
+    }
+	}
+	function collapse_all() {
+    var divs = document.getElementsByTagName("div");
+    for(var i = 0; i < divs.length; i++){
+      collapse_div(divs[i]);
+    }
 	}
 </script>
 
@@ -608,33 +648,33 @@ $ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
 ' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
 i  o      fcount  seconds_delta
 1  1      1       0
-2  2      3       0.000036001
+2  2      3       0.000035048
 3  3      5       0.000014067
-4  5      9       0.000016928
+4  5      9       0.000015974
 5  8      15      0.000023127
-6  13     25      0.000032902
-7  21     41      0.000049114
-8  34     67      0.000074863
-9  55     109     0.000120163
-10 89     177     0.000192881
-11 144    287     0.000306129
-12 233    465     0.000904799
-13 377    753     0.000806093
-14 610    1219    0.001179934
-15 987    1973    0.001911163
-16 1597   3193    0.003113985
-17 2584   5167    0.005069971
-18 4181   8361    0.010411978
-19 6765   13529   0.013213873
-20 10946  21891   0.020325184
-21 17711  35421   0.032596827
-22 28657  57313   0.052674055
-23 46368  92735   0.084632158
-24 75025  150049  0.130624771
-25 121393 242785  0.223796129
-26 196418 392835  0.372267008
-27 317811 635621  0.597162962
-28 514229 1028457 0.964564085
+6  13     25      0.000031948
+7  21     41      0.000047922
+8  34     67      0.000073910
+9  55     109     0.000117064
+10 89     177     0.000185966
+11 144    287     0.000302076
+12 233    465     0.000475883
+13 377    753     0.000766039
+14 610    1219    0.001186132
+15 987    1973    0.002631903
+16 1597   3193    0.002880096
+17 2584   5167    0.004626989
+18 4181   8361    0.008080006
+19 6765   13529   0.014917850
+20 10946  21891   0.019526005
+21 17711  35421   0.031150103
+22 28657  57313   0.050240993
+23 46368  92735   0.080420971
+24 75025  150049  0.136193991
+25 121393 242785  0.228802919
+26 196418 392835  0.372753143
+27 317811 635621  0.582310915
+28 514229 1028457 0.935086966
 </pre>
 </div>
 <p/>
@@ -666,33 +706,33 @@ $ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
 ' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
 i  o      fcount seconds_delta
 1  1      1      0
-2  2      3      0.000121117
-3  3      3      0.000018835
-4  5      3      0.000013113
-5  8      3      0.000011921
-6  13     3      0.000012159
-7  21     3      0.000011921
-8  34     3      0.000012875
-9  55     3      0.000030041
-10 89     3      0.000014067
-11 144    3      0.000012875
-12 233    3      0.000018120
+2  2      3      0.000034094
+3  3      3      0.000013113
+4  5      3      0.000010967
+5  8      3      0.000010967
+6  13     3      0.000010014
+7  21     3      0.000010014
+8  34     3      0.000010014
+9  55     3      0.000010014
+10 89     3      0.000011921
+11 144    3      0.000010014
+12 233    3      0.000014067
 13 377    3      0.000010967
-14 610    3      0.000011921
-15 987    3      0.000011206
-16 1597   3      0.000014782
-17 2584   3      0.000011206
-18 4181   3      0.000010967
-19 6765   3      0.000030994
-20 10946  3      0.000012875
-21 17711  3      0.000013113
-22 28657  3      0.000010967
-23 46368  3      0.000012875
-24 75025  3      0.000012159
-25 121393 3      0.000011921
-26 196418 3      0.000011921
-27 317811 3      0.000011206
-28 514229 3      0.000010967
+14 610    3      0.000010014
+15 987    3      0.000010014
+16 1597   3      0.000010014
+17 2584   3      0.000010014
+18 4181   3      0.000009775
+19 6765   3      0.000010014
+20 10946  3      0.000009060
+21 17711  3      0.000010014
+22 28657  3      0.000020981
+23 46368  3      0.000023127
+24 75025  3      0.000020981
+25 121393 3      0.000010014
+26 196418 3      0.000010014
+27 317811 3      0.000010967
+28 514229 3      0.000010014
 </pre>
 </div>
 <p/>

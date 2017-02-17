@@ -27,16 +27,56 @@ pageTracker._trackPageview();
 } catch(err) {}
 </script>
 
+<!-- ================================================================ -->
 <script type="text/javascript">
-	function toggle(divName) {
-		var eleDiv = document.getElementById(divName);
-		if (eleDiv != null) {
-			if (eleDiv.style.display == "block") {
-				eleDiv.style.display = "none";
-			} else {
-				eleDiv.style.display = "block";
-			}
+	function toggle_div(div) {
+		if (div != null) {
+      if (div.id.startsWith("section_toggle_")) {
+			  var state = div.style.display;
+			  if (state == "block") {
+				  div.style.display = "none";
+			  } else {
+				  div.style.display = "block";
+			  }
+		  }
 		}
+	}
+	function expand_div(div) {
+		if (div != null) {
+      if (div.id.startsWith("section_toggle_")) {
+			  div.style.display = "block";
+      }
+		}
+	}
+	function collapse_div(div) {
+		if (div != null) {
+      if (div.id.startsWith("section_toggle_")) {
+			  div.style.display = "none";
+      }
+		}
+	}
+
+	function toggle_by_name(divName) {
+		toggle_div(document.getElementById(divName));
+	}
+	function expand_by_name(divName) {
+		expand_div(document.getElementById(divName));
+	}
+	function collapse_by_name(divName) {
+		collapse_div(document.getElementById(divName));
+	}
+
+	function expand_all() {
+    var divs = document.getElementsByTagName("div");
+    for(var i = 0; i < divs.length; i++) {
+      expand_div(divs[i]);
+    }
+	}
+	function collapse_all() {
+    var divs = document.getElementsByTagName("div");
+    for(var i = 0; i < divs.length; i++){
+      collapse_div(divs[i]);
+    }
 	}
 </script>
 
@@ -195,8 +235,14 @@ part is called a <b>verb</b>. It specifies how you want to transform your data.
 (See also <a href="reference.html#Command_overview">here</a> for a breakdown.)
 The following is an alphabetical list of verbs with their descriptions.
 
+<p/>
+<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+
 <!-- ================================================================ -->
 <a id="bar"/><h1>bar</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_bar');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_bar" style="display: block">
 
 <p/> Cheesy bar-charting.
 
@@ -277,8 +323,11 @@ wye pan 5 [0.204603]**************************..............[0.75868] [0.134189]
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="bootstrap"/><h1>bootstrap</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_bootstrap');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_bootstrap" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -338,8 +387,11 @@ orange 0.468014 292
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="cat"/><h1>cat</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_cat');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_cat" style="display: block">
 
 <p/> Most useful for format conversions (see
 <a href="file-formats.html">File formats</a>), and concatenating multiple
@@ -460,8 +512,11 @@ n a   b   i x                   y
 <p/>
 </td></tr></table>
 
+</div>
 <!-- ================================================================ -->
 <a id="check"/><h1>check</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_check');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_check" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -474,8 +529,11 @@ Useful for doing a well-formatted check on input data.
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="count-distinct"/><h1>count-distinct</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_count_distinct');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_count_distinct" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -566,8 +624,11 @@ count=25
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="cut"/><h1>cut</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_cut');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_cut" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -641,8 +702,11 @@ b=2,c=3,a=1
 <p/>
 </td></tr></table>
 
+</div>
 <!-- ================================================================ -->
 <a id="decimate"/><h1>decimate</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_decimate');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_decimate" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -659,8 +723,12 @@ Passes through one of every n records, optionally by category.
 <p/>
 
 <p/>
+
+</div>
 <!-- ================================================================ -->
 <a id="filter"/><h1>filter</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_filter');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_filter" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -741,8 +809,11 @@ useful when you don't yet know which field name(s) you're looking for.
 language for filter and put</a> for more information about the expression
 language for <tt>mlr filter</tt>.
 
+</div>
 <!-- ================================================================ -->
 <a id="grep"/><h1>grep</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_grep');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_grep" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -768,8 +839,11 @@ features of system grep, you can do
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="group-by"/><h1>group-by</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_group_by');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_group_by" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -830,8 +904,11 @@ particular, the ordering of group-by fields for group-by is the order in which
 they were encountered in the data stream, which in some cases may be more interesting
 to you.
 
+</div>
 <!-- ================================================================ -->
 <a id="group-like"/><h1>group-like</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_group_like');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_group_like" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -879,8 +956,11 @@ record_count resource
 <p/>
 </td></tr></table>
 
+</div>
 <!-- ================================================================ -->
 <a id="having-fields"/><h1>having-fields</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_having_fields');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_having_fields" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -945,8 +1025,11 @@ resource=/some/other/path,loadsec=0.97,ok=false
 <p/>
 </td></tr></table>
 
+</div>
 <!-- ================================================================ -->
 <a id="head"/><h1>head</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_head');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_head" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -995,8 +1078,11 @@ wye hat 24 0.7286126830627567  0.19441962592638418
 <p/>
 </td></tr></table>
 
+</div>
 <!-- ================================================================ -->
 <a id="histogram"/><h1>histogram</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_histogram');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_histogram" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -1060,8 +1146,11 @@ my_bin_lo my_bin_hi my_x_count my_x2_count my_x3_count
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="join"/><h1>join</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_join');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_join" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -1280,8 +1369,11 @@ left_a left_b left_c right_a right_b right_c
 <p/>
 </td></tr></table>
 
+</div>
 <!-- ================================================================ -->
 <a id="label"/><h1>label</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_label');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_label" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -1372,8 +1464,11 @@ Carol 45  present
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="least-frequent"/><h1>least-frequent</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_least_frequent');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_least_frequent" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -1448,8 +1543,11 @@ circle   purple
 
 See also <a href="#most-frequent">most-frequent</a>.
 
+</div>
 <!-- ================================================================ -->
 <a id="merge-fields"/><h1>merge-fields</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_merge_fields');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_merge_fields" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -1536,8 +1634,11 @@ a_in a_out b_in b_out a_sum b_sum
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="most-frequent"/><h1>most-frequent</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_most_frequent');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_most_frequent" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -1612,8 +1713,11 @@ square   blue
 
 See also <a href="#least-frequent">least-frequent</a>.
 
+</div>
 <!-- ================================================================ -->
 <a id="nest"/><h1>nest</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_nest');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_nest" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -1668,8 +1772,11 @@ See also mlr reshape.
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="nothing"/><h1>nothing</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_nothing');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_nothing" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -1682,8 +1789,11 @@ produced other output.
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="put"/><h1>put</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_put');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_put" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -1777,8 +1887,11 @@ Please see in particular:
 language for filter and put</a> for more information about the expression
 language for <tt>mlr put</tt>.
 
+</div>
 <!-- ================================================================ -->
 <a id="regularize"/><h1>regularize</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_regularize');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_regularize" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -1800,8 +1913,11 @@ same order: <tt>mlr regularize</tt> helps clean that up.
 
 <p/>See also <a href="#reorder"><tt>reorder</tt></a>.
 
+</div>
 <!-- ================================================================ -->
 <a id="rename"/><h1>rename</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rename');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_rename" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -1897,8 +2013,11 @@ a=wye,b=pan,i=5,x=0.5732889198020006,COLUMN5=0.8636244699032729
 
 See also <a href="#label"><tt>label</tt></a>.
 
+</div>
 <!-- ================================================================ -->
 <a id="reorder"/><h1>reorder</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_reorder');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_reorder" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -1963,8 +2082,11 @@ wye 0.5732889198020006  0.8636244699032729  5 pan
 <p/>
 </td></tr></table>
 
+</div>
 <!-- ================================================================ -->
 <a id="repeat"/><h1>repeat</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_repeat');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_repeat" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -2037,8 +2159,11 @@ color=green
 <tt>stats1 -a mode</tt>, or (if the data are numeric) to <tt>stats1 -a
 p10,p50,p90</tt>, etc.
 
+</div>
 <!-- ================================================================ -->
 <a id="reshape"/><h1>reshape</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_reshape');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_reshape" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -2103,8 +2228,11 @@ See also mlr nest.
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="sample"/><h1>sample</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sample');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_sample" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -2180,8 +2308,11 @@ yellow square   1    158   0.41527900739142165 0.7118027080775757   0.4200799665
 sampling, which works in the streaming case, is <tt>mlr filter 'urand() &amp;
 0.001'</tt> where you tune the 0.001 to meet your needs.
 
+</div>
 <!-- ================================================================ -->
 <a id="sec2gmt"/><h1>sec2gmt</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_seg2gmt');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_seg2gmt" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -2198,8 +2329,11 @@ is the same as
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="sec2gmtdate"/><h1>sec2gmtdate</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_seg2gmtdate');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_seg2gmtdate" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -2216,8 +2350,11 @@ is the same as
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="seqgen"/><h1>seqgen</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_seqgen');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_seqgen" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -2281,8 +2418,11 @@ i=20
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="shuffle"/><h1>shuffle</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_shuffle');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_shuffle" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -2296,8 +2436,11 @@ See also mlr bootstrap and mlr sample.
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="sort"/><h1>sort</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sort');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_sort" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -2418,8 +2561,11 @@ a=3
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="stats1"/><h1>stats1</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_stats1');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_stats1" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -2546,8 +2692,11 @@ circle   red
 <p/>
 </td></tr></table>
 
+</div>
 <!-- ================================================================ -->
 <a id="stats2"/><h1>stats2</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_stats2');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_stats2" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -2721,8 +2870,11 @@ donesec                 25.108529
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="step"/><h1>step</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_step');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_step" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -2886,8 +3038,11 @@ $ each 10 uptime | mlr -p step -a delta -f 11
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="tac"/><h1>tac</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_tac');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_tac" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -2951,8 +3106,11 @@ a b c filename
 <p/>
 </td></tr></table>
 
+</div>
 <!-- ================================================================ -->
 <a id="tail"/><h1>tail</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_tail');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_tail" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -2995,8 +3153,11 @@ yellow circle   1    99994 0.764950884927175  0.25284227383991364 0.499698785395
 <p/>
 </td></tr></table>
 
+</div>
 <!-- ================================================================ -->
 <a id="tee"/><h1>tee</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_tee');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_tee" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -3017,8 +3178,11 @@ is written in JSON format.
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="top"/><h1>top</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_top');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_top" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -3091,8 +3255,11 @@ zee 2       0.999438
 <p/>
 </td></tr></table>
 
+</div>
 <!-- ================================================================ -->
 <a id="uniq"/><h1>uniq</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_uniq');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_uniq" style="display: block">
 
 <p/>
 <div class="pokipanel">

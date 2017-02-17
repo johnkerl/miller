@@ -27,16 +27,56 @@ pageTracker._trackPageview();
 } catch(err) {}
 </script>
 
+<!-- ================================================================ -->
 <script type="text/javascript">
-	function toggle(divName) {
-		var eleDiv = document.getElementById(divName);
-		if (eleDiv != null) {
-			if (eleDiv.style.display == "block") {
-				eleDiv.style.display = "none";
-			} else {
-				eleDiv.style.display = "block";
-			}
+	function toggle_div(div) {
+		if (div != null) {
+      if (div.id.startsWith("section_toggle_")) {
+			  var state = div.style.display;
+			  if (state == "block") {
+				  div.style.display = "none";
+			  } else {
+				  div.style.display = "block";
+			  }
+		  }
 		}
+	}
+	function expand_div(div) {
+		if (div != null) {
+      if (div.id.startsWith("section_toggle_")) {
+			  div.style.display = "block";
+      }
+		}
+	}
+	function collapse_div(div) {
+		if (div != null) {
+      if (div.id.startsWith("section_toggle_")) {
+			  div.style.display = "none";
+      }
+		}
+	}
+
+	function toggle_by_name(divName) {
+		toggle_div(document.getElementById(divName));
+	}
+	function expand_by_name(divName) {
+		expand_div(document.getElementById(divName));
+	}
+	function collapse_by_name(divName) {
+		collapse_div(document.getElementById(divName));
+	}
+
+	function expand_all() {
+    var divs = document.getElementsByTagName("div");
+    for(var i = 0; i < divs.length; i++) {
+      expand_div(divs[i]);
+    }
+	}
+	function collapse_all() {
+    var divs = document.getElementsByTagName("div");
+    for(var i = 0; i < divs.length; i++){
+      collapse_div(divs[i]);
+    }
 	}
 </script>
 
