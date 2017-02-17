@@ -201,13 +201,22 @@ Miller commands were run with pretty-print-tabular output format.
 </div>
 <p/>
 
+<p/>
+<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+
 <a id="Overview"/><h1>Overview</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_overview" style="display: block">
 
 <p/>Miller handles name-indexed data using several formats: some you probably
 know by name, such as CSV, TSV, and JSON &mdash; and other formats you&rsquo;re
 likely already seeing and using in your structured data.
 
+</div>
 <a id="Examples"/><h1>Examples</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_examples" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -276,7 +285,12 @@ $ mlr --usage-data-format-examples
 </div>
 <p/>
 
+</div>
 <a id="CSV/TSV/etc."/><h1>CSV/TSV/etc.</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_csv_tsv_etc');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_csv_tsv_etc" style="display: block">
+
+<p/>
 When <tt>mlr</tt> is invoked with the <tt>--csv</tt> or <tt>--csvlite</tt> option,
 key names are found on the first record and values are taken from subsequent
 records.  This includes the case of CSV-formatted files.  See
@@ -333,7 +347,12 @@ e.g. CR-LF vs. LF, or tab instead of comma for TSV, and so on.
 
 </ul>
 
+</div>
 <a id="DKVP:_Key-value_pairs"/><h1>DKVP: Key-value pairs</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_dkvp');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_dkvp" style="display: block">
+
+<p/>
 Miller&rsquo;s default file format is DKVP, for <b>delimited key-value pairs</b>. Example:
 
 <p/>
@@ -407,7 +426,10 @@ to analyze my logs.
 <p/>See <a href="reference.html">Reference</a> regarding how to specify separators other than
 the default equals-sign and comma.
 
+</div>
 <a id="NIDX:_Index-numbered_(toolkit_style)"/><h1>NIDX: Index-numbered (toolkit style)</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_nidx');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_nidx" style="display: block">
 
 With <tt>--inidx --ifs ' ' --repifs</tt>, Miller splits lines on whitespace and
 assigns integer field names starting with 1. This recapitulates Unix-toolkit
@@ -495,7 +517,10 @@ light
 <p/>
 </td> </tr></table>
 
+</div>
 <a id="Tabular_JSON"/><h1>Tabular JSON</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_json');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_json" style="display: block">
 
 <p/>JSON is a format which supports arbitrarily deep nesting of
 &ldquo;objects&rdquo; (hashmaps) and &ldquo;arrays&rdquo; (lists), while Miller
@@ -658,7 +683,12 @@ truly powerful, JSON-specific tool.
 this means that, unlike for other file formats, Miller does not (at present)
 handle JSON files in <tt>tail -f</tt> contexts.
 
+</div>
 <a id="PPRINT:_Pretty-printed_tabular"/><h1>PPRINT: Pretty-printed tabular</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_pprint');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_pprint" style="display: block">
+
+<p/>
 Miller&rsquo;s pretty-print format is like CSV, but column-aligned.  For example, compare
 
 <table><tr><td>
@@ -703,7 +733,10 @@ files is constrained by available machine memory.
 <p/> See <a href="record-heterogeneity.html">Record-heterogeneity</a> for how Miller
 handles changes of field names within a single data stream.
 
+</div>
 <a id="XTAB:_Vertical_tabular"/><h1>XTAB: Vertical tabular</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_xtab');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_xtab" style="display: block">
 
 <p/>This is perhaps most useful for looking a very wide and/or multi-column
 data which causes line-wraps on the screen (but see also <a
@@ -779,7 +812,10 @@ $ grep -v '^#' /etc/passwd | head -n 2 | \
 <p/>
 </td> </tr></table>
 
+</div>
 <a id="Markdown_tabular"/><h1>Markdown tabular</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_markdown_tabular');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_markdown_tabular" style="display: block">
 
 <p/>Markdown format looks like this:
 
@@ -805,7 +841,10 @@ which renders like this when dropped into various web tools (e.g. github comment
 
 <p/> As of Miller 4.3.0, markdown format is supported only for output, not input.
 
+</div>
 <a id="Data-conversion_keystroke-savers"/><h1>Data-conversion keystroke-savers</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_x2y');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_x2y" style="display: block">
 
 <p/>While you can do format conversion using <tt>mlr --icsv --ojson cat myfile.csv</tt>,
 there are also keystroke-savers for this purpose, such as <tt>mlr --c2j cat myfile.csv</tt>.
@@ -829,6 +868,8 @@ is available for output only.
 </pre>
 </div>
 <p/>
+
+</div>
     </div>
   </td>
 
