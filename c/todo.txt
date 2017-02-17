@@ -10,11 +10,7 @@ BUGFIXES
 * cookbook
 * other doc
 * expand/collapse JS divs @ ref pages? check pdf-printable ...
-  var divs = document.getElementsByTagName("div");
-  for(var i = 0; i < divs.length; i++){
-   //do something to each div like
-   divs[i].innerHTML = "something new...";
-  }
+  -> to jko/examples/something
 * mt_error/fatal/skip-assign audit
 * xxxes
 * re-valgrinds after UT expansion
