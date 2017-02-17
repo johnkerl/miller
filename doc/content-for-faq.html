@@ -1,6 +1,12 @@
 POKI_PUT_TOC_HERE
 
+<p/>
+<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+
 <h1>No output at all</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_no_output_at_all');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_no_output_at_all" style="display: block">
 
 <p/>Try <tt>od -xcv</tt> and/or <tt>cat -e</tt> on your file to check for non-printable characters.
 
@@ -8,7 +14,10 @@ POKI_PUT_TOC_HERE
 line-ending-autodetect feature was introduced, please see
 <a href="http://johnkerl.org/miller-releases/miller-4.5.0/doc/index.html">here</a>.
 
+</div>
 <h1>Fields not selected</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_fields_not_selected');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_fields_not_selected" style="display: block">
 
 <p/>Check the field-separators of the data, e.g. with the command-line
 <tt>head</tt> program. Example: for CSV, Miller&rsquo;s default record
@@ -19,11 +28,17 @@ case: <tt>mlr --fs tab {remaining arguments ...}</tt>.
 
 <p/>Also try <tt>od -xcv</tt> and/or <tt>cat -e</tt> on your file to check for non-printable characters.
 
+</div>
 <h1>Diagnosing delimiter specifications</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_diagnosing_delimiter_specifications');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_diagnosing_delimiter_specifications" style="display: block">
 
 POKI_INCLUDE_ESCAPED(data/delimiter-examples.txt)HERE
 
+</div>
 <h1>Error-output in certain string cases</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_error_output');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_error_output" style="display: block">
 
 <p/> <tt>mlr put '$y = string($x)' then put '$z = $y . $y'</tt> gives
 <tt>(error)</tt> on numeric data such as <tt>x=123</tt>, while <tt>mlr put
@@ -35,7 +50,10 @@ independently; in the third case, both assignments are within the same
 <tt>put</tt> statement, where type information is maintained for the duration
 of all assignments in the <tt>put</tt>.
 
+</div>
 <h1>How do I examine then-chaining?</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_examine_then_chaining');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_examine_then_chaining" style="display: block">
 
 <p/>Then-chaining found in Miller is intended to function the same as Unix
 pipes, but with less keystroking. You can print your data one pipeline step at
@@ -61,7 +79,10 @@ that verb.
 <p/>Note, by the way, that you&rsquo;ll get the same results using pipes:
 POKI_RUN_COMMAND{{mlr --csv count-distinct -f Status,Payment_Type data/then-example.csv | mlr --icsv --opprint sort -nr count}}HERE
 
+</div>
 <h1>I assigned $9 and it&rsquo;s not 9th</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_9_not_9th');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_9_not_9th" style="display: block">
 
 <p/> Miller records are ordered lists of key-value pairs. For NIDX format, DKVP
 format when keys are missing, or CSV/CSV-lite format with
@@ -78,7 +99,10 @@ POKI_RUN_COMMAND{{echo x,y,z | mlr --dkvp rename 2,999}}HERE
 POKI_RUN_COMMAND{{echo x,y,z | mlr --dkvp rename 2,newname}}HERE
 POKI_RUN_COMMAND{{echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2}}HERE
 
+</div>
 <h1>Why doesn&rsquo;t mlr cut put fields in the order I want?</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_cut_out_of_order');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_cut_out_of_order" style="display: block">
 
 <p/>Example: columns <tt>x,i,a</tt> were requested but they appear here in the order <tt>a,i,x</tt>:
 
@@ -93,7 +117,10 @@ command, which has the same semantics.
 
 POKI_RUN_COMMAND{{mlr cut -o -f x,i,a data/small}}HERE
 
+</div>
 <h1>NR is not consecutive after then-chaining</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_NR_not_consecutive_after_then');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_NR_not_consecutive_after_then" style="display: block">
 
 <p/> Given this input data:
 POKI_RUN_COMMAND{{cat data/small}}HERE
@@ -114,7 +141,10 @@ numbers, you can use out-of-stream variables as follows:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/dynamic-nr.sh)HERE
 
+</div>
 <h1>Why am I not seeing all possible joins occur?</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_not_all_possible_joins');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_not_all_possible_joins" style="display: block">
 
 <p/>For example, the right file here has nine records, and the left file should
 add in the <tt>hostname</tt> column &mdash; so the join output should also have
@@ -143,7 +173,10 @@ POKI_RUN_COMMAND{{mlr --icsvlite --opprint join -u -j ipaddr -f data/join-u-left
 containing name-to-number mappings, while saving large amounts of data for the
 right file.
 
+</div>
 <h1>What about XML or JSON file formats?</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_xml_or_json');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_xml_or_json" style="display: block">
 
 <p/>Miller handles <boldmaroon>tabular data</boldmaroon>, which is a list of
 records each having fields which are key-value pairs. Miller also doesn&rsquo;t
@@ -201,3 +234,5 @@ tool.
 <p/>For XML, my suggestion is to use a tool like
 <a href="http://ff-extractor.sourceforge.net/">ff-extractor</a> to do format
 conversion.
+
+</div>

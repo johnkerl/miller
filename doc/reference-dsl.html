@@ -223,8 +223,14 @@ Miller commands were run with pretty-print-tabular output format.
 </div>
 <p/>
 
+<p/>
+<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+
 <!-- ================================================================ -->
 <a id="Overview"/><h1>Overview</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_overview" style="display: block">
 
 <p/>
 
@@ -294,8 +300,11 @@ statement.
 
 <p/>There are more details and more choices, of course, as detailed in the following sections.
 
+</div>
 <!-- ================================================================ -->
 <a id="Syntax"/><h1>Syntax</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_syntax');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_syntax" style="display: block">
 
 <!-- ================================================================ -->
 <a id="Expression_formatting"/><h2>Expression formatting</h2>
@@ -569,8 +578,11 @@ mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptable
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="Variables"/><h1>Variables</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_variables');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_variables" style="display: block">
 
 <p/>Miller has the following kinds of variables:
 
@@ -1757,8 +1769,11 @@ The body statements must be wrapped in curly braces.
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="Operator_precedence"/><h1>Operator precedence</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_operator_precedence');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_operator_precedence" style="display: block">
 
 <p/>Operators are listed in order of decreasing precedence, highest first.
 
@@ -1787,8 +1802,11 @@ binary+ binary- .      left to right
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="Operator_and_function_semantics"/><h1>Operator and function semantics</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_operator_and_function_semantics');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_operator_and_function_semantics" style="display: block">
 
 <ul>
 
@@ -1812,8 +1830,11 @@ C.
 
 </ul>
 
+</div>
 <!-- ================================================================ -->
 <a id="Control_structures"/><h1>Control structures</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_control_structures');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_control_structures" style="display: block">
 
 <!-- ================================================================ -->
 <a id="Pattern-action_blocks"/><h2>Pattern-action blocks</h2>
@@ -2458,8 +2479,11 @@ x_count=10,x_sum=4.536294
 names (beginning with <tt>$</tt>), since these execute outside the context of
 input records.
 
+</div>
 <!-- ================================================================ -->
 <a id="Output_statements"/><h1>Output statements</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_output_statements');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_output_statements" style="display: block">
 
 <p/>You can <b>output</b> variable-values or expressions in <b>five ways</b>:
 
@@ -3085,8 +3109,11 @@ dump: prints all currently defined out-of-stream variables immediately
 
 </ul>
 
+</div>
 <!-- ================================================================ -->
 <a id="Unset_statements"/><h1>Unset statements</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_unset_statements');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_unset_statements" style="display: block">
 
 <p/>You can clear a map key by assigning the empty string as its value: <tt>$x=""</tt> or <tt>@x=""</tt>.
 Using <tt>unset</tt> you can remove the key entirely. Examples:
@@ -3179,8 +3206,11 @@ $ mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum["eks"]; dump }' data/sm
 <p/>If you use <tt>unset all</tt> (or <tt>unset @*</tt> which is synonymous), that will unset all out-of-stream
 variables which have been defined up to that point.
 
+</div>
 <!-- ================================================================ -->
 <a id="Filter_statements"/><h1>Filter statements</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_filter_statements');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_filter_statements" style="display: block">
 
 <p/> You can use <tt>filter</tt> within <tt>put</tt>. In fact, the
 following two are synonymous:
@@ -3227,8 +3257,11 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,z=0.495106
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="Built-in_functions_for_filter_and_put"/><h1>Built-in functions for filter and put</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_built_in_functions');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_built_in_functions" style="display: block">
 
 <p/>Each function takes a specific number of arguments, as shown below, except
 for functions marked as variadic such as <tt>min</tt> and <tt>max</tt>. (The
@@ -3619,8 +3652,11 @@ the mathematical constants PI and E.
 </div>
 <p/>
 
+</div>
 <!-- ================================================================ -->
 <a id="User-defined_functions_and_subroutines"/><h1>User-defined functions and subroutines</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_user_defined_functions');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_user_defined_functions" style="display: block">
 
 <p/> As of Miller 5.0.0 you can define your own functions, as well as subroutines.
 
@@ -3772,8 +3808,11 @@ files</a> for information on the use of <tt>-f</tt> and <tt>-e</tt> flags.
 
 </ul>
 
+</div>
 <!-- ================================================================ -->
 <a id="A_note_on_the_complexity_of_Miller&rsquo;s_expression_language"/><h1>A note on the complexity of Miller&rsquo;s expression language</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_a_note_on_complexity');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_a_note_on_complexity" style="display: block">
 
 <p/> One of Miller&rsquo;s strengths is its brevity: it&rsquo;s much quicker
 &mdash; and less error-prone &mdash; to type <tt>mlr stats1 -a sum -f x,y -g
@@ -3800,6 +3839,8 @@ for/while/if structures on about the same complexity level as <tt>awk</tt>.
 While I&rsquo;m excited by these powerful language features, I hope to keep new
 features beyond 4.1.0 focused on Miller&rsquo;s sweet spot which is speed plus
 simplicity.
+
+</div>
     </div>
   </td>
 
