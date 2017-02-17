@@ -16,7 +16,8 @@ BUGFIXES
 
 * whence-miller: cf. slpost
 
-* mlr hex -> auxes. and make an aux-list. and doc.
+* mlr hex -> auxes. and make an aux-list. and doc: olh as well as webdoc?
+* more other-tool cmps (many)
 
 ================================================================
 UT FOR 5.0.0:

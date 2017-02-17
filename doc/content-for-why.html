@@ -71,16 +71,9 @@ tried-and-true C programs and the lines-of-code count was a <i>lot</i> lower
 &mdash; it was great! Until I ran them on multi-GB files and realized they took
 60x as long to complete.  So I couldn&rsquo;t write Miller in Ruby, or in
 languages like it. I was going to have to do something in a low-level language
-in order to make it performant. I did simple experiments in several languages
-&mdash; Ruby, Python, Lua, Rust, Go, D. In one I just read lines and printed
-them back out &mdash; a line-oriented <tt>cat</tt>. In another I consumed input
-lines like <tt>x=1,y=2,z=3</tt> one at a time, split them on commas and equals
-signs to populate hash maps, transformed them (e.g. remove the <tt>y</tt>
-field, and emitted them. Basically <tt>mlr cut -x -f y</tt> with DKVP format.
-I didn&rsquo;t do anything fancy &mdash; just using each language&rsquo;s
-<tt>getline</tt>, string-split, hashmap-put, etc.  And nothing was as fast as
-C, so I used C.  (See also <a
-href="whyc.html#C_vs._Go,_D,_Rust,_etc.;_C_is_fast">here</a>.)
+in order to make it performant. I did simple experiments in several languages,
+and nothing was as fast as C, so I used C: see also <a
+href="whyc.html#C_vs._Go,_D,_Rust,_etc.;_C_is_fast">here</a>.
 
 <p/> Fifth thing: I wanted Miller to be <boldmaroon>pipe-friendly and
 interoperate with other command-line tools</boldmaroon>.  Since the basic
@@ -137,7 +130,9 @@ It&rsquo;d be quicker to write (but slower to run) if written in a high-level
 language. If Miller were written in Python, it would be implemented in
 significantly fewer lines of code than its current C implementation. The DSL
 would just be an <tt>eval</tt> of Python code. And it would run slower, but
-maybe not enough slower to be a problem for most folks.
+maybe not enough slower to be a problem for most folks. Later I found out about
+the <a href="https://github.com/turicas/rows">rows</a> tool &mdash; if you find
+Miller useful, you should check out <tt>rows</tt> as well.
 
 <p/> A fourth tradeoff is in the DSL (more visibly so in 5.0.0 but already in
 pre-5.0.0): how much to make it dynamically typed &mdash; so you can just say
