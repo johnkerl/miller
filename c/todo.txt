@@ -14,6 +14,10 @@ BUGFIXES
 * re-valgrinds after UT expansion
 * release notes
 
+* whence-miller: cf. slpost
+
+* mlr hex -> auxes. and make an aux-list. and doc.
+
 ================================================================
 UT FOR 5.0.0:
 
