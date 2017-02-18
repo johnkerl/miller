@@ -289,39 +289,38 @@ perf note:
 ================================================================
 5.0.0 RELEASE NOTES:
 
-MAJOR BECAUSE:
-* new keywords
-* unset of oosvar doesn't clear empty levels
-* no type-inference on literals: "3"+4 != 7
-* typeof MT_STRING -> string etc.
-* note this isn't huge. as w/ previous majors.
+k MAJOR BECAUSE:
+k new keywords
+k unset of oosvar doesn't clear empty levels
+k no type-inference on literals: "3"+4 != 7
+k typeof MT_STRING -> string etc.
+k note this isn't huge. as w/ previous majors.
 
-DSL:
-* func & subr. acknowledge awk yet again.
-* mapvars & mapfuncs
-* triple-fors
-* single-fors
-* multiple filter/put -f with examples @ new mld section.
-* variadic min & max
-* unset for locals
-* substr func
-* ENV @ LHS (putenv), and why (popens)
-* # in the lexer so #-strings are OK now (show an example)
+k DSL:
+k func & subr. acknowledge awk yet again.
+k mapvars & mapfuncs
+k triple-fors
+k single-fors
+k multiple filter/put -f with examples @ new mld section.
+k variadic min & max
+k substr func
+k ENV @ LHS (putenv), and why (popens)
+k # in the lexer so #-strings are OK now (show an example)
 
 VERBS:
-* most-frequent/least-frequent
-* seqgen
-* cat -n -g
-* -o for count-distinct, uniq, most-frequent, least-frequent, top, histogram
+k most-frequent/least-frequent
+k seqgen
+k cat -n -g
+  * -o for count-distinct, uniq, most-frequent, least-frequent, top, histogram
 * --jknquoteint/--jvquoteall @ put dump
 * start chain with 'then'
 k stats1 median
 
 I/O:
 * -I
-* bare print/printn
-* --c2p et al.
-* --pprint --barred
+k bare print/printn
+k --c2p et al.
+k --pprint --barred
 * --jknquoteint/--jvquoteall @ put dump, and JSON output
 
 BUGFIXES:
@@ -329,9 +328,9 @@ BUGFIXES:
 * b.tsv bug -- to relnotes
 
 DOC:
-* 10-min
+k 10-min
 * inverse-transform-sampling example at cookbook.
-* mlr -F and -K. Note -l -L -f -F -k -K.
+k mlr -F and -K. Note -l -L -f -F -k -K.
 * section toggles
 * go/d/rust cmps @ getline
 * ruby/python cmps @ mand
