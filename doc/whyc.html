@@ -194,7 +194,13 @@ Miller commands were run with pretty-print-tabular output format.
 </div>
 <p/>
 
+<p/>
+<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+
 <a id="Why_not_C?"/><h1>Why not C?</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_why_not_c');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_why_not_c" style="display: block">
 
 <p/>C lacks many of the features found in modern, high-level languages such as
 Java or Go: garbage collection, collections libraries, generics/near-generics,
@@ -215,7 +221,10 @@ Moreover, Miller&rsquo;s primary data structure, the
 is hand-tuned to Miller&rsquo;s use case and would have required hand-coding in
 any case.
 
+</div>
 <a id="C_vs._Go,_D,_Rust,_etc.;_C_is_fast"/><h1>C vs. Go, D, Rust, etc.; C is fast</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_c_is_fast');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_c_is_fast" style="display: block">
 
 <p/>I love Go (<a href="http://golang.org">https://golang.org</a>): I think
 it&rsquo;s one of the best things ever to happen to our craft, and I use it
@@ -255,13 +264,19 @@ application domain &mdash; parallelism here is more easily achieved by running
 multiple single-threaded processes, each handling its own input files, either
 on a single host or split across multiple hosts.
 
+</div>
 <a id="C_is_ubiquitous"/><h1>C is ubiquitous</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_c_is_ubiquitous');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_c_is_ubiquitous" style="display: block">
 
 <p/>Every Unix-like system has a C compiler (or is an <tt>apt-get</tt> or
 <tt>yum install</tt> away from it). This, I hope, bodes well for uptake
 of Miller.
 
+</div>
 <a id="C_is_old-school"/><h1>C is old-school</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_c_is_old_school');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_c_is_old_school" style="display: block">
 
 <p/>This alone is not enough reason to program in C, but since I find myself
 coding in C due to the other reasons on this page, it&rsquo;s happy enough to
@@ -272,7 +287,10 @@ use of modern tools such as <a href="http://valgrind.org">valgrind</a>.
 K&amp;R was a long, long time ago.  (I&rsquo;m writing plain C with <tt>//</tt>
 comments; enough said.)
 
+</div>
 <a id="C_vs._C++"/><h1>C vs. C++</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_c_vs_cpp');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_c_vs_cpp" style="display: block">
 
 I have a strong personal distaste for C++: its syntax is an ugly layer over the
 simplicity of C; templates and STL are even more awkward and even less
@@ -425,6 +443,8 @@ reader_t* reader_csv_alloc(...) {
 
 <p/>More details are at
 <a href="https://github.com/johnkerl/miller/tree/master/c/containers">https://github.com/johnkerl/miller/tree/master/c/containers</a>.
+
+</div>
     </div>
   </td>
 

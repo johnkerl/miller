@@ -1,5 +1,12 @@
 POKI_PUT_TOC_HERE
+
+<p/>
+<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+
 <h1>flins data</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_flins');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_flins" style="display: block">
 
 <p/> The <a href="data/flins.csv">flins.csv</a> file is some sample data
 obtained from <a href="https://support.spatialkey.com/spatialkey-sample-csv-data">https://support.spatialkey.com/spatialkey-sample-csv-data</a>.
@@ -18,7 +25,10 @@ POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint stats1 -a p95,p99,p
 POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --oxtab stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012}}HERE
 POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county}}HERE
 
+</div>
 <h1>Color/shape data</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_color_shape');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_color_shape" style="display: block">
 
 <p/> The <a href="data/colored-shapes.dkvp">colored-shapes.dkvp</a> file is some sample data produced by the
 <a href="https://github.com/johnkerl/miller/blob/master/doc/datagen/mkdat2">mkdat2</a> script. The idea is
@@ -52,3 +62,5 @@ POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape then
 <p/> Look at bivariate stats by color and shape. In particular, <tt>u,v</tt> pairwise correlation for red circles pops out:
 POKI_RUN_COMMAND{{mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp}}HERE
 POKI_RUN_COMMAND{{mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr data/colored-shapes.dkvp}}HERE
+
+</div>

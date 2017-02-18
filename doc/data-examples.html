@@ -188,7 +188,14 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Color/shape_data">Color/shape data</a><br/>
 </div>
 <p/>
+
+<p/>
+<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+
 <a id="flins_data"/><h1>flins data</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_flins');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_flins" style="display: block">
 
 <p/> The <a href="data/flins.csv">flins.csv</a> file is some sample data
 obtained from <a href="https://support.spatialkey.com/spatialkey-sample-csv-data">https://support.spatialkey.com/spatialkey-sample-csv-data</a>.
@@ -393,7 +400,10 @@ CITRUS COUNTY       0.989943               0.965940                138635.818880
 </div>
 <p/>
 
+</div>
 <a id="Color/shape_data"/><h1>Color/shape data</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_color_shape');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_color_shape" style="display: block">
 
 <p/> The <a href="data/colored-shapes.dkvp">colored-shapes.dkvp</a> file is some sample data produced by the
 <a href="https://github.com/johnkerl/miller/blob/master/doc/datagen/mkdat2">mkdat2</a> script. The idea is
@@ -539,6 +549,8 @@ yellow   circle -0.064773  0.073695
 </pre>
 </div>
 <p/>
+
+</div>
     </div>
   </td>
 
