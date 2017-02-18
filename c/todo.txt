@@ -70,23 +70,43 @@ cook 1:
   mlr --from segv.tsv --itsvlite --oxtab put -q 'o={}; for (k,v in $*) {o[k]=v}; emit o'
   mlr --from segv.tsv --itsvlite --oxtab put -q '                for (k,v in {1:2}) {emit {k:v}}'
 
-cook 2 = cook 1 ?
+current:
+* Parsing log-file output
+* Rectangularizing data
+* Bulk rename of field names
+* Headerless CSV on input or output
+* Regularizing ragged CSV
+* Finding missing dates
+* Two-pass algorithms
+  o Two-pass algorithms: computation of percentages
+  o Two-pass algorithms: line-number ratios
+  o Two-pass algorithms: records having max value
+* Filtering paragraphs of text
+* Doing arithmetic on fields with currency symbols
+* Program timing
+* Using out-of-stream variables
+  o Mean without/with oosvars
+  o Keyed mean without/with oosvars
+  o Variance and standard deviation without/with oosvars
+  o Min/max without/with oosvars
+  o Keyed min/max without/with oosvars
+  o Delta without/with oosvars
+  o Keyed delta without/with oosvars
+  o Exponentially weighted moving averages without/with oosvars
 
-cook 3: fun stuff:
+cook 2: fun stuff:
 * mand
 * sieve
 * ngrams
 * mlr --from ~/misc/words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 
-cook 4: verbs vs. dsl/func list
+cook 3: verbs vs. dsl/func list
 * stdlib.mlr examples
 * show mlr put '$*={...}' a full-featured cut/reorder/rename/label
 * seqgen vs.
   mlr -n put 'begin {for (int i = 0; i < 10; i += 1) {emit {"a":i,"b":i**2} }}' then sort -nr a
 
-cook 5: weird stuff
-
-Where to put in-place stuff? Any need beyond 10-min content?
+cook 4: weird stuff
 
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:
@@ -105,10 +125,6 @@ MAPVAR CHECKLIST:
   - coerce
   -> doc smoothouts for 5.0.0 incompat notes
   - e.g. non-string =~ regex: coerce LHS to string?
-
-* consol is/assert impls x 2
-
-! memmgt for ephemeral boxed xvals
 
 * feels weird: '$*=3' is a syntax error but 'o=3;$*=o' is not. also '@*=3' is not a syntax error.
 
