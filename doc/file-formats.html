@@ -198,6 +198,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#XTAB:_Vertical_tabular">XTAB: Vertical tabular</a><br/>
 &bull;&nbsp;<a href="#Markdown_tabular">Markdown tabular</a><br/>
 &bull;&nbsp;<a href="#Data-conversion_keystroke-savers">Data-conversion keystroke-savers</a><br/>
+&bull;&nbsp;<a href="#Autodetect_of_line_endings">Autodetect of line endings</a><br/>
 </div>
 <p/>
 
@@ -300,7 +301,7 @@ changes of field names within a single data stream.
 <p/> Miller has record separator <tt>RS</tt> and field separator <tt>FS</tt>,
 just as <tt>awk</tt> does.  For TSV, use <tt>--fs tab</tt>; to convert TSV to
 CSV, use <tt>--ifs tab --ofs comma</tt>, etc.  (See also
-<a href="reference.html">Reference</a>.)
+<a href="reference.html#Record/field/pair_separators">Reference</a>.)
 
 <p/> The following are synonymous pairs:
 <ul>
@@ -868,6 +869,39 @@ is available for output only.
 </pre>
 </div>
 <p/>
+
+</div>
+
+</div>
+<a id="Autodetect_of_line_endings"/><h1>Autodetect of line endings</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_autodetect_line_endings');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_autodetect_line_endings" style="display: block">
+
+<p/> Default line endings (<tt>--irs</tt> and <tt>--ors</tt>) are <tt>auto</tt>
+which means <boldmaroon>autodetect from the input file format</boldmaroon>, as
+long as the input file(s) have lines ending in either LF (also known as
+linefeed, <tt>'\n'</tt>, <tt>0x0a</tt>, Unix-style) or CRLF (also known as
+carriage-return/linefeed pairs, <tt>'\r\n'</tt>, <tt>0x0d 0x0a</tt>, Windows
+style).
+
+<p/> <boldmaroon>If both IRS and ORS are auto (which is the default) then LF input will
+lead to LF output and CRLF input will lead to CRLF output, regardless of the
+platform you&rsquo;re running on</boldmaroon>.
+
+<p/> The line-ending autodetector triggers on the first line ending detected in
+the input stream. E.g. if you specify a CRLF-terminated file on the command
+line followed by an LF-terminated file then autodetected line endings will be
+CRLF.
+
+<p/> If you use <tt>--ors {something else}</tt> with (default or explicitly
+specified) <tt>--irs auto</tt> then line endings are autodetected on input and
+set to what you specify on output.
+
+<p/> If you use <tt>--irs {something else}</tt> with (default or explicitly
+specified) <tt>--ors auto</tt> then the output line endings used are LF on
+Unix/Linux/BSD/MacOSX, and CRLF on Windows.
+
+<p/> See also <a href="reference.html#Record/field/pair_separators">Reference</a> for more information about record/field/pair separators.
 
 </div>
     </div>

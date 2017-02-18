@@ -788,10 +788,10 @@ static void main_usage_separator_options(FILE* o, char* argv0) {
 	fprintf(o, "    then line endings are autodetected on input and set to what you specify on output.\n");
 	fprintf(o, "  * If you use --irs {something else} with (default or explicitly specified) --ors auto\n");
 	fprintf(o, "    then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.\n");
-	fprintf(o, "  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats\n");
-	fprintf(o, "    do key-value pairs appear juxtaposed.\n");
 	fprintf(o, "\n");
 	fprintf(o, "  Notes about all other separators:\n");
+	fprintf(o, "  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats\n");
+	fprintf(o, "    do key-value pairs appear juxtaposed.\n");
 	fprintf(o, "  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;\n");
 	fprintf(o, "    XTAB records are separated by two or more consecutive IFS/OFS -- i.e.\n");
 	fprintf(o, "    a blank line. Everything above about --irs/--ors/--rs auto becomes --ifs/--ofs/--fs\n");
