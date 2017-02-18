@@ -9,8 +9,6 @@ BUGFIXES
 * UT
 * cookbook
 * other doc
-* expand/collapse JS divs @ ref pages? check pdf-printable ...
-  -> to jko/examples/something
 * mt_error/fatal/skip-assign audit
 * xxxes
 * re-valgrinds after UT expansion
@@ -175,7 +173,7 @@ TYPE-CHECKING:
 
 MAPVARS:
 * map typedecl
-* map literals
+* map literals: section
 * $*
 * etc.
 * xval args into UDFs
@@ -187,8 +185,11 @@ IN-PLACE: simple example at ref; another at cookbook: one for put; another for f
 
 SINGLE-FOR:
 * srec/oosvar-single-for mlh
-* srec/oosvar-single-for mld
+* srec/oosvar-single-for mld: section
 * find & update cookbook/ref/whateveritwas ...
+
+FORs:
+* h3's for flavors; update relnotes.md
 
 COOK:
 * use: https://github.com/petewarden/dstkdata
