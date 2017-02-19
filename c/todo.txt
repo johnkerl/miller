@@ -47,43 +47,52 @@ UT FOR 5.0.0:
 COOKBOOK CHECKLIST:
 
 cook 1:
-* simple stuff like headerless csv
-* true/false/1/0 data-cleaning cookbook section. include filter x 2 (preceded by put $nr=NR), & tee x 2.
-* ./se/ examples
-* for-records-counts example
-* memoization
-* make this easier:
-  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ","); for (k,v in o) {$["p".k]=v}'
-  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ":"); for (k,v in o) {$["p".k]=v}'
-  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ","); $*=mapsum($*,o)'
-  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ":"); $*=mapsum($*,o)'
-  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ","); for (k,v in o) {emit mapsum($*, {"fp":v})}'
-  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"fp":v})}'
 
-* xxx:
-  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ":"); for (k,v in o) {$["b".k]=v}'
-  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ","); for (k,v in o) {$["b".k]=v}'
-  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ","); for (k,v in o) {emit mapsum($*, {"b":v})}'
-  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'
-  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit {k:v}}'
-  mlr --from segv.tsv --itsvlite --oxtab put -q '                   for (k,v in $*) {emit {k:v}}'
-  mlr --from segv.tsv --itsvlite --oxtab put -q 'o={}; for (k,v in $*) {o[k]=v}; emit o'
-  mlr --from segv.tsv --itsvlite --oxtab put -q '                for (k,v in {1:2}) {emit {k:v}}'
-
-current:
-* Parsing log-file output
-* Rectangularizing data
-* Bulk rename of field names
 * Headerless CSV on input or output
-* Regularizing ragged CSV
+
+* Bulk rename of field names
+
+* true/false/1/0 data-cleaning cookbook section. include filter x 2 (preceded by put $nr=NR), & tee x 2.
+
 * Finding missing dates
+
 * Two-pass algorithms
   o Two-pass algorithms: computation of percentages
   o Two-pass algorithms: line-number ratios
   o Two-pass algorithms: records having max value
+
+* Rectangularizing data
+* Regularizing ragged CSV
+* Parsing log-file output
 * Filtering paragraphs of text
 * Doing arithmetic on fields with currency symbols
+* memoization
+
+cook 2: fun stuff:
+* sieve
+* mand
 * Program timing
+* mlr --from ~/misc/words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
+* ngrams
+
+cook 3: verbs vs. dsl/func list
+* stdlib.mlr examples
+* show mlr put '$*={...}' a full-featured cut/reorder/rename/label
+* seqgen vs.
+  mlr -n put 'begin {for (int i = 0; i < 10; i += 1) {emit {"a":i,"b":i**2} }}' then sort -nr a
+
+* make this easier:
+  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ":"); for (k,v in o) {$["p".k]=v}'
+  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ":"); $*=mapsum($*,o)'
+  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"fp":v})}'
+
+  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ":"); for (k,v in o) {$["b".k]=v}'
+  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'
+  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit {k:v}}'
+  mlr --from segv.tsv --itsvlite --oxtab put -q 'o={}; for (k,v in $*) {o[k]=v}; emit o'
+
+cook 4: weird stuff
+
 * Using out-of-stream variables
   o Mean without/with oosvars
   o Keyed mean without/with oosvars
@@ -93,20 +102,6 @@ current:
   o Delta without/with oosvars
   o Keyed delta without/with oosvars
   o Exponentially weighted moving averages without/with oosvars
-
-cook 2: fun stuff:
-* mand
-* sieve
-* ngrams
-* mlr --from ~/misc/words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
-
-cook 3: verbs vs. dsl/func list
-* stdlib.mlr examples
-* show mlr put '$*={...}' a full-featured cut/reorder/rename/label
-* seqgen vs.
-  mlr -n put 'begin {for (int i = 0; i < 10; i += 1) {emit {"a":i,"b":i**2} }}' then sort -nr a
-
-cook 4: weird stuff
 
 ----------------------------------------------------------------
 MAPVAR CHECKLIST:

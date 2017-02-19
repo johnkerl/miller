@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 
-<!-- PAGE GENERATED FROM template.html and content-for-record-heterogeneity.html BY poki. -->
+<!-- PAGE GENERATED FROM template.html and content-for-cookbook3.html BY poki. -->
 <!-- PLEASE MAKE CHANGES THERE AND THEN RE-RUN poki. -->
 <head>
   <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
@@ -10,7 +10,7 @@
   <meta name="keywords"
 	content="John Kerl, Kerl, Miller, miller, mlr, OLAP, data analysis software, regression, correlation, variance, data tools, " />
 
-  <title> Record-heterogeneity </title>
+  <title> Cookbook part 3 </title>
   <link rel="stylesheet" type="text/css" href="css/miller.css"/>
   <link rel="stylesheet" type="text/css" href="css/poki-callbacks.css"/>
 </head>
@@ -108,13 +108,13 @@ Miller commands were run with pretty-print-tabular output format.
 <br/>&bull;&nbsp;<a href="10-min.html">Miller in 10 minutes</a>
 <br/>&bull;&nbsp;<a href="file-formats.html">File formats</a>
 <br/>&bull;&nbsp;<a href="feature-comparison.html">Miller features in the context of the Unix toolkit</a>
-<br/>&bull;&nbsp;<a href="record-heterogeneity.html"><b>Record-heterogeneity</b></a>
+<br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
 <br/>&bull;&nbsp;<a href="internationalization.html">Internationalization</a>
 <br/><b>Using Miller:</b>
 <br/>&bull;&nbsp;<a href="faq.html">FAQ</a>
 <br/>&bull;&nbsp;<a href="cookbook.html">Cookbook part 1</a>
 <br/>&bull;&nbsp;<a href="cookbook2.html">Cookbook part 2</a>
-<br/>&bull;&nbsp;<a href="cookbook3.html">Cookbook part 3</a>
+<br/>&bull;&nbsp;<a href="cookbook3.html"><b>Cookbook part 3</b></a>
 <br/>&bull;&nbsp;<a href="cookbook4.html">Cookbook part 4</a>
 <br/>&bull;&nbsp;<a href="data-examples.html">Data-diving examples</a>
 <br/>&bull;&nbsp;<a href="manpage.html">Manpage</a>
@@ -181,244 +181,34 @@ Miller commands were run with pretty-print-tabular output format.
 
     -->
     <div>
-    <center> <titleinbody> Record-heterogeneity </titleinbody> </center>
+    <center> <titleinbody> Cookbook part 3 </titleinbody> </center>
     <p/>
     
-<!-- BODY COPIED FROM content-for-record-heterogeneity.html BY poki -->
+<!-- BODY COPIED FROM content-for-cookbook3.html BY poki -->
+
+<p/>
+<center>
+<boldmaroon>Comparing verbs and DSL</boldmaroon>
+</center>
+
 <div class="pokitoc">
 <center><b>Contents:</b></center>
-&bull;&nbsp;<a href="#For_I/O">For I/O</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#CSV_and_pretty-print">CSV and pretty-print</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Key-value-pair,_vertical-tabular,_and_index-numbered_formats">Key-value-pair, vertical-tabular, and index-numbered formats</a><br/>
-&bull;&nbsp;<a href="#For_processing">For processing</a><br/>
+&bull;&nbsp;<a href="#Overview">Overview</a><br/>
 </div>
 <p/>
 
-We think of CSV tables as rectangular: if there are 17 columns in the header then there are 17 columns for every row, else the data have a formatting error.
-
-<p/>But heterogeneous data abound (today&rsquo;s no-SQL databases for example). Miller handles this.
-
-<a id="For_I/O"/><h1>For I/O</h1>
-
-<a id="CSV_and_pretty-print"/><h2>CSV and pretty-print</h2>
-
-Miller simply prints a newline and a new header when there is a schema change. When there is no schema change, you get CSV per se as a special case. Likewise, Miller reads heterogeneous CSV or pretty-print input the same way. The difference between CSV and CSV-lite is that the former is RFC4180-compliant, while the latter readily handles heterogeneous data (which is non-compliant). For example:
-
-<table><tr><td>
 <p/>
-<div class="pokipanel">
-<pre>
-$ cat data/het.dkvp
-resource=/path/to/file,loadsec=0.45,ok=true
-record_count=100,resource=/path/to/file
-resource=/path/to/second/file,loadsec=0.32,ok=true
-record_count=150,resource=/path/to/second/file
-resource=/some/other/path,loadsec=0.97,ok=false
-</pre>
+<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+
+<!-- ================================================================ -->
+<a id="Overview"/><h1>Overview</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_overview" style="display: block">
+
+<p/> asdfa df asdf asd fasdf 
+
 </div>
-<p/>
-</td><td>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --ocsvlite cat data/het.dkvp
-resource,loadsec,ok
-/path/to/file,0.45,true
-
-record_count,resource
-100,/path/to/file
-
-resource,loadsec,ok
-/path/to/second/file,0.32,true
-
-record_count,resource
-150,/path/to/second/file
-
-resource,loadsec,ok
-/some/other/path,0.97,false
-</pre>
-</div>
-<p/>
-</td><td>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint cat data/het.dkvp
-resource      loadsec ok
-/path/to/file 0.45    true
-
-record_count resource
-100          /path/to/file
-
-resource             loadsec ok
-/path/to/second/file 0.32    true
-
-record_count resource
-150          /path/to/second/file
-
-resource         loadsec ok
-/some/other/path 0.97    false
-</pre>
-</div>
-<p/>
-</td></tr></table>
-
-<p/> You may also find Miller&rsquo;s <tt>group-like</tt> feature handy (see also
-<a href="reference.html">Reference</a>):
-
-<table><tr><td>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --ocsvlite group-like data/het.dkvp
-resource,loadsec,ok
-/path/to/file,0.45,true
-/path/to/second/file,0.32,true
-/some/other/path,0.97,false
-
-record_count,resource
-100,/path/to/file
-150,/path/to/second/file
-</pre>
-</div>
-<p/>
-</td><td>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint group-like data/het.dkvp
-resource             loadsec ok
-/path/to/file        0.45    true
-/path/to/second/file 0.32    true
-/some/other/path     0.97    false
-
-record_count resource
-100          /path/to/file
-150          /path/to/second/file
-</pre>
-</div>
-<p/>
-</td></tr></table>
-
-<a id="Key-value-pair,_vertical-tabular,_and_index-numbered_formats"/><h2>Key-value-pair, vertical-tabular, and index-numbered formats</h2>
-
-For these formats, record-heterogeneity comes naturally:
-
-<table><tr><td>
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat data/het.dkvp
-resource=/path/to/file,loadsec=0.45,ok=true
-record_count=100,resource=/path/to/file
-resource=/path/to/second/file,loadsec=0.32,ok=true
-record_count=150,resource=/path/to/second/file
-resource=/some/other/path,loadsec=0.97,ok=false
-</pre>
-</div>
-<p/>
-</td><td>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --onidx --ofs ' ' cat data/het.dkvp
-/path/to/file 0.45 true
-100 /path/to/file
-/path/to/second/file 0.32 true
-150 /path/to/second/file
-/some/other/path 0.97 false
-</pre>
-</div>
-<p/>
-</td> </tr><tr> <td>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --oxtab cat data/het.dkvp
-resource /path/to/file
-loadsec  0.45
-ok       true
-
-record_count 100
-resource     /path/to/file
-
-resource /path/to/second/file
-loadsec  0.32
-ok       true
-
-record_count 150
-resource     /path/to/second/file
-
-resource /some/other/path
-loadsec  0.97
-ok       false
-</pre>
-</div>
-<p/>
-</td><td>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --oxtab group-like data/het.dkvp
-resource /path/to/file
-loadsec  0.45
-ok       true
-
-resource /path/to/second/file
-loadsec  0.32
-ok       true
-
-resource /some/other/path
-loadsec  0.97
-ok       false
-
-record_count 100
-resource     /path/to/file
-
-record_count 150
-resource     /path/to/second/file
-</pre>
-</div>
-<p/>
-</td></tr></table>
-
-<a id="For_processing"/><h1>For processing</h1>
-
-<p/> Miller operates on specified fields and takes the rest along: for example, if you are sorting on the
-<tt>count</tt> field then all records in the input stream must have a <tt>count</tt> field but the other fields can
-vary, and moreover the sorted-on field name(s) don&rsquo;t need to be in the same position on each line:
-
-<table><tr><td>
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat data/sort-het.dkvp
-count=500,color=green
-count=600
-status=ok,count=250,hours=0.22
-status=ok,count=200,hours=3.4
-count=300,color=blue
-count=100,color=green
-count=450
-</pre>
-</div>
-<p/>
-</td><td>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr sort -n count data/sort-het.dkvp
-count=100,color=green
-status=ok,count=200,hours=3.4
-status=ok,count=250,hours=0.22
-count=300,color=blue
-count=450
-count=500,color=green
-count=600
-</pre>
-</div>
-<p/>
-</td></tr></table>
     </div>
   </td>
 

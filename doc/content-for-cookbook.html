@@ -1,3 +1,8 @@
+<p/>
+<center>
+<boldmaroon>Common patterns</boldmaroon>
+</center>
+
 POKI_PUT_TOC_HERE
 
 <p/>
@@ -7,70 +12,6 @@ POKI_PUT_TOC_HERE
 <p/><b>Disclaimer:</b> This page is about how to do some corner-case things in
 ways you mightn&rsquo;t have thought of. For an intro, please also see
 <a href="10-min.html">Miller in 10 minutes</a>.
-
-<!-- ================================================================ -->
-<h1>Parsing log-file output</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_parsing_log_file_output');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_parsing_log_file_output" style="display: block">
-
-<p/>This, of course, depends highly on what&rsquo;s in your log files. But, as
-an example, suppose you have log-file lines such as
-
-POKI_CARDIFY(2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [sometext] various/sorts/of data {& punctuation} hits=1 status=0 time=2.378)HERE
-
-I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the structured text, then hand that to Miller. Example:
-
-POKI_CARDIFY(grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status)HERE
-
-<!-- ================================================================ -->
-</div>
-<h1>Rectangularizing data</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rectangularizing_data');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_rectangularizing_data" style="display: block">
-
-<p/>Suppose you have a method (in whatever language) which is printing things of the form
-
-POKI_INCLUDE_ESCAPED(data/rect-outer.txt)HERE
-
-and then calls another method which prints things of the form
-
-POKI_INCLUDE_ESCAPED(data/rect-middle.txt)HERE
-
-and then, perhaps, that second method calls a third method which prints things of the form
-
-POKI_INCLUDE_ESCAPED(data/rect-inner.txt)HERE
-
-with the result that your program&rsquo;s output is
-
-POKI_INCLUDE_ESCAPED(data/rect.txt)HERE
-
-The idea here is that middles starting with a 1 belong to the outer value of 1,
-and so on.  (For example, the outer values might be account IDs, the middle
-values might be invoice IDs, and the inner values might be invoice line-items.)
-If you want all the middle and inner lines to have the context of which outers
-they belong to, you can modify your software to pass all those through your
-methods. Alternatively, you can use the following to rectangularize the data.
-The idea is to use an out-of-stream variable to accumulate fields across
-records. Clear that variable when you see an outer ID; accumulate fields; emit
-output when you see the inner IDs.
-
-POKI_INCLUDE_AND_RUN_ESCAPED(data/rect.sh)HERE
-
-<!-- ================================================================ -->
-</div>
-<h1>Bulk rename of field names</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_bulk_rename');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_bulk_rename" style="display: block">
-
-POKI_RUN_COMMAND{{cat data/spaces.csv}}HERE
-POKI_RUN_COMMAND{{mlr --csv rename -r -g ' ,_'  data/spaces.csv}}HERE
-POKI_RUN_COMMAND{{mlr --csv --opprint rename -r -g ' ,_'  data/spaces.csv}}HERE
-
-<p/>You can also do this with a for-loop but it puts the modified fields after the unmodified fields:
-
-POKI_RUN_COMMAND{{cat data/bulk-rename-for-loop.mlr}}HERE
-
-POKI_RUN_COMMAND{{mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv}}HERE
 
 <!-- ================================================================ -->
 </div>
@@ -101,58 +42,19 @@ POKI_RUN_COMMAND{{head -5 data/colored-shapes.dkvp | mlr --ocsv --headerless-csv
 
 <!-- ================================================================ -->
 </div>
-<h1>Regularizing ragged CSV</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rectangularizing_ragged_csv');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_rectangularizing_ragged_csv" style="display: block">
+<h1>Bulk rename of field names</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_bulk_rename');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_bulk_rename" style="display: block">
 
-<p/>Miller handles compliant CSV: in particular, it&rsquo;s an error if the
-number of data fields in a given data line don&rsquo;t match the number of
-header lines. But in the event that you have a CSV file in which some lines
-have less than the full number of fields, you can use Miller to pad them out.
-The trick is to use NIDX format, for which each line stands on its own without
-respect to a header line.
+POKI_RUN_COMMAND{{cat data/spaces.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv rename -r -g ' ,_'  data/spaces.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv --opprint rename -r -g ' ,_'  data/spaces.csv}}HERE
 
-POKI_RUN_COMMAND{{cat data/ragged.csv}}HERE
-POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv.sh)HERE
+<p/>You can also do this with a for-loop but it puts the modified fields after the unmodified fields:
 
-or, more simply,
+POKI_RUN_COMMAND{{cat data/bulk-rename-for-loop.mlr}}HERE
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv-2.sh)HERE
-
-<!-- ================================================================ -->
-</div>
-<h1>Program timing</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_program_timing');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_program_timing" style="display: block">
-
-This admittedly artificial example demonstrates using Miller time and stats
-functions to introspectly acquire some information about Miller&rsquo;s own
-runtime. The <tt>delta</tt> function computes the difference between successive
-timestamps.
-
-POKI_INCLUDE_ESCAPED(data/timing-example.txt)HERE
-
-<!-- ================================================================ -->
-</div>
-<h1>Memoization with out-of-stream variables</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_memoization_with_oosvars');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_memoization_with_oosvars" style="display: block">
-
-<p/> The recursive function for the Fibonacci sequence is famous for its computational complexity.
-Namely, using
-<i>f</i>(0)=1,
-<i>f</i>(1)=1,
-<i>f</i>(<i>n</i>)=<i>f</i>(<i>n</i>-1)+<i>f</i>(<i>n</i>-2) for <i>n</i>&ge;2,
-the evaluation tree branches left as well as right at each non-trivial level, resulting in millions
-or more paths to the root 0/1 nodes:
-
-POKI_INCLUDE_AND_RUN_ESCAPED(data/fibo-uncached.sh)HERE
-
-<p/> Note that the time it takes to evaluate the function is blowing up exponentially as the input argument
-increases. Using <tt>@</tt>-variables, which persist across records, we can cache and reuse the results
-of previous computations:
-
-POKI_INCLUDE_AND_RUN_ESCAPED(data/fibo-cached.sh)HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv}}HERE
 
 <!-- ================================================================ -->
 </div>
@@ -178,33 +80,6 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/miss-date-2.sh)HERE
 
 POKI_RUN_COMMAND{{mlr cat -n then filter '$n >= 770 && $n <= 780' data/miss-date.csv}}HERE
 POKI_RUN_COMMAND{{mlr cat -n then filter '$n >= 1115 && $n <= 1125' data/miss-date.csv}}HERE
-
-<!-- ================================================================ -->
-</div>
-<h1>Generating random variables</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_generating_random_variables');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_generating_random_variables" style="display: block">
-
-<p/>Here can chain together a few simple building blocks:
-
-POKI_RUN_COMMAND{{cat expo-sample.sh}}HERE
-
-<p/>Namely:
-
-<ul>
-<li/> Set the Miller random-number seed so this webdoc looks the same every time I regenerate it.
-<li/> Use pretty-printed tabular output.
-<li/> Use pretty-printed tabular output.
-<li/> Use <tt>seqgen</tt> to produce 100,000 records <tt>i=0</tt>, <tt>i=1</tt>, etc.
-<li/> Send those to a <tt>put</tt> step which defines an inverse-transform-sampling function and
-  calls it twice, then computes the sum and product of samples.
-<li/> Send those to a histogram, and from there to a bar-plotter. This is just for visualization; you
-  could just as well output CSV and send that off to your own plotting tool, etc.
-</ul>
-
-The output is as follows:
-
-POKI_RUN_COMMAND{{sh expo-sample.sh}}HERE
 
 <!-- ================================================================ -->
 </div>
@@ -254,6 +129,74 @@ POKI_RUN_COMMAND{{mlr --itsv --opprint put -q -f data/maxrows.mlr data/maxrows.t
 
 <!-- ================================================================ -->
 </div>
+<h1>Rectangularizing data</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rectangularizing_data');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_rectangularizing_data" style="display: block">
+
+<p/>Suppose you have a method (in whatever language) which is printing things of the form
+
+POKI_INCLUDE_ESCAPED(data/rect-outer.txt)HERE
+
+and then calls another method which prints things of the form
+
+POKI_INCLUDE_ESCAPED(data/rect-middle.txt)HERE
+
+and then, perhaps, that second method calls a third method which prints things of the form
+
+POKI_INCLUDE_ESCAPED(data/rect-inner.txt)HERE
+
+with the result that your program&rsquo;s output is
+
+POKI_INCLUDE_ESCAPED(data/rect.txt)HERE
+
+The idea here is that middles starting with a 1 belong to the outer value of 1,
+and so on.  (For example, the outer values might be account IDs, the middle
+values might be invoice IDs, and the inner values might be invoice line-items.)
+If you want all the middle and inner lines to have the context of which outers
+they belong to, you can modify your software to pass all those through your
+methods. Alternatively, you can use the following to rectangularize the data.
+The idea is to use an out-of-stream variable to accumulate fields across
+records. Clear that variable when you see an outer ID; accumulate fields; emit
+output when you see the inner IDs.
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/rect.sh)HERE
+
+<!-- ================================================================ -->
+</div>
+<h1>Regularizing ragged CSV</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rectangularizing_ragged_csv');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_rectangularizing_ragged_csv" style="display: block">
+
+<p/>Miller handles compliant CSV: in particular, it&rsquo;s an error if the
+number of data fields in a given data line don&rsquo;t match the number of
+header lines. But in the event that you have a CSV file in which some lines
+have less than the full number of fields, you can use Miller to pad them out.
+The trick is to use NIDX format, for which each line stands on its own without
+respect to a header line.
+
+POKI_RUN_COMMAND{{cat data/ragged.csv}}HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv.sh)HERE
+
+or, more simply,
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv-2.sh)HERE
+
+<!-- ================================================================ -->
+<h1>Parsing log-file output</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_parsing_log_file_output');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_parsing_log_file_output" style="display: block">
+
+<p/>This, of course, depends highly on what&rsquo;s in your log files. But, as
+an example, suppose you have log-file lines such as
+
+POKI_CARDIFY(2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [sometext] various/sorts/of data {& punctuation} hits=1 status=0 time=2.378)HERE
+
+I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the structured text, then hand that to Miller. Example:
+
+POKI_CARDIFY(grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status)HERE
+
+<!-- ================================================================ -->
+</div>
 <h1>Filtering paragraphs of text</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_filtering_paragraphs_of_text');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_filtering_paragraphs_of_text" style="display: block">
@@ -280,89 +223,22 @@ POKI_INCLUDE_ESCAPED(data/dollar-sign.txt)HERE
 
 <!-- ================================================================ -->
 </div>
-<h1>Using out-of-stream variables</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_using_oosvars');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_using_oosvars" style="display: block">
+<h1>Memoization with out-of-stream variables</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_memoization_with_oosvars');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_memoization_with_oosvars" style="display: block">
 
-<p/> One of Miller&rsquo;s strengths is its compact notation: for example, given input of the form
+<p/> The recursive function for the Fibonacci sequence is famous for its computational complexity.
+Namely, using
+<i>f</i>(0)=1,
+<i>f</i>(1)=1,
+<i>f</i>(<i>n</i>)=<i>f</i>(<i>n</i>-1)+<i>f</i>(<i>n</i>-2) for <i>n</i>&ge;2,
+the evaluation tree branches left as well as right at each non-trivial level, resulting in millions
+or more paths to the root 0/1 nodes:
 
-POKI_RUN_COMMAND{{head -n 5 ../data/medium}}HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/fibo-uncached.sh)HERE
 
-you can simply do
+<p/> Note that the time it takes to evaluate the function is blowing up exponentially as the input argument
+increases. Using <tt>@</tt>-variables, which persist across records, we can cache and reuse the results
+of previous computations:
 
-POKI_RUN_COMMAND{{mlr --oxtab stats1 -a sum -f x ../data/medium}}HERE
-
-or
-
-POKI_RUN_COMMAND{{mlr --opprint stats1 -a sum -f x -g b ../data/medium}}HERE
-
-rather than the more tedious
-
-POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-sum.sh)HERE
-
-or
-
-POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-sum-grouped.sh)HERE
-
-<p/> The former (<tt>mlr stats1</tt> et al.) has the advantages of being easier
-to type, being less error-prone to type, and running faster.
-
-<p/> Nonetheless, out-of-stream variables (which I whimsically call
-<i>oosvars</i>), begin/end blocks, and emit statements give you the ability to
-implement logic &mdash; if you wish to do so &mdash; which isn&rsquo;t present
-in other Miller verbs.  (If you find yourself often using the same
-out-of-stream-variable logic over and over, please file a request at <a
-href="https://github.com/johnkerl/miller/issues">https://github.com/johnkerl/miller/issues</a>
-to get it implemented directly in C as a Miller verb of its own.)
-
-<p/> The following examples compute some things using oosvars which are already
-computable using Miller verbs, by way of providing food for thought.
-
-<h2>Mean without/with oosvars</h2>
-
-POKI_RUN_COMMAND{{mlr --opprint stats1 -a mean -f x data/medium}}HERE
-POKI_INCLUDE_AND_RUN_ESCAPED(data/mean-with-oosvars.sh)HERE
-
-<h2>Keyed mean without/with oosvars</h2>
-
-POKI_RUN_COMMAND{{mlr --opprint stats1 -a mean -f x -g a,b data/medium}}HERE
-POKI_INCLUDE_AND_RUN_ESCAPED(data/keyed-mean-with-oosvars.sh)HERE
-
-<h2>Variance and standard deviation without/with oosvars</h2>
-
-POKI_RUN_COMMAND{{mlr --oxtab stats1 -a count,sum,mean,var,stddev -f x data/medium}}HERE
-POKI_RUN_COMMAND{{cat variance.mlr}}HERE
-POKI_RUN_COMMAND{{mlr --oxtab put -q -f variance.mlr data/medium}}HERE
-
-You can also do this keyed, of course, imitating the keyed-mean example above.
-
-<h2>Min/max without/with oosvars</h2>
-
-POKI_RUN_COMMAND{{mlr --oxtab stats1 -a min,max -f x data/medium}}HERE
-
-POKI_RUN_COMMAND{{mlr --oxtab put -q '@x_min = min(@x_min, $x); @x_max = max(@x_max, $x); end{emitf @x_min, @x_max}' data/medium}}HERE
-
-<h2>Keyed min/max without/with oosvars</h2>
-
-POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,max -f x -g a data/medium}}HERE
-POKI_INCLUDE_AND_RUN_ESCAPED(data/keyed-min-max-with-oosvars.sh)HERE
-
-<h2>Delta without/with oosvars</h2>
-
-POKI_RUN_COMMAND{{mlr --opprint step -a delta -f x data/small}}HERE
-
-POKI_RUN_COMMAND{{mlr --opprint put '$x_delta = is_present(@last) ? $x - @last : 0; @last = $x' data/small}}HERE
-
-<h2>Keyed delta without/with oosvars</h2>
-
-POKI_RUN_COMMAND{{mlr --opprint step -a delta -f x -g a data/small}}HERE
-
-POKI_RUN_COMMAND{{mlr --opprint put '$x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0; @last[$a]=$x' data/small}}HERE
-
-<h2>Exponentially weighted moving averages without/with oosvars</h2>
-
-POKI_INCLUDE_AND_RUN_ESCAPED(verb-example-ewma.sh)HERE
-
-POKI_INCLUDE_AND_RUN_ESCAPED(oosvar-example-ewma.sh)HERE
-
-</div>
+POKI_INCLUDE_AND_RUN_ESCAPED(data/fibo-cached.sh)HERE

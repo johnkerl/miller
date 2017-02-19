@@ -10,7 +10,7 @@
   <meta name="keywords"
 	content="John Kerl, Kerl, Miller, miller, mlr, OLAP, data analysis software, regression, correlation, variance, data tools, " />
 
-  <title> Cookbook </title>
+  <title> Cookbook part 1 </title>
   <link rel="stylesheet" type="text/css" href="css/miller.css"/>
   <link rel="stylesheet" type="text/css" href="css/poki-callbacks.css"/>
 </head>
@@ -112,8 +112,11 @@ Miller commands were run with pretty-print-tabular output format.
 <br/>&bull;&nbsp;<a href="internationalization.html">Internationalization</a>
 <br/><b>Using Miller:</b>
 <br/>&bull;&nbsp;<a href="faq.html">FAQ</a>
+<br/>&bull;&nbsp;<a href="cookbook.html"><b>Cookbook part 1</b></a>
+<br/>&bull;&nbsp;<a href="cookbook2.html">Cookbook part 2</a>
+<br/>&bull;&nbsp;<a href="cookbook3.html">Cookbook part 3</a>
+<br/>&bull;&nbsp;<a href="cookbook4.html">Cookbook part 4</a>
 <br/>&bull;&nbsp;<a href="data-examples.html">Data-diving examples</a>
-<br/>&bull;&nbsp;<a href="cookbook.html"><b>Cookbook</b></a>
 <br/>&bull;&nbsp;<a href="manpage.html">Manpage</a>
 <br/>&bull;&nbsp;<a href="reference.html">Reference</a>
 <br/>&bull;&nbsp;<a href="reference-verbs.html">Reference: Verbs</a>
@@ -178,36 +181,30 @@ Miller commands were run with pretty-print-tabular output format.
 
     -->
     <div>
-    <center> <titleinbody> Cookbook </titleinbody> </center>
+    <center> <titleinbody> Cookbook part 1 </titleinbody> </center>
     <p/>
     
 <!-- BODY COPIED FROM content-for-cookbook.html BY poki -->
+<p/>
+<center>
+<boldmaroon>Common patterns</boldmaroon>
+</center>
+
 <div class="pokitoc">
 <center><b>Contents:</b></center>
-&bull;&nbsp;<a href="#Parsing_log-file_output">Parsing log-file output</a><br/>
-&bull;&nbsp;<a href="#Rectangularizing_data">Rectangularizing data</a><br/>
-&bull;&nbsp;<a href="#Bulk_rename_of_field_names">Bulk rename of field names</a><br/>
 &bull;&nbsp;<a href="#Headerless_CSV_on_input_or_output">Headerless CSV on input or output</a><br/>
-&bull;&nbsp;<a href="#Regularizing_ragged_CSV">Regularizing ragged CSV</a><br/>
-&bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
-&bull;&nbsp;<a href="#Memoization_with_out-of-stream_variables">Memoization with out-of-stream variables</a><br/>
+&bull;&nbsp;<a href="#Bulk_rename_of_field_names">Bulk rename of field names</a><br/>
 &bull;&nbsp;<a href="#Finding_missing_dates">Finding missing dates</a><br/>
-&bull;&nbsp;<a href="#Generating_random_variables">Generating random variables</a><br/>
 &bull;&nbsp;<a href="#Two-pass_algorithms">Two-pass algorithms</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Two-pass_algorithms:_computation_of_percentages">Two-pass algorithms: computation of percentages</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Two-pass_algorithms:_line-number_ratios">Two-pass algorithms: line-number ratios</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Two-pass_algorithms:_records_having_max_value">Two-pass algorithms: records having max value</a><br/>
+&bull;&nbsp;<a href="#Rectangularizing_data">Rectangularizing data</a><br/>
+&bull;&nbsp;<a href="#Regularizing_ragged_CSV">Regularizing ragged CSV</a><br/>
+&bull;&nbsp;<a href="#Parsing_log-file_output">Parsing log-file output</a><br/>
 &bull;&nbsp;<a href="#Filtering_paragraphs_of_text">Filtering paragraphs of text</a><br/>
 &bull;&nbsp;<a href="#Doing_arithmetic_on_fields_with_currency_symbols">Doing arithmetic on fields with currency symbols</a><br/>
-&bull;&nbsp;<a href="#Using_out-of-stream_variables">Using out-of-stream variables</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Mean_without/with_oosvars">Mean without/with oosvars</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keyed_mean_without/with_oosvars">Keyed mean without/with oosvars</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Variance_and_standard_deviation_without/with_oosvars">Variance and standard deviation without/with oosvars</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Min/max_without/with_oosvars">Min/max without/with oosvars</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keyed_min/max_without/with_oosvars">Keyed min/max without/with oosvars</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Delta_without/with_oosvars">Delta without/with oosvars</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Keyed_delta_without/with_oosvars">Keyed delta without/with oosvars</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Exponentially_weighted_moving_averages_without/with_oosvars">Exponentially weighted moving averages without/with oosvars</a><br/>
+&bull;&nbsp;<a href="#Memoization_with_out-of-stream_variables">Memoization with out-of-stream variables</a><br/>
 </div>
 <p/>
 
@@ -218,211 +215,6 @@ Miller commands were run with pretty-print-tabular output format.
 <p/><b>Disclaimer:</b> This page is about how to do some corner-case things in
 ways you mightn&rsquo;t have thought of. For an intro, please also see
 <a href="10-min.html">Miller in 10 minutes</a>.
-
-<!-- ================================================================ -->
-<a id="Parsing_log-file_output"/><h1>Parsing log-file output</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_parsing_log_file_output');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_parsing_log_file_output" style="display: block">
-
-<p/>This, of course, depends highly on what&rsquo;s in your log files. But, as
-an example, suppose you have log-file lines such as
-
-<p/>
-<div class="pokipanel">
-<pre>
-2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [sometext] various/sorts/of data {&amp; punctuation} hits=1 status=0 time=2.378
-</pre>
-</div>
-<p/>
-
-I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the structured text, then hand that to Miller. Example:
-
-<p/>
-<div class="pokipanel">
-<pre>
-grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status
-</pre>
-</div>
-<p/>
-
-<!-- ================================================================ -->
-</div>
-<a id="Rectangularizing_data"/><h1>Rectangularizing data</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rectangularizing_data');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_rectangularizing_data" style="display: block">
-
-<p/>Suppose you have a method (in whatever language) which is printing things of the form
-
-<p/>
-<div class="pokipanel">
-<pre>
-outer=1
-outer=2
-outer=3
-</pre>
-</div>
-<p/>
-
-and then calls another method which prints things of the form
-
-<p/>
-<div class="pokipanel">
-<pre>
-middle=10
-middle=11
-middle=12
-middle=20
-middle=21
-middle=30
-middle=31
-</pre>
-</div>
-<p/>
-
-and then, perhaps, that second method calls a third method which prints things of the form
-
-<p/>
-<div class="pokipanel">
-<pre>
-inner1=100,inner2=101
-inner1=120,inner2=121
-inner1=200,inner2=201
-inner1=210,inner2=211
-inner1=300,inner2=301
-inner1=312
-inner1=313,inner2=314
-</pre>
-</div>
-<p/>
-
-with the result that your program&rsquo;s output is
-
-<p/>
-<div class="pokipanel">
-<pre>
-outer=1
-middle=10
-inner1=100,inner2=101
-middle=11
-middle=12
-inner1=120,inner2=121
-outer=2
-middle=20
-inner1=200,inner2=201
-middle=21
-inner1=210,inner2=211
-outer=3
-middle=30
-inner1=300,inner2=301
-middle=31
-inner1=312
-inner1=313,inner2=314
-</pre>
-</div>
-<p/>
-
-The idea here is that middles starting with a 1 belong to the outer value of 1,
-and so on.  (For example, the outer values might be account IDs, the middle
-values might be invoice IDs, and the inner values might be invoice line-items.)
-If you want all the middle and inner lines to have the context of which outers
-they belong to, you can modify your software to pass all those through your
-methods. Alternatively, you can use the following to rectangularize the data.
-The idea is to use an out-of-stream variable to accumulate fields across
-records. Clear that variable when you see an outer ID; accumulate fields; emit
-output when you see the inner IDs.
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/rect.txt put -q '
-  is_present($outer) {
-    unset @r
-  }
-  for (k, v in $*) {
-    @r[k] = v
-  }
-  is_present($inner1) {
-    emit @r
-  }'
-outer=1,middle=10,inner1=100,inner2=101
-outer=1,middle=12,inner1=120,inner2=121
-outer=2,middle=20,inner1=200,inner2=201
-outer=2,middle=21,inner1=210,inner2=211
-outer=3,middle=30,inner1=300,inner2=301
-outer=3,middle=31,inner1=312,inner2=301
-outer=3,middle=31,inner1=313,inner2=314
-</pre>
-</div>
-<p/>
-
-<!-- ================================================================ -->
-</div>
-<a id="Bulk_rename_of_field_names"/><h1>Bulk rename of field names</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_bulk_rename');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_bulk_rename" style="display: block">
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat data/spaces.csv
-a b c,def,g h i
-123,4567,890
-2468,1357,3579
-9987,3312,4543
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --csv rename -r -g ' ,_'  data/spaces.csv
-a_b_c,def,g_h_i
-123,4567,890
-2468,1357,3579
-9987,3312,4543
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --csv --opprint rename -r -g ' ,_'  data/spaces.csv
-a_b_c def  g_h_i
-123   4567 890
-2468  1357 3579
-9987  3312 4543
-</pre>
-</div>
-<p/>
-
-<p/>You can also do this with a for-loop but it puts the modified fields after the unmodified fields:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat data/bulk-rename-for-loop.mlr
-for (oldk,v in $*) {
-    @newk = gsub(oldk, " ", "_");
-    if (@newk != oldk) {
-        unset $[oldk];
-        $[@newk] = v
-    }
-}
-</pre>
-</div>
-<p/>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv
-def  a_b_c g_h_i
-4567 123   890
-1357 2468  3579
-3312 9987  4543
-</pre>
-</div>
-<p/>
 
 <!-- ================================================================ -->
 </div>
@@ -530,233 +322,69 @@ purple,triangle,0,51,0.4355354501763202,0.8591292672156728,0.8122903963006748,5.
 
 <!-- ================================================================ -->
 </div>
-<a id="Regularizing_ragged_CSV"/><h1>Regularizing ragged CSV</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rectangularizing_ragged_csv');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_rectangularizing_ragged_csv" style="display: block">
-
-<p/>Miller handles compliant CSV: in particular, it&rsquo;s an error if the
-number of data fields in a given data line don&rsquo;t match the number of
-header lines. But in the event that you have a CSV file in which some lines
-have less than the full number of fields, you can use Miller to pad them out.
-The trick is to use NIDX format, for which each line stands on its own without
-respect to a header line.
+<a id="Bulk_rename_of_field_names"/><h1>Bulk rename of field names</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_bulk_rename');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_bulk_rename" style="display: block">
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ cat data/ragged.csv
-a,b,c
-1,2,3
-4,5
-6
-7,8,9
+$ cat data/spaces.csv
+a b c,def,g h i
+123,4567,890
+2468,1357,3579
+9987,3312,4543
 </pre>
 </div>
 <p/>
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --from data/ragged.csv --fs comma --nidx put '
-  @maxnf = max(@maxnf, NF);
-  @nf = NF;
-  while(@nf &lt; @maxnf) {
-    @nf += 1;
-    $[@nf] = ""
-  }
-'
-a,b,c
-1,2,3
-4,5,
-6,,
-7,8,9
+$ mlr --csv rename -r -g ' ,_'  data/spaces.csv
+a_b_c,def,g_h_i
+123,4567,890
+2468,1357,3579
+9987,3312,4543
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv --opprint rename -r -g ' ,_'  data/spaces.csv
+a_b_c def  g_h_i
+123   4567 890
+2468  1357 3579
+9987  3312 4543
 </pre>
 </div>
 <p/>
 
-or, more simply,
+<p/>You can also do this with a for-loop but it puts the modified fields after the unmodified fields:
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --from data/ragged.csv --fs comma --nidx put '
-  @maxnf = max(@maxnf, NF);
-  while(NF &lt; @maxnf) {
-    $[NF+1] = "";
-  }
-'
-a,b,c
-1,2,3
-4,5,
-6,,
-7,8,9
-</pre>
-</div>
-<p/>
-
-<!-- ================================================================ -->
-</div>
-<a id="Program_timing"/><h1>Program timing</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_program_timing');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_program_timing" style="display: block">
-
-This admittedly artificial example demonstrates using Miller time and stats
-functions to introspectly acquire some information about Miller&rsquo;s own
-runtime. The <tt>delta</tt> function computes the difference between successive
-timestamps.
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ ruby -e '10000.times{|i|puts "i=#{i+1}"}' &gt; lines.txt
-
-$ head -n 5 lines.txt
-i=1
-i=2
-i=3
-i=4
-i=5
-
-mlr --ofmt '%.9le' --opprint put '$t=systime()' then step -a delta -f t lines.txt | head -n 7
-i     t                 t_delta
-1     1430603027.018016 1.430603027e+09
-2     1430603027.018043 2.694129944e-05
-3     1430603027.018048 5.006790161e-06
-4     1430603027.018052 4.053115845e-06
-5     1430603027.018055 2.861022949e-06
-6     1430603027.018058 3.099441528e-06
-
-mlr --ofmt '%.9le' --oxtab \
-  put '$t=systime()' then \
-  step -a delta -f t then \
-  filter '$i&gt;1' then \
-  stats1 -a min,mean,max -f t_delta \
-  lines.txt
-t_delta_min  2.861022949e-06
-t_delta_mean 4.077508505e-06
-t_delta_max  5.388259888e-05
-</pre>
-</div>
-<p/>
-
-<!-- ================================================================ -->
-</div>
-<a id="Memoization_with_out-of-stream_variables"/><h1>Memoization with out-of-stream variables</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_memoization_with_oosvars');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_memoization_with_oosvars" style="display: block">
-
-<p/> The recursive function for the Fibonacci sequence is famous for its computational complexity.
-Namely, using
-<i>f</i>(0)=1,
-<i>f</i>(1)=1,
-<i>f</i>(<i>n</i>)=<i>f</i>(<i>n</i>-1)+<i>f</i>(<i>n</i>-2) for <i>n</i>&ge;2,
-the evaluation tree branches left as well as right at each non-trivial level, resulting in millions
-or more paths to the root 0/1 nodes:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
-  func f(n) {
-      @fcount += 1;              # count number of calls to the function
-      if (n &lt; 2) {
-          return 1
-      } else {
-          return f(n-1) + f(n-2) # recurse
-      }
-  }
-
-  @fcount = 0;
-  $o = f($i);
-  $fcount = @fcount;
-
-' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
-i  o      fcount  seconds_delta
-1  1      1       0
-2  2      3       0.000508070
-3  3      5       0.000015020
-4  5      9       0.000017881
-5  8      15      0.000028133
-6  13     25      0.000033855
-7  21     41      0.000048161
-8  34     67      0.000073910
-9  55     109     0.000117064
-10 89     177     0.000186920
-11 144    287     0.000303030
-12 233    465     0.000464916
-13 377    753     0.000705957
-14 610    1219    0.001134157
-15 987    1973    0.001823902
-16 1597   3193    0.003216982
-17 2584   5167    0.004884005
-18 4181   8361    0.010985136
-19 6765   13529   0.014680862
-20 10946  21891   0.019859076
-21 17711  35421   0.035598993
-22 28657  57313   0.055988073
-23 46368  92735   0.091780901
-24 75025  150049  0.137456894
-25 121393 242785  0.217649221
-26 196418 392835  0.375679970
-27 317811 635621  0.588701963
-28 514229 1028457 0.933346987
-</pre>
-</div>
-<p/>
-
-<p/> Note that the time it takes to evaluate the function is blowing up exponentially as the input argument
-increases. Using <tt>@</tt>-variables, which persist across records, we can cache and reuse the results
-of previous computations:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
-  func f(n) {
-    @fcount += 1;                 # count number of calls to the function
-    if (is_present(@fcache[n])) { # cache hit
-      return @fcache[n]
-    } else {                      # cache miss
-      num rv = 1;
-      if (n &gt;= 2) {
-        rv = f(n-1) + f(n-2)      # recurse
-      }
-      @fcache[n] = rv;
-      return rv
+$ cat data/bulk-rename-for-loop.mlr
+for (oldk,v in $*) {
+    @newk = gsub(oldk, " ", "_");
+    if (@newk != oldk) {
+        unset $[oldk];
+        $[@newk] = v
     }
-  }
-  @fcount = 0;
-  $o = f($i);
-  $fcount = @fcount;
-' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
-i  o      fcount seconds_delta
-1  1      1      0
-2  2      3      0.000037909
-3  3      3      0.000013113
-4  5      3      0.000012875
-5  8      3      0.000011206
-6  13     3      0.000011921
-7  21     3      0.000010967
-8  34     3      0.000010967
-9  55     3      0.000010014
-10 89     3      0.000013113
-11 144    3      0.000010967
-12 233    3      0.000015020
-13 377    3      0.000011921
-14 610    3      0.000010967
-15 987    3      0.000010014
-16 1597   3      0.000010967
-17 2584   3      0.000010967
-18 4181   3      0.000010014
-19 6765   3      0.000011206
-20 10946  3      0.000010967
-21 17711  3      0.000010014
-22 28657  3      0.000010967
-23 46368  3      0.000012875
-24 75025  3      0.000010967
-25 121393 3      0.000010014
-26 196418 3      0.000010967
-27 317811 3      0.000010014
-28 514229 3      0.000011206
+}
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv
+def  a_b_c g_h_i
+4567 123   890
+1357 2468  3579
+3312 9987  4543
 </pre>
 </div>
 <p/>
@@ -871,123 +499,6 @@ n=1122,1=2015-04-02,2=181718
 n=1123,1=2015-04-03,2=181835
 n=1124,1=2015-04-04,2=182104
 n=1125,1=2015-04-05,2=182528
-</pre>
-</div>
-<p/>
-
-<!-- ================================================================ -->
-</div>
-<a id="Generating_random_variables"/><h1>Generating random variables</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_generating_random_variables');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_generating_random_variables" style="display: block">
-
-<p/>Here can chain together a few simple building blocks:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat expo-sample.sh
-# Generate 100,000 pairs of independent and identically distributed
-# exponentially distributed random variables with the same rate parameter
-# (namely, 2.5). Then compute histograms of one of them, along with
-# histograms for their sum and their product.
-#
-# See also https://en.wikipedia.org/wiki/Exponential_distribution
-#
-# Here I'm using a specified random-number seed so this example always
-# produces the same output for this web document: in everyday practice we
-# wouldn't do that.
-
-mlr -n \
-  --seed 0.25 \
-  --opprint \
-  seqgen --stop 100000 \
-  then put '
-    # https://en.wikipedia.org/wiki/Inverse_transform_sampling
-    func expo_sample(lambda) {
-      return -log(1-urand())/lambda
-    }
-    $u = expo_sample(2.5);
-    $v = expo_sample(2.5);
-    $s = $u + $v;
-    $p = $u * $v;
-  ' \
-  then histogram -f u,s,p --lo 0 --hi 2 --nbins 50 \
-  then bar -f u_count,s_count,p_count --auto -w 20
-</pre>
-</div>
-<p/>
-
-<p/>Namely:
-
-<ul>
-<li/> Set the Miller random-number seed so this webdoc looks the same every time I regenerate it.
-<li/> Use pretty-printed tabular output.
-<li/> Use pretty-printed tabular output.
-<li/> Use <tt>seqgen</tt> to produce 100,000 records <tt>i=0</tt>, <tt>i=1</tt>, etc.
-<li/> Send those to a <tt>put</tt> step which defines an inverse-transform-sampling function and
-  calls it twice, then computes the sum and product of samples.
-<li/> Send those to a histogram, and from there to a bar-plotter. This is just for visualization; you
-  could just as well output CSV and send that off to your own plotting tool, etc.
-</ul>
-
-The output is as follows:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ sh expo-sample.sh
-bin_lo   bin_hi   u_count                        s_count                         p_count
-0.000000 0.040000 [78]*******************#[9497] [353]#...................[3732] [20]*******************#[39755]
-0.040000 0.080000 [78]******************..[9497] [353]*****...............[3732] [20]*******.............[39755]
-0.080000 0.120000 [78]****************....[9497] [353]*********...........[3732] [20]****................[39755]
-0.120000 0.160000 [78]**************......[9497] [353]************........[3732] [20]***.................[39755]
-0.160000 0.200000 [78]*************.......[9497] [353]**************......[3732] [20]**..................[39755]
-0.200000 0.240000 [78]************........[9497] [353]****************....[3732] [20]*...................[39755]
-0.240000 0.280000 [78]**********..........[9497] [353]******************..[3732] [20]*...................[39755]
-0.280000 0.320000 [78]**********..........[9497] [353]******************..[3732] [20]*...................[39755]
-0.320000 0.360000 [78]*********...........[9497] [353]*******************.[3732] [20]#...................[39755]
-0.360000 0.400000 [78]********............[9497] [353]*******************.[3732] [20]#...................[39755]
-0.400000 0.440000 [78]*******.............[9497] [353]*******************#[3732] [20]#...................[39755]
-0.440000 0.480000 [78]******..............[9497] [353]******************..[3732] [20]#...................[39755]
-0.480000 0.520000 [78]*****...............[9497] [353]******************..[3732] [20]#...................[39755]
-0.520000 0.560000 [78]*****...............[9497] [353]******************..[3732] [20]#...................[39755]
-0.560000 0.600000 [78]****................[9497] [353]*****************...[3732] [20]#...................[39755]
-0.600000 0.640000 [78]****................[9497] [353]*****************...[3732] [20]#...................[39755]
-0.640000 0.680000 [78]****................[9497] [353]****************....[3732] [20]#...................[39755]
-0.680000 0.720000 [78]***.................[9497] [353]****************....[3732] [20]#...................[39755]
-0.720000 0.760000 [78]***.................[9497] [353]**************......[3732] [20]#...................[39755]
-0.760000 0.800000 [78]**..................[9497] [353]**************......[3732] [20]#...................[39755]
-0.800000 0.840000 [78]**..................[9497] [353]*************.......[3732] [20]#...................[39755]
-0.840000 0.880000 [78]**..................[9497] [353]************........[3732] [20]#...................[39755]
-0.880000 0.920000 [78]**..................[9497] [353]***********.........[3732] [20]#...................[39755]
-0.920000 0.960000 [78]*...................[9497] [353]***********.........[3732] [20]#...................[39755]
-0.960000 1.000000 [78]*...................[9497] [353]**********..........[3732] [20]#...................[39755]
-1.000000 1.040000 [78]*...................[9497] [353]*********...........[3732] [20]#...................[39755]
-1.040000 1.080000 [78]*...................[9497] [353]*********...........[3732] [20]#...................[39755]
-1.080000 1.120000 [78]*...................[9497] [353]********............[3732] [20]#...................[39755]
-1.120000 1.160000 [78]*...................[9497] [353]********............[3732] [20]#...................[39755]
-1.160000 1.200000 [78]#...................[9497] [353]*******.............[3732] [20]#...................[39755]
-1.200000 1.240000 [78]#...................[9497] [353]******..............[3732] [20]#...................[39755]
-1.240000 1.280000 [78]#...................[9497] [353]*****...............[3732] [20]#...................[39755]
-1.280000 1.320000 [78]#...................[9497] [353]*****...............[3732] [20]#...................[39755]
-1.320000 1.360000 [78]#...................[9497] [353]*****...............[3732] [20]#...................[39755]
-1.360000 1.400000 [78]#...................[9497] [353]****................[3732] [20]#...................[39755]
-1.400000 1.440000 [78]#...................[9497] [353]****................[3732] [20]#...................[39755]
-1.440000 1.480000 [78]#...................[9497] [353]***.................[3732] [20]#...................[39755]
-1.480000 1.520000 [78]#...................[9497] [353]***.................[3732] [20]#...................[39755]
-1.520000 1.560000 [78]#...................[9497] [353]***.................[3732] [20]#...................[39755]
-1.560000 1.600000 [78]#...................[9497] [353]**..................[3732] [20]#...................[39755]
-1.600000 1.640000 [78]#...................[9497] [353]**..................[3732] [20]#...................[39755]
-1.640000 1.680000 [78]#...................[9497] [353]*...................[3732] [20]#...................[39755]
-1.680000 1.720000 [78]#...................[9497] [353]*...................[3732] [20]#...................[39755]
-1.720000 1.760000 [78]#...................[9497] [353]*...................[3732] [20]#...................[39755]
-1.760000 1.800000 [78]#...................[9497] [353]*...................[3732] [20]#...................[39755]
-1.800000 1.840000 [78]#...................[9497] [353]#...................[3732] [20]#...................[39755]
-1.840000 1.880000 [78]#...................[9497] [353]#...................[3732] [20]#...................[39755]
-1.880000 1.920000 [78]#...................[9497] [353]#...................[3732] [20]#...................[39755]
-1.920000 1.960000 [78]#...................[9497] [353]#...................[3732] [20]#...................[39755]
-1.960000 2.000000 [78]#...................[9497] [353]#...................[3732] [20]#...................[39755]
 </pre>
 </div>
 <p/>
@@ -1165,6 +676,207 @@ green  purple 5 0.203577
 
 <!-- ================================================================ -->
 </div>
+<a id="Rectangularizing_data"/><h1>Rectangularizing data</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rectangularizing_data');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_rectangularizing_data" style="display: block">
+
+<p/>Suppose you have a method (in whatever language) which is printing things of the form
+
+<p/>
+<div class="pokipanel">
+<pre>
+outer=1
+outer=2
+outer=3
+</pre>
+</div>
+<p/>
+
+and then calls another method which prints things of the form
+
+<p/>
+<div class="pokipanel">
+<pre>
+middle=10
+middle=11
+middle=12
+middle=20
+middle=21
+middle=30
+middle=31
+</pre>
+</div>
+<p/>
+
+and then, perhaps, that second method calls a third method which prints things of the form
+
+<p/>
+<div class="pokipanel">
+<pre>
+inner1=100,inner2=101
+inner1=120,inner2=121
+inner1=200,inner2=201
+inner1=210,inner2=211
+inner1=300,inner2=301
+inner1=312
+inner1=313,inner2=314
+</pre>
+</div>
+<p/>
+
+with the result that your program&rsquo;s output is
+
+<p/>
+<div class="pokipanel">
+<pre>
+outer=1
+middle=10
+inner1=100,inner2=101
+middle=11
+middle=12
+inner1=120,inner2=121
+outer=2
+middle=20
+inner1=200,inner2=201
+middle=21
+inner1=210,inner2=211
+outer=3
+middle=30
+inner1=300,inner2=301
+middle=31
+inner1=312
+inner1=313,inner2=314
+</pre>
+</div>
+<p/>
+
+The idea here is that middles starting with a 1 belong to the outer value of 1,
+and so on.  (For example, the outer values might be account IDs, the middle
+values might be invoice IDs, and the inner values might be invoice line-items.)
+If you want all the middle and inner lines to have the context of which outers
+they belong to, you can modify your software to pass all those through your
+methods. Alternatively, you can use the following to rectangularize the data.
+The idea is to use an out-of-stream variable to accumulate fields across
+records. Clear that variable when you see an outer ID; accumulate fields; emit
+output when you see the inner IDs.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/rect.txt put -q '
+  is_present($outer) {
+    unset @r
+  }
+  for (k, v in $*) {
+    @r[k] = v
+  }
+  is_present($inner1) {
+    emit @r
+  }'
+outer=1,middle=10,inner1=100,inner2=101
+outer=1,middle=12,inner1=120,inner2=121
+outer=2,middle=20,inner1=200,inner2=201
+outer=2,middle=21,inner1=210,inner2=211
+outer=3,middle=30,inner1=300,inner2=301
+outer=3,middle=31,inner1=312,inner2=301
+outer=3,middle=31,inner1=313,inner2=314
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+</div>
+<a id="Regularizing_ragged_CSV"/><h1>Regularizing ragged CSV</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rectangularizing_ragged_csv');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_rectangularizing_ragged_csv" style="display: block">
+
+<p/>Miller handles compliant CSV: in particular, it&rsquo;s an error if the
+number of data fields in a given data line don&rsquo;t match the number of
+header lines. But in the event that you have a CSV file in which some lines
+have less than the full number of fields, you can use Miller to pad them out.
+The trick is to use NIDX format, for which each line stands on its own without
+respect to a header line.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/ragged.csv
+a,b,c
+1,2,3
+4,5
+6
+7,8,9
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/ragged.csv --fs comma --nidx put '
+  @maxnf = max(@maxnf, NF);
+  @nf = NF;
+  while(@nf &lt; @maxnf) {
+    @nf += 1;
+    $[@nf] = ""
+  }
+'
+a,b,c
+1,2,3
+4,5,
+6,,
+7,8,9
+</pre>
+</div>
+<p/>
+
+or, more simply,
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/ragged.csv --fs comma --nidx put '
+  @maxnf = max(@maxnf, NF);
+  while(NF &lt; @maxnf) {
+    $[NF+1] = "";
+  }
+'
+a,b,c
+1,2,3
+4,5,
+6,,
+7,8,9
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Parsing_log-file_output"/><h1>Parsing log-file output</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_parsing_log_file_output');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_parsing_log_file_output" style="display: block">
+
+<p/>This, of course, depends highly on what&rsquo;s in your log files. But, as
+an example, suppose you have log-file lines such as
+
+<p/>
+<div class="pokipanel">
+<pre>
+2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [sometext] various/sorts/of data {&amp; punctuation} hits=1 status=0 time=2.378
+</pre>
+</div>
+<p/>
+
+I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the structured text, then hand that to Miller. Example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+</div>
 <a id="Filtering_paragraphs_of_text"/><h1>Filtering paragraphs of text</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_filtering_paragraphs_of_text');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_filtering_paragraphs_of_text" style="display: block">
@@ -1293,407 +1005,130 @@ Amount_sum
 
 <!-- ================================================================ -->
 </div>
-<a id="Using_out-of-stream_variables"/><h1>Using out-of-stream variables</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_using_oosvars');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_using_oosvars" style="display: block">
+<a id="Memoization_with_out-of-stream_variables"/><h1>Memoization with out-of-stream variables</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_memoization_with_oosvars');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_memoization_with_oosvars" style="display: block">
 
-<p/> One of Miller&rsquo;s strengths is its compact notation: for example, given input of the form
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ head -n 5 ../data/medium
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-</pre>
-</div>
-<p/>
-
-you can simply do
+<p/> The recursive function for the Fibonacci sequence is famous for its computational complexity.
+Namely, using
+<i>f</i>(0)=1,
+<i>f</i>(1)=1,
+<i>f</i>(<i>n</i>)=<i>f</i>(<i>n</i>-1)+<i>f</i>(<i>n</i>-2) for <i>n</i>&ge;2,
+the evaluation tree branches left as well as right at each non-trivial level, resulting in millions
+or more paths to the root 0/1 nodes:
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --oxtab stats1 -a sum -f x ../data/medium
-x_sum 4986.019682
-</pre>
-</div>
-<p/>
-
-or
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint stats1 -a sum -f x -g b ../data/medium
-b   x_sum
-pan 965.763670
-wye 1023.548470
-zee 979.742016
-eks 1016.772857
-hat 1000.192668
-</pre>
-</div>
-<p/>
-
-rather than the more tedious
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --oxtab put -q '
-  @x_sum += $x;
-  end {
-    emit @x_sum
+$ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
+  func f(n) {
+      @fcount += 1;              # count number of calls to the function
+      if (n &lt; 2) {
+          return 1
+      } else {
+          return f(n-1) + f(n-2) # recurse
+      }
   }
-' data/medium
-x_sum 4986.019682
+
+  @fcount = 0;
+  $o = f($i);
+  $fcount = @fcount;
+
+' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
+i  o      fcount  seconds_delta
+1  1      1       0
+2  2      3       0.000032187
+3  3      5       0.000012875
+4  5      9       0.000015020
+5  8      15      0.000020027
+6  13     25      0.000028849
+7  21     41      0.000043154
+8  34     67      0.000066996
+9  55     109     0.000104904
+10 89     177     0.000167131
+11 144    287     0.000270844
+12 233    465     0.000430107
+13 377    753     0.000789881
+14 610    1219    0.001615047
+15 987    1973    0.002474070
+16 1597   3193    0.003597975
+17 2584   5167    0.005141020
+18 4181   8361    0.007761002
+19 6765   13529   0.012228012
+20 10946  21891   0.024306059
+21 17711  35421   0.035348892
+22 28657  57313   0.056926012
+23 46368  92735   0.093235970
+24 75025  150049  0.137828112
+25 121393 242785  0.227672815
+26 196418 392835  0.360737085
+27 317811 635621  0.575742006
+28 514229 1028457 0.925143957
 </pre>
 </div>
 <p/>
 
-or
+<p/> Note that the time it takes to evaluate the function is blowing up exponentially as the input argument
+increases. Using <tt>@</tt>-variables, which persist across records, we can cache and reuse the results
+of previous computations:
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint put -q '
-  @x_sum[$b] += $x;
-  end {
-    emit @x_sum, "b"
-  }
-' data/medium
-b   x_sum
-pan 965.763670
-wye 1023.548470
-zee 979.742016
-eks 1016.772857
-hat 1000.192668
-</pre>
-</div>
-<p/>
-
-<p/> The former (<tt>mlr stats1</tt> et al.) has the advantages of being easier
-to type, being less error-prone to type, and running faster.
-
-<p/> Nonetheless, out-of-stream variables (which I whimsically call
-<i>oosvars</i>), begin/end blocks, and emit statements give you the ability to
-implement logic &mdash; if you wish to do so &mdash; which isn&rsquo;t present
-in other Miller verbs.  (If you find yourself often using the same
-out-of-stream-variable logic over and over, please file a request at <a
-href="https://github.com/johnkerl/miller/issues">https://github.com/johnkerl/miller/issues</a>
-to get it implemented directly in C as a Miller verb of its own.)
-
-<p/> The following examples compute some things using oosvars which are already
-computable using Miller verbs, by way of providing food for thought.
-
-<a id="Mean_without/with_oosvars"/><h2>Mean without/with oosvars</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint stats1 -a mean -f x data/medium
-x_mean
-0.498602
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint put -q '
-  @x_sum += $x;
-  @x_count += 1;
-  end {
-    @x_mean = @x_sum / @x_count;
-    emit @x_mean
-  }
-' data/medium
-x_mean
-0.498602
-</pre>
-</div>
-<p/>
-
-<a id="Keyed_mean_without/with_oosvars"/><h2>Keyed mean without/with oosvars</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint stats1 -a mean -f x -g a,b data/medium
-a   b   x_mean
-pan pan 0.513314
-eks pan 0.485076
-wye wye 0.491501
-eks wye 0.483895
-wye pan 0.499612
-zee pan 0.519830
-eks zee 0.495463
-zee wye 0.514267
-hat wye 0.493813
-pan wye 0.502362
-zee eks 0.488393
-hat zee 0.509999
-hat eks 0.485879
-wye hat 0.497730
-pan eks 0.503672
-eks eks 0.522799
-hat hat 0.479931
-hat pan 0.464336
-zee zee 0.512756
-pan hat 0.492141
-pan zee 0.496604
-zee hat 0.467726
-wye zee 0.505907
-eks hat 0.500679
-wye eks 0.530604
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint put -q '
-  @x_sum[$a][$b] += $x;
-  @x_count[$a][$b] += 1;
-  end{
-    for ((a, b), v in @x_sum) {
-      @x_mean[a][b] = @x_sum[a][b] / @x_count[a][b];
+$ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
+  func f(n) {
+    @fcount += 1;                 # count number of calls to the function
+    if (is_present(@fcache[n])) { # cache hit
+      return @fcache[n]
+    } else {                      # cache miss
+      num rv = 1;
+      if (n &gt;= 2) {
+        rv = f(n-1) + f(n-2)      # recurse
+      }
+      @fcache[n] = rv;
+      return rv
     }
-    emit @x_mean, "a", "b"
   }
-' data/medium
-a   b   x_mean
-pan pan 0.513314
-pan wye 0.502362
-pan eks 0.503672
-pan hat 0.492141
-pan zee 0.496604
-eks pan 0.485076
-eks wye 0.483895
-eks zee 0.495463
-eks eks 0.522799
-eks hat 0.500679
-wye wye 0.491501
-wye pan 0.499612
-wye hat 0.497730
-wye zee 0.505907
-wye eks 0.530604
-zee pan 0.519830
-zee wye 0.514267
-zee eks 0.488393
-zee zee 0.512756
-zee hat 0.467726
-hat wye 0.493813
-hat zee 0.509999
-hat eks 0.485879
-hat hat 0.479931
-hat pan 0.464336
+  @fcount = 0;
+  $o = f($i);
+  $fcount = @fcount;
+' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
+i  o      fcount seconds_delta
+1  1      1      0
+2  2      3      0.000035048
+3  3      3      0.000011921
+4  5      3      0.000012159
+5  8      3      0.000010967
+6  13     3      0.000010014
+7  21     3      0.000010967
+8  34     3      0.000010014
+9  55     3      0.000010014
+10 89     3      0.000010967
+11 144    3      0.000010967
+12 233    3      0.000013113
+13 377    3      0.000010967
+14 610    3      0.000010014
+15 987    3      0.000010014
+16 1597   3      0.000010014
+17 2584   3      0.000010014
+18 4181   3      0.000009775
+19 6765   3      0.000009060
+20 10946  3      0.000010967
+21 17711  3      0.000009060
+22 28657  3      0.000010014
+23 46368  3      0.000011921
+24 75025  3      0.000010014
+25 121393 3      0.000010014
+26 196418 3      0.000010014
+27 317811 3      0.000010014
+28 514229 3      0.000009060
 </pre>
 </div>
 <p/>
 
-<a id="Variance_and_standard_deviation_without/with_oosvars"/><h2>Variance and standard deviation without/with oosvars</h2>
 
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --oxtab stats1 -a count,sum,mean,var,stddev -f x data/medium
-x_count  10000
-x_sum    4986.019682
-x_mean   0.498602
-x_var    0.084270
-x_stddev 0.290293
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat variance.mlr
-@n += 1;
-@sumx += $x;
-@sumx2 += $x**2;
-end {
-  @mean = @sumx / @n;
-  @var = (@sumx2 - @mean * (2 * @sumx - @n * @mean)) / (@n - 1);
-  @stddev = sqrt(@var);
-  emitf @n, @sumx, @sumx2, @mean, @var, @stddev
-}
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --oxtab put -q -f variance.mlr data/medium
-n      10000
-sumx   4986.019682
-sumx2  3328.652400
-mean   0.498602
-var    0.084270
-stddev 0.290293
-</pre>
-</div>
-<p/>
 
-You can also do this keyed, of course, imitating the keyed-mean example above.
 
-<a id="Min/max_without/with_oosvars"/><h2>Min/max without/with oosvars</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --oxtab stats1 -a min,max -f x data/medium
-x_min 0.000045
-x_max 0.999953
-</pre>
-</div>
-<p/>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --oxtab put -q '@x_min = min(@x_min, $x); @x_max = max(@x_max, $x); end{emitf @x_min, @x_max}' data/medium
-x_min 0.000045
-x_max 0.999953
-</pre>
-</div>
-<p/>
-
-<a id="Keyed_min/max_without/with_oosvars"/><h2>Keyed min/max without/with oosvars</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint stats1 -a min,max -f x -g a data/medium
-a   x_min    x_max
-pan 0.000204 0.999403
-eks 0.000692 0.998811
-wye 0.000187 0.999823
-zee 0.000549 0.999490
-hat 0.000045 0.999953
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint --from data/medium put -q '
-  @min[$a] = min(@min[$a], $x);
-  @max[$a] = max(@max[$a], $x);
-  end{
-    emit (@min, @max), "a";
-  }
-'
-a   min      max
-pan 0.000204 0.999403
-eks 0.000692 0.998811
-wye 0.000187 0.999823
-zee 0.000549 0.999490
-hat 0.000045 0.999953
-</pre>
-</div>
-<p/>
-
-<a id="Delta_without/with_oosvars"/><h2>Delta without/with oosvars</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint step -a delta -f x data/small
-a   b   i x                   y                   x_delta
-pan pan 1 0.3467901443380824  0.7268028627434533  0
-eks pan 2 0.7586799647899636  0.5221511083334797  0.411890
-wye wye 3 0.20460330576630303 0.33831852551664776 -0.554077
-eks wye 4 0.38139939387114097 0.13418874328430463 0.176796
-wye pan 5 0.5732889198020006  0.8636244699032729  0.191890
-</pre>
-</div>
-<p/>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint put '$x_delta = is_present(@last) ? $x - @last : 0; @last = $x' data/small
-a   b   i x                   y                   x_delta
-pan pan 1 0.3467901443380824  0.7268028627434533  0
-eks pan 2 0.7586799647899636  0.5221511083334797  0.411890
-wye wye 3 0.20460330576630303 0.33831852551664776 -0.554077
-eks wye 4 0.38139939387114097 0.13418874328430463 0.176796
-wye pan 5 0.5732889198020006  0.8636244699032729  0.191890
-</pre>
-</div>
-<p/>
-
-<a id="Keyed_delta_without/with_oosvars"/><h2>Keyed delta without/with oosvars</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint step -a delta -f x -g a data/small
-a   b   i x                   y                   x_delta
-pan pan 1 0.3467901443380824  0.7268028627434533  0
-eks pan 2 0.7586799647899636  0.5221511083334797  0
-wye wye 3 0.20460330576630303 0.33831852551664776 0
-eks wye 4 0.38139939387114097 0.13418874328430463 -0.377281
-wye pan 5 0.5732889198020006  0.8636244699032729  0.368686
-</pre>
-</div>
-<p/>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint put '$x_delta = is_present(@last[$a]) ? $x - @last[$a] : 0; @last[$a]=$x' data/small
-a   b   i x                   y                   x_delta
-pan pan 1 0.3467901443380824  0.7268028627434533  0
-eks pan 2 0.7586799647899636  0.5221511083334797  0
-wye wye 3 0.20460330576630303 0.33831852551664776 0
-eks wye 4 0.38139939387114097 0.13418874328430463 -0.377281
-wye pan 5 0.5732889198020006  0.8636244699032729  0.368686
-</pre>
-</div>
-<p/>
-
-<a id="Exponentially_weighted_moving_averages_without/with_oosvars"/><h2>Exponentially weighted moving averages without/with oosvars</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint step -a ewma -d 0.1 -f x data/small
-a   b   i x                   y                   x_ewma_0.1
-pan pan 1 0.3467901443380824  0.7268028627434533  0.346790
-eks pan 2 0.7586799647899636  0.5221511083334797  0.387979
-wye wye 3 0.20460330576630303 0.33831852551664776 0.369642
-eks wye 4 0.38139939387114097 0.13418874328430463 0.370817
-wye pan 5 0.5732889198020006  0.8636244699032729  0.391064
-</pre>
-</div>
-<p/>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --opprint put '
-  begin{ @a=0.1 };
-  $e = NR==1 ? $x : @a * $x + (1 - @a) * @e;
-  @e=$e
-' data/small
-a   b   i x                   y                   e
-pan pan 1 0.3467901443380824  0.7268028627434533  0.346790
-eks pan 2 0.7586799647899636  0.5221511083334797  0.387979
-wye wye 3 0.20460330576630303 0.33831852551664776 0.369642
-eks wye 4 0.38139939387114097 0.13418874328430463 0.370817
-wye pan 5 0.5732889198020006  0.8636244699032729  0.391064
-</pre>
-</div>
-<p/>
-
-</div>
     </div>
   </td>
 
