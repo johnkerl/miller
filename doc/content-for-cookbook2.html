@@ -34,6 +34,7 @@ POKI_PUT_TOC_HERE
 <p/> Given this following <a href="data/english-words.txt">word list</a>, first
 take a look to see what the first few lines look like:
 
+<p/>
 <div class="pokipanel"> <pre>
 $ head data/english-words.txt 
 a
@@ -48,6 +49,8 @@ abac
 abaca
 </pre> </div>
 
+<p/> Then the following will randomly sample ten words with four to eight characters in them:
+<p/>
 <div class="pokipanel"> <pre>
 $ mlr --from data/english-words.txt --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 thionine
@@ -68,9 +71,40 @@ coinmate
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_jabberwocky');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_jabberwocky" style="display: block">
 
-<p/> To do.
+<p/> These are simple <i>n</i>-grams as described
+<a href="http://johnkerl.org/randspell/randspell-slides-ts.pdf">here</a>. Some common functions are
+<a href="ngrams/ngfuncs.mlr.txt">here</a>.
+Then the following are scripts for
+<a href="ngrams/ng1.mlr.txt">1-grams</a>,
+<a href="ngrams/ng2.mlr.txt">2-grams</a>,
+<a href="ngrams/ng3.mlr.txt">3-grams</a>,
+<a href="ngrams/ng4.mlr.txt">4-grams</a>, and
+<a href="ngrams/ng5.mlr.txt">5-grams</a>.
 
-</div>
+<p/>The idea is that words from the input file are consumed, then taken apart and pasted back together
+in ways which imitate the letter-to-letter transitions found in the word list &mdash; giving us automatically
+generated words in the same vein as <i>bromance</i> and <i>spork</i>:
+<p/>
+<div class="pokipanel"> <pre>
+$ mlr --nidx --from ./ngrams/gsl-2000.txt put -q -f ./ngrams/ngfuncs.mlr -f ./ngrams/ng5.mlr
+beard
+plastinguish
+politicially
+noise
+loan
+country
+controductionary
+suppery
+lose
+lessors
+dollar
+judge
+rottendence
+lessenger
+diffendant
+suggestional
+</pre> </div>
+
 
 </div>
 <!-- ================================================================ -->
@@ -79,7 +113,7 @@ coinmate
 <div id="section_toggle_program_timing" style="display: block">
 
 This admittedly artificial example demonstrates using Miller time and stats
-functions to introspectly acquire some information about Miller&rsquo;s own
+functions to introspectively acquire some information about Miller&rsquo;s own
 runtime. The <tt>delta</tt> function computes the difference between successive
 timestamps.
 

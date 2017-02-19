@@ -568,6 +568,7 @@ static void udf_callsite_state_free(udf_callsite_state_t* pstate) {
 	for (int i = 0; i < pstate->arity; i++) {
 		rxval_evaluator_t* pxev = pstate->pevals[i];
 		pxev->pfree_func(pxev);
+		// xxx dup ownership w/ localstack?
 		if (pstate->args[i].is_ephemeral) {
 			mlhmmv_xvalue_free(&pstate->args[i].xval);
 		}

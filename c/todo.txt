@@ -1,10 +1,16 @@
 ================================================================
 BUGFIXES
 
-:D
+$ mlr --nidx --from data/english-words.txt put -q -f ngrams/ngfuncs.mlr -f ngrams/ng3.mlr
+...
+mlr(3541,0x7fffa963f3c0) malloc: *** error for object 0x7fe5190a0003: pointer being freed was not allocated
+*** set a breakpoint in malloc_error_break to debug
+Abort trap: 6
 
 ================================================================
 5.0.0 RELEASE TO DO:
+
+! malloc bug @ ngrams !
 
 * UT
 * cookbook

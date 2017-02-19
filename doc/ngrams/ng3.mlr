@@ -1,9 +1,9 @@
 # ================================================================
 begin {
-  if (isabsent(@olen)) {
+  if (is_absent(@olen)) {
     @olen = 16;
   }
-  if (isabsent(@ocount)) {
+  if (is_absent(@ocount)) {
     @ocount = 16;
   }
 }
@@ -31,32 +31,19 @@ for (_, v in $*) {
 
 # ================================================================
 end {
-  #dump;
+  map a_cmf = compute_cmf_from_histo(@a_histo);
   # Define these in this scope else they'll be scoped to the for-loops.
-  map a_cmf   = {};
   map ab_cmf  = {};
   map abc_cmf = {};
-
-  a_cmf = compute_cmf_from_histo(@a_histo);
-
-  #print "A CMF";
-  #dump a_cmf;
-
   for (a in @ab_histo) {
     ab_cmf[a] = compute_cmf_from_histo(@ab_histo[a]);
   }
-
-  #print "AB CMF";
-  #dump ab_cmf;
 
   for (a in @abc_histo) {
     for (b in @abc_histo[a]) {
       abc_cmf[a][b] = compute_cmf_from_histo(@abc_histo[a][b]);
     }
   }
-
-  #print "ABC CMF";
-  #dump abc_cmf;
 
   for (int oi = 0; oi < @ocount; oi += 1) {
     str oa = sample_from_cmf(a_cmf);

@@ -1,8 +1,8 @@
 begin {
-  if (isabsent(@olen)) {
+  if (is_absent(@olen)) {
     @olen = 16;
   }
-  if (isabsent(@ocount)) {
+  if (is_absent(@ocount)) {
     @ocount = 16;
   }
 }

@@ -1,4 +1,3 @@
-
 # ================================================================
 func compute_sum_from_histo(map histo) : num {
   num sum = 0;
