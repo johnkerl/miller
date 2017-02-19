@@ -49,36 +49,14 @@ COOKBOOK CHECKLIST:
 ----------------------------------------------------------------
 cook 1:
 
-k Headerless CSV on input or output
-
-k Bulk rename of field names
-
---- * true/false/1/0 data-cleaning cookbook section. include filter x 2 (preceded by put $nr=NR), & tee x 2.
-
-k Finding missing dates
-
-k Two-pass algorithms
-  o Two-pass algorithms: computation of percentages
-  o Two-pass algorithms: line-number ratios
-  o Two-pass algorithms: records having max value
-
-k Rectangularizing data
-
-k Regularizing ragged CSV
-
-k Parsing log-file output
-
-k Filtering paragraphs of text
-
-k Doing arithmetic on fields with currency symbols
-
-k memoization
+(done)
 
 ----------------------------------------------------------------
 cook 2: fun stuff:
 * sieve
 * mand
-* Program timing
+k Program timing
+k Generating random variables
 * mlr --from ~/misc/words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 * ngrams
 
@@ -94,17 +72,9 @@ cook 3: verbs vs. dsl/func list
   mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'
 
 ----------------------------------------------------------------
-cook 4: weird stuff
+cook 4:
 
-* Using out-of-stream variables
-  o Mean without/with oosvars
-  o Keyed mean without/with oosvars
-  o Variance and standard deviation without/with oosvars
-  o Min/max without/with oosvars
-  o Keyed min/max without/with oosvars
-  o Delta without/with oosvars
-  o Keyed delta without/with oosvars
-  o Exponentially weighted moving averages without/with oosvars
+(done)
 
 ================================================================
 MAPVAR CHECKLIST:

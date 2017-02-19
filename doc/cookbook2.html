@@ -193,8 +193,12 @@ Miller commands were run with pretty-print-tabular output format.
 
 <div class="pokitoc">
 <center><b>Contents:</b></center>
+&bull;&nbsp;<a href="#Sieve_of_Eratosthenes">Sieve of Eratosthenes</a><br/>
+&bull;&nbsp;<a href="#Mandelbrot-set_generator">Mandelbrot-set generator</a><br/>
+&bull;&nbsp;<a href="#Randomly_selecting_words_from_a_list">Randomly selecting words from a list</a><br/>
+&bull;&nbsp;<a href="#Randomly_generating_jabberwocky_words">Randomly generating jabberwocky words</a><br/>
 &bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
-&bull;&nbsp;<a href="#Generating_random_variables">Generating random variables</a><br/>
+&bull;&nbsp;<a href="#Generating_random_numbers_from_various_distributions">Generating random numbers from various distributions</a><br/>
 </div>
 <p/>
 
@@ -203,7 +207,69 @@ Miller commands were run with pretty-print-tabular output format.
 <button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
 
 <!-- ================================================================ -->
+<a id="Sieve_of_Eratosthenes"/><h1>Sieve of Eratosthenes</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sieve');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_sieve" style="display: block">
+
+<p/> To do.
+
 </div>
+<!-- ================================================================ -->
+<a id="Mandelbrot-set_generator"/><h1>Mandelbrot-set generator</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_mand');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_mand" style="display: block">
+
+<p/> To do.
+
+</div>
+<!-- ================================================================ -->
+<a id="Randomly_selecting_words_from_a_list"/><h1>Randomly selecting words from a list</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_generating_random_words');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_generating_random_words" style="display: block">
+
+<p/> Given this following <a href="data/english-words.txt">word list</a>, first
+take a look to see what the first few lines look like:
+
+<div class="pokipanel"> <pre>
+$ head data/english-words.txt 
+a
+aa
+aal
+aalii
+aam
+aardvark
+aardwolf
+aba
+abac
+abaca
+</pre> </div>
+
+<div class="pokipanel"> <pre>
+$ mlr --from data/english-words.txt --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
+thionine
+birchman
+mildewy
+avigate
+addedly
+abaze
+askant
+aiming
+insulant
+coinmate
+</pre> </div>
+
+</div>
+<!-- ================================================================ -->
+<a id="Randomly_generating_jabberwocky_words"/><h1>Randomly generating jabberwocky words</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_jabberwocky');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_jabberwocky" style="display: block">
+
+<p/> To do.
+
+</div>
+
+</div>
+<!-- ================================================================ -->
 <a id="Program_timing"/><h1>Program timing</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_program_timing');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_program_timing" style="display: block">
@@ -247,9 +313,9 @@ t_delta_max  5.388259888e-05
 </div>
 <p/>
 
-<!-- ================================================================ -->
 </div>
-<a id="Generating_random_variables"/><h1>Generating random variables</h1>
+<!-- ================================================================ -->
+<a id="Generating_random_numbers_from_various_distributions"/><h1>Generating random numbers from various distributions</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_generating_random_variables');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_generating_random_variables" style="display: block">
 

@@ -58,6 +58,70 @@ POKI_RUN_COMMAND{{mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data
 
 <!-- ================================================================ -->
 </div>
+<h1>Data-cleaning examples</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_data_cleaning_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_data_cleaning_examples" style="display: block">
+
+<p/> Here are some ways to use the type-checking options as described in
+the POKI_PUT_LINK_FOR_PAGE(reference-dsl.html#Type-test_and_type-assertion_expressions)HERE.
+Suppose you have the following data file, with inconsistent typing for boolean.
+(Also imagine that, for the sake of discussion, we have a million-line file
+rather than a four-line file, so we can&rsquo;t see it all at once and some
+automation is called for.)
+
+POKI_RUN_COMMAND{{cat data/het-bool.csv}}HERE
+
+<p/> One option is to coerce everything to boolean, or integer:
+
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$reachable = boolean($reachable)' data/het-bool.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv}}HERE
+
+<p/> A second option is to flag badly formatted data within the output stream:
+
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv}}HERE
+
+<p/> Or perhaps to flag badly formatted data outside the output stream:
+
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv}}HERE
+
+<p/> A third way is to abort the process on first instance of bad data:
+
+POKI_RUN_COMMAND_TOLERATING_ERROR{{mlr --csvlite put '$reachable = asserting_string($reachable)' data/het-bool.csv}}HERE
+
+<!-- ================================================================ -->
+</div>
+<h1>Finding missing dates</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_finding_missing_dates');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_finding_missing_dates" style="display: block">
+
+<p/>Suppose you have some date-stamped data which may (or may not) be missing entries for one or more dates:
+
+POKI_RUN_COMMAND{{head -n 10 data/miss-date.csv}}HERE
+POKI_RUN_COMMAND{{wc -l data/miss-date.csv}}HERE
+
+<p/>To find these, you can convert the dates to seconds since the epoch using <tt>strptime</tt>, then
+compute adjacent differences (the <tt>cat -n</tt> simply inserts record-counters):
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/miss-date-1.sh)HERE
+
+<p/>Then, filter for adjacent difference not being 86400 (the number of seconds in a day):
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$reachable = boolean($reachable)' data/het-bool.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv}}HERE
+
+<p/> A second option is to flag badly formatted data within the output stream:
+
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv}}HERE
+
+<p/> Or perhaps to flag badly formatted data outside the output stream:
+
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv}}HERE
+
+<p/> A third way is to abort the process on first instance of bad data:
+
+POKI_RUN_COMMAND_TOLERATING_ERROR{{mlr --csvlite put '$reachable = asserting_string($reachable)' data/het-bool.csv}}HERE
+
+<!-- ================================================================ -->
+</div>
 <h1>Finding missing dates</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_finding_missing_dates');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_finding_missing_dates" style="display: block">
@@ -192,38 +256,6 @@ an example, suppose you have log-file lines such as
 POKI_CARDIFY(2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [sometext] various/sorts/of data {& punctuation} hits=1 status=0 time=2.378)HERE
 
 I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the structured text, then hand that to Miller. Example:
-
-POKI_CARDIFY(grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status)HERE
-
-<!-- ================================================================ -->
-</div>
-<h1>Filtering paragraphs of text</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_filtering_paragraphs_of_text');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_filtering_paragraphs_of_text" style="display: block">
-
-<p/>The idea is to use a record separator which is a pair of newlines. Then, if
-you want each paragraph to be a record with a single value, use a
-field-separator which isn&rsquo;t present in the input data (e.g. a control-A
-which is octal 001). Or, if you want each paragraph to have its lines as
-separate values, use newline as field separator.
-
-POKI_RUN_COMMAND{{cat paragraphs.txt}}HERE
-
-POKI_RUN_COMMAND{{mlr --from paragraphs.txt --nidx --rs '\n\n' --fs '\001' filter '$1 =~ "the"'}}HERE
-
-POKI_RUN_COMMAND{{mlr --from paragraphs.txt --nidx --rs '\n\n' --fs '\n' cut  -f 1,3}}HERE
-
-<!-- ================================================================ -->
-</div>
-<h1>Doing arithmetic on fields with currency symbols</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_doing_arithmetic_with_currency_symbols');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_doing_arithmetic_with_currency_symbols" style="display: block">
-
-POKI_INCLUDE_ESCAPED(data/dollar-sign.txt)HERE
-
-<!-- ================================================================ -->
-</div>
-<h1>Memoization with out-of-stream variables</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_memoization_with_oosvars');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_memoization_with_oosvars" style="display: block">
 

@@ -194,6 +194,8 @@ Miller commands were run with pretty-print-tabular output format.
 <center><b>Contents:</b></center>
 &bull;&nbsp;<a href="#Headerless_CSV_on_input_or_output">Headerless CSV on input or output</a><br/>
 &bull;&nbsp;<a href="#Bulk_rename_of_field_names">Bulk rename of field names</a><br/>
+&bull;&nbsp;<a href="#Data-cleaning_examples">Data-cleaning examples</a><br/>
+&bull;&nbsp;<a href="#Finding_missing_dates">Finding missing dates</a><br/>
 &bull;&nbsp;<a href="#Finding_missing_dates">Finding missing dates</a><br/>
 &bull;&nbsp;<a href="#Two-pass_algorithms">Two-pass algorithms</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Two-pass_algorithms:_computation_of_percentages">Two-pass algorithms: computation of percentages</a><br/>
@@ -202,9 +204,6 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Rectangularizing_data">Rectangularizing data</a><br/>
 &bull;&nbsp;<a href="#Regularizing_ragged_CSV">Regularizing ragged CSV</a><br/>
 &bull;&nbsp;<a href="#Parsing_log-file_output">Parsing log-file output</a><br/>
-&bull;&nbsp;<a href="#Filtering_paragraphs_of_text">Filtering paragraphs of text</a><br/>
-&bull;&nbsp;<a href="#Doing_arithmetic_on_fields_with_currency_symbols">Doing arithmetic on fields with currency symbols</a><br/>
-&bull;&nbsp;<a href="#Memoization_with_out-of-stream_variables">Memoization with out-of-stream variables</a><br/>
 </div>
 <p/>
 
@@ -385,6 +384,236 @@ def  a_b_c g_h_i
 4567 123   890
 1357 2468  3579
 3312 9987  4543
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+</div>
+<a id="Data-cleaning_examples"/><h1>Data-cleaning examples</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_data_cleaning_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_data_cleaning_examples" style="display: block">
+
+<p/> Here are some ways to use the type-checking options as described in
+the <a href="reference-dsl.html#Type-test_and_type-assertion_expressions">Reference: DSL</a>.
+Suppose you have the following data file, with inconsistent typing for boolean.
+(Also imagine that, for the sake of discussion, we have a million-line file
+rather than a four-line file, so we can&rsquo;t see it all at once and some
+automation is called for.)
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/het-bool.csv
+name,reachable
+barney,false
+betty,true
+fred,true
+wilma,1
+</pre>
+</div>
+<p/>
+
+<p/> One option is to coerce everything to boolean, or integer:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsvlite --opprint put '$reachable = boolean($reachable)' data/het-bool.csv
+name   reachable
+barney false
+betty  true
+fred   true
+wilma  true
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsvlite --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv
+name   reachable
+barney 0
+betty  1
+fred   1
+wilma  1
+</pre>
+</div>
+<p/>
+
+<p/> A second option is to flag badly formatted data within the output stream:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsvlite --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv
+name   reachable format_ok
+barney false     true
+betty  true      true
+fred   true      true
+wilma  1         false
+</pre>
+</div>
+<p/>
+
+<p/> Or perhaps to flag badly formatted data outside the output stream:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsvlite --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv
+Malformed at NR=4
+name   reachable
+barney false
+betty  true
+fred   true
+wilma  1
+</pre>
+</div>
+<p/>
+
+<p/> A third way is to abort the process on first instance of bad data:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csvlite put '$reachable = asserting_string($reachable)' data/het-bool.csv
+mlr: string type-assertion failed at NR=4 FNR=4 FILENAME=data/het-bool.csv
+name,reachable
+barney,false
+betty,true
+fred,true
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+</div>
+<a id="Finding_missing_dates"/><h1>Finding missing dates</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_finding_missing_dates');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_finding_missing_dates" style="display: block">
+
+<p/>Suppose you have some date-stamped data which may (or may not) be missing entries for one or more dates:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ head -n 10 data/miss-date.csv
+date,qoh
+2012-03-05,10055
+2012-03-06,10486
+2012-03-07,10430
+2012-03-08,10674
+2012-03-09,10880
+2012-03-10,10718
+2012-03-11,10795
+2012-03-12,11043
+2012-03-13,11177
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ wc -l data/miss-date.csv
+    1372 data/miss-date.csv
+</pre>
+</div>
+<p/>
+
+<p/>To find these, you can convert the dates to seconds since the epoch using <tt>strptime</tt>, then
+compute adjacent differences (the <tt>cat -n</tt> simply inserts record-counters):
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/miss-date.csv --icsv \
+  cat -n \
+  then put '$datestamp = strptime($date, "%Y-%m-%d")' \
+  then step -a delta -f datestamp \
+| head
+n=1,date=2012-03-05,qoh=10055,datestamp=1330905600,datestamp_delta=0
+n=2,date=2012-03-06,qoh=10486,datestamp=1330992000,datestamp_delta=86400
+n=3,date=2012-03-07,qoh=10430,datestamp=1331078400,datestamp_delta=86400
+n=4,date=2012-03-08,qoh=10674,datestamp=1331164800,datestamp_delta=86400
+n=5,date=2012-03-09,qoh=10880,datestamp=1331251200,datestamp_delta=86400
+n=6,date=2012-03-10,qoh=10718,datestamp=1331337600,datestamp_delta=86400
+n=7,date=2012-03-11,qoh=10795,datestamp=1331424000,datestamp_delta=86400
+n=8,date=2012-03-12,qoh=11043,datestamp=1331510400,datestamp_delta=86400
+n=9,date=2012-03-13,qoh=11177,datestamp=1331596800,datestamp_delta=86400
+n=10,date=2012-03-14,qoh=11498,datestamp=1331683200,datestamp_delta=86400
+</pre>
+</div>
+<p/>
+
+<p/>Then, filter for adjacent difference not being 86400 (the number of seconds in a day):
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsvlite --opprint put '$reachable = boolean($reachable)' data/het-bool.csv
+name   reachable
+barney false
+betty  true
+fred   true
+wilma  true
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsvlite --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv
+name   reachable
+barney 0
+betty  1
+fred   1
+wilma  1
+</pre>
+</div>
+<p/>
+
+<p/> A second option is to flag badly formatted data within the output stream:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsvlite --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv
+name   reachable format_ok
+barney false     true
+betty  true      true
+fred   true      true
+wilma  1         false
+</pre>
+</div>
+<p/>
+
+<p/> Or perhaps to flag badly formatted data outside the output stream:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsvlite --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv
+Malformed at NR=4
+name   reachable
+barney false
+betty  true
+fred   true
+wilma  1
+</pre>
+</div>
+<p/>
+
+<p/> A third way is to abort the process on first instance of bad data:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csvlite put '$reachable = asserting_string($reachable)' data/het-bool.csv
+mlr: string type-assertion failed at NR=4 FNR=4 FILENAME=data/het-bool.csv
+name,reachable
+barney,false
+betty,true
+fred,true
 </pre>
 </div>
 <p/>
@@ -866,146 +1095,6 @@ an example, suppose you have log-file lines such as
 <p/>
 
 I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the structured text, then hand that to Miller. Example:
-
-<p/>
-<div class="pokipanel">
-<pre>
-grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status
-</pre>
-</div>
-<p/>
-
-<!-- ================================================================ -->
-</div>
-<a id="Filtering_paragraphs_of_text"/><h1>Filtering paragraphs of text</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_filtering_paragraphs_of_text');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_filtering_paragraphs_of_text" style="display: block">
-
-<p/>The idea is to use a record separator which is a pair of newlines. Then, if
-you want each paragraph to be a record with a single value, use a
-field-separator which isn&rsquo;t present in the input data (e.g. a control-A
-which is octal 001). Or, if you want each paragraph to have its lines as
-separate values, use newline as field separator.
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat paragraphs.txt
-The quick brown fox jumped over the lazy dogs. The quick brown fox jumped
-over the lazy dogs. The quick brown fox jumped over the lazy dogs. The quick
-brown fox jumped over the lazy dogs. The quick brown fox jumped over the
-lazy dogs.
-
-Now is the time for all good people to come to the aid of their country.  Now
-is the time for all good people to come to the aid of their country.  Now is
-the time for all good people to come to the aid of their country.  Now is the
-time for all good people to come to the aid of their country.  Now is the
-time for all good people to come to the aid of their country.
-
-Sphynx of black quartz, judge my vow. Sphynx of black quartz, judge my vow.
-Sphynx of black quartz, judge my vow. Sphynx of black quartz, judge my vow.
-Sphynx of black quartz, judge my vow.
-
-The rain in Spain falls mainly on the plain. The rain in Spain falls mainly
-on the plain. The rain in Spain falls mainly on the plain. The rain in Spain
-falls mainly on the plain. The rain in Spain falls mainly on the plain. The
-rain in Spain falls mainly on the plain. The rain in Spain falls mainly on
-the plain. The rain in Spain falls mainly on the plain.
-</pre>
-</div>
-<p/>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from paragraphs.txt --nidx --rs '\n\n' --fs '\001' filter '$1 =~ "the"'
-The quick brown fox jumped over the lazy dogs. The quick brown fox jumped
-over the lazy dogs. The quick brown fox jumped over the lazy dogs. The quick
-brown fox jumped over the lazy dogs. The quick brown fox jumped over the
-lazy dogs.
-
-Now is the time for all good people to come to the aid of their country.  Now
-is the time for all good people to come to the aid of their country.  Now is
-the time for all good people to come to the aid of their country.  Now is the
-time for all good people to come to the aid of their country.  Now is the
-time for all good people to come to the aid of their country.
-
-The rain in Spain falls mainly on the plain. The rain in Spain falls mainly
-on the plain. The rain in Spain falls mainly on the plain. The rain in Spain
-falls mainly on the plain. The rain in Spain falls mainly on the plain. The
-rain in Spain falls mainly on the plain. The rain in Spain falls mainly on
-the plain. The rain in Spain falls mainly on the plain.
-</pre>
-</div>
-<p/>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from paragraphs.txt --nidx --rs '\n\n' --fs '\n' cut  -f 1,3
-The quick brown fox jumped over the lazy dogs. The quick brown fox jumped
-brown fox jumped over the lazy dogs. The quick brown fox jumped over the
-
-Now is the time for all good people to come to the aid of their country.  Now
-the time for all good people to come to the aid of their country.  Now is the
-
-Sphynx of black quartz, judge my vow. Sphynx of black quartz, judge my vow.
-Sphynx of black quartz, judge my vow.
-
-The rain in Spain falls mainly on the plain. The rain in Spain falls mainly
-falls mainly on the plain. The rain in Spain falls mainly on the plain. The
-</pre>
-</div>
-<p/>
-
-<!-- ================================================================ -->
-</div>
-<a id="Doing_arithmetic_on_fields_with_currency_symbols"/><h1>Doing arithmetic on fields with currency symbols</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_doing_arithmetic_with_currency_symbols');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_doing_arithmetic_with_currency_symbols" style="display: block">
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ cat sample.csv
-EventOccurred,EventType,Description,Status,PaymentType,NameonAccount,TransactionNumber,Amount
-10/1/2015,Charged Back,Reason: Authorization Revoked By Customer,Disputed,Checking,John,1,$230.36
-10/1/2015,Charged Back,Reason: Authorization Revoked By Customer,Disputed,Checking,Fred,2,$32.25
-10/1/2015,Charged Back,Reason: Customer Advises Not Authorized,Disputed,Checking,Bob,3,$39.02
-10/1/2015,Charged Back,Reason: Authorization Revoked By Customer,Disputed,Checking,Alice,4,$57.54
-10/1/2015,Charged Back,Reason: Authorization Revoked By Customer,Disputed,Checking,Jungle,5,$230.36
-10/1/2015,Charged Back,Reason: Payment Stopped,Disputed,Checking,Joe,6,$281.96
-10/2/2015,Charged Back,Reason: Customer Advises Not Authorized,Disputed,Checking,Joseph,7,$188.19
-10/2/2015,Charged Back,Reason: Customer Advises Not Authorized,Disputed,Checking,Joseph,8,$188.19
-10/2/2015,Charged Back,Reason: Payment Stopped,Disputed,Checking,Anthony,9,$250.00
-
-$ mlr --icsv --opprint cat sample.csv
-EventOccurred EventType    Description                               Status   PaymentType NameonAccount TransactionNumber Amount
-10/1/2015     Charged Back Reason: Authorization Revoked By Customer Disputed Checking    John          1                 $230.36
-10/1/2015     Charged Back Reason: Authorization Revoked By Customer Disputed Checking    Fred          2                 $32.25
-10/1/2015     Charged Back Reason: Customer Advises Not Authorized   Disputed Checking    Bob           3                 $39.02
-10/1/2015     Charged Back Reason: Authorization Revoked By Customer Disputed Checking    Alice         4                 $57.54
-10/1/2015     Charged Back Reason: Authorization Revoked By Customer Disputed Checking    Jungle        5                 $230.36
-10/1/2015     Charged Back Reason: Payment Stopped                   Disputed Checking    Joe           6                 $281.96
-10/2/2015     Charged Back Reason: Customer Advises Not Authorized   Disputed Checking    Joseph        7                 $188.19
-10/2/2015     Charged Back Reason: Customer Advises Not Authorized   Disputed Checking    Joseph        8                 $188.19
-10/2/2015     Charged Back Reason: Payment Stopped                   Disputed Checking    Anthony       9                 $250.00
-
-$ mlr --csv put '$Amount = sub(string($Amount), "\$", "")' then stats1 -a sum -f Amount sample.csv
-Amount_sum
-1497.870000
-
-$ mlr --csv --ofmt '%.2lf' put '$Amount = sub(string($Amount), "\$", "")' then stats1 -a sum -f Amount sample.csv
-Amount_sum
-1497.87
-
-</pre>
-</div>
-<p/>
-
-<!-- ================================================================ -->
-</div>
-<a id="Memoization_with_out-of-stream_variables"/><h1>Memoization with out-of-stream variables</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_memoization_with_oosvars');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_memoization_with_oosvars" style="display: block">
 
@@ -1037,33 +1126,33 @@ $ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
 ' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
 i  o      fcount  seconds_delta
 1  1      1       0
-2  2      3       0.000032187
-3  3      5       0.000012875
-4  5      9       0.000015020
-5  8      15      0.000020027
-6  13     25      0.000028849
-7  21     41      0.000043154
-8  34     67      0.000066996
-9  55     109     0.000104904
-10 89     177     0.000167131
-11 144    287     0.000270844
-12 233    465     0.000430107
-13 377    753     0.000789881
-14 610    1219    0.001615047
-15 987    1973    0.002474070
-16 1597   3193    0.003597975
-17 2584   5167    0.005141020
-18 4181   8361    0.007761002
-19 6765   13529   0.012228012
-20 10946  21891   0.024306059
-21 17711  35421   0.035348892
-22 28657  57313   0.056926012
-23 46368  92735   0.093235970
-24 75025  150049  0.137828112
-25 121393 242785  0.227672815
-26 196418 392835  0.360737085
-27 317811 635621  0.575742006
-28 514229 1028457 0.925143957
+2  2      3       0.000037193
+3  3      5       0.000013828
+4  5      9       0.000018120
+5  8      15      0.000023842
+6  13     25      0.000034094
+7  21     41      0.000051022
+8  34     67      0.000077963
+9  55     109     0.000123024
+10 89     177     0.000198126
+11 144    287     0.000319004
+12 233    465     0.000483990
+13 377    753     0.000743866
+14 610    1219    0.001163006
+15 987    1973    0.001869917
+16 1597   3193    0.002873182
+17 2584   5167    0.007477999
+18 4181   8361    0.009431839
+19 6765   13529   0.012257099
+20 10946  21891   0.019612074
+21 17711  35421   0.031965017
+22 28657  57313   0.062458992
+23 46368  92735   0.085256815
+24 75025  150049  0.138292074
+25 121393 242785  0.222110987
+26 196418 392835  0.373306990
+27 317811 635621  0.554409027
+28 514229 1028457 0.951411009
 </pre>
 </div>
 <p/>
@@ -1095,40 +1184,36 @@ $ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
 ' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
 i  o      fcount seconds_delta
 1  1      1      0
-2  2      3      0.000035048
-3  3      3      0.000011921
-4  5      3      0.000012159
-5  8      3      0.000010967
-6  13     3      0.000010014
+2  2      3      0.000037909
+3  3      3      0.000014067
+4  5      3      0.000011921
+5  8      3      0.000012159
+6  13     3      0.000011921
 7  21     3      0.000010967
-8  34     3      0.000010014
-9  55     3      0.000010014
-10 89     3      0.000010967
+8  34     3      0.000010967
+9  55     3      0.000013113
+10 89     3      0.000012875
 11 144    3      0.000010967
-12 233    3      0.000013113
-13 377    3      0.000010967
-14 610    3      0.000010014
-15 987    3      0.000010014
-16 1597   3      0.000010014
-17 2584   3      0.000010014
-18 4181   3      0.000009775
-19 6765   3      0.000009060
+12 233    3      0.000015020
+13 377    3      0.000013113
+14 610    3      0.000010967
+15 987    3      0.000010967
+16 1597   3      0.000011921
+17 2584   3      0.000011206
+18 4181   3      0.000010967
+19 6765   3      0.000010967
 20 10946  3      0.000010967
-21 17711  3      0.000009060
-22 28657  3      0.000010014
-23 46368  3      0.000011921
-24 75025  3      0.000010014
-25 121393 3      0.000010014
-26 196418 3      0.000010014
-27 317811 3      0.000010014
-28 514229 3      0.000009060
+21 17711  3      0.000010967
+22 28657  3      0.000010967
+23 46368  3      0.000013113
+24 75025  3      0.000011921
+25 121393 3      0.000010967
+26 196418 3      0.000012159
+27 317811 3      0.000009775
+28 514229 3      0.000012159
 </pre>
 </div>
 <p/>
-
-
-
-
     </div>
   </td>
 

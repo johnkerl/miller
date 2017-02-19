@@ -428,29 +428,8 @@ POKI_RUN_COMMAND{{mlr -F | grep ^assert}}HERE
 </tr>
 </table>
 
-<p/> Here are some ways to use them. Suppose you have the following data file,
-with inconsistent typing for boolean. (Also imagine that, for the sake of
-discussion, we have a million-line file rather than a four-line file, so we
-can&rsquo;t see it all at once and some automation is called for.)
-
-POKI_RUN_COMMAND{{cat data/het-bool.csv}}HERE
-
-<p/> One option is to coerce everything to boolean, or integer:
-
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$reachable = boolean($reachable)' data/het-bool.csv}}HERE
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv}}HERE
-
-<p/> A second option is to flag badly formatted data within the output stream:
-
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv}}HERE
-
-<p/> Or perhaps to flag badly formatted data outside the output stream:
-
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv}}HERE
-
-<p/> A third way is to abort the process on first instance of bad data:
-
-POKI_RUN_COMMAND_TOLERATING_ERROR{{mlr --csvlite put '$reachable = asserting_string($reachable)' data/het-bool.csv}}HERE
+<p/> Please see the POKI_PUT_LINK_FOR_PAGE(cookbook.html#Data-cleaning_examples)HERE for examples
+of how to use these.
 
 <!-- ================================================================ -->
 <h3>Type-declarations for local variables, function parameter, and function return values</h3>
