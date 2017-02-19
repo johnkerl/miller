@@ -2,7 +2,6 @@
 begin {
 	@n = 100;
 }
-@n = $n;
 end {
 	for (int i = 0; i <= @n; i += 1) {
 		@s[i] = true;

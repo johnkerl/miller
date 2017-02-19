@@ -9,6 +9,7 @@ begin {
 	@maxits    = 100;
 	@levelstep = 5;
 	@chars     = "@X*o-.";
+	@verbose   = false;
 
 }
 
@@ -21,16 +22,19 @@ begin {
 @maxits    = $maxits;
 @levelstep = $levelstep;
 @chars     = $chars;
+@verbose   = $verbose;
 
 end {
-	print "RCORN     = ".@rcorn;
-	print "ICORN     = ".@icorn;
-	print "SIDE      = ".@side;
-	print "IHEIGHT   = ".@iheight;
-	print "IWIDTH    = ".@iwidth;
-	print "MAXITS    = ".@maxits;
-	print "LEVELSTEP = ".@levelstep;
-	print "CHARS     = ".@chars;
+	if (@verbose) {
+		print "RCORN     = ".@rcorn;
+		print "ICORN     = ".@icorn;
+		print "SIDE      = ".@side;
+		print "IHEIGHT   = ".@iheight;
+		print "IWIDTH    = ".@iwidth;
+		print "MAXITS    = ".@maxits;
+		print "LEVELSTEP = ".@levelstep;
+		print "CHARS     = ".@chars;
+	}
 
 	for (int ii = @iheight-1; ii >= 0; ii -= 1) {
 		num ci = @icorn + (ii/@iheight) * @side;
@@ -55,7 +59,7 @@ func get_point_plot(cr, ci, maxits) {
 				escaped = true;
 				break;
 		}
-	    # z := z^2 + c
+		# z := z^2 + c
 		zt = zr*zr - zi*zi + cr;
 		zi = 2*zr*zi + ci;
 		zr = zt;

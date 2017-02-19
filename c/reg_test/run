@@ -5446,7 +5446,7 @@ run_mlr --from $indir/abixy put 'func f(x,y) { return 2*y } $o = f($x,$y) '
 
 # general programming-language stuff
 run_mlr -n put -q -f $indir/sieve.mlr
-run_mlr -n put -q -f $indir/mand.mlr
+run_mlr -n put -q -f $indir/mand.mlr -e 'begin {@verbose = true}'
 
 # scoping within distinct begin/end blocks
 run_mlr --from $indir/abixy put -v '
