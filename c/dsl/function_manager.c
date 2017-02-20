@@ -548,6 +548,7 @@ static udf_callsite_state_t* udf_callsite_state_alloc(
 
 	pstate->args = mlr_malloc_or_die(pstate->arity * sizeof(boxed_xval_t));
 	for (i = 0; i < pstate->arity; i++) {
+		// Ownership will be transferred to local-stack which will be responsible for freeing.
 		pstate->args[i] = box_ephemeral_val(mv_absent());
 	}
 
@@ -568,10 +569,6 @@ static void udf_callsite_state_free(udf_callsite_state_t* pstate) {
 	for (int i = 0; i < pstate->arity; i++) {
 		rxval_evaluator_t* pxev = pstate->pevals[i];
 		pxev->pfree_func(pxev);
-		// xxx dup ownership w/ localstack?
-		if (pstate->args[i].is_ephemeral) {
-			mlhmmv_xvalue_free(&pstate->args[i].xval);
-		}
 	}
 	free(pstate->pevals);
 	free(pstate->args);

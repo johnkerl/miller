@@ -1,16 +1,10 @@
 ================================================================
 BUGFIXES
 
-$ mlr --nidx --from data/english-words.txt put -q -f ngrams/ngfuncs.mlr -f ngrams/ng3.mlr
-...
-mlr(3541,0x7fffa963f3c0) malloc: *** error for object 0x7fe5190a0003: pointer being freed was not allocated
-*** set a breakpoint in malloc_error_break to debug
-Abort trap: 6
+:D
 
 ================================================================
 5.0.0 RELEASE TO DO:
-
-! malloc bug @ ngrams !
 
 * UT
 * cookbook
@@ -55,7 +49,7 @@ COOKBOOK CHECKLIST:
 ----------------------------------------------------------------
 cook 1:
 
-(done)
+begin number nr andor cat -n -- maybe as faqent?
 
 ----------------------------------------------------------------
 cook 2: fun stuff:
@@ -263,7 +257,6 @@ func/subr:
 * cookbook examples
 
 file-formats page:
-* --c2p, --c2j etc ...
 * --pprint --barred; emph for output only
 
 perf note:
