@@ -55,7 +55,7 @@ COOKBOOK CHECKLIST:
 ----------------------------------------------------------------
 cook 1:
 
-(done)
+begin number nr andor cat -n -- maybe as faqent?
 
 ----------------------------------------------------------------
 cook 2: fun stuff:
