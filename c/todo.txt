@@ -49,7 +49,7 @@ COOKBOOK CHECKLIST:
 ----------------------------------------------------------------
 cook 1:
 
-begin number nr andor cat -n -- maybe as faqent?
+(done)
 
 ----------------------------------------------------------------
 cook 2: fun stuff:

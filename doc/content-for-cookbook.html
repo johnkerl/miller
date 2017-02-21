@@ -42,19 +42,52 @@ POKI_RUN_COMMAND{{head -5 data/colored-shapes.dkvp | mlr --ocsv --headerless-csv
 
 <!-- ================================================================ -->
 </div>
-<h1>Bulk rename of field names</h1>
+<h1>Bulk rename of fields</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_bulk_rename');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_bulk_rename" style="display: block">
 
+<p/>Suppose you want to replace spaces with underscores in your column names:
+
 POKI_RUN_COMMAND{{cat data/spaces.csv}}HERE
-POKI_RUN_COMMAND{{mlr --csv rename -r -g ' ,_'  data/spaces.csv}}HERE
-POKI_RUN_COMMAND{{mlr --csv --opprint rename -r -g ' ,_'  data/spaces.csv}}HERE
+
+<p/>The simplest way is to use <tt>mlr rename</tt> with <tt>-g</tt> (for global
+replace, not just first occurrence of space within each field) and <tt>-r</tt>
+for pattern-matching (rather than explicit single-column renames):
+
+POKI_RUN_COMMAND{{mlr --csv rename -g -r ' ,_'  data/spaces.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv --opprint rename -g -r ' ,_'  data/spaces.csv}}HERE
 
 <p/>You can also do this with a for-loop but it puts the modified fields after the unmodified fields:
 
 POKI_RUN_COMMAND{{cat data/bulk-rename-for-loop.mlr}}HERE
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv}}HERE
+
+<!-- ================================================================ -->
+</div>
+<h1>Numbering and renumbering records</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_renumbering_records');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_renumbering_records" style="display: block">
+
+<p/> The <tt>awk</tt>-like built-in variable <tt>NR</tt> is incremented for each input record:
+
+POKI_RUN_COMMAND{{cat data/small}}HERE
+POKI_RUN_COMMAND{{mlr put '$nr = NR' data/small}}HERE
+
+<p/> However, this is the record number within the original input stream
+&mdash; not after any filtering you may have done:
+
+POKI_RUN_COMMAND{{mlr filter '$a == "wye"' then put '$nr = NR' data/small}}HERE
+
+<p/> There are two good options here. One is to use the <tt>cat</tt> verb with <tt>-n</tt>:
+
+POKI_RUN_COMMAND{{mlr filter '$a == "wye"' then cat -n data/small}}HERE
+
+<p/> The other is to keep your own counter within the <tt>put</tt> DSL:
+
+POKI_RUN_COMMAND{{mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = $n; @n += 1' data/small}}HERE
+
+<p/> The difference is a matter of taste (although <tt>mlr cat -n</tt> puts the counter first).
 
 <!-- ================================================================ -->
 </div>
@@ -119,31 +152,6 @@ POKI_RUN_COMMAND{{mlr --icsvlite --opprint put 'if (!is_string($reachable)) {epr
 <p/> A third way is to abort the process on first instance of bad data:
 
 POKI_RUN_COMMAND_TOLERATING_ERROR{{mlr --csvlite put '$reachable = asserting_string($reachable)' data/het-bool.csv}}HERE
-
-<!-- ================================================================ -->
-</div>
-<h1>Finding missing dates</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_finding_missing_dates');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_finding_missing_dates" style="display: block">
-
-<p/>Suppose you have some date-stamped data which may (or may not) be missing entries for one or more dates:
-
-POKI_RUN_COMMAND{{head -n 10 data/miss-date.csv}}HERE
-POKI_RUN_COMMAND{{wc -l data/miss-date.csv}}HERE
-
-<p/>To find these, you can convert the dates to seconds since the epoch using <tt>strptime</tt>, then
-compute adjacent differences (the <tt>cat -n</tt> simply inserts record-counters):
-
-POKI_INCLUDE_AND_RUN_ESCAPED(data/miss-date-1.sh)HERE
-
-<p/>Then, filter for adjacent difference not being 86400 (the number of seconds in a day):
-
-POKI_INCLUDE_AND_RUN_ESCAPED(data/miss-date-2.sh)HERE
-
-<p/> Given this, it&rsquo;s now easy to see where the gaps are:
-
-POKI_RUN_COMMAND{{mlr cat -n then filter '$n >= 770 && $n <= 780' data/miss-date.csv}}HERE
-POKI_RUN_COMMAND{{mlr cat -n then filter '$n >= 1115 && $n <= 1125' data/miss-date.csv}}HERE
 
 <!-- ================================================================ -->
 </div>
