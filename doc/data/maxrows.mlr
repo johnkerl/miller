@@ -4,13 +4,12 @@
 @maxn = max(@maxn, $n);
 
 # After all records have been read, loop through retained records
-# and print those with the max n value
+# and print those with the max n value.
 end {
-  for ((nr,k),v in @records) {
-    if (k == "n") {
-      if (@records[nr]["n"] == @maxn) {
-        emit @records[nr]
-      }
+  for (int nr in @records) {
+    map record = @records[nr];
+    if (record["n"] == @maxn) {
+      emit record;
     }
   }
 }
