@@ -267,7 +267,7 @@ purple square   0    91    72.3735  8.2430
 </div>
 <p/>
 
-<p/><boldmaroon> <tt>mlr head</tt> and <tt>mlr tail</tt> count records. The CSV
+<p/><boldmaroon> <tt>mlr head</tt> and <tt>mlr tail</tt> count records rather than lines. The CSV
 header is included either way:</boldmaroon>
 
 <p/>
@@ -445,6 +445,9 @@ $ mlr --icsv --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' ex
 </pre>
 </div>
 <p/>
+
+<p/><boldmaroon> JSON output with vertical-formatting flags:</boldmaroon>
+
 <p/>
 <div class="pokipanel">
 <pre>
@@ -472,9 +475,10 @@ $ mlr --icsv --ojson --jvstack --jlistwrap tail -n 2 example.csv
 <p/>
 
 <p/><boldmaroon> Use <tt>then</tt> to pipe commands together. Also, the
-<tt>-g</tt> option for many Miller commands is for group-by: here,
-<tt>head -n 1 -g shape</tt> outputs the first record for each distinct
-value of the <tt>shape</tt> field.</boldmaroon>
+<tt>-g</tt> option for many Miller commands is for group-by: here, <tt>head -n
+1 -g shape</tt> outputs the first record for each distinct value of the
+<tt>shape</tt> field. This means we&rsquo;re finding the record with highest
+<tt>index</tt> field for each distinct <tt>shape</tt> field:</boldmaroon>
 
 <p/>
 <div class="pokipanel">

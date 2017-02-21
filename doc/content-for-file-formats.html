@@ -56,15 +56,12 @@ of platform.
 
 <li/>CSV supports <a href="https://tools.ietf.org/html/rfc4180">
 RFC-4180</a>)-style double-quoting, including the ability to have commas and/or
-CR-LF line-endings contained within an input field; CSV-lite does not.
-
-<li/>Default record separator for CSV is CR-LF; default record separator for
-CSV-lite is LF.
+LF/CRLF line-endings contained within an input field; CSV-lite does not.
 
 <li/>CSV does not allow heterogeneous data; CSV-lite does (see also <a
 href="record-heterogeneity.html">here</a>).
 
-<li/>The CSV-lite input-reading code is more efficient than the CSV
+<li/>The CSV-lite input-reading code is fractionally more efficient than the CSV
 input-reader.
 
 </ul>
@@ -220,9 +217,9 @@ truly powerful, JSON-specific tool.
 
 <h2>JSON non-streaming</h2>
 
-<p/>The JSON parser does not return until all input is parsed: in particular
-this means that, unlike for other file formats, Miller does not (at present)
-handle JSON files in <tt>tail -f</tt> contexts.
+<p/>The JSON parser Miller uses does not return until all input is parsed: in
+particular this means that, unlike for other file formats, Miller does not (at
+present) handle JSON files in <tt>tail -f</tt> contexts.
 
 </div>
 <h1>PPRINT: Pretty-printed tabular</h1>
@@ -302,7 +299,7 @@ POKI_RUN_COMMAND{{mlr --usage-format-conversion-keystroke-saver-options}}HERE
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_autodetect_line_endings');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_autodetect_line_endings" style="display: block">
 
-<p/> Default line endings (<tt>--irs</tt> and <tt>--ors</tt>) are <tt>auto</tt>
+<p/> Default line endings (<tt>--irs</tt> and <tt>--ors</tt>) are <tt>'auto'</tt>
 which means <boldmaroon>autodetect from the input file format</boldmaroon>, as
 long as the input file(s) have lines ending in either LF (also known as
 linefeed, <tt>'\n'</tt>, <tt>0x0a</tt>, Unix-style) or CRLF (also known as

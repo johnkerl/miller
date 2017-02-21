@@ -20,7 +20,7 @@ POKI_RUN_COMMAND{{mlr --csv cat example.csv}}HERE
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint cat example.csv}}HERE
 
-<p/><boldmaroon> <tt>mlr head</tt> and <tt>mlr tail</tt> count records. The CSV
+<p/><boldmaroon> <tt>mlr head</tt> and <tt>mlr tail</tt> count records rather than lines. The CSV
 header is included either way:</boldmaroon>
 
 POKI_RUN_COMMAND{{mlr --csv head -n 4 example.csv}}HERE
@@ -55,12 +55,16 @@ POKI_RUN_COMMAND{{mlr --icsv --opprint put '$ratio = $quantity / $rate; $color_s
 <p/><boldmaroon> JSON output:</boldmaroon>
 
 POKI_RUN_COMMAND{{mlr --icsv --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' example.csv}}HERE
+
+<p/><boldmaroon> JSON output with vertical-formatting flags:</boldmaroon>
+
 POKI_RUN_COMMAND{{mlr --icsv --ojson --jvstack --jlistwrap tail -n 2 example.csv}}HERE
 
 <p/><boldmaroon> Use <tt>then</tt> to pipe commands together. Also, the
-<tt>-g</tt> option for many Miller commands is for group-by: here,
-<tt>head -n 1 -g shape</tt> outputs the first record for each distinct
-value of the <tt>shape</tt> field.</boldmaroon>
+<tt>-g</tt> option for many Miller commands is for group-by: here, <tt>head -n
+1 -g shape</tt> outputs the first record for each distinct value of the
+<tt>shape</tt> field. This means we&rsquo;re finding the record with highest
+<tt>index</tt> field for each distinct <tt>shape</tt> field:</boldmaroon>
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv}}HERE
 

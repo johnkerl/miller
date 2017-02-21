@@ -326,15 +326,12 @@ of platform.
 
 <li/>CSV supports <a href="https://tools.ietf.org/html/rfc4180">
 RFC-4180</a>)-style double-quoting, including the ability to have commas and/or
-CR-LF line-endings contained within an input field; CSV-lite does not.
-
-<li/>Default record separator for CSV is CR-LF; default record separator for
-CSV-lite is LF.
+LF/CRLF line-endings contained within an input field; CSV-lite does not.
 
 <li/>CSV does not allow heterogeneous data; CSV-lite does (see also <a
 href="record-heterogeneity.html">here</a>).
 
-<li/>The CSV-lite input-reading code is more efficient than the CSV
+<li/>The CSV-lite input-reading code is fractionally more efficient than the CSV
 input-reader.
 
 </ul>
@@ -683,9 +680,9 @@ truly powerful, JSON-specific tool.
 
 <a id="JSON_non-streaming"/><h2>JSON non-streaming</h2>
 
-<p/>The JSON parser does not return until all input is parsed: in particular
-this means that, unlike for other file formats, Miller does not (at present)
-handle JSON files in <tt>tail -f</tt> contexts.
+<p/>The JSON parser Miller uses does not return until all input is parsed: in
+particular this means that, unlike for other file formats, Miller does not (at
+present) handle JSON files in <tt>tail -f</tt> contexts.
 
 </div>
 <a id="PPRINT:_Pretty-printed_tabular"/><h1>PPRINT: Pretty-printed tabular</h1>
@@ -866,9 +863,9 @@ As keystroke-savers for format-conversion you may use the following:
   --j2c --j2t --j2d --j2n       --j2x --j2p --j2m
   --x2c --x2t --x2d --x2n --x2j       --x2p --x2m
   --p2c --p2t --p2d --p2n --p2j --p2x       --p2m
-The letters c t d n j x p m refer to formats CSV with LF, TSV with LF, DKVP,
-NIDX, JSON, XTAB, PPRINT, and markdown, respectively. Note that markdown format
-is available for output only.
+The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
+PPRINT, and markdown, respectively. Note that markdown format is available for
+output only.
 </pre>
 </div>
 <p/>
@@ -880,7 +877,7 @@ is available for output only.
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_autodetect_line_endings');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_autodetect_line_endings" style="display: block">
 
-<p/> Default line endings (<tt>--irs</tt> and <tt>--ors</tt>) are <tt>auto</tt>
+<p/> Default line endings (<tt>--irs</tt> and <tt>--ors</tt>) are <tt>'auto'</tt>
 which means <boldmaroon>autodetect from the input file format</boldmaroon>, as
 long as the input file(s) have lines ending in either LF (also known as
 linefeed, <tt>'\n'</tt>, <tt>0x0a</tt>, Unix-style) or CRLF (also known as

@@ -743,9 +743,9 @@ static void main_usage_format_conversion_keystroke_saver_options(FILE* o, char* 
 	fprintf(o, "  --j2c --j2t --j2d --j2n       --j2x --j2p --j2m\n");
 	fprintf(o, "  --x2c --x2t --x2d --x2n --x2j       --x2p --x2m\n");
 	fprintf(o, "  --p2c --p2t --p2d --p2n --p2j --p2x       --p2m\n");
-	fprintf(o, "The letters c t d n j x p m refer to formats CSV with LF, TSV with LF, DKVP,\n");
-	fprintf(o, "NIDX, JSON, XTAB, PPRINT, and markdown, respectively. Note that markdown format\n");
-	fprintf(o, "is available for output only.\n");
+	fprintf(o, "The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,\n");
+	fprintf(o, "PPRINT, and markdown, respectively. Note that markdown format is available for\n");
+	fprintf(o, "output only.\n");
 }
 
 static void main_usage_compressed_data_options(FILE* o, char* argv0) {
