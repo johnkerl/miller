@@ -8,11 +8,11 @@ begin {
   @iwidth    = 100;
   @maxits    = 100;
   @levelstep = 5;
-  @chars     = "@X*o-.";
+  @chars     = "@X*o-."; # Palette of characters to print to the screen.
   @verbose   = false;
   @do_julia  = false;
-  @jr        = 0.0;
-  @ji        = 0.0;
+  @jr        = 0.0;      # Real part of Julia point, if any
+  @ji        = 0.0;      # Imaginary part of Julia point, if any
 }
 
 # Here, we can override defaults from an input file (if any).  In Miller's
@@ -55,7 +55,8 @@ end {
   }
 }
 
-# Function to approximate membership in the Mandelbrot set for a given point in the
+# This is a function to approximate membership in the Mandelbrot set (or Julia
+# set for a given Julia point if do_julia == true) for a given point in the
 # complex plane.
 func get_point_plot(pr, pi, maxits, do_julia, jr, ji) {
   num zr = 0.0;
