@@ -209,6 +209,9 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#If-statements">If-statements</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#While_and_do-while_loops">While and do-while loops</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loops">For-loops</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loop_over_the_current_stream_record">For-loop over the current stream record</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loop_over_out-of-stream_variable">For-loop over out-of-stream variable</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#C-style_triple-for_loops">C-style triple-for loops</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Begin/end_blocks">Begin/end blocks</a><br/>
 &bull;&nbsp;<a href="#Output_statements">Output statements</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit_statements">Emit statements</a><br/>
@@ -1945,7 +1948,7 @@ innermost loop enclosing them, if any, and a <tt>break</tt> or
 <tt>continue</tt> outside a loop is a syntax error that will be flagged as soon
 as the expression is parsed, before any input records are ingested.
 
-<p/><b>For-loop over the current stream record</b>:
+<a id="For-loop_over_the_current_stream_record"/><h3>For-loop over the current stream record</h3>
 
 <p/>
 <div class="pokipanel">
@@ -2051,16 +2054,17 @@ wye pan 5 0.5732889198020006  0.8636244699032729  6.436913
 </div>
 <p/>
 
-<p/><b>For-loop over out-of-stream variable</b>: This is similar to looping
-over the current stream record except for additional degrees of freedom: you
-can start iterating on sub-hashmaps of an out-of-stream variable; you can loop
-over nested keys; you can loop over all out-of-stream variables.  As with
-for-loops over stream records, the bound variables are bound to a copy of the
-sub-hashmap as it was before the loop started.  The sub-hashmap is specified by
-square-bracketed indices after <tt>in</tt>, and additional deeper indices are
-bound to loop key-variables. The terminal values are bound to the loop
-value-variable whenever the keys are neither too shallow, nor too deep. Example
-indexing is as follows:
+<a id="For-loop_over_out-of-stream_variable"/><h3>For-loop over out-of-stream variable</h3>
+
+<p/> This is similar to looping over the current stream record except for
+additional degrees of freedom: you can start iterating on sub-hashmaps of an
+out-of-stream variable; you can loop over nested keys; you can loop over all
+out-of-stream variables.  As with for-loops over stream records, the bound
+variables are bound to a copy of the sub-hashmap as it was before the loop
+started.  The sub-hashmap is specified by square-bracketed indices after
+<tt>in</tt>, and additional deeper indices are bound to loop key-variables. The
+terminal values are bound to the loop value-variable whenever the keys are
+neither too shallow, nor too deep. Example indexing is as follows:
 
 <p/>
 <div class="pokipanel">
@@ -2237,7 +2241,9 @@ basename=myvar,index1=nesting-is,index2=also-just-right,terminal=3
 So these for-loops don&rsquo;t produce the depth-two or depth-four entries in
 the hashmap.
 
-<p/><b>C-style triple-for loops</b> are supported as follows:
+<a id="C-style_triple-for_loops"/><h3>C-style triple-for loops</h3>
+
+<p/> These are supported as follows:
 
 <p/>
 <div class="pokipanel">

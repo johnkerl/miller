@@ -707,7 +707,7 @@ innermost loop enclosing them, if any, and a <tt>break</tt> or
 <tt>continue</tt> outside a loop is a syntax error that will be flagged as soon
 as the expression is parsed, before any input records are ingested.
 
-<p/><b>For-loop over the current stream record</b>:
+<h3>For-loop over the current stream record</h3>
 
 POKI_RUN_COMMAND{{cat data/for-srec-example.tbl}}HERE
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-1.sh)HERE
@@ -730,16 +730,17 @@ the stream record after the loop:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-3.sh)HERE
 
-<p/><b>For-loop over out-of-stream variable</b>: This is similar to looping
-over the current stream record except for additional degrees of freedom: you
-can start iterating on sub-hashmaps of an out-of-stream variable; you can loop
-over nested keys; you can loop over all out-of-stream variables.  As with
-for-loops over stream records, the bound variables are bound to a copy of the
-sub-hashmap as it was before the loop started.  The sub-hashmap is specified by
-square-bracketed indices after <tt>in</tt>, and additional deeper indices are
-bound to loop key-variables. The terminal values are bound to the loop
-value-variable whenever the keys are neither too shallow, nor too deep. Example
-indexing is as follows:
+<h3>For-loop over out-of-stream variable</h3>
+
+<p/> This is similar to looping over the current stream record except for
+additional degrees of freedom: you can start iterating on sub-hashmaps of an
+out-of-stream variable; you can loop over nested keys; you can loop over all
+out-of-stream variables.  As with for-loops over stream records, the bound
+variables are bound to a copy of the sub-hashmap as it was before the loop
+started.  The sub-hashmap is specified by square-bracketed indices after
+<tt>in</tt>, and additional deeper indices are bound to loop key-variables. The
+terminal values are bound to the loop value-variable whenever the keys are
+neither too shallow, nor too deep. Example indexing is as follows:
 
 POKI_INCLUDE_ESCAPED(data/for-oosvar-example-0a.txt)HERE
 
@@ -770,7 +771,9 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0g.sh)HERE
 So these for-loops don&rsquo;t produce the depth-two or depth-four entries in
 the hashmap.
 
-<p/><b>C-style triple-for loops</b> are supported as follows:
+<h3>C-style triple-for loops</h3>
+
+<p/> These are supported as follows:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/triple-for-example.sh)HERE
 

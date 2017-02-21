@@ -83,8 +83,6 @@ MAPVAR CHECKLIST:
   - mapsum-in-mlr UT cases, and valgrind
   - strtok -> strsep throughout
 
-* print mapvar; dump scalarvar
-
 * man mlr section on maps
   o things which are always maps:
     - maplit
@@ -125,6 +123,7 @@ MAPVARS:
 * xval args into subrs
 * xval retvals from UDFs
 * ispresent isabsent ismap isscalar & all other predicates; haskey; length; typeof
+* print of mapvar prints nothing.
 
 IN-PLACE: simple example at ref; another at cookbook: one for put; another for format conversion.
 
@@ -134,7 +133,8 @@ SINGLE-FOR:
 * find & update cookbook/ref/whateveritwas ...
 
 FORs:
-* h3's for flavors; update relnotes.md
+* h3's are false dichotomies now. it's just for-map w/ flavors. needs examples.
+s update links in relnotes.md
 
 COOK:
 * use: https://github.com/petewarden/dstkdata
