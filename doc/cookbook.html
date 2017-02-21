@@ -339,19 +339,17 @@ a_b_c def  g_h_i
 </div>
 <p/>
 
-<p/>You can also do this with a for-loop but it puts the modified fields after the unmodified fields:
+<p/>You can also do this with a for-loop:
 
 <p/>
 <div class="pokipanel">
 <pre>
 $ cat data/bulk-rename-for-loop.mlr
-for (oldk,v in $*) {
-    @newk = gsub(oldk, " ", "_");
-    if (@newk != oldk) {
-        unset $[oldk];
-        $[@newk] = v
-    }
+map newrec = {};
+for (oldk, v in $*) {
+    newrec[gsub(oldk, " ", "_")] = v;
 }
+$* = newrec
 </pre>
 </div>
 <p/>
@@ -360,10 +358,10 @@ for (oldk,v in $*) {
 <div class="pokipanel">
 <pre>
 $ mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv
-def  a_b_c g_h_i
-4567 123   890
-1357 2468  3579
-3312 9987  4543
+a_b_c def  g_h_i
+123   4567 890
+2468  1357 3579
+9987  3312 4543
 </pre>
 </div>
 <p/>

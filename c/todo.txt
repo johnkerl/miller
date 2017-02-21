@@ -46,6 +46,9 @@ UT FOR 5.0.0:
 ================================================================
 DOC FOR 5.0.0:
 
+COOKTWEAX:
+* bulk-rename w/ map newrec={}; loop; $*=newrec
+
 TYPE-CHECKING:
 * doc unset of localvars along w/ unset elsewheredoc
 * typeof now includes 'map'; MT_STRING -> string etc.

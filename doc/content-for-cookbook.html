@@ -50,7 +50,7 @@ for pattern-matching (rather than explicit single-column renames):
 POKI_RUN_COMMAND{{mlr --csv rename -g -r ' ,_'  data/spaces.csv}}HERE
 POKI_RUN_COMMAND{{mlr --csv --opprint rename -g -r ' ,_'  data/spaces.csv}}HERE
 
-<p/>You can also do this with a for-loop but it puts the modified fields after the unmodified fields:
+<p/>You can also do this with a for-loop:
 
 POKI_RUN_COMMAND{{cat data/bulk-rename-for-loop.mlr}}HERE
 
