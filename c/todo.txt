@@ -51,6 +51,7 @@ cook 1:
 
 --> FIX MISS-DATE B04K! LOOK THRU REVHIST
 --> FIX HAVING-LARGEST-VALUE B04K!
+--> FIX PARSING-LOG-FILE-OUTPUT B04K!!!
 
 ----------------------------------------------------------------
 cook 2: fun stuff:

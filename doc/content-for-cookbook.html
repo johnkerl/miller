@@ -10,7 +10,6 @@ POKI_PUT_TOC_HERE
 <button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
 
 <!-- ================================================================ -->
-</div>
 <h1>Headerless CSV on input or output</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_headerless_csv');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_headerless_csv" style="display: block">
@@ -102,23 +101,23 @@ POKI_RUN_COMMAND{{cat data/het-bool.csv}}HERE
 
 <p/> One option is to coerce everything to boolean, or integer:
 
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$reachable = boolean($reachable)' data/het-bool.csv}}HERE
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint put '$reachable = boolean($reachable)' data/het-bool.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv}}HERE
 
 <p/> A second option is to flag badly formatted data within the output stream:
 
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv}}HERE
 
 <p/> Or perhaps to flag badly formatted data outside the output stream:
 
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv}}HERE
 
 <p/> A third way is to abort the process on first instance of bad data:
 
-POKI_RUN_COMMAND_TOLERATING_ERROR{{mlr --csvlite put '$reachable = asserting_string($reachable)' data/het-bool.csv}}HERE
+POKI_RUN_COMMAND_TOLERATING_ERROR{{mlr --csv put '$reachable = asserting_string($reachable)' data/het-bool.csv}}HERE
 
-<!-- ================================================================ -->
 </div>
+<!-- ================================================================ -->
 <h1>Finding missing dates</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_finding_missing_dates');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_finding_missing_dates" style="display: block">
@@ -136,23 +135,16 @@ simply inserts record-counters):
 POKI_INCLUDE_AND_RUN_ESCAPED(data/miss-date-1.sh)HERE
 
 <p/>Then, filter for adjacent difference not being 86400 (the number of seconds in a day):
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$reachable = boolean($reachable)' data/het-bool.csv}}HERE
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$reachable = int(boolean($reachable))' data/het-bool.csv}}HERE
 
-<p/> A second option is to flag badly formatted data within the output stream:
+POKI_INCLUDE_AND_RUN_ESCAPED(data/miss-date-2.sh)HERE
 
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint put '$format_ok = is_string($reachable)' data/het-bool.csv}}HERE
+<p/> Given this, it&rsquo;s now easy to see where the gaps are:
 
-<p/> Or perhaps to flag badly formatted data outside the output stream:
+POKI_RUN_COMMAND{{mlr cat -n then filter '$n >= 770 && $n <= 780' data/miss-date.csv}}HERE
+POKI_RUN_COMMAND{{mlr cat -n then filter '$n >= 1115 && $n <= 1125' data/miss-date.csv}}HERE
 
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint put 'if (!is_string($reachable)) {eprint "Malformed at NR=".NR} ' data/het-bool.csv}}HERE
-
-<p/> A third way is to abort the process on first instance of bad data:
-
-POKI_RUN_COMMAND_TOLERATING_ERROR{{mlr --csvlite put '$reachable = asserting_string($reachable)' data/het-bool.csv}}HERE
-
-<!-- ================================================================ -->
 </div>
+<!-- ================================================================ -->
 <h1>Two-pass algorithms</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_two_pass_algorithms');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_two_pass_algorithms" style="display: block">
@@ -224,10 +216,11 @@ and so on.  (For example, the outer values might be account IDs, the middle
 values might be invoice IDs, and the inner values might be invoice line-items.)
 If you want all the middle and inner lines to have the context of which outers
 they belong to, you can modify your software to pass all those through your
-methods. Alternatively, you can use the following to rectangularize the data.
-The idea is to use an out-of-stream variable to accumulate fields across
-records. Clear that variable when you see an outer ID; accumulate fields; emit
-output when you see the inner IDs.
+methods. Alternatively, don&rsquo;t refactor your code just to handle some
+ad-hoc log-data formatting &mdash; instead, use the following to rectangularize
+the data.  The idea is to use an out-of-stream variable to accumulate fields
+across records. Clear that variable when you see an outer ID; accumulate
+fields; emit output when you see the inner IDs.
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/rect.sh)HERE
 
@@ -251,6 +244,7 @@ or, more simply,
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv-2.sh)HERE
 
+</div>
 <!-- ================================================================ -->
 <h1>Parsing log-file output</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_parsing_log_file_output');" href="javascript:;">Toggle section visibility</button>
@@ -262,6 +256,12 @@ an example, suppose you have log-file lines such as
 POKI_CARDIFY(2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [sometext] various/sorts/of data {& punctuation} hits=1 status=0 time=2.378)HERE
 
 I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the structured text, then hand that to Miller. Example:
+
+POKI_CARDIFY(grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status)HERE
+
+</div>
+<!-- ================================================================ -->
+<h1>Memoization with out-of-stream variables</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_memoization_with_oosvars');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_memoization_with_oosvars" style="display: block">
 
@@ -271,12 +271,83 @@ Namely, using
 <i>f</i>(1)=1,
 <i>f</i>(<i>n</i>)=<i>f</i>(<i>n</i>-1)+<i>f</i>(<i>n</i>-2) for <i>n</i>&ge;2,
 the evaluation tree branches left as well as right at each non-trivial level, resulting in millions
-or more paths to the root 0/1 nodes:
+or more paths to the root 0/1 nodes. This program
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/fibo-uncached.sh)HERE
+POKI_INCLUDE_ESCAPED(data/fibo-uncached.sh)HERE
+
+<p/> produces output like this:
+
+<p/>
+<div class="pokipanel"><pre>
+i  o      fcount  seconds_delta
+1  1      1       0
+2  2      3       0.000039101
+3  3      5       0.000015974
+4  5      9       0.000019073
+5  8      15      0.000026941
+6  13     25      0.000036955
+7  21     41      0.000056028
+8  34     67      0.000086069
+9  55     109     0.000134945
+10 89     177     0.000217915
+11 144    287     0.000355959
+12 233    465     0.000506163
+13 377    753     0.000811815
+14 610    1219    0.001297235
+15 987    1973    0.001960993
+16 1597   3193    0.003417969
+17 2584   5167    0.006215811
+18 4181   8361    0.008294106
+19 6765   13529   0.012095928
+20 10946  21891   0.019592047
+21 17711  35421   0.031193972
+22 28657  57313   0.057254076
+23 46368  92735   0.080307961
+24 75025  150049  0.129482031
+25 121393 242785  0.213325977
+26 196418 392835  0.334423065
+27 317811 635621  0.605969906
+28 514229 1028457 0.971235037
+</pre></div>
 
 <p/> Note that the time it takes to evaluate the function is blowing up exponentially as the input argument
 increases. Using <tt>@</tt>-variables, which persist across records, we can cache and reuse the results
 of previous computations:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/fibo-cached.sh)HERE
+POKI_INCLUDE_ESCAPED(data/fibo-cached.sh)HERE
+
+<p/> with output like this:
+<p/>
+<div class="pokipanel"><pre>
+i  o      fcount seconds_delta
+1  1      1      0
+2  2      3      0.000053883
+3  3      3      0.000035048
+4  5      3      0.000045061
+5  8      3      0.000014067
+6  13     3      0.000028849
+7  21     3      0.000028133
+8  34     3      0.000027895
+9  55     3      0.000014067
+10 89     3      0.000015020
+11 144    3      0.000012875
+12 233    3      0.000033140
+13 377    3      0.000014067
+14 610    3      0.000012875
+15 987    3      0.000029087
+16 1597   3      0.000013828
+17 2584   3      0.000013113
+18 4181   3      0.000012875
+19 6765   3      0.000013113
+20 10946  3      0.000012875
+21 17711  3      0.000013113
+22 28657  3      0.000013113
+23 46368  3      0.000015974
+24 75025  3      0.000012875
+25 121393 3      0.000013113
+26 196418 3      0.000012875
+27 317811 3      0.000013113
+28 514229 3      0.000012875
+</pre></div>
+
+</div>
