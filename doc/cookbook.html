@@ -193,6 +193,7 @@ Miller commands were run with pretty-print-tabular output format.
 <center><b>Contents:</b></center>
 &bull;&nbsp;<a href="#Headerless_CSV_on_input_or_output">Headerless CSV on input or output</a><br/>
 &bull;&nbsp;<a href="#Bulk_rename_of_fields">Bulk rename of fields</a><br/>
+&bull;&nbsp;<a href="#Full_field_renames_and_reassigns">Full field renames and reassigns</a><br/>
 &bull;&nbsp;<a href="#Numbering_and_renumbering_records">Numbering and renumbering records</a><br/>
 &bull;&nbsp;<a href="#Data-cleaning_examples">Data-cleaning examples</a><br/>
 &bull;&nbsp;<a href="#Finding_missing_dates">Finding missing dates</a><br/>
@@ -386,6 +387,56 @@ def  a_b_c g_h_i
 4567 123   890
 1357 2468  3579
 3312 9987  4543
+</pre>
+</div>
+<p/>
+
+</div>
+<!-- ================================================================ -->
+<a id="Full_field_renames_and_reassigns"/><h1>Full field renames and reassigns</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_full_renames_reassigns');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_full_renames_reassigns" style="display: block">
+
+<p/>Using Miller 5.0.0&rsquo;s map literals and assigning to <tt>$*</tt>, you can fully generalize
+<a href="reference-verbs.html#rename"><tt>mlr rename</tt></a>,
+<a href="reference-verbs.html#reorder"><tt>mlr reorder</tt></a>,
+etc.:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '
+  begin {
+    @i_cumu = 0;
+  }
+
+  @i_cumu += $i;
+  $* = {
+    "z": $x + y,
+    "KEYFIELD": $a,
+    "i": $i_cumu,
+    "b": $b,
+    "y": $x,
+    "x": $y,
+  };
+' data/small
+z=0.346790,KEYFIELD=pan,i=,b=pan,y=0.346790,x=0.726803
+z=0.758680,KEYFIELD=eks,i=,b=pan,y=0.758680,x=0.522151
+z=0.204603,KEYFIELD=wye,i=,b=wye,y=0.204603,x=0.338319
+z=0.381399,KEYFIELD=eks,i=,b=wye,y=0.381399,x=0.134189
+z=0.573289,KEYFIELD=wye,i=,b=pan,y=0.573289,x=0.863624
 </pre>
 </div>
 <p/>

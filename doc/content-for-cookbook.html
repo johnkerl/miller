@@ -58,6 +58,20 @@ POKI_RUN_COMMAND{{cat data/bulk-rename-for-loop.mlr}}HERE
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv}}HERE
 
+</div>
+<!-- ================================================================ -->
+<h1>Full field renames and reassigns</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_full_renames_reassigns');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_full_renames_reassigns" style="display: block">
+
+<p/>Using Miller 5.0.0&rsquo;s map literals and assigning to <tt>$*</tt>, you can fully generalize
+<a href="reference-verbs.html#rename"><tt>mlr rename</tt></a>,
+<a href="reference-verbs.html#reorder"><tt>mlr reorder</tt></a>,
+etc.:
+
+POKI_RUN_COMMAND{{cat data/small}}HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/full-reorg.sh)HERE
+
 <!-- ================================================================ -->
 </div>
 <h1>Numbering and renumbering records</h1>
