@@ -10,7 +10,8 @@ POKI_PUT_TOC_HERE
 
 <p/>Try <tt>od -xcv</tt> and/or <tt>cat -e</tt> on your file to check for non-printable characters.
 
-<p/>If you&rsquo;re using Miller version less than 5.0.0, when the
+<p/>If you&rsquo;re using Miller version less than 5.0.0 (try
+<tt>mlr --version</tt> on your system to find out), when the
 line-ending-autodetect feature was introduced, please see
 <a href="http://johnkerl.org/miller-releases/miller-4.5.0/doc/index.html">here</a>.
 
@@ -34,21 +35,6 @@ case: <tt>mlr --fs tab {remaining arguments ...}</tt>.
 <div id="section_toggle_diagnosing_delimiter_specifications" style="display: block">
 
 POKI_INCLUDE_ESCAPED(data/delimiter-examples.txt)HERE
-
-</div>
-<h1>Error-output in certain string cases</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_error_output');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_error_output" style="display: block">
-
-<p/> <tt>mlr put '$y = string($x)' then put '$z = $y . $y'</tt> gives
-<tt>(error)</tt> on numeric data such as <tt>x=123</tt>, while <tt>mlr put
-'$z=string($x).string($x)'</tt> and <tt>mlr put '$y = string($x); $z = $y .
-$y'</tt> do not.  This is because in the first case <tt>y</tt> is computed and
-stored as a string, then re-parsed as an integer, for which
-string-concatenation is an invalid operator. In the second case, casts are done
-independently; in the third case, both assignments are within the same
-<tt>put</tt> statement, where type information is maintained for the duration
-of all assignments in the <tt>put</tt>.
 
 </div>
 <h1>How do I examine then-chaining?</h1>
@@ -140,6 +126,10 @@ and records may be dropped by a <tt>filter</tt> within a <tt>then</tt>-chain. To
 numbers, you can use out-of-stream variables as follows:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/dynamic-nr.sh)HERE
+
+<p/>Or, simply use <tt>mlr cat -n</tt>:
+
+POKI_RUN_COMMAND{{mlr filter '$x > 0.5' then cat -n data/small}}HERE
 
 </div>
 <h1>Why am I not seeing all possible joins occur?</h1>
