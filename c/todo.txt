@@ -43,13 +43,6 @@ UT FOR 5.0.0:
 ? parameter marshaling in single-rhs-assign-to-map-lhs context
 
 ================================================================
-COOKBOOK CHECKLIST:
-
-* make this easier:
-  mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ":"); for (k,v in o) {$["p".k]=v}'
-  mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'
-
-================================================================
 MAPVAR CHECKLIST:
 
 !!! MT_ERROR vs. fatal vs. skip assign. iron it out!

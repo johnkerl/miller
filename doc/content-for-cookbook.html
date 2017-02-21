@@ -132,6 +132,29 @@ POKI_RUN_COMMAND_TOLERATING_ERROR{{mlr --csv put '$reachable = asserting_string(
 
 </div>
 <!-- ================================================================ -->
+<h1>Splitting nested fields</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_splitting_nested');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_splitting_nested" style="display: block">
+
+<p/> Suppose you have a TSV file like this:
+
+POKI_INCLUDE_ESCAPED(data/nested.tsv)HERE
+
+<p/> One option to split out the colon-delimited values in the <tt>b</tt>
+column is to use <tt>splitnv</tt> to create an integer-indexed map and loop
+over it, adding new fields to the current record:
+
+POKI_RUN_COMMAND{{mlr --from data/nested.tsv --itsv --oxtab put 'o=splitnv($b, ":"); for (k,v in o) {$["p".k]=v}'}}HERE
+
+<p/> while another is to loop over the same map from <tt>splitnv</tt> and use
+it (with <tt>put -q</tt> to suppress printing the original record) to produce
+multiple records:
+
+POKI_RUN_COMMAND{{mlr --from data/nested.tsv --itsv --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'}}HERE
+POKI_RUN_COMMAND{{mlr --from data/nested.tsv --tsv put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'}}HERE
+
+</div>
+<!-- ================================================================ -->
 <h1>Finding missing dates</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_finding_missing_dates');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_finding_missing_dates" style="display: block">
