@@ -49,7 +49,8 @@ COOKBOOK CHECKLIST:
 ----------------------------------------------------------------
 cook 1:
 
-(done)
+--> FIX MISS-DATE B04K! LOOK THRU REVHIST
+--> FIX HAVING-LARGEST-VALUE B04K!
 
 ----------------------------------------------------------------
 cook 2: fun stuff:

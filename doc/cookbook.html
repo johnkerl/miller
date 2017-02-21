@@ -211,10 +211,6 @@ Miller commands were run with pretty-print-tabular output format.
 <button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
 <button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
 
-<p/><b>Disclaimer:</b> This page is about how to do some corner-case things in
-ways you mightn&rsquo;t have thought of. For an intro, please also see
-<a href="10-min.html">Miller in 10 minutes</a>.
-
 <!-- ================================================================ -->
 </div>
 <a id="Headerless_CSV_on_input_or_output"/><h1>Headerless CSV on input or output</h1>
@@ -235,7 +231,7 @@ Carol,45,present
 </div>
 <p/>
 
-<p/> You can use Miller to add a header: the <tt>--implicit-csv-header</tt> applies positionally indexed labels:
+<p/> You can use Miller to add a header. The <tt>--implicit-csv-header</tt> applies positionally indexed labels:
 
 <p/>
 <div class="pokipanel">
@@ -458,9 +454,9 @@ n=2,a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = $n; @n += 1' data/small
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+$ mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n += 1' data/small
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,n=1
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,n=2
 </pre>
 </div>
 <p/>
@@ -600,8 +596,10 @@ $ wc -l data/miss-date.csv
 </div>
 <p/>
 
-<p/>To find these, you can convert the dates to seconds since the epoch using <tt>strptime</tt>, then
-compute adjacent differences (the <tt>cat -n</tt> simply inserts record-counters):
+<p/>Since there are 1372 lines in the data file, some automation is called for.
+To find the missing dates, you can convert the dates to seconds since the epoch
+using <tt>strptime</tt>, then compute adjacent differences (the <tt>cat -n</tt>
+simply inserts record-counters):
 
 <p/>
 <div class="pokipanel">
@@ -1091,33 +1089,33 @@ $ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
 ' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
 i  o      fcount  seconds_delta
 1  1      1       0
-2  2      3       0.000035048
-3  3      5       0.000013113
-4  5      9       0.000024796
-5  8      15      0.000020981
-6  13     25      0.000041008
-7  21     41      0.000055075
-8  34     67      0.000067949
-9  55     109     0.000109196
-10 89     177     0.000182867
-11 144    287     0.000307083
-12 233    465     0.000439882
-13 377    753     0.000730991
-14 610    1219    0.001173973
-15 987    1973    0.001893044
-16 1597   3193    0.003154993
-17 2584   5167    0.004925966
-18 4181   8361    0.007686138
-19 6765   13529   0.012122869
-20 10946  21891   0.019392014
-21 17711  35421   0.031095982
-22 28657  57313   0.050091982
-23 46368  92735   0.080941200
-24 75025  150049  0.130611897
-25 121393 242785  0.216569901
-26 196418 392835  0.340492010
-27 317811 635621  0.582877159
-28 514229 1028457 0.934934855
+2  2      3       0.000033140
+3  3      5       0.000012875
+4  5      9       0.000015020
+5  8      15      0.000020027
+6  13     25      0.000029087
+7  21     41      0.000043869
+8  34     67      0.000066042
+9  55     109     0.000106096
+10 89     177     0.000169039
+11 144    287     0.000271797
+12 233    465     0.000431061
+13 377    753     0.000690937
+14 610    1219    0.001108170
+15 987    1973    0.001784801
+16 1597   3193    0.002909184
+17 2584   5167    0.004741907
+18 4181   8361    0.007563114
+19 6765   13529   0.012151957
+20 10946  21891   0.019482851
+21 17711  35421   0.031655073
+22 28657  57313   0.055258989
+23 46368  92735   0.091561079
+24 75025  150049  0.143889904
+25 121393 242785  0.233440161
+26 196418 392835  0.386122942
+27 317811 635621  0.552792072
+28 514229 1028457 0.889795780
 </pre>
 </div>
 <p/>
@@ -1149,33 +1147,33 @@ $ mlr --ofmt '%.9lf' --opprint seqgen --start 1 --stop 28 then put '
 ' then put '$seconds=systime()' then step -a delta -f seconds then cut -x -f seconds
 i  o      fcount seconds_delta
 1  1      1      0
-2  2      3      0.000036001
-3  3      3      0.000014067
-4  5      3      0.000011921
-5  8      3      0.000011921
+2  2      3      0.000035048
+3  3      3      0.000012875
+4  5      3      0.000010967
+5  8      3      0.000010967
 6  13     3      0.000011206
 7  21     3      0.000010967
-8  34     3      0.000010967
-9  55     3      0.000010967
+8  34     3      0.000010014
+9  55     3      0.000010014
 10 89     3      0.000011921
-11 144    3      0.000012159
-12 233    3      0.000015020
+11 144    3      0.000010014
+12 233    3      0.000014067
 13 377    3      0.000010967
-14 610    3      0.000011921
-15 987    3      0.000010967
+14 610    3      0.000010967
+15 987    3      0.000010014
 16 1597   3      0.000010967
 17 2584   3      0.000010014
-18 4181   3      0.000010967
-19 6765   3      0.000010967
-20 10946  3      0.000011206
+18 4181   3      0.000010014
+19 6765   3      0.000010014
+20 10946  3      0.000010014
 21 17711  3      0.000010014
-22 28657  3      0.000010967
-23 46368  3      0.000012875
+22 28657  3      0.000010014
+23 46368  3      0.000011921
 24 75025  3      0.000010967
-25 121393 3      0.000011206
-26 196418 3      0.000009775
-27 317811 3      0.000011206
-28 514229 3      0.000010967
+25 121393 3      0.000010014
+26 196418 3      0.000010014
+27 317811 3      0.000010014
+28 514229 3      0.000010014
 </pre>
 </div>
 <p/>
