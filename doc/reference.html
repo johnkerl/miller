@@ -187,14 +187,13 @@ Miller commands were run with pretty-print-tabular output format.
 <div class="pokitoc">
 <center><b>Contents:</b></center>
 &bull;&nbsp;<a href="#Command_overview">Command overview</a><br/>
-&bull;&nbsp;<a href="#On-line_help">On-line help</a><br/>
 &bull;&nbsp;<a href="#I/O_options">I/O options</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Formats">Formats</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#In-place_mode">In-place mode</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Compression">Compression</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Record/field/pair_separators">Record/field/pair separators</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Number_formatting">Number formatting</a><br/>
-&bull;&nbsp;<a href="#Data_transformations">Data transformations</a><br/>
+&bull;&nbsp;<a href="#Data_transformations_(verbs)">Data transformations (verbs)</a><br/>
 &bull;&nbsp;<a href="#Expression_language_for_filter_and_put">Expression language for filter and put</a><br/>
 &bull;&nbsp;<a href="#then-chaining">then-chaining</a><br/>
 &bull;&nbsp;<a href="#Data_types">Data types</a><br/>
@@ -207,6 +206,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Conversion_by_math_routines">Conversion by math routines</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Conversion_by_arithmetic_operators">Conversion by arithmetic operators</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Pythonic_division">Pythonic division</a><br/>
+&bull;&nbsp;<a href="#On-line_help">On-line help</a><br/>
 </div>
 <p/>
 
@@ -318,346 +318,7 @@ mlr sort -f hostname,uptime *.dat
 </table>
 
 </div>
-<a id="On-line_help"/><h1>On-line help</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_online_help');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_online_help" style="display: block">
-
-<p/>Examples:<p/>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --help
-Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or more file names}
-
-Command-line-syntax examples:
-  mlr --csv cut -f hostname,uptime mydata.csv
-  mlr --tsv --rs lf filter '$status != "down" &amp;&amp; $upsec &gt;= 10000' *.tsv
-  mlr --nidx put '$sum = $7 &lt; 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
-  grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
-  mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
-  mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
-  mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
-  mlr stats2 -a linreg-pca -f u,v -g shape data/*
-  mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
-  mlr --from estimates.tbl put '
-  for (k,v in $*) {
-    if (is_numeric(v) &amp;&amp; k =~ "^[t-z].*$") {
-      $sum += v; $count += 1
-    }
-  }
-  $mean = $sum / $count # no assignment if count unset'
-  mlr --from infile.dat put -f analyze.mlr
-  mlr --from infile.dat put 'tee &gt; "./taps/data-".$a."-".$b, $*'
-  mlr --from infile.dat put 'tee | "gzip &gt; ./taps/data-".$a."-".$b.".gz", $*'
-  mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'
-  mlr --from infile.dat put  '(NR % 1000 == 0) { print &gt; stderr, "Checkpoint ".NR}'
-
-Data-format examples:
-  DKVP: delimited key-value pairs (Miller default format)
-  +---------------------+
-  | apple=1,bat=2,cog=3 | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
-  | dish=7,egg=8,flint  | Record 2: "dish" =&gt; "7", "egg" =&gt; "8", "3" =&gt; "flint"
-  +---------------------+
-
-  NIDX: implicitly numerically indexed (Unix-toolkit style)
-  +---------------------+
-  | the quick brown     | Record 1: "1" =&gt; "the", "2" =&gt; "quick", "3" =&gt; "brown"
-  | fox jumped          | Record 2: "1" =&gt; "fox", "2" =&gt; "jumped"
-  +---------------------+
-
-  CSV/CSV-lite: comma-separated values with separate header line
-  +---------------------+
-  | apple,bat,cog       |
-  | 1,2,3               | Record 1: "apple =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
-  | 4,5,6               | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
-  +---------------------+
-
-  Tabular JSON: nested objects are supported, although arrays within them are not:
-  +---------------------+
-  | {                   |
-  |  "apple": 1,        | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
-  |  "bat": 2,          |
-  |  "cog": 3           |
-  | }                   |
-  | {                   |
-  |   "dish": {         | Record 2: "dish:egg" =&gt; "7", "dish:flint" =&gt; "8", "garlic" =&gt; ""
-  |     "egg": 7,       |
-  |     "flint": 8      |
-  |   },                |
-  |   "garlic": ""      |
-  | }                   |
-  +---------------------+
-
-  PPRINT: pretty-printed tabular
-  +---------------------+
-  | apple bat cog       |
-  | 1     2   3         | Record 1: "apple =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
-  | 4     5   6         | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
-  +---------------------+
-
-  XTAB: pretty-printed transposed tabular
-  +---------------------+
-  | apple 1             | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
-  | bat   2             |
-  | cog   3             |
-  |                     |
-  | dish 7              | Record 2: "dish" =&gt; "7", "egg" =&gt; "8"
-  | egg  8              |
-  +---------------------+
-
-  Markdown tabular (supported for output only):
-  +-----------------------+
-  | | apple | bat | cog | |
-  | | ---   | --- | --- | |
-  | | 1     | 2   | 3   | | Record 1: "apple =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
-  | | 4     | 5   | 6   | | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
-  +-----------------------+
-
-Help options:
-  -h or --help Show this message.
-  --version              Show the software version.
-  {verb name} --help     Show verb-specific help.
-  --list-all-verbs or -l List only verb names.
-  --help-all-verbs       Show help on all verbs.
-
-Verbs:
-   bar bootstrap cat check count-distinct cut decimate filter grep group-by
-   group-like having-fields head histogram join label least-frequent
-   merge-fields most-frequent nest nothing put regularize rename reorder repeat
-   reshape sample sec2gmt sec2gmtdate seqgen shuffle sort stats1 stats2 step
-   tac tail tee top uniq
-
-Functions for the filter and put verbs:
-   + + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! ? : .
-   gsub strlen sub substr tolower toupper abs acos acosh asin asinh atan atan2
-   atanh cbrt ceil cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p
-   logifit madd max mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt
-   tan tanh urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms
-   gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime
-   strptime systime is_absent is_bool is_boolean is_empty is_empty_map is_float
-   is_int is_map is_nonempty_map is_not_empty is_not_map is_not_null is_null
-   is_numeric is_present is_string asserting_absent asserting_bool
-   asserting_boolean asserting_empty asserting_empty_map asserting_float
-   asserting_int asserting_map asserting_nonempty_map asserting_not_empty
-   asserting_not_map asserting_not_null asserting_null asserting_numeric
-   asserting_present asserting_string boolean float fmtnum hexfmt int string
-   typeof depth haskey joink joinkv joinv leafcount length mapdiff mapsum
-   splitkv splitkvx splitnv splitnvx
-Please use "mlr --help-function {function name}" for function-specific help.
-Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
-Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
-
-Data-format options, for input, output, or both:
-  --idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
-                                  (this is Miller's default format).
-
-  --inidx   --onidx   --nidx      Implicitly-integer-indexed fields
-                                  (Unix-toolkit style).
-
-  --icsv    --ocsv    --csv       Comma-separated value (or tab-separated
-                                  with --fs tab, etc.)
-
-  --itsv    --otsv    --tsv       Keystroke-savers for "--icsv --ifs tab",
-                                  "--ocsv --ofs tab", "--csv --fs tab".
-
-  --ipprint --opprint --pprint    Pretty-printed tabular (produces no
-                                  output until all input is in).
-                      --right     Right-justifies all fields for PPRINT output.
-                      --barred    Prints a border around PPRINT output
-                                  (only available for output).
-
-            --omd                 Markdown-tabular (only available for output).
-
-  --ixtab   --oxtab   --xtab      Pretty-printed vertical-tabular.
-                      --xvright   Right-justifies values for XTAB format.
-
-  --ijson   --ojson   --json      JSON tabular: sequence or list of one-level
-                                  maps: {...}{...} or [{...},{...}].
-                      --jvstack   Put one key-value pair per line for JSON
-                                  output.
-                      --jlistwrap Wrap JSON output in outermost [ ].
-                    --jknquoteint Do not quote non-string map keys in JSON output.
-                     --jvquoteall Quote map values in JSON output, even if they're
-                                  numeric.
-              --jflatsep {string} Separator for flattening multi-level JSON keys,
-                                  e.g. '{"a":{"b":3}}' becomes a:b =&gt; 3 for
-                                  non-JSON formats. Defaults to :.
-
-  -p is a keystroke-saver for --nidx --fs space --repifs
-
-  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for
-  DKVP-formatted input and pretty-printed output.
-
-Format-conversion keystroke-saver options, for input, output, or both:
-As keystroke-savers for format-conversion you may use the following:
-  --c2t --c2d --c2n --c2j --c2x --c2p --c2m
-  --t2c       --t2d --t2n --t2j --t2x --t2p --t2m
-  --d2c --d2t       --d2n --d2j --d2x --d2p --d2m
-  --n2c --n2t --n2d       --n2j --n2x --n2p --n2m
-  --j2c --j2t --j2d --j2n       --j2x --j2p --j2m
-  --x2c --x2t --x2d --x2n --x2j       --x2p --x2m
-  --p2c --p2t --p2d --p2n --p2j --p2x       --p2m
-The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
-PPRINT, and markdown, respectively. Note that markdown format is available for
-output only.
-
-Compressed-data options:
-  --prepipe {command} This allows Miller to handle compressed inputs. You can do
-  without this for single input files, e.g. "gunzip &lt; myfile.csv.gz | mlr ...".
-  However, when multiple input files are present, between-file separations are
-  lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can
-  specify an action to be taken on each input file. This pre-pipe command must
-  be able to read from standard input; it will be invoked with
-    {command} &lt; {filename}.
-  Examples:
-    mlr --prepipe 'gunzip'
-    mlr --prepipe 'zcat -cf'
-    mlr --prepipe 'xz -cd'
-    mlr --prepipe cat
-  Note that this feature is quite general and is not limited to decompression
-  utilities. You can use it to apply per-file filters of your choice.
-  For output compression (or other) utilities, simply pipe the output:
-    mlr ... | {your compression command}
-
-Separator options, for input, output, or both:
-  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\r\n'
-  --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma
-  --ps     --ips     --ops              Pair separators, e.g. equals sign
-
-  Notes about line endings:
-  * Default line endings (--irs and --ors) are "auto" which means autodetect from
-    the input file format, as long as the input file(s) have lines ending in either
-    LF (also known as linefeed, '\n', 0x0a, Unix-style) or CRLF (also known as
-    carriage-return/linefeed pairs, '\r\n', 0x0d 0x0a, Windows style).
-  * If both irs and ors are auto (which is the default) then LF input will lead to LF
-    output and CRLF input will lead to CRLF output, regardless of the platform you're
-    running on.
-  * The line-ending autodetector triggers on the first line ending detected in the input
-    stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
-    LF-terminated file then autodetected line endings will be CRLF.
-  * If you use --ors {something else} with (default or explicitly specified) --irs auto
-    then line endings are autodetected on input and set to what you specify on output.
-  * If you use --irs {something else} with (default or explicitly specified) --ors auto
-    then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
-
-  Notes about all other separators:
-  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats
-    do key-value pairs appear juxtaposed.
-  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;
-    XTAB records are separated by two or more consecutive IFS/OFS -- i.e.
-    a blank line. Everything above about --irs/--ors/--rs auto becomes --ifs/--ofs/--fs
-    auto for XTAB format. (XTAB's default IFS/OFS are "auto".)
-  * OFS must be single-character for PPRINT format. This is because it is used
-    with repetition for alignment; multi-character separators would make
-    alignment impossible.
-  * OPS may be multi-character for XTAB format, in which case alignment is
-    disabled.
-  * TSV is simply CSV using tab as field separator ("--fs tab").
-  * FS/PS are ignored for markdown format; RS is used.
-  * All FS and PS options are ignored for JSON format, since they are not relevant
-    to the JSON format.
-  * You can specify separators in any of the following ways, shown by example:
-    - Type them out, quoting as necessary for shell escapes, e.g.
-      "--fs '|' --ips :"
-    - C-style escape sequences, e.g. "--rs '\r\n' --fs '\t'".
-    - To avoid backslashing, you can use any of the following names:
-      cr crcr newline lf lflf crlf crlfcrlf tab space comma pipe slash colon semicolon equals
-  * Default separators by format:
-      File format  RS       FS       PS
-      dkvp         auto     ,        =
-      json         auto     (N/A)    (N/A)
-      nidx         auto     space    (N/A)
-      csv          auto     ,        (N/A)
-      csvlite      auto     ,        (N/A)
-      markdown     auto     (N/A)    (N/A)
-      pprint       auto     space    (N/A)
-      xtab         (N/A)    auto     space
-
-Relevant to CSV/CSV-lite input only:
-  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1
-                     of input files. Tip: combine with "label" to recreate
-                     missing headers.
-  --headerless-csv-output   Print only CSV data lines.
-
-Double-quoting for CSV output:
-  --quote-all        Wrap all fields in double quotes
-  --quote-none       Do not wrap any fields in double quotes, even if they have
-                     OFS or ORS in them
-  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS
-                     in them (default)
-  --quote-numeric    Wrap fields in double quotes only if they have numbers
-                     in them
-  --quote-original   Wrap fields in double quotes if and only if they were
-                     quoted on input. This isn't sticky for computed fields:
-                     e.g. if fields a and b were quoted on input and you do
-                     "put '$c = $a . $b'" then field c won't inherit a or b's
-                     was-quoted-on-input flag.
-
-Numerical formatting:
-  --ofmt {format}    E.g. %.18lf, %.0lf. Please use sprintf-style codes for
-                     double-precision. Applies to verbs which compute new
-                     values, e.g. put, stats1, stats2. See also the fmtnum
-                     function within mlr put (mlr --help-all-functions).
-                     Defaults to %lf.
-
-Other options:
-  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter
-                     urand()/urandint()/urand32().
-  --nr-progress-mod {m}, with m a positive integer: print filename and record
-                     count to stderr every m input records.
-  --from {filename}  Use this to specify an input file before the verb(s),
-                     rather than after. May be used more than once. Example:
-                     "mlr --from a.dat --from b.dat cat" is the same as
-                     "mlr cat a.dat b.dat".
-  -n                 Process no input files, nor standard input either. Useful
-                     for mlr put with begin/end statements only. (Same as --from
-                     /dev/null.) Also useful in "mlr -n put -v '...'" for
-                     analyzing abstract syntax trees (if that's your thing).
-  -I                 Process files in-place. For each file name on the command
-                     line, output is written to a temp file in the same
-                     directory, which is then renamed over the original. Each
-                     file is processed in isolation: if the output format is
-                     CSV, CSV headers will be present in each output file;
-                     statistics are only over each file's own records; and so on.
-
-Then-chaining:
-Output of one verb may be chained as input to another using "then", e.g.
-  mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
-
-For more information please see http://johnkerl.org/miller/doc and/or
-http://github.com/johnkerl/miller. This is Miller version v5.0.0-alpha.
-</pre>
-</div>
-<p/>
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr sort --help
-Usage: mlr sort {flags}
-Flags:
-  -f  {comma-separated field names}  Lexical ascending
-  -n  {comma-separated field names}  Numerical ascending; nulls sort last
-  -nf {comma-separated field names}  Numerical ascending; nulls sort last
-  -r  {comma-separated field names}  Lexical descending
-  -nr {comma-separated field names}  Numerical descending; nulls sort first
-Sorts records primarily by the first specified field, secondarily by the second
-field, and so on.  (Any records not having all specified sort keys will appear
-at the end of the output, in the order they were encountered, regardless of the
-specified sort order.) The sort is stable: records that compare equal will sort
-in the order they were encountered in the input record stream.
-
-Example:
-  mlr sort -f a,b -nr x,y,z
-which is the same as:
-  mlr sort -f a -f b -nr x -nr y -nr z
-</pre>
-</div>
-<p/>
-
 <!-- ================================================================ -->
-</div>
 <a id="I/O_options"/><h1>I/O options</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_io_options');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_io_options" style="display: block">
@@ -879,7 +540,7 @@ x=0xffff,y=0xff,z=0xfeff01
 
 <!-- ================================================================ -->
 </div>
-<a id="Data_transformations"/><h1>Data transformations</h1>
+<a id="Data_transformations_(verbs)"/><h1>Data transformations (verbs)</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_data_transformations');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_data_transformations" style="display: block">
 
@@ -1000,9 +661,10 @@ non-explicit return values from user-defined functions), <b>error</b>,
 <li/> On input, string values representable as numbers, e.g. "3" or "3.1", are
 treated as int or float, respectively. If a record has <tt>x=1,y=2</tt> then
 <tt>mlr put '$z=$x+$y'</tt> will produce <tt>x=1,y=2,z=3</tt>, and <tt>mlr put
-'$z=$x.$y'</tt> gives an error.  To coerce back to string for processing, use
-the <tt>string</tt> function: <tt>mlr put '$z=string($x).string($y)'</tt> will
-produce <tt>x=1,y=2,z=12</tt>.
+'$z=$x.$y'</tt> does not give an error simply because the dot operator has been
+generalized to stringify non-strings.  To coerce back to string for processing,
+use the <tt>string</tt> function: <tt>mlr put '$z=string($x).string($y)'</tt>
+will produce <tt>x=1,y=2,z=12</tt>.
 
 <li/> On input, string values representable as boolean  (e.g. <tt>"true"</tt>,
 <tt>"false"</tt>) are <i>not</i> automatically treated as boolean.  (This is
@@ -1039,16 +701,17 @@ contiguously by <tt>mlr sort</tt>.
 
 <ul>
 
-<li/> <b>Empty</b>: a field name is present in a record (or in an out-of-stream
-variable) with empty value: e.g. <tt>x=,y=2</tt> in the data input stream, or
-assignment <tt>$x=""</tt> or <tt>@x=""</tt> in <tt>mlr put</tt>.
+<li/> <b>Empty (key present, value empty)</b>: a field name is present in a
+record (or in an out-of-stream variable) with empty value: e.g. <tt>x=,y=2</tt>
+in the data input stream, or assignment <tt>$x=""</tt> or <tt>@x=""</tt> in
+<tt>mlr put</tt>.
 
-<li/> <b>Absent</b>: a field name is not present, e.g. input record is
-<tt>x=1,y=2</tt> and a <tt>put</tt> or <tt>filter</tt> expression refers to
-<tt>$z</tt>. Or, reading an out-of-stream variable which hasn&rsquo;t been
-assigned a value yet,
-e.g.  <tt>mlr put -q '@sum += $x'; end{emit @sum}'</tt> or <tt>mlr put -q
-'@sum[$a][$b] += $x'; end{emit @sum, "a", "b"}'</tt>.
+<li/> <b>Absent (key not present)</b>: a field name is not present, e.g. input
+record is <tt>x=1,y=2</tt> and a <tt>put</tt> or <tt>filter</tt> expression
+refers to <tt>$z</tt>. Or, reading an out-of-stream variable which hasn&rsquo;t
+been assigned a value yet, e.g.  <tt>mlr put -q '@sum += $x'; end{emit
+@sum}'</tt> or <tt>mlr put -q '@sum[$a][$b] += $x'; end{emit @sum, "a",
+"b"}'</tt>.
 
 </ul>
 
@@ -1511,10 +1174,350 @@ arithmetic.  This approach is not taken.)
 pythonic</a>:
   <ul>
   <li/> Quotient of integers is floating-point: <tt>7/2</tt> is <tt>3.5</tt>.
-  <li/> Integer division is done with <tt>//</tt>: <tt>7/2</tt> is <tt>3</tt>.
+  <li/> Integer division is done with <tt>//</tt>: <tt>7//2</tt> is <tt>3</tt>.
     This rounds toward the negative.
   <li/> Remainders are non-negative.
   </ul>
+
+</div>
+<!-- ================================================================ -->
+<a id="On-line_help"/><h1>On-line help</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_online_help');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_online_help" style="display: block">
+
+<p/>Examples:<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --help
+Usage: mlr [I/O options] {verb} [verb-dependent options ...] {zero or more file names}
+
+Command-line-syntax examples:
+  mlr --csv cut -f hostname,uptime mydata.csv
+  mlr --tsv --rs lf filter '$status != "down" &amp;&amp; $upsec &gt;= 10000' *.tsv
+  mlr --nidx put '$sum = $7 &lt; 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
+  grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
+  mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
+  mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
+  mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
+  mlr stats2 -a linreg-pca -f u,v -g shape data/*
+  mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
+  mlr --from estimates.tbl put '
+  for (k,v in $*) {
+    if (is_numeric(v) &amp;&amp; k =~ "^[t-z].*$") {
+      $sum += v; $count += 1
+    }
+  }
+  $mean = $sum / $count # no assignment if count unset'
+  mlr --from infile.dat put -f analyze.mlr
+  mlr --from infile.dat put 'tee &gt; "./taps/data-".$a."-".$b, $*'
+  mlr --from infile.dat put 'tee | "gzip &gt; ./taps/data-".$a."-".$b.".gz", $*'
+  mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'
+  mlr --from infile.dat put  '(NR % 1000 == 0) { print &gt; stderr, "Checkpoint ".NR}'
+
+Data-format examples:
+  DKVP: delimited key-value pairs (Miller default format)
+  +---------------------+
+  | apple=1,bat=2,cog=3 | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
+  | dish=7,egg=8,flint  | Record 2: "dish" =&gt; "7", "egg" =&gt; "8", "3" =&gt; "flint"
+  +---------------------+
+
+  NIDX: implicitly numerically indexed (Unix-toolkit style)
+  +---------------------+
+  | the quick brown     | Record 1: "1" =&gt; "the", "2" =&gt; "quick", "3" =&gt; "brown"
+  | fox jumped          | Record 2: "1" =&gt; "fox", "2" =&gt; "jumped"
+  +---------------------+
+
+  CSV/CSV-lite: comma-separated values with separate header line
+  +---------------------+
+  | apple,bat,cog       |
+  | 1,2,3               | Record 1: "apple =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
+  | 4,5,6               | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
+  +---------------------+
+
+  Tabular JSON: nested objects are supported, although arrays within them are not:
+  +---------------------+
+  | {                   |
+  |  "apple": 1,        | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
+  |  "bat": 2,          |
+  |  "cog": 3           |
+  | }                   |
+  | {                   |
+  |   "dish": {         | Record 2: "dish:egg" =&gt; "7", "dish:flint" =&gt; "8", "garlic" =&gt; ""
+  |     "egg": 7,       |
+  |     "flint": 8      |
+  |   },                |
+  |   "garlic": ""      |
+  | }                   |
+  +---------------------+
+
+  PPRINT: pretty-printed tabular
+  +---------------------+
+  | apple bat cog       |
+  | 1     2   3         | Record 1: "apple =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
+  | 4     5   6         | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
+  +---------------------+
+
+  XTAB: pretty-printed transposed tabular
+  +---------------------+
+  | apple 1             | Record 1: "apple" =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
+  | bat   2             |
+  | cog   3             |
+  |                     |
+  | dish 7              | Record 2: "dish" =&gt; "7", "egg" =&gt; "8"
+  | egg  8              |
+  +---------------------+
+
+  Markdown tabular (supported for output only):
+  +-----------------------+
+  | | apple | bat | cog | |
+  | | ---   | --- | --- | |
+  | | 1     | 2   | 3   | | Record 1: "apple =&gt; "1", "bat" =&gt; "2", "cog" =&gt; "3"
+  | | 4     | 5   | 6   | | Record 2: "apple" =&gt; "4", "bat" =&gt; "5", "cog" =&gt; "6"
+  +-----------------------+
+
+Help options:
+  -h or --help Show this message.
+  --version              Show the software version.
+  {verb name} --help     Show verb-specific help.
+  --list-all-verbs or -l List only verb names.
+  --help-all-verbs       Show help on all verbs.
+
+Verbs:
+   bar bootstrap cat check count-distinct cut decimate filter grep group-by
+   group-like having-fields head histogram join label least-frequent
+   merge-fields most-frequent nest nothing put regularize rename reorder repeat
+   reshape sample sec2gmt sec2gmtdate seqgen shuffle sort stats1 stats2 step
+   tac tail tee top uniq
+
+Functions for the filter and put verbs:
+   + + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! ? : .
+   gsub strlen sub substr tolower toupper abs acos acosh asin asinh atan atan2
+   atanh cbrt ceil cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p
+   logifit madd max mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt
+   tan tanh urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms
+   gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime
+   strptime systime is_absent is_bool is_boolean is_empty is_empty_map is_float
+   is_int is_map is_nonempty_map is_not_empty is_not_map is_not_null is_null
+   is_numeric is_present is_string asserting_absent asserting_bool
+   asserting_boolean asserting_empty asserting_empty_map asserting_float
+   asserting_int asserting_map asserting_nonempty_map asserting_not_empty
+   asserting_not_map asserting_not_null asserting_null asserting_numeric
+   asserting_present asserting_string boolean float fmtnum hexfmt int string
+   typeof depth haskey joink joinkv joinv leafcount length mapdiff mapsum
+   splitkv splitkvx splitnv splitnvx
+Please use "mlr --help-function {function name}" for function-specific help.
+Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
+Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
+
+Data-format options, for input, output, or both:
+  --idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
+                                  (this is Miller's default format).
+
+  --inidx   --onidx   --nidx      Implicitly-integer-indexed fields
+                                  (Unix-toolkit style).
+
+  --icsv    --ocsv    --csv       Comma-separated value (or tab-separated
+                                  with --fs tab, etc.)
+
+  --itsv    --otsv    --tsv       Keystroke-savers for "--icsv --ifs tab",
+                                  "--ocsv --ofs tab", "--csv --fs tab".
+
+  --ipprint --opprint --pprint    Pretty-printed tabular (produces no
+                                  output until all input is in).
+                      --right     Right-justifies all fields for PPRINT output.
+                      --barred    Prints a border around PPRINT output
+                                  (only available for output).
+
+            --omd                 Markdown-tabular (only available for output).
+
+  --ixtab   --oxtab   --xtab      Pretty-printed vertical-tabular.
+                      --xvright   Right-justifies values for XTAB format.
+
+  --ijson   --ojson   --json      JSON tabular: sequence or list of one-level
+                                  maps: {...}{...} or [{...},{...}].
+                      --jvstack   Put one key-value pair per line for JSON
+                                  output.
+                      --jlistwrap Wrap JSON output in outermost [ ].
+                    --jknquoteint Do not quote non-string map keys in JSON output.
+                     --jvquoteall Quote map values in JSON output, even if they're
+                                  numeric.
+              --jflatsep {string} Separator for flattening multi-level JSON keys,
+                                  e.g. '{"a":{"b":3}}' becomes a:b =&gt; 3 for
+                                  non-JSON formats. Defaults to :.
+
+  -p is a keystroke-saver for --nidx --fs space --repifs
+
+  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for
+  DKVP-formatted input and pretty-printed output.
+
+Format-conversion keystroke-saver options, for input, output, or both:
+As keystroke-savers for format-conversion you may use the following:
+  --c2t --c2d --c2n --c2j --c2x --c2p --c2m
+  --t2c       --t2d --t2n --t2j --t2x --t2p --t2m
+  --d2c --d2t       --d2n --d2j --d2x --d2p --d2m
+  --n2c --n2t --n2d       --n2j --n2x --n2p --n2m
+  --j2c --j2t --j2d --j2n       --j2x --j2p --j2m
+  --x2c --x2t --x2d --x2n --x2j       --x2p --x2m
+  --p2c --p2t --p2d --p2n --p2j --p2x       --p2m
+The letters c t d n j x p m refer to formats CSV, TSV, DKVP, NIDX, JSON, XTAB,
+PPRINT, and markdown, respectively. Note that markdown format is available for
+output only.
+
+Compressed-data options:
+  --prepipe {command} This allows Miller to handle compressed inputs. You can do
+  without this for single input files, e.g. "gunzip &lt; myfile.csv.gz | mlr ...".
+  However, when multiple input files are present, between-file separations are
+  lost; also, the FILENAME variable doesn't iterate. Using --prepipe you can
+  specify an action to be taken on each input file. This pre-pipe command must
+  be able to read from standard input; it will be invoked with
+    {command} &lt; {filename}.
+  Examples:
+    mlr --prepipe 'gunzip'
+    mlr --prepipe 'zcat -cf'
+    mlr --prepipe 'xz -cd'
+    mlr --prepipe cat
+  Note that this feature is quite general and is not limited to decompression
+  utilities. You can use it to apply per-file filters of your choice.
+  For output compression (or other) utilities, simply pipe the output:
+    mlr ... | {your compression command}
+
+Separator options, for input, output, or both:
+  --rs     --irs     --ors              Record separators, e.g. 'lf' or '\r\n'
+  --fs     --ifs     --ofs  --repifs    Field separators, e.g. comma
+  --ps     --ips     --ops              Pair separators, e.g. equals sign
+
+  Notes about line endings:
+  * Default line endings (--irs and --ors) are "auto" which means autodetect from
+    the input file format, as long as the input file(s) have lines ending in either
+    LF (also known as linefeed, '\n', 0x0a, Unix-style) or CRLF (also known as
+    carriage-return/linefeed pairs, '\r\n', 0x0d 0x0a, Windows style).
+  * If both irs and ors are auto (which is the default) then LF input will lead to LF
+    output and CRLF input will lead to CRLF output, regardless of the platform you're
+    running on.
+  * The line-ending autodetector triggers on the first line ending detected in the input
+    stream. E.g. if you specify a CRLF-terminated file on the command line followed by an
+    LF-terminated file then autodetected line endings will be CRLF.
+  * If you use --ors {something else} with (default or explicitly specified) --irs auto
+    then line endings are autodetected on input and set to what you specify on output.
+  * If you use --irs {something else} with (default or explicitly specified) --ors auto
+    then the output line endings used are LF on Unix/Linux/BSD/MacOSX, and CRLF on Windows.
+
+  Notes about all other separators:
+  * IPS/OPS are only used for DKVP and XTAB formats, since only in these formats
+    do key-value pairs appear juxtaposed.
+  * IRS/ORS are ignored for XTAB format. Nominally IFS and OFS are newlines;
+    XTAB records are separated by two or more consecutive IFS/OFS -- i.e.
+    a blank line. Everything above about --irs/--ors/--rs auto becomes --ifs/--ofs/--fs
+    auto for XTAB format. (XTAB's default IFS/OFS are "auto".)
+  * OFS must be single-character for PPRINT format. This is because it is used
+    with repetition for alignment; multi-character separators would make
+    alignment impossible.
+  * OPS may be multi-character for XTAB format, in which case alignment is
+    disabled.
+  * TSV is simply CSV using tab as field separator ("--fs tab").
+  * FS/PS are ignored for markdown format; RS is used.
+  * All FS and PS options are ignored for JSON format, since they are not relevant
+    to the JSON format.
+  * You can specify separators in any of the following ways, shown by example:
+    - Type them out, quoting as necessary for shell escapes, e.g.
+      "--fs '|' --ips :"
+    - C-style escape sequences, e.g. "--rs '\r\n' --fs '\t'".
+    - To avoid backslashing, you can use any of the following names:
+      cr crcr newline lf lflf crlf crlfcrlf tab space comma pipe slash colon semicolon equals
+  * Default separators by format:
+      File format  RS       FS       PS
+      dkvp         auto     ,        =
+      json         auto     (N/A)    (N/A)
+      nidx         auto     space    (N/A)
+      csv          auto     ,        (N/A)
+      csvlite      auto     ,        (N/A)
+      markdown     auto     (N/A)    (N/A)
+      pprint       auto     space    (N/A)
+      xtab         (N/A)    auto     space
+
+Relevant to CSV/CSV-lite input only:
+  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1
+                     of input files. Tip: combine with "label" to recreate
+                     missing headers.
+  --headerless-csv-output   Print only CSV data lines.
+
+Double-quoting for CSV output:
+  --quote-all        Wrap all fields in double quotes
+  --quote-none       Do not wrap any fields in double quotes, even if they have
+                     OFS or ORS in them
+  --quote-minimal    Wrap fields in double quotes only if they have OFS or ORS
+                     in them (default)
+  --quote-numeric    Wrap fields in double quotes only if they have numbers
+                     in them
+  --quote-original   Wrap fields in double quotes if and only if they were
+                     quoted on input. This isn't sticky for computed fields:
+                     e.g. if fields a and b were quoted on input and you do
+                     "put '$c = $a . $b'" then field c won't inherit a or b's
+                     was-quoted-on-input flag.
+
+Numerical formatting:
+  --ofmt {format}    E.g. %.18lf, %.0lf. Please use sprintf-style codes for
+                     double-precision. Applies to verbs which compute new
+                     values, e.g. put, stats1, stats2. See also the fmtnum
+                     function within mlr put (mlr --help-all-functions).
+                     Defaults to %lf.
+
+Other options:
+  --seed {n} with n of the form 12345678 or 0xcafefeed. For put/filter
+                     urand()/urandint()/urand32().
+  --nr-progress-mod {m}, with m a positive integer: print filename and record
+                     count to stderr every m input records.
+  --from {filename}  Use this to specify an input file before the verb(s),
+                     rather than after. May be used more than once. Example:
+                     "mlr --from a.dat --from b.dat cat" is the same as
+                     "mlr cat a.dat b.dat".
+  -n                 Process no input files, nor standard input either. Useful
+                     for mlr put with begin/end statements only. (Same as --from
+                     /dev/null.) Also useful in "mlr -n put -v '...'" for
+                     analyzing abstract syntax trees (if that's your thing).
+  -I                 Process files in-place. For each file name on the command
+                     line, output is written to a temp file in the same
+                     directory, which is then renamed over the original. Each
+                     file is processed in isolation: if the output format is
+                     CSV, CSV headers will be present in each output file;
+                     statistics are only over each file's own records; and so on.
+
+Then-chaining:
+Output of one verb may be chained as input to another using "then", e.g.
+  mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
+
+For more information please see http://johnkerl.org/miller/doc and/or
+http://github.com/johnkerl/miller. This is Miller version v5.0.0-alpha.
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr sort --help
+Usage: mlr sort {flags}
+Flags:
+  -f  {comma-separated field names}  Lexical ascending
+  -n  {comma-separated field names}  Numerical ascending; nulls sort last
+  -nf {comma-separated field names}  Numerical ascending; nulls sort last
+  -r  {comma-separated field names}  Lexical descending
+  -nr {comma-separated field names}  Numerical descending; nulls sort first
+Sorts records primarily by the first specified field, secondarily by the second
+field, and so on.  (Any records not having all specified sort keys will appear
+at the end of the output, in the order they were encountered, regardless of the
+specified sort order.) The sort is stable: records that compare equal will sort
+in the order they were encountered in the input record stream.
+
+Example:
+  mlr sort -f a,b -nr x,y,z
+which is the same as:
+  mlr sort -f a -f b -nr x -nr y -nr z
+</pre>
+</div>
+<p/>
 
 </div>
     </div>
