@@ -181,7 +181,7 @@ picture:
 # Get the number of rows and columns from the terminal window dimensions
 iheight=$(stty size | mlr --nidx --fs space cut -f 1)
 iwidth=$(stty size | mlr --nidx --fs space cut -f 2)
-echo "rcorn=-1.787582,icorn=-0.000002,side=0.000004,maxits=1000,iheight=$iheight,iwidth=$iwidth" \
+echo "rcorn=-1.755350,icorn=+0.014230,side=0.000020,maxits=10000,iheight=$iheight,iwidth=$iwidth" \
   | mlr put -f programs/mand.mlr 
 </pre></div>
 

@@ -544,7 +544,7 @@ $ mlr -n put -f programs/sieve.mlr
 <p/> The <a href="http://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot
 set</a> is also easily expressed. This isn&rsquo;t an important case of
 data-processing in the vein for which Miller was designed, but it is an
-examplep of Miller as a general-purpose programming language &mdash; a test
+example of Miller as a general-purpose programming language &mdash; a test
 case for the expressiveness of the language.
 
 <p/> The (approximate) computation of points in the complex plane which are and
@@ -569,6 +569,9 @@ begin {
   @levelstep = 5;
   @chars     = "@X*o-.";
   @verbose   = false;
+  @do_julia  = false;
+  @jr        = 0.0;
+  @ji        = 0.0;
 }
 
 # Here, we can override defaults from an input file (if any).  In Miller's
@@ -584,6 +587,9 @@ begin {
 @levelstep = $levelstep;
 @chars     = $chars;
 @verbose   = $verbose;
+@do_julia  = $do_julia;
+@jr        = $jr;
+@ji        = $ji;
 
 end {
   if (@verbose) {
@@ -599,10 +605,10 @@ end {
 
   # Iterate over a matrix of rows and columns, printing one character for each cell.
   for (int ii = @iheight-1; ii &gt;= 0; ii -= 1) {
-    num ci = @icorn + (ii/@iheight) * @side;
+    num pi = @icorn + (ii/@iheight) * @side;
     for (int ir = 0; ir &lt; @iwidth; ir += 1) {
-      num cr = @rcorn + (ir/@iwidth) * @side;
-      printn get_point_plot(cr, ci, @maxits);
+      num pr = @rcorn + (ir/@iwidth) * @side;
+      printn get_point_plot(pr, pi, @maxits, @do_julia, @jr, @ji);
     }
     print;
   }
@@ -610,9 +616,23 @@ end {
 
 # Function to approximate membership in the Mandelbrot set for a given point in the
 # complex plane.
-func get_point_plot(cr, ci, maxits) {
+func get_point_plot(pr, pi, maxits, do_julia, jr, ji) {
   num zr = 0.0;
   num zi = 0.0;
+  num cr = 0.0;
+  num ci = 0.0;
+
+  if (!do_julia) {
+    zr = 0.0;
+    zi = 0.0;
+    cr = pr;
+    ci = pi;
+  } else {
+    zr = pr;
+    zi = pi;
+    cr = jr;
+    ci = ji;
+  }
 
   int iti = 0;
   bool escaped = false;
@@ -709,7 +729,7 @@ picture:
 # Get the number of rows and columns from the terminal window dimensions
 iheight=$(stty size | mlr --nidx --fs space cut -f 1)
 iwidth=$(stty size | mlr --nidx --fs space cut -f 2)
-echo "rcorn=-1.787582,icorn=-0.000002,side=0.000004,maxits=1000,iheight=$iheight,iwidth=$iwidth" \
+echo "rcorn=-1.755350,icorn=+0.014230,side=0.000020,maxits=10000,iheight=$iheight,iwidth=$iwidth" \
   | mlr put -f programs/mand.mlr 
 </pre></div>
 
