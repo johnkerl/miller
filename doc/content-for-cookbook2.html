@@ -11,22 +11,6 @@ POKI_PUT_TOC_HERE
 <button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
 
 <!-- ================================================================ -->
-<h1>Sieve of Eratosthenes</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sieve');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_sieve" style="display: block">
-
-<p/> To do.
-
-</div>
-<!-- ================================================================ -->
-<h1>Mandelbrot-set generator</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_mand');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_mand" style="display: block">
-
-<p/> To do.
-
-</div>
-<!-- ================================================================ -->
 <h1>Randomly selecting words from a list</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_generating_random_words');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_generating_random_words" style="display: block">
@@ -74,7 +58,7 @@ coinmate
 <p/> These are simple <i>n</i>-grams as described
 <a href="http://johnkerl.org/randspell/randspell-slides-ts.pdf">here</a>. Some common functions are
 <a href="ngrams/ngfuncs.mlr.txt">here</a>.
-Then the following are scripts for
+Then here are scripts for
 <a href="ngrams/ng1.mlr.txt">1-grams</a>,
 <a href="ngrams/ng2.mlr.txt">2-grams</a>,
 <a href="ngrams/ng3.mlr.txt">3-grams</a>,
@@ -145,3 +129,64 @@ POKI_RUN_COMMAND{{cat expo-sample.sh}}HERE
 The output is as follows:
 
 POKI_RUN_COMMAND{{sh expo-sample.sh}}HERE
+
+</div>
+<!-- ================================================================ -->
+<h1>Sieve of Eratosthenes</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sieve');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_sieve" style="display: block">
+
+<p/> The <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">Sieve_of_Eratosthenes</a>
+is a standard introductory programming topic. The idea is to find all primes up
+to some <i>N</i> by making a list of the numbers 1 to <i>N</i>, then striking
+out all multiples of 2 except 2 itself, all multiples of 3 except 3 itself, all
+multiples of 4 except 4 itself, and so on. Whatever survives that without
+getting marked is a prime. This is easy enough in Miller. Notice that here all
+the work is in <tt>begin</tt> and <tt>end</tt> statements; there is no file
+input (so we use <tt>mlr -n</tt> to keep Miller from waiting for input data).
+
+POKI_RUN_COMMAND{{cat programs/sieve.mlr}}HERE
+POKI_RUN_COMMAND{{mlr -n put -f programs/sieve.mlr}}HERE
+
+</div>
+<!-- ================================================================ -->
+<h1>Mandelbrot-set generator</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_mand');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_mand" style="display: block">
+
+<p/> The <a href="http://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot
+set</a> is also easily expressed. This isn&rsquo;t an important case of
+data-processing in the vein for which Miller was designed, but it is an
+example of Miller as a general-purpose programming language &mdash; a test
+case for the expressiveness of the language.
+
+<p/> The (approximate) computation of points in the complex plane which are and
+aren&rsquo;t members is just a few lines of complex arithmetic (see the
+Wikipedia article); how to render them is another task.  Using graphics
+libraries you can create PNG or JPEG files, but another fun way to do this is
+by printing various characters to the screen:
+
+POKI_RUN_COMMAND{{cat programs/mand.mlr}}HERE
+
+<p/> At standard resolution this makes a nice little ASCII plot:
+
+POKI_RUN_COMMAND{{mlr -n put -f ./programs/mand.mlr}}HERE
+
+<p/> But using a very small font size (as small as my Mac will let me go), and by choosing the
+coordinates to zoom in on a particular part of the complex plane, we can get a nice little
+picture:
+
+<div class=pokipanel> <pre>
+#!/bin/bash
+# Get the number of rows and columns from the terminal window dimensions
+iheight=$(stty size | mlr --nidx --fs space cut -f 1)
+iwidth=$(stty size | mlr --nidx --fs space cut -f 2)
+echo "rcorn=-1.787582,icorn=-0.000002,side=0.000004,maxits=1000,iheight=$iheight,iwidth=$iwidth" \
+  | mlr put -f programs/mand.mlr 
+</pre></div>
+
+<center>
+<img src="pix/mand.png"/>
+</center>
+
+</div>

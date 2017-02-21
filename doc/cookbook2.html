@@ -193,12 +193,12 @@ Miller commands were run with pretty-print-tabular output format.
 
 <div class="pokitoc">
 <center><b>Contents:</b></center>
-&bull;&nbsp;<a href="#Sieve_of_Eratosthenes">Sieve of Eratosthenes</a><br/>
-&bull;&nbsp;<a href="#Mandelbrot-set_generator">Mandelbrot-set generator</a><br/>
 &bull;&nbsp;<a href="#Randomly_selecting_words_from_a_list">Randomly selecting words from a list</a><br/>
 &bull;&nbsp;<a href="#Randomly_generating_jabberwocky_words">Randomly generating jabberwocky words</a><br/>
 &bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
 &bull;&nbsp;<a href="#Generating_random_numbers_from_various_distributions">Generating random numbers from various distributions</a><br/>
+&bull;&nbsp;<a href="#Sieve_of_Eratosthenes">Sieve of Eratosthenes</a><br/>
+&bull;&nbsp;<a href="#Mandelbrot-set_generator">Mandelbrot-set generator</a><br/>
 </div>
 <p/>
 
@@ -206,22 +206,6 @@ Miller commands were run with pretty-print-tabular output format.
 <button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
 <button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
 
-<!-- ================================================================ -->
-<a id="Sieve_of_Eratosthenes"/><h1>Sieve of Eratosthenes</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sieve');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_sieve" style="display: block">
-
-<p/> To do.
-
-</div>
-<!-- ================================================================ -->
-<a id="Mandelbrot-set_generator"/><h1>Mandelbrot-set generator</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_mand');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_mand" style="display: block">
-
-<p/> To do.
-
-</div>
 <!-- ================================================================ -->
 <a id="Randomly_selecting_words_from_a_list"/><h1>Randomly selecting words from a list</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_generating_random_words');" href="javascript:;">Toggle section visibility</button>
@@ -270,7 +254,7 @@ coinmate
 <p/> These are simple <i>n</i>-grams as described
 <a href="http://johnkerl.org/randspell/randspell-slides-ts.pdf">here</a>. Some common functions are
 <a href="ngrams/ngfuncs.mlr.txt">here</a>.
-Then the following are scripts for
+Then here are scripts for
 <a href="ngrams/ng1.mlr.txt">1-grams</a>,
 <a href="ngrams/ng2.mlr.txt">2-grams</a>,
 <a href="ngrams/ng3.mlr.txt">3-grams</a>,
@@ -463,6 +447,277 @@ bin_lo   bin_hi   u_count                        s_count                        
 </pre>
 </div>
 <p/>
+
+</div>
+<!-- ================================================================ -->
+<a id="Sieve_of_Eratosthenes"/><h1>Sieve of Eratosthenes</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sieve');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_sieve" style="display: block">
+
+<p/> The <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">Sieve_of_Eratosthenes</a>
+is a standard introductory programming topic. The idea is to find all primes up
+to some <i>N</i> by making a list of the numbers 1 to <i>N</i>, then striking
+out all multiples of 2 except 2 itself, all multiples of 3 except 3 itself, all
+multiples of 4 except 4 itself, and so on. Whatever survives that without
+getting marked is a prime. This is easy enough in Miller. Notice that here all
+the work is in <tt>begin</tt> and <tt>end</tt> statements; there is no file
+input (so we use <tt>mlr -n</tt> to keep Miller from waiting for input data).
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat programs/sieve.mlr
+# ================================================================
+# Sieve of Eratosthenes: simple example of Miller DSL as programming language.
+# ================================================================
+
+# Put this in a begin-block so we can do either
+#   mlr -n put -q -f name-of-this-file.mlr
+# or
+#   mlr -n put -q -f name-of-this-file.mlr -e '@n = 200'
+# i.e. 100 is the default upper limit, and another can be specified using -e.
+begin {
+  @n = 100;
+}
+
+end {
+  for (int i = 0; i &lt;= @n; i += 1) {
+    @s[i] = true;
+  }
+  @s[0] = false; # 0 is neither prime nor composite
+  @s[1] = false; # 1 is neither prime nor composite
+  # Strike out multiples
+  for (int i = 2; i &lt;= @n; i += 1) {
+    for (int j = i+i; j &lt;= @n; j += i) {
+      @s[j] = false;
+    }
+  }
+  # Print survivors
+  for (int i = 0; i &lt;= @n; i += 1) {
+    if (@s[i]) {
+      print i;
+    }
+  }
+}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr -n put -f programs/sieve.mlr
+2
+3
+5
+7
+11
+13
+17
+19
+23
+29
+31
+37
+41
+43
+47
+53
+59
+61
+67
+71
+73
+79
+83
+89
+97
+</pre>
+</div>
+<p/>
+
+</div>
+<!-- ================================================================ -->
+<a id="Mandelbrot-set_generator"/><h1>Mandelbrot-set generator</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_mand');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_mand" style="display: block">
+
+<p/> The <a href="http://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot
+set</a> is also easily expressed. This isn&rsquo;t an important case of
+data-processing in the vein for which Miller was designed, but it is an
+examplep of Miller as a general-purpose programming language &mdash; a test
+case for the expressiveness of the language.
+
+<p/> The (approximate) computation of points in the complex plane which are and
+aren&rsquo;t members is just a few lines of complex arithmetic (see the
+Wikipedia article); how to render them is another task.  Using graphics
+libraries you can create PNG or JPEG files, but another fun way to do this is
+by printing various characters to the screen:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat programs/mand.mlr
+# Mandelbrot set generator: simple example of Miller DSL as programming language.
+begin {
+  # Set defaults
+  @rcorn     = -2.0;
+  @icorn     = -2.0;
+  @side      = 4.0;
+  @iheight   = 50;
+  @iwidth    = 100;
+  @maxits    = 100;
+  @levelstep = 5;
+  @chars     = "@X*o-.";
+  @verbose   = false;
+}
+
+# Here, we can override defaults from an input file (if any).  In Miller's
+# put/filter DSL, absent-null right-hand sides result in no assignment so we
+# can simply put @rcorn = $rcorn: if there is a field in the input like
+# 'rcorn = -1.847' we'll read and use it, else we'll keep the default.
+@rcorn     = $rcorn;
+@icorn     = $icorn;
+@side      = $side;
+@iheight   = $iheight;
+@iwidth    = $iwidth;
+@maxits    = $maxits;
+@levelstep = $levelstep;
+@chars     = $chars;
+@verbose   = $verbose;
+
+end {
+  if (@verbose) {
+    print "RCORN     = ".@rcorn;
+    print "ICORN     = ".@icorn;
+    print "SIDE      = ".@side;
+    print "IHEIGHT   = ".@iheight;
+    print "IWIDTH    = ".@iwidth;
+    print "MAXITS    = ".@maxits;
+    print "LEVELSTEP = ".@levelstep;
+    print "CHARS     = ".@chars;
+  }
+
+  # Iterate over a matrix of rows and columns, printing one character for each cell.
+  for (int ii = @iheight-1; ii &gt;= 0; ii -= 1) {
+    num ci = @icorn + (ii/@iheight) * @side;
+    for (int ir = 0; ir &lt; @iwidth; ir += 1) {
+      num cr = @rcorn + (ir/@iwidth) * @side;
+      printn get_point_plot(cr, ci, @maxits);
+    }
+    print;
+  }
+}
+
+# Function to approximate membership in the Mandelbrot set for a given point in the
+# complex plane.
+func get_point_plot(cr, ci, maxits) {
+  num zr = 0.0;
+  num zi = 0.0;
+
+  int iti = 0;
+  bool escaped = false;
+  num zt = 0;
+  for (iti = 0; iti &lt; maxits; iti += 1) {
+    num mag = zr*zr + zi+zi;
+    if (mag &gt; 4.0) {
+        escaped = true;
+        break;
+    }
+    # z := z^2 + c
+    zt = zr*zr - zi*zi + cr;
+    zi = 2*zr*zi + ci;
+    zr = zt;
+  }
+  if (!escaped) {
+    return ".";
+  } else {
+    # The // operator is Miller's (pythonic) integer-division operator
+    int level = (iti // @levelstep) % strlen(@chars);
+    return substr(@chars, level, level);
+  }
+}
+</pre>
+</div>
+<p/>
+
+<p/> At standard resolution this makes a nice little ASCII plot:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr -n put -f ./programs/mand.mlr
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXX.XXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXooXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXX**o..*XXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXX*-....-oXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXX@XXXXXXXXXX*......o*XXXXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXXX**oo*-.-........oo.XXXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXXXXXX....................X..o-XXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@XXXXXXXXXXXXXXX*oo......................oXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@XXX*XXXXXXXXXXXX**o........................*X*X@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@XXXXXXooo***o*.*XX**X..........................o-XX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@XXXXXXXX*-.......-***.............................oXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@XXXXXXXX*@..........Xo............................*XX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@XXXX@XXXXXXXX*o@oX...........@...........................oXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+.........................................................o*XXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@XXXXXXXXX*-.oX...........@...........................oXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@XXXXXXXXXX**@..........*o............................*XXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@XXXXXXXXXXXXX-........***.............................oXXXXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@XXXXXXXXXXXXoo****o*.XX***@..........................o-XXXXXXXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@XXXXX*XXXX*XXXXXXX**-........................***XXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@XXXXXXXXXXXXX*o*.....................@o*XXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXXXXX*....................*..o-XX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXX*ooo*-.o........oo.X*XXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXX**@.....*XXXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXX*o....-o*XXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXXXo*o..*XXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXXXXXX*o*XXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXXXXX@XXXXXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXXXXXX@@XXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@XXXXX@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@
+</pre>
+</div>
+<p/>
+
+<p/> But using a very small font size (as small as my Mac will let me go), and by choosing the
+coordinates to zoom in on a particular part of the complex plane, we can get a nice little
+picture:
+
+<div class=pokipanel> <pre>
+#!/bin/bash
+# Get the number of rows and columns from the terminal window dimensions
+iheight=$(stty size | mlr --nidx --fs space cut -f 1)
+iwidth=$(stty size | mlr --nidx --fs space cut -f 2)
+echo "rcorn=-1.787582,icorn=-0.000002,side=0.000004,maxits=1000,iheight=$iheight,iwidth=$iwidth" \
+  | mlr put -f programs/mand.mlr 
+</pre></div>
+
+<center>
+<img src="pix/mand.png"/>
+</center>
+
+</div>
     </div>
   </td>
 

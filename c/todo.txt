@@ -53,12 +53,9 @@ cook 1:
 
 ----------------------------------------------------------------
 cook 2: fun stuff:
-* sieve
-* mand
-k Program timing
-k Generating random variables
-* mlr --from ~/misc/words --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
-* ngrams
+
+(done)
+-> except maybe comment ngrams code a bit more; lo-prio
 
 ----------------------------------------------------------------
 cook 3: verbs vs. dsl/func list
