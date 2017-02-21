@@ -7,7 +7,9 @@ BUGFIXES
 5.0.0 RELEASE TO DO:
 
 * UT
-* cookbook
+* ref-dsl: update fors to be single-for, kvv-for, triple-for;
+* ref-dsl: go through oosvar vs. local
+* ref-dsl: separate map-literal section?
 * mt_error/fatal/skip-assign audit
 * xxxes
 * re-valgrinds after UT expansion
@@ -40,63 +42,6 @@ UT FOR 5.0.0:
 ? emit-lashed func retval                     > alloc & free the ephemeral
 
 ? parameter marshaling in single-rhs-assign-to-map-lhs context
-
-================================================================
-MAPVAR CHECKLIST:
-
-!!! MT_ERROR vs. fatal vs. skip assign. iron it out!
-
-* absent-null map-keys -- do what? document.
-  - mlr: map keys must be of type MT_STRING or MT_INT; got MT_ABSENT.
-  - maybe change to skip-assign, as with assignment statements?
-  - or to (error)?
-
-* more generally, audit error-handling for consistency:
-  - absent/skip
-  - '(error)'
-  - abend
-  - coerce
-  -> doc smoothouts for 5.0.0 incompat notes
-  - e.g. non-string =~ regex: coerce LHS to string?
-
-* feels weird: '$*=3' is a syntax error but 'o=3;$*=o' is not. also '@*=3' is not a syntax error.
-
-* emittable/dumpable/etc md_rhs -> more specific fcn-call.
-
-* death knell for mv-only evaluators: this is a syntax error:
-  mlr put -q 'o = haskey(NR==4 ? {"a": NF} : {"b": NF}, "a"); print "NR=".NR.",haskeya=".o'
-
-* gross: $*=splitkv(...) results in string keys always. strengthen the typed overlay for filter/put?
-  lhmsmv -> mlhmmv?? need to be careful with int-key gets ... char* field_name in many places ...
-
-* debt-reduction
-  ! naming conventions to clarify transfer/copy semantics
-  - copy/ref of keys vs. values in mlhmmv, local_stack, and callees -- ?!?
-  ! UT cases for xfuncs x all
-  ! xvfuncs mem-mgt
-  - mapsum-in-mlr UT cases, and valgrind
-
-* man mlr section on maps
-  o things which are always maps:
-    - maplit
-    - full srec
-    - full oosvar
-  o things which can be maps:
-    - oosvar
-    - localvar
-    - func retval
-    - func args
-  o what funcs are available
-  o scalar contexts vs. map contexts
-  o keywords print, dump, emit, for-kv, for-k
-  o copy semantics
-
-================================================================
-HYGIENE FOR 5.0.0:
-
-* xxxes
-* UT cases as valgrind inputs
-* valgrinds
 
 ================================================================
 DOC FOR 5.0.0:
@@ -192,6 +137,56 @@ perf note:
 ! key point (put at top of ref-dsl, ref-verb, and elsewhere -- esp cover page in bold):
   there is a DSL so you *can* loop things out w/ variables etc etc etc but also verbs for
   often-used idioms so you don't *have* to. then show a concise and convincing example.
+
+================================================================
+MAPVAR CHECKLIST:
+
+!!! MT_ERROR vs. fatal vs. skip assign. iron it out!
+
+* absent-null map-keys -- do what? document.
+  - mlr: map keys must be of type MT_STRING or MT_INT; got MT_ABSENT.
+  - maybe change to skip-assign, as with assignment statements?
+  - or to (error)?
+
+* more generally, audit error-handling for consistency:
+  - absent/skip
+  - '(error)'
+  - abend
+  - coerce
+  -> doc smoothouts for 5.0.0 incompat notes
+  - e.g. non-string =~ regex: coerce LHS to string?
+
+* feels weird: '$*=3' is a syntax error but 'o=3;$*=o' is not. also '@*=3' is not a syntax error.
+
+* emittable/dumpable/etc md_rhs -> more specific fcn-call.
+
+* death knell for mv-only evaluators: this is a syntax error:
+  mlr put -q 'o = haskey(NR==4 ? {"a": NF} : {"b": NF}, "a"); print "NR=".NR.",haskeya=".o'
+
+* gross: $*=splitkv(...) results in string keys always. strengthen the typed overlay for filter/put?
+  lhmsmv -> mlhmmv?? need to be careful with int-key gets ... char* field_name in many places ...
+
+* debt-reduction
+  ! naming conventions to clarify transfer/copy semantics
+  - copy/ref of keys vs. values in mlhmmv, local_stack, and callees -- ?!?
+  ! UT cases for xfuncs x all
+  ! xvfuncs mem-mgt
+  - mapsum-in-mlr UT cases, and valgrind
+
+* man mlr section on maps
+  o things which are always maps:
+    - maplit
+    - full srec
+    - full oosvar
+  o things which can be maps:
+    - oosvar
+    - localvar
+    - func retval
+    - func args
+  o what funcs are available
+  o scalar contexts vs. map contexts
+  o keywords print, dump, emit, for-kv, for-k
+  o copy semantics
 
 ================================================================
 5.0.0 RELEASE NOTES:

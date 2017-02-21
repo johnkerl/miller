@@ -246,18 +246,6 @@ Carol,45,present
 </pre>
 </div>
 <p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --icsv --implicit-csv-header --opprint cat data/headerless.csv
-1     2  3
-John  23 present
-Fred  34 present
-Alice 56 missing
-Carol 45 present
-</pre>
-</div>
-<p/>
 
 <p/> Following that, you can rename the positionally indexed labels to names with meaning for your context.
 For example:
@@ -271,18 +259,6 @@ John,23,present
 Fred,34,present
 Alice,56,missing
 Carol,45,present
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --icsv --implicit-csv-header --opprint label name,age,status data/headerless.csv
-name  age status
-John  23  present
-Fred  34  present
-Alice 56  missing
-Carol 45  present
 </pre>
 </div>
 <p/>
