@@ -8,7 +8,6 @@ BUGFIXES
 
 * UT
 * cookbook
-* other doc
 * mt_error/fatal/skip-assign audit
 * xxxes
 * re-valgrinds after UT expansion
@@ -46,34 +45,9 @@ UT FOR 5.0.0:
 ================================================================
 COOKBOOK CHECKLIST:
 
-----------------------------------------------------------------
-cook 1:
-
---> FIX MISS-DATE B04K! LOOK THRU REVHIST
---> FIX HAVING-LARGEST-VALUE B04K!
---> FIX PARSING-LOG-FILE-OUTPUT B04K!!!
-
-----------------------------------------------------------------
-cook 2: fun stuff:
-
-(done)
--> except maybe comment ngrams code a bit more; lo-prio
-
-----------------------------------------------------------------
-cook 3: a few verbs vs. dsl/func list
-? stdlib.mlr examples
-* show mlr put '$*={...}' a full-featured cut/reorder/rename/label
-* seqgen vs.
-  mlr -n put 'begin {for (int i = 0; i < 10; i += 1) {emit {"a":i,"b":i**2} }}' then sort -nr a
-
 * make this easier:
   mlr --from segv.tsv --itsvlite --oxtab put    'o=splitnv($b, ":"); for (k,v in o) {$["p".k]=v}'
   mlr --from segv.tsv --itsvlite --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'
-
-----------------------------------------------------------------
-cook 4:
-
-(done)
 
 ================================================================
 MAPVAR CHECKLIST:
@@ -142,11 +116,6 @@ HYGIENE FOR 5.0.0:
 ================================================================
 DOC FOR 5.0.0:
 
-EDIT THOROUGHLY:
-* ref-not-dsl and ref-dsl: make sure the right things are in the right places
-* check for anachronisms
-! link-check all, especially w/ ref-dsl split x 3.
-
 TYPE-CHECKING:
 * assert_X() functions
 * doc unset of localvars along w/ unset elsewheredoc
@@ -176,7 +145,6 @@ FORs:
 
 COOK:
 * use: https://github.com/petewarden/dstkdata
-* for-records-counts example
 
 TRANSPARENCY:
 * disclaimer about the Miller DSL having the usual plusses and minuses of a dynamically typed language:
@@ -209,8 +177,8 @@ PERF:
 
 KW autodoc:
 * kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
-
   E ENV FILENAME FILENUM FNR NF NR PI [IO][PFS]S
+* also update ref-dsl page
 
 COMPARES:
 * https://github.com/shenwei356/csvtk

@@ -81,14 +81,14 @@ POKI_RUN_COMMAND{{cat data/fe-example-3.mlr}}HERE
 POKI_RUN_COMMAND{{mlr --from data/small put -f data/fe-example-3.mlr}}HERE
 
 <p/>If you have some of the logic in a file and you want to write the rest on the command line, you
-can <b>use the -f and -e options</b>:
+can <b>use the -f and -e options together</b>:
 
 POKI_RUN_COMMAND{{cat data/fe-example-4.mlr}}HERE
 POKI_RUN_COMMAND{{mlr --from data/small put -f data/fe-example-4.mlr -e '$xy = f($x, $y)'}}HERE
 
 <p/>A suggested use-case here is defining functions in files, and calling them from command-line expressions.
 
-<p/>Another suggest use-case is putting default parameter values in files, e.g. using
+<p/>Another suggested use-case is putting default parameter values in files, e.g. using
 <tt>begin{@count=is_present(@count)?@count:10}</tt> in the file, where you can precede that using
 <tt>begin{@count=40}</tt> using <tt>-e</tt>.
 
@@ -202,9 +202,9 @@ POKI_RUN_COMMAND{{mlr --csv repeat -n 3 then put '$nr = NR' data/a.csv}}HERE
 
 <p/> The <b>extent</b> is for the duration of the put/filter: in a
 <tt>begin</tt> statement (which executes before the first input record is
-consumed) you will find <tt>NR=1</tt> and in an <tt>end</tt>statement (which is
-executed after the last input record is consumed) you will find <tt>NR</tt> to
-be the total number of records ingested.
+consumed) you will find <tt>NR=1</tt> and in an <tt>end</tt> statement (which
+is executed after the last input record is consumed) you will find <tt>NR</tt>
+to be the total number of records ingested.
 
 <p/> These are all <b>read-only</b> for the <tt>mlr put</tt> and <tt>mlr
 filter</tt> DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may
@@ -294,7 +294,7 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-7.sh)HERE
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-6a.sh)HERE
 
-The idea is that <tt>stats1</tt>, and other Miller commands, encapsulate
+The idea is that <tt>stats1</tt>, and other Miller verbs, encapsulate
 frequently-used patterns with a minimum of keystroking (and run a little
 faster), whereas using out-of-stream variables you have more flexibility and
 control in what you do.

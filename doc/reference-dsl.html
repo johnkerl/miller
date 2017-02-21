@@ -427,7 +427,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
 <p/>
 
 <p/>If you have some of the logic in a file and you want to write the rest on the command line, you
-can <b>use the -f and -e options</b>:
+can <b>use the -f and -e options together</b>:
 
 <p/>
 <div class="pokipanel">
@@ -454,7 +454,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
 
 <p/>A suggested use-case here is defining functions in files, and calling them from command-line expressions.
 
-<p/>Another suggest use-case is putting default parameter values in files, e.g. using
+<p/>Another suggested use-case is putting default parameter values in files, e.g. using
 <tt>begin{@count=is_present(@count)?@count:10}</tt> in the file, where you can precede that using
 <tt>begin{@count=40}</tt> using <tt>-e</tt>.
 
@@ -701,9 +701,9 @@ a,b,c,nr
 
 <p/> The <b>extent</b> is for the duration of the put/filter: in a
 <tt>begin</tt> statement (which executes before the first input record is
-consumed) you will find <tt>NR=1</tt> and in an <tt>end</tt>statement (which is
-executed after the last input record is consumed) you will find <tt>NR</tt> to
-be the total number of records ingested.
+consumed) you will find <tt>NR=1</tt> and in an <tt>end</tt> statement (which
+is executed after the last input record is consumed) you will find <tt>NR</tt>
+to be the total number of records ingested.
 
 <p/> These are all <b>read-only</b> for the <tt>mlr put</tt> and <tt>mlr
 filter</tt> DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may
@@ -902,7 +902,7 @@ a=hat,b=pan,x_count=363,x_sum=168.553807
 </div>
 <p/>
 
-The idea is that <tt>stats1</tt>, and other Miller commands, encapsulate
+The idea is that <tt>stats1</tt>, and other Miller verbs, encapsulate
 frequently-used patterns with a minimum of keystroking (and run a little
 faster), whereas using out-of-stream variables you have more flexibility and
 control in what you do.
