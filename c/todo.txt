@@ -46,9 +46,6 @@ UT FOR 5.0.0:
 ================================================================
 DOC FOR 5.0.0:
 
-COOKTWEAX:
-* bulk-rename w/ map newrec={}; loop; $*=newrec
-
 TYPE-CHECKING:
 * doc unset of localvars along w/ unset elsewheredoc
 * typeof now includes 'map'; MT_STRING -> string etc.
@@ -317,6 +314,29 @@ NON-RELEASE:
 
 COOK:
 * use: https://github.com/petewarden/dstkdata
+  mlr --from ../data/big.dkvp put -q '
+    #weight = $y;
+    #weight = $y * $y;
+    weight = $i;
+
+    @sumwx[$a] += weight * $i;
+    @sumw[$a] += weight;
+
+    @sumx[$a] += $i;
+    @sumn[$a] += 1;
+
+    end {
+      map wmean = {};
+      map mean  = {};
+      for (a in @sumwx) {
+        wmean[a] = @sumwx[a] / @sumw[a]
+      }
+      for (a in @sumx) {
+        mean[a] = @sumx[a] / @sumn[a]
+      }
+      emit wmean, "a";
+      emit mean, "a";
+    }'
 
 COMPARES:
 * https://github.com/shenwei356/csvtk
