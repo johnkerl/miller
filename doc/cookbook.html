@@ -293,6 +293,31 @@ purple,triangle,0,51,0.4355354501763202,0.8591292672156728,0.8122903963006748,5.
 </div>
 <p/>
 
+<p/> Lastly, often we say &ldquo;CSV&rdquo; or &ldquo;TSV&rdquo; when we have
+positionally indexed data in columns which are separated by commas or tabs,
+respectively. In this case it&rsquo;s perhaps simpler to <b>just use NIDX
+format</b> which was designed for this purpose. (See also
+<a href="file-formats.html">File formats</a>.) For example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --inidx --ifs comma --oxtab cut -f 1,3 data/headerless.csv
+1 John
+3 present
+
+1 Fred
+3 present
+
+1 Alice
+3 missing
+
+1 Carol
+3 present
+</pre>
+</div>
+<p/>
+
 <!-- ================================================================ -->
 </div>
 <a id="Bulk_rename_of_fields"/><h1>Bulk rename of fields</h1>
