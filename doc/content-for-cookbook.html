@@ -279,6 +279,35 @@ or, more simply,
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv-2.sh)HERE
 
+<!-- ================================================================ -->
+</div>
+<h1>Unsparsing</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_unsparsing');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_unsparsing" style="display: block">
+
+<p/> While the previous section discussed how to fill out missing data fields
+within CSV with full header line, next let&rsquo;s look at a related problem:
+we have data where each record has various key names but we want to produce
+rectangular output having the union of all key names.
+
+<p/> For example, suppose you have JSON input like this:
+
+POKI_RUN_COMMAND{{cat data/sparse.json}}HERE
+
+<p/>There are field names <tt>a</tt>, <tt>b</tt>, <tt>v</tt>, <tt>u</tt>,
+<tt>x</tt>, <tt>w</tt> in the data &mdash; but not all in every record.  Since
+we don&rsquo;t know the names of all the keys until we&rsquo;ve read them all,
+this needs to be a two-pass algorithm. On the first pass, remember all the
+unique key names and all the records; on the second pass, loop through the
+records filling in absent values, then producing output. Use <tt>put -q</tt>
+since we don&rsquo;t want to produce per-record output, only emitting output in
+the <tt>end</tt> block:
+
+POKI_RUN_COMMAND{{cat data/unsparsify.mlr}}HERE
+POKI_RUN_COMMAND{{mlr --json put -q -f data/unsparsify.mlr data/sparse.json}}HERE
+POKI_RUN_COMMAND{{mlr --ijson --ocsv put -q -f data/unsparsify.mlr data/sparse.json}}HERE
+POKI_RUN_COMMAND{{mlr --ijson --opprint put -q -f data/unsparsify.mlr data/sparse.json}}HERE
+
 </div>
 <!-- ================================================================ -->
 <h1>Parsing log-file output</h1>

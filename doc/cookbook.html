@@ -204,6 +204,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Two-pass_algorithms:_records_having_max_value">Two-pass algorithms: records having max value</a><br/>
 &bull;&nbsp;<a href="#Rectangularizing_data">Rectangularizing data</a><br/>
 &bull;&nbsp;<a href="#Regularizing_ragged_CSV">Regularizing ragged CSV</a><br/>
+&bull;&nbsp;<a href="#Unsparsing">Unsparsing</a><br/>
 &bull;&nbsp;<a href="#Parsing_log-file_output">Parsing log-file output</a><br/>
 &bull;&nbsp;<a href="#Memoization_with_out-of-stream_variables">Memoization with out-of-stream variables</a><br/>
 </div>
@@ -1119,6 +1120,110 @@ a,b,c
 4,5,
 6,,
 7,8,9
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+</div>
+<a id="Unsparsing"/><h1>Unsparsing</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_unsparsing');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_unsparsing" style="display: block">
+
+<p/> While the previous section discussed how to fill out missing data fields
+within CSV with full header line, next let&rsquo;s look at a related problem:
+we have data where each record has various key names but we want to produce
+rectangular output having the union of all key names.
+
+<p/> For example, suppose you have JSON input like this:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/sparse.json
+{"a":1,"b":2,"v":3}
+{"u":1,"b":2}
+{"a":1,"v":2,"x":3}
+{"v":1,"w":2}
+</pre>
+</div>
+<p/>
+
+<p/>There are field names <tt>a</tt>, <tt>b</tt>, <tt>v</tt>, <tt>u</tt>,
+<tt>x</tt>, <tt>w</tt> in the data &mdash; but not all in every record.  Since
+we don&rsquo;t know the names of all the keys until we&rsquo;ve read them all,
+this needs to be a two-pass algorithm. On the first pass, remember all the
+unique key names and all the records; on the second pass, loop through the
+records filling in absent values, then producing output. Use <tt>put -q</tt>
+since we don&rsquo;t want to produce per-record output, only emitting output in
+the <tt>end</tt> block:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/unsparsify.mlr
+# First pass:
+# Remember all unique key names:
+for (k in $*) {
+  @all_keys[k] = 1;
+}
+# Remember all input records:
+@records[NR] = $*;
+
+# Second pass:
+end {
+  for (nr in @records) {
+    # Get the sparsely keyed input record:
+    irecord = @records[nr];
+    # Fill in missing keys with empty string:
+    map orecord = {};
+    for (k in @all_keys) {
+      if (haskey(irecord, k)) {
+        orecord[k] = irecord[k];
+      } else {
+        orecord[k] = "";
+      }
+    }
+    # Produce the output:
+    emit orecord;
+  }
+}
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --json put -q -f data/unsparsify.mlr data/sparse.json
+{ "a": 1, "b": 2, "v": 3, "u": "", "x": "", "w": "" }
+{ "a": "", "b": 2, "v": "", "u": 1, "x": "", "w": "" }
+{ "a": 1, "b": "", "v": 2, "u": "", "x": 3, "w": "" }
+{ "a": "", "b": "", "v": 1, "u": "", "x": "", "w": 2 }
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --ijson --ocsv put -q -f data/unsparsify.mlr data/sparse.json
+a,b,v,u,x,w
+1,2,3,,,
+,2,,1,,
+1,,2,,3,
+,,1,,,2
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --ijson --opprint put -q -f data/unsparsify.mlr data/sparse.json
+a b v u x w
+1 2 3 - - -
+- 2 - 1 - -
+1 - 2 - 3 -
+- - 1 - - 2
 </pre>
 </div>
 <p/>

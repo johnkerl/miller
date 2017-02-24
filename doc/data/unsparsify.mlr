@@ -1,0 +1,26 @@
+# First pass:
+# Remember all unique key names:
+for (k in $*) {
+  @all_keys[k] = 1;
+}
+# Remember all input records:
+@records[NR] = $*;
+
+# Second pass:
+end {
+  for (nr in @records) {
+    # Get the sparsely keyed input record:
+    irecord = @records[nr];
+    # Fill in missing keys with empty string:
+    map orecord = {};
+    for (k in @all_keys) {
+      if (haskey(irecord, k)) {
+        orecord[k] = irecord[k];
+      } else {
+        orecord[k] = "";
+      }
+    }
+    # Produce the output:
+    emit orecord;
+  }
+}
