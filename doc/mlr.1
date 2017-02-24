@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2017-02-21
+.\"      Date: 2017-02-24
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2017-02-21" "\ \&" "\ \&"
+.TH "MILLER" "1" "2017-02-24" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -167,7 +167,7 @@ output separator to the given value.
  group-like having-fields head histogram join label least-frequent merge-fields
  most-frequent nest nothing put regularize rename reorder repeat reshape sample
  sec2gmt sec2gmtdate seqgen shuffle sort stats1 stats2 step tac tail tee top
- uniq
+ uniq unsparsify
 .fi
 .if n \{\
 .RE
@@ -1449,6 +1449,18 @@ Usage: mlr uniq [options]
 -o {name}     Field name for output count. Default "count".
 Prints distinct values for specified field names. With -c, same as
 count-distinct. For uniq, -f is a synonym for -g.
+.fi
+.if n \{\
+.RE
+.SS "unsparsify"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr unsparsify
+Prints records with the union of field names over all input records.
+For field names absent in a given record but present in others, fills value with
+empty string. This verb retains all input before producing any output.
 .fi
 .if n \{\
 .RE

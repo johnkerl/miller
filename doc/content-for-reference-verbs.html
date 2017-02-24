@@ -795,3 +795,15 @@ POKI_RUN_COMMAND{{mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp}
 </td></tr></table>
 
 </div>
+<!-- ================================================================ -->
+<h1>unsparsify</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_unsparsify');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_unsparsify" style="display: block">
+
+POKI_RUN_COMMAND{{mlr unsparsify --help}}HERE
+
+POKI_RUN_COMMAND{{cat data/sparse.json}}HERE
+POKI_RUN_COMMAND{{mlr --json unsparsify data/sparse.json}}HERE
+POKI_RUN_COMMAND{{mlr --ijson --opprint unsparsify data/sparse.json}}HERE
+
+</div>

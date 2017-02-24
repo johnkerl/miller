@@ -229,6 +229,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#tee">tee</a><br/>
 &bull;&nbsp;<a href="#top">top</a><br/>
 &bull;&nbsp;<a href="#uniq">uniq</a><br/>
+&bull;&nbsp;<a href="#unsparsify">unsparsify</a><br/>
 </div>
 <p/>
 
@@ -3378,6 +3379,59 @@ count
 </div>
 <p/>
 </td></tr></table>
+
+</div>
+<!-- ================================================================ -->
+<a id="unsparsify"/><h1>unsparsify</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_unsparsify');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_unsparsify" style="display: block">
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr unsparsify --help
+Usage: mlr unsparsify
+Prints records with the union of field names over all input records.
+For field names absent in a given record but present in others, fills value with
+empty string. This verb retains all input before producing any output.
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/sparse.json
+{"a":1,"b":2,"v":3}
+{"u":1,"b":2}
+{"a":1,"v":2,"x":3}
+{"v":1,"w":2}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --json unsparsify data/sparse.json
+{ "a": 1, "b": 2, "v": 3, "u": "", "x": "", "w": "" }
+{ "a": "", "b": 2, "v": "", "u": 1, "x": "", "w": "" }
+{ "a": 1, "b": "", "v": 2, "u": "", "x": 3, "w": "" }
+{ "a": "", "b": "", "v": 1, "u": "", "x": "", "w": 2 }
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --ijson --opprint unsparsify data/sparse.json
+a b v u x w
+1 2 3 - - -
+- 2 - 1 - -
+1 - 2 - 3 -
+- - 1 - - 2
+</pre>
+</div>
+<p/>
 
 </div>
     </div>

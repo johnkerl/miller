@@ -45,6 +45,7 @@ extern mapper_setup_t mapper_tail_setup;
 extern mapper_setup_t mapper_tee_setup;
 extern mapper_setup_t mapper_top_setup;
 extern mapper_setup_t mapper_uniq_setup;
+extern mapper_setup_t mapper_unsparsify_setup;
 
 // Construction is in mlrcli.c.
 void mapper_chain_free(sllv_t* pmapper_chain, context_t* pctx);

@@ -189,6 +189,9 @@ run_mlr group-like $indir/het.dkvp
 run_mlr tac $indir/abixy
 run_mlr tac /dev/null
 
+run_mlr --opprint unsparsify $indir/abixy
+run_mlr --opprint unsparsify $indir/abixy-het
+
 # ----------------------------------------------------------------
 announce HEAD/TAIL/ETC.
 

@@ -74,6 +74,7 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_tee_setup,
 	&mapper_top_setup,
 	&mapper_uniq_setup,
+	&mapper_unsparsify_setup,
 };
 static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(mapper_lookup_table[0]);
 

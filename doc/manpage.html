@@ -316,7 +316,7 @@ OPTIONS
 	group-like having-fields head histogram join label least-frequent merge-fields
 	most-frequent nest nothing put regularize rename reorder repeat reshape sample
 	sec2gmt sec2gmtdate seqgen shuffle sort stats1 stats2 step tac tail tee top
-	uniq
+	uniq unsparsify
 
    FUNCTION LIST
 	+ + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! ? : . gsub
@@ -1291,6 +1291,12 @@ VERBS
        Prints distinct values for specified field names. With -c, same as
        count-distinct. For uniq, -f is a synonym for -g.
 
+   unsparsify
+       Usage: mlr unsparsify
+       Prints records with the union of field names over all input records.
+       For field names absent in a given record but present in others, fills value with
+       empty string. This verb retains all input before producing any output.
+
 FUNCTIONS FOR FILTER/PUT
    +
        (class=arithmetic #args=2): Addition.
@@ -2055,7 +2061,7 @@ SEE ALSO
 
 
 
-				  2017-02-21			     MILLER(1)
+				  2017-02-24			     MILLER(1)
 </pre>
 </div>
 <p/>

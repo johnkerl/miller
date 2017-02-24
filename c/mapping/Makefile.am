@@ -38,6 +38,7 @@ libmapping_la_SOURCES=	\
 			mapper_tee.c \
 			mapper_top.c \
 			mapper_uniq.c \
+			mapper_unsparsify.c \
 			mappers.c \
 			mappers.h \
 			stats1_accumulators.c \
