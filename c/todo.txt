@@ -15,7 +15,7 @@ BUGFIXES
 * re-valgrinds after UT expansion
 * release notes
 
-* mlr unsparse
+* mlr unsparsify with --fill ?
 
 ! for (k, m in nested) { ... } -- this is confusing when m is non-terminal.
 
