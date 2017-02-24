@@ -1,7 +1,7 @@
 ================================================================
 BUGFIXES
 
-:D
+! tsv->json blank line -- ? needs repro.
 
 ================================================================
 5.0.0 RELEASE TO DO:
@@ -14,6 +14,8 @@ BUGFIXES
 * xxxes
 * re-valgrinds after UT expansion
 * release notes
+
+! for (k, m in nested) { ... } -- this is confusing when m is non-terminal.
 
 * mlr hex -> auxes. and make an aux-list. and doc: olh as well as webdoc?
 
