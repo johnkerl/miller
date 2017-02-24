@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "lib/mlrutil.h"
+#include "cli/argparse.h"
 #include "containers/lhmsi.h"
 #include "containers/sllv.h"
 #include "mapping/mappers.h"
@@ -7,12 +8,14 @@
 typedef struct _mapper_unsparsify_state_t {
 	lhmsi_t* key_names;
 	sllv_t* records;
+	char*   filler;
+	ap_state_t* pargp;
 } mapper_unsparsify_state_t;
 
 static void      mapper_unsparsify_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_unsparsify_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
-static mapper_t* mapper_unsparsify_alloc();
+static mapper_t* mapper_unsparsify_alloc(ap_state_t* pargp, char* filler);
 static void      mapper_unsparsify_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_unsparsify_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -26,31 +29,47 @@ mapper_setup_t mapper_unsparsify_setup = {
 
 // ----------------------------------------------------------------
 static void mapper_unsparsify_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "Usage: %s %s\n", argv0, verb);
+	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "Prints records with the union of field names over all input records.\n");
-	fprintf(o, "For field names absent in a given record but present in others, fills value with\n");
-	fprintf(o, "empty string. This verb retains all input before producing any output.\n");
+	fprintf(o, "For field names absent in a given record but present in others, fills in\n");
+	fprintf(o, "a value. This verb retains all input before producing any output.\n");
+	fprintf(o, "Options:\n");
+	fprintf(o, "--fill-with {filler string}  What to fill absent fields with. Defaults to\n");
+	fprintf(o, "                             the empty string.\n");
 }
 
 static mapper_t* mapper_unsparsify_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __)
 {
+	char* filler = "";
+
 	if ((argc - *pargi) < 1) {
 		mapper_unsparsify_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;
 	}
-	mapper_t* pmapper = mapper_unsparsify_alloc();
+	char* verb = argv[*pargi];
 	*pargi += 1;
+
+	ap_state_t* pargp = ap_alloc();
+	ap_define_string_flag(pargp, "--fill-with", &filler);
+	if (!ap_parse(pargp, verb, pargi, argc, argv)) {
+		mapper_unsparsify_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
+	mapper_t* pmapper = mapper_unsparsify_alloc(pargp, filler);
 	return pmapper;
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_unsparsify_alloc() {
+static mapper_t* mapper_unsparsify_alloc(ap_state_t* pargp, char* filler) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_unsparsify_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_unsparsify_state_t));
 	pstate->records = sllv_alloc();
 	pstate->key_names = lhmsi_alloc();
+	pstate->filler = filler;
+	pstate->pargp = pargp;
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_unsparsify_process;
@@ -64,6 +83,7 @@ static void mapper_unsparsify_free(mapper_t* pmapper, context_t* _) {
 	// Free the container
 	sllv_free(pstate->records);
 	lhmsi_free(pstate->key_names);
+	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
 }
@@ -92,7 +112,7 @@ static sllv_t* mapper_unsparsify_process(lrec_t* pinrec, context_t* pctx, void* 
 				char* key = pf->key;
 				char* value = lrec_get(pinrec, key);
 				if (value == NULL) {
-					lrec_put(poutrec, mlr_strdup_or_die(key), "", FREE_ENTRY_KEY);
+					lrec_put(poutrec, mlr_strdup_or_die(key), pstate->filler, FREE_ENTRY_KEY);
 				} else {
 					lrec_put(poutrec, mlr_strdup_or_die(key), mlr_strdup_or_die(value),
 						FREE_ENTRY_KEY|FREE_ENTRY_VALUE);

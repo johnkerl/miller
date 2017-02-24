@@ -1292,10 +1292,13 @@ VERBS
        count-distinct. For uniq, -f is a synonym for -g.
 
    unsparsify
-       Usage: mlr unsparsify
+       Usage: mlr unsparsify [options]
        Prints records with the union of field names over all input records.
-       For field names absent in a given record but present in others, fills value with
-       empty string. This verb retains all input before producing any output.
+       For field names absent in a given record but present in others, fills in
+       a value. This verb retains all input before producing any output.
+       Options:
+       --fill-with {filler string}  What to fill absent fields with. Defaults to
+				    the empty string.
 
 FUNCTIONS FOR FILTER/PUT
    +

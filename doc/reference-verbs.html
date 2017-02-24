@@ -3390,13 +3390,18 @@ count
 <div class="pokipanel">
 <pre>
 $ mlr unsparsify --help
-Usage: mlr unsparsify
+Usage: mlr unsparsify [options]
 Prints records with the union of field names over all input records.
-For field names absent in a given record but present in others, fills value with
-empty string. This verb retains all input before producing any output.
+For field names absent in a given record but present in others, fills in
+a value. This verb retains all input before producing any output.
+Options:
+--fill-with {filler string}  What to fill absent fields with. Defaults to
+                             the empty string.
 </pre>
 </div>
 <p/>
+
+<p/>Examples:
 
 <p/>
 <div class="pokipanel">
@@ -3429,6 +3434,18 @@ a b v u x w
 - 2 - 1 - -
 1 - 2 - 3 -
 - - 1 - - 2
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --ijson --opprint unsparsify --fill-with missing data/sparse.json
+a       b       v       u       x       w
+1       2       3       missing missing missing
+missing 2       missing 1       missing missing
+1       missing 2       missing 3       missing
+missing missing 1       missing missing 2
 </pre>
 </div>
 <p/>
