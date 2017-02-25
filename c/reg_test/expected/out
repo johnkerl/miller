@@ -38216,6 +38216,306 @@ panwye
 MAP-VARIANT LASHED EMITS
 
 
+---------------------------------------------------------------- scalar lashed emits
+mlr --from ./reg_test/input/abixy-het --opprint put -q emit ($a . "_" . $b, $x . "_" . $y)
+mlr DSL: syntax error at "$a"
+mlr put: syntax error on DSL parse of 'emit ($a . "_" . $b, $x . "_" . $y)'
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q  o = $a . "_" . $b;  p = $x . "_" . $y; emit  (o,  p)
+o       p
+pan_pan 0.346790_0.726803
+eks_pan 0.758680_0.522151
+_wye    0.204603_0.338319
+eks_    0.381399_0.134189
+wye_pan _0.863624
+zee_pan 0.527126_0.493221
+eks_zee 0.611784_0.187885
+zee_wye 0.598554_
+_       0.031442_0.749551
+pan_wye 0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q @o = $a . "_" . $b; @p = $x . "_" . $y; emit (@o, @p)
+o       p
+pan_pan 0.346790_0.726803
+eks_pan 0.758680_0.522151
+_wye    0.204603_0.338319
+eks_    0.381399_0.134189
+wye_pan _0.863624
+zee_pan 0.527126_0.493221
+eks_zee 0.611784_0.187885
+zee_wye 0.598554_
+_       0.031442_0.749551
+pan_wye 0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q func f(a, b) { return a . "_" . b }  o = f($a, $b);  p = f($x, $y); emit  (o,  p)
+o       p
+pan_pan 0.346790_0.726803
+eks_pan 0.758680_0.522151
+_wye    0.204603_0.338319
+eks_    0.381399_0.134189
+wye_pan _0.863624
+zee_pan 0.527126_0.493221
+eks_zee 0.611784_0.187885
+zee_wye 0.598554_
+_       0.031442_0.749551
+pan_wye 0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q func f(a, b) { return a . "_" . b } @o = f($a, $b); @p = f($x, $y); emit (@o, @p)
+o       p
+pan_pan 0.346790_0.726803
+eks_pan 0.758680_0.522151
+_wye    0.204603_0.338319
+eks_    0.381399_0.134189
+wye_pan _0.863624
+zee_pan 0.527126_0.493221
+eks_zee 0.611784_0.187885
+zee_wye 0.598554_
+_       0.031442_0.749551
+pan_wye 0.502626_0.952618
+
+
+---------------------------------------------------------------- non-scalar non-keyed lashed emits
+mlr --from ./reg_test/input/abixy-het --opprint put -q emit ({"ab": $a . "_" . $b}, {"ab": $x . "_" . $y})
+ab
+0.346790_0.726803
+0.758680_0.522151
+0.204603_0.338319
+0.381399_0.134189
+_0.863624
+0.527126_0.493221
+0.611784_0.187885
+0.598554_
+0.031442_0.749551
+0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q  o = {"ab": $a . "_" . $b};  p = {"ab": $x . "_" . $y}; emit  (o, p)
+ab
+0.346790_0.726803
+0.758680_0.522151
+0.204603_0.338319
+0.381399_0.134189
+_0.863624
+0.527126_0.493221
+0.611784_0.187885
+0.598554_
+0.031442_0.749551
+0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q @o = {"ab": $a . "_" . $b}; @p = {"ab": $x . "_" . $y}; emit (@o, @p)
+ab
+0.346790_0.726803
+0.758680_0.522151
+0.204603_0.338319
+0.381399_0.134189
+_0.863624
+0.527126_0.493221
+0.611784_0.187885
+0.598554_
+0.031442_0.749551
+0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q func f(a, b) { return {"ab": a . "_" . b} }  o = f($a, $b);  p = f($x, $y); emit  (o, p)
+ab
+0.346790_0.726803
+0.758680_0.522151
+0.204603_0.338319
+0.381399_0.134189
+_0.863624
+0.527126_0.493221
+0.611784_0.187885
+0.598554_
+0.031442_0.749551
+0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q func f(a, b) { return {"ab": a . "_" . b} } @o = f($a, $b); @p = f($x, $y); emit (@o, @p)
+ab
+0.346790_0.726803
+0.758680_0.522151
+0.204603_0.338319
+0.381399_0.134189
+_0.863624
+0.527126_0.493221
+0.611784_0.187885
+0.598554_
+0.031442_0.749551
+0.502626_0.952618
+
+
+---------------------------------------------------------------- non-scalar non-keyed lashed emits
+mlr --from ./reg_test/input/abixy-het --opprint put -q emitp ({"ab": $a . "_" . $b}, {"ab": $x . "_" . $y})
+_:ab
+0.346790_0.726803
+0.758680_0.522151
+0.204603_0.338319
+0.381399_0.134189
+_0.863624
+0.527126_0.493221
+0.611784_0.187885
+0.598554_
+0.031442_0.749551
+0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q  o = {"ab": $a . "_" . $b};  p = {"ab": $x . "_" . $y}; emitp  (o, p)
+o:ab    p:ab
+pan_pan 0.346790_0.726803
+eks_pan 0.758680_0.522151
+_wye    0.204603_0.338319
+eks_    0.381399_0.134189
+wye_pan _0.863624
+zee_pan 0.527126_0.493221
+eks_zee 0.611784_0.187885
+zee_wye 0.598554_
+_       0.031442_0.749551
+pan_wye 0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q @o = {"ab": $a . "_" . $b}; @p = {"ab": $x . "_" . $y}; emitp (@o, @p)
+o:ab    p:ab
+pan_pan 0.346790_0.726803
+eks_pan 0.758680_0.522151
+_wye    0.204603_0.338319
+eks_    0.381399_0.134189
+wye_pan _0.863624
+zee_pan 0.527126_0.493221
+eks_zee 0.611784_0.187885
+zee_wye 0.598554_
+_       0.031442_0.749551
+pan_wye 0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q func f(a, b) { return {"ab": a . "_" . b} }  o = f($a, $b);  p = f($x, $y); emitp  (o, p)
+o:ab    p:ab
+pan_pan 0.346790_0.726803
+eks_pan 0.758680_0.522151
+_wye    0.204603_0.338319
+eks_    0.381399_0.134189
+wye_pan _0.863624
+zee_pan 0.527126_0.493221
+eks_zee 0.611784_0.187885
+zee_wye 0.598554_
+_       0.031442_0.749551
+pan_wye 0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q func f(a, b) { return {"ab": a . "_" . b} } @o = f($a, $b); @p = f($x, $y); emitp (@o, @p)
+o:ab    p:ab
+pan_pan 0.346790_0.726803
+eks_pan 0.758680_0.522151
+_wye    0.204603_0.338319
+eks_    0.381399_0.134189
+wye_pan _0.863624
+zee_pan 0.527126_0.493221
+eks_zee 0.611784_0.187885
+zee_wye 0.598554_
+_       0.031442_0.749551
+pan_wye 0.502626_0.952618
+
+
+---------------------------------------------------------------- non-scalar keyed lashed emits
+mlr --from ./reg_test/input/abixy-het --opprint put -q  o = {"ab": $a . "_" . $b};  p = {"ab": $x . "_" . $y}; emit  (o, p), "ab"
+ab o       p
+ab pan_pan 0.346790_0.726803
+ab eks_pan 0.758680_0.522151
+ab _wye    0.204603_0.338319
+ab eks_    0.381399_0.134189
+ab wye_pan _0.863624
+ab zee_pan 0.527126_0.493221
+ab eks_zee 0.611784_0.187885
+ab zee_wye 0.598554_
+ab _       0.031442_0.749551
+ab pan_wye 0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q @o = {"ab": $a . "_" . $b}; @p = {"ab": $x . "_" . $y}; emit (@o, @p), "ab"
+ab o       p
+ab pan_pan 0.346790_0.726803
+ab eks_pan 0.758680_0.522151
+ab _wye    0.204603_0.338319
+ab eks_    0.381399_0.134189
+ab wye_pan _0.863624
+ab zee_pan 0.527126_0.493221
+ab eks_zee 0.611784_0.187885
+ab zee_wye 0.598554_
+ab _       0.031442_0.749551
+ab pan_wye 0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q func f(a, b) { return {"ab": a . "_" . b} }  o = f($a, $b);  p = f($x, $y); emit  (o, p), "ab"
+ab o       p
+ab pan_pan 0.346790_0.726803
+ab eks_pan 0.758680_0.522151
+ab _wye    0.204603_0.338319
+ab eks_    0.381399_0.134189
+ab wye_pan _0.863624
+ab zee_pan 0.527126_0.493221
+ab eks_zee 0.611784_0.187885
+ab zee_wye 0.598554_
+ab _       0.031442_0.749551
+ab pan_wye 0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q func f(a, b) { return {"ab": a . "_" . b} } @o = f($a, $b); @p = f($x, $y); emit (@o, @p), "ab"
+ab o       p
+ab pan_pan 0.346790_0.726803
+ab eks_pan 0.758680_0.522151
+ab _wye    0.204603_0.338319
+ab eks_    0.381399_0.134189
+ab wye_pan _0.863624
+ab zee_pan 0.527126_0.493221
+ab eks_zee 0.611784_0.187885
+ab zee_wye 0.598554_
+ab _       0.031442_0.749551
+ab pan_wye 0.502626_0.952618
+
+
+---------------------------------------------------------------- non-scalar keyed lashed emits
+mlr --from ./reg_test/input/abixy-het --opprint put -q  o = {"ab": $a . "_" . $b};  p = {"ab": $x . "_" . $y}; emitp  (o, p), "ab"
+ab o       p
+ab pan_pan 0.346790_0.726803
+ab eks_pan 0.758680_0.522151
+ab _wye    0.204603_0.338319
+ab eks_    0.381399_0.134189
+ab wye_pan _0.863624
+ab zee_pan 0.527126_0.493221
+ab eks_zee 0.611784_0.187885
+ab zee_wye 0.598554_
+ab _       0.031442_0.749551
+ab pan_wye 0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q @o = {"ab": $a . "_" . $b}; @p = {"ab": $x . "_" . $y}; emitp (@o, @p), "ab"
+ab o       p
+ab pan_pan 0.346790_0.726803
+ab eks_pan 0.758680_0.522151
+ab _wye    0.204603_0.338319
+ab eks_    0.381399_0.134189
+ab wye_pan _0.863624
+ab zee_pan 0.527126_0.493221
+ab eks_zee 0.611784_0.187885
+ab zee_wye 0.598554_
+ab _       0.031442_0.749551
+ab pan_wye 0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q func f(a, b) { return {"ab": a . "_" . b} }  o = f($a, $b);  p = f($x, $y); emitp  (o, p), "ab"
+ab o       p
+ab pan_pan 0.346790_0.726803
+ab eks_pan 0.758680_0.522151
+ab _wye    0.204603_0.338319
+ab eks_    0.381399_0.134189
+ab wye_pan _0.863624
+ab zee_pan 0.527126_0.493221
+ab eks_zee 0.611784_0.187885
+ab zee_wye 0.598554_
+ab _       0.031442_0.749551
+ab pan_wye 0.502626_0.952618
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q func f(a, b) { return {"ab": a . "_" . b} } @o = f($a, $b); @p = f($x, $y); emitp (@o, @p), "ab"
+ab o       p
+ab pan_pan 0.346790_0.726803
+ab eks_pan 0.758680_0.522151
+ab _wye    0.204603_0.338319
+ab eks_    0.381399_0.134189
+ab wye_pan _0.863624
+ab zee_pan 0.527126_0.493221
+ab eks_zee 0.611784_0.187885
+ab zee_wye 0.598554_
+ab _       0.031442_0.749551
+ab pan_wye 0.502626_0.952618
+
+
 ================================================================
 MAPPER NOTHING
 
