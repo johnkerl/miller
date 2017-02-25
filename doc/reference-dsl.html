@@ -197,6 +197,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables">Out-of-stream variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables">Indexed out-of-stream variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Local_variables">Local variables</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Map_literals">Map literals</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-checking">Type-checking</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-test_and_type-assertion_expressions">Type-test and type-assertion expressions</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Type-declarations_for_local_variables,_function_parameter,_and_function_return_values">Type-declarations for local variables, function parameter, and function return values</a><br/>
@@ -625,7 +626,7 @@ cannot use these names for local variables.
 <tt>NF</tt>, <tt>FILENAME</tt>, and only a small, specific set of them is
 defined by Miller.
 
-<p/>Miller supports the following five built-in variables for <a
+<p/>Namely, Miller supports the following five built-in variables for <a
 href="reference-verbs.html#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
 <tt>NF</tt>, <tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and
 <tt>FILENAME</tt>, as well as the mathematical constants <tt>PI</tt> and
@@ -715,17 +716,18 @@ not be assigned to: <tt>NR=100</tt> is a syntax error.
 <!-- ================================================================ -->
 <a id="Field_names"/><h2>Field names</h2>
 
-<p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> and <a
-href="reference-verbs.html#put"><tt>put</tt></a> expressions, even though the dollar signs
-don&rsquo;t appear in the data stream. For integer-indexed data, this looks
-like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>, except that Miller allows
-non-numeric names such as <tt>$quantity</tt> or <tt>$hostname</tt>.  (Likewise,
-enclose string literals in double quotes in <tt>filter</tt> expressions even
-though they don&rsquo;t appear in file data.  In particular, <tt>mlr filter
-'$x=="abc"'</tt> passes through the record <tt>x=abc</tt>.)
+<p/>Names of fields within stream records must be specified using a <tt>$</tt>
+in <tt>filter</tt> and <a href="reference-verbs.html#put"><tt>put</tt></a>
+expressions, even though the dollar signs don&rsquo;t appear in the data stream
+itself. For integer-indexed data, this looks like <tt>awk</tt>&rsquo;s
+<tt>$1,$2,$3</tt>, except that Miller allows non-numeric names such as
+<tt>$quantity</tt> or <tt>$hostname</tt>.  Likewise, enclose string literals
+in double quotes in <tt>filter</tt> expressions even though they don&rsquo;t
+appear in file data.  In particular, <tt>mlr filter '$x=="abc"'</tt> passes
+through the record <tt>x=abc</tt>.
 
-<p/>If field names have <b>special characters</b> such as <tt>.</tt> then you can use
-braces, e.g. <tt>'${field.name}'</tt>.
+<p/>If field names have <b>special characters</b> such as <tt>.</tt> then you
+can use braces, e.g. <tt>'${field.name}'</tt>.
 
 <p/>You may also use a <b>computed field name</b> in square brackets, e.g.
 
@@ -942,7 +944,10 @@ num_total=5,num_positive=3
 <!-- ================================================================ -->
 <a id="Local_variables"/><h2>Local variables</h2>
 
-<p/>There are three kinds of local variables: <b>arguments</b> to
+<p/>Local variables are similar to out-of-stream variables, except that
+their extent is limited to the expressions in which they appear (and their
+basenames can&rsquo;t be computed using square brackets).
+There are three kinds of local variables: <b>arguments</b> to
 functions/subroutines, <b>variables bound within for-loops</b>, and
 <b>locals</b> defined within control blocks. They may be untyped using
 <tt>var</tt>, or typed using <tt>num</tt>, <tt>int</tt>, <tt>float</tt>,
@@ -1166,6 +1171,67 @@ for (i = 1, int j = 2; i &lt;= 10; i += 1, j *= 2) { # C-style triple-for variab
 }                                                 #
 print "outer i =" . i;                            # i has been modified by the loop.
 print "outer j =" . j;                            # j is undefined in this scope.
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+<a id="Map_literals"/><h2>Map literals</h2>
+
+<p/>Miller&rsquo;s <tt>put</tt>/<tt>filter</tt> DSL has four kinds of hashmaps.
+<b>Stream records</b> are (single-level) maps from name to value.
+<b>Out-of-stream variables</b> and <b>local variables</b> are also maps,
+although they can be multi-level hashmaps (e.g. <tt>@sum[$x][$y]</tt>).  The
+fourth kind is <b>map literals</b>. These cannot be on the left-hand side of
+assignment expressions. Syntactically they look like JSON, although Miller
+allows integer keys in its map literals while JSON does not.
+
+<p/> For example the following swaps the input stream&rsquo;s <tt>a</tt> and <tt>i</tt>
+fields, modifies <tt>y</tt>, and drops the rest:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '
+  $* = {
+    "a": $i,
+    "i": $a,
+    "y": $y * 10,
+  }
+' data/small
+a i   y
+1 pan 7.268029
+2 eks 5.221511
+3 wye 3.383185
+4 eks 1.341887
+5 wye 8.636245
+</pre>
+</div>
+<p/>
+
+<p/>Likewise, you can assign map literals to out-of-stream variables or local variables;
+pass them as arguments to user-defined functions, return them from functions, and so on.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from ../c/s put '
+  func f(map m): map {
+    m["x"] *= 200;
+    return m;
+  }
+  $* = f({"a": $a, "x": $x});
+'
+a=pan,x=69.358029
+a=eks,x=151.735993
+a=wye,x=40.920661
+a=eks,x=76.279879
+a=wye,x=114.657784
+a=zee,x=105.425232
+a=eks,x=122.356812
+a=zee,x=119.710802
+a=hat,x=6.288375
+a=pan,x=100.525201
 </pre>
 </div>
 <p/>

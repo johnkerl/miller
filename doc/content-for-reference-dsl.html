@@ -176,7 +176,7 @@ cannot use these names for local variables.
 <tt>NF</tt>, <tt>FILENAME</tt>, and only a small, specific set of them is
 defined by Miller.
 
-<p/>Miller supports the following five built-in variables for <a
+<p/>Namely, Miller supports the following five built-in variables for <a
 href="reference-verbs.html#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
 <tt>NF</tt>, <tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and
 <tt>FILENAME</tt>, as well as the mathematical constants <tt>PI</tt> and
@@ -213,17 +213,18 @@ not be assigned to: <tt>NR=100</tt> is a syntax error.
 <!-- ================================================================ -->
 <h2>Field names</h2>
 
-<p/>Field names must be specified using a <tt>$</tt> in <tt>filter</tt> and <a
-href="reference-verbs.html#put"><tt>put</tt></a> expressions, even though the dollar signs
-don&rsquo;t appear in the data stream. For integer-indexed data, this looks
-like <tt>awk</tt>&rsquo;s <tt>$1,$2,$3</tt>, except that Miller allows
-non-numeric names such as <tt>$quantity</tt> or <tt>$hostname</tt>.  (Likewise,
-enclose string literals in double quotes in <tt>filter</tt> expressions even
-though they don&rsquo;t appear in file data.  In particular, <tt>mlr filter
-'$x=="abc"'</tt> passes through the record <tt>x=abc</tt>.)
+<p/>Names of fields within stream records must be specified using a <tt>$</tt>
+in <tt>filter</tt> and <a href="reference-verbs.html#put"><tt>put</tt></a>
+expressions, even though the dollar signs don&rsquo;t appear in the data stream
+itself. For integer-indexed data, this looks like <tt>awk</tt>&rsquo;s
+<tt>$1,$2,$3</tt>, except that Miller allows non-numeric names such as
+<tt>$quantity</tt> or <tt>$hostname</tt>.  Likewise, enclose string literals
+in double quotes in <tt>filter</tt> expressions even though they don&rsquo;t
+appear in file data.  In particular, <tt>mlr filter '$x=="abc"'</tt> passes
+through the record <tt>x=abc</tt>.
 
-<p/>If field names have <b>special characters</b> such as <tt>.</tt> then you can use
-braces, e.g. <tt>'${field.name}'</tt>.
+<p/>If field names have <b>special characters</b> such as <tt>.</tt> then you
+can use braces, e.g. <tt>'${field.name}'</tt>.
 
 <p/>You may also use a <b>computed field name</b> in square brackets, e.g.
 
@@ -306,7 +307,10 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/begin-end-example-8.sh)HERE
 <!-- ================================================================ -->
 <h2>Local variables</h2>
 
-<p/>There are three kinds of local variables: <b>arguments</b> to
+<p/>Local variables are similar to out-of-stream variables, except that
+their extent is limited to the expressions in which they appear (and their
+basenames can&rsquo;t be computed using square brackets).
+There are three kinds of local variables: <b>arguments</b> to
 functions/subroutines, <b>variables bound within for-loops</b>, and
 <b>locals</b> defined within control blocks. They may be untyped using
 <tt>var</tt>, or typed using <tt>num</tt>, <tt>int</tt>, <tt>float</tt>,
@@ -394,6 +398,27 @@ POKI_RUN_COMMAND{{mlr --oxtab --from data/scope-example.dat put -f data/scope-ex
 <p/> And this example demonstrates the type-declaration rules:
 
 POKI_RUN_COMMAND{{cat data/type-decl-example.mlr}}HERE
+
+<!-- ================================================================ -->
+<h2>Map literals</h2>
+
+<p/>Miller&rsquo;s <tt>put</tt>/<tt>filter</tt> DSL has four kinds of hashmaps.
+<b>Stream records</b> are (single-level) maps from name to value.
+<b>Out-of-stream variables</b> and <b>local variables</b> are also maps,
+although they can be multi-level hashmaps (e.g. <tt>@sum[$x][$y]</tt>).  The
+fourth kind is <b>map literals</b>. These cannot be on the left-hand side of
+assignment expressions. Syntactically they look like JSON, although Miller
+allows integer keys in its map literals while JSON does not.
+
+<p/> For example the following swaps the input stream&rsquo;s <tt>a</tt> and <tt>i</tt>
+fields, modifies <tt>y</tt>, and drops the rest:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-1.sh)HERE
+
+<p/>Likewise, you can assign map literals to out-of-stream variables or local variables;
+pass them as arguments to user-defined functions, return them from functions, and so on.
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-2.sh)HERE
 
 <!-- ================================================================ -->
 <h2>Type-checking</h2>
