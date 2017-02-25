@@ -34977,6 +34977,74 @@ x=7	xtype=int	sum=17	stype=int
 
 
 ================================================================
+MAP-VARIANT DUMPS
+
+mlr --from ./reg_test/input/abixy-het put -q dump {"a"."b":$a.$b}
+{
+  "ab": "panpan"
+}
+{
+  "ab": "ekspan"
+}
+{
+  "ab": "wye"
+}
+{
+  "ab": "eks"
+}
+{
+  "ab": "wyepan"
+}
+{
+  "ab": "zeepan"
+}
+{
+  "ab": "ekszee"
+}
+{
+  "ab": "zeewye"
+}
+{
+  "ab": 
+}
+{
+  "ab": "panwye"
+}
+
+mlr --from ./reg_test/input/abixy-het put -q func f(a, b) { return {"a"."b":a.b} } dump f($a, $b)
+{
+  "ab": "panpan"
+}
+{
+  "ab": "ekspan"
+}
+{
+  "ab": "wye"
+}
+{
+  "ab": "eks"
+}
+{
+  "ab": "wyepan"
+}
+{
+  "ab": "zeepan"
+}
+{
+  "ab": "ekszee"
+}
+{
+  "ab": "zeewye"
+}
+{
+  "ab": 
+}
+{
+  "ab": "panwye"
+}
+
+
+================================================================
 PARAMETERIZED EMIT
 
 mlr put -q @sum[$a] = $x; end{ emitp @sum; } ./reg_test/input/abixy
@@ -38002,6 +38070,124 @@ hat wye 34.054270 70    0.486490
 hat pan 42.538758 85    0.500456
 hat cat 44.325655 88    0.503701
 hat dog 37.114244 78    0.475824
+
+
+================================================================
+MAP-VARIANT EMITS
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q o=$a.$b; emit o
+o
+panpan
+ekspan
+wye
+eks
+wyepan
+zeepan
+ekszee
+zeewye
+-
+panwye
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q o={"ab":$a.$b}; emit o
+ab
+panpan
+ekspan
+wye
+eks
+wyepan
+zeepan
+ekszee
+zeewye
+-
+panwye
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q @o=$a.$b; emit @o
+o
+panpan
+ekspan
+wye
+eks
+wyepan
+zeepan
+ekszee
+zeewye
+zeewye
+panwye
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q @o={"ab":$a.$b}; emit @o
+ab
+panpan
+ekspan
+wye
+eks
+wyepan
+zeepan
+ekszee
+zeewye
+-
+panwye
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q @o=$a.$b; emit @*
+o
+panpan
+ekspan
+wye
+eks
+wyepan
+zeepan
+ekszee
+zeewye
+zeewye
+panwye
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q @o={"ab":$a.$b}; emit @*
+ab
+panpan
+ekspan
+wye
+eks
+wyepan
+zeepan
+ekszee
+zeewye
+-
+panwye
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q emit $a.$b
+mlr DSL: syntax error at "$a"
+mlr put: syntax error on DSL parse of 'emit $a.$b'
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q emit {"ab":$a.$b}
+ab
+panpan
+ekspan
+wye
+eks
+wyepan
+zeepan
+ekszee
+zeewye
+-
+panwye
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q func f(a,b) { return a.b } emit f($a, $b)
+
+mlr --from ./reg_test/input/abixy-het --opprint put -q func f(a,b) { return {"ab": a.b} } emit f($a, $b)
+ab
+panpan
+ekspan
+wye
+eks
+wyepan
+zeepan
+ekszee
+zeewye
+-
+panwye
+
+
+================================================================
+MAP-VARIANT LASHED EMITS
 
 
 ================================================================
@@ -55483,180 +55669,6 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapdiff({"a":999}, $*, {"b": 44
 }
 {
 }
-
-
-================================================================
-MAP-VARIANT DUMPS
-
-mlr --from ./reg_test/input/abixy-het put -q dump {"a"."b":$a.$b}
-{
-  "ab": "panpan"
-}
-{
-  "ab": "ekspan"
-}
-{
-  "ab": "wye"
-}
-{
-  "ab": "eks"
-}
-{
-  "ab": "wyepan"
-}
-{
-  "ab": "zeepan"
-}
-{
-  "ab": "ekszee"
-}
-{
-  "ab": "zeewye"
-}
-{
-  "ab": 
-}
-{
-  "ab": "panwye"
-}
-
-mlr --from ./reg_test/input/abixy-het put -q func f(a, b) { return {"a"."b":a.b} } dump f($a, $b)
-{
-  "ab": "panpan"
-}
-{
-  "ab": "ekspan"
-}
-{
-  "ab": "wye"
-}
-{
-  "ab": "eks"
-}
-{
-  "ab": "wyepan"
-}
-{
-  "ab": "zeepan"
-}
-{
-  "ab": "ekszee"
-}
-{
-  "ab": "zeewye"
-}
-{
-  "ab": 
-}
-{
-  "ab": "panwye"
-}
-
-
-================================================================
-MAP-VARIANT EMITS
-
-mlr --from ./reg_test/input/abixy-het put -q o=$a.$b; emit o
-o=panpan
-o=ekspan
-o=wye
-o=eks
-o=wyepan
-o=zeepan
-o=ekszee
-o=zeewye
-o=
-o=panwye
-
-mlr --from ./reg_test/input/abixy-het put -q o={"ab":$a.$b}; emit o
-ab=panpan
-ab=ekspan
-ab=wye
-ab=eks
-ab=wyepan
-ab=zeepan
-ab=ekszee
-ab=zeewye
-ab=
-ab=panwye
-
-mlr --from ./reg_test/input/abixy-het put -q @o=$a.$b; emit @o
-o=panpan
-o=ekspan
-o=wye
-o=eks
-o=wyepan
-o=zeepan
-o=ekszee
-o=zeewye
-o=zeewye
-o=panwye
-
-mlr --from ./reg_test/input/abixy-het put -q @o={"ab":$a.$b}; emit @o
-ab=panpan
-ab=ekspan
-ab=wye
-ab=eks
-ab=wyepan
-ab=zeepan
-ab=ekszee
-ab=zeewye
-ab=
-ab=panwye
-
-mlr --from ./reg_test/input/abixy-het put -q @o=$a.$b; emit @*
-o=panpan
-o=ekspan
-o=wye
-o=eks
-o=wyepan
-o=zeepan
-o=ekszee
-o=zeewye
-o=zeewye
-o=panwye
-
-mlr --from ./reg_test/input/abixy-het put -q @o={"ab":$a.$b}; emit @*
-ab=panpan
-ab=ekspan
-ab=wye
-ab=eks
-ab=wyepan
-ab=zeepan
-ab=ekszee
-ab=zeewye
-ab=
-ab=panwye
-
-mlr --from ./reg_test/input/abixy-het put -q emit $a.$b
-mlr DSL: syntax error at "$a"
-mlr put: syntax error on DSL parse of 'emit $a.$b'
-
-mlr --from ./reg_test/input/abixy-het put -q emit {"ab":$a.$b}
-ab=panpan
-ab=ekspan
-ab=wye
-ab=eks
-ab=wyepan
-ab=zeepan
-ab=ekszee
-ab=zeewye
-ab=
-ab=panwye
-
-mlr --from ./reg_test/input/abixy-het put -q func f(a,b) { return a.b } emit f($a, $b)
-
-mlr --from ./reg_test/input/abixy-het put -q func f(a,b) { return {"ab": a.b} } emit f($a, $b)
-ab=panpan
-ab=ekspan
-ab=wye
-ab=eks
-ab=wyepan
-ab=zeepan
-ab=ekszee
-ab=zeewye
-ab=
-ab=panwye
 
 
 ================================================================

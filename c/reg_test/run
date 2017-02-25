@@ -3298,6 +3298,12 @@ EOF
 
 
 # ----------------------------------------------------------------
+announce MAP-VARIANT DUMPS
+
+run_mlr --from $indir/abixy-het put -q 'dump {"a"."b":$a.$b}'
+run_mlr --from $indir/abixy-het put -q 'func f(a, b) { return {"a"."b":a.b} } dump f($a, $b)'
+
+# ----------------------------------------------------------------
 announce PARAMETERIZED EMIT
 
 run_mlr put -q '@sum[$a] = $x; end{ emitp @sum; }'         $indir/abixy
@@ -3813,6 +3819,48 @@ run_mlr --from $indir/abixy-wide --opprint put -q '
       emit (@sum, @count, @mean), "a", "b"
   }
 '
+
+# ----------------------------------------------------------------
+announce MAP-VARIANT EMITS
+
+run_mlr         --from $indir/abixy-het --opprint put -q 'o=$a.$b; emit o'
+run_mlr         --from $indir/abixy-het --opprint put -q 'o={"ab":$a.$b}; emit o'
+
+run_mlr         --from $indir/abixy-het --opprint put -q '@o=$a.$b; emit @o'
+run_mlr         --from $indir/abixy-het --opprint put -q '@o={"ab":$a.$b}; emit @o'
+
+run_mlr         --from $indir/abixy-het --opprint put -q '@o=$a.$b; emit @*'
+run_mlr         --from $indir/abixy-het --opprint put -q '@o={"ab":$a.$b}; emit @*'
+
+mlr_expect_fail --from $indir/abixy-het --opprint put -q 'emit $a.$b'
+run_mlr         --from $indir/abixy-het --opprint put -q 'emit {"ab":$a.$b}'
+
+run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return a.b } emit f($a, $b)'
+run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return {"ab": a.b} } emit f($a, $b)'
+
+# ----------------------------------------------------------------
+announce MAP-VARIANT LASHED EMITS
+
+## xxx segv
+##run_mlr         --from $indir/abixy-het --opprint put -q 'o=$a.$b; p = $i.$y; emit (o, p)'
+#run_mlr         --from $indir/abixy-het --opprint put -q 'o={"ab":$a.$b}; p={"ab":$x.$y}; emit (o, p),"ab"'
+#
+#run_mlr         --from $indir/abixy-het --opprint put -q '@o=$a.$b; @p = $i.$y; emit (@o, @p)'
+#run_mlr         --from $indir/abixy-het --opprint put -q '@o={"ab":$a.$b}; @p={"ab":$x.$y}; emit (@o, @p),"ab"'
+#
+#mlr_expect_fail --from $indir/abixy-het --opprint put -q 'emit ($a.$b,$x.$y)'
+#run_mlr         --from $indir/abixy-het --opprint put -q 'emit ({"ab":$a.$b},{"ab":$x.$y})'
+## wtfc
+#run_mlr         --from $indir/abixy-het --opprint put -q 'emit ({"ab":$a.$b},{"ab":$x.$y}), "ab"'
+#
+## xxx segv
+##run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return a.b }         o=f($a,$b); p=f($x,$y); emit (o, p)'
+#run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return {"ab": a.b} } o=f($a,$b); p=f($x,$y); emit (o, p), "ab"'
+#
+## xxx syntax error
+##run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return a.b } emit (f($a, $b),f($x,$y))'
+## xxx syntax error
+##run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return {"ab": a.b} } emit (f($a, $b),f($x,$y)),"ab"'
 
 # ----------------------------------------------------------------
 announce MAPPER NOTHING
@@ -6145,30 +6193,6 @@ run_mlr --from $indir/abixy-het put -q 'o = mapsum($*, {"a":999}, {"b": 444}); d
 run_mlr --from $indir/abixy-het put -q 'o = mapsum({"a":999}, $*, {"b": 444}); dump o'
 run_mlr --from $indir/abixy-het put -q 'o = mapdiff($*, {"a":999}, {"b": 444}); dump o'
 run_mlr --from $indir/abixy-het put -q 'o = mapdiff({"a":999}, $*, {"b": 444}); dump o'
-
-# ----------------------------------------------------------------
-announce MAP-VARIANT DUMPS
-
-run_mlr --from $indir/abixy-het put -q 'dump {"a"."b":$a.$b}'
-run_mlr --from $indir/abixy-het put -q 'func f(a, b) { return {"a"."b":a.b} } dump f($a, $b)'
-
-# ----------------------------------------------------------------
-announce MAP-VARIANT EMITS
-
-run_mlr         --from $indir/abixy-het put -q 'o=$a.$b; emit o'
-run_mlr         --from $indir/abixy-het put -q 'o={"ab":$a.$b}; emit o'
-
-run_mlr         --from $indir/abixy-het put -q '@o=$a.$b; emit @o'
-run_mlr         --from $indir/abixy-het put -q '@o={"ab":$a.$b}; emit @o'
-
-run_mlr         --from $indir/abixy-het put -q '@o=$a.$b; emit @*'
-run_mlr         --from $indir/abixy-het put -q '@o={"ab":$a.$b}; emit @*'
-
-mlr_expect_fail --from $indir/abixy-het put -q 'emit $a.$b'
-run_mlr         --from $indir/abixy-het put -q 'emit {"ab":$a.$b}'
-
-run_mlr         --from $indir/abixy-het put -q 'func f(a,b) { return a.b } emit f($a, $b)'
-run_mlr         --from $indir/abixy-het put -q 'func f(a,b) { return {"ab": a.b} } emit f($a, $b)'
 
 # ----------------------------------------------------------------
 announce EXTENDED TYPEOF
