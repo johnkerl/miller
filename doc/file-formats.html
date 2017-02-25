@@ -733,6 +733,26 @@ files is constrained by available machine memory.
 <p/> See <a href="record-heterogeneity.html">Record-heterogeneity</a> for how Miller
 handles changes of field names within a single data stream.
 
+<p/> For output only (this isn&rsquo;t supported in the input-scanner as of 5.0.0)
+you can use <tt>--barred</tt> with pprint output format:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint --barred cat data/small
++-----+-----+---+---------------------+---------------------+
+| a   | b   | i | x                   | y                   |
++-----+-----+---+---------------------+---------------------+
+| pan | pan | 1 | 0.3467901443380824  | 0.7268028627434533  |
+| eks | pan | 2 | 0.7586799647899636  | 0.5221511083334797  |
+| wye | wye | 3 | 0.20460330576630303 | 0.33831852551664776 |
+| eks | wye | 4 | 0.38139939387114097 | 0.13418874328430463 |
+| wye | pan | 5 | 0.5732889198020006  | 0.8636244699032729  |
++-----+-----+---+---------------------+---------------------+
+</pre>
+</div>
+<p/>
+
 </div>
 <a id="XTAB:_Vertical_tabular"/><h1>XTAB: Vertical tabular</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_xtab');" href="javascript:;">Toggle section visibility</button>

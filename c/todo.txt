@@ -6,8 +6,6 @@ BUGFIXES
 ================================================================
 5.0.0 RELEASE TO DO:
 
-! forbind mapvals!!
-
 * UT
 * ref-dsl: update fors to be single-for, kvv-for, triple-for;
 * ref-dsl: go through oosvar vs. local
@@ -19,7 +17,7 @@ BUGFIXES
 
 ? ship with autoreconf output committed?
 
-* mlr hex -> auxes. and make an aux-list. and doc: olh as well as webdoc?
+* find & update the task w/ requesting --barred
 
 ================================================================
 UT FOR 5.0.0:
@@ -50,36 +48,14 @@ UT FOR 5.0.0:
 ================================================================
 DOC FOR 5.0.0:
 
-TYPE-CHECKING:
-* doc unset of localvars along w/ unset elsewheredoc
-* typeof now includes 'map'; MT_STRING -> string etc.
-* fall-through absent-retval from UDF with typedecl retval abends
-
 MAPVARS:
 * n.b. print of mapvar prints nothing. use dump.
-
-SINGLE-FOR:
-* srec/oosvar-single-for mlh
-* srec/oosvar-single-for mld: section
-* find & update cookbook/ref/whateveritwas ...
-
-FORs:
-! final-v binds can now be map-valued -- make sure the docs reflect that.
-* h3's are false dichotomies now. it's just for-map w/ flavors. needs examples.
-s update links in relnotes.md
 
 TRANSPARENCY:
 * disclaimer about the Miller DSL having the usual plusses and minuses of a dynamically typed language:
   rapid prototyping and rapid access to data -- e.g. '$y=$x**2' should be free of syntactic bric-a-brac
   & the miller dsl is a place to get just that. but type-mixing can be unintentional (things really are
   implcitly typed in our heads).
-* additional disclaimer: type-heterogeneity is a feature, e.g. 'for (k, v in $*) { ... }'
-* absent-null & skipped assigns are a feature but aren't typo-proof:
-  o typeof()
-  o print/eprint
-  o isX()
-  o assertX() (once I write them)
-  o type decls (once I write them)
 * 'syntax error' is cryptic
   o ; is a common omission (separator not terminator)
   o no ++ or -- (not C-like)
@@ -108,29 +84,9 @@ covers:
 * func-def example @ cover x n
 * triple-for example @ cover x n
 
-@ new print/printn section:
-* print/printn zary
-
 mlh:
 * func-def example @ mlr put -h ?
 * triple-for example @ mlr put -h ?
-
-func/subr:
-* no begin/end/func/subr within func
-* (lhs) func no subr call
-* locals in all curly-braced control structures; top-level locals; scope, extent, freeing.
-* no begin/end/func/subr within subr
-* note subrs have a different namespace (log example); each kind may not be multiply defined.
-* local @ RHS before @ LHS: absent skips assign
-* a=2 before local a=1 -- why to even use local (when optional & when necessary).
-* cookbook examples
-
-file-formats page:
-* --pprint --barred; emph for output only
-
-perf note:
-* C stuff performant w/r/t other compiled langs (put up getlines samples)
-* DSL stuff performant w/r/t ruby/python (mand bench & maybe others)
 
 ! key point (put at top of ref-dsl, ref-verb, and elsewhere -- esp cover page in bold):
   there is a DSL so you *can* loop things out w/ variables etc etc etc but also verbs for
@@ -266,6 +222,10 @@ NON-RELEASE:
     ? sample -g
     ? tail -g
     - uniq -g
+
+* mlr hex -> auxes. and make an aux-list. and doc: olh as well as webdoc?
+
+perf note: DSL stuff performant w/r/t ruby/python (mand bench & maybe others)
 
 ! stats1 antimode
 
