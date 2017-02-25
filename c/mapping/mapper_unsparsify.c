@@ -33,9 +33,14 @@ static void mapper_unsparsify_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Prints records with the union of field names over all input records.\n");
 	fprintf(o, "For field names absent in a given record but present in others, fills in\n");
 	fprintf(o, "a value. This verb retains all input before producing any output.\n");
+	fprintf(o, "\n");
 	fprintf(o, "Options:\n");
 	fprintf(o, "--fill-with {filler string}  What to fill absent fields with. Defaults to\n");
 	fprintf(o, "                             the empty string.\n");
+	fprintf(o, "\n");
+	fprintf(o, "Example: if the input is two records, one being 'a=1,b=2' and the other\n");
+	fprintf(o, "being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and\n");
+	fprintf(o, "'a=,b=3,c=4'.\n");
 }
 
 static mapper_t* mapper_unsparsify_parse_cli(int* pargi, int argc, char** argv,

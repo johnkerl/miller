@@ -1296,9 +1296,13 @@ VERBS
        Prints records with the union of field names over all input records.
        For field names absent in a given record but present in others, fills in
        a value. This verb retains all input before producing any output.
+
        Options:
        --fill-with {filler string}  What to fill absent fields with. Defaults to
 				    the empty string.
+
+       Example: if the input is two records, one being 'a=1,b=2' and the other
+       being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
 
 FUNCTIONS FOR FILTER/PUT
    +
