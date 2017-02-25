@@ -19,10 +19,6 @@ BUGFIXES
 
 ? ship with autoreconf output committed?
 
-* mlr unsparsify with --fill ?
-
-! for (k, m in nested) { ... } -- this is confusing when m is non-terminal.
-
 * mlr hex -> auxes. and make an aux-list. and doc: olh as well as webdoc?
 
 ================================================================
@@ -68,6 +64,7 @@ SINGLE-FOR:
 * find & update cookbook/ref/whateveritwas ...
 
 FORs:
+! final-v binds can now be map-valued -- make sure the docs reflect that.
 * h3's are false dichotomies now. it's just for-map w/ flavors. needs examples.
 s update links in relnotes.md
 

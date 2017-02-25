@@ -773,8 +773,9 @@ out-of-stream variables.  As with for-loops over stream records, the bound
 variables are bound to a copy of the sub-hashmap as it was before the loop
 started.  The sub-hashmap is specified by square-bracketed indices after
 <tt>in</tt>, and additional deeper indices are bound to loop key-variables. The
-terminal values are bound to the loop value-variable whenever the keys are
-neither too shallow, nor too deep. Example indexing is as follows:
+terminal values are bound to the loop value-variable whenever the keys are not
+too shallow. The value-variable may refer to a terminal (string, number) or it
+may be map-valued if the map goes deeper. Example indexing is as follows:
 
 POKI_INCLUDE_ESCAPED(data/for-oosvar-example-0a.txt)HERE
 
@@ -790,20 +791,12 @@ and the index <tt>"nesting-is-too-shallow"</tt> &mdash; have depth two
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0c.sh)HERE
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0d.sh)HERE
 
-<p/>Note that it would take more than these two indices to reach the deeper values in the hashmap so they
-aren&rsquo;t bound in either of these for-loops.
-
-<p/>By contrast, the <tt>"just-right"</tt> parts have depth three (basename and
-two indices specify a terminal value) and can be gotten at by any of the
-following:
+<p/>The <tt>"just-right"</tt> parts have depth three (basename and two indices
+specify a terminal value) and can be gotten at by any of the following:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0e.sh)HERE
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0f.sh)HERE
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0g.sh)HERE
-
-<p/> Note that three key levels are specified here: basename and two indices.
-So these for-loops don&rsquo;t produce the depth-two or depth-four entries in
-the hashmap.
 
 <h3>C-style triple-for loops</h3>
 

@@ -2169,8 +2169,9 @@ out-of-stream variables.  As with for-loops over stream records, the bound
 variables are bound to a copy of the sub-hashmap as it was before the loop
 started.  The sub-hashmap is specified by square-bracketed indices after
 <tt>in</tt>, and additional deeper indices are bound to loop key-variables. The
-terminal values are bound to the loop value-variable whenever the keys are
-neither too shallow, nor too deep. Example indexing is as follows:
+terminal values are bound to the loop value-variable whenever the keys are not
+too shallow. The value-variable may refer to a terminal (string, number) or it
+may be map-valued if the map goes deeper. Example indexing is as follows:
 
 <p/>
 <div class="pokipanel">
@@ -2198,7 +2199,7 @@ $ mlr --opprint --from data/small head -n 2 then put -q '
     @myvar["nesting-is-too-shallow"] = 1;
     @myvar["nesting-is"]["just-right"] = 2;
     @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["too-deep"] = 4;
+    @myvar["nesting"]["is"]["deeper"] = 4;
   }
   end {
     dump
@@ -2213,7 +2214,7 @@ $ mlr --opprint --from data/small head -n 2 then put -q '
     },
     "nesting": {
       "is": {
-        "too-deep": 4
+        "deeper": 4
       }
     }
   }
@@ -2234,7 +2235,7 @@ $ mlr --from data/small head -n 2 then put -q '
     @myvar["nesting-is-too-shallow"] = 1;
     @myvar["nesting-is"]["just-right"] = 2;
     @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["too-deep"] = 4;
+    @myvar["nesting"]["is"]["deeper"] = 4;
   }
   end {
     for (k, v in @myvar) {
@@ -2244,6 +2245,8 @@ $ mlr --from data/small head -n 2 then put -q '
   }
 '
 index1=nesting-is-too-shallow,terminal=1
+index1=nesting-is,just-right=2,also-just-right=3
+index1=nesting,deeper=4
 </pre>
 </div>
 <p/>
@@ -2255,7 +2258,7 @@ $ mlr --from data/small head -n 2 then put -q '
     @myvar["nesting-is-too-shallow"] = 1;
     @myvar["nesting-is"]["just-right"] = 2;
     @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["too-deep"] = 4;
+    @myvar["nesting"]["is"]["deeper"] = 4;
   }
   end {
     for ((k1, k2), v in @*) {
@@ -2265,16 +2268,14 @@ $ mlr --from data/small head -n 2 then put -q '
   }
 '
 basename=myvar,index1=nesting-is-too-shallow,terminal=1
+basename=myvar,index1=nesting-is,just-right=2,also-just-right=3
+basename=myvar,index1=nesting,deeper=4
 </pre>
 </div>
 <p/>
 
-<p/>Note that it would take more than these two indices to reach the deeper values in the hashmap so they
-aren&rsquo;t bound in either of these for-loops.
-
-<p/>By contrast, the <tt>"just-right"</tt> parts have depth three (basename and
-two indices specify a terminal value) and can be gotten at by any of the
-following:
+<p/>The <tt>"just-right"</tt> parts have depth three (basename and two indices
+specify a terminal value) and can be gotten at by any of the following:
 
 <p/>
 <div class="pokipanel">
@@ -2284,7 +2285,7 @@ $ mlr --from data/small head -n 2 then put -q '
     @myvar["nesting-is-too-shallow"] = 1;
     @myvar["nesting-is"]["just-right"] = 2;
     @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["too-deep"] = 4;
+    @myvar["nesting"]["is"]["deeper"] = 4;
   }
   end {
     for ((k1), v in @myvar["nesting-is"]) {
@@ -2306,7 +2307,7 @@ $ mlr --from data/small head -n 2 then put -q '
     @myvar["nesting-is-too-shallow"] = 1;
     @myvar["nesting-is"]["just-right"] = 2;
     @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["too-deep"] = 4;
+    @myvar["nesting"]["is"]["deeper"] = 4;
   }
   end {
     for ((k1, k2), v in @myvar) {
@@ -2317,6 +2318,7 @@ $ mlr --from data/small head -n 2 then put -q '
 '
 index1=nesting-is,index2=just-right,terminal=2
 index1=nesting-is,index2=also-just-right,terminal=3
+index1=nesting,index2=is,deeper=4
 </pre>
 </div>
 <p/>
@@ -2328,7 +2330,7 @@ $ mlr --from data/small head -n 2 then put -q '
     @myvar["nesting-is-too-shallow"] = 1;
     @myvar["nesting-is"]["just-right"] = 2;
     @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["too-deep"] = 4;
+    @myvar["nesting"]["is"]["deeper"] = 4;
   }
   end {
     for ((k1, k2, k3), v in @*) {
@@ -2339,13 +2341,10 @@ $ mlr --from data/small head -n 2 then put -q '
 '
 basename=myvar,index1=nesting-is,index2=just-right,terminal=2
 basename=myvar,index1=nesting-is,index2=also-just-right,terminal=3
+basename=myvar,index1=nesting,index2=is,deeper=4
 </pre>
 </div>
 <p/>
-
-<p/> Note that three key levels are specified here: basename and two indices.
-So these for-loops don&rsquo;t produce the depth-two or depth-four entries in
-the hashmap.
 
 <a id="C-style_triple-for_loops"/><h3>C-style triple-for loops</h3>
 
