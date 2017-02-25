@@ -38448,6 +38448,19 @@ _0.863624
 
 
 ---------------------------------------------------------------- non-scalar keyed lashed emits
+mlr --from ./reg_test/input/abixy-het --opprint put -q emit ({"ab": $a . "_" . $b}, {"ab": $x . "_" . $y}), "ab"
+ab _
+ab 0.346790_0.726803
+ab 0.758680_0.522151
+ab 0.204603_0.338319
+ab 0.381399_0.134189
+ab _0.863624
+ab 0.527126_0.493221
+ab 0.611784_0.187885
+ab 0.598554_
+ab 0.031442_0.749551
+ab 0.502626_0.952618
+
 mlr --from ./reg_test/input/abixy-het --opprint put -q  o = {"ab": $a . "_" . $b};  p = {"ab": $x . "_" . $y}; emit  (o, p), "ab"
 ab o       p
 ab pan_pan 0.346790_0.726803
@@ -38515,6 +38528,19 @@ ab 0.502626_0.952618
 
 
 ---------------------------------------------------------------- non-scalar keyed lashed emits
+mlr --from ./reg_test/input/abixy-het --opprint put -q emitp ({"ab": $a . "_" . $b}, {"ab": $x . "_" . $y}), "ab"
+ab _
+ab 0.346790_0.726803
+ab 0.758680_0.522151
+ab 0.204603_0.338319
+ab 0.381399_0.134189
+ab _0.863624
+ab 0.527126_0.493221
+ab 0.611784_0.187885
+ab 0.598554_
+ab 0.031442_0.749551
+ab 0.502626_0.952618
+
 mlr --from ./reg_test/input/abixy-het --opprint put -q  o = {"ab": $a . "_" . $b};  p = {"ab": $x . "_" . $y}; emitp  (o, p), "ab"
 ab o       p
 ab pan_pan 0.346790_0.726803
