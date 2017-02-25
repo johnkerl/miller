@@ -1186,8 +1186,8 @@ fourth kind is <b>map literals</b>. These cannot be on the left-hand side of
 assignment expressions. Syntactically they look like JSON, although Miller
 allows integer keys in its map literals while JSON does not.
 
-<p/> For example the following swaps the input stream&rsquo;s <tt>a</tt> and <tt>i</tt>
-fields, modifies <tt>y</tt>, and drops the rest:
+<p/> For example, the following swaps the input stream&rsquo;s <tt>a</tt> and
+<tt>i</tt> fields, modifies <tt>y</tt>, and drops the rest:
 
 <p/>
 <div class="pokipanel">
@@ -1210,7 +1210,7 @@ a i   y
 <p/>
 
 <p/>Likewise, you can assign map literals to out-of-stream variables or local variables;
-pass them as arguments to user-defined functions, return them from functions, and so on.
+pass them as arguments to user-defined functions, return them from functions, and so on:
 
 <p/>
 <div class="pokipanel">
@@ -1235,6 +1235,46 @@ a=pan,x=100.525201
 </pre>
 </div>
 <p/>
+
+<p/> Like out-of-stream and local variables, map literals can be multi-level:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small put -q '
+  begin {
+    @o = {
+      "nrec": 0,
+      "nkey": {"numeric":0, "non-numeric":0},
+    };
+  }
+  @o["nrec"] += 1;
+  for (k, v in $*) {
+    if (is_numeric(v)) {
+      @o["nkey"]["numeric"] += 1;
+    } else {
+      @o["nkey"]["non-numeric"] += 1;
+    }
+  }
+  end {
+    dump @o;
+  }
+'
+{
+  "nrec": 5,
+  "nkey": {
+    "numeric": 15,
+    "non-numeric": 10
+  }
+}
+</pre>
+</div>
+<p/>
+
+<p/>By default, map-valued expressions are dumped using JSON formatting. If you
+use <tt>dump</tt> to print a hashmap with integer keys and you don&rsquo;t want
+them double-quoted (JSON-style) then you can use <tt>mlr put
+--jknquoteint</tt>. See also <tt>mlr put --help</tt>.
 
 <!-- ================================================================ -->
 <a id="Type-checking"/><h2>Type-checking</h2>

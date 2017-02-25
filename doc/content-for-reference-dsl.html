@@ -410,15 +410,24 @@ fourth kind is <b>map literals</b>. These cannot be on the left-hand side of
 assignment expressions. Syntactically they look like JSON, although Miller
 allows integer keys in its map literals while JSON does not.
 
-<p/> For example the following swaps the input stream&rsquo;s <tt>a</tt> and <tt>i</tt>
-fields, modifies <tt>y</tt>, and drops the rest:
+<p/> For example, the following swaps the input stream&rsquo;s <tt>a</tt> and
+<tt>i</tt> fields, modifies <tt>y</tt>, and drops the rest:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-1.sh)HERE
 
 <p/>Likewise, you can assign map literals to out-of-stream variables or local variables;
-pass them as arguments to user-defined functions, return them from functions, and so on.
+pass them as arguments to user-defined functions, return them from functions, and so on:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-2.sh)HERE
+
+<p/> Like out-of-stream and local variables, map literals can be multi-level:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/map-literal-example-3.sh)HERE
+
+<p/>By default, map-valued expressions are dumped using JSON formatting. If you
+use <tt>dump</tt> to print a hashmap with integer keys and you don&rsquo;t want
+them double-quoted (JSON-style) then you can use <tt>mlr put
+--jknquoteint</tt>. See also <tt>mlr put --help</tt>.
 
 <!-- ================================================================ -->
 <h2>Type-checking</h2>
