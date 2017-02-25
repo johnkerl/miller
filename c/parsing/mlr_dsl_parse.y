@@ -1742,38 +1742,10 @@ md_emitp_lashed_pipe(A) ::= MD_TOKEN_EMITP(O) MD_TOKEN_BITWISE_OR md_rhs(P) MD_T
 }
 
 //  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-md_emitp_lashed_keylists(A) ::= md_oosvar_keylist(B). {
+md_emitp_lashed_keylists(A) ::= md_emittable(B). {
 	A = mlr_dsl_ast_node_alloc_unary("lashed_keylists", MD_AST_NODE_TYPE_EMITP_LASHED, B);
 }
-md_emitp_lashed_keylists(A) ::= md_emitp_lashed_keylists(B) MD_TOKEN_COMMA md_oosvar_keylist(C). {
-	A = mlr_dsl_ast_node_append_arg(B, C);
-}
-
-md_emitp_lashed_keylists(A) ::= md_nonindexed_local_variable(B). {
-	A = mlr_dsl_ast_node_alloc_unary("lashed_keylists", MD_AST_NODE_TYPE_EMITP_LASHED, B);
-}
-md_emitp_lashed_keylists(A) ::= md_emitp_lashed_keylists(B) MD_TOKEN_COMMA md_nonindexed_local_variable(C). {
-	A = mlr_dsl_ast_node_append_arg(B, C);
-}
-
-md_emitp_lashed_keylists(A) ::= md_indexed_local_variable(B). {
-	A = mlr_dsl_ast_node_alloc_unary("lashed_keylists", MD_AST_NODE_TYPE_EMITP_LASHED, B);
-}
-md_emitp_lashed_keylists(A) ::= md_emitp_lashed_keylists(B) MD_TOKEN_COMMA md_indexed_local_variable(C). {
-	A = mlr_dsl_ast_node_append_arg(B, C);
-}
-
-md_emitp_lashed_keylists(A) ::= MD_TOKEN_FULL_SREC(B). {
-	A = mlr_dsl_ast_node_alloc_unary("lashed_keylists", MD_AST_NODE_TYPE_EMITP_LASHED, B);
-}
-md_emitp_lashed_keylists(A) ::= md_emitp_lashed_keylists(B) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC(C). {
-	A = mlr_dsl_ast_node_append_arg(B, C);
-}
-
-md_emitp_lashed_keylists(A) ::= md_map_literal(B). {
-	A = mlr_dsl_ast_node_alloc_unary("lashed_keylists", MD_AST_NODE_TYPE_EMITP_LASHED, B);
-}
-md_emitp_lashed_keylists(A) ::= md_emitp_lashed_keylists(B) MD_TOKEN_COMMA md_map_literal(C). {
+md_emitp_lashed_keylists(A) ::= md_emitp_lashed_keylists(B) MD_TOKEN_COMMA md_emittable(C). {
 	A = mlr_dsl_ast_node_append_arg(B, C);
 }
 
