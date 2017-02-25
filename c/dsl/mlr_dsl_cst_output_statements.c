@@ -22,7 +22,7 @@ static file_output_mode_t file_output_mode_from_ast_node_type(mlr_dsl_ast_node_t
 
 // ================================================================
 typedef struct _print_state_t {
-	rval_evaluator_t*    prhs_evaluator;
+	rxval_evaluator_t*   prhs_xevaluator;
 	FILE*                stdfp;
 	file_output_mode_t   file_output_mode;
 	rval_evaluator_t*    poutput_filename_evaluator;
@@ -44,14 +44,14 @@ mlr_dsl_cst_statement_t* alloc_print(
 {
 	print_state_t* pstate = mlr_malloc_or_die(sizeof(print_state_t));
 
-	pstate->prhs_evaluator             = NULL;
+	pstate->prhs_xevaluator            = NULL;
 	pstate->stdfp                      = NULL;
 	pstate->poutput_filename_evaluator = NULL;
 	pstate->pmulti_out                 = NULL;
 
 	MLR_INTERNAL_CODING_ERROR_IF((pnode->pchildren == NULL) || (pnode->pchildren->length != 2));
 	mlr_dsl_ast_node_t* pvalue_node = pnode->pchildren->phead->pvvalue;
-	pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(pvalue_node, pcst->pfmgr,
+	pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(pvalue_node, pcst->pfmgr,
 		type_inferencing, context_flags);
 	pstate->print_terminator = print_terminator;
 
@@ -80,8 +80,8 @@ mlr_dsl_cst_statement_t* alloc_print(
 static void free_print(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
 	print_state_t* pstate = pstatement->pvstate;
 
-	if (pstate->prhs_evaluator != NULL) {
-		pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
+	if (pstate->prhs_xevaluator != NULL) {
+		pstate->prhs_xevaluator->pfree_func(pstate->prhs_xevaluator);
 	}
 
 	if (pstate->poutput_filename_evaluator != NULL) {
@@ -104,10 +104,16 @@ static void handle_print(
 {
 	print_state_t* pstate = pstatement->pvstate;
 
-	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator;
-	mv_t val = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
-	char sfree_flags;
-	char* sval = mv_format_val(&val, &sfree_flags);
+	rxval_evaluator_t* prhs_xevaluator = pstate->prhs_xevaluator;
+	boxed_xval_t bxval = prhs_xevaluator->pprocess_func(prhs_xevaluator->pvstate, pvars);
+
+	char sfree_flags = NO_FREE;
+	char* sval = "{is-a-map}";
+
+	if (bxval.xval.is_terminal) {
+		sval = mv_alloc_format_val(&bxval.xval.terminal_mlrval);
+		sfree_flags = FREE_ENTRY_VALUE;
+	}
 
 	rval_evaluator_t* poutput_filename_evaluator = pstate->poutput_filename_evaluator;
 	if (poutput_filename_evaluator == NULL) {
@@ -128,9 +134,12 @@ static void handle_print(
 		mv_free(&filename_mv);
 	}
 
-	if (sfree_flags)
+	if (sfree_flags) {
 		free(sval);
-	mv_free(&val);
+	}
+	if (bxval.is_ephemeral) {
+		mlhmmv_xvalue_free(&bxval.xval);
+	}
 }
 
 // ================================================================

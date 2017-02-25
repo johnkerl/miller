@@ -11,6 +11,8 @@ BUGFIXES
 * re-valgrinds after UT expansion
 * release notes
 
+! print-map stub: UT x all map variants, incl print $*
+
 ? ship with autoreconf output committed?
 
 ================================================================

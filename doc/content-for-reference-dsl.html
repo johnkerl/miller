@@ -895,25 +895,26 @@ input records.
 field named <tt>nr</tt> to each output record, containing the value of the
 built-in variable <tt>NR</tt> as of when that record was ingested.
 
+<li/> Use the <b>print</b> or <b>eprint</b> keywords which immediately print an
+expression <i>directly to standard output or standard error</i>, respectively.
+Note that <tt>dump</tt>, <tt>edump</tt>, <tt>print</tt>, and <tt>eprint</tt>
+don&rsquo;t output records which participate in <tt>then</tt>-chaining; rather,
+they&rsquo;re just immediate prints to stdout/stderr. The <tt>printn</tt> and
+<tt>eprintn</tt> keywords are the same except that they don&rsquo;t print final
+newlines. Additionally, you can print to a specified file instead of
+stdout/stderr.
+
+<li/> Use the <b>dump</b> or <b>edump</b> keywords, which <i>immediately print
+all out-of-stream variables as a JSON data structure to the standard output or
+standard error</i> (respectively).
+
+<li/> Use <b>tee</b> which formats the current stream record (not just an
+arbitrary string as with <b>print</b>) to a specific file.
+
 <li/> Use <b>emit</b>/<b>emitp</b>/<b>emitf</b> to send out-of-stream
 variables&rsquo; current values to the output record stream, e.g.  <tt>@sum +=
 $x; emit @sum</tt> which produces an extra output record such as
 <tt>sum=3.1648382</tt>.
-
-<li/> Use the <b>dump</b> or <b>edump</b> keywords, which immediately print all
-out-of-stream variables as a JSON data structure to the standard output or
-standard error (respectively).
-
-<li/> Use the <b>print</b> or <b>eprint</b> keywords which immediately print an
-expression to standard output or standard error, respectively. Note that
-<tt>dump</tt>, <tt>edump</tt>, <tt>print</tt>, and <tt>eprint</tt> don&rsquo;t
-output records which participate in <tt>then</tt>-chaining; rather,
-they&rsquo;re just immediate prints to stdout/stderr. The <tt>printn</tt> and
-<tt>eprintn</tt> keywords are the same except that they don&rsquo;t print final
-newlines. Additionally, you can print to a specified file instead of stdout/stderr.
-
-<li/> Use <b>tee</b> which formats the current stream record (not just an
-arbitrary string as with <b>print</b>) to a specific file.
 
 </ul>
 
@@ -925,6 +926,126 @@ is formatted for output using <tt>--o...</tt> flags.
 output, standard error, or a file.
 
 <!-- ================================================================ -->
+<h2>Print statements</h2>
+
+<p/>The <tt>print</tt> statement is perhaps self-explanatory, but with a few
+light caveats:
+
+<ul>
+
+<li/> There are four variants: <tt>print</tt> goes to stdout with final
+newline, <tt>printn</tt> goes to stdout without final newline (you can include
+one using "\n" in your output string), <tt>eprint</tt> goes to stderr with
+final newline, and <tt>eprintn</tt> goes to stderr without final newline.
+
+<li/> Output goes directly to stdout/stderr, respectively: data produced this
+way do not go downstream to the next verb in a <tt>then</tt>-chain. (Use
+<tt>emit</tt> for that.)
+
+<li/> Print statements are for strings (<tt>print "hello"</tt>), or things
+which can be made into strings: numbers (<tt>print 3</tt>, <tt>print $a +
+$b</tt>, or concatenations thereof (<tt>print "a + b = " . ($a + $b)</tt>).
+Maps (in <tt>$*</tt>, map-valued out-of-stream or local variables, and map
+literals) aren&rsquo;t convertible into strings. If you print a map, you get
+<tt>{is-a-map}</tt> as output. Please use <tt>dump</tt> to print maps.
+
+<li/>You can redirect print output to a file:
+<tt>mlr --from myfile.dat put 'print &gt; "tap.txt", $x'</tt>
+<tt>mlr --from myfile.dat put 'o=$*; print &gt; $a.".txt", $x'</tt>.
+
+<li/> See also the <a href="#Redirected-output_statements">section on redirected output</a> for examples.
+
+</ul>
+
+<!-- ================================================================ -->
+<h2>Dump statements</h2>
+
+<p/>The <tt>dump</tt> statement is for printing expressions, including maps,
+directly to stdout/stderr, respectively:
+
+<ul>
+
+<li/> There are two variants: <tt>dump</tt> prints to stdout; <tt>edump</tt>
+prints to stderr.
+
+<li/> Output goes directly to stdout/stderr, respectively: data produced this
+way do not go downstream to the next verb in a <tt>then</tt>-chain. (Use
+<tt>emit</tt> for that.)
+
+<li/> You can use <tt>dump</tt> to output single strings, numbers,
+or expressions including map-valued data. Map-valued data are printed
+as JSON. Miller allows string and integer keys in its map literals while
+JSON allows only string keys, so use <tt>mlr put --jknquoteint</tt> if
+you want integer-valued map keys not double-quoted.
+
+<li/> If you use <tt>dump</tt> (or <tt>edump</tt>) with no arguments, you get a
+JSON structure representing the current values of all out-of-stream variables.
+
+<li/> As with <tt>print</tt>, you can redirect output to files.
+
+<li/> See also the <a href="#Redirected-output_statements">section on redirected output</a> for examples.
+
+</ul>
+
+<!-- ================================================================ -->
+<h2>Tee statements</h2>
+
+<p/> Records produced by a <tt>mlr put</tt> go downstream to the next verb in
+your <tt>then</tt>-chain, if any, or otherwise to standard output.  If you want
+to additionally copy out records to files, you can do that using <tt>tee</tt>.
+
+<p/>The syntax is, by example, <tt>mlr --from myfile.dat put 'tee &gt;
+"tap.dat", $*' then sort -n index</tt>.  First is <tt>tee &gt;</tt>, then the
+filename expression (which can be an expression such as
+<tt>"tap.".$a.".dat"</tt>), then a comma, then <tt>$*</tt>. (Nothing else but
+<tt>$*</tt> is teeable.)
+
+<p/> See also the <a href="#Redirected-output_statements">section on redirected
+output</a> for examples.
+
+<!-- ================================================================ -->
+<h2>Redirected-output statements</h2>
+
+The <b>print</b>, <b>dump</b> <b>tee</b>, <b>emitf</b>, <b>emit</b>, and
+<b>emitp</b> keywords all allow you to redirect output to one or more files or
+pipe-to commands. The filenames/commands are strings which can be constructed
+using record-dependent values, so you can do things like splitting a table into
+multiple files, one for each account ID, and so on.
+
+<p/> Details:
+
+<ul>
+
+<li/> The <tt>print</tt> and <tt>dump</tt> keywords produce output immediately
+to standard output, or to specified file(s) or pipe-to command if present.
+
+POKI_RUN_COMMAND{{mlr --help-keyword print}}HERE
+POKI_RUN_COMMAND{{mlr --help-keyword dump}}HERE
+
+<li/> <tt>mlr put</tt> sends the current record (possibly modified by the
+<tt>put</tt> expression) to the output record stream. Records are then input to
+the following verb in a <tt>then</tt>-chain (if any), else printed to standard
+output (unless <tt>put -q</tt>). The <b>tee</b> keyword <i>additionally</i>
+writes the output record to specified file(s) or pipe-to command, or
+immediately to <tt>stdout</tt>/<tt>stderr</tt>.
+
+POKI_RUN_COMMAND{{mlr --help-keyword tee}}HERE
+
+<li/> <tt>mlr put</tt>&rsquo;s <tt>emitf</tt>, <tt>emitp</tt>, and
+<tt>emit</tt> send out-of-stream variables to the output record stream. These
+are then input to the following verb in a <tt>then</tt>-chain (if any), else
+printed to standard output. When redirected with <tt>&gt;</tt>,
+<tt>&gt;&gt;</tt>, or <tt>|</tt>, they <i>instead</i> write the out-of-stream
+variable(s) to specified file(s) or pipe-to command, or immediately to
+<tt>stdout</tt>/<tt>stderr</tt>.
+
+POKI_RUN_COMMAND{{mlr --help-keyword emitf}}HERE
+POKI_RUN_COMMAND{{mlr --help-keyword emitp}}HERE
+POKI_RUN_COMMAND{{mlr --help-keyword emit}}HERE
+
+</ul>
+
+<!-- ================================================================ -->
 <h2>Emit statements</h2>
 
 <p/>There are three variants: <tt>emitf</tt>, <tt>emit</tt>, and
@@ -932,7 +1053,10 @@ output, standard error, or a file.
 multi-level hashmap (directly viewable as JSON using <tt>dump</tt>), whereas
 Miller output records are lists of single-level key-value pairs. The three emit
 variants allow you to control how the multilevel hashmaps are flatten down to
-output records.
+output records. You can emit any map-valued expression, including <tt>$*</tt>,
+map-valued out-of-stream variables, the entire out-of-stream-variable
+collection <tt>@*</tt>, map-valued local variables, map literals, or map-valued
+function return values.
 
 <p/>Use <b>emitf</b> to output several out-of-stream variables side-by-side in the same output record.
 For <tt>emitf</tt> these mustn&rsquo;t have indexing using <tt>@name[...]</tt>. Example:
@@ -980,7 +1104,8 @@ POKI_RUN_COMMAND{{mlr --oxtab put -q --oflatsep / '@sum[$a][$b] += $x; end { emi
 <!-- ================================================================ -->
 <h2>Multi-emit statements</h2>
 
-<p/>You can emit <b>multiple out-of-stream variables side-by-side</b> by including their names in parentheses:
+<p/>You can emit <b>multiple map-valued expressions side-by-side</b> by
+including their names in parentheses:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/emit-lashed.sh)HERE
 
@@ -988,61 +1113,19 @@ What this does is walk through the first out-of-stream variable
 (<tt>@x_sum</tt> in this example) as usual, then for each keylist found (e.g.
 <tt>pan,wye</tt>), include the values for the remaining out-of-stream variables
 (here, <tt>@x_count</tt> and <tt>@x_mean</tt>). You should use this when all
-out-of-stream variables in the emit statement have the same shape and the same
-keylists.
+out-of-stream variables in the emit statement have <b>the same shape and the same
+keylists</b>.
 
 <!-- ================================================================ -->
 <h2>Emit-all statements</h2>
 
-<p/>Use <b>emit all</b> (or <tt>emit @*</tt> which is synonumous) to output all
+<p/>Use <b>emit all</b> (or <tt>emit @*</tt> which is synonymous) to output all
 out-of-stream variables. You can use the following idiom to get various
 accumulators output side-by-side (reminiscent of <tt>mlr stats1</tt>):
 
 POKI_RUN_COMMAND{{mlr --from data/small --opprint put -q '@v[$a][$b]["sum"] += $x; @v[$a][$b]["count"] += 1; end{emit @*,"a","b"}'}}HERE
 POKI_RUN_COMMAND{{mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit @*,"a","b"}'}}HERE
 POKI_RUN_COMMAND{{mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @count[$a][$b] += 1; end{emit (@sum, @count),"a","b"}'}}HERE
-
-<!-- ================================================================ -->
-<h2>Redirected-output statements</h2>
-
-The <b>tee</b>, <b>emitf</b>, <b>emitp</b>, <b>emit</b>, <b>print</b>, and
-<b>dump</b> keywords all allow you to redirect output to one or more files or
-pipe-to commands. The filenames/commands are strings which can be constructed
-using record-dependent values, so you can do things like splitting a table into
-multiple files, one for each account ID, and so on.
-
-<p/> Details:
-
-<ul>
-
-<li/> <tt>mlr put</tt> sends the current record (possibly modified by the
-<tt>put</tt> expression) to the output record stream. Records are then input to
-the following verb in a <tt>then</tt>-chain (if any), else printed to standard
-output (unless <tt>put -q</tt>). The <b>tee</b> keyword <i>additionally</i>
-writes the output record to specified file(s) or pipe-to command, or
-immediately to <tt>stdout</tt>/<tt>stderr</tt>.
-
-POKI_RUN_COMMAND{{mlr --help-keyword tee}}HERE
-
-<li/> <tt>mlr put</tt>&rsquo;s <tt>emitf</tt>, <tt>emitp</tt>, and
-<tt>emit</tt> send out-of-stream variables to the output record stream. These
-are then input to the following verb in a <tt>then</tt>-chain (if any), else
-printed to standard output. When redirected with <tt>&gt;</tt>,
-<tt>&gt;&gt;</tt>, or <tt>|</tt>, they <i>instead</i> write the out-of-stream
-variable(s) to specified file(s) or pipe-to command, or immediately to
-<tt>stdout</tt>/<tt>stderr</tt>.
-
-POKI_RUN_COMMAND{{mlr --help-keyword emitf}}HERE
-POKI_RUN_COMMAND{{mlr --help-keyword emitp}}HERE
-POKI_RUN_COMMAND{{mlr --help-keyword emit}}HERE
-
-<li/> The <tt>print</tt> and <tt>dump</tt> keywords produce output immediately
-to standard output, or to specified file(s) or pipe-to command if present.
-
-POKI_RUN_COMMAND{{mlr --help-keyword print}}HERE
-POKI_RUN_COMMAND{{mlr --help-keyword dump}}HERE
-
-</ul>
 
 </div>
 <!-- ================================================================ -->
@@ -1056,7 +1139,9 @@ Using <tt>unset</tt> you can remove the key entirely. Examples:
 POKI_RUN_COMMAND{{cat data/small}}HERE
 POKI_RUN_COMMAND{{mlr put 'unset $x, $a' data/small}}HERE
 
-<p/>This can also be done, of course, using <tt>mlr cut -x</tt>. You can also clear out-of-stream variables, at the base name level, or at an indexed sublevel:
+<p/>This can also be done, of course, using <tt>mlr cut -x</tt>. You can also
+clear out-of-stream or local variables, at the base name level, or at an
+indexed sublevel:
 
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum; dump }' data/small}}HERE
 POKI_RUN_COMMAND{{mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum["eks"]; dump }' data/small}}HERE
@@ -1219,13 +1304,15 @@ place of a DSL. Multiple performance experiments showed me I could get better
 throughput using the former, and using C in particular &mdash; by a wide margin. So
 Miller is C under the hood with a hand-rolled DSL.
 
-<p/> I do want to keep focusing on what Miller is good at &mdash; concise notation,
-low latency, and high throughput &mdash; and not add too much in terms of
-high-level-language features to the DSL.  That said, some sort of looping over
-field names is a basic thing to want. As of 4.1.0 we have recursive
-for/while/if structures on about the same complexity level as <tt>awk</tt>.
-While I&rsquo;m excited by these powerful language features, I hope to keep new
-features beyond 4.1.0 focused on Miller&rsquo;s sweet spot which is speed plus
-simplicity.
+<p/> I do want to keep focusing on what Miller is good at &mdash; concise
+notation, low latency, and high throughput &mdash; and not add too much in
+terms of high-level-language features to the DSL.  That said, some sort of
+looping over field names is a basic thing to want. As of 4.1.0 we have
+recursive for/while/if structures on about the same complexity level as
+<tt>awk</tt>; as of 5.0.0 we have user-defined functions and map-valued
+variables, again on about the same complexity level as <tt>awk</tt> along with
+optional type-declaration syntax.  While I&rsquo;m excited by these powerful
+language features, I hope to keep new features beyond 5.0.0 focused on
+Miller&rsquo;s sweet spot which is speed plus simplicity.
 
 </div>
