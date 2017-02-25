@@ -3835,7 +3835,10 @@ run_mlr         --from $indir/abixy-het --opprint put -q '@o={"ab":$a.$b}; emit 
 mlr_expect_fail --from $indir/abixy-het --opprint put -q 'emit $a.$b'
 run_mlr         --from $indir/abixy-het --opprint put -q 'emit {"ab":$a.$b}'
 
+run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return a.b } o = f($a, $b); emit o'
 run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return a.b } emit f($a, $b)'
+
+run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return {"ab": a.b} } o = f($a, $b); emit o'
 run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return {"ab": a.b} } emit f($a, $b)'
 
 # ----------------------------------------------------------------
@@ -3843,24 +3846,35 @@ announce MAP-VARIANT LASHED EMITS
 
 ## xxx segv
 ##run_mlr         --from $indir/abixy-het --opprint put -q 'o=$a.$b; p = $i.$y; emit (o, p)'
-run_mlr         --from $indir/abixy-het --opprint put -q 'o={"ab":$a.$b}; p={"ab":$x.$y}; emit (o, p),"ab"'
-
-run_mlr         --from $indir/abixy-het --opprint put -q '@o=$a.$b; @p = $i.$y; emit (@o, @p)'
-run_mlr         --from $indir/abixy-het --opprint put -q '@o={"ab":$a.$b}; @p={"ab":$x.$y}; emit (@o, @p),"ab"'
-
+#run_mlr         --from $indir/abixy-het --opprint put -q 'o={"ab":$a.$b}; p={"ab":$x.$y}; emit (o, p),"ab"'
+#
+#run_mlr         --from $indir/abixy-het --opprint put -q '@o=$a.$b; @p = $i.$y; emit (@o, @p)'
+#run_mlr         --from $indir/abixy-het --opprint put -q '@o={"ab":$a.$b}; @p={"ab":$x.$y}; emit (@o, @p),"ab"'
+#
 #mlr_expect_fail --from $indir/abixy-het --opprint put -q 'emit ($a.$b,$x.$y)'
-#run_mlr         --from $indir/abixy-het --opprint put -q 'emit ({"ab":$a.$b},{"ab":$x.$y})'
+#run_mlr         --from $indir/abixy-het --opprint put -q 'o={"ab":$a.$b};p={"ab":$x.$y}; emit (o,p)'
+#run_mlr         --from $indir/abixy-het --opprint put -q 'o={"ab":$a.$b};p={"ab":$x.$y}; emit (o,p),"ab"'
 ## wtfc
-#run_mlr         --from $indir/abixy-het --opprint put -q 'emit ({"ab":$a.$b},{"ab":$x.$y}), "ab"'
+##run_mlr         --from $indir/abixy-het --opprint put -q 'emit ({"ab":$a.$b},{"ab":$x.$y})'
+## wtfc
+##run_mlr         --from $indir/abixy-het --opprint put -q 'emit ({"ab":$a.$b},{"ab":$x.$y}), "ab"'
 #
 ## xxx segv
 ##run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return a.b }         o=f($a,$b); p=f($x,$y); emit (o, p)'
-run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return {"ab": a.b} } o=f($a,$b); p=f($x,$y); emit (o, p), "ab"'
-
+#run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return {"ab": a.b} } o=f($a,$b); p=f($x,$y); emit (o, p), "ab"'
+#
+## xxx segv
+##run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return a.b } o=f($a, $b); p=f($x,$y); emit (o,p)'
+## xxx segv
+##run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return a.b } o=f($a, $b); p=f($x,$y); emit (o,p), "ab"'
 ## xxx syntax error
 ##run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return a.b } emit (f($a, $b),f($x,$y))'
 ## xxx syntax error
-##run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return {"ab": a.b} } emit (f($a, $b),f($x,$y)),"ab"'
+#
+#run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return {"ab": a.b} } o=f($a, $b); p=f($x,$y); emit (o,p)'
+#run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return {"ab": a.b} } o=f($a, $b); p=f($x,$y); emit (o,p), "ab"'
+## xxx syntax error
+##run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a,b) { return {"ab": a.b} } #emit (f($a, $b),f($x,$y)),"ab"'
 
 # ----------------------------------------------------------------
 announce MAPPER NOTHING
