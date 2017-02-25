@@ -13,13 +13,11 @@ BUGFIXES
 
 ? ship with autoreconf output committed?
 
-* find & update the task w/ requesting --barred
-
 ================================================================
 UT FOR 5.0.0:
 
 * for-valgrind list of tests all with explicit dot operator to catch string mallocs.
-  - locals, both scalars & with dot-output values in hashmap keys
+  - locals,  both scalars & with dot-output values in hashmap keys
   - oosvars, both scalars & with dot-output values in hashmap keys
 
 ! along the way clarify ownership semantics in localstack & mlhmmv via function names, & top-of-file comments
@@ -45,9 +43,6 @@ TRANSPARENCY:
 * dump locals & named/subscripted oosvars
 * emit locals & named/subscripted oosvars
 
-PERF:
-* mand bench somewhere; other benches.
-
 KW autodoc:
 * kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
   E ENV FILENAME FILENUM FNR NF NR PI [IO][PFS]S
@@ -59,7 +54,7 @@ To file:
 * absent vs. empty; unset $x vs. $x="". no null keyword.
 * env lhs expr
 * allow empty maps/levels in oosvars as well as map-literals
-* [IO][PFS]S variables
+* [IO][PFR]S variables
 
 covers:
 * func-def example @ cover x n
