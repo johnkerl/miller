@@ -408,7 +408,8 @@ POKI_RUN_COMMAND{{cat data/type-decl-example.mlr}}HERE
 although they can be multi-level hashmaps (e.g. <tt>@sum[$x][$y]</tt>).  The
 fourth kind is <b>map literals</b>. These cannot be on the left-hand side of
 assignment expressions. Syntactically they look like JSON, although Miller
-allows integer keys in its map literals while JSON does not.
+allows string and integer keys in its map literals while JSON allows only
+string keys (e.g. <tt>"3"</tt> rather than <tt>3</tt>).
 
 <p/> For example, the following swaps the input stream&rsquo;s <tt>a</tt> and
 <tt>i</tt> fields, modifies <tt>y</tt>, and drops the rest:
