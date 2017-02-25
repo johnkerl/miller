@@ -7,11 +7,7 @@ BUGFIXES
 5.0.0 RELEASE TO DO:
 
 * UT
-* ref-dsl: update fors to be single-for, kvv-for, triple-for;
-* ref-dsl: go through oosvar vs. local
-* ref-dsl: separate map-literal section?
 * mt_error/fatal/skip-assign audit
-* xxxes
 * re-valgrinds after UT expansion
 * release notes
 
@@ -27,9 +23,6 @@ UT FOR 5.0.0:
   - oosvars, both scalars & with dot-output values in hashmap keys
 
 ! along the way clarify ownership semantics in localstack & mlhmmv via function names, & top-of-file comments
-
-? dump maplit      -- ensure scalar-out is printed > alloc & free the ephemeral
-? dump func-retval -- ensure scalar-out is printed > alloc & free the ephemeral
 
 ? emit localvar -- check lashed; UTs          > ref the rhs
 ? emit oosvar                                 > ref the rhs
@@ -222,6 +215,8 @@ NON-RELEASE:
     ? sample -g
     ? tail -g
     - uniq -g
+
+* xxxes
 
 * mlr hex -> auxes. and make an aux-list. and doc: olh as well as webdoc?
 

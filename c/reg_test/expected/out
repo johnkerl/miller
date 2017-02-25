@@ -55486,6 +55486,74 @@ mlr --from ./reg_test/input/abixy-het put -q o = mapdiff({"a":999}, $*, {"b": 44
 
 
 ================================================================
+MAP-VARIANT DUMPS
+
+mlr --from ./reg_test/input/abixy-het put -q dump {"a"."b":$a.$b}
+{
+  "ab": "panpan"
+}
+{
+  "ab": "ekspan"
+}
+{
+  "ab": "wye"
+}
+{
+  "ab": "eks"
+}
+{
+  "ab": "wyepan"
+}
+{
+  "ab": "zeepan"
+}
+{
+  "ab": "ekszee"
+}
+{
+  "ab": "zeewye"
+}
+{
+  "ab": 
+}
+{
+  "ab": "panwye"
+}
+
+mlr --from ./reg_test/input/abixy-het put -q func f(a, b) { return {"a"."b":a.b} } dump f($a, $b)
+{
+  "ab": "panpan"
+}
+{
+  "ab": "ekspan"
+}
+{
+  "ab": "wye"
+}
+{
+  "ab": "eks"
+}
+{
+  "ab": "wyepan"
+}
+{
+  "ab": "zeepan"
+}
+{
+  "ab": "ekszee"
+}
+{
+  "ab": "zeewye"
+}
+{
+  "ab": 
+}
+{
+  "ab": "panwye"
+}
+
+
+================================================================
 EXTENDED TYPEOF
 
 mlr --from ./reg_test/input/xyz2 --oxtab put 

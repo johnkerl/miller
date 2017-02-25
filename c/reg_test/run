@@ -6147,6 +6147,12 @@ run_mlr --from $indir/abixy-het put -q 'o = mapdiff($*, {"a":999}, {"b": 444}); 
 run_mlr --from $indir/abixy-het put -q 'o = mapdiff({"a":999}, $*, {"b": 444}); dump o'
 
 # ----------------------------------------------------------------
+announce MAP-VARIANT DUMPS
+
+run_mlr --from $indir/abixy-het put -q 'dump {"a"."b":$a.$b}'
+run_mlr --from $indir/abixy-het put -q 'func f(a, b) { return {"a"."b":a.b} } dump f($a, $b)'
+
+# ----------------------------------------------------------------
 announce EXTENDED TYPEOF
 
 run_mlr --from $indir/xyz2 --oxtab put '
