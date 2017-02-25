@@ -210,6 +210,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#If-statements">If-statements</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#While_and_do-while_loops">While and do-while loops</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loops">For-loops</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Key-only_for-loops">Key-only for-loops</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loop_over_the_current_stream_record">For-loop over the current stream record</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loop_over_out-of-stream_variable">For-loop over out-of-stream variable</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#C-style_triple-for_loops">C-style triple-for loops</a><br/>
@@ -2038,21 +2039,87 @@ otherwise. For example, <b><tt>while (NR < 10)</tt> will never terminate as
 
 <p/>While Miller&rsquo;s <tt>while</tt> and <tt>do-while</tt> statements are
 much as in many other languages, <tt>for</tt> loops are more idiosyncratic to
-Miller. They are loops over key-value pairs, whether in stream records or
-out-of-stream variables: more reminiscent of <tt>foreach</tt>, as in (for
-example) PHP.
+Miller. They are loops over key-value pairs, whether in stream records,
+out-of-stream variables, local variables, or map-literals: more reminiscent of
+<tt>foreach</tt>, as in (for example) PHP. There are <b>for-loops over map
+keys</b> and <b>for-loops over key-value tuples</b>.  Additionally, Miller has a
+<b>C-style triple-for loop</b> with initialize, test, and update statements.
 
-<p/> There are three variants: <b>for-loop over key-value pairs in the current
-stream record</b>, <b>for-loop over key-value pairs in an out-of-stream
-variable</b>, and <b>C-style triple-for loops</b>.  In each of the first two
-cases the <tt>in</tt> keyword specifies the hashmap being iterated over, and
-the variable names between <tt>for</tt> and <tt>in</tt> are bound to the keys
-and values, respectively, of the hashmap&rsquo;s key-value pairs on each loop
-iteration.  As with <tt>while</tt> and <tt>do-while</tt>, a <tt>break</tt> or
+<p/>As with <tt>while</tt> and <tt>do-while</tt>, a <tt>break</tt> or
 <tt>continue</tt> within nested control structures will propagate to the
 innermost loop enclosing them, if any, and a <tt>break</tt> or
 <tt>continue</tt> outside a loop is a syntax error that will be flagged as soon
 as the expression is parsed, before any input records are ingested.
+
+<a id="Key-only_for-loops"/><h3>Key-only for-loops </h3>
+
+<p/>The <tt>key</tt> variable is always bound to the <i>key</i> of key-value pairs:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small put '
+  print "NR = ".NR;
+  for (key in $*) {
+    value = $[key];
+    print "  key:" . key . "  value:".value;
+  }
+
+'
+NR = 1
+  key:a  value:pan
+  key:b  value:pan
+  key:i  value:1
+  key:x  value:0.346790
+  key:y  value:0.726803
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+NR = 2
+  key:a  value:eks
+  key:b  value:pan
+  key:i  value:2
+  key:x  value:0.758680
+  key:y  value:0.522151
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+NR = 3
+  key:a  value:wye
+  key:b  value:wye
+  key:i  value:3
+  key:x  value:0.204603
+  key:y  value:0.338319
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+NR = 4
+  key:a  value:eks
+  key:b  value:wye
+  key:i  value:4
+  key:x  value:0.381399
+  key:y  value:0.134189
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+NR = 5
+  key:a  value:wye
+  key:b  value:pan
+  key:i  value:5
+  key:x  value:0.573289
+  key:y  value:0.863624
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr -n put '
+  end {
+    o = {1:2, 3:{4:5}};
+    for (key in o) {
+      print "  key:" . key . "  valuetype:" . typeof(o[key]);
+    }
+  }
+'
+  key:1  valuetype:int
+  key:3  valuetype:map
+</pre>
+</div>
+<p/>
 
 <a id="For-loop_over_the_current_stream_record"/><h3>For-loop over the current stream record</h3>
 

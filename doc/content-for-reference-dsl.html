@@ -725,21 +725,24 @@ otherwise. For example, <b><tt>while (NR < 10)</tt> will never terminate as
 
 <p/>While Miller&rsquo;s <tt>while</tt> and <tt>do-while</tt> statements are
 much as in many other languages, <tt>for</tt> loops are more idiosyncratic to
-Miller. They are loops over key-value pairs, whether in stream records or
-out-of-stream variables: more reminiscent of <tt>foreach</tt>, as in (for
-example) PHP.
+Miller. They are loops over key-value pairs, whether in stream records,
+out-of-stream variables, local variables, or map-literals: more reminiscent of
+<tt>foreach</tt>, as in (for example) PHP. There are <b>for-loops over map
+keys</b> and <b>for-loops over key-value tuples</b>.  Additionally, Miller has a
+<b>C-style triple-for loop</b> with initialize, test, and update statements.
 
-<p/> There are three variants: <b>for-loop over key-value pairs in the current
-stream record</b>, <b>for-loop over key-value pairs in an out-of-stream
-variable</b>, and <b>C-style triple-for loops</b>.  In each of the first two
-cases the <tt>in</tt> keyword specifies the hashmap being iterated over, and
-the variable names between <tt>for</tt> and <tt>in</tt> are bound to the keys
-and values, respectively, of the hashmap&rsquo;s key-value pairs on each loop
-iteration.  As with <tt>while</tt> and <tt>do-while</tt>, a <tt>break</tt> or
+<p/>As with <tt>while</tt> and <tt>do-while</tt>, a <tt>break</tt> or
 <tt>continue</tt> within nested control structures will propagate to the
 innermost loop enclosing them, if any, and a <tt>break</tt> or
 <tt>continue</tt> outside a loop is a syntax error that will be flagged as soon
 as the expression is parsed, before any input records are ingested.
+
+<h3>Key-only for-loops </h3>
+
+<p/>The <tt>key</tt> variable is always bound to the <i>key</i> of key-value pairs:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/single-for-example-1.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/single-for-example-2.sh)HERE
 
 <h3>For-loop over the current stream record</h3>
 
