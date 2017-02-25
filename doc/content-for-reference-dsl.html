@@ -744,7 +744,18 @@ as the expression is parsed, before any input records are ingested.
 POKI_INCLUDE_AND_RUN_ESCAPED(data/single-for-example-1.sh)HERE
 POKI_INCLUDE_AND_RUN_ESCAPED(data/single-for-example-2.sh)HERE
 
-<h3>For-loop over the current stream record</h3>
+<p/>Note that the value corresponding to a given key may be gotten as through a
+<b>computed field name</b> using square brackets as in <tt>$[key]</tt> for
+stream records, or by indexing the looped-over variable using square brackets.
+
+<h3>Key-value for-loops </h3>
+
+<p/>Single-level keys may be gotten at using either <tt>for(k,v)</tt> or
+<tt>for((k),v)</tt>; multi-level keys may be gotten at using
+<tt>for((k1,k2,k3),v)</tt> and so on.  The <tt>v</tt> variable will be bound to
+to a scalar value (a string or a number) if the map stops at that level, or to
+a map-valued variable if the map goes deeper. If the map isn&rsquo;t deep
+enough then the loop body won&rsquo;t be executed.
 
 POKI_RUN_COMMAND{{cat data/for-srec-example.tbl}}HERE
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-1.sh)HERE
@@ -762,23 +773,20 @@ itself</b>:
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-2.sh)HERE
 
 It can be confusing to modify the stream record while iterating over a copy of it, so
-instead you might find it simpler to use an out-of-stream variable in the loop and only update
+instead you might find it simpler to use a local variable in the loop and only update
 the stream record after the loop:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-srec-example-3.sh)HERE
 
-<h3>For-loop over out-of-stream variable</h3>
-
-<p/> This is similar to looping over the current stream record except for
-additional degrees of freedom: you can start iterating on sub-hashmaps of an
-out-of-stream variable; you can loop over nested keys; you can loop over all
-out-of-stream variables.  As with for-loops over stream records, the bound
-variables are bound to a copy of the sub-hashmap as it was before the loop
-started.  The sub-hashmap is specified by square-bracketed indices after
-<tt>in</tt>, and additional deeper indices are bound to loop key-variables. The
-terminal values are bound to the loop value-variable whenever the keys are not
-too shallow. The value-variable may refer to a terminal (string, number) or it
-may be map-valued if the map goes deeper. Example indexing is as follows:
+<p/>You can also start iterating on sub-hashmaps of an out-of-stream or local
+variable; you can loop over nested keys; you can loop over all out-of-stream
+variables.  The bound variables are bound to a copy of the sub-hashmap as it
+was before the loop started.  The sub-hashmap is specified by square-bracketed
+indices after <tt>in</tt>, and additional deeper indices are bound to loop
+key-variables. The terminal values are bound to the loop value-variable
+whenever the keys are not too shallow. The value-variable may refer to a
+terminal (string, number) or it may be map-valued if the map goes deeper.
+Example indexing is as follows:
 
 POKI_INCLUDE_ESCAPED(data/for-oosvar-example-0a.txt)HERE
 
@@ -787,37 +795,43 @@ Suppose the out-of-stream variable <tt>@myvar</tt> is populated as follows:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0b.sh)HERE
 
-<p/> Then the too-shallow parts &mdash; indexed by the basename <tt>myvar</tt>
-and the index <tt>"nesting-is-too-shallow"</tt> &mdash; have depth two
-(basename and one index specify a terminal value) and can be gotten as follows:
+<p/> Then we can get at various values as follows:
 
+<table><tr><td>
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0c.sh)HERE
+</td><td>
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0d.sh)HERE
-
-<p/>The <tt>"just-right"</tt> parts have depth three (basename and two indices
-specify a terminal value) and can be gotten at by any of the following:
-
+</td><td>
 POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0e.sh)HERE
-POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0f.sh)HERE
-POKI_INCLUDE_AND_RUN_ESCAPED(data/for-oosvar-example-0g.sh)HERE
+</td></tr></table>
 
 <h3>C-style triple-for loops</h3>
 
 <p/> These are supported as follows:
 
-POKI_INCLUDE_AND_RUN_ESCAPED(data/triple-for-example.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/triple-for-example-1.sh)HERE
+POKI_INCLUDE_AND_RUN_ESCAPED(data/triple-for-example-2.sh)HERE
 
 Notes:
 <ul>
 
 <li/> In <tt>for (start; continuation; update) { body }</tt>, the start,
 continuation, and update statements may be empty, single statements, or
-multiple comma-separated statements. If the continuation is empty it defaults
+multiple comma-separated statements. If the continuation is empty (e.g. <tt>for(i=1;;i+=1)</tt>) it defaults
 to true.
 
 <li/> In particular, you may use <tt>$</tt>-variables and/or
 <tt>@</tt>-variables in the start, continuation, and/or update steps (as well
 as the body, of course).
+
+<li/> The typedecls such as <tt>int</tt> or <tt>num</tt> are optional.  If a
+typedecl is provided (for a local variable), it binds a variable scoped to the
+for-loop regardless of whether a same-name variable is present in outer scope.
+If a typedecl is not provided, then the variable is scoped to the for-loop if
+no same-name variable is present in outer scope, or if a same-name variable is
+present in outer scope then it is modified.
+
+<li/> Miller has no <tt>++</tt> or <tt>--</tt> operators.
 
 <li/> As with all for/if/while statements in Miller, the curly braces are
 required even if the body is a single statement, or empty.

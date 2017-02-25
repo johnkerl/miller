@@ -211,8 +211,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#While_and_do-while_loops">While and do-while loops</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loops">For-loops</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Key-only_for-loops">Key-only for-loops</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loop_over_the_current_stream_record">For-loop over the current stream record</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#For-loop_over_out-of-stream_variable">For-loop over out-of-stream variable</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Key-value_for-loops">Key-value for-loops</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#C-style_triple-for_loops">C-style triple-for loops</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Begin/end_blocks">Begin/end blocks</a><br/>
 &bull;&nbsp;<a href="#Output_statements">Output statements</a><br/>
@@ -2121,7 +2120,18 @@ $ mlr -n put '
 </div>
 <p/>
 
-<a id="For-loop_over_the_current_stream_record"/><h3>For-loop over the current stream record</h3>
+<p/>Note that the value corresponding to a given key may be gotten as through a
+<b>computed field name</b> using square brackets as in <tt>$[key]</tt> for
+stream records, or by indexing the looped-over variable using square brackets.
+
+<a id="Key-value_for-loops"/><h3>Key-value for-loops </h3>
+
+<p/>Single-level keys may be gotten at using either <tt>for(k,v)</tt> or
+<tt>for((k),v)</tt>; multi-level keys may be gotten at using
+<tt>for((k1,k2,k3),v)</tt> and so on.  The <tt>v</tt> variable will be bound to
+to a scalar value (a string or a number) if the map stops at that level, or to
+a map-valued variable if the map goes deeper. If the map isn&rsquo;t deep
+enough then the loop body won&rsquo;t be executed.
 
 <p/>
 <div class="pokipanel">
@@ -2202,20 +2212,20 @@ wye pan 5 0.5732889198020006  0.8636244699032729  6.436913 25.747654
 <p/>
 
 It can be confusing to modify the stream record while iterating over a copy of it, so
-instead you might find it simpler to use an out-of-stream variable in the loop and only update
+instead you might find it simpler to use a local variable in the loop and only update
 the stream record after the loop:
 
 <p/>
 <div class="pokipanel">
 <pre>
 $ mlr --from data/small --opprint put '
-  @sum = 0;
+  sum = 0;
   for (k,v in $*) {
     if (is_numeric(v)) {
-      @sum += $[k];
+      sum += $[k];
     }
   }
-  $sum = @sum
+  $sum = sum
 '
 a   b   i x                   y                   sum
 pan pan 1 0.3467901443380824  0.7268028627434533  2.073593
@@ -2227,18 +2237,15 @@ wye pan 5 0.5732889198020006  0.8636244699032729  6.436913
 </div>
 <p/>
 
-<a id="For-loop_over_out-of-stream_variable"/><h3>For-loop over out-of-stream variable</h3>
-
-<p/> This is similar to looping over the current stream record except for
-additional degrees of freedom: you can start iterating on sub-hashmaps of an
-out-of-stream variable; you can loop over nested keys; you can loop over all
-out-of-stream variables.  As with for-loops over stream records, the bound
-variables are bound to a copy of the sub-hashmap as it was before the loop
-started.  The sub-hashmap is specified by square-bracketed indices after
-<tt>in</tt>, and additional deeper indices are bound to loop key-variables. The
-terminal values are bound to the loop value-variable whenever the keys are not
-too shallow. The value-variable may refer to a terminal (string, number) or it
-may be map-valued if the map goes deeper. Example indexing is as follows:
+<p/>You can also start iterating on sub-hashmaps of an out-of-stream or local
+variable; you can loop over nested keys; you can loop over all out-of-stream
+variables.  The bound variables are bound to a copy of the sub-hashmap as it
+was before the loop started.  The sub-hashmap is specified by square-bracketed
+indices after <tt>in</tt>, and additional deeper indices are bound to loop
+key-variables. The terminal values are bound to the loop value-variable
+whenever the keys are not too shallow. The value-variable may refer to a
+terminal (string, number) or it may be map-valued if the map goes deeper.
+Example indexing is as follows:
 
 <p/>
 <div class="pokipanel">
@@ -2261,27 +2268,25 @@ Suppose the out-of-stream variable <tt>@myvar</tt> is populated as follows:
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint --from data/small head -n 2 then put -q '
+$ mlr -n put --jknquoteint -q '
   begin {
-    @myvar["nesting-is-too-shallow"] = 1;
-    @myvar["nesting-is"]["just-right"] = 2;
-    @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["deeper"] = 4;
+    @myvar = {
+      1: 2,
+      3: { 4 : 5 },
+      6: { 7: { 8: 9 } }
+    }
   }
-  end {
-    dump
-  }
+  end { dump }
 '
 {
   "myvar": {
-    "nesting-is-too-shallow": 1,
-    "nesting-is": {
-      "just-right": 2,
-      "also-just-right": 3
+    1: 2,
+    3: {
+      4: 5
     },
-    "nesting": {
-      "is": {
-        "deeper": 4
+    6: {
+      7: {
+        8: 9
       }
     }
   }
@@ -2290,133 +2295,110 @@ $ mlr --opprint --from data/small head -n 2 then put -q '
 </div>
 <p/>
 
-<p/> Then the too-shallow parts &mdash; indexed by the basename <tt>myvar</tt>
-and the index <tt>"nesting-is-too-shallow"</tt> &mdash; have depth two
-(basename and one index specify a terminal value) and can be gotten as follows:
+<p/> Then we can get at various values as follows:
 
+<table><tr><td>
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --from data/small head -n 2 then put -q '
+$ mlr -n put --jknquoteint -q '
   begin {
-    @myvar["nesting-is-too-shallow"] = 1;
-    @myvar["nesting-is"]["just-right"] = 2;
-    @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["deeper"] = 4;
+    @myvar = {
+      1: 2,
+      3: { 4 : 5 },
+      6: { 7: { 8: 9 } }
+    }
   }
   end {
     for (k, v in @myvar) {
-      @terminal[k] = v
+      print
+        "key=" . k .
+        ",valuetype=" . typeof(v);
     }
-    emit @terminal, "index1"
   }
 '
-index1=nesting-is-too-shallow,terminal=1
-index1=nesting-is,just-right=2,also-just-right=3
-index1=nesting,deeper=4
+key=1,valuetype=int
+key=3,valuetype=map
+key=6,valuetype=map
 </pre>
 </div>
 <p/>
+</td><td>
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --from data/small head -n 2 then put -q '
+$ mlr -n put --jknquoteint -q '
   begin {
-    @myvar["nesting-is-too-shallow"] = 1;
-    @myvar["nesting-is"]["just-right"] = 2;
-    @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["deeper"] = 4;
-  }
-  end {
-    for ((k1, k2), v in @*) {
-      @terminal[k1][k2] = v
+    @myvar = {
+      1: 2,
+      3: { 4 : 5 },
+      6: { 7: { 8: 9 } }
     }
-    emit @terminal, "basename", "index1"
-  }
-'
-basename=myvar,index1=nesting-is-too-shallow,terminal=1
-basename=myvar,index1=nesting-is,just-right=2,also-just-right=3
-basename=myvar,index1=nesting,deeper=4
-</pre>
-</div>
-<p/>
-
-<p/>The <tt>"just-right"</tt> parts have depth three (basename and two indices
-specify a terminal value) and can be gotten at by any of the following:
-
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/small head -n 2 then put -q '
-  begin {
-    @myvar["nesting-is-too-shallow"] = 1;
-    @myvar["nesting-is"]["just-right"] = 2;
-    @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["deeper"] = 4;
-  }
-  end {
-    for ((k1), v in @myvar["nesting-is"]) {
-      @terminal[k1] = v
-    }
-    emit @terminal, "index1"
-  }
-'
-index1=just-right,terminal=2
-index1=also-just-right,terminal=3
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --from data/small head -n 2 then put -q '
-  begin {
-    @myvar["nesting-is-too-shallow"] = 1;
-    @myvar["nesting-is"]["just-right"] = 2;
-    @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["deeper"] = 4;
   }
   end {
     for ((k1, k2), v in @myvar) {
-      @terminal[k1][k2] = v
+      print
+        "key1=" . k1 .
+        ",key2=" . k2 .
+        ",valuetype=" . typeof(v);
     }
-    emit @terminal, "index1", "index2"
   }
 '
-index1=nesting-is,index2=just-right,terminal=2
-index1=nesting-is,index2=also-just-right,terminal=3
-index1=nesting,index2=is,deeper=4
+key1=3,key2=4,valuetype=int
+key1=6,key2=7,valuetype=map
 </pre>
 </div>
 <p/>
+</td><td>
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --from data/small head -n 2 then put -q '
+$ mlr -n put --jknquoteint -q '
   begin {
-    @myvar["nesting-is-too-shallow"] = 1;
-    @myvar["nesting-is"]["just-right"] = 2;
-    @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["deeper"] = 4;
+    @myvar = {
+      1: 2,
+      3: { 4 : 5 },
+      6: { 7: { 8: 9 } }
+    }
   }
   end {
-    for ((k1, k2, k3), v in @*) {
-      @terminal[k1][k2][k3] = v
+    for ((k1, k2), v in @myvar[6]) {
+      print
+        "key1=" . k1 .
+        ",key2=" . k2 .
+        ",valuetype=" . typeof(v);
     }
-    emit @terminal, "basename", "index1", "index2"
   }
 '
-basename=myvar,index1=nesting-is,index2=just-right,terminal=2
-basename=myvar,index1=nesting-is,index2=also-just-right,terminal=3
-basename=myvar,index1=nesting,index2=is,deeper=4
+key1=7,key2=8,valuetype=int
 </pre>
 </div>
 <p/>
+</td></tr></table>
 
 <a id="C-style_triple-for_loops"/><h3>C-style triple-for loops</h3>
 
 <p/> These are supported as follows:
 
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/small --opprint put '
+  num suma = 0;
+  for (a = 1; a &lt;= NR; a += 1) {
+    suma += a;
+  }
+  $suma = suma;
+'
+a   b   i x                   y                   suma
+pan pan 1 0.3467901443380824  0.7268028627434533  1
+eks pan 2 0.7586799647899636  0.5221511083334797  3
+wye wye 3 0.20460330576630303 0.33831852551664776 6
+eks wye 4 0.38139939387114097 0.13418874328430463 10
+wye pan 5 0.5732889198020006  0.8636244699032729  15
+</pre>
+</div>
+<p/>
 <p/>
 <div class="pokipanel">
 <pre>
@@ -2445,12 +2427,21 @@ Notes:
 
 <li/> In <tt>for (start; continuation; update) { body }</tt>, the start,
 continuation, and update statements may be empty, single statements, or
-multiple comma-separated statements. If the continuation is empty it defaults
+multiple comma-separated statements. If the continuation is empty (e.g. <tt>for(i=1;;i+=1)</tt>) it defaults
 to true.
 
 <li/> In particular, you may use <tt>$</tt>-variables and/or
 <tt>@</tt>-variables in the start, continuation, and/or update steps (as well
 as the body, of course).
+
+<li/> The typedecls such as <tt>int</tt> or <tt>num</tt> are optional.  If a
+typedecl is provided (for a local variable), it binds a variable scoped to the
+for-loop regardless of whether a same-name variable is present in outer scope.
+If a typedecl is not provided, then the variable is scoped to the for-loop if
+no same-name variable is present in outer scope, or if a same-name variable is
+present in outer scope then it is modified.
+
+<li/> Miller has no <tt>++</tt> or <tt>--</tt> operators.
 
 <li/> As with all for/if/while statements in Miller, the curly braces are
 required even if the body is a single statement, or empty.

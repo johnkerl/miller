@@ -1,14 +1,16 @@
-mlr --from data/small head -n 2 then put -q '
+mlr -n put --jknquoteint -q '
   begin {
-    @myvar["nesting-is-too-shallow"] = 1;
-    @myvar["nesting-is"]["just-right"] = 2;
-    @myvar["nesting-is"]["also-just-right"] = 3;
-    @myvar["nesting"]["is"]["deeper"] = 4;
+    @myvar = {
+      1: 2,
+      3: { 4 : 5 },
+      6: { 7: { 8: 9 } }
+    }
   }
   end {
     for (k, v in @myvar) {
-      @terminal[k] = v
+      print
+        "key=" . k .
+        ",valuetype=" . typeof(v);
     }
-    emit @terminal, "index1"
   }
 '
