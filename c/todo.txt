@@ -6,6 +6,8 @@ BUGFIXES
 ================================================================
 5.0.0 RELEASE TO DO:
 
+! forbind mapvals!!
+
 * UT
 * ref-dsl: update fors to be single-for, kvv-for, triple-for;
 * ref-dsl: go through oosvar vs. local
@@ -58,13 +60,6 @@ TYPE-CHECKING:
 * fall-through absent-retval from UDF with typedecl retval abends
 
 MAPVARS:
-* map typedecl
-* map literals: section
-* $*
-* etc.
-* xval args into UDFs
-* xval args into subrs
-* xval retvals from UDFs
 * n.b. print of mapvar prints nothing.
 
 SINGLE-FOR:

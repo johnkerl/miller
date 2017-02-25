@@ -509,7 +509,7 @@ static void mlr_dsl_true_keyword_usage(FILE* ostream) {
 
 static void mlr_dsl_unset_keyword_usage(FILE* ostream) {
     fprintf(ostream,
-		"unset: clears field(s) from the current record, or an out-of-stream variable.\n"
+		"unset: clears field(s) from the current record, or an out-of-stream or local variable.\n"
 		"\n"
 		"  Example: mlr --from f.dat put 'unset $x'\n"
 		"  Example: mlr --from f.dat put 'unset $*'\n"
