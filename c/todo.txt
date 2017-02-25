@@ -8,7 +8,6 @@ BUGFIXES
 
 * UT
   o print-map stub: UT x all map variants, incl print $*
-  o valgrind forbinds
   o parameter marshaling in single-rhs-assign-to-map-lhs context
 * mt_error/fatal/skip-assign audit
 * re-valgrinds after UT expansion
