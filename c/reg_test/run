@@ -3871,8 +3871,7 @@ run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a, b) { return 
 run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a, b) { return {"ab": a . "_" . b} } emit (f($a, $b), f($x, $y))'
 
 mention non-scalar keyed lashed emits
-# RONG
-#run_mlr         --from $indir/abixy-het --opprint put -q 'emit ({"ab": $a . "_" . $b}, {"ab": $x . "_" . $y}), "ab"'
+run_mlr         --from $indir/abixy-het --opprint put -q 'emit ({"ab": $a . "_" . $b}, {"ab": $x . "_" . $y}), "ab"'
 run_mlr         --from $indir/abixy-het --opprint put -q ' o = {"ab": $a . "_" . $b};  p = {"ab": $x . "_" . $y}; emit  (o, p), "ab"'
 run_mlr         --from $indir/abixy-het --opprint put -q '@o = {"ab": $a . "_" . $b}; @p = {"ab": $x . "_" . $y}; emit (@o, @p), "ab"'
 run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a, b) { return {"ab": a . "_" . b} }  o = f($a, $b);  p = f($x, $y); emit  (o, p), "ab"'
@@ -3880,8 +3879,7 @@ run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a, b) { return 
 run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a, b) { return {"ab": a . "_" . b} } emit (f($a, $b), f($x, $y)), "ab"'
 
 mention non-scalar keyed lashed emits
-# RONG
-#run_mlr         --from $indir/abixy-het --opprint put -q 'emitp ({"ab": $a . "_" . $b}, {"ab": $x . "_" . $y}), "ab"'
+run_mlr         --from $indir/abixy-het --opprint put -q 'emitp ({"ab": $a . "_" . $b}, {"ab": $x . "_" . $y}), "ab"'
 run_mlr         --from $indir/abixy-het --opprint put -q ' o = {"ab": $a . "_" . $b};  p = {"ab": $x . "_" . $y}; emitp  (o, p), "ab"'
 run_mlr         --from $indir/abixy-het --opprint put -q '@o = {"ab": $a . "_" . $b}; @p = {"ab": $x . "_" . $y}; emitp (@o, @p), "ab"'
 run_mlr         --from $indir/abixy-het --opprint put -q 'func f(a, b) { return {"ab": a . "_" . b} }  o = f($a, $b);  p = f($x, $y); emitp  (o, p), "ab"'
