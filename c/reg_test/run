@@ -6153,6 +6153,24 @@ run_mlr --from $indir/abixy-het put -q 'dump {"a"."b":$a.$b}'
 run_mlr --from $indir/abixy-het put -q 'func f(a, b) { return {"a"."b":a.b} } dump f($a, $b)'
 
 # ----------------------------------------------------------------
+announce MAP-VARIANT EMITS
+
+run_mlr         --from $indir/abixy-het put -q 'o=$a.$b; emit o'
+run_mlr         --from $indir/abixy-het put -q 'o={"ab":$a.$b}; emit o'
+
+run_mlr         --from $indir/abixy-het put -q '@o=$a.$b; emit @o'
+run_mlr         --from $indir/abixy-het put -q '@o={"ab":$a.$b}; emit @o'
+
+run_mlr         --from $indir/abixy-het put -q '@o=$a.$b; emit @*'
+run_mlr         --from $indir/abixy-het put -q '@o={"ab":$a.$b}; emit @*'
+
+mlr_expect_fail --from $indir/abixy-het put -q 'emit $a.$b'
+run_mlr         --from $indir/abixy-het put -q 'emit {"ab":$a.$b}'
+
+run_mlr         --from $indir/abixy-het put -q 'func f(a,b) { return a.b } emit f($a, $b)'
+run_mlr         --from $indir/abixy-het put -q 'func f(a,b) { return {"ab": a.b} } emit f($a, $b)'
+
+# ----------------------------------------------------------------
 announce EXTENDED TYPEOF
 
 run_mlr --from $indir/xyz2 --oxtab put '

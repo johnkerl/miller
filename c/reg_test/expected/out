@@ -55554,6 +55554,112 @@ mlr --from ./reg_test/input/abixy-het put -q func f(a, b) { return {"a"."b":a.b}
 
 
 ================================================================
+MAP-VARIANT EMITS
+
+mlr --from ./reg_test/input/abixy-het put -q o=$a.$b; emit o
+o=panpan
+o=ekspan
+o=wye
+o=eks
+o=wyepan
+o=zeepan
+o=ekszee
+o=zeewye
+o=
+o=panwye
+
+mlr --from ./reg_test/input/abixy-het put -q o={"ab":$a.$b}; emit o
+ab=panpan
+ab=ekspan
+ab=wye
+ab=eks
+ab=wyepan
+ab=zeepan
+ab=ekszee
+ab=zeewye
+ab=
+ab=panwye
+
+mlr --from ./reg_test/input/abixy-het put -q @o=$a.$b; emit @o
+o=panpan
+o=ekspan
+o=wye
+o=eks
+o=wyepan
+o=zeepan
+o=ekszee
+o=zeewye
+o=zeewye
+o=panwye
+
+mlr --from ./reg_test/input/abixy-het put -q @o={"ab":$a.$b}; emit @o
+ab=panpan
+ab=ekspan
+ab=wye
+ab=eks
+ab=wyepan
+ab=zeepan
+ab=ekszee
+ab=zeewye
+ab=
+ab=panwye
+
+mlr --from ./reg_test/input/abixy-het put -q @o=$a.$b; emit @*
+o=panpan
+o=ekspan
+o=wye
+o=eks
+o=wyepan
+o=zeepan
+o=ekszee
+o=zeewye
+o=zeewye
+o=panwye
+
+mlr --from ./reg_test/input/abixy-het put -q @o={"ab":$a.$b}; emit @*
+ab=panpan
+ab=ekspan
+ab=wye
+ab=eks
+ab=wyepan
+ab=zeepan
+ab=ekszee
+ab=zeewye
+ab=
+ab=panwye
+
+mlr --from ./reg_test/input/abixy-het put -q emit $a.$b
+mlr DSL: syntax error at "$a"
+mlr put: syntax error on DSL parse of 'emit $a.$b'
+
+mlr --from ./reg_test/input/abixy-het put -q emit {"ab":$a.$b}
+ab=panpan
+ab=ekspan
+ab=wye
+ab=eks
+ab=wyepan
+ab=zeepan
+ab=ekszee
+ab=zeewye
+ab=
+ab=panwye
+
+mlr --from ./reg_test/input/abixy-het put -q func f(a,b) { return a.b } emit f($a, $b)
+
+mlr --from ./reg_test/input/abixy-het put -q func f(a,b) { return {"ab": a.b} } emit f($a, $b)
+ab=panpan
+ab=ekspan
+ab=wye
+ab=eks
+ab=wyepan
+ab=zeepan
+ab=ekszee
+ab=zeewye
+ab=
+ab=panwye
+
+
+================================================================
 EXTENDED TYPEOF
 
 mlr --from ./reg_test/input/xyz2 --oxtab put 

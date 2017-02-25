@@ -24,12 +24,6 @@ UT FOR 5.0.0:
 
 ! along the way clarify ownership semantics in localstack & mlhmmv via function names, & top-of-file comments
 
-? emit localvar -- check lashed; UTs          > ref the rhs
-? emit oosvar                                 > ref the rhs
-? emit full oosvar                            > ref the rhs
-? emit mapliteral -- check lashed; UTs        > alloc & free the ephemeral
-? emit func retval                            > alloc & free the ephemeral
-
 ? emit-lashed localvar -- check lashed; UTs   > ref the rhs
 ? emit-lashed oosvar                          > ref the rhs
 ? emit-lashed full oosvar                     > ref the rhs
