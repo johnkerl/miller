@@ -216,8 +216,9 @@ static void handle_for_map_aux(
 				// Bind the k-name to the entry-key mlrval:
 				local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
 				// xxx note copy/ref semantics
-				local_stack_frame_define_terminal(pframe, prest_for_k_variable_names[0], prest_for_k_frame_relative_indices[0],
-					prest_for_k_type_masks[0], mv_copy(&pe->level_key));
+				local_stack_frame_define_terminal(pframe, prest_for_k_variable_names[0],
+					prest_for_k_frame_relative_indices[0], prest_for_k_type_masks[0],
+					mv_copy(&pe->level_key));
 				// Recurse into the next-level submap:
 				handle_for_map_aux(pstatement, pvars, pcst_outputs, &pe->level_xvalue,
 					&prest_for_k_variable_names[1], &prest_for_k_frame_relative_indices[1], &prest_for_k_type_masks[1],
@@ -235,17 +236,13 @@ static void handle_for_map_aux(
 
 	} else { // End of recursion: k-names have all been used up
 
-		if (!psubmap->is_terminal) {
-			// The submap was too deep for the user-specified k-names; there are no terminals here.
-		} else {
-			// Bind the v-name to the terminal mlrval:
-			local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
-			// xxx note copy/ref semantics
-			local_stack_frame_define_terminal(pframe, pstate->v_variable_name, pstate->v_frame_relative_index,
-				pstate->v_type_mask, mv_copy(&psubmap->terminal_mlrval));
-			// Execute the loop-body statements:
-			pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
-		}
+		// Bind the v-name to the terminal mlrval:
+		local_stack_frame_t* pframe = local_stack_get_top_frame(pvars->plocal_stack);
+		// xxx note copy/ref semantics
+		local_stack_frame_define_extended(pframe, pstate->v_variable_name, pstate->v_frame_relative_index,
+			pstate->v_type_mask, mlhmmv_xvalue_copy(psubmap));
+		// Execute the loop-body statements:
+		pstatement->pblock_handler(pstatement->pblock, pvars, pcst_outputs);
 
 	}
 }

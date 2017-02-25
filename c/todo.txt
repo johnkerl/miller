@@ -60,7 +60,7 @@ TYPE-CHECKING:
 * fall-through absent-retval from UDF with typedecl retval abends
 
 MAPVARS:
-* n.b. print of mapvar prints nothing.
+* n.b. print of mapvar prints nothing. use dump.
 
 SINGLE-FOR:
 * srec/oosvar-single-for mlh
