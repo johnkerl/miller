@@ -6,12 +6,8 @@ BUGFIXES
 ================================================================
 5.0.0 RELEASE TO DO:
 
-! print $*/{} @ dsl
-* UT
-  o print-map stub: UT x all map variants, incl print $*
-  o parameter marshaling in single-rhs-assign-to-map-lhs context
-  ! double UT loop: w/ and w/o mmap
-* mt_error/fatal/skip-assign audit
+* doc: absent-null map keys skip assign
+* doc: verbs-dsls xref hdrs
 * re-valgrinds after UT expansion
 * release notes
 
@@ -19,9 +15,6 @@ BUGFIXES
 
 ================================================================
 DOC FOR 5.0.0:
-
-MAPVARS:
-* n.b. print of mapvar prints nothing. use dump.
 
 TRANSPARENCY:
 * disclaimer about the Miller DSL having the usual plusses and minuses of a dynamically typed language:
@@ -66,11 +59,6 @@ MAPVAR CHECKLIST:
 
 !!! MT_ERROR vs. fatal vs. skip assign. iron it out!
 
-* absent-null map-keys -- do what? document.
-  - mlr: map keys must be of type MT_STRING or MT_INT; got MT_ABSENT.
-  - maybe change to skip-assign, as with assignment statements?
-  - or to (error)?
-
 * more generally, audit error-handling for consistency:
   - absent/skip
   - '(error)'
@@ -80,8 +68,6 @@ MAPVAR CHECKLIST:
   - e.g. non-string =~ regex: coerce LHS to string?
 
 * feels weird: '$*=3' is a syntax error but 'o=3;$*=o' is not. also '@*=3' is not a syntax error.
-
-* emittable/dumpable/etc md_rhs -> more specific fcn-call.
 
 * death knell for mv-only evaluators: this is a syntax error:
   mlr put -q 'o = haskey(NR==4 ? {"a": NF} : {"b": NF}, "a"); print "NR=".NR.",haskeya=".o'
@@ -112,54 +98,6 @@ MAPVAR CHECKLIST:
   o copy semantics
 
 * clarify ownership semantics in localstack & mlhmmv via function names, & top-of-file comments
-
-================================================================
-5.0.0 RELEASE NOTES:
-
-k MAJOR BECAUSE:
-k new keywords
-k unset of oosvar doesn't clear empty levels
-k no type-inference on literals: "3"+4 != 7
-k typeof MT_STRING -> string etc.
-k note this isn't huge. as w/ previous majors.
-
-k DSL:
-k func & subr. acknowledge awk yet again.
-k mapvars & mapfuncs
-k triple-fors
-k single-fors
-k multiple filter/put -f with examples @ new mld section.
-k variadic min & max
-k substr func
-k ENV @ LHS (putenv), and why (popens)
-k # in the lexer so #-strings are OK now (show an example)
-
-VERBS:
-k most-frequent/least-frequent
-k seqgen
-k cat -n -g
-k -o for count-distinct, uniq, most-frequent, least-frequent, top, histogram
-k start chain with 'then'
-k stats1 median
-
-I/O:
-k -I
-k bare print/printn
-k --c2p et al.
-k --pprint --barred
-k --jknquoteint/--jvquoteall @ put dump
-k --jknquoteint/--jvquoteall @ put dump, and JSON output
-
-BUGFIXES:
-k mlr rename -r w/multiple empty newvals
-k b.tsv bug -- to relnotes
-
-DOC:
-k 10-min
-k mlr -F and -K. Note -l -L -f -F -k -K.
-
-* final xxx check
-* final valgrind check
 
 ================================================================
 NON-RELEASE:
@@ -194,7 +132,11 @@ NON-RELEASE:
     ? tail -g
     - uniq -g
 
+* UT: formalize w/ w/o mmap. for now manual at least. (not a release-blocker)
+
 * xxxes
+
+* mt_error/fatal/skip-assign audit
 
 * mlr hex -> auxes. and make an aux-list. and doc: olh as well as webdoc?
 
