@@ -195,7 +195,10 @@ boxed_xval_t m_ss_splitnvx_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval
 	char* piece;
 	while ((piece = strsep(&walker, sep)) != NULL) {
 		mv_t key = mv_from_int(i);
+		// xxx do not ref here
 		mv_t val = mv_ref_type_infer_string(piece);
+		// xxx make clear the copy/ref semantics for mlhmmv put with scalar value.
+		// at the moment this does an mv_copy.
 		mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		i++;
 	}
