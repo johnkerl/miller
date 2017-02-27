@@ -6,8 +6,14 @@ BUGFIXES
 ================================================================
 5.0.0 RELEASE TO DO:
 
-* doc: absent-null map keys skip assign
 * doc: verbs-dsls xref hdrs
+* doc: transparency section
+* kw autodoc; IO-PFR-S variables
+* note mlr -l -L -f -F -k -K rather prominently at mlh, as well as mld.
+* absent vs. empty; unset $x vs. $x="". no null keyword.
+* maps section: what are always/maybe/never maps; funcs; etc.
+  - absent-null map keys skip assign
+
 * re-valgrinds after UT expansion
 * release notes
 
@@ -35,12 +41,7 @@ KW autodoc:
 * also update ref-dsl page
 
 To file:
-* note mlr -l -L -f -F -k -K rather prominently at mlh, as well as mld.
-* mlh/mld func/subr @ filter
-* absent vs. empty; unset $x vs. $x="". no null keyword.
 * env lhs expr
-* allow empty maps/levels in oosvars as well as map-literals
-* [IO][PFR]S variables
 
 covers:
 * func-def example @ cover x n
@@ -57,7 +58,7 @@ mlh:
 ================================================================
 MAPVAR CHECKLIST:
 
-!!! MT_ERROR vs. fatal vs. skip assign. iron it out!
+* MT_ERROR vs. fatal vs. skip assign. iron it out.
 
 * more generally, audit error-handling for consistency:
   - absent/skip
@@ -78,9 +79,6 @@ MAPVAR CHECKLIST:
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
   - copy/ref of keys vs. values in mlhmmv, local_stack, and callees -- ?!?
-  ! UT cases for xfuncs x all
-  ! xvfuncs mem-mgt
-  - mapsum-in-mlr UT cases, and valgrind
 
 * man mlr section on maps
   o things which are always maps:
