@@ -199,8 +199,11 @@ static sllv_t* mapper_rename_regex_process(lrec_t* pinrec, context_t* pctx, void
 				} else {
 					char* new_name = regex_sub(old_name, pregex, pstate->psb, replacement, &matched,
 						&all_captured);
-					if (matched)
+					if (matched) {
 						lrec_rename(pinrec, old_name, new_name, TRUE);
+					} else {
+						free(new_name);
+					}
 				}
 			}
 		}

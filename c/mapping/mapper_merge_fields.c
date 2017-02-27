@@ -511,6 +511,8 @@ static sllv_t* mapper_merge_fields_process_by_collapsing(lrec_t* pinrec, context
 					pa = pa->pnext;
 				}
 				free(short_name);
+			} else {
+				free(short_name);
 			}
 		}
 		if (!matched)
