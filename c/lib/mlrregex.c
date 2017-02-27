@@ -159,6 +159,7 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 		int matched = regmatch_or_die(pregex, &current_input[match_start], nmatchmax, matches);
 		if (!matched) {
 			if (input == current_input) {
+				*pfree_flags = FREE_ENTRY_VALUE;
 				return mlr_strdup_or_die(current_input);
 			} else {
 				return current_input;

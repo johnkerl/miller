@@ -35134,7 +35134,7 @@ NR1 name1 NR2 name2 output
 ================================================================
 DSL PRINT
 
-mlr put -q print 1; print "two"; print $a; print; print $i < 4; print "y is ".string($y); print "" ./reg_test/input/abixy
+mlr put -q print  1; print  "two"; print  $a; print;  print  $i < 4; print  "y is ".string($y); print "" ./reg_test/input/abixy
 1
 two
 pan
@@ -35217,6 +35217,60 @@ mlr put -q printn 1; printn "two"; printn $a; printn; printn $i < 4; printn "y i
 1twozeefalsey is 0.976181
 1twohatfalsey is 0.749551
 1twopanfalsey is 0.952618
+
+mlr put -q print  $*; print  $*; print  {}; print ./reg_test/input/abixy
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+{is-a-map}
+{is-a-map}
+{is-a-map}
+
+
+mlr put -q printn $*; printn $*; printn {}; print ./reg_test/input/abixy
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
+{is-a-map}{is-a-map}{is-a-map}
 
 
 ================================================================
