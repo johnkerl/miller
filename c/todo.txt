@@ -6,7 +6,6 @@ BUGFIXES
 ================================================================
 5.0.0 RELEASE TO DO:
 
-* doc: verbs-dsls xref hdrs
 * doc: transparency section
 * kw autodoc; IO-PFR-S variables
 * note mlr -l -L -f -F -k -K rather prominently at mlh, as well as mld.
@@ -129,6 +128,12 @@ NON-RELEASE:
     ? sample -g
     ? tail -g
     - uniq -g
+
+* mlr batchify/chunkify: start new blocks when field(s) change.
+  - needs backward-incompatible change to DKVP blank lines become skips, not empty maps
+  - DKVP/CSV/PPRINT: blank line.
+  - XTAB: extra blank link.
+  - JSON: ? empty {} ?
 
 * UT: formalize w/ w/o mmap. for now manual at least. (not a release-blocker)
 

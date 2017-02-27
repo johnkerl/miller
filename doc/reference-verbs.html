@@ -186,6 +186,7 @@ Miller commands were run with pretty-print-tabular output format.
 <!-- BODY COPIED FROM content-for-reference-verbs.html BY poki -->
 <div class="pokitoc">
 <center><b>Contents:</b></center>
+&bull;&nbsp;<a href="#Overview">Overview</a><br/>
 &bull;&nbsp;<a href="#bar">bar</a><br/>
 &bull;&nbsp;<a href="#bootstrap">bootstrap</a><br/>
 &bull;&nbsp;<a href="#cat">cat</a><br/>
@@ -233,15 +234,70 @@ Miller commands were run with pretty-print-tabular output format.
 </div>
 <p/>
 
+<p/>
+<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+
+<!-- ================================================================ -->
+<a id="Overview"/><h1>Overview</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_overview" style="display: block">
+
+<p/>
 When you type <tt>mlr {something} myfile.dat</tt>, the <tt>{something}</tt>
 part is called a <b>verb</b>. It specifies how you want to transform your data.
 (See also <a href="reference.html#Command_overview">here</a> for a breakdown.)
 The following is an alphabetical list of verbs with their descriptions.
 
-<p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+<p/> The verbs <tt>put</tt> and <tt>filter</tt> are special in that they have a
+rich expression language (domain-specific language, or &ldquo;DSL&rdquo;).
+More information about them can be found <a href="reference-dsl.html">here</a>.
 
+<p/> Here&rsquo;s a comparison of verbs and <tt>put</tt>/<tt>filter</tt> DSL expressions:
+
+<table border=1>
+<tr> <td>
+  Example:
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr stats1 -a sum -f x -g a data/small
+a=pan,x_sum=0.346790
+a=eks,x_sum=1.140079
+a=wye,x_sum=0.777892
+</pre>
+</div>
+<p/>
+  <p/>
+  <ul>
+  <li/> Verbs are coded in C
+  <li/> They run a bit faster
+  <li/> They take fewer keystrokes
+  <li/> Their customization is limited to each verb&rsquo;s options
+  </ul>
+</td>
+<td>
+  Example:
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
+a=pan,x_sum=0.346790
+a=eks,x_sum=1.140079
+a=wye,x_sum=0.777892
+</pre>
+</div>
+<p/>
+  <ul>
+  <li/> You get to write your own DSL expressions
+  <li/> They run a bit slower
+  <li/> They take more keystrokes
+  <li/> They are highly customizable
+  </ul>
+</td> </tr>
+</table>
+
+</div>
 <!-- ================================================================ -->
 <a id="bar"/><h1>bar</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_bar');" href="javascript:;">Toggle section visibility</button>

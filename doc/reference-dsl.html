@@ -241,8 +241,54 @@ Miller commands were run with pretty-print-tabular output format.
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_overview" style="display: block">
 
-<p/>
+<p/> Here&rsquo;s comparison of verbs and <tt>put</tt>/<tt>filter</tt> DSL expressions:
 
+<table border=1>
+<tr> <td>
+  Example:
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr stats1 -a sum -f x -g a data/small
+a=pan,x_sum=0.346790
+a=eks,x_sum=1.140079
+a=wye,x_sum=0.777892
+</pre>
+</div>
+<p/>
+  <p/>
+  <ul>
+  <li/> Verbs are coded in C
+  <li/> They run a bit faster
+  <li/> They take fewer keystrokes
+  <li/> Their customization is limited to each verb&rsquo;s options
+  </ul>
+</td>
+<td>
+  Example:
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr  put -q '@x_sum[$a] += $x; end{emit @x_sum, "a"}' data/small
+a=pan,x_sum=0.346790
+a=eks,x_sum=1.140079
+a=wye,x_sum=0.777892
+</pre>
+</div>
+<p/>
+  <ul>
+  <li/> You get to write your own DSL expressions
+  <li/> They run a bit slower
+  <li/> They take more keystrokes
+  <li/> They are highly customizable
+  </ul>
+</td> </tr>
+</table>
+
+<p/>Please see <a href="reference-dsl-verbs.html">here</a> for information on
+verbs other than <tt>put</tt> and <tt>filter</tt>.
+
+<p/>
 The essential usages of <tt>mlr filter</tt> and <tt>mlr put</tt> are for
 record-selection and record-updating expressions, respectively. For example, given the following input data:
 
