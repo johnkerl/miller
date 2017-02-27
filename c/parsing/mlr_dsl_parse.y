@@ -1920,27 +1920,27 @@ md_dumpable(A) ::= md_rhs(B). {
 
 // ----------------------------------------------------------------
 // Print string
-md_print(A) ::= MD_TOKEN_PRINT(O) md_rhs(B). {
+md_print(A) ::= MD_TOKEN_PRINT(O) md_dumpable(B). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT, B,
 		mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE,
 			mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT)));
 }
-md_eprint(A) ::= MD_TOKEN_EPRINT(O) md_rhs(B). {
+md_eprint(A) ::= MD_TOKEN_EPRINT(O) md_dumpable(B). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT, B,
 		mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE,
 			mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDERR)));
 }
-md_print_write(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA md_rhs(C). {
+md_print_write(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA md_dumpable(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT, C,
 		mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE,
 			F));
 }
-md_print_append(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_TOKEN_COMMA md_rhs(C). {
+md_print_append(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_TOKEN_COMMA md_dumpable(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT, C,
 		mlr_dsl_ast_node_alloc_unary(">>", MD_AST_NODE_TYPE_FILE_APPEND,
 			F));
 }
-md_print_pipe(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_BITWISE_OR md_rhs(P) MD_TOKEN_COMMA md_rhs(C). {
+md_print_pipe(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_BITWISE_OR md_rhs(P) MD_TOKEN_COMMA md_dumpable(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINT, C,
 		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE,
 			P));
@@ -1976,27 +1976,27 @@ md_print_pipe(A) ::= MD_TOKEN_PRINT(O) MD_TOKEN_BITWISE_OR md_rhs(P). {
 }
 
 // Printn string
-md_printn(A) ::= MD_TOKEN_PRINTN(O) md_rhs(B). {
+md_printn(A) ::= MD_TOKEN_PRINTN(O) md_dumpable(B). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN, B,
 		mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE,
 			mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDOUT)));
 }
-md_eprintn(A) ::= MD_TOKEN_EPRINTN(O) md_rhs(B). {
+md_eprintn(A) ::= MD_TOKEN_EPRINTN(O) md_dumpable(B). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN, B,
 		mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE,
 			mlr_dsl_ast_node_alloc_zary("stdout", MD_AST_NODE_TYPE_STDERR)));
 }
-md_printn_write(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA md_rhs(C). {
+md_printn_write(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA md_dumpable(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN, C,
 		mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE,
 			F));
 }
-md_printn_append(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_TOKEN_COMMA md_rhs(C). {
+md_printn_append(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_TOKEN_COMMA md_dumpable(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN, C,
 		mlr_dsl_ast_node_alloc_unary(">>", MD_AST_NODE_TYPE_FILE_APPEND,
 			F));
 }
-md_printn_pipe(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_BITWISE_OR md_rhs(P) MD_TOKEN_COMMA md_rhs(C). {
+md_printn_pipe(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_BITWISE_OR md_rhs(P) MD_TOKEN_COMMA md_dumpable(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN, C,
 		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE,
 			P));
@@ -2026,7 +2026,7 @@ md_printn_append(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_BITWISE_RSH md_output_file(F
 		mlr_dsl_ast_node_alloc("", MD_AST_NODE_TYPE_NUMERIC_LITERAL),
 		mlr_dsl_ast_node_alloc_unary(">>", MD_AST_NODE_TYPE_FILE_APPEND, F));
 }
-md_printn_pipe(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_BITWISE_OR md_rhs(P). {
+md_printn_pipe(A) ::= MD_TOKEN_PRINTN(O) MD_TOKEN_BITWISE_OR md_dumpable(P). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_PRINTN,
 		mlr_dsl_ast_node_alloc("", MD_AST_NODE_TYPE_NUMERIC_LITERAL),
 		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE, P));
