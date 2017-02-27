@@ -1238,7 +1238,7 @@ static mv_t rval_evaluator_x_srs_func(void* pvstate, variables_t* pvars) {
 	mv_t val3 = pstate->parg3->pprocess_func(pstate->parg3->pvstate, pvars);
 	NULL_OR_ERROR_OUT_FOR_STRINGS(val3);
 	if (!mv_is_string_or_empty(&val3)) {
-		mv_free(&val1);
+		mv_free(&val3);
 		return mv_error();
 	}
 
