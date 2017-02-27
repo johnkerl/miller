@@ -149,14 +149,9 @@ mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t*
 	char* input      = pval1->u.strv;
 	char* output     = regex_sub(input, pregex, psb, pval3->u.strv, &matched, &all_captured);
 
-	if (matched) {
-		mv_free(pval1);
-		mv_free(pval3);
-		return mv_from_string_with_free(output);
-	} else {
-		mv_free(pval3);
-		return mv_from_string_with_free(mlr_strdup_or_die(output)); // just modify regex_sub to always alloc
-	}
+	mv_free(pval1);
+	mv_free(pval3);
+	return mv_from_string_with_free(output);
 }
 
 // ----------------------------------------------------------------
@@ -185,17 +180,12 @@ mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t
 	int matched      = FALSE;
 	int all_captured = FALSE;
 	char* input      = pval1->u.strv;
-	char free_flags = NO_FREE;
+	char free_flags  = NO_FREE;
 	char* output     = regex_gsub(input, pregex, psb, pval3->u.strv, &matched, &all_captured, &free_flags);
 
-	if (matched) {
-		mv_free(pval1);
-		mv_free(pval3);
-		return mv_from_string(output, free_flags);
-	} else {
-		mv_free(pval3);
-		return mv_from_string_with_free(mlr_strdup_or_die(output));
-	}
+	mv_free(pval1);
+	mv_free(pval3);
+	return mv_from_string(output, free_flags);
 }
 
 // ----------------------------------------------------------------

@@ -102,9 +102,6 @@ int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
 	}
 }
 
-// If there is a match, the return value is dynamically allocated.  If not, the
-// input is returned.
-//
 // Capture-group example:
 // sed: $ echo '<<abcdefg>>'|sed 's/ab\(.\)d\(..\)g/AYEBEE\1DEE\2GEE/' gives <<AYEBEEcDEEefGEE>>
 // mlr: echo 'x=<<abcdefg>>' | mlr put '$x = sub($x, "ab(.)d(..)g", "AYEBEE\1DEE\2GEE")' x=<<AYEBEEcDEEefGEE>>
@@ -119,7 +116,7 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 
 	*pmatched = regmatch_or_die(pregex, input, nmatchmax, matches);
 	if (!*pmatched) {
-		return input;
+		return mlr_strdup_or_die(input);
 	} else {
 		sb_append_chars(psb, input, 0, matches[0].rm_so-1);
 		char* p = replacement;
@@ -161,7 +158,11 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 	while (TRUE) {
 		int matched = regmatch_or_die(pregex, &current_input[match_start], nmatchmax, matches);
 		if (!matched) {
-			return current_input;
+			if (input == current_input) {
+				return mlr_strdup_or_die(current_input);
+			} else {
+				return current_input;
+			}
 		}
 		*pmatched = TRUE;
 

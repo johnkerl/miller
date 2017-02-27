@@ -24,14 +24,14 @@ regex_t* regcomp_or_die_quoted(regex_t* pregex, char* regex_string, int cflags);
 int regmatch_or_die(const regex_t* pregex, const char* restrict match_string,
 	size_t nmatchmax, regmatch_t pmatch[restrict]);
 
-// If there is a match, the return value is dynamically allocated and returned.
-// If not, the input is returned.  So the caller should free the return value
-// if matched == TRUE.  The by-reference all-captured flag is true on return if
-// all \1, etc.  were satisfiable by parenthesized capture groups.
+// The return value is dynamically allocated even if there is no match, i.e. when output
+// equals input.  The by-reference all-captured flag is true on return if all \1, etc.
+// were satisfiable by parenthesized capture groups.
 char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement,
 	int* pmatched, int* pall_captured);
 
-char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int* pmatched, int* pall_captured, char *pfree_flags);
+char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* replacement, int* pmatched, int* pall_captured,
+	char *pfree_flags);
 
 // The regex library gives us an array of match pointers into the input string. This function strdups them
 // out into separate storage, to implement "\0", "\1", "\2", etc. regex-captures for the =~ and !=~ operators.
