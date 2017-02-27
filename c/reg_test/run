@@ -41,6 +41,11 @@ if [ "$1" = "--valgrind" ]; then
   # ../tools/clean-valg can be used to filter the output.
   path_to_mlr="valgrind --leak-check=full ${path_to_mlr}g"
 fi
+if [ "$1" = "--no-mmap" ]; then
+  # Leak-check the test suite. Needs 'make mlrg' first.
+  # ../tools/clean-valg can be used to filter the output.
+  path_to_mlr="${path_to_mlr} --no-mmap"
+fi
 echo Using mlr executable $path_to_mlr
 
 indir=$ourdir/input

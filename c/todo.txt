@@ -9,6 +9,7 @@ BUGFIXES
 * UT
   o print-map stub: UT x all map variants, incl print $*
   o parameter marshaling in single-rhs-assign-to-map-lhs context
+  ! double UT loop: w/ and w/o mmap
 * mt_error/fatal/skip-assign audit
 * re-valgrinds after UT expansion
 * release notes
