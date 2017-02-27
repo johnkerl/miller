@@ -30,6 +30,8 @@ sed 's/^==.*== //' "$@" | swipe \
   | mgrepv 'join_bucket_keeper_alloc' \
   | mgrepv 'join_bucket_keeper_emit' \
   | mgrepv 'handle_env_assignment' \
+  | mgrepv 'file_ingestor_stdio_vopen' \
+  | mgrepv 'lrec_reader_stdio_json_sof' \
   | cat
 
   #| mgrepv 'shared_parse_cli' \
