@@ -4,21 +4,20 @@ BUGFIXES
 ? tsv->json blank line -- ? needs repro.
 
 ================================================================
-5.0.0 RELEASE TO DO:
+5.0.0 POST-RELEASE TO DO:
+
+* bgrd @ doc :^/
+* static notes for x86_64: sudo yum install glibc-devel glibc-static
+* ln -s for latest doc
+* autoconf wtf?
 
 ================================================================
-DOC FOR 5.0.0:
+NON-RELEASE:
 
-To file:
-* env lhs expr
-
-covers:
-* func-def example @ cover x n
-* triple-for example @ cover x n
-
-mlh:
-* func-def example @ mlr put -h ?
-* triple-for example @ mlr put -h ?
+! rh/fedora/centos
+* go through lmag article & clarify all unclears
+* windows port?
+? msort.o wt?
 
 ================================================================
 MAPVAR CHECKLIST:
@@ -46,14 +45,6 @@ MAPVAR CHECKLIST:
   - copy/ref of keys vs. values in mlhmmv, local_stack, and callees -- ?!?
 
 * clarify ownership semantics in localstack & mlhmmv via function names, & top-of-file comments
-
-================================================================
-NON-RELEASE:
-
-! rh/fedora/centos
-* go through lmag article & clarify all unclears
-* windows port?
-? msort.o wt?
 
 ================================================================
 5.1.0 ideas:
@@ -114,6 +105,8 @@ perf note: DSL stuff performant w/r/t ruby/python (mand bench & maybe others)
 ? strict mode:
   - absent?
   - local shadow for-loop boundvars / func/subr args?
+
+* mlrfunc doc section?
 
 * seqgen as input lrec "reader"? the seqgen verb doesn't (and shouldn't) step NR.
 
