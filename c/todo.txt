@@ -21,19 +21,6 @@ BUGFIXES
 ================================================================
 DOC FOR 5.0.0:
 
-TRANSPARENCY:
-* disclaimer about the Miller DSL having the usual plusses and minuses of a dynamically typed language:
-  rapid prototyping and rapid access to data -- e.g. '$y=$x**2' should be free of syntactic bric-a-brac
-  & the miller dsl is a place to get just that. but type-mixing can be unintentional (things really are
-  implcitly typed in our heads).
-* 'syntax error' is cryptic
-  o ; is a common omission (separator not terminator)
-  o no ++ or -- (not C-like)
-  o curly braces are required in if/for/while even w/ single-statement bodies (not C-like)
-* execution-trace option: disclaim it's an AST dump, not source-level.
-* dump locals & named/subscripted oosvars
-* emit locals & named/subscripted oosvars
-
 KW autodoc:
 * kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
   E ENV FILENAME FILENUM FNR NF NR PI [IO][PFS]S

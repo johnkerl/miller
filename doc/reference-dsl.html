@@ -228,6 +228,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#User-defined_functions_and_subroutines">User-defined functions and subroutines</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#User-defined_functions">User-defined functions</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#User-defined_subroutines">User-defined subroutines</a><br/>
+&bull;&nbsp;<a href="#Errors_and_transparency">Errors and transparency</a><br/>
 &bull;&nbsp;<a href="#A_note_on_the_complexity_of_Miller&rsquo;s_expression_language">A note on the complexity of Miller&rsquo;s expression language</a><br/>
 </div>
 <p/>
@@ -4030,6 +4031,67 @@ files</a> for information on the use of <tt>-f</tt> and <tt>-e</tt> flags.
 
 </div>
 <!-- ================================================================ -->
+<a id="Errors_and_transparency"/><h1>Errors and transparency</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_transparency');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_transparency" style="display: block">
+
+<p/>As soon as you have a programming language, you start having the problem
+<i>What is my code doing, and why?</i> This includes getting syntax errors
+&mdash; which are always annoying &mdash; as well as the even more annoying
+problem of a program which parses without syntax error but doesn&rsquo;t do
+what you expect.
+
+<p/> The <tt>syntax error</tt> message is cryptic: it says <tt>syntax error at
+</tt> followed by the next symbol it couldn&rsquo;t parse. This is good, but
+(as of 5.0.0) it doesn&rsquo;t say things like <tt>syntax error at line 17,
+character 22</tt>. Here are some common causes of syntax errors:
+
+<ul>
+
+<li/> Don&rsquo;t forget <tt>;</tt> at end of line, before another statement on
+the next line.
+
+<li/> Miller&rsquo;s DSL lacks the <tt>++</tt> and <tt>--</tt> operators.
+
+<li/> Curly braces are required for the bodies of
+<tt>if</tt>/<tt>while</tt>/<tt>for</tt> blocks, even when the body is a single
+statement.
+
+</ul>
+
+<p/>Now for transparency:
+
+<ul>
+
+<li/>As in any language, you can do
+<a href="#Print_statements"><tt>print</tt></a> (or <tt>eprint</tt> to print to
+stderr). See also <a href="#Dump_statements"><tt>dump</tt></a> and <a
+href="#Emit_statements"><tt>emit</tt></a>.
+
+<li/> The <tt>-v</tt> option to <tt>mlr put</tt> and <tt>mlr filter</tt> prints
+abstract syntax trees for your code. While not all details here will be of
+interest to everyone, certainly this makes questions such as operator
+precedence completely unambiguous.
+
+<li/> The <tt>-T</tt> option prints a trace of each statement executed.
+
+<li/> The <tt>-t</tt> and <tt>-a</tt> options show low-level details for the
+parsing process and for stack-variable-index allocation, respectively. These
+will likely be of interest to people who enjoy compilers, and probably less
+useful for a more general audience.
+
+<li/> Please see the <a href="#Type-checking">type-checking section</a> for
+type declarations and type-assertions you can use to make sure expressions and
+the data flowing them are evaluating as you expect.  I made them optional
+because one of Miller&rsquo;s important use-cases is being able to say simple
+things like <tt>mlr put '$y = $x + 1' myfile.dat</tt> with a minimum of
+punctuational bric-a-brac &mdash; but for programs over a few lines I generally
+find that the more type-specification, the better.
+
+</ul>
+
+</div>
+<!-- ================================================================ -->
 <a id="A_note_on_the_complexity_of_Miller&rsquo;s_expression_language"/><h1>A note on the complexity of Miller&rsquo;s expression language</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_a_note_on_complexity');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_a_note_on_complexity" style="display: block">
@@ -4039,8 +4101,9 @@ files</a> for information on the use of <tt>-f</tt> and <tt>-e</tt> flags.
 a,b</tt> than having to track summation variables as in <tt>awk</tt>, or using
 Miller&rsquo;s out-of-stream variables. And the more language features
 Miller&rsquo;s put-DSL has (for-loops, if-statements, nested control
-structures, etc.) then the <i>less</i> powerful it begins to seem: because of
-the other programming-language features it <i>doesn&rsquo;t</i> have.
+structures, user-defined functions, etc.) then the <i>less</i> powerful it
+begins to seem: because of the other programming-language features it
+<i>doesn&rsquo;t</i> have (classes, execptions, and so on).
 
 <p/> When I was originally prototyping Miller in 2015, the decision I had was
 whether to hand-code in a low-level language like C or Rust, with my own
@@ -4054,13 +4117,13 @@ Miller is C under the hood with a hand-rolled DSL.
 <p/> I do want to keep focusing on what Miller is good at &mdash; concise
 notation, low latency, and high throughput &mdash; and not add too much in
 terms of high-level-language features to the DSL.  That said, some sort of
-looping over field names is a basic thing to want. As of 4.1.0 we have
-recursive for/while/if structures on about the same complexity level as
-<tt>awk</tt>; as of 5.0.0 we have user-defined functions and map-valued
-variables, again on about the same complexity level as <tt>awk</tt> along with
-optional type-declaration syntax.  While I&rsquo;m excited by these powerful
-language features, I hope to keep new features beyond 5.0.0 focused on
-Miller&rsquo;s sweet spot which is speed plus simplicity.
+customizability is a basic thing to want. As of 4.1.0 we have recursive
+for/while/if structures on about the same complexity level as <tt>awk</tt>; as
+of 5.0.0 we have user-defined functions and map-valued variables, again on
+about the same complexity level as <tt>awk</tt> along with optional
+type-declaration syntax.  While I&rsquo;m excited by these powerful language
+features, I hope to keep new features beyond 5.0.0 focused on Miller&rsquo;s
+sweet spot which is speed plus simplicity.
 
 </div>
     </div>
