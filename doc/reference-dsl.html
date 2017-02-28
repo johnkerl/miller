@@ -1233,7 +1233,7 @@ print "outer j =" . j;                            # j is undefined in this scope
 
 <p/>Miller&rsquo;s <tt>put</tt>/<tt>filter</tt> DSL has four kinds of hashmaps.
 <b>Stream records</b> are (single-level) maps from name to value.
-<b>Out-of-stream variables</b> and <b>local variables</b> are also maps,
+<b>Out-of-stream variables</b> and <b>local variables</b> can also be maps,
 although they can be multi-level hashmaps (e.g. <tt>@sum[$x][$y]</tt>).  The
 fourth kind is <b>map literals</b>. These cannot be on the left-hand side of
 assignment expressions. Syntactically they look like JSON, although Miller
@@ -1783,6 +1783,10 @@ in: used in for-loops over stream records or out-of-stream variables.
 int: declares an integer local variable in the current curly-braced scope.
 Type-checking happens at assignment: 'int x = 0.0' is an error.
 
+map: declares an map-valued local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'map b = 0' is an error. map b = {} is
+always OK. map b = a is OK or not depending on whether a is a map.
+
 num: declares an int/float local variable in the current curly-braced scope.
 Type-checking happens at assignment: 'num b = true' is an error.
 
@@ -1848,6 +1852,41 @@ Examples: 'var a=1', 'var xyz=""'
 
 while: introduces a while loop, or with "do", introduces a do-while loop.
 The body statements must be wrapped in curly braces.
+
+E: the mathematical constant.
+
+ENV: access to environment variables by name, e.g. '$home = ENV["HOME"]'
+
+FILENAME: evaluates to the name of the current file being processed.
+
+FILENUM: evaluates to the number of the current file being processed,
+starting with 1.
+
+FNR: evaluates to the number of the current record within the current file
+being processed, starting with 1. Resets at the start of each file.
+
+IFS: evaluates to the input field separator from the command line.
+
+IPS: evaluates to the input pair separator from the command line.
+
+IRS: evaluates to the input record separator from the command line,
+or to LF or CRLF from the input data if in autodetect mode (which is
+the default).
+
+NF: evaluates to the number of fields in the current record.
+
+NR: evaluates to the number of the current record over all files
+being processed, starting with 1. Does not reset at the start of each file.
+
+OFS: evaluates to the output field separator from the command line.
+
+OPS: evaluates to the output pair separator from the command line.
+
+ORS: evaluates to the output record separator from the command line,
+or to LF or CRLF from the input data if in autodetect mode (which is
+the default).
+
+PI: the mathematical constant.
 </pre>
 </div>
 <p/>

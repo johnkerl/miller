@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2017-02-25
+.\"      Date: 2017-02-28
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2017-02-25" "\ \&" "\ \&"
+.TH "MILLER" "1" "2017-02-28" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -150,11 +150,16 @@ output separator to the given value.
 .RS 0
 .\}
 .nf
-  -h or --help Show this message.
-  --version              Show the software version.
-  {verb name} --help     Show verb-specific help.
-  --list-all-verbs or -l List only verb names.
-  --help-all-verbs       Show help on all verbs.
+  -h or --help                 Show this message.
+  --version                    Show the software version.
+  {verb name} --help           Show verb-specific help.
+  --help-all-verbs             Show help on all verbs.
+  -l or --list-all-verbs       List only verb names.
+  -L                           List only verb names, one per line.
+  -f or --help-all-functions   Show help on all built-in functions.
+  -F                           Show a bare listing of built-in functions by name.
+  -k or --help-all-keywords    Show help on all keywords.
+  -K                           Show a bare listing of keywords by name.
 .fi
 .if n \{\
 .RE
@@ -191,9 +196,8 @@ output separator to the given value.
  asserting_string boolean float fmtnum hexfmt int string typeof depth haskey
  joink joinkv joinv leafcount length mapdiff mapsum splitkv splitkvx splitnv
  splitnvx
+
 Please use "mlr --help-function {function name}" for function-specific help.
-Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
-Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
 .fi
 .if n \{\
 .RE
@@ -3138,6 +3142,17 @@ Type-checking happens at assignment: 'int x = 0.0' is an error.
 .fi
 .if n \{\
 .RE
+.SS "map"
+.if n \{\
+.RS 0
+.\}
+.nf
+map: declares an map-valued local variable in the current curly-braced scope.
+Type-checking happens at assignment: 'map b = 0' is an error. map b = {} is
+always OK. map b = a is OK or not depending on whether a is a map.
+.fi
+.if n \{\
+.RE
 .SS "num"
 .if n \{\
 .RS 0
@@ -3292,6 +3307,139 @@ Examples: 'var a=1', 'var xyz=""'
 .nf
 while: introduces a while loop, or with "do", introduces a do-while loop.
 The body statements must be wrapped in curly braces.
+.fi
+.if n \{\
+.RE
+.SS "E"
+.if n \{\
+.RS 0
+.\}
+.nf
+E: the mathematical constant.
+.fi
+.if n \{\
+.RE
+.SS "ENV"
+.if n \{\
+.RS 0
+.\}
+.nf
+ENV: access to environment variables by name, e.g. '$home = ENV["HOME"]'
+.fi
+.if n \{\
+.RE
+.SS "FILENAME"
+.if n \{\
+.RS 0
+.\}
+.nf
+FILENAME: evaluates to the name of the current file being processed.
+.fi
+.if n \{\
+.RE
+.SS "FILENUM"
+.if n \{\
+.RS 0
+.\}
+.nf
+FILENUM: evaluates to the number of the current file being processed,
+starting with 1.
+.fi
+.if n \{\
+.RE
+.SS "FNR"
+.if n \{\
+.RS 0
+.\}
+.nf
+FNR: evaluates to the number of the current record within the current file
+being processed, starting with 1. Resets at the start of each file.
+.fi
+.if n \{\
+.RE
+.SS "IFS"
+.if n \{\
+.RS 0
+.\}
+.nf
+IFS: evaluates to the input field separator from the command line.
+.fi
+.if n \{\
+.RE
+.SS "IPS"
+.if n \{\
+.RS 0
+.\}
+.nf
+IPS: evaluates to the input pair separator from the command line.
+.fi
+.if n \{\
+.RE
+.SS "IRS"
+.if n \{\
+.RS 0
+.\}
+.nf
+IRS: evaluates to the input record separator from the command line,
+or to LF or CRLF from the input data if in autodetect mode (which is
+the default).
+.fi
+.if n \{\
+.RE
+.SS "NF"
+.if n \{\
+.RS 0
+.\}
+.nf
+NF: evaluates to the number of fields in the current record.
+.fi
+.if n \{\
+.RE
+.SS "NR"
+.if n \{\
+.RS 0
+.\}
+.nf
+NR: evaluates to the number of the current record over all files
+being processed, starting with 1. Does not reset at the start of each file.
+.fi
+.if n \{\
+.RE
+.SS "OFS"
+.if n \{\
+.RS 0
+.\}
+.nf
+OFS: evaluates to the output field separator from the command line.
+.fi
+.if n \{\
+.RE
+.SS "OPS"
+.if n \{\
+.RS 0
+.\}
+.nf
+OPS: evaluates to the output pair separator from the command line.
+.fi
+.if n \{\
+.RE
+.SS "ORS"
+.if n \{\
+.RS 0
+.\}
+.nf
+ORS: evaluates to the output record separator from the command line,
+or to LF or CRLF from the input data if in autodetect mode (which is
+the default).
+.fi
+.if n \{\
+.RE
+.SS "PI"
+.if n \{\
+.RS 0
+.\}
+.nf
+PI: the mathematical constant.
 .fi
 .if n \{\
 .RE

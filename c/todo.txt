@@ -1,19 +1,10 @@
 ================================================================
 BUGFIXES
 
-! tsv->json blank line -- ? needs repro.
+? tsv->json blank line -- ? needs repro.
 
 ================================================================
 5.0.0 RELEASE TO DO:
-
-* kw autodoc; IO-PFR-S variables
-* note mlr -l -L -f -F -k -K rather prominently at mlh, as well as mld.
-* absent vs. empty; unset $x vs. $x="". no null keyword.
-* maps section: what are always/maybe/never maps; funcs; etc.
-  - absent-null map keys skip assign
-
-* re-valgrinds after UT expansion
-* release notes
 
 ? ship with autoreconf output committed?
 
@@ -64,21 +55,6 @@ MAPVAR CHECKLIST:
 * debt-reduction
   ! naming conventions to clarify transfer/copy semantics
   - copy/ref of keys vs. values in mlhmmv, local_stack, and callees -- ?!?
-
-* man mlr section on maps
-  o things which are always maps:
-    - maplit
-    - full srec
-    - full oosvar
-  o things which can be maps:
-    - oosvar
-    - localvar
-    - func retval
-    - func args
-  o what funcs are available
-  o scalar contexts vs. map contexts
-  o keywords print, dump, emit, for-kv, for-k
-  o copy semantics
 
 * clarify ownership semantics in localstack & mlhmmv via function names, & top-of-file comments
 

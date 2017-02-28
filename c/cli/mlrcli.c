@@ -613,20 +613,24 @@ static void list_all_verbs(FILE* o, char* leader) {
 }
 
 static void main_usage_help_options(FILE* o, char* argv0) {
-	fprintf(o, "  -h or --help Show this message.\n");
-	fprintf(o, "  --version              Show the software version.\n");
-	fprintf(o, "  {verb name} --help     Show verb-specific help.\n");
-	fprintf(o, "  --list-all-verbs or -l List only verb names.\n");
-	fprintf(o, "  --help-all-verbs       Show help on all verbs.\n");
+	fprintf(o, "  -h or --help                 Show this message.\n");
+	fprintf(o, "  --version                    Show the software version.\n");
+	fprintf(o, "  {verb name} --help           Show verb-specific help.\n");
+	fprintf(o, "  --help-all-verbs             Show help on all verbs.\n");
+	fprintf(o, "  -l or --list-all-verbs       List only verb names.\n");
+	fprintf(o, "  -L                           List only verb names, one per line.\n");
+	fprintf(o, "  -f or --help-all-functions   Show help on all built-in functions.\n");
+	fprintf(o, "  -F                           Show a bare listing of built-in functions by name.\n");
+	fprintf(o, "  -k or --help-all-keywords    Show help on all keywords.\n");
+	fprintf(o, "  -K                           Show a bare listing of keywords by name.\n");
 }
 
 static void main_usage_functions(FILE* o, char* argv0, char* leader) {
 	fmgr_t* pfmgr = fmgr_alloc();
 	fmgr_list_functions(pfmgr, o, leader);
 	fmgr_free(pfmgr, NULL);
+	fprintf(o, "\n");
 	fprintf(o, "Please use \"%s --help-function {function name}\" for function-specific help.\n", argv0);
-	fprintf(o, "Please use \"%s --help-all-functions\" or \"%s -f\" for help on all functions.\n", argv0, argv0);
-	fprintf(o, "Please use \"%s --help-all-keywords\" or \"%s -k\" for help on all keywords.\n", argv0, argv0);
 }
 
 static void main_usage_data_format_examples(FILE* o, char* argv0) {

@@ -113,11 +113,16 @@ OPTIONS
        --rs sets both the input and output separator to the given value.
 
    HELP OPTIONS
-	 -h or --help Show this message.
-	 --version		Show the software version.
-	 {verb name} --help	Show verb-specific help.
-	 --list-all-verbs or -l List only verb names.
-	 --help-all-verbs	Show help on all verbs.
+	 -h or --help		      Show this message.
+	 --version		      Show the software version.
+	 {verb name} --help	      Show verb-specific help.
+	 --help-all-verbs	      Show help on all verbs.
+	 -l or --list-all-verbs       List only verb names.
+	 -L			      List only verb names, one per line.
+	 -f or --help-all-functions   Show help on all built-in functions.
+	 -F			      Show a bare listing of built-in functions by name.
+	 -k or --help-all-keywords    Show help on all keywords.
+	 -K			      Show a bare listing of keywords by name.
 
    VERB LIST
 	bar bootstrap cat check count-distinct cut decimate filter grep group-by
@@ -142,9 +147,8 @@ OPTIONS
 	asserting_string boolean float fmtnum hexfmt int string typeof depth haskey
 	joink joinkv joinv leafcount length mapdiff mapsum splitkv splitkvx splitnv
 	splitnvx
+
        Please use "mlr --help-function {function name}" for function-specific help.
-       Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
-       Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
 
    I/O FORMATTING
 	 --idkvp   --odkvp   --dkvp	 Delimited key-value pairs, e.g "a=1,b=2"
@@ -1784,6 +1788,11 @@ KEYWORDS FOR PUT AND FILTER
        int: declares an integer local variable in the current curly-braced scope.
        Type-checking happens at assignment: 'int x = 0.0' is an error.
 
+   map
+       map: declares an map-valued local variable in the current curly-braced scope.
+       Type-checking happens at assignment: 'map b = 0' is an error. map b = {} is
+       always OK. map b = a is OK or not depending on whether a is a map.
+
    num
        num: declares an int/float local variable in the current curly-braced scope.
        Type-checking happens at assignment: 'num b = true' is an error.
@@ -1863,6 +1872,55 @@ KEYWORDS FOR PUT AND FILTER
        while: introduces a while loop, or with "do", introduces a do-while loop.
        The body statements must be wrapped in curly braces.
 
+   E
+       E: the mathematical constant.
+
+   ENV
+       ENV: access to environment variables by name, e.g. '$home = ENV["HOME"]'
+
+   FILENAME
+       FILENAME: evaluates to the name of the current file being processed.
+
+   FILENUM
+       FILENUM: evaluates to the number of the current file being processed,
+       starting with 1.
+
+   FNR
+       FNR: evaluates to the number of the current record within the current file
+       being processed, starting with 1. Resets at the start of each file.
+
+   IFS
+       IFS: evaluates to the input field separator from the command line.
+
+   IPS
+       IPS: evaluates to the input pair separator from the command line.
+
+   IRS
+       IRS: evaluates to the input record separator from the command line,
+       or to LF or CRLF from the input data if in autodetect mode (which is
+       the default).
+
+   NF
+       NF: evaluates to the number of fields in the current record.
+
+   NR
+       NR: evaluates to the number of the current record over all files
+       being processed, starting with 1. Does not reset at the start of each file.
+
+   OFS
+       OFS: evaluates to the output field separator from the command line.
+
+   OPS
+       OPS: evaluates to the output pair separator from the command line.
+
+   ORS
+       ORS: evaluates to the output record separator from the command line,
+       or to LF or CRLF from the input data if in autodetect mode (which is
+       the default).
+
+   PI
+       PI: the mathematical constant.
+
 AUTHOR
        Miller is written by John Kerl <kerl.john.r@gmail.com>.
 
@@ -1876,4 +1934,4 @@ SEE ALSO
 
 
 
-				  2017-02-25			     MILLER(1)
+				  2017-02-28			     MILLER(1)

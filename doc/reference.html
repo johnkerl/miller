@@ -1282,11 +1282,16 @@ Data-format examples:
   +-----------------------+
 
 Help options:
-  -h or --help Show this message.
-  --version              Show the software version.
-  {verb name} --help     Show verb-specific help.
-  --list-all-verbs or -l List only verb names.
-  --help-all-verbs       Show help on all verbs.
+  -h or --help                 Show this message.
+  --version                    Show the software version.
+  {verb name} --help           Show verb-specific help.
+  --help-all-verbs             Show help on all verbs.
+  -l or --list-all-verbs       List only verb names.
+  -L                           List only verb names, one per line.
+  -f or --help-all-functions   Show help on all built-in functions.
+  -F                           Show a bare listing of built-in functions by name.
+  -k or --help-all-keywords    Show help on all keywords.
+  -K                           Show a bare listing of keywords by name.
 
 Verbs:
    bar bootstrap cat check count-distinct cut decimate filter grep group-by
@@ -1311,9 +1316,8 @@ Functions for the filter and put verbs:
    asserting_present asserting_string boolean float fmtnum hexfmt int string
    typeof depth haskey joink joinkv joinv leafcount length mapdiff mapsum
    splitkv splitkvx splitnv splitnvx
+
 Please use "mlr --help-function {function name}" for function-specific help.
-Please use "mlr --help-all-functions" or "mlr -f" for help on all functions.
-Please use "mlr --help-all-keywords" or "mlr -k" for help on all keywords.
 
 Data-format options, for input, output, or both:
   --idkvp   --odkvp   --dkvp      Delimited key-value pairs, e.g "a=1,b=2"
