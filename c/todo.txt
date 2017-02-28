@@ -6,7 +6,6 @@ BUGFIXES
 ================================================================
 5.0.0 RELEASE TO DO:
 
-* doc: transparency section
 * kw autodoc; IO-PFR-S variables
 * note mlr -l -L -f -F -k -K rather prominently at mlh, as well as mld.
 * absent vs. empty; unset $x vs. $x="". no null keyword.

@@ -725,7 +725,7 @@ Rules for null-handling:
 
 <ul>
 
-<li> Records with one or more empty sort-field values sort after records with
+<li/> Records with one or more empty sort-field values sort after records with
 all sort-field values present:
 <p/>
 <div class="pokipanel">
@@ -764,7 +764,7 @@ x=9,b=10
 </div>
 <p/>
 
-<li> Functions/operators which have one or more <i>empty</i> arguments produce empty output: e.g.
+<li/> Functions/operators which have one or more <i>empty</i> arguments produce empty output: e.g.
 <p/>
 <div class="pokipanel">
 <pre>
@@ -801,13 +801,13 @@ x=,y=3,a=3,b=3
 </div>
 <p/>
 
-<li> Functions of <i>absent</i> variables (e.g. <tt>mlr put '$y =
+<li/> Functions of <i>absent</i> variables (e.g. <tt>mlr put '$y =
 log10($nonesuch)'</tt>) evaluate to absent, and arithmetic/bitwise/boolean
 operators with both operands being absent evaluate to absent.
 Arithmetic operators with one absent operand return the other operand.
 More specifically, absent values act like zero for addition/subtraction, and
 one for multiplication: Furthermore, <b>any expression which evaluates to
-absent is not stored in the output record</b>:
+absent is not stored in the left-hand side of an assignment statement </b>:
 
 <p/>
 <div class="pokipanel">
@@ -825,6 +825,9 @@ x=2,y=3,a=2,b=3
 </pre>
 </div>
 <p/>
+
+<li/> Likewise, for assignment to maps, <b>absent-valued keys or values result
+in a skipped assignment</b>.
 
 </ul>
 
@@ -856,7 +859,8 @@ input data stream, which is intolerable.
 <li/> The penalty for the absent feature is that misspelled variables can be hard to find:
 e.g. in <tt>mlr put 'begin{@sumx = 10}; ...; update @sumx somehow per-record; ...; end {@something = @sum * 2}'</tt>
 the accumulator is spelt <tt>@sumx</tt> in the begin-block but <tt>@sum</tt> in the end-block, where since it
-is absent, <tt>@sum*2</tt> evaluates to 2.
+is absent, <tt>@sum*2</tt> evaluates to 2. See also the section on
+<a href="reference-dsl.html#Errors_and_transparency">errors and transparency</a>.
 
 </ul>
 

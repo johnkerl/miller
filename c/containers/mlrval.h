@@ -220,17 +220,8 @@ static inline int mv_is_boolean(mv_t* pval) {
 static inline int mv_is_string(mv_t* pval) {
 	return pval->type == MT_STRING || pval->type == MT_EMPTY;
 }
-static inline int mv_is_null(mv_t* pval) {
-	return MT_ERROR < pval->type && pval->type <= MT_EMPTY;
-}
 static inline int mv_is_error(mv_t* pval) {
 	return pval->type == MT_ERROR;
-}
-static inline int mv_is_null_or_error(mv_t* pval) {
-	return pval->type <= MT_EMPTY;
-}
-static inline int mv_is_non_null(mv_t* pval) {
-	return MT_ERROR < pval->type && pval->type > MT_EMPTY;
 }
 static inline int mv_is_absent(mv_t* pval) {
 	return pval->type == MT_ABSENT;
@@ -243,6 +234,15 @@ static inline int mv_is_empty(mv_t* pval) {
 }
 static inline int mv_is_not_empty(mv_t* pval) {
 	return pval->type != MT_EMPTY;
+}
+static inline int mv_is_null(mv_t* pval) {
+	return mv_is_absent(pval) || mv_is_empty(pval);
+}
+static inline int mv_is_null_or_error(mv_t* pval) {
+	return mv_is_null(pval) || pval->type == MT_EMPTY;
+}
+static inline int mv_is_non_null(mv_t* pval) {
+	return !mv_is_null(pval);
 }
 
 // ----------------------------------------------------------------
