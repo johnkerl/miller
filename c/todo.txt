@@ -6,15 +6,8 @@ BUGFIXES
 ================================================================
 5.0.0 RELEASE TO DO:
 
-? ship with autoreconf output committed?
-
 ================================================================
 DOC FOR 5.0.0:
-
-KW autodoc:
-* kw autodoc mods for func/subr/call/return; also add NR PI E etc. to keyword help.
-  E ENV FILENAME FILENUM FNR NF NR PI [IO][PFS]S
-* also update ref-dsl page
 
 To file:
 * env lhs expr
@@ -26,10 +19,6 @@ covers:
 mlh:
 * func-def example @ mlr put -h ?
 * triple-for example @ mlr put -h ?
-
-! key point (put at top of ref-dsl, ref-verb, and elsewhere -- esp cover page in bold):
-  there is a DSL so you *can* loop things out w/ variables etc etc etc but also verbs for
-  often-used idioms so you don't *have* to. then show a concise and convincing example.
 
 ================================================================
 MAPVAR CHECKLIST:
@@ -100,6 +89,8 @@ NON-RELEASE:
 * UT: formalize w/ w/o mmap. for now manual at least. (not a release-blocker)
 
 * xxxes
+
+? ship with autoreconf output committed?
 
 * mt_error/fatal/skip-assign audit
 
