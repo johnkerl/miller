@@ -6,14 +6,14 @@ BUGFIXES
 ================================================================
 5.0.0 POST-RELEASE TO DO:
 
-* autoconf wtf?
+! windows port
+* rh/fedora/centos
+* ship ./configure, w/ clean-target mods
 
 ================================================================
 NON-RELEASE:
 
-! rh/fedora/centos
 * go through lmag article & clarify all unclears
-* windows port?
 ? msort.o wt?
 
 ================================================================
@@ -68,6 +68,11 @@ MAPVAR CHECKLIST:
     ? tail -g
     - uniq -g
 
+* other stats:
+  - stats1 antimode
+  - stats1 for strings: min/max/percentiles. note count/mode already work.
+    -> how to handle mixed string/number columns ...
+
 * mlr batchify/chunkify: start new blocks when field(s) change.
   - needs backward-incompatible change to DKVP blank lines become skips, not empty maps
   - DKVP/CSV/PPRINT: blank line.
@@ -78,22 +83,15 @@ MAPVAR CHECKLIST:
 
 * xxxes
 
-? ship with autoreconf output committed?
-
 * mt_error/fatal/skip-assign audit
 
 * mlr hex -> auxes. and make an aux-list. and doc: olh as well as webdoc?
 
-perf note: DSL stuff performant w/r/t ruby/python (mand bench & maybe others)
-
-! stats1 antimode
+* perf note: DSL stuff performant w/r/t ruby/python (mand bench & maybe others)
 
 ! more than 'syntax error' from lemon-parse failures ... lemon API research
 
 * strtok -> strsep ?
-
-* stats1 for strings: min/max/percentiles. note count/mode already work.
-  -> how to handle mixed string/number columns ...
 
 ? some sort of debug/single-step/trace ... include the AST in the CST & reverse-generate ?
 
@@ -118,15 +116,13 @@ perf note: DSL stuff performant w/r/t ruby/python (mand bench & maybe others)
   mlr tee."
 
 ? some help for keyword clashes? e.g. 'func E(x) { ... }' ?
-? multiple-valued function returns?? map-returns?
 
 * bargv0 throughout, replacing "mlr" and argv[0] both. (former against name-changes; latter against /usr/bin/mlr.)
 
 * prune unused functions
 
-* strtok -> strsep throughout
-
 ? mlr step -a shift --by {n}
+
 ? --imd ?
 
 * bool_t:uchar typedef & perf check?
