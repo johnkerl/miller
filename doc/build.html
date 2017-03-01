@@ -417,8 +417,10 @@ copyright</a>.
   <li/> On buildbox: <tt>autoreconf -fiv &amp;&amp; ./configure &amp;&amp; make distcheck</tt>
   <li/> On buildbox: make SRPM as in <a href="https://github.com/johnkerl/miller/blob/master/README-RPM.md">
     https://github.com/johnkerl/miller/blob/master/README-RPM.md</a>
+  <li/> On all buildboxes: <tt>cd c</tt> and <tt>make -f Makefile.no-autoconfig mlr.static</tt>. Then copy
+    <tt>mlr.static</tt> to <tt>../mlr.{arch}</tt>.
   <li/> Pull back release tarball <tt>mlr-3.4.0.tar.gz</tt> and SRPM <tt>mlr-3.4.0-1.el6.src.rpm</tt> from buildbox,
-    and <tt>mlr.arch</tt> binaries from whatever buildboxes.
+    and <tt>mlr.{arch}</tt> binaries from whatever buildboxes.
   </ul>
 
 <li/>Create the Github release tag:
