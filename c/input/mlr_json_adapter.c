@@ -69,9 +69,7 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep, int j
 			free(prefix);
 			break;
 		case JSON_ARRAY:
-			if (json_skip_arrays_on_input) {
-				lrec_put(prec, key, "", NO_FREE);
-			} else {
+			if (!json_skip_arrays_on_input) {
 				fprintf(stderr,
 					"%s: found array item within JSON object. This is valid but unmillerable JSON.\n"
 					"Use --json-skip-arrays-on-input to exclude these from input without fataling.\n",

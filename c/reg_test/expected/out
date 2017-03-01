@@ -45740,6 +45740,15 @@ pan wye 10 0.5026260055412137  0.9526183602969864
 mlr --icsv --ojson --rs lf cat
 { "col": "abc \"def\" \\ghi" }
 
+mlr --ijson --oxtab cat
+mlr: found array item within JSON object. This is valid but unmillerable JSON.
+Use --json-skip-arrays-on-input to exclude these from input without fataling.
+mlr: Unable to parse JSON data.
+
+mlr --ijson --oxtab --json-skip-arrays-on-input cat
+a 1
+c 4
+
 
 ================================================================
 FORMAT-CONVERSION KEYSTROKE-SAVERS

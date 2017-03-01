@@ -369,6 +369,10 @@ OPTIONS
 
 	 --ijson   --ojson   --json	 JSON tabular: sequence or list of one-level
 					 maps: {...}{...} or [{...},{...}].
+	   --json-skip-arrays-on-input	 JSON arrays are unmillerable, and by default they
+					 cause a fatal error when read. With this option,
+					 they are ignored. Please use the jq tool for full
+					 JSON (pre)processing.
 			     --jvstack	 Put one key-value pair per line for JSON
 					 output.
 			     --jlistwrap Wrap JSON output in outermost [ ].
@@ -2127,7 +2131,7 @@ SEE ALSO
 
 
 
-				  2017-02-28			     MILLER(1)
+				  2017-03-01			     MILLER(1)
 </pre>
 </div>
 <p/>

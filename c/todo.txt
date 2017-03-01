@@ -11,9 +11,10 @@ BUGFIXES
   - skip
   - array-as-map ... not reversible though ... needs yet another flag, this one for --json_output_int_keys_use_array?
   - doc re irreversible w/o extensie redesign to fundamentally support arrays, as well as nested srec maps.
+  -> UT
+  -> mlh
+  -> mld as new ref section. also including why no array support.
 
-* json array-skip
-* json array-as-map
 * feature-counting script to cookbook
 * json_encode / json_decode functions? (map->string and string->map)
 ? mlrfunc docsection?

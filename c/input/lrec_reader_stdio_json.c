@@ -154,8 +154,12 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 
 		// The lrecs have their string pointers pointing into the parsed-JSON objects (for
 		// efficiency) so it's important we not free the latter until our free method.
-		reference_json_objects_as_lrecs(pstate->precords, parsed_top_level_json,
-			pstate->input_json_flatten_separator, pstate->json_skip_arrays_on_input);
+		if (!reference_json_objects_as_lrecs(pstate->precords, parsed_top_level_json,
+			pstate->input_json_flatten_separator, pstate->json_skip_arrays_on_input))
+		{
+			fprintf(stderr, "%s: Unable to parse JSON data.\n", MLR_GLOBALS.bargv0);
+			exit(1);
+		}
 
 		if (item_start == NULL)
 			break;

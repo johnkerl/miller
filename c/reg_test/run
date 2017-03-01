@@ -5229,6 +5229,14 @@ col
 "abc ""def"" \ghi"
 EOF
 
+mlr_expect_fail --ijson --oxtab cat <<EOF
+{ "a": 1, "b": [2, 3], "c": 4}
+EOF
+
+run_mlr --ijson --oxtab --json-skip-arrays-on-input cat <<EOF
+{ "a": 1, "b": [2, 3], "c": 4}
+EOF
+
 # ----------------------------------------------------------------
 announce FORMAT-CONVERSION KEYSTROKE-SAVERS
 

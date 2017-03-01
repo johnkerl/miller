@@ -189,6 +189,21 @@ I/O formats, are concerned, these are simply field names with colons in them:
 
 POKI_RUN_COMMAND{{mlr --json --jvstack head -n 1 then put '${values:uv} = ${values:u} * ${values:v}' data/json-example-2.json}}HERE
 
+<h2>Arrays</h2>
+
+<p/>Arrays aren&rsquo;t supported in Miller. The <tt>put</tt>/<tt>filter</tt>
+DSL does support hashmaps, and an array could be read in as an integer-keyed
+map: e.g. JSON <tt>["a","b","c"]</tt> could be read in as Miller hashmap
+<tt>{1:"a",2:"b",3:"c"}</tt>. But then arrays and maps both become maps, with
+the result that, once written back as output, they would differ from input.
+
+<p/>As a result, Miller by default fatals when it encounters arrays, which are
+&ldquo;unmillerable&rdquo;. You can use <tt>mlr
+--json-skip-arrays-on-input</tt>, if you like, which ignores arrays. To truly
+handle JSON, please use a JSON-processing tool such as
+<a href="http://stedolan.github.io/jq/">jq</a>.
+
+
 <h2>Formatting JSON options</h2>
 
 <p/>JSON isn&rsquo;t a parameterized format, so <tt>RS</tt>, <tt>FS</tt>,

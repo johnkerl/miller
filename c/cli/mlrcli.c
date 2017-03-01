@@ -722,6 +722,10 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "\n");
 	fprintf(o, "  --ijson   --ojson   --json      JSON tabular: sequence or list of one-level\n");
 	fprintf(o, "                                  maps: {...}{...} or [{...},{...}].\n");
+	fprintf(o, "    --json-skip-arrays-on-input   JSON arrays are unmillerable, and by default they\n");
+	fprintf(o, "                                  cause a fatal error when read. With this option,\n");
+	fprintf(o, "                                  they are ignored. Please use the jq tool for full\n");
+	fprintf(o, "                                  JSON (pre)processing.\n");
 	fprintf(o, "                      --jvstack   Put one key-value pair per line for JSON\n");
 	fprintf(o, "                                  output.\n");
 	fprintf(o, "                      --jlistwrap Wrap JSON output in outermost [ ].\n");
