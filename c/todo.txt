@@ -6,9 +6,6 @@ BUGFIXES
 ================================================================
 5.0.0 POST-RELEASE TO DO:
 
-* bgrd @ doc :^/
-* static notes for x86_64: sudo yum install glibc-devel glibc-static
-* ln -s for latest doc
 * autoconf wtf?
 
 ================================================================

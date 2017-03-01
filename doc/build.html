@@ -192,7 +192,6 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Building_from_source">Building from source</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#From_release_tarball_using_autoconfig">From release tarball using autoconfig</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#From_git_clone_using_autoconfig">From git clone using autoconfig</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Creating_a_release_tarball">Creating a release tarball</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Without_using_autoconfig">Without using autoconfig</a><br/>
 &bull;&nbsp;<a href="#In_case_of_problems">In case of problems</a><br/>
 &bull;&nbsp;<a href="#Dependencies">Dependencies</a><br/>
@@ -260,14 +259,16 @@ sudo apt-get install miller
 the generous and expert efforts of <a href="https://github.com/0-wiz-0/">Thomas
 Klausner</a>.
 
+
 <ul>
-<li/> Install the <tt>flex</tt> package using your system&rsquo;s package
-  manager (<tt>apt-get</tt>, <tt>yum install</tt>, etc.).
 <li/> Obtain <tt>mlr-i.j.k.tar.gz</tt> from <a
   href="https://github.com/johnkerl/miller/tags">https://github.com/johnkerl/miller/tags</a>,
   replacing <tt>i.j.k</tt> with the desired release, e.g. <tt>2.2.1</tt>.
 <li/> <tt>tar zxvf mlr-i.j.k.tar.gz</tt>
 <li/> <tt>cd mlr-i.j.k</tt>
+<li/> Install the following packages using your system&rsquo;s package manager
+  (<tt>apt-get</tt>, <tt>yum install</tt>, etc.):
+  <b>automake autoconf libtool flex</b>
 <li> Various configuration options of your choice, e.g.
   <ul>
   <li/> <tt>autoreconf -fiv</tt>
@@ -287,21 +288,9 @@ Klausner</a>.
 <a id="From_git_clone_using_autoconfig"/><h2>From git clone using autoconfig</h2>
 
 <ul>
-<li/> Install the following packages using your system&rsquo;s package manager
-(<tt>apt-get</tt>, <tt>yum install</tt>, etc.):
-<tt>automake autoconf libtool flex</tt>
-
 <li/> <tt>git clone https://github.com/johnkerl/miller</tt>
 <li/> <tt>cd miller</tt>
-<li/> Then continue from <tt>autoreconf -fiv</tt> as above.
-</ul>
-
-<a id="Creating_a_release_tarball"/><h2>Creating a release tarball</h2>
-
-<ul>
-<li/> Proceed from git-clone as above.
-<li/> Then edit the package version at the top of <tt>configure.ac</tt> as well as <tt>c/mlrvers.h</tt>.
-<li/> Then <tt>make distcheck</tt>.
+<li/> Then continue from &ldquo;Install the following ... &rdquo; as above.
 </ul>
 
 <a id="Without_using_autoconfig"/><h2>Without using autoconfig</h2>
@@ -446,6 +435,10 @@ copyright</a>.
   <li/> <tt>cd</tt> into <tt>doc</tt> subdir. Edit <tt>template.html</tt>&rsquo;s <tt>titleinbody</tt> tag from
     <tt>Miller</tt> to <tt>Miller 3.4.0</tt> and poki-build.
   <li/> ISP upload
+  <li/> At the ISP site, update the latest-revision symlink
+    <tt>ln -s pub_http_internet/miller-releases/miller-3.4.0 pub_http_internet/miller</tt>.
+    (This is the main doc URL linked to from the top of the Github repo so it
+    must point to this newly published revision.)
   <li/> Back in the Github repo, edit <tt>doc/content-for-release-docs.html</tt> to include new release, poki-build,
     push/commit, and ISP upload.
   </ul>
