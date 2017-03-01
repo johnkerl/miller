@@ -364,6 +364,8 @@ tags: .always
 
 mlr: .always parsing
 	$(CCOPT) $(NON_DSL_SRCS) $(DSL_OBJS) $(LFLAGS) -o mlr
+# On x86_64/Centos I had to first do
+# sudo yum install glibc-devel glibc-static
 mlr.static: .always parsing
 	$(CCOPT) -static $(NON_DSL_SRCS) $(DSL_OBJS) $(LFLAGS) -o mlr.static
 
