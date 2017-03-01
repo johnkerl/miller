@@ -20,6 +20,7 @@ typedef struct _cli_reader_opts_t {
 	char* ifs;
 	char* ips;
 	char* input_json_flatten_separator;
+	int   json_skip_arrays_on_input;
 
 	int   allow_repeat_ifs;
 	int   allow_repeat_ips;

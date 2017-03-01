@@ -6,6 +6,18 @@ BUGFIXES
 ================================================================
 5.0.0 POST-RELEASE TO DO:
 
+* json array handling:
+  - fatal
+  - skip
+  - array-as-map ... not reversible though ... needs yet another flag, this one for --json_output_int_keys_use_array?
+  - doc re irreversible w/o extensie redesign to fundamentally support arrays, as well as nested srec maps.
+
+* json array-skip
+* json array-as-map
+* feature-counting script to cookbook
+* json_encode / json_decode functions? (map->string and string->map)
+? mlrfunc docsection?
+
 ! windows port
 * rh/fedora/centos
 * ship ./configure, w/ clean-target mods

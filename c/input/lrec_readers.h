@@ -14,14 +14,16 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implici
 lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_stdio_nidx_alloc(char* irs, char* ifs, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips);
-lrec_reader_t* lrec_reader_stdio_json_alloc(char* input_json_flatten_separator, char* line_term);
+lrec_reader_t* lrec_reader_stdio_json_alloc(char* input_json_flatten_separator, int json_skip_arrays_on_input,
+	char* line_term);
 
 lrec_reader_t* lrec_reader_mmap_csv_alloc(char* irs, char* ifs, int use_implicit_header);
 lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs, int use_implicit_header);
 lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_mmap_nidx_alloc(char* irs, char* ifs, int allow_repeat_ifs);
 lrec_reader_t* lrec_reader_mmap_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips);
-lrec_reader_t* lrec_reader_mmap_json_alloc(char* input_json_flatten_separator, char* line_term);
+lrec_reader_t* lrec_reader_mmap_json_alloc(char* input_json_flatten_separator, int json_skip_arrays_on_input,
+	char* line_term);
 
 lrec_reader_t* lrec_reader_in_memory_alloc(sllv_t* precords);
 

@@ -2,11 +2,13 @@
 #include "lib/mlrutil.h"
 #include "input/mlr_json_adapter.h"
 
-static lrec_t* validate_millerable_object(json_value_t* pjson_object, char* flatten_sep);
+static lrec_t* validate_millerable_object(json_value_t* pjson_object, char* flatten_sep, int json_skip_arrays_on_input);
 static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object, char* prefix, char* flatten_sep);
 
 // ----------------------------------------------------------------
-int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_json, char* flatten_sep) {
+int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_json, char* flatten_sep,
+	int json_skip_arrays_on_input)
+{
 	if (ptop_level_json->type == JSON_ARRAY) {
 		int n = ptop_level_json->u.array.length;
 		for (int i = 0; i < n; i++) {
@@ -17,13 +19,13 @@ int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_j
 					MLR_GLOBALS.bargv0, json_describe_type(ptop_level_json->type));
 				return FALSE;
 			}
-			lrec_t* prec = validate_millerable_object(pnext_level_json, flatten_sep);
+			lrec_t* prec = validate_millerable_object(pnext_level_json, flatten_sep, json_skip_arrays_on_input);
 			if (prec == NULL)
 				return FALSE;
 			sllv_append(precords, prec);
 		}
 	} else if (ptop_level_json->type == JSON_OBJECT) {
-		lrec_t* prec = validate_millerable_object(ptop_level_json, flatten_sep);
+		lrec_t* prec = validate_millerable_object(ptop_level_json, flatten_sep, json_skip_arrays_on_input);
 		if (prec == NULL)
 			return FALSE;
 		sllv_append(precords, prec);
@@ -42,7 +44,7 @@ int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_j
 //
 // Precondition: the JSON value is assumed to have already been checked to be of type JSON_OBJECT.
 
-lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
+lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep, int json_skip_arrays_on_input) {
 	lrec_t* prec = lrec_unbacked_alloc();
 	int n = pjson->u.array.length;
 	for (int i = 0; i < n; i++) {
@@ -67,10 +69,15 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep) {
 			free(prefix);
 			break;
 		case JSON_ARRAY:
-			fprintf(stderr,
-				"%s: found array item within JSON object. This is valid but unmillerable JSON.\n",
-				MLR_GLOBALS.bargv0);
-			return NULL;
+			if (json_skip_arrays_on_input) {
+				lrec_put(prec, key, "", NO_FREE);
+			} else {
+				fprintf(stderr,
+					"%s: found array item within JSON object. This is valid but unmillerable JSON.\n"
+					"Use --json-skip-arrays-on-input to exclude these from input without fataling.\n",
+					MLR_GLOBALS.bargv0);
+				return NULL;
+			}
 			break;
 
 		case JSON_STRING:

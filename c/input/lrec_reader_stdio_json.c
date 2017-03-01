@@ -35,6 +35,7 @@ typedef struct _lrec_reader_stdio_json_state_t {
 	sllv_t* ptop_level_json_objects;
 	sllv_t* precords;
 	char* input_json_flatten_separator;
+	int json_skip_arrays_on_input;
 	int do_auto_line_term;
 	char* detected_line_term;
 } lrec_reader_stdio_json_state_t;
@@ -44,15 +45,18 @@ static void    lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle);
 static lrec_t* lrec_reader_stdio_json_process(void* pvstate, void* pvhandle, context_t* pctx);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_stdio_json_alloc(char* input_json_flatten_separator, char* line_term) {
+lrec_reader_t* lrec_reader_stdio_json_alloc(char* input_json_flatten_separator, int json_skip_arrays_on_input,
+	char* line_term)
+{
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_json_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_json_state_t));
 	pstate->ptop_level_json_objects      = sllv_alloc();
 	pstate->precords                     = sllv_alloc();
 	pstate->input_json_flatten_separator = input_json_flatten_separator;
-	pstate->do_auto_line_term             = FALSE;
-	pstate->detected_line_term            = "\n"; // xxx adapt to MLR_GLOBALS/ctx-const for Windows port
+	pstate->json_skip_arrays_on_input    = json_skip_arrays_on_input;
+	pstate->do_auto_line_term            = FALSE;
+	pstate->detected_line_term           = "\n"; // xxx adapt to MLR_GLOBALS/ctx-const for Windows port
 
 	if (streq(line_term, "auto")) {
 		pstate->do_auto_line_term = TRUE;
@@ -150,7 +154,8 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 
 		// The lrecs have their string pointers pointing into the parsed-JSON objects (for
 		// efficiency) so it's important we not free the latter until our free method.
-		reference_json_objects_as_lrecs(pstate->precords, parsed_top_level_json, pstate->input_json_flatten_separator);
+		reference_json_objects_as_lrecs(pstate->precords, parsed_top_level_json,
+			pstate->input_json_flatten_separator, pstate->json_skip_arrays_on_input);
 
 		if (item_start == NULL)
 			break;
