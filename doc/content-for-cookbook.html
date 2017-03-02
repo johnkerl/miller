@@ -289,6 +289,27 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv-2.sh)HERE
 
 <!-- ================================================================ -->
 </div>
+<h1>Feature-counting</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_feature_counting');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_feature_counting" style="display: block">
+
+<p/>Suppose you have some heterogeneous data like this:
+
+POKI_INCLUDE_ESCAPED(data/features.json)HERE
+
+<p/> A reasonable question to ask is, how many occurrences of each field are
+there? And, what percentage of total row count has each of them? Since the
+denominator of the percentage is not known until the end, this is a two-pass
+algorithm:
+
+POKI_INCLUDE_ESCAPED(data/feature-count.mlr)HERE
+
+<p/> Then
+POKI_RUN_COMMAND{{mlr --json put -q -f data/feature-count.mlr data/features.json}}HERE
+POKI_RUN_COMMAND{{mlr --ijson --opprint put -q -f data/feature-count.mlr data/features.json}}HERE
+
+<!-- ================================================================ -->
+</div>
 <h1>Unsparsing</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_unsparsing');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_unsparsing" style="display: block">

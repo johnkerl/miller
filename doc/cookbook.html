@@ -205,6 +205,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Two-pass_algorithms:_records_having_max_value">Two-pass algorithms: records having max value</a><br/>
 &bull;&nbsp;<a href="#Rectangularizing_data">Rectangularizing data</a><br/>
 &bull;&nbsp;<a href="#Regularizing_ragged_CSV">Regularizing ragged CSV</a><br/>
+&bull;&nbsp;<a href="#Feature-counting">Feature-counting</a><br/>
 &bull;&nbsp;<a href="#Unsparsing">Unsparsing</a><br/>
 &bull;&nbsp;<a href="#Parsing_log-file_output">Parsing log-file output</a><br/>
 &bull;&nbsp;<a href="#Memoization_with_out-of-stream_variables">Memoization with out-of-stream variables</a><br/>
@@ -1146,6 +1147,101 @@ a,b,c
 4,5,
 6,,
 7,8,9
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+</div>
+<a id="Feature-counting"/><h1>Feature-counting</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_feature_counting');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_feature_counting" style="display: block">
+
+<p/>Suppose you have some heterogeneous data like this:
+
+<p/>
+<div class="pokipanel">
+<pre>
+{ "qoh": 29874, "rate": 1.68, "latency": 0.02 }
+{ "name": "alice", "uid": 572 }
+{ "qoh": 1227, "rate": 1.01, "latency": 0.07 }
+{ "qoh": 13458, "rate": 1.72, "latency": 0.04 }
+{ "qoh": 56782, "rate": 1.64, "latency": 0.02 }
+{ "qoh": 23512, "rate": 1.71, "latency": 0.03 }
+{ "qoh": 9876, "rate": 1.89, "latency": 0.08 }
+{ "name": "bill", "uid": 684 }
+{ "name": "chuck", "uid": 908 }
+{ "name": "dottie", "uid": 440 }
+{ "qoh": 0, "rate": 0.40, "latency": 0.01 }
+{ "qoh": 5438, "rate": 1.56, "latency": 0.17 }
+</pre>
+</div>
+<p/>
+
+<p/> A reasonable question to ask is, how many occurrences of each field are
+there? And, what percentage of total row count has each of them? Since the
+denominator of the percentage is not known until the end, this is a two-pass
+algorithm:
+
+<p/>
+<div class="pokipanel">
+<pre>
+for (key in $*) {
+  @key_counts[key] += 1;
+}
+@record_count += 1;
+
+end {
+  for (key in @key_counts) {
+      @key_fraction[key] = @key_counts[key] / @record_count
+  }
+  emit @record_count;
+  emit @key_counts, "key";
+  emit @key_fraction,"key"
+}
+</pre>
+</div>
+<p/>
+
+<p/> Then
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --json put -q -f data/feature-count.mlr data/features.json
+{ "record_count": 12 }
+{ "key": "qoh", "key_counts": 8 }
+{ "key": "rate", "key_counts": 8 }
+{ "key": "latency", "key_counts": 8 }
+{ "key": "name", "key_counts": 4 }
+{ "key": "uid", "key_counts": 4 }
+{ "key": "qoh", "key_fraction": 0.666667 }
+{ "key": "rate", "key_fraction": 0.666667 }
+{ "key": "latency", "key_fraction": 0.666667 }
+{ "key": "name", "key_fraction": 0.333333 }
+{ "key": "uid", "key_fraction": 0.333333 }
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --ijson --opprint put -q -f data/feature-count.mlr data/features.json
+record_count
+12
+
+key     key_counts
+qoh     8
+rate    8
+latency 8
+name    4
+uid     4
+
+key     key_fraction
+qoh     0.666667
+rate    0.666667
+latency 0.666667
+name    0.333333
+uid     0.333333
 </pre>
 </div>
 <p/>

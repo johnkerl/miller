@@ -1334,7 +1334,7 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 		preader_opts->allow_repeat_ifs = TRUE;
 		argi += 1;
 
-	} else if (streq(argv[argi], "--json-skip-arrays-on-input")) { // xxx to mlr -h
+	} else if (streq(argv[argi], "--json-skip-arrays-on-input")) {
 		preader_opts->json_skip_arrays_on_input = TRUE;
 		argi += 1;
 
