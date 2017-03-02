@@ -329,7 +329,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_TYPING, "is_present",     1,0, "True if field is present in input, false otherwise."},
 	{FUNC_CLASS_TYPING, "is_string",      1,0, "True if field is present with string (including empty-string) value"},
 
-	{FUNC_CLASS_TYPING, "asserting_absent",      1,0, "Returns argument if it is absent in the input ata, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_absent",      1,0, "Returns argument if it is absent in the input data, else throws an error."},
 	{FUNC_CLASS_TYPING, "asserting_bool",        1,0, "Returns argument if it is present with boolean value, else throws an error."},
 	{FUNC_CLASS_TYPING, "asserting_boolean",     1,0, "Returns argument if it is present with boolean value, else throws an error."},
 	{FUNC_CLASS_TYPING, "asserting_empty",       1,0, "Returns argument if it is present in input with empty value, else throws an error."},

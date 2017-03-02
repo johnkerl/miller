@@ -8,9 +8,11 @@ BUGFIXES
 
 ! windows port
 
+* mlrfunc docsection:
+  - POKI_RUN_UNESCAPED
+
 * rh/fedora/centos
 * ship ./configure, w/ clean-target mods
-? mlrfunc docsection?
 
 * start a draft-5.1.0-relnotes.md
   - incl. json-skip-arrays-on-input
@@ -170,6 +172,7 @@ COMPARES:
 5.2.0 IDEAS:
 
 * json_encode / json_decode functions? (map->string and string->map)
+  - array handling ...
 
 * strptime/strftime:
   - strptime w/ fractional seconds. maybe %OS?
