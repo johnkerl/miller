@@ -1166,11 +1166,11 @@ a,b,c
 { "name": "alice", "uid": 572 }
 { "qoh": 1227, "rate": 1.01, "latency": 0.07 }
 { "qoh": 13458, "rate": 1.72, "latency": 0.04 }
-{ "qoh": 56782, "rate": 1.64, "latency": 0.02 }
+{ "qoh": 56782, "rate": 1.64 }
 { "qoh": 23512, "rate": 1.71, "latency": 0.03 }
 { "qoh": 9876, "rate": 1.89, "latency": 0.08 }
 { "name": "bill", "uid": 684 }
-{ "name": "chuck", "uid": 908 }
+{ "name": "chuck", "uid2": 908 }
 { "name": "dottie", "uid": 440 }
 { "qoh": 0, "rate": 0.40, "latency": 0.01 }
 { "qoh": 5438, "rate": 1.56, "latency": 0.17 }
@@ -1211,14 +1211,16 @@ $ mlr --json put -q -f data/feature-count.mlr data/features.json
 { "record_count": 12 }
 { "key": "qoh", "key_counts": 8 }
 { "key": "rate", "key_counts": 8 }
-{ "key": "latency", "key_counts": 8 }
+{ "key": "latency", "key_counts": 7 }
 { "key": "name", "key_counts": 4 }
-{ "key": "uid", "key_counts": 4 }
+{ "key": "uid", "key_counts": 3 }
+{ "key": "uid2", "key_counts": 1 }
 { "key": "qoh", "key_fraction": 0.666667 }
 { "key": "rate", "key_fraction": 0.666667 }
-{ "key": "latency", "key_fraction": 0.666667 }
+{ "key": "latency", "key_fraction": 0.583333 }
 { "key": "name", "key_fraction": 0.333333 }
-{ "key": "uid", "key_fraction": 0.333333 }
+{ "key": "uid", "key_fraction": 0.250000 }
+{ "key": "uid2", "key_fraction": 0.083333 }
 </pre>
 </div>
 <p/>
@@ -1232,16 +1234,18 @@ record_count
 key     key_counts
 qoh     8
 rate    8
-latency 8
+latency 7
 name    4
-uid     4
+uid     3
+uid2    1
 
 key     key_fraction
 qoh     0.666667
 rate    0.666667
-latency 0.666667
+latency 0.583333
 name    0.333333
-uid     0.333333
+uid     0.250000
+uid2    0.083333
 </pre>
 </div>
 <p/>
