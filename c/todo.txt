@@ -18,6 +18,8 @@ BUGFIXES
   - incl. json-skip-arrays-on-input
   - feaature-counting script
 
+* binreshape.txt? creach+parside?
+
 ================================================================
 NON-RELEASE:
 
@@ -34,11 +36,19 @@ MSYS2
 * pacman -Syu
 * pacman -Su
 * pacman -S base-devel
+? pacman -S msys2-devel ?
 * pacman -S mingw-w64-x86_64-toolchain
-* pacman -S libc6-dev ? (for sys/mman.h)
+? pacman -S libc6-dev ? (for sys/mman.h)
+
+? mingw-w64-mman ?
+? mingw-w64-x86_64-pcre
+? pacman -S msys2-runtime ?
+
 * pacman -S vim
 * run \msys64\mingw64.exe
 * in that shell: gcc hello.c
+
+* see also: https://msdn.microsoft.com/en-us/commandline/wsl/about
 
 ================================================================
 MAPVAR CHECKLIST:
