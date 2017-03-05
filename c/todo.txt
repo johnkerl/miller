@@ -50,6 +50,10 @@ MSYS2
 
 * see also: https://msdn.microsoft.com/en-us/commandline/wsl/about
 
+? https://github.com/jonls/redshift/issues/171
+./configure --enable-wingdi --disable-shared --disable-geoclue2 --disable-nls
+
+
 ================================================================
 MAPVAR CHECKLIST:
 
