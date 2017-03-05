@@ -92,6 +92,8 @@ MSYS2 NOTES
 ? https://github.com/jonls/redshift/issues/171
 ./configure --enable-wingdi --disable-shared --disable-geoclue2 --disable-nls
 
+* https://help.github.com/articles/dealing-with-line-endings/#platform-windows
+
 ================================================================
 MAPVAR CHECKLIST:
 
