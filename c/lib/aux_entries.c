@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
 
 static int lecat_main(int argc, char** argv);
@@ -170,7 +171,7 @@ static int do_stream(FILE* input_stream, FILE* output_stream, char inend, line_c
 	while (1) {
 		char* line = NULL;
 		size_t linecap = 0;
-		ssize_t linelen = getdelim(&line, &linecap, inend, input_stream);
+		ssize_t linelen = mlr_arch_getdelim(&line, &linecap, inend, input_stream);
 		if (linelen <= 0) {
 			break;
 		}

@@ -10,7 +10,7 @@
 char* mlr_get_cline(FILE* fp, char irs) {
 	char* line = NULL;
 	size_t linecap = 0;
-	ssize_t linelen = getdelim(&line, &linecap, irs, fp);
+	ssize_t linelen = mlr_arch_getdelim(&line, &linecap, irs, fp);
 	if (linelen <= 0) {
 		if (line != NULL)
 			free(line);
@@ -26,7 +26,7 @@ char* mlr_get_cline(FILE* fp, char irs) {
 char* mlr_get_cline_with_length(FILE* fp, char irs, int* plength) {
 	char* line = NULL;
 	size_t linecap = 0;
-	ssize_t linelen = getdelim(&line, &linecap, irs, fp);
+	ssize_t linelen = mlr_arch_getdelim(&line, &linecap, irs, fp);
 	if (linelen <= 0) {
 		if (line != NULL)
 			free(line);
@@ -42,7 +42,7 @@ char* mlr_get_cline_with_length(FILE* fp, char irs, int* plength) {
 }
 
 // ----------------------------------------------------------------
-// Only for direct performance comparison against getdelim()
+// Only for direct performance comparison against mlr_arch_getdelim()
 char* mlr_get_cline2(FILE* fp, char irs) {
 	size_t linecap = INITIAL_SIZE;
 	char* restrict line = mlr_malloc_or_die(INITIAL_SIZE);
