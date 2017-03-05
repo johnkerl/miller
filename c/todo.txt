@@ -96,6 +96,8 @@ MSYS2 NOTES
 
 * https://help.github.com/articles/dealing-with-line-endings/#platform-windows
 
+* big dev readme about .gitattributes
+
 ================================================================
 MAPVAR CHECKLIST:
 

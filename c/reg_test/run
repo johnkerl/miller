@@ -4843,23 +4843,23 @@ run_mlr --opprint --ofmt '%.3lf' stats1 -a sum -f x $indir/ofmt.dat
 # ----------------------------------------------------------------
 announce IMPLICIT-HEADER-CSV INPUT
 
-run_mlr --irs crlf                       --no-mmap --icsvlite --ifs ,  --opprint cut -x -f b/ $indir/multi-sep.csv
-run_mlr --irs crlf --implicit-csv-header --no-mmap --icsvlite --ifs ,  --opprint cut -x -f 2  $indir/multi-sep.csv
+run_mlr --irs crlf                       --no-mmap --icsvlite --ifs ,  --opprint cut -x -f b/ $indir/multi-sep.csv-crlf
+run_mlr --irs crlf --implicit-csv-header --no-mmap --icsvlite --ifs ,  --opprint cut -x -f 2  $indir/multi-sep.csv-crlf
 
-run_mlr --irs crlf                       --no-mmap --icsvlite --ifs /, --opprint cut -x -f b  $indir/multi-sep.csv
-run_mlr --irs crlf --implicit-csv-header --no-mmap --icsvlite --ifs /, --opprint cut -x -f 2  $indir/multi-sep.csv
+run_mlr --irs crlf                       --no-mmap --icsvlite --ifs /, --opprint cut -x -f b  $indir/multi-sep.csv-crlf
+run_mlr --irs crlf --implicit-csv-header --no-mmap --icsvlite --ifs /, --opprint cut -x -f 2  $indir/multi-sep.csv-crlf
 
-run_mlr --irs crlf                       --mmap    --icsvlite --ifs ,  --opprint cut -x -f b/ $indir/multi-sep.csv
-run_mlr --irs crlf --implicit-csv-header --mmap    --icsvlite --ifs ,  --opprint cut -x -f 2  $indir/multi-sep.csv
+run_mlr --irs crlf                       --mmap    --icsvlite --ifs ,  --opprint cut -x -f b/ $indir/multi-sep.csv-crlf
+run_mlr --irs crlf --implicit-csv-header --mmap    --icsvlite --ifs ,  --opprint cut -x -f 2  $indir/multi-sep.csv-crlf
 
-run_mlr --irs crlf                       --mmap    --icsvlite --ifs /, --opprint cut -x -f b  $indir/multi-sep.csv
-run_mlr --irs crlf --implicit-csv-header --mmap    --icsvlite --ifs /, --opprint cut -x -f 2  $indir/multi-sep.csv
+run_mlr --irs crlf                       --mmap    --icsvlite --ifs /, --opprint cut -x -f b  $indir/multi-sep.csv-crlf
+run_mlr --irs crlf --implicit-csv-header --mmap    --icsvlite --ifs /, --opprint cut -x -f 2  $indir/multi-sep.csv-crlf
 
-run_mlr                       --icsv --ifs ,  --opprint cut -x -f b/ $indir/multi-sep.csv
-run_mlr --implicit-csv-header --icsv --ifs ,  --opprint cut -x -f 2  $indir/multi-sep.csv
+run_mlr                       --icsv --ifs ,  --opprint cut -x -f b/ $indir/multi-sep.csv-crlf
+run_mlr --implicit-csv-header --icsv --ifs ,  --opprint cut -x -f 2  $indir/multi-sep.csv-crlf
 
-run_mlr                       --icsv --ifs /, --opprint cut -x -f b  $indir/multi-sep.csv
-run_mlr --implicit-csv-header --icsv --ifs /, --opprint cut -x -f 2  $indir/multi-sep.csv
+run_mlr                       --icsv --ifs /, --opprint cut -x -f b  $indir/multi-sep.csv-crlf
+run_mlr --implicit-csv-header --icsv --ifs /, --opprint cut -x -f 2  $indir/multi-sep.csv-crlf
 
 # ----------------------------------------------------------------
 announce HET-CSV INPUT
@@ -5059,21 +5059,21 @@ run_mlr --oxtab --ofmt '%.8g' put '$n0=$n*0;$n1=$n*1;$n2=$n*2;$n3=$n*3' $indir/i
 # ----------------------------------------------------------------
 announce COMPRESSED INPUT
 
-run_mlr --csv  --prepipe 'cat'   cat   $indir/rfc-csv/simple.csv
+run_mlr --csv  --prepipe 'cat'   cat   $indir/rfc-csv/simple.csv-crlf
 run_mlr --dkvp --prepipe 'cat'   cat   $indir/abixy
-run_mlr --csv  --prepipe 'cat'   cat < $indir/rfc-csv/simple.csv
+run_mlr --csv  --prepipe 'cat'   cat < $indir/rfc-csv/simple.csv-crlf
 run_mlr --dkvp --prepipe 'cat'   cat < $indir/abixy
 
 # ----------------------------------------------------------------
 announce STDIN
 
-run_mlr --csv cat < $indir/rfc-csv/simple.csv
+run_mlr --csv cat < $indir/rfc-csv/simple.csv-crlf
 
 # ----------------------------------------------------------------
 announce RFC-CSV
 
-run_mlr --no-mmap --csv cat $indir/rfc-csv/simple.csv
-run_mlr --mmap    --csv cat $indir/rfc-csv/simple.csv
+run_mlr --no-mmap --csv cat $indir/rfc-csv/simple.csv-crlf
+run_mlr --mmap    --csv cat $indir/rfc-csv/simple.csv-crlf
 
 run_mlr --no-mmap --csv cat $indir/rfc-csv/simple-truncated.csv
 run_mlr --mmap    --csv cat $indir/rfc-csv/simple-truncated.csv
@@ -5096,8 +5096,8 @@ run_mlr --mmap    --csv cat $indir/rfc-csv/quoted-crlf.csv
 run_mlr --no-mmap --csv cat $indir/rfc-csv/quoted-crlf-truncated.csv
 run_mlr --mmap    --csv cat $indir/rfc-csv/quoted-crlf-truncated.csv
 
-run_mlr --no-mmap --csv cat $indir/rfc-csv/simple-truncated.csv $indir/rfc-csv/simple.csv
-run_mlr --mmap    --csv cat $indir/rfc-csv/simple-truncated.csv $indir/rfc-csv/simple.csv
+run_mlr --no-mmap --csv cat $indir/rfc-csv/simple-truncated.csv $indir/rfc-csv/simple.csv-crlf
+run_mlr --mmap    --csv cat $indir/rfc-csv/simple-truncated.csv $indir/rfc-csv/simple.csv-crlf
 
 run_mlr --no-mmap --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b $indir/rfc-csv/modify-defaults.csv
 run_mlr --mmap    --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b $indir/rfc-csv/modify-defaults.csv
@@ -5105,8 +5105,8 @@ run_mlr --mmap    --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f
 run_mlr --no-mmap --csv --rs lf --quote-original cut -o -f c,b,a $indir/quote-original.csv
 run_mlr --mmap    --csv --rs lf --quote-original cut -o -f c,b,a $indir/quote-original.csv
 
-run_mlr --csv --quote-all      cat $indir/rfc-csv/simple.csv
-run_mlr --csv --quote-original cat $indir/rfc-csv/simple.csv
+run_mlr --csv --quote-all      cat $indir/rfc-csv/simple.csv-crlf
+run_mlr --csv --quote-original cat $indir/rfc-csv/simple.csv-crlf
 
 run_mlr --itsv --rs lf --oxtab cat $indir/simple.tsv
 
@@ -5118,48 +5118,48 @@ run_mlr --itsv --rs lf --omd cat $indir/simple.tsv
 # ----------------------------------------------------------------
 announce CSV/RS ENVIRONMENT DEFAULTS
 
-run_mlr --csv cut -f a $indir/rfc-csv/simple.csv
-run_mlr --csv --rs crlf cut -f a $indir/rfc-csv/simple.csv
-mlr_expect_fail --csv --rs lf cut -f a $indir/rfc-csv/simple.csv
+run_mlr --csv cut -f a $indir/rfc-csv/simple.csv-crlf
+run_mlr --csv --rs crlf cut -f a $indir/rfc-csv/simple.csv-crlf
+mlr_expect_fail --csv --rs lf cut -f a $indir/rfc-csv/simple.csv-crlf
 
 # ----------------------------------------------------------------
 announce MULTI-CHARACTER IRS/IFS/IPS FOR DKVP
 
-run_mlr --oxtab --idkvp --mmap    --irs lf   --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp
-run_mlr --oxtab --idkvp --mmap    --irs lf   --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp
-run_mlr --oxtab --idkvp --mmap    --irs crlf --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp
-run_mlr --oxtab --idkvp --mmap    --irs crlf --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp
+run_mlr --oxtab --idkvp --mmap    --irs lf   --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --idkvp --mmap    --irs lf   --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --idkvp --mmap    --irs crlf --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --idkvp --mmap    --irs crlf --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
 
-run_mlr --oxtab --no-mmap --irs lf   --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp
-run_mlr --oxtab --no-mmap --irs lf   --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp
-run_mlr --oxtab --no-mmap --irs crlf --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp
-run_mlr --oxtab --no-mmap --irs crlf --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp
+run_mlr --oxtab --no-mmap --irs lf   --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --no-mmap --irs lf   --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --no-mmap --irs crlf --ifs ,  --ips =  cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --no-mmap --irs crlf --ifs /, --ips =: cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
 
 # ----------------------------------------------------------------
 announce MULTI-CHARACTER IRS/IFS FOR NIDX
 
-run_mlr --oxtab --inidx --mmap    --irs lf   --ifs ,  cut -o -f 4,1,3 $indir/multi-sep.dkvp
-run_mlr --oxtab --inidx --mmap    --irs lf   --ifs /, cut -o -f 4,1,3 $indir/multi-sep.dkvp
-run_mlr --oxtab --inidx --mmap    --irs crlf --ifs ,  cut -o -f 4,1,3 $indir/multi-sep.dkvp
-run_mlr --oxtab --inidx --mmap    --irs crlf --ifs /, cut -o -f 4,1,3 $indir/multi-sep.dkvp
+run_mlr --oxtab --inidx --mmap    --irs lf   --ifs ,  cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --inidx --mmap    --irs lf   --ifs /, cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --inidx --mmap    --irs crlf --ifs ,  cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --inidx --mmap    --irs crlf --ifs /, cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
 
-run_mlr --oxtab --inidx --no-mmap --irs lf   --ifs ,  cut -o -f 4,1,3 $indir/multi-sep.dkvp
-run_mlr --oxtab --inidx --no-mmap --irs lf   --ifs /, cut -o -f 4,1,3 $indir/multi-sep.dkvp
-run_mlr --oxtab --inidx --no-mmap --irs crlf --ifs ,  cut -o -f 4,1,3 $indir/multi-sep.dkvp
-run_mlr --oxtab --inidx --no-mmap --irs crlf --ifs /, cut -o -f 4,1,3 $indir/multi-sep.dkvp
+run_mlr --oxtab --inidx --no-mmap --irs lf   --ifs ,  cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --inidx --no-mmap --irs lf   --ifs /, cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --inidx --no-mmap --irs crlf --ifs ,  cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --inidx --no-mmap --irs crlf --ifs /, cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
 
 # ----------------------------------------------------------------
 announce MULTI-CHARACTER IRS/IFS FOR CSVLITE
 
-run_mlr --oxtab --icsvlite --mmap    --irs lf   --ifs ,  cut -o -f x/,a/,i/ $indir/multi-sep.csv
-run_mlr --oxtab --icsvlite --mmap    --irs lf   --ifs /, cut -o -f x,a,i    $indir/multi-sep.csv
-run_mlr --oxtab --icsvlite --mmap    --irs crlf --ifs ,  cut -o -f x/,a/,i/ $indir/multi-sep.csv
-run_mlr --oxtab --icsvlite --mmap    --irs crlf --ifs /, cut -o -f x,a,i    $indir/multi-sep.csv
+run_mlr --oxtab --icsvlite --mmap    --irs lf   --ifs ,  cut -o -f x/,a/,i/ $indir/multi-sep.csv-crlf
+run_mlr --oxtab --icsvlite --mmap    --irs lf   --ifs /, cut -o -f x,a,i    $indir/multi-sep.csv-crlf
+run_mlr --oxtab --icsvlite --mmap    --irs crlf --ifs ,  cut -o -f x/,a/,i/ $indir/multi-sep.csv-crlf
+run_mlr --oxtab --icsvlite --mmap    --irs crlf --ifs /, cut -o -f x,a,i    $indir/multi-sep.csv-crlf
 
-run_mlr --oxtab --icsvlite --no-mmap --irs lf   --ifs ,  cut -o -f x/,a/,i/ $indir/multi-sep.csv
-run_mlr --oxtab --icsvlite --no-mmap --irs lf   --ifs /, cut -o -f x,a,i    $indir/multi-sep.csv
-run_mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs ,  cut -o -f x/,a/,i/ $indir/multi-sep.csv
-run_mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs /, cut -o -f x,a,i    $indir/multi-sep.csv
+run_mlr --oxtab --icsvlite --no-mmap --irs lf   --ifs ,  cut -o -f x/,a/,i/ $indir/multi-sep.csv-crlf
+run_mlr --oxtab --icsvlite --no-mmap --irs lf   --ifs /, cut -o -f x,a,i    $indir/multi-sep.csv-crlf
+run_mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs ,  cut -o -f x/,a/,i/ $indir/multi-sep.csv-crlf
+run_mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs /, cut -o -f x,a,i    $indir/multi-sep.csv-crlf
 
 # ----------------------------------------------------------------
 announce MULTI-CHARACTER SEPARATORS FOR XTAB
@@ -5174,8 +5174,8 @@ run_mlr --xtab --ips ": " --ops '@@@@' put '$sum=int($a+$b)' $indir/multi-ips.dk
 # ----------------------------------------------------------------
 announce MULTI-CHARACTER IRS FOR PPRINT
 
-run_mlr --mmap    --pprint --irs crlf --ifs / --ofs @ cut -x -f b $indir/dots.pprint
-run_mlr --no-mmap --pprint --irs crlf --ifs / --ofs @ cut -x -f b $indir/dots.pprint
+run_mlr --mmap    --pprint --irs crlf --ifs / --ofs @ cut -x -f b $indir/dots.pprint-crlf
+run_mlr --no-mmap --pprint --irs crlf --ifs / --ofs @ cut -x -f b $indir/dots.pprint-crlf
 
 # ----------------------------------------------------------------
 announce BARRED PPRINT
@@ -5189,8 +5189,8 @@ run_mlr --opprint --barred --right cat $indir/abixy-het
 # ----------------------------------------------------------------
 announce MULTI-CHARACTER IXS SPECIFIERS
 
-run_mlr --oxtab --idkvp --mmap  --irs lf   --ifs '\x2c'  --ips '\075'  cut -o -f x,a,i $indir/multi-sep.dkvp
-run_mlr --oxtab --idkvp --mmap  --irs lf   --ifs /, --ips '\x3d\x3a' cut -o -f x,a,i $indir/multi-sep.dkvp
+run_mlr --oxtab --idkvp --mmap  --irs lf   --ifs '\x2c'  --ips '\075'  cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
+run_mlr --oxtab --idkvp --mmap  --irs lf   --ifs /, --ips '\x3d\x3a' cut -o -f x,a,i $indir/multi-sep.dkvp-crlf
 
 # ----------------------------------------------------------------
 announce JSON I/O
