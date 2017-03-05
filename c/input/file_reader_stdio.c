@@ -4,7 +4,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include <sys/mman.h>
 #include "lib/mlrutil.h"
 #include "lib/mlrescape.h"
 #include "lib/mlr_globals.h"
