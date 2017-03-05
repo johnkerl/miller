@@ -23,4 +23,7 @@
 int mlr_arch_setenv(const char *name, const char *value);
 int mlr_arch_unsetenv(const char *name);
 
+// ----------------------------------------------------------------
+char * mlr_arch_strsep(char **pstring, const char *delim);
+
 #endif // MLR_ARCH_H

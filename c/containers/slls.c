@@ -1,5 +1,6 @@
 #include <string.h>
 #include <stdlib.h>
+#include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
 #include "containers/slls.h"
 
@@ -100,7 +101,7 @@ slls_t* slls_from_line(char* line, char ifs, int allow_repeat_ifs) {
 	char* sep = &seps[0];
 	char* walker = line;
 	char* piece;
-	while ((piece = strsep(&walker, sep)) != NULL) {
+	while ((piece = mlr_arch_strsep(&walker, sep)) != NULL) {
 		slls_append_no_free(plist, piece);
 	}
 
