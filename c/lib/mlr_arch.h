@@ -26,7 +26,7 @@ int mlr_arch_setenv(const char *name, const char *value);
 int mlr_arch_unsetenv(const char *name);
 
 // ----------------------------------------------------------------
-char * mlr_arch_strsep(char **pstring, const char *delim);
+char* mlr_arch_strsep(char **pstring, const char *delim);
 
 // ----------------------------------------------------------------
 ssize_t mlr_arch_getdelim(char** restrict pline, size_t* restrict plinecap, int delimiter, FILE* restrict stream);
