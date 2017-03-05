@@ -4,8 +4,8 @@
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
-#include <regex.h>
 #include "../lib/mlrutil.h"
+#include "../lib/mlrregex.h"
 #include "../lib/free_flags.h"
 
 // ================================================================

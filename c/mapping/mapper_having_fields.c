@@ -1,4 +1,3 @@
-#include <regex.h>
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "lib/mlrregex.h"

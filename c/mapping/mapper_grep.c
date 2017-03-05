@@ -1,4 +1,3 @@
-#include <regex.h>
 #include "cli/argparse.h"
 #include "cli/mlrcli.h"
 #include "mapping/mappers.h"
