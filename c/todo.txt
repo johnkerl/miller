@@ -30,27 +30,43 @@ BUGFIXES
 ================================================================
 MSYS2
 
-* to do:
-  ! msys2 / pacman -S / etc @ appveyor
-  o get_unlocked / getc:
-    - @ mlr_arch.h: ifdef MSYS2 define getc_unlocked(x) getc(x)
-  o mman/mmap ifdef out entirely with default --no-mmap.
-    - @ mlr_arch.h: ifdef MSYS2 undef ENABLE_MMAP
-    - @ callsites: ifdef ENABLE_MMAP
-  o setenv w/o gmtime_r
-    - @ mlr_arch.h: ifdef MSYS2 undef ENABLE_SETENV
-    - @ callsite: fatal?
-  o setenv w/  gmtime_r
-    - figure out how to do this directly on msys2
-    - @ mlr_arch.h: proto for plat-indep abstraction layer
-    - @ mlr_arch_unixish: as now
-    - @ mlr_arch_msys2: do it that new way. or fatal until then ... or "unimpl" retval.
-  o -lpcreposix
-    - found how to do this in ./configure, Makefile.am w/ ifdef, something ...
-  o needs-DLL issue:
-    - find out how to fix at ./configure / msys2 build
-  o needs-dot-exe issue:
-    - wtf
+----------------------------------------------------------------
+MSYS2 TO-DO
+
+! msys2 / pacman -S / etc @ appveyor
+
+! getdelim
+
+! strsep
+
+k get_unlocked / getc:
+  k @ mlr_arch.h: ifdef MSYS2 define getc_unlocked(x) getc(x)
+
+k mman/mmap ifdef out entirely with default --no-mmap.
+  k @ mlr_arch.h: ifdef MSYS2 undef ENABLE_MMAP
+  k @ callsites: ifdef ENABLE_MMAP
+
+* setenv w/o gmtime_r
+  - @ mlr_arch.h: ifdef MSYS2 undef ENABLE_SETENV
+  - @ callsite: fatal?
+
+* setenv w/ gmtime_r
+  - figure out how to do this directly on msys2
+  - @ mlr_arch.h: proto for plat-indep abstraction layer
+  - @ mlr_arch_unixish: as now
+  - @ mlr_arch_msys2: do it that new way. or fatal until then ... or "unimpl" retval.
+
+* -lpcreposix
+  - found how to do this in ./configure, Makefile.am w/ ifdef, something ...
+
+* needs-DLL issue:
+  - find out how to fix at ./configure / msys2 build
+
+* needs-dot-exe issue:
+  - wtf
+
+----------------------------------------------------------------
+MSYS2 NOTES
 
 * https://github.com/msys2/msys2/wiki
 * https://github.com/Alexpux/MINGW-packages

@@ -19,4 +19,7 @@
 #include <sys/mman.h>
 #endif
 
+// ----------------------------------------------------------------
+int mlr_arch_setenv(const char *name, const char *value, int overwrite);
+
 #endif // MLR_ARCH_H
