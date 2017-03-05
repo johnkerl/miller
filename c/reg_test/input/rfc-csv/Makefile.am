@@ -7,4 +7,4 @@ EXTRA_DIST=	\
 		quoted-crlf-truncated.csv \
 		quoted-crlf.csv \
 		simple-truncated.csv \
-		simple.csv
+		simple.csv-crlf
