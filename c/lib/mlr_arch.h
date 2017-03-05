@@ -1,6 +1,8 @@
 #ifndef MLR_ARCH_H
 #define MLR_ARCH_H
 
+#include <stdio.h>
+
 // ----------------------------------------------------------------
 // Miller is single-threaded and the file-locking in getc is simply an unneeded
 // performance hit, so we intentionally call getc_unlocked().  But for MSYS2
@@ -25,5 +27,8 @@ int mlr_arch_unsetenv(const char *name);
 
 // ----------------------------------------------------------------
 char * mlr_arch_strsep(char **pstring, const char *delim);
+
+// ----------------------------------------------------------------
+ssize_t mlr_arch_getdelim(char** restrict pline, size_t* restrict plinecap, int delimiter, FILE* restrict stream);
 
 #endif // MLR_ARCH_H
