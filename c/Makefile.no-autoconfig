@@ -430,49 +430,49 @@ regtest-copy-dev:
 # Unit-test executables
 
 test-argparse: .always
-	$(CCDEBUG) $(TEST_ARGPARSE_SRCS) -o test-argparse
+	$(CCDEBUG) $(TEST_ARGPARSE_SRCS) $(LFLAGS) -o test-argparse
 
 test-byte-readers: .always
-	$(CCDEBUG) $(TEST_BYTE_READERS_SRCS) -o test-byte-readers
+	$(CCDEBUG) $(TEST_BYTE_READERS_SRCS) $(LFLAGS) -o test-byte-readers
 
 test-peek-file-reader: .always
-	$(CCDEBUG) $(TEST_PEEK_FILE_READER_SRCS) -o test-peek-file-reader
+	$(CCDEBUG) $(TEST_PEEK_FILE_READER_SRCS) $(LFLAGS) -o test-peek-file-reader
 
 test-lrec: .always
-	$(CCDEBUG) $(TEST_LREC_SRCS) -o test-lrec -lm
+	$(CCDEBUG) $(TEST_LREC_SRCS) $(LFLAGS) -o test-lrec -lm
 
 test-multiple-containers: .always
-	$(CCDEBUG) $(TEST_MULTIPLE_CONTAINERS_SRCS) -o test-multiple-containers -lm
+	$(CCDEBUG) $(TEST_MULTIPLE_CONTAINERS_SRCS) $(LFLAGS) -o test-multiple-containers -lm
 
 test-mlhmmv: .always
-	$(CCDEBUG) $(TEST_MLHMMV_SRCS) -o test-mlhmmv -lm
+	$(CCDEBUG) $(TEST_MLHMMV_SRCS) $(LFLAGS) -o test-mlhmmv -lm
 
 test-mlrutil: .always
-	$(CCDEBUG) $(TEST_MLRUTIL_SRCS) -o test-mlrutil -lm
+	$(CCDEBUG) $(TEST_MLRUTIL_SRCS) $(LFLAGS) -o test-mlrutil -lm
 
 test-mlrregex: .always
-	$(CCDEBUG) $(TEST_MLRREGEX_SRCS) -o test-mlrregex
+	$(CCDEBUG) $(TEST_MLRREGEX_SRCS) $(LFLAGS) -o test-mlrregex
 
 test-string-builder: .always
-	$(CCDEBUG) $(TEST_STRING_BUILDER_SRCS) -o test-string-builder
+	$(CCDEBUG) $(TEST_STRING_BUILDER_SRCS) $(LFLAGS) -o test-string-builder
 
 test-parse-trie: .always
-	$(CCDEBUG) $(TEST_PARSE_TRIE_SRCS) -o test-parse-trie
+	$(CCDEBUG) $(TEST_PARSE_TRIE_SRCS) $(LFLAGS) -o test-parse-trie
 
 test-rval-evaluators: .always
-	$(CCDEBUG) $(TEST_RVAL_EVALUATORS_SRCS) -o test-rval-evaluators -lm
+	$(CCDEBUG) $(TEST_RVAL_EVALUATORS_SRCS) $(LFLAGS) -o test-rval-evaluators -lm
 
 test-join-bucket-keeper: .always
-	$(CCDEBUG) $(TEST_JOIN_BUCKET_KEEPER_SRCS) -o test-join-bucket-keeper -lm
+	$(CCDEBUG) $(TEST_JOIN_BUCKET_KEEPER_SRCS) $(LFLAGS) -o test-join-bucket-keeper -lm
 
 # ----------------------------------------------------------------
 # Standalone mains
 
 getl: .always
-	$(CCOPT) $(EXPERIMENTAL_READER_SRCS) -o getl
+	$(CCOPT) $(EXPERIMENTAL_READER_SRCS) $(LFLAGS) -o getl
 
 json-vg-mem: .always
-	$(CCDEBUG) $(EXPERIMENTAL_JSON_VG_MEM_SRCS) -o json-vg-mem
+	$(CCDEBUG) $(EXPERIMENTAL_JSON_VG_MEM_SRCS) $(LFLAGS) -o json-vg-mem
 
 # ================================================================
 # BSD can't handle rm -v, alas
