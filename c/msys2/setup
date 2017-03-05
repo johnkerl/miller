@@ -22,5 +22,21 @@ export endtitle=$'\007'
 #export PS1='\w% '
 export PS1="${yellow}${bold}\w% ${textdefault}"
 alias lt='ls -lrt'
+alias ll='ls -l'
 alias v=vim
+alias h=history
+
 alias bake='make -f Makefile.no-autoconfig'
+
+export mlb=/miller/miller-git/miller
+export mlc=/miller/miller-git/miller/c
+export mld=/miller/miller-git/miller/doc
+
+alias mlb='cd $mlb; '
+alias mlc='cd $mlc; '
+alias mld='cd $mld; '
+
+alias gs='git status'
+alias gd='git diff'
+alias gam='git status | grep modified | awk "{print $NF}"'
+alias gcm='git commit -m '
