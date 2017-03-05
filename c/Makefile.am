@@ -1,4 +1,4 @@
-SUBDIRS=		lib cli stream input dsl mapping containers output parsing experimental tools . unit_test reg_test
+SUBDIRS=		lib cli stream input dsl mapping containers output parsing experimental . unit_test reg_test
 
 AM_CPPFLAGS=		-I${srcdir}
 AM_CFLAGS=		-Wall -std=gnu99

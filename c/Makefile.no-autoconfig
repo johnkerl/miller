@@ -468,9 +468,6 @@ test-join-bucket-keeper: .always
 # ----------------------------------------------------------------
 # Standalone mains
 
-termcvt: tools/termcvt.c
-	$(CCDEBUG) tools/termcvt.c -o termcvt
-
 getl: .always
 	$(CCOPT) $(EXPERIMENTAL_READER_SRCS) -o getl
 
