@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "lib/mlr_globals.h"
+#include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
 #include "input/file_reader_stdio.h"
 #include "input/file_reader_mmap.h"
@@ -166,7 +167,7 @@ static char* read_line_getc_unlocked(FILE* fp, char* irs) {
 	char* line = mlr_malloc_or_die(FIXED_LINE_LEN);
 	char* p = line;
 	while (TRUE) {
-		int i = getc_unlocked(fp);
+		int i = mlr_arch_getc(fp);
 		char c = i;
 		if (i == EOF) {
 			if (p == line) {
@@ -208,7 +209,7 @@ static int read_file_getc_unlocked_fixed_len(char* filename, int do_write) {
 // ================================================================
 static char* read_line_getc_unlocked_psb(FILE* fp, string_builder_t* psb, char* irs) {
 	while (TRUE) {
-		int c = getc_unlocked(fp);
+		int c = mlr_arch_getc(fp);
 		if (c == EOF) {
 			if (sb_is_empty(psb))
 				return NULL;
