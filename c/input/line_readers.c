@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
 #include "input/line_readers.h"
 
@@ -56,7 +57,7 @@ char* mlr_get_cline2(FILE* fp, char irs) {
 			line = mlr_realloc_or_die(line, linecap);
 			p = line + offset;
 		}
-		c = getc_unlocked(fp);
+		c = mlr_arch_getc(fp);
 		if (c == irs) {
 			*p = 0;
 			break;
@@ -97,7 +98,7 @@ char* mlr_get_sline(FILE* fp, char* irs, int irslen) {
 			line = mlr_realloc_or_die(line, linecap);
 			p = line + offset;
 		}
-		c = getc_unlocked(fp);
+		c = mlr_arch_getc(fp);
 		if (c == EOF) {
 			if (p == line)
 				eof = TRUE;

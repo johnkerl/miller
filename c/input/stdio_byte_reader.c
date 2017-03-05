@@ -2,6 +2,7 @@
 #include <string.h>
 #include "input/byte_readers.h"
 #include "lib/mlr_globals.h"
+#include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
 #include "lib/mlrescape.h"
 
@@ -74,7 +75,7 @@ static int stdio_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe
 
 static int stdio_byte_reader_read_func(struct _byte_reader_t* pbr) {
 	stdio_byte_reader_state_t* pstate = pbr->pvstate;
-	int c = getc_unlocked(pstate->fp);
+	int c = mlr_arch_getc(pstate->fp);
 	if (c == EOF && ferror(pstate->fp)) {
 		perror("fread");
 		fprintf(stderr, "%s: Read error on file \"%s\".\n", MLR_GLOBALS.bargv0, pstate->filename);

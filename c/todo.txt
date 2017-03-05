@@ -27,6 +27,7 @@ BUGFIXES
 MSYS2
 
 * to do:
+  ! msys2 / pacman -S / etc @ appveyor
   o get_unlocked / getc:
     - @ mlr_arch.h: ifdef MSYS2 define getc_unlocked(x) getc(x)
   o mman/mmap ifdef out entirely with default --no-mmap.
@@ -70,7 +71,6 @@ MSYS2
 
 ? https://github.com/jonls/redshift/issues/171
 ./configure --enable-wingdi --disable-shared --disable-geoclue2 --disable-nls
-
 
 ================================================================
 MAPVAR CHECKLIST:
