@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
 #include "lib/mtrand.h"
@@ -1039,7 +1040,11 @@ void cli_apply_reader_defaults(cli_reader_opts_t* preader_opts) {
 		preader_opts->use_implicit_csv_header = FALSE;
 
 	if (preader_opts->use_mmap_for_read == NEITHER_TRUE_NOR_FALSE)
+#if MLR_ARCH_MMAP_ENABLED
 		preader_opts->use_mmap_for_read = TRUE;
+#else
+		preader_opts->use_mmap_for_read = FALSE;
+#endif
 
 	if (preader_opts->input_json_flatten_separator == NULL)
 		preader_opts->input_json_flatten_separator = DEFAULT_JSON_FLATTEN_SEPARATOR;

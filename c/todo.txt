@@ -14,6 +14,9 @@ BUGFIXES
 
 * aux-entries doc @ mlh, mld
 
+* --mmap / --no-mmap double-regression loop
+  o also "." the setup funcs
+
 * ship ./configure, w/ clean-target mods
 
 * start a draft-5.1.0-relnotes.md

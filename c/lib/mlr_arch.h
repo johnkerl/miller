@@ -11,4 +11,12 @@
 #define mlr_arch_getc(stream) getc_unlocked(stream)
 #endif
 
+// ----------------------------------------------------------------
+#ifdef MLR_ON_MSYS2
+#define MLR_ARCH_MMAP_ENABLED 0
+#else
+#define MLR_ARCH_MMAP_ENABLED 1
+#include <sys/mman.h>
+#endif
+
 #endif // MLR_ARCH_H

@@ -4,15 +4,18 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include <sys/mman.h>
+#include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
 #include "file_reader_mmap.h"
 
+#if MLR_ARCH_MMAP_ENABLED
 static char empty_buf[1] = { 0 };
+#endif
 
 // ----------------------------------------------------------------
 file_reader_mmap_state_t* file_reader_mmap_open(char* prepipe, char* file_name) {
+#if MLR_ARCH_MMAP_ENABLED
 	// popen is a stdio construct, not an mmap construct, and it can't be supported here.
 	if (prepipe != NULL) {
 		fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
@@ -52,6 +55,11 @@ file_reader_mmap_state_t* file_reader_mmap_open(char* prepipe, char* file_name) 
 		exit(1);
 	}
 	return pstate;
+#else
+	fprintf(stderr, "%s: mmap is unsupported on this architecture.\n", MLR_GLOBALS.bargv0);
+	exit(1);
+	return NULL;
+#endif
 }
 
 // ----------------------------------------------------------------

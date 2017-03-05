@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
 #include "lib/minunit.h"
@@ -117,6 +118,7 @@ static char* test_stdio_byte_reader_reuse() {
 
 // ----------------------------------------------------------------
 static char* test_mmap_byte_reader_1() {
+#if MLR_ARCH_MMAP_ENABLED
 	byte_reader_t* pbr = mmap_byte_reader_alloc();
 
 	char* contents = "";
@@ -129,10 +131,12 @@ static char* test_mmap_byte_reader_1() {
 	unlink_file_or_die(path);
 
 	return NULL;
+#endif
 }
 
 // ----------------------------------------------------------------
 static char* test_mmap_byte_reader_2() {
+#if MLR_ARCH_MMAP_ENABLED
 	byte_reader_t* pbr = mmap_byte_reader_alloc();
 
 	char* contents = "abcdefg";
@@ -152,10 +156,12 @@ static char* test_mmap_byte_reader_2() {
 	unlink_file_or_die(path);
 
 	return NULL;
+#endif
 }
 
 // ----------------------------------------------------------------
 static char* test_mmap_byte_reader_reuse() {
+#if MLR_ARCH_MMAP_ENABLED
 	byte_reader_t* pbr = mmap_byte_reader_alloc();
 
 	char* contents = "abc";
@@ -184,6 +190,7 @@ static char* test_mmap_byte_reader_reuse() {
 	unlink_file_or_die(path);
 
 	return NULL;
+#endif
 }
 
 // ================================================================

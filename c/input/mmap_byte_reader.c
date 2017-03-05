@@ -2,12 +2,14 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <sys/stat.h>
-#include <sys/mman.h>
+#include "lib/mlr_arch.h"
 #include "input/byte_readers.h"
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 
+#if MLR_ARCH_MMAP_ENABLED
 static char empty_buf[1] = { 0 };
+#endif
 
 typedef struct _mmap_byte_reader_state_t {
 	char* filename;
@@ -43,6 +45,7 @@ void mmap_byte_reader_free(byte_reader_t* pbr) {
 
 // ----------------------------------------------------------------
 static int mmap_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe, char* filename) {
+#if MLR_ARCH_MMAP_ENABLED
 	// popen is a stdio construct, not an mmap construct, and it can't be supported here.
 	if (prepipe != NULL) {
 		fprintf(stderr, "%s: coding error detected in file %s at line %d.\n",
@@ -81,6 +84,11 @@ static int mmap_byte_reader_open_func(struct _byte_reader_t* pbr, char* prepipe,
 	pstate->p = pstate->sof;
 	pbr->pvstate = pstate;
 	return TRUE;
+#else
+	fprintf(stderr, "%s: mmap is unsupported on this architecture.\n", MLR_GLOBALS.bargv0);
+	exit(1);
+	return TRUE;
+#endif
 }
 
 static int mmap_byte_reader_read_func(struct _byte_reader_t* pbr) {
