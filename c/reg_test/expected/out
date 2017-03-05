@@ -43892,7 +43892,7 @@ a b c
 4 5 6
 7 8 9
 
-mlr --no-mmap --xtab cat ./reg_test/input/truncated.xtab
+mlr --no-mmap --xtab cat ./reg_test/input/truncated.xtab-crlf
 a 1
 b 2
 c 3
@@ -43900,7 +43900,7 @@ c 3
 d 4
 e 5
 
-mlr --xtab cat ./reg_test/input/truncated.xtab
+mlr --xtab cat ./reg_test/input/truncated.xtab-crlf
 a 1
 b 2
 c 3
