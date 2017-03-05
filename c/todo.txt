@@ -8,26 +8,27 @@ BUGFIXES
 
 ! windows port
 
-* mlrfunc docsection:
+* mlrfunc docsection (automate):
   - POKI_RUN_UNESCAPED
 
-* rh/fedora/centos
 * ship ./configure, w/ clean-target mods
 
 * start a draft-5.1.0-relnotes.md
   - incl. json-skip-arrays-on-input
   - feaature-counting script
+  - mlrfunc docsect w/ h2's
 
-* binreshape.txt? creach+parside?
-
-================================================================
-NON-RELEASE:
-
-* go through lmag article & clarify all unclears
-? msort.o wt?
+* rh/fedora/centos
 
 ================================================================
 MSYS2
+
+* to do:
+  - get_unlocked / getc
+  - mman/mmap ifdef out entirely with default --no-mmap
+  - setenv w/o gmtime_r
+  - setenv w/  gmtime_r
+  - libpcreposix
 
 * https://github.com/msys2/msys2/wiki
 * https://github.com/Alexpux/MINGW-packages
