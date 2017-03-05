@@ -20,6 +20,7 @@
 #endif
 
 // ----------------------------------------------------------------
-int mlr_arch_setenv(const char *name, const char *value, int overwrite);
+int mlr_arch_setenv(const char *name, const char *value);
+int mlr_arch_unsetenv(const char *name);
 
 #endif // MLR_ARCH_H

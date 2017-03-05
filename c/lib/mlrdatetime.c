@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <sys/time.h>
 #include <sys/stat.h>
+#include "lib/mlr_arch.h"
 #include "lib/mlrdatetime.h"
 
 // ----------------------------------------------------------------
@@ -20,13 +21,13 @@ time_t mlr_timegm(struct tm* ptm) {
 	char* tz;
 
 	tz = getenv("TZ");
-	setenv("TZ", "GMT0", 1);
+	mlr_arch_setenv("TZ", "GMT0");
 	tzset();
 	ret = mktime(ptm);
 	if (tz) {
-		setenv("TZ", tz, 1);
+		mlr_arch_setenv("TZ", tz);
 	} else {
-		unsetenv("TZ");
+		mlr_arch_unsetenv("TZ");
 	}
 	tzset();
 	return ret;

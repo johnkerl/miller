@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include "lib/mlr_globals.h"
+#include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
 #include "mlr_dsl_cst.h"
 #include "context_flags.h"
@@ -223,7 +224,9 @@ static void handle_env_assignment(
 	mv_t rval = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 
 	if (mv_is_present(&lval) && mv_is_present(&rval)) {
-		setenv(mlr_strdup_or_die(mv_alloc_format_val(&lval)), mlr_strdup_or_die(mv_alloc_format_val(&rval)), 1);
+		mlr_arch_setenv(
+			mlr_strdup_or_die(mv_alloc_format_val(&lval)),
+			mlr_strdup_or_die(mv_alloc_format_val(&rval)));
 	}
 	mv_free(&lval);
 	mv_free(&rval);
