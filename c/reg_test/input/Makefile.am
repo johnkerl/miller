@@ -26,7 +26,7 @@ EXTRA_DIST=	\
 		d.pprint \
 		date1.csv \
 		date2.csv \
-		dots.pprint \
+		dots.pprint-crlf \
 		dots.xtab \
 		double-ps.dkvp \
 		e.csv \
@@ -112,8 +112,8 @@ EXTRA_DIST=	\
 		multi-format-join-b.dkvp \
 		multi-format-join-b.json \
 		multi-ips.dkvp \
-		multi-sep.csv \
-		multi-sep.dkvp \
+		multi-sep.csv-crlf \
+		multi-sep.dkvp-crlf \
 		near-ovf.dkvp \
 		nest-explode-vary-fs-ps.dkvp \
 		nest-explode.dkvp \
@@ -169,7 +169,7 @@ EXTRA_DIST=	\
 		truncated.dkvp \
 		truncated.nidx \
 		truncated.pprint \
-		truncated.xtab \
+		truncated.xtab-crlf \
 		truncated.xtab-crlf \
 		typeof.dkvp \
 		unset1.dkvp \
