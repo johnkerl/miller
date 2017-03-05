@@ -170,7 +170,6 @@ EXTRA_DIST=	\
 		truncated.nidx \
 		truncated.pprint \
 		truncated.xtab-crlf \
-		truncated.xtab-crlf \
 		typeof.dkvp \
 		unset1.dkvp \
 		unset4.dkvp \

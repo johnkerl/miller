@@ -5013,8 +5013,8 @@ run_mlr --no-mmap --nidx    cat $indir/truncated.nidx
 run_mlr           --nidx    cat $indir/truncated.nidx
 run_mlr --no-mmap --pprint  cat $indir/truncated.pprint
 run_mlr           --pprint  cat $indir/truncated.pprint
-run_mlr --no-mmap --xtab    cat $indir/truncated.xtab
-run_mlr           --xtab    cat $indir/truncated.xtab
+run_mlr --no-mmap --xtab    cat $indir/truncated.xtab.crlf
+run_mlr           --xtab    cat $indir/truncated.xtab.crlf
 
 # ----------------------------------------------------------------
 announce UTF-8 alignment
