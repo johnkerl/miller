@@ -4,32 +4,52 @@
 #include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
 
+static int aux_help_main(int argc, char** argv);
 static int lecat_main(int argc, char** argv);
 static int lecat_stream(FILE* input_stream, int do_color);
-
 static int termcvt_main(int argc, char** argv);
-
 static int show_temp_suffixes_main(int argc, char** argv);
-
 static int hex_main(int argc, char** argv);
+
+typedef int aux_main_t(int argc, char**argv);
+
+typedef struct _aux_lookup_entry_t {
+	char* name;
+	aux_main_t* phandler;
+} aux_lookup_entry_t;
+
+static aux_lookup_entry_t aux_lookup_table[] = {
+
+	{ "aux_help",           aux_help_main           },
+	{ "lecat",              lecat_main              },
+	{ "termcvt",            termcvt_main            },
+	{ "show_temp_suffixes", show_temp_suffixes_main },
+	{ "hex",                hex_main                },
+
+};
+
+static int aux_lookup_table_size = sizeof(aux_lookup_table) / sizeof(aux_lookup_table[0]);
 
 // ================================================================
 void do_aux_entries(int argc, char** argv) {
 	if (argc < 2) {
 		return;
 	}
-	if (streq(argv[1], "lecat")) {
-		exit(lecat_main(argc, argv));
+
+	// xxx to do: list-all option.
+	for (int i = 0; i < aux_lookup_table_size; i++) {
+		if (streq(argv[1], aux_lookup_table[i].name)) {
+			exit(aux_lookup_table[i].phandler(argc, argv));
+		}
 	}
-	if (streq(argv[1], "termcvt")) {
-		exit(termcvt_main(argc, argv));
+}
+
+// ----------------------------------------------------------------
+static int aux_help_main(int argc, char** argv) {
+	for (int i = 0; i < aux_lookup_table_size; i++) {
+		printf("%s\n", aux_lookup_table[i].name);
 	}
-	if (streq(argv[1], "show_temp_suffixes")) {
-		exit(show_temp_suffixes_main(argc, argv));
-	}
-	if (streq(argv[1], "hex")) {
-		exit(hex_main(argc, argv));
-	}
+	return 0;
 }
 
 // ----------------------------------------------------------------
