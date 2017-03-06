@@ -3,6 +3,7 @@
 #include <string.h>
 #include "mlr_globals.h"
 #include "mlr_arch.h"
+#include "mlrutil.h"
 
 // ----------------------------------------------------------------
 int mlr_arch_setenv(const char *name, const char *value) {
@@ -35,7 +36,10 @@ char * mlr_arch_strsep(char **pstring, const char *delim) {
 
 // ----------------------------------------------------------------
 #ifdef MLR_ON_MSYS2
-static int mlr_arch_getdelim(char** restrict pline, size_t* restrict plinecap, int delimiter, FILE* restrict stream) {
+
+// Use powers of two exclusively, to help avoid heap fragmentation
+#define INITIAL_SIZE 128
+static int local_getdelim(char** restrict pline, size_t* restrict plinecap, int delimiter, FILE* restrict stream) {
 	size_t linecap = INITIAL_SIZE;
 	char* restrict line = mlr_malloc_or_die(INITIAL_SIZE);
 	char* restrict p = line;
@@ -52,6 +56,7 @@ static int mlr_arch_getdelim(char** restrict pline, size_t* restrict plinecap, i
 		c = mlr_arch_getc(stream);
 		if (c == delimiter) {
 			*p = 0;
+			p++;
 			break;
 		} else if (c == EOF) {
 			if (p == line)
@@ -67,7 +72,7 @@ static int mlr_arch_getdelim(char** restrict pline, size_t* restrict plinecap, i
 		free(line);
 		*pline = NULL;
 		*plinecap = 0;
-		return 0;
+		return -1;
 	} else {
 		*pline = line;
 		*plinecap = linecap;
@@ -81,7 +86,6 @@ ssize_t mlr_arch_getdelim(char** restrict pline, size_t* restrict plinecap, int 
 #ifndef MLR_ON_MSYS2
 	return getdelim(pline, plinecap, delimiter, stream);
 #else
-	char* retval = mlr_get_cline2(stream, delimiter);
 	return local_getdelim(pline, plinecap, delimiter, stream);
 #endif
 }

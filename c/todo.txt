@@ -39,9 +39,9 @@ MSYS2 TO-DO
 
 ! msys2 / pacman -S / etc @ appveyor
 
-! getdelim
+~ getdelim
 
-! strsep
+~ strsep
 
 k get_unlocked / getc:
   k @ mlr_arch.h: ifdef MSYS2 define getc_unlocked(x) getc(x)

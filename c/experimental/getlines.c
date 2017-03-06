@@ -3,6 +3,7 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
+#include "lib/mlrdatetime.h"
 #include "input/file_reader_stdio.h"
 #include "input/file_reader_mmap.h"
 #include "input/lrec_readers.h"

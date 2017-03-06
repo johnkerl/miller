@@ -65,6 +65,7 @@ char* mlr_get_cline2(FILE* fp, char irs) {
 			if (p == line)
 				eof = TRUE;
 			*p = 0;
+			p++;
 			break;
 		} else {
 			*(p++) = c;

@@ -339,11 +339,13 @@ TEST_JOIN_BUCKET_KEEPER_SRCS = \
 
 EXPERIMENTAL_READER_SRCS = \
   lib/mlrutil.c \
+  lib/mlrdatetime.c \
   lib/mlr_arch.c \
   lib/mtrand.c \
   lib/mlrescape.c \
   lib/mlrregex.c \
   lib/mlr_globals.c \
+  lib/string_array.c \
   lib/string_builder.c \
   input/stdio_byte_reader.c \
   input/file_reader_mmap.c \
