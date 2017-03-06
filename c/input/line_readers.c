@@ -42,45 +42,6 @@ char* mlr_get_cline_with_length(FILE* fp, char irs, int* plength) {
 }
 
 // ----------------------------------------------------------------
-// Only for direct performance comparison against mlr_arch_getdelim()
-char* mlr_get_cline2(FILE* fp, char irs) {
-	size_t linecap = INITIAL_SIZE;
-	char* restrict line = mlr_malloc_or_die(INITIAL_SIZE);
-	char* restrict p = line;
-	int eof = FALSE;
-	int c;
-
-	while (TRUE) {
-		size_t offset = p - line;
-		if (offset >= linecap) {
-			linecap = linecap << 1;
-			line = mlr_realloc_or_die(line, linecap);
-			p = line + offset;
-		}
-		c = mlr_arch_getc(fp);
-		if (c == irs) {
-			*p = 0;
-			break;
-		} else if (c == EOF) {
-			if (p == line)
-				eof = TRUE;
-			*p = 0;
-			p++;
-			break;
-		} else {
-			*(p++) = c;
-		}
-	}
-
-	if (eof) {
-		free(line);
-		return NULL;
-	} else {
-		return line;
-	}
-}
-
-// ----------------------------------------------------------------
 // 0 1 2 3
 // a b c 0
 char* mlr_get_sline(FILE* fp, char* irs, int irslen) {
@@ -125,5 +86,46 @@ char* mlr_get_sline(FILE* fp, char* irs, int irslen) {
 		return NULL;
 	} else {
 		return line;
+	}
+}
+
+// ----------------------------------------------------------------
+int local_getdelim(char** restrict pline, size_t* restrict plinecap, int delimiter, FILE* restrict stream) {
+	size_t linecap = INITIAL_SIZE;
+	char* restrict line = mlr_malloc_or_die(INITIAL_SIZE);
+	char* restrict p = line;
+	int eof = FALSE;
+	int c;
+
+	while (TRUE) {
+		size_t offset = p - line;
+		if (offset >= linecap) {
+			linecap = linecap << 1;
+			line = mlr_realloc_or_die(line, linecap);
+			p = line + offset;
+		}
+		c = mlr_arch_getc(stream);
+		if (c == delimiter) {
+			*(p++) = 0;
+			break;
+		} else if (c == EOF) {
+			if (p == line)
+				eof = TRUE;
+			*p = 0;
+			break;
+		} else {
+			*(p++) = c;
+		}
+	}
+
+	if (eof) {
+		free(line);
+		*pline = NULL;
+		*plinecap = 0;
+		return -1;
+	} else {
+		*pline = line;
+		*plinecap = linecap;
+		return p - line;
 	}
 }
