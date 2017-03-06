@@ -15,6 +15,7 @@ BUGFIXES
   - POKI_RUN_UNESCAPED
 
 * aux-entries doc @ mlh, mld
+  - unhex ?
 
 * --mmap / --no-mmap double-regression loop
   o also "." the setup funcs
