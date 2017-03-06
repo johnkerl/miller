@@ -55,8 +55,7 @@ static int local_getdelim(char** restrict pline, size_t* restrict plinecap, int 
 		}
 		c = mlr_arch_getc(stream);
 		if (c == delimiter) {
-			*p = 0;
-			p++;
+			*(p++) = 0;
 			break;
 		} else if (c == EOF) {
 			if (p == line)
