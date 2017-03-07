@@ -135,3 +135,10 @@ ssize_t local_getdelim(char** restrict pline, size_t* restrict plinecap, int del
 		return p - line;
 	}
 }
+
+// getline:
+// input delimiter (single/multiple)
+// input fp
+// returns line
+// returns strlen
+// returns linecap
