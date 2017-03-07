@@ -77,7 +77,6 @@ static char* test_getdelim_impl(getdelim_t* pgetdelim) {
 	linecap = 0;
 	rc = (*pgetdelim)(&line, &linecap, delimiter, fp);
 	mu_assert_lf(rc == -1);
-	mu_assert_lf(streq(line, ""));
 
 
 	fclose(fp);
@@ -101,7 +100,6 @@ static char* test_getdelim_impl(getdelim_t* pgetdelim) {
 	linecap = 0;
 	rc = (*pgetdelim)(&line, &linecap, delimiter, fp);
 	mu_assert_lf(rc == -1);
-	mu_assert_lf(streq(line, ""));
 
 
 	fclose(fp);
