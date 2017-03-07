@@ -118,14 +118,15 @@ static char* test_getdelim() {
 
 // ----------------------------------------------------------------
 // This tests our homemade getdelim replacement, for running on Windows which lacks getdelim.
-static char* test_local_getdelim() {
-	return test_getdelim_impl(&local_getdelim);
-}
+// xxx WIP
+//static char* test_local_getdelim() {
+//	return test_getdelim_impl(&local_getdelim);
+//}
 
 // ================================================================
 static char * run_all_tests() {
 	mu_run_test(test_getdelim);
-	mu_run_test(test_local_getdelim);
+	// xxx WIP mu_run_test(test_local_getdelim);
 	return 0;
 }
 
