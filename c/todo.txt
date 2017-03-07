@@ -14,10 +14,6 @@ BUGFIXES
 * mlrfunc docsection (automate):
   - POKI_RUN_UNESCAPED
 
-* aux-entries doc @ mlh, mld
-  - unhex ?
-  ? new aux dir?
-
 * --mmap / --no-mmap double-regression loop
   o also "." the setup funcs
 
@@ -41,9 +37,9 @@ MSYS2 TO-DO
 
 ! msys2 / pacman -S / etc @ appveyor
 
-~ getdelim
+~ getdelim: UT
 
-~ strsep
+~ strsep: UT
 
 k get_unlocked / getc:
   k @ mlr_arch.h: ifdef MSYS2 define getc_unlocked(x) getc(x)
@@ -154,8 +150,6 @@ MAPVAR CHECKLIST:
     ? tail -g
     - uniq -g
 
-!! coroutines: line-oriented; operate on field(s); r/w popen
-
 * other stats:
   - stats1 antimode
   - stats1 for strings: min/max/percentiles. note count/mode already work.
@@ -250,6 +244,10 @@ COMPARES:
 
 ================================================================
 5.2.0 IDEAS:
+
+!! coroutines: line-oriented; operate on field(s); r/w popen
+
+* aux-entries doc @ mlh, mld
 
 * json_encode / json_decode functions? (map->string and string->map)
   - array handling ...

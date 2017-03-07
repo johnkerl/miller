@@ -78,6 +78,17 @@ TEST_BYTE_READERS_SRCS = \
   input/mmap_byte_reader.c \
   unit_test/test_byte_readers.c
 
+TEST_LINE_READERS_SRCS = \
+  lib/mlrutil.c \
+  lib/mlr_arch.c \
+  lib/mtrand.c \
+  lib/mlrescape.c \
+  lib/mlr_test_util.c \
+  lib/mlr_globals.c \
+  lib/string_builder.c \
+  input/line_readers.c \
+  unit_test/test_line_readers.c
+
 TEST_PEEK_FILE_READER_SRCS = \
   lib/mlrutil.c \
   lib/mlr_arch.c \
@@ -419,6 +430,7 @@ unit-test: test-mlrutil test-mlrregex test-argparse test-byte-readers test-peek-
 	./test-mlrutil
 	./test-mlrregex
 	./test-argparse
+	./test-line-readers
 	./test-byte-readers
 	./test-peek-file-reader
 	./test-parse-trie
@@ -450,6 +462,9 @@ test-argparse: .always
 
 test-byte-readers: .always
 	$(CCDEBUG) $(TEST_BYTE_READERS_SRCS) $(LFLAGS) -o test-byte-readers
+
+test-line-readers: .always
+	$(CCDEBUG) $(TEST_LINE_READERS_SRCS) $(LFLAGS) -o test-line-readers
 
 test-peek-file-reader: .always
 	$(CCDEBUG) $(TEST_PEEK_FILE_READER_SRCS) $(LFLAGS) -o test-peek-file-reader
