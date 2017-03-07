@@ -257,6 +257,8 @@ COMPARES:
 
 !! coroutines: line-oriented; operate on field(s); r/w popen
 
+* split-column verb: down/across modes. across-mode with optional prefix?
+
 * aux-entries doc @ mlh, mld
 
 * json_encode / json_decode functions? (map->string and string->map)
