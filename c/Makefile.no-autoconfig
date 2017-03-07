@@ -426,7 +426,7 @@ mlrp: .always parsing
 # ================================================================
 tests: unit-test reg-test
 
-unit-test: test-mlrutil test-mlrregex test-argparse test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-mlhmmv test-string-builder test-rval-evaluators test-join-bucket-keeper
+unit-test: test-mlrutil test-mlrregex test-argparse test-line-readers test-byte-readers test-peek-file-reader test-parse-trie test-lrec test-multiple-containers test-mlhmmv test-string-builder test-rval-evaluators test-join-bucket-keeper
 	./test-mlrutil
 	./test-mlrregex
 	./test-argparse
