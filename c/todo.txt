@@ -16,6 +16,7 @@ BUGFIXES
 
 * aux-entries doc @ mlh, mld
   - unhex ?
+  ? new aux dir?
 
 * --mmap / --no-mmap double-regression loop
   o also "." the setup funcs
