@@ -90,7 +90,7 @@ char* mlr_get_sline(FILE* fp, char* irs, int irslen) {
 }
 
 // ----------------------------------------------------------------
-int local_getdelim(char** restrict pline, size_t* restrict plinecap, int delimiter, FILE* restrict stream) {
+ssize_t local_getdelim(char** restrict pline, size_t* restrict plinecap, int delimiter, FILE* restrict stream) {
 	size_t linecap = INITIAL_SIZE;
 	char* restrict line = mlr_malloc_or_die(INITIAL_SIZE);
 	char* restrict p = line;
@@ -106,26 +106,32 @@ int local_getdelim(char** restrict pline, size_t* restrict plinecap, int delimit
 		}
 		c = mlr_arch_getc(stream);
 		if (c == delimiter) {
-			*(p++) = 0;
+			*(p++) = delimiter;
 			break;
 		} else if (c == EOF) {
 			if (p == line)
 				eof = TRUE;
-			*p = 0;
 			break;
 		} else {
 			*(p++) = c;
 		}
 	}
 
+	// xxx check length
+	size_t offset = p - line;
+	if (offset >= linecap) {
+		linecap = linecap + 1;
+		line = mlr_realloc_or_die(line, linecap);
+		p = line + offset;
+	}
+	p[1] = 0;
+
+	*pline = line;
+	*plinecap = linecap;
 	if (eof) {
-		free(line);
-		*pline = NULL;
-		*plinecap = 0;
+		**pline = 0;
 		return -1;
 	} else {
-		*pline = line;
-		*plinecap = linecap;
 		return p - line;
 	}
 }

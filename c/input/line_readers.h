@@ -22,6 +22,6 @@ char*  mlr_get_sline(FILE* input_stream, char* irs, int irslen);
 // getdelim is built-in on OSX and modern unix-like OSs. For MSYS2, we need to
 // roll our own. The function is exposed publicly here, rather than privately
 // inside mlr_arch.c, for unit-testing visibility.
-int local_getdelim(char** restrict pline, size_t* restrict plinecap, int delimiter, FILE* restrict stream);
+ssize_t local_getdelim(char** restrict pline, size_t* restrict plinecap, int delimiter, FILE* restrict stream);
 
 #endif // LINE_READERS_H

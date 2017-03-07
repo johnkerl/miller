@@ -13,6 +13,8 @@ int tests_failed      = 0;
 int assertions_run    = 0;
 int assertions_failed = 0;
 
+typedef ssize_t getdelim_t(char** restrict pline, size_t* restrict plinecap, int delimiter, FILE* restrict stream);
+
 // ----------------------------------------------------------------
 static FILE* fopen_or_die(char* filename) {
 	FILE* fp = fopen(filename, "r");
@@ -24,20 +26,7 @@ static FILE* fopen_or_die(char* filename) {
 	return fp;
 }
 
-// ----------------------------------------------------------------
-// This tests our homemade getdelim replacement, for running on Windows which lacks getdelim.
-
-static char* test_local_getdelim() {
-
-	return NULL;
-}
-
-// ----------------------------------------------------------------
-// On unixish platforms this is testing the system getdelim() which is correct by definition.
-// (At least, we verify it's behaving as we expect.) On Windows, this tests our local_getdelim
-// which is a radundant test -- but again, it confirms behavior is as expected.
-
-static char* test_getdelim() {
+static char* test_getdelim_impl(getdelim_t* pgetdelim) {
 	char delimiter = '\n';
 	char* contents = NULL;
 	char* path = NULL;
@@ -54,7 +43,7 @@ static char* test_getdelim() {
 	// Read line
 	line = NULL;
 	linecap = 0;
-	rc = getdelim(&line, &linecap, delimiter, fp);
+	rc = (*pgetdelim)(&line, &linecap, delimiter, fp);
 	mu_assert_lf(rc == -1);
 	mu_assert_lf(streq(line, ""));
 	mu_assert_lf(linecap >= 1+strlen(contents));
@@ -62,7 +51,7 @@ static char* test_getdelim() {
 	// Read past EOF
 	line = NULL;
 	linecap = 0;
-	rc = getdelim(&line, &linecap, delimiter, fp);
+	rc = (*pgetdelim)(&line, &linecap, delimiter, fp);
 	mu_assert_lf(rc == -1);
 	mu_assert_lf(streq(line, ""));
 
@@ -78,7 +67,7 @@ static char* test_getdelim() {
 	// Read line
 	line = NULL;
 	linecap = 0;
-	rc = getdelim(&line, &linecap, delimiter, fp);
+	rc = (*pgetdelim)(&line, &linecap, delimiter, fp);
 	mu_assert_lf(rc == 1);
 	mu_assert_lf(streq(line, "\n"));
 	mu_assert_lf(linecap >= 1+strlen(contents));
@@ -86,7 +75,7 @@ static char* test_getdelim() {
 	// Read past EOF
 	line = NULL;
 	linecap = 0;
-	rc = getdelim(&line, &linecap, delimiter, fp);
+	rc = (*pgetdelim)(&line, &linecap, delimiter, fp);
 	mu_assert_lf(rc == -1);
 	mu_assert_lf(streq(line, ""));
 
@@ -102,7 +91,7 @@ static char* test_getdelim() {
 	// Read line
 	line = NULL;
 	linecap = 0;
-	rc = getdelim(&line, &linecap, delimiter, fp);
+	rc = (*pgetdelim)(&line, &linecap, delimiter, fp);
 	mu_assert_lf(rc == 2);
 	mu_assert_lf(streq(line, "\r\n"));
 	mu_assert_lf(linecap >= 1+strlen(contents));
@@ -110,7 +99,7 @@ static char* test_getdelim() {
 	// Read past EOF
 	line = NULL;
 	linecap = 0;
-	rc = getdelim(&line, &linecap, delimiter, fp);
+	rc = (*pgetdelim)(&line, &linecap, delimiter, fp);
 	mu_assert_lf(rc == -1);
 	mu_assert_lf(streq(line, ""));
 
@@ -121,10 +110,24 @@ static char* test_getdelim() {
 	return NULL;
 }
 
+// ----------------------------------------------------------------
+// On unixish platforms this is testing the system getdelim() which is correct by definition.
+// (At least, we verify it's behaving as we expect.) On Windows, this tests our local_getdelim
+// which is a radundant test -- but again, it confirms behavior is as expected.
+static char* test_getdelim() {
+	return test_getdelim_impl(&mlr_arch_getdelim);
+}
+
+// ----------------------------------------------------------------
+// This tests our homemade getdelim replacement, for running on Windows which lacks getdelim.
+static char* test_local_getdelim() {
+	return test_getdelim_impl(&local_getdelim);
+}
+
 // ================================================================
 static char * run_all_tests() {
-	mu_run_test(test_local_getdelim);
 	mu_run_test(test_getdelim);
+	mu_run_test(test_local_getdelim);
 	return 0;
 }
 
