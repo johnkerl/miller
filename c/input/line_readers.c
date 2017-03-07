@@ -137,8 +137,14 @@ ssize_t local_getdelim(char** restrict pline, size_t* restrict plinecap, int del
 }
 
 // getline:
-// input delimiter (single/multiple)
-// input fp
-// returns line
-// returns strlen
-// returns linecap
+// in delimiter (single/multiple)
+// in fp
+// ?in do_auto_line_term
+// ?inout pctx
+// out line
+// out reached eof
+// inout strlen (old/new)
+// inout linecap (old/new)
+//
+// reuse linecap on subsequent calls. power of two above last readlen.
+// work autodetect deeper into the callstack
