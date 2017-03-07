@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 #include "lib/mlr_globals.h"
 #include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
@@ -10,14 +11,17 @@ static int aux_list_main(int argc, char** argv);
 static int    lecat_main(int argc, char** argv);
 static int  termcvt_main(int argc, char** argv);
 static int      hex_main(int argc, char** argv);
+static int    unhex_main(int argc, char** argv);
 
 static int lecat_stream(FILE* input_stream, int do_color);
 static void hex_dump_fp(FILE *in_fp, FILE *out_fp, int do_raw);
+static void    unhex_fp(FILE *in_fp, FILE *out_fp);
 
 static void aux_list_usage(char* argv0, char* argv1, FILE* o, int exit_code);
 static void    lecat_usage(char* argv0, char* argv1, FILE* o, int exit_code);
 static void  termcvt_usage(char* argv0, char* argv1, FILE* o, int exit_code);
 static void      hex_usage(char* argv0, char* argv1, FILE* o, int exit_code);
+static void    unhex_usage(char* argv0, char* argv1, FILE* o, int exit_code);
 
 // ----------------------------------------------------------------
 typedef int aux_main_t(int argc, char**argv);
@@ -34,6 +38,7 @@ static aux_lookup_entry_t aux_lookup_table[] = {
 	{ "lecat",    lecat_main,    lecat_usage    },
 	{ "termcvt",  termcvt_main,  termcvt_usage  },
 	{ "hex",      hex_main,      hex_usage      },
+	{ "unhex",    unhex_main,    unhex_usage    },
 
 };
 
@@ -325,11 +330,6 @@ static int termcvt_main(int argc, char** argv) {
 // 00000070: 70 71 72 73  74 75 76 77  78 79 7a 7b  7c 7d 7e 7f |pqrstuvwxyz{|}~.|
 // ================================================================
 
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <fcntl.h>
-
 #define LINE_LENGTH_MAX 8192
 
 // ----------------------------------------------------------------
@@ -398,7 +398,7 @@ static int hex_main(int argc, char **argv) {
 	return 0;
 }
 
-//----------------------------------------------------------------------
+// ----------------------------------------------------------------
 static void hex_dump_fp(FILE *in_fp, FILE *out_fp, int do_raw) {
 	const int bytes_per_clump = 4;
 	const int clumps_per_line = 4;
@@ -449,5 +449,56 @@ static void hex_dump_fp(FILE *in_fp, FILE *out_fp, int do_raw) {
 
 		printf("\n");
 		num_bytes_total += num_bytes_read;
+	}
+}
+
+// ----------------------------------------------------------------
+static void unhex_usage(char* argv0, char* argv1, FILE* o, int exit_code) {
+	fprintf(o, "Usage: %s %s [option] {zero or more file names}\n", argv0, argv1);
+	fprintf(o, "Options:\n");
+	fprintf(o, "-h or --help: print this message\n");
+	fprintf(o, "Zero file names means read from standard input.\n");
+	fprintf(o, "Output is always to standard output; files are not written in-place.\n");
+	exit(exit_code);
+}
+
+// ----------------------------------------------------------------
+int unhex_main(int argc, char ** argv) {
+	// 'mlr' and 'unhex' are already argv[0] and argv[1].
+	if (argc >= 3) {
+		if (streq(argv[2], "-h") || streq(argv[2], "--help")) {
+			unhex_usage(argv[0], argv[1], stdout, 0);
+		}
+	}
+
+	int exit_code = 0;
+	if (argc == 2) {
+		unhex_fp(stdin, stdout);
+	} else {
+		for (int argi = 2; argi < argc; argi++) {
+			char* filename = argv[argi];
+			FILE* infp = fopen(filename, "rb");
+			if (infp == NULL) {
+				fprintf(stderr, "%s %s: Couldn't open \"%s\"; skipping.\n",
+					argv[0], argv[1], filename);
+				exit_code = 1;
+			} else {
+				unhex_fp(infp, stdout);
+				fclose(infp);
+			}
+		}
+	}
+
+	return 0;
+}
+
+// ----------------------------------------------------------------
+static void unhex_fp(FILE *infp, FILE *outfp) {
+	unsigned char byte;
+	unsigned temp;
+	int count;
+	while ((count=fscanf(infp, "%x", &temp)) > 0) {
+		byte = temp;
+		fwrite (&byte, sizeof(byte), 1, outfp);
 	}
 }
