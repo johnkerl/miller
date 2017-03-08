@@ -136,13 +136,13 @@ ssize_t local_getdelim(char** restrict pline, size_t* restrict plinecap, int del
 	}
 }
 
+// xxx rm:
 // getline:
 // in delimiter (single/multiple)
 // in fp
 // -in do_auto_line_term- separate variant
 // -inout pctx- separate variant
 // out line
-// out reached eof
 // inout strlen (old/new). DEFAULT_SIZE @ first call
 // inout linecap (old/new) DEFAULT_SIZE @ first call
 //
@@ -153,16 +153,18 @@ ssize_t local_getdelim(char** restrict pline, size_t* restrict plinecap, int del
 char* mlr_alloc_read_line_single_delimiter(
 	FILE*   fp,
 	int     delimiter,
-	int*    preached_eof,
 	size_t* pold_then_new_strlen,
-	size_t* pold_then_new_linecap)
+	size_t* pnew_linecap)
 {
-	// xxx wip
 	size_t linecap = power_of_two_above(*pold_then_new_strlen);
 	char* restrict line = mlr_malloc_or_die(linecap);
 	char* restrict p = line;
 	int reached_eof = FALSE;
 	int c;
+	int nread = 0;
+
+	// [#|#|#|#]
+	// [a|b|c|0]
 
 	while (TRUE) {
 		size_t offset = p - line;
@@ -172,22 +174,40 @@ char* mlr_alloc_read_line_single_delimiter(
 			p = line + offset;
 		}
 		c = mlr_arch_getc(fp);
-		if (c == delimiter) {
-			*(p++) = 0;
+		if (c == EOF) {
+			*p = 0;
+			reached_eof = TRUE;
 			break;
-		} else if (c == EOF) {
-			*(p++) = 0;
-			if (p == line)
-				reached_eof = TRUE;
+		} else if (c == delimiter) {
+			nread++;
+			*p = 0;
 			break;
 		} else {
+			nread++;
 			*(p++) = c;
 		}
 	}
 
-	*preached_eof = reached_eof;
-	*pold_then_new_strlen = p - line - 1; // exclude null terminator
-	*pold_then_new_linecap = linecap;
+//	// The line-ending '\n' won't be included in the field buffer.
+//	if (do_auto_line_term) {
+//		if (p > line && *p == '\r') {
+//			*(p--) = 0;
+//			context_set_autodetected_crlf(pctx);
+//		} else {
+//			context_set_autodetected_lf(pctx);
+//		}
+//	}
+
+	int linelen = p - line;
+
+	// linelen excludes line-ending characters.
+	// nread   includes line-ending characters.
+	if (nread == 0 && reached_eof) {
+		line = NULL;
+		linelen = 0;
+	}
+	*pold_then_new_strlen = linelen;
+	*pnew_linecap = linecap;
 
 	return line;
 }

@@ -41,8 +41,7 @@ ssize_t local_getdelim(char** restrict pline, size_t* restrict plinecap, int del
 char* mlr_alloc_read_line_single_delimiter(
 	FILE*   fp,
 	int     delimiter,
-	int*    preached_eof,
 	size_t* pold_then_new_strlen,
-	size_t* pold_then_new_linecap);
+	size_t* pnew_linecap);
 
 #endif // LINE_READERS_H

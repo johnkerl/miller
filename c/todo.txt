@@ -7,6 +7,12 @@ BUGFIXES
 ================================================================
 5.0.0 POST-RELEASE TO DO:
 
+https://github.com/johnkerl/miller/issues/132
+
+! cook:
+
+  mlr --csv nest --explode -f b --values --across-records --nested-fs ':' x
+
 ! windows port
 
 ! getdelim replacement:
