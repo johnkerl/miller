@@ -26,6 +26,7 @@ static FILE* fopen_or_die(char* filename) {
 	return fp;
 }
 
+// ----------------------------------------------------------------
 static char* test_getdelim_impl(getdelim_t* pgetdelim) {
 	char delimiter = '\n';
 	char* contents = NULL;
@@ -109,6 +110,92 @@ static char* test_getdelim_impl(getdelim_t* pgetdelim) {
 }
 
 // ----------------------------------------------------------------
+static char* test_mlr_alloc_read_line_single_delimiter() {
+#if 0
+	char   delimiter = '\n';
+	char*  path = NULL;
+	FILE*  fp = NULL;
+	char*  contents = NULL;
+	char*  line = NULL;
+	int    reached_eof = FALSE;
+	size_t linelen = 0;
+	size_t linecap = 0;
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	contents = "";
+	path = write_temp_file_or_die(contents);
+	fp = fopen_or_die(path);
+
+	// Read line
+	linecap = 4;
+	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &reached_eof, &linelen, &linecap);
+	printf("reof=%d,linelen=%d,linecap=%d,line=\"%s\"\n", (int)reached_eof, (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, ""));
+	mu_assert_lf(reached_eof == TRUE);
+	mu_assert_lf(linelen == strlen(""));
+	mu_assert_lf(linecap > linelen);
+
+	// Read past EOF
+	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &reached_eof, &linelen, &linecap);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, ""));
+	mu_assert_lf(reached_eof == TRUE);
+
+	fclose(fp);
+	unlink_file_or_die(path);
+
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	contents = "\n";
+	path = write_temp_file_or_die(contents);
+	fp = fopen_or_die(path);
+
+	// Read line
+	line = NULL;
+	linecap = 0;
+	rc = (*pgetdelim)(&line, &linecap, delimiter, fp);
+	mu_assert_lf(rc == 1);
+	mu_assert_lf(streq(line, "\n"));
+	mu_assert_lf(linecap >= 1+strlen(contents));
+
+	// Read past EOF
+	line = NULL;
+	linecap = 0;
+	rc = (*pgetdelim)(&line, &linecap, delimiter, fp);
+	mu_assert_lf(rc == -1);
+
+
+	fclose(fp);
+	unlink_file_or_die(path);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	contents = "\r\n";
+	path = write_temp_file_or_die(contents);
+	fp = fopen_or_die(path);
+
+	// Read line
+	line = NULL;
+	linecap = 0;
+	rc = (*pgetdelim)(&line, &linecap, delimiter, fp);
+	mu_assert_lf(rc == 2);
+	mu_assert_lf(streq(line, "\r\n"));
+	mu_assert_lf(linecap >= 1+strlen(contents));
+
+	// Read past EOF
+	line = NULL;
+	linecap = 0;
+	rc = (*pgetdelim)(&line, &linecap, delimiter, fp);
+	mu_assert_lf(rc == -1);
+
+
+	fclose(fp);
+	unlink_file_or_die(path);
+#endif
+	return NULL;
+}
+
+// ----------------------------------------------------------------
 // On unixish platforms this is testing the system getdelim() which is correct by definition.
 // (At least, we verify it's behaving as we expect.) On Windows, this tests our local_getdelim
 // which is a radundant test -- but again, it confirms behavior is as expected.
@@ -126,7 +213,7 @@ static char* test_getdelim() {
 // ================================================================
 static char * run_all_tests() {
 	mu_run_test(test_getdelim);
-	// xxx WIP mu_run_test(test_local_getdelim);
+	mu_run_test(test_mlr_alloc_read_line_single_delimiter);
 	return 0;
 }
 

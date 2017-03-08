@@ -24,4 +24,25 @@ char*  mlr_get_sline(FILE* input_stream, char* irs, int irslen);
 // inside mlr_arch.c, for unit-testing visibility.
 ssize_t local_getdelim(char** restrict pline, size_t* restrict plinecap, int delimiter, FILE* restrict stream);
 
+// xxx type up comments:
+// * in delimiter (single/multiple)
+// * in fp
+// * -in do_auto_line_term- separate variant
+// * -inout pctx- separate variant
+// * out line
+// * out reached eof
+// * inout strlen (old/new). DEFAULT_SIZE @ first call
+// * inout linecap (old/new) DEFAULT_SIZE @ first call
+//
+// reuse linecap on subsequent calls. power of two above last readlen.
+// work autodetect deeper into the callstack
+
+#define MLR_ALLOC_READ_LINE_INITIAL_SIZE 128
+char* mlr_alloc_read_line_single_delimiter(
+	FILE*   fp,
+	int     delimiter,
+	int*    preached_eof,
+	size_t* pold_then_new_strlen,
+	size_t* pold_then_new_linecap);
+
 #endif // LINE_READERS_H

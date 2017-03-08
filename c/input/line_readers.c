@@ -148,3 +148,46 @@ ssize_t local_getdelim(char** restrict pline, size_t* restrict plinecap, int del
 //
 // reuse linecap on subsequent calls. power of two above last readlen.
 // work autodetect deeper into the callstack
+
+// ----------------------------------------------------------------
+char* mlr_alloc_read_line_single_delimiter(
+	FILE*   fp,
+	int     delimiter,
+	int*    preached_eof,
+	size_t* pold_then_new_strlen,
+	size_t* pold_then_new_linecap)
+{
+	// xxx wip
+	size_t linecap = power_of_two_above(*pold_then_new_strlen);
+	char* restrict line = mlr_malloc_or_die(linecap);
+	char* restrict p = line;
+	int reached_eof = FALSE;
+	int c;
+
+	while (TRUE) {
+		size_t offset = p - line;
+		if (offset >= linecap) {
+			linecap = linecap << 1;
+			line = mlr_realloc_or_die(line, linecap);
+			p = line + offset;
+		}
+		c = mlr_arch_getc(fp);
+		if (c == delimiter) {
+			*(p++) = 0;
+			break;
+		} else if (c == EOF) {
+			*(p++) = 0;
+			if (p == line)
+				reached_eof = TRUE;
+			break;
+		} else {
+			*(p++) = c;
+		}
+	}
+
+	*preached_eof = reached_eof;
+	*pold_then_new_strlen = p - line - 1; // exclude null terminator
+	*pold_then_new_linecap = linecap;
+
+	return line;
+}
