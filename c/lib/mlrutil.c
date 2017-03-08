@@ -346,7 +346,7 @@ int mlr_imax2(int a, int b) {
 }
 
 // ----------------------------------------------------------------
-int power_of_two_ceil(int n) {
+int power_of_two_above(int n) {
 	n |= (n >> 1);
 	n |= (n >> 2);
 	n |= (n >> 4);

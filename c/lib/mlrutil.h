@@ -127,7 +127,7 @@ int string_starts_with(char* string, char* prefix);
 int string_ends_with(char* string, char* suffix, int* pstringlen);
 
 int mlr_imax2(int a, int b);
-int power_of_two_ceil(int n);
+int power_of_two_above(int n);
 
 // The caller should free the return value. Maps two-character sequences such as
 // "\t", "\n", "\\" to single characters such as tab, newline, backslash, etc.

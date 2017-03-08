@@ -30,6 +30,24 @@ static char * test_canonical_mod() {
 }
 
 // ----------------------------------------------------------------
+static char * test_power_of_two_above() {
+	mu_assert("error: power_of_two_above 0", power_of_two_above(0) == 1);
+	mu_assert("error: power_of_two_above 1", power_of_two_above(1) == 2);
+	mu_assert("error: power_of_two_above 2", power_of_two_above(2) == 4);
+	mu_assert("error: power_of_two_above 3", power_of_two_above(3) == 4);
+	mu_assert("error: power_of_two_above 4", power_of_two_above(4) == 8);
+	mu_assert("error: power_of_two_above 5", power_of_two_above(5) == 8);
+	mu_assert("error: power_of_two_above 6", power_of_two_above(6) == 8);
+	mu_assert("error: power_of_two_above 7", power_of_two_above(7) == 8);
+	mu_assert("error: power_of_two_above 8", power_of_two_above(8) == 16);
+	mu_assert("error: power_of_two_above 9", power_of_two_above(9) == 16);
+	mu_assert("error: power_of_two_above 1023", power_of_two_above(1023) == 1024);
+	mu_assert("error: power_of_two_above 1024", power_of_two_above(1024) == 2048);
+	mu_assert("error: power_of_two_above 1025", power_of_two_above(1025) == 2048);
+	return 0;
+}
+
+// ----------------------------------------------------------------
 static char * test_streq() {
 	char* x;
 	char* y;
@@ -156,6 +174,7 @@ static char * test_unbackslash() {
 // ================================================================
 static char * all_tests() {
 	mu_run_test(test_canonical_mod);
+	mu_run_test(test_power_of_two_above);
 	mu_run_test(test_streq);
 	mu_run_test(test_streqn);
 	mu_run_test(test_strdup_quoted);
