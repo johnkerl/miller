@@ -2,6 +2,7 @@
 #define LINE_READERS_H
 
 #include <stdio.h>
+#include "lib/context.h"
 
 // Notes:
 // * The caller should free the return value.
@@ -39,10 +40,11 @@ ssize_t local_getdelim(char** restrict pline, size_t* restrict plinecap, int del
 
 #define MLR_ALLOC_READ_LINE_INITIAL_SIZE 128
 char* mlr_alloc_read_line_single_delimiter(
-	FILE*   fp,
-	int     delimiter,
-	int*    preached_eof,
-	size_t* pold_then_new_strlen,
-	size_t* pold_then_new_linecap);
+	FILE*      fp,
+	int        delimiter,
+	size_t*    pold_then_new_strlen,
+	size_t*    pnew_linecap,
+	int        do_auto_line_term,
+	context_t* pctx);
 
 #endif // LINE_READERS_H

@@ -83,6 +83,7 @@ TEST_LINE_READERS_SRCS = \
   lib/mlr_arch.c \
   lib/mtrand.c \
   lib/mlrescape.c \
+  lib/context.c \
   lib/mlr_test_util.c \
   lib/mlr_globals.c \
   lib/string_builder.c \
