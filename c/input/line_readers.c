@@ -42,8 +42,6 @@ char* mlr_get_cline_with_length(FILE* fp, char irs, int* plength) {
 }
 
 // ----------------------------------------------------------------
-// 0 1 2 3
-// a b c 0
 char* mlr_get_sline(FILE* fp, char* irs, int irslen) {
 	size_t linecap = INITIAL_SIZE;
 	char* restrict line = mlr_malloc_or_die(INITIAL_SIZE);

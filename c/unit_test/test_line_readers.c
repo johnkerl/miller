@@ -264,12 +264,16 @@ static char* test_mlr_alloc_read_line_single_delimiter_with_autodetect() {
 	mu_assert_lf(streq(line, ""));
 	mu_assert_lf(linelen == strlen(""));
 	mu_assert_lf(linecap > linelen);
+	mu_assert_lf(pctx->auto_line_term_detected == TRUE);
+	mu_assert_lf(streq(pctx->auto_line_term, "\n"));
 
 	// Read to EOF
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line == NULL);
 	mu_assert_lf(linecap > linelen);
+	mu_assert_lf(pctx->auto_line_term_detected == TRUE);
+	mu_assert_lf(streq(pctx->auto_line_term, "\n"));
 
 	fclose(fp);
 	unlink_file_or_die(path);
@@ -288,12 +292,16 @@ static char* test_mlr_alloc_read_line_single_delimiter_with_autodetect() {
 	mu_assert_lf(streq(line, "abc"));
 	mu_assert_lf(linelen == strlen("abc"));
 	mu_assert_lf(linecap > linelen);
+	mu_assert_lf(pctx->auto_line_term_detected == TRUE);
+	mu_assert_lf(streq(pctx->auto_line_term, "\n"));
 
 	// Read to EOF
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line == NULL);
 	mu_assert_lf(linecap > linelen);
+	mu_assert_lf(pctx->auto_line_term_detected == TRUE);
+	mu_assert_lf(streq(pctx->auto_line_term, "\n"));
 
 	fclose(fp);
 	unlink_file_or_die(path);
@@ -312,6 +320,8 @@ static char* test_mlr_alloc_read_line_single_delimiter_with_autodetect() {
 	mu_assert_lf(streq(line, "abc"));
 	mu_assert_lf(linelen == strlen("abc"));
 	mu_assert_lf(linecap > linelen);
+	mu_assert_lf(pctx->auto_line_term_detected == TRUE);
+	mu_assert_lf(streq(pctx->auto_line_term, "\n"));
 
 	// Read line 2
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
@@ -320,6 +330,8 @@ static char* test_mlr_alloc_read_line_single_delimiter_with_autodetect() {
 	mu_assert_lf(streq(line, ""));
 	mu_assert_lf(linelen == strlen(""));
 	mu_assert_lf(linecap > linelen);
+	mu_assert_lf(pctx->auto_line_term_detected == TRUE);
+	mu_assert_lf(streq(pctx->auto_line_term, "\n"));
 
 	// Read to EOF
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
@@ -344,6 +356,8 @@ static char* test_mlr_alloc_read_line_single_delimiter_with_autodetect() {
 	mu_assert_lf(streq(line, ""));
 	mu_assert_lf(linelen == strlen(""));
 	mu_assert_lf(linecap > linelen);
+	mu_assert_lf(pctx->auto_line_term_detected == TRUE);
+	mu_assert_lf(streq(pctx->auto_line_term, "\n"));
 
 	// Read line 2
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
@@ -352,6 +366,8 @@ static char* test_mlr_alloc_read_line_single_delimiter_with_autodetect() {
 	mu_assert_lf(streq(line, "abc"));
 	mu_assert_lf(linelen == strlen("abc"));
 	mu_assert_lf(linecap > linelen);
+	mu_assert_lf(pctx->auto_line_term_detected == TRUE);
+	mu_assert_lf(streq(pctx->auto_line_term, "\n"));
 
 	// Read to EOF
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
@@ -376,6 +392,8 @@ static char* test_mlr_alloc_read_line_single_delimiter_with_autodetect() {
 	mu_assert_lf(streq(line, ""));
 	mu_assert_lf(linelen == strlen(""));
 	mu_assert_lf(linecap > linelen);
+	mu_assert_lf(pctx->auto_line_term_detected == TRUE);
+	mu_assert_lf(streq(pctx->auto_line_term, "\n"));
 
 	// Read line 2
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
@@ -384,6 +402,8 @@ static char* test_mlr_alloc_read_line_single_delimiter_with_autodetect() {
 	mu_assert_lf(streq(line, "abc"));
 	mu_assert_lf(linelen == strlen("abc"));
 	mu_assert_lf(linecap > linelen);
+	mu_assert_lf(pctx->auto_line_term_detected == TRUE);
+	mu_assert_lf(streq(pctx->auto_line_term, "\n"));
 
 	// Read to EOF
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
