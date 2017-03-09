@@ -130,20 +130,12 @@ static char* test_mlr_alloc_read_line_single_delimiter() {
 	printf("Case start[%s]\n", contents);
 
 	// Read line
-<<<<<<< HEAD
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
-=======
-	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap);
->>>>>>> 1bf772537601af39fa87a8870951c598c0e6852f
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line == NULL);
 
 	// Read past EOF
-<<<<<<< HEAD
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
-=======
-	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap);
->>>>>>> 1bf772537601af39fa87a8870951c598c0e6852f
 	mu_assert_lf(line == NULL);
 
 	fclose(fp);
@@ -158,11 +150,7 @@ static char* test_mlr_alloc_read_line_single_delimiter() {
 	printf("Case start[%s]\n", contents);
 
 	// Read line
-<<<<<<< HEAD
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
-=======
-	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap);
->>>>>>> 1bf772537601af39fa87a8870951c598c0e6852f
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line != NULL);
 	mu_assert_lf(streq(line, ""));
@@ -170,11 +158,7 @@ static char* test_mlr_alloc_read_line_single_delimiter() {
 	mu_assert_lf(linecap > linelen);
 
 	// Read to EOF
-<<<<<<< HEAD
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
-=======
-	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap);
->>>>>>> 1bf772537601af39fa87a8870951c598c0e6852f
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line == NULL);
 	mu_assert_lf(linecap > linelen);
@@ -191,11 +175,7 @@ static char* test_mlr_alloc_read_line_single_delimiter() {
 	printf("Case start[%s]\n", contents);
 
 	// Read line
-<<<<<<< HEAD
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
-=======
-	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap);
->>>>>>> 1bf772537601af39fa87a8870951c598c0e6852f
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line != NULL);
 	mu_assert_lf(streq(line, "abc"));
@@ -203,11 +183,7 @@ static char* test_mlr_alloc_read_line_single_delimiter() {
 	mu_assert_lf(linecap > linelen);
 
 	// Read to EOF
-<<<<<<< HEAD
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
-=======
-	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap);
->>>>>>> 1bf772537601af39fa87a8870951c598c0e6852f
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line == NULL);
 	mu_assert_lf(linecap > linelen);
@@ -224,11 +200,7 @@ static char* test_mlr_alloc_read_line_single_delimiter() {
 	printf("Case start[%s]\n", contents);
 
 	// Read line 1
-<<<<<<< HEAD
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
-=======
-	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap);
->>>>>>> 1bf772537601af39fa87a8870951c598c0e6852f
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line != NULL);
 	mu_assert_lf(streq(line, "abc"));
@@ -236,11 +208,7 @@ static char* test_mlr_alloc_read_line_single_delimiter() {
 	mu_assert_lf(linecap > linelen);
 
 	// Read line 2
-<<<<<<< HEAD
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
-=======
-	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap);
->>>>>>> 1bf772537601af39fa87a8870951c598c0e6852f
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line != NULL);
 	mu_assert_lf(streq(line, ""));
@@ -248,11 +216,7 @@ static char* test_mlr_alloc_read_line_single_delimiter() {
 	mu_assert_lf(linecap > linelen);
 
 	// Read to EOF
-<<<<<<< HEAD
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
-=======
-	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap);
->>>>>>> 1bf772537601af39fa87a8870951c598c0e6852f
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line == NULL);
 	mu_assert_lf(linecap > linelen);
@@ -269,11 +233,7 @@ static char* test_mlr_alloc_read_line_single_delimiter() {
 	printf("Case start[%s]\n", contents);
 
 	// Read line 1
-<<<<<<< HEAD
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
-=======
-	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap);
->>>>>>> 1bf772537601af39fa87a8870951c598c0e6852f
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line != NULL);
 	mu_assert_lf(streq(line, ""));
@@ -281,11 +241,7 @@ static char* test_mlr_alloc_read_line_single_delimiter() {
 	mu_assert_lf(linecap > linelen);
 
 	// Read line 2
-<<<<<<< HEAD
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
-=======
-	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap);
->>>>>>> 1bf772537601af39fa87a8870951c598c0e6852f
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line != NULL);
 	mu_assert_lf(streq(line, "abc"));
@@ -293,11 +249,7 @@ static char* test_mlr_alloc_read_line_single_delimiter() {
 	mu_assert_lf(linecap > linelen);
 
 	// Read to EOF
-<<<<<<< HEAD
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
-=======
-	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap);
->>>>>>> 1bf772537601af39fa87a8870951c598c0e6852f
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line == NULL);
 	mu_assert_lf(linecap > linelen);
@@ -314,11 +266,7 @@ static char* test_mlr_alloc_read_line_single_delimiter() {
 	printf("Case start[%s]\n", contents);
 
 	// Read line 1
-<<<<<<< HEAD
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
-=======
-	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap);
->>>>>>> 1bf772537601af39fa87a8870951c598c0e6852f
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line != NULL);
 	mu_assert_lf(streq(line, ""));
@@ -326,11 +274,7 @@ static char* test_mlr_alloc_read_line_single_delimiter() {
 	mu_assert_lf(linecap > linelen);
 
 	// Read line 2
-<<<<<<< HEAD
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
-=======
-	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap);
->>>>>>> 1bf772537601af39fa87a8870951c598c0e6852f
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line != NULL);
 	mu_assert_lf(streq(line, "abc"));
@@ -338,11 +282,7 @@ static char* test_mlr_alloc_read_line_single_delimiter() {
 	mu_assert_lf(linecap > linelen);
 
 	// Read to EOF
-<<<<<<< HEAD
 	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap, do_auto_line_term, pctx);
-=======
-	line = mlr_alloc_read_line_single_delimiter(fp, delimiter, &linelen, &linecap);
->>>>>>> 1bf772537601af39fa87a8870951c598c0e6852f
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line == NULL);
 	mu_assert_lf(linecap > linelen);
