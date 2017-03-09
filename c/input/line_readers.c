@@ -188,10 +188,11 @@ char* mlr_alloc_read_line_single_delimiter(
 	}
 
 	if (do_auto_line_term) {
-		p--;
-		if (p >= line && *p == '\r') {
-			*p = 0;
+		char* q = p - 1;
+		if (q >= line && *q == '\r') {
+			*q = 0;
 			context_set_autodetected_crlf(pctx);
+			p = q;
 		} else {
 			context_set_autodetected_lf(pctx);
 		}
