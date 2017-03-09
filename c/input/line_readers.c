@@ -134,19 +134,6 @@ ssize_t local_getdelim(char** restrict pline, size_t* restrict plinecap, int del
 	}
 }
 
-// xxx rm:
-// getline:
-// in delimiter (single/multiple)
-// in fp
-// -in do_auto_line_term- separate variant
-// -inout pctx- separate variant
-// out line
-// inout strlen (old/new). DEFAULT_SIZE @ first call
-// inout linecap (old/new) DEFAULT_SIZE @ first call
-//
-// reuse linecap on subsequent calls. power of two above last readlen.
-// work autodetect deeper into the callstack
-
 // ----------------------------------------------------------------
 char* mlr_alloc_read_line_single_delimiter(
 	FILE*      fp,
@@ -208,3 +195,55 @@ char* mlr_alloc_read_line_single_delimiter(
 
 	return line;
 }
+
+//// ----------------------------------------------------------------
+//char* mlr_alloc_read_line_multiple_delimiter(
+//	FILE*      fp,
+//	char*      delimiter,
+//	size_t*    pold_then_new_strlen,
+//	size_t*    pnew_linecap)
+//{
+//	size_t linecap = power_of_two_above(*pold_then_new_strlen);
+//	char* restrict line = mlr_malloc_or_die(linecap);
+//	char* restrict p = line;
+//	int reached_eof = FALSE;
+//	int c;
+//	int nread = 0;
+//
+//	while (TRUE) {
+//		size_t offset = p - line;
+//		if (offset >= linecap) {
+//			linecap = linecap << 1;
+//			line = mlr_realloc_or_die(line, linecap);
+//			p = line + offset;
+//		}
+//		c = mlr_arch_getc(fp);
+//		if (c == EOF) {
+//			*p = 0;
+//			reached_eof = TRUE;
+//			break;
+//		} else if (streq(c, delimiter)) {
+//			// This function exists separately from mlr_alloc_read_line_single_delimiter solely so
+//			// that mlr_alloc_read_line_single_delimiter can avoid doing a strcmp on every input
+//			// character read into Miller.
+//			nread++;
+//			*p = 0;
+//			break;
+//		} else {
+//			nread++;
+//			*(p++) = c;
+//		}
+//	}
+//
+//	// linelen excludes line-ending characters.
+//	// nread   includes line-ending characters.
+//	int linelen = p - line;
+//	if (nread == 0 && reached_eof) {
+//		line = NULL;
+//		linelen = 0;
+//	}
+//	*pold_then_new_strlen = linelen;
+//	*pnew_linecap = linecap;
+//
+//	return line;
+//}

@@ -314,8 +314,7 @@ static sllv_t* mapper_nest_explode_values_across_records(lrec_t* pinrec, context
 
 	sllv_t* poutrecs = sllv_alloc();
 	char* sep = pstate->nested_fs;
-	int i = 1;
-	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep), i++) {
+	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep)) {
 		lrec_t* poutrec = lrec_copy(pinrec);
 		lrec_put(poutrec, pstate->field_name, mlr_strdup_or_die(piece), FREE_ENTRY_VALUE);
 		sllv_append(poutrecs, poutrec);

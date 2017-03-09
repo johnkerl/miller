@@ -47,4 +47,10 @@ char* mlr_alloc_read_line_single_delimiter(
 	int        do_auto_line_term,
 	context_t* pctx);
 
+//char* mlr_alloc_read_line_multiple_delimiter(
+//	FILE*      fp,
+//	char*      delimiter,
+//	size_t*    pold_then_new_strlen,
+//	size_t*    pnew_linecap);
+
 #endif // LINE_READERS_H
