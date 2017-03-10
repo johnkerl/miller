@@ -196,54 +196,59 @@ char* mlr_alloc_read_line_single_delimiter(
 	return line;
 }
 
-//// ----------------------------------------------------------------
-//char* mlr_alloc_read_line_multiple_delimiter(
-//	FILE*      fp,
-//	char*      delimiter,
-//	size_t*    pold_then_new_strlen,
-//	size_t*    pnew_linecap)
-//{
-//	size_t linecap = power_of_two_above(*pold_then_new_strlen);
-//	char* restrict line = mlr_malloc_or_die(linecap);
-//	char* restrict p = line;
-//	int reached_eof = FALSE;
-//	int c;
-//	int nread = 0;
-//
-//	while (TRUE) {
-//		size_t offset = p - line;
-//		if (offset >= linecap) {
-//			linecap = linecap << 1;
-//			line = mlr_realloc_or_die(line, linecap);
-//			p = line + offset;
-//		}
-//		c = mlr_arch_getc(fp);
-//		if (c == EOF) {
-//			*p = 0;
-//			reached_eof = TRUE;
-//			break;
-//		} else if (streq(c, delimiter)) {
-//			// This function exists separately from mlr_alloc_read_line_single_delimiter solely so
-//			// that mlr_alloc_read_line_single_delimiter can avoid doing a strcmp on every input
-//			// character read into Miller.
-//			nread++;
-//			*p = 0;
-//			break;
-//		} else {
-//			nread++;
-//			*(p++) = c;
-//		}
-//	}
-//
-//	// linelen excludes line-ending characters.
-//	// nread   includes line-ending characters.
-//	int linelen = p - line;
-//	if (nread == 0 && reached_eof) {
-//		line = NULL;
-//		linelen = 0;
-//	}
-//	*pold_then_new_strlen = linelen;
-//	*pnew_linecap = linecap;
-//
-//	return line;
-//}
+// ----------------------------------------------------------------
+char* mlr_alloc_read_line_multiple_delimiter(
+	FILE*      fp,
+	char*      delimiter,
+	int        delimiter_length,
+	size_t*    pold_then_new_strlen,
+	size_t*    pnew_linecap)
+{
+	size_t linecap = power_of_two_above(*pold_then_new_strlen);
+	char* restrict line = mlr_malloc_or_die(linecap);
+	char* restrict p = line;
+	int reached_eof = FALSE;
+	int c;
+	int nread = 0;
+	char delimend = delimiter[delimiter_length-1];
+	int dlm1 = delimiter_length - 1;
+
+	while (TRUE) {
+		size_t offset = p - line;
+		if (offset >= linecap) {
+			linecap = linecap << 1;
+			line = mlr_realloc_or_die(line, linecap);
+			p = line + offset;
+		}
+		c = mlr_arch_getc(fp);
+		if (c == EOF) {
+			*p = 0;
+			reached_eof = TRUE;
+			break;
+		} else if (c == delimend) {
+			nread++;
+			// xxx commend
+			if (offset >= delimiter_length && streq(&p[-dlm1], delimiter)) {
+				*p = 0;
+			} else {
+				*(p++) = c;
+			}
+			break;
+		} else {
+			nread++;
+			*(p++) = c;
+		}
+	}
+
+	// linelen excludes line-ending characters.
+	// nread   includes line-ending characters.
+	int linelen = p - line;
+	if (nread == 0 && reached_eof) {
+		line = NULL;
+		linelen = 0;
+	}
+	*pold_then_new_strlen = linelen;
+	*pnew_linecap = linecap;
+
+	return line;
+}

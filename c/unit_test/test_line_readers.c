@@ -596,6 +596,330 @@ static char* test_mlr_alloc_read_line_single_delimiter_with_autodetect() {
 	return NULL;
 }
 
+// ----------------------------------------------------------------
+static char* test_mlr_alloc_read_line_multiple_delimiter() {
+	char*  delimiter = "xy\n";
+	int    delimiter_length = strlen(delimiter);
+	char*  path = NULL;
+	FILE*  fp = NULL;
+	char*  contents = NULL;
+	char*  line = NULL;
+	size_t linelen = 0;
+	size_t linecap = 0;
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	contents = "";
+	path = write_temp_file_or_die(contents);
+	fp = fopen_or_die(path);
+	linelen = linecap = 4;
+	my_print_string(contents);
+
+	// Read line
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line == NULL);
+
+#if 0
+	// Read past EOF
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	mu_assert_lf(line == NULL);
+
+	fclose(fp);
+	unlink_file_or_die(path);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	contents = "\n";
+	path = write_temp_file_or_die(contents);
+	fp = fopen_or_die(path);
+	linelen = linecap = 4;
+	my_print_string(contents);
+
+	// Read line
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, ""));
+	mu_assert_lf(linelen == strlen(""));
+	mu_assert_lf(linecap > linelen);
+
+	// Read to EOF
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line == NULL);
+	mu_assert_lf(linecap > linelen);
+
+	fclose(fp);
+	unlink_file_or_die(path);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	contents = "\r\n";
+	path = write_temp_file_or_die(contents);
+	fp = fopen_or_die(path);
+	linelen = linecap = 4;
+	my_print_string(contents);
+
+	// Read line
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, ""));
+	mu_assert_lf(linelen == strlen(""));
+	mu_assert_lf(linecap > linelen);
+
+	// Read to EOF
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line == NULL);
+	mu_assert_lf(linecap > linelen);
+
+	fclose(fp);
+	unlink_file_or_die(path);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	contents = "abc\n";
+	path = write_temp_file_or_die(contents);
+	fp = fopen_or_die(path);
+	linelen = linecap = 4;
+	my_print_string(contents);
+
+	// Read line
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, "abc"));
+	mu_assert_lf(linelen == strlen("abc"));
+	mu_assert_lf(linecap > linelen);
+
+	// Read to EOF
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line == NULL);
+	mu_assert_lf(linecap > linelen);
+
+	fclose(fp);
+	unlink_file_or_die(path);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	contents = "abc\r\n";
+	path = write_temp_file_or_die(contents);
+	fp = fopen_or_die(path);
+	linelen = linecap = 4;
+	my_print_string(contents);
+
+	// Read line
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, "abc"));
+	mu_assert_lf(linelen == strlen("abc"));
+	mu_assert_lf(linecap > linelen);
+
+	// Read to EOF
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line == NULL);
+	mu_assert_lf(linecap > linelen);
+
+	fclose(fp);
+	unlink_file_or_die(path);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	contents = "abc\n\n";
+	path = write_temp_file_or_die(contents);
+	fp = fopen_or_die(path);
+	linelen = linecap = 4;
+	my_print_string(contents);
+
+	// Read line 1
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, "abc"));
+	mu_assert_lf(linelen == strlen("abc"));
+	mu_assert_lf(linecap > linelen);
+
+	// Read line 2
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, ""));
+	mu_assert_lf(linelen == strlen(""));
+	mu_assert_lf(linecap > linelen);
+
+	// Read to EOF
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line == NULL);
+	mu_assert_lf(linecap > linelen);
+
+	fclose(fp);
+	unlink_file_or_die(path);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	contents = "\nabc\n";
+	path = write_temp_file_or_die(contents);
+	fp = fopen_or_die(path);
+	linelen = linecap = 4;
+	my_print_string(contents);
+
+	// Read line 1
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, ""));
+	mu_assert_lf(linelen == strlen(""));
+	mu_assert_lf(linecap > linelen);
+
+	// Read line 2
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, "abc"));
+	mu_assert_lf(linelen == strlen("abc"));
+	mu_assert_lf(linecap > linelen);
+
+	// Read to EOF
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line == NULL);
+	mu_assert_lf(linecap > linelen);
+
+	fclose(fp);
+	unlink_file_or_die(path);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	contents = "\nabc";
+	path = write_temp_file_or_die(contents);
+	fp = fopen_or_die(path);
+	linelen = linecap = 4;
+	my_print_string(contents);
+
+	// Read line 1
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, ""));
+	mu_assert_lf(linelen == strlen(""));
+	mu_assert_lf(linecap > linelen);
+
+	// Read line 2
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, "abc"));
+	mu_assert_lf(linelen == strlen("abc"));
+	mu_assert_lf(linecap > linelen);
+
+	// Read to EOF
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line == NULL);
+	mu_assert_lf(linecap > linelen);
+
+	fclose(fp);
+	unlink_file_or_die(path);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	contents = "\nabc\r\n";
+	path = write_temp_file_or_die(contents);
+	fp = fopen_or_die(path);
+	linelen = linecap = 4;
+	my_print_string(contents);
+
+	// Read line 1
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, ""));
+	mu_assert_lf(linelen == strlen(""));
+	mu_assert_lf(linecap > linelen);
+
+	// Read line 2
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, "abc"));
+	mu_assert_lf(linelen == strlen("abc"));
+	mu_assert_lf(linecap > linelen);
+
+	// Read to EOF
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line == NULL);
+	mu_assert_lf(linecap > linelen);
+
+	fclose(fp);
+	unlink_file_or_die(path);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	contents = "\r\nabc\n";
+	path = write_temp_file_or_die(contents);
+	fp = fopen_or_die(path);
+	linelen = linecap = 4;
+	my_print_string(contents);
+
+	// Read line 1
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, ""));
+	mu_assert_lf(linelen == strlen(""));
+	mu_assert_lf(linecap > linelen);
+
+	// Read line 2
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, "abc"));
+	mu_assert_lf(linelen == strlen("abc"));
+	mu_assert_lf(linecap > linelen);
+
+	// Read to EOF
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line == NULL);
+	mu_assert_lf(linecap > linelen);
+
+	fclose(fp);
+	unlink_file_or_die(path);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	contents = "\r\nabc";
+	path = write_temp_file_or_die(contents);
+	fp = fopen_or_die(path);
+	linelen = linecap = 4;
+	my_print_string(contents);
+
+	// Read line 1
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, ""));
+	mu_assert_lf(linelen == strlen(""));
+	mu_assert_lf(linecap > linelen);
+
+	// Read line 2
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line != NULL);
+	mu_assert_lf(streq(line, "abc"));
+	mu_assert_lf(linelen == strlen("abc"));
+	mu_assert_lf(linecap > linelen);
+
+	// Read to EOF
+	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
+	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
+	mu_assert_lf(line == NULL);
+	mu_assert_lf(linecap > linelen);
+
+	fclose(fp);
+	unlink_file_or_die(path);
+
+#endif
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	return NULL;
+}
+
 // ================================================================
 static char * run_all_tests() {
 	printf("----------------------------------------------------------------\n");
@@ -606,6 +930,11 @@ static char * run_all_tests() {
 	printf("----------------------------------------------------------------\n");
 	printf("test_mlr_alloc_read_line_single_delimiter_with_autodetect\n");
 	mu_run_test(test_mlr_alloc_read_line_single_delimiter_with_autodetect);
+
+	printf("\n");
+	printf("----------------------------------------------------------------\n");
+	printf("test_mlr_alloc_read_line_multiple_delimiter\n");
+	mu_run_test(test_mlr_alloc_read_line_multiple_delimiter);
 
 	printf("\n");
 	printf("----------------------------------------------------------------\n");
