@@ -169,7 +169,7 @@ lrec_t* lrec_parse_stdio_xtab_multi_ips(slls_t* pxtab_lines, char* ips, int ipsl
 		if (*p == 0) {
 			lrec_put(prec, key, "", NO_FREE);
 		} else {
-			while (*p != 0 && !streqn(p, ips, ipslen)) {
+			while (*p != 0 && streqn(p, ips, ipslen)) {
 				*p = 0;
 				p += ipslen;
 			}
