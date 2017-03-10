@@ -74,6 +74,11 @@ static inline int streqn(char* a, char* b, int n) {
 }
 
 // ----------------------------------------------------------------
+// Like strsep but the sep argument is a multi-character delimiter,
+// not a set of single-character delimiters.
+char* mlr_strmsep(char **pstring, const char *sep, int seplen);
+
+// ----------------------------------------------------------------
 int mlr_bsearch_double_for_insert(double* array, int size, double value);
 
 void*  mlr_malloc_or_die(size_t size);

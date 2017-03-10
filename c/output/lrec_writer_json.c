@@ -117,15 +117,18 @@ static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t*
 		mlhmmv_root_t* pmap = mlhmmv_root_alloc();
 
 		char* sep = pstate->output_json_flatten_separator;
+		int seplen = strlen(sep);
 
 		for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
-			// strdup since strtok is destructive and CSV/PPRINT header fields
+			// strdup since strmsep is destructive and CSV/PPRINT header fields
 			// are shared across multiple records
 			char* lkey = mlr_strdup_or_die(pe->key);
 			char* lvalue = pe->value;
 
 			sllmv_t* pmvkeys = sllmv_alloc();
-			for (char* piece = strtok(lkey, sep); piece != NULL; piece = strtok(NULL, sep)) {
+			char* walker = lkey;
+			char* piece = NULL;
+			while ((piece = mlr_strmsep(&walker, sep, seplen)) != NULL) {
 				mv_t mvkey = mv_from_string(piece, NO_FREE);
 				sllmv_append_no_free(pmvkeys, &mvkey);
 			}

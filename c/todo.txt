@@ -15,10 +15,13 @@ BUGFIXES
 * xtab.wtf
 ? tsv->json blank line -- ? needs repro.
 
+* nidx with repifs & leading spaces :^/
+
 ================================================================
 5.0.0 POST-RELEASE TO DO:
 
 https://github.com/johnkerl/miller/issues/132
+-> strmsep UTs
 
 ! cook:
 
@@ -295,6 +298,8 @@ COMPARES:
 * mlr sort --fold!
 * mlr paste (sjackman)
 * dump @records after @records[NR]=$*: json "1" rather than 1 indices are b04k3d. make a cliopt.
+
+* regexes for IPS/IFS/IRS; also in mlr nest etc.
 
 !!?? disallow implicit assignment? force w/ var at least??
   - w/  implicit: for (...) {sum += x} FUBAR

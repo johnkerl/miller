@@ -27,6 +27,23 @@ void mlr_internal_coding_error_unless(int v, char* file, int line) {
 }
 
 // ----------------------------------------------------------------
+char* mlr_strmsep(char **pstring, const char *sep, int seplen) {
+	char* string = *pstring;
+	if (string == NULL) {
+		return NULL;
+	}
+	char* pnext = strstr(string, sep);
+	if (pnext == NULL) {
+		*pstring = NULL;
+		return string;
+	} else {
+		*pnext = 0;
+		*pstring = pnext + seplen;
+		return string;
+	}
+}
+
+// ----------------------------------------------------------------
 int mlr_bsearch_double_for_insert(double* array, int size, double value) {
 	int lo = 0;
 	int hi = size-1;
