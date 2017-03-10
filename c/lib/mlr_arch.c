@@ -26,15 +26,6 @@ int mlr_arch_unsetenv(const char *name) {
 }
 
 // ----------------------------------------------------------------
-char * mlr_arch_strsep(char **pstring, const char *delim) {
-#ifdef MLR_ON_MSYS2
-	return strtok_r(*pstring, delim, pstring);
-#else
-	return strsep(pstring, delim);
-#endif
-}
-
-// ----------------------------------------------------------------
 ssize_t mlr_arch_getdelim(char** restrict pline, size_t* restrict plinecap, int delimiter, FILE* restrict stream) {
 #ifndef MLR_ON_MSYS2
 	return getdelim(pline, plinecap, delimiter, stream);
