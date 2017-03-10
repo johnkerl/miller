@@ -344,7 +344,7 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 				if (rc) {
 					switch(stridx) {
 					case EOF_STRIDX: // end of record
-						fprintf(stderr, "%s: imbalanced double-quote at line %lld.\n",
+						fprintf(stderr, "%s: unmatched double quote at line %lld.\n",
 							MLR_GLOBALS.bargv0, pstate->ilno);
 						exit(1);
 						break;
