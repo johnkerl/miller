@@ -2,7 +2,6 @@
 BUGFIXES
 
 * xtab.wtf
-? tsv->json blank line -- ? needs repro.
 
 * nidx with repifs & leading spaces :^/
 
@@ -34,6 +33,8 @@ BUGFIXES
 * rh/fedora/centos
 
 * termcvt in-place; et al.
+
+* doc xtab.wtf corner-case bugfix
 
 ================================================================
 MSYS2
