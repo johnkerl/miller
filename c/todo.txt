@@ -6,7 +6,7 @@ BUGFIXES
 ================================================================
 5.0.0 POST-RELEASE TO DO:
 
-! https://github.com/johnkerl/miller/issues/132 -> 5.0.1 !
+* mlr nest multi-fs UT for the future
 
 ! cook: mlr --csv nest --explode -f b --values --across-records --nested-fs ':' x
 
