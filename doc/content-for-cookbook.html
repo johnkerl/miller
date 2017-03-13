@@ -146,6 +146,14 @@ POKI_RUN_COMMAND_TOLERATING_ERROR{{mlr --csv put '$reachable = asserting_string(
 
 POKI_INCLUDE_ESCAPED(data/nested.tsv)HERE
 
+<p/> The simplest option is to use <a href="reference-verbs.html#nest"><tt>mlr nest</tt></a>:
+
+POKI_RUN_COMMAND{{mlr --tsv nest --explode --values --across-records -f b --nested-fs : data/nested.tsv}}HERE
+POKI_RUN_COMMAND{{mlr --tsv nest --explode --values --across-fields  -f b --nested-fs : data/nested.tsv}}HERE
+
+<p/> While <tt>mlr nest</tt> is simplest, let&rsquo;s also take a look at a few ways to do this using the
+<tt>put</tt> DSL.
+
 <p/> One option to split out the colon-delimited values in the <tt>b</tt>
 column is to use <tt>splitnv</tt> to create an integer-indexed map and loop
 over it, adding new fields to the current record:

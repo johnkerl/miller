@@ -250,14 +250,18 @@ static sllv_t* mapper_nest_explode_values_across_fields(lrec_t* pinrec, context_
 	lrece_t* porig = pentry;
 
 	char* sep = pstate->nested_fs;
+	int seplen = strlen(sep);
 	int i = 1;
-	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep), i++) {
+	char* walker = field_value;
+	char* piece = NULL;
+	while ((piece = mlr_strmsep(&walker, sep, seplen)) != NULL) {
 		char  istring_free_flags;
 		char* istring = low_int_to_string(i, &istring_free_flags);
 		char* new_key = mlr_paste_3_strings(pstate->field_name, "_", istring);
 		if (istring_free_flags & FREE_ENTRY_KEY)
 			free(istring);
 		pentry = lrec_put_after(pinrec, pentry, new_key, mlr_strdup_or_die(piece), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		i++;
 	}
 	lrec_unlink_and_free(pinrec, porig);
 	return sllv_single(pinrec);;
@@ -314,8 +318,10 @@ static sllv_t* mapper_nest_explode_values_across_records(lrec_t* pinrec, context
 
 	sllv_t* poutrecs = sllv_alloc();
 	char* sep = pstate->nested_fs;
-	int i = 1;
-	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep), i++) {
+	int seplen = strlen(sep);
+	char* walker = field_value;
+	char* piece = NULL;
+	while ((piece = mlr_strmsep(&walker, sep, seplen)) != NULL) {
 		lrec_t* poutrec = lrec_copy(pinrec);
 		lrec_put(poutrec, pstate->field_name, mlr_strdup_or_die(piece), FREE_ENTRY_VALUE);
 		sllv_append(poutrecs, poutrec);
@@ -401,7 +407,10 @@ static sllv_t* mapper_nest_explode_pairs_across_fields(lrec_t* pinrec, context_t
 	lrece_t* porig = pentry;
 
 	char* sep = pstate->nested_fs;
-	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep)) {
+	int seplen = strlen(sep);
+	char* walker = field_value;
+	char* piece = NULL;
+	while ((piece = mlr_strmsep(&walker, sep, seplen)) != NULL) {
 		char* found_sep = strstr(piece, pstate->nested_ps);
 		if (found_sep != NULL) { // there is a pair
 			*found_sep = 0;
@@ -431,7 +440,10 @@ static sllv_t* mapper_nest_explode_pairs_across_records(lrec_t* pinrec, context_
 
 	sllv_t* poutrecs = sllv_alloc();
 	char* sep = pstate->nested_fs;
-	for (char* piece = strtok(field_value, sep); piece != NULL; piece = strtok(NULL, sep)) {
+	int seplen = strlen(sep);
+	char* walker = field_value;
+	char* piece = NULL;
+	while ((piece = mlr_strmsep(&walker, sep, seplen)) != NULL) {
 		char* found_sep = strstr(piece, pstate->nested_ps);
 		lrec_t* poutrec = lrec_copy(pinrec);
 		lrece_t* pe = NULL;

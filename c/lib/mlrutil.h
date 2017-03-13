@@ -74,6 +74,11 @@ static inline int streqn(char* a, char* b, int n) {
 }
 
 // ----------------------------------------------------------------
+// Like strsep but the sep argument is a multi-character delimiter,
+// not a set of single-character delimiters.
+char* mlr_strmsep(char **pstring, const char *sep, int seplen);
+
+// ----------------------------------------------------------------
 int mlr_bsearch_double_for_insert(double* array, int size, double value);
 
 void*  mlr_malloc_or_die(size_t size);
@@ -127,7 +132,7 @@ int string_starts_with(char* string, char* prefix);
 int string_ends_with(char* string, char* suffix, int* pstringlen);
 
 int mlr_imax2(int a, int b);
-int power_of_two_ceil(int n);
+int power_of_two_above(int n);
 
 // The caller should free the return value. Maps two-character sequences such as
 // "\t", "\n", "\\" to single characters such as tab, newline, backslash, etc.

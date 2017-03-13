@@ -25,7 +25,7 @@ typedef struct _peek_file_reader_t {
 static inline peek_file_reader_t* pfr_alloc(byte_reader_t* pbr, int maxnpeek) {
 	peek_file_reader_t* pfr = mlr_malloc_or_die(sizeof(peek_file_reader_t));
 	pfr->pbr            = pbr;
-	pfr->peekbuflen     = power_of_two_ceil(maxnpeek);
+	pfr->peekbuflen     = power_of_two_above(maxnpeek);
 	pfr->peekbuflenmask = pfr->peekbuflen - 1;
 	// The peek-buffer doesn't contain null-terminated C strings, but we
 	// nonetheless null-terminate the buffer with an extra never-touched byte

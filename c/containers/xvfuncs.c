@@ -164,11 +164,12 @@ boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval)
 	mlhmmv_xvalue_t map = mlhmmv_xvalue_alloc_empty_map();
 	char* input = mlr_strdup_or_die(pstringval->xval.terminal_mlrval.u.strv);
 	char* sep = psepval->xval.terminal_mlrval.u.strv;
+	int seplen = strlen(sep);
 
 	int i = 1;
 	char* walker = input;
 	char* piece;
-	while ((piece = mlr_arch_strsep(&walker, sep)) != NULL) {
+	while ((piece = mlr_strmsep(&walker, sep, seplen)) != NULL) {
 		mv_t key = mv_from_int(i);
 		mv_t val = mv_ref_type_infer_string_or_float_or_int(piece);
 		mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
@@ -190,11 +191,12 @@ boxed_xval_t m_ss_splitnvx_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval
 	mlhmmv_xvalue_t map = mlhmmv_xvalue_alloc_empty_map();
 	char* input = mlr_strdup_or_die(pstringval->xval.terminal_mlrval.u.strv);
 	char* sep = psepval->xval.terminal_mlrval.u.strv;
+	int seplen = strlen(sep);
 
 	int i = 1;
 	char* walker = input;
 	char* piece;
-	while ((piece = mlr_arch_strsep(&walker, sep)) != NULL) {
+	while ((piece = mlr_strmsep(&walker, sep, seplen)) != NULL) {
 		mv_t key = mv_from_int(i);
 		// xxx do not ref here
 		mv_t val = mv_ref_type_infer_string(piece);
@@ -221,19 +223,21 @@ boxed_xval_t m_sss_splitkv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* ppairse
 	char* input = mlr_strdup_or_die(pstringval->xval.terminal_mlrval.u.strv);
 	char* listsep = plistsepval->xval.terminal_mlrval.u.strv;
 	char* pairsep = ppairsepval->xval.terminal_mlrval.u.strv;
+	int listseplen = strlen(listsep);
+	int pairseplen = strlen(pairsep);
 
 	int i = 1;
 	char* walker = input;
 	char* piece;
-	while ((piece = mlr_arch_strsep(&walker, listsep)) != NULL) {
+	while ((piece = mlr_strmsep(&walker, listsep, listseplen)) != NULL) {
 		char* pair = piece;
-		char* left = mlr_arch_strsep(&pair, pairsep);
+		char* left = mlr_strmsep(&pair, pairsep, pairseplen);
 		if (pair == NULL) {
 			mv_t key = mv_from_int(i);
 			mv_t val = mv_ref_type_infer_string_or_float_or_int(left);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		} else {
-			char* right = mlr_arch_strsep(&pair, pairsep);
+			char* right = mlr_strmsep(&pair, pairsep, pairseplen);
 			mv_t key = mv_from_string(left, NO_FREE);
 			mv_t val = mv_ref_type_infer_string_or_float_or_int(right);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
@@ -260,19 +264,21 @@ boxed_xval_t m_sss_splitkvx_xfunc(boxed_xval_t* pstringval, boxed_xval_t* ppairs
 	char* input = mlr_strdup_or_die(pstringval->xval.terminal_mlrval.u.strv);
 	char* listsep = plistsepval->xval.terminal_mlrval.u.strv;
 	char* pairsep = ppairsepval->xval.terminal_mlrval.u.strv;
+	int listseplen = strlen(listsep);
+	int pairseplen = strlen(pairsep);
 
 	int i = 1;
 	char* walker = input;
 	char* piece;
-	while ((piece = mlr_arch_strsep(&walker, listsep)) != NULL) {
+	while ((piece = mlr_strmsep(&walker, listsep, listseplen)) != NULL) {
 		char* pair = piece;
-		char* left = mlr_arch_strsep(&pair, pairsep);
+		char* left = mlr_strmsep(&pair, pairsep, pairseplen);
 		if (pair == NULL) {
 			mv_t key = mv_from_int(i);
 			mv_t val = mv_ref_type_infer_string(left);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);
 		} else {
-			char* right = mlr_arch_strsep(&pair, pairsep);
+			char* right = mlr_strmsep(&pair, pairsep, pairseplen);
 			mv_t key = mv_from_string(left, NO_FREE);
 			mv_t val = mv_ref_type_infer_string(right);
 			mlhmmv_level_put_terminal_singly_keyed(map.pnext_level, &key, &val);

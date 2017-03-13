@@ -1,41 +1,99 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
+#include "lib/mlr_globals.h"
 #include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
 
-static int lecat_main(int argc, char** argv);
+// ----------------------------------------------------------------
+static int aux_list_main(int argc, char** argv);
+static int    lecat_main(int argc, char** argv);
+static int  termcvt_main(int argc, char** argv);
+static int      hex_main(int argc, char** argv);
+static int    unhex_main(int argc, char** argv);
+
 static int lecat_stream(FILE* input_stream, int do_color);
+static void hex_dump_fp(FILE *in_fp, FILE *out_fp, int do_raw);
+static void    unhex_fp(FILE *in_fp, FILE *out_fp);
 
-static int termcvt_main(int argc, char** argv);
+static void aux_list_usage(char* argv0, char* argv1, FILE* o, int exit_code);
+static void    lecat_usage(char* argv0, char* argv1, FILE* o, int exit_code);
+static void  termcvt_usage(char* argv0, char* argv1, FILE* o, int exit_code);
+static void      hex_usage(char* argv0, char* argv1, FILE* o, int exit_code);
+static void    unhex_usage(char* argv0, char* argv1, FILE* o, int exit_code);
 
-static int show_temp_suffixes_main(int argc, char** argv);
+// ----------------------------------------------------------------
+typedef int aux_main_t(int argc, char**argv);
+typedef void aux_usage_t( char* argv0, char* argv1, FILE* o, int exit_code);
+typedef struct _aux_lookup_entry_t {
+	char* name;
+	aux_main_t* pmain;
+	aux_usage_t* pusage;
+} aux_lookup_entry_t;
 
-static int hex_main(int argc, char** argv);
+static aux_lookup_entry_t aux_lookup_table[] = {
+
+	{ "aux-list", aux_list_main, aux_list_usage },
+	{ "lecat",    lecat_main,    lecat_usage    },
+	{ "termcvt",  termcvt_main,  termcvt_usage  },
+	{ "hex",      hex_main,      hex_usage      },
+	{ "unhex",    unhex_main,    unhex_usage    },
+
+};
+
+static int aux_lookup_table_size = sizeof(aux_lookup_table) / sizeof(aux_lookup_table[0]);
 
 // ================================================================
 void do_aux_entries(int argc, char** argv) {
 	if (argc < 2) {
 		return;
 	}
-	if (streq(argv[1], "lecat")) {
-		exit(lecat_main(argc, argv));
+
+	for (int i = 0; i < aux_lookup_table_size; i++) {
+		if (streq(argv[1], aux_lookup_table[i].name)) {
+			exit(aux_lookup_table[i].pmain(argc, argv));
+		}
 	}
-	if (streq(argv[1], "termcvt")) {
-		exit(termcvt_main(argc, argv));
-	}
-	if (streq(argv[1], "show_temp_suffixes")) {
-		exit(show_temp_suffixes_main(argc, argv));
-	}
-	if (streq(argv[1], "hex")) {
-		exit(hex_main(argc, argv));
-	}
+	// else return to mlrmain for the rest of Miller.
 }
 
 // ----------------------------------------------------------------
+static void aux_list_usage(char* argv0, char* argv1, FILE* o, int exit_code) {
+	fprintf(o, "Usage: %s %s [options]\n", argv0, argv1);
+	fprintf(o, "Options:\n");
+	fprintf(o, "-h or --help: print this message\n");
+	exit(exit_code);
+}
+
+static int aux_list_main(int argc, char** argv) {
+	printf("Available subcommands:\n");
+	for (int i = 0; i < aux_lookup_table_size; i++) {
+		printf("  %s\n", aux_lookup_table[i].name);
+	}
+	printf("For more information, please invoke %s {subcommand} --help\n", MLR_GLOBALS.bargv0);
+	return 0;
+}
+
+// ----------------------------------------------------------------
+static void lecat_usage(char* argv0, char* argv1, FILE* o, int exit_code) {
+	fprintf(o, "Usage: %s %s [options] {zero or more file names}\n", argv0, argv1);
+	fprintf(o, "Simply echoes input, but flags CR characters in red and LF characters in green.\n");
+	fprintf(o, "If zero file names are supplied, standard input is read.\n");
+	fprintf(o, "Options:\n");
+	fprintf(o, "-h or --help: print this message\n");
+	exit(exit_code);
+}
+
 static int lecat_main(int argc, char** argv) {
 	int ok = 1;
 	int do_color = TRUE;
+
+	if (argc >= 3) {
+		if (streq(argv[2], "-h") || streq(argv[2], "--help")) {
+			lecat_usage(argv[0], argv[1], stdout, 0);
+		}
+	}
 
 	// 'mlr' and 'lecat' are already argv[0] and argv[1].
 	int argb = 2;
@@ -67,7 +125,6 @@ static int lecat_main(int argc, char** argv) {
 	return ok ? 0 : 1;
 }
 
-// ----------------------------------------------------------------
 static int lecat_stream(FILE* input_stream, int do_color) {
 	while (1) {
 		int c = fgetc(input_stream);
@@ -184,20 +241,19 @@ static int do_stream(FILE* input_stream, FILE* output_stream, char inend, line_c
 }
 
 // ----------------------------------------------------------------
-static void termcvt_usage(char* argv0, char* argv1) {
-	printf("Usage: %s %s [option] {zero or more file names}\n", argv0, argv1);
-	printf("Option (exactly one is required):\n");
-	printf("--cr2crlf\n");
-	printf("--lf2crlf\n");
-	printf("--crlf2cr\n");
-	printf("--crlf2lf\n");
-	printf("--cr2lf\n");
-	printf("--lf2cr\n");
-	printf("-h or --help: print this message\n");
-	printf("Zero file names means read from standard input.\n");
-	printf("Output is always to standard output; files are not written in-place.\n");
-
-	exit(1);
+static void termcvt_usage(char* argv0, char* argv1, FILE* o, int exit_code) {
+	fprintf(o, "Usage: %s %s [option] {zero or more file names}\n", argv0, argv1);
+	fprintf(o, "Option (exactly one is required):\n");
+	fprintf(o, "--cr2crlf\n");
+	fprintf(o, "--lf2crlf\n");
+	fprintf(o, "--crlf2cr\n");
+	fprintf(o, "--crlf2lf\n");
+	fprintf(o, "--cr2lf\n");
+	fprintf(o, "--lf2cr\n");
+	fprintf(o, "-h or --help: print this message\n");
+	fprintf(o, "Zero file names means read from standard input.\n");
+	fprintf(o, "Output is always to standard output; files are not written in-place.\n");
+	exit(exit_code);
 }
 
 // ----------------------------------------------------------------
@@ -211,12 +267,10 @@ static int termcvt_main(int argc, char** argv) {
 	// argv[2] is '--some-option'
 	// argv[3] and above are filenames
 	if (argc < 3)
-		termcvt_usage(argv[0], argv[1]);
+		termcvt_usage(argv[0], argv[1], stderr, 1);
 	char* opt = argv[2];
-	if (!strcmp(opt, "-h")) {
-		termcvt_usage(argv[0], argv[1]);
-	} else if (!strcmp(opt, "--help")) {
-		termcvt_usage(argv[0], argv[1]);
+	if (streq(opt, "-h") || streq(opt, "--help")) {
+		termcvt_usage(argv[0], argv[1], stdout, 0);
 	} else if (!strcmp(opt, "--cr2crlf")) {
 		pcvt_func = cr_to_crlf;
 		inend = '\r';
@@ -236,7 +290,7 @@ static int termcvt_main(int argc, char** argv) {
 		pcvt_func = lf_to_cr;
 		inend = '\n';
 	} else {
-		termcvt_usage(argv[0], argv[1]);
+		termcvt_usage(argv[0], argv[1], stdout, 0);
 	}
 
 	if (argc == 3) {
@@ -254,18 +308,6 @@ static int termcvt_main(int argc, char** argv) {
 		}
 	}
 	return ok ? 0 : 1;
-}
-
-// ----------------------------------------------------------------
-static int show_temp_suffixes_main(int argc, char** argv) {
-	for (int i = 0; i < 1000; i++) {
-		char* in = "a";
-		char* out = alloc_suffixed_temp_file_name(in);
-		printf("%s\n", out);
-		free(out);
-
-	}
-	return 0;
 }
 
 // ================================================================
@@ -288,14 +330,18 @@ static int show_temp_suffixes_main(int argc, char** argv) {
 // 00000070: 70 71 72 73  74 75 76 77  78 79 7a 7b  7c 7d 7e 7f |pqrstuvwxyz{|}~.|
 // ================================================================
 
-#include <stdio.h>
-#include <string.h>
-#include <ctype.h>
-#include <fcntl.h>
-
 #define LINE_LENGTH_MAX 8192
 
-static void hex_dump_fp(FILE *in_fp, FILE *out_fp, int do_raw);
+// ----------------------------------------------------------------
+static void hex_usage(char* argv0, char* argv1, FILE* o, int exit_code) {
+	fprintf(o, "Usage: %s %s [options] {zero or more file names}\n", argv0, argv1);
+	fprintf(o, "Simple hex-dump.\n");
+	fprintf(o, "If zero file names are supplied, standard input is read.\n");
+	fprintf(o, "Options:\n");
+	fprintf(o, "-r: print only raw hex without leading offset indicators or trailing ASCII dump.\n");
+	fprintf(o, "-h or --help: print this message\n");
+	exit(exit_code);
+}
 
 //----------------------------------------------------------------------
 // 'mlr' and 'hex' are already argv[0] and argv[1].
@@ -306,9 +352,13 @@ static int hex_main(int argc, char **argv) {
 	int do_raw = 0;
 	int argi = 2;
 
-	if (argc >= 3 && strcmp(argv[2], "-r") == 0) {
-		do_raw = 1;
-		argi++;
+	if (argc >= 3) {
+		if (streq(argv[2], "-r")) {
+			do_raw = 1;
+			argi++;
+		} else if (streq(argv[2], "-h") || streq(argv[2], "--help")) {
+			hex_usage(argv[0], argv[1], stdout, 0);
+		}
 	}
 
 	int num_file_names = argc - argi;
@@ -348,12 +398,11 @@ static int hex_main(int argc, char **argv) {
 	return 0;
 }
 
-//----------------------------------------------------------------------
-#define bytes_per_clump  4
-#define clumps_per_line  4
-#define buffer_size     (bytes_per_clump * clumps_per_line)
-
+// ----------------------------------------------------------------
 static void hex_dump_fp(FILE *in_fp, FILE *out_fp, int do_raw) {
+	const int bytes_per_clump = 4;
+	const int clumps_per_line = 4;
+	const int buffer_size = bytes_per_clump * clumps_per_line;
 	unsigned char buf[buffer_size];
 	long num_bytes_read;
 	long num_bytes_total = 0;
@@ -400,5 +449,56 @@ static void hex_dump_fp(FILE *in_fp, FILE *out_fp, int do_raw) {
 
 		printf("\n");
 		num_bytes_total += num_bytes_read;
+	}
+}
+
+// ----------------------------------------------------------------
+static void unhex_usage(char* argv0, char* argv1, FILE* o, int exit_code) {
+	fprintf(o, "Usage: %s %s [option] {zero or more file names}\n", argv0, argv1);
+	fprintf(o, "Options:\n");
+	fprintf(o, "-h or --help: print this message\n");
+	fprintf(o, "Zero file names means read from standard input.\n");
+	fprintf(o, "Output is always to standard output; files are not written in-place.\n");
+	exit(exit_code);
+}
+
+// ----------------------------------------------------------------
+int unhex_main(int argc, char ** argv) {
+	// 'mlr' and 'unhex' are already argv[0] and argv[1].
+	if (argc >= 3) {
+		if (streq(argv[2], "-h") || streq(argv[2], "--help")) {
+			unhex_usage(argv[0], argv[1], stdout, 0);
+		}
+	}
+
+	int exit_code = 0;
+	if (argc == 2) {
+		unhex_fp(stdin, stdout);
+	} else {
+		for (int argi = 2; argi < argc; argi++) {
+			char* filename = argv[argi];
+			FILE* infp = fopen(filename, "rb");
+			if (infp == NULL) {
+				fprintf(stderr, "%s %s: Couldn't open \"%s\"; skipping.\n",
+					argv[0], argv[1], filename);
+				exit_code = 1;
+			} else {
+				unhex_fp(infp, stdout);
+				fclose(infp);
+			}
+		}
+	}
+
+	return exit_code;
+}
+
+// ----------------------------------------------------------------
+static void unhex_fp(FILE *infp, FILE *outfp) {
+	unsigned char byte;
+	unsigned temp;
+	int count;
+	while ((count=fscanf(infp, "%x", &temp)) > 0) {
+		byte = temp;
+		fwrite (&byte, sizeof(byte), 1, outfp);
 	}
 }

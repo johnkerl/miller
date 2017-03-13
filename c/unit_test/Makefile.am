@@ -4,6 +4,7 @@ check_PROGRAMS = 	test_mlrutil \
 			test_mlrregex \
 			test_argparse \
 			test_byte_readers \
+			test_line_readers \
 			test_peek_file_reader \
 			test_parse_trie \
 			test_lrec \
@@ -40,6 +41,9 @@ test_argparse_LDADD=              ${all_ldadd}
 
 test_byte_readers_CFLAGS=         -std=gnu99 -g ${AM_CFLAGS}
 test_byte_readers_LDADD=          ${all_ldadd}
+
+test_line_readers_CFLAGS=         -std=gnu99 -g ${AM_CFLAGS}
+test_line_readers_LDADD=          ${all_ldadd}
 
 test_peek_file_reader_CFLAGS=     -std=gnu99 -g ${AM_CFLAGS}
 test_peek_file_reader_LDADD=      ${all_ldadd}

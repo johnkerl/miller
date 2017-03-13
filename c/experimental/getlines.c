@@ -3,6 +3,7 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
+#include "lib/mlrdatetime.h"
 #include "input/file_reader_stdio.h"
 #include "input/file_reader_mmap.h"
 #include "input/lrec_readers.h"
@@ -35,27 +36,6 @@ static int read_file_mlr_get_line(char* filename, int do_write) {
 		char* line = mlr_get_cline(fp, '\n');
 		if (line == NULL)
 			break;
-		bc += strlen(line);
-		if (do_write) {
-			fputs(line, stdout);
-			fputc('\n', stdout);
-		}
-		free(line);
-	}
-	fclose(fp);
-	return bc;
-}
-
-// ================================================================
-static int read_file_mlr_getcdelim(char* filename, int do_write) {
-	FILE* fp = fopen_or_die(filename);
-	char irs = '\n';
-	int bc = 0;
-	while (1) {
-		char* line = mlr_get_cline2(fp, irs);
-		if (line == NULL)
-			break;
-		//bc += linelen; // available by API, but make a fair comparison
 		bc += strlen(line);
 		if (do_write) {
 			fputs(line, stdout);
@@ -412,13 +392,6 @@ int main(int argc, char** argv) {
 		e = get_systime();
 		t = e - s;
 		printf("type=getdelim,t=%.6lf,n=%d\n", t, bc);
-		fflush(stdout);
-
-		s = get_systime();
-		bc = read_file_mlr_getcdelim(filename, do_write);
-		e = get_systime();
-		t = e - s;
-		printf("type=mlr_getcdelim,t=%.6lf,n=%d\n", t, bc);
 		fflush(stdout);
 
 		s = get_systime();

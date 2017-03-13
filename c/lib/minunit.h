@@ -19,7 +19,8 @@
 	tests_run++; \
 	if (message) { \
 		tests_failed++; \
-		printf("Failure at %s, invoked from file %s line %d\n", message, __FILE__, __LINE__); \
+		printf("Failure at %s\n", message); \
+		printf("from file  %s line %d\n", __FILE__, __LINE__); \
 		return message; \
 	} \
 } while (0)

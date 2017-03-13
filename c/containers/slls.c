@@ -99,9 +99,10 @@ slls_t* slls_from_line(char* line, char ifs, int allow_repeat_ifs) {
 
 	char seps[2] = {ifs, 0};
 	char* sep = &seps[0];
+	int seplen = 1;
 	char* walker = line;
 	char* piece;
-	while ((piece = mlr_arch_strsep(&walker, sep)) != NULL) {
+	while ((piece = mlr_strmsep(&walker, sep, seplen)) != NULL) {
 		slls_append_no_free(plist, piece);
 	}
 
