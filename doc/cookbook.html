@@ -633,6 +633,36 @@ s	u:v:w
 </div>
 <p/>
 
+<p/> The simplest option is to use <a href="reference-verbs.html#nest"><tt>mlr nest</tt></a>:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --tsv nest --explode --values --across-records -f b --nested-fs : data/nested.tsv
+a	b
+x	z
+s	u
+s	v
+s	w
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --tsv nest --explode --values --across-fields  -f b --nested-fs : data/nested.tsv
+a	b_1
+x	z
+
+a	b_1	b_2	b_3
+s	u	v	w
+</pre>
+</div>
+<p/>
+
+<p/> While <tt>mlr nest</tt> is simplest, let&rsquo;s also take a look at a few ways to do this using the
+<tt>put</tt> DSL.
+
 <p/> One option to split out the colon-delimited values in the <tt>b</tt>
 column is to use <tt>splitnv</tt> to create an integer-indexed map and loop
 over it, adding new fields to the current record:
