@@ -28,76 +28,76 @@ static FILE* fopen_or_die(char* filename) {
 	return fp;
 }
 
-// ================================================================
-static int read_file_mlr_get_line(char* filename, int do_write) {
-	FILE* fp = fopen_or_die(filename);
-	int bc = 0;
-	while (1) {
-		char* line = mlr_get_cline(fp, '\n');
-		if (line == NULL)
-			break;
-		bc += strlen(line);
-		if (do_write) {
-			fputs(line, stdout);
-			fputc('\n', stdout);
-		}
-		free(line);
-	}
-	fclose(fp);
-	return bc;
-}
+//// ================================================================
+//static int read_file_mlr_get_line(char* filename, int do_write) {
+//	FILE* fp = fopen_or_die(filename);
+//	int bc = 0;
+//	while (1) {
+//		char* line = mlr_get_cline(fp, '\n');
+//		if (line == NULL)
+//			break;
+//		bc += strlen(line);
+//		if (do_write) {
+//			fputs(line, stdout);
+//			fputc('\n', stdout);
+//		}
+//		free(line);
+//	}
+//	fclose(fp);
+//	return bc;
+//}
 
-// ================================================================
-static int read_file_mlr_getsdelim(char* filename, int do_write) {
-	FILE* fp = fopen_or_die(filename);
-	char* irs = "\r\n";
-	int irslen = strlen(irs);
-	int bc = 0;
-	while (1) {
-		char* line = mlr_get_sline(fp, irs, irslen);
-		if (line == NULL)
-			break;
-		//bc += linelen; // available by API, but make a fair comparison
-		bc += strlen(line);
-		if (do_write) {
-			fputs(line, stdout);
-			fputc('\n', stdout);
-		}
-		free(line);
-	}
-	fclose(fp);
-	return bc;
-}
+//// ================================================================
+//static int read_file_mlr_getsdelim(char* filename, int do_write) {
+//	FILE* fp = fopen_or_die(filename);
+//	char* irs = "\r\n";
+//	int irslen = strlen(irs);
+//	int bc = 0;
+//	while (1) {
+//		char* line = mlr_get_sline(fp, irs, irslen);
+//		if (line == NULL)
+//			break;
+//		//bc += linelen; // available by API, but make a fair comparison
+//		bc += strlen(line);
+//		if (do_write) {
+//			fputs(line, stdout);
+//			fputc('\n', stdout);
+//		}
+//		free(line);
+//	}
+//	fclose(fp);
+//	return bc;
+//}
 
-// ================================================================
-static int popen_file_mlr_getsdelim(char* reader, char* filename, int do_write) {
-	char* command = mlr_malloc_or_die(strlen(reader) + 1 + strlen(filename) + 1);
-	strcpy(command, reader);
-	strcat(command, " ");
-	strcat(command, filename);
-	FILE* fp = popen(command, "r");
-	if (fp == NULL) {
-		perror("popen");
-		exit(1);
-	}
-	char* irs = "\r\n";
-	int irslen = strlen(irs);
-	int bc = 0;
-	while (1) {
-		char* line = mlr_get_sline(fp, irs, irslen);
-		if (line == NULL)
-			break;
-		//bc += linelen; // available by API, but make a fair comparison
-		bc += strlen(line);
-		if (do_write) {
-			fputs(line, stdout);
-			fputc('\n', stdout);
-		}
-		free(line);
-	}
-	pclose(fp);
-	return bc;
-}
+//// ================================================================
+//static int popen_file_mlr_getsdelim(char* reader, char* filename, int do_write) {
+//	char* command = mlr_malloc_or_die(strlen(reader) + 1 + strlen(filename) + 1);
+//	strcpy(command, reader);
+//	strcat(command, " ");
+//	strcat(command, filename);
+//	FILE* fp = popen(command, "r");
+//	if (fp == NULL) {
+//		perror("popen");
+//		exit(1);
+//	}
+//	char* irs = "\r\n";
+//	int irslen = strlen(irs);
+//	int bc = 0;
+//	while (1) {
+//		char* line = mlr_get_sline(fp, irs, irslen);
+//		if (line == NULL)
+//			break;
+//		//bc += linelen; // available by API, but make a fair comparison
+//		bc += strlen(line);
+//		if (do_write) {
+//			fputs(line, stdout);
+//			fputc('\n', stdout);
+//		}
+//		free(line);
+//	}
+//	pclose(fp);
+//	return bc;
+//}
 
 // ================================================================
 static char* read_line_fgetc(FILE* fp, char* irs) {
@@ -387,26 +387,26 @@ int main(int argc, char** argv) {
 
 	for (int i = 0; i < nreps; i++) {
 
-		s = get_systime();
-		bc = read_file_mlr_get_line(filename, do_write);
-		e = get_systime();
-		t = e - s;
-		printf("type=getdelim,t=%.6lf,n=%d\n", t, bc);
-		fflush(stdout);
+//		s = get_systime();
+//		bc = read_file_mlr_get_line(filename, do_write);
+//		e = get_systime();
+//		t = e - s;
+//		printf("type=getdelim,t=%.6lf,n=%d\n", t, bc);
+//		fflush(stdout);
 
-		s = get_systime();
-		bc = read_file_mlr_getsdelim(filename, do_write);
-		e = get_systime();
-		t = e - s;
-		printf("type=mlr_getsdelim,t=%.6lf,n=%d\n", t, bc);
-		fflush(stdout);
+//		s = get_systime();
+//		bc = read_file_mlr_getsdelim(filename, do_write);
+//		e = get_systime();
+//		t = e - s;
+//		printf("type=mlr_getsdelim,t=%.6lf,n=%d\n", t, bc);
+//		fflush(stdout);
 
-		s = get_systime();
-		bc = popen_file_mlr_getsdelim("zcat -cf < ", filename, do_write);
-		e = get_systime();
-		t = e - s;
-		printf("type=mlr_popen_getsdelim,t=%.6lf,n=%d\n", t, bc);
-		fflush(stdout);
+//		s = get_systime();
+//		bc = popen_file_mlr_getsdelim("zcat -cf < ", filename, do_write);
+//		e = get_systime();
+//		t = e - s;
+//		printf("type=mlr_popen_getsdelim,t=%.6lf,n=%d\n", t, bc);
+//		fflush(stdout);
 
 		s = get_systime();
 		bc = read_file_fgetc_fixed_len(filename, do_write);
