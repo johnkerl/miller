@@ -115,21 +115,12 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_line_
 {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
-	int line_length;
-	char* line = mlr_get_cline_with_length(input_stream, pstate->irs[0], &line_length);
+
+	char* line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
+		&pstate->line_length, TRUE, pctx);
 	if (line == NULL) {
 		return NULL;
 	} else {
-
-		// mlr_get_cline_with_length will have already chomped the trailing '\n',
-		// and it won't be included in the line length.
-		if (line_length > 0 && line[line_length-1] == '\r') {
-			line[line_length-1] = 0;
-			context_set_autodetected_crlf(pctx);
-		} else {
-			context_set_autodetected_lf(pctx);
-		}
-
 		return lrec_parse_stdio_dkvp_multi_sep(line, pstate->ifs, pstate->ips, pstate->ifslen, pstate->ipslen,
 			pstate->allow_repeat_ifs);
 	}
@@ -138,7 +129,8 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_line_
 static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
-	char* line = mlr_get_cline(input_stream, pstate->irs[0]);
+	char* line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
+		&pstate->line_length, FALSE, pctx);
 	if (line == NULL)
 		return NULL;
 	else
@@ -148,7 +140,8 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others(void* pvs
 static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
-	char* line = mlr_get_cline(input_stream, pstate->irs[0]);
+	char* line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
+		&pstate->line_length, FALSE, pctx);
 	if (line == NULL)
 		return NULL;
 	else
@@ -159,7 +152,8 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others(void* pvst
 static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
 	FILE* input_stream = pvhandle;
-	char* line = mlr_get_sline(input_stream, pstate->irs, pstate->irslen);
+	char* line = mlr_alloc_read_line_multiple_delimiter(input_stream, pstate->irs, pstate->irslen,
+		&pstate->line_length);
 	if (line == NULL)
 		return NULL;
 	else
@@ -169,7 +163,8 @@ static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_single_others(void* pvst
 static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
 	FILE* input_stream = pvhandle;
-	char* line = mlr_get_sline(input_stream, pstate->irs, pstate->irslen);
+	char* line = mlr_alloc_read_line_multiple_delimiter(input_stream, pstate->irs, pstate->irslen,
+		&pstate->line_length);
 	if (line == NULL)
 		return NULL;
 	else
