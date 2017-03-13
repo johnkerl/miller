@@ -97,6 +97,16 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
 	int line_length;
+
+// ----------------------------------------------------------------
+// xxx init pstate->line_length @ prev
+//char* line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
+//	&pstate->line_length, xxxnolinecap, TRUE, pctx);
+//	pnew_linecap,
+//	do_auto_line_term,
+//	pctx);
+// ----------------------------------------------------------------
+
 	char* line = mlr_get_cline_with_length(input_stream, pstate->irs[0], &line_length);
 	if (line == NULL) {
 		return NULL;

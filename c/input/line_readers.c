@@ -139,7 +139,6 @@ char* mlr_alloc_read_line_single_delimiter(
 	FILE*      fp,
 	int        delimiter,
 	size_t*    pold_then_new_strlen,
-	size_t*    pnew_linecap,
 	int        do_auto_line_term,
 	context_t* pctx)
 {
@@ -191,7 +190,6 @@ char* mlr_alloc_read_line_single_delimiter(
 		linelen = 0;
 	}
 	*pold_then_new_strlen = linelen;
-	*pnew_linecap = linecap;
 
 	return line;
 }
@@ -201,8 +199,7 @@ char* mlr_alloc_read_line_multiple_delimiter(
 	FILE*      fp,
 	char*      delimiter,
 	int        delimiter_length,
-	size_t*    pold_then_new_strlen,
-	size_t*    pnew_linecap)
+	size_t*    pold_then_new_strlen)
 {
 	size_t linecap = power_of_two_above(*pold_then_new_strlen);
 	char* line = mlr_malloc_or_die(linecap);
@@ -255,7 +252,6 @@ char* mlr_alloc_read_line_multiple_delimiter(
 		linelen = 0;
 	}
 	*pold_then_new_strlen = linelen;
-	*pnew_linecap = linecap;
 
 	return line;
 }

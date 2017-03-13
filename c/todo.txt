@@ -39,15 +39,9 @@ MSYS2 TO-DO
 ! msys2 / pacman -S / etc @ appveyor
 
 * getdelim replacement:
-  - avoid windows-compat problem by roll-my-own
-  - don't need getdelim's reuse case: always alloc
-  - reduce the number of functions in the callstack
-  - getdelim1 vs. getdelimn, all but identical. UT against one another in the n==1 case.
-  - always return len & linecap
-  - simplify reached-eof and already-at-eof semantics
-  - reuse linecap on subsequent calls. power of two above last readlen.
-  - work autodetect deeper into the callstack
-  - UTs
+  - comments @ header file
+  - push it into the stdio lrec readers
+  - rid of local_getdelim
 
 k get_unlocked / getc:
   k @ mlr_arch.h: ifdef MSYS2 define getc_unlocked(x) getc(x)
