@@ -14,17 +14,20 @@
 #include "input/lrec_readers.h"
 
 typedef struct _lrec_reader_stdio_nidx_state_t {
-	char* irs;
-	char* ifs;
-	int   irslen;
-	int   ifslen;
-	int   allow_repeat_ifs;
+	char*  irs;
+	char*  ifs;
+	int    irslen;
+	int    ifslen;
+	int    allow_repeat_ifs;
+	size_t line_length;
 } lrec_reader_stdio_nidx_state_t;
 
 static void    lrec_reader_stdio_nidx_free(lrec_reader_t* preader);
 static void    lrec_reader_stdio_nidx_sof(void* pvstate, void* pvhandle);
-static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs_auto_line_term(void* pvstate, void* pvhandle, context_t* pctx);
-static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs_auto_line_term(void* pvstate, void* pvhandle, context_t* pctx);
+static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs_auto_line_term(void* pvstate, void* pvhandle,
+	context_t* pctx);
+static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs_auto_line_term(void* pvstate, void* pvhandle,
+	context_t* pctx);
 static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_stdio_nidx_process_multi_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx);
@@ -40,6 +43,8 @@ lrec_reader_t* lrec_reader_stdio_nidx_alloc(char* irs, char* ifs, int allow_repe
 	pstate->irslen           = strlen(irs);
 	pstate->ifslen           = strlen(ifs);
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
+	// This is used to track nominal line length over the file read. Bootstrap with a default length.
+	pstate->line_length      = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_stdio_vopen;
@@ -82,21 +87,13 @@ static void lrec_reader_stdio_nidx_sof(void* pvstate, void* pvhandle) {
 static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs_auto_line_term(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_nidx_state_t* pstate = pvstate;
-	int line_length;
-	char* line = mlr_get_cline_with_length(input_stream, pstate->irs[0], &line_length);
+
+	char* line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
+		&pstate->line_length, TRUE, pctx);
+
 	if (line == NULL) {
 		return NULL;
 	} else {
-
-		// mlr_get_cline_with_length will have already chomped the trailing '\n',
-		// and it won't be included in the line length.
-		if (line_length > 0 && line[line_length-1] == '\r') {
-			line[line_length-1] = 0;
-			context_set_autodetected_crlf(pctx);
-		} else {
-			context_set_autodetected_lf(pctx);
-		}
-
 		return lrec_parse_stdio_nidx_single_sep(line, pstate->ifs[0], pstate->allow_repeat_ifs);
 	}
 }
@@ -104,21 +101,13 @@ static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs_auto_line_te
 static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs_auto_line_term(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_nidx_state_t* pstate = pvstate;
-	int line_length;
-	char* line = mlr_get_cline_with_length(input_stream, pstate->irs[0], &line_length);
+
+	char* line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
+		&pstate->line_length, TRUE, pctx);
+
 	if (line == NULL) {
 		return NULL;
 	} else {
-
-		// mlr_get_cline_with_length will have already chomped the trailing '\n',
-		// and it won't be included in the line length.
-		if (line_length > 0 && line[line_length-1] == '\r') {
-			line[line_length-1] = 0;
-			context_set_autodetected_crlf(pctx);
-		} else {
-			context_set_autodetected_lf(pctx);
-		}
-
 		return lrec_parse_stdio_nidx_multi_sep(line, pstate->ifs, pstate->ifslen, pstate->allow_repeat_ifs);
 	}
 }
@@ -126,7 +115,10 @@ static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs_auto_line_ter
 static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_nidx_state_t* pstate = pvstate;
-	char* line = mlr_get_cline(input_stream, pstate->irs[0]);
+
+	char* line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
+		&pstate->line_length, FALSE, pctx);
+
 	if (line == NULL)
 		return NULL;
 	else
@@ -136,7 +128,10 @@ static lrec_t* lrec_reader_stdio_nidx_process_single_irs_single_ifs(void* pvstat
 static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_nidx_state_t* pstate = pvstate;
-	char* line = mlr_get_cline(input_stream, pstate->irs[0]);
+
+	char* line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
+		&pstate->line_length, FALSE, pctx);
+
 	if (line == NULL)
 		return NULL;
 	else
@@ -146,7 +141,8 @@ static lrec_t* lrec_reader_stdio_nidx_process_single_irs_multi_ifs(void* pvstate
 static lrec_t* lrec_reader_stdio_nidx_process_multi_irs_single_ifs(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_stdio_nidx_state_t* pstate = pvstate;
 	FILE* input_stream = pvhandle;
-	char* line = mlr_get_sline(input_stream, pstate->irs, pstate->irslen);
+	char* line = mlr_alloc_read_line_multiple_delimiter(input_stream, pstate->irs, pstate->irslen,
+		&pstate->line_length);
 	if (line == NULL)
 		return NULL;
 	else
@@ -156,7 +152,8 @@ static lrec_t* lrec_reader_stdio_nidx_process_multi_irs_single_ifs(void* pvstate
 static lrec_t* lrec_reader_stdio_nidx_process_multi_irs_multi_ifs(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_stdio_nidx_state_t* pstate = pvstate;
 	FILE* input_stream = pvhandle;
-	char* line = mlr_get_sline(input_stream, pstate->irs, pstate->irslen);
+	char* line = mlr_alloc_read_line_multiple_delimiter(input_stream, pstate->irs, pstate->irslen,
+		&pstate->line_length);
 	if (line == NULL)
 		return NULL;
 	else
