@@ -619,7 +619,6 @@ static char* test_mlr_alloc_read_line_multiple_delimiter() {
 	printf("linelen=%d linecap=%d line=\"%s\"\n", (int)linelen, (int)linecap, line);
 	mu_assert_lf(line == NULL);
 
-#if 0
 	// Read past EOF
 	line = mlr_alloc_read_line_multiple_delimiter(fp, delimiter, delimiter_length, &linelen, &linecap);
 	mu_assert_lf(line == NULL);
@@ -628,7 +627,14 @@ static char* test_mlr_alloc_read_line_multiple_delimiter() {
 	unlink_file_or_die(path);
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	contents = "\n";
+	printf("\n");
+	printf("\n");
+	printf("\n");
+	printf("================================================================\n");
+	printf("\n");
+	printf("\n");
+	printf("\n");
+	contents = "xy\n";
 	path = write_temp_file_or_die(contents);
 	fp = fopen_or_die(path);
 	linelen = linecap = 4;
@@ -651,6 +657,7 @@ static char* test_mlr_alloc_read_line_multiple_delimiter() {
 	fclose(fp);
 	unlink_file_or_die(path);
 
+#if 0
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	contents = "\r\n";
 	path = write_temp_file_or_die(contents);
