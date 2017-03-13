@@ -15,13 +15,14 @@
 #include "input/lrec_readers.h"
 
 typedef struct _lrec_reader_stdio_xtab_state_t {
-	char* ifs;
-	char* ips;
-	int   ifslen;
-	int   ipslen;
-	int   allow_repeat_ips;
-	int   do_auto_line_term;
-	int   at_eof;
+	char*  ifs;
+	char*  ips;
+	int    ifslen;
+	int    ipslen;
+	int    allow_repeat_ips;
+	int    do_auto_line_term;
+	int    at_eof;
+	size_t line_length;
 } lrec_reader_stdio_xtab_state_t;
 
 static void    lrec_reader_stdio_xtab_free(lrec_reader_t* preader);
@@ -40,6 +41,8 @@ lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repe
 	pstate->allow_repeat_ips  = allow_repeat_ips;
 	pstate->do_auto_line_term = FALSE;
 	pstate->at_eof            = FALSE;
+	// This is used to track nominal line length over the file read. Bootstrap with a default length.
+	pstate->line_length       = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
 
 	if (streq(ifs, "auto")) {
 		pstate->do_auto_line_term = TRUE;
