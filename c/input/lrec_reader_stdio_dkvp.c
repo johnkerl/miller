@@ -16,14 +16,14 @@
 #include "input/lrec_readers.h"
 
 typedef struct _lrec_reader_stdio_dkvp_state_t {
-	char* irs;
-	char* ifs;
-	char* ips;
-	int   irslen;
-	int   ifslen;
-	int   ipslen;
-	int   allow_repeat_ifs;
-	int   line_length;
+	char*  irs;
+	char*  ifs;
+	char*  ips;
+	int    irslen;
+	int    ifslen;
+	int    ipslen;
+	int    allow_repeat_ifs;
+	size_t line_length;
 } lrec_reader_stdio_dkvp_state_t;
 
 static void    lrec_reader_stdio_dkvp_free(lrec_reader_t* preader);
@@ -53,6 +53,7 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char* ifs, char* ips, int
 	pstate->ifslen           = strlen(ifs);
 	pstate->ipslen           = strlen(ips);
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
+	// This is used to track nominal line length over the file read. Bootstrap with a default length.
 	pstate->line_length      = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
 
 	plrec_reader->pvstate       = (void*)pstate;
@@ -98,28 +99,13 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line
 {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
-	int line_length;
 
-// ----------------------------------------------------------------
-// xxx init pstate->line_length @ prev
-//char* line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
-//	&pstate->line_length, xxxnolinecap, TRUE, pctx);
-// ----------------------------------------------------------------
+	char* line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
+		&pstate->line_length, TRUE, pctx);
 
-	char* line = mlr_get_cline_with_length(input_stream, pstate->irs[0], &line_length);
 	if (line == NULL) {
 		return NULL;
 	} else {
-
-		// mlr_get_cline_with_length will have already chomped the trailing '\n',
-		// and it won't be included in the line length.
-		if (line_length > 0 && line[line_length-1] == '\r') {
-			line[line_length-1] = 0;
-			context_set_autodetected_crlf(pctx);
-		} else {
-			context_set_autodetected_lf(pctx);
-		}
-
 		return lrec_parse_stdio_dkvp_single_sep(line, pstate->ifs[0], pstate->ips[0], pstate->allow_repeat_ifs);
 	}
 }
