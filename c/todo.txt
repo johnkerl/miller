@@ -40,8 +40,9 @@ MSYS2 TO-DO
 
 * getdelim replacement:
   - comments @ header file
-  - push it into the stdio lrec readers
-  - rid of local_getdelim
+  k push it into the stdio lrec readers
+  k rid of local_getdelim
+  ! experimental/getlines !
 
 k get_unlocked / getc:
   k @ mlr_arch.h: ifdef MSYS2 define getc_unlocked(x) getc(x)
