@@ -20,15 +20,11 @@ BUGFIXES
 
 * start a draft-5.1.0-relnotes.md
   - incl. json-skip-arrays-on-input
-  - feaature-counting script
+  - feature-counting script
   - mlrfunc docsect w/ h2's
   - aux-entries
 
 * rh/fedora/centos
-
-* termcvt in-place; et al.
-
-* doc xtab.wtf corner-case bugfix
 
 ================================================================
 MSYS2

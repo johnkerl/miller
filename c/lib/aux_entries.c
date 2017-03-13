@@ -224,7 +224,7 @@ static void lf_to_cr(char* line,  ssize_t linelen, FILE* output_stream) {
 }
 
 // ----------------------------------------------------------------
-static int do_stream(FILE* input_stream, FILE* output_stream, char inend, line_cvt_func_t* pcvt_func) {
+static int termcvt_stream(FILE* input_stream, FILE* output_stream, char inend, line_cvt_func_t* pcvt_func) {
 	while (1) {
 		char* line = NULL;
 		size_t linecap = 0;
@@ -250,6 +250,7 @@ static void termcvt_usage(char* argv0, char* argv1, FILE* o, int exit_code) {
 	fprintf(o, "--crlf2lf\n");
 	fprintf(o, "--cr2lf\n");
 	fprintf(o, "--lf2cr\n");
+	fprintf(o, "-I in-place processing (default is to write to stdout)\n");
 	fprintf(o, "-h or --help: print this message\n");
 	fprintf(o, "Zero file names means read from standard input.\n");
 	fprintf(o, "Output is always to standard output; files are not written in-place.\n");
@@ -260,52 +261,100 @@ static void termcvt_usage(char* argv0, char* argv1, FILE* o, int exit_code) {
 static int termcvt_main(int argc, char** argv) {
 	int ok = 1;
 	char inend = '\n';
+	int do_in_place = FALSE;
 	line_cvt_func_t* pcvt_func = lf_to_crlf;
 
 	// argv[0] is 'mlr'
 	// argv[1] is 'termcvt'
 	// argv[2] is '--some-option'
 	// argv[3] and above are filenames
-	if (argc < 3)
+	if (argc < 2)
 		termcvt_usage(argv[0], argv[1], stderr, 1);
-	char* opt = argv[2];
-	if (streq(opt, "-h") || streq(opt, "--help")) {
-		termcvt_usage(argv[0], argv[1], stdout, 0);
-	} else if (!strcmp(opt, "--cr2crlf")) {
-		pcvt_func = cr_to_crlf;
-		inend = '\r';
-	} else if (!strcmp(opt, "--lf2crlf")) {
-		pcvt_func = lf_to_crlf;
-		inend = '\n';
-	} else if (!strcmp(opt, "--crlf2cr")) {
-		pcvt_func = crlf_to_cr;
-		inend = '\n';
-	} else if (!strcmp(opt, "--crlf2lf")) {
-		pcvt_func = crlf_to_lf;
-		inend = '\n';
-	} else if (!strcmp(opt, "--cr2lf")) {
-		pcvt_func = cr_to_lf;
-		inend = '\r';
-	} else if (!strcmp(opt, "--lf2cr")) {
-		pcvt_func = lf_to_cr;
-		inend = '\n';
-	} else {
-		termcvt_usage(argv[0], argv[1], stdout, 0);
+	int argi;
+	for (argi = 2; argi < argc; argi++) {
+		char* opt = argv[argi];
+
+		if (opt[0] != '-')
+			break;
+
+		if (streq(opt, "-h") || streq(opt, "--help")) {
+			termcvt_usage(argv[0], argv[1], stdout, 0);
+		} else if (streq(opt, "-I")) {
+			do_in_place = TRUE;
+		} else if (streq(opt, "--cr2crlf")) {
+			pcvt_func = cr_to_crlf;
+			inend = '\r';
+		} else if (streq(opt, "--lf2crlf")) {
+			pcvt_func = lf_to_crlf;
+			inend = '\n';
+		} else if (streq(opt, "--crlf2cr")) {
+			pcvt_func = crlf_to_cr;
+			inend = '\n';
+		} else if (streq(opt, "--crlf2lf")) {
+			pcvt_func = crlf_to_lf;
+			inend = '\n';
+		} else if (streq(opt, "--cr2lf")) {
+			pcvt_func = cr_to_lf;
+			inend = '\r';
+		} else if (streq(opt, "--lf2cr")) {
+			pcvt_func = lf_to_cr;
+			inend = '\n';
+		} else {
+			termcvt_usage(argv[0], argv[1], stdout, 0);
+		}
 	}
 
-	if (argc == 3) {
-		ok = ok && do_stream(stdin, stdout, inend, pcvt_func);
+	int nfiles = argc - argi;
+	if (nfiles == 0) {
+		ok = ok && termcvt_stream(stdin, stdout, inend, pcvt_func);
+
+	} else if (do_in_place) {
+		for (; argi < argc; argi++) {
+			char* file_name = argv[argi];
+			char* temp_name = alloc_suffixed_temp_file_name(file_name);
+			FILE* input_stream = fopen(file_name, "r");
+			FILE* output_stream = fopen(temp_name, "wb");
+
+			if (input_stream == NULL) {
+				perror("fopen");
+				fprintf(stderr, "%s: Could not open \"%s\" for read.\n",
+					MLR_GLOBALS.bargv0, file_name);
+				exit(1);
+			}
+			if (output_stream == NULL) {
+				perror("fopen");
+				fprintf(stderr, "%s: Could not open \"%s\" for write.\n",
+					MLR_GLOBALS.bargv0, temp_name);
+				exit(1);
+			}
+
+			ok = termcvt_stream(input_stream, output_stream, inend, pcvt_func);
+
+			fclose(input_stream);
+			fclose(output_stream);
+
+			int rc = rename(temp_name, file_name);
+			if (rc != 0) {
+				perror("rename");
+				fprintf(stderr, "%s: Could not rename \"%s\" to \"%s\".\n",
+					MLR_GLOBALS.bargv0, temp_name, file_name);
+				exit(1);
+			}
+			free(temp_name);
+		}
+
 	} else {
-		for (int argi = 3; argi < argc; argi++) {
+		for (; argi < argc; argi++) {
 			char* file_name = argv[argi];
 			FILE* input_stream = fopen(file_name, "r");
 			if (input_stream == NULL) {
 				perror(file_name);
 				exit(1);
 			}
-			ok = do_stream(input_stream, stdout, inend, pcvt_func);
+			ok = termcvt_stream(input_stream, stdout, inend, pcvt_func);
 			fclose(input_stream);
 		}
+
 	}
 	return ok ? 0 : 1;
 }
