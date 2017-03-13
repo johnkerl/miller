@@ -8,19 +8,10 @@
 // * The caller should free the return value.
 // * The line-terminator is not returned as part of the string.
 // * Null is returned at EOF.
-
-// xxx type up comments:
-// * in delimiter (single/multiple)
-// * in fp
-// * -in do_auto_line_term- separate variant
-// * -inout pctx- separate variant
-// * out line
-// * out reached eof
-// * inout strlen (old/new). DEFAULT_SIZE @ first call
-// * inout linecap (old/new) DEFAULT_SIZE @ first call
-//
-// reuse linecap on subsequent calls. power of two above last readlen.
-// work autodetect deeper into the callstack
+// * Simiar to getdelim but customized for Miller: in particular, support for autodetected line endings (LF/CRLF).
+//   Also, exists on Windows MSYS2 where there isn't a getdelim.
+// * Line-length reuses previous length for initial buffer-size allocation. Pass MLR_ALLOC_READ_LINE_INITIAL_SIZE
+//   on first call. On subsequent calls, buffer-size allocations will adapt to the file's line-lengths.
 
 #define MLR_ALLOC_READ_LINE_INITIAL_SIZE 128
 

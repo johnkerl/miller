@@ -38,18 +38,8 @@ MSYS2 TO-DO
 
 ! msys2 / pacman -S / etc @ appveyor
 
-* getdelim replacement:
-  - comments @ header file
-  k push it into the stdio lrec readers
-  k rid of local_getdelim
-  ! experimental/getlines !
-
-k get_unlocked / getc:
-  k @ mlr_arch.h: ifdef MSYS2 define getc_unlocked(x) getc(x)
-
-k mman/mmap ifdef out entirely with default --no-mmap.
-  k @ mlr_arch.h: ifdef MSYS2 undef ENABLE_MMAP
-  k @ callsites: ifdef ENABLE_MMAP
+! MLR_ON_MSYS2: needs autocreate from ./configure or some such
+! -lpcreposix at Makefile.am: needs autocreate from ./configure or some such
 
 * setenv w/o gmtime_r
   - @ mlr_arch.h: ifdef MSYS2 undef ENABLE_SETENV
@@ -60,9 +50,6 @@ k mman/mmap ifdef out entirely with default --no-mmap.
   - @ mlr_arch.h: proto for plat-indep abstraction layer
   - @ mlr_arch_unixish: as now
   - @ mlr_arch_msys2: do it that new way. or fatal until then ... or "unimpl" retval.
-
-* -lpcreposix
-  - found how to do this in ./configure, Makefile.am w/ ifdef, something ...
 
 * needs-DLL issue:
   - find out how to fix at ./configure / msys2 build
