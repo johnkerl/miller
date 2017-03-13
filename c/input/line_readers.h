@@ -39,6 +39,7 @@ ssize_t local_getdelim(char** restrict pline, size_t* restrict plinecap, int del
 // work autodetect deeper into the callstack
 
 #define MLR_ALLOC_READ_LINE_INITIAL_SIZE 128
+
 char* mlr_alloc_read_line_single_delimiter(
 	FILE*      fp,
 	int        delimiter,

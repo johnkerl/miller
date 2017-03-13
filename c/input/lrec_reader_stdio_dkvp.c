@@ -23,6 +23,7 @@ typedef struct _lrec_reader_stdio_dkvp_state_t {
 	int   ifslen;
 	int   ipslen;
 	int   allow_repeat_ifs;
+	int   line_length;
 } lrec_reader_stdio_dkvp_state_t;
 
 static void    lrec_reader_stdio_dkvp_free(lrec_reader_t* preader);
@@ -52,6 +53,7 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char* ifs, char* ips, int
 	pstate->ifslen           = strlen(ifs);
 	pstate->ipslen           = strlen(ips);
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
+	pstate->line_length      = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_stdio_vopen;
@@ -102,9 +104,6 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line
 // xxx init pstate->line_length @ prev
 //char* line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
 //	&pstate->line_length, xxxnolinecap, TRUE, pctx);
-//	pnew_linecap,
-//	do_auto_line_term,
-//	pctx);
 // ----------------------------------------------------------------
 
 	char* line = mlr_get_cline_with_length(input_stream, pstate->irs[0], &line_length);

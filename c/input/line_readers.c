@@ -142,7 +142,7 @@ char* mlr_alloc_read_line_single_delimiter(
 	int        do_auto_line_term,
 	context_t* pctx)
 {
-	size_t linecap = power_of_two_above(*pold_then_new_strlen);
+	size_t linecap = power_of_two_above(*pold_then_new_strlen + 1); // +1 for null-terminator
 	char* restrict line = mlr_malloc_or_die(linecap);
 	char* restrict p = line;
 	int reached_eof = FALSE;
@@ -201,7 +201,7 @@ char* mlr_alloc_read_line_multiple_delimiter(
 	int        delimiter_length,
 	size_t*    pold_then_new_strlen)
 {
-	size_t linecap = power_of_two_above(*pold_then_new_strlen);
+	size_t linecap = power_of_two_above(*pold_then_new_strlen + 1); // +1 for null-terminator
 	char* line = mlr_malloc_or_die(linecap);
 	char* p = line; // points to null-terminator in (chomped) output string
 	char* q = line; // points to end of line in (non-chomped) data read from file
