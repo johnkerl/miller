@@ -39,6 +39,7 @@ NON_DSL_SRCS = \
   cli/*.c \
   lib/*.c \
   containers/*.c \
+  aux/*.c \
   stream/*.c \
   input/*.c \
   dsl/*.c \
