@@ -5,6 +5,7 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
+#include "input/line_readers.h"
 
 // ----------------------------------------------------------------
 static int aux_list_main(int argc, char** argv);
@@ -225,15 +226,14 @@ static void lf_to_cr(char* line,  ssize_t linelen, FILE* output_stream) {
 
 // ----------------------------------------------------------------
 static int termcvt_stream(FILE* input_stream, FILE* output_stream, char inend, line_cvt_func_t* pcvt_func) {
+	size_t line_length = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
 	while (1) {
-		char* line = NULL;
-		size_t linecap = 0;
-		ssize_t linelen = mlr_arch_getdelim(&line, &linecap, inend, input_stream);
-		if (linelen <= 0) {
+		char* line = mlr_alloc_read_line_single_delimiter(input_stream, inend, &line_length, FALSE, NULL);
+		if (line == NULL) {
 			break;
 		}
 
-		pcvt_func(line, linelen, output_stream);
+		pcvt_func(line, line_length, output_stream);
 
 		free(line);
 	}

@@ -24,12 +24,3 @@ int mlr_arch_unsetenv(const char *name) {
 	return unsetenv(name);
 #endif
 }
-
-// ----------------------------------------------------------------
-ssize_t mlr_arch_getdelim(char** restrict pline, size_t* restrict plinecap, int delimiter, FILE* restrict stream) {
-#ifndef MLR_ON_MSYS2
-	return getdelim(pline, plinecap, delimiter, stream);
-#else
-	return local_getdelim(pline, plinecap, delimiter, stream);
-#endif
-}

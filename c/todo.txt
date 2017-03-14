@@ -8,10 +8,7 @@ BUGFIXES
 
 ! windows port
 
-! rguy ac error <-> smith aclocal-1.15?
-
-* mlrfunc docsection (automate):
-  - POKI_RUN_UNESCAPED
+! eddelbuettel ac error <-> smith aclocal-1.15?
 
 * --mmap / --no-mmap double-regression loop
   o also "." the setup funcs

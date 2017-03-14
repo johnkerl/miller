@@ -25,7 +25,4 @@
 int mlr_arch_setenv(const char *name, const char *value);
 int mlr_arch_unsetenv(const char *name);
 
-// ----------------------------------------------------------------
-ssize_t mlr_arch_getdelim(char** restrict pline, size_t* restrict plinecap, int delimiter, FILE* restrict stream);
-
 #endif // MLR_ARCH_H
