@@ -329,22 +329,36 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_TYPING, "is_present",     1,0, "True if field is present in input, false otherwise."},
 	{FUNC_CLASS_TYPING, "is_string",      1,0, "True if field is present with string (including empty-string) value"},
 
-	{FUNC_CLASS_TYPING, "asserting_absent",      1,0, "Returns argument if it is absent in the input data, else throws an error."},
-	{FUNC_CLASS_TYPING, "asserting_bool",        1,0, "Returns argument if it is present with boolean value, else throws an error."},
-	{FUNC_CLASS_TYPING, "asserting_boolean",     1,0, "Returns argument if it is present with boolean value, else throws an error."},
-	{FUNC_CLASS_TYPING, "asserting_empty",       1,0, "Returns argument if it is present in input with empty value, else throws an error."},
-	{FUNC_CLASS_TYPING, "asserting_empty_map",    1,0, "Returns argument if it is a map with empty value, else throws an error."},
-	{FUNC_CLASS_TYPING, "asserting_float",       1,0, "Returns argument if it is present with float value, else throws an error."},
-	{FUNC_CLASS_TYPING, "asserting_int",         1,0, "Returns argument if it is present with int value, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_absent",      1,0, "Returns argument if it is absent in the input data, else\n"
+		"throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_bool",        1,0, "Returns argument if it is present with boolean value, else\n"
+		"throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_boolean",     1,0, "Returns argument if it is present with boolean value, else\n"
+		"throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_empty",       1,0, "Returns argument if it is present in input with empty value,\n"
+		"else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_empty_map",    1,0, "Returns argument if it is a map with empty value, else\n"
+		"throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_float",       1,0, "Returns argument if it is present with float value, else\n"
+		"throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_int",         1,0, "Returns argument if it is present with int value, else\n"
+		"throws an error."},
 	{FUNC_CLASS_TYPING, "asserting_map",         1,0, "Returns argument if it is a map, else throws an error."},
-	{FUNC_CLASS_TYPING, "asserting_nonempty_map", 1,0, "Returns argument if it is a non-empty map, else throws an error."},
-	{FUNC_CLASS_TYPING, "asserting_not_empty",    1,0, "Returns argument if it is present in input with non-empty value, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_nonempty_map", 1,0, "Returns argument if it is a non-empty map, else throws\n"
+		"an error."},
+	{FUNC_CLASS_TYPING, "asserting_not_empty",    1,0, "Returns argument if it is present in input with non-empty\n"
+		"value, else throws an error."},
 	{FUNC_CLASS_TYPING, "asserting_not_map",      1,0, "Returns argument if it is not a map, else throws an error."},
-	{FUNC_CLASS_TYPING, "asserting_not_null",     1,0, "Returns argument if it is non-null (non-empty and non-absent), else throws an error."},
-	{FUNC_CLASS_TYPING, "asserting_null",        1,0, "Returns argument if it is null (empty or absent), else throws an error."},
-	{FUNC_CLASS_TYPING, "asserting_numeric",     1,0, "Returns argument if it is present with int or float value, else throws an error."},
-	{FUNC_CLASS_TYPING, "asserting_present",     1,0, "Returns argument if it is present in input, else throws an error."},
-	{FUNC_CLASS_TYPING, "asserting_string",      1,0, "Returns argument if it is present with string (including empty-string) value, else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_not_null",     1,0, "Returns argument if it is non-null (non-empty and non-absent),\n"
+		"else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_null",        1,0, "Returns argument if it is null (empty or absent), else throws\n"
+		"an error."},
+	{FUNC_CLASS_TYPING, "asserting_numeric",     1,0, "Returns argument if it is present with int or float value,\n"
+		"else throws an error."},
+	{FUNC_CLASS_TYPING, "asserting_present",     1,0, "Returns argument if it is present in input, else throws\n"
+		"an error."},
+	{FUNC_CLASS_TYPING, "asserting_string",      1,0, "Returns argument if it is present with string (including\n"
+		"empty-string) value, else throws an error."},
 
 	{FUNC_CLASS_CONVERSION, "boolean",     1,0, "Convert int/float/bool/string to boolean."},
 	{FUNC_CLASS_CONVERSION, "float",       1,0, "Convert int/float/bool/string to float."},
@@ -359,18 +373,27 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"MT_STRING). For debug."},
 
 	{FUNC_CLASS_MAPS, "depth",         1,0, "Prints maximum depth of hashmap: ''. Scalars have depth 0."},
-	{FUNC_CLASS_MAPS, "haskey",        2,0, "True/false if map has/hasn't key, e.g. 'haskey($*, \"a\")' or 'haskey(mymap, mykey)'. Error if 1st argument is not a map."},
+	{FUNC_CLASS_MAPS, "haskey",        2,0, "True/false if map has/hasn't key, e.g. 'haskey($*, \"a\")' or\n"
+		"'haskey(mymap, mykey)'. Error if 1st argument is not a map."},
 	{FUNC_CLASS_MAPS, "joink",         2,0, "Makes string from map keys. E.g. 'joink($*, \",\")'."},
 	{FUNC_CLASS_MAPS, "joinkv",        3,0, "Makes string from map key-value pairs. E.g. 'joinkv(@v[2], \"=\", \",\")'"},
 	{FUNC_CLASS_MAPS, "joinv",         2,0, "Makes string from map keys. E.g. 'joinv(mymap, \",\")'."},
-	{FUNC_CLASS_MAPS, "leafcount",     1,0, "Counts total number of terminal values in hashmap. For single-level maps, same as length."},
+	{FUNC_CLASS_MAPS, "leafcount",     1,0, "Counts total number of terminal values in hashmap. For single-level maps,\n"
+		"same as length."},
 	{FUNC_CLASS_MAPS, "length",        1,0, "Counts number of top-level entries in hashmap. Scalars have length 1."},
-	{FUNC_CLASS_MAPS, "mapdiff",       0,1, "With 0 args, returns empty map. With 1 arg, returns copy of arg. With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed."},
-	{FUNC_CLASS_MAPS, "mapsum",        0,1, "With 0 args, returns empty map. With >= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'."},
-	{FUNC_CLASS_MAPS, "splitkv",       3,0, "Splits string by separators into map with type inference. E.g. 'splitkv(\"a=1,b=2,c=3\", \"=\", \",\")' gives '{\"a\" : 1, \"b\" : 2, \"c\" : 3}'."},
-	{FUNC_CLASS_MAPS, "splitkvx",      3,0, "Splits string by separators into map without type inference (keys and values are strings). E.g. 'splitkv(\"a=1,b=2,c=3\", \"=\", \",\")' gives '{\"a\" : \"1\", \"b\" : \"2\", \"c\" : \"3\"}'."},
-	{FUNC_CLASS_MAPS, "splitnv",       2,0, "Splits string by separator into integer-indexed map with type inference. E.g. 'splitnv(\"a,b,c\" , \",\")' gives '{1 : \"a\", 2 : \"b\", 3 : \"c\"}'."},
-	{FUNC_CLASS_MAPS, "splitnvx",      2,0, "Splits string by separator into integer-indexed map without type inference (values are strings). E.g. 'splitnv(\"4,5,6\" , \",\")' gives '{1 : \"4\", 2 : \"5\", 3 : \"6\"}'."},
+	{FUNC_CLASS_MAPS, "mapdiff",       0,1, "With 0 args, returns empty map. With 1 arg, returns copy of arg.\n"
+		"With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed."},
+	{FUNC_CLASS_MAPS, "mapsum",        0,1, "With 0 args, returns empty map. With >= 1 arg, returns a map with\n"
+		"key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'."},
+	{FUNC_CLASS_MAPS, "splitkv",       3,0, "Splits string by separators into map with type inference.\n"
+		"E.g. 'splitkv(\"a=1,b=2,c=3\", \"=\", \",\")' gives '{\"a\" : 1, \"b\" : 2, \"c\" : 3}'."},
+	{FUNC_CLASS_MAPS, "splitkvx",      3,0, "Splits string by separators into map without type inference (keys and\n"
+		"values are strings). E.g. 'splitkv(\"a=1,b=2,c=3\", \"=\", \",\")' gives\n"
+			"'{\"a\" : \"1\", \"b\" : \"2\", \"c\" : \"3\"}'."},
+	{FUNC_CLASS_MAPS, "splitnv",       2,0, "Splits string by separator into integer-indexed map with type inference.\n"
+		"E.g. 'splitnv(\"a,b,c\" , \",\")' gives '{1 : \"a\", 2 : \"b\", 3 : \"c\"}'."},
+	{FUNC_CLASS_MAPS, "splitnvx",      2,0, "Splits string by separator into integer-indexed map without type\n"
+		"inference (values are strings). E.g. 'splitnv(\"4,5,6\" , \",\")' gives '{1 : \"4\", 2 : \"5\", 3 : \"6\"}'."},
 
 	{0, NULL, -1 , -1, NULL}, // table terminator
 };

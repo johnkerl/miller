@@ -15,13 +15,14 @@
 #include "input/lrec_readers.h"
 
 typedef struct _lrec_reader_stdio_xtab_state_t {
-	char* ifs;
-	char* ips;
-	int   ifslen;
-	int   ipslen;
-	int   allow_repeat_ips;
-	int   do_auto_line_term;
-	int   at_eof;
+	char*  ifs;
+	char*  ips;
+	int    ifslen;
+	int    ipslen;
+	int    allow_repeat_ips;
+	int    do_auto_line_term;
+	int    at_eof;
+	size_t line_length;
 } lrec_reader_stdio_xtab_state_t;
 
 static void    lrec_reader_stdio_xtab_free(lrec_reader_t* preader);
@@ -40,6 +41,8 @@ lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repe
 	pstate->allow_repeat_ips  = allow_repeat_ips;
 	pstate->do_auto_line_term = FALSE;
 	pstate->at_eof            = FALSE;
+	// This is used to track nominal line length over the file read. Bootstrap with a default length.
+	pstate->line_length       = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
 
 	if (streq(ifs, "auto")) {
 		pstate->do_auto_line_term = TRUE;
@@ -78,10 +81,12 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 	slls_t* pxtab_lines = slls_alloc();
 
 	while (TRUE) {
-		int line_length = 0;
 		char* line = (pstate->ifslen == 1)
-			? mlr_get_cline_with_length(input_stream, pstate->ifs[0], &line_length)
-			: mlr_get_sline(input_stream, pstate->ifs, pstate->ifslen);
+			? mlr_alloc_read_line_single_delimiter(input_stream, pstate->ifs[0],
+				&pstate->line_length, pstate->do_auto_line_term, pctx)
+			: mlr_alloc_read_line_multiple_delimiter(input_stream, pstate->ifs, pstate->ifslen,
+				&pstate->line_length);
+
 		if (line == NULL) { // EOF
 			// EOF or blank line terminates the stanza.
 			pstate->at_eof = TRUE;
@@ -97,17 +102,6 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 
 		} else if (*line == '\0') {
 			free(line);
-			context_set_autodetected_lf(pctx);
-			if (pxtab_lines->length > 0) {
-				return (pstate->ipslen == 1)
-					? lrec_parse_stdio_xtab_single_ips(pxtab_lines, pstate->ips[0], pstate->allow_repeat_ips)
-					: lrec_parse_stdio_xtab_multi_ips(pxtab_lines, pstate->ips, pstate->ipslen,
-						pstate->allow_repeat_ips);
-			}
-
-		} else if (line[0] == '\r' && line[1] == '\0') {
-			free(line);
-			context_set_autodetected_crlf(pctx);
 			if (pxtab_lines->length > 0) {
 				return (pstate->ipslen == 1)
 					? lrec_parse_stdio_xtab_single_ips(pxtab_lines, pstate->ips[0], pstate->allow_repeat_ips)
@@ -116,16 +110,6 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 			}
 
 		} else {
-			if (pstate->do_auto_line_term) {
-				// mlr_get_cline_with_length will have already chomped the trailing '\n',
-				// and it won't be included in the line length.
-				if (line_length > 0 && line[line_length-1] == '\r') {
-					line[line_length-1] = 0;
-					context_set_autodetected_crlf(pctx);
-				} else {
-					context_set_autodetected_lf(pctx);
-				}
-			}
 			slls_append_with_free(pxtab_lines, line);
 		}
 	}

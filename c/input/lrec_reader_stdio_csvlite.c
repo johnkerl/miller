@@ -48,13 +48,14 @@
 typedef struct _lrec_reader_stdio_csvlite_state_t {
 	long long  ifnr;
 	long long  ilno; // Line-level, not record-level as in context_t
-	char* irs;
-	char* ifs;
-	int   irslen;
-	int   ifslen;
-	int   allow_repeat_ifs;
-	int   do_auto_line_term;
-	int   use_implicit_header;
+	char*  irs;
+	char*  ifs;
+	int    irslen;
+	int    ifslen;
+	int    allow_repeat_ifs;
+	int    do_auto_line_term;
+	int    use_implicit_header;
+	size_t line_length;
 
 	int  expect_header_line_next;
 	header_keeper_t* pheader_keeper;
@@ -76,8 +77,11 @@ lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_r
 	pstate->irslen                  = strlen(irs);
 	pstate->ifslen                  = strlen(ifs);
 	pstate->allow_repeat_ifs        = allow_repeat_ifs;
-	pstate->do_auto_line_term             = FALSE;
+	pstate->do_auto_line_term       = FALSE;
 	pstate->use_implicit_header     = use_implicit_header;
+	// This is used to track nominal line length over the file read. Bootstrap with a default length.
+	pstate->line_length             = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
+
 	pstate->expect_header_line_next = use_implicit_header  ? FALSE : TRUE;
 	pstate->pheader_keeper          = NULL;
 	pstate->pheader_keepers         = lhmslv_alloc();
@@ -125,28 +129,19 @@ static void lrec_reader_stdio_sof(void* pvstate, void* pvhandle) {
 static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_csvlite_state_t* pstate = pvstate;
-	int line_length = 0;
 
 	while (TRUE) {
 		if (pstate->expect_header_line_next) {
 			while (TRUE) {
 				char* hline = (pstate->irslen == 1)
-					? mlr_get_cline_with_length(input_stream, pstate->irs[0], &line_length)
-					: mlr_get_sline(input_stream, pstate->irs, pstate->irslen);
+					? mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
+						&pstate->line_length, pstate->do_auto_line_term, pctx)
+					: mlr_alloc_read_line_multiple_delimiter(input_stream, pstate->irs, pstate->irslen,
+						&pstate->line_length);
+
 				if (hline == NULL) // EOF
 					return NULL;
 				pstate->ilno++;
-
-				// mlr_get_cline_with_length will have already chomped the trailing '\n',
-				// and it won't be included in the line length.
-				if (pstate->do_auto_line_term) {
-					if (line_length > 0 && hline[line_length-1] == '\r') {
-						hline[line_length-1] = 0;
-						context_set_autodetected_crlf(pctx);
-					} else {
-						context_set_autodetected_lf(pctx);
-					}
-				}
 
 				slls_t* pheader_fields = (pstate->ifslen == 1)
 					? split_csvlite_header_line_single_ifs(hline, pstate->ifs[0], pstate->allow_repeat_ifs)
@@ -182,22 +177,14 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 		}
 
 		char* line = (pstate->irslen == 1)
-			? mlr_get_cline_with_length(input_stream, pstate->irs[0], &line_length)
-			: mlr_get_sline(input_stream, pstate->irs, pstate->irslen);
+			? mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
+				&pstate->line_length, pstate->do_auto_line_term, pctx)
+			: mlr_alloc_read_line_multiple_delimiter(input_stream, pstate->irs, pstate->irslen,
+				&pstate->line_length);
+
 		if (line == NULL) // EOF
 			return NULL;
 		pstate->ilno++;
-
-		// mlr_get_cline_with_length will have already chomped the trailing '\n',
-		// and it won't be included in the line length.
-		if (pstate->do_auto_line_term) {
-			if (line_length > 0 && line[line_length-1] == '\r') {
-				line[line_length-1] = 0;
-				context_set_autodetected_crlf(pctx);
-			} else {
-				context_set_autodetected_lf(pctx);
-			}
-		}
 
 		if (!*line) {
 			if (pstate->pheader_keeper != NULL) {
@@ -213,15 +200,15 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 					? lrec_parse_stdio_csvlite_data_line_single_ifs_implicit_header(
 						pstate->pheader_keeper, pctx->filename, pstate->ilno, line,
 						pstate->ifs[0], pstate->allow_repeat_ifs)
-					:  lrec_parse_stdio_csvlite_data_line_single_ifs(pstate->pheader_keeper, pctx->filename, pstate->ilno, line,
-						pstate->ifs[0], pstate->allow_repeat_ifs);
+					: lrec_parse_stdio_csvlite_data_line_single_ifs(pstate->pheader_keeper, pctx->filename,
+						pstate->ilno, line, pstate->ifs[0], pstate->allow_repeat_ifs);
 			} else {
 				return pstate->use_implicit_header
 					? lrec_parse_stdio_csvlite_data_line_multi_ifs_implicit_header(
 						pstate->pheader_keeper, pctx->filename, pstate->ilno, line,
 						pstate->ifs, pstate->ifslen, pstate->allow_repeat_ifs)
-					: lrec_parse_stdio_csvlite_data_line_multi_ifs(pstate->pheader_keeper, pctx->filename, pstate->ilno, line,
-						pstate->ifs, pstate->ifslen, pstate->allow_repeat_ifs);
+					: lrec_parse_stdio_csvlite_data_line_multi_ifs(pstate->pheader_keeper, pctx->filename,
+						pstate->ilno, line, pstate->ifs, pstate->ifslen, pstate->allow_repeat_ifs);
 			}
 		}
 	}

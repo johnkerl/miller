@@ -29,11 +29,13 @@ static FILE* fopen_or_die(char* filename) {
 }
 
 // ================================================================
-static int read_file_mlr_get_line(char* filename, int do_write) {
+static int read_file_mlr_alloc_read_line_single_delimiter_no_autodetect(char* filename, int do_write) {
 	FILE* fp = fopen_or_die(filename);
 	int bc = 0;
+	size_t line_length = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
 	while (1) {
-		char* line = mlr_get_cline(fp, '\n');
+		char* line = mlr_alloc_read_line_single_delimiter(
+			fp, '\n', &line_length, FALSE, NULL);
 		if (line == NULL)
 			break;
 		bc += strlen(line);
@@ -48,16 +50,18 @@ static int read_file_mlr_get_line(char* filename, int do_write) {
 }
 
 // ================================================================
-static int read_file_mlr_getsdelim(char* filename, int do_write) {
+static int read_file_mlr_alloc_read_line_single_delimiter_with_autodetect(char* filename, int do_write) {
 	FILE* fp = fopen_or_die(filename);
-	char* irs = "\r\n";
-	int irslen = strlen(irs);
 	int bc = 0;
+	size_t line_length = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
+	context_t ctx;
+	context_init_from_first_file_name(&ctx, "fake-file-name");
+
 	while (1) {
-		char* line = mlr_get_sline(fp, irs, irslen);
+		char* line = mlr_alloc_read_line_single_delimiter(
+			fp, '\n', &line_length, TRUE, &ctx);
 		if (line == NULL)
 			break;
-		//bc += linelen; // available by API, but make a fair comparison
 		bc += strlen(line);
 		if (do_write) {
 			fputs(line, stdout);
@@ -70,24 +74,15 @@ static int read_file_mlr_getsdelim(char* filename, int do_write) {
 }
 
 // ================================================================
-static int popen_file_mlr_getsdelim(char* reader, char* filename, int do_write) {
-	char* command = mlr_malloc_or_die(strlen(reader) + 1 + strlen(filename) + 1);
-	strcpy(command, reader);
-	strcat(command, " ");
-	strcat(command, filename);
-	FILE* fp = popen(command, "r");
-	if (fp == NULL) {
-		perror("popen");
-		exit(1);
-	}
-	char* irs = "\r\n";
-	int irslen = strlen(irs);
+static int read_file_mlr_alloc_read_line_multiple_delimiter(char* filename, int do_write) {
+	FILE* fp = fopen_or_die(filename);
 	int bc = 0;
+	size_t line_length = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
+
 	while (1) {
-		char* line = mlr_get_sline(fp, irs, irslen);
+		char* line = mlr_alloc_read_line_multiple_delimiter(fp, "\n", 1, &line_length);
 		if (line == NULL)
 			break;
-		//bc += linelen; // available by API, but make a fair comparison
 		bc += strlen(line);
 		if (do_write) {
 			fputs(line, stdout);
@@ -95,7 +90,7 @@ static int popen_file_mlr_getsdelim(char* reader, char* filename, int do_write) 
 		}
 		free(line);
 	}
-	pclose(fp);
+	fclose(fp);
 	return bc;
 }
 
@@ -388,24 +383,24 @@ int main(int argc, char** argv) {
 	for (int i = 0; i < nreps; i++) {
 
 		s = get_systime();
-		bc = read_file_mlr_get_line(filename, do_write);
+		bc = read_file_mlr_alloc_read_line_single_delimiter_no_autodetect(filename, do_write);
 		e = get_systime();
 		t = e - s;
-		printf("type=getdelim,t=%.6lf,n=%d\n", t, bc);
+		printf("type=single_delim_no_auto,t=%.6lf,n=%d\n", t, bc);
 		fflush(stdout);
 
 		s = get_systime();
-		bc = read_file_mlr_getsdelim(filename, do_write);
+		bc = read_file_mlr_alloc_read_line_single_delimiter_with_autodetect(filename, do_write);
 		e = get_systime();
 		t = e - s;
-		printf("type=mlr_getsdelim,t=%.6lf,n=%d\n", t, bc);
+		printf("type=single_delim_with_auto,t=%.6lf,n=%d\n", t, bc);
 		fflush(stdout);
 
 		s = get_systime();
-		bc = popen_file_mlr_getsdelim("zcat -cf < ", filename, do_write);
+		bc = read_file_mlr_alloc_read_line_multiple_delimiter(filename, do_write);
 		e = get_systime();
 		t = e - s;
-		printf("type=mlr_popen_getsdelim,t=%.6lf,n=%d\n", t, bc);
+		printf("type=multiple_delim,t=%.6lf,n=%d\n", t, bc);
 		fflush(stdout);
 
 		s = get_systime();

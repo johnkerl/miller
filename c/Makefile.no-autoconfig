@@ -354,6 +354,7 @@ EXPERIMENTAL_READER_SRCS = \
   lib/mlrdatetime.c \
   lib/mlr_arch.c \
   lib/mtrand.c \
+  lib/context.c \
   lib/mlrescape.c \
   lib/mlrregex.c \
   lib/mlr_globals.c \

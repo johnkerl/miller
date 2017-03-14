@@ -20,15 +20,11 @@ BUGFIXES
 
 * start a draft-5.1.0-relnotes.md
   - incl. json-skip-arrays-on-input
-  - feaature-counting script
+  - feature-counting script
   - mlrfunc docsect w/ h2's
   - aux-entries
 
 * rh/fedora/centos
-
-* termcvt in-place; et al.
-
-* doc xtab.wtf corner-case bugfix
 
 ================================================================
 MSYS2
@@ -38,23 +34,8 @@ MSYS2 TO-DO
 
 ! msys2 / pacman -S / etc @ appveyor
 
-* getdelim replacement:
-  - avoid windows-compat problem by roll-my-own
-  - don't need getdelim's reuse case: always alloc
-  - reduce the number of functions in the callstack
-  - getdelim1 vs. getdelimn, all but identical. UT against one another in the n==1 case.
-  - always return len & linecap
-  - simplify reached-eof and already-at-eof semantics
-  - reuse linecap on subsequent calls. power of two above last readlen.
-  - work autodetect deeper into the callstack
-  - UTs
-
-k get_unlocked / getc:
-  k @ mlr_arch.h: ifdef MSYS2 define getc_unlocked(x) getc(x)
-
-k mman/mmap ifdef out entirely with default --no-mmap.
-  k @ mlr_arch.h: ifdef MSYS2 undef ENABLE_MMAP
-  k @ callsites: ifdef ENABLE_MMAP
+! MLR_ON_MSYS2: needs autocreate from ./configure or some such
+! -lpcreposix at Makefile.am: needs autocreate from ./configure or some such
 
 * setenv w/o gmtime_r
   - @ mlr_arch.h: ifdef MSYS2 undef ENABLE_SETENV
@@ -65,9 +46,6 @@ k mman/mmap ifdef out entirely with default --no-mmap.
   - @ mlr_arch.h: proto for plat-indep abstraction layer
   - @ mlr_arch_unixish: as now
   - @ mlr_arch_msys2: do it that new way. or fatal until then ... or "unimpl" retval.
-
-* -lpcreposix
-  - found how to do this in ./configure, Makefile.am w/ ifdef, something ...
 
 * needs-DLL issue:
   - find out how to fix at ./configure / msys2 build

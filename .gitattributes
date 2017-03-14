@@ -10,6 +10,8 @@ out binary
 
 *.c text eol=lf
 *.h text eol=lf
+*.sh text eol=lf
+*.rb text eol=lf
 
 *.csv text eol=lf
 *.dat text eol=lf
