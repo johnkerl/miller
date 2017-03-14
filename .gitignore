@@ -4,6 +4,7 @@ mlrg
 mlrp
 test-argparse
 test-byte-readers
+test-line-readers
 test-dsl-stack
 test-join-bucket-keeper
 test-json-parser
@@ -19,6 +20,7 @@ test-string-builder
 test_rval_evaluators
 test_argparse
 test_byte_readers
+test_line_readers
 test_join_bucket_keeper
 test_json_parser
 test_lrec

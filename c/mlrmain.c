@@ -3,11 +3,11 @@
 #include <string.h>
 
 #include "lib/mlrutil.h"
-#include "lib/aux_entries.h"
 #include "lib/mlr_globals.h"
 #include "cli/mlrcli.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
+#include "aux/aux_entries.h"
 #include "input/lrec_readers.h"
 #include "mapping/mappers.h"
 #include "output/lrec_writers.h"
