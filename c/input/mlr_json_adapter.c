@@ -157,6 +157,7 @@ static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object
 	}
 }
 
+#if 0
 // xxx retval
 /*xxx temp static*/
 void populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, char* prefix, char* flatten_sep,
@@ -209,3 +210,4 @@ void populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, char* p
 
 	}
 }
+#endif

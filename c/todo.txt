@@ -1,12 +1,19 @@
 ================================================================
 BUGFIXES
 
-:D
+* bad free:
+  echo a=1,b=2,c=3 | mlr merge-fields -r '.*' -a mode -o foo
+  but this is ok (wtf):
+  echo a=1,b=2,c=3 | mlr merge-fields -a mode -r '.*' -o foo
 
 ================================================================
 5.0.0 POST-RELEASE TO DO:
 
 ! windows port
+
+! json array foo
+
+! antimode
 
 * eddelbuettel ac error <-> smith aclocal-1.15?
 
