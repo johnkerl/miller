@@ -1,16 +1,18 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
+#include "cli/json_array_ingest.h"
 #include "input/mlr_json_adapter.h"
 
-static lrec_t* validate_millerable_object(json_value_t* pjson_object, char* flatten_sep, int json_skip_arrays_on_input);
+static lrec_t* validate_millerable_object(json_value_t* pjson_object, char* flatten_sep,
+	json_array_ingest_t json_array_ingest);
 static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object, char* prefix, char* flatten_sep,
-	int json_skip_arrays_on_input);
+	json_array_ingest_t json_array_ingest);
 //static void populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, char* prefix, char* flatten_sep,
-	//int json_skip_arrays_on_input);
+	//json_array_ingest_t json_array_ingest);
 
 // ----------------------------------------------------------------
 int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_json, char* flatten_sep,
-	int json_skip_arrays_on_input)
+	json_array_ingest_t json_array_ingest)
 {
 	if (ptop_level_json->type == JSON_ARRAY) {
 		int n = ptop_level_json->u.array.length;
@@ -22,13 +24,13 @@ int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_j
 					MLR_GLOBALS.bargv0, json_describe_type(ptop_level_json->type));
 				return FALSE;
 			}
-			lrec_t* prec = validate_millerable_object(pnext_level_json, flatten_sep, json_skip_arrays_on_input);
+			lrec_t* prec = validate_millerable_object(pnext_level_json, flatten_sep, json_array_ingest);
 			if (prec == NULL)
 				return FALSE;
 			sllv_append(precords, prec);
 		}
 	} else if (ptop_level_json->type == JSON_OBJECT) {
-		lrec_t* prec = validate_millerable_object(ptop_level_json, flatten_sep, json_skip_arrays_on_input);
+		lrec_t* prec = validate_millerable_object(ptop_level_json, flatten_sep, json_array_ingest);
 		if (prec == NULL)
 			return FALSE;
 		sllv_append(precords, prec);
@@ -47,7 +49,7 @@ int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_j
 //
 // Precondition: the JSON value is assumed to have already been checked to be of type JSON_OBJECT.
 
-lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep, int json_skip_arrays_on_input) {
+lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep, json_array_ingest_t json_array_ingest) {
 	lrec_t* prec = lrec_unbacked_alloc();
 	int n = pjson->u.array.length;
 	for (int i = 0; i < n; i++) {
@@ -68,11 +70,11 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep, int j
 		case JSON_OBJECT:
 			// This could be made more efficient ... the string length is in the json_value_t.
 			prefix = mlr_paste_2_strings(key, flatten_sep);
-			populate_from_nested_object(prec, pjson_value, prefix, flatten_sep, json_skip_arrays_on_input);
+			populate_from_nested_object(prec, pjson_value, prefix, flatten_sep, json_array_ingest);
 			free(prefix);
 			break;
 		case JSON_ARRAY:
-			if (!json_skip_arrays_on_input) {
+			if (json_array_ingest == JSON_ARRAY_INGEST_FATAL) {
 				fprintf(stderr,
 					"%s: found array item within JSON object. This is valid but unmillerable JSON.\n"
 					"Use --json-skip-arrays-on-input to exclude these from input without fataling.\n",
@@ -80,7 +82,7 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep, int j
 				return NULL;
 			}
 			//prefix = mlr_paste_2_strings(key, flatten_sep);
-			//populate_from_nested_array(prec, pjson_value, prefix, flatten_sep, json_skip_arrays_on_input);
+			//populate_from_nested_array(prec, pjson_value, prefix, flatten_sep, json_array_ingest);
 			break;
 
 		case JSON_STRING:
@@ -111,7 +113,7 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep, int j
 
 // xxx retval
 static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object, char* prefix, char* flatten_sep,
-	int json_skip_arrays_on_input)
+	json_array_ingest_t json_array_ingest)
 {
 	int n = pjson_object->u.object.length;
 	for (int i = 0; i < n; i++) {
@@ -136,12 +138,12 @@ static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object
 			break;
 		case JSON_OBJECT:
 			prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
-			populate_from_nested_object(prec, pjson_value, prefix, flatten_sep, json_skip_arrays_on_input);
+			populate_from_nested_object(prec, pjson_value, prefix, flatten_sep, json_array_ingest);
 			free(prefix);
 			free(lrec_key);
 			break;
 		case JSON_ARRAY:
-			if (!json_skip_arrays_on_input) {
+			if (json_array_ingest == JSON_ARRAY_INGEST_FATAL) {
 				fprintf(stderr,
 					"%s: found array item within JSON object. This is valid but unmillerable JSON.\n",
 					MLR_GLOBALS.bargv0);
@@ -164,7 +166,7 @@ static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object
 // xxx retval
 /* xxx temp static */
 void populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, char* prefix, char* flatten_sep,
-	int json_skip_arrays_on_input)
+	json_array_ingest_t json_array_ingest)
 {
 	int n = pjson_array->u.array.length;
 	for (int i = 0; i < n; i++) {
@@ -192,12 +194,12 @@ void populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, char* p
 			break;
 		case JSON_OBJECT:
 			prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
-			populate_from_nested_object(prec, pjson_value, prefix, flatten_sep, json_skip_arrays_on_input);
+			populate_from_nested_object(prec, pjson_value, prefix, flatten_sep, json_array_ingest);
 			free(prefix);
 			free(lrec_key);
 			break;
 		case JSON_ARRAY:
-			if (!json_skip_arrays_on_input) {
+			if (json_array_ingest == JSON_ARRAY_INGEST_FATAL) {
 				fprintf(stderr,
 					"%s: found array item within JSON object. This is valid but unmillerable JSON.\n",
 					MLR_GLOBALS.bargv0);

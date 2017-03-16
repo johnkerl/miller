@@ -723,6 +723,7 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "\n");
 	fprintf(o, "  --ijson   --ojson   --json      JSON tabular: sequence or list of one-level\n");
 	fprintf(o, "                                  maps: {...}{...} or [{...},{...}].\n");
+	// xxx
 	fprintf(o, "    --json-skip-arrays-on-input   JSON arrays are unmillerable, and by default they\n");
 	fprintf(o, "                                  cause a fatal error when read. With this option,\n");
 	fprintf(o, "                                  they are ignored. Please use the jq tool for full\n");
@@ -987,7 +988,7 @@ void cli_reader_opts_init(cli_reader_opts_t* preader_opts) {
 	preader_opts->ifs                            = NULL;
 	preader_opts->ips                            = NULL;
 	preader_opts->input_json_flatten_separator   = NULL;
-	preader_opts->json_skip_arrays_on_input      = NEITHER_TRUE_NOR_FALSE;
+	preader_opts->json_array_ingest              = JSON_ARRAY_INGEST_UNSPECIFIED;
 
 	preader_opts->allow_repeat_ifs               = NEITHER_TRUE_NOR_FALSE;
 	preader_opts->allow_repeat_ips               = NEITHER_TRUE_NOR_FALSE;
@@ -1032,9 +1033,8 @@ void cli_apply_reader_defaults(cli_reader_opts_t* preader_opts) {
 	if (preader_opts->ifile_fmt == NULL)
 		preader_opts->ifile_fmt = "dkvp";
 
-	// xxx should eventually be an enum: fatal, skip, or any other TBD options.
-	if (preader_opts->json_skip_arrays_on_input == NEITHER_TRUE_NOR_FALSE)
-		preader_opts->json_skip_arrays_on_input = FALSE;
+	if (preader_opts->json_array_ingest == JSON_ARRAY_INGEST_UNSPECIFIED)
+		preader_opts->json_array_ingest = JSON_ARRAY_INGEST_FATAL; // xxx temp
 
 	if (preader_opts->use_implicit_csv_header == NEITHER_TRUE_NOR_FALSE)
 		preader_opts->use_implicit_csv_header = FALSE;
@@ -1143,8 +1143,8 @@ void cli_merge_reader_opts(cli_reader_opts_t* pfunc_opts, cli_reader_opts_t* pma
 
 	}
 
-	if (pfunc_opts->json_skip_arrays_on_input == NEITHER_TRUE_NOR_FALSE)
-		pfunc_opts->json_skip_arrays_on_input = pmain_opts->json_skip_arrays_on_input;
+	if (pfunc_opts->json_array_ingest == JSON_ARRAY_INGEST_UNSPECIFIED)
+		pfunc_opts->json_array_ingest = pmain_opts->json_array_ingest;
 
 	if (pfunc_opts->use_implicit_csv_header == NEITHER_TRUE_NOR_FALSE)
 		pfunc_opts->use_implicit_csv_header = pmain_opts->use_implicit_csv_header;
@@ -1339,8 +1339,8 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 		preader_opts->allow_repeat_ifs = TRUE;
 		argi += 1;
 
-	} else if (streq(argv[argi], "--json-skip-arrays-on-input")) {
-		preader_opts->json_skip_arrays_on_input = TRUE;
+	} else if (streq(argv[argi], "--json-skip-arrays-on-input")) { // xxx
+		preader_opts->json_array_ingest = JSON_ARRAY_INGEST_SKIP;
 		argi += 1;
 
 	} else if (streq(argv[argi], "--implicit-csv-header")) {
