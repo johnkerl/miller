@@ -1339,8 +1339,14 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 		preader_opts->allow_repeat_ifs = TRUE;
 		argi += 1;
 
+	} else if (streq(argv[argi], "--json-fatal-arrays-on-input")) { // xxx
+		preader_opts->json_array_ingest = JSON_ARRAY_INGEST_FATAL;
+		argi += 1;
 	} else if (streq(argv[argi], "--json-skip-arrays-on-input")) { // xxx
 		preader_opts->json_array_ingest = JSON_ARRAY_INGEST_SKIP;
+		argi += 1;
+	} else if (streq(argv[argi], "--json-map-arrays-on-input")) { // xxx
+		preader_opts->json_array_ingest = JSON_ARRAY_INGEST_AS_MAP;
 		argi += 1;
 
 	} else if (streq(argv[argi], "--implicit-csv-header")) {
