@@ -10,7 +10,7 @@ BUGFIXES
 
 ! json array foo
 
-! antimode
+! coroutines?
 
 * eddelbuettel ac error <-> smith aclocal-1.15?
 
@@ -24,6 +24,7 @@ BUGFIXES
   - feature-counting script
   - mlrfunc docsect w/ h2's
   - aux-entries
+  - antimode
 
 * rh/fedora/centos
 
@@ -135,7 +136,6 @@ MAPVAR CHECKLIST:
     - uniq -g
 
 * other stats:
-  - stats1 antimode
   - stats1 for strings: min/max/percentiles. note count/mode already work.
     -> how to handle mixed string/number columns ...
 

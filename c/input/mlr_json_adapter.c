@@ -5,6 +5,8 @@
 static lrec_t* validate_millerable_object(json_value_t* pjson_object, char* flatten_sep, int json_skip_arrays_on_input);
 static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object, char* prefix, char* flatten_sep,
 	int json_skip_arrays_on_input);
+//static void populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, char* prefix, char* flatten_sep,
+	//int json_skip_arrays_on_input);
 
 // ----------------------------------------------------------------
 int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_json, char* flatten_sep,
@@ -77,6 +79,8 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep, int j
 					MLR_GLOBALS.bargv0);
 				return NULL;
 			}
+			//prefix = mlr_paste_2_strings(key, flatten_sep);
+			//populate_from_nested_array(prec, pjson_value, prefix, flatten_sep, json_skip_arrays_on_input);
 			break;
 
 		case JSON_STRING:
@@ -157,18 +161,20 @@ static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object
 	}
 }
 
-#if 0
 // xxx retval
-/*xxx temp static*/
+/* xxx temp static */
 void populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, char* prefix, char* flatten_sep,
 	int json_skip_arrays_on_input)
 {
 	int n = pjson_array->u.array.length;
 	for (int i = 0; i < n; i++) {
-		json_value_t* pjson_value = &pjson_array->u.array.p.values[i];
-		// xxx char* json_key = (char*)pobject_entry->name;
-		char* json_key = "temp"; // xxx temp
+		json_value_t* pjson_value = pjson_array->u.array.values[i];
+
+		char free_flags = NO_FREE;
+		char* json_key = low_int_to_string(i, &free_flags);
 		char* lrec_key = mlr_paste_2_strings(prefix, json_key);
+		if (free_flags)
+			free(json_key);
 		char* prefix = NULL;
 
 		switch (pjson_value->type) {
@@ -210,4 +216,3 @@ void populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, char* p
 
 	}
 }
-#endif
