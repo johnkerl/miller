@@ -128,8 +128,8 @@ static mapper_t* mapper_merge_fields_parse_cli(int* pargi, int argc, char** argv
 				mapper_merge_fields_usage(stderr, argv[0], verb);
 				return NULL;
 			}
-			if (pvalue_field_names != NULL)
-				slls_free(pvalue_field_names);
+			if (paccumulator_names != NULL)
+				slls_free(paccumulator_names);
 			paccumulator_names = slls_from_line(argv[argi+1], ',', FALSE);
 			argi += 2;
 

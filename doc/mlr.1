@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2017-03-13
+.\"      Date: 2017-03-16
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2017-03-13" "\ \&" "\ \&"
+.TH "MILLER" "1" "2017-03-16" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -815,6 +815,7 @@ Options:
 -a {sum,count,...}  Names of accumulators. One or more of:
   count     Count instances of fields
   mode      Find most-frequently-occurring values for fields; first-found wins tie
+  antimode  Find least-frequently-occurring values for fields; first-found wins tie
   sum       Compute sums of specified fields
   mean      Compute averages (sample means) of specified fields
   stddev    Compute sample standard deviation of specified fields
@@ -1278,6 +1279,7 @@ Options:
                     one or more of:
   count     Count instances of fields
   mode      Find most-frequently-occurring values for fields; first-found wins tie
+  antimode  Find least-frequently-occurring values for fields; first-found wins tie
   sum       Compute sums of specified fields
   mean      Compute averages (sample means) of specified fields
   stddev    Compute sample standard deviation of specified fields
@@ -2463,7 +2465,8 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(class=typing #args=1): Returns argument if it is absent in the input data, else throws an error.
+(class=typing #args=1): Returns argument if it is absent in the input data, else
+throws an error.
 .fi
 .if n \{\
 .RE
@@ -2472,7 +2475,8 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(class=typing #args=1): Returns argument if it is present with boolean value, else throws an error.
+(class=typing #args=1): Returns argument if it is present with boolean value, else
+throws an error.
 .fi
 .if n \{\
 .RE
@@ -2481,7 +2485,8 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(class=typing #args=1): Returns argument if it is present with boolean value, else throws an error.
+(class=typing #args=1): Returns argument if it is present with boolean value, else
+throws an error.
 .fi
 .if n \{\
 .RE
@@ -2490,7 +2495,8 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(class=typing #args=1): Returns argument if it is present in input with empty value, else throws an error.
+(class=typing #args=1): Returns argument if it is present in input with empty value,
+else throws an error.
 .fi
 .if n \{\
 .RE
@@ -2499,7 +2505,8 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(class=typing #args=1): Returns argument if it is a map with empty value, else throws an error.
+(class=typing #args=1): Returns argument if it is a map with empty value, else
+throws an error.
 .fi
 .if n \{\
 .RE
@@ -2508,7 +2515,8 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(class=typing #args=1): Returns argument if it is present with float value, else throws an error.
+(class=typing #args=1): Returns argument if it is present with float value, else
+throws an error.
 .fi
 .if n \{\
 .RE
@@ -2517,7 +2525,8 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(class=typing #args=1): Returns argument if it is present with int value, else throws an error.
+(class=typing #args=1): Returns argument if it is present with int value, else
+throws an error.
 .fi
 .if n \{\
 .RE
@@ -2535,7 +2544,8 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(class=typing #args=1): Returns argument if it is a non-empty map, else throws an error.
+(class=typing #args=1): Returns argument if it is a non-empty map, else throws
+an error.
 .fi
 .if n \{\
 .RE
@@ -2544,7 +2554,8 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(class=typing #args=1): Returns argument if it is present in input with non-empty value, else throws an error.
+(class=typing #args=1): Returns argument if it is present in input with non-empty
+value, else throws an error.
 .fi
 .if n \{\
 .RE
@@ -2562,7 +2573,8 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(class=typing #args=1): Returns argument if it is non-null (non-empty and non-absent), else throws an error.
+(class=typing #args=1): Returns argument if it is non-null (non-empty and non-absent),
+else throws an error.
 .fi
 .if n \{\
 .RE
@@ -2571,7 +2583,8 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(class=typing #args=1): Returns argument if it is null (empty or absent), else throws an error.
+(class=typing #args=1): Returns argument if it is null (empty or absent), else throws
+an error.
 .fi
 .if n \{\
 .RE
@@ -2580,7 +2593,8 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(class=typing #args=1): Returns argument if it is present with int or float value, else throws an error.
+(class=typing #args=1): Returns argument if it is present with int or float value,
+else throws an error.
 .fi
 .if n \{\
 .RE
@@ -2589,7 +2603,8 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(class=typing #args=1): Returns argument if it is present in input, else throws an error.
+(class=typing #args=1): Returns argument if it is present in input, else throws
+an error.
 .fi
 .if n \{\
 .RE
@@ -2598,7 +2613,8 @@ e.g. 1440768801.748936.
 .RS 0
 .\}
 .nf
-(class=typing #args=1): Returns argument if it is present with string (including empty-string) value, else throws an error.
+(class=typing #args=1): Returns argument if it is present with string (including
+empty-string) value, else throws an error.
 .fi
 .if n \{\
 .RE
@@ -2681,7 +2697,8 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)'. Error if 1st argument is not a map.
+(class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
+'haskey(mymap, mykey)'. Error if 1st argument is not a map.
 .fi
 .if n \{\
 .RE
@@ -2717,7 +2734,8 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=1): Counts total number of terminal values in hashmap. For single-level maps, same as length.
+(class=maps #args=1): Counts total number of terminal values in hashmap. For single-level maps,
+same as length.
 .fi
 .if n \{\
 .RE
@@ -2735,7 +2753,8 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps variadic): With 0 args, returns empty map. With 1 arg, returns copy of arg. With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
+(class=maps variadic): With 0 args, returns empty map. With 1 arg, returns copy of arg.
+With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
 .fi
 .if n \{\
 .RE
@@ -2744,7 +2763,8 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps variadic): With 0 args, returns empty map. With >= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'.
+(class=maps variadic): With 0 args, returns empty map. With >= 1 arg, returns a map with
+key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'.
 .fi
 .if n \{\
 .RE
@@ -2753,7 +2773,8 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=3): Splits string by separators into map with type inference. E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
+(class=maps #args=3): Splits string by separators into map with type inference.
+E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
 .fi
 .if n \{\
 .RE
@@ -2762,7 +2783,9 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=3): Splits string by separators into map without type inference (keys and values are strings). E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : "1", "b" : "2", "c" : "3"}'.
+(class=maps #args=3): Splits string by separators into map without type inference (keys and
+values are strings). E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives
+'{"a" : "1", "b" : "2", "c" : "3"}'.
 .fi
 .if n \{\
 .RE
@@ -2771,7 +2794,8 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=2): Splits string by separator into integer-indexed map with type inference. E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
+(class=maps #args=2): Splits string by separator into integer-indexed map with type inference.
+E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
 .fi
 .if n \{\
 .RE
@@ -2780,7 +2804,8 @@ MT_STRING). For debug.
 .RS 0
 .\}
 .nf
-(class=maps #args=2): Splits string by separator into integer-indexed map without type inference (values are strings). E.g. 'splitnv("4,5,6" , ",")' gives '{1 : "4", 2 : "5", 3 : "6"}'.
+(class=maps #args=2): Splits string by separator into integer-indexed map without type
+inference (values are strings). E.g. 'splitnv("4,5,6" , ",")' gives '{1 : "4", 2 : "5", 3 : "6"}'.
 .fi
 .if n \{\
 .RE
