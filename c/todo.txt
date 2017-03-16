@@ -1,12 +1,7 @@
 ================================================================
 BUGFIXES
 
-* bad free:
-  echo a=1,b=2,c=3 | mlr merge-fields -r '.*'  -a mode -o foo
-  echo a=1,b=2,c=3 | mlr merge-fields -f a,b,c -a mode -o foo
-  but this is ok (wtf):
-  echo a=1,b=2,c=3 | mlr merge-fields -a mode -r '.*'  -o foo
-  echo a=1,b=2,c=3 | mlr merge-fields -a mode -f a,b,c -o foo
+:)
 
 ================================================================
 5.0.0 POST-RELEASE TO DO:
