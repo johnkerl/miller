@@ -192,6 +192,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Diagnosing_delimiter_specifications">Diagnosing delimiter specifications</a><br/>
 &bull;&nbsp;<a href="#How_do_I_examine_then-chaining?">How do I examine then-chaining?</a><br/>
 &bull;&nbsp;<a href="#I_assigned_$9_and_it&rsquo;s_not_9th">I assigned $9 and it&rsquo;s not 9th</a><br/>
+&bull;&nbsp;<a href="#How_can_I_put_single-quotes_into_strings?">How can I put single-quotes into strings?</a><br/>
 &bull;&nbsp;<a href="#Why_doesn&rsquo;t_mlr_cut_put_fields_in_the_order_I_want?">Why doesn&rsquo;t mlr cut put fields in the order I want?</a><br/>
 &bull;&nbsp;<a href="#NR_is_not_consecutive_after_then-chaining">NR is not consecutive after then-chaining</a><br/>
 &bull;&nbsp;<a href="#Why_am_I_not_seeing_all_possible_joins_occur?">Why am I not seeing all possible joins occur?</a><br/>
@@ -441,6 +442,63 @@ z,x,y
 </pre>
 </div>
 <p/>
+
+</div>
+<a id="How_can_I_put_single-quotes_into_strings?"/><h1>How can I put single-quotes into strings?</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_single_quotes_in_strings');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_single_quotes_in_strings" style="display: block">
+
+<p/> This is a little tricky due to the shell&rsquo;s handling of quotes. For simplicity, let&rsquo;s first put
+an update script into a file:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$a = "It's OK, I said, then 'for now'."
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo a=bcd | mlr put -f data/single-quote-example.mlr
+a=It's OK, I said, then 'for now'.
+</pre>
+</div>
+<p/>
+
+<p/>So, it&rsuoq;s simple: Miller&rsquo;s DSL uses double quotes for strings,
+and you can put single quotes (or backslash-escaped double-quotes) inside
+strings, no problem.
+
+<p/> Without putting the update expression in a file, it&rsquo;s messier:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo a=bcd | mlr put '$a="It'\''s OK, I said, '\''for now'\''."'
+a=It's OK, I said, 'for now'.
+</pre>
+</div>
+<p/>
+
+<p/> The idea is that the outermost single-quotes are to protect the
+<tt>put</tt> expression from the shell, and the double quotes within them are
+for Miller. To get a single quote in the middle there, you need to actually put it <i>outside</i> the single-quoting
+for the shell. The pieces are
+
+<ul>
+<li/> <tt>$a="It</tt>
+<li/> <tt>\'</tt>
+<li/> <tt>s OK, I said,</tt>
+<li/> <tt>\'</tt>
+<li/> <tt>for now</tt>
+<li/> <tt>\'</tt>
+<li/> <tt>.</tt>
+</ul>
+
+all concatenated together.
 
 </div>
 <a id="Why_doesn&rsquo;t_mlr_cut_put_fields_in_the_order_I_want?"/><h1>Why doesn&rsquo;t mlr cut put fields in the order I want?</h1>

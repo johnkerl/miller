@@ -8,7 +8,7 @@ BUGFIXES
 
 ! windows port
 
-! eddelbuettel ac error <-> smith aclocal-1.15?
+* eddelbuettel ac error <-> smith aclocal-1.15?
 
 * --mmap / --no-mmap double-regression loop
   o also "." the setup funcs
