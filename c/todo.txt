@@ -10,7 +10,7 @@ BUGFIXES
 
 ! json array foo
 
-! coroutines?
+! coroutines (r/w pipes)?
 
 * eddelbuettel ac error <-> smith aclocal-1.15?
 
