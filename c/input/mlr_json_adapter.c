@@ -150,12 +150,21 @@ static void populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object
 			free(lrec_key);
 			break;
 		case JSON_ARRAY:
-			if (json_array_ingest == JSON_ARRAY_INGEST_FATAL) {
+			switch (json_array_ingest) {
+			case JSON_ARRAY_INGEST_FATAL:
 				fprintf(stderr,
-					"%s: found array item within JSON object. This is valid but unmillerable JSON.\n",
+					"%s: found array item within JSON object. This is valid but unmillerable JSON.\n"
+					"Use --json-skip-arrays-on-input to exclude these from input without fataling.\n",
 					MLR_GLOBALS.bargv0);
+				break;
+			case JSON_ARRAY_INGEST_AS_MAP:
+				prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
+				populate_from_nested_array(prec, pjson_value, prefix, flatten_sep, json_array_ingest);
+				break;
+			// xxx other cases!
+			default:
+				break;
 			}
-			break;
 		case JSON_INTEGER:
 			lrec_put(prec, lrec_key, pjson_value->u.integer.sval, FREE_ENTRY_KEY);
 			break;
