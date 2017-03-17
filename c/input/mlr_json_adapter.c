@@ -129,7 +129,7 @@ static int populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object,
 		char* json_key = (char*)pobject_entry->name;
 		json_value_t* pjson_value = pobject_entry->pvalue;
 		char* lrec_key = mlr_paste_2_strings(prefix, json_key);
-		char* prefix = NULL;
+		char* next_prefix = NULL;
 
 		switch (pjson_value->type) {
 		case JSON_NONE:
@@ -145,10 +145,10 @@ static int populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object,
 			lrec_put(prec, lrec_key, pjson_value->u.boolean.sval, FREE_ENTRY_KEY);
 			break;
 		case JSON_OBJECT:
-			prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
-			if (!populate_from_nested_object(prec, pjson_value, prefix, flatten_sep, json_array_ingest))
+			next_prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
+			if (!populate_from_nested_object(prec, pjson_value, next_prefix, flatten_sep, json_array_ingest))
 				return FALSE;
-			free(prefix);
+			free(next_prefix);
 			free(lrec_key);
 			break;
 		case JSON_ARRAY:
@@ -161,14 +161,17 @@ static int populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object,
 				return FALSE;
 				break;
 			case JSON_ARRAY_INGEST_AS_MAP:
-				prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
-				if (!populate_from_nested_array(prec, pjson_value, prefix, flatten_sep, json_array_ingest))
+				next_prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
+				if (!populate_from_nested_array(prec, pjson_value, next_prefix, flatten_sep, json_array_ingest))
 					return FALSE;
+				free(next_prefix);
+				free(lrec_key);
 				break;
 			// xxx other cases!
 			default:
 				break;
 			}
+			break;
 		case JSON_INTEGER:
 			lrec_put(prec, lrec_key, pjson_value->u.integer.sval, FREE_ENTRY_KEY);
 			break;
@@ -195,7 +198,7 @@ static int populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, c
 		char* lrec_key = mlr_paste_2_strings(prefix, json_key);
 		if (free_flags)
 			free(json_key);
-		char* prefix = NULL;
+		char* next_prefix = NULL;
 
 		switch (pjson_value->type) {
 		case JSON_NONE:
@@ -211,10 +214,10 @@ static int populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, c
 			lrec_put(prec, lrec_key, pjson_value->u.boolean.sval, FREE_ENTRY_KEY);
 			break;
 		case JSON_OBJECT:
-			prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
-			if (!populate_from_nested_object(prec, pjson_value, prefix, flatten_sep, json_array_ingest))
+			next_prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
+			if (!populate_from_nested_object(prec, pjson_value, next_prefix, flatten_sep, json_array_ingest))
 				return FALSE;
-			free(prefix);
+			free(next_prefix);
 			free(lrec_key);
 			break;
 		case JSON_ARRAY:
@@ -227,9 +230,11 @@ static int populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, c
 				return FALSE;
 				break;
 			case JSON_ARRAY_INGEST_AS_MAP:
-				prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
-				if (!populate_from_nested_array(prec, pjson_value, prefix, flatten_sep, json_array_ingest))
+				next_prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
+				if (!populate_from_nested_array(prec, pjson_value, next_prefix, flatten_sep, json_array_ingest))
 					return FALSE;
+				free(lrec_key);
+				free(next_prefix);
 				break;
 			// xxx other cases!
 			default:
