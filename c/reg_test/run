@@ -5229,12 +5229,10 @@ col
 "abc ""def"" \ghi"
 EOF
 
-mlr_expect_fail --ijson --oxtab cat <<EOF
-{ "a": 1, "b": [2, 3], "c": 4}
-EOF
-
-run_mlr --ijson --oxtab --json-skip-arrays-on-input cat $indir/arrays.json
-run_mlr --ijson --oxtab --json-map-arrays-on-input  cat $indir/arrays.json
+run_mlr         --ijson --oxtab                              cat $indir/arrays.json
+run_mlr         --ijson --oxtab --json-map-arrays-on-input   cat $indir/arrays.json
+run_mlr         --ijson --oxtab --json-skip-arrays-on-input  cat $indir/arrays.json
+mlr_expect_fail --ijson --oxtab --json-fatal-arrays-on-input cat $indir/arrays.json
 
 # ----------------------------------------------------------------
 announce FORMAT-CONVERSION KEYSTROKE-SAVERS

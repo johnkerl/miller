@@ -79,7 +79,8 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep, json_
 			case JSON_ARRAY_INGEST_FATAL:
 				fprintf(stderr,
 					"%s: found array item within JSON object. This is valid but unmillerable JSON.\n"
-					"Use --json-skip-arrays-on-input to exclude these from input without fataling.\n",
+					"Use --json-skip-arrays-on-input to exclude these from input without fataling.\n"
+					"Or, --json-map-arrays-on-input to convert them to integer-indexed maps.\n",
 					MLR_GLOBALS.bargv0);
 				return NULL;
 				break;
@@ -156,7 +157,8 @@ static int populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object,
 			case JSON_ARRAY_INGEST_FATAL:
 				fprintf(stderr,
 					"%s: found array item within JSON object. This is valid but unmillerable JSON.\n"
-					"Use --json-skip-arrays-on-input to exclude these from input without fataling.\n",
+					"Use --json-skip-arrays-on-input to exclude these from input without fataling.\n"
+					"Or, --json-map-arrays-on-input to convert them to integer-indexed maps.\n",
 					MLR_GLOBALS.bargv0);
 				return FALSE;
 				break;
@@ -225,7 +227,8 @@ static int populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, c
 			case JSON_ARRAY_INGEST_FATAL:
 				fprintf(stderr,
 					"%s: found array item within JSON object. This is valid but unmillerable JSON.\n"
-					"Use --json-skip-arrays-on-input to exclude these from input without fataling.\n",
+					"Use --json-skip-arrays-on-input to exclude these from input without fataling.\n"
+					"Or, --json-map-arrays-on-input to convert them to integer-indexed maps.\n",
 					MLR_GLOBALS.bargv0);
 				return FALSE;
 				break;
