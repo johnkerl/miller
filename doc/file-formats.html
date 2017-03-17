@@ -655,18 +655,80 @@ $ mlr --json --jvstack head -n 1 then put '${values:uv} = ${values:u} * ${values
 
 <a id="Arrays"/><h2>Arrays</h2>
 
-<p/>Arrays aren&rsquo;t supported in Miller. The <tt>put</tt>/<tt>filter</tt>
-DSL does support hashmaps, and an array could be read in as an integer-keyed
-map: e.g. JSON <tt>["a","b","c"]</tt> could be read in as Miller hashmap
-<tt>{1:"a",2:"b",3:"c"}</tt>. But then arrays and maps both become maps, with
-the result that, once written back as output, they would differ from input.
+<p/>Arrays aren&rsquo;t supported in Miller&rsquo;s
+<tt>put</tt>/<tt>filter</tt> DSL. By default, JSON arrays are read in as
+integer-keyed maps.
 
-<p/>As a result, Miller by default fatals when it encounters arrays, which are
-&ldquo;unmillerable&rdquo;. You can use <tt>mlr
---json-skip-arrays-on-input</tt>, if you like, which ignores arrays. To truly
-handle JSON, please use a JSON-processing tool such as
-<a href="http://stedolan.github.io/jq/">jq</a>.
+<p/> Suppose you have arrays like this in our input data:
 
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/json-example-3.json
+{
+  "label": "orange",
+  "values": [12.2, 13.8, 17.2]
+}
+{
+  "label": "purple",
+  "values": [27.0, 32.4]
+}
+</pre>
+</div>
+<p/>
+
+<p/> Then integer indices (starting from 0 and counting up) are used as map keys:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --ijson --oxtab cat data/json-example-3.json
+label    orange
+values:0 12.2
+values:1 13.8
+values:2 17.2
+
+label    purple
+values:0 27.0
+values:1 32.4
+</pre>
+</div>
+<p/>
+
+<p/> When the data are written back out as JSON, field names are re-expanded as above,
+but what were arrays on input are now maps on output:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --json --jvstack cat data/json-example-3.json
+{
+  "label": "orange",
+  "values": {
+    "0": 12.2,
+    "1": 13.8,
+    "2": 17.2
+  }
+}
+{
+  "label": "purple",
+  "values": {
+    "0": 27.0,
+    "1": 32.4
+  }
+}
+</pre>
+</div>
+<p/>
+
+<p/> This is non-ideal, but it allows Miller (5.x release being latest as of
+this writing) to handle JSON arrays at all.
+
+<p/>You might also use <tt>mlr --json-skip-arrays-on-input</tt> or <tt>mlr
+--json-fatal-arrays-on-input</tt>.
+
+To truly handle JSON, please use a JSON-processing tool such as <a
+href="http://stedolan.github.io/jq/">jq</a>.
 
 <a id="Formatting_JSON_options"/><h2>Formatting JSON options</h2>
 
