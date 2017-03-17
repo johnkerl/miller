@@ -8,8 +8,6 @@ BUGFIXES
 
 ! windows port
 
-! json array foo
-
 ! coroutines (r/w pipes)?
 
 * eddelbuettel ac error <-> smith aclocal-1.15?
@@ -25,6 +23,7 @@ BUGFIXES
   - mlrfunc docsect w/ h2's
   - aux-entries
   - antimode
+  - json-arrays-as-maps feature
 
 * rh/fedora/centos
 
