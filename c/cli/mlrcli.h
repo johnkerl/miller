@@ -9,6 +9,7 @@
 #include "containers/slls.h"
 #include "containers/sllv.h"
 #include "cli/quoting.h"
+#include "cli/json_array_ingest.h"
 #include "containers/lhmsll.h"
 #include "containers/lhmss.h"
 
@@ -20,7 +21,7 @@ typedef struct _cli_reader_opts_t {
 	char* ifs;
 	char* ips;
 	char* input_json_flatten_separator;
-	int   json_skip_arrays_on_input;
+	json_array_ingest_t  json_array_ingest;
 
 	int   allow_repeat_ifs;
 	int   allow_repeat_ips;

@@ -176,9 +176,10 @@ OPTIONS
 
 	 --ijson   --ojson   --json	 JSON tabular: sequence or list of one-level
 					 maps: {...}{...} or [{...},{...}].
-	   --json-skip-arrays-on-input	 JSON arrays are unmillerable, and by default they
-					 cause a fatal error when read. With this option,
-					 they are ignored. Please use the jq tool for full
+	   --json-map-arrays-on-input	 JSON arrays are unmillerable. --json-map-arrays-on-input
+	   --json-skip-arrays-on-input	 is the default: arrays are converted to integer-indexed
+	   --json-fatal-arrays-on-input  maps. The other two options cause them to be skipped, or
+					 to be treated as errors.  Please use the jq tool for full
 					 JSON (pre)processing.
 			     --jvstack	 Put one key-value pair per line for JSON
 					 output.
@@ -602,6 +603,7 @@ VERBS
        -a {sum,count,...}  Names of accumulators. One or more of:
 	 count	   Count instances of fields
 	 mode	   Find most-frequently-occurring values for fields; first-found wins tie
+	 antimode  Find least-frequently-occurring values for fields; first-found wins tie
 	 sum	   Compute sums of specified fields
 	 mean	   Compute averages (sample means) of specified fields
 	 stddev    Compute sample standard deviation of specified fields
@@ -969,6 +971,7 @@ VERBS
 			   one or more of:
 	 count	   Count instances of fields
 	 mode	   Find most-frequently-occurring values for fields; first-found wins tie
+	 antimode  Find least-frequently-occurring values for fields; first-found wins tie
 	 sum	   Compute sums of specified fields
 	 mean	   Compute averages (sample means) of specified fields
 	 stddev    Compute sample standard deviation of specified fields
@@ -1473,52 +1476,66 @@ FUNCTIONS FOR FILTER/PUT
        (class=typing #args=1): True if field is present with string (including empty-string) value
 
    asserting_absent
-       (class=typing #args=1): Returns argument if it is absent in the input data, else throws an error.
+       (class=typing #args=1): Returns argument if it is absent in the input data, else
+       throws an error.
 
    asserting_bool
-       (class=typing #args=1): Returns argument if it is present with boolean value, else throws an error.
+       (class=typing #args=1): Returns argument if it is present with boolean value, else
+       throws an error.
 
    asserting_boolean
-       (class=typing #args=1): Returns argument if it is present with boolean value, else throws an error.
+       (class=typing #args=1): Returns argument if it is present with boolean value, else
+       throws an error.
 
    asserting_empty
-       (class=typing #args=1): Returns argument if it is present in input with empty value, else throws an error.
+       (class=typing #args=1): Returns argument if it is present in input with empty value,
+       else throws an error.
 
    asserting_empty_map
-       (class=typing #args=1): Returns argument if it is a map with empty value, else throws an error.
+       (class=typing #args=1): Returns argument if it is a map with empty value, else
+       throws an error.
 
    asserting_float
-       (class=typing #args=1): Returns argument if it is present with float value, else throws an error.
+       (class=typing #args=1): Returns argument if it is present with float value, else
+       throws an error.
 
    asserting_int
-       (class=typing #args=1): Returns argument if it is present with int value, else throws an error.
+       (class=typing #args=1): Returns argument if it is present with int value, else
+       throws an error.
 
    asserting_map
        (class=typing #args=1): Returns argument if it is a map, else throws an error.
 
    asserting_nonempty_map
-       (class=typing #args=1): Returns argument if it is a non-empty map, else throws an error.
+       (class=typing #args=1): Returns argument if it is a non-empty map, else throws
+       an error.
 
    asserting_not_empty
-       (class=typing #args=1): Returns argument if it is present in input with non-empty value, else throws an error.
+       (class=typing #args=1): Returns argument if it is present in input with non-empty
+       value, else throws an error.
 
    asserting_not_map
        (class=typing #args=1): Returns argument if it is not a map, else throws an error.
 
    asserting_not_null
-       (class=typing #args=1): Returns argument if it is non-null (non-empty and non-absent), else throws an error.
+       (class=typing #args=1): Returns argument if it is non-null (non-empty and non-absent),
+       else throws an error.
 
    asserting_null
-       (class=typing #args=1): Returns argument if it is null (empty or absent), else throws an error.
+       (class=typing #args=1): Returns argument if it is null (empty or absent), else throws
+       an error.
 
    asserting_numeric
-       (class=typing #args=1): Returns argument if it is present with int or float value, else throws an error.
+       (class=typing #args=1): Returns argument if it is present with int or float value,
+       else throws an error.
 
    asserting_present
-       (class=typing #args=1): Returns argument if it is present in input, else throws an error.
+       (class=typing #args=1): Returns argument if it is present in input, else throws
+       an error.
 
    asserting_string
-       (class=typing #args=1): Returns argument if it is present with string (including empty-string) value, else throws an error.
+       (class=typing #args=1): Returns argument if it is present with string (including
+       empty-string) value, else throws an error.
 
    boolean
        (class=conversion #args=1): Convert int/float/bool/string to boolean.
@@ -1547,7 +1564,7 @@ FUNCTIONS FOR FILTER/PUT
        (class=maps #args=1): Prints maximum depth of hashmap: ''. Scalars have depth 0.
 
    haskey
-       (class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or 'haskey(mymap, mykey)'. Error if 1st argument is not a map.
+       (class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
 
    joink
        (class=maps #args=2): Makes string from map keys. E.g. 'joink($*, ",")'.
@@ -1559,28 +1576,35 @@ FUNCTIONS FOR FILTER/PUT
        (class=maps #args=2): Makes string from map keys. E.g. 'joinv(mymap, ",")'.
 
    leafcount
-       (class=maps #args=1): Counts total number of terminal values in hashmap. For single-level maps, same as length.
+       (class=maps #args=1): Counts total number of terminal values in hashmap. For single-level maps,
+       same as length.
 
    length
        (class=maps #args=1): Counts number of top-level entries in hashmap. Scalars have length 1.
 
    mapdiff
-       (class=maps variadic): With 0 args, returns empty map. With 1 arg, returns copy of arg. With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
+       (class=maps variadic): With 0 args, returns empty map. With 1 arg, returns copy of arg.
+       With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
 
    mapsum
-       (class=maps variadic): With 0 args, returns empty map. With >= 1 arg, returns a map with key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'.
+       (class=maps variadic): With 0 args, returns empty map. With >= 1 arg, returns a map with
+       key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'.
 
    splitkv
-       (class=maps #args=3): Splits string by separators into map with type inference. E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
+       (class=maps #args=3): Splits string by separators into map with type inference.
+       E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
 
    splitkvx
-       (class=maps #args=3): Splits string by separators into map without type inference (keys and values are strings). E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : "1", "b" : "2", "c" : "3"}'.
+       (class=maps #args=3): Splits string by separators into map without type inference (keys and
+       values are strings). E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives
 
    splitnv
-       (class=maps #args=2): Splits string by separator into integer-indexed map with type inference. E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
+       (class=maps #args=2): Splits string by separator into integer-indexed map with type inference.
+       E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
 
    splitnvx
-       (class=maps #args=2): Splits string by separator into integer-indexed map without type inference (values are strings). E.g. 'splitnv("4,5,6" , ",")' gives '{1 : "4", 2 : "5", 3 : "6"}'.
+       (class=maps #args=2): Splits string by separator into integer-indexed map without type
+       inference (values are strings). E.g. 'splitnv("4,5,6" , ",")' gives '{1 : "4", 2 : "5", 3 : "6"}'.
 
 KEYWORDS FOR PUT AND FILTER
    all
@@ -1938,4 +1962,4 @@ SEE ALSO
 
 
 
-				  2017-03-13			     MILLER(1)
+				  2017-03-17			     MILLER(1)

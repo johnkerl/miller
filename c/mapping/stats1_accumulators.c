@@ -159,7 +159,8 @@ static void stats1_mode_emit(void* pvstate, char* value_field_name, char* stats1
 		}
 	}
 	if (copy_data)
-		lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), mlr_strdup_or_die(max_key), FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+		lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), mlr_strdup_or_die(max_key),
+			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 	else
 		lrec_put(poutrec, pstate->output_field_name, max_key, NO_FREE);
 }
@@ -184,6 +185,65 @@ stats1_acc_t* stats1_mode_alloc(char* value_field_name, char* stats1_acc_name, i
 	pstats1_acc->psingest_func  = stats1_mode_singest;
 	pstats1_acc->pemit_func     = stats1_mode_emit;
 	pstats1_acc->pfree_func     = stats1_mode_free;
+	return pstats1_acc;
+}
+
+// ----------------------------------------------------------------
+typedef struct _stats1_antimode_state_t {
+	lhmsll_t* pcounts_for_value;
+	char* output_field_name;
+} stats1_antimode_state_t;
+// antimode on strings: "1" and "1.0" and "1.0000" are distinct text.
+static void stats1_antimode_singest(void* pvstate, char* val) {
+	stats1_antimode_state_t* pstate = pvstate;
+	lhmslle_t* pe = lhmsll_get_entry(pstate->pcounts_for_value, val);
+	if (pe == NULL) {
+		// lhmsll does a strdup so we needn't.
+		lhmsll_put(pstate->pcounts_for_value, mlr_strdup_or_die(val), 1, FREE_ENTRY_KEY);
+	} else {
+		pe->value++;
+	}
+}
+static void stats1_antimode_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
+	stats1_antimode_state_t* pstate = pvstate;
+	int min_count = 0;
+	int have_min_count = FALSE;
+	char* min_key = "";
+	for (lhmslle_t* pe = pstate->pcounts_for_value->phead; pe != NULL; pe = pe->pnext) {
+		int count = pe->value;
+		if (!have_min_count || count < min_count) {
+			min_key = pe->key;
+			min_count = count;
+			have_min_count = TRUE;
+		}
+	}
+	if (copy_data)
+		lrec_put(poutrec, mlr_strdup_or_die(pstate->output_field_name), mlr_strdup_or_die(min_key),
+			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+	else
+		lrec_put(poutrec, pstate->output_field_name, min_key, NO_FREE);
+}
+static void stats1_antimode_free(stats1_acc_t* pstats1_acc) {
+	stats1_antimode_state_t* pstate = pstats1_acc->pvstate;
+	lhmsll_free(pstate->pcounts_for_value);
+	free(pstate->output_field_name);
+	free(pstate);
+	free(pstats1_acc);
+}
+stats1_acc_t* stats1_antimode_alloc(char* value_field_name, char* stats1_acc_name, int allow_int_float,
+	int do_interpolated_percentiles)
+{
+	stats1_acc_t* pstats1_acc   = mlr_malloc_or_die(sizeof(stats1_acc_t));
+	stats1_antimode_state_t* pstate = mlr_malloc_or_die(sizeof(stats1_antimode_state_t));
+	pstate->pcounts_for_value   = lhmsll_alloc();
+	pstate->output_field_name   = mlr_paste_3_strings(value_field_name, "_", stats1_acc_name);
+
+	pstats1_acc->pvstate        = (void*)pstate;
+	pstats1_acc->pdingest_func  = NULL;
+	pstats1_acc->pningest_func  = NULL;
+	pstats1_acc->psingest_func  = stats1_antimode_singest;
+	pstats1_acc->pemit_func     = stats1_antimode_emit;
+	pstats1_acc->pfree_func     = stats1_antimode_free;
 	return pstats1_acc;
 }
 

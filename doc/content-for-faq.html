@@ -86,6 +86,43 @@ POKI_RUN_COMMAND{{echo x,y,z | mlr --dkvp rename 2,newname}}HERE
 POKI_RUN_COMMAND{{echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2}}HERE
 
 </div>
+<h1>How can I put single-quotes into strings?</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_single_quotes_in_strings');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_single_quotes_in_strings" style="display: block">
+
+<p/> This is a little tricky due to the shell&rsquo;s handling of quotes. For simplicity, let&rsquo;s first put
+an update script into a file:
+
+POKI_INCLUDE_ESCAPED(data/single-quote-example.mlr)HERE
+
+POKI_RUN_COMMAND{{echo a=bcd | mlr put -f data/single-quote-example.mlr}}HERE
+
+<p/>So, it&rsquo;s simple: Miller&rsquo;s DSL uses double quotes for strings,
+and you can put single quotes (or backslash-escaped double-quotes) inside
+strings, no problem.
+
+<p/> Without putting the update expression in a file, it&rsquo;s messier:
+
+POKI_RUN_COMMAND{{echo a=bcd | mlr put '$a="It'\''s OK, I said, '\''for now'\''."'}}HERE
+
+<p/> The idea is that the outermost single-quotes are to protect the
+<tt>put</tt> expression from the shell, and the double quotes within them are
+for Miller. To get a single quote in the middle there, you need to actually put it <i>outside</i> the single-quoting
+for the shell. The pieces are
+
+<ul>
+<li/> <tt>$a="It</tt>
+<li/> <tt>\'</tt>
+<li/> <tt>s OK, I said,</tt>
+<li/> <tt>\'</tt>
+<li/> <tt>for now</tt>
+<li/> <tt>\'</tt>
+<li/> <tt>.</tt>
+</ul>
+
+all concatenated together.
+
+</div>
 <h1>Why doesn&rsquo;t mlr cut put fields in the order I want?</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_cut_out_of_order');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_cut_out_of_order" style="display: block">

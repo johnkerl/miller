@@ -48,6 +48,7 @@ typedef stats1_acc_t* stats1_alloc_func_t(char* value_field_name, char* stats1_a
 // dip = do_interpolated_percentiles
 stats1_acc_t* stats1_count_alloc             (char* value_field_name, char* stats1_acc_name, int aif, int dip);
 stats1_acc_t* stats1_mode_alloc              (char* value_field_name, char* stats1_acc_name, int aif, int dip);
+stats1_acc_t* stats1_antimode_alloc          (char* value_field_name, char* stats1_acc_name, int aif, int dip);
 stats1_acc_t* stats1_sum_alloc               (char* value_field_name, char* stats1_acc_name, int aif, int dip);
 stats1_acc_t* stats1_mean_alloc              (char* value_field_name, char* stats1_acc_name, int aif, int dip);
 stats1_acc_t* stats1_stddev_var_meaneb_alloc (char* value_field_name, char* stats1_acc_name, cumulant2o_t do_which);
@@ -92,6 +93,7 @@ typedef struct _stats1_acc_lookup_t {
 static stats1_acc_lookup_t stats1_acc_lookup_table[] = {
 	{"count",    stats1_count_alloc,    "Count instances of fields"},
 	{"mode",     stats1_mode_alloc,     "Find most-frequently-occurring values for fields; first-found wins tie"},
+	{"antimode", stats1_antimode_alloc, "Find least-frequently-occurring values for fields; first-found wins tie"},
 	{"sum",      stats1_sum_alloc,      "Compute sums of specified fields"},
 	{"mean",     stats1_mean_alloc,     "Compute averages (sample means) of specified fields"},
 	{"stddev",   stats1_stddev_alloc,   "Compute sample standard deviation of specified fields"},

@@ -13,6 +13,6 @@
 // poses problems of irreversibility. (Namely, 'mlr --json cat foo.json' when foo.json contains
 // arrays would result in output differing from input.)
 int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_json, char* flatten_sep,
-	int json_skip_arrays_on_input);
+	json_array_ingest_t json_array_ingest);
 
 #endif // MLR_JSON_ADAPTER_H

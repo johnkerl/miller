@@ -1,14 +1,16 @@
 ================================================================
 BUGFIXES
 
-* nidx with repifs & leading spaces :^/
+:)
 
 ================================================================
 5.0.0 POST-RELEASE TO DO:
 
 ! windows port
 
-! eddelbuettel ac error <-> smith aclocal-1.15?
+! coroutines (r/w pipes)?
+
+* eddelbuettel ac error <-> smith aclocal-1.15?
 
 * --mmap / --no-mmap double-regression loop
   o also "." the setup funcs
@@ -20,6 +22,8 @@ BUGFIXES
   - feature-counting script
   - mlrfunc docsect w/ h2's
   - aux-entries
+  - antimode
+  - json-arrays-as-maps feature
 
 * rh/fedora/centos
 
@@ -46,9 +50,6 @@ MSYS2 TO-DO
 
 * needs-DLL issue:
   - find out how to fix at ./configure / msys2 build
-
-* needs-dot-exe issue:
-  - wtf
 
 ----------------------------------------------------------------
 MSYS2 NOTES
@@ -134,7 +135,6 @@ MAPVAR CHECKLIST:
     - uniq -g
 
 * other stats:
-  - stats1 antimode
   - stats1 for strings: min/max/percentiles. note count/mode already work.
     -> how to handle mixed string/number columns ...
 
@@ -150,13 +150,9 @@ MAPVAR CHECKLIST:
 
 * mt_error/fatal/skip-assign audit
 
-* mlr hex -> auxes. and make an aux-list. and doc: olh as well as webdoc?
-
 * perf note: DSL stuff performant w/r/t ruby/python (mand bench & maybe others)
 
 ! more than 'syntax error' from lemon-parse failures ... lemon API research
-
-* strtok -> strsep ?
 
 ? some sort of debug/single-step/trace ... include the AST in the CST & reverse-generate ?
 
@@ -229,8 +225,6 @@ COMPARES:
 5.2.0 IDEAS:
 
 !! coroutines: line-oriented; operate on field(s); r/w popen
-
-* split-column verb: down/across modes. across-mode with optional prefix?
 
 * aux-entries doc @ mlh, mld
 

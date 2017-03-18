@@ -537,20 +537,20 @@ run_mlr --from $indir/abixy cat then seqgen --start 1 --stop 5
 # ----------------------------------------------------------------
 announce STATS
 
-run_mlr --opprint stats1    -a mean,sum,count,min,max,mode     -f i,x,y $indir/abixy
-run_mlr --opprint stats1    -a min,p10,p50,median,mode,p90,max -f i,x,y $indir/abixy
-run_mlr --opprint stats1    -a mean,meaneb,stddev              -f i,x,y $indir/abixy
-run_mlr --oxtab   stats1 -s -a mean,sum,count,min,max,mode     -f i,x,y $indir/abixy
+run_mlr --opprint stats1    -a mean,sum,count,min,max,antimode,mode     -f i,x,y $indir/abixy
+run_mlr --opprint stats1    -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y $indir/abixy
+run_mlr --opprint stats1    -a mean,meaneb,stddev                       -f i,x,y $indir/abixy
+run_mlr --oxtab   stats1 -s -a mean,sum,count,min,max,antimode,mode     -f i,x,y $indir/abixy
 
-run_mlr --opprint stats1    -a mean,sum,count,min,max,mode     -f i,x,y -g a $indir/abixy
-run_mlr --opprint stats1    -a min,p10,p50,median,mode,p90,max -f i,x,y -g a $indir/abixy
-run_mlr --opprint stats1    -a mean,meaneb,stddev              -f i,x,y -g a $indir/abixy
-run_mlr --oxtab   stats1 -s -a mean,sum,count,min,max,mode     -f i,x,y -g a $indir/abixy
+run_mlr --opprint stats1    -a mean,sum,count,min,max,antimode,mode     -f i,x,y -g a $indir/abixy
+run_mlr --opprint stats1    -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y -g a $indir/abixy
+run_mlr --opprint stats1    -a mean,meaneb,stddev                       -f i,x,y -g a $indir/abixy
+run_mlr --oxtab   stats1 -s -a mean,sum,count,min,max,antimode,mode     -f i,x,y -g a $indir/abixy
 
-run_mlr --opprint stats1    -a mean,sum,count,min,max,mode     -f i,x,y -g a,b $indir/abixy
-run_mlr --opprint stats1    -a min,p10,p50,median,mode,p90,max -f i,x,y -g a,b $indir/abixy
-run_mlr --opprint stats1    -a mean,meaneb,stddev              -f i,x,y -g a,b $indir/abixy
-run_mlr --oxtab   stats1 -s -a mean,sum,count,min,max,mode     -f i,x,y -g a,b $indir/abixy
+run_mlr --opprint stats1    -a mean,sum,count,min,max,antimode,mode     -f i,x,y -g a,b $indir/abixy
+run_mlr --opprint stats1    -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y -g a,b $indir/abixy
+run_mlr --opprint stats1    -a mean,meaneb,stddev                       -f i,x,y -g a,b $indir/abixy
+run_mlr --oxtab   stats1 -s -a mean,sum,count,min,max,antimode,mode     -f i,x,y -g a,b $indir/abixy
 
 run_mlr --oxtab   stats1 -a mean -f x      $indir/abixy-het
 run_mlr --oxtab   stats1 -a mean -f x -g a $indir/abixy-het
@@ -4934,18 +4934,18 @@ run_mlr --icsvlite --odkvp cat $indir/null-fields.csv
 run_mlr --inidx --ifs comma --odkvp cat $indir/null-fields.nidx
 run_mlr --idkvp --oxtab cat $indir/missings.dkvp
 
-run_mlr --oxtab stats1 -a sum,min,max,mode -f x          $indir/nullvals.dkvp
-run_mlr --oxtab stats1 -a sum,min,max,mode -f y          $indir/nullvals.dkvp
-run_mlr --oxtab stats1 -a sum,min,max,mode -f z          $indir/nullvals.dkvp
-run_mlr --oxtab stats1 -a sum,min,max,mode -f x,y,z      $indir/nullvals.dkvp
-run_mlr --oxtab stats1 -a sum,min,max,mode -f x     -g a $indir/nullvals.dkvp
-run_mlr --oxtab stats1 -a sum,min,max,mode -f y     -g a $indir/nullvals.dkvp
-run_mlr --oxtab stats1 -a sum,min,max,mode -f z     -g a $indir/nullvals.dkvp
-run_mlr --oxtab stats1 -a sum,min,max,mode -f x,y,z -g a $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x          $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f y          $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f z          $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x,y,z      $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x     -g a $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f y     -g a $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f z     -g a $indir/nullvals.dkvp
+run_mlr --oxtab stats1 -a sum,min,max,antimode,mode -f x,y,z -g a $indir/nullvals.dkvp
 
-run_mlr --opprint merge-fields -a sum,min,max,mode -f x,y,z -o xyz $indir/nullvals.dkvp
-run_mlr --opprint merge-fields -a sum,min,max,mode -r x,y,z -o xyz $indir/nullvals.dkvp
-run_mlr --opprint merge-fields -a sum,min,max,mode -c x,y,z        $indir/nullvals.dkvp
+run_mlr --opprint merge-fields -a sum,min,max,antimode,mode -f x,y,z -o xyz $indir/nullvals.dkvp
+run_mlr --opprint merge-fields -a sum,min,max,antimode,mode -r x,y,z -o xyz $indir/nullvals.dkvp
+run_mlr --opprint merge-fields -a sum,min,max,antimode,mode -c x,y,z        $indir/nullvals.dkvp
 
 run_mlr --oxtab stats2 -a cov -f x,y        $indir/nullvals.dkvp
 run_mlr --oxtab stats2 -a cov -f x,z        $indir/nullvals.dkvp
@@ -5229,13 +5229,10 @@ col
 "abc ""def"" \ghi"
 EOF
 
-mlr_expect_fail --ijson --oxtab cat <<EOF
-{ "a": 1, "b": [2, 3], "c": 4}
-EOF
-
-run_mlr --ijson --oxtab --json-skip-arrays-on-input cat <<EOF
-{ "a": 1, "b": [2, 3], "c": 4}
-EOF
+run_mlr         --ijson --oxtab                              cat $indir/arrays.json
+run_mlr         --ijson --oxtab --json-map-arrays-on-input   cat $indir/arrays.json
+run_mlr         --ijson --oxtab --json-skip-arrays-on-input  cat $indir/arrays.json
+mlr_expect_fail --ijson --oxtab --json-fatal-arrays-on-input cat $indir/arrays.json
 
 # ----------------------------------------------------------------
 announce FORMAT-CONVERSION KEYSTROKE-SAVERS

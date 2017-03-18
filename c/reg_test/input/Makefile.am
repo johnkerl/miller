@@ -15,6 +15,7 @@ EXTRA_DIST=	\
 		abixy.tsv \
 		abixy.xtab \
 		absent.dkvp \
+		arrays.json \
 		b.csv \
 		b.pprint \
 		braced.csv \

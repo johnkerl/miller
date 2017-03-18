@@ -82,6 +82,7 @@ static void lecat_usage(char* argv0, char* argv1, FILE* o, int exit_code) {
 	fprintf(o, "Simply echoes input, but flags CR characters in red and LF characters in green.\n");
 	fprintf(o, "If zero file names are supplied, standard input is read.\n");
 	fprintf(o, "Options:\n");
+	fprintf(o, "--mono: don't try to colorize the output\n");
 	fprintf(o, "-h or --help: print this message\n");
 	exit(exit_code);
 }
