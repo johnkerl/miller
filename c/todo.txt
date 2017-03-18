@@ -7,8 +7,16 @@ BUGFIXES
 5.0.0 POST-RELEASE TO DO:
 
 ! windows port
+  o gmtime_r
+  o strptime
+  o -lpcreposix @ Makefile.am
+  o avoid pathext for pcreposix.dll @ runtime, outside of msys2
 
 ! coroutines (r/w pipes)?
+  o maybe not now: need notion of # lines in/out which, simplest case, are 1-1,
+    but in the more general case might not be.
+
+! synctool: use "rsync -e 'ssh -4' ..."
 
 * eddelbuettel ac error <-> smith aclocal-1.15?
 
