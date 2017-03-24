@@ -1,7 +1,7 @@
 ================================================================
 BUGFIXES
 
-:)
+! json join
 
 ================================================================
 5.0.0 POST-RELEASE TO DO:
@@ -12,9 +12,14 @@ BUGFIXES
   o -lpcreposix @ Makefile.am
   o avoid pathext for pcreposix.dll @ runtime, outside of msys2
 
+! join -u
+
+! cover-page simplify
+
 ! coroutines (r/w pipes)?
   o maybe not now: need notion of # lines in/out which, simplest case, are 1-1,
     but in the more general case might not be.
+  o coexec as well as shellout; stderr caveats x both
 
 ! synctool: use "rsync -e 'ssh -4' ..."
 
@@ -32,6 +37,7 @@ BUGFIXES
   - aux-entries
   - antimode
   - json-arrays-as-maps feature
+  - unsorted join by default, with mem caveat. & update dox. incl sjax req#
 
 * rh/fedora/centos
 

@@ -87,10 +87,13 @@ static void mapper_join_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  --np         Do not emit paired records\n");
 	fprintf(o, "  --ul         Emit unpaired records from the left file\n");
 	fprintf(o, "  --ur         Emit unpaired records from the right file(s)\n");
-	fprintf(o, "  -u           Enable unsorted input. In this case, the entire left file will\n");
-	fprintf(o, "               be loaded into memory. Without -u, records must be sorted\n");
+	fprintf(o, "  -s|--sorted-input   Require sorted input: records must be sorted\n");
 	fprintf(o, "               lexically by their join-field names, else not all records will\n");
-	fprintf(o, "               be paired.\n");
+	fprintf(o, "               be paired. The only likely use case for this is with a left\n");
+	fprintf(o, "               file which is too big to fit into system memory.\n");
+	fprintf(o, "  -u           Enable unsorted input. (This is the default even without -u.)\n");
+	fprintf(o, "               In this case, the entire left file will be loaded into memory.\n");
+
 	fprintf(o, "  --prepipe {command} As in main input options; see %s --help for details.\n",
 		MLR_GLOBALS.bargv0);
 	fprintf(o, "               If you wish to use a prepipe command for the main input as well\n");
@@ -133,7 +136,7 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv,
 	popts->emit_pairables                      = TRUE;
 	popts->emit_left_unpairables               = FALSE;
 	popts->emit_right_unpairables              = FALSE;
-	popts->allow_unsorted_input                = FALSE;
+	popts->allow_unsorted_input                = TRUE;
 
 	int argi = *pargi;
 	char* verb = argv[argi++];
@@ -219,6 +222,10 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv,
 
 		} else if (streq(argv[argi], "-u")) {
 			popts->allow_unsorted_input = TRUE;
+			argi += 1;
+
+		} else if (streq(argv[argi], "--sorted-input") || streq(argv[argi], "-s")) {
+			popts->allow_unsorted_input = FALSE;
 			argi += 1;
 
 		} else {
@@ -436,7 +443,8 @@ static sllv_t* mapper_join_process_unsorted(lrec_t* pright_rec, context_t* pctx,
 		}
 	}
 
-	slls_t* pright_field_values = mlr_reference_selected_values_from_record(pright_rec, pstate->popts->pright_join_field_names);
+	slls_t* pright_field_values = mlr_reference_selected_values_from_record(pright_rec,
+		pstate->popts->pright_join_field_names);
 	if (pright_field_values != NULL) {
 		join_bucket_t* pleft_bucket = lhmslv_get(pstate->pleft_buckets_by_join_field_values, pright_field_values);
 		slls_free(pright_field_values);
@@ -551,8 +559,12 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 		lrec_t* pleft_rec = plrec_reader->pprocess_func(plrec_reader->pvstate, pvhandle, pctx);
 		if (pleft_rec == NULL)
 			break;
+		// Mmapped input records are backed by their storage, i.e. they contain pointers into
+		// mmaped file data. After the lrec reader is freed they will be invalid. So in this
+		// ingestor we need to copy.
+		lrec_t* pleft_copy = lrec_copy(pleft_rec);
 
-		slls_t* pleft_field_values = mlr_reference_selected_values_from_record(pleft_rec,
+		slls_t* pleft_field_values = mlr_reference_selected_values_from_record(pleft_copy,
 			pstate->popts->pleft_join_field_names);
 		if (pleft_field_values != NULL) {
 			join_bucket_t* pbucket = lhmslv_get(pstate->pleft_buckets_by_join_field_values, pleft_field_values);
@@ -564,14 +576,15 @@ static void ingest_left_file(mapper_join_state_t* pstate) {
 				pbucket->pleft_field_values = slls_copy(pleft_field_values);
 				lhmslv_put(pstate->pleft_buckets_by_join_field_values, pkey_field_values_copy, pbucket,
 					FREE_ENTRY_KEY);
-				sllv_append(pbucket->precords, pleft_rec);
+				sllv_append(pbucket->precords, pleft_copy);
 			} else { // Previously seen key-field-value: append record to bucket
-				sllv_append(pbucket->precords, pleft_rec);
+				sllv_append(pbucket->precords, pleft_copy);
 			}
 			slls_free(pleft_field_values);
 		} else {
-			sllv_append(pstate->pleft_unpaired_records, pleft_rec);
+			sllv_append(pstate->pleft_unpaired_records, pleft_copy);
 		}
+		lrec_free(pleft_rec);
 	}
 
 	plrec_reader->pclose_func(plrec_reader->pvstate, pvhandle, pstate->popts->prepipe);
