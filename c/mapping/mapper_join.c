@@ -87,10 +87,10 @@ static void mapper_join_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  --np         Do not emit paired records\n");
 	fprintf(o, "  --ul         Emit unpaired records from the left file\n");
 	fprintf(o, "  --ur         Emit unpaired records from the right file(s)\n");
-	fprintf(o, "  -s|--sorted-input   Require sorted input: records must be sorted\n");
+	fprintf(o, "  -s|--sorted-input  Require sorted input: records must be sorted\n");
 	fprintf(o, "               lexically by their join-field names, else not all records will\n");
 	fprintf(o, "               be paired. The only likely use case for this is with a left\n");
-	fprintf(o, "               file which is too big to fit into system memory.\n");
+	fprintf(o, "               file which is too big to fit into system memory otherwise.\n");
 	fprintf(o, "  -u           Enable unsorted input. (This is the default even without -u.)\n");
 	fprintf(o, "               In this case, the entire left file will be loaded into memory.\n");
 

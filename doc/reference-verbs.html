@@ -1237,10 +1237,12 @@ Options:
   --np         Do not emit paired records
   --ul         Emit unpaired records from the left file
   --ur         Emit unpaired records from the right file(s)
-  -u           Enable unsorted input. In this case, the entire left file will
-               be loaded into memory. Without -u, records must be sorted
+  -s|--sorted-input  Require sorted input: records must be sorted
                lexically by their join-field names, else not all records will
-               be paired.
+               be paired. The only likely use case for this is with a left
+               file which is too big to fit into system memory otherwise.
+  -u           Enable unsorted input. (This is the default even without -u.)
+               In this case, the entire left file will be loaded into memory.
   --prepipe {command} As in main input options; see mlr --help for details.
                If you wish to use a prepipe command for the main input as well
                as here, it must be specified there as well as here.
