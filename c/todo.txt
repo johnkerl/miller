@@ -2,6 +2,8 @@
 BUGFIXES
 
 ! json join
+! neaten vg.out !
+! synctool -4/-6
 
 ================================================================
 5.0.0 POST-RELEASE TO DO:
@@ -13,6 +15,8 @@ BUGFIXES
   o avoid pathext for pcreposix.dll @ runtime, outside of msys2
 
 ! join -u
+
+! 'nest --evar , -f foo' etc
 
 ! cover-page simplify
 

@@ -1,0 +1,219 @@
+Using mlr executable valgrind --leak-check=full ./reg_test/../../c/mlrg
+
+mlr cat ./reg_test/input/abixy
+Command: ./reg_test/../../c/mlrg cat ./reg_test/input/abixy
+
+--1366737-- WARNING: Serious error when reading debug info
+--1366737-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1366737-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--1366737-- WARNING: Serious error when reading debug info
+--1366737-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1366737-- Last block truncated in .debug_info; ignoring
+--1366737-- WARNING: Serious error when reading debug info
+--1366737-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1366737-- parse_CU_Header: is neither DWARF2 nor DWARF3 nor DWARF4
+--1366737-- WARNING: Serious error when reading debug info
+--1366737-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1366737-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--1366737-- WARNING: Serious error when reading debug info
+--1366737-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1366737-- Last block truncated in .debug_info; ignoring
+--1366737-- WARNING: Serious error when reading debug info
+--1366737-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1366737-- parse_CU_Header: is neither DWARF2 nor DWARF3 nor DWARF4
+
+All heap blocks were freed -- no leaks are possible
+
+mlr --prepipe cat --odkvp join -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+Command: ./reg_test/../../c/mlrg --prepipe cat --odkvp join -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+
+--1369394-- WARNING: Serious error when reading debug info
+--1369394-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369394-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--1369394-- WARNING: Serious error when reading debug info
+--1369394-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369394-- Last block truncated in .debug_info; ignoring
+--1369394-- WARNING: Serious error when reading debug info
+--1369394-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369394-- parse_CU_Header: is neither DWARF2 nor DWARF3 nor DWARF4
+--1369394-- WARNING: Serious error when reading debug info
+--1369394-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369394-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--1369394-- WARNING: Serious error when reading debug info
+--1369394-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369394-- Last block truncated in .debug_info; ignoring
+--1369394-- WARNING: Serious error when reading debug info
+--1369394-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369394-- parse_CU_Header: is neither DWARF2 nor DWARF3 nor DWARF4
+
+32 bytes in 1 blocks are definitely lost in loss record 1 of 2
+   at 0x4C26B0F: malloc (in /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+   by 0x40CE15: mlr_malloc_or_die (mlrutil.c:89)
+   by 0x42BA54: mlr_alloc_read_line_single_delimiter (line_readers.c:15)
+   by 0x434B6F: lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line_term (lrec_reader_stdio_dkvp.c:103)
+   by 0x45BEAE: ingest_left_file (mapper_join.c:559)
+   by 0x45B916: mapper_join_process_unsorted (mapper_join.c:421)
+   by 0x428C4A: chain_map (stream.c:219)
+   by 0x428BA7: drive_lrec (stream.c:200)
+   by 0x428B48: do_file_chained (stream.c:189)
+   by 0x428970: do_stream_chained_to_stdout (stream.c:143)
+   by 0x4284F3: do_stream_chained (stream.c:34)
+   by 0x4024B3: main (mlrmain.c:32)
+
+64 bytes in 1 blocks are definitely lost in loss record 2 of 2
+   at 0x4C26B0F: malloc (in /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+   by 0x40CE15: mlr_malloc_or_die (mlrutil.c:89)
+   by 0x42BA54: mlr_alloc_read_line_single_delimiter (line_readers.c:15)
+   by 0x434B6F: lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line_term (lrec_reader_stdio_dkvp.c:103)
+   by 0x428ABB: do_file_chained (stream.c:177)
+   by 0x428970: do_stream_chained_to_stdout (stream.c:143)
+   by 0x4284F3: do_stream_chained (stream.c:34)
+   by 0x4024B3: main (mlrmain.c:32)
+
+mlr --odkvp join --prepipe cat -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+Command: ./reg_test/../../c/mlrg --odkvp join --prepipe cat -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+
+--1369398-- WARNING: Serious error when reading debug info
+--1369398-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369398-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--1369398-- WARNING: Serious error when reading debug info
+--1369398-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369398-- Last block truncated in .debug_info; ignoring
+--1369398-- WARNING: Serious error when reading debug info
+--1369398-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369398-- parse_CU_Header: is neither DWARF2 nor DWARF3 nor DWARF4
+--1369398-- WARNING: Serious error when reading debug info
+--1369398-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369398-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--1369398-- WARNING: Serious error when reading debug info
+--1369398-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369398-- Last block truncated in .debug_info; ignoring
+--1369398-- WARNING: Serious error when reading debug info
+--1369398-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369398-- parse_CU_Header: is neither DWARF2 nor DWARF3 nor DWARF4
+
+32 bytes in 1 blocks are definitely lost in loss record 1 of 1
+   at 0x4C26B0F: malloc (in /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+   by 0x40CE15: mlr_malloc_or_die (mlrutil.c:89)
+   by 0x42BA54: mlr_alloc_read_line_single_delimiter (line_readers.c:15)
+   by 0x434B6F: lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line_term (lrec_reader_stdio_dkvp.c:103)
+   by 0x45BEAE: ingest_left_file (mapper_join.c:559)
+   by 0x45B916: mapper_join_process_unsorted (mapper_join.c:421)
+   by 0x428C4A: chain_map (stream.c:219)
+   by 0x428BA7: drive_lrec (stream.c:200)
+   by 0x428B48: do_file_chained (stream.c:189)
+   by 0x428970: do_stream_chained_to_stdout (stream.c:143)
+   by 0x4284F3: do_stream_chained (stream.c:34)
+   by 0x4024B3: main (mlrmain.c:32)
+
+mlr --prepipe cat --odkvp join --prepipe cat -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+Command: ./reg_test/../../c/mlrg --prepipe cat --odkvp join --prepipe cat -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+
+--1369400-- WARNING: Serious error when reading debug info
+--1369400-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369400-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--1369400-- WARNING: Serious error when reading debug info
+--1369400-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369400-- Last block truncated in .debug_info; ignoring
+--1369400-- WARNING: Serious error when reading debug info
+--1369400-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369400-- parse_CU_Header: is neither DWARF2 nor DWARF3 nor DWARF4
+--1369400-- WARNING: Serious error when reading debug info
+--1369400-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369400-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--1369400-- WARNING: Serious error when reading debug info
+--1369400-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369400-- Last block truncated in .debug_info; ignoring
+--1369400-- WARNING: Serious error when reading debug info
+--1369400-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369400-- parse_CU_Header: is neither DWARF2 nor DWARF3 nor DWARF4
+
+32 bytes in 1 blocks are definitely lost in loss record 1 of 2
+   at 0x4C26B0F: malloc (in /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+   by 0x40CE15: mlr_malloc_or_die (mlrutil.c:89)
+   by 0x42BA54: mlr_alloc_read_line_single_delimiter (line_readers.c:15)
+   by 0x434B6F: lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line_term (lrec_reader_stdio_dkvp.c:103)
+   by 0x45BEAE: ingest_left_file (mapper_join.c:559)
+   by 0x45B916: mapper_join_process_unsorted (mapper_join.c:421)
+   by 0x428C4A: chain_map (stream.c:219)
+   by 0x428BA7: drive_lrec (stream.c:200)
+   by 0x428B48: do_file_chained (stream.c:189)
+   by 0x428970: do_stream_chained_to_stdout (stream.c:143)
+   by 0x4284F3: do_stream_chained (stream.c:34)
+   by 0x4024B3: main (mlrmain.c:32)
+
+64 bytes in 1 blocks are definitely lost in loss record 2 of 2
+   at 0x4C26B0F: malloc (in /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+   by 0x40CE15: mlr_malloc_or_die (mlrutil.c:89)
+   by 0x42BA54: mlr_alloc_read_line_single_delimiter (line_readers.c:15)
+   by 0x434B6F: lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line_term (lrec_reader_stdio_dkvp.c:103)
+   by 0x428ABB: do_file_chained (stream.c:177)
+   by 0x428970: do_stream_chained_to_stdout (stream.c:143)
+   by 0x4284F3: do_stream_chained (stream.c:34)
+   by 0x4024B3: main (mlrmain.c:32)
+
+mlr --json join -s -j x -f ./reg_test/input/multi-format-join-a.json ./reg_test/input/multi-format-join-b.json
+Command: ./reg_test/../../c/mlrg --json join -s -j x -f ./reg_test/input/multi-format-join-a.json ./reg_test/input/multi-format-join-b.json
+
+--1369430-- WARNING: Serious error when reading debug info
+--1369430-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369430-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--1369430-- WARNING: Serious error when reading debug info
+--1369430-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369430-- Last block truncated in .debug_info; ignoring
+--1369430-- WARNING: Serious error when reading debug info
+--1369430-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369430-- parse_CU_Header: is neither DWARF2 nor DWARF3 nor DWARF4
+--1369430-- WARNING: Serious error when reading debug info
+--1369430-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369430-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--1369430-- WARNING: Serious error when reading debug info
+--1369430-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369430-- Last block truncated in .debug_info; ignoring
+--1369430-- WARNING: Serious error when reading debug info
+--1369430-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369430-- parse_CU_Header: is neither DWARF2 nor DWARF3 nor DWARF4
+
+mlr --dkvp join -s -j x -f ./reg_test/input/multi-format-join-a.dkvp ./reg_test/input/multi-format-join-b.dkvp
+Command: ./reg_test/../../c/mlrg --dkvp join -s -j x -f ./reg_test/input/multi-format-join-a.dkvp ./reg_test/input/multi-format-join-b.dkvp
+
+--1369432-- WARNING: Serious error when reading debug info
+--1369432-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369432-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--1369432-- WARNING: Serious error when reading debug info
+--1369432-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369432-- Last block truncated in .debug_info; ignoring
+--1369432-- WARNING: Serious error when reading debug info
+--1369432-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369432-- parse_CU_Header: is neither DWARF2 nor DWARF3 nor DWARF4
+--1369432-- WARNING: Serious error when reading debug info
+--1369432-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369432-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--1369432-- WARNING: Serious error when reading debug info
+--1369432-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369432-- Last block truncated in .debug_info; ignoring
+--1369432-- WARNING: Serious error when reading debug info
+--1369432-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369432-- parse_CU_Header: is neither DWARF2 nor DWARF3 nor DWARF4
+
+mlr --csvlite join -s -j x -f ./reg_test/input/multi-format-join-a.csv ./reg_test/input/multi-format-join-b.csv
+Command: ./reg_test/../../c/mlrg --csvlite join -s -j x -f ./reg_test/input/multi-format-join-a.csv ./reg_test/input/multi-format-join-b.csv
+
+--1369435-- WARNING: Serious error when reading debug info
+--1369435-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369435-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--1369435-- WARNING: Serious error when reading debug info
+--1369435-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369435-- Last block truncated in .debug_info; ignoring
+--1369435-- WARNING: Serious error when reading debug info
+--1369435-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_core-amd64-linux.so:
+--1369435-- parse_CU_Header: is neither DWARF2 nor DWARF3 nor DWARF4
+--1369435-- WARNING: Serious error when reading debug info
+--1369435-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369435-- Ignoring non-Dwarf2/3/4 block in .debug_info
+--1369435-- WARNING: Serious error when reading debug info
+--1369435-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369435-- Last block truncated in .debug_info; ignoring
+--1369435-- WARNING: Serious error when reading debug info
+--1369435-- When reading debug info from /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so:
+--1369435-- parse_CU_Header: is neither DWARF2 nor DWARF3 nor DWARF4

@@ -1,7 +1,8 @@
 SUBDIRS=	input expected
 EXTRA_DIST=	run README.md
 
-TESTS=		run
+TESTS=		run \
+		run --no-mmap
 
 # created by 'run'
 clean-local:

@@ -82,7 +82,7 @@ char* mlr_alloc_read_line_multiple_delimiter(
 
 	while (TRUE) {
 		size_t offset = q - line;
-		if (offset >= linecap) {
+		if (offset >= linecap-1) {
 			linecap = linecap << 1;
 			line = mlr_realloc_or_die(line, linecap);
 			q = line + offset;

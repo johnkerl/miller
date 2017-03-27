@@ -453,6 +453,7 @@ unit-test: test-mlrutil test-mlrregex test-argparse test-line-readers test-byte-
 
 reg-test:
 	./reg_test/run
+	./reg_test/run --no-mmap
 
 # ----------------------------------------------------------------
 # Run this after unit-test expected output has changed, and is verified to be

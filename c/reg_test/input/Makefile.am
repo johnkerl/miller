@@ -178,6 +178,7 @@ EXTRA_DIST=	\
 		utf8-2.csv \
 		utf8-align.dkvp \
 		utf8-align.nidx \
+		valgrind.txt \
 		x0to10.dat \
 		xy40.dkvp \
 		xyz345 \

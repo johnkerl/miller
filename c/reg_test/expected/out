@@ -43297,7 +43297,7 @@ x_sum
 ================================================================
 IMPLICIT-HEADER-CSV INPUT
 
-mlr --irs crlf --no-mmap --icsvlite --ifs , --opprint cut -x -f b/ ./reg_test/input/multi-sep.csv-crlf
+mlr --irs crlf --icsvlite --ifs , --opprint cut -x -f b/ ./reg_test/input/multi-sep.csv-crlf
 a/   i/ x/                    y/
 wye/ 0/ 0.641593543645736508/ 0.262688053894177098
 eks/ 1/ 0.827614412562742041/ 0.715431942006308552
@@ -43305,7 +43305,7 @@ zee/ 2/ 0.923068348748175560/ 0.009737410587136359
 zee/ 3/ 0.000047786161325772/ 0.803142013402256216
 zee/ 4/ 0.676537984365847889/ 0.573903236805416328
 
-mlr --irs crlf --implicit-csv-header --no-mmap --icsvlite --ifs , --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv-crlf
+mlr --irs crlf --implicit-csv-header --icsvlite --ifs , --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv-crlf
 1    3  4                     5
 a/   i/ x/                    y/
 wye/ 0/ 0.641593543645736508/ 0.262688053894177098
@@ -43314,7 +43314,7 @@ zee/ 2/ 0.923068348748175560/ 0.009737410587136359
 zee/ 3/ 0.000047786161325772/ 0.803142013402256216
 zee/ 4/ 0.676537984365847889/ 0.573903236805416328
 
-mlr --irs crlf --no-mmap --icsvlite --ifs /, --opprint cut -x -f b ./reg_test/input/multi-sep.csv-crlf
+mlr --irs crlf --icsvlite --ifs /, --opprint cut -x -f b ./reg_test/input/multi-sep.csv-crlf
 a   i x                    y/
 wye 0 0.641593543645736508 0.262688053894177098
 eks 1 0.827614412562742041 0.715431942006308552
@@ -43322,41 +43322,7 @@ zee 2 0.923068348748175560 0.009737410587136359
 zee 3 0.000047786161325772 0.803142013402256216
 zee 4 0.676537984365847889 0.573903236805416328
 
-mlr --irs crlf --implicit-csv-header --no-mmap --icsvlite --ifs /, --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv-crlf
-1   3 4                    5
-a   i x                    y/
-wye 0 0.641593543645736508 0.262688053894177098
-eks 1 0.827614412562742041 0.715431942006308552
-zee 2 0.923068348748175560 0.009737410587136359
-zee 3 0.000047786161325772 0.803142013402256216
-zee 4 0.676537984365847889 0.573903236805416328
-
-mlr --irs crlf --mmap --icsvlite --ifs , --opprint cut -x -f b/ ./reg_test/input/multi-sep.csv-crlf
-a/   i/ x/                    y/
-wye/ 0/ 0.641593543645736508/ 0.262688053894177098
-eks/ 1/ 0.827614412562742041/ 0.715431942006308552
-zee/ 2/ 0.923068348748175560/ 0.009737410587136359
-zee/ 3/ 0.000047786161325772/ 0.803142013402256216
-zee/ 4/ 0.676537984365847889/ 0.573903236805416328
-
-mlr --irs crlf --implicit-csv-header --mmap --icsvlite --ifs , --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv-crlf
-1    3  4                     5
-a/   i/ x/                    y/
-wye/ 0/ 0.641593543645736508/ 0.262688053894177098
-eks/ 1/ 0.827614412562742041/ 0.715431942006308552
-zee/ 2/ 0.923068348748175560/ 0.009737410587136359
-zee/ 3/ 0.000047786161325772/ 0.803142013402256216
-zee/ 4/ 0.676537984365847889/ 0.573903236805416328
-
-mlr --irs crlf --mmap --icsvlite --ifs /, --opprint cut -x -f b ./reg_test/input/multi-sep.csv-crlf
-a   i x                    y/
-wye 0 0.641593543645736508 0.262688053894177098
-eks 1 0.827614412562742041 0.715431942006308552
-zee 2 0.923068348748175560 0.009737410587136359
-zee 3 0.000047786161325772 0.803142013402256216
-zee 4 0.676537984365847889 0.573903236805416328
-
-mlr --irs crlf --implicit-csv-header --mmap --icsvlite --ifs /, --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv-crlf
+mlr --irs crlf --implicit-csv-header --icsvlite --ifs /, --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv-crlf
 1   3 4                    5
 a   i x                    y/
 wye 0 0.641593543645736508 0.262688053894177098
@@ -43996,38 +43962,22 @@ b - - - -         -      -         -      -         -
 ================================================================
 SPACE-PADDING
 
-mlr --mmap --idkvp --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.dkvp
+mlr --idkvp --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.dkvp
 a=1,b=2
 c=3
 
-mlr --no-mmap --idkvp --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.dkvp
-a=1,b=2
-c=3
-
-mlr --mmap --inidx --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.nidx
+mlr --inidx --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.nidx
 1=a,2=b,3=c
 1=d,2=e,3=f
 
-mlr --no-mmap --inidx --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.nidx
-1=a,2=b,3=c
-1=d,2=e,3=f
-
-mlr --mmap --icsvlite --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.pprint
-a=1,b=2,c=3
-
-mlr --no-mmap --icsvlite --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.pprint
+mlr --icsvlite --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.pprint
 a=1,b=2,c=3
 
 
 ================================================================
 DOUBLE PS
 
-mlr --no-mmap --opprint cat ./reg_test/input/double-ps.dkvp
-a   b    c
-pan wy.e 3
-pan wy=e 3
-
-mlr --mmap --opprint cat ./reg_test/input/double-ps.dkvp
+mlr --opprint cat ./reg_test/input/double-ps.dkvp
 a   b    c
 pan wy.e 3
 pan wy=e 3
@@ -44036,53 +43986,25 @@ pan wy=e 3
 ================================================================
 MISSING FINAL LF
 
-mlr --no-mmap --csvlite cat ./reg_test/input/truncated.csv
-a,b,c
-1,2,3
-4,5,6
-7,8,9
-
 mlr --csvlite cat ./reg_test/input/truncated.csv
 a,b,c
 1,2,3
 4,5,6
 7,8,9
 
-mlr --no-mmap --dkvp cat ./reg_test/input/truncated.dkvp
-a=1,b=2
-c=3
-
 mlr --dkvp cat ./reg_test/input/truncated.dkvp
 a=1,b=2
 c=3
 
-mlr --no-mmap --nidx cat ./reg_test/input/truncated.nidx
-1 2 3
-4 5
-
 mlr --nidx cat ./reg_test/input/truncated.nidx
 1 2 3
 4 5
-
-mlr --no-mmap --pprint cat ./reg_test/input/truncated.pprint
-a b c
-1 2 3
-4 5 6
-7 8 9
 
 mlr --pprint cat ./reg_test/input/truncated.pprint
 a b c
 1 2 3
 4 5 6
 7 8 9
-
-mlr --no-mmap --xtab cat ./reg_test/input/truncated.xtab-crlf
-a 1
-b 2
-c 3
-
-d 4
-e 5
 
 mlr --xtab cat ./reg_test/input/truncated.xtab-crlf
 a 1
@@ -44616,43 +44538,18 @@ x,"y""yy",z
 ================================================================
 RFC-CSV
 
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/simple.csv-crlf
-a,b,c
-1,x,3
-4,5,6
-x,"y""yy",z
-
 mlr --mmap --csv cat ./reg_test/input/rfc-csv/simple.csv-crlf
 a,b,c
 1,x,3
 4,5,6
 x,"y""yy",z
 
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv
-a,b,c
-1,x,3
-4,5,6
-
 mlr --mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv
 a,b,c
 1,x,3
 4,5,6
 
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/narrow.csv
-a
-1
-2
-3
-4
-
 mlr --mmap --csv cat ./reg_test/input/rfc-csv/narrow.csv
-a
-1
-2
-3
-4
-
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/narrow-truncated.csv
 a
 1
 2
@@ -44666,17 +44563,7 @@ a
 3
 4
 
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/quoted-comma.csv
-a,b,c
-1,"x,3",y
-4,5,6
-
 mlr --mmap --csv cat ./reg_test/input/rfc-csv/quoted-comma.csv
-a,b,c
-1,"x,3",y
-4,5,6
-
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/quoted-comma-truncated.csv
 a,b,c
 1,"x,3",y
 4,5,6
@@ -44686,19 +44573,7 @@ a,b,c
 1,"x,3",y
 4,5,6
 
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/quoted-crlf.csv
-a,b,c
-1,"x
-3",y
-4,5,6
-
 mlr --mmap --csv cat ./reg_test/input/rfc-csv/quoted-crlf.csv
-a,b,c
-1,"x
-3",y
-4,5,6
-
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/quoted-crlf-truncated.csv
 a,b,c
 1,"x
 3",y
@@ -44710,14 +44585,6 @@ a,b,c
 3",y
 4,5,6
 
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv ./reg_test/input/rfc-csv/simple.csv-crlf
-a,b,c
-1,x,3
-4,5,6
-1,x,3
-4,5,6
-x,"y""yy",z
-
 mlr --mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv ./reg_test/input/rfc-csv/simple.csv-crlf
 a,b,c
 1,x,3
@@ -44726,14 +44593,6 @@ a,b,c
 4,5,6
 x,"y""yy",z
 
-mlr --no-mmap --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b ./reg_test/input/rfc-csv/modify-defaults.csv
-a|c
-
-1|3
-
-4|6
-
-
 mlr --mmap --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b ./reg_test/input/rfc-csv/modify-defaults.csv
 a|c
 
@@ -44741,12 +44600,6 @@ a|c
 
 4|6
 
-
-mlr --no-mmap --csv --rs lf --quote-original cut -o -f c,b,a ./reg_test/input/quote-original.csv
-c,b,a
-3,2,1
-6,"5",4
-"9",8,"7"
 
 mlr --mmap --csv --rs lf --quote-original cut -o -f c,b,a ./reg_test/input/quote-original.csv
 c,b,a
@@ -44836,7 +44689,7 @@ a
 ================================================================
 MULTI-CHARACTER IRS/IFS/IPS FOR DKVP
 
-mlr --oxtab --idkvp --mmap --irs lf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --idkvp --irs lf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
 x :0.641593543645736508/
 a :wye/
 i :0/
@@ -44857,7 +44710,7 @@ x :0.676537984365847889/
 a :zee/
 i :4/
 
-mlr --oxtab --idkvp --mmap --irs lf --ifs /, --ips =: cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --idkvp --irs lf --ifs /, --ips =: cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
 x 0.641593543645736508
 a wye
 i 0
@@ -44878,7 +44731,7 @@ x 0.676537984365847889
 a zee
 i 4
 
-mlr --oxtab --idkvp --mmap --irs crlf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --idkvp --irs crlf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
 x :0.641593543645736508/
 a :wye/
 i :0/
@@ -44899,91 +44752,7 @@ x :0.676537984365847889/
 a :zee/
 i :4/
 
-mlr --oxtab --idkvp --mmap --irs crlf --ifs /, --ips =: cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
-x 0.641593543645736508
-a wye
-i 0
-
-x 0.827614412562742041
-a eks
-i 1
-
-x 0.923068348748175560
-a zee
-i 2
-
-x 0.000047786161325772
-a zee
-i 3
-
-x 0.676537984365847889
-a zee
-i 4
-
-mlr --oxtab --no-mmap --irs lf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
-x :0.641593543645736508/
-a :wye/
-i :0/
-
-x :0.827614412562742041/
-a :eks/
-i :1/
-
-x :0.923068348748175560/
-a :zee/
-i :2/
-
-x :0.000047786161325772/
-a :zee/
-i :3/
-
-x :0.676537984365847889/
-a :zee/
-i :4/
-
-mlr --oxtab --no-mmap --irs lf --ifs /, --ips =: cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
-x 0.641593543645736508
-a wye
-i 0
-
-x 0.827614412562742041
-a eks
-i 1
-
-x 0.923068348748175560
-a zee
-i 2
-
-x 0.000047786161325772
-a zee
-i 3
-
-x 0.676537984365847889
-a zee
-i 4
-
-mlr --oxtab --no-mmap --irs crlf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
-x :0.641593543645736508/
-a :wye/
-i :0/
-
-x :0.827614412562742041/
-a :eks/
-i :1/
-
-x :0.923068348748175560/
-a :zee/
-i :2/
-
-x :0.000047786161325772/
-a :zee/
-i :3/
-
-x :0.676537984365847889/
-a :zee/
-i :4/
-
-mlr --oxtab --no-mmap --irs crlf --ifs /, --ips =: cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --idkvp --irs crlf --ifs /, --ips =: cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
 x 0.641593543645736508
 a wye
 i 0
@@ -45008,7 +44777,7 @@ i 4
 ================================================================
 MULTI-CHARACTER IRS/IFS FOR NIDX
 
-mlr --oxtab --inidx --mmap --irs lf --ifs , cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --inidx --irs lf --ifs , cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
 4 x=:0.641593543645736508/
 1 a=:wye/
 3 i=:0/
@@ -45029,7 +44798,7 @@ mlr --oxtab --inidx --mmap --irs lf --ifs , cut -o -f 4,1,3 ./reg_test/input/mul
 1 a=:zee/
 3 i=:4/
 
-mlr --oxtab --inidx --mmap --irs lf --ifs /, cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --inidx --irs lf --ifs /, cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
 4 x=:0.641593543645736508
 1 a=:wye
 3 i=:0
@@ -45050,7 +44819,7 @@ mlr --oxtab --inidx --mmap --irs lf --ifs /, cut -o -f 4,1,3 ./reg_test/input/mu
 1 a=:zee
 3 i=:4
 
-mlr --oxtab --inidx --mmap --irs crlf --ifs , cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --inidx --irs crlf --ifs , cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
 4 x=:0.641593543645736508/
 1 a=:wye/
 3 i=:0/
@@ -45071,91 +44840,7 @@ mlr --oxtab --inidx --mmap --irs crlf --ifs , cut -o -f 4,1,3 ./reg_test/input/m
 1 a=:zee/
 3 i=:4/
 
-mlr --oxtab --inidx --mmap --irs crlf --ifs /, cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
-4 x=:0.641593543645736508
-1 a=:wye
-3 i=:0
-
-4 x=:0.827614412562742041
-1 a=:eks
-3 i=:1
-
-4 x=:0.923068348748175560
-1 a=:zee
-3 i=:2
-
-4 x=:0.000047786161325772
-1 a=:zee
-3 i=:3
-
-4 x=:0.676537984365847889
-1 a=:zee
-3 i=:4
-
-mlr --oxtab --inidx --no-mmap --irs lf --ifs , cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
-4 x=:0.641593543645736508/
-1 a=:wye/
-3 i=:0/
-
-4 x=:0.827614412562742041/
-1 a=:eks/
-3 i=:1/
-
-4 x=:0.923068348748175560/
-1 a=:zee/
-3 i=:2/
-
-4 x=:0.000047786161325772/
-1 a=:zee/
-3 i=:3/
-
-4 x=:0.676537984365847889/
-1 a=:zee/
-3 i=:4/
-
-mlr --oxtab --inidx --no-mmap --irs lf --ifs /, cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
-4 x=:0.641593543645736508
-1 a=:wye
-3 i=:0
-
-4 x=:0.827614412562742041
-1 a=:eks
-3 i=:1
-
-4 x=:0.923068348748175560
-1 a=:zee
-3 i=:2
-
-4 x=:0.000047786161325772
-1 a=:zee
-3 i=:3
-
-4 x=:0.676537984365847889
-1 a=:zee
-3 i=:4
-
-mlr --oxtab --inidx --no-mmap --irs crlf --ifs , cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
-4 x=:0.641593543645736508/
-1 a=:wye/
-3 i=:0/
-
-4 x=:0.827614412562742041/
-1 a=:eks/
-3 i=:1/
-
-4 x=:0.923068348748175560/
-1 a=:zee/
-3 i=:2/
-
-4 x=:0.000047786161325772/
-1 a=:zee/
-3 i=:3/
-
-4 x=:0.676537984365847889/
-1 a=:zee/
-3 i=:4/
-
-mlr --oxtab --inidx --no-mmap --irs crlf --ifs /, cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --inidx --irs crlf --ifs /, cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
 4 x=:0.641593543645736508
 1 a=:wye
 3 i=:0
@@ -45180,7 +44865,7 @@ mlr --oxtab --inidx --no-mmap --irs crlf --ifs /, cut -o -f 4,1,3 ./reg_test/inp
 ================================================================
 MULTI-CHARACTER IRS/IFS FOR CSVLITE
 
-mlr --oxtab --icsvlite --mmap --irs lf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv-crlf
+mlr --oxtab --icsvlite --irs lf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv-crlf
 x/ 0.641593543645736508/
 a/ wye/
 i/ 0/
@@ -45201,7 +44886,7 @@ x/ 0.676537984365847889/
 a/ zee/
 i/ 4/
 
-mlr --oxtab --icsvlite --mmap --irs lf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv-crlf
+mlr --oxtab --icsvlite --irs lf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv-crlf
 x 0.641593543645736508
 a wye
 i 0
@@ -45222,7 +44907,7 @@ x 0.676537984365847889
 a zee
 i 4
 
-mlr --oxtab --icsvlite --mmap --irs crlf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv-crlf
+mlr --oxtab --icsvlite --irs crlf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv-crlf
 x/ 0.641593543645736508/
 a/ wye/
 i/ 0/
@@ -45243,91 +44928,7 @@ x/ 0.676537984365847889/
 a/ zee/
 i/ 4/
 
-mlr --oxtab --icsvlite --mmap --irs crlf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv-crlf
-x 0.641593543645736508
-a wye
-i 0
-
-x 0.827614412562742041
-a eks
-i 1
-
-x 0.923068348748175560
-a zee
-i 2
-
-x 0.000047786161325772
-a zee
-i 3
-
-x 0.676537984365847889
-a zee
-i 4
-
-mlr --oxtab --icsvlite --no-mmap --irs lf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv-crlf
-x/ 0.641593543645736508/
-a/ wye/
-i/ 0/
-
-x/ 0.827614412562742041/
-a/ eks/
-i/ 1/
-
-x/ 0.923068348748175560/
-a/ zee/
-i/ 2/
-
-x/ 0.000047786161325772/
-a/ zee/
-i/ 3/
-
-x/ 0.676537984365847889/
-a/ zee/
-i/ 4/
-
-mlr --oxtab --icsvlite --no-mmap --irs lf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv-crlf
-x 0.641593543645736508
-a wye
-i 0
-
-x 0.827614412562742041
-a eks
-i 1
-
-x 0.923068348748175560
-a zee
-i 2
-
-x 0.000047786161325772
-a zee
-i 3
-
-x 0.676537984365847889
-a zee
-i 4
-
-mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv-crlf
-x/ 0.641593543645736508/
-a/ wye/
-i/ 0/
-
-x/ 0.827614412562742041/
-a/ eks/
-i/ 1/
-
-x/ 0.923068348748175560/
-a/ zee/
-i/ 2/
-
-x/ 0.000047786161325772/
-a/ zee/
-i/ 3/
-
-x/ 0.676537984365847889/
-a/ zee/
-i/ 4/
-
-mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv-crlf
+mlr --oxtab --icsvlite --irs crlf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv-crlf
 x 0.641593543645736508
 a wye
 i 0
@@ -45354,28 +44955,12 @@ MULTI-CHARACTER SEPARATORS FOR XTAB
 
 mlr --mmap --xtab --ifs crlf --ofs Z cut -x -f b ./reg_test/input/truncated.xtab-crlf
 a 1Zc 3ZZd 4Ze 5Z
-mlr --no-mmap --xtab --ifs crlf --ofs Z cut -x -f b ./reg_test/input/truncated.xtab-crlf
-a 1Zc 3ZZd 4Ze 5Z
 mlr --mmap --xtab --ips . --ops @ cut -x -f b ./reg_test/input/dots.xtab
 a@1
 c@345
 
 defg@6
 hi@@@78
-
-mlr --no-mmap --xtab --ips . --ops @ cut -x -f b ./reg_test/input/dots.xtab
-a@1
-c@345
-
-defg@6
-hi@@@78
-
-mlr --no-mmap --xtab --ips . --ops := cut -x -f b ./reg_test/input/dots.xtab
-a:=1
-c:=345
-
-defg:=6
-hi:=78
 
 mlr --xtab --ips :  --ops @@@@ put $sum=int($a+$b) ./reg_test/input/multi-ips.dkvp
 a@@@@1
@@ -45386,20 +44971,7 @@ sum@@@@3
 ================================================================
 MULTI-CHARACTER IRS FOR PPRINT
 
-mlr --mmap --pprint --irs crlf --ifs / --ofs @ cut -x -f b ./reg_test/input/dots.pprint-crlf
-a@@@i@@x@@@@@@@@@@@@@@@@@@@y
-pan@1@@0.3467901443380824@@0.7268028627434533
-eks@2@@0.7586799647899636@@0.5221511083334797
-wye@3@@0.20460330576630303@0.33831852551664776
-eks@4@@0.38139939387114097@0.13418874328430463
-wye@5@@0.5732889198020006@@0.8636244699032729
-zee@6@@0.5271261600918548@@0.49322128674835697
-eks@7@@0.6117840605678454@@0.1878849191181694
-zee@8@@0.5985540091064224@@0.976181385699006
-hat@9@@0.03144187646093577@0.7495507603507059
-pan@10@0.5026260055412137@@0.9526183602969864
-
-mlr --no-mmap --pprint --irs crlf --ifs / --ofs @ cut -x -f b ./reg_test/input/dots.pprint-crlf
+mlr --pprint --irs crlf --ifs / --ofs @ cut -x -f b ./reg_test/input/dots.pprint-crlf
 a@@@i@@x@@@@@@@@@@@@@@@@@@@y
 pan@1@@0.3467901443380824@@0.7268028627434533
 eks@2@@0.7586799647899636@@0.5221511083334797
@@ -45876,29 +45448,6 @@ mlr put -q --jknquoteint o = $*; o[7] = 8; dump o ./reg_test/input/json-output-o
 }
 
 mlr --ijson --opprint cat ./reg_test/input/small-non-nested-wrapped.json ./reg_test/input/small-non-nested-wrapped.json
-a   b   i  x                   y
-pan pan 1  0.3467901443380824  0.7268028627434533
-eks pan 2  0.7586799647899636  0.5221511083334797
-wye wye 3  0.20460330576630303 0.33831852551664776
-eks wye 4  0.38139939387114097 0.13418874328430463
-wye pan 5  0.5732889198020006  0.8636244699032729
-zee pan 6  0.5271261600918548  0.49322128674835697
-eks zee 7  0.6117840605678454  0.1878849191181694
-zee wye 8  0.5985540091064224  0.976181385699006
-hat wye 9  0.03144187646093577 0.7495507603507059
-pan wye 10 0.5026260055412137  0.9526183602969864
-pan pan 1  0.3467901443380824  0.7268028627434533
-eks pan 2  0.7586799647899636  0.5221511083334797
-wye wye 3  0.20460330576630303 0.33831852551664776
-eks wye 4  0.38139939387114097 0.13418874328430463
-wye pan 5  0.5732889198020006  0.8636244699032729
-zee pan 6  0.5271261600918548  0.49322128674835697
-eks zee 7  0.6117840605678454  0.1878849191181694
-zee wye 8  0.5985540091064224  0.976181385699006
-hat wye 9  0.03144187646093577 0.7495507603507059
-pan wye 10 0.5026260055412137  0.9526183602969864
-
-mlr --no-mmap --ijson --opprint cat ./reg_test/input/small-non-nested-wrapped.json ./reg_test/input/small-non-nested-wrapped.json
 a   b   i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -46903,8 +46452,6 @@ mlr --x2m cat ./reg_test/input/abixy.xtab
 ================================================================
 LF/CRLF AND AUTODETECT
 
-
----------------------------------------------------------------- mmap dkvp
 mlr --irs auto --ors lf cat ./reg_test/input/line-term-lf.dkvp
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
@@ -46942,56 +46489,6 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 mlr cat ./reg_test/input/line-term-crlf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-
----------------------------------------------------------------- stdio dkvp
-mlr --irs auto --ors lf --no-mmap cat ./reg_test/input/line-term-lf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-mlr --irs auto --ors lf --no-mmap cat ./reg_test/input/line-term-crlf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-mlr --no-mmap cat ./reg_test/input/line-term-lf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-mlr --no-mmap cat ./reg_test/input/line-term-crlf.dkvp
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -47054,56 +46551,6 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 
----------------------------------------------------------------- stdio nidx
-mlr --irs auto --ors lf --nidx --fs comma --no-mmap cat ./reg_test/input/line-term-lf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-mlr --irs auto --ors lf --nidx --fs comma --no-mmap cat ./reg_test/input/line-term-crlf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-mlr --nidx --fs comma --no-mmap cat ./reg_test/input/line-term-lf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-mlr --nidx --fs comma --no-mmap cat ./reg_test/input/line-term-crlf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-
 ---------------------------------------------------------------- mmap csvlite
 mlr --irs auto --ors lf --csvlite cat ./reg_test/input/line-term-lf.csv
 a,b,i,x,y
@@ -47145,60 +46592,6 @@ hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
 mlr --csvlite cat ./reg_test/input/line-term-crlf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-
----------------------------------------------------------------- stdio csvlite
-mlr --irs auto --ors lf --csvlite --no-mmap cat ./reg_test/input/line-term-lf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --irs auto --ors lf --csvlite --no-mmap cat ./reg_test/input/line-term-crlf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --csvlite --no-mmap cat ./reg_test/input/line-term-lf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --csvlite --no-mmap cat ./reg_test/input/line-term-crlf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
 eks,pan,2,0.7586799647899636,0.5221511083334797
@@ -47266,60 +46659,6 @@ hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
 
----------------------------------------------------------------- stdio pprint
-mlr --irs auto --ors lf --pprint --no-mmap cat ./reg_test/input/line-term-lf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --irs auto --ors lf --pprint --no-mmap cat ./reg_test/input/line-term-crlf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --pprint --no-mmap cat ./reg_test/input/line-term-lf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --pprint --no-mmap cat ./reg_test/input/line-term-crlf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-
 ---------------------------------------------------------------- mmap xtab
 mlr --ifs auto --xtab cat ./reg_test/input/line-term-lf.xtab
 a pan
@@ -47566,252 +46905,6 @@ x 0.5026260055412137
 y 0.9526183602969864
 
 
----------------------------------------------------------------- stdio xtab
-mlr --ifs auto --xtab --no-mmap cat ./reg_test/input/line-term-lf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-mlr --ifs auto --xtab --no-mmap cat ./reg_test/input/line-term-crlf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-mlr --fs auto --xtab --no-mmap cat ./reg_test/input/line-term-lf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-mlr --fs auto --xtab --no-mmap cat ./reg_test/input/line-term-crlf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-
 ---------------------------------------------------------------- mmap xtab
 mlr --ifs auto --xtab cat ./reg_test/input/line-term-lf.xtab
 a pan
@@ -47997,252 +47090,6 @@ x 0.5026260055412137
 y 0.9526183602969864
 
 mlr --fs auto --xtab cat ./reg_test/input/line-term-crlf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-
----------------------------------------------------------------- stdio xtab
-mlr --ifs auto --xtab --no-mmap cat ./reg_test/input/line-term-lf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-mlr --ifs auto --xtab --no-mmap cat ./reg_test/input/line-term-crlf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-mlr --fs auto --xtab --no-mmap cat ./reg_test/input/line-term-lf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-mlr --fs auto --xtab --no-mmap cat ./reg_test/input/line-term-crlf.xtab
 a pan
 b pan
 i 1
@@ -48358,60 +47205,6 @@ hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
 
----------------------------------------------------------------- stdio csv
-mlr --irs auto --ors lf --csv --no-mmap cat ./reg_test/input/line-term-lf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --irs auto --ors lf --csv --no-mmap cat ./reg_test/input/line-term-crlf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --csv --no-mmap cat ./reg_test/input/line-term-lf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --csv --no-mmap cat ./reg_test/input/line-term-crlf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-
 ---------------------------------------------------------------- mmap json nowrap nostack
 mlr --irs auto --ors lf --json cat ./reg_test/input/line-term-lf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
@@ -48450,56 +47243,6 @@ mlr --json cat ./reg_test/input/line-term-lf.json
 { "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 
 mlr --json cat ./reg_test/input/line-term-crlf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-
----------------------------------------------------------------- stdio json nowrap nostack
-mlr --irs auto --ors lf --json --no-mmap cat ./reg_test/input/line-term-lf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-mlr --irs auto --ors lf --json --no-mmap cat ./reg_test/input/line-term-crlf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-mlr --json --no-mmap cat ./reg_test/input/line-term-lf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-mlr --json --no-mmap cat ./reg_test/input/line-term-crlf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 { "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
 { "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
@@ -48556,64 +47299,6 @@ mlr --jlistwrap --json cat ./reg_test/input/line-term-lf-wrap.json
 ]
 
 mlr --jlistwrap --json cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-
----------------------------------------------------------------- stdio json yeswrap nostack
-mlr --irs auto --ors lf --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-mlr --irs auto --ors lf --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-mlr --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-mlr --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
 [
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 ,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
@@ -48918,296 +47603,6 @@ mlr --json --jvstack cat ./reg_test/input/line-term-crlf.json
 }
 
 
----------------------------------------------------------------- stdio json nowrap yesstack
-mlr --irs auto --ors lf --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-mlr --irs auto --ors lf --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-mlr --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-mlr --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-
 ---------------------------------------------------------------- mmap json yeswrap yesstack
 mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ./reg_test/input/line-term-lf-wrap.json
 [
@@ -49506,304 +47901,6 @@ mlr --jlistwrap --json --jvstack cat ./reg_test/input/line-term-crlf-wrap.json
 ]
 
 
----------------------------------------------------------------- stdio json yeswrap yesstack
-mlr --irs auto --ors lf --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-mlr --irs auto --ors lf --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-mlr --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-mlr --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-
 ---------------------------------------------------------------- mmap json nowrap nostack
 mlr --irs auto --ors lf --json cat ./reg_test/input/line-term-lf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
@@ -49842,56 +47939,6 @@ mlr --json cat ./reg_test/input/line-term-lf.json
 { "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 
 mlr --json cat ./reg_test/input/line-term-crlf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-
----------------------------------------------------------------- stdio json nowrap nostack
-mlr --irs auto --ors lf --json --no-mmap cat ./reg_test/input/line-term-lf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-mlr --irs auto --ors lf --json --no-mmap cat ./reg_test/input/line-term-crlf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-mlr --json --no-mmap cat ./reg_test/input/line-term-lf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-mlr --json --no-mmap cat ./reg_test/input/line-term-crlf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 { "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
 { "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
@@ -49948,64 +47995,6 @@ mlr --jlistwrap --json cat ./reg_test/input/line-term-lf-wrap.json
 ]
 
 mlr --jlistwrap --json cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-
----------------------------------------------------------------- stdio json yeswrap nostack
-mlr --irs auto --ors lf --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-mlr --irs auto --ors lf --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-mlr --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-mlr --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
 [
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 ,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
@@ -50310,296 +48299,6 @@ mlr --json --jvstack cat ./reg_test/input/line-term-crlf.json
 }
 
 
----------------------------------------------------------------- stdio json nowrap yesstack
-mlr --irs auto --ors lf --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-mlr --irs auto --ors lf --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-mlr --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-mlr --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-
 ---------------------------------------------------------------- mmap json yeswrap yesstack
 mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ./reg_test/input/line-term-lf-wrap.json
 [
@@ -50824,304 +48523,6 @@ mlr --jlistwrap --json --jvstack cat ./reg_test/input/line-term-lf-wrap.json
 ]
 
 mlr --jlistwrap --json --jvstack cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-
----------------------------------------------------------------- stdio json yeswrap yesstack
-mlr --irs auto --ors lf --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-mlr --irs auto --ors lf --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-mlr --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-mlr --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
 [
 {
   "a": "pan",
