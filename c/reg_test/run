@@ -5118,17 +5118,6 @@ run_mlr --oxtab --inidx --irs lf   --ifs /, cut -o -f 4,1,3 $indir/multi-sep.dkv
 run_mlr --oxtab --inidx --irs crlf --ifs ,  cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
 run_mlr --oxtab --inidx --irs crlf --ifs /, cut -o -f 4,1,3 $indir/multi-sep.dkvp-crlf
 
-#run_mlr --nidx --rs '\n\n' --fs '\001' --from $indir/valgrind.txt put -q '
-#  $1 =~ "^mlr " {
-#    @cmd = $1
-#  }
-#  $1 =~ "by 0x" {
-#    @stack_trace = $1;
-#    @combined = @cmd."\n".@stack_trace;
-#    emit @combined
-#  }
-#'
-
 # ----------------------------------------------------------------
 announce MULTI-CHARACTER IRS/IFS FOR CSVLITE
 
