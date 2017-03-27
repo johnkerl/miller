@@ -14,10 +14,6 @@ BUGFIXES
   o -lpcreposix @ Makefile.am
   o avoid pathext for pcreposix.dll @ runtime, outside of msys2
 
-! join -u
-
-! 'nest --evar , -f foo' etc
-
 ! cover-page simplify
 
 ! coroutines (r/w pipes)?
@@ -44,6 +40,7 @@ BUGFIXES
   - antimode
   - json-arrays-as-maps feature
   - unsorted join by default, with mem caveat. & update dox. incl sjax req#
+  - mlr nest --evar , -f items
 
 * rh/fedora/centos
 
