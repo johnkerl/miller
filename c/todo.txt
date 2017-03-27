@@ -27,6 +27,8 @@ BUGFIXES
 
 ! synctool: use "rsync -e 'ssh -4' ..."
 
+* fix vg.out case :/ ... w/ -f ?
+
 * eddelbuettel ac error <-> smith aclocal-1.15?
 
 * --mmap / --no-mmap double-regression loop
