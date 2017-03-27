@@ -1,10 +1,12 @@
 #!/bin/bash
 
-mlr --nidx --rs '\n\n' --fs '\001' put -q '
-  $1 =~ "^mlr " {@a=$1};
+run_mlr --nidx --rs '\n\n' --fs '\001' put -q '
+  $1 =~ "^mlr " {
+    @cmd = $1
+  }
   $1 =~ "by 0x" {
-    @b=$1;
-    @c = @a."\n".@b;
-    emit @c
+    @stack_trace = $1;
+    @combined = @cmd."\n".@stack_trace;
+    emit @combined
   }
 ' "$@"

@@ -105,8 +105,8 @@ char* mlr_alloc_read_line_multiple_delimiter(
 			p = q - delimiter_length;
 			if (q - line >= delimiter_length && memcmp(p, delimiter, delimiter_length) == 0) {
 				*p = 0;
+				break;
 			}
-			break;
 		} else {
 			nread++;
 			*(q++) = c;
