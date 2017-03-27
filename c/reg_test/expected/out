@@ -44861,6 +44861,92 @@ mlr --oxtab --inidx --irs crlf --ifs /, cut -o -f 4,1,3 ./reg_test/input/multi-s
 1 a=:zee
 3 i=:4
 
+mlr --nidx --rs 
+
+ --fs  --from ./reg_test/input/valgrind.txt put -q 
+  $1 =~ "^mlr " {
+    @cmd = $1
+  }
+  $1 =~ "by 0x" {
+    @stack_trace = $1;
+    @combined = @cmd."
+".@stack_trace;
+    emit @combined
+  }
+
+mlr --prepipe cat --odkvp join -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+Command: ./reg_test/../../c/mlrg --prepipe cat --odkvp join -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+32 bytes in 1 blocks are definitely lost in loss record 1 of 2
+   at 0x4C26B0F: malloc (in /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+   by 0x40CE15: mlr_malloc_or_die (mlrutil.c:89)
+   by 0x42BA54: mlr_alloc_read_line_single_delimiter (line_readers.c:15)
+   by 0x434B6F: lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line_term (lrec_reader_stdio_dkvp.c:103)
+   by 0x45BEAE: ingest_left_file (mapper_join.c:559)
+   by 0x45B916: mapper_join_process_unsorted (mapper_join.c:421)
+   by 0x428C4A: chain_map (stream.c:219)
+   by 0x428BA7: drive_lrec (stream.c:200)
+   by 0x428B48: do_file_chained (stream.c:189)
+   by 0x428970: do_stream_chained_to_stdout (stream.c:143)
+   by 0x4284F3: do_stream_chained (stream.c:34)
+   by 0x4024B3: main (mlrmain.c:32)
+
+mlr --prepipe cat --odkvp join -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+Command: ./reg_test/../../c/mlrg --prepipe cat --odkvp join -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+64 bytes in 1 blocks are definitely lost in loss record 2 of 2
+   at 0x4C26B0F: malloc (in /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+   by 0x40CE15: mlr_malloc_or_die (mlrutil.c:89)
+   by 0x42BA54: mlr_alloc_read_line_single_delimiter (line_readers.c:15)
+   by 0x434B6F: lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line_term (lrec_reader_stdio_dkvp.c:103)
+   by 0x428ABB: do_file_chained (stream.c:177)
+   by 0x428970: do_stream_chained_to_stdout (stream.c:143)
+   by 0x4284F3: do_stream_chained (stream.c:34)
+   by 0x4024B3: main (mlrmain.c:32)
+
+mlr --odkvp join --prepipe cat -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+Command: ./reg_test/../../c/mlrg --odkvp join --prepipe cat -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+32 bytes in 1 blocks are definitely lost in loss record 1 of 1
+   at 0x4C26B0F: malloc (in /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+   by 0x40CE15: mlr_malloc_or_die (mlrutil.c:89)
+   by 0x42BA54: mlr_alloc_read_line_single_delimiter (line_readers.c:15)
+   by 0x434B6F: lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line_term (lrec_reader_stdio_dkvp.c:103)
+   by 0x45BEAE: ingest_left_file (mapper_join.c:559)
+   by 0x45B916: mapper_join_process_unsorted (mapper_join.c:421)
+   by 0x428C4A: chain_map (stream.c:219)
+   by 0x428BA7: drive_lrec (stream.c:200)
+   by 0x428B48: do_file_chained (stream.c:189)
+   by 0x428970: do_stream_chained_to_stdout (stream.c:143)
+   by 0x4284F3: do_stream_chained (stream.c:34)
+   by 0x4024B3: main (mlrmain.c:32)
+
+mlr --prepipe cat --odkvp join --prepipe cat -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+Command: ./reg_test/../../c/mlrg --prepipe cat --odkvp join --prepipe cat -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+32 bytes in 1 blocks are definitely lost in loss record 1 of 2
+   at 0x4C26B0F: malloc (in /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+   by 0x40CE15: mlr_malloc_or_die (mlrutil.c:89)
+   by 0x42BA54: mlr_alloc_read_line_single_delimiter (line_readers.c:15)
+   by 0x434B6F: lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line_term (lrec_reader_stdio_dkvp.c:103)
+   by 0x45BEAE: ingest_left_file (mapper_join.c:559)
+   by 0x45B916: mapper_join_process_unsorted (mapper_join.c:421)
+   by 0x428C4A: chain_map (stream.c:219)
+   by 0x428BA7: drive_lrec (stream.c:200)
+   by 0x428B48: do_file_chained (stream.c:189)
+   by 0x428970: do_stream_chained_to_stdout (stream.c:143)
+   by 0x4284F3: do_stream_chained (stream.c:34)
+   by 0x4024B3: main (mlrmain.c:32)
+
+mlr --prepipe cat --odkvp join --prepipe cat -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+Command: ./reg_test/../../c/mlrg --prepipe cat --odkvp join --prepipe cat -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+64 bytes in 1 blocks are definitely lost in loss record 2 of 2
+   at 0x4C26B0F: malloc (in /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+   by 0x40CE15: mlr_malloc_or_die (mlrutil.c:89)
+   by 0x42BA54: mlr_alloc_read_line_single_delimiter (line_readers.c:15)
+   by 0x434B6F: lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line_term (lrec_reader_stdio_dkvp.c:103)
+   by 0x428ABB: do_file_chained (stream.c:177)
+   by 0x428970: do_stream_chained_to_stdout (stream.c:143)
+   by 0x4284F3: do_stream_chained (stream.c:34)
+   by 0x4024B3: main (mlrmain.c:32)
+
+
 
 ================================================================
 MULTI-CHARACTER IRS/IFS FOR CSVLITE

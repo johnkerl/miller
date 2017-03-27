@@ -55,6 +55,7 @@ char* mlr_alloc_read_line_single_delimiter(
 	// nread   includes line-ending characters.
 	int linelen = p - line;
 	if (nread == 0 && reached_eof) {
+		free(line);
 		line = NULL;
 		linelen = 0;
 	}
