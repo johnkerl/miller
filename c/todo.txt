@@ -23,12 +23,7 @@ BUGFIXES
 
 ! synctool: use "rsync -e 'ssh -4' ..."
 
-* fix vg.out UT case :/ ... w/ -f ?
-
 * eddelbuettel ac error <-> smith aclocal-1.15?
-
-* --mmap / --no-mmap double-regression loop
-  o also "." the setup funcs
 
 * ship ./configure, w/ clean-target mods
 
