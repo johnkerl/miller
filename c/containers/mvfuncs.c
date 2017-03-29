@@ -12,9 +12,6 @@
 // See important notes at the top of mlrval.h.
 // ================================================================
 
-// For some Linux distros, in spite of including time.h:
-char *strptime(const char *s, const char *format, struct tm *ptm);
-
 typedef int mv_i_nn_comparator_func_t(mv_t* pa, mv_t* pb);
 typedef int mv_i_cncn_comparator_func_t(const mv_t* pa, const mv_t* pb);
 

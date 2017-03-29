@@ -8,6 +8,9 @@
 #include "lib/mlrutil.h"
 #include "lib/mlrdatetime.h"
 
+// For some Linux distros, in spite of including time.h:
+char *strptime(const char *s, const char *format, struct tm *ptm);
+
 // ----------------------------------------------------------------
 // seconds since the epoch
 double get_systime() {
