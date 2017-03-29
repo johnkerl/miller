@@ -2,9 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
-#include <time.h>
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
+#include "lib/mlrdatetime.h"
 #include "lib/mlrregex.h"
 #include "containers/mvfuncs.h"
 
@@ -301,30 +301,19 @@ mv_t s_x_typeof_func(mv_t* pval1) {
 }
 
 // ----------------------------------------------------------------
-#define NZBUFLEN 63
-
 // Precondition: psec is either int or float.
 mv_t time_string_from_seconds(mv_t* psec, char* format) {
-	time_t clock = 0;
+	time_t seconds = 0;
 	if (psec->type == MT_FLOAT) {
 		if (isinf(psec->u.fltv) || isnan(psec->u.fltv)) {
 			return mv_error();
 		}
-		clock = (time_t) psec->u.fltv;
+		seconds = (time_t) psec->u.fltv;
 	} else {
-		clock = (time_t) psec->u.intv;
+		seconds = (time_t) psec->u.intv;
 	}
 
-	struct tm tm;
-	struct tm *ptm = gmtime_r(&clock, &tm);
-	MLR_INTERNAL_CODING_ERROR_IF(ptm == NULL);
-	char* string = mlr_malloc_or_die(NZBUFLEN + 1);
-	int written_length = strftime(string, NZBUFLEN, format, ptm);
-	if (written_length > NZBUFLEN || written_length == 0) {
-		fprintf(stderr, "%s: could not strftime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
-			MLR_GLOBALS.bargv0, string, format, MLR_GLOBALS.bargv0);
-		exit(1);
-	}
+	char* string = mlr_alloc_time_string_from_seconds(seconds, format);
 
 	return mv_from_string_with_free(string);
 }
@@ -367,21 +356,12 @@ mv_t s_ns_strftime_func(mv_t* pval1, mv_t* pval2) {
 }
 
 // ----------------------------------------------------------------
-static mv_t seconds_from_time_string(char* time, char* format) {
-	if (*time == '\0') {
+static mv_t seconds_from_time_string(char* string, char* format) {
+	if (*string == '\0') {
 		return mv_empty();
 	} else {
-		struct tm tm;
-		memset(&tm, 0, sizeof(tm));
-		char* retval = strptime(time, format, &tm);
-		if (retval == NULL) {
-			fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
-				MLR_GLOBALS.bargv0, time, format, MLR_GLOBALS.bargv0);
-			exit(1);
-		}
-		MLR_INTERNAL_CODING_ERROR_IF(*retval != 0); // Parseable input followed by non-parseable
-		time_t t = mlr_timegm(&tm);
-		return mv_from_int((long long)t);
+		time_t seconds = mlr_seconds_from_time_string(string, format);
+		return mv_from_int((long long)seconds);
 	}
 }
 
