@@ -5,6 +5,15 @@ BUGFIXES
 ! neaten vg.out !
 ! synctool -4/-6
 
+$ mlr --json cat <<< '{"a": "first\tline\nsecond line"}'
+  { "a": "first   line
+  second line" }
+
+  Would expect:
+
+  { "a": "first\tline\nsecond line" }
+
+
 ================================================================
 5.0.0 POST-RELEASE TO DO:
 
@@ -13,6 +22,8 @@ BUGFIXES
   o strptime
   o -lpcreposix @ Makefile.am
   o avoid pathext for pcreposix.dll @ runtime, outside of msys2
+
+! allow flags after filenames?
 
 ! cover-page simplify
 
@@ -150,14 +161,6 @@ MAPVAR CHECKLIST:
   - stats1 for strings: min/max/percentiles. note count/mode already work.
     -> how to handle mixed string/number columns ...
 
-* mlr batchify/chunkify: start new blocks when field(s) change.
-  - needs backward-incompatible change to DKVP blank lines become skips, not empty maps
-  - DKVP/CSV/PPRINT: blank line.
-  - XTAB: extra blank link.
-  - JSON: ? empty {} ?
-
-* UT: formalize w/ w/o mmap. for now manual at least. (not a release-blocker)
-
 * xxxes
 
 * mt_error/fatal/skip-assign audit
@@ -169,12 +172,6 @@ MAPVAR CHECKLIST:
 ? some sort of debug/single-step/trace ... include the AST in the CST & reverse-generate ?
 
 ? formalize _ for skipvars?
-
-? strict mode:
-  - absent?
-  - local shadow for-loop boundvars / func/subr args?
-
-* mlrfunc doc section?
 
 * seqgen as input lrec "reader"? the seqgen verb doesn't (and shouldn't) step NR.
 
