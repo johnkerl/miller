@@ -16,6 +16,8 @@ BUGFIXES
 
 ! allow flags after filenames?
 
+! coroutines
+
 ! cover-page simplify
 
 ! coroutines (r/w pipes)?
@@ -30,12 +32,14 @@ BUGFIXES
 * ship ./configure, w/ clean-target mods
 
 * start a draft-5.1.0-relnotes.md
-  - incl. json-skip-arrays-on-input
+  - JSON arrays:
+    > --json-skip-arrays-on-input
+    > --json-arrays-as-maps
+  - correct JSON escaping on output
   - feature-counting script
   - mlrfunc docsect w/ h2's
   - aux-entries
   - antimode
-  - json-arrays-as-maps feature
   - unsorted join by default, with mem caveat. & update dox. incl sjax req#
   - mlr nest --evar , -f items
 
@@ -161,8 +165,6 @@ MAPVAR CHECKLIST:
 ! more than 'syntax error' from lemon-parse failures ... lemon API research
 
 ? some sort of debug/single-step/trace ... include the AST in the CST & reverse-generate ?
-
-? formalize _ for skipvars?
 
 * seqgen as input lrec "reader"? the seqgen verb doesn't (and shouldn't) step NR.
 
