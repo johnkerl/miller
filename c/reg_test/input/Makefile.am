@@ -34,6 +34,7 @@ EXTRA_DIST=	\
 		e.pprint \
 		env-assign.sh \
 		env-var.dkvp \
+		escapes.json \
 		f.csv \
 		f.pprint \
 		filter-example.dsl \

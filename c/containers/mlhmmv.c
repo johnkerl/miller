@@ -169,9 +169,39 @@ static void json_print_string_escaped(FILE* ostream, char* s) {
 	fputc('"', ostream);
 	for (char* p = s; *p; p++) {
 		char c = *p;
-		if ((c == '"' || c == '\\'))
+		switch (c) {
+		case '"':
 			fputc('\\', ostream);
-		fputc(c, ostream);
+			fputc('"', ostream);
+			break;
+		case '\\':
+			fputc('\\', ostream);
+			fputc('\\', ostream);
+			break;
+		case '\n':
+			fputc('\\', ostream);
+			fputc('n', ostream);
+			break;
+		case '\r':
+			fputc('\\', ostream);
+			fputc('r', ostream);
+			break;
+		case '\t':
+			fputc('\\', ostream);
+			fputc('t', ostream);
+			break;
+		case '\b':
+			fputc('\\', ostream);
+			fputc('b', ostream);
+			break;
+		case '\f':
+			fputc('\\', ostream);
+			fputc('f', ostream);
+			break;
+		default:
+			fputc(c, ostream);
+			break;
+		}
 	}
 	fputc('"', ostream);
 }

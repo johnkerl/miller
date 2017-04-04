@@ -5,15 +5,6 @@ BUGFIXES
 ! neaten vg.out !
 ! synctool -4/-6
 
-$ mlr --json cat <<< '{"a": "first\tline\nsecond line"}'
-  { "a": "first   line
-  second line" }
-
-  Would expect:
-
-  { "a": "first\tline\nsecond line" }
-
-
 ================================================================
 5.0.0 POST-RELEASE TO DO:
 

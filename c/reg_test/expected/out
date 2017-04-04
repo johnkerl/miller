@@ -45543,6 +45543,10 @@ Use --json-skip-arrays-on-input to exclude these from input without fataling.
 Or, --json-map-arrays-on-input to convert them to integer-indexed maps.
 mlr: Unable to parse JSON data.
 
+mlr --json cat ./reg_test/input/escapes.json
+{ "abc\bdef\fghi": "jkl\nmno\rpqr\tstu\"vw\\xyz" }
+{ "abc\bdef\fghi": "jkl\nmno\rpqr\tstu\"vw\\\\xyz" }
+
 
 ================================================================
 FORMAT-CONVERSION KEYSTROKE-SAVERS
