@@ -173,26 +173,28 @@ POKI_RUN_COMMAND{{mlr filter '$x > 0.5' then cat -n data/small}}HERE
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_not_all_possible_joins');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_not_all_possible_joins" style="display: block">
 
+<p/><b>This section describes behavior before Miller 5.1.0. As of 5.1.0, <tt>-u</tt> is the default.</b>
+
 <p/>For example, the right file here has nine records, and the left file should
 add in the <tt>hostname</tt> column &mdash; so the join output should also have
 9 records:
 
 POKI_RUN_COMMAND{{mlr --icsvlite --opprint cat data/join-u-left.csv}}HERE
 POKI_RUN_COMMAND{{mlr --icsvlite --opprint cat data/join-u-right.csv}}HERE
-POKI_RUN_COMMAND{{mlr --icsvlite --opprint join -j ipaddr -f data/join-u-left.csv data/join-u-right.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsvlite --opprint join -s -j ipaddr -f data/join-u-left.csv data/join-u-right.csv}}HERE
 
-<p/>The issue is that Miller&rsquo;s <tt>join</tt>, by default, takes input
-sorted (lexically ascending) by the sort keys on both the left and right files.
-This design decision was made intentionally to parallel the *nix system
-<tt>join</tt> command, which has the same semantics. The benefit of this
+<p/>The issue is that Miller&rsquo;s <tt>join</tt>, by default (before 5.1.0),
+took input sorted (lexically ascending) by the sort keys on both the left and
+right files.  This design decision was made intentionally to parallel the *nix
+system <tt>join</tt> command, which has the same semantics. The benefit of this
 default is that the joiner program can stream through the left and right files,
 needing to load neither entirely into memory. The drawback, of course, is that
 is requires sorted input.
 
 <p/>The solution (besides pre-sorting the input files on the join keys) is to
-simply use <b>mlr join -u</b>. This loads the left file entirely into memory
-(while the right file is still streamed one line at a time) and does all
-possible joins without requiring sorted input:
+simply use <b>mlr join -u</b> (which is now the default). This loads the left
+file entirely into memory (while the right file is still streamed one line at a
+time) and does all possible joins without requiring sorted input:
 
 POKI_RUN_COMMAND{{mlr --icsvlite --opprint join -u -j ipaddr -f data/join-u-left.csv data/join-u-right.csv}}HERE
 

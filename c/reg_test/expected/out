@@ -1241,6 +1241,22 @@ a=3
 ================================================================
 JOIN
 
+mlr --opprint join -s -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
+o x y
+1 a s
+2 b t
+2 c t
+2 d t
+2 b v
+2 c v
+2 d v
+3 e w
+3 f w
+3 e x
+3 f x
+3 e y
+3 f y
+
 mlr --opprint join -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
 o x y
 1 a s
@@ -1257,7 +1273,7 @@ o x y
 3 e y
 3 f y
 
-mlr --opprint join -u -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
+mlr --opprint join -s --ul -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
 o x y
 1 a s
 2 b t
@@ -1272,6 +1288,9 @@ o x y
 3 f x
 3 e y
 3 f y
+
+l x
+4 g
 
 mlr --opprint join --ul -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
 o x y
@@ -1292,7 +1311,7 @@ o x y
 l x
 4 g
 
-mlr --opprint join -u --ul -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
+mlr --opprint join -s --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
 o x y
 1 a s
 2 b t
@@ -1308,8 +1327,8 @@ o x y
 3 e y
 3 f y
 
-l x
-4 g
+r y
+5 z
 
 mlr --opprint join --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
 o x y
@@ -1330,7 +1349,7 @@ o x y
 r y
 5 z
 
-mlr --opprint join -u --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
+mlr --opprint join -s --ul --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
 o x y
 1 a s
 2 b t
@@ -1345,6 +1364,9 @@ o x y
 3 f x
 3 e y
 3 f y
+
+l x
+4 g
 
 r y
 5 z
@@ -1365,31 +1387,13 @@ o x y
 3 e y
 3 f y
 
+r y
+5 z
+
 l x
 4 g
 
-r y
-5 z
-
-mlr --opprint join -u --ul --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
-o x y
-1 a s
-2 b t
-2 c t
-2 d t
-2 b v
-2 c v
-2 d v
-3 e w
-3 f w
-3 e x
-3 f x
-3 e y
-3 f y
-
-r y
-5 z
-
+mlr --opprint join -s --np --ul -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
 l x
 4 g
 
@@ -1397,39 +1401,45 @@ mlr --opprint join --np --ul -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg
 l x
 4 g
 
-mlr --opprint join -u --np --ul -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
-l x
-4 g
+mlr --opprint join -s --np --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
+r y
+5 z
 
 mlr --opprint join --np --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
 r y
 5 z
 
-mlr --opprint join -u --np --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
+mlr --opprint join -s --np --ul --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
+l x
+4 g
+
 r y
 5 z
 
 mlr --opprint join --np --ul --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
-l x
-4 g
-
-r y
-5 z
-
-mlr --opprint join -u --np --ul --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o ./reg_test/input/joinb.dkvp
 r y
 5 z
 
 l x
 4 g
+
+mlr --opprint join -s -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
 
 mlr --opprint join -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
 
-mlr --opprint join -u -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
+mlr --opprint join -s --ul -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
 
 mlr --opprint join --ul -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
 
-mlr --opprint join -u --ul -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
+mlr --opprint join -s --ur -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
+r y
+1 s
+2 t
+2 v
+3 w
+3 x
+3 y
+5 z
 
 mlr --opprint join --ur -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
 r y
@@ -1441,7 +1451,7 @@ r y
 3 y
 5 z
 
-mlr --opprint join -u --ur -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
+mlr --opprint join -s --ul --ur -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -1461,7 +1471,11 @@ r y
 3 y
 5 z
 
-mlr --opprint join -u --ul --ur -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
+mlr --opprint join -s --np --ul -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
+
+mlr --opprint join --np --ul -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
+
+mlr --opprint join -s --np --ur -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -1470,10 +1484,6 @@ r y
 3 x
 3 y
 5 z
-
-mlr --opprint join --np --ul -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
-
-mlr --opprint join -u --np --ul -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
 
 mlr --opprint join --np --ur -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
 r y
@@ -1485,7 +1495,7 @@ r y
 3 y
 5 z
 
-mlr --opprint join -u --np --ur -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
+mlr --opprint join -s --np --ul --ur -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
 r y
 1 s
 2 t
@@ -1505,19 +1515,19 @@ r y
 3 y
 5 z
 
-mlr --opprint join -u --np --ul --ur -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
-r y
-1 s
-2 t
-2 v
-3 w
-3 x
-3 y
-5 z
+mlr --opprint join -s -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
 
 mlr --opprint join -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
 
-mlr --opprint join -u -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -s --ul -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
+l x
+1 a
+2 b
+2 c
+2 d
+3 e
+3 f
+4 g
 
 mlr --opprint join --ul -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
@@ -1529,7 +1539,11 @@ l x
 3 f
 4 g
 
-mlr --opprint join -u --ul -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -s --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
+
+mlr --opprint join --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
+
+mlr --opprint join -s --ul --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -1538,10 +1552,6 @@ l x
 3 e
 3 f
 4 g
-
-mlr --opprint join --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
-
-mlr --opprint join -u --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
 
 mlr --opprint join --ul --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
@@ -1553,7 +1563,7 @@ l x
 3 f
 4 g
 
-mlr --opprint join -u --ul --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -s --np --ul -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -1573,7 +1583,11 @@ l x
 3 f
 4 g
 
-mlr --opprint join -u --np --ul -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
+mlr --opprint join -s --np --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
+
+mlr --opprint join --np --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
+
+mlr --opprint join -s --np --ul --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
 1 a
 2 b
@@ -1582,10 +1596,6 @@ l x
 3 e
 3 f
 4 g
-
-mlr --opprint join --np --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
-
-mlr --opprint join -u --np --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
 
 mlr --opprint join --np --ul --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
 l x
@@ -1597,17 +1607,7 @@ l x
 3 f
 4 g
 
-mlr --opprint join -u --np --ul --ur -f ./reg_test/input/joina.dkvp -l l -r r -j o /dev/null
-l x
-1 a
-2 b
-2 c
-2 d
-3 e
-3 f
-4 g
-
-mlr --odkvp join -u -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+mlr --odkvp join -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
 a=pan,n=234,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,n=123,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,n=123,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
@@ -1617,7 +1617,7 @@ a=eks,n=123,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 a=zee,n=456,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 a=pan,n=234,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --odkvp join -u -j a -f ./reg_test/input/abixy-het ./reg_test/input/join-het.dkvp
+mlr --odkvp join -j a -f ./reg_test/input/abixy-het ./reg_test/input/join-het.dkvp
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,n=123
 a=eks,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,n=123
 a=eks,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694,n=123
@@ -1627,15 +1627,552 @@ a=wye,b=pan,i=5,xxx=0.5732889198020006,y=0.8636244699032729,n=345
 a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,n=456
 a=zee,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006,n=456
 
-mlr --odkvp join -u --np --ul --ur -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+mlr --odkvp join --np --ul --ur -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 aye=bee,enn=emm
 
-mlr --odkvp join -u --np --ul --ur -j a -f ./reg_test/input/abixy-het ./reg_test/input/join-het.dkvp
+mlr --odkvp join --np --ul --ur -j a -f ./reg_test/input/abixy-het ./reg_test/input/join-het.dkvp
 aye=bee,enn=emm
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r1
+j=1,b=11
+j=1,b=12
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r11
+j=1,b=11
+j=1,b=12
+j=1,b=11
+j=1,b=12
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r12
+j=1,b=11
+j=1,b=12
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r13
+j=1,b=11
+j=1,b=12
+j=3,b=14
+j=3,b=15
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r14
+j=1,b=11
+j=1,b=12
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r15
+j=1,b=11
+j=1,b=12
+j=5,b=17
+j=5,b=18
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r16
+j=1,b=11
+j=1,b=12
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r2
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r22
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r23
+j=3,b=14
+j=3,b=15
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r24
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r25
+j=5,b=17
+j=5,b=18
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r26
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r3
+j=3,b=14
+j=3,b=15
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r33
+j=3,b=14
+j=3,b=15
+j=3,b=14
+j=3,b=15
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r34
+j=3,b=14
+j=3,b=15
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r35
+j=3,b=14
+j=3,b=15
+j=5,b=17
+j=5,b=18
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r36
+j=3,b=14
+j=3,b=15
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r4
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r44
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r45
+j=5,b=17
+j=5,b=18
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r46
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r5
+j=5,b=17
+j=5,b=18
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r55
+j=5,b=17
+j=5,b=18
+j=5,b=17
+j=5,b=18
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r56
+j=5,b=17
+j=5,b=18
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r6
+
+mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r66
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r1
+x=100,b=10
+x=200,b=13
+l=3,b=14
+l=3,b=15
+x=300,b=16
+l=5,b=17
+l=5,b=18
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r11
+x=100,b=10
+x=200,b=13
+l=3,b=14
+l=3,b=15
+x=300,b=16
+l=5,b=17
+l=5,b=18
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r12
+x=100,b=10
+x=200,b=13
+x=300,b=16
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r13
+x=100,b=10
+x=200,b=13
+x=300,b=16
+l=5,b=17
+l=5,b=18
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r14
+x=100,b=10
+x=200,b=13
+l=3,b=14
+l=3,b=15
+x=300,b=16
+x=400,b=19
+l=5,b=17
+l=5,b=18
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r15
+x=100,b=10
+x=200,b=13
+l=3,b=14
+l=3,b=15
+x=300,b=16
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r16
+x=100,b=10
+x=200,b=13
+l=3,b=14
+l=3,b=15
+x=300,b=16
+l=5,b=17
+l=5,b=18
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r2
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+x=300,b=16
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r22
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+x=300,b=16
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r23
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+x=300,b=16
+l=5,b=17
+l=5,b=18
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r24
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+x=300,b=16
+l=3,b=14
+l=3,b=15
+x=400,b=19
+l=5,b=17
+l=5,b=18
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r25
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+x=300,b=16
+l=3,b=14
+l=3,b=15
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r26
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+x=300,b=16
+l=3,b=14
+l=3,b=15
+l=5,b=17
+l=5,b=18
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r3
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+x=300,b=16
+l=5,b=17
+l=5,b=18
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r33
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+x=300,b=16
+l=5,b=17
+l=5,b=18
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r34
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+x=300,b=16
+x=400,b=19
+l=5,b=17
+l=5,b=18
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r35
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+x=300,b=16
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r36
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+x=300,b=16
+l=5,b=17
+l=5,b=18
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r4
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+x=300,b=16
+x=400,b=19
+l=5,b=17
+l=5,b=18
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r44
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+x=300,b=16
+x=400,b=19
+l=5,b=17
+l=5,b=18
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r45
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+x=300,b=16
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r46
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+x=300,b=16
+x=400,b=19
+l=5,b=17
+l=5,b=18
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r5
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+x=300,b=16
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r55
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+x=300,b=16
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r56
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+x=300,b=16
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r6
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+x=300,b=16
+l=5,b=17
+l=5,b=18
+x=400,b=19
+
+mlr join -s --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r66
+x=100,b=10
+x=200,b=13
+l=1,b=11
+l=1,b=12
+l=3,b=14
+l=3,b=15
+x=300,b=16
+l=5,b=17
+l=5,b=18
+x=400,b=19
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r1
+y=111
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r11
+y=111
+y=222
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r12
+y=111
+y=222
+r=2
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r13
+y=111
+y=222
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r14
+y=111
+y=222
+r=4
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r15
+y=111
+y=222
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r16
+y=111
+y=222
+r=6
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r2
+y=111
+r=2
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r22
+y=111
+r=2
+y=222
+r=2
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r23
+y=111
+r=2
+y=222
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r24
+y=111
+r=2
+y=222
+r=4
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r25
+y=111
+r=2
+y=222
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r26
+y=111
+r=2
+y=222
+r=6
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r3
+y=111
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r33
+y=111
+y=222
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r34
+y=111
+y=222
+r=4
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r35
+y=111
+y=222
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r36
+y=111
+y=222
+r=6
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r4
+y=111
+r=4
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r44
+y=111
+r=4
+y=222
+r=4
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r45
+y=111
+r=4
+y=222
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r46
+y=111
+r=4
+y=222
+r=6
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r5
+y=111
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r55
+y=111
+y=222
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r56
+y=111
+y=222
+r=6
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r6
+y=111
+r=6
+y=333
+
+mlr join -s --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r66
+y=111
+r=6
+y=222
+r=6
+y=333
 
 mlr join -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r1
 j=1,b=11
@@ -1740,285 +2277,285 @@ mlr join -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-j
 mlr join -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r66
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r1
-x=100,b=10
-x=200,b=13
 l=3,b=14
 l=3,b=15
-x=300,b=16
 l=5,b=17
 l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r11
-x=100,b=10
-x=200,b=13
 l=3,b=14
 l=3,b=15
-x=300,b=16
 l=5,b=17
 l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r12
-x=100,b=10
-x=200,b=13
-x=300,b=16
 l=3,b=14
 l=3,b=15
 l=5,b=17
 l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r13
+l=5,b=17
+l=5,b=18
 x=100,b=10
 x=200,b=13
 x=300,b=16
-l=5,b=17
-l=5,b=18
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r14
-x=100,b=10
-x=200,b=13
 l=3,b=14
 l=3,b=15
-x=300,b=16
-x=400,b=19
 l=5,b=17
 l=5,b=18
-
-mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r15
 x=100,b=10
 x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r15
 l=3,b=14
 l=3,b=15
+x=100,b=10
+x=200,b=13
 x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r16
-x=100,b=10
-x=200,b=13
 l=3,b=14
 l=3,b=15
-x=300,b=16
 l=5,b=17
 l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r2
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
-x=300,b=16
 l=3,b=14
 l=3,b=15
 l=5,b=17
 l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r22
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
-x=300,b=16
 l=3,b=14
 l=3,b=15
 l=5,b=17
 l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r23
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
-x=300,b=16
 l=5,b=17
 l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r24
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
-x=300,b=16
 l=3,b=14
 l=3,b=15
-x=400,b=19
 l=5,b=17
 l=5,b=18
-
-mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r25
 x=100,b=10
 x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r25
 l=1,b=11
 l=1,b=12
-x=300,b=16
 l=3,b=14
 l=3,b=15
+x=100,b=10
+x=200,b=13
+x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r26
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
-x=300,b=16
 l=3,b=14
 l=3,b=15
 l=5,b=17
 l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r3
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
-x=300,b=16
 l=5,b=17
 l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r33
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
-x=300,b=16
 l=5,b=17
 l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r34
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
-x=300,b=16
-x=400,b=19
 l=5,b=17
 l=5,b=18
-
-mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r35
 x=100,b=10
 x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r35
 l=1,b=11
 l=1,b=12
+x=100,b=10
+x=200,b=13
 x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r36
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
-x=300,b=16
 l=5,b=17
 l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r4
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
 l=3,b=14
 l=3,b=15
-x=300,b=16
-x=400,b=19
 l=5,b=17
 l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
+x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r44
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
 l=3,b=14
 l=3,b=15
-x=300,b=16
-x=400,b=19
 l=5,b=17
 l=5,b=18
-
-mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r45
 x=100,b=10
 x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r45
 l=1,b=11
 l=1,b=12
 l=3,b=14
 l=3,b=15
+x=100,b=10
+x=200,b=13
 x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r46
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
 l=3,b=14
 l=3,b=15
-x=300,b=16
-x=400,b=19
 l=5,b=17
 l=5,b=18
-
-mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r5
 x=100,b=10
 x=200,b=13
+x=300,b=16
+x=400,b=19
+
+mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r5
 l=1,b=11
 l=1,b=12
 l=3,b=14
 l=3,b=15
+x=100,b=10
+x=200,b=13
 x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r55
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
 l=3,b=14
 l=3,b=15
+x=100,b=10
+x=200,b=13
 x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r56
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
 l=3,b=14
 l=3,b=15
+x=100,b=10
+x=200,b=13
 x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r6
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
 l=3,b=14
 l=3,b=15
-x=300,b=16
 l=5,b=17
 l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
 x=400,b=19
 
 mlr join --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r66
-x=100,b=10
-x=200,b=13
 l=1,b=11
 l=1,b=12
 l=3,b=14
 l=3,b=15
-x=300,b=16
 l=5,b=17
 l=5,b=18
+x=100,b=10
+x=200,b=13
+x=300,b=16
 x=400,b=19
 
 mlr join --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r1
@@ -2174,548 +2711,11 @@ y=222
 r=6
 y=333
 
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r1
-j=1,b=11
-j=1,b=12
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r11
-j=1,b=11
-j=1,b=12
-j=1,b=11
-j=1,b=12
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r12
-j=1,b=11
-j=1,b=12
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r13
-j=1,b=11
-j=1,b=12
-j=3,b=14
-j=3,b=15
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r14
-j=1,b=11
-j=1,b=12
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r15
-j=1,b=11
-j=1,b=12
-j=5,b=17
-j=5,b=18
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r16
-j=1,b=11
-j=1,b=12
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r2
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r22
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r23
-j=3,b=14
-j=3,b=15
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r24
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r25
-j=5,b=17
-j=5,b=18
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r26
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r3
-j=3,b=14
-j=3,b=15
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r33
-j=3,b=14
-j=3,b=15
-j=3,b=14
-j=3,b=15
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r34
-j=3,b=14
-j=3,b=15
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r35
-j=3,b=14
-j=3,b=15
-j=5,b=17
-j=5,b=18
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r36
-j=3,b=14
-j=3,b=15
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r4
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r44
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r45
-j=5,b=17
-j=5,b=18
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r46
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r5
-j=5,b=17
-j=5,b=18
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r55
-j=5,b=17
-j=5,b=18
-j=5,b=17
-j=5,b=18
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r56
-j=5,b=17
-j=5,b=18
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r6
-
-mlr join -u -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r66
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r1
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r11
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r13
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r14
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r15
-l=3,b=14
-l=3,b=15
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r16
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r2
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r22
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r23
-l=1,b=11
-l=1,b=12
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r24
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r25
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r26
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r3
-l=1,b=11
-l=1,b=12
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r33
-l=1,b=11
-l=1,b=12
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r34
-l=1,b=11
-l=1,b=12
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r35
-l=1,b=11
-l=1,b=12
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r36
-l=1,b=11
-l=1,b=12
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r4
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r44
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r45
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r46
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r5
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r55
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r56
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r6
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ul -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r66
-l=1,b=11
-l=1,b=12
-l=3,b=14
-l=3,b=15
-l=5,b=17
-l=5,b=18
-x=100,b=10
-x=200,b=13
-x=300,b=16
-x=400,b=19
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r1
-y=111
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r11
-y=111
-y=222
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r12
-y=111
-y=222
-r=2
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r13
-y=111
-y=222
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r14
-y=111
-y=222
-r=4
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r15
-y=111
-y=222
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r16
-y=111
-y=222
-r=6
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r2
-y=111
-r=2
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r22
-y=111
-r=2
-y=222
-r=2
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r23
-y=111
-r=2
-y=222
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r24
-y=111
-r=2
-y=222
-r=4
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r25
-y=111
-r=2
-y=222
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r26
-y=111
-r=2
-y=222
-r=6
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r3
-y=111
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r33
-y=111
-y=222
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r34
-y=111
-y=222
-r=4
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r35
-y=111
-y=222
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r36
-y=111
-y=222
-r=6
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r4
-y=111
-r=4
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r44
-y=111
-r=4
-y=222
-r=4
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r45
-y=111
-r=4
-y=222
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r46
-y=111
-r=4
-y=222
-r=6
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r5
-y=111
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r55
-y=111
-y=222
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r56
-y=111
-y=222
-r=6
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r6
-y=111
-r=6
-y=333
-
-mlr join -u --np --ur -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r66
-y=111
-r=6
-y=222
-r=6
-y=333
-
 
 ================================================================
 JOIN PREPIPE
 
-mlr --prepipe cat --odkvp join -u -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+mlr --prepipe cat --odkvp join -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
 a=pan,n=234,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,n=123,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,n=123,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
@@ -2725,7 +2725,7 @@ a=eks,n=123,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 a=zee,n=456,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 a=pan,n=234,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --odkvp join --prepipe cat -u -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+mlr --odkvp join --prepipe cat -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
 a=pan,n=234,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,n=123,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,n=123,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
@@ -2735,7 +2735,7 @@ a=eks,n=123,b=zee,iii=7,x=0.6117840605678454,y=0.1878849191181694
 a=zee,n=456,b=wye,i=8,x=0.5985540091064224,yyy=0.976181385699006
 a=pan,n=234,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr --prepipe cat --odkvp join --prepipe cat -u -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
+mlr --prepipe cat --odkvp join --prepipe cat -j a -f ./reg_test/input/join-het.dkvp ./reg_test/input/abixy-het
 a=pan,n=234,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,n=123,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=eks,n=123,bbb=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
@@ -2748,6 +2748,25 @@ a=pan,n=234,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 ================================================================
 JOIN MIXED-FORMAT
+
+mlr --json join -s -j x -f ./reg_test/input/multi-format-join-a.json ./reg_test/input/multi-format-join-b.json
+{ "x": 1, "a": 2, "b": 20 }
+{ "x": 2, "a": 3, "b": 30 }
+{ "x": 3, "a": 4, "b": 40 }
+{ "x": 4, "a": 5, "b": 50 }
+
+mlr --dkvp join -s -j x -f ./reg_test/input/multi-format-join-a.dkvp ./reg_test/input/multi-format-join-b.dkvp
+x=1,a=2,b=20
+x=2,a=3,b=30
+x=3,a=4,b=40
+x=4,a=5,b=50
+
+mlr --csvlite join -s -j x -f ./reg_test/input/multi-format-join-a.csv ./reg_test/input/multi-format-join-b.csv
+x,a,b
+1,2,20
+2,3,30
+3,4,40
+4,5,50
 
 mlr --json join -j x -f ./reg_test/input/multi-format-join-a.json ./reg_test/input/multi-format-join-b.json
 { "x": 1, "a": 2, "b": 20 }
@@ -2762,6 +2781,25 @@ x=3,a=4,b=40
 x=4,a=5,b=50
 
 mlr --csvlite join -j x -f ./reg_test/input/multi-format-join-a.csv ./reg_test/input/multi-format-join-b.csv
+x,a,b
+1,2,20
+2,3,30
+3,4,40
+4,5,50
+
+mlr --json join -s -i csvlite -j x -f ./reg_test/input/multi-format-join-a.csv ./reg_test/input/multi-format-join-b.json
+{ "x": 1, "a": 2, "b": 20 }
+{ "x": 2, "a": 3, "b": 30 }
+{ "x": 3, "a": 4, "b": 40 }
+{ "x": 4, "a": 5, "b": 50 }
+
+mlr --dkvp join -s -i csvlite -j x -f ./reg_test/input/multi-format-join-a.csv ./reg_test/input/multi-format-join-b.dkvp
+x=1,a=2,b=20
+x=2,a=3,b=30
+x=3,a=4,b=40
+x=4,a=5,b=50
+
+mlr --csvlite join -s -i csvlite -j x -f ./reg_test/input/multi-format-join-a.csv ./reg_test/input/multi-format-join-b.csv
 x,a,b
 1,2,20
 2,3,30
@@ -2787,6 +2825,25 @@ x,a,b
 3,4,40
 4,5,50
 
+mlr --json join -s -i dkvp -j x -f ./reg_test/input/multi-format-join-a.dkvp ./reg_test/input/multi-format-join-b.json
+{ "x": 1, "a": 2, "b": 20 }
+{ "x": 2, "a": 3, "b": 30 }
+{ "x": 3, "a": 4, "b": 40 }
+{ "x": 4, "a": 5, "b": 50 }
+
+mlr --dkvp join -s -i dkvp -j x -f ./reg_test/input/multi-format-join-a.dkvp ./reg_test/input/multi-format-join-b.dkvp
+x=1,a=2,b=20
+x=2,a=3,b=30
+x=3,a=4,b=40
+x=4,a=5,b=50
+
+mlr --csvlite join -s -i dkvp -j x -f ./reg_test/input/multi-format-join-a.dkvp ./reg_test/input/multi-format-join-b.csv
+x,a,b
+1,2,20
+2,3,30
+3,4,40
+4,5,50
+
 mlr --json join -i dkvp -j x -f ./reg_test/input/multi-format-join-a.dkvp ./reg_test/input/multi-format-join-b.json
 { "x": 1, "a": 2, "b": 20 }
 { "x": 2, "a": 3, "b": 30 }
@@ -2800,6 +2857,25 @@ x=3,a=4,b=40
 x=4,a=5,b=50
 
 mlr --csvlite join -i dkvp -j x -f ./reg_test/input/multi-format-join-a.dkvp ./reg_test/input/multi-format-join-b.csv
+x,a,b
+1,2,20
+2,3,30
+3,4,40
+4,5,50
+
+mlr --json join -s -i json -j x -f ./reg_test/input/multi-format-join-a.json ./reg_test/input/multi-format-join-b.json
+{ "x": 1, "a": 2, "b": 20 }
+{ "x": 2, "a": 3, "b": 30 }
+{ "x": 3, "a": 4, "b": 40 }
+{ "x": 4, "a": 5, "b": 50 }
+
+mlr --dkvp join -s -i json -j x -f ./reg_test/input/multi-format-join-a.json ./reg_test/input/multi-format-join-b.dkvp
+x=1,a=2,b=20
+x=2,a=3,b=30
+x=3,a=4,b=40
+x=4,a=5,b=50
+
+mlr --csvlite join -s -i json -j x -f ./reg_test/input/multi-format-join-a.json ./reg_test/input/multi-format-join-b.csv
 x,a,b
 1,2,20
 2,3,30
@@ -43221,7 +43297,7 @@ x_sum
 ================================================================
 IMPLICIT-HEADER-CSV INPUT
 
-mlr --irs crlf --no-mmap --icsvlite --ifs , --opprint cut -x -f b/ ./reg_test/input/multi-sep.csv-crlf
+mlr --irs crlf --icsvlite --ifs , --opprint cut -x -f b/ ./reg_test/input/multi-sep.csv-crlf
 a/   i/ x/                    y/
 wye/ 0/ 0.641593543645736508/ 0.262688053894177098
 eks/ 1/ 0.827614412562742041/ 0.715431942006308552
@@ -43229,7 +43305,7 @@ zee/ 2/ 0.923068348748175560/ 0.009737410587136359
 zee/ 3/ 0.000047786161325772/ 0.803142013402256216
 zee/ 4/ 0.676537984365847889/ 0.573903236805416328
 
-mlr --irs crlf --implicit-csv-header --no-mmap --icsvlite --ifs , --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv-crlf
+mlr --irs crlf --implicit-csv-header --icsvlite --ifs , --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv-crlf
 1    3  4                     5
 a/   i/ x/                    y/
 wye/ 0/ 0.641593543645736508/ 0.262688053894177098
@@ -43238,7 +43314,7 @@ zee/ 2/ 0.923068348748175560/ 0.009737410587136359
 zee/ 3/ 0.000047786161325772/ 0.803142013402256216
 zee/ 4/ 0.676537984365847889/ 0.573903236805416328
 
-mlr --irs crlf --no-mmap --icsvlite --ifs /, --opprint cut -x -f b ./reg_test/input/multi-sep.csv-crlf
+mlr --irs crlf --icsvlite --ifs /, --opprint cut -x -f b ./reg_test/input/multi-sep.csv-crlf
 a   i x                    y/
 wye 0 0.641593543645736508 0.262688053894177098
 eks 1 0.827614412562742041 0.715431942006308552
@@ -43246,41 +43322,7 @@ zee 2 0.923068348748175560 0.009737410587136359
 zee 3 0.000047786161325772 0.803142013402256216
 zee 4 0.676537984365847889 0.573903236805416328
 
-mlr --irs crlf --implicit-csv-header --no-mmap --icsvlite --ifs /, --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv-crlf
-1   3 4                    5
-a   i x                    y/
-wye 0 0.641593543645736508 0.262688053894177098
-eks 1 0.827614412562742041 0.715431942006308552
-zee 2 0.923068348748175560 0.009737410587136359
-zee 3 0.000047786161325772 0.803142013402256216
-zee 4 0.676537984365847889 0.573903236805416328
-
-mlr --irs crlf --mmap --icsvlite --ifs , --opprint cut -x -f b/ ./reg_test/input/multi-sep.csv-crlf
-a/   i/ x/                    y/
-wye/ 0/ 0.641593543645736508/ 0.262688053894177098
-eks/ 1/ 0.827614412562742041/ 0.715431942006308552
-zee/ 2/ 0.923068348748175560/ 0.009737410587136359
-zee/ 3/ 0.000047786161325772/ 0.803142013402256216
-zee/ 4/ 0.676537984365847889/ 0.573903236805416328
-
-mlr --irs crlf --implicit-csv-header --mmap --icsvlite --ifs , --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv-crlf
-1    3  4                     5
-a/   i/ x/                    y/
-wye/ 0/ 0.641593543645736508/ 0.262688053894177098
-eks/ 1/ 0.827614412562742041/ 0.715431942006308552
-zee/ 2/ 0.923068348748175560/ 0.009737410587136359
-zee/ 3/ 0.000047786161325772/ 0.803142013402256216
-zee/ 4/ 0.676537984365847889/ 0.573903236805416328
-
-mlr --irs crlf --mmap --icsvlite --ifs /, --opprint cut -x -f b ./reg_test/input/multi-sep.csv-crlf
-a   i x                    y/
-wye 0 0.641593543645736508 0.262688053894177098
-eks 1 0.827614412562742041 0.715431942006308552
-zee 2 0.923068348748175560 0.009737410587136359
-zee 3 0.000047786161325772 0.803142013402256216
-zee 4 0.676537984365847889 0.573903236805416328
-
-mlr --irs crlf --implicit-csv-header --mmap --icsvlite --ifs /, --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv-crlf
+mlr --irs crlf --implicit-csv-header --icsvlite --ifs /, --opprint cut -x -f 2 ./reg_test/input/multi-sep.csv-crlf
 1   3 4                    5
 a   i x                    y/
 wye 0 0.641593543645736508 0.262688053894177098
@@ -43920,38 +43962,22 @@ b - - - -         -      -         -      -         -
 ================================================================
 SPACE-PADDING
 
-mlr --mmap --idkvp --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.dkvp
+mlr --idkvp --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.dkvp
 a=1,b=2
 c=3
 
-mlr --no-mmap --idkvp --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.dkvp
-a=1,b=2
-c=3
-
-mlr --mmap --inidx --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.nidx
+mlr --inidx --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.nidx
 1=a,2=b,3=c
 1=d,2=e,3=f
 
-mlr --no-mmap --inidx --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.nidx
-1=a,2=b,3=c
-1=d,2=e,3=f
-
-mlr --mmap --icsvlite --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.pprint
-a=1,b=2,c=3
-
-mlr --no-mmap --icsvlite --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.pprint
+mlr --icsvlite --odkvp --ifs space --repifs cat ./reg_test/input/space-pad.pprint
 a=1,b=2,c=3
 
 
 ================================================================
 DOUBLE PS
 
-mlr --no-mmap --opprint cat ./reg_test/input/double-ps.dkvp
-a   b    c
-pan wy.e 3
-pan wy=e 3
-
-mlr --mmap --opprint cat ./reg_test/input/double-ps.dkvp
+mlr --opprint cat ./reg_test/input/double-ps.dkvp
 a   b    c
 pan wy.e 3
 pan wy=e 3
@@ -43960,53 +43986,25 @@ pan wy=e 3
 ================================================================
 MISSING FINAL LF
 
-mlr --no-mmap --csvlite cat ./reg_test/input/truncated.csv
-a,b,c
-1,2,3
-4,5,6
-7,8,9
-
 mlr --csvlite cat ./reg_test/input/truncated.csv
 a,b,c
 1,2,3
 4,5,6
 7,8,9
 
-mlr --no-mmap --dkvp cat ./reg_test/input/truncated.dkvp
-a=1,b=2
-c=3
-
 mlr --dkvp cat ./reg_test/input/truncated.dkvp
 a=1,b=2
 c=3
 
-mlr --no-mmap --nidx cat ./reg_test/input/truncated.nidx
-1 2 3
-4 5
-
 mlr --nidx cat ./reg_test/input/truncated.nidx
 1 2 3
 4 5
-
-mlr --no-mmap --pprint cat ./reg_test/input/truncated.pprint
-a b c
-1 2 3
-4 5 6
-7 8 9
 
 mlr --pprint cat ./reg_test/input/truncated.pprint
 a b c
 1 2 3
 4 5 6
 7 8 9
-
-mlr --no-mmap --xtab cat ./reg_test/input/truncated.xtab-crlf
-a 1
-b 2
-c 3
-
-d 4
-e 5
 
 mlr --xtab cat ./reg_test/input/truncated.xtab-crlf
 a 1
@@ -44540,43 +44538,18 @@ x,"y""yy",z
 ================================================================
 RFC-CSV
 
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/simple.csv-crlf
-a,b,c
-1,x,3
-4,5,6
-x,"y""yy",z
-
 mlr --mmap --csv cat ./reg_test/input/rfc-csv/simple.csv-crlf
 a,b,c
 1,x,3
 4,5,6
 x,"y""yy",z
 
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv
-a,b,c
-1,x,3
-4,5,6
-
 mlr --mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv
 a,b,c
 1,x,3
 4,5,6
 
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/narrow.csv
-a
-1
-2
-3
-4
-
 mlr --mmap --csv cat ./reg_test/input/rfc-csv/narrow.csv
-a
-1
-2
-3
-4
-
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/narrow-truncated.csv
 a
 1
 2
@@ -44590,17 +44563,7 @@ a
 3
 4
 
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/quoted-comma.csv
-a,b,c
-1,"x,3",y
-4,5,6
-
 mlr --mmap --csv cat ./reg_test/input/rfc-csv/quoted-comma.csv
-a,b,c
-1,"x,3",y
-4,5,6
-
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/quoted-comma-truncated.csv
 a,b,c
 1,"x,3",y
 4,5,6
@@ -44610,19 +44573,7 @@ a,b,c
 1,"x,3",y
 4,5,6
 
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/quoted-crlf.csv
-a,b,c
-1,"x
-3",y
-4,5,6
-
 mlr --mmap --csv cat ./reg_test/input/rfc-csv/quoted-crlf.csv
-a,b,c
-1,"x
-3",y
-4,5,6
-
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/quoted-crlf-truncated.csv
 a,b,c
 1,"x
 3",y
@@ -44634,14 +44585,6 @@ a,b,c
 3",y
 4,5,6
 
-mlr --no-mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv ./reg_test/input/rfc-csv/simple.csv-crlf
-a,b,c
-1,x,3
-4,5,6
-1,x,3
-4,5,6
-x,"y""yy",z
-
 mlr --mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv ./reg_test/input/rfc-csv/simple.csv-crlf
 a,b,c
 1,x,3
@@ -44650,14 +44593,6 @@ a,b,c
 4,5,6
 x,"y""yy",z
 
-mlr --no-mmap --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b ./reg_test/input/rfc-csv/modify-defaults.csv
-a|c
-
-1|3
-
-4|6
-
-
 mlr --mmap --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b ./reg_test/input/rfc-csv/modify-defaults.csv
 a|c
 
@@ -44665,12 +44600,6 @@ a|c
 
 4|6
 
-
-mlr --no-mmap --csv --rs lf --quote-original cut -o -f c,b,a ./reg_test/input/quote-original.csv
-c,b,a
-3,2,1
-6,"5",4
-"9",8,"7"
 
 mlr --mmap --csv --rs lf --quote-original cut -o -f c,b,a ./reg_test/input/quote-original.csv
 c,b,a
@@ -44760,7 +44689,7 @@ a
 ================================================================
 MULTI-CHARACTER IRS/IFS/IPS FOR DKVP
 
-mlr --oxtab --idkvp --mmap --irs lf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --idkvp --irs lf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
 x :0.641593543645736508/
 a :wye/
 i :0/
@@ -44781,7 +44710,7 @@ x :0.676537984365847889/
 a :zee/
 i :4/
 
-mlr --oxtab --idkvp --mmap --irs lf --ifs /, --ips =: cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --idkvp --irs lf --ifs /, --ips =: cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
 x 0.641593543645736508
 a wye
 i 0
@@ -44802,7 +44731,7 @@ x 0.676537984365847889
 a zee
 i 4
 
-mlr --oxtab --idkvp --mmap --irs crlf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --idkvp --irs crlf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
 x :0.641593543645736508/
 a :wye/
 i :0/
@@ -44823,91 +44752,7 @@ x :0.676537984365847889/
 a :zee/
 i :4/
 
-mlr --oxtab --idkvp --mmap --irs crlf --ifs /, --ips =: cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
-x 0.641593543645736508
-a wye
-i 0
-
-x 0.827614412562742041
-a eks
-i 1
-
-x 0.923068348748175560
-a zee
-i 2
-
-x 0.000047786161325772
-a zee
-i 3
-
-x 0.676537984365847889
-a zee
-i 4
-
-mlr --oxtab --no-mmap --irs lf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
-x :0.641593543645736508/
-a :wye/
-i :0/
-
-x :0.827614412562742041/
-a :eks/
-i :1/
-
-x :0.923068348748175560/
-a :zee/
-i :2/
-
-x :0.000047786161325772/
-a :zee/
-i :3/
-
-x :0.676537984365847889/
-a :zee/
-i :4/
-
-mlr --oxtab --no-mmap --irs lf --ifs /, --ips =: cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
-x 0.641593543645736508
-a wye
-i 0
-
-x 0.827614412562742041
-a eks
-i 1
-
-x 0.923068348748175560
-a zee
-i 2
-
-x 0.000047786161325772
-a zee
-i 3
-
-x 0.676537984365847889
-a zee
-i 4
-
-mlr --oxtab --no-mmap --irs crlf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
-x :0.641593543645736508/
-a :wye/
-i :0/
-
-x :0.827614412562742041/
-a :eks/
-i :1/
-
-x :0.923068348748175560/
-a :zee/
-i :2/
-
-x :0.000047786161325772/
-a :zee/
-i :3/
-
-x :0.676537984365847889/
-a :zee/
-i :4/
-
-mlr --oxtab --no-mmap --irs crlf --ifs /, --ips =: cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --idkvp --irs crlf --ifs /, --ips =: cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
 x 0.641593543645736508
 a wye
 i 0
@@ -44932,7 +44777,7 @@ i 4
 ================================================================
 MULTI-CHARACTER IRS/IFS FOR NIDX
 
-mlr --oxtab --inidx --mmap --irs lf --ifs , cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --inidx --irs lf --ifs , cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
 4 x=:0.641593543645736508/
 1 a=:wye/
 3 i=:0/
@@ -44953,7 +44798,7 @@ mlr --oxtab --inidx --mmap --irs lf --ifs , cut -o -f 4,1,3 ./reg_test/input/mul
 1 a=:zee/
 3 i=:4/
 
-mlr --oxtab --inidx --mmap --irs lf --ifs /, cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --inidx --irs lf --ifs /, cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
 4 x=:0.641593543645736508
 1 a=:wye
 3 i=:0
@@ -44974,7 +44819,7 @@ mlr --oxtab --inidx --mmap --irs lf --ifs /, cut -o -f 4,1,3 ./reg_test/input/mu
 1 a=:zee
 3 i=:4
 
-mlr --oxtab --inidx --mmap --irs crlf --ifs , cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --inidx --irs crlf --ifs , cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
 4 x=:0.641593543645736508/
 1 a=:wye/
 3 i=:0/
@@ -44995,91 +44840,7 @@ mlr --oxtab --inidx --mmap --irs crlf --ifs , cut -o -f 4,1,3 ./reg_test/input/m
 1 a=:zee/
 3 i=:4/
 
-mlr --oxtab --inidx --mmap --irs crlf --ifs /, cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
-4 x=:0.641593543645736508
-1 a=:wye
-3 i=:0
-
-4 x=:0.827614412562742041
-1 a=:eks
-3 i=:1
-
-4 x=:0.923068348748175560
-1 a=:zee
-3 i=:2
-
-4 x=:0.000047786161325772
-1 a=:zee
-3 i=:3
-
-4 x=:0.676537984365847889
-1 a=:zee
-3 i=:4
-
-mlr --oxtab --inidx --no-mmap --irs lf --ifs , cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
-4 x=:0.641593543645736508/
-1 a=:wye/
-3 i=:0/
-
-4 x=:0.827614412562742041/
-1 a=:eks/
-3 i=:1/
-
-4 x=:0.923068348748175560/
-1 a=:zee/
-3 i=:2/
-
-4 x=:0.000047786161325772/
-1 a=:zee/
-3 i=:3/
-
-4 x=:0.676537984365847889/
-1 a=:zee/
-3 i=:4/
-
-mlr --oxtab --inidx --no-mmap --irs lf --ifs /, cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
-4 x=:0.641593543645736508
-1 a=:wye
-3 i=:0
-
-4 x=:0.827614412562742041
-1 a=:eks
-3 i=:1
-
-4 x=:0.923068348748175560
-1 a=:zee
-3 i=:2
-
-4 x=:0.000047786161325772
-1 a=:zee
-3 i=:3
-
-4 x=:0.676537984365847889
-1 a=:zee
-3 i=:4
-
-mlr --oxtab --inidx --no-mmap --irs crlf --ifs , cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
-4 x=:0.641593543645736508/
-1 a=:wye/
-3 i=:0/
-
-4 x=:0.827614412562742041/
-1 a=:eks/
-3 i=:1/
-
-4 x=:0.923068348748175560/
-1 a=:zee/
-3 i=:2/
-
-4 x=:0.000047786161325772/
-1 a=:zee/
-3 i=:3/
-
-4 x=:0.676537984365847889/
-1 a=:zee/
-3 i=:4/
-
-mlr --oxtab --inidx --no-mmap --irs crlf --ifs /, cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --inidx --irs crlf --ifs /, cut -o -f 4,1,3 ./reg_test/input/multi-sep.dkvp-crlf
 4 x=:0.641593543645736508
 1 a=:wye
 3 i=:0
@@ -45104,7 +44865,7 @@ mlr --oxtab --inidx --no-mmap --irs crlf --ifs /, cut -o -f 4,1,3 ./reg_test/inp
 ================================================================
 MULTI-CHARACTER IRS/IFS FOR CSVLITE
 
-mlr --oxtab --icsvlite --mmap --irs lf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv-crlf
+mlr --oxtab --icsvlite --irs lf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv-crlf
 x/ 0.641593543645736508/
 a/ wye/
 i/ 0/
@@ -45125,7 +44886,7 @@ x/ 0.676537984365847889/
 a/ zee/
 i/ 4/
 
-mlr --oxtab --icsvlite --mmap --irs lf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv-crlf
+mlr --oxtab --icsvlite --irs lf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv-crlf
 x 0.641593543645736508
 a wye
 i 0
@@ -45146,7 +44907,7 @@ x 0.676537984365847889
 a zee
 i 4
 
-mlr --oxtab --icsvlite --mmap --irs crlf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv-crlf
+mlr --oxtab --icsvlite --irs crlf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv-crlf
 x/ 0.641593543645736508/
 a/ wye/
 i/ 0/
@@ -45167,91 +44928,7 @@ x/ 0.676537984365847889/
 a/ zee/
 i/ 4/
 
-mlr --oxtab --icsvlite --mmap --irs crlf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv-crlf
-x 0.641593543645736508
-a wye
-i 0
-
-x 0.827614412562742041
-a eks
-i 1
-
-x 0.923068348748175560
-a zee
-i 2
-
-x 0.000047786161325772
-a zee
-i 3
-
-x 0.676537984365847889
-a zee
-i 4
-
-mlr --oxtab --icsvlite --no-mmap --irs lf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv-crlf
-x/ 0.641593543645736508/
-a/ wye/
-i/ 0/
-
-x/ 0.827614412562742041/
-a/ eks/
-i/ 1/
-
-x/ 0.923068348748175560/
-a/ zee/
-i/ 2/
-
-x/ 0.000047786161325772/
-a/ zee/
-i/ 3/
-
-x/ 0.676537984365847889/
-a/ zee/
-i/ 4/
-
-mlr --oxtab --icsvlite --no-mmap --irs lf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv-crlf
-x 0.641593543645736508
-a wye
-i 0
-
-x 0.827614412562742041
-a eks
-i 1
-
-x 0.923068348748175560
-a zee
-i 2
-
-x 0.000047786161325772
-a zee
-i 3
-
-x 0.676537984365847889
-a zee
-i 4
-
-mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs , cut -o -f x/,a/,i/ ./reg_test/input/multi-sep.csv-crlf
-x/ 0.641593543645736508/
-a/ wye/
-i/ 0/
-
-x/ 0.827614412562742041/
-a/ eks/
-i/ 1/
-
-x/ 0.923068348748175560/
-a/ zee/
-i/ 2/
-
-x/ 0.000047786161325772/
-a/ zee/
-i/ 3/
-
-x/ 0.676537984365847889/
-a/ zee/
-i/ 4/
-
-mlr --oxtab --icsvlite --no-mmap --irs crlf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv-crlf
+mlr --oxtab --icsvlite --irs crlf --ifs /, cut -o -f x,a,i ./reg_test/input/multi-sep.csv-crlf
 x 0.641593543645736508
 a wye
 i 0
@@ -45278,28 +44955,12 @@ MULTI-CHARACTER SEPARATORS FOR XTAB
 
 mlr --mmap --xtab --ifs crlf --ofs Z cut -x -f b ./reg_test/input/truncated.xtab-crlf
 a 1Zc 3ZZd 4Ze 5Z
-mlr --no-mmap --xtab --ifs crlf --ofs Z cut -x -f b ./reg_test/input/truncated.xtab-crlf
-a 1Zc 3ZZd 4Ze 5Z
 mlr --mmap --xtab --ips . --ops @ cut -x -f b ./reg_test/input/dots.xtab
 a@1
 c@345
 
 defg@6
 hi@@@78
-
-mlr --no-mmap --xtab --ips . --ops @ cut -x -f b ./reg_test/input/dots.xtab
-a@1
-c@345
-
-defg@6
-hi@@@78
-
-mlr --no-mmap --xtab --ips . --ops := cut -x -f b ./reg_test/input/dots.xtab
-a:=1
-c:=345
-
-defg:=6
-hi:=78
 
 mlr --xtab --ips :  --ops @@@@ put $sum=int($a+$b) ./reg_test/input/multi-ips.dkvp
 a@@@@1
@@ -45310,20 +44971,7 @@ sum@@@@3
 ================================================================
 MULTI-CHARACTER IRS FOR PPRINT
 
-mlr --mmap --pprint --irs crlf --ifs / --ofs @ cut -x -f b ./reg_test/input/dots.pprint-crlf
-a@@@i@@x@@@@@@@@@@@@@@@@@@@y
-pan@1@@0.3467901443380824@@0.7268028627434533
-eks@2@@0.7586799647899636@@0.5221511083334797
-wye@3@@0.20460330576630303@0.33831852551664776
-eks@4@@0.38139939387114097@0.13418874328430463
-wye@5@@0.5732889198020006@@0.8636244699032729
-zee@6@@0.5271261600918548@@0.49322128674835697
-eks@7@@0.6117840605678454@@0.1878849191181694
-zee@8@@0.5985540091064224@@0.976181385699006
-hat@9@@0.03144187646093577@0.7495507603507059
-pan@10@0.5026260055412137@@0.9526183602969864
-
-mlr --no-mmap --pprint --irs crlf --ifs / --ofs @ cut -x -f b ./reg_test/input/dots.pprint-crlf
+mlr --pprint --irs crlf --ifs / --ofs @ cut -x -f b ./reg_test/input/dots.pprint-crlf
 a@@@i@@x@@@@@@@@@@@@@@@@@@@y
 pan@1@@0.3467901443380824@@0.7268028627434533
 eks@2@@0.7586799647899636@@0.5221511083334797
@@ -45822,29 +45470,6 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-mlr --no-mmap --ijson --opprint cat ./reg_test/input/small-non-nested-wrapped.json ./reg_test/input/small-non-nested-wrapped.json
-a   b   i  x                   y
-pan pan 1  0.3467901443380824  0.7268028627434533
-eks pan 2  0.7586799647899636  0.5221511083334797
-wye wye 3  0.20460330576630303 0.33831852551664776
-eks wye 4  0.38139939387114097 0.13418874328430463
-wye pan 5  0.5732889198020006  0.8636244699032729
-zee pan 6  0.5271261600918548  0.49322128674835697
-eks zee 7  0.6117840605678454  0.1878849191181694
-zee wye 8  0.5985540091064224  0.976181385699006
-hat wye 9  0.03144187646093577 0.7495507603507059
-pan wye 10 0.5026260055412137  0.9526183602969864
-pan pan 1  0.3467901443380824  0.7268028627434533
-eks pan 2  0.7586799647899636  0.5221511083334797
-wye wye 3  0.20460330576630303 0.33831852551664776
-eks wye 4  0.38139939387114097 0.13418874328430463
-wye pan 5  0.5732889198020006  0.8636244699032729
-zee pan 6  0.5271261600918548  0.49322128674835697
-eks zee 7  0.6117840605678454  0.1878849191181694
-zee wye 8  0.5985540091064224  0.976181385699006
-hat wye 9  0.03144187646093577 0.7495507603507059
-pan wye 10 0.5026260055412137  0.9526183602969864
-
 mlr --icsv --ojson --rs lf cat
 { "col": "abc \"def\" \\ghi" }
 
@@ -45917,6 +45542,10 @@ mlr: found array item within JSON object. This is valid but unmillerable JSON.
 Use --json-skip-arrays-on-input to exclude these from input without fataling.
 Or, --json-map-arrays-on-input to convert them to integer-indexed maps.
 mlr: Unable to parse JSON data.
+
+mlr --json cat ./reg_test/input/escapes.json
+{ "abc\bdef\fghi": "jkl\nmno\rpqr\tstu\"vw\\xyz" }
+{ "abc\bdef\fghi": "jkl\nmno\rpqr\tstu\"vw\\\\xyz" }
 
 
 ================================================================
@@ -46827,8 +46456,6 @@ mlr --x2m cat ./reg_test/input/abixy.xtab
 ================================================================
 LF/CRLF AND AUTODETECT
 
-
----------------------------------------------------------------- mmap dkvp
 mlr --irs auto --ors lf cat ./reg_test/input/line-term-lf.dkvp
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
@@ -46866,56 +46493,6 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 mlr cat ./reg_test/input/line-term-crlf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-
----------------------------------------------------------------- stdio dkvp
-mlr --irs auto --ors lf --no-mmap cat ./reg_test/input/line-term-lf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-mlr --irs auto --ors lf --no-mmap cat ./reg_test/input/line-term-crlf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-mlr --no-mmap cat ./reg_test/input/line-term-lf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-mlr --no-mmap cat ./reg_test/input/line-term-crlf.dkvp
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -46978,56 +46555,6 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 
----------------------------------------------------------------- stdio nidx
-mlr --irs auto --ors lf --nidx --fs comma --no-mmap cat ./reg_test/input/line-term-lf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-mlr --irs auto --ors lf --nidx --fs comma --no-mmap cat ./reg_test/input/line-term-crlf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-mlr --nidx --fs comma --no-mmap cat ./reg_test/input/line-term-lf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-mlr --nidx --fs comma --no-mmap cat ./reg_test/input/line-term-crlf.dkvp
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
-a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
-a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
-a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
-a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
-
-
 ---------------------------------------------------------------- mmap csvlite
 mlr --irs auto --ors lf --csvlite cat ./reg_test/input/line-term-lf.csv
 a,b,i,x,y
@@ -47069,60 +46596,6 @@ hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
 mlr --csvlite cat ./reg_test/input/line-term-crlf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-
----------------------------------------------------------------- stdio csvlite
-mlr --irs auto --ors lf --csvlite --no-mmap cat ./reg_test/input/line-term-lf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --irs auto --ors lf --csvlite --no-mmap cat ./reg_test/input/line-term-crlf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --csvlite --no-mmap cat ./reg_test/input/line-term-lf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --csvlite --no-mmap cat ./reg_test/input/line-term-crlf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
 eks,pan,2,0.7586799647899636,0.5221511083334797
@@ -47190,60 +46663,6 @@ hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
 
----------------------------------------------------------------- stdio pprint
-mlr --irs auto --ors lf --pprint --no-mmap cat ./reg_test/input/line-term-lf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --irs auto --ors lf --pprint --no-mmap cat ./reg_test/input/line-term-crlf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --pprint --no-mmap cat ./reg_test/input/line-term-lf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --pprint --no-mmap cat ./reg_test/input/line-term-crlf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-
 ---------------------------------------------------------------- mmap xtab
 mlr --ifs auto --xtab cat ./reg_test/input/line-term-lf.xtab
 a pan
@@ -47490,252 +46909,6 @@ x 0.5026260055412137
 y 0.9526183602969864
 
 
----------------------------------------------------------------- stdio xtab
-mlr --ifs auto --xtab --no-mmap cat ./reg_test/input/line-term-lf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-mlr --ifs auto --xtab --no-mmap cat ./reg_test/input/line-term-crlf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-mlr --fs auto --xtab --no-mmap cat ./reg_test/input/line-term-lf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-mlr --fs auto --xtab --no-mmap cat ./reg_test/input/line-term-crlf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-
 ---------------------------------------------------------------- mmap xtab
 mlr --ifs auto --xtab cat ./reg_test/input/line-term-lf.xtab
 a pan
@@ -47921,252 +47094,6 @@ x 0.5026260055412137
 y 0.9526183602969864
 
 mlr --fs auto --xtab cat ./reg_test/input/line-term-crlf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-
----------------------------------------------------------------- stdio xtab
-mlr --ifs auto --xtab --no-mmap cat ./reg_test/input/line-term-lf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-mlr --ifs auto --xtab --no-mmap cat ./reg_test/input/line-term-crlf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-mlr --fs auto --xtab --no-mmap cat ./reg_test/input/line-term-lf.xtab
-a pan
-b pan
-i 1
-x 0.3467901443380824
-y 0.7268028627434533
-
-a eks
-b pan
-i 2
-x 0.7586799647899636
-y 0.5221511083334797
-
-a wye
-b wye
-i 3
-x 0.20460330576630303
-y 0.33831852551664776
-
-a eks
-b wye
-i 4
-x 0.38139939387114097
-y 0.13418874328430463
-
-a wye
-b pan
-i 5
-x 0.5732889198020006
-y 0.8636244699032729
-
-a zee
-b pan
-i 6
-x 0.5271261600918548
-y 0.49322128674835697
-
-a eks
-b zee
-i 7
-x 0.6117840605678454
-y 0.1878849191181694
-
-a zee
-b wye
-i 8
-x 0.5985540091064224
-y 0.976181385699006
-
-a hat
-b wye
-i 9
-x 0.03144187646093577
-y 0.7495507603507059
-
-a pan
-b wye
-i 10
-x 0.5026260055412137
-y 0.9526183602969864
-
-mlr --fs auto --xtab --no-mmap cat ./reg_test/input/line-term-crlf.xtab
 a pan
 b pan
 i 1
@@ -48282,60 +47209,6 @@ hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
 
----------------------------------------------------------------- stdio csv
-mlr --irs auto --ors lf --csv --no-mmap cat ./reg_test/input/line-term-lf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --irs auto --ors lf --csv --no-mmap cat ./reg_test/input/line-term-crlf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --csv --no-mmap cat ./reg_test/input/line-term-lf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-mlr --csv --no-mmap cat ./reg_test/input/line-term-crlf.csv
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-zee,pan,6,0.5271261600918548,0.49322128674835697
-eks,zee,7,0.6117840605678454,0.1878849191181694
-zee,wye,8,0.5985540091064224,0.976181385699006
-hat,wye,9,0.03144187646093577,0.7495507603507059
-pan,wye,10,0.5026260055412137,0.9526183602969864
-
-
 ---------------------------------------------------------------- mmap json nowrap nostack
 mlr --irs auto --ors lf --json cat ./reg_test/input/line-term-lf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
@@ -48374,56 +47247,6 @@ mlr --json cat ./reg_test/input/line-term-lf.json
 { "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 
 mlr --json cat ./reg_test/input/line-term-crlf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-
----------------------------------------------------------------- stdio json nowrap nostack
-mlr --irs auto --ors lf --json --no-mmap cat ./reg_test/input/line-term-lf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-mlr --irs auto --ors lf --json --no-mmap cat ./reg_test/input/line-term-crlf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-mlr --json --no-mmap cat ./reg_test/input/line-term-lf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-mlr --json --no-mmap cat ./reg_test/input/line-term-crlf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 { "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
 { "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
@@ -48480,64 +47303,6 @@ mlr --jlistwrap --json cat ./reg_test/input/line-term-lf-wrap.json
 ]
 
 mlr --jlistwrap --json cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-
----------------------------------------------------------------- stdio json yeswrap nostack
-mlr --irs auto --ors lf --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-mlr --irs auto --ors lf --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-mlr --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-mlr --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
 [
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 ,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
@@ -48842,296 +47607,6 @@ mlr --json --jvstack cat ./reg_test/input/line-term-crlf.json
 }
 
 
----------------------------------------------------------------- stdio json nowrap yesstack
-mlr --irs auto --ors lf --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-mlr --irs auto --ors lf --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-mlr --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-mlr --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-
 ---------------------------------------------------------------- mmap json yeswrap yesstack
 mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ./reg_test/input/line-term-lf-wrap.json
 [
@@ -49430,304 +47905,6 @@ mlr --jlistwrap --json --jvstack cat ./reg_test/input/line-term-crlf-wrap.json
 ]
 
 
----------------------------------------------------------------- stdio json yeswrap yesstack
-mlr --irs auto --ors lf --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-mlr --irs auto --ors lf --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-mlr --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-mlr --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-
 ---------------------------------------------------------------- mmap json nowrap nostack
 mlr --irs auto --ors lf --json cat ./reg_test/input/line-term-lf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
@@ -49766,56 +47943,6 @@ mlr --json cat ./reg_test/input/line-term-lf.json
 { "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 
 mlr --json cat ./reg_test/input/line-term-crlf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-
----------------------------------------------------------------- stdio json nowrap nostack
-mlr --irs auto --ors lf --json --no-mmap cat ./reg_test/input/line-term-lf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-mlr --irs auto --ors lf --json --no-mmap cat ./reg_test/input/line-term-crlf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-mlr --json --no-mmap cat ./reg_test/input/line-term-lf.json
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-
-mlr --json --no-mmap cat ./reg_test/input/line-term-crlf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 { "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
 { "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
@@ -49872,64 +47999,6 @@ mlr --jlistwrap --json cat ./reg_test/input/line-term-lf-wrap.json
 ]
 
 mlr --jlistwrap --json cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-
----------------------------------------------------------------- stdio json yeswrap nostack
-mlr --irs auto --ors lf --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-mlr --irs auto --ors lf --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-mlr --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
-,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
-,{ "a": "wye", "b": "wye", "i": 3, "x": 0.20460330576630303, "y": 0.33831852551664776 }
-,{ "a": "eks", "b": "wye", "i": 4, "x": 0.38139939387114097, "y": 0.13418874328430463 }
-,{ "a": "wye", "b": "pan", "i": 5, "x": 0.5732889198020006, "y": 0.8636244699032729 }
-,{ "a": "zee", "b": "pan", "i": 6, "x": 0.5271261600918548, "y": 0.49322128674835697 }
-,{ "a": "eks", "b": "zee", "i": 7, "x": 0.6117840605678454, "y": 0.1878849191181694 }
-,{ "a": "zee", "b": "wye", "i": 8, "x": 0.5985540091064224, "y": 0.976181385699006 }
-,{ "a": "hat", "b": "wye", "i": 9, "x": 0.03144187646093577, "y": 0.7495507603507059 }
-,{ "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
-]
-
-mlr --jlistwrap --json --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
 [
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 ,{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
@@ -50234,296 +48303,6 @@ mlr --json --jvstack cat ./reg_test/input/line-term-crlf.json
 }
 
 
----------------------------------------------------------------- stdio json nowrap yesstack
-mlr --irs auto --ors lf --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-mlr --irs auto --ors lf --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-mlr --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-mlr --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf.json
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-
-
 ---------------------------------------------------------------- mmap json yeswrap yesstack
 mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ./reg_test/input/line-term-lf-wrap.json
 [
@@ -50748,304 +48527,6 @@ mlr --jlistwrap --json --jvstack cat ./reg_test/input/line-term-lf-wrap.json
 ]
 
 mlr --jlistwrap --json --jvstack cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-
----------------------------------------------------------------- stdio json yeswrap yesstack
-mlr --irs auto --ors lf --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-mlr --irs auto --ors lf --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-mlr --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-lf-wrap.json
-[
-{
-  "a": "pan",
-  "b": "pan",
-  "i": 1,
-  "x": 0.3467901443380824,
-  "y": 0.7268028627434533
-}
-,{
-  "a": "eks",
-  "b": "pan",
-  "i": 2,
-  "x": 0.7586799647899636,
-  "y": 0.5221511083334797
-}
-,{
-  "a": "wye",
-  "b": "wye",
-  "i": 3,
-  "x": 0.20460330576630303,
-  "y": 0.33831852551664776
-}
-,{
-  "a": "eks",
-  "b": "wye",
-  "i": 4,
-  "x": 0.38139939387114097,
-  "y": 0.13418874328430463
-}
-,{
-  "a": "wye",
-  "b": "pan",
-  "i": 5,
-  "x": 0.5732889198020006,
-  "y": 0.8636244699032729
-}
-,{
-  "a": "zee",
-  "b": "pan",
-  "i": 6,
-  "x": 0.5271261600918548,
-  "y": 0.49322128674835697
-}
-,{
-  "a": "eks",
-  "b": "zee",
-  "i": 7,
-  "x": 0.6117840605678454,
-  "y": 0.1878849191181694
-}
-,{
-  "a": "zee",
-  "b": "wye",
-  "i": 8,
-  "x": 0.5985540091064224,
-  "y": 0.976181385699006
-}
-,{
-  "a": "hat",
-  "b": "wye",
-  "i": 9,
-  "x": 0.03144187646093577,
-  "y": 0.7495507603507059
-}
-,{
-  "a": "pan",
-  "b": "wye",
-  "i": 10,
-  "x": 0.5026260055412137,
-  "y": 0.9526183602969864
-}
-]
-
-mlr --jlistwrap --json --jvstack --no-mmap cat ./reg_test/input/line-term-crlf-wrap.json
 [
 {
   "a": "pan",

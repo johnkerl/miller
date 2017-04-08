@@ -55,6 +55,7 @@ char* mlr_alloc_read_line_single_delimiter(
 	// nread   includes line-ending characters.
 	int linelen = p - line;
 	if (nread == 0 && reached_eof) {
+		free(line);
 		line = NULL;
 		linelen = 0;
 	}
@@ -82,7 +83,7 @@ char* mlr_alloc_read_line_multiple_delimiter(
 
 	while (TRUE) {
 		size_t offset = q - line;
-		if (offset >= linecap) {
+		if (offset >= linecap-1) {
 			linecap = linecap << 1;
 			line = mlr_realloc_or_die(line, linecap);
 			q = line + offset;
@@ -105,8 +106,8 @@ char* mlr_alloc_read_line_multiple_delimiter(
 			p = q - delimiter_length;
 			if (q - line >= delimiter_length && memcmp(p, delimiter, delimiter_length) == 0) {
 				*p = 0;
+				break;
 			}
-			break;
 		} else {
 			nread++;
 			*(q++) = c;

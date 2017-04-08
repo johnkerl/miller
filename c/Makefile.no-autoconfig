@@ -27,6 +27,7 @@ INSTALLDIR=/usr/local/bin
 
 CCOPT=$(CC) $(CFLAGS) $(IFLAGS) $(WFLAGS) -O3
 CCDEBUG=$(CC) -g $(CFLAGS) $(IFLAGS) $(WFLAGS)
+CCASAN=clang -fsanitize=address -g $(CFLAGS) $(IFLAGS) $(WFLAGS)
 
 # clang ASAN. Use -O1 for debug mode to (among other things) disable inlining.
 #CCOPT=clang -fsanitize=address -fno-omit-frame-pointer $(CFLAGS) $(IFLAGS) $(WFLAGS)
@@ -426,6 +427,10 @@ mlrt: .always parsing
 mlrp: .always parsing
 	$(CCDEBUG) -g -pg $(NON_DSL_SRCS) $(DSL_OBJS) $(LFLAGS) -o mlrp
 
+# ASAN version
+mlra: .always parsing
+	$(CCASAN) $(NON_DSL_SRCS) $(DSL_OBJS) $(LFLAGS) -o mlra
+
 # ================================================================
 tests: unit-test reg-test
 
@@ -448,6 +453,7 @@ unit-test: test-mlrutil test-mlrregex test-argparse test-line-readers test-byte-
 
 reg-test:
 	./reg_test/run
+	./reg_test/run --no-mmap
 
 # ----------------------------------------------------------------
 # Run this after unit-test expected output has changed, and is verified to be

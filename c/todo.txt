@@ -1,29 +1,47 @@
 ================================================================
 BUGFIXES
 
-:)
+! json join
+! neaten vg.out !
+! synctool -4/-6
 
 ================================================================
 5.0.0 POST-RELEASE TO DO:
 
 ! windows port
+  o gmtime_r
+  o strptime
+  o -lpcreposix @ Makefile.am
+  o avoid pathext for pcreposix.dll @ runtime, outside of msys2
+
+! allow flags after filenames?
+
+! coroutines
+
+! cover-page simplify
 
 ! coroutines (r/w pipes)?
+  o maybe not now: need notion of # lines in/out which, simplest case, are 1-1,
+    but in the more general case might not be.
+  o coexec as well as shellout; stderr caveats x both
+
+! synctool: use "rsync -e 'ssh -4' ..."
 
 * eddelbuettel ac error <-> smith aclocal-1.15?
-
-* --mmap / --no-mmap double-regression loop
-  o also "." the setup funcs
 
 * ship ./configure, w/ clean-target mods
 
 * start a draft-5.1.0-relnotes.md
-  - incl. json-skip-arrays-on-input
+  - JSON arrays:
+    > --json-skip-arrays-on-input
+    > --json-arrays-as-maps
+  - correct JSON escaping on output
   - feature-counting script
   - mlrfunc docsect w/ h2's
   - aux-entries
   - antimode
-  - json-arrays-as-maps feature
+  - unsorted join by default, with mem caveat. & update dox. incl sjax req#
+  - mlr nest --evar , -f items
 
 * rh/fedora/centos
 
@@ -138,14 +156,6 @@ MAPVAR CHECKLIST:
   - stats1 for strings: min/max/percentiles. note count/mode already work.
     -> how to handle mixed string/number columns ...
 
-* mlr batchify/chunkify: start new blocks when field(s) change.
-  - needs backward-incompatible change to DKVP blank lines become skips, not empty maps
-  - DKVP/CSV/PPRINT: blank line.
-  - XTAB: extra blank link.
-  - JSON: ? empty {} ?
-
-* UT: formalize w/ w/o mmap. for now manual at least. (not a release-blocker)
-
 * xxxes
 
 * mt_error/fatal/skip-assign audit
@@ -155,14 +165,6 @@ MAPVAR CHECKLIST:
 ! more than 'syntax error' from lemon-parse failures ... lemon API research
 
 ? some sort of debug/single-step/trace ... include the AST in the CST & reverse-generate ?
-
-? formalize _ for skipvars?
-
-? strict mode:
-  - absent?
-  - local shadow for-loop boundvars / func/subr args?
-
-* mlrfunc doc section?
 
 * seqgen as input lrec "reader"? the seqgen verb doesn't (and shouldn't) step NR.
 
