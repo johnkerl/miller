@@ -57,6 +57,7 @@ DSL_OBJS = \
 TEST_ARGPARSE_SRCS = \
   lib/mlrutil.c \
   lib/mlr_arch.c \
+  lib/netbsd_strptime.c \
   lib/mtrand.c \
   lib/mlrregex.c \
   lib/mlr_globals.c \
@@ -70,6 +71,7 @@ TEST_ARGPARSE_SRCS = \
 TEST_BYTE_READERS_SRCS = \
   lib/mlrutil.c \
   lib/mlr_arch.c \
+  lib/netbsd_strptime.c \
   lib/mtrand.c \
   lib/mlrescape.c \
   lib/mlr_test_util.c \
@@ -83,6 +85,7 @@ TEST_BYTE_READERS_SRCS = \
 TEST_LINE_READERS_SRCS = \
   lib/mlrutil.c \
   lib/mlr_arch.c \
+  lib/netbsd_strptime.c \
   lib/mtrand.c \
   lib/mlrescape.c \
   lib/context.c \
@@ -95,6 +98,7 @@ TEST_LINE_READERS_SRCS = \
 TEST_PEEK_FILE_READER_SRCS = \
   lib/mlrutil.c \
   lib/mlr_arch.c \
+  lib/netbsd_strptime.c \
   lib/mtrand.c \
   lib/mlr_test_util.c \
   lib/mlr_globals.c \
@@ -106,6 +110,7 @@ TEST_PEEK_FILE_READER_SRCS = \
 TEST_LREC_SRCS = \
   lib/mlrutil.c \
   lib/mlr_arch.c \
+  lib/netbsd_strptime.c \
   lib/mtrand.c \
   lib/context.c \
   lib/mlrdatetime.c \
@@ -146,6 +151,7 @@ TEST_LREC_SRCS = \
 TEST_MULTIPLE_CONTAINERS_SRCS = \
   lib/mlrutil.c \
   lib/mlr_arch.c \
+  lib/netbsd_strptime.c \
   lib/mtrand.c \
   lib/context.c \
   lib/mlrdatetime.c \
@@ -194,6 +200,7 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
 TEST_MLHMMV_SRCS = \
   lib/mlrutil.c \
   lib/mlr_arch.c \
+  lib/netbsd_strptime.c \
   lib/mtrand.c \
   lib/mlrdatetime.c \
   lib/string_builder.c \
@@ -213,6 +220,7 @@ TEST_MLRUTIL_SRCS = \
   lib/mlr_globals.c \
   lib/mlrutil.c \
   lib/mlr_arch.c \
+  lib/netbsd_strptime.c \
   lib/mtrand.c \
   lib/string_builder.c \
   unit_test/test_mlrutil.c
@@ -221,6 +229,7 @@ TEST_MLRREGEX_SRCS = \
   lib/mlr_globals.c \
   lib/mlrutil.c \
   lib/mlr_arch.c \
+  lib/netbsd_strptime.c \
   lib/mtrand.c \
   lib/mlrregex.c \
   lib/string_builder.c \
@@ -230,6 +239,7 @@ TEST_MLRREGEX_SRCS = \
 TEST_STRING_BUILDER_SRCS = \
   lib/mlrutil.c \
   lib/mlr_arch.c \
+  lib/netbsd_strptime.c \
   lib/mtrand.c \
   lib/mlr_globals.c \
   lib/string_builder.c \
@@ -238,6 +248,7 @@ TEST_STRING_BUILDER_SRCS = \
 TEST_PARSE_TRIE_SRCS = \
   lib/mlrutil.c \
   lib/mlr_arch.c \
+  lib/netbsd_strptime.c \
   lib/mtrand.c \
   lib/mlr_globals.c \
   lib/string_builder.c \
@@ -248,6 +259,7 @@ TEST_RVAL_EVALUATORS_SRCS = \
   lib/mlr_globals.c \
   lib/mlrutil.c \
   lib/mlr_arch.c \
+  lib/netbsd_strptime.c \
   lib/mtrand.c \
   lib/mlrdatetime.c \
   lib/mlrregex.c \
@@ -311,6 +323,7 @@ TEST_RVAL_EVALUATORS_SRCS = \
 TEST_JOIN_BUCKET_KEEPER_SRCS = \
   lib/mlrutil.c \
   lib/mlr_arch.c \
+  lib/netbsd_strptime.c \
   lib/mtrand.c \
   lib/mlrescape.c \
   lib/mlr_globals.c \
@@ -355,6 +368,7 @@ EXPERIMENTAL_READER_SRCS = \
   lib/mlrutil.c \
   lib/mlrdatetime.c \
   lib/mlr_arch.c \
+  lib/netbsd_strptime.c \
   lib/mtrand.c \
   lib/context.c \
   lib/mlrescape.c \
@@ -372,6 +386,7 @@ EXPERIMENTAL_JSON_VG_MEM_SRCS = \
   lib/mlr_globals.c \
   lib/mlrutil.c \
   lib/mlr_arch.c \
+  lib/netbsd_strptime.c \
   lib/mtrand.c \
   input/json_parser.c \
   experimental/json_vg_mem.c

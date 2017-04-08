@@ -5,24 +5,27 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
+#include "lib/netbsd_strptime.h"
 #include "input/line_readers.h"
 
 // ----------------------------------------------------------------
-static int aux_list_main(int argc, char** argv);
-static int    lecat_main(int argc, char** argv);
-static int  termcvt_main(int argc, char** argv);
-static int      hex_main(int argc, char** argv);
-static int    unhex_main(int argc, char** argv);
+static int        aux_list_main(int argc, char** argv);
+static int           lecat_main(int argc, char** argv);
+static int         termcvt_main(int argc, char** argv);
+static int             hex_main(int argc, char** argv);
+static int           unhex_main(int argc, char** argv);
+static int netbsd_strptime_main(int argc, char** argv);
 
 static int lecat_stream(FILE* input_stream, int do_color);
 static void hex_dump_fp(FILE *in_fp, FILE *out_fp, int do_raw);
 static void    unhex_fp(FILE *in_fp, FILE *out_fp);
 
-static void aux_list_usage(char* argv0, char* argv1, FILE* o, int exit_code);
-static void    lecat_usage(char* argv0, char* argv1, FILE* o, int exit_code);
-static void  termcvt_usage(char* argv0, char* argv1, FILE* o, int exit_code);
-static void      hex_usage(char* argv0, char* argv1, FILE* o, int exit_code);
-static void    unhex_usage(char* argv0, char* argv1, FILE* o, int exit_code);
+static void        aux_list_usage(char* argv0, char* argv1, FILE* o, int exit_code);
+static void           lecat_usage(char* argv0, char* argv1, FILE* o, int exit_code);
+static void         termcvt_usage(char* argv0, char* argv1, FILE* o, int exit_code);
+static void             hex_usage(char* argv0, char* argv1, FILE* o, int exit_code);
+static void           unhex_usage(char* argv0, char* argv1, FILE* o, int exit_code);
+static void netbsd_strptime_usage(char* argv0, char* argv1, FILE* o, int exit_code);
 
 // ----------------------------------------------------------------
 typedef int aux_main_t(int argc, char**argv);
@@ -35,11 +38,12 @@ typedef struct _aux_lookup_entry_t {
 
 static aux_lookup_entry_t aux_lookup_table[] = {
 
-	{ "aux-list", aux_list_main, aux_list_usage },
-	{ "lecat",    lecat_main,    lecat_usage    },
-	{ "termcvt",  termcvt_main,  termcvt_usage  },
-	{ "hex",      hex_main,      hex_usage      },
-	{ "unhex",    unhex_main,    unhex_usage    },
+	{ "aux-list",        aux_list_main,        aux_list_usage        },
+	{ "lecat",           lecat_main,           lecat_usage           },
+	{ "termcvt",         termcvt_main,         termcvt_usage         },
+	{ "hex",             hex_main,             hex_usage             },
+	{ "unhex",           unhex_main,           unhex_usage           },
+	{ "netbsd-strptime", netbsd_strptime_main, netbsd_strptime_usage },
 
 };
 
@@ -551,4 +555,45 @@ static void unhex_fp(FILE *infp, FILE *outfp) {
 		byte = temp;
 		fwrite (&byte, sizeof(byte), 1, outfp);
 	}
+}
+
+// ================================================================
+static void netbsd_strptime_usage(char* argv0, char* argv1, FILE* o, int exit_code) {
+	fprintf(o, "Usage: %s %s {string value} {format}\n", argv0, argv1);
+	fprintf(o, "Standalone driver for replacement strptime for MSYS2.\n");
+	fprintf(o, "Example string value: 2012-03-04T05:06:07Z\n");
+	fprintf(o, "Example format: %%Y-%%m-%%dT%%H:%%M:%%SZ\n");
+	exit(exit_code);
+}
+
+//----------------------------------------------------------------------
+#define MYBUFLEN 256
+static int netbsd_strptime_main(int argc, char **argv) {
+	// 'mlr' and 'netbsd_strptime' are already argv[0] and argv[1].
+	if (streq(argv[2], "-h") || streq(argv[2], "--help") || (argc != 4)) {
+		netbsd_strptime_usage(argv[0], argv[1], stdout, 0);
+	}
+
+	struct tm tm;
+	char* strptime_input = argv[2];
+	char* format = argv[3];
+	memset(&tm, 0, sizeof(tm));
+	char* strptime_output = netbsd_strptime(strptime_input, format, &tm);
+	if (strptime_output == NULL) {
+		printf("Could not strptime(\"%s\", \"%s\").\n", strptime_input, format);
+	} else {
+		printf("strptime: %s ->\n", strptime_input);
+		printf("  tm_sec    = %d\n",  tm.tm_sec);
+		printf("  tm_min    = %d\n",  tm.tm_min);
+		printf("  tm_hour   = %d\n",  tm.tm_hour);
+		printf("  tm_mday   = %d\n",  tm.tm_mday);
+		printf("  tm_mon    = %d\n",  tm.tm_mon);
+		printf("  tm_year   = %d\n",  tm.tm_year);
+		printf("  tm_wday   = %d\n",  tm.tm_wday);
+		printf("  tm_yday   = %d\n",  tm.tm_yday);
+		printf("  tm_isdst  = %d\n",  tm.tm_isdst);
+		printf("  remainder = \"%s\"\n", strptime_output);
+	}
+
+	return 0;
 }

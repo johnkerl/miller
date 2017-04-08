@@ -2,6 +2,7 @@
 #define MLR_ARCH_H
 
 #include <stdio.h>
+#include <time.h>
 
 // ----------------------------------------------------------------
 // Miller is single-threaded and the file-locking in getc is simply an unneeded
@@ -24,5 +25,7 @@
 // ----------------------------------------------------------------
 int mlr_arch_setenv(const char *name, const char *value);
 int mlr_arch_unsetenv(const char *name);
+
+char *mlr_arch_strptime(const char *s, const char *format, struct tm *ptm);
 
 #endif // MLR_ARCH_H
