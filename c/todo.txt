@@ -5,6 +5,9 @@ BUGFIXES
 ! neaten vg.out !
 ! synctool -4/-6
 
+! $ mlr --from s put "'$t=4'"
+  Segmentation fault: 11
+
 ================================================================
 5.0.0 POST-RELEASE TO DO:
 

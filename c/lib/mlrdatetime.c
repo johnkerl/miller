@@ -8,34 +8,12 @@
 #include "lib/mlrutil.h"
 #include "lib/mlrdatetime.h"
 
-// For some Linux distros, in spite of including time.h:
-char *strptime(const char *s, const char *format, struct tm *ptm);
-
 // ----------------------------------------------------------------
 // seconds since the epoch
 double get_systime() {
 	struct timeval tv = { .tv_sec = 0, .tv_usec = 0 };
 	(void)gettimeofday(&tv, NULL);
 	return (double)tv.tv_sec + (double)tv.tv_usec * 1e-6;
-}
-
-// ----------------------------------------------------------------
-// See the GNU timegm manpage -- this is what it does.
-time_t mlr_timegm(struct tm* ptm) {
-	time_t ret;
-	char* tz;
-
-	tz = getenv("TZ");
-	mlr_arch_setenv("TZ", "GMT0");
-	tzset();
-	ret = mktime(ptm);
-	if (tz) {
-		mlr_arch_setenv("TZ", tz);
-	} else {
-		mlr_arch_unsetenv("TZ");
-	}
-	tzset();
-	return ret;
 }
 
 // ----------------------------------------------------------------
@@ -64,5 +42,5 @@ time_t mlr_seconds_from_time_string(char* string, char* format) {
 		exit(1);
 	}
 	MLR_INTERNAL_CODING_ERROR_IF(*retval != 0); // Parseable input followed by non-parseable
-	return mlr_timegm(&tm);
+	return mlr_arch_timegm(&tm);
 }

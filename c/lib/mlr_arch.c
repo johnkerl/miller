@@ -37,3 +37,26 @@ char *mlr_arch_strptime(const char *s, const char *format, struct tm *ptm) {
 	return strptime(s, format, ptm);
 #endif
 }
+
+// ----------------------------------------------------------------
+// See the GNU timegm manpage -- this is what it does.
+time_t mlr_arch_timegm(struct tm* ptm) {
+#ifdef MLR_ON_MSYS2
+	return _mkgmtime(ptm);
+#else
+	time_t ret;
+	char* tz;
+
+	tz = getenv("TZ");
+	mlr_arch_setenv("TZ", "GMT0");
+	tzset();
+	ret = mktime(ptm);
+	if (tz) {
+		mlr_arch_setenv("TZ", tz);
+	} else {
+		mlr_arch_unsetenv("TZ");
+	}
+	tzset();
+	return ret;
+#endif
+}
