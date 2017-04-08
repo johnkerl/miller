@@ -1,0 +1,68 @@
+diff --git a/c/Makefile.am b/c/Makefile.am
+index 29a1e875..f6ecc180 100644
+--- a/c/Makefile.am
++++ b/c/Makefile.am
+@@ -19,7 +19,7 @@ mlr_LDADD=		\
+ 			lib/libmlr.la \
+ 			parsing/libdsl.la \
+ 			aux/libaux.la \
+-			-lm
++			-lm -lpcreposix
+ 
+ # Other executable variants
+ 
+diff --git a/c/lib/mlr_arch.c b/c/lib/mlr_arch.c
+index ee50a490..d7334ccb 100644
+--- a/c/lib/mlr_arch.c
++++ b/c/lib/mlr_arch.c
+@@ -29,8 +29,8 @@ int mlr_arch_unsetenv(const char *name) {
+ // ----------------------------------------------------------------
+ char *mlr_arch_strptime(const char *s, const char *format, struct tm *ptm) {
+ #ifdef MLR_ON_MSYS2
+-	return strptime(*s, format, ptm);
+-#else
+ 	return netbsd_strptime(s, format, ptm);
++#else
++	return strptime(s, format, ptm);
+ #endif
+ }
+diff --git a/c/lib/mlr_arch.h b/c/lib/mlr_arch.h
+index 97eaf5c8..30fe1d0c 100644
+--- a/c/lib/mlr_arch.h
++++ b/c/lib/mlr_arch.h
+@@ -4,6 +4,8 @@
+ #include <stdio.h>
+ #include <time.h>
+ 
++#define MLR_ON_MSYS2
++
+ // ----------------------------------------------------------------
+ // Miller is single-threaded and the file-locking in getc is simply an unneeded
+ // performance hit, so we intentionally call getc_unlocked().  But for MSYS2
+diff --git a/c/lib/mlrdatetime.c b/c/lib/mlrdatetime.c
+index 6c028fa0..3ed300e0 100644
+--- a/c/lib/mlrdatetime.c
++++ b/c/lib/mlrdatetime.c
+@@ -41,11 +41,9 @@ time_t mlr_timegm(struct tm* ptm) {
+ // ----------------------------------------------------------------
+ #define NZBUFLEN 63
+ char* mlr_alloc_time_string_from_seconds(time_t seconds, char* format) {
+-	struct tm tm;
+-	struct tm *ptm = gmtime_r(&seconds, &tm);
+-	MLR_INTERNAL_CODING_ERROR_IF(ptm == NULL);
++	struct tm tm = *gmtime(&seconds);
+ 	char* string = mlr_malloc_or_die(NZBUFLEN + 1);
+-	int written_length = strftime(string, NZBUFLEN, format, ptm);
++	int written_length = strftime(string, NZBUFLEN, format, &tm);
+ 	if (written_length > NZBUFLEN || written_length == 0) {
+ 		fprintf(stderr, "%s: could not strftime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
+ 			MLR_GLOBALS.bargv0, string, format, MLR_GLOBALS.bargv0);
+@@ -59,7 +57,7 @@ char* mlr_alloc_time_string_from_seconds(time_t seconds, char* format) {
+ time_t mlr_seconds_from_time_string(char* string, char* format) {
+ 	struct tm tm;
+ 	memset(&tm, 0, sizeof(tm));
+-	char* retval = strptime(string, format, &tm);
++	char* retval = mlr_arch_strptime(string, format, &tm);
+ 	if (retval == NULL) {
+ 		fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
+ 			MLR_GLOBALS.bargv0, string, format, MLR_GLOBALS.bargv0);
