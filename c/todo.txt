@@ -13,6 +13,8 @@ BUGFIXES
 ! pcreposix.dll sadpanda:
   https://github.com/universal-ctags/ctags/issues/505
 
+! write-temp-file abend on negfd etc
+
 ! windows port
   o gmtime_r
   o strptime
