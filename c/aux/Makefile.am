@@ -1,4 +1,4 @@
-noinst_LTLIBRARIES=	libaux.la
+noinst_LTLIBRARIES=	libmlr.la libaux.la
 libaux_la_SOURCES=	aux_entries.c \
 			aux_entries.h
 
