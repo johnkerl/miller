@@ -119,43 +119,43 @@ literal:
 		// "Complex" conversion rules, implemented through recursion.
 		case 'c':       // Date and time, using the locale's format.
 			LEGAL_ALT(ALT_E);
-			if (!(bp = strptime(bp, "%x %X", tm)))
+			if (!(bp = netbsd_strptime(bp, "%x %X", tm)))
 				return (0);
 			break;
 
 		case 'D':       // The date as "%m/%d/%y".
 			LEGAL_ALT(0);
-			if (!(bp = strptime(bp, "%m/%d/%y", tm)))
+			if (!(bp = netbsd_strptime(bp, "%m/%d/%y", tm)))
 				return (0);
 			break;
 
 		case 'R':       // The time as "%H:%M".
 			LEGAL_ALT(0);
-			if (!(bp = strptime(bp, "%H:%M", tm)))
+			if (!(bp = netbsd_strptime(bp, "%H:%M", tm)))
 				return (0);
 			break;
 
 		case 'r':       // The time in 12-hour clock representation.
 			LEGAL_ALT(0);
-			if (!(bp = strptime(bp, "%I:%M:%S %p", tm)))
+			if (!(bp = netbsd_strptime(bp, "%I:%M:%S %p", tm)))
 				return (0);
 			break;
 
 		case 'T':       // The time as "%H:%M:%S".
 			LEGAL_ALT(0);
-			if (!(bp = strptime(bp, "%H:%M:%S", tm)))
+			if (!(bp = netbsd_strptime(bp, "%H:%M:%S", tm)))
 				return (0);
 			break;
 
 		case 'X':       // The time, using the locale's format.
 			LEGAL_ALT(ALT_E);
-			if (!(bp = strptime(bp, "%H:%M:%S", tm)))
+			if (!(bp = netbsd_strptime(bp, "%H:%M:%S", tm)))
 				return (0);
 			break;
 
 		case 'x':       // The date, using the locale's format.
 			LEGAL_ALT(ALT_E);
-			if (!(bp = strptime(bp, "%m/%d/%y", tm)))
+			if (!(bp = netbsd_strptime(bp, "%m/%d/%y", tm)))
 				return (0);
 			break;
 
