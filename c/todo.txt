@@ -11,13 +11,15 @@ BUGFIXES
 ================================================================
 5.0.0 POST-RELEASE TO DO:
 
+!!! fracsec in strftime/strptime !!!
+
+!!! mlr --from s put "'$t=4'" segv
+
 ! windows port
   o gmtime_r
   o strptime
   o -lpcreposix @ Makefile.am
   o avoid pathext for pcreposix.dll @ runtime, outside of msys2
-
-  https://sourceforge.net/p/mingw/msys2-runtime/ci/02fa2fc077ae6346d65cdc115311c764d06f1202/tree/newlib/libc/locale/timelocal.h
 
   % gcc try.c
   C:\msys64\tmp\ccyxKrDs.o:try.c:(.text+0xe2): undefined reference to `strptime'

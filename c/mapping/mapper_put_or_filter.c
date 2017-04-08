@@ -356,6 +356,18 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	}
 	sllv_free(expression_infos);
 
+	// On Linux, '$x=4' is correct; single-quotes inhibit shell-variable expansion which is desired
+	// since Miller variables also start with $. In either case, the shell removes the outermost
+	// quotes before passing the string to us.  On Windows, though, double-quotes are the right
+	// thing and are removed for us, while single-quotes are passed through to us.
+	if (mlr_dsl_expression[0] == '\'') {
+		int len = strlen(mlr_dsl_expression);
+		if (len >= 2 && mlr_dsl_expression[len-1] == '\'') {
+			mlr_dsl_expression[0] = ' ';
+			mlr_dsl_expression[len-1] = 0;
+		}
+	}
+
 	mlr_dsl_ast_t* past = mlr_dsl_parse(mlr_dsl_expression, trace_parse);
 	if (past == NULL) {
 		fprintf(stderr, "%s %s: syntax error on DSL parse of '%s'\n",
