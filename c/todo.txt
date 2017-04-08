@@ -16,6 +16,10 @@ BUGFIXES
 
   https://sourceforge.net/p/mingw/msys2-runtime/ci/02fa2fc077ae6346d65cdc115311c764d06f1202/tree/newlib/libc/locale/timelocal.h
 
+  % gcc try.c
+  C:\msys64\tmp\ccyxKrDs.o:try.c:(.text+0xe2): undefined reference to `strptime'
+  collect2.exe: error: ld returned 1 exit status
+
 ! allow flags after filenames?
 
 ! coroutines
