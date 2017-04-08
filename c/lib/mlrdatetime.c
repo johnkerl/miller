@@ -59,7 +59,7 @@ char* mlr_alloc_time_string_from_seconds(time_t seconds, char* format) {
 time_t mlr_seconds_from_time_string(char* string, char* format) {
 	struct tm tm;
 	memset(&tm, 0, sizeof(tm));
-	char* retval = strptime(string, format, &tm);
+	char* retval = mlr_arch_strptime(string, format, &tm);
 	if (retval == NULL) {
 		fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
 			MLR_GLOBALS.bargv0, string, format, MLR_GLOBALS.bargv0);
