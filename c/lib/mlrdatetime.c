@@ -41,11 +41,9 @@ time_t mlr_timegm(struct tm* ptm) {
 // ----------------------------------------------------------------
 #define NZBUFLEN 63
 char* mlr_alloc_time_string_from_seconds(time_t seconds, char* format) {
-	struct tm tm;
-	struct tm *ptm = gmtime_r(&seconds, &tm);
-	MLR_INTERNAL_CODING_ERROR_IF(ptm == NULL);
+	struct tm tm = *gmtime(&seconds); // No gmtime_r on windows
 	char* string = mlr_malloc_or_die(NZBUFLEN + 1);
-	int written_length = strftime(string, NZBUFLEN, format, ptm);
+	int written_length = strftime(string, NZBUFLEN, format, &tm);
 	if (written_length > NZBUFLEN || written_length == 0) {
 		fprintf(stderr, "%s: could not strftime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
 			MLR_GLOBALS.bargv0, string, format, MLR_GLOBALS.bargv0);
