@@ -6,7 +6,7 @@
 
 #define ISO8601_TIME_FORMAT "%Y-%m-%dT%H:%M:%SZ"
 #define NZBUFLEN 63
-//char *strptime(const char *s, const char *format, struct tm *ptm);
+char *strptime(const char *s, const char *format, struct tm *ptm);
 
 // ----------------------------------------------------------------
 int main(int argc, char** argv) {
@@ -35,8 +35,6 @@ int main(int argc, char** argv) {
 		printf("  tm_wday   = %d\n",  tm.tm_wday);
 		printf("  tm_yday   = %d\n",  tm.tm_yday);
 		printf("  tm_isdst  = %d\n",  tm.tm_isdst);
-		printf("  tm_zone   = %s\n",  tm.tm_zone);
-		printf("  tm_gmtoff = %ld\n", tm.tm_gmtoff);
 		printf("  remainder = \"%s\"\n", strptime_output);
 	}
 
