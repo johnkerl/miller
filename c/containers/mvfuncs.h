@@ -16,8 +16,17 @@
 
 #define MV_SB_ALLOC_LENGTH 32
 
-#define ISO8601_TIME_FORMAT "%Y-%m-%dT%H:%M:%SZ"
-#define ISO8601_DATE_FORMAT "%Y-%m-%d"
+#define ISO8601_TIME_FORMAT   "%Y-%m-%dT%H:%M:%SZ"
+#define ISO8601_TIME_FORMAT_1 "%Y-%m-%dT%H:%M:%1SZ"
+#define ISO8601_TIME_FORMAT_2 "%Y-%m-%dT%H:%M:%2SZ"
+#define ISO8601_TIME_FORMAT_3 "%Y-%m-%dT%H:%M:%3SZ"
+#define ISO8601_TIME_FORMAT_4 "%Y-%m-%dT%H:%M:%4SZ"
+#define ISO8601_TIME_FORMAT_5 "%Y-%m-%dT%H:%M:%5SZ"
+#define ISO8601_TIME_FORMAT_6 "%Y-%m-%dT%H:%M:%6SZ"
+#define ISO8601_TIME_FORMAT_7 "%Y-%m-%dT%H:%M:%7SZ"
+#define ISO8601_TIME_FORMAT_8 "%Y-%m-%dT%H:%M:%8SZ"
+#define ISO8601_TIME_FORMAT_9 "%Y-%m-%dT%H:%M:%9SZ"
+#define ISO8601_DATE_FORMAT   "%Y-%m-%d"
 
 // ----------------------------------------------------------------
 typedef mv_t mv_variadic_func_t(mv_t* pvals, int nvals);

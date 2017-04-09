@@ -13,6 +13,7 @@ BUGFIXES
 ! percent/fraction hold-and-emit verb
 
 ? sec2gmtn(x, n)?
+  - func as well as verb
   - i_... name, boo
 
 ! pcreposix.dll sadpanda:
