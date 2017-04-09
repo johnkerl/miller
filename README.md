@@ -106,7 +106,7 @@ Documentation links:
 
 * [**Full documentation for latest release**](http://johnkerl.org/miller/doc)
 * [Head docs](http://johnkerl.org/miller-releases/miller-head/doc/index.html) match
-[head code](https://github.com/johnkerl/miller). [Release-specific docs](http://johnkerl.org/miller/doc/release-docs.html)
+[head code](https://github.com/johnkerl/miller); [release-specific docs](http://johnkerl.org/miller/doc/release-docs.html)
 match [release-specific code](https://github.com/johnkerl/miller/tags).
 * [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/master/LICENSE.txt).
 * [Build information including dependencies](http://johnkerl.org/miller/doc/build.html)

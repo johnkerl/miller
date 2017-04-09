@@ -9,9 +9,8 @@ BUGFIXES
 5.0.0 POST-RELEASE TO DO:
 
 ! function-doc needs work -- *not* autogen :(
-
+! R.m needs to start with *one* nice example. then details later on.
 ! percent/fraction hold-and-emit verb
-
 ? sec2gmtn(x, n)?
   - func as well as verb
   - i_... name, boo
@@ -27,27 +26,6 @@ BUGFIXES
   o -lpcreposix @ Makefile.am
   o avoid pathext for pcreposix.dll @ runtime, outside of msys2
 
-  % gcc try.c
-  C:\msys64\tmp\ccyxKrDs.o:try.c:(.text+0xe2): undefined reference to `strptime'
-  collect2.exe: error: ld returned 1 exit status
-
-! allow flags after filenames?
-
-! coroutines
-
-! cover-page simplify
-
-! coroutines (r/w pipes)?
-  o maybe not now: need notion of # lines in/out which, simplest case, are 1-1,
-    but in the more general case might not be.
-  o coexec as well as shellout; stderr caveats x both
-
-! synctool: use "rsync -e 'ssh -4' ..."
-
-* eddelbuettel ac error <-> smith aclocal-1.15?
-
-* ship ./configure, w/ clean-target mods
-
 * start a draft-5.1.0-relnotes.md
   - JSON arrays:
     > --json-skip-arrays-on-input
@@ -61,6 +39,19 @@ BUGFIXES
   - antimode
   - unsorted join by default, with mem caveat. & update dox. incl sjax req#
   - mlr nest --evar , -f items
+
+! cover-page simplify
+
+? coroutines (r/w pipes)?
+  o maybe not now: need notion of # lines in/out which, simplest case, are 1-1,
+    but in the more general case might not be.
+  o coexec as well as shellout; stderr caveats x both
+
+* synctool: use "rsync -e 'ssh -4' ..."
+
+* eddelbuettel ac error <-> smith aclocal-1.15?
+
+* ship ./configure, w/ clean-target mods
 
 * rh/fedora/centos
 
