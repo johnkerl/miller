@@ -9,6 +9,9 @@
 #include "lib/mlrdatetime.h"
 #include "lib/string_builder.h"
 
+// NZ since this isn't counting the null terminator.
+#define NZBUFLEN 63
+
 // ----------------------------------------------------------------
 // seconds since the epoch
 double get_systime() {
@@ -18,7 +21,6 @@ double get_systime() {
 }
 
 // ----------------------------------------------------------------
-#define NZBUFLEN 63
 // The essential idea is that we use the library function gmtime to get a struct tm, then strftime
 // to produce a formatted string. The only complication is that we support "%1S" through "%9S" for
 // formatting the seconds with a desired number of decimal places.
@@ -124,12 +126,11 @@ char* mlr_alloc_time_string_from_seconds(double seconds_since_the_epoch, char* f
 
 	// 9. Concatenate the output. For string_builder, the size argument is just an initial size;
 	//    it can realloc beyond that initial estimate if necessary.
-
 	string_builder_t* psb = sb_alloc(NZBUFLEN+1);
 	sb_append_string(psb, left_formatted);
 	sb_append_string(psb, middle_int_formatted);
 	MLR_INTERNAL_CODING_ERROR_IF(middle_fractional_formatted[0] != '0');
-	sb_append_string(psb, &middle_fractional_formatted[1]); // xxx comment
+	sb_append_string(psb, &middle_fractional_formatted[1]);
 	sb_append_string(psb, right_formatted);
 	char* output_string = sb_finish(psb);
 	sb_free(psb);
@@ -138,108 +139,106 @@ char* mlr_alloc_time_string_from_seconds(double seconds_since_the_epoch, char* f
 }
 
 // ----------------------------------------------------------------
-double mlr_seconds_from_time_string(char* string, char* format) {
-	struct tm tm;
-	memset(&tm, 0, sizeof(tm));
-	char* retval = mlr_arch_strptime(string, format, &tm);
-	if (retval == NULL) {
-		fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
-			MLR_GLOBALS.bargv0, string, format, MLR_GLOBALS.bargv0);
-		exit(1);
-	}
-	MLR_INTERNAL_CODING_ERROR_IF(*retval != 0); // Parseable input followed by non-parseable
-	time_t iseconds = mlr_arch_timegm(&tm);
-	return (double)iseconds;
-}
+// Miller supports fractional seconds in the input string, but strptime doesn't. So we have
+// to play some tricks, inspired in part by some ideas on StackOverflow. Special shout-out
+// to @tinkerware on Github for the push in the right direction! :)
 
-//#define MYBUFLEN 256
-
-//// ----------------------------------------------------------------
-//static int p(char* time_string, char* format_string) {
-//
+double mlr_seconds_from_time_string(char* time_string, char* format_string) {
+	// xxx gc
 //	struct tm tm;
 //	memset(&tm, 0, sizeof(tm));
-//
-//	// xxx cmt try the non-floating-point-seconds case first and return quickly if so.
-//	char* strptime_retval = mlr_arch_strptime(time_string, format_string, &tm);
-//	if (strptime_retval != NULL) {
-//		if (*strptime_retval != 0) { // xxx extraneous
-//			fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
-//				MLR_GLOBALS.bargv0, time_string, format_string, MLR_GLOBALS.bargv0);
-//			exit(1);
-//		}
-//		time_t iseconds = mlr_arch_timegm(&tm);
-//		printf("%s, %s -> %u, \"%s\"\n", time_string, format_string, (unsigned)iseconds, strptime_retval);
-//		return 0;
-//	}
-//
-//	char* pS = strstr(format_string, "%S");
-//	if (pS == NULL) {
-//		// Couldn't have been because of floating-point-seconds stuff. No reason to try any harder.
+//	char* retval = mlr_arch_strptime(time_string, format_string, &tm);
+//	if (retval == NULL) {
 //		fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
 //			MLR_GLOBALS.bargv0, time_string, format_string, MLR_GLOBALS.bargv0);
 //		exit(1);
 //	}
-//
-//	// xxx
-//	// Input is    "2017-04-09T00:51:09.123456 TZBLAHBLAH"
-//	// with format "%Y-%m-%dT%H:%M:%S TZBLAHBLAH"
-//
-//	// 1. Copy the format up to the %S but with nothing else after. This is temporary to help us locate
-//	//    the fractional-seconds part of the input string.
-//	//    Example temporary format: "%Y-%m-%dT%H:%M:%S"
-//
-//	int truncated_format_string_length = pS - format_string + 2;
-//	char* truncated_format_string = mlr_malloc_or_die(truncated_format_string_length + 1);
-//	memcpy(truncated_format_string, format_string, truncated_format_string_length);
-//	truncated_format_string[truncated_format_string_length] = 0;
-//	//printf("ORIGINAL  FORMAT \"%s\"\n", format_string);
-//	//printf("TRUNCATED FORMAT \"%s\"\n", truncated_format_string);
-//
-//	// 2. strptime using that truncated format and ignore the tm. Only look at the string return value.
-//	//    Example return value: ".123456 TZBLAHBLAH"
-//
-//	strptime_retval = mlr_arch_strptime(time_string, truncated_format_string, &tm);
-//	if (strptime_retval == NULL) {
-//		fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
-//			MLR_GLOBALS.bargv0, time_string, format_string, MLR_GLOBALS.bargv0);
-//		exit(1);
-//	}
-//	//printf("STRPTIME TEMP RETVAL \"%s\"\n", strptime_retval);
-//
-//	// 3. strtod the return value to find the fractional-seconds part, and whatever's after.
-//	//    Example fractional-seconds part: ".123456"
-//	//    Example stuff after: " TZBLAHBLAH"
-//
-//	char* stuff_after = NULL;
-//	double fractional_seconds = strtod(strptime_retval, &stuff_after);
-//	//printf("FRACTIONAL SECONDS %.6lf\n", fractional_seconds);
-//	//printf("STUFF AFTER  \"%s\"\n", stuff_after);
-//
-//	// 4. Make a copy of the input string with the fractional seconds elided.
-//	//    Example: "2017-04-09T00:51:09 TZBLAHBLAH"
-//	char* elided_fraction_input = mlr_malloc_or_die(strlen(time_string) + 1);
-//	int input_length_to_fractional_seconds = strptime_retval - time_string;
-//	memcpy(elided_fraction_input, time_string, input_length_to_fractional_seconds);
-//	strcpy(&elided_fraction_input[input_length_to_fractional_seconds], stuff_after);
-//	//printf("ELIDE \"%s\"\n", elided_fraction_input);
-//
-//	// 5. strptime the elided-fraction input string using the original format string. Get the tm.
-//	memset(&tm, 0, sizeof(tm));
-//	strptime_retval = mlr_arch_strptime(elided_fraction_input, format_string, &tm);
-//	if (strptime_retval == NULL) {
-//		fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
-//			MLR_GLOBALS.bargv0, time_string, format_string, MLR_GLOBALS.bargv0);
-//		exit(1);
-//	}
-//	//printf("STRPTIME ELIDE RETVAL \"%s\"\n", strptime_retval);
-//
-//	// 6. Convert the tm to a time_t (seconds since the epoch) and then add the fractional seceonds.
+//	MLR_INTERNAL_CODING_ERROR_IF(*retval != 0); // Parseable input followed by non-parseable
 //	time_t iseconds = mlr_arch_timegm(&tm);
-//	//printf("ISECONDS %u\n", (unsigned)iseconds);
-//	double fseconds = iseconds + fractional_seconds;
-//	//printf("FSECONDS %.6lf\n", fseconds);
-//	printf("%s %s -> %.6lf\n", time_string, format_string, fseconds);
-//
-//	return 0;
-//}
+//	return (double)iseconds;
+
+	struct tm tm;
+
+	// 1. Just try strptime on the input as-is and return quickly if it's OK.
+	memset(&tm, 0, sizeof(tm));
+	char* strptime_retval = mlr_arch_strptime(time_string, format_string, &tm);
+	if (strptime_retval != NULL) {
+		if (*strptime_retval != 0) { // Extraneous stuff in the input not matching the format
+			fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
+				MLR_GLOBALS.bargv0, time_string, format_string, MLR_GLOBALS.bargv0);
+			exit(1);
+		}
+		return (double)mlr_arch_timegm(&tm);
+	}
+
+	// 2. Now either there's floating-point seconds in the input, or something else is wrong.
+	//    First look for "%S" in the format string, for two reasons: (a) if there isn't "%S"
+	//    then something else is wrong; (b) if there is, we'll need that to split the format
+	//    string.
+	char* pS = strstr(format_string, "%S");
+	if (pS == NULL) {
+		// strptime failure couldn't have been because of floating-point-seconds stuff. No
+		// reason to try any harder.
+		fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
+			MLR_GLOBALS.bargv0, time_string, format_string, MLR_GLOBALS.bargv0);
+		exit(1);
+	}
+
+	// There's "%S" in the format string, and the input has fractional seconds matching that
+	// and no other problems, or there's something else wrong.
+	//
+	// Running example as we work through the rest:
+	// * Input is  "2017-04-09T00:51:09.123456 TZBLAHBLAH"
+	// * Format is "%Y-%m-%dT%H:%M:%S TZBLAHBLAH"
+
+	// 3. Copy the format up to the %S but with nothing else after. This is temporary to help us locate
+	//    the fractional-seconds part of the input string.
+	//    Example temporary format: "%Y-%m-%dT%H:%M:%S"
+
+	int truncated_format_string_length = pS - format_string + 2; // 2 for the "%S"
+	char* truncated_format_string = mlr_malloc_or_die(truncated_format_string_length + 1);
+	memcpy(truncated_format_string, format_string, truncated_format_string_length);
+	truncated_format_string[truncated_format_string_length] = 0;
+
+	// 4. strptime using that truncated format and ignore the tm. Only look at the string return value.
+	//    Example return value: ".123456 TZBLAHBLAH"
+	strptime_retval = mlr_arch_strptime(time_string, truncated_format_string, &tm);
+	if (strptime_retval == NULL) {
+		fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
+			MLR_GLOBALS.bargv0, time_string, format_string, MLR_GLOBALS.bargv0);
+		exit(1);
+	}
+	free(truncated_format_string);
+
+	// 5. strtod the return value to find the fractional-seconds part, and whatever's after.
+	//    Example fractional-seconds part: ".123456"
+	//    Example stuff after: " TZBLAHBLAH"
+	char* stuff_after = NULL;
+	double fractional_seconds = strtod(strptime_retval, &stuff_after);
+
+	// 6. Make a copy of the input string with the fractional seconds elided.
+	//    Example: "2017-04-09T00:51:09 TZBLAHBLAH"
+	char* elided_fraction_input = mlr_malloc_or_die(strlen(time_string) + 1);
+	int input_length_up_to_fractional_seconds = strptime_retval - time_string;
+	memcpy(elided_fraction_input, time_string, input_length_up_to_fractional_seconds);
+	strcpy(&elided_fraction_input[input_length_up_to_fractional_seconds], stuff_after);
+
+	// 7. strptime the elided-fraction input string using the original format string. (This is like
+	//    the input never had fractional seconds in the first place.) Get the tm parsed from that.
+	memset(&tm, 0, sizeof(tm));
+	strptime_retval = mlr_arch_strptime(elided_fraction_input, format_string, &tm);
+	if (strptime_retval == NULL) {
+		fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
+			MLR_GLOBALS.bargv0, time_string, format_string, MLR_GLOBALS.bargv0);
+		exit(1);
+	}
+	if (*strptime_retval != 0) { // Extraneous stuff in the input not matching the format
+		fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
+			MLR_GLOBALS.bargv0, time_string, format_string, MLR_GLOBALS.bargv0);
+		exit(1);
+	}
+	free(elided_fraction_input);
+
+	// 8. Convert the tm to a time_t (seconds since the epoch) and then add the fractional seconds.
+	return mlr_arch_timegm(&tm) + fractional_seconds;
+}
