@@ -18,8 +18,9 @@ double get_systime() {
 
 // ----------------------------------------------------------------
 #define NZBUFLEN 63
-char* mlr_alloc_time_string_from_seconds(time_t seconds, char* format) {
-	struct tm tm = *gmtime(&seconds); // No gmtime_r on windows
+char* mlr_alloc_time_string_from_seconds(double seconds_since_the_epoch, char* format) {
+	time_t xxx_temp = (time_t)seconds_since_the_epoch;
+	struct tm tm = *gmtime(&xxx_temp); // No gmtime_r on windows
 	char* string = mlr_malloc_or_die(NZBUFLEN + 1);
 	int written_length = strftime(string, NZBUFLEN, format, &tm);
 	if (written_length > NZBUFLEN || written_length == 0) {

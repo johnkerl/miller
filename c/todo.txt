@@ -8,7 +8,13 @@ BUGFIXES
 ================================================================
 5.0.0 POST-RELEASE TO DO:
 
-!!! fracsec in strftime/strptime !!!
+! percent/fraction hold-and-emit verb
+
+! fracsec in strftime/strptime
+  - code
+  - UT
+  - mld stuff
+  - to release notes of course
 
 ! pcreposix.dll sadpanda:
   https://github.com/universal-ctags/ctags/issues/505
@@ -48,6 +54,7 @@ BUGFIXES
     > --json-arrays-as-maps
   - correct JSON escaping on output
   - feature-counting script
+  - fractional seconds in strptime (%S) and strftime (latter %nS)
   - mlrfunc docsect w/ h2's
   - aux-entries
   - antimode

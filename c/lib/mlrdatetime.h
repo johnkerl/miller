@@ -8,7 +8,7 @@
 
 double get_systime();
 
-char* mlr_alloc_time_string_from_seconds(time_t seconds, char* format);
+char* mlr_alloc_time_string_from_seconds(double seconds_since_the_epoch, char* format);
 time_t mlr_seconds_from_time_string(char* string, char* format);
 
 #endif // MLRDATETIME_H

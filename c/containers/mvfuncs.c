@@ -300,17 +300,17 @@ mv_t s_x_typeof_func(mv_t* pval1) {
 // ----------------------------------------------------------------
 // Precondition: psec is either int or float.
 mv_t time_string_from_seconds(mv_t* psec, char* format) {
-	time_t seconds = 0;
+	double seconds_since_the_epoch = 0.0;
 	if (psec->type == MT_FLOAT) {
 		if (isinf(psec->u.fltv) || isnan(psec->u.fltv)) {
 			return mv_error();
 		}
-		seconds = (time_t) psec->u.fltv;
+		seconds_since_the_epoch = psec->u.fltv;
 	} else {
-		seconds = (time_t) psec->u.intv;
+		seconds_since_the_epoch = psec->u.intv;
 	}
 
-	char* string = mlr_alloc_time_string_from_seconds(seconds, format);
+	char* string = mlr_alloc_time_string_from_seconds(seconds_since_the_epoch, format);
 
 	return mv_from_string_with_free(string);
 }
