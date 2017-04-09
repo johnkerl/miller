@@ -2408,9 +2408,12 @@ sqrt (class=math #args=1): Square root.
 <p/>
 <div class="pokipanel">
 <pre>
-strftime (class=time #args=2): Formats seconds since epoch (integer part)
-as timestamp, e.g.
-strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z".
+strftime (class=time #args=2): Formats seconds since the epoch as timestamp, e.g.
+strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
+strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".
+Format strings are as in the C library (please see "man strftime" on your system),
+with the Miller-specific addition of "%1S" through "%9S" which format the seocnds
+with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
 </pre>
 </div>
 
@@ -2437,8 +2440,9 @@ strlen (class=string #args=1): String length.
 <p/>
 <div class="pokipanel">
 <pre>
-strptime (class=time #args=2): Parses timestamp as integer seconds since epoch,
-e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.
+strptime (class=time #args=2): Parses timestamp as floating-point seconds since the epoch,
+e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
+and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
 </pre>
 </div>
 
@@ -2547,6 +2551,10 @@ urandint (class=math #args=2): Integer uniformly distributed between inclusive
 integer endpoints.
 </pre>
 </div>
+
+<!--
+EOG
+-->
 
 
 <!-- ================================================================ -->

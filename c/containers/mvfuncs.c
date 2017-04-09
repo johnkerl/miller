@@ -357,8 +357,7 @@ static mv_t seconds_from_time_string(char* string, char* format) {
 	if (*string == '\0') {
 		return mv_empty();
 	} else {
-		time_t seconds = mlr_seconds_from_time_string(string, format);
-		return mv_from_int((long long)seconds);
+		return mv_from_float(mlr_seconds_from_time_string(string, format));
 	}
 }
 

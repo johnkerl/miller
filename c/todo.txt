@@ -8,20 +8,21 @@ BUGFIXES
 ================================================================
 5.0.0 POST-RELEASE TO DO:
 
+! function-doc needs work -- *not* autogen :(
+
 ! percent/fraction hold-and-emit verb
 
 ! fracsec in strftime/strptime
   k code
   k UT
-  - olh stuff
-  - mld stuff
+  k olh stuff
+  k mld stuff
   - to release notes of course
-  - gmt2sec/sec2gmt functions -- ?
+    > minor back-incompat. suggest cast.
+  - sec2gmtn(x, n)?
     > $ echo x=1|mlr put '$x=systime(); $y=strftime($x,"%Y-%m-%dT%H:%M:%6SZ");$u=gmt2sec($y)'
       x=1491709184.696075,y=2017-04-09T03:39:44.696075Z,u=1491709184
     > i_... name, boo
-    > gmt2secn(x, n) ?
-    > sec2gmtn(x, n) ?
 
 ! pcreposix.dll sadpanda:
   https://github.com/universal-ctags/ctags/issues/505

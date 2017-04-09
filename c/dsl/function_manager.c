@@ -302,12 +302,16 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"Formats integer seconds as in\n"
 		"sec2hms(5000) = \"01:23:20\""},
 	{FUNC_CLASS_TIME, "strftime",  2,0,
-		"Formats seconds since epoch (integer part)\n"
-		"as timestamp, e.g.\n"
-		"strftime(1440768801.7,\"%Y-%m-%dT%H:%M:%SZ\") = \"2015-08-28T13:33:21Z\"."},
+		"Formats seconds since the epoch as timestamp, e.g.\n"
+		"strftime(1440768801.7,\"%Y-%m-%dT%H:%M:%SZ\") = \"2015-08-28T13:33:21Z\", and\n"
+		"strftime(1440768801.7,\"%Y-%m-%dT%H:%M:%3SZ\") = \"2015-08-28T13:33:21.700Z\".\n"
+		"Format strings are as in the C library (please see \"man strftime\" on your system),\n"
+		"with the Miller-specific addition of \"%1S\" through \"%9S\" which format the seocnds\n"
+		"with 1 through 9 decimal places, respectively. (\"%S\" uses no decimal places.)"},
 	{FUNC_CLASS_TIME, "strptime",  2,0,
-		"Parses timestamp as integer seconds since epoch,\n"
-		"e.g. strptime(\"2015-08-28T13:33:21Z\",\"%Y-%m-%dT%H:%M:%SZ\") = 1440768801."},
+		"Parses timestamp as floating-point seconds since the epoch,\n"
+		"e.g. strptime(\"2015-08-28T13:33:21Z\",\"%Y-%m-%dT%H:%M:%SZ\") = 1440768801.000000,\n"
+		"and  strptime(\"2015-08-28T13:33:21.345Z\",\"%Y-%m-%dT%H:%M:%SZ\") = 1440768801.345000."},
 	{FUNC_CLASS_TIME, "systime",   0,0,
 		"Floating-point seconds since the epoch,\n"
 		"e.g. 1440768801.748936." },
