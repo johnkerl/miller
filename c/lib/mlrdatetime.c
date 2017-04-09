@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
 #include <sys/time.h>
 #include <sys/stat.h>
 #include "lib/mlr_globals.h"
@@ -37,6 +38,7 @@ char* mlr_alloc_time_string_from_seconds(double seconds_since_the_epoch, char* f
 	// 2. See if "%nS" (for n in 1..9) is a substring of the format string.
 	char* middle_nS_format = NULL;
 	char* right_subformat = NULL;
+	int n = 0; // Save off n for round-up handling below.
 	for (char* p = format_string; *p; p++) {
 		// We can't use strstr since we're searching for a pattern, and regexes are overkill.
 		// Here we rely on left-to-right evaluation of the boolean expressions, with non-evaluation
@@ -45,6 +47,7 @@ char* mlr_alloc_time_string_from_seconds(double seconds_since_the_epoch, char* f
 		if (p[0] == '%' && p[1] >= '1' && p[1] <= '9' && p[2] == 'S') {
 			middle_nS_format = p;
 			right_subformat = &p[3];
+			n = p[1] - '0';
 			break;
 		}
 	}
@@ -129,8 +132,17 @@ char* mlr_alloc_time_string_from_seconds(double seconds_since_the_epoch, char* f
 	string_builder_t* psb = sb_alloc(NZBUFLEN+1);
 	sb_append_string(psb, left_formatted);
 	sb_append_string(psb, middle_int_formatted);
-	MLR_INTERNAL_CODING_ERROR_IF(middle_fractional_formatted[0] != '0');
-	sb_append_string(psb, &middle_fractional_formatted[1]);
+	// When the input has fractional seconds like 0.999999 and the format is shorter than that,
+	// e.g. "%3S", there can be round-up to 1.0 on the sprintf.
+	if (middle_fractional_formatted[0] == '1') {
+		sb_append_char(psb, '.');
+		for (int i = 0; i < n; i++)
+			sb_append_char(psb, '9');
+	} else if (middle_fractional_formatted[0] == '0') {
+		sb_append_string(psb, &middle_fractional_formatted[1]);
+	} else {
+		MLR_INTERNAL_CODING_ERROR();
+	}
 	sb_append_string(psb, right_formatted);
 	char* output_string = sb_finish(psb);
 	sb_free(psb);
@@ -214,7 +226,21 @@ double mlr_seconds_from_time_string(char* time_string, char* format_string) {
 	//    Example fractional-seconds part: ".123456"
 	//    Example stuff after: " TZBLAHBLAH"
 	char* stuff_after = NULL;
-	double fractional_seconds = strtod(strptime_retval, &stuff_after);
+	double fractional_seconds;
+	if (strptime_retval[0] == '.' && !isdigit(strptime_retval[1])) {
+		// If they had just a decimal point with no digits after, e.g. "10." seconds rather than "10.0",
+		// that's OK, but strtod won't parse that as double.
+		fractional_seconds = 0.0;
+		stuff_after = &strptime_retval[1];
+	} else {
+		fractional_seconds = strtod(strptime_retval, &stuff_after);
+		if (stuff_after == strptime_retval) {
+			// Non-parseable
+			fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
+				MLR_GLOBALS.bargv0, time_string, format_string, MLR_GLOBALS.bargv0);
+			exit(1);
+		}
+	}
 
 	// 6. Make a copy of the input string with the fractional seconds elided.
 	//    Example: "2017-04-09T00:51:09 TZBLAHBLAH"

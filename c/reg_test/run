@@ -1832,8 +1832,11 @@ run_mlr --csvlite put '$gmt = sec2gmt($sec)' $indir/sec2gmt
 run_mlr --csvlite put '$sec = gmt2sec($gmt)' $indir/gmt2sec
 run_mlr --csvlite put '$gmtdate = sec2gmtdate($sec)' $indir/sec2gmt
 
-run_mlr --csvlite put '$gmt = strftime($sec, "%Y-%m-%dT%H:%M:%SZ")' $indir/sec2gmt
-run_mlr --csvlite put '$sec = strptime($gmt, "%Y-%m-%dT%H:%M:%SZ")' $indir/gmt2sec
+run_mlr --icsv --opprint put '$gmt = strftime($sec, "%Y-%m-%dT%H:%M:%SZ")'  $indir/sec2gmt
+run_mlr --icsv --opprint put '$gmt = strftime($sec, "%Y-%m-%dT%H:%M:%1SZ")' $indir/sec2gmt
+run_mlr --icsv --opprint put '$gmt = strftime($sec, "%Y-%m-%dT%H:%M:%3SZ")' $indir/sec2gmt
+run_mlr --icsv --opprint put '$gmt = strftime($sec, "%Y-%m-%dT%H:%M:%6SZ")' $indir/sec2gmt
+run_mlr --icsv --opprint put '$sec = strptime($gmt, "%Y-%m-%dT%H:%M:%SZ")'  $indir/gmt2sec
 
 run_mlr --csvlite sec2gmt sec $indir/sec2gmt
 
