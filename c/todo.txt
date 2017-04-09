@@ -6,11 +6,11 @@ BUGFIXES
 ! synctool -4/-6
 
 ================================================================
-5.0.0 POST-RELEASE TO DO:
+5.1.0 TO-DO:
 
+----------------------------------------------------------------
+airable:
 ! function-doc needs work -- *not* autogen :(
-
-! R.m needs to start with *one* nice example. then details later on.
 
 ! percent/fraction hold-and-emit verb
 
@@ -18,16 +18,9 @@ BUGFIXES
   - func as well as verb
   - i_... name, boo
 
-! pcreposix.dll sadpanda:
-  https://github.com/universal-ctags/ctags/issues/505
+! cover page needs to start with *one* nice example. then details later on.
 
-! write-temp-file abend on negfd etc
-
-! windows port
-  o define MLR_ON_MSYS2
-  o -lpcreposix @ Makefile.am
-  o pcreposix DLLs x 2 @ runtime
-    - https://sourceforge.net/p/msys2/mailman/message/33756712/
+! cover-page simplify
 
 * start a draft-5.1.0-relnotes.md
   - JSON arrays:
@@ -43,7 +36,25 @@ BUGFIXES
   - unsorted join by default, with mem caveat. & update dox. incl sjax req#
   - mlr nest --evar , -f items
 
-! cover-page simplify
+----------------------------------------------------------------
+non-airable:
+! pcreposix.dll sadpanda:
+  https://github.com/universal-ctags/ctags/issues/505
+
+! write-temp-file abend on negfd etc
+
+! msys2 / pacman -S / etc @ appveyor
+
+! patchless windows build
+  o define MLR_ON_MSYS2
+  o -lpcreposix @ Makefile.am
+  o pcreposix DLLs x 2 @ runtime -- ship zip & doc, or fix somehow
+    - https://sourceforge.net/p/msys2/mailman/message/33756712/
+
+* rh/fedora/centos
+
+----------------------------------------------------------------
+other:
 
 ? coroutines (r/w pipes)?
   o maybe not now: need notion of # lines in/out which, simplest case, are 1-1,
@@ -56,33 +67,7 @@ BUGFIXES
 
 * ship ./configure, w/ clean-target mods
 
-* rh/fedora/centos
-
 ================================================================
-MSYS2
-
-----------------------------------------------------------------
-MSYS2 TO-DO
-
-! msys2 / pacman -S / etc @ appveyor
-
-! MLR_ON_MSYS2: needs autocreate from ./configure or some such
-! -lpcreposix at Makefile.am: needs autocreate from ./configure or some such
-
-* setenv w/o gmtime_r
-  - @ mlr_arch.h: ifdef MSYS2 undef ENABLE_SETENV
-  - @ callsite: fatal?
-
-* setenv w/ gmtime_r
-  - figure out how to do this directly on msys2
-  - @ mlr_arch.h: proto for plat-indep abstraction layer
-  - @ mlr_arch_unixish: as now
-  - @ mlr_arch_msys2: do it that new way. or fatal until then ... or "unimpl" retval.
-
-* needs-DLL issue:
-  - find out how to fix at ./configure / msys2 build
-
-----------------------------------------------------------------
 MSYS2 NOTES
 
 * https://github.com/msys2/msys2/wiki
