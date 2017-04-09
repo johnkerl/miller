@@ -9,8 +9,11 @@ BUGFIXES
 5.0.0 POST-RELEASE TO DO:
 
 ! function-doc needs work -- *not* autogen :(
+
 ! R.m needs to start with *one* nice example. then details later on.
+
 ! percent/fraction hold-and-emit verb
+
 ? sec2gmtn(x, n)?
   - func as well as verb
   - i_... name, boo
@@ -21,10 +24,10 @@ BUGFIXES
 ! write-temp-file abend on negfd etc
 
 ! windows port
-  o gmtime_r
-  o strptime
+  o define MLR_ON_MSYS2
   o -lpcreposix @ Makefile.am
-  o avoid pathext for pcreposix.dll @ runtime, outside of msys2
+  o pcreposix DLLs x 2 @ runtime
+    - https://sourceforge.net/p/msys2/mailman/message/33756712/
 
 * start a draft-5.1.0-relnotes.md
   - JSON arrays:
