@@ -102,16 +102,15 @@ lines first
 in portable, modern C, with **zero runtime dependencies**. You can download or
 compile a single binary, `scp` it to a faraway machine, and expect it to work.
 
-Documentation:
+Documentation links:
 
-* **For full documentation, please visit** http://johnkerl.org/miller/doc
-* Note: head docs at http://johnkerl.org/miller-releases/miller-head/doc/index.html match head code
-at https://github.com/johnkerl/miller.  Release-specific docs at
-http://johnkerl.org/miller/doc/release-docs.html match release-specific code at
-https://github.com/johnkerl/miller/tags.
-* Miller's license is two-clause BSD: https://github.com/johnkerl/miller/blob/master/LICENSE.txt
-* Build information including dependencies: http://johnkerl.org/miller/doc/build.html
-* Notes about issue-labeling in the Github repo: https://github.com/johnkerl/miller/wiki/Issue-labeling
-* See [here](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) for active issues.
+* [**Full documentation for latest release**](http://johnkerl.org/miller/doc)
+* [Head docs](http://johnkerl.org/miller-releases/miller-head/doc/index.html) match
+[head code](https://github.com/johnkerl/miller). [Release-specific docs](http://johnkerl.org/miller/doc/release-docs.html)
+match [release-specific code](https://github.com/johnkerl/miller/tags).
+* [Miller's license is two-clause BSD](https://github.com/johnkerl/miller/blob/master/LICENSE.txt).
+* [Build information including dependencies](http://johnkerl.org/miller/doc/build.html)
+* [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
+* [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 
 <!-- In case freshports becomes stale: https://svnweb.freebsd.org/ports/head/textproc/miller/ -->
