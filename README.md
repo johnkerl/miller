@@ -112,6 +112,6 @@ https://github.com/johnkerl/miller/tags.
 * Miller's license is two-clause BSD: https://github.com/johnkerl/miller/blob/master/LICENSE.txt
 * Build information including dependencies: http://johnkerl.org/miller/doc/build.html
 * Notes about issue-labeling in the Github repo: https://github.com/johnkerl/miller/wiki/Issue-labeling
-* See [here] (https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) for active issues.
+* See [here](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc) for active issues.
 
 <!-- In case freshports becomes stale: https://svnweb.freebsd.org/ports/head/textproc/miller/ -->
