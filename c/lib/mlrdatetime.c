@@ -33,7 +33,7 @@ char* mlr_alloc_time_string_from_seconds(double seconds_since_the_epoch, char* f
 }
 
 // ----------------------------------------------------------------
-time_t mlr_seconds_from_time_string(char* string, char* format) {
+double mlr_seconds_from_time_string(char* string, char* format) {
 	struct tm tm;
 	memset(&tm, 0, sizeof(tm));
 	char* retval = mlr_arch_strptime(string, format, &tm);
@@ -43,5 +43,6 @@ time_t mlr_seconds_from_time_string(char* string, char* format) {
 		exit(1);
 	}
 	MLR_INTERNAL_CODING_ERROR_IF(*retval != 0); // Parseable input followed by non-parseable
-	return mlr_arch_timegm(&tm);
+	time_t iseconds = mlr_arch_timegm(&tm);
+	return (double)iseconds;
 }

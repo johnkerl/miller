@@ -4,6 +4,12 @@
 #include <stdio.h>
 #include <time.h>
 
+// ================================================================
+// Miller compiles without ifdefs on Linux, BSDs, and MacOSX -- but
+// the situation is more complex for Windows (using MSYS2 in particular).
+// The idea of mlr_arch is to confine all platform-specific code here.
+// ================================================================
+
 // ----------------------------------------------------------------
 // Miller is single-threaded and the file-locking in getc is simply an unneeded
 // performance hit, so we intentionally call getc_unlocked().  But for MSYS2
