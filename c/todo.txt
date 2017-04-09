@@ -12,17 +12,8 @@ BUGFIXES
 
 ! percent/fraction hold-and-emit verb
 
-! fracsec in strftime/strptime
-  k code
-  k UT
-  k olh stuff
-  k mld stuff
-  - to release notes of course
-    > minor back-incompat. suggest cast.
-  - sec2gmtn(x, n)?
-    > $ echo x=1|mlr put '$x=systime(); $y=strftime($x,"%Y-%m-%dT%H:%M:%6SZ");$u=gmt2sec($y)'
-      x=1491709184.696075,y=2017-04-09T03:39:44.696075Z,u=1491709184
-    > i_... name, boo
+? sec2gmtn(x, n)?
+  - i_... name, boo
 
 ! pcreposix.dll sadpanda:
   https://github.com/universal-ctags/ctags/issues/505
@@ -63,6 +54,7 @@ BUGFIXES
   - correct JSON escaping on output
   - feature-counting script
   - fractional seconds in strptime (%S) and strftime (latter %nS)
+    > minor backward incompatiblity. suggest wrap with `int(...)`.
   - mlrfunc docsect w/ h2's
   - aux-entries
   - antimode
