@@ -8,6 +8,7 @@
 #include "containers/lhmslv.h"
 #include "containers/lhmsmv.h"
 #include "containers/mixutil.h"
+#include "containers/mvfuncs.h"
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 
@@ -158,10 +159,12 @@ static sllv_t* mapper_percent_process(lrec_t* pinrec, context_t* pctx, void* pvs
 				char* percent_field_name = pf->value;
 				char* lrec_string_value = lrec_get(pinrec, percent_field_name);
 				if (lrec_string_value != NULL) {
-					mv_t lrec_num_value = mv_scan_number_nullable(lrec_string_value);
-					if (!mv_is_null(&lrec_num_value)) {
-						// xxx temp: need acc sum
+					mv_t lrec_num_value = mv_scan_number_or_die(lrec_string_value);
+					mv_t* psum = lhmsmv_get(psums_for_group, percent_field_name);
+					if (psum == NULL) { // First value for group
 						lhmsmv_put(psums_for_group, percent_field_name, &lrec_num_value, FREE_ENTRY_VALUE);
+					} else {
+						*psum = x_xx_plus_func(psum, &lrec_num_value);
 					}
 				}
 			}
