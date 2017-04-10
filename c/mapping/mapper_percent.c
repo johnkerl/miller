@@ -184,19 +184,27 @@ static sllv_t* mapper_percent_process(lrec_t* pinrec, context_t* pctx, void* pvs
 				pstate->pgroup_by_field_names);
 			if (pgroup_by_field_values != NULL) {
 				lhmsmv_t* psums_for_group = lhmslv_get(pstate->psums, pgroup_by_field_values);
-				MLR_INTERNAL_CODING_ERROR_IF(psums_for_group == NULL);
+				MLR_INTERNAL_CODING_ERROR_IF(psums_for_group == NULL); // should have populated on pass 1
 				for (sllse_t* pf = pstate->ppercent_field_names->phead; pf != NULL; pf = pf->pnext) {
 					char* percent_field_name = pf->value;
-					mv_t* psum = lhmsmv_get(psums_for_group, percent_field_name);
-					char* output_value = mv_alloc_format_val(psum); // xxx temp
+					char* lrec_string_value = lrec_get(poutrec, percent_field_name);
+					if (lrec_string_value != NULL) {
+						mv_t lrec_num_value = mv_scan_number_or_die(lrec_string_value);
 
-					// xxx
-					// maybe * 100
-					// maybe cumu
-					// lrec_put w/ _percent or _fraction
+						// xxx
+						// maybe * 100
+						// maybe cumu
+						// lrec_put w/ _percent or _fraction
 
-					char* output_field_name = mlr_paste_2_strings(percent_field_name, "_percent");
-					lrec_put(poutrec, output_field_name, output_value, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+						char* output_field_name = mlr_paste_2_strings(percent_field_name, "_percent");
+						mv_t* psum = lhmsmv_get(psums_for_group, percent_field_name);
+						mv_t frac = mv_error();
+						if (/* xxx if nonzero*/1) {
+							frac = x_xx_divide_func(&lrec_num_value, psum);
+						}
+						char* output_value = mv_alloc_format_val(&frac);
+						lrec_put(poutrec, output_field_name, output_value, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+					}
 				}
 				slls_free(pgroup_by_field_values);
 			}
