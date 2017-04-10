@@ -30,31 +30,31 @@
 //     maybe cumu
 //     lrec_put w/ _percent or _fraction
 
-typedef struct _mapper_percent_state_t {
+typedef struct _mapper_fraction_state_t {
 	ap_state_t* pargp;
 	slls_t* ppercent_field_names;
 	slls_t* pgroup_by_field_names;
 	sllv_t* precords;
 	lhmslv_t* psums;
-} mapper_percent_state_t;
+} mapper_fraction_state_t;
 
-static void      mapper_percent_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_percent_parse_cli(int* pargi, int argc, char** argv,
+static void      mapper_fraction_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_fraction_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
-static mapper_t* mapper_percent_alloc(ap_state_t* pargp, slls_t* ppercent_field_names, slls_t* pgroup_by_field_names);
-static void      mapper_percent_free(mapper_t* pmapper, context_t* _);
-static sllv_t*   mapper_percent_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static mapper_t* mapper_fraction_alloc(ap_state_t* pargp, slls_t* ppercent_field_names, slls_t* pgroup_by_field_names);
+static void      mapper_fraction_free(mapper_t* pmapper, context_t* _);
+static sllv_t*   mapper_fraction_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
-mapper_setup_t mapper_percent_setup = {
+mapper_setup_t mapper_fraction_setup = {
 	.verb = "percent",
-	.pusage_func = mapper_percent_usage,
-	.pparse_func = mapper_percent_parse_cli,
+	.pusage_func = mapper_fraction_usage,
+	.pparse_func = mapper_fraction_parse_cli,
 	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------
-static void mapper_percent_usage(FILE* o, char* argv0, char* verb) {
+static void mapper_fraction_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	// xxx narrate here
 	// xxx streaming/two-pass disclaimer
@@ -66,7 +66,7 @@ static void mapper_percent_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Passes through the last n records, optionally by category.\n");
 }
 
-static mapper_t* mapper_percent_parse_cli(int* pargi, int argc, char** argv,
+static mapper_t* mapper_fraction_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __)
 {
 	slls_t* ppercent_field_names = slls_alloc();
@@ -79,25 +79,23 @@ static mapper_t* mapper_percent_parse_cli(int* pargi, int argc, char** argv,
 	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_percent_usage(stderr, argv[0], verb);
+		mapper_fraction_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
 	if (ppercent_field_names->length == 0) {
-		mapper_percent_usage(stderr, argv[0], verb);
+		mapper_fraction_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
-	// xxx abend on empty -f
-
-	return mapper_percent_alloc(pstate, ppercent_field_names, pgroup_by_field_names);
+	return mapper_fraction_alloc(pstate, ppercent_field_names, pgroup_by_field_names);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_percent_alloc(ap_state_t* pargp, slls_t* ppercent_field_names, slls_t* pgroup_by_field_names) {
+static mapper_t* mapper_fraction_alloc(ap_state_t* pargp, slls_t* ppercent_field_names, slls_t* pgroup_by_field_names) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
-	mapper_percent_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_percent_state_t));
+	mapper_fraction_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_fraction_state_t));
 
 	pstate->pargp                  = pargp;
 	pstate->ppercent_field_names   = ppercent_field_names;
@@ -106,14 +104,14 @@ static mapper_t* mapper_percent_alloc(ap_state_t* pargp, slls_t* ppercent_field_
 	pstate->psums                  = lhmslv_alloc();
 
 	pmapper->pvstate       = pstate;
-	pmapper->pprocess_func = mapper_percent_process;
-	pmapper->pfree_func    = mapper_percent_free;
+	pmapper->pprocess_func = mapper_fraction_process;
+	pmapper->pfree_func    = mapper_fraction_free;
 
 	return pmapper;
 }
 
-static void mapper_percent_free(mapper_t* pmapper, context_t* _) {
-	mapper_percent_state_t* pstate = pmapper->pvstate;
+static void mapper_fraction_free(mapper_t* pmapper, context_t* _) {
+	mapper_fraction_state_t* pstate = pmapper->pvstate;
 	if (pstate->ppercent_field_names != NULL)
 		slls_free(pstate->ppercent_field_names);
 	if (pstate->pgroup_by_field_names != NULL)
@@ -126,7 +124,7 @@ static void mapper_percent_free(mapper_t* pmapper, context_t* _) {
 	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
 	for (lhmslve_t* pa = pstate->psums->phead; pa != NULL; pa = pa->pnext) {
 //		sllv_t* precord_list_for_group = pa->pvvalue;
-//		// outrecs were freed by caller of mapper_percent_process. Here, just free
+//		// outrecs were freed by caller of mapper_fraction_process. Here, just free
 //		// the sllv container itself.
 //		sllv_free(precord_list_for_group);
 	}
@@ -138,8 +136,8 @@ static void mapper_percent_free(mapper_t* pmapper, context_t* _) {
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_percent_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	mapper_percent_state_t* pstate = pvstate;
+static sllv_t* mapper_fraction_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_fraction_state_t* pstate = pvstate;
 	if (pinrec != NULL) { // Not end of stream; pass 1
 
 		sllv_append(pstate->precords, pinrec);
@@ -193,8 +191,6 @@ static sllv_t* mapper_percent_process(lrec_t* pinrec, context_t* pctx, void* pvs
 
 						// xxx
 						// maybe * 100
-						// maybe cumu
-						// lrec_put w/ _percent or _fraction
 
 						char* output_field_name = mlr_paste_2_strings(percent_field_name, "_percent");
 						mv_t* psum = lhmsmv_get(psums_for_group, percent_field_name);

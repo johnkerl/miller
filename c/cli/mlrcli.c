@@ -55,7 +55,7 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_most_frequent_setup,
 	&mapper_nest_setup,
 	&mapper_nothing_setup,
-	&mapper_percent_setup,
+	&mapper_fraction_setup,
 	&mapper_put_setup,
 	&mapper_regularize_setup,
 	&mapper_rename_setup,
