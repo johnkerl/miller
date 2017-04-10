@@ -13,6 +13,7 @@ airable:
 ! function-doc needs work -- *not* autogen :(
 
 ! percent/fraction hold-and-emit verb
+  - i_nn -> b_nn
 
 ? sec2gmtn(x, n)?
   - func as well as verb
