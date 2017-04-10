@@ -36,6 +36,8 @@ airable:
   - unsorted join by default, with mem caveat. & update dox. incl sjax req#
   - mlr nest --evar , -f items
 
+* ship ./configure, w/ clean-target mods
+
 ----------------------------------------------------------------
 non-airable:
 ! pcreposix.dll sadpanda:
@@ -64,8 +66,6 @@ other:
 * synctool: use "rsync -e 'ssh -4' ..."
 
 * eddelbuettel ac error <-> smith aclocal-1.15?
-
-* ship ./configure, w/ clean-target mods
 
 ================================================================
 MSYS2 NOTES

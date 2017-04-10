@@ -6,7 +6,7 @@
 #include "containers/sllv.h"
 #include "containers/slls.h"
 #include "containers/lhmslv.h"
-#include "containers/lhmsv.h"
+#include "containers/lhmsmv.h"
 #include "containers/mixutil.h"
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
@@ -15,6 +15,7 @@
 // * append records to single record list
 // * accumulate sums of percent-field names grouped by group-by field names
 //   - two-level map: group-by field values -> percent field name -> mv_t sum
+//     lhmslv_t -> lhmsmv
 //   - how to handle het case: do sum only if record has all group-by field names
 //
 // pass 2:
@@ -32,9 +33,8 @@ typedef struct _mapper_percent_state_t {
 	ap_state_t* pargp;
 	slls_t* ppercent_field_names;
 	slls_t* pgroup_by_field_names;
-	// xxx needs to emit records in original order.
-	// xxx needs sums of percent-field names grouped by group-by field names
-	lhmslv_t* precord_lists_by_group;
+	sllv_t* precords;
+	lhmslv_t* psums;
 } mapper_percent_state_t;
 
 static void      mapper_percent_usage(FILE* o, char* argv0, char* verb);
@@ -82,6 +82,11 @@ static mapper_t* mapper_percent_parse_cli(int* pargi, int argc, char** argv,
 		return NULL;
 	}
 
+	if (ppercent_field_names->length == 0) {
+		mapper_percent_usage(stderr, argv[0], verb);
+		return NULL;
+	}
+
 	// xxx abend on empty -f
 
 	return mapper_percent_alloc(pstate, ppercent_field_names, pgroup_by_field_names);
@@ -96,7 +101,8 @@ static mapper_t* mapper_percent_alloc(ap_state_t* pargp, slls_t* ppercent_field_
 	pstate->pargp                  = pargp;
 	pstate->ppercent_field_names   = ppercent_field_names;
 	pstate->pgroup_by_field_names  = pgroup_by_field_names;
-	pstate->precord_lists_by_group = lhmslv_alloc();
+	pstate->precords               = sllv_alloc();
+	pstate->psums                  = lhmslv_alloc();
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_percent_process;
@@ -111,14 +117,20 @@ static void mapper_percent_free(mapper_t* pmapper, context_t* _) {
 		slls_free(pstate->ppercent_field_names);
 	if (pstate->pgroup_by_field_names != NULL)
 		slls_free(pstate->pgroup_by_field_names);
+
+	// The process method will have emptied out the list. We just need to free the container.
+	sllv_free(pstate->precords);
+
+	// xxx update
 	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
-	for (lhmslve_t* pa = pstate->precord_lists_by_group->phead; pa != NULL; pa = pa->pnext) {
-		sllv_t* precord_list_for_group = pa->pvvalue;
-		// outrecs were freed by caller of mapper_percent_process. Here, just free
-		// the sllv container itself.
-		sllv_free(precord_list_for_group);
+	for (lhmslve_t* pa = pstate->psums->phead; pa != NULL; pa = pa->pnext) {
+//		sllv_t* precord_list_for_group = pa->pvvalue;
+//		// outrecs were freed by caller of mapper_percent_process. Here, just free
+//		// the sllv container itself.
+//		sllv_free(precord_list_for_group);
 	}
-	lhmslv_free(pstate->precord_lists_by_group);
+	lhmslv_free(pstate->psums);
+
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
@@ -127,30 +139,68 @@ static void mapper_percent_free(mapper_t* pmapper, context_t* _) {
 // ----------------------------------------------------------------
 static sllv_t* mapper_percent_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_percent_state_t* pstate = pvstate;
-	if (pinrec != NULL) {
+	if (pinrec != NULL) { // Not end of stream; pass 1
+
+		sllv_append(pstate->precords, pinrec);
+
 		slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(pinrec,
 			pstate->pgroup_by_field_names);
+
 		if (pgroup_by_field_values != NULL) {
-			sllv_t* precord_list_for_group = lhmslv_get(pstate->precord_lists_by_group, pgroup_by_field_values);
-			if (precord_list_for_group == NULL) {
-				precord_list_for_group = sllv_alloc();
-				lhmslv_put(pstate->precord_lists_by_group, slls_copy(pgroup_by_field_values),
-					precord_list_for_group, FREE_ENTRY_KEY);
+			lhmsmv_t* psums_for_group = lhmslv_get(pstate->psums, pgroup_by_field_values);
+			if (psums_for_group == NULL) {
+				psums_for_group = lhmsmv_alloc();
+				lhmslv_put(pstate->psums, slls_copy(pgroup_by_field_values),
+					psums_for_group, FREE_ENTRY_KEY);
 			}
+
+			for (sllse_t* pf = pstate->ppercent_field_names->phead; pf != NULL; pf = pf->pnext) {
+				char* percent_field_name = pf->value;
+				char* lrec_string_value = lrec_get(pinrec, percent_field_name);
+				if (lrec_string_value != NULL) {
+					mv_t lrec_num_value = mv_scan_number_nullable(lrec_string_value);
+					if (!mv_is_null(&lrec_num_value)) {
+						// xxx temp: need acc sum
+						lhmsmv_put(psums_for_group, percent_field_name, &lrec_num_value, FREE_ENTRY_VALUE);
+					}
+				}
+			}
+
 			slls_free(pgroup_by_field_values);
-			sllv_append(precord_list_for_group, pinrec);
-		} else {
-			lrec_free(pinrec);
 		}
+
 		return NULL;
-	}
-	else {
+
+	} else { // End of stream; pass 2
 		sllv_t* poutrecs = sllv_alloc();
 
-		for (lhmslve_t* pa = pstate->precord_lists_by_group->phead; pa != NULL; pa = pa->pnext) {
-			sllv_t* precord_list_for_group = pa->pvvalue;
-			sllv_transfer(poutrecs, precord_list_for_group);
+		while (pstate->precords->phead != NULL) {
+			lrec_t* poutrec = sllv_pop(pstate->precords);
+
+			slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(poutrec,
+				pstate->pgroup_by_field_names);
+			if (pgroup_by_field_values != NULL) {
+				lhmsmv_t* psums_for_group = lhmslv_get(pstate->psums, pgroup_by_field_values);
+				MLR_INTERNAL_CODING_ERROR_IF(psums_for_group == NULL);
+				for (sllse_t* pf = pstate->ppercent_field_names->phead; pf != NULL; pf = pf->pnext) {
+					char* percent_field_name = pf->value;
+					mv_t* psum = lhmsmv_get(psums_for_group, percent_field_name);
+					char* output_value = mv_alloc_format_val(psum); // xxx temp
+
+					// xxx
+					// maybe * 100
+					// maybe cumu
+					// lrec_put w/ _percent or _fraction
+
+					char* output_field_name = mlr_paste_2_strings(percent_field_name, "_percent");
+					lrec_put(poutrec, output_field_name, output_value, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+				}
+				slls_free(pgroup_by_field_values);
+			}
+
+			sllv_append(poutrecs, poutrec);
 		}
+
 		sllv_append(poutrecs, NULL);
 		return poutrecs;
 	}
