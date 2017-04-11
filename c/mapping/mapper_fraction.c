@@ -17,8 +17,8 @@ typedef struct _mapper_fraction_state_t {
 	slls_t* pfraction_field_names;
 	slls_t* pgroup_by_field_names;
 	sllv_t* precords;
-	// Two-level map: lhmslv_t -> lhmsv. Group-by field names are the first keyset and the fraction field names
-	// are keys into the second.
+	// Two-level map: lhmslv_t -> lhmsv. Group-by field names are the first keyset;
+	// the fraction field names are keys into the second.
 	lhmslv_t* psums;
 	mv_t zero;
 } mapper_fraction_state_t;
@@ -110,13 +110,10 @@ static void mapper_fraction_free(mapper_t* pmapper, context_t* _) {
 	// The process method will have emptied out the list. We just need to free the container.
 	sllv_free(pstate->precords);
 
-	// xxx update
 	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
 	for (lhmslve_t* pa = pstate->psums->phead; pa != NULL; pa = pa->pnext) {
-//		sllv_t* precord_list_for_group = pa->pvvalue;
-//		// outrecs were freed by caller of mapper_fraction_process. Here, just free
-//		// the sllv container itself.
-//		sllv_free(precord_list_for_group);
+		lhmsmv_t* psums_for_group = pa->pvvalue;
+		lhmsmv_free(psums_for_group);
 	}
 	lhmslv_free(pstate->psums);
 

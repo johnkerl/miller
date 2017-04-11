@@ -320,9 +320,9 @@ OPTIONS
    VERB LIST
 	bar bootstrap cat check count-distinct cut decimate filter grep group-by
 	group-like having-fields head histogram join label least-frequent merge-fields
-	most-frequent nest nothing put regularize rename reorder repeat reshape sample
-	sec2gmt sec2gmtdate seqgen shuffle sort stats1 stats2 step tac tail tee top
-	uniq unsparsify
+	most-frequent nest nothing fraction put regularize rename reorder repeat
+	reshape sample sec2gmt sec2gmtdate seqgen shuffle sort stats1 stats2 step tac
+	tail tee top uniq unsparsify
 
    FUNCTION LIST
 	+ + - - * / // % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; == != =~ !=~ &gt; &gt;= &lt; &lt;= &amp;&amp; || ^^ ! ? : . gsub
@@ -893,6 +893,21 @@ VERBS
        Usage: mlr nothing [options]
        Drops all input records. Useful for testing, or after tee/print/etc. have
        produced other output.
+
+   fraction
+       Usage: mlr fraction [options]
+       For each each record's value in specified fields, computes the ratio
+       of that value to the sum of values in all input records.
+       E.g. with input records x=1  x=2  x=3  and x=4, emits output records
+       x=1,x_percent=.1  x=2,x_percent=.2  x=3,x_percent=.3  and x=4,x_percent=.4
+
+       Note: this is internally a two-pass algorithm: on the first pass it retains
+       input records and accumulates sums; on the second pass it computes fractions.
+       This means it produces no output until all input is read.
+
+       Options:
+       -f {a,b,c}    Field names for fraction calculation
+       -g {d,e,f}    Optional group-by-field names for fraction counts
 
    put
        Usage: mlr put [options] {expression}
@@ -2164,7 +2179,7 @@ SEE ALSO
 
 
 
-				  2017-04-09			     MILLER(1)
+				  2017-04-11			     MILLER(1)
 </pre>
 </div>
 <p/>

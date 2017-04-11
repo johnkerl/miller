@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2017-04-09
+.\"      Date: 2017-04-11
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2017-04-09" "\ \&" "\ \&"
+.TH "MILLER" "1" "2017-04-11" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -170,9 +170,9 @@ output separator to the given value.
 .nf
  bar bootstrap cat check count-distinct cut decimate filter grep group-by
  group-like having-fields head histogram join label least-frequent merge-fields
- most-frequent nest nothing put regularize rename reorder repeat reshape sample
- sec2gmt sec2gmtdate seqgen shuffle sort stats1 stats2 step tac tail tee top
- uniq unsparsify
+ most-frequent nest nothing fraction put regularize rename reorder repeat
+ reshape sample sec2gmt sec2gmtdate seqgen shuffle sort stats1 stats2 step tac
+ tail tee top uniq unsparsify
 .fi
 .if n \{\
 .RE
@@ -931,6 +931,27 @@ See also mlr reshape.
 Usage: mlr nothing [options]
 Drops all input records. Useful for testing, or after tee/print/etc. have
 produced other output.
+.fi
+.if n \{\
+.RE
+.SS "fraction"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr fraction [options]
+For each each record's value in specified fields, computes the ratio
+of that value to the sum of values in all input records.
+E.g. with input records x=1  x=2  x=3  and x=4, emits output records
+x=1,x_percent=.1  x=2,x_percent=.2  x=3,x_percent=.3  and x=4,x_percent=.4
+
+Note: this is internally a two-pass algorithm: on the first pass it retains
+input records and accumulates sums; on the second pass it computes fractions.
+This means it produces no output until all input is read.
+
+Options:
+-f {a,b,c}    Field names for fraction calculation
+-g {d,e,f}    Optional group-by-field names for fraction counts
 .fi
 .if n \{\
 .RE
