@@ -41,18 +41,18 @@ mapper_setup_t mapper_fraction_setup = {
 // ----------------------------------------------------------------
 static void mapper_fraction_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "For each each record's value in specified fields, computes the ratio\n");
-	fprintf(o, "of that value to the sum of values in all input records.\n");
-	fprintf(o, "E.g. with input records x=1  x=2  x=3  and x=4, emits output records\n");
-	fprintf(o, "x=1,x_percent=.1  x=2,x_percent=.2  x=3,x_percent=.3  and x=4,x_percent=.4\n");
+	fprintf(o, "For each record's value in specified fields, computes the ratio of that\n");
+	fprintf(o, "value to the sum of values in that field over all input records.\n");
+	fprintf(o, "E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records\n");
+	fprintf(o, "x=1,x_percent=.1  x=2,x_percent=.2  x=3,x_percent=.3  and  x=4,x_percent=.4\n");
 	fprintf(o, "\n");
 	fprintf(o, "Note: this is internally a two-pass algorithm: on the first pass it retains\n");
-	fprintf(o, "input records and accumulates sums; on the second pass it computes fractions.\n");
-	fprintf(o, "This means it produces no output until all input is read.\n");
+	fprintf(o, "input records and accumulates sums; on the second pass it computes quotients\n");
+	fprintf(o, "and emits output records. This means it produces no output until all input is read.\n");
 	fprintf(o, "\n");
 	fprintf(o, "Options:\n");
-	fprintf(o, "-f {a,b,c}    Field names for fraction calculation\n");
-	fprintf(o, "-g {d,e,f}    Optional group-by-field names for fraction counts\n");
+	fprintf(o, "-f {a,b,c}    Field name(s) for fraction calculation\n");
+	fprintf(o, "-g {d,e,f}    Optional group-by-field name(s) for fraction counts\n");
 }
 
 static mapper_t* mapper_fraction_parse_cli(int* pargi, int argc, char** argv,

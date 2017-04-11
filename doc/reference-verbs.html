@@ -197,6 +197,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#decimate">decimate</a><br/>
 &bull;&nbsp;<a href="#filter">filter</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Features_which_filter_shares_with_put">Features which filter shares with put</a><br/>
+&bull;&nbsp;<a href="#fraction">fraction</a><br/>
 &bull;&nbsp;<a href="#grep">grep</a><br/>
 &bull;&nbsp;<a href="#group-by">group-by</a><br/>
 &bull;&nbsp;<a href="#group-like">group-like</a><br/>
@@ -870,6 +871,195 @@ useful when you don't yet know which field name(s) you're looking for.
 <p/>Please see <a href="#Expression_language_for_filter_and_put">Expression
 language for filter and put</a> for more information about the expression
 language for <tt>mlr filter</tt>.
+
+</div>
+<!-- ================================================================ -->
+<a id="fraction"/><h1>fraction</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_decimate');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_decimate" style="display: block">
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr fraction --help
+Usage: mlr fraction [options]
+For each record's value in specified fields, computes the ratio of that
+value to the sum of values in that field over all input records.
+E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records
+x=1,x_percent=.1  x=2,x_percent=.2  x=3,x_percent=.3  and  x=4,x_percent=.4
+
+Note: this is internally a two-pass algorithm: on the first pass it retains
+input records and accumulates sums; on the second pass it computes quotients
+and emits output records. This means it produces no output until all input is read.
+
+Options:
+-f {a,b,c}    Field name(s) for fraction calculation
+-g {d,e,f}    Optional group-by-field name(s) for fraction counts
+</pre>
+</div>
+<p/>
+
+<p/>For example, suppose you have the following CSV file:
+
+<p/>
+<div class="pokipanel">
+<pre>
+u=female,v=red,n=2458
+u=female,v=green,n=192
+u=female,v=blue,n=337
+u=female,v=purple,n=468
+u=female,v=yellow,n=3
+u=female,v=orange,n=17
+u=male,v=red,n=143
+u=male,v=green,n=227
+u=male,v=blue,n=2034
+u=male,v=purple,n=12
+u=male,v=yellow,n=1192
+u=male,v=orange,n=448
+</pre>
+</div>
+<p/>
+
+<p/>Then we can see what each record&rsquo;s <tt>n</tt> contributes to the total <tt>n</tt>:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint fraction -f n data/fraction-example.csv
+u      v      n    n_fraction
+female red    2458 0.326384
+female green  192  0.025495
+female blue   337  0.044748
+female purple 468  0.062143
+female yellow 3    0.000398
+female orange 17   0.002257
+male   red    143  0.018988
+male   green  227  0.030142
+male   blue   2034 0.270084
+male   purple 12   0.001593
+male   yellow 1192 0.158279
+male   orange 448  0.059487
+</pre>
+</div>
+<p/>
+
+<p/>Using <tt>-g</tt> we can split those out by gender, or by color:
+
+<table><tr> <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint fraction -f n -g u data/fraction-example.csv
+u      v      n    n_fraction
+female red    2458 0.707338
+female green  192  0.055252
+female blue   337  0.096978
+female purple 468  0.134676
+female yellow 3    0.000863
+female orange 17   0.004892
+male   red    143  0.035256
+male   green  227  0.055966
+male   blue   2034 0.501479
+male   purple 12   0.002959
+male   yellow 1192 0.293886
+male   orange 448  0.110454
+</pre>
+</div>
+<p/>
+</td> <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint fraction -f n -g v data/fraction-example.csv
+u      v      n    n_fraction
+female red    2458 0.945021
+female green  192  0.458234
+female blue   337  0.142134
+female purple 468  0.975000
+female yellow 3    0.002510
+female orange 17   0.036559
+male   red    143  0.054979
+male   green  227  0.541766
+male   blue   2034 0.857866
+male   purple 12   0.025000
+male   yellow 1192 0.997490
+male   orange 448  0.963441
+</pre>
+</div>
+<p/>
+</td> </tr></table>
+
+<p/>We can see, for example, that 70.9% of females have red (on the left) while
+94.5% of reds are for females.
+
+<p/> Converting fractions to percents is easy:
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint fraction -f n then put '$n_percent = $n_fraction * 100; unset $n_fraction' data/fraction-example.csv
+u      v      n    n_percent
+female red    2458 32.638400
+female green  192  2.549500
+female blue   337  4.474800
+female purple 468  6.214300
+female yellow 3    0.039800
+female orange 17   0.225700
+male   red    143  1.898800
+male   green  227  3.014200
+male   blue   2034 27.008400
+male   purple 12   0.159300
+male   yellow 1192 15.827900
+male   orange 448  5.948700
+</pre>
+</div>
+<p/>
+
+<p/> Another often-used idiom is to convert from a point distribution to a cumulative distribution, also
+known as &ldquo;running sums&rdquo;:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint fraction -f n then step -a rsum -f n_fraction data/fraction-example.csv
+u      v      n    n_fraction n_fraction_rsum
+female red    2458 0.326384   0.326384
+female green  192  0.025495   0.351879
+female blue   337  0.044748   0.396627
+female purple 468  0.062143   0.458770
+female yellow 3    0.000398   0.459168
+female orange 17   0.002257   0.461425
+male   red    143  0.018988   0.480413
+male   green  227  0.030142   0.510555
+male   blue   2034 0.270084   0.780639
+male   purple 12   0.001593   0.782232
+male   yellow 1192 0.158279   0.940511
+male   orange 448  0.059487   0.999998
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint fraction -f n -g u then step -a rsum -f n_fraction -g u data/fraction-example.csv
+u      v      n    n_fraction n_fraction_rsum
+female red    2458 0.707338   0.707338
+female green  192  0.055252   0.762590
+female blue   337  0.096978   0.859568
+female purple 468  0.134676   0.994244
+female yellow 3    0.000863   0.995107
+female orange 17   0.004892   0.999999
+male   red    143  0.035256   0.035256
+male   green  227  0.055966   0.091222
+male   blue   2034 0.501479   0.592701
+male   purple 12   0.002959   0.595660
+male   yellow 1192 0.293886   0.889546
+male   orange 448  0.110454   1.000000
+</pre>
+</div>
+<p/>
+
+<p/>
 
 </div>
 <!-- ================================================================ -->
