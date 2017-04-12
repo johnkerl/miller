@@ -1,6 +1,7 @@
 ================================================================
 BUGFIXES
 
+! right-join bug !!
 ! json join
 ! neaten vg.out !
 ! synctool -4/-6
