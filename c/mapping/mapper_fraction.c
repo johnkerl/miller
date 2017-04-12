@@ -20,6 +20,8 @@ typedef struct _mapper_fraction_state_t {
 	// Two-level map: lhmslv_t -> lhmsv. Group-by field names are the first keyset;
 	// the fraction field names are keys into the second.
 	lhmslv_t* psums;
+	lhmslv_t* pcumus;
+	int do_cumu;
 	char* output_field_name_suffix; // "_fraction" or "_percent"
 	mv_t multiplier; // 1.0 for fraction or 100.0 for percent
 	mv_t zero;
@@ -29,7 +31,7 @@ static void      mapper_fraction_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_fraction_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
 static mapper_t* mapper_fraction_alloc(ap_state_t* pargp, slls_t* pfraction_field_names, slls_t* pgroup_by_field_names,
-	int do_percents);
+	int do_percents, int do_cumu);
 static void      mapper_fraction_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_fraction_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -66,6 +68,7 @@ static mapper_t* mapper_fraction_parse_cli(int* pargi, int argc, char** argv,
 	slls_t* pfraction_field_names = slls_alloc();
 	slls_t* pgroup_by_field_names = slls_alloc();
 	int do_percents = FALSE;
+	int do_cumu = FALSE;
 
 	char* verb = argv[(*pargi)++];
 
@@ -73,6 +76,7 @@ static mapper_t* mapper_fraction_parse_cli(int* pargi, int argc, char** argv,
 	ap_define_string_list_flag(pstate, "-f", &pfraction_field_names);
 	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
 	ap_define_true_flag(pstate,        "-p", &do_percents);
+	ap_define_true_flag(pstate,        "-c", &do_cumu);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_fraction_usage(stderr, argv[0], verb);
@@ -84,12 +88,12 @@ static mapper_t* mapper_fraction_parse_cli(int* pargi, int argc, char** argv,
 		return NULL;
 	}
 
-	return mapper_fraction_alloc(pstate, pfraction_field_names, pgroup_by_field_names, do_percents);
+	return mapper_fraction_alloc(pstate, pfraction_field_names, pgroup_by_field_names, do_percents, do_cumu);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_fraction_alloc(ap_state_t* pargp, slls_t* pfraction_field_names, slls_t* pgroup_by_field_names,
-	int do_percents)
+	int do_percents, int do_cumu)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
@@ -100,6 +104,7 @@ static mapper_t* mapper_fraction_alloc(ap_state_t* pargp, slls_t* pfraction_fiel
 	pstate->pgroup_by_field_names   = pgroup_by_field_names;
 	pstate->precords                = sllv_alloc();
 	pstate->psums                   = lhmslv_alloc();
+	pstate->pcumus                  = lhmslv_alloc();
 	if (do_percents) {
 		pstate->multiplier = mv_from_int(100);
 		pstate->output_field_name_suffix = "_percent";
@@ -107,7 +112,8 @@ static mapper_t* mapper_fraction_alloc(ap_state_t* pargp, slls_t* pfraction_fiel
 		pstate->multiplier = mv_from_int(1);
 		pstate->output_field_name_suffix = "_fraction";
 	}
-	pstate->zero       = mv_from_int(0);
+	pstate->do_cumu = do_cumu;
+	pstate->zero    = mv_from_int(0);
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_fraction_process;
@@ -133,6 +139,12 @@ static void mapper_fraction_free(mapper_t* pmapper, context_t* _) {
 	}
 	lhmslv_free(pstate->psums);
 
+	for (lhmslve_t* pa = pstate->pcumus->phead; pa != NULL; pa = pa->pnext) {
+		lhmsmv_t* psums_for_group = pa->pvvalue;
+		lhmsmv_free(psums_for_group);
+	}
+	lhmslv_free(pstate->pcumus);
+
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
@@ -152,10 +164,14 @@ static sllv_t* mapper_fraction_process(lrec_t* pinrec, context_t* pctx, void* pv
 
 		if (pgroup_by_field_values != NULL) {
 			lhmsmv_t* psums_for_group = lhmslv_get(pstate->psums, pgroup_by_field_values);
+			lhmsmv_t* pcumus_for_group = NULL;
 			if (psums_for_group == NULL) {
 				psums_for_group = lhmsmv_alloc();
 				lhmslv_put(pstate->psums, slls_copy(pgroup_by_field_values),
 					psums_for_group, FREE_ENTRY_KEY);
+				pcumus_for_group = lhmsmv_alloc();
+				lhmslv_put(pstate->pcumus, slls_copy(pgroup_by_field_values),
+					pcumus_for_group, FREE_ENTRY_KEY);
 			}
 
 			for (sllse_t* pf = pstate->pfraction_field_names->phead; pf != NULL; pf = pf->pnext) {
@@ -166,6 +182,7 @@ static sllv_t* mapper_fraction_process(lrec_t* pinrec, context_t* pctx, void* pv
 					mv_t* psum = lhmsmv_get(psums_for_group, fraction_field_name);
 					if (psum == NULL) { // First value for group
 						lhmsmv_put(psums_for_group, fraction_field_name, &lrec_num_value, FREE_ENTRY_VALUE);
+						lhmsmv_put(pcumus_for_group, fraction_field_name, &pstate->zero, FREE_ENTRY_VALUE);
 					} else {
 						*psum = x_xx_plus_func(psum, &lrec_num_value);
 					}
@@ -188,6 +205,7 @@ static sllv_t* mapper_fraction_process(lrec_t* pinrec, context_t* pctx, void* pv
 				pstate->pgroup_by_field_names);
 			if (pgroup_by_field_values != NULL) {
 				lhmsmv_t* psums_for_group = lhmslv_get(pstate->psums, pgroup_by_field_values);
+				lhmsmv_t* pcumus_for_group = lhmslv_get(pstate->pcumus, pgroup_by_field_values);
 				MLR_INTERNAL_CODING_ERROR_IF(psums_for_group == NULL); // should have populated on pass 1
 				for (sllse_t* pf = pstate->pfraction_field_names->phead; pf != NULL; pf = pf->pnext) {
 					char* fraction_field_name = pf->value;
@@ -198,15 +216,31 @@ static sllv_t* mapper_fraction_process(lrec_t* pinrec, context_t* pctx, void* pv
 						char* output_field_name = mlr_paste_2_strings(fraction_field_name,
 							pstate->output_field_name_suffix);
 						mv_t* psum = lhmsmv_get(psums_for_group, fraction_field_name);
+
+						mv_t* pcumu = NULL;
+						if (pstate->do_cumu) {
+							pcumu = lhmsmv_get(pcumus_for_group, fraction_field_name);
+						}
+
 						mv_t fraction;
 						if (mv_i_nn_ne(&lrec_num_value, &pstate->zero)) {
 							fraction = x_xx_divide_func(&lrec_num_value, psum);
 						} else {
 							fraction = mv_error();
 						}
-						fraction = x_xx_times_func(&fraction, &pstate->multiplier);
-						char* output_value = mv_alloc_format_val(&fraction);
-						lrec_put(poutrec, output_field_name, output_value, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+						mv_t output_value;
+						if (pstate->do_cumu) {
+							output_value = x_xx_plus_func(&fraction, pcumu);
+						} else {
+							output_value = fraction;
+						}
+						output_value = x_xx_times_func(&output_value, &pstate->multiplier);
+						char* output_string = mv_alloc_format_val(&output_value);
+						lrec_put(poutrec, output_field_name, output_string, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+
+						if (pstate->do_cumu) {
+							*pcumu = x_xx_plus_func(pcumu, &fraction);
+						}
 					}
 				}
 				slls_free(pgroup_by_field_values);
