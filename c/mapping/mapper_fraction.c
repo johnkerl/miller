@@ -49,7 +49,7 @@ static void mapper_fraction_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "For each record's value in specified fields, computes the ratio of that\n");
 	fprintf(o, "value to the sum of values in that field over all input records.\n");
 	fprintf(o, "E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records\n");
-	fprintf(o, "x=1,x_percent=.1  x=2,x_percent=.2  x=3,x_percent=.3  and  x=4,x_percent=.4\n");
+	fprintf(o, "x=1,x_fraction=0.1  x=2,x_fraction=0.2  x=3,x_fraction=0.3  and  x=4,x_fraction=0.4\n");
 	fprintf(o, "\n");
 	fprintf(o, "Note: this is internally a two-pass algorithm: on the first pass it retains\n");
 	fprintf(o, "input records and accumulates sums; on the second pass it computes quotients\n");
@@ -59,7 +59,12 @@ static void mapper_fraction_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-f {a,b,c}    Field name(s) for fraction calculation\n");
 	fprintf(o, "-g {d,e,f}    Optional group-by-field name(s) for fraction counts\n");
 	fprintf(o, "-p            Produce percents [0..100], not fractions [0..1]. Output field names\n");
-	fprintf(o, "              end with \"_percent\" rather than \"_fraction\".\n");
+	fprintf(o, "              end with \"_percent\" rather than \"_fraction\"\n");
+	fprintf(o, "-c            Produce cumulative distributions, i.e. running sums: each output\n");
+	fprintf(o, "              value folds in the sum of the previous for the specified group\n");
+	fprintf(o, "              E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records\n");
+	fprintf(o, "              x=1,x_fraction=0.1  x=2,x_fraction=0.3  x=3,x_fraction=0.6  and\n");
+	fprintf(o, "              x=4,x_fraction=1.0\n");
 }
 
 static mapper_t* mapper_fraction_parse_cli(int* pargi, int argc, char** argv,
@@ -213,36 +218,30 @@ static sllv_t* mapper_fraction_process(lrec_t* pinrec, context_t* pctx, void* pv
 					if (lrec_string_value != NULL) {
 						mv_t lrec_num_value = mv_scan_number_or_die(lrec_string_value);
 
-						mv_t* psum = lhmsmv_get(psums_for_group, fraction_field_name);
-
+						mv_t numerator;
 						mv_t* pcumu = NULL;
 						if (pstate->do_cumu) {
 							pcumu = lhmsmv_get(pcumus_for_group, fraction_field_name);
+							numerator = x_xx_plus_func(&lrec_num_value, pcumu);
+						} else {
+							numerator = lrec_num_value;
 						}
 
-						mv_t fraction;
-						if (mv_i_nn_ne(&lrec_num_value, &pstate->zero)) {
-							fraction = x_xx_divide_func(&lrec_num_value, psum);
-						} else {
-							fraction = mv_error();
-						}
+						mv_t* pdenominator = lhmsmv_get(psums_for_group, fraction_field_name);
 
-						mv_t output_value;
-						if (pstate->do_cumu) {
-							output_value = x_xx_plus_func(&fraction, pcumu);
-						} else {
-							output_value = fraction;
-						}
+						mv_t output_value = mv_i_nn_ne(&lrec_num_value, &pstate->zero)
+							? x_xx_divide_func(&numerator, pdenominator)
+							: mv_error();
 						output_value = x_xx_times_func(&output_value, &pstate->multiplier);
 
-						char* output_string = mv_alloc_format_val(&output_value);
 
-						char* output_field_name = mlr_paste_2_strings(fraction_field_name,
-							pstate->output_field_name_suffix);
-						lrec_put(poutrec, output_field_name, output_string, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+						lrec_put(poutrec,
+							mlr_paste_2_strings(fraction_field_name, pstate->output_field_name_suffix),
+							mv_alloc_format_val(&output_value),
+							FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 
 						if (pstate->do_cumu) {
-							*pcumu = x_xx_plus_func(pcumu, &fraction);
+							*pcumu = x_xx_plus_func(pcumu, &lrec_num_value);
 						}
 					}
 				}

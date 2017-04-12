@@ -29,6 +29,7 @@ airable:
   - JSON arrays:
     > --json-skip-arrays-on-input
     > --json-arrays-as-maps
+  - mlr fraction verb
   - correct JSON escaping on output
   - feature-counting script
   - fractional seconds in strptime (%S) and strftime (latter %nS)

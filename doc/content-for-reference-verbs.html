@@ -242,15 +242,15 @@ POKI_RUN_COMMAND{{mlr --opprint fraction -f n -g v data/fraction-example.csv}}HE
 <p/>We can see, for example, that 70.9% of females have red (on the left) while
 94.5% of reds are for females.
 
-<p/> Converting fractions to percents is easy:
-POKI_RUN_COMMAND{{mlr --opprint fraction -f n then put '$n_percent = $n_fraction * 100; unset $n_fraction' data/fraction-example.csv}}HERE
+<p/> To convert fractions to percents, you may use <tt>-p</tt>:
+POKI_RUN_COMMAND{{mlr --opprint fraction -f n -p data/fraction-example.csv}}HERE
 
 <p/> Another often-used idiom is to convert from a point distribution to a cumulative distribution, also
-known as &ldquo;running sums&rdquo;:
+known as &ldquo;running sums&rdquo;. Here, you can use <tt>-c</tt>:
 
-POKI_RUN_COMMAND{{mlr --opprint fraction -f n then step -a rsum -f n_fraction data/fraction-example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --opprint fraction -f n -p -c data/fraction-example.csv}}HERE
 
-POKI_RUN_COMMAND{{mlr --opprint fraction -f n -g u then step -a rsum -f n_fraction -g u data/fraction-example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --opprint fraction -f n -g u -p -c data/fraction-example.csv}}HERE
 
 <p/>
 

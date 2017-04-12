@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2017-04-11
+.\"      Date: 2017-04-12
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2017-04-11" "\ \&" "\ \&"
+.TH "MILLER" "1" "2017-04-12" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -943,7 +943,7 @@ Usage: mlr fraction [options]
 For each record's value in specified fields, computes the ratio of that
 value to the sum of values in that field over all input records.
 E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records
-x=1,x_percent=.1  x=2,x_percent=.2  x=3,x_percent=.3  and  x=4,x_percent=.4
+x=1,x_fraction=0.1  x=2,x_fraction=0.2  x=3,x_fraction=0.3  and  x=4,x_fraction=0.4
 
 Note: this is internally a two-pass algorithm: on the first pass it retains
 input records and accumulates sums; on the second pass it computes quotients
@@ -952,6 +952,13 @@ and emits output records. This means it produces no output until all input is re
 Options:
 -f {a,b,c}    Field name(s) for fraction calculation
 -g {d,e,f}    Optional group-by-field name(s) for fraction counts
+-p            Produce percents [0..100], not fractions [0..1]. Output field names
+              end with "_percent" rather than "_fraction"
+-c            Produce cumulative distributions, i.e. running sums: each output
+              value folds in the sum of the previous for the specified group
+              E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records
+              x=1,x_fraction=0.1  x=2,x_fraction=0.3  x=3,x_fraction=0.6  and
+              x=4,x_fraction=1.0
 .fi
 .if n \{\
 .RE

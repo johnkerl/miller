@@ -886,7 +886,7 @@ Usage: mlr fraction [options]
 For each record's value in specified fields, computes the ratio of that
 value to the sum of values in that field over all input records.
 E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records
-x=1,x_percent=.1  x=2,x_percent=.2  x=3,x_percent=.3  and  x=4,x_percent=.4
+x=1,x_fraction=0.1  x=2,x_fraction=0.2  x=3,x_fraction=0.3  and  x=4,x_fraction=0.4
 
 Note: this is internally a two-pass algorithm: on the first pass it retains
 input records and accumulates sums; on the second pass it computes quotients
@@ -895,6 +895,13 @@ and emits output records. This means it produces no output until all input is re
 Options:
 -f {a,b,c}    Field name(s) for fraction calculation
 -g {d,e,f}    Optional group-by-field name(s) for fraction counts
+-p            Produce percents [0..100], not fractions [0..1]. Output field names
+              end with "_percent" rather than "_fraction"
+-c            Produce cumulative distributions, i.e. running sums: each output
+              value folds in the sum of the previous for the specified group
+              E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records
+              x=1,x_fraction=0.1  x=2,x_fraction=0.3  x=3,x_fraction=0.6  and
+              x=4,x_fraction=1.0
 </pre>
 </div>
 <p/>
@@ -992,48 +999,48 @@ male   orange 448  0.963441
 <p/>We can see, for example, that 70.9% of females have red (on the left) while
 94.5% of reds are for females.
 
-<p/> Converting fractions to percents is easy:
+<p/> To convert fractions to percents, you may use <tt>-p</tt>:
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint fraction -f n then put '$n_percent = $n_fraction * 100; unset $n_fraction' data/fraction-example.csv
+$ mlr --opprint fraction -f n -p data/fraction-example.csv
 u      v      n    n_percent
-female red    2458 32.638400
-female green  192  2.549500
-female blue   337  4.474800
-female purple 468  6.214300
-female yellow 3    0.039800
-female orange 17   0.225700
-male   red    143  1.898800
-male   green  227  3.014200
-male   blue   2034 27.008400
-male   purple 12   0.159300
-male   yellow 1192 15.827900
-male   orange 448  5.948700
+female red    2458 32.638428
+female green  192  2.549462
+female blue   337  4.474837
+female purple 468  6.214314
+female yellow 3    0.039835
+female orange 17   0.225734
+male   red    143  1.898818
+male   green  227  3.014208
+male   blue   2034 27.008365
+male   purple 12   0.159341
+male   yellow 1192 15.827911
+male   orange 448  5.948745
 </pre>
 </div>
 <p/>
 
 <p/> Another often-used idiom is to convert from a point distribution to a cumulative distribution, also
-known as &ldquo;running sums&rdquo;:
+known as &ldquo;running sums&rdquo;. Here, you can use <tt>-c</tt>:
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint fraction -f n then step -a rsum -f n_fraction data/fraction-example.csv
-u      v      n    n_fraction n_fraction_rsum
-female red    2458 0.326384   0.326384
-female green  192  0.025495   0.351879
-female blue   337  0.044748   0.396627
-female purple 468  0.062143   0.458770
-female yellow 3    0.000398   0.459168
-female orange 17   0.002257   0.461425
-male   red    143  0.018988   0.480413
-male   green  227  0.030142   0.510555
-male   blue   2034 0.270084   0.780639
-male   purple 12   0.001593   0.782232
-male   yellow 1192 0.158279   0.940511
-male   orange 448  0.059487   0.999998
+$ mlr --opprint fraction -f n -p -c data/fraction-example.csv
+u      v      n    n_percent
+female red    2458 32.638428
+female green  192  35.187890
+female blue   337  39.662727
+female purple 468  45.877042
+female yellow 3    45.916877
+female orange 17   46.142611
+male   red    143  48.041429
+male   green  227  51.055637
+male   blue   2034 78.064002
+male   purple 12   78.223344
+male   yellow 1192 94.051255
+male   orange 448  100
 </pre>
 </div>
 <p/>
@@ -1041,20 +1048,20 @@ male   orange 448  0.059487   0.999998
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --opprint fraction -f n -g u then step -a rsum -f n_fraction -g u data/fraction-example.csv
-u      v      n    n_fraction n_fraction_rsum
-female red    2458 0.707338   0.707338
-female green  192  0.055252   0.762590
-female blue   337  0.096978   0.859568
-female purple 468  0.134676   0.994244
-female yellow 3    0.000863   0.995107
-female orange 17   0.004892   0.999999
-male   red    143  0.035256   0.035256
-male   green  227  0.055966   0.091222
-male   blue   2034 0.501479   0.592701
-male   purple 12   0.002959   0.595660
-male   yellow 1192 0.293886   0.889546
-male   orange 448  0.110454   1.000000
+$ mlr --opprint fraction -f n -g u -p -c data/fraction-example.csv
+u      v      n    n_percent
+female red    2458 70.733813
+female green  192  76.258993
+female blue   337  85.956835
+female purple 468  99.424460
+female yellow 3    99.510791
+female orange 17   100
+male   red    143  3.525641
+male   green  227  9.122288
+male   blue   2034 59.270217
+male   purple 12   59.566075
+male   yellow 1192 88.954635
+male   orange 448  100
 </pre>
 </div>
 <p/>
