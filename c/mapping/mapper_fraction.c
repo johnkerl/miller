@@ -20,13 +20,16 @@ typedef struct _mapper_fraction_state_t {
 	// Two-level map: lhmslv_t -> lhmsv. Group-by field names are the first keyset;
 	// the fraction field names are keys into the second.
 	lhmslv_t* psums;
+	char* output_field_name_suffix; // "_fraction" or "_percent"
+	mv_t multiplier; // 1.0 for fraction or 100.0 for percent
 	mv_t zero;
 } mapper_fraction_state_t;
 
 static void      mapper_fraction_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_fraction_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
-static mapper_t* mapper_fraction_alloc(ap_state_t* pargp, slls_t* pfraction_field_names, slls_t* pgroup_by_field_names);
+static mapper_t* mapper_fraction_alloc(ap_state_t* pargp, slls_t* pfraction_field_names, slls_t* pgroup_by_field_names,
+	int do_percents);
 static void      mapper_fraction_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_fraction_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -53,6 +56,8 @@ static void mapper_fraction_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Options:\n");
 	fprintf(o, "-f {a,b,c}    Field name(s) for fraction calculation\n");
 	fprintf(o, "-g {d,e,f}    Optional group-by-field name(s) for fraction counts\n");
+	fprintf(o, "-p            Produce percents [0..100], not fractions [0..1]. Output field names\n");
+	fprintf(o, "              end with \"_percent\" rather than \"_fraction\".\n");
 }
 
 static mapper_t* mapper_fraction_parse_cli(int* pargi, int argc, char** argv,
@@ -60,12 +65,14 @@ static mapper_t* mapper_fraction_parse_cli(int* pargi, int argc, char** argv,
 {
 	slls_t* pfraction_field_names = slls_alloc();
 	slls_t* pgroup_by_field_names = slls_alloc();
+	int do_percents = FALSE;
 
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_list_flag(pstate, "-f", &pfraction_field_names);
 	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
+	ap_define_true_flag(pstate,        "-p", &do_percents);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_fraction_usage(stderr, argv[0], verb);
@@ -77,21 +84,30 @@ static mapper_t* mapper_fraction_parse_cli(int* pargi, int argc, char** argv,
 		return NULL;
 	}
 
-	return mapper_fraction_alloc(pstate, pfraction_field_names, pgroup_by_field_names);
+	return mapper_fraction_alloc(pstate, pfraction_field_names, pgroup_by_field_names, do_percents);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_fraction_alloc(ap_state_t* pargp, slls_t* pfraction_field_names, slls_t* pgroup_by_field_names) {
+static mapper_t* mapper_fraction_alloc(ap_state_t* pargp, slls_t* pfraction_field_names, slls_t* pgroup_by_field_names,
+	int do_percents)
+{
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_fraction_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_fraction_state_t));
 
-	pstate->pargp                  = pargp;
+	pstate->pargp                   = pargp;
 	pstate->pfraction_field_names   = pfraction_field_names;
-	pstate->pgroup_by_field_names  = pgroup_by_field_names;
-	pstate->precords               = sllv_alloc();
-	pstate->psums                  = lhmslv_alloc();
-	pstate->zero                   = mv_from_int(0);
+	pstate->pgroup_by_field_names   = pgroup_by_field_names;
+	pstate->precords                = sllv_alloc();
+	pstate->psums                   = lhmslv_alloc();
+	if (do_percents) {
+		pstate->multiplier = mv_from_int(100);
+		pstate->output_field_name_suffix = "_percent";
+	} else {
+		pstate->multiplier = mv_from_int(1);
+		pstate->output_field_name_suffix = "_fraction";
+	}
+	pstate->zero       = mv_from_int(0);
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_fraction_process;
@@ -179,7 +195,8 @@ static sllv_t* mapper_fraction_process(lrec_t* pinrec, context_t* pctx, void* pv
 					if (lrec_string_value != NULL) {
 						mv_t lrec_num_value = mv_scan_number_or_die(lrec_string_value);
 
-						char* output_field_name = mlr_paste_2_strings(fraction_field_name, "_fraction");
+						char* output_field_name = mlr_paste_2_strings(fraction_field_name,
+							pstate->output_field_name_suffix);
 						mv_t* psum = lhmsmv_get(psums_for_group, fraction_field_name);
 						mv_t fraction;
 						if (mv_i_nn_ne(&lrec_num_value, &pstate->zero)) {
@@ -187,6 +204,7 @@ static sllv_t* mapper_fraction_process(lrec_t* pinrec, context_t* pctx, void* pv
 						} else {
 							fraction = mv_error();
 						}
+						fraction = x_xx_times_func(&fraction, &pstate->multiplier);
 						char* output_value = mv_alloc_format_val(&fraction);
 						lrec_put(poutrec, output_field_name, output_value, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 					}
