@@ -213,8 +213,6 @@ static sllv_t* mapper_fraction_process(lrec_t* pinrec, context_t* pctx, void* pv
 					if (lrec_string_value != NULL) {
 						mv_t lrec_num_value = mv_scan_number_or_die(lrec_string_value);
 
-						char* output_field_name = mlr_paste_2_strings(fraction_field_name,
-							pstate->output_field_name_suffix);
 						mv_t* psum = lhmsmv_get(psums_for_group, fraction_field_name);
 
 						mv_t* pcumu = NULL;
@@ -228,6 +226,7 @@ static sllv_t* mapper_fraction_process(lrec_t* pinrec, context_t* pctx, void* pv
 						} else {
 							fraction = mv_error();
 						}
+
 						mv_t output_value;
 						if (pstate->do_cumu) {
 							output_value = x_xx_plus_func(&fraction, pcumu);
@@ -235,7 +234,11 @@ static sllv_t* mapper_fraction_process(lrec_t* pinrec, context_t* pctx, void* pv
 							output_value = fraction;
 						}
 						output_value = x_xx_times_func(&output_value, &pstate->multiplier);
+
 						char* output_string = mv_alloc_format_val(&output_value);
+
+						char* output_field_name = mlr_paste_2_strings(fraction_field_name,
+							pstate->output_field_name_suffix);
 						lrec_put(poutrec, output_field_name, output_string, FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 
 						if (pstate->do_cumu) {
