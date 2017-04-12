@@ -12,10 +12,7 @@ BUGFIXES
 airable:
 ! function-doc needs work -- *not* autogen :(
 
-! percent/fraction hold-and-emit verb
-  o i_nn -> b_nn
-  o --percent
-  o --cumu
+o i_nn -> b_nn
 
 ? sec2gmtn(x, n)?
   - func as well as verb
@@ -130,7 +127,7 @@ MAPVAR CHECKLIST:
 * clarify ownership semantics in localstack & mlhmmv via function names, & top-of-file comments
 
 ================================================================
-5.1.0 ideas:
+5.2.0 ideas:
 
 !!! multi-field x many verbs
   ! -f/-r field-name-spec opportunities throughout
@@ -226,7 +223,7 @@ COMPARES:
 * https://www.gnu.org/software/datamash/manual/datamash.html
 
 ================================================================
-5.2.0 IDEAS:
+5.3.0 IDEAS:
 
 !! coroutines: line-oriented; operate on field(s); r/w popen
 
