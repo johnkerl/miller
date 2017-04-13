@@ -6,6 +6,8 @@ BUGFIXES
 ! neaten vg.out !
 ! synctool -4/-6
 
+* tee out multiple columns w/ print >"xxx", $a, $b
+
 ================================================================
 5.1.0 TO-DO:
 

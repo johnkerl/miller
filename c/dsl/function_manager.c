@@ -294,6 +294,10 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"Formats seconds since epoch (integer part)\n"
 		"as GMT timestamp, e.g. sec2gmt(1440768801.7) = \"2015-08-28T13:33:21Z\".\n"
 		"Leaves non-numbers as-is."},
+	{FUNC_CLASS_TIME, "sec2gmt",   2,0,
+		"Formats seconds since epoch as GMT timestamp with n\n"
+		"decimal places for seconds, e.g. sec2gmt(1440768801.7,1) = \"2015-08-28T13:33:21.7Z\".\n"
+		"Leaves non-numbers as-is."},
 	{FUNC_CLASS_TIME, "sec2gmtdate", 1,0,
 		"Formats seconds since epoch (integer part)\n"
 		"as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = \"2015-08-28\".\n"
@@ -446,7 +450,7 @@ static void fmgr_check_arity_with_report(fmgr_t* pfmgr, char* function_name,
 		// More flexibly, I'd have a list of arities supported by each
 		// function. But this is overkill: there are unary and binary minus,
 		// and everything else has a single arity.
-		if (streq(function_name, "-")) {
+		if (streq(function_name, "-") || streq(function_name, "sec2gmt")) {
 			fprintf(stderr, "%s: Function named \"%s\" takes one argument or two; got %d.\n",
 				MLR_GLOBALS.bargv0, function_name, user_provided_arity);
 		} else {
@@ -1162,6 +1166,7 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "roundm")) { return rval_evaluator_alloc_from_x_xx_func(x_xx_roundm_func,     parg1, parg2);
 	} else if (streq(fnnm, "fmtnum")) { return rval_evaluator_alloc_from_s_xs_func(s_xs_fmtnum_func,     parg1, parg2);
 	} else if (streq(fnnm, "urandint")) { return rval_evaluator_alloc_from_i_ii_func(i_ii_urandint_func, parg1, parg2);
+	} else if (streq(fnnm, "sec2gmt"))  { return rval_evaluator_alloc_from_x_i_func(s_xi_sec2gmt_func,   parg1, parg2);
 	} else if (streq(fnnm, "&"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_band_func,         parg1, parg2);
 	} else if (streq(fnnm, "|"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_bor_func,          parg1, parg2);
 	} else if (streq(fnnm, "^"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_bxor_func,         parg1, parg2);
