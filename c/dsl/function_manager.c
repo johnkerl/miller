@@ -509,11 +509,14 @@ void fmgr_function_usage(fmgr_t* pfmgr, FILE* output_stream, char* function_name
 	char* nfmt = "%s (class=%s #args=%d): %s\n";
 	char* vfmt = "%s (class=%s variadic): %s\n";
 
+	int num_printed = 0; // > 1 matches e.g. for - and sec2gmt
 	for (int i = 0; ; i++) {
 		function_lookup_t* plookup = &FUNCTION_LOOKUP_TABLE[i];
 		if (plookup->function_name == NULL) // end of table
 			break;
 		if (function_name == NULL || streq(function_name, plookup->function_name)) {
+			if (++num_printed > 1)
+				fprintf(output_stream, "\n");
 			if (plookup->variadic) {
 				fprintf(output_stream, vfmt, plookup->function_name,
 					function_class_to_desc(plookup->function_class),

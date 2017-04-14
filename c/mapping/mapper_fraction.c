@@ -63,8 +63,8 @@ static void mapper_fraction_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-c            Produce cumulative distributions, i.e. running sums: each output\n");
 	fprintf(o, "              value folds in the sum of the previous for the specified group\n");
 	fprintf(o, "              E.g. with input records  x=1  x=2  x=3  and  x=4, emits output records\n");
-	fprintf(o, "              x=1,x_fraction=0.1  x=2,x_fraction=0.3  x=3,x_fraction=0.6  and\n");
-	fprintf(o, "              x=4,x_fraction=1.0\n");
+	fprintf(o, "              x=1,x_cumulative_fraction=0.1  x=2,x_cumulative_fraction=0.3\n");
+	fprintf(o, "              x=3,x_cumulative_fraction=0.6  and  x=4,x_cumulative_fraction=1.0\n");
 }
 
 static mapper_t* mapper_fraction_parse_cli(int* pargi, int argc, char** argv,

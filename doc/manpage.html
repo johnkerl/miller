@@ -913,8 +913,8 @@ VERBS
        -c	     Produce cumulative distributions, i.e. running sums: each output
 		     value folds in the sum of the previous for the specified group
 		     E.g. with input records  x=1  x=2	x=3  and  x=4, emits output records
-		     x=1,x_fraction=0.1  x=2,x_fraction=0.3  x=3,x_fraction=0.6  and
-		     x=4,x_fraction=1.0
+		     x=1,x_cumulative_fraction=0.1  x=2,x_cumulative_fraction=0.3
+		     x=3,x_cumulative_fraction=0.6  and  x=4,x_cumulative_fraction=1.0
 
    put
        Usage: mlr put [options] {expression}
@@ -1346,10 +1346,12 @@ VERBS
 FUNCTIONS FOR FILTER/PUT
    +
        (class=arithmetic #args=2): Addition.
+
        + (class=arithmetic #args=1): Unary plus.
 
    -
        (class=arithmetic #args=2): Subtraction.
+
        - (class=arithmetic #args=1): Unary minus.
 
    *
@@ -1624,6 +1626,7 @@ FUNCTIONS FOR FILTER/PUT
        (class=time #args=1): Formats seconds since epoch (integer part)
        as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
        Leaves non-numbers as-is.
+
        sec2gmt (class=time #args=2): Formats seconds since epoch as GMT timestamp with n
        decimal places for seconds, e.g. sec2gmt(1440768801.7,1) = "2015-08-28T13:33:21.7Z".
        Leaves non-numbers as-is.
