@@ -1423,6 +1423,51 @@ r y
 l x
 4 g
 
+mlr join -l l -r r -j j -f ./reg_test/input/joina.dkvp ./reg_test/input/joinb.dkvp
+j=1,x=a,y=s
+j=2,x=b,y=t
+j=2,x=c,y=t
+j=2,x=d,y=t
+j=2,x=b,y=v
+j=2,x=c,y=v
+j=2,x=d,y=v
+j=3,x=e,y=w
+j=3,x=f,y=w
+j=3,x=e,y=x
+j=3,x=f,y=x
+j=3,x=e,y=y
+j=3,x=f,y=y
+
+mlr join -l l -j r -f ./reg_test/input/joina.dkvp ./reg_test/input/joinb.dkvp
+r=1,x=a,y=s
+r=2,x=b,y=t
+r=2,x=c,y=t
+r=2,x=d,y=t
+r=2,x=b,y=v
+r=2,x=c,y=v
+r=2,x=d,y=v
+r=3,x=e,y=w
+r=3,x=f,y=w
+r=3,x=e,y=x
+r=3,x=f,y=x
+r=3,x=e,y=y
+r=3,x=f,y=y
+
+mlr join -r r -j l -f ./reg_test/input/joina.dkvp ./reg_test/input/joinb.dkvp
+l=1,x=a,y=s
+l=2,x=b,y=t
+l=2,x=c,y=t
+l=2,x=d,y=t
+l=2,x=b,y=v
+l=2,x=c,y=v
+l=2,x=d,y=v
+l=3,x=e,y=w
+l=3,x=f,y=w
+l=3,x=e,y=x
+l=3,x=f,y=x
+l=3,x=e,y=y
+l=3,x=f,y=y
+
 mlr --opprint join -s -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp
 
 mlr --opprint join -f /dev/null -l l -r r -j o ./reg_test/input/joinb.dkvp

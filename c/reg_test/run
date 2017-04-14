@@ -340,6 +340,9 @@ run_mlr --opprint join    --np      --ur -f $indir/joina.dkvp -l l -r r -j o $in
 run_mlr --opprint join -s --np --ul --ur -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
 run_mlr --opprint join    --np --ul --ur -f $indir/joina.dkvp -l l -r r -j o $indir/joinb.dkvp
 
+run_mlr join -l l -r r -j j -f $indir/joina.dkvp $indir/joinb.dkvp
+run_mlr join -l l      -j r -f $indir/joina.dkvp $indir/joinb.dkvp
+run_mlr join      -r r -j l -f $indir/joina.dkvp $indir/joinb.dkvp
 
 run_mlr --opprint join -s                -f /dev/null -l l -r r -j o $indir/joinb.dkvp
 run_mlr --opprint join                   -f /dev/null -l l -r r -j o $indir/joinb.dkvp

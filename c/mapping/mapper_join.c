@@ -259,10 +259,13 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv,
 		mapper_join_usage(stderr, argv[0], verb);
 		return NULL;
 	}
-	if (popts->pleft_join_field_names == NULL)
+
+	if (popts->pleft_join_field_names == NULL) {
 		popts->pleft_join_field_names = slls_copy(popts->poutput_join_field_names);
-	if (popts->pright_join_field_names == NULL)
-		popts->pright_join_field_names = slls_copy(popts->pleft_join_field_names);
+	}
+	if (popts->pright_join_field_names == NULL) {
+		popts->pright_join_field_names = slls_copy(popts->poutput_join_field_names);
+	}
 
 	int llen = popts->pleft_join_field_names->length;
 	int rlen = popts->pright_join_field_names->length;
