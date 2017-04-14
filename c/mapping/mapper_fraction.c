@@ -112,10 +112,10 @@ static mapper_t* mapper_fraction_alloc(ap_state_t* pargp, slls_t* pfraction_fiel
 	pstate->pcumus                  = lhmslv_alloc();
 	if (do_percents) {
 		pstate->multiplier = mv_from_int(100);
-		pstate->output_field_name_suffix = "_percent";
+		pstate->output_field_name_suffix = do_cumu ? "_cumulative_percent" : "_percent";
 	} else {
 		pstate->multiplier = mv_from_int(1);
-		pstate->output_field_name_suffix = "_fraction";
+		pstate->output_field_name_suffix = do_cumu ? "_cumulative_fraction" : "_fraction";
 	}
 	pstate->do_cumu = do_cumu;
 	pstate->zero    = mv_from_int(0);

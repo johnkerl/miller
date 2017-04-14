@@ -12,6 +12,8 @@ BUGFIXES
 ----------------------------------------------------------------
 airable:
 
+! _cumulative prefix on _fraction/_percent
+
 * tee $*
 
 ! function-doc needs work -- *not* autogen :(

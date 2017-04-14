@@ -86,8 +86,11 @@ lrec_t* validate_millerable_object(json_value_t* pjson, char* flatten_sep, json_
 				break;
 			case JSON_ARRAY_INGEST_AS_MAP:
 				prefix = mlr_paste_2_strings(key, flatten_sep);
-				if (!populate_from_nested_array(prec, pjson_value, prefix, flatten_sep, json_array_ingest))
+				if (!populate_from_nested_array(prec, pjson_value, prefix, flatten_sep, json_array_ingest)) {
+					free(prefix);
 					return NULL;
+				}
+				free(prefix);
 				break;
 			// xxx other cases!
 			default:
@@ -164,8 +167,10 @@ static int populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object,
 				break;
 			case JSON_ARRAY_INGEST_AS_MAP:
 				next_prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
-				if (!populate_from_nested_array(prec, pjson_value, next_prefix, flatten_sep, json_array_ingest))
+				if (!populate_from_nested_array(prec, pjson_value, next_prefix, flatten_sep, json_array_ingest)) {
+					free(next_prefix);
 					return FALSE;
+				}
 				free(next_prefix);
 				free(lrec_key);
 				break;
@@ -234,8 +239,10 @@ static int populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, c
 				break;
 			case JSON_ARRAY_INGEST_AS_MAP:
 				next_prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
-				if (!populate_from_nested_array(prec, pjson_value, next_prefix, flatten_sep, json_array_ingest))
+				if (!populate_from_nested_array(prec, pjson_value, next_prefix, flatten_sep, json_array_ingest)) {
+					free(next_prefix);
 					return FALSE;
+				}
 				free(lrec_key);
 				free(next_prefix);
 				break;
