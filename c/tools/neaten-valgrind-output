@@ -1,6 +1,6 @@
 #!/bin/bash
 
-run_mlr --nidx --rs '\n\n' --fs '\001' put -q '
+mlr --nidx --rs '\n\n' --fs '\001' put -q '
   $1 =~ "^mlr " {
     @cmd = $1
   }
