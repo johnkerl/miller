@@ -163,12 +163,14 @@ static int populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object,
 					"Use --json-skip-arrays-on-input to exclude these from input without fataling.\n"
 					"Or, --json-map-arrays-on-input to convert them to integer-indexed maps.\n",
 					MLR_GLOBALS.bargv0);
+				free(lrec_key);
 				return FALSE;
 				break;
 			case JSON_ARRAY_INGEST_AS_MAP:
 				next_prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
 				if (!populate_from_nested_array(prec, pjson_value, next_prefix, flatten_sep, json_array_ingest)) {
 					free(next_prefix);
+					free(lrec_key);
 					return FALSE;
 				}
 				free(next_prefix);
@@ -176,6 +178,7 @@ static int populate_from_nested_object(lrec_t* prec, json_value_t* pjson_object,
 				break;
 			// xxx other cases!
 			default:
+				free(lrec_key);
 				break;
 			}
 			break;
@@ -240,6 +243,7 @@ static int populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, c
 			case JSON_ARRAY_INGEST_AS_MAP:
 				next_prefix = mlr_paste_2_strings(lrec_key, flatten_sep);
 				if (!populate_from_nested_array(prec, pjson_value, next_prefix, flatten_sep, json_array_ingest)) {
+					free(lrec_key);
 					free(next_prefix);
 					return FALSE;
 				}
@@ -248,6 +252,7 @@ static int populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, c
 				break;
 			// xxx other cases!
 			default:
+				free(lrec_key);
 				break;
 			}
 			break;
