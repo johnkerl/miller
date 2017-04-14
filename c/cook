@@ -1,0 +1,42 @@
+$ db --quiet -r xdb.foo -B -e '
+  SET sql_big_selects = 1;
+  SELECT * FROM file
+  WHERE status = 20 AND ignore_reason = 2 ORDER BY enqueued_time DESC LIMIT 10000000
+'
+
+$ sh query.sh | mlr --itsvlite --odkvp cat > ne-20160708.dkvp
+
+$ mlr --from ne-20160708.dkvp --opprint put '$date=strftime($updated, "%Y-%m-%d")' then stats1 -a count -f fbid -g date then sort -f date
+
+
+
+
+ grep SBPROPS 2|grep '^<'|sed 's/.*SBPROPS //'|mlr --opprint sort -f class then group-like
+ step   stamp                property             class
+ before 2016-09-08T13:26:42Z account_end_date     SwitchboardUserPropertyAccountEndDate
+ before 2016-09-08T13:26:42Z credit_cards         SwitchboardUserPropertyCreditCards
+ before 2016-09-08T13:26:43Z emails               SwitchboardUserPropertyEmails
+ before 2016-09-08T13:26:28Z ip_addresses         SwitchboardUserPropertyIpAddressesCP
+ before 2016-09-08T13:26:43Z name                 SwitchboardUserPropertyName
+ before 2016-09-08T13:26:43Z ncmec_reports        SwitchboardUserPropertyNcmecReports
+ before 2016-09-08T13:26:43Z phone_numbers        SwitchboardUserPropertyPhoneNumbers
+ before 2016-09-08T13:26:43Z registration_date    SwitchboardUserPropertyRegistrationDate
+ before 2016-09-08T13:26:43Z registration_ip      SwitchboardUserPropertyRegistrationIp
+ before 2016-09-08T13:26:43Z secret_conversations SwitchboardUserPropertySecretConversations
+ before 2016-09-08T13:26:35Z unified_messages     SwitchboardUserPropertyUnifiedMessagesCP
+ before 2016-09-08T13:26:43Z vanity               SwitchboardUserPropertyVanity
+
+ step  stamp                property             class                                      seconds
+ after 2016-09-08T13:26:42Z account_end_date     SwitchboardUserPropertyAccountEndDate      0.18908190727234
+ after 2016-09-08T13:26:43Z credit_cards         SwitchboardUserPropertyCreditCards         0.18282604217529
+ after 2016-09-08T13:26:43Z emails               SwitchboardUserPropertyEmails              0.29736280441284
+ after 2016-09-08T13:26:35Z ip_addresses         SwitchboardUserPropertyIpAddressesCP       6.8268001079559
+ after 2016-09-08T13:26:43Z name                 SwitchboardUserPropertyName                0.004094123840332
+ after 2016-09-08T13:26:43Z ncmec_reports        SwitchboardUserPropertyNcmecReports        0.085015058517456
+ after 2016-09-08T13:26:43Z phone_numbers        SwitchboardUserPropertyPhoneNumbers        0.005079984664917
+ after 2016-09-08T13:26:43Z registration_date    SwitchboardUserPropertyRegistrationDate    0.00026106834411621
+ after 2016-09-08T13:26:43Z registration_ip      SwitchboardUserPropertyRegistrationIp      0.002593994140625
+ after 2016-09-08T13:26:43Z secret_conversations SwitchboardUserPropertySecretConversations 0.0085608959197998
+ after 2016-09-08T13:26:42Z unified_messages     SwitchboardUserPropertyUnifiedMessagesCP   7.6265189647675
+ after 2016-09-08T13:26:43Z vanity               SwitchboardUserPropertyVanity              0.00046086311340332
+

@@ -1,0 +1,10 @@
+#!/bin/bash
+mlr "$@"
+status=$?
+if [ $status -eq 0 ]; then
+    echo "Failed to fail!"
+    exit 1
+else
+    echo "Failed as expected."
+    exit 0
+fi

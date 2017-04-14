@@ -1,0 +1,4 @@
+#!/bin/bash
+set -u
+cd $mlb
+synctool -r u58051762@home321765456.1and1-data.host pushpwd

@@ -1,0 +1,5 @@
+#!/bin/bash
+set -u -e
+cd $mlb
+rsync -r -tlzv --delete $(pwd)/ $smith:/home/kerl/local/miller-head
+

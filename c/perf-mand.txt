@@ -1,0 +1,31 @@
+$ time ruby mand.rb > /dev/null
+real 0m1.731s
+user 0m1.717s
+sys  0m0.012s
+
+$ time python mand.py > /dev/null
+real 0m3.534s
+user 0m3.506s
+sys  0m0.023s
+
+$ time a.out > /dev/null
+real 0m0.044s
+user 0m0.039s
+sys  0m0.003s
+
+# with old hashmap-backed bind-stack
+$ time mlr -n put -q -f mand.mlr  > /dev/null
+real 0m7.258s
+user 0m7.237s
+sys  0m0.012s
+
+# with new index-precomputed local-stack (clearless)
+$ time mlr -n put -q -f ~/mand.mlr  > /dev/null
+real 0m2.314s
+user 0m2.303s
+sys  0m0.007s
+
+time ruby ~/mand.rb > /dev/null
+time python ~/mand.py > /dev/null
+time ~/a.out > /dev/null
+time mlr -n put -q -f ~/mand.mlr  > /dev/null

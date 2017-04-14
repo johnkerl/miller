@@ -1,0 +1,4 @@
+#!/bin/bash
+
+export CC='clang -fsanitize=address'
+make -ef Makefile.no-autoconfig "$@"

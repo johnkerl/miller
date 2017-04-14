@@ -1,0 +1,58 @@
+mlr --ijson --oxtab cat ./reg_test/input/arrays.json
+Command: ./reg_test/../../c/mlrg --ijson --oxtab cat ./reg_test/input/arrays.json
+9 bytes in 3 blocks are definitely lost in loss record 1 of 1
+   at 0x4C26B0F: malloc (in /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+   by 0x40D8BF: mlr_malloc_or_die (mlrutil.c:89)
+   by 0x40DEE6: mlr_paste_2_strings (mlrutil.c:254)
+   by 0x4381FD: validate_millerable_object (mlr_json_adapter.c:88)
+   by 0x438025: reference_json_objects_as_lrecs (mlr_json_adapter.c:33)
+   by 0x431AA7: lrec_reader_mmap_json_sof (lrec_reader_mmap_json.c:161)
+   by 0x42A3DD: do_file_chained (stream.c:174)
+   by 0x42A2AE: do_stream_chained_to_stdout (stream.c:143)
+   by 0x429E31: do_stream_chained (stream.c:34)
+   by 0x402593: main (mlrmain.c:32)
+
+mlr --ijson --oxtab --json-map-arrays-on-input cat ./reg_test/input/arrays.json
+Command: ./reg_test/../../c/mlrg --ijson --oxtab --json-map-arrays-on-input cat ./reg_test/input/arrays.json
+9 bytes in 3 blocks are definitely lost in loss record 1 of 1
+   at 0x4C26B0F: malloc (in /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+   by 0x40D8BF: mlr_malloc_or_die (mlrutil.c:89)
+   by 0x40DEE6: mlr_paste_2_strings (mlrutil.c:254)
+   by 0x4381FD: validate_millerable_object (mlr_json_adapter.c:88)
+   by 0x438025: reference_json_objects_as_lrecs (mlr_json_adapter.c:33)
+   by 0x431AA7: lrec_reader_mmap_json_sof (lrec_reader_mmap_json.c:161)
+   by 0x42A3DD: do_file_chained (stream.c:174)
+   by 0x42A2AE: do_stream_chained_to_stdout (stream.c:143)
+   by 0x429E31: do_stream_chained (stream.c:34)
+   by 0x402593: main (mlrmain.c:32)
+
+mlr --ijson --oxtab --json-skip-arrays-on-input cat ./reg_test/input/arrays.json
+Command: ./reg_test/../../c/mlrg --ijson --oxtab --json-skip-arrays-on-input cat ./reg_test/input/arrays.json
+4 bytes in 1 blocks are definitely lost in loss record 1 of 2
+   at 0x4C26B0F: malloc (in /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+   by 0x40D8BF: mlr_malloc_or_die (mlrutil.c:89)
+   by 0x40DEE6: mlr_paste_2_strings (mlrutil.c:254)
+   by 0x438353: populate_from_nested_object (mlr_json_adapter.c:132)
+   by 0x438192: validate_millerable_object (mlr_json_adapter.c:73)
+   by 0x438025: reference_json_objects_as_lrecs (mlr_json_adapter.c:33)
+   by 0x431AA7: lrec_reader_mmap_json_sof (lrec_reader_mmap_json.c:161)
+   by 0x42A3DD: do_file_chained (stream.c:174)
+   by 0x42A2AE: do_stream_chained_to_stdout (stream.c:143)
+   by 0x429E31: do_stream_chained (stream.c:34)
+   by 0x402593: main (mlrmain.c:32)
+
+mlr --ijson --oxtab --json-skip-arrays-on-input cat ./reg_test/input/arrays.json
+Command: ./reg_test/../../c/mlrg --ijson --oxtab --json-skip-arrays-on-input cat ./reg_test/input/arrays.json
+6 bytes in 1 blocks are definitely lost in loss record 2 of 2
+   at 0x4C26B0F: malloc (in /usr/local/fbcode/gcc-5-glibc-2.23/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+   by 0x40D8BF: mlr_malloc_or_die (mlrutil.c:89)
+   by 0x40DEE6: mlr_paste_2_strings (mlrutil.c:254)
+   by 0x438353: populate_from_nested_object (mlr_json_adapter.c:132)
+   by 0x438432: populate_from_nested_object (mlr_json_adapter.c:150)
+   by 0x438192: validate_millerable_object (mlr_json_adapter.c:73)
+   by 0x438025: reference_json_objects_as_lrecs (mlr_json_adapter.c:33)
+   by 0x431AA7: lrec_reader_mmap_json_sof (lrec_reader_mmap_json.c:161)
+   by 0x42A3DD: do_file_chained (stream.c:174)
+   by 0x42A2AE: do_stream_chained_to_stdout (stream.c:143)
+   by 0x429E31: do_stream_chained (stream.c:34)
+   by 0x402593: main (mlrmain.c:32)

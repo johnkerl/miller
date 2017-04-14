@@ -1,0 +1,37 @@
+
+func mymapsum(map a, map b): map {
+  for (k in b) {
+    if (!haskey(a, k)) {
+      a[k] = b[k];
+    }
+  }
+  return a;
+}
+
+func mymapdiff(map a, map b): map {
+  for (k in b) {
+    if (haskey(a, k)) {
+      unset a[k]
+    }
+  }
+  return a;
+}
+
+func myleafcount(map m) : int {
+  int sum = 0;
+  for (k in m) {
+    sum += 1;
+    if (ismap(m[k])) {
+      sum += leafcount(m[k])
+    }
+  }
+  return sum;
+}
+
+func mylength(map m) : int {
+  int sum = 0;
+  for (k in m) {
+    sum += 1;
+  }
+  return sum;
+}
