@@ -939,6 +939,49 @@ rval_evaluator_t* rval_evaluator_alloc_from_x_x_func(mv_unary_func_t* pfunc, rva
 }
 
 // ----------------------------------------------------------------
+typedef struct _rval_evaluator_x_xi_state_t {
+	mv_binary_func_t* pfunc;
+	rval_evaluator_t* parg1;
+	rval_evaluator_t* parg2;
+} rval_evaluator_x_xi_state_t;
+
+static mv_t rval_evaluator_x_xi_func(void* pvstate, variables_t* pvars) {
+	rval_evaluator_x_xi_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
+	mv_t val2 = pstate->parg2->pprocess_func(pstate->parg2->pvstate, pvars);
+
+	if (val2.type != MT_INT) {
+		return mv_error();
+	}
+
+	// nullity of 1st argument handled by full disposition matrices
+	return pstate->pfunc(&val1, &val2);
+}
+static void rval_evaluator_x_xi_free(rval_evaluator_t* pevaluator) {
+	rval_evaluator_x_xi_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	pstate->parg2->pfree_func(pstate->parg2);
+	free(pstate);
+	free(pevaluator);
+}
+
+rval_evaluator_t* rval_evaluator_alloc_from_x_xi_func(mv_binary_func_t* pfunc,
+	rval_evaluator_t* parg1, rval_evaluator_t* parg2)
+{
+	rval_evaluator_x_xi_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_x_xi_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+	pstate->parg2 = parg2;
+
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pprocess_func = rval_evaluator_x_xi_func;
+	pevaluator->pfree_func = rval_evaluator_x_xi_free;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
 typedef struct _rval_evaluator_x_ns_state_t {
 	mv_binary_func_t* pfunc;
 	rval_evaluator_t* parg1;

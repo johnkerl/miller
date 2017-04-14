@@ -327,8 +327,34 @@ static mv_unary_func_t* sec2gmt_dispositions[MT_DIM] = {
 	/*FLOAT*/  sec2gmt_s_n,
 	/*BOOL*/   _0,
 };
-
 mv_t s_x_sec2gmt_func(mv_t* pval1) { return (sec2gmt_dispositions[pval1->type])(pval1); }
+
+// Precondition: val2 is already asserted int
+static mv_t sec2gmt_s_ni(mv_t* pa, mv_t* pb) {
+	switch (pb->u.intv) {
+	case 1: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_1); break;
+	case 2: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_2); break;
+	case 3: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_3); break;
+	case 4: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_4); break;
+	case 5: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_5); break;
+	case 6: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_6); break;
+	case 7: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_7); break;
+	case 8: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_8); break;
+	case 9: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_9); break;
+	default: return mv_error();
+	}
+}
+
+static mv_binary_func_t* sec2gmtn_dispositions[MT_DIM] = {
+	/*ERROR*/  _err,
+	/*ABSENT*/ _a,
+	/*EMPTY*/  _emt,
+	/*STRING*/ _1,
+	/*INT*/    sec2gmt_s_ni,
+	/*FLOAT*/  sec2gmt_s_ni,
+	/*BOOL*/   _1,
+};
+mv_t s_xi_sec2gmt_func(mv_t* pval1, mv_t* pval2) { return (sec2gmtn_dispositions[pval1->type])(pval1, pval2); }
 
 // ----------------------------------------------------------------
 static mv_t sec2gmtdate_s_n(mv_t* pa) { return time_string_from_seconds(pa, ISO8601_DATE_FORMAT); }

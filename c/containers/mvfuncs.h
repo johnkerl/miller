@@ -185,6 +185,7 @@ mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t
 
 // ----------------------------------------------------------------
 mv_t s_x_sec2gmt_func(mv_t* pval1);
+mv_t s_xi_sec2gmt_func(mv_t* pval1, mv_t* pval2);
 mv_t s_x_sec2gmtdate_func(mv_t* pval1);
 mv_t i_s_gmt2sec_func(mv_t* pval1);
 mv_t s_ns_strftime_func(mv_t* pval1, mv_t* pval2);

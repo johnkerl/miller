@@ -1829,6 +1829,9 @@ run_mlr --opprint put '       !($x > 0.5) {$z = "flag"}' $indir/abixy
 announce DSL DATETIME FUNCTIONS
 
 run_mlr --csvlite put '$gmt = sec2gmt($sec)' $indir/sec2gmt
+run_mlr --csvlite put '$gmt = sec2gmt($sec,1)' $indir/sec2gmt
+run_mlr --csvlite put '$gmt = sec2gmt($sec,3)' $indir/sec2gmt
+run_mlr --csvlite put '$gmt = sec2gmt($sec,6)' $indir/sec2gmt
 run_mlr --csvlite put '$sec = gmt2sec($gmt)' $indir/gmt2sec
 run_mlr --csvlite put '$gmtdate = sec2gmtdate($sec)' $indir/sec2gmt
 

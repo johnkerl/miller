@@ -448,7 +448,7 @@ static void fmgr_check_arity_with_report(fmgr_t* pfmgr, char* function_name,
 	}
 	if (result == ARITY_CHECK_FAIL) {
 		// More flexibly, I'd have a list of arities supported by each
-		// function. But this is overkill: there are unary and binary minus,
+		// function. But this is overkill: there are unary and binary minus and sec2gmt,
 		// and everything else has a single arity.
 		if (streq(function_name, "-") || streq(function_name, "sec2gmt")) {
 			fprintf(stderr, "%s: Function named \"%s\" takes one argument or two; got %d.\n",
@@ -1166,7 +1166,7 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "roundm")) { return rval_evaluator_alloc_from_x_xx_func(x_xx_roundm_func,     parg1, parg2);
 	} else if (streq(fnnm, "fmtnum")) { return rval_evaluator_alloc_from_s_xs_func(s_xs_fmtnum_func,     parg1, parg2);
 	} else if (streq(fnnm, "urandint")) { return rval_evaluator_alloc_from_i_ii_func(i_ii_urandint_func, parg1, parg2);
-	} else if (streq(fnnm, "sec2gmt"))  { return rval_evaluator_alloc_from_x_i_func(s_xi_sec2gmt_func,   parg1, parg2);
+	} else if (streq(fnnm, "sec2gmt"))  { return rval_evaluator_alloc_from_x_xi_func(s_xi_sec2gmt_func,  parg1, parg2);
 	} else if (streq(fnnm, "&"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_band_func,         parg1, parg2);
 	} else if (streq(fnnm, "|"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_bor_func,          parg1, parg2);
 	} else if (streq(fnnm, "^"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_bxor_func,         parg1, parg2);

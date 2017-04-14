@@ -137,7 +137,7 @@ OPTIONS
 	cbrt ceil cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p logifit
 	madd max mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh
 	urand urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec
-	hms2sec sec2dhms sec2gmt sec2gmtdate sec2hms strftime strptime systime
+	hms2sec sec2dhms sec2gmt sec2gmt sec2gmtdate sec2hms strftime strptime systime
 	is_absent is_bool is_boolean is_empty is_empty_map is_float is_int is_map
 	is_nonempty_map is_not_empty is_not_map is_not_null is_null is_numeric
 	is_present is_string asserting_absent asserting_bool asserting_boolean
@@ -1431,6 +1431,9 @@ FUNCTIONS FOR FILTER/PUT
        (class=time #args=1): Formats seconds since epoch (integer part)
        as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
        Leaves non-numbers as-is.
+       sec2gmt (class=time #args=2): Formats seconds since epoch as GMT timestamp with n
+       decimal places for seconds, e.g. sec2gmt(1440768801.7,1) = "2015-08-28T13:33:21.7Z".
+       Leaves non-numbers as-is.
 
    sec2gmtdate
        (class=time #args=1): Formats seconds since epoch (integer part)
@@ -1993,4 +1996,4 @@ SEE ALSO
 
 
 
-				  2017-04-12			     MILLER(1)
+				  2017-04-14			     MILLER(1)

@@ -15,12 +15,6 @@ BUGFIXES
 airable:
 ! function-doc needs work -- *not* autogen :(
 
-o i_nn -> b_nn
-
-? sec2gmtn(x, n)?
-  - func as well as verb
-  - i_... name, boo
-
 ! cover page needs to start with *one* nice example. then details later on.
 
 ! cover-page simplify
@@ -30,6 +24,7 @@ o i_nn -> b_nn
     > --json-skip-arrays-on-input
     > --json-arrays-as-maps
   - mlr fraction verb
+  - sec2gmt(x, n): verb & function
   - correct JSON escaping on output
   - feature-counting script
   - fractional seconds in strptime (%S) and strftime (latter %nS)
