@@ -1,8 +1,6 @@
 ================================================================
 BUGFIXES
 
-! right-join bug !!
-! json join
 ! neaten vg.out !
 ! synctool -4/-6
 
@@ -13,10 +11,11 @@ BUGFIXES
 
 ----------------------------------------------------------------
 airable:
+
+* tee $*
+
 ! function-doc needs work -- *not* autogen :(
-
 ! cover page needs to start with *one* nice example. then details later on.
-
 ! cover-page simplify
 
 * start a draft-5.1.0-relnotes.md
@@ -24,7 +23,8 @@ airable:
     > --json-skip-arrays-on-input
     > --json-arrays-as-maps
   - mlr fraction verb
-  - sec2gmt(x, n): verb & function
+  - join bug
+  - strptime & strftime w/ fracsec; sec2gmt(x, n) verb & function
   - correct JSON escaping on output
   - feature-counting script
   - fractional seconds in strptime (%S) and strftime (latter %nS)
@@ -34,8 +34,6 @@ airable:
   - antimode
   - unsorted join by default, with mem caveat. & update dox. incl sjax req#
   - mlr nest --evar , -f items
-
-* ship ./configure, w/ clean-target mods
 
 ----------------------------------------------------------------
 non-airable:
@@ -53,6 +51,8 @@ non-airable:
     - https://sourceforge.net/p/msys2/mailman/message/33756712/
 
 * rh/fedora/centos
+
+* ship ./configure, w/ clean-target mods
 
 ----------------------------------------------------------------
 other:
