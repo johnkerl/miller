@@ -554,6 +554,25 @@ run_mlr seqgen --start 5 --stop 5 --step -1 -f d
 run_mlr --from $indir/abixy cat then seqgen --start 1 --stop 5
 
 # ----------------------------------------------------------------
+announce FRACTION
+
+run_mlr fraction -f x,y              $indir/abixy-het
+run_mlr fraction -f x,y -g a         $indir/abixy-het
+run_mlr fraction -f x,y -g a,b       $indir/abixy-het
+
+run_mlr fraction -f x,y        -p    $indir/abixy-het
+run_mlr fraction -f x,y -g a   -p    $indir/abixy-het
+run_mlr fraction -f x,y -g a,b -p    $indir/abixy-het
+
+run_mlr fraction -f x,y           -c $indir/abixy-het
+run_mlr fraction -f x,y -g a      -c $indir/abixy-het
+run_mlr fraction -f x,y -g a,b    -c $indir/abixy-het
+
+run_mlr fraction -f x,y        -p -c $indir/abixy-het
+run_mlr fraction -f x,y -g a   -p -c $indir/abixy-het
+run_mlr fraction -f x,y -g a,b -p -c $indir/abixy-het
+
+# ----------------------------------------------------------------
 announce STATS
 
 run_mlr --opprint stats1    -a mean,sum,count,min,max,antimode,mode     -f i,x,y $indir/abixy
