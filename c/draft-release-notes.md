@@ -27,7 +27,7 @@ keystroke-savers for <tt>strptime</tt> and <tt>strftime</tt>, are similarly modi
 [**sec2gmt**](http://johnkerl.org/miller-releases/miller-5.1.0/doc/reference-verbs.html#sec2gmt) verb.
 This resolves https://github.com/johnkerl/miller/issues/125.
 
-* A few nearly-standalone programs -- which do not have anything to do with record streams -- are packed with Miller. <tt>mlr aux-list</tt>. xxx doc-ent.
+* A few nearly-standalone programs -- which do not have anything to do with record streams -- are packaged within the Miller. (For example, hex-dump, unhex, and show-line-endings commands.) These are described [**here**](http://johnkerl.org/miller-releases/miller-5.1.0/doc/reference.html#Auxiliary_commands).
 
 * The [**stats1**](http://johnkerl.org/miller-releases/miller-5.1.0/doc/reference-verbs.html#stats1)
 and [**merge-fields**](http://johnkerl.org/miller-releases/miller-5.1.0/doc/reference-verbs.html#merge-fields)
