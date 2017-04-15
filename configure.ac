@@ -31,7 +31,7 @@ AC_CONFIG_FILES([Makefile
 		c/mapping/Makefile
 		c/output/Makefile
 		c/stream/Makefile
-		c/aux/Makefile
+		c/auxents/Makefile
 		c/unit_test/Makefile
 		c/reg_test/Makefile
 		c/reg_test/expected/Makefile

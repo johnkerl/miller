@@ -1,4 +1,4 @@
-SUBDIRS=		lib cli stream input dsl mapping containers output parsing aux experimental . unit_test reg_test
+SUBDIRS=		lib cli stream input dsl mapping containers output parsing auxents experimental . unit_test reg_test
 
 AM_CPPFLAGS=		-I${srcdir}
 AM_CFLAGS=		-Wall -std=gnu99
@@ -18,7 +18,7 @@ mlr_LDADD=		\
 			output/liboutput.la \
 			lib/libmlr.la \
 			parsing/libdsl.la \
-			aux/libaux.la \
+			auxents/libauxents.la \
 			-lm
 
 # Other executable variants

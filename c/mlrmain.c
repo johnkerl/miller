@@ -7,7 +7,7 @@
 #include "cli/mlrcli.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
-#include "aux/aux_entries.h"
+#include "auxents/aux_entries.h"
 #include "input/lrec_readers.h"
 #include "mapping/mappers.h"
 #include "output/lrec_writers.h"
