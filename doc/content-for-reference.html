@@ -325,6 +325,25 @@ pipeline stage.
 
 <!-- ================================================================ -->
 </div>
+<h1>Auxiliary commands</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_auxents');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_auxents" style="display: block">
+
+<p/> There are a few nearly-standalone programs which have nothing to do with the rest of Miller, do not
+participate in record streams, and do not deal with file formats. They might as well be little standalone executables
+but they&rsquo;re delivered within the main Miller executable for convenience.
+
+POKI_RUN_COMMAND{{mlr aux-list}}HERE
+
+<p/> Examples:
+
+POKI_RUN_COMMAND{{echo 'Hello, world!' | mlr hex}}HERE
+POKI_RUN_COMMAND{{echo 'Hello, world!' | mlr hex -r}}HERE
+POKI_RUN_COMMAND{{echo 'Hello, world!' | mlr hex -r | mlr unhex}}HERE
+POKI_RUN_COMMAND{{echo 'Hello, world!' | mlr lecat --mono}}HERE
+
+<!-- ================================================================ -->
+</div>
 <h1>Data types</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_data_types');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_data_types" style="display: block">

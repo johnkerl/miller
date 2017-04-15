@@ -197,6 +197,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Data_transformations_(verbs)">Data transformations (verbs)</a><br/>
 &bull;&nbsp;<a href="#Expression_language_for_filter_and_put">Expression language for filter and put</a><br/>
 &bull;&nbsp;<a href="#then-chaining">then-chaining</a><br/>
+&bull;&nbsp;<a href="#Auxiliary_commands">Auxiliary commands</a><br/>
 &bull;&nbsp;<a href="#Data_types">Data types</a><br/>
 &bull;&nbsp;<a href="#Null_data:_empty_and_absent">Null data: empty and absent</a><br/>
 &bull;&nbsp;<a href="#String_literals">String literals</a><br/>
@@ -625,6 +626,67 @@ assured you get the same results either way.
 <p/>The other reason to use then-chaining is for simplicity: you don&rsquo;t
 have re-type formatting flags (e.g. <tt>--csv --fs tab</tt>) at every
 pipeline stage.
+
+<!-- ================================================================ -->
+</div>
+<a id="Auxiliary_commands"/><h1>Auxiliary commands</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_auxents');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_auxents" style="display: block">
+
+<p/> There are a few nearly-standalone programs which have nothing to do with the rest of Miller, do not
+participate in record streams, and do not deal with file formats. They might as well be little standalone executables
+but they&rsquo;re delivered within the main Miller executable for convenience.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr aux-list
+Available subcommands:
+  aux-list
+  lecat
+  termcvt
+  hex
+  unhex
+  netbsd-strptime
+For more information, please invoke mlr {subcommand} --help
+</pre>
+</div>
+<p/>
+
+<p/> Examples:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'Hello, world!' | mlr hex
+00000000: 48 65 6c 6c  6f 2c 20 77  6f 72 6c 64  21 0a       |Hello, world!.|
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'Hello, world!' | mlr hex -r
+48 65 6c 6c  6f 2c 20 77  6f 72 6c 64  21 0a
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'Hello, world!' | mlr hex -r | mlr unhex
+Hello, world!
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'Hello, world!' | mlr lecat --mono
+Hello, world![LF]
+</pre>
+</div>
+<p/>
 
 <!-- ================================================================ -->
 </div>
