@@ -1,7 +1,7 @@
 ================================================================
 BUGFIXES
 
-! synctool -4/-6
+:D
 
 ================================================================
 5.2.0 TO-DO:
@@ -12,27 +12,27 @@ airable:
 * --c2j et al.: not csvlite but csv
 
 * tee out arbitrary map w/ print >"xxx", $a, $b
-  - variadic map_except)
+  - variadic map_except
   - https://github.com/johnkerl/miller/issues/137
 
 ! function-doc needs work -- *not* autogen :(
 ! cover page needs to start with *one* nice example. then details later on.
 ! cover-page simplify
 
+* ut join w/ left/right prefixes
+
+* synctool -4/-6. also alias/flag handling.
+
 ----------------------------------------------------------------
 non-airable:
-! pcreposix.dll sadpanda:
-  https://github.com/universal-ctags/ctags/issues/505
+
+* pcreposix.dll sadpanda
 
 ! write-temp-file abend on negfd etc
 
-! msys2 / pacman -S / etc @ appveyor
+! ./configure syntax for -D MLR_ON_MSYS2 & -lpcreposix -- ?
 
-! patchless windows build
-  o define MLR_ON_MSYS2
-  o -lpcreposix @ Makefile.am
-  o pcreposix DLLs x 2 @ runtime -- ship zip & doc, or fix somehow
-    - https://sourceforge.net/p/msys2/mailman/message/33756712/
+! appveyor set up msys2 / pacman -S / etc
 
 * rh/fedora/centos
 
@@ -57,25 +57,7 @@ MSYS2 NOTES
 * https://github.com/Alexpux/MINGW-packages
 * https://github.com/Alexpux/MINGW-packages/wiki
 
-* pacman -Syu
-* pacman -Su
-* pacman -S base-devel
-? pacman -S msys2-devel ?
-* pacman -S mingw-w64-x86_64-toolchain
-? pacman -S libc6-dev ? (for sys/mman.h)
-
-? mingw-w64-mman ?
-? mingw-w64-x86_64-pcre
-? pacman -S msys2-runtime ?
-
-* pacman -S vim
-* run \msys64\mingw64.exe
-* in that shell: gcc hello.c
-
-* see also: https://msdn.microsoft.com/en-us/commandline/wsl/about
-
-? https://github.com/jonls/redshift/issues/171
-./configure --enable-wingdi --disable-shared --disable-geoclue2 --disable-nls
+* see also bash on windows: https://msdn.microsoft.com/en-us/commandline/wsl/about
 
 * https://help.github.com/articles/dealing-with-line-endings/#platform-windows
 
@@ -133,9 +115,10 @@ MAPVAR CHECKLIST:
     ? tail -g
     - uniq -g
 
-* other stats:
-  - stats1 for strings: min/max/percentiles. note count/mode already work.
-    -> how to handle mixed string/number columns ...
+* stats1 for strings: min/max/percentiles. note count/mode already work.
+  -> how to handle mixed string/number columns ...
+
+? weighted stats?
 
 * xxxes
 
@@ -209,16 +192,8 @@ COMPARES:
 
 !! coroutines: line-oriented; operate on field(s); r/w popen
 
-* aux-entries doc @ mlh, mld
-
 * json_encode / json_decode functions? (map->string and string->map)
   - array handling ...
-
-* strptime/strftime:
-  - strptime w/ fractional seconds. maybe %OS?
-  - strftime: %OS1-%OS9?
-  - use stdlib vers w/ strpokes/hacks, or reimpl stdlib vers?
-  - 1st write a mlrlib vers?!?
 
 * option to inhibit dquot of int map keys on dump
   ! fix for srec keys !
@@ -305,21 +280,11 @@ SYNTAX ERROR IMPROVEMENT:
 ? double-quote-aware (non-lite) nidx & dkvp options?
 ? comma-number -- using locale?
 
-? triple-for with boundvars?
-? user-defined functions?
-? localvars w/ decl syntax?
-
-! multiple -f w/ append so linker is cat
 * MLRPATH
 
 ----------------------------------------------------------------
 ? narrative/slides doc ...
 ? stdin-then-tail-f
-
-* find a more elegant way to do no-semicolon-after-block but don't block 4.1.0
-? autodetect format by file extension -- ?
-? c-ify the rectangularize feature? unset fields; and?or? emit fields; and?or?
-* two remaining valgrinds -- both venial
 
 ? CONVFMT? IGNORECASE? MLRPATH?
 
@@ -365,21 +330,27 @@ COOKBOOK/FAQ/ETC.:
     $ mlr --csvlite stats2 -a linreg-pca  -f x,y x
     x_y_pca_m,x_y_pca_b,x_y_pca_n,x_y_pca_quality
     1.030300,0.949250,4,0.999859
+
     $ mlr --csvlite --odkvp --ofs semicolon stats2 -a linreg-pca  -f x,y x
     x_y_pca_m=1.030300;x_y_pca_b=0.949250;x_y_pca_n=4;x_y_pca_quality=0.999859
+
     $ eval $(mlr --csvlite --odkvp --ofs semicolon stats2 -a linreg-pca  -f x,y x)
+
     $ echo $x_y_pca_m
     1.030300
 
   - hold-and-fit regressor doc: 'then put' for residuals; note avoids two-pass &
     the saving of fit parameters
+
   - histo w/ min/max is effectively 2-pass (unless you have prior knowledge about the data).
     note count-distinct w/ int() func.
+
   - two-pass lin/logi reg vs. hold-and-fit.
 
   - very specific R/mysql/etc inouts
 
   - polyglottal dkvp/etc production.
+
   - very specific examples of sed/grep/etc preprocessing to structurize semi-structured data (e.g. logs)
 
   - checku.dash -> cookbook
@@ -432,32 +403,11 @@ COOKBOOK/FAQ/ETC.:
   o allows 'x = 10' in DKVP
   o allows right-justified keys in XTAB
 
-* hold-and-emit fraction?
-
-* statsn covar, ols, logistic: port material from my stats_m/sackmat_m for much of that
-
-* uni/multivariate logistic for ternary & above?
-
 ? wiki quickselect ?
 
 * hash-collision ifdef instrumentation -> maybe find a better hash function out there
 * lemon in-dir -- cf wiz note
 * gprof link with -lc on FreeBSD -- ?
-
-================================================================
-UT/REG
-* ut cat/X/cat for all X
-* ut tac/X/cat for all X
-* ut cat/X/tac for all X
-* ut tac/X/tac for all X
-* ut multi-csv I/O: include --icsvlite --odkvp and --idkvp --ocsv, as well as --csv cases
-* ut het-xtab out
-* ut modulus operator
-* ut make should-fail machinery & use it for null-key dkvp cases.
-* ut all mathlib funcs
-* ut int/float/string
-* ut roundm
-* ut join with left/right-prefix
 
 ================================================================
 DOC
@@ -498,18 +448,6 @@ https://fedoraproject.org/wiki/How_to_get_sponsored_into_the_packager_group
 https://fedoraproject.org/wiki/Package_Review_Process
 https://docs.fedoraproject.org/ro/Fedora_Draft_Documentation/0.1/html/RPM_Guide/ch11s03.html
 http://wiki.networksecuritytoolkit.org/nstwiki/index.php/HowTo_Create_A_Patch_File_For_A_RPM
-
-================================================================
-git remote add upstream https://github.com/Homebrew/homebrew
-git fetch upstream
-git rebase upstream/master
-git checkout -b miller-3.4.0
-shasum -a 256 ../mlr-3.4.0.tar.gz
-edit Library/Formula/miller.rb
-git add ...
-git commit -m 'miller 3.4.0'
-git push -u origin miller-3.4.0
-submit the pull request
 
 ----------------------------------------------------------------
 Squash commits by:
