@@ -13,11 +13,18 @@ airable:
 ! cover page needs to start with *one* nice example. then details later on.
 ! cover-page simplify
 
+* more json handling: topmost/second-topmost array, put nidx-style as with dkvp.
+
 * synctool -4/-6. also alias/flag handling.
+
+* string stats
+
+* across-all/regex x stats1 / many verbs
 
 ----------------------------------------------------------------
 non-airable:
 
+* augment msys2 notes w/ the frombelows
 * pcreposix.dll sadpanda
 
 ! write-temp-file abend on negfd etc
@@ -39,10 +46,6 @@ other:
   o maybe not now: need notion of # lines in/out which, simplest case, are 1-1,
     but in the more general case might not be.
   o coexec as well as shellout; stderr caveats x both
-
-* synctool: use "rsync -e 'ssh -4' ..."
-
-* eddelbuettel ac error <-> smith aclocal-1.15?
 
 ================================================================
 MSYS2 NOTES
