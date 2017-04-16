@@ -11,9 +11,6 @@ airable:
 
 * --c2j et al.: not csvlite but csv
 
-* tee out arbitrary map w/ print >"xxx", $a, $b
-  - https://github.com/johnkerl/miller/issues/137
-
 ! function-doc needs work -- *not* autogen :(
 ! cover page needs to start with *one* nice example. then details later on.
 ! cover-page simplify

@@ -1970,7 +1970,11 @@ tee: prints the current record to specified file.
   You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
   etc., to control the format of the output. See also mlr -h.
 
+  emit with redirect and tee with redirect are identical, except tee can only
+  output $*.
+
   Example: mlr --from f.dat put 'tee &gt;  "/tmp/data-".$a, $*'
+  Example: mlr --from f.dat put 'tee &gt;  "/tmp/data-".$a, mapexcept($*, "a")'
   Example: mlr --from f.dat put 'tee &gt;&gt; "/tmp/data-".$a.$b, $*'
   Example: mlr --from f.dat put 'tee &gt;  stderr, $*'
   Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\]", $*'
@@ -3003,7 +3007,11 @@ tee: prints the current record to specified file.
   You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
   etc., to control the format of the output. See also mlr -h.
 
+  emit with redirect and tee with redirect are identical, except tee can only
+  output $*.
+
   Example: mlr --from f.dat put 'tee &gt;  "/tmp/data-".$a, $*'
+  Example: mlr --from f.dat put 'tee &gt;  "/tmp/data-".$a, mapexcept($*, "a")'
   Example: mlr --from f.dat put 'tee &gt;&gt; "/tmp/data-".$a.$b, $*'
   Example: mlr --from f.dat put 'tee &gt;  stderr, $*'
   Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\]", $*'
