@@ -312,6 +312,9 @@ boxed_xval_t variadic_mapsum_xfunc(
 boxed_xval_t variadic_mapdiff_xfunc(
 	boxed_xval_t* pbxvals, int nxvals);
 
+boxed_xval_t variadic_mapexcept_xfunc(
+	boxed_xval_t* pbxvals, int nxvals);
+
 boxed_xval_t m_ss_splitnv_xfunc(
 	boxed_xval_t* pstringval,
 	boxed_xval_t* psepval);

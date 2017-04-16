@@ -391,8 +391,10 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_MAPS, "length",        1,0, "Counts number of top-level entries in hashmap. Scalars have length 1."},
 	{FUNC_CLASS_MAPS, "mapdiff",       0,1, "With 0 args, returns empty map. With 1 arg, returns copy of arg.\n"
 		"With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed."},
+	{FUNC_CLASS_MAPS, "mapexcept",     0,1, "With 1 args, returns argument map. With >= 2 args, returns a map with\n"
+		"keys from remaining arguments unset. E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'."},
 	{FUNC_CLASS_MAPS, "mapsum",        0,1, "With 0 args, returns empty map. With >= 1 arg, returns a map with\n"
-		"key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'."},
+		"key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'."},
 	{FUNC_CLASS_MAPS, "splitkv",       3,0, "Splits string by separators into map with type inference.\n"
 		"E.g. 'splitkv(\"a=1,b=2,c=3\", \"=\", \",\")' gives '{\"a\" : 1, \"b\" : 2, \"c\" : 3}'."},
 	{FUNC_CLASS_MAPS, "splitkvx",      3,0, "Splits string by separators into map without type inference (keys and\n"
@@ -1279,6 +1281,9 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(
 			pfmgr, type_inferencing, context_flags);
 	} else if (streq(function_name, "mapdiff")) {
 		return rxval_evaluator_alloc_from_variadic_func(variadic_mapdiff_xfunc, parg_nodes,
+			pfmgr, type_inferencing, context_flags);
+	} else if (streq(function_name, "mapexcept")) {
+		return rxval_evaluator_alloc_from_variadic_func(variadic_mapexcept_xfunc, parg_nodes,
 			pfmgr, type_inferencing, context_flags);
 	} else {
 		return NULL;

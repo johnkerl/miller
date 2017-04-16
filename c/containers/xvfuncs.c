@@ -159,6 +159,46 @@ boxed_xval_t variadic_mapdiff_xfunc(boxed_xval_t* pbxvals, int nxvals) {
 }
 
 // ----------------------------------------------------------------
+boxed_xval_t variadic_mapexcept_xfunc(
+	boxed_xval_t* pbxvals,
+	int nxvals)
+{
+	mlhmmv_xvalue_t except = mlhmmv_xvalue_alloc_empty_map();
+	if (nxvals == 0) {
+		return box_ephemeral_xval(except);
+	}
+	// xxx to-do optmization: transfer arg 1 if it's ephemeral
+
+	// xxx methodize
+	int i = 0;
+	if (!pbxvals[i].xval.is_terminal) {
+		mlhmmv_level_t* plevel = pbxvals[i].xval.pnext_level;
+		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
+			// xxx do refs/copies correctly
+			mlhmmv_xvalue_t xval_copy = mlhmmv_xvalue_copy(&pe->level_xvalue);
+			sllmve_t e = (sllmve_t) { .value = pe->level_key, .free_flags = 0, .pnext = NULL };
+			mlhmmv_level_put_xvalue(except.pnext_level, &e, &xval_copy);
+		}
+		if (pbxvals[i].is_ephemeral)
+			mlhmmv_xvalue_free(&pbxvals[i].xval);
+	}
+
+	for (i = 1; i < nxvals; i++) {
+		if (!pbxvals[i].xval.is_terminal) {
+			mlhmmv_level_t* plevel = pbxvals[i].xval.pnext_level;
+			for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
+				sllmve_t e = (sllmve_t) { .value = pe->level_key, .free_flags = 0, .pnext = NULL };
+				mlhmmv_level_remove(except.pnext_level, &e);
+			}
+		}
+		if (pbxvals[i].is_ephemeral)
+			mlhmmv_xvalue_free(&pbxvals[i].xval);
+	}
+
+	return box_ephemeral_xval(except);
+}
+
+// ----------------------------------------------------------------
 // Precondition: the caller has ensured that both arguments are string-valued terminals.
 boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval) {
 	mlhmmv_xvalue_t map = mlhmmv_xvalue_alloc_empty_map();

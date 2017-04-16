@@ -39,9 +39,4 @@ vee=
 # ----------------------------------------------------------------
 announce
 
-run_mlr cat $indir/joina.dkvp
-run_mlr cat $indir/joinb.dkvp
-
-run_mlr join -l l -r r -j j -f $indir/joina.dkvp $indir/joinb.dkvp
-run_mlr join -l l      -j r -f $indir/joina.dkvp $indir/joinb.dkvp
-run_mlr join      -r r -j l -f $indir/joina.dkvp $indir/joinb.dkvp
+run_mlr --from $indir/abixy put 'dump mapexcept($*, "a")'
