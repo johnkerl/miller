@@ -1682,6 +1682,97 @@ aye=bee,enn=emm
 aaa=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
 aaa=hat,bbb=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 
+mlr --idkvp --oxtab join --lp left_ --rp right_ -j i -f ./reg_test/input/abixy-het ./reg_test/input/abixy-het
+i       1
+left_a  pan
+left_b  pan
+left_x  0.3467901443380824
+left_y  0.7268028627434533
+right_a pan
+right_b pan
+right_x 0.3467901443380824
+right_y 0.7268028627434533
+
+i       2
+left_a  eks
+left_b  pan
+left_x  0.7586799647899636
+left_y  0.5221511083334797
+right_a eks
+right_b pan
+right_x 0.7586799647899636
+right_y 0.5221511083334797
+
+i         3
+left_aaa  wye
+left_b    wye
+left_x    0.20460330576630303
+left_y    0.33831852551664776
+right_aaa wye
+right_b   wye
+right_x   0.20460330576630303
+right_y   0.33831852551664776
+
+i         4
+left_a    eks
+left_bbb  wye
+left_x    0.38139939387114097
+left_y    0.13418874328430463
+right_a   eks
+right_bbb wye
+right_x   0.38139939387114097
+right_y   0.13418874328430463
+
+i         5
+left_a    wye
+left_b    pan
+left_xxx  0.5732889198020006
+left_y    0.8636244699032729
+right_a   wye
+right_b   pan
+right_xxx 0.5732889198020006
+right_y   0.8636244699032729
+
+i       6
+left_a  zee
+left_b  pan
+left_x  0.5271261600918548
+left_y  0.49322128674835697
+right_a zee
+right_b pan
+right_x 0.5271261600918548
+right_y 0.49322128674835697
+
+i         8
+left_a    zee
+left_b    wye
+left_x    0.5985540091064224
+left_yyy  0.976181385699006
+right_a   zee
+right_b   wye
+right_x   0.5985540091064224
+right_yyy 0.976181385699006
+
+i         9
+left_aaa  hat
+left_bbb  wye
+left_x    0.03144187646093577
+left_y    0.7495507603507059
+right_aaa hat
+right_bbb wye
+right_x   0.03144187646093577
+right_y   0.7495507603507059
+
+i       10
+left_a  pan
+left_b  wye
+left_x  0.5026260055412137
+left_y  0.9526183602969864
+right_a pan
+right_b wye
+right_x 0.5026260055412137
+right_y 0.9526183602969864
+
 mlr join -s -l l -r r -j j -f ./reg_test/input/het-join-left ./reg_test/input/het-join-right-r1
 j=1,b=11
 j=1,b=12

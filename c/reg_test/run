@@ -392,6 +392,8 @@ run_mlr --odkvp join -j a -f $indir/abixy-het     $indir/join-het.dkvp
 run_mlr --odkvp join --np --ul --ur -j a -f $indir/join-het.dkvp $indir/abixy-het
 run_mlr --odkvp join --np --ul --ur -j a -f $indir/abixy-het     $indir/join-het.dkvp
 
+run_mlr --idkvp --oxtab join --lp left_ --rp right_ -j i -f $indir/abixy-het $indir/abixy-het
+
 for sorted_flag in "-s" ""; do
   for pairing_flags in "" "--np --ul" "--np --ur"; do
     for i in 1 2 3 4 5 6; do

@@ -9,13 +9,9 @@ BUGFIXES
 ----------------------------------------------------------------
 airable:
 
-* --c2j et al.: not csvlite but csv
-
 ! function-doc needs work -- *not* autogen :(
 ! cover page needs to start with *one* nice example. then details later on.
 ! cover-page simplify
-
-* ut join w/ left/right prefixes
 
 * synctool -4/-6. also alias/flag handling.
 
