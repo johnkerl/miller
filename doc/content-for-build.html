@@ -118,6 +118,108 @@ modern Linux/BSD-like systems: I&rsquo;m aware of successful use with
 Yosemite), and FreeBSD.
 
 </div>
+<h1>Windows (beta)</h1>
+
+<p/>Status as of 2017-04-15: Miller is built on Windows using MSYS2: <a
+href="http://www.msys2.org/">http://www.msys2.org/</a>.  You can install MSYS2
+and build Miller from its source code within MSYS2, and then you can use the
+binary from outside MSYS2.  You can also use a precompiled binary.
+
+<h2>Precompiled binaries</h2>
+
+<p/>Miller releases from <a
+href="https://github.com/johnkerl/miller/releases/tag/v5.1.0w">5.1.0w</a>
+onward will have a precompiled Windows binary, in addition to the MacOSX, Linux
+32-bit static, and Linux 64-bit precompiled binaries as on previous releases.
+
+<p/>Important caveat: due to the issue tracked in <a
+href="https://github.com/Alexpux/MSYS2-packages/issues/872">
+https://github.com/Alexpux/MSYS2-packages/issues/872</a>, you will need to
+download three files: the <tt>mlr.exe</tt> file as well as
+<tt>libpcre-1.dll</tt> and <tt>libpcreposix-0.dll</tt>. This situation is
+unfortunate and inconvenient; I felt it worthwhile to get a Windows beta out to
+users (due to demand) while this issue is being resolved.
+
+<p/> For example:
+<tt>C:\&gt; mkdir \mbin</tt>.
+Then place
+<tt>libpcreposix-0.dll</tt>,
+<tt>libpcre-1.dll</tt>, and
+<tt>mlr.exe</tt> all into <tt>C:\mbin</tt>. Then put that into your <tt>%PATH%</tt>, e.g. with
+<tt>C:\&gt; set PATH=%PATH%;\mbin</tt>.
+
+<h2>Building from source</h2>
+
+<p/> You will first need to install MSYS2: <a href="http://www.msys2.org/">http://www.msys2.org/</a>.
+
+<p/> Then, start an MSYS2 shell, e.g. (supposing you installed MSYS2 to
+<tt>C:\msys2\</tt>) run <tt>C:\msys2\mingw64.exe</tt>.  Within the MSYS2 shell,
+you can run the following to install dependent packages:
+
+<div class=pokipanel>
+<pre>
+pacman -Syu
+pacman -Su
+pacman -S base-devel
+pacman -S msys2-devel
+pacman -S mingw-w64-x86_64-toolchain
+pacman -S mingw-w64-x86_64-pcre
+pacman -S msys2-runtime
+</pre>
+</div>
+
+<p/>There are (at present) two manual edits, not yet (as of 2017-04-15)
+automated into the configuration process.  One is to edit
+<tt>c/lib/mlr_arch.h</tt> and add <tt>#define MLR_ON_MSYS2</tt> on its own line
+right above <tt>#ifdef MLR_ON_MSYS2</tt>. The other is to edit
+<tt>c/Makefile.am</tt> and <tt>c/unit_test/Makefile.am</tt> and add a space and
+<tt>-lpcreposix</tt> after <tt>-lm</tt>.
+
+<p/> Then (still within the MSYS2 shell) proceed as above with
+<tt>autoreconf.fiv</tt>, <tt>./configure</tt>, and <tt>make</tt>.  There is a
+unit-test false-negative issue involving the semantics of the <tt>mkstemp</tt>
+library routine but a <tt>make -k</tt> in the <tt>c</tt> subdirectory has been
+producing a <tt>mlr.exe</tt> for me.
+
+<p/> Within MSYS2 you can run <tt>mlr</tt>: simply copy it from the <tt>c</tt>
+subdirectory to your desired location somewhere within your MSYS2
+<tt>$PATH</tt>.  To run <tt>mlr</tt> outside of MSYS2, just as with precompiled
+binaries as described above, you&rsquo;ll need the two DLLs.  One way to do
+this is to augment your path:
+
+<div class=pokipanel>
+<pre>
+C:\&gt; set PATH=%PATH%;\msys64\mingw64\bin
+</pre>
+</div>
+
+<p/> Another way to do it is to copy the Miller executable and the two DLLs all to the same directory:
+
+<div class=pokipanel>
+<pre>
+C:\&gt; mkdir \mbin
+C:\&gt; copy \msys64\mingw64\bin\libpcreposix-0.dll \mbin
+C:\&gt; copy \msys64\mingw64\bin\libpcre-1.dll \mbin
+C:\&gt; copy \msys64\wherever\you\installed\miller\c\mlr.exe \mbin
+C:\&gt; set PATH=%PATH%;\mbin
+</pre>
+</div>
+
+<p/> The Windows port is still beta: please open an issue at
+<a href="https://github.com/johnkerl/miller/issues">https://github.com/johnkerl/miller/issues</a>
+if you encounter any problems.
+
+<h2>Continuous build using Appveyor</h2>
+
+Currently Miller is autorun using Travis on every build (<a
+href="https://travis-ci.org/johnkerl/miller/builds">https://travis-ci.org/johnkerl/miller/builds</a>).
+This was set up by the generous assistance of <a
+href="https://github.com/SikhNerd">SikhNerd</a> on Github, tracked in <a
+href="https://github.com/johnkerl/miller/issues/15">https://github.com/johnkerl/miller/issues/15</a>.
+There is a similar continuous-build system for Windows. As of 2017-04-15 <a
+href="https://ci.appveyor.com/project/johnkerl/miller">https://ci.appveyor.com/project/johnkerl/miller</a>
+is not correctly set up, but in the future, it will auto-build Miller commits and releases.
+
 <h1>In case of problems</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_in_case_of_problems');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_in_case_of_problems" style="display: block">

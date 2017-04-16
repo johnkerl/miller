@@ -6,36 +6,18 @@ BUGFIXES
 ================================================================
 5.2.0 TO-DO:
 
-* tee w/ key-unset feature (sjax case)
-
-----------------------------------------------------------------
-5.1.0 TO-DO:
-
 ----------------------------------------------------------------
 airable:
 
+* --c2j et al.: not csvlite but csv
+
 * tee out arbitrary map w/ print >"xxx", $a, $b
+  - variadic map_except)
+  - https://github.com/johnkerl/miller/issues/137
 
 ! function-doc needs work -- *not* autogen :(
 ! cover page needs to start with *one* nice example. then details later on.
 ! cover-page simplify
-
-* start a draft-5.1.0-relnotes.md
-  - JSON arrays:
-    > --json-skip-arrays-on-input
-    > --json-arrays-as-maps
-  - mlr fraction verb
-  - join bug
-  - strptime & strftime w/ fracsec; sec2gmt(x, n) verb & function
-  - correct JSON escaping on output
-  - feature-counting script
-  - fractional seconds in strptime (%S) and strftime (latter %nS)
-    > minor backward incompatiblity. suggest wrap with `int(...)`.
-  - mlrfunc docsect w/ h2's
-  - aux-entries
-  - antimode
-  - unsorted join by default, with mem caveat. & update dox. incl sjax req#
-  - mlr nest --evar , -f items
 
 ----------------------------------------------------------------
 non-airable:
