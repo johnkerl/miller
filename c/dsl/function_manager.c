@@ -26,7 +26,7 @@ typedef enum _arity_check_t {
 typedef struct _function_lookup_t {
 	func_class_t function_class;
 	char*        function_name;
-	int          arity;
+	int          arity; // for variadic, this is minimum arity
 	int          variadic;
 	char*        usage_string;
 } function_lookup_t;
@@ -391,7 +391,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_MAPS, "length",        1,0, "Counts number of top-level entries in hashmap. Scalars have length 1."},
 	{FUNC_CLASS_MAPS, "mapdiff",       0,1, "With 0 args, returns empty map. With 1 arg, returns copy of arg.\n"
 		"With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed."},
-	{FUNC_CLASS_MAPS, "mapexcept",     0,1, "With 1 args, returns argument map. With >= 2 args, returns a map with\n"
+	{FUNC_CLASS_MAPS, "mapexcept",     1,1, "With 1 arg, returns argument map. With >= 2 args, returns a map with\n"
 		"keys from remaining arguments unset. E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'."},
 	{FUNC_CLASS_MAPS, "mapsum",        0,1, "With 0 args, returns empty map. With >= 1 arg, returns a map with\n"
 		"key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'."},
@@ -424,6 +424,9 @@ static arity_check_t check_arity(function_lookup_t lookup_table[], char* functio
 			*parity = plookup->arity;
 			if (plookup->variadic) {
 				*pvariadic = TRUE;
+				if (user_provided_arity < plookup->arity) {
+					return ARITY_CHECK_FAIL;
+				}
 				return ARITY_CHECK_PASS;
 			}
 			if (user_provided_arity == plookup->arity) {
@@ -455,6 +458,9 @@ static void fmgr_check_arity_with_report(fmgr_t* pfmgr, char* function_name,
 		if (streq(function_name, "-") || streq(function_name, "sec2gmt")) {
 			fprintf(stderr, "%s: Function named \"%s\" takes one argument or two; got %d.\n",
 				MLR_GLOBALS.bargv0, function_name, user_provided_arity);
+		} else if (*pvariadic) {
+			fprintf(stderr, "%s: Function named \"%s\" takes at least %d argument%s; got %d.\n",
+				MLR_GLOBALS.bargv0, function_name, arity, (arity == 1) ? "" : "s", user_provided_arity);
 		} else {
 			fprintf(stderr, "%s: Function named \"%s\" takes %d argument%s; got %d.\n",
 				MLR_GLOBALS.bargv0, function_name, arity, (arity == 1) ? "" : "s", user_provided_arity);

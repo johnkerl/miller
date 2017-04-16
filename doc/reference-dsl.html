@@ -330,6 +330,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#logifit">logifit</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#madd">madd</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#mapdiff">mapdiff</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#mapexcept">mapexcept</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#mapsum">mapsum</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#max">max</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#mexp">mexp</a><br/>
@@ -4679,13 +4680,23 @@ With 2 or more, returns copy of arg 1 with all keys from any of remaining argume
 </pre>
 </div>
 
+<h2>mapexcept</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+mapexcept (class=maps variadic): With 1 arg, returns argument map. With >= 2 args, returns a map with
+keys from remaining arguments unset. E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'.
+</pre>
+</div>
+
 <h2>mapsum</h2>
 
 <p/>
 <div class="pokipanel">
 <pre>
 mapsum (class=maps variadic): With 0 args, returns empty map. With >= 1 arg, returns a map with
-key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'.
+key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
 </pre>
 </div>
 
@@ -6014,6 +6025,16 @@ madd (class=math #args=3): a + b mod m (integers)
 <pre>
 mapdiff (class=maps variadic): With 0 args, returns empty map. With 1 arg, returns copy of arg.
 With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
+</pre>
+</div>
+
+<a id="mapexcept"/><h2>mapexcept</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+mapexcept (class=maps variadic): With 1 args, returns argument map. With >= 2 args, returns a map with
+keys from remaining arguments unset. E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'.
 </pre>
 </div>
 

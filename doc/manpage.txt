@@ -145,8 +145,8 @@ OPTIONS
 	asserting_map asserting_nonempty_map asserting_not_empty asserting_not_map
 	asserting_not_null asserting_null asserting_numeric asserting_present
 	asserting_string boolean float fmtnum hexfmt int string typeof depth haskey
-	joink joinkv joinv leafcount length mapdiff mapsum splitkv splitkvx splitnv
-	splitnvx
+	joink joinkv joinv leafcount length mapdiff mapexcept mapsum splitkv splitkvx
+	splitnv splitnvx
 
        Please use "mlr --help-function {function name}" for function-specific help.
 
@@ -1623,9 +1623,13 @@ FUNCTIONS FOR FILTER/PUT
        (class=maps variadic): With 0 args, returns empty map. With 1 arg, returns copy of arg.
        With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
 
+   mapexcept
+       (class=maps variadic): With 1 arg, returns argument map. With >= 2 args, returns a map with
+       keys from remaining arguments unset. E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'.
+
    mapsum
        (class=maps variadic): With 0 args, returns empty map. With >= 1 arg, returns a map with
-       key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'.
+       key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
 
    splitkv
        (class=maps #args=3): Splits string by separators into map with type inference.
@@ -1999,4 +2003,4 @@ SEE ALSO
 
 
 
-				  2017-04-15			     MILLER(1)
+				  2017-04-16			     MILLER(1)

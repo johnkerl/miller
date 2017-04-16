@@ -12,7 +12,6 @@ airable:
 * --c2j et al.: not csvlite but csv
 
 * tee out arbitrary map w/ print >"xxx", $a, $b
-  - variadic map_except
   - https://github.com/johnkerl/miller/issues/137
 
 ! function-doc needs work -- *not* autogen :(
@@ -37,6 +36,8 @@ non-airable:
 * rh/fedora/centos
 
 * ship ./configure, w/ clean-target mods
+
+* travis clang build w/ asan ?
 
 ----------------------------------------------------------------
 other:

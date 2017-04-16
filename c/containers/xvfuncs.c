@@ -159,43 +159,34 @@ boxed_xval_t variadic_mapdiff_xfunc(boxed_xval_t* pbxvals, int nxvals) {
 }
 
 // ----------------------------------------------------------------
+// Precondition (validated before we're called): there is at least one argument
+// which is the map to be unkeyed.
 boxed_xval_t variadic_mapexcept_xfunc(
 	boxed_xval_t* pbxvals,
 	int nxvals)
 {
-	mlhmmv_xvalue_t except = mlhmmv_xvalue_alloc_empty_map();
-	if (nxvals == 0) {
-		return box_ephemeral_xval(except);
-	}
-	// xxx to-do optmization: transfer arg 1 if it's ephemeral
+	MLR_INTERNAL_CODING_ERROR_IF(nxvals < 1);
 
-	// xxx methodize
-	int i = 0;
-	if (!pbxvals[i].xval.is_terminal) {
-		mlhmmv_level_t* plevel = pbxvals[i].xval.pnext_level;
-		for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
-			// xxx do refs/copies correctly
-			mlhmmv_xvalue_t xval_copy = mlhmmv_xvalue_copy(&pe->level_xvalue);
-			sllmve_t e = (sllmve_t) { .value = pe->level_key, .free_flags = 0, .pnext = NULL };
-			mlhmmv_level_put_xvalue(except.pnext_level, &e, &xval_copy);
+	boxed_xval_t* pinbxval = &pbxvals[0];
+	boxed_xval_t outbxval = box_ephemeral_xval(mlhmmv_xvalue_copy(&pinbxval->xval));
+
+	if (pinbxval->xval.is_terminal) { // non-map
+		return outbxval;
+	}
+
+	mlhmmv_level_t* poutlevel = outbxval.xval.pnext_level;
+
+	for (int i = 1; i < nxvals; i++) {
+		if (pbxvals[i].xval.is_terminal) {
+			mv_t* pkey = &pbxvals[i].xval.terminal_mlrval;
+			sllmve_t e = (sllmve_t) { .value = *pkey, .free_flags = 0, .pnext = NULL };
+			mlhmmv_level_remove(poutlevel, &e);
 		}
 		if (pbxvals[i].is_ephemeral)
 			mlhmmv_xvalue_free(&pbxvals[i].xval);
 	}
 
-	for (i = 1; i < nxvals; i++) {
-		if (!pbxvals[i].xval.is_terminal) {
-			mlhmmv_level_t* plevel = pbxvals[i].xval.pnext_level;
-			for (mlhmmv_level_entry_t* pe = plevel->phead; pe != NULL; pe = pe->pnext) {
-				sllmve_t e = (sllmve_t) { .value = pe->level_key, .free_flags = 0, .pnext = NULL };
-				mlhmmv_level_remove(except.pnext_level, &e);
-			}
-		}
-		if (pbxvals[i].is_ephemeral)
-			mlhmmv_xvalue_free(&pbxvals[i].xval);
-	}
-
-	return box_ephemeral_xval(except);
+	return outbxval;
 }
 
 // ----------------------------------------------------------------

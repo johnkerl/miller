@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2017-04-15
+.\"      Date: 2017-04-16
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2017-04-15" "\ \&" "\ \&"
+.TH "MILLER" "1" "2017-04-16" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -194,8 +194,8 @@ output separator to the given value.
  asserting_map asserting_nonempty_map asserting_not_empty asserting_not_map
  asserting_not_null asserting_null asserting_numeric asserting_present
  asserting_string boolean float fmtnum hexfmt int string typeof depth haskey
- joink joinkv joinv leafcount length mapdiff mapsum splitkv splitkvx splitnv
- splitnvx
+ joink joinkv joinv leafcount length mapdiff mapexcept mapsum splitkv splitkvx
+ splitnv splitnvx
 
 Please use "mlr --help-function {function name}" for function-specific help.
 .fi
@@ -2802,13 +2802,23 @@ With 2 or more, returns copy of arg 1 with all keys from any of remaining argume
 .fi
 .if n \{\
 .RE
+.SS "mapexcept"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=maps variadic): With 1 arg, returns argument map. With >= 2 args, returns a map with
+keys from remaining arguments unset. E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'.
+.fi
+.if n \{\
+.RE
 .SS "mapsum"
 .if n \{\
 .RS 0
 .\}
 .nf
 (class=maps variadic): With 0 args, returns empty map. With >= 1 arg, returns a map with
-key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'.
+key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
 .fi
 .if n \{\
 .RE
