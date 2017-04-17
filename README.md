@@ -1,4 +1,4 @@
-**Miller is like awk, sed, cut, join, and sort for name-indexed data such as CSV and tabular JSON.**
+**Miller is like awk, sed, cut, join, and sort for name-indexed data such as CSV, TSV, and tabular JSON.**
 
 [![Build Status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller)
 [![License](http://img.shields.io/badge/license-BSD2-blue.svg)](https://github.com/johnkerl/miller/blob/master/LICENSE.txt) [![Docs](https://img.shields.io/badge/docs-here-yellow.svg)](http://johnkerl.org/miller/doc)
@@ -17,31 +17,39 @@ AppVeyor alpha:
 [![AppVeyor alpha](https://ci.appveyor.com/api/projects/status/github/johnkerl/miller?branch=master&svg=true)](https://ci.appveyor.com/project/johnkerl/miller)
 
 With Miller, you get to use named fields without needing to count positional
-indices.  Examples:
+indices, using familiar format such as CSV, TSV, JSON, and positionally-indexed.
+
+For example, suppose you have a CSV data file like this:
 
 ```
-% mlr --csv cut -f hostname,uptime mydata.csv
-% mlr --tsv --rs lf filter '$status != "down" && $upsec >= 10000' *.tsv
-% mlr --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
-% grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
-% mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
-% mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
-% mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
-% mlr stats2 -a linreg-pca -f u,v -g shape data/*
-% mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
-% mlr --from estimates.tbl put '
-  for (k,v in $*) {
-    if (isnumeric(v) && k =~ "^[t-z].*$") {
-      $sum += v; $count += 1
-    }
-  }
-  $mean = $sum / $count # no assignment if count unset
-'
-% mlr --from infile.dat put -f analyze.mlr
-% mlr --from infile.dat put 'tee > "./taps/data-".$a."-".$b, $*'
-% mlr --from infile.dat put 'tee | "gzip > ./taps/data-".$a."-".$b.".gz", $*'
-% mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'
-% mlr --from infile.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
+county,tiv_2011,tiv_2012,line,construction
+SEMINOLE,22890.55,20848.71,Residential,Wood
+MIAMI DADE,1158674.85,1076001.08,Residential,Masonry
+PALM BEACH,1174081.5,1856589.17,Residential,Masonry
+MIAMI DADE,2850980.31,2650932.72,Commercial,Reinforced Masonry
+HIGHLANDS,23006.41,19757.91,Residential,Wood
+HIGHLANDS,49155.16,47362.96,Residential,Wood
+DUVAL,1731888.18,2785551.63,Residential,Masonry
+ST. JOHNS,29589.12,35207.53,Residential,Wood
+```
+
+Then, on the fly, you can add new fields which are functions which are functions of existing fields, drop fields, sort, aggregate statistically, pretty-print, and more:
+```
+$ mlr --icsv --opprint --barred \
+  put '$tiv_delta = $tiv_2012 - $tiv_2011; unset $tiv_2011, $tiv_2012' \
+  then sort -nr tiv_delta flins.csv 
++------------+-------------+----------------+
+| county     | line        | tiv_delta      |
++------------+-------------+----------------+
+| Duval      | Residential | 1053663.450000 |
+| Palm Beach | Residential | 682507.670000  |
+| St. Johns  | Residential | 5618.410000    |
+| Highlands  | Residential | -1792.200000   |
+| Seminole   | Residential | -2041.840000   |
+| Highlands  | Residential | -3248.500000   |
+| Miami Dade | Residential | -82673.770000  |
+| Miami Dade | Commercial  | -200047.590000 |
++------------+-------------+----------------+
 ```
 
 This is something the Unix toolkit always could have done, and arguably always
@@ -112,5 +120,32 @@ match [release-specific code](https://github.com/johnkerl/miller/tags).
 * [Build information including dependencies](http://johnkerl.org/miller/doc/build.html)
 * [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
 * [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
+
+More examples:
+
+```
+% mlr --csv cut -f hostname,uptime mydata.csv
+% mlr --tsv --rs lf filter '$status != "down" && $upsec >= 10000' *.tsv
+% mlr --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
+% grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
+% mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
+% mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
+% mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
+% mlr stats2 -a linreg-pca -f u,v -g shape data/*
+% mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
+% mlr --from estimates.tbl put '
+  for (k,v in $*) {
+    if (isnumeric(v) && k =~ "^[t-z].*$") {
+      $sum += v; $count += 1
+    }
+  }
+  $mean = $sum / $count # no assignment if count unset
+'
+% mlr --from infile.dat put -f analyze.mlr
+% mlr --from infile.dat put 'tee > "./taps/data-".$a."-".$b, $*'
+% mlr --from infile.dat put 'tee | "gzip > ./taps/data-".$a."-".$b.".gz", $*'
+% mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'
+% mlr --from infile.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
+```
 
 <!-- In case freshports becomes stale: https://svnweb.freebsd.org/ports/head/textproc/miller/ -->

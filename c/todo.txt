@@ -9,9 +9,6 @@ BUGFIXES
 ----------------------------------------------------------------
 airable:
 
-! cover page needs to start with *one* nice example. then details later on.
-! cover-page simplify
-
 * more json handling: topmost/second-topmost array, put nidx-style as with dkvp.
 
 * synctool -4/-6. also alias/flag handling.
@@ -22,6 +19,8 @@ airable:
 
 ----------------------------------------------------------------
 non-airable:
+
+* --barred & autodetect notes @ the long issue
 
 ! rm temp-junk files !
 
