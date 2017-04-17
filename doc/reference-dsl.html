@@ -3689,1385 +3689,6 @@ reference.
 
 <p/>You can get a list of all functions using <b>mlr -F</b>.
 
-<!--
-<p/>
-<div class="pokipanel">
-<pre>
-$ #!/bin/bash
-
-mlr -F | grep -v '^[a-zA-Z]' | uniq | while read funcname; do
-  echo "<h2>$funcname</h2>"
-  echo ""
-  echo "<p/>"
-  echo '<div class="pokipanel">'
-  echo '<pre>'
-  mlr --help-function "$funcname"
-  echo '</pre>'
-  echo '</div>'
-  echo ""
-done
-
-mlr -F | grep '^[a-zA-Z]' | sort -u | while read funcname; do
-  echo "<h2>$funcname</h2>"
-  echo ""
-  echo "<p/>"
-  echo '<div class="pokipanel">'
-  echo '<pre>'
-  mlr --help-function "$funcname"
-  echo '</pre>'
-  echo '</div>'
-  echo ""
-done
-
-<h2>+</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-+ (class=arithmetic #args=2): Addition.
-
-+ (class=arithmetic #args=1): Unary plus.
-</pre>
-</div>
-
-<h2>-</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-- (class=arithmetic #args=2): Subtraction.
-
-- (class=arithmetic #args=1): Unary minus.
-</pre>
-</div>
-
-<h2>*</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-* (class=arithmetic #args=2): Multiplication.
-</pre>
-</div>
-
-<h2>/</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-/ (class=arithmetic #args=2): Division.
-</pre>
-</div>
-
-<h2>//</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-// (class=arithmetic #args=2): Integer division: rounds to negative (pythonic).
-</pre>
-</div>
-
-<h2>%</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-% (class=arithmetic #args=2): Remainder; never negative-valued (pythonic).
-</pre>
-</div>
-
-<h2>**</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-** (class=arithmetic #args=2): Exponentiation; same as pow, but as an infix
-operator.
-</pre>
-</div>
-
-<h2>|</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-| (class=arithmetic #args=2): Bitwise OR.
-</pre>
-</div>
-
-<h2>^</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-^ (class=arithmetic #args=2): Bitwise XOR.
-</pre>
-</div>
-
-<h2>&</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-& (class=arithmetic #args=2): Bitwise AND.
-</pre>
-</div>
-
-<h2>~</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-~ (class=arithmetic #args=1): Bitwise NOT. Beware '$y=~$x' since =~ is the
-regex-match operator: try '$y = ~$x'.
-</pre>
-</div>
-
-<h2><<</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-<< (class=arithmetic #args=2): Bitwise left-shift.
-</pre>
-</div>
-
-<h2>>></h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
->> (class=arithmetic #args=2): Bitwise right-shift.
-</pre>
-</div>
-
-<h2>==</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-== (class=boolean #args=2): String/numeric equality. Mixing number and string
-results in string compare.
-</pre>
-</div>
-
-<h2>!=</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-!= (class=boolean #args=2): String/numeric inequality. Mixing number and string
-results in string compare.
-</pre>
-</div>
-
-<h2>=~</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-=~ (class=boolean #args=2): String (left-hand side) matches regex (right-hand
-side), e.g. '$name =~ "^a.*b$"'.
-</pre>
-</div>
-
-<h2>!=~</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-!=~ (class=boolean #args=2): String (left-hand side) does not match regex
-(right-hand side), e.g. '$name !=~ "^a.*b$"'.
-</pre>
-</div>
-
-<h2>></h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-> (class=boolean #args=2): String/numeric greater-than. Mixing number and string
-results in string compare.
-</pre>
-</div>
-
-<h2>>=</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
->= (class=boolean #args=2): String/numeric greater-than-or-equals. Mixing number
-and string results in string compare.
-</pre>
-</div>
-
-<h2><</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-< (class=boolean #args=2): String/numeric less-than. Mixing number and string
-results in string compare.
-</pre>
-</div>
-
-<h2><=</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-<= (class=boolean #args=2): String/numeric less-than-or-equals. Mixing number
-and string results in string compare.
-</pre>
-</div>
-
-<h2>&&</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-&& (class=boolean #args=2): Logical AND.
-</pre>
-</div>
-
-<h2>||</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-|| (class=boolean #args=2): Logical OR.
-</pre>
-</div>
-
-<h2>^^</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-^^ (class=boolean #args=2): Logical XOR.
-</pre>
-</div>
-
-<h2>!</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-! (class=boolean #args=1): Logical negation.
-</pre>
-</div>
-
-<h2>? :</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-? : (class=boolean #args=3): Ternary operator.
-</pre>
-</div>
-
-<h2>.</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-. (class=string #args=2): String concatenation.
-</pre>
-</div>
-
-<h2>abs</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-abs (class=math #args=1): Absolute value.
-</pre>
-</div>
-
-<h2>acos</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-acos (class=math #args=1): Inverse trigonometric cosine.
-</pre>
-</div>
-
-<h2>acosh</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-acosh (class=math #args=1): Inverse hyperbolic cosine.
-</pre>
-</div>
-
-<h2>asin</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asin (class=math #args=1): Inverse trigonometric sine.
-</pre>
-</div>
-
-<h2>asinh</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asinh (class=math #args=1): Inverse hyperbolic sine.
-</pre>
-</div>
-
-<h2>asserting_absent</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_absent (class=typing #args=1): Returns argument if it is absent in the input data, else
-throws an error.
-</pre>
-</div>
-
-<h2>asserting_bool</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_bool (class=typing #args=1): Returns argument if it is present with boolean value, else
-throws an error.
-</pre>
-</div>
-
-<h2>asserting_boolean</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_boolean (class=typing #args=1): Returns argument if it is present with boolean value, else
-throws an error.
-</pre>
-</div>
-
-<h2>asserting_empty</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_empty (class=typing #args=1): Returns argument if it is present in input with empty value,
-else throws an error.
-</pre>
-</div>
-
-<h2>asserting_empty_map</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_empty_map (class=typing #args=1): Returns argument if it is a map with empty value, else
-throws an error.
-</pre>
-</div>
-
-<h2>asserting_float</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_float (class=typing #args=1): Returns argument if it is present with float value, else
-throws an error.
-</pre>
-</div>
-
-<h2>asserting_int</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_int (class=typing #args=1): Returns argument if it is present with int value, else
-throws an error.
-</pre>
-</div>
-
-<h2>asserting_map</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_map (class=typing #args=1): Returns argument if it is a map, else throws an error.
-</pre>
-</div>
-
-<h2>asserting_nonempty_map</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_nonempty_map (class=typing #args=1): Returns argument if it is a non-empty map, else throws
-an error.
-</pre>
-</div>
-
-<h2>asserting_not_empty</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_not_empty (class=typing #args=1): Returns argument if it is present in input with non-empty
-value, else throws an error.
-</pre>
-</div>
-
-<h2>asserting_not_map</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_not_map (class=typing #args=1): Returns argument if it is not a map, else throws an error.
-</pre>
-</div>
-
-<h2>asserting_not_null</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_not_null (class=typing #args=1): Returns argument if it is non-null (non-empty and non-absent),
-else throws an error.
-</pre>
-</div>
-
-<h2>asserting_null</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_null (class=typing #args=1): Returns argument if it is null (empty or absent), else throws
-an error.
-</pre>
-</div>
-
-<h2>asserting_numeric</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_numeric (class=typing #args=1): Returns argument if it is present with int or float value,
-else throws an error.
-</pre>
-</div>
-
-<h2>asserting_present</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_present (class=typing #args=1): Returns argument if it is present in input, else throws
-an error.
-</pre>
-</div>
-
-<h2>asserting_string</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-asserting_string (class=typing #args=1): Returns argument if it is present with string (including
-empty-string) value, else throws an error.
-</pre>
-</div>
-
-<h2>atan</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-atan (class=math #args=1): One-argument arctangent.
-</pre>
-</div>
-
-<h2>atan2</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-atan2 (class=math #args=2): Two-argument arctangent.
-</pre>
-</div>
-
-<h2>atanh</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-atanh (class=math #args=1): Inverse hyperbolic tangent.
-</pre>
-</div>
-
-<h2>boolean</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
-</pre>
-</div>
-
-<h2>cbrt</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-cbrt (class=math #args=1): Cube root.
-</pre>
-</div>
-
-<h2>ceil</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-ceil (class=math #args=1): Ceiling: nearest integer at or above.
-</pre>
-</div>
-
-<h2>cos</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-cos (class=math #args=1): Trigonometric cosine.
-</pre>
-</div>
-
-<h2>cosh</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-cosh (class=math #args=1): Hyperbolic cosine.
-</pre>
-</div>
-
-<h2>depth</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-depth (class=maps #args=1): Prints maximum depth of hashmap: ''. Scalars have depth 0.
-</pre>
-</div>
-
-<h2>dhms2fsec</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-dhms2fsec (class=time #args=1): Recovers floating-point seconds as in
-dhms2fsec("5d18h53m20.250000s") = 500000.250000
-</pre>
-</div>
-
-<h2>dhms2sec</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-dhms2sec (class=time #args=1): Recovers integer seconds as in
-dhms2sec("5d18h53m20s") = 500000
-</pre>
-</div>
-
-<h2>erf</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-erf (class=math #args=1): Error function.
-</pre>
-</div>
-
-<h2>erfc</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-erfc (class=math #args=1): Complementary error function.
-</pre>
-</div>
-
-<h2>exp</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-exp (class=math #args=1): Exponential function e**x.
-</pre>
-</div>
-
-<h2>expm1</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-expm1 (class=math #args=1): e**x - 1.
-</pre>
-</div>
-
-<h2>float</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-float (class=conversion #args=1): Convert int/float/bool/string to float.
-</pre>
-</div>
-
-<h2>floor</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-floor (class=math #args=1): Floor: nearest integer at or below.
-</pre>
-</div>
-
-<h2>fmtnum</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-fmtnum (class=conversion #args=2): Convert int/float/bool to string using
-printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
-</pre>
-</div>
-
-<h2>fsec2dhms</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-fsec2dhms (class=time #args=1): Formats floating-point seconds as in
-fsec2dhms(500000.25) = "5d18h53m20.250000s"
-</pre>
-</div>
-
-<h2>fsec2hms</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-fsec2hms (class=time #args=1): Formats floating-point seconds as in
-fsec2hms(5000.25) = "01:23:20.250000"
-</pre>
-</div>
-
-<h2>gmt2sec</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-gmt2sec (class=time #args=1): Parses GMT timestamp as integer seconds since
-the epoch.
-</pre>
-</div>
-
-<h2>gsub</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-gsub (class=string #args=3): Example: '$name=gsub($name, "old", "new")'
-(replace all).
-</pre>
-</div>
-
-<h2>haskey</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-haskey (class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
-'haskey(mymap, mykey)'. Error if 1st argument is not a map.
-</pre>
-</div>
-
-<h2>hexfmt</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-hexfmt (class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
-</pre>
-</div>
-
-<h2>hms2fsec</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-hms2fsec (class=time #args=1): Recovers floating-point seconds as in
-hms2fsec("01:23:20.250000") = 5000.250000
-</pre>
-</div>
-
-<h2>hms2sec</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-hms2sec (class=time #args=1): Recovers integer seconds as in
-hms2sec("01:23:20") = 5000
-</pre>
-</div>
-
-<h2>int</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-int (class=conversion #args=1): Convert int/float/bool/string to int.
-</pre>
-</div>
-
-<h2>invqnorm</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-invqnorm (class=math #args=1): Inverse of normal cumulative distribution
-function. Note that invqorm(urand()) is normally distributed.
-</pre>
-</div>
-
-<h2>is_absent</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_absent (class=typing #args=1): False if field is present in input, false otherwise
-</pre>
-</div>
-
-<h2>is_bool</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_bool (class=typing #args=1): True if field is present with boolean value. Synonymous with is_boolean.
-</pre>
-</div>
-
-<h2>is_boolean</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_boolean (class=typing #args=1): True if field is present with boolean value. Synonymous with is_bool.
-</pre>
-</div>
-
-<h2>is_empty</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_empty (class=typing #args=1): True if field is present in input with empty string value, false otherwise.
-</pre>
-</div>
-
-<h2>is_empty_map</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_empty_map (class=typing #args=1): True if argument is a map which is empty.
-</pre>
-</div>
-
-<h2>is_float</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_float (class=typing #args=1): True if field is present with value inferred to be float
-</pre>
-</div>
-
-<h2>is_int</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_int (class=typing #args=1): True if field is present with value inferred to be int 
-</pre>
-</div>
-
-<h2>is_map</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_map (class=typing #args=1): True if argument is a map.
-</pre>
-</div>
-
-<h2>is_nonempty_map</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_nonempty_map (class=typing #args=1): True if argument is a map which is non-empty.
-</pre>
-</div>
-
-<h2>is_not_empty</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_not_empty (class=typing #args=1): False if field is present in input with empty value, false otherwise
-</pre>
-</div>
-
-<h2>is_not_map</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_not_map (class=typing #args=1): True if argument is not a map.
-</pre>
-</div>
-
-<h2>is_not_null</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_not_null (class=typing #args=1): False if argument is null (empty or absent), true otherwise.
-</pre>
-</div>
-
-<h2>is_null</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_null (class=typing #args=1): True if argument is null (empty or absent), false otherwise.
-</pre>
-</div>
-
-<h2>is_numeric</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_numeric (class=typing #args=1): True if field is present with value inferred to be int or float
-</pre>
-</div>
-
-<h2>is_present</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_present (class=typing #args=1): True if field is present in input, false otherwise.
-</pre>
-</div>
-
-<h2>is_string</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-is_string (class=typing #args=1): True if field is present with string (including empty-string) value
-</pre>
-</div>
-
-<h2>joink</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-joink (class=maps #args=2): Makes string from map keys. E.g. 'joink($*, ",")'.
-</pre>
-</div>
-
-<h2>joinkv</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-joinkv (class=maps #args=3): Makes string from map key-value pairs. E.g. 'joinkv(@v[2], "=", ",")'
-</pre>
-</div>
-
-<h2>joinv</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-joinv (class=maps #args=2): Makes string from map keys. E.g. 'joinv(mymap, ",")'.
-</pre>
-</div>
-
-<h2>leafcount</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-leafcount (class=maps #args=1): Counts total number of terminal values in hashmap. For single-level maps,
-same as length.
-</pre>
-</div>
-
-<h2>length</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-length (class=maps #args=1): Counts number of top-level entries in hashmap. Scalars have length 1.
-</pre>
-</div>
-
-<h2>log</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-log (class=math #args=1): Natural (base-e) logarithm.
-</pre>
-</div>
-
-<h2>log10</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-log10 (class=math #args=1): Base-10 logarithm.
-</pre>
-</div>
-
-<h2>log1p</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-log1p (class=math #args=1): log(1-x).
-</pre>
-</div>
-
-<h2>logifit</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-logifit (class=math #args=3): Given m and b from logistic regression, compute
-fit: $yhat=logifit($x,$m,$b).
-</pre>
-</div>
-
-<h2>madd</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-madd (class=math #args=3): a + b mod m (integers)
-</pre>
-</div>
-
-<h2>mapdiff</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-mapdiff (class=maps variadic): With 0 args, returns empty map. With 1 arg, returns copy of arg.
-With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed.
-</pre>
-</div>
-
-<h2>mapexcept</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-mapexcept (class=maps variadic): With 1 arg, returns argument map. With >= 2 args, returns a map with
-keys from remaining arguments unset. E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'.
-</pre>
-</div>
-
-<h2>mapsum</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-mapsum (class=maps variadic): With 0 args, returns empty map. With >= 1 arg, returns a map with
-key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
-</pre>
-</div>
-
-<h2>max</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-max (class=math variadic): max of n numbers; null loses
-</pre>
-</div>
-
-<h2>mexp</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-mexp (class=math #args=3): a ** b mod m (integers)
-</pre>
-</div>
-
-<h2>min</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-min (class=math variadic): Min of n numbers; null loses
-</pre>
-</div>
-
-<h2>mmul</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-mmul (class=math #args=3): a * b mod m (integers)
-</pre>
-</div>
-
-<h2>msub</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-msub (class=math #args=3): a - b mod m (integers)
-</pre>
-</div>
-
-<h2>pow</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-pow (class=math #args=2): Exponentiation; same as **.
-</pre>
-</div>
-
-<h2>qnorm</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-qnorm (class=math #args=1): Normal cumulative distribution function.
-</pre>
-</div>
-
-<h2>round</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-round (class=math #args=1): Round to nearest integer.
-</pre>
-</div>
-
-<h2>roundm</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-roundm (class=math #args=2): Round to nearest multiple of m: roundm($x,$m) is
-the same as round($x/$m)*$m
-</pre>
-</div>
-
-<h2>sec2dhms</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-sec2dhms (class=time #args=1): Formats integer seconds as in sec2dhms(500000)
-= "5d18h53m20s"
-</pre>
-</div>
-
-<h2>sec2gmt</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-sec2gmt (class=time #args=1): Formats seconds since epoch (integer part)
-as GMT timestamp, e.g. sec2gmt(1440768801.7) = "2015-08-28T13:33:21Z".
-Leaves non-numbers as-is.
-
-sec2gmt (class=time #args=2): Formats seconds since epoch as GMT timestamp with n
-decimal places for seconds, e.g. sec2gmt(1440768801.7,1) = "2015-08-28T13:33:21.7Z".
-Leaves non-numbers as-is.
-</pre>
-</div>
-
-<h2>sec2gmtdate</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-sec2gmtdate (class=time #args=1): Formats seconds since epoch (integer part)
-as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
-Leaves non-numbers as-is.
-</pre>
-</div>
-
-<h2>sec2hms</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-sec2hms (class=time #args=1): Formats integer seconds as in
-sec2hms(5000) = "01:23:20"
-</pre>
-</div>
-
-<h2>sgn</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-sgn (class=math #args=1): +1 for positive input, 0 for zero input, -1 for
-negative input.
-</pre>
-</div>
-
-<h2>sin</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-sin (class=math #args=1): Trigonometric sine.
-</pre>
-</div>
-
-<h2>sinh</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-sinh (class=math #args=1): Hyperbolic sine.
-</pre>
-</div>
-
-<h2>splitkv</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-splitkv (class=maps #args=3): Splits string by separators into map with type inference.
-E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
-</pre>
-</div>
-
-<h2>splitkvx</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-splitkvx (class=maps #args=3): Splits string by separators into map without type inference (keys and
-values are strings). E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives
-'{"a" : "1", "b" : "2", "c" : "3"}'.
-</pre>
-</div>
-
-<h2>splitnv</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-splitnv (class=maps #args=2): Splits string by separator into integer-indexed map with type inference.
-E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
-</pre>
-</div>
-
-<h2>splitnvx</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-splitnvx (class=maps #args=2): Splits string by separator into integer-indexed map without type
-inference (values are strings). E.g. 'splitnv("4,5,6" , ",")' gives '{1 : "4", 2 : "5", 3 : "6"}'.
-</pre>
-</div>
-
-<h2>sqrt</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-sqrt (class=math #args=1): Square root.
-</pre>
-</div>
-
-<h2>strftime</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-strftime (class=time #args=2): Formats seconds since the epoch as timestamp, e.g.
-strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
-strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".
-Format strings are as in the C library (please see "man strftime" on your system),
-with the Miller-specific addition of "%1S" through "%9S" which format the seocnds
-with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
-</pre>
-</div>
-
-<h2>string</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-string (class=conversion #args=1): Convert int/float/bool/string to string.
-</pre>
-</div>
-
-<h2>strlen</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-strlen (class=string #args=1): String length.
-</pre>
-</div>
-
-<h2>strptime</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-strptime (class=time #args=2): Parses timestamp as floating-point seconds since the epoch,
-e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
-and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
-</pre>
-</div>
-
-<h2>sub</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-sub (class=string #args=3): Example: '$name=sub($name, "old", "new")'
-(replace once).
-</pre>
-</div>
-
-<h2>substr</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-substr (class=string #args=3): substr(s,m,n) gives substring of s from 0-up position m to n 
-inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
-</pre>
-</div>
-
-<h2>systime</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-systime (class=time #args=0): Floating-point seconds since the epoch,
-e.g. 1440768801.748936.
-</pre>
-</div>
-
-<h2>tan</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-tan (class=math #args=1): Trigonometric tangent.
-</pre>
-</div>
-
-<h2>tanh</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-tanh (class=math #args=1): Hyperbolic tangent.
-</pre>
-</div>
-
-<h2>tolower</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-tolower (class=string #args=1): Convert string to lowercase.
-</pre>
-</div>
-
-<h2>toupper</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-toupper (class=string #args=1): Convert string to uppercase.
-</pre>
-</div>
-
-<h2>typeof</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-typeof (class=conversion #args=1): Convert argument to type of argument (e.g.
-MT_STRING). For debug.
-</pre>
-</div>
-
-<h2>urand</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-urand (class=math #args=0): Floating-point numbers on the unit interval.
-Int-valued example: '$n=floor(20+urand()*11)'.
-</pre>
-</div>
-
-<h2>urand32</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-urand32 (class=math #args=0): Integer uniformly distributed 0 and 2**32-1
-inclusive.
-</pre>
-</div>
-
-<h2>urandint</h2>
-
-<p/>
-<div class="pokipanel">
-<pre>
-urandint (class=math #args=2): Integer uniformly distributed between inclusive
-integer endpoints.
-</pre>
-</div>
-</pre>
-</div>
-<p/>
-... or just run the .sh into this file, e.g. '.!mk-func-h2s.sh' in vim
-mk-func-h2s.sh
--->
 
 <a id="+"/><h2>+</h2>
 
@@ -5075,9 +3696,11 @@ mk-func-h2s.sh
 <div class="pokipanel">
 <pre>
 + (class=arithmetic #args=2): Addition.
+
 + (class=arithmetic #args=1): Unary plus.
 </pre>
 </div>
+
 
 <a id="-"/><h2>-</h2>
 
@@ -5085,9 +3708,11 @@ mk-func-h2s.sh
 <div class="pokipanel">
 <pre>
 - (class=arithmetic #args=2): Subtraction.
+
 - (class=arithmetic #args=1): Unary minus.
 </pre>
 </div>
+
 
 <a id="*"/><h2>*</h2>
 
@@ -5098,6 +3723,7 @@ mk-func-h2s.sh
 </pre>
 </div>
 
+
 <a id="/"/><h2>/</h2>
 
 <p/>
@@ -5106,6 +3732,7 @@ mk-func-h2s.sh
 / (class=arithmetic #args=2): Division.
 </pre>
 </div>
+
 
 <a id="//"/><h2>//</h2>
 
@@ -5116,6 +3743,7 @@ mk-func-h2s.sh
 </pre>
 </div>
 
+
 <a id="%"/><h2>%</h2>
 
 <p/>
@@ -5124,6 +3752,7 @@ mk-func-h2s.sh
 % (class=arithmetic #args=2): Remainder; never negative-valued (pythonic).
 </pre>
 </div>
+
 
 <a id="**"/><h2>**</h2>
 
@@ -5135,6 +3764,7 @@ operator.
 </pre>
 </div>
 
+
 <a id="|"/><h2>|</h2>
 
 <p/>
@@ -5143,6 +3773,7 @@ operator.
 | (class=arithmetic #args=2): Bitwise OR.
 </pre>
 </div>
+
 
 <a id="^"/><h2>^</h2>
 
@@ -5153,6 +3784,7 @@ operator.
 </pre>
 </div>
 
+
 <a id="&"/><h2>&</h2>
 
 <p/>
@@ -5161,6 +3793,7 @@ operator.
 & (class=arithmetic #args=2): Bitwise AND.
 </pre>
 </div>
+
 
 <a id="~"/><h2>~</h2>
 
@@ -5172,6 +3805,7 @@ regex-match operator: try '$y = ~$x'.
 </pre>
 </div>
 
+
 <a id="<<"/><h2><<</h2>
 
 <p/>
@@ -5181,6 +3815,7 @@ regex-match operator: try '$y = ~$x'.
 </pre>
 </div>
 
+
 <a id=">>"/><h2>>></h2>
 
 <p/>
@@ -5189,6 +3824,7 @@ regex-match operator: try '$y = ~$x'.
 >> (class=arithmetic #args=2): Bitwise right-shift.
 </pre>
 </div>
+
 
 <a id="=="/><h2>==</h2>
 
@@ -5200,6 +3836,7 @@ results in string compare.
 </pre>
 </div>
 
+
 <a id="!="/><h2>!=</h2>
 
 <p/>
@@ -5209,6 +3846,7 @@ results in string compare.
 results in string compare.
 </pre>
 </div>
+
 
 <a id="=~"/><h2>=~</h2>
 
@@ -5220,6 +3858,7 @@ side), e.g. '$name =~ "^a.*b$"'.
 </pre>
 </div>
 
+
 <a id="!=~"/><h2>!=~</h2>
 
 <p/>
@@ -5229,6 +3868,7 @@ side), e.g. '$name =~ "^a.*b$"'.
 (right-hand side), e.g. '$name !=~ "^a.*b$"'.
 </pre>
 </div>
+
 
 <a id=">"/><h2>></h2>
 
@@ -5240,6 +3880,7 @@ results in string compare.
 </pre>
 </div>
 
+
 <a id=">="/><h2>>=</h2>
 
 <p/>
@@ -5249,6 +3890,7 @@ results in string compare.
 and string results in string compare.
 </pre>
 </div>
+
 
 <a id="<"/><h2><</h2>
 
@@ -5260,6 +3902,7 @@ results in string compare.
 </pre>
 </div>
 
+
 <a id="<="/><h2><=</h2>
 
 <p/>
@@ -5270,6 +3913,7 @@ and string results in string compare.
 </pre>
 </div>
 
+
 <a id="&&"/><h2>&&</h2>
 
 <p/>
@@ -5278,6 +3922,7 @@ and string results in string compare.
 && (class=boolean #args=2): Logical AND.
 </pre>
 </div>
+
 
 <a id="||"/><h2>||</h2>
 
@@ -5288,6 +3933,7 @@ and string results in string compare.
 </pre>
 </div>
 
+
 <a id="^^"/><h2>^^</h2>
 
 <p/>
@@ -5296,6 +3942,7 @@ and string results in string compare.
 ^^ (class=boolean #args=2): Logical XOR.
 </pre>
 </div>
+
 
 <a id="!"/><h2>!</h2>
 
@@ -5306,6 +3953,7 @@ and string results in string compare.
 </pre>
 </div>
 
+
 <a id="?_:"/><h2>? :</h2>
 
 <p/>
@@ -5314,6 +3962,7 @@ and string results in string compare.
 ? : (class=boolean #args=3): Ternary operator.
 </pre>
 </div>
+
 
 <a id="."/><h2>.</h2>
 
@@ -5324,6 +3973,7 @@ and string results in string compare.
 </pre>
 </div>
 
+
 <a id="abs"/><h2>abs</h2>
 
 <p/>
@@ -5332,6 +3982,7 @@ and string results in string compare.
 abs (class=math #args=1): Absolute value.
 </pre>
 </div>
+
 
 <a id="acos"/><h2>acos</h2>
 
@@ -5342,6 +3993,7 @@ acos (class=math #args=1): Inverse trigonometric cosine.
 </pre>
 </div>
 
+
 <a id="acosh"/><h2>acosh</h2>
 
 <p/>
@@ -5350,6 +4002,7 @@ acos (class=math #args=1): Inverse trigonometric cosine.
 acosh (class=math #args=1): Inverse hyperbolic cosine.
 </pre>
 </div>
+
 
 <a id="asin"/><h2>asin</h2>
 
@@ -5360,6 +4013,7 @@ asin (class=math #args=1): Inverse trigonometric sine.
 </pre>
 </div>
 
+
 <a id="asinh"/><h2>asinh</h2>
 
 <p/>
@@ -5368,6 +4022,7 @@ asin (class=math #args=1): Inverse trigonometric sine.
 asinh (class=math #args=1): Inverse hyperbolic sine.
 </pre>
 </div>
+
 
 <a id="asserting_absent"/><h2>asserting_absent</h2>
 
@@ -5379,6 +4034,7 @@ throws an error.
 </pre>
 </div>
 
+
 <a id="asserting_bool"/><h2>asserting_bool</h2>
 
 <p/>
@@ -5388,6 +4044,7 @@ asserting_bool (class=typing #args=1): Returns argument if it is present with bo
 throws an error.
 </pre>
 </div>
+
 
 <a id="asserting_boolean"/><h2>asserting_boolean</h2>
 
@@ -5399,6 +4056,7 @@ throws an error.
 </pre>
 </div>
 
+
 <a id="asserting_empty"/><h2>asserting_empty</h2>
 
 <p/>
@@ -5408,6 +4066,7 @@ asserting_empty (class=typing #args=1): Returns argument if it is present in inp
 else throws an error.
 </pre>
 </div>
+
 
 <a id="asserting_empty_map"/><h2>asserting_empty_map</h2>
 
@@ -5419,6 +4078,7 @@ throws an error.
 </pre>
 </div>
 
+
 <a id="asserting_float"/><h2>asserting_float</h2>
 
 <p/>
@@ -5428,6 +4088,7 @@ asserting_float (class=typing #args=1): Returns argument if it is present with f
 throws an error.
 </pre>
 </div>
+
 
 <a id="asserting_int"/><h2>asserting_int</h2>
 
@@ -5439,6 +4100,7 @@ throws an error.
 </pre>
 </div>
 
+
 <a id="asserting_map"/><h2>asserting_map</h2>
 
 <p/>
@@ -5447,6 +4109,7 @@ throws an error.
 asserting_map (class=typing #args=1): Returns argument if it is a map, else throws an error.
 </pre>
 </div>
+
 
 <a id="asserting_nonempty_map"/><h2>asserting_nonempty_map</h2>
 
@@ -5458,6 +4121,7 @@ an error.
 </pre>
 </div>
 
+
 <a id="asserting_not_empty"/><h2>asserting_not_empty</h2>
 
 <p/>
@@ -5468,6 +4132,7 @@ value, else throws an error.
 </pre>
 </div>
 
+
 <a id="asserting_not_map"/><h2>asserting_not_map</h2>
 
 <p/>
@@ -5476,6 +4141,7 @@ value, else throws an error.
 asserting_not_map (class=typing #args=1): Returns argument if it is not a map, else throws an error.
 </pre>
 </div>
+
 
 <a id="asserting_not_null"/><h2>asserting_not_null</h2>
 
@@ -5487,6 +4153,7 @@ else throws an error.
 </pre>
 </div>
 
+
 <a id="asserting_null"/><h2>asserting_null</h2>
 
 <p/>
@@ -5496,6 +4163,7 @@ asserting_null (class=typing #args=1): Returns argument if it is null (empty or 
 an error.
 </pre>
 </div>
+
 
 <a id="asserting_numeric"/><h2>asserting_numeric</h2>
 
@@ -5507,6 +4175,7 @@ else throws an error.
 </pre>
 </div>
 
+
 <a id="asserting_present"/><h2>asserting_present</h2>
 
 <p/>
@@ -5516,6 +4185,7 @@ asserting_present (class=typing #args=1): Returns argument if it is present in i
 an error.
 </pre>
 </div>
+
 
 <a id="asserting_string"/><h2>asserting_string</h2>
 
@@ -5527,6 +4197,7 @@ empty-string) value, else throws an error.
 </pre>
 </div>
 
+
 <a id="atan"/><h2>atan</h2>
 
 <p/>
@@ -5535,6 +4206,7 @@ empty-string) value, else throws an error.
 atan (class=math #args=1): One-argument arctangent.
 </pre>
 </div>
+
 
 <a id="atan2"/><h2>atan2</h2>
 
@@ -5545,6 +4217,7 @@ atan2 (class=math #args=2): Two-argument arctangent.
 </pre>
 </div>
 
+
 <a id="atanh"/><h2>atanh</h2>
 
 <p/>
@@ -5553,6 +4226,7 @@ atan2 (class=math #args=2): Two-argument arctangent.
 atanh (class=math #args=1): Inverse hyperbolic tangent.
 </pre>
 </div>
+
 
 <a id="boolean"/><h2>boolean</h2>
 
@@ -5563,6 +4237,7 @@ boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
 </pre>
 </div>
 
+
 <a id="cbrt"/><h2>cbrt</h2>
 
 <p/>
@@ -5571,6 +4246,7 @@ boolean (class=conversion #args=1): Convert int/float/bool/string to boolean.
 cbrt (class=math #args=1): Cube root.
 </pre>
 </div>
+
 
 <a id="ceil"/><h2>ceil</h2>
 
@@ -5581,6 +4257,7 @@ ceil (class=math #args=1): Ceiling: nearest integer at or above.
 </pre>
 </div>
 
+
 <a id="cos"/><h2>cos</h2>
 
 <p/>
@@ -5589,6 +4266,7 @@ ceil (class=math #args=1): Ceiling: nearest integer at or above.
 cos (class=math #args=1): Trigonometric cosine.
 </pre>
 </div>
+
 
 <a id="cosh"/><h2>cosh</h2>
 
@@ -5599,6 +4277,7 @@ cosh (class=math #args=1): Hyperbolic cosine.
 </pre>
 </div>
 
+
 <a id="depth"/><h2>depth</h2>
 
 <p/>
@@ -5607,6 +4286,7 @@ cosh (class=math #args=1): Hyperbolic cosine.
 depth (class=maps #args=1): Prints maximum depth of hashmap: ''. Scalars have depth 0.
 </pre>
 </div>
+
 
 <a id="dhms2fsec"/><h2>dhms2fsec</h2>
 
@@ -5618,6 +4298,7 @@ dhms2fsec("5d18h53m20.250000s") = 500000.250000
 </pre>
 </div>
 
+
 <a id="dhms2sec"/><h2>dhms2sec</h2>
 
 <p/>
@@ -5628,6 +4309,7 @@ dhms2sec("5d18h53m20s") = 500000
 </pre>
 </div>
 
+
 <a id="erf"/><h2>erf</h2>
 
 <p/>
@@ -5636,6 +4318,7 @@ dhms2sec("5d18h53m20s") = 500000
 erf (class=math #args=1): Error function.
 </pre>
 </div>
+
 
 <a id="erfc"/><h2>erfc</h2>
 
@@ -5646,6 +4329,7 @@ erfc (class=math #args=1): Complementary error function.
 </pre>
 </div>
 
+
 <a id="exp"/><h2>exp</h2>
 
 <p/>
@@ -5654,6 +4338,7 @@ erfc (class=math #args=1): Complementary error function.
 exp (class=math #args=1): Exponential function e**x.
 </pre>
 </div>
+
 
 <a id="expm1"/><h2>expm1</h2>
 
@@ -5664,6 +4349,7 @@ expm1 (class=math #args=1): e**x - 1.
 </pre>
 </div>
 
+
 <a id="float"/><h2>float</h2>
 
 <p/>
@@ -5673,6 +4359,7 @@ float (class=conversion #args=1): Convert int/float/bool/string to float.
 </pre>
 </div>
 
+
 <a id="floor"/><h2>floor</h2>
 
 <p/>
@@ -5681,6 +4368,7 @@ float (class=conversion #args=1): Convert int/float/bool/string to float.
 floor (class=math #args=1): Floor: nearest integer at or below.
 </pre>
 </div>
+
 
 <a id="fmtnum"/><h2>fmtnum</h2>
 
@@ -5692,6 +4380,7 @@ printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
 </pre>
 </div>
 
+
 <a id="fsec2dhms"/><h2>fsec2dhms</h2>
 
 <p/>
@@ -5701,6 +4390,7 @@ fsec2dhms (class=time #args=1): Formats floating-point seconds as in
 fsec2dhms(500000.25) = "5d18h53m20.250000s"
 </pre>
 </div>
+
 
 <a id="fsec2hms"/><h2>fsec2hms</h2>
 
@@ -5712,6 +4402,7 @@ fsec2hms(5000.25) = "01:23:20.250000"
 </pre>
 </div>
 
+
 <a id="gmt2sec"/><h2>gmt2sec</h2>
 
 <p/>
@@ -5721,6 +4412,7 @@ gmt2sec (class=time #args=1): Parses GMT timestamp as integer seconds since
 the epoch.
 </pre>
 </div>
+
 
 <a id="gsub"/><h2>gsub</h2>
 
@@ -5732,6 +4424,7 @@ gsub (class=string #args=3): Example: '$name=gsub($name, "old", "new")'
 </pre>
 </div>
 
+
 <a id="haskey"/><h2>haskey</h2>
 
 <p/>
@@ -5742,6 +4435,7 @@ haskey (class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*, 
 </pre>
 </div>
 
+
 <a id="hexfmt"/><h2>hexfmt</h2>
 
 <p/>
@@ -5750,6 +4444,7 @@ haskey (class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*, 
 hexfmt (class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
 </pre>
 </div>
+
 
 <a id="hms2fsec"/><h2>hms2fsec</h2>
 
@@ -5761,6 +4456,7 @@ hms2fsec("01:23:20.250000") = 5000.250000
 </pre>
 </div>
 
+
 <a id="hms2sec"/><h2>hms2sec</h2>
 
 <p/>
@@ -5771,6 +4467,7 @@ hms2sec("01:23:20") = 5000
 </pre>
 </div>
 
+
 <a id="int"/><h2>int</h2>
 
 <p/>
@@ -5779,6 +4476,7 @@ hms2sec("01:23:20") = 5000
 int (class=conversion #args=1): Convert int/float/bool/string to int.
 </pre>
 </div>
+
 
 <a id="invqnorm"/><h2>invqnorm</h2>
 
@@ -5790,6 +4488,7 @@ function. Note that invqorm(urand()) is normally distributed.
 </pre>
 </div>
 
+
 <a id="is_absent"/><h2>is_absent</h2>
 
 <p/>
@@ -5798,6 +4497,7 @@ function. Note that invqorm(urand()) is normally distributed.
 is_absent (class=typing #args=1): False if field is present in input, false otherwise
 </pre>
 </div>
+
 
 <a id="is_bool"/><h2>is_bool</h2>
 
@@ -5808,6 +4508,7 @@ is_bool (class=typing #args=1): True if field is present with boolean value. Syn
 </pre>
 </div>
 
+
 <a id="is_boolean"/><h2>is_boolean</h2>
 
 <p/>
@@ -5816,6 +4517,7 @@ is_bool (class=typing #args=1): True if field is present with boolean value. Syn
 is_boolean (class=typing #args=1): True if field is present with boolean value. Synonymous with is_bool.
 </pre>
 </div>
+
 
 <a id="is_empty"/><h2>is_empty</h2>
 
@@ -5826,6 +4528,7 @@ is_empty (class=typing #args=1): True if field is present in input with empty st
 </pre>
 </div>
 
+
 <a id="is_empty_map"/><h2>is_empty_map</h2>
 
 <p/>
@@ -5834,6 +4537,7 @@ is_empty (class=typing #args=1): True if field is present in input with empty st
 is_empty_map (class=typing #args=1): True if argument is a map which is empty.
 </pre>
 </div>
+
 
 <a id="is_float"/><h2>is_float</h2>
 
@@ -5844,6 +4548,7 @@ is_float (class=typing #args=1): True if field is present with value inferred to
 </pre>
 </div>
 
+
 <a id="is_int"/><h2>is_int</h2>
 
 <p/>
@@ -5852,6 +4557,7 @@ is_float (class=typing #args=1): True if field is present with value inferred to
 is_int (class=typing #args=1): True if field is present with value inferred to be int 
 </pre>
 </div>
+
 
 <a id="is_map"/><h2>is_map</h2>
 
@@ -5862,6 +4568,7 @@ is_map (class=typing #args=1): True if argument is a map.
 </pre>
 </div>
 
+
 <a id="is_nonempty_map"/><h2>is_nonempty_map</h2>
 
 <p/>
@@ -5870,6 +4577,7 @@ is_map (class=typing #args=1): True if argument is a map.
 is_nonempty_map (class=typing #args=1): True if argument is a map which is non-empty.
 </pre>
 </div>
+
 
 <a id="is_not_empty"/><h2>is_not_empty</h2>
 
@@ -5880,6 +4588,7 @@ is_not_empty (class=typing #args=1): False if field is present in input with emp
 </pre>
 </div>
 
+
 <a id="is_not_map"/><h2>is_not_map</h2>
 
 <p/>
@@ -5888,6 +4597,7 @@ is_not_empty (class=typing #args=1): False if field is present in input with emp
 is_not_map (class=typing #args=1): True if argument is not a map.
 </pre>
 </div>
+
 
 <a id="is_not_null"/><h2>is_not_null</h2>
 
@@ -5898,6 +4608,7 @@ is_not_null (class=typing #args=1): False if argument is null (empty or absent),
 </pre>
 </div>
 
+
 <a id="is_null"/><h2>is_null</h2>
 
 <p/>
@@ -5906,6 +4617,7 @@ is_not_null (class=typing #args=1): False if argument is null (empty or absent),
 is_null (class=typing #args=1): True if argument is null (empty or absent), false otherwise.
 </pre>
 </div>
+
 
 <a id="is_numeric"/><h2>is_numeric</h2>
 
@@ -5916,6 +4628,7 @@ is_numeric (class=typing #args=1): True if field is present with value inferred 
 </pre>
 </div>
 
+
 <a id="is_present"/><h2>is_present</h2>
 
 <p/>
@@ -5924,6 +4637,7 @@ is_numeric (class=typing #args=1): True if field is present with value inferred 
 is_present (class=typing #args=1): True if field is present in input, false otherwise.
 </pre>
 </div>
+
 
 <a id="is_string"/><h2>is_string</h2>
 
@@ -5934,6 +4648,7 @@ is_string (class=typing #args=1): True if field is present with string (includin
 </pre>
 </div>
 
+
 <a id="joink"/><h2>joink</h2>
 
 <p/>
@@ -5942,6 +4657,7 @@ is_string (class=typing #args=1): True if field is present with string (includin
 joink (class=maps #args=2): Makes string from map keys. E.g. 'joink($*, ",")'.
 </pre>
 </div>
+
 
 <a id="joinkv"/><h2>joinkv</h2>
 
@@ -5952,6 +4668,7 @@ joinkv (class=maps #args=3): Makes string from map key-value pairs. E.g. 'joinkv
 </pre>
 </div>
 
+
 <a id="joinv"/><h2>joinv</h2>
 
 <p/>
@@ -5960,6 +4677,7 @@ joinkv (class=maps #args=3): Makes string from map key-value pairs. E.g. 'joinkv
 joinv (class=maps #args=2): Makes string from map keys. E.g. 'joinv(mymap, ",")'.
 </pre>
 </div>
+
 
 <a id="leafcount"/><h2>leafcount</h2>
 
@@ -5971,6 +4689,7 @@ same as length.
 </pre>
 </div>
 
+
 <a id="length"/><h2>length</h2>
 
 <p/>
@@ -5979,6 +4698,7 @@ same as length.
 length (class=maps #args=1): Counts number of top-level entries in hashmap. Scalars have length 1.
 </pre>
 </div>
+
 
 <a id="log"/><h2>log</h2>
 
@@ -5989,6 +4709,7 @@ log (class=math #args=1): Natural (base-e) logarithm.
 </pre>
 </div>
 
+
 <a id="log10"/><h2>log10</h2>
 
 <p/>
@@ -5998,6 +4719,7 @@ log10 (class=math #args=1): Base-10 logarithm.
 </pre>
 </div>
 
+
 <a id="log1p"/><h2>log1p</h2>
 
 <p/>
@@ -6006,6 +4728,7 @@ log10 (class=math #args=1): Base-10 logarithm.
 log1p (class=math #args=1): log(1-x).
 </pre>
 </div>
+
 
 <a id="logifit"/><h2>logifit</h2>
 
@@ -6017,6 +4740,7 @@ fit: $yhat=logifit($x,$m,$b).
 </pre>
 </div>
 
+
 <a id="madd"/><h2>madd</h2>
 
 <p/>
@@ -6025,6 +4749,7 @@ fit: $yhat=logifit($x,$m,$b).
 madd (class=math #args=3): a + b mod m (integers)
 </pre>
 </div>
+
 
 <a id="mapdiff"/><h2>mapdiff</h2>
 
@@ -6036,15 +4761,17 @@ With 2 or more, returns copy of arg 1 with all keys from any of remaining argume
 </pre>
 </div>
 
+
 <a id="mapexcept"/><h2>mapexcept</h2>
 
 <p/>
 <div class="pokipanel">
 <pre>
-mapexcept (class=maps variadic): With 1 args, returns argument map. With >= 2 args, returns a map with
+mapexcept (class=maps variadic): With 1 arg, returns argument map. With >= 2 args, returns a map with
 keys from remaining arguments unset. E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'.
 </pre>
 </div>
+
 
 <a id="mapsum"/><h2>mapsum</h2>
 
@@ -6052,9 +4779,10 @@ keys from remaining arguments unset. E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is
 <div class="pokipanel">
 <pre>
 mapsum (class=maps variadic): With 0 args, returns empty map. With >= 1 arg, returns a map with
-key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3,4},{1:5})' is '{1:5,3:4}'.
+key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'.
 </pre>
 </div>
+
 
 <a id="max"/><h2>max</h2>
 
@@ -6065,6 +4793,7 @@ max (class=math variadic): max of n numbers; null loses
 </pre>
 </div>
 
+
 <a id="mexp"/><h2>mexp</h2>
 
 <p/>
@@ -6073,6 +4802,7 @@ max (class=math variadic): max of n numbers; null loses
 mexp (class=math #args=3): a ** b mod m (integers)
 </pre>
 </div>
+
 
 <a id="min"/><h2>min</h2>
 
@@ -6083,6 +4813,7 @@ min (class=math variadic): Min of n numbers; null loses
 </pre>
 </div>
 
+
 <a id="mmul"/><h2>mmul</h2>
 
 <p/>
@@ -6091,6 +4822,7 @@ min (class=math variadic): Min of n numbers; null loses
 mmul (class=math #args=3): a * b mod m (integers)
 </pre>
 </div>
+
 
 <a id="msub"/><h2>msub</h2>
 
@@ -6101,6 +4833,7 @@ msub (class=math #args=3): a - b mod m (integers)
 </pre>
 </div>
 
+
 <a id="pow"/><h2>pow</h2>
 
 <p/>
@@ -6109,6 +4842,7 @@ msub (class=math #args=3): a - b mod m (integers)
 pow (class=math #args=2): Exponentiation; same as **.
 </pre>
 </div>
+
 
 <a id="qnorm"/><h2>qnorm</h2>
 
@@ -6119,6 +4853,7 @@ qnorm (class=math #args=1): Normal cumulative distribution function.
 </pre>
 </div>
 
+
 <a id="round"/><h2>round</h2>
 
 <p/>
@@ -6127,6 +4862,7 @@ qnorm (class=math #args=1): Normal cumulative distribution function.
 round (class=math #args=1): Round to nearest integer.
 </pre>
 </div>
+
 
 <a id="roundm"/><h2>roundm</h2>
 
@@ -6138,6 +4874,7 @@ the same as round($x/$m)*$m
 </pre>
 </div>
 
+
 <a id="sec2dhms"/><h2>sec2dhms</h2>
 
 <p/>
@@ -6147,6 +4884,7 @@ sec2dhms (class=time #args=1): Formats integer seconds as in sec2dhms(500000)
 = "5d18h53m20s"
 </pre>
 </div>
+
 
 <a id="sec2gmt"/><h2>sec2gmt</h2>
 
@@ -6163,6 +4901,7 @@ Leaves non-numbers as-is.
 </pre>
 </div>
 
+
 <a id="sec2gmtdate"/><h2>sec2gmtdate</h2>
 
 <p/>
@@ -6174,6 +4913,7 @@ Leaves non-numbers as-is.
 </pre>
 </div>
 
+
 <a id="sec2hms"/><h2>sec2hms</h2>
 
 <p/>
@@ -6183,6 +4923,7 @@ sec2hms (class=time #args=1): Formats integer seconds as in
 sec2hms(5000) = "01:23:20"
 </pre>
 </div>
+
 
 <a id="sgn"/><h2>sgn</h2>
 
@@ -6194,6 +4935,7 @@ negative input.
 </pre>
 </div>
 
+
 <a id="sin"/><h2>sin</h2>
 
 <p/>
@@ -6202,6 +4944,7 @@ negative input.
 sin (class=math #args=1): Trigonometric sine.
 </pre>
 </div>
+
 
 <a id="sinh"/><h2>sinh</h2>
 
@@ -6212,6 +4955,7 @@ sinh (class=math #args=1): Hyperbolic sine.
 </pre>
 </div>
 
+
 <a id="splitkv"/><h2>splitkv</h2>
 
 <p/>
@@ -6221,6 +4965,7 @@ splitkv (class=maps #args=3): Splits string by separators into map with type inf
 E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives '{"a" : 1, "b" : 2, "c" : 3}'.
 </pre>
 </div>
+
 
 <a id="splitkvx"/><h2>splitkvx</h2>
 
@@ -6233,6 +4978,7 @@ values are strings). E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives
 </pre>
 </div>
 
+
 <a id="splitnv"/><h2>splitnv</h2>
 
 <p/>
@@ -6242,6 +4988,7 @@ splitnv (class=maps #args=2): Splits string by separator into integer-indexed ma
 E.g. 'splitnv("a,b,c" , ",")' gives '{1 : "a", 2 : "b", 3 : "c"}'.
 </pre>
 </div>
+
 
 <a id="splitnvx"/><h2>splitnvx</h2>
 
@@ -6253,6 +5000,7 @@ inference (values are strings). E.g. 'splitnv("4,5,6" , ",")' gives '{1 : "4", 2
 </pre>
 </div>
 
+
 <a id="sqrt"/><h2>sqrt</h2>
 
 <p/>
@@ -6261,6 +5009,7 @@ inference (values are strings). E.g. 'splitnv("4,5,6" , ",")' gives '{1 : "4", 2
 sqrt (class=math #args=1): Square root.
 </pre>
 </div>
+
 
 <a id="strftime"/><h2>strftime</h2>
 
@@ -6276,6 +5025,7 @@ with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
 </pre>
 </div>
 
+
 <a id="string"/><h2>string</h2>
 
 <p/>
@@ -6285,6 +5035,7 @@ string (class=conversion #args=1): Convert int/float/bool/string to string.
 </pre>
 </div>
 
+
 <a id="strlen"/><h2>strlen</h2>
 
 <p/>
@@ -6293,6 +5044,7 @@ string (class=conversion #args=1): Convert int/float/bool/string to string.
 strlen (class=string #args=1): String length.
 </pre>
 </div>
+
 
 <a id="strptime"/><h2>strptime</h2>
 
@@ -6305,6 +5057,7 @@ and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.3450
 </pre>
 </div>
 
+
 <a id="sub"/><h2>sub</h2>
 
 <p/>
@@ -6314,6 +5067,7 @@ sub (class=string #args=3): Example: '$name=sub($name, "old", "new")'
 (replace once).
 </pre>
 </div>
+
 
 <a id="substr"/><h2>substr</h2>
 
@@ -6325,6 +5079,7 @@ inclusive. Negative indices -len .. -1 alias to 0 .. len-1.
 </pre>
 </div>
 
+
 <a id="systime"/><h2>systime</h2>
 
 <p/>
@@ -6335,6 +5090,7 @@ e.g. 1440768801.748936.
 </pre>
 </div>
 
+
 <a id="tan"/><h2>tan</h2>
 
 <p/>
@@ -6343,6 +5099,7 @@ e.g. 1440768801.748936.
 tan (class=math #args=1): Trigonometric tangent.
 </pre>
 </div>
+
 
 <a id="tanh"/><h2>tanh</h2>
 
@@ -6353,6 +5110,7 @@ tanh (class=math #args=1): Hyperbolic tangent.
 </pre>
 </div>
 
+
 <a id="tolower"/><h2>tolower</h2>
 
 <p/>
@@ -6362,6 +5120,7 @@ tolower (class=string #args=1): Convert string to lowercase.
 </pre>
 </div>
 
+
 <a id="toupper"/><h2>toupper</h2>
 
 <p/>
@@ -6370,6 +5129,7 @@ tolower (class=string #args=1): Convert string to lowercase.
 toupper (class=string #args=1): Convert string to uppercase.
 </pre>
 </div>
+
 
 <a id="typeof"/><h2>typeof</h2>
 
@@ -6381,6 +5141,7 @@ MT_STRING). For debug.
 </pre>
 </div>
 
+
 <a id="urand"/><h2>urand</h2>
 
 <p/>
@@ -6390,6 +5151,7 @@ urand (class=math #args=0): Floating-point numbers on the unit interval.
 Int-valued example: '$n=floor(20+urand()*11)'.
 </pre>
 </div>
+
 
 <a id="urand32"/><h2>urand32</h2>
 
@@ -6401,6 +5163,7 @@ inclusive.
 </pre>
 </div>
 
+
 <a id="urandint"/><h2>urandint</h2>
 
 <p/>
@@ -6410,11 +5173,6 @@ urandint (class=math #args=2): Integer uniformly distributed between inclusive
 integer endpoints.
 </pre>
 </div>
-
-<!--
-EOG
--->
-
 
 <!-- ================================================================ -->
 

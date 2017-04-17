@@ -9,7 +9,6 @@ BUGFIXES
 ----------------------------------------------------------------
 airable:
 
-! function-doc needs work -- *not* autogen :(
 ! cover page needs to start with *one* nice example. then details later on.
 ! cover-page simplify
 
@@ -23,6 +22,10 @@ airable:
 
 ----------------------------------------------------------------
 non-airable:
+
+! rm temp-junk files !
+
+! pokipush
 
 * augment msys2 notes w/ the frombelows
 * pcreposix.dll sadpanda
