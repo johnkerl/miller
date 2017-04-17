@@ -78,3 +78,10 @@ getl
 lemon_prepared
 lrim
 mlr-[0-9.]*.tar.*
+c/jkopush
+c/run_mlr
+c/mlr_expect_fail
+c/push2f
+data/.gitignore
+doc/jkopush
+doc/push2
