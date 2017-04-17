@@ -1666,95 +1666,95 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 
 	} else if (streq(argv[argi], "--c2t")) {
 		preader_opts->ifile_fmt = "csv";
-		preader_opts->irs       = "\n";
+		preader_opts->irs       = "auto";
 		pwriter_opts->ofile_fmt = "csv";
-		pwriter_opts->ors       = "\n";
+		pwriter_opts->ors       = "auto";
 		pwriter_opts->ofs       = "\t";
 		argi += 1;
 	} else if (streq(argv[argi], "--c2d")) {
 		preader_opts->ifile_fmt = "csv";
-		preader_opts->irs       = "\n";
+		preader_opts->irs       = "auto";
 		pwriter_opts->ofile_fmt = "dkvp";
 		argi += 1;
 	} else if (streq(argv[argi], "--c2n")) {
 		preader_opts->ifile_fmt = "csv";
-		preader_opts->irs       = "\n";
+		preader_opts->irs       = "auto";
 		pwriter_opts->ofile_fmt = "nidx";
 		argi += 1;
 	} else if (streq(argv[argi], "--c2j")) {
 		preader_opts->ifile_fmt = "csv";
-		preader_opts->irs       = "\n";
+		preader_opts->irs       = "auto";
 		pwriter_opts->ofile_fmt = "json";
 		argi += 1;
 	} else if (streq(argv[argi], "--c2p")) {
 		preader_opts->ifile_fmt = "csv";
-		preader_opts->irs       = "\n";
+		preader_opts->irs       = "auto";
 		pwriter_opts->ofile_fmt = "pprint";
 		argi += 1;
 	} else if (streq(argv[argi], "--c2x")) {
 		preader_opts->ifile_fmt = "csv";
-		preader_opts->irs       = "\n";
+		preader_opts->irs       = "auto";
 		pwriter_opts->ofile_fmt = "xtab";
 		argi += 1;
 	} else if (streq(argv[argi], "--c2m")) {
 		preader_opts->ifile_fmt = "csv";
-		preader_opts->irs       = "\n";
+		preader_opts->irs       = "auto";
 		pwriter_opts->ofile_fmt = "markdown";
 		argi += 1;
 
 	} else if (streq(argv[argi], "--t2c")) {
 		preader_opts->ifile_fmt = "csv";
 		preader_opts->ifs       = "\t";
-		preader_opts->irs       = "\n";
+		preader_opts->irs       = "auto";
 		pwriter_opts->ofile_fmt = "csv";
-		pwriter_opts->ors       = "\n";
+		pwriter_opts->ors       = "auto";
 		argi += 1;
 	} else if (streq(argv[argi], "--t2d")) {
 		preader_opts->ifile_fmt = "csv";
 		preader_opts->ifs       = "\t";
-		preader_opts->irs       = "\n";
+		preader_opts->irs       = "auto";
 		pwriter_opts->ofile_fmt = "dkvp";
 		argi += 1;
 	} else if (streq(argv[argi], "--t2n")) {
 		preader_opts->ifile_fmt = "csv";
 		preader_opts->ifs       = "\t";
-		preader_opts->irs       = "\n";
+		preader_opts->irs       = "auto";
 		pwriter_opts->ofile_fmt = "nidx";
 		argi += 1;
 	} else if (streq(argv[argi], "--t2j")) {
 		preader_opts->ifile_fmt = "csv";
 		preader_opts->ifs       = "\t";
-		preader_opts->irs       = "\n";
+		preader_opts->irs       = "auto";
 		pwriter_opts->ofile_fmt = "json";
 		argi += 1;
 	} else if (streq(argv[argi], "--t2p")) {
 		preader_opts->ifile_fmt = "csv";
 		preader_opts->ifs       = "\t";
-		preader_opts->irs       = "\n";
+		preader_opts->irs       = "auto";
 		pwriter_opts->ofile_fmt = "pprint";
 		argi += 1;
 	} else if (streq(argv[argi], "--t2x")) {
 		preader_opts->ifile_fmt = "csv";
 		preader_opts->ifs       = "\t";
-		preader_opts->irs       = "\n";
+		preader_opts->irs       = "auto";
 		pwriter_opts->ofile_fmt = "xtab";
 		argi += 1;
 	} else if (streq(argv[argi], "--t2m")) {
 		preader_opts->ifile_fmt = "csv";
 		preader_opts->ifs       = "\t";
-		preader_opts->irs       = "\n";
+		preader_opts->irs       = "auto";
 		pwriter_opts->ofile_fmt = "markdown";
 		argi += 1;
 
 	} else if (streq(argv[argi], "--d2c")) {
 		preader_opts->ifile_fmt = "dkvp";
 		pwriter_opts->ofile_fmt = "csv";
-		pwriter_opts->ors       = "\n";
+		pwriter_opts->ors       = "auto";
 		argi += 1;
 	} else if (streq(argv[argi], "--d2t")) {
 		preader_opts->ifile_fmt = "dkvp";
 		pwriter_opts->ofile_fmt = "csv";
-		pwriter_opts->ors       = "\n";
+		pwriter_opts->ors       = "auto";
 		pwriter_opts->ofs       = "\t";
 		argi += 1;
 	} else if (streq(argv[argi], "--d2n")) {
@@ -1781,12 +1781,12 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 	} else if (streq(argv[argi], "--n2c")) {
 		preader_opts->ifile_fmt = "nidx";
 		pwriter_opts->ofile_fmt = "csv";
-		pwriter_opts->ors       = "\n";
+		pwriter_opts->ors       = "auto";
 		argi += 1;
 	} else if (streq(argv[argi], "--n2t")) {
 		preader_opts->ifile_fmt = "nidx";
 		pwriter_opts->ofile_fmt = "csv";
-		pwriter_opts->ors       = "\n";
+		pwriter_opts->ors       = "auto";
 		pwriter_opts->ofs       = "\t";
 		argi += 1;
 	} else if (streq(argv[argi], "--n2d")) {
@@ -1813,12 +1813,12 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 	} else if (streq(argv[argi], "--j2c")) {
 		preader_opts->ifile_fmt = "json";
 		pwriter_opts->ofile_fmt = "csv";
-		pwriter_opts->ors       = "\n";
+		pwriter_opts->ors       = "auto";
 		argi += 1;
 	} else if (streq(argv[argi], "--j2t")) {
 		preader_opts->ifile_fmt = "json";
 		pwriter_opts->ofile_fmt = "csv";
-		pwriter_opts->ors       = "\n";
+		pwriter_opts->ors       = "auto";
 		pwriter_opts->ofs       = "\t";
 		argi += 1;
 	} else if (streq(argv[argi], "--j2d")) {
@@ -1847,14 +1847,14 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 		preader_opts->ifs              = " ";
 		preader_opts->allow_repeat_ifs = TRUE;
 		pwriter_opts->ofile_fmt        = "csv";
-		pwriter_opts->ors              = "\n";
+		pwriter_opts->ors              = "auto";
 		argi += 1;
 	} else if (streq(argv[argi], "--p2t")) {
 		preader_opts->ifile_fmt        = "csvlite";
 		preader_opts->ifs              = " ";
 		preader_opts->allow_repeat_ifs = TRUE;
 		pwriter_opts->ofile_fmt        = "csv";
-		pwriter_opts->ors              = "\n";
+		pwriter_opts->ors              = "auto";
 		pwriter_opts->ofs              = "\t";
 		argi += 1;
 	} else if (streq(argv[argi], "--p2d")) {
@@ -1891,12 +1891,12 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 	} else if (streq(argv[argi], "--x2c")) {
 		preader_opts->ifile_fmt = "xtab";
 		pwriter_opts->ofile_fmt = "csv";
-		pwriter_opts->ors       = "\n";
+		pwriter_opts->ors       = "auto";
 		argi += 1;
 	} else if (streq(argv[argi], "--x2t")) {
 		preader_opts->ifile_fmt = "xtab";
 		pwriter_opts->ofile_fmt = "csv";
-		pwriter_opts->ors       = "\n";
+		pwriter_opts->ors       = "auto";
 		pwriter_opts->ofs       = "\t";
 		argi += 1;
 	} else if (streq(argv[argi], "--x2d")) {
