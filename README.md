@@ -60,6 +60,8 @@ insertion-ordered hash map.  This encompasses a **variety of data formats**,
 including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
 (Miller can handle **positionally-indexed data** as a special case.)
 
+For a few more examples please see [Miller in 10 minutes](http://johnkerl.org/miller/doc/10-min.html).
+
 Features:
 
 * Miller is **multi-purpose**: it's useful for **data cleaning**,
