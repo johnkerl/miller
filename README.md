@@ -17,7 +17,7 @@ AppVeyor alpha:
 [![AppVeyor alpha](https://ci.appveyor.com/api/projects/status/github/johnkerl/miller?branch=master&svg=true)](https://ci.appveyor.com/project/johnkerl/miller)
 
 With Miller, you get to use named fields without needing to count positional
-indices, using familiar format such as CSV, TSV, JSON, and positionally-indexed.
+indices, using familiar formats such as CSV, TSV, JSON, and positionally-indexed.
 
 For example, suppose you have a CSV data file like this:
 
