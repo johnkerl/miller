@@ -4,10 +4,17 @@ BUGFIXES
 :D
 
 ================================================================
+FUNDAM:
+
+* revlines & shufflines: cmt tac & shuf
+
+================================================================
 5.2.0 TO-DO:
 
 ----------------------------------------------------------------
 airable:
+
+* run-to-run deltas example to cookbook
 
 * more json handling: topmost/second-topmost array, put nidx-style as with dkvp.
 
@@ -16,9 +23,12 @@ airable:
 * string stats
 
 * across-all/regex x stats1 / many verbs
+* reg_test/run --mlrexec flag
 
 ----------------------------------------------------------------
 non-airable:
+
+! ASAN build @ travis !
 
 * --barred & autodetect notes @ the long issue
 
