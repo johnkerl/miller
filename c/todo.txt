@@ -14,11 +14,12 @@ FUNDAM:
 ----------------------------------------------------------------
 airable:
 
+! maponly analog of mapexcept
+  -> then reply to sjax
+
 * run-to-run deltas example to cookbook
 
 * more json handling: topmost/second-topmost array, put nidx-style as with dkvp.
-
-* synctool -4/-6. also alias/flag handling.
 
 * string stats
 
@@ -29,6 +30,8 @@ airable:
 non-airable:
 
 ! ASAN build @ travis !
+
+* synctool -4/-6. also alias/flag handling.
 
 * --barred & autodetect notes @ the long issue
 
