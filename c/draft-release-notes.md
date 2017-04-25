@@ -7,3 +7,5 @@ This is a relatively minor release, containing feature requests.
 **Bugfixes:**
 
 * CRLF line-endings were not being correctly autodetected when I/O formats were specified using <tt>--c2j</tt> et al.
+
+* Integer division by zero was causing a fatal runtime exception, rather than computing <tt>inf</tt> or <tt>nan</tt> as in the floating-point case.

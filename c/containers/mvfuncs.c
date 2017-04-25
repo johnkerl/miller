@@ -854,6 +854,9 @@ static mv_t divide_f_if(mv_t* pa, mv_t* pb) {
 static mv_t divide_i_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
 	long long b = pb->u.intv;
+	if (b == 0LL) { // Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
+		return mv_from_float((double)a / (double)b);
+	}
 	long long r = a % b;
 	// Pythonic division, not C division.
 	if (r == 0LL) {
@@ -895,6 +898,9 @@ static mv_t idiv_f_if(mv_t* pa, mv_t* pb) {
 static mv_t idiv_i_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
 	long long b = pb->u.intv;
+	if (b == 0LL) { // Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
+		return mv_from_float((double)a / (double)b);
+	}
 	// Pythonic division, not C division.
 	long long q = a / b;
 	long long r = a % b;
@@ -946,6 +952,9 @@ static mv_t mod_f_if(mv_t* pa, mv_t* pb) {
 static mv_t mod_i_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
 	long long b = pb->u.intv;
+	if (b == 0LL) { // Compute inf/nan as with floats rather than fatal runtime FPE on integer divide by zero
+		return mv_from_float((double)a / (double)b);
+	}
 	long long u = a % b;
 	// Pythonic division, not C division.
 	if (a >= 0LL) {
