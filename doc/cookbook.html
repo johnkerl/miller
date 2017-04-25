@@ -198,6 +198,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Numbering_and_renumbering_records">Numbering and renumbering records</a><br/>
 &bull;&nbsp;<a href="#Data-cleaning_examples">Data-cleaning examples</a><br/>
 &bull;&nbsp;<a href="#Splitting_nested_fields">Splitting nested fields</a><br/>
+&bull;&nbsp;<a href="#Showing_differences_between_successive_queries">Showing differences between successive queries</a><br/>
 &bull;&nbsp;<a href="#Finding_missing_dates">Finding missing dates</a><br/>
 &bull;&nbsp;<a href="#Two-pass_algorithms">Two-pass algorithms</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Two-pass_algorithms:_computation_of_percentages">Two-pass algorithms: computation of percentages</a><br/>
@@ -715,6 +716,116 @@ x	z
 s	u
 s	v
 s	w
+</pre>
+</div>
+<p/>
+
+</div>
+<!-- ================================================================ -->
+<a id="Showing_differences_between_successive_queries"/><h1>Showing differences between successive queries</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_successive_query_deltas');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_successive_query_deltas" style="display: block">
+
+<p/> Suppose you have a database query which you run at one point in time, producing the output on the
+left, then again later producing the output on the right:
+
+<table>
+<tr>
+<td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/previous_counters.csv
+color,count
+red,3472
+blue,6838
+orange,694
+purple,12
+</pre>
+</div>
+<p/>
+</td>
+<td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/current_counters.csv
+color,count
+red,3467
+orange,670
+yellow,27
+blue,6944
+</pre>
+</div>
+<p/>
+</td>
+</tr>
+</table>
+
+<p/> And, suppose you want to compute the differences in the counters between
+adjacent keys. Since the color names aren&rsquo;t all in the same order, nor
+are they all present on both sides, we can&rsquo;t just paste the two files
+side-by-side and do some column-four-minus-column-two arithmetic.
+
+<p/> First, rename counter columns to make them distinct:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv rename count,previous_count data/previous_counters.csv &gt; data/prevtemp.csv
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/prevtemp.csv
+color,previous_count
+red,3472
+blue,6838
+orange,694
+purple,12
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv rename count,current_count data/current_counters.csv &gt; data/currtemp.csv
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/currtemp.csv
+color,current_count
+red,3467
+orange,670
+yellow,27
+blue,6944
+</pre>
+</div>
+<p/>
+
+<p/> Then, join on the key field(s), and use unsparsify to zero-fill counters
+absent on one side but present on the other. Use <tt>--ul</tt> and
+<tt>--ur</tt> to emit unpaired records (namely, purple on the left and yellow on the right):
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --opprint \
+  join -j color --ul --ur -f data/prevtemp.csv \
+  then unsparsify --fill-with 0 \
+  then put '$count_delta = $current_count - $previous_count' \
+  data/currtemp.csv
+color  previous_count current_count count_delta
+red    3472           3467          -5
+orange 694            670           -24
+yellow 0              27            27
+blue   6838           6944          106
+purple 12             0             -12
 </pre>
 </div>
 <p/>

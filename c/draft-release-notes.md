@@ -4,6 +4,10 @@ This is a relatively minor release, containing feature requests.
 
 * There is a new DSL function [**mapexcept**](http://johnkerl.org/miller-releases/miller-5.1.0/doc/reference-dsl.html#mapexcept) which returns a copy of the argument with specified key(s), if any, unset.  Likewise, [**maponly**](http://johnkerl.org/miller-releases/miller-5.1.0/doc/reference-dsl.html#maponly) returns a copy of the argument with only specified key(s), if any, set.  This resolves https://github.com/johnkerl/miller/issues/137.
 
+**Documentation:**
+
+* xxx cookbook example [**Showing differences between successive queries**](http://www.johnkerl.org/miller-releases/miller-5.2.0/doc/cookbook.html#Showing_differences_between_successive_queries)
+
 **Bugfixes:**
 
 * CRLF line-endings were not being correctly autodetected when I/O formats were specified using <tt>--c2j</tt> et al.

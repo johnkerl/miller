@@ -169,6 +169,44 @@ POKI_RUN_COMMAND{{mlr --from data/nested.tsv --tsv put -q 'o=splitnv($b, ":"); f
 
 </div>
 <!-- ================================================================ -->
+<h1>Showing differences between successive queries</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_successive_query_deltas');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_successive_query_deltas" style="display: block">
+
+<p/> Suppose you have a database query which you run at one point in time, producing the output on the
+left, then again later producing the output on the right:
+
+<table>
+<tr>
+<td>
+POKI_RUN_COMMAND{{cat data/previous_counters.csv}}HERE
+</td>
+<td>
+POKI_RUN_COMMAND{{cat data/current_counters.csv}}HERE
+</td>
+</tr>
+</table>
+
+<p/> And, suppose you want to compute the differences in the counters between
+adjacent keys. Since the color names aren&rsquo;t all in the same order, nor
+are they all present on both sides, we can&rsquo;t just paste the two files
+side-by-side and do some column-four-minus-column-two arithmetic.
+
+<p/> First, rename counter columns to make them distinct:
+
+POKI_RUN_COMMAND{{mlr --csv rename count,previous_count data/previous_counters.csv > data/prevtemp.csv}}HERE
+POKI_RUN_COMMAND{{cat data/prevtemp.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv rename count,current_count data/current_counters.csv > data/currtemp.csv}}HERE
+POKI_RUN_COMMAND{{cat data/currtemp.csv}}HERE
+
+<p/> Then, join on the key field(s), and use unsparsify to zero-fill counters
+absent on one side but present on the other. Use <tt>--ul</tt> and
+<tt>--ur</tt> to emit unpaired records (namely, purple on the left and yellow on the right):
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/previous-to-current.sh)HERE
+
+</div>
+<!-- ================================================================ -->
 <h1>Finding missing dates</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_finding_missing_dates');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_finding_missing_dates" style="display: block">

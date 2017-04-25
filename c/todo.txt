@@ -6,7 +6,8 @@ BUGFIXES
 ================================================================
 FUNDAM:
 
-* revlines & shufflines: cmt tac & shuf
+* push
+* synctool alias/flag handling ...
 
 ================================================================
 5.2.0 TO-DO:
@@ -14,16 +15,11 @@ FUNDAM:
 ----------------------------------------------------------------
 airable:
 
-! join-fill-somehow .... ? rows are heterogeneous so can't use schema ... some 2-pass prefill verb something?
-  :)
-  mlr --pprint join -j common --ul --ur then unsparsify --fill-with 0 -f file1 file2
-
-* run-to-run deltas example to cookbook
+* reg_test/run --mlrexec flag
 
 * string stats
 
 * across-all/regex x stats1 / many verbs
-* reg_test/run --mlrexec flag
 
 * more json handling: topmost/second-topmost array, put nidx-style as with dkvp.
 
@@ -31,8 +27,6 @@ airable:
 non-airable:
 
 ! ASAN build @ travis !
-
-* synctool -4/-6. also alias/flag handling.
 
 * --barred & autodetect notes @ the long issue
 
