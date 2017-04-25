@@ -3,6 +3,8 @@ BUGFIXES
 
 :D
 
+! do not let FPE happen on integer division by zero
+
 ================================================================
 FUNDAM:
 
@@ -13,6 +15,10 @@ FUNDAM:
 
 ----------------------------------------------------------------
 airable:
+
+! join-fill-somehow .... ? rows are heterogeneous so can't use schema ... some 2-pass prefill verb something?
+  :)
+  mlr --pprint join -j common --ul --ur then unsparsify --fill-with 0 -f file1 file2
 
 ! maponly analog of mapexcept
   -> then reply to sjax
