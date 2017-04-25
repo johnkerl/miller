@@ -6246,6 +6246,7 @@ announce MAPSUM/MAPDIFF/MAPEXCEPT
 run_mlr --from $indir/abixy-het put -q 'o = mapsum(); dump o'
 run_mlr --from $indir/abixy-het put -q 'o = mapdiff(); dump o'
 mlr_expect_fail --from $indir/abixy-het put -q 'o = mapexcept(); dump o'
+mlr_expect_fail --from $indir/abixy-het put -q 'o = maponly(); dump o'
 
 run_mlr --from $indir/abixy-het put -q 'o = mapsum($*); dump o'
 run_mlr --from $indir/abixy-het put -q 'o = mapsum({"a":999}); dump o'
@@ -6253,6 +6254,8 @@ run_mlr --from $indir/abixy-het put -q 'o = mapdiff($*); dump o'
 run_mlr --from $indir/abixy-het put -q 'o = mapdiff({"a":999}); dump o'
 run_mlr --from $indir/abixy-het put -q 'o = mapexcept($*); dump o'
 run_mlr --from $indir/abixy-het put -q 'o = mapexcept({"a":999}); dump o'
+run_mlr --from $indir/abixy-het put -q 'o = maponly($*); dump o'
+run_mlr --from $indir/abixy-het put -q 'o = maponly({"a":999}); dump o'
 
 run_mlr --from $indir/abixy-het put -q 'o = mapsum($*, {"a":999}); dump o'
 run_mlr --from $indir/abixy-het put -q 'o = mapsum({"a":999}, $*); dump o'
@@ -6261,13 +6264,18 @@ run_mlr --from $indir/abixy-het put -q 'o = mapdiff({"a":999}, $*); dump o'
 run_mlr --from $indir/abixy-het put -q 'o = mapexcept($*, "a"); dump o'
 run_mlr --from $indir/abixy-het put -q 'o = mapexcept({"a":999}, "a"); dump o'
 run_mlr --from $indir/abixy-het put -q 'o = mapexcept({"a":999}, "nonesuch"); dump o'
+run_mlr --from $indir/abixy-het put -q 'o = maponly($*, "a"); dump o'
+run_mlr --from $indir/abixy-het put -q 'o = maponly({"a":999}, "a"); dump o'
+run_mlr --from $indir/abixy-het put -q 'o = maponly({"a":999}, "nonesuch"); dump o'
 
 run_mlr --from $indir/abixy-het put -q 'o = mapsum($*, {"a":999}, {"b": 444}); dump o'
 run_mlr --from $indir/abixy-het put -q 'o = mapsum({"a":999}, $*, {"b": 444}); dump o'
 run_mlr --from $indir/abixy-het put -q 'o = mapdiff($*, {"a":999}, {"b": 444}); dump o'
 run_mlr --from $indir/abixy-het put -q 'o = mapdiff({"a":999}, $*, {"b": 444}); dump o'
 run_mlr --from $indir/abixy-het put -q 'o = mapexcept($*, "a", "b"); dump o'
-run_mlr --from $indir/abixy-het put -q 'o = mapexcept({"a":999}, "b", "nonesuch"); dump o'
+run_mlr --from $indir/abixy-het put -q 'o = maponly({"a":999}, "b", "nonesuch"); dump o'
+run_mlr --from $indir/abixy-het put -q 'o = maponly($*, "a", "b"); dump o'
+run_mlr --from $indir/abixy-het put -q 'o = maponly({"a":999}, "b", "nonesuch"); dump o'
 
 # ----------------------------------------------------------------
 announce EXTENDED TYPEOF

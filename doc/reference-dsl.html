@@ -331,6 +331,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#madd">madd</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#mapdiff">mapdiff</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#mapexcept">mapexcept</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#maponly">maponly</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#mapsum">mapsum</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#max">max</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#mexp">mexp</a><br/>
@@ -4767,8 +4768,19 @@ With 2 or more, returns copy of arg 1 with all keys from any of remaining argume
 <p/>
 <div class="pokipanel">
 <pre>
-mapexcept (class=maps variadic): With 1 arg, returns argument map. With >= 2 args, returns a map with
-keys from remaining arguments unset. E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'.
+mapexcept (class=maps variadic): Returns a map with keys from remaining arguments, if any, unset.
+E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'.
+</pre>
+</div>
+
+
+<a id="maponly"/><h2>maponly</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+maponly (class=maps variadic): Returns a map with only keys from remaining arguments set.
+E.g. 'maponly({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'.
 </pre>
 </div>
 

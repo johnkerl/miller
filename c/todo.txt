@@ -3,8 +3,6 @@ BUGFIXES
 
 :D
 
-! do not let FPE happen on integer division by zero
-
 ================================================================
 FUNDAM:
 
@@ -20,17 +18,14 @@ airable:
   :)
   mlr --pprint join -j common --ul --ur then unsparsify --fill-with 0 -f file1 file2
 
-! maponly analog of mapexcept
-  -> then reply to sjax
-
 * run-to-run deltas example to cookbook
-
-* more json handling: topmost/second-topmost array, put nidx-style as with dkvp.
 
 * string stats
 
 * across-all/regex x stats1 / many verbs
 * reg_test/run --mlrexec flag
+
+* more json handling: topmost/second-topmost array, put nidx-style as with dkvp.
 
 ----------------------------------------------------------------
 non-airable:

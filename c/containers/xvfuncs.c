@@ -190,6 +190,47 @@ boxed_xval_t variadic_mapexcept_xfunc(
 }
 
 // ----------------------------------------------------------------
+// Precondition (validated before we're called): there is at least one argument
+// which is the map to be unkeyed.
+boxed_xval_t variadic_maponly_xfunc(
+	boxed_xval_t* pbxvals,
+	int nxvals)
+{
+	MLR_INTERNAL_CODING_ERROR_IF(nxvals < 1);
+
+	boxed_xval_t* pinbxval = &pbxvals[0];
+	boxed_xval_t outbxval = box_ephemeral_xval(mlhmmv_xvalue_alloc_empty_map());
+
+	if (pinbxval->xval.is_terminal) { // non-map
+		return outbxval;
+	}
+
+	mlhmmv_level_t* pinlevel = pinbxval->xval.pnext_level;
+	mlhmmv_level_t* poutlevel = outbxval.xval.pnext_level;
+
+	for (int i = 1; i < nxvals; i++) {
+
+		if (pbxvals[i].xval.is_terminal) {
+			mv_t* pkey = &pbxvals[i].xval.terminal_mlrval;
+			sllmv_t* pkeylist = sllmv_single_no_free(pkey);
+			int unused = 0;
+			mlhmmv_xvalue_t* pval = mlhmmv_level_look_up_and_ref_xvalue(pinlevel, pkeylist, &unused);
+			if (pval != NULL) {
+				mlhmmv_xvalue_t copyval = mlhmmv_xvalue_copy(pval);
+				// mlhmmv_level_put_xvalue copies key not value
+				mlhmmv_level_put_xvalue(poutlevel, pkeylist->phead, &copyval);
+			}
+			sllmv_free(pkeylist);
+		}
+		if (pbxvals[i].is_ephemeral)
+			mlhmmv_xvalue_free(&pbxvals[i].xval);
+
+	}
+
+	return outbxval;
+}
+
+// ----------------------------------------------------------------
 // Precondition: the caller has ensured that both arguments are string-valued terminals.
 boxed_xval_t m_ss_splitnv_xfunc(boxed_xval_t* pstringval, boxed_xval_t* psepval) {
 	mlhmmv_xvalue_t map = mlhmmv_xvalue_alloc_empty_map();
