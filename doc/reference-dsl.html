@@ -331,7 +331,7 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#madd">madd</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#mapdiff">mapdiff</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#mapexcept">mapexcept</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#maponly">maponly</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#mapselect">mapselect</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#mapsum">mapsum</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#max">max</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#mexp">mexp</a><br/>
@@ -4774,13 +4774,13 @@ E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'.
 </div>
 
 
-<a id="maponly"/><h2>maponly</h2>
+<a id="mapselect"/><h2>mapselect</h2>
 
 <p/>
 <div class="pokipanel">
 <pre>
-maponly (class=maps variadic): Returns a map with only keys from remaining arguments set.
-E.g. 'maponly({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'.
+mapselect (class=maps variadic): Returns a map with only keys from remaining arguments set.
+E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'.
 </pre>
 </div>
 

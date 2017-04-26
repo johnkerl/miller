@@ -208,24 +208,10 @@ obtained from <a href="https://support.spatialkey.com/spatialkey-sample-csv-data
 <div class="pokipanel">
 <pre>
 $ head -n 2 data/flins.csv | mlr --icsv --oxtab cat
-policyID           119736
-statecode          FL
-county             CLAY COUNTY
-eq_site_limit      498960
-hu_site_limit      498960
-fl_site_limit      498960
-fr_site_limit      498960
-tiv_2011           498960
-tiv_2012           792148.9
-eq_site_deductible 0
-hu_site_deductible 9979.2
-fl_site_deductible 0
-fr_site_deductible 0
-point_latitude     30.102261
-point_longitude    -81.711777
-line               Residential
-construction       Masonry
-point_granularity  1
+county   Seminole
+tiv_2011 22890.55
+tiv_2012 20848.71
+line     Residential
 </pre>
 </div>
 <p/>
@@ -234,16 +220,13 @@ point_granularity  1
 <div class="pokipanel">
 <pre>
 $ mlr --from data/flins.csv --icsv --opprint count-distinct -f county | head
-county              count
-CLAY COUNTY         363
-SUWANNEE COUNTY     154
-NASSAU COUNTY       135
-COLUMBIA COUNTY     125
-ST  JOHNS COUNTY    657
-BAKER COUNTY        70
-BRADFORD COUNTY     31
-HAMILTON COUNTY     35
-UNION COUNTY        15
+county     count
+Seminole   1
+Miami Dade 2
+Palm Beach 1
+Highlands  2
+Duval      1
+St. Johns  1
 </pre>
 </div>
 <p/>
@@ -251,12 +234,6 @@ UNION COUNTY        15
 <div class="pokipanel">
 <pre>
 $ mlr --from data/flins.csv --icsv --opprint count-distinct -f construction,line
-construction        line        count
-Masonry             Residential 9257
-Wood                Residential 21581
-Reinforced Concrete Commercial  1299
-Reinforced Masonry  Commercial  4225
-Steel Frame         Commercial  272
 </pre>
 </div>
 <p/>
@@ -266,7 +243,7 @@ Steel Frame         Commercial  272
 <pre>
 $ mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012
 tiv_2012_min tiv_2012_mean  tiv_2012_max
-73.370000    2571004.097342 1701000000.000000
+19757.910000 1061531.463750 2785551.630000
 </pre>
 </div>
 <p/>
@@ -274,12 +251,6 @@ tiv_2012_min tiv_2012_mean  tiv_2012_max
 <div class="pokipanel">
 <pre>
 $ mlr --from data/flins.csv --icsv --opprint stats1 -a min,mean,max -f tiv_2012 -g construction,line
-construction        line        tiv_2012_min   tiv_2012_mean    tiv_2012_max
-Masonry             Residential 261168.070000  1041986.129217   3234970.920000
-Wood                Residential 73.370000      113493.017049    649046.120000
-Reinforced Concrete Commercial  6416016.010000 20212428.681840  60570000.000000
-Reinforced Masonry  Commercial  1287817.340000 4621372.981117   16650000.000000
-Steel Frame         Commercial  29790000       133492500.000000 1701000000
 </pre>
 </div>
 <p/>
@@ -288,13 +259,13 @@ Steel Frame         Commercial  29790000       133492500.000000 1701000000
 <div class="pokipanel">
 <pre>
 $ mlr --from data/flins.csv --icsv --oxtab stats1 -a p0,p10,p50,p90,p95,p99,p100 -f hu_site_deductible
-hu_site_deductible_p0   0
-hu_site_deductible_p10  0
-hu_site_deductible_p50  0
-hu_site_deductible_p90  76.500000
-hu_site_deductible_p95  6829.200000
-hu_site_deductible_p99  126270
-hu_site_deductible_p100 7380000
+hu_site_deductible_p0
+hu_site_deductible_p10
+hu_site_deductible_p50
+hu_site_deductible_p90
+hu_site_deductible_p95
+hu_site_deductible_p99
+hu_site_deductible_p100
 </pre>
 </div>
 <p/>
@@ -302,16 +273,13 @@ hu_site_deductible_p100 7380000
 <div class="pokipanel">
 <pre>
 $ mlr --from data/flins.csv --icsv --opprint stats1 -a p95,p99,p100 -f hu_site_deductible -g county then sort -f county | head
-county              hu_site_deductible_p95 hu_site_deductible_p99 hu_site_deductible_p100
-ALACHUA COUNTY      30630.600000           107312.400000          1641375
-BAKER COUNTY        0                      0                      0
-BAY COUNTY          26131.500000           181912.500000          630000
-BRADFORD COUNTY     3355.200000            8163                   8163
-BREVARD COUNTY      5360.400000            78975                  1973461.500000
-BROWARD COUNTY      0                      148500                 3258900
-CALHOUN COUNTY      0                      33339.600000           33339.600000
-CHARLOTTE COUNTY    5400                   52650                  250994.700000
-CITRUS COUNTY       1332.900000            79974.900000           483785.100000
+county     hu_site_deductible_p95 hu_site_deductible_p99 hu_site_deductible_p100
+Duval      -                      -                      -
+Highlands  -                      -                      -
+Miami Dade -                      -                      -
+Palm Beach -                      -                      -
+Seminole   -                      -                      -
+St. Johns  -                      -                      -
 </pre>
 </div>
 <p/>
@@ -319,11 +287,11 @@ CITRUS COUNTY       1332.900000            79974.900000           483785.100000
 <div class="pokipanel">
 <pre>
 $ mlr --from data/flins.csv --icsv --oxtab stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012
-tiv_2011_tiv_2012_corr  0.973050
-tiv_2011_tiv_2012_ols_m 0.983558
-tiv_2011_tiv_2012_ols_b 433854.642897
-tiv_2011_tiv_2012_ols_n 36634
-tiv_2011_tiv_2012_r2    0.946826
+tiv_2011_tiv_2012_corr  0.935363
+tiv_2011_tiv_2012_ols_m 1.089091
+tiv_2011_tiv_2012_ols_b 103095.523356
+tiv_2011_tiv_2012_ols_n 8
+tiv_2011_tiv_2012_r2    0.874904
 </pre>
 </div>
 <p/>
@@ -331,74 +299,13 @@ tiv_2011_tiv_2012_r2    0.946826
 <div class="pokipanel">
 <pre>
 $ mlr --from data/flins.csv --icsv --opprint stats2 -a corr,linreg-ols,r2 -f tiv_2011,tiv_2012 -g county
-county              tiv_2011_tiv_2012_corr tiv_2011_tiv_2012_ols_m tiv_2011_tiv_2012_ols_b tiv_2011_tiv_2012_ols_n tiv_2011_tiv_2012_r2
-CLAY COUNTY         0.962716               1.090115                46450.531268            363                     0.926822
-SUWANNEE COUNTY     0.989208               1.074658                36253.003174            154                     0.978533
-NASSAU COUNTY       0.973135               1.296321                -45369.242673           135                     0.946993
-COLUMBIA COUNTY     0.999492               0.931447                117183.548383           125                     0.998985
-ST  JOHNS COUNTY    0.966170               1.230056                -596.623856             657                     0.933485
-BAKER COUNTY        0.963515               0.942771                29063.065747            70                      0.928360
-BRADFORD COUNTY     0.999766               0.849029                69544.341944            31                      0.999533
-HAMILTON COUNTY     0.987026               1.224952                1045.052170             35                      0.974220
-UNION COUNTY        0.997745               1.432575                -56.125738              15                      0.995495
-MADISON COUNTY      0.985213               1.512114                -84278.028498           81                      0.970645
-LAFAYETTE COUNTY    0.967499               1.134289                9904.860798             68                      0.936055
-FLAGLER COUNTY      0.984854               1.007922                95340.508354            204                     0.969937
-DUVAL COUNTY        0.978815               1.245630                -60831.675023           1894                    0.958079
-LAKE COUNTY         0.999727               1.293864                -107695.848518          206                     0.999455
-VOLUSIA COUNTY      0.994636               1.202247                -36277.755477           1367                    0.989300
-PUTNAM COUNTY       0.961167               1.176294                6405.060826             268                     0.923841
-MARION COUNTY       0.975774               1.175642                20434.945602            1138                    0.952136
-SUMTER COUNTY       0.989760               1.372395                -62648.989750           158                     0.979625
-LEON COUNTY         0.978644               1.259681                -90816.033261           246                     0.957743
-FRANKLIN COUNTY     0.989430               1.048513                36026.508852            37                      0.978972
-LIBERTY COUNTY      0.995175               1.369834                -79755.544362           36                      0.990373
-GADSDEN COUNTY      0.997898               1.180585                7335.013009             196                     0.995801
-WAKULLA COUNTY      0.978267               1.192350                44607.922080            85                      0.957006
-JEFFERSON COUNTY    0.976543               0.976066                74884.170791            57                      0.953637
-TAYLOR COUNTY       0.981770               1.386188                -56856.945239           113                     0.963873
-BAY COUNTY          0.975404               1.004452                373000.300167           403                     0.951412
-WALTON COUNTY       0.985855               1.319583                -83273.091503           288                     0.971909
-JACKSON COUNTY      0.991195               1.171538                8128.438198             208                     0.982468
-CALHOUN COUNTY      0.967974               1.274077                -739.602262             68                      0.936973
-HOLMES COUNTY       0.997366               1.159384                42610.647058            40                      0.994738
-WASHINGTON COUNTY   0.982582               1.213413                -13125.214494           116                     0.965468
-GULF COUNTY         0.990367               1.135626                26094.474571            72                      0.980826
-ESCAMBIA COUNTY     0.986666               1.195336                46106.277408            494                     0.973509
-SANTA ROSA COUNTY   0.972696               1.013849                30496.045069            856                     0.946138
-OKALOOSA COUNTY     0.970781               1.462083                -116127.032201          1115                    0.942416
-ALACHUA COUNTY      0.982825               1.142748                52671.269211            973                     0.965945
-GILCHRIST COUNTY    0.977467               1.375740                -15309.425813           39                      0.955442
-LEVY COUNTY         0.956302               1.200506                265.391211              126                     0.914513
-DIXIE COUNTY        0.995780               1.640150                -98273.767115           40                      0.991578
-SEMINOLE COUNTY     0.985925               0.880108                427892.123991           1100                    0.972048
-ORANGE COUNTY       0.990658               0.872027                1298970.668186          1811                    0.981403
-BREVARD COUNTY      0.978015               1.271225                -19295.177646           872                     0.956513
-INDIAN RIVER COUNTY 0.985673               1.284620                -116579.613922          380                     0.971550
-MIAMI DADE COUNTY   0.987833               1.293106                -237168.505282          4315                    0.975815
-BROWARD COUNTY      0.983847               1.187689                81931.896276            3193                    0.967954
-MONROE COUNTY       0.982555               1.013142                455469.576218           152                     0.965414
-PALM BEACH COUNTY   0.982591               1.247594                -77252.429421           2791                    0.965485
-MARTIN COUNTY       0.975896               1.032873                8668.746202             109                     0.952374
-HENDRY COUNTY       0.971645               0.969699                208613.031856           74                      0.944093
-PASCO COUNTY        0.986556               1.288225                -152936.104164          790                     0.973294
-GLADES COUNTY       0.983518               0.982993                125666.627729           22                      0.967308
-HILLSBOROUGH COUNTY 0.985446               1.211620                214512.927989           1166                    0.971103
-HERNANDO COUNTY     0.974068               0.759748                701096.129434           120                     0.948809
-PINELLAS COUNTY     0.987215               1.154797                38609.763660            1774                    0.974593
-POLK COUNTY         0.979963               1.094848                153371.308143           1629                    0.960327
-North Fort Myers    -                      -                       -                       1                       -
-Orlando             -                      -                       -                       1                       -
-HIGHLANDS COUNTY    0.993054               1.528760                -300198.361569          369                     0.986157
-HARDEE COUNTY       0.977999               1.323440                -98513.434797           81                      0.956482
-MANATEE COUNTY      0.967526               1.068496                137190.708238           518                     0.936106
-OSCEOLA COUNTY      -                      -                       -                       1                       -
-LEE COUNTY          0.978945               1.252722                -16843.109269           678                     0.958334
-CHARLOTTE COUNTY    0.979024               1.013211                178461.328878           414                     0.958488
-COLLIER COUNTY      0.958031               1.169759                110270.385201           787                     0.917824
-SARASOTA COUNTY     0.984781               1.292514                -109939.723017          417                     0.969793
-DESOTO COUNTY       0.980130               1.286205                -9987.042982            108                     0.960654
-CITRUS COUNTY       0.989943               0.965940                138635.818880           384                     0.979986
+county     tiv_2011_tiv_2012_corr tiv_2011_tiv_2012_ols_m tiv_2011_tiv_2012_ols_b tiv_2011_tiv_2012_ols_n tiv_2011_tiv_2012_r2
+Seminole   -                      -                       -                       1                       -
+Miami Dade 1.000000               0.930643                -2311.154328            2                       1.000000
+Palm Beach -                      -                       -                       1                       -
+Highlands  1.000000               1.055693                -4529.793939            2                       1.000000
+Duval      -                      -                       -                       1                       -
+St. Johns  -                      -                       -                       1                       -
 </pre>
 </div>
 <p/>

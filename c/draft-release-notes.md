@@ -2,7 +2,7 @@ This is a relatively minor release, containing feature requests.
 
 **Features:**
 
-* There is a new DSL function [**mapexcept**](http://johnkerl.org/miller-releases/miller-5.1.0/doc/reference-dsl.html#mapexcept) which returns a copy of the argument with specified key(s), if any, unset.  Likewise, [**maponly**](http://johnkerl.org/miller-releases/miller-5.1.0/doc/reference-dsl.html#maponly) returns a copy of the argument with only specified key(s), if any, set.  This resolves https://github.com/johnkerl/miller/issues/137.
+* There is a new DSL function [**mapexcept**](http://johnkerl.org/miller-releases/miller-5.1.0/doc/reference-dsl.html#mapexcept) which returns a copy of the argument with specified key(s), if any, unset.  Likewise, [**mapselect**](http://johnkerl.org/miller-releases/miller-5.1.0/doc/reference-dsl.html#mapselect) returns a copy of the argument with only specified key(s), if any, set.  This resolves https://github.com/johnkerl/miller/issues/137.
 
 **Documentation:**
 

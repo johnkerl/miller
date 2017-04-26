@@ -192,7 +192,7 @@ boxed_xval_t variadic_mapexcept_xfunc(
 // ----------------------------------------------------------------
 // Precondition (validated before we're called): there is at least one argument
 // which is the map to be unkeyed.
-boxed_xval_t variadic_maponly_xfunc(
+boxed_xval_t variadic_mapselect_xfunc(
 	boxed_xval_t* pbxvals,
 	int nxvals)
 {

@@ -338,7 +338,7 @@ OPTIONS
 	asserting_map asserting_nonempty_map asserting_not_empty asserting_not_map
 	asserting_not_null asserting_null asserting_numeric asserting_present
 	asserting_string boolean float fmtnum hexfmt int string typeof depth haskey
-	joink joinkv joinv leafcount length mapdiff mapexcept maponly mapsum splitkv
+	joink joinkv joinv leafcount length mapdiff mapexcept mapselect mapsum splitkv
 	splitkvx splitnv splitnvx
 
        Please use "mlr --help-function {function name}" for function-specific help.
@@ -1820,9 +1820,9 @@ FUNCTIONS FOR FILTER/PUT
        (class=maps variadic): Returns a map with keys from remaining arguments, if any, unset.
        E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'.
 
-   maponly
+   mapselect
        (class=maps variadic): Returns a map with only keys from remaining arguments set.
-       E.g. 'maponly({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'.
+       E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'.
 
    mapsum
        (class=maps variadic): With 0 args, returns empty map. With &gt;= 1 arg, returns a map with
@@ -2204,7 +2204,7 @@ SEE ALSO
 
 
 
-				  2017-04-25			     MILLER(1)
+				  2017-04-26			     MILLER(1)
 </pre>
 </div>
 <p/>

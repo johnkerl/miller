@@ -393,8 +393,8 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"With 2 or more, returns copy of arg 1 with all keys from any of remaining argument maps removed."},
 	{FUNC_CLASS_MAPS, "mapexcept",     1,1, "Returns a map with keys from remaining arguments, if any, unset.\n"
 		"E.g. 'mapexcept({1:2,3:4,5:6}, 1, 5, 7)' is '{3:4}'."},
-	{FUNC_CLASS_MAPS, "maponly",       1,1, "Returns a map with only keys from remaining arguments set.\n"
-		"E.g. 'maponly({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'."},
+	{FUNC_CLASS_MAPS, "mapselect",       1,1, "Returns a map with only keys from remaining arguments set.\n"
+		"E.g. 'mapselect({1:2,3:4,5:6}, 1, 5, 7)' is '{1:2,5:6}'."},
 	{FUNC_CLASS_MAPS, "mapsum",        0,1, "With 0 args, returns empty map. With >= 1 arg, returns a map with\n"
 		"key-value pairs from all arguments. Rightmost collisions win, e.g. 'mapsum({1:2,3:4},{1:5})' is '{1:5,3:4}'."},
 	{FUNC_CLASS_MAPS, "splitkv",       3,0, "Splits string by separators into map with type inference.\n"
@@ -1293,8 +1293,8 @@ static rxval_evaluator_t* fmgr_alloc_xevaluator_from_variadic_func_name(
 	} else if (streq(function_name, "mapexcept")) {
 		return rxval_evaluator_alloc_from_variadic_func(variadic_mapexcept_xfunc, parg_nodes,
 			pfmgr, type_inferencing, context_flags);
-	} else if (streq(function_name, "maponly")) {
-		return rxval_evaluator_alloc_from_variadic_func(variadic_maponly_xfunc, parg_nodes,
+	} else if (streq(function_name, "mapselect")) {
+		return rxval_evaluator_alloc_from_variadic_func(variadic_mapselect_xfunc, parg_nodes,
 			pfmgr, type_inferencing, context_flags);
 	} else {
 		return NULL;
