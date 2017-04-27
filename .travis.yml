@@ -13,7 +13,7 @@ addons:
 
 # Build using gcc and clang since it is supported
 compiler:
-  - clang
+  - clang -fsanitize=address
   - gcc
 
 before_script: autoreconf -fiv 
