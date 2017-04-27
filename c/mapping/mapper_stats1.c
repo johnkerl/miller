@@ -68,6 +68,7 @@ static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "-f {a,b,c}  Value-field names on which to compute statistics\n");
 	fprintf(o, "-g {d,e,f}  Optional group-by-field names\n");
 	fprintf(o, "-i          Use interpolated percentiles, like R's type=7; default like type=1.\n");
+	fprintf(o, "            Not sensical for string-valued fields.\n");
 	fprintf(o, "-s          Print iterative stats. Useful in tail -f contexts (in which\n");
 	fprintf(o, "            case please avoid pprint-format output since end of input\n");
 	fprintf(o, "            stream will never be seen).\n");
@@ -79,6 +80,9 @@ static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "* p50 and median are synonymous.\n");
 	fprintf(o, "* min and max output the same results as p0 and p100, respectively, but use\n");
 	fprintf(o, "  less memory.\n");
+	fprintf(o, "* String-valued data make sense unless arithmetic on them is required,\n");
+	fprintf(o, "  e.g. for sum, mean, interpolated percentiles, etc. In case of mixed data,\n");
+	fprintf(o, "  numbers are less than strings.\n");
 	fprintf(o, "* count and mode allow text input; the rest require numeric input.\n");
 	fprintf(o, "  In particular, 1 and 1.0 are distinct text for count and mode.\n");
 	fprintf(o, "* When there are mode ties, the first-encountered datum wins.\n");

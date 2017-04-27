@@ -90,10 +90,16 @@ static void mapper_merge_fields_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "            after removing substrings will be accumulated together. Please see\n");
 	fprintf(o, "            examples below.\n");
 	fprintf(o, "-i          Use interpolated percentiles, like R's type=7; default like type=1.\n");
+	fprintf(o, "            Not sensical for string-valued fields.\n");
 	fprintf(o, "-o {name}   Output field basename for -f/-r.\n");
 	fprintf(o, "-k          Keep the input fields which contributed to the output statistics;\n");
 	fprintf(o, "            the default is to omit them.\n");
 	fprintf(o, "-F          Computes integerable things (e.g. count) in floating point.\n");
+	fprintf(o, "\n");
+	fprintf(o, "String-valued data make sense unless arithmetic on them is required,\n");
+	fprintf(o, "e.g. for sum, mean, interpolated percentiles, etc. In case of mixed data,\n");
+	fprintf(o, "numbers are less than strings.\n");
+	fprintf(o, "\n");
 	fprintf(o, "Example input data: \"a_in_x=1,a_out_x=2,b_in_y=4,b_out_x=8\".\n");
 	fprintf(o, "Example: %s %s -a sum,count -f a_in_x,a_out_x -o foo\n", argv0, verb);
 	fprintf(o, "  produces \"b_in_y=4,b_out_x=8,foo_sum=3,foo_count=2\" since \"a_in_x,a_out_x\" are\n");

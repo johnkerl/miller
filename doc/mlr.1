@@ -835,10 +835,16 @@ Options:
             after removing substrings will be accumulated together. Please see
             examples below.
 -i          Use interpolated percentiles, like R's type=7; default like type=1.
+            Not sensical for string-valued fields.
 -o {name}   Output field basename for -f/-r.
 -k          Keep the input fields which contributed to the output statistics;
             the default is to omit them.
 -F          Computes integerable things (e.g. count) in floating point.
+
+String-valued data make sense unless arithmetic on them is required,
+e.g. for sum, mean, interpolated percentiles, etc. In case of mixed data,
+numbers are less than strings.
+
 Example input data: "a_in_x=1,a_out_x=2,b_in_y=4,b_out_x=8".
 Example: mlr merge-fields -a sum,count -f a_in_x,a_out_x -o foo
   produces "b_in_y=4,b_out_x=8,foo_sum=3,foo_count=2" since "a_in_x,a_out_x" are
@@ -1326,6 +1332,7 @@ Options:
 -f {a,b,c}  Value-field names on which to compute statistics
 -g {d,e,f}  Optional group-by-field names
 -i          Use interpolated percentiles, like R's type=7; default like type=1.
+            Not sensical for string-valued fields.
 -s          Print iterative stats. Useful in tail -f contexts (in which
             case please avoid pprint-format output since end of input
             stream will never be seen).
@@ -1337,6 +1344,9 @@ Notes:
 * p50 and median are synonymous.
 * min and max output the same results as p0 and p100, respectively, but use
   less memory.
+* String-valued data make sense unless arithmetic on them is required,
+  e.g. for sum, mean, interpolated percentiles, etc. In case of mixed data,
+  numbers are less than strings.
 * count and mode allow text input; the rest require numeric input.
   In particular, 1 and 1.0 are distinct text for count and mode.
 * When there are mode ties, the first-encountered datum wins.
