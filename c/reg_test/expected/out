@@ -4634,6 +4634,23 @@ y_max      0.952618
 y_antimode 0.9526183602969864
 y_mode     0.9526183602969864
 
+mlr --oxtab stats1 -a min,p0,p50,p100,max -f x,y,z ./reg_test/input/string-numeric-ordering.dkvp
+x_min  1.000000
+x_p0   1
+x_p50  2.500000
+x_p100 b
+x_max  b
+y_min  1.000000
+y_p0   1
+y_p50  3
+y_p100 4
+y_max  4.000000
+z_min  a
+z_p0   a
+z_p50  d
+z_p100 f
+z_max  f
+
 mlr --oxtab stats1 -a mean -f x ./reg_test/input/abixy-het
 x_mean 0.440334
 
@@ -17996,6 +18013,15 @@ x=1,y=2,z=3,o=1
 
 mlr put $o=max($x,$y,$z)
 x=1,y=2,z=3,o=3
+
+mlr put $u=min($x,$y);$v=max($x,$y)
+x=1,y=b,u=1,v=b
+
+mlr put $u=min($x,$y);$v=max($x,$y)
+x=a,y=2,u=2,v=a
+
+mlr put $u=min($x,$y);$v=max($x,$y)
+x=a,y=b,u=a,v=b
 
 mlr --icsvlite --oxtab put ${x+y} = ${name.x} + ${name.y}; ${x*y} = ${name.x} * ${name.y} ./reg_test/input/braced.csv
 name.x 1

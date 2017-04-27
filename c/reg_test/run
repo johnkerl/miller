@@ -592,6 +592,8 @@ run_mlr --opprint stats1    -a min,p10,p50,median,antimode,mode,p90,max -f i,x,y
 run_mlr --opprint stats1    -a mean,meaneb,stddev                       -f i,x,y -g a,b $indir/abixy
 run_mlr --oxtab   stats1 -s -a mean,sum,count,min,max,antimode,mode     -f i,x,y -g a,b $indir/abixy
 
+run_mlr --oxtab stats1 -a min,p0,p50,p100,max -f x,y,z $indir/string-numeric-ordering.dkvp
+
 run_mlr --oxtab   stats1 -a mean -f x      $indir/abixy-het
 run_mlr --oxtab   stats1 -a mean -f x -g a $indir/abixy-het
 
@@ -635,6 +637,9 @@ run_mlr --csvlite --opprint merge-fields -k -a p0,min,p29,max,p100,sum -c _in,_o
 
 run_mlr --csvlite --opprint merge-fields -i    -a p0,min,p29,max,p100,sum -c _in,_out $indir/merge-fields-in-out.csv
 run_mlr --csvlite --opprint merge-fields -i -k -a p0,min,p29,max,p100,sum -c _in,_out $indir/merge-fields-in-out.csv
+
+run_mlr --csvlite --opprint merge-fields    -a p0,min,p29,max,p100 -c _in,_out $indir/merge-fields-in-out-mixed.csv
+run_mlr --csvlite --opprint merge-fields -k -a p0,min,p29,max,p100 -c _in,_out $indir/merge-fields-in-out-mixed.csv
 
 run_mlr --oxtab merge-fields -k -a p0,min,p29,max,p100,sum,count -f a_in_x,a_out_x -o foo $indir/merge-fields-abxy.dkvp
 run_mlr --oxtab merge-fields -k -a p0,min,p29,max,p100,sum,count -r in_,out_       -o bar $indir/merge-fields-abxy.dkvp
@@ -1151,6 +1156,10 @@ echo 'x=1,y=2,z=3' | run_mlr put '$o=min($x,$y)'
 echo 'x=1,y=2,z=3' | run_mlr put '$o=max($x,$y)'
 echo 'x=1,y=2,z=3' | run_mlr put '$o=min($x,$y,$z)'
 echo 'x=1,y=2,z=3' | run_mlr put '$o=max($x,$y,$z)'
+
+echo 'x=1,y=b' | run_mlr put '$u=min($x,$y);$v=max($x,$y)'
+echo 'x=a,y=2' | run_mlr put '$u=min($x,$y);$v=max($x,$y)'
+echo 'x=a,y=b' | run_mlr put '$u=min($x,$y);$v=max($x,$y)'
 
 run_mlr --icsvlite --oxtab put '${x+y} = ${name.x} + ${name.y}; ${x*y} = ${name.x} * ${name.y}' $indir/braced.csv
 run_mlr --icsvlite --oxtab filter '${name.y} < ${z}' $indir/braced.csv

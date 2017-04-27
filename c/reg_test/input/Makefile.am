@@ -103,6 +103,7 @@ EXTRA_DIST=	\
 		mand.mlr \
 		merge-fields-abxy.dkvp \
 		merge-fields-in-out.csv \
+		merge-fields-in-out-mixed.csv \
 		minmax.dkvp \
 		missings.dkvp \
 		mixed-types.xtab \
@@ -160,6 +161,7 @@ EXTRA_DIST=	\
 		space-pad.dkvp \
 		space-pad.nidx \
 		space-pad.pprint \
+		string-numeric-ordering.dkvp \
 		sub.dat \
 		subtab.dkvp \
 		subtab1.mlr \

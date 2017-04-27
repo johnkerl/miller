@@ -25,6 +25,7 @@ airable:
 * reg_test/run --mlrexec flag
 
 * string stats
+  -> merge-fields code, autodoc, UT
 
 * across-all/regex x stats1 / many verbs
 
@@ -34,6 +35,8 @@ airable:
 
 ----------------------------------------------------------------
 non-airable:
+
+* valgrinds
 
 ! ASAN build @ travis !
 

@@ -36,6 +36,14 @@ static mv_t _1(mv_t* pa, mv_t* pb) {
 static mv_t _2(mv_t* pa, mv_t* pb) {
 	return *pb;
 }
+static mv_t _1f(mv_t* pa, mv_t* pb) {
+	mv_free(pb);
+	return *pa;
+}
+static mv_t _2f(mv_t* pa, mv_t* pb) {
+	mv_free(pa);
+	return *pb;
+}
 static mv_t _s1(mv_t* pa, mv_t* pb) {
 	return s_x_string_func(pa);
 }
@@ -1192,27 +1200,61 @@ static mv_t min_i_ii(mv_t* pa, mv_t* pb) {
 	return mv_from_int(a < b ? a : b);
 }
 
+static mv_t min_b_bb(mv_t* pa, mv_t* pb) {
+	int a = pa->u.boolv;
+	int b = pb->u.boolv;
+	return mv_from_bool(a < b ? a : b);
+}
+
+static mv_t min_s_ss(mv_t* pa, mv_t* pb) {
+	char* a = pa->u.strv;
+	char* b = pb->u.strv;
+	int   c = strcmp(a, b);
+	if (c <= 0) {
+		mv_free(pb);
+		return *pa;
+	} else {
+		mv_free(pa);
+		return *pb;
+	}
+}
+
+// Sort rules (same for min, max, and comparator):
+// * NUMERICS < BOOL < STRINGS < ERROR < ABSENT
+// * error == error (singleton type)
+// * absent == absent (singleton type)
+// * string compares on strings
+// * numeric compares on numbers
+// * false < true
+// Exceptions for min & max:
+// * absent-null always loses
+// * empty-null always loses against numbers
 static mv_binary_func_t* min_dispositions[MT_DIM][MT_DIM] = {
-	//         ERROR  ABSENT EMPTY STRING INT       FLOAT     BOOL
-	/*ERROR*/  {_err, _err,  _err, _err,  _err,     _err,     _err},
-	/*ABSENT*/ {_err, _a,    _a,   _err,  _2,       _2,       _err},
-	/*EMPTY*/  {_err, _a,    _emt, _err,  _2,       _2,       _err},
-	/*STRING*/ {_err, _err,  _err, _err,  _err,     _err,     _err},
-	/*INT*/    {_err, _1,    _1,   _err,  min_i_ii, min_f_if, _err},
-	/*FLOAT*/  {_err, _1,    _1,   _err,  min_f_fi, min_f_ff, _err},
-	/*BOOL*/   {_err, _err,  _err, _err,  _err,     _err,     _err},
+	//         ERROR  ABSENT EMPTY STRING    INT       FLOAT     BOOL
+	/*ERROR*/  {_err, _err,  _err, _err,     _err,     _err,     _err},
+	/*ABSENT*/ {_err, _a,    _2,   _2f,      _2,       _2,       _2},
+	/*EMPTY*/  {_err, _1,    _emt, _emt,     _2,       _2,       _2},
+	/*STRING*/ {_err, _1f,   _emt, min_s_ss, _2,       _2f,      _2f},
+	/*INT*/    {_err, _1,    _1,   _1f,      min_i_ii, min_f_if, _1},
+	/*FLOAT*/  {_err, _1,    _1,   _1f,      min_f_fi, min_f_ff, _1},
+	/*BOOL*/   {_err, _1,    _1,   _1f,      _2,       _2,       min_b_bb},
 };
 
-// xxx memory leak
-mv_t x_xx_min_func(mv_t* pval1, mv_t* pval2) { return (min_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+mv_t x_xx_min_func(mv_t* pval1, mv_t* pval2) {
+	return (min_dispositions[pval1->type][pval2->type])(pval1,pval2);
+}
 
 mv_t variadic_min_func(mv_t* pvals, int nvals) {
-	mv_t rv = mv_empty();
-	for (int i = 0; i < nvals; i++) {
-		rv = x_xx_min_func(&rv, &pvals[i]);
-		mv_free(&pvals[i]);
+	if (nvals == 0) {
+		return mv_empty();
+	} else {
+		mv_t rv = pvals[0];
+		for (int i = 1; i < nvals; i++) {
+			rv = x_xx_min_func(&rv, &pvals[i]);
+			// Disposition-matrix entries for min all free their non-return arguments
+		}
+		return rv;
 	}
-	return rv;
 }
 
 // ----------------------------------------------------------------
@@ -1240,26 +1282,61 @@ static mv_t max_i_ii(mv_t* pa, mv_t* pb) {
 	return mv_from_int(a > b ? a : b);
 }
 
-static mv_binary_func_t* max_dispositions[MT_DIM][MT_DIM] = {
-	//         ERROR  ABSENT EMPTY STRING INT       FLOAT     BOOL
-	/*ERROR*/  {_err, _err,  _err, _err,  _err,     _err,     _err},
-	/*ABSENT*/ {_err, _a,    _a,   _err,  _2,       _2,       _err},
-	/*EMPTY*/  {_err, _a,    _emt, _err,  _2,       _2,       _err},
-	/*STRING*/ {_err, _err,  _err, _err,  _err,     _err,     _err},
-	/*INT*/    {_err, _1,    _1,   _err,  max_i_ii, max_f_if, _err},
-	/*FLOAT*/  {_err, _1,    _1,   _err,  max_f_fi, max_f_ff, _err},
-	/*BOOL*/   {_err, _err,  _err, _err,  _err,     _err,     _err},
-};
+static mv_t max_b_bb(mv_t* pa, mv_t* pb) {
+	int a = pa->u.boolv;
+	int b = pb->u.boolv;
+	return mv_from_bool(a > b ? a : b);
+}
 
-mv_t x_xx_max_func(mv_t* pval1, mv_t* pval2) { return (max_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+static mv_t max_s_ss(mv_t* pa, mv_t* pb) {
+	char* a = pa->u.strv;
+	char* b = pb->u.strv;
+	int   c = strcmp(a, b);
+	if (c >= 0) {
+		mv_free(pb);
+		return *pa;
+	} else {
+		mv_free(pa);
+		return *pb;
+	}
+}
+
+// Sort rules (same for min, max, and comparator):
+// * NUMERICS < BOOL < STRINGS < ERROR < ABSENT
+// * error == error (singleton type)
+// * absent == absent (singleton type)
+// * string compares on strings
+// * numeric compares on numbers
+// * false < true
+// Exceptions for min & max:
+// * absent-null always loses
+// * empty-null always loses against numbers
+static mv_binary_func_t* max_dispositions[MT_DIM][MT_DIM] = {
+	//         ERROR  ABSENT EMPTY STRING    INT       FLOAT     BOOL
+	/*ERROR*/  {_err, _err,  _err, _err,     _err,     _err,     _err},
+	/*ABSENT*/ {_err, _a,    _2,   _2f,      _2,       _2,       _2},
+	/*EMPTY*/  {_err, _1,    _emt, _2f,      _2,       _2,       _2},
+	/*STRING*/ {_err, _1f,   _1f,  max_s_ss, _1,       _1f,      _1f},
+	/*INT*/    {_err, _1,    _1,   _2f,      max_i_ii, max_f_if, _2},
+	/*FLOAT*/  {_err, _1,    _1,   _2f,      max_f_fi, max_f_ff, _2},
+	/*BOOL*/   {_err, _1,    _1,   _2f,      _1,       _1,       max_b_bb},
+	};
+
+mv_t x_xx_max_func(mv_t* pval1, mv_t* pval2) {
+	return (max_dispositions[pval1->type][pval2->type])(pval1,pval2);
+}
 
 mv_t variadic_max_func(mv_t* pvals, int nvals) {
-	mv_t rv = mv_empty();
-	for (int i = 0; i < nvals; i++) {
-		rv = x_xx_max_func(&rv, &pvals[i]);
-		mv_free(&pvals[i]);
+	if (nvals == 0) {
+		return mv_empty();
+	} else {
+		mv_t rv = pvals[0];
+		for (int i = 1; i < nvals; i++) {
+			rv = x_xx_max_func(&rv, &pvals[i]);
+			// Disposition-matrix entries for max all free their non-return arguments
+		}
+		return rv;
 	}
-	return rv;
 }
 
 // ----------------------------------------------------------------
@@ -2002,7 +2079,7 @@ static int mv_ss_cmp(const mv_t* pa, const mv_t* pb) {
 	return strcmp(pa->u.strv, pb->u.strv);
 }
 
-// Sort rules:
+// Sort rules (same for min, max, and comparator):
 // * NUMERICS < BOOL < STRINGS < ERROR < ABSENT
 // * error == error (singleton type)
 // * absent == absent (singleton type)

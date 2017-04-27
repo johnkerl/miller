@@ -2084,8 +2084,9 @@ library.
 
 <li/> The <tt>min</tt> and <tt>max</tt> functions are different from other
 multi-argument functions which return null if any of their inputs are null: for
-<tt>min</tt> and <tt>max</tt>, by contrast, if one argument is null, the other
-is returned.
+<tt>min</tt> and <tt>max</tt>, by contrast, if one argument is absent-null, the other
+is returned. Empty-null loses min or max against numeric or boolean; empty-null
+is less than any other string.
 
 <li/> Symmetrically with respect to the bitwise OR, XOR, and AND operators
 <tt>|</tt>, <tt>^</tt>, <tt>&amp;</tt>, Miller has logical operators

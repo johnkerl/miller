@@ -26,7 +26,7 @@ static mv_t rval_evaluator_variadic_func(void* pvstate, variables_t* pvars) {
 		rval_evaluator_t* parg = pstate->pargs[i];
 		mv_t* pmv = &pstate->pmvs[i];
 		*pmv = parg->pprocess_func(parg->pvstate, pvars);
-	    mv_set_number_nullable(pmv);
+	    //mv_set_number_nullable(pmv);
 	}
 
 	return pstate->pfunc(pstate->pmvs, nargs);
@@ -38,10 +38,6 @@ static void rval_evaluator_variadic_free(rval_evaluator_t* pevaluator) {
 	for (int i = 0; i < pstate->nargs; i++)
 		pstate->pargs[i]->pfree_func(pstate->pargs[i]);
 	free(pstate->pargs);
-
-	for (int i = 0; i < pstate->nargs; i++)
-		mv_free(&pstate->pmvs[i]);
-	free(pstate->pmvs);
 
 	free(pstate);
 
