@@ -10,6 +10,8 @@ addons:
       - flex
       - autoconf
       - libtool
+      - automake
+      - m4
 
 # Build using gcc and clang since it is supported
 compiler:

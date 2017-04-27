@@ -22,10 +22,9 @@ FUNDAM:
 ----------------------------------------------------------------
 airable:
 
-* reg_test/run --mlrexec flag
+! !autoreconf doc note w/ as-of-5.2.0 caveat
 
-* string stats
-  -> merge-fields code, autodoc, UT
+* reg_test/run --mlrexec flag
 
 * across-all/regex x stats1 / many verbs
 

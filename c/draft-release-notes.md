@@ -6,6 +6,8 @@ This is a relatively minor release, containing feature requests.
 
 * xxx min/max functions and stats1/merge-fields min/max/percentile mix int and string. esp. string-only order statistics. doclink for mixed case. interpolation obv nonsensical.
 
+* xxx `./configure` vs. `autoreconf -fiv` 1st, and which issue is resolved by this.
+
 **Documentation:**
 
 * xxx cookbook example [**Showing differences between successive queries**](http://www.johnkerl.org/miller-releases/miller-5.2.0/doc/cookbook.html#Showing_differences_between_successive_queries)
