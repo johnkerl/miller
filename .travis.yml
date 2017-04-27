@@ -12,7 +12,7 @@ addons:
       - libtool
       - automake
       - m4
-      - aclocal-1.13
+      - aclocal
 
 # Build using gcc and clang since it is supported
 compiler:
