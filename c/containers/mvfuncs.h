@@ -239,6 +239,17 @@ int mvnecopy(mv_t* pval1, mv_t* pval2);
 // For qsort of numeric mlrvals.
 int mv_nn_comparator(const void* pva, const void* pvb);
 
+// For qsort of arbitrary mlrvals. Sort rules:
+// * Across types:
+//   NUMERICS < BOOL < STRINGS < ERROR < ABSENT
+// * Within types:
+//   o numeric compares on numbers
+//   o false < true
+//   o string compares on strings
+//   o error == error (this is a singleton type)
+//   o absent == absent (this is a singleton type)
+int mv_xx_comparator(const void* pva, const void* pvb);
+
 int mlr_bsearch_mv_n_for_insert(mv_t* array, int size, mv_t* pvalue);
 
 #endif // MVFUNCS_H

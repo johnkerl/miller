@@ -247,7 +247,7 @@ mv_t percentile_keeper_emit_non_interpolated(percentile_keeper_t* ppercentile_ke
 		return mv_absent();
 	}
 	if (!ppercentile_keeper->sorted) {
-		qsort(ppercentile_keeper->data, ppercentile_keeper->size, sizeof(mv_t), mv_nn_comparator);
+		qsort(ppercentile_keeper->data, ppercentile_keeper->size, sizeof(mv_t), mv_xx_comparator);
 		ppercentile_keeper->sorted = TRUE;
 	}
 	return ppercentile_keeper->data[compute_index_non_interpolated(ppercentile_keeper->size, percentile)];
@@ -258,7 +258,7 @@ mv_t percentile_keeper_emit_linearly_interpolated(percentile_keeper_t* ppercenti
 		return mv_absent();
 	}
 	if (!ppercentile_keeper->sorted) {
-		qsort(ppercentile_keeper->data, ppercentile_keeper->size, sizeof(mv_t), mv_nn_comparator);
+		qsort(ppercentile_keeper->data, ppercentile_keeper->size, sizeof(mv_t), mv_xx_comparator);
 		ppercentile_keeper->sorted = TRUE;
 	}
 	return get_percentile_linearly_interpolated(ppercentile_keeper->data, ppercentile_keeper->size, percentile);

@@ -293,5 +293,6 @@ mv_t mv_scan_number_or_die(char* string);
 mv_t mv_ref_type_infer_string(char* string);
 mv_t mv_ref_type_infer_string_or_float(char* string);
 mv_t mv_ref_type_infer_string_or_float_or_int(char* string);
+mv_t mv_copy_type_infer_string_or_float_or_int(char* string); // strdups if retval is MT_STRING
 
 #endif // MLRVAL_H

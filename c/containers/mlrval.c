@@ -397,3 +397,21 @@ mv_t mv_ref_type_infer_string_or_float_or_int(char* string) {
 		}
 	}
 }
+
+mv_t mv_copy_type_infer_string_or_float_or_int(char* string) {
+	if (string == NULL) {
+		return mv_absent();
+	} else if (*string == 0) {
+		return mv_empty();
+	} else {
+		long long intv;
+		double fltv;
+		if (mlr_try_int_from_string(string, &intv)) {
+			return mv_from_int(intv);
+		} else if (mlr_try_float_from_string(string, &fltv)) {
+			return mv_from_float(fltv);
+		} else {
+			return mv_from_string(mlr_strdup_or_die(string), FREE_ENTRY_VALUE);
+		}
+	}
+}

@@ -4659,12 +4659,12 @@ y_p50  -9223372036854775804
 y_p100 -9223372036854775801
 
 mlr --oxtab stats1 -a p0,p50,p100 -f x,y -F ./reg_test/input/near-ovf.dkvp
-x_p0   9223372036854775808.000000
-x_p50  9223372036854775808.000000
-x_p100 9223372036854775808.000000
-y_p0   -9223372036854775808.000000
-y_p50  -9223372036854775808.000000
-y_p100 -9223372036854775808.000000
+x_p0   9223372036854775801
+x_p50  9223372036854775804
+x_p100 9223372036854775807
+y_p0   -9223372036854775807
+y_p50  -9223372036854775804
+y_p100 -9223372036854775801
 
 mlr --opprint stats2 -a linreg-ols,linreg-pca,r2,corr,cov -f x,y,xy,y2 ./reg_test/input/abixy-wide
 x_y_ols_m x_y_ols_b x_y_ols_n x_y_pca_m x_y_pca_b x_y_pca_n x_y_pca_quality x_y_r2   x_y_corr x_y_cov  xy_y2_ols_m xy_y2_ols_b xy_y2_ols_n xy_y2_pca_m xy_y2_pca_b xy_y2_pca_n xy_y2_pca_quality xy_y2_r2 xy_y2_corr xy_y2_cov
@@ -21997,8 +21997,8 @@ z_sum   90.800000
 z_count 3
 
 mlr --oxtab stats1 -F -a min,max,sum,count -f x,y,z ./reg_test/input/int-float.dkvp
-x_min   1.000000
-x_max   3.000000
+x_min   1
+x_max   3
 x_sum   6.000000
 x_count 3.000000
 y_min   10.100000

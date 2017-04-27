@@ -13,7 +13,7 @@
 // ================================================================
 
 typedef int mv_i_nn_comparator_func_t(mv_t* pa, mv_t* pb);
-typedef int mv_i_cncn_comparator_func_t(const mv_t* pa, const mv_t* pb);
+typedef int mv_i_xx_comparator_func_t(const mv_t* pa, const mv_t* pb);
 
 // ----------------------------------------------------------------
 // Keystroke-savers for disposition matrices:
@@ -1203,6 +1203,7 @@ static mv_binary_func_t* min_dispositions[MT_DIM][MT_DIM] = {
 	/*BOOL*/   {_err, _err,  _err, _err,  _err,     _err,     _err},
 };
 
+// xxx memory leak
 mv_t x_xx_min_func(mv_t* pval1, mv_t* pval2) { return (min_dispositions[pval1->type][pval2->type])(pval1,pval2); }
 
 mv_t variadic_min_func(mv_t* pvals, int nvals) {
@@ -1952,38 +1953,77 @@ mv_t does_not_match_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t*
 }
 
 // ----------------------------------------------------------------
-static int mv_ff_comparator(const mv_t* pa, const mv_t* pb) {
+static int mv_ff_cmp(const mv_t* pa, const mv_t* pb) {
 	double d = pa->u.fltv - pb->u.fltv;
 	return (d < 0) ? -1 : (d > 0) ? 1 : 0;
 }
-static int mv_fi_comparator(const mv_t* pa, const mv_t* pb) {
+static int mv_fi_cmp(const mv_t* pa, const mv_t* pb) {
 	double d = pa->u.fltv - pb->u.intv;
 	return (d < 0) ? -1 : (d > 0) ? 1 : 0;
 }
-static int mv_if_comparator(const mv_t* pa, const mv_t* pb) {
+static int mv_if_cmp(const mv_t* pa, const mv_t* pb) {
 	double d = pa->u.intv - pb->u.fltv;
 	return (d < 0) ? -1 : (d > 0) ? 1 : 0;
 }
-static int mv_ii_comparator(const mv_t* pa, const mv_t* pb) {
+static int mv_ii_cmp(const mv_t* pa, const mv_t* pb) {
 	long long d = pa->u.intv - pb->u.intv;
 	return (d < 0) ? -1 : (d > 0) ? 1 : 0;
 }
 // We assume mv_t's coming into percentile keeper are int or double -- in particular, non-null.
-static mv_i_cncn_comparator_func_t* mv_comparator_dispositions[MT_DIM][MT_DIM] = {
-	//         ERROR  ABSENT EMPTY STRING INT               FLOAT             BOOL
-	/*ERROR*/  {NULL, NULL,  NULL, NULL,  NULL,             NULL,             NULL},
-	/*ABSENT*/ {NULL, NULL,  NULL, NULL,  NULL,             NULL,             NULL},
-	/*EMPTY*/  {NULL, NULL,  NULL, NULL,  NULL,             NULL,             NULL},
-	/*STRING*/ {NULL, NULL,  NULL, NULL,  NULL,             NULL,             NULL},
-	/*INT*/    {NULL, NULL,  NULL, NULL,  mv_ii_comparator, mv_if_comparator, NULL},
-	/*FLOAT*/  {NULL, NULL,  NULL, NULL,  mv_fi_comparator, mv_ff_comparator, NULL},
-	/*BOOL*/   {NULL, NULL,  NULL, NULL,  NULL,             NULL,             NULL},
+static mv_i_xx_comparator_func_t* mv_nn_comparator_dispositions[MT_DIM][MT_DIM] = {
+	//         ERROR  ABSENT EMPTY STRING INT        FLOAT      BOOL
+	/*ERROR*/  {NULL, NULL,  NULL, NULL,  NULL,      NULL,      NULL},
+	/*ABSENT*/ {NULL, NULL,  NULL, NULL,  NULL,      NULL,      NULL},
+	/*EMPTY*/  {NULL, NULL,  NULL, NULL,  NULL,      NULL,      NULL},
+	/*STRING*/ {NULL, NULL,  NULL, NULL,  NULL,      NULL,      NULL},
+	/*INT*/    {NULL, NULL,  NULL, NULL,  mv_ii_cmp, mv_if_cmp, NULL},
+	/*FLOAT*/  {NULL, NULL,  NULL, NULL,  mv_fi_cmp, mv_ff_cmp, NULL},
+	/*BOOL*/   {NULL, NULL,  NULL, NULL,  NULL,      NULL,      NULL},
 };
 
 int mv_nn_comparator(const void* pva, const void* pvb) {
 	const mv_t* pa = pva;
 	const mv_t* pb = pvb;
-	return mv_comparator_dispositions[pa->type][pb->type](pa, pb);
+	return mv_nn_comparator_dispositions[pa->type][pb->type](pa, pb);
+}
+
+// ----------------------------------------------------------------
+// For general qsorting of mv_t's
+
+static int mv_cmp_eq(const mv_t* pa, const mv_t* pb) { return  0; }
+static int mv_cmp_lt(const mv_t* pa, const mv_t* pb) { return -1; }
+static int mv_cmp_gt(const mv_t* pa, const mv_t* pb) { return  1; }
+
+static int mv_bb_comparator(const mv_t* pa, const mv_t* pb) {
+	int d = pa->u.boolv - pb->u.boolv;
+	return (d < 0) ? -1 : (d > 0) ? 1 : 0;
+}
+static int mv_ss_cmp(const mv_t* pa, const mv_t* pb) {
+	return strcmp(pa->u.strv, pb->u.strv);
+}
+
+// Sort rules:
+// * NUMERICS < BOOL < STRINGS < ERROR < ABSENT
+// * error == error (singleton type)
+// * absent == absent (singleton type)
+// * string compares on strings
+// * numeric compares on numbers
+// * false < true
+static mv_i_xx_comparator_func_t* mv_xx_comparator_dispositions[MT_DIM][MT_DIM] = {
+	//         ERROR       ABSENT     EMPTY      STRING     INT        FLOAT      BOOL
+	/*ERROR*/  {mv_cmp_eq, mv_cmp_lt, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt},
+	/*ABSENT*/ {mv_cmp_gt, mv_cmp_eq, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt},
+	/*EMPTY*/  {mv_cmp_lt, mv_cmp_lt, mv_cmp_eq, mv_ss_cmp, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt},
+	/*STRING*/ {mv_cmp_lt, mv_cmp_lt, mv_ss_cmp, mv_ss_cmp, mv_cmp_gt, mv_cmp_gt, mv_cmp_gt},
+	/*INT*/    {mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_ii_cmp, mv_if_cmp, mv_cmp_lt},
+	/*FLOAT*/  {mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_fi_cmp, mv_ff_cmp, mv_cmp_lt},
+	/*BOOL*/   {mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_cmp_lt, mv_cmp_gt, mv_cmp_gt, mv_bb_comparator},
+};
+
+int mv_xx_comparator(const void* pva, const void* pvb) {
+	const mv_t* pa = pva;
+	const mv_t* pb = pvb;
+	return mv_xx_comparator_dispositions[pa->type][pb->type](pa, pb);
 }
 
 // ----------------------------------------------------------------

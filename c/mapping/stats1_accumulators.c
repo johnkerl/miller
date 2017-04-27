@@ -540,9 +540,10 @@ typedef struct _stats1_min_state_t {
 	mv_t min;
 	char* output_field_name;
 } stats1_min_state_t;
-static void stats1_min_ningest(void* pvstate, mv_t* pval) {
+static void stats1_min_singest(void* pvstate, char* sval) {
 	stats1_min_state_t* pstate = pvstate;
-	pstate->min = x_xx_min_func(&pstate->min, pval);
+	mv_t val = mv_copy_type_infer_string_or_float_or_int(sval);
+	pstate->min = x_xx_min_func(&pstate->min, &val); // xxx memory leak
 }
 static void stats1_min_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_min_state_t* pstate = pvstate;
@@ -576,8 +577,8 @@ stats1_acc_t* stats1_min_alloc(char* value_field_name, char* stats1_acc_name, in
 
 	pstats1_acc->pvstate       = (void*)pstate;
 	pstats1_acc->pdingest_func = NULL;
-	pstats1_acc->pningest_func = stats1_min_ningest;
-	pstats1_acc->psingest_func = NULL;
+	pstats1_acc->pningest_func = NULL;
+	pstats1_acc->psingest_func = stats1_min_singest;
 	pstats1_acc->pemit_func    = stats1_min_emit;
 	pstats1_acc->pfree_func    = stats1_min_free;
 	return pstats1_acc;
@@ -588,9 +589,10 @@ typedef struct _stats1_max_state_t {
 	mv_t max;
 	char* output_field_name;
 } stats1_max_state_t;
-static void stats1_max_ningest(void* pvstate, mv_t* pval) {
+static void stats1_max_singest(void* pvstate, char* sval) {
 	stats1_max_state_t* pstate = pvstate;
-	pstate->max = x_xx_max_func(&pstate->max, pval);
+	mv_t val = mv_copy_type_infer_string_or_float_or_int(sval);
+	pstate->max = x_xx_max_func(&pstate->max, &val); // xxx memory leak
 }
 static void stats1_max_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_max_state_t* pstate = pvstate;
@@ -624,8 +626,8 @@ stats1_acc_t* stats1_max_alloc(char* value_field_name, char* stats1_acc_name, in
 
 	pstats1_acc->pvstate       = (void*)pstate;
 	pstats1_acc->pdingest_func = NULL;
-	pstats1_acc->pningest_func = stats1_max_ningest;
-	pstats1_acc->psingest_func = NULL;
+	pstats1_acc->pningest_func = NULL;
+	pstats1_acc->psingest_func = stats1_max_singest;
 	pstats1_acc->pemit_func    = stats1_max_emit;
 	pstats1_acc->pfree_func    = stats1_max_free;
 	return pstats1_acc;
@@ -638,9 +640,10 @@ typedef struct _stats1_percentile_state_t {
 	int reference_count;
 	percentile_keeper_emitter_t* ppercentile_keeper_emitter;
 } stats1_percentile_state_t;
-static void stats1_percentile_ningest(void* pvstate, mv_t* pval) {
+static void stats1_percentile_singest(void* pvstate, char* sval) {
 	stats1_percentile_state_t* pstate = pvstate;
-	percentile_keeper_ingest(pstate->ppercentile_keeper, *pval);
+	mv_t val = mv_copy_type_infer_string_or_float_or_int(sval);
+	percentile_keeper_ingest(pstate->ppercentile_keeper, val);
 }
 
 static void stats1_percentile_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
@@ -689,8 +692,8 @@ stats1_acc_t* stats1_percentile_alloc(char* value_field_name, char* stats1_acc_n
 
 	pstats1_acc->pvstate        = (void*)pstate;
 	pstats1_acc->pdingest_func  = NULL;
-	pstats1_acc->pningest_func  = stats1_percentile_ningest;
-	pstats1_acc->psingest_func  = NULL;
+	pstats1_acc->pningest_func  = NULL;
+	pstats1_acc->psingest_func  = stats1_percentile_singest;
 	pstats1_acc->pemit_func     = stats1_percentile_emit;
 	pstats1_acc->pfree_func     = stats1_percentile_free;
 	return pstats1_acc;
