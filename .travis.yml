@@ -10,13 +10,12 @@ addons:
       - flex
       - autoconf
       - libtool
-      - automake
-      - m4
-      - aclocal
 
 # Build using gcc and clang since it is supported
 compiler:
   - clang
   - gcc
+
+before_script: autoreconf -fiv 
 
 script: ./configure && make && make check && make distcheck && make CC=$CC -C c -f Makefile.no-autoconfig
