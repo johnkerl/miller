@@ -41,6 +41,7 @@ non-airable:
 * valgrinds
 
 ! ASAN build @ travis !
+  -> doesn't look quite right at travis
   -> to release notes if successful
 
 * --barred & autodetect notes @ the long issue
