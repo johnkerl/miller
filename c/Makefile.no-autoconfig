@@ -278,6 +278,7 @@ TEST_RVAL_EVALUATORS_SRCS = \
   containers/lhmsll.c \
   containers/mlhmmv.c \
   containers/lhmsmv.c \
+  containers/lhmss.c \
   containers/hss.c \
   containers/mixutil.c \
   containers/loop_stack.c \
@@ -328,13 +329,16 @@ TEST_JOIN_BUCKET_KEEPER_SRCS = \
   lib/mlrescape.c \
   lib/mlr_globals.c \
   lib/string_builder.c \
+  lib/mlrregex.c \
   lib/context.c \
+  lib/string_array.c \
   containers/parse_trie.c \
   containers/lrec.c \
   containers/sllv.c \
   containers/rslls.c \
   containers/slls.c \
   containers/lhmslv.c \
+  containers/lhmss.c \
   containers/hss.c \
   containers/mixutil.c \
   containers/header_keeper.c \

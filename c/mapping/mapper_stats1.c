@@ -3,10 +3,11 @@
 #include <string.h>
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
+#include "lib/string_array.h"
+#include "lib/mlrregex.h"
 #include "cli/argparse.h"
 #include "containers/sllv.h"
 #include "containers/slls.h"
-#include "lib/string_array.h"
 #include "containers/lhmslv.h"
 #include "containers/lhmsv.h"
 #include "containers/mixutil.h"
@@ -23,6 +24,12 @@ typedef struct _mapper_stats1_state_t {
 	string_array_t* pvalue_field_names;     // parameter
 	string_array_t* pvalue_field_values;    // scratch space used per-record
 	slls_t*         pgroup_by_field_names;  // parameter
+
+	regex_t*        value_field_regexes;
+	int             num_value_field_regexes;
+	regex_t*        group_by_field_regexes;
+	int             num_group_by_field_regexes;
+
 	lhmslv_t*       groups;
 	int             do_iterative_stats;
 	int             allow_int_float;
@@ -32,8 +39,10 @@ typedef struct _mapper_stats1_state_t {
 static void      mapper_stats1_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
-static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_names, string_array_t* pvalue_field_names,
-	slls_t* pgroup_by_field_names, int do_iterative_stats, int allow_int_float, int do_interpolated_percentiles);
+static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_names,
+	string_array_t* pvalue_field_names, int do_regex_value_field_names, int invert_regex_value_field_names,
+	slls_t* pgroup_by_field_names, int do_regex_group_by_field_names, int invert_regex_group_by_field_names,
+	int do_iterative_stats, int allow_int_float, int do_interpolated_percentiles);
 static void      mapper_stats1_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 static void      mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
@@ -91,26 +100,51 @@ static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
 static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __)
 {
-	slls_t*         paccumulator_names          = NULL;
-	string_array_t* pvalue_field_names          = NULL;
-	slls_t*         pgroup_by_field_names       = slls_alloc();
-	int             do_iterative_stats          = FALSE;
-	int             allow_int_float             = TRUE;
-	int             do_interpolated_percentiles = FALSE;
+	slls_t*         paccumulator_names                = NULL;
+	string_array_t* pvalue_field_names                = NULL;
+	slls_t*         pgroup_by_field_names             = slls_alloc();
+	int             do_iterative_stats                = FALSE;
+	int             allow_int_float                   = TRUE;
+	int             do_interpolated_percentiles       = FALSE;
+	int             do_regex_value_field_names        = FALSE;
+	int             invert_regex_value_field_names    = FALSE;
+	int             do_regex_group_by_field_names     = FALSE;
+	int             invert_regex_group_by_field_names = FALSE;
 
 	char* verb = argv[(*pargi)++];
 
+	int oargi = *pargi;
+
 	ap_state_t* pstate = ap_alloc();
-	ap_define_string_list_flag(pstate,  "-a", &paccumulator_names);
-	ap_define_string_array_flag(pstate, "-f", &pvalue_field_names);
-	ap_define_string_list_flag(pstate,  "-g", &pgroup_by_field_names);
-	ap_define_true_flag(pstate,         "-s", &do_iterative_stats);
-	ap_define_false_flag(pstate,        "-F", &allow_int_float);
-	ap_define_true_flag(pstate,         "-i", &do_interpolated_percentiles);
+	ap_define_string_list_flag(pstate,  "-a",   &paccumulator_names);
+	ap_define_string_array_flag(pstate, "-f",   &pvalue_field_names);
+	ap_define_string_array_flag(pstate, "--fr", &pvalue_field_names);
+	ap_define_string_array_flag(pstate, "--fx", &pvalue_field_names);
+	ap_define_string_list_flag(pstate,  "-g",   &pgroup_by_field_names);
+	ap_define_string_list_flag(pstate,  "--gr", &pgroup_by_field_names);
+	ap_define_string_list_flag(pstate,  "--gx", &pgroup_by_field_names);
+	ap_define_true_flag(pstate,         "-s",   &do_iterative_stats);
+	ap_define_false_flag(pstate,        "-F",   &allow_int_float);
+	ap_define_true_flag(pstate,         "-i",   &do_interpolated_percentiles);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_stats1_usage(stderr, argv[0], verb);
 		return NULL;
+	}
+
+	int nargi = *pargi;
+	for (int argi = oargi; argi < nargi; argi++) {
+		if (streq(argv[argi], "--fr")) {
+			do_regex_value_field_names = TRUE;
+		} else if (streq(argv[argi], "--fx")) {
+			do_regex_value_field_names = TRUE;
+			invert_regex_value_field_names = TRUE;
+		} else if (streq(argv[argi], "--gr")) {
+			do_regex_group_by_field_names = TRUE;
+		} else if (streq(argv[argi], "--gx")) {
+			do_regex_group_by_field_names = TRUE;
+			invert_regex_group_by_field_names = TRUE;
+		}
 	}
 
 	if (paccumulator_names == NULL || pvalue_field_names == NULL) {
@@ -118,23 +152,60 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv,
 		return NULL;
 	}
 
-	return mapper_stats1_alloc(pstate, paccumulator_names, pvalue_field_names, pgroup_by_field_names,
+	return mapper_stats1_alloc(pstate, paccumulator_names,
+		pvalue_field_names, do_regex_value_field_names, invert_regex_value_field_names,
+		pgroup_by_field_names, do_regex_group_by_field_names, invert_regex_group_by_field_names,
 		do_iterative_stats, allow_int_float, do_interpolated_percentiles);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_names, string_array_t* pvalue_field_names,
-	slls_t* pgroup_by_field_names, int do_iterative_stats, int allow_int_float, int do_interpolated_percentiles)
+static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_names,
+	string_array_t* pvalue_field_names, int do_regex_value_field_names, int invert_regex_value_field_names,
+	slls_t* pgroup_by_field_names, int do_regex_group_by_field_names, int invert_regex_group_by_field_names,
+	int do_iterative_stats, int allow_int_float, int do_interpolated_percentiles)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_stats1_state_t* pstate  = mlr_malloc_or_die(sizeof(mapper_stats1_state_t));
 
-	pstate->pargp                       = pargp;
-	pstate->paccumulator_names          = paccumulator_names;
-	pstate->pvalue_field_names          = pvalue_field_names;
-	pstate->pgroup_by_field_names       = pgroup_by_field_names;
-	pstate->pvalue_field_values         = string_array_alloc(pvalue_field_names->length);
+	pstate->pargp              = pargp;
+	pstate->paccumulator_names = paccumulator_names;
+
+	if (do_regex_value_field_names) {
+		pstate->pvalue_field_names      = NULL;
+		pstate->pvalue_field_values     = NULL;
+		pstate->num_value_field_regexes = pvalue_field_names->length;
+		pstate->value_field_regexes     = mlr_malloc_or_die(sizeof(regex_t) * pstate->num_value_field_regexes);
+		for (int i = 0; i < pvalue_field_names->length; i++) {
+			// Let them type in a.*b if they want, or "a.*b", or "a.*b"i.
+			// Strip off the leading " and trailing " or "i.
+			regcomp_or_die_quoted(&pstate->value_field_regexes[i], pvalue_field_names->strings[i], REG_NOSUB);
+		}
+		string_array_free(pvalue_field_names);
+	} else {
+		pstate->pvalue_field_names      = pvalue_field_names;
+		pstate->pvalue_field_values     = string_array_alloc(pvalue_field_names->length);
+		pstate->value_field_regexes     = NULL;
+		pstate->num_value_field_regexes = 0;
+	}
+
+	if (do_regex_group_by_field_names) {
+		pstate->pgroup_by_field_names   = NULL;
+		pstate->num_group_by_field_regexes = pgroup_by_field_names->length;
+		pstate->group_by_field_regexes     = mlr_malloc_or_die(sizeof(regex_t) * pstate->num_group_by_field_regexes);
+		int i = 0;
+		for (sllse_t* pe = pgroup_by_field_names->phead; pe != NULL; pe = pe->pnext, i++) {
+			// Let them type in a.*b if they want, or "a.*b", or "a.*b"i.
+			// Strip off the leading " and trailing " or "i.
+			regcomp_or_die_quoted(&pstate->group_by_field_regexes[i], pe->value, REG_NOSUB);
+		}
+		slls_free(pgroup_by_field_names);
+	} else {
+		pstate->pgroup_by_field_names      = pgroup_by_field_names;
+		pstate->group_by_field_regexes     = NULL;
+		pstate->num_group_by_field_regexes = 0;
+	}
+
 	pstate->groups                      = lhmslv_alloc();
 	pstate->do_iterative_stats          = do_iterative_stats;
 	pstate->allow_int_float             = allow_int_float;
@@ -153,6 +224,16 @@ static void mapper_stats1_free(mapper_t* pmapper, context_t* _) {
 	string_array_free(pstate->pvalue_field_names);
 	string_array_free(pstate->pvalue_field_values);
 	slls_free(pstate->pgroup_by_field_names);
+
+	if (pstate->value_field_regexes != NULL) {
+		for (int i = 0; i < pstate->num_value_field_regexes; i++)
+			regfree(&pstate->value_field_regexes[i]);
+	}
+
+	if (pstate->group_by_field_regexes != NULL) {
+		for (int i = 0; i < pstate->num_group_by_field_regexes; i++)
+			regfree(&pstate->group_by_field_regexes[i]);
+	}
 
 	// lhmslv_free and lhmsv_free will free the hashmap keys; we need to free
 	// the void-star hashmap values.

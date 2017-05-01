@@ -101,6 +101,29 @@ int record_has_all_keys(lrec_t* prec, slls_t* pselected_field_names) {
 }
 
 // ----------------------------------------------------------------
+lhmss_t* mlr_reference_key_value_pairs_from_regex_names(lrec_t* prec, regex_t* pregexes, int num_regexes,
+	int invert_matches)
+{
+	lhmss_t* pmap = lhmss_alloc();
+
+	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
+		int matches_any = FALSE;
+		for (int i = 0; i < num_regexes; i++) {
+			regex_t* pregex = &pregexes[i];
+			if (regmatch_or_die(pregex, pe->key, 0, NULL)) {
+				matches_any = TRUE;
+				break;
+			}
+		}
+		if (matches_any) {
+			lhmss_put(pmap, pe->key, pe->value, NO_FREE);
+		}
+	}
+
+	return pmap;
+}
+
+// ----------------------------------------------------------------
 hss_t* hss_from_slls(slls_t* plist) {
 	hss_t* pset = hss_alloc();
 	for (sllse_t* pe = plist->phead; pe != NULL; pe = pe->pnext)

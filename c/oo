@@ -39,11 +39,4 @@ vee=
 # ----------------------------------------------------------------
 announce
 
-mlr_expect_fail --from $indir/abixy head -n 2 then put 'dump mapexcept()'
-run_mlr --from $indir/abixy --opprint head -n 2 then put '$* = mapexcept("xyz")'
-run_mlr --from $indir/abixy --opprint head -n 2 then put '$* = mapexcept("xyz", "a")'
-run_mlr --from $indir/abixy --opprint head -n 2 then put '$* = mapexcept($*)'
-run_mlr --from $indir/abixy --opprint head -n 2 then put '$* = mapexcept($*, "a")'
-run_mlr --from $indir/abixy --opprint head -n 2 then put '$* = mapexcept($*, "nonesuch")'
-run_mlr --from $indir/abixy --opprint head -n 2 then put '$* = mapexcept($*, "a", "b")'
-run_mlr --from $indir/abixy --opprint head -n 2 then put '$* = mapexcept($*, "a", "nonesuch", "x")'
+run_mlr --from $indir/abixy --opprint stats1 -a sum --gr '[a-h]' --fr '[i-z]'

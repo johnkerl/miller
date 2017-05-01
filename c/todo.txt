@@ -27,6 +27,11 @@ airable:
 * reg_test/run --mlrexec flag
 
 * across-all/regex x stats1 / many verbs
+  i stats1 first
+  - functionality
+  - stats1 --help
+  - UT
+  - mld: mlh suffices? cookbook example? 10min example??
 
 * more json handling: topmost/second-topmost array, put nidx-style as with dkvp.
 
@@ -110,27 +115,32 @@ MAPVAR CHECKLIST:
 ================================================================
 5.2.0 ideas:
 
-!!! multi-field x many verbs
-  ! -f/-r field-name-spec opportunities throughout
-    - bar
-    - count-distinct
-    - histogram
-    - label
-    - merge-fields -x
-    - nest
-    - reorder
-    - sec2gmt/seg2gmtdate
-    - sort
-    * stats1
-    * stats2
-    - step
-    - top
-    ? join
-    ? decimate -g
-    ? head -g
-    ? sample -g
-    ? tail -g
-    - uniq -g
+----------------------------------------------------------------
+! multi-field x many verbs: -f/-r field-name-spec opportunities throughout
+
+which verbs:
+  * stats1
+  * stats2
+  - bar
+  - count-distinct
+  - histogram
+  - label
+  - merge-fields -x
+  - nest
+  - reorder
+  - sec2gmt/seg2gmtdate
+  - sort
+  - step
+  - top
+  - uniq -g
+  ? decimate -g
+  ? head -g
+  ? sample -g
+  ? tail -g
+  ? join
+  ? merge-fields -x ?
+
+----------------------------------------------------------------
 
 ? weighted stats?
 
