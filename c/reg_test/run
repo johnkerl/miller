@@ -5071,6 +5071,12 @@ run_mlr --oxtab cat $indir/utf8-align.dkvp
 run_mlr --inidx --ifs space --oxtab --xvright cat $indir/utf8-align.nidx
 
 # ----------------------------------------------------------------
+announce UTF-8 BOM
+
+run_mlr --icsv --opprint cat   $indir/bom.csv
+run_mlr --icsv --opprint cat < $indir/bom.csv
+
+# ----------------------------------------------------------------
 announce MMAP AT PAGE BOUNDARIES
 
 run_mlr --dkvp        tail -n 4 $indir/page-aligned-final-ifs.dkvp

@@ -30,14 +30,13 @@ airable:
 
 * more json handling: topmost/second-topmost array, put nidx-style as with dkvp.
 
-* utf8 bom strip efbbbf
-
 ----------------------------------------------------------------
 non-airable:
 
 * valgrinds
 
 ! ASAN build @ travis !
+  -> to release notes if successful
 
 * --barred & autodetect notes @ the long issue
 

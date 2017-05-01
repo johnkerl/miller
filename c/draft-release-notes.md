@@ -8,6 +8,8 @@ This is a relatively minor release, containing feature requests.
 
 * xxx `./configure` vs. `autoreconf -fiv` 1st, and which issue is resolved by this.
 
+* xxx UTF-8 BOM strip for CSV files; resolves xxx
+
 **Documentation:**
 
 * xxx cookbook example [**Showing differences between successive queries**](http://www.johnkerl.org/miller-releases/miller-5.2.0/doc/cookbook.html#Showing_differences_between_successive_queries)

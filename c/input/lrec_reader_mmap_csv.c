@@ -192,7 +192,12 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 			}
 			// Transfer pointer-free responsibility from the rslls to the
 			// header fields in the header keeper
-			slls_append(pheader_fields, pe->value, pe->free_flag);
+			if (string_starts_with(pe->value, "\xef\xbb\xbf")) {
+				// Strip UTF-8 BOM if any
+				slls_append(pheader_fields, mlr_strdup_or_die(&pe->value[3]), FREE_ENTRY_VALUE);
+			} else {
+				slls_append(pheader_fields, pe->value, pe->free_flag);
+			}
 			pe->free_flag = 0;
 		}
 		rslls_reset(pstate->pfields);

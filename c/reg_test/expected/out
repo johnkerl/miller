@@ -44649,6 +44649,20 @@ mlr --inidx --ifs space --oxtab --xvright cat ./reg_test/input/utf8-align.nidx
 
 
 ================================================================
+UTF-8 BOM
+
+mlr --icsv --opprint cat ./reg_test/input/bom.csv
+a b c
+1 2 3
+4 5 6
+
+mlr --icsv --opprint cat
+a b c
+1 2 3
+4 5 6
+
+
+================================================================
 MMAP AT PAGE BOUNDARIES
 
 mlr --dkvp tail -n 4 ./reg_test/input/page-aligned-final-ifs.dkvp

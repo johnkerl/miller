@@ -18,6 +18,7 @@ EXTRA_DIST=	\
 		arrays.json \
 		b.csv \
 		b.pprint \
+		bom.csv \
 		braced.csv \
 		c.csv \
 		c.pprint \
