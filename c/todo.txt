@@ -132,9 +132,6 @@ MAPVAR CHECKLIST:
     ? tail -g
     - uniq -g
 
-* stats1 for strings: min/max/percentiles. note count/mode already work.
-  -> how to handle mixed string/number columns ...
-
 ? weighted stats?
 
 * xxxes
@@ -148,8 +145,6 @@ MAPVAR CHECKLIST:
 ? some sort of debug/single-step/trace ... include the AST in the CST & reverse-generate ?
 
 * seqgen as input lrec "reader"? the seqgen verb doesn't (and shouldn't) step NR.
-
-* ruby/python cmps @ mand
 
 ? free vs. free_contents names ?
 
