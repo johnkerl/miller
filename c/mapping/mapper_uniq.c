@@ -5,7 +5,7 @@
 #include "lib/mlrutil.h"
 #include "containers/sllv.h"
 #include "containers/lhmslv.h"
-#include "containers/lhmsv.h"
+#include "containers/lhmsll.h"
 #include "containers/mixutil.h"
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
@@ -18,6 +18,7 @@ typedef struct _mapper_uniq_state_t {
 	int show_counts;
 	int show_num_distinct_only;
 	lhmslv_t* pcounts_by_group;
+	lhmsll_t* pcounts_unlashed;
 	char* output_field_name;
 } mapper_uniq_state_t;
 
@@ -144,6 +145,7 @@ static mapper_t* mapper_uniq_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_na
 	pstate->show_counts            = show_counts;
 	pstate->show_num_distinct_only = show_num_distinct_only;
 	pstate->pcounts_by_group       = lhmslv_alloc();
+	pstate->pcounts_unlashed       = lhmsll_alloc();
 	pstate->output_field_name      = output_field_name;
 
 	pmapper->pvstate = pstate;
@@ -167,8 +169,10 @@ static void mapper_uniq_free(mapper_t* pmapper, context_t* _) {
 		free(pcount);
 	}
 	lhmslv_free(pstate->pcounts_by_group);
+	lhmsll_free(pstate->pcounts_unlashed);
 	pstate->pgroup_by_field_names = NULL;
 	pstate->pcounts_by_group = NULL;
+	pstate->pcounts_unlashed = NULL;
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
