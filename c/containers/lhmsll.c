@@ -210,6 +210,22 @@ int lhmsll_test_and_get(lhmsll_t* pmap, char* key, long long* pval) {
 	}
 }
 
+int lhmsll_test_and_increment(lhmsll_t* pmap, char* key) {
+	int ideal_index = 0;
+	int index = lhmsll_find_index_for_key(pmap, key, &ideal_index);
+	lhmslle_t* pe = &pmap->entries[index];
+
+	if (pmap->states[index] == OCCUPIED) {
+		pe->value++;
+		return TRUE;
+	} else if (pmap->states[index] == EMPTY) {
+		return FALSE;
+	} else {
+		fprintf(stderr, "%s: lhmsll_find_index_for_key did not find end of chain.\n", MLR_GLOBALS.bargv0);
+		exit(1);
+	}
+}
+
 lhmslle_t* lhmsll_get_entry(lhmsll_t* pmap, char* key) {
 	int ideal_index = 0;
 	int index = lhmsll_find_index_for_key(pmap, key, &ideal_index);

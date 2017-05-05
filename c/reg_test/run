@@ -261,8 +261,9 @@ run_mlr uniq    -f a,b $indir/abixy-het
 run_mlr uniq -c -g a   $indir/abixy-het
 run_mlr uniq -c -g a,b $indir/abixy-het
 
-run_mlr count-distinct -f a   $indir/small $indir/abixy
-run_mlr count-distinct -f a,b $indir/small $indir/abixy
+run_mlr count-distinct -f a      $indir/small $indir/abixy
+run_mlr count-distinct -f a,b    $indir/small $indir/abixy
+run_mlr count-distinct -f a,b -u $indir/small $indir/abixy
 
 run_mlr count-distinct -f a   -n $indir/small $indir/abixy
 run_mlr count-distinct -f a,b -n $indir/small $indir/abixy

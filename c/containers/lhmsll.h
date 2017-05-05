@@ -45,6 +45,7 @@ void  lhmsll_free(lhmsll_t* pmap);
 void  lhmsll_put(lhmsll_t* pmap, char* key, int value, char free_flags);
 long long lhmsll_get(lhmsll_t* pmap, char* key); // caller must do lhmsll_has_key to check validity
 int lhmsll_test_and_get(lhmsll_t* pmap, char* key, long long* pval); // *pval undefined if return is FALSE
+int lhmsll_test_and_increment(lhmsll_t* pmap, char* key); // increments value only if mapping exists
 lhmslle_t* lhmsll_get_entry(lhmsll_t* pmap, char* key);
 int   lhmsll_has_key(lhmsll_t* pmap, char* key);
 

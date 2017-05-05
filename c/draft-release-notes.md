@@ -6,6 +6,8 @@ This is a relatively minor release, containing feature requests.
 
 * xxx min/max functions and stats1/merge-fields min/max/percentile mix int and string. esp. string-only order statistics. doclink for mixed case. interpolation obv nonsensical.
 
+* xxx count-distinct -u
+
 * xxx `./configure` vs. `autoreconf -fiv` 1st, and which issue is resolved by this.
 
 * xxx UTF-8 BOM strip for CSV files; resolves xxx

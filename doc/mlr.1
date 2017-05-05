@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2017-04-27
+.\"      Date: 2017-05-05
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2017-04-27" "\ \&" "\ \&"
+.TH "MILLER" "1" "2017-05-05" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -508,8 +508,14 @@ Useful for doing a well-formatted check on input data.
 .nf
 Usage: mlr count-distinct [options]
 -f {a,b,c}    Field names for distinct count.
--n            Show only the number of distinct values.
+-n            Show only the number of distinct values. Not compatible with -u.
 -o {name}     Field name for output count. Default "count".
+              Ignored with -u.
+-u            Do unlashed counts for multiple field names. With -f a,b and
+              without -u, computes counts for distinct combinations of a
+              and b field values. With -f a,b and with -u, computes counts
+              for distinct a field values and counts for distinct b field
+              values separately.
 Prints number of records having distinct values for specified field names.
 Same as uniq -c.
 .fi
