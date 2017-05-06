@@ -427,11 +427,13 @@ static void mapper_stats1_ingest_with_regexes(lrec_t* pinrec, mapper_stats1_stat
 		slls_append_no_free(pgroup_by_field_values, pe->value);
 	}
 
+	// xxx needs two levels or four flavors: --gr/--fr = TT TF FT FF
 	// Two-level map: group-by field names -> group-by field values -> acc-field map
 	lhmslv_t* pgroups_by_names = lhmslv_get(pstate->groups_with_group_by_regex, pgroup_by_field_names);
 	if (pgroups_by_names == NULL) {
 		pgroups_by_names = lhmslv_alloc();
-		lhmslv_put(pstate->groups_with_group_by_regex, slls_copy(pgroup_by_field_names), pgroups_by_names, FREE_ENTRY_KEY);
+		lhmslv_put(pstate->groups_with_group_by_regex, slls_copy(pgroup_by_field_names), pgroups_by_names,
+			FREE_ENTRY_KEY);
 	}
 
 	lhmsv_t* pgroup_by_field_values_to_acc_fields = lhmslv_get(pgroups_by_names, pgroup_by_field_values);
@@ -447,7 +449,8 @@ static void mapper_stats1_ingest_with_regexes(lrec_t* pinrec, mapper_stats1_stat
 	for (lhmsse_t* pf = value_pairs->phead; pf != NULL; pf = pf->pnext) {
 		char* value_field_name = pf->key;
 		char* value_field_sval = pf->value;
-		mapper_stats1_ingest_name_value(pinrec, pstate, value_field_name, value_field_sval, pgroup_by_field_values_to_acc_fields);
+		mapper_stats1_ingest_name_value(pinrec, pstate, value_field_name, value_field_sval,
+			pgroup_by_field_values_to_acc_fields);
 	}
 
 	slls_free(pgroup_by_field_names);
