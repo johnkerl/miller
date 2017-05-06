@@ -18,23 +18,35 @@
 static char* fake_acc_name_for_setups = "__setup_done__";
 
 // ----------------------------------------------------------------
+struct _mapper_stats1_state_t; // forward reference
+typedef void ingestor_func_t(lrec_t* pinrec, struct _mapper_stats1_state_t* pstate);
+typedef sllv_t* emitter_func_t(struct _mapper_stats1_state_t* pstate);
+
 typedef struct _mapper_stats1_state_t {
-	ap_state_t* pargp;
-	slls_t*         paccumulator_names;
-	string_array_t* pvalue_field_names;     // parameter
-	string_array_t* pvalue_field_values;    // scratch space used per-record
-	slls_t*         pgroup_by_field_names;  // parameter
+	ap_state_t*      pargp;
 
-	regex_t*        value_field_regexes;
-	int             num_value_field_regexes;
-	regex_t*        group_by_field_regexes;
-	int             num_group_by_field_regexes;
+	slls_t*          paccumulator_names;
+	string_array_t*  pvalue_field_names;     // parameter
+	string_array_t*  pvalue_field_values;    // scratch space used per-record
+	slls_t*          pgroup_by_field_names;  // parameter
 
-	lhmslv_t*       groups;
-	int             do_iterative_stats;
-	int             allow_int_float;
-	int             do_interpolated_percentiles;
+	ingestor_func_t* pingestor;
+	emitter_func_t*  pemitter;
+
+	regex_t*         value_field_regexes;
+	int              num_value_field_regexes;
+	int              invert_regex_value_field_names;
+	regex_t*         group_by_field_regexes;
+	int              num_group_by_field_regexes;
+	int              invert_regex_group_by_field_names;
+
+	lhmslv_t*        groups_without_group_by_regex;
+	lhmslv_t*        groups_with_group_by_regex;
+	int              do_iterative_stats;
+	int              allow_int_float;
+	int              do_interpolated_percentiles;
 } mapper_stats1_state_t;
+
 
 static void      mapper_stats1_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv,
@@ -45,8 +57,12 @@ static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_nam
 	int do_iterative_stats, int allow_int_float, int do_interpolated_percentiles);
 static void      mapper_stats1_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate);
-static sllv_t*   mapper_stats1_emit_all(mapper_stats1_state_t* pstate);
+static void      mapper_stats1_ingest_without_regexes(lrec_t* pinrec, mapper_stats1_state_t* pstate);
+static void      mapper_stats1_ingest_with_regexes(lrec_t* pinrec, mapper_stats1_state_t* pstate);
+static void      mapper_stats1_ingest_name_value(lrec_t* pinrec, mapper_stats1_state_t* pstate,
+	char* value_field_name, char* value_field_sval, lhmsv_t* pgroup_to_acc_field);
+static sllv_t*   mapper_stats1_emit_all_without_regexes(mapper_stats1_state_t* pstate);
+static sllv_t*   mapper_stats1_emit_all_with_regexes(mapper_stats1_state_t* pstate);
 static lrec_t*   mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec,
 	char* value_field_name, lhmsv_t* acc_field_to_acc_state_out);
 
@@ -182,11 +198,17 @@ static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_nam
 			regcomp_or_die_quoted(&pstate->value_field_regexes[i], pvalue_field_names->strings[i], REG_NOSUB);
 		}
 		string_array_free(pvalue_field_names);
+		pstate->invert_regex_value_field_names = invert_regex_value_field_names;
+		pstate->pingestor = mapper_stats1_ingest_with_regexes;
+		pstate->pemitter = mapper_stats1_emit_all_with_regexes;
 	} else {
-		pstate->pvalue_field_names      = pvalue_field_names;
-		pstate->pvalue_field_values     = string_array_alloc(pvalue_field_names->length);
-		pstate->value_field_regexes     = NULL;
-		pstate->num_value_field_regexes = 0;
+		pstate->pvalue_field_names                = pvalue_field_names;
+		pstate->pvalue_field_values               = string_array_alloc(pvalue_field_names->length);
+		pstate->value_field_regexes               = NULL;
+		pstate->num_value_field_regexes           = 0;
+		pstate->invert_regex_value_field_names    = FALSE;
+		pstate->pingestor                         = mapper_stats1_ingest_without_regexes;
+		pstate->pemitter                          = mapper_stats1_emit_all_without_regexes;
 	}
 
 	if (do_regex_group_by_field_names) {
@@ -200,16 +222,21 @@ static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_nam
 			regcomp_or_die_quoted(&pstate->group_by_field_regexes[i], pe->value, REG_NOSUB);
 		}
 		slls_free(pgroup_by_field_names);
+		pstate->invert_regex_group_by_field_names = invert_regex_group_by_field_names;
+		pstate->groups_without_group_by_regex     = NULL;
+		pstate->groups_with_group_by_regex        = lhmslv_alloc();
 	} else {
-		pstate->pgroup_by_field_names      = pgroup_by_field_names;
-		pstate->group_by_field_regexes     = NULL;
-		pstate->num_group_by_field_regexes = 0;
+		pstate->pgroup_by_field_names             = pgroup_by_field_names;
+		pstate->group_by_field_regexes            = NULL;
+		pstate->num_group_by_field_regexes        = 0;
+		pstate->invert_regex_group_by_field_names = FALSE;
+		pstate->groups_without_group_by_regex     = lhmslv_alloc();
+		pstate->groups_with_group_by_regex        = NULL;
 	}
 
-	pstate->groups                      = lhmslv_alloc();
-	pstate->do_iterative_stats          = do_iterative_stats;
-	pstate->allow_int_float             = allow_int_float;
-	pstate->do_interpolated_percentiles = do_interpolated_percentiles;
+	pstate->do_iterative_stats            = do_iterative_stats;
+	pstate->allow_int_float               = allow_int_float;
+	pstate->do_interpolated_percentiles   = do_interpolated_percentiles;
 
 	pmapper->pvstate       = pstate;
 	pmapper->pprocess_func = mapper_stats1_process;
@@ -232,30 +259,59 @@ static void mapper_stats1_free(mapper_t* pmapper, context_t* _) {
 
 	if (pstate->group_by_field_regexes != NULL) {
 		for (int i = 0; i < pstate->num_group_by_field_regexes; i++)
-			regfree(&pstate->group_by_field_regexes[i]);
+		regfree(&pstate->group_by_field_regexes[i]);
 	}
 
 	// lhmslv_free and lhmsv_free will free the hashmap keys; we need to free
 	// the void-star hashmap values.
-	for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
-		lhmsv_t* pgroup_to_acc_field = pa->pvvalue;
-		for (lhmsve_t* pb = pgroup_to_acc_field->phead; pb != NULL; pb = pb->pnext) {
-			acc_map_pair_t* pacc_field_to_acc_states = pb->pvvalue;
-			lhmsv_t* pacc_field_to_acc_state_in  = pacc_field_to_acc_states->pin;
-			lhmsv_t* pacc_field_to_acc_state_out = pacc_field_to_acc_states->pout;
-			for (lhmsve_t* pc = pacc_field_to_acc_state_out->phead; pc != NULL; pc = pc->pnext) {
-				if (streq(pc->key, fake_acc_name_for_setups))
-					continue;
-				stats1_acc_t* pstats1_acc = pc->pvvalue;
-				pstats1_acc->pfree_func(pstats1_acc);
+	if (pstate->groups_without_group_by_regex != NULL) {
+		for (lhmslve_t* pa = pstate->groups_without_group_by_regex->phead; pa != NULL; pa = pa->pnext) {
+			lhmsv_t* pgroup_to_acc_field = pa->pvvalue;
+			for (lhmsve_t* pb = pgroup_to_acc_field->phead; pb != NULL; pb = pb->pnext) {
+				acc_map_pair_t* pacc_field_to_acc_states = pb->pvvalue;
+				lhmsv_t* pacc_field_to_acc_state_in  = pacc_field_to_acc_states->pin;
+				lhmsv_t* pacc_field_to_acc_state_out = pacc_field_to_acc_states->pout;
+				for (lhmsve_t* pc = pacc_field_to_acc_state_out->phead; pc != NULL; pc = pc->pnext) {
+					if (streq(pc->key, fake_acc_name_for_setups))
+						continue;
+					stats1_acc_t* pstats1_acc = pc->pvvalue;
+					pstats1_acc->pfree_func(pstats1_acc);
+				}
+				lhmsv_free(pacc_field_to_acc_state_in);
+				lhmsv_free(pacc_field_to_acc_state_out);
+				free(pacc_field_to_acc_states);
 			}
-			lhmsv_free(pacc_field_to_acc_state_in);
-			lhmsv_free(pacc_field_to_acc_state_out);
-			free(pacc_field_to_acc_states);
+			lhmsv_free(pgroup_to_acc_field);
 		}
-		lhmsv_free(pgroup_to_acc_field);
+		lhmslv_free(pstate->groups_without_group_by_regex);
 	}
-	lhmslv_free(pstate->groups);
+
+	if (pstate->groups_with_group_by_regex != NULL) {
+		for (lhmslve_t* pa = pstate->groups_with_group_by_regex->phead; pa != NULL; pa = pa->pnext) {
+			lhmslv_t* pgroups_by_names = pa->pvvalue;
+			for (lhmslve_t* pb = pgroups_by_names->phead; pb != NULL; pb = pb->pnext) {
+				lhmsv_t* pgroup_to_acc_field = pb->pvvalue;
+				for (lhmsve_t* pc = pgroup_to_acc_field->phead; pc != NULL; pc = pc->pnext) {
+					acc_map_pair_t* pacc_field_to_acc_states = pc->pvvalue;
+					lhmsv_t* pacc_field_to_acc_state_in  = pacc_field_to_acc_states->pin;
+					lhmsv_t* pacc_field_to_acc_state_out = pacc_field_to_acc_states->pout;
+					for (lhmsve_t* pd = pacc_field_to_acc_state_out->phead; pd != NULL; pd = pd->pnext) {
+						if (streq(pd->key, fake_acc_name_for_setups))
+							continue;
+						stats1_acc_t* pstats1_acc = pd->pvvalue;
+						pstats1_acc->pfree_func(pstats1_acc);
+					}
+					lhmsv_free(pacc_field_to_acc_state_in);
+					lhmsv_free(pacc_field_to_acc_state_out);
+					free(pacc_field_to_acc_states);
+				}
+				lhmsv_free(pgroup_to_acc_field);
+			}
+			lhmslv_free(pgroups_by_names);
+		}
+		lhmslv_free(pstate->groups_with_group_by_regex);
+	}
+
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
@@ -310,7 +366,7 @@ static void mapper_stats1_free(mapper_t* pmapper, context_t* _) {
 static sllv_t* mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats1_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		mapper_stats1_ingest(pinrec, pstate);
+		pstate->pingestor(pinrec, pstate);
 		if (pstate->do_iterative_stats) {
 			// The input record is modified in this case, with new fields appended
 			return sllv_single(pinrec);
@@ -319,14 +375,14 @@ static sllv_t* mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvst
 			return NULL;
 		}
 	} else if (!pstate->do_iterative_stats) {
-		return mapper_stats1_emit_all(pstate);
+		return pstate->pemitter(pstate);
 	} else {
 		return NULL;
 	}
 }
 
 // ----------------------------------------------------------------
-static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) {
+static void mapper_stats1_ingest_without_regexes(lrec_t* pinrec, mapper_stats1_state_t* pstate) {
 	// E.g. ["s", "t"]
 	// To do: make value_field_values into a hashmap. Then accept partial
 	// population on that, but retain full-population requirement on group-by.
@@ -338,10 +394,10 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 		return;
 	}
 
-	lhmsv_t* pgroup_to_acc_field = lhmslv_get(pstate->groups, pgroup_by_field_values);
+	lhmsv_t* pgroup_to_acc_field = lhmslv_get(pstate->groups_without_group_by_regex, pgroup_by_field_values);
 	if (pgroup_to_acc_field == NULL) {
 		pgroup_to_acc_field = lhmsv_alloc();
-		lhmslv_put(pstate->groups, slls_copy(pgroup_by_field_values), pgroup_to_acc_field,
+		lhmslv_put(pstate->groups_without_group_by_regex, slls_copy(pgroup_by_field_values), pgroup_to_acc_field,
 			FREE_ENTRY_KEY);
 	}
 
@@ -351,85 +407,135 @@ static void mapper_stats1_ingest(lrec_t* pinrec, mapper_stats1_state_t* pstate) 
 	for (int i = 0; i < n; i++) {
 		char* value_field_name = pstate->pvalue_field_names->strings[i];
 		char* value_field_sval = pstate->pvalue_field_values->strings[i];
-
-		// For percentiles there is one unique accumulator given (for example) five distinct
-		// names p0,p25,p50,p75,p100.  The input accumulators are unique: only one
-		// percentile-keeper. There are multiple output accumulators: each references the same
-		// underlying percentile-keeper but with distinct parameters.  Hence the ->pin and ->pout maps.
-		acc_map_pair_t* pacc_field_to_acc_states = lhmsv_get(pgroup_to_acc_field, value_field_name);
-		if (pacc_field_to_acc_states == NULL) {
-			pacc_field_to_acc_states = mlr_malloc_or_die(sizeof(acc_map_pair_t));
-			pacc_field_to_acc_states->pin  = lhmsv_alloc();
-			pacc_field_to_acc_states->pout = lhmsv_alloc();
-			lhmsv_put(pgroup_to_acc_field, value_field_name, pacc_field_to_acc_states, NO_FREE);
-		}
-		lhmsv_t* acc_field_to_acc_state_in  = pacc_field_to_acc_states->pin;
-		lhmsv_t* acc_field_to_acc_state_out = pacc_field_to_acc_states->pout;
-
-		// Look up presence of all accumulators at this level's hashmap.
-		char* presence = lhmsv_get(acc_field_to_acc_state_in, fake_acc_name_for_setups);
-		if (presence == NULL) {
-			make_stats1_accs(value_field_name, pstate->paccumulator_names, pstate->allow_int_float,
-				pstate->do_interpolated_percentiles, acc_field_to_acc_state_in, acc_field_to_acc_state_out);
-			lhmsv_put(acc_field_to_acc_state_in, fake_acc_name_for_setups, fake_acc_name_for_setups, NO_FREE);
-		}
-
-		if (value_field_sval == NULL) // Key not present
-			continue;
-		if (*value_field_sval == 0) // Key present with null value
-			continue;
-
-		int have_dval = FALSE;
-		int have_nval = FALSE;
-		double value_field_dval = -999.0;
-		mv_t   value_field_nval = mv_absent();
-
-		// There isn't a one-to-one mapping between user-specified stats1_names
-		// and internal stats1_acc_t's. Here in the ingestor we feed each datum
-		// into a stats1_acc_t.  In the emitter, we loop over the stats1_names in
-		// user-specified order. Example: they ask for p10,mean,p90. Then there
-		// is only one percentiles accumulator to be told about each point. In
-		// the emitter it will be asked to produce output twice: once for the
-		// 10th percentile & once for the 90th.
-		for (lhmsve_t* pc = acc_field_to_acc_state_in->phead; pc != NULL; pc = pc->pnext) {
-			char* stats1_acc_name = pc->key;
-			if (streq(stats1_acc_name, fake_acc_name_for_setups))
-				continue;
-			stats1_acc_t* pstats1_acc = pc->pvvalue;
-
-			if (pstats1_acc->pdingest_func != NULL) {
-				if (!have_dval) {
-					value_field_dval = mlr_double_from_string_or_die(value_field_sval);
-					have_dval = TRUE;
-				}
-				pstats1_acc->pdingest_func(pstats1_acc->pvstate, value_field_dval);
-			}
-			if (pstats1_acc->pningest_func != NULL) {
-				if (!have_nval) {
-					value_field_nval = pstate->allow_int_float
-						? mv_scan_number_or_die(value_field_sval)
-						: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
-					have_nval = TRUE;
-				}
-				pstats1_acc->pningest_func(pstats1_acc->pvstate, &value_field_nval);
-			}
-			if (pstats1_acc->psingest_func != NULL) {
-				pstats1_acc->psingest_func(pstats1_acc->pvstate, value_field_sval);
-			}
-
-		}
-		if (pstate->do_iterative_stats) {
-			mapper_stats1_emit(pstate, pinrec, value_field_name, acc_field_to_acc_state_out);
-		}
+		mapper_stats1_ingest_name_value(pinrec, pstate, value_field_name, value_field_sval, pgroup_to_acc_field);
 	}
 	slls_free(pgroup_by_field_values);
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_stats1_emit_all(mapper_stats1_state_t* pstate) {
+static void mapper_stats1_ingest_with_regexes(lrec_t* pinrec, mapper_stats1_state_t* pstate) {
+	// E.g. {"a": "s", "b":"t"}
+	lhmss_t* group_by_pairs = mlr_reference_key_value_pairs_from_regex_names(pinrec,
+		pstate->group_by_field_regexes, pstate->num_group_by_field_regexes, pstate->invert_regex_group_by_field_names);
+
+	slls_t* pgroup_by_field_names = slls_alloc();
+	for (lhmsse_t* pe = group_by_pairs->phead; pe != NULL; pe = pe->pnext) {
+		slls_append_no_free(pgroup_by_field_names, pe->key);
+	}
+	slls_t* pgroup_by_field_values = slls_alloc();
+	for (lhmsse_t* pe = group_by_pairs->phead; pe != NULL; pe = pe->pnext) {
+		slls_append_no_free(pgroup_by_field_values, pe->value);
+	}
+
+	// Two-level map: group-by field names -> group-by field values -> acc-field map
+	lhmslv_t* pgroups_by_names = lhmslv_get(pstate->groups_with_group_by_regex, pgroup_by_field_names);
+	if (pgroups_by_names == NULL) {
+		pgroups_by_names = lhmslv_alloc();
+		lhmslv_put(pstate->groups_with_group_by_regex, slls_copy(pgroup_by_field_names), pgroups_by_names, FREE_ENTRY_KEY);
+	}
+
+	lhmsv_t* pgroup_by_field_values_to_acc_fields = lhmslv_get(pgroups_by_names, pgroup_by_field_values);
+	if (pgroup_by_field_values_to_acc_fields == NULL) {
+		pgroup_by_field_values_to_acc_fields = lhmsv_alloc();
+		lhmslv_put(pgroups_by_names, slls_copy(pgroup_by_field_values), pgroup_by_field_values_to_acc_fields,
+			FREE_ENTRY_KEY);
+	}
+
+	// E.g. {"x": 1, "y": 2}
+	lhmss_t* value_pairs = mlr_reference_key_value_pairs_from_regex_names(pinrec,
+		pstate->value_field_regexes, pstate->num_value_field_regexes, pstate->invert_regex_value_field_names);
+	for (lhmsse_t* pf = value_pairs->phead; pf != NULL; pf = pf->pnext) {
+		char* value_field_name = pf->key;
+		char* value_field_sval = pf->value;
+		mapper_stats1_ingest_name_value(pinrec, pstate, value_field_name, value_field_sval, pgroup_by_field_values_to_acc_fields);
+	}
+
+	slls_free(pgroup_by_field_names);
+	slls_free(pgroup_by_field_values);
+	lhmss_free(group_by_pairs);
+	lhmss_free(value_pairs);
+}
+
+// ----------------------------------------------------------------
+static void mapper_stats1_ingest_name_value(lrec_t* pinrec, mapper_stats1_state_t* pstate,
+	char* value_field_name, char* value_field_sval, lhmsv_t* pgroup_to_acc_field)
+{
+	// For percentiles there is one unique accumulator given (for example) five distinct
+	// names p0,p25,p50,p75,p100.  The input accumulators are unique: only one
+	// percentile-keeper. There are multiple output accumulators: each references the same
+	// underlying percentile-keeper but with distinct parameters.  Hence the ->pin and ->pout maps.
+	acc_map_pair_t* pacc_field_to_acc_states = lhmsv_get(pgroup_to_acc_field, value_field_name);
+	if (pacc_field_to_acc_states == NULL) {
+		pacc_field_to_acc_states = mlr_malloc_or_die(sizeof(acc_map_pair_t));
+		pacc_field_to_acc_states->pin  = lhmsv_alloc();
+		pacc_field_to_acc_states->pout = lhmsv_alloc();
+		lhmsv_put(pgroup_to_acc_field, value_field_name, pacc_field_to_acc_states, NO_FREE);
+	}
+	lhmsv_t* acc_field_to_acc_state_in  = pacc_field_to_acc_states->pin;
+	lhmsv_t* acc_field_to_acc_state_out = pacc_field_to_acc_states->pout;
+
+	// Look up presence of all accumulators at this level's hashmap.
+	char* presence = lhmsv_get(acc_field_to_acc_state_in, fake_acc_name_for_setups);
+	if (presence == NULL) {
+		make_stats1_accs(value_field_name, pstate->paccumulator_names, pstate->allow_int_float,
+			pstate->do_interpolated_percentiles, acc_field_to_acc_state_in, acc_field_to_acc_state_out);
+		lhmsv_put(acc_field_to_acc_state_in, fake_acc_name_for_setups, fake_acc_name_for_setups, NO_FREE);
+	}
+
+	if (value_field_sval == NULL) // Key not present
+		return;
+	if (*value_field_sval == 0) // Key present with null value
+		return;
+
+	int have_dval = FALSE;
+	int have_nval = FALSE;
+	double value_field_dval = -999.0;
+	mv_t   value_field_nval = mv_absent();
+
+	// There isn't a one-to-one mapping between user-specified stats1_names
+	// and internal stats1_acc_t's. Here in the ingestor we feed each datum
+	// into a stats1_acc_t.  In the emitter, we loop over the stats1_names in
+	// user-specified order. Example: they ask for p10,mean,p90. Then there
+	// is only one percentiles accumulator to be told about each point. In
+	// the emitter it will be asked to produce output twice: once for the
+	// 10th percentile & once for the 90th.
+	for (lhmsve_t* pc = acc_field_to_acc_state_in->phead; pc != NULL; pc = pc->pnext) {
+		char* stats1_acc_name = pc->key;
+		if (streq(stats1_acc_name, fake_acc_name_for_setups))
+			continue;
+		stats1_acc_t* pstats1_acc = pc->pvvalue;
+
+		if (pstats1_acc->pdingest_func != NULL) {
+			if (!have_dval) {
+				value_field_dval = mlr_double_from_string_or_die(value_field_sval);
+				have_dval = TRUE;
+			}
+			pstats1_acc->pdingest_func(pstats1_acc->pvstate, value_field_dval);
+		}
+		if (pstats1_acc->pningest_func != NULL) {
+			if (!have_nval) {
+				value_field_nval = pstate->allow_int_float
+					? mv_scan_number_or_die(value_field_sval)
+					: mv_from_float(mlr_double_from_string_or_die(value_field_sval));
+				have_nval = TRUE;
+			}
+			pstats1_acc->pningest_func(pstats1_acc->pvstate, &value_field_nval);
+		}
+		if (pstats1_acc->psingest_func != NULL) {
+			pstats1_acc->psingest_func(pstats1_acc->pvstate, value_field_sval);
+		}
+
+	}
+	if (pstate->do_iterative_stats) {
+		mapper_stats1_emit(pstate, pinrec, value_field_name, acc_field_to_acc_state_out);
+	}
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_stats1_emit_all_without_regexes(mapper_stats1_state_t* pstate) {
 	sllv_t* poutrecs = sllv_alloc();
 
-	for (lhmslve_t* pa = pstate->groups->phead; pa != NULL; pa = pa->pnext) {
+	for (lhmslve_t* pa = pstate->groups_without_group_by_regex->phead; pa != NULL; pa = pa->pnext) {
 		slls_t* pgroup_by_field_values = pa->key;
 		lrec_t* poutrec = lrec_unbacked_alloc();
 
@@ -451,6 +557,46 @@ static sllv_t* mapper_stats1_emit_all(mapper_stats1_state_t* pstate) {
 		}
 		sllv_append(poutrecs, poutrec);
 	}
+	sllv_append(poutrecs, NULL);
+	return poutrecs;
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_stats1_emit_all_with_regexes(mapper_stats1_state_t* pstate) {
+	sllv_t* poutrecs = sllv_alloc();
+
+	// Two-level map: group-by field names -> group-by field values -> acc-field map
+	for (lhmslve_t* pa = pstate->groups_with_group_by_regex->phead; pa != NULL; pa = pa->pnext) {
+		slls_t* pgroup_by_field_names = pa->key;
+		lhmslv_t* pgroups_by_names = pa->pvvalue;
+
+		for (lhmslve_t* pb = pgroups_by_names->phead; pb != NULL; pb = pb->pnext) {
+			slls_t* pgroup_by_field_values = pb->key;
+			lhmsv_t* pgroup_by_field_values_to_acc_field = pb->pvvalue;
+
+			lrec_t* poutrec = lrec_unbacked_alloc();
+
+			// Add in a=s,b=t fields:
+			sllse_t* pc = pgroup_by_field_names->phead;
+			sllse_t* pd = pgroup_by_field_values->phead;
+			for ( ; pc != NULL && pd != NULL; pc = pc->pnext, pd = pd->pnext) {
+				lrec_put(poutrec, pc->value, pd->value, NO_FREE);
+			}
+
+			// Add in fields such as x_sum=#, y_count=#, etc.:
+			// for "x", "y"
+			for (lhmsve_t* pe = pgroup_by_field_values_to_acc_field->phead; pe != NULL; pe = pe->pnext) {
+				char* value_field_name = pe->key;
+				acc_map_pair_t* pacc_field_to_acc_states = pe->pvvalue;
+				lhmsv_t* acc_field_to_acc_state_out = pacc_field_to_acc_states->pout;
+				mapper_stats1_emit(pstate, poutrec, value_field_name, acc_field_to_acc_state_out);
+			}
+
+			sllv_append(poutrecs, poutrec);
+
+		}
+	}
+
 	sllv_append(poutrecs, NULL);
 	return poutrecs;
 }
