@@ -394,21 +394,28 @@ static void mapper_stats1_ingest_without_regexes(lrec_t* pinrec, mapper_stats1_s
 		return;
 	}
 
-	lhmsv_t* pgroup_to_acc_field = lhmslv_get(pstate->groups_without_group_by_regex, pgroup_by_field_values);
-	if (pgroup_to_acc_field == NULL) {
-		pgroup_to_acc_field = lhmsv_alloc();
-		lhmslv_put(pstate->groups_without_group_by_regex, slls_copy(pgroup_by_field_values), pgroup_to_acc_field,
-			FREE_ENTRY_KEY);
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	lhmsv_t* pgroup_by_field_values_to_acc_fields = lhmslv_get(pstate->groups_without_group_by_regex,
+		pgroup_by_field_values);
+	if (pgroup_by_field_values_to_acc_fields == NULL) {
+		pgroup_by_field_values_to_acc_fields = lhmsv_alloc();
+		lhmslv_put(pstate->groups_without_group_by_regex, slls_copy(pgroup_by_field_values),
+			pgroup_by_field_values_to_acc_fields, FREE_ENTRY_KEY);
 	}
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// for x=1 and y=2
-	mlr_reference_values_from_record_into_string_array(pinrec, pstate->pvalue_field_names, pstate->pvalue_field_values);
+	mlr_reference_values_from_record_into_string_array(pinrec, pstate->pvalue_field_names,
+		pstate->pvalue_field_values);
 	int n = pstate->pvalue_field_names->length;
 	for (int i = 0; i < n; i++) {
 		char* value_field_name = pstate->pvalue_field_names->strings[i];
 		char* value_field_sval = pstate->pvalue_field_values->strings[i];
-		mapper_stats1_ingest_name_value(pinrec, pstate, value_field_name, value_field_sval, pgroup_to_acc_field);
+		mapper_stats1_ingest_name_value(pinrec, pstate, value_field_name, value_field_sval,
+			pgroup_by_field_values_to_acc_fields);
 	}
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	slls_free(pgroup_by_field_values);
 }
 
@@ -436,6 +443,7 @@ static void mapper_stats1_ingest_with_regexes(lrec_t* pinrec, mapper_stats1_stat
 			FREE_ENTRY_KEY);
 	}
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	lhmsv_t* pgroup_by_field_values_to_acc_fields = lhmslv_get(pgroups_by_names, pgroup_by_field_values);
 	if (pgroup_by_field_values_to_acc_fields == NULL) {
 		pgroup_by_field_values_to_acc_fields = lhmsv_alloc();
@@ -443,6 +451,7 @@ static void mapper_stats1_ingest_with_regexes(lrec_t* pinrec, mapper_stats1_stat
 			FREE_ENTRY_KEY);
 	}
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// E.g. {"x": 1, "y": 2}
 	lhmss_t* value_pairs = mlr_reference_key_value_pairs_from_regex_names(pinrec,
 		pstate->value_field_regexes, pstate->num_value_field_regexes, pstate->invert_regex_value_field_names);
@@ -453,6 +462,7 @@ static void mapper_stats1_ingest_with_regexes(lrec_t* pinrec, mapper_stats1_stat
 			pgroup_by_field_values_to_acc_fields);
 	}
 
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	slls_free(pgroup_by_field_names);
 	slls_free(pgroup_by_field_values);
 	lhmss_free(group_by_pairs);
