@@ -651,6 +651,14 @@ run_mlr --oxtab merge-fields -i -k -a p0,min,p29,max,p100,sum,count -r in_,out_ 
 run_mlr --oxtab merge-fields -i -k -a p0,min,p29,max,p100,sum,count -c in_,out_              $indir/merge-fields-abxy.dkvp
 
 # ----------------------------------------------------------------
+announce STATS1 WITH REGEXED FIELD NAMES
+
+run_mlr --from $indir/abixy --opprint stats1 -a sum --gr '[a-h]' --fr '[i-z]'
+run_mlr --from $indir/abixy --opprint stats1 -a sum  -g  a,b     --fr '[i-z]'
+run_mlr --from $indir/abixy --opprint stats1 -a sum --gr '[a-h]'  -f  i,x,y
+run_mlr --from $indir/abixy --opprint stats1 -a sum  -g  a,b      -f  i,x,y
+
+# ----------------------------------------------------------------
 announce MOST/LEAST FREQUENT
 
 run_mlr --opprint --from $indir/freq.dkvp most-frequent -f a -n 3

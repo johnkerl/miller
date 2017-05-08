@@ -19,7 +19,9 @@ static char* fake_acc_name_for_setups = "__setup_done__";
 
 // ----------------------------------------------------------------
 struct _mapper_stats1_state_t; // forward reference
-typedef void ingestor_func_t(lrec_t* pinrec, struct _mapper_stats1_state_t* pstate);
+typedef void group_by_ingestor_func_t(lrec_t* pinrec, struct _mapper_stats1_state_t* pstate);
+typedef void value_ingestor_func_t(lrec_t* pinrec, struct _mapper_stats1_state_t* pstate,
+	lhmsv_t* pgroup_by_field_values_to_acc_fields);
 typedef sllv_t* emitter_func_t(struct _mapper_stats1_state_t* pstate);
 
 typedef struct _mapper_stats1_state_t {
@@ -30,8 +32,9 @@ typedef struct _mapper_stats1_state_t {
 	string_array_t*  pvalue_field_values;    // scratch space used per-record
 	slls_t*          pgroup_by_field_names;  // parameter
 
-	ingestor_func_t* pingestor;
-	emitter_func_t*  pemitter;
+	group_by_ingestor_func_t* pgroup_by_ingestor;
+	value_ingestor_func_t*    pvalue_ingestor;
+	emitter_func_t*           pemitter;
 
 	regex_t*         value_field_regexes;
 	int              num_value_field_regexes;
@@ -57,12 +60,26 @@ static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_nam
 	int do_iterative_stats, int allow_int_float, int do_interpolated_percentiles);
 static void      mapper_stats1_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static void      mapper_stats1_ingest_without_regexes(lrec_t* pinrec, mapper_stats1_state_t* pstate);
-static void      mapper_stats1_ingest_with_regexes(lrec_t* pinrec, mapper_stats1_state_t* pstate);
+
+static void mapper_stats1_group_by_ingest_without_regexes(
+	lrec_t*                pinrec,
+	mapper_stats1_state_t* pstate);
+static void mapper_stats1_group_by_ingest_with_regexes(
+	lrec_t*                pinrec,
+	mapper_stats1_state_t* pstate);
+static void mapper_stats1_value_ingest_without_regexes(
+	lrec_t*                pinrec,
+	mapper_stats1_state_t* pstate,
+	lhmsv_t*               pgroup_by_field_values_to_acc_fields);
+static void mapper_stats1_value_ingest_with_regexes(
+	lrec_t*                pinrec,
+	mapper_stats1_state_t* pstate,
+	lhmsv_t*               pgroup_by_field_values_to_acc_fields);
+
 static void      mapper_stats1_ingest_name_value(lrec_t* pinrec, mapper_stats1_state_t* pstate,
 	char* value_field_name, char* value_field_sval, lhmsv_t* pgroup_to_acc_field);
-static sllv_t*   mapper_stats1_emit_all_without_regexes(mapper_stats1_state_t* pstate);
-static sllv_t*   mapper_stats1_emit_all_with_regexes(mapper_stats1_state_t* pstate);
+static sllv_t*   mapper_stats1_emit_all_without_group_by_regexes(mapper_stats1_state_t* pstate);
+static sllv_t*   mapper_stats1_emit_all_with_group_by_regexes(mapper_stats1_state_t* pstate);
 static lrec_t*   mapper_stats1_emit(mapper_stats1_state_t* pstate, lrec_t* poutrec,
 	char* value_field_name, lhmsv_t* acc_field_to_acc_state_out);
 
@@ -199,16 +216,14 @@ static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_nam
 		}
 		string_array_free(pvalue_field_names);
 		pstate->invert_regex_value_field_names = invert_regex_value_field_names;
-		pstate->pingestor = mapper_stats1_ingest_with_regexes;
-		pstate->pemitter = mapper_stats1_emit_all_with_regexes;
+		pstate->pvalue_ingestor                = mapper_stats1_value_ingest_with_regexes;
 	} else {
-		pstate->pvalue_field_names                = pvalue_field_names;
-		pstate->pvalue_field_values               = string_array_alloc(pvalue_field_names->length);
-		pstate->value_field_regexes               = NULL;
-		pstate->num_value_field_regexes           = 0;
-		pstate->invert_regex_value_field_names    = FALSE;
-		pstate->pingestor                         = mapper_stats1_ingest_without_regexes;
-		pstate->pemitter                          = mapper_stats1_emit_all_without_regexes;
+		pstate->pvalue_field_names             = pvalue_field_names;
+		pstate->pvalue_field_values            = string_array_alloc(pvalue_field_names->length);
+		pstate->value_field_regexes            = NULL;
+		pstate->num_value_field_regexes        = 0;
+		pstate->invert_regex_value_field_names = FALSE;
+		pstate->pvalue_ingestor                = mapper_stats1_value_ingest_without_regexes;
 	}
 
 	if (do_regex_group_by_field_names) {
@@ -222,10 +237,14 @@ static mapper_t* mapper_stats1_alloc(ap_state_t* pargp, slls_t* paccumulator_nam
 			regcomp_or_die_quoted(&pstate->group_by_field_regexes[i], pe->value, REG_NOSUB);
 		}
 		slls_free(pgroup_by_field_names);
+		pstate->pgroup_by_ingestor                = mapper_stats1_group_by_ingest_with_regexes;
+		pstate->pemitter                          = mapper_stats1_emit_all_with_group_by_regexes;
 		pstate->invert_regex_group_by_field_names = invert_regex_group_by_field_names;
 		pstate->groups_without_group_by_regex     = NULL;
 		pstate->groups_with_group_by_regex        = lhmslv_alloc();
 	} else {
+		pstate->pgroup_by_ingestor                = mapper_stats1_group_by_ingest_without_regexes;
+		pstate->pemitter                          = mapper_stats1_emit_all_without_group_by_regexes;
 		pstate->pgroup_by_field_names             = pgroup_by_field_names;
 		pstate->group_by_field_regexes            = NULL;
 		pstate->num_group_by_field_regexes        = 0;
@@ -366,7 +385,7 @@ static void mapper_stats1_free(mapper_t* pmapper, context_t* _) {
 static sllv_t* mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_stats1_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
-		pstate->pingestor(pinrec, pstate);
+		pstate->pgroup_by_ingestor(pinrec, pstate);
 		if (pstate->do_iterative_stats) {
 			// The input record is modified in this case, with new fields appended
 			return sllv_single(pinrec);
@@ -382,7 +401,7 @@ static sllv_t* mapper_stats1_process(lrec_t* pinrec, context_t* pctx, void* pvst
 }
 
 // ----------------------------------------------------------------
-static void mapper_stats1_ingest_without_regexes(lrec_t* pinrec, mapper_stats1_state_t* pstate) {
+static void mapper_stats1_group_by_ingest_without_regexes(lrec_t* pinrec, mapper_stats1_state_t* pstate) {
 	// E.g. ["s", "t"]
 	// To do: make value_field_values into a hashmap. Then accept partial
 	// population on that, but retain full-population requirement on group-by.
@@ -405,22 +424,14 @@ static void mapper_stats1_ingest_without_regexes(lrec_t* pinrec, mapper_stats1_s
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// for x=1 and y=2
-	mlr_reference_values_from_record_into_string_array(pinrec, pstate->pvalue_field_names,
-		pstate->pvalue_field_values);
-	int n = pstate->pvalue_field_names->length;
-	for (int i = 0; i < n; i++) {
-		char* value_field_name = pstate->pvalue_field_names->strings[i];
-		char* value_field_sval = pstate->pvalue_field_values->strings[i];
-		mapper_stats1_ingest_name_value(pinrec, pstate, value_field_name, value_field_sval,
-			pgroup_by_field_values_to_acc_fields);
-	}
+	pstate->pvalue_ingestor(pinrec, pstate, pgroup_by_field_values_to_acc_fields);
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	slls_free(pgroup_by_field_values);
 }
 
 // ----------------------------------------------------------------
-static void mapper_stats1_ingest_with_regexes(lrec_t* pinrec, mapper_stats1_state_t* pstate) {
+static void mapper_stats1_group_by_ingest_with_regexes(lrec_t* pinrec, mapper_stats1_state_t* pstate) {
 	// E.g. {"a": "s", "b":"t"}
 	lhmss_t* group_by_pairs = mlr_reference_key_value_pairs_from_regex_names(pinrec,
 		pstate->group_by_field_regexes, pstate->num_group_by_field_regexes, pstate->invert_regex_group_by_field_names);
@@ -453,6 +464,37 @@ static void mapper_stats1_ingest_with_regexes(lrec_t* pinrec, mapper_stats1_stat
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	// E.g. {"x": 1, "y": 2}
+	pstate->pvalue_ingestor(pinrec, pstate, pgroup_by_field_values_to_acc_fields);
+
+	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+	slls_free(pgroup_by_field_names);
+	slls_free(pgroup_by_field_values);
+	lhmss_free(group_by_pairs);
+}
+
+// ----------------------------------------------------------------
+static void mapper_stats1_value_ingest_without_regexes(
+	lrec_t*                pinrec,
+	mapper_stats1_state_t* pstate,
+	lhmsv_t*               pgroup_by_field_values_to_acc_fields)
+{
+	mlr_reference_values_from_record_into_string_array(pinrec, pstate->pvalue_field_names,
+		pstate->pvalue_field_values);
+	int n = pstate->pvalue_field_names->length;
+	for (int i = 0; i < n; i++) {
+		char* value_field_name = pstate->pvalue_field_names->strings[i];
+		char* value_field_sval = pstate->pvalue_field_values->strings[i];
+		mapper_stats1_ingest_name_value(pinrec, pstate, value_field_name, value_field_sval,
+			pgroup_by_field_values_to_acc_fields);
+	}
+}
+
+// ----------------------------------------------------------------
+static void mapper_stats1_value_ingest_with_regexes(
+	lrec_t*                pinrec,
+	mapper_stats1_state_t* pstate,
+	lhmsv_t*               pgroup_by_field_values_to_acc_fields)
+{
 	lhmss_t* value_pairs = mlr_reference_key_value_pairs_from_regex_names(pinrec,
 		pstate->value_field_regexes, pstate->num_value_field_regexes, pstate->invert_regex_value_field_names);
 	for (lhmsse_t* pf = value_pairs->phead; pf != NULL; pf = pf->pnext) {
@@ -461,11 +503,6 @@ static void mapper_stats1_ingest_with_regexes(lrec_t* pinrec, mapper_stats1_stat
 		mapper_stats1_ingest_name_value(pinrec, pstate, value_field_name, value_field_sval,
 			pgroup_by_field_values_to_acc_fields);
 	}
-
-	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-	slls_free(pgroup_by_field_names);
-	slls_free(pgroup_by_field_values);
-	lhmss_free(group_by_pairs);
 	lhmss_free(value_pairs);
 }
 
@@ -545,7 +582,7 @@ static void mapper_stats1_ingest_name_value(lrec_t* pinrec, mapper_stats1_state_
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_stats1_emit_all_without_regexes(mapper_stats1_state_t* pstate) {
+static sllv_t* mapper_stats1_emit_all_without_group_by_regexes(mapper_stats1_state_t* pstate) {
 	sllv_t* poutrecs = sllv_alloc();
 
 	for (lhmslve_t* pa = pstate->groups_without_group_by_regex->phead; pa != NULL; pa = pa->pnext) {
@@ -575,7 +612,7 @@ static sllv_t* mapper_stats1_emit_all_without_regexes(mapper_stats1_state_t* pst
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_stats1_emit_all_with_regexes(mapper_stats1_state_t* pstate) {
+static sllv_t* mapper_stats1_emit_all_with_group_by_regexes(mapper_stats1_state_t* pstate) {
 	sllv_t* poutrecs = sllv_alloc();
 
 	// Two-level map: group-by field names -> group-by field values -> acc-field map
