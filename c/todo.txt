@@ -22,6 +22,8 @@ FUNDAM:
 ----------------------------------------------------------------
 airable:
 
+! faqent for ${x.a}
+
 ! !autoreconf doc note w/ as-of-5.2.0 caveat
 
 * reg_test/run --mlrexec flag

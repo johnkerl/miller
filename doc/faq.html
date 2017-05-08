@@ -192,6 +192,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Diagnosing_delimiter_specifications">Diagnosing delimiter specifications</a><br/>
 &bull;&nbsp;<a href="#How_do_I_examine_then-chaining?">How do I examine then-chaining?</a><br/>
 &bull;&nbsp;<a href="#I_assigned_$9_and_it&rsquo;s_not_9th">I assigned $9 and it&rsquo;s not 9th</a><br/>
+&bull;&nbsp;<a href="#How_can_I_handle_field_names_with_special_symbols_in_them?">How can I handle field names with special symbols in them?</a><br/>
 &bull;&nbsp;<a href="#How_can_I_put_single-quotes_into_strings?">How can I put single-quotes into strings?</a><br/>
 &bull;&nbsp;<a href="#Why_doesn&rsquo;t_mlr_cut_put_fields_in_the_order_I_want?">Why doesn&rsquo;t mlr cut put fields in the order I want?</a><br/>
 &bull;&nbsp;<a href="#NR_is_not_consecutive_after_then-chaining">NR is not consecutive after then-chaining</a><br/>
@@ -439,6 +440,22 @@ $ echo x,y,z | mlr --dkvp rename 2,newname
 $ echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2
 3,1,2
 z,x,y
+</pre>
+</div>
+<p/>
+
+</div>
+<a id="How_can_I_handle_field_names_with_special_symbols_in_them?"/><h1>How can I handle field names with special symbols in them?</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_field_names_with_special_symbols');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_field_names_with_special_symbols" style="display: block">
+
+<p/>Simply surround the field names with curly braces:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'x.a=3,y:b=4,z/c=5' | mlr put '${product.all} = ${x.a} * ${y:b} * ${z/c}'
+x.a=3,y:b=4,z/c=5,product.all=60
 </pre>
 </div>
 <p/>
