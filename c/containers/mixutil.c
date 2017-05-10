@@ -115,7 +115,7 @@ lhmss_t* mlr_reference_key_value_pairs_from_regex_names(lrec_t* prec, regex_t* p
 				break;
 			}
 		}
-		if (matches_any) {
+		if (matches_any ^ invert_matches) {
 			lhmss_put(pmap, pe->key, pe->value, NO_FREE);
 		}
 	}

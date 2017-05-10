@@ -39,6 +39,7 @@ typedef struct _mapper_stats1_state_t {
 	regex_t*         value_field_regexes;
 	int              num_value_field_regexes;
 	int              invert_regex_value_field_names;
+
 	regex_t*         group_by_field_regexes;
 	int              num_group_by_field_regexes;
 	int              invert_regex_group_by_field_names;
@@ -445,7 +446,6 @@ static void mapper_stats1_group_by_ingest_with_regexes(lrec_t* pinrec, mapper_st
 		slls_append_no_free(pgroup_by_field_values, pe->value);
 	}
 
-	// xxx needs two levels or four flavors: --gr/--fr = TT TF FT FF
 	// Two-level map: group-by field names -> group-by field values -> acc-field map
 	lhmslv_t* pgroups_by_names = lhmslv_get(pstate->groups_with_group_by_regex, pgroup_by_field_names);
 	if (pgroups_by_names == NULL) {
