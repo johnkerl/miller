@@ -22,7 +22,9 @@ FUNDAM:
 ----------------------------------------------------------------
 airable:
 
-! faqent for ${x.a}
+* IQR-put faqent
+
+* pn-pm aggr @ stats1 ?!?
 
 ! !autoreconf doc note w/ as-of-5.2.0 caveat
 
@@ -33,12 +35,16 @@ airable:
   - functionality
   - stats1 --help
   - UT
+  - merge-fields -h
+  - how many others for incremental release? stats2?
   - mld: mlh suffices? cookbook example? 10min example??
 
 * more json handling: topmost/second-topmost array, put nidx-style as with dkvp.
 
 ----------------------------------------------------------------
 non-airable:
+
+! fix autoreconf timestamp wtf
 
 * valgrinds
 
@@ -124,24 +130,25 @@ MAPVAR CHECKLIST:
 which verbs:
   * stats1
   * stats2
-  - bar
+  * merge-fields -x
   - count-distinct
+
+  - bar
   - histogram
   - label
-  - merge-fields -x
   - nest
   - reorder
   - sec2gmt/seg2gmtdate
-  - sort
+  ? sort
   - step
   - top
   - uniq -g
+
   ? decimate -g
   ? head -g
   ? sample -g
   ? tail -g
   ? join
-  ? merge-fields -x ?
 
 ----------------------------------------------------------------
 
