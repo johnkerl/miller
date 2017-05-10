@@ -157,6 +157,7 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv,
 	ap_define_string_list_flag(pstate,  "-g",   &pgroup_by_field_names);
 	ap_define_string_list_flag(pstate,  "--gr", &pgroup_by_field_names);
 	ap_define_string_list_flag(pstate,  "--gx", &pgroup_by_field_names);
+	ap_define_string_list_flag(pstate,  "--grfx", &pgroup_by_field_names);
 	ap_define_true_flag(pstate,         "-s",   &do_iterative_stats);
 	ap_define_false_flag(pstate,        "-F",   &allow_int_float);
 	ap_define_true_flag(pstate,         "-i",   &do_interpolated_percentiles);
@@ -178,6 +179,16 @@ static mapper_t* mapper_stats1_parse_cli(int* pargi, int argc, char** argv,
 		} else if (streq(argv[argi], "--gx")) {
 			do_regex_group_by_field_names = TRUE;
 			invert_regex_group_by_field_names = TRUE;
+		} else if (streq(argv[argi], "--grfx")) {
+			do_regex_group_by_field_names = TRUE;
+			do_regex_value_field_names = TRUE;
+			invert_regex_value_field_names = TRUE;
+			pvalue_field_names = string_array_alloc(pgroup_by_field_names->length);
+			int i = 0;
+			for (sllse_t* pe = pgroup_by_field_names->phead; pe != NULL; pe = pe->pnext, i++) {
+				pvalue_field_names->strings[i] = pe->value;
+				i++;
+			}
 		}
 	}
 
