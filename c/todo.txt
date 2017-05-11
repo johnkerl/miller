@@ -31,11 +31,10 @@ airable:
 * reg_test/run --mlrexec flag
 
 * across-all/regex x stats1 / many verbs
-  i stats1 first
-  - functionality
+  k stats1 functionality
+  k UT
   - stats1 --help
-  - UT
-  - merge-fields -h
+  - merge-fields -x
   - how many others for incremental release? stats2?
   - mld: mlh suffices? cookbook example? 10min example??
 
@@ -133,21 +132,23 @@ which verbs:
   * merge-fields -x
   - count-distinct
 
-  - bar
-  - histogram
-  - label
-  - nest
   - reorder
+
   - sec2gmt/seg2gmtdate
-  ? sort
   - step
   - top
   - uniq -g
+  - head -g
+  - sample -g
+  - tail -g
+
+  ? bar
+  ? histogram
+  ? label
+  ? nest
+  ? sort
 
   ? decimate -g
-  ? head -g
-  ? sample -g
-  ? tail -g
   ? join
 
 ----------------------------------------------------------------
