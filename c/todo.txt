@@ -22,6 +22,9 @@ FUNDAM:
 ----------------------------------------------------------------
 airable:
 
+! faqent/cookbook/more:
+  mlr termcvt --cr2lf foo.csv.cr > foo.csv
+
 * IQR-put faqent
 
 * pn-pm aggr @ stats1 ?!?
