@@ -24,3 +24,4 @@ out binary
 *.csv-crlf binary
 *.pprint-crlf binary
 *.dkvp-crlf binary
+*.bin binary

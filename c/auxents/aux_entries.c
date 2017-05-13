@@ -156,90 +156,16 @@ static int lecat_stream(FILE* input_stream, int do_color) {
 }
 
 // ================================================================
-typedef void line_cvt_func_t(char* line, ssize_t linelen, FILE* output_stream);
-
-static void cr_to_crlf(char* line,  ssize_t linelen, FILE* output_stream) {
-	if (linelen == 1) {
-		if (line[0] == '\r') {
-			fputc('\r', output_stream);
-			fputc('\n', output_stream);
-		} else {
-			fputc(line[0], output_stream);
-		}
-	} else {
-		if (line[linelen-2] == '\r' && line[linelen-1] == '\n') {
-			fputs(line, output_stream);
-		} else if (line[linelen-1] == '\r') {
-			fputs(line, output_stream);
-			fputc('\n', output_stream);
-		} else {
-			fputs(line, output_stream);
-		}
-	}
-}
-
-static void lf_to_crlf(char* line,  ssize_t linelen, FILE* output_stream) {
-	if (linelen == 1) {
-		if (line[0] == '\n') {
-			fputc('\r', output_stream);
-			fputc('\n', output_stream);
-		} else {
-			fputc(line[0], output_stream);
-		}
-	} else {
-		if (line[linelen-2] == '\r' && line[linelen-1] == '\n') {
-			fputs(line, output_stream);
-		} else if (line[linelen-1] == '\n') {
-			line[linelen-1] = '\r';
-			fputs(line, output_stream);
-			fputc('\n', output_stream);
-		} else {
-			fputs(line, output_stream);
-		}
-	}
-}
-
-static void crlf_to_cr(char* line,  ssize_t linelen, FILE* output_stream) {
-	if (linelen >= 2 && line[linelen-2] == '\r' && line[linelen-1] == '\n') {
-		line[linelen-2] = '\r';
-		line[linelen-1] = '\0';
-	}
-	fputs(line, output_stream);
-}
-
-static void crlf_to_lf(char* line,  ssize_t linelen, FILE* output_stream) {
-	if (linelen >= 2 && line[linelen-2] == '\r' && line[linelen-1] == '\n') {
-		line[linelen-2] = '\n';
-		line[linelen-1] = '\0';
-	}
-	fputs(line, output_stream);
-}
-
-static void cr_to_lf(char* line,  ssize_t linelen, FILE* output_stream) {
-	if (linelen >= 1 && line[linelen-1] == '\r') {
-		line[linelen-1] = '\n';
-	}
-	fputs(line, output_stream);
-}
-
-static void lf_to_cr(char* line,  ssize_t linelen, FILE* output_stream) {
-	if (linelen >= 1 && line[linelen-1] == '\n') {
-		line[linelen-1] = '\r';
-	}
-	fputs(line, output_stream);
-}
-
-// ----------------------------------------------------------------
-static int termcvt_stream(FILE* input_stream, FILE* output_stream, char inend, line_cvt_func_t* pcvt_func) {
+static int termcvt_stream(FILE* input_stream, FILE* output_stream, char* inend, char* outend) {
 	size_t line_length = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
+	int inend_length = strlen(inend);
 	while (1) {
-		char* line = mlr_alloc_read_line_single_delimiter(input_stream, inend, &line_length, FALSE, NULL);
+		char* line = mlr_alloc_read_line_multiple_delimiter(input_stream, inend, inend_length, &line_length);
 		if (line == NULL) {
 			break;
 		}
-
-		pcvt_func(line, line_length, output_stream);
-
+		fputs(line, output_stream);
+		fputs(outend, output_stream);
 		free(line);
 	}
 	return 1;
@@ -265,9 +191,9 @@ static void termcvt_usage(char* argv0, char* argv1, FILE* o, int exit_code) {
 // ----------------------------------------------------------------
 static int termcvt_main(int argc, char** argv) {
 	int ok = 1;
-	char inend = '\n';
+	char* inend  = "\n";
+	char* outend = "\n";
 	int do_in_place = FALSE;
-	line_cvt_func_t* pcvt_func = lf_to_crlf;
 
 	// argv[0] is 'mlr'
 	// argv[1] is 'termcvt'
@@ -287,23 +213,23 @@ static int termcvt_main(int argc, char** argv) {
 		} else if (streq(opt, "-I")) {
 			do_in_place = TRUE;
 		} else if (streq(opt, "--cr2crlf")) {
-			pcvt_func = cr_to_crlf;
-			inend = '\r';
+			inend  = "\r";
+			outend = "\r\n";
 		} else if (streq(opt, "--lf2crlf")) {
-			pcvt_func = lf_to_crlf;
-			inend = '\n';
+			inend  = "\n";
+			outend = "\r\n";
 		} else if (streq(opt, "--crlf2cr")) {
-			pcvt_func = crlf_to_cr;
-			inend = '\n';
-		} else if (streq(opt, "--crlf2lf")) {
-			pcvt_func = crlf_to_lf;
-			inend = '\n';
-		} else if (streq(opt, "--cr2lf")) {
-			pcvt_func = cr_to_lf;
-			inend = '\r';
+			inend  = "\r\n";
+			outend = "\r";
 		} else if (streq(opt, "--lf2cr")) {
-			pcvt_func = lf_to_cr;
-			inend = '\n';
+			inend  = "\n";
+			outend = "\r";
+		} else if (streq(opt, "--crlf2lf")) {
+			inend  = "\r\n";
+			outend = "\n";
+		} else if (streq(opt, "--cr2lf")) {
+			inend  = "\r";
+			outend = "\n";
 		} else {
 			termcvt_usage(argv[0], argv[1], stdout, 0);
 		}
@@ -311,7 +237,7 @@ static int termcvt_main(int argc, char** argv) {
 
 	int nfiles = argc - argi;
 	if (nfiles == 0) {
-		ok = ok && termcvt_stream(stdin, stdout, inend, pcvt_func);
+		ok = ok && termcvt_stream(stdin, stdout, inend, outend);
 
 	} else if (do_in_place) {
 		for (; argi < argc; argi++) {
@@ -333,7 +259,7 @@ static int termcvt_main(int argc, char** argv) {
 				exit(1);
 			}
 
-			ok = termcvt_stream(input_stream, output_stream, inend, pcvt_func);
+			ok = termcvt_stream(input_stream, output_stream, inend, outend);
 
 			fclose(input_stream);
 			fclose(output_stream);
@@ -356,7 +282,7 @@ static int termcvt_main(int argc, char** argv) {
 				perror(file_name);
 				exit(1);
 			}
-			ok = termcvt_stream(input_stream, stdout, inend, pcvt_func);
+			ok = termcvt_stream(input_stream, stdout, inend, outend);
 			fclose(input_stream);
 		}
 

@@ -22,6 +22,10 @@ FUNDAM:
 ----------------------------------------------------------------
 airable:
 
+!!! aux-list -> main help; dox too
+
+!! fix term-cvt and UT it along with hex -r !!
+
 ! faqent/cookbook/more:
   mlr termcvt --cr2lf foo.csv.cr > foo.csv
 

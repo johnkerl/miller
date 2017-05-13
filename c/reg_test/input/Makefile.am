@@ -88,6 +88,9 @@ EXTRA_DIST=	\
 		joina.dkvp \
 		joinb.dkvp \
 		json-output-options.dkvp \
+		line-ending-cr.bin \
+		line-ending-crlf.bin \
+		line-ending-lf.bin \
 		line-term-lf.dkvp \
 		line-term-crlf.dkvp \
 		line-term-lf.csv \

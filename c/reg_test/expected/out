@@ -56359,3 +56359,87 @@ i 10
 x 0.5026260055412137
 y 0.9526183602969864
 
+mlr lecat --mono ./reg_test/input/line-ending-cr.bin
+hello[CR]there[CR]how[CR]are[CR]you[CR]
+mlr lecat --mono ./reg_test/input/line-ending-lf.bin
+hello[LF]
+there[LF]
+how[LF]
+are[LF]
+you[LF]
+
+mlr lecat --mono ./reg_test/input/line-ending-crlf.bin
+hello[CR][LF]
+there[CR][LF]
+how[CR][LF]
+are[CR][LF]
+you[CR][LF]
+
+mlr termcvt --cr2lf ./reg_test/input/line-ending-cr.bin
+mlr hex
+hello
+there
+how
+are
+you
+
+00000000: 6d 6c 72 20  74 65 72 6d  63 76 74 20  2d 2d 63 72 |mlr termcvt --cr|
+00000010: 32 6c 66 20  2e 2f 72 65  67 5f 74 65  73 74 2f 69 |2lf ./reg_test/i|
+00000020: 6e 70 75 74  2f 6c 69 6e  65 2d 65 6e  64 69 6e 67 |nput/line-ending|
+00000030: 2d 63 72 2e  62 69 6e 0a                           |-cr.bin.|
+
+mlr termcvt --cr2crlf ./reg_test/input/line-ending-cr.bin
+mlr hex
+hello
+there
+how
+are
+you
+
+00000000: 6d 6c 72 20  74 65 72 6d  63 76 74 20  2d 2d 63 72 |mlr termcvt --cr|
+00000010: 32 63 72 6c  66 20 2e 2f  72 65 67 5f  74 65 73 74 |2crlf ./reg_test|
+00000020: 2f 69 6e 70  75 74 2f 6c  69 6e 65 2d  65 6e 64 69 |/input/line-endi|
+00000030: 6e 67 2d 63  72 2e 62 69  6e 0a                    |ng-cr.bin.|
+
+mlr termcvt --lf2cr ./reg_test/input/line-ending-lf.bin
+mlr hex
+hellotherehowareyou
+00000000: 6d 6c 72 20  74 65 72 6d  63 76 74 20  2d 2d 6c 66 |mlr termcvt --lf|
+00000010: 32 63 72 20  2e 2f 72 65  67 5f 74 65  73 74 2f 69 |2cr ./reg_test/i|
+00000020: 6e 70 75 74  2f 6c 69 6e  65 2d 65 6e  64 69 6e 67 |nput/line-ending|
+00000030: 2d 6c 66 2e  62 69 6e 0a                           |-lf.bin.|
+
+mlr termcvt --lf2crlf ./reg_test/input/line-ending-lf.bin
+mlr hex
+hello
+there
+how
+are
+you
+
+00000000: 6d 6c 72 20  74 65 72 6d  63 76 74 20  2d 2d 6c 66 |mlr termcvt --lf|
+00000010: 32 63 72 6c  66 20 2e 2f  72 65 67 5f  74 65 73 74 |2crlf ./reg_test|
+00000020: 2f 69 6e 70  75 74 2f 6c  69 6e 65 2d  65 6e 64 69 |/input/line-endi|
+00000030: 6e 67 2d 6c  66 2e 62 69  6e 0a                    |ng-lf.bin.|
+
+mlr termcvt --crlf2cr ./reg_test/input/line-ending-crlf.bin
+mlr hex
+hellotherehowareyou
+00000000: 6d 6c 72 20  74 65 72 6d  63 76 74 20  2d 2d 63 72 |mlr termcvt --cr|
+00000010: 6c 66 32 63  72 20 2e 2f  72 65 67 5f  74 65 73 74 |lf2cr ./reg_test|
+00000020: 2f 69 6e 70  75 74 2f 6c  69 6e 65 2d  65 6e 64 69 |/input/line-endi|
+00000030: 6e 67 2d 63  72 6c 66 2e  62 69 6e 0a              |ng-crlf.bin.|
+
+mlr termcvt --crlf2lf ./reg_test/input/line-ending-crlf.bin
+mlr hex
+hello
+there
+how
+are
+you
+
+00000000: 6d 6c 72 20  74 65 72 6d  63 76 74 20  2d 2d 63 72 |mlr termcvt --cr|
+00000010: 6c 66 32 6c  66 20 2e 2f  72 65 67 5f  74 65 73 74 |lf2lf ./reg_test|
+00000020: 2f 69 6e 70  75 74 2f 6c  69 6e 65 2d  65 6e 64 69 |/input/line-endi|
+00000030: 6e 67 2d 63  72 6c 66 2e  62 69 6e 0a              |ng-crlf.bin.|
+

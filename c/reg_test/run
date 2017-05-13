@@ -6576,6 +6576,20 @@ run_mlr --oxtab --from $indir/abixy-het put '
  )
 '
 
+# ----------------------------------------------------------------
+# AUX ENTRIES
+
+run_mlr lecat --mono $indir/line-ending-cr.bin
+run_mlr lecat --mono $indir/line-ending-lf.bin
+run_mlr lecat --mono $indir/line-ending-crlf.bin
+
+run_mlr termcvt --cr2lf   $indir/line-ending-cr.bin   | run_mlr hex
+run_mlr termcvt --cr2crlf $indir/line-ending-cr.bin   | run_mlr hex
+run_mlr termcvt --lf2cr   $indir/line-ending-lf.bin   | run_mlr hex
+run_mlr termcvt --lf2crlf $indir/line-ending-lf.bin   | run_mlr hex
+run_mlr termcvt --crlf2cr $indir/line-ending-crlf.bin | run_mlr hex
+run_mlr termcvt --crlf2lf $indir/line-ending-crlf.bin | run_mlr hex
+
 # ================================================================
 # A key feature of this regression script is that it can be invoked from any
 # directory. Depending on the directory it's invoked from, the path to $outdir
