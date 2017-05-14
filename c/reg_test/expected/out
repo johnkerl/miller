@@ -45361,7 +45361,7 @@ a
 x
 
 mlr --csv --rs lf cut -f a ./reg_test/input/rfc-csv/simple.csv-crlf
-mlr: unmatched double quote at line 3.
+mlr: unmatched double quote at line  3.
 a
 1
 4
