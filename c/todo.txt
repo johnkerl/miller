@@ -23,15 +23,14 @@ FUNDAM:
 airable:
 
 !!! aux-list -> main help; dox too
-
-!! fix term-cvt and UT it along with hex -r !!
+- UT aux-list entries ... with/without --no-mmap ...
 
 ! faqent/cookbook/more:
   mlr termcvt --cr2lf foo.csv.cr > foo.csv
 
 * IQR-put faqent
 
-* pn-pm aggr @ stats1 ?!?
+? pn-pm aggr @ stats1 ?!?
 
 ! !autoreconf doc note w/ as-of-5.2.0 caveat
 
