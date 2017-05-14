@@ -36,12 +36,14 @@ else
   exit 1
 fi
 
+using_no_mmap="false"
 if [ "$1" = "--valgrind" ]; then
   # Leak-check the test suite. Needs 'make mlrg' first.
   # ../tools/clean-valg can be used to filter the output.
   path_to_mlr="valgrind --leak-check=full ${path_to_mlr}g"
 elif [ "$1" = "--no-mmap" ]; then
   path_to_mlr="${path_to_mlr} --no-mmap"
+  using_no_mmap="true"
 elif [ "$1" = "--valgrind-no-mmap" ]; then
   path_to_mlr="valgrind --leak-check=full ${path_to_mlr}g --no-mmap"
 fi
@@ -6588,23 +6590,25 @@ run_mlr --oxtab --from $indir/abixy-het put '
 # ----------------------------------------------------------------
 # AUX ENTRIES
 
-run_mlr lecat --mono $indir/line-ending-cr.bin
-run_mlr lecat --mono $indir/line-ending-lf.bin
-run_mlr lecat --mono $indir/line-ending-crlf.bin
+if [ "$using_no_mmap" = "false" ]; then
+  run_mlr lecat --mono $indir/line-ending-cr.bin
+  run_mlr lecat --mono $indir/line-ending-lf.bin
+  run_mlr lecat --mono $indir/line-ending-crlf.bin
 
-run_mlr_quiet termcvt --cr2lf   $indir/line-ending-cr.bin   > $outdir/line-ending-temp-1.bin
-run_mlr_quiet termcvt --cr2crlf $indir/line-ending-cr.bin   > $outdir/line-ending-temp-2.bin
-run_mlr_quiet termcvt --lf2cr   $indir/line-ending-lf.bin   > $outdir/line-ending-temp-3.bin
-run_mlr_quiet termcvt --lf2crlf $indir/line-ending-lf.bin   > $outdir/line-ending-temp-4.bin
-run_mlr_quiet termcvt --crlf2cr $indir/line-ending-crlf.bin > $outdir/line-ending-temp-5.bin
-run_mlr_quiet termcvt --crlf2lf $indir/line-ending-crlf.bin > $outdir/line-ending-temp-6.bin
+  run_mlr_quiet termcvt --cr2lf   $indir/line-ending-cr.bin   > $outdir/line-ending-temp-1.bin
+  run_mlr_quiet termcvt --cr2crlf $indir/line-ending-cr.bin   > $outdir/line-ending-temp-2.bin
+  run_mlr_quiet termcvt --lf2cr   $indir/line-ending-lf.bin   > $outdir/line-ending-temp-3.bin
+  run_mlr_quiet termcvt --lf2crlf $indir/line-ending-lf.bin   > $outdir/line-ending-temp-4.bin
+  run_mlr_quiet termcvt --crlf2cr $indir/line-ending-crlf.bin > $outdir/line-ending-temp-5.bin
+  run_mlr_quiet termcvt --crlf2lf $indir/line-ending-crlf.bin > $outdir/line-ending-temp-6.bin
 
-run_mlr hex $outdir/line-ending-temp-1.bin
-run_mlr hex $outdir/line-ending-temp-2.bin
-run_mlr hex $outdir/line-ending-temp-3.bin
-run_mlr hex $outdir/line-ending-temp-4.bin
-run_mlr hex $outdir/line-ending-temp-5.bin
-run_mlr hex $outdir/line-ending-temp-6.bin
+  run_mlr hex $outdir/line-ending-temp-1.bin
+  run_mlr hex $outdir/line-ending-temp-2.bin
+  run_mlr hex $outdir/line-ending-temp-3.bin
+  run_mlr hex $outdir/line-ending-temp-4.bin
+  run_mlr hex $outdir/line-ending-temp-5.bin
+  run_mlr hex $outdir/line-ending-temp-6.bin
+fi
 
 # ================================================================
 # A key feature of this regression script is that it can be invoked from any
