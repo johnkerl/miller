@@ -56359,48 +56359,48 @@ i 10
 x 0.5026260055412137
 y 0.9526183602969864
 
-mlr lecat --mono ./reg_test/input/line-ending-cr.bin
-hello[CR]there[CR]how[CR]are[CR]you[CR]mlr lecat --mono ./reg_test/input/line-ending-lf.bin
+mlr lecat --mono
+hello[CR]there[CR]how[CR]are[CR]you[CR]mlr lecat --mono
 hello[LF]
 there[LF]
 how[LF]
 are[LF]
 you[LF]
-mlr lecat --mono ./reg_test/input/line-ending-crlf.bin
+mlr lecat --mono
 hello[CR][LF]
 there[CR][LF]
 how[CR][LF]
 are[CR][LF]
 you[CR][LF]
-mlr termcvt --cr2lf ./reg_test/input/line-ending-cr.bin
+mlr termcvt --cr2lf
 hello
 there
 how
 are
 you
-mlr termcvt --cr2crlf ./reg_test/input/line-ending-cr.bin
+mlr termcvt --cr2crlf
 hello
 there
 how
 are
 you
-mlr termcvt --lf2cr ./reg_test/input/line-ending-lf.bin
-hellotherehowareyoumlr termcvt --lf2crlf ./reg_test/input/line-ending-lf.bin
+mlr termcvt --lf2cr
+hellotherehowareyoumlr termcvt --lf2crlf
 hello
 there
 how
 are
 you
-mlr termcvt --crlf2cr ./reg_test/input/line-ending-crlf.bin
-hellotherehowareyoumlr termcvt --crlf2lf ./reg_test/input/line-ending-crlf.bin
+mlr termcvt --crlf2cr
+hellotherehowareyoumlr termcvt --crlf2lf
 hello
 there
 how
 are
 you
-mlr hex /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/line-ending-temp-1.bin
-mlr hex /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/line-ending-temp-2.bin
-mlr hex /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/line-ending-temp-3.bin
-mlr hex /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/line-ending-temp-4.bin
-mlr hex /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/line-ending-temp-5.bin
-mlr hex /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/line-ending-temp-6.bin
+mlr hex
+mlr hex
+mlr hex
+mlr hex
+mlr hex
+mlr hex

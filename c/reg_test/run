@@ -6594,23 +6594,23 @@ run_mlr --oxtab --from $indir/abixy-het put '
 # ----------------------------------------------------------------
 # AUX ENTRIES
 
-run_mlr_for_auxents lecat --mono $indir/line-ending-cr.bin
-run_mlr_for_auxents lecat --mono $indir/line-ending-lf.bin
-run_mlr_for_auxents lecat --mono $indir/line-ending-crlf.bin
+run_mlr_for_auxents lecat --mono < $indir/line-ending-cr.bin
+run_mlr_for_auxents lecat --mono < $indir/line-ending-lf.bin
+run_mlr_for_auxents lecat --mono < $indir/line-ending-crlf.bin
 
-run_mlr_for_auxents termcvt --cr2lf   $indir/line-ending-cr.bin   > $outdir/line-ending-temp-1.bin
-run_mlr_for_auxents termcvt --cr2crlf $indir/line-ending-cr.bin   > $outdir/line-ending-temp-2.bin
-run_mlr_for_auxents termcvt --lf2cr   $indir/line-ending-lf.bin   > $outdir/line-ending-temp-3.bin
-run_mlr_for_auxents termcvt --lf2crlf $indir/line-ending-lf.bin   > $outdir/line-ending-temp-4.bin
-run_mlr_for_auxents termcvt --crlf2cr $indir/line-ending-crlf.bin > $outdir/line-ending-temp-5.bin
-run_mlr_for_auxents termcvt --crlf2lf $indir/line-ending-crlf.bin > $outdir/line-ending-temp-6.bin
+run_mlr_for_auxents termcvt --cr2lf   < $indir/line-ending-cr.bin   > $outdir/line-ending-temp-1.bin
+run_mlr_for_auxents termcvt --cr2crlf < $indir/line-ending-cr.bin   > $outdir/line-ending-temp-2.bin
+run_mlr_for_auxents termcvt --lf2cr   < $indir/line-ending-lf.bin   > $outdir/line-ending-temp-3.bin
+run_mlr_for_auxents termcvt --lf2crlf < $indir/line-ending-lf.bin   > $outdir/line-ending-temp-4.bin
+run_mlr_for_auxents termcvt --crlf2cr < $indir/line-ending-crlf.bin > $outdir/line-ending-temp-5.bin
+run_mlr_for_auxents termcvt --crlf2lf < $indir/line-ending-crlf.bin > $outdir/line-ending-temp-6.bin
 
-run_mlr_for_auxents hex $outdir/line-ending-temp-1.bin
-run_mlr_for_auxents hex $outdir/line-ending-temp-2.bin
-run_mlr_for_auxents hex $outdir/line-ending-temp-3.bin
-run_mlr_for_auxents hex $outdir/line-ending-temp-4.bin
-run_mlr_for_auxents hex $outdir/line-ending-temp-5.bin
-run_mlr_for_auxents hex $outdir/line-ending-temp-6.bin
+run_mlr_for_auxents hex < $outdir/line-ending-temp-1.bin
+run_mlr_for_auxents hex < $outdir/line-ending-temp-2.bin
+run_mlr_for_auxents hex < $outdir/line-ending-temp-3.bin
+run_mlr_for_auxents hex < $outdir/line-ending-temp-4.bin
+run_mlr_for_auxents hex < $outdir/line-ending-temp-5.bin
+run_mlr_for_auxents hex < $outdir/line-ending-temp-6.bin
 
 # ================================================================
 # A key feature of this regression script is that it can be invoked from any
