@@ -22,15 +22,15 @@ FUNDAM:
 ----------------------------------------------------------------
 airable:
 
+! termcvt -I
 !!! aux-list -> main help; dox too
-- UT aux-list entries ... with/without --no-mmap ...
-
+* UT unhex
 ! faqent/cookbook/more:
   mlr termcvt --cr2lf foo.csv.cr > foo.csv
 
-* IQR-put faqent
-
-? pn-pm aggr @ stats1 ?!?
+* IQR:
+  - IQR-put faqent
+  ? pn-pm aggr @ stats1 ?!?
 
 ! !autoreconf doc note w/ as-of-5.2.0 caveat
 
@@ -50,6 +50,8 @@ airable:
 non-airable:
 
 ! fix autoreconf timestamp wtf
+
+! appveyor !
 
 * valgrinds
 
