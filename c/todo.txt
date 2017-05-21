@@ -140,16 +140,16 @@ which verbs:
   * merge-fields -x
   - count-distinct
 
-  - reorder
-
   - sec2gmt/seg2gmtdate
   - step
   - top
-  - uniq -g
-  - head -g
-  - sample -g
-  - tail -g
 
+  ? uniq -g
+  ? sample -g
+  ? head -g
+  ? tail -g
+
+  ? reorder
   ? bar
   ? histogram
   ? label
