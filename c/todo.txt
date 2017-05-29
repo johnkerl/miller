@@ -11,6 +11,14 @@ BUGFIXES
   x=9223372036854775802,y=-9223372036854775806
   x=9223372036854775805,y=-9223372036854775802
 
+mlr ... then sec2gmt:
+Usage: mlr (null) [options] {comma-separated list of field names}
+Replaces a numeric field representing seconds since the epoch with the
+corresponding GMT timestamp; leaves non-numbers as-is. This is nothing
+more than a keystroke-saver for the sec2gmt function:
+  mlr (null) time1,time2
+is the same as
+
 ================================================================
 FUNDAM:
 
@@ -48,6 +56,8 @@ airable:
 
 ----------------------------------------------------------------
 non-airable:
+
+? into moreutils?
 
 ! fix autoreconf timestamp wtf
 
