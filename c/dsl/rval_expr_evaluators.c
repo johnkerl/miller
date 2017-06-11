@@ -43,14 +43,14 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 			// In input data such as echo x=3,y=4 | mlr put '$z=$x+$y', the 3 and 4 are strings
 			// which need parsing as integers. But in DSL expression literals such as 'put $z = "3" + 4'
 			// the "3" should not.
-			return rval_evaluator_alloc_from_numeric_literal(pnode->text, TYPE_INFER_STRING_ONLY);
+			return rval_evaluator_alloc_from_string_literal(pnode->text);
 			break;
 
 		case MD_AST_NODE_TYPE_NUMERIC_LITERAL:
 			// In input data such as echo x=3,y=4 | mlr put '$z=$x+$y', the 3 and 4 are strings
 			// which need parsing as integers. But in DSL expression literals such as 'put $z = "3" + 4'
 			// the "3" should not.
-			return rval_evaluator_alloc_from_numeric_literal(pnode->text, type_inferencing);
+			return rval_evaluator_alloc_from_numeric_literal(pnode->text);
 			break;
 
 		case MD_AST_NODE_TYPE_BOOLEAN_LITERAL:
@@ -58,7 +58,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 			break;
 
 		case MD_AST_NODE_TYPE_REGEXI:
-			return rval_evaluator_alloc_from_numeric_literal(pnode->text, type_inferencing);
+			return rval_evaluator_alloc_from_string_literal(pnode->text);
 			break;
 
 		case MD_AST_NODE_TYPE_CONTEXT_VARIABLE:
@@ -441,12 +441,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_local_map_keylist(mlr_dsl_ast_node_t
 }
 
 // ================================================================
-// This is used for evaluating strings and numbers in literal expressions, e.g. '$x = "abc"'
-// or '$x = "left_\1". The values are subject to replacement with regex captures. See comments
-// in mapper_put for more information.
-//
-// Compare rval_evaluator_alloc_from_string which doesn't do regex replacement: it is intended for
-// oosvar names on expression left-hand sides (outside of this file).
+// This is used for evaluating numbers in literal expressions, e.g. '$x = 4'
 
 typedef struct _rval_evaluator_numeric_literal_state_t {
 	mv_t literal;
@@ -479,7 +474,14 @@ static void rval_evaluator_numeric_literal_free(rval_evaluator_t* pevaluator) {
 	free(pevaluator);
 }
 
-rval_evaluator_t* rval_evaluator_alloc_from_numeric_literal(char* string, int type_inferencing) {
+// How to handle echo a=1,b=2.0 | mlr put {flag} '$s = $a; $t = $b; $u = 3; $v = 4.0', where {flag} is -S, -F, or
+// neither:
+// * (no flag) TYPE_INFER_STRING_FLOAT_INT: a and s = int 1,      b and t = float 2.0,    u = int 3, v = float 4.0
+// * (-F flag) TYPE_INFER_STRING_FLOAT:     a and s = float 1.0,  b and t = float 2.0,    u = int 3, v = float 4.0
+// * (-S flag) TYPE_INFER_STRING_ONLY:      a and s = string "1", b and t = string "2.0", u = int 3, v = float 4.0
+// The -S/-F flags for put/filter are for type inferencing in record data, not in literal expressions.
+
+rval_evaluator_t* rval_evaluator_alloc_from_numeric_literal(char* string) {
 	rval_evaluator_numeric_literal_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_numeric_literal_state_t));
 	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 
@@ -491,37 +493,16 @@ rval_evaluator_t* rval_evaluator_alloc_from_numeric_literal(char* string, int ty
 		double fltv;
 
 		pevaluator->pprocess_func = NULL;
-		switch (type_inferencing) {
-		case TYPE_INFER_STRING_ONLY:
+
+		if (mlr_try_int_from_string(string, &intv)) {
+			pstate->literal = mv_from_int(intv);
+			pevaluator->pprocess_func = rval_evaluator_non_string_literal_func;
+		} else if (mlr_try_float_from_string(string, &fltv)) {
+			pstate->literal = mv_from_float(fltv);
+			pevaluator->pprocess_func = rval_evaluator_non_string_literal_func;
+		} else {
 			pstate->literal = mv_from_string_no_free(string);
 			pevaluator->pprocess_func = rval_evaluator_string_literal_func;
-			break;
-
-		case TYPE_INFER_STRING_FLOAT:
-			if (mlr_try_float_from_string(string, &fltv)) {
-				pstate->literal = mv_from_float(fltv);
-				pevaluator->pprocess_func = rval_evaluator_non_string_literal_func;
-			} else {
-				pstate->literal = mv_from_string_no_free(string);
-				pevaluator->pprocess_func = rval_evaluator_string_literal_func;
-			}
-			break;
-
-		case TYPE_INFER_STRING_FLOAT_INT:
-			if (mlr_try_int_from_string(string, &intv)) {
-				pstate->literal = mv_from_int(intv);
-				pevaluator->pprocess_func = rval_evaluator_non_string_literal_func;
-			} else if (mlr_try_float_from_string(string, &fltv)) {
-				pstate->literal = mv_from_float(fltv);
-				pevaluator->pprocess_func = rval_evaluator_non_string_literal_func;
-			} else {
-				pstate->literal = mv_from_string_no_free(string);
-				pevaluator->pprocess_func = rval_evaluator_string_literal_func;
-			}
-			break;
-		default:
-			MLR_INTERNAL_CODING_ERROR();
-			break;
 		}
 	}
 	pevaluator->pfree_func = rval_evaluator_numeric_literal_free;
@@ -531,8 +512,44 @@ rval_evaluator_t* rval_evaluator_alloc_from_numeric_literal(char* string, int ty
 }
 
 // ================================================================
+// This is used for evaluating strings and numbers in literal expressions, e.g. '$x = "abc"'
+// or '$x = "left_\1". The values are subject to replacement with regex captures. See comments
+// in mapper_put for more information.
+//
+// Compare rval_evaluator_alloc_from_string which doesn't do regex replacement: it is intended for
+// oosvar names on expression left-hand sides (outside of this file).
+
+typedef struct _rval_evaluator_string_literal_state_t {
+	mv_t literal;
+} rval_evaluator_string_literal_state_t;
+
+static void rval_evaluator_string_literal_free(rval_evaluator_t* pevaluator) {
+	rval_evaluator_string_literal_state_t* pstate = pevaluator->pvstate;
+	mv_free(&pstate->literal);
+	free(pstate);
+	free(pevaluator);
+}
+
+rval_evaluator_t* rval_evaluator_alloc_from_string_literal(char* string) {
+	rval_evaluator_string_literal_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_string_literal_state_t));
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+
+	if (string == NULL) {
+		pstate->literal = mv_absent();
+		pevaluator->pprocess_func = rval_evaluator_non_string_literal_func;
+	} else {
+		pstate->literal = mv_from_string_no_free(string);
+		pevaluator->pprocess_func = rval_evaluator_string_literal_func;
+	}
+	pevaluator->pfree_func = rval_evaluator_string_literal_free;
+
+	pevaluator->pvstate = pstate;
+	return pevaluator;
+}
+
+// ================================================================
 // This is intended only for oosvar names on expression left-hand sides (outside of this file).
-// Compare rval_evaluator_alloc_from_numeric_literal.
+// Compare rval_evaluator_alloc_from_string_literal.
 
 typedef struct _rval_evaluator_string_state_t {
 	char* string;

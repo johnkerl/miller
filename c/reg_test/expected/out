@@ -20500,6 +20500,42 @@ zi  0
 pi2 76
 ni2 -76
 
+mlr --oxtab put $s = $a; $t = $b; $u = 3; $v = 4.0; $ts=typeof($s); $tt=typeof($t); $tu=typeof($u); $tv=typeof($v);
+a  1
+b  2.0
+s  1
+t  2.000000
+u  3
+v  4.000000
+ts int
+tt float
+tu int
+tv float
+
+mlr --oxtab put -F $s = $a; $t = $b; $u = 3; $v = 4.0; $ts=typeof($s); $tt=typeof($t); $tu=typeof($u); $tv=typeof($v);
+a  1
+b  2.0
+s  1.000000
+t  2.000000
+u  3
+v  4.000000
+ts float
+tt float
+tu int
+tv float
+
+mlr --oxtab put -S $s = $a; $t = $b; $u = 3; $v = 4.0; $ts=typeof($s); $tt=typeof($t); $tu=typeof($u); $tv=typeof($v);
+a  1
+b  2.0
+s  1
+t  2.0
+u  3
+v  4.000000
+ts string
+tt string
+tu int
+tv float
+
 mlr --xtab put $y=abs($pf1) ./reg_test/input/mixed-types.xtab
 pf1 71.2
 nf1 -71.2

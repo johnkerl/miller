@@ -72,7 +72,7 @@ static char * test_strings() {
 	context_t* pctx = &ctx;
 
 	rval_evaluator_t* ps       = rval_evaluator_alloc_from_field_name("s", TYPE_INFER_STRING_FLOAT_INT);
-	rval_evaluator_t* pdef     = rval_evaluator_alloc_from_numeric_literal("def", TYPE_INFER_STRING_FLOAT_INT);
+	rval_evaluator_t* pdef     = rval_evaluator_alloc_from_string_literal("def");
 	rval_evaluator_t* pdot     = rval_evaluator_alloc_from_x_ss_func(s_xx_dot_func, ps, pdef);
 	rval_evaluator_t* ptolower = rval_evaluator_alloc_from_s_s_func(s_s_tolower_func, pdot);
 	rval_evaluator_t* ptoupper = rval_evaluator_alloc_from_s_s_func(s_s_toupper_func, pdot);
@@ -137,7 +137,7 @@ static char * test_numbers() {
 	};
 	context_t* pctx = &ctx;
 
-	rval_evaluator_t* p2     = rval_evaluator_alloc_from_numeric_literal("2.0", TYPE_INFER_STRING_FLOAT_INT);
+	rval_evaluator_t* p2     = rval_evaluator_alloc_from_numeric_literal("2.0");
 	rval_evaluator_t* px     = rval_evaluator_alloc_from_field_name("x", TYPE_INFER_STRING_FLOAT_INT);
 	rval_evaluator_t* plogx  = rval_evaluator_alloc_from_f_f_func(f_f_log10_func, px);
 	rval_evaluator_t* p2logx = rval_evaluator_alloc_from_x_xx_func(x_xx_times_func, p2, plogx);

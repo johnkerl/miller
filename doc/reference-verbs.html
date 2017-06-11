@@ -816,10 +816,8 @@ Options:
 -t: Prints a low-level parser trace to stderr.
 -T: Prints a every statement to stderr as it is executed.
 -x: Prints records for which {expression} evaluates to false.
--S: Keeps field values, or literals in the expression, as strings with no type
-    inference to int or float.
--F: Keeps field values, or literals in the expression, as strings or floats
-    with no inference to int.
+-S: Keeps field values as strings with no type inference to int or float.
+-F: Keeps field values as strings or floats with no inference to int.
 --oflatsep {string}: Separator to use when flattening multi-level @-variables
     to output records for emit. Default ":".
 --jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.
@@ -2090,10 +2088,8 @@ Options:
 -T: Prints a every statement to stderr as it is executed.
 -q: Does not include the modified record in the output stream. Useful for when
     all desired output is in begin and/or end blocks.
--S: Keeps field values, or literals in the expression, as strings with no type
-    inference to int or float.
--F: Keeps field values, or literals in the expression, as strings or floats
-    with no inference to int.
+-S: Keeps field values as strings with no type inference to int or float.
+-F: Keeps field values as strings or floats with no inference to int.
 --oflatsep {string}: Separator to use when flattening multi-level @-variables
     to output records for emit. Default ":".
 --jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.

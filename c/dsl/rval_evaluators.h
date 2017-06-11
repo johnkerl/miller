@@ -66,13 +66,14 @@ rval_evaluator_t* rval_evaluator_alloc_from_local_map_keylist(mlr_dsl_ast_node_t
 //
 // Compare rval_evaluator_alloc_from_string which doesn't do regex replacement: it is intended for
 // oosvar names on expression left-hand sides (outside of this file).
-rval_evaluator_t* rval_evaluator_alloc_from_numeric_literal(char* string, int type_inferencing);
+rval_evaluator_t* rval_evaluator_alloc_from_string_literal(char* string);
+rval_evaluator_t* rval_evaluator_alloc_from_numeric_literal(char* string);
+rval_evaluator_t* rval_evaluator_alloc_from_boolean_literal(char* string);
 
 // This is intended only for oosvar names on expression left-hand sides.
 // Compare rval_evaluator_alloc_from_numeric_literal.
 rval_evaluator_t* rval_evaluator_alloc_from_string(char* string);
 
-rval_evaluator_t* rval_evaluator_alloc_from_boolean_literal(char* string);
 rval_evaluator_t* rval_evaluator_alloc_from_boolean(int boolval);
 rval_evaluator_t* rval_evaluator_alloc_from_environment(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags);

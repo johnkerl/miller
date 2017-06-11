@@ -176,10 +176,8 @@ static void shared_usage(FILE* o, char* argv0, char* verb) {
 	if (streq(verb, "filter")) {
 		fprintf(o, "-x: Prints records for which {expression} evaluates to false.\n");
 	}
-	fprintf(o, "-S: Keeps field values, or literals in the expression, as strings with no type \n");
-	fprintf(o, "    inference to int or float.\n");
-	fprintf(o, "-F: Keeps field values, or literals in the expression, as strings or floats\n");
-	fprintf(o, "    with no inference to int.\n");
+	fprintf(o, "-S: Keeps field values as strings with no type inference to int or float.\n");
+	fprintf(o, "-F: Keeps field values as strings or floats with no inference to int.\n");
 	fprintf(o, "--oflatsep {string}: Separator to use when flattening multi-level @-variables\n");
 	fprintf(o, "    to output records for emit. Default \"%s\".\n", DEFAULT_OOSVAR_FLATTEN_SEPARATOR);
 	fprintf(o, "--jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.\n");

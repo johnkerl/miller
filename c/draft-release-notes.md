@@ -12,6 +12,8 @@ This is a relatively minor release, containing feature requests.
 
 * xxx UTF-8 BOM strip for CSV files; resolves xxx
 
+* For `put` and `filter` with `-S`, program literals such as the `6` in `$x = 6` were being parsed as strings. This is not sensible, since the `-S` option for `put` and `filter` is intended to suppress numeric conversion of record data, not program literals. To get string `6` one may use `$x = "6"`.
+
 **Documentation:**
 
 * xxx cookbook example [**Showing differences between successive queries**](http://www.johnkerl.org/miller-releases/miller-5.2.0/doc/cookbook.html#Showing_differences_between_successive_queries)

@@ -11,7 +11,7 @@ BUGFIXES
   x=9223372036854775802,y=-9223372036854775806
   x=9223372036854775805,y=-9223372036854775802
 
-mlr ... then sec2gmt:
+mlr cat then sec2gmt:
 Usage: mlr (null) [options] {comma-separated list of field names}
 Replaces a numeric field representing seconds since the epoch with the
 corresponding GMT timestamp; leaves non-numbers as-is. This is nothing
