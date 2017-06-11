@@ -103,7 +103,6 @@ static stats1_acc_lookup_t stats1_acc_lookup_table[] = {
 	{"kurtosis", stats1_kurtosis_alloc, "Compute sample kurtosis of specified fields"},
 	{"min",      stats1_min_alloc,      "Compute minimum values of specified fields"},
 	{"max",      stats1_max_alloc,      "Compute maximum values of specified fields"},
-	//{"median",   stats1_median_alloc,   "Alias for p50"},
 };
 static int stats1_acc_lookup_table_length = sizeof(stats1_acc_lookup_table) / sizeof(stats1_acc_lookup_table[0]);
 

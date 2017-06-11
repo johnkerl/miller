@@ -2,6 +2,24 @@ This release contains mostly feature requests.
 
 **Features:**
 
+* The [**min**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-dsl.html#min)
+and [**max**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-dsl.html#max) DSL functions, and the
+min/max/percentile aggregators for the
+[**stats1**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#stats1) and
+[**merge-fields**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#merge-fields) verbs, now
+**support numeric as well as string field values**. (For mixed string/numeric
+fields, numbers compare before strings.) This means in particular that order
+statistics are now possible on string-only fields. Interpolation is obviously
+nonsensical for strings, so interpolated percentiles such as `mlr stats1 -a p50
+-f a -i` yields an error for string-only fields.  Likewise, any other
+aggregations requiring arithmetic, such as <tt>mean</tt>, also produce an error
+on string-valued input.
+
+* The [**stats1**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#stats1) verb
+now lets you use **regular expressions** to specify which field names to compute
+statistics on, and/or which to group by. Full details are
+[**here**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#stats1).
+
 * There is a new DSL function
 [**mapexcept**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-dsl.html#mapexcept) which returns a
 copy of the argument with specified key(s), if any, unset.  The motivating use-case is to split records to multiple
@@ -10,18 +28,7 @@ filenames depending on particular field value, which is omitted from the output:
 [**mapselect**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-dsl.html#mapselect) returns a copy of the
 argument with only specified key(s), if any, set.  This resolves https://github.com/johnkerl/miller/issues/137.
 
-* The [**min**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-dsl.html#min)
-and [**max**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-dsl.html#max) DSL functions, and the
-min/max/percentile aggregators for the
-[**stats1**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#stats1) and
-[**merge-fields**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#merge-fields) verbs, now
-support numeric as well as string field values. (For mixed string/numeric fields, numbers compare before strings.) This
-means in particular that order statistics are now possible on string-only fields. Interpolation is obviously nonsensical
-for strings, so interpolated percentiles such as `mlr stats1 -a p50 -f a -i` yields an error for string-only fields.
-Likewise, any other aggregations requiring arithmetic, such as <tt>mean</tt>, also produce an error on string-valued
-input.
-
-* A new **-u** option for [**count-distinct**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#count-distinct) allows unlashed counts for multiple field names. For example, with `-f a,b` and
+* A new **-u** option for [**count-distinct**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#count-distinct) allows **unlashed counts** for multiple field names. For example, with `-f a,b` and
 without `-u`, `count-distinct` computes counts for distinct pairs of `a` and `b` field values. With `-f a,b` and with `-u`, it computes counts
 for distinct `a` field values and counts for distinct `b` field values separately.
 
