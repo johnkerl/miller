@@ -45,11 +45,11 @@ static mapper_t* mapper_sec2gmt_parse_cli(int* pargi, int argc, char** argv,
 {
 	int num_decimal_places = 0;
 
+	char* verb = argv[*pargi];
 	if ((argc - *pargi) < 1) {
-		mapper_sec2gmt_usage(stderr, argv[0], argv[*pargi]);
+		mapper_sec2gmt_usage(stderr, argv[0], verb);
 		return NULL;
 	}
-	char* verb = argv[*pargi];
 	*pargi += 1;
 
     ap_state_t* pstate = ap_alloc();
@@ -70,7 +70,7 @@ static mapper_t* mapper_sec2gmt_parse_cli(int* pargi, int argc, char** argv,
     ap_free(pstate);
 
 	if ((argc - *pargi) < 1) {
-		mapper_sec2gmt_usage(stderr, argv[0], argv[*pargi]);
+		mapper_sec2gmt_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 

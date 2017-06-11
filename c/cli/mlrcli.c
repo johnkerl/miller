@@ -34,6 +34,7 @@
 
 // ----------------------------------------------------------------
 static mapper_setup_t* mapper_lookup_table[] = {
+
 	&mapper_bar_setup,
 	&mapper_bootstrap_setup,
 	&mapper_cat_setup,
@@ -42,6 +43,7 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_cut_setup,
 	&mapper_decimate_setup,
 	&mapper_filter_setup,
+	&mapper_fraction_setup,
 	&mapper_grep_setup,
 	&mapper_group_by_setup,
 	&mapper_group_like_setup,
@@ -55,7 +57,6 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_most_frequent_setup,
 	&mapper_nest_setup,
 	&mapper_nothing_setup,
-	&mapper_fraction_setup,
 	&mapper_put_setup,
 	&mapper_regularize_setup,
 	&mapper_rename_setup,
@@ -77,6 +78,7 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_top_setup,
 	&mapper_uniq_setup,
 	&mapper_unsparsify_setup,
+
 };
 static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(mapper_lookup_table[0]);
 
