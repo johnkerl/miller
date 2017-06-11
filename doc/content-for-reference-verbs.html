@@ -169,6 +169,8 @@ POKI_RUN_COMMAND{{mlr count-distinct --help}}HERE
 
 POKI_RUN_COMMAND{{mlr count-distinct -f a,b then sort -nr count data/medium}}HERE
 
+POKI_RUN_COMMAND{{mlr count-distinct -u -f a,b data/medium}}HERE
+
 POKI_RUN_COMMAND{{mlr count-distinct -f a,b -o someothername then sort -nr someothername data/medium}}HERE
 
 POKI_RUN_COMMAND{{mlr count-distinct -n -f a,b data/medium}}HERE

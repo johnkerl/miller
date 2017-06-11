@@ -30,6 +30,8 @@ FUNDAM:
 ----------------------------------------------------------------
 airable:
 
+? count-distinct -u wtf ?
+
 ! termcvt -I
 !!! aux-list -> main help; dox too
 * UT unhex

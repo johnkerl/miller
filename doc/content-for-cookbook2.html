@@ -105,6 +105,20 @@ POKI_INCLUDE_ESCAPED(data/timing-example.txt)HERE
 
 </div>
 <!-- ================================================================ -->
+<h1>Computing interquartile ranges</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_iqr');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_iqr" style="display: block">
+
+<p> For one or more specified field names, simply compute p25 and p75, then write the IQR as the difference of p75 and p25:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/iqr1.sh)HERE
+
+<p> For wildcarded field names, first compute p25 and p75, then loop over field names with <tt>p25</tt> in them:
+
+POKI_INCLUDE_AND_RUN_ESCAPED(data/iqrn.sh)HERE
+
+</div>
+<!-- ================================================================ -->
 <h1>Generating random numbers from various distributions</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_generating_random_variables');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_generating_random_variables" style="display: block">

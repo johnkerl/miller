@@ -654,6 +654,16 @@ a=eks,b=zee,count=357
 <p/>
 <div class="pokipanel">
 <pre>
+$ mlr count-distinct -u -f a,b data/medium
+field=a,pan_count=2081,eks_count=1965,wye_count=1966,zee_count=2047,hat_count=1941
+field=b,pan_count=1942,wye_count=2057,zee_count=1943,eks_count=2008,hat_count=2050
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
 $ mlr count-distinct -f a,b -o someothername then sort -nr someothername data/medium
 a=zee,b=wye,someothername=455
 a=pan,b=eks,someothername=429

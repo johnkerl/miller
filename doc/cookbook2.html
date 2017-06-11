@@ -196,6 +196,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Randomly_selecting_words_from_a_list">Randomly selecting words from a list</a><br/>
 &bull;&nbsp;<a href="#Randomly_generating_jabberwocky_words">Randomly generating jabberwocky words</a><br/>
 &bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
+&bull;&nbsp;<a href="#Computing_interquartile_ranges">Computing interquartile ranges</a><br/>
 &bull;&nbsp;<a href="#Generating_random_numbers_from_various_distributions">Generating random numbers from various distributions</a><br/>
 &bull;&nbsp;<a href="#Sieve_of_Eratosthenes">Sieve of Eratosthenes</a><br/>
 &bull;&nbsp;<a href="#Mandelbrot-set_generator">Mandelbrot-set generator</a><br/>
@@ -327,6 +328,48 @@ mlr --ofmt '%.9le' --oxtab \
 t_delta_min  2.861022949e-06
 t_delta_mean 4.077508505e-06
 t_delta_max  5.388259888e-05
+</pre>
+</div>
+<p/>
+
+</div>
+<!-- ================================================================ -->
+<a id="Computing_interquartile_ranges"/><h1>Computing interquartile ranges</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_iqr');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_iqr" style="display: block">
+
+<p> For one or more specified field names, simply compute p25 and p75, then write the IQR as the difference of p75 and p25:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab stats1 -f x -a p25,p75 \
+    then put '$x_iqr = $x_p75 - $x_p25' \
+    data/medium
+x_p25 0.246670
+x_p75 0.748186
+x_iqr 0.501516
+</pre>
+</div>
+<p/>
+
+<p> For wildcarded field names, first compute p25 and p75, then loop over field names with <tt>p25</tt> in them:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --oxtab stats1 --fr '[i-z]' -a p25,p75 \
+    then put 'for (k,v in $*) {if (k =~ "(.*)_p25") {$["\1_iqr"] =$["\1_p75"] - $["\1_p25"]}}' \
+    data/medium
+i_p25 2501
+i_p75 7501
+x_p25 0.246670
+x_p75 0.748186
+y_p25 0.252137
+y_p75 0.764003
+i_iqr 5000
+x_iqr 0.501516
+y_iqr 0.511866
 </pre>
 </div>
 <p/>
