@@ -223,16 +223,16 @@ static sllv_t* mapper_uniq_process_unlashed(lrec_t* pinrec, context_t* pctx, voi
 	else {
 		sllv_t* poutrecs = sllv_alloc();
 		for (lhmsve_t* pe = pstate->pcounts_unlashed->phead; pe != NULL; pe = pe->pnext) {
-			lrec_t* poutrec = lrec_unbacked_alloc();
 			char* field_name= pe->key;
 			lhmsll_t* pcounts_for_field_name = pe->pvvalue;
-			lrec_put(poutrec, "field", field_name, NO_FREE);
 			for (lhmslle_t* pf = pcounts_for_field_name->phead; pf != NULL; pf = pf->pnext) {
 				char* field_value = pf->key;
-				lrec_put(poutrec, mlr_paste_2_strings(field_value, "_count"), mlr_alloc_string_from_ll(pf->value),
-					FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+				lrec_t* poutrec = lrec_unbacked_alloc();
+				lrec_put(poutrec, "field", field_name, NO_FREE);
+				lrec_put(poutrec, "value", field_value, NO_FREE);
+				lrec_put(poutrec, "count", mlr_alloc_string_from_ll(pf->value), FREE_ENTRY_VALUE);
+				sllv_append(poutrecs, poutrec);
 			}
-			sllv_append(poutrecs, poutrec);
 		}
 		sllv_append(poutrecs, NULL);
 		return poutrecs;

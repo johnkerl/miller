@@ -197,6 +197,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Randomly_generating_jabberwocky_words">Randomly generating jabberwocky words</a><br/>
 &bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
 &bull;&nbsp;<a href="#Computing_interquartile_ranges">Computing interquartile ranges</a><br/>
+&bull;&nbsp;<a href="#Computing_weighted_means">Computing weighted means</a><br/>
 &bull;&nbsp;<a href="#Generating_random_numbers_from_various_distributions">Generating random numbers from various distributions</a><br/>
 &bull;&nbsp;<a href="#Sieve_of_Eratosthenes">Sieve of Eratosthenes</a><br/>
 &bull;&nbsp;<a href="#Mandelbrot-set_generator">Mandelbrot-set generator</a><br/>
@@ -370,6 +371,51 @@ y_p75 0.764003
 i_iqr 5000
 x_iqr 0.501516
 y_iqr 0.511866
+</pre>
+</div>
+<p/>
+
+</div>
+<!-- ================================================================ -->
+<a id="Computing_weighted_means"/><h1>Computing weighted means</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_weighted_mean');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_weighted_mean" style="display: block">
+
+<p> This might be more elegantly implemented as an option within the <tt>stats1</tt> verb. Meanwhile, it&rsquo;s
+expressible within the DSL:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --from data/medium put -q '
+  # Using the y field for weighting in this example
+  weight = $y;
+
+  # Using the a field for weighted aggregation in this example
+  @sumwx[$a] += weight * $i;
+  @sumw[$a] += weight;
+
+  @sumx[$a] += $i;
+  @sumn[$a] += 1;
+
+  end {
+    map wmean = {};
+    map mean  = {};
+    for (a in @sumwx) {
+      wmean[a] = @sumwx[a] / @sumw[a]
+    }
+    for (a in @sumx) {
+      mean[a] = @sumx[a] / @sumn[a]
+    }
+    #emit wmean, "a";
+    #emit mean, "a";
+    emit (wmean, mean), "a";
+  }'
+a=pan,wmean=4979.563722,mean=5028.259010
+a=eks,wmean=4890.381593,mean=4956.290076
+a=wye,wmean=4946.987746,mean=4920.001017
+a=zee,wmean=5164.719685,mean=5123.092330
+a=hat,wmean=4925.533162,mean=4967.743946
 </pre>
 </div>
 <p/>

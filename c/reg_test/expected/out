@@ -919,8 +919,14 @@ a=hat,b=wye,count=2
 a=pan,b=wye,count=2
 
 mlr count-distinct -f a,b -u ./reg_test/input/small ./reg_test/input/abixy
-field=a,pan_count=4,eks_count=6,wye_count=4,zee_count=4,hat_count=2
-field=b,pan_count=8,wye_count=10,zee_count=2
+field=a,value=pan,count=4
+field=a,value=eks,count=6
+field=a,value=wye,count=4
+field=a,value=zee,count=4
+field=a,value=hat,count=2
+field=b,value=pan,count=8
+field=b,value=wye,count=10
+field=b,value=zee,count=2
 
 mlr count-distinct -f a -n ./reg_test/input/small ./reg_test/input/abixy
 count=5

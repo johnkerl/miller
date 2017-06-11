@@ -11,36 +11,22 @@ BUGFIXES
   x=9223372036854775802,y=-9223372036854775806
   x=9223372036854775805,y=-9223372036854775802
 
-mlr cat then sec2gmt:
-Usage: mlr (null) [options] {comma-separated list of field names}
-Replaces a numeric field representing seconds since the epoch with the
-corresponding GMT timestamp; leaves non-numbers as-is. This is nothing
-more than a keystroke-saver for the sec2gmt function:
-  mlr (null) time1,time2
-is the same as
-
 ================================================================
 FUNDAM:
 
 * synctool alias/flag handling ...
 
 ================================================================
-5.2.0 TO-DO:
+5.3.0 TO-DO:
 
 ----------------------------------------------------------------
 airable:
-
-? count-distinct -u wtf ?
 
 ! termcvt -I
 !!! aux-list -> main help; dox too
 * UT unhex
 ! faqent/cookbook/more:
   mlr termcvt --cr2lf foo.csv.cr > foo.csv
-
-* IQR:
-  - IQR-put faqent
-  ? pn-pm aggr @ stats1 ?!?
 
 ! !autoreconf doc note w/ as-of-5.2.0 caveat
 
@@ -141,13 +127,13 @@ MAPVAR CHECKLIST:
 * clarify ownership semantics in localstack & mlhmmv via function names, & top-of-file comments
 
 ================================================================
-5.2.0 ideas:
+5.3.0 ideas:
 
 ----------------------------------------------------------------
 ! multi-field x many verbs: -f/-r field-name-spec opportunities throughout
 
 which verbs:
-  * stats1
+  k stats1 (done in 5.2.0)
   * stats2
   * merge-fields -x
   - count-distinct
