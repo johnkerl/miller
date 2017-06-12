@@ -30,12 +30,12 @@ without `-u`, `count-distinct` computes counts for distinct pairs of `a` and `b`
 for distinct `a` field values and counts for distinct `b` field values separately.
 
 * If you [build from source](http://johnkerl.org/miller-releases/miller-5.2.0/doc/build.html), you can now
-do `./configure` without first doing `autoreconf -fiv`. This resolves https://github.com/johnkerl/miller/issues/xxx.
+do `./configure` without first doing `autoreconf -fiv`. This resolves https://github.com/johnkerl/miller/issues/131.
 **xxx to do**: figure out and fix the timestamp issue.
 **xxx to do**: update the build.html page.
 
 * The UTF-8 BOM sequence `0xef` `0xbb` `0xbf` is now automatically ignored from the start of CSV files. (The same is
-already done for JSON files.) This resolves https://github.com/johnkerl/miller/issues/xxx.
+already done for JSON files.) This resolves https://github.com/johnkerl/miller/issues/138.
 
 * For `put` and `filter` with `-S`, program literals such as the `6` in `$x = 6` were being parsed as strings. This is not sensible, since the `-S` option for `put` and `filter` is intended to suppress numeric conversion of record data, not program literals. To get string `6` one may use `$x = "6"`.
 
