@@ -31,8 +31,6 @@ for distinct `a` field values and counts for distinct `b` field values separatel
 
 * If you [build from source](http://johnkerl.org/miller-releases/miller-5.2.0/doc/build.html), you can now
 do `./configure` without first doing `autoreconf -fiv`. This resolves https://github.com/johnkerl/miller/issues/131.
-**xxx to do**: figure out and fix the timestamp issue.
-**xxx to do**: update the build.html page.
 
 * The UTF-8 BOM sequence `0xef` `0xbb` `0xbf` is now automatically ignored from the start of CSV files. (The same is
 already done for JSON files.) This resolves https://github.com/johnkerl/miller/issues/138.

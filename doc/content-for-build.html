@@ -53,10 +53,11 @@ Klausner</a>.
 <li/> <tt>cd mlr-i.j.k</tt>
 <li/> Install the following packages using your system&rsquo;s package manager
   (<tt>apt-get</tt>, <tt>yum install</tt>, etc.):
-  <b>automake autoconf libtool flex</b>
+  <b>automake autoconf libtool flex</b> (if you need to run <tt>autoreconf -fiv</tt>) else just
+  <b>libtool flex</b>
 <li> Various configuration options of your choice, e.g.
   <ul>
-  <li/> <tt>autoreconf -fiv</tt>
+  <li/> <tt>autoreconf -fiv</tt> (no longer necessary as of 5.2.0)
   <li/> <tt>./configure</tt>
   <li/> <tt>./configure --prefix=/usr/local</tt>
   <li/> <tt>./configure --prefix=$HOME/pkgs</tt>
