@@ -12,10 +12,10 @@ and [**max**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-dsl
 min/max/percentile aggregators for the
 [**stats1**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#stats1) and
 [**merge-fields**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#merge-fields) verbs, now
-**support numeric as well as string field values**. (For mixed string/numeric
-fields, numbers compare before strings.) This means in particular that order
-statistics are now possible on string-only fields: min, max, non-interpolated percentiles, etc. (Of course, any operations requiring arithmetic on values,
-such as computing sums, averages, or interpolated percentiles, yield an error on string-valued input.)
+**support numeric as well as string field values**. (For mixed string/numeric fields, numbers compare before strings.)
+This means in particular that order statistics are now possible on string-only fields: min, max, non-interpolated
+percentiles, mode, antimode, and count. (Of course, any operations requiring arithmetic on values, such as computing
+sums, averages, or interpolated percentiles, yield an error on string-valued input.)
 
 * There is a new DSL function
 [**mapexcept**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-dsl.html#mapexcept) which returns a
