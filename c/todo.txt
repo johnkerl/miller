@@ -22,6 +22,8 @@ FUNDAM:
 ----------------------------------------------------------------
 airable:
 
+! mld/mlh stats1 regex cookbook/10min examples
+
 ! termcvt -I
 !!! aux-list -> main help; dox too
 * UT unhex
@@ -35,10 +37,9 @@ airable:
 * across-all/regex x stats1 / many verbs
   k stats1 functionality
   k UT
-  - stats1 --help
+  k stats1 --help
   - merge-fields -x
   - how many others for incremental release? stats2?
-  - mld: mlh suffices? cookbook example? 10min example??
 
 * more json handling: topmost/second-topmost array, put nidx-style as with dkvp.
 

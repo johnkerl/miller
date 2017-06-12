@@ -2,6 +2,11 @@ This release contains mostly feature requests.
 
 **Features:**
 
+* The [**stats1**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#stats1) verb
+now lets you use **regular expressions** to specify which field names to compute
+statistics on, and/or which to group by. Full details are
+[**here**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#stats1).
+
 * The [**min**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-dsl.html#min)
 and [**max**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-dsl.html#max) DSL functions, and the
 min/max/percentile aggregators for the
@@ -9,16 +14,8 @@ min/max/percentile aggregators for the
 [**merge-fields**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#merge-fields) verbs, now
 **support numeric as well as string field values**. (For mixed string/numeric
 fields, numbers compare before strings.) This means in particular that order
-statistics are now possible on string-only fields. Interpolation is obviously
-nonsensical for strings, so interpolated percentiles such as `mlr stats1 -a p50
--f a -i` yields an error for string-only fields.  Likewise, any other
-aggregations requiring arithmetic, such as <tt>mean</tt>, also produce an error
-on string-valued input.
-
-* The [**stats1**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#stats1) verb
-now lets you use **regular expressions** to specify which field names to compute
-statistics on, and/or which to group by. Full details are
-[**here**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#stats1).
+statistics are now possible on string-only fields: min, max, non-interpolated percentiles, etc. (Of course, any operations requiring arithmetic on values,
+such as computing sums, averages, or interpolated percentiles, yield an error on string-valued input.)
 
 * There is a new DSL function
 [**mapexcept**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-dsl.html#mapexcept) which returns a
