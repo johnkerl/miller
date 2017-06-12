@@ -298,11 +298,13 @@ static void mapper_stats1_free(mapper_t* pmapper, context_t* _) {
 	if (pstate->value_field_regexes != NULL) {
 		for (int i = 0; i < pstate->num_value_field_regexes; i++)
 			regfree(&pstate->value_field_regexes[i]);
+		free(pstate->value_field_regexes);
 	}
 
 	if (pstate->group_by_field_regexes != NULL) {
 		for (int i = 0; i < pstate->num_group_by_field_regexes; i++)
-		regfree(&pstate->group_by_field_regexes[i]);
+			regfree(&pstate->group_by_field_regexes[i]);
+		free(pstate->group_by_field_regexes);
 	}
 
 	// lhmslv_free and lhmsv_free will free the hashmap keys; we need to free
