@@ -1,7 +1,11 @@
 #!/bin/bash
 
 mlr --nidx --rs '\n\n' --fs '\001' put -q '
-  $1 =~ "^mlr " {
+  $1 =~ "^mlr "
+    || $1 =~ "Command.*termcvt"
+    || $1 =~ "Command.*lecat"
+    || $1 =~ "Command.*hex"
+  {
     @cmd = $1
   }
   $1 =~ "by 0x" {

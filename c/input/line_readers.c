@@ -118,6 +118,7 @@ char* mlr_alloc_read_line_multiple_delimiter(
 	// nread   includes line-ending characters.
 	int linelen = p - line;
 	if (nread == 0 && reached_eof) {
+		free(line);
 		line = NULL;
 		linelen = 0;
 	}
