@@ -213,6 +213,8 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 			if (string_starts_with(pe->value, "\xef\xbb\xbf")) {
 				// Strip UTF-8 BOM if any
 				slls_append(pheader_fields, mlr_strdup_or_die(&pe->value[3]), FREE_ENTRY_VALUE);
+				if (pe->free_flag & FREE_ENTRY_VALUE)
+					free(pe->value);
 			} else {
 				slls_append(pheader_fields, pe->value, pe->free_flag);
 			}
