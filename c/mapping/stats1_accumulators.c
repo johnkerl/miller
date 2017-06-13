@@ -563,6 +563,7 @@ static void stats1_min_emit(void* pvstate, char* value_field_name, char* stats1_
 }
 static void stats1_min_free(stats1_acc_t* pstats1_acc) {
 	stats1_min_state_t* pstate = pstats1_acc->pvstate;
+	mv_free(&pstate->min);
 	free(pstate->output_field_name);
 	free(pstate);
 	free(pstats1_acc);
@@ -612,6 +613,7 @@ static void stats1_max_emit(void* pvstate, char* value_field_name, char* stats1_
 }
 static void stats1_max_free(stats1_acc_t* pstats1_acc) {
 	stats1_max_state_t* pstate = pstats1_acc->pvstate;
+	mv_free(&pstate->max);
 	free(pstate->output_field_name);
 	free(pstate);
 	free(pstats1_acc);
