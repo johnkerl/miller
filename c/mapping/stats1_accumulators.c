@@ -543,7 +543,7 @@ typedef struct _stats1_min_state_t {
 static void stats1_min_singest(void* pvstate, char* sval) {
 	stats1_min_state_t* pstate = pvstate;
 	mv_t val = mv_copy_type_infer_string_or_float_or_int(sval);
-	pstate->min = x_xx_min_func(&pstate->min, &val); // xxx memory leak
+	pstate->min = x_xx_min_func(&pstate->min, &val);
 }
 static void stats1_min_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_min_state_t* pstate = pvstate;
@@ -593,7 +593,7 @@ typedef struct _stats1_max_state_t {
 static void stats1_max_singest(void* pvstate, char* sval) {
 	stats1_max_state_t* pstate = pvstate;
 	mv_t val = mv_copy_type_infer_string_or_float_or_int(sval);
-	pstate->max = x_xx_max_func(&pstate->max, &val); // xxx memory leak
+	pstate->max = x_xx_max_func(&pstate->max, &val);
 }
 static void stats1_max_emit(void* pvstate, char* value_field_name, char* stats1_acc_name, int copy_data, lrec_t* poutrec) {
 	stats1_max_state_t* pstate = pvstate;
