@@ -1,6 +1,8 @@
 ================================================================
 BUGFIXES
 
+! lemon segv @ opensuse, gcc7, non-x86?
+
 * near-overflow case:
   $ mlr sort -n x reg_test/input/near-ovf.dkvp 
   x=9223372036854775807,y=-9223372036854775803
@@ -45,6 +47,8 @@ airable:
 
 ----------------------------------------------------------------
 non-airable:
+
+? bash completion script ?
 
 ? into moreutils?
 
