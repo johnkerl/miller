@@ -302,7 +302,7 @@ copyright</a>.
 
 <li>Create the release tarball and SRPM:
   <ul>
-  <li/> On buildbox: <tt>autoreconf -fiv &amp;&amp; ./configure &amp;&amp; make distcheck</tt>
+  <li/> On buildbox: <tt>./configure &amp;&amp; make distcheck</tt>
   <li/> On buildbox: make SRPM as in <a href="https://github.com/johnkerl/miller/blob/master/README-RPM.md">
     https://github.com/johnkerl/miller/blob/master/README-RPM.md</a>
   <li/> On all buildboxes: <tt>cd c</tt> and <tt>make -f Makefile.no-autoconfig mlr.static</tt>. Then copy
