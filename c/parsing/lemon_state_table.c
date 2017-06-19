@@ -31,12 +31,12 @@ struct config *b;
 static int statehash(a)
 struct config *a;
 {
-	int h=0;
+	unsigned h=0;
 	while (a) {
-		h = h*571 + a->rp->index*37 + a->dot;
+		h = h*571 + (unsigned)a->rp->index*37 + (unsigned)a->dot;
 		a = a->bp;
 	}
-	return h;
+	return (int)h;
 }
 
 /* Allocate a new state structure */

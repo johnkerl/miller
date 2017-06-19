@@ -27,12 +27,12 @@ airable:
 ! mld/mlh stats1 regex cookbook/10min examples
 
 ! termcvt -I
-!!! aux-list -> main help; dox too
+! aux-list -> main help; dox too
+
 * UT unhex
+
 ! faqent/cookbook/more:
   mlr termcvt --cr2lf foo.csv.cr > foo.csv
-
-! !autoreconf doc note w/ as-of-5.2.0 caveat
 
 * reg_test/run --mlrexec flag
 

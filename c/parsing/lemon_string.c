@@ -5,9 +5,9 @@
 #include "lemon_string.h"
 
 int strhash(char *x) {
-	int h = 0;
+	unsigned h = 0;
 	while (*x) h = h*13 + *(x++);
-	return h;
+	return (int)h;
 }
 
 // ================================================================
