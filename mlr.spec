@@ -1,6 +1,6 @@
 Summary: Name-indexed data processing tool
 Name: mlr
-Version: 5.2.0
+Version: 5.2.1
 Release: 1%{?dist}
 License: BSD2
 Group: Applications/Text
@@ -41,6 +41,8 @@ rm -rf ${RPM_BUILD_ROOT}
 %defattr(-,root,root)
 
 %changelog
+* Mon Jun 19 2017 John Kerl <kerl.john.r@gmail.com>
+- 5.2.1 release
 * Sun Jun 11 2017 John Kerl <kerl.john.r@gmail.com>
 - 5.2.0 release
 * Thu Apr 13 2017 John Kerl <kerl.john.r@gmail.com>
