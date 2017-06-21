@@ -16,6 +16,4 @@ compiler:
   - clang -fsanitize=address
   - gcc
 
-before_script: autoreconf -fiv 
-
 script: ./configure && make && make check && make distcheck && make CC=$CC -C c -f Makefile.no-autoconfig
