@@ -14,7 +14,6 @@ AM_PROG_LEX
 AC_EXEEXT
 LT_INIT
 
-
 # TODO: better source handling for lemon sources?
 # perhaps lemon can be improved to survive being called from the build dir
 AC_CONFIG_LINKS([c/parsing/lempar.c:c/parsing/lempar.c])
