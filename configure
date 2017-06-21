@@ -30,7 +30,6 @@ else
 esac
 fi
 
-
 as_nl='
 '
 export as_nl
