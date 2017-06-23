@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2017-06-20
+.\"      Date: 2017-06-23
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2017-06-20" "\ \&" "\ \&"
+.TH "MILLER" "1" "2017-06-23" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -2710,7 +2710,7 @@ empty-string) value, else throws an error.
 .\}
 .nf
 (class=conversion #args=2): Convert int/float/bool to string using
-printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
+printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'. WARNING: Miller numbersare all long long or double. If you use formats like %d or %f, behavior is undefined.
 .fi
 .if n \{\
 .RE

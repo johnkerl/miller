@@ -1606,7 +1606,7 @@ FUNCTIONS FOR FILTER/PUT
 
    fmtnum
        (class=conversion #args=2): Convert int/float/bool to string using
-       printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'.
+       printf-style format string, e.g. '$s = fmtnum($n, "%06lld")'. WARNING: Miller numbersare all long long or double. If you use formats like %d or %f, behavior is undefined.
 
    hexfmt
        (class=conversion #args=1): Convert int to string, e.g. 255 to "0xff".
@@ -2035,4 +2035,4 @@ SEE ALSO
 
 
 
-				  2017-06-20			     MILLER(1)
+				  2017-06-23			     MILLER(1)
