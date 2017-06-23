@@ -24131,7 +24131,7 @@ mlr put -q
     for (j = -n-2; j <= n+2; j += 1) {
       print "i: ".fmtnum(i,"%3lld")
         ."   j:".fmtnum(j,"%3lld")
-        ."   substr(".$x.",".fmtnum(i,"%3d").",".fmtnum(j,"%3lld")."): <<"
+        ."   substr(".$x.",".fmtnum(i,"%3lld").",".fmtnum(j,"%3lld")."): <<"
         .substr($x, i, j) .">>";
     }
     print;
