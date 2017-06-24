@@ -10,6 +10,8 @@
 // The idea of mlr_arch is to confine all platform-specific code here.
 // ================================================================
 
+#undef MLR_ON_MSYS2 // sedded to #define in appveyor setup
+
 // ----------------------------------------------------------------
 // Miller is single-threaded and the file-locking in getc is simply an unneeded
 // performance hit, so we intentionally call getc_unlocked().  But for MSYS2
