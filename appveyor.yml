@@ -9,4 +9,5 @@ install:
   - bash -lc "pacman --noconfirm -S msys2-runtime"
 
 build_script:
+  - bash -lc "cd $APPVEYOR_BUILD_FOLDER; cat appveyor-build.sh"
   - bash -lc "cd $APPVEYOR_BUILD_FOLDER; bash -x appveyor-build.sh"
