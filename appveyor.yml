@@ -9,4 +9,6 @@ install:
   - bash -lc "pacman --noconfirm -S msys2-runtime"
 
 build_script:
+  - bash -lc "pwd"
+  - bash -lc "ls -l"
   - bash -lc "./configure"
