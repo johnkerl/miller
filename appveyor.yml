@@ -1,3 +1,4 @@
 install:
+  - set PATH=C:\msys64\usr\bin;%PATH%
   - bash -lc "pacman --needed --noconfirm -Syu"
   - bash -lc "pacman --needed --noconfirm -Sy"
