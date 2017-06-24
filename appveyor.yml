@@ -9,10 +9,4 @@ install:
   - bash -lc "pacman --noconfirm -S msys2-runtime"
 
 build_script:
-  - bash -lc "cd $APPVEYOR_BUILD_FOLDER; pwd"
-  - bash -lc "cd $APPVEYOR_BUILD_FOLDER; ls -l"
-  - bash -lc "cd $APPVEYOR_BUILD_FOLDER; sed 's/-lm/-lm -lpcreposix/' c/Makefile.am > temp; mv temp c/Makefile.am"
-  - bash -lc "cd $APPVEYOR_BUILD_FOLDER; sed 's/-lm/-lm -lpcreposix/' c/unit_test/Makefile.am > temp; mv temp c/unit_test/Makefile.am"
-  - bash -lc "cd $APPVEYOR_BUILD_FOLDER; sed 's/#undef MLR_ON_MSYS2/#define MLR_ON_MSYS2/' c/lib/mlr_arch.h > temp; mv temp c/lib/mlr_arch.h"
-  - bash -lc "cd $APPVEYOR_BUILD_FOLDER; ./configure"
-  - bash -lc "cd $APPVEYOR_BUILD_FOLDER; make"
+  - bash -lc "cd $APPVEYOR_BUILD_FOLDER; bash -x appveyor-build.sh"
