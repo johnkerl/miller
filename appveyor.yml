@@ -11,4 +11,8 @@ install:
 build_script:
   - bash -lc "pwd"
   - bash -lc "ls -l"
+  - bash -lc "echo $APPVEYOR_BUILD_FOLDER"
+  - bash -lc "cd $APPVEYOR_BUILD_FOLDER"
+  - bash -lc "pwd"
+  - bash -lc "ls -l"
   - bash -lc "./configure"
