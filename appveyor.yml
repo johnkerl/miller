@@ -1,0 +1,3 @@
+install:
+  - bash -lc "pacman --needed --noconfirm -Syu"
+  - bash -lc "pacman --needed --noconfirm -Sy"
