@@ -12,6 +12,8 @@ addons:
       - libtool
 
 # Build using gcc and clang since it is supported
+# Note: 'clang -fsanitize=address' is not the right way to get an ASAN build.
+# This needs work.
 compiler:
   - clang -fsanitize=address
   - gcc
