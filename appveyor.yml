@@ -2,3 +2,9 @@ install:
   - set PATH=C:\msys64\usr\bin;%PATH%
   - bash -lc "pacman --needed --noconfirm -Syu"
   - bash -lc "pacman --needed --noconfirm -Sy"
+  - bash -lc "pacman --needed --noconfirm base-devel"
+  - bash -lc "pacman --needed --noconfirm msys2-devel"
+  - bash -lc "pacman --needed --noconfirm mingw-w64-x86_64-toolchain"
+  - bash -lc "pacman --needed --noconfirm mingw-w64-x86_64-pcre"
+  - bash -lc "pacman --needed --noconfirm msys2-runtime"
+
