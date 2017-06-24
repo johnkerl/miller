@@ -8,3 +8,5 @@ install:
   - bash -lc "pacman --noconfirm -S mingw-w64-x86_64-pcre"
   - bash -lc "pacman --noconfirm -S msys2-runtime"
 
+build_script:
+  - bash -lc "./configure"
