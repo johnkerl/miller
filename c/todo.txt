@@ -1,8 +1,6 @@
 ================================================================
 BUGFIXES
 
-! lemon segv @ opensuse, gcc7, non-x86?
-
 * near-overflow case:
   $ mlr sort -n x reg_test/input/near-ovf.dkvp 
   x=9223372036854775807,y=-9223372036854775803
@@ -48,13 +46,21 @@ airable:
 ----------------------------------------------------------------
 non-airable:
 
+! appveyor !
+  - augment msys2 notes w/ the frombelows
+  - pcreposix.dll sadpanda
+  - https://github.com/msys2/msys2/wiki
+  - https://github.com/Alexpux/MINGW-packages
+  - https://github.com/Alexpux/MINGW-packages/wiki
+  - see also bash on windows: https://msdn.microsoft.com/en-us/commandline/wsl/about
+  - https://help.github.com/articles/dealing-with-line-endings/#platform-windows
+  - big dev readme about .gitattributes
+
 ? bash completion script ?
 
 ? into moreutils?
 
 ! fix autoreconf timestamp wtf
-
-! appveyor !
 
 * valgrinds
 
@@ -68,14 +74,7 @@ non-airable:
 
 ! pokipush
 
-* augment msys2 notes w/ the frombelows
-* pcreposix.dll sadpanda
-
 ! write-temp-file abend on negfd etc
-
-! ./configure syntax for -D MLR_ON_MSYS2 & -lpcreposix -- ?
-
-! appveyor set up msys2 / pacman -S / etc
 
 * rh/fedora/centos
 
@@ -90,19 +89,6 @@ other:
   o maybe not now: need notion of # lines in/out which, simplest case, are 1-1,
     but in the more general case might not be.
   o coexec as well as shellout; stderr caveats x both
-
-================================================================
-MSYS2 NOTES
-
-* https://github.com/msys2/msys2/wiki
-* https://github.com/Alexpux/MINGW-packages
-* https://github.com/Alexpux/MINGW-packages/wiki
-
-* see also bash on windows: https://msdn.microsoft.com/en-us/commandline/wsl/about
-
-* https://help.github.com/articles/dealing-with-line-endings/#platform-windows
-
-* big dev readme about .gitattributes
 
 ================================================================
 MAPVAR CHECKLIST:
