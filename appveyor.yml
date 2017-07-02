@@ -11,5 +11,6 @@ install:
 build_script:
   - bash -lc "cd $APPVEYOR_BUILD_FOLDER; pwd"
   - bash -lc "cd $APPVEYOR_BUILD_FOLDER; ls -l"
+  - bash -lc "cd $APPVEYOR_BUILD_FOLDER; pacman -Q"
   - bash -lc "cd $APPVEYOR_BUILD_FOLDER; cat msys2-build.sh"
   - bash -lc "cd $APPVEYOR_BUILD_FOLDER; bash -x msys2-build.sh"
