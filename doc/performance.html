@@ -200,7 +200,7 @@ Miller commands were run with pretty-print-tabular output format.
 
 In a previous version of this page (see <a
 href="http://johnkerl.org/miller-releases/miller-5.1.0/doc/performance.html">here</a>)
-I compared Miller to some items in the Unix toolkit in terms of runtime. But
+I compared Miller to some items in the Unix toolkit in terms of run time. But
 such comparisons are very much not apples-to-apples:
 
 <ul>
@@ -210,12 +210,12 @@ various formats</b> while the system tools <b>do not</b>. So if you time
 <tt>mlr sort</tt> on a CSV file against system <tt>sort</tt>, it's not relevant
 to say which is faster by how many percent &mdash; Miller will respect the
 header line, leaving it in place, while the system sort will move it, sorting
-it along with all the other header lines. This would be comparing the runtime
+it along with all the other header lines. This would be comparing the run times
 of two programs produce different outputs.  Likewise, <tt>awk</tt>
 doesn&rsquo;t respect header lines, although you can code up some CSV-handling
 using <tt>if (NR==1) { ... } else { ... }</tt>. And that&rsquo;s just CSV: I
 don&rsquo;t know any simple way to get <tt>sort</tt>, <tt>awk</tt>, etc. to
-handle DKVP, JSON, etc. &rsquo; which is the main rreason I wrote Miller.
+handle DKVP, JSON, etc. &mdash; which is the main rreason I wrote Miller.
 
 <li/> <b>Implementations differ by platform</b>: one <tt>awk</tt> may be
 fundamentally faster than another, and <tt>mawk</tt> has a very efficient
