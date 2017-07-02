@@ -16,7 +16,10 @@ build_script:
   - bash -lc "cd $APPVEYOR_BUILD_FOLDER; pacman -Q"
   - bash -lc "cd $APPVEYOR_BUILD_FOLDER; cat msys2-build.sh"
   - bash -lc "cd $APPVEYOR_BUILD_FOLDER; bash -x msys2-build.sh"
+  - bash -lc "cd $APPVEYOR_BUILD_FOLDER; cp /usr/bin/msys-2.0.dll ."
 
 artifacts:
-  - path: c/mlr.exe
+  - path: ./c/mlr.exe
     name: Miller executable
+  - path: ./msys-2.0.dll
+    name: MSYS2 DLL
