@@ -4,74 +4,44 @@ POKI_PUT_TOC_HERE
 <button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
 <button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
 
-<h1>Data</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_data');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_data" style="display: block">
+<h1>Disclaimer</h1>
 
-Test data were of the form
-
-<table><tr><td>
-POKI_INCLUDE_ESCAPED(./data/small)HERE
-</td><td>
-POKI_INCLUDE_ESCAPED(./data/small.csv)HERE
-</td></tr></table>
-
-for DKVP and CSV, respectively, where fields <tt>a</tt> and <tt>b</tt> take one of five text values,
-uniformly distributed; <tt>i</tt> is a 1-up line counter; <tt>x</tt> and <tt>y</tt>
-are independent uniformly distributed floating-point numbers in the unit
-interval.
-
-<p>Data files of one million lines (totalling about 50MB for CSV and 60MB for
-DKVP) were used. In experiments not shown here, I also varied the file sizes;
-the size-dependent results were the expected, completely unsurprising
-linearities and so I produced no file-size-dependent plots for your viewing pleasure.
-
-</div>
-<h1>Comparands</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_comparands');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_comparands" style="display: block">
-
-The <tt>cat</tt>, <tt>cut</tt>, <tt>awk</tt>, <tt>sed</tt>, <tt>sort</tt> tools
-were compared to <tt>mlr</tt> on an 8-core Darwin laptop; RAM capacity was
-nowhere near challenged . The <tt>catc</tt> program is a simple line-oriented
-line-printer (<a
-href="https://github.com/johnkerl/miller/blob/master/c/tools/catc.c">source
-here</a>) which is intermediate between Miller (which is record-aware as well
-as line-aware) and <tt>cat</tt> (which is only byte-aware).
-
-</div>
-<h1>Raw results</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_raw_results');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_raw_results" style="display: block">
-
-Note that for CSV data, the command is <tt>mlr --csvlite ...</tt> rather than <tt>mlr ...</tt>.
-
-POKI_INCLUDE_ESCAPED(perftbl.txt)HERE
-
-</div>
-<h1>Analysis</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_analysis');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_analysis" style="display: block">
+In a previous version of this page (see <a
+href="http://johnkerl.org/miller-releases/miller-5.1.0/doc/performance.html">here</a>)
+I compared Miller to some items in the Unix toolkit in terms of runtime. But
+such comparisons are very much not apples-to-apples:
 
 <ul>
-<li/> As expected, <tt>cat</tt> is very fast &mdash; it needs only stream bytes as quickly as possible; it doesn&rsquo;t even need to touch individual bytes.
-<li/> My <tt>catc</tt> is also faster than Miller: it needs to read and write lines, but it doesn&rsquo;t segment lines into records; in fact it does no iteration over bytes in each line.
-<li/> Miller does not outperform <tt>sed</tt>, which is string-oriented rather than record-oriented.
-<li/> For the tools which do need to pick apart fields (<tt>cut</tt>,
-<tt>awk</tt>, <tt>sort</tt>), Miller is comparable or outperforms. As noted above, this effect
-persists linearly across file sizes.
-<li/> For univariate and bivariate statistics, I didn&rsquo;t attempt to
-compare to other tools wherein such computations are less straightforward;
-rather, I attempted only to show that Miller&rsquo;s processing time here is comparable to its own processing time for other problems.
+
+<li/> Miller&rsquo;s principal strength is that it handles <b>key-value data in
+various formats</b> while the system tools <b>do not</b>. So if you time
+<tt>mlr sort</tt> on a CSV file against system <tt>sort</tt>, it's not relevant
+to say which is faster by how many percent &mdash; Miller will respect the
+header line, leaving it in place, while the system sort will move it, sorting
+it along with all the other header lines. Likewise, <tt>awk</tt> doesn&rsquo;t
+respect header lines, although you can code up some CSV-handling using <tt>if
+(NR==1) { ... } else { ... }</tt>. And that&rsquo;s just CSV: I don&rsquo;t
+know any simple way to get <tt>sort</tt>, <tt>awk</tt>, etc. to handle DKVP,
+JSON, etc. &rsquo; which is the main rreason I wrote Miller.
+
+<li/> <b>Implementations differ by platform</b>: one <tt>awk</tt> may be
+fundamentally faster than another, and <tt>mawk</tt> has a very efficient
+bytecode implementation.
+
+<li/> The system <tt>sort</tt> command will, on some systems, handle
+too-large-for-RAM datasets by spilling to disk; Miller (as of version 5.2.0,
+mid-2017) does not. Miller sorts are always stable; GNU supports stable and
+unstable variants.
+
 </ul>
 
-</div>
-<h1>Conclusion</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_conclusion');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_conclusion" style="display: block">
+<h1>Summary</h1>
 
-For record-oriented data transformations, Miller meets or beats the Unix
-toolkit in many contexts. Field renames in particular are worth doing as a
-pre-pipe or post-pipe using <tt>sed</tt>.
+<p/> Miller can do many kinds of processing on key-value-pair data using
+elapsed time roughly of the same order of magnitude as items in the Unix
+toolkit can handle positionally indexed data. Specific results vary widely
+by platform, implementation details, multi-core use (or not). Lastly,
+specific special-purpose non-record-aware processing will run far faster
+in <tt>grep</tt>, <tt>sed</tt>, etc.
 
 </div>

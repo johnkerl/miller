@@ -187,11 +187,8 @@ Miller commands were run with pretty-print-tabular output format.
 <!-- BODY COPIED FROM content-for-performance.html BY poki -->
 <div class="pokitoc">
 <center><b>Contents:</b></center>
-&bull;&nbsp;<a href="#Data">Data</a><br/>
-&bull;&nbsp;<a href="#Comparands">Comparands</a><br/>
-&bull;&nbsp;<a href="#Raw_results">Raw results</a><br/>
-&bull;&nbsp;<a href="#Analysis">Analysis</a><br/>
-&bull;&nbsp;<a href="#Conclusion">Conclusion</a><br/>
+&bull;&nbsp;<a href="#Disclaimer">Disclaimer</a><br/>
+&bull;&nbsp;<a href="#Summary">Summary</a><br/>
 </div>
 <p/>
 
@@ -199,130 +196,45 @@ Miller commands were run with pretty-print-tabular output format.
 <button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
 <button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
 
-<a id="Data"/><h1>Data</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_data');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_data" style="display: block">
+<a id="Disclaimer"/><h1>Disclaimer</h1>
 
-Test data were of the form
-
-<table><tr><td>
-<p/>
-<div class="pokipanel">
-<pre>
-a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
-a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
-a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
-a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
-a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
-</pre>
-</div>
-<p/>
-</td><td>
-<p/>
-<div class="pokipanel">
-<pre>
-a,b,i,x,y
-pan,pan,1,0.3467901443380824,0.7268028627434533
-eks,pan,2,0.7586799647899636,0.5221511083334797
-wye,wye,3,0.20460330576630303,0.33831852551664776
-eks,wye,4,0.38139939387114097,0.13418874328430463
-wye,pan,5,0.5732889198020006,0.8636244699032729
-</pre>
-</div>
-<p/>
-</td></tr></table>
-
-for DKVP and CSV, respectively, where fields <tt>a</tt> and <tt>b</tt> take one of five text values,
-uniformly distributed; <tt>i</tt> is a 1-up line counter; <tt>x</tt> and <tt>y</tt>
-are independent uniformly distributed floating-point numbers in the unit
-interval.
-
-<p>Data files of one million lines (totalling about 50MB for CSV and 60MB for
-DKVP) were used. In experiments not shown here, I also varied the file sizes;
-the size-dependent results were the expected, completely unsurprising
-linearities and so I produced no file-size-dependent plots for your viewing pleasure.
-
-</div>
-<a id="Comparands"/><h1>Comparands</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_comparands');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_comparands" style="display: block">
-
-The <tt>cat</tt>, <tt>cut</tt>, <tt>awk</tt>, <tt>sed</tt>, <tt>sort</tt> tools
-were compared to <tt>mlr</tt> on an 8-core Darwin laptop; RAM capacity was
-nowhere near challenged . The <tt>catc</tt> program is a simple line-oriented
-line-printer (<a
-href="https://github.com/johnkerl/miller/blob/master/c/tools/catc.c">source
-here</a>) which is intermediate between Miller (which is record-aware as well
-as line-aware) and <tt>cat</tt> (which is only byte-aware).
-
-</div>
-<a id="Raw_results"/><h1>Raw results</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_raw_results');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_raw_results" style="display: block">
-
-Note that for CSV data, the command is <tt>mlr --csvlite ...</tt> rather than <tt>mlr ...</tt>.
-
-<p/>
-<div class="pokipanel">
-<pre>
-   Mac     Mac         Comparand
-   DKVP    CSV
-  seconds seconds
-
-   0.016   0.013       cat
-   0.189   0.189       catc
-   3.657   4.388       awk -F, '{print}'
-   2.027   1.795       mlr cat
-
-   2.292   1.940       cut -d , -f 1,4
-   3.540   4.516       awk -F, '{print $1,$4}'
-   1.600   1.390       mlr cut -f a,x
-   1.694   1.648       mlr cut -x -f a,x
-
-   0.845   0.643       sed -e 's/x=/EKS=/' -e 's/b=/BEE=/'
-   2.076   1.842       mlr rename x,EKS,b,BEE
-
-   5.643   5.031       awk -F, '{gsub("x=","",$4);gsub("y=","",$5);print $4+$5}'
-   4.019   3.679       mlr put '$z=$x+$y'
-
-   2.481   2.628       mlr stats1 -a mean -f x,y -g a,b
-
-   2.587   2.389       mlr stats2 -a corr -f x,y -g a,b
-
-  23.247  14.466       sort -t, -k 1,2
-   3.023   5.658       mlr sort -f a,b
-
-  17.224  15.523       sort -t, -k 4,5
-   5.807   5.194       mlr sort -n x,y
-</pre>
-</div>
-<p/>
-
-</div>
-<a id="Analysis"/><h1>Analysis</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_analysis');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_analysis" style="display: block">
+In a previous version of this page (see <a
+href="http://johnkerl.org/miller-releases/miller-5.1.0/doc/performance.html">here</a>)
+I compared Miller to some items in the Unix toolkit in terms of runtime. But
+such comparisons are very much not apples-to-apples:
 
 <ul>
-<li/> As expected, <tt>cat</tt> is very fast &mdash; it needs only stream bytes as quickly as possible; it doesn&rsquo;t even need to touch individual bytes.
-<li/> My <tt>catc</tt> is also faster than Miller: it needs to read and write lines, but it doesn&rsquo;t segment lines into records; in fact it does no iteration over bytes in each line.
-<li/> Miller does not outperform <tt>sed</tt>, which is string-oriented rather than record-oriented.
-<li/> For the tools which do need to pick apart fields (<tt>cut</tt>,
-<tt>awk</tt>, <tt>sort</tt>), Miller is comparable or outperforms. As noted above, this effect
-persists linearly across file sizes.
-<li/> For univariate and bivariate statistics, I didn&rsquo;t attempt to
-compare to other tools wherein such computations are less straightforward;
-rather, I attempted only to show that Miller&rsquo;s processing time here is comparable to its own processing time for other problems.
+
+<li/> Miller&rsquo;s principal strength is that it handles <b>key-value data in
+various formats</b> while the system tools <b>do not</b>. So if you time
+<tt>mlr sort</tt> on a CSV file against system <tt>sort</tt>, it's not relevant
+to say which is faster by how many percent &mdash; Miller will respect the
+header line, leaving it in place, while the system sort will move it, sorting
+it along with all the other header lines. Likewise, <tt>awk</tt> doesn&rsquo;t
+respect header lines, although you can code up some CSV-handling using <tt>if
+(NR==1) { ... } else { ... }</tt>. And that&rsquo;s just CSV: I don&rsquo;t
+know any simple way to get <tt>sort</tt>, <tt>awk</tt>, etc. to handle DKVP,
+JSON, etc. &rsquo; which is the main rreason I wrote Miller.
+
+<li/> <b>Implementations differ by platform</b>: one <tt>awk</tt> may be
+fundamentally faster than another, and <tt>mawk</tt> has a very efficient
+bytecode implementation.
+
+<li/> The system <tt>sort</tt> command will, on some systems, handle
+too-large-for-RAM datasets by spilling to disk; Miller (as of version 5.2.0,
+mid-2017) does not. Miller sorts are always stable; GNU supports stable and
+unstable variants.
+
 </ul>
 
-</div>
-<a id="Conclusion"/><h1>Conclusion</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_conclusion');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_conclusion" style="display: block">
+<a id="Summary"/><h1>Summary</h1>
 
-For record-oriented data transformations, Miller meets or beats the Unix
-toolkit in many contexts. Field renames in particular are worth doing as a
-pre-pipe or post-pipe using <tt>sed</tt>.
+<p/> Miller can do many kinds of processing on key-value-pair data using
+elapsed time roughly of the same order of magnitude as items in the Unix
+toolkit can handle positionally indexed data. Specific results vary widely
+by platform, implementation details, multi-core use (or not). Lastly,
+specific special-purpose non-record-aware processing will run far faster
+in <tt>grep</tt>, <tt>sed</tt>, etc.
 
 </div>
     </div>
