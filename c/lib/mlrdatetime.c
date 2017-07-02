@@ -156,18 +156,6 @@ char* mlr_alloc_time_string_from_seconds(double seconds_since_the_epoch, char* f
 // to @tinkerware on Github for the push in the right direction! :)
 
 double mlr_seconds_from_time_string(char* time_string, char* format_string) {
-	// xxx gc
-//	struct tm tm;
-//	memset(&tm, 0, sizeof(tm));
-//	char* retval = mlr_arch_strptime(time_string, format_string, &tm);
-//	if (retval == NULL) {
-//		fprintf(stderr, "%s: could not strptime(\"%s\", \"%s\"). See \"%s --help-function strptime\".\n",
-//			MLR_GLOBALS.bargv0, time_string, format_string, MLR_GLOBALS.bargv0);
-//		exit(1);
-//	}
-//	MLR_INTERNAL_CODING_ERROR_IF(*retval != 0); // Parseable input followed by non-parseable
-//	time_t iseconds = mlr_arch_timegm(&tm);
-//	return (double)iseconds;
 
 	struct tm tm;
 
