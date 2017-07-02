@@ -27,12 +27,15 @@ handle DKVP, JSON, etc. &mdash; which is the main rreason I wrote Miller.
 
 <li/> <b>Implementations differ by platform</b>: one <tt>awk</tt> may be
 fundamentally faster than another, and <tt>mawk</tt> has a very efficient
-bytecode implementation.
+bytecode implementation &mdash; which handles positionally indexed data
+far faster than Miller does.
 
 <li/> The system <tt>sort</tt> command will, on some systems, handle
 too-large-for-RAM datasets by spilling to disk; Miller (as of version 5.2.0,
 mid-2017) does not. Miller sorts are always stable; GNU supports stable and
 unstable variants.
+
+<li/> Etc.
 
 </ul>
 
