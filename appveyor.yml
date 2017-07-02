@@ -19,4 +19,4 @@ build_script:
 
 artifacts:
   - path: c/mlr.exe
-  - name: Miller executable
+    name: Miller executable
