@@ -7,4 +7,5 @@ sed 's/#undef MLR_ON_MSYS2/#define MLR_ON_MSYS2/' c/lib/mlr_arch.h > temp; mv te
 
 echo ================================================================
 ./configure
+make -C c/parsing lemon.exe
 make
