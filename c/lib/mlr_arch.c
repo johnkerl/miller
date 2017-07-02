@@ -5,6 +5,7 @@
 #include "mlr_arch.h"
 #include "mlrutil.h"
 #include "netbsd_strptime.h"
+#include "nlnet_timegm.h"
 
 // For some Linux distros, in spite of including time.h:
 char *strptime(const char *s, const char *format, struct tm *ptm);
@@ -42,12 +43,10 @@ char *mlr_arch_strptime(const char *s, const char *format, struct tm *ptm) {
 // See the GNU timegm manpage -- this is what it does.
 time_t mlr_arch_timegm(struct tm* ptm) {
 #ifdef MLR_ON_MSYS2
-	return _mkgmtime(ptm);
+	return nlnet_timegm(ptm);
 #else
 	time_t ret;
-	char* tz;
-
-	tz = getenv("TZ");
+	char* tz = getenv("TZ");
 	mlr_arch_setenv("TZ", "GMT0");
 	tzset();
 	ret = mktime(ptm);

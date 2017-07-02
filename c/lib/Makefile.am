@@ -19,6 +19,8 @@ libmlr_la_SOURCES=	free_flags.h \
 			mlrutil.h \
 			netbsd_strptime.c \
 			netbsd_strptime.h \
+			nlnet_timegm.c \
+			nlnet_timegm.h \
 			context.c \
 			context.h \
 			mtrand.c \
