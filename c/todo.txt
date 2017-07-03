@@ -47,6 +47,7 @@ airable:
 non-airable:
 
 ! appveyor !
+  ! 10min etc re single quotes vs. triple-doubles
   - augment msys2 notes w/ the frombelows
   - pcreposix.dll sadpanda
   - https://github.com/msys2/msys2/wiki
