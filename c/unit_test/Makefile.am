@@ -72,7 +72,7 @@ test_multiple_containers_LDFLAGS= ${all_ldflags}
 test_multiple_containers_LDADD=   ${all_ldadd}
 
 test_string_builder_CFLAGS=       -std=gnu99 -g ${AM_CFLAGS}
-test_string_build_LDFLAGS=        ${all_ldflags}
+test_string_builder_LDFLAGS=      ${all_ldflags}
 test_string_builder_LDADD=        ${all_ldadd}
 
 test_rval_evaluators_CFLAGS=      -std=gnu99 -g ${AM_CFLAGS}
