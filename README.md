@@ -1,7 +1,10 @@
 **Miller is like awk, sed, cut, join, and sort for name-indexed data such as CSV, TSV, and tabular JSON.**
 
-[![Build Status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller)
-[![License](http://img.shields.io/badge/license-BSD2-blue.svg)](https://github.com/johnkerl/miller/blob/master/LICENSE.txt) [![Docs](https://img.shields.io/badge/docs-here-yellow.svg)](http://johnkerl.org/miller/doc)
+[![Linux build status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller)
+[![Windows build status](https://ci.appveyor.com/api/projects/status/github/johnkerl/miller?branch=master&svg=true)](https://ci.appveyor.com/project/johnkerl/miller)
+[![License](http://img.shields.io/badge/license-BSD2-blue.svg)](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
+[![Docs](https://img.shields.io/badge/docs-here-yellow.svg)](http://johnkerl.org/miller/doc)
+
 [![Xenial](https://img.shields.io/badge/distros-ubuntu-db4923.svg)](https://launchpad.net/ubuntu/xenial/+package/miller)
 [![Ubuntu 16.04 LTS](https://img.shields.io/badge/distros-ubuntu1604lts-db4923.svg)](http://installion.co.uk/ubuntu/xenial/universe/m/miller/install/index.html)
 [![Debian](https://img.shields.io/badge/distros-debian-c70036.svg)](https://buildd.debian.org/status/package.php?p=miller)
@@ -11,10 +14,6 @@
 [![Pro-Linux](https://img.shields.io/badge/distros-prolinux-3a679d.svg)](http://www.pro-linux.de/cgi-bin/DBApp/check.cgi?ShowApp..20427.100)
 [![Arch Linux](https://img.shields.io/badge/distros-archlinux-1792d0.svg)](https://aur.archlinux.org/packages/miller-git)
 [![Homebrew/MacOSX](https://img.shields.io/badge/distros-macosxbrew-ba832b.svg)](https://github.com/Homebrew/homebrew-core/search?utf8=%E2%9C%93&q=miller)
-
-AppVeyor alpha:
-
-[![AppVeyor alpha](https://ci.appveyor.com/api/projects/status/github/johnkerl/miller?branch=master&svg=true)](https://ci.appveyor.com/project/johnkerl/miller)
 
 With Miller, you get to use named fields without needing to count positional
 indices, using familiar formats such as CSV, TSV, JSON, and positionally-indexed.
