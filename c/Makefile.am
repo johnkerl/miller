@@ -8,6 +8,8 @@ noinst_PROGRAMS=	mlrg \
 
 mlr_SOURCES=		mlrmain.c
 
+mlr_LDFLAGS=		-static
+
 mlr_LDADD=		\
 			cli/libcli.la \
 			containers/libcontainers.la \
@@ -18,17 +20,34 @@ mlr_LDADD=		\
 			output/liboutput.la \
 			lib/libmlr.la \
 			parsing/libdsl.la \
-			auxents/libauxents.la
+			auxents/libauxents.la \
+			-lm
 
-all_ldflags=		-lm
-
-mlr_LDFLAGS=	${all_ldflags}
+# Resulting link line:
+# /bin/sh ../libtool --tag=CC --mode=link
+#   gcc
+#     -Wall -std=gnu99
+#     -g -O2
+#     <<<LDFLAGS GO HERE>>> <-------------------------------------
+#     -o mlr
+#     mlrmain.o
+#     cli/libcli.la
+#     containers/libcontainers.la
+#     stream/libstream.la
+#     input/libinput.la
+#     dsl/libdsl.la
+#     mapping/libmapping.la
+#     output/liboutput.la
+#     lib/libmlr.la
+#     parsing/libdsl.la
+#     auxents/libauxents.la
+#     <<<LDADD GOES HERE>>> <-------------------------------------
 
 # Other executable variants
 
 # Debug version:
 mlrg_CFLAGS=	-g ${AM_CFLAGS}
-mlrg_LDFLAGS=	${all_ldflags}
+mlrg_LDFLAGS=	${mlr_LDFLAGS}
 mlrg_LDADD=	${mlr_LDADD}
 mlrg_SOURCES=	${mlr_SOURCES}
 
@@ -39,7 +58,7 @@ mlrg_SOURCES=	${mlr_SOURCES}
 # Note: works on Linux; not on OSX. On FreeBSD it sounds like it'll need an
 # extra -lc on the link line.
 mlrp_CFLAGS=	-g -pg ${AM_CFLAGS}
-mlrp_LDFLAGS=	${all_ldflags}
+mlrp_LDFLAGS=	${mlr_LDFLAGS}
 mlrp_LDADD=	${mlr_LDADD}
 mlrp_SOURCES=	${mlr_SOURCES}
 
