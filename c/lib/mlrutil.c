@@ -88,11 +88,11 @@ int mlr_bsearch_double_for_insert(double* array, int size, double value) {
 void* mlr_malloc_or_die(size_t size) {
 	void* p = malloc(size);
 	if (p == NULL) {
-		fprintf(stderr, "malloc(%lu) failed.\n", (unsigned long)size);
+		fprintf(stderr, "malloc(%llu) failed.\n", (unsigned long long)size);
 		exit(1);
 	}
 #ifdef MLR_MALLOC_TRACE
-	fprintf(stderr, "MALLOC size=%d,p=%p\n", (int)size, p);
+	fprintf(stderr, "MALLOC size=%llu,p=%p\n", (unsigned long long)size, p);
 #endif
 	return p;
 }
@@ -101,11 +101,11 @@ void* mlr_malloc_or_die(size_t size) {
 void* mlr_realloc_or_die(void *optr, size_t size) {
 	void* nptr = realloc(optr, size);
 	if (nptr == NULL) {
-		fprintf(stderr, "realloc(%lu) failed.\n", (unsigned long)size);
+		fprintf(stderr, "realloc(%llu) failed.\n", (unsigned long long)size);
 		exit(1);
 	}
 #ifdef MLR_MALLOC_TRACE
-	fprintf(stderr, "REALLOC size=%d,p=%p\n", (int)size, nptr);
+	fprintf(stderr, "REALLOC size=%llu,p=%p\n", (unsigned long long)size, nptr);
 #endif
 	return nptr;
 }

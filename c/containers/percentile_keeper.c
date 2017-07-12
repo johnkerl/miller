@@ -9,10 +9,10 @@
 
 // ----------------------------------------------------------------
 percentile_keeper_t* percentile_keeper_alloc() {
-	int capacity = INITIAL_CAPACITY;
+	unsigned long long capacity = INITIAL_CAPACITY;
 	percentile_keeper_t* ppercentile_keeper = mlr_malloc_or_die(sizeof(percentile_keeper_t));
 	ppercentile_keeper->data     = mlr_malloc_or_die(capacity*sizeof(mv_t));
-	ppercentile_keeper->size     = 0;
+	ppercentile_keeper->size     = 0LL;
 	ppercentile_keeper->capacity = capacity;
 	ppercentile_keeper->sorted   = FALSE;
 	return ppercentile_keeper;
@@ -22,20 +22,20 @@ percentile_keeper_t* percentile_keeper_alloc() {
 void percentile_keeper_free(percentile_keeper_t* ppercentile_keeper) {
 	if (ppercentile_keeper == NULL)
 		return;
-	for (int i = 0; i < ppercentile_keeper->size; i++) {
+	for (unsigned long long i = 0; i < ppercentile_keeper->size; i++) {
 		mv_free(&ppercentile_keeper->data[i]);
 	}
 	free(ppercentile_keeper->data);
 	ppercentile_keeper->data = NULL;
-	ppercentile_keeper->size = 0;
-	ppercentile_keeper->capacity = 0;
+	ppercentile_keeper->size = 0LL;
+	ppercentile_keeper->capacity = 0LL;
 	free(ppercentile_keeper);
 }
 
 // ----------------------------------------------------------------
 void percentile_keeper_ingest(percentile_keeper_t* ppercentile_keeper, mv_t value) {
 	if (ppercentile_keeper->size >= ppercentile_keeper->capacity) {
-		ppercentile_keeper->capacity = (int)(ppercentile_keeper->capacity * GROWTH_FACTOR);
+		ppercentile_keeper->capacity = (unsigned long long)(ppercentile_keeper->capacity * GROWTH_FACTOR);
 		ppercentile_keeper->data = (mv_t*)mlr_realloc_or_die(ppercentile_keeper->data,
 			ppercentile_keeper->capacity*sizeof(mv_t));
 	}
@@ -213,23 +213,23 @@ void percentile_keeper_ingest(percentile_keeper_t* ppercentile_keeper, mv_t valu
 // * (Note that Miller's interpolated percentiles match match R's quantile with type=7)
 // ----------------------------------------------------------------
 
-static int compute_index_non_interpolated(int n, double p) {
-	int index = p*n/100.0;
-	//int index = p*(n-1)/100.0;
-	//int index = (int)ceil(p*(n-1)/100.0);
-	//int index = (int)ceil(-0.5 + p*(n-1)/100.0);
+static unsigned long long compute_index_non_interpolated(unsigned long long n, double p) {
+	long long index = p*n/100.0;
+	//unsigned long long index = p*(n-1)/100.0;
+	//unsigned long long index = (unsigned long long)ceil(p*(n-1)/100.0);
+	//unsigned long long index = (unsigned long long)ceil(-0.5 + p*(n-1)/100.0);
 	if (index >= n)
 		index = n-1;
 	if (index < 0)
 		index = 0;
-	return index;
+	return (unsigned long long)index;
 }
 
-static mv_t get_percentile_linearly_interpolated(mv_t* array, int n, double p) {
+static mv_t get_percentile_linearly_interpolated(mv_t* array, unsigned long long n, double p) {
 	double findex = (p/100.0)*(n-1);
 	if (findex < 0)
 		findex = 0;
-	int iindex = (int)floor(findex);
+	unsigned long long iindex = (unsigned long long)floor(findex);
 	if (iindex >= n-1) {
 		return array[iindex];
 	} else {
@@ -270,11 +270,11 @@ mv_t percentile_keeper_emit_linearly_interpolated(percentile_keeper_t* ppercenti
 // ----------------------------------------------------------------
 void percentile_keeper_print(percentile_keeper_t* ppercentile_keeper) {
 	printf("percentile_keeper dump:\n");
-	for (int i = 0; i < ppercentile_keeper->size; i++) {
+	for (unsigned long long i = 0; i < ppercentile_keeper->size; i++) {
 		mv_t* pa = &ppercentile_keeper->data[i];
 		if (pa->type == MT_FLOAT)
-			printf("[%02d] %.8lf\n", i, ppercentile_keeper->data[i].u.fltv);
+			printf("[%02llu] %.8lf\n", i, ppercentile_keeper->data[i].u.fltv);
 		else
-			printf("[%02d] %8lld\n", i, ppercentile_keeper->data[i].u.intv);
+			printf("[%02llu] %8lld\n", i, ppercentile_keeper->data[i].u.intv);
 	}
 }

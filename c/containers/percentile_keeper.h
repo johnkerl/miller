@@ -8,8 +8,8 @@
 
 typedef struct _percentile_keeper_t {
 	mv_t* data;
-	int   size;
-	int   capacity;
+	unsigned long long size;
+	unsigned long long capacity;
 	int   sorted;
 } percentile_keeper_t;
 
