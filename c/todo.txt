@@ -22,6 +22,8 @@ FUNDAM:
 ----------------------------------------------------------------
 airable:
 
+!! --gen olh/mld
+
 ! mld/mlh stats1 regex cookbook/10min examples
 
 ! termcvt -I

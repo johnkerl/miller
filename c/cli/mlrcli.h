@@ -14,6 +14,14 @@
 #include "containers/lhmss.h"
 
 // ----------------------------------------------------------------
+typedef struct _genereator_opts_t {
+	char* field_name;
+	// xxx to do: convert to mv_t
+	long long start;
+	long long stop;
+	long long step;
+} generator_opts_t;
+
 typedef struct _cli_reader_opts_t {
 
 	char* ifile_fmt;
@@ -31,6 +39,9 @@ typedef struct _cli_reader_opts_t {
 	// Command for popen on input, e.g. "zcat -cf <". Can be null in which case
 	// files are read directly rather than through a pipe.
 	char*  prepipe;
+
+	// Fake internal-data-generator 'reader'
+	generator_opts_t generator_opts;
 
 } cli_reader_opts_t;
 

@@ -386,10 +386,10 @@ static lhmss_t* get_default_rses() {
 	if (singleton_default_rses == NULL) {
 		singleton_default_rses = lhmss_alloc();
 
+		lhmss_put(singleton_default_rses, "gen",      "N/A",  NO_FREE);
 		lhmss_put(singleton_default_rses, "dkvp",     "auto",  NO_FREE);
 		lhmss_put(singleton_default_rses, "json",     "auto",  NO_FREE);
 		lhmss_put(singleton_default_rses, "nidx",     "auto",  NO_FREE);
-
 		lhmss_put(singleton_default_rses, "csv",      "auto",  NO_FREE);
 		lhmss_put(singleton_default_rses, "csvlite",  "auto",  NO_FREE);
 		lhmss_put(singleton_default_rses, "markdown", "auto",  NO_FREE);
@@ -402,6 +402,7 @@ static lhmss_t* get_default_rses() {
 static lhmss_t* get_default_fses() {
 	if (singleton_default_fses == NULL) {
 		singleton_default_fses = lhmss_alloc();
+		lhmss_put(singleton_default_fses, "gen",      "(N/A)",  NO_FREE);
 		lhmss_put(singleton_default_fses, "dkvp",     ",",      NO_FREE);
 		lhmss_put(singleton_default_fses, "json",     "(N/A)",  NO_FREE);
 		lhmss_put(singleton_default_fses, "nidx",     " ",      NO_FREE);
@@ -417,6 +418,7 @@ static lhmss_t* get_default_fses() {
 static lhmss_t* get_default_pses() {
 	if (singleton_default_pses == NULL) {
 		singleton_default_pses = lhmss_alloc();
+		lhmss_put(singleton_default_pses, "gen",      "(N/A)", NO_FREE);
 		lhmss_put(singleton_default_pses, "dkvp",     "=",     NO_FREE);
 		lhmss_put(singleton_default_pses, "json",     "(N/A)", NO_FREE);
 		lhmss_put(singleton_default_pses, "nidx",     "(N/A)", NO_FREE);
@@ -432,6 +434,7 @@ static lhmss_t* get_default_pses() {
 static lhmsll_t* get_default_repeat_ifses() {
 	if (singleton_default_repeat_ifses == NULL) {
 		singleton_default_repeat_ifses = lhmsll_alloc();
+		lhmsll_put(singleton_default_repeat_ifses, "gen",      FALSE, NO_FREE);
 		lhmsll_put(singleton_default_repeat_ifses, "dkvp",     FALSE, NO_FREE);
 		lhmsll_put(singleton_default_repeat_ifses, "json",     FALSE, NO_FREE);
 		lhmsll_put(singleton_default_repeat_ifses, "csv",      FALSE, NO_FREE);
@@ -447,6 +450,7 @@ static lhmsll_t* get_default_repeat_ifses() {
 static lhmsll_t* get_default_repeat_ipses() {
 	if (singleton_default_repeat_ipses == NULL) {
 		singleton_default_repeat_ipses = lhmsll_alloc();
+		lhmsll_put(singleton_default_repeat_ipses, "gen",      FALSE, NO_FREE);
 		lhmsll_put(singleton_default_repeat_ipses, "dkvp",     FALSE, NO_FREE);
 		lhmsll_put(singleton_default_repeat_ipses, "json",     FALSE, NO_FREE);
 		lhmsll_put(singleton_default_repeat_ipses, "csv",      FALSE, NO_FREE);
@@ -1000,6 +1004,12 @@ void cli_reader_opts_init(cli_reader_opts_t* preader_opts) {
 	preader_opts->use_mmap_for_read              = NEITHER_TRUE_NOR_FALSE;
 
 	preader_opts->prepipe                        = NULL;
+
+	// xxx temp
+	preader_opts->generator_opts.field_name     = "i";
+	preader_opts->generator_opts.start          = 0LL;
+	preader_opts->generator_opts.stop           = 100LL;
+	preader_opts->generator_opts.step           = 1LL;
 }
 
 void cli_writer_opts_init(cli_writer_opts_t* pwriter_opts) {
@@ -1370,6 +1380,34 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 			exit(1);
 		}
 		preader_opts->ifile_fmt = argv[argi+1];
+		argi += 2;
+
+	} else if (streq(argv[argi], "--igen")) { // xxx temp
+		preader_opts->ifile_fmt = "gen";
+		argi += 1;
+	} else if (streq(argv[argi], "--gen-start")) { // xxx temp
+		preader_opts->ifile_fmt = "gen";
+		check_arg_count(argv, argi, argc, 2);
+		if (sscanf(argv[argi+1], "%lld", &preader_opts->generator_opts.start) != 1) {
+			fprintf(stderr, "%s: could not scan \"%s\".\n",
+				MLR_GLOBALS.bargv0, argv[argi+1]);
+		}
+		argi += 2;
+	} else if (streq(argv[argi], "--gen-stop")) { // xxx temp
+		preader_opts->ifile_fmt = "gen";
+		check_arg_count(argv, argi, argc, 2);
+		if (sscanf(argv[argi+1], "%lld", &preader_opts->generator_opts.stop) != 1) {
+			fprintf(stderr, "%s: could not scan \"%s\".\n",
+				MLR_GLOBALS.bargv0, argv[argi+1]);
+		}
+		argi += 2;
+	} else if (streq(argv[argi], "--gen-step")) { // xxx temp
+		preader_opts->ifile_fmt = "gen";
+		check_arg_count(argv, argi, argc, 2);
+		if (sscanf(argv[argi+1], "%lld", &preader_opts->generator_opts.step) != 1) {
+			fprintf(stderr, "%s: could not scan \"%s\".\n",
+				MLR_GLOBALS.bargv0, argv[argi+1]);
+		}
 		argi += 2;
 
 	} else if (streq(argv[argi], "--icsv")) {

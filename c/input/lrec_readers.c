@@ -4,7 +4,10 @@
 #include "input/byte_readers.h"
 
 lrec_reader_t*  lrec_reader_alloc(cli_reader_opts_t* popts) {
-	if (streq(popts->ifile_fmt, "dkvp")) {
+	if (streq(popts->ifile_fmt, "gen")) {
+		generator_opts_t* pgopts = &popts->generator_opts;
+		return lrec_reader_gen_alloc(pgopts->field_name, pgopts->start, pgopts->stop, pgopts->step);
+	} else if (streq(popts->ifile_fmt, "dkvp")) {
 		if (popts->use_mmap_for_read)
 			return lrec_reader_mmap_dkvp_alloc(popts->irs, popts->ifs, popts->ips, popts->allow_repeat_ifs);
 		else
