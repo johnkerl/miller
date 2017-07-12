@@ -14,10 +14,10 @@ typedef struct _mapper_seqgen_state_t {
 	int continue_cmp;
 } mapper_seqgen_state_t;
 
-	#define DEFAULT_FIELD_NAME   "i"
-	#define DEFAULT_START_STRING "1"
-	#define DEFAULT_STOP_STRING  "100"
-	#define DEFAULT_STEP_STRING  "1"
+#define DEFAULT_FIELD_NAME   "i"
+#define DEFAULT_START_STRING "1"
+#define DEFAULT_STOP_STRING  "100"
+#define DEFAULT_STEP_STRING  "1"
 
 static void      mapper_seqgen_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_seqgen_parse_cli(int* pargi, int argc, char** argv,
