@@ -272,6 +272,7 @@ OPTIONS
 	     cr crcr newline lf lflf crlf crlfcrlf tab space comma pipe slash colon semicolon equals
 	 * Default separators by format:
 	     File format  RS	   FS	    PS
+	     gen	  N/A	   (N/A)    (N/A)
 	     dkvp	  auto	   ,	    =
 	     json	  auto	   (N/A)    (N/A)
 	     nidx	  auto	   space    (N/A)
@@ -2036,4 +2037,4 @@ SEE ALSO
 
 
 
-				  2017-06-23			     MILLER(1)
+				  2017-07-14			     MILLER(1)
