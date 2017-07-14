@@ -15,6 +15,7 @@ libinput_la_SOURCES=	\
 			line_readers.c \
 			line_readers.h \
 			lrec_reader.h \
+			lrec_reader_gen.c \
 			lrec_reader_in_memory.c \
 			lrec_reader_mmap_csv.c \
 			lrec_reader_mmap_csvlite.c \
