@@ -359,6 +359,7 @@ TEST_JOIN_BUCKET_KEEPER_SRCS = \
   input/mmap_byte_reader.c \
   input/stdio_byte_reader.c \
   input/line_readers.c \
+  input/lrec_reader_gen.c \
   input/lrec_reader_in_memory.c \
   input/lrec_readers.c \
   input/lrec_reader_mmap_csv.c \
