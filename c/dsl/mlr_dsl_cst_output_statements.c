@@ -118,6 +118,8 @@ static void handle_print(
 	rval_evaluator_t* poutput_filename_evaluator = pstate->poutput_filename_evaluator;
 	if (poutput_filename_evaluator == NULL) {
 		fprintf(pstate->stdfp, "%s%s", sval, pstate->print_terminator);
+		if (pstate->flush_every_record)
+			fflush(pstate->stdfp);
 	} else {
 		mv_t filename_mv = poutput_filename_evaluator->pprocess_func(poutput_filename_evaluator->pvstate, pvars);
 
