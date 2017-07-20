@@ -1,6 +1,6 @@
 AC_PREREQ([2.60])
 # Manually increment on updates to https://github.com/johnkerl/miller/releases
-AC_INIT([mlr],[5.2.2])
+AC_INIT([mlr],[5.2.2-dev])
 AC_CONFIG_SRCDIR([c/mlrmain.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_AUX_DIR([autotools])
