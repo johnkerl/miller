@@ -162,6 +162,9 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 }
 
 static void shared_usage(FILE* o, char* argv0, char* verb) {
+	fprintf(o, "All field values are type-inferred to int/float/string unless this behavior is\n");
+	fprintf(o, "suppressed with -S or -F (details below).\n");
+	fprintf(o, "\n");
 	fprintf(o, "Options:\n");
 	fprintf(o, "-v: Prints the expressions's AST (abstract syntax tree), which gives\n");
 	fprintf(o, "    full transparency on the precedence and associativity rules of\n");

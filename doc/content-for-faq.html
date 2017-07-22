@@ -37,6 +37,66 @@ case: <tt>mlr --fs tab {remaining arguments ...}</tt>.
 POKI_INCLUDE_ESCAPED(data/delimiter-examples.txt)HERE
 
 </div>
+<h1>How do I suppress numeric conversion?</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_examine_then_chaining');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_suppress_numeric_conversion" style="display: block">
+
+<p/><b>TL;DR use put -S</b>.
+
+<p/> Within <tt>mlr put</tt> and <tt>mlr filter</tt>, the default behavior for
+scanning input records is to parse them as integer, if possible, then as float,
+if possible, else leave them as string:
+
+POKI_RUN_COMMAND{{cat data/scan-example-1.tbl}}HERE
+
+POKI_RUN_COMMAND{{mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-1.tbl}}HERE
+
+<p/>The numeric-conversion rule is simple:
+
+<ul>
+<li/> Try to scan as integer (<tt>"1"</tt> should be int);
+<li/> if that doesn&rsquo;t succeed, try to scan as float (<tt>"1.0"</tt> should be float);
+<li/> if that doesn&rsquo;t succeed, leave the value as a string (<tt>"1x"</tt> is string).
+</ul>
+
+<p/>This is a sensible default: you should be able to put <tt>'$z = $x +
+$y'</tt> without having to write <tt>'$z = int($x) + float($y)'</tt>.  Also
+note that default output format for floating-point numbers created by
+<tt>put</tt> (and other verbs such as <tt>stats1</tt>) is six decimal places;
+you can override this using <tt>mlr --ofmt</tt>.  Also note that Miller uses
+your system&rsquo;s C library functions whenever possible: e.g. <tt>sscanf</tt>
+for converting strings to integer or floating-point.
+
+<p/>But now suppose you have data like these:
+
+POKI_RUN_COMMAND{{cat data/scan-example-2.tbl}}HERE
+
+POKI_RUN_COMMAND{{mlr --pprint put '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl}}HERE
+
+<p/> The same conversion rules as above are being used. Namely:
+
+<ul>
+<li/> By default field values are inferred to int, else float, else string;
+
+<li/> leading zeroes indicate octal for integers (<tt>sscanf</tt> semantics);
+
+<li/> since <tt>0008</tt> doesn't scan as integer (leading 0 requests octal but 8
+isn't a valid octal digit), the float scan is tried next and it succeeds;
+
+<li/> default floating-point output format is 6 decimal places (override with <tt>mlr --ofmt</tt>).
+</ul>
+
+<p/> Taken individually the rules make sense; taken collectively they produce a mishmash of types here.
+
+<p/>The solution is to <b>use the -S flag</b> for <tt>mlr put</tt> and/or <tt>mlr filter</tt>.
+Then all field values are left as string. You can type-coerce on demand using syntax like
+<tt>'$z = int($x) + float($y)'</tt>. (See also the
+<a href="reference.html/#put">put documentation</a>; see also
+<a href="https://github.com/johnkerl/miller/issues/150">https://github.com/johnkerl/miller/issues/150</a>.)
+
+POKI_RUN_COMMAND{{mlr --pprint put -S '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl}}HERE
+
+</div>
 <h1>How do I examine then-chaining?</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_examine_then_chaining');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_examine_then_chaining" style="display: block">

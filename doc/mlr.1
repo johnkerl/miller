@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2017-07-20
+.\"      Date: 2017-07-22
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2017-07-20" "\ \&" "\ \&"
+.TH "MILLER" "1" "2017-07-22" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -570,6 +570,9 @@ Prints records for which {expression} evaluates to true.
 If there are multiple semicolon-delimited expressions, all of them are
 evaluated and the last one is used as the filter criterion.
 
+All field values are type-inferred to int/float/string unless this behavior is
+suppressed with -S or -F (details below).
+
 Options:
 -v: Prints the expressions's AST (abstract syntax tree), which gives
     full transparency on the precedence and associativity rules of
@@ -984,6 +987,9 @@ either be assignments, or evaluate to boolean.  Booleans with following
 statements in curly braces control whether those statements are executed;
 booleans without following curly braces do nothing except side effects (e.g.
 regex-captures into \e1, \e2, etc.).
+
+All field values are type-inferred to int/float/string unless this behavior is
+suppressed with -S or -F (details below).
 
 Options:
 -v: Prints the expressions's AST (abstract syntax tree), which gives
