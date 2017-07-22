@@ -22,6 +22,10 @@ FUNDAM:
 ----------------------------------------------------------------
 airable:
 
+* step -a prev?
+* hexscan
+* bitcount
+
 !! --gen:
 * olh/mld
 * mlrval.?/mvfuncs.? -> lib; then support mv_t @ gen-reader
