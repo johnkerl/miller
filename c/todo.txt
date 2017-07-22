@@ -25,6 +25,8 @@ airable:
 * step -a prev?
 * hexscan
 * bitcount
+  - pc.mlr
+  - native version
 
 !! --gen:
 * olh/mld
