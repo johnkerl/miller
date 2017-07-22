@@ -826,23 +826,25 @@ Prints records for which {expression} evaluates to true.
 If there are multiple semicolon-delimited expressions, all of them are
 evaluated and the last one is used as the filter criterion.
 
-All field values are type-inferred to int/float/string unless this behavior is
-suppressed with -S or -F (details below).
-
-Options:
--v: Prints the expressions's AST (abstract syntax tree), which gives
-    full transparency on the precedence and associativity rules of
-    Miller's grammar, to stdout.
--a: Prints a low-level stack-allocation trace to stdout.
--t: Prints a low-level parser trace to stderr.
--T: Prints a every statement to stderr as it is executed.
--x: Prints records for which {expression} evaluates to false.
+Conversion options:
 -S: Keeps field values as strings with no type inference to int or float.
 -F: Keeps field values as strings or floats with no inference to int.
+All field values are type-inferred to int/float/string unless this behavior is
+suppressed with -S or -F.
+
+Output/formatting options:
 --oflatsep {string}: Separator to use when flattening multi-level @-variables
     to output records for emit. Default ":".
 --jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.
 --jvquoteall: For dump output (JSON-formatted), quote map values even if non-string.
+Any of the output-format command-line flags (see mlr -h). Example: using
+  mlr --icsv --opprint ... then put --ojson 'tee &gt; "mytap-".$a.".dat", $*' then ...
+the input is CSV, the output is pretty-print tabular, but the tee-file output
+is written in JSON format.
+--no-fflush: for emit, tee, print, and dump, don't call fflush() after every
+    record.
+
+Expression-specification options:
 -f {filename}: the DSL expression is taken from the specified file rather
     than from the command line. Outer single quotes wrapping the expression
     should not be placed in the file. If -f is specified more than once,
@@ -854,12 +856,17 @@ Options:
 (If you mix -e and -f then the expressions are evaluated in the order encountered.
 Since the expression pieces are simply concatenated, please be sure to use intervening
 semicolons to separate expressions.)
---no-fflush: for emit, tee, print, and dump, don't call fflush() after every
-    record.
-Any of the output-format command-line flags (see mlr -h). Example: using
-  mlr --icsv --opprint ... then put --ojson 'tee &gt; "mytap-".$a.".dat", $*' then ...
-the input is CSV, the output is pretty-print tabular, but the tee-file output
-is written in JSON format.
+
+Tracing options:
+-v: Prints the expressions's AST (abstract syntax tree), which gives
+    full transparency on the precedence and associativity rules of
+    Miller's grammar, to stdout.
+-a: Prints a low-level stack-allocation trace to stdout.
+-t: Prints a low-level parser trace to stderr.
+-T: Prints a every statement to stderr as it is executed.
+
+Other options:
+-x: Prints records for which {expression} evaluates to false.
 
 Please use a dollar sign for field names and double-quotes for string
 literals. If field names have special characters such as "." then you might
@@ -2100,24 +2107,25 @@ statements in curly braces control whether those statements are executed;
 booleans without following curly braces do nothing except side effects (e.g.
 regex-captures into \1, \2, etc.).
 
-All field values are type-inferred to int/float/string unless this behavior is
-suppressed with -S or -F (details below).
-
-Options:
--v: Prints the expressions's AST (abstract syntax tree), which gives
-    full transparency on the precedence and associativity rules of
-    Miller's grammar, to stdout.
--a: Prints a low-level stack-allocation trace to stdout.
--t: Prints a low-level parser trace to stderr.
--T: Prints a every statement to stderr as it is executed.
--q: Does not include the modified record in the output stream. Useful for when
-    all desired output is in begin and/or end blocks.
+Conversion options:
 -S: Keeps field values as strings with no type inference to int or float.
 -F: Keeps field values as strings or floats with no inference to int.
+All field values are type-inferred to int/float/string unless this behavior is
+suppressed with -S or -F.
+
+Output/formatting options:
 --oflatsep {string}: Separator to use when flattening multi-level @-variables
     to output records for emit. Default ":".
 --jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.
 --jvquoteall: For dump output (JSON-formatted), quote map values even if non-string.
+Any of the output-format command-line flags (see mlr -h). Example: using
+  mlr --icsv --opprint ... then put --ojson 'tee &gt; "mytap-".$a.".dat", $*' then ...
+the input is CSV, the output is pretty-print tabular, but the tee-file output
+is written in JSON format.
+--no-fflush: for emit, tee, print, and dump, don't call fflush() after every
+    record.
+
+Expression-specification options:
 -f {filename}: the DSL expression is taken from the specified file rather
     than from the command line. Outer single quotes wrapping the expression
     should not be placed in the file. If -f is specified more than once,
@@ -2129,12 +2137,18 @@ Options:
 (If you mix -e and -f then the expressions are evaluated in the order encountered.
 Since the expression pieces are simply concatenated, please be sure to use intervening
 semicolons to separate expressions.)
---no-fflush: for emit, tee, print, and dump, don't call fflush() after every
-    record.
-Any of the output-format command-line flags (see mlr -h). Example: using
-  mlr --icsv --opprint ... then put --ojson 'tee &gt; "mytap-".$a.".dat", $*' then ...
-the input is CSV, the output is pretty-print tabular, but the tee-file output
-is written in JSON format.
+
+Tracing options:
+-v: Prints the expressions's AST (abstract syntax tree), which gives
+    full transparency on the precedence and associativity rules of
+    Miller's grammar, to stdout.
+-a: Prints a low-level stack-allocation trace to stdout.
+-t: Prints a low-level parser trace to stderr.
+-T: Prints a every statement to stderr as it is executed.
+
+Other options:
+-q: Does not include the modified record in the output stream. Useful for when
+    all desired output is in begin and/or end blocks.
 
 Please use a dollar sign for field names and double-quotes for string
 literals. If field names have special characters such as "." then you might

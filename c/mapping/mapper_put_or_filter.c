@@ -162,29 +162,29 @@ static void mapper_filter_usage(FILE* o, char* argv0, char* verb) {
 }
 
 static void shared_usage(FILE* o, char* argv0, char* verb) {
-	fprintf(o, "All field values are type-inferred to int/float/string unless this behavior is\n");
-	fprintf(o, "suppressed with -S or -F (details below).\n");
-	fprintf(o, "\n");
-	fprintf(o, "Options:\n");
-	fprintf(o, "-v: Prints the expressions's AST (abstract syntax tree), which gives\n");
-	fprintf(o, "    full transparency on the precedence and associativity rules of\n");
-	fprintf(o, "    Miller's grammar, to stdout.\n");
-	fprintf(o, "-a: Prints a low-level stack-allocation trace to stdout.\n");
-	fprintf(o, "-t: Prints a low-level parser trace to stderr.\n");
-	fprintf(o, "-T: Prints a every statement to stderr as it is executed.\n");
-	if (streq(verb, "put")) {
-		fprintf(o, "-q: Does not include the modified record in the output stream. Useful for when\n");
-		fprintf(o, "    all desired output is in begin and/or end blocks.\n");
-	}
-	if (streq(verb, "filter")) {
-		fprintf(o, "-x: Prints records for which {expression} evaluates to false.\n");
-	}
+	fprintf(o, "Conversion options:\n");
 	fprintf(o, "-S: Keeps field values as strings with no type inference to int or float.\n");
 	fprintf(o, "-F: Keeps field values as strings or floats with no inference to int.\n");
+	fprintf(o, "All field values are type-inferred to int/float/string unless this behavior is\n");
+	fprintf(o, "suppressed with -S or -F.\n");
+	fprintf(o, "\n");
+
+	fprintf(o, "Output/formatting options:\n");
 	fprintf(o, "--oflatsep {string}: Separator to use when flattening multi-level @-variables\n");
 	fprintf(o, "    to output records for emit. Default \"%s\".\n", DEFAULT_OOSVAR_FLATTEN_SEPARATOR);
 	fprintf(o, "--jknquoteint: For dump output (JSON-formatted), do not quote map keys if non-string.\n");
 	fprintf(o, "--jvquoteall: For dump output (JSON-formatted), quote map values even if non-string.\n");
+	fprintf(o, "Any of the output-format command-line flags (see %s -h). Example: using\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(o, "  %s --icsv --opprint ... then put --ojson 'tee > \"mytap-\".$a.\".dat\", $*' then ...\n",
+		MLR_GLOBALS.bargv0);
+	fprintf(o, "the input is CSV, the output is pretty-print tabular, but the tee-file output\n");
+	fprintf(o, "is written in JSON format.\n");
+	fprintf(o, "--no-fflush: for emit, tee, print, and dump, don't call fflush() after every\n");
+	fprintf(o, "    record.\n");
+	fprintf(o, "\n");
+
+	fprintf(o, "Expression-specification options:\n");
 	fprintf(o, "-f {filename}: the DSL expression is taken from the specified file rather\n");
 	fprintf(o, "    than from the command line. Outer single quotes wrapping the expression\n");
 	fprintf(o, "    should not be placed in the file. If -f is specified more than once,\n");
@@ -196,15 +196,27 @@ static void shared_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "(If you mix -e and -f then the expressions are evaluated in the order encountered.\n");
 	fprintf(o, "Since the expression pieces are simply concatenated, please be sure to use intervening\n");
 	fprintf(o, "semicolons to separate expressions.)\n");
-	fprintf(o, "--no-fflush: for emit, tee, print, and dump, don't call fflush() after every\n");
-	fprintf(o, "    record.\n");
-	fprintf(o, "Any of the output-format command-line flags (see %s -h). Example: using\n",
-		MLR_GLOBALS.bargv0);
-	fprintf(o, "  %s --icsv --opprint ... then put --ojson 'tee > \"mytap-\".$a.\".dat\", $*' then ...\n",
-		MLR_GLOBALS.bargv0);
-	fprintf(o, "the input is CSV, the output is pretty-print tabular, but the tee-file output\n");
-	fprintf(o, "is written in JSON format.\n");
 	fprintf(o, "\n");
+
+	fprintf(o, "Tracing options:\n");
+	fprintf(o, "-v: Prints the expressions's AST (abstract syntax tree), which gives\n");
+	fprintf(o, "    full transparency on the precedence and associativity rules of\n");
+	fprintf(o, "    Miller's grammar, to stdout.\n");
+	fprintf(o, "-a: Prints a low-level stack-allocation trace to stdout.\n");
+	fprintf(o, "-t: Prints a low-level parser trace to stderr.\n");
+	fprintf(o, "-T: Prints a every statement to stderr as it is executed.\n");
+	fprintf(o, "\n");
+
+	fprintf(o, "Other options:\n");
+	if (streq(verb, "put")) {
+		fprintf(o, "-q: Does not include the modified record in the output stream. Useful for when\n");
+		fprintf(o, "    all desired output is in begin and/or end blocks.\n");
+	}
+	if (streq(verb, "filter")) {
+		fprintf(o, "-x: Prints records for which {expression} evaluates to false.\n");
+	}
+	fprintf(o, "\n");
+
 	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");
 	fprintf(o, "use braces, e.g. '${field.name}'. Miller built-in variables are\n");
