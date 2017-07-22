@@ -47,6 +47,8 @@ airable:
 
 * more json handling: topmost/second-topmost array, put nidx-style as with dkvp.
 
+?? JIT conversion (#150)? makes a mess of the disposition matrices; bleah. but the outcome would be nice.
+
 ----------------------------------------------------------------
 non-airable:
 
