@@ -22,7 +22,11 @@ FUNDAM:
 ----------------------------------------------------------------
 airable:
 
-!! --gen olh/mld
+!! --gen:
+* olh/mld
+* mlrval.?/mvfuncs.? -> lib; then support mv_t @ gen-reader
+* w/ multiple file names it gens twice. abend unless #infile==0.
+  -> also '$z=FILENAME' says '(stdin)' :(
 
 ! stdout fflushes ..
 
