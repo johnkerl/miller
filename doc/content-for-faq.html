@@ -91,7 +91,7 @@ isn't a valid octal digit), the float scan is tried next and it succeeds;
 <p/>The solution is to <b>use the -S flag</b> for <tt>mlr put</tt> and/or <tt>mlr filter</tt>.
 Then all field values are left as string. You can type-coerce on demand using syntax like
 <tt>'$z = int($x) + float($y)'</tt>. (See also the
-<a href="reference.html/#put">put documentation</a>; see also
+<a href="reference-verbs.html#put">put documentation</a>; see also
 <a href="https://github.com/johnkerl/miller/issues/150">https://github.com/johnkerl/miller/issues/150</a>.)
 
 POKI_RUN_COMMAND{{mlr --pprint put -S '$copy = $value; $type = typeof($value)' data/scan-example-2.tbl}}HERE
