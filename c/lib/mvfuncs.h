@@ -174,6 +174,7 @@ static inline mv_t i_ii_bitwise_rsh_func(mv_t* pval1, mv_t* pval2) {
 static inline mv_t i_i_bitwise_not_func(mv_t* pval1) {
 	return mv_from_int(~pval1->u.intv);
 }
+mv_t i_i_bitcount_func(mv_t* pval1);
 
 mv_t i_iii_modadd_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 mv_t i_iii_modsub_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);

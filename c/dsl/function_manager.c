@@ -201,6 +201,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"Bitwise NOT. Beware '$y=~$x' since =~ is the\nregex-match operator: try '$y = ~$x'."},
 	{FUNC_CLASS_ARITHMETIC, "<<", 2,0, "Bitwise left-shift."},
 	{FUNC_CLASS_ARITHMETIC, ">>", 2,0, "Bitwise right-shift."},
+	{FUNC_CLASS_ARITHMETIC, "bitcount",  1,0, "Count of 1-bits"},
 
 	{FUNC_CLASS_BOOLEAN, "==",  2,0, "String/numeric equality. Mixing number and string\nresults in string compare."},
 	{FUNC_CLASS_BOOLEAN, "!=",  2,0, "String/numeric inequality. Mixing number and string\nresults in string compare."},
@@ -1113,9 +1114,9 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_unary_func_name(char* fnnm, r
 	} else if (streq(fnnm, "acosh"))           { return rval_evaluator_alloc_from_f_f_func(f_f_acosh_func,       parg1);
 	} else if (streq(fnnm, "asin"))            { return rval_evaluator_alloc_from_f_f_func(f_f_asin_func,        parg1);
 	} else if (streq(fnnm, "asinh"))           { return rval_evaluator_alloc_from_f_f_func(f_f_asinh_func,       parg1);
-
 	} else if (streq(fnnm, "atan"))            { return rval_evaluator_alloc_from_f_f_func(f_f_atan_func,        parg1);
 	} else if (streq(fnnm, "atanh"))           { return rval_evaluator_alloc_from_f_f_func(f_f_atanh_func,       parg1);
+	} else if (streq(fnnm, "bitcount"))        { return rval_evaluator_alloc_from_i_i_func(i_i_bitcount_func,    parg1);
 	} else if (streq(fnnm, "boolean"))         { return rval_evaluator_alloc_from_x_x_func(b_x_boolean_func,     parg1);
 	} else if (streq(fnnm, "cbrt"))            { return rval_evaluator_alloc_from_f_f_func(f_f_cbrt_func,        parg1);
 	} else if (streq(fnnm, "ceil"))            { return rval_evaluator_alloc_from_x_x_func(x_x_ceil_func,        parg1);
@@ -1137,7 +1138,6 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_unary_func_name(char* fnnm, r
 	} else if (streq(fnnm, "hms2sec"))         { return rval_evaluator_alloc_from_f_s_func(i_s_hms2sec_func,     parg1);
 	} else if (streq(fnnm, "int"))             { return rval_evaluator_alloc_from_x_x_func(i_x_int_func,         parg1);
 	} else if (streq(fnnm, "invqnorm"))        { return rval_evaluator_alloc_from_f_f_func(f_f_invqnorm_func,    parg1);
-
 	} else if (streq(fnnm, "log"))             { return rval_evaluator_alloc_from_f_f_func(f_f_log_func,         parg1);
 	} else if (streq(fnnm, "log10"))           { return rval_evaluator_alloc_from_f_f_func(f_f_log10_func,       parg1);
 	} else if (streq(fnnm, "log1p"))           { return rval_evaluator_alloc_from_f_f_func(f_f_log1p_func,       parg1);

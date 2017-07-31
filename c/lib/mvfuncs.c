@@ -193,6 +193,27 @@ mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t
 }
 
 // ----------------------------------------------------------------
+// https://en.wikipedia.org/wiki/Hamming_weight
+
+static const unsigned long long _m1  = 0x5555555555555555;
+static const unsigned long long _m2  = 0x3333333333333333;
+static const unsigned long long _m4  = 0x0f0f0f0f0f0f0f0f;
+static const unsigned long long _m8  = 0x00ff00ff00ff00ff;
+static const unsigned long long _m16 = 0x0000ffff0000ffff;
+static const unsigned long long _m32 = 0x00000000ffffffff;
+
+mv_t i_i_bitcount_func(mv_t* pval1) {
+	unsigned long long a = pval1->u.intv;
+	a = (a & _m1 ) + ((a >>  1) & _m1 );
+	a = (a & _m2 ) + ((a >>  2) & _m2 );
+	a = (a & _m4 ) + ((a >>  4) & _m4 );
+	a = (a & _m8 ) + ((a >>  8) & _m8 );
+	a = (a & _m16) + ((a >> 16) & _m16);
+	a = (a & _m32) + ((a >> 32) & _m32);
+	return mv_from_int((long long)a);
+}
+
+// ----------------------------------------------------------------
 mv_t i_iii_modadd_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 	long long m = pval3->u.intv;
 	if (m <= 0LL)
@@ -816,7 +837,7 @@ static mv_t times_f_if(mv_t* pa, mv_t* pb) {
 // 2**63-1 (or is less than -2**63) using integer arithmetic (it may have
 // already overflowed) *or* using double-precision (granularity). Instead we
 // check if the absolute value of the product exceeds the largest representable
-// double less than 2**63. (An alterative would be to do all integer multipies
+// double less than 2**63. (An alterative would be to do all integer multiplies
 // using handcrafted multi-word 128-bit arithmetic).
 static mv_t times_n_ii(mv_t* pa, mv_t* pb) {
 	long long a = pa->u.intv;
