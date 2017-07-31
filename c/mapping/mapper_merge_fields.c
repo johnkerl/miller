@@ -12,7 +12,7 @@
 #include "containers/lhmslv.h"
 #include "containers/lhmsv.h"
 #include "containers/mixutil.h"
-#include "containers/mlrval.h"
+#include "lib/mlrval.h"
 #include "mapping/mappers.h"
 #include "mapping/stats1_accumulators.h"
 

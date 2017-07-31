@@ -232,6 +232,11 @@ Miller commands were run with pretty-print-tabular output format.
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#*">*</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#/">/</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#//">//</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#.+">.+</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#.-">.-</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#.*">.*</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#./">./</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#.//">.//</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#%">%</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#**">**</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#|">|</a><br/>
@@ -3742,6 +3747,60 @@ reference.
 <div class="pokipanel">
 <pre>
 // (class=arithmetic #args=2): Integer division: rounds to negative (pythonic).
+</pre>
+</div>
+
+
+<a id=".+"/><h2>.+</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+.+ (class=arithmetic #args=2): Addition, with integer-to-integer overflow
+
+.+ (class=arithmetic #args=1): Unary plus, with integer-to-integer overflow.
+</pre>
+</div>
+
+
+<a id=".-"/><h2>.-</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+.- (class=arithmetic #args=2): Subtraction, with integer-to-integer overflow.
+
+.- (class=arithmetic #args=1): Unary minus, with integer-to-integer overflow.
+</pre>
+</div>
+
+
+<a id=".*"/><h2>.*</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+.* (class=arithmetic #args=2): Multiplication, with integer-to-integer overflow.
+</pre>
+</div>
+
+
+<a id="./"/><h2>./</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+./ (class=arithmetic #args=2): Division, with integer-to-integer overflow.
+</pre>
+</div>
+
+
+<a id=".//"/><h2>.//</h2>
+
+<p/>
+<div class="pokipanel">
+<pre>
+.// (class=arithmetic #args=2): Integer division: rounds to negative (pythonic), with integer-to-integer overflow.
 </pre>
 </div>
 

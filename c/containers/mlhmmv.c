@@ -18,7 +18,7 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/mlhmmv.h"
-#include "containers/mvfuncs.h"
+#include "lib/mvfuncs.h"
 
 // ================================================================
 // Allow compile-time override, e.g using gcc -D.

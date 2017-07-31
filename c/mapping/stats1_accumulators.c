@@ -10,7 +10,7 @@
 #include "containers/lhmss.h"
 #include "containers/lhmsll.h"
 #include "containers/percentile_keeper.h"
-#include "containers/mvfuncs.h"
+#include "lib/mvfuncs.h"
 #include "mapping/stats1_accumulators.h"
 
 // ----------------------------------------------------------------

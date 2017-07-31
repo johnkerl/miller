@@ -17,6 +17,10 @@ libmlr_la_SOURCES=	free_flags.h \
 			mlrregex.h \
 			mlrutil.c \
 			mlrutil.h \
+			mlrval.c \
+			mlrval.h \
+			mvfuncs.c \
+			mvfuncs.h \
 			netbsd_strptime.c \
 			netbsd_strptime.h \
 			nlnet_timegm.c \

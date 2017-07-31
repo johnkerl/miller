@@ -2,7 +2,7 @@
 #include <string.h>
 #include "lib/mlrutil.h"
 #include "containers/top_keeper.h"
-#include "containers/mvfuncs.h"
+#include "lib/mvfuncs.h"
 
 // ----------------------------------------------------------------
 top_keeper_t* top_keeper_alloc(int capacity) {

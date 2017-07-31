@@ -18,7 +18,7 @@
 #include "containers/percentile_keeper.h"
 #include "containers/top_keeper.h"
 #include "containers/dheap.h"
-#include "containers/mvfuncs.h"
+#include "lib/mvfuncs.h"
 
 int tests_run         = 0;
 int tests_failed      = 0;

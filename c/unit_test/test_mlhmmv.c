@@ -4,7 +4,7 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "containers/mlhmmv.h"
-#include "containers/mvfuncs.h"
+#include "lib/mvfuncs.h"
 
 int tests_run         = 0;
 int tests_failed      = 0;

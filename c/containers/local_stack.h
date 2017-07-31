@@ -1,7 +1,7 @@
 #ifndef LOCAL_STACK_H
 #define LOCAL_STACK_H
 
-#include "containers/mlrval.h"
+#include "lib/mlrval.h"
 #include "containers/type_decl.h"
 #include "containers/sllv.h"
 #include "containers/mlhmmv.h"

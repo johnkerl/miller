@@ -12,7 +12,7 @@
 #include "../lib/mtrand.h"
 #include "../lib/string_builder.h"
 #include "../lib/string_array.h"
-#include "../containers/mlrval.h"
+#include "../lib/mlrval.h"
 
 #define MV_SB_ALLOC_LENGTH 32
 

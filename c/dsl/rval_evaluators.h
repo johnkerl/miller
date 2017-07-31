@@ -29,7 +29,7 @@
 //   type-specific functions in mlrval.c.  Those with _n_ take int or float
 //   and also use disposition matrices.  In all cases it's the job of
 //   rval_evaluators.c to invoke functions here with mlrvals of the correct
-//   type(s). See also comments in containers/mlrval.h.
+//   type(s). See also comments in lib/mlrval.h.
 //
 // ================================================================
 
@@ -37,7 +37,7 @@
 #define RVAL_EVALUATORS_H
 
 #include <stdio.h>
-#include "containers/mvfuncs.h"
+#include "lib/mvfuncs.h"
 #include "containers/xvfuncs.h"
 #include "dsl/mlr_dsl_ast.h"
 #include "dsl/rval_evaluator.h"
@@ -100,7 +100,7 @@ rval_evaluator_t* rval_evaluator_alloc_from_mlrval(mv_t* pval);
 // rval_func_evaluators.c
 // ================================================================
 
-// These have some shared code that would otherwise be duplicated per-function in containers/mvfuncs.c.
+// These have some shared code that would otherwise be duplicated per-function in lib/mvfuncs.c.
 rval_evaluator_t* rval_evaluator_alloc_from_variadic_func(mv_variadic_func_t* pfunc, rval_evaluator_t** pargs, int nargs);
 rval_evaluator_t* rval_evaluator_alloc_from_b_b_func(mv_unary_func_t* pfunc, rval_evaluator_t* parg1);
 rval_evaluator_t* rval_evaluator_alloc_from_b_bb_and_func(rval_evaluator_t* parg1, rval_evaluator_t* parg2);

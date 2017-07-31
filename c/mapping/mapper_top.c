@@ -11,7 +11,7 @@
 #include "containers/lhmsv.h"
 #include "containers/top_keeper.h"
 #include "containers/mixutil.h"
-#include "containers/mvfuncs.h"
+#include "lib/mvfuncs.h"
 #include "mapping/mappers.h"
 #include "cli/argparse.h"
 

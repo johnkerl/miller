@@ -1,7 +1,7 @@
 #ifndef TYPE_DECL_H
 #define TYPE_DECL_H
 
-#include "../containers/mlrval.h"
+#include "../lib/mlrval.h"
 
 // ----------------------------------------------------------------
 // These use the MT defines from mlrval.h, except that map-types (mlhmmv.h)

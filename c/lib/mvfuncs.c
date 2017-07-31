@@ -6,7 +6,7 @@
 #include "lib/mlrutil.h"
 #include "lib/mlrdatetime.h"
 #include "lib/mlrregex.h"
-#include "containers/mvfuncs.h"
+#include "lib/mvfuncs.h"
 
 // ================================================================
 // See important notes at the top of mlrval.h.

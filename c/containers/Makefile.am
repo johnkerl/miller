@@ -35,10 +35,6 @@ libcontainers_la_SOURCES=	\
 			mixutil.h \
 			mlhmmv.c \
 			mlhmmv.h \
-			mlrval.c \
-			mlrval.h \
-			mvfuncs.c \
-			mvfuncs.h \
 			parse_trie.c \
 			parse_trie.h \
 			percentile_keeper.c \

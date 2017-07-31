@@ -19,7 +19,7 @@
 #include "containers/lrec.h"
 #include "containers/lhmsmv.h"
 #include "containers/mlhmmv.h"
-#include "containers/mvfuncs.h"
+#include "lib/mvfuncs.h"
 #include "containers/boxed_xval.h"
 #include "containers/local_stack.h"
 #include "containers/loop_stack.h"

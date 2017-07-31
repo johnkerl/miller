@@ -15,7 +15,7 @@
 #ifndef MLHMMV_H
 #define MLHMMV_H
 
-#include "containers/mlrval.h"
+#include "lib/mlrval.h"
 #include "containers/sllmv.h"
 #include "containers/sllv.h"
 #include "containers/lrec.h"

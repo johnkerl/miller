@@ -10,7 +10,7 @@
 #ifndef BOXED_XVAL_H
 #define BOXED_XVAL_H
 
-#include "../containers/mlrval.h"
+#include "../lib/mlrval.h"
 #include "../containers/mlhmmv.h"
 
 // ----------------------------------------------------------------

@@ -22,12 +22,12 @@ FUNDAM:
 ----------------------------------------------------------------
 airable:
 
-* step -a prev?
 * hexscan
 * bitcount
   - pc.mlr
   - overflow-intentional arithops ...
   - native version
+  - tohex/fromhex simplifiers ...
 
 !! --gen:
 * olh/mld

@@ -6,7 +6,7 @@
 #ifndef SLLMV_H
 #define SLLMV_H
 
-#include "mlrval.h"
+#include "../lib/mlrval.h"
 #include "../lib/free_flags.h"
 
 // ----------------------------------------------------------------
