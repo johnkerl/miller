@@ -26,6 +26,7 @@ airable:
 * hexscan
 * bitcount
   - pc.mlr
+  - overflow-intentional arithops ...
   - native version
 
 !! --gen:

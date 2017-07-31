@@ -1098,6 +1098,7 @@ md_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_BITWISE_RSH_EQUALS md_rhs(C
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary(">>", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 }
+
 md_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_PLUS_EQUALS md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary("+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
@@ -1122,6 +1123,28 @@ md_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_INT_DIVIDE_EQUALS md_rhs(C)
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary("//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 }
+
+md_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_OPLUS_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_OMINUS_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".-", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_OTIMES_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_ODIVIDE_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary("./", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_INT_ODIVIDE_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+
 md_srec_assignment(A)  ::= md_field_name(B) MD_TOKEN_MOD_EQUALS md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_SREC_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary("%", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
@@ -1164,6 +1187,7 @@ md_oosvar_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_BITWISE_RSH_EQUALS md
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary(">>", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 }
+
 md_oosvar_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_PLUS_EQUALS md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary("+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
@@ -1195,6 +1219,27 @@ md_oosvar_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_MOD_EQUALS md_rhs(C).
 md_oosvar_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_POW_EQUALS md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary("**", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+
+md_oosvar_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_OPLUS_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_oosvar_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_OMINUS_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".-", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_oosvar_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_OTIMES_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_oosvar_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_ODIVIDE_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary("./", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_oosvar_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_INT_ODIVIDE_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 }
 
 md_nonindexed_local_assignment(A)  ::= md_nonindexed_local_variable(B) MD_TOKEN_LOGICAL_OR_EQUALS md_rhs(C). {
@@ -1229,6 +1274,7 @@ md_nonindexed_local_assignment(A)  ::= md_nonindexed_local_variable(B) MD_TOKEN_
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary(">>", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 }
+
 md_nonindexed_local_assignment(A)  ::= md_nonindexed_local_variable(B) MD_TOKEN_PLUS_EQUALS md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary("+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
@@ -1260,6 +1306,27 @@ md_nonindexed_local_assignment(A)  ::= md_nonindexed_local_variable(B) MD_TOKEN_
 md_nonindexed_local_assignment(A)  ::= md_nonindexed_local_variable(B) MD_TOKEN_POW_EQUALS md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary("**", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+
+md_nonindexed_local_assignment(A)  ::= md_nonindexed_local_variable(B) MD_TOKEN_OPLUS_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_nonindexed_local_assignment(A)  ::= md_nonindexed_local_variable(B) MD_TOKEN_OMINUS_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".-", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_nonindexed_local_assignment(A)  ::= md_nonindexed_local_variable(B) MD_TOKEN_OTIMES_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_nonindexed_local_assignment(A)  ::= md_nonindexed_local_variable(B) MD_TOKEN_ODIVIDE_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary("./", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_nonindexed_local_assignment(A)  ::= md_nonindexed_local_variable(B) MD_TOKEN_INT_ODIVIDE_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_NONINDEXED_LOCAL_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 }
 
 md_indexed_local_assignment(A)  ::= md_indexed_local_variable(B) MD_TOKEN_LOGICAL_OR_EQUALS md_rhs(C). {
@@ -1294,6 +1361,7 @@ md_indexed_local_assignment(A)  ::= md_indexed_local_variable(B) MD_TOKEN_BITWIS
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary(">>", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 }
+
 md_indexed_local_assignment(A)  ::= md_indexed_local_variable(B) MD_TOKEN_PLUS_EQUALS md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary("+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
@@ -1325,6 +1393,27 @@ md_indexed_local_assignment(A)  ::= md_indexed_local_variable(B) MD_TOKEN_MOD_EQ
 md_indexed_local_assignment(A)  ::= md_indexed_local_variable(B) MD_TOKEN_POW_EQUALS md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary("**", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+
+md_indexed_local_assignment(A)  ::= md_indexed_local_variable(B) MD_TOKEN_OPLUS_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".+", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_indexed_local_assignment(A)  ::= md_indexed_local_variable(B) MD_TOKEN_OMINUS_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".-", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_indexed_local_assignment(A)  ::= md_indexed_local_variable(B) MD_TOKEN_OTIMES_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_indexed_local_assignment(A)  ::= md_indexed_local_variable(B) MD_TOKEN_ODIVIDE_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary("./", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_indexed_local_assignment(A)  ::= md_indexed_local_variable(B) MD_TOKEN_INT_ODIVIDE_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 }
 
 // ----------------------------------------------------------------
@@ -1372,6 +1461,7 @@ md_env_assignment(A)  ::= md_env_index(B) MD_TOKEN_DOT_EQUALS md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary(".", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 }
+
 md_env_assignment(A)  ::= md_env_index(B) MD_TOKEN_TIMES_EQUALS md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary("*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
@@ -1391,6 +1481,27 @@ md_env_assignment(A)  ::= md_env_index(B) MD_TOKEN_MOD_EQUALS md_rhs(C). {
 md_env_assignment(A)  ::= md_env_index(B) MD_TOKEN_POW_EQUALS md_rhs(C). {
 	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
 		mlr_dsl_ast_node_alloc_binary("**", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+
+md_env_assignment(A)  ::= md_env_index(B) MD_TOKEN_OTIMES_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".*", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_env_assignment(A)  ::= md_env_index(B) MD_TOKEN_ODIVIDE_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary("./", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_env_assignment(A)  ::= md_env_index(B) MD_TOKEN_OINT_DIVIDE_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".//", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_env_assignment(A)  ::= md_env_index(B) MD_TOKEN_OMOD_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".%", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
+}
+md_env_assignment(A)  ::= md_env_index(B) MD_TOKEN_OPOW_EQUALS md_rhs(C). {
+	A = mlr_dsl_ast_node_alloc_binary("=", MD_AST_NODE_TYPE_ENV_ASSIGNMENT, B,
+		mlr_dsl_ast_node_alloc_binary(".**", MD_AST_NODE_TYPE_OPERATOR, mlr_dsl_ast_tree_copy(B) , C));
 }
 
 // ----------------------------------------------------------------
@@ -2155,6 +2266,12 @@ md_addsubdot_term(A) ::= md_addsubdot_term(B) MD_TOKEN_PLUS(O) md_muldiv_term(C)
 md_addsubdot_term(A) ::= md_addsubdot_term(B) MD_TOKEN_MINUS(O) md_muldiv_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
+md_addsubdot_term(A) ::= md_addsubdot_term(B) MD_TOKEN_OPLUS(O) md_muldiv_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
+}
+md_addsubdot_term(A) ::= md_addsubdot_term(B) MD_TOKEN_OMINUS(O) md_muldiv_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
+}
 md_addsubdot_term(A) ::= md_addsubdot_term(B) MD_TOKEN_DOT(O) md_muldiv_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
@@ -2163,6 +2280,7 @@ md_addsubdot_term(A) ::= md_addsubdot_term(B) MD_TOKEN_DOT(O) md_muldiv_term(C).
 md_muldiv_term(A) ::= md_unary_bitwise_op_term(B). {
 	A = B;
 }
+
 md_muldiv_term(A) ::= md_muldiv_term(B) MD_TOKEN_TIMES(O) md_unary_bitwise_op_term(C). {
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
@@ -2176,6 +2294,16 @@ md_muldiv_term(A) ::= md_muldiv_term(B) MD_TOKEN_MOD(O) md_unary_bitwise_op_term
 	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
 }
 
+md_muldiv_term(A) ::= md_muldiv_term(B) MD_TOKEN_OTIMES(O) md_unary_bitwise_op_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
+}
+md_muldiv_term(A) ::= md_muldiv_term(B) MD_TOKEN_ODIVIDE(O) md_unary_bitwise_op_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
+}
+md_muldiv_term(A) ::= md_muldiv_term(B) MD_TOKEN_INT_ODIVIDE(O) md_unary_bitwise_op_term(C). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_OPERATOR, B, C);
+}
+
 // ----------------------------------------------------------------
 md_unary_bitwise_op_term(A) ::= md_pow_term(B). {
 	A = B;
@@ -2184,6 +2312,12 @@ md_unary_bitwise_op_term(A) ::= MD_TOKEN_PLUS(O) md_unary_bitwise_op_term(C). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_OPERATOR, C);
 }
 md_unary_bitwise_op_term(A) ::= MD_TOKEN_MINUS(O) md_unary_bitwise_op_term(C). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_OPERATOR, C);
+}
+md_unary_bitwise_op_term(A) ::= MD_TOKEN_OPLUS(O) md_unary_bitwise_op_term(C). {
+	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_OPERATOR, C);
+}
+md_unary_bitwise_op_term(A) ::= MD_TOKEN_OMINUS(O) md_unary_bitwise_op_term(C). {
 	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_OPERATOR, C);
 }
 md_unary_bitwise_op_term(A) ::= MD_TOKEN_LOGICAL_NOT(O) md_unary_bitwise_op_term(C). {

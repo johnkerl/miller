@@ -93,11 +93,21 @@ static inline mv_t f_ff_pow_func(mv_t* pval1, mv_t* pval2) {
 	return mv_from_float(pow(pval1->u.fltv, pval2->u.fltv));
 }
 
+// These four overflow from 64-bit ints to double. This is for general use.
 mv_t x_xx_plus_func(mv_t* pval1, mv_t* pval2);
 mv_t x_xx_minus_func(mv_t* pval1, mv_t* pval2);
 mv_t x_xx_times_func(mv_t* pval1, mv_t* pval2);
 mv_t x_xx_divide_func(mv_t* pval1, mv_t* pval2);
 mv_t x_xx_int_divide_func(mv_t* pval1, mv_t* pval2);
+
+// These four intentionally overflow 64-bit ints. This is for use-cases where
+// people want that, e.g. 64-bit integer math.
+mv_t x_xx_oplus_func(mv_t* pval1, mv_t* pval2);
+mv_t x_xx_ominus_func(mv_t* pval1, mv_t* pval2);
+mv_t x_xx_otimes_func(mv_t* pval1, mv_t* pval2);
+mv_t x_xx_odivide_func(mv_t* pval1, mv_t* pval2);
+mv_t x_xx_int_odivide_func(mv_t* pval1, mv_t* pval2);
+
 mv_t x_xx_mod_func(mv_t* pval1, mv_t* pval2);
 mv_t x_x_upos_func(mv_t* pval1);
 mv_t x_x_uneg_func(mv_t* pval1);

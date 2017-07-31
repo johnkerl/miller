@@ -183,6 +183,15 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_ARITHMETIC, "*",  2,0, "Multiplication."},
 	{FUNC_CLASS_ARITHMETIC, "/",  2,0, "Division."},
 	{FUNC_CLASS_ARITHMETIC, "//", 2,0, "Integer division: rounds to negative (pythonic)."},
+
+	{FUNC_CLASS_ARITHMETIC, ".+",  2,0, "Addition, with integer-to-integer overflow"},
+	{FUNC_CLASS_ARITHMETIC, ".+",  1,0, "Unary plus, with integer-to-integer overflow."},
+	{FUNC_CLASS_ARITHMETIC, ".-",  2,0, "Subtraction, with integer-to-integer overflow."},
+	{FUNC_CLASS_ARITHMETIC, ".-",  1,0, "Unary minus, with integer-to-integer overflow."},
+	{FUNC_CLASS_ARITHMETIC, ".*",  2,0, "Multiplication, with integer-to-integer overflow."},
+	{FUNC_CLASS_ARITHMETIC, "./",  2,0, "Division, with integer-to-integer overflow."},
+	{FUNC_CLASS_ARITHMETIC, ".//", 2,0, "Integer division: rounds to negative (pythonic), with integer-to-integer overflow."},
+
 	{FUNC_CLASS_ARITHMETIC, "%",  2,0, "Remainder; never negative-valued (pythonic)."},
 	{FUNC_CLASS_ARITHMETIC, "**", 2,0, "Exponentiation; same as pow, but as an infix\noperator."},
 	{FUNC_CLASS_ARITHMETIC, "|",  2,0, "Bitwise OR."},
@@ -1097,6 +1106,8 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_unary_func_name(char* fnnm, r
 	if        (streq(fnnm, "!"))               { return rval_evaluator_alloc_from_b_b_func(b_b_not_func,         parg1);
 	} else if (streq(fnnm, "+"))               { return rval_evaluator_alloc_from_x_x_func(x_x_upos_func,        parg1);
 	} else if (streq(fnnm, "-"))               { return rval_evaluator_alloc_from_x_x_func(x_x_uneg_func,        parg1);
+	} else if (streq(fnnm, ".+"))              { return rval_evaluator_alloc_from_x_x_func(x_x_upos_func,        parg1);
+	} else if (streq(fnnm, ".-"))              { return rval_evaluator_alloc_from_x_x_func(x_x_uneg_func,        parg1);
 	} else if (streq(fnnm, "abs"))             { return rval_evaluator_alloc_from_x_x_func(x_x_abs_func,         parg1);
 	} else if (streq(fnnm, "acos"))            { return rval_evaluator_alloc_from_f_f_func(f_f_acos_func,        parg1);
 	} else if (streq(fnnm, "acosh"))           { return rval_evaluator_alloc_from_f_f_func(f_f_acosh_func,       parg1);
@@ -1168,11 +1179,19 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "<"))    { return rval_evaluator_alloc_from_x_xx_func(lt_op_func,             parg1, parg2);
 	} else if (streq(fnnm, "<="))   { return rval_evaluator_alloc_from_x_xx_func(le_op_func,             parg1, parg2);
 	} else if (streq(fnnm, "."))    { return rval_evaluator_alloc_from_x_xx_func(s_xx_dot_func,          parg1, parg2);
+
 	} else if (streq(fnnm, "+"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_plus_func,         parg1, parg2);
 	} else if (streq(fnnm, "-"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_minus_func,        parg1, parg2);
 	} else if (streq(fnnm, "*"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_times_func,        parg1, parg2);
 	} else if (streq(fnnm, "/"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_divide_func,       parg1, parg2);
 	} else if (streq(fnnm, "//"))   { return rval_evaluator_alloc_from_x_xx_func(x_xx_int_divide_func,   parg1, parg2);
+
+	} else if (streq(fnnm, ".+"))   { return rval_evaluator_alloc_from_x_xx_func(x_xx_oplus_func,        parg1, parg2);
+	} else if (streq(fnnm, ".-"))   { return rval_evaluator_alloc_from_x_xx_func(x_xx_ominus_func,       parg1, parg2);
+	} else if (streq(fnnm, ".*"))   { return rval_evaluator_alloc_from_x_xx_func(x_xx_otimes_func,       parg1, parg2);
+	} else if (streq(fnnm, "./"))   { return rval_evaluator_alloc_from_x_xx_func(x_xx_odivide_func,      parg1, parg2);
+	} else if (streq(fnnm, ".//"))  { return rval_evaluator_alloc_from_x_xx_func(x_xx_int_odivide_func,  parg1, parg2);
+
 	} else if (streq(fnnm, "%"))    { return rval_evaluator_alloc_from_x_xx_func(x_xx_mod_func,          parg1, parg2);
 	} else if (streq(fnnm, "**"))   { return rval_evaluator_alloc_from_f_ff_func(f_ff_pow_func,          parg1, parg2);
 	} else if (streq(fnnm, "pow"))  { return rval_evaluator_alloc_from_f_ff_func(f_ff_pow_func,          parg1, parg2);

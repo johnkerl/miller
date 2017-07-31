@@ -292,7 +292,6 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);
 	return MD_TOKEN_DOT_EQUALS;
 }
-
 "*" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);
 	return MD_TOKEN_TIMES;
@@ -317,6 +316,48 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);
 	return MD_TOKEN_INT_DIVIDE_EQUALS;
 }
+
+"\.+" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);
+	return MD_TOKEN_OPLUS;
+}
+"\.+=" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);
+	return MD_TOKEN_OPLUS_EQUALS;
+}
+"\.-" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);
+	return MD_TOKEN_OMINUS;
+}
+"\.-=" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);
+	return MD_TOKEN_OMINUS_EQUALS;
+}
+"\.*" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);
+	return MD_TOKEN_OTIMES;
+}
+"\.*=" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);
+	return MD_TOKEN_OTIMES_EQUALS;
+}
+"\./" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);
+	return MD_TOKEN_ODIVIDE;
+}
+"\./=" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);
+	return MD_TOKEN_ODIVIDE_EQUALS;
+}
+"\.//" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);
+	return MD_TOKEN_INT_ODIVIDE;
+}
+"\.//=" {
+	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);
+	return MD_TOKEN_INT_ODIVIDE_EQUALS;
+}
+
 "%" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_OPERATOR);
 	return MD_TOKEN_MOD;

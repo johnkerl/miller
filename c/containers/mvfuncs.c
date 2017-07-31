@@ -672,7 +672,7 @@ mv_t f_s_dhms2fsec_func(mv_t* pval1) {
 	return mv_from_float(sec * sign);
 }
 
-// ----------------------------------------------------------------
+// ================================================================
 static mv_t plus_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
@@ -941,7 +941,201 @@ mv_t x_xx_int_divide_func(mv_t* pval1, mv_t* pval2) {
 	return (idiv_dispositions[pval1->type][pval2->type])(pval1,pval2);
 }
 
+// ================================================================
+static mv_t oplus_f_ff(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = pb->u.fltv;
+	return mv_from_float(a + b);
+}
+static mv_t oplus_f_fi(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = (double)pb->u.intv;
+	return mv_from_float(a + b);
+}
+static mv_t oplus_f_if(mv_t* pa, mv_t* pb) {
+	double a = (double)pa->u.intv;
+	double b = pb->u.fltv;
+	return mv_from_float(a + b);
+}
+static mv_t oplus_n_ii(mv_t* pa, mv_t* pb) {
+	long long a = pa->u.intv;
+	long long b = pb->u.intv;
+	long long c = a + b;
+	return mv_from_int(c);
+}
+
+static mv_binary_func_t* oplus_dispositions[MT_DIM][MT_DIM] = {
+	//         ERROR  ABSENT EMPTY STRING INT         FLOAT       BOOL
+	/*ERROR*/  {_err, _err,  _err, _err,  _err,       _err,       _err},
+	/*ABSENT*/ {_err, _a,    _a,   _err,  _2,         _2,         _err},
+	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,       _emt,       _err},
+	/*STRING*/ {_err, _err,  _err, _err,  _err,       _err,       _err},
+	/*INT*/    {_err, _1,    _emt, _err,  oplus_n_ii, oplus_f_if, _err},
+	/*FLOAT*/  {_err, _1,    _emt, _err,  oplus_f_fi, oplus_f_ff, _err},
+	/*BOOL*/   {_err, _err,  _err, _err,  _err,       _err,       _err},
+};
+
+mv_t x_xx_oplus_func(mv_t* pval1, mv_t* pval2) { return (oplus_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+
 // ----------------------------------------------------------------
+static mv_t ominus_f_ff(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = pb->u.fltv;
+	return mv_from_float(a - b);
+}
+static mv_t ominus_f_fi(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = (double)pb->u.intv;
+	return mv_from_float(a - b);
+}
+static mv_t ominus_f_if(mv_t* pa, mv_t* pb) {
+	double a = (double)pa->u.intv;
+	double b = pb->u.fltv;
+	return mv_from_float(a - b);
+}
+static mv_t ominus_n_ii(mv_t* pa, mv_t* pb) {
+	long long a = pa->u.intv;
+	long long b = pb->u.intv;
+	long long c = a - b;
+	return mv_from_int(c);
+}
+
+static mv_binary_func_t* ominus_dispositions[MT_DIM][MT_DIM] = {
+	//         ERROR  ABSENT EMPTY STRING INT          FLOAT        BOOL
+	/*ERROR*/  {_err, _err,  _err, _err,  _err,        _err,        _err},
+	/*ABSENT*/ {_err, _a,    _a,   _err,  _2,          _2,          _err},
+	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,        _emt,        _err},
+	/*STRING*/ {_err, _err,  _err, _err,  _err,        _err,        _err},
+	/*INT*/    {_err, _1,    _emt, _err,  ominus_n_ii, ominus_f_if, _err},
+	/*FLOAT*/  {_err, _1,    _emt, _err,  ominus_f_fi, ominus_f_ff, _err},
+	/*BOOL*/   {_err, _err,  _err, _err,  _err,        _err,        _err},
+};
+
+mv_t x_xx_ominus_func(mv_t* pval1, mv_t* pval2) { return (ominus_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+
+// ----------------------------------------------------------------
+static mv_t otimes_f_ff(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = pb->u.fltv;
+	return mv_from_float(a * b);
+}
+static mv_t otimes_f_fi(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = (double)pb->u.intv;
+	return mv_from_float(a * b);
+}
+static mv_t otimes_f_if(mv_t* pa, mv_t* pb) {
+	double a = (double)pa->u.intv;
+	double b = pb->u.fltv;
+	return mv_from_float(a * b);
+}
+static mv_t otimes_n_ii(mv_t* pa, mv_t* pb) {
+	long long a = pa->u.intv;
+	long long b = pb->u.intv;
+	return mv_from_int(a * b);
+}
+
+static mv_binary_func_t* otimes_dispositions[MT_DIM][MT_DIM] = {
+	//         ERROR  ABSENT EMPTY STRING INT          FLOAT       BOOL
+	/*ERROR*/  {_err, _err,  _err, _err,  _err,        _err,       _err},
+	/*ABSENT*/ {_err, _a,    _a,   _err,  _2,          _2,         _err},
+	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,        _emt,       _err},
+	/*STRING*/ {_err, _err,  _err, _err,  _err,        _err,       _err},
+	/*INT*/    {_err, _1,    _emt, _err,  otimes_n_ii, otimes_f_if, _err},
+	/*FLOAT*/  {_err, _1,    _emt, _err,  otimes_f_fi, otimes_f_ff, _err},
+	/*BOOL*/   {_err, _err,  _err, _err,  _err,        _err,       _err},
+};
+
+mv_t x_xx_otimes_func(mv_t* pval1, mv_t* pval2) { return (otimes_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+
+// ----------------------------------------------------------------
+static mv_t odivide_f_ff(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = pb->u.fltv;
+	return mv_from_float(a / b);
+}
+static mv_t odivide_f_fi(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = (double)pb->u.intv;
+	return mv_from_float(a / b);
+}
+static mv_t odivide_f_if(mv_t* pa, mv_t* pb) {
+	double a = (double)pa->u.intv;
+	double b = pb->u.fltv;
+	return mv_from_float(a / b);
+}
+static mv_t odivide_i_ii(mv_t* pa, mv_t* pb) {
+	long long a = pa->u.intv;
+	long long b = pb->u.intv;
+	return mv_from_int(a / b);
+}
+
+static mv_binary_func_t* odivide_dispositions[MT_DIM][MT_DIM] = {
+	//         ERROR  ABSENT EMPTY STRING INT           FLOAT         BOOL
+	/*ERROR*/  {_err, _err,  _err, _err,  _err,         _err,         _err},
+	/*ABSENT*/ {_err, _a,    _a,   _err,  _i0,          _f0,          _err},
+	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,         _emt,         _err},
+	/*STRING*/ {_err, _err,  _err, _err,  _err,         _err,         _err},
+	/*INT*/    {_err, _1,    _emt, _err,  odivide_i_ii, odivide_f_if, _err},
+	/*FLOAT*/  {_err, _1,    _emt, _err,  odivide_f_fi, odivide_f_ff, _err},
+	/*BOOL*/   {_err, _err,  _err, _err,  _err,         _err,         _err},
+};
+
+mv_t x_xx_odivide_func(mv_t* pval1, mv_t* pval2) { return (odivide_dispositions[pval1->type][pval2->type])(pval1,pval2); }
+
+// ----------------------------------------------------------------
+static mv_t oidiv_f_ff(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = pb->u.fltv;
+	return mv_from_float(floor(a / b));
+}
+static mv_t oidiv_f_fi(mv_t* pa, mv_t* pb) {
+	double a = pa->u.fltv;
+	double b = (double)pb->u.intv;
+	return mv_from_float(floor(a / b));
+}
+static mv_t oidiv_f_if(mv_t* pa, mv_t* pb) {
+	double a = (double)pa->u.intv;
+	double b = pb->u.fltv;
+	return mv_from_float(floor(a / b));
+}
+static mv_t oidiv_i_ii(mv_t* pa, mv_t* pb) {
+	long long a = pa->u.intv;
+	long long b = pb->u.intv;
+
+	// Pythonic division, not C division.
+	long long q = a / b;
+	long long r = a % b;
+	if (a < 0) {
+		if (b > 0) {
+			if (r != 0)
+				q--;
+		}
+	} else {
+		if (b < 0) {
+			if (r != 0)
+				q--;
+		}
+	}
+	return mv_from_int(q);
+}
+
+static mv_binary_func_t* oidiv_dispositions[MT_DIM][MT_DIM] = {
+	//         ERROR  ABSENT EMPTY STRING INT         FLOAT       BOOL
+	/*ERROR*/  {_err, _err,  _err, _err,  _err,       _err,       _err},
+	/*ABSENT*/ {_err, _a,    _a,   _err,  _i0,        _f0,        _err},
+	/*EMPTY*/  {_err, _a,    _emt, _err,  _emt,       _emt,       _err},
+	/*STRING*/ {_err, _err,  _err, _err,  _err,       _err,       _err},
+	/*INT*/    {_err, _1,    _emt, _err,  oidiv_i_ii, oidiv_f_if, _err},
+	/*FLOAT*/  {_err, _1,    _emt, _err,  oidiv_f_fi, oidiv_f_ff, _err},
+	/*BOOL*/   {_err, _err,  _err, _err,  _err,       _err,       _err},
+};
+
+mv_t x_xx_int_odivide_func(mv_t* pval1, mv_t* pval2) {
+	return (oidiv_dispositions[pval1->type][pval2->type])(pval1,pval2);
+}
+
+// ================================================================
 static mv_t mod_f_ff(mv_t* pa, mv_t* pb) {
 	double a = pa->u.fltv;
 	double b = pb->u.fltv;
