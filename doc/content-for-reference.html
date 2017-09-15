@@ -426,8 +426,8 @@ in the data input stream, or assignment <tt>$x=""</tt> or <tt>@x=""</tt> in
 <li/> <b>Absent (key not present)</b>: a field name is not present, e.g. input
 record is <tt>x=1,y=2</tt> and a <tt>put</tt> or <tt>filter</tt> expression
 refers to <tt>$z</tt>. Or, reading an out-of-stream variable which hasn&rsquo;t
-been assigned a value yet, e.g.  <tt>mlr put -q '@sum += $x'; end{emit
-@sum}'</tt> or <tt>mlr put -q '@sum[$a][$b] += $x'; end{emit @sum, "a",
+been assigned a value yet, e.g.  <tt>mlr put -q '@sum += $x; end{emit
+@sum}'</tt> or <tt>mlr put -q '@sum[$a][$b] += $x; end{emit @sum, "a",
 "b"}'</tt>.
 
 </ul>
