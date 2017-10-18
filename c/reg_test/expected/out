@@ -22710,6 +22710,16 @@ text="main_block", type=STATEMENT_BLOCK: subframe_var_count=1 max_subframe_depth
 
 x=abcd,y=ghi
 
+mlr --csv filter $text =~ "." ./reg_test/input/dot-match.csv
+text
+hi
+a.b
+bye
+
+mlr --csv filter $text =~ "\." ./reg_test/input/dot-match.csv
+text
+a.b
+
 
 ================================================================
 DSL TYPED OVERLAY

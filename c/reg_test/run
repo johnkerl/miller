@@ -1807,6 +1807,9 @@ run_mlr filter -v '$x =~ "^abc$"i'     $indir/regex.dkvp
 run_mlr filter -v '$x =~ "^a.*d$"i'    $indir/regex.dkvp
 run_mlr filter -v '$x =~ "^a.*"."d$"i' $indir/regex.dkvp
 
+run_mlr --csv filter '$text =~ "."'    $indir/dot-match.csv
+run_mlr --csv filter '$text =~ "\."'   $indir/dot-match.csv
+
 # ----------------------------------------------------------------
 announce DSL TYPED OVERLAY
 

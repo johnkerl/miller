@@ -28,6 +28,7 @@ EXTRA_DIST=	\
 		d.pprint \
 		date1.csv \
 		date2.csv \
+		dot-match.csv \
 		dots.pprint-crlf \
 		dots.xtab \
 		double-ps.dkvp \

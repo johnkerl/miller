@@ -482,13 +482,17 @@ char* mlr_alloc_double_backslash(char* input) {
 	for (p = input; *p; p++) {
 		input_length++;
 		if (*p == '\\') {
-			num_backslashes++;
+			if (p[1] != '.') {
+				num_backslashes++;
+			}
 		}
 	}
 	char* output = mlr_malloc_or_die(input_length + num_backslashes + 1);
 	for (p = input, q = output; *p; p++) {
 		if (*p == '\\') {
-			*(q++) = *p;
+			if (p[1] != '.') {
+				*(q++) = *p;
+			}
 			*(q++) = *p;
 		} else {
 			*(q++) = *p;
