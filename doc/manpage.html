@@ -350,12 +350,24 @@ OPTIONS
 
 	 --inidx   --onidx   --nidx	 Implicitly-integer-indexed fields
 					 (Unix-toolkit style).
+	 -T				 Synonymous with "--nidx --fs tab".
 
 	 --icsv    --ocsv    --csv	 Comma-separated value (or tab-separated
 					 with --fs tab, etc.)
 
 	 --itsv    --otsv    --tsv	 Keystroke-savers for "--icsv --ifs tab",
 					 "--ocsv --ofs tab", "--csv --fs tab".
+
+	 --icsvlite --ocsvlite --csvlite Comma-separated value (or tab-separated
+					 with --fs tab, etc.). The 'lite' CSV does not handle
+					 RFC-CSV double-quoting rules; is slightly faster;
+					 and handles heterogeneity in the input stream via
+					 empty newline followed by new header line. See also
+					 http://johnkerl.org/miller/doc/file-formats.html#CSV/TSV/etc.
+
+	 --itsvlite --otsvlite --tsvlite Keystroke-savers for "--icsvlite --ifs tab",
+					 "--ocsvlite --ofs tab", "--csvlite --fs tab".
+	 -t				 Synonymous with --tsvlite.
 
 	 --ipprint --opprint --pprint	 Pretty-printed tabular (produces no
 					 output until all input is in).
@@ -2273,7 +2285,7 @@ SEE ALSO
 
 
 
-				  2017-07-31			     MILLER(1)
+				  2017-10-18			     MILLER(1)
 </pre>
 </div>
 <p/>

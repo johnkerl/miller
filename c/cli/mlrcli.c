@@ -710,12 +710,24 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "\n");
 	fprintf(o, "  --inidx   --onidx   --nidx      Implicitly-integer-indexed fields\n");
 	fprintf(o, "                                  (Unix-toolkit style).\n");
+	fprintf(o, "  -T                              Synonymous with \"--nidx --fs tab\".\n");
 	fprintf(o, "\n");
 	fprintf(o, "  --icsv    --ocsv    --csv       Comma-separated value (or tab-separated\n");
 	fprintf(o, "                                  with --fs tab, etc.)\n");
 	fprintf(o, "\n");
 	fprintf(o, "  --itsv    --otsv    --tsv       Keystroke-savers for \"--icsv --ifs tab\",\n");
 	fprintf(o, "                                  \"--ocsv --ofs tab\", \"--csv --fs tab\".\n");
+	fprintf(o, "\n");
+	fprintf(o, "  --icsvlite --ocsvlite --csvlite Comma-separated value (or tab-separated\n");
+	fprintf(o, "                                  with --fs tab, etc.). The 'lite' CSV does not handle\n");
+	fprintf(o, "                                  RFC-CSV double-quoting rules; is slightly faster;\n");
+	fprintf(o, "                                  and handles heterogeneity in the input stream via\n");
+	fprintf(o, "                                  empty newline followed by new header line. See also\n");
+	fprintf(o, "                                  http://johnkerl.org/miller/doc/file-formats.html#CSV/TSV/etc.\n");
+	fprintf(o, "\n");
+	fprintf(o, "  --itsvlite --otsvlite --tsvlite Keystroke-savers for \"--icsvlite --ifs tab\",\n");
+	fprintf(o, "                                  \"--ocsvlite --ofs tab\", \"--csvlite --fs tab\".\n");
+	fprintf(o, "  -t                              Synonymous with --tsvlite.\n");
 	fprintf(o, "\n");
 	fprintf(o, "  --ipprint --opprint --pprint    Pretty-printed tabular (produces no\n");
 	fprintf(o, "                                  output until all input is in).\n");
@@ -1671,7 +1683,7 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 		pwriter_opts->ofs = "\t";
 		argi += 1;
 
-	} else if (streq(argv[argi], "--tsvlite")) {
+	} else if (streq(argv[argi], "--tsvlite") || streq(argv[argi], "-t")) {
 		preader_opts->ifile_fmt = pwriter_opts->ofile_fmt = "csvlite";
 		preader_opts->ifs = "\t";
 		pwriter_opts->ofs = "\t";
@@ -1690,6 +1702,13 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 	} else if (streq(argv[argi], "--nidx")) {
 		preader_opts->ifile_fmt = "nidx";
 		pwriter_opts->ofile_fmt = "nidx";
+		argi += 1;
+
+	} else if (streq(argv[argi], "-T")) {
+		preader_opts->ifile_fmt = "nidx";
+		pwriter_opts->ofile_fmt = "nidx";
+		preader_opts->ifs = "\t";
+		pwriter_opts->ofs = "\t";
 		argi += 1;
 
 	} else if (streq(argv[argi], "--xtab")) {
