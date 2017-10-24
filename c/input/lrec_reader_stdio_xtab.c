@@ -22,6 +22,7 @@ typedef struct _lrec_reader_stdio_xtab_state_t {
 	int    allow_repeat_ips;
 	int    do_auto_line_term;
 	int    at_eof;
+	char*  comment_string;
 	size_t line_length;
 } lrec_reader_stdio_xtab_state_t;
 
@@ -41,6 +42,7 @@ lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repe
 	pstate->allow_repeat_ips  = allow_repeat_ips;
 	pstate->do_auto_line_term = FALSE;
 	pstate->at_eof            = FALSE;
+	pstate->comment_string    = comment_string;
 	// This is used to track nominal line length over the file read. Bootstrap with a default length.
 	pstate->line_length       = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
 
@@ -81,11 +83,23 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 	slls_t* pxtab_lines = slls_alloc();
 
 	while (TRUE) {
-		char* line = (pstate->ifslen == 1)
-			? mlr_alloc_read_line_single_delimiter(input_stream, pstate->ifs[0],
-				&pstate->line_length, pstate->do_auto_line_term, pctx)
-			: mlr_alloc_read_line_multiple_delimiter(input_stream, pstate->ifs, pstate->ifslen,
-				&pstate->line_length);
+		char* line = NULL;
+
+		if (pstate->comment_string == NULL) {
+			if (pstate->ifslen == 1)
+				line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->ifs[0],
+					&pstate->line_length, pstate->do_auto_line_term, pctx);
+			else
+				line = mlr_alloc_read_line_multiple_delimiter(input_stream, pstate->ifs, pstate->ifslen,
+					&pstate->line_length);
+		} else {
+			if (pstate->ifslen == 1)
+				line = mlr_alloc_read_line_single_delimiter_stripping_comments(input_stream, pstate->ifs[0],
+					&pstate->line_length, pstate->do_auto_line_term, pstate->comment_string, pctx);
+			else
+				line = mlr_alloc_read_line_multiple_delimiter_stripping_comments(input_stream, pstate->ifs, pstate->ifslen,
+					&pstate->line_length, pstate->comment_string);
+		}
 
 		if (line == NULL) { // EOF
 			// EOF or blank line terminates the stanza.
