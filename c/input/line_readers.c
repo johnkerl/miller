@@ -126,3 +126,46 @@ char* mlr_alloc_read_line_multiple_delimiter(
 
 	return line;
 }
+
+// ----------------------------------------------------------------
+char* mlr_alloc_read_line_single_delimiter_stripping_comments(
+	FILE*      fp,
+	int        delimiter,
+	size_t*    pold_then_new_strlen,
+	int        do_auto_line_term,
+	char*      comment_string,
+	context_t* pctx)
+{
+	while (TRUE) {
+		char* line = mlr_alloc_read_line_single_delimiter(
+			fp, delimiter, pold_then_new_strlen, do_auto_line_term, pctx);
+		if (line == NULL) {
+			return line;
+		} else if (string_starts_with(line, comment_string)) {
+			free(line);
+		} else {
+			return line;
+		}
+	}
+}
+
+// ----------------------------------------------------------------
+char* mlr_alloc_read_line_multiple_delimiter_stripping_comments(
+	FILE*      fp,
+	char*      delimiter,
+	int        delimiter_length,
+	size_t*    pold_then_new_strlen,
+	char*      comment_string)
+{
+	while (TRUE) {
+		char* line = mlr_alloc_read_line_multiple_delimiter(
+			fp, delimiter, delimiter_length, pold_then_new_strlen);
+		if (line == NULL) {
+			return line;
+		} else if (string_starts_with(line, comment_string)) {
+			free(line);
+		} else {
+			return line;
+		}
+	}
+}

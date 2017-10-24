@@ -23,6 +23,8 @@ typedef struct _lrec_reader_mmap_dkvp_state_t {
 	int   ipslen;
 	int   allow_repeat_ifs;
 	int   do_auto_line_term;
+	char* comment_string;
+	int   comment_string_length;
 } lrec_reader_mmap_dkvp_state_t;
 
 static void    lrec_reader_mmap_dkvp_free(lrec_reader_t* preader);
@@ -32,6 +34,18 @@ static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_multi_others(void* pvsta
 static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx);
 
+static lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *phandle,
+	char irs, char ifs, char ips, lrec_reader_mmap_dkvp_state_t* pstate, context_t* pctx);
+
+static lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *phandle,
+	char irs, lrec_reader_mmap_dkvp_state_t* pstate, context_t* pctx);
+
+static lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *phandle,
+	char ifs, char ips, lrec_reader_mmap_dkvp_state_t* pstate, context_t* pctx);
+
+static lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *phandle,
+	lrec_reader_mmap_dkvp_state_t* pstate, context_t* pctx);
+
 // ----------------------------------------------------------------
 lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs,
 	char* comment_string)
@@ -39,14 +53,17 @@ lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int 
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_dkvp_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_dkvp_state_t));
-	pstate->irs              = irs;
-	pstate->ifs              = ifs;
-	pstate->ips              = ips;
-	pstate->irslen           = strlen(irs);
-	pstate->ifslen           = strlen(ifs);
-	pstate->ipslen           = strlen(ips);
-	pstate->allow_repeat_ifs = allow_repeat_ifs;
-	pstate->do_auto_line_term      = FALSE;
+	pstate->irs                   = irs;
+	pstate->ifs                   = ifs;
+	pstate->ips                   = ips;
+	pstate->irslen                = strlen(irs);
+	pstate->ifslen                = strlen(ifs);
+	pstate->ipslen                = strlen(ips);
+	pstate->allow_repeat_ifs      = allow_repeat_ifs;
+	pstate->do_auto_line_term     = FALSE;
+	pstate->comment_string        = comment_string;
+	pstate->comment_string_length = comment_string == NULL ? 0 : strlen(comment_string);
+
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
@@ -94,7 +111,7 @@ static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_single_others(void* pvst
 		return NULL;
 	else
 		return lrec_parse_mmap_dkvp_single_irs_single_others(phandle, pstate->irs[0], pstate->ifs[0], pstate->ips[0],
-			pstate->allow_repeat_ifs, pstate->do_auto_line_term, pctx);
+			pstate, pctx);
 }
 
 static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -103,8 +120,7 @@ static lrec_t* lrec_reader_mmap_dkvp_process_single_irs_multi_others(void* pvsta
 	if (phandle->sol >= phandle->eof)
 		return NULL;
 	else
-		return lrec_parse_mmap_dkvp_single_irs_multi_others(phandle, pstate->irs[0], pstate->ifs, pstate->ips,
-			pstate->ifslen, pstate->ipslen, pstate->allow_repeat_ifs, pstate->do_auto_line_term, pctx);
+		return lrec_parse_mmap_dkvp_single_irs_multi_others(phandle, pstate->irs[0], pstate, pctx);
 }
 
 static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -113,8 +129,8 @@ static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_single_others(void* pvsta
 	if (phandle->sol >= phandle->eof)
 		return NULL;
 	else
-		return lrec_parse_mmap_dkvp_multi_irs_single_others(phandle, pstate->irs, pstate->ifs[0], pstate->ips[0],
-			pstate->irslen, pstate->allow_repeat_ifs, pctx);
+		return lrec_parse_mmap_dkvp_multi_irs_single_others(phandle, pstate->ifs[0], pstate->ips[0],
+			pstate, pctx);
 }
 
 static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -123,21 +139,36 @@ static lrec_t* lrec_reader_mmap_dkvp_process_multi_irs_multi_others(void* pvstat
 	if (phandle->sol >= phandle->eof)
 		return NULL;
 	else
-		return lrec_parse_mmap_dkvp_multi_irs_multi_others(phandle, pstate->irs, pstate->ifs, pstate->ips,
-			pstate->irslen, pstate->ifslen, pstate->ipslen, pstate->allow_repeat_ifs, pctx);
+		return lrec_parse_mmap_dkvp_multi_irs_multi_others(phandle, pstate, pctx);
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *phandle,
-	char irs, char ifs, char ips, int allow_repeat_ifs, int do_auto_line_term, context_t* pctx)
+static lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *phandle,
+	char irs, char ifs, char ips, lrec_reader_mmap_dkvp_state_t* pstate, context_t* pctx)
 {
-	lrec_t* prec = lrec_unbacked_alloc();
+	// Skip comment lines
+	if (pstate->comment_string != NULL) {
+		while ((phandle->eof - phandle->sol) >= pstate->comment_string_length
+		&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
+		{
+			phandle->sol += pstate->comment_string_length;
+			while (phandle->sol < phandle->eof && *phandle->sol != irs) {
+				phandle->sol++;
+			}
+			if (phandle->sol < phandle->eof && *phandle->sol == irs) {
+				phandle->sol++;
+			}
+		}
+	}
+	if (phandle->sol >= phandle->eof)
+		return NULL;
 
 	char* line  = phandle->sol;
+	lrec_t* prec = lrec_unbacked_alloc();
 
 	int idx = 0;
 	char* p = line;
-	if (allow_repeat_ifs) {
+	if (pstate->allow_repeat_ifs) {
 		while (*p == ifs)
 			p++;
 	}
@@ -151,7 +182,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 		if (*p == irs) {
 			*p = 0;
 
-			if (do_auto_line_term) {
+			if (pstate->do_auto_line_term) {
 				if (p > line && p[-1] == '\r') {
 					p[-1] = 0;
 					context_set_autodetected_crlf(pctx);
@@ -180,7 +211,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 			}
 
 			p++;
-			if (allow_repeat_ifs) {
+			if (pstate->allow_repeat_ifs) {
 				while (*p == ifs)
 					p++;
 			}
@@ -199,7 +230,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 		phandle->sol = p+1;
 	idx++;
 
-	if (allow_repeat_ifs && *key == 0 && *value == 0)
+	if (pstate->allow_repeat_ifs && *key == 0 && *value == 0)
 		return prec;
 
 	// There are two ways out of that loop: saw IRS, or saw end of file.
@@ -246,16 +277,32 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_state_t *
 	return prec;
 }
 
-lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *phandle,
-	char* irs, char ifs, char ips, int irslen, int allow_repeat_ifs, context_t* pctx)
+static lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *phandle,
+	char ifs, char ips, lrec_reader_mmap_dkvp_state_t* pstate, context_t* pctx)
 {
-	lrec_t* prec = lrec_unbacked_alloc();
+	// Skip comment lines
+	if (pstate->comment_string != NULL) {
+		while ((phandle->eof - phandle->sol) >= pstate->comment_string_length
+		&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
+		{
+			phandle->sol += pstate->comment_string_length;
+			while ((phandle->eof - phandle->sol) >= pstate->irslen && !streqn(phandle->sol, pstate->irs, pstate->irslen)) {
+				phandle->sol++;
+			}
+			if ((phandle->eof - phandle->sol) >= pstate->irslen && streqn(phandle->sol, pstate->irs, pstate->irslen)) {
+				phandle->sol += pstate->irslen;
+			}
+		}
+	}
+	if (phandle->sol >= phandle->eof)
+		return NULL;
 
 	char* line  = phandle->sol;
+	lrec_t* prec = lrec_unbacked_alloc();
 
 	int idx = 0;
 	char* p = line;
-	if (allow_repeat_ifs) {
+	if (pstate->allow_repeat_ifs) {
 		while (*p == ifs)
 			p++;
 	}
@@ -266,9 +313,9 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 	int saw_rs = FALSE;
 
 	for ( ; p < phandle->eof && *p; ) {
-		if (streqn(p, irs, irslen)) {
+		if (streqn(p, pstate->irs, pstate->irslen)) {
 			*p = 0;
-			phandle->sol = p + irslen;
+			phandle->sol = p + pstate->irslen;
 			saw_rs = TRUE;
 			break;
 		} else if (*p == ifs) {
@@ -288,7 +335,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 			}
 
 			p++;
-			if (allow_repeat_ifs) {
+			if (pstate->allow_repeat_ifs) {
 				while (*p == ifs)
 					p++;
 			}
@@ -307,7 +354,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 		phandle->sol = p+1;
 	idx++;
 
-	if (allow_repeat_ifs && *key == 0 && *value == 0)
+	if (pstate->allow_repeat_ifs && *key == 0 && *value == 0)
 		return prec;
 
 	// There are two ways out of that loop: saw IRS, or saw end of file.
@@ -354,18 +401,34 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_state_t *p
 	return prec;
 }
 
-lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *phandle, char irs, char* ifs, char* ips,
-	int ifslen, int ipslen, int allow_repeat_ifs, int do_auto_line_term, context_t* pctx)
+static lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *phandle, char irs,
+	lrec_reader_mmap_dkvp_state_t* pstate, context_t* pctx)
 {
-	lrec_t* prec = lrec_unbacked_alloc();
+	// Skip comment lines
+	if (pstate->comment_string != NULL) {
+		while ((phandle->eof - phandle->sol) >= pstate->comment_string_length
+		&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
+		{
+			phandle->sol += pstate->comment_string_length;
+			while (phandle->sol < phandle->eof && *phandle->sol != irs) {
+				phandle->sol++;
+			}
+			if (phandle->sol < phandle->eof && *phandle->sol == irs) {
+				phandle->sol++;
+			}
+		}
+	}
+	if (phandle->sol >= phandle->eof)
+		return NULL;
 
 	char* line  = phandle->sol;
+	lrec_t* prec = lrec_unbacked_alloc();
 
 	int idx = 0;
 	char* p = line;
-	if (allow_repeat_ifs) {
-		while (streqn(p, ifs, ifslen))
-			p += ifslen;
+	if (pstate->allow_repeat_ifs) {
+		while (streqn(p, pstate->ifs, pstate->ifslen))
+			p += pstate->ifslen;
 	}
 	char* key   = p;
 	char* value = p;
@@ -377,7 +440,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 		if (*p == irs) {
 			*p = 0;
 
-			if (do_auto_line_term) {
+			if (pstate->do_auto_line_term) {
 				if (p > line && p[-1] == '\r') {
 					p[-1] = 0;
 					context_set_autodetected_crlf(pctx);
@@ -389,7 +452,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 			phandle->sol = p+1;
 			saw_rs = TRUE;
 			break;
-		} else if (streqn(p, ifs, ifslen)) {
+		} else if (streqn(p, pstate->ifs, pstate->ifslen)) {
 			saw_ps = FALSE;
 			*p = 0;
 
@@ -405,16 +468,16 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 				lrec_put(prec, key, value, NO_FREE);
 			}
 
-			p += ifslen;
-			if (allow_repeat_ifs) {
-				while (streqn(p, ifs, ifslen))
-					p += ifslen;
+			p += pstate->ifslen;
+			if (pstate->allow_repeat_ifs) {
+				while (streqn(p, pstate->ifs, pstate->ifslen))
+					p += pstate->ifslen;
 			}
 			key = p;
 			value = p;
-		} else if (streqn(p, ips, ipslen) && !saw_ps) {
+		} else if (streqn(p, pstate->ips, pstate->ipslen) && !saw_ps) {
 			*p = 0;
-			p += ipslen;
+			p += pstate->ipslen;
 			value = p;
 			saw_ps = TRUE;
 		} else {
@@ -426,7 +489,7 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 		phandle->sol = p+1;
 	idx++;
 
-	if (allow_repeat_ifs && *key == 0 && *value == 0)
+	if (pstate->allow_repeat_ifs && *key == 0 && *value == 0)
 		return prec;
 
 	// There are two ways out of that loop: saw IRS, or saw end of file.
@@ -473,18 +536,34 @@ lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_state_t *p
 	return prec;
 }
 
-lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *phandle,
-	char* irs, char* ifs, char* ips, int irslen, int ifslen, int ipslen, int allow_repeat_ifs, context_t* pctx)
+static lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *phandle,
+	lrec_reader_mmap_dkvp_state_t* pstate, context_t* pctx)
 {
-	lrec_t* prec = lrec_unbacked_alloc();
+	// Skip comment lines
+	if (pstate->comment_string != NULL) {
+		while ((phandle->eof - phandle->sol) >= pstate->comment_string_length
+		&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
+		{
+			phandle->sol += pstate->comment_string_length;
+			while ((phandle->eof - phandle->sol) >= pstate->irslen && !streqn(phandle->sol, pstate->irs, pstate->irslen)) {
+				phandle->sol++;
+			}
+			if ((phandle->eof - phandle->sol) >= pstate->irslen && streqn(phandle->sol, pstate->irs, pstate->irslen)) {
+				phandle->sol += pstate->irslen;
+			}
+		}
+	}
+	if (phandle->sol >= phandle->eof)
+		return NULL;
 
 	char* line  = phandle->sol;
+	lrec_t* prec = lrec_unbacked_alloc();
 
 	int idx = 0;
 	char* p = line;
-	if (allow_repeat_ifs) {
-		while (streqn(p, ifs, ifslen))
-			p += ifslen;
+	if (pstate->allow_repeat_ifs) {
+		while (streqn(p, pstate->ifs, pstate->ifslen))
+			p += pstate->ifslen;
 	}
 	char* key   = p;
 	char* value = p;
@@ -493,12 +572,12 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 	int saw_rs = FALSE;
 
 	for ( ; p < phandle->eof && *p; ) {
-		if (streqn(p, irs, irslen)) {
+		if (streqn(p, pstate->irs, pstate->irslen)) {
 			*p = 0;
-			phandle->sol = p + irslen;
+			phandle->sol = p + pstate->irslen;
 			saw_rs = TRUE;
 			break;
-		} else if (streqn(p, ifs, ifslen)) {
+		} else if (streqn(p, pstate->ifs, pstate->ifslen)) {
 			saw_ps = FALSE;
 			*p = 0;
 
@@ -514,16 +593,16 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 				lrec_put(prec, key, value, NO_FREE);
 			}
 
-			p += ifslen;
-			if (allow_repeat_ifs) {
-				while (streqn(p, ifs, ifslen))
-					p += ifslen;
+			p += pstate->ifslen;
+			if (pstate->allow_repeat_ifs) {
+				while (streqn(p, pstate->ifs, pstate->ifslen))
+					p += pstate->ifslen;
 			}
 			key = p;
 			value = p;
-		} else if (streqn(p, ips, ipslen) && !saw_ps) {
+		} else if (streqn(p, pstate->ips, pstate->ipslen) && !saw_ps) {
 			*p = 0;
-			p += ipslen;
+			p += pstate->ipslen;
 			value = p;
 			saw_ps = TRUE;
 		} else {
@@ -534,7 +613,7 @@ lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_state_t *ph
 		phandle->sol = p+1;
 	idx++;
 
-	if (allow_repeat_ifs && *key == 0 && *value == 0)
+	if (pstate->allow_repeat_ifs && *key == 0 && *value == 0)
 		return prec;
 
 	// There are two ways out of that loop: saw IRS, or saw end of file.

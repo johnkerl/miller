@@ -23,6 +23,7 @@ typedef struct _lrec_reader_stdio_dkvp_state_t {
 	int    ifslen;
 	int    ipslen;
 	int    allow_repeat_ifs;
+	char*  comment_string;
 	size_t line_length;
 } lrec_reader_stdio_dkvp_state_t;
 
@@ -55,6 +56,7 @@ lrec_reader_t* lrec_reader_stdio_dkvp_alloc(char* irs, char* ifs, char* ips, int
 	pstate->ifslen           = strlen(ifs);
 	pstate->ipslen           = strlen(ips);
 	pstate->allow_repeat_ifs = allow_repeat_ifs;
+	pstate->comment_string   = comment_string;
 	// This is used to track nominal line length over the file read. Bootstrap with a default length.
 	pstate->line_length      = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
 
@@ -102,8 +104,11 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others_auto_line
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
 
-	char* line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
-		&pstate->line_length, TRUE, pctx);
+	char* line = pstate->comment_string == NULL
+		? mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
+			&pstate->line_length, TRUE, pctx)
+		: mlr_alloc_read_line_single_delimiter_stripping_comments(input_stream, pstate->irs[0],
+			&pstate->line_length, TRUE, pstate->comment_string, pctx);
 
 	if (line == NULL) {
 		return NULL;
@@ -118,8 +123,10 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_line_
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
 
-	char* line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
-		&pstate->line_length, TRUE, pctx);
+	char* line = pstate->comment_string == NULL
+		? mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0], &pstate->line_length, TRUE, pctx)
+		: mlr_alloc_read_line_single_delimiter_stripping_comments(input_stream, pstate->irs[0], &pstate->line_length,
+			TRUE, pstate->comment_string, pctx);
 	if (line == NULL) {
 		return NULL;
 	} else {
@@ -131,8 +138,10 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others_auto_line_
 static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
-	char* line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
-		&pstate->line_length, FALSE, pctx);
+	char* line = pstate->comment_string == NULL
+		? mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0], &pstate->line_length, FALSE, pctx)
+		: mlr_alloc_read_line_single_delimiter_stripping_comments(input_stream, pstate->irs[0], &pstate->line_length,
+			FALSE, pstate->comment_string, pctx);
 	if (line == NULL)
 		return NULL;
 	else
@@ -142,8 +151,11 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_single_others(void* pvs
 static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx) {
 	FILE* input_stream = pvhandle;
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
-	char* line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
-		&pstate->line_length, FALSE, pctx);
+	char* line = pstate->comment_string == NULL
+		? mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
+			&pstate->line_length, FALSE, pctx)
+		: mlr_alloc_read_line_single_delimiter_stripping_comments(input_stream, pstate->irs[0],
+			&pstate->line_length, FALSE, pstate->comment_string, pctx);
 	if (line == NULL)
 		return NULL;
 	else
@@ -154,8 +166,11 @@ static lrec_t* lrec_reader_stdio_dkvp_process_single_irs_multi_others(void* pvst
 static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_single_others(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
 	FILE* input_stream = pvhandle;
-	char* line = mlr_alloc_read_line_multiple_delimiter(input_stream, pstate->irs, pstate->irslen,
-		&pstate->line_length);
+	char* line = pstate->comment_string == NULL
+		? mlr_alloc_read_line_multiple_delimiter(input_stream, pstate->irs, pstate->irslen,
+			&pstate->line_length)
+		: mlr_alloc_read_line_multiple_delimiter_stripping_comments(input_stream, pstate->irs, pstate->irslen,
+			&pstate->line_length, pstate->comment_string);
 	if (line == NULL)
 		return NULL;
 	else
@@ -165,8 +180,11 @@ static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_single_others(void* pvst
 static lrec_t* lrec_reader_stdio_dkvp_process_multi_irs_multi_others(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_stdio_dkvp_state_t* pstate = pvstate;
 	FILE* input_stream = pvhandle;
-	char* line = mlr_alloc_read_line_multiple_delimiter(input_stream, pstate->irs, pstate->irslen,
-		&pstate->line_length);
+	char* line = pstate->comment_string == NULL
+		? mlr_alloc_read_line_multiple_delimiter(input_stream, pstate->irs, pstate->irslen,
+			&pstate->line_length)
+		: mlr_alloc_read_line_multiple_delimiter_stripping_comments(input_stream, pstate->irs, pstate->irslen,
+			&pstate->line_length, pstate->comment_string);
 	if (line == NULL)
 		return NULL;
 	else
