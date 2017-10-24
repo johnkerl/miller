@@ -20,6 +20,8 @@ typedef struct _lrec_reader_mmap_xtab_state_t {
 	int   ipslen;
 	int   allow_repeat_ips;
 	int   do_auto_line_term;
+	char* comment_string;
+	int   comment_string_length;
 } lrec_reader_mmap_xtab_state_t;
 
 static void    lrec_reader_mmap_xtab_free(lrec_reader_t* preader);
@@ -30,7 +32,7 @@ static lrec_t* lrec_reader_mmap_xtab_process_multi_ifs_single_ips(void* pvstate,
 static lrec_t* lrec_reader_mmap_xtab_process_multi_ifs_multi_ips(void* pvstate, void* pvhandle, context_t* pctx);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_mmap_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips) {
+lrec_reader_t* lrec_reader_mmap_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips, char* comment_string) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_xtab_state_t));
@@ -40,6 +42,9 @@ lrec_reader_t* lrec_reader_mmap_xtab_alloc(char* ifs, char* ips, int allow_repea
 	pstate->ipslen              = strlen(pstate->ips);
 	pstate->allow_repeat_ips    = allow_repeat_ips;
 	pstate->do_auto_line_term   = FALSE;
+	pstate->comment_string      = comment_string;
+	pstate->comment_string_length = comment_string == NULL ? 0 : strlen(comment_string);
+
 
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;

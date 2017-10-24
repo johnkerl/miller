@@ -31,6 +31,7 @@
 #define DEFAULT_OQUOTING                 QUOTE_MINIMAL
 #define DEFAULT_JSON_FLATTEN_SEPARATOR   ":"
 #define DEFAULT_OOSVAR_FLATTEN_SEPARATOR ":"
+#define DEFAULT_COMMENT_STRING           "#"
 
 // ----------------------------------------------------------------
 static mapper_setup_t* mapper_lookup_table[] = {
@@ -1016,6 +1017,7 @@ void cli_reader_opts_init(cli_reader_opts_t* preader_opts) {
 	preader_opts->use_mmap_for_read              = NEITHER_TRUE_NOR_FALSE;
 
 	preader_opts->prepipe                        = NULL;
+	preader_opts->comment_string                 = NULL;
 
 	// xxx temp
 	preader_opts->generator_opts.field_name     = "i";
@@ -1474,6 +1476,15 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 		check_arg_count(argv, argi, argc, 2);
 		preader_opts->prepipe = argv[argi+1];
 		preader_opts->use_mmap_for_read = FALSE;
+		argi += 2;
+
+	} else if (streq(argv[argi], "--skip-comments")) {
+		preader_opts->comment_string = DEFAULT_COMMENT_STRING;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--skip-comments-with")) {
+		check_arg_count(argv, argi, argc, 2);
+		preader_opts->comment_string = argv[argi+1];
 		argi += 2;
 
 	}

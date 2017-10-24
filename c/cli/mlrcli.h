@@ -38,7 +38,9 @@ typedef struct _cli_reader_opts_t {
 
 	// Command for popen on input, e.g. "zcat -cf <". Can be null in which case
 	// files are read directly rather than through a pipe.
-	char*  prepipe;
+	char* prepipe;
+
+	char* comment_string;
 
 	// Fake internal-data-generator 'reader'
 	generator_opts_t generator_opts;
