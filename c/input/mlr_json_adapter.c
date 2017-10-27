@@ -271,3 +271,30 @@ static int populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, c
 	}
 	return TRUE;
 }
+
+// ----------------------------------------------------------------
+// * The buffer is an entire JSON blob, e.g. contents from stdio read or mmap; peof-psof is the file size so peof is one
+//   byte *after* the last valid file byte.
+// * The buffer is not assumed to be null-terminated.
+// * Any lines beginning with comment_string are modified by poking space characters up to line_term.
+void mlr_json_strip_comments(char* psof, char* peof, char* comment_string, char* line_term) {
+	int comment_string_len = strlen(comment_string);
+	int line_term_len = strlen(line_term);
+	int at_line_start = TRUE;
+	for (char* p = psof; p < peof; /* increment in loop */) {
+		if (streqn(p, line_term, line_term_len)) {
+			p += line_term_len;
+			at_line_start = TRUE;
+		} else if (at_line_start && streqn(p, comment_string, comment_string_len)) {
+			// Fill with spaces to end of line
+			while (p < peof && !streqn(p, line_term, line_term_len)) {
+				*p = ' ';
+				p++;
+			}
+			at_line_start = TRUE;
+		} else {
+			at_line_start = FALSE;
+			p++;
+		}
+	}
+}

@@ -36,8 +36,10 @@ typedef struct _lrec_reader_mmap_json_state_t {
 	sllv_t* precords;
 	char* input_json_flatten_separator;
 	json_array_ingest_t json_array_ingest;
+	char* specified_line_term;
 	int do_auto_line_term;
 	char* detected_line_term;
+	char* comment_string;
 } lrec_reader_mmap_json_state_t;
 
 static void    lrec_reader_mmap_json_free(lrec_reader_t* preader);
@@ -46,7 +48,7 @@ static lrec_t* lrec_reader_mmap_json_process(void* pvstate, void* pvhandle, cont
 
 // ----------------------------------------------------------------
 lrec_reader_t* lrec_reader_mmap_json_alloc(char* input_json_flatten_separator, json_array_ingest_t json_array_ingest,
-	char* line_term)
+	char* line_term, char* comment_string)
 {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
@@ -55,8 +57,10 @@ lrec_reader_t* lrec_reader_mmap_json_alloc(char* input_json_flatten_separator, j
 	pstate->precords                      = sllv_alloc();
 	pstate->input_json_flatten_separator  = input_json_flatten_separator;
 	pstate->json_array_ingest             = json_array_ingest;
+	pstate->specified_line_term           = line_term;
 	pstate->do_auto_line_term             = FALSE;
 	pstate->detected_line_term            = "\n"; // xxx adapt to MLR_GLOBALS/ctx-const for Windows port
+	pstate->comment_string                = comment_string;
 
 	if (streq(line_term, "auto")) {
 		pstate->do_auto_line_term = TRUE;
@@ -146,6 +150,15 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 					}
 				}
 			}
+		}
+
+		// Skip comments. For JSON, we ingest the entire blob, this is a matter of finding and iterating over lines.
+		// Miller data comments must be at start of line.
+		if (pstate->comment_string != NULL) {
+			char* line_term = pstate->specified_line_term;
+			if (pstate->do_auto_line_term && detected_line_term != NULL)
+				line_term = detected_line_term;
+			mlr_json_strip_comments(item_start, item_start + length, pstate->comment_string, line_term);
 		}
 
 		parsed_top_level_json = json_parse(item_start, length, error_buf, &item_start);

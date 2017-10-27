@@ -41,10 +41,10 @@ lrec_reader_t*  lrec_reader_alloc(cli_reader_opts_t* popts) {
 	} else if (streq(popts->ifile_fmt, "json")) {
 		if (popts->use_mmap_for_read)
 			return lrec_reader_mmap_json_alloc(popts->input_json_flatten_separator,
-				popts->json_array_ingest, popts->irs);
+				popts->json_array_ingest, popts->irs, popts->comment_string);
 		else
 			return lrec_reader_stdio_json_alloc(popts->input_json_flatten_separator,
-				popts->json_array_ingest, popts->irs);
+				popts->json_array_ingest, popts->irs, popts->comment_string);
 	} else {
 		return NULL;
 	}
