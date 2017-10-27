@@ -57,6 +57,9 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	char* ifs_eof;
 	char* ifs;
 	int   do_auto_line_term;
+	char* comment_string;
+	int   comment_string_length;
+
 	char* dquote;
 	char* dquote_irs;
 	char* dquote_irs2;
@@ -104,6 +107,9 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implici
 		irs = "\n";
 		pstate->do_auto_line_term = TRUE;
 	}
+
+	pstate->comment_string = comment_string;
+	pstate->comment_string_length = comment_string == NULL ? 0 : strlen(comment_string);
 
 	pstate->eof           = "\xff";
 	pstate->irs           = irs;
@@ -195,49 +201,74 @@ static void lrec_reader_stdio_csv_sof(void* pvstate, void* pvhandle) {
 static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, context_t* pctx) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 
+	// Ingest the next header line, if expected
 	if (pstate->expect_header_line_next) {
-		if (!lrec_reader_stdio_csv_get_fields(pstate, pstate->pfields, pctx))
-			return NULL;
-		pstate->ilno++;
+		while (TRUE) {
+			if (!lrec_reader_stdio_csv_get_fields(pstate, pstate->pfields, pctx))
+				return NULL;
+			pstate->ilno++;
 
-		slls_t* pheader_fields = slls_alloc();
-		int i = 0;
-		for (rsllse_t* pe = pstate->pfields->phead; i < pstate->pfields->length && pe != NULL; pe = pe->pnext) {
-			if (*pe->value == 0) {
-				fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
-					MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
-				exit(1);
+			if (pstate->comment_string != NULL) {
+				if (pstate->pfields->phead != NULL) {
+					if (streqn(pstate->pfields->phead->value, pstate->comment_string, pstate->comment_string_length)) {
+						rslls_reset(pstate->pfields);
+						continue;
+					}
+				}
 			}
-			// Transfer pointer-free responsibility from the rslls to the
-			// header fields in the header keeper
-			if (string_starts_with(pe->value, "\xef\xbb\xbf")) {
-				// Strip UTF-8 BOM if any
-				slls_append(pheader_fields, mlr_strdup_or_die(&pe->value[3]), FREE_ENTRY_VALUE);
-				if (pe->free_flag & FREE_ENTRY_VALUE)
-					free(pe->value);
-			} else {
-				slls_append(pheader_fields, pe->value, pe->free_flag);
+
+			slls_t* pheader_fields = slls_alloc();
+			int i = 0;
+			for (rsllse_t* pe = pstate->pfields->phead; i < pstate->pfields->length && pe != NULL; pe = pe->pnext) {
+				if (*pe->value == 0) {
+					fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
+						MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
+					exit(1);
+				}
+				// Transfer pointer-free responsibility from the rslls to the
+				// header fields in the header keeper
+				if (string_starts_with(pe->value, "\xef\xbb\xbf")) {
+					// Strip UTF-8 BOM if any
+					slls_append(pheader_fields, mlr_strdup_or_die(&pe->value[3]), FREE_ENTRY_VALUE);
+					if (pe->free_flag & FREE_ENTRY_VALUE)
+						free(pe->value);
+				} else {
+					slls_append(pheader_fields, pe->value, pe->free_flag);
+				}
+				pe->free_flag = 0;
 			}
-			pe->free_flag = 0;
-		}
-		rslls_reset(pstate->pfields);
+			rslls_reset(pstate->pfields);
 
-		pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
-		if (pstate->pheader_keeper == NULL) {
-			pstate->pheader_keeper = header_keeper_alloc(NULL, pheader_fields);
-			lhmslv_put(pstate->pheader_keepers, pheader_fields, pstate->pheader_keeper,
-				NO_FREE); // freed by header-keeper
-		} else { // Re-use the header-keeper in the header cache
-			slls_free(pheader_fields);
-		}
+			pstate->pheader_keeper = lhmslv_get(pstate->pheader_keepers, pheader_fields);
+			if (pstate->pheader_keeper == NULL) {
+				pstate->pheader_keeper = header_keeper_alloc(NULL, pheader_fields);
+				lhmslv_put(pstate->pheader_keepers, pheader_fields, pstate->pheader_keeper,
+					NO_FREE); // freed by header-keeper
+			} else { // Re-use the header-keeper in the header cache
+				slls_free(pheader_fields);
+			}
 
-		pstate->expect_header_line_next = FALSE;
+			pstate->expect_header_line_next = FALSE;
+			break;
+		}
 	}
-	int rc = lrec_reader_stdio_csv_get_fields(pstate, pstate->pfields, pctx);
-	pstate->ilno++;
-	if (rc == FALSE) // EOF
-		return NULL;
-	else {
+
+	// Ingest the next data line, if expected
+	while (TRUE) {
+		int rc = lrec_reader_stdio_csv_get_fields(pstate, pstate->pfields, pctx);
+		pstate->ilno++;
+		if (rc == FALSE) // EOF
+			return NULL;
+
+		if (pstate->comment_string != NULL) {
+			if (pstate->pfields->phead != NULL) {
+				if (streqn(pstate->pfields->phead->value, pstate->comment_string, pstate->comment_string_length)) {
+					rslls_reset(pstate->pfields);
+					continue;
+				}
+			}
+		}
+
 		lrec_t* prec =  pstate->use_implicit_header
 			? paste_indices_and_data(pstate, pstate->pfields, pctx)
 			: paste_header_and_data(pstate, pstate->pfields, pctx);
