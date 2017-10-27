@@ -40,6 +40,7 @@ catc0
 catm
 gmon.out
 *.o
+*.pyc
 .swp
 .swo
 .*.swp
