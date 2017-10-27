@@ -45,7 +45,6 @@ lrec_reader_t* lrec_reader_mmap_xtab_alloc(char* ifs, char* ips, int allow_repea
 	pstate->comment_string      = comment_string;
 	pstate->comment_string_length = comment_string == NULL ? 0 : strlen(comment_string);
 
-
 	plrec_reader->pvstate       = (void*)pstate;
 	plrec_reader->popen_func    = file_reader_mmap_vopen;
 	plrec_reader->pclose_func   = file_reader_mmap_vclose;
