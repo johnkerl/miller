@@ -64,10 +64,9 @@ lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int 
 	pstate->comment_string        = comment_string;
 	pstate->comment_string_length = comment_string == NULL ? 0 : strlen(comment_string);
 
-
-	plrec_reader->pvstate       = (void*)pstate;
-	plrec_reader->popen_func    = file_reader_mmap_vopen;
-	plrec_reader->pclose_func   = file_reader_mmap_vclose;
+	plrec_reader->pvstate     = (void*)pstate;
+	plrec_reader->popen_func  = file_reader_mmap_vopen;
+	plrec_reader->pclose_func = file_reader_mmap_vclose;
 	if (streq(irs, "auto")) {
 		// Auto means either lines end in "\n" or "\r\n" (LF or CRLF).  In
 		// either case the final character is "\n". Then for autodetect we

@@ -57,15 +57,6 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs_implicit_header(header_keep
 lrec_t* lrec_parse_stdio_xtab_single_ips(slls_t* pxtab_lines, char ips, int allow_repeat_ips);
 lrec_t* lrec_parse_stdio_xtab_multi_ips(slls_t* pxtab_lines, char* ips, int ipslen, int allow_repeat_ips);
 
-lrec_t* lrec_parse_mmap_nidx_single_irs_single_ifs(file_reader_mmap_state_t *phandle,
-	char irs, char ifs, int allow_repeat_ifs, int do_auto_line_term, context_t* pctx);
-lrec_t* lrec_parse_mmap_nidx_single_irs_multi_ifs(file_reader_mmap_state_t *phandle,
-	char irs, char* ifs, int ifslen, int allow_repeat_ifs, int do_auto_line_term, context_t* pctx);
-lrec_t* lrec_parse_mmap_nidx_multi_irs_single_ifs(file_reader_mmap_state_t *phandle,
-	char* irs, char ifs, int irslen, int allow_repeat_ifs);
-lrec_t* lrec_parse_mmap_nidx_multi_irs_multi_ifs(file_reader_mmap_state_t *phandle,
-	char* irs, char* ifs, int irslen, int ifslen, int allow_repeat_ifs);
-
 lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* phandle, char ifs, char ips, int allow_repeat_ips,
 	int do_auto_line_term, context_t* pctx);
 lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phandle, char ifs, char* ips, int ipslen, int allow_repeat_ips,
