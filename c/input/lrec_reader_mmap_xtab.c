@@ -31,6 +31,18 @@ static lrec_t* lrec_reader_mmap_xtab_process_single_ifs_multi_ips(void* pvstate,
 static lrec_t* lrec_reader_mmap_xtab_process_multi_ifs_single_ips(void* pvstate, void* pvhandle, context_t* pctx);
 static lrec_t* lrec_reader_mmap_xtab_process_multi_ifs_multi_ips(void* pvstate, void* pvhandle, context_t* pctx);
 
+static lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* phandle, char ifs, char ips,
+	lrec_reader_mmap_xtab_state_t* pstate, context_t* pctx);
+
+static lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phandle, char ifs,
+	lrec_reader_mmap_xtab_state_t* pstate, context_t* pctx);
+
+static lrec_t* lrec_parse_mmap_xtab_multi_ifs_single_ips(file_reader_mmap_state_t* phandle, char ips,
+	lrec_reader_mmap_xtab_state_t* pstate);
+
+static lrec_t* lrec_parse_mmap_xtab_multi_ifs_multi_ips(file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_xtab_state_t* pstate);
+
 // ----------------------------------------------------------------
 lrec_reader_t* lrec_reader_mmap_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips, char* comment_string) {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
@@ -93,7 +105,7 @@ static lrec_t* lrec_reader_mmap_xtab_process_single_ifs_single_ips(void* pvstate
 		return NULL;
 	else
 		return lrec_parse_mmap_xtab_single_ifs_single_ips(phandle, pstate->ifs[0], pstate->ips[0],
-			pstate->allow_repeat_ips, pstate->do_auto_line_term, pctx);
+			pstate, pctx);
 }
 
 static lrec_t* lrec_reader_mmap_xtab_process_single_ifs_multi_ips(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -102,8 +114,7 @@ static lrec_t* lrec_reader_mmap_xtab_process_single_ifs_multi_ips(void* pvstate,
 	if (phandle->sol >= phandle->eof)
 		return NULL;
 	else
-		return lrec_parse_mmap_xtab_single_ifs_multi_ips(phandle, pstate->ifs[0], pstate->ips, pstate->ipslen,
-			pstate->allow_repeat_ips, pstate->do_auto_line_term, pctx);
+		return lrec_parse_mmap_xtab_single_ifs_multi_ips(phandle, pstate->ifs[0], pstate, pctx);
 }
 
 static lrec_t* lrec_reader_mmap_xtab_process_multi_ifs_single_ips(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -112,8 +123,7 @@ static lrec_t* lrec_reader_mmap_xtab_process_multi_ifs_single_ips(void* pvstate,
 	if (phandle->sol >= phandle->eof)
 		return NULL;
 	else
-		return lrec_parse_mmap_xtab_multi_ifs_single_ips(phandle, pstate->ifs, pstate->ips[0], pstate->ifslen,
-			pstate->allow_repeat_ips);
+		return lrec_parse_mmap_xtab_multi_ifs_single_ips(phandle, pstate->ips[0], pstate);
 }
 
 static lrec_t* lrec_reader_mmap_xtab_process_multi_ifs_multi_ips(void* pvstate, void* pvhandle, context_t* pctx) {
@@ -122,15 +132,17 @@ static lrec_t* lrec_reader_mmap_xtab_process_multi_ifs_multi_ips(void* pvstate, 
 	if (phandle->sol >= phandle->eof)
 		return NULL;
 	else
-		return lrec_parse_mmap_xtab_multi_ifs_multi_ips(phandle, pstate->ifs, pstate->ips, pstate->ifslen,
-			pstate->ipslen, pstate->allow_repeat_ips);
+		return lrec_parse_mmap_xtab_multi_ifs_multi_ips(phandle, pstate);
 }
 
 // ----------------------------------------------------------------
-lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* phandle, char ifs, char ips,
-	int allow_repeat_ips, int do_auto_line_term, context_t* pctx)
+static lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* phandle, char ifs, char ips,
+	lrec_reader_mmap_xtab_state_t* pstate, context_t* pctx)
 {
-	if (do_auto_line_term) {
+	char* comment_string = pstate->comment_string;
+	int comment_string_length = pstate->comment_string_length;
+
+	if (pstate->do_auto_line_term) {
 		// Skip over otherwise empty LF-only or CRLF-only lines.
 		while (phandle->sol < phandle->eof) {
 			if (*phandle->sol == '\n') {
@@ -149,10 +161,30 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 			}
 		}
 	} else {
-		// Skip over otherwise empty IRS-only lines.
-		while (phandle->sol < phandle->eof && *phandle->sol == ifs)
-			phandle->sol++;
+		// Skip over otherwise empty IFS-only lines, or comment lines
+		while (TRUE) {
+			int skipped_anything = FALSE;
+			if (phandle->sol < phandle->eof && *phandle->sol == ifs) {
+				skipped_anything = TRUE;
+				phandle->sol++;
+			}
+			if (comment_string != NULL) {
+				if (phandle->sol < phandle->eof && streqn(phandle->sol, comment_string, comment_string_length)) {
+					skipped_anything = TRUE;
+					phandle->sol += comment_string_length;
+					while (*phandle->sol != ifs) {
+						phandle->sol++;
+					}
+					if (*phandle->sol == ifs) {
+						phandle->sol++;
+					}
+				}
+			}
+			if (!skipped_anything)
+				break;
+		}
 	}
+	// xxx skip comments ...
 
 	if (phandle->sol >= phandle->eof)
 		return NULL;
@@ -161,6 +193,21 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 
 	// Loop over fields, one per line
 	while (TRUE) {
+
+		// Skip comment lines
+		if (comment_string != NULL) {
+			if (streqn(phandle->sol, comment_string, comment_string_length)) {
+				phandle->sol += comment_string_length;
+				while (phandle->sol < phandle->eof && !streqn(phandle->sol, comment_string, comment_string_length)) {
+					phandle->sol++;
+				}
+				if (phandle->sol < phandle->eof && phandle->sol < phandle->eof && *phandle->sol == ifs) {
+					phandle->sol++;
+				}
+				continue;
+			}
+		}
+
 		char* line  = phandle->sol;
 		char* key   = line;
 		char* value = "";
@@ -172,7 +219,7 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 			if (*p == ifs) {
 				*p = 0;
 
-				if (do_auto_line_term) {
+				if (pstate->do_auto_line_term) {
 					if (p > line && p[-1] == '\r') {
 						p[-1] = 0;
 						context_set_autodetected_crlf(pctx);
@@ -189,7 +236,7 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 				*p = 0;
 
 				p++;
-				if (allow_repeat_ips) {
+				if (pstate->allow_repeat_ips) {
 					while (*p == ips)
 						p++;
 				}
@@ -217,7 +264,7 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 		if (phandle->sol >= phandle->eof)
 			break;
 
-		if (do_auto_line_term) {
+		if (pstate->do_auto_line_term) {
 			char* p = phandle->sol;
 			char* q = phandle->sol + 1;
 			if (*p == '\n')
@@ -237,10 +284,12 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* pha
 	}
 }
 
-lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phandle, char ifs, char* ips, int ipslen,
-	int allow_repeat_ips, int do_auto_line_term, context_t* pctx)
+static lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phandle, char ifs,
+	lrec_reader_mmap_xtab_state_t* pstate, context_t* pctx)
 {
-	if (do_auto_line_term) {
+	char* comment_string = pstate->comment_string;
+	int comment_string_length = pstate->comment_string_length;
+	if (pstate->do_auto_line_term) {
 		// Skip over otherwise empty LF-only or CRLF-only lines.
 		while (phandle->sol < phandle->eof) {
 			if (*phandle->sol == '\n') {
@@ -259,18 +308,38 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phan
 			}
 		}
 	} else {
-		// Skip over otherwise empty IRS-only lines.
+		// Skip over otherwise empty IFS-only lines.
 		while (phandle->sol < phandle->eof && *phandle->sol == ifs)
 			phandle->sol++;
 	}
 
+	// xxx skip comments ...
+
 	if (phandle->sol >= phandle->eof)
 		return NULL;
+
+	char* ips = pstate->ips;
+	int ipslen = pstate->ipslen;
 
 	lrec_t* prec = lrec_unbacked_alloc();
 
 	// Loop over fields, one per line
 	while (TRUE) {
+
+		// Skip comment lines
+		if (comment_string != NULL) {
+			if (streqn(phandle->sol, comment_string, comment_string_length)) {
+				phandle->sol += comment_string_length;
+				while (phandle->sol < phandle->eof && !streqn(phandle->sol, comment_string, comment_string_length)) {
+					phandle->sol++;
+				}
+				if (phandle->sol < phandle->eof && *phandle->sol == ifs) {
+					phandle->sol++;
+				}
+				continue;
+			}
+		}
+
 		char* line  = phandle->sol;
 		char* key   = line;
 		char* value = "";
@@ -282,7 +351,7 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phan
 			if (*p == ifs) {
 				*p = 0;
 
-				if (do_auto_line_term) {
+				if (pstate->do_auto_line_term) {
 					if (p > line && p[-1] == '\r') {
 						p[-1] = 0;
 						context_set_autodetected_crlf(pctx);
@@ -299,7 +368,7 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phan
 				*p = 0;
 
 				p += ipslen;
-				if (allow_repeat_ips) {
+				if (pstate->allow_repeat_ips) {
 					while (streqn(p, ips, ipslen))
 						p += ipslen;
 				}
@@ -335,11 +404,39 @@ lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phan
 	}
 }
 
-lrec_t* lrec_parse_mmap_xtab_multi_ifs_single_ips(file_reader_mmap_state_t* phandle, char* ifs, char ips, int ifslen,
-	int allow_repeat_ips)
+static lrec_t* lrec_parse_mmap_xtab_multi_ifs_single_ips(file_reader_mmap_state_t* phandle, char ips,
+	lrec_reader_mmap_xtab_state_t* pstate)
 {
-	while (phandle->sol < phandle->eof && streqn(phandle->sol, ifs, ifslen))
-		phandle->sol += ifslen;
+	char* ifs = pstate->ifs;
+	int ifslen = pstate->ifslen;
+	char* comment_string = pstate->comment_string;
+	int comment_string_length = pstate->comment_string_length;
+
+	// Skip blank lines and comment lines
+	while (TRUE) {
+		int skipped_anything = FALSE;
+		// Skip blank lines
+		if (phandle->sol < phandle->eof && streqn(phandle->sol, ifs, ifslen)) {
+			skipped_anything = TRUE;
+			phandle->sol += ifslen;
+		}
+		// Skip comment lines
+		if (comment_string != NULL) {
+			if (phandle->sol < phandle->eof && streqn(phandle->sol, comment_string, comment_string_length)) {
+				skipped_anything = TRUE;
+				phandle->sol += comment_string_length;
+				while (phandle->sol < phandle->eof && !streqn(phandle->sol, ifs, ifslen)) {
+					phandle->sol++;
+				}
+				if (phandle->sol < phandle->eof && streqn(phandle->sol, ifs, ifslen)) {
+					phandle->sol += ifslen;
+				}
+			}
+		}
+		if (!skipped_anything)
+			break;
+	}
+	// xxx skip comments ...
 
 	if (phandle->sol >= phandle->eof)
 		return NULL;
@@ -348,6 +445,21 @@ lrec_t* lrec_parse_mmap_xtab_multi_ifs_single_ips(file_reader_mmap_state_t* phan
 
 	// Loop over fields, one per line
 	while (TRUE) {
+
+		// Skip comment lines
+		if (comment_string != NULL) {
+			if (streqn(phandle->sol, comment_string, comment_string_length)) {
+				phandle->sol += comment_string_length;
+				while (phandle->sol < phandle->eof && !streqn(phandle->sol, comment_string, comment_string_length)) {
+					phandle->sol++;
+				}
+				if (phandle->sol < phandle->eof && streqn(phandle->sol, ifs, ifslen)) {
+					phandle->sol += ifslen;
+				}
+				continue;
+			}
+		}
+
 		char* line  = phandle->sol;
 		char* key   = line;
 		char* value = "";
@@ -366,7 +478,7 @@ lrec_t* lrec_parse_mmap_xtab_multi_ifs_single_ips(file_reader_mmap_state_t* phan
 				*p = 0;
 
 				p++;
-				if (allow_repeat_ips) {
+				if (pstate->allow_repeat_ips) {
 					while (*p == ips)
 						p++;
 				}
@@ -402,11 +514,40 @@ lrec_t* lrec_parse_mmap_xtab_multi_ifs_single_ips(file_reader_mmap_state_t* phan
 	}
 }
 
-lrec_t* lrec_parse_mmap_xtab_multi_ifs_multi_ips(file_reader_mmap_state_t* phandle, char* ifs, char* ips,
-	int ifslen, int ipslen, int allow_repeat_ips)
+static lrec_t* lrec_parse_mmap_xtab_multi_ifs_multi_ips(file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_xtab_state_t* pstate)
 {
-	while (phandle->sol < phandle->eof && streqn(phandle->sol, ifs, ifslen))
-		phandle->sol += ifslen;
+	char* ips = pstate->ips;
+	int ipslen = pstate->ipslen;
+	char* ifs = pstate->ifs;
+	int ifslen = pstate->ifslen;
+	char* comment_string = pstate->comment_string;
+	int comment_string_length = pstate->comment_string_length;
+
+	// Skip blank lines and comment lines
+	while (TRUE) {
+		int skipped_anything = FALSE;
+		// Skip blank lines
+		if (phandle->sol < phandle->eof && streqn(phandle->sol, ifs, ifslen)) {
+			skipped_anything = TRUE;
+			phandle->sol += ifslen;
+		}
+		// Skip comment lines
+		if (comment_string != NULL) {
+			if (phandle->sol < phandle->eof && streqn(phandle->sol, comment_string, comment_string_length)) {
+				skipped_anything = TRUE;
+				phandle->sol += comment_string_length;
+				while (phandle->sol < phandle->eof && !streqn(phandle->sol, ifs, ifslen)) {
+					phandle->sol++;
+				}
+				if (phandle->sol < phandle->eof && streqn(phandle->sol, ifs, ifslen)) {
+					phandle->sol += ifslen;
+				}
+			}
+		}
+		if (!skipped_anything)
+			break;
+	}
 
 	if (phandle->sol >= phandle->eof)
 		return NULL;
@@ -415,6 +556,21 @@ lrec_t* lrec_parse_mmap_xtab_multi_ifs_multi_ips(file_reader_mmap_state_t* phand
 
 	// Loop over fields, one per line
 	while (TRUE) {
+
+		// Skip comment lines
+		if (comment_string != NULL) {
+			if (streqn(phandle->sol, comment_string, comment_string_length)) {
+				phandle->sol += comment_string_length;
+				while (phandle->sol < phandle->eof && !streqn(phandle->sol, comment_string, comment_string_length)) {
+					phandle->sol++;
+				}
+				if (phandle->sol < phandle->eof && streqn(phandle->sol, ifs, ifslen)) {
+					phandle->sol += ifslen;
+				}
+				continue;
+			}
+		}
+
 		char* line  = phandle->sol;
 		char* key   = line;
 		char* value = "";
@@ -433,7 +589,7 @@ lrec_t* lrec_parse_mmap_xtab_multi_ifs_multi_ips(file_reader_mmap_state_t* phand
 				*p = 0;
 
 				p += ipslen;
-				if (allow_repeat_ips) {
+				if (pstate->allow_repeat_ips) {
 					while (streqn(p, ips, ipslen))
 						p += ipslen;
 				}

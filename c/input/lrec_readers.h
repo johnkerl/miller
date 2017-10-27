@@ -57,11 +57,4 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs_implicit_header(header_keep
 lrec_t* lrec_parse_stdio_xtab_single_ips(slls_t* pxtab_lines, char ips, int allow_repeat_ips);
 lrec_t* lrec_parse_stdio_xtab_multi_ips(slls_t* pxtab_lines, char* ips, int ipslen, int allow_repeat_ips);
 
-lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state_t* phandle, char ifs, char ips, int allow_repeat_ips,
-	int do_auto_line_term, context_t* pctx);
-lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_t* phandle, char ifs, char* ips, int ipslen, int allow_repeat_ips,
-	int do_auto_line_term, context_t* pctx);
-lrec_t* lrec_parse_mmap_xtab_multi_ifs_single_ips(file_reader_mmap_state_t* phandle, char* ifs, char ips, int ifslen, int allow_repeat_ips);
-lrec_t* lrec_parse_mmap_xtab_multi_ifs_multi_ips(file_reader_mmap_state_t* phandle, char* ifs, char* ips, int ipslen, int ifslen, int allow_repeat_ips);
-
 #endif // LREC_READERS_H
