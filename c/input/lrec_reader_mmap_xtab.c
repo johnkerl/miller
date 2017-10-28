@@ -142,6 +142,7 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state
 	char* comment_string = pstate->comment_string;
 	int comment_string_length = pstate->comment_string_length;
 
+	// xxx more
 	if (pstate->do_auto_line_term) {
 		// Skip over otherwise empty LF-only or CRLF-only lines.
 		while (phandle->sol < phandle->eof) {
@@ -184,7 +185,6 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state
 				break;
 		}
 	}
-	// xxx skip comments ...
 
 	if (phandle->sol >= phandle->eof)
 		return NULL;
@@ -193,15 +193,17 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state
 
 	// Loop over fields, one per line
 	while (TRUE) {
+		if (phandle->sol >= phandle->eof)
+			break;
 
 		// Skip comment lines
 		if (comment_string != NULL) {
 			if (streqn(phandle->sol, comment_string, comment_string_length)) {
 				phandle->sol += comment_string_length;
-				while (phandle->sol < phandle->eof && !streqn(phandle->sol, comment_string, comment_string_length)) {
+				while (phandle->sol < phandle->eof && *phandle->sol != ifs) {
 					phandle->sol++;
 				}
-				if (phandle->sol < phandle->eof && phandle->sol < phandle->eof && *phandle->sol == ifs) {
+				if (phandle->sol < phandle->eof && *phandle->sol == ifs) {
 					phandle->sol++;
 				}
 				continue;
@@ -330,7 +332,7 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_
 		if (comment_string != NULL) {
 			if (streqn(phandle->sol, comment_string, comment_string_length)) {
 				phandle->sol += comment_string_length;
-				while (phandle->sol < phandle->eof && !streqn(phandle->sol, comment_string, comment_string_length)) {
+				while (phandle->sol < phandle->eof && *phandle->sol != ifs) {
 					phandle->sol++;
 				}
 				if (phandle->sol < phandle->eof && *phandle->sol == ifs) {
