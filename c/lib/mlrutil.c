@@ -131,14 +131,14 @@ char* mlr_alloc_string_from_double(double value, char* fmt) {
 	return string;
 }
 
-char* mlr_alloc_string_from_ull(unsigned long  long value) {
+char* mlr_alloc_string_from_ull(unsigned long long value) {
 	int n = snprintf(NULL, 0, "%llu", value);
 	char* string = mlr_malloc_or_die(n+1);
 	sprintf(string, "%llu", value);
 	return string;
 }
 
-char* mlr_alloc_string_from_ll(long  long value) {
+char* mlr_alloc_string_from_ll(long long value) {
 	int n = snprintf(NULL, 0, "%lld", value);
 	char* string = mlr_malloc_or_die(n+1);
 	sprintf(string, "%lld", value);
@@ -166,7 +166,7 @@ char* mlr_alloc_string_from_char_range(char* start, int num_bytes) {
 	return string;
 }
 
-char* mlr_alloc_hexfmt_from_ll(long  long value) {
+char* mlr_alloc_hexfmt_from_ll(long long value) {
 	int n = snprintf(NULL, 0, "0x%llx", (unsigned long long)value);
 	char* string = mlr_malloc_or_die(n+1);
 	sprintf(string, "0x%llx", value);

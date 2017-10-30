@@ -15,7 +15,7 @@ typedef struct _mapper_head_state_t {
 	slls_t* pgroup_by_field_names;
 	unsigned long long head_count;
 	unsigned long long unkeyed_record_count;
-	lhmslv_t* precord_lists_by_group;
+	lhmslv_t* pcounts_by_group;
 } mapper_head_state_t;
 
 static void      mapper_head_usage(FILE* o, char* argv0, char* verb);
@@ -74,7 +74,7 @@ static mapper_t* mapper_head_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_na
 	pstate->pgroup_by_field_names  = pgroup_by_field_names;
 	pstate->head_count             = head_count;
 	pstate->unkeyed_record_count   = 0LL;
-	pstate->precord_lists_by_group = lhmslv_alloc();
+	pstate->pcounts_by_group       = lhmslv_alloc();
 
 	pmapper->pvstate        = pstate;
 	pmapper->pprocess_func  = pgroup_by_field_names->length == 0
@@ -90,11 +90,11 @@ static void mapper_head_free(mapper_t* pmapper, context_t* _) {
 	if (pstate->pgroup_by_field_names != NULL)
 		slls_free(pstate->pgroup_by_field_names);
 	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
-	for (lhmslve_t* pa = pstate->precord_lists_by_group->phead; pa != NULL; pa = pa->pnext) {
+	for (lhmslve_t* pa = pstate->pcounts_by_group->phead; pa != NULL; pa = pa->pnext) {
 		unsigned long long* pcount_for_group = pa->pvvalue;
 		free(pcount_for_group);
 	}
-	lhmslv_free(pstate->precord_lists_by_group);
+	lhmslv_free(pstate->pcounts_by_group);
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
@@ -127,12 +127,12 @@ static sllv_t* mapper_head_process_keyed(lrec_t* pinrec, context_t* pctx, void* 
 			lrec_free(pinrec);
 			return NULL;
 		} else {
-			unsigned long long* pcount_for_group = lhmslv_get(pstate->precord_lists_by_group,
+			unsigned long long* pcount_for_group = lhmslv_get(pstate->pcounts_by_group,
 				pgroup_by_field_values);
 			if (pcount_for_group == NULL) {
 				pcount_for_group = mlr_malloc_or_die(sizeof(unsigned long long));
 				*pcount_for_group = 0LL;
-				lhmslv_put(pstate->precord_lists_by_group, slls_copy(pgroup_by_field_values),
+				lhmslv_put(pstate->pcounts_by_group, slls_copy(pgroup_by_field_values),
 					pcount_for_group, FREE_ENTRY_KEY);
 			}
 			slls_free(pgroup_by_field_values);

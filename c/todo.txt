@@ -32,7 +32,8 @@ k work into lrec_readers API calls, stubbed
 5.3.0 TO-DO:
 
 ! count-similar
-! stats1 count-unique ...
+  -> ut
+! stats1 count-unique ... uniq -c -ish
 k ruby/python/etc. dkvp-reader/writers, and example code
 
 ----------------------------------------------------------------
