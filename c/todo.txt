@@ -31,8 +31,9 @@ k work into lrec_readers API calls, stubbed
 ================================================================
 5.3.0 TO-DO:
 
-----------------------------------------------------------------
-* ruby/python/etc. dkvp-reader/writers, and example code
+! count-similar
+! stats1 count-unique ...
+k ruby/python/etc. dkvp-reader/writers, and example code
 
 ----------------------------------------------------------------
 ! dirname/basename functions !
