@@ -26,6 +26,8 @@ k work into lrec_readers API calls, stubbed
 * mld
 * streqn-past-eof scenarios @ page boudaries ...
 
+* clusz-y verb ...
+
 ================================================================
 5.3.0 TO-DO:
 
