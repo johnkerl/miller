@@ -1,20 +1,38 @@
-Features:
+## Features:
 
-* comment-skipper
-* `count-similar` verb
-* `.*` int math
-* `popcount` function
+* **Comment strings in data files:** `mlr --skip-comments` allows you to
+filter out input lines starting with `#`, for all file formats.  Likewise, `mlr
+--skip-comments-with X` lets you specify the comment-string `X`.  Comments are
+only supported at start of data line.
 
-```seq 1 32 | mlr --nidx put '$2=bitcount(NR)' then sort -n 2```
+* The [**count-similar**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-verbs.html#count-similar)
+verb lets you compute cluster sizes by cluster labels.
 
-Documentation:
+* While Miller DSL arithmetic gracefully overflows from 64-integer to
+double-precision float (see also
+[**here**](http://johnkerl.org/miller/doc/reference.html#Arithmetic)), there
+are now the **integer-preserving arithmetic operators** ``.+` `.-` `.*` `./` `.//`
+for those times when you want integer overflow.
 
-* ruby/python/etc. dkvp-reader/writers, and example code
-* 'How do I suppress numeric conversion?' @ mlh w/ pagelink; xref to followup task (#150 ...)
-* csvlite at mlh/man
+* There is a new [**bitcount**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-dsl.html#bitcount) function: for example, `echo x=0xf0000206 | mlr put '$y=bitcount($x)'` produces `x=0xf0000206,y=7`.
 
-Bugfixes:
+* [**Issue 158**](https://github.com/johnkerl/miller/issues/158): `mlr -T` is
+an alias for `--nidx --fs tab`, and `mlr -t` is an alias for `mlr
+--tsvlite`.
 
-* fix https://github.com/johnkerl/miller/issues/158: short option for `--nidx --fs tab`
-* Fix https://github.com/johnkerl/miller/issues/159: regex-match of literal dot
+## Documentation:
 
+* As noted
+[**here**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-dsl.html#A_note_on_the_complexity_of_Miller’s_expression_language), since Miller has its own DSL there will always be things better expressible in a general-purpose language. The new page
+[**Sharing data with other languages**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/data-sharing.html) shows how to seamlessly share data back and forth between Miller, Ruby, and Python.
+
+* [**Issue 150**](https://github.com/johnkerl/miller/issues/150) raised a
+question about suppressing numeric conversion. This resulted in a new FAQ entry
+[**How do I suppress numeric conversion?**](http://johnkerl.org/miller/doc/faq.html#How_do_I_suppress_numeric_conversion?), as well as the
+longer-term follow-on [**issue 151**](https://github.com/johnkerl/miller/issues/151) which will make numeric conversion happen on a just-in-time basis.
+
+* To my surprise, **csvlite format options** weren&rsquo;t listed in `mlr --help` or the manpage. This has been fixed.
+
+## Bugfixes:
+
+* [**Issue 159**](https://github.com/johnkerl/miller/issues/159): fix regex-match of literal dot.
