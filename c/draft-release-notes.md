@@ -1,16 +1,19 @@
+Features:
 
-xxx comment-skipper
+* comment-skipper
+* `count-similar` verb
+* `.*` int math
+* popcount
 
-xxx `.*` int math
+Documentation:
 
-xxx popcount
+* ruby/python/etc. dkvp-reader/writers, and example code
+* 'How do I suppress numeric conversion?' @ mlh w/ pagelink; xref to followup task
+* csvlite at mlh/man
 
-xxx backslash bugfix
+Bugfixes:
 
-xxx polyglot dkvp i/o examples
+* backslash bugfix
+* fix https://github.com/johnkerl/miller/issues/158: short option for `--nidx --fs tab`
+* Fix https://github.com/johnkerl/miller/issues/159: regex-match of literal dot
 
-xxx 'How do I suppress numeric conversion?' @ mlh w/ pagelink; xref to followup task
-
-xxx csvlite at mlh/man
-
-xxx 150 158 159

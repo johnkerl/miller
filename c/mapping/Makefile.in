@@ -105,18 +105,18 @@ LTLIBRARIES = $(noinst_LTLIBRARIES)
 libmapping_la_DEPENDENCIES = ../lib/libmlr.la ../cli/libcli.la \
 	../input/libinput.la
 am_libmapping_la_OBJECTS = mapper_bar.lo mapper_bootstrap.lo \
-	mapper_cat.lo mapper_check.lo mapper_cut.lo mapper_decimate.lo \
-	mapper_grep.lo mapper_group_like.lo mapper_having_fields.lo \
-	mapper_head.lo mapper_histogram.lo mapper_join.lo \
-	mapper_label.lo mapper_merge_fields.lo \
-	mapper_most_or_least_frequent.lo mapper_nest.lo \
-	mapper_nothing.lo mapper_fraction.lo mapper_put_or_filter.lo \
-	mapper_regularize.lo mapper_rename.lo mapper_reorder.lo \
-	mapper_repeat.lo mapper_reshape.lo mapper_sample.lo \
-	mapper_sec2gmt.lo mapper_sec2gmtdate.lo mapper_seqgen.lo \
-	mapper_shuffle.lo mapper_sort.lo mapper_stats1.lo \
-	mapper_stats2.lo mapper_step.lo mapper_tac.lo mapper_tail.lo \
-	mapper_tee.lo mapper_top.lo mapper_uniq.lo \
+	mapper_cat.lo mapper_check.lo mapper_count_similar.lo \
+	mapper_cut.lo mapper_decimate.lo mapper_grep.lo \
+	mapper_group_like.lo mapper_having_fields.lo mapper_head.lo \
+	mapper_histogram.lo mapper_join.lo mapper_label.lo \
+	mapper_merge_fields.lo mapper_most_or_least_frequent.lo \
+	mapper_nest.lo mapper_nothing.lo mapper_fraction.lo \
+	mapper_put_or_filter.lo mapper_regularize.lo mapper_rename.lo \
+	mapper_reorder.lo mapper_repeat.lo mapper_reshape.lo \
+	mapper_sample.lo mapper_sec2gmt.lo mapper_sec2gmtdate.lo \
+	mapper_seqgen.lo mapper_shuffle.lo mapper_sort.lo \
+	mapper_stats1.lo mapper_stats2.lo mapper_step.lo mapper_tac.lo \
+	mapper_tail.lo mapper_tee.lo mapper_top.lo mapper_uniq.lo \
 	mapper_unsparsify.lo mappers.lo stats1_accumulators.lo
 libmapping_la_OBJECTS = $(am_libmapping_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
@@ -311,6 +311,7 @@ libmapping_la_SOURCES = \
 			mapper_bootstrap.c \
 			mapper_cat.c \
 			mapper_check.c \
+			mapper_count_similar.c \
 			mapper_cut.c \
 			mapper_decimate.c \
 			mapper_grep.c \
@@ -419,6 +420,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_bootstrap.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_cat.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_check.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_count_similar.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_cut.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_decimate.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_fraction.Plo@am__quote@
