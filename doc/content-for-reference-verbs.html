@@ -177,6 +177,20 @@ POKI_RUN_COMMAND{{mlr count-distinct -n -f a,b data/medium}}HERE
 
 </div>
 <!-- ================================================================ -->
+<h1>count-similar</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_count_similar');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_count_similar" style="display: block">
+
+POKI_RUN_COMMAND{{mlr count-similar --help}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint head -n 20 data/medium}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint head -n 20 then count-similar -g a data/medium}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint head -n 20 then count-similar -g a then sort -f a data/medium}}HERE
+
+</div>
+<!-- ================================================================ -->
 <h1>cut</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_cut');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_cut" style="display: block">

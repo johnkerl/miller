@@ -62,7 +62,7 @@ static void mapper_count_similar_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Ingests all records, then emits each record augmented by a count of \n");
 	fprintf(o, "the number of other records having the same group-by field values.\n");
 	fprintf(o, "Options:\n");
-	fprintf(o, "-g {d,e,f} Group-by-field names for uniq counts.\n");
+	fprintf(o, "-g {d,e,f} Group-by-field names for counts.\n");
 	fprintf(o, "-o {name}  Field name for output count. Default \"%s\".\n",
 		DEFAULT_OUTPUT_FIELD_NAME);
 }

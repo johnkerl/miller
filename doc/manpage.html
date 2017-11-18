@@ -319,11 +319,11 @@ OPTIONS
 	 -K			      Show a bare listing of keywords by name.
 
    VERB LIST
-	bar bootstrap cat check count-distinct cut decimate filter fraction grep
-	group-by group-like having-fields head histogram join label least-frequent
-	merge-fields most-frequent nest nothing put regularize rename reorder repeat
-	reshape sample sec2gmt sec2gmtdate seqgen shuffle sort stats1 stats2 step tac
-	tail tee top uniq unsparsify
+	bar bootstrap cat check count-distinct count-similar cut decimate filter
+	fraction grep group-by group-like having-fields head histogram join label
+	least-frequent merge-fields most-frequent nest nothing put regularize rename
+	reorder repeat reshape sample sec2gmt sec2gmtdate seqgen shuffle sort stats1
+	stats2 step tac tail tee top uniq unsparsify
 
    FUNCTION LIST
 	+ + - - * / // .+ .+ .- .- .* ./ .// % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; bitcount == != =~ !=~
@@ -591,6 +591,14 @@ VERBS
 		     values separately.
        Prints number of records having distinct values for specified field names.
        Same as uniq -c.
+
+   count-similar
+       Usage: mlr count-similar [options]
+       Ingests all records, then emits each record augmented by a count of
+       the number of other records having the same group-by field values.
+       Options:
+       -g {d,e,f} Group-by-field names for counts.
+       -o {name}  Field name for output count. Default "count".
 
    cut
        Usage: mlr cut [options]
@@ -2286,7 +2294,7 @@ SEE ALSO
 
 
 
-				  2017-10-18			     MILLER(1)
+				  2017-11-18			     MILLER(1)
 </pre>
 </div>
 <p/>

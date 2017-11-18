@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2017-10-18
+.\"      Date: 2017-11-18
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2017-10-18" "\ \&" "\ \&"
+.TH "MILLER" "1" "2017-11-18" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -168,11 +168,11 @@ output separator to the given value.
 .RS 0
 .\}
 .nf
- bar bootstrap cat check count-distinct cut decimate filter fraction grep
- group-by group-like having-fields head histogram join label least-frequent
- merge-fields most-frequent nest nothing put regularize rename reorder repeat
- reshape sample sec2gmt sec2gmtdate seqgen shuffle sort stats1 stats2 step tac
- tail tee top uniq unsparsify
+ bar bootstrap cat check count-distinct count-similar cut decimate filter
+ fraction grep group-by group-like having-fields head histogram join label
+ least-frequent merge-fields most-frequent nest nothing put regularize rename
+ reorder repeat reshape sample sec2gmt sec2gmtdate seqgen shuffle sort stats1
+ stats2 step tac tail tee top uniq unsparsify
 .fi
 .if n \{\
 .RE
@@ -532,6 +532,20 @@ Usage: mlr count-distinct [options]
               values separately.
 Prints number of records having distinct values for specified field names.
 Same as uniq -c.
+.fi
+.if n \{\
+.RE
+.SS "count-similar"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr count-similar [options]
+Ingests all records, then emits each record augmented by a count of 
+the number of other records having the same group-by field values.
+Options:
+-g {d,e,f} Group-by-field names for counts.
+-o {name}  Field name for output count. Default "count".
 .fi
 .if n \{\
 .RE

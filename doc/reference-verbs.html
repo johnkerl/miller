@@ -194,6 +194,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#cat">cat</a><br/>
 &bull;&nbsp;<a href="#check">check</a><br/>
 &bull;&nbsp;<a href="#count-distinct">count-distinct</a><br/>
+&bull;&nbsp;<a href="#count-similar">count-similar</a><br/>
 &bull;&nbsp;<a href="#cut">cut</a><br/>
 &bull;&nbsp;<a href="#decimate">decimate</a><br/>
 &bull;&nbsp;<a href="#filter">filter</a><br/>
@@ -708,6 +709,113 @@ a=eks,b=zee,someothername=357
 <pre>
 $ mlr count-distinct -n -f a,b data/medium
 count=25
+</pre>
+</div>
+<p/>
+
+</div>
+<!-- ================================================================ -->
+<a id="count-similar"/><h1>count-similar</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_count_similar');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_count_similar" style="display: block">
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr count-similar --help
+Usage: mlr count-similar [options]
+Ingests all records, then emits each record augmented by a count of
+the number of other records having the same group-by field values.
+Options:
+-g {d,e,f} Group-by-field names for counts.
+-o {name}  Field name for output count. Default "count".
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint head -n 20 data/medium
+a   b   i  x                   y
+pan pan 1  0.3467901443380824  0.7268028627434533
+eks pan 2  0.7586799647899636  0.5221511083334797
+wye wye 3  0.20460330576630303 0.33831852551664776
+eks wye 4  0.38139939387114097 0.13418874328430463
+wye pan 5  0.5732889198020006  0.8636244699032729
+zee pan 6  0.5271261600918548  0.49322128674835697
+eks zee 7  0.6117840605678454  0.1878849191181694
+zee wye 8  0.5985540091064224  0.976181385699006
+hat wye 9  0.03144187646093577 0.7495507603507059
+pan wye 10 0.5026260055412137  0.9526183602969864
+pan pan 11 0.7930488423451967  0.6505816637259333
+zee pan 12 0.3676141320555616  0.23614420670296965
+eks pan 13 0.4915175580479536  0.7709126592971468
+eks zee 14 0.5207382318405251  0.34141681118811673
+eks pan 15 0.07155556372719507 0.3596137145616235
+pan pan 16 0.5736853980681922  0.7554169353781729
+zee eks 17 0.29081949506712723 0.054478717073354166
+hat zee 18 0.05727869223575699 0.13343527626645157
+zee pan 19 0.43144132839222604 0.8442204830496998
+eks wye 20 0.38245149780530685 0.4730652428100751
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint head -n 20 then count-similar -g a data/medium
+a   b   i  x                   y                    count
+pan pan 1  0.3467901443380824  0.7268028627434533   4
+pan wye 10 0.5026260055412137  0.9526183602969864   4
+pan pan 11 0.7930488423451967  0.6505816637259333   4
+pan pan 16 0.5736853980681922  0.7554169353781729   4
+eks pan 2  0.7586799647899636  0.5221511083334797   7
+eks wye 4  0.38139939387114097 0.13418874328430463  7
+eks zee 7  0.6117840605678454  0.1878849191181694   7
+eks pan 13 0.4915175580479536  0.7709126592971468   7
+eks zee 14 0.5207382318405251  0.34141681118811673  7
+eks pan 15 0.07155556372719507 0.3596137145616235   7
+eks wye 20 0.38245149780530685 0.4730652428100751   7
+wye wye 3  0.20460330576630303 0.33831852551664776  2
+wye pan 5  0.5732889198020006  0.8636244699032729   2
+zee pan 6  0.5271261600918548  0.49322128674835697  5
+zee wye 8  0.5985540091064224  0.976181385699006    5
+zee pan 12 0.3676141320555616  0.23614420670296965  5
+zee eks 17 0.29081949506712723 0.054478717073354166 5
+zee pan 19 0.43144132839222604 0.8442204830496998   5
+hat wye 9  0.03144187646093577 0.7495507603507059   2
+hat zee 18 0.05727869223575699 0.13343527626645157  2
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint head -n 20 then count-similar -g a then sort -f a data/medium
+a   b   i  x                   y                    count
+eks pan 2  0.7586799647899636  0.5221511083334797   7
+eks wye 4  0.38139939387114097 0.13418874328430463  7
+eks zee 7  0.6117840605678454  0.1878849191181694   7
+eks pan 13 0.4915175580479536  0.7709126592971468   7
+eks zee 14 0.5207382318405251  0.34141681118811673  7
+eks pan 15 0.07155556372719507 0.3596137145616235   7
+eks wye 20 0.38245149780530685 0.4730652428100751   7
+hat wye 9  0.03144187646093577 0.7495507603507059   2
+hat zee 18 0.05727869223575699 0.13343527626645157  2
+pan pan 1  0.3467901443380824  0.7268028627434533   4
+pan wye 10 0.5026260055412137  0.9526183602969864   4
+pan pan 11 0.7930488423451967  0.6505816637259333   4
+pan pan 16 0.5736853980681922  0.7554169353781729   4
+wye wye 3  0.20460330576630303 0.33831852551664776  2
+wye pan 5  0.5732889198020006  0.8636244699032729   2
+zee pan 6  0.5271261600918548  0.49322128674835697  5
+zee wye 8  0.5985540091064224  0.976181385699006    5
+zee pan 12 0.3676141320555616  0.23614420670296965  5
+zee eks 17 0.29081949506712723 0.054478717073354166 5
+zee pan 19 0.43144132839222604 0.8442204830496998   5
 </pre>
 </div>
 <p/>
