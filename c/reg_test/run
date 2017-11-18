@@ -703,6 +703,13 @@ run_mlr --opprint --from $indir/freq.dkvp least-frequent -f a,b -n 3 -b -o foo
 run_mlr --opprint --from $indir/freq.dkvp least-frequent -f nonesuch -n 3 -o foo
 
 # ----------------------------------------------------------------
+announce COUNT-SIMILAR
+
+run_mlr --opprint --from $indir/abixy count-similar -g a
+run_mlr --opprint --from $indir/abixy count-similar -g b,i
+run_mlr --opprint --from $indir/abixy count-similar -g a,b,i -o other_name_for_counter
+
+# ----------------------------------------------------------------
 announce NON-INTERPOLATED AND INTERPOLATED PERCENTILES
 
 for k in 1 2 3 4 5 6 7 8 9 10 11; do
