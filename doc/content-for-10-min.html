@@ -345,6 +345,145 @@ standard 10009872    108
 flags.
 
 </div>
+<h1>SQL-input examples</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sql_input_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_sql_input_examples" style="display: block">
+
+<p/> One use of NIDX (value-only, no keys) format is for loading up SQL tables.
+
+<p/> Create and load SQL table:
+
+<div class="pokipanel"><pre>
+mysql> CREATE TABLE abixy(
+  a VARCHAR(32),
+  b VARCHAR(32),
+  i BIGINT(10),
+  x DOUBLE,
+  y DOUBLE
+);
+Query OK, 0 rows affected (0.01 sec)
+
+bash$ mlr --onidx --fs comma cat data/medium > medium.nidx
+
+mysql> LOAD DATA LOCAL INFILE 'medium.nidx' REPLACE INTO TABLE abixy FIELDS TERMINATED BY ',' ;
+Query OK, 10000 rows affected (0.07 sec)
+Records: 10000  Deleted: 0  Skipped: 0  Warnings: 0
+
+mysql> SELECT COUNT(*) AS count FROM abixy;
++-------+
+| count |
++-------+
+| 10000 |
++-------+
+1 row in set (0.00 sec)
+
+mysql> SELECT * FROM abixy LIMIT 10;
++------+------+------+---------------------+---------------------+
+| a    | b    | i    | x                   | y                   |
++------+------+------+---------------------+---------------------+
+| pan  | pan  |    1 |  0.3467901443380824 |  0.7268028627434533 |
+| eks  | pan  |    2 |  0.7586799647899636 |  0.5221511083334797 |
+| wye  | wye  |    3 | 0.20460330576630303 | 0.33831852551664776 |
+| eks  | wye  |    4 | 0.38139939387114097 | 0.13418874328430463 |
+| wye  | pan  |    5 |  0.5732889198020006 |  0.8636244699032729 |
+| zee  | pan  |    6 |  0.5271261600918548 | 0.49322128674835697 |
+| eks  | zee  |    7 |  0.6117840605678454 |  0.1878849191181694 |
+| zee  | wye  |    8 |  0.5985540091064224 |   0.976181385699006 |
+| hat  | wye  |    9 | 0.03144187646093577 |  0.7495507603507059 |
+| pan  | wye  |   10 |  0.5026260055412137 |  0.9526183602969864 |
++------+------+------+---------------------+---------------------+
+</pre></div>
+
+<p/> Aggregate counts within SQL:
+<div class="pokipanel"><pre>
+mysql> SELECT a, b, COUNT(*) AS count FROM abixy GROUP BY a, b ORDER BY COUNT DESC;
++------+------+-------+
+| a    | b    | count |
++------+------+-------+
+| zee  | wye  |   455 |
+| pan  | eks  |   429 |
+| pan  | pan  |   427 |
+| wye  | hat  |   426 |
+| hat  | wye  |   423 |
+| pan  | hat  |   417 |
+| eks  | hat  |   417 |
+| pan  | zee  |   413 |
+| eks  | eks  |   413 |
+| zee  | hat  |   409 |
+| eks  | wye  |   407 |
+| zee  | zee  |   403 |
+| pan  | wye  |   395 |
+| wye  | pan  |   392 |
+| zee  | eks  |   391 |
+| zee  | pan  |   389 |
+| hat  | eks  |   389 |
+| wye  | eks  |   386 |
+| wye  | zee  |   385 |
+| hat  | zee  |   385 |
+| hat  | hat  |   381 |
+| wye  | wye  |   377 |
+| eks  | pan  |   371 |
+| hat  | pan  |   363 |
+| eks  | zee  |   357 |
++------+------+-------+
+25 rows in set (0.01 sec)
+</pre></div>
+
+<p/> Aggregate counts within Miller:
+<div class="pokipanel"><pre>
+
+$ mlr --opprint uniq -c -g a,b then sort -nr count data/medium
+a   b   count
+zee wye 455
+pan eks 429
+pan pan 427
+wye hat 426
+hat wye 423
+pan hat 417
+eks hat 417
+eks eks 413
+pan zee 413
+zee hat 409
+eks wye 407
+zee zee 403
+pan wye 395
+hat pan 363
+eks zee 357
+</pre></div>
+
+<p/> Pipe SQL output to aggregate counts within Miller:
+<div class="pokipanel"><pre>
+
+$ mysql -D miller -B -e 'select * from abixy' | mlr --itsv --opprint uniq -c -g a,b then sort -nr count
+a   b   count
+zee wye 455
+pan eks 429
+pan pan 427
+wye hat 426
+hat wye 423
+pan hat 417
+eks hat 417
+eks eks 413
+pan zee 413
+zee hat 409
+eks wye 407
+zee zee 403
+pan wye 395
+wye pan 392
+zee eks 391
+zee pan 389
+hat eks 389
+wye eks 386
+hat zee 385
+wye zee 385
+hat hat 381
+wye wye 377
+eks pan 371
+hat pan 363
+eks zee 357
+</pre></div>
+
+</div>
 <h1>Log-processing examples</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_log_processing_examples');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_log_processing_examples" style="display: block">
