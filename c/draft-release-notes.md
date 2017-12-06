@@ -37,4 +37,6 @@ longer-term follow-on [**issue 151**](https://github.com/johnkerl/miller/issues/
 
 ## Bugfixes:
 
+* xxx mmap/madvise
+
 * [**Issue 159**](https://github.com/johnkerl/miller/issues/159): fix regex-match of literal dot.
