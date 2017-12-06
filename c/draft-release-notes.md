@@ -26,7 +26,7 @@ an alias for `--nidx --fs tab`, and `mlr -t` is an alias for `mlr
 [**here**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/reference-dsl.html#A_note_on_the_complexity_of_Miller’s_expression_language), since Miller has its own DSL there will always be things better expressible in a general-purpose language. The new page
 [**Sharing data with other languages**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/data-sharing.html) shows how to seamlessly share data back and forth between Miller, Ruby, and Python.
 
-* [**SQL-input examples](http://johnkerl.org/miller-releases/miller-5.2.0/doc/10-min.html#SQL-input_examples) contains detailed information the interplay between Miller and SQL.
+* [**SQL-input examples**](http://johnkerl.org/miller-releases/miller-5.2.0/doc/10-min.html#SQL-input_examples) contains detailed information the interplay between Miller and SQL.
 
 * [**Issue 150**](https://github.com/johnkerl/miller/issues/150) raised a
 question about suppressing numeric conversion. This resulted in a new FAQ entry
