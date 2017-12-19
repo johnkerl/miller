@@ -771,7 +771,7 @@ mv_t rval_evaluator_PI_func(void* pvstate, variables_t* pvars) {
 static void rval_evaluator_PI_free(rval_evaluator_t* pevaluator) {
 	free(pevaluator);
 }
-rval_evaluator_t* rval_evaluator_alloc_from_PI() {
+rval_evaluator_t* rval_evaluator_alloc_from_M_PI() {
 	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 	pevaluator->pvstate = NULL;
 	pevaluator->pprocess_func = rval_evaluator_PI_func;
@@ -786,7 +786,7 @@ mv_t rval_evaluator_E_func(void* pvstate, variables_t* pvars) {
 static void rval_evaluator_E_free(rval_evaluator_t* pevaluator) {
 	free(pevaluator);
 }
-rval_evaluator_t* rval_evaluator_alloc_from_E() {
+rval_evaluator_t* rval_evaluator_alloc_from_M_E() {
 	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
 	pevaluator->pvstate = NULL;
 	pevaluator->pprocess_func = rval_evaluator_E_func;
@@ -901,8 +901,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_context_variable(char* variable_name
 	} else if (streq(variable_name, "FNR"))      { return rval_evaluator_alloc_from_FNR();
 	} else if (streq(variable_name, "FILENAME")) { return rval_evaluator_alloc_from_FILENAME();
 	} else if (streq(variable_name, "FILENUM"))  { return rval_evaluator_alloc_from_FILENUM();
-	} else if (streq(variable_name, "PI"))       { return rval_evaluator_alloc_from_PI();
-	} else if (streq(variable_name, "E"))        { return rval_evaluator_alloc_from_E();
+	} else if (streq(variable_name, "M_PI"))     { return rval_evaluator_alloc_from_M_PI();
+	} else if (streq(variable_name, "M_E"))      { return rval_evaluator_alloc_from_M_E();
 	} else if (streq(variable_name, "IPS"))      { return rval_evaluator_alloc_from_IPS();
 	} else if (streq(variable_name, "IFS"))      { return rval_evaluator_alloc_from_IFS();
 	} else if (streq(variable_name, "IRS"))      { return rval_evaluator_alloc_from_IRS();

@@ -7,6 +7,20 @@
 // ----------------------------------------------------------------
 typedef void keyword_usage_func_t(FILE* ostream);
 
+static keyword_usage_func_t mlr_dsl_ENV_keyword_usage;
+static keyword_usage_func_t mlr_dsl_FILENAME_keyword_usage;
+static keyword_usage_func_t mlr_dsl_FILENUM_keyword_usage;
+static keyword_usage_func_t mlr_dsl_FNR_keyword_usage;
+static keyword_usage_func_t mlr_dsl_IFS_keyword_usage;
+static keyword_usage_func_t mlr_dsl_IPS_keyword_usage;
+static keyword_usage_func_t mlr_dsl_IRS_keyword_usage;
+static keyword_usage_func_t mlr_dsl_M_E_keyword_usage;
+static keyword_usage_func_t mlr_dsl_M_PI_keyword_usage;
+static keyword_usage_func_t mlr_dsl_NF_keyword_usage;
+static keyword_usage_func_t mlr_dsl_NR_keyword_usage;
+static keyword_usage_func_t mlr_dsl_OFS_keyword_usage;
+static keyword_usage_func_t mlr_dsl_OPS_keyword_usage;
+static keyword_usage_func_t mlr_dsl_ORS_keyword_usage;
 static keyword_usage_func_t mlr_dsl_all_keyword_usage;
 static keyword_usage_func_t mlr_dsl_begin_keyword_usage;
 static keyword_usage_func_t mlr_dsl_bool_keyword_usage;
@@ -46,20 +60,6 @@ static keyword_usage_func_t mlr_dsl_true_keyword_usage;
 static keyword_usage_func_t mlr_dsl_unset_keyword_usage;
 static keyword_usage_func_t mlr_dsl_var_keyword_usage;
 static keyword_usage_func_t mlr_dsl_while_keyword_usage;
-static keyword_usage_func_t mlr_dsl_E_keyword_usage;
-static keyword_usage_func_t mlr_dsl_ENV_keyword_usage;
-static keyword_usage_func_t mlr_dsl_FILENAME_keyword_usage;
-static keyword_usage_func_t mlr_dsl_FILENUM_keyword_usage;
-static keyword_usage_func_t mlr_dsl_FNR_keyword_usage;
-static keyword_usage_func_t mlr_dsl_IFS_keyword_usage;
-static keyword_usage_func_t mlr_dsl_IPS_keyword_usage;
-static keyword_usage_func_t mlr_dsl_IRS_keyword_usage;
-static keyword_usage_func_t mlr_dsl_NF_keyword_usage;
-static keyword_usage_func_t mlr_dsl_NR_keyword_usage;
-static keyword_usage_func_t mlr_dsl_OFS_keyword_usage;
-static keyword_usage_func_t mlr_dsl_OPS_keyword_usage;
-static keyword_usage_func_t mlr_dsl_ORS_keyword_usage;
-static keyword_usage_func_t mlr_dsl_PI_keyword_usage;
 
 // ----------------------------------------------------------------
 typedef struct _keyword_usage_entry_t {
@@ -108,7 +108,6 @@ static keyword_usage_entry_t KEYWORD_USAGE_TABLE[] = {
 	{ "unset",    mlr_dsl_unset_keyword_usage    },
 	{ "var",      mlr_dsl_var_keyword_usage      },
 	{ "while",    mlr_dsl_while_keyword_usage    },
-	{ "E",        mlr_dsl_E_keyword_usage        },
 	{ "ENV",      mlr_dsl_ENV_keyword_usage      },
 	{ "FILENAME", mlr_dsl_FILENAME_keyword_usage },
 	{ "FILENUM",  mlr_dsl_FILENUM_keyword_usage  },
@@ -116,12 +115,13 @@ static keyword_usage_entry_t KEYWORD_USAGE_TABLE[] = {
 	{ "IFS",      mlr_dsl_IFS_keyword_usage      },
 	{ "IPS",      mlr_dsl_IPS_keyword_usage      },
 	{ "IRS",      mlr_dsl_IRS_keyword_usage      },
+	{ "M_E",      mlr_dsl_M_E_keyword_usage      },
+	{ "M_PI",     mlr_dsl_M_PI_keyword_usage     },
 	{ "NF",       mlr_dsl_NF_keyword_usage       },
 	{ "NR",       mlr_dsl_NR_keyword_usage       },
 	{ "OFS",      mlr_dsl_OFS_keyword_usage      },
 	{ "OPS",      mlr_dsl_OPS_keyword_usage      },
 	{ "ORS",      mlr_dsl_ORS_keyword_usage      },
-	{ "PI",       mlr_dsl_PI_keyword_usage       },
 
 };
 static int KEYWORD_USAGE_TABLE_SIZE = sizeof(KEYWORD_USAGE_TABLE)/sizeof(KEYWORD_USAGE_TABLE[0]);
@@ -562,12 +562,6 @@ static void mlr_dsl_while_keyword_usage(FILE* ostream) {
 	);
 }
 
-static void mlr_dsl_E_keyword_usage(FILE *ostream) {
-	fprintf(ostream,
-		"E: the mathematical constant.\n"
-	);
-}
-
 static void mlr_dsl_ENV_keyword_usage(FILE *ostream) {
 	fprintf(ostream,
 		"ENV: access to environment variables by name, e.g. '$home = ENV[\"HOME\"]'\n"
@@ -614,6 +608,18 @@ static void mlr_dsl_IRS_keyword_usage(FILE *ostream) {
 	);
 }
 
+static void mlr_dsl_M_E_keyword_usage(FILE *ostream) {
+	fprintf(ostream,
+		"M_E: the mathematical constant e.\n"
+	);
+}
+
+static void mlr_dsl_M_PI_keyword_usage(FILE *ostream) {
+	fprintf(ostream,
+		"M_PI: the mathematical constant pi.\n"
+	);
+}
+
 static void mlr_dsl_NF_keyword_usage(FILE *ostream) {
 	fprintf(ostream,
 		"NF: evaluates to the number of fields in the current record.\n"
@@ -644,12 +650,6 @@ static void mlr_dsl_ORS_keyword_usage(FILE *ostream) {
 		"ORS: evaluates to the output record separator from the command line,\n"
 		"or to LF or CRLF from the input data if in autodetect mode (which is\n"
 		"the default).\n"
-	);
-}
-
-static void mlr_dsl_PI_keyword_usage(FILE *ostream) {
-	fprintf(ostream,
-		"PI: the mathematical constant.\n"
 	);
 }
 

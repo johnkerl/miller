@@ -559,7 +559,7 @@ void fmgr_function_usage(fmgr_t* pfmgr, FILE* output_stream, char* function_name
 		fprintf(output_stream, "numbers of the form \"%s --seed 123456789\" or \"%s --seed 0xcafefeed\".\n",
 			MLR_GLOBALS.bargv0, MLR_GLOBALS.bargv0);
 		fprintf(output_stream, "Miller's built-in variables are NF, NR, FNR, FILENUM, and FILENAME (awk-like)\n");
-		fprintf(output_stream, "along with the mathematical constants PI and E.\n");
+		fprintf(output_stream, "along with the mathematical constants M_PI and M_E.\n");
 	}
 }
 

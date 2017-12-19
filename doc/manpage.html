@@ -677,7 +677,7 @@ VERBS
        Please use a dollar sign for field names and double-quotes for string
        literals. If field names have special characters such as "." then you might
        use braces, e.g. '${field.name}'. Miller built-in variables are
-       NF NR FNR FILENUM FILENAME PI E, and ENV["namegoeshere"] to access environment
+       NF NR FNR FILENUM FILENAME M_PI M_E, and ENV["namegoeshere"] to access environment
        variables. The environment-variable name may be an expression, e.g. a field
        value.
 
@@ -1013,7 +1013,7 @@ VERBS
        Please use a dollar sign for field names and double-quotes for string
        literals. If field names have special characters such as "." then you might
        use braces, e.g. '${field.name}'. Miller built-in variables are
-       NF NR FNR FILENUM FILENAME PI E, and ENV["namegoeshere"] to access environment
+       NF NR FNR FILENUM FILENAME M_PI M_E, and ENV["namegoeshere"] to access environment
        variables. The environment-variable name may be an expression, e.g. a field
        value.
 
@@ -2232,9 +2232,6 @@ KEYWORDS FOR PUT AND FILTER
        while: introduces a while loop, or with "do", introduces a do-while loop.
        The body statements must be wrapped in curly braces.
 
-   E
-       E: the mathematical constant.
-
    ENV
        ENV: access to environment variables by name, e.g. '$home = ENV["HOME"]'
 
@@ -2260,6 +2257,12 @@ KEYWORDS FOR PUT AND FILTER
        or to LF or CRLF from the input data if in autodetect mode (which is
        the default).
 
+   M_E
+       M_E: the mathematical constant e.
+
+   M_PI
+       M_PI: the mathematical constant pi.
+
    NF
        NF: evaluates to the number of fields in the current record.
 
@@ -2278,9 +2281,6 @@ KEYWORDS FOR PUT AND FILTER
        or to LF or CRLF from the input data if in autodetect mode (which is
        the default).
 
-   PI
-       PI: the mathematical constant.
-
 AUTHOR
        Miller is written by John Kerl &lt;kerl.john.r@gmail.com&gt;.
 
@@ -2294,7 +2294,7 @@ SEE ALSO
 
 
 
-				  2017-11-18			     MILLER(1)
+				  2017-12-19			     MILLER(1)
 </pre>
 </div>
 <p/>

@@ -796,7 +796,7 @@ mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptable
 <p/>Miller has the following kinds of variables:
 
 <p/> <b>Built-in variables</b> such as <tt>NF</tt>, <tt>NF</tt>,
-<tt>FILENAME</tt>, <tt>PI</tt>, and <tt>E</tt>.  These are all capital letters
+<tt>FILENAME</tt>, <tt>M_PI</tt>, and <tt>M_E</tt>.  These are all capital letters
 and are read-only (although some of them change value from one record to
 another).
 
@@ -832,8 +832,8 @@ defined by Miller.
 <p/>Namely, Miller supports the following five built-in variables for <a
 href="reference-verbs.html#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
 <tt>NF</tt>, <tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and
-<tt>FILENAME</tt>, as well as the mathematical constants <tt>PI</tt> and
-<tt>E</tt>.  Lastly, the <tt>ENV</tt> hashmap allows read access to environment
+<tt>FILENAME</tt>, as well as the mathematical constants <tt>M_PI</tt> and
+<tt>M_E</tt>.  Lastly, the <tt>ENV</tt> hashmap allows read access to environment
 variables, e.g.  <tt>ENV["HOME"]</tt> or <tt>ENV["foo_".$hostname]</tt>.
 
 <p/>
@@ -2007,8 +2007,6 @@ Examples: 'var a=1', 'var xyz=""'
 while: introduces a while loop, or with "do", introduces a do-while loop.
 The body statements must be wrapped in curly braces.
 
-E: the mathematical constant.
-
 ENV: access to environment variables by name, e.g. '$home = ENV["HOME"]'
 
 FILENAME: evaluates to the name of the current file being processed.
@@ -2027,6 +2025,10 @@ IRS: evaluates to the input record separator from the command line,
 or to LF or CRLF from the input data if in autodetect mode (which is
 the default).
 
+M_E: the mathematical constant e.
+
+M_PI: the mathematical constant pi.
+
 NF: evaluates to the number of fields in the current record.
 
 NR: evaluates to the number of the current record over all files
@@ -2039,8 +2041,6 @@ OPS: evaluates to the output pair separator from the command line.
 ORS: evaluates to the output record separator from the command line,
 or to LF or CRLF from the input data if in autodetect mode (which is
 the default).
-
-PI: the mathematical constant.
 </pre>
 </div>
 <p/>

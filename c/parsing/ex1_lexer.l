@@ -425,11 +425,11 @@ false {
 	*yyextra = ex_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
 	return MD_TOKEN_CONTEXT_VARIABLE;
 }
-"PI" {
+"M_PI" {
 	*yyextra = ex_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
 	return MD_TOKEN_CONTEXT_VARIABLE;
 }
-"E" {
+"M_E" {
 	*yyextra = ex_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
 	return MD_TOKEN_CONTEXT_VARIABLE;
 }

@@ -550,11 +550,11 @@
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
 	return MD_TOKEN_CONTEXT_VARIABLE;
 }
-"PI" {
+"M_PI" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
 	return MD_TOKEN_CONTEXT_VARIABLE;
 }
-"E" {
+"M_E" {
 	*yyextra = mlr_dsl_ast_node_alloc(yytext, MD_AST_NODE_TYPE_CONTEXT_VARIABLE);
 	return MD_TOKEN_CONTEXT_VARIABLE;
 }

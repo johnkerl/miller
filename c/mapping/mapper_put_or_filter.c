@@ -220,7 +220,7 @@ static void shared_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Please use a dollar sign for field names and double-quotes for string\n");
 	fprintf(o, "literals. If field names have special characters such as \".\" then you might\n");
 	fprintf(o, "use braces, e.g. '${field.name}'. Miller built-in variables are\n");
-	fprintf(o, "NF NR FNR FILENUM FILENAME PI E, and ENV[\"namegoeshere\"] to access environment\n");
+	fprintf(o, "NF NR FNR FILENUM FILENAME M_PI M_E, and ENV[\"namegoeshere\"] to access environment\n");
 	fprintf(o, "variables. The environment-variable name may be an expression, e.g. a field\n");
 	fprintf(o, "value.\n");
 	fprintf(o, "\n");

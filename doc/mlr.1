@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2017-11-18
+.\"      Date: 2017-12-19
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2017-11-18" "\ \&" "\ \&"
+.TH "MILLER" "1" "2017-12-19" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -642,7 +642,7 @@ Other options:
 Please use a dollar sign for field names and double-quotes for string
 literals. If field names have special characters such as "." then you might
 use braces, e.g. '${field.name}'. Miller built-in variables are
-NF NR FNR FILENUM FILENAME PI E, and ENV["namegoeshere"] to access environment
+NF NR FNR FILENUM FILENAME M_PI M_E, and ENV["namegoeshere"] to access environment
 variables. The environment-variable name may be an expression, e.g. a field
 value.
 
@@ -1068,7 +1068,7 @@ Other options:
 Please use a dollar sign for field names and double-quotes for string
 literals. If field names have special characters such as "." then you might
 use braces, e.g. '${field.name}'. Miller built-in variables are
-NF NR FNR FILENUM FILENAME PI E, and ENV["namegoeshere"] to access environment
+NF NR FNR FILENUM FILENAME M_PI M_E, and ENV["namegoeshere"] to access environment
 variables. The environment-variable name may be an expression, e.g. a field
 value.
 
@@ -3538,15 +3538,6 @@ The body statements must be wrapped in curly braces.
 .fi
 .if n \{\
 .RE
-.SS "E"
-.if n \{\
-.RS 0
-.\}
-.nf
-E: the mathematical constant.
-.fi
-.if n \{\
-.RE
 .SS "ENV"
 .if n \{\
 .RS 0
@@ -3614,6 +3605,24 @@ the default).
 .fi
 .if n \{\
 .RE
+.SS "M_E"
+.if n \{\
+.RS 0
+.\}
+.nf
+M_E: the mathematical constant e.
+.fi
+.if n \{\
+.RE
+.SS "M_PI"
+.if n \{\
+.RS 0
+.\}
+.nf
+M_PI: the mathematical constant pi.
+.fi
+.if n \{\
+.RE
 .SS "NF"
 .if n \{\
 .RS 0
@@ -3659,15 +3668,6 @@ OPS: evaluates to the output pair separator from the command line.
 ORS: evaluates to the output record separator from the command line,
 or to LF or CRLF from the input data if in autodetect mode (which is
 the default).
-.fi
-.if n \{\
-.RE
-.SS "PI"
-.if n \{\
-.RS 0
-.\}
-.nf
-PI: the mathematical constant.
 .fi
 .if n \{\
 .RE
