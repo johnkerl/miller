@@ -15,7 +15,7 @@ BUGFIXES
 5.3.0 TO DO:
 
 ! mmap-limit option !!!
-* comment pass-through option
+! comment pass-through option
 ? fromhex ?
 ! --skip-comments
 ! count-similar

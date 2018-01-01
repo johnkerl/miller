@@ -9,6 +9,7 @@
 #include "containers/slls.h"
 #include "containers/sllv.h"
 #include "cli/quoting.h"
+#include "cli/comment_handling.h"
 #include "cli/json_array_ingest.h"
 #include "containers/lhmsll.h"
 #include "containers/lhmss.h"
@@ -41,6 +42,7 @@ typedef struct _cli_reader_opts_t {
 	char* prepipe;
 
 	char* comment_string;
+	comment_handling_t comment_handling;
 
 	// Fake internal-data-generator 'reader'
 	generator_opts_t generator_opts;

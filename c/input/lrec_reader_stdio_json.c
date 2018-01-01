@@ -16,6 +16,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "cli/comment_handling.h"
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "input/file_ingestor_stdio.h"

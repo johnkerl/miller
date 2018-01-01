@@ -1,3 +1,4 @@
+#include "cli/comment_handling.h"
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
 #include "input/lrec_readers.h"

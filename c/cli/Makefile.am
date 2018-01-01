@@ -2,6 +2,7 @@ noinst_LTLIBRARIES=	libcli.la
 libcli_la_SOURCES=	\
 			argparse.c \
 			argparse.h \
+			comment_handling.h \
 			json_array_ingest.h \
 			mlrcli.c \
 			mlrcli.h \

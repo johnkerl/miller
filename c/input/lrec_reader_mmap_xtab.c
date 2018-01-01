@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "cli/comment_handling.h"
 #include "lib/mlrutil.h"
 #include "input/file_reader_mmap.h"
 #include "input/lrec_readers.h"

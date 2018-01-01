@@ -1019,6 +1019,7 @@ void cli_reader_opts_init(cli_reader_opts_t* preader_opts) {
 
 	preader_opts->prepipe                        = NULL;
 	preader_opts->comment_string                 = NULL;
+	preader_opts->comment_handling               = COMMENTS_ARE_DATA;
 
 	// xxx temp
 	preader_opts->generator_opts.field_name     = "i";
@@ -1481,11 +1482,24 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 
 	} else if (streq(argv[argi], "--skip-comments")) {
 		preader_opts->comment_string = DEFAULT_COMMENT_STRING;
+		preader_opts->comment_handling = SKIP_COMMENTS;
 		argi += 1;
 
 	} else if (streq(argv[argi], "--skip-comments-with")) {
 		check_arg_count(argv, argi, argc, 2);
 		preader_opts->comment_string = argv[argi+1];
+		preader_opts->comment_handling = SKIP_COMMENTS;
+		argi += 2;
+
+	} else if (streq(argv[argi], "--pass-comments")) {
+		preader_opts->comment_string = DEFAULT_COMMENT_STRING;
+		preader_opts->comment_handling = PASS_COMMENTS;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--pass-comments-with")) {
+		check_arg_count(argv, argi, argc, 2);
+		preader_opts->comment_string = argv[argi+1];
+		preader_opts->comment_handling = PASS_COMMENTS;
 		argi += 2;
 
 	}

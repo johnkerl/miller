@@ -8,6 +8,7 @@
 // ================================================================
 
 #include <stdlib.h>
+#include "cli/comment_handling.h"
 #include "lib/mlrutil.h"
 #include "input/file_reader_stdio.h"
 #include "input/line_readers.h"

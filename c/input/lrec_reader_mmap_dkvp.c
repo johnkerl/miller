@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "cli/comment_handling.h"
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "input/file_reader_mmap.h"
@@ -23,6 +24,7 @@ typedef struct _lrec_reader_mmap_dkvp_state_t {
 	int   ipslen;
 	int   allow_repeat_ifs;
 	int   do_auto_line_term;
+	comment_handling_t comment_handling;
 	char* comment_string;
 	int   comment_string_length;
 } lrec_reader_mmap_dkvp_state_t;
