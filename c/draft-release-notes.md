@@ -10,7 +10,7 @@ verb lets you compute cluster sizes by cluster labels.
 
 * While Miller DSL arithmetic gracefully overflows from 64-integer to
 double-precision float (see also
-[**here**](http://johnkerl.org/miller/doc/reference.html#Arithmetic)), there
+[**here**](http://johnkerl.org/miller/doc/reference.html#Arithmetic), there
 are now the **integer-preserving arithmetic operators** ``.+` `.-` `.*` `./` `.//`
 for those times when you want integer overflow.
 
@@ -20,7 +20,7 @@ for those times when you want integer overflow.
 an alias for `--nidx --fs tab`, and `mlr -t` is an alias for `mlr
 --tsvlite`.
 
-* The mathematical constants pi and e have been renamed from `PI` and `E` to `M_PI` and `M_E`, respectively. (It's annoying to get a syntax error when you try to define a variable named `E` in the DSL, when `A` through `D` work just fine.) This is a backward incompatibility, but not enough of us to justify calling this release Miller 6.0.0.
+* The mathematical constants &pi; and <i>e</i> have been renamed from `PI` and `E` to `M_PI` and `M_E`, respectively. (It's annoying to get a syntax error when you try to define a variable named `E` in the DSL, when `A` through `D` work just fine.) This is a backward incompatibility, but not enough of us to justify calling this release Miller 6.0.0.
 
 ## Documentation:
 
