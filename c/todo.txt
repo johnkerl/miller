@@ -1,17 +1,6 @@
 ================================================================
 BUGFIXES
 
-* CSV w/ BOM w/ double-quoted header line
-
-  $ mlr --pprint put '@quantity_sum += $quanity; @rate_sum += $rate; end {emit @quantity_sum, @rate_sum}' < a
-  color  shape    flag index quantity rate
-  yellow triangle 1    11    43.6498  9.8870
-  red    square   1    15    79.2778  0.0130
-  red    circle   1    16    13.8103  2.9010
-
-  $ mlr --pprint put '@quantity_sum += $quanity; @rate_sum += $rate; end {emit (@quantity_sum, @rate_sum)}' < a
-  Segmentation fault: 11
-
 * near-overflow case:
   $ mlr sort -n x reg_test/input/near-ovf.dkvp 
   x=9223372036854775807,y=-9223372036854775803
@@ -25,7 +14,6 @@ BUGFIXES
 ================================================================
 5.3.0 TO DO:
 
-* CSV BOM-strip w/ dquote header
 * comment pass-through option
 
 ? fromhex ?
@@ -38,6 +26,7 @@ k ruby/python/etc. dkvp-reader/writers, and example code
 * int-overflowing arithmetic operators
 * fix https://github.com/johnkerl/miller/issues/158
 * fix https://github.com/johnkerl/miller/issues/159
+k CSV BOM-strip w/ dquote header
 
 ================================================================
 COMMENTS:
