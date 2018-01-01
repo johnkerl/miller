@@ -15,18 +15,10 @@ BUGFIXES
 5.3.0 TO DO:
 
 * comment pass-through option
-
 ? fromhex ?
 ! --skip-comments
 ! count-similar
   -> ut
-! stats1 count-unique ... uniq -c -ish
-k ruby/python/etc. dkvp-reader/writers, and example code
-* FAQ for https://github.com/johnkerl/miller/issues/150
-* int-overflowing arithmetic operators
-* fix https://github.com/johnkerl/miller/issues/158
-* fix https://github.com/johnkerl/miller/issues/159
-k CSV BOM-strip w/ dquote header
 
 ================================================================
 COMMENTS:

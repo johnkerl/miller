@@ -39,8 +39,10 @@ longer-term follow-on [**issue 151**](https://github.com/johnkerl/miller/issues/
 
 ## Bugfixes:
 
+* [**Issue 159**](https://github.com/johnkerl/miller/issues/159) fixes regex-match of literal dot.
+
 * [**Issue 160**](https://github.com/johnkerl/miller/issues/160) fixes out-of-memory cases for huge files. This is an old bug, as old as Miller, and is due to inadequate testing of huge-file cases. The problem is simple: Miller prefers memory-mapped I/O (using `mmap`) over `stdio` since `mmap` is fractionally faster. Yet as any processing steps through an input file, more and more pages are faulted in -- and, unfortunately, previous pages are not freed once memory pressure increases. (This despite gallant attempts with `madvise`.) Once all processing is done, the memory is released; there is no leak per se. But the Miller process can crash before the entire file is read. The solution is equally simple: to prefer `stdio` over `mmap` for files over xxx finish typing me up re size and command-line flags and doc link.
 
-* [**Issue 162**](https://github.com/johnkerl/miller/issues/162) fixes a corner case doing multi-emit of aggregate variables when the first variable name is a typo.
+* [**Issue 161**](https://github.com/johnkerl/miller/issues/161) fixes a CSV-parse error (with `unwrapped double quote at line 0`) when a CSV file starts with the UTF-8 bill-of-materials ("BOM") sequence `0xef` `0xbb` `0xbf` and the header line has double-quoted fields. ([Release 5.2.0](https://github.com/johnkerl/miller/releases/tag/v5.2.0) introduced handling for UTF-8 BOMs, but missed the case of double-quoted header line.)
 
-* [**Issue 159**](https://github.com/johnkerl/miller/issues/159) fixes regex-match of literal dot.
+* [**Issue 162**](https://github.com/johnkerl/miller/issues/162) fixes a corner case doing multi-emit of aggregate variables when the first variable name is a typo.
