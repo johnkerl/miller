@@ -175,6 +175,14 @@ static void lrec_reader_mmap_csv_sof(void* pvstate, void* pvhandle) {
 	lrec_reader_mmap_csv_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
 	pstate->expect_header_line_next = pstate->use_implicit_header ? FALSE : TRUE;
+
+	// Strip UTF-8 BOM if any
+	file_reader_mmap_state_t* phandle = pvhandle;
+	if ((phandle->eof - phandle->sol) >= 3) {
+		if (memcmp(phandle->sol, "\xef\xbb\xbf", 3) == 0) {
+			phandle->sol += 3;
+		}
+	}
 }
 
 // ----------------------------------------------------------------
@@ -208,12 +216,7 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 				}
 				// Transfer pointer-free responsibility from the rslls to the
 				// header fields in the header keeper
-				if (string_starts_with(pe->value, "\xef\xbb\xbf")) {
-					// Strip UTF-8 BOM if any
-					slls_append(pheader_fields, mlr_strdup_or_die(&pe->value[3]), FREE_ENTRY_VALUE);
-				} else {
-					slls_append(pheader_fields, pe->value, pe->free_flag);
-				}
+				slls_append(pheader_fields, pe->value, pe->free_flag);
 				pe->free_flag = 0;
 			}
 			rslls_reset(pstate->pfields);

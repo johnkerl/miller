@@ -45,6 +45,12 @@
 #define DQUOTE_IFS_STRIDX    0x2007
 #define DQUOTE_EOF_STRIDX    0x2008
 #define DQUOTE_DQUOTE_STRIDX 0x2009
+#define UTF8_BOM_STRIDX      0x200b
+
+#define UTF8_BOM "\xef\xbb\xbf"
+#define UTF8_BOM_LENGTH 3
+
+//#define DEBUG_PARSER
 
 // ----------------------------------------------------------------
 typedef struct _lrec_reader_stdio_csv_state_t {
@@ -73,6 +79,7 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	byte_reader_t*      pbr;
 	peek_file_reader_t* pfr;
 
+	parse_trie_t*       putf8_bom_parse_trie;
 	parse_trie_t*       pno_dquote_parse_trie;
 	parse_trie_t*       pdquote_parse_trie;
 
@@ -87,7 +94,7 @@ static void    lrec_reader_stdio_csv_free(lrec_reader_t* preader);
 static void    lrec_reader_stdio_csv_sof(void* pvstate, void* pvhandle);
 static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, context_t* pctx);
 static int     lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pfields,
-	context_t* pctx);
+	context_t* pctx, int is_header);
 static lrec_t* paste_indices_and_data(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pdata_fields,
 	context_t* pctx);
 static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pdata_fields,
@@ -123,6 +130,12 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implici
 
 	pstate->dquotelen     = strlen(pstate->dquote);
 
+
+	// Parse trie for UTF-8 BOM
+	pstate->putf8_bom_parse_trie = parse_trie_alloc();
+	parse_trie_add_string(pstate->putf8_bom_parse_trie, UTF8_BOM, UTF8_BOM_STRIDX);
+
+	// Parse trie for non-double-quoted fields
 	pstate->pno_dquote_parse_trie = parse_trie_alloc();
 	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->eof,     EOF_STRIDX);
 	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->irs,     IRS_STRIDX);
@@ -130,6 +143,7 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implici
 	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->ifs,     IFS_STRIDX);
 	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->dquote,  DQUOTE_STRIDX);
 
+	// Parse trie for double-quoted fields
 	pstate->pdquote_parse_trie = parse_trie_alloc();
 	if (pstate->do_auto_line_term) {
 		pstate->dquote_irs  = mlr_paste_2_strings("\"", "\n");
@@ -147,10 +161,13 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implici
 	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_eof,    DQUOTE_EOF_STRIDX);
 	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_dquote, DQUOTE_DQUOTE_STRIDX);
 
+
 	pstate->pfields = rslls_alloc();
 	pstate->psb = sb_alloc(STRING_BUILDER_INIT_SIZE);
 	pstate->pbr = stdio_byte_reader_alloc();
-	pstate->pfr = pfr_alloc(pstate->pbr, mlr_imax2(pstate->pno_dquote_parse_trie->maxlen,
+	pstate->pfr = pfr_alloc(pstate->pbr, mlr_imax3(
+		pstate->putf8_bom_parse_trie->maxlen,
+		pstate->pno_dquote_parse_trie->maxlen,
 		pstate->pdquote_parse_trie->maxlen));
 
 	pstate->expect_header_line_next   = use_implicit_header ? FALSE : TRUE;
@@ -177,6 +194,7 @@ static void lrec_reader_stdio_csv_free(lrec_reader_t* preader) {
 	}
 	lhmslv_free(pstate->pheader_keepers);
 	pfr_free(pstate->pfr);
+	parse_trie_free(pstate->putf8_bom_parse_trie);
 	parse_trie_free(pstate->pno_dquote_parse_trie);
 	parse_trie_free(pstate->pdquote_parse_trie);
 	rslls_free(pstate->pfields);
@@ -204,7 +222,7 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 	// Ingest the next header line, if expected
 	if (pstate->expect_header_line_next) {
 		while (TRUE) {
-			if (!lrec_reader_stdio_csv_get_fields(pstate, pstate->pfields, pctx))
+			if (!lrec_reader_stdio_csv_get_fields(pstate, pstate->pfields, pctx, TRUE))
 				return NULL;
 			pstate->ilno++;
 
@@ -227,14 +245,7 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 				}
 				// Transfer pointer-free responsibility from the rslls to the
 				// header fields in the header keeper
-				if (string_starts_with(pe->value, "\xef\xbb\xbf")) {
-					// Strip UTF-8 BOM if any
-					slls_append(pheader_fields, mlr_strdup_or_die(&pe->value[3]), FREE_ENTRY_VALUE);
-					if (pe->free_flag & FREE_ENTRY_VALUE)
-						free(pe->value);
-				} else {
-					slls_append(pheader_fields, pe->value, pe->free_flag);
-				}
+				slls_append(pheader_fields, pe->value, pe->free_flag);
 				pe->free_flag = 0;
 			}
 			rslls_reset(pstate->pfields);
@@ -255,7 +266,7 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 
 	// Ingest the next data line, if expected
 	while (TRUE) {
-		int rc = lrec_reader_stdio_csv_get_fields(pstate, pstate->pfields, pctx);
+		int rc = lrec_reader_stdio_csv_get_fields(pstate, pstate->pfields, pctx, FALSE);
 		pstate->ilno++;
 		if (rc == FALSE) // EOF
 			return NULL;
@@ -278,7 +289,7 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 }
 
 static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pfields,
-	context_t* pctx)
+	context_t* pctx, int is_header)
 {
 	int rc, stridx, matchlen, record_done, field_done;
 	peek_file_reader_t* pfr = pstate->pfr;
@@ -289,11 +300,29 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 	if (pfr_peek_char(pfr) == (char)EOF) // char defaults to unsigned on some platforms
 		return FALSE;
 
-	// loop over fields in record
+	// Strip the UTF-8 BOM, if any. This is MUCH simpler for mmap, and for stdio on files.  For mmap
+	// we can test the first 3 bytes, then skip past them or not. For stdio on files we can fread
+	// the first 3 bytes, then rewind the fp if they're not the UTF-8 BOM. But for stdio on stdin
+	// (which is the primary reason we support stdio in Miller), we cannot rewind: stdin is not
+	// rewindable.
+	if (is_header) {
+		pfr_buffer_by(pfr, UTF8_BOM_LENGTH);
+		int rc = parse_trie_ring_match(pstate->putf8_bom_parse_trie,
+			pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
+			&stridx, &matchlen);
+#ifdef DEBUG_PARSER
+		printf("RC=%d stridx=0x%04x matchlen=%d\n", rc, stridx, matchlen);
+#endif
+		if (rc == TRUE && stridx == UTF8_BOM_STRIDX) {
+			pfr_advance_by(pfr, matchlen);
+		}
+	}
+
+	// Loop over fields in record
 	record_done = FALSE;
 	while (!record_done) {
 		// Assumption is dquote is "\""
-		if (pfr_peek_char(pfr) != pstate->dquote[0]) {
+		if (pfr_peek_char(pfr) != pstate->dquote[0]) { // NOT DOUBLE-QUOTED
 
 			// Loop over characters in field
 			field_done = FALSE;
@@ -365,7 +394,7 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 				}
 			}
 
-		} else {
+		} else { // DOUBLE-QUOTED
 			pfr_advance_by(pfr, pstate->dquotelen);
 
 			// loop over characters in field

@@ -44858,6 +44858,16 @@ a b c
 1 2 3
 4 5 6
 
+mlr --icsv --opprint cat ./reg_test/input/bom-dquote-header.csv
+a b c
+1 2 3
+4 5 6
+
+mlr --icsv --opprint cat
+a b c
+1 2 3
+4 5 6
+
 
 ================================================================
 MMAP AT PAGE BOUNDARIES

@@ -132,6 +132,7 @@ int string_starts_with(char* string, char* prefix);
 int string_ends_with(char* string, char* suffix, int* pstringlen);
 
 int mlr_imax2(int a, int b);
+int mlr_imax3(int a, int b, int c);
 int power_of_two_above(int n);
 
 // The caller should free the return value. Maps two-character sequences such as

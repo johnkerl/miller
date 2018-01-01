@@ -5119,6 +5119,8 @@ announce UTF-8 BOM
 
 run_mlr --icsv --opprint cat   $indir/bom.csv
 run_mlr --icsv --opprint cat < $indir/bom.csv
+run_mlr --icsv --opprint cat   $indir/bom-dquote-header.csv
+run_mlr --icsv --opprint cat < $indir/bom-dquote-header.csv
 
 # ----------------------------------------------------------------
 announce MMAP AT PAGE BOUNDARIES

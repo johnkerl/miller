@@ -19,6 +19,7 @@ EXTRA_DIST=	\
 		b.csv \
 		b.pprint \
 		bom.csv \
+		bom-dquote-header.csv \
 		braced.csv \
 		c.csv \
 		c.pprint \

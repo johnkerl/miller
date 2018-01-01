@@ -363,6 +363,11 @@ int mlr_imax2(int a, int b) {
 }
 
 // ----------------------------------------------------------------
+int mlr_imax3(int a, int b, int c) {
+	return mlr_imax2(a, mlr_imax2(b, c));
+}
+
+// ----------------------------------------------------------------
 int power_of_two_above(int n) {
 	n |= (n >> 1);
 	n |= (n >> 2);
