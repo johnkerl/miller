@@ -41,4 +41,6 @@ longer-term follow-on [**issue 151**](https://github.com/johnkerl/miller/issues/
 
 * xxx mmap/madvise
 
+* xxx nonesuch-lash https://github.com/johnkerl/miller/issues/162
+
 * [**Issue 159**](https://github.com/johnkerl/miller/issues/159): fix regex-match of literal dot.
