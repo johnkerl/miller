@@ -15,7 +15,6 @@ addons:
 # Note: 'clang -fsanitize=address' is not the right way to get an ASAN build.
 # This needs work.
 compiler:
-  - clang -fsanitize=address
   - gcc
 
 before_script: autoreconf -fiv
