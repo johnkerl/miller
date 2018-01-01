@@ -1060,7 +1060,7 @@ static void mlhhmv_levels_to_lrecs_lashed_across_records(
 			}
 		}
 
-	} else {
+	} else if (pplevels[0] != NULL) {
 		// If there are no more remaining namelist entries, flatten remaining map levels using the join separator
 		// (default ":") and use them to create lrec values.
 		lrec_t* pnextrec = lrec_copy(ptemplate);
