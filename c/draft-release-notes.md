@@ -20,7 +20,7 @@ for those times when you want integer overflow.
 an alias for `--nidx --fs tab`, and `mlr -t` is an alias for `mlr
 --tsvlite`.
 
-* The mathematical constants &pi; and <i>e</i> have been renamed from `PI` and `E` to `M_PI` and `M_E`, respectively. (It's annoying to get a syntax error when you try to define a variable named `E` in the DSL, when `A` through `D` work just fine.) This is a backward incompatibility, but not enough of us to justify calling this release Miller 6.0.0.
+* The mathematical constants **&pi; and <i>e</i> have been renamed from `PI` and `E` to `M_PI` and `M_E`, respectively**. (It's annoying to get a syntax error when you try to define a variable named `E` in the DSL, when `A` through `D` work just fine.) This is a backward incompatibility, but not enough of us to justify calling this release Miller 6.0.0.
 
 ## Documentation:
 
@@ -39,8 +39,8 @@ longer-term follow-on [**issue 151**](https://github.com/johnkerl/miller/issues/
 
 ## Bugfixes:
 
-* xxx mmap/madvise
+* [**Issue 160**](https://github.com/johnkerl/miller/issues/160) fixes out-of-memory cases for huge files. This is an old bug, as old as Miller, and is due to inadequate testing of huge-file cases. The problem is simple: Miller prefers memory-mapped I/O (using `mmap`) over `stdio` since `mmap` is fractionally faster. Yet as any processing steps through an input file, more and more pages are faulted in -- and, unfortunately, previous pages are not freed once memory pressure increases. (This despite gallant attempts with `madvise`.) Once all processing is done, the memory is released; there is no leak per se. But the Miller process can crash before the entire file is read. The solution is equally simple: to prefer `stdio` over `mmap` for files over xxx finish typing me up re size and command-line flags and doc link.
 
-* xxx nonesuch-lash https://github.com/johnkerl/miller/issues/162
+* [**Issue 162**](https://github.com/johnkerl/miller/issues/162) fixes a corner case doing multi-emit of aggregate variables when the first variable name is a typo.
 
-* [**Issue 159**](https://github.com/johnkerl/miller/issues/159): fix regex-match of literal dot.
+* [**Issue 159**](https://github.com/johnkerl/miller/issues/159) fixes regex-match of literal dot.
