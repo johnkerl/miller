@@ -17,36 +17,27 @@ BUGFIXES
 * comment-handling:
   o --pass-comments option
   o xxxes
+  o streqn-past-eof scenarios @ page boundaries ...
   o UT for skip/pass
+
+    input/lrec_reader_mmap_csv.c:9
+    input/lrec_reader_mmap_csvlite.c:37
+    input/lrec_reader_mmap_dkvp.c:25
+    input/lrec_reader_mmap_json.c:7
+    input/lrec_reader_mmap_nidx.c:10
+    input/lrec_reader_mmap_xtab.c:47
+
+    input/lrec_reader_stdio_csv.c:9
+    input/lrec_reader_stdio_csvlite.c:13
+    input/lrec_reader_stdio_dkvp.c:21
+    input/lrec_reader_stdio_json.c:7
+    input/lrec_reader_stdio_nidx.c:21
+    input/lrec_reader_stdio_xtab.c:8
+
+  o mlh
+  o mld
 * sql in/outs -> own page?
 * sql-setup doc somewhere .......
-
-================================================================
-COMMENTS:
-
-! pass-through variant
-k mlrcli
-k work into lrec_readers API calls, stubbed
-* impl off one at a time
-* mlh
-* mld
-* streqn-past-eof scenarios @ page boundaries ...
-
-* UT
-
-  input/lrec_reader_mmap_csv.c:9
-  input/lrec_reader_mmap_csvlite.c:37
-  input/lrec_reader_mmap_dkvp.c:25
-  input/lrec_reader_mmap_json.c:7
-  input/lrec_reader_mmap_nidx.c:10
-  input/lrec_reader_mmap_xtab.c:47
-
-  input/lrec_reader_stdio_csv.c:9
-  input/lrec_reader_stdio_csvlite.c:13
-  input/lrec_reader_stdio_dkvp.c:21
-  input/lrec_reader_stdio_json.c:7
-  input/lrec_reader_stdio_nidx.c:21
-  input/lrec_reader_stdio_xtab.c:8
 
 ================================================================
 FUNDAM:
