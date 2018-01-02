@@ -21,6 +21,7 @@ BUGFIXES
 ! count-similar
   -> ut
 * sql in/outs -> own page?
+* sql-setup doc somewhere .......
 
 ================================================================
 COMMENTS:

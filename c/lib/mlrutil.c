@@ -509,6 +509,17 @@ char* mlr_alloc_double_backslash(char* input) {
 }
 
 // ----------------------------------------------------------------
+// Returns -1 on error
+ssize_t get_file_size(char* filename) {
+	struct stat statbuf;
+	if (stat(filename, &statbuf) < 0) {
+		return (ssize_t)(-1);
+	} else {
+		return statbuf.st_size;
+	}
+}
+
+// ----------------------------------------------------------------
 char* read_file_into_memory(char* filename, size_t* psize) {
 	struct stat statbuf;
 	if (stat(filename, &statbuf) < 0) {

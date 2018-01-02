@@ -168,6 +168,9 @@ char* mlr_alloc_unbackslash(char* input);
 // as desired.
 char* mlr_alloc_double_backslash(char* input);
 
+// Returns -1 on error
+ssize_t get_file_size(char* filename);
+
 // The caller should free the return value.
 char* read_file_into_memory(char* filename, size_t* psize);
 // The caller should free the return value.

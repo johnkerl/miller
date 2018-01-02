@@ -44,6 +44,9 @@ typedef struct _cli_reader_opts_t {
 	char* comment_string;
 	comment_handling_t comment_handling;
 
+	// https://github.com/johnkerl/miller/issues/160
+	ssize_t max_file_size_for_mmap;
+
 	// Fake internal-data-generator 'reader'
 	generator_opts_t generator_opts;
 

@@ -32,6 +32,7 @@
 #define DEFAULT_JSON_FLATTEN_SEPARATOR   ":"
 #define DEFAULT_OOSVAR_FLATTEN_SEPARATOR ":"
 #define DEFAULT_COMMENT_STRING           "#"
+#define DEFAULT_MAX_FILE_SIZE_FOR_MMAP (4LL*1024LL*1024LL*1024LL)
 
 // ----------------------------------------------------------------
 static mapper_setup_t* mapper_lookup_table[] = {
@@ -251,12 +252,32 @@ cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 		slls_append(popts->filenames, argv[argi], NO_FREE);
 	}
 
+	// Check for use of mmap. It's fractionally faster than stdio (due to fewer data copies
+	// -- lrecs can be pointer-backed by mmap memory) but we can't use it in all situations.
 	if (no_input) {
 		slls_free(popts->filenames);
 		popts->filenames = NULL;
 	} else if (popts->filenames->length == 0) {
 		// No filenames means read from standard input, and standard input cannot be mmapped.
 		popts->reader_opts.use_mmap_for_read = FALSE;
+	} else if (popts->reader_opts.use_mmap_for_read == TRUE) {
+		// https://github.com/johnkerl/miller/issues/160: don't use mmap for large files.
+		//
+		// If any input files don't exist, don't error out just yet ... it's possible that the user
+		// is doing some complex put-with-tee or somesuch which will create the input file by the
+		// time it's needed. In that case we of course can't know the size yet, so avoid mmap there
+		// to be safe.
+		int all_exist_and_are_small_enough = TRUE;
+		for (sllse_t* pe = popts->filenames->phead; pe != NULL; pe = pe->pnext) {
+			ssize_t file_size = get_file_size(pe->value);
+			if (file_size == (ssize_t)(-1) || file_size >= popts->reader_opts.max_file_size_for_mmap) {
+				all_exist_and_are_small_enough = FALSE;
+				break;
+			}
+		}
+		if (!all_exist_and_are_small_enough) {
+			popts->reader_opts.use_mmap_for_read = FALSE;
+		}
 	}
 
 	if (popts->do_in_place && (popts->filenames == NULL || popts->filenames->length == 0)) {
@@ -763,6 +784,14 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "\n");
 	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
 	fprintf(o, "\n");
+	fprintf(o, "  --mmap --no-mmap --mmap-below {n} Use mmap for files whenever possible, never, or\n");
+	fprintf(o, "                                  for files less than n bytes in size. Default is for\n");
+	fprintf(o, "                                  files less than %lld bytes in size.\n", DEFAULT_MAX_FILE_SIZE_FOR_MMAP);
+	fprintf(o, "                                  'Whenever possible' means always except for when reading\n");
+	fprintf(o, "                                  standard input which is not mmappable. If you don't know\n");
+	fprintf(o, "                                  what this means, don't worry about it -- it's a minor\n");
+	fprintf(o, "                                  performance optimization.\n");
+	fprintf(o, "\n");
 	fprintf(o, "  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for\n");
 	fprintf(o, "  DKVP-formatted input and pretty-printed output.\n");
 }
@@ -1020,6 +1049,8 @@ void cli_reader_opts_init(cli_reader_opts_t* preader_opts) {
 	preader_opts->prepipe                        = NULL;
 	preader_opts->comment_string                 = NULL;
 	preader_opts->comment_handling               = COMMENTS_ARE_DATA;
+
+	preader_opts->max_file_size_for_mmap         = DEFAULT_MAX_FILE_SIZE_FOR_MMAP;
 
 	// xxx temp
 	preader_opts->generator_opts.field_name     = "i";
@@ -1473,6 +1504,17 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 	} else if (streq(argv[argi], "--no-mmap")) {
 		preader_opts->use_mmap_for_read = FALSE;
 		argi += 1;
+
+	} else if (streq(argv[argi], "--mmap-below")) {
+		check_arg_count(argv, argi, argc, 2);
+		preader_opts->use_mmap_for_read = TRUE;
+		long long llmax;
+		if (sscanf(argv[argi+1], "%lld", &llmax) != 1) {
+			fprintf(stderr, "%s: could not scan \"%s\".\n",
+				MLR_GLOBALS.bargv0, argv[argi+1]);
+		}
+		preader_opts->max_file_size_for_mmap = llmax;
+		argi += 2;
 
 	} else if (streq(argv[argi], "--prepipe")) {
 		check_arg_count(argv, argi, argc, 2);
