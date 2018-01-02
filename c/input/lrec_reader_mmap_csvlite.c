@@ -81,7 +81,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(fi
 
 // ----------------------------------------------------------------
 lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs, int use_implicit_header,
-	char* comment_string)
+	comment_handling_t comment_handling, char* comment_string)
 {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 

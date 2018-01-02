@@ -23,6 +23,7 @@ typedef struct _lrec_reader_stdio_xtab_state_t {
 	int    allow_repeat_ips;
 	int    do_auto_line_term;
 	int    at_eof;
+	comment_handling_t comment_handling;
 	char*  comment_string;
 	size_t line_length;
 } lrec_reader_stdio_xtab_state_t;
@@ -32,7 +33,9 @@ static void    lrec_reader_stdio_xtab_sof(void* pvstate, void* pvhandle);
 static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, context_t* pctx);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips, char* comment_string) {
+lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips,
+	comment_handling_t comment_handling, char* comment_string)
+{
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_xtab_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_xtab_state_t));
@@ -43,6 +46,7 @@ lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repe
 	pstate->allow_repeat_ips  = allow_repeat_ips;
 	pstate->do_auto_line_term = FALSE;
 	pstate->at_eof            = FALSE;
+	pstate->comment_handling  = comment_handling;
 	pstate->comment_string    = comment_string;
 	// This is used to track nominal line length over the file read. Bootstrap with a default length.
 	pstate->line_length       = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
@@ -86,7 +90,7 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 	while (TRUE) {
 		char* line = NULL;
 
-		if (pstate->comment_string == NULL) {
+		if (pstate->comment_handling == COMMENTS_ARE_DATA) {
 			if (pstate->ifslen == 1)
 				line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->ifs[0],
 					&pstate->line_length, pstate->do_auto_line_term, pctx);
@@ -96,10 +100,12 @@ static lrec_t* lrec_reader_stdio_xtab_process(void* pvstate, void* pvhandle, con
 		} else {
 			if (pstate->ifslen == 1)
 				line = mlr_alloc_read_line_single_delimiter_stripping_comments(input_stream, pstate->ifs[0],
-					&pstate->line_length, pstate->do_auto_line_term, pstate->comment_string, pctx);
+					&pstate->line_length, pstate->do_auto_line_term,
+					pstate->comment_handling, pstate->comment_string, pctx);
 			else
-				line = mlr_alloc_read_line_multiple_delimiter_stripping_comments(input_stream, pstate->ifs, pstate->ifslen,
-					&pstate->line_length, pstate->comment_string);
+				line = mlr_alloc_read_line_multiple_delimiter_stripping_comments(input_stream,
+					pstate->ifs, pstate->ifslen, &pstate->line_length,
+					pstate->comment_handling, pstate->comment_string);
 		}
 
 		if (line == NULL) { // EOF

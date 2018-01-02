@@ -57,6 +57,7 @@ typedef struct _lrec_reader_stdio_csvlite_state_t {
 	int    do_auto_line_term;
 	int    use_implicit_header;
 	size_t line_length;
+	comment_handling_t comment_handling;
 	char*  comment_string;
 
 	int  expect_header_line_next;
@@ -70,7 +71,7 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 
 // ----------------------------------------------------------------
 lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs, int use_implicit_header,
-	char* comment_string)
+	comment_handling_t comment_handling, char* comment_string)
 {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
@@ -85,6 +86,7 @@ lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_r
 	pstate->use_implicit_header     = use_implicit_header;
 	// This is used to track nominal line length over the file read. Bootstrap with a default length.
 	pstate->line_length             = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
+	pstate->comment_handling        = comment_handling;
 	pstate->comment_string          = comment_string;
 
 	pstate->expect_header_line_next = use_implicit_header  ? FALSE : TRUE;
@@ -139,7 +141,7 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 		if (pstate->expect_header_line_next) {
 			while (TRUE) {
 				char* hline = NULL;
-				if (pstate->comment_string == NULL) {
+				if (pstate->comment_handling == COMMENTS_ARE_DATA) {
 					if (pstate->irslen == 1)
 						hline = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
 							&pstate->line_length, pstate->do_auto_line_term, pctx);
@@ -149,10 +151,12 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 				} else {
 					if (pstate->irslen == 1)
 						hline = mlr_alloc_read_line_single_delimiter_stripping_comments(input_stream, pstate->irs[0],
-							&pstate->line_length, pstate->do_auto_line_term, pstate->comment_string, pctx);
+							&pstate->line_length, pstate->do_auto_line_term,
+							pstate->comment_handling, pstate->comment_string, pctx);
 					else
 						hline = mlr_alloc_read_line_multiple_delimiter_stripping_comments(input_stream,
-							pstate->irs, pstate->irslen, &pstate->line_length, pstate->comment_string);
+							pstate->irs, pstate->irslen, &pstate->line_length,
+							pstate->comment_handling, pstate->comment_string);
 				}
 
 				if (hline == NULL) // EOF
@@ -194,7 +198,7 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 
 		char* line = NULL;
 
-		if (pstate->comment_string == NULL) {
+		if (pstate->comment_handling == COMMENTS_ARE_DATA) {
 			if (pstate->irslen == 1)
 				line = mlr_alloc_read_line_single_delimiter(input_stream, pstate->irs[0],
 					&pstate->line_length, pstate->do_auto_line_term, pctx);
@@ -204,10 +208,12 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 		} else {
 			if (pstate->irslen == 1)
 				line = mlr_alloc_read_line_single_delimiter_stripping_comments(input_stream, pstate->irs[0],
-					&pstate->line_length, pstate->do_auto_line_term, pstate->comment_string, pctx);
+					&pstate->line_length, pstate->do_auto_line_term,
+					pstate->comment_handling, pstate->comment_string, pctx);
 			else
 				line = mlr_alloc_read_line_multiple_delimiter_stripping_comments(input_stream,
-					pstate->irs, pstate->irslen, &pstate->line_length, pstate->comment_string);
+					pstate->irs, pstate->irslen, &pstate->line_length,
+					pstate->comment_handling, pstate->comment_string);
 		}
 
 		if (line == NULL) // EOF

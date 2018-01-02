@@ -87,7 +87,9 @@ static lrec_t* paste_indices_and_data(lrec_reader_mmap_csv_state_t* pstate, rsll
 static lrec_t* paste_header_and_data(lrec_reader_mmap_csv_state_t* pstate, rslls_t* pdata_fields, context_t* pctx);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_mmap_csv_alloc(char* irs, char* ifs, int use_implicit_header, char* comment_string) {
+lrec_reader_t* lrec_reader_mmap_csv_alloc(char* irs, char* ifs, int use_implicit_header,
+	comment_handling_t comment_handling, char* comment_string)
+{
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_mmap_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_mmap_csv_state_t));

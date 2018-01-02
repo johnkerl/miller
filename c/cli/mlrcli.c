@@ -1047,8 +1047,8 @@ void cli_reader_opts_init(cli_reader_opts_t* preader_opts) {
 	preader_opts->use_mmap_for_read              = NEITHER_TRUE_NOR_FALSE;
 
 	preader_opts->prepipe                        = NULL;
-	preader_opts->comment_string                 = NULL;
 	preader_opts->comment_handling               = COMMENTS_ARE_DATA;
+	preader_opts->comment_string                 = NULL;
 
 	preader_opts->max_file_size_for_mmap         = DEFAULT_MAX_FILE_SIZE_FOR_MMAP;
 

@@ -104,7 +104,9 @@ static void*   lrec_reader_stdio_csv_open(void* pvstate, char* prepipe, char* fi
 static void    lrec_reader_stdio_csv_close(void* pvstate, void* pvhandle, char* prepipe);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implicit_header, char* comment_string) {
+lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implicit_header,
+	comment_handling_t comment_handling, char* comment_string)
+{
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
 	lrec_reader_stdio_csv_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_reader_stdio_csv_state_t));

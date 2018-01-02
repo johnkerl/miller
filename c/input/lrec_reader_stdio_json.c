@@ -40,6 +40,7 @@ typedef struct _lrec_reader_stdio_json_state_t {
 	char* specified_line_term;
 	int do_auto_line_term;
 	char* detected_line_term;
+	comment_handling_t comment_handling;
 	char* comment_string;
 } lrec_reader_stdio_json_state_t;
 
@@ -48,8 +49,8 @@ static void    lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle);
 static lrec_t* lrec_reader_stdio_json_process(void* pvstate, void* pvhandle, context_t* pctx);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_stdio_json_alloc(char* input_json_flatten_separator, json_array_ingest_t json_array_ingest,
-	char* line_term, char* comment_string)
+lrec_reader_t* lrec_reader_stdio_json_alloc(char* input_json_flatten_separator, json_array_ingest_t json_array_ingest, char* line_term,
+	comment_handling_t comment_handling, char* comment_string)
 {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
@@ -61,6 +62,7 @@ lrec_reader_t* lrec_reader_stdio_json_alloc(char* input_json_flatten_separator, 
 	pstate->specified_line_term          = line_term;
 	pstate->do_auto_line_term            = FALSE;
 	pstate->detected_line_term           = "\n"; // xxx adapt to MLR_GLOBALS/ctx-const for Windows port
+	pstate->comment_handling             = comment_handling;
 	pstate->comment_string               = comment_string;
 
 	if (streq(line_term, "auto")) {
@@ -150,11 +152,12 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 
 	// Skip comments. For JSON, we ingest the entire blob, this is a matter of finding and iterating over lines.
 	// Miller data comments must be at start of line.
-	if (pstate->comment_string != NULL) {
+	if (pstate->comment_handling != COMMENTS_ARE_DATA) {
 		char* line_term = pstate->specified_line_term;
 		if (pstate->do_auto_line_term && detected_line_term != NULL)
 			line_term = detected_line_term;
-		mlr_json_strip_comments(phandle->sof, phandle->eof, pstate->comment_string, line_term);
+		mlr_json_strip_comments(phandle->sof, phandle->eof,
+			pstate->comment_handling, pstate->comment_string, line_term);
 	}
 
 	while (TRUE) {

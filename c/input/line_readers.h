@@ -2,6 +2,7 @@
 #define LINE_READERS_H
 
 #include <stdio.h>
+#include "cli/comment_handling.h"
 #include "lib/context.h"
 
 // Notes:
@@ -29,18 +30,20 @@ char* mlr_alloc_read_line_multiple_delimiter(
 	size_t*    pold_then_new_strlen);
 
 char* mlr_alloc_read_line_single_delimiter_stripping_comments(
-	FILE*      fp,
-	int        delimiter,
-	size_t*    pold_then_new_strlen,
-	int        do_auto_line_term,
-	char*      comment_string,
-	context_t* pctx);
+	FILE*              fp,
+	int                delimiter,
+	size_t*            pold_then_new_strlen,
+	int                do_auto_line_term,
+	comment_handling_t comment_handling,
+	char*              comment_string,
+	context_t*         pctx);
 
 char* mlr_alloc_read_line_multiple_delimiter_stripping_comments(
-	FILE*      fp,
-	char*      delimiter,
-	int        delimiter_length,
-	size_t*    pold_then_new_strlen,
-	char*      comment_string);
+	FILE*              fp,
+	char*              delimiter,
+	int                delimiter_length,
+	size_t*            pold_then_new_strlen,
+	comment_handling_t comment_handling,
+	char*              comment_string);
 
 #endif // LINE_READERS_H

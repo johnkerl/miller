@@ -1,6 +1,7 @@
 #ifndef MLR_JSON_ADAPTER_H
 #define MLR_JSON_ADAPTER_H
 
+#include "cli/comment_handling.h"
 #include "input/json_parser.h"
 #include "containers/lrec.h"
 
@@ -19,6 +20,7 @@ int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_j
 //   byte *after* the last valid file byte.
 // * The buffer is not assumed to be null-terminated.
 // * Any lines beginning with comment_string are modified by poking space characters up to line_term.
-void mlr_json_strip_comments(char* psof, char* peof, char* comment_string, char* line_term);
+void mlr_json_strip_comments(char* psof, char* peof,
+	comment_handling_t comment_handling, char* comment_string, char* line_term);
 
 #endif // MLR_JSON_ADAPTER_H

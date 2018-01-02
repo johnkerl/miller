@@ -277,7 +277,7 @@ static int populate_from_nested_array(lrec_t* prec, json_value_t* pjson_array, c
 //   byte *after* the last valid file byte.
 // * The buffer is not assumed to be null-terminated.
 // * Any lines beginning with comment_string are modified by poking space characters up to line_term.
-void mlr_json_strip_comments(char* psof, char* peof, char* comment_string, char* line_term) {
+void mlr_json_strip_comments(char* psof, char* peof, comment_handling_t comment_handling, char* comment_string, char* line_term) {
 	int comment_string_len = strlen(comment_string);
 	int line_term_len = strlen(line_term);
 	int at_line_start = TRUE;

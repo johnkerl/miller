@@ -41,8 +41,8 @@ typedef struct _cli_reader_opts_t {
 	// files are read directly rather than through a pipe.
 	char* prepipe;
 
-	char* comment_string;
 	comment_handling_t comment_handling;
+	char* comment_string;
 
 	// https://github.com/johnkerl/miller/issues/160
 	ssize_t max_file_size_for_mmap;

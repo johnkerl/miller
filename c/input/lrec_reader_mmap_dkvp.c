@@ -50,7 +50,7 @@ static lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_stat
 
 // ----------------------------------------------------------------
 lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs,
-	char* comment_string)
+	comment_handling_t comment_handling, char* comment_string)
 {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 

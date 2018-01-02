@@ -133,6 +133,7 @@ char* mlr_alloc_read_line_single_delimiter_stripping_comments(
 	int        delimiter,
 	size_t*    pold_then_new_strlen,
 	int        do_auto_line_term,
+	comment_handling_t comment_handling,
 	char*      comment_string,
 	context_t* pctx)
 {
@@ -142,6 +143,10 @@ char* mlr_alloc_read_line_single_delimiter_stripping_comments(
 		if (line == NULL) {
 			return line;
 		} else if (string_starts_with(line, comment_string)) {
+			if (comment_handling == PASS_COMMENTS) {
+				fputs(line, stdout);
+				fflush(stdout);
+			}
 			free(line);
 		} else {
 			return line;
@@ -155,6 +160,7 @@ char* mlr_alloc_read_line_multiple_delimiter_stripping_comments(
 	char*      delimiter,
 	int        delimiter_length,
 	size_t*    pold_then_new_strlen,
+	comment_handling_t comment_handling,
 	char*      comment_string)
 {
 	while (TRUE) {
@@ -163,6 +169,10 @@ char* mlr_alloc_read_line_multiple_delimiter_stripping_comments(
 		if (line == NULL) {
 			return line;
 		} else if (string_starts_with(line, comment_string)) {
+			if (comment_handling == PASS_COMMENTS) {
+				fputs(line, stdout);
+				fflush(stdout);
+			}
 			free(line);
 		} else {
 			return line;
