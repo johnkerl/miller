@@ -145,6 +145,7 @@ char* mlr_alloc_read_line_single_delimiter_stripping_comments(
 		} else if (string_starts_with(line, comment_string)) {
 			if (comment_handling == PASS_COMMENTS) {
 				fputs(line, stdout);
+				fputc(delimiter, stdout);
 				fflush(stdout);
 			}
 			free(line);
@@ -171,6 +172,7 @@ char* mlr_alloc_read_line_multiple_delimiter_stripping_comments(
 		} else if (string_starts_with(line, comment_string)) {
 			if (comment_handling == PASS_COMMENTS) {
 				fputs(line, stdout);
+				fputs(delimiter, stdout);
 				fflush(stdout);
 			}
 			free(line);

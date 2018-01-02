@@ -20,6 +20,7 @@ typedef struct _lrec_reader_mmap_nidx_state_t {
 	int   ifslen;
 	int   allow_repeat_ifs;
 	int   do_auto_line_term;
+	comment_handling_t comment_handling;
 	char* comment_string;
 	int   comment_string_length;
 } lrec_reader_mmap_nidx_state_t;
@@ -56,6 +57,7 @@ lrec_reader_t* lrec_reader_mmap_nidx_alloc(char* irs, char* ifs, int allow_repea
 	pstate->ifslen                   = strlen(pstate->ifs);
 	pstate->allow_repeat_ifs         = allow_repeat_ifs;
 	pstate->do_auto_line_term        = FALSE;
+	pstate->comment_handling         = comment_handling;
 	pstate->comment_string           = comment_string;
 	pstate->comment_string_length    = comment_string == NULL ? 0 : strlen(comment_string);
 
@@ -145,11 +147,18 @@ static lrec_t* lrec_parse_mmap_nidx_single_irs_single_ifs(file_reader_mmap_state
 		while ((phandle->eof - phandle->sol) >= pstate->comment_string_length
 		&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
 		{
+			if (pstate->comment_handling == PASS_COMMENTS)
+				for (int i = 0; i < pstate->comment_string_length; i++)
+					fputc(phandle->sol[i], stdout);
 			phandle->sol += pstate->comment_string_length;
 			while (phandle->sol < phandle->eof && *phandle->sol != irs) {
+				if (pstate->comment_handling == PASS_COMMENTS)
+					fputc(*phandle->sol, stdout);
 				phandle->sol++;
 			}
 			if (phandle->sol < phandle->eof && *phandle->sol == irs) {
+				if (pstate->comment_handling == PASS_COMMENTS)
+					fputc(*phandle->sol, stdout);
 				phandle->sol++;
 			}
 		}

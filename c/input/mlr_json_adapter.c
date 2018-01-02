@@ -288,9 +288,13 @@ void mlr_json_strip_comments(char* psof, char* peof, comment_handling_t comment_
 		} else if (at_line_start && streqn(p, comment_string, comment_string_len)) {
 			// Fill with spaces to end of line
 			while (p < peof && !streqn(p, line_term, line_term_len)) {
+				if (comment_handling == PASS_COMMENTS)
+					fputc(*p, stdout);
 				*p = ' ';
 				p++;
 			}
+			if (comment_handling == PASS_COMMENTS)
+				fputs(line_term, stdout);
 			at_line_start = TRUE;
 		} else {
 			at_line_start = FALSE;

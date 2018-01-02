@@ -16,6 +16,7 @@ BUGFIXES
 
 * comment-handling:
   o --pass-comments option
+  o xxxes
   o UT for skip/pass
 * sql in/outs -> own page?
 * sql-setup doc somewhere .......

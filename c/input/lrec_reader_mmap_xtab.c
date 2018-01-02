@@ -21,6 +21,7 @@ typedef struct _lrec_reader_mmap_xtab_state_t {
 	int   ipslen;
 	int   allow_repeat_ips;
 	int   do_auto_line_term;
+	comment_handling_t comment_handling;
 	char* comment_string;
 	int   comment_string_length;
 } lrec_reader_mmap_xtab_state_t;
@@ -57,6 +58,7 @@ lrec_reader_t* lrec_reader_mmap_xtab_alloc(char* ifs, char* ips, int allow_repea
 	pstate->ipslen              = strlen(pstate->ips);
 	pstate->allow_repeat_ips    = allow_repeat_ips;
 	pstate->do_auto_line_term   = FALSE;
+	pstate->comment_handling    = comment_handling;
 	pstate->comment_string      = comment_string;
 	pstate->comment_string_length = comment_string == NULL ? 0 : strlen(comment_string);
 
@@ -175,11 +177,18 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state
 			if (comment_string != NULL) {
 				if (phandle->sol < phandle->eof && streqn(phandle->sol, comment_string, comment_string_length)) {
 					skipped_anything = TRUE;
+					if (pstate->comment_handling == PASS_COMMENTS)
+						for (int i = 0; i < pstate->comment_string_length; i++)
+							fputc(phandle->sol[i], stdout);
 					phandle->sol += comment_string_length;
 					while (*phandle->sol != ifs) {
+						if (pstate->comment_handling == PASS_COMMENTS)
+							fputc(*phandle->sol, stdout);
 						phandle->sol++;
 					}
 					if (*phandle->sol == ifs) {
+						if (pstate->comment_handling == PASS_COMMENTS)
+							fputc(*phandle->sol, stdout);
 						phandle->sol++;
 					}
 				}
@@ -202,11 +211,18 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state
 		// Skip comment lines
 		if (comment_string != NULL) {
 			if (streqn(phandle->sol, comment_string, comment_string_length)) {
+				if (pstate->comment_handling == PASS_COMMENTS)
+					for (int i = 0; i < pstate->comment_string_length; i++)
+						fputc(phandle->sol[i], stdout);
 				phandle->sol += comment_string_length;
 				while (phandle->sol < phandle->eof && *phandle->sol != ifs) {
+					if (pstate->comment_handling == PASS_COMMENTS)
+						fputc(*phandle->sol, stdout);
 					phandle->sol++;
 				}
 				if (phandle->sol < phandle->eof && *phandle->sol == ifs) {
+					if (pstate->comment_handling == PASS_COMMENTS)
+						fputc(*phandle->sol, stdout);
 					phandle->sol++;
 				}
 				continue;
@@ -334,11 +350,18 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_
 		// Skip comment lines
 		if (comment_string != NULL) {
 			if (streqn(phandle->sol, comment_string, comment_string_length)) {
+				if (pstate->comment_handling == PASS_COMMENTS)
+					for (int i = 0; i < pstate->comment_string_length; i++)
+						fputc(phandle->sol[i], stdout);
 				phandle->sol += comment_string_length;
 				while (phandle->sol < phandle->eof && *phandle->sol != ifs) {
+					if (pstate->comment_handling == PASS_COMMENTS)
+						fputc(*phandle->sol, stdout);
 					phandle->sol++;
 				}
 				if (phandle->sol < phandle->eof && *phandle->sol == ifs) {
+					if (pstate->comment_handling == PASS_COMMENTS)
+						fputc(*phandle->sol, stdout);
 					phandle->sol++;
 				}
 				continue;
@@ -429,11 +452,19 @@ static lrec_t* lrec_parse_mmap_xtab_multi_ifs_single_ips(file_reader_mmap_state_
 		if (comment_string != NULL) {
 			if (phandle->sol < phandle->eof && streqn(phandle->sol, comment_string, comment_string_length)) {
 				skipped_anything = TRUE;
+				if (pstate->comment_handling == PASS_COMMENTS)
+					for (int i = 0; i < pstate->comment_string_length; i++)
+						fputc(phandle->sol[i], stdout);
 				phandle->sol += comment_string_length;
 				while (phandle->sol < phandle->eof && !streqn(phandle->sol, ifs, ifslen)) {
+					if (pstate->comment_handling == PASS_COMMENTS)
+						fputc(*phandle->sol, stdout);
 					phandle->sol++;
 				}
 				if (phandle->sol < phandle->eof && streqn(phandle->sol, ifs, ifslen)) {
+					if (pstate->comment_handling == PASS_COMMENTS)
+						for (int i = 0; i < ifslen; i++)
+							fputc(phandle->sol[i], stdout);
 					phandle->sol += ifslen;
 				}
 			}
@@ -454,11 +485,19 @@ static lrec_t* lrec_parse_mmap_xtab_multi_ifs_single_ips(file_reader_mmap_state_
 		// Skip comment lines
 		if (comment_string != NULL) {
 			if (streqn(phandle->sol, comment_string, comment_string_length)) {
+				if (pstate->comment_handling == PASS_COMMENTS)
+					for (int i = 0; i < pstate->comment_string_length; i++)
+						fputc(phandle->sol[i], stdout);
 				phandle->sol += comment_string_length;
 				while (phandle->sol < phandle->eof && !streqn(phandle->sol, comment_string, comment_string_length)) {
+					if (pstate->comment_handling == PASS_COMMENTS)
+						fputc(*phandle->sol, stdout);
 					phandle->sol++;
 				}
 				if (phandle->sol < phandle->eof && streqn(phandle->sol, ifs, ifslen)) {
+					if (pstate->comment_handling == PASS_COMMENTS)
+						for (int i = 0; i < ifslen; i++)
+							fputc(phandle->sol[i], stdout);
 					phandle->sol += ifslen;
 				}
 				continue;
@@ -541,11 +580,19 @@ static lrec_t* lrec_parse_mmap_xtab_multi_ifs_multi_ips(file_reader_mmap_state_t
 		if (comment_string != NULL) {
 			if (phandle->sol < phandle->eof && streqn(phandle->sol, comment_string, comment_string_length)) {
 				skipped_anything = TRUE;
+				if (pstate->comment_handling == PASS_COMMENTS)
+					for (int i = 0; i < pstate->comment_string_length; i++)
+						fputc(phandle->sol[i], stdout);
 				phandle->sol += comment_string_length;
 				while (phandle->sol < phandle->eof && !streqn(phandle->sol, ifs, ifslen)) {
+					if (pstate->comment_handling == PASS_COMMENTS)
+						fputc(*phandle->sol, stdout);
 					phandle->sol++;
 				}
 				if (phandle->sol < phandle->eof && streqn(phandle->sol, ifs, ifslen)) {
+					if (pstate->comment_handling == PASS_COMMENTS)
+						for (int i = 0; i < ifslen; i++)
+							fputc(phandle->sol[i], stdout);
 					phandle->sol += ifslen;
 				}
 			}
@@ -565,11 +612,19 @@ static lrec_t* lrec_parse_mmap_xtab_multi_ifs_multi_ips(file_reader_mmap_state_t
 		// Skip comment lines
 		if (comment_string != NULL) {
 			if (streqn(phandle->sol, comment_string, comment_string_length)) {
+				if (pstate->comment_handling == PASS_COMMENTS)
+					for (int i = 0; i < pstate->comment_string_length; i++)
+						fputc(phandle->sol[i], stdout);
 				phandle->sol += comment_string_length;
 				while (phandle->sol < phandle->eof && !streqn(phandle->sol, comment_string, comment_string_length)) {
+					if (pstate->comment_handling == PASS_COMMENTS)
+						fputc(*phandle->sol, stdout);
 					phandle->sol++;
 				}
 				if (phandle->sol < phandle->eof && streqn(phandle->sol, ifs, ifslen)) {
+					if (pstate->comment_handling == PASS_COMMENTS)
+						for (int i = 0; i < ifslen; i++)
+							fputc(phandle->sol[i], stdout);
 					phandle->sol += ifslen;
 				}
 				continue;

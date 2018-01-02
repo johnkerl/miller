@@ -64,6 +64,7 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	char* ifs_eof;
 	char* ifs;
 	int   do_auto_line_term;
+	comment_handling_t comment_handling;
 	char* comment_string;
 	int   comment_string_length;
 
@@ -118,7 +119,8 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implici
 		pstate->do_auto_line_term = TRUE;
 	}
 
-	pstate->comment_string = comment_string;
+	pstate->comment_handling = comment_handling;
+	pstate->comment_string   = comment_string;
 	pstate->comment_string_length = comment_string == NULL ? 0 : strlen(comment_string);
 
 	pstate->eof           = "\xff";
@@ -232,6 +234,7 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 			if (pstate->comment_string != NULL) {
 				if (pstate->pfields->phead != NULL) {
 					if (streqn(pstate->pfields->phead->value, pstate->comment_string, pstate->comment_string_length)) {
+						// xxx fix me
 						rslls_reset(pstate->pfields);
 						continue;
 					}
@@ -276,6 +279,7 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 
 		if (pstate->comment_string != NULL) {
 			if (pstate->pfields->phead != NULL) {
+				// xxx fix me
 				if (streqn(pstate->pfields->phead->value, pstate->comment_string, pstate->comment_string_length)) {
 					rslls_reset(pstate->pfields);
 					continue;

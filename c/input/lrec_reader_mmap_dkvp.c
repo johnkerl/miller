@@ -63,6 +63,7 @@ lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int 
 	pstate->ipslen                = strlen(ips);
 	pstate->allow_repeat_ifs      = allow_repeat_ifs;
 	pstate->do_auto_line_term     = FALSE;
+	pstate->comment_handling      = comment_handling;
 	pstate->comment_string        = comment_string;
 	pstate->comment_string_length = comment_string == NULL ? 0 : strlen(comment_string);
 
@@ -152,11 +153,18 @@ static lrec_t* lrec_parse_mmap_dkvp_single_irs_single_others(file_reader_mmap_st
 		while ((phandle->eof - phandle->sol) >= pstate->comment_string_length
 		&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
 		{
+			if (pstate->comment_handling == PASS_COMMENTS)
+				for (int i = 0; i < pstate->comment_string_length; i++)
+					fputc(phandle->sol[i], stdout);
 			phandle->sol += pstate->comment_string_length;
 			while (phandle->sol < phandle->eof && *phandle->sol != irs) {
+				if (pstate->comment_handling == PASS_COMMENTS)
+					fputc(*phandle->sol, stdout);
 				phandle->sol++;
 			}
 			if (phandle->sol < phandle->eof && *phandle->sol == irs) {
+				if (pstate->comment_handling == PASS_COMMENTS)
+					fputc(*phandle->sol, stdout);
 				phandle->sol++;
 			}
 		}
@@ -286,11 +294,19 @@ static lrec_t* lrec_parse_mmap_dkvp_multi_irs_single_others(file_reader_mmap_sta
 		while ((phandle->eof - phandle->sol) >= pstate->comment_string_length
 		&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
 		{
+			if (pstate->comment_handling == PASS_COMMENTS)
+				for (int i = 0; i < pstate->comment_string_length; i++)
+					fputc(phandle->sol[i], stdout);
 			phandle->sol += pstate->comment_string_length;
 			while ((phandle->eof - phandle->sol) >= pstate->irslen && !streqn(phandle->sol, pstate->irs, pstate->irslen)) {
+				if (pstate->comment_handling == PASS_COMMENTS)
+					fputc(*phandle->sol, stdout);
 				phandle->sol++;
 			}
 			if ((phandle->eof - phandle->sol) >= pstate->irslen && streqn(phandle->sol, pstate->irs, pstate->irslen)) {
+				if (pstate->comment_handling == PASS_COMMENTS)
+					for (int i = 0; i < pstate->irslen; i++)
+						fputc(phandle->sol[i], stdout);
 				phandle->sol += pstate->irslen;
 			}
 		}
@@ -410,11 +426,18 @@ static lrec_t* lrec_parse_mmap_dkvp_single_irs_multi_others(file_reader_mmap_sta
 		while ((phandle->eof - phandle->sol) >= pstate->comment_string_length
 		&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
 		{
+			if (pstate->comment_handling == PASS_COMMENTS)
+				for (int i = 0; i < pstate->comment_string_length; i++)
+					fputc(phandle->sol[i], stdout);
 			phandle->sol += pstate->comment_string_length;
 			while (phandle->sol < phandle->eof && *phandle->sol != irs) {
+				if (pstate->comment_handling == PASS_COMMENTS)
+					fputc(*phandle->sol, stdout);
 				phandle->sol++;
 			}
 			if (phandle->sol < phandle->eof && *phandle->sol == irs) {
+				if (pstate->comment_handling == PASS_COMMENTS)
+					fputc(*phandle->sol, stdout);
 				phandle->sol++;
 			}
 		}
@@ -545,11 +568,19 @@ static lrec_t* lrec_parse_mmap_dkvp_multi_irs_multi_others(file_reader_mmap_stat
 		while ((phandle->eof - phandle->sol) >= pstate->comment_string_length
 		&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
 		{
+			if (pstate->comment_handling == PASS_COMMENTS)
+				for (int i = 0; i < pstate->comment_string_length; i++)
+					fputc(phandle->sol[i], stdout);
 			phandle->sol += pstate->comment_string_length;
 			while ((phandle->eof - phandle->sol) >= pstate->irslen && !streqn(phandle->sol, pstate->irs, pstate->irslen)) {
+				if (pstate->comment_handling == PASS_COMMENTS)
+					fputc(*phandle->sol, stdout);
 				phandle->sol++;
 			}
 			if ((phandle->eof - phandle->sol) >= pstate->irslen && streqn(phandle->sol, pstate->irs, pstate->irslen)) {
+				if (pstate->comment_handling == PASS_COMMENTS)
+					for (int i = 0; i < pstate->irslen; i++)
+						fputc(phandle->sol[i], stdout);
 				phandle->sol += pstate->irslen;
 			}
 		}
