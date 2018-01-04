@@ -79,6 +79,14 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(file_reader_mmap_state_t* phandle,
 	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx, header_keeper_t* pheader_keeper, int* pend_of_stanza);
 
+static int handle_comment_line_single_irs(
+	file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_csvlite_state_t* pstate,
+	char irs);
+
+static int handle_comment_line_multi_irs(
+	file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_csvlite_state_t* pstate);
 
 // ----------------------------------------------------------------
 lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs, int use_implicit_header,
@@ -255,36 +263,14 @@ static slls_t* lrec_reader_mmap_csvlite_get_header_single_seps(file_reader_mmap_
 
 	// Skip blank/comment lines and seek to header line
 	while (TRUE) {
-
 		if (phandle->sol < phandle->eof && *phandle->sol == irs) {
 			phandle->sol++;
 			pstate->ilno++;
-		}
-
-		// Skip comment lines
-		if (pstate->comment_string != NULL
-		&& (phandle->eof - phandle->sol) >= pstate->comment_string_length
-		&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
-		{
-			if (pstate->comment_handling == PASS_COMMENTS)
-				for (int i = 0; i < pstate->comment_string_length; i++)
-					fputc(phandle->sol[i], stdout);
-			phandle->sol += pstate->comment_string_length;
-			while (phandle->sol < phandle->eof && *phandle->sol != irs) {
-				if (pstate->comment_handling == PASS_COMMENTS)
-					fputc(*phandle->sol, stdout);
-				phandle->sol++;
-			}
-			if (phandle->sol < phandle->eof && *phandle->sol == irs) {
-				if (pstate->comment_handling == PASS_COMMENTS)
-					fputc(*phandle->sol, stdout);
-				phandle->sol++;
-			}
-
-			pstate->ilno++;
 			continue;
 		}
-
+		if (pstate->comment_string != NULL && handle_comment_line_single_irs(phandle, pstate, irs)) {
+			continue;
+		}
 		break;
 	}
 
@@ -347,43 +333,20 @@ static slls_t* lrec_reader_mmap_csvlite_get_header_multi_seps(file_reader_mmap_s
 	int   ifslen = pstate->ifslen;
 	int allow_repeat_ifs = pstate->allow_repeat_ifs;
 
-	slls_t* pheader_names = slls_alloc();
-
 	// Skip blank/comment lines and seek to header line
 	while (TRUE) {
-
 		if ((phandle->eof - phandle->sol) >= irslen && streqn(phandle->sol, irs, irslen)) {
 			phandle->sol += irslen;
 			pstate->ilno++;
 			continue;
 		}
-
-		// Skip comment lines
-		if (pstate->comment_string != NULL
-		&& (phandle->eof - phandle->sol) >= pstate->comment_string_length
-		&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
-		{
-			if (pstate->comment_handling == PASS_COMMENTS)
-				for (int i = 0; i < pstate->comment_string_length; i++)
-					fputc(phandle->sol[i], stdout);
-			phandle->sol += pstate->comment_string_length;
-			while ((phandle->eof - phandle->sol) >= irslen && !streqn(phandle->sol, irs, irslen)) {
-				if (pstate->comment_handling == PASS_COMMENTS)
-					fputc(*phandle->sol, stdout);
-				phandle->sol++;
-			}
-			if ((phandle->eof - phandle->sol) >= irslen && streqn(phandle->sol, irs, irslen)) {
-				if (pstate->comment_handling == PASS_COMMENTS)
-					for (int i = 0; i < irslen; i++)
-						fputc(phandle->sol[i], stdout);
-				phandle->sol += irslen;
-			}
-			pstate->ilno++;
+		if (pstate->comment_string != NULL && handle_comment_line_multi_irs(phandle, pstate)) {
 			continue;
 		}
-
 		break;
 	}
+
+	slls_t* pheader_names = slls_alloc();
 
 	// Parse the header line
 	char* p = phandle->sol;
@@ -430,27 +393,16 @@ static slls_t* lrec_reader_mmap_csvlite_get_header_multi_seps(file_reader_mmap_s
 static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_state_t* phandle,
 	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx, header_keeper_t* pheader_keeper, int* pend_of_stanza)
 {
-	if (phandle->sol >= phandle->eof)
-		return NULL;
-
 	char irs = pstate->irs[0];
 	char ifs = pstate->ifs[0];
 	int allow_repeat_ifs = pstate->allow_repeat_ifs;
 
 	// Skip comment lines
-	while (pstate->comment_string != NULL
-	&& (phandle->eof - phandle->sol) >= pstate->comment_string_length
-	&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
-	{
-		phandle->sol += pstate->comment_string_length;
-		while (phandle->sol < phandle->eof && *phandle->sol != irs) {
-			phandle->sol++;
-		}
-		if (phandle->sol < phandle->eof && *phandle->sol == irs) {
-			phandle->sol++;
-		}
-		pstate->ilno++;
+	if (pstate->comment_string != NULL) {
+		while (handle_comment_line_single_irs(phandle, pstate, irs))
+			;
 	}
+
 	if (phandle->sol >= phandle->eof)
 		return NULL;
 
@@ -547,6 +499,11 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_state_t* phandle,
 	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx, header_keeper_t* pheader_keeper, int* pend_of_stanza)
 {
+	// Skip comment lines
+	if (pstate->comment_string != NULL) {
+		while (handle_comment_line_multi_irs(phandle, pstate))
+			;
+	}
 	if (phandle->sol >= phandle->eof)
 		return NULL;
 
@@ -555,25 +512,6 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 	int   irslen = pstate->irslen;
 	int   ifslen = pstate->ifslen;
 	int allow_repeat_ifs = pstate->allow_repeat_ifs;
-
-	// Skip comment lines
-	// xxx funcify
-	while (pstate->comment_string != NULL
-	&& (phandle->eof - phandle->sol) >= pstate->comment_string_length
-	&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
-	{
-		phandle->sol += pstate->comment_string_length;
-		while ((phandle->eof - phandle->sol) >= irslen && !streqn(phandle->sol, irs, irslen)) {
-			phandle->sol++;
-		}
-		if ((phandle->eof - phandle->sol) >= irslen && streqn(phandle->sol, irs, irslen)) {
-			phandle->sol += irslen;
-		}
-		pstate->ilno++;
-		continue;
-	}
-	if (phandle->sol >= phandle->eof)
-		return NULL;
 
 	lrec_t* prec = lrec_unbacked_alloc();
 	char* line  = phandle->sol;
@@ -659,26 +597,14 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(file_reader_mmap_state_t* phandle,
 	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx, header_keeper_t* pheader_keeper, int* pend_of_stanza)
 {
-	if (phandle->sol >= phandle->eof)
-		return NULL;
-
 	char irs = pstate->irs[0];
 	char ifs = pstate->ifs[0];
 	int allow_repeat_ifs = pstate->allow_repeat_ifs;
 
 	// Skip comment lines
-	while (pstate->comment_string != NULL
-	&& (phandle->eof - phandle->sol) >= pstate->comment_string_length
-	&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
-	{
-		phandle->sol += pstate->comment_string_length;
-		while (phandle->sol < phandle->eof && *phandle->sol != irs) {
-			phandle->sol++;
-		}
-		if (phandle->sol < phandle->eof && *phandle->sol == irs) {
-			phandle->sol++;
-		}
-		pstate->ilno++;
+	if (pstate->comment_string != NULL) {
+		while (handle_comment_line_single_irs(phandle, pstate, irs))
+			;
 	}
 	if (phandle->sol >= phandle->eof)
 		return NULL;
@@ -759,6 +685,11 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps_implicit_header(f
 static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(file_reader_mmap_state_t* phandle,
 	lrec_reader_mmap_csvlite_state_t* pstate, context_t* pctx, header_keeper_t* pheader_keeper, int* pend_of_stanza)
 {
+	// Skip comment lines
+	if (pstate->comment_string != NULL) {
+		while (handle_comment_line_multi_irs(phandle, pstate))
+			;
+	}
 	if (phandle->sol >= phandle->eof)
 		return NULL;
 
@@ -767,24 +698,6 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(fi
 	int   irslen = pstate->irslen;
 	int   ifslen = pstate->ifslen;
 	int allow_repeat_ifs = pstate->allow_repeat_ifs;
-
-	// Skip comment lines
-	while (pstate->comment_string != NULL
-	&& (phandle->eof - phandle->sol) >= pstate->comment_string_length
-	&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
-	{
-		phandle->sol += pstate->comment_string_length;
-		while ((phandle->eof - phandle->sol) >= irslen && !streqn(phandle->sol, irs, irslen)) {
-			phandle->sol++;
-		}
-		if ((phandle->eof - phandle->sol) >= irslen && streqn(phandle->sol, irs, irslen)) {
-			phandle->sol += irslen;
-		}
-		pstate->ilno++;
-		continue;
-	}
-	if (phandle->sol >= phandle->eof)
-		return NULL;
 
 	lrec_t* prec = lrec_unbacked_alloc();
 	char* line  = phandle->sol;
@@ -848,4 +761,64 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps_implicit_header(fi
 	}
 
 	return prec;
+}
+
+// ----------------------------------------------------------------
+static int handle_comment_line_single_irs(
+	file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_csvlite_state_t* pstate,
+	char irs)
+{
+	if ((phandle->eof - phandle->sol) >= pstate->comment_string_length
+	&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
+	{
+		if (pstate->comment_handling == PASS_COMMENTS)
+			for (int i = 0; i < pstate->comment_string_length; i++)
+				fputc(phandle->sol[i], stdout);
+		phandle->sol += pstate->comment_string_length;
+		while (phandle->sol < phandle->eof && *phandle->sol != irs) {
+			if (pstate->comment_handling == PASS_COMMENTS)
+				fputc(*phandle->sol, stdout);
+			phandle->sol++;
+		}
+		if (phandle->sol < phandle->eof && *phandle->sol == irs) {
+			if (pstate->comment_handling == PASS_COMMENTS)
+				fputc(*phandle->sol, stdout);
+			phandle->sol++;
+		}
+		pstate->ilno++;
+		return TRUE;
+	} else {
+		return FALSE;
+	}
+}
+
+// ----------------------------------------------------------------
+static int handle_comment_line_multi_irs(
+	file_reader_mmap_state_t* phandle,
+	lrec_reader_mmap_csvlite_state_t* pstate)
+{
+	if ((phandle->eof - phandle->sol) >= pstate->comment_string_length
+	&& streqn(phandle->sol, pstate->comment_string, pstate->comment_string_length))
+	{
+		if (pstate->comment_handling == PASS_COMMENTS)
+			for (int i = 0; i < pstate->comment_string_length; i++)
+				fputc(phandle->sol[i], stdout);
+		phandle->sol += pstate->comment_string_length;
+		while ((phandle->eof < phandle->sol >= pstate->irslen) && !streqn(phandle->sol, pstate->irs, pstate->irslen)) {
+			if (pstate->comment_handling == PASS_COMMENTS)
+				fputc(*phandle->sol, stdout);
+			phandle->sol++;
+		}
+		if ((phandle->eof - phandle->sol >= pstate->irslen) && streqn(phandle->sol, pstate->irs, pstate->irslen)) {
+			if (pstate->comment_handling == PASS_COMMENTS)
+				for (int i = 0; i < pstate->irslen; i++)
+					fputc(phandle->sol[i], stdout);
+			phandle->sol += pstate->irslen;
+		}
+		pstate->ilno++;
+		return TRUE;
+	} else {
+		return FALSE;
+	}
 }
