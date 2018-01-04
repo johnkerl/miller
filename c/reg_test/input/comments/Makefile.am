@@ -7,5 +7,9 @@ EXTRA_DIST=	\
 	comments2.nidx \
 	comments3.nidx \
 	\
+	comments1.json \
+	comments2.json \
+	comments3.json \
+	\
 	comments1.xtab \
 	comments2.xtab
