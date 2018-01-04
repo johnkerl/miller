@@ -161,37 +161,39 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 	}
 	mlr_json_end_strip(phandle->sof, &phandle->eof);
 
-	while (TRUE) {
+	if (phandle->sof >= phandle->eof) {
+		while (TRUE) {
 
-		parsed_top_level_json = json_parse(item_start, length, error_buf, &item_start);
+			parsed_top_level_json = json_parse(item_start, length, error_buf, &item_start);
 
-		if (parsed_top_level_json == NULL) {
-			fprintf(stderr, "%s: Unable to parse JSON data: %s\n", MLR_GLOBALS.bargv0, error_buf);
-			exit(1);
-		}
+			if (parsed_top_level_json == NULL) {
+				fprintf(stderr, "%s: Unable to parse JSON data: %s\n", MLR_GLOBALS.bargv0, error_buf);
+				exit(1);
+			}
 
-		// The lrecs have their string pointers pointing into the parsed-JSON objects (for
-		// efficiency) so it's important we not free the latter until our free method.
-		if (!reference_json_objects_as_lrecs(pstate->precords, parsed_top_level_json,
-			pstate->input_json_flatten_separator, pstate->json_array_ingest))
-		{
-			fprintf(stderr, "%s: Unable to parse JSON data.\n", MLR_GLOBALS.bargv0);
-			exit(1);
-		}
+			// The lrecs have their string pointers pointing into the parsed-JSON objects (for
+			// efficiency) so it's important we not free the latter until our free method.
+			if (!reference_json_objects_as_lrecs(pstate->precords, parsed_top_level_json,
+				pstate->input_json_flatten_separator, pstate->json_array_ingest))
+			{
+				fprintf(stderr, "%s: Unable to parse JSON data.\n", MLR_GLOBALS.bargv0);
+				exit(1);
+			}
 
-		if (item_start == NULL)
-			break;
-		if (*item_start == 0)
-			break;
-		length -= (item_start - json_input);
-		json_input = item_start;
-		// json_parse goes up to the '\r' or '\n' (whichever is found first) on the first
-		// parse, then keeps going from there on the next. E.g. in the CRLF case it
-		// consumes the CR at the end of the first read and consumes the LF at the start
-		// of the second, and so on. After the very last parse, we need to here consume
-		// the final '\n' which is (by itself) a parse error.
-		if (length == 1 && *(char*)json_input == '\n') {
-			break;
+			if (item_start == NULL)
+				break;
+			if (*item_start == 0)
+				break;
+			length -= (item_start - json_input);
+			json_input = item_start;
+			// json_parse goes up to the '\r' or '\n' (whichever is found first) on the first
+			// parse, then keeps going from there on the next. E.g. in the CRLF case it
+			// consumes the CR at the end of the first read and consumes the LF at the start
+			// of the second, and so on. After the very last parse, we need to here consume
+			// the final '\n' which is (by itself) a parse error.
+			if (length == 1 && *(char*)json_input == '\n') {
+				break;
+			}
 		}
 	}
 	if (detected_line_term != NULL) {
