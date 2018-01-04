@@ -33,19 +33,16 @@ BUGFIXES
   k input/lrec_reader_stdio_nidx.c:21
   k input/lrec_reader_mmap_nidx.c:10
 
+  k input/lrec_reader_stdio_json.c:7
+  k input/lrec_reader_mmap_json.c:7
+
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   t input/lrec_reader_stdio_csvlite.c:13
   ~ input/lrec_reader_mmap_csvlite.c:37
-    -> just needs rm of code-dupe ?
+    needs rm of code-dupe
+    needs pass-handling (do post-funcify)
 
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ~ input/lrec_reader_stdio_json.c:7
-    end-strip
-    UT
-  ~ input/lrec_reader_mmap_json.c:7
-    end-strip
-    UT
-
   ~ input/lrec_reader_stdio_csv.c:9
     has skip-logic; needs pass-logic; and both need a refactor
   ~ input/lrec_reader_mmap_csv.c:9

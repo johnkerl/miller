@@ -12,4 +12,7 @@ EXTRA_DIST=	\
 	comments3.json \
 	\
 	comments1.xtab \
-	comments2.xtab
+	comments2.xtab \
+	\
+	comments1.csv \
+	comments2.csv
