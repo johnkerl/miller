@@ -20,27 +20,29 @@ BUGFIXES
   o streqn-past-eof scenarios @ page boundaries ...
   o UT for skip/pass
 
-  k input/lrec_reader_mmap_dkvp.c:25
   k input/lrec_reader_stdio_dkvp.c:21
+  k input/lrec_reader_mmap_dkvp.c:25
 
-  k input/lrec_reader_mmap_nidx.c:10
   k input/lrec_reader_stdio_nidx.c:21
+  k input/lrec_reader_mmap_nidx.c:10
 
-    input/lrec_reader_mmap_xtab.c:47
-    input/lrec_reader_stdio_xtab.c:8
-
-    input/lrec_reader_mmap_csv.c:9
-    input/lrec_reader_stdio_csv.c:9
-
-    input/lrec_reader_mmap_csvlite.c:37
-    input/lrec_reader_stdio_csvlite.c:13
-
-    input/lrec_reader_mmap_json.c:7
     input/lrec_reader_stdio_json.c:7
+    input/lrec_reader_mmap_json.c:7
 
+    input/lrec_reader_stdio_csvlite.c:13
+    input/lrec_reader_mmap_csvlite.c:37
+
+    input/lrec_reader_stdio_csv.c:9
+    input/lrec_reader_mmap_csv.c:9
+
+    input/lrec_reader_stdio_xtab.c:8
+    input/lrec_reader_mmap_xtab.c:47
+
+  ! rm code-dupe in various readers, especially dkvp & nidx & xtab
   o mlh
   o mld
 
+* xxx note for trailing whitespace in json fixed
 * sql-setup doc somewhere .......
 
 * bare ./configure ?
