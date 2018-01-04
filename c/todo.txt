@@ -36,11 +36,8 @@ BUGFIXES
   k input/lrec_reader_stdio_json.c:7
   k input/lrec_reader_mmap_json.c:7
 
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  t input/lrec_reader_stdio_csvlite.c:13
-  ~ input/lrec_reader_mmap_csvlite.c:37
-    needs rm of code-dupe
-    needs pass-handling (do post-funcify)
+  k input/lrec_reader_stdio_csvlite.c:13
+  k input/lrec_reader_mmap_csvlite.c:37
 
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ~ input/lrec_reader_stdio_csv.c:9
