@@ -11,7 +11,12 @@ verb lets you compute cluster sizes by cluster labels.
 * While Miller DSL arithmetic gracefully overflows from 64-integer to
 double-precision float (see also
 [**here**](http://johnkerl.org/miller/doc/reference.html#Arithmetic)), there
-are now the **integer-preserving arithmetic operators** `.+` `.-` `.*` `./` `.//`
+are now the **integer-preserving arithmetic operators**
+[**`.+`**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/reference-dsl.html#.+)
+[**`.-`**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/reference-dsl.html#.-)
+[**`.*`**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/reference-dsl.html#.*)
+[**`./`**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/reference-dsl.html#./)
+[**`.//`**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/reference-dsl.html#.//)
 for those times when you want integer overflow.
 
 * There is a new [**bitcount**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/reference-dsl.html#bitcount) function: for example, `echo x=0xf0000206 | mlr put '$y=bitcount($x)'` produces `x=0xf0000206,y=7`.
@@ -26,9 +31,7 @@ an alias for `--nidx --fs tab`, and `mlr -t` is an alias for `mlr
 
 * As noted
 [**here**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/reference-dsl.html#A_note_on_the_complexity_of_Miller’s_expression_language), while Miller has its own DSL there will always be things better expressible in a general-purpose language. The new page
-[**Sharing data with other languages**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/data-sharing.html) shows how to seamlessly share data back and forth between Miller, Ruby, and Python.
-
-* [**SQL-input examples**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/10-min.html#SQL-input_examples) and [**SQL-output examples**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/10-min.html#SQL-output_examples) contain detailed information the interplay between Miller and SQL.
+[**Sharing data with other languages**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/data-sharing.html) shows how to seamlessly share data back and forth between **Miller, Ruby, and Python**.  [**SQL-input examples**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/10-min.html#SQL-input_examples) and [**SQL-output examples**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/10-min.html#SQL-output_examples) contain detailed information the interplay between **Miller and SQL**.
 
 * [**Issue 150**](https://github.com/johnkerl/miller/issues/150) raised a
 question about suppressing numeric conversion. This resulted in a new FAQ entry
