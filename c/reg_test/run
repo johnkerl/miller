@@ -95,6 +95,13 @@ run_mlr() {
   num_completed=`expr $num_completed + 1`
 }
 
+run_cat() {
+  echo cat "$@"
+  echo cat "$@" >> $outfile
+  cat "$@" >> $outfile
+  echo >> $outfile
+}
+
 run_mlr_for_auxents() {
   # Use just "mlr" for info messages
   echo mlr "$@" >> $outfile
@@ -5157,6 +5164,82 @@ run_mlr --icsv --opprint cat   $indir/bom.csv
 run_mlr --icsv --opprint cat < $indir/bom.csv
 run_mlr --icsv --opprint cat   $indir/bom-dquote-header.csv
 run_mlr --icsv --opprint cat < $indir/bom-dquote-header.csv
+
+# ----------------------------------------------------------------
+announce SKIP/PASS COMMENTS DKVP
+
+mention input comments1.dkvp
+run_cat $indir/comments/comments1.dkvp
+
+mention skip comments1.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat < $indir/comments/comments1.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat   $indir/comments/comments1.dkvp
+
+mention pass comments1.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat < $indir/comments/comments1.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat   $indir/comments/comments1.dkvp
+
+
+mention input comments2.dkvp
+run_cat $indir/comments/comments2.dkvp
+
+mention skip comments2.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat < $indir/comments/comments2.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat   $indir/comments/comments2.dkvp
+
+mention pass comments2.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat < $indir/comments/comments2.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat   $indir/comments/comments2.dkvp
+
+
+mention input comments3.dkvp
+run_cat $indir/comments/comments3.dkvp
+
+mention skip comments3.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat < $indir/comments/comments3.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat   $indir/comments/comments3.dkvp
+
+mention pass comments3.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat < $indir/comments/comments3.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat   $indir/comments/comments3.dkvp
+
+# ----------------------------------------------------------------
+announce SKIP/PASS COMMENTS NIDX
+
+mention input comments1.nidx
+run_cat $indir/comments/comments1.nidx
+
+mention skip comments1.nidx
+run_mlr --skip-comments --inidx --oxtab cat < $indir/comments/comments1.nidx
+run_mlr --skip-comments --inidx --oxtab cat   $indir/comments/comments1.nidx
+
+mention pass comments1.nidx
+run_mlr --pass-comments --inidx --oxtab cat < $indir/comments/comments1.nidx
+run_mlr --pass-comments --inidx --oxtab cat   $indir/comments/comments1.nidx
+
+
+mention input comments2.nidx
+run_cat $indir/comments/comments2.nidx
+
+mention skip comments2.nidx
+run_mlr --skip-comments --inidx --oxtab cat < $indir/comments/comments2.nidx
+run_mlr --skip-comments --inidx --oxtab cat   $indir/comments/comments2.nidx
+
+mention pass comments2.nidx
+run_mlr --pass-comments --inidx --oxtab cat < $indir/comments/comments2.nidx
+run_mlr --pass-comments --inidx --oxtab cat   $indir/comments/comments2.nidx
+
+
+mention input comments3.nidx
+run_cat $indir/comments/comments3.nidx
+
+mention skip comments3.nidx
+run_mlr --skip-comments --inidx --oxtab cat < $indir/comments/comments3.nidx
+run_mlr --skip-comments --inidx --oxtab cat   $indir/comments/comments3.nidx
+
+mention pass comments3.nidx
+run_mlr --pass-comments --inidx --oxtab cat < $indir/comments/comments3.nidx
+run_mlr --pass-comments --inidx --oxtab cat   $indir/comments/comments3.nidx
 
 # ----------------------------------------------------------------
 announce MMAP AT PAGE BOUNDARIES
