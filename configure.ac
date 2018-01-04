@@ -36,6 +36,7 @@ AC_CONFIG_FILES([Makefile
 		c/reg_test/expected/Makefile
 		c/reg_test/input/Makefile
 		c/reg_test/input/rfc-csv/Makefile
+		c/reg_test/input/comments/Makefile
 		c/Makefile
 		doc/Makefile])
 AC_OUTPUT
