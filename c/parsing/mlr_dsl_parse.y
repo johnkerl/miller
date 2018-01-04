@@ -1546,19 +1546,22 @@ md_unset_args(A) ::= md_unset_args(B) MD_TOKEN_COMMA md_oosvar_keylist(C). {
 }
 
 // ----------------------------------------------------------------
-md_tee_write(A) ::= MD_TOKEN_TEE(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC. {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_TEE,
-		mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE, F));
+md_tee_write(A) ::= MD_TOKEN_TEE(O) MD_TOKEN_GT md_output_file(F) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC(M). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_TEE,
+		mlr_dsl_ast_node_alloc_unary(">", MD_AST_NODE_TYPE_FILE_WRITE, F),
+		M);
 }
 
-md_tee_append(A) ::= MD_TOKEN_TEE(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC. {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_TEE,
-		mlr_dsl_ast_node_alloc_unary(">>", MD_AST_NODE_TYPE_FILE_APPEND, F));
+md_tee_append(A) ::= MD_TOKEN_TEE(O) MD_TOKEN_BITWISE_RSH md_output_file(F) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC(M). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_TEE,
+		mlr_dsl_ast_node_alloc_unary(">>", MD_AST_NODE_TYPE_FILE_APPEND, F),
+		M);
 }
 
-md_tee_pipe(A) ::= MD_TOKEN_TEE(O) MD_TOKEN_BITWISE_OR md_rhs(P) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC. {
-	A = mlr_dsl_ast_node_alloc_unary(O->text, MD_AST_NODE_TYPE_TEE,
-		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE, P));
+md_tee_pipe(A) ::= MD_TOKEN_TEE(O) MD_TOKEN_BITWISE_OR md_rhs(P) MD_TOKEN_COMMA MD_TOKEN_FULL_SREC(M). {
+	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_TEE,
+		mlr_dsl_ast_node_alloc_unary("|", MD_AST_NODE_TYPE_PIPE, P),
+		M);
 }
 
 // ----------------------------------------------------------------

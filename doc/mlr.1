@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2018-01-02
+.\"      Date: 2018-01-04
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2018-01-02" "\ \&" "\ \&"
+.TH "MILLER" "1" "2018-01-04" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -3163,6 +3163,8 @@ emit: inserts an out-of-stream variable into the output record stream. Hashmap
   You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
   etc., to control the format of the output if the output is redirected. See also mlr -h.
 
+  Example: mlr --from f.dat put 'emit >  "/tmp/data-".$a, $*'
+  Example: mlr --from f.dat put 'emit >  "/tmp/data-".$a, mapexcept($*, "a")'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
   Example: mlr --from f.dat put --ojson '@sums[$a][$b]+=$x; emit > "tap-".$a.$b.".dat", @sums'
   Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
@@ -3491,7 +3493,6 @@ tee: prints the current record to specified file.
   output $*.
 
   Example: mlr --from f.dat put 'tee >  "/tmp/data-".$a, $*'
-  Example: mlr --from f.dat put 'tee >  "/tmp/data-".$a, mapexcept($*, "a")'
   Example: mlr --from f.dat put 'tee >> "/tmp/data-".$a.$b, $*'
   Example: mlr --from f.dat put 'tee >  stderr, $*'
   Example: mlr --from f.dat put -q 'tee | "tr [a-z\e] [A-Z\e]", $*'

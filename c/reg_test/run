@@ -4838,6 +4838,42 @@ touch $emit8/err2
 run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit > stderr, all, "NR"' $indir/abixy 2> $emit8/err2
 run_cat $emit8/err2
 
+
+emit9=$reloutdir/emit9
+mkdir -p $emit9
+run_mlr head -n 4 then put -q 'emit > "'$emit9'/out.".$a.$b, $*' $indir/abixy
+run_cat $emit9/out.ekspan
+run_cat $emit9/out.ekswye
+run_cat $emit9/out.panpan
+run_cat $emit9/out.wyewye
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit | "tr \[a-z\] \[A-Z\]", $*, "NR"' $indir/abixy
+
+touch $emit9/err1
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit > stdout, $*, "NR"' $indir/abixy 2> $emit9/err1
+run_cat $emit9/err1
+
+touch $emit9/err2
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit > stderr, $*, "NR"' $indir/abixy 2> $emit9/err2
+run_cat $emit9/err2
+
+
+emit10=$reloutdir/emit10
+mkdir -p $emit10
+run_mlr head -n 4 then put -q 'emit > "'$emit10'/out.".$a.$b, mapexcept($*, "a", "b")' $indir/abixy
+run_cat $emit10/out.ekspan
+run_cat $emit10/out.ekswye
+run_cat $emit10/out.panpan
+run_cat $emit10/out.wyewye
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit | "tr \[a-z\] \[A-Z\]", mapexcept($*, "a", "b"), "NR"' $indir/abixy
+
+touch $emit10/err1
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit > stdout, mapexcept($*, "a", "b"), "NR"' $indir/abixy 2> $emit10/err1
+run_cat $emit10/err1
+
+touch $emit10/err2
+run_mlr head -n 4 then put -q '@a[NR]=$a; @b[NR]=$b; emit > stderr, mapexcept($*, "a", "b"), "NR"' $indir/abixy 2> $emit10/err2
+run_cat $emit10/err2
+
 # ----------------------------------------------------------------
 announce OOSVAR-FROM-SREC ASSIGNMENT
 

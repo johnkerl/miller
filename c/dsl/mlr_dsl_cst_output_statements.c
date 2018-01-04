@@ -275,7 +275,6 @@ static lrec_t* handle_tee_common(
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs)
 {
-
 	lrec_t* pcopy = lrec_copy(pvars->pinrec);
 
 	// Write the output fields from the typed overlay back to the lrec.

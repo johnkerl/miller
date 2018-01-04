@@ -42700,6 +42700,102 @@ NR=2,b=pan
 NR=3,b=wye
 NR=4,b=wye
 
+mlr head -n 4 then put -q emit > "./output-regtest/emit9/out.".$a.$b, $* ./reg_test/input/abixy
+
+cat ./output-regtest/emit9/out.ekspan
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+
+cat ./output-regtest/emit9/out.ekswye
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+
+cat ./output-regtest/emit9/out.panpan
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+
+cat ./output-regtest/emit9/out.wyewye
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit | "tr \[a-z\] \[A-Z\]", $*, "NR" ./reg_test/input/abixy
+A=PAN,B=PAN,I=1,X=0.3467901443380824,Y=0.7268028627434533
+A=EKS,B=PAN,I=2,X=0.7586799647899636,Y=0.5221511083334797
+A=WYE,B=WYE,I=3,X=0.20460330576630303,Y=0.33831852551664776
+A=EKS,B=WYE,I=4,X=0.38139939387114097,Y=0.13418874328430463
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit > stdout, $*, "NR" ./reg_test/input/abixy
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+
+cat ./output-regtest/emit9/err1
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit > stderr, $*, "NR" ./reg_test/input/abixy
+
+cat ./output-regtest/emit9/err2
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+
+mlr head -n 4 then put -q emit > "./output-regtest/emit10/out.".$a.$b, mapexcept($*, "a", "b") ./reg_test/input/abixy
+
+cat ./output-regtest/emit10/out.ekspan
+i=2,x=0.7586799647899636,y=0.5221511083334797
+
+cat ./output-regtest/emit10/out.ekswye
+i=4,x=0.38139939387114097,y=0.13418874328430463
+
+cat ./output-regtest/emit10/out.panpan
+i=1,x=0.3467901443380824,y=0.7268028627434533
+
+cat ./output-regtest/emit10/out.wyewye
+i=3,x=0.20460330576630303,y=0.33831852551664776
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit | "tr \[a-z\] \[A-Z\]", mapexcept($*, "a", "b"), "NR" ./reg_test/input/abixy
+NR=I,_=1
+NR=X,_=0.3467901443380824
+NR=Y,_=0.7268028627434533
+NR=I,_=2
+NR=X,_=0.7586799647899636
+NR=Y,_=0.5221511083334797
+NR=I,_=3
+NR=X,_=0.20460330576630303
+NR=Y,_=0.33831852551664776
+NR=I,_=4
+NR=X,_=0.38139939387114097
+NR=Y,_=0.13418874328430463
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit > stdout, mapexcept($*, "a", "b"), "NR" ./reg_test/input/abixy
+NR=i,_=1
+NR=x,_=0.3467901443380824
+NR=y,_=0.7268028627434533
+NR=i,_=2
+NR=x,_=0.7586799647899636
+NR=y,_=0.5221511083334797
+NR=i,_=3
+NR=x,_=0.20460330576630303
+NR=y,_=0.33831852551664776
+NR=i,_=4
+NR=x,_=0.38139939387114097
+NR=y,_=0.13418874328430463
+
+cat ./output-regtest/emit10/err1
+
+mlr head -n 4 then put -q @a[NR]=$a; @b[NR]=$b; emit > stderr, mapexcept($*, "a", "b"), "NR" ./reg_test/input/abixy
+
+cat ./output-regtest/emit10/err2
+NR=i,_=1
+NR=x,_=0.3467901443380824
+NR=y,_=0.7268028627434533
+NR=i,_=2
+NR=x,_=0.7586799647899636
+NR=y,_=0.5221511083334797
+NR=i,_=3
+NR=x,_=0.20460330576630303
+NR=y,_=0.33831852551664776
+NR=i,_=4
+NR=x,_=0.38139939387114097
+NR=y,_=0.13418874328430463
+
 
 ================================================================
 OOSVAR-FROM-SREC ASSIGNMENT

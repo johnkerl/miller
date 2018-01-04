@@ -2021,6 +2021,8 @@ KEYWORDS FOR PUT AND FILTER
 	 You can use any of the output-format command-line flags, e.g. --ocsv, --ofs,
 	 etc., to control the format of the output if the output is redirected. See also mlr -h.
 
+	 Example: mlr --from f.dat put 'emit &gt;	"/tmp/data-".$a, $*'
+	 Example: mlr --from f.dat put 'emit &gt;	"/tmp/data-".$a, mapexcept($*, "a")'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums'
 	 Example: mlr --from f.dat put --ojson '@sums[$a][$b]+=$x; emit &gt; "tap-".$a.$b.".dat", @sums'
 	 Example: mlr --from f.dat put '@sums[$a][$b]+=$x; emit @sums, "index1", "index2"'
@@ -2211,7 +2213,6 @@ KEYWORDS FOR PUT AND FILTER
 	 output $*.
 
 	 Example: mlr --from f.dat put 'tee &gt;  "/tmp/data-".$a, $*'
-	 Example: mlr --from f.dat put 'tee &gt;  "/tmp/data-".$a, mapexcept($*, "a")'
 	 Example: mlr --from f.dat put 'tee &gt;&gt; "/tmp/data-".$a.$b, $*'
 	 Example: mlr --from f.dat put 'tee &gt;  stderr, $*'
 	 Example: mlr --from f.dat put -q 'tee | "tr [a-z\] [A-Z\]", $*'
@@ -2302,7 +2303,7 @@ SEE ALSO
 
 
 
-				  2018-01-02			     MILLER(1)
+				  2018-01-04			     MILLER(1)
 </pre>
 </div>
 <p/>
