@@ -294,6 +294,7 @@ noinst_LTLIBRARIES = libcli.la
 libcli_la_SOURCES = \
 			argparse.c \
 			argparse.h \
+			comment_handling.h \
 			json_array_ingest.h \
 			mlrcli.c \
 			mlrcli.h \
@@ -320,9 +321,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu c/cli/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign c/cli/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu c/cli/Makefile
+	  $(AUTOMAKE) --foreign c/cli/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \

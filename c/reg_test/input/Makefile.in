@@ -300,7 +300,9 @@ target_alias = @target_alias@
 top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
-SUBDIRS = rfc-csv
+SUBDIRS = rfc-csv \
+		comments
+
 EXTRA_DIST = \
 		a.csv \
 		a.pprint \
@@ -321,11 +323,13 @@ EXTRA_DIST = \
 		b.csv \
 		b.pprint \
 		bom.csv \
+		bom-dquote-header.csv \
 		braced.csv \
 		c.csv \
 		c.pprint \
 		capture-lengths.dkvp \
 		capture.dkvp \
+		comments \
 		d.csv \
 		d.pprint \
 		date1.csv \
@@ -489,6 +493,8 @@ EXTRA_DIST = \
 		utf8-align.dkvp \
 		utf8-align.nidx \
 		valgrind.txt \
+		with-comments.csv \
+		without-comments.csv \
 		x0to10.dat \
 		xy40.dkvp \
 		xyz345 \
@@ -506,9 +512,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu c/reg_test/input/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign c/reg_test/input/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --gnu c/reg_test/input/Makefile
+	  $(AUTOMAKE) --foreign c/reg_test/input/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \

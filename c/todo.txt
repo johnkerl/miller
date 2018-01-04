@@ -43,7 +43,7 @@ BUGFIXES
 
 * sql-setup doc somewhere .......
 
-* ./configure
+* bare ./configure ?
 
 * valgrinds
 

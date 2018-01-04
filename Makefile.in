@@ -168,7 +168,8 @@ am__DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/config.h.in \
 	$(top_srcdir)/autotools/ltmain.sh \
 	$(top_srcdir)/autotools/missing autotools/ar-lib \
 	autotools/compile autotools/config.guess autotools/config.sub \
-	autotools/install-sh autotools/ltmain.sh autotools/missing
+	autotools/depcomp autotools/install-sh autotools/ltmain.sh \
+	autotools/missing
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
 distdir = $(PACKAGE)-$(VERSION)
 top_distdir = $(distdir)

@@ -6792,7 +6792,7 @@ echo "Differences between $expfile and $outfile:"
 # when the diff is long.
 
 set +e
-diff -I '^mlr' -C5 $expfile $outfile
+diff -I '^mlr' -I '^cat' -C5 $expfile $outfile
 status=$?
 
 if [ $status -eq 0 ]; then
