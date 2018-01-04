@@ -11,8 +11,6 @@ BUGFIXES
   x=9223372036854775802,y=-9223372036854775806
   x=9223372036854775805,y=-9223372036854775802
 
-$ mlr --from s put 'tee > "boo.".$a, mapexcept($*,"a")'
-
 ================================================================
 5.3.0 TO DO:
 
@@ -22,24 +20,34 @@ $ mlr --from s put 'tee > "boo.".$a, mapexcept($*,"a")'
   o streqn-past-eof scenarios @ page boundaries ...
   o UT for skip/pass
 
-    input/lrec_reader_mmap_csv.c:9
-    input/lrec_reader_mmap_csvlite.c:37
-    input/lrec_reader_mmap_dkvp.c:25
-    input/lrec_reader_mmap_json.c:7
-    input/lrec_reader_mmap_nidx.c:10
-    input/lrec_reader_mmap_xtab.c:47
+  k input/lrec_reader_mmap_dkvp.c:25
+  k input/lrec_reader_stdio_dkvp.c:21
 
-    input/lrec_reader_stdio_csv.c:9
-    input/lrec_reader_stdio_csvlite.c:13
-    input/lrec_reader_stdio_dkvp.c:21
-    input/lrec_reader_stdio_json.c:7
-    input/lrec_reader_stdio_nidx.c:21
+  k input/lrec_reader_mmap_nidx.c:10
+  k input/lrec_reader_stdio_nidx.c:21
+
+    input/lrec_reader_mmap_xtab.c:47
     input/lrec_reader_stdio_xtab.c:8
+
+    input/lrec_reader_mmap_csv.c:9
+    input/lrec_reader_stdio_csv.c:9
+
+    input/lrec_reader_mmap_csvlite.c:37
+    input/lrec_reader_stdio_csvlite.c:13
+
+    input/lrec_reader_mmap_json.c:7
+    input/lrec_reader_stdio_json.c:7
 
   o mlh
   o mld
-* sql in/outs -> own page?
+
 * sql-setup doc somewhere .......
+
+* ./configure
+
+* valgrinds
+
+* xxxes
 
 ================================================================
 FUNDAM:
@@ -160,7 +168,7 @@ MAPVAR CHECKLIST:
 * clarify ownership semantics in localstack & mlhmmv via function names, & top-of-file comments
 
 ================================================================
-5.3.0 ideas:
+5.4.0 ideas:
 
 ----------------------------------------------------------------
 ! multi-field x many verbs: -f/-r field-name-spec opportunities throughout
@@ -197,8 +205,6 @@ which verbs:
 * xxxes
 
 * mt_error/fatal/skip-assign audit
-
-* perf note: DSL stuff performant w/r/t ruby/python (mand bench & maybe others)
 
 ! more than 'syntax error' from lemon-parse failures ... lemon API research
 
@@ -260,7 +266,7 @@ COMPARES:
 * https://www.gnu.org/software/datamash/manual/datamash.html
 
 ================================================================
-5.3.0 IDEAS:
+5.4.0 IDEAS:
 
 !! coroutines: line-oriented; operate on field(s); r/w popen
 

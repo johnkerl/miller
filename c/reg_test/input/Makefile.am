@@ -1,4 +1,6 @@
-SUBDIRS=	rfc-csv
+SUBDIRS=	rfc-csv \
+		comments
+
 EXTRA_DIST=	\
 		a.csv \
 		a.pprint \
@@ -25,6 +27,7 @@ EXTRA_DIST=	\
 		c.pprint \
 		capture-lengths.dkvp \
 		capture.dkvp \
+		comments \
 		d.csv \
 		d.pprint \
 		date1.csv \

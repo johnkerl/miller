@@ -49,3 +49,5 @@ longer-term follow-on [**issue 151**](https://github.com/johnkerl/miller/issues/
 * [**Issue 161**](https://github.com/johnkerl/miller/issues/161) fixes a CSV-parse error (with error message "unwrapped double quote at line 0") when a CSV file starts with the UTF-8 bill-of-materials ("BOM") sequence `0xef` `0xbb` `0xbf` and the header line has double-quoted fields. ([Release 5.2.0](https://github.com/johnkerl/miller/releases/tag/v5.2.0) introduced handling for UTF-8 BOMs, but missed the case of double-quoted header line.)
 
 * [**Issue 162**](https://github.com/johnkerl/miller/issues/162) fixes a corner case doing multi-emit of aggregate variables when the first variable name is a typo.
+
+There is no prebuilt Windows executable for this release; my apologies.

@@ -147,7 +147,6 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state
 	char* comment_string = pstate->comment_string;
 	int comment_string_length = pstate->comment_string_length;
 
-	// xxx more
 	if (pstate->do_auto_line_term) {
 		// Skip over otherwise empty LF-only or CRLF-only lines.
 		while (phandle->sol < phandle->eof) {
@@ -334,8 +333,6 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_
 			phandle->sol++;
 	}
 
-	// xxx skip comments ...
-
 	if (phandle->sol >= phandle->eof)
 		return NULL;
 
@@ -472,7 +469,6 @@ static lrec_t* lrec_parse_mmap_xtab_multi_ifs_single_ips(file_reader_mmap_state_
 		if (!skipped_anything)
 			break;
 	}
-	// xxx skip comments ...
 
 	if (phandle->sol >= phandle->eof)
 		return NULL;
