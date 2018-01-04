@@ -160,8 +160,9 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 			pstate->comment_handling, pstate->comment_string, line_term);
 	}
 	mlr_json_end_strip(phandle->sof, &phandle->eof);
+	length = phandle->eof - phandle->sof;
 
-	if (phandle->sof >= phandle->eof) {
+	if (length > 0) {
 		while (TRUE) {
 
 			parsed_top_level_json = json_parse(item_start, length, error_buf, &item_start);

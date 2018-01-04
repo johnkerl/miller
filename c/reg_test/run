@@ -5242,6 +5242,44 @@ run_mlr --pass-comments --inidx --oxtab cat < $indir/comments/comments3.nidx
 run_mlr --pass-comments --inidx --oxtab cat   $indir/comments/comments3.nidx
 
 # ----------------------------------------------------------------
+announce SKIP/PASS COMMENTS JSON
+
+mention input comments1.json
+run_cat $indir/comments/comments1.json
+
+mention skip comments1.json
+run_mlr --skip-comments --ijson --odkvp cat < $indir/comments/comments1.json
+run_mlr --skip-comments --ijson --odkvp cat   $indir/comments/comments1.json
+
+mention pass comments1.json
+run_mlr --pass-comments --ijson --odkvp cat < $indir/comments/comments1.json
+run_mlr --pass-comments --ijson --odkvp cat   $indir/comments/comments1.json
+
+
+mention input comments2.json
+run_cat $indir/comments/comments2.json
+
+mention skip comments2.json
+run_mlr --skip-comments --ijson --odkvp cat < $indir/comments/comments2.json
+run_mlr --skip-comments --ijson --odkvp cat   $indir/comments/comments2.json
+
+mention pass comments2.json
+run_mlr --pass-comments --ijson --odkvp cat < $indir/comments/comments2.json
+run_mlr --pass-comments --ijson --odkvp cat   $indir/comments/comments2.json
+
+
+mention input comments3.json
+run_cat $indir/comments/comments3.json
+
+mention skip comments3.json
+run_mlr --skip-comments --ijson --odkvp cat < $indir/comments/comments3.json
+run_mlr --skip-comments --ijson --odkvp cat   $indir/comments/comments3.json
+
+mention pass comments3.json
+run_mlr --pass-comments --ijson --odkvp cat < $indir/comments/comments3.json
+run_mlr --pass-comments --ijson --odkvp cat   $indir/comments/comments3.json
+
+# ----------------------------------------------------------------
 announce MMAP AT PAGE BOUNDARIES
 
 run_mlr --dkvp        tail -n 4 $indir/page-aligned-final-ifs.dkvp

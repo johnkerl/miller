@@ -45268,6 +45268,97 @@ mlr --pass-comments --inidx --oxtab cat ./reg_test/input/comments/comments3.nidx
 
 
 ================================================================
+SKIP/PASS COMMENTS JSON
+
+
+---------------------------------------------------------------- input comments1.json
+cat ./reg_test/input/comments/comments1.json
+# hello world 1
+{ "a":1, "b":2, "c":3 }
+{ "a":4, "b":5, "c":6 }
+
+
+---------------------------------------------------------------- skip comments1.json
+mlr --skip-comments --ijson --odkvp cat
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --skip-comments --ijson --odkvp cat ./reg_test/input/comments/comments1.json
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
+---------------------------------------------------------------- pass comments1.json
+mlr --pass-comments --ijson --odkvp cat
+# hello world 1
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --pass-comments --ijson --odkvp cat ./reg_test/input/comments/comments1.json
+# hello world 1
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
+---------------------------------------------------------------- input comments2.json
+cat ./reg_test/input/comments/comments2.json
+{ "a":1, "b":2, "c":3 }
+# hello world 2
+{ "a":4, "b":5, "c":6 }
+
+
+---------------------------------------------------------------- skip comments2.json
+mlr --skip-comments --ijson --odkvp cat
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --skip-comments --ijson --odkvp cat ./reg_test/input/comments/comments2.json
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
+---------------------------------------------------------------- pass comments2.json
+mlr --pass-comments --ijson --odkvp cat
+# hello world 2
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --pass-comments --ijson --odkvp cat ./reg_test/input/comments/comments2.json
+# hello world 2
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
+---------------------------------------------------------------- input comments3.json
+cat ./reg_test/input/comments/comments3.json
+{ "a":1, "b":2, "c":3 }
+{ "a":4, "b":5, "c":6 }
+# hello world 3
+
+
+---------------------------------------------------------------- skip comments3.json
+mlr --skip-comments --ijson --odkvp cat
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --skip-comments --ijson --odkvp cat ./reg_test/input/comments/comments3.json
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
+---------------------------------------------------------------- pass comments3.json
+mlr --pass-comments --ijson --odkvp cat
+# hello world 3
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --pass-comments --ijson --odkvp cat ./reg_test/input/comments/comments3.json
+# hello world 3
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
+================================================================
 MMAP AT PAGE BOUNDARIES
 
 mlr --dkvp tail -n 4 ./reg_test/input/page-aligned-final-ifs.dkvp
