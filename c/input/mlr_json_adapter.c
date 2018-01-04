@@ -302,3 +302,16 @@ void mlr_json_strip_comments(char* psof, char* peof, comment_handling_t comment_
 		}
 	}
 }
+
+// ----------------------------------------------------------------
+// I'm using a 3rd-party JSON parser and it's easy to strip all trailing whitespace
+// than tweak the parser to handle those.
+void mlr_json_end_strip(char* psof, char** ppeof) {
+	char* peof = *ppeof;
+
+	while (peof >= psof && (*peof == ' ' || *peof == '\t' || *peof == '\r' || *peof == '\n')) {
+		peof--;
+	}
+
+	*ppeof = peof;
+}

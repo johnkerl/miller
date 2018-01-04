@@ -234,7 +234,7 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 			if (pstate->comment_string != NULL) {
 				if (pstate->pfields->phead != NULL) {
 					if (streqn(pstate->pfields->phead->value, pstate->comment_string, pstate->comment_string_length)) {
-						// xxx fix me
+						// xxx fix me -- doesn't do well with pass-through, post-parse ...
 						rslls_reset(pstate->pfields);
 						continue;
 					}

@@ -159,6 +159,7 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 		mlr_json_strip_comments(phandle->sof, phandle->eof,
 			pstate->comment_handling, pstate->comment_string, line_term);
 	}
+	mlr_json_end_strip(phandle->sof, &phandle->eof);
 
 	while (TRUE) {
 

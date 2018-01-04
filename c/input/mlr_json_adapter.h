@@ -23,4 +23,8 @@ int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_j
 void mlr_json_strip_comments(char* psof, char* peof,
 	comment_handling_t comment_handling, char* comment_string, char* line_term);
 
+// I'm using a 3rd-party JSON parser and it's easy to strip all trailing whitespace
+// than tweak the parser to handle those.
+void mlr_json_end_strip(char* psof, char** ppeof);
+
 #endif // MLR_JSON_ADAPTER_H

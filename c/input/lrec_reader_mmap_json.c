@@ -165,6 +165,11 @@ static void lrec_reader_mmap_json_sof(void* pvstate, void* pvhandle) {
 				line_term);
 		}
 
+		// Trim trailing whitespace.
+		char* item_end = item_start + length;
+		mlr_json_end_strip(item_start, &item_end);
+		length = item_end - item_start;
+
 		parsed_top_level_json = json_parse(item_start, length, error_buf, &item_start);
 		if (parsed_top_level_json == NULL) {
 			fprintf(stderr, "%s: Unable to parse JSON data: %s\n", MLR_GLOBALS.bargv0, error_buf);
