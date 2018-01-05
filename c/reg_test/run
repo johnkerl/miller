@@ -5280,6 +5280,32 @@ run_mlr --pass-comments --ijson --odkvp cat < $indir/comments/comments3.json
 run_mlr --pass-comments --ijson --odkvp cat   $indir/comments/comments3.json
 
 # ----------------------------------------------------------------
+announce SKIP/PASS COMMENTS XTAB
+
+mention input comments1.xtab
+run_cat $indir/comments/comments1.xtab
+
+mention skip comments1.xtab
+run_mlr --skip-comments --ixtab --odkvp cat < $indir/comments/comments1.xtab
+run_mlr --skip-comments --ixtab --odkvp cat   $indir/comments/comments1.xtab
+
+mention pass comments1.xtab
+run_mlr --pass-comments --ixtab --odkvp cat < $indir/comments/comments1.xtab
+run_mlr --pass-comments --ixtab --odkvp cat   $indir/comments/comments1.xtab
+
+
+mention input comments2.xtab
+run_cat $indir/comments/comments2.xtab
+
+mention skip comments2.xtab
+run_mlr --skip-comments --ixtab --odkvp cat < $indir/comments/comments2.xtab
+run_mlr --skip-comments --ixtab --odkvp cat   $indir/comments/comments2.xtab
+
+mention pass comments2.xtab
+run_mlr --pass-comments --ixtab --odkvp cat < $indir/comments/comments2.xtab
+run_mlr --pass-comments --ixtab --odkvp cat   $indir/comments/comments2.xtab
+
+# ----------------------------------------------------------------
 announce SKIP/PASS COMMENTS CSVLITE
 
 mention input comments1.csv

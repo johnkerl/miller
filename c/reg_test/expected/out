@@ -45359,6 +45359,95 @@ a=4,b=5,c=6
 
 
 ================================================================
+SKIP/PASS COMMENTS XTAB
+
+
+---------------------------------------------------------------- input comments1.xtab
+cat ./reg_test/input/comments/comments1.xtab
+x 1
+#hello world3
+z 3
+
+x 2
+#hello world4
+z 5
+
+
+
+---------------------------------------------------------------- skip comments1.xtab
+mlr --skip-comments --ixtab --odkvp cat
+x=1,z=3
+x=2,z=5
+
+mlr --skip-comments --ixtab --odkvp cat ./reg_test/input/comments/comments1.xtab
+x=1,z=3
+x=2,z=5
+
+
+---------------------------------------------------------------- pass comments1.xtab
+mlr --pass-comments --ixtab --odkvp cat
+#hello world3
+x=1,z=3
+#hello world4
+x=2,z=5
+
+mlr --pass-comments --ixtab --odkvp cat ./reg_test/input/comments/comments1.xtab
+#hello world3
+x=1,z=3
+#hello world4
+x=2,z=5
+
+
+---------------------------------------------------------------- input comments2.xtab
+cat ./reg_test/input/comments/comments2.xtab
+#hello world1
+
+#hello world2
+x 1
+#hello world3
+z 3
+
+x 2
+#hello world4
+z 5
+#hello world5
+
+#hello world6
+
+
+---------------------------------------------------------------- skip comments2.xtab
+mlr --skip-comments --ixtab --odkvp cat
+x=1,z=3
+x=2,z=5
+
+mlr --skip-comments --ixtab --odkvp cat ./reg_test/input/comments/comments2.xtab
+x=1,z=3
+x=2,z=5
+
+
+---------------------------------------------------------------- pass comments2.xtab
+mlr --pass-comments --ixtab --odkvp cat
+#hello world1
+#hello world2
+#hello world3
+x=1,z=3
+#hello world4
+#hello world5
+x=2,z=5
+#hello world6
+
+mlr --pass-comments --ixtab --odkvp cat ./reg_test/input/comments/comments2.xtab
+#hello world1
+#hello world2
+#hello world3
+x=1,z=3
+#hello world4
+#hello world5
+x=2,z=5
+#hello world6
+
+
+================================================================
 SKIP/PASS COMMENTS CSVLITE
 
 

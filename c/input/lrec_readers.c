@@ -37,7 +37,8 @@ lrec_reader_t*  lrec_reader_alloc(cli_reader_opts_t* popts) {
 			return lrec_reader_stdio_nidx_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs,
 				popts->comment_handling, popts->comment_string);
 	} else if (streq(popts->ifile_fmt, "xtab")) {
-		if (popts->use_mmap_for_read)
+		// Use stdio-xtab for comment handling; not supported in the mmap-xtab reader.
+		if (popts->use_mmap_for_read && popts->comment_string == NULL)
 			return lrec_reader_mmap_xtab_alloc(popts->ifs, popts->ips, popts->allow_repeat_ips,
 				popts->comment_handling, popts->comment_string);
 		else
