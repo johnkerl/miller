@@ -16,10 +16,10 @@ BUGFIXES
 
 * comment-handling:
   o UT for CRLFs
-  o mlh
-  o mld
+  o UT for non-#
 
-* xxx note for trailing whitespace in json fixed
+! double-check line-number handling for csv/csvlite/other errors
+
 * sql-setup doc somewhere .......
 
 * bare ./configure ?

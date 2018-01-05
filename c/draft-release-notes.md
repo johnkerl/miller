@@ -1,9 +1,6 @@
 ## Features:
 
-* **Comment strings in data files:** `mlr --skip-comments` allows you to
-filter out input lines starting with `#`, for all file formats.  Likewise, `mlr
---skip-comments-with X` lets you specify the comment-string `X`.  Comments are
-only supported at start of data line.
+* [**Comment strings in data files:**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/file-formats.html#Comments_in_data) `mlr --skip-comments` allows you to filter out input lines starting with `#`, for all file formats.  Likewise, `mlr --skip-comments-with X` lets you specify the comment-string `X`.  Comments are only supported at start of data line.  `mlr --pass-comments` and `mlr --pass-comments-with X` allow you to forward comments to program output as they are read.  
 
 * The [**count-similar**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/reference-verbs.html#count-similar)
 verb lets you compute cluster sizes by cluster labels.

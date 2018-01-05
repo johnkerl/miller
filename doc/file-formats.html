@@ -204,6 +204,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Markdown_tabular">Markdown tabular</a><br/>
 &bull;&nbsp;<a href="#Data-conversion_keystroke-savers">Data-conversion keystroke-savers</a><br/>
 &bull;&nbsp;<a href="#Autodetect_of_line_endings">Autodetect of line endings</a><br/>
+&bull;&nbsp;<a href="#Comments_in_data">Comments in data</a><br/>
 </div>
 <p/>
 
@@ -217,7 +218,8 @@ Miller commands were run with pretty-print-tabular output format.
 
 <p/>Miller handles name-indexed data using several formats: some you probably
 know by name, such as CSV, TSV, and JSON &mdash; and other formats you&rsquo;re
-likely already seeing and using in your structured data.
+likely already seeing and using in your structured data. Additionally, Miller gives
+you the option of including comments within your data.
 
 </div>
 <a id="Examples"/><h1>Examples</h1>
@@ -1003,6 +1005,76 @@ Unix/Linux/BSD/MacOSX, and CRLF on Windows.
 <p/> See also
 <a href="reference.html#Record/field/pair_separators">Reference</a> for
 more information about record/field/pair separators.
+
+</div>
+<a id="Comments_in_data"/><h1>Comments in data</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_comments_in_data');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_comments_in_data" style="display: block">
+
+<p/>You can include comments within your data files, and either have them ignored, or passed directly
+through to the standard output as soon as they are encountered:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --usage-comments-in-data
+  --skip-comments                 Ignore commented lines (prefixed by "#")
+                                  within the input.
+  --skip-comments-with {string}   Ignore commented lines within input, with
+                                  specified prefix.
+  --pass-comments                 Immediately print commented lines (prefixed by "#")
+                                  within the input.
+  --pass-comments-with {string}   Immediately print commented lines within input, with
+                                  specified prefix.
+Notes:
+* Comments are only honored at the start of a line.
+* In the absence of any of the above four options, comments are data like
+  any other text.
+* When pass-comments is used, comment lines are written to standard output
+  immediately upon being read; they are not part of the record stream.
+  Results may be counterintuitive. A suggestion is to place comments at the
+  start of data files.
+</pre>
+</div>
+<p/>
+
+<p/>Examples:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/budget.csv
+# Asana -- here are the budget figure you asked for!
+type,quantity
+purple,456.78
+green,678.12
+orange,123.45
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --skip-comments --icsv --opprint sort -nr quantity data/budget.csv
+type   quantity
+green  678.12
+purple 456.78
+orange 123.45
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --pass-comments --icsv --opprint sort -nr quantity data/budget.csv
+# Asana -- here are the budget figure you asked for!
+type   quantity
+green  678.12
+purple 456.78
+orange 123.45
+</pre>
+</div>
+<p/>
 
 </div>
     </div>

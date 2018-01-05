@@ -10,7 +10,8 @@ POKI_PUT_TOC_HERE
 
 <p/>Miller handles name-indexed data using several formats: some you probably
 know by name, such as CSV, TSV, and JSON &mdash; and other formats you&rsquo;re
-likely already seeing and using in your structured data.
+likely already seeing and using in your structured data. Additionally, Miller gives
+you the option of including comments within your data.
 
 </div>
 <h1>Examples</h1>
@@ -359,5 +360,21 @@ Unix/Linux/BSD/MacOSX, and CRLF on Windows.
 <p/> See also
 POKI_PUT_LINK_FOR_PAGE(reference.html#Record/field/pair_separators)HERE for
 more information about record/field/pair separators.
+
+</div>
+<h1>Comments in data</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_comments_in_data');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_comments_in_data" style="display: block">
+
+<p/>You can include comments within your data files, and either have them ignored, or passed directly
+through to the standard output as soon as they are encountered:
+
+POKI_RUN_COMMAND{{mlr --usage-comments-in-data}}HERE
+
+<p/>Examples:
+
+POKI_RUN_COMMAND{{cat data/budget.csv}}HERE
+POKI_RUN_COMMAND{{mlr --skip-comments --icsv --opprint sort -nr quantity data/budget.csv}}HERE
+POKI_RUN_COMMAND{{mlr --pass-comments --icsv --opprint sort -nr quantity data/budget.csv}}HERE
 
 </div>
