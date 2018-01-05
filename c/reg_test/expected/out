@@ -45444,12 +45444,21 @@ a,b,c
 
 
 ---------------------------------------------------------------- skip comments1.csv
+mlr --skip-comments --icsv --odkvp cat
+a=1,b=2,c=3
+a=4,b=5,c=6
+
 mlr --skip-comments --icsv --odkvp cat ./reg_test/input/comments/comments1.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
 
 ---------------------------------------------------------------- pass comments1.csv
+mlr --pass-comments --icsv --odkvp cat
+# hello
+a=1,b=2,c=3
+a=4,b=5,c=6
+
 mlr --pass-comments --icsv --odkvp cat ./reg_test/input/comments/comments1.csv
 # hello
 a=1,b=2,c=3
@@ -45468,12 +45477,24 @@ a,b,c
 
 
 ---------------------------------------------------------------- skip comments2.csv
+mlr --skip-comments --icsv --odkvp cat
+a=1,b=2,c=3
+a=4,b=5,c=6
+
 mlr --skip-comments --icsv --odkvp cat ./reg_test/input/comments/comments2.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
 
 ---------------------------------------------------------------- pass comments2.csv
+mlr --pass-comments --icsv --odkvp cat
+# hello
+# hi
+a=1,b=2,c=3
+# there
+a=4,b=5,c=6
+# haha
+
 mlr --pass-comments --icsv --odkvp cat ./reg_test/input/comments/comments2.csv
 # hello
 # hi
