@@ -22,6 +22,7 @@ BUGFIXES
   o xxxes
   o streqn-past-eof scenarios @ page boundaries ...
   o UT for skip/pass
+  o UT for CRLFs
 
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   ! single/multi irs/ifs test cases
