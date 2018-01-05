@@ -185,7 +185,6 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state
 			if (comment_string != NULL) {
 				if (skip_comment_line_single_ifs(phandle, pstate, ifs))
 					skipped_anything = TRUE;
-
 			}
 			if (!skipped_anything)
 				break;
@@ -199,13 +198,16 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state
 
 	// Loop over fields, one per line
 	while (TRUE) {
+		if (comment_string != NULL) {
+			if (skip_comment_line_single_ifs(phandle, pstate, ifs)) {
+				if (phandle->sol < phandle->eof && *phandle->sol == ifs)
+					break;
+				else
+					continue;
+			}
+		}
 		if (phandle->sol >= phandle->eof)
 			break;
-
-		if (comment_string != NULL) {
-			if (skip_comment_line_single_ifs(phandle, pstate, ifs))
-				continue;
-		}
 
 		char* line  = phandle->sol;
 		char* key   = line;
@@ -321,11 +323,16 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_
 
 	// Loop over fields, one per line
 	while (TRUE) {
-
 		if (comment_string != NULL) {
-			if (skip_comment_line_single_ifs(phandle, pstate, ifs))
-				continue;
+			if (skip_comment_line_single_ifs(phandle, pstate, ifs)) {
+				if (phandle->sol < phandle->eof && *phandle->sol == ifs)
+					break;
+				else
+					continue;
+			}
 		}
+		if (phandle->sol >= phandle->eof)
+			break;
 
 		char* line  = phandle->sol;
 		char* key   = line;
@@ -421,11 +428,16 @@ static lrec_t* lrec_parse_mmap_xtab_multi_ifs_single_ips(file_reader_mmap_state_
 
 	// Loop over fields, one per line
 	while (TRUE) {
-
 		if (comment_string != NULL) {
-			if (skip_comment_line_multi_ifs(phandle, pstate))
-				continue;
+			if (skip_comment_line_multi_ifs(phandle, pstate)) {
+				if (phandle->eof - phandle->sol >= ifslen && streqn(phandle->sol, ifs, ifslen))
+					break;
+				else
+					continue;
+			}
 		}
+		if (phandle->sol >= phandle->eof)
+			break;
 
 		char* line  = phandle->sol;
 		char* key   = line;
@@ -512,12 +524,14 @@ static lrec_t* lrec_parse_mmap_xtab_multi_ifs_multi_ips(file_reader_mmap_state_t
 
 	// Loop over fields, one per line
 	while (TRUE) {
-
-		// Skip comment lines
 		if (comment_string != NULL) {
-			if (skip_comment_line_multi_ifs(phandle, pstate))
+			if (phandle->eof - phandle->sol >= ifslen && streqn(phandle->sol, ifs, ifslen))
+				break;
+			else
 				continue;
 		}
+		if (phandle->sol >= phandle->eof)
+			break;
 
 		char* line  = phandle->sol;
 		char* key   = line;
