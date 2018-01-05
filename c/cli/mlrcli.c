@@ -105,6 +105,7 @@ static void main_usage_help_options(FILE* o, char* argv0);
 static void main_usage_functions(FILE* o, char* argv0, char* leader);
 static void main_usage_data_format_examples(FILE* o, char* argv0);
 static void main_usage_data_format_options(FILE* o, char* argv0);
+static void main_usage_comments_in_data(FILE* o, char* argv0);
 static void main_usage_format_conversion_keystroke_saver_options(FILE* o, char* argv0);
 static void main_usage_compressed_data_options(FILE* o, char* argv0);
 static void main_usage_separator_options(FILE* o, char* argv0);
@@ -549,6 +550,10 @@ static void main_usage_long(FILE* o, char* argv0) {
 	main_usage_data_format_options(o, argv0);
 	fprintf(o, "\n");
 
+	fprintf(o, "Comments in data:\n");
+	main_usage_comments_in_data(o, argv0);
+	fprintf(o, "\n");
+
 	fprintf(o, "Format-conversion keystroke-saver options, for input, output, or both:\n");
 	main_usage_format_conversion_keystroke_saver_options(o, argv0);
 	fprintf(o, "\n");
@@ -770,7 +775,6 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "    --json-fatal-arrays-on-input  maps. The other two options cause them to be skipped, or\n");
 	fprintf(o, "                                  to be treated as errors.  Please use the jq tool for full\n");
 	fprintf(o, "                                  JSON (pre)processing.\n");
-
 	fprintf(o, "                      --jvstack   Put one key-value pair per line for JSON\n");
 	fprintf(o, "                                  output.\n");
 	fprintf(o, "                      --jlistwrap Wrap JSON output in outermost [ ].\n");
@@ -794,6 +798,27 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "\n");
 	fprintf(o, "  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for\n");
 	fprintf(o, "  DKVP-formatted input and pretty-printed output.\n");
+}
+
+static void main_usage_comments_in_data(FILE* o, char* argv0) {
+	fprintf(o, "  --skip-comments                 Ignore commented lines (prefixed by \"%s\")\n",
+		DEFAULT_COMMENT_STRING);
+	fprintf(o, "                                  within the input.\n");
+	fprintf(o, "  --skip-comments-with {string}   Ignore commented lines within input, with\n");
+	fprintf(o, "                                  specified prefix.\n");
+	fprintf(o, "  --pass-comments                 Immediately print commented lines (prefixed by \"%s\")\n",
+		DEFAULT_COMMENT_STRING);
+	fprintf(o, "                                  within the input.\n");
+	fprintf(o, "  --pass-comments-with {string}   Immediately print commented lines within input, with\n");
+	fprintf(o, "                                  specified prefix.\n");
+	fprintf(o, "Notes:\n");
+	fprintf(o, "* Comments are only honored at the start of a line.\n");
+	fprintf(o, "* In the absence of any of the above four options, comments are data like\n");
+	fprintf(o, "  any other text.\n");
+	fprintf(o, "* When pass-comments is used, comment lines are written to standard output\n");
+	fprintf(o, "  immediately upon being read; they are not part of the record stream.\n");
+	fprintf(o, "  Results may be counterintuitive. A suggestion is to place comments at the\n");
+	fprintf(o, "  start of data files.\n");
 }
 
 static void main_usage_format_conversion_keystroke_saver_options(FILE* o, char* argv0) {
@@ -1349,6 +1374,9 @@ static int handle_terminal_usage(char** argv, int argc, int argi) {
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-data-format-options")) {
 		main_usage_data_format_options(stdout, MLR_GLOBALS.bargv0);
+		return TRUE;
+	} else if (streq(argv[argi], "--usage-comments-in-data")) {
+		main_usage_comments_in_data(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-format-conversion-keystroke-saver-options")) {
 		main_usage_format_conversion_keystroke_saver_options(stdout, MLR_GLOBALS.bargv0);

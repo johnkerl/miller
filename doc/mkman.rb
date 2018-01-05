@@ -63,6 +63,9 @@ output separator to the given value."""
 	print make_subsection('I/O FORMATTING', [])
 	print make_code_block(`mlr --usage-data-format-options`)
 
+	print make_subsection('COMMENTS IN DATA', [])
+	print make_code_block(`mlr --usage-comments-in-data`)
+
 	print make_subsection('FORMAT-CONVERSION KEYSTROKE-SAVERS', [])
 	print make_code_block(`mlr --usage-format-conversion-keystroke-saver-options`)
 

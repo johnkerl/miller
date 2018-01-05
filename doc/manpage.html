@@ -411,6 +411,24 @@ OPTIONS
 	 Examples: --csv for CSV-formatted input and output; --idkvp --opprint for
 	 DKVP-formatted input and pretty-printed output.
 
+   COMMENTS IN DATA
+	 --skip-comments		 Ignore commented lines (prefixed by "#")
+					 within the input.
+	 --skip-comments-with {string}	 Ignore commented lines within input, with
+					 specified prefix.
+	 --pass-comments		 Immediately print commented lines (prefixed by "#")
+					 within the input.
+	 --pass-comments-with {string}	 Immediately print commented lines within input, with
+					 specified prefix.
+       Notes:
+       * Comments are only honored at the start of a line.
+       * In the absence of any of the above four options, comments are data like
+	 any other text.
+       * When pass-comments is used, comment lines are written to standard output
+	 immediately upon being read; they are not part of the record stream.
+	 Results may be counterintuitive. A suggestion is to place comments at the
+	 start of data files.
+
    FORMAT-CONVERSION KEYSTROKE-SAVERS
        As keystroke-savers for format-conversion you may use the following:
 	 --c2t --c2d --c2n --c2j --c2x --c2p --c2m
@@ -2303,7 +2321,7 @@ SEE ALSO
 
 
 
-				  2018-01-04			     MILLER(1)
+				  2018-01-05			     MILLER(1)
 </pre>
 </div>
 <p/>
