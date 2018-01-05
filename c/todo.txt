@@ -14,42 +14,8 @@ BUGFIXES
 ================================================================
 5.3.0 TO DO:
 
-* mlr-5.2.0 --json cat /dev/null
-  mlr-5.2.0: Unable to parse JSON data: Line 1 column 0: Unexpected `0x00` when seeking value
-
 * comment-handling:
-  o --pass-comments option
-  o xxxes
-  o streqn-past-eof scenarios @ page boundaries ...
-  o UT for skip/pass
   o UT for CRLFs
-
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ! single/multi irs/ifs test cases
-
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  k input/lrec_reader_stdio_dkvp.c:21
-  k input/lrec_reader_mmap_dkvp.c:25
-
-  k input/lrec_reader_stdio_nidx.c:21
-  k input/lrec_reader_mmap_nidx.c:10
-
-  k input/lrec_reader_stdio_json.c:7
-  k input/lrec_reader_mmap_json.c:7
-
-  k input/lrec_reader_stdio_csvlite.c:13
-  k input/lrec_reader_mmap_csvlite.c:37
-
-  k input/lrec_reader_stdio_csv.c:9
-  k input/lrec_reader_mmap_csv.c:9
-
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  t input/lrec_reader_stdio_xtab.c:8
-  x input/lrec_reader_mmap_xtab.c:47
-    R-O-N-G
-
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ! rm code-dupe in various readers, especially dkvp & nidx & xtab
   o mlh
   o mld
 
@@ -59,8 +25,6 @@ BUGFIXES
 * bare ./configure ?
 
 * valgrinds
-
-* xxxes
 
 ================================================================
 FUNDAM:

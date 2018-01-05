@@ -50,4 +50,6 @@ longer-term follow-on [**issue 151**](https://github.com/johnkerl/miller/issues/
 
 * [**Issue 162**](https://github.com/johnkerl/miller/issues/162) fixes a corner case doing multi-emit of aggregate variables when the first variable name is a typo.
 
+* The Miller JSON parser used to error with `Unable to parse JSON data: Line 1 column 0: Unexpected 0x00 when seeking value` on empty input, or input with trailing whitespace; this has been fixed.
+
 There is no prebuilt Windows executable for this release; my apologies.
