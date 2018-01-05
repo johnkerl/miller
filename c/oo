@@ -37,26 +37,26 @@ flags="-a"
 vee=
 
 # ----------------------------------------------------------------
-announce CSVLITE
+announce CSV
 
 mention input comments1.csv
 cat reg_test/input/comments/comments1.csv
 
 mention skip comments1.csv
-run_mlr --skip-comments --icsvlite --odkvp cat < reg_test/input/comments/comments1.csv
-run_mlr --skip-comments --icsvlite --odkvp cat   reg_test/input/comments/comments1.csv
+run_mlr --skip-comments --icsv --odkvp cat < reg_test/input/comments/comments1.csv
+run_mlr --skip-comments --icsv --odkvp cat   reg_test/input/comments/comments1.csv
 
 mention pass comments1.csv
-run_mlr --pass-comments --icsvlite --odkvp cat < reg_test/input/comments/comments1.csv
-run_mlr --pass-comments --icsvlite --odkvp cat   reg_test/input/comments/comments1.csv
+run_mlr --pass-comments --icsv --odkvp cat < reg_test/input/comments/comments1.csv
+run_mlr --pass-comments --icsv --odkvp cat   reg_test/input/comments/comments1.csv
 
 mention input comments2.csv
 cat reg_test/input/comments/comments2.csv
 
 mention skip comments2.csv
-run_mlr --skip-comments --icsvlite --odkvp cat < reg_test/input/comments/comments2.csv
-run_mlr --skip-comments --icsvlite --odkvp cat   reg_test/input/comments/comments2.csv
+run_mlr --skip-comments --icsv --odkvp cat < reg_test/input/comments/comments2.csv
+run_mlr --skip-comments --icsv --odkvp cat   reg_test/input/comments/comments2.csv
 
 mention pass comments2.csv
-run_mlr --pass-comments --icsvlite --odkvp cat < reg_test/input/comments/comments2.csv
-run_mlr --pass-comments --icsvlite --odkvp cat   reg_test/input/comments/comments2.csv
+run_mlr --pass-comments --icsv --odkvp cat < reg_test/input/comments/comments2.csv
+run_mlr --pass-comments --icsv --odkvp cat   reg_test/input/comments/comments2.csv

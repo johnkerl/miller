@@ -45432,6 +45432,58 @@ a=4,b=5,c=6
 
 
 ================================================================
+SKIP/PASS COMMENTS CSV
+
+
+---------------------------------------------------------------- input comments1.csv
+cat ./reg_test/input/comments/comments1.csv
+# hello
+a,b,c
+1,2,3
+4,5,6
+
+
+---------------------------------------------------------------- skip comments1.csv
+mlr --skip-comments --icsv --odkvp cat ./reg_test/input/comments/comments1.csv
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
+---------------------------------------------------------------- pass comments1.csv
+mlr --pass-comments --icsv --odkvp cat ./reg_test/input/comments/comments1.csv
+# hello
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
+---------------------------------------------------------------- input comments2.csv
+cat ./reg_test/input/comments/comments2.csv
+# hello
+a,b,c
+# hi
+1,2,3
+# there
+4,5,6
+# haha
+
+
+---------------------------------------------------------------- skip comments2.csv
+mlr --skip-comments --icsv --odkvp cat ./reg_test/input/comments/comments2.csv
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
+---------------------------------------------------------------- pass comments2.csv
+mlr --pass-comments --icsv --odkvp cat ./reg_test/input/comments/comments2.csv
+# hello
+# hi
+a=1,b=2,c=3
+# there
+a=4,b=5,c=6
+# haha
+
+
+================================================================
 MMAP AT PAGE BOUNDARIES
 
 mlr --dkvp tail -n 4 ./reg_test/input/page-aligned-final-ifs.dkvp
