@@ -202,18 +202,6 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 				return NULL;
 			pstate->ilno++;
 
-			if (pstate->comment_string != NULL) {
-				if (pstate->pfields->phead != NULL) {
-					if (streqn(pstate->pfields->phead->value, pstate->comment_string, pstate->comment_string_length)) {
-						if (pstate->comment_handling == PASS_COMMENTS) {
-							// xxx fix me
-						}
-						rslls_reset(pstate->pfields);
-						continue;
-					}
-				}
-			}
-
 			slls_t* pheader_fields = slls_alloc();
 			int i = 0;
 			for (rsllse_t* pe = pstate->pfields->phead; i < pstate->pfields->length && pe != NULL; pe = pe->pnext, i++) {
@@ -249,18 +237,6 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 		pstate->ilno++;
 		if (rc == FALSE) // EOF
 			return NULL;
-
-		if (pstate->comment_string != NULL) {
-			if (pstate->pfields->phead != NULL) {
-				if (streqn(pstate->pfields->phead->value, pstate->comment_string, pstate->comment_string_length)) {
-					if (pstate->comment_handling == PASS_COMMENTS) {
-						// xxx fix me
-					}
-					rslls_reset(pstate->pfields);
-					continue;
-				}
-			}
-		}
 
 		lrec_t* prec = pstate->use_implicit_header
 			? paste_indices_and_data(pstate, pstate->pfields, pctx)

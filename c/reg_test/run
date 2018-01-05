@@ -5632,35 +5632,6 @@ run_mlr --jlistwrap --json --jvstack cat $indir/line-term-lf-wrap.json
 run_mlr --jlistwrap --json --jvstack cat $indir/line-term-crlf-wrap.json
 
 # ----------------------------------------------------------------
-announce SKIP-COMMENTS
-
-mention CSV mmap
-run_mlr --csv                 --mmap cat $indir/without-comments.csv
-run_mlr --csv --skip-comments --mmap cat $indir/without-comments.csv
-mlr_expect_fail --csv         --mmap cat $indir/with-comments.csv
-run_mlr --csv --skip-comments --mmap cat $indir/with-comments.csv
-
-mention CSV stdio
-run_mlr --csv                 --no-mmap cat $indir/without-comments.csv
-run_mlr --csv --skip-comments --no-mmap cat $indir/without-comments.csv
-mlr_expect_fail --csv         --no-mmap cat $indir/with-comments.csv
-run_mlr --csv --skip-comments --no-mmap cat $indir/with-comments.csv
-
-
-mention CSVLITE mmap
-run_mlr --csvlite                 --mmap cat $indir/without-comments.csv
-run_mlr --csvlite --skip-comments --mmap cat $indir/without-comments.csv
-mlr_expect_fail --csvlite         --mmap cat $indir/with-comments.csv
-# xxx fix me:
-#run_mlr --csvlite --skip-comments --mmap cat $indir/with-comments.csv
-
-mention CSVLITE stdio
-run_mlr --csvlite                 --no-mmap cat $indir/without-comments.csv
-run_mlr --csvlite --skip-comments --no-mmap cat $indir/without-comments.csv
-mlr_expect_fail --csvlite         --no-mmap cat $indir/with-comments.csv
-run_mlr --csvlite --skip-comments --no-mmap cat $indir/with-comments.csv
-
-# ----------------------------------------------------------------
 announce USER-DEFINED FUNCTIONS AND SUBROUTINES
 
 run_mlr --opprint --from $indir/abixy put 'func f(u,v){return u+v} $o=f(NR*1000,$x)'
