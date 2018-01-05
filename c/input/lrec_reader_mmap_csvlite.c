@@ -805,7 +805,7 @@ static int handle_comment_line_multi_irs(
 			for (int i = 0; i < pstate->comment_string_length; i++)
 				fputc(phandle->sol[i], stdout);
 		phandle->sol += pstate->comment_string_length;
-		while ((phandle->eof < phandle->sol >= pstate->irslen) && !streqn(phandle->sol, pstate->irs, pstate->irslen)) {
+		while ((phandle->eof - phandle->sol >= pstate->irslen) && !streqn(phandle->sol, pstate->irs, pstate->irslen)) {
 			if (pstate->comment_handling == PASS_COMMENTS)
 				fputc(*phandle->sol, stdout);
 			phandle->sol++;

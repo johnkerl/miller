@@ -168,10 +168,12 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state
 	} else {
 		// Skip over otherwise empty IFS-only lines, or comment lines
 		while (TRUE) {
+			// xxx funcify
 			int skipped_anything = FALSE;
 			if (phandle->sol < phandle->eof && *phandle->sol == ifs) {
 				skipped_anything = TRUE;
 				phandle->sol++;
+				continue;
 			}
 			if (comment_string != NULL) {
 				if (phandle->sol < phandle->eof && streqn(phandle->sol, comment_string, comment_string_length)) {
@@ -191,6 +193,7 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state
 						phandle->sol++;
 					}
 				}
+				continue;
 			}
 			if (!skipped_anything)
 				break;
