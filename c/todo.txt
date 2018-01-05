@@ -39,11 +39,8 @@ BUGFIXES
   k input/lrec_reader_stdio_csvlite.c:13
   k input/lrec_reader_mmap_csvlite.c:37
 
-  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-  ~ input/lrec_reader_stdio_csv.c:9
-    has skip-logic; needs pass-logic; and both need a refactor
-  ~ input/lrec_reader_mmap_csv.c:9
-    has skip-logic; needs pass-logic; and both need a refactor
+  k input/lrec_reader_stdio_csv.c:9
+  k input/lrec_reader_mmap_csv.c:9
 
   - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
   t input/lrec_reader_stdio_xtab.c:8

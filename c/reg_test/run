@@ -5312,11 +5312,11 @@ mention input comments1.csv
 run_cat $indir/comments/comments1.csv
 
 mention skip comments1.csv
-############run_mlr --skip-comments --icsv --odkvp cat < $indir/comments/comments1.csv
+run_mlr --skip-comments --icsv --odkvp cat < $indir/comments/comments1.csv
 run_mlr --skip-comments --icsv --odkvp cat   $indir/comments/comments1.csv
 
 mention pass comments1.csv
-############run_mlr --pass-comments --icsv --odkvp cat < $indir/comments/comments1.csv
+run_mlr --pass-comments --icsv --odkvp cat < $indir/comments/comments1.csv
 run_mlr --pass-comments --icsv --odkvp cat   $indir/comments/comments1.csv
 
 
@@ -5324,11 +5324,11 @@ mention input comments2.csv
 run_cat $indir/comments/comments2.csv
 
 mention skip comments2.csv
-############run_mlr --skip-comments --icsv --odkvp cat < $indir/comments/comments2.csv
+run_mlr --skip-comments --icsv --odkvp cat < $indir/comments/comments2.csv
 run_mlr --skip-comments --icsv --odkvp cat   $indir/comments/comments2.csv
 
 mention pass comments2.csv
-############run_mlr --pass-comments --icsv --odkvp cat < $indir/comments/comments2.csv
+run_mlr --pass-comments --icsv --odkvp cat < $indir/comments/comments2.csv
 run_mlr --pass-comments --icsv --odkvp cat   $indir/comments/comments2.csv
 
 # ----------------------------------------------------------------

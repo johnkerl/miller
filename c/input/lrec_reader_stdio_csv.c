@@ -231,6 +231,28 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 				return NULL;
 			pstate->ilno++;
 
+			// We check for comments here rather than within the parser since it's important
+			// for users to be able to comment out lines containing double-quoted newlines.
+			if (pstate->comment_string != NULL && pstate->pfields->phead != NULL) {
+				if (streqn(pstate->pfields->phead->value, pstate->comment_string, pstate->comment_string_length)) {
+					if (pstate->comment_handling == PASS_COMMENTS) {
+						int i = 0;
+						for (
+							rsllse_t* pe = pstate->pfields->phead;
+							i < pstate->pfields->length && pe != NULL;
+							pe = pe->pnext, i++)
+						{
+							if (i > 0)
+								fputs(pstate->ifs, stdout);
+							fputs(pe->value, stdout);
+						}
+						fputs(pstate->irs, stdout);
+					}
+					rslls_reset(pstate->pfields);
+					continue;
+				}
+			}
+
 			slls_t* pheader_fields = slls_alloc();
 			int i = 0;
 			for (rsllse_t* pe = pstate->pfields->phead; i < pstate->pfields->length && pe != NULL; pe = pe->pnext) {
@@ -266,6 +288,28 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 		pstate->ilno++;
 		if (rc == FALSE) // EOF
 			return NULL;
+
+		// We check for comments here rather than within the parser since it's important
+		// for users to be able to comment out lines containing double-quoted newlines.
+		if (pstate->comment_string != NULL && pstate->pfields->phead != NULL) {
+			if (streqn(pstate->pfields->phead->value, pstate->comment_string, pstate->comment_string_length)) {
+				if (pstate->comment_handling == PASS_COMMENTS) {
+					int i = 0;
+					for (
+						rsllse_t* pe = pstate->pfields->phead;
+						i < pstate->pfields->length && pe != NULL;
+						pe = pe->pnext, i++)
+					{
+						if (i > 0)
+							fputs(pstate->ifs, stdout);
+						fputs(pe->value, stdout);
+					}
+					fputs(pstate->irs, stdout);
+				}
+				rslls_reset(pstate->pfields);
+				continue;
+			}
+		}
 
 		lrec_t* prec =  pstate->use_implicit_header
 			? paste_indices_and_data(pstate, pstate->pfields, pctx)
