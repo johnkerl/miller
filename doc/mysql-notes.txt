@@ -1,0 +1,115 @@
+================================================================
+brew install mysql ?
+not working on my current OS rev
+
+dev.mysql.com ...
+
+sudo launchctl   load -F /Library/LaunchDaemons/com.oracle.oss.mysql.mysqld.plist
+sudo launchctl unload -w /Library/LaunchDaemons/com.oracle.oss.mysql.mysqld.plist
+
+/usr/local/mysql/bin/mysql
+/usr/local/mysql/bin/mysqladmin
+
+================================================================
+mysql -u root -p
+SET PASSWORD FOR 'root'@'localhost' = PASSWORD('password-goes-here');
+DESCRIBE mysql.user;
+GRANT ALL PRIVILEGES ON *.* TO 'username'@'localhost' IDENTIFIED BY 'password';
+SELECT Host, User from mysql.user;
+SHOW GRANTS;
+
+FLUSH PRIVILEGES; somewhere in there helped?!?
+
+================================================================
+cat ~/.my.cnf
+[client]
+user=user-name-goes-here
+password=password-goes-here
+
+chmod 600 ~/.my.cnf
+
+SELECT USER();
+
+================================================================
+CREATE DATABASE db-name-goes-here;
+USE db-name-goes-here;
+
+CREATE TABLE example(
+  id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
+  name VARCHAR(20) NOT NULL,
+  CONSTRAINT pk_example PRIMARY KEY (id)
+);
+INSERT INTO example (id, name) VALUES (null, 'Sample data');
+INSERT INTO example (id, name) VALUES (null, 'Sample data');
+INSERT INTO example (id, name) VALUES (null, 'More data');
+SELECT * FROM example;
+
+================================================================
+mysql -D sample    -e 'select * from example;'
+mysql -D sample -B -e 'select * from example;'
+
+================================================================
+mysql -D sample -B -e 'select BIT_COUNT(id^id) from example'
+
+================================================================
+================================================================
+CREATE DATABASE miller;
+USE miller;
+
+================================================================
+CREATE TABLE abixy(
+  a VARCHAR(32),
+  b VARCHAR(32),
+  i BIGINT(10),
+  x DOUBLE,
+  y DOUBLE
+);
+
+INSERT INTO abixy (a,b,i,x,y) VALUES ("pot", "pan", 1, 0.323455, 0.78234);
+
+SELECT * FROM abixy;
+
+mysql> CREATE DATABASE miller;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> USE miller;
+
+mysql> CREATE TABLE abixy(
+    ->   a VARCHAR(32),
+    ->   b VARCHAR(32),
+    ->   i BIGINT(10),
+    ->   x DOUBLE,
+    ->   y DOUBLE
+    -> );
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> 
+mysql> INSERT INTO abixy (a,b,i,x,y) VALUES ("pot", "pan", 1, 0.323455, 0.78234);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM abixy;
++------+------+------+----------+---------+
+| a    | b    | i    | x        | y       |
++------+------+------+----------+---------+
+| pot  | pan  |    1 | 0.323455 | 0.78234 |
++------+------+------+----------+---------+
+1 row in set (0.01 sec)
+
+mysql> INSERT INTO abixy (a,b,i,x,y) VALUES ("pot", "pan", 1, 0.323455, 0.78234);
+Query OK, 1 row affected (0.00 sec)
+
+mysql> SELECT * FROM abixy;
++------+------+------+----------+---------+
+| a    | b    | i    | x        | y       |
++------+------+------+----------+---------+
+| pot  | pan  |    1 | 0.323455 | 0.78234 |
+| pot  | pan  |    1 | 0.323455 | 0.78234 |
++------+------+------+----------+---------+
+2 rows in set (0.00 sec)
+
+----------------------------------------------------------------
+mlr --onidx --fs comma cat s > t
+
+DROP TABLE abixy;
+load data local infile 't' into table abixy fields terminated by ',' ;
+load data local infile 't' replace into table abixy fields terminated by ',' ;
