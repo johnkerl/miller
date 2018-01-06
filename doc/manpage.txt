@@ -372,6 +372,18 @@ OPTIONS
        Output of one verb may be chained as input to another using "then", e.g.
 	 mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
 
+   AUXILIARY COMMANDS
+       Miller has a few otherwise-standalone executables packaged within it.
+       They do not participate in any other parts of Miller.
+       Available subcommands:
+	 aux-list
+	 lecat
+	 termcvt
+	 hex
+	 unhex
+	 netbsd-strptime
+       For more information, please invoke mlr {subcommand} --help
+
 VERBS
    bar
        Usage: mlr bar [options]
@@ -2127,4 +2139,4 @@ SEE ALSO
 
 
 
-				  2018-01-05			     MILLER(1)
+				  2018-01-06			     MILLER(1)

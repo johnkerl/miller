@@ -170,7 +170,11 @@ char* mlr_alloc_read_line_single_delimiter_stripping_comments_aux(
 				(*pnum_lines_comment_skipped)++;
 			if (comment_handling == PASS_COMMENTS) {
 				fputs(line, stdout);
-				fputc(delimiter, stdout);
+				if (do_auto_line_term) {
+					fputs(pctx->auto_line_term, stdout);
+				} else {
+					fputc(delimiter, stdout);
+				}
 				fflush(stdout);
 			}
 			free(line);

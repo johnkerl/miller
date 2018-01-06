@@ -246,7 +246,11 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 								fputs(pstate->ifs, stdout);
 							fputs(pe->value, stdout);
 						}
-						fputs(pstate->irs, stdout);
+						if (pstate->do_auto_line_term) {
+							fputs(pctx->auto_line_term, stdout);
+						} else {
+							fputs(pstate->irs, stdout);
+						}
 					}
 					rslls_reset(pstate->pfields);
 					continue;
@@ -304,7 +308,11 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 							fputs(pstate->ifs, stdout);
 						fputs(pe->value, stdout);
 					}
-					fputs(pstate->irs, stdout);
+					if (pstate->do_auto_line_term) {
+						fputs(pctx->auto_line_term, stdout);
+					} else {
+						fputs(pstate->irs, stdout);
+					}
 				}
 				rslls_reset(pstate->pfields);
 				continue;
