@@ -2,17 +2,13 @@
 BUGFIXES
 
 ================================================================
-5.3.0 TO DO:
-
-* valgrinds
-? bare ./configure ?
-
-================================================================
 FUNDAM:
 
 * synctool alias/flag handling ...
 
 ----------------------------------------------------------------
+? bare ./configure ?
+
 ! dirname/basename functions !
 
 * sort fcn / issue77
