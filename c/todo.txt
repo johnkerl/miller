@@ -14,27 +14,6 @@ BUGFIXES
   mlr: could not fread "/dev/null"
   mlr: Couldn't open "/dev/null" for read.
 
-* also do autodetect on comment-skip/pass:
-  $  mlr --pass-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp|mlr lecat
-  # hello world 1[CR][LF]
-  a 1[CR][LF]
-  b 2[CR][LF]
-  c 3[CR][LF]
-  [CR][LF]
-  a 4[CR][LF]
-  b 5[CR][LF]
-  c 6[CR][LF]
-
-  $  mlr --no-mmap --pass-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp|mlr lecat
-  # hello world 1[LF]
-  a 1[CR][LF]
-  b 2[CR][LF]
-  c 3[CR][LF]
-  [CR][LF]
-  a 4[CR][LF]
-  b 5[CR][LF]
-  c 6[CR][LF]
-
 ================================================================
 5.3.0 TO DO:
 
