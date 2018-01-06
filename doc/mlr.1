@@ -1,13 +1,13 @@
 '\" t
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
-.\" Generator: ./mkman.rb
-.\"      Date: 2018-01-05
+.\" Generator: mkman.rb
+.\"      Date: 2018-01-06
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2018-01-05" "\ \&" "\ \&"
+.TH "MILLER" "1" "2018-01-06" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -480,6 +480,24 @@ output only.
 .nf
 Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
+.fi
+.if n \{\
+.RE
+.SS "AUXILIARY COMMANDS"
+.if n \{\
+.RS 0
+.\}
+.nf
+Miller has a few otherwise-standalone executables packaged within it.
+They do not participate in any other parts of Miller.
+Available subcommands:
+  aux-list
+  lecat
+  termcvt
+  hex
+  unhex
+  netbsd-strptime
+For more information, please invoke mlr {subcommand} --help
 .fi
 .if n \{\
 .RE
