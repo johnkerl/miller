@@ -132,6 +132,7 @@ static void mapper_count_similar_free(mapper_t* pmapper, context_t* _) {
 		// the sllv container itself.
 		sllv_free(precord_list_for_group);
 	}
+	lhmslv_free(pstate->precord_lists_by_group);
 
 	pstate->pgroup_by_field_names = NULL;
 	pstate->pcounts_by_group = NULL;
