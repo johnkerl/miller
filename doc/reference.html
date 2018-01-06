@@ -653,38 +653,119 @@ For more information, please invoke mlr {subcommand} --help
 </pre>
 </div>
 <p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr lecat --help
+Usage: mlr lecat [options] {zero or more file names}
+Simply echoes input, but flags CR characters in red and LF characters in green.
+If zero file names are supplied, standard input is read.
+Options:
+--mono: don't try to colorize the output
+-h or --help: print this message
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr termcvt --help
+Usage: mlr termcvt [option] {zero or more file names}
+Option (exactly one is required):
+--cr2crlf
+--lf2crlf
+--crlf2cr
+--crlf2lf
+--cr2lf
+--lf2cr
+-I in-place processing (default is to write to stdout)
+-h or --help: print this message
+Zero file names means read from standard input.
+Output is always to standard output; files are not written in-place.
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr hex --help
+Usage: mlr hex [options] {zero or more file names}
+Simple hex-dump.
+If zero file names are supplied, standard input is read.
+Options:
+-r: print only raw hex without leading offset indicators or trailing ASCII dump.
+-h or --help: print this message
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr unhex --help
+Usage: mlr unhex [option] {zero or more file names}
+Options:
+-h or --help: print this message
+Zero file names means read from standard input.
+Output is always to standard output; files are not written in-place.
+</pre>
+</div>
+<p/>
 
 <p/> Examples:
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ echo 'Hello, world!' | mlr hex
-00000000: 48 65 6c 6c  6f 2c 20 77  6f 72 6c 64  21 0a       |Hello, world!.|
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo 'Hello, world!' | mlr hex -r
-48 65 6c 6c  6f 2c 20 77  6f 72 6c 64  21 0a
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
-$ echo 'Hello, world!' | mlr hex -r | mlr unhex
-Hello, world!
-</pre>
-</div>
-<p/>
-<p/>
-<div class="pokipanel">
-<pre>
 $ echo 'Hello, world!' | mlr lecat --mono
 Hello, world![LF]
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'Hello, world!' | mlr termcvt --lf2crlf | mlr lecat --mono
+Hello, world![CR][LF]
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr hex data/budget.csv
+00000000: 23 20 41 73  61 6e 61 20  2d 2d 20 68  65 72 65 20 |# Asana -- here |
+00000010: 61 72 65 20  74 68 65 20  62 75 64 67  65 74 20 66 |are the budget f|
+00000020: 69 67 75 72  65 73 20 79  6f 75 20 61  73 6b 65 64 |igures you asked|
+00000030: 20 66 6f 72  21 0a 74 79  70 65 2c 71  75 61 6e 74 | for!.type,quant|
+00000040: 69 74 79 0a  70 75 72 70  6c 65 2c 34  35 36 2e 37 |ity.purple,456.7|
+00000050: 38 0a 67 72  65 65 6e 2c  36 37 38 2e  31 32 0a 6f |8.green,678.12.o|
+00000060: 72 61 6e 67  65 2c 31 32  33 2e 34 35  0a          |range,123.45.|
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr hex -r data/budget.csv
+23 20 41 73  61 6e 61 20  2d 2d 20 68  65 72 65 20
+61 72 65 20  74 68 65 20  62 75 64 67  65 74 20 66
+69 67 75 72  65 73 20 79  6f 75 20 61  73 6b 65 64
+20 66 6f 72  21 0a 74 79  70 65 2c 71  75 61 6e 74
+69 74 79 0a  70 75 72 70  6c 65 2c 34  35 36 2e 37
+38 0a 67 72  65 65 6e 2c  36 37 38 2e  31 32 0a 6f
+72 61 6e 67  65 2c 31 32  33 2e 34 35  0a
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr hex -r data/budget.csv | sed 's/20/2a/g' | mlr unhex
+#*Asana*--*here*are*the*budget*figures*you*asked*for!
+type,quantity
+purple,456.78
+green,678.12
+orange,123.45
 </pre>
 </div>
 <p/>
@@ -1604,6 +1685,18 @@ Other options:
 Then-chaining:
 Output of one verb may be chained as input to another using "then", e.g.
   mlr stats1 -a min,mean,max -f flag,u,v -g color then sort -f color
+
+Auxiliary commands:
+Miller has a few otherwise-standalone executables packaged within it.
+They do not participate in any other parts of Miller.
+Available subcommands:
+  aux-list
+  lecat
+  termcvt
+  hex
+  unhex
+  netbsd-strptime
+For more information, please invoke mlr {subcommand} --help
 
 For more information please see http://johnkerl.org/miller/doc and/or
 http://github.com/johnkerl/miller. This is Miller version v5.2.2-dev.

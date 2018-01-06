@@ -37,6 +37,8 @@ longer-term follow-on [**issue 151**](https://github.com/johnkerl/miller/issues/
 
 * To my surprise, **csvlite format options** weren&rsquo;t listed in `mlr --help` or the manpage. This has been fixed.
 
+* Documentation for [**auxiliary commands**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/reference.html#Auxiliary_commands) has been expanded, including within the [**manpage**](http://johnkerl.org/miller-releases/miller-5.3.0/doc/manpage.html).
+
 ## Bugfixes:
 
 * [**Issue 159**](https://github.com/johnkerl/miller/issues/159) fixes regex-match of literal dot.
