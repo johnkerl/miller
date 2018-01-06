@@ -17,6 +17,7 @@
 #include "cli/mlrcli.h"
 #include "cli/quoting.h"
 #include "cli/argparse.h"
+#include "auxents/aux_entries.h"
 
 #ifdef HAVE_CONFIG_H
 #include "config.h"
@@ -114,6 +115,7 @@ static void main_usage_double_quoting(FILE* o, char* argv0);
 static void main_usage_numerical_formatting(FILE* o, char* argv0);
 static void main_usage_other_options(FILE* o, char* argv0);
 static void main_usage_then_chaining(FILE* o, char* argv0);
+static void main_usage_auxents(FILE* o, char* argv0);
 static void main_usage_see_also(FILE* o, char* argv0);
 static void print_type_arithmetic_info(FILE* o, char* argv0);
 static void usage_all_verbs(char* argv0);
@@ -586,6 +588,10 @@ static void main_usage_long(FILE* o, char* argv0) {
 	main_usage_then_chaining(o, argv0);
 	fprintf(o, "\n");
 
+	fprintf(o, "Auxiliary commands:\n");
+	main_usage_auxents(o, argv0);
+	fprintf(o, "\n");
+
 	main_usage_see_also(o, argv0);
 }
 
@@ -971,6 +977,12 @@ static void main_usage_other_options(FILE* o, char* argv0) {
 static void main_usage_then_chaining(FILE* o, char* argv0) {
 	fprintf(o, "Output of one verb may be chained as input to another using \"then\", e.g.\n");
 	fprintf(o, "  %s stats1 -a min,mean,max -f flag,u,v -g color then sort -f color\n", argv0);
+}
+
+static void main_usage_auxents(FILE* o, char* argv0) {
+	fprintf(o, "Miller has a few otherwise-standalone executables packaged within it.\n");
+	fprintf(o, "They do not participate in any other parts of Miller.\n");
+	show_aux_entries(o);
 }
 
 static void main_usage_see_also(FILE* o, char* argv0) {
@@ -1401,6 +1413,9 @@ static int handle_terminal_usage(char** argv, int argc, int argi) {
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-then-chaining")) {
 		main_usage_then_chaining(stdout, MLR_GLOBALS.bargv0);
+		return TRUE;
+	} else if (streq(argv[argi], "--usage-auxents")) {
+		main_usage_auxents(stdout, MLR_GLOBALS.bargv0);
 		return TRUE;
 	} else if (streq(argv[argi], "--usage-see-also")) {
 		main_usage_see_also(stdout, MLR_GLOBALS.bargv0);

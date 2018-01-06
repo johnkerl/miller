@@ -539,7 +539,7 @@ char* read_file_into_memory(char* filename, size_t* psize) {
 
 	int rc = fread(buffer, statbuf.st_size, 1, fp);
 	if (rc != 1) {
-		fprintf(stderr, "Unable t read content of %s\n", filename);
+		fprintf(stderr, "Unable to read content of %s\n", filename);
 		perror("fread");
 		fprintf(stderr, "%s: could not fread \"%s\"\n", MLR_GLOBALS.bargv0, filename);
 		fclose(fp);

@@ -63,6 +63,14 @@ void do_aux_entries(int argc, char** argv) {
 	// else return to mlrmain for the rest of Miller.
 }
 
+void show_aux_entries(FILE* fp) {
+	fprintf(fp, "Available subcommands:\n");
+	for (int i = 0; i < aux_lookup_table_size; i++) {
+		fprintf(fp, "  %s\n", aux_lookup_table[i].name);
+	}
+	fprintf(fp, "For more information, please invoke %s {subcommand} --help\n", MLR_GLOBALS.bargv0);
+}
+
 // ----------------------------------------------------------------
 static void aux_list_usage(char* argv0, char* argv1, FILE* o, int exit_code) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, argv1);
@@ -71,12 +79,8 @@ static void aux_list_usage(char* argv0, char* argv1, FILE* o, int exit_code) {
 	exit(exit_code);
 }
 
-static int aux_list_main(int argc, char** argv) {
-	printf("Available subcommands:\n");
-	for (int i = 0; i < aux_lookup_table_size; i++) {
-		printf("  %s\n", aux_lookup_table[i].name);
-	}
-	printf("For more information, please invoke %s {subcommand} --help\n", MLR_GLOBALS.bargv0);
+int aux_list_main(int argc, char** argv) {
+	show_aux_entries(stdout);
 	return 0;
 }
 

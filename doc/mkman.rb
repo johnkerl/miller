@@ -90,6 +90,9 @@ output separator to the given value."""
 	print make_subsection('THEN-CHAINING', [])
 	print make_code_block(`mlr --usage-then-chaining`)
 
+	print make_subsection('AUXILIARY COMMANDS', [])
+	print make_code_block(`mlr --usage-auxents`)
+
   verbs = `mlr --list-all-verbs-raw`
   print make_section('VERBS', [
     ""
