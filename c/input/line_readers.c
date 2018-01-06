@@ -137,12 +137,37 @@ char* mlr_alloc_read_line_single_delimiter_stripping_comments(
 	char*      comment_string,
 	context_t* pctx)
 {
+	return mlr_alloc_read_line_single_delimiter_stripping_comments_aux(
+		fp,
+		delimiter,
+		pold_then_new_strlen,
+		do_auto_line_term,
+		comment_handling,
+		comment_string,
+		NULL,
+		pctx);
+}
+
+char* mlr_alloc_read_line_single_delimiter_stripping_comments_aux(
+	FILE*      fp,
+	int        delimiter,
+	size_t*    pold_then_new_strlen,
+	int        do_auto_line_term,
+	comment_handling_t comment_handling,
+	char*      comment_string,
+	int*       pnum_lines_comment_skipped,
+	context_t* pctx)
+{
+	if (pnum_lines_comment_skipped != NULL)
+		*pnum_lines_comment_skipped = 0;
 	while (TRUE) {
 		char* line = mlr_alloc_read_line_single_delimiter(
 			fp, delimiter, pold_then_new_strlen, do_auto_line_term, pctx);
 		if (line == NULL) {
 			return line;
 		} else if (string_starts_with(line, comment_string)) {
+			if (pnum_lines_comment_skipped != NULL)
+				(*pnum_lines_comment_skipped)++;
 			if (comment_handling == PASS_COMMENTS) {
 				fputs(line, stdout);
 				fputc(delimiter, stdout);
@@ -164,12 +189,36 @@ char* mlr_alloc_read_line_multiple_delimiter_stripping_comments(
 	comment_handling_t comment_handling,
 	char*      comment_string)
 {
+	return mlr_alloc_read_line_multiple_delimiter_stripping_comments_aux(
+		fp,
+		delimiter,
+		delimiter_length,
+		pold_then_new_strlen,
+		comment_handling,
+		comment_string,
+		NULL);
+}
+
+// ----------------------------------------------------------------
+char* mlr_alloc_read_line_multiple_delimiter_stripping_comments_aux(
+	FILE*      fp,
+	char*      delimiter,
+	int        delimiter_length,
+	size_t*    pold_then_new_strlen,
+	comment_handling_t comment_handling,
+	char*      comment_string,
+	int*       pnum_lines_comment_skipped)
+{
+	if (pnum_lines_comment_skipped != NULL)
+		*pnum_lines_comment_skipped = 0;
 	while (TRUE) {
 		char* line = mlr_alloc_read_line_multiple_delimiter(
 			fp, delimiter, delimiter_length, pold_then_new_strlen);
 		if (line == NULL) {
 			return line;
 		} else if (string_starts_with(line, comment_string)) {
+			if (pnum_lines_comment_skipped != NULL)
+				(*pnum_lines_comment_skipped)++;
 			if (comment_handling == PASS_COMMENTS) {
 				fputs(line, stdout);
 				fputs(delimiter, stdout);

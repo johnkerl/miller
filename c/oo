@@ -37,26 +37,35 @@ flags="-a"
 vee=
 
 # ----------------------------------------------------------------
-announce XTAB
+announce cat 1.csv
+cat 1.csv
+announce
+run_mlr --pass-comments --csv cat       1.csv
+run_mlr --pass-comments --csv cat     < 1.csv
+run_mlr --pass-comments --csvlite cat   1.csv
+run_mlr --pass-comments --csvlite cat < 1.csv
 
-mention input comments1.xtab
-cat reg_test/input/comments/comments1.xtab
+announce cat 2.csv
+cat 2.csv
+announce
+run_mlr --pass-comments --csv cat       2.csv
+run_mlr --pass-comments --csv cat     < 2.csv
+run_mlr --pass-comments --csvlite cat   2.csv
+run_mlr --pass-comments --csvlite cat < 2.csv
 
-mention skip comments1.xtab
-run_mlr --skip-comments --ixtab --odkvp cat < reg_test/input/comments/comments1.xtab
-run_mlr --skip-comments --ixtab --odkvp cat   reg_test/input/comments/comments1.xtab
+announce cat 3.csv
+cat 3.csv
+announce
+run_mlr --pass-comments --csv cat       3.csv
+run_mlr --pass-comments --csv cat     < 3.csv
+run_mlr --pass-comments --csvlite cat   3.csv
+run_mlr --pass-comments --csvlite cat < 3.csv
 
-mention pass comments1.xtab
-run_mlr --pass-comments --ixtab --odkvp cat < reg_test/input/comments/comments1.xtab
-run_mlr --pass-comments --ixtab --odkvp cat   reg_test/input/comments/comments1.xtab
+announce cat 4.csv
+cat 4.csv
+announce
+run_mlr --pass-comments --csv cat       4.csv
+run_mlr --pass-comments --csv cat     < 4.csv
+run_mlr --pass-comments --csvlite cat   4.csv
+run_mlr --pass-comments --csvlite cat < 4.csv
 
-mention input comments2.xtab
-cat reg_test/input/comments/comments2.xtab
-
-mention skip comments2.xtab
-run_mlr --skip-comments --ixtab --odkvp cat < reg_test/input/comments/comments2.xtab
-run_mlr --skip-comments --ixtab --odkvp cat   reg_test/input/comments/comments2.xtab
-
-mention pass comments2.xtab
-run_mlr --pass-comments --ixtab --odkvp cat < reg_test/input/comments/comments2.xtab
-run_mlr --pass-comments --ixtab --odkvp cat   reg_test/input/comments/comments2.xtab

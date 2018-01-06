@@ -29,6 +29,7 @@ char* mlr_alloc_read_line_multiple_delimiter(
 	int        delimiter_length,
 	size_t*    pold_then_new_strlen);
 
+
 char* mlr_alloc_read_line_single_delimiter_stripping_comments(
 	FILE*              fp,
 	int                delimiter,
@@ -38,6 +39,17 @@ char* mlr_alloc_read_line_single_delimiter_stripping_comments(
 	char*              comment_string,
 	context_t*         pctx);
 
+char* mlr_alloc_read_line_single_delimiter_stripping_comments_aux(
+	FILE*              fp,
+	int                delimiter,
+	size_t*            pold_then_new_strlen,
+	int                do_auto_line_term,
+	comment_handling_t comment_handling,
+	char*              comment_string,
+	int*               pnum_lines_comment_skipped, // Lets caller track line numbers
+	context_t*         pctx);
+
+
 char* mlr_alloc_read_line_multiple_delimiter_stripping_comments(
 	FILE*              fp,
 	char*              delimiter,
@@ -45,5 +57,14 @@ char* mlr_alloc_read_line_multiple_delimiter_stripping_comments(
 	size_t*            pold_then_new_strlen,
 	comment_handling_t comment_handling,
 	char*              comment_string);
+
+char* mlr_alloc_read_line_multiple_delimiter_stripping_comments_aux(
+	FILE*              fp,
+	char*              delimiter,
+	int                delimiter_length,
+	size_t*            pold_then_new_strlen,
+	comment_handling_t comment_handling,
+	char*              comment_string,
+	int*               pnum_lines_comment_skipped); // Lets caller track line numbers
 
 #endif // LINE_READERS_H

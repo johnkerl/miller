@@ -148,20 +148,25 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 					else
 						hline = mlr_alloc_read_line_multiple_delimiter(input_stream, pstate->irs, pstate->irslen,
 							&pstate->line_length);
+					if (hline != NULL)
+						pstate->ilno++;
 				} else {
+					int num_lines_comment_skipped = 0;
 					if (pstate->irslen == 1)
-						hline = mlr_alloc_read_line_single_delimiter_stripping_comments(input_stream, pstate->irs[0],
+						hline = mlr_alloc_read_line_single_delimiter_stripping_comments_aux(input_stream, pstate->irs[0],
 							&pstate->line_length, pstate->do_auto_line_term,
-							pstate->comment_handling, pstate->comment_string, pctx);
+							pstate->comment_handling, pstate->comment_string, &num_lines_comment_skipped, pctx);
 					else
-						hline = mlr_alloc_read_line_multiple_delimiter_stripping_comments(input_stream,
+						hline = mlr_alloc_read_line_multiple_delimiter_stripping_comments_aux(input_stream,
 							pstate->irs, pstate->irslen, &pstate->line_length,
-							pstate->comment_handling, pstate->comment_string);
+							pstate->comment_handling, pstate->comment_string, &num_lines_comment_skipped);
+					pstate->ilno += num_lines_comment_skipped;
+					if (hline != NULL)
+						pstate->ilno++;
 				}
 
 				if (hline == NULL) // EOF
 					return NULL;
-				pstate->ilno++;
 
 				slls_t* pheader_fields = (pstate->ifslen == 1)
 					? split_csvlite_header_line_single_ifs(hline, pstate->ifs[0], pstate->allow_repeat_ifs)
