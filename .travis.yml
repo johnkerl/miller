@@ -17,6 +17,6 @@ addons:
 compiler:
   - gcc
 
-before_script: df -h . && autoreconf -fiv
+before_script: df -h
 
 script: ./configure && make && make check && make distcheck && make CC=$CC -C c -f Makefile.no-autoconfig
