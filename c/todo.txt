@@ -14,12 +14,6 @@ BUGFIXES
 ================================================================
 5.3.0 TO DO:
 
-* comment-handling:
-  o UT for CRLFs
-  o UT for non-#
-
-* sql-setup doc somewhere .......
-
 * bare ./configure ?
 
 * valgrinds

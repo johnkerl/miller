@@ -19,6 +19,7 @@ sed 's/^==.*== //' "$@" | swipe \
   | mgrepv 'mlr_try_float_from_string' \
   | mgrepv '__snprintf_chk' \
   | mgrepv 'vsscanf_l' \
+  | mgrepv 'handle_ld_preload' \
   | mgrepv 'NXMapRemove' \
   | mgrepv '_platform_memchr' \
   | mgrepv 'xpc_pipe_routine' \
