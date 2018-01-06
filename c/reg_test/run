@@ -111,6 +111,15 @@ run_mlr_for_auxents() {
   num_completed=`expr $num_completed + 1`
 }
 
+run_mlr_for_auxents_no_output() {
+  # Use just "mlr" for info messages
+  echo mlr "$@" >> $outfile
+  # Use path to mlr for invoking the command
+  $path_to_mlr_for_auxents "$@"
+  # since set -e
+  num_completed=`expr $num_completed + 1`
+}
+
 # Just cats a file while also announcing that fact.
 run_cat() {
   echo cat "$@"
@@ -5206,7 +5215,7 @@ run_mlr --pass-comments --idkvp --oxtab cat   $indir/comments/comments3.dkvp
 # It's annoying trying to check in text files (especially CSV) with CRLF
 # to Git, given that it likes to 'fix' line endings for multi-platform use.
 # It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents termcvt --lf2crlf < $indir/comments/comments1.dkvp > $outdir/comments1-crlf.dkvp
+run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.dkvp > $outdir/comments1-crlf.dkvp
 
 mention input comments1-crlf.dkvp
 run_cat $outdir/comments1-crlf.dkvp
@@ -5300,7 +5309,7 @@ run_mlr --pass-comments --inidx --oxtab cat   $indir/comments/comments3.nidx
 # It's annoying trying to check in text files (especially CSV) with CRLF
 # to Git, given that it likes to 'fix' line endings for multi-platform use.
 # It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents termcvt --lf2crlf < $indir/comments/comments1.nidx > $outdir/comments1-crlf.nidx
+run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.nidx > $outdir/comments1-crlf.nidx
 
 mention input comments1-crlf.nidx
 run_cat $outdir/comments1-crlf.nidx
@@ -5355,7 +5364,7 @@ run_mlr --pass-comments --ijson --odkvp cat   $indir/comments/comments3.json
 # It's annoying trying to check in text files (especially CSV) with CRLF
 # to Git, given that it likes to 'fix' line endings for multi-platform use.
 # It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents termcvt --lf2crlf < $indir/comments/comments1.json > $outdir/comments1-crlf.json
+run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.json > $outdir/comments1-crlf.json
 
 mention input comments1-crlf.json
 run_cat $outdir/comments1-crlf.json
@@ -5398,7 +5407,7 @@ run_mlr --pass-comments --ixtab --odkvp cat   $indir/comments/comments2.xtab
 # It's annoying trying to check in text files (especially CSV) with CRLF
 # to Git, given that it likes to 'fix' line endings for multi-platform use.
 # It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents termcvt --lf2crlf < $indir/comments/comments1.xtab > $outdir/comments1-crlf.xtab
+run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.xtab > $outdir/comments1-crlf.xtab
 
 mention input comments1-crlf.xtab
 run_cat $outdir/comments1-crlf.xtab
@@ -5441,7 +5450,7 @@ run_mlr --pass-comments --icsvlite --odkvp cat   $indir/comments/comments2.csv
 # It's annoying trying to check in text files (especially CSV) with CRLF
 # to Git, given that it likes to 'fix' line endings for multi-platform use.
 # It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents termcvt --lf2crlf < $indir/comments/comments1.csv > $outdir/comments1-crlf.csv
+run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.csv > $outdir/comments1-crlf.csv
 
 mention input comments1-crlf.csv
 run_cat $outdir/comments1-crlf.csv
@@ -5484,7 +5493,7 @@ run_mlr --pass-comments --icsv --odkvp cat   $indir/comments/comments2.csv
 # It's annoying trying to check in text files (especially CSV) with CRLF
 # to Git, given that it likes to 'fix' line endings for multi-platform use.
 # It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents termcvt --lf2crlf < $indir/comments/comments1.csv > $outdir/comments1-crlf.csv
+run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/comments/comments1.csv > $outdir/comments1-crlf.csv
 
 mention input comments1-crlf.csv
 run_cat $outdir/comments1-crlf.csv
@@ -6989,12 +6998,12 @@ run_mlr_for_auxents lecat --mono < $indir/line-ending-cr.bin
 run_mlr_for_auxents lecat --mono < $indir/line-ending-lf.bin
 run_mlr_for_auxents lecat --mono < $indir/line-ending-crlf.bin
 
-run_mlr_for_auxents termcvt --cr2lf   < $indir/line-ending-cr.bin   > $outdir/line-ending-temp-1.bin
-run_mlr_for_auxents termcvt --cr2crlf < $indir/line-ending-cr.bin   > $outdir/line-ending-temp-2.bin
-run_mlr_for_auxents termcvt --lf2cr   < $indir/line-ending-lf.bin   > $outdir/line-ending-temp-3.bin
-run_mlr_for_auxents termcvt --lf2crlf < $indir/line-ending-lf.bin   > $outdir/line-ending-temp-4.bin
-run_mlr_for_auxents termcvt --crlf2cr < $indir/line-ending-crlf.bin > $outdir/line-ending-temp-5.bin
-run_mlr_for_auxents termcvt --crlf2lf < $indir/line-ending-crlf.bin > $outdir/line-ending-temp-6.bin
+run_mlr_for_auxents_no_output termcvt --cr2lf   < $indir/line-ending-cr.bin   > $outdir/line-ending-temp-1.bin
+run_mlr_for_auxents_no_output termcvt --cr2crlf < $indir/line-ending-cr.bin   > $outdir/line-ending-temp-2.bin
+run_mlr_for_auxents_no_output termcvt --lf2cr   < $indir/line-ending-lf.bin   > $outdir/line-ending-temp-3.bin
+run_mlr_for_auxents_no_output termcvt --lf2crlf < $indir/line-ending-lf.bin   > $outdir/line-ending-temp-4.bin
+run_mlr_for_auxents_no_output termcvt --crlf2cr < $indir/line-ending-crlf.bin > $outdir/line-ending-temp-5.bin
+run_mlr_for_auxents_no_output termcvt --crlf2lf < $indir/line-ending-crlf.bin > $outdir/line-ending-temp-6.bin
 
 run_mlr_for_auxents hex < $outdir/line-ending-temp-1.bin
 run_mlr_for_auxents hex < $outdir/line-ending-temp-2.bin

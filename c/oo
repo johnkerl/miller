@@ -6,6 +6,13 @@ run_mlr() {
   ./mlr "$@"
 }
 
+run_mlr_for_auxents() {
+  echo
+  echo ................................................................
+  echo mlr "$@"
+  ./mlr "$@"
+}
+
 run_cat() {
   echo cat "$@"
   echo cat "$@" >> $outfile
@@ -47,15 +54,36 @@ vee=
 # It's annoying trying to check in text files (especially CSV) with CRLF
 # to Git, given that it likes to 'fix' line endings for multi-platform use.
 # It's easy to simply create CRLF on the fly.
-run_mlr termcvt --lf2crlf < $indir/comments/comments1.dkvp > $outdir/comments1-crlf.dkvp
+run_mlr_for_auxents termcvt --lf2crlf < $indir/comments/comments1.json > $outdir/comments1-crlf.json
 
-mention input comments1-crlf.dkvp
-run_cat $outdir/comments1-crlf.dkvp
+echo "AAA"
+ls -l $indir/comments/comments1.json
+ls -l $outdir/comments1-crlf.json
+hex $outdir/comments1-crlf.json
 
-mention skip comments1-crlf.dkvp
-run_mlr --skip-comments --idkvp --oxtab cat < $outdir/comments1-crlf.dkvp
-run_mlr --skip-comments --idkvp --oxtab cat   $outdir/comments1-crlf.dkvp
+mention input comments1-crlf.json
+run_cat $outdir/comments1-crlf.json
 
-mention pass comments1-crlf.dkvp
-run_mlr --pass-comments --idkvp --oxtab cat < $outdir/comments1-crlf.dkvp
-run_mlr --pass-comments --idkvp --oxtab cat   $outdir/comments1-crlf.dkvp
+echo "BBB"
+ls -l $outdir/comments1-crlf.json
+hex $outdir/comments1-crlf.json
+
+mention skip comments1-crlf.json
+run_mlr --skip-comments --ijson --odkvp cat < $outdir/comments1-crlf.json
+echo "CCC"
+ls -l $outdir/comments1-crlf.json
+hex $outdir/comments1-crlf.json
+run_mlr --skip-comments --ijson --odkvp cat   $outdir/comments1-crlf.json
+echo "DDD"
+ls -l $outdir/comments1-crlf.json
+hex $outdir/comments1-crlf.json
+
+mention pass comments1-crlf.json
+run_mlr --pass-comments --ijson --odkvp cat < $outdir/comments1-crlf.json
+echo "EEE"
+ls -l $outdir/comments1-crlf.json
+hex $outdir/comments1-crlf.json
+run_mlr --pass-comments --ijson --odkvp cat   $outdir/comments1-crlf.json
+echo "FFF"
+ls -l $outdir/comments1-crlf.json
+hex $outdir/comments1-crlf.json
