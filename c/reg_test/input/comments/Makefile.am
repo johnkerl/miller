@@ -15,14 +15,4 @@ EXTRA_DIST=	\
 	\
 	comments1-atat.dkvp \
 	comments2-atat.dkvp \
-	comments3-atat.dkvp \
-	comments1-atat.nidx \
-	comments2-atat.nidx \
-	comments3-atat.nidx \
-	comments1-atat.json \
-	comments2-atat.json \
-	comments3-atat.json \
-	comments1-atat.xtab \
-	comments2-atat.xtab \
-	comments1-atat.csv \
-	comments2-atat.csv
+	comments3-atat.dkvp
