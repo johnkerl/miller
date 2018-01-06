@@ -45116,6 +45116,153 @@ c 6
 # hello world 3
 
 
+---------------------------------------------------------------- input comments1-atat.dkvp
+cat ./reg_test/input/comments/comments1-atat.dkvp
+@@ hello world 1
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
+---------------------------------------------------------------- skip comments1-atat.dkvp
+mlr --skip-comments-with @@ --idkvp --oxtab cat
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+
+mlr --skip-comments-with @@ --idkvp --oxtab cat ./reg_test/input/comments/comments1-atat.dkvp
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+
+
+---------------------------------------------------------------- pass comments1-atat.dkvp
+mlr --pass-comments-with @@ --idkvp --oxtab cat
+@@ hello world 1
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+
+mlr --pass-comments-with @@ --idkvp --oxtab cat ./reg_test/input/comments/comments1-atat.dkvp
+@@ hello world 1
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+
+
+---------------------------------------------------------------- input comments2-atat.dkvp
+cat ./reg_test/input/comments/comments2-atat.dkvp
+a=1,b=2,c=3
+@@ hello world 2
+a=4,b=5,c=6
+
+
+---------------------------------------------------------------- skip comments2-atat.dkvp
+mlr --skip-comments-with @@ --idkvp --oxtab cat
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+
+mlr --skip-comments-with @@ --idkvp --oxtab cat ./reg_test/input/comments/comments2-atat.dkvp
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+
+
+---------------------------------------------------------------- pass comments2-atat.dkvp
+mlr --pass-comments-with @@ --idkvp --oxtab cat
+a 1
+b 2
+c 3
+@@ hello world 2
+
+a 4
+b 5
+c 6
+
+mlr --pass-comments-with @@ --idkvp --oxtab cat ./reg_test/input/comments/comments2-atat.dkvp
+a 1
+b 2
+c 3
+@@ hello world 2
+
+a 4
+b 5
+c 6
+
+
+---------------------------------------------------------------- input comments3-atat.dkvp
+cat ./reg_test/input/comments/comments3-atat.dkvp
+a=1,b=2,c=3
+a=4,b=5,c=6
+@@ hello world 3
+
+
+---------------------------------------------------------------- skip comments3-atat.dkvp
+mlr --skip-comments-with @@ --idkvp --oxtab cat
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+
+mlr --skip-comments-with @@ --idkvp --oxtab cat ./reg_test/input/comments/comments3-atat.dkvp
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+
+
+---------------------------------------------------------------- pass comments3-atat.dkvp
+mlr --pass-comments-with @@ --idkvp --oxtab cat
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+@@ hello world 3
+
+mlr --pass-comments-with @@ --idkvp --oxtab cat ./reg_test/input/comments/comments3-atat.dkvp
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+@@ hello world 3
+
+
 ================================================================
 SKIP/PASS COMMENTS NIDX
 

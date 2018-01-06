@@ -5203,6 +5203,42 @@ mention pass comments3.dkvp
 run_mlr --pass-comments --idkvp --oxtab cat < $indir/comments/comments3.dkvp
 run_mlr --pass-comments --idkvp --oxtab cat   $indir/comments/comments3.dkvp
 
+
+mention input comments1-atat.dkvp
+run_cat $indir/comments/comments1-atat.dkvp
+
+mention skip comments1-atat.dkvp
+run_mlr --skip-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments1-atat.dkvp
+run_mlr --skip-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments1-atat.dkvp
+
+mention pass comments1-atat.dkvp
+run_mlr --pass-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments1-atat.dkvp
+run_mlr --pass-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments1-atat.dkvp
+
+
+mention input comments2-atat.dkvp
+run_cat $indir/comments/comments2-atat.dkvp
+
+mention skip comments2-atat.dkvp
+run_mlr --skip-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments2-atat.dkvp
+run_mlr --skip-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments2-atat.dkvp
+
+mention pass comments2-atat.dkvp
+run_mlr --pass-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments2-atat.dkvp
+run_mlr --pass-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments2-atat.dkvp
+
+
+mention input comments3-atat.dkvp
+run_cat $indir/comments/comments3-atat.dkvp
+
+mention skip comments3-atat.dkvp
+run_mlr --skip-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments3-atat.dkvp
+run_mlr --skip-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments3-atat.dkvp
+
+mention pass comments3-atat.dkvp
+run_mlr --pass-comments-with @@ --idkvp --oxtab cat < $indir/comments/comments3-atat.dkvp
+run_mlr --pass-comments-with @@ --idkvp --oxtab cat   $indir/comments/comments3-atat.dkvp
+
 # ----------------------------------------------------------------
 announce SKIP/PASS COMMENTS NIDX
 
