@@ -6,6 +6,13 @@ run_mlr() {
   ./mlr "$@"
 }
 
+run_cat() {
+  echo cat "$@"
+  echo cat "$@" >> $outfile
+  cat "$@" >> $outfile
+  echo >> $outfile
+}
+
 mlr_expect_fail() {
   echo
   echo ................................................................
@@ -37,35 +44,18 @@ flags="-a"
 vee=
 
 # ----------------------------------------------------------------
-announce cat 1.csv
-cat 1.csv
-announce
-run_mlr --pass-comments --csv cat       1.csv
-run_mlr --pass-comments --csv cat     < 1.csv
-run_mlr --pass-comments --csvlite cat   1.csv
-run_mlr --pass-comments --csvlite cat < 1.csv
+# It's annoying trying to check in text files (especially CSV) with CRLF
+# to Git, given that it likes to 'fix' line endings for multi-platform use.
+# It's easy to simply create CRLF on the fly.
+run_mlr termcvt --lf2crlf < $indir/comments/comments1.dkvp > $outdir/comments1-crlf.dkvp
 
-announce cat 2.csv
-cat 2.csv
-announce
-run_mlr --pass-comments --csv cat       2.csv
-run_mlr --pass-comments --csv cat     < 2.csv
-run_mlr --pass-comments --csvlite cat   2.csv
-run_mlr --pass-comments --csvlite cat < 2.csv
+mention input comments1-crlf.dkvp
+run_cat $outdir/comments1-crlf.dkvp
 
-announce cat 3.csv
-cat 3.csv
-announce
-run_mlr --pass-comments --csv cat       3.csv
-run_mlr --pass-comments --csv cat     < 3.csv
-run_mlr --pass-comments --csvlite cat   3.csv
-run_mlr --pass-comments --csvlite cat < 3.csv
+mention skip comments1-crlf.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat < $outdir/comments1-crlf.dkvp
+run_mlr --skip-comments --idkvp --oxtab cat   $outdir/comments1-crlf.dkvp
 
-announce cat 4.csv
-cat 4.csv
-announce
-run_mlr --pass-comments --csv cat       4.csv
-run_mlr --pass-comments --csv cat     < 4.csv
-run_mlr --pass-comments --csvlite cat   4.csv
-run_mlr --pass-comments --csvlite cat < 4.csv
-
+mention pass comments1-crlf.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat < $outdir/comments1-crlf.dkvp
+run_mlr --pass-comments --idkvp --oxtab cat   $outdir/comments1-crlf.dkvp

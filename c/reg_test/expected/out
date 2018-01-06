@@ -45116,6 +45116,59 @@ c 6
 # hello world 3
 
 
+---------------------------------------------------------------- input comments1-crlf.dkvp
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp
+# hello world 1
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
+---------------------------------------------------------------- skip comments1-crlf.dkvp
+mlr --skip-comments --idkvp --oxtab cat
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+
+mlr --skip-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+
+
+---------------------------------------------------------------- pass comments1-crlf.dkvp
+mlr --pass-comments --idkvp --oxtab cat
+# hello world 1
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+
+mlr --pass-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp
+# hello world 1
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 6
+
+
+================================================================
+SKIP/PASS COMMENTS DKVP WITH ALTERNATE PREFIX
+
+
 ---------------------------------------------------------------- input comments1-atat.dkvp
 cat ./reg_test/input/comments/comments1-atat.dkvp
 @@ hello world 1
@@ -45414,6 +45467,55 @@ mlr --pass-comments --inidx --oxtab cat ./reg_test/input/comments/comments3.nidx
 # hello world 3
 
 
+---------------------------------------------------------------- input comments1-crlf.nidx
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.nidx
+# hello world 1
+aX1 bX2 cX3
+aX4 bX5 cX6
+
+
+---------------------------------------------------------------- skip comments1-crlf.nidx
+mlr --skip-comments --inidx --oxtab cat
+1 aX1
+2 bX2
+3 cX3
+
+1 aX4
+2 bX5
+3 cX6
+
+mlr --skip-comments --inidx --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.nidx
+1 aX1
+2 bX2
+3 cX3
+
+1 aX4
+2 bX5
+3 cX6
+
+
+---------------------------------------------------------------- pass comments1-crlf.nidx
+mlr --pass-comments --inidx --oxtab cat
+# hello world 1
+1 aX1
+2 bX2
+3 cX3
+
+1 aX4
+2 bX5
+3 cX6
+
+mlr --pass-comments --inidx --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.nidx
+# hello world 1
+1 aX1
+2 bX2
+3 cX3
+
+1 aX4
+2 bX5
+3 cX6
+
+
 ================================================================
 SKIP/PASS COMMENTS JSON
 
@@ -45501,6 +45603,35 @@ a=4,b=5,c=6
 
 mlr --pass-comments --ijson --odkvp cat ./reg_test/input/comments/comments3.json
 # hello world 3
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
+---------------------------------------------------------------- input comments1-crlf.json
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.json
+# hello world 1
+{ "a":1, "b":2, "c":3 }
+{ "a":4, "b":5, "c":6 }
+
+
+---------------------------------------------------------------- skip comments1-crlf.json
+mlr --skip-comments --ijson --odkvp cat
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --skip-comments --ijson --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.json
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
+---------------------------------------------------------------- pass comments1-crlf.json
+mlr --pass-comments --ijson --odkvp cat
+# hello world 1
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --pass-comments --ijson --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.json
+# hello world 1
 a=1,b=2,c=3
 a=4,b=5,c=6
 
@@ -45594,6 +45725,42 @@ x=2,z=5
 #hello world6
 
 
+---------------------------------------------------------------- input comments1-crlf.xtab
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.xtab
+x 1
+#hello world3
+z 3
+
+x 2
+#hello world4
+z 5
+
+
+
+---------------------------------------------------------------- skip comments1-crlf.xtab
+mlr --skip-comments --ixtab --odkvp cat
+x=1,z=3
+x=2,z=5
+
+mlr --skip-comments --ixtab --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.xtab
+x=1,z=3
+x=2,z=5
+
+
+---------------------------------------------------------------- pass comments1-crlf.xtab
+mlr --pass-comments --ixtab --odkvp cat
+#hello world3
+x=1,z=3
+#hello world4
+x=2,z=5
+
+mlr --pass-comments --ixtab --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.xtab
+#hello world3
+x=1,z=3
+#hello world4
+x=2,z=5
+
+
 ================================================================
 SKIP/PASS COMMENTS CSVLITE
 
@@ -45667,6 +45834,36 @@ a=4,b=5,c=6
 # haha
 
 
+---------------------------------------------------------------- input comments1-crlf.csv
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+# hello
+a,b,c
+1,2,3
+4,5,6
+
+
+---------------------------------------------------------------- skip comments1-crlf.csv
+mlr --skip-comments --icsvlite --odkvp cat
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --skip-comments --icsvlite --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
+---------------------------------------------------------------- pass comments1-crlf.csv
+mlr --pass-comments --icsvlite --odkvp cat
+# hello
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --pass-comments --icsvlite --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+# hello
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
 ================================================================
 SKIP/PASS COMMENTS CSV
 
@@ -45738,6 +45935,36 @@ a=1,b=2,c=3
 # there
 a=4,b=5,c=6
 # haha
+
+
+---------------------------------------------------------------- input comments1-crlf.csv
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+# hello
+a,b,c
+1,2,3
+4,5,6
+
+
+---------------------------------------------------------------- skip comments1-crlf.csv
+mlr --skip-comments --icsv --odkvp cat
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --skip-comments --icsv --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+
+---------------------------------------------------------------- pass comments1-crlf.csv
+mlr --pass-comments --icsv --odkvp cat
+# hello
+a=1,b=2,c=3
+a=4,b=5,c=6
+
+mlr --pass-comments --icsv --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+# hello
+a=1,b=2,c=3
+a=4,b=5,c=6
 
 
 ================================================================
