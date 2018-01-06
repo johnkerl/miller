@@ -1,25 +1,11 @@
 ================================================================
 BUGFIXES
 
-* wtf
-  $ mlr --json cat < /dev/null
-  (ok)
-
-  $ mlr --no-mmap --json cat < /dev/null
-  (ok)
-
-  $ mlr --no-mmap --json cat /dev/null
-  Unable to read content of /dev/null
-  fread: Undefined error: 0
-  mlr: could not fread "/dev/null"
-  mlr: Couldn't open "/dev/null" for read.
-
 ================================================================
 5.3.0 TO DO:
 
-* bare ./configure ?
-
 * valgrinds
+? bare ./configure ?
 
 ================================================================
 FUNDAM:
