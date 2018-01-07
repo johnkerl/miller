@@ -548,6 +548,9 @@ git rebase upstream/master
 git checkout -b miller-3.4.0
 shasum -a 256 /path/to/mlr-3.4.0.tar.gz
 edit Formula/miller.rb
+# Test the URL from the line like
+#   url "https://github.com/johnkerl/miller/releases/download/v3.4.0/mlr-3.4.0.tar.gz"
+# in a browser for typos
 git add Formula/miller.rb
 git commit -m 'miller 3.4.0'
 git push -u origin miller-3.4.0
