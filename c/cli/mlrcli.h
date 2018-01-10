@@ -13,6 +13,7 @@
 #include "cli/json_array_ingest.h"
 #include "containers/lhmsll.h"
 #include "containers/lhmss.h"
+#include <unistd.h>
 
 // ----------------------------------------------------------------
 typedef struct _genereator_opts_t {
