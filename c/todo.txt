@@ -7,9 +7,14 @@ FUNDAM:
 * synctool alias/flag handling ...
 
 ----------------------------------------------------------------
+
+! APPVEYOR !
+
 ? bare ./configure ?
 
 ! dirname/basename functions !
+
+* MILLER_{MAJOR/MINOR/MICRO} builtins ?
 
 * sort fcn / issue77
 
