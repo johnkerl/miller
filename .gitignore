@@ -76,7 +76,9 @@ mlr-[0-9.]*.tar.*
 c/jkopush
 c/run_mlr
 c/mlr_expect_fail
-c/push2f
+c/run_mlr_for_auxents
+c/push2
+push2
 data/.gitignore
 doc/jkopush
 doc/push2
