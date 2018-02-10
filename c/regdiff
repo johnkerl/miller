@@ -1,2 +1,2 @@
 #!/bin/bash
-diff -I '^mlr ' "$@" reg_test/expected/out output-regtest/out 
+diff -a -I '^mlr ' "$@" reg_test/expected/out output-regtest/out 

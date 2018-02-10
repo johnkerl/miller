@@ -149,6 +149,7 @@ EXTRA_DIST=	\
 		regex.dkvp \
 		regularize.dkvp \
 		repeat-input.dat \
+		repeats.dkvp \
 		reshape-long-ragged.dkvp \
 		reshape-long.tbl \
 		reshape-wide-ragged.dkvp \

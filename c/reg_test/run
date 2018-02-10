@@ -308,6 +308,13 @@ run_mlr uniq    -f a,b -o foo $indir/abixy-het
 run_mlr uniq -c -g a   -o foo $indir/abixy-het
 run_mlr uniq -c -g a,b -o foo $indir/abixy-het
 
+run_mlr uniq -a           $indir/repeats.dkvp
+run_mlr uniq -a -c        $indir/repeats.dkvp
+run_mlr uniq -a -c -o foo $indir/repeats.dkvp
+run_mlr uniq -a -n        $indir/repeats.dkvp
+run_mlr uniq -a -n -o bar $indir/repeats.dkvp
+mlr_expect_fail uniq -a -c -n $indir/repeats.dkvp
+
 run_mlr count-distinct -f a   -o foo $indir/small $indir/abixy
 run_mlr count-distinct -f a,b -o foo $indir/small $indir/abixy
 
