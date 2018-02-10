@@ -4,7 +4,7 @@
 #include <math.h>
 #include "lib/mlrutil.h"
 #include "containers/sllv.h"
-#include "containers/lhmsi.h"
+#include "containers/lhmsll.h"
 #include "containers/lhmslv.h"
 #include "containers/lhmsv.h"
 #include "containers/lhmsll.h"
@@ -16,30 +16,88 @@
 
 typedef struct _mapper_uniq_state_t {
 	ap_state_t* pargp;
-	slls_t* pgroup_by_field_names;
-	int show_counts;
-	int show_num_distinct_only;
-	lhmsi_t* puniqified_records; // lrec_sprintf -> full lrec
+	slls_t*   pgroup_by_field_names;
+	int       show_counts;
+	int       show_num_distinct_only;
+	lhmsll_t* puniqified_record_counts; // lrec_sprintf -> counts
+	lhmsv_t*  puniqified_records; // lrec_sprintf -> records
 	lhmslv_t* pcounts_by_group;
-	lhmsv_t* pcounts_unlashed; // string field name -> string field value -> long long count
+	lhmsv_t*  pcounts_unlashed; // string field name -> string field value -> long long count
 	char* output_field_name;
 } mapper_uniq_state_t;
 
-static void      mapper_uniq_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv,
-	cli_reader_opts_t* _, cli_writer_opts_t* __);
-static void      mapper_count_distinct_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** argv,
-	cli_reader_opts_t* _, cli_writer_opts_t* __);
-static mapper_t* mapper_uniq_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names, int do_lashed,
-	int show_counts, int show_num_distinct_only, char* output_field_name, int uniqify_entire_records);
-static void      mapper_uniq_free(mapper_t* pmapper, context_t* _);
+// ----------------------------------------------------------------
+static void mapper_uniq_usage(
+	FILE* o,
+	char* argv0,
+	char* verb);
 
-static sllv_t* mapper_uniq_process_uniqify_entire_records(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t* mapper_uniq_process_unlashed(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t* mapper_uniq_process_num_distinct_only(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t* mapper_uniq_process_with_counts(lrec_t* pinrec, context_t* pctx, void* pvstate);
-static sllv_t* mapper_uniq_process_no_counts(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static mapper_t* mapper_uniq_parse_cli(
+	int* pargi,
+	int argc,
+	char** argv,
+	cli_reader_opts_t* _,
+	cli_writer_opts_t* __);
+
+static void mapper_count_distinct_usage(
+	FILE* o,
+	char* argv0,
+	char* verb);
+
+static mapper_t* mapper_count_distinct_parse_cli(
+	int* pargi,
+	int argc,
+	char** argv,
+	cli_reader_opts_t* _,
+	cli_writer_opts_t* __);
+
+static mapper_t* mapper_uniq_alloc(
+	ap_state_t* pargp,
+	slls_t* pgroup_by_field_names,
+	int do_lashed,
+	int show_counts,
+	int show_num_distinct_only,
+	char* output_field_name,
+	int uniqify_entire_records);
+
+static void mapper_uniq_free(
+	mapper_t* pmapper,
+	context_t* _);
+
+static sllv_t* mapper_uniq_process_uniqify_entire_records(
+	lrec_t* pinrec,
+	context_t* pctx,
+	void* pvstate);
+
+static sllv_t* mapper_uniq_process_uniqify_entire_records_show_counts(
+	lrec_t* pinrec,
+	context_t* pctx,
+	void* pvstate);
+
+static sllv_t* mapper_uniq_process_uniqify_entire_records_show_num_distinct_only(
+	lrec_t* pinrec,
+	context_t* pctx,
+	void* pvstate);
+
+static sllv_t* mapper_uniq_process_unlashed(
+	lrec_t* pinrec,
+	context_t* pctx,
+	void* pvstate);
+
+static sllv_t* mapper_uniq_process_num_distinct_only(
+	lrec_t* pinrec,
+	context_t* pctx,
+	void* pvstate);
+
+static sllv_t* mapper_uniq_process_with_counts(
+	lrec_t* pinrec,
+	context_t* pctx,
+	void* pvstate);
+
+static sllv_t* mapper_uniq_process_no_counts(
+	lrec_t* pinrec,
+	context_t* pctx,
+	void* pvstate);
 
 // ----------------------------------------------------------------
 mapper_setup_t mapper_count_distinct_setup = {
@@ -57,8 +115,16 @@ mapper_setup_t mapper_uniq_setup = {
 };
 
 // ----------------------------------------------------------------
-static void mapper_count_distinct_usage(FILE* o, char* argv0, char* verb) {
+static void mapper_count_distinct_usage(
+	FILE* o,
+	char* argv0,
+	char* verb)
+{
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "Prints number of records having distinct values for specified field names.\n");
+	fprintf(o, "Same as uniq -c.\n");
+	fprintf(o, "\n");
+	fprintf(o, "Options:\n");
 	fprintf(o, "-f {a,b,c}    Field names for distinct count.\n");
 	fprintf(o, "-n            Show only the number of distinct values. Not compatible with -u.\n");
 	fprintf(o, "-o {name}     Field name for output count. Default \"%s\".\n", DEFAULT_OUTPUT_FIELD_NAME);
@@ -68,13 +134,15 @@ static void mapper_count_distinct_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "              and b field values. With -f a,b and with -u, computes counts\n");
 	fprintf(o, "              for distinct a field values and counts for distinct b field\n");
 	fprintf(o, "              values separately.\n");
-	fprintf(o, "Prints number of records having distinct values for specified field names.\n");
-	fprintf(o, "Same as uniq -c.\n");
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** argv,
-	cli_reader_opts_t* _, cli_writer_opts_t* __)
+static mapper_t* mapper_count_distinct_parse_cli(
+	int* pargi,
+	int argc,
+	char** argv,
+	cli_reader_opts_t* _,
+	cli_writer_opts_t* __)
 {
 	slls_t* pfield_names = NULL;
 	int     show_num_distinct_only = FALSE;
@@ -108,19 +176,32 @@ static mapper_t* mapper_count_distinct_parse_cli(int* pargi, int argc, char** ar
 }
 
 // ----------------------------------------------------------------
-static void mapper_uniq_usage(FILE* o, char* argv0, char* verb) {
+static void mapper_uniq_usage(
+	FILE* o,
+	char* argv0,
+	char* verb)
+{
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	fprintf(o, "Prints distinct values for specified field names. With -c, same as\n");
+	fprintf(o, "count-distinct. For uniq, -f is a synonym for -g.\n");
+	fprintf(o, "\n");
+	fprintf(o, "Options:\n");
 	fprintf(o, "-g {d,e,f}    Group-by-field names for uniq counts.\n");
 	fprintf(o, "-c            Show repeat counts in addition to unique values.\n");
 	fprintf(o, "-n            Show only the number of distinct values.\n");
 	fprintf(o, "-o {name}     Field name for output count. Default \"%s\".\n", DEFAULT_OUTPUT_FIELD_NAME);
-	fprintf(o, "-a            Output each unique record only once. Incompatible with -g, -c, -n, -o.\n");
-	fprintf(o, "Prints distinct values for specified field names. With -c, same as\n");
-	fprintf(o, "count-distinct. For uniq, -f is a synonym for -g.\n");
+	fprintf(o, "-a            Output each unique record only once. Incompatible with -g.\n");
+	fprintf(o, "              With -c, produces unique records, with repeat counts for each.\n");
+	fprintf(o, "              With -n, produces only one record which is the unique-record count.\n");
+	fprintf(o, "              With neither -c nor -n, produces unique records.\n");
 }
 
-static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv,
-	cli_reader_opts_t* _, cli_writer_opts_t* __)
+static mapper_t* mapper_uniq_parse_cli(
+	int* pargi,
+	int argc,
+	char** argv,
+	cli_reader_opts_t* _,
+	cli_writer_opts_t* __)
 {
 	slls_t* pgroup_by_field_names = NULL;
 	int     show_counts = FALSE;
@@ -145,11 +226,11 @@ static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv,
 	}
 
 	if (uniqify_entire_records) {
-		if ((pgroup_by_field_names != NULL) || show_counts || show_num_distinct_only) {
+		if (pgroup_by_field_names != NULL) {
 			mapper_uniq_usage(stderr, argv[0], verb);
 			return NULL;
 		}
-		if (!streq(output_field_name, DEFAULT_OUTPUT_FIELD_NAME)) {
+		if (show_counts && show_num_distinct_only) {
 			mapper_uniq_usage(stderr, argv[0], verb);
 			return NULL;
 		}
@@ -165,26 +246,38 @@ static mapper_t* mapper_uniq_parse_cli(int* pargi, int argc, char** argv,
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_uniq_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_names, int do_lashed,
-	int show_counts, int show_num_distinct_only, char* output_field_name, int uniqify_entire_records)
+static mapper_t* mapper_uniq_alloc(
+	ap_state_t* pargp,
+	slls_t* pgroup_by_field_names,
+	int do_lashed,
+	int show_counts,
+	int show_num_distinct_only,
+	char* output_field_name,
+	int uniqify_entire_records)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_uniq_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_uniq_state_t));
 
-	pstate->pargp                  = pargp;
-	pstate->pgroup_by_field_names  = pgroup_by_field_names;
-	pstate->show_counts            = show_counts;
-	pstate->show_num_distinct_only = show_num_distinct_only;
-	pstate->puniqified_records     = lhmsi_alloc();
-	pstate->pcounts_by_group       = lhmslv_alloc();
-	pstate->pcounts_unlashed       = lhmsv_alloc();
-	pstate->output_field_name      = output_field_name;
+	pstate->pargp                    = pargp;
+	pstate->pgroup_by_field_names    = pgroup_by_field_names;
+	pstate->show_counts              = show_counts;
+	pstate->show_num_distinct_only   = show_num_distinct_only;
+	pstate->puniqified_record_counts = lhmsll_alloc();
+	pstate->puniqified_records       = lhmsv_alloc();
+	pstate->pcounts_by_group         = lhmslv_alloc();
+	pstate->pcounts_unlashed         = lhmsv_alloc();
+	pstate->output_field_name        = output_field_name;
 
 	pmapper->pvstate = pstate;
-	if (uniqify_entire_records)
-		pmapper->pprocess_func = mapper_uniq_process_uniqify_entire_records;
-	else if (!do_lashed)
+	if (uniqify_entire_records) {
+		if (show_counts)
+			pmapper->pprocess_func = mapper_uniq_process_uniqify_entire_records_show_counts;
+		else if (show_num_distinct_only)
+			pmapper->pprocess_func = mapper_uniq_process_uniqify_entire_records_show_num_distinct_only;
+		else
+			pmapper->pprocess_func = mapper_uniq_process_uniqify_entire_records;
+	} else if (!do_lashed)
 		pmapper->pprocess_func = mapper_uniq_process_unlashed;
 	else if (show_num_distinct_only)
 		pmapper->pprocess_func = mapper_uniq_process_num_distinct_only;
@@ -197,12 +290,23 @@ static mapper_t* mapper_uniq_alloc(ap_state_t* pargp, slls_t* pgroup_by_field_na
 	return pmapper;
 }
 
-static void mapper_uniq_free(mapper_t* pmapper, context_t* _) {
+static void mapper_uniq_free(
+	mapper_t* pmapper,
+	context_t* _)
+{
 	mapper_uniq_state_t* pstate = pmapper->pvstate;
 
 	slls_free(pstate->pgroup_by_field_names);
 
-	lhmsi_free(pstate->puniqified_records);
+	lhmsll_free(pstate->puniqified_record_counts);
+	pstate->puniqified_record_counts = NULL;
+
+	// lhmslv_free will free the keys: we only need to free the void-star values.
+	for (lhmsve_t* pa = pstate->puniqified_records->phead; pa != NULL; pa = pa->pnext) {
+		lrec_t* prec = pa->pvvalue;
+		lrec_free(prec);
+	}
+	lhmsv_free(pstate->puniqified_records);
 	pstate->puniqified_records = NULL;
 
 	// lhmslv_free will free the keys: we only need to free the void-star values.
@@ -229,17 +333,22 @@ static void mapper_uniq_free(mapper_t* pmapper, context_t* _) {
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_uniq_process_uniqify_entire_records(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+// Print each unique record only once (on first occurrence).
+static sllv_t* mapper_uniq_process_uniqify_entire_records(
+	lrec_t* pinrec,
+	context_t* pctx,
+	void* pvstate)
+{
 	mapper_uniq_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		char* lrec_as_string = lrec_sprint(pinrec, "\xfc", "\xfd", "\xfe");
-		if (lhmsi_has_key(pstate->puniqified_records, lrec_as_string)) {
+		if (lhmsll_has_key(pstate->puniqified_record_counts, lrec_as_string)) {
 			// have seen
 			free(lrec_as_string);
 			lrec_free(pinrec);
 			return sllv_single(NULL);
 		} else {
-			lhmsi_put(pstate->puniqified_records, lrec_as_string, 1, FREE_ENTRY_VALUE);
+			lhmsll_put(pstate->puniqified_record_counts, lrec_as_string, 1LL, FREE_ENTRY_KEY);
 			return sllv_single(pinrec);
 		}
 	} else { // end of record stream
@@ -247,7 +356,76 @@ static sllv_t* mapper_uniq_process_uniqify_entire_records(lrec_t* pinrec, contex
 	}
 }
 
-static sllv_t* mapper_uniq_process_unlashed(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+// Print each unique record only once, with uniqueness counts.  This means
+// non-streaming, with output at end of stream.
+static sllv_t* mapper_uniq_process_uniqify_entire_records_show_counts(
+	lrec_t* pinrec,
+	context_t* pctx,
+	void* pvstate)
+{
+	mapper_uniq_state_t* pstate = pvstate;
+	if (pinrec != NULL) {
+		char* lrec_as_string = lrec_sprint(pinrec, "\xfc", "\xfd", "\xfe");
+		if (lhmsll_test_and_increment(pstate->puniqified_record_counts, lrec_as_string)) {
+			// have seen; count was just incremented
+			free(lrec_as_string);
+			lrec_free(pinrec);
+			return sllv_single(NULL);
+		} else {
+			lhmsll_put(pstate->puniqified_record_counts, lrec_as_string, 1LL, FREE_ENTRY_KEY);
+			lhmsv_put(pstate->puniqified_records, mlr_strdup_or_die(lrec_as_string), pinrec, FREE_ENTRY_KEY);
+			return sllv_single(NULL);
+		}
+	} else { // end of record stream
+		sllv_t* poutrecs = sllv_alloc();
+
+		for (lhmsve_t* pe = pstate->puniqified_records->phead; pe != NULL; pe = pe->pnext) {
+			lrec_t* prec = pe->pvvalue;
+			long long count = lhmsll_get(pstate->puniqified_record_counts, pe->key);
+			lrec_prepend(prec, pstate->output_field_name, mlr_alloc_string_from_ll(count), FREE_ENTRY_VALUE);
+			sllv_append(poutrecs, prec);
+			pe->pvvalue = NULL; // transfer ownership to poutrecs
+		}
+
+		return poutrecs;
+	}
+}
+
+// Print count of unique records.  This means non-streaming, with output at end
+// of stream.
+static sllv_t* mapper_uniq_process_uniqify_entire_records_show_num_distinct_only(
+	lrec_t* pinrec,
+	context_t* pctx,
+	void* pvstate)
+{
+	mapper_uniq_state_t* pstate = pvstate;
+	if (pinrec != NULL) {
+		char* lrec_as_string = lrec_sprint(pinrec, "\xfc", "\xfd", "\xfe");
+		if (lhmsll_has_key(pstate->puniqified_record_counts, lrec_as_string)) {
+			free(lrec_as_string);
+			lrec_free(pinrec);
+			return sllv_single(NULL);
+		} else {
+			lhmsll_put(pstate->puniqified_record_counts, lrec_as_string, 1LL, FREE_ENTRY_KEY);
+			lrec_free(pinrec);
+			return sllv_single(NULL);
+		}
+	} else { // end of record stream
+		sllv_t* poutrecs = sllv_alloc();
+		lrec_t* poutrec = lrec_unbacked_alloc();
+		long long count = pstate->puniqified_record_counts->num_occupied;
+		lrec_put(poutrec, pstate->output_field_name, mlr_alloc_string_from_ll(count), FREE_ENTRY_VALUE);
+		sllv_append(poutrecs, poutrec);
+		return poutrecs;
+	}
+}
+
+// ----------------------------------------------------------------
+static sllv_t* mapper_uniq_process_unlashed(
+	lrec_t* pinrec,
+	context_t* pctx,
+	void* pvstate)
+{
 	mapper_uniq_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		for (sllse_t* pe = pstate->pgroup_by_field_names->phead; pe != NULL; pe = pe->pnext) {
@@ -286,7 +464,11 @@ static sllv_t* mapper_uniq_process_unlashed(lrec_t* pinrec, context_t* pctx, voi
 	}
 }
 
-static sllv_t* mapper_uniq_process_num_distinct_only(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_uniq_process_num_distinct_only(
+	lrec_t* pinrec,
+	context_t* pctx,
+	void* pvstate)
+{
 	mapper_uniq_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(pinrec,
@@ -318,7 +500,11 @@ static sllv_t* mapper_uniq_process_num_distinct_only(lrec_t* pinrec, context_t* 
 	}
 }
 
-static sllv_t* mapper_uniq_process_with_counts(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_uniq_process_with_counts(
+	lrec_t* pinrec,
+	context_t* pctx,
+	void* pvstate)
+{
 	mapper_uniq_state_t* pstate = pvstate;
 	if (pinrec != NULL) {
 		slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(pinrec,
@@ -362,7 +548,11 @@ static sllv_t* mapper_uniq_process_with_counts(lrec_t* pinrec, context_t* pctx, 
 	}
 }
 
-static sllv_t* mapper_uniq_process_no_counts(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+static sllv_t* mapper_uniq_process_no_counts(
+	lrec_t* pinrec,
+	context_t* pctx,
+	void* pvstate)
+{
 	mapper_uniq_state_t* pstate = pvstate;
 	if (pinrec == NULL) {
 		return sllv_single(NULL);

@@ -6,7 +6,15 @@ FUNDAM:
 
 * synctool alias/flag handling ...
 
-----------------------------------------------------------------
+================================================================
+
+* uniq:
+  o UT cases x all
+  o faqent w/ ref to head -n 1 -g
+    - xxx
+    - xxx
+    - xxx
+
 
 ! APPVEYOR !
 

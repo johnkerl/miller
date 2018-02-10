@@ -29,9 +29,9 @@ typedef struct _lhmslle_t {
 typedef unsigned char lhmslle_state_t;
 
 typedef struct _lhmsll_t {
-	int             num_occupied;
-	int             num_freed;
-	int             array_length;
+	int              num_occupied;
+	int              num_freed;
+	int              array_length;
 	lhmslle_t*       entries;
 	lhmslle_state_t* states;
 	lhmslle_t*       phead;
@@ -40,7 +40,9 @@ typedef struct _lhmsll_t {
 
 // ----------------------------------------------------------------
 lhmsll_t* lhmsll_alloc();
+
 lhmsll_t* lhmsll_copy(lhmsll_t* pmap);
+
 void  lhmsll_free(lhmsll_t* pmap);
 void  lhmsll_put(lhmsll_t* pmap, char* key, int value, char free_flags);
 long long lhmsll_get(lhmsll_t* pmap, char* key); // caller must do lhmsll_has_key to check validity
