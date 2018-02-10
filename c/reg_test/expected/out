@@ -1012,21 +1012,6 @@ count=7
 mlr uniq -a -n -o bar ./reg_test/input/repeats.dkvp
 bar=7
 
-mlr uniq -a -c -n ./reg_test/input/repeats.dkvp
-Usage: ./reg_test/../../c/mlr uniq [options]
-Prints distinct values for specified field names. With -c, same as
-count-distinct. For uniq, -f is a synonym for -g.
-
-Options:
--g {d,e,f}    Group-by-field names for uniq counts.
--c            Show repeat counts in addition to unique values.
--n            Show only the number of distinct values.
--o {name}     Field name for output count. Default "count".
--a            Output each unique record only once. Incompatible with -g.
-              With -c, produces unique records, with repeat counts for each.
-              With -n, produces only one record which is the unique-record count.
-              With neither -c nor -n, produces unique records.
-
 mlr count-distinct -f a -o foo ./reg_test/input/small ./reg_test/input/abixy
 a=pan,foo=4
 a=eks,foo=6
