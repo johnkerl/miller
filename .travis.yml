@@ -21,4 +21,4 @@ before_script: df -h && autoreconf -fiv
 
 script: ./configure && make && make check && make distcheck && make CC=$CC -C c -f Makefile.no-autoconfig
 
-after_failure: cat c/reg_test/test-suite.log
+after_failure: wc -l c/reg_test/test-suite.log && cat c/reg_test/test-suite.log
