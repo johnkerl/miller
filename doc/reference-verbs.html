@@ -605,6 +605,10 @@ Useful for doing a well-formatted check on input data.
 <pre>
 $ mlr count-distinct --help
 Usage: mlr count-distinct [options]
+Prints number of records having distinct values for specified field names.
+Same as uniq -c.
+
+Options:
 -f {a,b,c}    Field names for distinct count.
 -n            Show only the number of distinct values. Not compatible with -u.
 -o {name}     Field name for output count. Default "count".
@@ -614,8 +618,6 @@ Usage: mlr count-distinct [options]
               and b field values. With -f a,b and with -u, computes counts
               for distinct a field values and counts for distinct b field
               values separately.
-Prints number of records having distinct values for specified field names.
-Same as uniq -c.
 </pre>
 </div>
 <p/>
@@ -3703,16 +3705,23 @@ zee 2       0.999438
 <pre>
 $ mlr uniq --help
 Usage: mlr uniq [options]
+Prints distinct values for specified field names. With -c, same as
+count-distinct. For uniq, -f is a synonym for -g.
+
+Options:
 -g {d,e,f}    Group-by-field names for uniq counts.
 -c            Show repeat counts in addition to unique values.
 -n            Show only the number of distinct values.
 -o {name}     Field name for output count. Default "count".
--a            Output each unique record only once. Incompatible with -g, -c, -n, -o.
-Prints distinct values for specified field names. With -c, same as
-count-distinct. For uniq, -f is a synonym for -g.
+-a            Output each unique record only once. Incompatible with -g.
+              With -c, produces unique records, with repeat counts for each.
+              With -n, produces only one record which is the unique-record count.
+              With neither -c nor -n, produces unique records.
 </pre>
 </div>
 <p/>
+
+<p/>There are two main ways to use <tt>mlr uniq</tt>: the first way is with <tt>-g</tt> to specify group-by columns.
 
 <table><tr><td>
 <p/>
@@ -3814,6 +3823,139 @@ count
 </div>
 <p/>
 </td></tr></table>
+
+<p/>The second main way to use <tt>mlr uniq</tt> is without group-by columns, using <tt>-a</tt> instead:
+
+<table>
+<tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/repeats.dkvp
+color=red,shape=square,flag=0
+color=purple,shape=triangle,flag=0
+color=yellow,shape=circle,flag=1
+color=red,shape=circle,flag=1
+color=red,shape=square,flag=0
+color=yellow,shape=circle,flag=1
+color=red,shape=square,flag=0
+color=red,shape=square,flag=0
+color=yellow,shape=circle,flag=1
+color=red,shape=circle,flag=1
+color=yellow,shape=circle,flag=1
+color=yellow,shape=circle,flag=1
+color=purple,shape=triangle,flag=0
+color=yellow,shape=circle,flag=1
+color=yellow,shape=circle,flag=1
+color=red,shape=circle,flag=1
+color=red,shape=square,flag=0
+color=purple,shape=triangle,flag=0
+color=yellow,shape=circle,flag=1
+color=red,shape=square,flag=0
+color=purple,shape=square,flag=0
+color=red,shape=square,flag=0
+color=red,shape=square,flag=1
+color=red,shape=square,flag=0
+color=red,shape=square,flag=0
+color=purple,shape=triangle,flag=0
+color=red,shape=square,flag=0
+color=purple,shape=triangle,flag=0
+color=red,shape=square,flag=0
+color=red,shape=square,flag=0
+color=purple,shape=square,flag=0
+color=red,shape=square,flag=0
+color=red,shape=square,flag=0
+color=purple,shape=triangle,flag=0
+color=yellow,shape=triangle,flag=1
+color=purple,shape=square,flag=0
+color=yellow,shape=circle,flag=1
+color=purple,shape=triangle,flag=0
+color=red,shape=circle,flag=1
+color=purple,shape=triangle,flag=0
+color=purple,shape=triangle,flag=0
+color=red,shape=square,flag=0
+color=red,shape=circle,flag=1
+color=red,shape=square,flag=1
+color=red,shape=square,flag=0
+color=red,shape=circle,flag=1
+color=purple,shape=square,flag=0
+color=purple,shape=square,flag=0
+color=red,shape=square,flag=1
+color=purple,shape=triangle,flag=0
+color=purple,shape=triangle,flag=0
+color=purple,shape=square,flag=0
+color=yellow,shape=circle,flag=1
+color=red,shape=square,flag=0
+color=yellow,shape=triangle,flag=1
+color=yellow,shape=circle,flag=1
+color=purple,shape=square,flag=0
+</pre>
+</div>
+<p/>
+</td></tr>
+
+<tr>
+  <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ wc -l data/repeats.dkvp
+      57 data/repeats.dkvp
+</pre>
+</div>
+<p/>
+  </td>
+  <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint uniq -a data/repeats.dkvp
+color  shape    flag
+red    square   0
+purple triangle 0
+yellow circle   1
+red    circle   1
+purple square   0
+red    square   1
+yellow triangle 1
+</pre>
+</div>
+<p/>
+  </td>
+</tr>
+
+<tr>
+  <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint uniq -a -n data/repeats.dkvp
+count
+7
+</pre>
+</div>
+<p/>
+  </td>
+  <td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint uniq -a -c data/repeats.dkvp
+count color  shape    flag
+17    red    square   0
+11    purple triangle 0
+11    yellow circle   1
+6     red    circle   1
+7     purple square   0
+3     red    square   1
+2     yellow triangle 1
+</pre>
+</div>
+<p/>
+  </td>
+</tr>
+
+</table>
 
 </div>
 <!-- ================================================================ -->

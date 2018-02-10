@@ -876,6 +876,8 @@ POKI_RUN_COMMAND{{mlr --opprint top -n 2 -f x -g a then sort -f a data/medium}}H
 
 POKI_RUN_COMMAND{{mlr uniq --help}}HERE
 
+<p/>There are two main ways to use <tt>mlr uniq</tt>: the first way is with <tt>-g</tt> to specify group-by columns.
+
 <table><tr><td>
 POKI_RUN_COMMAND{{wc -l data/colored-shapes.dkvp}}HERE
 </td></tr><tr><td>
@@ -887,6 +889,33 @@ POKI_RUN_COMMAND{{mlr --opprint uniq -g color,shape -c -o someothername then sor
 </td></tr><tr><td>
 POKI_RUN_COMMAND{{mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp}}HERE
 </td></tr></table>
+
+<p/>The second main way to use <tt>mlr uniq</tt> is without group-by columns, using <tt>-a</tt> instead:
+
+<table>
+<tr><td>
+POKI_RUN_COMMAND{{cat data/repeats.dkvp}}HERE
+</td></tr>
+
+<tr>
+  <td>
+    POKI_RUN_COMMAND{{wc -l data/repeats.dkvp}}HERE
+  </td>
+  <td>
+    POKI_RUN_COMMAND{{mlr --opprint uniq -a data/repeats.dkvp}}HERE
+  </td>
+</tr>
+
+<tr>
+  <td>
+    POKI_RUN_COMMAND{{mlr --opprint uniq -a -n data/repeats.dkvp}}HERE
+  </td>
+  <td>
+    POKI_RUN_COMMAND{{mlr --opprint uniq -a -c data/repeats.dkvp}}HERE
+  </td>
+</tr>
+
+</table>
 
 </div>
 <!-- ================================================================ -->
