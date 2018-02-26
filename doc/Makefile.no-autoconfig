@@ -18,8 +18,10 @@ manpage: .always
 manpage.txt: .always
 	mkman.rb | groff -man -Tascii | col -b > manpage.txt
 install: manpage
+  mkdir -p $(INSTALLDIR)
 	cp mlr.1 $(INSTALLDIR)/mlr.1
 installhome: manpage
+  mkdir -p $(INSTALLHOME)
 	cp mlr.1 $(INSTALLHOME)/mlr.1
 
 .always:
