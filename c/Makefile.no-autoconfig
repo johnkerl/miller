@@ -423,7 +423,7 @@ install: mlr tests
 	mkdir -p $(INSTALLDIR)
 	cp mlr $(INSTALLDIR)
 installhome: mlr tests
-    mkdir -p $(HOME)/bin
+	mkdir -p $(HOME)/bin
 	cp mlr $(HOME)/bin
 
 # ================================================================
