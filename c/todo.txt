@@ -15,7 +15,6 @@ FUNDAM:
     - xxx
     - xxx
 
-
 ! APPVEYOR !
 
 ? bare ./configure ?
