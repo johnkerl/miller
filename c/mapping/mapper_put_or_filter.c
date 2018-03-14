@@ -42,6 +42,7 @@ typedef struct _expression_info_t {
 } expression_info_t;
 
 // ----------------------------------------------------------------
+static void mapper_put_or_filter_usage(FILE* o, char* argv0, char* verb);
 static void      mapper_put_usage(FILE* o, char* argv0, char* verb);
 static void   mapper_filter_usage(FILE* o, char* argv0, char* verb);
 static void          shared_usage(FILE* o, char* argv0, char* verb);
@@ -88,6 +89,19 @@ mapper_setup_t mapper_filter_setup = {
 	.pparse_func = mapper_filter_parse_cli,
 	.ignores_input = FALSE,
 };
+
+// ----------------------------------------------------------------
+static void mapper_put_or_filter_usage(FILE* o, char* argv0, char* verb) {
+	if (streq(verb, "filter")) {
+		mapper_filter_usage(o, argv0, verb);
+	} else if (streq(verb, "put")) {
+		mapper_put_usage(o, argv0, verb);
+	} else {
+		fprintf(stderr, "%s: internal coding error detected at file %s line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+	}
+}
 
 // ----------------------------------------------------------------
 static void mapper_put_usage(FILE* o, char* argv0, char* verb) {
@@ -261,7 +275,7 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 
 	int argi = *pargi;
 	if ((argc - argi) < 1) {
-		mapper_put_usage(stderr, argv[0], argv[argi]);
+		mapper_put_or_filter_usage(stderr, argv[0], argv[argi]);
 		return NULL;
 	}
 	char* verb = argv[argi++];
@@ -280,7 +294,7 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 
 		} else if (streq(argv[argi], "-f")) {
 			if ((argc - argi) < 2) {
-				mapper_put_usage(stderr, argv[0], verb);
+				mapper_put_or_filter_usage(stderr, argv[0], verb);
 				return NULL;
 			}
 			expression_info_t* pexpression_info = mlr_malloc_or_die(sizeof(expression_info_t));
@@ -291,7 +305,7 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 
 		} else if (streq(argv[argi], "-e")) {
 			if ((argc - argi) < 2) {
-				mapper_put_usage(stderr, argv[0], verb);
+				mapper_put_or_filter_usage(stderr, argv[0], verb);
 				return NULL;
 			}
 			expression_info_t* pexpression_info = mlr_malloc_or_die(sizeof(expression_info_t));
@@ -328,7 +342,7 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 			argi += 1;
 		} else if (streq(argv[argi], "--oflatsep")) {
 			if ((argc - argi) < 2) {
-				mapper_put_usage(stderr, argv[0], verb);
+				mapper_put_or_filter_usage(stderr, argv[0], verb);
 				return NULL;
 			}
 			oosvar_flatten_separator = argv[argi+1];
@@ -338,14 +352,14 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 			argi += 1;
 
 		} else {
-			mapper_put_usage(stderr, argv[0], verb);
+			mapper_put_or_filter_usage(stderr, argv[0], verb);
 			return NULL;
 		}
 	}
 
 	if (expression_infos->length == 0) {
 		if ((argc - argi) < 1) {
-			mapper_put_usage(stderr, argv[0], verb);
+			mapper_put_or_filter_usage(stderr, argv[0], verb);
 			return NULL;
 		}
 		mlr_dsl_expression = mlr_strdup_or_die(argv[argi++]);
