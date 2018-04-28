@@ -15,6 +15,7 @@ libmlr_la_SOURCES=	free_flags.h \
 			mlrstat.h \
 			mlrregex.c \
 			mlrregex.h \
+			mlrtimezone.h \
 			mlrutil.c \
 			mlrutil.h \
 			mlrval.c \

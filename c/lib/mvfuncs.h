@@ -217,9 +217,13 @@ mv_t s_xi_sec2localtime_func(mv_t* pval1, mv_t* pval2);
 mv_t s_x_sec2localdate_func(mv_t* pval1);
 
 mv_t i_s_gmt2sec_func(mv_t* pval1);
+mv_t i_s_localtime2sec_func(mv_t* pval1);
+
 mv_t s_ns_strftime_func(mv_t* pval1, mv_t* pval2);
 mv_t s_ns_strftime_local_func(mv_t* pval1, mv_t* pval2);
+
 mv_t i_ss_strptime_func(mv_t* pval1, mv_t* pval2);
+mv_t i_ss_strptime_local_func(mv_t* pval1, mv_t* pval2);
 
 mv_t s_i_sec2hms_func(mv_t* pval1);
 mv_t s_f_fsec2hms_func(mv_t* pval1);
@@ -231,7 +235,7 @@ mv_t i_s_dhms2sec_func(mv_t* pval1);
 mv_t f_s_dhms2fsec_func(mv_t* pval1);
 
 mv_t time_string_from_seconds(mv_t* psec, char* format,
-	time_from_seconds_choice_t time_from_seconds_choice);
+	timezone_handling_t timezone_handling);
 
 // ----------------------------------------------------------------
 // arg2 evaluates to string via compound expression; regexes compiled on each call

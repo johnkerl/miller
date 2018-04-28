@@ -41,21 +41,33 @@ char *mlr_arch_strptime(const char *s, const char *format, struct tm *ptm) {
 
 // ----------------------------------------------------------------
 // See the GNU timegm manpage -- this is what it does.
-time_t mlr_arch_timegm(struct tm* ptm) {
+time_t mlr_arch_timegm(struct tm* ptm, timezone_handling_t timezone_handling) {
 #ifdef MLR_ON_MSYS2
+	// Crap, we're offering limited Windows support :(
+	if (timezone_handling != TIMEZONE_HANDLING_GMT) {
+		fprintf(stderr, "%s: Local timezone is not handled for output.\n",
+			MLR_GLOBALS.bargv0);
+		exit(1);
+	}
 	return nlnet_timegm(ptm);
 #else
 	time_t ret;
-	char* tz = getenv("TZ");
-	mlr_arch_setenv("TZ", "GMT0");
-	tzset();
-	ret = mktime(ptm);
-	if (tz) {
-		mlr_arch_setenv("TZ", tz);
+
+	if (timezone_handling == TIMEZONE_HANDLING_GMT) {
+		char* tz = getenv("TZ");
+		mlr_arch_setenv("TZ", "GMT0");
+		tzset();
+		ret = mktime(ptm);
+		if (tz) {
+			mlr_arch_setenv("TZ", tz);
+		} else {
+			mlr_arch_unsetenv("TZ");
+		}
+		tzset();
 	} else {
-		mlr_arch_unsetenv("TZ");
+		ret = mktime(ptm);
 	}
-	tzset();
+
 	return ret;
 #endif
 }

@@ -298,6 +298,8 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"Formats floating-point seconds as in\nfsec2hms(5000.25) = \"01:23:20.250000\""},
 
 	{FUNC_CLASS_TIME, "gmt2sec",   1,0, "Parses GMT timestamp as integer seconds since\nthe epoch."},
+	{FUNC_CLASS_TIME, "localtime2sec", 1,0, "Parses local timestamp as integer seconds since\n"
+		"the epoch. Consults $TZ environment variable."},
 
 	{FUNC_CLASS_TIME, "hms2fsec",  1,0,
 		"Recovers floating-point seconds as in\nhms2fsec(\"01:23:20.250000\") = 5000.250000"},
@@ -317,8 +319,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = \"2015-08-28\".\n"
 		"Leaves non-numbers as-is."},
 
-	{FUNC_CLASS_TIME, "sec2localtime",   1,0,
-		"Formats seconds since epoch (integer part)\n"
+	{FUNC_CLASS_TIME, "sec2localtime",   1,0, "Formats seconds since epoch (integer part)\n"
 		"as local timestamp, e.g. sec2localtime(1440768801.7) = \"2015-08-28T13:33:21Z\".\n"
 		"Consults $TZ environment variable. Leaves non-numbers as-is."},
 	{FUNC_CLASS_TIME, "sec2localtime",   2,0,
@@ -346,6 +347,8 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"Parses timestamp as floating-point seconds since the epoch,\n"
 		"e.g. strptime(\"2015-08-28T13:33:21Z\",\"%Y-%m-%dT%H:%M:%SZ\") = 1440768801.000000,\n"
 		"and  strptime(\"2015-08-28T13:33:21.345Z\",\"%Y-%m-%dT%H:%M:%SZ\") = 1440768801.345000."},
+	{FUNC_CLASS_TIME, "strptime_local",  2,0,
+		"Like strptime, but consults $TZ environment variable to find and use local timezone."},
 	{FUNC_CLASS_TIME, "systime",   0,0,
 		"Floating-point seconds since the epoch,\n"
 		"e.g. 1440768801.748936." },
@@ -1153,6 +1156,7 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_unary_func_name(char* fnnm, r
 	} else if (streq(fnnm, "fsec2dhms"))       { return rval_evaluator_alloc_from_s_f_func(s_f_fsec2dhms_func,   parg1);
 	} else if (streq(fnnm, "fsec2hms"))        { return rval_evaluator_alloc_from_s_f_func(s_f_fsec2hms_func,    parg1);
 	} else if (streq(fnnm, "gmt2sec"))         { return rval_evaluator_alloc_from_i_s_func(i_s_gmt2sec_func,     parg1);
+	} else if (streq(fnnm, "localtime2sec"))   { return rval_evaluator_alloc_from_i_s_func(i_s_localtime2sec_func, parg1);
 	} else if (streq(fnnm, "hexfmt"))          { return rval_evaluator_alloc_from_x_x_func(s_x_hexfmt_func,      parg1);
 	} else if (streq(fnnm, "hms2fsec"))        { return rval_evaluator_alloc_from_f_s_func(f_s_hms2fsec_func,    parg1);
 	} else if (streq(fnnm, "hms2sec"))         { return rval_evaluator_alloc_from_f_s_func(i_s_hms2sec_func,     parg1);
@@ -1231,6 +1235,7 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "strftime")) { return rval_evaluator_alloc_from_x_ns_func(s_ns_strftime_func, parg1, parg2);
 	} else if (streq(fnnm, "strftime_local")) { return rval_evaluator_alloc_from_x_ns_func(s_ns_strftime_local_func, parg1, parg2);
 	} else if (streq(fnnm, "strptime")) { return rval_evaluator_alloc_from_x_ss_func(i_ss_strptime_func, parg1, parg2);
+	} else if (streq(fnnm, "strptime_local")) { return rval_evaluator_alloc_from_x_ss_func(i_ss_strptime_local_func, parg1, parg2);
 	} else  { return NULL; }
 }
 

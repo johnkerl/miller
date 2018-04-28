@@ -27,7 +27,7 @@ double get_systime() {
 // formatting the seconds with a desired number of decimal places.
 
 char* mlr_alloc_time_string_from_seconds(double seconds_since_the_epoch, char* format_string,
-	time_from_seconds_choice_t time_from_seconds_choice)
+	timezone_handling_t timezone_handling)
 {
 
 	// 1. Split out the integer seconds since the epoch, which the stdlib can handle, and
@@ -36,11 +36,11 @@ char* mlr_alloc_time_string_from_seconds(double seconds_since_the_epoch, char* f
 	double fracsec = seconds_since_the_epoch - iseconds;
 
 	struct tm tm;
-	switch(time_from_seconds_choice) {
-	case TIME_FROM_SECONDS_GMT:
+	switch(timezone_handling) {
+	case TIMEZONE_HANDLING_GMT:
 		tm = *gmtime(&iseconds); // No gmtime_r on Windows so just use gmtime.
 		break;
-	case TIME_FROM_SECONDS_LOCAL:
+	case TIMEZONE_HANDLING_LOCAL:
 		tm = *localtime(&iseconds); // No gmtime_r on Windows so just use gmtime.
 		break;
 	default:
@@ -170,8 +170,9 @@ char* mlr_alloc_time_string_from_seconds(double seconds_since_the_epoch, char* f
 // to play some tricks, inspired in part by some ideas on StackOverflow. Special shout-out
 // to @tinkerware on Github for the push in the right direction! :)
 
-double mlr_seconds_from_time_string(char* time_string, char* format_string) {
-
+double mlr_seconds_from_time_string(char* time_string, char* format_string,
+	timezone_handling_t timezone_handling)
+{
 	struct tm tm;
 
 	// 1. Just try strptime on the input as-is and return quickly if it's OK.
@@ -183,7 +184,7 @@ double mlr_seconds_from_time_string(char* time_string, char* format_string) {
 				MLR_GLOBALS.bargv0, time_string, format_string, MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		return (double)mlr_arch_timegm(&tm);
+		return (double)mlr_arch_timegm(&tm, timezone_handling);
 	}
 
 	// 2. Now either there's floating-point seconds in the input, or something else is wrong.
@@ -269,5 +270,5 @@ double mlr_seconds_from_time_string(char* time_string, char* format_string) {
 	free(elided_fraction_input);
 
 	// 8. Convert the tm to a time_t (seconds since the epoch) and then add the fractional seconds.
-	return mlr_arch_timegm(&tm) + fractional_seconds;
+	return mlr_arch_timegm(&tm, timezone_handling) + fractional_seconds;
 }

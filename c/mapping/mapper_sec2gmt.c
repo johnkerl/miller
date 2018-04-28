@@ -133,7 +133,7 @@ static sllv_t* mapper_sec2gmt_process(lrec_t* pinrec, context_t* pctx, void* pvs
 		} else {
 			mv_t mval = mv_scan_number_nullable(sval);
 			if (!mv_is_error(&mval)) {
-				mv_t stamp = time_string_from_seconds(&mval, pstate->format_string, TIME_FROM_SECONDS_GMT);
+				mv_t stamp = time_string_from_seconds(&mval, pstate->format_string, TIMEZONE_HANDLING_GMT);
 				lrec_put(pinrec, name, stamp.u.strv, FREE_ENTRY_VALUE);
 			}
 		}

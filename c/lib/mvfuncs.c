@@ -381,7 +381,7 @@ mv_t s_x_typeof_func(mv_t* pval1) {
 // ----------------------------------------------------------------
 // Precondition: psec is either int or float.
 mv_t time_string_from_seconds(mv_t* psec, char* format,
-	time_from_seconds_choice_t time_from_seconds_choice)
+	timezone_handling_t timezone_handling)
 {
 	double seconds_since_the_epoch = 0.0;
 	if (psec->type == MT_FLOAT) {
@@ -394,14 +394,14 @@ mv_t time_string_from_seconds(mv_t* psec, char* format,
 	}
 
 	char* string = mlr_alloc_time_string_from_seconds(seconds_since_the_epoch, format,
-		time_from_seconds_choice);
+		timezone_handling);
 
 	return mv_from_string_with_free(string);
 }
 
 // ----------------------------------------------------------------
 static mv_t sec2gmt_s_n(mv_t* pa) {
-	return time_string_from_seconds(pa, ISO8601_TIME_FORMAT, TIME_FROM_SECONDS_GMT);
+	return time_string_from_seconds(pa, ISO8601_TIME_FORMAT, TIMEZONE_HANDLING_GMT);
 }
 
 static mv_unary_func_t* sec2gmt_dispositions[MT_DIM] = {
@@ -418,15 +418,15 @@ mv_t s_x_sec2gmt_func(mv_t* pval1) { return (sec2gmt_dispositions[pval1->type])(
 // Precondition: val2 is already asserted int
 static mv_t sec2gmt_s_ni(mv_t* pa, mv_t* pb) {
 	switch (pb->u.intv) {
-	case 1: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_1, TIME_FROM_SECONDS_GMT); break;
-	case 2: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_2, TIME_FROM_SECONDS_GMT); break;
-	case 3: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_3, TIME_FROM_SECONDS_GMT); break;
-	case 4: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_4, TIME_FROM_SECONDS_GMT); break;
-	case 5: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_5, TIME_FROM_SECONDS_GMT); break;
-	case 6: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_6, TIME_FROM_SECONDS_GMT); break;
-	case 7: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_7, TIME_FROM_SECONDS_GMT); break;
-	case 8: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_8, TIME_FROM_SECONDS_GMT); break;
-	case 9: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_9, TIME_FROM_SECONDS_GMT); break;
+	case 1: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_1, TIMEZONE_HANDLING_GMT); break;
+	case 2: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_2, TIMEZONE_HANDLING_GMT); break;
+	case 3: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_3, TIMEZONE_HANDLING_GMT); break;
+	case 4: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_4, TIMEZONE_HANDLING_GMT); break;
+	case 5: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_5, TIMEZONE_HANDLING_GMT); break;
+	case 6: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_6, TIMEZONE_HANDLING_GMT); break;
+	case 7: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_7, TIMEZONE_HANDLING_GMT); break;
+	case 8: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_8, TIMEZONE_HANDLING_GMT); break;
+	case 9: return time_string_from_seconds(pa, ISO8601_TIME_FORMAT_9, TIMEZONE_HANDLING_GMT); break;
 	default: return mv_error();
 	}
 }
@@ -444,7 +444,7 @@ mv_t s_xi_sec2gmt_func(mv_t* pval1, mv_t* pval2) { return (sec2gmtn_dispositions
 
 // ----------------------------------------------------------------
 static mv_t sec2gmtdate_s_n(mv_t* pa) {
-	return time_string_from_seconds(pa, ISO8601_DATE_FORMAT, TIME_FROM_SECONDS_GMT);
+	return time_string_from_seconds(pa, ISO8601_DATE_FORMAT, TIMEZONE_HANDLING_GMT);
 }
 
 static mv_unary_func_t* sec2gmtdate_dispositions[MT_DIM] = {
@@ -461,7 +461,7 @@ mv_t s_x_sec2gmtdate_func(mv_t* pval1) { return (sec2gmtdate_dispositions[pval1-
 
 // ----------------------------------------------------------------
 static mv_t sec2localtime_s_n(mv_t* pa) {
-	return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT, TIME_FROM_SECONDS_LOCAL);
+	return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT, TIMEZONE_HANDLING_LOCAL);
 }
 
 static mv_unary_func_t* sec2localtime_dispositions[MT_DIM] = {
@@ -478,15 +478,15 @@ mv_t s_x_sec2localtime_func(mv_t* pval1) { return (sec2localtime_dispositions[pv
 // Precondition: val2 is already asserted int
 static mv_t sec2localtime_s_ni(mv_t* pa, mv_t* pb) {
 	switch (pb->u.intv) {
-	case 1: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_1, TIME_FROM_SECONDS_LOCAL); break;
-	case 2: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_2, TIME_FROM_SECONDS_LOCAL); break;
-	case 3: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_3, TIME_FROM_SECONDS_LOCAL); break;
-	case 4: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_4, TIME_FROM_SECONDS_LOCAL); break;
-	case 5: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_5, TIME_FROM_SECONDS_LOCAL); break;
-	case 6: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_6, TIME_FROM_SECONDS_LOCAL); break;
-	case 7: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_7, TIME_FROM_SECONDS_LOCAL); break;
-	case 8: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_8, TIME_FROM_SECONDS_LOCAL); break;
-	case 9: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_9, TIME_FROM_SECONDS_LOCAL); break;
+	case 1: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_1, TIMEZONE_HANDLING_LOCAL); break;
+	case 2: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_2, TIMEZONE_HANDLING_LOCAL); break;
+	case 3: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_3, TIMEZONE_HANDLING_LOCAL); break;
+	case 4: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_4, TIMEZONE_HANDLING_LOCAL); break;
+	case 5: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_5, TIMEZONE_HANDLING_LOCAL); break;
+	case 6: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_6, TIMEZONE_HANDLING_LOCAL); break;
+	case 7: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_7, TIMEZONE_HANDLING_LOCAL); break;
+	case 8: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_8, TIMEZONE_HANDLING_LOCAL); break;
+	case 9: return time_string_from_seconds(pa, ISO8601_LOCAL_TIME_FORMAT_9, TIMEZONE_HANDLING_LOCAL); break;
 	default: return mv_error();
 	}
 }
@@ -504,7 +504,7 @@ mv_t s_xi_sec2localtime_func(mv_t* pval1, mv_t* pval2) { return (sec2localn_disp
 
 // ----------------------------------------------------------------
 static mv_t sec2localdate_s_n(mv_t* pa) {
-	return time_string_from_seconds(pa, ISO8601_DATE_FORMAT, TIME_FROM_SECONDS_LOCAL);
+	return time_string_from_seconds(pa, ISO8601_DATE_FORMAT, TIMEZONE_HANDLING_LOCAL);
 }
 
 static mv_unary_func_t* sec2localdate_dispositions[MT_DIM] = {
@@ -522,35 +522,50 @@ mv_t s_x_sec2localdate_func(mv_t* pval1) { return (sec2localdate_dispositions[pv
 
 // ----------------------------------------------------------------
 mv_t s_ns_strftime_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = time_string_from_seconds(pval1, pval2->u.strv, TIME_FROM_SECONDS_GMT);
+	mv_t rv = time_string_from_seconds(pval1, pval2->u.strv, TIMEZONE_HANDLING_GMT);
 	mv_free(pval2);
 	return rv;
 }
 
 // ----------------------------------------------------------------
 mv_t s_ns_strftime_local_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = time_string_from_seconds(pval1, pval2->u.strv, TIME_FROM_SECONDS_LOCAL);
+	mv_t rv = time_string_from_seconds(pval1, pval2->u.strv, TIMEZONE_HANDLING_LOCAL);
 	mv_free(pval2);
 	return rv;
 }
 
 // ----------------------------------------------------------------
-static mv_t seconds_from_time_string(char* string, char* format) {
+static mv_t seconds_from_time_string(char* string, char* format,
+	timezone_handling_t timezone_handling)
+{
 	if (*string == '\0') {
 		return mv_empty();
 	} else {
-		return mv_from_float(mlr_seconds_from_time_string(string, format));
+		return mv_from_float(mlr_seconds_from_time_string(string, format, timezone_handling));
 	}
 }
 
 mv_t i_s_gmt2sec_func(mv_t* pval1) {
-	mv_t rv = seconds_from_time_string(pval1->u.strv, ISO8601_TIME_FORMAT);
+	mv_t rv = seconds_from_time_string(pval1->u.strv, ISO8601_TIME_FORMAT, TIMEZONE_HANDLING_GMT);
+	mv_free(pval1);
+	return rv;
+}
+
+mv_t i_s_localtime2sec_func(mv_t* pval1) {
+	mv_t rv = seconds_from_time_string(pval1->u.strv, ISO8601_LOCAL_TIME_FORMAT, TIMEZONE_HANDLING_LOCAL);
 	mv_free(pval1);
 	return rv;
 }
 
 mv_t i_ss_strptime_func(mv_t* pval1, mv_t* pval2) {
-	mv_t rv = seconds_from_time_string(pval1->u.strv, pval2->u.strv);
+	mv_t rv = seconds_from_time_string(pval1->u.strv, pval2->u.strv, TIMEZONE_HANDLING_GMT);
+	mv_free(pval1);
+	mv_free(pval2);
+	return rv;
+}
+
+mv_t i_ss_strptime_local_func(mv_t* pval1, mv_t* pval2) {
+	mv_t rv = seconds_from_time_string(pval1->u.strv, pval2->u.strv, TIMEZONE_HANDLING_LOCAL);
 	mv_free(pval1);
 	mv_free(pval2);
 	return rv;
