@@ -24209,6 +24209,125 @@ z
 x 
 y 
 
+mlr --opprint put $y = ssub($x, "HE",       "") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO LLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "HE",       "HE") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "HE",       "12345") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO 12345LLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "LL",       "1") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HE1O
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "LL",       "12") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HE12O
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "LL",       "12345") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HE12345O
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "LLO",      "") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HE
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "LLO",      "12") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HE12
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "LLO",      "123") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HE123
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "LLO",      "123456") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HE123456
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "HELLO",    "") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO -
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "HELLO",    "1234") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO 1234
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "HELLO",    "12345") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO 12345
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "HELLO",    "1234678") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO 1234678
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "nonesuch", "") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "nonesuch", "1234") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HELLO
+world world
+WORLD WORLD
+
+mlr --opprint put $y = ssub($x, "nonesuch", "1234567890") ./reg_test/input/sub.dat
+x     y
+hello hello
+HELLO HELLO
+world world
+WORLD WORLD
+
 
 ================================================================
 DSL SUBSTR

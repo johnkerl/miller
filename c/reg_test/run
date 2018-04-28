@@ -1982,6 +1982,24 @@ run_mlr --oxtab put -f $indir/subtab2.mlr $indir/subtab.dkvp
 run_mlr --oxtab put -f $indir/subtab3.mlr $indir/subtab.dkvp
 run_mlr --oxtab put -f $indir/subtab4.mlr $indir/subtab.dkvp
 
+run_mlr --opprint put '$y = ssub($x, "HE",       "")'           $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "HE",       "HE")'         $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "HE",       "12345")'      $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "LL",       "1")'          $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "LL",       "12")'         $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "LL",       "12345")'      $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "LLO",      "")'           $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "LLO",      "12")'         $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "LLO",      "123")'        $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "LLO",      "123456")'     $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "HELLO",    "")'           $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "HELLO",    "1234")'       $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "HELLO",    "12345")'      $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "HELLO",    "1234678")'    $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "nonesuch", "")'           $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "nonesuch", "1234")'       $indir/sub.dat
+run_mlr --opprint put '$y = ssub($x, "nonesuch", "1234567890")' $indir/sub.dat
+
 # ----------------------------------------------------------------
 announce DSL SUBSTR
 
