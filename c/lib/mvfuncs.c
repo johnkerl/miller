@@ -193,6 +193,58 @@ mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t
 }
 
 // ----------------------------------------------------------------
+// String-substitution with no regexes or special characters.
+// It is assumed that all inputs have already been checked to be strings.
+mv_t s_sss_ssub_func(mv_t* pmvinput, mv_t* pmvold, mv_t* pmvnew) {
+	char* pinput = pmvinput->u.strv;
+	char* pold = pmvold->u.strv;
+	char* pnew = pmvnew->u.strv;
+
+	char* pmatch = strstr(pinput, pold);
+
+	if (pmatch == NULL) {
+		mv_free(pmvold);
+		mv_free(pmvnew);
+		return *pmvinput;
+	} else {
+		// Example:
+		// input: aaaaOOObbbbb
+		// old:   OOO
+		// new:   NNNNN
+		// Output length: strlen(aaaa) + strlen(NNNNN) + strlen(bbbbb)
+
+		// Compute lengths
+		int input_length = strlen(pinput);
+		int old_length = strlen(pold);
+		int new_length = strlen(pnew);
+		int output_length = input_length - old_length + new_length + 1;
+		int pre_length = pmatch - pinput; // the "aaaa" part
+		int post_length = input_length - pre_length - old_length; // the "bbbbb" part
+
+		// Allocate output
+		char* poutput = mlr_malloc_or_die(output_length);
+		char* p = poutput;
+
+		// Populate output
+		strncpy(p, pinput, pre_length);
+		p += pre_length;
+
+		strcpy(p, pnew);
+		p += new_length;
+
+		strcpy(p, &pinput[pre_length + old_length]);
+		p += post_length;
+
+		*p = 0;
+
+		mv_free(pmvinput);
+		mv_free(pmvold);
+		mv_free(pmvnew);
+		return mv_from_string(poutput, FREE_ENTRY_VALUE);
+	}
+}
+
+// ----------------------------------------------------------------
 // https://en.wikipedia.org/wiki/Hamming_weight
 
 static const unsigned long long _m1  = 0x5555555555555555;

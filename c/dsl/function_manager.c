@@ -233,6 +233,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_STRING, "gsub",     3,0, "Example: '$name=gsub($name, \"old\", \"new\")'\n(replace all)."},
 	{FUNC_CLASS_STRING, "strlen",   1,0, "String length."},
 	{FUNC_CLASS_STRING, "sub",      3,0, "Example: '$name=sub($name, \"old\", \"new\")'\n(replace once)."},
+	{FUNC_CLASS_STRING, "ssub",     3,0, "Like sub but does no regexing. No characters are special."},
 	{FUNC_CLASS_STRING, "substr",   3,0,
 		"substr(s,m,n) gives substring of s from 0-up position m to n \n"
 		"inclusive. Negative indices -len .. -1 alias to 0 .. len-1."},
@@ -1228,6 +1229,8 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_func_name(char* fnnm,
 		return rval_evaluator_alloc_from_s_sss_func(sub_no_precomp_func,  parg1, parg2, parg3);
 	} else if (streq(fnnm, "gsub")) {
 		return rval_evaluator_alloc_from_s_sss_func(gsub_no_precomp_func, parg1, parg2, parg3);
+	} else if (streq(fnnm, "ssub")) {
+		return rval_evaluator_alloc_from_s_sss_func(s_sss_ssub_func,      parg1, parg2, parg3);
 	} else if (streq(fnnm, "logifit")) {
 		return rval_evaluator_alloc_from_f_fff_func(f_fff_logifit_func,   parg1, parg2, parg3);
 	} else if (streq(fnnm, "madd")) {
