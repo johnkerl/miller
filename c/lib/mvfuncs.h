@@ -28,6 +28,17 @@
 #define ISO8601_TIME_FORMAT_9 "%Y-%m-%dT%H:%M:%9SZ"
 #define ISO8601_DATE_FORMAT   "%Y-%m-%d"
 
+#define ISO8601_LOCAL_TIME_FORMAT   "%Y-%m-%dT%H:%M:%S %Z"
+#define ISO8601_LOCAL_TIME_FORMAT_1 "%Y-%m-%dT%H:%M:%1S %Z"
+#define ISO8601_LOCAL_TIME_FORMAT_2 "%Y-%m-%dT%H:%M:%2S %Z"
+#define ISO8601_LOCAL_TIME_FORMAT_3 "%Y-%m-%dT%H:%M:%3S %Z"
+#define ISO8601_LOCAL_TIME_FORMAT_4 "%Y-%m-%dT%H:%M:%4S %Z"
+#define ISO8601_LOCAL_TIME_FORMAT_5 "%Y-%m-%dT%H:%M:%5S %Z"
+#define ISO8601_LOCAL_TIME_FORMAT_6 "%Y-%m-%dT%H:%M:%6S %Z"
+#define ISO8601_LOCAL_TIME_FORMAT_7 "%Y-%m-%dT%H:%M:%7S %Z"
+#define ISO8601_LOCAL_TIME_FORMAT_8 "%Y-%m-%dT%H:%M:%8S %Z"
+#define ISO8601_LOCAL_TIME_FORMAT_9 "%Y-%m-%dT%H:%M:%9S %Z"
+
 // ----------------------------------------------------------------
 typedef mv_t mv_variadic_func_t(mv_t* pvals, int nvals);
 typedef mv_t mv_zary_func_t();
@@ -200,8 +211,14 @@ mv_t s_sss_ssub_func(mv_t* pstring, mv_t* pold, mv_t* pnew);
 mv_t s_x_sec2gmt_func(mv_t* pval1);
 mv_t s_xi_sec2gmt_func(mv_t* pval1, mv_t* pval2);
 mv_t s_x_sec2gmtdate_func(mv_t* pval1);
+
+mv_t s_x_sec2localtime_func(mv_t* pval1);
+mv_t s_xi_sec2localtime_func(mv_t* pval1, mv_t* pval2);
+mv_t s_x_sec2localdate_func(mv_t* pval1);
+
 mv_t i_s_gmt2sec_func(mv_t* pval1);
 mv_t s_ns_strftime_func(mv_t* pval1, mv_t* pval2);
+mv_t s_ns_strftime_local_func(mv_t* pval1, mv_t* pval2);
 mv_t i_ss_strptime_func(mv_t* pval1, mv_t* pval2);
 
 mv_t s_i_sec2hms_func(mv_t* pval1);
@@ -213,7 +230,8 @@ mv_t f_s_hms2fsec_func(mv_t* pval1);
 mv_t i_s_dhms2sec_func(mv_t* pval1);
 mv_t f_s_dhms2fsec_func(mv_t* pval1);
 
-mv_t time_string_from_seconds(mv_t* psec, char* format);
+mv_t time_string_from_seconds(mv_t* psec, char* format,
+	time_from_seconds_choice_t time_from_seconds_choice);
 
 // ----------------------------------------------------------------
 // arg2 evaluates to string via compound expression; regexes compiled on each call

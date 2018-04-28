@@ -26,14 +26,29 @@ double get_systime() {
 // to produce a formatted string. The only complication is that we support "%1S" through "%9S" for
 // formatting the seconds with a desired number of decimal places.
 
-char* mlr_alloc_time_string_from_seconds(double seconds_since_the_epoch, char* format_string) {
+char* mlr_alloc_time_string_from_seconds(double seconds_since_the_epoch, char* format_string,
+	time_from_seconds_choice_t time_from_seconds_choice)
+{
 
 	// 1. Split out the integer seconds since the epoch, which the stdlib can handle, and
 	//    the fractional part, which it cannot.
 	time_t iseconds = (time_t) seconds_since_the_epoch;
 	double fracsec = seconds_since_the_epoch - iseconds;
 
-	struct tm tm = *gmtime(&iseconds); // No gmtime_r on Windows so just use gmtime.
+	struct tm tm;
+	switch(time_from_seconds_choice) {
+	case TIME_FROM_SECONDS_GMT:
+		tm = *gmtime(&iseconds); // No gmtime_r on Windows so just use gmtime.
+		break;
+	case TIME_FROM_SECONDS_LOCAL:
+		tm = *localtime(&iseconds); // No gmtime_r on Windows so just use gmtime.
+		break;
+	default:
+		fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+			MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+		exit(1);
+		break;
+	}
 
 	// 2. See if "%nS" (for n in 1..9) is a substring of the format string.
 	char* middle_nS_format = NULL;

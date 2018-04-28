@@ -91,7 +91,8 @@ static sllv_t* mapper_sec2gmtdate_process(lrec_t* pinrec, context_t* pctx, void*
 		} else {
 			mv_t mval = mv_scan_number_nullable(sval);
 			if (!mv_is_error(&mval)) {
-				mv_t stamp = time_string_from_seconds(&mval, ISO8601_DATE_FORMAT);
+				mv_t stamp = time_string_from_seconds(&mval, ISO8601_DATE_FORMAT,
+					TIME_FROM_SECONDS_GMT);
 				lrec_put(pinrec, name, stamp.u.strv, FREE_ENTRY_VALUE);
 			}
 		}

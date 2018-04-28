@@ -332,16 +332,16 @@ OPTIONS
 	floor invqnorm log log10 log1p logifit madd max mexp min mmul msub pow qnorm
 	round roundm sgn sin sinh sqrt tan tanh urand urand32 urandint dhms2fsec
 	dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2gmt
-	sec2gmtdate sec2hms strftime strptime systime is_absent is_bool is_boolean
-	is_empty is_empty_map is_float is_int is_map is_nonempty_map is_not_empty
-	is_not_map is_not_null is_null is_numeric is_present is_string
-	asserting_absent asserting_bool asserting_boolean asserting_empty
-	asserting_empty_map asserting_float asserting_int asserting_map
-	asserting_nonempty_map asserting_not_empty asserting_not_map
-	asserting_not_null asserting_null asserting_numeric asserting_present
-	asserting_string boolean float fmtnum hexfmt int string typeof depth haskey
-	joink joinkv joinv leafcount length mapdiff mapexcept mapselect mapsum splitkv
-	splitkvx splitnv splitnvx
+	sec2gmtdate sec2localtime sec2localtime sec2localdate sec2hms strftime
+	strptime systime is_absent is_bool is_boolean is_empty is_empty_map is_float
+	is_int is_map is_nonempty_map is_not_empty is_not_map is_not_null is_null
+	is_numeric is_present is_string asserting_absent asserting_bool
+	asserting_boolean asserting_empty asserting_empty_map asserting_float
+	asserting_int asserting_map asserting_nonempty_map asserting_not_empty
+	asserting_not_map asserting_not_null asserting_null asserting_numeric
+	asserting_present asserting_string boolean float fmtnum hexfmt int string
+	typeof depth haskey joink joinkv joinv leafcount length mapdiff mapexcept
+	mapselect mapsum splitkv splitkvx splitnv splitnvx
 
        Please use "mlr --help-function {function name}" for function-specific help.
 
@@ -1774,6 +1774,20 @@ FUNCTIONS FOR FILTER/PUT
        as GMT timestamp with year-month-date, e.g. sec2gmtdate(1440768801.7) = "2015-08-28".
        Leaves non-numbers as-is.
 
+   sec2localtime
+       (class=time #args=1): Formats seconds since epoch (integer part)
+       as local timestamp, e.g. sec2localtime(1440768801.7) = "2015-08-28T13:33:21Z".
+       Consults $TZ environment variable. Leaves non-numbers as-is.
+
+       sec2localtime (class=time #args=2): Formats seconds since epoch as local timestamp with n
+       decimal places for seconds, e.g. sec2localtime(1440768801.7,1) = "2015-08-28T13:33:21.7Z".
+       Consults $TZ environment variable. Leaves non-numbers as-is.
+
+   sec2localdate
+       (class=time #args=1): Formats seconds since epoch (integer part)
+       as local timestamp with year-month-date, e.g. sec2localdate(1440768801.7) = "2015-08-28".
+       Consults $TZ environment variable. Leaves non-numbers as-is.
+
    sec2hms
        (class=time #args=1): Formats integer seconds as in
        sec2hms(5000) = "01:23:20"
@@ -1783,7 +1797,7 @@ FUNCTIONS FOR FILTER/PUT
        strftime(1440768801.7,"%Y-%m-%dT%H:%M:%SZ") = "2015-08-28T13:33:21Z", and
        strftime(1440768801.7,"%Y-%m-%dT%H:%M:%3SZ") = "2015-08-28T13:33:21.700Z".
        Format strings are as in the C library (please see "man strftime" on your system),
-       with the Miller-specific addition of "%1S" through "%9S" which format the seocnds
+       with the Miller-specific addition of "%1S" through "%9S" which format the seconds
        with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
 
    strptime
