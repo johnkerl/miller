@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2018-03-14
+.\"      Date: 2018-04-28
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2018-03-14" "\ \&" "\ \&"
+.TH "MILLER" "1" "2018-04-28" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -182,11 +182,11 @@ output separator to the given value.
 .\}
 .nf
  + + - - * / // .+ .+ .- .- .* ./ .// % ** | ^ & ~ << >> bitcount == != =~ !=~
- > >= < <= && || ^^ ! ? : . gsub strlen sub substr tolower toupper abs acos
- acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp expm1 floor
- invqnorm log log10 log1p logifit madd max mexp min mmul msub pow qnorm round
- roundm sgn sin sinh sqrt tan tanh urand urand32 urandint dhms2fsec dhms2sec
- fsec2dhms fsec2hms gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2gmt
+ > >= < <= && || ^^ ! ? : . gsub strlen sub ssub substr tolower toupper abs
+ acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp expm1
+ floor invqnorm log log10 log1p logifit madd max mexp min mmul msub pow qnorm
+ round roundm sgn sin sinh sqrt tan tanh urand urand32 urandint dhms2fsec
+ dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2gmt
  sec2gmtdate sec2hms strftime strptime systime is_absent is_bool is_boolean
  is_empty is_empty_map is_float is_int is_map is_nonempty_map is_not_empty
  is_not_map is_not_null is_null is_numeric is_present is_string
@@ -1990,6 +1990,15 @@ and string results in string compare.
 .nf
 (class=string #args=3): Example: '$name=sub($name, "old", "new")'
 (replace once).
+.fi
+.if n \{\
+.RE
+.SS "ssub"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=string #args=3): Like sub but does no regexing. No characters are special.
 .fi
 .if n \{\
 .RE
