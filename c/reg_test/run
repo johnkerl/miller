@@ -1925,7 +1925,7 @@ run_mlr --opprint put 'filter !($x > 0.5); $z = "flag"'  $indir/abixy
 run_mlr --opprint put '       !($x > 0.5) {$z = "flag"}' $indir/abixy
 
 # ----------------------------------------------------------------
-announce DSL DATETIME FUNCTIONS
+announce DSL GMT DATE/TIME FUNCTIONS
 
 run_mlr --csvlite put '$gmt = sec2gmt($sec)' $indir/sec2gmt
 run_mlr --csvlite put '$gmt = sec2gmt($sec,1)' $indir/sec2gmt
@@ -1949,6 +1949,61 @@ run_mlr --opprint put '$hms=fsec2dhms($sec); $resec=dhms2fsec($hms); $diff=$rese
 
 run_mlr --csvlite sec2gmt     sec $indir/sec2gmt
 run_mlr --csvlite sec2gmtdate sec $indir/sec2gmt
+
+# ----------------------------------------------------------------
+announce DSL LOCAL DATE/TIME FUNCTIONS
+
+# See also the system date command:
+# export TZ=America/Sao_Paulo; date -j -f "%Y-%m-%d %H:%M:%S %Y" "2017-02-19 00:30:00" +%s
+# export TZ=America/Sao_Paulo; date -r  86400 +"%Y-%m-%d %H:%M:%S %Z"
+
+export TZ=America/Sao_Paulo
+echo TZ=$TZ
+run_mlr --opprint put '$b=localtime2sec($a); $c=sec2localtime($b); $d=sec2localdate($b)' <<_EOF
+a=2017-02-18 23:00:00
+a=2017-02-18 23:59:59
+a=2017-02-19 00:00:00
+a=2017-02-19 00:30:00
+a=2017-02-19 01:00:00
+a=2017-10-14 23:00:00
+a=2017-10-14 23:59:59
+a=2017-10-15 00:00:00
+a=2017-10-15 00:30:00
+a=2017-10-15 01:00:00
+_EOF
+export TZ=
+
+export TZ=America/Sao_Paulo
+echo TZ=$TZ
+run_mlr --opprint put '$b=strptime_local($a, "%Y-%m-%d %H:%M:%S"); $c=strftime_local($b, "%Y-%m-%d %H:%M:%S")' <<_EOF
+a=2017-02-18 23:00:00
+a=2017-02-18 23:59:59
+a=2017-02-19 00:00:00
+a=2017-02-19 00:30:00
+a=2017-02-19 01:00:00
+a=2017-10-14 23:00:00
+a=2017-10-14 23:59:59
+a=2017-10-15 00:00:00
+a=2017-10-15 00:30:00
+a=2017-10-15 01:00:00
+_EOF
+export TZ=
+
+export TZ=America/Sao_Paulo
+echo TZ=$TZ
+run_mlr --opprint put '$b=strptime_local($a, "%Y-%m-%d %H:%M:%S"); $c=strftime_local($b, "%Y-%m-%d %H:%M:%S")' <<_EOF
+a=2017-02-18 23:00:00
+a=2017-02-18 23:59:59
+a=2017-02-19 00:00:00
+a=2017-02-19 00:30:00
+a=2017-02-19 01:00:00
+a=2017-10-14 23:00:00
+a=2017-10-14 23:59:59
+a=2017-10-15 00:00:00
+a=2017-10-15 00:30:00
+a=2017-10-15 01:00:00
+_EOF
+export TZ=
 
 # ----------------------------------------------------------------
 announce DSL SUB/GSUB

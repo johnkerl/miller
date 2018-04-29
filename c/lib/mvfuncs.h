@@ -28,16 +28,16 @@
 #define ISO8601_TIME_FORMAT_9 "%Y-%m-%dT%H:%M:%9SZ"
 #define ISO8601_DATE_FORMAT   "%Y-%m-%d"
 
-#define ISO8601_LOCAL_TIME_FORMAT   "%Y-%m-%dT%H:%M:%S %Z"
-#define ISO8601_LOCAL_TIME_FORMAT_1 "%Y-%m-%dT%H:%M:%1S %Z"
-#define ISO8601_LOCAL_TIME_FORMAT_2 "%Y-%m-%dT%H:%M:%2S %Z"
-#define ISO8601_LOCAL_TIME_FORMAT_3 "%Y-%m-%dT%H:%M:%3S %Z"
-#define ISO8601_LOCAL_TIME_FORMAT_4 "%Y-%m-%dT%H:%M:%4S %Z"
-#define ISO8601_LOCAL_TIME_FORMAT_5 "%Y-%m-%dT%H:%M:%5S %Z"
-#define ISO8601_LOCAL_TIME_FORMAT_6 "%Y-%m-%dT%H:%M:%6S %Z"
-#define ISO8601_LOCAL_TIME_FORMAT_7 "%Y-%m-%dT%H:%M:%7S %Z"
-#define ISO8601_LOCAL_TIME_FORMAT_8 "%Y-%m-%dT%H:%M:%8S %Z"
-#define ISO8601_LOCAL_TIME_FORMAT_9 "%Y-%m-%dT%H:%M:%9S %Z"
+#define ISO8601_LOCAL_TIME_FORMAT   "%Y-%m-%d %H:%M:%S"
+#define ISO8601_LOCAL_TIME_FORMAT_1 "%Y-%m-%d %H:%M:%1S"
+#define ISO8601_LOCAL_TIME_FORMAT_2 "%Y-%m-%d %H:%M:%2S"
+#define ISO8601_LOCAL_TIME_FORMAT_3 "%Y-%m-%d %H:%M:%3S"
+#define ISO8601_LOCAL_TIME_FORMAT_4 "%Y-%m-%d %H:%M:%4S"
+#define ISO8601_LOCAL_TIME_FORMAT_5 "%Y-%m-%d %H:%M:%5S"
+#define ISO8601_LOCAL_TIME_FORMAT_6 "%Y-%m-%d %H:%M:%6S"
+#define ISO8601_LOCAL_TIME_FORMAT_7 "%Y-%m-%d %H:%M:%7S"
+#define ISO8601_LOCAL_TIME_FORMAT_8 "%Y-%m-%d %H:%M:%8S"
+#define ISO8601_LOCAL_TIME_FORMAT_9 "%Y-%m-%d %H:%M:%9S"
 
 // ----------------------------------------------------------------
 typedef mv_t mv_variadic_func_t(mv_t* pvals, int nvals);

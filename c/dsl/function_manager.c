@@ -340,13 +340,15 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"strftime(1440768801.7,\"%Y-%m-%dT%H:%M:%3SZ\") = \"2015-08-28T13:33:21.700Z\".\n"
 		"Format strings are as in the C library (please see \"man strftime\" on your system),\n"
 		"with the Miller-specific addition of \"%1S\" through \"%9S\" which format the seconds\n"
-		"with 1 through 9 decimal places, respectively. (\"%S\" uses no decimal places.)"},
+		"with 1 through 9 decimal places, respectively. (\"%S\" uses no decimal places.)\n"
+		"See also strftime_local."},
 	{FUNC_CLASS_TIME, "strftime_local",  2,0,
 		"Like strftime but consults the $TZ environment variable to get local time zone."},
 	{FUNC_CLASS_TIME, "strptime",  2,0,
 		"Parses timestamp as floating-point seconds since the epoch,\n"
 		"e.g. strptime(\"2015-08-28T13:33:21Z\",\"%Y-%m-%dT%H:%M:%SZ\") = 1440768801.000000,\n"
-		"and  strptime(\"2015-08-28T13:33:21.345Z\",\"%Y-%m-%dT%H:%M:%SZ\") = 1440768801.345000."},
+		"and  strptime(\"2015-08-28T13:33:21.345Z\",\"%Y-%m-%dT%H:%M:%SZ\") = 1440768801.345000.\n"
+		"See also strptime_local."},
 	{FUNC_CLASS_TIME, "strptime_local",  2,0,
 		"Like strptime, but consults $TZ environment variable to find and use local timezone."},
 	{FUNC_CLASS_TIME, "systime",   0,0,
