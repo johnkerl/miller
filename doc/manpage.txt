@@ -1610,6 +1610,7 @@ FUNCTIONS FOR FILTER/PUT
        Format strings are as in the C library (please see "man strftime" on your system),
        with the Miller-specific addition of "%1S" through "%9S" which format the seconds
        with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
+       See also strftime_local.
 
    strftime_local
        (class=time #args=2): Like strftime but consults the $TZ environment variable to get local time zone.
@@ -1618,6 +1619,7 @@ FUNCTIONS FOR FILTER/PUT
        (class=time #args=2): Parses timestamp as floating-point seconds since the epoch,
        e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
        and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
+       See also strptime_local.
 
    strptime_local
        (class=time #args=2): Like strptime, but consults $TZ environment variable to find and use local timezone.
