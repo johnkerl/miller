@@ -139,7 +139,7 @@ static int p(char* time_string, char* format_string) {
 				MLR_GLOBALS.bargv0, time_string, format_string, MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		time_t iseconds = mlr_arch_timegm(&tm);
+		time_t iseconds = mlr_arch_timegmlocal(&tm);
 		printf("%s, %s -> %u, \"%s\"\n", time_string, format_string, (unsigned)iseconds, strptime_retval);
 		return 0;
 	}
@@ -206,7 +206,7 @@ static int p(char* time_string, char* format_string) {
 	printf("STRPTIME ELIDE RETVAL \"%s\"\n", strptime_retval);
 
 	// 6. Convert the tm to a time_t (seconds since the epoch) and then add the fractional seceonds.
-	time_t iseconds = mlr_arch_timegm(&tm);
+	time_t iseconds = mlr_arch_timegmlocal(&tm);
 	printf("ISECONDS %u\n", (unsigned)iseconds);
 	double fseconds = iseconds + fractional_seconds;
 	printf("FSECONDS %.6lf\n", fseconds);

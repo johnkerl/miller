@@ -184,7 +184,20 @@ double mlr_seconds_from_time_string(char* time_string, char* format_string,
 				MLR_GLOBALS.bargv0, time_string, format_string, MLR_GLOBALS.bargv0);
 			exit(1);
 		}
-		return (double)mlr_arch_timegm(&tm, timezone_handling);
+
+        // printf("TIME_STRING   %s\n", time_string);
+        // printf("FORMAT_STRING %s\n", time_string);
+        // printf("tm_year  =%d\n", tm.tm_year);
+        // printf("tm_mon   =%d\n", tm.tm_mon);
+        // printf("tm_mday  =%d\n", tm.tm_mday);
+        // printf("tm_wday  =%d\n", tm.tm_wday);
+        // printf("tm_yday  =%d\n", tm.tm_yday);
+        // printf("tm_hour  =%d\n", tm.tm_hour);
+        // printf("tm_min   =%d\n", tm.tm_min);
+        // printf("tm_sec   =%d\n", tm.tm_sec);
+        // printf("tm_isdst =%d\n", tm.tm_isdst);
+
+		return (double)mlr_arch_timegmlocal(&tm, timezone_handling);
 	}
 
 	// 2. Now either there's floating-point seconds in the input, or something else is wrong.
@@ -270,5 +283,5 @@ double mlr_seconds_from_time_string(char* time_string, char* format_string,
 	free(elided_fraction_input);
 
 	// 8. Convert the tm to a time_t (seconds since the epoch) and then add the fractional seconds.
-	return mlr_arch_timegm(&tm, timezone_handling) + fractional_seconds;
+	return mlr_arch_timegmlocal(&tm, timezone_handling) + fractional_seconds;
 }

@@ -36,6 +36,6 @@ int mlr_arch_setenv(const char *name, const char *value);
 int mlr_arch_unsetenv(const char *name);
 
 char *mlr_arch_strptime(const char *s, const char *format, struct tm *ptm);
-time_t mlr_arch_timegm(struct tm* ptm, timezone_handling_t timezone_handling);
+time_t mlr_arch_timegmlocal(struct tm* ptm, timezone_handling_t timezone_handling);
 
 #endif // MLR_ARCH_H

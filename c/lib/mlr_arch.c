@@ -41,7 +41,7 @@ char *mlr_arch_strptime(const char *s, const char *format, struct tm *ptm) {
 
 // ----------------------------------------------------------------
 // See the GNU timegm manpage -- this is what it does.
-time_t mlr_arch_timegm(struct tm* ptm, timezone_handling_t timezone_handling) {
+time_t mlr_arch_timegmlocal(struct tm* ptm, timezone_handling_t timezone_handling) {
 #ifdef MLR_ON_MSYS2
 	// Crap, we're offering limited Windows support :(
 	if (timezone_handling != TIMEZONE_HANDLING_GMT) {
