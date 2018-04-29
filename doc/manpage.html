@@ -331,17 +331,18 @@ OPTIONS
 	acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh erf erfc exp expm1
 	floor invqnorm log log10 log1p logifit madd max mexp min mmul msub pow qnorm
 	round roundm sgn sin sinh sqrt tan tanh urand urand32 urandint dhms2fsec
-	dhms2sec fsec2dhms fsec2hms gmt2sec hms2fsec hms2sec sec2dhms sec2gmt sec2gmt
-	sec2gmtdate sec2localtime sec2localtime sec2localdate sec2hms strftime
-	strptime systime is_absent is_bool is_boolean is_empty is_empty_map is_float
-	is_int is_map is_nonempty_map is_not_empty is_not_map is_not_null is_null
-	is_numeric is_present is_string asserting_absent asserting_bool
-	asserting_boolean asserting_empty asserting_empty_map asserting_float
-	asserting_int asserting_map asserting_nonempty_map asserting_not_empty
-	asserting_not_map asserting_not_null asserting_null asserting_numeric
-	asserting_present asserting_string boolean float fmtnum hexfmt int string
-	typeof depth haskey joink joinkv joinv leafcount length mapdiff mapexcept
-	mapselect mapsum splitkv splitkvx splitnv splitnvx
+	dhms2sec fsec2dhms fsec2hms gmt2sec localtime2sec hms2fsec hms2sec sec2dhms
+	sec2gmt sec2gmt sec2gmtdate sec2localtime sec2localtime sec2localdate sec2hms
+	strftime strftime_local strptime strptime_local systime is_absent is_bool
+	is_boolean is_empty is_empty_map is_float is_int is_map is_nonempty_map
+	is_not_empty is_not_map is_not_null is_null is_numeric is_present is_string
+	asserting_absent asserting_bool asserting_boolean asserting_empty
+	asserting_empty_map asserting_float asserting_int asserting_map
+	asserting_nonempty_map asserting_not_empty asserting_not_map
+	asserting_not_null asserting_null asserting_numeric asserting_present
+	asserting_string boolean float fmtnum hexfmt int string typeof depth haskey
+	joink joinkv joinv leafcount length mapdiff mapexcept mapselect mapsum splitkv
+	splitkvx splitnv splitnvx
 
        Please use "mlr --help-function {function name}" for function-specific help.
 
@@ -1748,6 +1749,10 @@ FUNCTIONS FOR FILTER/PUT
        (class=time #args=1): Parses GMT timestamp as integer seconds since
        the epoch.
 
+   localtime2sec
+       (class=time #args=1): Parses local timestamp as integer seconds since
+       the epoch. Consults $TZ environment variable.
+
    hms2fsec
        (class=time #args=1): Recovers floating-point seconds as in
        hms2fsec("01:23:20.250000") = 5000.250000
@@ -1800,10 +1805,16 @@ FUNCTIONS FOR FILTER/PUT
        with the Miller-specific addition of "%1S" through "%9S" which format the seconds
        with 1 through 9 decimal places, respectively. ("%S" uses no decimal places.)
 
+   strftime_local
+       (class=time #args=2): Like strftime but consults the $TZ environment variable to get local time zone.
+
    strptime
        (class=time #args=2): Parses timestamp as floating-point seconds since the epoch,
        e.g. strptime("2015-08-28T13:33:21Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.000000,
        and  strptime("2015-08-28T13:33:21.345Z","%Y-%m-%dT%H:%M:%SZ") = 1440768801.345000.
+
+   strptime_local
+       (class=time #args=2): Like strptime, but consults $TZ environment variable to find and use local timezone.
 
    systime
        (class=time #args=0): Floating-point seconds since the epoch,
@@ -2358,7 +2369,7 @@ SEE ALSO
 
 
 
-				  2018-04-28			     MILLER(1)
+				  2018-04-29			     MILLER(1)
 </pre>
 </div>
 <p/>

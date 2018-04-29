@@ -51,39 +51,72 @@ flags="-a"
 vee=
 
 # ----------------------------------------------------------------
-# It's annoying trying to check in text files (especially CSV) with CRLF
-# to Git, given that it likes to 'fix' line endings for multi-platform use.
-# It's easy to simply create CRLF on the fly.
-run_mlr_for_auxents termcvt --lf2crlf < $indir/comments/comments1.json > $outdir/comments1-crlf.json
+# sec2localtime
+# sec2localdate
+# localtime2sec
 
-echo "AAA"
-ls -l $indir/comments/comments1.json
-ls -l $outdir/comments1-crlf.json
-hex $outdir/comments1-crlf.json
+# strftime_local
+# strfpime_local
 
-mention input comments1-crlf.json
-run_cat $outdir/comments1-crlf.json
+export TZ=UTC+05:00
+mlr --opprint put '$y=sec2localtime($x)' <<_EOF
+x=-86400
+x=-1
+x=0
+x=86400
+_EOF
+echo
 
-echo "BBB"
-ls -l $outdir/comments1-crlf.json
-hex $outdir/comments1-crlf.json
+export TZ=UTC
+mlr --opprint put '$y=sec2localtime($x)' <<_EOF
+x=-86400
+x=-1
+x=0
+x=86400
+_EOF
+echo
 
-mention skip comments1-crlf.json
-run_mlr --skip-comments --ijson --odkvp cat < $outdir/comments1-crlf.json
-echo "CCC"
-ls -l $outdir/comments1-crlf.json
-hex $outdir/comments1-crlf.json
-run_mlr --skip-comments --ijson --odkvp cat   $outdir/comments1-crlf.json
-echo "DDD"
-ls -l $outdir/comments1-crlf.json
-hex $outdir/comments1-crlf.json
+export TZ=UTC+05:00
+mlr put '$y=strptime_local($x, "%Y-%m-%d %H:%M:%S")' <<_EOF
+x=2017-02-18 23:00:00
+x=2017-02-18 23:59:59
+x=2017-02-19 00:00:00
+x=2017-02-19 01:00:00
+x=2017-02-19 02:00:00
+x=2017-10-14 23:00:00
+x=2017-10-14 23:59:59
+x=2017-10-15 00:00:00
+x=2017-10-15 01:00:00
+x=2017-10-15 02:00:00
+_EOF
+echo
 
-mention pass comments1-crlf.json
-run_mlr --pass-comments --ijson --odkvp cat < $outdir/comments1-crlf.json
-echo "EEE"
-ls -l $outdir/comments1-crlf.json
-hex $outdir/comments1-crlf.json
-run_mlr --pass-comments --ijson --odkvp cat   $outdir/comments1-crlf.json
-echo "FFF"
-ls -l $outdir/comments1-crlf.json
-hex $outdir/comments1-crlf.json
+export TZ=UTC+05:30
+mlr put '$y=strptime_local($x, "%Y-%m-%d %H:%M:%S")' <<_EOF
+x=2017-02-18 23:00:00
+x=2017-02-18 23:59:59
+x=2017-02-19 00:00:00
+x=2017-02-19 01:00:00
+x=2017-02-19 02:00:00
+x=2017-10-14 23:00:00
+x=2017-10-14 23:59:59
+x=2017-10-15 00:00:00
+x=2017-10-15 01:00:00
+x=2017-10-15 02:00:00
+_EOF
+echo
+
+export TZ=America/Sao_Paulo
+mlr put '$y=strptime_local($x, "%Y-%m-%d %H:%M:%S")' <<_EOF
+x=2017-02-18 23:00:00
+x=2017-02-18 23:59:59
+x=2017-02-19 00:00:00
+x=2017-02-19 01:00:00
+x=2017-02-19 02:00:00
+x=2017-10-14 23:00:00
+x=2017-10-14 23:59:59
+x=2017-10-15 00:00:00
+x=2017-10-15 01:00:00
+x=2017-10-15 02:00:00
+_EOF
+
