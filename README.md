@@ -32,7 +32,7 @@ DUVAL,1731888.18,2785551.63,Residential,Masonry
 ST. JOHNS,29589.12,35207.53,Residential,Wood
 ```
 
-Then, on the fly, you can add new fields which are functions which are functions of existing fields, drop fields, sort, aggregate statistically, pretty-print, and more:
+Then, on the fly, you can add new fields which are functions of existing fields, drop fields, sort, aggregate statistically, pretty-print, and more:
 ```
 $ mlr --icsv --opprint --barred \
   put '$tiv_delta = $tiv_2012 - $tiv_2011; unset $tiv_2011, $tiv_2012' \
