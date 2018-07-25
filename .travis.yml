@@ -16,6 +16,10 @@ addons:
 # This needs work.
 compiler:
   - gcc
+  
+os:
+  - linux
+  - osx
 
 before_script: df -h && autoreconf -fiv
 
