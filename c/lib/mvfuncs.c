@@ -193,18 +193,18 @@ mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t
 }
 
 // ----------------------------------------------------------------
-mv_t regex_extract_no_precomp_func(mv_t* pval1, mv_t* pval2) {
+mv_t regextract_no_precomp_func(mv_t* pval1, mv_t* pval2) {
 	regex_t regex;
-	mv_t rv = regex_extract_precomp_func(pval1, regcomp_or_die(&regex, pval2->u.strv, 0));
+	mv_t rv = regextract_precomp_func(pval1, regcomp_or_die(&regex, pval2->u.strv, 0));
 	regfree(&regex);
 	mv_free(pval2);
 	return rv;
 }
 
 // ----------------------------------------------------------------
-mv_t regex_extract_precomp_func(mv_t* pval1, regex_t* pregex) {
+mv_t regextract_precomp_func(mv_t* pval1, regex_t* pregex) {
 	char* input  = pval1->u.strv;
-	char* output = regex_extract(input, pregex);
+	char* output = regextract(input, pregex);
 
 	mv_free(pval1);
 	if (output == NULL) {

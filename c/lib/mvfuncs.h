@@ -46,7 +46,7 @@ typedef mv_t mv_unary_func_t(mv_t* pval1);
 typedef mv_t mv_binary_func_t(mv_t* pval1, mv_t* pval2);
 typedef mv_t mv_binary_arg3_capture_func_t(mv_t* pval1, mv_t* pval2, string_array_t** ppregex_captures);
 typedef mv_t mv_binary_arg2_regex_func_t(mv_t* pval1, regex_t* pregex, string_builder_t* psb, string_array_t** ppregex_captures);
-typedef mv_t mv_binary_arg2_regex_extract_func_t(mv_t* pval1, regex_t* pregex);
+typedef mv_t mv_binary_arg2_regextract_func_t(mv_t* pval1, regex_t* pregex);
 typedef mv_t mv_ternary_func_t(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 typedef mv_t mv_ternary_arg2_regex_func_t(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3);
 
@@ -205,8 +205,8 @@ mv_t sub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 mv_t sub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3);
 mv_t gsub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3);
-mv_t regex_extract_no_precomp_func(mv_t* pval1, mv_t* pval2);
-mv_t regex_extract_precomp_func(mv_t* pval1, regex_t* pregex);
+mv_t regextract_no_precomp_func(mv_t* pval1, mv_t* pval2);
+mv_t regextract_precomp_func(mv_t* pval1, regex_t* pregex);
 // String-substitution with no regexes or special characters.
 mv_t s_sss_ssub_func(mv_t* pstring, mv_t* pold, mv_t* pnew);
 

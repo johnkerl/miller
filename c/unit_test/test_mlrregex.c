@@ -134,7 +134,7 @@ static char * test_interpolate_regex_captures() {
 }
 
 // ----------------------------------------------------------------
-static char * test_regex_extract() {
+static char * test_regextract() {
 	char* input = NULL;
 	char* sregex = NULL;
 	char* output = NULL;
@@ -144,34 +144,34 @@ static char * test_regex_extract() {
 	input = "abcdef";
 	sregex = ".+";
 	regcomp_or_die(&regex, sregex, cflags);
-	output = regex_extract(input, &regex);
+	output = regextract(input, &regex);
 	mu_assert_lf(output != NULL);
 	mu_assert_lf(streq(output, input));
-	printf("regex_extract input=\"%s\" regex=\"%s\" output=\"%s\"\n", input, sregex, output);
+	printf("regextract input=\"%s\" regex=\"%s\" output=\"%s\"\n", input, sregex, output);
 	free(output);
 
 	input = "abcdef";
 	sregex = "[a-z]+";
 	regcomp_or_die(&regex, sregex, cflags);
-	output = regex_extract(input, &regex);
+	output = regextract(input, &regex);
 	mu_assert_lf(output != NULL);
 	mu_assert_lf(streq(output, input));
-	printf("regex_extract input=\"%s\" regex=\"%s\" output=\"%s\"\n", input, sregex, output);
+	printf("regextract input=\"%s\" regex=\"%s\" output=\"%s\"\n", input, sregex, output);
 	free(output);
 
 	input = "abcdef";
 	sregex = "[0-9]+";
 	regcomp_or_die(&regex, sregex, cflags);
-	output = regex_extract(input, &regex);
+	output = regextract(input, &regex);
 	mu_assert_lf(output == NULL);
-	printf("regex_extract input=\"%s\" regex=\"%s\" output=NULL\n", input, sregex);
+	printf("regextract input=\"%s\" regex=\"%s\" output=NULL\n", input, sregex);
 	free(output);
 
 	input = "abc345";
 	sregex = "[0-9]+";
 	regcomp_or_die(&regex, sregex, cflags);
-	output = regex_extract(input, &regex);
-	printf("regex_extract input=\"%s\" regex=\"%s\" output=\"%s\"\n", input, sregex, output);
+	output = regextract(input, &regex);
+	printf("regextract input=\"%s\" regex=\"%s\" output=\"%s\"\n", input, sregex, output);
 	mu_assert_lf(output != NULL);
 	mu_assert_lf(streq(output, "345"));
 	free(output);
@@ -179,8 +179,8 @@ static char * test_regex_extract() {
 	input = "789xyz";
 	sregex = "[0-9]+";
 	regcomp_or_die(&regex, sregex, cflags);
-	output = regex_extract(input, &regex);
-	printf("regex_extract input=\"%s\" regex=\"%s\" output=\"%s\"\n", input, sregex, output);
+	output = regextract(input, &regex);
+	printf("regextract input=\"%s\" regex=\"%s\" output=\"%s\"\n", input, sregex, output);
 	mu_assert_lf(output != NULL);
 	mu_assert_lf(streq(output, "789"));
 	free(output);
@@ -192,7 +192,7 @@ static char * test_regex_extract() {
 static char * all_tests() {
 	mu_run_test(test_save_regex_captures);
 	mu_run_test(test_interpolate_regex_captures);
-	mu_run_test(test_regex_extract);
+	mu_run_test(test_regextract);
 	return 0;
 }
 

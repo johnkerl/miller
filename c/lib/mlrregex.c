@@ -202,7 +202,7 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 }
 
 // ----------------------------------------------------------------
-char* regex_extract(char* input, regex_t* pregex) {
+char* regextract(char* input, regex_t* pregex) {
 	const size_t nmatchmax = 1;
 	regmatch_t matches[nmatchmax];
 
