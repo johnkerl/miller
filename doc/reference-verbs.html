@@ -325,16 +325,18 @@ Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.
 <p/>
 <div class="pokipanel">
 <pre>
-$ echo 'a,b,c,d,e,f' mlr --opprint altkv
-a,b,c,d,e,f mlr --opprint altkv
+$ echo 'a,b,c,d,e,f' | mlr --opprint altkv
+a c e
+b d f
 </pre>
 </div>
 <p/>
 <p/>
 <div class="pokipanel">
 <pre>
-$ echo 'a,b,c,d,e,f,g' mlr --opprint altkv
-a,b,c,d,e,f,g mlr --opprint altkv
+$ echo 'a,b,c,d,e,f,g' | mlr --opprint altkv
+a c e 4
+b d f g
 </pre>
 </div>
 <p/>
