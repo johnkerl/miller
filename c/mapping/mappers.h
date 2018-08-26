@@ -4,6 +4,7 @@
 #include "containers/slls.h"
 #include "mapping/mapper.h"
 
+extern mapper_setup_t mapper_altkv_setup;
 extern mapper_setup_t mapper_bar_setup;
 extern mapper_setup_t mapper_bootstrap_setup;
 extern mapper_setup_t mapper_cat_setup;

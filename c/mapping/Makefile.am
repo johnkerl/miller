@@ -1,6 +1,7 @@
 noinst_LTLIBRARIES=	libmapping.la
 libmapping_la_SOURCES=	\
 			mapper.h \
+			mapper_altkv.c \
 			mapper_bar.c \
 			mapper_bootstrap.c \
 			mapper_cat.c \

@@ -168,7 +168,7 @@ output separator to the given value.
 .RS 0
 .\}
 .nf
- bar bootstrap cat check count-distinct count-similar cut decimate filter
+ altkv bar bootstrap cat check count-distinct count-similar cut decimate filter
  fraction grep group-by group-like having-fields head histogram join label
  least-frequent merge-fields most-frequent nest nothing put regularize rename
  reorder repeat reshape sample sec2gmt sec2gmtdate seqgen shuffle sort stats1
@@ -505,6 +505,16 @@ For more information, please invoke mlr {subcommand} --help
 .SH "VERBS"
 .sp
 
+.SS "altkv"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr altkv [no options]
+Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.
+.fi
+.if n \{\
+.RE
 .SS "bar"
 .if n \{\
 .RS 0

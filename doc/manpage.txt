@@ -125,7 +125,7 @@ OPTIONS
 	 -K			      Show a bare listing of keywords by name.
 
    VERB LIST
-	bar bootstrap cat check count-distinct count-similar cut decimate filter
+	altkv bar bootstrap cat check count-distinct count-similar cut decimate filter
 	fraction grep group-by group-like having-fields head histogram join label
 	least-frequent merge-fields most-frequent nest nothing put regularize rename
 	reorder repeat reshape sample sec2gmt sec2gmtdate seqgen shuffle sort stats1
@@ -386,6 +386,10 @@ OPTIONS
        For more information, please invoke mlr {subcommand} --help
 
 VERBS
+   altkv
+       Usage: mlr altkv [no options]
+       Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.
+
    bar
        Usage: mlr bar [options]
        Replaces a numeric field with a number of asterisks, allowing for cheesy

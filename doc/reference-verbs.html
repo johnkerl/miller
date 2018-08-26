@@ -189,6 +189,7 @@ Miller commands were run with pretty-print-tabular output format.
 <div class="pokitoc">
 <center><b>Contents:</b></center>
 &bull;&nbsp;<a href="#Overview">Overview</a><br/>
+&bull;&nbsp;<a href="#altkv">altkv</a><br/>
 &bull;&nbsp;<a href="#bar">bar</a><br/>
 &bull;&nbsp;<a href="#bootstrap">bootstrap</a><br/>
 &bull;&nbsp;<a href="#cat">cat</a><br/>
@@ -302,6 +303,41 @@ a=wye,x_sum=0.777892
   </ul>
 </td> </tr>
 </table>
+
+</div>
+<!-- ================================================================ -->
+<a id="altkv"/><h1>altkv</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_bar');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_bar" style="display: block">
+
+<p/> Map list of values to alternating key/value pairs.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr altkv -h
+Usage: mlr altkv [no options]
+Given fields with values of the form a,b,c,d,e,f emits a=b,c=d,e=f pairs.
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'a,b,c,d,e,f' mlr --opprint altkv
+a,b,c,d,e,f mlr --opprint altkv
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ echo 'a,b,c,d,e,f,g' mlr --opprint altkv
+a,b,c,d,e,f,g mlr --opprint altkv
+</pre>
+</div>
+<p/>
 
 </div>
 <!-- ================================================================ -->

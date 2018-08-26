@@ -38,6 +38,7 @@
 // ----------------------------------------------------------------
 static mapper_setup_t* mapper_lookup_table[] = {
 
+	&mapper_altkv_setup,
 	&mapper_bar_setup,
 	&mapper_bootstrap_setup,
 	&mapper_cat_setup,
