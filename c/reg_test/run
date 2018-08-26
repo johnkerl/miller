@@ -2076,19 +2076,33 @@ run_mlr --opprint put '$y = ssub($x, "nonesuch", "")'           $indir/sub.dat
 run_mlr --opprint put '$y = ssub($x, "nonesuch", "1234")'       $indir/sub.dat
 run_mlr --opprint put '$y = ssub($x, "nonesuch", "1234567890")' $indir/sub.dat
 
-run_mlr --oxtab put '$y = regex_extract($x, "[A-Z]+")' $indir/sub.dat
-run_mlr --oxtab put '$y = regex_extract($x, "[A-Z]*")' $indir/sub.dat
-run_mlr --oxtab put '$y = regex_extract($x, "[a-z]+")' $indir/sub.dat
-run_mlr --oxtab put '$y = regex_extract($x, "[a-z]*")' $indir/sub.dat
-run_mlr --oxtab put '$y = regex_extract($x, "[0-9]+")' $indir/sub.dat
-run_mlr --oxtab put '$y = regex_extract($x, "[0-9]*")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract($x, "[A-Z]+")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract($x, "[A-Z]*")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract($x, "[a-z]+")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract($x, "[a-z]*")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract($x, "[0-9]+")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract($x, "[0-9]*")' $indir/sub.dat
 
-run_mlr --oxtab put '$y = regex_extract($x, "[ef]+")' $indir/sub.dat
-run_mlr --oxtab put '$y = regex_extract($x, "[ef]*")' $indir/sub.dat
-run_mlr --oxtab put '$y = regex_extract($x, "[hi]+")' $indir/sub.dat
-run_mlr --oxtab put '$y = regex_extract($x, "[hi]*")' $indir/sub.dat
-run_mlr --oxtab put '$y = regex_extract($x, "[op]+")' $indir/sub.dat
-run_mlr --oxtab put '$y = regex_extract($x, "[op]*")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract($x, "[ef]+")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract($x, "[ef]*")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract($x, "[hi]+")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract($x, "[hi]*")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract($x, "[op]+")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract($x, "[op]*")' $indir/sub.dat
+
+run_mlr --oxtab put '$y = regextract_or_else($x, "[A-Z]+", "DEFAULT")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract_or_else($x, "[A-Z]*", "DEFAULT")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract_or_else($x, "[a-z]+", "DEFAULT")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract_or_else($x, "[a-z]*", "DEFAULT")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract_or_else($x, "[0-9]+", "DEFAULT")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract_or_else($x, "[0-9]*", "DEFAULT")' $indir/sub.dat
+
+run_mlr --oxtab put '$y = regextract_or_else($x, "[ef]+", "DEFAULT")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract_or_else($x, "[ef]*", "DEFAULT")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract_or_else($x, "[hi]+", "DEFAULT")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract_or_else($x, "[hi]*", "DEFAULT")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract_or_else($x, "[op]+", "DEFAULT")' $indir/sub.dat
+run_mlr --oxtab put '$y = regextract_or_else($x, "[op]*", "DEFAULT")' $indir/sub.dat
 
 # ----------------------------------------------------------------
 announce DSL SUBSTR

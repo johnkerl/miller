@@ -232,7 +232,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_STRING, ".",        2,0, "String concatenation."},
 	{FUNC_CLASS_STRING, "gsub",     3,0, "Example: '$name=gsub($name, \"old\", \"new\")'\n(replace all)."},
 	{FUNC_CLASS_STRING, "regextract", 2,0, "Example: '$name=regextract($name, \"[A-Z]{3}[0-9]{2}\")'\n."},
-	{FUNC_CLASS_STRING, "regextract_or_else", 2,0, "Example: '$name=regextract_or_else($name, \"[A-Z]{3}[0-9]{2}\", \"default\")'\n."},
+	{FUNC_CLASS_STRING, "regextract_or_else", 3,0, "Example: '$name=regextract_or_else($name, \"[A-Z]{3}[0-9]{2}\", \"default\")'\n."},
 	{FUNC_CLASS_STRING, "strlen",   1,0, "String length."},
 	{FUNC_CLASS_STRING, "sub",      3,0, "Example: '$name=sub($name, \"old\", \"new\")'\n(replace once)."},
 	{FUNC_CLASS_STRING, "ssub",     3,0, "Like sub but does no regexing. No characters are special."},

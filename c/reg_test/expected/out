@@ -24021,7 +24021,7 @@ a                   b                 c
 
 
 ================================================================
-DSL SUB/GSUB
+DSL SUB/GSUB/REGEX_EXTRACT
 
 mlr --opprint put $y = sub($x, "e.*l",        "") ./reg_test/input/sub.dat
 x     y
@@ -24388,6 +24388,302 @@ hello hello
 HELLO HELLO
 world world
 WORLD WORLD
+
+mlr --oxtab put $y = regextract($x, "[A-Z]+") ./reg_test/input/sub.dat
+x hello
+
+x HELLO
+y HELLO
+
+x world
+
+x WORLD
+y WORLD
+
+mlr --oxtab put $y = regextract($x, "[A-Z]*") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y HELLO
+
+x world
+y 
+
+x WORLD
+y WORLD
+
+mlr --oxtab put $y = regextract($x, "[a-z]+") ./reg_test/input/sub.dat
+x hello
+y hello
+
+x HELLO
+
+x world
+y world
+
+x WORLD
+
+mlr --oxtab put $y = regextract($x, "[a-z]*") ./reg_test/input/sub.dat
+x hello
+y hello
+
+x HELLO
+y 
+
+x world
+y world
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract($x, "[0-9]+") ./reg_test/input/sub.dat
+x hello
+
+x HELLO
+
+x world
+
+x WORLD
+
+mlr --oxtab put $y = regextract($x, "[0-9]*") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract($x, "[ef]+") ./reg_test/input/sub.dat
+x hello
+y e
+
+x HELLO
+
+x world
+
+x WORLD
+
+mlr --oxtab put $y = regextract($x, "[ef]*") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract($x, "[hi]+") ./reg_test/input/sub.dat
+x hello
+y h
+
+x HELLO
+
+x world
+
+x WORLD
+
+mlr --oxtab put $y = regextract($x, "[hi]*") ./reg_test/input/sub.dat
+x hello
+y h
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract($x, "[op]+") ./reg_test/input/sub.dat
+x hello
+y o
+
+x HELLO
+
+x world
+y o
+
+x WORLD
+
+mlr --oxtab put $y = regextract($x, "[op]*") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract_or_else($x, "[A-Z]+", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y DEFAULT
+
+x HELLO
+y HELLO
+
+x world
+y DEFAULT
+
+x WORLD
+y WORLD
+
+mlr --oxtab put $y = regextract_or_else($x, "[A-Z]*", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y HELLO
+
+x world
+y 
+
+x WORLD
+y WORLD
+
+mlr --oxtab put $y = regextract_or_else($x, "[a-z]+", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y hello
+
+x HELLO
+y DEFAULT
+
+x world
+y world
+
+x WORLD
+y DEFAULT
+
+mlr --oxtab put $y = regextract_or_else($x, "[a-z]*", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y hello
+
+x HELLO
+y 
+
+x world
+y world
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract_or_else($x, "[0-9]+", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y DEFAULT
+
+x HELLO
+y DEFAULT
+
+x world
+y DEFAULT
+
+x WORLD
+y DEFAULT
+
+mlr --oxtab put $y = regextract_or_else($x, "[0-9]*", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract_or_else($x, "[ef]+", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y e
+
+x HELLO
+y DEFAULT
+
+x world
+y DEFAULT
+
+x WORLD
+y DEFAULT
+
+mlr --oxtab put $y = regextract_or_else($x, "[ef]*", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract_or_else($x, "[hi]+", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y h
+
+x HELLO
+y DEFAULT
+
+x world
+y DEFAULT
+
+x WORLD
+y DEFAULT
+
+mlr --oxtab put $y = regextract_or_else($x, "[hi]*", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y h
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
+
+mlr --oxtab put $y = regextract_or_else($x, "[op]+", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y o
+
+x HELLO
+y DEFAULT
+
+x world
+y o
+
+x WORLD
+y DEFAULT
+
+mlr --oxtab put $y = regextract_or_else($x, "[op]*", "DEFAULT") ./reg_test/input/sub.dat
+x hello
+y 
+
+x HELLO
+y 
+
+x world
+y 
+
+x WORLD
+y 
 
 
 ================================================================
