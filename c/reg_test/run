@@ -2027,7 +2027,7 @@ _EOF
 export TZ=
 
 # ----------------------------------------------------------------
-announce DSL SUB/GSUB
+announce DSL SUB/GSUB/REGEX_EXTRACT
 
 run_mlr --opprint put '$y = sub($x, "e.*l",        "")' $indir/sub.dat
 run_mlr --opprint put '$y = sub($x, "e.*l"i,       "")' $indir/sub.dat
@@ -2075,6 +2075,20 @@ run_mlr --opprint put '$y = ssub($x, "HELLO",    "1234678")'    $indir/sub.dat
 run_mlr --opprint put '$y = ssub($x, "nonesuch", "")'           $indir/sub.dat
 run_mlr --opprint put '$y = ssub($x, "nonesuch", "1234")'       $indir/sub.dat
 run_mlr --opprint put '$y = ssub($x, "nonesuch", "1234567890")' $indir/sub.dat
+
+run_mlr --oxtab put '$y = regex_extract($x, "[A-Z]+")' $indir/sub.dat
+run_mlr --oxtab put '$y = regex_extract($x, "[A-Z]*")' $indir/sub.dat
+run_mlr --oxtab put '$y = regex_extract($x, "[a-z]+")' $indir/sub.dat
+run_mlr --oxtab put '$y = regex_extract($x, "[a-z]*")' $indir/sub.dat
+run_mlr --oxtab put '$y = regex_extract($x, "[0-9]+")' $indir/sub.dat
+run_mlr --oxtab put '$y = regex_extract($x, "[0-9]*")' $indir/sub.dat
+
+run_mlr --oxtab put '$y = regex_extract($x, "[ef]+")' $indir/sub.dat
+run_mlr --oxtab put '$y = regex_extract($x, "[ef]*")' $indir/sub.dat
+run_mlr --oxtab put '$y = regex_extract($x, "[hi]+")' $indir/sub.dat
+run_mlr --oxtab put '$y = regex_extract($x, "[hi]*")' $indir/sub.dat
+run_mlr --oxtab put '$y = regex_extract($x, "[op]+")' $indir/sub.dat
+run_mlr --oxtab put '$y = regex_extract($x, "[op]*")' $indir/sub.dat
 
 # ----------------------------------------------------------------
 announce DSL SUBSTR
