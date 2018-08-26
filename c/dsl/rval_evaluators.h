@@ -177,6 +177,9 @@ rval_evaluator_t* rval_evaluator_alloc_from_s_sss_func(mv_ternary_func_t* pfunc,
 rval_evaluator_t* rval_evaluator_alloc_from_x_srs_func(mv_ternary_arg2_regex_func_t* pfunc,
 	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3);
 
+rval_evaluator_t* rval_evaluator_alloc_from_x_ses_func(mv_ternary_arg2_regextract_func_t* pfunc,
+	rval_evaluator_t* parg1, char* regex_string, int ignore_case, rval_evaluator_t* parg3);
+
 // ================================================================
 // rval_list_evaluators.c
 // ================================================================

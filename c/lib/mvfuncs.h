@@ -49,6 +49,7 @@ typedef mv_t mv_binary_arg2_regex_func_t(mv_t* pval1, regex_t* pregex, string_bu
 typedef mv_t mv_binary_arg2_regextract_func_t(mv_t* pval1, regex_t* pregex);
 typedef mv_t mv_ternary_func_t(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 typedef mv_t mv_ternary_arg2_regex_func_t(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3);
+typedef mv_t mv_ternary_arg2_regextract_func_t(mv_t* pval1, regex_t* pregex, mv_t* pval3);
 
 // ----------------------------------------------------------------
 static inline mv_t b_b_not_func(mv_t* pval1) {

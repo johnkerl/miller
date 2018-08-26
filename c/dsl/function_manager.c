@@ -232,6 +232,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_STRING, ".",        2,0, "String concatenation."},
 	{FUNC_CLASS_STRING, "gsub",     3,0, "Example: '$name=gsub($name, \"old\", \"new\")'\n(replace all)."},
 	{FUNC_CLASS_STRING, "regextract", 2,0, "Example: '$name=regextract($name, \"[A-Z]{3}[0-9]{2}\")'\n."},
+	{FUNC_CLASS_STRING, "regextract_or_else", 2,0, "Example: '$name=regextract_or_else($name, \"[A-Z]{3}[0-9]{2}\", \"default\")'\n."},
 	{FUNC_CLASS_STRING, "strlen",   1,0, "String length."},
 	{FUNC_CLASS_STRING, "sub",      3,0, "Example: '$name=sub($name, \"old\", \"new\")'\n(replace once)."},
 	{FUNC_CLASS_STRING, "ssub",     3,0, "Like sub but does no regexing. No characters are special."},
@@ -989,7 +990,8 @@ static rval_evaluator_t* construct_builtin_function_callsite_evaluator(
 
 		int is_regexy =
 			streq(function_name, "sub") ||
-			streq(function_name, "gsub");
+			streq(function_name, "gsub") ||
+			streq(function_name, "regextract_or_else");
 
 		if (is_regexy && type2 == MD_AST_NODE_TYPE_STRING_LITERAL) {
 			// sub/gsub-regex special case:
@@ -1275,6 +1277,8 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_func_name(char* fnnm,
 		return rval_evaluator_alloc_from_s_sss_func(gsub_no_precomp_func, parg1, parg2, parg3);
 	} else if (streq(fnnm, "ssub")) {
 		return rval_evaluator_alloc_from_s_sss_func(s_sss_ssub_func,      parg1, parg2, parg3);
+	} else if (streq(fnnm, "regextract_or_else")) {
+		return rval_evaluator_alloc_from_s_sss_func(regextract_or_else_no_precomp_func, parg1, parg2, parg3);
 	} else if (streq(fnnm, "logifit")) {
 		return rval_evaluator_alloc_from_f_fff_func(f_fff_logifit_func,   parg1, parg2, parg3);
 	} else if (streq(fnnm, "madd")) {
@@ -1299,6 +1303,8 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_ternary_regex_arg2_func_name(
 		return rval_evaluator_alloc_from_x_srs_func(sub_precomp_func,  parg1, regex_string, ignore_case, parg3);
 	} else if (streq(fnnm, "gsub"))  {
 		return rval_evaluator_alloc_from_x_srs_func(gsub_precomp_func, parg1, regex_string, ignore_case, parg3);
+	} else if (streq(fnnm, "regextract_or_else"))  {
+		return rval_evaluator_alloc_from_x_ses_func(regextract_or_else_precomp_func, parg1, regex_string, ignore_case, parg3);
 	} else  { return NULL; }
 }
 
