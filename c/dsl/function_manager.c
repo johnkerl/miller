@@ -231,6 +231,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 
 	{FUNC_CLASS_STRING, ".",        2,0, "String concatenation."},
 	{FUNC_CLASS_STRING, "gsub",     3,0, "Example: '$name=gsub($name, \"old\", \"new\")'\n(replace all)."},
+	{FUNC_CLASS_STRING, "regex_extract", 2,0, "Example: '$name=regex_extract($name, \"[A-Z]{3}[0-9]{2}\")'\n."},
 	{FUNC_CLASS_STRING, "strlen",   1,0, "String length."},
 	{FUNC_CLASS_STRING, "sub",      3,0, "Example: '$name=sub($name, \"old\", \"new\")'\n(replace once)."},
 	{FUNC_CLASS_STRING, "ssub",     3,0, "Like sub but does no regexing. No characters are special."},
@@ -958,11 +959,16 @@ static rval_evaluator_t* construct_builtin_function_callsite_evaluator(
 		mlr_dsl_ast_node_t* parg2_node = pnode->pchildren->phead->pnext->pvvalue;
 		int type2 = parg2_node->type;
 
-		if ((streq(function_name, "=~") || streq(function_name, "!=~")) && type2 == MD_AST_NODE_TYPE_STRING_LITERAL) {
+		int is_regexy =
+			streq(function_name, "=~") ||
+			streq(function_name, "!=~") ||
+			streq(function_name, "regex_extract");
+
+		if (is_regexy && type2 == MD_AST_NODE_TYPE_STRING_LITERAL) {
 			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
 			pevaluator = fmgr_alloc_evaluator_from_binary_regex_arg2_func_name(function_name,
 				parg1, parg2_node->text, FALSE);
-		} else if ((streq(function_name, "=~") || streq(function_name, "!=~")) && type2 == MD_AST_NODE_TYPE_REGEXI) {
+		} else if (is_regexy && type2 == MD_AST_NODE_TYPE_REGEXI) {
 			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
 			pevaluator = fmgr_alloc_evaluator_from_binary_regex_arg2_func_name(function_name, parg1, parg2_node->text,
 				TYPE_INFER_STRING_FLOAT_INT);
@@ -981,14 +987,18 @@ static rval_evaluator_t* construct_builtin_function_callsite_evaluator(
 		mlr_dsl_ast_node_t* parg3_node = pnode->pchildren->phead->pnext->pnext->pvvalue;
 		int type2 = parg2_node->type;
 
-		if ((streq(function_name, "sub") || streq(function_name, "gsub")) && type2 == MD_AST_NODE_TYPE_STRING_LITERAL) {
+		int is_regexy =
+			streq(function_name, "sub") ||
+			streq(function_name, "gsub");
+
+		if (is_regexy && type2 == MD_AST_NODE_TYPE_STRING_LITERAL) {
 			// sub/gsub-regex special case:
 			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
 			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast(parg3_node, pfmgr, type_inferencing, context_flags);
 			pevaluator = fmgr_alloc_evaluator_from_ternary_regex_arg2_func_name(function_name, parg1, parg2_node->text,
 				FALSE, parg3);
 
-		} else if ((streq(function_name, "sub") || streq(function_name, "gsub")) && type2 == MD_AST_NODE_TYPE_REGEXI) {
+		} else if (is_regexy && type2 == MD_AST_NODE_TYPE_REGEXI) {
 			// sub/gsub-regex special case:
 			rval_evaluator_t* parg1 = rval_evaluator_alloc_from_ast(parg1_node, pfmgr, type_inferencing, context_flags);
 			rval_evaluator_t* parg3 = rval_evaluator_alloc_from_ast(parg3_node, pfmgr, type_inferencing, context_flags);
@@ -1199,6 +1209,8 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "^^"))   { return rval_evaluator_alloc_from_b_bb_xor_func(parg1, parg2);
 	} else if (streq(fnnm, "=~"))   { return rval_evaluator_alloc_from_x_ssc_func(
 		matches_no_precomp_func, parg1, parg2);
+	} else if (streq(fnnm, "regex_extract"))   { return rval_evaluator_alloc_from_x_ss_func(
+		regex_extract_no_precomp_func, parg1, parg2);
 	} else if (streq(fnnm, "!=~"))  { return rval_evaluator_alloc_from_x_ssc_func(does_not_match_no_precomp_func, parg1, parg2);
 	} else if (streq(fnnm, "=="))   { return rval_evaluator_alloc_from_x_xx_func(eq_op_func,             parg1, parg2);
 	} else if (streq(fnnm, "!="))   { return rval_evaluator_alloc_from_x_xx_func(ne_op_func,             parg1, parg2);
@@ -1248,6 +1260,8 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_binary_regex_arg2_func_name(c
 		return rval_evaluator_alloc_from_x_sr_func(matches_precomp_func,        parg1, regex_string, ignore_case);
 	} else if (streq(fnnm, "!=~")) {
 		return rval_evaluator_alloc_from_x_sr_func(does_not_match_precomp_func, parg1, regex_string, ignore_case);
+	} else if (streq(fnnm, "regex_extract")) {
+		return rval_evaluator_alloc_from_x_se_func(regex_extract_precomp_func, parg1, regex_string, ignore_case);
 	} else  { return NULL; }
 }
 

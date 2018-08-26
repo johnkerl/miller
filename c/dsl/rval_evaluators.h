@@ -160,6 +160,12 @@ rval_evaluator_t* rval_evaluator_alloc_from_x_sr_func(
 	char* regex_string,
 	int ignore_case);
 
+rval_evaluator_t* rval_evaluator_alloc_from_x_se_func(
+	mv_binary_arg2_regex_extract_func_t* pfunc,
+	rval_evaluator_t* parg1,
+	char* regex_string,
+	int ignore_case);
+
 rval_evaluator_t* rval_evaluator_alloc_from_s_xs_func(
 	mv_binary_func_t* pfunc,
 	rval_evaluator_t* parg1,

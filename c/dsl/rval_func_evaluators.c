@@ -1160,6 +1160,50 @@ rval_evaluator_t* rval_evaluator_alloc_from_x_sr_func(mv_binary_arg2_regex_func_
 }
 
 // ----------------------------------------------------------------
+typedef struct _rval_evaluator_x_se_state_t {
+	mv_binary_arg2_regex_extract_func_t* pfunc;
+	rval_evaluator_t*             parg1;
+	regex_t                       regex;
+} rval_evaluator_x_se_state_t;
+
+static mv_t rval_evaluator_x_se_func(void* pvstate, variables_t* pvars) {
+	rval_evaluator_x_se_state_t* pstate = pvstate;
+	mv_t val1 = pstate->parg1->pprocess_func(pstate->parg1->pvstate, pvars);
+
+	NULL_OR_ERROR_OUT_FOR_STRINGS(val1);
+	if (!mv_is_string_or_empty(&val1))
+		return mv_error();
+
+	return pstate->pfunc(&val1, &pstate->regex);
+}
+
+static void rval_evaluator_x_se_free(rval_evaluator_t* pevaluator) {
+	rval_evaluator_x_se_state_t* pstate = pevaluator->pvstate;
+	pstate->parg1->pfree_func(pstate->parg1);
+	regfree(&pstate->regex);
+	free(pstate);
+	free(pevaluator);
+}
+
+rval_evaluator_t* rval_evaluator_alloc_from_x_se_func(mv_binary_arg2_regex_extract_func_t* pfunc,
+	rval_evaluator_t* parg1, char* regex_string, int ignore_case)
+{
+	rval_evaluator_x_se_state_t* pstate = mlr_malloc_or_die(sizeof(rval_evaluator_x_se_state_t));
+	pstate->pfunc = pfunc;
+	pstate->parg1 = parg1;
+
+	int cflags = ignore_case ? REG_ICASE : 0;
+	regcomp_or_die(&pstate->regex, regex_string, cflags);
+
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pprocess_func = rval_evaluator_x_se_func;
+	pevaluator->pfree_func = rval_evaluator_x_se_free;
+
+	return pevaluator;
+}
+
+// ----------------------------------------------------------------
 typedef struct _rval_evaluator_s_xs_state_t {
 	mv_binary_func_t*  pfunc;
 	rval_evaluator_t* parg1;
