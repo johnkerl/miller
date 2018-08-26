@@ -215,6 +215,26 @@ mv_t regextract_precomp_func(mv_t* pval1, regex_t* pregex) {
 }
 
 // ----------------------------------------------------------------
+mv_t regextract_or_else_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
+	regex_t regex;
+	mv_t rv = regextract_or_else_precomp_func(pval1, regcomp_or_die(&regex, pval2->u.strv, 0), pval3);
+	regfree(&regex);
+	mv_free(pval2);
+	return rv;
+}
+
+// ----------------------------------------------------------------
+mv_t regextract_or_else_precomp_func(mv_t* pval1, regex_t* pregex, mv_t* pval3) {
+	char* input  = pval1->u.strv;
+	char* default_value  = pval3->u.strv;
+	char* output = regextract_or_else(input, pregex, default_value);
+
+	mv_free(pval1);
+	mv_free(pval3);
+	return mv_from_string_with_free(output);
+}
+
+// ----------------------------------------------------------------
 // String-substitution with no regexes or special characters.
 // It is assumed that all inputs have already been checked to be strings.
 mv_t s_sss_ssub_func(mv_t* pmvinput, mv_t* pmvold, mv_t* pmvnew) {

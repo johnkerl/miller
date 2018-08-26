@@ -216,6 +216,20 @@ char* regextract(char* input, regex_t* pregex) {
 }
 
 // ----------------------------------------------------------------
+char* regextract_or_else(char* input, regex_t* pregex, char* default_value) {
+	const size_t nmatchmax = 1;
+	regmatch_t matches[nmatchmax];
+
+	int matched = regmatch_or_die(pregex, input, nmatchmax, matches);
+	if (!matched) {
+		return mlr_strdup_or_die(default_value);
+	}
+	regmatch_t* pmatch = &matches[0];
+	int len = pmatch->rm_eo - pmatch->rm_so;
+	return mlr_alloc_string_from_char_range(&input[pmatch->rm_so], len);
+}
+
+// ----------------------------------------------------------------
 // Slot 0 is the entire matched input string.
 // Slots 1 and up are substring matches for parenthesized capture expressions (if any).
 // Example regex "a(.*)e" with input string "abcde": slot 1 points to "bcd" and match_count = 2.

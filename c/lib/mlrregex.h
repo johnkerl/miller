@@ -35,6 +35,7 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 
 // The return value is dynamically allocated if there is a match, else it returns null.
 char* regextract(char* input, regex_t* pregex);
+char* regextract_or_else(char* input, regex_t* pregex, char* default_value);
 
 // The regex library gives us an array of match pointers into the input string. This function strdups them
 // out into separate storage, to implement "\0", "\1", "\2", etc. regex-captures for the =~ and !=~ operators.

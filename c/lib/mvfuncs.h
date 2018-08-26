@@ -207,6 +207,8 @@ mv_t gsub_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
 mv_t gsub_precomp_func(mv_t* pval1, regex_t* pregex, string_builder_t* psb, mv_t* pval3);
 mv_t regextract_no_precomp_func(mv_t* pval1, mv_t* pval2);
 mv_t regextract_precomp_func(mv_t* pval1, regex_t* pregex);
+mv_t regextract_or_else_no_precomp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3);
+mv_t regextract_or_else_precomp_func(mv_t* pval1, regex_t* pregex, mv_t* pval3);
 // String-substitution with no regexes or special characters.
 mv_t s_sss_ssub_func(mv_t* pstring, mv_t* pold, mv_t* pnew);
 
