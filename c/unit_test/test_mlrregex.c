@@ -188,11 +188,69 @@ static char * test_regextract() {
 	return 0;
 }
 
+// ----------------------------------------------------------------
+static char * test_regextract_or_else() {
+	char* input = NULL;
+	char* sregex = NULL;
+	char* default_value = "DEFAULT";
+	char* output = NULL;
+	regex_t regex;
+	int cflags = 0;
+
+	input = "abcdef";
+	sregex = ".+";
+	regcomp_or_die(&regex, sregex, cflags);
+	output = regextract_or_else(input, &regex, default_value);
+	mu_assert_lf(output != NULL);
+	mu_assert_lf(streq(output, input));
+	printf("regextract_or_else input=\"%s\" regex=\"%s\" default=\"%s\" output=\"%s\"\n", input, sregex, default_value, output);
+	free(output);
+
+	input = "abcdef";
+	sregex = "[a-z]+";
+	regcomp_or_die(&regex, sregex, cflags);
+	output = regextract_or_else(input, &regex, default_value);
+	mu_assert_lf(output != NULL);
+	mu_assert_lf(streq(output, input));
+	printf("regextract_or_else input=\"%s\" regex=\"%s\" default=\"%s\" output=\"%s\"\n", input, sregex, default_value, output);
+	free(output);
+
+	input = "abcdef";
+	sregex = "[0-9]+";
+	regcomp_or_die(&regex, sregex, cflags);
+	output = regextract_or_else(input, &regex, default_value);
+	mu_assert_lf(output != NULL);
+	mu_assert_lf(streq(output, default_value));
+	printf("regextract_or_else input=\"%s\" regex=\"%s\" default=\"%s\" output=NULL\n", input, sregex, default_value);
+	free(output);
+
+	input = "abc345";
+	sregex = "[0-9]+";
+	regcomp_or_die(&regex, sregex, cflags);
+	output = regextract_or_else(input, &regex, default_value);
+	printf("regextract_or_else input=\"%s\" regex=\"%s\" default=\"%s\" output=\"%s\"\n", input, sregex, default_value, output);
+	mu_assert_lf(output != NULL);
+	mu_assert_lf(streq(output, "345"));
+	free(output);
+
+	input = "789xyz";
+	sregex = "[0-9]+";
+	regcomp_or_die(&regex, sregex, cflags);
+	output = regextract_or_else(input, &regex, default_value);
+	printf("regextract_or_else input=\"%s\" regex=\"%s\" default=\"%s\" output=\"%s\"\n", input, sregex, default_value, output);
+	mu_assert_lf(output != NULL);
+	mu_assert_lf(streq(output, "789"));
+	free(output);
+
+	return 0;
+}
+
 // ================================================================
 static char * all_tests() {
 	mu_run_test(test_save_regex_captures);
 	mu_run_test(test_interpolate_regex_captures);
 	mu_run_test(test_regextract);
+	mu_run_test(test_regextract_or_else);
 	return 0;
 }
 
