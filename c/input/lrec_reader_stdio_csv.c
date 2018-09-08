@@ -511,10 +511,11 @@ static lrec_t* paste_indices_and_data(lrec_reader_stdio_csv_state_t* pstate, rsl
 	int idx = 0;
 	for (rsllse_t* pd = pdata_fields->phead; pd != NULL; pd = pd->pnext) {
 		idx++;
-		char free_flags = pd->free_flag;
-		char* key = low_int_to_string(idx, &free_flags);
+		char key_free_flags = 0;
+		char* key = low_int_to_string(idx, &key_free_flags);
+		char value_free_flags = pd->free_flag;
 		// Transfer pointer-free responsibility from the rslls to the lrec object
-		lrec_put_ext(prec, key, pd->value, free_flags, pd->quote_flag);
+		lrec_put_ext(prec, key, pd->value, key_free_flags | value_free_flags, pd->quote_flag);
 		pd->free_flag = 0;
 	}
 	return prec;
