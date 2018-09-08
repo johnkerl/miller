@@ -457,11 +457,10 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 }
 
 // ----------------------------------------------------------------
-static lrec_t* paste_indices_and_data(lrec_reader_mmap_csv_state_t* pstate, rslls_t* pdata_fields, context_t* pctx)
-{
-	lrec_t* prec = lrec_unbacked_alloc();
+static lrec_t* paste_indices_and_data(lrec_reader_mmap_csv_state_t* pstate, rslls_t* pdata_fields, context_t* pctx) {
 	int idx = 0;
-	for (rsllse_t* pd = pdata_fields->phead; pd != NULL; pd = pd->pnext) {
+	lrec_t* prec = lrec_unbacked_alloc();
+	for (rsllse_t* pd = pdata_fields->phead; idx < pdata_fields->length && pd != NULL; pd = pd->pnext) {
 		idx++;
 		char key_free_flags = 0;
 		char* key = low_int_to_string(idx, &key_free_flags);
