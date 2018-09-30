@@ -9,6 +9,7 @@ libmapping_la_SOURCES=	\
 			mapper_count_similar.c \
 			mapper_cut.c \
 			mapper_decimate.c \
+			mapper_fill_down.c \
 			mapper_grep.c \
 			mapper_group_like.c \
 			mapper_having_fields.c \

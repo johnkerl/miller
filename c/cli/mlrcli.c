@@ -47,6 +47,7 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_count_similar_setup,
 	&mapper_cut_setup,
 	&mapper_decimate_setup,
+	&mapper_fill_down_setup,
 	&mapper_filter_setup,
 	&mapper_fraction_setup,
 	&mapper_grep_setup,
