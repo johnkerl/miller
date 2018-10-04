@@ -7,7 +7,7 @@ mlr put '
   $* = {
     "z": $x + y,
     "KEYFIELD": $a,
-    "i": $i_cumu,
+    "i": @i_cumu,
     "b": $b,
     "y": $x,
     "x": $y,
