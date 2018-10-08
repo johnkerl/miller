@@ -149,6 +149,8 @@ static void lhmss_put_no_enlarge(lhmss_t* pmap, char* key, char* value, char fre
 
 	if (pmap->states[index] == OCCUPIED) {
 		// Existing key found in chain; put value.
+		if (pe->free_flags & FREE_ENTRY_KEY)
+			free(key);
 		if (pe->free_flags & FREE_ENTRY_VALUE)
 			free(pe->value);
 		pe->value = value;
