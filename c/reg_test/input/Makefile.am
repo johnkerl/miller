@@ -43,6 +43,7 @@ EXTRA_DIST=	\
 		escapes.json \
 		f.csv \
 		f.pprint \
+		fill-down.csv \
 		filter-example.dsl \
 		filter-script-piece-1 \
 		filter-script-piece-2 \

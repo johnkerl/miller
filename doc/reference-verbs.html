@@ -198,6 +198,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#count-similar">count-similar</a><br/>
 &bull;&nbsp;<a href="#cut">cut</a><br/>
 &bull;&nbsp;<a href="#decimate">decimate</a><br/>
+&bull;&nbsp;<a href="#fill-down">fill-down</a><br/>
 &bull;&nbsp;<a href="#filter">filter</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Features_which_filter_shares_with_put">Features which filter shares with put</a><br/>
 &bull;&nbsp;<a href="#fraction">fraction</a><br/>
@@ -956,6 +957,50 @@ Passes through one of every n records, optionally by category.
 </div>
 <p/>
 
+<p/>
+
+</div>
+<!-- ================================================================ -->
+<a id="fill-down"/><h1>fill-down</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_fill_down');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_fill_down" style="display: block">
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr fill-down --help
+Usage: mlr fill-down [options]
+-f {a,b,c}          Field names for fill-down
+-a|--only-if-absent Field names for fill-down
+If a given record has a missing value for a given field, fill that from
+the corresponding value from a previous record, if any.
+By default, a 'missing' field either is absent, or has the empty-string value.
+With -a, a field is 'missing' only if it is absent.
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv fill-down -f b data/fill-down.csv
+a,b,c
+1,,3
+4,5,6
+7,5,9
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv fill-down -a -f b data/fill-down.csv
+a,b,c
+1,,3
+4,5,6
+7,,9
+</pre>
+</div>
 <p/>
 
 </div>

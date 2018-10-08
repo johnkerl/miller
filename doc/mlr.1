@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2018-08-26
+.\"      Date: 2018-10-08
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2018-08-26" "\ \&" "\ \&"
+.TH "MILLER" "1" "2018-10-08" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -168,11 +168,11 @@ output separator to the given value.
 .RS 0
 .\}
 .nf
- altkv bar bootstrap cat check count-distinct count-similar cut decimate filter
- fraction grep group-by group-like having-fields head histogram join label
- least-frequent merge-fields most-frequent nest nothing put regularize rename
- reorder repeat reshape sample sec2gmt sec2gmtdate seqgen shuffle sort stats1
- stats2 step tac tail tee top uniq unsparsify
+ altkv bar bootstrap cat check count-distinct count-similar cut decimate
+ fill-down filter fraction grep group-by group-like having-fields head
+ histogram join label least-frequent merge-fields most-frequent nest nothing
+ put regularize rename reorder repeat reshape sample sec2gmt sec2gmtdate seqgen
+ shuffle sort stats1 stats2 step tac tail tee top uniq unsparsify
 .fi
 .if n \{\
 .RE
@@ -647,6 +647,21 @@ Usage: mlr decimate [options]
 -e            Decimate by printing last of every n (default).
 -g {a,b,c}    Optional group-by-field names for decimate counts
 Passes through one of every n records, optionally by category.
+.fi
+.if n \{\
+.RE
+.SS "fill-down"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr fill-down [options]
+-f {a,b,c}          Field names for fill-down
+-a|--only-if-absent Field names for fill-down
+If a given record has a missing value for a given field, fill that from
+the corresponding value from a previous record, if any.
+By default, a 'missing' field either is absent, or has the empty-string value.
+With -a, a field is 'missing' only if it is absent.
 .fi
 .if n \{\
 .RE

@@ -232,6 +232,17 @@ POKI_RUN_COMMAND{{mlr decimate --help}}HERE
 
 </div>
 <!-- ================================================================ -->
+<h1>fill-down</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_fill_down');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_fill_down" style="display: block">
+
+POKI_RUN_COMMAND{{mlr fill-down --help}}HERE
+
+POKI_RUN_COMMAND{{mlr --csv fill-down -f b data/fill-down.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv fill-down -a -f b data/fill-down.csv}}HERE
+
+</div>
+<!-- ================================================================ -->
 <h1>filter</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_filter');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_filter" style="display: block">

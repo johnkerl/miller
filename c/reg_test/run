@@ -590,6 +590,12 @@ run_mlr nest --explode --pairs  --across-records -f x $indir/nest-explode.dkvp
 run_mlr nest --explode --pairs  --across-records -f x --nested-fs pipe --nested-ps = $indir/nest-explode-vary-fs-ps.dkvp
 
 # ----------------------------------------------------------------
+announce FILL-DOWN
+
+run_mlr --csv fill-down -f a,b,c    $indir/fill-down.csv
+run_mlr --csv fill-down -f a,b,c -a $indir/fill-down.csv
+
+# ----------------------------------------------------------------
 announce SEQGEN
 
 run_mlr seqgen --start 1 --stop 5 --step  1
