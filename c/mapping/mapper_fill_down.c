@@ -96,12 +96,20 @@ static sllv_t* mapper_fill_down_process(lrec_t* pinrec, context_t* pctx, void* p
 	for (sllse_t* pe = pstate->pfill_down_field_names->phead; pe != NULL; pe = pe->pnext) {
 		char* pkey = pe->value;
 		char* pvalue = lrec_get(pinrec, pkey);
-		if (pvalue == NULL) {
+		if (pvalue != NULL) {
+			// xxx
+			lhmss_put(pstate->plast_non_null_values,
+				mlr_strdup_or_die(pkey),
+				mlr_strdup_or_die(pvalue),
+				FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
 		} else {
+			// xxx
+			lhmss_put(pstate->plast_non_null_values,
+				mlr_strdup_or_die(pkey),
+				mlr_strdup_or_die(pvalue),
+				FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
 		}
 	}
 
-
-	// xxx stub
 	return sllv_single(pinrec);
 }
