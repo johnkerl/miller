@@ -388,6 +388,18 @@ mv_t i_iii_modexp_func(mv_t* pval1, mv_t* pval2, mv_t* pval3) {
 }
 
 // ----------------------------------------------------------------
+mv_t i_s_strlen_func(mv_t* pval1) {
+	mv_t rv = mv_from_int(strlen_for_utf8_display(pval1->u.strv));
+	mv_free(pval1);
+	return rv;
+}
+
+mv_t s_x_typeof_func(mv_t* pval1) {
+	mv_t rv = mv_from_string(mt_describe_type(pval1->type), NO_FREE);
+	mv_free(pval1);
+	return rv;
+}
+
 mv_t s_s_tolower_func(mv_t* pval1) {
 	char* string = mlr_strdup_or_die(pval1->u.strv);
 	for (char* c = string; *c; c++)
@@ -421,31 +433,48 @@ mv_t s_s_lstrip_func(mv_t* pval1) {
 }
 
 mv_t s_s_rstrip_func(mv_t* pval1) {
-	return mv_absent();
+	char* start = pval1->u.strv;
+	int oldlen = strlen(start);
+	char* last_non_space = &start[oldlen-1];
+	while ((start <= last_non_space) && isspace(*last_non_space))
+		last_non_space--;
+	if (last_non_space < start) {
+		return mv_empty();
+	} else {
+		int newlen = (last_non_space - start) + 1;
+		char* retval = mlr_malloc_or_die(newlen + 1);
+		memcpy(retval, start, newlen);
+		retval[newlen+1] = 0;
+		return mv_from_string(retval, FREE_ENTRY_VALUE);
+	}
 }
 
 mv_t s_s_strip_func(mv_t* pval1) {
-	return mv_absent();
+	mv_t temp = s_s_rstrip_func(pval1);
+	return s_s_lstrip_func(&temp);
 }
 
 mv_t s_s_collapse_whitespace_func(mv_t* pval1) {
-	return mv_absent();
+	int len = strlen(pval1->u.strv);
+	char* retval = mlr_malloc_or_die(len+1);
+	char* pdst = retval;
+	int last_was_space = FALSE;
+	for (char* psrc = pval1->u.strv; *psrc; psrc++) {
+		int current_is_space = isspace(*psrc);
+		if (last_was_space && current_is_space) {
+		} else {
+			*pdst = *psrc;
+			pdst++;
+		}
+		last_was_space = current_is_space;
+	}
+	*pdst = 0;
+	return mv_from_string(retval, FREE_ENTRY_VALUE);
 }
 
 mv_t s_s_clean_whitespace_func(mv_t* pval1) {
-	return mv_absent();
-}
-
-mv_t i_s_strlen_func(mv_t* pval1) {
-	mv_t rv = mv_from_int(strlen_for_utf8_display(pval1->u.strv));
-	mv_free(pval1);
-	return rv;
-}
-
-mv_t s_x_typeof_func(mv_t* pval1) {
-	mv_t rv = mv_from_string(mt_describe_type(pval1->type), NO_FREE);
-	mv_free(pval1);
-	return rv;
+	mv_t temp = s_s_collapse_whitespace_func(pval1);
+	return s_s_strip_func(&temp);
 }
 
 // ----------------------------------------------------------------
