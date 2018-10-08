@@ -13,12 +13,13 @@ typedef struct _mapper_fill_down_state_t {
 	ap_state_t* pargp;
 	slls_t* pfill_down_field_names;
 	lhmss_t* plast_non_null_values;
+	int only_if_absent;
 } mapper_fill_down_state_t;
 
 static void      mapper_fill_down_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_fill_down_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
-static mapper_t* mapper_fill_down_alloc(ap_state_t* pargp, slls_t* pfill_down_field_names);
+static mapper_t* mapper_fill_down_alloc(ap_state_t* pargp, slls_t* pfill_down_field_names, int only_if_absent);
 static void      mapper_fill_down_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_fill_down_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -33,20 +34,26 @@ mapper_setup_t mapper_fill_down_setup = {
 // ----------------------------------------------------------------
 static void mapper_fill_down_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
-	fprintf(o, "-f {a,b,c}    Field names for fill-down\n");
-	fprintf(o, "xxx description goes here.\n");
-	// xxx null vs absent behavior
+	fprintf(o, "-f {a,b,c}          Field names for fill-down\n");
+	fprintf(o, "-a|--only-if-absent Field names for fill-down\n");
+	fprintf(o, "If a given record has a missing value for a given field, fill that from\n");
+	fprintf(o, "the corresponding value from a previous record, if any.\n");
+	fprintf(o, "By default, a 'missing' field either is absent, or has the empty-string value.\n");
+	fprintf(o, "With -a, a field is 'missing' only if it is absent.\n");
 }
 
 static mapper_t* mapper_fill_down_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __)
 {
 	slls_t* pfill_down_field_names = NULL;
+	int only_if_absent = FALSE;
 
 	char* verb = argv[(*pargi)++];
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_string_list_flag(pstate, "-f", &pfill_down_field_names);
+	ap_define_true_flag(pstate, "-a", &only_if_absent);
+	ap_define_true_flag(pstate, "--only-if-absent", &only_if_absent);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_fill_down_usage(stderr, argv[0], verb);
@@ -57,11 +64,11 @@ static mapper_t* mapper_fill_down_parse_cli(int* pargi, int argc, char** argv,
 		return NULL;
 	}
 
-	return mapper_fill_down_alloc(pstate, pfill_down_field_names);
+	return mapper_fill_down_alloc(pstate, pfill_down_field_names, only_if_absent);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_fill_down_alloc(ap_state_t* pargp, slls_t* pfill_down_field_names) {
+static mapper_t* mapper_fill_down_alloc(ap_state_t* pargp, slls_t* pfill_down_field_names, int only_if_absent) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_fill_down_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_fill_down_state_t));
@@ -69,6 +76,7 @@ static mapper_t* mapper_fill_down_alloc(ap_state_t* pargp, slls_t* pfill_down_fi
 	pstate->pargp                  = pargp;
 	pstate->pfill_down_field_names = pfill_down_field_names;
 	pstate->plast_non_null_values  = lhmss_alloc();
+	pstate->only_if_absent         = only_if_absent;
 
 	pmapper->pvstate        = pstate;
 	pmapper->pprocess_func  = mapper_fill_down_process;
@@ -96,18 +104,22 @@ static sllv_t* mapper_fill_down_process(lrec_t* pinrec, context_t* pctx, void* p
 	for (sllse_t* pe = pstate->pfill_down_field_names->phead; pe != NULL; pe = pe->pnext) {
 		char* pkey = pe->value;
 		char* pvalue = lrec_get(pinrec, pkey);
-		if (pvalue != NULL) {
-			// xxx
+		int present = (pstate->only_if_absent)
+			? (pvalue != NULL)
+			: (pvalue != NULL && *pvalue);
+		if (present) {
+			// Remember it for a subsequent record lacking this field
 			lhmss_put(pstate->plast_non_null_values,
 				mlr_strdup_or_die(pkey),
 				mlr_strdup_or_die(pvalue),
 				FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
 		} else {
-			// xxx
-			lhmss_put(pstate->plast_non_null_values,
-				mlr_strdup_or_die(pkey),
-				mlr_strdup_or_die(pvalue),
-				FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
+			// Reuse previously seen value, if any
+			char* prev = lhmss_get(pstate->plast_non_null_values, pkey);
+			if (prev != NULL) {
+				lrec_put(pinrec, mlr_strdup_or_die(pkey), mlr_strdup_or_die(prev),
+					FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
+			}
 		}
 	}
 
