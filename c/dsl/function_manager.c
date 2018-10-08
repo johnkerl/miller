@@ -241,6 +241,11 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"inclusive. Negative indices -len .. -1 alias to 0 .. len-1."},
 	{FUNC_CLASS_STRING, "tolower",  1,0, "Convert string to lowercase."},
 	{FUNC_CLASS_STRING, "toupper",  1,0, "Convert string to uppercase."},
+	{FUNC_CLASS_STRING, "lstrip",  1,0,  "Strip leading whitespace from string."},
+	{FUNC_CLASS_STRING, "rstrip",  1,0,  "Strip trailing whitespace from string."},
+	{FUNC_CLASS_STRING, "strip",  1,0,  "Strip leading and trailing whitespace from string."},
+	{FUNC_CLASS_STRING, "collapse_whitespace",  1,0,  "Strip repeated whitespace from string."},
+	{FUNC_CLASS_STRING, "clean_whitespace",  1,0,  "Same as collapse_whitespace and strip."},
 
 	{FUNC_CLASS_MATH, "abs",      1,0, "Absolute value."},
 	{FUNC_CLASS_MATH, "acos",     1,0, "Inverse trigonometric cosine."},
@@ -1197,6 +1202,11 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_unary_func_name(char* fnnm, r
 	} else if (streq(fnnm, "tanh"))            { return rval_evaluator_alloc_from_f_f_func(f_f_tanh_func,        parg1);
 	} else if (streq(fnnm, "tolower"))         { return rval_evaluator_alloc_from_s_s_func(s_s_tolower_func,     parg1);
 	} else if (streq(fnnm, "toupper"))         { return rval_evaluator_alloc_from_s_s_func(s_s_toupper_func,     parg1);
+	} else if (streq(fnnm, "lstrip"))          { return rval_evaluator_alloc_from_s_s_func(s_s_lstrip_func,      parg1);
+	} else if (streq(fnnm, "rstrip"))          { return rval_evaluator_alloc_from_s_s_func(s_s_rstrip_func,      parg1);
+	} else if (streq(fnnm, "strip"))           { return rval_evaluator_alloc_from_s_s_func(s_s_strip_func,       parg1);
+	} else if (streq(fnnm, "collapse_whitespace")) { return rval_evaluator_alloc_from_s_s_func(s_s_collapse_whitespace_func, parg1);
+	} else if (streq(fnnm, "clean_whitespace")) { return rval_evaluator_alloc_from_s_s_func(s_s_clean_whitespace_func, parg1);
 	} else if (streq(fnnm, "~"))               { return rval_evaluator_alloc_from_i_i_func(i_i_bitwise_not_func, parg1);
 
 	} else return NULL;

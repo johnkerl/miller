@@ -408,6 +408,34 @@ mv_t s_s_toupper_func(mv_t* pval1) {
 	return mv_from_string_with_free(string);
 }
 
+mv_t s_s_lstrip_func(mv_t* pval1) {
+	if (!isspace(pval1->u.strv[0])) {
+		return *pval1;
+	} else {
+		char* p = pval1->u.strv;
+		while (isspace(*p)) {
+			p++;
+		}
+		return mv_from_string(mlr_strdup_or_die(p), FREE_ENTRY_VALUE);
+	}
+}
+
+mv_t s_s_rstrip_func(mv_t* pval1) {
+	return mv_absent();
+}
+
+mv_t s_s_strip_func(mv_t* pval1) {
+	return mv_absent();
+}
+
+mv_t s_s_collapse_whitespace_func(mv_t* pval1) {
+	return mv_absent();
+}
+
+mv_t s_s_clean_whitespace_func(mv_t* pval1) {
+	return mv_absent();
+}
+
 mv_t i_s_strlen_func(mv_t* pval1) {
 	mv_t rv = mv_from_int(strlen_for_utf8_display(pval1->u.strv));
 	mv_free(pval1);
