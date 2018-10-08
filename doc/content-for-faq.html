@@ -272,6 +272,32 @@ containing name-to-number mappings, while saving large amounts of data for the
 right file.
 
 </div>
+<h1>How to rectangularize after joins with unpareid?</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rectangularize_after_join');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_rectangularize_after_join" style="display: block">
+
+<p/> Suppose you have the following two data files:
+
+POKI_INCLUDE_ESCAPED(data/color-codes.csv)HERE
+POKI_INCLUDE_ESCAPED(data/color-names.csv)HERE
+
+<p/> Joining on color the results are as expected:
+
+POKI_RUN_COMMAND{{mlr --csv join -j id -f data/color-codes.csv data/color-names.csv}}HERE
+
+<p/> However, if we ask for left-unpaireds, since there&rsquo;s no
+<tt>color</tt> column, we get a row not having the same column names as the
+other:
+
+POKI_RUN_COMMAND{{mlr --csv join --ul -j id -f data/color-codes.csv data/color-names.csv}}HERE
+
+<p/> To fix this, we can use <b>unsparsify</b>:
+
+POKI_RUN_COMMAND{{mlr --csv join --ul -j id -f data/color-codes.csv then unsparsify --fill-with "" data/color-names.csv}}HERE
+
+<p/> Thanks to @aborruso for the tip!
+
+</div>
 <h1>What about XML or JSON file formats?</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_xml_or_json');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_xml_or_json" style="display: block">
