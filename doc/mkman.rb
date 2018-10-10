@@ -211,6 +211,8 @@ def make_code_block(block)
   retval += ".nf\n"
   # In case the line starts with a dot:
   retval += block.gsub('\\', '\e').gsub(/^\./){'\&.'}
+  # In case the line starts with a single quote:
+  retval = retval.gsub(/^'/, '\(cq')
   retval += ".fi\n"
   retval += ".if n \\{\\\n"
   retval += ".RE\n"

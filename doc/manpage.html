@@ -1469,6 +1469,7 @@ VERBS
 
        Example: if the input is two records, one being 'a=1,b=2' and the other
        being 'b=3,c=4', then the output is the two records 'a=1,b=2,c=' and
+       'a=,b=3,c=4'.
 
 FUNCTIONS FOR FILTER/PUT
    +
@@ -1982,6 +1983,7 @@ FUNCTIONS FOR FILTER/PUT
 
    haskey
        (class=maps #args=2): True/false if map has/hasn't key, e.g. 'haskey($*, "a")' or
+       'haskey(mymap, mykey)'. Error if 1st argument is not a map.
 
    joink
        (class=maps #args=2): Makes string from map keys. E.g. 'joink($*, ",")'.
@@ -2022,6 +2024,7 @@ FUNCTIONS FOR FILTER/PUT
    splitkvx
        (class=maps #args=3): Splits string by separators into map without type inference (keys and
        values are strings). E.g. 'splitkv("a=1,b=2,c=3", "=", ",")' gives
+       '{"a" : "1", "b" : "2", "c" : "3"}'.
 
    splitnv
        (class=maps #args=2): Splits string by separator into integer-indexed map with type inference.
@@ -2392,7 +2395,7 @@ SEE ALSO
 
 
 
-				  2018-10-08			     MILLER(1)
+				  2018-10-10			     MILLER(1)
 </pre>
 </div>
 <p/>
