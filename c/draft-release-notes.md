@@ -2,8 +2,7 @@
 
 ## Features:
 
-* altkv
-https://github.com/johnkerl/miller/issues/184
+* [**altkv**](http://johnkerl.org/miller/doc/reference-verbs.html#altkv) resolves https://github.com/johnkerl/miller/issues/184 which was originally opened via an email request.
 email request ...
 
 * clean-whitespace et al.
