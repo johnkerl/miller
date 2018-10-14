@@ -400,6 +400,7 @@ mv_t s_x_typeof_func(mv_t* pval1) {
 	return rv;
 }
 
+// ----------------------------------------------------------------
 mv_t s_s_tolower_func(mv_t* pval1) {
 	char* string = mlr_strdup_or_die(pval1->u.strv);
 	for (char* c = string; *c; c++)
@@ -420,6 +421,7 @@ mv_t s_s_toupper_func(mv_t* pval1) {
 	return mv_from_string_with_free(string);
 }
 
+// ----------------------------------------------------------------
 mv_t s_s_lstrip_func(mv_t* pval1) {
 	if (!isspace(pval1->u.strv[0])) {
 		return *pval1;
@@ -439,12 +441,14 @@ mv_t s_s_rstrip_func(mv_t* pval1) {
 	while ((start <= last_non_space) && isspace(*last_non_space))
 		last_non_space--;
 	if (last_non_space < start) {
+		mv_free(pval1);
 		return mv_empty();
 	} else {
 		int newlen = (last_non_space - start) + 1;
 		char* retval = mlr_malloc_or_die(newlen + 1);
 		memcpy(retval, start, newlen);
-		retval[newlen+1] = 0;
+		retval[newlen] = 0;
+		mv_free(pval1);
 		return mv_from_string(retval, FREE_ENTRY_VALUE);
 	}
 }
@@ -469,6 +473,7 @@ mv_t s_s_collapse_whitespace_func(mv_t* pval1) {
 		last_was_space = current_is_space;
 	}
 	*pdst = 0;
+	mv_free(pval1);
 	return mv_from_string(retval, FREE_ENTRY_VALUE);
 }
 
