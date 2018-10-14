@@ -27,6 +27,7 @@ EXTRA_DIST=	\
 		c.pprint \
 		capture-lengths.dkvp \
 		capture.dkvp \
+		clean-whitespace.csv \
 		comments \
 		d.csv \
 		d.pprint \
