@@ -1,4 +1,4 @@
-mlr --from ../c/s put '
+mlr --from data/small put '
   func f(map m): map {
     m["x"] *= 200;
     return m;
