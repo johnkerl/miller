@@ -1,4 +1,4 @@
-# New data-cleaning features, limited localtime support, and bugfixes
+# New data-cleaning features, Windows mlr.exe, limited localtime support, and bugfixes
 
 ## Features:
 
