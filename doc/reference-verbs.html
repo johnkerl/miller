@@ -194,6 +194,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#bootstrap">bootstrap</a><br/>
 &bull;&nbsp;<a href="#cat">cat</a><br/>
 &bull;&nbsp;<a href="#check">check</a><br/>
+&bull;&nbsp;<a href="#clean-whitespace">clean-whitespace</a><br/>
 &bull;&nbsp;<a href="#count-distinct">count-distinct</a><br/>
 &bull;&nbsp;<a href="#count-similar">count-similar</a><br/>
 &bull;&nbsp;<a href="#cut">cut</a><br/>
@@ -627,6 +628,80 @@ $ mlr check --help
 Usage: mlr check
 Consumes records without printing any output.
 Useful for doing a well-formatted check on input data.
+</pre>
+</div>
+<p/>
+
+</div>
+<!-- ================================================================ -->
+<a id="clean-whitespace"/><h1>clean-whitespace</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_clean_whitespace');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_clean_whitespace" style="display: block">
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr clean-whitespace --help
+Usage: mlr clean-whitespace [options] {old1,new1,old2,new2,...}
+For each record, for each field in the record, whitespace-cleans the keys and
+values. Whitespace-cleaning entails stripping leading and trailing whitespace,
+and replacing multiple whitespace with singles. For finer-grained control,
+please see the DSL functions lstrip, rstrip, strip, collapse_whitespace,
+and clean_whitespace.
+
+Options:
+-k|--keys-only    Do not touch values.
+-v|--values-only  Do not touch keys.
+It is an error to specify -k as well as -v.
+</pre>
+</div>
+<p/>
+
+<ul>
+<li/> <a href="./reference-verbs.html/#lstrip">lstrip</a>
+<li/> <a href="./reference-verbs.html/#rstrip">rstrip</a>
+<li/> <a href="./reference-verbs.html/#strip">strip</a>
+<li/> <a href="./reference-verbs.html/#collapse_whitespace">collapse_whitespace</a>
+<li/> <a href="./reference-verbs.html/#clean_whitespace">clean_whitespace</a>
+</ul>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --ojson cat data/clean-whitespace.csv
+{ "  Name  ": "  Ann  Simons", " Preference  ": "  blue  " }
+{ "  Name  ": "Bob Wang  ", " Preference  ": " red       " }
+{ "  Name  ": " Carol  Vee", " Preference  ": "    yellow" }
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --ojson clean-whitespace -k data/clean-whitespace.csv
+{ "Name": "  Ann  Simons", "Preference": "  blue  " }
+{ "Name": "Bob Wang  ", "Preference": " red       " }
+{ "Name": " Carol  Vee", "Preference": "    yellow" }
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --ojson clean-whitespace -v data/clean-whitespace.csv
+{ "  Name  ": "Ann Simons", " Preference  ": "blue" }
+{ "  Name  ": "Bob Wang", " Preference  ": "red" }
+{ "  Name  ": "Carol Vee", " Preference  ": "yellow" }
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --ojson clean-whitespace data/clean-whitespace.csv
+{ "Name": "Ann Simons", "Preference": "blue" }
+{ "Name": "Bob Wang", "Preference": "red" }
+{ "Name": "Carol Vee", "Preference": "yellow" }
 </pre>
 </div>
 <p/>

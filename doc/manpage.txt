@@ -125,30 +125,32 @@ OPTIONS
 	 -K			      Show a bare listing of keywords by name.
 
    VERB LIST
-	altkv bar bootstrap cat check count-distinct count-similar cut decimate
-	fill-down filter fraction grep group-by group-like having-fields head
-	histogram join label least-frequent merge-fields most-frequent nest nothing
-	put regularize rename reorder repeat reshape sample sec2gmt sec2gmtdate seqgen
-	shuffle sort stats1 stats2 step tac tail tee top uniq unsparsify
+	altkv bar bootstrap cat check clean-whitespace count-distinct count-similar
+	cut decimate fill-down filter fraction grep group-by group-like having-fields
+	head histogram join label least-frequent merge-fields most-frequent nest
+	nothing put regularize rename reorder repeat reshape sample sec2gmt
+	sec2gmtdate seqgen shuffle sort stats1 stats2 step tac tail tee top uniq
+	unsparsify
 
    FUNCTION LIST
 	+ + - - * / // .+ .+ .- .- .* ./ .// % ** | ^ & ~ << >> bitcount == != =~ !=~
 	> >= < <= && || ^^ ! ? : . gsub regextract regextract_or_else strlen sub ssub
-	substr tolower toupper abs acos acosh asin asinh atan atan2 atanh cbrt ceil
-	cos cosh erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd max
-	mexp min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand
-	urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec localtime2sec
-	hms2fsec hms2sec sec2dhms sec2gmt sec2gmt sec2gmtdate sec2localtime
-	sec2localtime sec2localdate sec2hms strftime strftime_local strptime
-	strptime_local systime is_absent is_bool is_boolean is_empty is_empty_map
-	is_float is_int is_map is_nonempty_map is_not_empty is_not_map is_not_null
-	is_null is_numeric is_present is_string asserting_absent asserting_bool
-	asserting_boolean asserting_empty asserting_empty_map asserting_float
-	asserting_int asserting_map asserting_nonempty_map asserting_not_empty
-	asserting_not_map asserting_not_null asserting_null asserting_numeric
-	asserting_present asserting_string boolean float fmtnum hexfmt int string
-	typeof depth haskey joink joinkv joinv leafcount length mapdiff mapexcept
-	mapselect mapsum splitkv splitkvx splitnv splitnvx
+	substr tolower toupper lstrip rstrip strip collapse_whitespace
+	clean_whitespace abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh
+	erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd max mexp min
+	mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand urand32
+	urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec localtime2sec hms2fsec
+	hms2sec sec2dhms sec2gmt sec2gmt sec2gmtdate sec2localtime sec2localtime
+	sec2localdate sec2hms strftime strftime_local strptime strptime_local systime
+	is_absent is_bool is_boolean is_empty is_empty_map is_float is_int is_map
+	is_nonempty_map is_not_empty is_not_map is_not_null is_null is_numeric
+	is_present is_string asserting_absent asserting_bool asserting_boolean
+	asserting_empty asserting_empty_map asserting_float asserting_int
+	asserting_map asserting_nonempty_map asserting_not_empty asserting_not_map
+	asserting_not_null asserting_null asserting_numeric asserting_present
+	asserting_string boolean float fmtnum hexfmt int string typeof depth haskey
+	joink joinkv joinv leafcount length mapdiff mapexcept mapselect mapsum splitkv
+	splitkvx splitnv splitnvx
 
        Please use "mlr --help-function {function name}" for function-specific help.
 
@@ -426,6 +428,19 @@ VERBS
        Usage: mlr check
        Consumes records without printing any output.
        Useful for doing a well-formatted check on input data.
+
+   clean-whitespace
+       Usage: mlr clean-whitespace [options] {old1,new1,old2,new2,...}
+       For each record, for each field in the record, whitespace-cleans the keys and
+       values. Whitespace-cleaning entails stripping leading and trailing whitespace,
+       and replacing multiple whitespace with singles. For finer-grained control,
+       please see the DSL functions lstrip, rstrip, strip, collapse_whitespace,
+       and clean_whitespace.
+
+       Options:
+       -k|--keys-only	 Do not touch values.
+       -v|--values-only  Do not touch keys.
+       It is an error to specify -k as well as -v.
 
    count-distinct
        Usage: mlr count-distinct [options]
@@ -1427,6 +1442,21 @@ FUNCTIONS FOR FILTER/PUT
    toupper
        (class=string #args=1): Convert string to uppercase.
 
+   lstrip
+       (class=string #args=1): Strip leading whitespace from string.
+
+   rstrip
+       (class=string #args=1): Strip trailing whitespace from string.
+
+   strip
+       (class=string #args=1): Strip leading and trailing whitespace from string.
+
+   collapse_whitespace
+       (class=string #args=1): Strip repeated whitespace from string.
+
+   clean_whitespace
+       (class=string #args=1): Same as collapse_whitespace and strip.
+
    abs
        (class=math #args=1): Absolute value.
 
@@ -2201,4 +2231,4 @@ SEE ALSO
 
 
 
-				  2018-10-10			     MILLER(1)
+				  2018-10-14			     MILLER(1)

@@ -174,6 +174,28 @@ POKI_RUN_COMMAND{{mlr check --help}}HERE
 
 </div>
 <!-- ================================================================ -->
+<h1>clean-whitespace</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_clean_whitespace');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_clean_whitespace" style="display: block">
+
+POKI_RUN_COMMAND{{mlr clean-whitespace --help}}HERE
+
+POKI_RUN_COMMAND{{mlr --icsv --ojson cat data/clean-whitespace.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --ojson clean-whitespace -k data/clean-whitespace.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --ojson clean-whitespace -v data/clean-whitespace.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --ojson clean-whitespace data/clean-whitespace.csv}}HERE
+
+<p/> Function links:
+<ul>
+<li/> <a href="./reference-verbs.html/#lstrip">lstrip</a>
+<li/> <a href="./reference-verbs.html/#rstrip">rstrip</a>
+<li/> <a href="./reference-verbs.html/#strip">strip</a>
+<li/> <a href="./reference-verbs.html/#collapse_whitespace">collapse_whitespace</a>
+<li/> <a href="./reference-verbs.html/#clean_whitespace">clean_whitespace</a>
+</ul>
+
+</div>
+<!-- ================================================================ -->
 <h1>count-distinct</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_count_distinct');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_count_distinct" style="display: block">
