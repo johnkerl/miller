@@ -34,6 +34,7 @@ libmapping_la_SOURCES=	\
 			mapper_sec2gmtdate.c \
 			mapper_seqgen.c \
 			mapper_shuffle.c \
+			mapper_skip_trivial_records.c \
 			mapper_sort.c \
 			mapper_stats1.c \
 			mapper_stats2.c \
