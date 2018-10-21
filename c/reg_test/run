@@ -234,6 +234,8 @@ run_mlr tac /dev/null
 run_mlr --opprint unsparsify $indir/abixy
 run_mlr --opprint unsparsify $indir/abixy-het
 
+run_mlr --csv skip-trivial-records $indir/trivial-records.csv
+
 # ----------------------------------------------------------------
 announce HEAD/TAIL/ETC.
 

@@ -181,6 +181,7 @@ EXTRA_DIST=	\
 		subtab3.mlr \
 		subtab4.mlr \
 		test-dsl-stack-allocation.mlr \
+		trivial-records.csv \
 		truncated.csv \
 		truncated.dkvp \
 		truncated.nidx \
