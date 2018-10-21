@@ -228,6 +228,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#sec2gmtdate">sec2gmtdate</a><br/>
 &bull;&nbsp;<a href="#seqgen">seqgen</a><br/>
 &bull;&nbsp;<a href="#shuffle">shuffle</a><br/>
+&bull;&nbsp;<a href="#skip-trivial-records">skip-trivial-records</a><br/>
 &bull;&nbsp;<a href="#sort">sort</a><br/>
 &bull;&nbsp;<a href="#stats1">stats1</a><br/>
 &bull;&nbsp;<a href="#stats2">stats2</a><br/>
@@ -3022,6 +3023,49 @@ Usage: mlr shuffle {no options}
 Outputs records randomly permuted. No output records are produced until
 all input records are read.
 See also mlr bootstrap and mlr sample.
+</pre>
+</div>
+<p/>
+
+</div>
+<!-- ================================================================ -->
+<a id="skip-trivial-records"/><h1>skip-trivial-records</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_skip_trivial_records');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_skip_trivial_records" style="display: block">
+
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr skip-trivial-records -h
+Usage: mlr skip-trivial-records [options]
+Passes through all records except:
+* those with zero fields;
+* those for which all fields have empty value.
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/trivial-records.csv
+a,b,c
+1,2,3
+4,,6
+,,
+,8,9
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv skip-trivial-records data/trivial-records.csv
+a,b,c
+1,2,3
+4,,6
+,8,9
 </pre>
 </div>
 <p/>

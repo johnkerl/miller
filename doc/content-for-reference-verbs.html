@@ -728,6 +728,18 @@ POKI_RUN_COMMAND{{mlr shuffle -h}}HERE
 
 </div>
 <!-- ================================================================ -->
+<h1>skip-trivial-records</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_skip_trivial_records');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_skip_trivial_records" style="display: block">
+
+<p/>
+
+POKI_RUN_COMMAND{{mlr skip-trivial-records -h}}HERE
+POKI_RUN_COMMAND{{cat data/trivial-records.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv skip-trivial-records data/trivial-records.csv}}HERE
+
+</div>
+<!-- ================================================================ -->
 <h1>sort</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sort');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_sort" style="display: block">

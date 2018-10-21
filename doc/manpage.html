@@ -323,8 +323,8 @@ OPTIONS
 	cut decimate fill-down filter fraction grep group-by group-like having-fields
 	head histogram join label least-frequent merge-fields most-frequent nest
 	nothing put regularize rename reorder repeat reshape sample sec2gmt
-	sec2gmtdate seqgen shuffle sort stats1 stats2 step tac tail tee top uniq
-	unsparsify
+	sec2gmtdate seqgen shuffle skip-trivial-records sort stats1 stats2 step tac
+	tail tee top uniq unsparsify
 
    FUNCTION LIST
 	+ + - - * / // .+ .+ .- .- .* ./ .// % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; bitcount == != =~ !=~
@@ -1282,6 +1282,12 @@ VERBS
        Outputs records randomly permuted. No output records are produced until
        all input records are read.
        See also mlr bootstrap and mlr sample.
+
+   skip-trivial-records
+       Usage: mlr skip-trivial-records [options]
+       Passes through all records except:
+       * those with zero fields;
+       * those for which all fields have empty value.
 
    sort
        Usage: mlr sort {flags}
@@ -2425,7 +2431,7 @@ SEE ALSO
 
 
 
-				  2018-10-14			     MILLER(1)
+				  2018-10-21			     MILLER(1)
 </pre>
 </div>
 <p/>

@@ -49,8 +49,8 @@ static mapper_t* mapper_skip_trivial_records_parse_cli(int* pargi, int argc, cha
 static void mapper_skip_trivial_records_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "Passes through all records except:\n");
-	fprintf(o, "* Those with zero fields\n");
-	fprintf(o, "* Those for which all fields have empty value\n");
+	fprintf(o, "* those with zero fields;\n");
+	fprintf(o, "* those for which all fields have empty value.\n");
 }
 
 // ----------------------------------------------------------------

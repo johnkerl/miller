@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2018-10-14
+.\"      Date: 2018-10-21
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2018-10-14" "\ \&" "\ \&"
+.TH "MILLER" "1" "2018-10-21" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -172,8 +172,8 @@ output separator to the given value.
  cut decimate fill-down filter fraction grep group-by group-like having-fields
  head histogram join label least-frequent merge-fields most-frequent nest
  nothing put regularize rename reorder repeat reshape sample sec2gmt
- sec2gmtdate seqgen shuffle sort stats1 stats2 step tac tail tee top uniq
- unsparsify
+ sec2gmtdate seqgen shuffle skip-trivial-records sort stats1 stats2 step tac
+ tail tee top uniq unsparsify
 .fi
 .if n \{\
 .RE
@@ -1427,6 +1427,18 @@ Usage: mlr shuffle {no options}
 Outputs records randomly permuted. No output records are produced until
 all input records are read.
 See also mlr bootstrap and mlr sample.
+.fi
+.if n \{\
+.RE
+.SS "skip-trivial-records"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr skip-trivial-records [options]
+Passes through all records except:
+* those with zero fields;
+* those for which all fields have empty value.
 .fi
 .if n \{\
 .RE
