@@ -195,6 +195,7 @@ Miller commands were run with pretty-print-tabular output format.
 <center><b>Contents:</b></center>
 &bull;&nbsp;<a href="#Headerless_CSV_on_input_or_output">Headerless CSV on input or output</a><br/>
 &bull;&nbsp;<a href="#Bulk_rename_of_fields">Bulk rename of fields</a><br/>
+&bull;&nbsp;<a href="#Search-and-replace_over_all_fields">Search-and-replace over all fields</a><br/>
 &bull;&nbsp;<a href="#Full_field_renames_and_reassigns">Full field renames and reassigns</a><br/>
 &bull;&nbsp;<a href="#Numbering_and_renumbering_records">Numbering and renumbering records</a><br/>
 &bull;&nbsp;<a href="#Options_for_dealing_with_duplicate_rows">Options for dealing with duplicate rows</a><br/>
@@ -393,6 +394,46 @@ a_b_c def  g_h_i
 123   4567 890
 2468  1357 3579
 9987  3312 4543
+</pre>
+</div>
+<p/>
+
+<!-- ================================================================ -->
+</div>
+<a id="Search-and-replace_over_all_fields"/><h1>Search-and-replace over all fields</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_search_and_replace_over_all_fields');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_search_and_replace_over_all_fields" style="display: block">
+
+<p/> How to do <tt>$name=gsub($name, "old", "new")</tt> for all fields?
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/sar.csv
+a,b,c
+the quick,brown fox,jumped
+over,the,lazy dogs
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/sar.mlr
+  for (k in $*) {
+    $[k] = gsub($[k], "e", "X");
+  }
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv put -f data/sar.mlr data/sar.csv
+a,b,c
+thX quick,brown fox,jumpXd
+ovXr,thX,lazy dogs
 </pre>
 </div>
 <p/>

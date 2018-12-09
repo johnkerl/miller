@@ -64,6 +64,19 @@ POKI_RUN_COMMAND{{cat data/bulk-rename-for-loop.mlr}}HERE
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data/spaces.csv}}HERE
 
+<!-- ================================================================ -->
+</div>
+<h1>Search-and-replace over all fields</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_search_and_replace_over_all_fields');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_search_and_replace_over_all_fields" style="display: block">
+
+<p/> How to do <tt>$name=gsub($name, "old", "new")</tt> for all fields?
+
+POKI_RUN_COMMAND{{cat data/sar.csv}}HERE
+
+POKI_RUN_COMMAND{{cat data/sar.mlr}}HERE
+POKI_RUN_COMMAND{{mlr --csv put -f data/sar.mlr data/sar.csv}}HERE
+
 </div>
 <!-- ================================================================ -->
 <h1>Full field renames and reassigns</h1>
