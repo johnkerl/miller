@@ -194,6 +194,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#How_do_I_suppress_numeric_conversion?">How do I suppress numeric conversion?</a><br/>
 &bull;&nbsp;<a href="#How_do_I_examine_then-chaining?">How do I examine then-chaining?</a><br/>
 &bull;&nbsp;<a href="#I_assigned_$9_and_it&rsquo;s_not_9th">I assigned $9 and it&rsquo;s not 9th</a><br/>
+&bull;&nbsp;<a href="#How_can_I_filter_by_date?">How can I filter by date?</a><br/>
 &bull;&nbsp;<a href="#How_can_I_handle_commas-as-data_in_various_formats?">How can I handle commas-as-data in various formats?</a><br/>
 &bull;&nbsp;<a href="#How_can_I_handle_field_names_with_special_symbols_in_them?">How can I handle field names with special symbols in them?</a><br/>
 &bull;&nbsp;<a href="#How_to_escape_'?'_in_regexes?">How to escape '?' in regexes?</a><br/>
@@ -581,6 +582,45 @@ z,x,y
 </pre>
 </div>
 <p/>
+
+</div>
+<a id="How_can_I_filter_by_date?"/><h1>How can I filter by date?</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_date_filtering');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_date_filtering" style="display: block">
+
+<p/> Given input like
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat dates.csv
+date,event
+2018-02-03,initialization
+2018-03-07,discovery
+2018-02-03,allocation
+</pre>
+</div>
+<p/>
+
+we can use <tt>strptime</tt> to parse the date field into seconds-since-epoch
+and then do numeric comparisons.  Simply match your input dataset&rsquo;s
+date-formatting to the <a href="reference-dsl.html#strptime">strptime</a>
+format-string.  For example:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv filter 'strptime($date, "%Y-%m-%d") &gt; strptime("2018-03-03", "%Y-%m-%d")' dates.csv
+date,event
+2018-03-07,discovery
+</pre>
+</div>
+<p/>
+
+<p/>Caveat: localtime-handling in timezones with DST is still a work in progress; see
+<a href="https://github.com/johnkerl/miller/issues/170">https://github.com/johnkerl/miller/issues/170</a>.
+See also <a href="https://github.com/johnkerl/miller/issues/208">https://github.com/johnkerl/miller/issues/208</a>
+&mdash; thanks @aborruso!
 
 </div>
 <a id="How_can_I_handle_commas-as-data_in_various_formats?"/><h1>How can I handle commas-as-data in various formats?</h1>
