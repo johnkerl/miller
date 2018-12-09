@@ -128,9 +128,9 @@ OPTIONS
 	altkv bar bootstrap cat check clean-whitespace count-distinct count-similar
 	cut decimate fill-down filter fraction grep group-by group-like having-fields
 	head histogram join label least-frequent merge-fields most-frequent nest
-	nothing put regularize rename reorder repeat reshape sample sec2gmt
-	sec2gmtdate seqgen shuffle skip-trivial-records sort stats1 stats2 step tac
-	tail tee top uniq unsparsify
+	nothing put regularize remove-empty-columns rename reorder repeat reshape
+	sample sec2gmt sec2gmtdate seqgen shuffle skip-trivial-records sort stats1
+	stats2 step tac tail tee top uniq unsparsify
 
    FUNCTION LIST
 	+ + - - * / // .+ .+ .- .- .* ./ .// % ** | ^ & ~ << >> bitcount == != =~ !=~
@@ -929,6 +929,10 @@ VERBS
        encountered order.
        Example: input records a=1,c=2,b=3, then e=4,d=5, then c=7,a=6,b=8
        output as	      a=1,c=2,b=3, then e=4,d=5, then a=6,c=7,b=8
+
+   remove-empty-columns
+       Usage: mlr remove-empty-columns
+       Omits fields which are empty on every input row. Non-streaming.
 
    rename
        Usage: mlr rename [options] {old1,new1,old2,new2,...}
@@ -2237,4 +2241,4 @@ SEE ALSO
 
 
 
-				  2018-10-21			     MILLER(1)
+				  2018-12-09			     MILLER(1)

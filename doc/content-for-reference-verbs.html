@@ -596,6 +596,21 @@ same order: <tt>mlr regularize</tt> helps clean that up.
 
 </div>
 <!-- ================================================================ -->
+<h1>remove-empty-columns</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_remove_empty_columns');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_remove_empty_columns" style="display: block">
+
+<p/>
+POKI_RUN_COMMAND{{mlr remove-empty-columns --help}}HERE
+POKI_RUN_COMMAND{{cat data/remove-empty-columns.csv}}HERE
+POKI_RUN_COMMAND{{mlr --csv remove-empty-columns data/remove-empty-columns.csv}}HERE
+
+<p/>Since this verb needs to read all records to see if any of them has a
+non-empty value for a given field name, it is non-streaming: it will ingest
+all records before writing any.
+
+</div>
+<!-- ================================================================ -->
 <h1>rename</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rename');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_rename" style="display: block">

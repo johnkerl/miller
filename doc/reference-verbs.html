@@ -219,6 +219,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#put">put</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Features_which_put_shares_with_filter">Features which put shares with filter</a><br/>
 &bull;&nbsp;<a href="#regularize">regularize</a><br/>
+&bull;&nbsp;<a href="#remove-empty-columns">remove-empty-columns</a><br/>
 &bull;&nbsp;<a href="#rename">rename</a><br/>
 &bull;&nbsp;<a href="#reorder">reorder</a><br/>
 &bull;&nbsp;<a href="#repeat">repeat</a><br/>
@@ -2501,6 +2502,49 @@ encountered in the wild does not always print similar rows with fields in the
 same order: <tt>mlr regularize</tt> helps clean that up.
 
 <p/>See also <a href="#reorder"><tt>reorder</tt></a>.
+
+</div>
+<!-- ================================================================ -->
+<a id="remove-empty-columns"/><h1>remove-empty-columns</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_remove_empty_columns');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_remove_empty_columns" style="display: block">
+
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr remove-empty-columns --help
+Usage: mlr remove-empty-columns
+Omits fields which are empty on every input row. Non-streaming.
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/remove-empty-columns.csv
+a,b,c,d,e
+1,,3,,5
+2,,4,,5
+3,,5,,7
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --csv remove-empty-columns data/remove-empty-columns.csv
+a,c,e
+1,3,5
+2,4,5
+3,5,7
+</pre>
+</div>
+<p/>
+
+<p/>Since this verb needs to read all records to see if any of them has a
+non-empty value for a given field name, it is non-streaming: it will ingest
+all records before writing any.
 
 </div>
 <!-- ================================================================ -->
