@@ -32,6 +32,7 @@ extern mapper_setup_t mapper_nest_setup;
 extern mapper_setup_t mapper_nothing_setup;
 extern mapper_setup_t mapper_put_setup;
 extern mapper_setup_t mapper_regularize_setup;
+extern mapper_setup_t mapper_remove_empty_columns_setup;
 extern mapper_setup_t mapper_rename_setup;
 extern mapper_setup_t mapper_reorder_setup;
 extern mapper_setup_t mapper_repeat_setup;

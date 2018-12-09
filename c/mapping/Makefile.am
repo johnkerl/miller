@@ -25,6 +25,7 @@ libmapping_la_SOURCES=	\
 			mapper_fraction.c \
 			mapper_put_or_filter.c \
 			mapper_regularize.c \
+			mapper_remove_empty_columns.c \
 			mapper_rename.c \
 			mapper_reorder.c \
 			mapper_repeat.c \

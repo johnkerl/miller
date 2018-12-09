@@ -66,6 +66,7 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_nothing_setup,
 	&mapper_put_setup,
 	&mapper_regularize_setup,
+	&mapper_remove_empty_columns_setup,
 	&mapper_rename_setup,
 	&mapper_reorder_setup,
 	&mapper_repeat_setup,
