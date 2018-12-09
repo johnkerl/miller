@@ -387,6 +387,16 @@ wye pan 5  0.5732889198020006  0.8636244699032729
 
 </ul>
 
+<b>Pro-tip:</b> Please use either <b>--format1</b>, or <b>--iformat1
+--oformat2</b>.  If you use <b>--format1 --oformat2</b> then what happens is
+that flags are set up for input <i>and</i> output for format1, some of which
+are overwritten for output in format2. For technical reasons, having
+<tt>--oformat2</tt> clobber all the output-related effects of
+<tt>--format1</tt> also removes some flexibility from the command-line
+interface. See also
+<a href="https://github.com/johnkerl/miller/issues/180">https://github.com/johnkerl/miller/issues/180</a> and
+<a href="https://github.com/johnkerl/miller/issues/199">https://github.com/johnkerl/miller/issues/199</a>.
+
 <!-- ================================================================ -->
 <a id="In-place_mode"/><h2>In-place mode</h2>
 
