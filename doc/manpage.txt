@@ -220,6 +220,10 @@ OPTIONS
 	 Examples: --csv for CSV-formatted input and output; --idkvp --opprint for
 	 DKVP-formatted input and pretty-printed output.
 
+	 Please use --iformat1 --oformat2 rather than --format1 --oformat2.
+	 The latter sets up input and output flags for format1, not all of which
+	 are overridden in all cases by setting output format to format2.
+
    COMMENTS IN DATA
 	 --skip-comments		 Ignore commented lines (prefixed by "#")
 					 within the input.

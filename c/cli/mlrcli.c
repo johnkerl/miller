@@ -809,6 +809,10 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "\n");
 	fprintf(o, "  Examples: --csv for CSV-formatted input and output; --idkvp --opprint for\n");
 	fprintf(o, "  DKVP-formatted input and pretty-printed output.\n");
+	fprintf(o, "\n");
+	fprintf(o, "  Please use --iformat1 --oformat2 rather than --format1 --oformat2.\n");
+	fprintf(o, "  The latter sets up input and output flags for format1, not all of which\n");
+	fprintf(o, "  are overridden in all cases by setting output format to format2.\n");
 }
 
 static void main_usage_comments_in_data(FILE* o, char* argv0) {
