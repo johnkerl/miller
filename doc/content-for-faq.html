@@ -155,6 +155,20 @@ POKI_RUN_COMMAND{{echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2}
 POKI_RUN_COMMAND{{echo 'x.a=3,y:b=4,z/c=5' | mlr put '${product.all} = ${x.a} * ${y:b} * ${z/c}'}}HERE
 
 </div>
+<h1>How to escape '?' in regexes?</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_escape_in_regex');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_escape_in_regex" style="display: block">
+
+<p/> One way is to use square brackets; an alternative is to use simple
+string-substitution rather than a regular expression.
+
+POKI_RUN_COMMAND{{cat data/question.dat}}HERE
+POKI_RUN_COMMAND{{mlr --oxtab put '$c = gsub($a, "[?]"," ...")' data/question.dat}}HERE
+POKI_RUN_COMMAND{{mlr --oxtab put '$c = ssub($a, "?"," ...")' data/question.dat}}HERE
+
+<p/> The <tt>ssub</tt> function exists precisely for this reason: so you don&rsquo;t have to escape anything.
+
+</div>
 <h1>How can I put single-quotes into strings?</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_single_quotes_in_strings');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_single_quotes_in_strings" style="display: block">
