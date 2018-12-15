@@ -371,7 +371,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_TYPING, "is_int",         1,0, "True if field is present with value inferred to be int "},
 	{FUNC_CLASS_TYPING, "is_map",         1,0, "True if argument is a map."},
 	{FUNC_CLASS_TYPING, "is_nonempty_map", 1,0, "True if argument is a map which is non-empty."},
-	{FUNC_CLASS_TYPING, "is_not_empty",    1,0, "False if field is present in input with empty value, false otherwise"},
+	{FUNC_CLASS_TYPING, "is_not_empty",    1,0, "False if field is present in input with empty value, true otherwise"},
 	{FUNC_CLASS_TYPING, "is_not_map",      1,0, "True if argument is not a map."},
 	{FUNC_CLASS_TYPING, "is_not_null",     1,0, "False if argument is null (empty or absent), true otherwise."},
 	{FUNC_CLASS_TYPING, "is_null",        1,0, "True if argument is null (empty or absent), false otherwise."},

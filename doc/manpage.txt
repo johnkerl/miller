@@ -1722,7 +1722,7 @@ FUNCTIONS FOR FILTER/PUT
        (class=typing #args=1): True if argument is a map which is non-empty.
 
    is_not_empty
-       (class=typing #args=1): False if field is present in input with empty value, false otherwise
+       (class=typing #args=1): False if field is present in input with empty value, true otherwise
 
    is_not_map
        (class=typing #args=1): True if argument is not a map.
@@ -2245,4 +2245,4 @@ SEE ALSO
 
 
 
-				  2018-12-09			     MILLER(1)
+				  2018-12-15			     MILLER(1)
