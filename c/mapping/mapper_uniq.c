@@ -346,7 +346,7 @@ static sllv_t* mapper_uniq_process_uniqify_entire_records(
 			// have seen
 			free(lrec_as_string);
 			lrec_free(pinrec);
-			return sllv_single(NULL);
+			return NULL;
 		} else {
 			lhmsll_put(pstate->puniqified_record_counts, lrec_as_string, 1LL, FREE_ENTRY_KEY);
 			return sllv_single(pinrec);
