@@ -370,11 +370,11 @@ static sllv_t* mapper_uniq_process_uniqify_entire_records_show_counts(
 			// have seen; count was just incremented
 			free(lrec_as_string);
 			lrec_free(pinrec);
-			return sllv_single(NULL);
+			return NULL;
 		} else {
 			lhmsll_put(pstate->puniqified_record_counts, lrec_as_string, 1LL, FREE_ENTRY_KEY);
 			lhmsv_put(pstate->puniqified_records, mlr_strdup_or_die(lrec_as_string), pinrec, FREE_ENTRY_KEY);
-			return sllv_single(NULL);
+			return NULL;
 		}
 	} else { // end of record stream
 		sllv_t* poutrecs = sllv_alloc();
@@ -404,11 +404,11 @@ static sllv_t* mapper_uniq_process_uniqify_entire_records_show_num_distinct_only
 		if (lhmsll_has_key(pstate->puniqified_record_counts, lrec_as_string)) {
 			free(lrec_as_string);
 			lrec_free(pinrec);
-			return sllv_single(NULL);
+			return NULL;
 		} else {
 			lhmsll_put(pstate->puniqified_record_counts, lrec_as_string, 1LL, FREE_ENTRY_KEY);
 			lrec_free(pinrec);
-			return sllv_single(NULL);
+			return NULL;
 		}
 	} else { // end of record stream
 		sllv_t* poutrecs = sllv_alloc();
@@ -554,7 +554,7 @@ static sllv_t* mapper_uniq_process_no_counts(
 	void* pvstate)
 {
 	mapper_uniq_state_t* pstate = pvstate;
-	if (pinrec == NULL) {
+	if (pinrec == NULL) { // end of record stream
 		return sllv_single(NULL);
 	}
 
