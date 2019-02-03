@@ -119,7 +119,7 @@ static void mapper_sort_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Flags:\n");
 	fprintf(o, "  -f  {comma-separated field names}  Lexical ascending\n");
 	fprintf(o, "  -n  {comma-separated field names}  Numerical ascending; nulls sort last\n");
-	fprintf(o, "  -nf {comma-separated field names}  Numerical ascending; nulls sort last\n");
+	fprintf(o, "  -nf {comma-separated field names}  Same as -n\n");
 	fprintf(o, "  -r  {comma-separated field names}  Lexical descending\n");
 	fprintf(o, "  -nr {comma-separated field names}  Numerical descending; nulls sort first\n");
 	fprintf(o, "Sorts records primarily by the first specified field, secondarily by the second\n");
