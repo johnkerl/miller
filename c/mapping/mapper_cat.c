@@ -7,6 +7,7 @@
 
 typedef struct _mapper_cat_state_t {
 	ap_state_t* pargp;
+	int verbose;
 	char* counter_field_name;
 	unsigned long long counter;
 	slls_t* pgroup_by_field_names;
@@ -18,7 +19,7 @@ typedef struct _mapper_cat_state_t {
 static void      mapper_cat_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
-static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* counter_field_name,
+static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, int verbose, char* counter_field_name,
 	slls_t* pgroup_by_field_names);
 static void      mapper_cat_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_cat_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
@@ -40,6 +41,7 @@ static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv,
 	char* default_counter_field_name = DEFAULT_COUNTER_FIELD_NAME;
 	char* counter_field_name = NULL;
 	int   do_counters = FALSE;
+	int   verbose = FALSE;
 	slls_t* pgroup_by_field_names = slls_alloc();
 
 	if ((argc - *pargi) < 1) {
@@ -51,6 +53,7 @@ static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv,
 
 	ap_state_t* pstate = ap_alloc();
 	ap_define_true_flag(pstate, "-n",   &do_counters);
+	ap_define_true_flag(pstate, "-v",   &verbose);
 	ap_define_string_flag(pstate, "-N", &counter_field_name);
 	ap_define_string_list_flag(pstate, "-g", &pgroup_by_field_names);
 
@@ -65,7 +68,7 @@ static mapper_t* mapper_cat_parse_cli(int* pargi, int argc, char** argv,
 		counter_field_name = default_counter_field_name;
 	}
 
-	mapper_t* pmapper = mapper_cat_alloc(pstate, do_counters, counter_field_name, pgroup_by_field_names);
+	mapper_t* pmapper = mapper_cat_alloc(pstate, do_counters, verbose, counter_field_name, pgroup_by_field_names);
 	return pmapper;
 }
 
@@ -77,16 +80,18 @@ static void mapper_cat_usage(FILE* o, char* argv0, char* verb) {
 		DEFAULT_COUNTER_FIELD_NAME);
 	fprintf(o, "-g {comma-separated field name(s)} When used with -n/-N, writes record-counters\n");
 	fprintf(o, "          keyed by specified field name(s).\n");
+	fprintf(o, "-v        Write a low-level record-structure dump to stderr.\n");
 	fprintf(o, "-N {name} Prepend field {name} to each record with record-counter starting at 1\n");
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, char* counter_field_name,
+static mapper_t* mapper_cat_alloc(ap_state_t* pargp, int do_counters, int verbose, char* counter_field_name,
 	slls_t* pgroup_by_field_names)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 	mapper_cat_state_t* pstate    = mlr_malloc_or_die(sizeof(mapper_cat_state_t));
 	pstate->pargp                 = pargp;
+	pstate->verbose               = verbose;
 	pstate->pgroup_by_field_names = pgroup_by_field_names;
 	pstate->counter_field_name    = counter_field_name;
 	pstate->counter               = 0LL;
@@ -121,6 +126,10 @@ static void mapper_cat_free(mapper_t* pmapper, context_t* _) {
 
 // ----------------------------------------------------------------
 static sllv_t* mapper_cat_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_cat_state_t* pstate = (mapper_cat_state_t*)pvstate;
+	if (pstate->verbose) {
+		lrec_dump_fp(pinrec, stderr);
+	}
 	if (pinrec != NULL)
 		return sllv_single(pinrec);
 	else
@@ -130,6 +139,9 @@ static sllv_t* mapper_cat_process(lrec_t* pinrec, context_t* pctx, void* pvstate
 // ----------------------------------------------------------------
 static sllv_t* mapper_catn_process_ungrouped(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_cat_state_t* pstate = (mapper_cat_state_t*)pvstate;
+	if (pstate->verbose) {
+		lrec_dump_fp(pinrec, stderr);
+	}
 	if (pinrec != NULL) {
 		char* counter_field_value = mlr_alloc_string_from_ull(++pstate->counter);
 		lrec_prepend(pinrec, pstate->counter_field_name, counter_field_value, FREE_ENTRY_VALUE);
@@ -142,6 +154,9 @@ static sllv_t* mapper_catn_process_ungrouped(lrec_t* pinrec, context_t* pctx, vo
 // ----------------------------------------------------------------
 static sllv_t* mapper_catn_process_grouped(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	mapper_cat_state_t* pstate = (mapper_cat_state_t*)pvstate;
+	if (pstate->verbose) {
+		lrec_dump_fp(pinrec, stderr);
+	}
 	if (pinrec != NULL) {
 
 		unsigned long long counter = 0LL;

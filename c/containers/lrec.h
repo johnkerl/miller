@@ -152,6 +152,7 @@ void lrec_unlink_and_free(lrec_t* prec, lrece_t* pe);
 
 void lrec_print(lrec_t* prec);
 void lrec_dump(lrec_t* prec);
+void lrec_dump_fp(lrec_t* prec, FILE* fp);
 void lrec_dump_titled(char* msg, lrec_t* prec);
 void lrec_pointer_dump(lrec_t* prec);
 // The caller should free the return value

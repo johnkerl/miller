@@ -432,8 +432,15 @@ static void lrec_link_at_tail(lrec_t* prec, lrece_t* pe) {
 
 // ----------------------------------------------------------------
 void lrec_dump(lrec_t* prec) {
-	printf("field_count = %d\n", prec->field_count);
-	printf("| phead: %16p | ptail %16p\n", prec->phead, prec->ptail);
+	lrec_dump_fp(prec, stdout);
+}
+void lrec_dump_fp(lrec_t* prec, FILE* fp) {
+	if (prec == NULL) {
+		fprintf(fp, "NULL\n");
+		return;
+	}
+	fprintf(fp, "field_count = %d\n", prec->field_count);
+	fprintf(fp, "| phead: %16p | ptail %16p\n", prec->phead, prec->ptail);
 	for (lrece_t* pe = prec->phead; pe != NULL; pe = pe->pnext) {
 		const char* key_string = (pe == NULL) ? "none" :
 			pe->key == NULL ? "null" :
@@ -441,7 +448,7 @@ void lrec_dump(lrec_t* prec) {
 		const char* value_string = (pe == NULL) ? "none" :
 			pe->value == NULL ? "null" :
 			pe->value;
-		printf(
+		fprintf(fp,
 		"| prev: %16p curr: %16p next: %16p | key: %12s | value: %12s |\n",
 			pe->pprev, pe, pe->pnext,
 			key_string, value_string);
