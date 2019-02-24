@@ -937,6 +937,7 @@ static void main_usage_csv_options(FILE* o, char* argv0) {
 	fprintf(o, "                     of input files. Tip: combine with \"label\" to recreate\n");
 	fprintf(o, "                     missing headers.\n");
 	fprintf(o, "  --headerless-csv-output   Print only CSV data lines.\n");
+	fprintf(o, "  -N                 Keystroke-saver for --implicit-csv-header --headerless-csv-output.\n");
 }
 
 static void main_usage_double_quoting(FILE* o, char* argv0) {
@@ -2099,6 +2100,10 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 		pwriter_opts->ofile_fmt = "markdown";
 		argi += 1;
 
+	} else if (streq(argv[argi], "-N")) {
+		preader_opts->use_implicit_csv_header = TRUE;
+		pwriter_opts->headerless_csv_output = TRUE;
+		argi += 1;
 	}
 	*pargi = argi;
 	return argi != oargi;

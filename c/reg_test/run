@@ -5164,6 +5164,9 @@ run_mlr --implicit-csv-header --icsv --ifs ,  --opprint cut -x -f 2  $indir/mult
 run_mlr                       --icsv --ifs /, --opprint cut -x -f b  $indir/multi-sep.csv-crlf
 run_mlr --implicit-csv-header --icsv --ifs /, --opprint cut -x -f 2  $indir/multi-sep.csv-crlf
 
+run_mlr --csv -N reorder -f 1,3,2,5,4 $indir/multi-sep.csv-crlf
+run_mlr --csv -N reorder -f 5,4,3,2,1 $indir/multi-sep.csv-crlf
+
 # ----------------------------------------------------------------
 announce HET-CSV INPUT
 
