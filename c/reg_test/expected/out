@@ -48091,6 +48091,9 @@ pan wye 10 0.5026260055412137  0.9526183602969864
 mlr --icsv --ojson --rs lf cat
 { "col": "abc \"def\" \\ghi" }
 
+mlr --icsv --ojson --jvquoteall --rs lf cat
+{ "col": "abc \"def\" \\ghi" }
+
 mlr --ijson --oxtab cat ./reg_test/input/arrays.json
 a 1
 b 1

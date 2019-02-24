@@ -5825,6 +5825,11 @@ col
 "abc ""def"" \ghi"
 EOF
 
+run_mlr --icsv --ojson --jvquoteall --rs lf cat <<EOF
+col
+"abc ""def"" \ghi"
+EOF
+
 run_mlr         --ijson --oxtab                              cat $indir/arrays.json
 run_mlr         --ijson --oxtab --json-map-arrays-on-input   cat $indir/arrays.json
 run_mlr         --ijson --oxtab --json-skip-arrays-on-input  cat $indir/arrays.json

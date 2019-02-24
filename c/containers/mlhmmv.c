@@ -1253,7 +1253,7 @@ static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 			char* level_value_string = mv_alloc_format_val(&pentry->level_xvalue.terminal_mlrval);
 
 			if (quote_values_always) {
-				fprintf(ostream, "\"%s\"", level_value_string);
+				json_print_string_escaped(ostream,level_value_string);
 			} else if (pentry->level_xvalue.terminal_mlrval.type == MT_STRING) {
 				double unused;
 				if (mlr_try_float_from_string(level_value_string, &unused)) {
