@@ -37,6 +37,7 @@ libmapping_la_SOURCES=	\
 			mapper_shuffle.c \
 			mapper_skip_trivial_records.c \
 			mapper_sort.c \
+			mapper_sort_within_records.c \
 			mapper_stats1.c \
 			mapper_stats2.c \
 			mapper_step.c \

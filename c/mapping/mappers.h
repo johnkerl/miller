@@ -44,6 +44,7 @@ extern mapper_setup_t mapper_seqgen_setup;
 extern mapper_setup_t mapper_shuffle_setup;
 extern mapper_setup_t mapper_skip_trivial_records_setup;
 extern mapper_setup_t mapper_sort_setup;
+extern mapper_setup_t mapper_sort_within_records_setup;
 extern mapper_setup_t mapper_stats1_setup;
 extern mapper_setup_t mapper_stats2_setup;
 extern mapper_setup_t mapper_step_setup;

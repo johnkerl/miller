@@ -78,6 +78,7 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_shuffle_setup,
 	&mapper_skip_trivial_records_setup,
 	&mapper_sort_setup,
+	&mapper_sort_within_records_setup,
 	&mapper_stats1_setup,
 	&mapper_stats2_setup,
 	&mapper_step_setup,
