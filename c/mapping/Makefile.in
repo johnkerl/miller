@@ -113,14 +113,15 @@ am_libmapping_la_OBJECTS = mapper_altkv.lo mapper_bar.lo \
 	mapper_label.lo mapper_merge_fields.lo \
 	mapper_most_or_least_frequent.lo mapper_nest.lo \
 	mapper_nothing.lo mapper_fraction.lo mapper_put_or_filter.lo \
-	mapper_regularize.lo mapper_rename.lo mapper_reorder.lo \
-	mapper_repeat.lo mapper_reshape.lo mapper_sample.lo \
-	mapper_sec2gmt.lo mapper_sec2gmtdate.lo mapper_seqgen.lo \
-	mapper_shuffle.lo mapper_skip_trivial_records.lo \
-	mapper_sort.lo mapper_stats1.lo mapper_stats2.lo \
-	mapper_step.lo mapper_tac.lo mapper_tail.lo mapper_tee.lo \
-	mapper_top.lo mapper_uniq.lo mapper_unsparsify.lo mappers.lo \
-	stats1_accumulators.lo
+	mapper_regularize.lo mapper_remove_empty_columns.lo \
+	mapper_rename.lo mapper_reorder.lo mapper_repeat.lo \
+	mapper_reshape.lo mapper_sample.lo mapper_sec2gmt.lo \
+	mapper_sec2gmtdate.lo mapper_seqgen.lo mapper_shuffle.lo \
+	mapper_skip_trivial_records.lo mapper_sort.lo \
+	mapper_sort_within_records.lo mapper_stats1.lo \
+	mapper_stats2.lo mapper_step.lo mapper_tac.lo mapper_tail.lo \
+	mapper_tee.lo mapper_top.lo mapper_uniq.lo \
+	mapper_unsparsify.lo mappers.lo stats1_accumulators.lo
 libmapping_la_OBJECTS = $(am_libmapping_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -158,18 +159,21 @@ am__depfiles_remade = ./$(DEPDIR)/mapper_altkv.Plo \
 	./$(DEPDIR)/mapper_nest.Plo ./$(DEPDIR)/mapper_nothing.Plo \
 	./$(DEPDIR)/mapper_put_or_filter.Plo \
 	./$(DEPDIR)/mapper_regularize.Plo \
+	./$(DEPDIR)/mapper_remove_empty_columns.Plo \
 	./$(DEPDIR)/mapper_rename.Plo ./$(DEPDIR)/mapper_reorder.Plo \
 	./$(DEPDIR)/mapper_repeat.Plo ./$(DEPDIR)/mapper_reshape.Plo \
 	./$(DEPDIR)/mapper_sample.Plo ./$(DEPDIR)/mapper_sec2gmt.Plo \
 	./$(DEPDIR)/mapper_sec2gmtdate.Plo \
 	./$(DEPDIR)/mapper_seqgen.Plo ./$(DEPDIR)/mapper_shuffle.Plo \
 	./$(DEPDIR)/mapper_skip_trivial_records.Plo \
-	./$(DEPDIR)/mapper_sort.Plo ./$(DEPDIR)/mapper_stats1.Plo \
-	./$(DEPDIR)/mapper_stats2.Plo ./$(DEPDIR)/mapper_step.Plo \
-	./$(DEPDIR)/mapper_tac.Plo ./$(DEPDIR)/mapper_tail.Plo \
-	./$(DEPDIR)/mapper_tee.Plo ./$(DEPDIR)/mapper_top.Plo \
-	./$(DEPDIR)/mapper_uniq.Plo ./$(DEPDIR)/mapper_unsparsify.Plo \
-	./$(DEPDIR)/mappers.Plo ./$(DEPDIR)/stats1_accumulators.Plo
+	./$(DEPDIR)/mapper_sort.Plo \
+	./$(DEPDIR)/mapper_sort_within_records.Plo \
+	./$(DEPDIR)/mapper_stats1.Plo ./$(DEPDIR)/mapper_stats2.Plo \
+	./$(DEPDIR)/mapper_step.Plo ./$(DEPDIR)/mapper_tac.Plo \
+	./$(DEPDIR)/mapper_tail.Plo ./$(DEPDIR)/mapper_tee.Plo \
+	./$(DEPDIR)/mapper_top.Plo ./$(DEPDIR)/mapper_uniq.Plo \
+	./$(DEPDIR)/mapper_unsparsify.Plo ./$(DEPDIR)/mappers.Plo \
+	./$(DEPDIR)/stats1_accumulators.Plo
 am__mv = mv -f
 COMPILE = $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) \
 	$(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS)
@@ -260,6 +264,7 @@ LIBTOOL = @LIBTOOL@
 LIPO = @LIPO@
 LN_S = @LN_S@
 LTLIBOBJS = @LTLIBOBJS@
+LT_SYS_LIBRARY_PATH = @LT_SYS_LIBRARY_PATH@
 MAKEINFO = @MAKEINFO@
 MANIFEST_TOOL = @MANIFEST_TOOL@
 MKDIR_P = @MKDIR_P@
@@ -362,6 +367,7 @@ libmapping_la_SOURCES = \
 			mapper_fraction.c \
 			mapper_put_or_filter.c \
 			mapper_regularize.c \
+			mapper_remove_empty_columns.c \
 			mapper_rename.c \
 			mapper_reorder.c \
 			mapper_repeat.c \
@@ -373,6 +379,7 @@ libmapping_la_SOURCES = \
 			mapper_shuffle.c \
 			mapper_skip_trivial_records.c \
 			mapper_sort.c \
+			mapper_sort_within_records.c \
 			mapper_stats1.c \
 			mapper_stats2.c \
 			mapper_step.c \
@@ -410,9 +417,9 @@ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
 	      exit 1;; \
 	  esac; \
 	done; \
-	echo ' cd $(top_srcdir) && $(AUTOMAKE) --foreign c/mapping/Makefile'; \
+	echo ' cd $(top_srcdir) && $(AUTOMAKE) --gnu c/mapping/Makefile'; \
 	$(am__cd) $(top_srcdir) && \
-	  $(AUTOMAKE) --foreign c/mapping/Makefile
+	  $(AUTOMAKE) --gnu c/mapping/Makefile
 Makefile: $(srcdir)/Makefile.in $(top_builddir)/config.status
 	@case '$?' in \
 	  *config.status*) \
@@ -475,6 +482,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_nothing.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_put_or_filter.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_regularize.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_remove_empty_columns.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_rename.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_reorder.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_repeat.Plo@am__quote@ # am--include-marker
@@ -486,6 +494,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_shuffle.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_skip_trivial_records.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_sort.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_sort_within_records.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_stats1.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_stats2.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_step.Plo@am__quote@ # am--include-marker
@@ -680,6 +689,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/mapper_nothing.Plo
 	-rm -f ./$(DEPDIR)/mapper_put_or_filter.Plo
 	-rm -f ./$(DEPDIR)/mapper_regularize.Plo
+	-rm -f ./$(DEPDIR)/mapper_remove_empty_columns.Plo
 	-rm -f ./$(DEPDIR)/mapper_rename.Plo
 	-rm -f ./$(DEPDIR)/mapper_reorder.Plo
 	-rm -f ./$(DEPDIR)/mapper_repeat.Plo
@@ -691,6 +701,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/mapper_shuffle.Plo
 	-rm -f ./$(DEPDIR)/mapper_skip_trivial_records.Plo
 	-rm -f ./$(DEPDIR)/mapper_sort.Plo
+	-rm -f ./$(DEPDIR)/mapper_sort_within_records.Plo
 	-rm -f ./$(DEPDIR)/mapper_stats1.Plo
 	-rm -f ./$(DEPDIR)/mapper_stats2.Plo
 	-rm -f ./$(DEPDIR)/mapper_step.Plo
@@ -771,6 +782,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/mapper_nothing.Plo
 	-rm -f ./$(DEPDIR)/mapper_put_or_filter.Plo
 	-rm -f ./$(DEPDIR)/mapper_regularize.Plo
+	-rm -f ./$(DEPDIR)/mapper_remove_empty_columns.Plo
 	-rm -f ./$(DEPDIR)/mapper_rename.Plo
 	-rm -f ./$(DEPDIR)/mapper_reorder.Plo
 	-rm -f ./$(DEPDIR)/mapper_repeat.Plo
@@ -782,6 +794,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/mapper_shuffle.Plo
 	-rm -f ./$(DEPDIR)/mapper_skip_trivial_records.Plo
 	-rm -f ./$(DEPDIR)/mapper_sort.Plo
+	-rm -f ./$(DEPDIR)/mapper_sort_within_records.Plo
 	-rm -f ./$(DEPDIR)/mapper_stats1.Plo
 	-rm -f ./$(DEPDIR)/mapper_stats2.Plo
 	-rm -f ./$(DEPDIR)/mapper_step.Plo
