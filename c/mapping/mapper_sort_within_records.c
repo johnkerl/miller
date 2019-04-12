@@ -80,7 +80,7 @@ static mapper_t* mapper_sort_within_records_parse_cli(int* pargi, int argc, char
 		mapper_sort_within_records_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;
 	}
-	char* verb = argv[*pargi];
+	//char* verb = argv[*pargi];
 	*pargi += 1;
 
 	while ((argc - *pargi) >= 1 && argv[*pargi][0] == '-') {
