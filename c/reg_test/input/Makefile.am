@@ -150,6 +150,7 @@ EXTRA_DIST=	\
 		quote-original.csv \
 		regex.dkvp \
 		regularize.dkvp \
+		remove-empty-columns.csv \
 		repeat-input.dat \
 		repeats.dkvp \
 		reshape-long-ragged.dkvp \
