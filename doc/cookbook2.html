@@ -235,7 +235,7 @@ abaca
 <p/> Then the following will randomly sample ten words with four to eight characters in them:
 <p/>
 <div class="pokipanel"> <pre>
-$ mlr --from data/english-words.txt --nidx filter 'n=strlen($1);4<=n&&n<=8' then sample -k 10
+$ mlr --from data/english-words.txt --nidx filter -S 'n=strlen($1);4<=n&&n<=8' then sample -k 10
 thionine
 birchman
 mildewy
