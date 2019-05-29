@@ -2,11 +2,10 @@ Summary: Name-indexed data processing tool
 Name: miller
 Version: 5.4.0
 Release: 1%{?dist}
-License: BSD2
-Group: Applications/Text
+License: BSD
 Source: https://github.com/johnkerl/miller/releases/download/%{version}/mlr-%{version}.tar.gz
 URL: http://johnkerl.org/miller/doc
-Buildroot: %{_tmppath}/mlr-%{version}-root
+BuildRequires: gcc
 BuildRequires: flex >= 2.5.35
 
 %description
@@ -21,47 +20,56 @@ well with pipes and can feed "tail -f".
 
 %build
 %configure
-make
+%make_build
 
 %check
 make check
 
 %install
-rm -rf ${RPM_BUILD_ROOT}
-make install DESTDIR="$RPM_BUILD_ROOT"
-
-%clean
-rm -rf ${RPM_BUILD_ROOT}
+%make_install
 
 %files
-%defattr(755, root, root, -)
+%license LICENSE.txt
+%doc README.md
 %{_bindir}/mlr
-%defattr(644, root, root, -)
-%{_mandir}/man1/mlr.1.gz
-%defattr(-,root,root)
+%{_mandir}/man1/mlr.1*
 
 %changelog
-* Sun Oct 14 2018 John Kerl <kerl.john.r@gmail.com>
+* Tue May 28 2019 Stephen Kitt <steve@sk2.org> - 5.4.0-1
+- Fix up for Fedora
+
+* Sun Oct 14 2018 John Kerl <kerl.john.r@gmail.com> - 5.4.0-1
 - 5.4.0 release
-* Sat Jan 06 2018 John Kerl <kerl.john.r@gmail.com>
+
+* Sat Jan 06 2018 John Kerl <kerl.john.r@gmail.com> - 5.3.0-1
 - 5.3.0 release
-* Mon Jul 19 2017 John Kerl <kerl.john.r@gmail.com>
+
+* Thu Jul 20 2017 John Kerl <kerl.john.r@gmail.com> - 5.2.2-1
 - 5.2.2 release
-* Mon Jun 19 2017 John Kerl <kerl.john.r@gmail.com>
+
+* Mon Jun 19 2017 John Kerl <kerl.john.r@gmail.com> - 5.2.1-1
 - 5.2.1 release
-* Sun Jun 11 2017 John Kerl <kerl.john.r@gmail.com>
+
+* Sun Jun 11 2017 John Kerl <kerl.john.r@gmail.com> - 5.2.0-1
 - 5.2.0 release
-* Thu Apr 13 2017 John Kerl <kerl.john.r@gmail.com>
+
+* Thu Apr 13 2017 John Kerl <kerl.john.r@gmail.com> - 5.1.0-1
 - 5.1.0 release
-* Sat Mar 11 2017 John Kerl <kerl.john.r@gmail.com>
+
+* Sat Mar 11 2017 John Kerl <kerl.john.r@gmail.com> - 5.0.1-1
 - 5.0.1 release
-* Mon Feb 27 2017 John Kerl <kerl.john.r@gmail.com>
+
+* Mon Feb 27 2017 John Kerl <kerl.john.r@gmail.com> - 5.0.0-1
 - 5.0.0 release
-* Sun Aug 21 2016 John Kerl <kerl.john.r@gmail.com>
+
+* Sun Aug 21 2016 John Kerl <kerl.john.r@gmail.com> - 4.5.0-1
 - 4.5.0 release
-* Mon Apr 04 2016 John Kerl <kerl.john.r@gmail.com>
+
+* Mon Apr 04 2016 John Kerl <kerl.john.r@gmail.com> - 3.5.0-1
 - 3.5.0 release
-* Sun Feb 14 2016 John Kerl <kerl.john.r@gmail.com>
+
+* Sun Feb 14 2016 John Kerl <kerl.john.r@gmail.com> - 3.4.0-1
 - 3.4.0 release
-* Sun Feb 07 2016 John Kerl <kerl.john.r@gmail.com>
+
+* Sun Feb 07 2016 John Kerl <kerl.john.r@gmail.com> - 3.3.2-1
 - Initial spec-file submission for Miller
