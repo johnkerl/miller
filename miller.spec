@@ -1,12 +1,12 @@
 Summary: Name-indexed data processing tool
-Name: mlr
+Name: miller
 Version: 5.4.0
 Release: 1%{?dist}
 License: BSD2
 Group: Applications/Text
-Source: https://github.com/johnkerl/miller/releases/download/v%{version}/%{name}-%{version}.tar.gz
+Source: https://github.com/johnkerl/miller/releases/download/%{version}/mlr-%{version}.tar.gz
 URL: http://johnkerl.org/miller/doc
-Buildroot: %{_tmppath}/%{name}-%{version}-root
+Buildroot: %{_tmppath}/mlr-%{version}-root
 BuildRequires: flex >= 2.5.35
 
 %description
@@ -17,7 +17,7 @@ streams data where possible so its memory requirements stay small. It works
 well with pipes and can feed "tail -f".
 
 %prep
-%setup -q -n %{name}-%{version}
+%setup -q -n mlr-%{version}
 
 %build
 %configure
