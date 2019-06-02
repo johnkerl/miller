@@ -291,6 +291,8 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_MATH, "urand",    0,0,
 		"Floating-point numbers on the unit interval.\n"
 		"Int-valued example: '$n=floor(20+urand()*11)'." },
+	{FUNC_CLASS_MATH, "urandrange",    2,0,
+		"Floating-point numbers on the interval [a, b)." },
 	{FUNC_CLASS_MATH, "urand32",  0,0, "Integer uniformly distributed 0 and 2**32-1\n"
 	"inclusive." },
 	{FUNC_CLASS_MATH, "urandint", 2,0, "Integer uniformly distributed between inclusive\ninteger endpoints." },
@@ -1262,6 +1264,7 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_binary_func_name(char* fnnm,
 	} else if (streq(fnnm, "strftime_local")) { return rval_evaluator_alloc_from_x_ns_func(s_ns_strftime_local_func, parg1, parg2);
 	} else if (streq(fnnm, "strptime")) { return rval_evaluator_alloc_from_x_ss_func(i_ss_strptime_func, parg1, parg2);
 	} else if (streq(fnnm, "strptime_local")) { return rval_evaluator_alloc_from_x_ss_func(i_ss_strptime_local_func, parg1, parg2);
+	} else if (streq(fnnm, "urandrange")) { return rval_evaluator_alloc_from_f_ff_func(f_ff_urandrange_func, parg1, parg2);
 	} else  { return NULL; }
 }
 

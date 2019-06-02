@@ -178,6 +178,13 @@ static inline mv_t i_ii_urandint_func(mv_t* pval1, mv_t* pval2) {
 	return mv_from_int(u);
 }
 
+static inline mv_t f_ff_urandrange_func(mv_t* pval1, mv_t* pval2) {
+	double lo = pval1->u.fltv;
+	double hi = pval2->u.fltv;
+	double u  = lo + (hi - lo) * get_mtrand_double();
+	return mv_from_float(u);
+}
+
 static inline mv_t i_ii_bitwise_lsh_func(mv_t* pval1, mv_t* pval2) {
 	return mv_from_int(pval1->u.intv << pval2->u.intv);
 }

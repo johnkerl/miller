@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2019-02-24
+.\"      Date: 2019-06-02
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2019-02-24" "\ \&" "\ \&"
+.TH "MILLER" "1" "2019-06-02" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -172,8 +172,8 @@ output separator to the given value.
  cut decimate fill-down filter fraction grep group-by group-like having-fields
  head histogram join label least-frequent merge-fields most-frequent nest
  nothing put regularize remove-empty-columns rename reorder repeat reshape
- sample sec2gmt sec2gmtdate seqgen shuffle skip-trivial-records sort stats1
- stats2 step tac tail tee top uniq unsparsify
+ sample sec2gmt sec2gmtdate seqgen shuffle skip-trivial-records sort
+ sort-within-records stats1 stats2 step tac tail tee top uniq unsparsify
 .fi
 .if n \{\
 .RE
@@ -187,19 +187,19 @@ output separator to the given value.
  substr tolower toupper lstrip rstrip strip collapse_whitespace
  clean_whitespace abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh
  erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd max mexp min
- mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand urand32
- urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec localtime2sec hms2fsec
- hms2sec sec2dhms sec2gmt sec2gmt sec2gmtdate sec2localtime sec2localtime
- sec2localdate sec2hms strftime strftime_local strptime strptime_local systime
- is_absent is_bool is_boolean is_empty is_empty_map is_float is_int is_map
- is_nonempty_map is_not_empty is_not_map is_not_null is_null is_numeric
- is_present is_string asserting_absent asserting_bool asserting_boolean
- asserting_empty asserting_empty_map asserting_float asserting_int
- asserting_map asserting_nonempty_map asserting_not_empty asserting_not_map
- asserting_not_null asserting_null asserting_numeric asserting_present
- asserting_string boolean float fmtnum hexfmt int string typeof depth haskey
- joink joinkv joinv leafcount length mapdiff mapexcept mapselect mapsum splitkv
- splitkvx splitnv splitnvx
+ mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand urandrange
+ urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec localtime2sec
+ hms2fsec hms2sec sec2dhms sec2gmt sec2gmt sec2gmtdate sec2localtime
+ sec2localtime sec2localdate sec2hms strftime strftime_local strptime
+ strptime_local systime is_absent is_bool is_boolean is_empty is_empty_map
+ is_float is_int is_map is_nonempty_map is_not_empty is_not_map is_not_null
+ is_null is_numeric is_present is_string asserting_absent asserting_bool
+ asserting_boolean asserting_empty asserting_empty_map asserting_float
+ asserting_int asserting_map asserting_nonempty_map asserting_not_empty
+ asserting_not_map asserting_not_null asserting_null asserting_numeric
+ asserting_present asserting_string boolean float fmtnum hexfmt int string
+ typeof depth haskey joink joinkv joinv leafcount length mapdiff mapexcept
+ mapselect mapsum splitkv splitkvx splitnv splitnvx
 
 Please use "mlr --help-function {function name}" for function-specific help.
 .fi
@@ -1483,6 +1483,27 @@ which is the same as:
 .fi
 .if n \{\
 .RE
+.SS "sort-within-records"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr sort-within-records {flags}
+Flags:
+  -k    Sort by keys
+  -v    Sort by values
+  -n    Sort numerically
+  -f    Sort lexically (default)
+  -r    Reverse sort
+  -nk   Shorthand for -n -k
+  -nv   Shorthand for -n -v
+  -rk   Shorthand for -r -k
+  -rv   Shorthand for -r -v
+  -nrk  Shorthand for -n -r -k
+  -nrv  Shorthand for -n -r -v
+.fi
+.if n \{\
+.RE
 .SS "stats1"
 .if n \{\
 .RS 0
@@ -2523,6 +2544,15 @@ negative input.
 .nf
 (class=math #args=0): Floating-point numbers on the unit interval.
 Int-valued example: '$n=floor(20+urand()*11)'.
+.fi
+.if n \{\
+.RE
+.SS "urandrange"
+.if n \{\
+.RS 0
+.\}
+.nf
+(class=math #args=2): Floating-point numbers on the interval [a, b).
 .fi
 .if n \{\
 .RE

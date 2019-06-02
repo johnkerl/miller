@@ -1454,8 +1454,8 @@ Verbs:
    having-fields head histogram join label least-frequent merge-fields
    most-frequent nest nothing put regularize remove-empty-columns rename
    reorder repeat reshape sample sec2gmt sec2gmtdate seqgen shuffle
-   skip-trivial-records sort stats1 stats2 step tac tail tee top uniq
-   unsparsify
+   skip-trivial-records sort sort-within-records stats1 stats2 step tac tail
+   tee top uniq unsparsify
 
 Functions for the filter and put verbs:
    + + - - * / // .+ .+ .- .- .* ./ .// % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; bitcount == != =~
@@ -1464,18 +1464,18 @@ Functions for the filter and put verbs:
    clean_whitespace abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos
    cosh erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd max mexp
    min mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand
-   urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec localtime2sec
-   hms2fsec hms2sec sec2dhms sec2gmt sec2gmt sec2gmtdate sec2localtime
-   sec2localtime sec2localdate sec2hms strftime strftime_local strptime
-   strptime_local systime is_absent is_bool is_boolean is_empty is_empty_map
-   is_float is_int is_map is_nonempty_map is_not_empty is_not_map is_not_null
-   is_null is_numeric is_present is_string asserting_absent asserting_bool
-   asserting_boolean asserting_empty asserting_empty_map asserting_float
-   asserting_int asserting_map asserting_nonempty_map asserting_not_empty
-   asserting_not_map asserting_not_null asserting_null asserting_numeric
-   asserting_present asserting_string boolean float fmtnum hexfmt int string
-   typeof depth haskey joink joinkv joinv leafcount length mapdiff mapexcept
-   mapselect mapsum splitkv splitkvx splitnv splitnvx
+   urandrange urand32 urandint dhms2fsec dhms2sec fsec2dhms fsec2hms gmt2sec
+   localtime2sec hms2fsec hms2sec sec2dhms sec2gmt sec2gmt sec2gmtdate
+   sec2localtime sec2localtime sec2localdate sec2hms strftime strftime_local
+   strptime strptime_local systime is_absent is_bool is_boolean is_empty
+   is_empty_map is_float is_int is_map is_nonempty_map is_not_empty is_not_map
+   is_not_null is_null is_numeric is_present is_string asserting_absent
+   asserting_bool asserting_boolean asserting_empty asserting_empty_map
+   asserting_float asserting_int asserting_map asserting_nonempty_map
+   asserting_not_empty asserting_not_map asserting_not_null asserting_null
+   asserting_numeric asserting_present asserting_string boolean float fmtnum
+   hexfmt int string typeof depth haskey joink joinkv joinv leafcount length
+   mapdiff mapexcept mapselect mapsum splitkv splitkvx splitnv splitnvx
 
 Please use "mlr --help-function {function name}" for function-specific help.
 
