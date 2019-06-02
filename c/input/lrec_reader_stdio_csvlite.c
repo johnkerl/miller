@@ -337,6 +337,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_k
 		if (*p == ifs) {
 			*p = 0;
 			if (pe == NULL) {
+				// Data line has more fields than the header line did
 				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 					MLR_GLOBALS.bargv0, filename, ilno);
 				exit(1);
@@ -358,6 +359,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_k
 	if (allow_repeat_ifs && *value == 0) {
 		; // OK
 	} else if (pe == NULL) {
+		// Data line has more fields than the header line did
 		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 			MLR_GLOBALS.bargv0, filename, ilno);
 		exit(1);
@@ -365,6 +367,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_k
 		key = pe->value;
 		lrec_put(prec, key, value, NO_FREE);
 		if (pe->pnext != NULL) {
+			// Header line has more fields than the data line did
 			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 				MLR_GLOBALS.bargv0, filename, ilno);
 			exit(1);
@@ -392,6 +395,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_ke
 		if (streqn(p, ifs, ifslen)) {
 			*p = 0;
 			if (pe == NULL) {
+				// Data line has more fields than the header line did
 				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 					MLR_GLOBALS.bargv0, filename, ilno);
 				exit(1);
@@ -413,6 +417,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_ke
 	if (allow_repeat_ifs && *value == 0) {
 		; // OK
 	} else if (pe == NULL) {
+		// Data line has more fields than the header line did
 		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 			MLR_GLOBALS.bargv0, filename, ilno);
 		exit(1);
@@ -420,6 +425,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_ke
 		key = pe->value;
 		lrec_put(prec, key, value, NO_FREE);
 		if (pe->pnext != NULL) {
+			// Header line has more fields than the data line did
 			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 				MLR_GLOBALS.bargv0, filename, ilno);
 			exit(1);

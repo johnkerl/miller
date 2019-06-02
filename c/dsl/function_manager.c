@@ -289,10 +289,10 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_MATH, "tan",      1,0, "Trigonometric tangent."},
 	{FUNC_CLASS_MATH, "tanh",     1,0, "Hyperbolic tangent."},
 	{FUNC_CLASS_MATH, "urand",    0,0,
-		"Floating-point numbers on the unit interval.\n"
+		"Floating-point numbers uniformly distributed on the unit interval.\n"
 		"Int-valued example: '$n=floor(20+urand()*11)'." },
 	{FUNC_CLASS_MATH, "urandrange",    2,0,
-		"Floating-point numbers on the interval [a, b)." },
+		"Floating-point numbers uniformly distributed on the interval [a, b)." },
 	{FUNC_CLASS_MATH, "urand32",  0,0, "Integer uniformly distributed 0 and 2**32-1\n"
 	"inclusive." },
 	{FUNC_CLASS_MATH, "urandint", 2,0, "Integer uniformly distributed between inclusive\ninteger endpoints." },

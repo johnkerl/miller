@@ -1607,11 +1607,11 @@ FUNCTIONS FOR FILTER/PUT
        (class=math #args=1): Hyperbolic tangent.
 
    urand
-       (class=math #args=0): Floating-point numbers on the unit interval.
+       (class=math #args=0): Floating-point numbers uniformly distributed on the unit interval.
        Int-valued example: '$n=floor(20+urand()*11)'.
 
    urandrange
-       (class=math #args=2): Floating-point numbers on the interval [a, b).
+       (class=math #args=2): Floating-point numbers uniformly distributed on the interval [a, b).
 
    urand32
        (class=math #args=0): Integer uniformly distributed 0 and 2**32-1

@@ -443,6 +443,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 		} else if (*p == ifs) {
 			*p = 0;
 			if (pe == NULL) {
+				// Data line has more fields than the header line did
 				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 					MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 				exit(1);
@@ -468,6 +469,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 		return prec;
 
 	if (pe == NULL) {
+		// Data line has more fields than the header line did
 		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 			MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 		exit(1);
@@ -488,6 +490,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_single_seps(file_reader_mmap_
 	}
 
 	if (pe->pnext != NULL) {
+		// Header line has more fields than the data line did
 		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 			MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 		exit(1);
@@ -540,6 +543,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 		} else if (streqn(p, ifs, ifslen)) {
 			*p = 0;
 			if (pe == NULL) {
+				// Data line has more fields than the header line did
 				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 					MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 				exit(1);
@@ -565,6 +569,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 		return prec;
 
 	if (pe == NULL) {
+		// Data line has more fields than the header line did
 		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 			MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 		exit(1);
@@ -585,6 +590,7 @@ static lrec_t* lrec_reader_mmap_csvlite_get_record_multi_seps(file_reader_mmap_s
 	}
 
 	if (pe->pnext != NULL) {
+		// Header line has more fields than the data line did
 		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
 			MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
 		exit(1);
