@@ -86,7 +86,8 @@ typedef struct _lrec_reader_stdio_csv_state_t {
 	parse_trie_t*       pdquote_parse_trie;
 
 	int                 expect_header_line_next;
-	int                 use_implicit_header;
+	int                 use_implicit_csv_header;
+	int                 allow_ragged_csv_input;
 	header_keeper_t*    pheader_keeper;
 	lhmslv_t*           pheader_keepers;
 
@@ -99,14 +100,16 @@ static int     lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* p
 	context_t* pctx, int is_header);
 static lrec_t* paste_indices_and_data(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pdata_fields,
 	context_t* pctx);
-static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pdata_fields,
+static lrec_t* paste_header_and_data_ragged(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pdata_fields,
+	context_t* pctx);
+static lrec_t* paste_header_and_data_rectangular(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pdata_fields,
 	context_t* pctx);
 static void*   lrec_reader_stdio_csv_open(void* pvstate, char* prepipe, char* filename);
 static void    lrec_reader_stdio_csv_close(void* pvstate, void* pvhandle, char* prepipe);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implicit_header,
-	comment_handling_t comment_handling, char* comment_string)
+lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implicit_csv_header,
+	int allow_ragged_csv_input, comment_handling_t comment_handling, char* comment_string)
 {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
@@ -175,8 +178,9 @@ lrec_reader_t* lrec_reader_stdio_csv_alloc(char* irs, char* ifs, int use_implici
 		pstate->pno_dquote_parse_trie->maxlen,
 		pstate->pdquote_parse_trie->maxlen));
 
-	pstate->expect_header_line_next   = use_implicit_header ? FALSE : TRUE;
-	pstate->use_implicit_header       = use_implicit_header;
+	pstate->expect_header_line_next   = use_implicit_csv_header ? FALSE : TRUE;
+	pstate->use_implicit_csv_header   = use_implicit_csv_header;
+	pstate->allow_ragged_csv_input    = allow_ragged_csv_input;
 	pstate->pheader_keeper            = NULL;
 	pstate->pheader_keepers           = lhmslv_alloc();
 
@@ -217,7 +221,7 @@ static void lrec_reader_stdio_csv_free(lrec_reader_t* preader) {
 static void lrec_reader_stdio_csv_sof(void* pvstate, void* pvhandle) {
 	lrec_reader_stdio_csv_state_t* pstate = pvstate;
 	pstate->ilno = 0LL;
-	pstate->expect_header_line_next = pstate->use_implicit_header ? FALSE : TRUE;
+	pstate->expect_header_line_next = pstate->use_implicit_csv_header ? FALSE : TRUE;
 }
 
 // ----------------------------------------------------------------
@@ -319,9 +323,12 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 			}
 		}
 
-		lrec_t* prec =  pstate->use_implicit_header
+
+		lrec_t* prec = pstate->use_implicit_csv_header
 			? paste_indices_and_data(pstate, pstate->pfields, pctx)
-			: paste_header_and_data(pstate, pstate->pfields, pctx);
+			: pstate->allow_ragged_csv_input
+			? paste_header_and_data_ragged(pstate, pstate->pfields, pctx)
+			: paste_header_and_data_rectangular(pstate, pstate->pfields, pctx);
 		rslls_reset(pstate->pfields);
 		return prec;
 	}
@@ -522,7 +529,51 @@ static lrec_t* paste_indices_and_data(lrec_reader_stdio_csv_state_t* pstate, rsl
 }
 
 // ----------------------------------------------------------------
-static lrec_t* paste_header_and_data(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pdata_fields,
+static lrec_t* paste_header_and_data_ragged(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pdata_fields,
+	context_t* pctx)
+{
+	lrec_t* prec = lrec_unbacked_alloc();
+	sllse_t* ph  = pstate->pheader_keeper->pkeys->phead;
+	rsllse_t* pd = pdata_fields->phead;
+	int idx = 0;
+	int hlen = pstate->pheader_keeper->pkeys->length;
+	int dlen = pdata_fields->length;
+
+	// Process fields up to minimum of header length and data length
+	// Note that pd->pnext can be non-null due to pointer-reuse semantics of rslls,
+	// so use list-length attributes for end-of-list check.
+	for (idx = 0; idx < hlen && idx < dlen; idx++, ph = ph->pnext, pd = pd->pnext) {
+		// Transfer pointer-free responsibility from the rslls to the lrec object
+		lrec_put_ext(prec, ph->value, pd->value, pd->free_flag, pd->quote_flag);
+		pd->free_flag = 0;
+	}
+
+	if (hlen > dlen) {
+		// Header is longer. Empty-fill the remaining data fields.
+		// E.g. if the input looks like
+		//   a,b,c,d <-- header
+		//   1,2     <-- data
+		// then put c="", d="".
+		for ( ; idx < hlen; idx++, ph = ph->pnext) {
+			lrec_put_ext(prec, ph->value, "", NO_FREE, 0);
+		}
+	} else {
+		// Data is longer. Use positional indices to label the remaining data fields.
+		for ( ; idx < dlen; idx++, pd = pd->pnext) {
+			char key_free_flags = 0;
+			char* key = low_int_to_string(idx+1, &key_free_flags);
+			char value_free_flags = pd->free_flag;
+			// Transfer pointer-free responsibility from the rslls to the lrec object
+			lrec_put_ext(prec, key, pd->value, key_free_flags | value_free_flags, pd->quote_flag);
+			pd->free_flag = 0;
+		}
+	}
+
+	return prec;
+}
+
+// ----------------------------------------------------------------
+static lrec_t* paste_header_and_data_rectangular(lrec_reader_stdio_csv_state_t* pstate, rslls_t* pdata_fields,
 	context_t* pctx)
 {
 	if (pstate->pheader_keeper->pkeys->length != pdata_fields->length) {

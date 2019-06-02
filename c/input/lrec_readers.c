@@ -18,17 +18,19 @@ lrec_reader_t*  lrec_reader_alloc(cli_reader_opts_t* popts) {
 	} else if (streq(popts->ifile_fmt, "csv")) {
 		if (popts->use_mmap_for_read)
 			return lrec_reader_mmap_csv_alloc(popts->irs, popts->ifs, popts->use_implicit_csv_header,
-				popts->comment_handling, popts->comment_string);
+				popts->allow_ragged_csv_input, popts->comment_handling, popts->comment_string);
 		else
 			return lrec_reader_stdio_csv_alloc(popts->irs, popts->ifs, popts->use_implicit_csv_header,
-				popts->comment_handling, popts->comment_string);
+				popts->allow_ragged_csv_input, popts->comment_handling, popts->comment_string);
 	} else if (streq(popts->ifile_fmt, "csvlite")) {
 		if (popts->use_mmap_for_read)
 			return lrec_reader_mmap_csvlite_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs,
-				popts->use_implicit_csv_header, popts->comment_handling, popts->comment_string);
+				popts->use_implicit_csv_header, popts->allow_ragged_csv_input, popts->comment_handling,
+				popts->comment_string);
 		else
 			return lrec_reader_stdio_csvlite_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs,
-				popts->use_implicit_csv_header, popts->comment_handling, popts->comment_string);
+				popts->use_implicit_csv_header, popts->allow_ragged_csv_input, popts->comment_handling,
+				popts->comment_string);
 	} else if (streq(popts->ifile_fmt, "nidx")) {
 		if (popts->use_mmap_for_read)
 			return lrec_reader_mmap_nidx_alloc(popts->irs, popts->ifs, popts->allow_repeat_ifs,

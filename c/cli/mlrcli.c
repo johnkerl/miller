@@ -937,6 +937,10 @@ static void main_usage_csv_options(FILE* o, char* argv0) {
 	fprintf(o, "  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1\n");
 	fprintf(o, "                     of input files. Tip: combine with \"label\" to recreate\n");
 	fprintf(o, "                     missing headers.\n");
+	fprintf(o, "  --allow_ragged_csv_input If a data line has fewer fields than the header line,\n");
+	fprintf(o, "                     fill remaining keys with empty string. If a data line has more\n");
+	fprintf(o, "                     fields than the header line, use interger field labels as in\n");
+	fprintf(o, "                     the implicit-header case.\n");
 	fprintf(o, "  --headerless-csv-output   Print only CSV data lines.\n");
 	fprintf(o, "  -N                 Keystroke-saver for --implicit-csv-header --headerless-csv-output.\n");
 }
@@ -1092,6 +1096,7 @@ void cli_reader_opts_init(cli_reader_opts_t* preader_opts) {
 	preader_opts->allow_repeat_ifs               = NEITHER_TRUE_NOR_FALSE;
 	preader_opts->allow_repeat_ips               = NEITHER_TRUE_NOR_FALSE;
 	preader_opts->use_implicit_csv_header        = NEITHER_TRUE_NOR_FALSE;
+	preader_opts->allow_ragged_csv_input         = NEITHER_TRUE_NOR_FALSE;
 	preader_opts->use_mmap_for_read              = NEITHER_TRUE_NOR_FALSE;
 
 	preader_opts->prepipe                        = NULL;
@@ -1147,6 +1152,9 @@ void cli_apply_reader_defaults(cli_reader_opts_t* preader_opts) {
 
 	if (preader_opts->use_implicit_csv_header == NEITHER_TRUE_NOR_FALSE)
 		preader_opts->use_implicit_csv_header = FALSE;
+
+	if (preader_opts->allow_ragged_csv_input == NEITHER_TRUE_NOR_FALSE)
+		preader_opts->allow_ragged_csv_input = FALSE;
 
 	if (preader_opts->use_mmap_for_read == NEITHER_TRUE_NOR_FALSE)
 #if MLR_ARCH_MMAP_ENABLED
@@ -1257,6 +1265,9 @@ void cli_merge_reader_opts(cli_reader_opts_t* pfunc_opts, cli_reader_opts_t* pma
 
 	if (pfunc_opts->use_implicit_csv_header == NEITHER_TRUE_NOR_FALSE)
 		pfunc_opts->use_implicit_csv_header = pmain_opts->use_implicit_csv_header;
+
+	if (pfunc_opts->allow_ragged_csv_input == NEITHER_TRUE_NOR_FALSE)
+		pfunc_opts->allow_ragged_csv_input = pmain_opts->allow_ragged_csv_input;
 
 	if (pfunc_opts->use_mmap_for_read == NEITHER_TRUE_NOR_FALSE)
 		pfunc_opts->use_mmap_for_read = pmain_opts->use_mmap_for_read;
@@ -1466,6 +1477,10 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 
 	} else if (streq(argv[argi], "--implicit-csv-header")) {
 		preader_opts->use_implicit_csv_header = TRUE;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--allow-ragged-csv-input")) {
+		preader_opts->allow_ragged_csv_input = TRUE;
 		argi += 1;
 
 	} else if (streq(argv[argi], "--ips")) {

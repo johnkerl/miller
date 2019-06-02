@@ -55,7 +55,8 @@ typedef struct _lrec_reader_stdio_csvlite_state_t {
 	int    ifslen;
 	int    allow_repeat_ifs;
 	int    do_auto_line_term;
-	int    use_implicit_header;
+	int    use_implicit_csv_header;
+	int    allow_ragged_csv_input;
 	size_t line_length;
 	comment_handling_t comment_handling;
 	char*  comment_string;
@@ -70,8 +71,8 @@ static void    lrec_reader_stdio_sof(void* pvstate, void* pvhandle);
 static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, context_t* pctx);
 
 // ----------------------------------------------------------------
-lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs, int use_implicit_header,
-	comment_handling_t comment_handling, char* comment_string)
+lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs, int use_implicit_csv_header,
+	int allow_ragged_csv_input, comment_handling_t comment_handling, char* comment_string)
 {
 	lrec_reader_t* plrec_reader = mlr_malloc_or_die(sizeof(lrec_reader_t));
 
@@ -83,13 +84,14 @@ lrec_reader_t* lrec_reader_stdio_csvlite_alloc(char* irs, char* ifs, int allow_r
 	pstate->ifslen                  = strlen(ifs);
 	pstate->allow_repeat_ifs        = allow_repeat_ifs;
 	pstate->do_auto_line_term       = FALSE;
-	pstate->use_implicit_header     = use_implicit_header;
+	pstate->use_implicit_csv_header = use_implicit_csv_header;
+	pstate->allow_ragged_csv_input  = allow_ragged_csv_input;
 	// This is used to track nominal line length over the file read. Bootstrap with a default length.
 	pstate->line_length             = MLR_ALLOC_READ_LINE_INITIAL_SIZE;
 	pstate->comment_handling        = comment_handling;
 	pstate->comment_string          = comment_string;
 
-	pstate->expect_header_line_next = use_implicit_header  ? FALSE : TRUE;
+	pstate->expect_header_line_next = use_implicit_csv_header  ? FALSE : TRUE;
 	pstate->pheader_keeper          = NULL;
 	pstate->pheader_keepers         = lhmslv_alloc();
 
@@ -129,7 +131,7 @@ static void lrec_reader_stdio_sof(void* pvstate, void* pvhandle) {
 	lrec_reader_stdio_csvlite_state_t* pstate = pvstate;
 	pstate->ifnr = 0LL;
 	pstate->ilno = 0LL;
-	pstate->expect_header_line_next = pstate->use_implicit_header ? FALSE : TRUE;
+	pstate->expect_header_line_next = pstate->use_implicit_csv_header ? FALSE : TRUE;
 }
 
 // ----------------------------------------------------------------
@@ -235,19 +237,20 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 		} else {
 			pstate->ifnr++;
 			if (pstate->ifslen == 1) {
-				return pstate->use_implicit_header
+				return pstate->use_implicit_csv_header
 					? lrec_parse_stdio_csvlite_data_line_single_ifs_implicit_header(
 						pstate->pheader_keeper, pctx->filename, pstate->ilno, line,
 						pstate->ifs[0], pstate->allow_repeat_ifs)
 					: lrec_parse_stdio_csvlite_data_line_single_ifs(pstate->pheader_keeper, pctx->filename,
-						pstate->ilno, line, pstate->ifs[0], pstate->allow_repeat_ifs);
+						pstate->ilno, line, pstate->ifs[0], pstate->allow_repeat_ifs, pstate->allow_ragged_csv_input);
 			} else {
-				return pstate->use_implicit_header
+				return pstate->use_implicit_csv_header
 					? lrec_parse_stdio_csvlite_data_line_multi_ifs_implicit_header(
 						pstate->pheader_keeper, pctx->filename, pstate->ilno, line,
 						pstate->ifs, pstate->ifslen, pstate->allow_repeat_ifs)
 					: lrec_parse_stdio_csvlite_data_line_multi_ifs(pstate->pheader_keeper, pctx->filename,
-						pstate->ilno, line, pstate->ifs, pstate->ifslen, pstate->allow_repeat_ifs);
+						pstate->ilno, line, pstate->ifs, pstate->ifslen, pstate->allow_repeat_ifs,
+						pstate->allow_ragged_csv_input);
 			}
 		}
 	}
@@ -320,7 +323,7 @@ slls_t* split_csvlite_header_line_multi_ifs(char* line, char* ifs, int ifslen, i
 
 // ----------------------------------------------------------------
 lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_keeper, char* filename, long long ilno,
-	char* data_line, char ifs, int allow_repeat_ifs)
+	char* data_line, char ifs, int allow_repeat_ifs, int allow_ragged_csv_input)
 {
 	lrec_t* prec = lrec_csvlite_alloc(data_line);
 	char* p = data_line;
@@ -331,21 +334,29 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_k
 	}
 	char* key   = NULL;
 	char* value = p;
+	int idx = 0;
 
 	sllse_t* pe = pheader_keeper->pkeys->phead;
 	for ( ; *p; ) {
 		if (*p == ifs) {
 			*p = 0;
+			idx++;
 			if (pe == NULL) {
 				// Data line has more fields than the header line did
-				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-					MLR_GLOBALS.bargv0, filename, ilno);
-				exit(1);
+				if (allow_ragged_csv_input) {
+					char free_flags = NO_FREE;
+					key = low_int_to_string(idx, &free_flags);
+					lrec_put(prec, key, value, free_flags);
+				} else{
+					fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+						MLR_GLOBALS.bargv0, filename, ilno);
+					exit(1);
+				}
+			} else {
+				key = pe->value;
+				pe = pe->pnext;
+				lrec_put(prec, key, value, NO_FREE);
 			}
-			key = pe->value;
-			pe = pe->pnext;
-			lrec_put(prec, key, value, NO_FREE);
-
 			p++;
 			if (allow_repeat_ifs) {
 				while (*p == ifs)
@@ -360,17 +371,31 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_k
 		; // OK
 	} else if (pe == NULL) {
 		// Data line has more fields than the header line did
-		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-			MLR_GLOBALS.bargv0, filename, ilno);
-		exit(1);
+		if (allow_ragged_csv_input) {
+			idx++;
+			char free_flags = NO_FREE;
+			key = low_int_to_string(idx, &free_flags);
+			lrec_put(prec, key, value, free_flags);
+		} else{
+			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+				MLR_GLOBALS.bargv0, filename, ilno);
+			exit(1);
+		}
 	} else {
 		key = pe->value;
 		lrec_put(prec, key, value, NO_FREE);
 		if (pe->pnext != NULL) {
 			// Header line has more fields than the data line did
-			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-				MLR_GLOBALS.bargv0, filename, ilno);
-			exit(1);
+			if (allow_ragged_csv_input) {
+				for (pe = pe->pnext ; pe != NULL; pe = pe->pnext) {
+					key = pe->value;
+					lrec_put(prec, key, "", NO_FREE);
+				}
+			} else {
+				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+					MLR_GLOBALS.bargv0, filename, ilno);
+				exit(1);
+			}
 		}
 	}
 
@@ -378,7 +403,7 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs(header_keeper_t* pheader_k
 }
 
 lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_keeper, char* filename, long long ilno,
-	char* data_line, char* ifs, int ifslen, int allow_repeat_ifs)
+	char* data_line, char* ifs, int ifslen, int allow_repeat_ifs, int allow_ragged_csv_input)
 {
 	lrec_t* prec = lrec_csvlite_alloc(data_line);
 	char* p = data_line;
@@ -389,16 +414,24 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_ke
 	}
 	char* key   = NULL;
 	char* value = p;
+	int idx = 0;
 
 	sllse_t* pe = pheader_keeper->pkeys->phead;
 	for ( ; *p; ) {
 		if (streqn(p, ifs, ifslen)) {
 			*p = 0;
+			idx++;
 			if (pe == NULL) {
 				// Data line has more fields than the header line did
-				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-					MLR_GLOBALS.bargv0, filename, ilno);
-				exit(1);
+				if (allow_ragged_csv_input) {
+					char free_flags = NO_FREE;
+					key = low_int_to_string(idx, &free_flags);
+					lrec_put(prec, key, value, free_flags);
+				} else{
+					fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+						MLR_GLOBALS.bargv0, filename, ilno);
+					exit(1);
+				}
 			}
 			key = pe->value;
 			pe = pe->pnext;
@@ -418,17 +451,30 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs(header_keeper_t* pheader_ke
 		; // OK
 	} else if (pe == NULL) {
 		// Data line has more fields than the header line did
-		fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-			MLR_GLOBALS.bargv0, filename, ilno);
-		exit(1);
+		if (allow_ragged_csv_input) {
+			char free_flags = NO_FREE;
+			key = low_int_to_string(idx, &free_flags);
+			lrec_put(prec, key, value, free_flags);
+		} else{
+			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+				MLR_GLOBALS.bargv0, filename, ilno);
+			exit(1);
+		}
 	} else {
 		key = pe->value;
 		lrec_put(prec, key, value, NO_FREE);
 		if (pe->pnext != NULL) {
 			// Header line has more fields than the data line did
-			fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
-				MLR_GLOBALS.bargv0, filename, ilno);
-			exit(1);
+			if (allow_ragged_csv_input) {
+				for (pe = pe->pnext ; pe != NULL; pe = pe->pnext) {
+					key = pe->value;
+					lrec_put(prec, key, "", NO_FREE);
+				}
+			} else {
+				fprintf(stderr, "%s: Header-data length mismatch in file %s at line %lld.\n",
+					MLR_GLOBALS.bargv0, filename, ilno);
+				exit(1);
+			}
 		}
 	}
 
@@ -479,8 +525,8 @@ lrec_t* lrec_parse_stdio_csvlite_data_line_single_ifs_implicit_header(header_kee
 	return prec;
 }
 
-lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs_implicit_header(header_keeper_t* pheader_keeper, char* filename, long long ilno,
-	char* data_line, char* ifs, int ifslen, int allow_repeat_ifs)
+lrec_t* lrec_parse_stdio_csvlite_data_line_multi_ifs_implicit_header(header_keeper_t* pheader_keeper, char* filename,
+	long long ilno, char* data_line, char* ifs, int ifslen, int allow_repeat_ifs)
 {
 	lrec_t* prec = lrec_csvlite_alloc(data_line);
 	char* p = data_line;

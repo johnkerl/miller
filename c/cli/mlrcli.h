@@ -36,6 +36,7 @@ typedef struct _cli_reader_opts_t {
 	int   allow_repeat_ifs;
 	int   allow_repeat_ips;
 	int   use_implicit_csv_header;
+	int   allow_ragged_csv_input;
 	int   use_mmap_for_read;
 
 	// Command for popen on input, e.g. "zcat -cf <". Can be null in which case
