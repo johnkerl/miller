@@ -68,6 +68,7 @@ static void mapper_nest_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  --nested-fs {string}  Defaults to \";\". Field separator for nested values.\n");
 	fprintf(o, "  --nested-ps {string}  Defaults to \":\". Pair separator for nested key-value pairs.\n");
 	fprintf(o, "  --evar {string}       Shorthand for --explode --values ---across-records --nested-fs {string}\n");
+	fprintf(o, "  --ivar {string}       Shorthand for --implode --values ---across-records --nested-fs {string}\n");
 	fprintf(o, "Please use \"%s --usage-separator-options\" for information on specifying separators.\n",
 		argv0);
 
@@ -120,6 +121,7 @@ static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv,
 	char* nested_fs = ";";
 	char* nested_ps = ":";
 	char* vfs = NULL;
+	char* ivfs = NULL;
 	int   do_explode       = NEITHER_TRUE_NOR_FALSE;
 	int   do_pairs         = NEITHER_TRUE_NOR_FALSE;
 	int   do_across_fields = NEITHER_TRUE_NOR_FALSE;
@@ -137,6 +139,7 @@ static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv,
 	ap_define_true_flag(pstate,   "--across-fields",  &do_across_fields);
 	ap_define_false_flag(pstate,  "--across-records", &do_across_fields);
 	ap_define_string_flag(pstate, "--evar",           &vfs);
+	ap_define_string_flag(pstate, "--ivar",           &ivfs);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
 		mapper_nest_usage(stderr, argv[0], verb);
@@ -148,6 +151,13 @@ static mapper_t* mapper_nest_parse_cli(int* pargi, int argc, char** argv,
 		do_pairs = FALSE;
 		do_across_fields = FALSE;
 		nested_fs = vfs;
+	}
+
+	if (ivfs != NULL) {
+		do_explode = FALSE;
+		do_pairs = FALSE;
+		do_across_fields = FALSE;
+		nested_fs = ivfs;
 	}
 
 	if (field_name == NULL) {
