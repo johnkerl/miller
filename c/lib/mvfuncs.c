@@ -421,6 +421,17 @@ mv_t s_s_toupper_func(mv_t* pval1) {
 	return mv_from_string_with_free(string);
 }
 
+mv_t s_s_capitalize_func(mv_t* pval1) {
+	char* string = mlr_strdup_or_die(pval1->u.strv);
+	if (*string) {
+		*string = toupper((unsigned char)*string);
+	}
+	mv_free(pval1);
+	pval1->u.strv = NULL;
+
+	return mv_from_string_with_free(string);
+}
+
 // ----------------------------------------------------------------
 mv_t s_s_lstrip_func(mv_t* pval1) {
 	if (!isspace(pval1->u.strv[0])) {

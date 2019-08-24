@@ -18506,6 +18506,42 @@ x=,y=6
 mlr -n put begin{ENV["HOME"]="foobar"} end{print ENV["HOME"]}
 foobar
 
+mlr put $y = toupper($x)
+x=hello,y=HELLO
+
+mlr put $y = toupper($x)
+x=HELLO,y=HELLO
+
+mlr put $y = toupper($x)
+x=,y=
+
+mlr put $y = toupper($z)
+x=hello
+
+mlr put $y = tolower($x)
+x=hello,y=hello
+
+mlr put $y = tolower($x)
+x=HELLO,y=hello
+
+mlr put $y = tolower($x)
+x=,y=
+
+mlr put $y = tolower($z)
+x=hello
+
+mlr put $y = capitalize($x)
+x=hello,y=Hello
+
+mlr put $y = capitalize($x)
+x=HELLO,y=HELLO
+
+mlr put $y = capitalize($x)
+x=,y=
+
+mlr put $y = capitalize($z)
+x=hello
+
 
 ---------------------------------------------------------------- LHS value on first record should result in ZYX for process creation
 mlr --from ./reg_test/input/abixy put ENV["ZYX"]="CBA".NR; print | ENV["indir"]."/env-assign.sh" , "a is " . $a

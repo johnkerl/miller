@@ -135,7 +135,7 @@ OPTIONS
    FUNCTION LIST
 	+ + - - * / // .+ .+ .- .- .* ./ .// % ** | ^ & ~ << >> bitcount == != =~ !=~
 	> >= < <= && || ^^ ! ? : . gsub regextract regextract_or_else strlen sub ssub
-	substr tolower toupper lstrip rstrip strip collapse_whitespace
+	substr tolower toupper capitalize lstrip rstrip strip collapse_whitespace
 	clean_whitespace abs acos acosh asin asinh atan atan2 atanh cbrt ceil cos cosh
 	erf erfc exp expm1 floor invqnorm log log10 log1p logifit madd max mexp min
 	mmul msub pow qnorm round roundm sgn sin sinh sqrt tan tanh urand urandrange
@@ -1477,6 +1477,9 @@ FUNCTIONS FOR FILTER/PUT
 
    toupper
        (class=string #args=1): Convert string to uppercase.
+
+   capitalize
+       (class=string #args=1): Convert string's first character to uppercase.
 
    lstrip
        (class=string #args=1): Strip leading whitespace from string.

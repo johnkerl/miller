@@ -206,6 +206,7 @@ mv_t i_s_strlen_func(mv_t* pval1);
 mv_t s_x_typeof_func(mv_t* pval1);
 mv_t s_s_tolower_func(mv_t* pval1);
 mv_t s_s_toupper_func(mv_t* pval1);
+mv_t s_s_capitalize_func(mv_t* pval1);
 mv_t s_s_lstrip_func(mv_t* pval1);
 mv_t s_s_rstrip_func(mv_t* pval1);
 mv_t s_s_strip_func(mv_t* pval1);

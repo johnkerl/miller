@@ -1282,6 +1282,21 @@ run_mlr put '$x = ENV["X"]; $y = ENV[$name]' $indir/env-var.dkvp
 
 run_mlr -n put 'begin{ENV["HOME"]="foobar"} end{print ENV["HOME"]}'
 
+echo 'x=hello' | run_mlr put '$y = toupper($x)'
+echo 'x=HELLO' | run_mlr put '$y = toupper($x)'
+echo 'x='      | run_mlr put '$y = toupper($x)'
+echo 'x=hello' | run_mlr put '$y = toupper($z)'
+
+echo 'x=hello' | run_mlr put '$y = tolower($x)'
+echo 'x=HELLO' | run_mlr put '$y = tolower($x)'
+echo 'x='      | run_mlr put '$y = tolower($x)'
+echo 'x=hello' | run_mlr put '$y = tolower($z)'
+
+echo 'x=hello' | run_mlr put '$y = capitalize($x)'
+echo 'x=HELLO' | run_mlr put '$y = capitalize($x)'
+echo 'x='      | run_mlr put '$y = capitalize($x)'
+echo 'x=hello' | run_mlr put '$y = capitalize($z)'
+
 mention LHS value on first record should result in ZYX for process creation
 export indir; run_mlr --from $indir/abixy put 'ENV["ZYX"]="CBA".NR; print | ENV["indir"]."/env-assign.sh" , "a is " . $a'
 

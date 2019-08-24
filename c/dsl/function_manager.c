@@ -241,6 +241,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"inclusive. Negative indices -len .. -1 alias to 0 .. len-1."},
 	{FUNC_CLASS_STRING, "tolower",  1,0, "Convert string to lowercase."},
 	{FUNC_CLASS_STRING, "toupper",  1,0, "Convert string to uppercase."},
+	{FUNC_CLASS_STRING, "capitalize",  1,0, "Convert string's first character to uppercase."},
 	{FUNC_CLASS_STRING, "lstrip",  1,0,  "Strip leading whitespace from string."},
 	{FUNC_CLASS_STRING, "rstrip",  1,0,  "Strip trailing whitespace from string."},
 	{FUNC_CLASS_STRING, "strip",  1,0,  "Strip leading and trailing whitespace from string."},
@@ -1204,6 +1205,7 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_unary_func_name(char* fnnm, r
 	} else if (streq(fnnm, "tanh"))            { return rval_evaluator_alloc_from_f_f_func(f_f_tanh_func,        parg1);
 	} else if (streq(fnnm, "tolower"))         { return rval_evaluator_alloc_from_s_s_func(s_s_tolower_func,     parg1);
 	} else if (streq(fnnm, "toupper"))         { return rval_evaluator_alloc_from_s_s_func(s_s_toupper_func,     parg1);
+	} else if (streq(fnnm, "capitalize"))      { return rval_evaluator_alloc_from_s_s_func(s_s_capitalize_func,  parg1);
 	} else if (streq(fnnm, "lstrip"))          { return rval_evaluator_alloc_from_s_s_func(s_s_lstrip_func,      parg1);
 	} else if (streq(fnnm, "rstrip"))          { return rval_evaluator_alloc_from_s_s_func(s_s_rstrip_func,      parg1);
 	} else if (streq(fnnm, "strip"))           { return rval_evaluator_alloc_from_s_s_func(s_s_strip_func,       parg1);
