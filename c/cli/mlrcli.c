@@ -261,13 +261,17 @@ cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 		slls_append(popts->filenames, argv[argi], NO_FREE);
 	}
 
-	// Check for use of mmap. It's fractionally faster than stdio (due to fewer data copies
+	// Check for use of mmap. It's about 20% faster than stdio (due to fewer data copies
 	// -- lrecs can be pointer-backed by mmap memory) but we can't use it in all situations.
 	if (no_input) {
 		slls_free(popts->filenames);
 		popts->filenames = NULL;
 	} else if (popts->filenames->length == 0) {
 		// No filenames means read from standard input, and standard input cannot be mmapped.
+		popts->reader_opts.use_mmap_for_read = FALSE;
+	} else if (popts->filenames->length > 10) {
+		// https://github.com/johnkerl/miller/issues/256: too many small files is as bad as one big one
+		// (for which see immediately below).
 		popts->reader_opts.use_mmap_for_read = FALSE;
 	} else if (popts->reader_opts.use_mmap_for_read == TRUE) {
 		// https://github.com/johnkerl/miller/issues/160: don't use mmap for large files.
