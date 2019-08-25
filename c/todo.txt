@@ -1,4 +1,21 @@
 ================================================================
+CAPITALIZE AND POSIDX
+
+k typed-overlay to-do
+k valgrind oo
+
+* coverage in reg_test/run
+* valgrind that
+
+* mld
+
+* doc/bld note for vgrun oo
+
+* follow-on for pre-existing unset/typed-overlay issue
+
+* prep release notes!! :)
+
+================================================================
 BUGFIXES
 
 ================================================================

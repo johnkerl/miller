@@ -167,6 +167,7 @@ int mlr_dsl_ast_node_cannot_be_bare_boolean(mlr_dsl_ast_node_t* pnode) {
 	case MD_AST_NODE_TYPE_BOOLEAN_LITERAL:
 	case MD_AST_NODE_TYPE_FIELD_NAME:
 	case MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME:
+	case MD_AST_NODE_TYPE_POSITIONAL_SREC_NAME:
 	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
 	case MD_AST_NODE_TYPE_NON_SIGIL_NAME:
 	case MD_AST_NODE_TYPE_OPERATOR:
@@ -296,6 +297,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_REGEXI:                                return "REGEXI";                                break;
 	case MD_AST_NODE_TYPE_FIELD_NAME:                            return "FIELD_NAME";                            break;
 	case MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME:                   return "INDIRECT_FIELD_NAME";                   break;
+	case MD_AST_NODE_TYPE_POSITIONAL_SREC_NAME:                  return "POSITIONAL_SREC_NAME";                  break;
 	case MD_AST_NODE_TYPE_FULL_SREC:                             return "FULL_SREC";                             break;
 	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:                        return "OOSVAR_KEYLIST";                        break;
 	case MD_AST_NODE_TYPE_FULL_OOSVAR:                           return "FULL_OOSVAR";                           break;
@@ -305,6 +307,7 @@ char* mlr_dsl_ast_node_describe_type(mlr_dsl_ast_node_type_t type) {
 	case MD_AST_NODE_TYPE_INDEXED_LOCAL_ASSIGNMENT:              return "INDEXED_LOCAL_ASSIGNMENT";              break;
 	case MD_AST_NODE_TYPE_SREC_ASSIGNMENT:                       return "SREC_ASSIGNMENT";                       break;
 	case MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT:              return "INDIRECT_SREC_ASSIGNMENT";              break;
+	case MD_AST_NODE_TYPE_POSITIONAL_SREC_NAME_ASSIGNMENT:       return "POSITIONAL_SREC_NAME_ASSIGNMENT";       break;
 	case MD_AST_NODE_TYPE_OOSVAR_ASSIGNMENT:                     return "OOSVAR_ASSIGNMENT";                     break;
 	case MD_AST_NODE_TYPE_OOSVAR_FROM_FULL_SREC_ASSIGNMENT:      return "OOSVAR_FROM_FULL_SREC_ASSIGNMENT";      break;
 	case MD_AST_NODE_TYPE_FULL_OOSVAR_ASSIGNMENT:                return "FULL_OOSVAR_ASSIGNMENT";                break;

@@ -55,6 +55,8 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(
 rval_evaluator_t* rval_evaluator_alloc_from_field_name(char* field_name, int type_inferencing);
 rval_evaluator_t* rval_evaluator_alloc_from_indirect_field_name(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags);
+rval_evaluator_t* rval_evaluator_alloc_from_positional_srec_field_name(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
+	int type_inferencing, int context_flags);
 rval_evaluator_t* rval_evaluator_alloc_from_oosvar_keylist(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,
 	int type_inferencing, int context_flags);
 rval_evaluator_t* rval_evaluator_alloc_from_local_map_keylist(mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr,

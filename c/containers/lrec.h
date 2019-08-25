@@ -130,6 +130,9 @@ void  lrec_prepend(lrec_t* prec, char* key, char* value, char free_flags);
 lrece_t*  lrec_put_after(lrec_t* prec, lrece_t* pd, char* key, char* value, char free_flags);
 
 char* lrec_get(lrec_t* prec, char* key);
+lrece_t* lrec_get_pair_by_position(lrec_t* prec, int position); // 1-up not 0-up
+char* lrec_get_key_by_position(lrec_t* prec, int position); // 1-up not 0-up
+char* lrec_get_value_by_position(lrec_t* prec, int position); // 1-up not 0-up
 
 // This returns a pointer to the lrec's free-flags so that the caller can do ownership-transfer
 // of about-to-be-removed key-value pairs.
@@ -141,7 +144,9 @@ char* lrec_get_pff(lrec_t* prec, char* key, char** ppfree_flags);
 char* lrec_get_ext(lrec_t* prec, char* key, lrece_t** ppentry);
 
 void  lrec_remove(lrec_t* prec, char* key);
+void  lrec_remove_by_position(lrec_t* prec, int position); // 1-up not 0-up
 void  lrec_rename(lrec_t* prec, char* old_key, char* new_key, int new_needs_freeing);
+void  lrec_rename_at_position(lrec_t* prec, int position, char* new_key, int new_needs_freeing); // 1-up not 0-up
 void  lrec_move_to_head(lrec_t* prec, char* key);
 void  lrec_move_to_tail(lrec_t* prec, char* key);
 

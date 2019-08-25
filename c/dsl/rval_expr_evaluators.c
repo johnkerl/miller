@@ -100,6 +100,15 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 		return rval_evaluator_alloc_from_indirect_field_name(pnode->pchildren->phead->pvvalue, pfmgr,
 			type_inferencing, context_flags);
 
+	} else if (pnode->type == MD_AST_NODE_TYPE_POSITIONAL_SREC_NAME) {
+		if (context_flags & IN_BEGIN_OR_END) {
+			fprintf(stderr, "%s: statements involving $-variables are not valid within begin or end blocks.\n",
+				MLR_GLOBALS.bargv0);
+			exit(1);
+		}
+		return rval_evaluator_alloc_from_positional_srec_field_name(pnode->pchildren->phead->pvvalue, pfmgr,
+			type_inferencing, context_flags);
+
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	} else if (pnode->type == MD_AST_NODE_TYPE_OOSVAR_KEYLIST) {
 		return rval_evaluator_alloc_from_oosvar_keylist(pnode, pfmgr, type_inferencing, context_flags);
@@ -286,6 +295,62 @@ rval_evaluator_t* rval_evaluator_alloc_from_indirect_field_name(mlr_dsl_ast_node
 		break;
 	}
 	pevaluator->pfree_func = rval_evaluator_indirect_field_name_free;
+
+	return pevaluator;
+}
+
+// ================================================================
+typedef struct _rval_evaluator_positional_field_name_state_t {
+	rval_evaluator_t* pname_evaluator;
+} rval_evaluator_positional_field_name_state_t;
+
+static mv_t rval_evaluator_positional_field_name_func(void* pvstate, variables_t* pvars) {
+	rval_evaluator_positional_field_name_state_t* pstate = pvstate;
+
+	mv_t mvname = pstate->pname_evaluator->pprocess_func(pstate->pname_evaluator->pvstate, pvars);
+	if (mv_is_null(&mvname)) {
+		mv_free(&mvname);
+		return mv_absent();
+	}
+	if (!mv_is_int(&mvname)) {
+		char free_flags = NO_FREE;
+		char* text = mv_maybe_alloc_format_val(&mvname, &free_flags);
+		fprintf(stderr, "%s: positional names must be integers; got \"%s\".\n", MLR_GLOBALS.bargv0, text);
+		if (free_flags)
+			free(text);
+		exit(1);
+	}
+	int positional_field_name = mvname.u.intv;
+
+	char* key = lrec_get_key_by_position(pvars->pinrec, positional_field_name);
+	mv_t rv = mv_absent();
+	if (key != NULL) {
+		rv = mv_from_string_with_free(mlr_strdup_or_die(key));
+	}
+	mv_free(&mvname);
+
+	return rv;
+}
+
+static void rval_evaluator_positional_field_name_free(rval_evaluator_t* pevaluator) {
+	rval_evaluator_positional_field_name_state_t* pstate = pevaluator->pvstate;
+	pstate->pname_evaluator->pfree_func(pstate->pname_evaluator);
+	free(pstate);
+	free(pevaluator);
+}
+
+rval_evaluator_t* rval_evaluator_alloc_from_positional_srec_field_name(mlr_dsl_ast_node_t* pnamenode, fmgr_t* pfmgr,
+	int type_inferencing, int context_flags)
+{
+	rval_evaluator_positional_field_name_state_t* pstate = mlr_malloc_or_die(
+		sizeof(rval_evaluator_positional_field_name_state_t));
+
+	pstate->pname_evaluator = rval_evaluator_alloc_from_ast(pnamenode, pfmgr, type_inferencing, context_flags);
+
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+	pevaluator->pvstate = pstate;
+	pevaluator->pprocess_func = rval_evaluator_positional_field_name_func;
+	pevaluator->pfree_func = rval_evaluator_positional_field_name_free;
 
 	return pevaluator;
 }

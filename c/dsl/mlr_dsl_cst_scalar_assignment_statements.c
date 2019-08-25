@@ -164,6 +164,105 @@ static void handle_indirect_srec_assignment(
 	}
 }
 
+// ================================================================
+typedef struct _positional_srec_name_assignment_state_t {
+	rval_evaluator_t* plhs_evaluator;
+	rval_evaluator_t* prhs_evaluator;
+} positional_srec_name_assignment_state_t;
+
+static mlr_dsl_cst_statement_handler_t handle_positional_srec_name_assignment;
+static mlr_dsl_cst_statement_freer_t free_positional_srec_name_assignment;
+
+// ----------------------------------------------------------------
+mlr_dsl_cst_statement_t* alloc_positional_srec_name_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pnode,
+	int type_inferencing, int context_flags)
+{
+	positional_srec_name_assignment_state_t* pstate = mlr_malloc_or_die(sizeof(positional_srec_name_assignment_state_t));
+
+	pstate->prhs_evaluator = NULL;
+
+	MLR_INTERNAL_CODING_ERROR_IF((pnode->pchildren == NULL) || (pnode->pchildren->length != 2));
+
+	mlr_dsl_ast_node_t* plhs_node = pnode->pchildren->phead->pvvalue;
+	mlr_dsl_ast_node_t* prhs_node = pnode->pchildren->phead->pnext->pvvalue;
+
+	pstate->plhs_evaluator = rval_evaluator_alloc_from_ast(plhs_node,  pcst->pfmgr, type_inferencing, context_flags);
+	pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, type_inferencing, context_flags);
+
+	return mlr_dsl_cst_statement_valloc(
+		pnode,
+		handle_positional_srec_name_assignment,
+		free_positional_srec_name_assignment,
+		pstate);
+}
+
+// ----------------------------------------------------------------
+static void free_positional_srec_name_assignment(mlr_dsl_cst_statement_t* pstatement, context_t* _) {
+	positional_srec_name_assignment_state_t* pstate = pstatement->pvstate;
+
+	pstate->plhs_evaluator->pfree_func(pstate->plhs_evaluator);
+	pstate->prhs_evaluator->pfree_func(pstate->prhs_evaluator);
+
+	free(pstate);
+}
+
+// ----------------------------------------------------------------
+static void handle_positional_srec_name_assignment(
+	mlr_dsl_cst_statement_t* pstatement,
+	variables_t*             pvars,
+	cst_outputs_t*           pcst_outputs)
+{
+	positional_srec_name_assignment_state_t* pstate = pstatement->pvstate;
+
+	rval_evaluator_t* plhs_evaluator = pstate->plhs_evaluator;
+	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator;
+
+	mv_t lval = plhs_evaluator->pprocess_func(plhs_evaluator->pvstate, pvars);
+	mv_t rval = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
+
+	if (!mv_is_int(&lval)) {
+		char free_flags = NO_FREE;
+		char* text = mv_maybe_alloc_format_val(&lval, &free_flags);
+		fprintf(stderr, "%s: positional names must be integers; got \"%s\".\n", MLR_GLOBALS.bargv0, text);
+		if (free_flags)
+			free(text);
+		exit(1);
+	}
+
+	if (mv_is_absent(&rval)) {
+		return;
+	} else if (!mv_is_string(&rval)) {
+		char free_flags = NO_FREE;
+		char* text = mv_maybe_alloc_format_val(&rval, &free_flags);
+		fprintf(stderr, "%s: new positional names must be strings; got [%s].\n", MLR_GLOBALS.bargv0, text);
+		if (free_flags)
+			free(text);
+		exit(1);
+	}
+
+	int srec_lhs_field_position = lval.u.intv;
+	// xxx elsewhere (lrec logic: prohibit empty-string name -- ?
+	char* new_name = rval.u.strv;
+
+	// Before: srec is 'a=1,b=2,c=3'
+	// Assignment: '$[[3]] = "X"'
+	// After:  srec is 'a=1,b=2,X=3'
+	if (mv_is_present(&rval)) {
+		// xxx fix the lhmsmv_unset of old name on the same separate commit for fixing the unset bug
+		char* old_name = lrec_get_key_by_position(pvars->pinrec, srec_lhs_field_position);
+		if (old_name != NULL) {
+			mv_t* poverlay = lhmsmv_get(pvars->ptyped_overlay, old_name);
+			if (poverlay != NULL) {
+				mv_t copy = mv_copy(poverlay);
+				lhmsmv_put(pvars->ptyped_overlay, mlr_strdup_or_die(new_name), &copy,
+					FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
+			}
+		}
+		lrec_rename_at_position(pvars->pinrec, srec_lhs_field_position, mlr_strdup_or_die(new_name), TRUE);
+		mv_free(&rval);
+	}
+}
+
 
 // ================================================================
 typedef struct _env_assignment_state_t {

@@ -1,4 +1,3 @@
-
 run_mlr() {
   echo
   echo ................................................................
@@ -51,3 +50,27 @@ flags="-a"
 vee=
 
 # ----------------------------------------------------------------
+
+run_mlr --opprint put '$a     = $[[2]]; unset $["a"]' s
+run_mlr --opprint put '$[[1]] = $b;     unset $[[1]]' s
+run_mlr --opprint put '$[[1]] = $[[2]]; unset $["a"]' s
+
+run_mlr --c2p cat input.txt
+
+run_mlr --c2p put '$[[3]] = capitalize($[[3]])'  input.txt
+run_mlr --c2p put '$[[[3]]] = capitalize($[[[3]]])'  input.txt
+
+run_mlr --c2p put '$foo = capitalize($[[3]])'  input.txt
+run_mlr --c2p put '$foo = capitalize($[[[3]]])'  input.txt
+
+run_mlr --c2p put '$[[3]] = "NEW"'  input.txt
+run_mlr --c2p put '$[[[3]]] = "NEW"'  input.txt
+
+
+run_mlr --opprint put '$new1=$[[1]]; $[[11]]=$[[2]]' s
+run_mlr --opprint put '$new1=$[[1]]; $[[2]]=$[[11]]' s
+
+run_mlr --opprint put 'unset $c' s
+run_mlr --opprint put 'unset $c; $c="new"' s
+run_mlr --opprint put '$c=$a.$b; unset $c; $c="new"' s
+run_mlr --opprint put '$c=$a.$b; unset $c' s

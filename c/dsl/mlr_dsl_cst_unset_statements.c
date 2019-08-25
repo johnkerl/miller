@@ -54,6 +54,11 @@ static void handle_unset_indirect_srec_field_name(
 	variables_t*   pvars,
 	cst_outputs_t* pcst_outputs);
 
+static void handle_unset_positional_srec_field_name(
+	unset_item_t*  punset_item,
+	variables_t*   pvars,
+	cst_outputs_t* pcst_outputs);
+
 // ================================================================
 typedef struct _unset_state_t {
 	sllv_t* punset_items;
@@ -111,6 +116,18 @@ mlr_dsl_cst_statement_t* alloc_unset(mlr_dsl_cst_t* pcst, mlr_dsl_ast_node_t* pn
 			}
 			unset_item_t* punset_item = alloc_blank_unset_item();
 			punset_item->punset_item_handler = handle_unset_indirect_srec_field_name;
+			punset_item->psrec_field_name_evaluator = rval_evaluator_alloc_from_ast(
+				pchild->pchildren->phead->pvvalue, pcst->pfmgr, type_inferencing, context_flags);
+			sllv_append(pstate->punset_items, punset_item);
+
+		} else if (pchild->type == MD_AST_NODE_TYPE_POSITIONAL_SREC_NAME) {
+			if (context_flags & IN_BEGIN_OR_END) {
+				fprintf(stderr, "%s: unset of $-variables are not valid within begin or end blocks.\n",
+					MLR_GLOBALS.bargv0);
+				exit(1);
+			}
+			unset_item_t* punset_item = alloc_blank_unset_item();
+			punset_item->punset_item_handler = handle_unset_positional_srec_field_name;
 			punset_item->psrec_field_name_evaluator = rval_evaluator_alloc_from_ast(
 				pchild->pchildren->phead->pvvalue, pcst->pfmgr, type_inferencing, context_flags);
 			sllv_append(pstate->punset_items, punset_item);
@@ -283,5 +300,26 @@ static void handle_unset_indirect_srec_field_name(
 	lrec_remove(pvars->pinrec, field_name);
 	if (free_flags & FREE_ENTRY_VALUE)
 		free(field_name);
+	mv_free(&nameval);
+}
+
+static void handle_unset_positional_srec_field_name(
+	unset_item_t*  punset_item,
+	variables_t*   pvars,
+	cst_outputs_t* pcst_outputs)
+{
+	rval_evaluator_t* pevaluator = punset_item->psrec_field_name_evaluator;
+	mv_t nameval = pevaluator->pprocess_func(pevaluator->pvstate, pvars);
+	if (!mv_is_int(&nameval)) {
+		char free_flags = NO_FREE;
+		char* text = mv_maybe_alloc_format_val(&nameval, &free_flags);
+		fprintf(stderr, "%s: positional names must be integers; got \"%s\".\n", MLR_GLOBALS.bargv0, text);
+		if (free_flags)
+			free(text);
+		exit(1);
+	}
+	// xxx typed overlay too!!
+	int field_position = nameval.u.intv;
+	lrec_remove_by_position(pvars->pinrec, field_position);
 	mv_free(&nameval);
 }

@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "lib/string_builder.h"
 #include "containers/lrec.h"
@@ -282,8 +283,66 @@ char* lrec_get_ext(lrec_t* prec, char* key, lrece_t** ppentry) {
 }
 
 // ----------------------------------------------------------------
+lrece_t* lrec_get_pair_by_position(lrec_t* prec, int position) { // 1-up not 0-up
+	if (position <= 0 || position > prec->field_count) {
+		return NULL;
+	}
+	int sought_index = position - 1;
+	int found_index = 0;
+	lrece_t* pe = NULL;
+	for (
+		found_index = 0, pe = prec->phead;
+		pe != NULL;
+		found_index++, pe = pe->pnext
+	) {
+		if (found_index == sought_index) {
+			return pe;
+		}
+	}
+	fprintf(stderr, "%s: internal coding error detected in file %s at line %d.\n",
+		MLR_GLOBALS.bargv0, __FILE__, __LINE__);
+	exit(1);
+}
+
+char* lrec_get_key_by_position(lrec_t* prec, int position) { // 1-up not 0-up
+	lrece_t* pe = lrec_get_pair_by_position(prec, position);
+	if (pe == NULL) {
+		return NULL;
+	} else {
+		return pe->key;
+	}
+}
+
+char* lrec_get_value_by_position(lrec_t* prec, int position) { // 1-up not 0-up
+	lrece_t* pe = lrec_get_pair_by_position(prec, position);
+	if (pe == NULL) {
+		return NULL;
+	} else {
+		return pe->value;
+	}
+}
+
+// ----------------------------------------------------------------
 void lrec_remove(lrec_t* prec, char* key) {
 	lrece_t* pe = lrec_find_entry(prec, key);
+	if (pe == NULL)
+		return;
+
+	lrec_unlink(prec, pe);
+
+	if (pe->free_flags & FREE_ENTRY_KEY) {
+		free(pe->key);
+	}
+	if (pe->free_flags & FREE_ENTRY_VALUE) {
+		free(pe->value);
+	}
+
+	free(pe);
+}
+
+// ----------------------------------------------------------------
+void lrec_remove_by_position(lrec_t* prec, int position) { // 1-up not 0-up
+	lrece_t* pe = lrec_get_pair_by_position(prec, position);
 	if (pe == NULL)
 		return;
 
@@ -344,6 +403,36 @@ void lrec_rename(lrec_t* prec, char* old_key, char* new_key, int new_needs_freei
 			lrec_unlink(prec, pnew);
 			free(pnew);
 		}
+	}
+}
+
+// Cases:
+// 1. Rename field at position 3 from "x" to "y when "y" does not exist elsewhere in the srec
+// 2. Rename field at position 3 from "x" to "y when "y" does     exist elsewhere in the srec
+// Note: position is 1-up not 0-up
+void  lrec_rename_at_position(lrec_t* prec, int position, char* new_key, int new_needs_freeing){
+	lrece_t* pe = lrec_get_pair_by_position(prec, position);
+	if (pe == NULL) {
+		if (new_needs_freeing) {
+			free(new_key);
+		}
+		return;
+	}
+
+	lrece_t* pother = lrec_find_entry(prec, new_key);
+
+	if (pe->free_flags & FREE_ENTRY_KEY) {
+		free(pe->key);
+	}
+	pe->key = new_key;
+	if (new_needs_freeing) {
+		pe->free_flags |= FREE_ENTRY_KEY;
+	} else {
+		pe->free_flags &= ~FREE_ENTRY_KEY;
+	}
+	if (pother != NULL) {
+		lrec_unlink(prec, pother);
+		free(pother);
 	}
 }
 

@@ -336,6 +336,7 @@ mlr_dsl_cst_statement_t* alloc_final_filter(
 // dsl/mlr_dsl_cst_terminal_assignment_statements.c
 mlr_dsl_cst_statement_allocator_t alloc_srec_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_indirect_srec_assignment;
+mlr_dsl_cst_statement_allocator_t alloc_positional_srec_name_assignment;
 mlr_dsl_cst_statement_allocator_t alloc_env_assignment;
 
 // dsl/mlr_dsl_cst_map_assignment_statements.c

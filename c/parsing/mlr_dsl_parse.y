@@ -188,6 +188,8 @@ md_statement_not_braced_end(A) ::= MD_TOKEN_SUBR_CALL md_fcn_or_subr_call(B). {
 // Not valid in begin/end since they refer to srecs:
 md_statement_not_braced_end(A) ::= md_srec_assignment(B).                  { A = B; }
 md_statement_not_braced_end(A) ::= md_srec_indirect_assignment(B).         { A = B; }
+md_statement_not_braced_end(A) ::= md_srec_positional_name_assignment(B).  { A = B; }
+md_statement_not_braced_end(A) ::= md_srec_positional_value_assignment(B). { A = B; }
 md_statement_not_braced_end(A) ::= md_oosvar_from_full_srec_assignment(B). { A = B; }
 md_statement_not_braced_end(A) ::= md_full_srec_assignment(B).             { A = B; }
 md_statement_not_braced_end(A) ::= md_env_assignment(B).                   { A = B; }
@@ -1008,7 +1010,46 @@ md_srec_indirect_assignment(A)  ::=
 	MD_TOKEN_DOLLAR_SIGN MD_TOKEN_LEFT_BRACKET md_rhs(B) MD_TOKEN_RIGHT_BRACKET
 	MD_TOKEN_ASSIGN(O) md_rhs(C).
 {
-	A = mlr_dsl_ast_node_alloc_binary(O->text, MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT, B, C);
+	A = mlr_dsl_ast_node_alloc_binary(
+		O->text,
+		MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT,
+		B,
+		C
+	);
+}
+md_srec_positional_name_assignment(A)  ::=
+	MD_TOKEN_DOLLAR_SIGN
+		MD_TOKEN_LEFT_BRACKET MD_TOKEN_LEFT_BRACKET
+			md_rhs(B)
+		MD_TOKEN_RIGHT_BRACKET MD_TOKEN_RIGHT_BRACKET
+	MD_TOKEN_ASSIGN(O) md_rhs(C).
+{
+	A = mlr_dsl_ast_node_alloc_binary(
+		O->text,
+		MD_AST_NODE_TYPE_POSITIONAL_SREC_NAME_ASSIGNMENT,
+		B,
+		C
+	);
+}
+// '$[[[3]]] = "new"' is shorthand for '$[ $[[3]] ] = "new"'.
+// Note that '$[[3]]' is key at srec position 3 and '$[[[3]]]' is value at srec position 3.
+md_srec_positional_value_assignment(A)  ::=
+	MD_TOKEN_DOLLAR_SIGN
+		MD_TOKEN_LEFT_BRACKET MD_TOKEN_LEFT_BRACKET MD_TOKEN_LEFT_BRACKET
+			md_rhs(B)
+		MD_TOKEN_RIGHT_BRACKET MD_TOKEN_RIGHT_BRACKET MD_TOKEN_RIGHT_BRACKET
+	MD_TOKEN_ASSIGN(O) md_rhs(C).
+{
+	A = mlr_dsl_ast_node_alloc_binary(
+		O->text,
+		MD_AST_NODE_TYPE_INDIRECT_SREC_ASSIGNMENT,
+		mlr_dsl_ast_node_alloc_unary(
+			"positional_srec_field_name",
+			MD_AST_NODE_TYPE_POSITIONAL_SREC_NAME,
+			B
+		),
+		C
+	);
 }
 
 md_oosvar_assignment(A)  ::= md_oosvar_keylist(B) MD_TOKEN_ASSIGN(O) md_rhs(C). {
@@ -1523,6 +1564,9 @@ md_unset_args(A) ::= md_field_name(B). {
 	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
 }
 md_unset_args(A) ::= md_indirect_field_name(B). {
+	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
+}
+md_unset_args(A) ::= md_positional_srec_name(B). {
 	A = mlr_dsl_ast_node_alloc_unary("temp", MD_AST_NODE_TYPE_UNSET, B);
 }
 md_unset_args(A) ::= MD_TOKEN_FULL_SREC(B). {
@@ -2368,6 +2412,40 @@ md_atom_or_fcn(A) ::= md_indirect_field_name(B). {
 }
 md_indirect_field_name(A) ::= MD_TOKEN_DOLLAR_SIGN MD_TOKEN_LEFT_BRACKET md_rhs(B) MD_TOKEN_RIGHT_BRACKET.  {
 	A = mlr_dsl_ast_node_alloc_unary("indirect_field_name", MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME, B);
+}
+
+md_atom_or_fcn(A) ::= md_positional_srec_name(B). {
+	A = B;
+}
+md_positional_srec_name(A) ::= MD_TOKEN_DOLLAR_SIGN
+	MD_TOKEN_LEFT_BRACKET MD_TOKEN_LEFT_BRACKET
+		md_rhs(B)
+	MD_TOKEN_RIGHT_BRACKET MD_TOKEN_RIGHT_BRACKET.  {
+	A = mlr_dsl_ast_node_alloc_unary(
+		"positional_srec_field_name",
+		MD_AST_NODE_TYPE_POSITIONAL_SREC_NAME,
+		B
+	);
+}
+
+// '$value = $[[[3]]]' is shorthand for '$value = $[ $[[3]] ]'.
+// Note that '$[[3]]' is key at srec position 3 and '$[[[3]]]' is value at srec position 3.
+md_atom_or_fcn(A) ::= md_positional_srec_value(B). {
+	A = B;
+}
+md_positional_srec_value(A) ::= MD_TOKEN_DOLLAR_SIGN
+	MD_TOKEN_LEFT_BRACKET MD_TOKEN_LEFT_BRACKET MD_TOKEN_LEFT_BRACKET
+		md_rhs(B)
+	MD_TOKEN_RIGHT_BRACKET MD_TOKEN_RIGHT_BRACKET MD_TOKEN_RIGHT_BRACKET.  {
+	A = mlr_dsl_ast_node_alloc_unary(
+		"indirect_field_name",
+		MD_AST_NODE_TYPE_INDIRECT_FIELD_NAME,
+		mlr_dsl_ast_node_alloc_unary(
+			"positional_srec_field_name",
+			MD_AST_NODE_TYPE_POSITIONAL_SREC_NAME,
+			B
+		)
+	);
 }
 
 // ----------------------------------------------------------------
