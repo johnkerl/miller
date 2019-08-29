@@ -4,12 +4,13 @@ CAPITALIZE AND POSIDX
 k typed-overlay to-do
 k valgrind oo
 
-* coverage in reg_test/run
-* valgrind that
+k coverage in reg_test/run
+k valgrind that
 
-* mld
+k mld
 
 * doc/bld note for vgrun oo
+* oo w/ indir
 
 * follow-on for pre-existing unset/typed-overlay issue
 
