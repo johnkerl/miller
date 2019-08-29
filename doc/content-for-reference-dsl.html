@@ -262,6 +262,8 @@ POKI_RUN_COMMAND{{echo a=3,b=4 | mlr filter '$["x"] < 0.5'}}HERE
 
 POKI_RUN_COMMAND{{echo s=green,t=blue,a=3,b=4 | mlr put '$[$s."_".$t] = $a * $b'}}HERE
 
+Notes:
+
 <p/> The names of record fields depend on the contents of your input data stream, and their
 values change from one record to the next as Miller scans through your input
 data stream.
@@ -276,6 +278,37 @@ is the <tt>filter</tt> or <tt>put</tt> command in which they appear.
 stream are passed through to output (written to standard output) unless fields
 are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
 <tt>put -q</tt>, etc. Simply assign a value to a field and it will be output.
+
+<!-- ================================================================ -->
+<h2>Positional field names</h2>
+
+<p/> Even though Miller&rsquo;s main selling point is
+name-indexing, sometimes you really want to refer to a field name by its
+positional index (starting from 1).
+
+<p/> Use <tt>$[[3]]</tt> to access the name of field 3.  More generally, any
+expression evaluating to an integer can go between <tt>$[[</tt> and
+<tt>]]</tt>.
+
+Then using a computed field name, <tt>$[ $[[3]] ]</tt> is the value in the third field.
+This has the shorter equivalent notation <tt>$[[[3]]]</tt>.
+
+POKI_RUN_COMMAND{{mlr cat data/small}}HERE
+
+POKI_RUN_COMMAND{{mlr put '$[[3]] = "NEW"' data/small}}HERE
+POKI_RUN_COMMAND{{mlr put '$[[[3]]] = "NEW"' data/small}}HERE
+POKI_RUN_COMMAND{{mlr put '$NEW = $[[NR]]' data/small}}HERE
+POKI_RUN_COMMAND{{mlr put '$NEW = $[[[NR]]]' data/small}}HERE
+POKI_RUN_COMMAND{{mlr put '$[[[NR]]] = "NEW"' data/small}}HERE
+
+Right-hand side accesses to non-existent fields &mdash; i.e. with index less
+than 1 or greater than <tt>NF</tt> -- return an absent value. Likewise,
+left-hand side accesses only refer to fields which already exist. For example,
+if a field has 5 records then assigning the name or value of the 6th (or 600th)
+field results in a no-op.
+
+POKI_RUN_COMMAND{{mlr put '$[[6]] = "NEW"' data/small}}HERE
+POKI_RUN_COMMAND{{mlr put '$[[[6]]] = "NEW"' data/small}}HERE
 
 <!-- ================================================================ -->
 <h2>Out-of-stream variables</h2>

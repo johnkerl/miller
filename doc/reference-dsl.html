@@ -196,6 +196,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#Variables">Variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Built-in_variables">Built-in variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Field_names">Field names</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Positional_field_names">Positional field names</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Out-of-stream_variables">Out-of-stream variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Indexed_out-of-stream_variables">Indexed out-of-stream variables</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Local_variables">Local variables</a><br/>
@@ -803,6 +804,8 @@ s=green,t=blue,a=3,b=4,green_blue=12
 </div>
 <p/>
 
+Notes:
+
 <p/> The names of record fields depend on the contents of your input data stream, and their
 values change from one record to the next as Miller scans through your input
 data stream.
@@ -817,6 +820,125 @@ is the <tt>filter</tt> or <tt>put</tt> command in which they appear.
 stream are passed through to output (written to standard output) unless fields
 are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
 <tt>put -q</tt>, etc. Simply assign a value to a field and it will be output.
+
+<!-- ================================================================ -->
+<a id="Positional_field_names"/><h2>Positional field names</h2>
+
+<p/> Even though Miller&rsquo;s main selling point is
+name-indexing, sometimes you really want to refer to a field name by its
+positional index (starting from 1).
+
+<p/> Use <tt>$[[3]]</tt> to access the name of field 3.  More generally, any
+expression evaluating to an integer can go between <tt>$[[</tt> and
+<tt>]]</tt>.
+
+Then using a computed field name, <tt>$[ $[[3]] ]</tt> is the value in the third field.
+This has the shorter equivalent notation <tt>$[[[3]]]</tt>.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr cat data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$[[3]] = "NEW"' data/small
+a=pan,b=pan,NEW=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,NEW=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,NEW=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,NEW=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,NEW=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$[[[3]]] = "NEW"' data/small
+a=pan,b=pan,i=NEW,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=NEW,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=NEW,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=NEW,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=NEW,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$NEW = $[[NR]]' data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,NEW=a
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NEW=b
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,NEW=i
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,NEW=x
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NEW=y
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$NEW = $[[[NR]]]' data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,NEW=pan
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,NEW=pan
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,NEW=3
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,NEW=0.381399
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NEW=0.863624
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$[[[NR]]] = "NEW"' data/small
+a=NEW,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=NEW,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=NEW,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=NEW,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=NEW
+</pre>
+</div>
+<p/>
+
+Right-hand side accesses to non-existent fields &mdash; i.e. with index less
+than 1 or greater than <tt>NF</tt> -- return an absent value. Likewise,
+left-hand side accesses only refer to fields which already exist. For example,
+if a field has 5 records then assigning the name or value of the 6th (or 600th)
+field results in a no-op.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$[[6]] = "NEW"' data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr put '$[[[6]]] = "NEW"' data/small
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+</pre>
+</div>
+<p/>
 
 <!-- ================================================================ -->
 <a id="Out-of-stream_variables"/><h2>Out-of-stream variables</h2>

@@ -52,6 +52,14 @@ POKI_RUN_COMMAND{{mlr --icsv --opprint filter '$color == "red" && $flag == 1' ex
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv}}HERE
 
+<p/><boldmaroon> Even though Miller&rsquo;s main selling point is
+name-indexing, sometimes you really want to refer to a field name by its
+positional index. Use <tt>$[[3]]</tt> to access the name of field 3 or
+<tt>$[[[3]]]</tt> to access the value of field 3:</boldmaroon>
+
+POKI_RUN_COMMAND{{mlr --icsv --opprint put '$[[3]] = "NEW"' example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --opprint put '$[[[3]]] = "NEW"' example.csv}}HERE
+
 <p/><boldmaroon> JSON output:</boldmaroon>
 
 POKI_RUN_COMMAND{{mlr --icsv --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' example.csv}}HERE
