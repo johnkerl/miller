@@ -15,6 +15,23 @@ k mld
 * follow-on for pre-existing unset/typed-overlay issue
 
 * prep release notes!! :)
+- remove-empty-columns -- status ??
+- skip-trivial-records -- status ??
+- sort-within-records -- status??
+- ragged csv input -- definitely incomplete :^/
+- -N
+- mlr cat -v
+- urandrange function
+- capitalize function
+- positional indexing
+  > update examples to include capitalize or something
+! bugfix for unset -- don't release without ...
+* sar @ cookbook -- ?
+* filter-by-date at faq
+* how to escape ? in regexes
+* --ivar
+
+>>>> attrib all to issues whenever possible
 
 ================================================================
 BUGFIXES
