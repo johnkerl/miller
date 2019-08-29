@@ -135,6 +135,10 @@ static void handle_indirect_srec_assignment(
 	rval_evaluator_t* prhs_evaluator = pstate->prhs_evaluator;
 
 	mv_t lval = plhs_evaluator->pprocess_func(plhs_evaluator->pvstate, pvars);
+	if (mv_is_absent(&lval)) {
+		return;
+	}
+
 	mv_t rval = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 
 	char free_flags;
@@ -156,6 +160,7 @@ static void handle_indirect_srec_assignment(
 			FREE_ENTRY_KEY|FREE_ENTRY_VALUE);
 		lrec_put(pvars->pinrec, mlr_strdup_or_die(srec_lhs_field_name), "bug", FREE_ENTRY_KEY | FREE_ENTRY_KEY);
 	} else {
+		// xxx re-examine after push
 		mv_free(&rval);
 	}
 
@@ -220,6 +225,9 @@ static void handle_positional_srec_name_assignment(
 	mv_t lval = plhs_evaluator->pprocess_func(plhs_evaluator->pvstate, pvars);
 	mv_t rval = prhs_evaluator->pprocess_func(prhs_evaluator->pvstate, pvars);
 
+	if (mv_is_absent(&lval)) {
+		return;
+	}
 	if (!mv_is_int(&lval)) {
 		char free_flags = NO_FREE;
 		char* text = mv_maybe_alloc_format_val(&lval, &free_flags);
@@ -231,7 +239,8 @@ static void handle_positional_srec_name_assignment(
 
 	if (mv_is_absent(&rval)) {
 		return;
-	} else if (!mv_is_string(&rval)) {
+	}
+	if (!mv_is_string(&rval)) {
 		char free_flags = NO_FREE;
 		char* text = mv_maybe_alloc_format_val(&rval, &free_flags);
 		fprintf(stderr, "%s: new positional names must be strings; got [%s].\n", MLR_GLOBALS.bargv0, text);
