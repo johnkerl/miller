@@ -172,8 +172,8 @@ output separator to the given value.
  cut decimate fill-down filter fraction grep group-by group-like having-fields
  head histogram join label least-frequent merge-fields most-frequent nest
  nothing put regularize remove-empty-columns rename reorder repeat reshape
- sample sec2gmt sec2gmtdate seqgen shuffle skip-trivial-records sort
- sort-within-records stats1 stats2 step tac tail tee top uniq unsparsify
+ sample sec2gmt sec2gmtdate seqgen shuffle skip-trivial-records sort stats1
+ stats2 step tac tail tee top uniq unsparsify
 .fi
 .if n \{\
 .RE
@@ -1485,27 +1485,6 @@ Example:
   mlr sort -f a,b -nr x,y,z
 which is the same as:
   mlr sort -f a -f b -nr x -nr y -nr z
-.fi
-.if n \{\
-.RE
-.SS "sort-within-records"
-.if n \{\
-.RS 0
-.\}
-.nf
-Usage: mlr sort-within-records {flags}
-Flags:
-  -k    Sort by keys
-  -v    Sort by values
-  -n    Sort numerically
-  -f    Sort lexically (default)
-  -r    Reverse sort
-  -nk   Shorthand for -n -k
-  -nv   Shorthand for -n -v
-  -rk   Shorthand for -r -k
-  -rv   Shorthand for -r -v
-  -nrk  Shorthand for -n -r -k
-  -nrv  Shorthand for -n -r -v
 .fi
 .if n \{\
 .RE

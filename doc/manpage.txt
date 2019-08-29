@@ -129,8 +129,8 @@ OPTIONS
 	cut decimate fill-down filter fraction grep group-by group-like having-fields
 	head histogram join label least-frequent merge-fields most-frequent nest
 	nothing put regularize remove-empty-columns rename reorder repeat reshape
-	sample sec2gmt sec2gmtdate seqgen shuffle skip-trivial-records sort
-	sort-within-records stats1 stats2 step tac tail tee top uniq unsparsify
+	sample sec2gmt sec2gmtdate seqgen shuffle skip-trivial-records sort stats1
+	stats2 step tac tail tee top uniq unsparsify
 
    FUNCTION LIST
 	+ + - - * / // .+ .+ .- .- .* ./ .// % ** | ^ & ~ << >> bitcount == != =~ !=~
@@ -1128,21 +1128,6 @@ VERBS
 	 mlr sort -f a,b -nr x,y,z
        which is the same as:
 	 mlr sort -f a -f b -nr x -nr y -nr z
-
-   sort-within-records
-       Usage: mlr sort-within-records {flags}
-       Flags:
-	 -k    Sort by keys
-	 -v    Sort by values
-	 -n    Sort numerically
-	 -f    Sort lexically (default)
-	 -r    Reverse sort
-	 -nk   Shorthand for -n -k
-	 -nv   Shorthand for -n -v
-	 -rk   Shorthand for -r -k
-	 -rv   Shorthand for -r -v
-	 -nrk  Shorthand for -n -r -k
-	 -nrv  Shorthand for -n -r -v
 
    stats1
        Usage: mlr stats1 [options]
