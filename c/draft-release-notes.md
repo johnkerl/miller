@@ -20,9 +20,9 @@
 
 ## Documentation:
 
-* The new FAQ entry http://johnkerl.org/miller-releases/miller-head/doc/faq.html#How_to_escape_'?'_in_regexes resolves https://github.com/johnkerl/miller/issues/203.
+* The new FAQ entry http://johnkerl.org/miller/doc/faq.html#How_to_escape_'?'_in_regexes resolves https://github.com/johnkerl/miller/issues/203.
 
-* The new FAQ entry http://johnkerl.org/miller-releases/miller-head/doc/faq.html#How_can_I_filter_by_date resolves https://github.com/johnkerl/miller/issues/208.
+* The new FAQ entry http://johnkerl.org/miller/doc/faq.html#How_can_I_filter_by_date resolves https://github.com/johnkerl/miller/issues/208.
 
 * https://github.com/johnkerl/miller/issues/244 fixes a documentation issue while highlighting the need for https://github.com/johnkerl/miller/issues/241.
 
