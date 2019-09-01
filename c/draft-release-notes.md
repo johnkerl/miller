@@ -1,90 +1,37 @@
-# New data-cleaning features, Windows mlr.exe, limited localtime support, and bugfixes
+# Positional-indexing and other data-cleaning features
 
 ## Features:
 
-* The new [**clean-whitespace**](http://johnkerl.org/miller/doc/reference-verbs.html#clean-whitespace) verb resolves
-https://github.com/johnkerl/miller/issues/190 from @aborruso.
-Along with the new functions
-[**strip**](http://johnkerl.org/miller/doc/reference-dsl.html#strip),
-[**lstrip**](http://johnkerl.org/miller/doc/reference-dsl.html#lstrip),
-[**rstrip**](http://johnkerl.org/miller/doc/reference-dsl.html#rstrip),
-[**collapse_whitespace**](http://johnkerl.org/miller/doc/reference-dsl.html#collapse_whitespace), and
-[**clean_whitespace**](http://johnkerl.org/miller/doc/reference-dsl.html#clean_whitespace), there is
-coarser-grained and finer-grained control over whitespace within field names and/or values.
-See the linked-to documentation for examples.
+* The [**positional-indexing feature**](http://johnkerl.org/miller/doc/reference-dsl.html#Positional_field_names) resolves https://github.com/johnkerl/miller/issues/236 from @aborruso. You can now get the name of the 3rd field of each record via <tt>$[[3]]</tt>, and the value by <tt>$[[[3]]]</tt>. These are both usable on either the left-hand or right-hand side of assignment statements, so you can more easily do things like renaming fields progrmatically within the DSL.
 
-* The new [**altkv**](http://johnkerl.org/miller/doc/reference-verbs.html#altkv) verb resolves
-https://github.com/johnkerl/miller/issues/184 which was originally opened via an email request. This supports mapping
-value-lists such as `a,b,c,d` to alternating key-value pairs such as `a=b,c=d`.
+* There is a new [**capitalize**](http://johnkerl.org/miller/doc/reference-dsl.html#capitalize) DSL function, complementing the already-existing <tt>toupper</tt>. This stems from https://github.com/johnkerl/miller/issues/236.
 
-* The new [**fill-down**](http://johnkerl.org/miller/doc/reference-verbs.html#fill-down) verb resolves
-https://github.com/johnkerl/miller/issues/189
-by
-@aborruso
-See the linked-to documentation for examples.
+* There is a new [**skip-trivial-records**](http://johnkerl.org/miller/doc/reference-verbs.html#skip-trivial-records) verb, resolving https://github.com/johnkerl/miller/issues/197. Similarly, there is a new [**remove-empty-columns**](http://johnkerl.org/miller/doc/reference-verbs.html#remove-empty-columns) verb, resolving https://github.com/johnkerl/miller/issues/206. Both are useful for **data-cleaning use-cases**.
 
-* The [**uniq**](http://johnkerl.org/miller/doc/reference-verbs.html#verb) verb now has a **uniq -a**
-which resolves https://github.com/johnkerl/miller/issues/168 from @sjackman.
+* Another pair is https://github.com/johnkerl/miller/issues/181 and https://github.com/johnkerl/miller/issues/256. While Miller uses <tt>mmap</tt> internally (and invisibily) to get approximately a 20% performance boost over not using it, this can cause out-of-memory issues with reading either large files, or too many small ones. Now, Miller automatically avoids <tt>mmap</tt> in these cases. You can still use <tt>--mmap</tt> or <tt>--no-mmap</tt> if you want manual control of this.
 
-* The new
-[**regextract**](http://johnkerl.org/miller/doc/reference-dsl.html#regextract) and
-[**regextract_or_else**](http://johnkerl.org/miller/doc/reference-dsl.html#regextract_or_else)
-functions resolve
-https://github.com/johnkerl/miller/issues/183
-by @aborruso.
-xxx.
+* There is a new [**--ivar option for the nest verb**](http://johnkerl.org/miller/doc/reference-verbs.html#nest) which complements the already-existing <tt>--evar</tt>. This is from https://github.com/johnkerl/miller/pull/260 thanks to @jgreely.
 
-* The new [**ssub**](http://johnkerl.org/miller/doc/reference-dsl.html#ssub) function arises from
-https://github.com/johnkerl/miller/issues/171
-by @dohse, as a simplified way to avoid escaping characters which are special to regular-expression parsers.
+* There is a new keystroke-saving [**urandrange**](http://johnkerl.org/miller/doc/reference-dsl.html#urand) DSL function: <tt>urandrange(low, high)</tt> is the same as <tt>low + (high - low) * urand()</tt>.
 
-* There are [**localtime**] functions in response to
-https://github.com/johnkerl/miller/issues/170 by @sitaramc, as follows. However note that
-as discussed on https://github.com/johnkerl/miller/issues/170 these do not undo one another in all
-circumstances.
-This is a non-issue for timezones which do not do DST. Otherwise, please use with disclaimers.
-  * [**localdate**](http://johnkerl.org/miller/doc/reference-dsl.html#localdate)
-  * [**localtime2sec**](http://johnkerl.org/miller/doc/reference-dsl.html#localtime2sec)
-  * [**sec2localdate**](http://johnkerl.org/miller/doc/reference-dsl.html#sec2localdate)
-  * [**sec2localtime**](http://johnkerl.org/miller/doc/reference-dsl.html#sec2localtime)
-  * [**strftime_local**](http://johnkerl.org/miller/doc/reference-dsl.html#strftime_local)
-  * [**strptime_local**](http://johnkerl.org/miller/doc/reference-dsl.html#strptime_local)
+* There is a new [**-v option for the cat verb**](http://johnkerl.org/miller/doc/reference-verbs.html#cat) which writes a low-level record-structure dump to standard error.
 
-## Builds:
-
-* Windows build-artifacts are now available in Appveyor at
-https://ci.appveyor.com/project/johnkerl/miller/build/artifacts, and will be attached to this and future releases. This
-reseolvs https://github.com/johnkerl/miller/issues/167, https://github.com/johnkerl/miller/issues/148, and
-https://github.com/johnkerl/miller/issues/109.
-
-* Travis builds at https://travis-ci.org/johnkerl/miller/builds now run on OSX as well as Linux.
-
-* An Ubuntu 17 build issue was fixed by @singalen on https://github.com/johnkerl/miller/issues/164.
+* There is a new [**-N option for mlr**](http://johnkerl.org/miller/doc/manpage.html) which is a keystroke-saver for <tt>--implicit-csv-header --headerless-csv-output</tt>.
 
 ## Documentation:
 
-* <tt>put</tt>/<tt>filter</tt> documentation was confusing as reported by @NikosAlexandris on
-https://github.com/johnkerl/miller/issues/169.
+* The new FAQ entry http://johnkerl.org/miller-releases/miller-head/doc/faq.html#How_to_escape_'?'_in_regexes resolves https://github.com/johnkerl/miller/issues/203.
 
-* The new FAQ entry
-http://johnkerl.org/miller-releases/miller-head/doc/faq.html#How_to_rectangularize_after_joins_with_unpaired?
-resolves
-https://github.com/johnkerl/miller/issues/193
-by @aborruso.
+* The new FAQ entry http://johnkerl.org/miller-releases/miller-head/doc/faq.html#How_can_I_filter_by_date resolves https://github.com/johnkerl/miller/issues/208.
 
-* The new cookbook entry
-http://johnkerl.org/miller/doc/cookbook.html#Options_for_dealing_with_duplicate_rows arises from
-https://github.com/johnkerl/miller/issues/168 from @sjackman.
-
-* The <tt>unsparsify</tt> documentation had some words missing as reported by
-@tst2005 on https://github.com/johnkerl/miller/issues/194.
-
-* There was a typo in the cookpage page http://johnkerl.org/miller/doc/cookbook.html#Full_field_renames_and_reassigns
-as fixed by @tst2005 in https://github.com/johnkerl/miller/pull/192.
+* https://github.com/johnkerl/miller/issues/244 fixes a documentation issue while highlighting the need for https://github.com/johnkerl/miller/issues/241.
 
 ## Bugfixes: 
 
-* There was a memory leak for TSV-format files only as reported by @treynr on https://github.com/johnkerl/miller/issues/181.
+* There was a SEGV using `nest` within `then`-chains, fixed in response to https://github.com/johnkerl/miller/issues/220.
 
-* Dollar sign in regular expressions were not being escaped properly as reported by @dohse on
-https://github.com/johnkerl/miller/issues/171.
+* Quotes and backslashes weren't being escaped in JSON output with <tt>--jvquoteall</tt>; reported on https://github.com/johnkerl/miller/issues/222.
+
+## Note:
+
+I've never code-named releases but if I were to code-name 5.5.0 I would call it "aborruso". Andrea has contributed many fantastic feature requests, as well as driving a huge volume of Miller-related discussions in StackExchange (https://github.com/johnkerl/miller/issues/212). Mille grazie al mio amico @aborruso!
