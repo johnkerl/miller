@@ -2,7 +2,7 @@
 
 ## Features:
 
-* The [**positional-indexing feature**](http://johnkerl.org/miller/doc/reference-dsl.html#Positional_field_names) resolves https://github.com/johnkerl/miller/issues/236 from @aborruso. You can now get the name of the 3rd field of each record via <tt>$[[3]]</tt>, and the value by <tt>$[[[3]]]</tt>. These are both usable on either the left-hand or right-hand side of assignment statements, so you can more easily do things like renaming fields progrmatically within the DSL.
+* The new [**positional-indexing feature**](http://johnkerl.org/miller/doc/reference-dsl.html#Positional_field_names) resolves https://github.com/johnkerl/miller/issues/236 from @aborruso. You can now get the name of the 3rd field of each record via <tt>$[[3]]</tt>, and its value by <tt>$[[[3]]]</tt>. These are both usable on either the left-hand or right-hand side of assignment statements, so you can more easily do things like renaming fields progrmatically within the DSL.
 
 * There is a new [**capitalize**](http://johnkerl.org/miller/doc/reference-dsl.html#capitalize) DSL function, complementing the already-existing <tt>toupper</tt>. This stems from https://github.com/johnkerl/miller/issues/236.
 
