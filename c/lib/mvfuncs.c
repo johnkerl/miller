@@ -7,6 +7,7 @@
 #include "lib/mlrdatetime.h"
 #include "lib/mlrregex.h"
 #include "lib/mvfuncs.h"
+#include "lib/utf8.h"
 
 // ================================================================
 // See important notes at the top of mlrval.h.
@@ -403,8 +404,14 @@ mv_t s_x_typeof_func(mv_t* pval1) {
 // ----------------------------------------------------------------
 mv_t s_s_tolower_func(mv_t* pval1) {
 	char* string = mlr_strdup_or_die(pval1->u.strv);
+#if 0
+	// ASCII only
 	for (char* c = string; *c; c++)
 		*c = tolower((unsigned char)*c);
+#else
+	// UTF-8
+	utf8lwr(string);
+#endif
 	mv_free(pval1);
 	pval1->u.strv = NULL;
 
@@ -413,8 +420,14 @@ mv_t s_s_tolower_func(mv_t* pval1) {
 
 mv_t s_s_toupper_func(mv_t* pval1) {
 	char* string = mlr_strdup_or_die(pval1->u.strv);
+#if 0
+	// ASCII only
 	for (char* c = string; *c; c++)
 		*c = toupper((unsigned char)*c);
+#else
+	// UTF-8
+	utf8upr(string);
+#endif
 	mv_free(pval1);
 	pval1->u.strv = NULL;
 

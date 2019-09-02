@@ -340,7 +340,8 @@ libmlr_la_SOURCES = free_flags.h \
 			string_builder.c \
 			string_builder.h \
 			mlr_test_util.c \
-			mlr_test_util.h
+			mlr_test_util.h \
+			utf8.h
 
 AM_CPPFLAGS = -I${srcdir}/../
 AM_CFLAGS = -std=gnu99
