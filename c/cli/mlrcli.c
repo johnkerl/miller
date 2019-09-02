@@ -254,9 +254,10 @@ cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 	// mappers operate on all input files. Also retain information needed to construct them
 	// for each input file, for in-place mode.
 	popts->mapper_argb = argi;
-	popts->argv = argv;
+	popts->original_argv = argv;
+	popts->non_in_place_argv = copy_argv(argv);
 	popts->argc = argc;
-	*ppmapper_list = cli_parse_mappers(argv, &argi, argc, popts, &no_input);
+	*ppmapper_list = cli_parse_mappers(popts->non_in_place_argv, &argi, argc, popts, &no_input);
 
 	for ( ; argi < argc; argi++) {
 		slls_append(popts->filenames, argv[argi], NO_FREE);
@@ -334,10 +335,9 @@ sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, 
 	// is on the command line that the verbs and their arguments end and the filenames
 	// begin.
 
-	char** xargv = popts->do_in_place ? copy_argv(popts->argv) : popts->argv;
 	while (TRUE) {
-		check_arg_count(xargv, argi, argc, 1);
-		char* verb = xargv[argi];
+		check_arg_count(argv, argi, argc, 1);
+		char* verb = argv[argi];
 
 		mapper_setup_t* pmapper_setup = look_up_mapper_setup(verb);
 		if (pmapper_setup == NULL) {
@@ -347,7 +347,7 @@ sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, 
 		}
 
 		if ((argc - argi) >= 2) {
-			if (streq(xargv[argi+1], "-h") || streq(xargv[argi+1], "--help")) {
+			if (streq(argv[argi+1], "-h") || streq(argv[argi+1], "--help")) {
 				pmapper_setup->pusage_func(stdout, MLR_GLOBALS.bargv0, verb);
 				exit(0);
 			}
@@ -356,7 +356,7 @@ sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, 
 		// It's up to the parse func to print its usage on CLI-parse failure.
 		// Also note: this assumes main reader/writer opts are all parsed
 		// *before* mapper parse-CLI methods are invoked.
-		mapper_t* pmapper = pmapper_setup->pparse_func(&argi, argc, xargv,
+		mapper_t* pmapper = pmapper_setup->pparse_func(&argi, argc, argv,
 			&popts->reader_opts, &popts->writer_opts);
 		if (pmapper == NULL) {
 			exit(1);
@@ -369,12 +369,9 @@ sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, 
 
 		sllv_append(pmapper_list, pmapper);
 
-		if (argi >= argc || !streq(xargv[argi], "then"))
+		if (argi >= argc || !streq(argv[argi], "then"))
 			break;
 		argi++;
-	}
-	if (popts->do_in_place) {
-		free_argv_copy(xargv);
 	}
 
 	*pargi = argi;
@@ -387,6 +384,7 @@ void cli_opts_free(cli_opts_t* popts) {
 		return;
 
 	slls_free(popts->filenames);
+	free_argv_copy(popts->non_in_place_argv);
 	free(popts);
 	free_opt_singletons();
 }

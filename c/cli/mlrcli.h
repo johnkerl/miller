@@ -82,9 +82,13 @@ typedef struct _cli_opts_t {
 	cli_reader_opts_t reader_opts;
 	cli_writer_opts_t writer_opts;
 
-	// These are used to construct the mapper list. In particular,
-	// for in-place mode they're reconstructed for each file.
-	char**  argv;
+	// These are used to construct the mapper list. In particular, for in-place mode
+	// they're reconstructed for each file.  We make copies since each pass through a
+	// CLI-parser operates destructively, principally by running strtok over
+	// comma-delimited field-name lists.
+
+	char**  original_argv;
+	char**  non_in_place_argv;
 	int     argc;
 	int     mapper_argb;
 
