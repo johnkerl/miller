@@ -188,11 +188,21 @@ Miller commands were run with pretty-print-tabular output format.
 <!-- BODY COPIED FROM content-for-internationalization.html BY poki -->
 <p/>Miller handles strings with any characters other than 0x00 or 0xff, using
 explicit UTF-8-friendly string-length computations.  (I have no plans to
-support UTF-16 or ISO-8859-1.) Tabular output formats (pprint and xtab) are
-aligned correctly and the Miller <tt>strlen</tt> function correctly counts
-UTF-8 codepoints rather than bytes.  Please file an issue at
-<a href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>
-if you encounter bugs related to internationalization (or anything else for
+support UTF-16 or ISO-8859-1.)
+
+<p/>
+By and large, Miller treats strings as sequences of non-null bytes without need
+to interpret them semantically. Intentional support for internationalization includes:
+
+<ul>
+<li/> <a href="file-formats.html">Tabular output formats</a> (pprint and xtab) are aligned correctly.
+<li/> The <a href="reference-dsl.html#strlen">strlen</a> function correctly counts UTF-8 codepoints rather than bytes.
+<li/> The <a href="reference-dsl.html#toupper">toupper</a>, <a href="reference-dsl.html#tolower">tolower</a>, and <a href="reference-dsl.html#capitalize">capitalize</a> DSL functions within the capabilities of <a href="https://github.com/sheredom/utf8.h">https://github.com/sheredom/utf8.h</a>.
+</ul>
+
+<p/>Meanwhile, regular expressions and the <a href="reference-dsl.html#sub">sub</a> and <a href="reference-dsl.html#gsub">gsub</a> function correctly, albeit without explicit intentional support.
+
+<p/> Please file an issue at <a href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a> if you encounter bugs related to internationalization (or anything else for
 that matter).
     </div>
   </td>
