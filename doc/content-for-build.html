@@ -290,7 +290,7 @@ copyright</a>.
   <li/> On buildbox: make SRPM as in <a href="https://github.com/johnkerl/miller/blob/master/README-RPM.md">
     https://github.com/johnkerl/miller/blob/master/README-RPM.md</a>
   <li/> On all buildboxes: <tt>cd c</tt> and <tt>make -f Makefile.no-autoconfig mlr.static</tt>. Then copy
-    <tt>mlr.static</tt> to <tt>../mlr.{arch}</tt>.
+    <tt>mlr.static</tt> to <tt>../mlr.{arch}</tt>. (This may require as prerequisite <tt>sudo yum install glibc-static</tt> or the like.)
   <li/> Pull back release tarball <tt>mlr-3.4.0.tar.gz</tt> and SRPM <tt>mlr-3.4.0-1.el6.src.rpm</tt> from buildbox,
     and <tt>mlr.{arch}</tt> binaries from whatever buildboxes.
   <li/> Download <tt>mlr.exe</tt> and <tt>msys-2.0.dll</tt> from
