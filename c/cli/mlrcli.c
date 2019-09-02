@@ -35,6 +35,14 @@
 #define DEFAULT_COMMENT_STRING           "#"
 #define DEFAULT_MAX_FILE_SIZE_FOR_MMAP (4LL*1024LL*1024LL*1024LL)
 
+// ASCII 1f and 1e
+#define ASV_FS "\x1f"
+#define ASV_RS "\x1e"
+
+// Unicode code points U+241F and U+241E
+#define USV_FS "\xe2\x90\x9f"
+#define USV_RS "\xe2\x90\x9e"
+
 // ----------------------------------------------------------------
 static mapper_setup_t* mapper_lookup_table[] = {
 
@@ -1560,6 +1568,30 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 		preader_opts->ifs = "\t";
 		argi += 1;
 
+	} else if (streq(argv[argi], "--iasv")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->ifs = ASV_FS;
+		preader_opts->irs = ASV_RS;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--iasvlite")) {
+		preader_opts->ifile_fmt = "csvlite";
+		preader_opts->ifs = ASV_FS;
+		preader_opts->irs = ASV_RS;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--iusv")) {
+		preader_opts->ifile_fmt = "csv";
+		preader_opts->ifs = USV_FS;
+		preader_opts->irs = USV_RS;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--iusvlite")) {
+		preader_opts->ifile_fmt = "csvlite";
+		preader_opts->ifs = USV_FS;
+		preader_opts->irs = USV_RS;
+		argi += 1;
+
 	} else if (streq(argv[argi], "--idkvp")) {
 		preader_opts->ifile_fmt = "dkvp";
 		argi += 1;
@@ -1713,6 +1745,30 @@ int cli_handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts
 		pwriter_opts->ofs = "\t";
 		argi += 1;
 
+	} else if (streq(argv[argi], "--oasv")) {
+		pwriter_opts->ofile_fmt = "csv";
+		pwriter_opts->ofs = ASV_FS;
+		pwriter_opts->ors = ASV_RS;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--oasvlite")) {
+		pwriter_opts->ofile_fmt = "csvlite";
+		pwriter_opts->ofs = ASV_FS;
+		pwriter_opts->ors = ASV_RS;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--ousv")) {
+		pwriter_opts->ofile_fmt = "csv";
+		pwriter_opts->ofs = USV_FS;
+		pwriter_opts->ors = USV_RS;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--ousvlite")) {
+		pwriter_opts->ofile_fmt = "csvlite";
+		pwriter_opts->ofs = USV_FS;
+		pwriter_opts->ors = USV_RS;
+		argi += 1;
+
 	} else if (streq(argv[argi], "--omd")) {
 		pwriter_opts->ofile_fmt = "markdown";
 		argi += 1;
@@ -1840,6 +1896,38 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 		preader_opts->ifile_fmt = pwriter_opts->ofile_fmt = "csvlite";
 		preader_opts->ifs = "\t";
 		pwriter_opts->ofs = "\t";
+		argi += 1;
+
+	} else if (streq(argv[argi], "--asv")) {
+		preader_opts->ifile_fmt = pwriter_opts->ofile_fmt = "csv";
+		preader_opts->ifs = ASV_FS;
+		pwriter_opts->ofs = ASV_FS;
+		preader_opts->irs = ASV_RS;
+		pwriter_opts->ors = ASV_RS;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--asvlite")) {
+		preader_opts->ifile_fmt = pwriter_opts->ofile_fmt = "csvlite";
+		preader_opts->ifs = ASV_FS;
+		pwriter_opts->ofs = ASV_FS;
+		preader_opts->irs = ASV_RS;
+		pwriter_opts->ors = ASV_RS;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--usv")) {
+		preader_opts->ifile_fmt = pwriter_opts->ofile_fmt = "csv";
+		preader_opts->ifs = USV_FS;
+		pwriter_opts->ofs = USV_FS;
+		preader_opts->irs = USV_RS;
+		pwriter_opts->ors = USV_RS;
+		argi += 1;
+
+	} else if (streq(argv[argi], "--usvlite")) {
+		preader_opts->ifile_fmt = pwriter_opts->ofile_fmt = "csvlite";
+		preader_opts->ifs = USV_FS;
+		pwriter_opts->ofs = USV_FS;
+		preader_opts->irs = USV_RS;
+		pwriter_opts->ors = USV_RS;
 		argi += 1;
 
 	} else if (streq(argv[argi], "--dkvp")) {
