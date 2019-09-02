@@ -21,6 +21,7 @@ typedef struct _slls_t {
 } slls_t;
 
 slls_t* slls_alloc();
+int     slls_size(slls_t* plist);
 slls_t* slls_copy(slls_t* pold);
 void    slls_free(slls_t* plist);
 slls_t* slls_single_with_free(char* value);

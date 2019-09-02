@@ -1,16 +1,20 @@
 #include "lib/mlrutil.h"
+#include "lib/mlr_globals.h"
+#include "containers/hss.h"
 #include "containers/slls.h"
 #include "containers/sllv.h"
+#include "containers/mixutil.h"
 #include "mapping/mappers.h"
 
 typedef struct _mapper_label_state_t {
-	slls_t* pnames;
+	slls_t* pnames_as_list;
+	hss_t* pnames_as_set; // needed for efficient deduplication
 } mapper_label_state_t;
 
 static void      mapper_label_usage(FILE* o, char* argv0, char* verb);
 static mapper_t* mapper_label_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
-static mapper_t* mapper_label_alloc(slls_t* pnames);
+static mapper_t* mapper_label_alloc(slls_t* pnames_as_list, hss_t* pnames_as_set);
 static void      mapper_label_free(mapper_t* pmapper, context_t* _);
 static sllv_t*   mapper_label_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
@@ -38,23 +42,35 @@ static void mapper_label_usage(FILE* o, char* argv0, char* verb) {
 static mapper_t* mapper_label_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __)
 {
-	if ((argc - *pargi) < 2) {
-		mapper_label_usage(stderr, argv[0], argv[*pargi]);
+	int argi = *pargi;
+	if ((argc - argi) < 2) {
+		mapper_label_usage(stderr, argv[0], argv[argi]);
 		return NULL;
 	}
 
-	slls_t* pnames = slls_from_line(argv[*pargi+1], ',', FALSE);
+	char* verb = argv[argi];
+	char* names_as_string = argv[argi+1];
+
+	slls_t* pnames_as_list = slls_from_line(names_as_string, ',', FALSE);
+	hss_t* pnames_as_set = hss_from_slls(pnames_as_list);
+
+	if (slls_size(pnames_as_list) != hss_size(pnames_as_set)) {
+		fprintf(stderr, "%s %s: labels must be unique; got \"%s\"\n",
+			MLR_GLOBALS.bargv0, verb, names_as_string);
+		exit(1);
+	}
 
 	*pargi += 2;
-	return mapper_label_alloc(pnames);
+	return mapper_label_alloc(pnames_as_list, pnames_as_set);
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_label_alloc(slls_t* pnames) {
+static mapper_t* mapper_label_alloc(slls_t* pnames_as_list, hss_t* pnames_as_set) {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
 
 	mapper_label_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_label_state_t));
-	pstate->pnames = pnames;
+	pstate->pnames_as_list = pnames_as_list;
+	pstate->pnames_as_set = pnames_as_set;
 
 	pmapper->pvstate       = (void*)pstate;
 	pmapper->pprocess_func = mapper_label_process;
@@ -65,8 +81,10 @@ static mapper_t* mapper_label_alloc(slls_t* pnames) {
 
 static void mapper_label_free(mapper_t* pmapper, context_t* _) {
 	mapper_label_state_t* pstate = pmapper->pvstate;
-	if (pstate->pnames != NULL)
-		slls_free(pstate->pnames);
+	if (pstate->pnames_as_list != NULL)
+		slls_free(pstate->pnames_as_list);
+	if (pstate->pnames_as_set != NULL)
+		hss_free(pstate->pnames_as_set);
 	free(pstate);
 	free(pmapper);
 }
@@ -75,13 +93,7 @@ static void mapper_label_free(mapper_t* pmapper, context_t* _) {
 static sllv_t* mapper_label_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
 	if (pinrec != NULL) {
 		mapper_label_state_t* pstate = (mapper_label_state_t*)pvstate;
-		lrece_t* pe = pinrec->phead;
-		sllse_t* pn = pstate->pnames->phead;
-		for ( ; pe != NULL && pn != NULL; pe = pe->pnext, pn = pn->pnext) {
-			char* old_name = pe->key;
-			char* new_name = pn->value;
-			lrec_rename(pinrec, old_name, new_name, FALSE);
-		}
+		lrec_label(pinrec, pstate->pnames_as_list, pstate->pnames_as_set);
 		return sllv_single(pinrec);
 	}
 	else {

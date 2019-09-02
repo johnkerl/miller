@@ -14,6 +14,11 @@ slls_t* slls_alloc() {
 }
 
 // ----------------------------------------------------------------
+int slls_size(slls_t* plist) {
+	return plist->length;
+}
+
+// ----------------------------------------------------------------
 slls_t* slls_copy(slls_t* pold) {
 	slls_t* pnew = slls_alloc();
 	for (sllse_t* pe = pold->phead; pe != NULL; pe = pe->pnext)

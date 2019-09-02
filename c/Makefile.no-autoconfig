@@ -126,6 +126,7 @@ TEST_LREC_SRCS = \
   lib/string_array.c \
   lib/mlrval.c \
   lib/mvfuncs.c \
+  containers/hss.c \
   containers/lrec.c \
   containers/header_keeper.c \
   containers/sllv.c \
@@ -216,6 +217,7 @@ TEST_MLHMMV_SRCS = \
   lib/mlr_globals.c \
   lib/mlrval.c \
   lib/mvfuncs.c \
+  containers/hss.c \
   containers/mlhmmv.c \
   containers/sllmv.c \
   containers/sllv.c \

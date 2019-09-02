@@ -45,6 +45,8 @@
 
 #include "lib/free_flags.h"
 #include "containers/sllv.h"
+#include "containers/slls.h"
+#include "containers/hss.h"
 #include "containers/header_keeper.h"
 
 #define FIELD_QUOTED_ON_INPUT 0x02
@@ -149,6 +151,12 @@ void  lrec_rename(lrec_t* prec, char* old_key, char* new_key, int new_needs_free
 void  lrec_rename_at_position(lrec_t* prec, int position, char* new_key, int new_needs_freeing); // 1-up not 0-up
 void  lrec_move_to_head(lrec_t* prec, char* key);
 void  lrec_move_to_tail(lrec_t* prec, char* key);
+// Renames the first n fields where n is the length of pnames.
+// The hash-set argument is for efficient dedupe.
+// Assumes as a precondition that pnames_as_list has no duplicates.
+// If the new labels include any field names existing later on in the record, those are unset.
+// For example, input record "a=1,b=2,c=3,d=4,e=5" with labels "d,x,f" results in output record "d=1,x=2,f=3,e=5".
+void  lrec_label(lrec_t* prec, slls_t* pnames_as_list, hss_t* pnames_as_set);
 
 // For lrec-internal use:
 void lrec_unlink(lrec_t* prec, lrece_t* pe);

@@ -5,6 +5,8 @@
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "lib/string_builder.h"
+#include "containers/hss.h"
+#include "containers/slls.h"
 #include "containers/lrec.h"
 
 #define SB_ALLOC_LENGTH 256
@@ -453,6 +455,55 @@ void lrec_move_to_tail(lrec_t* prec, char* key) {
 
 	lrec_unlink(prec, pe);
 	lrec_link_at_tail(prec, pe);
+}
+
+// ----------------------------------------------------------------
+// Simply rename the first (at most) n positions where n is the length of pnames.
+//
+// Possible complications:
+//
+// * pnames itself contains duplicates -- we require this as invariant-check from the caller since (for performance)
+//   we don't want to check this on every record processed.
+//
+// * pnames has length less than the current record and one of the new names becomes a clash with an existing name.
+//   Example:
+//   - Input record has names "a,b,c,d,e".
+//   - pnames is "d,x,f"
+//   - We then construct the invalid "d,x,f,d,e" -- we need to detect and unset the second 'd' field.
+
+void  lrec_label(lrec_t* prec, slls_t* pnames_as_list, hss_t* pnames_as_set) {
+	lrece_t* pe = prec->phead;
+	sllse_t* pn = pnames_as_list->phead;
+
+	// Process the labels list
+	for ( ; pe != NULL && pn != NULL; pe = pe->pnext, pn = pn->pnext) {
+		char* new_name = pn->value;
+
+		if (pe->free_flags & FREE_ENTRY_KEY) {
+			free(pe->key);
+		}
+		pe->key = mlr_strdup_or_die(new_name);;
+		pe->free_flags |= FREE_ENTRY_KEY;
+	}
+
+	// Process the remaining fields in the record beyond those affected by the new-labels list
+	for ( ; pe != NULL; ) {
+		char* name = pe->key;
+		if (hss_has(pnames_as_set, name)) {
+			lrece_t* pnext = pe->pnext;
+			if (pe->free_flags & FREE_ENTRY_KEY) {
+				free(pe->key);
+			}
+			if (pe->free_flags & FREE_ENTRY_VALUE) {
+				free(pe->value);
+			}
+			lrec_unlink(prec, pe);
+			free(pe);
+			pe = pnext;
+		} else {
+			pe = pe->pnext;
+		}
+	}
 }
 
 // ----------------------------------------------------------------

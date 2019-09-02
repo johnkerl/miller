@@ -4,6 +4,11 @@ BUGFIXES
 ================================================================
 FUNDAM:
 
+* valgrind all since 5.5.0
+
+* linear rename:
+  - new UTs
+
 * doc/bld note for vgrun oo
 * oo w/ indir
 * follow-on for pre-existing unset/typed-overlay issue
