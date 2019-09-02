@@ -391,10 +391,11 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
-					case IFS_EOF_STRIDX:
-						fprintf(stderr, "%s: syntax error: record-ending field separator at line %lld.\n",
-							MLR_GLOBALS.bargv0, pstate->ilno);
-						exit(1);
+					case IFS_EOF_STRIDX: // end of record, last field is empty
+						rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, 0);
+						rslls_append(pfields, "", NO_FREE, 0);
+						field_done  = TRUE;
+						record_done = TRUE;
 						break;
 					case IFS_STRIDX: // end of field
 						rslls_append(pfields, sb_finish(psb), FREE_ENTRY_VALUE, 0);

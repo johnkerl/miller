@@ -47649,6 +47649,24 @@ c,b,a
 6,"5",4
 "9",8,"7"
 
+mlr --mmap --icsv --oxtab cat ./reg_test/input/comma-at-eof.csv
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 
+
+mlr --no-mmap --icsv --oxtab cat ./reg_test/input/comma-at-eof.csv
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 
+
 mlr --csv --quote-all cat ./reg_test/input/rfc-csv/simple.csv-crlf
 "a","b","c"
 "1","x","3"
