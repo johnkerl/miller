@@ -437,7 +437,13 @@ mv_t s_s_toupper_func(mv_t* pval1) {
 mv_t s_s_capitalize_func(mv_t* pval1) {
 	char* string = mlr_strdup_or_die(pval1->u.strv);
 	if (*string) {
+#if 0
+		// ASCII
 		*string = toupper((unsigned char)*string);
+#else
+		// UTF-8
+		utf8upr1(string);
+#endif
 	}
 	mv_free(pval1);
 	pval1->u.strv = NULL;

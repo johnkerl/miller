@@ -207,6 +207,9 @@ utf8_nonnull utf8_weak void utf8lwr(void *utf8_restrict str);
 // Transform the given string into all uppercase codepoints.
 utf8_nonnull utf8_weak void utf8upr(void *utf8_restrict str);
 
+// Transform the first codepoint (if any) of the given string into uppercase.
+utf8_nonnull utf8_weak void utf8upr1(void *utf8_restrict str);
+
 // Make a codepoint lower case if possible.
 utf8_weak utf8_int32_t utf8lwrcodepoint(utf8_int32_t cp);
 
@@ -1084,6 +1087,26 @@ void utf8upr(void *utf8_restrict str) {
   pn = utf8codepoint(p, &cp);
 
   while (cp != 0) {
+    const utf8_int32_t lwr_cp = utf8uprcodepoint(cp);
+    const size_t size = utf8codepointsize(lwr_cp);
+
+    if (lwr_cp != cp) {
+      utf8catcodepoint(p, lwr_cp, size);
+    }
+
+    p = pn;
+    pn = utf8codepoint(p, &cp);
+  }
+}
+
+void utf8upr1(void *utf8_restrict str) {
+  void *p, *pn;
+  utf8_int32_t cp;
+
+  p = (char *)str;
+  pn = utf8codepoint(p, &cp);
+
+  if (cp != 0) {
     const utf8_int32_t lwr_cp = utf8uprcodepoint(cp);
     const size_t size = utf8codepointsize(lwr_cp);
 

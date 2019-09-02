@@ -45855,6 +45855,7 @@ UTF-8 alignment
 mlr --icsvlite --opprint cat ./reg_test/input/utf8-1.csv
 langue   nom      jour
 français françois vendredi
+žusz     éloignée -
 
 mlr --icsvlite --opprint cat ./reg_test/input/utf8-2.csv
 français françois vendredi
@@ -45864,6 +45865,10 @@ mlr --icsvlite --oxtab cat ./reg_test/input/utf8-1.csv
 langue français
 nom    françois
 jour   vendredi
+
+langue žusz
+nom    éloignée
+jour   
 
 mlr --icsvlite --oxtab cat ./reg_test/input/utf8-2.csv
 français langue
@@ -45936,6 +45941,40 @@ mlr --icsv --opprint cat
 a b c
 1 2 3
 4 5 6
+
+
+================================================================
+UTF-8 UPPERCASE/LOWERCASE
+
+mlr --icsvlite --opprint put $langue = toupper($langue) ./reg_test/input/utf8-1.csv
+langue   nom      jour
+FRANÇAIS françois vendredi
+ŽUSZ     éloignée -
+
+mlr --icsvlite --opprint put $nom    = toupper($nom) ./reg_test/input/utf8-1.csv
+langue   nom      jour
+français FRANÇOIS vendredi
+žusz     ÉLOIGNÉE -
+
+mlr --icsvlite --opprint put $jour   = toupper($jour) ./reg_test/input/utf8-1.csv
+langue   nom      jour
+français françois VENDREDI
+žusz     éloignée -
+
+mlr --icsvlite --opprint put $langue = capitalize($langue) ./reg_test/input/utf8-1.csv
+langue   nom      jour
+Français françois vendredi
+Žusz     éloignée -
+
+mlr --icsvlite --opprint put $nom    = capitalize($nom) ./reg_test/input/utf8-1.csv
+langue   nom      jour
+français François vendredi
+žusz     Éloignée -
+
+mlr --icsvlite --opprint put $jour   = capitalize($jour) ./reg_test/input/utf8-1.csv
+langue   nom      jour
+français françois Vendredi
+žusz     éloignée -
 
 
 ================================================================
