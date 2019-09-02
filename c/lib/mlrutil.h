@@ -179,4 +179,7 @@ char* read_fp_into_memory(FILE* fp, size_t* psize);
 // Returns a copy of the filename with random characters attached to the end.
 char* alloc_suffixed_temp_file_name(char* filename);
 
+char** copy_argv(char** argv);
+void free_argv_copy(char** argv);
+
 #endif // MLRUTIL_H

@@ -602,3 +602,30 @@ char* alloc_suffixed_temp_file_name(char* filename) {
 
 	return output;
 }
+
+// ----------------------------------------------------------------
+// The convention for argv-style arrays is that they're null-terminated.
+// So we loop through once to find the length.
+char** copy_argv(char** argv) {
+	int length = 0;
+	int argi;
+	for (argi = 0; argv[argi]; argi++) {
+		length++;
+	}
+
+	char** copy = mlr_malloc_or_die((length + 1) * sizeof(char*));
+	for (argi = 0; argv[argi]; argi++) {
+		copy[argi] = mlr_strdup_or_die(argv[argi]);
+	}
+
+	copy[length] = 0;
+
+	return copy;
+}
+
+void free_argv_copy(char** copy) {
+	for (int argi = 0; copy[argi]; argi++) {
+		free(copy[argi]);
+	}
+	free(copy);
+}

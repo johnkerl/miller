@@ -326,9 +326,18 @@ sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, 
 		main_usage_short(stderr, MLR_GLOBALS.bargv0);
 		exit(1);
 	}
+
+	// Note that the command-line parsers can operate destructively on argv, e.g. verbs
+	// which take comma-delimited field names splitting on commas.  For this reason we
+	// need to duplicate argv on each in-place run within the streamer module. But before
+	// that ever happens, here we run through the verb-parsers once to find out where it
+	// is on the command line that the verbs and their arguments end and the filenames
+	// begin.
+
+	char** xargv = popts->do_in_place ? copy_argv(popts->argv) : popts->argv;
 	while (TRUE) {
-		check_arg_count(argv, argi, argc, 1);
-		char* verb = argv[argi];
+		check_arg_count(xargv, argi, argc, 1);
+		char* verb = xargv[argi];
 
 		mapper_setup_t* pmapper_setup = look_up_mapper_setup(verb);
 		if (pmapper_setup == NULL) {
@@ -338,7 +347,7 @@ sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, 
 		}
 
 		if ((argc - argi) >= 2) {
-			if (streq(argv[argi+1], "-h") || streq(argv[argi+1], "--help")) {
+			if (streq(xargv[argi+1], "-h") || streq(xargv[argi+1], "--help")) {
 				pmapper_setup->pusage_func(stdout, MLR_GLOBALS.bargv0, verb);
 				exit(0);
 			}
@@ -347,7 +356,7 @@ sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, 
 		// It's up to the parse func to print its usage on CLI-parse failure.
 		// Also note: this assumes main reader/writer opts are all parsed
 		// *before* mapper parse-CLI methods are invoked.
-		mapper_t* pmapper = pmapper_setup->pparse_func(&argi, argc, argv,
+		mapper_t* pmapper = pmapper_setup->pparse_func(&argi, argc, xargv,
 			&popts->reader_opts, &popts->writer_opts);
 		if (pmapper == NULL) {
 			exit(1);
@@ -360,9 +369,12 @@ sllv_t* cli_parse_mappers(char** argv, int* pargi, int argc, cli_opts_t* popts, 
 
 		sllv_append(pmapper_list, pmapper);
 
-		if (argi >= argc || !streq(argv[argi], "then"))
+		if (argi >= argc || !streq(xargv[argi], "then"))
 			break;
 		argi++;
+	}
+	if (popts->do_in_place) {
+		free_argv_copy(xargv);
 	}
 
 	*pargi = argi;

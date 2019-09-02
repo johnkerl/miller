@@ -6,6 +6,10 @@ FUNDAM:
 
 * valgrind all since 5.5.0
 
+* in-place:
+  - more UT
+  - also check for adding no_mmap
+
 * linear rename:
   - new UTs
 

@@ -10,4 +10,4 @@
 
 ## Bugfixes: 
 
-* ...
+* https://github.com/johnkerl/miller/issues/253 fixes a bug in the [**label**](http://johnkerl.org/miller/doc/reference-verbs.html#label) when one or more names are common between old and new.

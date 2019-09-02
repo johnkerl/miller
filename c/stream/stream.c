@@ -62,9 +62,15 @@ static int do_stream_chained_in_place(context_t* pctx, cli_opts_t* popts) {
 		lrec_reader_t* plrec_reader = lrec_reader_alloc_or_die(&popts->reader_opts);
 		lrec_writer_t* plrec_writer = lrec_writer_alloc_or_die(&popts->writer_opts);
 
+		// Note that the command-line parsers can operate destructively on argv,
+		// e.g. verbs which take comma-delimited field names splitting on commas.
+		// For this reason we need to duplicate argv on each run. We need to free
+		// after processing in case mappers have retained pointers into argv.
+
 		int argi = popts->mapper_argb;
 		int unused;
-		sllv_t* pmapper_list = cli_parse_mappers(popts->argv, &argi, popts->argc, popts, &unused);
+		char** argv_copy = copy_argv(popts->argv);
+		sllv_t* pmapper_list = cli_parse_mappers(argv_copy, &argi, popts->argc, popts, &unused);
 		MLR_INTERNAL_CODING_ERROR_IF(pmapper_list->length < 1); // Should not have been allowed by the CLI parser.
 
 		char* filename = pe->value;
@@ -109,6 +115,8 @@ static int do_stream_chained_in_place(context_t* pctx, cli_opts_t* popts) {
 		plrec_writer->pfree_func(plrec_writer, pctx);
 
 		mapper_chain_free(pmapper_list, pctx);
+
+		free_argv_copy(argv_copy);
 	}
 
 	return ok;

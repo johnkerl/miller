@@ -1,3 +1,4 @@
+#include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
 #include "lib/mlrregex.h"
 #include "lib/string_builder.h"
@@ -88,6 +89,8 @@ static mapper_t* mapper_rename_parse_cli(int* pargi, int argc, char** argv,
 
 	slls_t* pnames = slls_from_line(argv[*pargi], ',', FALSE);
 	if ((pnames->length % 2) != 0) {
+		fprintf(stderr, "%s %s: name-list must have even length; got \"%s\".\n",
+			MLR_GLOBALS.bargv0, verb, argv[*pargi]);
 		mapper_rename_usage(stderr, argv[0], verb);
 		return NULL;
 	}
