@@ -548,6 +548,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.trace_execution              = pstate->trace_execution,
 			.json_quote_int_keys          = pstate->pwriter_opts->json_quote_int_keys,
 			.json_quote_non_string_values = pstate->pwriter_opts->json_quote_non_string_values,
+			.json_apply_ofmt_to_floats    = pstate->pwriter_opts->json_apply_ofmt_to_floats,
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
 			.pshould_emit_rec             = &should_emit_rec,
@@ -579,6 +580,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 			.trace_execution              = pstate->trace_execution,
 			.json_quote_int_keys          = pstate->pwriter_opts->json_quote_int_keys,
 			.json_quote_non_string_values = pstate->pwriter_opts->json_quote_non_string_values,
+			.json_apply_ofmt_to_floats    = pstate->pwriter_opts->json_apply_ofmt_to_floats,
 		};
 		cst_outputs_t cst_outputs = (cst_outputs_t) {
 			.pshould_emit_rec             = &should_emit_rec,
@@ -614,6 +616,7 @@ static sllv_t* mapper_put_or_filter_process(lrec_t* pinrec, context_t* pctx, voi
 		.trace_execution              = pstate->trace_execution,
 		.json_quote_int_keys          = pstate->pwriter_opts->json_quote_int_keys,
 		.json_quote_non_string_values = pstate->pwriter_opts->json_quote_non_string_values,
+		.json_apply_ofmt_to_floats    = pstate->pwriter_opts->json_apply_ofmt_to_floats,
 	};
 	cst_outputs_t cst_outputs = (cst_outputs_t) {
 		.pshould_emit_rec             = &should_emit_rec,

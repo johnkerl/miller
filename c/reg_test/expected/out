@@ -48610,6 +48610,46 @@ mlr --json cat ./reg_test/input/escapes.json
 { "abc\bdef\fghi": "jkl\nmno\rpqr\tstu\"vw\\xyz" }
 { "abc\bdef\fghi": "jkl\nmno\rpqr\tstu\"vw\\\\xyz" }
 
+mlr --ojson head -n 2 ./reg_test/input/abixy
+{ "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
+{ "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
+
+mlr --ojson --jofmt --ofmt %.4lf head -n 2 ./reg_test/input/abixy
+{ "a": "pan", "b": "pan", "i": 1.0000, "x": 0.3468, "y": 0.7268 }
+{ "a": "eks", "b": "pan", "i": 2.0000, "x": 0.7587, "y": 0.5222 }
+
+mlr --ojson --jvstack head -n 2 ./reg_test/input/abixy
+{
+  "a": "pan",
+  "b": "pan",
+  "i": 1,
+  "x": 0.3467901443380824,
+  "y": 0.7268028627434533
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "i": 2,
+  "x": 0.7586799647899636,
+  "y": 0.5221511083334797
+}
+
+mlr --ojson --jvstack --jofmt --ofmt %.4lf head -n 2 ./reg_test/input/abixy
+{
+  "a": "pan",
+  "b": "pan",
+  "i": 1.0000,
+  "x": 0.3468,
+  "y": 0.7268
+}
+{
+  "a": "eks",
+  "b": "pan",
+  "i": 2.0000,
+  "x": 0.7587,
+  "y": 0.5222
+}
+
 
 ================================================================
 FORMAT-CONVERSION KEYSTROKE-SAVERS

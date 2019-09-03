@@ -1532,6 +1532,12 @@ Data-format options, for input, output, or both:
               --jflatsep {string} Separator for flattening multi-level JSON keys,
                                   e.g. '{"a":{"b":3}}' becomes a:b =&gt; 3 for
                                   non-JSON formats. Defaults to :.
+                          --jofmt Apply global --ofmt to floating-point JSON values
+                                  Note: please use sprintf-style codes for double precision,
+                                  e.g. ending in %lf, %le, or %lg. Miller floats are
+                                  double-precision so behavior using %f, %d, etc. is undefined.
+                                  Also note: 0.123 is valid JSON; .123 is not. Thus this feature
+                                  allows you to emit JSON which may be unparseable by other tools.
 
   -p is a keystroke-saver for --nidx --fs space --repifs
 

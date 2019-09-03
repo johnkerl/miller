@@ -19,6 +19,8 @@ FUNDAM:
 
 * synctool alias/flag handling ...
 
+* 'mlr help X' .... try to look for things ... -- ? or just `man mlr` ...
+
 ================================================================
 
 * uniq:

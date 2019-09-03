@@ -820,6 +820,12 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "                                  e.g. '{\"a\":{\"b\":3}}' becomes a:b => 3 for\n");
 	fprintf(o, "                                  non-JSON formats. Defaults to %s.\n",
 		DEFAULT_JSON_FLATTEN_SEPARATOR);
+	fprintf(o, "                          --jofmt Apply global --ofmt to floating-point JSON values\n");
+	fprintf(o, "                                  Note: please use sprintf-style codes for double precision,\n");
+	fprintf(o, "                                  e.g. ending in %%lf, %%le, or %%lg. Miller floats are\n");
+	fprintf(o, "                                  double-precision so behavior using %%f, %%d, etc. is undefined.\n");
+	fprintf(o, "                                  Also note: 0.123 is valid JSON; .123 is not. Thus this feature\n");
+	fprintf(o, "                                  allows you to emit JSON which may be unparseable by other tools.\n");
 	fprintf(o, "\n");
 	fprintf(o, "  -p is a keystroke-saver for --nidx --fs space --repifs\n");
 	fprintf(o, "\n");
@@ -1150,6 +1156,7 @@ void cli_writer_opts_init(cli_writer_opts_t* pwriter_opts) {
 	pwriter_opts->wrap_json_output_in_outer_list = NEITHER_TRUE_NOR_FALSE;
 	pwriter_opts->json_quote_int_keys            = NEITHER_TRUE_NOR_FALSE;
 	pwriter_opts->json_quote_non_string_values   = NEITHER_TRUE_NOR_FALSE;
+	pwriter_opts->json_apply_ofmt_to_floats      = NEITHER_TRUE_NOR_FALSE;
 
 	pwriter_opts->output_json_flatten_separator  = NULL;
 	pwriter_opts->oosvar_flatten_separator       = NULL;
@@ -1218,6 +1225,9 @@ void cli_apply_writer_defaults(cli_writer_opts_t* pwriter_opts) {
 
 	if (pwriter_opts->json_quote_non_string_values == NEITHER_TRUE_NOR_FALSE)
 		pwriter_opts->json_quote_non_string_values = FALSE;
+
+	if (pwriter_opts->json_apply_ofmt_to_floats == NEITHER_TRUE_NOR_FALSE)
+		pwriter_opts->json_apply_ofmt_to_floats = FALSE;
 
 	if (pwriter_opts->output_json_flatten_separator == NULL)
 		pwriter_opts->output_json_flatten_separator = DEFAULT_JSON_FLATTEN_SEPARATOR;
@@ -1347,6 +1357,9 @@ void cli_merge_writer_opts(cli_writer_opts_t* pfunc_opts, cli_writer_opts_t* pma
 
 	if (pfunc_opts->json_quote_non_string_values == NEITHER_TRUE_NOR_FALSE)
 		pfunc_opts->json_quote_non_string_values = pmain_opts->json_quote_non_string_values;
+
+	if (pfunc_opts->json_apply_ofmt_to_floats == NEITHER_TRUE_NOR_FALSE)
+		pfunc_opts->json_apply_ofmt_to_floats = pmain_opts->json_apply_ofmt_to_floats;
 
 	if (pfunc_opts->output_json_flatten_separator == NULL)
 		pfunc_opts->output_json_flatten_separator = pmain_opts->output_json_flatten_separator;
@@ -1710,6 +1723,9 @@ int cli_handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts
 		argi += 1;
 	} else if (streq(argv[argi], "--jvquoteall")) {
 		pwriter_opts->json_quote_non_string_values = TRUE;
+		argi += 1;
+	} else if (streq(argv[argi], "--jofmt")) {
+		pwriter_opts->json_apply_ofmt_to_floats = TRUE;
 		argi += 1;
 
 	} else if (streq(argv[argi], "--vflatsep")) {

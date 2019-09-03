@@ -47,6 +47,7 @@ typedef struct _variables_t {
 	int              trace_execution;
 	int              json_quote_int_keys;
 	int              json_quote_non_string_values;
+	int              json_apply_ofmt_to_floats;
 } variables_t;
 
 #endif // VARIABLES_H
