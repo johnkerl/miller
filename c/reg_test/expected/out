@@ -47710,6 +47710,15 @@ i 5
 x 5
 y 0.448283
 
+mlr --iusv --oxtab cat ./reg_test/input/example.usv
+a d
+b e
+c f
+
+a g
+b h
+c i
+
 
 ================================================================
 MARKDOWN OUTPUT

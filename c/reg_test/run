@@ -5796,6 +5796,8 @@ run_mlr --csv --quote-original cat $indir/rfc-csv/simple.csv-crlf
 
 run_mlr --itsv --rs lf --oxtab cat $indir/simple.tsv
 
+run_mlr --iusv --oxtab cat $indir/example.usv
+
 # ----------------------------------------------------------------
 announce MARKDOWN OUTPUT
 

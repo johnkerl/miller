@@ -190,7 +190,7 @@ Miller commands were run with pretty-print-tabular output format.
 <center><b>Contents:</b></center>
 &bull;&nbsp;<a href="#Overview">Overview</a><br/>
 &bull;&nbsp;<a href="#Examples">Examples</a><br/>
-&bull;&nbsp;<a href="#CSV/TSV/etc.">CSV/TSV/etc.</a><br/>
+&bull;&nbsp;<a href="#CSV/TSV/ASV/USV/etc.">CSV/TSV/ASV/USV/etc.</a><br/>
 &bull;&nbsp;<a href="#DKVP:_Key-value_pairs">DKVP: Key-value pairs</a><br/>
 &bull;&nbsp;<a href="#NIDX:_Index-numbered_(toolkit_style)">NIDX: Index-numbered (toolkit style)</a><br/>
 &bull;&nbsp;<a href="#Tabular_JSON">Tabular JSON</a><br/>
@@ -294,7 +294,7 @@ $ mlr --usage-data-format-examples
 <p/>
 
 </div>
-<a id="CSV/TSV/etc."/><h1>CSV/TSV/etc.</h1>
+<a id="CSV/TSV/ASV/USV/etc."/><h1>CSV/TSV/ASV/USV/etc.</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_csv_tsv_etc');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_csv_tsv_etc" style="display: block">
 
@@ -310,7 +310,7 @@ just as <tt>awk</tt> does.  For TSV, use <tt>--fs tab</tt>; to convert TSV to
 CSV, use <tt>--ifs tab --ofs comma</tt>, etc.  (See also
 <a href="reference.html#Record/field/pair_separators">Reference</a>.)
 
-<p/> The following are synonymous pairs:
+<p/> <b>TSV (tab-separated values):</b> the following are synonymous pairs:
 <ul>
 <li/> <tt>--tsv</tt> and <tt>--csv --fs tab</tt>
 <li/> <tt>--itsv</tt> and <tt>--icsv --ifs tab</tt>
@@ -319,6 +319,22 @@ CSV, use <tt>--ifs tab --ofs comma</tt>, etc.  (See also
 <li/> <tt>--itsvlite</tt> and <tt>--icsvlite --ifs tab</tt>
 <li/> <tt>--otsvlite</tt> and <tt>--ocsvlite --ofs tab</tt>
 </ul>
+
+<p/> <b>ASV (ASCII-separated values):</b> the flags
+<tt>--asv</tt>,
+<tt>--iasv</tt>,
+<tt>--oasv</tt>,
+<tt>--asvlite</tt>,
+<tt>--iasvlite</tt>, and
+<tt>--oasvlite</tt> are analogous except they use ASCII FS and RS 0x1f and 0x1e, respectively.
+
+<p/> <b>USV (Unicode-separated values):</b> likewise, the flags
+<tt>--usv</tt>,
+<tt>--iusv</tt>,
+<tt>--ousv</tt>,
+<tt>--usvlite</tt>,
+<tt>--iusvlite</tt>, and
+<tt>--ousvlite</tt> use Unicode FS and RS U+241F (UTF-8 0x0xe2909f) and U+241E (UTF-8 0xe2909e), respectively.
 
 <p/>Miller&rsquo;s <tt>--csv</tt> flag supports RFC-4180 CSV (<a href="https://tools.ietf.org/html/rfc4180">
 https://tools.ietf.org/html/rfc4180</a>). This includes CRLF line-terminators by default, regardless

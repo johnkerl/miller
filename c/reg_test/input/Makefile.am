@@ -43,6 +43,7 @@ EXTRA_DIST=	\
 		env-assign.sh \
 		env-var.dkvp \
 		escapes.json \
+		example.usv \
 		f.csv \
 		f.pprint \
 		fill-down.csv \

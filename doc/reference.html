@@ -1493,6 +1493,9 @@ Data-format options, for input, output, or both:
 
   --itsv    --otsv    --tsv       Keystroke-savers for "--icsv --ifs tab",
                                   "--ocsv --ofs tab", "--csv --fs tab".
+  --iasv    --oasv    --asv       Similar but using ASCII FS 0x1f and RS 0x1e
+  --iusv    --ousv    --usv       Similar but using Unicode FS U+241F (UTF-8 0xe2909f)
+                                  and RS U+241E (UTF-8 0xe2909e)
 
   --icsvlite --ocsvlite --csvlite Comma-separated value (or tab-separated
                                   with --fs tab, etc.). The 'lite' CSV does not handle
@@ -1504,6 +1507,9 @@ Data-format options, for input, output, or both:
   --itsvlite --otsvlite --tsvlite Keystroke-savers for "--icsvlite --ifs tab",
                                   "--ocsvlite --ofs tab", "--csvlite --fs tab".
   -t                              Synonymous with --tsvlite.
+  --iasvlite --oasvlite --asvlite Similar to --itsvlite et al. but using ASCII FS 0x1f and RS 0x1e
+  --iusvlite --ousvlite --usvlite Similar to --itsvlite et al. but using Unicode FS U+241F (UTF-8 0xe2909f)
+                                  and RS U+241E (UTF-8 0xe2909e)
 
   --ipprint --opprint --pprint    Pretty-printed tabular (produces no
                                   output until all input is in).

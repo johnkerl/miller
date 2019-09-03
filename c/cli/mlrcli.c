@@ -39,9 +39,15 @@
 #define ASV_FS "\x1f"
 #define ASV_RS "\x1e"
 
-// Unicode code points U+241F and U+241E
+#define ASV_FS_FOR_HELP "0x1f"
+#define ASV_RS_FOR_HELP "0x1e"
+
+// Unicode code points U+241F and U+241E, encoded as UTF-8.
 #define USV_FS "\xe2\x90\x9f"
 #define USV_RS "\xe2\x90\x9e"
+
+#define USV_FS_FOR_HELP "U+241F (UTF-8 0xe2909f)"
+#define USV_RS_FOR_HELP "U+241E (UTF-8 0xe2909e)"
 
 // ----------------------------------------------------------------
 static mapper_setup_t* mapper_lookup_table[] = {
@@ -780,6 +786,12 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "\n");
 	fprintf(o, "  --itsv    --otsv    --tsv       Keystroke-savers for \"--icsv --ifs tab\",\n");
 	fprintf(o, "                                  \"--ocsv --ofs tab\", \"--csv --fs tab\".\n");
+	fprintf(o, "  --iasv    --oasv    --asv       Similar but using ASCII FS %s and RS %s\n",
+		ASV_FS_FOR_HELP, ASV_RS_FOR_HELP);
+	fprintf(o, "  --iusv    --ousv    --usv       Similar but using Unicode FS %s\n",
+		USV_FS_FOR_HELP);
+	fprintf(o, "                                  and RS %s\n",
+		USV_RS_FOR_HELP);
 	fprintf(o, "\n");
 	fprintf(o, "  --icsvlite --ocsvlite --csvlite Comma-separated value (or tab-separated\n");
 	fprintf(o, "                                  with --fs tab, etc.). The 'lite' CSV does not handle\n");
@@ -791,6 +803,12 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "  --itsvlite --otsvlite --tsvlite Keystroke-savers for \"--icsvlite --ifs tab\",\n");
 	fprintf(o, "                                  \"--ocsvlite --ofs tab\", \"--csvlite --fs tab\".\n");
 	fprintf(o, "  -t                              Synonymous with --tsvlite.\n");
+	fprintf(o, "  --iasvlite --oasvlite --asvlite Similar to --itsvlite et al. but using ASCII FS %s and RS %s\n",
+		ASV_FS_FOR_HELP, ASV_RS_FOR_HELP);
+	fprintf(o, "  --iusvlite --ousvlite --usvlite Similar to --itsvlite et al. but using Unicode FS %s\n",
+		USV_FS_FOR_HELP);
+	fprintf(o, "                                  and RS %s\n",
+		USV_RS_FOR_HELP);
 	fprintf(o, "\n");
 	fprintf(o, "  --ipprint --opprint --pprint    Pretty-printed tabular (produces no\n");
 	fprintf(o, "                                  output until all input is in).\n");

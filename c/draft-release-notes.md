@@ -2,8 +2,9 @@
 
 ## Features:
 
-* The new [**--jofmt**](http://johnkerl.org/miller/doc/file-formats.html#Formatting_JSON_options) option allows you to apply
-the global <tt>--ofmt</tt> to floating-point values in JSON output &mdash; with caveats as noted [**here**](http://johnkerl.org/miller/doc/file-formats.html#Formatting_JSON_options).
+* There is now support for [**ASV and USV file formats**](http://johnkerl.org/miller/doc/file-formats.html#CSV/TSV/ASV/USV/etc.).
+
+* The new [**--jofmt**](http://johnkerl.org/miller/doc/file-formats.html#Formatting_JSON_options) option allows you to apply the global <tt>--ofmt</tt> to floating-point values in JSON output &mdash; with caveats as noted [**here**](http://johnkerl.org/miller/doc/file-formats.html#Formatting_JSON_options).
 
 ## Documentation:
 
