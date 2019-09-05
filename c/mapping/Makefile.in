@@ -112,11 +112,12 @@ am_libmapping_la_OBJECTS = mapper_altkv.lo mapper_bar.lo \
 	mapper_head.lo mapper_histogram.lo mapper_join.lo \
 	mapper_label.lo mapper_merge_fields.lo \
 	mapper_most_or_least_frequent.lo mapper_nest.lo \
-	mapper_nothing.lo mapper_fraction.lo mapper_put_or_filter.lo \
-	mapper_regularize.lo mapper_remove_empty_columns.lo \
-	mapper_rename.lo mapper_reorder.lo mapper_repeat.lo \
-	mapper_reshape.lo mapper_sample.lo mapper_sec2gmt.lo \
-	mapper_sec2gmtdate.lo mapper_seqgen.lo mapper_shuffle.lo \
+	mapper_nothing.lo mapper_format.lo mapper_fraction.lo \
+	mapper_put_or_filter.lo mapper_regularize.lo \
+	mapper_remove_empty_columns.lo mapper_rename.lo \
+	mapper_reorder.lo mapper_repeat.lo mapper_reshape.lo \
+	mapper_sample.lo mapper_sec2gmt.lo mapper_sec2gmtdate.lo \
+	mapper_seqgen.lo mapper_shuffle.lo \
 	mapper_skip_trivial_records.lo mapper_sort.lo \
 	mapper_sort_within_records.lo mapper_stats1.lo \
 	mapper_stats2.lo mapper_step.lo mapper_tac.lo mapper_tail.lo \
@@ -148,7 +149,7 @@ am__depfiles_remade = ./$(DEPDIR)/mapper_altkv.Plo \
 	./$(DEPDIR)/mapper_clean_whitespace.Plo \
 	./$(DEPDIR)/mapper_count_similar.Plo \
 	./$(DEPDIR)/mapper_cut.Plo ./$(DEPDIR)/mapper_decimate.Plo \
-	./$(DEPDIR)/mapper_fill_down.Plo \
+	./$(DEPDIR)/mapper_fill_down.Plo ./$(DEPDIR)/mapper_format.Plo \
 	./$(DEPDIR)/mapper_fraction.Plo ./$(DEPDIR)/mapper_grep.Plo \
 	./$(DEPDIR)/mapper_group_like.Plo \
 	./$(DEPDIR)/mapper_having_fields.Plo \
@@ -364,6 +365,7 @@ libmapping_la_SOURCES = \
 			mapper_most_or_least_frequent.c \
 			mapper_nest.c \
 			mapper_nothing.c \
+			mapper_format.c \
 			mapper_fraction.c \
 			mapper_put_or_filter.c \
 			mapper_regularize.c \
@@ -468,6 +470,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_cut.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_decimate.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_fill_down.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_format.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_fraction.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_grep.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_group_like.Plo@am__quote@ # am--include-marker
@@ -675,6 +678,7 @@ distclean: distclean-am
 	-rm -f ./$(DEPDIR)/mapper_cut.Plo
 	-rm -f ./$(DEPDIR)/mapper_decimate.Plo
 	-rm -f ./$(DEPDIR)/mapper_fill_down.Plo
+	-rm -f ./$(DEPDIR)/mapper_format.Plo
 	-rm -f ./$(DEPDIR)/mapper_fraction.Plo
 	-rm -f ./$(DEPDIR)/mapper_grep.Plo
 	-rm -f ./$(DEPDIR)/mapper_group_like.Plo
@@ -768,6 +772,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f ./$(DEPDIR)/mapper_cut.Plo
 	-rm -f ./$(DEPDIR)/mapper_decimate.Plo
 	-rm -f ./$(DEPDIR)/mapper_fill_down.Plo
+	-rm -f ./$(DEPDIR)/mapper_format.Plo
 	-rm -f ./$(DEPDIR)/mapper_fraction.Plo
 	-rm -f ./$(DEPDIR)/mapper_grep.Plo
 	-rm -f ./$(DEPDIR)/mapper_group_like.Plo

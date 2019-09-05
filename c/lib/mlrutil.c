@@ -173,6 +173,13 @@ char* mlr_alloc_hexfmt_from_ll(long long value) {
 	return string;
 }
 
+char* mlr_alloc_string_from_string_and_format(char* old_value, char* fmt) {
+	int n = snprintf(NULL, 0, fmt, old_value);
+	char* new_value = mlr_malloc_or_die(n+1);
+	sprintf(new_value, fmt, old_value);
+	return new_value;
+}
+
 double mlr_double_from_string_or_die(char* string) {
 	double d;
 	if (!mlr_try_float_from_string(string, &d)) {

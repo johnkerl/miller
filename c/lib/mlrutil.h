@@ -102,6 +102,7 @@ char* mlr_alloc_string_from_ull(unsigned long long value);
 char* mlr_alloc_string_from_ll(long long value);
 char* mlr_alloc_string_from_ll_and_format(long long value, char* fmt);
 char* mlr_alloc_string_from_int(int value);
+char* mlr_alloc_string_from_string_and_format(char* value, char* fmt);
 // The input doesn't include the null-terminator; the output does.
 char* mlr_alloc_string_from_char_range(char* start, int num_bytes);
 

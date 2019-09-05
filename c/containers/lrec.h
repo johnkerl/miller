@@ -158,6 +158,8 @@ void  lrec_move_to_tail(lrec_t* prec, char* key);
 // For example, input record "a=1,b=2,c=3,d=4,e=5" with labels "d,x,f" results in output record "d=1,x=2,f=3,e=5".
 void  lrec_label(lrec_t* prec, slls_t* pnames_as_list, hss_t* pnames_as_set);
 
+void lrece_update_value(lrece_t* pe, char* new_value, int new_needs_freeing);
+
 // For lrec-internal use:
 void lrec_unlink(lrec_t* prec, lrece_t* pe);
 // May be used for removing fields from a record while iterating over it:

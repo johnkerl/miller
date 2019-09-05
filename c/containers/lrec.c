@@ -507,6 +507,21 @@ void  lrec_label(lrec_t* prec, slls_t* pnames_as_list, hss_t* pnames_as_set) {
 }
 
 // ----------------------------------------------------------------
+void lrece_update_value(lrece_t* pe, char* new_value, int new_needs_freeing) {
+	if (pe == NULL) {
+		return;
+	}
+	if (pe->free_flags & FREE_ENTRY_VALUE) {
+		free(pe->key);
+	}
+	pe->value = new_value;
+	if (new_needs_freeing)
+		pe->free_flags |= FREE_ENTRY_VALUE;
+	else
+		pe->free_flags &= ~FREE_ENTRY_VALUE;
+}
+
+// ----------------------------------------------------------------
 void lrec_unlink(lrec_t* prec, lrece_t* pe) {
 	if (pe == prec->phead) {
 		if (pe == prec->ptail) {
