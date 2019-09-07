@@ -243,6 +243,11 @@ run_mlr --opprint unsparsify $indir/abixy-het
 run_mlr --csv skip-trivial-records $indir/trivial-records.csv
 run_mlr --csv remove-empty-columns $indir/remove-empty-columns.csv
 
+run_mlr format-values $indir/abixy
+run_mlr format-values -n $indir/abixy
+run_mlr format-values -i %08llx -f %.6le -s X%sX $indir/abixy
+run_mlr format-values -i %08llx -f %.6le -s X%sX -n $indir/abixy
+
 # ----------------------------------------------------------------
 announce HEAD/TAIL/ETC.
 

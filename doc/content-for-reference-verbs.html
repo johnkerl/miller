@@ -280,6 +280,19 @@ language for <tt>mlr filter</tt>.
 
 </div>
 <!-- ================================================================ -->
+<h1>format-values</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_format_values');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_format_values" style="display: block">
+
+POKI_RUN_COMMAND{{mlr format-values --help}}HERE
+
+POKI_RUN_COMMAND{{mlr --opprint format-values data/small}}HERE
+POKI_RUN_COMMAND{{mlr --opprint format-values -n data/small}}HERE
+POKI_RUN_COMMAND{{mlr --opprint format-values -i %08llx -f %.6le -s X%sX data/small}}HERE
+POKI_RUN_COMMAND{{mlr --opprint format-values -i %08llx -f %.6le -s X%sX -n data/small}}HERE
+
+</div>
+<!-- ================================================================ -->
 <h1>fraction</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_decimate');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_decimate" style="display: block">

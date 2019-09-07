@@ -202,6 +202,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#fill-down">fill-down</a><br/>
 &bull;&nbsp;<a href="#filter">filter</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Features_which_filter_shares_with_put">Features which filter shares with put</a><br/>
+&bull;&nbsp;<a href="#format-values">format-values</a><br/>
 &bull;&nbsp;<a href="#fraction">fraction</a><br/>
 &bull;&nbsp;<a href="#grep">grep</a><br/>
 &bull;&nbsp;<a href="#group-by">group-by</a><br/>
@@ -1185,6 +1186,102 @@ useful when you don't yet know which field name(s) you're looking for.
 <p/>Please see <a href="#Expression_language_for_filter_and_put">Expression
 language for filter and put</a> for more information about the expression
 language for <tt>mlr filter</tt>.
+
+</div>
+<!-- ================================================================ -->
+<a id="format-values"/><h1>format-values</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_format_values');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_format_values" style="display: block">
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr format-values --help
+Usage: mlr format-values [options]
+Applies format strings to all field values, depending on autodetected type.
+* If a field value is detected to be integer, applies integer format.
+* Else, if a field value is detected to be float, applies float format.
+* Else, applies string format.
+
+Note: this is a low-keystroke way to apply formatting to many fields. To get
+finer control, please see the fmtnum function within the mlr put DSL.
+
+Note: this verb lets you apply arbitrary format strings, which can produce
+undefined behavior and/or program crashes.  See your system's "man printf".
+
+Options:
+-i {integer format} Defaults to "%lld".
+                    Examples: "%06lld", "%08llx".
+                    Note that Miller integers are long long so you must use
+                    formats which apply to long long, e.g. with ll in them.
+                    Undefined behavior results otherwise.
+-f {float format}   Defaults to "%lf".
+                    Examples: "%8.3lf", "%.6le".
+                    Note that Miller floats are double-precision so you must
+                    use formats which apply to double, e.g. with l[efg] in them.
+                    Undefined behavior results otherwise.
+-s {string format}  Defaults to "%s".
+                    Examples: "_%s", "%08s".
+                    Note that you must use formats which apply to string, e.g.
+                    with s in them. Undefined behavior results otherwise.
+-n                  Coerce field values autodetected as int to float, and then
+                    apply the float format.
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint format-values data/small
+a   b   i x        y
+pan pan 1 0.346790 0.726803
+eks pan 2 0.758680 0.522151
+wye wye 3 0.204603 0.338319
+eks wye 4 0.381399 0.134189
+wye pan 5 0.573289 0.863624
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint format-values -n data/small
+a   b   i        x        y
+pan pan 1.000000 0.346790 0.726803
+eks pan 2.000000 0.758680 0.522151
+wye wye 3.000000 0.204603 0.338319
+eks wye 4.000000 0.381399 0.134189
+wye pan 5.000000 0.573289 0.863624
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint format-values -i %08llx -f %.6le -s X%sX data/small
+a     b     i        x            y
+XpanX XpanX 00000001 3.467901e-01 7.268029e-01
+XeksX XpanX 00000002 7.586800e-01 5.221511e-01
+XwyeX XwyeX 00000003 2.046033e-01 3.383185e-01
+XeksX XwyeX 00000004 3.813994e-01 1.341887e-01
+XwyeX XpanX 00000005 5.732889e-01 8.636245e-01
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint format-values -i %08llx -f %.6le -s X%sX -n data/small
+a     b     i            x            y
+XpanX XpanX 1.000000e+00 3.467901e-01 7.268029e-01
+XeksX XpanX 2.000000e+00 7.586800e-01 5.221511e-01
+XwyeX XwyeX 3.000000e+00 2.046033e-01 3.383185e-01
+XeksX XwyeX 4.000000e+00 3.813994e-01 1.341887e-01
+XwyeX XpanX 5.000000e+00 5.732889e-01 8.636245e-01
+</pre>
+</div>
+<p/>
 
 </div>
 <!-- ================================================================ -->
