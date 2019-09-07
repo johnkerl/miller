@@ -4,7 +4,7 @@
 
 * There is now support for [**ASV and USV file formats**](http://johnkerl.org/miller/doc/file-formats.html#CSV/TSV/ASV/USV/etc.).
 
-* The new [**format-values**](http://johnkerl.org/miller/doc/reference-for-verbs.html#format-values) verb allows you to apply numerical formatting across all record values.
+* The new [**format-values**](http://johnkerl.org/miller/doc/reference-verbs.html#format-values) verb allows you to apply numerical formatting across all record values.
 
 ## Documentation:
 

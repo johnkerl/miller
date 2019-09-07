@@ -5,12 +5,6 @@ BUGFIXES
 FUNDAM:
 
 * mlr format-values:
-  - int/float mash flag ...
-  - mlr format-values --help
-  - tests
-  - valgrind all
-  - doc
-    - mlr format-values -i '%08llx' -f '%.6lle' -s 'X%s' s
 
 * python3 @ mld
 
