@@ -5804,6 +5804,14 @@ run_mlr --itsv --rs lf --oxtab cat $indir/simple.tsv
 run_mlr --iusv --oxtab cat $indir/example.usv
 
 # ----------------------------------------------------------------
+announce RAGGED NON-RFC CSV
+
+run_mlr --mmap    --icsv     --oxtab --ragged cat $indir/ragged.csv
+run_mlr --no-mmap --icsv     --oxtab --ragged cat $indir/ragged.csv
+run_mlr --mmap    --icsvlite --oxtab --ragged cat $indir/ragged.csv
+run_mlr --no-mmap --icsvlite --oxtab --ragged cat $indir/ragged.csv
+
+# ----------------------------------------------------------------
 announce MARKDOWN OUTPUT
 
 run_mlr --itsv --rs lf --omd cat $indir/simple.tsv

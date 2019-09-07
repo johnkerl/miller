@@ -47769,6 +47769,66 @@ c i
 
 
 ================================================================
+RAGGED NON-RFC CSV
+
+mlr --mmap --icsv --oxtab --ragged cat ./reg_test/input/ragged.csv
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 
+
+a 6
+b 7
+c 8
+4 9
+
+mlr --no-mmap --icsv --oxtab --ragged cat ./reg_test/input/ragged.csv
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 
+
+a 6
+b 7
+c 8
+4 9
+
+mlr --mmap --icsvlite --oxtab --ragged cat ./reg_test/input/ragged.csv
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 
+
+a 6
+b 7
+c 8
+4 9
+
+mlr --no-mmap --icsvlite --oxtab --ragged cat ./reg_test/input/ragged.csv
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c 
+
+a 6
+b 7
+c 8
+4 9
+
+
+================================================================
 MARKDOWN OUTPUT
 
 mlr --itsv --rs lf --omd cat ./reg_test/input/simple.tsv

@@ -979,11 +979,10 @@ static void main_usage_csv_options(FILE* o, char* argv0) {
 	fprintf(o, "  --implicit-csv-header Use 1,2,3,... as field labels, rather than from line 1\n");
 	fprintf(o, "                     of input files. Tip: combine with \"label\" to recreate\n");
 	fprintf(o, "                     missing headers.\n");
-	// xxx not passing tests -- commenting out for 5.5.0 but will restore progress after
-	//fprintf(o, "  --allow_ragged_csv_input If a data line has fewer fields than the header line,\n");
-	//fprintf(o, "                     fill remaining keys with empty string. If a data line has more\n");
-	//fprintf(o, "                     fields than the header line, use interger field labels as in\n");
-	//fprintf(o, "                     the implicit-header case.\n");
+	fprintf(o, "  --allow-ragged-csv-input|--ragged If a data line has fewer fields than the header line,\n");
+	fprintf(o, "                     fill remaining keys with empty string. If a data line has more\n");
+	fprintf(o, "                     fields than the header line, use interger field labels as in\n");
+	fprintf(o, "                     the implicit-header case.\n");
 	fprintf(o, "  --headerless-csv-output   Print only CSV data lines.\n");
 	fprintf(o, "  -N                 Keystroke-saver for --implicit-csv-header --headerless-csv-output.\n");
 }
@@ -1522,7 +1521,7 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 		preader_opts->use_implicit_csv_header = TRUE;
 		argi += 1;
 
-	} else if (streq(argv[argi], "--allow-ragged-csv-input")) {
+	} else if (streq(argv[argi], "--allow-ragged-csv-input") || streq(argv[argi], "--ragged")) {
 		preader_opts->allow_ragged_csv_input = TRUE;
 		argi += 1;
 
