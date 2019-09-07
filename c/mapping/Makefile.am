@@ -22,7 +22,7 @@ libmapping_la_SOURCES=	\
 			mapper_most_or_least_frequent.c \
 			mapper_nest.c \
 			mapper_nothing.c \
-			mapper_format.c \
+			mapper_format_values.c \
 			mapper_fraction.c \
 			mapper_put_or_filter.c \
 			mapper_regularize.c \

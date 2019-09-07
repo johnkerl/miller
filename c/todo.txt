@@ -5,7 +5,11 @@ BUGFIXES
 FUNDAM:
 
 * mlr format:
-  mlr format -i '%08llx' -f '%.6lle' -s 'X%s' s
+  - mlr format-values -i '%08llx' -f '%.6lle' -s 'X%s' s
+  - valgrind
+  ! rename the verb !
+
+* python3 @ mld
 
 * valgrind all since 5.5.0
 

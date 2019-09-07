@@ -3,34 +3,34 @@
 #include "lib/mlrutil.h"
 #include "containers/lrec.h"
 
-typedef struct _mapper_format_state_t {
+typedef struct _mapper_format_values_state_t {
 	ap_state_t* pargp;
 	char* string_format;
 	char* int_format;
 	char* float_format;
-} mapper_format_state_t;
+} mapper_format_values_state_t;
 
 #define DEFAULT_STRING_FORMAT "%s"
 #define DEFAULT_INT_FORMAT    "%lld"
 #define DEFAULT_FLOAT_FORMAT  "%lf"
 
-static void      mapper_format_usage(FILE* o, char* argv0, char* verb);
-static mapper_t* mapper_format_parse_cli(int* pargi, int argc, char** argv,
+static void      mapper_format_values_usage(FILE* o, char* argv0, char* verb);
+static mapper_t* mapper_format_values_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __);
-static mapper_t* mapper_format_alloc(ap_state_t* pargp, char* string_format, char* int_format, char* float_format);
-static void      mapper_format_free(mapper_t* pmapper, context_t* _);
-static sllv_t*   mapper_format_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
+static mapper_t* mapper_format_values_alloc(ap_state_t* pargp, char* string_format, char* int_format, char* float_format);
+static void      mapper_format_values_free(mapper_t* pmapper, context_t* _);
+static sllv_t*   mapper_format_values_process(lrec_t* pinrec, context_t* pctx, void* pvstate);
 
 // ----------------------------------------------------------------
-mapper_setup_t mapper_format_setup = {
-	.verb = "format",
-	.pusage_func = mapper_format_usage,
-	.pparse_func = mapper_format_parse_cli,
+mapper_setup_t mapper_format_values_setup = {
+	.verb = "format-values",
+	.pusage_func = mapper_format_values_usage,
+	.pparse_func = mapper_format_values_parse_cli,
 	.ignores_input = FALSE,
 };
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_format_parse_cli(int* pargi, int argc, char** argv,
+static mapper_t* mapper_format_values_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __)
 {
 	char* string_format = DEFAULT_STRING_FORMAT;
@@ -38,7 +38,7 @@ static mapper_t* mapper_format_parse_cli(int* pargi, int argc, char** argv,
 	char* float_format  = DEFAULT_FLOAT_FORMAT;
 
 	if ((argc - *pargi) < 1) {
-		mapper_format_usage(stderr, argv[0], argv[*pargi]);
+		mapper_format_values_usage(stderr, argv[0], argv[*pargi]);
 		return NULL;
 	}
 	char* verb = argv[*pargi];
@@ -50,15 +50,15 @@ static mapper_t* mapper_format_parse_cli(int* pargi, int argc, char** argv,
 	ap_define_string_flag(pstate, "-f", &float_format);
 
 	if (!ap_parse(pstate, verb, pargi, argc, argv)) {
-		mapper_format_usage(stderr, argv[0], verb);
+		mapper_format_values_usage(stderr, argv[0], verb);
 		return NULL;
 	}
 
-	mapper_t* pmapper = mapper_format_alloc(pstate, string_format, int_format, float_format);
+	mapper_t* pmapper = mapper_format_values_alloc(pstate, string_format, int_format, float_format);
 	return pmapper;
 }
 
-static void mapper_format_usage(FILE* o, char* argv0, char* verb) {
+static void mapper_format_values_usage(FILE* o, char* argv0, char* verb) {
 	// xxx fmtnum is fine-grained. this is the sledgehammer which guesses for you.
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
 	fprintf(o, "Passes input records directly to output. Most useful for format conversion.\n");
@@ -69,10 +69,10 @@ static void mapper_format_usage(FILE* o, char* argv0, char* verb) {
 }
 
 // ----------------------------------------------------------------
-static mapper_t* mapper_format_alloc(ap_state_t* pargp, char* string_format, char* int_format, char* float_format)
+static mapper_t* mapper_format_values_alloc(ap_state_t* pargp, char* string_format, char* int_format, char* float_format)
 {
 	mapper_t* pmapper = mlr_malloc_or_die(sizeof(mapper_t));
-	mapper_format_state_t* pstate    = mlr_malloc_or_die(sizeof(mapper_format_state_t));
+	mapper_format_values_state_t* pstate    = mlr_malloc_or_die(sizeof(mapper_format_values_state_t));
 	pstate->pargp                 = pargp;
 	pstate->string_format         = string_format;
 	pstate->int_format            = int_format;
@@ -80,21 +80,21 @@ static mapper_t* mapper_format_alloc(ap_state_t* pargp, char* string_format, cha
 	pmapper->pvstate              = pstate;
 
 	pmapper->pprocess_func        = NULL;
-	pmapper->pprocess_func        = mapper_format_process;
+	pmapper->pprocess_func        = mapper_format_values_process;
 
-	pmapper->pfree_func           = mapper_format_free;
+	pmapper->pfree_func           = mapper_format_values_free;
 	return pmapper;
 }
-static void mapper_format_free(mapper_t* pmapper, context_t* _) {
-	mapper_format_state_t* pstate = pmapper->pvstate;
+static void mapper_format_values_free(mapper_t* pmapper, context_t* _) {
+	mapper_format_values_state_t* pstate = pmapper->pvstate;
 	ap_free(pstate->pargp);
 	free(pstate);
 	free(pmapper);
 }
 
 // ----------------------------------------------------------------
-static sllv_t* mapper_format_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
-	mapper_format_state_t* pstate = (mapper_format_state_t*)pvstate;
+static sllv_t* mapper_format_values_process(lrec_t* pinrec, context_t* pctx, void* pvstate) {
+	mapper_format_values_state_t* pstate = (mapper_format_values_state_t*)pvstate;
 	if (pinrec != NULL) {
 		for (lrece_t* pe = pinrec->phead; pe != NULL; pe = pe->pnext) {
 			long long int_value;

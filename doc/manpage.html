@@ -320,11 +320,11 @@ OPTIONS
 
    VERB LIST
 	altkv bar bootstrap cat check clean-whitespace count-distinct count-similar
-	cut decimate fill-down filter fraction grep group-by group-like having-fields
-	head histogram join label least-frequent merge-fields most-frequent nest
-	nothing put regularize remove-empty-columns rename reorder repeat reshape
-	sample sec2gmt sec2gmtdate seqgen shuffle skip-trivial-records sort stats1
-	stats2 step tac tail tee top uniq unsparsify
+	cut decimate fill-down filter format-values fraction grep group-by group-like
+	having-fields head histogram join label least-frequent merge-fields
+	most-frequent nest nothing put regularize remove-empty-columns rename reorder
+	repeat reshape sample sec2gmt sec2gmtdate seqgen shuffle skip-trivial-records
+	sort stats1 stats2 step tac tail tee top uniq unsparsify
 
    FUNCTION LIST
 	+ + - - * / // .+ .+ .- .- .* ./ .// % ** | ^ &amp; ~ &lt;&lt; &gt;&gt; bitcount == != =~ !=~
@@ -787,6 +787,14 @@ VERBS
        Please see http://johnkerl.org/miller/doc/reference.html for more information
        including function list. Or "mlr -f". Please also also "mlr grep" which is
        useful when you don't yet know which field name(s) you're looking for.
+
+   format-values
+       Usage: mlr format-values [options]
+       Passes input records directly to output. Most useful for format conversion.
+       Options:
+       -g {comma-separated field name(s)} When used with -n/-N, writes record-counters
+		 keyed by specified field name(s).
+       -v	 Write a low-level record-structure dump to stderr.
 
    fraction
        Usage: mlr fraction [options]
@@ -2460,7 +2468,7 @@ SEE ALSO
 
 
 
-				  2019-09-03			     MILLER(1)
+				  2019-09-07			     MILLER(1)
 </pre>
 </div>
 <p/>
