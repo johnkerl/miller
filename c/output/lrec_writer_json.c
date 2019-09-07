@@ -10,7 +10,6 @@ typedef struct _lrec_writer_json_state_t {
 
 	int json_quote_int_keys;
 	int json_quote_non_string_values;
-	int json_apply_ofmt_to_floats;
 	char* line_indent;
 	char* before_records_at_start_of_stream1;
 	char* between_records_after_start_of_stream;
@@ -34,7 +33,7 @@ static void lrec_writer_json_process_nonauto_line_term_no_wrap(void* pvstate, FI
 
 // ----------------------------------------------------------------
 lrec_writer_t* lrec_writer_json_alloc(int stack_vertically, int wrap_json_output_in_outer_list,
-	int json_quote_int_keys, int json_quote_non_string_values, int json_apply_ofmt_to_floats,
+	int json_quote_int_keys, int json_quote_non_string_values,
 	char* output_json_flatten_separator, char* line_term)
 {
 	lrec_writer_t* plrec_writer = mlr_malloc_or_die(sizeof(lrec_writer_t));
@@ -42,7 +41,6 @@ lrec_writer_t* lrec_writer_json_alloc(int stack_vertically, int wrap_json_output
 	lrec_writer_json_state_t* pstate = mlr_malloc_or_die(sizeof(lrec_writer_json_state_t));
 	pstate->json_quote_int_keys = json_quote_int_keys;
 	pstate->json_quote_non_string_values = json_quote_non_string_values;
-	pstate->json_apply_ofmt_to_floats = json_apply_ofmt_to_floats;
 	pstate->counter = 0;
 	pstate->output_json_flatten_separator = output_json_flatten_separator;
 
@@ -143,10 +141,10 @@ static void lrec_writer_json_process(void* pvstate, FILE* output_stream, lrec_t*
 
 		if (pstate->stack_vertically)
 			mlhmmv_root_print_json_stacked(pmap, pstate->json_quote_int_keys, pstate->json_quote_non_string_values,
-				pstate->json_apply_ofmt_to_floats, pstate->line_indent, line_term, output_stream);
+				pstate->line_indent, line_term, output_stream);
 		else
 			mlhmmv_root_print_json_single_lines(pmap, pstate->json_quote_int_keys,
-				pstate->json_quote_non_string_values, pstate->json_apply_ofmt_to_floats, line_term, output_stream);
+				pstate->json_quote_non_string_values, line_term, output_stream);
 
 		mlhmmv_root_free(pmap);
 

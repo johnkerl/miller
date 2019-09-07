@@ -5914,11 +5914,6 @@ mlr_expect_fail --ijson --oxtab --json-fatal-arrays-on-input cat $indir/arrays.j
 
 run_mlr --json cat $indir/escapes.json
 
-run_mlr --ojson                                  head -n 2 $indir/abixy
-run_mlr --ojson --jofmt --ofmt '%.4lf'           head -n 2 $indir/abixy
-run_mlr --ojson --jvstack                        head -n 2 $indir/abixy
-run_mlr --ojson --jvstack --jofmt --ofmt '%.4lf' head -n 2 $indir/abixy
-
 # ----------------------------------------------------------------
 announce FORMAT-CONVERSION KEYSTROKE-SAVERS
 

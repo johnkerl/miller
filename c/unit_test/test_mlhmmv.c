@@ -29,7 +29,7 @@ static char* test_no_overlap() {
 
 	printf("================================================================\n");
 	printf("empty map:\n");
-	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, FALSE, "", "\n", stdout);
+	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, "", "\n", stdout);
 
 	sllmv_t* pmvkeys1 = sllmv_single_with_free(imv(3));
 	mv_t value1 = mv_from_int(4LL);
@@ -39,7 +39,7 @@ static char* test_no_overlap() {
 	printf("value1: %s\n", mv_alloc_format_val(&value1));
 	mlhmmv_root_put_terminal(pmap, pmvkeys1, &value1);
 	printf("map:\n");
-	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, FALSE, "", "\n", stdout);
+	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, "", "\n", stdout);
 	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys1, &error), &value1));
 
 	sllmv_t* pmvkeys2 = sllmv_double_with_free(smv("abcde"), imv(-6));
@@ -50,7 +50,7 @@ static char* test_no_overlap() {
 	printf("value2: %s\n", mv_alloc_format_val(&value2));
 	mlhmmv_root_put_terminal(pmap, pmvkeys2, &value2);
 	printf("map:\n");
-	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, FALSE, "", "\n", stdout);
+	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, "", "\n", stdout);
 	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys2, &error), &value2));
 
 	sllmv_t* pmvkeys3 = sllmv_triple_with_free(imv(0), smv("fghij"), imv(0));
@@ -61,7 +61,7 @@ static char* test_no_overlap() {
 	printf("value3: %s\n", mv_alloc_format_val(&value3));
 	mlhmmv_root_put_terminal(pmap, pmvkeys3, &value3);
 	printf("map:\n");
-	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, FALSE, "", "\n", stdout);
+	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, "", "\n", stdout);
 	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys3, &error), &value3));
 
 	sllmv_free(pmvkeys1);
@@ -78,35 +78,35 @@ static char* test_overlap() {
 	sllmv_t* pmvkeys = sllmv_single_with_free(imv(3));
 	mv_t* ptermval = imv(4);
 	mlhmmv_root_put_terminal(pmap, pmvkeys, ptermval);
-	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, FALSE, "", "\n", stdout);
+	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, "", "\n", stdout);
 	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	ptermval = imv(5);
 	mlhmmv_root_put_terminal(pmap, pmvkeys, ptermval);
-	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, FALSE, "", "\n", stdout);
+	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, "", "\n", stdout);
 	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_double_with_free(imv(3), smv("x"));
 	ptermval = imv(6);
 	mlhmmv_root_put_terminal(pmap, pmvkeys, ptermval);
-	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, FALSE, "", "\n", stdout);
+	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, "", "\n", stdout);
 	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	ptermval = imv(7);
 	mlhmmv_root_put_terminal(pmap, pmvkeys, ptermval);
-	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, FALSE, "", "\n", stdout);
+	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, "", "\n", stdout);
 	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_triple_with_free(imv(3), imv(9), smv("y"));
 	ptermval = smv("z");
 	mlhmmv_root_put_terminal(pmap, pmvkeys, ptermval);
-	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, FALSE, "", "\n", stdout);
+	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, "", "\n", stdout);
 	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	pmvkeys = sllmv_triple_with_free(imv(3), imv(9), smv("z"));
 	ptermval = smv("y");
 	mlhmmv_root_put_terminal(pmap, pmvkeys, ptermval);
-	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, FALSE, "", "\n", stdout);
+	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, "", "\n", stdout);
 	mu_assert_lf(mv_equals_si(mlhmmv_root_look_up_and_ref_terminal(pmap, pmvkeys, &error), ptermval));
 
 	mlhmmv_root_free(pmap);
@@ -121,17 +121,17 @@ static char* test_resize() {
 	printf("================================================================\n");
 	for (int i = 0; i < 2*MLHMMV_INITIAL_ARRAY_LENGTH; i++)
 		mlhmmv_root_put_terminal(pmap, sllmv_single_with_free(imv(i)), imv(-i));
-	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, FALSE, "", "\n", stdout);
+	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, "", "\n", stdout);
 	printf("\n");
 
 	for (int i = 0; i < 2*MLHMMV_INITIAL_ARRAY_LENGTH; i++)
 		mlhmmv_root_put_terminal(pmap, sllmv_double_with_free(smv("a"), imv(i)), imv(-i));
-	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, FALSE, "", "\n", stdout);
+	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, "", "\n", stdout);
 	printf("\n");
 
 	for (int i = 0; i < 2*MLHMMV_INITIAL_ARRAY_LENGTH; i++)
 		mlhmmv_root_put_terminal(pmap, sllmv_triple_with_free(imv(i*100), imv(i % 4), smv("b")), smv("term"));
-	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, FALSE, "", "\n", stdout);
+	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, "", "\n", stdout);
 
 	sllmv_t* pmvkeys = sllmv_single_with_free(imv(2));
 	mv_t* ptermval = imv(-2);
@@ -213,7 +213,7 @@ static char* test_mlhmmv_to_lrecs() {
 	mlhmmv_root_put_terminal(pmap, sllmv_double_with_free(smv("double"), smv("k")), imv(113));
 
 	printf("full map:\n");
-	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, FALSE, "", "\n", stdout);
+	mlhmmv_root_print_json_stacked(pmap, TRUE, FALSE, "", "\n", stdout);
 	printf("\n");
 
 	sllv_t* poutrecs = NULL;

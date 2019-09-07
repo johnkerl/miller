@@ -28,7 +28,7 @@
 #define MLHMMV_INITIAL_ARRAY_LENGTH 16
 
 // ----------------------------------------------------------------
-void mlhmmv_print_terminal(mv_t* pmv, int quote_keys_always, int quote_values_always, int json_apply_ofmt_to_floats,
+void mlhmmv_print_terminal(mv_t* pmv, int quote_keys_always, int quote_values_always,
 	FILE* ostream);
 
 // ----------------------------------------------------------------
@@ -156,7 +156,6 @@ void mlhmmv_level_print_stacked(
 	int             do_final_comma,
 	int             quote_keys_always,
 	int             quote_values_always,
-	int             json_apply_ofmt_to_floats,
 	char*           line_indent,
 	char*           line_term,
 	FILE*           ostream);
@@ -302,10 +301,10 @@ void mlhmmv_root_partial_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pkeys, sllmv_t* 
 
 // For 'dump' in the DSL; also used by the lrec-to-JSON writer.
 void mlhmmv_root_print_json_stacked(mlhmmv_root_t* pmap,
-	int quote_keys_always, int quote_values_always, int json_apply_ofmt_to_floats,
+	int quote_keys_always, int quote_values_always,
 	char* line_indent, char* line_term, FILE* ostream);
 void mlhmmv_root_print_json_single_lines(mlhmmv_root_t* pmap, int quote_keys_always,
-	int quote_values_always, int json_apply_ofmt_to_floats, char* line_term, FILE* ostream);
+	int quote_values_always, char* line_term, FILE* ostream);
 
 // Used for emit of localvars. Puts the xvalue in a single-key-value-pair map
 // keyed by the specified name. The xvalue is referenced, not copied.

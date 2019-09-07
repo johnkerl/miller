@@ -37,7 +37,7 @@
 
 // ================================================================
 static int  mlhmmv_hash_func(mv_t* plevel_key);
-static void json_decimal_print       (FILE* ostream, char* s, int json_apply_ofmt_to_floats, double parsed);
+static void json_decimal_print       (FILE* ostream, char* s, double parsed);
 static void json_print_string_escaped(FILE* ostream, char* s);
 
 // ----------------------------------------------------------------
@@ -96,7 +96,7 @@ static void mlhhmv_levels_to_lrecs_lashed_within_records(
 	char*            flatten_separator);
 
 static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
-	int do_final_comma, int quote_keys_always, int quote_values_always, int json_apply_ofmt_to_floats,
+	int do_final_comma, int quote_keys_always, int quote_values_always,
 	FILE* ostream);
 
 // ----------------------------------------------------------------
@@ -132,7 +132,7 @@ static int mlhmmv_hash_func(mv_t* pa) {
 }
 
 // ================================================================
-void mlhmmv_print_terminal(mv_t* pmv, int quote_keys_always, int quote_values_always, int json_apply_ofmt_to_floats,
+void mlhmmv_print_terminal(mv_t* pmv, int quote_keys_always, int quote_values_always,
 	FILE* ostream)
 {
 	char* level_value_string = mv_alloc_format_val(pmv);
@@ -141,7 +141,7 @@ void mlhmmv_print_terminal(mv_t* pmv, int quote_keys_always, int quote_values_al
 	} else if (pmv->type == MT_STRING) {
 		double parsed;
 		if (mlr_try_float_from_string(level_value_string, &parsed)) {
-			json_decimal_print(ostream, level_value_string, json_apply_ofmt_to_floats, parsed);
+			json_decimal_print(ostream, level_value_string, parsed);
 		} else if (streq(level_value_string, "true") || streq(level_value_string, "false")) {
 			fprintf(ostream, "%s", level_value_string);
 		} else {
@@ -158,17 +158,13 @@ void mlhmmv_print_terminal(mv_t* pmv, int quote_keys_always, int quote_values_al
 // we make it JSON-compliant.
 //
 // Precondition: the caller has already checked that the string represents a number.
-static void json_decimal_print(FILE* ostream, char* s, int json_apply_ofmt_to_floats, double parsed) {
-	if (json_apply_ofmt_to_floats) {
-		fprintf(ostream, MLR_GLOBALS.ofmt, parsed);
+static void json_decimal_print(FILE* ostream, char* s, double parsed) {
+	if (s[0] == '.') {
+		fprintf(ostream, "0%s", s);
+	} else if (s[0] == '-' && s[1] == '.') {
+		fprintf(ostream, "-0.%s", &s[2]);
 	} else {
-		if (s[0] == '.') {
-			fprintf(ostream, "0%s", s);
-		} else if (s[0] == '-' && s[1] == '.') {
-			fprintf(ostream, "-0.%s", &s[2]);
-		} else {
-			fprintf(ostream, "%s", s);
-		}
+		fprintf(ostream, "%s", s);
 	}
 }
 
@@ -1193,7 +1189,7 @@ static void mlhhmv_levels_to_lrecs_lashed_within_records(
 
 // ----------------------------------------------------------------
 void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
-	int do_final_comma, int quote_keys_always, int quote_values_always, int json_apply_ofmt_to_floats,
+	int do_final_comma, int quote_keys_always, int quote_values_always,
 	char* line_indent, char* line_term, FILE* ostream)
 {
 	if (plevel == NULL) {
@@ -1218,7 +1214,7 @@ void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 
 		if (pentry->level_xvalue.is_terminal) {
 			mlhmmv_print_terminal(&pentry->level_xvalue.terminal_mlrval, quote_keys_always,
-				quote_values_always, json_apply_ofmt_to_floats, ostream);
+				quote_values_always, ostream);
 
 			if (pentry->pnext != NULL)
 				fprintf(ostream, ",%s", line_term);
@@ -1227,7 +1223,7 @@ void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 		} else {
 			fprintf(ostream, "%s{%s", line_indent, line_term);
 			mlhmmv_level_print_stacked(pentry->level_xvalue.pnext_level, depth + 1,
-				pentry->pnext != NULL, quote_keys_always, quote_values_always, json_apply_ofmt_to_floats,
+				pentry->pnext != NULL, quote_keys_always, quote_values_always,
 				line_indent, line_term,
 				ostream);
 		}
@@ -1242,7 +1238,7 @@ void mlhmmv_level_print_stacked(mlhmmv_level_t* plevel, int depth,
 
 // ----------------------------------------------------------------
 static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
-	int do_final_comma, int quote_keys_always, int quote_values_always, int json_apply_ofmt_to_floats,
+	int do_final_comma, int quote_keys_always, int quote_values_always,
 	FILE* ostream)
 {
 	// Top-level opening brace goes on a line by itself; subsequents on the same line after the level key.
@@ -1266,7 +1262,7 @@ static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 			} else if (pentry->level_xvalue.terminal_mlrval.type == MT_STRING) {
 				double parsed;
 				if (mlr_try_float_from_string(level_value_string, &parsed)) {
-					json_decimal_print(ostream, level_value_string, json_apply_ofmt_to_floats, parsed);
+					json_decimal_print(ostream, level_value_string, parsed);
 				} else if (streq(level_value_string, "true") || streq(level_value_string, "false")) {
 					fprintf(ostream, "%s", level_value_string);
 				} else {
@@ -1282,7 +1278,7 @@ static void mlhmmv_level_print_single_line(mlhmmv_level_t* plevel, int depth,
 		} else {
 			fprintf(ostream, "{");
 			mlhmmv_level_print_single_line(pentry->level_xvalue.pnext_level, depth + 1,
-				pentry->pnext != NULL, quote_keys_always, quote_values_always, json_apply_ofmt_to_floats, ostream);
+				pentry->pnext != NULL, quote_keys_always, quote_values_always, ostream);
 		}
 	}
 	if (do_final_comma)
@@ -1560,18 +1556,18 @@ void mlhmmv_root_partial_to_lrecs(mlhmmv_root_t* pmap, sllmv_t* pkeys, sllmv_t* 
 // }
 
 void mlhmmv_root_print_json_stacked(mlhmmv_root_t* pmap, int quote_keys_always, int quote_values_always,
-	int json_apply_ofmt_to_floats, char* line_indent, char* line_term, FILE* ostream)
+	char* line_indent, char* line_term, FILE* ostream)
 {
 	mlhmmv_level_print_stacked(pmap->root_xvalue.pnext_level, 0, FALSE, quote_keys_always,
-		quote_values_always, json_apply_ofmt_to_floats, line_indent, line_term, ostream);
+		quote_values_always, line_indent, line_term, ostream);
 }
 
 // ----------------------------------------------------------------
 void mlhmmv_root_print_json_single_lines(mlhmmv_root_t* pmap, int quote_keys_always, int quote_values_always,
-	int json_apply_ofmt_to_floats, char* line_term, FILE* ostream)
+	char* line_term, FILE* ostream)
 {
 	mlhmmv_level_print_single_line(pmap->root_xvalue.pnext_level, 0, FALSE, quote_keys_always,
-		quote_values_always, json_apply_ofmt_to_floats, ostream);
+		quote_values_always, ostream);
 	fprintf(ostream, "%s", line_term);
 }
 

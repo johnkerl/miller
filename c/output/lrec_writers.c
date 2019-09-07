@@ -9,7 +9,7 @@ lrec_writer_t*  lrec_writer_alloc(cli_writer_opts_t* popts) {
 	} else if (streq(popts->ofile_fmt, "json")) {
 		return lrec_writer_json_alloc(popts->stack_json_output_vertically,
 			popts->wrap_json_output_in_outer_list, popts->json_quote_int_keys,
-			popts->json_quote_non_string_values, popts->json_apply_ofmt_to_floats,
+			popts->json_quote_non_string_values,
 			popts->output_json_flatten_separator, popts->ors);
 
 	} else if (streq(popts->ofile_fmt, "csv")) {

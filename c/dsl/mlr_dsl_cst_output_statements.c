@@ -1407,12 +1407,12 @@ static void handle_dump(
 
 	if (boxed_xval.xval.is_terminal) {
 		mlhmmv_print_terminal(&boxed_xval.xval.terminal_mlrval,
-			pvars->json_quote_int_keys, pvars->json_quote_non_string_values, pvars->json_apply_ofmt_to_floats,
+			pvars->json_quote_int_keys, pvars->json_quote_non_string_values,
 			pstate->stdfp);
 		fprintf(pstate->stdfp, "\n");
 	} else {
 		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE,
-			pvars->json_quote_int_keys, pvars->json_quote_non_string_values, pvars->json_apply_ofmt_to_floats,
+			pvars->json_quote_int_keys, pvars->json_quote_non_string_values,
 			"", pvars->pctx->auto_line_term,
 			pstate->stdfp);
 	}
@@ -1441,12 +1441,12 @@ static void handle_dump_to_file(
 
 	if (boxed_xval.xval.is_terminal) {
 		mlhmmv_print_terminal(&boxed_xval.xval.terminal_mlrval,
-			pvars->json_quote_int_keys, pvars->json_quote_non_string_values, pvars->json_apply_ofmt_to_floats,
+			pvars->json_quote_int_keys, pvars->json_quote_non_string_values,
 			outfp);
 		fprintf(outfp, "\n");
 	} else if (boxed_xval.xval.pnext_level != NULL) {
 		mlhmmv_level_print_stacked(boxed_xval.xval.pnext_level, 0, FALSE,
-			pvars->json_quote_int_keys, pvars->json_quote_non_string_values, pvars->json_apply_ofmt_to_floats,
+			pvars->json_quote_int_keys, pvars->json_quote_non_string_values,
 			"", pvars->pctx->auto_line_term,
 			outfp);
 	}

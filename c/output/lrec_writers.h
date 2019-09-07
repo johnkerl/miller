@@ -15,7 +15,7 @@ lrec_writer_t* lrec_writer_csvlite_alloc(char* ors, char* ofs, int headerless_cs
 lrec_writer_t* lrec_writer_markdown_alloc(char* ors);
 lrec_writer_t* lrec_writer_dkvp_alloc(char* ors, char* ofs, char* ops);
 lrec_writer_t* lrec_writer_json_alloc(int stack_vertically, int wrap_json_output_in_outer_list,
-	int json_quote_int_keys, int json_quote_non_string_values, int json_apply_ofmt_to_floats,
+	int json_quote_int_keys, int json_quote_non_string_values,
 	char* output_json_flatten_separator, char* line_term);
 lrec_writer_t* lrec_writer_nidx_alloc(char* ors, char* ofs);
 lrec_writer_t* lrec_writer_pprint_alloc(char* ors, char ofs, int right_align, int barred);

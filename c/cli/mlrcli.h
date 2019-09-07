@@ -70,7 +70,6 @@ typedef struct _cli_writer_opts_t {
 	int   wrap_json_output_in_outer_list;
 	int   json_quote_int_keys;
 	int   json_quote_non_string_values;
-	int   json_apply_ofmt_to_floats;
 	char* output_json_flatten_separator;
 	char* oosvar_flatten_separator;
 
