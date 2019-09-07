@@ -4,8 +4,6 @@ BUGFIXES
 ================================================================
 FUNDAM:
 
-* mlr format-values:
-
 * python3 @ mld
 
 * valgrind all since 5.5.0

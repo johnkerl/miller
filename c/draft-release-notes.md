@@ -8,7 +8,7 @@
 
 ## Documentation:
 
-* ...
+* The new [**DKVP I/O in Python**](http://johnkerl.org/miller/doc/data-sharing.html#DKVP_I/O_in_Python) sample code now works for Python 2 as well as Python 3.
 
 ## Bugfixes: 
 

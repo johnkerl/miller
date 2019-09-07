@@ -1,7 +1,8 @@
-#!/usr/bin/env ruby
+#!/usr/bin/env python
 
 import sys
 import re
+import copy
 import dkvp_io
 
 while True:
@@ -19,13 +20,15 @@ while True:
 	map['iy'] = map['i'] + map['y']
 
 	# Add new fields which show type of each already-existing field:
-	keys = map.keys()
+	omap = copy.copy(map) # since otherwise the for-loop will modify what it loops over
+	keys = omap.keys()
 	for key in keys:
 		# Convert "<type 'int'>" to just "int", etc.:
 		type_string = str(map[key].__class__)
-		type_string = re.sub("<type '", "", type_string)
+		type_string = re.sub("<type '", "", type_string) # python2
+		type_string = re.sub("<class '", "", type_string) # python3
 		type_string = re.sub("'>", "", type_string)
 		map['t'+key] = type_string
 
 	# Write the modified record:
-	print dkvp_io.map2dkvpline(map, '=', ',')
+	print(dkvp_io.map2dkvpline(map, '=', ','))

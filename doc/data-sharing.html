@@ -285,10 +285,11 @@ And here is an example using them:
 <div class="pokipanel">
 <pre>
 $ cat polyglot-dkvp-io/example.py
-#!/usr/bin/env ruby
+#!/usr/bin/env python
 
 import sys
 import re
+import copy
 import dkvp_io
 
 while True:
@@ -306,16 +307,18 @@ while True:
 	map['iy'] = map['i'] + map['y']
 
 	# Add new fields which show type of each already-existing field:
-	keys = map.keys()
+	omap = copy.copy(map) # since otherwise the for-loop will modify what it loops over
+	keys = omap.keys()
 	for key in keys:
 		# Convert "&lt;type 'int'&gt;" to just "int", etc.:
 		type_string = str(map[key].__class__)
-		type_string = re.sub("&lt;type '", "", type_string)
+		type_string = re.sub("&lt;type '", "", type_string) # python2
+		type_string = re.sub("&lt;class '", "", type_string) # python3
 		type_string = re.sub("'&gt;", "", type_string)
 		map['t'+key] = type_string
 
 	# Write the modified record:
-	print dkvp_io.map2dkvpline(map, '=', ',')
+	print(dkvp_io.map2dkvpline(map, '=', ','))
 </pre>
 </div>
 <p/>
