@@ -18,6 +18,14 @@ POKI_RUN_COMMAND{{mlr --ocsvlite cat data/het.dkvp}}HERE
 POKI_RUN_COMMAND{{mlr --opprint cat data/het.dkvp}}HERE
 </td></tr></table>
 
+<p/> Miller handles explicit header changes as just shown. If your CSV input contains ragged data &mdash; if there are implicit header changes &mdash; you can use <tt>--allow-ragged-csv-input</tt> (or keystroke-saver <tt>--ragged</tt>). For too-short data lines, values are filled with empty string; for too-long data lines, missing field names are replaced with positional indices (counting up from 1, not 0), as follows: 
+
+<table><tr><td>
+POKI_RUN_COMMAND{{cat data/ragged.csv}}HERE
+</td><td>
+POKI_RUN_COMMAND{{mlr --icsv --oxtab --allow-ragged-csv-input cat data/ragged.csv}}HERE
+</td></tr></table>
+
 <p/> You may also find Miller&rsquo;s <tt>group-like</tt> feature handy (see also
 POKI_PUT_LINK_FOR_PAGE(reference.html)HERE):
 

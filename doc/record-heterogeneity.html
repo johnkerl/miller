@@ -264,6 +264,42 @@ resource         loadsec ok
 <p/>
 </td></tr></table>
 
+<p/> Miller handles explicit header changes as just shown. If your CSV input contains ragged data &mdash; if there are implicit header changes &mdash; you can use <tt>--allow-ragged-csv-input</tt> (or keystroke-saver <tt>--ragged</tt>). For too-short data lines, values are filled with empty string; for too-long data lines, missing field names are replaced with positional indices (counting up from 1, not 0), as follows: 
+
+<table><tr><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ cat data/ragged.csv
+a,b,c
+1,2,3
+4,5
+6,7,8,9
+</pre>
+</div>
+<p/>
+</td><td>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --oxtab --allow-ragged-csv-input cat data/ragged.csv
+a 1
+b 2
+c 3
+
+a 4
+b 5
+c
+
+a 6
+b 7
+c 8
+4 9
+</pre>
+</div>
+<p/>
+</td></tr></table>
+
 <p/> You may also find Miller&rsquo;s <tt>group-like</tt> feature handy (see also
 <a href="reference.html">Reference</a>):
 
