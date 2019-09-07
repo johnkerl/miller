@@ -2,15 +2,15 @@
 BUGFIXES
 
 ================================================================
-FUNDAM:
+TOP OF LIST:
 
-* python3 @ mld
+* sort-within-records
+* system()
+* LUA-style
+* inf/nan in strings ...
+* multi-join @ FAQ
 
 * valgrind all since 5.5.0
-
-* in-place:
-  - more UT
-  - also check for adding no_mmap
 
 * linear rename:
   - new UTs

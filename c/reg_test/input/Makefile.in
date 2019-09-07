@@ -453,6 +453,7 @@ EXTRA_DIST = \
 		put-script-piece-2 \
 		put-script-piece-3 \
 		quote-original.csv \
+		ragged.csv \
 		regex.dkvp \
 		regularize.dkvp \
 		remove-empty-columns.csv \
