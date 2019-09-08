@@ -1,27 +1,27 @@
 ================================================================
 BUGFIXES
 
+* follow-on for pre-existing unset/typed-overlay issue
+
 ================================================================
-TOP OF LIST:
+TOP OF LIST
+
+quick doc:
+* write up: https://github.com/johnkerl/miller/issues/131
+* multi-join @ FAQ
+* doc/bld note for vgrun oo
 
 * sort-within-records
 * system()
 * LUA-style
 * inf/nan in strings ...
-* multi-join @ FAQ
 
 * valgrind all since 5.5.0
 
 * linear rename:
   - new UTs
 
-* doc/bld note for vgrun oo
 * oo w/ indir
-* follow-on for pre-existing unset/typed-overlay issue
-
-* synctool alias/flag handling ...
-
-* 'mlr help X' .... try to look for things ... -- ? or just `man mlr` ...
 
 ================================================================
 
@@ -32,15 +32,9 @@ TOP OF LIST:
     - xxx
     - xxx
 
-! APPVEYOR !
-
-? bare ./configure ?
-
 ! dirname/basename functions !
 
 * MILLER_{MAJOR/MINOR/MICRO} builtins ?
-
-* sort fcn / issue77
 
 airable:
 
@@ -78,24 +72,9 @@ airable:
 ----------------------------------------------------------------
 non-airable:
 
-! appveyor !
-  ! 10min etc re single quotes vs. triple-doubles
-  - augment msys2 notes w/ the frombelows
-  - pcreposix.dll sadpanda
-  - https://github.com/msys2/msys2/wiki
-  - https://github.com/Alexpux/MINGW-packages
-  - https://github.com/Alexpux/MINGW-packages/wiki
-  - see also bash on windows: https://msdn.microsoft.com/en-us/commandline/wsl/about
-  - https://help.github.com/articles/dealing-with-line-endings/#platform-windows
-  - big dev readme about .gitattributes
-
 ? bash completion script ?
 
-? into moreutils?
-
 ! fix autoreconf timestamp wtf
-
-* valgrinds
 
 ! ASAN build @ travis !
   -> doesn't look quite right at travis
@@ -110,8 +89,6 @@ non-airable:
 ! write-temp-file abend on negfd etc
 
 * rh/fedora/centos
-
-* ship ./configure, w/ clean-target mods
 
 * travis clang build w/ asan ?
 

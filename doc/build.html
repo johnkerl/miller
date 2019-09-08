@@ -190,13 +190,13 @@ Miller commands were run with pretty-print-tabular output format.
 <center><b>Contents:</b></center>
 &bull;&nbsp;<a href="#Miller_license">Miller license</a><br/>
 &bull;&nbsp;<a href="#Prebuilt_executables">Prebuilt executables</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Building_from_source">Building from source</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Via_package_managers">Via package managers</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Via_GitHub_per_release">Via GitHub per release</a><br/>
+&bull;&nbsp;<a href="#Building_from_source">Building from source</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#From_release_tarball_using_autoconfig">From release tarball using autoconfig</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#From_git_clone_using_autoconfig">From git clone using autoconfig</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Without_using_autoconfig">Without using autoconfig</a><br/>
-&bull;&nbsp;<a href="#Windows">Windows</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Precompiled_binaries">Precompiled binaries</a><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Building_from_source">Building from source</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Windows">Windows</a><br/>
 &bull;&nbsp;<a href="#In_case_of_problems">In case of problems</a><br/>
 &bull;&nbsp;<a href="#Dependencies">Dependencies</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Required_external_dependencies">Required external dependencies</a><br/>
@@ -223,10 +223,7 @@ https://github.com/johnkerl/miller/blob/master/LICENSE.txt</a>.
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_prebuilt_executables');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_prebuilt_executables" style="display: block">
 
-<p/> Please see <a href="https://github.com/johnkerl/miller/releases">
-https://github.com/johnkerl/miller/releases</a> where there are builds for OSX
-Yosemite, Linux i686 (statically linked), and Linux x86-64 (dynamically
-linked).
+<a id="Via_package_managers"/><h2>Via package managers</h2>
 
 <p/> Homebrew installation support for OSX is available via
 
@@ -238,9 +235,9 @@ brew update &amp;&amp; brew install miller
 </div>
 <p/>
 
-<p/> You may already have <tt>mlr</tt> available in your platform&rsquo;s
+<p/> You may already have the <tt>mlr</tt> executable available in your platform&rsquo;s
 package manager on NetBSD, Debian Linux, Ubuntu Xenial and upward, Arch Linux, or perhaps other distributions.
-For example, on Debian/Ubuntu, you can try
+For example, on various Linux distributions you might do one of the following:
 
 <p/>
 <div class="pokipanel">
@@ -249,6 +246,44 @@ sudo apt-get install miller
 </pre>
 </div>
 <p/>
+<p/>
+<div class="pokipanel">
+<pre>
+sudo apt install miller
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+sudo yum install miller
+</pre>
+</div>
+<p/>
+
+<a id="Via_GitHub_per_release"/><h2>Via GitHub per release</h2>
+
+<p/> Please see <a href="https://github.com/johnkerl/miller/releases">
+https://github.com/johnkerl/miller/releases</a> where there are builds for OSX
+Yosemite, Linux x86-64 (dynamically linked), and Windows (via Appveyor build artifacts).
+
+<p/>Miller is autobuilt for <b>Linux</b> using <b>Travis</b> on every commit (<a
+href="https://travis-ci.org/johnkerl/miller/builds">https://travis-ci.org/johnkerl/miller/builds</a>).
+This was set up by the generous assistance of <a
+href="https://github.com/SikhNerd">SikhNerd</a> on Github, tracked in <a
+href="https://github.com/johnkerl/miller/issues/15">https://github.com/johnkerl/miller/issues/15</a>.
+Analogously, Miller is autobuilt for <b>Windows</b> using the <b>Appveyor</b> continuous-build system:
+<a href="https://ci.appveyor.com/project/johnkerl/miller">https://ci.appveyor.com/project/johnkerl/miller</a>.
+
+<p/>Miller releases from <a
+href="https://github.com/johnkerl/miller/releases/tag/v5.1.0w">5.1.0w</a>
+onward will have a precompiled Windows binary, in addition to the MacOSX and
+Linux 64-bit precompiled binaries as on previous releases.  Specifically, at <a
+href="https://ci.appveyor.com/project/johnkerl/miller">
+https://ci.appveyor.com/project/johnkerl/miller</a> you can select <i>Latest
+Build</i> and then <i>Artifacts</i> to always get the current head build.
+Miller releases from 5.3.0 onward will simply point to a particular Appveyor
+artifact associated with the release.
 
 </div>
 <a id="Building_from_source"/><h1>Building from source</h1>
@@ -257,12 +292,11 @@ sudo apt-get install miller
 
 <a id="From_release_tarball_using_autoconfig"/><h2>From release tarball using autoconfig</h2>
 
-<p/>Miller allows you the option of using GNU autoconfigure to build portably.
+<p/>Miller allows you the option of using GNU <tt>autoconfigure</tt> to build portably.
 
 <p/>Grateful acknowledgement: Miller&rsquo;s GNU autoconfig work was done by
 the generous and expert efforts of <a href="https://github.com/0-wiz-0/">Thomas
 Klausner</a>.
-
 
 <ul>
 <li/> Obtain <tt>mlr-i.j.k.tar.gz</tt> from <a
@@ -272,11 +306,9 @@ Klausner</a>.
 <li/> <tt>cd mlr-i.j.k</tt>
 <li/> Install the following packages using your system&rsquo;s package manager
   (<tt>apt-get</tt>, <tt>yum install</tt>, etc.):
-  <b>automake autoconf libtool flex</b> (if you need to run <tt>autoreconf -fiv</tt>) else just
-  <b>libtool flex</b>
+  <b>flex</b>
 <li> Various configuration options of your choice, e.g.
   <ul>
-  <li/> <tt>autoreconf -fiv</tt> (no longer necessary as of 5.2.0)
   <li/> <tt>./configure</tt>
   <li/> <tt>./configure --prefix=/usr/local</tt>
   <li/> <tt>./configure --prefix=$HOME/pkgs</tt>
@@ -295,6 +327,11 @@ Klausner</a>.
 <ul>
 <li/> <tt>git clone https://github.com/johnkerl/miller</tt>
 <li/> <tt>cd miller</tt>
+<li/> Install the following packages using your system&rsquo;s package manager
+  (<tt>apt-get</tt>, <tt>yum install</tt>, etc.):
+  <b>automake autoconf libtool flex</b>
+<li/> Run <tt>autoreconf -fiv</tt>. (This is necessary when building from head as discussed in
+  <a href="https://github.com/johnkerl/miller/issues/131">https://github.com/johnkerl/miller/issues/131</a>.)
 <li/> Then continue from &ldquo;Install the following ... &rdquo; as above.
 </ul>
 
@@ -338,38 +375,19 @@ modern Linux/BSD-like systems: I&rsquo;m aware of successful use with
 Yosemite), and FreeBSD.
 
 </div>
-<a id="Windows"/><h1>Windows</h1>
+<a id="Windows"/><h2>Windows</h2>
 
-<p/>Miller is built on Windows using MSYS2: <a
+<p/><i>Disclaimer: I&rsquo;m now relying exclusively on
+<a href="https://ci.appveyor.com/project/johnkerl/miller">Appveyor</a> for Windows
+builds; I haven&rsquo;t built from source using MSYS in quite a while.</i>
+
+<p/>Miller has been built on Windows using MSYS2: <a
 href="http://www.msys2.org/">http://www.msys2.org/</a>.  You can install MSYS2
 and build Miller from its source code within MSYS2, and then you can use the
-binary from outside MSYS2.  You can also use a precompiled binary.
-
-<a id="Precompiled_binaries"/><h2>Precompiled binaries</h2>
-
-<p/>Miller is autobuilt for <b>Linux</b> using <b>Travis</b> on every commit (<a
-href="https://travis-ci.org/johnkerl/miller/builds">https://travis-ci.org/johnkerl/miller/builds</a>).
-This was set up by the generous assistance of <a
-href="https://github.com/SikhNerd">SikhNerd</a> on Github, tracked in <a
-href="https://github.com/johnkerl/miller/issues/15">https://github.com/johnkerl/miller/issues/15</a>.
-Analogously, Miller is autobuilt for <b>Windows</b> using the <b>Appveyor</b> continuous-build system:
-<a href="https://ci.appveyor.com/project/johnkerl/miller">https://ci.appveyor.com/project/johnkerl/miller</a>.
-
-<p/>Miller releases from <a
-href="https://github.com/johnkerl/miller/releases/tag/v5.1.0w">5.1.0w</a>
-onward will have a precompiled Windows binary, in addition to the MacOSX, Linux
-32-bit static, and Linux 64-bit precompiled binaries as on previous releases.
-Specifically, at <a href="https://ci.appveyor.com/project/johnkerl/miller">
-https://ci.appveyor.com/project/johnkerl/miller</a> you can select <i>Latest
-Build</i> and then <i>Artifacts</i> to always get the current head build.
-Miller releases from 5.3.0 onward will simply point to a particular Appveyor
-artifact associated with the release.
-
-<a id="Building_from_source"/><h2>Building from source</h2>
+binary from outside MSYS2.  You can also use a precompiled binary (see above).
 
 <p/> You will first need to install MSYS2: <a href="http://www.msys2.org/">http://www.msys2.org/</a>.
-
-<p/> Then, start an MSYS2 shell, e.g. (supposing you installed MSYS2 to
+Then, start an MSYS2 shell, e.g. (supposing you installed MSYS2 to
 <tt>C:\msys2\</tt>) run <tt>C:\msys2\mingw64.exe</tt>.  Within the MSYS2 shell,
 you can run the following to install dependent packages:
 
@@ -418,10 +436,6 @@ C:\&gt; copy \msys64\wherever\you\installed\miller\c\mlr.exe \mbin
 C:\&gt; set PATH=%PATH%;\mbin
 </pre>
 </div>
-
-<p/> The Windows port is still recent: please open an issue at
-<a href="https://github.com/johnkerl/miller/issues">https://github.com/johnkerl/miller/issues</a>
-if you encounter any problems.
 
 </div>
 <a id="In_case_of_problems"/><h1>In case of problems</h1>
