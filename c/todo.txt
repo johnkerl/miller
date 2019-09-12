@@ -7,7 +7,6 @@ BUGFIXES
 TOP OF LIST
 
 quick doc:
-* write up: https://github.com/johnkerl/miller/issues/131
 * multi-join @ FAQ
 * doc/bld note for vgrun oo
 

@@ -8,6 +8,7 @@
 #include "lib/mlrregex.h"
 #include "lib/mvfuncs.h"
 #include "lib/utf8.h"
+#include "lib/string_builder.h"
 
 // ================================================================
 // See important notes at the top of mlrval.h.
@@ -436,6 +437,7 @@ mv_t s_s_toupper_func(mv_t* pval1) {
 
 mv_t s_s_capitalize_func(mv_t* pval1) {
 	char* string = mlr_strdup_or_die(pval1->u.strv);
+
 	if (*string) {
 #if 0
 		// ASCII
@@ -445,10 +447,42 @@ mv_t s_s_capitalize_func(mv_t* pval1) {
 		utf8upr1(string);
 #endif
 	}
+
 	mv_free(pval1);
 	pval1->u.strv = NULL;
 
 	return mv_from_string_with_free(string);
+}
+
+mv_t s_s_system_func(mv_t* pval1) {
+	char* cmd = mlr_strdup_or_die(pval1->u.strv);
+
+	mv_t retval = mv_from_string_no_free("error-running-system-command");
+	string_builder_t* psb = sb_alloc(100);
+    char buffer[128];
+	FILE* pipe = popen(cmd, "r");
+	if (pipe != NULL) {
+		while (fgets(buffer, sizeof buffer, pipe) != NULL) {
+			sb_append_string(psb, buffer);
+		}
+		fclose(pipe);
+		char* output_string = sb_finish(psb);
+		// xxx make windows-friendly lib func for chomp
+
+		int len = strlen(output_string);
+		if (len > 0) {
+			if (output_string[len-1] == '\n') {
+				output_string[len-1] = 0;
+			}
+		}
+
+		retval = mv_from_string_with_free(output_string);
+	}
+
+	mv_free(pval1);
+	pval1->u.strv = NULL;
+
+	return retval;
 }
 
 // ----------------------------------------------------------------

@@ -247,6 +247,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 	{FUNC_CLASS_STRING, "strip",  1,0,  "Strip leading and trailing whitespace from string."},
 	{FUNC_CLASS_STRING, "collapse_whitespace",  1,0,  "Strip repeated whitespace from string."},
 	{FUNC_CLASS_STRING, "clean_whitespace",  1,0,  "Same as collapse_whitespace and strip."},
+	{FUNC_CLASS_STRING, "system",  1,0, "Run command string, yielding its stdout minus final carriage return."},
 
 	{FUNC_CLASS_MATH, "abs",      1,0, "Absolute value."},
 	{FUNC_CLASS_MATH, "acos",     1,0, "Inverse trigonometric cosine."},
@@ -1206,6 +1207,7 @@ static rval_evaluator_t* fmgr_alloc_evaluator_from_unary_func_name(char* fnnm, r
 	} else if (streq(fnnm, "tolower"))         { return rval_evaluator_alloc_from_s_s_func(s_s_tolower_func,     parg1);
 	} else if (streq(fnnm, "toupper"))         { return rval_evaluator_alloc_from_s_s_func(s_s_toupper_func,     parg1);
 	} else if (streq(fnnm, "capitalize"))      { return rval_evaluator_alloc_from_s_s_func(s_s_capitalize_func,  parg1);
+	} else if (streq(fnnm, "system"))          { return rval_evaluator_alloc_from_s_s_func(s_s_system_func,      parg1);
 	} else if (streq(fnnm, "lstrip"))          { return rval_evaluator_alloc_from_s_s_func(s_s_lstrip_func,      parg1);
 	} else if (streq(fnnm, "rstrip"))          { return rval_evaluator_alloc_from_s_s_func(s_s_rstrip_func,      parg1);
 	} else if (streq(fnnm, "strip"))           { return rval_evaluator_alloc_from_s_s_func(s_s_strip_func,       parg1);
