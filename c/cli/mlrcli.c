@@ -881,7 +881,7 @@ static void main_usage_comments_in_data(FILE* o, char* argv0) {
 
 static void main_usage_format_conversion_keystroke_saver_options(FILE* o, char* argv0) {
 	fprintf(o, "As keystroke-savers for format-conversion you may use the following:\n");
-	fprintf(o, "  --c2t --c2d --c2n --c2j --c2x --c2p --c2m\n");
+	fprintf(o, "        --c2t --c2d --c2n --c2j --c2x --c2p --c2m\n");
 	fprintf(o, "  --t2c       --t2d --t2n --t2j --t2x --t2p --t2m\n");
 	fprintf(o, "  --d2c --d2t       --d2n --d2j --d2x --d2p --d2m\n");
 	fprintf(o, "  --n2c --n2t --n2d       --n2j --n2x --n2p --n2m\n");
