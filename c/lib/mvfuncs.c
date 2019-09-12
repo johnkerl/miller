@@ -465,10 +465,10 @@ mv_t s_s_system_func(mv_t* pval1) {
 		while (fgets(buffer, sizeof buffer, pipe) != NULL) {
 			sb_append_string(psb, buffer);
 		}
-		fclose(pipe);
+		pclose(pipe);
 		char* output_string = sb_finish(psb);
-		// xxx make windows-friendly lib func for chomp
 
+		// xxx make a windows-friendly lib func for chomp
 		int len = strlen(output_string);
 		if (len > 0) {
 			if (output_string[len-1] == '\n') {
