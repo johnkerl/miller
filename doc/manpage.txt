@@ -3,7 +3,7 @@ MILLER(1)							     MILLER(1)
 
 
 NAME
-       Miller is like awk, sed, cut, join, and sort for name-indexed data such
+       miller - like awk, sed, cut, join, and sort for name-indexed data such
        as CSV and tabular JSON.
 
 SYNOPSIS
