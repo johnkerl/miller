@@ -981,7 +981,7 @@ static void main_usage_csv_options(FILE* o, char* argv0) {
 	fprintf(o, "                     missing headers.\n");
 	fprintf(o, "  --allow-ragged-csv-input|--ragged If a data line has fewer fields than the header line,\n");
 	fprintf(o, "                     fill remaining keys with empty string. If a data line has more\n");
-	fprintf(o, "                     fields than the header line, use interger field labels as in\n");
+	fprintf(o, "                     fields than the header line, use integer field labels as in\n");
 	fprintf(o, "                     the implicit-header case.\n");
 	fprintf(o, "  --headerless-csv-output   Print only CSV data lines.\n");
 	fprintf(o, "  -N                 Keystroke-saver for --implicit-csv-header --headerless-csv-output.\n");
