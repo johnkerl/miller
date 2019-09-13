@@ -192,6 +192,7 @@ Miller commands were run with pretty-print-tabular output format.
 &bull;&nbsp;<a href="#DKVP_I/O_in_Ruby">DKVP I/O in Ruby</a><br/>
 &bull;&nbsp;<a href="#SQL-output_examples">SQL-output examples</a><br/>
 &bull;&nbsp;<a href="#SQL-input_examples">SQL-input examples</a><br/>
+&bull;&nbsp;<a href="#Running_shell_commands">Running shell commands</a><br/>
 </div>
 <p/>
 
@@ -501,6 +502,82 @@ wye pan 5 0.8636244699032729  wyepan 5.863624469903273  String String Integer Fl
 <div id="section_toggle_sql_input_examples" style="display: block">
 
 <p/>Please see <a href="10-min.html#SQL-input_examples">here</a>.
+
+</div>
+<a id="Running_shell_commands"/><h1>Running shell commands</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_shell_commands');" href="javascript:;">Toggle section visibility</button>
+<div id="section_toggle_shell_commands" style="display: block">
+
+<p/>The <a href="reference-dsl.html#system">system</a> DSL function allows you to run a specific shell command and put its output &mdash; minus the final newline &mdash; into a record field. The command itself is any string, either a literal string, or a concatenation of strings, perhaps including other field values or what have you.
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '$o = system("echo hello world")' data/small
+a   b   i x                   y                   o
+pan pan 1 0.3467901443380824  0.7268028627434533  hello world
+eks pan 2 0.7586799647899636  0.5221511083334797  hello world
+wye wye 3 0.20460330576630303 0.33831852551664776 hello world
+eks wye 4 0.38139939387114097 0.13418874328430463 hello world
+wye pan 5 0.5732889198020006  0.8636244699032729  hello world
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '$o = system("echo {" . NR . "}")' data/small
+a   b   i x                   y                   o
+pan pan 1 0.3467901443380824  0.7268028627434533  {1}
+eks pan 2 0.7586799647899636  0.5221511083334797  {2}
+wye wye 3 0.20460330576630303 0.33831852551664776 {3}
+eks wye 4 0.38139939387114097 0.13418874328430463 {4}
+wye pan 5 0.5732889198020006  0.8636244699032729  {5}
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '$o = system("echo -n ".$a."| sha1sum")' data/small
+a   b   i x                   y                   o
+pan pan 1 0.3467901443380824  0.7268028627434533  bd2bd8216b9cb4aa5a12daa6cfc98eef2ee20e56  -
+eks pan 2 0.7586799647899636  0.5221511083334797  16191338e81a46c7d127f5c8899f5c92e3cd38e3  -
+wye wye 3 0.20460330576630303 0.33831852551664776 14ba3c3e96a2474ab6dc7409ebf9d6b9cc3d84f0  -
+eks wye 4 0.38139939387114097 0.13418874328430463 16191338e81a46c7d127f5c8899f5c92e3cd38e3  -
+wye pan 5 0.5732889198020006  0.8636244699032729  14ba3c3e96a2474ab6dc7409ebf9d6b9cc3d84f0  -
+</pre>
+</div>
+<p/>
+
+<p/>Note that running a subprocess on every record takes a non-trivial amount of time. Comparing asking the system <tt>date</tt> command for the current time in nanoseconds versus computing it in process:
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '$t=system("date +%s.%N")' then step -a delta -f t data/small
+a   b   i x                   y                   t                    t_delta
+pan pan 1 0.3467901443380824  0.7268028627434533  1568337293.262687818 0
+eks pan 2 0.7586799647899636  0.5221511083334797  1568337293.263938423 0.001251
+wye wye 3 0.20460330576630303 0.33831852551664776 1568337293.265136087 0.001198
+eks wye 4 0.38139939387114097 0.13418874328430463 1568337293.266335577 0.001199
+wye pan 5 0.5732889198020006  0.8636244699032729  1568337293.267592813 0.001257
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '$t=systime()' then step -a delta -f t data/small
+a   b   i x                   y                   t                 t_delta
+pan pan 1 0.3467901443380824  0.7268028627434533  1568337293.269359 0
+eks pan 2 0.7586799647899636  0.5221511083334797  1568337293.269385 0.000026
+wye wye 3 0.20460330576630303 0.33831852551664776 1568337293.269393 0.000008
+eks wye 4 0.38139939387114097 0.13418874328430463 1568337293.269399 0.000006
+wye pan 5 0.5732889198020006  0.8636244699032729  1568337293.269403 0.000004
+</pre>
+</div>
+<p/>
 
 </div>
     </div>

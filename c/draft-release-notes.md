@@ -2,6 +2,9 @@
 
 ## Features:
 
+* The new [**system DSL function**](http://johnkerl.org/miller/doc/reference-dsl.html#system) allows you to run
+arbitrary shell commands and store them in field values. Some example usages are documented [**here**](http://johnkerl.org/miller/doc/data-sharing.html#Running_shell_commands).
+
 * There is now support for [**ASV and USV file formats**](http://johnkerl.org/miller/doc/file-formats.html#CSV/TSV/ASV/USV/etc.).
 
 * The new [**format-values**](http://johnkerl.org/miller/doc/reference-verbs.html#format-values) verb allows you to apply numerical formatting across all record values.
