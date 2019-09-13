@@ -455,7 +455,7 @@ mv_t s_s_capitalize_func(mv_t* pval1) {
 }
 
 mv_t s_s_system_func(mv_t* pval1) {
-	char* cmd = mlr_strdup_or_die(pval1->u.strv);
+	char* cmd = pval1->u.strv;
 
 	mv_t retval = mv_from_string_no_free("error-running-system-command");
 	string_builder_t* psb = sb_alloc(100);
@@ -478,6 +478,7 @@ mv_t s_s_system_func(mv_t* pval1) {
 
 		retval = mv_from_string_with_free(output_string);
 	}
+	sb_free(psb);
 
 	mv_free(pval1);
 	pval1->u.strv = NULL;

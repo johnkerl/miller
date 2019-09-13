@@ -9,6 +9,10 @@ TOP OF LIST
 quick doc:
 * multi-join @ FAQ
 * doc/bld note for vgrun oo
+  - git log; find last release
+  - git diff -r xxxxx reg_test/run
+  - export indir=./reg_test/input
+  - vgrun mlr ...
 
 * sort-within-records
 * system()
