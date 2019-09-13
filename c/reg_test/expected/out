@@ -26082,6 +26082,22 @@ i:  12   j: 12   substr(o123456789, 12, 12): <<>>
 
 
 ================================================================
+DSL SYSTEM
+
+mlr put $counter = system("echo X".NR."Y") ./reg_test/input/abixy
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533,counter=X1Y
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797,counter=X2Y
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776,counter=X3Y
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463,counter=X4Y
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,counter=X5Y
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697,counter=X6Y
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694,counter=X7Y
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006,counter=X8Y
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059,counter=X9Y
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864,counter=X10Y
+
+
+================================================================
 DSL OOSVARS
 
 mlr --opprint put -v begin{@ox=0}; $d=$x-@ox; @ox=$x ./reg_test/input/abixy
@@ -41162,7 +41178,7 @@ mlr cat then nothing then cat ./reg_test/input/abixy
 ================================================================
 IN-PLACE PROCESSING
 
-cat /home/kerl/git/miller/c/output-regtest/abixy.temp1
+cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -41174,7 +41190,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-cat /home/kerl/git/miller/c/output-regtest/abixy.temp2
+cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -41186,14 +41202,14 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr -I --opprint head -n 2 /home/kerl/git/miller/c/output-regtest/abixy.temp1 /home/kerl/git/miller/c/output-regtest/abixy.temp2
+mlr -I --opprint head -n 2 /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1 /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
 
-cat /home/kerl/git/miller/c/output-regtest/abixy.temp1
+cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
 a   b   i x                  y
 pan pan 1 0.3467901443380824 0.7268028627434533
 eks pan 2 0.7586799647899636 0.5221511083334797
 
-cat /home/kerl/git/miller/c/output-regtest/abixy.temp2
+cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
 a   b   i x                  y
 pan pan 1 0.3467901443380824 0.7268028627434533
 eks pan 2 0.7586799647899636 0.5221511083334797
@@ -41201,10 +41217,10 @@ eks pan 2 0.7586799647899636 0.5221511083334797
 mlr -I --opprint head -n 2
 mlr: -I option (in-place operation) requires input files.
 
-mlr -I --opprint -n head -n 2 /home/kerl/git/miller/c/output-regtest/abixy.temp1
+mlr -I --opprint -n head -n 2 /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
 mlr: -I option (in-place operation) requires input files.
 
-cat /home/kerl/git/miller/c/output-regtest/abixy.temp1
+cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -41216,7 +41232,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-cat /home/kerl/git/miller/c/output-regtest/abixy.temp2
+cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -41228,9 +41244,9 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr -I --opprint rename a,AYE,b,BEE /home/kerl/git/miller/c/output-regtest/abixy.temp1 /home/kerl/git/miller/c/output-regtest/abixy.temp2
+mlr -I --opprint rename a,AYE,b,BEE /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1 /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
 
-cat /home/kerl/git/miller/c/output-regtest/abixy.temp1
+cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
 AYE BEE i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -41243,7 +41259,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-cat /home/kerl/git/miller/c/output-regtest/abixy.temp2
+cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
 AYE BEE i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -46315,7 +46331,7 @@ c 6
 mlr termcvt --lf2crlf
 
 ---------------------------------------------------------------- input comments1-crlf.dkvp
-cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.dkvp
+cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp
 # hello world 1
 a=1,b=2,c=3
 a=4,b=5,c=6
@@ -46331,7 +46347,7 @@ a 4
 b 5
 c 6
 
-mlr --skip-comments --idkvp --oxtab cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.dkvp
+mlr --skip-comments --idkvp --oxtab cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp
 a 1
 b 2
 c 3
@@ -46352,7 +46368,7 @@ a 4
 b 5
 c 6
 
-mlr --pass-comments --idkvp --oxtab cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.dkvp
+mlr --pass-comments --idkvp --oxtab cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp
 # hello world 1
 a 1
 b 2
@@ -46667,7 +46683,7 @@ mlr --pass-comments --inidx --oxtab cat ./reg_test/input/comments/comments3.nidx
 mlr termcvt --lf2crlf
 
 ---------------------------------------------------------------- input comments1-crlf.nidx
-cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.nidx
+cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.nidx
 # hello world 1
 aX1 bX2 cX3
 aX4 bX5 cX6
@@ -46683,7 +46699,7 @@ mlr --skip-comments --inidx --oxtab cat
 2 bX5
 3 cX6
 
-mlr --skip-comments --inidx --oxtab cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.nidx
+mlr --skip-comments --inidx --oxtab cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.nidx
 1 aX1
 2 bX2
 3 cX3
@@ -46704,7 +46720,7 @@ mlr --pass-comments --inidx --oxtab cat
 2 bX5
 3 cX6
 
-mlr --pass-comments --inidx --oxtab cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.nidx
+mlr --pass-comments --inidx --oxtab cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.nidx
 # hello world 1
 1 aX1
 2 bX2
@@ -46808,7 +46824,7 @@ a=4,b=5,c=6
 mlr termcvt --lf2crlf
 
 ---------------------------------------------------------------- input comments1-crlf.json
-cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.json
+cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.json
 # hello world 1
 { "a":1, "b":2, "c":3 }
 { "a":4, "b":5, "c":6 }
@@ -46819,7 +46835,7 @@ mlr --skip-comments --ijson --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --skip-comments --ijson --odkvp cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.json
+mlr --skip-comments --ijson --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.json
 a=1,b=2,c=3
 a=4,b=5,c=6
 
@@ -46830,7 +46846,7 @@ mlr --pass-comments --ijson --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --pass-comments --ijson --odkvp cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.json
+mlr --pass-comments --ijson --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.json
 # hello world 1
 a=1,b=2,c=3
 a=4,b=5,c=6
@@ -46927,7 +46943,7 @@ x=2,z=5
 mlr termcvt --lf2crlf
 
 ---------------------------------------------------------------- input comments1-crlf.xtab
-cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.xtab
+cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.xtab
 x 1
 #hello world3
 z 3
@@ -46943,7 +46959,7 @@ mlr --skip-comments --ixtab --odkvp cat
 x=1,z=3
 x=2,z=5
 
-mlr --skip-comments --ixtab --odkvp cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.xtab
+mlr --skip-comments --ixtab --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.xtab
 x=1,z=3
 x=2,z=5
 
@@ -46955,7 +46971,7 @@ x=1,z=3
 #hello world4
 x=2,z=5
 
-mlr --pass-comments --ixtab --odkvp cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.xtab
+mlr --pass-comments --ixtab --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.xtab
 #hello world3
 x=1,z=3
 #hello world4
@@ -47037,7 +47053,7 @@ a=4,b=5,c=6
 mlr termcvt --lf2crlf
 
 ---------------------------------------------------------------- input comments1-crlf.csv
-cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.csv
+cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
 # hello
 a,b,c
 1,2,3
@@ -47049,7 +47065,7 @@ mlr --skip-comments --icsvlite --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --skip-comments --icsvlite --odkvp cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.csv
+mlr --skip-comments --icsvlite --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
@@ -47060,7 +47076,7 @@ mlr --pass-comments --icsvlite --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --pass-comments --icsvlite --odkvp cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.csv
+mlr --pass-comments --icsvlite --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
 # hello
 a=1,b=2,c=3
 a=4,b=5,c=6
@@ -47141,7 +47157,7 @@ a=4,b=5,c=6
 mlr termcvt --lf2crlf
 
 ---------------------------------------------------------------- input comments1-crlf.csv
-cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.csv
+cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
 # hello
 a,b,c
 1,2,3
@@ -47153,7 +47169,7 @@ mlr --skip-comments --icsv --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --skip-comments --icsv --odkvp cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.csv
+mlr --skip-comments --icsv --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
@@ -47164,7 +47180,7 @@ mlr --pass-comments --icsv --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --pass-comments --icsv --odkvp cat /home/kerl/git/miller/c/output-regtest/comments1-crlf.csv
+mlr --pass-comments --icsv --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
 # hello
 a=1,b=2,c=3
 a=4,b=5,c=6

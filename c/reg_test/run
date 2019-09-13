@@ -2210,6 +2210,11 @@ x=o123456789
 EOF
 
 # ----------------------------------------------------------------
+announce DSL SYSTEM
+
+run_mlr put '$counter = system("echo X".NR."Y")' $indir/abixy
+
+# ----------------------------------------------------------------
 announce DSL OOSVARS
 
 run_mlr --opprint put -v 'begin{@ox=0}; $d=$x-@ox; @ox=$x' $indir/abixy
