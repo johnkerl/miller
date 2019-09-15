@@ -553,3 +553,37 @@ wye pan 5 0.5732889198020006  0.8636244699032729  eab0de043d67f441c7fd1e335f0ca3
 
 <p/>Note that running a subprocess on every record takes a non-trivial amount of time. Comparing asking the system <code>date</code> command for the current time in nanoseconds versus computing it in process:
 
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '$t=system("date +%s.%N")' then step -a delta -f t data/small
+a   b   i x                   y                   t                    t_delta
+pan pan 1 0.3467901443380824  0.7268028627434533  1568375012.158262651 0
+eks pan 2 0.7586799647899636  0.5221511083334797  1568375012.159158101 0.000895
+wye wye 3 0.20460330576630303 0.33831852551664776 1568375012.160042919 0.000885
+eks wye 4 0.38139939387114097 0.13418874328430463 1568375012.160817120 0.000774
+wye pan 5 0.5732889198020006  0.8636244699032729  1568375012.161655136 0.000838
+</pre>
+</div>
+<p/>
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --opprint put '$t=systime()' then step -a delta -f t data/small
+a   b   i x                   y                   t                 t_delta
+pan pan 1 0.3467901443380824  0.7268028627434533  1568375012.162864 0
+eks pan 2 0.7586799647899636  0.5221511083334797  1568375012.162882 0.000018
+wye wye 3 0.20460330576630303 0.33831852551664776 1568375012.162888 0.000006
+eks wye 4 0.38139939387114097 0.13418874328430463 1568375012.162892 0.000004
+wye pan 5 0.5732889198020006  0.8636244699032729  1568375012.162895 0.000003
+</pre>
+</div>
+<p/>
+
+</div>
+    </div>
+  </td>
+
+</table>
+</body>
+</html>

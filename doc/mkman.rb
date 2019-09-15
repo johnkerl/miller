@@ -17,7 +17,7 @@ def main
   print make_top
 
   print make_section('NAME', [
-    "Miller is like awk, sed, cut, join, and sort for name-indexed data such as CSV and tabular JSON."
+    "miller \\\- like awk, sed, cut, join, and sort for name-indexed data such as CSV and tabular JSON."
   ])
 
   print make_section('SYNOPSIS', [
@@ -224,7 +224,7 @@ def groff_encode(line)
   #line = line.gsub(/"/, '\(dq')
   #line = line.gsub(/\./, '\&')
   #line = line.gsub(/-/, '\-')
-  line = line.gsub(/\\/, '\e')
+  line = line.gsub(/\\([^-])/, '\e\1')
   line = line.gsub(/^\./){'\&.'}
   line
 end
