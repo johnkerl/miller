@@ -321,11 +321,11 @@ St. Johns  -                      -                       -                     
 <ul>
 <li> Produce some data with known distributions and correlations, and verify that Miller recovers those properties empirically.
 <li> Each record is labeled with one of a few colors and one of a few shapes.
-<li> The <tt>flag</tt> field is 0 or 1, with probability dependent on color
-<li> The <tt>u</tt> field is plain uniform on the unit interval.
-<li> The <tt>v</tt> field is the same, except tightly correlated with <tt>u</tt> for red circles.
-<li> The <tt>w</tt> field is autocorrelated for each color/shape pair.
-<li> The <tt>x</tt> field is boring Gaussian with mean 5 and standard deviation about 1.2, with no dependence on color or shape.
+<li> The <code>flag</code> field is 0 or 1, with probability dependent on color
+<li> The <code>u</code> field is plain uniform on the unit interval.
+<li> The <code>v</code> field is the same, except tightly correlated with <code>u</code> for red circles.
+<li> The <code>w</code> field is autocorrelated for each color/shape pair.
+<li> The <code>x</code> field is boring Gaussian with mean 5 and standard deviation about 1.2, with no dependence on color or shape.
 </ul>
 
 <p/> Peek at the data:
@@ -352,8 +352,8 @@ red    square   0    64 0.2015510269821953  0.9531098083420033   0.7719912015786
 </div>
 <p/>
 
-<p/> Look at uncategorized stats (using <a href="https://github.com/johnkerl/scripts/blob/master/fundam/creach"><tt>creach</tt></a> for spacing).
-Here it looks reasonable that <tt>u</tt> is unit-uniform; something&rsquo;s up with <tt>v</tt> but we can&rsquo;t yet see what:
+<p/> Look at uncategorized stats (using <a href="https://github.com/johnkerl/scripts/blob/master/fundam/creach"><code>creach</code></a> for spacing).
+Here it looks reasonable that <code>u</code> is unit-uniform; something&rsquo;s up with <code>v</code> but we can&rsquo;t yet see what:
 <p/>
 <div class="pokipanel">
 <pre>
@@ -424,7 +424,7 @@ triangle 0        0.401542  1        0.000881 0.496859 0.999661 0.000717  0.5010
 </div>
 <p/>
 
-<p/> Look at bivariate stats by color and shape. In particular, <tt>u,v</tt> pairwise correlation for red circles pops out:
+<p/> Look at bivariate stats by color and shape. In particular, <code>u,v</code> pairwise correlation for red circles pops out:
 <p/>
 <div class="pokipanel">
 <pre>

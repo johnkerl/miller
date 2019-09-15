@@ -231,8 +231,8 @@ interleaved.
 
 <li/> Miller is <b>streaming</b>: most operations need only a single record in
 memory at a time, rather than ingesting all input before producing any output.
-For those operations which require deeper retention (<tt>sort</tt>,
-<tt>tac</tt>, <tt>stats1</tt>), Miller retains only as much data as needed.
+For those operations which require deeper retention (<code>sort</code>,
+<code>tac</code>, <code>stats1</code>), Miller retains only as much data as needed.
 This means that whenever functionally possible, you can operate on files which
 are larger than your system&rsquo;s available RAM, and you can use Miller in
 <b>tail -f</b> contexts.
@@ -244,14 +244,14 @@ are larger than your system&rsquo;s available RAM, and you can use Miller in
 
 <li/> Miller does <b>conversion</b> between formats
 
-<li/> Miller&rsquo;s <b>processing is format-aware</b>: e.g. CSV <tt>sort</tt>
-and <tt>tac</tt> keep header lines first
+<li/> Miller&rsquo;s <b>processing is format-aware</b>: e.g. CSV <code>sort</code>
+and <code>tac</code> keep header lines first
 
 <li/> Miller has high-throughput <b>performance</b> on par with the Unix toolkit
 
 <li/> Not unlike <a href="http://stedolan.github.io/jq/">jq</a> (for JSON),
 Miller is written in portable, modern C, with <b>zero runtime dependencies</b>.
-You can download or compile a single binary, <tt>scp</tt> it to a faraway
+You can download or compile a single binary, <code>scp</code> it to a faraway
 machine, and expect it to work.
 
 </ul>

@@ -26,44 +26,44 @@ POKI_RUN_COMMAND{{mlr --usage-data-format-examples}}HERE
 <div id="section_toggle_csv_tsv_etc" style="display: block">
 
 <p/>
-When <tt>mlr</tt> is invoked with the <tt>--csv</tt> or <tt>--csvlite</tt> option,
+When <code>mlr</code> is invoked with the <code>--csv</code> or <code>--csvlite</code> option,
 key names are found on the first record and values are taken from subsequent
 records.  This includes the case of CSV-formatted files.  See
 POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE for how Miller handles
 changes of field names within a single data stream.
 
-<p/> Miller has record separator <tt>RS</tt> and field separator <tt>FS</tt>,
-just as <tt>awk</tt> does.  For TSV, use <tt>--fs tab</tt>; to convert TSV to
-CSV, use <tt>--ifs tab --ofs comma</tt>, etc.  (See also
+<p/> Miller has record separator <code>RS</code> and field separator <code>FS</code>,
+just as <code>awk</code> does.  For TSV, use <code>--fs tab</code>; to convert TSV to
+CSV, use <code>--ifs tab --ofs comma</code>, etc.  (See also
 POKI_PUT_LINK_FOR_PAGE(reference.html#Record/field/pair_separators)HERE.)
 
 <p/> <b>TSV (tab-separated values):</b> the following are synonymous pairs:
 <ul>
-<li/> <tt>--tsv</tt> and <tt>--csv --fs tab</tt>
-<li/> <tt>--itsv</tt> and <tt>--icsv --ifs tab</tt>
-<li/> <tt>--otsv</tt> and <tt>--ocsv --ofs tab</tt>
-<li/> <tt>--tsvlite</tt> and <tt>--csvlite --fs tab</tt>
-<li/> <tt>--itsvlite</tt> and <tt>--icsvlite --ifs tab</tt>
-<li/> <tt>--otsvlite</tt> and <tt>--ocsvlite --ofs tab</tt>
+<li/> <code>--tsv</code> and <code>--csv --fs tab</code>
+<li/> <code>--itsv</code> and <code>--icsv --ifs tab</code>
+<li/> <code>--otsv</code> and <code>--ocsv --ofs tab</code>
+<li/> <code>--tsvlite</code> and <code>--csvlite --fs tab</code>
+<li/> <code>--itsvlite</code> and <code>--icsvlite --ifs tab</code>
+<li/> <code>--otsvlite</code> and <code>--ocsvlite --ofs tab</code>
 </ul>
 
 <p/> <b>ASV (ASCII-separated values):</b> the flags
-<tt>--asv</tt>,
-<tt>--iasv</tt>,
-<tt>--oasv</tt>,
-<tt>--asvlite</tt>,
-<tt>--iasvlite</tt>, and
-<tt>--oasvlite</tt> are analogous except they use ASCII FS and RS 0x1f and 0x1e, respectively.
+<code>--asv</code>,
+<code>--iasv</code>,
+<code>--oasv</code>,
+<code>--asvlite</code>,
+<code>--iasvlite</code>, and
+<code>--oasvlite</code> are analogous except they use ASCII FS and RS 0x1f and 0x1e, respectively.
 
 <p/> <b>USV (Unicode-separated values):</b> likewise, the flags
-<tt>--usv</tt>,
-<tt>--iusv</tt>,
-<tt>--ousv</tt>,
-<tt>--usvlite</tt>,
-<tt>--iusvlite</tt>, and
-<tt>--ousvlite</tt> use Unicode FS and RS U+241F (UTF-8 0x0xe2909f) and U+241E (UTF-8 0xe2909e), respectively.
+<code>--usv</code>,
+<code>--iusv</code>,
+<code>--ousv</code>,
+<code>--usvlite</code>,
+<code>--iusvlite</code>, and
+<code>--ousvlite</code> use Unicode FS and RS U+241F (UTF-8 0x0xe2909f) and U+241E (UTF-8 0xe2909e), respectively.
 
-<p/>Miller&rsquo;s <tt>--csv</tt> flag supports RFC-4180 CSV (<a href="https://tools.ietf.org/html/rfc4180">
+<p/>Miller&rsquo;s <code>--csv</code> flag supports RFC-4180 CSV (<a href="https://tools.ietf.org/html/rfc4180">
 https://tools.ietf.org/html/rfc4180</a>). This includes CRLF line-terminators by default, regardless
 of platform.
 
@@ -90,8 +90,8 @@ input-reader.
 <li/>The ability to specify record/field separators other than the default,
 e.g. CR-LF vs. LF, or tab instead of comma for TSV, and so on.
 
-<li/>The <tt>--implicit-csv-header</tt> flag for input and the
-<tt>--headerless-csv-output</tt> flag for output.
+<li/>The <code>--implicit-csv-header</code> flag for input and the
+<code>--headerless-csv-output</code> flag for output.
 
 </ul>
 
@@ -108,15 +108,15 @@ POKI_RUN_COMMAND{{mlr cat data/small}}HERE
 Such data are easy to generate, e.g. in Ruby with
 POKI_CARDIFY(puts "host=#{hostname},seconds=#{t2-t1},message=#{msg}")HERE
 POKI_CARDIFY{{puts mymap.collect{|k,v| "#{k}=#{v}"}.join(',')}}HERE
-or <tt>print</tt> statements in various languages, e.g.
+or <code>print</code> statements in various languages, e.g.
 POKI_CARDIFY(echo "type=3,user=$USER,date=$date\n";)HERE
 POKI_CARDIFY{{logger.log("type=3,user=$USER,date=$date\n");}}HERE
 
 <p/>Fields lacking an IPS will have positional index (starting at 1) used as
-the key, as in NIDX format. For example, <tt>dish=7,egg=8,flint</tt> is parsed
-as <tt>"dish" =&gt; "7", "egg" =&gt; "8", "3" =&gt; "flint"</tt> and
-<tt>dish,egg,flint</tt> is parsed as <tt>"1" =&gt; "dish", "2" =&gt; "egg", "3"
-=&gt; "flint"</tt>.
+the key, as in NIDX format. For example, <code>dish=7,egg=8,flint</code> is parsed
+as <code>"dish" =&gt; "7", "egg" =&gt; "8", "3" =&gt; "flint"</code> and
+<code>dish,egg,flint</code> is parsed as <code>"1" =&gt; "dish", "2" =&gt; "egg", "3"
+=&gt; "flint"</code>.
 
 <p/> As discussed in POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE,
 Miller handles changes of field names within the same data stream. But using
@@ -133,7 +133,7 @@ resource=/some/other/path,loadsec=0.97,ok=false
 </div>
 <p/>
 
-etc. and I just log them as needed. Then later, I can use <tt>grep</tt>, <tt>mlr --opprint group-like</tt>, etc.
+etc. and I just log them as needed. Then later, I can use <code>grep</code>, <code>mlr --opprint group-like</code>, etc.
 to analyze my logs.
 
 <p/>See POKI_PUT_LINK_FOR_PAGE(reference.html)HERE regarding how to specify separators other than
@@ -144,7 +144,7 @@ the default equals-sign and comma.
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_nidx');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_nidx" style="display: block">
 
-With <tt>--inidx --ifs ' ' --repifs</tt>, Miller splits lines on whitespace and
+With <code>--inidx --ifs ' ' --repifs</code>, Miller splits lines on whitespace and
 assigns integer field names starting with 1. This recapitulates Unix-toolkit
 behavior.
 
@@ -201,7 +201,7 @@ POKI_RUN_COMMAND{{mlr --ijson --opprint stats1 -a mean,stddev,count -f u -g shap
 POKI_RUN_COMMAND{{mlr --json --jvstack head -n 2 data/json-example-2.json}}HERE
 POKI_RUN_COMMAND{{mlr --ijson --opprint head -n 4 data/json-example-2.json}}HERE
 
-<p/>Note in particular that as far as Miller&rsquo;s <tt>put</tt> and <tt>filter</tt>, as well as other
+<p/>Note in particular that as far as Miller&rsquo;s <code>put</code> and <code>filter</code>, as well as other
 I/O formats, are concerned, these are simply field names with colons in them:
 
 POKI_RUN_COMMAND{{mlr --json --jvstack head -n 1 then put '${values:uv} = ${values:u} * ${values:v}' data/json-example-2.json}}HERE
@@ -209,7 +209,7 @@ POKI_RUN_COMMAND{{mlr --json --jvstack head -n 1 then put '${values:uv} = ${valu
 <h2>Arrays</h2>
 
 <p/>Arrays aren&rsquo;t supported in Miller&rsquo;s
-<tt>put</tt>/<tt>filter</tt> DSL. By default, JSON arrays are read in as
+<code>put</code>/<code>filter</code> DSL. By default, JSON arrays are read in as
 integer-keyed maps.
 
 <p/> Suppose you have arrays like this in our input data:
@@ -228,38 +228,38 @@ POKI_RUN_COMMAND{{mlr --json --jvstack cat data/json-example-3.json}}HERE
 <p/> This is non-ideal, but it allows Miller (5.x release being latest as of
 this writing) to handle JSON arrays at all.
 
-<p/>You might also use <tt>mlr --json-skip-arrays-on-input</tt> or <tt>mlr
---json-fatal-arrays-on-input</tt>.
+<p/>You might also use <code>mlr --json-skip-arrays-on-input</code> or <code>mlr
+--json-fatal-arrays-on-input</code>.
 
 To truly handle JSON, please use a JSON-processing tool such as <a
 href="http://stedolan.github.io/jq/">jq</a>.
 
 <h2>Formatting JSON options</h2>
 
-<p/>JSON isn&rsquo;t a parameterized format, so <tt>RS</tt>, <tt>FS</tt>,
-<tt>PS</tt> aren&rsquo;t specifiable. Nonetheless, you can do the following:
+<p/>JSON isn&rsquo;t a parameterized format, so <code>RS</code>, <code>FS</code>,
+<code>PS</code> aren&rsquo;t specifiable. Nonetheless, you can do the following:
 
 <ul>
 
-<li/>Use <tt>--jvstack</tt> to pretty-print JSON objects with multi-line
+<li/>Use <code>--jvstack</code> to pretty-print JSON objects with multi-line
 (vertically stacked) spacing. By defaulty, each Miller record (JSON object) is
 one per line.
 
-<li/>Use <tt>--jlistwrap</tt> to print the sequence of JSON objects wrapped in
-an outermost <tt>[</tt> and <tt>]</tt>. By default, these aren&rsquo;t printed.
+<li/>Use <code>--jlistwrap</code> to print the sequence of JSON objects wrapped in
+an outermost <code>[</code> and <code>]</code>. By default, these aren&rsquo;t printed.
 
-<li/>Use <tt>--jquoteall</tt> to double-quote all object values. By default,
-integers, floating-point numbers, and booleans <tt>true</tt> and <tt>false</tt>
+<li/>Use <code>--jquoteall</code> to double-quote all object values. By default,
+integers, floating-point numbers, and booleans <code>true</code> and <code>false</code>
 are not double-quoted when they appear as JSON-object keys.
 
-<li/>Use <tt>--jflatsep yourstringhere</tt> to specify the string used for
+<li/>Use <code>--jflatsep yourstringhere</code> to specify the string used for
 key concatenation: this defaults to a single colon.
 
-<li/>Use <tt>--jofmt</tt> to force Miller to apply the global <tt>--ofmt</tt>
+<li/>Use <code>--jofmt</code> to force Miller to apply the global <code>--ofmt</code>
 to floating-point values.  First note: please use sprintf-style codes for
-double precision, e.g. ending in <tt>%lf</tt>, <tt>%le</tt>, or <tt>%lg</tt>.
-Miller floats are double-precision so behavior using <tt>%f</tt>, <tt>%d</tt>,
-etc. is undefined.  Second note: <tt>0.123</tt> is valid JSON; <tt>.123</tt> is
+double precision, e.g. ending in <code>%lf</code>, <code>%le</code>, or <code>%lg</code>.
+Miller floats are double-precision so behavior using <code>%f</code>, <code>%d</code>,
+etc. is undefined.  Second note: <code>0.123</code> is valid JSON; <code>.123</code> is
 not. Thus this feature allows you to emit JSON which may be unparseable by
 other tools.
 
@@ -272,7 +272,7 @@ truly powerful, JSON-specific tool.
 
 <p/>The JSON parser Miller uses does not return until all input is parsed: in
 particular this means that, unlike for other file formats, Miller does not (at
-present) handle JSON files in <tt>tail -f</tt> contexts.
+present) handle JSON files in <code>tail -f</code> contexts.
 
 </div>
 <h1>PPRINT: Pretty-printed tabular</h1>
@@ -293,7 +293,7 @@ Note that while Miller is a line-at-a-time processor and retains input lines in
 memory only where necessary (e.g. for sort), pretty-print output requires it to
 accumulate all input lines (so that it can compute maximum column widths)
 before producing any output. This has two consequences: (a) pretty-print output
-won&rsquo;t work on <tt>tail -f</tt> contexts, where Miller will be waiting for
+won&rsquo;t work on <code>tail -f</code> contexts, where Miller will be waiting for
 an end-of-file marker which never arrives; (b) pretty-print output for large
 files is constrained by available machine memory.
 
@@ -301,7 +301,7 @@ files is constrained by available machine memory.
 handles changes of field names within a single data stream.
 
 <p/> For output only (this isn&rsquo;t supported in the input-scanner as of 5.0.0)
-you can use <tt>--barred</tt> with pprint output format:
+you can use <code>--barred</code> with pprint output format:
 
 POKI_RUN_COMMAND{{mlr --opprint --barred cat data/small}}HERE
 
@@ -344,8 +344,8 @@ which renders like this when dropped into various web tools (e.g. github comment
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_x2y');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_x2y" style="display: block">
 
-<p/>While you can do format conversion using <tt>mlr --icsv --ojson cat myfile.csv</tt>,
-there are also keystroke-savers for this purpose, such as <tt>mlr --c2j cat myfile.csv</tt>.
+<p/>While you can do format conversion using <code>mlr --icsv --ojson cat myfile.csv</code>,
+there are also keystroke-savers for this purpose, such as <code>mlr --c2j cat myfile.csv</code>.
 For a complete list:
 
 POKI_RUN_COMMAND{{mlr --usage-format-conversion-keystroke-saver-options}}HERE
@@ -357,11 +357,11 @@ POKI_RUN_COMMAND{{mlr --usage-format-conversion-keystroke-saver-options}}HERE
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_autodetect_line_endings');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_autodetect_line_endings" style="display: block">
 
-<p/> Default line endings (<tt>--irs</tt> and <tt>--ors</tt>) are <tt>'auto'</tt>
+<p/> Default line endings (<code>--irs</code> and <code>--ors</code>) are <code>'auto'</code>
 which means <boldmaroon>autodetect from the input file format</boldmaroon>, as
 long as the input file(s) have lines ending in either LF (also known as
-linefeed, <tt>'\n'</tt>, <tt>0x0a</tt>, Unix-style) or CRLF (also known as
-carriage-return/linefeed pairs, <tt>'\r\n'</tt>, <tt>0x0d 0x0a</tt>, Windows
+linefeed, <code>'\n'</code>, <code>0x0a</code>, Unix-style) or CRLF (also known as
+carriage-return/linefeed pairs, <code>'\r\n'</code>, <code>0x0d 0x0a</code>, Windows
 style).
 
 <p/> <boldmaroon>If both IRS and ORS are auto (which is the default) then LF input will
@@ -373,12 +373,12 @@ the input stream. E.g. if you specify a CRLF-terminated file on the command
 line followed by an LF-terminated file then autodetected line endings will be
 CRLF.
 
-<p/> If you use <tt>--ors {something else}</tt> with (default or explicitly
-specified) <tt>--irs auto</tt> then line endings are autodetected on input and
+<p/> If you use <code>--ors {something else}</code> with (default or explicitly
+specified) <code>--irs auto</code> then line endings are autodetected on input and
 set to what you specify on output.
 
-<p/> If you use <tt>--irs {something else}</tt> with (default or explicitly
-specified) <tt>--ors auto</tt> then the output line endings used are LF on
+<p/> If you use <code>--irs {something else}</code> with (default or explicitly
+specified) <code>--ors auto</code> then the output line endings used are LF on
 Unix/Linux/BSD/MacOSX, and CRLF on Windows.
 
 <p/> See also

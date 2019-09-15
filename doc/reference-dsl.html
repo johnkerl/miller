@@ -246,7 +246,7 @@ Miller commands were run with pretty-print-tabular output format.
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_overview" style="display: block">
 
-<p/> Here&rsquo;s comparison of verbs and <tt>put</tt>/<tt>filter</tt> DSL expressions:
+<p/> Here&rsquo;s comparison of verbs and <code>put</code>/<code>filter</code> DSL expressions:
 
 <table border=1>
 <tr> <td>
@@ -293,10 +293,10 @@ a=wye,x_sum=0.777892
 </table>
 
 <p/>Please see <a href="reference-verbs.html">here</a> for information on
-verbs other than <tt>put</tt> and <tt>filter</tt>.
+verbs other than <code>put</code> and <code>filter</code>.
 
 <p/>
-The essential usages of <tt>mlr filter</tt> and <tt>mlr put</tt> are for
+The essential usages of <code>mlr filter</code> and <code>mlr put</code> are for
 record-selection and record-updating expressions, respectively. For example, given the following input data:
 
 <p/>
@@ -312,7 +312,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </div>
 <p/>
 
-<p/> you might retain only the records whose <tt>a</tt> field has value <tt>eks</tt>:
+<p/> you might retain only the records whose <code>a</code> field has value <code>eks</code>:
 
 <p/>
 <div class="pokipanel">
@@ -339,19 +339,19 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,ab=wye_pan
 </div>
 <p/>
 
-<p/>The two verbs <tt>mlr filter</tt> and <tt>mlr put</tt> are essentially the
+<p/>The two verbs <code>mlr filter</code> and <code>mlr put</code> are essentially the
 same. The only differences are:
 
 <ul>
 
-<li/> Expressions sent to <tt>mlr filter</tt> must end with a boolean expression,
+<li/> Expressions sent to <code>mlr filter</code> must end with a boolean expression,
 which is the filtering criterion;
 
-<li/> <tt>mlr filter</tt> expressions may not
-reference the <tt>filter</tt> keyword within them; and
+<li/> <code>mlr filter</code> expressions may not
+reference the <code>filter</code> keyword within them; and
 
-<li/> <tt>mlr filter</tt> expressions may not use <tt>tee</tt>, <tt>emit</tt>,
-<tt>emitp</tt>, or <tt>emitf</tt>.
+<li/> <code>mlr filter</code> expressions may not use <code>tee</code>, <code>emit</code>,
+<code>emitp</code>, or <code>emitf</code>.
 
 </ul>
 
@@ -432,7 +432,7 @@ x_y_corr
 <!-- ================================================================ -->
 <a id="Expressions_from_files"/><h2>Expressions from files</h2>
 
-<p/>The simplest way to enter expressions for <tt>put</tt> and <tt>filter</tt> is between single quotes on the command line, e.g.
+<p/>The simplest way to enter expressions for <code>put</code> and <code>filter</code> is between single quotes on the command line, e.g.
 
 <p/>
 <div class="pokipanel">
@@ -515,16 +515,16 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,xy=1.036584
 <p/>A suggested use-case here is defining functions in files, and calling them from command-line expressions.
 
 <p/>Another suggested use-case is putting default parameter values in files, e.g. using
-<tt>begin{@count=is_present(@count)?@count:10}</tt> in the file, where you can precede that using
-<tt>begin{@count=40}</tt> using <tt>-e</tt>.
+<code>begin{@count=is_present(@count)?@count:10}</code> in the file, where you can precede that using
+<code>begin{@count=40}</code> using <code>-e</code>.
 
-<p/>Moreover, you can have one or more <tt>-f</tt> expressions (maybe one
-function per file, for example) and one or more <tt>-e</tt> expressions on the
-command line.  If you mix <tt>-f</tt> and <tt>-e</tt> then the expressions are
+<p/>Moreover, you can have one or more <code>-f</code> expressions (maybe one
+function per file, for example) and one or more <code>-e</code> expressions on the
+command line.  If you mix <code>-f</code> and <code>-e</code> then the expressions are
 evaluated in the order encountered. (Since the expressions are all simply
 concatenated together in order, don&rsquo;t forget intervening semicolons: e.g.
-not <tt>mlr put -e '$x=1' -e '$y=2 ...'</tt> but rather <tt>mlr put -e '$x=1;' -e
-'$y=2' ...</tt>.)
+not <code>mlr put -e '$x=1' -e '$y=2 ...'</code> but rather <code>mlr put -e '$x=1;' -e
+'$y=2' ...</code>.)
 
 <!-- ================================================================ -->
 <a id="Semicolons,_commas,_newlines,_and_curly_braces"/><h2>Semicolons, commas, newlines, and curly braces</h2>
@@ -648,25 +648,25 @@ mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptable
 
 <p/>Miller has the following kinds of variables:
 
-<p/> <b>Built-in variables</b> such as <tt>NF</tt>, <tt>NF</tt>,
-<tt>FILENAME</tt>, <tt>M_PI</tt>, and <tt>M_E</tt>.  These are all capital letters
+<p/> <b>Built-in variables</b> such as <code>NF</code>, <code>NF</code>,
+<code>FILENAME</code>, <code>M_PI</code>, and <code>M_E</code>.  These are all capital letters
 and are read-only (although some of them change value from one record to
 another).
 
-<p/> <b>Fields of stream records</b>, accessed using the <tt>$</tt> prefix.
+<p/> <b>Fields of stream records</b>, accessed using the <code>$</code> prefix.
 These refer to fields of the current data-stream record. For example, in
-<tt>echo x=1,y=2 | mlr put '$z = $x + $y'</tt>, <tt>$x</tt> and <tt>$y</tt>
-refer to input fields, and <tt>$z</tt> refers to a new, computed output field.
+<code>echo x=1,y=2 | mlr put '$z = $x + $y'</code>, <code>$x</code> and <code>$y</code>
+refer to input fields, and <code>$z</code> refers to a new, computed output field.
 In a few contexts, presented below, you can refer to the entire record as
-<tt>$*</tt>.
+<code>$*</code>.
 
-<p/> <b>Out-of-stream variables</b> accessed using the <tt>@</tt> prefix. These
+<p/> <b>Out-of-stream variables</b> accessed using the <code>@</code> prefix. These
 refer to data which persist from one record to the next, including in
-<tt>begin</tt> and <tt>end</tt> blocks (which execute before/after the record
+<code>begin</code> and <code>end</code> blocks (which execute before/after the record
 stream is consumed, respectively). You use them to remember values across
 records, such as sums, differences, counters, and so on.  In a few contexts,
 presented below, you can refer to the entire out-of-stream-variables collection
-as <tt>@*</tt>.
+as <code>@*</code>.
 
 <p/> <b>Local variables</b> are limited in scope and extent to the current
 statements being executed: these include function arguments, bound variables in
@@ -678,16 +678,16 @@ cannot use these names for local variables.
 <!-- ================================================================ -->
 <a id="Built-in_variables"/><h2>Built-in variables</h2>
 
-<p/> These are written all in capital letters, such as <tt>NR</tt>,
-<tt>NF</tt>, <tt>FILENAME</tt>, and only a small, specific set of them is
+<p/> These are written all in capital letters, such as <code>NR</code>,
+<code>NF</code>, <code>FILENAME</code>, and only a small, specific set of them is
 defined by Miller.
 
 <p/>Namely, Miller supports the following five built-in variables for <a
-href="reference-verbs.html#filter"><tt>filter</tt></a> and <tt>put</tt>, all <tt>awk</tt>-inspired:
-<tt>NF</tt>, <tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>, and
-<tt>FILENAME</tt>, as well as the mathematical constants <tt>M_PI</tt> and
-<tt>M_E</tt>.  Lastly, the <tt>ENV</tt> hashmap allows read access to environment
-variables, e.g.  <tt>ENV["HOME"]</tt> or <tt>ENV["foo_".$hostname]</tt>.
+href="reference-verbs.html#filter"><code>filter</code></a> and <code>put</code>, all <code>awk</code>-inspired:
+<code>NF</code>, <code>NR</code>, <code>FNR</code>, <code>FILENUM</code>, and
+<code>FILENAME</code>, as well as the mathematical constants <code>M_PI</code> and
+<code>M_E</code>.  Lastly, the <code>ENV</code> hashmap allows read access to environment
+variables, e.g.  <code>ENV["HOME"]</code> or <code>ENV["foo_".$hostname]</code>.
 
 <p/>
 <div class="pokipanel">
@@ -724,14 +724,14 @@ a=pan,b=zee,i=10003,x=0.272054845593895200,y=0.425789896597056627,fnr=5
 </div>
 <p/>
 
-<p/> Their values of <tt>NF</tt>, <tt>NR</tt>, <tt>FNR</tt>, <tt>FILENUM</tt>,
-and <tt>FILENAME</tt> change from one record to the next as Miller scans
+<p/> Their values of <code>NF</code>, <code>NR</code>, <code>FNR</code>, <code>FILENUM</code>,
+and <code>FILENAME</code> change from one record to the next as Miller scans
 through your input data stream. The mathematical constants, of course, do not
-change; <tt>ENV</tt> is populated from the system environment variables at the
+change; <code>ENV</code> is populated from the system environment variables at the
 time Miller starts and is read-only for the remainder of program execution.
 
-<p/> Their <b>scope is global</b>: you can refer to them in any <tt>filter</tt>
-or <tt>put</tt> statement. Their values are assigned by the input-record
+<p/> Their <b>scope is global</b>: you can refer to them in any <code>filter</code>
+or <code>put</code> statement. Their values are assigned by the input-record
 reader:
 
 <p/>
@@ -760,30 +760,30 @@ a,b,c,nr
 <p/>
 
 <p/> The <b>extent</b> is for the duration of the put/filter: in a
-<tt>begin</tt> statement (which executes before the first input record is
-consumed) you will find <tt>NR=1</tt> and in an <tt>end</tt> statement (which
-is executed after the last input record is consumed) you will find <tt>NR</tt>
+<code>begin</code> statement (which executes before the first input record is
+consumed) you will find <code>NR=1</code> and in an <code>end</code> statement (which
+is executed after the last input record is consumed) you will find <code>NR</code>
 to be the total number of records ingested.
 
-<p/> These are all <b>read-only</b> for the <tt>mlr put</tt> and <tt>mlr
-filter</tt> DSLs: they may be assigned from, e.g. <tt>$nr=NR</tt>, but they may
-not be assigned to: <tt>NR=100</tt> is a syntax error.
+<p/> These are all <b>read-only</b> for the <code>mlr put</code> and <code>mlr
+filter</code> DSLs: they may be assigned from, e.g. <code>$nr=NR</code>, but they may
+not be assigned to: <code>NR=100</code> is a syntax error.
 
 <!-- ================================================================ -->
 <a id="Field_names"/><h2>Field names</h2>
 
-<p/>Names of fields within stream records must be specified using a <tt>$</tt>
-in <tt>filter</tt> and <a href="reference-verbs.html#put"><tt>put</tt></a>
+<p/>Names of fields within stream records must be specified using a <code>$</code>
+in <code>filter</code> and <a href="reference-verbs.html#put"><code>put</code></a>
 expressions, even though the dollar signs don&rsquo;t appear in the data stream
-itself. For integer-indexed data, this looks like <tt>awk</tt>&rsquo;s
-<tt>$1,$2,$3</tt>, except that Miller allows non-numeric names such as
-<tt>$quantity</tt> or <tt>$hostname</tt>.  Likewise, enclose string literals
-in double quotes in <tt>filter</tt> expressions even though they don&rsquo;t
-appear in file data.  In particular, <tt>mlr filter '$x=="abc"'</tt> passes
-through the record <tt>x=abc</tt>.
+itself. For integer-indexed data, this looks like <code>awk</code>&rsquo;s
+<code>$1,$2,$3</code>, except that Miller allows non-numeric names such as
+<code>$quantity</code> or <code>$hostname</code>.  Likewise, enclose string literals
+in double quotes in <code>filter</code> expressions even though they don&rsquo;t
+appear in file data.  In particular, <code>mlr filter '$x=="abc"'</code> passes
+through the record <code>x=abc</code>.
 
-<p/>If field names have <b>special characters</b> such as <tt>.</tt> then you
-can use braces, e.g. <tt>'${field.name}'</tt>.
+<p/>If field names have <b>special characters</b> such as <code>.</code> then you
+can use braces, e.g. <code>'${field.name}'</code>.
 
 <p/>You may also use a <b>computed field name</b> in square brackets, e.g.
 
@@ -811,15 +811,15 @@ values change from one record to the next as Miller scans through your input
 data stream.
 
 <p/> Their <b>extent</b> is limited to the current record; their <b>scope</b>
-is the <tt>filter</tt> or <tt>put</tt> command in which they appear.
+is the <code>filter</code> or <code>put</code> command in which they appear.
 
-<p/> These are <b>read-write</b>: you can do <tt>$y=2*$x</tt>,
-<tt>$x=$x+1</tt>, etc.
+<p/> These are <b>read-write</b>: you can do <code>$y=2*$x</code>,
+<code>$x=$x+1</code>, etc.
 
 <p/> Records are Miller&rsquo;s output: field names present in the input
 stream are passed through to output (written to standard output) unless fields
-are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
-<tt>put -q</tt>, etc. Simply assign a value to a field and it will be output.
+are removed with <code>cut</code>, or records are excluded with <code>filter</code> or
+<code>put -q</code>, etc. Simply assign a value to a field and it will be output.
 
 <!-- ================================================================ -->
 <a id="Positional_field_names"/><h2>Positional field names</h2>
@@ -828,12 +828,12 @@ are removed with <tt>cut</tt>, or records are excluded with <tt>filter</tt> or
 name-indexing, sometimes you really want to refer to a field name by its
 positional index (starting from 1).
 
-<p/> Use <tt>$[[3]]</tt> to access the name of field 3.  More generally, any
-expression evaluating to an integer can go between <tt>$[[</tt> and
-<tt>]]</tt>.
+<p/> Use <code>$[[3]]</code> to access the name of field 3.  More generally, any
+expression evaluating to an integer can go between <code>$[[</code> and
+<code>]]</code>.
 
-Then using a computed field name, <tt>$[ $[[3]] ]</tt> is the value in the third field.
-This has the shorter equivalent notation <tt>$[[[3]]]</tt>.
+Then using a computed field name, <code>$[ $[[3]] ]</code> is the value in the third field.
+This has the shorter equivalent notation <code>$[[[3]]]</code>.
 
 <p/>
 <div class="pokipanel">
@@ -910,7 +910,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=NEW
 <p/>
 
 Right-hand side accesses to non-existent fields &mdash; i.e. with index less
-than 1 or greater than <tt>NF</tt> -- return an absent value. Likewise,
+than 1 or greater than <code>NF</code> -- return an absent value. Likewise,
 left-hand side accesses only refer to fields which already exist. For example,
 if a field has 5 records then assigning the name or value of the 6th (or 600th)
 field results in a no-op.
@@ -943,19 +943,19 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 <!-- ================================================================ -->
 <a id="Out-of-stream_variables"/><h2>Out-of-stream variables</h2>
 
-<p/> These are prefixed with an at-sign, e.g. <tt>@sum</tt>.  Furthermore,
+<p/> These are prefixed with an at-sign, e.g. <code>@sum</code>.  Furthermore,
 unlike built-in variables and stream-record fields, they are maintained in an
-arbitrarily nested hashmap: you can do <tt>@sum += $quanity</tt>, or
-<tt>@sum[$color] += $quanity</tt>, or <tt>@sum[$color][$shape] +=
-$quanity</tt>. The keys for the multi-level hashmap can be any expression which
-evaluates to string or integer: e.g.  <tt>@sum[NR] = $a + $b</tt>,
-<tt>@sum[$a."-".$b] = $x</tt>, etc.
+arbitrarily nested hashmap: you can do <code>@sum += $quanity</code>, or
+<code>@sum[$color] += $quanity</code>, or <code>@sum[$color][$shape] +=
+$quanity</code>. The keys for the multi-level hashmap can be any expression which
+evaluates to string or integer: e.g.  <code>@sum[NR] = $a + $b</code>,
+<code>@sum[$a."-".$b] = $x</code>, etc.
 
 <p/> Their names and their values are entirely under your control; they change
 only when you assign to them.
 
 <p/> Just as for field names in stream records, if you want to define out-of-stream variables
-with <b>special characters</b> such as <tt>.</tt> then you can use braces, e.g. <tt>'@{variable.name}["index"]'</tt>.
+with <b>special characters</b> such as <code>.</code> then you can use braces, e.g. <code>'@{variable.name}["index"]'</code>.
 
 <p/>You may use a <b>computed key </b> in square brackets, e.g.
 
@@ -968,9 +968,9 @@ green_blue=12
 </div>
 <p/>
 
-<p/> Out-of-stream variables are <b>scoped</b> to the <tt>put</tt> command in
-which they appear.  In particular, if you have two or more <tt>put</tt>
-commands separated by <tt>then</tt>, each put will have its own set of
+<p/> Out-of-stream variables are <b>scoped</b> to the <code>put</code> command in
+which they appear.  In particular, if you have two or more <code>put</code>
+commands separated by <code>then</code>, each put will have its own set of
 out-of-stream variables:
 
 <p/>
@@ -995,16 +995,16 @@ sum=50
 <p/>
 
 <p/> Out-of-stream variables&rsquo; <b>extent</b> is from the start to the end of the record stream,
-i.e. every time the <tt>put</tt> or <tt>filter</tt> statement referring to them is executed.
+i.e. every time the <code>put</code> or <code>filter</code> statement referring to them is executed.
 
-<p/> Out-of-stream variables are <b>read-write</b>: you can do <tt>$sum=@sum</tt>, <tt>@sum=$sum</tt>,
+<p/> Out-of-stream variables are <b>read-write</b>: you can do <code>$sum=@sum</code>, <code>@sum=$sum</code>,
 etc.
 
 <!-- ================================================================ -->
 <a id="Indexed_out-of-stream_variables"/><h2>Indexed out-of-stream variables</h2>
 
-<p/>Using an index on the <tt>@count</tt> and <tt>@sum</tt> variables, we get the benefit of the
-<tt>-g</tt> (group-by) option which <tt>mlr stats1</tt> and various other Miller commands have:
+<p/>Using an index on the <code>@count</code> and <code>@sum</code> variables, we get the benefit of the
+<code>-g</code> (group-by) option which <code>mlr stats1</code> and various other Miller commands have:
 
 <p/>
 <div class="pokipanel">
@@ -1084,7 +1084,7 @@ a=hat,b=pan,x_count=363,x_sum=168.553807
 </div>
 <p/>
 
-The idea is that <tt>stats1</tt>, and other Miller verbs, encapsulate
+The idea is that <code>stats1</code>, and other Miller verbs, encapsulate
 frequently-used patterns with a minimum of keystroking (and run a little
 faster), whereas using out-of-stream variables you have more flexibility and
 control in what you do.
@@ -1127,8 +1127,8 @@ basenames can&rsquo;t be computed using square brackets).
 There are three kinds of local variables: <b>arguments</b> to
 functions/subroutines, <b>variables bound within for-loops</b>, and
 <b>locals</b> defined within control blocks. They may be untyped using
-<tt>var</tt>, or typed using <tt>num</tt>, <tt>int</tt>, <tt>float</tt>,
-<tt>str</tt>, <tt>bool</tt>, and <tt>map</tt>.
+<code>var</code>, or typed using <code>num</code>, <code>int</code>, <code>float</code>,
+<code>str</code>, <code>bool</code>, and <code>map</code>.
 
 <p/>For example:
 
@@ -1170,27 +1170,27 @@ i=10,o=15.643912
 <ul>
 
 <li/> Parameter names are bound to their arguments but can be reassigned, e.g.
-if there is a parameter named <tt>a</tt> then you can reassign the value of
-<tt>a</tt> to be something else within the function if you like.
+if there is a parameter named <code>a</code> then you can reassign the value of
+<code>a</code> to be something else within the function if you like.
 
 <li/> However, you cannot redeclare the <i>type</i> of an argument or a local:
-<tt>var a=1; var a=2</tt> is an error but
-<tt>var a=1;  a=2</tt> is OK.
+<code>var a=1; var a=2</code> is an error but
+<code>var a=1;  a=2</code> is OK.
 
 <li/> All argument-passing is positional rather than by name; arguments are
 passed by value, not by reference. (This is also true for map-valued variables:
 they are not, and cannot be, passed by reference)
 
-<li/> You can define locals (using <tt>var</tt>, <tt>num</tt>, etc.) at any
+<li/> You can define locals (using <code>var</code>, <code>num</code>, etc.) at any
 scope (if-statements, else-statements, while-loops, for-loops, or the top-level
 scope), and nested scopes will have access (more details on scope in the next
 section).  If you define a local variable with the same name inside an inner
 scope, then a new variable is created with the narrower scope.
 
 <li/> If you assign to a local variable for the first time in a scope without
-declaring it as <tt>var</tt>, <tt>num</tt>, etc. then: if it exists in an outer
+declaring it as <code>var</code>, <code>num</code>, etc. then: if it exists in an outer
 scope, that outer-scope variable will be updated; if not, it will be defined in
-the current scope as if <tt>var</tt> had been used. (See also <a
+the current scope as if <code>var</code> had been used. (See also <a
 href="#Type-checking">here</a> for an example.) I recommend always declaring
 variables explicitly to make the intended scoping clear.
 
@@ -1203,31 +1203,31 @@ variables explicitly to make the intended scoping clear.
 
 <ul>
 
-<li/> Type declarations using <tt>var</tt>, or typed using <tt>num</tt>,
-<tt>int</tt>, <tt>float</tt>, <tt>str</tt>, and <tt>bool</tt> are necessary to
+<li/> Type declarations using <code>var</code>, or typed using <code>num</code>,
+<code>int</code>, <code>float</code>, <code>str</code>, and <code>bool</code> are necessary to
 declare local variables.  Function arguments and variables bound in for-loops
 over stream records and out-of-stream variables are <i>implicitly</i> declared
-using <tt>var</tt>. (Some examples are shown below.)
+using <code>var</code>. (Some examples are shown below.)
 
-<li/> Type-checking is done at assignment time. For example, <tt>float f =
-0</tt> is an error (since <tt>0</tt> is an integer), as is <tt>float f = 0.0; f
-= 1</tt>. For this reason I prefer to use <tt>num</tt> over <tt>float</tt> in
-most contexts since <tt>num</tt> encompasses integer and floating-point values.
+<li/> Type-checking is done at assignment time. For example, <code>float f =
+0</code> is an error (since <code>0</code> is an integer), as is <code>float f = 0.0; f
+= 1</code>. For this reason I prefer to use <code>num</code> over <code>float</code> in
+most contexts since <code>num</code> encompasses integer and floating-point values.
 More information about type-checking is <a href="#Type-checking">here</a>.
 
 <li/> Bound variables in for-loops over stream records and out-of-stream
 variables are implicitly local to that block. E.g. in
-<tt>for (k, v in $*) { ... }</tt>
-<tt>for ((k1, k2), v in @*) { ... }</tt>
-if there are <tt>k</tt>, <tt>v</tt>, etc. in the enclosing scope then those
+<code>for (k, v in $*) { ... }</code>
+<code>for ((k1, k2), v in @*) { ... }</code>
+if there are <code>k</code>, <code>v</code>, etc. in the enclosing scope then those
 will be masked by the loop-local bound variables in the loop, and moreover
 the values of the loop-local bound variables are not available after the
 end of the loop.
 
 <li/> For C-style triple-for loops, if a for-loop variable is defined using
-<tt>var</tt>, <tt>int</tt>, etc. then it is scoped to that for-loop. E.g.
-<tt>for (i = 0; i < 10; i += 1) { ... }</tt> and <tt>for (int i = 0; i < 10; i
-+= 1) { ... }</tt>. (This is unsurprising.). If there is no typedecl and an
+<code>var</code>, <code>int</code>, etc. then it is scoped to that for-loop. E.g.
+<code>for (i = 0; i < 10; i += 1) { ... }</code> and <code>for (int i = 0; i < 10; i
++= 1) { ... }</code>. (This is unsurprising.). If there is no typedecl and an
 outer-scope variable of that name exists, then it is used. (This is also
 unsurprising.) But of there is no outer-scope variable of that name then the
 variable is scoped to the for-loop only.
@@ -1355,17 +1355,17 @@ print "outer j =" . j;                            # j is undefined in this scope
 <!-- ================================================================ -->
 <a id="Map_literals"/><h2>Map literals</h2>
 
-<p/>Miller&rsquo;s <tt>put</tt>/<tt>filter</tt> DSL has four kinds of hashmaps.
+<p/>Miller&rsquo;s <code>put</code>/<code>filter</code> DSL has four kinds of hashmaps.
 <b>Stream records</b> are (single-level) maps from name to value.
 <b>Out-of-stream variables</b> and <b>local variables</b> can also be maps,
-although they can be multi-level hashmaps (e.g. <tt>@sum[$x][$y]</tt>).  The
+although they can be multi-level hashmaps (e.g. <code>@sum[$x][$y]</code>).  The
 fourth kind is <b>map literals</b>. These cannot be on the left-hand side of
 assignment expressions. Syntactically they look like JSON, although Miller
 allows string and integer keys in its map literals while JSON allows only
-string keys (e.g. <tt>"3"</tt> rather than <tt>3</tt>).
+string keys (e.g. <code>"3"</code> rather than <code>3</code>).
 
-<p/> For example, the following swaps the input stream&rsquo;s <tt>a</tt> and
-<tt>i</tt> fields, modifies <tt>y</tt>, and drops the rest:
+<p/> For example, the following swaps the input stream&rsquo;s <code>a</code> and
+<code>i</code> fields, modifies <code>y</code>, and drops the rest:
 
 <p/>
 <div class="pokipanel">
@@ -1445,14 +1445,14 @@ $ mlr --from data/small put -q '
 <p/>
 
 <p/>By default, map-valued expressions are dumped using JSON formatting. If you
-use <tt>dump</tt> to print a hashmap with integer keys and you don&rsquo;t want
-them double-quoted (JSON-style) then you can use <tt>mlr put
---jknquoteint</tt>. See also <tt>mlr put --help</tt>.
+use <code>dump</code> to print a hashmap with integer keys and you don&rsquo;t want
+them double-quoted (JSON-style) then you can use <code>mlr put
+--jknquoteint</code>. See also <code>mlr put --help</code>.
 
 <!-- ================================================================ -->
 <a id="Type-checking"/><h2>Type-checking</h2>
 
-<p/> Miller&rsquo;s <tt>put</tt>/<tt>filter</tt> DSLs support two optional
+<p/> Miller&rsquo;s <code>put</code>/<code>filter</code> DSLs support two optional
 kinds of type-checking.  One is inline <b>type-tests</b> and
 <b>type-assertions</b> within expressions.  The other is <b>type
 declarations</b> for assignments to local variables, binding of arguments to
@@ -1466,9 +1466,9 @@ misspellings in your DSL code or unexpected irregularities in your input data.
 <!-- ================================================================ -->
 <a id="Type-test_and_type-assertion_expressions"/><h3>Type-test and type-assertion expressions</h3>
 
-<p/> The following <tt>is...</tt> functions take a value and return a boolean
+<p/> The following <code>is...</code> functions take a value and return a boolean
 indicating whether the argument is of the indicated type. The
-<tt>assert_...</tt> functions return their argument if it is of the specified
+<code>assert_...</code> functions return their argument if it is of the specified
 type, and cause a fatal error otherwise:
 
 <table>
@@ -1532,15 +1532,15 @@ of how to use these.
 <!-- ================================================================ -->
 <a id="Type-declarations_for_local_variables,_function_parameter,_and_function_return_values"/><h3>Type-declarations for local variables, function parameter, and function return values</h3>
 
-<p/> Local variables can be defined either untyped as in <tt>x = 1</tt>, or
-typed as in <tt>int x = 1</tt>. Types include <b>var</b> (explicitly untyped),
+<p/> Local variables can be defined either untyped as in <code>x = 1</code>, or
+typed as in <code>int x = 1</code>. Types include <b>var</b> (explicitly untyped),
 <b>int</b>, <b>float</b>, <b>num</b> (int or float), <b>str</b>, <b>bool</b>,
 and <b>map</b>. These optional type declarations are enforced at the time
 values are assigned to variables: whether at the initial value assignment as in
-<tt>int x = 1</tt> or in any subsequent assignments to the same variable
+<code>int x = 1</code> or in any subsequent assignments to the same variable
 farther down in the scope.
 
-<p/> The reason for <tt>num</tt> is that <tt>int</tt> and <tt>float</tt> typedecls are very precise:
+<p/> The reason for <code>num</code> is that <code>int</code> and <code>float</code> typedecls are very precise:
 
 <div class="pokipanel">
 <pre>
@@ -1551,17 +1551,17 @@ farther down in the scope.
 </pre>
 </div>
 
-<p/> A suggestion is to use <tt>num</tt> for general use when you want numeric
-content, and use <tt>int</tt> when you genuinely want integer-only values, e.g.
+<p/> A suggestion is to use <code>num</code> for general use when you want numeric
+content, and use <code>int</code> when you genuinely want integer-only values, e.g.
 in loop indices or map keys (since Miller map keys can only be strings or
 ints).
 
-<p/> The <tt>var</tt> type declaration indicates no type restrictions, e.g.
-<tt>var x = 1</tt> has the same type restrictions on <tt>x</tt> as <tt>x =
-1</tt>. The difference is in intentional shadowing: if you have <tt>x = 1</tt>
-in outer scope and <tt>x = 2</tt> in inner scope (e.g. within a for-loop or an
-if-statement) then outer-scope <tt>x</tt> has value 2 after the second
-assignment.  But if you have <tt>var x = 2</tt> in the inner scope, then you
+<p/> The <code>var</code> type declaration indicates no type restrictions, e.g.
+<code>var x = 1</code> has the same type restrictions on <code>x</code> as <code>x =
+1</code>. The difference is in intentional shadowing: if you have <code>x = 1</code>
+in outer scope and <code>x = 2</code> in inner scope (e.g. within a for-loop or an
+if-statement) then outer-scope <code>x</code> has value 2 after the second
+assignment.  But if you have <code>var x = 2</code> in the inner scope, then you
 are declaring a variable scoped to the inner block.) For example:
 
 <div class="pokipanel">
@@ -1602,7 +1602,7 @@ when the function is called:
 </div>
 
 <p/> Thirdly, function return values can be type-checked at the point of
-<tt>return</tt> using <tt>:</tt> and a typedecl after the parameter list:
+<code>return</code> using <code>:</code> and a typedecl after the parameter list:
 
 <div class="pokipanel">
 <pre>
@@ -1637,7 +1637,7 @@ when the function is called:
 <a id="Aggregate_variable_assignments"/><h2>Aggregate variable assignments</h2>
 
 <p/>There are three remaining kinds of variable assignment using out-of-stream
-variables, the last two of which use the <tt>$*</tt> syntax:
+variables, the last two of which use the <code>$*</code> syntax:
 <ul>
 <li/> Recursive copy of out-of-stream variables
 <li/> Out-of-stream variable assigned to full stream record
@@ -1686,7 +1686,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 <p/>
 
 <p/>Example of full stream record assigned to an out-of-stream variable, finding
-the record for which the <tt>x</tt> field has the largest value in the input
+the record for which the <code>x</code> field has the largest value in the input
 stream:
 
 <p/>
@@ -2059,21 +2059,21 @@ binary+ binary- .      left to right
 <li/> Functions are in general pass-throughs straight to the system-standard C
 library.
 
-<li/> The <tt>min</tt> and <tt>max</tt> functions are different from other
+<li/> The <code>min</code> and <code>max</code> functions are different from other
 multi-argument functions which return null if any of their inputs are null: for
-<tt>min</tt> and <tt>max</tt>, by contrast, if one argument is absent-null, the other
+<code>min</code> and <code>max</code>, by contrast, if one argument is absent-null, the other
 is returned. Empty-null loses min or max against numeric or boolean; empty-null
 is less than any other string.
 
 <li/> Symmetrically with respect to the bitwise OR, XOR, and AND operators
-<tt>|</tt>, <tt>^</tt>, <tt>&amp;</tt>, Miller has logical operators
-<tt>||</tt>, <tt>^^</tt>, <tt>&amp;&amp;</tt>: the logical XOR not existing in
+<code>|</code>, <code>^</code>, <code>&amp;</code>, Miller has logical operators
+<code>||</code>, <code>^^</code>, <code>&amp;&amp;</code>: the logical XOR not existing in
 C.
 
-<li/> The exponentiation operator <tt>**</tt> is familiar from many languages.
+<li/> The exponentiation operator <code>**</code> is familiar from many languages.
 
-<li/> The regex-match and regex-not-match operators <tt>=~</tt> and
-<tt>!=~</tt> are similar to those in Ruby and Perl.
+<li/> The regex-match and regex-not-match operators <code>=~</code> and
+<code>!=~</code> are similar to those in Ruby and Perl.
 
 </ul>
 
@@ -2086,7 +2086,7 @@ C.
 <!-- ================================================================ -->
 <a id="Pattern-action_blocks"/><h2>Pattern-action blocks</h2>
 
-<p/>These are reminiscent of <tt>awk</tt> syntax.  They can be used to allow
+<p/>These are reminiscent of <code>awk</code> syntax.  They can be used to allow
 assignments to be done only when appropriate &mdash; e.g. for math-function
 domain restrictions, regex-matching, and so on:
 
@@ -2138,9 +2138,9 @@ a=xyz_789,b=left_xyz,c=right_789
 <p/>This produces heteregenous output which Miller, of course, has no problems
 with (see <a href="record-heterogeneity.html">Record-heterogeneity</a>).  But if you
 want homogeneous output, the curly braces can be replaced with a semicolon
-between the expression and the body statements.  This causes <tt>put</tt> to
+between the expression and the body statements.  This causes <code>put</code> to
 evaluate the boolean expression (along with any side effects, namely,
-regex-captures <tt>\1</tt>, <tt>\2</tt>, etc.) but doesn&rsquo;t use it as a
+regex-captures <code>\1</code>, <code>\2</code>, etc.) but doesn&rsquo;t use it as a
 criterion for whether subsequent assignments should be executed. Instead,
 subsequent assignments are done unconditionally:
 
@@ -2170,8 +2170,8 @@ a=xyz_789,b=left_xyz,c=right_789
 <!-- ================================================================ -->
 <a id="If-statements"/><h2>If-statements</h2>
 
-<p/>These are again reminiscent of <tt>awk</tt>. Pattern-action blocks are a special case of <tt>if</tt> with no
-<tt>elif</tt> or <tt>else</tt> blocks, no <tt>if</tt> keyword, and parentheses optional around the boolean expression:
+<p/>These are again reminiscent of <code>awk</code>. Pattern-action blocks are a special case of <code>if</code> with no
+<code>elif</code> or <code>else</code> blocks, no <code>if</code> keyword, and parentheses optional around the boolean expression:
 
 <p/>
 <div class="pokipanel">
@@ -2188,7 +2188,7 @@ mlr put 'if (NR == 4) {$foo = "bar"}'
 </div>
 <p/>
 
-<p/>Compound statements use <tt>elif</tt> (rather than <tt>elsif</tt> or <tt>else if</tt>):
+<p/>Compound statements use <code>elif</code> (rather than <code>elsif</code> or <code>else if</code>):
 
 <p/>
 <div class="pokipanel">
@@ -2211,8 +2211,8 @@ mlr put '
 <!-- ================================================================ -->
 <a id="While_and_do-while_loops"/><h2>While and do-while loops</h2>
 
-<p/>Miller&rsquo;s <tt>while</tt> and <tt>do-while</tt> are unsurprising in
-comparison to various languages, as are <tt>break</tt> and <tt>continue</tt>:
+<p/>Miller&rsquo;s <code>while</code> and <code>do-while</code> are unsurprising in
+comparison to various languages, as are <code>break</code> and <code>continue</code>:
 
 <p/>
 <div class="pokipanel">
@@ -2244,39 +2244,39 @@ x=1,y=2,3=,4=,5=,foo=bar
 </div>
 <p/>
 
-<p/> A <tt>break</tt> or <tt>continue</tt> within nested conditional blocks or
+<p/> A <code>break</code> or <code>continue</code> within nested conditional blocks or
 if-statements will, of course, propagate to the innermost loop enclosing them,
-if any. A <tt>break</tt> or <tt>continue</tt> outside a loop is a syntax error
+if any. A <code>break</code> or <code>continue</code> outside a loop is a syntax error
 that will be flagged as soon as the expression is parsed, before any input
 records are ingested.
 
-<p/> The existence of <tt>while</tt>, <tt>do-while</tt>, and <tt>for</tt> loops
+<p/> The existence of <code>while</code>, <code>do-while</code>, and <code>for</code> loops
 in Miller&rsquo;s DSL means that you can create infinite-loop scenarios
 inadvertently.  In particular, please recall that DSL statements are executed
-once if in <tt>begin</tt> or <tt>end</tt> blocks, and once <i>per record</i>
-otherwise. For example, <b><tt>while (NR < 10)</tt> will never terminate as
-<tt>NR</tt> is only incremented between records</b>.
+once if in <code>begin</code> or <code>end</code> blocks, and once <i>per record</i>
+otherwise. For example, <b><code>while (NR < 10)</code> will never terminate as
+<code>NR</code> is only incremented between records</b>.
 
 <!-- ================================================================ -->
 <a id="For-loops"/><h2>For-loops</h2>
 
-<p/>While Miller&rsquo;s <tt>while</tt> and <tt>do-while</tt> statements are
-much as in many other languages, <tt>for</tt> loops are more idiosyncratic to
+<p/>While Miller&rsquo;s <code>while</code> and <code>do-while</code> statements are
+much as in many other languages, <code>for</code> loops are more idiosyncratic to
 Miller. They are loops over key-value pairs, whether in stream records,
 out-of-stream variables, local variables, or map-literals: more reminiscent of
-<tt>foreach</tt>, as in (for example) PHP. There are <b>for-loops over map
+<code>foreach</code>, as in (for example) PHP. There are <b>for-loops over map
 keys</b> and <b>for-loops over key-value tuples</b>.  Additionally, Miller has a
 <b>C-style triple-for loop</b> with initialize, test, and update statements.
 
-<p/>As with <tt>while</tt> and <tt>do-while</tt>, a <tt>break</tt> or
-<tt>continue</tt> within nested control structures will propagate to the
-innermost loop enclosing them, if any, and a <tt>break</tt> or
-<tt>continue</tt> outside a loop is a syntax error that will be flagged as soon
+<p/>As with <code>while</code> and <code>do-while</code>, a <code>break</code> or
+<code>continue</code> within nested control structures will propagate to the
+innermost loop enclosing them, if any, and a <code>break</code> or
+<code>continue</code> outside a loop is a syntax error that will be flagged as soon
 as the expression is parsed, before any input records are ingested.
 
 <a id="Key-only_for-loops"/><h3>Key-only for-loops </h3>
 
-<p/>The <tt>key</tt> variable is always bound to the <i>key</i> of key-value pairs:
+<p/>The <code>key</code> variable is always bound to the <i>key</i> of key-value pairs:
 
 <p/>
 <div class="pokipanel">
@@ -2345,14 +2345,14 @@ $ mlr -n put '
 <p/>
 
 <p/>Note that the value corresponding to a given key may be gotten as through a
-<b>computed field name</b> using square brackets as in <tt>$[key]</tt> for
+<b>computed field name</b> using square brackets as in <code>$[key]</code> for
 stream records, or by indexing the looped-over variable using square brackets.
 
 <a id="Key-value_for-loops"/><h3>Key-value for-loops </h3>
 
-<p/>Single-level keys may be gotten at using either <tt>for(k,v)</tt> or
-<tt>for((k),v)</tt>; multi-level keys may be gotten at using
-<tt>for((k1,k2,k3),v)</tt> and so on.  The <tt>v</tt> variable will be bound to
+<p/>Single-level keys may be gotten at using either <code>for(k,v)</code> or
+<code>for((k),v)</code>; multi-level keys may be gotten at using
+<code>for((k1,k2,k3),v)</code> and so on.  The <code>v</code> variable will be bound to
 to a scalar value (a string or a number) if the map stops at that level, or to
 a map-valued variable if the map goes deeper. If the map isn&rsquo;t deep
 enough then the loop body won&rsquo;t be executed.
@@ -2404,7 +2404,7 @@ wye pan 5 0.5732889198020006  0.8636244699032729  string string int    float  fl
 <p/>
 
 <p/>Note that the value of the current field in the for-loop can be gotten either using the bound
-variable <tt>value</tt>, or through a <b>computed field name</b> using square brackets as in <tt>$[key]</tt>.
+variable <code>value</code>, or through a <b>computed field name</b> using square brackets as in <code>$[key]</code>.
 
 <p/>Important note: to avoid inconsistent looping behavior in case you&rsquo;re
 setting new fields (and/or unsetting existing ones) while looping over the
@@ -2465,7 +2465,7 @@ wye pan 5 0.5732889198020006  0.8636244699032729  6.436913
 variable; you can loop over nested keys; you can loop over all out-of-stream
 variables.  The bound variables are bound to a copy of the sub-hashmap as it
 was before the loop started.  The sub-hashmap is specified by square-bracketed
-indices after <tt>in</tt>, and additional deeper indices are bound to loop
+indices after <code>in</code>, and additional deeper indices are bound to loop
 key-variables. The terminal values are bound to the loop value-variable
 whenever the keys are not too shallow. The value-variable may refer to a
 terminal (string, number) or it may be map-valued if the map goes deeper.
@@ -2487,7 +2487,7 @@ for ((k1, k2, k3), v in @* { ... }            # Loop over all variables (k1 is b
 <p/>
 
 <p/>That&rsquo;s confusing in the abstract, so a concrete example is in order.
-Suppose the out-of-stream variable <tt>@myvar</tt> is populated as follows:
+Suppose the out-of-stream variable <code>@myvar</code> is populated as follows:
 
 <p/>
 <div class="pokipanel">
@@ -2649,23 +2649,23 @@ wye pan 5 0.5732889198020006  0.8636244699032729  15   31
 Notes:
 <ul>
 
-<li/> In <tt>for (start; continuation; update) { body }</tt>, the start,
+<li/> In <code>for (start; continuation; update) { body }</code>, the start,
 continuation, and update statements may be empty, single statements, or
-multiple comma-separated statements. If the continuation is empty (e.g. <tt>for(i=1;;i+=1)</tt>) it defaults
+multiple comma-separated statements. If the continuation is empty (e.g. <code>for(i=1;;i+=1)</code>) it defaults
 to true.
 
-<li/> In particular, you may use <tt>$</tt>-variables and/or
-<tt>@</tt>-variables in the start, continuation, and/or update steps (as well
+<li/> In particular, you may use <code>$</code>-variables and/or
+<code>@</code>-variables in the start, continuation, and/or update steps (as well
 as the body, of course).
 
-<li/> The typedecls such as <tt>int</tt> or <tt>num</tt> are optional.  If a
+<li/> The typedecls such as <code>int</code> or <code>num</code> are optional.  If a
 typedecl is provided (for a local variable), it binds a variable scoped to the
 for-loop regardless of whether a same-name variable is present in outer scope.
 If a typedecl is not provided, then the variable is scoped to the for-loop if
 no same-name variable is present in outer scope, or if a same-name variable is
 present in outer scope then it is modified.
 
-<li/> Miller has no <tt>++</tt> or <tt>--</tt> operators.
+<li/> Miller has no <code>++</code> or <code>--</code> operators.
 
 <li/> As with all for/if/while statements in Miller, the curly braces are
 required even if the body is a single statement, or empty.
@@ -2675,13 +2675,13 @@ required even if the body is a single statement, or empty.
 <!-- ================================================================ -->
 <a id="Begin/end_blocks"/><h2>Begin/end blocks</h2>
 
-<p/>Miller supports an <tt>awk</tt>-like <tt>begin/end</tt> syntax.  The
-statements in the <tt>begin</tt> block are executed before any input records
-are read; the statements in the <tt>end</tt> block are executed after the last
+<p/>Miller supports an <code>awk</code>-like <code>begin/end</code> syntax.  The
+statements in the <code>begin</code> block are executed before any input records
+are read; the statements in the <code>end</code> block are executed after the last
 input record is read.  (If you want to execute some statement at the start of
-each file, not at the start of the first file as with <tt>begin</tt>, you might
-use a pattern/action block of the form <tt>FNR == 1 { ... }</tt>.) All
-statements outside of <tt>begin</tt> or <tt>end</tt> are, of course, executed
+each file, not at the start of the first file as with <code>begin</code>, you might
+use a pattern/action block of the form <code>FNR == 1 { ... }</code>.) All
+statements outside of <code>begin</code> or <code>end</code> are, of course, executed
 on every input record. Semicolons separate statements inside or outside of
 begin/end blocks; semicolons are required between begin/end block bodies and
 any subsequent statement.  For example:
@@ -2711,7 +2711,7 @@ x_sum=4.536294
 
 <p/>Since uninitialized out-of-stream variables default to 0 for
 addition/substraction and 1 for multiplication when they appear on expression
-right-hand sides (as in <tt>awk</tt>), the above can be written more succinctly
+right-hand sides (as in <code>awk</code>), the above can be written more succinctly
 as
 
 <p/>
@@ -2737,7 +2737,7 @@ x_sum=4.536294
 <p/>
 
 <p/>The <b>put -q</b> option is a shorthand which suppresses printing of each
-output record, with only <tt>emit</tt> statements being output. So to get only
+output record, with only <code>emit</code> statements being output. So to get only
 summary outputs, one could write
 
 <p/>
@@ -2783,7 +2783,7 @@ x_count=10,x_sum=4.536294
 <p/>
 
 <p/>Note that it&rsquo;s a syntax error for begin/end blocks to refer to field
-names (beginning with <tt>$</tt>), since these execute outside the context of
+names (beginning with <code>$</code>), since these execute outside the context of
 input records.
 
 </div>
@@ -2797,16 +2797,16 @@ input records.
 <ul>
 
 <li/> <b>Assign</b> them to stream-record fields. For example,
-<tt>$cumulative_sum = @sum</tt>. For another example, <tt>$nr = NR</tt> adds a
-field named <tt>nr</tt> to each output record, containing the value of the
-built-in variable <tt>NR</tt> as of when that record was ingested.
+<code>$cumulative_sum = @sum</code>. For another example, <code>$nr = NR</code> adds a
+field named <code>nr</code> to each output record, containing the value of the
+built-in variable <code>NR</code> as of when that record was ingested.
 
 <li/> Use the <b>print</b> or <b>eprint</b> keywords which immediately print an
 expression <i>directly to standard output or standard error</i>, respectively.
-Note that <tt>dump</tt>, <tt>edump</tt>, <tt>print</tt>, and <tt>eprint</tt>
-don&rsquo;t output records which participate in <tt>then</tt>-chaining; rather,
-they&rsquo;re just immediate prints to stdout/stderr. The <tt>printn</tt> and
-<tt>eprintn</tt> keywords are the same except that they don&rsquo;t print final
+Note that <code>dump</code>, <code>edump</code>, <code>print</code>, and <code>eprint</code>
+don&rsquo;t output records which participate in <code>then</code>-chaining; rather,
+they&rsquo;re just immediate prints to stdout/stderr. The <code>printn</code> and
+<code>eprintn</code> keywords are the same except that they don&rsquo;t print final
 newlines. Additionally, you can print to a specified file instead of
 stdout/stderr.
 
@@ -2818,15 +2818,15 @@ standard error</i> (respectively).
 arbitrary string as with <b>print</b>) to a specific file.
 
 <li/> Use <b>emit</b>/<b>emitp</b>/<b>emitf</b> to send out-of-stream
-variables&rsquo; current values to the output record stream, e.g.  <tt>@sum +=
-$x; emit @sum</tt> which produces an extra output record such as
-<tt>sum=3.1648382</tt>.
+variables&rsquo; current values to the output record stream, e.g.  <code>@sum +=
+$x; emit @sum</code> which produces an extra output record such as
+<code>sum=3.1648382</code>.
 
 </ul>
 
 <p/>For the first two options you are populating the output-records stream
-which feeds into the next verb in a <tt>then</tt>-chain (if any), or which otherwise
-is formatted for output using <tt>--o...</tt> flags.
+which feeds into the next verb in a <code>then</code>-chain (if any), or which otherwise
+is formatted for output using <code>--o...</code> flags.
 
 <p/>For the last three options you are sending output directly to standard
 output, standard error, or a file.
@@ -2834,30 +2834,30 @@ output, standard error, or a file.
 <!-- ================================================================ -->
 <a id="Print_statements"/><h2>Print statements</h2>
 
-<p/>The <tt>print</tt> statement is perhaps self-explanatory, but with a few
+<p/>The <code>print</code> statement is perhaps self-explanatory, but with a few
 light caveats:
 
 <ul>
 
-<li/> There are four variants: <tt>print</tt> goes to stdout with final
-newline, <tt>printn</tt> goes to stdout without final newline (you can include
-one using "\n" in your output string), <tt>eprint</tt> goes to stderr with
-final newline, and <tt>eprintn</tt> goes to stderr without final newline.
+<li/> There are four variants: <code>print</code> goes to stdout with final
+newline, <code>printn</code> goes to stdout without final newline (you can include
+one using "\n" in your output string), <code>eprint</code> goes to stderr with
+final newline, and <code>eprintn</code> goes to stderr without final newline.
 
 <li/> Output goes directly to stdout/stderr, respectively: data produced this
-way do not go downstream to the next verb in a <tt>then</tt>-chain. (Use
-<tt>emit</tt> for that.)
+way do not go downstream to the next verb in a <code>then</code>-chain. (Use
+<code>emit</code> for that.)
 
-<li/> Print statements are for strings (<tt>print "hello"</tt>), or things
-which can be made into strings: numbers (<tt>print 3</tt>, <tt>print $a +
-$b</tt>, or concatenations thereof (<tt>print "a + b = " . ($a + $b)</tt>).
-Maps (in <tt>$*</tt>, map-valued out-of-stream or local variables, and map
+<li/> Print statements are for strings (<code>print "hello"</code>), or things
+which can be made into strings: numbers (<code>print 3</code>, <code>print $a +
+$b</code>, or concatenations thereof (<code>print "a + b = " . ($a + $b)</code>).
+Maps (in <code>$*</code>, map-valued out-of-stream or local variables, and map
 literals) aren&rsquo;t convertible into strings. If you print a map, you get
-<tt>{is-a-map}</tt> as output. Please use <tt>dump</tt> to print maps.
+<code>{is-a-map}</code> as output. Please use <code>dump</code> to print maps.
 
 <li/>You can redirect print output to a file:
-<tt>mlr --from myfile.dat put 'print &gt; "tap.txt", $x'</tt>
-<tt>mlr --from myfile.dat put 'o=$*; print &gt; $a.".txt", $x'</tt>.
+<code>mlr --from myfile.dat put 'print &gt; "tap.txt", $x'</code>
+<code>mlr --from myfile.dat put 'o=$*; print &gt; $a.".txt", $x'</code>.
 
 <li/> See also the <a href="#Redirected-output_statements">section on redirected output</a> for examples.
 
@@ -2866,28 +2866,28 @@ literals) aren&rsquo;t convertible into strings. If you print a map, you get
 <!-- ================================================================ -->
 <a id="Dump_statements"/><h2>Dump statements</h2>
 
-<p/>The <tt>dump</tt> statement is for printing expressions, including maps,
+<p/>The <code>dump</code> statement is for printing expressions, including maps,
 directly to stdout/stderr, respectively:
 
 <ul>
 
-<li/> There are two variants: <tt>dump</tt> prints to stdout; <tt>edump</tt>
+<li/> There are two variants: <code>dump</code> prints to stdout; <code>edump</code>
 prints to stderr.
 
 <li/> Output goes directly to stdout/stderr, respectively: data produced this
-way do not go downstream to the next verb in a <tt>then</tt>-chain. (Use
-<tt>emit</tt> for that.)
+way do not go downstream to the next verb in a <code>then</code>-chain. (Use
+<code>emit</code> for that.)
 
-<li/> You can use <tt>dump</tt> to output single strings, numbers,
+<li/> You can use <code>dump</code> to output single strings, numbers,
 or expressions including map-valued data. Map-valued data are printed
 as JSON. Miller allows string and integer keys in its map literals while
-JSON allows only string keys, so use <tt>mlr put --jknquoteint</tt> if
+JSON allows only string keys, so use <code>mlr put --jknquoteint</code> if
 you want integer-valued map keys not double-quoted.
 
-<li/> If you use <tt>dump</tt> (or <tt>edump</tt>) with no arguments, you get a
+<li/> If you use <code>dump</code> (or <code>edump</code>) with no arguments, you get a
 JSON structure representing the current values of all out-of-stream variables.
 
-<li/> As with <tt>print</tt>, you can redirect output to files.
+<li/> As with <code>print</code>, you can redirect output to files.
 
 <li/> See also the <a href="#Redirected-output_statements">section on redirected output</a> for examples.
 
@@ -2896,15 +2896,15 @@ JSON structure representing the current values of all out-of-stream variables.
 <!-- ================================================================ -->
 <a id="Tee_statements"/><h2>Tee statements</h2>
 
-<p/> Records produced by a <tt>mlr put</tt> go downstream to the next verb in
-your <tt>then</tt>-chain, if any, or otherwise to standard output.  If you want
-to additionally copy out records to files, you can do that using <tt>tee</tt>.
+<p/> Records produced by a <code>mlr put</code> go downstream to the next verb in
+your <code>then</code>-chain, if any, or otherwise to standard output.  If you want
+to additionally copy out records to files, you can do that using <code>tee</code>.
 
-<p/>The syntax is, by example, <tt>mlr --from myfile.dat put 'tee &gt;
-"tap.dat", $*' then sort -n index</tt>.  First is <tt>tee &gt;</tt>, then the
+<p/>The syntax is, by example, <code>mlr --from myfile.dat put 'tee &gt;
+"tap.dat", $*' then sort -n index</code>.  First is <code>tee &gt;</code>, then the
 filename expression (which can be an expression such as
-<tt>"tap.".$a.".dat"</tt>), then a comma, then <tt>$*</tt>. (Nothing else but
-<tt>$*</tt> is teeable.)
+<code>"tap.".$a.".dat"</code>), then a comma, then <code>$*</code>. (Nothing else but
+<code>$*</code> is teeable.)
 
 <p/> See also the <a href="#Redirected-output_statements">section on redirected
 output</a> for examples.
@@ -2922,7 +2922,7 @@ multiple files, one for each account ID, and so on.
 
 <ul>
 
-<li/> The <tt>print</tt> and <tt>dump</tt> keywords produce output immediately
+<li/> The <code>print</code> and <code>dump</code> keywords produce output immediately
 to standard output, or to specified file(s) or pipe-to command if present.
 
 <p/>
@@ -2961,12 +2961,12 @@ dump: prints all currently defined out-of-stream variables immediately
 </div>
 <p/>
 
-<li/> <tt>mlr put</tt> sends the current record (possibly modified by the
-<tt>put</tt> expression) to the output record stream. Records are then input to
-the following verb in a <tt>then</tt>-chain (if any), else printed to standard
-output (unless <tt>put -q</tt>). The <b>tee</b> keyword <i>additionally</i>
+<li/> <code>mlr put</code> sends the current record (possibly modified by the
+<code>put</code> expression) to the output record stream. Records are then input to
+the following verb in a <code>then</code>-chain (if any), else printed to standard
+output (unless <code>put -q</code>). The <b>tee</b> keyword <i>additionally</i>
 writes the output record to specified file(s) or pipe-to command, or
-immediately to <tt>stdout</tt>/<tt>stderr</tt>.
+immediately to <code>stdout</code>/<code>stderr</code>.
 
 <p/>
 <div class="pokipanel">
@@ -3000,13 +3000,13 @@ tee: prints the current record to specified file.
 </div>
 <p/>
 
-<li/> <tt>mlr put</tt>&rsquo;s <tt>emitf</tt>, <tt>emitp</tt>, and
-<tt>emit</tt> send out-of-stream variables to the output record stream. These
-are then input to the following verb in a <tt>then</tt>-chain (if any), else
-printed to standard output. When redirected with <tt>&gt;</tt>,
-<tt>&gt;&gt;</tt>, or <tt>|</tt>, they <i>instead</i> write the out-of-stream
+<li/> <code>mlr put</code>&rsquo;s <code>emitf</code>, <code>emitp</code>, and
+<code>emit</code> send out-of-stream variables to the output record stream. These
+are then input to the following verb in a <code>then</code>-chain (if any), else
+printed to standard output. When redirected with <code>&gt;</code>,
+<code>&gt;&gt;</code>, or <code>|</code>, they <i>instead</i> write the out-of-stream
 variable(s) to specified file(s) or pipe-to command, or immediately to
-<tt>stdout</tt>/<tt>stderr</tt>.
+<code>stdout</code>/<code>stderr</code>.
 
 <p/>
 <div class="pokipanel">
@@ -3118,18 +3118,18 @@ emit: inserts an out-of-stream variable into the output record stream. Hashmap
 <!-- ================================================================ -->
 <a id="Emit_statements"/><h2>Emit statements</h2>
 
-<p/>There are three variants: <tt>emitf</tt>, <tt>emit</tt>, and
-<tt>emitp</tt>. Keep in mind that out-of-stream variables are a nested,
-multi-level hashmap (directly viewable as JSON using <tt>dump</tt>), whereas
+<p/>There are three variants: <code>emitf</code>, <code>emit</code>, and
+<code>emitp</code>. Keep in mind that out-of-stream variables are a nested,
+multi-level hashmap (directly viewable as JSON using <code>dump</code>), whereas
 Miller output records are lists of single-level key-value pairs. The three emit
 variants allow you to control how the multilevel hashmaps are flatten down to
-output records. You can emit any map-valued expression, including <tt>$*</tt>,
+output records. You can emit any map-valued expression, including <code>$*</code>,
 map-valued out-of-stream variables, the entire out-of-stream-variable
-collection <tt>@*</tt>, map-valued local variables, map literals, or map-valued
+collection <code>@*</code>, map-valued local variables, map literals, or map-valued
 function return values.
 
 <p/>Use <b>emitf</b> to output several out-of-stream variables side-by-side in the same output record.
-For <tt>emitf</tt> these mustn&rsquo;t have indexing using <tt>@name[...]</tt>. Example:
+For <code>emitf</code> these mustn&rsquo;t have indexing using <code>@name[...]</code>. Example:
 
 <p/>
 <div class="pokipanel">
@@ -3173,7 +3173,7 @@ sum=2.264762
 </div>
 <p/>
 
-<p/>If it&rsquo;s indexed then use as many names after <tt>emit</tt> as there are indices:
+<p/>If it&rsquo;s indexed then use as many names after <code>emit</code> as there are indices:
 
 <p/>
 <div class="pokipanel">
@@ -3280,11 +3280,11 @@ a=wye,b=pan,i=5,sum=0.573289
 </div>
 <p/>
 
-<p/>Now for <b>emitp</b>: if you have as many names following <tt>emit</tt> as
-there are levels in the out-of-stream variable&rsquo;s hashmap, then <tt>emit</tt> and <tt>emitp</tt> do the same
+<p/>Now for <b>emitp</b>: if you have as many names following <code>emit</code> as
+there are levels in the out-of-stream variable&rsquo;s hashmap, then <code>emit</code> and <code>emitp</code> do the same
 thing. Where they differ is when you don&rsquo;t specify as many names as there are hashmap levels. In this
-case, Miller needs to flatten multiple map indices down to output-record keys: <tt>emitp</tt> includes full
-prefixing (hence the <tt>p</tt> in <tt>emitp</tt>) while <tt>emit</tt> takes the deepest hashmap key as the
+case, Miller needs to flatten multiple map indices down to output-record keys: <code>emitp</code> includes full
+prefixing (hence the <code>p</code> in <code>emitp</code>) while <code>emit</code> takes the deepest hashmap key as the
 output-record key:
 
 <p/>
@@ -3361,7 +3361,7 @@ sum:wye:pan 0.573289
 <p/>
 
 <p/>Use <b>--oflatsep</b> to specify the character which joins multilevel
-keys for <tt>emitp</tt> (it defaults to a colon):
+keys for <code>emitp</code> (it defaults to a colon):
 
 <p/>
 <div class="pokipanel">
@@ -3444,18 +3444,18 @@ hat pan 168.553807 363     0.464336
 <p/>
 
 What this does is walk through the first out-of-stream variable
-(<tt>@x_sum</tt> in this example) as usual, then for each keylist found (e.g.
-<tt>pan,wye</tt>), include the values for the remaining out-of-stream variables
-(here, <tt>@x_count</tt> and <tt>@x_mean</tt>). You should use this when all
+(<code>@x_sum</code> in this example) as usual, then for each keylist found (e.g.
+<code>pan,wye</code>), include the values for the remaining out-of-stream variables
+(here, <code>@x_count</code> and <code>@x_mean</code>). You should use this when all
 out-of-stream variables in the emit statement have <b>the same shape and the same
 keylists</b>.
 
 <!-- ================================================================ -->
 <a id="Emit-all_statements"/><h2>Emit-all statements</h2>
 
-<p/>Use <b>emit all</b> (or <tt>emit @*</tt> which is synonymous) to output all
+<p/>Use <b>emit all</b> (or <code>emit @*</code> which is synonymous) to output all
 out-of-stream variables. You can use the following idiom to get various
-accumulators output side-by-side (reminiscent of <tt>mlr stats1</tt>):
+accumulators output side-by-side (reminiscent of <code>mlr stats1</code>):
 
 <p/>
 <div class="pokipanel">
@@ -3510,8 +3510,8 @@ wye pan 0.573289 1
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_unset_statements');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_unset_statements" style="display: block">
 
-<p/>You can clear a map key by assigning the empty string as its value: <tt>$x=""</tt> or <tt>@x=""</tt>.
-Using <tt>unset</tt> you can remove the key entirely. Examples:
+<p/>You can clear a map key by assigning the empty string as its value: <code>$x=""</code> or <code>@x=""</code>.
+Using <code>unset</code> you can remove the key entirely. Examples:
 
 <p/>
 <div class="pokipanel">
@@ -3538,7 +3538,7 @@ b=pan,i=5,y=0.8636244699032729
 </div>
 <p/>
 
-<p/>This can also be done, of course, using <tt>mlr cut -x</tt>. You can also
+<p/>This can also be done, of course, using <code>mlr cut -x</code>. You can also
 clear out-of-stream or local variables, at the base name level, or at an
 indexed sublevel:
 
@@ -3600,7 +3600,7 @@ $ mlr put -q '@sum[$a][$b] += $x; end { dump; unset @sum["eks"]; dump }' data/sm
 </div>
 <p/>
 
-<p/>If you use <tt>unset all</tt> (or <tt>unset @*</tt> which is synonymous), that will unset all out-of-stream
+<p/>If you use <code>unset all</code> (or <code>unset @*</code> which is synonymous), that will unset all out-of-stream
 variables which have been defined up to that point.
 
 </div>
@@ -3609,7 +3609,7 @@ variables which have been defined up to that point.
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_filter_statements');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_filter_statements" style="display: block">
 
-<p/> You can use <tt>filter</tt> within <tt>put</tt>. In fact, the
+<p/> You can use <code>filter</code> within <code>put</code>. In fact, the
 following two are synonymous:
 
 <p/>
@@ -3661,7 +3661,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,z=0.495106
 <div id="section_toggle_built_in_functions" style="display: block">
 
 <p/>Each function takes a specific number of arguments, as shown below, except
-for functions marked as variadic such as <tt>min</tt> and <tt>max</tt>. (The
+for functions marked as variadic such as <code>min</code> and <code>max</code>. (The
 latter compute min and max of any number of numerical arguments.) There is no
 notion of optional or default-on-absent arguments. All argument-passing is
 positional rather than by name; arguments are passed by value, not by
@@ -5614,25 +5614,25 @@ wye pan 5 0.5732889198020006  0.8636244699032729  211.387310 120
 
 <ul>
 
-<li/> Function bodies start with <tt>func</tt> and a parameter list, defined
-outside of <tt>begin</tt>, <tt>end</tt>, or other <tt>func</tt> or
-<tt>subr</tt> blocks. (I.e. the Miller DSL has no nested functions.)
+<li/> Function bodies start with <code>func</code> and a parameter list, defined
+outside of <code>begin</code>, <code>end</code>, or other <code>func</code> or
+<code>subr</code> blocks. (I.e. the Miller DSL has no nested functions.)
 
 <li/> A function (uniqified by its name) may not be redefined: either by
 redefining a user-defined function, or by redefining a built-in function.
 However, functions and subroutines have separate namespaces: you can define a
-subroutine <tt>log</tt> which does not clash with the mathematical <tt>log</tt>
+subroutine <code>log</code> which does not clash with the mathematical <code>log</code>
 function.
 
 <li/> Functions may be defined either before or after use (there is an
 object-binding/linkage step at startup).  More specifically, functions may be
 either recursive or mutually recursive. Functions may not call subroutines.
 
-<li/> Functions may be defined and called either within <tt>mlr put</tt> or
-<tt>mlr put</tt>.
+<li/> Functions may be defined and called either within <code>mlr put</code> or
+<code>mlr put</code>.
 
-<li/> Functions have read access to <tt>$</tt>-variables and
-<tt>@</tt>-variables but may not modify them.
+<li/> Functions have read access to <code>$</code>-variables and
+<code>@</code>-variables but may not modify them.
 See also
 <a href="cookbook.html#Memoization_with_out-of-stream_variables">this cookbook item</a> for an example.
 
@@ -5640,7 +5640,7 @@ See also
 
 <li/> When a return value is not implicitly returned, this results in a return
 value of absent-null. (In the example above, if there were records for which
-the argument to <tt>f</tt> is non-numeric, the assignments would be skipped.)
+the argument to <code>f</code> is non-numeric, the assignments would be skipped.)
 See also the section on
 <a href="#Null_data:_empty_and_absent">empty_and_absent null data</a>.
 
@@ -5649,7 +5649,7 @@ information on scope and extent of arguments, as well as for information on the
 use of local variables within functions.
 
 <li/> See the section on <a href="#Expressions_from_files">expressions from
-files</a> for information on the use of <tt>-f</tt> and <tt>-e</tt> flags.
+files</a> for information on the use of <code>-f</code> and <code>-e</code> flags.
 
 </ul>
 
@@ -5696,24 +5696,24 @@ numcalls=15
 
 <ul>
 
-<li/> Subroutine bodies start with <tt>subr</tt> and a parameter list, defined
-outside of <tt>begin</tt>, <tt>end</tt>, or other <tt>func</tt> or
-<tt>subr</tt> blocks. (I.e. the Miller DSL has no nested subroutines.)
+<li/> Subroutine bodies start with <code>subr</code> and a parameter list, defined
+outside of <code>begin</code>, <code>end</code>, or other <code>func</code> or
+<code>subr</code> blocks. (I.e. the Miller DSL has no nested subroutines.)
 
 <li/> A subroutine (uniqified by its name) may not be redefined.
 However, functions and subroutines have separate namespaces: you can define a
-subroutine <tt>log</tt> which does not clash with the mathematical <tt>log</tt>
+subroutine <code>log</code> which does not clash with the mathematical <code>log</code>
 function.
 
 <li/> Subroutines may be defined either before or after use (there is an
 object-binding/linkage step at startup).  More specifically, subroutines may be
 either recursive or mutually recursive. Subroutines may call functions.
 
-<li/> Subroutines may be defined and called either within <tt>mlr put</tt> or
-<tt>mlr put</tt>.
+<li/> Subroutines may be defined and called either within <code>mlr put</code> or
+<code>mlr put</code>.
 
-<li/> Subroutines have read/write access to <tt>$</tt>-variables and
-<tt>@</tt>-variables.
+<li/> Subroutines have read/write access to <code>$</code>-variables and
+<code>@</code>-variables.
 
 <li/> Argument values may be reassigned: they are not read-only.
 
@@ -5722,7 +5722,7 @@ information on scope and extent of arguments, as well as for information on the
 use of local variables within functions.
 
 <li/> See the section on <a href="#Expressions_from_files">expressions from
-files</a> for information on the use of <tt>-f</tt> and <tt>-e</tt> flags.
+files</a> for information on the use of <code>-f</code> and <code>-e</code> flags.
 
 </ul>
 
@@ -5738,20 +5738,20 @@ files</a> for information on the use of <tt>-f</tt> and <tt>-e</tt> flags.
 problem of a program which parses without syntax error but doesn&rsquo;t do
 what you expect.
 
-<p/> The <tt>syntax error</tt> message is cryptic: it says <tt>syntax error at
-</tt> followed by the next symbol it couldn&rsquo;t parse. This is good, but
-(as of 5.0.0) it doesn&rsquo;t say things like <tt>syntax error at line 17,
-character 22</tt>. Here are some common causes of syntax errors:
+<p/> The <code>syntax error</code> message is cryptic: it says <code>syntax error at
+</code> followed by the next symbol it couldn&rsquo;t parse. This is good, but
+(as of 5.0.0) it doesn&rsquo;t say things like <code>syntax error at line 17,
+character 22</code>. Here are some common causes of syntax errors:
 
 <ul>
 
-<li/> Don&rsquo;t forget <tt>;</tt> at end of line, before another statement on
+<li/> Don&rsquo;t forget <code>;</code> at end of line, before another statement on
 the next line.
 
-<li/> Miller&rsquo;s DSL lacks the <tt>++</tt> and <tt>--</tt> operators.
+<li/> Miller&rsquo;s DSL lacks the <code>++</code> and <code>--</code> operators.
 
 <li/> Curly braces are required for the bodies of
-<tt>if</tt>/<tt>while</tt>/<tt>for</tt> blocks, even when the body is a single
+<code>if</code>/<code>while</code>/<code>for</code> blocks, even when the body is a single
 statement.
 
 </ul>
@@ -5761,18 +5761,18 @@ statement.
 <ul>
 
 <li/>As in any language, you can do
-<a href="#Print_statements"><tt>print</tt></a> (or <tt>eprint</tt> to print to
-stderr). See also <a href="#Dump_statements"><tt>dump</tt></a> and <a
-href="#Emit_statements"><tt>emit</tt></a>.
+<a href="#Print_statements"><code>print</code></a> (or <code>eprint</code> to print to
+stderr). See also <a href="#Dump_statements"><code>dump</code></a> and <a
+href="#Emit_statements"><code>emit</code></a>.
 
-<li/> The <tt>-v</tt> option to <tt>mlr put</tt> and <tt>mlr filter</tt> prints
+<li/> The <code>-v</code> option to <code>mlr put</code> and <code>mlr filter</code> prints
 abstract syntax trees for your code. While not all details here will be of
 interest to everyone, certainly this makes questions such as operator
 precedence completely unambiguous.
 
-<li/> The <tt>-T</tt> option prints a trace of each statement executed.
+<li/> The <code>-T</code> option prints a trace of each statement executed.
 
-<li/> The <tt>-t</tt> and <tt>-a</tt> options show low-level details for the
+<li/> The <code>-t</code> and <code>-a</code> options show low-level details for the
 parsing process and for stack-variable-index allocation, respectively. These
 will likely be of interest to people who enjoy compilers, and probably less
 useful for a more general audience.
@@ -5781,7 +5781,7 @@ useful for a more general audience.
 type declarations and type-assertions you can use to make sure expressions and
 the data flowing them are evaluating as you expect.  I made them optional
 because one of Miller&rsquo;s important use-cases is being able to say simple
-things like <tt>mlr put '$y = $x + 1' myfile.dat</tt> with a minimum of
+things like <code>mlr put '$y = $x + 1' myfile.dat</code> with a minimum of
 punctuational bric-a-brac &mdash; but for programs over a few lines I generally
 find that the more type-specification, the better.
 
@@ -5794,8 +5794,8 @@ find that the more type-specification, the better.
 <div id="section_toggle_a_note_on_complexity" style="display: block">
 
 <p/> One of Miller&rsquo;s strengths is its brevity: it&rsquo;s much quicker
-&mdash; and less error-prone &mdash; to type <tt>mlr stats1 -a sum -f x,y -g
-a,b</tt> than having to track summation variables as in <tt>awk</tt>, or using
+&mdash; and less error-prone &mdash; to type <code>mlr stats1 -a sum -f x,y -g
+a,b</code> than having to track summation variables as in <code>awk</code>, or using
 Miller&rsquo;s out-of-stream variables. And the more language features
 Miller&rsquo;s put-DSL has (for-loops, if-statements, nested control
 structures, user-defined functions, etc.) then the <i>less</i> powerful it
@@ -5805,8 +5805,8 @@ begins to seem: because of the other programming-language features it
 <p/> When I was originally prototyping Miller in 2015, the decision I had was
 whether to hand-code in a low-level language like C or Rust, with my own
 hand-rolled DSL, or whether to use a higher-level language (like Python or Lua
-or Nim) and let the <tt>put</tt> statements be handled by the implementation
-language&rsquo;s own <tt>eval</tt>: the implementation language would take the
+or Nim) and let the <code>put</code> statements be handled by the implementation
+language&rsquo;s own <code>eval</code>: the implementation language would take the
 place of a DSL. Multiple performance experiments showed me I could get better
 throughput using the former, and using C in particular &mdash; by a wide margin. So
 Miller is C under the hood with a hand-rolled DSL.
@@ -5815,9 +5815,9 @@ Miller is C under the hood with a hand-rolled DSL.
 notation, low latency, and high throughput &mdash; and not add too much in
 terms of high-level-language features to the DSL.  That said, some sort of
 customizability is a basic thing to want. As of 4.1.0 we have recursive
-for/while/if structures on about the same complexity level as <tt>awk</tt>; as
+for/while/if structures on about the same complexity level as <code>awk</code>; as
 of 5.0.0 we have user-defined functions and map-valued variables, again on
-about the same complexity level as <tt>awk</tt> along with optional
+about the same complexity level as <code>awk</code> along with optional
 type-declaration syntax.  While I&rsquo;m excited by these powerful language
 features, I hope to keep new features beyond 5.0.0 focused on Miller&rsquo;s
 sweet spot which is speed plus simplicity.

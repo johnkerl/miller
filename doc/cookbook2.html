@@ -297,7 +297,7 @@ suggestional
 
 This admittedly artificial example demonstrates using Miller time and stats
 functions to introspectively acquire some information about Miller&rsquo;s own
-runtime. The <tt>delta</tt> function computes the difference between successive
+runtime. The <code>delta</code> function computes the difference between successive
 timestamps.
 
 <p/>
@@ -355,7 +355,7 @@ x_iqr 0.501516
 </div>
 <p/>
 
-<p> For wildcarded field names, first compute p25 and p75, then loop over field names with <tt>p25</tt> in them:
+<p> For wildcarded field names, first compute p25 and p75, then loop over field names with <code>p25</code> in them:
 
 <p/>
 <div class="pokipanel">
@@ -386,7 +386,7 @@ y_iqr 0.511866
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_weighted_mean');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_weighted_mean" style="display: block">
 
-<p> This might be more elegantly implemented as an option within the <tt>stats1</tt> verb. Meanwhile, it&rsquo;s
+<p> This might be more elegantly implemented as an option within the <code>stats1</code> verb. Meanwhile, it&rsquo;s
 expressible within the DSL:
 
 <p/>
@@ -474,8 +474,8 @@ mlr -n \
 <li/> Set the Miller random-number seed so this webdoc looks the same every time I regenerate it.
 <li/> Use pretty-printed tabular output.
 <li/> Use pretty-printed tabular output.
-<li/> Use <tt>seqgen</tt> to produce 100,000 records <tt>i=0</tt>, <tt>i=1</tt>, etc.
-<li/> Send those to a <tt>put</tt> step which defines an inverse-transform-sampling function and
+<li/> Use <code>seqgen</code> to produce 100,000 records <code>i=0</code>, <code>i=1</code>, etc.
+<li/> Send those to a <code>put</code> step which defines an inverse-transform-sampling function and
   calls it twice, then computes the sum and product of samples.
 <li/> Send those to a histogram, and from there to a bar-plotter. This is just for visualization; you
   could just as well output CSV and send that off to your own plotting tool, etc.
@@ -554,8 +554,8 @@ to some <i>N</i> by making a list of the numbers 1 to <i>N</i>, then striking
 out all multiples of 2 except 2 itself, all multiples of 3 except 3 itself, all
 multiples of 4 except 4 itself, and so on. Whatever survives that without
 getting marked is a prime. This is easy enough in Miller. Notice that here all
-the work is in <tt>begin</tt> and <tt>end</tt> statements; there is no file
-input (so we use <tt>mlr -n</tt> to keep Miller from waiting for input data).
+the work is in <code>begin</code> and <code>end</code> statements; there is no file
+input (so we use <code>mlr -n</code> to keep Miller from waiting for input data).
 
 <p/>
 <div class="pokipanel">

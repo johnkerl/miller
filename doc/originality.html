@@ -188,7 +188,7 @@ Miller commands were run with pretty-print-tabular output format.
 <!-- BODY COPIED FROM content-for-originality.html BY poki -->
 <p/> It isn&rsquo;t. Miller is one of many, many participants in the
 online-analytical-processing culture. Other key participants include
-<tt>awk</tt>, SQL, spreadsheets, etc. etc.  etc.  Far from being an original
+<code>awk</code>, SQL, spreadsheets, etc. etc.  etc.  Far from being an original
 concept, Miller explicitly strives to imitate several existing tools:
 
 <p/>
@@ -207,23 +207,23 @@ to <a href="https://github.com/benbernard/RecordStream">RecordStream</a>. The
 key difference is that RecordStream is a Perl-based tool for manipulating JSON
 (including requiring it to separately manipulate other formats such as CSV into
 and out of JSON), while Miller is fast C which handles its formats natively.
-The similarities include the <tt>sort</tt>, <tt>stats1</tt> (analog of
-RecordStream&rsquo;s <tt>collate</tt>), and <tt>delta</tt> operations, as well
-as <tt>filter</tt> and <tt>put</tt>, and pretty-print formatting.
+The similarities include the <code>sort</code>, <code>stats1</code> (analog of
+RecordStream&rsquo;s <code>collate</code>), and <code>delta</code> operations, as well
+as <code>filter</code> and <code>put</code>, and pretty-print formatting.
 
 <p/> <boldmaroon>stats_m</boldmaroon>: A third source of lineage is my Python
 <a href="https://github.com/johnkerl/scripts-math/tree/master/stats">stats_m</a>
 module.  This includes simple single-pass algorithms which form Miller&rsquo;s
-<tt>stats1</tt> and <tt>stats2</tt> subcommands.
+<code>stats1</code> and <code>stats2</code> subcommands.
 
-<p/> <boldmaroon>SQL</boldmaroon>: Fourthly, Miller&rsquo;s <tt>group-by</tt> command
-name is from SQL, as is the term <tt>aggregate</tt>.
+<p/> <boldmaroon>SQL</boldmaroon>: Fourthly, Miller&rsquo;s <code>group-by</code> command
+name is from SQL, as is the term <code>aggregate</code>.
 
 <p/> <boldmaroon>Added value</boldmaroon>:
 Miller&rsquo;s added values include:
 <ul>
 <li> Name-indexing, compared to the Unix toolkit&rsquo;s positional indexing.
-<li> Raw speed, compared to <tt>awk</tt>, RecordStream, <tt>stats_m</tt>, or various other kinds of Python/Ruby/etc. scripts one can easily create.
+<li> Raw speed, compared to <code>awk</code>, RecordStream, <code>stats_m</code>, or various other kinds of Python/Ruby/etc. scripts one can easily create.
 <li> Compact keystroking for many common tasks, with a decent amount of flexibility.
 <li> Ability to handle text files on the Unix pipe, without need for creating database tables, compared to SQL databases.
 <li> Various file formats, and on-the-fly format conversion.
@@ -231,7 +231,7 @@ Miller&rsquo;s added values include:
 
 <p/><boldmaroon>jq</boldmaroon>: Miller does for name-indexed text what
 <a href="http://stedolan.github.io/jq/">jq</a> does for JSON. If you&rsquo;re
-not already familiar with <tt>jq</tt>, please <a href="http://stedolan.github.io/jq/">check it out!</a>.
+not already familiar with <code>jq</code>, please <a href="http://stedolan.github.io/jq/">check it out!</a>.
 
 <p/><boldmaroon>What about similar tools?</boldmaroon>
 Here&rsquo;s a comprehensive list:
@@ -241,16 +241,16 @@ As it turns out, I learned about most of these after writing Miller.
 
 <p/><boldmaroon>What about DOTADIW?</boldmaroon> One of the key points of the
 <a href="http://en.wikipedia.org/wiki/Unix_philosophy">Unix philosophy</a> is
-that a tool should do one thing and do it well.  Hence <tt>sort</tt> and
-<tt>cut</tt> do just one thing. Why does Miller put <tt>awk</tt>-like
+that a tool should do one thing and do it well.  Hence <code>sort</code> and
+<code>cut</code> do just one thing. Why does Miller put <code>awk</code>-like
 processing, a few SQL-like operations, and statistical reduction all into one
 tool (see also <a href="reference.html">Reference</a>)?  This is a fair
-question. First note that many standard tools, such as <tt>awk</tt> and
-<tt>perl</tt>, do quite a few things &mdash; as does <tt>jq</tt>.  But I could
+question. First note that many standard tools, such as <code>awk</code> and
+<code>perl</code>, do quite a few things &mdash; as does <code>jq</code>.  But I could
 have pushed for putting format awareness and name-indexing options into
-<tt>cut</tt>, <tt>awk</tt>, and so on (so you could do <tt>cut -f
-hostname,uptime</tt> or <tt>awk '{sum += $x*$y}END{print sum}'</tt>).  Patching
-<tt>cut</tt>, <tt>sort</tt>, etc. on multiple operating systems is a
+<code>cut</code>, <code>awk</code>, and so on (so you could do <code>cut -f
+hostname,uptime</code> or <code>awk '{sum += $x*$y}END{print sum}'</code>).  Patching
+<code>cut</code>, <code>sort</code>, etc. on multiple operating systems is a
 non-starter in terms of uptake.  Moreover, it makes sense for me to have Miller
 be a tool which collects together format-aware record-stream processing into
 one place, with good reuse of Miller-internal library code for its various
@@ -268,7 +268,7 @@ Using low-level implementation languages like C, Go, Rust, and Nim, I&rsquo;d
 need to create my own domain-specific language (DSL) which would always be less
 featured than a full programming language, but I&rsquo;d get better
 performance.  Using high-level interpreted languages such as Perl/Python/Ruby
-I&rsquo;d get the language&rsquo;s <tt>eval</tt> for free and I wouldn&rsquo;t
+I&rsquo;d get the language&rsquo;s <code>eval</code> for free and I wouldn&rsquo;t
 need a DSL; Miller would have mainly been a set of format-specific I/O hooks.
 If I&rsquo;d gotten good enough performance from the latter I&rsquo;d have done
 it without question and Miller would be far more flexible.  But C won the
@@ -276,7 +276,7 @@ performance criteria by a landslide so we have Miller in C with a custom DSL.
 
 <p/> <boldmaroon>No, really, why one more command-line data-manipulation
 tool?</boldmaroon> I wrote Miller because I was frustrated with tools like
-<tt>grep</tt>, <tt>sed</tt>, and so on being <i>line-aware</i> without being
+<code>grep</code>, <code>sed</code>, and so on being <i>line-aware</i> without being
 <i>format-aware</i>. The single most poignant example I can think of is seeing
 people grep data lines out of their CSV files and sadly losing their header
 lines.  While some lighter-than-SQL processing is very nice to have, at core I

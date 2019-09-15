@@ -196,7 +196,7 @@ Miller commands were run with pretty-print-tabular output format.
 
 <a id="File-format_awareness"/><h1>File-format awareness</h1>
 
-Miller respects CSV headers. If you do <tt>mlr --csv cat *.csv</tt> then the header line is written once:
+Miller respects CSV headers. If you do <code>mlr --csv cat *.csv</code> then the header line is written once:
 
 <table><tr>
 <td>
@@ -250,52 +250,52 @@ a,b,c
 </td>
 </tr></table>
 
-Likewise with <tt>mlr sort</tt>, <tt>mlr tac</tt>, and so on.
+Likewise with <code>mlr sort</code>, <code>mlr tac</code>, and so on.
 
 <a id="awk-like_features:_mlr_filter_and_mlr_put"/><h1>awk-like features: mlr filter and mlr put</h1>
 
 <ul>
 
-<li/> <tt>mlr filter</tt> includes/excludes records based on a filter
-expression, e.g. <tt>mlr filter '$count &gt; 10'</tt>.
+<li/> <code>mlr filter</code> includes/excludes records based on a filter
+expression, e.g. <code>mlr filter '$count &gt; 10'</code>.
 
-<li/> <tt>mlr put</tt> adds a new field as a function of others, e.g. <tt>mlr
-put '$xy = $x * $y'</tt> or <tt>mlr put '$counter = NR'</tt>.
+<li/> <code>mlr put</code> adds a new field as a function of others, e.g. <code>mlr
+put '$xy = $x * $y'</code> or <code>mlr put '$counter = NR'</code>.
 
-<li/> The <tt>$name</tt> syntax is straight from <tt>awk</tt>&rsquo;s <tt>$1 $2
-$3</tt> (adapted to name-based indexing), as are the variables <tt>FS</tt>,
-<tt>OFS</tt>, <tt>RS</tt>, <tt>ORS</tt>, <tt>NF</tt>, <tt>NR</tt>, and
-<tt>FILENAME</tt>. The <tt>ENV[...]</tt> syntax is from Ruby.
+<li/> The <code>$name</code> syntax is straight from <code>awk</code>&rsquo;s <code>$1 $2
+$3</code> (adapted to name-based indexing), as are the variables <code>FS</code>,
+<code>OFS</code>, <code>RS</code>, <code>ORS</code>, <code>NF</code>, <code>NR</code>, and
+<code>FILENAME</code>. The <code>ENV[...]</code> syntax is from Ruby.
 
-<li/> While <tt>awk</tt> functions are record-based, Miller subcommands (or
+<li/> While <code>awk</code> functions are record-based, Miller subcommands (or
 <i>verbs</i>) are stream-based: each of them maps a stream of records into
 another stream of records.
 
-<li/> Like <tt>awk</tt>, Miller (as of v5.0.0) allows you to define new
-functions within its <tt>put</tt> and <tt>filter</tt> expression language.
-Further programmability comes from chaining with <tt>then</tt>.
+<li/> Like <code>awk</code>, Miller (as of v5.0.0) allows you to define new
+functions within its <code>put</code> and <code>filter</code> expression language.
+Further programmability comes from chaining with <code>then</code>.
 
-<li/> As with <tt>awk</tt>, <tt>$</tt>-variables are stream variables and all
-verbs (such as <tt>cut</tt>, <tt>stats1</tt>, <tt>put</tt>, etc.) as well as
-<tt>put</tt>/<tt>filter</tt> statements operate on streams.  This means that
+<li/> As with <code>awk</code>, <code>$</code>-variables are stream variables and all
+verbs (such as <code>cut</code>, <code>stats1</code>, <code>put</code>, etc.) as well as
+<code>put</code>/<code>filter</code> statements operate on streams.  This means that
 you define actions to be done on each record and then stream your data through
-those actions.  The built-in variables <tt>NF</tt>, <tt>NR</tt>, etc.  change
-from one line to another, <tt>$x</tt> is a label for field <tt>x</tt> in the
-current record, and the input to <tt>sqrt($x)</tt> changes from one record to
-the next.  The expression language for the <tt>put</tt> and <tt>filter</tt>
-verbs additionally allows you to define <tt>begin {...}</tt> and
-<tt>end {...}</tt> blocks for actions to be taken before and after records are
+those actions.  The built-in variables <code>NF</code>, <code>NR</code>, etc.  change
+from one line to another, <code>$x</code> is a label for field <code>x</code> in the
+current record, and the input to <code>sqrt($x)</code> changes from one record to
+the next.  The expression language for the <code>put</code> and <code>filter</code>
+verbs additionally allows you to define <code>begin {...}</code> and
+<code>end {...}</code> blocks for actions to be taken before and after records are
 processed, respectively.
 
-<li/> As with <tt>awk</tt>, Miller&rsquo;s <tt>put</tt>/<tt>filter</tt>
-language lets you set <tt>@sum=0</tt> before records are read, then update that
-sum on each record, then print its value at the end.  Unlike <tt>awk</tt>,
+<li/> As with <code>awk</code>, Miller&rsquo;s <code>put</code>/<code>filter</code>
+language lets you set <code>@sum=0</code> before records are read, then update that
+sum on each record, then print its value at the end.  Unlike <code>awk</code>,
 Miller makes syntactically explicit the difference between variables with
-extent across all records (names starting with <tt>@</tt>, such as
-<tt>@sum</tt>) and variables which are local to the current expression (names
-starting without <tt>@</tt>, such as <tt>sum</tt>).
+extent across all records (names starting with <code>@</code>, such as
+<code>@sum</code>) and variables which are local to the current expression (names
+starting without <code>@</code>, such as <code>sum</code>).
 
-<li/> Miller can be faster than <tt>awk</tt>, <tt>cut</tt>, and so on,
+<li/> Miller can be faster than <code>awk</code>, <code>cut</code>, and so on,
 depending on platform; see also <a href="performance.html">Performance</a>).
 In particular, Miller&rsquo;s DSL syntax is parsed into C control structures at
 startup time, with the bulk data-stream processing all done in C.
@@ -305,9 +305,9 @@ startup time, with the bulk data-stream processing all done in C.
 <a id="See_also"/><h1>See also</h1>
 
 <p/>See <a href="reference.html">Reference</a> for more on Miller&rsquo;s
-subcommands <tt>cat</tt>, <tt>cut</tt>, <tt>head</tt>, <tt>sort</tt>,
-<tt>tac</tt>, <tt>tail</tt>, <tt>top</tt>, and <tt>uniq</tt>, as well as awk-like
-<tt>mlr filter</tt> and <tt>mlr put</tt>.
+subcommands <code>cat</code>, <code>cut</code>, <code>head</code>, <code>sort</code>,
+<code>tac</code>, <code>tail</code>, <code>top</code>, and <code>uniq</code>, as well as awk-like
+<code>mlr filter</code> and <code>mlr put</code>.
     </div>
   </td>
 

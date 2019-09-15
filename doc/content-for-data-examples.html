@@ -35,19 +35,19 @@ POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint stats2 -a corr,linr
 <ul>
 <li> Produce some data with known distributions and correlations, and verify that Miller recovers those properties empirically.
 <li> Each record is labeled with one of a few colors and one of a few shapes.
-<li> The <tt>flag</tt> field is 0 or 1, with probability dependent on color
-<li> The <tt>u</tt> field is plain uniform on the unit interval.
-<li> The <tt>v</tt> field is the same, except tightly correlated with <tt>u</tt> for red circles.
-<li> The <tt>w</tt> field is autocorrelated for each color/shape pair.
-<li> The <tt>x</tt> field is boring Gaussian with mean 5 and standard deviation about 1.2, with no dependence on color or shape.
+<li> The <code>flag</code> field is 0 or 1, with probability dependent on color
+<li> The <code>u</code> field is plain uniform on the unit interval.
+<li> The <code>v</code> field is the same, except tightly correlated with <code>u</code> for red circles.
+<li> The <code>w</code> field is autocorrelated for each color/shape pair.
+<li> The <code>x</code> field is boring Gaussian with mean 5 and standard deviation about 1.2, with no dependence on color or shape.
 </ul>
 
 <p/> Peek at the data:
 POKI_RUN_COMMAND{{wc -l data/colored-shapes.dkvp}}HERE
 POKI_RUN_COMMAND{{head -n 6 data/colored-shapes.dkvp | mlr --opprint cat}}HERE
 
-<p/> Look at uncategorized stats (using <a href="https://github.com/johnkerl/scripts/blob/master/fundam/creach"><tt>creach</tt></a> for spacing).
-Here it looks reasonable that <tt>u</tt> is unit-uniform; something&rsquo;s up with <tt>v</tt> but we can&rsquo;t yet see what:
+<p/> Look at uncategorized stats (using <a href="https://github.com/johnkerl/scripts/blob/master/fundam/creach"><code>creach</code></a> for spacing).
+Here it looks reasonable that <code>u</code> is unit-uniform; something&rsquo;s up with <code>v</code> but we can&rsquo;t yet see what:
 POKI_RUN_COMMAND{{mlr --oxtab stats1 -a min,mean,max -f flag,u,v data/colored-shapes.dkvp | creach 3}}HERE
 <p/>The histogram shows the different distribution of 0/1 flags:
 POKI_RUN_COMMAND{{mlr --opprint histogram -f flag,u,v --lo -0.1 --hi 1.1 --nbins 12 data/colored-shapes.dkvp}}HERE
@@ -59,7 +59,7 @@ Bernoulli probablities from the data-generator script:
 POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,mean,max -f flag,u,v -g color then sort -f color data/colored-shapes.dkvp}}HERE
 POKI_RUN_COMMAND{{mlr --opprint stats1 -a min,mean,max -f flag,u,v -g shape then sort -f shape data/colored-shapes.dkvp}}HERE
 
-<p/> Look at bivariate stats by color and shape. In particular, <tt>u,v</tt> pairwise correlation for red circles pops out:
+<p/> Look at bivariate stats by color and shape. In particular, <code>u,v</code> pairwise correlation for red circles pops out:
 POKI_RUN_COMMAND{{mlr --opprint --right stats2 -a corr -f u,v,w,x data/colored-shapes.dkvp}}HERE
 POKI_RUN_COMMAND{{mlr --opprint --right stats2 -a corr -f u,v,w,x -g color,shape then sort -nr u_v_corr data/colored-shapes.dkvp}}HERE
 

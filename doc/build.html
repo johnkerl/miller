@@ -235,7 +235,7 @@ brew update &amp;&amp; brew install miller
 </div>
 <p/>
 
-<p/> You may already have the <tt>mlr</tt> executable available in your platform&rsquo;s
+<p/> You may already have the <code>mlr</code> executable available in your platform&rsquo;s
 package manager on NetBSD, Debian Linux, Ubuntu Xenial and upward, Arch Linux, or perhaps other distributions.
 For example, on various Linux distributions you might do one of the following:
 
@@ -292,45 +292,45 @@ artifact associated with the release.
 
 <a id="From_release_tarball_using_autoconfig"/><h2>From release tarball using autoconfig</h2>
 
-<p/>Miller allows you the option of using GNU <tt>autoconfigure</tt> to build portably.
+<p/>Miller allows you the option of using GNU <code>autoconfigure</code> to build portably.
 
 <p/>Grateful acknowledgement: Miller&rsquo;s GNU autoconfig work was done by
 the generous and expert efforts of <a href="https://github.com/0-wiz-0/">Thomas
 Klausner</a>.
 
 <ul>
-<li/> Obtain <tt>mlr-i.j.k.tar.gz</tt> from <a
+<li/> Obtain <code>mlr-i.j.k.tar.gz</code> from <a
   href="https://github.com/johnkerl/miller/tags">https://github.com/johnkerl/miller/tags</a>,
-  replacing <tt>i.j.k</tt> with the desired release, e.g. <tt>2.2.1</tt>.
-<li/> <tt>tar zxvf mlr-i.j.k.tar.gz</tt>
-<li/> <tt>cd mlr-i.j.k</tt>
+  replacing <code>i.j.k</code> with the desired release, e.g. <code>2.2.1</code>.
+<li/> <code>tar zxvf mlr-i.j.k.tar.gz</code>
+<li/> <code>cd mlr-i.j.k</code>
 <li/> Install the following packages using your system&rsquo;s package manager
-  (<tt>apt-get</tt>, <tt>yum install</tt>, etc.):
+  (<code>apt-get</code>, <code>yum install</code>, etc.):
   <b>flex</b>
 <li> Various configuration options of your choice, e.g.
   <ul>
-  <li/> <tt>./configure</tt>
-  <li/> <tt>./configure --prefix=/usr/local</tt>
-  <li/> <tt>./configure --prefix=$HOME/pkgs</tt>
-  <li/> <tt>./configure CC=clang</tt>
-  <li/> <tt>./configure --disable-shared</tt> (to make a statically linked executable)
-  <li/> <tt>./configure 'CFLAGS=-Wall -std=gnu99 -O3'</tt>
+  <li/> <code>./configure</code>
+  <li/> <code>./configure --prefix=/usr/local</code>
+  <li/> <code>./configure --prefix=$HOME/pkgs</code>
+  <li/> <code>./configure CC=clang</code>
+  <li/> <code>./configure --disable-shared</code> (to make a statically linked executable)
+  <li/> <code>./configure 'CFLAGS=-Wall -std=gnu99 -O3'</code>
   <li/> etc.
   </ul>
-<li/> <tt>make</tt> creates the <tt>c/mlr</tt> executable
-<li/> <tt>make check</tt>
-<li/> <tt>make install</tt> copies the <tt>c/mlr</tt> executable to your prefix&rsquo;s <tt>bin</tt> subdirectory.
+<li/> <code>make</code> creates the <code>c/mlr</code> executable
+<li/> <code>make check</code>
+<li/> <code>make install</code> copies the <code>c/mlr</code> executable to your prefix&rsquo;s <code>bin</code> subdirectory.
 </ul>
 
 <a id="From_git_clone_using_autoconfig"/><h2>From git clone using autoconfig</h2>
 
 <ul>
-<li/> <tt>git clone https://github.com/johnkerl/miller</tt>
-<li/> <tt>cd miller</tt>
+<li/> <code>git clone https://github.com/johnkerl/miller</code>
+<li/> <code>cd miller</code>
 <li/> Install the following packages using your system&rsquo;s package manager
-  (<tt>apt-get</tt>, <tt>yum install</tt>, etc.):
+  (<code>apt-get</code>, <code>yum install</code>, etc.):
   <b>automake autoconf libtool flex</b>
-<li/> Run <tt>autoreconf -fiv</tt>. (This is necessary when building from head as discussed in
+<li/> Run <code>autoreconf -fiv</code>. (This is necessary when building from head as discussed in
   <a href="https://github.com/johnkerl/miller/issues/131">https://github.com/johnkerl/miller/issues/131</a>.)
 <li/> Then continue from &ldquo;Install the following ... &rdquo; as above.
 </ul>
@@ -343,7 +343,7 @@ us to build software on a wide diversity of platforms. For this reason I&rsquo;m
 autoconfig.
 
 <p/>But, many others (myself included!) find autoconfig confusing: if it works
-without errors, great, but if not, the <tt>./configure &amp;&amp; make</tt>
+without errors, great, but if not, the <code>./configure &amp;&amp; make</code>
 output can be exceedingly difficult to decipher. And this also can be a
 turn-off for using open-source software: if you can&rsquo;t figure out the
 build errors, you may just keep walking. For this reason I&rsquo;m happy that
@@ -357,21 +357,21 @@ https://github.com/johnkerl/miller/issues</a>.)
 <p/>Steps:
 <ul>
 <li/> Obtain a release tarball or git clone.
-<li/> <tt>cd</tt> into the <tt>c</tt> subdirectory.
-<li/> Edit the <tt>INSTALLDIR</tt> in <tt>Makefile.no-autoconfig</tt>.
-<li/> To change the C compiler, edit the <tt>CC=</tt> lines in
-  <tt>Makefile.no-autoconfig</tt> and <tt>dsls/Makefile.no-autoconfig</tt>.
-<li/> <tt>make -f Makefile.no-autoconfig</tt> creates the <tt>mlr</tt>
+<li/> <code>cd</code> into the <code>c</code> subdirectory.
+<li/> Edit the <code>INSTALLDIR</code> in <code>Makefile.no-autoconfig</code>.
+<li/> To change the C compiler, edit the <code>CC=</code> lines in
+  <code>Makefile.no-autoconfig</code> and <code>dsls/Makefile.no-autoconfig</code>.
+<li/> <code>make -f Makefile.no-autoconfig</code> creates the <code>mlr</code>
   executable and runs unit/regression tests (i.e. the equivalent of both
-  <tt>make</tt> and <tt>make check</tt> using autoconfig).
-<li/> <tt>make install</tt> copies the <tt>mlr</tt> executable to your install directory.
+  <code>make</code> and <code>make check</code> using autoconfig).
+<li/> <code>make install</code> copies the <code>mlr</code> executable to your install directory.
 </ul>
 
-<p/>The <tt>Makefile.no-autoconfig</tt> is simple: little more than <tt>gcc
-*.c</tt>.  Customzing is less automatic than autoconfig, but more transparent.
+<p/>The <code>Makefile.no-autoconfig</code> is simple: little more than <code>gcc
+*.c</code>.  Customzing is less automatic than autoconfig, but more transparent.
 I expect this makefile to work with few modifications on a large fraction of
 modern Linux/BSD-like systems: I&rsquo;m aware of successful use with
-<tt>gcc</tt> and <tt>clang</tt>, on Ubuntu 12.04 LTS, SELinux, Darwin (MacOS
+<code>gcc</code> and <code>clang</code>, on Ubuntu 12.04 LTS, SELinux, Darwin (MacOS
 Yosemite), and FreeBSD.
 
 </div>
@@ -388,7 +388,7 @@ binary from outside MSYS2.  You can also use a precompiled binary (see above).
 
 <p/> You will first need to install MSYS2: <a href="http://www.msys2.org/">http://www.msys2.org/</a>.
 Then, start an MSYS2 shell, e.g. (supposing you installed MSYS2 to
-<tt>C:\msys2\</tt>) run <tt>C:\msys2\mingw64.exe</tt>.  Within the MSYS2 shell,
+<code>C:\msys2\</code>) run <code>C:\msys2\mingw64.exe</code>.  Within the MSYS2 shell,
 you can run the following to install dependent packages:
 
 <div class=pokipanel>
@@ -407,17 +407,17 @@ pacman -S msys2-runtime
 in the Miller base directory.
 
 <p/>Then, simply run <b>msys2-build.sh</b> which is a thin wrapper around
-<tt>./configure &amp;&amp; make</tt> which accommodates certain Windows/MSYS2
+<code>./configure &amp;&amp; make</code> which accommodates certain Windows/MSYS2
 idiosyncracies.
 
 <p/> There is a unit-test false-negative issue involving the semantics of the
-<tt>mkstemp</tt> library routine but a <tt>make -k</tt> in the <tt>c</tt>
-subdirectory has been producing a <tt>mlr.exe</tt> for me.
+<code>mkstemp</code> library routine but a <code>make -k</code> in the <code>c</code>
+subdirectory has been producing a <code>mlr.exe</code> for me.
 
-<p/> Within MSYS2 you can run <tt>mlr</tt>: simply copy it from the <tt>c</tt>
+<p/> Within MSYS2 you can run <code>mlr</code>: simply copy it from the <code>c</code>
 subdirectory to your desired location somewhere within your MSYS2
-<tt>$PATH</tt>.  To run <tt>mlr</tt> outside of MSYS2, just as with precompiled
-binaries as described above, you&rsquo;ll need <tt>msys-2.0.dll</tt>.  One way
+<code>$PATH</code>.  To run <code>mlr</code> outside of MSYS2, just as with precompiled
+binaries as described above, you&rsquo;ll need <code>msys-2.0.dll</code>.  One way
 to do this is to augment your path:
 
 <div class=pokipanel>
@@ -455,15 +455,15 @@ https://github.com/johnkerl/miller/issues</a>.
 
 <a id="Required_external_dependencies"/><h2>Required external dependencies</h2>
 
-<p/> These are necessary to produce the <tt>mlr</tt>
+<p/> These are necessary to produce the <code>mlr</code>
 executable.
 <ul>
-<li/> <tt>gcc</tt>, <tt>clang</tt>, etc. (or presumably other compilers; please
+<li/> <code>gcc</code>, <code>clang</code>, etc. (or presumably other compilers; please
 open an issue or send me a pull request if you have information for me about
 other 21st-century compilers)
 <li/> The standard C library
-<li/> <tt>flex</tt>
-<li/> <tt>automake</tt>, <tt>autoconf</tt>, and <tt>libtool</tt>, if you build with autoconfig
+<li/> <code>flex</code>
+<li/> <code>automake</code>, <code>autoconf</code>, and <code>libtool</code>, if you build with autoconfig
 </ul>
 
 <a id="Optional_external_dependencies"/><h2>Optional external dependencies</h2>
@@ -472,11 +472,11 @@ This documentation pageset is built using <boldmaroon>Poki</boldmaroon>:
 <a href="http://johnkerl.org/poki/doc">docs here</a>,
 <a href="https://github.com/johnkerl/poki">source code here</a>.
 Note that <a href="http://johnkerl.org/miller/doc/index.html">http://johnkerl.org/miller/doc/index.html</a>
-is nothing more than Miller&rsquo;s <tt>doc</tt> directory served up by a web server.
-You&rsquo;ll need <tt>poki</tt> if you modify documents, or if you modify the code in a way that affects the documents
+is nothing more than Miller&rsquo;s <code>doc</code> directory served up by a web server.
+You&rsquo;ll need <code>poki</code> if you modify documents, or if you modify the code in a way that affects the documents
 (there are auto-run snippets inserted into the doc).
-The best way to discover this is to run <tt>make install</tt> as above, then run <tt>poki</tt> in Miller&rsquo;s
-<tt>doc</tt> subdirectory, then run <tt>git diff</tt> to see if docs were affected
+The best way to discover this is to run <code>make install</code> as above, then run <code>poki</code> in Miller&rsquo;s
+<code>doc</code> subdirectory, then run <code>git diff</code> to see if docs were affected
 by the code mod.  (If so, commit and push them.)
 
 <a id="Internal_dependencies"/><h2>Internal dependencies</h2>
@@ -494,7 +494,7 @@ https://github.com/johnkerl/miller/blob/master/c/lib/minunit.h</a>.
 copyright</a>.
 <li/> The <a href="https://github.com/udp/json-parser">udp JSON parser</a>, with BSD2 license.
 <li/> The <a href="https://github.com/sheredom/utf8.h">sheredom UTF-8 library</a>, which is free and unencumbered software released into the public domain.
-<li/> The NetBSD <tt>strptime</tt> (needed for the Windows/MSYS2 port since MSYS2 lacks this), with BSD license.
+<li/> The NetBSD <code>strptime</code> (needed for the Windows/MSYS2 port since MSYS2 lacks this), with BSD license.
 </ul>
 
 </div>
@@ -507,13 +507,13 @@ copyright</a>.
 <p/>In this example I am using version 3.4.0; of course that will change for subsequent revisions.
 <ul>
 
-<li>Update version found in <tt>mlr --version</tt> and <tt>man mlr</tt>:
+<li>Update version found in <code>mlr --version</code> and <code>man mlr</code>:
   <ul>
-  <li/> Edit <tt>configure.ac</tt>, <tt>c/mlrvers.h</tt>, and <tt>miller.spec</tt>
-    from <tt>3.3.2-dev</tt> to <tt>3.4.0</tt>.
-  <li/> Do a fresh <tt>autoreconf -fiv</tt> and commit the output.
-  <li/> <tt>make -C c -f Makefile.no-autoconfig installhome &amp;&amp;
-    make -C doc -f Makefile.no-autoconfig all installhome</tt>
+  <li/> Edit <code>configure.ac</code>, <code>c/mlrvers.h</code>, and <code>miller.spec</code>
+    from <code>3.3.2-dev</code> to <code>3.4.0</code>.
+  <li/> Do a fresh <code>autoreconf -fiv</code> and commit the output.
+  <li/> <code>make -C c -f Makefile.no-autoconfig installhome &amp;&amp;
+    make -C doc -f Makefile.no-autoconfig all installhome</code>
   <li/> Commit and push.
   <li/> ISP upload so <a href="http://johnkerl.org/miller/doc/index.html">http://johnkerl.org/miller/doc/index.html</a>
     will have updated head-docs.
@@ -521,20 +521,20 @@ copyright</a>.
 
 <li>Create the release tarball and SRPM:
   <ul>
-  <li/> On buildbox: <tt>./configure &amp;&amp; make distcheck</tt>
+  <li/> On buildbox: <code>./configure &amp;&amp; make distcheck</code>
   <li/> On buildbox: make SRPM as in <a href="https://github.com/johnkerl/miller/blob/master/README-RPM.md">
     https://github.com/johnkerl/miller/blob/master/README-RPM.md</a>
-  <li/> On all buildboxes: <tt>cd c</tt> and <tt>make -f Makefile.no-autoconfig mlr.static</tt>. Then copy
-    <tt>mlr.static</tt> to <tt>../mlr.{arch}</tt>. (This may require as prerequisite <tt>sudo yum install glibc-static</tt> or the like.)
-  <li/> Pull back release tarball <tt>mlr-3.4.0.tar.gz</tt> and SRPM <tt>mlr-3.4.0-1.el6.src.rpm</tt> from buildbox,
-    and <tt>mlr.{arch}</tt> binaries from whatever buildboxes.
-  <li/> Download <tt>mlr.exe</tt> and <tt>msys-2.0.dll</tt> from
+  <li/> On all buildboxes: <code>cd c</code> and <code>make -f Makefile.no-autoconfig mlr.static</code>. Then copy
+    <code>mlr.static</code> to <code>../mlr.{arch}</code>. (This may require as prerequisite <code>sudo yum install glibc-static</code> or the like.)
+  <li/> Pull back release tarball <code>mlr-3.4.0.tar.gz</code> and SRPM <code>mlr-3.4.0-1.el6.src.rpm</code> from buildbox,
+    and <code>mlr.{arch}</code> binaries from whatever buildboxes.
+  <li/> Download <code>mlr.exe</code> and <code>msys-2.0.dll</code> from
   <a href="https://ci.appveyor.com/project/johnkerl/miller/build/artifacts">https://ci.appveyor.com/project/johnkerl/miller/build/artifacts</a>.
   </ul>
 
 <li/>Create the Github release tag:
   <ul>
-  <li/> Don&rsquo;t forget the <tt>v</tt> in <tt>v3.4.0</tt>
+  <li/> Don&rsquo;t forget the <code>v</code> in <code>v3.4.0</code>
   <li/> Write the release notes
   <li/> Attach the release tarball, SRPM, and binaries. Double-check assets were successfully uploaded.
   <li/> Publish the release
@@ -542,22 +542,22 @@ copyright</a>.
 
 <li/>Create the release-specific docs:
   <ul>
-  <li/> Pull the Github-generated source <tt>.tgz</tt> from Github to ISP
-    miller-releases directory and unpack and <tt>cd</tt> into it.
-  <li/> <tt>cd</tt> into <tt>doc</tt> subdir. Edit <tt>template.html</tt>&rsquo;s <tt>titleinbody</tt> tag from
-    <tt>Miller</tt> to <tt>Miller 3.4.0</tt> and poki-build.
+  <li/> Pull the Github-generated source <code>.tgz</code> from Github to ISP
+    miller-releases directory and unpack and <code>cd</code> into it.
+  <li/> <code>cd</code> into <code>doc</code> subdir. Edit <code>template.html</code>&rsquo;s <code>titleinbody</code> tag from
+    <code>Miller</code> to <code>Miller 3.4.0</code> and poki-build.
   <li/> ISP upload
   <li/> At the ISP site, update the latest-revision symlink
-    <tt>ln -s pub_http_internet/miller-releases/miller-3.4.0 pub_http_internet/miller</tt>.
+    <code>ln -s pub_http_internet/miller-releases/miller-3.4.0 pub_http_internet/miller</code>.
     (This is the main doc URL linked to from the top of the Github repo so it
     must point to this newly published revision.)
-  <li/> Back in the Github repo, edit <tt>doc/content-for-release-docs.html</tt> to include new release, poki-build,
+  <li/> Back in the Github repo, edit <code>doc/content-for-release-docs.html</code> to include new release, poki-build,
     push/commit, and ISP upload.
   </ul>
 
 <li/>Notify:
   <ul>
-  <li/> Submit <tt>brew</tt> pull request; notify any other distros which don&rsquo;t appear to have autoupdated
+  <li/> Submit <code>brew</code> pull request; notify any other distros which don&rsquo;t appear to have autoupdated
     since the previous release.
 <pre>
 git remote add upstream https://github.com/Homebrew/homebrew-core # one-time setup only
@@ -583,10 +583,10 @@ git push -u origin miller-3.4.0
 
 <li/>Afterwork:
   <ul>
-  <li> Edit <tt>configure.ac</tt> and <tt>c/mlrvers.h</tt> to change version from <tt>3.4.0</tt> to
-    <tt>3.4.0-dev</tt>.
-  <li/> <tt>make -C c -f Makefile.no-autoconfig installhome &amp;&amp;
-    make -C doc -f Makefile.no-autoconfig all installhome</tt>
+  <li> Edit <code>configure.ac</code> and <code>c/mlrvers.h</code> to change version from <code>3.4.0</code> to
+    <code>3.4.0-dev</code>.
+  <li/> <code>make -C c -f Makefile.no-autoconfig installhome &amp;&amp;
+    make -C doc -f Makefile.no-autoconfig all installhome</code>
   <li> Commit and push.
   </ul>
 

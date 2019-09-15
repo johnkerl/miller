@@ -15,22 +15,22 @@ such comparisons are very much not apples-to-apples:
 
 <li/> Miller&rsquo;s principal strength is that it handles <b>key-value data in
 various formats</b> while the system tools <b>do not</b>. So if you time
-<tt>mlr sort</tt> on a CSV file against system <tt>sort</tt>, it's not relevant
+<code>mlr sort</code> on a CSV file against system <code>sort</code>, it's not relevant
 to say which is faster by how many percent &mdash; Miller will respect the
 header line, leaving it in place, while the system sort will move it, sorting
 it along with all the other header lines. This would be comparing the run times
-of two programs produce different outputs.  Likewise, <tt>awk</tt>
+of two programs produce different outputs.  Likewise, <code>awk</code>
 doesn&rsquo;t respect header lines, although you can code up some CSV-handling
-using <tt>if (NR==1) { ... } else { ... }</tt>. And that&rsquo;s just CSV: I
-don&rsquo;t know any simple way to get <tt>sort</tt>, <tt>awk</tt>, etc. to
+using <code>if (NR==1) { ... } else { ... }</code>. And that&rsquo;s just CSV: I
+don&rsquo;t know any simple way to get <code>sort</code>, <code>awk</code>, etc. to
 handle DKVP, JSON, etc. &mdash; which is the main rreason I wrote Miller.
 
-<li/> <b>Implementations differ by platform</b>: one <tt>awk</tt> may be
-fundamentally faster than another, and <tt>mawk</tt> has a very efficient
+<li/> <b>Implementations differ by platform</b>: one <code>awk</code> may be
+fundamentally faster than another, and <code>mawk</code> has a very efficient
 bytecode implementation &mdash; which handles positionally indexed data
 far faster than Miller does.
 
-<li/> The system <tt>sort</tt> command will, on some systems, handle
+<li/> The system <code>sort</code> command will, on some systems, handle
 too-large-for-RAM datasets by spilling to disk; Miller (as of version 5.2.0,
 mid-2017) does not. Miller sorts are always stable; GNU supports stable and
 unstable variants.
@@ -46,6 +46,6 @@ elapsed time roughly of the same order of magnitude as items in the Unix
 toolkit can handle positionally indexed data. Specific results vary widely
 by platform, implementation details, multi-core use (or not). Lastly,
 specific special-purpose non-record-aware processing will run far faster
-in <tt>grep</tt>, <tt>sed</tt>, etc.
+in <code>grep</code>, <code>sed</code>, etc.
 
 </div>

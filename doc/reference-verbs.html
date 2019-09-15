@@ -254,16 +254,16 @@ Miller commands were run with pretty-print-tabular output format.
 <div id="section_toggle_overview" style="display: block">
 
 <p/>
-When you type <tt>mlr {something} myfile.dat</tt>, the <tt>{something}</tt>
+When you type <code>mlr {something} myfile.dat</code>, the <code>{something}</code>
 part is called a <b>verb</b>. It specifies how you want to transform your data.
 (See also <a href="reference.html#Command_overview">here</a> for a breakdown.)
 The following is an alphabetical list of verbs with their descriptions.
 
-<p/> The verbs <tt>put</tt> and <tt>filter</tt> are special in that they have a
+<p/> The verbs <code>put</code> and <code>filter</code> are special in that they have a
 rich expression language (domain-specific language, or &ldquo;DSL&rdquo;).
 More information about them can be found <a href="reference-dsl.html">here</a>.
 
-<p/> Here&rsquo;s a comparison of verbs and <tt>put</tt>/<tt>filter</tt> DSL expressions:
+<p/> Here&rsquo;s a comparison of verbs and <code>put</code>/<code>filter</code> DSL expressions:
 
 <table border=1>
 <tr> <td>
@@ -1185,7 +1185,7 @@ useful when you don't yet know which field name(s) you're looking for.
 
 <p/>Please see <a href="#Expression_language_for_filter_and_put">Expression
 language for filter and put</a> for more information about the expression
-language for <tt>mlr filter</tt>.
+language for <code>mlr filter</code>.
 
 </div>
 <!-- ================================================================ -->
@@ -1338,7 +1338,7 @@ u=male,v=orange,n=448
 </div>
 <p/>
 
-<p/>Then we can see what each record&rsquo;s <tt>n</tt> contributes to the total <tt>n</tt>:
+<p/>Then we can see what each record&rsquo;s <code>n</code> contributes to the total <code>n</code>:
 
 <p/>
 <div class="pokipanel">
@@ -1361,7 +1361,7 @@ male   orange 448  0.059487
 </div>
 <p/>
 
-<p/>Using <tt>-g</tt> we can split those out by gender, or by color:
+<p/>Using <code>-g</code> we can split those out by gender, or by color:
 
 <table><tr> <td>
 <p/>
@@ -1410,7 +1410,7 @@ male   orange 448  0.963441
 <p/>We can see, for example, that 70.9% of females have red (on the left) while
 94.5% of reds are for females.
 
-<p/> To convert fractions to percents, you may use <tt>-p</tt>:
+<p/> To convert fractions to percents, you may use <code>-p</code>:
 <p/>
 <div class="pokipanel">
 <pre>
@@ -1433,7 +1433,7 @@ male   orange 448  5.948745
 <p/>
 
 <p/> Another often-used idiom is to convert from a point distribution to a cumulative distribution, also
-known as &ldquo;running sums&rdquo;. Here, you can use <tt>-c</tt>:
+known as &ldquo;running sums&rdquo;. Here, you can use <code>-c</code>:
 
 <p/>
 <div class="pokipanel">
@@ -1525,7 +1525,7 @@ Outputs records in batches having identical values at specified field names.
 </div>
 <p/>
 
-<p/>This is similar to <tt>sort</tt> but with less work. Namely, Miller&rsquo;s
+<p/>This is similar to <code>sort</code> but with less work. Namely, Miller&rsquo;s
 sort has three steps: read through the data and append linked lists of records,
 one for each unique combination of the key-field values; after all records
 are read, sort the key-field values; then print each record-list. The group-by
@@ -1562,13 +1562,13 @@ wye pan 5 0.5732889198020006  0.8636244699032729
 <p/>
 </td> </tr></table>
 
-<p/>In this example, since the sort is on field <tt>a</tt>, the first step is
-to group together all records having the same value for field <tt>a</tt>; the
-second step is to sort the distinct <tt>a</tt>-field values <tt>pan</tt>,
-<tt>eks</tt>, and <tt>wye</tt> into <tt>eks</tt>, <tt>pan</tt>, and
-<tt>wye</tt>; the third step is to print out the record-list for
-<tt>a=eks</tt>, then the record-list for <tt>a=pan</tt>, then the record-list
-for <tt>a=wye</tt>.  The group-by operation omits the middle sort and just puts
+<p/>In this example, since the sort is on field <code>a</code>, the first step is
+to group together all records having the same value for field <code>a</code>; the
+second step is to sort the distinct <code>a</code>-field values <code>pan</code>,
+<code>eks</code>, and <code>wye</code> into <code>eks</code>, <code>pan</code>, and
+<code>wye</code>; the third step is to print out the record-list for
+<code>a=eks</code>, then the record-list for <code>a=pan</code>, then the record-list
+for <code>a=wye</code>.  The group-by operation omits the middle sort and just puts
 like records together, for those times when a sort isn&rsquo;t desired. In
 particular, the ordering of group-by fields for group-by is the order in which
 they were encountered in the data stream, which in some cases may be more interesting
@@ -1654,7 +1654,7 @@ Examples:
 </div>
 <p/>
 
-<p/> Similar to <a href="#group-like"><tt>group-like</tt></a>, this retains records with specified schema.
+<p/> Similar to <a href="#group-like"><code>group-like</code></a>, this retains records with specified schema.
 
 <table><tr><td>
 <p/>
@@ -1715,9 +1715,9 @@ records have been read.
 </div>
 <p/>
 
-Note that <tt>head</tt> is distinct from <a href="#top"><tt>top</tt></a>
-&mdash; <tt>head</tt> shows fields which appear first in the data stream;
-<tt>top</tt> shows fields which are numerically largest (or smallest).
+Note that <code>head</code> is distinct from <a href="#top"><code>top</code></a>
+&mdash; <code>head</code> shows fields which appear first in the data stream;
+<code>top</code> shows fields which are numerically largest (or smallest).
 
 <table><tr><td>
 <p/>
@@ -1772,11 +1772,11 @@ Just a histogram. Input values &lt; lo or &gt; hi are not counted.
 <p/>
 
 This is just a histogram; there&rsquo;s not too much to say here. A note about
-binning, by example: Suppose you use <tt>--lo 0.0 --hi 1.0 --nbins 10 -f
-x</tt>.  The input numbers less than 0 or greater than 1 aren&rsquo;t counted
+binning, by example: Suppose you use <code>--lo 0.0 --hi 1.0 --nbins 10 -f
+x</code>.  The input numbers less than 0 or greater than 1 aren&rsquo;t counted
 in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin
-0 has <tt>0.0 &le; x &lt; 0.1</tt>, bin 1 has <tt>0.1 &le; x &lt; 0.2</tt>,
-etc., but bin 9 has <tt>0.9 &le; x &le; 1.0</tt>.
+0 has <code>0.0 &le; x &lt; 0.1</code>, bin 1 has <code>0.1 &le; x &lt; 0.2</code>,
+etc., but bin 9 has <code>0.9 &le; x &le; 1.0</code>.
 
 <p/>
 <div class="pokipanel">
@@ -2063,9 +2063,9 @@ Examples:
 </div>
 <p/>
 
-See also <a href="#rename"><tt>rename</tt></a>.
+See also <a href="#rename"><code>rename</code></a>.
 
-<p/>Example: Files such as <tt>/etc/passwd</tt>, <tt>/etc/group</tt>, and so on
+<p/>Example: Files such as <code>/etc/passwd</code>, <code>/etc/group</code>, and so on
 have implicit field names which are found in section-5 manpages. These field names may be made explicit as follows:
 
 <p/>
@@ -2086,7 +2086,7 @@ _postfix              *        27  27  Postfix Mail Server           /var/spool/
 </div>
 <p/>
 
-<p/>Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of its header line, you can re-add a header line using <tt>--implicit-csv-header</tt> and <tt>label</tt>:
+<p/>Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of its header line, you can re-add a header line using <code>--implicit-csv-header</code> and <code>label</code>:
 
 <p/>
 <div class="pokipanel">
@@ -2273,7 +2273,7 @@ Example: mlr merge-fields -a sum,count -c in_,out_
 </div>
 <p/>
 
-<p/>This is like <tt>mlr stats1</tt> but all accumulation is done across fields
+<p/>This is like <code>mlr stats1</code> but all accumulation is done across fields
 within each given record: horizontal rather than vertical statistics, if you
 will.
 
@@ -2574,7 +2574,7 @@ Please see in particular:
 
 <p/>Please see <a href="#Expression_language_for_filter_and_put">Expression
 language for filter and put</a> for more information about the expression
-language for <tt>mlr put</tt>.
+language for <code>mlr put</code>.
 
 </div>
 <!-- ================================================================ -->
@@ -2598,9 +2598,9 @@ output as              a=1,c=2,b=3, then e=4,d=5, then a=6,c=7,b=8
 
 <p/>This exists since hash-map software in various languages and tools
 encountered in the wild does not always print similar rows with fields in the
-same order: <tt>mlr regularize</tt> helps clean that up.
+same order: <code>mlr regularize</code> helps clean that up.
 
-<p/>See also <a href="#reorder"><tt>reorder</tt></a>.
+<p/>See also <a href="#reorder"><code>reorder</code></a>.
 
 </div>
 <!-- ================================================================ -->
@@ -2709,7 +2709,7 @@ wye pan     5     0.5732889198020006  0.8636244699032729
 <p/>
 </td></tr></table>
 
-<p/>As discussed in <a href="performance.html">Performance</a>, <tt>sed</tt>
+<p/>As discussed in <a href="performance.html">Performance</a>, <code>sed</code>
 is significantly faster than Miller at doing this. However, Miller is
 format-aware, so it knows to do renames only within specified field keys and
 not any others, nor in field values which may happen to contain the same
@@ -2743,7 +2743,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,COLUMN5=0.8636244699032729
 <p/>
 </td></tr></table>
 
-See also <a href="#label"><tt>label</tt></a>.
+See also <a href="#label"><code>label</code></a>.
 
 </div>
 <!-- ================================================================ -->
@@ -2853,7 +2853,7 @@ produces:
 <p/>
 
 <p>This is useful in at least two ways: one, as a data-generator as in the
-above example using <tt>urand()</tt>; two, for reconstructing individual
+above example using <code>urand()</code>; two, for reconstructing individual
 samples from data which has been count-aggregated:
 
 <p/>
@@ -2887,9 +2887,9 @@ color=green
 </div>
 <p/>
 
-<p>After expansion with <tt>repeat</tt>, such data can then be sent on to
-<tt>stats1 -a mode</tt>, or (if the data are numeric) to <tt>stats1 -a
-p10,p50,p90</tt>, etc.
+<p>After expansion with <code>repeat</code>, such data can then be sent on to
+<code>stats1 -a mode</code>, or (if the data are numeric) to <code>stats1 -a
+p10,p50,p90</code>, etc.
 
 </div>
 <!-- ================================================================ -->
@@ -2981,8 +2981,8 @@ See also mlr bootstrap and mlr shuffle.
 
 <p/>This is reservoir-sampling: select <i>k</i> items from <i>n</i> with
 uniform probability and no repeats in the sample. (If <i>n</i> is less than
-<i>k</i>, then of course only <i>n</i> samples are produced.) With <tt>-g
-{field names}</tt>, produce a <i>k</i>-sample for each distinct value of the
+<i>k</i>, then of course only <i>n</i> samples are produced.) With <code>-g
+{field names}</code>, produce a <i>k</i>-sample for each distinct value of the
 specified field names.
 
 <p/>
@@ -3037,8 +3037,8 @@ yellow square   1    158   0.41527900739142165 0.7118027080775757   0.4200799665
 <p/>
 
 <p/>Note that no output is produced until all inputs are in. Another way to do
-sampling, which works in the streaming case, is <tt>mlr filter 'urand() &amp;
-0.001'</tt> where you tune the 0.001 to meet your needs.
+sampling, which works in the streaming case, is <code>mlr filter 'urand() &amp;
+0.001'</code> where you tune the 0.001 to meet your needs.
 
 </div>
 <!-- ================================================================ -->
@@ -3280,7 +3280,7 @@ upsec=1.327,color=purple,count=917
 <p/>
 
 <p/> We can group these by thread by sorting on the thread ID (here,
-<tt>color</tt>). Since Miller&rsquo;s sort is stable, this means that
+<code>color</code>). Since Miller&rsquo;s sort is stable, this means that
 timestamps within each thread&rsquo;s log data are still chronological:
 
 <p/>
@@ -3404,7 +3404,7 @@ Notes:
 <p/>
 
 These are simple univariate statistics on one or more number-valued fields
-(<tt>count</tt> and <tt>mode</tt> apply to non-numeric fields as well),
+(<code>count</code> and <code>mode</code> apply to non-numeric fields as well),
 optionally categorized by one or more other fields.
 
 <table><tr><td>
@@ -3561,8 +3561,8 @@ hat -0.018621 0.517901  1941      0.000352 1.000000  0.000000  1941      1.00000
 <p/>
 </td></tr></table>
 
-<p/>Here&rsquo;s an example simple line-fit. The <tt>x</tt> and <tt>y</tt>
-fields of the <tt>data/medium</tt> dataset are just independent uniformly
+<p/>Here&rsquo;s an example simple line-fit. The <code>x</code> and <code>y</code>
+fields of the <code>data/medium</code> dataset are just independent uniformly
 distributed on the unit interval. Here we remove half the data and fit a line to it.
 
 <p/>
@@ -3594,7 +3594,7 @@ mlr --onidx stats2 -a linreg-pca --fit -f x,y then cut -f a,b,i data/medium-squa
 </div>
 <p/>
 
-<p/>I use <a href="https://github.com/johnkerl/pgr"><tt>pgr</tt></a> for
+<p/>I use <a href="https://github.com/johnkerl/pgr"><code>pgr</code></a> for
 plotting; here&rsquo;s a screenshot.
 
 <center>
@@ -3605,8 +3605,8 @@ plotting; here&rsquo;s a screenshot.
 
 <p/> Here&rsquo;s an example estimating time-to-completion for a set of jobs.
 Input data comes from a log file, with number of work units left to do in the
-<tt>count</tt> field and accumulated seconds in the <tt>upsec</tt> field,
-labeled by the <tt>color</tt> field:
+<code>count</code> field and accumulated seconds in the <code>upsec</code> field,
+labeled by the <code>color</code> field:
 
 <p/>
 <div class="pokipanel">
@@ -3626,8 +3626,8 @@ upsec=1.327,color=purple,count=917
 </div>
 <p/>
 
-We can do a linear regression on count remaining as a function of time: with <tt>c = m*u+b</tt> we want to find the
-time when the count goes to zero, i.e. <tt>u=-b/m</tt>.
+We can do a linear regression on count remaining as a function of time: with <code>c = m*u+b</code> we want to find the
+time when the count goes to zero, i.e. <code>u=-b/m</code>.
 
 <p/>
 <div class="pokipanel">
@@ -3713,9 +3713,9 @@ for more information on EWMA.
 </div>
 <p/>
 
-Most Miller commands are record-at-a-time, with the exception of <tt>stats1</tt>,
-<tt>stats2</tt>, and <tt>histogram</tt> which compute aggregate output. The
-<tt>step</tt> command is intermediate: it allows the option of adding fields
+Most Miller commands are record-at-a-time, with the exception of <code>stats1</code>,
+<code>stats2</code>, and <code>histogram</code> which compute aggregate output. The
+<code>step</code> command is intermediate: it allows the option of adding fields
 which are functions of fields from previous records. Rsum is short for <i>running sum</i>.
 
 <table><tr><td>
@@ -3998,9 +3998,9 @@ optionally by category.
 </div>
 <p/>
 
-Note that <tt>top</tt> is distinct from <a href="#head"><tt>head</tt></a>
-&mdash; <tt>head</tt> shows fields which appear first in the data stream;
-<tt>top</tt> shows fields which are numerically largest (or smallest).
+Note that <code>top</code> is distinct from <a href="#head"><code>head</code></a>
+&mdash; <code>head</code> shows fields which appear first in the data stream;
+<code>top</code> shows fields which are numerically largest (or smallest).
 
 <table><tr><td>
 <p/>
@@ -4076,7 +4076,7 @@ Options:
 </div>
 <p/>
 
-<p/>There are two main ways to use <tt>mlr uniq</tt>: the first way is with <tt>-g</tt> to specify group-by columns.
+<p/>There are two main ways to use <code>mlr uniq</code>: the first way is with <code>-g</code> to specify group-by columns.
 
 <table><tr><td>
 <p/>
@@ -4179,7 +4179,7 @@ count
 <p/>
 </td></tr></table>
 
-<p/>The second main way to use <tt>mlr uniq</tt> is without group-by columns, using <tt>-a</tt> instead:
+<p/>The second main way to use <code>mlr uniq</code> is without group-by columns, using <code>-a</code> instead:
 
 <table>
 <tr><td>

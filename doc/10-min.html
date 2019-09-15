@@ -227,7 +227,7 @@ purple,square,0,91,72.3735,8.2430
 </div>
 <p/>
 
-<p/><boldmaroon> <tt>mlr cat</tt> is like cat ...</boldmaroon>
+<p/><boldmaroon> <code>mlr cat</code> is like cat ...</boldmaroon>
 
 <p/>
 <div class="pokipanel">
@@ -269,7 +269,7 @@ purple square   0    91    72.3735  8.2430
 </div>
 <p/>
 
-<p/><boldmaroon> <tt>mlr head</tt> and <tt>mlr tail</tt> count records rather than lines. The CSV
+<p/><boldmaroon> <code>mlr head</code> and <code>mlr tail</code> count records rather than lines. The CSV
 header is included either way:</boldmaroon>
 
 <p/>
@@ -319,7 +319,7 @@ yellow triangle 1    11    43.6498  9.8870
 </div>
 <p/>
 
-<p/><boldmaroon> Use <tt>cut</tt> to retain only specified fields, in input-data order:</boldmaroon>
+<p/><boldmaroon> Use <code>cut</code> to retain only specified fields, in input-data order:</boldmaroon>
 
 <p/>
 <div class="pokipanel">
@@ -340,7 +340,7 @@ square   0
 </div>
 <p/>
 
-<p/><boldmaroon> Use <tt>cut -o</tt> to retain only specified fields, in your specified order:</boldmaroon>
+<p/><boldmaroon> Use <code>cut -o</code> to retain only specified fields, in your specified order:</boldmaroon>
 
 <p/>
 <div class="pokipanel">
@@ -361,7 +361,7 @@ flag shape
 </div>
 <p/>
 
-<p/><boldmaroon> Use <tt>cut -x</tt> to omit specified fields:</boldmaroon>
+<p/><boldmaroon> Use <code>cut -x</code> to omit specified fields:</boldmaroon>
 
 <p/>
 <div class="pokipanel">
@@ -382,7 +382,7 @@ purple 91    72.3735  8.2430
 </div>
 <p/>
 
-<p/><boldmaroon> Use <tt>filter</tt> to retain specified records:</boldmaroon>
+<p/><boldmaroon> Use <code>filter</code> to retain specified records:</boldmaroon>
 
 <p/>
 <div class="pokipanel">
@@ -407,7 +407,7 @@ red   circle 1    16    13.8103  2.9010
 </div>
 <p/>
 
-<p/><boldmaroon> Use <tt>put</tt> to add/replace fields which are computed from other fields:</boldmaroon>
+<p/><boldmaroon> Use <code>put</code> to add/replace fields which are computed from other fields:</boldmaroon>
 
 <p/>
 <div class="pokipanel">
@@ -430,8 +430,8 @@ purple square   0    91    72.3735  8.2430 8.779995    purple_square
 
 <p/><boldmaroon> Even though Miller&rsquo;s main selling point is
 name-indexing, sometimes you really want to refer to a field name by its
-positional index. Use <tt>$[[3]]</tt> to access the name of field 3 or
-<tt>$[[[3]]]</tt> to access the value of field 3:</boldmaroon>
+positional index. Use <code>$[[3]]</code> to access the name of field 3 or
+<code>$[[[3]]]</code> to access the value of field 3:</boldmaroon>
 
 <p/>
 <div class="pokipanel">
@@ -518,11 +518,11 @@ $ mlr --icsv --ojson --jvstack --jlistwrap tail -n 2 example.csv
 </div>
 <p/>
 
-<p/><boldmaroon> Use <tt>then</tt> to pipe commands together. Also, the
-<tt>-g</tt> option for many Miller commands is for group-by: here, <tt>head -n
-1 -g shape</tt> outputs the first record for each distinct value of the
-<tt>shape</tt> field. This means we&rsquo;re finding the record with highest
-<tt>index</tt> field for each distinct <tt>shape</tt> field:</boldmaroon>
+<p/><boldmaroon> Use <code>then</code> to pipe commands together. Also, the
+<code>-g</code> option for many Miller commands is for group-by: here, <code>head -n
+1 -g shape</code> outputs the first record for each distinct value of the
+<code>shape</code> field. This means we&rsquo;re finding the record with highest
+<code>index</code> field for each distinct <code>shape</code> field:</boldmaroon>
 
 <p/>
 <div class="pokipanel">
@@ -537,7 +537,7 @@ purple triangle 0    65    80.1405  5.8240
 <p/>
 
 <p/><boldmaroon> Statistics can be computed with or without group-by field(s). Also, the first of these two
-examples uses <tt>--oxtab</tt> output format which is a nice alternative to <tt>--opprint</tt> when you
+examples uses <code>--oxtab</code> output format which is a nice alternative to <code>--opprint</code> when you
 have lots of columns:</boldmaroon>
 
 <p/>
@@ -653,7 +653,7 @@ purple square   0    91    72.3735  8.2430
 </pre> </div>
 </td></tr></table>
 
-<p/> Also using <tt>mlr -I</tt> you can bulk-operate on lots of files: e.g.
+<p/> Also using <code>mlr -I</code> you can bulk-operate on lots of files: e.g.
 
 <table><tr><td>
 <div class="pokipanel"> <pre>
@@ -663,7 +663,7 @@ mlr -I --csv cut -x -f unwanted_column_name *.csv
 
 <p/> If you like, you can first copy off your original data somewhere else, before doing in-place operations.
 
-<p/><boldmaroon> Lastly, using <tt>tee</tt> within <tt>put</tt>, you can split your input data into separate files
+<p/><boldmaroon> Lastly, using <code>tee</code> within <code>put</code>, you can split your input data into separate files
 per one or more field names:</boldmaroon>
 
 <p/>
@@ -777,13 +777,13 @@ different output format.
 
 <p/>I like to produce SQL-query output with header-column and tab delimiter:
 this is CSV but with a tab instead of a comma, also known as TSV. Then I
-post-process with <tt>mlr --tsv</tt> or <tt>mlr --tsvlite</tt>.  This
+post-process with <code>mlr --tsv</code> or <code>mlr --tsvlite</code>.  This
 means I can do some (or all, or none) of my data processing within SQL queries,
 and some (or none, or all) of my data processing using Miller &mdash; whichever
 is most convenient for my needs at the moment.
 
-<p/>For example, using default output formatting in <tt>mysql</tt> we get
-formatting like Miller&rsquo;s <tt>--opprint --barred</tt>:
+<p/>For example, using default output formatting in <code>mysql</code> we get
+formatting like Miller&rsquo;s <code>--opprint --barred</code>:
 
 <div class="pokipanel">
 <pre>
@@ -800,7 +800,7 @@ $ mysql --database=mydb -e 'show columns in mytable'
 </pre>
 </div>
 
-<p/>Using <tt>mysql</tt>&rsquo;s <tt>-B</tt> we get TSV output:
+<p/>Using <code>mysql</code>&rsquo;s <code>-B</code> we get TSV output:
 
 <div class="pokipanel">
 <pre>
@@ -1033,7 +1033,7 @@ eks zee 357
 <p/>Another of my favorite use-cases for Miller is doing ad-hoc processing of
 log-file data.  Here&rsquo;s where DKVP format really shines: one, since the
 field names and field values are present on every line, every line stands on
-its own. That means you can <tt>grep</tt> or what have you. Also it means not
+its own. That means you can <code>grep</code> or what have you. Also it means not
 every line needs to have the same list of field names (&ldquo;schema &rdquo;).
 
 <p/>Again, all the examples in the CSV section apply here &mdash; just change
@@ -1100,8 +1100,8 @@ time=1472819742,batch_size=100,num_filtered=728
 
 <p/> Each print statement simply contains local information: the current
 timestamp, whether a particular cache was hit or not, etc. Then using either
-the system <tt>grep</tt> command, or Miller&rsquo;s <tt>having-fields</tt>, or
-<tt>is_present</tt>, we can pick out the parts we want and analyze them:
+the system <code>grep</code> command, or Miller&rsquo;s <code>having-fields</code>, or
+<code>is_present</code>, we can pick out the parts we want and analyze them:
 
 <p/>
 <div class="pokipanel">

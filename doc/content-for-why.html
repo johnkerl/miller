@@ -45,8 +45,8 @@ it&rsquo;s for?
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_what_was_miller_created_to_do');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_what_was_miller_created_to_do" style="display: block">
 
-<p/> First: there are tools like <tt>xsv</tt> which handles CSV marvelously and
-<tt>jq</tt> which handles JSON marvelously, and so on &mdash; but I over the
+<p/> First: there are tools like <code>xsv</code> which handles CSV marvelously and
+<code>jq</code> which handles JSON marvelously, and so on &mdash; but I over the
 years of my career in the software industry I&rsquo;ve found myself, and
 others, doing a lot of ad-hoc things which really were fundamentally the same
 <i>except</i> for format. So the number one thing about Miller is doing common
@@ -98,17 +98,17 @@ unit-test</boldmaroon>. Since Miller handles a lot of formats and solves a lot
 of problems, there&rsquo;s a lot to test and a lot to keep working correctly as
 I add features or optimize. And I wanted it to be able to explain itself
 &mdash; not only through web docs like the one you&rsquo;re reading but also
-through <tt>man mlr</tt> and <tt>mlr --help</tt>, <tt>mlr sort --help</tt>,
+through <code>man mlr</code> and <code>mlr --help</code>, <code>mlr sort --help</code>,
 etc.
 
 <p/> Seventh thing: <boldmaroon>Must have a domain-specific
 language</boldmaroon> (DSL) <boldmaroon>but also must let you do common things
 without it</boldmaroon>. All those little verbs Miller has to help you
 <i>avoid</i> having to write for-loops are great. I use them for
-keystroke-saving: <tt>mlr stats1 -a mean,stddev,min,max -f quantity</tt>, for
+keystroke-saving: <code>mlr stats1 -a mean,stddev,min,max -f quantity</code>, for
 example, without you having to write for-loops or define accumulator variables.
 But you also have to be able to break out of that and write arbitrary code when
-you want to: <tt>mlr put '$distance = $rate * $time'</tt> or anything else you
+you want to: <code>mlr put '$distance = $rate * $time'</code> or anything else you
 can think up. In Perl/AWK/etc.  it&rsquo;s all DSL. In xsv et al.  it&rsquo;s
 all verbs. In Miller I like having the combination.
 
@@ -140,10 +140,10 @@ variety of formats.
 It&rsquo;d be quicker to write (but slower to run) if written in a high-level
 language. If Miller were written in Python, it would be implemented in
 significantly fewer lines of code than its current C implementation. The DSL
-would just be an <tt>eval</tt> of Python code. And it would run slower, but
+would just be an <code>eval</code> of Python code. And it would run slower, but
 maybe not enough slower to be a problem for most folks. Later I found out about
 the <a href="https://github.com/turicas/rows">rows</a> tool &mdash; if you find
-Miller useful, you should check out <tt>rows</tt> as well.
+Miller useful, you should check out <code>rows</code> as well.
 
 <p/> A fourth tradeoff is in the DSL (more visibly so in 5.0.0 but already in
 pre-5.0.0): how much to make it dynamically typed &mdash; so you can just say
@@ -176,7 +176,7 @@ It doesn&rsquo;t mention <a href="https://github.com/turicas/rows">rows</a> so h
 <div id="section_toggle_moving_forward" style="display: block">
 
 <p/> I originally aimed Miller at people who already know what
-<tt>sed</tt>/<tt>awk</tt>/<tt>cut</tt>/<tt>sort</tt>/<tt>join</tt> are and
+<code>sed</code>/<code>awk</code>/<code>cut</code>/<code>sort</code>/<code>join</code> are and
 wanted some options. But as time goes by I realize that tools like this can be
 useful to folks who <i>don&rsquo;t</i> know what those things are; people who
 aren&rsquo;t primarily coders; people who are scientists, or data scientists.

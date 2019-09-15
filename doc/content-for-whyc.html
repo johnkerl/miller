@@ -11,7 +11,7 @@ POKI_PUT_TOC_HERE
 <p/>C lacks many of the features found in modern, high-level languages such as
 Java or Go: garbage collection, collections libraries, generics/near-generics,
 hash-map/linked-list literals built into the language (e.g.
-<tt>mymap={"a"=&gt;1,"b"=&gt;2}</tt> or <tt>mylist=[3,4,5]</tt>), autodoc (e.g.
+<code>mymap={"a"=&gt;1,"b"=&gt;2}</code> or <code>mylist=[3,4,5]</code>), autodoc (e.g.
 Javadoc), and so on.  Yet, while memory management is indeed Miller&rsquo;s
 trickiest aspect, its garbage-collection needs are well-delineated and so the
 absence of GC is no great loss.  Miller&rsquo;s performance relies on
@@ -23,7 +23,7 @@ https://github.com/johnkerl/miller/blob/master/c/README.md</a>.)
 Miller doesn&rsquo;t require a complex collections library: mostly simple hash
 maps, hash sets, and linked lists which aren&rsquo;t difficult to code.
 Moreover, Miller&rsquo;s primary data structure, the
-<a href="https://github.com/johnkerl/miller/blob/master/c/containers/lrec.h"><tt>lrec_t</tt></a>,
+<a href="https://github.com/johnkerl/miller/blob/master/c/containers/lrec.h"><code>lrec_t</code></a>,
 is hand-tuned to Miller&rsquo;s use case and would have required hand-coding in
 any case.
 
@@ -42,12 +42,12 @@ throughput I get in C.
 
 <p/a>Specifically, I did simple experiments in several languages &mdash; Ruby,
 Python, Lua, Rust, Go, D. In one I just read lines and printed them back out
-&mdash; a line-oriented <tt>cat</tt>. In another I consumed input lines like
-<tt>x=1,y=2,z=3</tt> one at a time, split them on commas and equals signs to
-populate hash maps, transformed them (e.g. remove the <tt>y</tt> field), and
-emitted them. Basically <tt>mlr cut -x -f y</tt> with DKVP format.  I
+&mdash; a line-oriented <code>cat</code>. In another I consumed input lines like
+<code>x=1,y=2,z=3</code> one at a time, split them on commas and equals signs to
+populate hash maps, transformed them (e.g. remove the <code>y</code> field), and
+emitted them. Basically <code>mlr cut -x -f y</code> with DKVP format.  I
 didn&rsquo;t do anything fancy &mdash; just using each language&rsquo;s
-<tt>getline</tt>, string-split, hashmap-put, etc.  And nothing was as fast as
+<code>getline</code>, string-split, hashmap-put, etc.  And nothing was as fast as
 C, so I used C. Here are the experiments I kept (I failed to keep the
 Lua code, for example):
 <a href="../perf/catc.c.txt">C cat</a>,
@@ -75,8 +75,8 @@ on a single host or split across multiple hosts.
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_c_is_ubiquitous');" href="javascript:;">Toggle section visibility</button>
 <div id="section_toggle_c_is_ubiquitous" style="display: block">
 
-<p/>Every Unix-like system has a C compiler (or is an <tt>apt-get</tt> or
-<tt>yum install</tt> away from it). This, I hope, bodes well for uptake
+<p/>Every Unix-like system has a C compiler (or is an <code>apt-get</code> or
+<code>yum install</code> away from it). This, I hope, bodes well for uptake
 of Miller.
 
 </div>
@@ -90,7 +90,7 @@ use a throwback language for a throwback tool (see
 POKI_PUT_LINK_FOR_PAGE(etymology.html)HERE).  That said, Miller is coded in GNU
 C99, it uses getopt-style command-line parsing, and for development work I make
 use of modern tools such as <a href="http://valgrind.org">valgrind</a>.
-K&amp;R was a long, long time ago.  (I&rsquo;m writing plain C with <tt>//</tt>
+K&amp;R was a long, long time ago.  (I&rsquo;m writing plain C with <code>//</code>
 comments; enough said.)
 
 </div>
@@ -105,8 +105,8 @@ ruled them out not for aesthetics but for performance as described above.)
 Meanwhile all the positive features I would want from C++ are easily
 implementable in C as follows:
 
-<h2><tt>this</tt> pointers and attributes</h2>
-The C++ compiler implictly inserts <tt>this</tt> pointers into method calls:
+<h2><code>this</code> pointers and attributes</h2>
+The C++ compiler implictly inserts <code>this</code> pointers into method calls:
 for example
 
 <pre>

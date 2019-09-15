@@ -83,7 +83,7 @@ POKI_RUN_COMMAND{{mlr --opprint put '$o = system("echo hello world")' data/small
 POKI_RUN_COMMAND{{mlr --opprint put '$o = system("echo {" . NR . "}")' data/small}}HERE
 POKI_RUN_COMMAND{{mlr --opprint put '$o = system("echo -n ".$a."| sha1sum")' data/small}}HERE
 
-<p/>Note that running a subprocess on every record takes a non-trivial amount of time. Comparing asking the system <tt>date</tt> command for the current time in nanoseconds versus computing it in process:
+<p/>Note that running a subprocess on every record takes a non-trivial amount of time. Comparing asking the system <code>date</code> command for the current time in nanoseconds versus computing it in process:
 
 POKI_RUN_COMMAND{{mlr --opprint put '$t=system("date +%s.%N")' then step -a delta -f t data/small}}HERE
 POKI_RUN_COMMAND{{mlr --opprint put '$t=systime()' then step -a delta -f t data/small}}HERE
