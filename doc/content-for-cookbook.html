@@ -6,19 +6,19 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
 
 <!-- ================================================================ -->
 <h1>Headerless CSV on input or output</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_headerless_csv');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_headerless_csv" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_headerless_csv');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_headerless_csv" style="display: block">
 
 <p/>Sometimes we get CSV files which lack a header. For example:
 
 POKI_RUN_COMMAND{{cat data/headerless.csv}}HERE
 
-<p/> You can use Miller to add a header. The <tt>--implicit-csv-header</tt> applies positionally indexed labels:
+<p/> You can use Miller to add a header. The <code>--implicit-csv-header</code> applies positionally indexed labels:
 
 POKI_RUN_COMMAND{{mlr --csv --implicit-csv-header cat data/headerless.csv}}HERE
 
@@ -28,7 +28,7 @@ For example:
 POKI_RUN_COMMAND{{mlr --csv --implicit-csv-header label name,age,status data/headerless.csv}}HERE
 
 <p/> Likewise, if you need to produce CSV which is lacking its header, you can pipe Miller&rsquo;s output
-to the system command <tt>sed 1d</tt>, or you can use Miller&rsquo;s <tt>--headerless-csv-output</tt> option:
+to the system command <code>sed 1d</code>, or you can use Miller&rsquo;s <code>--headerless-csv-output</code> option:
 
 POKI_RUN_COMMAND{{head -5 data/colored-shapes.dkvp | mlr --ocsv cat}}HERE
 POKI_RUN_COMMAND{{head -5 data/colored-shapes.dkvp | mlr --ocsv --headerless-csv-output cat}}HERE
@@ -44,34 +44,34 @@ POKI_RUN_COMMAND{{mlr --inidx --ifs comma --oxtab cut -f 1,3 data/headerless.csv
 <!-- ================================================================ -->
 </div>
 <h1>Doing multiple joins</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_multiple_joins');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_multiple_joins" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_multiple_joins');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_multiple_joins" style="display: block">
 
 <p/>Suppose we have the following data:
 
 POKI_RUN_COMMAND{{cat multi-join/input.csv}}HERE
 
-<p/>And we want to augment the <tt>id</tt> column with lookups from the following data files:
+<p/>And we want to augment the <code>id</code> column with lookups from the following data files:
 
 POKI_RUN_COMMAND{{cat multi-join/name-lookup.csv}}HERE
 POKI_RUN_COMMAND{{cat multi-join/status-lookup.csv}}HERE
 
-<p/>We can run the input file through multiple <tt>join</tt> commands in a <tt>then</tt>-chain:
+<p/>We can run the input file through multiple <code>join</code> commands in a <code>then</code>-chain:
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id then join -f multi-join/status-lookup.csv -j id multi-join/input.csv}}HERE
 
 <!-- ================================================================ -->
 </div>
 <h1>Bulk rename of fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_bulk_rename');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_bulk_rename" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_bulk_rename');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_bulk_rename" style="display: block">
 
 <p/>Suppose you want to replace spaces with underscores in your column names:
 
 POKI_RUN_COMMAND{{cat data/spaces.csv}}HERE
 
-<p/>The simplest way is to use <tt>mlr rename</tt> with <tt>-g</tt> (for global
-replace, not just first occurrence of space within each field) and <tt>-r</tt>
+<p/>The simplest way is to use <code>mlr rename</code> with <code>-g</code> (for global
+replace, not just first occurrence of space within each field) and <code>-r</code>
 for pattern-matching (rather than explicit single-column renames):
 
 POKI_RUN_COMMAND{{mlr --csv rename -g -r ' ,_'  data/spaces.csv}}HERE
@@ -86,10 +86,10 @@ POKI_RUN_COMMAND{{mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data
 <!-- ================================================================ -->
 </div>
 <h1>Search-and-replace over all fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_search_and_replace_over_all_fields');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_search_and_replace_over_all_fields" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_search_and_replace_over_all_fields');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_search_and_replace_over_all_fields" style="display: block">
 
-<p/> How to do <tt>$name=gsub($name, "old", "new")</tt> for all fields?
+<p/> How to do <code>$name=gsub($name, "old", "new")</code> for all fields?
 
 POKI_RUN_COMMAND{{cat data/sar.csv}}HERE
 
@@ -99,12 +99,12 @@ POKI_RUN_COMMAND{{mlr --csv put -f data/sar.mlr data/sar.csv}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>Full field renames and reassigns</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_full_renames_reassigns');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_full_renames_reassigns" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_full_renames_reassigns');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_full_renames_reassigns" style="display: block">
 
-<p/>Using Miller 5.0.0&rsquo;s map literals and assigning to <tt>$*</tt>, you can fully generalize
-<a href="reference-verbs.html#rename"><tt>mlr rename</tt></a>,
-<a href="reference-verbs.html#reorder"><tt>mlr reorder</tt></a>,
+<p/>Using Miller 5.0.0&rsquo;s map literals and assigning to <code>$*</code>, you can fully generalize
+<a href="reference-verbs.html#rename"><code>mlr rename</code></a>,
+<a href="reference-verbs.html#reorder"><code>mlr reorder</code></a>,
 etc.:
 
 POKI_RUN_COMMAND{{cat data/small}}HERE
@@ -113,10 +113,10 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/full-reorg.sh)HERE
 <!-- ================================================================ -->
 </div>
 <h1>Numbering and renumbering records</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_renumbering_records');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_renumbering_records" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_renumbering_records');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_renumbering_records" style="display: block">
 
-<p/> The <tt>awk</tt>-like built-in variable <tt>NR</tt> is incremented for each input record:
+<p/> The <code>awk</code>-like built-in variable <code>NR</code> is incremented for each input record:
 
 POKI_RUN_COMMAND{{cat data/small}}HERE
 POKI_RUN_COMMAND{{mlr put '$nr = NR' data/small}}HERE
@@ -126,37 +126,37 @@ POKI_RUN_COMMAND{{mlr put '$nr = NR' data/small}}HERE
 
 POKI_RUN_COMMAND{{mlr filter '$a == "wye"' then put '$nr = NR' data/small}}HERE
 
-<p/> There are two good options here. One is to use the <tt>cat</tt> verb with <tt>-n</tt>:
+<p/> There are two good options here. One is to use the <code>cat</code> verb with <code>-n</code>:
 
 POKI_RUN_COMMAND{{mlr filter '$a == "wye"' then cat -n data/small}}HERE
 
-<p/> The other is to keep your own counter within the <tt>put</tt> DSL:
+<p/> The other is to keep your own counter within the <code>put</code> DSL:
 
 POKI_RUN_COMMAND{{mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n += 1' data/small}}HERE
 
-<p/> The difference is a matter of taste (although <tt>mlr cat -n</tt> puts the counter first).
+<p/> The difference is a matter of taste (although <code>mlr cat -n</code> puts the counter first).
 
 <!-- ================================================================ -->
 </div>
 <h1>Options for dealing with duplicate rows</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_dedupe');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_dedupe" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_dedupe');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_dedupe" style="display: block">
 
 <p/> If your data has records appearing multiple times, you can use
 <a href="reference-verbs.html#uniq">mlr uniq</a> to show and/or count the unique
 records.
 
 <p/> If you want to look at partial uniqueness &mdash; for example, show only
-the first record for each unique combination of the <tt>account_id</tt> and
-<tt>account_status</tt> fields &mdash; you might use <tt>mlr head -n 1 -g
-account_id,account_status</tt>. Please also see <a
+the first record for each unique combination of the <code>account_id</code> and
+<code>account_status</code> fields &mdash; you might use <code>mlr head -n 1 -g
+account_id,account_status</code>. Please also see <a
 href="reference-verbs.html#head">mlr head</a>.
 
 <!-- ================================================================ -->
 </div>
 <h1>Data-cleaning examples</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_data_cleaning_examples');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_data_cleaning_examples" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_data_cleaning_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_data_cleaning_examples" style="display: block">
 
 <p/> Here are some ways to use the type-checking options as described in
 the POKI_PUT_LINK_FOR_PAGE(reference-dsl.html#Type-test_and_type-assertion_expressions)HERE.
@@ -187,29 +187,29 @@ POKI_RUN_COMMAND_TOLERATING_ERROR{{mlr --csv put '$reachable = asserting_string(
 </div>
 <!-- ================================================================ -->
 <h1>Splitting nested fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_splitting_nested');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_splitting_nested" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_splitting_nested');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_splitting_nested" style="display: block">
 
 <p/> Suppose you have a TSV file like this:
 
 POKI_INCLUDE_ESCAPED(data/nested.tsv)HERE
 
-<p/> The simplest option is to use <a href="reference-verbs.html#nest"><tt>mlr nest</tt></a>:
+<p/> The simplest option is to use <a href="reference-verbs.html#nest"><code>mlr nest</code></a>:
 
 POKI_RUN_COMMAND{{mlr --tsv nest --explode --values --across-records -f b --nested-fs : data/nested.tsv}}HERE
 POKI_RUN_COMMAND{{mlr --tsv nest --explode --values --across-fields  -f b --nested-fs : data/nested.tsv}}HERE
 
-<p/> While <tt>mlr nest</tt> is simplest, let&rsquo;s also take a look at a few ways to do this using the
-<tt>put</tt> DSL.
+<p/> While <code>mlr nest</code> is simplest, let&rsquo;s also take a look at a few ways to do this using the
+<code>put</code> DSL.
 
-<p/> One option to split out the colon-delimited values in the <tt>b</tt>
-column is to use <tt>splitnv</tt> to create an integer-indexed map and loop
+<p/> One option to split out the colon-delimited values in the <code>b</code>
+column is to use <code>splitnv</code> to create an integer-indexed map and loop
 over it, adding new fields to the current record:
 
 POKI_RUN_COMMAND{{mlr --from data/nested.tsv --itsv --oxtab put 'o=splitnv($b, ":"); for (k,v in o) {$["p".k]=v}'}}HERE
 
-<p/> while another is to loop over the same map from <tt>splitnv</tt> and use
-it (with <tt>put -q</tt> to suppress printing the original record) to produce
+<p/> while another is to loop over the same map from <code>splitnv</code> and use
+it (with <code>put -q</code> to suppress printing the original record) to produce
 multiple records:
 
 POKI_RUN_COMMAND{{mlr --from data/nested.tsv --itsv --oxtab put -q 'o=splitnv($b, ":"); for (k,v in o) {emit mapsum($*, {"b":v})}'}}HERE
@@ -218,8 +218,8 @@ POKI_RUN_COMMAND{{mlr --from data/nested.tsv --tsv put -q 'o=splitnv($b, ":"); f
 </div>
 <!-- ================================================================ -->
 <h1>Showing differences between successive queries</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_successive_query_deltas');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_successive_query_deltas" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_successive_query_deltas');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_successive_query_deltas" style="display: block">
 
 <p/> Suppose you have a database query which you run at one point in time, producing the output on the
 left, then again later producing the output on the right:
@@ -248,16 +248,16 @@ POKI_RUN_COMMAND{{mlr --csv rename count,current_count data/current_counters.csv
 POKI_RUN_COMMAND{{cat data/currtemp.csv}}HERE
 
 <p/> Then, join on the key field(s), and use unsparsify to zero-fill counters
-absent on one side but present on the other. Use <tt>--ul</tt> and
-<tt>--ur</tt> to emit unpaired records (namely, purple on the left and yellow on the right):
+absent on one side but present on the other. Use <code>--ul</code> and
+<code>--ur</code> to emit unpaired records (namely, purple on the left and yellow on the right):
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/previous-to-current.sh)HERE
 
 </div>
 <!-- ================================================================ -->
 <h1>Finding missing dates</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_finding_missing_dates');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_finding_missing_dates" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_finding_missing_dates');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_finding_missing_dates" style="display: block">
 
 <p/>Suppose you have some date-stamped data which may (or may not) be missing entries for one or more dates:
 
@@ -266,7 +266,7 @@ POKI_RUN_COMMAND{{wc -l data/miss-date.csv}}HERE
 
 <p/>Since there are 1372 lines in the data file, some automation is called for.
 To find the missing dates, you can convert the dates to seconds since the epoch
-using <tt>strptime</tt>, then compute adjacent differences (the <tt>cat -n</tt>
+using <code>strptime</code>, then compute adjacent differences (the <code>cat -n</code>
 simply inserts record-counters):
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/miss-date-1.sh)HERE
@@ -283,14 +283,14 @@ POKI_RUN_COMMAND{{mlr cat -n then filter '$n >= 1115 && $n <= 1125' data/miss-da
 </div>
 <!-- ================================================================ -->
 <h1>Two-pass algorithms</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_two_pass_algorithms');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_two_pass_algorithms" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_two_pass_algorithms');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_two_pass_algorithms" style="display: block">
 
 <p/>Miller is a streaming record processor; commands are performed once per
 record. This makes Miller particularly suitable for single-pass algorithms,
 allowing many of its verbs to process files that are (much) larger than the
 amount of RAM present in your system. (Of course, Miller verbs such as
-<tt>sort</tt>, </tt>tac</tt>, etc. all must ingest and retain all input records
+<code>sort</code>, </code>tac</code>, etc. all must ingest and retain all input records
 before emitting any output records.) You can also use out-of-stream variables
 to perform multi-pass computations, at the price of retaining all input records
 in memory.
@@ -313,12 +313,12 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/two-pass-record-numbers.sh)HERE
 
 <h2>Two-pass algorithms: records having max value</h2>
 
-<p/>The idea is to retain records having the largest value of <tt>n</tt> in the
+<p/>The idea is to retain records having the largest value of <code>n</code> in the
 following data:
 
 POKI_RUN_COMMAND{{mlr --itsv --opprint cat data/maxrows.tsv}}HERE
 
-<p/>Of course, the largest value of <tt>n</tt> isn&rsquo;t known until after
+<p/>Of course, the largest value of <code>n</code> isn&rsquo;t known until after
 all data have been read. Using an out-of-stream variable we can retain all
 records as they are read, then filter them at the end:
 
@@ -329,8 +329,8 @@ POKI_RUN_COMMAND{{mlr --itsv --opprint put -q -f data/maxrows.mlr data/maxrows.t
 <!-- ================================================================ -->
 </div>
 <h1>Rectangularizing data</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rectangularizing_data');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_rectangularizing_data" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_rectangularizing_data');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_rectangularizing_data" style="display: block">
 
 <p/>Suppose you have a method (in whatever language) which is printing things of the form
 
@@ -364,8 +364,8 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/rect.sh)HERE
 <!-- ================================================================ -->
 </div>
 <h1>Regularizing ragged CSV</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rectangularizing_ragged_csv');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_rectangularizing_ragged_csv" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_rectangularizing_ragged_csv');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_rectangularizing_ragged_csv" style="display: block">
 
 <p/>Miller handles compliant CSV: in particular, it&rsquo;s an error if the
 number of data fields in a given data line don&rsquo;t match the number of
@@ -384,8 +384,8 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv-2.sh)HERE
 <!-- ================================================================ -->
 </div>
 <h1>Feature-counting</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_feature_counting');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_feature_counting" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_feature_counting');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_feature_counting" style="display: block">
 
 <p/>Suppose you have some heterogeneous data like this:
 
@@ -405,8 +405,8 @@ POKI_RUN_COMMAND{{mlr --ijson --opprint put -q -f data/feature-count.mlr data/fe
 <!-- ================================================================ -->
 </div>
 <h1>Unsparsing</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_unsparsing');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_unsparsing" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_unsparsing');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_unsparsing" style="display: block">
 
 <p/> The previous section discussed how to fill out missing data fields within
 CSV with full header line &mdash; so the list of all field names is present
@@ -418,42 +418,42 @@ output having the union of all key names.
 
 POKI_RUN_COMMAND{{cat data/sparse.json}}HERE
 
-<p/>There are field names <tt>a</tt>, <tt>b</tt>, <tt>v</tt>, <tt>u</tt>,
-<tt>x</tt>, <tt>w</tt> in the data &mdash; but not all in every record.  Since
+<p/>There are field names <code>a</code>, <code>b</code>, <code>v</code>, <code>u</code>,
+<code>x</code>, <code>w</code> in the data &mdash; but not all in every record.  Since
 we don&rsquo;t know the names of all the keys until we&rsquo;ve read them all,
 this needs to be a two-pass algorithm. On the first pass, remember all the
 unique key names and all the records; on the second pass, loop through the
-records filling in absent values, then producing output. Use <tt>put -q</tt>
+records filling in absent values, then producing output. Use <code>put -q</code>
 since we don&rsquo;t want to produce per-record output, only emitting output in
-the <tt>end</tt> block:
+the <code>end</code> block:
 
 POKI_RUN_COMMAND{{cat data/unsparsify.mlr}}HERE
 POKI_RUN_COMMAND{{mlr --json put -q -f data/unsparsify.mlr data/sparse.json}}HERE
 POKI_RUN_COMMAND{{mlr --ijson --ocsv put -q -f data/unsparsify.mlr data/sparse.json}}HERE
 POKI_RUN_COMMAND{{mlr --ijson --opprint put -q -f data/unsparsify.mlr data/sparse.json}}HERE
 
-<p/> There is a keystroke-saving verb for this: <a href="reference-verbs.html#unsparsify"><tt>mlr unsparsify</tt></a>.
+<p/> There is a keystroke-saving verb for this: <a href="reference-verbs.html#unsparsify"><code>mlr unsparsify</code></a>.
 
 </div>
 <!-- ================================================================ -->
 <h1>Parsing log-file output</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_parsing_log_file_output');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_parsing_log_file_output" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_parsing_log_file_output');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_parsing_log_file_output" style="display: block">
 
 <p/>This, of course, depends highly on what&rsquo;s in your log files. But, as
 an example, suppose you have log-file lines such as
 
 POKI_CARDIFY(2015-10-08 08:29:09,445 INFO com.company.path.to.ClassName @ [sometext] various/sorts/of data {& punctuation} hits=1 status=0 time=2.378)HERE
 
-I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the structured text, then hand that to Miller. Example:
+I prefer to pre-filter with <code>grep</code> and/or <code>sed</code> to extract the structured text, then hand that to Miller. Example:
 
 POKI_CARDIFY(grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab stats1 -a min,p10,p50,p90,max -f time -g status)HERE
 
 </div>
 <!-- ================================================================ -->
 <h1>Memoization with out-of-stream variables</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_memoization_with_oosvars');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_memoization_with_oosvars" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_memoization_with_oosvars');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_memoization_with_oosvars" style="display: block">
 
 <p/> The recursive function for the Fibonacci sequence is famous for its computational complexity.
 Namely, using
@@ -501,7 +501,7 @@ i  o      fcount  seconds_delta
 </pre></div>
 
 <p/> Note that the time it takes to evaluate the function is blowing up exponentially as the input argument
-increases. Using <tt>@</tt>-variables, which persist across records, we can cache and reuse the results
+increases. Using <code>@</code>-variables, which persist across records, we can cache and reuse the results
 of previous computations:
 
 POKI_INCLUDE_ESCAPED(data/fibo-cached.sh)HERE

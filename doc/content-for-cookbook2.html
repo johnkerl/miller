@@ -1,4 +1,3 @@
-
 <p/>
 <center>
 <boldmaroon>Random things, and some math</boldmaroon>
@@ -7,13 +6,13 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
 
 <!-- ================================================================ -->
 <h1>Randomly selecting words from a list</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_generating_random_words');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_generating_random_words" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_generating_random_words');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_generating_random_words" style="display: block">
 
 <p/> Given this <a href="data/english-words.txt">word list</a>, first take a
 look to see what the first few lines look like:
@@ -52,8 +51,8 @@ coinmate
 </div>
 <!-- ================================================================ -->
 <h1>Randomly generating jabberwocky words</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_jabberwocky');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_jabberwocky" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_jabberwocky');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_jabberwocky" style="display: block">
 
 <p/> These are simple <i>n</i>-grams as described
 <a href="http://johnkerl.org/randspell/randspell-slides-ts.pdf">here</a>. Some common functions are
@@ -93,12 +92,12 @@ suggestional
 </div>
 <!-- ================================================================ -->
 <h1>Program timing</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_program_timing');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_program_timing" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_program_timing');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_program_timing" style="display: block">
 
 This admittedly artificial example demonstrates using Miller time and stats
 functions to introspectively acquire some information about Miller&rsquo;s own
-runtime. The <tt>delta</tt> function computes the difference between successive
+runtime. The <code>delta</code> function computes the difference between successive
 timestamps.
 
 POKI_INCLUDE_ESCAPED(data/timing-example.txt)HERE
@@ -106,24 +105,24 @@ POKI_INCLUDE_ESCAPED(data/timing-example.txt)HERE
 </div>
 <!-- ================================================================ -->
 <h1>Computing interquartile ranges</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_iqr');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_iqr" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_iqr');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_iqr" style="display: block">
 
 <p> For one or more specified field names, simply compute p25 and p75, then write the IQR as the difference of p75 and p25:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/iqr1.sh)HERE
 
-<p> For wildcarded field names, first compute p25 and p75, then loop over field names with <tt>p25</tt> in them:
+<p> For wildcarded field names, first compute p25 and p75, then loop over field names with <code>p25</code> in them:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/iqrn.sh)HERE
 
 </div>
 <!-- ================================================================ -->
 <h1>Computing weighted means</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_weighted_mean');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_weighted_mean" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_weighted_mean');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_weighted_mean" style="display: block">
 
-<p> This might be more elegantly implemented as an option within the <tt>stats1</tt> verb. Meanwhile, it&rsquo;s
+<p> This might be more elegantly implemented as an option within the <code>stats1</code> verb. Meanwhile, it&rsquo;s
 expressible within the DSL:
 
 POKI_INCLUDE_AND_RUN_ESCAPED(data/weighted-mean.sh)HERE
@@ -131,8 +130,8 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/weighted-mean.sh)HERE
 </div>
 <!-- ================================================================ -->
 <h1>Generating random numbers from various distributions</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_generating_random_variables');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_generating_random_variables" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_generating_random_variables');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_generating_random_variables" style="display: block">
 
 <p/>Here we can chain together a few simple building blocks:
 
@@ -144,8 +143,8 @@ POKI_RUN_COMMAND{{cat expo-sample.sh}}HERE
 <li/> Set the Miller random-number seed so this webdoc looks the same every time I regenerate it.
 <li/> Use pretty-printed tabular output.
 <li/> Use pretty-printed tabular output.
-<li/> Use <tt>seqgen</tt> to produce 100,000 records <tt>i=0</tt>, <tt>i=1</tt>, etc.
-<li/> Send those to a <tt>put</tt> step which defines an inverse-transform-sampling function and
+<li/> Use <code>seqgen</code> to produce 100,000 records <code>i=0</code>, <code>i=1</code>, etc.
+<li/> Send those to a <code>put</code> step which defines an inverse-transform-sampling function and
   calls it twice, then computes the sum and product of samples.
 <li/> Send those to a histogram, and from there to a bar-plotter. This is just for visualization; you
   could just as well output CSV and send that off to your own plotting tool, etc.
@@ -158,8 +157,8 @@ POKI_RUN_COMMAND{{sh expo-sample.sh}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>Sieve of Eratosthenes</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sieve');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_sieve" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_sieve');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_sieve" style="display: block">
 
 <p/> The <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">Sieve_of_Eratosthenes</a>
 is a standard introductory programming topic. The idea is to find all primes up
@@ -167,8 +166,8 @@ to some <i>N</i> by making a list of the numbers 1 to <i>N</i>, then striking
 out all multiples of 2 except 2 itself, all multiples of 3 except 3 itself, all
 multiples of 4 except 4 itself, and so on. Whatever survives that without
 getting marked is a prime. This is easy enough in Miller. Notice that here all
-the work is in <tt>begin</tt> and <tt>end</tt> statements; there is no file
-input (so we use <tt>mlr -n</tt> to keep Miller from waiting for input data).
+the work is in <code>begin</code> and <code>end</code> statements; there is no file
+input (so we use <code>mlr -n</code> to keep Miller from waiting for input data).
 
 POKI_RUN_COMMAND{{cat programs/sieve.mlr}}HERE
 POKI_RUN_COMMAND{{mlr -n put -f programs/sieve.mlr}}HERE
@@ -176,8 +175,8 @@ POKI_RUN_COMMAND{{mlr -n put -f programs/sieve.mlr}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>Mandelbrot-set generator</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_mand');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_mand" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_mand');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_mand" style="display: block">
 
 <p/> The <a href="http://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot
 set</a> is also easily expressed. This isn&rsquo;t an important case of

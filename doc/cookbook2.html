@@ -29,171 +29,181 @@ pageTracker._trackPageview();
 
 <!-- ================================================================ -->
 <script type="text/javascript">
-  function toggle_div(div) {
-    if (div != null) {
-      if (div.id.startsWith("section_toggle_")) {
-        var state = div.style.display;
-        if (state == "block") {
-          div.style.display = "none";
-        } else {
-          div.style.display = "block";
-        }
-      }
-    }
+
+  function vis_expand_all_navbar_sections() {
+    //console.log('vis_expand_all_navbar_sections ENTER');
+    vis_expand_all_with_prefix('navbar_section_toggle_');
+    //console.log('vis_expand_all_navbar_sections EXIT');
   }
-  function expand_div(div) {
-    if (div != null) {
-      if (div.id.startsWith("section_toggle_")) {
-        div.style.display = "block";
-      }
-    }
-  }
-  function collapse_div(div) {
-    if (div != null) {
-      if (div.id.startsWith("section_toggle_")) {
-        div.style.display = "none";
-      }
-    }
+  function vis_collapse_all_navbar_sections() {
+    //console.log('vis_collapse_all_navbar_sections ENTER');
+    vis_collapse_all_with_prefix('navbar_section_toggle_');
+    //console.log('vis_collapse_all_navbar_sections EXIT');
   }
 
-  function toggle_by_name(divName) {
-    toggle_div(document.getElementById(divName));
+  function vis_expand_all_body_sections() {
+    //console.log('vis_expand_all_body_sections ENTER');
+    vis_expand_all_with_prefix('body_section_toggle_');
+    //console.log('vis_expand_all_body_sections EXIT');
   }
-  function expand_by_name(divName) {
-    expand_div(document.getElementById(divName));
-  }
-  function collapse_by_name(divName) {
-    collapse_div(document.getElementById(divName));
+  function vis_collapse_all_body_sections() {
+    //console.log('vis_collapse_all_body_sections ENTER');
+    vis_collapse_all_with_prefix('body_section_toggle_');
+    //console.log('vis_collapse_all_body_sections EXIT');
   }
 
-  function expand_all() {
-    var divs = document.getElementsByTagName("div");
+  function vis_expand_all_with_prefix(prefix) {
+    //console.log('vis_expand_all_with_prefix ENTER', prefix);
+    var divs = document.getElementsByTagName('div');
+    console.log("DIVS", divs);
     for(var i = 0; i < divs.length; i++) {
-      expand_div(divs[i]);
+      const div = divs[i];
+      if (div.id.startsWith(prefix)) {
+        vis_expand_div(div);
+      }
     }
+    //console.log('vis_expand_all_with_prefix EXIT', prefix);
   }
-  function collapse_all() {
-    var divs = document.getElementsByTagName("div");
+  function vis_collapse_all_with_prefix(prefix) {
+    var divs = document.getElementsByTagName('div');
     for(var i = 0; i < divs.length; i++){
-      collapse_div(divs[i]);
+      const div = divs[i];
+      if (div.id.startsWith(prefix)) {
+        vis_collapse_div(div);
+      }
     }
   }
+
+  function vis_toggle_by_name(divName) {
+    vis_toggle_div(document.getElementById(divName));
+  }
+  function vis_expand_by_name(divName) {
+    vis_expand_div(document.getElementById(divName));
+  }
+  function vis_collapse_by_name(divName) {
+    vis_collapse_div(document.getElementById(divName));
+  }
+
+  function vis_toggle_div(div) {
+    if (div != null) {
+      var state = div.style.display;
+      if (state == 'block') {
+        div.style.display = 'none';
+      } else {
+        div.style.display = 'block';
+      }
+    }
+  }
+  function vis_expand_div(div) {
+    if (div != null) {
+      div.style.display = 'block';
+    }
+  }
+  function vis_collapse_div(div) {
+    if (div != null) {
+      div.style.display = 'none';
+    }
+  }
+
 </script>
 
-<!--
-The background image is from a screenshot of a Google search for "data analysis
-tools", lightened and sepia-toned. Over this was placed a Mac Terminal app with
-very light-grey font and translucent background, in which a few statistical
-Miller commands were run with pretty-print-tabular output format.
-<body background="pix/sepia-overlay.jpg">
--->
 <body bgcolor="#ffffff">
 
 <!-- ================================================================ -->
-<table width="100%">
-<tr>
 
-  <!-- navbar -->
-  <td width="15%">
-    <!--
-    <img src="pix/mlr.jpg" />
-    <img style="border-width:1px; color:black;" src="pix/mlr.jpg" />
-    -->
+<!-- navbar -->
+<div class="pokinav">
+  <center><titleinbody>Miller</titleinbody></center>
+  
+<!-- NAVBAR GENERATED FROM template.html BY poki -->
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_overview');"
+  href="javascript:;"
+  >
+    Overview
+</button>
+<button
+  style="font-weight:bold;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_using');"
+  href="javascript:;"
+  >
+    Using
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_reference');"
+  href="javascript:;"
+  >
+    Reference
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_background');"
+  href="javascript:;"
+  >
+    Background
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_repository');"
+  href="javascript:;"
+  >
+    Repository
+</button>
+<div id="navbar_section_toggle_overview" style="display: none;text-align: left">
+<br/><a href="index.html">About</a>
+<br/><a href="10-min.html">10-minute intro</a>
+<br/><a href="file-formats.html">File formats</a>
+<br/><a href="feature-comparison.html">Unix-toolkit context</a>
+<br/><a href="record-heterogeneity.html">Record-hetrogeneity</a>
+<br/><a href="internationalization.html">Internationalization</a>
+</div>
+<div id="navbar_section_toggle_using" style="display: block;text-align: left">
+<br/><a href="faq.html">FAQ</a>
+<br/><a href="data-sharing.html">10-minute intro</a>
+<br/><a href="cookbook.html">Cookbook part 1</a>
+<br/><a href="cookbook2.html"><b>Cookbook part 2</b></a>
+<br/><a href="cookbook3.html">Cookbook part 3</a>
+<br/><a href="data-examples.html">Data-diviing examples</a>
+</div>
+<div id="navbar_section_toggle_reference" style="display: none;text-align: left">
+<br/><a href="reference.html">Main reference</a>
+<br/><a href="reference-verbs.html">Verbs reference</a>
+<br/><a href="reference-dsl.html">DSL reference</a>
+<br/><a href="manpage.html">Manpage</a>
+<br/><a href="release-docs.html">Documents by release</a>
+<br/><a href="build.html">Installation</a>
+</div>
+<div id="navbar_section_toggle_background" style="display: none;text-align: left">
+<br/><a href="why.html">Why?</a>
+<br/><a href="whyc.html">Why C?</a>
+<br/><a href="etymology.html">Why call it Miller?</a>
+<br/><a href="originality.html">How original is Miller?</a>
+<br/><a href="performance.html">Performance</a>
+</div>
+<div id="navbar_section_toggle_repository" style="display: none;text-align: left">
+<br/><a href="contact.html">Contact information</a>
+<br/><a href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>
+</div>
+</div>
 
-    <div class="pokinav">
-      <center><titleinbody>Miller</titleinbody></center>
-      
-<!-- PAGE LIST GENERATED FROM template.html BY poki -->
-<br/><b>Overview:</b>
-<br/>&bull;&nbsp;<a href="index.html">About Miller</a>
-<br/>&bull;&nbsp;<a href="10-min.html">Miller in 10 minutes</a>
-<br/>&bull;&nbsp;<a href="file-formats.html">File formats</a>
-<br/>&bull;&nbsp;<a href="feature-comparison.html">Miller features in the context of the Unix toolkit</a>
-<br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
-<br/>&bull;&nbsp;<a href="internationalization.html">Internationalization</a>
-<br/><b>Using Miller:</b>
-<br/>&bull;&nbsp;<a href="faq.html">FAQ</a>
-<br/>&bull;&nbsp;<a href="data-sharing.html">Sharing data with other languages</a>
-<br/>&bull;&nbsp;<a href="cookbook.html">Cookbook part 1</a>
-<br/>&bull;&nbsp;<a href="cookbook2.html"><b>Cookbook part 2</b></a>
-<br/>&bull;&nbsp;<a href="cookbook3.html">Cookbook part 3</a>
-<br/>&bull;&nbsp;<a href="data-examples.html">Data-diving examples</a>
-<br/>&bull;&nbsp;<a href="manpage.html">Manpage</a>
-<br/>&bull;&nbsp;<a href="reference.html">Reference</a>
-<br/>&bull;&nbsp;<a href="reference-verbs.html">Reference: Verbs</a>
-<br/>&bull;&nbsp;<a href="reference-dsl.html">Reference: DSL</a>
-<br/>&bull;&nbsp;<a href="release-docs.html">Documents by release</a>
-<br/>&bull;&nbsp;<a href="build.html">Installation, portability, dependencies, and testing</a>
-<br/><b>Background:</b>
-<br/>&bull;&nbsp;<a href="why.html">Why?</a>
-<br/>&bull;&nbsp;<a href="whyc.html">Why C?</a>
-<br/>&bull;&nbsp;<a href="etymology.html">Why call it Miller?</a>
-<br/>&bull;&nbsp;<a href="originality.html">How original is Miller?</a>
-<br/>&bull;&nbsp;<a href="performance.html">Performance</a>
-<br/><b>Repository:</b>
-<br/>&bull;&nbsp;<a href="to-do.html">Things to do</a>
-<br/>&bull;&nbsp;<a href="contact.html">Contact information</a>
-<br/>&bull;&nbsp;<a href="https://github.com/johnkerl/miller">GitHub repo</a>
-      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
-      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
-      <br/> <br/> <br/> <br/> <br/> <br/>
-    </div>
-  </td>
+<!-- page body -->
+<p/>
 
-  <!-- page body -->
-  <td>
-    <!--
-      This is a visually gorgeous feature (here & in the CSS): it allows for
-      independent scroll of the nav and body panels. In particular the nav
-      stays on-screen as you scroll the body.
-
-      However, two problems:
-
-      (1) In Firefox & Chrome both I get janky end-of-body scrolls: there is
-      more content but I can't scroll down to it unless I repeatedly retry the
-      scrolldown. Which is weird.
-
-      (2) Worse, only the first page renders in PDF (again, Firefox & Chrome).
-
-      For now I'm disabling this separate-scroll feature. A frontender, I am
-      not ... maybe someday I'll find a config which gets *all* the features
-      I want; for now, it's a tradeoff.
-    -->
-
-    <!-- Implementation details: one bit is right here:
-
-    div style="overflow-y:scroll;height:1500px"
-
-    and the other bit is in css/poki-callbacks.css:
-
-    .pokinav {
-      display:        inline-block;
-      background:     #e8d9bc;
-      border:         1;
-      box-shadow:     0px 0px 3px 3px #C9C9C9;
-      margin:         10px;
-      padding-top:    10px;
-      padding-bottom: 10px;
-      padding-left:   10px;
-      padding-right:  10px;
-      overflow-y:     scroll;  < - - - - - - here
-      height: 1500px;
-    }
-
-    -->
-    <div>
-    <center> <titleinbody> Cookbook part 2 </titleinbody> </center>
-    <p/>
-    
 <!-- BODY COPIED FROM content-for-cookbook2.html BY poki -->
-
 <p/>
 <center>
 <boldmaroon>Random things, and some math</boldmaroon>
 </center>
 
 <div class="pokitoc">
-<center><b>Contents:</b></center>
+<center><titleinbody>Cookbook part 2</titleinbody></center>
 &bull;&nbsp;<a href="#Randomly_selecting_words_from_a_list">Randomly selecting words from a list</a><br/>
 &bull;&nbsp;<a href="#Randomly_generating_jabberwocky_words">Randomly generating jabberwocky words</a><br/>
 &bull;&nbsp;<a href="#Program_timing">Program timing</a><br/>
@@ -206,13 +216,13 @@ Miller commands were run with pretty-print-tabular output format.
 <p/>
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
 
 <!-- ================================================================ -->
 <a id="Randomly_selecting_words_from_a_list"/><h1>Randomly selecting words from a list</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_generating_random_words');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_generating_random_words" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_generating_random_words');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_generating_random_words" style="display: block">
 
 <p/> Given this <a href="data/english-words.txt">word list</a>, first take a
 look to see what the first few lines look like:
@@ -251,8 +261,8 @@ coinmate
 </div>
 <!-- ================================================================ -->
 <a id="Randomly_generating_jabberwocky_words"/><h1>Randomly generating jabberwocky words</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_jabberwocky');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_jabberwocky" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_jabberwocky');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_jabberwocky" style="display: block">
 
 <p/> These are simple <i>n</i>-grams as described
 <a href="http://johnkerl.org/randspell/randspell-slides-ts.pdf">here</a>. Some common functions are
@@ -292,12 +302,12 @@ suggestional
 </div>
 <!-- ================================================================ -->
 <a id="Program_timing"/><h1>Program timing</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_program_timing');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_program_timing" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_program_timing');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_program_timing" style="display: block">
 
 This admittedly artificial example demonstrates using Miller time and stats
 functions to introspectively acquire some information about Miller&rsquo;s own
-runtime. The <tt>delta</tt> function computes the difference between successive
+runtime. The <code>delta</code> function computes the difference between successive
 timestamps.
 
 <p/>
@@ -337,8 +347,8 @@ t_delta_max  5.388259888e-05
 </div>
 <!-- ================================================================ -->
 <a id="Computing_interquartile_ranges"/><h1>Computing interquartile ranges</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_iqr');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_iqr" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_iqr');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_iqr" style="display: block">
 
 <p> For one or more specified field names, simply compute p25 and p75, then write the IQR as the difference of p75 and p25:
 
@@ -355,7 +365,7 @@ x_iqr 0.501516
 </div>
 <p/>
 
-<p> For wildcarded field names, first compute p25 and p75, then loop over field names with <tt>p25</tt> in them:
+<p> For wildcarded field names, first compute p25 and p75, then loop over field names with <code>p25</code> in them:
 
 <p/>
 <div class="pokipanel">
@@ -383,10 +393,10 @@ y_iqr 0.511866
 </div>
 <!-- ================================================================ -->
 <a id="Computing_weighted_means"/><h1>Computing weighted means</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_weighted_mean');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_weighted_mean" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_weighted_mean');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_weighted_mean" style="display: block">
 
-<p> This might be more elegantly implemented as an option within the <tt>stats1</tt> verb. Meanwhile, it&rsquo;s
+<p> This might be more elegantly implemented as an option within the <code>stats1</code> verb. Meanwhile, it&rsquo;s
 expressible within the DSL:
 
 <p/>
@@ -428,8 +438,8 @@ a=hat,wmean=4925.533162,mean=4967.743946
 </div>
 <!-- ================================================================ -->
 <a id="Generating_random_numbers_from_various_distributions"/><h1>Generating random numbers from various distributions</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_generating_random_variables');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_generating_random_variables" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_generating_random_variables');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_generating_random_variables" style="display: block">
 
 <p/>Here we can chain together a few simple building blocks:
 
@@ -474,8 +484,8 @@ mlr -n \
 <li/> Set the Miller random-number seed so this webdoc looks the same every time I regenerate it.
 <li/> Use pretty-printed tabular output.
 <li/> Use pretty-printed tabular output.
-<li/> Use <tt>seqgen</tt> to produce 100,000 records <tt>i=0</tt>, <tt>i=1</tt>, etc.
-<li/> Send those to a <tt>put</tt> step which defines an inverse-transform-sampling function and
+<li/> Use <code>seqgen</code> to produce 100,000 records <code>i=0</code>, <code>i=1</code>, etc.
+<li/> Send those to a <code>put</code> step which defines an inverse-transform-sampling function and
   calls it twice, then computes the sum and product of samples.
 <li/> Send those to a histogram, and from there to a bar-plotter. This is just for visualization; you
   could just as well output CSV and send that off to your own plotting tool, etc.
@@ -545,8 +555,8 @@ bin_lo   bin_hi   u_count                        s_count                        
 </div>
 <!-- ================================================================ -->
 <a id="Sieve_of_Eratosthenes"/><h1>Sieve of Eratosthenes</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sieve');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_sieve" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_sieve');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_sieve" style="display: block">
 
 <p/> The <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">Sieve_of_Eratosthenes</a>
 is a standard introductory programming topic. The idea is to find all primes up
@@ -554,8 +564,8 @@ to some <i>N</i> by making a list of the numbers 1 to <i>N</i>, then striking
 out all multiples of 2 except 2 itself, all multiples of 3 except 3 itself, all
 multiples of 4 except 4 itself, and so on. Whatever survives that without
 getting marked is a prime. This is easy enough in Miller. Notice that here all
-the work is in <tt>begin</tt> and <tt>end</tt> statements; there is no file
-input (so we use <tt>mlr -n</tt> to keep Miller from waiting for input data).
+the work is in <code>begin</code> and <code>end</code> statements; there is no file
+input (so we use <code>mlr -n</code> to keep Miller from waiting for input data).
 
 <p/>
 <div class="pokipanel">
@@ -632,8 +642,8 @@ $ mlr -n put -f programs/sieve.mlr
 </div>
 <!-- ================================================================ -->
 <a id="Mandelbrot-set_generator"/><h1>Mandelbrot-set generator</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_mand');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_mand" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_mand');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_mand" style="display: block">
 
 <p/> The <a href="http://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot
 set</a> is also easily expressed. This isn&rsquo;t an important case of
@@ -833,9 +843,6 @@ echo "rcorn=-1.755350,icorn=+0.014230,side=0.000020,maxits=10000,iheight=$iheigh
 </center>
 
 </div>
-    </div>
-  </td>
 
-</table>
 </body>
 </html>

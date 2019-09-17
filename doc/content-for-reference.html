@@ -1,16 +1,16 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
 
 <h1>Command overview</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_overview" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_overview" style="display: block">
 
 <p>
-Whereas the Unix toolkit is made of the separate executables <tt>cat</tt>, <tt>tail</tt>, <tt>cut</tt>,
-<tt>sort</tt>, etc., Miller has subcommands, invoked as follows:
+Whereas the Unix toolkit is made of the separate executables <code>cat</code>, <code>tail</code>, <code>cut</code>,
+<code>sort</code>, etc., Miller has subcommands, invoked as follows:
 
 POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)HERE
 
@@ -23,16 +23,16 @@ POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)HERE
   </tr>
   <tr>
     <td>
-      <a href="reference-verbs.html#cat"><tt>cat</tt></a>,
-      <a href="reference-verbs.html#cut"><tt>cut</tt></a>,
-      <a href="reference-verbs.html#grep"><tt>grep</tt></a>,
-      <a href="reference-verbs.html#head"><tt>head</tt></a>,
-      <a href="reference-verbs.html#join"><tt>join</tt></a>,
-      <a href="reference-verbs.html#sort"><tt>sort</tt></a>,
-      <a href="reference-verbs.html#tac"><tt>tac</tt></a>,
-      <a href="reference-verbs.html#tail"><tt>tail</tt></a>,
-      <a href="reference-verbs.html#top"><tt>top</tt></a>,
-      <a href="reference-verbs.html#uniq"><tt>uniq</tt></a>
+      <a href="reference-verbs.html#cat"><code>cat</code></a>,
+      <a href="reference-verbs.html#cut"><code>cut</code></a>,
+      <a href="reference-verbs.html#grep"><code>grep</code></a>,
+      <a href="reference-verbs.html#head"><code>head</code></a>,
+      <a href="reference-verbs.html#join"><code>join</code></a>,
+      <a href="reference-verbs.html#sort"><code>sort</code></a>,
+      <a href="reference-verbs.html#tac"><code>tac</code></a>,
+      <a href="reference-verbs.html#tail"><code>tail</code></a>,
+      <a href="reference-verbs.html#top"><code>top</code></a>,
+      <a href="reference-verbs.html#uniq"><code>uniq</code></a>
     </td>
     <td> Analogs of their Unix-toolkit namesakes, discussed below as well as in
     POKI_PUT_LINK_FOR_PAGE(feature-comparison.html)HERE </td>
@@ -40,37 +40,37 @@ POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)HERE
 
   <tr>
     <td>
-      <a href="reference-verbs.html#filter"><tt>filter</tt></a>,
-      <a href="reference-verbs.html#put"><tt>put</tt></a>,
-      <a href="reference-verbs.html#sec2gmt"><tt>sec2gmt</tt></a>,
-      <a href="reference-verbs.html#sec2gmtdate"><tt>sec2gmtdate</tt></a>,
-      <a href="reference-verbs.html#step"><tt>step</tt></a>,
-      <a href="reference-verbs.html#tee"><tt>tee</tt></a>
+      <a href="reference-verbs.html#filter"><code>filter</code></a>,
+      <a href="reference-verbs.html#put"><code>put</code></a>,
+      <a href="reference-verbs.html#sec2gmt"><code>sec2gmt</code></a>,
+      <a href="reference-verbs.html#sec2gmtdate"><code>sec2gmtdate</code></a>,
+      <a href="reference-verbs.html#step"><code>step</code></a>,
+      <a href="reference-verbs.html#tee"><code>tee</code></a>
     </td>
-    <td> <tt>awk</tt>-like functionality </td>
+    <td> <code>awk</code>-like functionality </td>
   </tr>
 
   <tr>
     <td>
-      <a href="reference-verbs.html#bar"><tt>bar</tt></a>,
-      <a href="reference-verbs.html#bootstrap"><tt>bootstrap</tt></a>,
-      <a href="reference-verbs.html#decimate"><tt>decimate</tt></a>,
-      <a href="reference-verbs.html#histogram"><tt>histogram</tt></a>,
-      <a href="reference-verbs.html#least-frequent"><tt>least-frequent</tt></a>,
-      <a href="reference-verbs.html#most-frequent"><tt>most-frequent</tt></a>,
-      <a href="reference-verbs.html#sample"><tt>sample</tt></a>,
-      <a href="reference-verbs.html#shuffle"><tt>shuffle</tt></a>,
-      <a href="reference-verbs.html#stats1"><tt>stats1</tt></a>,
-      <a href="reference-verbs.html#stats2"><tt>stats2</tt></a>
+      <a href="reference-verbs.html#bar"><code>bar</code></a>,
+      <a href="reference-verbs.html#bootstrap"><code>bootstrap</code></a>,
+      <a href="reference-verbs.html#decimate"><code>decimate</code></a>,
+      <a href="reference-verbs.html#histogram"><code>histogram</code></a>,
+      <a href="reference-verbs.html#least-frequent"><code>least-frequent</code></a>,
+      <a href="reference-verbs.html#most-frequent"><code>most-frequent</code></a>,
+      <a href="reference-verbs.html#sample"><code>sample</code></a>,
+      <a href="reference-verbs.html#shuffle"><code>shuffle</code></a>,
+      <a href="reference-verbs.html#stats1"><code>stats1</code></a>,
+      <a href="reference-verbs.html#stats2"><code>stats2</code></a>
     </td>
     <td> Statistically oriented </td>
   </tr>
 
   <tr>
     <td>
-      <a href="reference-verbs.html#group-by"><tt>group-by</tt></a>,
-      <a href="reference-verbs.html#group-like"><tt>group-like</tt></a>,
-      <a href="reference-verbs.html#having-fields"><tt>having-fields</tt></a>
+      <a href="reference-verbs.html#group-by"><code>group-by</code></a>,
+      <a href="reference-verbs.html#group-like"><code>group-like</code></a>,
+      <a href="reference-verbs.html#having-fields"><code>having-fields</code></a>
     </td>
     <td> Particularly oriented toward POKI_PUT_LINK_FOR_PAGE(record-heterogeneity.html)HERE, although
       all Miller commands can handle heterogeneous records
@@ -78,21 +78,21 @@ POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)HERE
 
   <tr>
     <td>
-      <a href="reference-verbs.html#check"><tt>check</tt></a>,
-      <a href="reference-verbs.html#count-distinct"><tt>count-distinct</tt></a>,
-      <a href="reference-verbs.html#label"><tt>label</tt></a>,
-      <a href="reference-verbs.html#merge-fields"><tt>merge-fields</tt></a>,
-      <a href="reference-verbs.html#nest"><tt>nest</tt></a>,
-      <a href="reference-verbs.html#nothing"><tt>nothing</tt></a>,
-      <a href="reference-verbs.html#regularize"><tt>rename</tt></a>,
-      <a href="reference-verbs.html#rename"><tt>rename</tt></a>,
-      <a href="reference-verbs.html#reorder"><tt>reorder</tt></a>,
-      <a href="reference-verbs.html#reshape"><tt>reshape</tt></a>,
-      <a href="reference-verbs.html#seqgen"><tt>seqgen</tt></a>
+      <a href="reference-verbs.html#check"><code>check</code></a>,
+      <a href="reference-verbs.html#count-distinct"><code>count-distinct</code></a>,
+      <a href="reference-verbs.html#label"><code>label</code></a>,
+      <a href="reference-verbs.html#merge-fields"><code>merge-fields</code></a>,
+      <a href="reference-verbs.html#nest"><code>nest</code></a>,
+      <a href="reference-verbs.html#nothing"><code>nothing</code></a>,
+      <a href="reference-verbs.html#regularize"><code>rename</code></a>,
+      <a href="reference-verbs.html#rename"><code>rename</code></a>,
+      <a href="reference-verbs.html#reorder"><code>reorder</code></a>,
+      <a href="reference-verbs.html#reshape"><code>reshape</code></a>,
+      <a href="reference-verbs.html#seqgen"><code>seqgen</code></a>
     </td>
     <td> These draw from other sources (see also POKI_PUT_LINK_FOR_PAGE(originality.html)HERE):
-      <a href="reference-verbs.html#count-distinct"><tt>count-distinct</tt></a> is SQL-ish, and
-      <a href="reference-verbs.html#rename"><tt>rename</tt></a> can be done by <tt>sed</tt> (which does it faster:
+      <a href="reference-verbs.html#count-distinct"><code>count-distinct</code></a> is SQL-ish, and
+      <a href="reference-verbs.html#rename"><code>rename</code></a> can be done by <code>sed</code> (which does it faster:
         see POKI_PUT_LINK_FOR_PAGE(performance.html)HERE).
     </td>
   </tr>
@@ -102,8 +102,8 @@ POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)HERE
 </div>
 <!-- ================================================================ -->
 <h1>I/O options</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_io_options');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_io_options" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_io_options');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_io_options" style="display: block">
 
 <!-- ================================================================ -->
 <h2>Formats</h2>
@@ -120,7 +120,7 @@ POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)HERE
   --json    --ijson    --ojson
 </pre>
 
-<p/> These are as discussed in POKI_PUT_LINK_FOR_PAGE(file-formats.html)HERE, with the exception of <tt>--right</tt>
+<p/> These are as discussed in POKI_PUT_LINK_FOR_PAGE(file-formats.html)HERE, with the exception of <code>--right</code>
 which makes pretty-printed output right-aligned:
 
 <table><tr><td>
@@ -133,12 +133,12 @@ POKI_RUN_COMMAND{{mlr --opprint --right cat data/small}}HERE
 
 <ul>
 
-<li/> Use <tt>--csv</tt>, <tt>--pprint</tt>, etc. when the input and output formats are the same.
+<li/> Use <code>--csv</code>, <code>--pprint</code>, etc. when the input and output formats are the same.
 
-<li/> Use <tt>--icsv --opprint</tt>, etc. when you want format conversion as part of what Miller does to your data.
+<li/> Use <code>--icsv --opprint</code>, etc. when you want format conversion as part of what Miller does to your data.
 
 <li/> DKVP (key-value-pair) format is the default for input and output. So,
-<tt>--oxtab</tt> is the same as <tt>--idkvp --oxtab</tt>.
+<code>--oxtab</code> is the same as <code>--idkvp --oxtab</code>.
 
 </ul>
 
@@ -146,8 +146,8 @@ POKI_RUN_COMMAND{{mlr --opprint --right cat data/small}}HERE
 --oformat2</b>.  If you use <b>--format1 --oformat2</b> then what happens is
 that flags are set up for input <i>and</i> output for format1, some of which
 are overwritten for output in format2. For technical reasons, having
-<tt>--oformat2</tt> clobber all the output-related effects of
-<tt>--format1</tt> also removes some flexibility from the command-line
+<code>--oformat2</code> clobber all the output-related effects of
+<code>--format1</code> also removes some flexibility from the command-line
 interface. See also
 <a href="https://github.com/johnkerl/miller/issues/180">https://github.com/johnkerl/miller/issues/180</a> and
 <a href="https://github.com/johnkerl/miller/issues/199">https://github.com/johnkerl/miller/issues/199</a>.
@@ -155,13 +155,13 @@ interface. See also
 <!-- ================================================================ -->
 <h2>In-place mode</h2>
 
-<p/> Use the <tt>mlr -I</tt> flag to process files in-place. For example,
-<tt>mlr -I --csv cut -x -f unwanted_column_name mydata/*.csv</tt> will remove
-<tt>unwanted_column_name</tt> from all your <tt>*.csv</tt> files in your
-<tt>mydata/</tt> subdirectory.
+<p/> Use the <code>mlr -I</code> flag to process files in-place. For example,
+<code>mlr -I --csv cut -x -f unwanted_column_name mydata/*.csv</code> will remove
+<code>unwanted_column_name</code> from all your <code>*.csv</code> files in your
+<code>mydata/</code> subdirectory.
 
 <p/> By default, Miller output goes to the screen (or you can redirect a file
-using <tt>&gt;</tt> or to another process using <tt>|</tt>). With <tt>-I</tt>,
+using <code>&gt;</code> or to another process using <code>|</code>). With <code>-I</code>,
 for each file name on the command line, output is written to a temporary file
 in the same directory. Miller writes its output into that temp file, which is
 then renamed over the original.  Then, processing continues on the next file.
@@ -183,7 +183,7 @@ for examples.
 
 <p/>The prepipe command is anything which reads from standard input and produces data acceptable to
 Miller. Nominally this allows you to use whichever decompression utilities you have installed on your
-system, on a per-file basis. If the command has flags, quote them: e.g. <tt>mlr --prepipe 'zcat -cf'</tt>. Examples:
+system, on a per-file basis. If the command has flags, quote them: e.g. <code>mlr --prepipe 'zcat -cf'</code>. Examples:
 
 <p/>
 <div class="pokipanel">
@@ -212,9 +212,9 @@ $ mlr --prepipe 'xz -cd' cut -f hostname,uptime myfile1.csv.xz myfile2.csv.xz | 
 <!-- ================================================================ -->
 <h2>Record/field/pair separators</h2>
 
-<p/> Miller has record separators <tt>IRS</tt> and <tt>ORS</tt>, field
-separators <tt>IFS</tt> and <tt>OFS</tt>, and pair separators <tt>IPS</tt> and
-<tt>OPS</tt>.  For example, in the DKVP line <tt>a=1,b=2,c=3</tt>, the record
+<p/> Miller has record separators <code>IRS</code> and <code>ORS</code>, field
+separators <code>IFS</code> and <code>OFS</code>, and pair separators <code>IPS</code> and
+<code>OPS</code>.  For example, in the DKVP line <code>a=1,b=2,c=3</code>, the record
 separator is newline, field separator is comma, and pair separator is the
 equals sign. These are the default values.
 
@@ -227,54 +227,54 @@ equals sign. These are the default values.
 
 <ul>
 
-<li/> You can change a separator from input to output via e.g. <tt>--ifs =
---ofs :</tt>. Or, you can specify that the same separator is to be used for
-input and output via e.g. <tt>--fs :</tt>.
+<li/> You can change a separator from input to output via e.g. <code>--ifs =
+--ofs :</code>. Or, you can specify that the same separator is to be used for
+input and output via e.g. <code>--fs :</code>.
 
 <li/> The pair separator is only relevant to DKVP format.
 
 <li/> Pretty-print and xtab formats ignore the separator arguments altogether.
 
-<li/> The <tt>--repifs</tt> means that multiple successive occurrences of the
+<li/> The <code>--repifs</code> means that multiple successive occurrences of the
 field separator count as one.  For example, in CSV data we often signify nulls
-by empty strings, e.g. <tt>2,9,,,,,6,5,4</tt>. On the other hand, if the field
-separator is a space, it might be more natural to parse <tt>2 4    5</tt> the
-same as <tt>2 4 5</tt>: <tt>--repifs --ifs ' '</tt> lets this happen.  In fact,
-the <tt>--ipprint</tt> option above is internally implemented in terms of
-<tt>--repifs</tt>.
+by empty strings, e.g. <code>2,9,,,,,6,5,4</code>. On the other hand, if the field
+separator is a space, it might be more natural to parse <code>2 4    5</code> the
+same as <code>2 4 5</code>: <code>--repifs --ifs ' '</code> lets this happen.  In fact,
+the <code>--ipprint</code> option above is internally implemented in terms of
+<code>--repifs</code>.
 
-<li/> Just write out the desired separator, e.g. <tt>--ofs '|'</tt>. But you
-may use the symbolic names <tt>newline</tt>, <tt>space</tt>, <tt>tab</tt>,
-<tt>pipe</tt>, or <tt>semicolon</tt> if you like.
+<li/> Just write out the desired separator, e.g. <code>--ofs '|'</code>. But you
+may use the symbolic names <code>newline</code>, <code>space</code>, <code>tab</code>,
+<code>pipe</code>, or <code>semicolon</code> if you like.
 
 </ul>
 
 <!-- ================================================================ -->
 <h2>Number formatting</h2>
 
-<p/> The command-line option <tt>--ofmt {format string}</tt> is the global
+<p/> The command-line option <code>--ofmt {format string}</code> is the global
 number format for commands which generate numeric output, e.g.
-<tt>stats1</tt>, <tt>stats2</tt>, <tt>histogram</tt>, and <tt>step</tt>, as
-well as <tt>mlr put</tt>. Examples:
+<code>stats1</code>, <code>stats2</code>, <code>histogram</code>, and <code>step</code>, as
+well as <code>mlr put</code>. Examples:
 
 POKI_CARDIFY(--ofmt %.9le  --ofmt %.6lf  --ofmt %.0lf)HERE
 
-<p/> These are just C <tt>printf</tt> formats applied to double-precision
-numbers.  Please don&rsquo;t use <tt>%s</tt> or <tt>%d</tt>. Additionally, if
-you use leading width (e.g. <tt>%18.12lf</tt>) then the output will contain
+<p/> These are just C <code>printf</code> formats applied to double-precision
+numbers.  Please don&rsquo;t use <code>%s</code> or <code>%d</code>. Additionally, if
+you use leading width (e.g. <code>%18.12lf</code>) then the output will contain
 embedded whitespace, which may not be what you want if you pipe the output to
 something else, particularly CSV. I use Miller&rsquo;s pretty-print format
-(<tt>mlr --opprint</tt>) to column-align numerical data.
+(<code>mlr --opprint</code>) to column-align numerical data.
 
 <p/> To apply formatting to a single field, overriding the global
-<tt>ofmt</tt>, use <tt>fmtnum</tt> function within <tt>mlr put</tt>. For example:
+<code>ofmt</code>, use <code>fmtnum</code> function within <code>mlr put</code>. For example:
 POKI_RUN_COMMAND{{echo 'x=3.1,y=4.3' | mlr put '$z=fmtnum($x*$y,"%08lf")'}}HERE
 POKI_RUN_COMMAND{{echo 'x=0xffff,y=0xff' | mlr put '$z=fmtnum(int($x*$y),"%08llx")'}}HERE
 
 <p/>Input conversion from hexadecimal is done automatically on fields handled
-by <tt>mlr put</tt> and <tt>mlr filter</tt> as long as the field value begins
+by <code>mlr put</code> and <code>mlr filter</code> as long as the field value begins
 with "0x".  To apply output conversion to hexadecimal on a single column, you
-may use <tt>fmtnum</tt>, or the keystroke-saving <tt>hexfmt</tt> function.
+may use <code>fmtnum</code>, or the keystroke-saving <code>hexfmt</code> function.
 Example:
 
 POKI_RUN_COMMAND{{echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'}}HERE
@@ -282,24 +282,24 @@ POKI_RUN_COMMAND{{echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'}}HERE
 <!-- ================================================================ -->
 </div>
 <h1>Data transformations (verbs)</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_data_transformations');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_data_transformations" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_data_transformations');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_data_transformations" style="display: block">
 
 <p/> Please see <a href="reference-verbs.html">the separate page here</a>.
 
 <!-- ================================================================ -->
 </div>
 <h1>Expression language for filter and put</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_dsl_ref');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_dsl_ref" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_dsl_ref');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_dsl_ref" style="display: block">
 
 <p/> Please see <a href="reference-dsl.html">the separate page here</a>.
 
 <!-- ================================================================ -->
 </div>
 <h1>then-chaining</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_then_chaining');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_then_chaining" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_then_chaining');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_then_chaining" style="display: block">
 
 <p/>
 In accord with the
@@ -310,11 +310,11 @@ POKI_CARDIFY(mlr cut --complement -f os_version *.dat | mlr sort -f hostname,upt
 
 <p/>
 You can, if you like, instead simply chain commands together using the
-<tt>then</tt> keyword:
+<code>then</code> keyword:
 
 POKI_CARDIFY(mlr cut --complement -f os_version then sort -f hostname,uptime *.dat)HERE
 
-<p/>(You can precede the very first verb with <tt>then</tt>, if you like, for symmetry.)
+<p/>(You can precede the very first verb with <code>then</code>, if you like, for symmetry.)
 
 Here&rsquo;s a performance comparison:
 
@@ -330,14 +330,14 @@ streaming-data programs operate through pipes, each one can use a CPU.  Rest
 assured you get the same results either way.
 
 <p/>The other reason to use then-chaining is for simplicity: you don&rsquo;t
-have re-type formatting flags (e.g. <tt>--csv --fs tab</tt>) at every
+have re-type formatting flags (e.g. <code>--csv --fs tab</code>) at every
 pipeline stage.
 
 <!-- ================================================================ -->
 </div>
 <h1>Auxiliary commands</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_auxents');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_auxents" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_auxents');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_auxents" style="display: block">
 
 <p/> There are a few nearly-standalone programs which have nothing to do with the rest of Miller, do not
 participate in record streams, and do not deal with file formats. They might as well be little standalone executables
@@ -360,8 +360,8 @@ POKI_RUN_COMMAND{{mlr hex -r data/budget.csv | sed 's/20/2a/g' | mlr unhex}}HERE
 <!-- ================================================================ -->
 </div>
 <h1>Data types</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_data_types');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_data_types" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_data_types');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_data_types" style="display: block">
 
 <p/> Miller&rsquo;s input and output are all string-oriented: there is (as of
 August 2015 anyway) no support for binary record packing. In this sense,
@@ -375,12 +375,12 @@ otherwise type-specific) operations.
 
 <p/> Field values are treated as numeric for the following:
 <ul>
-<li/> Numeric sort: <tt>mlr sort -n</tt>, <tt>mlr sort -nr</tt>.
-<li/> Statistics: <tt>mlr histogram</tt>, <tt>mlr stats1</tt>, <tt>mlr stats2</tt>.
-<li/> Cross-record arithmetic: <tt>mlr step</tt>.
+<li/> Numeric sort: <code>mlr sort -n</code>, <code>mlr sort -nr</code>.
+<li/> Statistics: <code>mlr histogram</code>, <code>mlr stats1</code>, <code>mlr stats2</code>.
+<li/> Cross-record arithmetic: <code>mlr step</code>.
 </ul>
 
-<p/>For <tt>mlr put</tt> and <tt>mlr filter</tt>:
+<p/>For <code>mlr put</code> and <code>mlr filter</code>:
 
 <ul>
 
@@ -391,26 +391,26 @@ non-explicit return values from user-defined functions), <b>error</b>,
 <b>boolean</b>.
 
 <li/> On input, string values representable as numbers, e.g. "3" or "3.1", are
-treated as int or float, respectively. If a record has <tt>x=1,y=2</tt> then
-<tt>mlr put '$z=$x+$y'</tt> will produce <tt>x=1,y=2,z=3</tt>, and <tt>mlr put
-'$z=$x.$y'</tt> does not give an error simply because the dot operator has been
+treated as int or float, respectively. If a record has <code>x=1,y=2</code> then
+<code>mlr put '$z=$x+$y'</code> will produce <code>x=1,y=2,z=3</code>, and <code>mlr put
+'$z=$x.$y'</code> does not give an error simply because the dot operator has been
 generalized to stringify non-strings.  To coerce back to string for processing,
-use the <tt>string</tt> function: <tt>mlr put '$z=string($x).string($y)'</tt>
-will produce <tt>x=1,y=2,z=12</tt>.
+use the <code>string</code> function: <code>mlr put '$z=string($x).string($y)'</code>
+will produce <code>x=1,y=2,z=12</code>.
 
-<li/> On input, string values representable as boolean  (e.g. <tt>"true"</tt>,
-<tt>"false"</tt>) are <i>not</i> automatically treated as boolean.  (This is
-because <tt>"true"</tt> and <tt>"false"</tt> are ordinary words, and auto
+<li/> On input, string values representable as boolean  (e.g. <code>"true"</code>,
+<code>"false"</code>) are <i>not</i> automatically treated as boolean.  (This is
+because <code>"true"</code> and <code>"false"</code> are ordinary words, and auto
 string-to-boolean on a column consisting of words would result in some strings
-mixed with some booleans.) Use the <tt>boolean</tt> function to coerce: e.g.
-giving the record <tt>x=1,y=2,w=false</tt> to <tt>mlr put '$z=($x&lt;$y) ||
-boolean($w)'</tt>.
+mixed with some booleans.) Use the <code>boolean</code> function to coerce: e.g.
+giving the record <code>x=1,y=2,w=false</code> to <code>mlr put '$z=($x&lt;$y) ||
+boolean($w)'</code>.
 
-<li/> Functions take types as described in <tt>mlr --help-all-functions</tt>:
-for example, <tt>log10</tt> takes float input and produces float output,
-<tt>gmt2sec</tt> maps string to int, and <tt>sec2gmt</tt> maps int to string.
+<li/> Functions take types as described in <code>mlr --help-all-functions</code>:
+for example, <code>log10</code> takes float input and produces float output,
+<code>gmt2sec</code> maps string to int, and <code>sec2gmt</code> maps int to string.
 
-<li/> All math functions described in <tt>mlr --help-all-functions</tt> take
+<li/> All math functions described in <code>mlr --help-all-functions</code> take
 integer as well as float input.
 
 </ul>
@@ -418,38 +418,38 @@ integer as well as float input.
 <!-- ================================================================ -->
 </div>
 <h1>Null data: empty and absent</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_null_data');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_null_data" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_null_data');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_null_data" style="display: block">
 
 <p/> One of Miller&rsquo;s key features is its support for <b>heterogeneous</b>
-data.  For example, take <tt>mlr sort</tt>: if you try to sort on field
-<tt>hostname</tt> when not all records in the data stream <i>have</i> a field
-named <tt>hostname</tt>, it is not an error (although you could pre-filter the
-data stream using <tt>mlr having-fields --at-least hostname then sort
-...</tt>).  Rather, records lacking one or more sort keys are simply output
-contiguously by <tt>mlr sort</tt>.
+data.  For example, take <code>mlr sort</code>: if you try to sort on field
+<code>hostname</code> when not all records in the data stream <i>have</i> a field
+named <code>hostname</code>, it is not an error (although you could pre-filter the
+data stream using <code>mlr having-fields --at-least hostname then sort
+...</code>).  Rather, records lacking one or more sort keys are simply output
+contiguously by <code>mlr sort</code>.
 
 <p/> Miller has two kinds of null data:
 
 <ul>
 
 <li/> <b>Empty (key present, value empty)</b>: a field name is present in a
-record (or in an out-of-stream variable) with empty value: e.g. <tt>x=,y=2</tt>
-in the data input stream, or assignment <tt>$x=""</tt> or <tt>@x=""</tt> in
-<tt>mlr put</tt>.
+record (or in an out-of-stream variable) with empty value: e.g. <code>x=,y=2</code>
+in the data input stream, or assignment <code>$x=""</code> or <code>@x=""</code> in
+<code>mlr put</code>.
 
 <li/> <b>Absent (key not present)</b>: a field name is not present, e.g. input
-record is <tt>x=1,y=2</tt> and a <tt>put</tt> or <tt>filter</tt> expression
-refers to <tt>$z</tt>. Or, reading an out-of-stream variable which hasn&rsquo;t
-been assigned a value yet, e.g.  <tt>mlr put -q '@sum += $x; end{emit
-@sum}'</tt> or <tt>mlr put -q '@sum[$a][$b] += $x; end{emit @sum, "a",
-"b"}'</tt>.
+record is <code>x=1,y=2</code> and a <code>put</code> or <code>filter</code> expression
+refers to <code>$z</code>. Or, reading an out-of-stream variable which hasn&rsquo;t
+been assigned a value yet, e.g.  <code>mlr put -q '@sum += $x; end{emit
+@sum}'</code> or <code>mlr put -q '@sum[$a][$b] += $x; end{emit @sum, "a",
+"b"}'</code>.
 
 </ul>
 
 <p/>You can test these programatically using the functions
-<tt>is_empty</tt>/<tt>is_not_empty</tt>, <tt>is_absent</tt>/<tt>is_present</tt>, and
-<tt>is_null</tt>/<tt>is_not_null</tt>. For the last pair, note that null means
+<code>is_empty</code>/<code>is_not_empty</code>, <code>is_absent</code>/<code>is_present</code>, and
+<code>is_null</code>/<code>is_not_null</code>. For the last pair, note that null means
 either empty or absent.
 
 <p/>
@@ -468,12 +468,12 @@ POKI_RUN_COMMAND{{echo 'x=2,y=3' | mlr put '$a=$x+$y'}}HERE
 POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=$x+$y'}}HERE
 POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=log($x);$b=log($y)'}}HERE
 
-with the exception that the <tt>min</tt> and <tt>max</tt> functions are
+with the exception that the <code>min</code> and <code>max</code> functions are
 special: if one argument is non-null, it wins:
 POKI_RUN_COMMAND{{echo 'x=,y=3' | mlr put '$a=min($x,$y);$b=max($x,$y)'}}HERE
 
-<li/> Functions of <i>absent</i> variables (e.g. <tt>mlr put '$y =
-log10($nonesuch)'</tt>) evaluate to absent, and arithmetic/bitwise/boolean
+<li/> Functions of <i>absent</i> variables (e.g. <code>mlr put '$y =
+log10($nonesuch)'</code>) evaluate to absent, and arithmetic/bitwise/boolean
 operators with both operands being absent evaluate to absent.
 Arithmetic operators with one absent operand return the other operand.
 More specifically, absent values act like zero for addition/subtraction, and
@@ -493,41 +493,41 @@ The reasoning is as follows:
 <ul>
 
 <li/> Empty values are explicit in the data so they should explicitly affect accumulations:
-<tt>mlr put '@sum += $x'</tt>
-should accumulate numeric <tt>x</tt> values into the sum but an empty
-<tt>x</tt>, when encountered in the input data stream, should make the sum
+<code>mlr put '@sum += $x'</code>
+should accumulate numeric <code>x</code> values into the sum but an empty
+<code>x</code>, when encountered in the input data stream, should make the sum
 non-numeric. To work around this you can use the
-<tt>is_not_null</tt> function as follows:
-<tt>mlr put 'is_not_null($x) { @sum += $x }'</tt>
+<code>is_not_null</code> function as follows:
+<code>mlr put 'is_not_null($x) { @sum += $x }'</code>
 
 <li/> Absent stream-record values should not break accumulations, since Miller
-by design handles heterogenous data: the running <tt>@sum</tt> in
-<tt>mlr put '@sum += $x'</tt>
-should not be invalidated for records which have no <tt>x</tt>.
+by design handles heterogenous data: the running <code>@sum</code> in
+<code>mlr put '@sum += $x'</code>
+should not be invalidated for records which have no <code>x</code>.
 
 <li/> Absent out-of-stream-variable values are precisely what allow you to write
-<tt>mlr put '@sum += $x'</tt>. Otherwise you would have to write
-<tt>mlr put 'begin{@sum = 0}; @sum += $x'</tt> &mdash;
+<code>mlr put '@sum += $x'</code>. Otherwise you would have to write
+<code>mlr put 'begin{@sum = 0}; @sum += $x'</code> &mdash;
 which is tolerable &mdash; but for
-<tt>mlr put 'begin{...}; @sum[$a][$b] += $x'</tt>
-you&rsquo;d have to pre-initialize <tt>@sum</tt> for all values of <tt>$a</tt> and <tt>$b</tt> in your
+<code>mlr put 'begin{...}; @sum[$a][$b] += $x'</code>
+you&rsquo;d have to pre-initialize <code>@sum</code> for all values of <code>$a</code> and <code>$b</code> in your
 input data stream, which is intolerable.
 
 <li/> The penalty for the absent feature is that misspelled variables can be hard to find:
-e.g. in <tt>mlr put 'begin{@sumx = 10}; ...; update @sumx somehow per-record; ...; end {@something = @sum * 2}'</tt>
-the accumulator is spelt <tt>@sumx</tt> in the begin-block but <tt>@sum</tt> in the end-block, where since it
-is absent, <tt>@sum*2</tt> evaluates to 2. See also the section on
+e.g. in <code>mlr put 'begin{@sumx = 10}; ...; update @sumx somehow per-record; ...; end {@something = @sum * 2}'</code>
+the accumulator is spelt <code>@sumx</code> in the begin-block but <code>@sum</code> in the end-block, where since it
+is absent, <code>@sum*2</code> evaluates to 2. See also the section on
 <a href="reference-dsl.html#Errors_and_transparency">errors and transparency</a>.
 
 </ul>
 
 <p/>Since absent plus absent is absent (and likewise for other operators),
-accumulations such as <tt>@sum += $x</tt> work correctly on heterogenous data,
+accumulations such as <code>@sum += $x</code> work correctly on heterogenous data,
 as do within-record formulas if both operands are absent. If one operand is
 present, you may get behavior you don&rsquo;t desire.  To work around this
 &mdash; namely, to set an output field only for records which have all the
 inputs present &mdash; you can use a pattern-action block with
-<tt>is_present</tt>:
+<code>is_present</code>:
 
 POKI_RUN_COMMAND{{mlr cat data/het.dkvp}}HERE
 POKI_RUN_COMMAND{{mlr put 'is_present($loadsec) { $loadmillis = $loadsec * 1000 }' data/het.dkvp}}HERE
@@ -542,62 +542,62 @@ POKI_RUN_COMMAND{{mlr --print-type-arithmetic-info}}HERE
 <!-- ================================================================ -->
 </div>
 <h1>String literals</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_string_literals');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_string_literals" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_string_literals');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_string_literals" style="display: block">
 
 <p/>
 You can use the following backslash escapes for strings such as between the double quotes in contexts such as
-<tt>mlr filter '$name =~ "..."'</tt>,
-<tt>mlr put '$name = $othername . "..."'</tt>,
-<tt>mlr put '$name = sub($name, "...", "...")</tt>, etc.:
+<code>mlr filter '$name =~ "..."'</code>,
+<code>mlr put '$name = $othername . "..."'</code>,
+<code>mlr put '$name = sub($name, "...", "...")</code>, etc.:
 
 <ul>
-<li/> <tt>\a</tt>: ASCII code 0x07 (alarm/bell)
-<li/> <tt>\b</tt>: ASCII code 0x08 (backspace)
-<li/> <tt>\f</tt>: ASCII code 0x0c (formfeed)
-<li/> <tt>\n</tt>: ASCII code 0x0a (LF/linefeed/newline)
-<li/> <tt>\r</tt>: ASCII code 0x0d (CR/carriage return)
-<li/> <tt>\t</tt>: ASCII code 0x09 (tab)
-<li/> <tt>\v</tt>: ASCII code 0x0b (vertical tab)
-<li/> <tt>\\</tt>: backslash
-<li/> <tt>\"</tt>: double quote
-<li/> <tt>\123</tt>: Octal 123, etc. for <tt>\000</tt> up to <tt>\377</tt>
-<li/> <tt>\x7f</tt>: Hexadecimal 7f, etc. for <tt>\x00</tt> up to <tt>\xff</tt>
+<li/> <code>\a</code>: ASCII code 0x07 (alarm/bell)
+<li/> <code>\b</code>: ASCII code 0x08 (backspace)
+<li/> <code>\f</code>: ASCII code 0x0c (formfeed)
+<li/> <code>\n</code>: ASCII code 0x0a (LF/linefeed/newline)
+<li/> <code>\r</code>: ASCII code 0x0d (CR/carriage return)
+<li/> <code>\t</code>: ASCII code 0x09 (tab)
+<li/> <code>\v</code>: ASCII code 0x0b (vertical tab)
+<li/> <code>\\</code>: backslash
+<li/> <code>\"</code>: double quote
+<li/> <code>\123</code>: Octal 123, etc. for <code>\000</code> up to <code>\377</code>
+<li/> <code>\x7f</code>: Hexadecimal 7f, etc. for <code>\x00</code> up to <code>\xff</code>
 </ul>
 
 <p/>See also <a href="https://en.wikipedia.org/wiki/Escape_sequences_in_C">https://en.wikipedia.org/wiki/Escape_sequences_in_C</a>.
 
-<p/>These replacements apply only to strings you key in for the DSL expressions for <tt>filter</tt> and <tt>put</tt>:
-that is, if you type <tt>\t</tt> in a string literal for a <tt>filter</tt>/<tt>put</tt> expression, it will be turned into a tab character. If you want a backslash followed by a <tt>t</tt>, then please type <tt>\\t</tt>.
+<p/>These replacements apply only to strings you key in for the DSL expressions for <code>filter</code> and <code>put</code>:
+that is, if you type <code>\t</code> in a string literal for a <code>filter</code>/<code>put</code> expression, it will be turned into a tab character. If you want a backslash followed by a <code>t</code>, then please type <code>\\t</code>.
 
 <p/>However, these replacements are not done automatically within your data stream. If you wish to make these
-replacements, you can do, for example, for a field named <tt>field</tt>, <tt> mlr put '$field = gsub($field, "\\t",
-"\t")'</tt>. If you need to make such a replacement for all fields in your data, you should probably simply use the
-system <tt>sed</tt> command.
+replacements, you can do, for example, for a field named <code>field</code>, <code> mlr put '$field = gsub($field, "\\t",
+"\t")'</code>. If you need to make such a replacement for all fields in your data, you should probably simply use the
+system <code>sed</code> command.
 
 </div>
 <h1>Regular expressions</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_regular_expressions');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_regular_expressions" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_regular_expressions');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_regular_expressions" style="display: block">
 
 <p/>Miller lets you use regular expressions (of type POSIX.2) in the following contexts:
 
 <ul>
 
-<li/> In <tt>mlr filter</tt> with <tt>=~</tt> or <tt>!=~</tt>, e.g. <tt>mlr
-filter '$url =~ "http.*com"'</tt>
+<li/> In <code>mlr filter</code> with <code>=~</code> or <code>!=~</code>, e.g. <code>mlr
+filter '$url =~ "http.*com"'</code>
 
-<li/> In <tt>mlr put</tt> with <tt>sub</tt> or <tt>gsub</tt>, e.g. <tt>mlr put
-'$url = sub($url, "http.*com", "")'</tt>
+<li/> In <code>mlr put</code> with <code>sub</code> or <code>gsub</code>, e.g. <code>mlr put
+'$url = sub($url, "http.*com", "")'</code>
 
-<li/> In <tt>mlr having-fields</tt>, e.g. <tt>mlr having-fields
---any-matching '^sda[0-9]'</tt>
+<li/> In <code>mlr having-fields</code>, e.g. <code>mlr having-fields
+--any-matching '^sda[0-9]'</code>
 
-<li/> In <tt>mlr cut</tt>, e.g. <tt>mlr cut -r -f '^status$,^sda[0-9]'</tt>
+<li/> In <code>mlr cut</code>, e.g. <code>mlr cut -r -f '^status$,^sda[0-9]'</code>
 
-<li/> In <tt>mlr rename</tt>, e.g. <tt>mlr rename -r '^(sda[0-9]).*$,dev/\1'</tt>
+<li/> In <code>mlr rename</code>, e.g. <code>mlr rename -r '^(sda[0-9]).*$,dev/\1'</code>
 
-<li/> In <tt>mlr grep</tt>, e.g. <tt>mlr --csv grep 00188555487 myfiles*.csv</tt>
+<li/> In <code>mlr grep</code>, e.g. <code>mlr --csv grep 00188555487 myfiles*.csv</code>
 
 </ul>
 
@@ -606,22 +606,22 @@ filter '$url =~ "http.*com"'</tt>
 <ul>
 
 <li/> There are no implicit start-of-string or end-of-string anchors; please
-use <tt>^</tt> and/or <tt>$</tt> explicitly.
+use <code>^</code> and/or <code>$</code> explicitly.
 
 <li/> Miller regexes are wrapped with double quotes rather than slashes.
 
-<li/> The <tt>i</tt> after the ending double quote indicates a case-insensitive
+<li/> The <code>i</code> after the ending double quote indicates a case-insensitive
 regex.
 
-<li/> Capture groups are wrapped with <tt>(...)</tt> rather than
-<tt>\(...\)</tt>; use <tt>\(</tt> and <tt>\)</tt> to match against parentheses.
+<li/> Capture groups are wrapped with <code>(...)</code> rather than
+<code>\(...\)</code>; use <code>\(</code> and <code>\)</code> to match against parentheses.
 
 </ul>
 
-<p/>For <tt>filter</tt> and <tt>put</tt>, if the regular expression is a string
+<p/>For <code>filter</code> and <code>put</code>, if the regular expression is a string
 literal (the normal case), it is precompiled at process start and reused
 thereafter, which is efficient. If the regular expression is a more complex
-expression, including string concatenation using <tt>.</tt>, or a column name
+expression, including string concatenation using <code>.</code>, or a column name
 (in which case you can take regular expressions from input data!), then regexes
 are compiled on each record which works but is less efficient. As well, in this
 case there is no way to specify case-insensitive matching.
@@ -633,12 +633,12 @@ POKI_RUN_COMMAND{{mlr filter '$name =~ $regex' data/regex-in-data.dat}}HERE
 
 <h2>Regex captures</h2>
 
-<p/>Regex captures of the form <tt>\0</tt> through <tt>\9</tt> are supported as
+<p/>Regex captures of the form <code>\0</code> through <code>\9</code> are supported as
 follows: <ul>
 
-<li/> Captures have in-function context for <tt>sub</tt> and <tt>gsub</tt>.
-For example, the first <tt>\1,\2</tt> pair belong to the first <tt>sub</tt> and
-the second <tt>\1,\2</tt> pair belong to the second <tt>sub</tt>:
+<li/> Captures have in-function context for <code>sub</code> and <code>gsub</code>.
+For example, the first <code>\1,\2</code> pair belong to the first <code>sub</code> and
+the second <code>\1,\2</code> pair belong to the second <code>sub</code>:
 
 <p/>
 <div class=pokipanel>
@@ -647,9 +647,9 @@ mlr put '$b = sub($a, "(..)_(...)", "\2-\1"); $c = sub($a, "(..)_(.)(..)", ":\1:
 </pre>
 </div>
 
-<li/> Captures endure for the entirety of a <tt>put</tt> for the <tt>=~</tt>
-and <tt>!=~</tt> operators. For example, here the <tt>\1,\2</tt> are set by the
-<tt>=~</tt> operator and are used by both subsequent assignment statements:
+<li/> Captures endure for the entirety of a <code>put</code> for the <code>=~</code>
+and <code>!=~</code> operators. For example, here the <code>\1,\2</code> are set by the
+<code>=~</code> operator and are used by both subsequent assignment statements:
 
 <p/>
 <div class=pokipanel>
@@ -659,7 +659,7 @@ mlr put '$a =~ "(..)_(....); $b = "left_\1"; $c = "right_\2"'
 </div>
 
 <li/>The captures are not retained across multiple puts. For example, here the
-<tt>\1,\2</tt> won&rsquo;t be expanded from the regex capture:
+<code>\1,\2</code> won&rsquo;t be expanded from the regex capture:
 
 <p/>
 <div class=pokipanel>
@@ -668,10 +668,10 @@ mlr put '$a =~ "(..)_(....)' then {... something else ...} then put '$b = "left_
 </pre>
 </div>
 
-<li/> Captures are ignored in <tt>filter</tt> for the <tt>=~</tt> and
-<tt>!=~</tt> operators. For example, there is no mechanism provided to refer to
-the first <tt>(..)</tt> as <tt>\1</tt> or to the second <tt>(....)</tt> as
-<tt>\2</tt> in the following filter statement:
+<li/> Captures are ignored in <code>filter</code> for the <code>=~</code> and
+<code>!=~</code> operators. For example, there is no mechanism provided to refer to
+the first <code>(..)</code> as <code>\1</code> or to the second <code>(....)</code> as
+<code>\2</code> in the following filter statement:
 
 <p/>
 <div class=pokipanel>
@@ -680,42 +680,42 @@ mlr filter '$a =~ "(..)_(....)'
 </pre>
 </div>
 
-<li/> Up to nine matches are supported: <tt>\1</tt> through <tt>\9</tt>, while
-<tt>\0</tt> is the entire match string; <tt>\15</tt> is treated as <tt>\1</tt>
-followed by an unrelated <tt>5</tt>.
+<li/> Up to nine matches are supported: <code>\1</code> through <code>\9</code>, while
+<code>\0</code> is the entire match string; <code>\15</code> is treated as <code>\1</code>
+followed by an unrelated <code>5</code>.
 </ul>
 
 <!-- ================================================================ -->
 </div>
 <h1>Arithmetic</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_arithmetic');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_arithmetic" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_arithmetic');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_arithmetic" style="display: block">
 
 <h2>Input scanning</h2>
 
 <p/>Numbers in Miller are double-precision float or 64-bit signed integers.
-Anything scannable as int, e.g <tt>123</tt> or <tt>0xabcd</tt>, is treated as
-an integer; otherwise, input scannable as float (<tt>4.56</tt> or <tt>8e9</tt>)
+Anything scannable as int, e.g <code>123</code> or <code>0xabcd</code>, is treated as
+an integer; otherwise, input scannable as float (<code>4.56</code> or <code>8e9</code>)
 is treated as float; everything else is a string.
 
 <p/>If you want all numbers to be treated as floats, then you may use
-<tt>float()</tt> in your filter/put expressions (e.g. replacing <tt>$c = $a *
-$b</tt> with <tt>$c = float($a) * float($b)</tt>) &mdash; or, more simply, use
-<tt>mlr filter -F</tt> and <tt>mlr put -F</tt> which forces all numeric input,
-whether from expression literals or field values, to float. Likewise <tt>mlr
-stats1 -F</tt> and <tt>mlr step -F</tt> force integerable accumulators (such as
-<tt>count</tt>) to be done in floating-point.
+<code>float()</code> in your filter/put expressions (e.g. replacing <code>$c = $a *
+$b</code> with <code>$c = float($a) * float($b)</code>) &mdash; or, more simply, use
+<code>mlr filter -F</code> and <code>mlr put -F</code> which forces all numeric input,
+whether from expression literals or field values, to float. Likewise <code>mlr
+stats1 -F</code> and <code>mlr step -F</code> force integerable accumulators (such as
+<code>count</code>) to be done in floating-point.
 
 <h2>Conversion by math routines</h2>
 
 <p/>For most math functions, integers are cast to float on input, and produce
-float output: e.g. <tt>exp(0) = 1.0</tt> rather than <tt>1</tt>.  The
+float output: e.g. <code>exp(0) = 1.0</code> rather than <code>1</code>.  The
 following, however, produce integer output if their inputs are integers:
-<tt>+</tt> <tt>-</tt> <tt>*</tt> <tt>/</tt> <tt>//</tt> <tt>%</tt> <tt>abs</tt>
-<tt>ceil</tt> <tt>floor</tt> <tt>max</tt> <tt>min</tt> <tt>round</tt>
-<tt>roundm</tt> <tt>sgn</tt>. As well, <tt>stats1 -a min</tt>, <tt>stats1 -a
-max</tt>, <tt>stats1 -a sum</tt>, <tt>step -a delta</tt>, and <tt>step -a
-rsum</tt> produce integer output if their inputs are integers.
+<code>+</code> <code>-</code> <code>*</code> <code>/</code> <code>//</code> <code>%</code> <code>abs</code>
+<code>ceil</code> <code>floor</code> <code>max</code> <code>min</code> <code>round</code>
+<code>roundm</code> <code>sgn</code>. As well, <code>stats1 -a min</code>, <code>stats1 -a
+max</code>, <code>stats1 -a sum</code>, <code>step -a delta</code>, and <code>step -a
+rsum</code> produce integer output if their inputs are integers.
 
 <h2>Conversion by arithmetic operators</h2>
 
@@ -769,8 +769,8 @@ arithmetic.  This approach is not taken.)
 <a href="http://python-history.blogspot.com/2010/08/why-pythons-integer-division-floors.html">
 pythonic</a>:
   <ul>
-  <li/> Quotient of integers is floating-point: <tt>7/2</tt> is <tt>3.5</tt>.
-  <li/> Integer division is done with <tt>//</tt>: <tt>7//2</tt> is <tt>3</tt>.
+  <li/> Quotient of integers is floating-point: <code>7/2</code> is <code>3.5</code>.
+  <li/> Integer division is done with <code>//</code>: <code>7//2</code> is <code>3</code>.
     This rounds toward the negative.
   <li/> Remainders are non-negative.
   </ul>
@@ -778,8 +778,8 @@ pythonic</a>:
 </div>
 <!-- ================================================================ -->
 <h1>On-line help</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_online_help');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_online_help" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_online_help');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_online_help" style="display: block">
 
 <p/>Examples:<p/>
 

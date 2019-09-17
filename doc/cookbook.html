@@ -29,162 +29,173 @@ pageTracker._trackPageview();
 
 <!-- ================================================================ -->
 <script type="text/javascript">
-  function toggle_div(div) {
-    if (div != null) {
-      if (div.id.startsWith("section_toggle_")) {
-        var state = div.style.display;
-        if (state == "block") {
-          div.style.display = "none";
-        } else {
-          div.style.display = "block";
-        }
-      }
-    }
+
+  function vis_expand_all_navbar_sections() {
+    //console.log('vis_expand_all_navbar_sections ENTER');
+    vis_expand_all_with_prefix('navbar_section_toggle_');
+    //console.log('vis_expand_all_navbar_sections EXIT');
   }
-  function expand_div(div) {
-    if (div != null) {
-      if (div.id.startsWith("section_toggle_")) {
-        div.style.display = "block";
-      }
-    }
-  }
-  function collapse_div(div) {
-    if (div != null) {
-      if (div.id.startsWith("section_toggle_")) {
-        div.style.display = "none";
-      }
-    }
+  function vis_collapse_all_navbar_sections() {
+    //console.log('vis_collapse_all_navbar_sections ENTER');
+    vis_collapse_all_with_prefix('navbar_section_toggle_');
+    //console.log('vis_collapse_all_navbar_sections EXIT');
   }
 
-  function toggle_by_name(divName) {
-    toggle_div(document.getElementById(divName));
+  function vis_expand_all_body_sections() {
+    //console.log('vis_expand_all_body_sections ENTER');
+    vis_expand_all_with_prefix('body_section_toggle_');
+    //console.log('vis_expand_all_body_sections EXIT');
   }
-  function expand_by_name(divName) {
-    expand_div(document.getElementById(divName));
-  }
-  function collapse_by_name(divName) {
-    collapse_div(document.getElementById(divName));
+  function vis_collapse_all_body_sections() {
+    //console.log('vis_collapse_all_body_sections ENTER');
+    vis_collapse_all_with_prefix('body_section_toggle_');
+    //console.log('vis_collapse_all_body_sections EXIT');
   }
 
-  function expand_all() {
-    var divs = document.getElementsByTagName("div");
+  function vis_expand_all_with_prefix(prefix) {
+    //console.log('vis_expand_all_with_prefix ENTER', prefix);
+    var divs = document.getElementsByTagName('div');
+    console.log("DIVS", divs);
     for(var i = 0; i < divs.length; i++) {
-      expand_div(divs[i]);
+      const div = divs[i];
+      if (div.id.startsWith(prefix)) {
+        vis_expand_div(div);
+      }
     }
+    //console.log('vis_expand_all_with_prefix EXIT', prefix);
   }
-  function collapse_all() {
-    var divs = document.getElementsByTagName("div");
+  function vis_collapse_all_with_prefix(prefix) {
+    var divs = document.getElementsByTagName('div');
     for(var i = 0; i < divs.length; i++){
-      collapse_div(divs[i]);
+      const div = divs[i];
+      if (div.id.startsWith(prefix)) {
+        vis_collapse_div(div);
+      }
     }
   }
+
+  function vis_toggle_by_name(divName) {
+    vis_toggle_div(document.getElementById(divName));
+  }
+  function vis_expand_by_name(divName) {
+    vis_expand_div(document.getElementById(divName));
+  }
+  function vis_collapse_by_name(divName) {
+    vis_collapse_div(document.getElementById(divName));
+  }
+
+  function vis_toggle_div(div) {
+    if (div != null) {
+      var state = div.style.display;
+      if (state == 'block') {
+        div.style.display = 'none';
+      } else {
+        div.style.display = 'block';
+      }
+    }
+  }
+  function vis_expand_div(div) {
+    if (div != null) {
+      div.style.display = 'block';
+    }
+  }
+  function vis_collapse_div(div) {
+    if (div != null) {
+      div.style.display = 'none';
+    }
+  }
+
 </script>
 
-<!--
-The background image is from a screenshot of a Google search for "data analysis
-tools", lightened and sepia-toned. Over this was placed a Mac Terminal app with
-very light-grey font and translucent background, in which a few statistical
-Miller commands were run with pretty-print-tabular output format.
-<body background="pix/sepia-overlay.jpg">
--->
 <body bgcolor="#ffffff">
 
 <!-- ================================================================ -->
-<table width="100%">
-<tr>
 
-  <!-- navbar -->
-  <td width="15%">
-    <!--
-    <img src="pix/mlr.jpg" />
-    <img style="border-width:1px; color:black;" src="pix/mlr.jpg" />
-    -->
+<!-- navbar -->
+<div class="pokinav">
+  <center><titleinbody>Miller</titleinbody></center>
+  
+<!-- NAVBAR GENERATED FROM template.html BY poki -->
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_overview');"
+  href="javascript:;"
+  >
+    Overview
+</button>
+<button
+  style="font-weight:bold;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_using');"
+  href="javascript:;"
+  >
+    Using
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_reference');"
+  href="javascript:;"
+  >
+    Reference
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_background');"
+  href="javascript:;"
+  >
+    Background
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_repository');"
+  href="javascript:;"
+  >
+    Repository
+</button>
+<div id="navbar_section_toggle_overview" style="display: none;text-align: left">
+<br/><a href="index.html">About</a>
+<br/><a href="10-min.html">10-minute intro</a>
+<br/><a href="file-formats.html">File formats</a>
+<br/><a href="feature-comparison.html">Unix-toolkit context</a>
+<br/><a href="record-heterogeneity.html">Record-hetrogeneity</a>
+<br/><a href="internationalization.html">Internationalization</a>
+</div>
+<div id="navbar_section_toggle_using" style="display: block;text-align: left">
+<br/><a href="faq.html">FAQ</a>
+<br/><a href="data-sharing.html">10-minute intro</a>
+<br/><a href="cookbook.html"><b>Cookbook part 1</b></a>
+<br/><a href="cookbook2.html">Cookbook part 2</a>
+<br/><a href="cookbook3.html">Cookbook part 3</a>
+<br/><a href="data-examples.html">Data-diviing examples</a>
+</div>
+<div id="navbar_section_toggle_reference" style="display: none;text-align: left">
+<br/><a href="reference.html">Main reference</a>
+<br/><a href="reference-verbs.html">Verbs reference</a>
+<br/><a href="reference-dsl.html">DSL reference</a>
+<br/><a href="manpage.html">Manpage</a>
+<br/><a href="release-docs.html">Documents by release</a>
+<br/><a href="build.html">Installation</a>
+</div>
+<div id="navbar_section_toggle_background" style="display: none;text-align: left">
+<br/><a href="why.html">Why?</a>
+<br/><a href="whyc.html">Why C?</a>
+<br/><a href="etymology.html">Why call it Miller?</a>
+<br/><a href="originality.html">How original is Miller?</a>
+<br/><a href="performance.html">Performance</a>
+</div>
+<div id="navbar_section_toggle_repository" style="display: none;text-align: left">
+<br/><a href="contact.html">Contact information</a>
+<br/><a href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>
+</div>
+</div>
 
-    <div class="pokinav">
-      <center><titleinbody>Miller</titleinbody></center>
-      
-<!-- PAGE LIST GENERATED FROM template.html BY poki -->
-<br/><b>Overview:</b>
-<br/>&bull;&nbsp;<a href="index.html">About Miller</a>
-<br/>&bull;&nbsp;<a href="10-min.html">Miller in 10 minutes</a>
-<br/>&bull;&nbsp;<a href="file-formats.html">File formats</a>
-<br/>&bull;&nbsp;<a href="feature-comparison.html">Miller features in the context of the Unix toolkit</a>
-<br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
-<br/>&bull;&nbsp;<a href="internationalization.html">Internationalization</a>
-<br/><b>Using Miller:</b>
-<br/>&bull;&nbsp;<a href="faq.html">FAQ</a>
-<br/>&bull;&nbsp;<a href="data-sharing.html">Sharing data with other languages</a>
-<br/>&bull;&nbsp;<a href="cookbook.html"><b>Cookbook part 1</b></a>
-<br/>&bull;&nbsp;<a href="cookbook2.html">Cookbook part 2</a>
-<br/>&bull;&nbsp;<a href="cookbook3.html">Cookbook part 3</a>
-<br/>&bull;&nbsp;<a href="data-examples.html">Data-diving examples</a>
-<br/>&bull;&nbsp;<a href="manpage.html">Manpage</a>
-<br/>&bull;&nbsp;<a href="reference.html">Reference</a>
-<br/>&bull;&nbsp;<a href="reference-verbs.html">Reference: Verbs</a>
-<br/>&bull;&nbsp;<a href="reference-dsl.html">Reference: DSL</a>
-<br/>&bull;&nbsp;<a href="release-docs.html">Documents by release</a>
-<br/>&bull;&nbsp;<a href="build.html">Installation, portability, dependencies, and testing</a>
-<br/><b>Background:</b>
-<br/>&bull;&nbsp;<a href="why.html">Why?</a>
-<br/>&bull;&nbsp;<a href="whyc.html">Why C?</a>
-<br/>&bull;&nbsp;<a href="etymology.html">Why call it Miller?</a>
-<br/>&bull;&nbsp;<a href="originality.html">How original is Miller?</a>
-<br/>&bull;&nbsp;<a href="performance.html">Performance</a>
-<br/><b>Repository:</b>
-<br/>&bull;&nbsp;<a href="to-do.html">Things to do</a>
-<br/>&bull;&nbsp;<a href="contact.html">Contact information</a>
-<br/>&bull;&nbsp;<a href="https://github.com/johnkerl/miller">GitHub repo</a>
-      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
-      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
-      <br/> <br/> <br/> <br/> <br/> <br/>
-    </div>
-  </td>
+<!-- page body -->
+<p/>
 
-  <!-- page body -->
-  <td>
-    <!--
-      This is a visually gorgeous feature (here & in the CSS): it allows for
-      independent scroll of the nav and body panels. In particular the nav
-      stays on-screen as you scroll the body.
-
-      However, two problems:
-
-      (1) In Firefox & Chrome both I get janky end-of-body scrolls: there is
-      more content but I can't scroll down to it unless I repeatedly retry the
-      scrolldown. Which is weird.
-
-      (2) Worse, only the first page renders in PDF (again, Firefox & Chrome).
-
-      For now I'm disabling this separate-scroll feature. A frontender, I am
-      not ... maybe someday I'll find a config which gets *all* the features
-      I want; for now, it's a tradeoff.
-    -->
-
-    <!-- Implementation details: one bit is right here:
-
-    div style="overflow-y:scroll;height:1500px"
-
-    and the other bit is in css/poki-callbacks.css:
-
-    .pokinav {
-      display:        inline-block;
-      background:     #e8d9bc;
-      border:         1;
-      box-shadow:     0px 0px 3px 3px #C9C9C9;
-      margin:         10px;
-      padding-top:    10px;
-      padding-bottom: 10px;
-      padding-left:   10px;
-      padding-right:  10px;
-      overflow-y:     scroll;  < - - - - - - here
-      height: 1500px;
-    }
-
-    -->
-    <div>
-    <center> <titleinbody> Cookbook part 1 </titleinbody> </center>
-    <p/>
-    
 <!-- BODY COPIED FROM content-for-cookbook.html BY poki -->
 <p/>
 <center>
@@ -192,7 +203,7 @@ Miller commands were run with pretty-print-tabular output format.
 </center>
 
 <div class="pokitoc">
-<center><b>Contents:</b></center>
+<center><titleinbody>Cookbook part 1</titleinbody></center>
 &bull;&nbsp;<a href="#Headerless_CSV_on_input_or_output">Headerless CSV on input or output</a><br/>
 &bull;&nbsp;<a href="#Doing_multiple_joins">Doing multiple joins</a><br/>
 &bull;&nbsp;<a href="#Bulk_rename_of_fields">Bulk rename of fields</a><br/>
@@ -218,13 +229,13 @@ Miller commands were run with pretty-print-tabular output format.
 <p/>
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
 
 <!-- ================================================================ -->
 <a id="Headerless_CSV_on_input_or_output"/><h1>Headerless CSV on input or output</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_headerless_csv');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_headerless_csv" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_headerless_csv');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_headerless_csv" style="display: block">
 
 <p/>Sometimes we get CSV files which lack a header. For example:
 
@@ -240,7 +251,7 @@ Carol,45,present
 </div>
 <p/>
 
-<p/> You can use Miller to add a header. The <tt>--implicit-csv-header</tt> applies positionally indexed labels:
+<p/> You can use Miller to add a header. The <code>--implicit-csv-header</code> applies positionally indexed labels:
 
 <p/>
 <div class="pokipanel">
@@ -272,7 +283,7 @@ Carol,45,present
 <p/>
 
 <p/> Likewise, if you need to produce CSV which is lacking its header, you can pipe Miller&rsquo;s output
-to the system command <tt>sed 1d</tt>, or you can use Miller&rsquo;s <tt>--headerless-csv-output</tt> option:
+to the system command <code>sed 1d</code>, or you can use Miller&rsquo;s <code>--headerless-csv-output</code> option:
 
 <p/>
 <div class="pokipanel">
@@ -328,8 +339,8 @@ $ mlr --inidx --ifs comma --oxtab cut -f 1,3 data/headerless.csv
 <!-- ================================================================ -->
 </div>
 <a id="Doing_multiple_joins"/><h1>Doing multiple joins</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_multiple_joins');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_multiple_joins" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_multiple_joins');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_multiple_joins" style="display: block">
 
 <p/>Suppose we have the following data:
 
@@ -350,7 +361,7 @@ id,task
 </div>
 <p/>
 
-<p/>And we want to augment the <tt>id</tt> column with lookups from the following data files:
+<p/>And we want to augment the <code>id</code> column with lookups from the following data files:
 
 <p/>
 <div class="pokipanel">
@@ -375,7 +386,7 @@ id,status
 </div>
 <p/>
 
-<p/>We can run the input file through multiple <tt>join</tt> commands in a <tt>then</tt>-chain:
+<p/>We can run the input file through multiple <code>join</code> commands in a <code>then</code>-chain:
 
 <p/>
 <div class="pokipanel">
@@ -397,8 +408,8 @@ id status   name  task
 <!-- ================================================================ -->
 </div>
 <a id="Bulk_rename_of_fields"/><h1>Bulk rename of fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_bulk_rename');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_bulk_rename" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_bulk_rename');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_bulk_rename" style="display: block">
 
 <p/>Suppose you want to replace spaces with underscores in your column names:
 
@@ -414,8 +425,8 @@ a b c,def,g h i
 </div>
 <p/>
 
-<p/>The simplest way is to use <tt>mlr rename</tt> with <tt>-g</tt> (for global
-replace, not just first occurrence of space within each field) and <tt>-r</tt>
+<p/>The simplest way is to use <code>mlr rename</code> with <code>-g</code> (for global
+replace, not just first occurrence of space within each field) and <code>-r</code>
 for pattern-matching (rather than explicit single-column renames):
 
 <p/>
@@ -471,10 +482,10 @@ a_b_c def  g_h_i
 <!-- ================================================================ -->
 </div>
 <a id="Search-and-replace_over_all_fields"/><h1>Search-and-replace over all fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_search_and_replace_over_all_fields');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_search_and_replace_over_all_fields" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_search_and_replace_over_all_fields');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_search_and_replace_over_all_fields" style="display: block">
 
-<p/> How to do <tt>$name=gsub($name, "old", "new")</tt> for all fields?
+<p/> How to do <code>$name=gsub($name, "old", "new")</code> for all fields?
 
 <p/>
 <div class="pokipanel">
@@ -511,12 +522,12 @@ ovXr,thX,lazy dogs
 </div>
 <!-- ================================================================ -->
 <a id="Full_field_renames_and_reassigns"/><h1>Full field renames and reassigns</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_full_renames_reassigns');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_full_renames_reassigns" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_full_renames_reassigns');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_full_renames_reassigns" style="display: block">
 
-<p/>Using Miller 5.0.0&rsquo;s map literals and assigning to <tt>$*</tt>, you can fully generalize
-<a href="reference-verbs.html#rename"><tt>mlr rename</tt></a>,
-<a href="reference-verbs.html#reorder"><tt>mlr reorder</tt></a>,
+<p/>Using Miller 5.0.0&rsquo;s map literals and assigning to <code>$*</code>, you can fully generalize
+<a href="reference-verbs.html#rename"><code>mlr rename</code></a>,
+<a href="reference-verbs.html#reorder"><code>mlr reorder</code></a>,
 etc.:
 
 <p/>
@@ -561,10 +572,10 @@ z=0.573289,KEYFIELD=wye,i=15,b=pan,y=0.573289,x=0.863624
 <!-- ================================================================ -->
 </div>
 <a id="Numbering_and_renumbering_records"/><h1>Numbering and renumbering records</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_renumbering_records');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_renumbering_records" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_renumbering_records');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_renumbering_records" style="display: block">
 
-<p/> The <tt>awk</tt>-like built-in variable <tt>NR</tt> is incremented for each input record:
+<p/> The <code>awk</code>-like built-in variable <code>NR</code> is incremented for each input record:
 
 <p/>
 <div class="pokipanel">
@@ -604,7 +615,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,nr=5
 </div>
 <p/>
 
-<p/> There are two good options here. One is to use the <tt>cat</tt> verb with <tt>-n</tt>:
+<p/> There are two good options here. One is to use the <code>cat</code> verb with <code>-n</code>:
 
 <p/>
 <div class="pokipanel">
@@ -616,7 +627,7 @@ n=2,a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </div>
 <p/>
 
-<p/> The other is to keep your own counter within the <tt>put</tt> DSL:
+<p/> The other is to keep your own counter within the <code>put</code> DSL:
 
 <p/>
 <div class="pokipanel">
@@ -628,32 +639,32 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,n=2
 </div>
 <p/>
 
-<p/> The difference is a matter of taste (although <tt>mlr cat -n</tt> puts the counter first).
+<p/> The difference is a matter of taste (although <code>mlr cat -n</code> puts the counter first).
 
 <!-- ================================================================ -->
 </div>
 <a id="Options_for_dealing_with_duplicate_rows"/><h1>Options for dealing with duplicate rows</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_dedupe');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_dedupe" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_dedupe');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_dedupe" style="display: block">
 
 <p/> If your data has records appearing multiple times, you can use
 <a href="reference-verbs.html#uniq">mlr uniq</a> to show and/or count the unique
 records.
 
 <p/> If you want to look at partial uniqueness &mdash; for example, show only
-the first record for each unique combination of the <tt>account_id</tt> and
-<tt>account_status</tt> fields &mdash; you might use <tt>mlr head -n 1 -g
-account_id,account_status</tt>. Please also see <a
+the first record for each unique combination of the <code>account_id</code> and
+<code>account_status</code> fields &mdash; you might use <code>mlr head -n 1 -g
+account_id,account_status</code>. Please also see <a
 href="reference-verbs.html#head">mlr head</a>.
 
 <!-- ================================================================ -->
 </div>
 <a id="Data-cleaning_examples"/><h1>Data-cleaning examples</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_data_cleaning_examples');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_data_cleaning_examples" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_data_cleaning_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_data_cleaning_examples" style="display: block">
 
 <p/> Here are some ways to use the type-checking options as described in
-the <a href="reference-dsl.html#Type-test_and_type-assertion_expressions">Reference: DSL</a>.
+the <a href="reference-dsl.html#Type-test_and_type-assertion_expressions">DSL reference</a>.
 Suppose you have the following data file, with inconsistent typing for boolean.
 (Also imagine that, for the sake of discussion, we have a million-line file
 rather than a four-line file, so we can&rsquo;t see it all at once and some
@@ -748,8 +759,8 @@ fred,true
 </div>
 <!-- ================================================================ -->
 <a id="Splitting_nested_fields"/><h1>Splitting nested fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_splitting_nested');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_splitting_nested" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_splitting_nested');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_splitting_nested" style="display: block">
 
 <p/> Suppose you have a TSV file like this:
 
@@ -763,7 +774,7 @@ s	u:v:w
 </div>
 <p/>
 
-<p/> The simplest option is to use <a href="reference-verbs.html#nest"><tt>mlr nest</tt></a>:
+<p/> The simplest option is to use <a href="reference-verbs.html#nest"><code>mlr nest</code></a>:
 
 <p/>
 <div class="pokipanel">
@@ -790,11 +801,11 @@ s	u	v	w
 </div>
 <p/>
 
-<p/> While <tt>mlr nest</tt> is simplest, let&rsquo;s also take a look at a few ways to do this using the
-<tt>put</tt> DSL.
+<p/> While <code>mlr nest</code> is simplest, let&rsquo;s also take a look at a few ways to do this using the
+<code>put</code> DSL.
 
-<p/> One option to split out the colon-delimited values in the <tt>b</tt>
-column is to use <tt>splitnv</tt> to create an integer-indexed map and loop
+<p/> One option to split out the colon-delimited values in the <code>b</code>
+column is to use <code>splitnv</code> to create an integer-indexed map and loop
 over it, adding new fields to the current record:
 
 <p/>
@@ -814,8 +825,8 @@ p3 w
 </div>
 <p/>
 
-<p/> while another is to loop over the same map from <tt>splitnv</tt> and use
-it (with <tt>put -q</tt> to suppress printing the original record) to produce
+<p/> while another is to loop over the same map from <code>splitnv</code> and use
+it (with <code>put -q</code> to suppress printing the original record) to produce
 multiple records:
 
 <p/>
@@ -852,8 +863,8 @@ s	w
 </div>
 <!-- ================================================================ -->
 <a id="Showing_differences_between_successive_queries"/><h1>Showing differences between successive queries</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_successive_query_deltas');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_successive_query_deltas" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_successive_query_deltas');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_successive_query_deltas" style="display: block">
 
 <p/> Suppose you have a database query which you run at one point in time, producing the output on the
 left, then again later producing the output on the right:
@@ -938,8 +949,8 @@ blue,6944
 <p/>
 
 <p/> Then, join on the key field(s), and use unsparsify to zero-fill counters
-absent on one side but present on the other. Use <tt>--ul</tt> and
-<tt>--ur</tt> to emit unpaired records (namely, purple on the left and yellow on the right):
+absent on one side but present on the other. Use <code>--ul</code> and
+<code>--ur</code> to emit unpaired records (namely, purple on the left and yellow on the right):
 
 <p/>
 <div class="pokipanel">
@@ -962,8 +973,8 @@ purple 12             0             -12
 </div>
 <!-- ================================================================ -->
 <a id="Finding_missing_dates"/><h1>Finding missing dates</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_finding_missing_dates');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_finding_missing_dates" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_finding_missing_dates');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_finding_missing_dates" style="display: block">
 
 <p/>Suppose you have some date-stamped data which may (or may not) be missing entries for one or more dates:
 
@@ -995,7 +1006,7 @@ $ wc -l data/miss-date.csv
 
 <p/>Since there are 1372 lines in the data file, some automation is called for.
 To find the missing dates, you can convert the dates to seconds since the epoch
-using <tt>strptime</tt>, then compute adjacent differences (the <tt>cat -n</tt>
+using <code>strptime</code>, then compute adjacent differences (the <code>cat -n</code>
 simply inserts record-counters):
 
 <p/>
@@ -1078,14 +1089,14 @@ n=1125,1=2015-04-05,2=182528
 </div>
 <!-- ================================================================ -->
 <a id="Two-pass_algorithms"/><h1>Two-pass algorithms</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_two_pass_algorithms');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_two_pass_algorithms" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_two_pass_algorithms');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_two_pass_algorithms" style="display: block">
 
 <p/>Miller is a streaming record processor; commands are performed once per
 record. This makes Miller particularly suitable for single-pass algorithms,
 allowing many of its verbs to process files that are (much) larger than the
 amount of RAM present in your system. (Of course, Miller verbs such as
-<tt>sort</tt>, </tt>tac</tt>, etc. all must ingest and retain all input records
+<code>sort</code>, </code>tac</code>, etc. all must ingest and retain all input records
 before emitting any output records.) You can also use out-of-stream variables
 to perform multi-pass computations, at the price of retaining all input records
 in memory.
@@ -1157,7 +1168,7 @@ I N PCT a   b   i x                   y
 
 <a id="Two-pass_algorithms:_records_having_max_value"/><h2>Two-pass algorithms: records having max value</h2>
 
-<p/>The idea is to retain records having the largest value of <tt>n</tt> in the
+<p/>The idea is to retain records having the largest value of <code>n</code> in the
 following data:
 
 <p/>
@@ -1200,7 +1211,7 @@ blue   red    4 0.007487
 </div>
 <p/>
 
-<p/>Of course, the largest value of <tt>n</tt> isn&rsquo;t known until after
+<p/>Of course, the largest value of <code>n</code> isn&rsquo;t known until after
 all data have been read. Using an out-of-stream variable we can retain all
 records as they are read, then filter them at the end:
 
@@ -1248,8 +1259,8 @@ green  purple 5 0.203577
 <!-- ================================================================ -->
 </div>
 <a id="Rectangularizing_data"/><h1>Rectangularizing data</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rectangularizing_data');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_rectangularizing_data" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_rectangularizing_data');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_rectangularizing_data" style="display: block">
 
 <p/>Suppose you have a method (in whatever language) which is printing things of the form
 
@@ -1359,8 +1370,8 @@ outer=3,middle=31,inner1=313,inner2=314
 <!-- ================================================================ -->
 </div>
 <a id="Regularizing_ragged_CSV"/><h1>Regularizing ragged CSV</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rectangularizing_ragged_csv');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_rectangularizing_ragged_csv" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_rectangularizing_ragged_csv');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_rectangularizing_ragged_csv" style="display: block">
 
 <p/>Miller handles compliant CSV: in particular, it&rsquo;s an error if the
 number of data fields in a given data line don&rsquo;t match the number of
@@ -1421,8 +1432,8 @@ a,b,c
 <!-- ================================================================ -->
 </div>
 <a id="Feature-counting"/><h1>Feature-counting</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_feature_counting');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_feature_counting" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_feature_counting');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_feature_counting" style="display: block">
 
 <p/>Suppose you have some heterogeneous data like this:
 
@@ -1520,8 +1531,8 @@ uid2    0.083333
 <!-- ================================================================ -->
 </div>
 <a id="Unsparsing"/><h1>Unsparsing</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_unsparsing');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_unsparsing" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_unsparsing');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_unsparsing" style="display: block">
 
 <p/> The previous section discussed how to fill out missing data fields within
 CSV with full header line &mdash; so the list of all field names is present
@@ -1543,14 +1554,14 @@ $ cat data/sparse.json
 </div>
 <p/>
 
-<p/>There are field names <tt>a</tt>, <tt>b</tt>, <tt>v</tt>, <tt>u</tt>,
-<tt>x</tt>, <tt>w</tt> in the data &mdash; but not all in every record.  Since
+<p/>There are field names <code>a</code>, <code>b</code>, <code>v</code>, <code>u</code>,
+<code>x</code>, <code>w</code> in the data &mdash; but not all in every record.  Since
 we don&rsquo;t know the names of all the keys until we&rsquo;ve read them all,
 this needs to be a two-pass algorithm. On the first pass, remember all the
 unique key names and all the records; on the second pass, loop through the
-records filling in absent values, then producing output. Use <tt>put -q</tt>
+records filling in absent values, then producing output. Use <code>put -q</code>
 since we don&rsquo;t want to produce per-record output, only emitting output in
-the <tt>end</tt> block:
+the <code>end</code> block:
 
 <p/>
 <div class="pokipanel">
@@ -1621,13 +1632,13 @@ a b v u x w
 </div>
 <p/>
 
-<p/> There is a keystroke-saving verb for this: <a href="reference-verbs.html#unsparsify"><tt>mlr unsparsify</tt></a>.
+<p/> There is a keystroke-saving verb for this: <a href="reference-verbs.html#unsparsify"><code>mlr unsparsify</code></a>.
 
 </div>
 <!-- ================================================================ -->
 <a id="Parsing_log-file_output"/><h1>Parsing log-file output</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_parsing_log_file_output');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_parsing_log_file_output" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_parsing_log_file_output');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_parsing_log_file_output" style="display: block">
 
 <p/>This, of course, depends highly on what&rsquo;s in your log files. But, as
 an example, suppose you have log-file lines such as
@@ -1640,7 +1651,7 @@ an example, suppose you have log-file lines such as
 </div>
 <p/>
 
-I prefer to pre-filter with <tt>grep</tt> and/or <tt>sed</tt> to extract the structured text, then hand that to Miller. Example:
+I prefer to pre-filter with <code>grep</code> and/or <code>sed</code> to extract the structured text, then hand that to Miller. Example:
 
 <p/>
 <div class="pokipanel">
@@ -1653,8 +1664,8 @@ grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab st
 </div>
 <!-- ================================================================ -->
 <a id="Memoization_with_out-of-stream_variables"/><h1>Memoization with out-of-stream variables</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_memoization_with_oosvars');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_memoization_with_oosvars" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_memoization_with_oosvars');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_memoization_with_oosvars" style="display: block">
 
 <p/> The recursive function for the Fibonacci sequence is famous for its computational complexity.
 Namely, using
@@ -1723,7 +1734,7 @@ i  o      fcount  seconds_delta
 </pre></div>
 
 <p/> Note that the time it takes to evaluate the function is blowing up exponentially as the input argument
-increases. Using <tt>@</tt>-variables, which persist across records, we can cache and reuse the results
+increases. Using <code>@</code>-variables, which persist across records, we can cache and reuse the results
 of previous computations:
 
 <p/>
@@ -1786,9 +1797,6 @@ i  o      fcount seconds_delta
 </pre></div>
 
 </div>
-    </div>
-  </td>
 
-</table>
 </body>
 </html>

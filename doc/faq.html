@@ -29,165 +29,176 @@ pageTracker._trackPageview();
 
 <!-- ================================================================ -->
 <script type="text/javascript">
-  function toggle_div(div) {
-    if (div != null) {
-      if (div.id.startsWith("section_toggle_")) {
-        var state = div.style.display;
-        if (state == "block") {
-          div.style.display = "none";
-        } else {
-          div.style.display = "block";
-        }
-      }
-    }
+
+  function vis_expand_all_navbar_sections() {
+    //console.log('vis_expand_all_navbar_sections ENTER');
+    vis_expand_all_with_prefix('navbar_section_toggle_');
+    //console.log('vis_expand_all_navbar_sections EXIT');
   }
-  function expand_div(div) {
-    if (div != null) {
-      if (div.id.startsWith("section_toggle_")) {
-        div.style.display = "block";
-      }
-    }
-  }
-  function collapse_div(div) {
-    if (div != null) {
-      if (div.id.startsWith("section_toggle_")) {
-        div.style.display = "none";
-      }
-    }
+  function vis_collapse_all_navbar_sections() {
+    //console.log('vis_collapse_all_navbar_sections ENTER');
+    vis_collapse_all_with_prefix('navbar_section_toggle_');
+    //console.log('vis_collapse_all_navbar_sections EXIT');
   }
 
-  function toggle_by_name(divName) {
-    toggle_div(document.getElementById(divName));
+  function vis_expand_all_body_sections() {
+    //console.log('vis_expand_all_body_sections ENTER');
+    vis_expand_all_with_prefix('body_section_toggle_');
+    //console.log('vis_expand_all_body_sections EXIT');
   }
-  function expand_by_name(divName) {
-    expand_div(document.getElementById(divName));
-  }
-  function collapse_by_name(divName) {
-    collapse_div(document.getElementById(divName));
+  function vis_collapse_all_body_sections() {
+    //console.log('vis_collapse_all_body_sections ENTER');
+    vis_collapse_all_with_prefix('body_section_toggle_');
+    //console.log('vis_collapse_all_body_sections EXIT');
   }
 
-  function expand_all() {
-    var divs = document.getElementsByTagName("div");
+  function vis_expand_all_with_prefix(prefix) {
+    //console.log('vis_expand_all_with_prefix ENTER', prefix);
+    var divs = document.getElementsByTagName('div');
+    console.log("DIVS", divs);
     for(var i = 0; i < divs.length; i++) {
-      expand_div(divs[i]);
+      const div = divs[i];
+      if (div.id.startsWith(prefix)) {
+        vis_expand_div(div);
+      }
     }
+    //console.log('vis_expand_all_with_prefix EXIT', prefix);
   }
-  function collapse_all() {
-    var divs = document.getElementsByTagName("div");
+  function vis_collapse_all_with_prefix(prefix) {
+    var divs = document.getElementsByTagName('div');
     for(var i = 0; i < divs.length; i++){
-      collapse_div(divs[i]);
+      const div = divs[i];
+      if (div.id.startsWith(prefix)) {
+        vis_collapse_div(div);
+      }
     }
   }
+
+  function vis_toggle_by_name(divName) {
+    vis_toggle_div(document.getElementById(divName));
+  }
+  function vis_expand_by_name(divName) {
+    vis_expand_div(document.getElementById(divName));
+  }
+  function vis_collapse_by_name(divName) {
+    vis_collapse_div(document.getElementById(divName));
+  }
+
+  function vis_toggle_div(div) {
+    if (div != null) {
+      var state = div.style.display;
+      if (state == 'block') {
+        div.style.display = 'none';
+      } else {
+        div.style.display = 'block';
+      }
+    }
+  }
+  function vis_expand_div(div) {
+    if (div != null) {
+      div.style.display = 'block';
+    }
+  }
+  function vis_collapse_div(div) {
+    if (div != null) {
+      div.style.display = 'none';
+    }
+  }
+
 </script>
 
-<!--
-The background image is from a screenshot of a Google search for "data analysis
-tools", lightened and sepia-toned. Over this was placed a Mac Terminal app with
-very light-grey font and translucent background, in which a few statistical
-Miller commands were run with pretty-print-tabular output format.
-<body background="pix/sepia-overlay.jpg">
--->
 <body bgcolor="#ffffff">
 
 <!-- ================================================================ -->
-<table width="100%">
-<tr>
 
-  <!-- navbar -->
-  <td width="15%">
-    <!--
-    <img src="pix/mlr.jpg" />
-    <img style="border-width:1px; color:black;" src="pix/mlr.jpg" />
-    -->
+<!-- navbar -->
+<div class="pokinav">
+  <center><titleinbody>Miller</titleinbody></center>
+  
+<!-- NAVBAR GENERATED FROM template.html BY poki -->
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_overview');"
+  href="javascript:;"
+  >
+    Overview
+</button>
+<button
+  style="font-weight:bold;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_using');"
+  href="javascript:;"
+  >
+    Using
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_reference');"
+  href="javascript:;"
+  >
+    Reference
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_background');"
+  href="javascript:;"
+  >
+    Background
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_repository');"
+  href="javascript:;"
+  >
+    Repository
+</button>
+<div id="navbar_section_toggle_overview" style="display: none;text-align: left">
+<br/><a href="index.html">About</a>
+<br/><a href="10-min.html">10-minute intro</a>
+<br/><a href="file-formats.html">File formats</a>
+<br/><a href="feature-comparison.html">Unix-toolkit context</a>
+<br/><a href="record-heterogeneity.html">Record-hetrogeneity</a>
+<br/><a href="internationalization.html">Internationalization</a>
+</div>
+<div id="navbar_section_toggle_using" style="display: block;text-align: left">
+<br/><a href="faq.html"><b>FAQ</b></a>
+<br/><a href="data-sharing.html">10-minute intro</a>
+<br/><a href="cookbook.html">Cookbook part 1</a>
+<br/><a href="cookbook2.html">Cookbook part 2</a>
+<br/><a href="cookbook3.html">Cookbook part 3</a>
+<br/><a href="data-examples.html">Data-diviing examples</a>
+</div>
+<div id="navbar_section_toggle_reference" style="display: none;text-align: left">
+<br/><a href="reference.html">Main reference</a>
+<br/><a href="reference-verbs.html">Verbs reference</a>
+<br/><a href="reference-dsl.html">DSL reference</a>
+<br/><a href="manpage.html">Manpage</a>
+<br/><a href="release-docs.html">Documents by release</a>
+<br/><a href="build.html">Installation</a>
+</div>
+<div id="navbar_section_toggle_background" style="display: none;text-align: left">
+<br/><a href="why.html">Why?</a>
+<br/><a href="whyc.html">Why C?</a>
+<br/><a href="etymology.html">Why call it Miller?</a>
+<br/><a href="originality.html">How original is Miller?</a>
+<br/><a href="performance.html">Performance</a>
+</div>
+<div id="navbar_section_toggle_repository" style="display: none;text-align: left">
+<br/><a href="contact.html">Contact information</a>
+<br/><a href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>
+</div>
+</div>
 
-    <div class="pokinav">
-      <center><titleinbody>Miller</titleinbody></center>
-      
-<!-- PAGE LIST GENERATED FROM template.html BY poki -->
-<br/><b>Overview:</b>
-<br/>&bull;&nbsp;<a href="index.html">About Miller</a>
-<br/>&bull;&nbsp;<a href="10-min.html">Miller in 10 minutes</a>
-<br/>&bull;&nbsp;<a href="file-formats.html">File formats</a>
-<br/>&bull;&nbsp;<a href="feature-comparison.html">Miller features in the context of the Unix toolkit</a>
-<br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
-<br/>&bull;&nbsp;<a href="internationalization.html">Internationalization</a>
-<br/><b>Using Miller:</b>
-<br/>&bull;&nbsp;<a href="faq.html"><b>FAQ</b></a>
-<br/>&bull;&nbsp;<a href="data-sharing.html">Sharing data with other languages</a>
-<br/>&bull;&nbsp;<a href="cookbook.html">Cookbook part 1</a>
-<br/>&bull;&nbsp;<a href="cookbook2.html">Cookbook part 2</a>
-<br/>&bull;&nbsp;<a href="cookbook3.html">Cookbook part 3</a>
-<br/>&bull;&nbsp;<a href="data-examples.html">Data-diving examples</a>
-<br/>&bull;&nbsp;<a href="manpage.html">Manpage</a>
-<br/>&bull;&nbsp;<a href="reference.html">Reference</a>
-<br/>&bull;&nbsp;<a href="reference-verbs.html">Reference: Verbs</a>
-<br/>&bull;&nbsp;<a href="reference-dsl.html">Reference: DSL</a>
-<br/>&bull;&nbsp;<a href="release-docs.html">Documents by release</a>
-<br/>&bull;&nbsp;<a href="build.html">Installation, portability, dependencies, and testing</a>
-<br/><b>Background:</b>
-<br/>&bull;&nbsp;<a href="why.html">Why?</a>
-<br/>&bull;&nbsp;<a href="whyc.html">Why C?</a>
-<br/>&bull;&nbsp;<a href="etymology.html">Why call it Miller?</a>
-<br/>&bull;&nbsp;<a href="originality.html">How original is Miller?</a>
-<br/>&bull;&nbsp;<a href="performance.html">Performance</a>
-<br/><b>Repository:</b>
-<br/>&bull;&nbsp;<a href="to-do.html">Things to do</a>
-<br/>&bull;&nbsp;<a href="contact.html">Contact information</a>
-<br/>&bull;&nbsp;<a href="https://github.com/johnkerl/miller">GitHub repo</a>
-      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
-      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
-      <br/> <br/> <br/> <br/> <br/> <br/>
-    </div>
-  </td>
+<!-- page body -->
+<p/>
 
-  <!-- page body -->
-  <td>
-    <!--
-      This is a visually gorgeous feature (here & in the CSS): it allows for
-      independent scroll of the nav and body panels. In particular the nav
-      stays on-screen as you scroll the body.
-
-      However, two problems:
-
-      (1) In Firefox & Chrome both I get janky end-of-body scrolls: there is
-      more content but I can't scroll down to it unless I repeatedly retry the
-      scrolldown. Which is weird.
-
-      (2) Worse, only the first page renders in PDF (again, Firefox & Chrome).
-
-      For now I'm disabling this separate-scroll feature. A frontender, I am
-      not ... maybe someday I'll find a config which gets *all* the features
-      I want; for now, it's a tradeoff.
-    -->
-
-    <!-- Implementation details: one bit is right here:
-
-    div style="overflow-y:scroll;height:1500px"
-
-    and the other bit is in css/poki-callbacks.css:
-
-    .pokinav {
-      display:        inline-block;
-      background:     #e8d9bc;
-      border:         1;
-      box-shadow:     0px 0px 3px 3px #C9C9C9;
-      margin:         10px;
-      padding-top:    10px;
-      padding-bottom: 10px;
-      padding-left:   10px;
-      padding-right:  10px;
-      overflow-y:     scroll;  < - - - - - - here
-      height: 1500px;
-    }
-
-    -->
-    <div>
-    <center> <titleinbody> FAQ </titleinbody> </center>
-    <p/>
-    
 <!-- BODY COPIED FROM content-for-faq.html BY poki -->
 <div class="pokitoc">
-<center><b>Contents:</b></center>
+<center><titleinbody>FAQ</titleinbody></center>
 &bull;&nbsp;<a href="#No_output_at_all">No output at all</a><br/>
 &bull;&nbsp;<a href="#Fields_not_selected">Fields not selected</a><br/>
 &bull;&nbsp;<a href="#Diagnosing_delimiter_specifications">Diagnosing delimiter specifications</a><br/>
@@ -208,38 +219,38 @@ Miller commands were run with pretty-print-tabular output format.
 <p/>
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
 
 <a id="No_output_at_all"/><h1>No output at all</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_no_output_at_all');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_no_output_at_all" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_no_output_at_all');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_no_output_at_all" style="display: block">
 
-<p/>Try <tt>od -xcv</tt> and/or <tt>cat -e</tt> on your file to check for non-printable characters.
+<p/>Try <code>od -xcv</code> and/or <code>cat -e</code> on your file to check for non-printable characters.
 
 <p/>If you&rsquo;re using Miller version less than 5.0.0 (try
-<tt>mlr --version</tt> on your system to find out), when the
+<code>mlr --version</code> on your system to find out), when the
 line-ending-autodetect feature was introduced, please see
 <a href="http://johnkerl.org/miller-releases/miller-4.5.0/doc/index.html">here</a>.
 
 </div>
 <a id="Fields_not_selected"/><h1>Fields not selected</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_fields_not_selected');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_fields_not_selected" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_fields_not_selected');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_fields_not_selected" style="display: block">
 
 <p/>Check the field-separators of the data, e.g. with the command-line
-<tt>head</tt> program. Example: for CSV, Miller&rsquo;s default record
-separator is comma; if your data is tab-delimited, e.g. <tt>aTABbTABc</tt>,
-then Miller won&rsquo;t find three fields named <tt>a</tt>, <tt>b</tt>, and
-<tt>c</tt> but rather just one named <tt>aTABbTABc</tt>.  Solution in this
-case: <tt>mlr --fs tab {remaining arguments ...}</tt>.
+<code>head</code> program. Example: for CSV, Miller&rsquo;s default record
+separator is comma; if your data is tab-delimited, e.g. <code>aTABbTABc</code>,
+then Miller won&rsquo;t find three fields named <code>a</code>, <code>b</code>, and
+<code>c</code> but rather just one named <code>aTABbTABc</code>.  Solution in this
+case: <code>mlr --fs tab {remaining arguments ...}</code>.
 
-<p/>Also try <tt>od -xcv</tt> and/or <tt>cat -e</tt> on your file to check for non-printable characters.
+<p/>Also try <code>od -xcv</code> and/or <code>cat -e</code> on your file to check for non-printable characters.
 
 </div>
 <a id="Diagnosing_delimiter_specifications"/><h1>Diagnosing delimiter specifications</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_diagnosing_delimiter_specifications');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_diagnosing_delimiter_specifications" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_diagnosing_delimiter_specifications');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_diagnosing_delimiter_specifications" style="display: block">
 
 <p/>
 <div class="pokipanel">
@@ -307,12 +318,12 @@ masterdata_colourcode_2;Czarny;Negru
 
 </div>
 <a id="How_do_I_suppress_numeric_conversion?"/><h1>How do I suppress numeric conversion?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_examine_then_chaining');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_suppress_numeric_conversion" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_examine_then_chaining');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_suppress_numeric_conversion" style="display: block">
 
 <p/><b>TL;DR use put -S</b>.
 
-<p/> Within <tt>mlr put</tt> and <tt>mlr filter</tt>, the default behavior for
+<p/> Within <code>mlr put</code> and <code>mlr filter</code>, the default behavior for
 scanning input records is to parse them as integer, if possible, then as float,
 if possible, else leave them as string:
 
@@ -345,17 +356,17 @@ hello hello    string
 <p/>The numeric-conversion rule is simple:
 
 <ul>
-<li/> Try to scan as integer (<tt>"1"</tt> should be int);
-<li/> if that doesn&rsquo;t succeed, try to scan as float (<tt>"1.0"</tt> should be float);
-<li/> if that doesn&rsquo;t succeed, leave the value as a string (<tt>"1x"</tt> is string).
+<li/> Try to scan as integer (<code>"1"</code> should be int);
+<li/> if that doesn&rsquo;t succeed, try to scan as float (<code>"1.0"</code> should be float);
+<li/> if that doesn&rsquo;t succeed, leave the value as a string (<code>"1x"</code> is string).
 </ul>
 
-<p/>This is a sensible default: you should be able to put <tt>'$z = $x +
-$y'</tt> without having to write <tt>'$z = int($x) + float($y)'</tt>.  Also
+<p/>This is a sensible default: you should be able to put <code>'$z = $x +
+$y'</code> without having to write <code>'$z = int($x) + float($y)'</code>.  Also
 note that default output format for floating-point numbers created by
-<tt>put</tt> (and other verbs such as <tt>stats1</tt>) is six decimal places;
-you can override this using <tt>mlr --ofmt</tt>.  Also note that Miller uses
-your system&rsquo;s C library functions whenever possible: e.g. <tt>sscanf</tt>
+<code>put</code> (and other verbs such as <code>stats1</code>) is six decimal places;
+you can override this using <code>mlr --ofmt</code>.  Also note that Miller uses
+your system&rsquo;s C library functions whenever possible: e.g. <code>sscanf</code>
 for converting strings to integer or floating-point.
 
 <p/>But now suppose you have data like these:
@@ -403,19 +414,19 @@ value  copy     type
 <ul>
 <li/> By default field values are inferred to int, else float, else string;
 
-<li/> leading zeroes indicate octal for integers (<tt>sscanf</tt> semantics);
+<li/> leading zeroes indicate octal for integers (<code>sscanf</code> semantics);
 
-<li/> since <tt>0008</tt> doesn't scan as integer (leading 0 requests octal but 8
+<li/> since <code>0008</code> doesn't scan as integer (leading 0 requests octal but 8
 isn't a valid octal digit), the float scan is tried next and it succeeds;
 
-<li/> default floating-point output format is 6 decimal places (override with <tt>mlr --ofmt</tt>).
+<li/> default floating-point output format is 6 decimal places (override with <code>mlr --ofmt</code>).
 </ul>
 
 <p/> Taken individually the rules make sense; taken collectively they produce a mishmash of types here.
 
-<p/>The solution is to <b>use the -S flag</b> for <tt>mlr put</tt> and/or <tt>mlr filter</tt>.
+<p/>The solution is to <b>use the -S flag</b> for <code>mlr put</code> and/or <code>mlr filter</code>.
 Then all field values are left as string. You can type-coerce on demand using syntax like
-<tt>'$z = int($x) + float($y)'</tt>. (See also the
+<code>'$z = int($x) + float($y)'</code>. (See also the
 <a href="reference-verbs.html#put">put documentation</a>; see also
 <a href="https://github.com/johnkerl/miller/issues/150">https://github.com/johnkerl/miller/issues/150</a>.)
 
@@ -440,8 +451,8 @@ value  copy   type
 
 </div>
 <a id="How_do_I_examine_then-chaining?"/><h1>How do I examine then-chaining?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_examine_then_chaining');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_examine_then_chaining" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_examine_then_chaining');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_examine_then_chaining" style="display: block">
 
 <p/>Then-chaining found in Miller is intended to function the same as Unix
 pipes, but with less keystroking. You can print your data one pipeline step at
@@ -464,7 +475,7 @@ paid,debit,30.00
 </div>
 <p/>
 
-Next, run the first step of your command, omitting anything from the first <tt>then</tt> onward:
+Next, run the first step of your command, omitting anything from the first <code>then</code> onward:
 
 <p/>
 <div class="pokipanel">
@@ -479,7 +490,7 @@ paid    debit        1
 </div>
 <p/>
 
-After that, run it with the next <tt>then</tt> step included:
+After that, run it with the next <code>then</code> step included:
 
 <p/>
 <div class="pokipanel">
@@ -494,8 +505,8 @@ paid    debit        1
 </div>
 <p/>
 
-Now if you use <tt>then</tt> to include another verb after that, the columns
-<tt>Status</tt>, <tt>Payment_Type</tt>, and <tt>count</tt> will be the input to
+Now if you use <code>then</code> to include another verb after that, the columns
+<code>Status</code>, <code>Payment_Type</code>, and <code>count</code> will be the input to
 that verb.
 
 <p/>Note, by the way, that you&rsquo;ll get the same results using pipes:
@@ -514,13 +525,13 @@ paid    debit        1
 
 </div>
 <a id="I_assigned_$9_and_it&rsquo;s_not_9th"/><h1>I assigned $9 and it&rsquo;s not 9th</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_9_not_9th');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_9_not_9th" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_9_not_9th');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_9_not_9th" style="display: block">
 
 <p/> Miller records are ordered lists of key-value pairs. For NIDX format, DKVP
 format when keys are missing, or CSV/CSV-lite format with
-<tt>--implicit-csv-header</tt>, Miller will sequentially assign keys of the
-form <tt>1</tt>, <tt>2</tt>, etc. But these are not integer array indices:
+<code>--implicit-csv-header</code>, Miller will sequentially assign keys of the
+form <code>1</code>, <code>2</code>, etc. But these are not integer array indices:
 they&rsquo;re just field names taken from the initial field ordering in the
 input data.
 
@@ -585,8 +596,8 @@ z,x,y
 
 </div>
 <a id="How_can_I_filter_by_date?"/><h1>How can I filter by date?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_date_filtering');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_date_filtering" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_date_filtering');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_date_filtering" style="display: block">
 
 <p/> Given input like
 
@@ -602,7 +613,7 @@ date,event
 </div>
 <p/>
 
-we can use <tt>strptime</tt> to parse the date field into seconds-since-epoch
+we can use <code>strptime</code> to parse the date field into seconds-since-epoch
 and then do numeric comparisons.  Simply match your input dataset&rsquo;s
 date-formatting to the <a href="reference-dsl.html#strptime">strptime</a>
 format-string.  For example:
@@ -624,8 +635,8 @@ See also <a href="https://github.com/johnkerl/miller/issues/208">https://github.
 
 </div>
 <a id="How_can_I_handle_commas-as-data_in_various_formats?"/><h1>How can I handle commas-as-data in various formats?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_comma_handling');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_comma_handling" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_comma_handling');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_comma_handling" style="display: block">
 
 <p/> <a href="file-formats.html#CSV/TSV/ASV/USV/etc.">CSV</a> handles this well and by design:
 
@@ -712,8 +723,8 @@ Name=Khavari, Darius^ARole=tester
 
 </div>
 <a id="How_can_I_handle_field_names_with_special_symbols_in_them?"/><h1>How can I handle field names with special symbols in them?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_field_names_with_special_symbols');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_field_names_with_special_symbols" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_field_names_with_special_symbols');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_field_names_with_special_symbols" style="display: block">
 
 <p/>Simply surround the field names with curly braces:
 
@@ -728,8 +739,8 @@ x.a=3,y:b=4,z/c=5,product.all=60
 
 </div>
 <a id="How_to_escape_'?'_in_regexes?"/><h1>How to escape '?' in regexes?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_escape_in_regex');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_escape_in_regex" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_escape_in_regex');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_escape_in_regex" style="display: block">
 
 <p/> One way is to use square brackets; an alternative is to use simple
 string-substitution rather than a regular expression.
@@ -763,12 +774,12 @@ c is it ...
 </div>
 <p/>
 
-<p/> The <tt>ssub</tt> function exists precisely for this reason: so you don&rsquo;t have to escape anything.
+<p/> The <code>ssub</code> function exists precisely for this reason: so you don&rsquo;t have to escape anything.
 
 </div>
 <a id="How_can_I_put_single-quotes_into_strings?"/><h1>How can I put single-quotes into strings?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_single_quotes_in_strings');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_single_quotes_in_strings" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_single_quotes_in_strings');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_single_quotes_in_strings" style="display: block">
 
 <p/> This is a little tricky due to the shell&rsquo;s handling of quotes. For simplicity, let&rsquo;s first put
 an update script into a file:
@@ -806,28 +817,28 @@ a=It's OK, I said, 'for now'.
 <p/>
 
 <p/> The idea is that the outermost single-quotes are to protect the
-<tt>put</tt> expression from the shell, and the double quotes within them are
+<code>put</code> expression from the shell, and the double quotes within them are
 for Miller. To get a single quote in the middle there, you need to actually put it <i>outside</i> the single-quoting
 for the shell. The pieces are
 
 <ul>
-<li/> <tt>$a="It</tt>
-<li/> <tt>\'</tt>
-<li/> <tt>s OK, I said,</tt>
-<li/> <tt>\'</tt>
-<li/> <tt>for now</tt>
-<li/> <tt>\'</tt>
-<li/> <tt>.</tt>
+<li/> <code>$a="It</code>
+<li/> <code>\'</code>
+<li/> <code>s OK, I said,</code>
+<li/> <code>\'</code>
+<li/> <code>for now</code>
+<li/> <code>\'</code>
+<li/> <code>.</code>
 </ul>
 
 all concatenated together.
 
 </div>
 <a id="Why_doesn&rsquo;t_mlr_cut_put_fields_in_the_order_I_want?"/><h1>Why doesn&rsquo;t mlr cut put fields in the order I want?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_cut_out_of_order');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_cut_out_of_order" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_cut_out_of_order');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_cut_out_of_order" style="display: block">
 
-<p/>Example: columns <tt>x,i,a</tt> were requested but they appear here in the order <tt>a,i,x</tt>:
+<p/>Example: columns <code>x,i,a</code> were requested but they appear here in the order <code>a,i,x</code>:
 
 <p/>
 <div class="pokipanel">
@@ -854,11 +865,11 @@ a=wye,i=5,x=0.5732889198020006
 </div>
 <p/>
 
-<p/>The issue is that Miller&rsquo;s <tt>cut</tt>, by default, outputs cut fields in the order they
-appear in the input data. This design decision was made intentionally to parallel the *nix system <tt>cut</tt>
+<p/>The issue is that Miller&rsquo;s <code>cut</code>, by default, outputs cut fields in the order they
+appear in the input data. This design decision was made intentionally to parallel the *nix system <code>cut</code>
 command, which has the same semantics.
 
-<p/>The solution is to use the <tt>-o</tt> option:
+<p/>The solution is to use the <code>-o</code> option:
 
 <p/>
 <div class="pokipanel">
@@ -875,8 +886,8 @@ x=0.5732889198020006,i=5,a=wye
 
 </div>
 <a id="NR_is_not_consecutive_after_then-chaining"/><h1>NR is not consecutive after then-chaining</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_NR_not_consecutive_after_then');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_NR_not_consecutive_after_then" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_NR_not_consecutive_after_then');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_NR_not_consecutive_after_then" style="display: block">
 
 <p/> Given this input data:
 <p/>
@@ -892,7 +903,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 </div>
 <p/>
 
-why don&rsquo;t I see <tt>NR=1</tt> and <tt>NR=2</tt> here??
+why don&rsquo;t I see <code>NR=1</code> and <code>NR=2</code> here??
 
 <p/>
 <div class="pokipanel">
@@ -904,9 +915,9 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,NR=5
 </div>
 <p/>
 
-<p/>The reason is that <tt>NR</tt> is computed for the original input records and isn&rsquo;t dynamically
-updated. By contrast, <tt>NF</tt> is dynamically updated: it&rsquo;s the number of fields in the
-current record, and if you add/remove a field, the value of <tt>NF</tt> will change:
+<p/>The reason is that <code>NR</code> is computed for the original input records and isn&rsquo;t dynamically
+updated. By contrast, <code>NF</code> is dynamically updated: it&rsquo;s the number of fields in the
+current record, and if you add/remove a field, the value of <code>NF</code> will change:
 
 <p/>
 <div class="pokipanel">
@@ -917,8 +928,8 @@ nf1=3,u=4,nf2=5,nf3=3
 </div>
 <p/>
 
-<p/><tt>NR</tt>, by contrast (and <tt>FNR</tt> as well), retains the value from the original input stream,
-and records may be dropped by a <tt>filter</tt> within a <tt>then</tt>-chain. To recover consecutive record
+<p/><code>NR</code>, by contrast (and <code>FNR</code> as well), retains the value from the original input stream,
+and records may be dropped by a <code>filter</code> within a <code>then</code>-chain. To recover consecutive record
 numbers, you can use out-of-stream variables as follows:
 
 <p/>
@@ -942,7 +953,7 @@ wye pan 5 0.5732889198020006 0.8636244699032729 5   2
 </div>
 <p/>
 
-<p/>Or, simply use <tt>mlr cat -n</tt>:
+<p/>Or, simply use <code>mlr cat -n</code>:
 
 <p/>
 <div class="pokipanel">
@@ -956,13 +967,13 @@ n=2,a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
 </div>
 <a id="Why_am_I_not_seeing_all_possible_joins_occur?"/><h1>Why am I not seeing all possible joins occur?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_not_all_possible_joins');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_not_all_possible_joins" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_not_all_possible_joins');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_not_all_possible_joins" style="display: block">
 
-<p/><b>This section describes behavior before Miller 5.1.0. As of 5.1.0, <tt>-u</tt> is the default.</b>
+<p/><b>This section describes behavior before Miller 5.1.0. As of 5.1.0, <code>-u</code> is the default.</b>
 
 <p/>For example, the right file here has nine records, and the left file should
-add in the <tt>hostname</tt> column &mdash; so the join output should also have
+add in the <code>hostname</code> column &mdash; so the join output should also have
 9 records:
 
 <p/>
@@ -1006,10 +1017,10 @@ ipaddr    hostname              timestamp  bytes
 </div>
 <p/>
 
-<p/>The issue is that Miller&rsquo;s <tt>join</tt>, by default (before 5.1.0),
+<p/>The issue is that Miller&rsquo;s <code>join</code>, by default (before 5.1.0),
 took input sorted (lexically ascending) by the sort keys on both the left and
 right files.  This design decision was made intentionally to parallel the *nix
-system <tt>join</tt> command, which has the same semantics. The benefit of this
+system <code>join</code> command, which has the same semantics. The benefit of this
 default is that the joiner program can stream through the left and right files,
 needing to load neither entirely into memory. The drawback, of course, is that
 is requires sorted input.
@@ -1043,8 +1054,8 @@ right file.
 
 </div>
 <a id="How_to_rectangularize_after_joins_with_unpaired?"/><h1>How to rectangularize after joins with unpaired?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rectangularize_after_join');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_rectangularize_after_join" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_rectangularize_after_join');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_rectangularize_after_join" style="display: block">
 
 <p/> Suppose you have the following two data files:
 
@@ -1082,7 +1093,7 @@ id,code,color
 <p/>
 
 <p/> However, if we ask for left-unpaireds, since there&rsquo;s no
-<tt>color</tt> column, we get a row not having the same column names as the
+<code>color</code> column, we get a row not having the same column names as the
 other:
 
 <p/>
@@ -1117,8 +1128,8 @@ id,code,color
 
 </div>
 <a id="What_about_XML_or_JSON_file_formats?"/><h1>What about XML or JSON file formats?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_xml_or_json');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_xml_or_json" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_xml_or_json');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_xml_or_json" style="display: block">
 
 <p/>Miller handles <boldmaroon>tabular data</boldmaroon>, which is a list of
 records each having fields which are key-value pairs. Miller also doesn&rsquo;t
@@ -1178,9 +1189,6 @@ tool.
 conversion.
 
 </div>
-    </div>
-  </td>
 
-</table>
 </body>
 </html>

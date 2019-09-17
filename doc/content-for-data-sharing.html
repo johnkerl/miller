@@ -1,8 +1,8 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
 
 <p/> As discussed in the section on
 POKI_PUT_LINK_FOR_PAGE(file-formats.html)HERE, Miller supports several
@@ -14,8 +14,8 @@ to use arbitrary <b>shell commands</b> to extend functionality beyond Miller&rsq
 domain-specific language.
 
 <h1>DKVP I/O in Python</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_dkvp_python');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_dkvp_python" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_dkvp_python');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_dkvp_python" style="display: block">
 
 <p/>
 Here are the I/O routines:
@@ -36,8 +36,8 @@ POKI_RUN_COMMAND{{python polyglot-dkvp-io/example.py < data/small | mlr --opprin
 
 </div>
 <h1>DKVP I/O in Ruby</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_dkvp_ruby');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_dkvp_ruby" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_dkvp_ruby');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_dkvp_ruby" style="display: block">
 
 <p/>
 Here are the I/O routines:
@@ -59,23 +59,23 @@ POKI_RUN_COMMAND{{ruby -I./polyglot-dkvp-io polyglot-dkvp-io/example.rb data/sma
 </div>
 
 <h1>SQL-output examples</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sql_output_examples');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_sql_output_examples" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_sql_output_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_sql_output_examples" style="display: block">
 
 <p/>Please see <a href="10-min.html#SQL-output_examples">here</a>.
 
 </div>
 
 <h1>SQL-input examples</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sql_input_examples');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_sql_input_examples" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_sql_input_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_sql_input_examples" style="display: block">
 
 <p/>Please see <a href="10-min.html#SQL-input_examples">here</a>.
 
 </div>
 <h1>Running shell commands</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_shell_commands');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_shell_commands" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_shell_commands');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_shell_commands" style="display: block">
 
 <p/>The <a href="reference-dsl.html#system">system</a> DSL function allows you to run a specific shell command and put its output &mdash; minus the final newline &mdash; into a record field. The command itself is any string, either a literal string, or a concatenation of strings, perhaps including other field values or what have you.
 
@@ -83,9 +83,9 @@ POKI_RUN_COMMAND{{mlr --opprint put '$o = system("echo hello world")' data/small
 POKI_RUN_COMMAND{{mlr --opprint put '$o = system("echo {" . NR . "}")' data/small}}HERE
 POKI_RUN_COMMAND{{mlr --opprint put '$o = system("echo -n ".$a."| sha1sum")' data/small}}HERE
 
-<p/>Note that running a subprocess on every record takes a non-trivial amount of time. Comparing asking the system <tt>date</tt> command for the current time in nanoseconds versus computing it in process:
+<p/>Note that running a subprocess on every record takes a non-trivial amount of time. Comparing asking the system <code>date</code> command for the current time in nanoseconds versus computing it in process:
 
-POKI_RUN_COMMAND{{mlr --opprint put '$t=system("date +%s.%N")' then step -a delta -f t data/small}}HERE
+POKI_RUN_COMMAND{{echo mlr --opprint put '$t=system("date +%s.%N")' then step -a delta -f t data/small}}HERE
 POKI_RUN_COMMAND{{mlr --opprint put '$t=systime()' then step -a delta -f t data/small}}HERE
 
 </div>

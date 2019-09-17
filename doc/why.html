@@ -29,165 +29,176 @@ pageTracker._trackPageview();
 
 <!-- ================================================================ -->
 <script type="text/javascript">
-  function toggle_div(div) {
-    if (div != null) {
-      if (div.id.startsWith("section_toggle_")) {
-        var state = div.style.display;
-        if (state == "block") {
-          div.style.display = "none";
-        } else {
-          div.style.display = "block";
-        }
-      }
-    }
+
+  function vis_expand_all_navbar_sections() {
+    //console.log('vis_expand_all_navbar_sections ENTER');
+    vis_expand_all_with_prefix('navbar_section_toggle_');
+    //console.log('vis_expand_all_navbar_sections EXIT');
   }
-  function expand_div(div) {
-    if (div != null) {
-      if (div.id.startsWith("section_toggle_")) {
-        div.style.display = "block";
-      }
-    }
-  }
-  function collapse_div(div) {
-    if (div != null) {
-      if (div.id.startsWith("section_toggle_")) {
-        div.style.display = "none";
-      }
-    }
+  function vis_collapse_all_navbar_sections() {
+    //console.log('vis_collapse_all_navbar_sections ENTER');
+    vis_collapse_all_with_prefix('navbar_section_toggle_');
+    //console.log('vis_collapse_all_navbar_sections EXIT');
   }
 
-  function toggle_by_name(divName) {
-    toggle_div(document.getElementById(divName));
+  function vis_expand_all_body_sections() {
+    //console.log('vis_expand_all_body_sections ENTER');
+    vis_expand_all_with_prefix('body_section_toggle_');
+    //console.log('vis_expand_all_body_sections EXIT');
   }
-  function expand_by_name(divName) {
-    expand_div(document.getElementById(divName));
-  }
-  function collapse_by_name(divName) {
-    collapse_div(document.getElementById(divName));
+  function vis_collapse_all_body_sections() {
+    //console.log('vis_collapse_all_body_sections ENTER');
+    vis_collapse_all_with_prefix('body_section_toggle_');
+    //console.log('vis_collapse_all_body_sections EXIT');
   }
 
-  function expand_all() {
-    var divs = document.getElementsByTagName("div");
+  function vis_expand_all_with_prefix(prefix) {
+    //console.log('vis_expand_all_with_prefix ENTER', prefix);
+    var divs = document.getElementsByTagName('div');
+    console.log("DIVS", divs);
     for(var i = 0; i < divs.length; i++) {
-      expand_div(divs[i]);
+      const div = divs[i];
+      if (div.id.startsWith(prefix)) {
+        vis_expand_div(div);
+      }
     }
+    //console.log('vis_expand_all_with_prefix EXIT', prefix);
   }
-  function collapse_all() {
-    var divs = document.getElementsByTagName("div");
+  function vis_collapse_all_with_prefix(prefix) {
+    var divs = document.getElementsByTagName('div');
     for(var i = 0; i < divs.length; i++){
-      collapse_div(divs[i]);
+      const div = divs[i];
+      if (div.id.startsWith(prefix)) {
+        vis_collapse_div(div);
+      }
     }
   }
+
+  function vis_toggle_by_name(divName) {
+    vis_toggle_div(document.getElementById(divName));
+  }
+  function vis_expand_by_name(divName) {
+    vis_expand_div(document.getElementById(divName));
+  }
+  function vis_collapse_by_name(divName) {
+    vis_collapse_div(document.getElementById(divName));
+  }
+
+  function vis_toggle_div(div) {
+    if (div != null) {
+      var state = div.style.display;
+      if (state == 'block') {
+        div.style.display = 'none';
+      } else {
+        div.style.display = 'block';
+      }
+    }
+  }
+  function vis_expand_div(div) {
+    if (div != null) {
+      div.style.display = 'block';
+    }
+  }
+  function vis_collapse_div(div) {
+    if (div != null) {
+      div.style.display = 'none';
+    }
+  }
+
 </script>
 
-<!--
-The background image is from a screenshot of a Google search for "data analysis
-tools", lightened and sepia-toned. Over this was placed a Mac Terminal app with
-very light-grey font and translucent background, in which a few statistical
-Miller commands were run with pretty-print-tabular output format.
-<body background="pix/sepia-overlay.jpg">
--->
 <body bgcolor="#ffffff">
 
 <!-- ================================================================ -->
-<table width="100%">
-<tr>
 
-  <!-- navbar -->
-  <td width="15%">
-    <!--
-    <img src="pix/mlr.jpg" />
-    <img style="border-width:1px; color:black;" src="pix/mlr.jpg" />
-    -->
+<!-- navbar -->
+<div class="pokinav">
+  <center><titleinbody>Miller</titleinbody></center>
+  
+<!-- NAVBAR GENERATED FROM template.html BY poki -->
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_overview');"
+  href="javascript:;"
+  >
+    Overview
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_using');"
+  href="javascript:;"
+  >
+    Using
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_reference');"
+  href="javascript:;"
+  >
+    Reference
+</button>
+<button
+  style="font-weight:bold;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_background');"
+  href="javascript:;"
+  >
+    Background
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_repository');"
+  href="javascript:;"
+  >
+    Repository
+</button>
+<div id="navbar_section_toggle_overview" style="display: none;text-align: left">
+<br/><a href="index.html">About</a>
+<br/><a href="10-min.html">10-minute intro</a>
+<br/><a href="file-formats.html">File formats</a>
+<br/><a href="feature-comparison.html">Unix-toolkit context</a>
+<br/><a href="record-heterogeneity.html">Record-hetrogeneity</a>
+<br/><a href="internationalization.html">Internationalization</a>
+</div>
+<div id="navbar_section_toggle_using" style="display: none;text-align: left">
+<br/><a href="faq.html">FAQ</a>
+<br/><a href="data-sharing.html">10-minute intro</a>
+<br/><a href="cookbook.html">Cookbook part 1</a>
+<br/><a href="cookbook2.html">Cookbook part 2</a>
+<br/><a href="cookbook3.html">Cookbook part 3</a>
+<br/><a href="data-examples.html">Data-diviing examples</a>
+</div>
+<div id="navbar_section_toggle_reference" style="display: none;text-align: left">
+<br/><a href="reference.html">Main reference</a>
+<br/><a href="reference-verbs.html">Verbs reference</a>
+<br/><a href="reference-dsl.html">DSL reference</a>
+<br/><a href="manpage.html">Manpage</a>
+<br/><a href="release-docs.html">Documents by release</a>
+<br/><a href="build.html">Installation</a>
+</div>
+<div id="navbar_section_toggle_background" style="display: block;text-align: left">
+<br/><a href="why.html"><b>Why?</b></a>
+<br/><a href="whyc.html">Why C?</a>
+<br/><a href="etymology.html">Why call it Miller?</a>
+<br/><a href="originality.html">How original is Miller?</a>
+<br/><a href="performance.html">Performance</a>
+</div>
+<div id="navbar_section_toggle_repository" style="display: none;text-align: left">
+<br/><a href="contact.html">Contact information</a>
+<br/><a href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>
+</div>
+</div>
 
-    <div class="pokinav">
-      <center><titleinbody>Miller</titleinbody></center>
-      
-<!-- PAGE LIST GENERATED FROM template.html BY poki -->
-<br/><b>Overview:</b>
-<br/>&bull;&nbsp;<a href="index.html">About Miller</a>
-<br/>&bull;&nbsp;<a href="10-min.html">Miller in 10 minutes</a>
-<br/>&bull;&nbsp;<a href="file-formats.html">File formats</a>
-<br/>&bull;&nbsp;<a href="feature-comparison.html">Miller features in the context of the Unix toolkit</a>
-<br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
-<br/>&bull;&nbsp;<a href="internationalization.html">Internationalization</a>
-<br/><b>Using Miller:</b>
-<br/>&bull;&nbsp;<a href="faq.html">FAQ</a>
-<br/>&bull;&nbsp;<a href="data-sharing.html">Sharing data with other languages</a>
-<br/>&bull;&nbsp;<a href="cookbook.html">Cookbook part 1</a>
-<br/>&bull;&nbsp;<a href="cookbook2.html">Cookbook part 2</a>
-<br/>&bull;&nbsp;<a href="cookbook3.html">Cookbook part 3</a>
-<br/>&bull;&nbsp;<a href="data-examples.html">Data-diving examples</a>
-<br/>&bull;&nbsp;<a href="manpage.html">Manpage</a>
-<br/>&bull;&nbsp;<a href="reference.html">Reference</a>
-<br/>&bull;&nbsp;<a href="reference-verbs.html">Reference: Verbs</a>
-<br/>&bull;&nbsp;<a href="reference-dsl.html">Reference: DSL</a>
-<br/>&bull;&nbsp;<a href="release-docs.html">Documents by release</a>
-<br/>&bull;&nbsp;<a href="build.html">Installation, portability, dependencies, and testing</a>
-<br/><b>Background:</b>
-<br/>&bull;&nbsp;<a href="why.html"><b>Why?</b></a>
-<br/>&bull;&nbsp;<a href="whyc.html">Why C?</a>
-<br/>&bull;&nbsp;<a href="etymology.html">Why call it Miller?</a>
-<br/>&bull;&nbsp;<a href="originality.html">How original is Miller?</a>
-<br/>&bull;&nbsp;<a href="performance.html">Performance</a>
-<br/><b>Repository:</b>
-<br/>&bull;&nbsp;<a href="to-do.html">Things to do</a>
-<br/>&bull;&nbsp;<a href="contact.html">Contact information</a>
-<br/>&bull;&nbsp;<a href="https://github.com/johnkerl/miller">GitHub repo</a>
-      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
-      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
-      <br/> <br/> <br/> <br/> <br/> <br/>
-    </div>
-  </td>
+<!-- page body -->
+<p/>
 
-  <!-- page body -->
-  <td>
-    <!--
-      This is a visually gorgeous feature (here & in the CSS): it allows for
-      independent scroll of the nav and body panels. In particular the nav
-      stays on-screen as you scroll the body.
-
-      However, two problems:
-
-      (1) In Firefox & Chrome both I get janky end-of-body scrolls: there is
-      more content but I can't scroll down to it unless I repeatedly retry the
-      scrolldown. Which is weird.
-
-      (2) Worse, only the first page renders in PDF (again, Firefox & Chrome).
-
-      For now I'm disabling this separate-scroll feature. A frontender, I am
-      not ... maybe someday I'll find a config which gets *all* the features
-      I want; for now, it's a tradeoff.
-    -->
-
-    <!-- Implementation details: one bit is right here:
-
-    div style="overflow-y:scroll;height:1500px"
-
-    and the other bit is in css/poki-callbacks.css:
-
-    .pokinav {
-      display:        inline-block;
-      background:     #e8d9bc;
-      border:         1;
-      box-shadow:     0px 0px 3px 3px #C9C9C9;
-      margin:         10px;
-      padding-top:    10px;
-      padding-bottom: 10px;
-      padding-left:   10px;
-      padding-right:  10px;
-      overflow-y:     scroll;  < - - - - - - here
-      height: 1500px;
-    }
-
-    -->
-    <div>
-    <center> <titleinbody> Why? </titleinbody> </center>
-    <p/>
-    
 <!-- BODY COPIED FROM content-for-why.html BY poki -->
 <div class="pokitoc">
-<center><b>Contents:</b></center>
+<center><titleinbody>Why?</titleinbody></center>
 &bull;&nbsp;<a href="#Who_is_Miller_for?">Who is Miller for?</a><br/>
 &bull;&nbsp;<a href="#What_was_Miller_created_to_do?">What was Miller created to do?</a><br/>
 &bull;&nbsp;<a href="#Tradeoffs">Tradeoffs</a><br/>
@@ -197,15 +208,15 @@ Miller commands were run with pretty-print-tabular output format.
 <p/>
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
 
 <p/> Someone asked me the other day about design, tradeoffs, thought process,
 why I felt it necessary to build Miller, etc. Here are some answers.
 
 <a id="Who_is_Miller_for?"/><h1>Who is Miller for?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_who_is_miller_for');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_who_is_miller_for" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_who_is_miller_for');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_who_is_miller_for" style="display: block">
 
 <p/> For background, I&rsquo;m a software engineer, with a heavy devops bent
 and a non-trivial amount of data-engineering in my career.
@@ -238,11 +249,11 @@ it&rsquo;s for?
 
 </div>
 <a id="What_was_Miller_created_to_do?"/><h1>What was Miller created to do?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_what_was_miller_created_to_do');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_what_was_miller_created_to_do" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_what_was_miller_created_to_do');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_what_was_miller_created_to_do" style="display: block">
 
-<p/> First: there are tools like <tt>xsv</tt> which handles CSV marvelously and
-<tt>jq</tt> which handles JSON marvelously, and so on &mdash; but I over the
+<p/> First: there are tools like <code>xsv</code> which handles CSV marvelously and
+<code>jq</code> which handles JSON marvelously, and so on &mdash; but I over the
 years of my career in the software industry I&rsquo;ve found myself, and
 others, doing a lot of ad-hoc things which really were fundamentally the same
 <i>except</i> for format. So the number one thing about Miller is doing common
@@ -294,17 +305,17 @@ unit-test</boldmaroon>. Since Miller handles a lot of formats and solves a lot
 of problems, there&rsquo;s a lot to test and a lot to keep working correctly as
 I add features or optimize. And I wanted it to be able to explain itself
 &mdash; not only through web docs like the one you&rsquo;re reading but also
-through <tt>man mlr</tt> and <tt>mlr --help</tt>, <tt>mlr sort --help</tt>,
+through <code>man mlr</code> and <code>mlr --help</code>, <code>mlr sort --help</code>,
 etc.
 
 <p/> Seventh thing: <boldmaroon>Must have a domain-specific
 language</boldmaroon> (DSL) <boldmaroon>but also must let you do common things
 without it</boldmaroon>. All those little verbs Miller has to help you
 <i>avoid</i> having to write for-loops are great. I use them for
-keystroke-saving: <tt>mlr stats1 -a mean,stddev,min,max -f quantity</tt>, for
+keystroke-saving: <code>mlr stats1 -a mean,stddev,min,max -f quantity</code>, for
 example, without you having to write for-loops or define accumulator variables.
 But you also have to be able to break out of that and write arbitrary code when
-you want to: <tt>mlr put '$distance = $rate * $time'</tt> or anything else you
+you want to: <code>mlr put '$distance = $rate * $time'</code> or anything else you
 can think up. In Perl/AWK/etc.  it&rsquo;s all DSL. In xsv et al.  it&rsquo;s
 all verbs. In Miller I like having the combination.
 
@@ -316,8 +327,8 @@ a niche in the world (people use it) but it also fills a niche in my life.
 
 </div>
 <a id="Tradeoffs"/><h1>Tradeoffs</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_tradeoffs');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_tradeoffs" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_tradeoffs');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_tradeoffs" style="display: block">
 
 <p/> Miller is command-line-only by design. People who want a graphical user
 interface won&rsquo;t find it here.  This is in part (a) accommodating my
@@ -336,10 +347,10 @@ variety of formats.
 It&rsquo;d be quicker to write (but slower to run) if written in a high-level
 language. If Miller were written in Python, it would be implemented in
 significantly fewer lines of code than its current C implementation. The DSL
-would just be an <tt>eval</tt> of Python code. And it would run slower, but
+would just be an <code>eval</code> of Python code. And it would run slower, but
 maybe not enough slower to be a problem for most folks. Later I found out about
 the <a href="https://github.com/turicas/rows">rows</a> tool &mdash; if you find
-Miller useful, you should check out <tt>rows</tt> as well.
+Miller useful, you should check out <code>rows</code> as well.
 
 <p/> A fourth tradeoff is in the DSL (more visibly so in 5.0.0 but already in
 pre-5.0.0): how much to make it dynamically typed &mdash; so you can just say
@@ -359,8 +370,8 @@ type-checking.
 
 </div>
 <a id="Related_tools"/><h1>Related tools</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_related_tools');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_related_tools" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_related_tools');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_related_tools" style="display: block">
 
 <p/>Here&rsquo;s a comprehensive list:
 <a href="https://github.com/dbohdan/structured-text-tools">https://github.com/dbohdan/structured-text-tools</a>.
@@ -368,11 +379,11 @@ It doesn&rsquo;t mention <a href="https://github.com/turicas/rows">rows</a> so h
 
 </div>
 <a id="Moving_forward"/><h1>Moving forward</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_moving_forward');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_moving_forward" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_moving_forward');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_moving_forward" style="display: block">
 
 <p/> I originally aimed Miller at people who already know what
-<tt>sed</tt>/<tt>awk</tt>/<tt>cut</tt>/<tt>sort</tt>/<tt>join</tt> are and
+<code>sed</code>/<code>awk</code>/<code>cut</code>/<code>sort</code>/<code>join</code> are and
 wanted some options. But as time goes by I realize that tools like this can be
 useful to folks who <i>don&rsquo;t</i> know what those things are; people who
 aren&rsquo;t primarily coders; people who are scientists, or data scientists.
@@ -382,9 +393,6 @@ to the existing language-reference kinds of stuff.  And continuing to seek out
 input from people who use Miller on where to go next.
 
 </div>
-    </div>
-  </td>
 
-</table>
 </body>
 </html>

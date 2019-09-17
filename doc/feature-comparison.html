@@ -10,7 +10,7 @@
   <meta name="keywords"
   content="John Kerl, Kerl, Miller, miller, mlr, OLAP, data analysis software, regression, correlation, variance, data tools, " />
 
-  <title> Miller features in the context of the Unix toolkit </title>
+  <title> Unix-toolkit context </title>
   <link rel="stylesheet" type="text/css" href="css/miller.css"/>
   <link rel="stylesheet" type="text/css" href="css/poki-callbacks.css"/>
 </head>
@@ -29,165 +29,176 @@ pageTracker._trackPageview();
 
 <!-- ================================================================ -->
 <script type="text/javascript">
-  function toggle_div(div) {
-    if (div != null) {
-      if (div.id.startsWith("section_toggle_")) {
-        var state = div.style.display;
-        if (state == "block") {
-          div.style.display = "none";
-        } else {
-          div.style.display = "block";
-        }
-      }
-    }
+
+  function vis_expand_all_navbar_sections() {
+    //console.log('vis_expand_all_navbar_sections ENTER');
+    vis_expand_all_with_prefix('navbar_section_toggle_');
+    //console.log('vis_expand_all_navbar_sections EXIT');
   }
-  function expand_div(div) {
-    if (div != null) {
-      if (div.id.startsWith("section_toggle_")) {
-        div.style.display = "block";
-      }
-    }
-  }
-  function collapse_div(div) {
-    if (div != null) {
-      if (div.id.startsWith("section_toggle_")) {
-        div.style.display = "none";
-      }
-    }
+  function vis_collapse_all_navbar_sections() {
+    //console.log('vis_collapse_all_navbar_sections ENTER');
+    vis_collapse_all_with_prefix('navbar_section_toggle_');
+    //console.log('vis_collapse_all_navbar_sections EXIT');
   }
 
-  function toggle_by_name(divName) {
-    toggle_div(document.getElementById(divName));
+  function vis_expand_all_body_sections() {
+    //console.log('vis_expand_all_body_sections ENTER');
+    vis_expand_all_with_prefix('body_section_toggle_');
+    //console.log('vis_expand_all_body_sections EXIT');
   }
-  function expand_by_name(divName) {
-    expand_div(document.getElementById(divName));
-  }
-  function collapse_by_name(divName) {
-    collapse_div(document.getElementById(divName));
+  function vis_collapse_all_body_sections() {
+    //console.log('vis_collapse_all_body_sections ENTER');
+    vis_collapse_all_with_prefix('body_section_toggle_');
+    //console.log('vis_collapse_all_body_sections EXIT');
   }
 
-  function expand_all() {
-    var divs = document.getElementsByTagName("div");
+  function vis_expand_all_with_prefix(prefix) {
+    //console.log('vis_expand_all_with_prefix ENTER', prefix);
+    var divs = document.getElementsByTagName('div');
+    console.log("DIVS", divs);
     for(var i = 0; i < divs.length; i++) {
-      expand_div(divs[i]);
+      const div = divs[i];
+      if (div.id.startsWith(prefix)) {
+        vis_expand_div(div);
+      }
     }
+    //console.log('vis_expand_all_with_prefix EXIT', prefix);
   }
-  function collapse_all() {
-    var divs = document.getElementsByTagName("div");
+  function vis_collapse_all_with_prefix(prefix) {
+    var divs = document.getElementsByTagName('div');
     for(var i = 0; i < divs.length; i++){
-      collapse_div(divs[i]);
+      const div = divs[i];
+      if (div.id.startsWith(prefix)) {
+        vis_collapse_div(div);
+      }
     }
   }
+
+  function vis_toggle_by_name(divName) {
+    vis_toggle_div(document.getElementById(divName));
+  }
+  function vis_expand_by_name(divName) {
+    vis_expand_div(document.getElementById(divName));
+  }
+  function vis_collapse_by_name(divName) {
+    vis_collapse_div(document.getElementById(divName));
+  }
+
+  function vis_toggle_div(div) {
+    if (div != null) {
+      var state = div.style.display;
+      if (state == 'block') {
+        div.style.display = 'none';
+      } else {
+        div.style.display = 'block';
+      }
+    }
+  }
+  function vis_expand_div(div) {
+    if (div != null) {
+      div.style.display = 'block';
+    }
+  }
+  function vis_collapse_div(div) {
+    if (div != null) {
+      div.style.display = 'none';
+    }
+  }
+
 </script>
 
-<!--
-The background image is from a screenshot of a Google search for "data analysis
-tools", lightened and sepia-toned. Over this was placed a Mac Terminal app with
-very light-grey font and translucent background, in which a few statistical
-Miller commands were run with pretty-print-tabular output format.
-<body background="pix/sepia-overlay.jpg">
--->
 <body bgcolor="#ffffff">
 
 <!-- ================================================================ -->
-<table width="100%">
-<tr>
 
-  <!-- navbar -->
-  <td width="15%">
-    <!--
-    <img src="pix/mlr.jpg" />
-    <img style="border-width:1px; color:black;" src="pix/mlr.jpg" />
-    -->
+<!-- navbar -->
+<div class="pokinav">
+  <center><titleinbody>Miller</titleinbody></center>
+  
+<!-- NAVBAR GENERATED FROM template.html BY poki -->
+<button
+  style="font-weight:bold;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_overview');"
+  href="javascript:;"
+  >
+    Overview
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_using');"
+  href="javascript:;"
+  >
+    Using
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_reference');"
+  href="javascript:;"
+  >
+    Reference
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_background');"
+  href="javascript:;"
+  >
+    Background
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_repository');"
+  href="javascript:;"
+  >
+    Repository
+</button>
+<div id="navbar_section_toggle_overview" style="display: block;text-align: left">
+<br/><a href="index.html">About</a>
+<br/><a href="10-min.html">10-minute intro</a>
+<br/><a href="file-formats.html">File formats</a>
+<br/><a href="feature-comparison.html"><b>Unix-toolkit context</b></a>
+<br/><a href="record-heterogeneity.html">Record-hetrogeneity</a>
+<br/><a href="internationalization.html">Internationalization</a>
+</div>
+<div id="navbar_section_toggle_using" style="display: none;text-align: left">
+<br/><a href="faq.html">FAQ</a>
+<br/><a href="data-sharing.html">10-minute intro</a>
+<br/><a href="cookbook.html">Cookbook part 1</a>
+<br/><a href="cookbook2.html">Cookbook part 2</a>
+<br/><a href="cookbook3.html">Cookbook part 3</a>
+<br/><a href="data-examples.html">Data-diviing examples</a>
+</div>
+<div id="navbar_section_toggle_reference" style="display: none;text-align: left">
+<br/><a href="reference.html">Main reference</a>
+<br/><a href="reference-verbs.html">Verbs reference</a>
+<br/><a href="reference-dsl.html">DSL reference</a>
+<br/><a href="manpage.html">Manpage</a>
+<br/><a href="release-docs.html">Documents by release</a>
+<br/><a href="build.html">Installation</a>
+</div>
+<div id="navbar_section_toggle_background" style="display: none;text-align: left">
+<br/><a href="why.html">Why?</a>
+<br/><a href="whyc.html">Why C?</a>
+<br/><a href="etymology.html">Why call it Miller?</a>
+<br/><a href="originality.html">How original is Miller?</a>
+<br/><a href="performance.html">Performance</a>
+</div>
+<div id="navbar_section_toggle_repository" style="display: none;text-align: left">
+<br/><a href="contact.html">Contact information</a>
+<br/><a href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>
+</div>
+</div>
 
-    <div class="pokinav">
-      <center><titleinbody>Miller</titleinbody></center>
-      
-<!-- PAGE LIST GENERATED FROM template.html BY poki -->
-<br/><b>Overview:</b>
-<br/>&bull;&nbsp;<a href="index.html">About Miller</a>
-<br/>&bull;&nbsp;<a href="10-min.html">Miller in 10 minutes</a>
-<br/>&bull;&nbsp;<a href="file-formats.html">File formats</a>
-<br/>&bull;&nbsp;<a href="feature-comparison.html"><b>Miller features in the context of the Unix toolkit</b></a>
-<br/>&bull;&nbsp;<a href="record-heterogeneity.html">Record-heterogeneity</a>
-<br/>&bull;&nbsp;<a href="internationalization.html">Internationalization</a>
-<br/><b>Using Miller:</b>
-<br/>&bull;&nbsp;<a href="faq.html">FAQ</a>
-<br/>&bull;&nbsp;<a href="data-sharing.html">Sharing data with other languages</a>
-<br/>&bull;&nbsp;<a href="cookbook.html">Cookbook part 1</a>
-<br/>&bull;&nbsp;<a href="cookbook2.html">Cookbook part 2</a>
-<br/>&bull;&nbsp;<a href="cookbook3.html">Cookbook part 3</a>
-<br/>&bull;&nbsp;<a href="data-examples.html">Data-diving examples</a>
-<br/>&bull;&nbsp;<a href="manpage.html">Manpage</a>
-<br/>&bull;&nbsp;<a href="reference.html">Reference</a>
-<br/>&bull;&nbsp;<a href="reference-verbs.html">Reference: Verbs</a>
-<br/>&bull;&nbsp;<a href="reference-dsl.html">Reference: DSL</a>
-<br/>&bull;&nbsp;<a href="release-docs.html">Documents by release</a>
-<br/>&bull;&nbsp;<a href="build.html">Installation, portability, dependencies, and testing</a>
-<br/><b>Background:</b>
-<br/>&bull;&nbsp;<a href="why.html">Why?</a>
-<br/>&bull;&nbsp;<a href="whyc.html">Why C?</a>
-<br/>&bull;&nbsp;<a href="etymology.html">Why call it Miller?</a>
-<br/>&bull;&nbsp;<a href="originality.html">How original is Miller?</a>
-<br/>&bull;&nbsp;<a href="performance.html">Performance</a>
-<br/><b>Repository:</b>
-<br/>&bull;&nbsp;<a href="to-do.html">Things to do</a>
-<br/>&bull;&nbsp;<a href="contact.html">Contact information</a>
-<br/>&bull;&nbsp;<a href="https://github.com/johnkerl/miller">GitHub repo</a>
-      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
-      <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/> <br/>
-      <br/> <br/> <br/> <br/> <br/> <br/>
-    </div>
-  </td>
+<!-- page body -->
+<p/>
 
-  <!-- page body -->
-  <td>
-    <!--
-      This is a visually gorgeous feature (here & in the CSS): it allows for
-      independent scroll of the nav and body panels. In particular the nav
-      stays on-screen as you scroll the body.
-
-      However, two problems:
-
-      (1) In Firefox & Chrome both I get janky end-of-body scrolls: there is
-      more content but I can't scroll down to it unless I repeatedly retry the
-      scrolldown. Which is weird.
-
-      (2) Worse, only the first page renders in PDF (again, Firefox & Chrome).
-
-      For now I'm disabling this separate-scroll feature. A frontender, I am
-      not ... maybe someday I'll find a config which gets *all* the features
-      I want; for now, it's a tradeoff.
-    -->
-
-    <!-- Implementation details: one bit is right here:
-
-    div style="overflow-y:scroll;height:1500px"
-
-    and the other bit is in css/poki-callbacks.css:
-
-    .pokinav {
-      display:        inline-block;
-      background:     #e8d9bc;
-      border:         1;
-      box-shadow:     0px 0px 3px 3px #C9C9C9;
-      margin:         10px;
-      padding-top:    10px;
-      padding-bottom: 10px;
-      padding-left:   10px;
-      padding-right:  10px;
-      overflow-y:     scroll;  < - - - - - - here
-      height: 1500px;
-    }
-
-    -->
-    <div>
-    <center> <titleinbody> Miller features in the context of the Unix toolkit </titleinbody> </center>
-    <p/>
-    
 <!-- BODY COPIED FROM content-for-feature-comparison.html BY poki -->
 <div class="pokitoc">
-<center><b>Contents:</b></center>
+<center><titleinbody>Unix-toolkit context</titleinbody></center>
 &bull;&nbsp;<a href="#File-format_awareness">File-format awareness</a><br/>
 &bull;&nbsp;<a href="#awk-like_features:_mlr_filter_and_mlr_put">awk-like features: mlr filter and mlr put</a><br/>
 &bull;&nbsp;<a href="#See_also">See also</a><br/>
@@ -196,7 +207,7 @@ Miller commands were run with pretty-print-tabular output format.
 
 <a id="File-format_awareness"/><h1>File-format awareness</h1>
 
-Miller respects CSV headers. If you do <tt>mlr --csv cat *.csv</tt> then the header line is written once:
+Miller respects CSV headers. If you do <code>mlr --csv cat *.csv</code> then the header line is written once:
 
 <table><tr>
 <td>
@@ -250,52 +261,52 @@ a,b,c
 </td>
 </tr></table>
 
-Likewise with <tt>mlr sort</tt>, <tt>mlr tac</tt>, and so on.
+Likewise with <code>mlr sort</code>, <code>mlr tac</code>, and so on.
 
 <a id="awk-like_features:_mlr_filter_and_mlr_put"/><h1>awk-like features: mlr filter and mlr put</h1>
 
 <ul>
 
-<li/> <tt>mlr filter</tt> includes/excludes records based on a filter
-expression, e.g. <tt>mlr filter '$count &gt; 10'</tt>.
+<li/> <code>mlr filter</code> includes/excludes records based on a filter
+expression, e.g. <code>mlr filter '$count &gt; 10'</code>.
 
-<li/> <tt>mlr put</tt> adds a new field as a function of others, e.g. <tt>mlr
-put '$xy = $x * $y'</tt> or <tt>mlr put '$counter = NR'</tt>.
+<li/> <code>mlr put</code> adds a new field as a function of others, e.g. <code>mlr
+put '$xy = $x * $y'</code> or <code>mlr put '$counter = NR'</code>.
 
-<li/> The <tt>$name</tt> syntax is straight from <tt>awk</tt>&rsquo;s <tt>$1 $2
-$3</tt> (adapted to name-based indexing), as are the variables <tt>FS</tt>,
-<tt>OFS</tt>, <tt>RS</tt>, <tt>ORS</tt>, <tt>NF</tt>, <tt>NR</tt>, and
-<tt>FILENAME</tt>. The <tt>ENV[...]</tt> syntax is from Ruby.
+<li/> The <code>$name</code> syntax is straight from <code>awk</code>&rsquo;s <code>$1 $2
+$3</code> (adapted to name-based indexing), as are the variables <code>FS</code>,
+<code>OFS</code>, <code>RS</code>, <code>ORS</code>, <code>NF</code>, <code>NR</code>, and
+<code>FILENAME</code>. The <code>ENV[...]</code> syntax is from Ruby.
 
-<li/> While <tt>awk</tt> functions are record-based, Miller subcommands (or
+<li/> While <code>awk</code> functions are record-based, Miller subcommands (or
 <i>verbs</i>) are stream-based: each of them maps a stream of records into
 another stream of records.
 
-<li/> Like <tt>awk</tt>, Miller (as of v5.0.0) allows you to define new
-functions within its <tt>put</tt> and <tt>filter</tt> expression language.
-Further programmability comes from chaining with <tt>then</tt>.
+<li/> Like <code>awk</code>, Miller (as of v5.0.0) allows you to define new
+functions within its <code>put</code> and <code>filter</code> expression language.
+Further programmability comes from chaining with <code>then</code>.
 
-<li/> As with <tt>awk</tt>, <tt>$</tt>-variables are stream variables and all
-verbs (such as <tt>cut</tt>, <tt>stats1</tt>, <tt>put</tt>, etc.) as well as
-<tt>put</tt>/<tt>filter</tt> statements operate on streams.  This means that
+<li/> As with <code>awk</code>, <code>$</code>-variables are stream variables and all
+verbs (such as <code>cut</code>, <code>stats1</code>, <code>put</code>, etc.) as well as
+<code>put</code>/<code>filter</code> statements operate on streams.  This means that
 you define actions to be done on each record and then stream your data through
-those actions.  The built-in variables <tt>NF</tt>, <tt>NR</tt>, etc.  change
-from one line to another, <tt>$x</tt> is a label for field <tt>x</tt> in the
-current record, and the input to <tt>sqrt($x)</tt> changes from one record to
-the next.  The expression language for the <tt>put</tt> and <tt>filter</tt>
-verbs additionally allows you to define <tt>begin {...}</tt> and
-<tt>end {...}</tt> blocks for actions to be taken before and after records are
+those actions.  The built-in variables <code>NF</code>, <code>NR</code>, etc.  change
+from one line to another, <code>$x</code> is a label for field <code>x</code> in the
+current record, and the input to <code>sqrt($x)</code> changes from one record to
+the next.  The expression language for the <code>put</code> and <code>filter</code>
+verbs additionally allows you to define <code>begin {...}</code> and
+<code>end {...}</code> blocks for actions to be taken before and after records are
 processed, respectively.
 
-<li/> As with <tt>awk</tt>, Miller&rsquo;s <tt>put</tt>/<tt>filter</tt>
-language lets you set <tt>@sum=0</tt> before records are read, then update that
-sum on each record, then print its value at the end.  Unlike <tt>awk</tt>,
+<li/> As with <code>awk</code>, Miller&rsquo;s <code>put</code>/<code>filter</code>
+language lets you set <code>@sum=0</code> before records are read, then update that
+sum on each record, then print its value at the end.  Unlike <code>awk</code>,
 Miller makes syntactically explicit the difference between variables with
-extent across all records (names starting with <tt>@</tt>, such as
-<tt>@sum</tt>) and variables which are local to the current expression (names
-starting without <tt>@</tt>, such as <tt>sum</tt>).
+extent across all records (names starting with <code>@</code>, such as
+<code>@sum</code>) and variables which are local to the current expression (names
+starting without <code>@</code>, such as <code>sum</code>).
 
-<li/> Miller can be faster than <tt>awk</tt>, <tt>cut</tt>, and so on,
+<li/> Miller can be faster than <code>awk</code>, <code>cut</code>, and so on,
 depending on platform; see also <a href="performance.html">Performance</a>).
 In particular, Miller&rsquo;s DSL syntax is parsed into C control structures at
 startup time, with the bulk data-stream processing all done in C.
@@ -304,13 +315,10 @@ startup time, with the bulk data-stream processing all done in C.
 
 <a id="See_also"/><h1>See also</h1>
 
-<p/>See <a href="reference.html">Reference</a> for more on Miller&rsquo;s
-subcommands <tt>cat</tt>, <tt>cut</tt>, <tt>head</tt>, <tt>sort</tt>,
-<tt>tac</tt>, <tt>tail</tt>, <tt>top</tt>, and <tt>uniq</tt>, as well as awk-like
-<tt>mlr filter</tt> and <tt>mlr put</tt>.
-    </div>
-  </td>
+<p/>See <a href="reference.html">Main reference</a> for more on Miller&rsquo;s
+subcommands <code>cat</code>, <code>cut</code>, <code>head</code>, <code>sort</code>,
+<code>tac</code>, <code>tail</code>, <code>top</code>, and <code>uniq</code>, as well as awk-like
+<code>mlr filter</code> and <code>mlr put</code>.
 
-</table>
 </body>
 </html>

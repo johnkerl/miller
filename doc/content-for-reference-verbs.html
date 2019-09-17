@@ -1,25 +1,25 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="expand_all();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="collapse_all();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
 
 <!-- ================================================================ -->
 <h1>Overview</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_overview" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_overview" style="display: block">
 
 <p/>
-When you type <tt>mlr {something} myfile.dat</tt>, the <tt>{something}</tt>
+When you type <code>mlr {something} myfile.dat</code>, the <code>{something}</code>
 part is called a <b>verb</b>. It specifies how you want to transform your data.
 (See also <a href="reference.html#Command_overview">here</a> for a breakdown.)
 The following is an alphabetical list of verbs with their descriptions.
 
-<p/> The verbs <tt>put</tt> and <tt>filter</tt> are special in that they have a
+<p/> The verbs <code>put</code> and <code>filter</code> are special in that they have a
 rich expression language (domain-specific language, or &ldquo;DSL&rdquo;).
 More information about them can be found <a href="reference-dsl.html">here</a>.
 
-<p/> Here&rsquo;s a comparison of verbs and <tt>put</tt>/<tt>filter</tt> DSL expressions:
+<p/> Here&rsquo;s a comparison of verbs and <code>put</code>/<code>filter</code> DSL expressions:
 
 <table border=1>
 <tr> <td>
@@ -50,8 +50,8 @@ More information about them can be found <a href="reference-dsl.html">here</a>.
 </div>
 <!-- ================================================================ -->
 <h1>altkv</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_bar');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_bar" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_bar');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_bar" style="display: block">
 
 <p/> Map list of values to alternating key/value pairs.
 
@@ -63,8 +63,8 @@ POKI_RUN_COMMAND{{echo 'a,b,c,d,e,f,g' | mlr altkv}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>bar</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_bar');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_bar" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_bar');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_bar" style="display: block">
 
 <p/> Cheesy bar-charting.
 
@@ -81,8 +81,8 @@ POKI_RUN_COMMAND{{mlr --opprint bar --auto -f x,y data/small}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>bootstrap</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_bootstrap');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_bootstrap" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_bootstrap');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_bootstrap" style="display: block">
 
 POKI_RUN_COMMAND{{mlr bootstrap --help}}HERE
 
@@ -133,8 +133,8 @@ orange 0.468014 292
 </div>
 <!-- ================================================================ -->
 <h1>cat</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_cat');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_cat" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_cat');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_cat" style="display: block">
 
 <p/> Most useful for format conversions (see
 POKI_PUT_LINK_FOR_PAGE(file-formats.html)HERE), and concatenating multiple
@@ -167,16 +167,16 @@ POKI_RUN_COMMAND{{mlr --opprint cat -n -g a data/small}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>check</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_check');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_check" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_check');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_check" style="display: block">
 
 POKI_RUN_COMMAND{{mlr check --help}}HERE
 
 </div>
 <!-- ================================================================ -->
 <h1>clean-whitespace</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_clean_whitespace');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_clean_whitespace" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_clean_whitespace');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_clean_whitespace" style="display: block">
 
 POKI_RUN_COMMAND{{mlr clean-whitespace --help}}HERE
 
@@ -197,8 +197,8 @@ POKI_RUN_COMMAND{{mlr --icsv --ojson clean-whitespace data/clean-whitespace.csv}
 </div>
 <!-- ================================================================ -->
 <h1>count-distinct</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_count_distinct');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_count_distinct" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_count_distinct');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_count_distinct" style="display: block">
 
 POKI_RUN_COMMAND{{mlr count-distinct --help}}HERE
 
@@ -213,8 +213,8 @@ POKI_RUN_COMMAND{{mlr count-distinct -n -f a,b data/medium}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>count-similar</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_count_similar');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_count_similar" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_count_similar');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_count_similar" style="display: block">
 
 POKI_RUN_COMMAND{{mlr count-similar --help}}HERE
 
@@ -227,8 +227,8 @@ POKI_RUN_COMMAND{{mlr --opprint head -n 20 then count-similar -g a then sort -f 
 </div>
 <!-- ================================================================ -->
 <h1>cut</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_cut');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_cut" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_cut');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_cut" style="display: block">
 
 POKI_RUN_COMMAND{{mlr cut --help}}HERE
 
@@ -245,8 +245,8 @@ POKI_RUN_COMMAND{{echo 'a=1,b=2,c=3' | mlr cut -o -f b,c,a}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>decimate</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_decimate');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_decimate" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_decimate');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_decimate" style="display: block">
 
 POKI_RUN_COMMAND{{mlr decimate --help}}HERE
 
@@ -255,8 +255,8 @@ POKI_RUN_COMMAND{{mlr decimate --help}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>fill-down</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_fill_down');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_fill_down" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_fill_down');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_fill_down" style="display: block">
 
 POKI_RUN_COMMAND{{mlr fill-down --help}}HERE
 
@@ -267,8 +267,8 @@ POKI_RUN_COMMAND{{mlr --csv fill-down -a -f b data/fill-down.csv}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>filter</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_filter');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_filter" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_filter');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_filter" style="display: block">
 
 POKI_RUN_COMMAND{{mlr filter --help}}HERE
 
@@ -276,13 +276,13 @@ POKI_RUN_COMMAND{{mlr filter --help}}HERE
 
 <p/>Please see <a href="#Expression_language_for_filter_and_put">Expression
 language for filter and put</a> for more information about the expression
-language for <tt>mlr filter</tt>.
+language for <code>mlr filter</code>.
 
 </div>
 <!-- ================================================================ -->
 <h1>format-values</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_format_values');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_format_values" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_format_values');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_format_values" style="display: block">
 
 POKI_RUN_COMMAND{{mlr format-values --help}}HERE
 
@@ -294,8 +294,8 @@ POKI_RUN_COMMAND{{mlr --opprint format-values -i %08llx -f %.6le -s X%sX -n data
 </div>
 <!-- ================================================================ -->
 <h1>fraction</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_decimate');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_decimate" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_decimate');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_decimate" style="display: block">
 
 POKI_RUN_COMMAND{{mlr fraction --help}}HERE
 
@@ -303,11 +303,11 @@ POKI_RUN_COMMAND{{mlr fraction --help}}HERE
 
 POKI_INCLUDE_ESCAPED(data/fraction-example.csv)HERE
 
-<p/>Then we can see what each record&rsquo;s <tt>n</tt> contributes to the total <tt>n</tt>:
+<p/>Then we can see what each record&rsquo;s <code>n</code> contributes to the total <code>n</code>:
 
 POKI_RUN_COMMAND{{mlr --opprint fraction -f n data/fraction-example.csv}}HERE
 
-<p/>Using <tt>-g</tt> we can split those out by gender, or by color:
+<p/>Using <code>-g</code> we can split those out by gender, or by color:
 
 <table><tr> <td>
 POKI_RUN_COMMAND{{mlr --opprint fraction -f n -g u data/fraction-example.csv}}HERE
@@ -318,11 +318,11 @@ POKI_RUN_COMMAND{{mlr --opprint fraction -f n -g v data/fraction-example.csv}}HE
 <p/>We can see, for example, that 70.9% of females have red (on the left) while
 94.5% of reds are for females.
 
-<p/> To convert fractions to percents, you may use <tt>-p</tt>:
+<p/> To convert fractions to percents, you may use <code>-p</code>:
 POKI_RUN_COMMAND{{mlr --opprint fraction -f n -p data/fraction-example.csv}}HERE
 
 <p/> Another often-used idiom is to convert from a point distribution to a cumulative distribution, also
-known as &ldquo;running sums&rdquo;. Here, you can use <tt>-c</tt>:
+known as &ldquo;running sums&rdquo;. Here, you can use <code>-c</code>:
 
 POKI_RUN_COMMAND{{mlr --opprint fraction -f n -p -c data/fraction-example.csv}}HERE
 
@@ -333,20 +333,20 @@ POKI_RUN_COMMAND{{mlr --opprint fraction -f n -g u -p -c data/fraction-example.c
 </div>
 <!-- ================================================================ -->
 <h1>grep</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_grep');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_grep" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_grep');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_grep" style="display: block">
 
 POKI_RUN_COMMAND{{mlr grep -h}}HERE
 
 </div>
 <!-- ================================================================ -->
 <h1>group-by</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_group_by');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_group_by" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_group_by');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_group_by" style="display: block">
 
 POKI_RUN_COMMAND{{mlr group-by --help}}HERE
 
-<p/>This is similar to <tt>sort</tt> but with less work. Namely, Miller&rsquo;s
+<p/>This is similar to <code>sort</code> but with less work. Namely, Miller&rsquo;s
 sort has three steps: read through the data and append linked lists of records,
 one for each unique combination of the key-field values; after all records
 are read, sort the key-field values; then print each record-list. The group-by
@@ -359,13 +359,13 @@ POKI_RUN_COMMAND{{mlr --opprint group-by a data/small}}HERE
 POKI_RUN_COMMAND{{mlr --opprint sort -f a data/small}}HERE
 </td> </tr></table>
 
-<p/>In this example, since the sort is on field <tt>a</tt>, the first step is
-to group together all records having the same value for field <tt>a</tt>; the
-second step is to sort the distinct <tt>a</tt>-field values <tt>pan</tt>,
-<tt>eks</tt>, and <tt>wye</tt> into <tt>eks</tt>, <tt>pan</tt>, and
-<tt>wye</tt>; the third step is to print out the record-list for
-<tt>a=eks</tt>, then the record-list for <tt>a=pan</tt>, then the record-list
-for <tt>a=wye</tt>.  The group-by operation omits the middle sort and just puts
+<p/>In this example, since the sort is on field <code>a</code>, the first step is
+to group together all records having the same value for field <code>a</code>; the
+second step is to sort the distinct <code>a</code>-field values <code>pan</code>,
+<code>eks</code>, and <code>wye</code> into <code>eks</code>, <code>pan</code>, and
+<code>wye</code>; the third step is to print out the record-list for
+<code>a=eks</code>, then the record-list for <code>a=pan</code>, then the record-list
+for <code>a=wye</code>.  The group-by operation omits the middle sort and just puts
 like records together, for those times when a sort isn&rsquo;t desired. In
 particular, the ordering of group-by fields for group-by is the order in which
 they were encountered in the data stream, which in some cases may be more interesting
@@ -374,8 +374,8 @@ to you.
 </div>
 <!-- ================================================================ -->
 <h1>group-like</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_group_like');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_group_like" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_group_like');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_group_like" style="display: block">
 
 POKI_RUN_COMMAND{{mlr group-like --help}}HERE
 
@@ -393,12 +393,12 @@ POKI_RUN_COMMAND{{mlr --opprint group-like data/het.dkvp}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>having-fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_having_fields');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_having_fields" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_having_fields');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_having_fields" style="display: block">
 
 POKI_RUN_COMMAND{{mlr having-fields --help}}HERE
 
-<p/> Similar to <a href="#group-like"><tt>group-like</tt></a>, this retains records with specified schema.
+<p/> Similar to <a href="#group-like"><code>group-like</code></a>, this retains records with specified schema.
 
 <table><tr><td>
 POKI_RUN_COMMAND{{mlr cat data/het.dkvp}}HERE
@@ -411,14 +411,14 @@ POKI_RUN_COMMAND{{mlr having-fields --which-are resource,ok,loadsec data/het.dkv
 </div>
 <!-- ================================================================ -->
 <h1>head</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_head');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_head" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_head');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_head" style="display: block">
 
 POKI_RUN_COMMAND{{mlr head --help}}HERE
 
-Note that <tt>head</tt> is distinct from <a href="#top"><tt>top</tt></a>
-&mdash; <tt>head</tt> shows fields which appear first in the data stream;
-<tt>top</tt> shows fields which are numerically largest (or smallest).
+Note that <code>head</code> is distinct from <a href="#top"><code>top</code></a>
+&mdash; <code>head</code> shows fields which appear first in the data stream;
+<code>top</code> shows fields which are numerically largest (or smallest).
 
 <table><tr><td>
 POKI_RUN_COMMAND{{mlr --opprint head -n 4 data/medium}}HERE
@@ -429,17 +429,17 @@ POKI_RUN_COMMAND{{mlr --opprint head -n 1 -g b data/medium}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>histogram</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_histogram');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_histogram" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_histogram');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_histogram" style="display: block">
 
 POKI_RUN_COMMAND{{mlr histogram --help}}HERE
 
 This is just a histogram; there&rsquo;s not too much to say here. A note about
-binning, by example: Suppose you use <tt>--lo 0.0 --hi 1.0 --nbins 10 -f
-x</tt>.  The input numbers less than 0 or greater than 1 aren&rsquo;t counted
+binning, by example: Suppose you use <code>--lo 0.0 --hi 1.0 --nbins 10 -f
+x</code>.  The input numbers less than 0 or greater than 1 aren&rsquo;t counted
 in any bin.  Input numbers equal to 1 are counted in the last bin. That is, bin
-0 has <tt>0.0 &le; x &lt; 0.1</tt>, bin 1 has <tt>0.1 &le; x &lt; 0.2</tt>,
-etc., but bin 9 has <tt>0.9 &le; x &le; 1.0</tt>.
+0 has <code>0.0 &le; x &lt; 0.1</code>, bin 1 has <code>0.1 &le; x &lt; 0.2</code>,
+etc., but bin 9 has <code>0.9 &le; x &le; 1.0</code>.
 
 POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x2,x3 --lo 0 --hi 1 --nbins 10 data/medium}}HERE
 
@@ -448,8 +448,8 @@ POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x**2;$x3=$x2*$x' then histogram -f x,x
 </div>
 <!-- ================================================================ -->
 <h1>join</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_join');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_join" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_join');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_join" style="display: block">
 
 POKI_RUN_COMMAND{{mlr join --help}}HERE
 
@@ -490,19 +490,19 @@ POKI_RUN_COMMAND{{mlr --csvlite --opprint join -j "" --lp left_ --rp right_ -f d
 </div>
 <!-- ================================================================ -->
 <h1>label</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_label');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_label" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_label');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_label" style="display: block">
 
 POKI_RUN_COMMAND{{mlr label --help}}HERE
 
-See also <a href="#rename"><tt>rename</tt></a>.
+See also <a href="#rename"><code>rename</code></a>.
 
-<p/>Example: Files such as <tt>/etc/passwd</tt>, <tt>/etc/group</tt>, and so on
+<p/>Example: Files such as <code>/etc/passwd</code>, <code>/etc/group</code>, and so on
 have implicit field names which are found in section-5 manpages. These field names may be made explicit as follows:
 
 POKI_INCLUDE_ESCAPED(data/label-example.txt)HERE
 
-<p/>Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of its header line, you can re-add a header line using <tt>--implicit-csv-header</tt> and <tt>label</tt>:
+<p/>Likewise, if you have CSV/CSV-lite input data which has somehow been bereft of its header line, you can re-add a header line using <code>--implicit-csv-header</code> and <code>label</code>:
 
 POKI_RUN_COMMAND{{cat data/headerless.csv}}HERE
 POKI_RUN_COMMAND{{mlr  --csv --implicit-csv-header cat data/headerless.csv}}HERE
@@ -512,8 +512,8 @@ POKI_RUN_COMMAND{{mlr --icsv --implicit-csv-header --opprint label name,age,stat
 </div>
 <!-- ================================================================ -->
 <h1>least-frequent</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_least_frequent');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_least_frequent" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_least_frequent');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_least_frequent" style="display: block">
 
 POKI_RUN_COMMAND{{mlr least-frequent -h}}HERE
 
@@ -530,12 +530,12 @@ See also <a href="#most-frequent">most-frequent</a>.
 </div>
 <!-- ================================================================ -->
 <h1>merge-fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_merge_fields');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_merge_fields" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_merge_fields');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_merge_fields" style="display: block">
 
 POKI_RUN_COMMAND{{mlr merge-fields --help}}HERE
 
-<p/>This is like <tt>mlr stats1</tt> but all accumulation is done across fields
+<p/>This is like <code>mlr stats1</code> but all accumulation is done across fields
 within each given record: horizontal rather than vertical statistics, if you
 will.
 
@@ -548,8 +548,8 @@ POKI_RUN_COMMAND{{mlr --csvlite --opprint merge-fields -k -a sum -c _in,_out dat
 </div>
 <!-- ================================================================ -->
 <h1>most-frequent</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_most_frequent');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_most_frequent" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_most_frequent');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_most_frequent" style="display: block">
 
 POKI_RUN_COMMAND{{mlr most-frequent -h}}HERE
 
@@ -566,24 +566,24 @@ See also <a href="#least-frequent">least-frequent</a>.
 </div>
 <!-- ================================================================ -->
 <h1>nest</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_nest');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_nest" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_nest');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_nest" style="display: block">
 
 POKI_RUN_COMMAND{{mlr nest -h}}HERE
 
 </div>
 <!-- ================================================================ -->
 <h1>nothing</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_nothing');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_nothing" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_nothing');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_nothing" style="display: block">
 
 POKI_RUN_COMMAND{{mlr nothing -h}}HERE
 
 </div>
 <!-- ================================================================ -->
 <h1>put</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_put');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_put" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_put');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_put" style="display: block">
 
 POKI_RUN_COMMAND{{mlr put --help}}HERE
 
@@ -591,27 +591,27 @@ POKI_RUN_COMMAND{{mlr put --help}}HERE
 
 <p/>Please see <a href="#Expression_language_for_filter_and_put">Expression
 language for filter and put</a> for more information about the expression
-language for <tt>mlr put</tt>.
+language for <code>mlr put</code>.
 
 </div>
 <!-- ================================================================ -->
 <h1>regularize</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_regularize');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_regularize" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_regularize');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_regularize" style="display: block">
 
 POKI_RUN_COMMAND{{mlr regularize --help}}HERE
 
 <p/>This exists since hash-map software in various languages and tools
 encountered in the wild does not always print similar rows with fields in the
-same order: <tt>mlr regularize</tt> helps clean that up.
+same order: <code>mlr regularize</code> helps clean that up.
 
-<p/>See also <a href="#reorder"><tt>reorder</tt></a>.
+<p/>See also <a href="#reorder"><code>reorder</code></a>.
 
 </div>
 <!-- ================================================================ -->
 <h1>remove-empty-columns</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_remove_empty_columns');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_remove_empty_columns" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_remove_empty_columns');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_remove_empty_columns" style="display: block">
 
 <p/>
 POKI_RUN_COMMAND{{mlr remove-empty-columns --help}}HERE
@@ -625,8 +625,8 @@ all records before writing any.
 </div>
 <!-- ================================================================ -->
 <h1>rename</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_rename');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_rename" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_rename');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_rename" style="display: block">
 
 POKI_RUN_COMMAND{{mlr rename --help}}HERE
 
@@ -636,7 +636,7 @@ POKI_RUN_COMMAND{{mlr --opprint cat data/small}}HERE
 POKI_RUN_COMMAND{{mlr --opprint rename i,INDEX,b,COLUMN2 data/small}}HERE
 </td></tr></table>
 
-<p/>As discussed in POKI_PUT_LINK_FOR_PAGE(performance.html)HERE, <tt>sed</tt>
+<p/>As discussed in POKI_PUT_LINK_FOR_PAGE(performance.html)HERE, <code>sed</code>
 is significantly faster than Miller at doing this. However, Miller is
 format-aware, so it knows to do renames only within specified field keys and
 not any others, nor in field values which may happen to contain the same
@@ -648,13 +648,13 @@ POKI_RUN_COMMAND{{sed 's/y/COLUMN5/g' data/small}}HERE
 POKI_RUN_COMMAND{{mlr rename y,COLUMN5 data/small}}HERE
 </td></tr></table>
 
-See also <a href="#label"><tt>label</tt></a>.
+See also <a href="#label"><code>label</code></a>.
 
 </div>
 <!-- ================================================================ -->
 <h1>reorder</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_reorder');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_reorder" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_reorder');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_reorder" style="display: block">
 
 POKI_RUN_COMMAND{{mlr reorder --help}}HERE
 
@@ -673,72 +673,72 @@ POKI_RUN_COMMAND{{mlr --opprint reorder -e -f i,b data/small}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>repeat</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_repeat');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_repeat" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_repeat');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_repeat" style="display: block">
 
 POKI_RUN_COMMAND{{mlr repeat --help}}HERE
 
 <p>This is useful in at least two ways: one, as a data-generator as in the
-above example using <tt>urand()</tt>; two, for reconstructing individual
+above example using <code>urand()</code>; two, for reconstructing individual
 samples from data which has been count-aggregated:
 
 POKI_RUN_COMMAND{{cat data/repeat-example.dat}}HERE
 
 POKI_RUN_COMMAND{{mlr repeat -f count then cut -x -f count data/repeat-example.dat}}HERE
 
-<p>After expansion with <tt>repeat</tt>, such data can then be sent on to
-<tt>stats1 -a mode</tt>, or (if the data are numeric) to <tt>stats1 -a
-p10,p50,p90</tt>, etc.
+<p>After expansion with <code>repeat</code>, such data can then be sent on to
+<code>stats1 -a mode</code>, or (if the data are numeric) to <code>stats1 -a
+p10,p50,p90</code>, etc.
 
 </div>
 <!-- ================================================================ -->
 <h1>reshape</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_reshape');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_reshape" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_reshape');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_reshape" style="display: block">
 
 POKI_RUN_COMMAND{{mlr reshape --help}}HERE
 
 </div>
 <!-- ================================================================ -->
 <h1>sample</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sample');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_sample" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_sample');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_sample" style="display: block">
 
 POKI_RUN_COMMAND{{mlr sample --help}}HERE
 
 <p/>This is reservoir-sampling: select <i>k</i> items from <i>n</i> with
 uniform probability and no repeats in the sample. (If <i>n</i> is less than
-<i>k</i>, then of course only <i>n</i> samples are produced.) With <tt>-g
-{field names}</tt>, produce a <i>k</i>-sample for each distinct value of the
+<i>k</i>, then of course only <i>n</i> samples are produced.) With <code>-g
+{field names}</code>, produce a <i>k</i>-sample for each distinct value of the
 specified field names.
 
 POKI_INCLUDE_ESCAPED(data/sample-example.txt)HERE
 
 <p/>Note that no output is produced until all inputs are in. Another way to do
-sampling, which works in the streaming case, is <tt>mlr filter 'urand() &amp;
-0.001'</tt> where you tune the 0.001 to meet your needs.
+sampling, which works in the streaming case, is <code>mlr filter 'urand() &amp;
+0.001'</code> where you tune the 0.001 to meet your needs.
 
 </div>
 <!-- ================================================================ -->
 <h1>sec2gmt</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_seg2gmt');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_seg2gmt" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_seg2gmt');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_seg2gmt" style="display: block">
 
 POKI_RUN_COMMAND{{mlr sec2gmt -h}}HERE
 
 </div>
 <!-- ================================================================ -->
 <h1>sec2gmtdate</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_seg2gmtdate');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_seg2gmtdate" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_seg2gmtdate');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_seg2gmtdate" style="display: block">
 
 POKI_RUN_COMMAND{{mlr sec2gmtdate -h}}HERE
 
 </div>
 <!-- ================================================================ -->
 <h1>seqgen</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_seqgen');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_seqgen" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_seqgen');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_seqgen" style="display: block">
 
 POKI_RUN_COMMAND{{mlr seqgen -h}}HERE
 
@@ -749,16 +749,16 @@ POKI_RUN_COMMAND{{mlr seqgen --start 40 --stop 20 --step -4}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>shuffle</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_shuffle');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_shuffle" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_shuffle');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_shuffle" style="display: block">
 
 POKI_RUN_COMMAND{{mlr shuffle -h}}HERE
 
 </div>
 <!-- ================================================================ -->
 <h1>skip-trivial-records</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_skip_trivial_records');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_skip_trivial_records" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_skip_trivial_records');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_skip_trivial_records" style="display: block">
 
 <p/>
 
@@ -769,8 +769,8 @@ POKI_RUN_COMMAND{{mlr --csv skip-trivial-records data/trivial-records.csv}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>sort</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_sort');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_sort" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_sort');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_sort" style="display: block">
 
 POKI_RUN_COMMAND{{mlr sort --help}}HERE
 
@@ -782,7 +782,7 @@ POKI_RUN_COMMAND{{mlr --opprint sort -f a -nr x data/small}}HERE
 POKI_RUN_COMMAND{{head -n 10 data/multicountdown.dat}}HERE
 
 <p/> We can group these by thread by sorting on the thread ID (here,
-<tt>color</tt>). Since Miller&rsquo;s sort is stable, this means that
+<code>color</code>). Since Miller&rsquo;s sort is stable, this means that
 timestamps within each thread&rsquo;s log data are still chronological:
 
 POKI_RUN_COMMAND{{head -n 20 data/multicountdown.dat | mlr --opprint sort -f color}}HERE
@@ -796,13 +796,13 @@ POKI_RUN_COMMAND{{mlr sort -nr x data/sort-missing.dkvp}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>stats1</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_stats1');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_stats1" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_stats1');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_stats1" style="display: block">
 
 POKI_RUN_COMMAND{{mlr stats1 --help}}HERE
 
 These are simple univariate statistics on one or more number-valued fields
-(<tt>count</tt> and <tt>mode</tt> apply to non-numeric fields as well),
+(<code>count</code> and <code>mode</code> apply to non-numeric fields as well),
 optionally categorized by one or more other fields.
 
 <table><tr><td>
@@ -820,8 +820,8 @@ POKI_RUN_COMMAND{{mlr --opprint stats1 -a mode -f color -g shape data/colored-sh
 </div>
 <!-- ================================================================ -->
 <h1>stats2</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_stats2');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_stats2" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_stats2');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_stats2" style="display: block">
 
 POKI_RUN_COMMAND{{mlr stats2 --help}}HERE
 
@@ -834,13 +834,13 @@ POKI_RUN_COMMAND{{mlr --oxtab put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 
 POKI_RUN_COMMAND{{mlr --opprint put '$x2=$x*$x; $xy=$x*$y; $y2=$y**2' then stats2 -a linreg-ols,r2 -f x,y,y,y,xy,y2 -g a data/medium}}HERE
 </td></tr></table>
 
-<p/>Here&rsquo;s an example simple line-fit. The <tt>x</tt> and <tt>y</tt>
-fields of the <tt>data/medium</tt> dataset are just independent uniformly
+<p/>Here&rsquo;s an example simple line-fit. The <code>x</code> and <code>y</code>
+fields of the <code>data/medium</code> dataset are just independent uniformly
 distributed on the unit interval. Here we remove half the data and fit a line to it.
 
 POKI_INCLUDE_ESCAPED(data/linreg-example.txt)HERE
 
-<p/>I use <a href="https://github.com/johnkerl/pgr"><tt>pgr</tt></a> for
+<p/>I use <a href="https://github.com/johnkerl/pgr"><code>pgr</code></a> for
 plotting; here&rsquo;s a screenshot.
 
 <center>
@@ -851,27 +851,27 @@ plotting; here&rsquo;s a screenshot.
 
 <p/> Here&rsquo;s an example estimating time-to-completion for a set of jobs.
 Input data comes from a log file, with number of work units left to do in the
-<tt>count</tt> field and accumulated seconds in the <tt>upsec</tt> field,
-labeled by the <tt>color</tt> field:
+<code>count</code> field and accumulated seconds in the <code>upsec</code> field,
+labeled by the <code>color</code> field:
 
 POKI_RUN_COMMAND{{head -n 10 data/multicountdown.dat}}HERE
 
-We can do a linear regression on count remaining as a function of time: with <tt>c = m*u+b</tt> we want to find the
-time when the count goes to zero, i.e. <tt>u=-b/m</tt>.
+We can do a linear regression on count remaining as a function of time: with <code>c = m*u+b</code> we want to find the
+time when the count goes to zero, i.e. <code>u=-b/m</code>.
 
 POKI_RUN_COMMAND{{mlr --oxtab stats2 -a linreg-pca -f upsec,count -g color then put '$donesec = -$upsec_count_pca_b/$upsec_count_pca_m' data/multicountdown.dat}}HERE
 
 </div>
 <!-- ================================================================ -->
 <h1>step</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_step');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_step" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_step');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_step" style="display: block">
 
 POKI_RUN_COMMAND{{mlr step --help}}HERE
 
-Most Miller commands are record-at-a-time, with the exception of <tt>stats1</tt>,
-<tt>stats2</tt>, and <tt>histogram</tt> which compute aggregate output. The
-<tt>step</tt> command is intermediate: it allows the option of adding fields
+Most Miller commands are record-at-a-time, with the exception of <code>stats1</code>,
+<code>stats2</code>, and <code>histogram</code> which compute aggregate output. The
+<code>step</code> command is intermediate: it allows the option of adding fields
 which are functions of fields from previous records. Rsum is short for <i>running sum</i>.
 
 <table><tr><td>
@@ -891,8 +891,8 @@ POKI_INCLUDE_ESCAPED(data/ping-delta-example.txt)HERE
 </div>
 <!-- ================================================================ -->
 <h1>tac</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_tac');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_tac" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_tac');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_tac" style="display: block">
 
 POKI_RUN_COMMAND{{mlr tac --help}}HERE
 
@@ -914,8 +914,8 @@ POKI_RUN_COMMAND{{mlr --icsv --opprint put '$filename=FILENAME' then tac data/a.
 </div>
 <!-- ================================================================ -->
 <h1>tail</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_tail');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_tail" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_tail');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_tail" style="display: block">
 
 POKI_RUN_COMMAND{{mlr tail --help}}HERE
 
@@ -930,22 +930,22 @@ POKI_RUN_COMMAND{{mlr --opprint tail -n 1 -g shape data/colored-shapes.dkvp}}HER
 </div>
 <!-- ================================================================ -->
 <h1>tee</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_tee');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_tee" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_tee');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_tee" style="display: block">
 
 POKI_RUN_COMMAND{{mlr tee --help}}HERE
 
 </div>
 <!-- ================================================================ -->
 <h1>top</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_top');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_top" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_top');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_top" style="display: block">
 
 POKI_RUN_COMMAND{{mlr top --help}}HERE
 
-Note that <tt>top</tt> is distinct from <a href="#head"><tt>head</tt></a>
-&mdash; <tt>head</tt> shows fields which appear first in the data stream;
-<tt>top</tt> shows fields which are numerically largest (or smallest).
+Note that <code>top</code> is distinct from <a href="#head"><code>head</code></a>
+&mdash; <code>head</code> shows fields which appear first in the data stream;
+<code>top</code> shows fields which are numerically largest (or smallest).
 
 <table><tr><td>
 POKI_RUN_COMMAND{{mlr --opprint top -n 4 -f x data/medium}}HERE
@@ -958,12 +958,12 @@ POKI_RUN_COMMAND{{mlr --opprint top -n 2 -f x -g a then sort -f a data/medium}}H
 </div>
 <!-- ================================================================ -->
 <h1>uniq</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_uniq');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_uniq" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_uniq');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_uniq" style="display: block">
 
 POKI_RUN_COMMAND{{mlr uniq --help}}HERE
 
-<p/>There are two main ways to use <tt>mlr uniq</tt>: the first way is with <tt>-g</tt> to specify group-by columns.
+<p/>There are two main ways to use <code>mlr uniq</code>: the first way is with <code>-g</code> to specify group-by columns.
 
 <table><tr><td>
 POKI_RUN_COMMAND{{wc -l data/colored-shapes.dkvp}}HERE
@@ -977,7 +977,7 @@ POKI_RUN_COMMAND{{mlr --opprint uniq -g color,shape -c -o someothername then sor
 POKI_RUN_COMMAND{{mlr --opprint uniq -n -g color,shape data/colored-shapes.dkvp}}HERE
 </td></tr></table>
 
-<p/>The second main way to use <tt>mlr uniq</tt> is without group-by columns, using <tt>-a</tt> instead:
+<p/>The second main way to use <code>mlr uniq</code> is without group-by columns, using <code>-a</code> instead:
 
 <table>
 <tr><td>
@@ -1007,8 +1007,8 @@ POKI_RUN_COMMAND{{cat data/repeats.dkvp}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>unsparsify</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="toggle_by_name('section_toggle_unsparsify');" href="javascript:;">Toggle section visibility</button>
-<div id="section_toggle_unsparsify" style="display: block">
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_unsparsify');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_unsparsify" style="display: block">
 
 POKI_RUN_COMMAND{{mlr unsparsify --help}}HERE
 

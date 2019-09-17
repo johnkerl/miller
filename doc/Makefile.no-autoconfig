@@ -12,7 +12,7 @@ INSTALLDIR=/usr/local/share/man/man1
 INSTALLHOME=$(HOME)/man/man1
 
 html: manpage.txt .always
-	poki
+	./poki
 manpage: .always
 	mkman.rb > mlr.1
 manpage.txt: .always

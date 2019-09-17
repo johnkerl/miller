@@ -1,15 +1,14 @@
 
 .pokinav {
   display:        inline-block;
+  border:         1px solid black;
   background:     #e8d9bc;
-  border:         1;
   box-shadow:     0px 0px 3px 3px #C9C9C9;
   margin:         10px;
   padding-top:    10px;
   padding-bottom: 10px;
   padding-left:   10px;
   padding-right:  10px;
-  height: 1500px;
 }
 
 .pokitoc {
