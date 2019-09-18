@@ -47,14 +47,17 @@
         },
         {
           "external_name": "Cookbook part 1",
+          "external_subname": "Common patterns",
           "file_name": "cookbook.html"
         },
         {
           "external_name": "Cookbook part 2",
+          "external_subname": "Random things, and some math",
           "file_name": "cookbook2.html"
         },
         {
           "external_name": "Cookbook part 3",
+          "external_subname": "Stats with and without out-of-stream variables",
           "file_name": "cookbook3.html"
         },
         {

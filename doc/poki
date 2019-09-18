@@ -310,8 +310,13 @@ def generate_toc(overall_config, section_config, page_config, input_html_path, o
   end
 
   page_title = page_config.fetch('external_name')
+  page_subtitle = page_config['external_subname'] # nullable
   output_handle.puts('<div class="pokitoc">')
-  output_handle.puts("<center><titleinbody>#{page_title}</titleinbody></center>")
+  if page_subtitle.nil?
+    output_handle.puts("<center><titleinbody>#{page_title}</titleinbody></center>")
+  else
+    output_handle.puts("<center><titleinbody>#{page_title}: #{page_subtitle}</titleinbody></center>")
+  end
   tags.each do |tag|
     # Indent h2 more than h1, h3 more than h2, etc.
     depths[tag].times{output_handle.write "&nbsp;&nbsp;&nbsp;&nbsp;"}
