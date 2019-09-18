@@ -100,7 +100,6 @@ def generate_pages(overall_config)
       # External links aren't associated with a local input HTML file.
       next unless page_config['file_name'] # nullable
 
-      # xxx lots of null-checks :(
       input_html_path = "#{overall_config.fetch('content_file_prefix')}#{page_config.fetch('file_name')}"
       output_html_name = page_config.fetch('file_name')
       generate_page(overall_config, section_config, page_config, input_html_path, output_html_name)
@@ -160,7 +159,6 @@ def generate_navbar(overall_config, section_config, page_config, output_html_nam
     other_section_internal_name = other_section_config.fetch('internal_name')
     other_section_external_name = other_section_config.fetch('external_name')
     font_weight = 'normal'
-    # xxx at top of fcn
     if (other_section_internal_name == section_config.fetch('internal_name'))
       font_weight = 'bold'
     end
@@ -178,7 +176,6 @@ def generate_navbar(overall_config, section_config, page_config, output_html_nam
     other_section_internal_name = other_section_config.fetch('internal_name')
     other_section_external_name = other_section_config.fetch('external_name')
     display = 'none'
-    # xxx at top of fcn
     if (other_section_internal_name == section_config.fetch('internal_name'))
       display = 'block'
     end
@@ -264,7 +261,6 @@ def generate_page_body(overall_config, section_config, page_config, input_html_p
       other_page_link = $1
       other_page_name = other_page_link.sub(/#.*/, '')
 
-      # xxx clean up naming ...
       other_page_title = nil
       for loop_section_config in overall_config.fetch('sections')
         for loop_page_config in loop_section_config.fetch('pages')
