@@ -6,6 +6,12 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
+poki updates:
+* nullable subtitles -> TOCs
+* one big master-TOC page -- ?
+* general refactors
+* fold back to gh/jk/poki
+
 quick doc:
 * multi-join @ FAQ
 * doc/bld note for vgrun oo
@@ -15,16 +21,11 @@ quick doc:
   - vgrun mlr ...
 
 * sort-within-records
-* system()
 * LUA-style
 * inf/nan in strings ...
 
-* valgrind all since 5.5.0
-
 * linear rename:
   - new UTs
-
-* oo w/ indir
 
 ================================================================
 

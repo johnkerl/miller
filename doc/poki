@@ -13,19 +13,13 @@
 # ================================================================
 
 $us                           = File.basename $0
+$default_config_file_name     = "poki-cfg.json"
 $output_file_mode_during_edit = 0644;
 $output_file_mode_after_edit  = 0444;
-
-# xxx required argument
-$default_config_file_name     = "poki-cfg.json"
 
 require 'getoptlong'
 require 'fileutils'
 require 'json'
-
-# xxx irb(main):003:0> x=JSON.load(File.read('poki-cfg.json'))
-
-# ruby -e "require 'JSON'; puts JSON.load File.read 'poki-cfg.json'"
 
 # ================================================================
 def usage()
@@ -64,8 +58,6 @@ def main()
   end
   usage if ARGV.length != 0
 
-  # xxx config as required argument. with looping. and -h if empty.
-
   overall_config = load_config_file(config_file_name)
 
   generate_pages(overall_config)
@@ -73,8 +65,6 @@ end
 
 # ================================================================
 # Sample config file:
-
-# xxx more
 
 # {
 #   "main_title": "Main Title",
@@ -101,16 +91,18 @@ def load_config_file(config_file_name)
 end
 
 # ================================================================
+# Note: we use map.fetch('key') throughout so it will raise KeyError on missing
+# values, rathre than map['key'] which will return nil.
 def generate_pages(overall_config)
-  for section_config in overall_config['sections']
-    for page_config in section_config['pages']
+  for section_config in overall_config.fetch('sections')
+    for page_config in section_config.fetch('pages')
 
       # External links aren't associated with a local input HTML file.
-      next unless page_config['file_name']
+      next unless page_config['file_name'] # nullable
 
       # xxx lots of null-checks :(
-      input_html_path = "#{overall_config['content_file_prefix']}#{page_config['file_name']}"
-      output_html_name = page_config['file_name']
+      input_html_path = "#{overall_config.fetch('content_file_prefix')}#{page_config.fetch('file_name')}"
+      output_html_name = page_config.fetch('file_name')
       generate_page(overall_config, section_config, page_config, input_html_path, output_html_name)
 
     end
@@ -122,8 +114,8 @@ def generate_page(overall_config, section_config, page_config, input_html_path, 
   if test(?f, output_html_name)
     FileUtils.chmod($output_file_mode_during_edit, output_html_name)
   end
-  template_file_name = overall_config['template_file_name']
-  page_title = page_config['external_name']
+  template_file_name = overall_config.fetch('template_file_name')
+  page_title = page_config.fetch('external_name')
 
   File.open(output_html_name, "w", $output_file_mode_during_edit) do |output_handle|
     File.readlines(template_file_name).each do |template_line|
@@ -161,15 +153,15 @@ end
 
 # ----------------------------------------------------------------
 def generate_navbar(overall_config, section_config, page_config, output_html_name, output_handle)
-  template_file_name = overall_config['template_file_name']
+  template_file_name = overall_config.fetch('template_file_name')
   output_handle.puts "<!-- NAVBAR GENERATED FROM #{template_file_name} BY #{$us} -->"
 
-  for other_section_config in overall_config['sections']
-    other_section_internal_name = other_section_config['internal_name']
-    other_section_external_name = other_section_config['external_name']
+  for other_section_config in overall_config.fetch('sections')
+    other_section_internal_name = other_section_config.fetch('internal_name')
+    other_section_external_name = other_section_config.fetch('external_name')
     font_weight = 'normal'
     # xxx at top of fcn
-    if (other_section_internal_name == section_config['internal_name'])
+    if (other_section_internal_name == section_config.fetch('internal_name'))
       font_weight = 'bold'
     end
     output_handle.puts("<button");
@@ -182,19 +174,19 @@ def generate_navbar(overall_config, section_config, page_config, output_html_nam
     output_handle.puts("</button>");
   end
 
-  for other_section_config in overall_config['sections']
-    other_section_internal_name = other_section_config['internal_name']
-    other_section_external_name = other_section_config['external_name']
+  for other_section_config in overall_config.fetch('sections')
+    other_section_internal_name = other_section_config.fetch('internal_name')
+    other_section_external_name = other_section_config.fetch('external_name')
     display = 'none'
     # xxx at top of fcn
-    if (other_section_internal_name == section_config['internal_name'])
+    if (other_section_internal_name == section_config.fetch('internal_name'))
       display = 'block'
     end
     output_handle.puts("<div id=\"navbar_section_toggle_#{other_section_internal_name}\" style=\"display: #{display};text-align: left\">")
-    for other_page_config in other_section_config['pages']
-      other_page_file_name = other_page_config['file_name']
-      other_page_link_name = other_page_config['link']
-      other_page_external_name = other_page_config['external_name']
+    for other_page_config in other_section_config.fetch('pages')
+      other_page_file_name = other_page_config['file_name'] # nullable
+      other_page_link_name = other_page_config['link'] # nullable
+      other_page_external_name = other_page_config.fetch('external_name')
 
       if other_page_link_name != nil
         url = other_page_link_name.sub(/^ext:/, '')
@@ -274,10 +266,10 @@ def generate_page_body(overall_config, section_config, page_config, input_html_p
 
       # xxx clean up naming ...
       other_page_title = nil
-      for loop_section_config in overall_config['sections']
-        for loop_page_config in loop_section_config['pages']
-          loop_page_file_name = loop_page_config['file_name']
-          loop_page_external_name = loop_page_config['external_name']
+      for loop_section_config in overall_config.fetch('sections')
+        for loop_page_config in loop_section_config.fetch('pages')
+          loop_page_file_name = loop_page_config['file_name'] # nullable
+          loop_page_external_name = loop_page_config.fetch('external_name')
           if other_page_name == loop_page_file_name
             other_page_title = loop_page_external_name
           end
@@ -321,7 +313,7 @@ def generate_toc(overall_config, section_config, page_config, input_html_path, o
     end
   end
 
-  page_title = page_config['external_name']
+  page_title = page_config.fetch('external_name')
   output_handle.puts('<div class="pokitoc">')
   output_handle.puts("<center><titleinbody>#{page_title}</titleinbody></center>")
   tags.each do |tag|
