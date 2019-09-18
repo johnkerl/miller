@@ -10,7 +10,7 @@
   <meta name="keywords"
   content="John Kerl, Kerl, Miller, miller, mlr, OLAP, data analysis software, regression, correlation, variance, data tools, " />
 
-  <title> 10-minute intro </title>
+  <title> Mixing with other languages </title>
   <link rel="stylesheet" type="text/css" href="css2/miller.css"/>
   <link rel="stylesheet" type="text/css" href="css2/poki-callbacks.css"/>
 </head>
@@ -166,7 +166,8 @@ pageTracker._trackPageview();
 </div>
 <div id="navbar_section_toggle_using" style="display: block;text-align: left">
 <br/><a href="faq.html">FAQ</a>
-<br/><a href="data-sharing.html"><b>10-minute intro</b></a>
+<br/><a href="10-min.html">10-minute intro</a>
+<br/><a href="data-sharing.html"><b>Mixing with other languages</b></a>
 <br/><a href="cookbook.html">Cookbook part 1</a>
 <br/><a href="cookbook2.html">Cookbook part 2</a>
 <br/><a href="cookbook3.html">Cookbook part 3</a>
@@ -198,7 +199,7 @@ pageTracker._trackPageview();
 
 <!-- BODY COPIED FROM content-for-data-sharing.html BY poki -->
 <div class="pokitoc">
-<center><titleinbody>10-minute intro</titleinbody></center>
+<center><titleinbody>Mixing with other languages</titleinbody></center>
 &bull;&nbsp;<a href="#DKVP_I/O_in_Python">DKVP I/O in Python</a><br/>
 &bull;&nbsp;<a href="#DKVP_I/O_in_Ruby">DKVP I/O in Ruby</a><br/>
 &bull;&nbsp;<a href="#SQL-output_examples">SQL-output examples</a><br/>
@@ -569,11 +570,11 @@ wye pan 5 0.5732889198020006  0.8636244699032729  14ba3c3e96a2474ab6dc7409ebf9d6
 <pre>
 $ mlr --opprint put '$t=system("date +%s.%N")' then step -a delta -f t data/small
 a   b   i x                   y                   t                    t_delta
-pan pan 1 0.3467901443380824  0.7268028627434533  1568773890.746609440 0
-eks pan 2 0.7586799647899636  0.5221511083334797  1568773890.747514111 0.000905
-wye wye 3 0.20460330576630303 0.33831852551664776 1568773890.748402155 0.000888
-eks wye 4 0.38139939387114097 0.13418874328430463 1568773890.749289244 0.000887
-wye pan 5 0.5732889198020006  0.8636244699032729  1568773890.750172561 0.000883
+pan pan 1 0.3467901443380824  0.7268028627434533  1568774318.513903817 0
+eks pan 2 0.7586799647899636  0.5221511083334797  1568774318.514722876 0.000819
+wye wye 3 0.20460330576630303 0.33831852551664776 1568774318.515618046 0.000895
+eks wye 4 0.38139939387114097 0.13418874328430463 1568774318.516547441 0.000929
+wye pan 5 0.5732889198020006  0.8636244699032729  1568774318.517518828 0.000971
 </pre>
 </div>
 <p/>
@@ -582,11 +583,11 @@ wye pan 5 0.5732889198020006  0.8636244699032729  1568773890.750172561 0.000883
 <pre>
 $ mlr --opprint put '$t=systime()' then step -a delta -f t data/small
 a   b   i x                   y                   t                 t_delta
-pan pan 1 0.3467901443380824  0.7268028627434533  1568773890.751365 0
-eks pan 2 0.7586799647899636  0.5221511083334797  1568773890.751383 0.000018
-wye wye 3 0.20460330576630303 0.33831852551664776 1568773890.751389 0.000006
-eks wye 4 0.38139939387114097 0.13418874328430463 1568773890.751392 0.000003
-wye pan 5 0.5732889198020006  0.8636244699032729  1568773890.751396 0.000004
+pan pan 1 0.3467901443380824  0.7268028627434533  1568774318.518699 0
+eks pan 2 0.7586799647899636  0.5221511083334797  1568774318.518717 0.000018
+wye wye 3 0.20460330576630303 0.33831852551664776 1568774318.518723 0.000006
+eks wye 4 0.38139939387114097 0.13418874328430463 1568774318.518727 0.000004
+wye pan 5 0.5732889198020006  0.8636244699032729  1568774318.518730 0.000003
 </pre>
 </div>
 <p/>
