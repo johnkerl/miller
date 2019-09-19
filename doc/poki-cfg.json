@@ -109,6 +109,10 @@
           "file_name": "whyc.html"
         },
         {
+          "external_name": "Why C: details",
+          "file_name": "whyc-details.html"
+        },
+        {
           "external_name": "Why call it Miller?",
           "file_name": "etymology.html"
         },

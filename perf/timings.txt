@@ -1,0 +1,31 @@
+----------------------------------------------------------------
+justtime catc < ../data/bigger  > /dev/null
+TIME IN SECONDS 0.062 -- catc
+
+justtime catc0 < ../data/bigger  > /dev/null
+TIME IN SECONDS 0.052 -- catc0
+
+justtime catm ../data/bigger  > /dev/null
+TIME IN SECONDS 0.196 -- catm ../data/bigger
+
+justtime catd < ../data/bigger  > /dev/null
+TIME IN SECONDS 0.275 -- catd
+
+justtime catgo < ../data/bigger  > /dev/null
+TIME IN SECONDS 0.108 -- catgo
+
+justtime catrust < ../data/bigger  > /dev/null
+TIME IN SECONDS 1.025 -- catrust
+
+justtime catnim < ../data/bigger  > /dev/null
+TIME IN SECONDS 0.626 -- catnim
+
+----------------------------------------------------------------
+justtime cutgo < ../data/bigger  > /dev/null
+TIME IN SECONDS 1.117 -- cutgo
+
+justtime cutd < ../data/bigger  > /dev/null
+TIME IN SECONDS 4.283 -- cutd
+
+justtime cutnim < ../data/bigger  > /dev/null
+TIME IN SECONDS 21.309 -- cutnim

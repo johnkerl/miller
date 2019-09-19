@@ -9,7 +9,7 @@ TOP OF LIST
 multi-language perf writeup
 
 poki updates:
-* general refactors
+* all expand-all/collapse-all, h1's, etc. could be autogenned -- ?
 ? fold back to gh/jk/poki
 
 quick doc:

@@ -1,0 +1,180 @@
+POKI_PUT_TOC_HERE
+
+<p/>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+
+<p/>This section contains details substantiating the discussion at POKI_PUT_LINK_FOR_PAGE(whyc.html)HERE.
+
+</div>
+<h1>Timings</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_timings');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_timings" style="display: block">
+
+POKI_INCLUDE_ESCAPED(../perf/timings.txt)HERE
+
+</div>
+<h1>Discussion</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_discussion');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_discussion" style="display: block">
+
+<ul>
+<li/> <code>/bin/cat</code> is quite a bit faster than my line-oriented C code.
+This shows that my simple experiments here don&rsquo;t exhaust the
+possibilities of clever programming. Rather, they serve to compare and contrast
+the performance of straightforward coding in various languages.
+
+<li/> I didn&rsquo;t get any of the other languages to do line-oriented
+<code>cat</code> as fast as C. But Go was in the ballpark and was worth a
+further look.
+
+<li/> The <code>cut</code> experiments separated it out. I iteratively
+commented out/in various steps of the <code>cut</code> steps and found (as
+noted in the source code below) big chunks of time in the simple map and
+write-to-stdout operations.  I failed to retain <code>cutc.c</code> as I
+originally implemented it (it morphed gradually into Miller per se) but it was
+sufficiently faster than <code>cutgo.go</code> that I stuck with C for
+implementing Miller.
+
+<li/> The full Miller executable running <code>mlr cat</code> or <code>mlr
+cut</code> is slower than these bare-bones executables &mdash; I fully
+implemented Miller only in one language so there&rsquo;s no apples-to-apples
+comparison with other languages.
+
+</ul>
+
+<h1>Source code</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_source_code');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_source_code" style="display: block">
+
+<p/a>I did simple experiments in several languages.  In one experiment (<b>cat
+tests</b>) I just read lines and printed them back out &mdash; a line-oriented
+<code>cat</code>.  In another (<b>cut tests</b>) I consumed input lines like
+<code>x=1,y=2,z=3</code> one at a time, split them on commas and equals signs
+to populate hash maps, transformed them (e.g. remove the <code>y</code> field),
+and emitted them. Basically <code>mlr cut -x -f y</code> with DKVP format.  I
+didn&rsquo;t do anything fancy &mdash; just using each language&rsquo;s
+<code>getline</code>, string-split, hashmap-put, etc.  And nothing was as fast
+as C, so I used C. Here are the experiments I kept (I failed to keep the Lua
+code, for example):
+
+<h2>C cat using fgets</h2>
+POKI_INCLUDE_ESCAPED(../perf/catc.c)HERE
+
+<h2>C cat using getdelim</h2>
+POKI_INCLUDE_ESCAPED(../perf/catc0.c)HERE
+
+<h2>C cat using mmap</h2>
+POKI_INCLUDE_ESCAPED(../perf/catm.c)HERE
+
+<h2>D cat</h2>
+POKI_INCLUDE_ESCAPED(../perf/catd.d)HERE
+
+<h2>Rust cat</h2>
+POKI_INCLUDE_ESCAPED(../perf/catrust.rs)HERE
+
+<h2>Go cat</h2>
+POKI_INCLUDE_ESCAPED(../perf/catgo.go)HERE
+
+<h2>D cut</h2>
+POKI_INCLUDE_ESCAPED(../perf/cutd.d)HERE
+
+<h2>Go cut</h2>
+POKI_INCLUDE_ESCAPED(../perf/cutgo.go)HERE
+
+</div>
+<h1>Makefile</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_makefile');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_makefile" style="display: block">
+
+POKI_INCLUDE_ESCAPED(../perf/Makefile.no-autoconfig)HERE
+
+</div>
+<h1>Compiler versions</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_versions');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_versions" style="display: block">
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ gcc --version
+gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+Copyright (C) 2017 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+$ dmd --version
+DMD64 D Compiler v2.088.0
+Copyright (C) 1999-2019 by The D Language Foundation, All Rights Reserved written by Walter Bright
+
+$ rustc --version
+rustc 1.36.0
+
+$ go version
+go version go1.10.4 linux/amd64
+
+$ nim --version
+Nim Compiler Version 0.17.2 (2018-02-05) [Linux: amd64]
+Copyright (c) 2006-2018 by Andreas Rumpf
+
+active boot switches: -d:release
+
+</pre>
+</div>
+<p/>
+
+
+</div>
+<h1>Hardware</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_hardware');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_hardware" style="display: block">
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ uname -a
+Linux sprax 4.15.0-20-generic #21-Ubuntu SMP Tue Apr 24 06:16:15 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+
+$ cat /proc/cpuinfo
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 142
+model name	: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz
+stepping	: 10
+microcode	: 0x96
+cpu MHz		: 796.615
+cache size	: 8192 KB
+physical id	: 0
+siblings	: 8
+core id		: 0
+cpu cores	: 4
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat
+pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp
+lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc
+cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2
+ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt
+tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch
+cpuid_fault epb invpcid_single pti tpr_shadow vnmi flexpriority ept vpid
+fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap
+clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves ibpb ibrs stibp dtherm ida
+arat pln pts hwp hwp_notify hwp_act_window hwp_epp
+bugs		: cpu_meltdown spectre_v1 spectre_v2
+bogomips	: 3984.00
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+... (8 CPUs total)
+</pre>
+</div>
+<p/>
+
+</div>

@@ -172,6 +172,7 @@ pageTracker._trackPageview();
 <div id="navbar_section_toggle_background" style="display: block;text-align: left">
 <br/><a href="why.html">Why?</a>
 <br/><a href="whyc.html"><b>Why C?</b></a>
+<br/><a href="whyc-details.html">Why C: details</a>
 <br/><a href="etymology.html">Why call it Miller?</a>
 <br/><a href="originality.html">How original is Miller?</a>
 <br/><a href="performance.html">Performance</a>
@@ -238,26 +239,7 @@ many of Go&rsquo;s strengths, with a tighter stylistic similarity to C. And init
 experiments with Rust are intriguing. Yet with none of them could I obtain the
 throughput I get in C.
 
-<p/a>Specifically, I did simple experiments in several languages &mdash; Ruby,
-Python, Lua, Rust, Go, D. In one I just read lines and printed them back out
-&mdash; a line-oriented <code>cat</code>. In another I consumed input lines like
-<code>x=1,y=2,z=3</code> one at a time, split them on commas and equals signs to
-populate hash maps, transformed them (e.g. remove the <code>y</code> field), and
-emitted them. Basically <code>mlr cut -x -f y</code> with DKVP format.  I
-didn&rsquo;t do anything fancy &mdash; just using each language&rsquo;s
-<code>getline</code>, string-split, hashmap-put, etc.  And nothing was as fast as
-C, so I used C. Here are the experiments I kept (I failed to keep the
-Lua code, for example):
-<a href="../perf/catc.c.txt">C cat</a>,
-<a href="../perf/catc0.c.txt">another C cat</a>,
-<a href="../perf/catd.d.txt">D cat</a>,
-<a href="../perf/catgo.go.txt">Go cat</a>,
-<a href="../perf/catgo2.go.txt">another Go cat</a>,
-<a href="../perf/catrust.rs.txt">Rust cat</a>,
-<a href="../perf/nimcat.nim.txt">Nim cat</a>,
-<a href="../perf/cutd.d.txt">D cut</a>,
-<a href="../perf/cutgo.go.txt">Go cut</a>,
-<a href="../perf/nimcut.nim.txt">Nim cut</a>.
+<p/a>Details are written up at <a href="whyc-details.html">Why C: details</a>.
 
 <p/>One of Go&rsquo;s most powerful features is the ease with which it allows
 quick-to-code, error-free concurrency.  Yet Miller, like most high-volume

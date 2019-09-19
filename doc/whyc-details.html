@@ -1,0 +1,897 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+
+<!-- PAGE GENERATED FROM template.html and content-for-whyc-details.html BY poki. -->
+<!-- PLEASE MAKE CHANGES THERE AND THEN RE-RUN poki. -->
+<head>
+  <meta http-equiv="Content-type" content="text/html;charset=UTF-8"/>
+  <meta name="description" content="Miller documentation"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- mobile-friendly -->
+  <meta name="keywords"
+  content="John Kerl, Kerl, Miller, miller, mlr, OLAP, data analysis software, regression, correlation, variance, data tools, " />
+
+  <title> Why C: details </title>
+  <link rel="stylesheet" type="text/css" href="css2/miller.css"/>
+  <link rel="stylesheet" type="text/css" href="css2/poki-callbacks.css"/>
+</head>
+
+<!-- ================================================================ -->
+<script type="text/javascript">
+var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+</script>
+<script type="text/javascript">
+try {
+var pageTracker = _gat._getTracker("UA-15651652-1");
+pageTracker._trackPageview();
+} catch(err) {}
+</script>
+
+<!-- ================================================================ -->
+<script type="text/javascript">
+
+  function vis_expand_all_navbar_sections() {
+    vis_expand_all_with_prefix('navbar_section_toggle_');
+  }
+  function vis_collapse_all_navbar_sections() {
+    vis_collapse_all_with_prefix('navbar_section_toggle_');
+  }
+
+  function vis_expand_all_body_sections() {
+    vis_expand_all_with_prefix('body_section_toggle_');
+  }
+  function vis_collapse_all_body_sections() {
+    vis_collapse_all_with_prefix('body_section_toggle_');
+  }
+
+  function vis_expand_all_with_prefix(prefix) {
+    var divs = document.getElementsByTagName('div');
+    for(var i = 0; i < divs.length; i++) {
+      const div = divs[i];
+      if (div.id.startsWith(prefix)) {
+        vis_expand_div(div);
+      }
+    }
+  }
+  function vis_collapse_all_with_prefix(prefix) {
+    var divs = document.getElementsByTagName('div');
+    for(var i = 0; i < divs.length; i++){
+      const div = divs[i];
+      if (div.id.startsWith(prefix)) {
+        vis_collapse_div(div);
+      }
+    }
+  }
+
+  function vis_toggle_by_name(divName) {
+    vis_toggle_div(document.getElementById(divName));
+  }
+  function vis_expand_by_name(divName) {
+    vis_expand_div(document.getElementById(divName));
+  }
+  function vis_collapse_by_name(divName) {
+    vis_collapse_div(document.getElementById(divName));
+  }
+
+  function vis_toggle_div(div) {
+    if (div != null) {
+      var state = div.style.display;
+      if (state == 'block') {
+        div.style.display = 'none';
+      } else {
+        div.style.display = 'block';
+      }
+    }
+  }
+  function vis_expand_div(div) {
+    if (div != null) {
+      div.style.display = 'block';
+    }
+  }
+  function vis_collapse_div(div) {
+    if (div != null) {
+      div.style.display = 'none';
+    }
+  }
+
+</script>
+
+<body bgcolor="#ffffff">
+
+<!-- ================================================================ -->
+
+<!-- navbar -->
+<div class="pokinav">
+  <center><titleinbody>Miller</titleinbody></center>
+  
+<!-- NAVBAR GENERATED FROM template.html BY poki -->
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_overview');"
+  href="javascript:;"
+  >
+    Overview
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_using');"
+  href="javascript:;"
+  >
+    Using
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_reference');"
+  href="javascript:;"
+  >
+    Reference
+</button>
+<button
+  style="font-weight:bold;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_background');"
+  href="javascript:;"
+  >
+    Background
+</button>
+<button
+  style="font-weight:normal;font-size:100%;color:maroon;border:0"
+  padding=0
+  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_repository');"
+  href="javascript:;"
+  >
+    Repository
+</button>
+<div id="navbar_section_toggle_overview" style="display: none;text-align: left">
+<br/><a href="index.html">About</a>
+<br/><a href="10-min.html">10-minute intro</a>
+<br/><a href="file-formats.html">File formats</a>
+<br/><a href="feature-comparison.html">Unix-toolkit context</a>
+<br/><a href="record-heterogeneity.html">Record-hetrogeneity</a>
+<br/><a href="internationalization.html">Internationalization</a>
+</div>
+<div id="navbar_section_toggle_using" style="display: none;text-align: left">
+<br/><a href="faq.html">FAQ</a>
+<br/><a href="data-sharing.html">Mixing with other languages</a>
+<br/><a href="cookbook.html">Cookbook part 1</a>
+<br/><a href="cookbook2.html">Cookbook part 2</a>
+<br/><a href="cookbook3.html">Cookbook part 3</a>
+<br/><a href="data-examples.html">Data-diving examples</a>
+</div>
+<div id="navbar_section_toggle_reference" style="display: none;text-align: left">
+<br/><a href="reference.html">Main reference</a>
+<br/><a href="reference-verbs.html">Verbs reference</a>
+<br/><a href="reference-dsl.html">DSL reference</a>
+<br/><a href="manpage.html">Manpage</a>
+<br/><a href="release-docs.html">Documents by release</a>
+<br/><a href="build.html">Installation</a>
+</div>
+<div id="navbar_section_toggle_background" style="display: block;text-align: left">
+<br/><a href="why.html">Why?</a>
+<br/><a href="whyc.html">Why C?</a>
+<br/><a href="whyc-details.html"><b>Why C: details</b></a>
+<br/><a href="etymology.html">Why call it Miller?</a>
+<br/><a href="originality.html">How original is Miller?</a>
+<br/><a href="performance.html">Performance</a>
+</div>
+<div id="navbar_section_toggle_repository" style="display: none;text-align: left">
+<br/><a href="contact.html">Contact information</a>
+<br/><a href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>
+</div>
+</div>
+
+<!-- page body -->
+<p/>
+
+<!-- BODY COPIED FROM content-for-whyc-details.html BY poki -->
+<div class="pokitoc">
+<center><titleinbody>Why C: details</titleinbody></center>
+&bull;&nbsp;<a href="#Timings">Timings</a><br/>
+&bull;&nbsp;<a href="#Discussion">Discussion</a><br/>
+&bull;&nbsp;<a href="#Source_code">Source code</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#C_cat_using_fgets">C cat using fgets</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#C_cat_using_getdelim">C cat using getdelim</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#C_cat_using_mmap">C cat using mmap</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#D_cat">D cat</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Rust_cat">Rust cat</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Go_cat">Go cat</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#D_cut">D cut</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Go_cut">Go cut</a><br/>
+&bull;&nbsp;<a href="#Makefile">Makefile</a><br/>
+&bull;&nbsp;<a href="#Compiler_versions">Compiler versions</a><br/>
+&bull;&nbsp;<a href="#Hardware">Hardware</a><br/>
+</div>
+<p/>
+
+<p/>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+
+<p/>This section contains details substantiating the discussion at <a href="whyc.html">Why C?</a>.
+
+</div>
+<a id="Timings"/><h1>Timings</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_timings');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_timings" style="display: block">
+
+<p/>
+<div class="pokipanel">
+<pre>
+----------------------------------------------------------------
+justtime catc &lt; ../data/bigger  &gt; /dev/null
+TIME IN SECONDS 0.062 -- catc
+
+justtime catc0 &lt; ../data/bigger  &gt; /dev/null
+TIME IN SECONDS 0.052 -- catc0
+
+justtime catm ../data/bigger  &gt; /dev/null
+TIME IN SECONDS 0.196 -- catm ../data/bigger
+
+justtime catd &lt; ../data/bigger  &gt; /dev/null
+TIME IN SECONDS 0.275 -- catd
+
+justtime catgo &lt; ../data/bigger  &gt; /dev/null
+TIME IN SECONDS 0.108 -- catgo
+
+justtime catrust &lt; ../data/bigger  &gt; /dev/null
+TIME IN SECONDS 1.025 -- catrust
+
+justtime catnim &lt; ../data/bigger  &gt; /dev/null
+TIME IN SECONDS 0.626 -- catnim
+
+----------------------------------------------------------------
+justtime cutgo &lt; ../data/bigger  &gt; /dev/null
+TIME IN SECONDS 1.117 -- cutgo
+
+justtime cutd &lt; ../data/bigger  &gt; /dev/null
+TIME IN SECONDS 4.283 -- cutd
+
+justtime cutnim &lt; ../data/bigger  &gt; /dev/null
+TIME IN SECONDS 21.309 -- cutnim
+</pre>
+</div>
+<p/>
+
+</div>
+<a id="Discussion"/><h1>Discussion</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_discussion');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_discussion" style="display: block">
+
+<ul>
+<li/> <code>/bin/cat</code> is quite a bit faster than my line-oriented C code.
+This shows that my simple experiments here don&rsquo;t exhaust the
+possibilities of clever programming. Rather, they serve to compare and contrast
+the performance of straightforward coding in various languages.
+
+<li/> I didn&rsquo;t get any of the other languages to do line-oriented
+<code>cat</code> as fast as C. But Go was in the ballpark and was worth a
+further look.
+
+<li/> The <code>cut</code> experiments separated it out. I iteratively
+commented out/in various steps of the <code>cut</code> steps and found (as
+noted in the source code below) big chunks of time in the simple map and
+write-to-stdout operations.  I failed to retain <code>cutc.c</code> as I
+originally implemented it (it morphed gradually into Miller per se) but it was
+sufficiently faster than <code>cutgo.go</code> that I stuck with C for
+implementing Miller.
+
+<li/> The full Miller executable running <code>mlr cat</code> or <code>mlr
+cut</code> is slower than these bare-bones executables &mdash; I fully
+implemented Miller only in one language so there&rsquo;s no apples-to-apples
+comparison with other languages.
+
+</ul>
+
+<a id="Source_code"/><h1>Source code</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_source_code');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_source_code" style="display: block">
+
+<p/a>I did simple experiments in several languages.  In one experiment (<b>cat
+tests</b>) I just read lines and printed them back out &mdash; a line-oriented
+<code>cat</code>.  In another (<b>cut tests</b>) I consumed input lines like
+<code>x=1,y=2,z=3</code> one at a time, split them on commas and equals signs
+to populate hash maps, transformed them (e.g. remove the <code>y</code> field),
+and emitted them. Basically <code>mlr cut -x -f y</code> with DKVP format.  I
+didn&rsquo;t do anything fancy &mdash; just using each language&rsquo;s
+<code>getline</code>, string-split, hashmap-put, etc.  And nothing was as fast
+as C, so I used C. Here are the experiments I kept (I failed to keep the Lua
+code, for example):
+
+<a id="C_cat_using_fgets"/><h2>C cat using fgets</h2>
+<p/>
+<div class="pokipanel">
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+// ----------------------------------------------------------------
+static int do_stream(char* file_name) {
+	FILE* input_stream  = stdin;
+	FILE* output_stream = stdout;
+
+	if (strcmp(file_name, "-")) {
+		input_stream = fopen(file_name, "r");
+		if (input_stream == NULL) {
+			perror(file_name);
+			return 0;
+		}
+	}
+
+	while (1) {
+		char* line = NULL;
+		size_t linecap = 0;
+		ssize_t linelen = getdelim(&amp;line, &amp;linecap, '\n', input_stream);
+		if (linelen &lt;= 0) {
+			break;
+		}
+		fputs(line, output_stream);
+		free(line);
+	}
+	if (input_stream != stdin)
+		fclose(input_stream);
+
+	return 1;
+}
+
+// ================================================================
+int main(int argc, char** argv) {
+	int ok = 1;
+	if (argc == 1) {
+		ok = ok &amp;&amp; do_stream("-");
+	} else {
+		for (int argi = 1; argi &lt; argc; argi++) {
+		    ok = do_stream(argv[argi]);
+		}
+	}
+	return ok ? 0 : 1;
+}
+</pre>
+</div>
+<p/>
+
+<a id="C_cat_using_getdelim"/><h2>C cat using getdelim</h2>
+<p/>
+<div class="pokipanel">
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+#define MYBUFSIZ 8192
+static char iobuf[MYBUFSIZ];
+
+// ----------------------------------------------------------------
+static int do_stream(char* file_name) {
+	FILE* input_stream  = stdin;
+	FILE* output_stream = stdout;
+
+	if (strcmp(file_name, "-")) {
+		input_stream = fopen(file_name, "r");
+		if (input_stream == NULL) {
+			perror(file_name);
+			return 0;
+		}
+	}
+
+	while (1) {
+		char* line = fgets(iobuf, BUFSIZ, input_stream);
+		if (line == NULL)
+			break;
+		fputs(line, output_stream);
+	}
+	if (input_stream != stdin)
+		fclose(input_stream);
+
+	return 1;
+}
+
+// ================================================================
+int main(int argc, char** argv) {
+	int ok = 1;
+	if (argc == 1) {
+		ok = ok &amp;&amp; do_stream("-");
+	} else {
+		for (int argi = 1; argi &lt; argc; argi++) {
+		    ok = do_stream(argv[argi]);
+		}
+	}
+	return ok ? 0 : 1;
+}
+</pre>
+</div>
+<p/>
+
+<a id="C_cat_using_mmap"/><h2>C cat using mmap</h2>
+<p/>
+<div class="pokipanel">
+<pre>
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;sys/mman.h&gt;
+
+// ----------------------------------------------------------------
+static void emit(char* sol, char* eol, FILE* output_stream) {
+	 size_t ntowrite = eol - sol;
+     size_t nwritten = fwrite(sol, 1, ntowrite, output_stream);
+	 if (nwritten != ntowrite) {
+		perror("fwrite");
+		exit(1);
+	 }
+}
+
+// ----------------------------------------------------------------
+static int do_stream(char* file_name) {
+	FILE* output_stream = stdout;
+	int fd = open(file_name, O_RDONLY);
+	if (fd &lt; 0) {
+		perror("open");
+		exit(1);
+	}
+	struct stat stat;
+	if (fstat(fd, &amp;stat) &lt; 0) {
+		perror("fstat");
+		exit(1);
+	}
+	char* sof = mmap(NULL, (size_t)stat.st_size, PROT_READ|PROT_WRITE, MAP_FILE|MAP_PRIVATE, fd, (off_t)0);
+	if (sof == MAP_FAILED) {
+		perror("mmap");
+		exit(1);
+	}
+	char* eof = sof + stat.st_size;
+	char* sol = sof;
+	char* eol;
+	char* p = sof;
+
+	while (p &lt; eof) {
+		if (*p == '\n') {
+			*p = 0;
+			eol = p;
+			emit(sol, eol, output_stream);
+			p++;
+			sol = p;
+		} else {
+			p++;
+		}
+	}
+
+	if (close(fd) &lt; 0) {
+		perror("close");
+		exit(1);
+	}
+
+	return 1;
+}
+
+// ================================================================
+int main(int argc, char** argv) {
+	int ok = 1;
+	for (int argi = 1; argi &lt; argc; argi++) {
+	    ok = do_stream(argv[argi]);
+	}
+	return ok ? 0 : 1;
+}
+</pre>
+</div>
+<p/>
+
+<a id="D_cat"/><h2>D cat</h2>
+<p/>
+<div class="pokipanel">
+<pre>
+// Reads $(D stdin) and writes it to $(D stdout).
+import std.stdio;
+
+void main()
+{
+	string line;
+	while ((line = stdin.readln()) !is null)
+		write(line);
+}
+</pre>
+</div>
+<p/>
+
+<a id="Rust_cat"/><h2>Rust cat</h2>
+<p/>
+<div class="pokipanel">
+<pre>
+use std::io;
+use std::io::BufRead;
+
+fn main() {
+    for line in io::stdin().lock().lines() {
+        print!("{}", line.unwrap());
+    }
+}
+
+//fn main() {
+//    let mut reader = io::stdin();
+//    let mut line;
+//    loop {
+//        line = reader.read_line();
+//        print!("{}\n", line);
+//    }
+//}
+</pre>
+</div>
+<p/>
+
+<a id="Go_cat"/><h2>Go cat</h2>
+<p/>
+<div class="pokipanel">
+<pre>
+package main
+
+import (
+	"bufio"
+	"io"
+	"log"
+	"os"
+)
+
+// ----------------------------------------------------------------
+func main() {
+	args := os.Args[1:]
+	includeFields := []string {"a", "x"};
+
+	ok := true
+	if len(args) == 0 {
+		ok = handle("-", includeFields) &amp;&amp; ok
+	} else {
+		for _, arg := range args {
+			ok = handle(arg, includeFields) &amp;&amp; ok
+		}
+	}
+	if ok {
+		os.Exit(0)
+	} else {
+		os.Exit(1)
+	}
+}
+
+// ----------------------------------------------------------------
+func handle(fileName string, includeFields []string) (ok bool) {
+	inputStream := os.Stdin
+	if fileName != "-" {
+		var err error
+		if inputStream, err = os.Open(fileName); err != nil {
+			log.Println(err)
+			return false
+		}
+	}
+
+	reader := bufio.NewReader(inputStream)
+	writer := bufio.NewWriter(os.Stdout)
+	eof := false
+
+	for !eof {
+		line, err := reader.ReadString('\n')
+		if err == io.EOF {
+			err = nil
+			eof = true
+		} else if err != nil {
+			log.Println(err)
+			if fileName != "-" {
+				inputStream.Close()
+			}
+			return false
+		} else {
+			writer.WriteString(line)
+		}
+	}
+	if fileName != "-" {
+		inputStream.Close()
+	}
+	writer.Flush()
+
+	return true
+}
+</pre>
+</div>
+<p/>
+
+<a id="D_cut"/><h2>D cut</h2>
+<p/>
+<div class="pokipanel">
+<pre>
+// Reads $(D stdin) and writes it to $(D stdout).
+// http://dlang.org/hash-map.html
+import std.stdio;
+import std.string;
+import std.array;
+
+void main() {
+	string[] includeFields = ["a", "x"];
+	string line;
+	while ((line = stdin.readln()) !is null) {
+		// Input string to hashmap.
+		string[string] oldmap;
+		string[] fields = split(line, ',');
+		foreach (field; fields) {
+			string[] kvps = split(field, '='); // really want splitN with max #parts = 2
+			oldmap[kvps[0]] = kvps[1];
+		}
+
+		// Hashmap-to-hashmap transform.
+		// Note: unordered hashmap here.
+		string[string] newmap;
+		foreach (includeField; includeFields) {
+			if (includeField in oldmap) {
+				newmap[includeField] = oldmap[includeField];
+			}
+		}
+
+		// Hashmap to output strings.
+		int i = 0;
+		foreach (key; newmap.keys) {
+			if (i &gt; 0)
+				write(',');
+			write(key);
+			write('=');
+			write(newmap[key]);
+			i++;
+		}
+		write('\n');
+	}
+}
+</pre>
+</div>
+<p/>
+
+<a id="Go_cut"/><h2>Go cut</h2>
+<p/>
+<div class="pokipanel">
+<pre>
+package main
+
+import (
+	"bufio"
+	"io"
+	"log"
+	"os"
+	"strings"
+)
+
+// ----------------------------------------------------------------
+func main() {
+	args := os.Args[1:]
+	includeFields := []string {"a", "x"};
+
+	ok := true
+	if len(args) == 0 {
+		ok = handle("-", includeFields) &amp;&amp; ok
+	} else {
+		for _, arg := range args {
+			ok = handle(arg, includeFields) &amp;&amp; ok
+		}
+	}
+	if ok {
+		os.Exit(0)
+	} else {
+		os.Exit(1)
+	}
+}
+
+// ----------------------------------------------------------------
+func handle(fileName string, includeFields []string) (ok bool) {
+	inputStream := os.Stdin
+	if fileName != "-" {
+		var err error
+		if inputStream, err = os.Open(fileName); err != nil {
+			log.Println(err)
+			return false
+		}
+	}
+
+	reader := bufio.NewReader(inputStream)
+	writer := bufio.NewWriter(os.Stdout)
+	eof := false
+
+	for !eof {
+		line, err := reader.ReadString('\n')
+		if err == io.EOF {
+			err = nil
+			eof = true
+		} else if err != nil {
+			log.Println(err)
+			if fileName != "-" {
+				inputStream.Close()
+			}
+			return false
+		} else {
+
+			// 0.030s
+
+			// Line to map
+			mymap := make(map[string]string)
+			fields := strings.Split(line, ",");
+			for _, field := range(fields) {
+				kvps := strings.SplitN(field, "=", 2)
+				mymap[kvps[0]] = kvps[1]
+			}
+			// 0.220s
+			// delta 0.190s
+			// 27%
+
+			// Map-to-map transform
+			newmap := make(map[string]string)
+			for _, includeField := range(includeFields) {
+				value, present := mymap[includeField]
+				if present {
+					newmap[includeField] = value
+				}
+			}
+			// 0.280s
+			// delta 0.060s
+			// 9%
+
+			// Map to string
+			outs := make([]string, len(newmap))
+			i := 0
+			for k, v := range(newmap) {
+				outs[i] = k + "=" + v
+				i++
+			}
+			// 0.320s
+			// delta 0.040s
+			// 6%
+
+			out := strings.Join(outs, ",")
+			// 0.330s
+			// delta 0.010s
+			// 2%
+
+			// Write to output stream
+			//fmt.Println("")
+			writer.WriteString(out)
+			// delta 0.390s
+			// 56%
+
+		}
+	}
+	if fileName != "-" {
+		inputStream.Close()
+	}
+	writer.Flush()
+
+	return true
+}
+</pre>
+</div>
+<p/>
+
+</div>
+<a id="Makefile"/><h1>Makefile</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_makefile');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_makefile" style="display: block">
+
+<p/>
+<div class="pokipanel">
+<pre>
+all: catc catc0 catm catd catrust catgo catnim cutd cutgo cutnim
+allc: catc catc0 catm
+
+catc: catc.c
+	gcc -Wall catc.c -o catc
+catc0: catc0.c
+	gcc -Wall catc0.c -o catc0
+catm: catm.c
+	gcc -Wall catm.c -o catm
+catd: catd.d
+	dmd -O catd.d
+catrust: catrust.rs
+	rustc catrust.rs
+catgo: catgo.go
+	go build catgo.go
+catnim: catnim.nim
+	nim compile catnim.nim
+cutd: cutd.d
+	dmd -O cutd.d
+cutgo: cutgo.go
+	go build cutgo.go
+cutnim: cutnim.nim
+	nim compile cutnim.nim
+</pre>
+</div>
+<p/>
+
+</div>
+<a id="Compiler_versions"/><h1>Compiler versions</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_versions');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_versions" style="display: block">
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ gcc --version
+gcc (Ubuntu 7.3.0-27ubuntu1~18.04) 7.3.0
+Copyright (C) 2017 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+$ dmd --version
+DMD64 D Compiler v2.088.0
+Copyright (C) 1999-2019 by The D Language Foundation, All Rights Reserved written by Walter Bright
+
+$ rustc --version
+rustc 1.36.0
+
+$ go version
+go version go1.10.4 linux/amd64
+
+$ nim --version
+Nim Compiler Version 0.17.2 (2018-02-05) [Linux: amd64]
+Copyright (c) 2006-2018 by Andreas Rumpf
+
+active boot switches: -d:release
+
+</pre>
+</div>
+<p/>
+
+
+</div>
+<a id="Hardware"/><h1>Hardware</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_hardware');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_hardware" style="display: block">
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ uname -a
+Linux sprax 4.15.0-20-generic #21-Ubuntu SMP Tue Apr 24 06:16:15 UTC 2018 x86_64 x86_64 x86_64 GNU/Linux
+
+$ cat /proc/cpuinfo
+processor	: 0
+vendor_id	: GenuineIntel
+cpu family	: 6
+model		: 142
+model name	: Intel(R) Core(TM) i7-8550U CPU @ 1.80GHz
+stepping	: 10
+microcode	: 0x96
+cpu MHz		: 796.615
+cache size	: 8192 KB
+physical id	: 0
+siblings	: 8
+core id		: 0
+cpu cores	: 4
+apicid		: 0
+initial apicid	: 0
+fpu		: yes
+fpu_exception	: yes
+cpuid level	: 22
+wp		: yes
+flags		: fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat
+pse36 clflush dts acpi mmx fxsr sse sse2 ss ht tm pbe syscall nx pdpe1gb rdtscp
+lm constant_tsc art arch_perfmon pebs bts rep_good nopl xtopology nonstop_tsc
+cpuid aperfmperf tsc_known_freq pni pclmulqdq dtes64 monitor ds_cpl vmx est tm2
+ssse3 sdbg fma cx16 xtpr pdcm pcid sse4_1 sse4_2 x2apic movbe popcnt
+tsc_deadline_timer aes xsave avx f16c rdrand lahf_lm abm 3dnowprefetch
+cpuid_fault epb invpcid_single pti tpr_shadow vnmi flexpriority ept vpid
+fsgsbase tsc_adjust bmi1 avx2 smep bmi2 erms invpcid mpx rdseed adx smap
+clflushopt intel_pt xsaveopt xsavec xgetbv1 xsaves ibpb ibrs stibp dtherm ida
+arat pln pts hwp hwp_notify hwp_act_window hwp_epp
+bugs		: cpu_meltdown spectre_v1 spectre_v2
+bogomips	: 3984.00
+clflush size	: 64
+cache_alignment	: 64
+address sizes	: 39 bits physical, 48 bits virtual
+power management:
+
+... (8 CPUs total)
+</pre>
+</div>
+<p/>
+
+</div>
+
+</body>
+</html>
