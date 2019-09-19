@@ -189,6 +189,7 @@ pageTracker._trackPageview();
 <!-- BODY COPIED FROM content-for-whyc-details.html BY poki -->
 <div class="pokitoc">
 <center><titleinbody>Why C: details</titleinbody></center>
+&bull;&nbsp;<a href="#Overview">Overview</a><br/>
 &bull;&nbsp;<a href="#Timings">Timings</a><br/>
 &bull;&nbsp;<a href="#Discussion">Discussion</a><br/>
 &bull;&nbsp;<a href="#Source_code">Source code</a><br/>
@@ -198,8 +199,10 @@ pageTracker._trackPageview();
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#D_cat">D cat</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Rust_cat">Rust cat</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Go_cat">Go cat</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Nim_cat">Nim cat</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#D_cut">D cut</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Go_cut">Go cut</a><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Nim_cut">Nim cut</a><br/>
 &bull;&nbsp;<a href="#Makefile">Makefile</a><br/>
 &bull;&nbsp;<a href="#Compiler_versions">Compiler versions</a><br/>
 &bull;&nbsp;<a href="#Hardware">Hardware</a><br/>
@@ -210,7 +213,24 @@ pageTracker._trackPageview();
 <button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
 <button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
 
+<a id="Overview"/><h1>Overview</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_timings');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_timings" style="display: block">
+
 <p/>This section contains details substantiating the discussion at <a href="whyc.html">Why C?</a>.
+
+<p/a>I did simple experiments in several languages.  In one experiment (<b>cat
+tests</b>) I just read lines and printed them back out &mdash; a line-oriented
+<code>cat</code>.  In another (<b>cut tests</b>) I consumed input lines like
+<code>x=1,y=2,z=3</code> one at a time, split them on commas and equals signs
+to populate hash maps, transformed them (e.g. remove the <code>y</code> field),
+and emitted them. Basically <code>mlr cut -x -f y</code> with DKVP format.  I
+didn&rsquo;t do anything fancy &mdash; just using each language&rsquo;s
+<code>getline</code>, string-split, hashmap-put, etc.  (For C, the hashmap logic
+was my own and has turned into Miller per se.) And nothing was as fast
+as C, so I used C. Here are the experiments I kept (I failed to keep the Lua
+code, for example).  Note that I re-ran the timings in 2019 using code written
+in 2015, for purposes of creating this page.
 
 </div>
 <a id="Timings"/><h1>Timings</h1>
@@ -338,9 +358,7 @@ noted in the source code below) big chunks of <code>cutgo.go</code>&rsquo;s
 time in the simple map and write-to-stdout library-code operations.  I failed
 to retain <code>cutc.c</code> as I originally implemented it in 2015 (it
 morphed gradually into Miller per se) but it was sufficiently faster than
-<code>cutgo.go</code> that I stuck with C for implementing Miller. (Note
-that I re-ran the timings in 2019 using code written in 2015, for purposes of
-creating this page.)
+<code>cutgo.go</code> that I stuck with C for implementing Miller.
 
 <li/> The full Miller executable running <code>mlr cat</code> or <code>mlr
 cut</code> is slower than these bare-bones C executables &mdash; I fully
@@ -353,20 +371,10 @@ faster in that language. That was a gamble I did not take.
 
 </ul>
 
+</div>
 <a id="Source_code"/><h1>Source code</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_source_code');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_source_code" style="display: block">
-
-<p/a>I did simple experiments in several languages.  In one experiment (<b>cat
-tests</b>) I just read lines and printed them back out &mdash; a line-oriented
-<code>cat</code>.  In another (<b>cut tests</b>) I consumed input lines like
-<code>x=1,y=2,z=3</code> one at a time, split them on commas and equals signs
-to populate hash maps, transformed them (e.g. remove the <code>y</code> field),
-and emitted them. Basically <code>mlr cut -x -f y</code> with DKVP format.  I
-didn&rsquo;t do anything fancy &mdash; just using each language&rsquo;s
-<code>getline</code>, string-split, hashmap-put, etc.  And nothing was as fast
-as C, so I used C. Here are the experiments I kept (I failed to keep the Lua
-code, for example).
 
 <a id="C_cat_using_fgets"/><h2>C cat using fgets</h2>
 <p/>
@@ -657,6 +665,16 @@ func handle(fileName string, includeFields []string) (ok bool) {
 </div>
 <p/>
 
+<a id="Nim_cat"/><h2>Nim cat</h2>
+<p/>
+<div class="pokipanel">
+<pre>
+for line in stdin.lines:
+  echo(line)
+</pre>
+</div>
+<p/>
+
 <a id="D_cut"/><h2>D cut</h2>
 <p/>
 <div class="pokipanel">
@@ -823,6 +841,29 @@ func handle(fileName string, includeFields []string) (ok bool) {
 
 	return true
 }
+</pre>
+</div>
+<p/>
+
+<a id="Nim_cut"/><h2>Nim cut</h2>
+<p/>
+<div class="pokipanel">
+<pre>
+import strutils, tables
+
+for line in stdin.lines:
+  #var map: OrderedTable[string,string]
+  var map = {"":""}.newOrderedTable
+  #var map = initTable[string, string]
+  #var map: OrderedTable[string, string]
+  #var map: newOrderedTable[string, string](16)
+  for word in line.split(","):
+      var pair = word.split("=")
+      #echo(pair[0])
+      #echo(pair[1])
+      #echo()
+      #map[pair[0]] = pair[1]
+      map.add(pair[0], pair[1])
 </pre>
 </div>
 <p/>
