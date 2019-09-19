@@ -221,6 +221,28 @@ pageTracker._trackPageview();
 <div class="pokipanel">
 <pre>
 ----------------------------------------------------------------
+$ wc -l ../data/bigger
+1000000 ../data/bigger
+
+$ ls -lh ../data/bigger
+-rw----r-- 1 kerl kerl 59M Sep 18 21:47 ../data/bigger
+
+$ head ../data/bigger
+a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
+a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
+a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
+a=eks,b=wye,i=4,x=0.38139939387114097,y=0.13418874328430463
+a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
+a=zee,b=pan,i=6,x=0.5271261600918548,y=0.49322128674835697
+a=eks,b=zee,i=7,x=0.6117840605678454,y=0.1878849191181694
+a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
+a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
+a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
+
+----------------------------------------------------------------
+$ justtime /bin/cat ../data/bigger &gt; /dev/null
+TIME IN SECONDS 0.008 -- /bin/cat ../data/bigger
+
 justtime catc &lt; ../data/bigger  &gt; /dev/null
 TIME IN SECONDS 0.062 -- catc
 
@@ -274,14 +296,18 @@ further look.
 commented out/in various steps of the <code>cut</code> steps and found (as
 noted in the source code below) big chunks of time in the simple map and
 write-to-stdout operations.  I failed to retain <code>cutc.c</code> as I
-originally implemented it (it morphed gradually into Miller per se) but it was
-sufficiently faster than <code>cutgo.go</code> that I stuck with C for
+originally implemented it in 2015 (it morphed gradually into Miller per se) but
+it was sufficiently faster than <code>cutgo.go</code> that I stuck with C for
 implementing Miller.
 
 <li/> The full Miller executable running <code>mlr cat</code> or <code>mlr
 cut</code> is slower than these bare-bones executables &mdash; I fully
 implemented Miller only in one language so there&rsquo;s no apples-to-apples
 comparison with other languages.
+
+<li/> While C was the clear winner in these very simple tests, it&rsquo;s quite possible
+that had I committed to another language for full-featured Miller, it would have been
+faster in that language. That was a gamble I did not take.
 
 </ul>
 
@@ -511,15 +537,6 @@ fn main() {
         print!("{}", line.unwrap());
     }
 }
-
-//fn main() {
-//    let mut reader = io::stdin();
-//    let mut line;
-//    loop {
-//        line = reader.read_line();
-//        print!("{}\n", line);
-//    }
-//}
 </pre>
 </div>
 <p/>

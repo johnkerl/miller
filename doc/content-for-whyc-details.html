@@ -32,14 +32,18 @@ further look.
 commented out/in various steps of the <code>cut</code> steps and found (as
 noted in the source code below) big chunks of time in the simple map and
 write-to-stdout operations.  I failed to retain <code>cutc.c</code> as I
-originally implemented it (it morphed gradually into Miller per se) but it was
-sufficiently faster than <code>cutgo.go</code> that I stuck with C for
+originally implemented it in 2015 (it morphed gradually into Miller per se) but
+it was sufficiently faster than <code>cutgo.go</code> that I stuck with C for
 implementing Miller.
 
 <li/> The full Miller executable running <code>mlr cat</code> or <code>mlr
 cut</code> is slower than these bare-bones executables &mdash; I fully
 implemented Miller only in one language so there&rsquo;s no apples-to-apples
 comparison with other languages.
+
+<li/> While C was the clear winner in these very simple tests, it&rsquo;s quite possible
+that had I committed to another language for full-featured Miller, it would have been
+faster in that language. That was a gamble I did not take.
 
 </ul>
 

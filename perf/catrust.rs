@@ -6,12 +6,3 @@ fn main() {
         print!("{}", line.unwrap());
     }
 }
-
-//fn main() {
-//    let mut reader = io::stdin();
-//    let mut line;
-//    loop {
-//        line = reader.read_line();
-//        print!("{}\n", line);
-//    }
-//}
