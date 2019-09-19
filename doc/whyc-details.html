@@ -240,39 +240,79 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 ----------------------------------------------------------------
-$ justtime /bin/cat ../data/bigger &gt; /dev/null
-TIME IN SECONDS 0.008 -- /bin/cat ../data/bigger
+$ cat timings.sh
 
-justtime catc &lt; ../data/bigger  &gt; /dev/null
-TIME IN SECONDS 0.062 -- catc
+time /bin/cat ../data/bigger &gt; /dev/null
+time catc &lt; ../data/bigger  &gt; /dev/null
+time catc0 &lt; ../data/bigger  &gt; /dev/null
+time catm ../data/bigger  &gt; /dev/null
+time catd &lt; ../data/bigger  &gt; /dev/null
+time catgo &lt; ../data/bigger  &gt; /dev/null
+time catrust &lt; ../data/bigger  &gt; /dev/null
+time catnim &lt; ../data/bigger  &gt; /dev/null
 
-justtime catc0 &lt; ../data/bigger  &gt; /dev/null
-TIME IN SECONDS 0.052 -- catc0
-
-justtime catm ../data/bigger  &gt; /dev/null
-TIME IN SECONDS 0.196 -- catm ../data/bigger
-
-justtime catd &lt; ../data/bigger  &gt; /dev/null
-TIME IN SECONDS 0.275 -- catd
-
-justtime catgo &lt; ../data/bigger  &gt; /dev/null
-TIME IN SECONDS 0.108 -- catgo
-
-justtime catrust &lt; ../data/bigger  &gt; /dev/null
-TIME IN SECONDS 1.025 -- catrust
-
-justtime catnim &lt; ../data/bigger  &gt; /dev/null
-TIME IN SECONDS 0.626 -- catnim
+time cutgo &lt; ../data/bigger  &gt; /dev/null
+time cutd &lt; ../data/bigger  &gt; /dev/null
+time cutnim &lt; ../data/bigger  &gt; /dev/null
 
 ----------------------------------------------------------------
-justtime cutgo &lt; ../data/bigger  &gt; /dev/null
-TIME IN SECONDS 1.117 -- cutgo
+$ bash -x timings.sh
 
-justtime cutd &lt; ../data/bigger  &gt; /dev/null
-TIME IN SECONDS 4.283 -- cutd
++ /bin/cat ../data/bigger
+real    0m0.026s
+user    0m0.000s
+sys     0m0.026s
 
-justtime cutnim &lt; ../data/bigger  &gt; /dev/null
-TIME IN SECONDS 21.309 -- cutnim
++ catc
+real    0m0.097s
+user    0m0.076s
+sys     0m0.021s
+
++ catc0
+real    0m0.057s
+user    0m0.028s
+sys     0m0.028s
+
++ catm ../data/bigger
+real    0m0.197s
+user    0m0.177s
+sys     0m0.020s
+
++ catd
+real    0m0.258s
+user    0m0.213s
+sys     0m0.054s
+
++ catgo
+real    0m0.121s
+user    0m0.111s
+sys     0m0.024s
+
++ catrust
+real    0m1.055s
+user    0m1.035s
+sys     0m0.020s
+
++ catnim
+real    0m0.624s
+user    0m0.432s
+sys     0m0.192s
+
++ cutgo
+real    0m1.073s
+user    0m1.079s
+sys     0m0.041s
+
++ cutd
+real    0m4.233s
+user    0m4.462s
+sys     0m0.113s
+
++ cutnim
+real    0m21.380s
+user    0m21.350s
+sys     0m0.024s
+
 </pre>
 </div>
 <p/>
@@ -303,7 +343,7 @@ that I re-ran the timings in 2019 using code written in 2015, for purposes of
 creating this page.)
 
 <li/> The full Miller executable running <code>mlr cat</code> or <code>mlr
-cut</code> is slower than these bare-bones executables &mdash; I fully
+cut</code> is slower than these bare-bones C executables &mdash; I fully
 implemented Miller only in one language so there&rsquo;s no apples-to-apples
 comparison with other languages.
 
