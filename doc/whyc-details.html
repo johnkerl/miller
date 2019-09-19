@@ -294,11 +294,11 @@ further look.
 
 <li/> The <code>cut</code> experiments separated it out. I iteratively
 commented out/in various steps of the <code>cut</code> steps and found (as
-noted in the source code below) big chunks of time in the simple map and
-write-to-stdout operations.  I failed to retain <code>cutc.c</code> as I
-originally implemented it in 2015 (it morphed gradually into Miller per se) but
-it was sufficiently faster than <code>cutgo.go</code> that I stuck with C for
-implementing Miller.
+noted in the source code below) big chunks of <code>cutgo.go</code>&rsquo;s
+time in the simple map and write-to-stdout library-code operations.  I failed
+to retain <code>cutc.c</code> as I originally implemented it in 2015 (it
+morphed gradually into Miller per se) but it was sufficiently faster than
+<code>cutgo.go</code> that I stuck with C for implementing Miller.
 
 <li/> The full Miller executable running <code>mlr cat</code> or <code>mlr
 cut</code> is slower than these bare-bones executables &mdash; I fully

@@ -6,7 +6,7 @@ BUGFIXES
 ================================================================
 TOP OF LIST
 
-multi-language perf writeup
+multi-language perf writeup -- to draft release notes
 
 poki updates:
 * all expand-all/collapse-all, h1's, etc. could be autogenned -- ?
