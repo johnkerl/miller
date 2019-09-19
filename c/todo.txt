@@ -7,10 +7,8 @@ BUGFIXES
 TOP OF LIST
 
 poki updates:
-* nullable subtitles -> TOCs
-* one big master-TOC page -- ?
 * general refactors
-* fold back to gh/jk/poki
+? fold back to gh/jk/poki
 
 quick doc:
 * multi-join @ FAQ

@@ -31,38 +31,27 @@ pageTracker._trackPageview();
 <script type="text/javascript">
 
   function vis_expand_all_navbar_sections() {
-    //console.log('vis_expand_all_navbar_sections ENTER');
     vis_expand_all_with_prefix('navbar_section_toggle_');
-    //console.log('vis_expand_all_navbar_sections EXIT');
   }
   function vis_collapse_all_navbar_sections() {
-    //console.log('vis_collapse_all_navbar_sections ENTER');
     vis_collapse_all_with_prefix('navbar_section_toggle_');
-    //console.log('vis_collapse_all_navbar_sections EXIT');
   }
 
   function vis_expand_all_body_sections() {
-    //console.log('vis_expand_all_body_sections ENTER');
     vis_expand_all_with_prefix('body_section_toggle_');
-    //console.log('vis_expand_all_body_sections EXIT');
   }
   function vis_collapse_all_body_sections() {
-    //console.log('vis_collapse_all_body_sections ENTER');
     vis_collapse_all_with_prefix('body_section_toggle_');
-    //console.log('vis_collapse_all_body_sections EXIT');
   }
 
   function vis_expand_all_with_prefix(prefix) {
-    //console.log('vis_expand_all_with_prefix ENTER', prefix);
     var divs = document.getElementsByTagName('div');
-    console.log("DIVS", divs);
     for(var i = 0; i < divs.length; i++) {
       const div = divs[i];
       if (div.id.startsWith(prefix)) {
         vis_expand_div(div);
       }
     }
-    //console.log('vis_expand_all_with_prefix EXIT', prefix);
   }
   function vis_collapse_all_with_prefix(prefix) {
     var divs = document.getElementsByTagName('div');
