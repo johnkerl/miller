@@ -298,7 +298,9 @@ noted in the source code below) big chunks of <code>cutgo.go</code>&rsquo;s
 time in the simple map and write-to-stdout library-code operations.  I failed
 to retain <code>cutc.c</code> as I originally implemented it in 2015 (it
 morphed gradually into Miller per se) but it was sufficiently faster than
-<code>cutgo.go</code> that I stuck with C for implementing Miller.
+<code>cutgo.go</code> that I stuck with C for implementing Miller. (Note
+that I re-ran the timings in 2019 using code written in 2015, for purposes of
+creating this page.)
 
 <li/> The full Miller executable running <code>mlr cat</code> or <code>mlr
 cut</code> is slower than these bare-bones executables &mdash; I fully
@@ -324,7 +326,7 @@ and emitted them. Basically <code>mlr cut -x -f y</code> with DKVP format.  I
 didn&rsquo;t do anything fancy &mdash; just using each language&rsquo;s
 <code>getline</code>, string-split, hashmap-put, etc.  And nothing was as fast
 as C, so I used C. Here are the experiments I kept (I failed to keep the Lua
-code, for example):
+code, for example).
 
 <a id="C_cat_using_fgets"/><h2>C cat using fgets</h2>
 <p/>
