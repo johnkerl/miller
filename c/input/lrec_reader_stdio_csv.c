@@ -50,7 +50,7 @@
 #define UTF8_BOM "\xef\xbb\xbf"
 #define UTF8_BOM_LENGTH 3
 
-#define DEBUG_PARSER
+//#define DEBUG_PARSER
 
 // ----------------------------------------------------------------
 typedef struct _lrec_reader_stdio_csv_state_t {
@@ -337,6 +337,9 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 	context_t* pctx, int is_header)
 {
 	int rc, token = 0, matchlen = 0, record_done = FALSE, field_done = FALSE;
+#ifdef DEBUG_PARSER
+	char c = 0;
+#endif
 	peek_file_reader_t* pfr = pstate->pfr;
 	string_builder_t*   psb = pstate->psb;
 	char* field = NULL;
@@ -356,7 +359,9 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 			pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
 			&token, &matchlen);
 #ifdef DEBUG_PARSER
-		printf("RC=%d token=0x%04x matchlen=%d\n", rc, token, matchlen);
+		if (rc) {
+			printf("BOMRC=%d token=0x%04x matchlen=%d\n", rc, token, matchlen);
+		}
 #endif
 		if (rc == TRUE && token == UTF8_BOM_TOKEN) {
 			pfr_advance_by(pfr, matchlen);
@@ -382,7 +387,7 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 #endif
 				if (rc) {
 #ifdef DEBUG_PARSER
-					printf("RC=%d token=0x%04x matchlen=%d\n", rc, token, matchlen);
+					printf("DQ=0 RC=%d token=0x%04x matchlen=%d\n", rc, token, matchlen);
 #endif
 					switch(token) {
 					case EOF_TOKEN: // end of record
@@ -403,7 +408,7 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 					case IRS_TOKEN: // end of record
 						field = sb_finish_with_length(psb, &field_length);
 
-						// The line-ending '\n' won't be included in the field buffer.
+						// The line-ending '\n' wonlt be included in the field buffer.
 						if (pstate->do_auto_line_term) {
 							if (field_length > 0 && field[field_length-1] == '\r') {
 								field[field_length-1] = 0;
@@ -431,7 +436,7 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 					pfr_advance_by(pfr, matchlen);
 				} else {
 #ifdef DEBUG_PARSER
-					char c = pfr_read_char(pfr);
+					c = pfr_read_char(pfr);
 					printf("CHAR=%c [%02x]\n", isprint((unsigned char)c) ? c : ' ', (unsigned)c);
 					sb_append_char(psb, c);
 #else
@@ -453,8 +458,13 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 				rc = parse_trie_ring_match(pstate->pdquote_parse_trie,
 					pfr->peekbuf, pfr->sob, pfr->npeeked, pfr->peekbuflenmask,
 					&token, &matchlen);
-
+#ifdef DEBUG_PARSER
+				pfr_print(pfr);
+#endif
 				if (rc) {
+#ifdef DEBUG_PARSER
+					printf("DQ=1 RC=%d token=0x%04x matchlen=%d\n", rc, token, matchlen);
+#endif
 					switch(token) {
 					case EOF_TOKEN: // end of record
 						fprintf(stderr, "%s: unmatched double quote at line %lld.\n",
@@ -490,7 +500,13 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 						record_done = TRUE;
 						break;
 					case DQUOTE_DQUOTE_TOKEN: // RFC-4180 CSV: "" inside a dquoted field is an escape for "
+#ifdef DEBUG_PARSER
+						c = pstate->dquote[0];
+						printf("CHAR=%c [%02x]\n", isprint((unsigned char)c) ? c : ' ', (unsigned)c);
+						sb_append_char(psb, c);
+#else
 						sb_append_char(psb, pstate->dquote[0]);
+#endif
 						break;
 					default:
 						fprintf(stderr, "%s: internal coding error: unexpected token %d at line %lld.\n",
@@ -500,7 +516,13 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 					}
 					pfr_advance_by(pfr, matchlen);
 				} else {
+#ifdef DEBUG_PARSER
+					c = pfr_read_char(pfr);
+					printf("CHAR=%c [%02x]\n", isprint((unsigned char)c) ? c : ' ', (unsigned)c);
+					sb_append_char(psb, c);
+#else
 					sb_append_char(psb, pfr_read_char(pfr));
+#endif
 				}
 			}
 
