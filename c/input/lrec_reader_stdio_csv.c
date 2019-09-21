@@ -262,7 +262,7 @@ static lrec_t* lrec_reader_stdio_csv_process(void* pvstate, void* pvhandle, cont
 
 			slls_t* pheader_fields = slls_alloc();
 			int i = 0;
-			for (rsllse_t* pe = pstate->pfields->phead; i < pstate->pfields->length && pe != NULL; pe = pe->pnext) {
+			for (rsllse_t* pe = pstate->pfields->phead; i < pstate->pfields->length && pe != NULL; pe = pe->pnext, i++) {
 				if (*pe->value == 0) {
 					fprintf(stderr, "%s: unacceptable empty CSV key at file \"%s\" line %lld.\n",
 						MLR_GLOBALS.bargv0, pctx->filename, pstate->ilno);
