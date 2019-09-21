@@ -301,9 +301,9 @@ static int read_file_mmap_psb(char* filename, int do_write) {
 }
 
 // ================================================================
-#define IRS_STRIDX    11
-#define EOF_STRIDX    22
-#define IRSEOF_STRIDX 33
+#define IRS_TOKEN    11
+#define EOF_TOKEN    22
+#define IRSEOF_TOKEN 33
 
 static char* read_line_pfr_psb(peek_file_reader_t* pfr, string_builder_t* psb, parse_trie_t* ptrie) {
 	int rc, stridx, matchlen;
@@ -314,13 +314,13 @@ static char* read_line_pfr_psb(peek_file_reader_t* pfr, string_builder_t* psb, p
 		if (rc) {
 			pfr_advance_by(pfr, matchlen);
 			switch(stridx) {
-			case IRS_STRIDX:
+			case IRS_TOKEN:
 				return sb_finish(psb);
 				break;
-			case IRSEOF_STRIDX:
+			case IRSEOF_TOKEN:
 				return sb_finish(psb);
 				break;
-			case EOF_STRIDX:
+			case EOF_TOKEN:
 				return NULL;
 				break;
 			}
@@ -338,9 +338,9 @@ static int read_file_pfr_psb(char* filename, int do_write) {
 	peek_file_reader_t* pfr = pfr_alloc(pbr, PEEK_BUF_LEN);
 
 	parse_trie_t* ptrie = parse_trie_alloc();
-	parse_trie_add_string(ptrie, "\n", IRS_STRIDX);
-	parse_trie_add_string(ptrie, "\xff", EOF_STRIDX);
-	parse_trie_add_string(ptrie, "\n\xff", IRSEOF_STRIDX);
+	parse_trie_add_string(ptrie, "\n", IRS_TOKEN);
+	parse_trie_add_string(ptrie, "\xff", EOF_TOKEN);
+	parse_trie_add_string(ptrie, "\n\xff", IRSEOF_TOKEN);
 
 	int bc = 0;
 

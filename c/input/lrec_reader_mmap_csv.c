@@ -34,14 +34,13 @@
 // ----------------------------------------------------------------
 #define STRING_BUILDER_INIT_SIZE 1024
 
-// AKA "token"
-#define IRS_STRIDX           0x2001
-#define IFS_STRIDX           0x2002
-#define DQUOTE_STRIDX        0x2003
-#define DQUOTE_IRS_STRIDX    0x2004
-#define DQUOTE_IRS2_STRIDX   0x2005 // alternate line-ending for autodetect LF/CRLF
-#define DQUOTE_IFS_STRIDX    0x2006
-#define DQUOTE_DQUOTE_STRIDX 0x2007
+#define IRS_TOKEN           0x2001
+#define IFS_TOKEN           0x2002
+#define DQUOTE_TOKEN        0x2003
+#define DQUOTE_IRS_TOKEN    0x2004
+#define DQUOTE_IRS2_TOKEN   0x2005 // alternate line-ending for autodetect LF/CRLF
+#define DQUOTE_IFS_TOKEN    0x2006
+#define DQUOTE_DQUOTE_TOKEN 0x2007
 
 // ----------------------------------------------------------------
 typedef struct _lrec_reader_mmap_csv_state_t {
@@ -123,23 +122,23 @@ lrec_reader_t* lrec_reader_mmap_csv_alloc(char* irs, char* ifs, int use_implicit
 	pstate->dquotelen     = strlen(pstate->dquote);
 
 	pstate->pno_dquote_parse_trie = parse_trie_alloc();
-	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->irs,     IRS_STRIDX);
-	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->ifs,     IFS_STRIDX);
-	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->dquote,  DQUOTE_STRIDX);
+	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->irs,     IRS_TOKEN);
+	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->ifs,     IFS_TOKEN);
+	parse_trie_add_string(pstate->pno_dquote_parse_trie, pstate->dquote,  DQUOTE_TOKEN);
 
 	pstate->pdquote_parse_trie = parse_trie_alloc();
 	if (pstate->do_auto_line_term) {
 		pstate->dquote_irs  = mlr_paste_2_strings("\"", "\n");
 		pstate->dquote_irs2 = mlr_paste_2_strings("\"", "\r\n");
-		parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_irs,  DQUOTE_IRS_STRIDX);
-		parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_irs2, DQUOTE_IRS2_STRIDX);
+		parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_irs,  DQUOTE_IRS_TOKEN);
+		parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_irs2, DQUOTE_IRS2_TOKEN);
 	} else {
 		pstate->dquote_irs  = mlr_paste_2_strings("\"", pstate->irs);
 		pstate->dquote_irs2 = NULL;
-		parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_irs, DQUOTE_IRS_STRIDX);
+		parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_irs, DQUOTE_IRS_TOKEN);
 	}
-	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_ifs,    DQUOTE_IFS_STRIDX);
-	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_dquote, DQUOTE_DQUOTE_STRIDX);
+	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_ifs,    DQUOTE_IFS_TOKEN);
+	parse_trie_add_string(pstate->pdquote_parse_trie, pstate->dquote_dquote, DQUOTE_DQUOTE_TOKEN);
 
 	pstate->pfields = rslls_alloc();
 	pstate->psb = sb_alloc(STRING_BUILDER_INIT_SIZE);
@@ -308,7 +307,7 @@ static lrec_t* lrec_reader_mmap_csv_process(void* pvstate, void* pvhandle, conte
 static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 	rslls_t* pfields, file_reader_mmap_state_t* phandle, context_t* pctx)
 {
-	int rc, stridx, matchlen, record_done, field_done;
+	int rc, token = 0, matchlen = 0, record_done = FALSE, field_done = FALSE;
 	string_builder_t* psb = pstate->psb;
 
 	if (phandle->sol >= phandle->eof)
@@ -327,16 +326,16 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 			field_done = FALSE;
 			while (!field_done) {
 				MLR_INTERNAL_CODING_ERROR_IF(e > phandle->eof);
-				rc = parse_trie_match(pstate->pno_dquote_parse_trie, e, phandle->eof, &stridx, &matchlen);
+				rc = parse_trie_match(pstate->pno_dquote_parse_trie, e, phandle->eof, &token, &matchlen);
 				if (rc) {
-					switch(stridx) {
-					case IFS_STRIDX: // end of field
+					switch(token) {
+					case IFS_TOKEN: // end of field
 						*e = 0;
 						rslls_append(pfields, p, NO_FREE, 0);
 						p = e + matchlen;
 						field_done  = TRUE;
 						break;
-					case IRS_STRIDX: // end of record
+					case IRS_TOKEN: // end of record
 						*e = 0;
 
 						if (pstate->do_auto_line_term) {
@@ -353,14 +352,14 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
-					case DQUOTE_STRIDX: // CSV syntax error: fields containing quotes must be fully wrapped in quotes
+					case DQUOTE_TOKEN: // CSV syntax error: fields containing quotes must be fully wrapped in quotes
 						fprintf(stderr, "%s: syntax error: unwrapped double quote at line %lld.\n",
 							MLR_GLOBALS.bargv0, pstate->ilno);
 						exit(1);
 						break;
 					default:
 						fprintf(stderr, "%s: internal coding error: unexpected token %d at line %lld.\n",
-							MLR_GLOBALS.bargv0, stridx, pstate->ilno);
+							MLR_GLOBALS.bargv0, token, pstate->ilno);
 						exit(1);
 						break;
 					}
@@ -401,11 +400,11 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 					exit(1);
 				}
 
-				rc = parse_trie_match(pstate->pdquote_parse_trie, e, phandle->eof, &stridx, &matchlen);
+				rc = parse_trie_match(pstate->pdquote_parse_trie, e, phandle->eof, &token, &matchlen);
 
 				if (rc) {
-					switch(stridx) {
-					case DQUOTE_IFS_STRIDX: // end of field
+					switch(token) {
+					case DQUOTE_IFS_TOKEN: // end of field
 						*e = 0;
 						if (contiguous)
 							rslls_append(pfields, p, NO_FREE, FIELD_QUOTED_ON_INPUT);
@@ -414,8 +413,8 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 						p = e + matchlen;
 						field_done  = TRUE;
 						break;
-					case DQUOTE_IRS_STRIDX: // end of record
-					case DQUOTE_IRS2_STRIDX: // end of record
+					case DQUOTE_IRS_TOKEN: // end of record
+					case DQUOTE_IRS2_TOKEN: // end of record
 						*e = 0;
 
 						if (pstate->do_auto_line_term) {
@@ -435,7 +434,7 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 						field_done  = TRUE;
 						record_done = TRUE;
 						break;
-					case DQUOTE_DQUOTE_STRIDX: // RFC-4180 CSV: "" inside a dquoted field is an escape for "
+					case DQUOTE_DQUOTE_TOKEN: // RFC-4180 CSV: "" inside a dquoted field is an escape for "
 						if (contiguous) { // not anymore it isn't
 							sb_append_char_range(psb, p, e);
 							contiguous = FALSE;
@@ -445,7 +444,7 @@ static int lrec_reader_mmap_csv_get_fields(lrec_reader_mmap_csv_state_t* pstate,
 						break;
 					default:
 						fprintf(stderr, "%s: internal coding error: unexpected token %d at line %lld.\n",
-							MLR_GLOBALS.bargv0, stridx, pstate->ilno);
+							MLR_GLOBALS.bargv0, token, pstate->ilno);
 						exit(1);
 						break;
 					}
