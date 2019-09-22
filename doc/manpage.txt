@@ -18,7 +18,7 @@ DESCRIPTION
        insertion-ordered hash map.  This encompasses a variety of data
        formats, including but not limited to the familiar CSV, TSV, and JSON.
        (Miller can handle positionally-indexed data as a special case.) This
-       manpage documents Miller v5.6.1-dev.
+       manpage documents Miller v5.6.2-dev.
 
 EXAMPLES
    COMMAND-LINE SYNTAX
@@ -2298,4 +2298,4 @@ SEE ALSO
 
 
 
-				  2019-09-21			     MILLER(1)
+				  2019-09-22			     MILLER(1)

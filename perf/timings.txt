@@ -20,18 +20,18 @@ a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 ----------------------------------------------------------------
 $ cat timings.sh
 
-time /bin/cat ../data/bigger > /dev/null
-time catc < ../data/bigger  > /dev/null
-time catc0 < ../data/bigger  > /dev/null
-time catm ../data/bigger  > /dev/null
-time catd < ../data/bigger  > /dev/null
-time catgo < ../data/bigger  > /dev/null
-time catrust < ../data/bigger  > /dev/null
-time catnim < ../data/bigger  > /dev/null
+time /bin/cat < ../data/bigger > /dev/null
+time catc     < ../data/bigger  > /dev/null
+time catc0    < ../data/bigger  > /dev/null
+time catm       ../data/bigger  > /dev/null
+time catd     < ../data/bigger  > /dev/null
+time catgo    < ../data/bigger  > /dev/null
+time catrust  < ../data/bigger  > /dev/null
+time catnim   < ../data/bigger  > /dev/null
 
-time cutgo < ../data/bigger  > /dev/null
-time cutd < ../data/bigger  > /dev/null
-time cutnim < ../data/bigger  > /dev/null
+time cutgo    < ../data/bigger  > /dev/null
+time cutd     < ../data/bigger  > /dev/null
+time cutnim   < ../data/bigger  > /dev/null
 
 ----------------------------------------------------------------
 $ bash -x timings.sh
