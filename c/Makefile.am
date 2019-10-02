@@ -3,8 +3,7 @@ SUBDIRS=		lib cli stream input dsl mapping containers output parsing auxents exp
 AM_CPPFLAGS=		-I${srcdir}
 AM_CFLAGS=		-Wall -std=gnu99
 bin_PROGRAMS=		mlr
-noinst_PROGRAMS=	mlrg \
-			mlrp
+noinst_PROGRAMS=	mlrg
 
 mlr_SOURCES=		mlrmain.c
 
