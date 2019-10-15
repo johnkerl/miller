@@ -127,7 +127,9 @@ char* regex_sub(char* input, regex_t* pregex, string_builder_t* psb, char* repla
 				if (pmatch->rm_so == -1) {
 					if (pall_captured)
 						*pall_captured = FALSE;
-					sb_append_chars(psb, p, 0, 1);
+					// implicitly append empty string by doing nothing at all --
+					// we don't need to write:
+					// sb_append_string(psb, "");
 				} else {
 					sb_append_chars(psb, input, matches[idx].rm_so, matches[idx].rm_eo-1);
 				}
@@ -177,7 +179,9 @@ char* regex_gsub(char* input, regex_t* pregex, string_builder_t* psb, char* repl
 				regmatch_t* pmatch = &matches[idx];
 				if (pmatch->rm_so == -1) {
 					*pall_captured = FALSE;
-					sb_append_chars(psb, p, 0, 1);
+					// implicitly append empty string by doing nothing at all --
+					// we don't need to write:
+					// sb_append_string(psb, "");
 				} else {
 					sb_append_chars(psb, &current_input[match_start], matches[idx].rm_so, matches[idx].rm_eo-1);
 				}
@@ -250,11 +254,14 @@ char* regextract_or_else(char* input, regex_t* pregex, char* default_value) {
 // This is important: see the comments in mapper_put for details.
 
 void save_regex_captures(string_array_t** ppregex_captures, char* input, regmatch_t matches[], int nmatchmax) {
-	int match_count = nmatchmax; // In fully occupied case, there will be no slots with -1's
+	int match_count = 0;
+	match_count = 0;
+	// In fully occupied case, there will be no slots with -1's.
+	// Using optional regex captures, one slot may have rm_so == rm_eo == -1 (i.e. trivial) while a subsequent slot
+	// may be non-trivial. So we need to check all slots.
 	for (int i = 0; i < nmatchmax; i++) {
-		if (matches[i].rm_so == -1) {
-			match_count = i;
-			break;
+		if (matches[i].rm_so != -1) {
+			match_count = i + 1;
 		}
 	}
 	if (*ppregex_captures != NULL)

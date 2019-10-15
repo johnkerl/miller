@@ -208,6 +208,7 @@ run_mlr --csvlite rename -r    '^Date_[0-9].*$,Date'  $indir/date1.csv $indir/da
 run_mlr --csvlite rename -r    '(.*)e(.*),\1EEE\2'    $indir/date1.csv $indir/date2.csv
 run_mlr --csvlite rename -r    '"(.*)e(.*)"i,\1EEE\2' $indir/date1.csv $indir/date2.csv
 run_mlr --csvlite rename -r -g '"(.*)e(.*)"i,\1EEE\2' $indir/date1.csv $indir/date2.csv
+run_mlr --csvlite rename -r    '^(.a.e)(_.*)?,AA\1BB\2CC' $indir/date1.csv
 run_mlr --csvlite rename -r    '"e",EEE'              $indir/date1.csv $indir/date2.csv
 run_mlr --csvlite rename -r -g '"e",EEE'              $indir/date1.csv $indir/date2.csv
 run_mlr --csvlite rename -r    '"e"i,EEE'             $indir/date1.csv $indir/date2.csv
@@ -1997,6 +1998,11 @@ run_mlr --opprint put 'filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)";       $F0="\
 run_mlr --opprint put 'filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)";    $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
 run_mlr --opprint put 'filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)"; $F0="\0";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"' $indir/capture-lengths.dkvp
 
+echo 'abcdefg' | run_mlr --inidx --odkvp put '$1 =~ "ab(.)d(..)g"  { $c1 = "\1"; $c2 = "\2"}'
+echo 'abcdefg' | run_mlr --inidx --odkvp put '$1 =~ "ab(.)?d(..)g" { $c1 = "\1"; $c2 = "\2"}'
+echo 'abXdefg' | run_mlr --inidx --odkvp put '$1 =~ "ab(c)?d(..)g" { $c1 = "\1"; $c2 = "\2"}'
+echo 'abdefg'  | run_mlr --inidx --odkvp put '$1 =~ "ab(c)?d(..)g" { $c1 = "\1"; $c2 = "\2"}'
+
 # ----------------------------------------------------------------
 announce DSL FILTER/PATTERN-ACTION
 
@@ -2186,6 +2192,11 @@ run_mlr --oxtab put '$y = regextract_or_else($x, "[hi]+", "DEFAULT")' $indir/sub
 run_mlr --oxtab put '$y = regextract_or_else($x, "[hi]*", "DEFAULT")' $indir/sub.dat
 run_mlr --oxtab put '$y = regextract_or_else($x, "[op]+", "DEFAULT")' $indir/sub.dat
 run_mlr --oxtab put '$y = regextract_or_else($x, "[op]*", "DEFAULT")' $indir/sub.dat
+
+echo 'abcdefg' | run_mlr --nidx put '$1 = sub($1, "ab(.)d(..)g",  "ab<<\1>>d<<\2>>g")'
+echo 'abcdefg' | run_mlr --nidx put '$1 = sub($1, "ab(c)?d(..)g", "ab<<\1>>d<<\2>>g")'
+echo 'abXdefg' | run_mlr --nidx put '$1 = sub($1, "ab(c)?d(..)g", "ab<<\1>>d<<\2>>g")'
+echo 'abdefg'  | run_mlr --nidx put '$1 = sub($1, "ab(c)?d(..)g", "ab<<\1>>d<<\2>>g")'
 
 # ----------------------------------------------------------------
 announce DSL SUBSTR

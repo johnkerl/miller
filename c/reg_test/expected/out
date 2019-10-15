@@ -384,7 +384,7 @@ Denise,2015-06-17,feed
 Chuck,2015-06-19,beef
 Bob,2015-06-19,d00d
 
-mlr --csvlite rename -r (.*)e(.*),EEE ./reg_test/input/date1.csv ./reg_test/input/date2.csv
+mlr --csvlite rename -r (.*)e(.*),\1EEE\2 ./reg_test/input/date1.csv ./reg_test/input/date2.csv
 NamEEE,DatEEE_201505,ExtranEEEous
 Alice,2015-05-14,foo
 Bob,2015-05-11,bar
@@ -397,7 +397,7 @@ Denise,2015-06-17,feed
 Chuck,2015-06-19,beef
 Bob,2015-06-19,d00d
 
-mlr --csvlite rename -r "(.*)e(.*)"i,EEE ./reg_test/input/date1.csv ./reg_test/input/date2.csv
+mlr --csvlite rename -r "(.*)e(.*)"i,\1EEE\2 ./reg_test/input/date1.csv ./reg_test/input/date2.csv
 NamEEE,DatEEE_201505,ExtranEEEous
 Alice,2015-05-14,foo
 Bob,2015-05-11,bar
@@ -410,7 +410,7 @@ Denise,2015-06-17,feed
 Chuck,2015-06-19,beef
 Bob,2015-06-19,d00d
 
-mlr --csvlite rename -r -g "(.*)e(.*)"i,EEE ./reg_test/input/date1.csv ./reg_test/input/date2.csv
+mlr --csvlite rename -r -g "(.*)e(.*)"i,\1EEE\2 ./reg_test/input/date1.csv ./reg_test/input/date2.csv
 NamEEE,DatEEE_201505,ExtranEEEous
 Alice,2015-05-14,foo
 Bob,2015-05-11,bar
@@ -422,6 +422,13 @@ Alice,2015-06-23,cafe
 Denise,2015-06-17,feed
 Chuck,2015-06-19,beef
 Bob,2015-06-19,d00d
+
+mlr --csvlite rename -r ^(.a.e)(_.*)?,AA\1BB\2CC ./reg_test/input/date1.csv
+AANameBBCC,AADateBB_201505CC,Extraneous
+Alice,2015-05-14,foo
+Bob,2015-05-11,bar
+Chuck,2015-05-28,quux
+Denise,2015-05-02,meep
 
 mlr --csvlite rename -r "e",EEE ./reg_test/input/date1.csv ./reg_test/input/date2.csv
 NamEEE,DatEEE_201505,ExtranEEEous
@@ -23371,35 +23378,35 @@ x=3,y=10.3,z=13.300000,a=farewell world,b=hello world,c=hello world
 ================================================================
 DSL REGEX CAPTURES
 
-mlr --opprint put $FIELD =~ "([A-Z]+)([0-9]+)";         $F1=""; $F2=""; $F3="" ./reg_test/input/capture.dkvp
+mlr --opprint put $FIELD =~ "([A-Z]+)([0-9]+)";         $F1="\1"; $F2="\2"; $F3="\3" ./reg_test/input/capture.dkvp
 FIELD             F1  F2  F3
 ABC123            ABC 123 -
 ABC..123          -   -   -
 ..ABC..123..      -   -   -
 none of the above -   -   -
 
-mlr --opprint put $FIELD =~ "([A-Z]+)[^0-9]*([0-9]+)";  $F1=""; $F2=""; $F3="" ./reg_test/input/capture.dkvp
+mlr --opprint put $FIELD =~ "([A-Z]+)[^0-9]*([0-9]+)";  $F1="\1"; $F2="\2"; $F3="\3" ./reg_test/input/capture.dkvp
 FIELD             F1  F2  F3
 ABC123            ABC 123 -
 ABC..123          ABC 123 -
 ..ABC..123..      ABC 123 -
 none of the above -   -   -
 
-mlr --opprint put $FIELD =~ "([A-Z]+)([0-9]+)" then put $F1=""; $F2=""; $F3="" ./reg_test/input/capture.dkvp
+mlr --opprint put $FIELD =~ "([A-Z]+)([0-9]+)" then put $F1="\1"; $F2="\2"; $F3="\3" ./reg_test/input/capture.dkvp
 FIELD             F1 F2 F3
 ABC123            \1 \2 \3
 ABC..123          \1 \2 \3
 ..ABC..123..      \1 \2 \3
 none of the above \1 \2 \3
 
-mlr --opprint put $FIELD =~ "([A-Z]+)[^0-9]*([0-9]+)" then put $F1=""; $F2=""; $F3="" ./reg_test/input/capture.dkvp
+mlr --opprint put $FIELD =~ "([A-Z]+)[^0-9]*([0-9]+)" then put $F1="\1"; $F2="\2"; $F3="\3" ./reg_test/input/capture.dkvp
 FIELD             F1 F2 F3
 ABC123            \1 \2 \3
 ABC..123          \1 \2 \3
 ..ABC..123..      \1 \2 \3
 none of the above \1 \2 \3
 
-mlr --opprint put        $FIELD =~ "....."; $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put        $FIELD =~ "....."; $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0    F1 F2 F3 F4 F5 F6 F7 F8 F9
 -            -     -  -  -  -  -  -  -  -  -
 a            -     -  -  -  -  -  -  -  -  -
@@ -23415,7 +23422,7 @@ abcdefghij   abcde -  -  -  -  -  -  -  -  -
 abcdefghijk  abcde -  -  -  -  -  -  -  -  -
 abcdefghijkl abcde -  -  -  -  -  -  -  -  -
 
-mlr --opprint put        $FIELD =~ "....." {$F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put        $FIELD =~ "....." {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -23433,7 +23440,7 @@ abcdefghij   abcde -  -  -  -  -  -  -  -  -
 abcdefghijk  abcde -  -  -  -  -  -  -  -  -
 abcdefghijkl abcde -  -  -  -  -  -  -  -  -
 
-mlr --opprint put filter $FIELD =~ "....."; $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put filter $FIELD =~ "....."; $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0    F1 F2 F3 F4 F5 F6 F7 F8 F9
 abcde        abcde -  -  -  -  -  -  -  -  -
 abcdef       abcde -  -  -  -  -  -  -  -  -
@@ -23444,7 +23451,7 @@ abcdefghij   abcde -  -  -  -  -  -  -  -  -
 abcdefghijk  abcde -  -  -  -  -  -  -  -  -
 abcdefghijkl abcde -  -  -  -  -  -  -  -  -
 
-mlr --opprint put $FIELD =~ "(.)";                            $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)";                            $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0 F1 F2 F3 F4 F5 F6 F7 F8 F9
 -            -  -  -  -  -  -  -  -  -  -
 a            a  a  -  -  -  -  -  -  -  -
@@ -23460,7 +23467,7 @@ abcdefghij   a  a  -  -  -  -  -  -  -  -
 abcdefghijk  a  a  -  -  -  -  -  -  -  -
 abcdefghijkl a  a  -  -  -  -  -  -  -  -
 
-mlr --opprint put $FIELD =~ "(.)(.)";                         $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)";                         $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0 F1 F2 F3 F4 F5 F6 F7 F8 F9
 -            -  -  -  -  -  -  -  -  -  -
 a            -  -  -  -  -  -  -  -  -  -
@@ -23476,7 +23483,7 @@ abcdefghij   ab a  b  -  -  -  -  -  -  -
 abcdefghijk  ab a  b  -  -  -  -  -  -  -
 abcdefghijkl ab a  b  -  -  -  -  -  -  -
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)";                      $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)";                      $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0  F1 F2 F3 F4 F5 F6 F7 F8 F9
 -            -   -  -  -  -  -  -  -  -  -
 a            -   -  -  -  -  -  -  -  -  -
@@ -23492,7 +23499,7 @@ abcdefghij   abc a  b  c  -  -  -  -  -  -
 abcdefghijk  abc a  b  c  -  -  -  -  -  -
 abcdefghijkl abc a  b  c  -  -  -  -  -  -
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)(.)";                   $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)";                   $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0   F1 F2 F3 F4 F5 F6 F7 F8 F9
 -            -    -  -  -  -  -  -  -  -  -
 a            -    -  -  -  -  -  -  -  -  -
@@ -23508,7 +23515,7 @@ abcdefghij   abcd a  b  c  d  -  -  -  -  -
 abcdefghijk  abcd a  b  c  d  -  -  -  -  -
 abcdefghijkl abcd a  b  c  d  -  -  -  -  -
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)";                $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)";                $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0    F1 F2 F3 F4 F5 F6 F7 F8 F9
 -            -     -  -  -  -  -  -  -  -  -
 a            -     -  -  -  -  -  -  -  -  -
@@ -23524,7 +23531,7 @@ abcdefghij   abcde a  b  c  d  e  -  -  -  -
 abcdefghijk  abcde a  b  c  d  e  -  -  -  -
 abcdefghijkl abcde a  b  c  d  e  -  -  -  -
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)";             $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)";             $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0     F1 F2 F3 F4 F5 F6 F7 F8 F9
 -            -      -  -  -  -  -  -  -  -  -
 a            -      -  -  -  -  -  -  -  -  -
@@ -23540,7 +23547,7 @@ abcdefghij   abcdef a  b  c  d  e  f  -  -  -
 abcdefghijk  abcdef a  b  c  d  e  f  -  -  -
 abcdefghijkl abcdef a  b  c  d  e  f  -  -  -
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)";          $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)";          $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0      F1 F2 F3 F4 F5 F6 F7 F8 F9
 -            -       -  -  -  -  -  -  -  -  -
 a            -       -  -  -  -  -  -  -  -  -
@@ -23556,7 +23563,7 @@ abcdefghij   abcdefg a  b  c  d  e  f  g  -  -
 abcdefghijk  abcdefg a  b  c  d  e  f  g  -  -
 abcdefghijkl abcdefg a  b  c  d  e  f  g  -  -
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)";       $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)";       $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0       F1 F2 F3 F4 F5 F6 F7 F8 F9
 -            -        -  -  -  -  -  -  -  -  -
 a            -        -  -  -  -  -  -  -  -  -
@@ -23572,7 +23579,7 @@ abcdefghij   abcdefgh a  b  c  d  e  f  g  h  -
 abcdefghijk  abcdefgh a  b  c  d  e  f  g  h  -
 abcdefghijkl abcdefgh a  b  c  d  e  f  g  h  -
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)";    $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)";    $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0        F1 F2 F3 F4 F5 F6 F7 F8 F9
 -            -         -  -  -  -  -  -  -  -  -
 a            -         -  -  -  -  -  -  -  -  -
@@ -23588,7 +23595,7 @@ abcdefghij   abcdefghi a  b  c  d  e  f  g  h  i
 abcdefghijk  abcdefghi a  b  c  d  e  f  g  h  i
 abcdefghijkl abcdefghi a  b  c  d  e  f  g  h  i
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)"; $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)"; $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0         F1 F2 F3 F4 F5 F6 F7 F8 F9
 -            -          -  -  -  -  -  -  -  -  -
 a            -          -  -  -  -  -  -  -  -  -
@@ -23604,7 +23611,7 @@ abcdefghij   abcdefghij a  b  c  d  e  f  g  h  i
 abcdefghijk  abcdefghij a  b  c  d  e  f  g  h  i
 abcdefghijkl abcdefghij a  b  c  d  e  f  g  h  i
 
-mlr --opprint put $FIELD =~ "(.)"                            {$F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)"                            {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 
@@ -23622,7 +23629,7 @@ abcdefghij   a  a  -  -  -  -  -  -  -  -
 abcdefghijk  a  a  -  -  -  -  -  -  -  -
 abcdefghijkl a  a  -  -  -  -  -  -  -  -
 
-mlr --opprint put $FIELD =~ "(.)(.)"                         {$F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)"                         {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -23640,7 +23647,7 @@ abcdefghij   ab a  b  -  -  -  -  -  -  -
 abcdefghijk  ab a  b  -  -  -  -  -  -  -
 abcdefghijkl ab a  b  -  -  -  -  -  -  -
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)"                      {$F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)"                      {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -23658,7 +23665,7 @@ abcdefghij   abc a  b  c  -  -  -  -  -  -
 abcdefghijk  abc a  b  c  -  -  -  -  -  -
 abcdefghijkl abc a  b  c  -  -  -  -  -  -
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)(.)"                   {$F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)"                   {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -23676,7 +23683,7 @@ abcdefghij   abcd a  b  c  d  -  -  -  -  -
 abcdefghijk  abcd a  b  c  d  -  -  -  -  -
 abcdefghijkl abcd a  b  c  d  -  -  -  -  -
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)"                {$F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)"                {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -23694,7 +23701,7 @@ abcdefghij   abcde a  b  c  d  e  -  -  -  -
 abcdefghijk  abcde a  b  c  d  e  -  -  -  -
 abcdefghijkl abcde a  b  c  d  e  -  -  -  -
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)"             {$F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)"             {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -23712,7 +23719,7 @@ abcdefghij   abcdef a  b  c  d  e  f  -  -  -
 abcdefghijk  abcdef a  b  c  d  e  f  -  -  -
 abcdefghijkl abcdef a  b  c  d  e  f  -  -  -
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)"          {$F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)"          {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -23730,7 +23737,7 @@ abcdefghij   abcdefg a  b  c  d  e  f  g  -  -
 abcdefghijk  abcdefg a  b  c  d  e  f  g  -  -
 abcdefghijkl abcdefg a  b  c  d  e  f  g  -  -
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)"       {$F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)"       {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -23748,7 +23755,7 @@ abcdefghij   abcdefgh a  b  c  d  e  f  g  h  -
 abcdefghijk  abcdefgh a  b  c  d  e  f  g  h  -
 abcdefghijkl abcdefgh a  b  c  d  e  f  g  h  -
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)"    {$F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)"    {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -23766,7 +23773,7 @@ abcdefghij   abcdefghi a  b  c  d  e  f  g  h  i
 abcdefghijk  abcdefghi a  b  c  d  e  f  g  h  i
 abcdefghijkl abcdefghi a  b  c  d  e  f  g  h  i
 
-mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)" {$F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)" {$F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9"} ./reg_test/input/capture-lengths.dkvp
 FIELD
 -
 a
@@ -23784,7 +23791,7 @@ abcdefghij   abcdefghij a  b  c  d  e  f  g  h  i
 abcdefghijk  abcdefghij a  b  c  d  e  f  g  h  i
 abcdefghijkl abcdefghij a  b  c  d  e  f  g  h  i
 
-mlr --opprint put filter $FIELD =~ "(.)";                            $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put filter $FIELD =~ "(.)";                            $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0 F1 F2 F3 F4 F5 F6 F7 F8 F9
 a            a  a  -  -  -  -  -  -  -  -
 ab           a  a  -  -  -  -  -  -  -  -
@@ -23799,7 +23806,7 @@ abcdefghij   a  a  -  -  -  -  -  -  -  -
 abcdefghijk  a  a  -  -  -  -  -  -  -  -
 abcdefghijkl a  a  -  -  -  -  -  -  -  -
 
-mlr --opprint put filter $FIELD =~ "(.)(.)";                         $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put filter $FIELD =~ "(.)(.)";                         $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0 F1 F2 F3 F4 F5 F6 F7 F8 F9
 ab           ab a  b  -  -  -  -  -  -  -
 abc          ab a  b  -  -  -  -  -  -  -
@@ -23813,7 +23820,7 @@ abcdefghij   ab a  b  -  -  -  -  -  -  -
 abcdefghijk  ab a  b  -  -  -  -  -  -  -
 abcdefghijkl ab a  b  -  -  -  -  -  -  -
 
-mlr --opprint put filter $FIELD =~ "(.)(.)(.)";                      $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put filter $FIELD =~ "(.)(.)(.)";                      $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0  F1 F2 F3 F4 F5 F6 F7 F8 F9
 abc          abc a  b  c  -  -  -  -  -  -
 abcd         abc a  b  c  -  -  -  -  -  -
@@ -23826,7 +23833,7 @@ abcdefghij   abc a  b  c  -  -  -  -  -  -
 abcdefghijk  abc a  b  c  -  -  -  -  -  -
 abcdefghijkl abc a  b  c  -  -  -  -  -  -
 
-mlr --opprint put filter $FIELD =~ "(.)(.)(.)(.)";                   $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put filter $FIELD =~ "(.)(.)(.)(.)";                   $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0   F1 F2 F3 F4 F5 F6 F7 F8 F9
 abcd         abcd a  b  c  d  -  -  -  -  -
 abcde        abcd a  b  c  d  -  -  -  -  -
@@ -23838,7 +23845,7 @@ abcdefghij   abcd a  b  c  d  -  -  -  -  -
 abcdefghijk  abcd a  b  c  d  -  -  -  -  -
 abcdefghijkl abcd a  b  c  d  -  -  -  -  -
 
-mlr --opprint put filter $FIELD =~ "(.)(.)(.)(.)(.)";                $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put filter $FIELD =~ "(.)(.)(.)(.)(.)";                $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0    F1 F2 F3 F4 F5 F6 F7 F8 F9
 abcde        abcde a  b  c  d  e  -  -  -  -
 abcdef       abcde a  b  c  d  e  -  -  -  -
@@ -23849,7 +23856,7 @@ abcdefghij   abcde a  b  c  d  e  -  -  -  -
 abcdefghijk  abcde a  b  c  d  e  -  -  -  -
 abcdefghijkl abcde a  b  c  d  e  -  -  -  -
 
-mlr --opprint put filter $FIELD =~ "(.)(.)(.)(.)(.)(.)";             $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put filter $FIELD =~ "(.)(.)(.)(.)(.)(.)";             $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0     F1 F2 F3 F4 F5 F6 F7 F8 F9
 abcdef       abcdef a  b  c  d  e  f  -  -  -
 abcdefg      abcdef a  b  c  d  e  f  -  -  -
@@ -23859,7 +23866,7 @@ abcdefghij   abcdef a  b  c  d  e  f  -  -  -
 abcdefghijk  abcdef a  b  c  d  e  f  -  -  -
 abcdefghijkl abcdef a  b  c  d  e  f  -  -  -
 
-mlr --opprint put filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)";          $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)";          $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0      F1 F2 F3 F4 F5 F6 F7 F8 F9
 abcdefg      abcdefg a  b  c  d  e  f  g  -  -
 abcdefgh     abcdefg a  b  c  d  e  f  g  -  -
@@ -23868,7 +23875,7 @@ abcdefghij   abcdefg a  b  c  d  e  f  g  -  -
 abcdefghijk  abcdefg a  b  c  d  e  f  g  -  -
 abcdefghijkl abcdefg a  b  c  d  e  f  g  -  -
 
-mlr --opprint put filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)";       $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)";       $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0       F1 F2 F3 F4 F5 F6 F7 F8 F9
 abcdefgh     abcdefgh a  b  c  d  e  f  g  h  -
 abcdefghi    abcdefgh a  b  c  d  e  f  g  h  -
@@ -23876,18 +23883,30 @@ abcdefghij   abcdefgh a  b  c  d  e  f  g  h  -
 abcdefghijk  abcdefgh a  b  c  d  e  f  g  h  -
 abcdefghijkl abcdefgh a  b  c  d  e  f  g  h  -
 
-mlr --opprint put filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)";    $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)";    $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0        F1 F2 F3 F4 F5 F6 F7 F8 F9
 abcdefghi    abcdefghi a  b  c  d  e  f  g  h  i
 abcdefghij   abcdefghi a  b  c  d  e  f  g  h  i
 abcdefghijk  abcdefghi a  b  c  d  e  f  g  h  i
 abcdefghijkl abcdefghi a  b  c  d  e  f  g  h  i
 
-mlr --opprint put filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)"; $F0=" ./reg_test/input/capture-lengths.dkvp
+mlr --opprint put filter $FIELD =~ "(.)(.)(.)(.)(.)(.)(.)(.)(.)(.)"; $F0=" ";$F1="\1";$F2="\2";$F3="\3";$F4="\4";$F5="\5";$F6="\6";$F7="\7";$F8="\8";$F9="\9" ./reg_test/input/capture-lengths.dkvp
 FIELD        F0         F1 F2 F3 F4 F5 F6 F7 F8 F9
 abcdefghij   abcdefghij a  b  c  d  e  f  g  h  i
 abcdefghijk  abcdefghij a  b  c  d  e  f  g  h  i
 abcdefghijkl abcdefghij a  b  c  d  e  f  g  h  i
+
+mlr --inidx --odkvp put $1 =~ "ab(.)d(..)g"  { $c1 = "\1"; $c2 = "\2"}
+1=abcdefg,c1=c,c2=ef
+
+mlr --inidx --odkvp put $1 =~ "ab(.)?d(..)g" { $c1 = "\1"; $c2 = "\2"}
+1=abcdefg,c1=c,c2=ef
+
+mlr --inidx --odkvp put $1 =~ "ab(c)?d(..)g" { $c1 = "\1"; $c2 = "\2"}
+1=abXdefg
+
+mlr --inidx --odkvp put $1 =~ "ab(c)?d(..)g" { $c1 = "\1"; $c2 = "\2"}
+1=abdefg,c1=,c2=ef
 
 
 ================================================================
@@ -24612,21 +24631,21 @@ HELLO HELLO
 world world
 WORLD WORLD
 
-mlr --opprint put $y = sub($x, "([hg])e.*l(.)", "yy123y") ./reg_test/input/sub.dat
+mlr --opprint put $y = sub($x, "([hg])e.*l(.)", "y\1y123\2y") ./reg_test/input/sub.dat
 x     y
 hello yhy123oy
 HELLO HELLO
 world world
 WORLD WORLD
 
-mlr --opprint put $y = sub($x, "([hg])e.*l.",   "yy123y") ./reg_test/input/sub.dat
+mlr --opprint put $y = sub($x, "([hg])e.*l.",   "y\1y123\2y") ./reg_test/input/sub.dat
 x     y
-hello yhy123\2y
+hello yhy123y
 HELLO HELLO
 world world
 WORLD WORLD
 
-mlr --opprint put $y = sub($x, "([hg])e.*l(.)", "yy123.y") ./reg_test/input/sub.dat
+mlr --opprint put $y = sub($x, "([hg])e.*l(.)", "y\1y123.y") ./reg_test/input/sub.dat
 x     y
 hello yhy123.y
 HELLO HELLO
@@ -24678,7 +24697,7 @@ LMNOP      LMNOP
 ABCDEFG    AaBCDEFG
 ABABBABBBA AaBAaBBAaBBBAa
 
-mlr --opprint put $y = gsub($x, "a(.)", "aa") ./reg_test/input/gsub.dat
+mlr --opprint put $y = gsub($x, "a(.)", "aa\1\1\1") ./reg_test/input/gsub.dat
 x          y
 lmnop      lmnop
 abcdefg    aabbbcdefg
@@ -25231,6 +25250,18 @@ y
 
 x WORLD
 y 
+
+mlr --nidx put $1 = sub($1, "ab(.)d(..)g",  "ab<<\1>>d<<\2>>g")
+ab<<c>>d<<ef>>g
+
+mlr --nidx put $1 = sub($1, "ab(c)?d(..)g", "ab<<\1>>d<<\2>>g")
+ab<<c>>d<<ef>>g
+
+mlr --nidx put $1 = sub($1, "ab(c)?d(..)g", "ab<<\1>>d<<\2>>g")
+abXdefg
+
+mlr --nidx put $1 = sub($1, "ab(c)?d(..)g", "ab<<\1>>d<<\2>>g")
+ab<<>>d<<ef>>g
 
 
 ================================================================
@@ -41178,7 +41209,7 @@ mlr cat then nothing then cat ./reg_test/input/abixy
 ================================================================
 IN-PLACE PROCESSING
 
-cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -41190,7 +41221,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -41202,14 +41233,14 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr -I --opprint head -n 2 /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1 /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
+mlr -I --opprint head -n 2 /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1 /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
 
-cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
 a   b   i x                  y
 pan pan 1 0.3467901443380824 0.7268028627434533
 eks pan 2 0.7586799647899636 0.5221511083334797
 
-cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
 a   b   i x                  y
 pan pan 1 0.3467901443380824 0.7268028627434533
 eks pan 2 0.7586799647899636 0.5221511083334797
@@ -41217,10 +41248,10 @@ eks pan 2 0.7586799647899636 0.5221511083334797
 mlr -I --opprint head -n 2
 mlr: -I option (in-place operation) requires input files.
 
-mlr -I --opprint -n head -n 2 /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
+mlr -I --opprint -n head -n 2 /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
 mlr: -I option (in-place operation) requires input files.
 
-cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -41232,7 +41263,7 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
 a=wye,b=wye,i=3,x=0.20460330576630303,y=0.33831852551664776
@@ -41244,9 +41275,9 @@ a=zee,b=wye,i=8,x=0.5985540091064224,y=0.976181385699006
 a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
-mlr -I --opprint rename a,AYE,b,BEE /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1 /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
+mlr -I --opprint rename a,AYE,b,BEE /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1 /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
 
-cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp1
 AYE BEE i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -41259,7 +41290,7 @@ zee wye 8  0.5985540091064224  0.976181385699006
 hat wye 9  0.03144187646093577 0.7495507603507059
 pan wye 10 0.5026260055412137  0.9526183602969864
 
-cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/abixy.temp2
 AYE BEE i  x                   y
 pan pan 1  0.3467901443380824  0.7268028627434533
 eks pan 2  0.7586799647899636  0.5221511083334797
@@ -46331,7 +46362,7 @@ c 6
 mlr termcvt --lf2crlf
 
 ---------------------------------------------------------------- input comments1-crlf.dkvp
-cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp
 # hello world 1
 a=1,b=2,c=3
 a=4,b=5,c=6
@@ -46347,7 +46378,7 @@ a 4
 b 5
 c 6
 
-mlr --skip-comments --idkvp --oxtab cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp
+mlr --skip-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp
 a 1
 b 2
 c 3
@@ -46368,7 +46399,7 @@ a 4
 b 5
 c 6
 
-mlr --pass-comments --idkvp --oxtab cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp
+mlr --pass-comments --idkvp --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.dkvp
 # hello world 1
 a 1
 b 2
@@ -46683,7 +46714,7 @@ mlr --pass-comments --inidx --oxtab cat ./reg_test/input/comments/comments3.nidx
 mlr termcvt --lf2crlf
 
 ---------------------------------------------------------------- input comments1-crlf.nidx
-cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.nidx
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.nidx
 # hello world 1
 aX1 bX2 cX3
 aX4 bX5 cX6
@@ -46699,7 +46730,7 @@ mlr --skip-comments --inidx --oxtab cat
 2 bX5
 3 cX6
 
-mlr --skip-comments --inidx --oxtab cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.nidx
+mlr --skip-comments --inidx --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.nidx
 1 aX1
 2 bX2
 3 cX3
@@ -46720,7 +46751,7 @@ mlr --pass-comments --inidx --oxtab cat
 2 bX5
 3 cX6
 
-mlr --pass-comments --inidx --oxtab cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.nidx
+mlr --pass-comments --inidx --oxtab cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.nidx
 # hello world 1
 1 aX1
 2 bX2
@@ -46824,7 +46855,7 @@ a=4,b=5,c=6
 mlr termcvt --lf2crlf
 
 ---------------------------------------------------------------- input comments1-crlf.json
-cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.json
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.json
 # hello world 1
 { "a":1, "b":2, "c":3 }
 { "a":4, "b":5, "c":6 }
@@ -46835,7 +46866,7 @@ mlr --skip-comments --ijson --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --skip-comments --ijson --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.json
+mlr --skip-comments --ijson --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.json
 a=1,b=2,c=3
 a=4,b=5,c=6
 
@@ -46846,7 +46877,7 @@ mlr --pass-comments --ijson --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --pass-comments --ijson --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.json
+mlr --pass-comments --ijson --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.json
 # hello world 1
 a=1,b=2,c=3
 a=4,b=5,c=6
@@ -46943,7 +46974,7 @@ x=2,z=5
 mlr termcvt --lf2crlf
 
 ---------------------------------------------------------------- input comments1-crlf.xtab
-cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.xtab
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.xtab
 x 1
 #hello world3
 z 3
@@ -46959,7 +46990,7 @@ mlr --skip-comments --ixtab --odkvp cat
 x=1,z=3
 x=2,z=5
 
-mlr --skip-comments --ixtab --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.xtab
+mlr --skip-comments --ixtab --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.xtab
 x=1,z=3
 x=2,z=5
 
@@ -46971,7 +47002,7 @@ x=1,z=3
 #hello world4
 x=2,z=5
 
-mlr --pass-comments --ixtab --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.xtab
+mlr --pass-comments --ixtab --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.xtab
 #hello world3
 x=1,z=3
 #hello world4
@@ -47053,7 +47084,7 @@ a=4,b=5,c=6
 mlr termcvt --lf2crlf
 
 ---------------------------------------------------------------- input comments1-crlf.csv
-cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
 # hello
 a,b,c
 1,2,3
@@ -47065,7 +47096,7 @@ mlr --skip-comments --icsvlite --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --skip-comments --icsvlite --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+mlr --skip-comments --icsvlite --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
@@ -47076,7 +47107,7 @@ mlr --pass-comments --icsvlite --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --pass-comments --icsvlite --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+mlr --pass-comments --icsvlite --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
 # hello
 a=1,b=2,c=3
 a=4,b=5,c=6
@@ -47157,7 +47188,7 @@ a=4,b=5,c=6
 mlr termcvt --lf2crlf
 
 ---------------------------------------------------------------- input comments1-crlf.csv
-cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
 # hello
 a,b,c
 1,2,3
@@ -47169,7 +47200,7 @@ mlr --skip-comments --icsv --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --skip-comments --icsv --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+mlr --skip-comments --icsv --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
 a=1,b=2,c=3
 a=4,b=5,c=6
 
@@ -47180,7 +47211,7 @@ mlr --pass-comments --icsv --odkvp cat
 a=1,b=2,c=3
 a=4,b=5,c=6
 
-mlr --pass-comments --icsv --odkvp cat /home/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
+mlr --pass-comments --icsv --odkvp cat /Users/kerl/pub_http_internet/miller-releases/miller-head/c/output-regtest/comments1-crlf.csv
 # hello
 a=1,b=2,c=3
 a=4,b=5,c=6
@@ -48329,7 +48360,7 @@ mlr --opprint --barred --right cat ./reg_test/input/abixy-het
 ================================================================
 MULTI-CHARACTER IXS SPECIFIERS
 
-mlr --oxtab --idkvp --mmap --irs lf --ifs \x2c --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --idkvp --mmap --irs lf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
 x :0.641593543645736508/
 a :wye/
 i :0/
@@ -48350,7 +48381,7 @@ x :0.676537984365847889/
 a :zee/
 i :4/
 
-mlr --oxtab --idkvp --mmap --irs lf --ifs /, --ips \x3d\x3a cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --idkvp --mmap --irs lf --ifs /, --ips =: cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
 x 0.641593543645736508
 a wye
 i 0
