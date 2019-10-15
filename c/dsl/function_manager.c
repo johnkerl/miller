@@ -608,6 +608,25 @@ void fmgr_list_all_functions_raw(fmgr_t* pfmgr, FILE* output_stream) {
 	}
 }
 
+void fmgr_list_all_functions_as_table(fmgr_t* pfmgr, FILE* output_stream) {
+	fprintf(output_stream, "%-30s %-10s %s\n", "Name", "Class", "#Args");
+	for (int i = 0; ; i++) {
+		function_lookup_t* plookup = &FUNCTION_LOOKUP_TABLE[i];
+		if (plookup->function_name == NULL) // end of table
+			break;
+
+		fprintf(output_stream, "%-30s %-10s ",
+			plookup->function_name,
+			function_class_to_desc(plookup->function_class));
+		if (plookup->variadic) {
+			fprintf(output_stream, "variadic");
+		} else {
+			fprintf(output_stream, "%d", plookup->arity);
+		}
+		fprintf(output_stream, "\n");
+	}
+}
+
 // ================================================================
 typedef struct _udf_callsite_state_t {
 	int arity;

@@ -67,4 +67,6 @@ void fmgr_function_usage(fmgr_t* pfmgr, FILE* output_stream, char* function_name
 
 void fmgr_list_all_functions_raw(fmgr_t* pfmgr, FILE* output_stream);
 
+void fmgr_list_all_functions_as_table(fmgr_t* pfmgr, FILE* output_stream);
+
 #endif // FUNCTION_MANAGER_H

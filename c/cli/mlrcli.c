@@ -1405,6 +1405,11 @@ static int handle_terminal_usage(char** argv, int argc, int argi) {
 		fmgr_list_all_functions_raw(pfmgr, stdout);
 		fmgr_free(pfmgr, NULL);
 		return TRUE;
+	} else if (streq(argv[argi], "--list-all-functions-as-table")) {
+		fmgr_t* pfmgr = fmgr_alloc();
+		fmgr_list_all_functions_as_table(pfmgr, stdout);
+		fmgr_free(pfmgr, NULL);
+		return TRUE;
 	} else if (streq(argv[argi], "--help-all-functions") || streq(argv[argi], "-f")) {
 		fmgr_t* pfmgr = fmgr_alloc();
 		fmgr_function_usage(pfmgr, stdout, NULL);
