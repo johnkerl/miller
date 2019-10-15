@@ -229,6 +229,7 @@ pageTracker._trackPageview();
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#Emit-all_statements">Emit-all statements</a><br/>
 &bull;&nbsp;<a href="#Unset_statements">Unset statements</a><br/>
 &bull;&nbsp;<a href="#Filter_statements">Filter statements</a><br/>
+&bull;&nbsp;<a href="#Built-in_functions_for_filter_and_put,_summary">Built-in functions for filter and put, summary</a><br/>
 &bull;&nbsp;<a href="#Built-in_functions_for_filter_and_put">Built-in functions for filter and put</a><br/>
 &bull;&nbsp;<a href="#User-defined_functions_and_subroutines">User-defined functions and subroutines</a><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&bull;&nbsp;<a href="#User-defined_functions">User-defined functions</a><br/>
@@ -3654,6 +3655,528 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,z=0.495106
 </pre>
 </div>
 <p/>
+
+</div>
+<!-- ================================================================ -->
+<a id="Built-in_functions_for_filter_and_put,_summary"/><h1>Built-in functions for filter and put, summary</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_built_in_functions_summary');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_built_in_functions_summary" style="display: block">
+
+<table border=1>
+<tr class="mlrbg">
+<th>Name</th> <th>Class</th> <th>#Args</th>
+</tr>
+<tr>
+<td><a href=#+>+</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#+>+</a></td> <td>arithmetic</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#->-</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#->-</a></td> <td>arithmetic</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#*>*</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#/>/</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#//>//</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#.+>.+</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#.+>.+</a></td> <td>arithmetic</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#.->.-</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#.->.-</a></td> <td>arithmetic</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#.*>.*</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#./>./</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#.//>.//</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#%>%</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#**>**</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#|>|</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#^>^</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#&>&</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#~>~</a></td> <td>arithmetic</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#<<><<</a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#>>>>></a></td> <td>arithmetic</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#bitcount>bitcount</a></td> <td>arithmetic</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#==>==</a></td> <td>boolean</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#!=>!=</a></td> <td>boolean</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#=~>=~</a></td> <td>boolean</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#!=~>!=~</a></td> <td>boolean</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#>>></a></td> <td>boolean</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#>=>>=</a></td> <td>boolean</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#<><</a></td> <td>boolean</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#<=><=</a></td> <td>boolean</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#&&>&&</a></td> <td>boolean</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#||>||</a></td> <td>boolean</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#^^>^^</a></td> <td>boolean</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#!>!</a></td> <td>boolean</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#?>?</a></td> <td>:</td> <td>boolean    3</td>
+</tr>
+<tr>
+<td><a href=#.>.</a></td> <td>string</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#gsub>gsub</a></td> <td>string</td> <td>3</td>
+</tr>
+<tr>
+<td><a href=#regextract>regextract</a></td> <td>string</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#regextract_or_else>regextract_or_else</a></td> <td>string</td> <td>3</td>
+</tr>
+<tr>
+<td><a href=#strlen>strlen</a></td> <td>string</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#sub>sub</a></td> <td>string</td> <td>3</td>
+</tr>
+<tr>
+<td><a href=#ssub>ssub</a></td> <td>string</td> <td>3</td>
+</tr>
+<tr>
+<td><a href=#substr>substr</a></td> <td>string</td> <td>3</td>
+</tr>
+<tr>
+<td><a href=#tolower>tolower</a></td> <td>string</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#toupper>toupper</a></td> <td>string</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#capitalize>capitalize</a></td> <td>string</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#lstrip>lstrip</a></td> <td>string</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#rstrip>rstrip</a></td> <td>string</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#strip>strip</a></td> <td>string</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#collapse_whitespace>collapse_whitespace</a></td> <td>string</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#clean_whitespace>clean_whitespace</a></td> <td>string</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#system>system</a></td> <td>string</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#abs>abs</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#acos>acos</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#acosh>acosh</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asin>asin</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asinh>asinh</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#atan>atan</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#atan2>atan2</a></td> <td>math</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#atanh>atanh</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#cbrt>cbrt</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#ceil>ceil</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#cos>cos</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#cosh>cosh</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#erf>erf</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#erfc>erfc</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#exp>exp</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#expm1>expm1</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#floor>floor</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#invqnorm>invqnorm</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#log>log</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#log10>log10</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#log1p>log1p</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#logifit>logifit</a></td> <td>math</td> <td>3</td>
+</tr>
+<tr>
+<td><a href=#madd>madd</a></td> <td>math</td> <td>3</td>
+</tr>
+<tr>
+<td><a href=#max>max</a></td> <td>math</td> <td>variadic</td>
+</tr>
+<tr>
+<td><a href=#mexp>mexp</a></td> <td>math</td> <td>3</td>
+</tr>
+<tr>
+<td><a href=#min>min</a></td> <td>math</td> <td>variadic</td>
+</tr>
+<tr>
+<td><a href=#mmul>mmul</a></td> <td>math</td> <td>3</td>
+</tr>
+<tr>
+<td><a href=#msub>msub</a></td> <td>math</td> <td>3</td>
+</tr>
+<tr>
+<td><a href=#pow>pow</a></td> <td>math</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#qnorm>qnorm</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#round>round</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#roundm>roundm</a></td> <td>math</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#sgn>sgn</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#sin>sin</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#sinh>sinh</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#sqrt>sqrt</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#tan>tan</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#tanh>tanh</a></td> <td>math</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#urand>urand</a></td> <td>math</td> <td>0</td>
+</tr>
+<tr>
+<td><a href=#urandrange>urandrange</a></td> <td>math</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#urand32>urand32</a></td> <td>math</td> <td>0</td>
+</tr>
+<tr>
+<td><a href=#urandint>urandint</a></td> <td>math</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#dhms2fsec>dhms2fsec</a></td> <td>time</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#dhms2sec>dhms2sec</a></td> <td>time</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#fsec2dhms>fsec2dhms</a></td> <td>time</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#fsec2hms>fsec2hms</a></td> <td>time</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#gmt2sec>gmt2sec</a></td> <td>time</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#localtime2sec>localtime2sec</a></td> <td>time</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#hms2fsec>hms2fsec</a></td> <td>time</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#hms2sec>hms2sec</a></td> <td>time</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#sec2dhms>sec2dhms</a></td> <td>time</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#sec2gmt>sec2gmt</a></td> <td>time</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#sec2gmt>sec2gmt</a></td> <td>time</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#sec2gmtdate>sec2gmtdate</a></td> <td>time</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#sec2localtime>sec2localtime</a></td> <td>time</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#sec2localtime>sec2localtime</a></td> <td>time</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#sec2localdate>sec2localdate</a></td> <td>time</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#sec2hms>sec2hms</a></td> <td>time</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#strftime>strftime</a></td> <td>time</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#strftime_local>strftime_local</a></td> <td>time</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#strptime>strptime</a></td> <td>time</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#strptime_local>strptime_local</a></td> <td>time</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#systime>systime</a></td> <td>time</td> <td>0</td>
+</tr>
+<tr>
+<td><a href=#is_absent>is_absent</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#is_bool>is_bool</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#is_boolean>is_boolean</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#is_empty>is_empty</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#is_empty_map>is_empty_map</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#is_float>is_float</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#is_int>is_int</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#is_map>is_map</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#is_nonempty_map>is_nonempty_map</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#is_not_empty>is_not_empty</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#is_not_map>is_not_map</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#is_not_null>is_not_null</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#is_null>is_null</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#is_numeric>is_numeric</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#is_present>is_present</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#is_string>is_string</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_absent>asserting_absent</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_bool>asserting_bool</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_boolean>asserting_boolean</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_empty>asserting_empty</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_empty_map>asserting_empty_map</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_float>asserting_float</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_int>asserting_int</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_map>asserting_map</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_nonempty_map>asserting_nonempty_map</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_not_empty>asserting_not_empty</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_not_map>asserting_not_map</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_not_null>asserting_not_null</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_null>asserting_null</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_numeric>asserting_numeric</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_present>asserting_present</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#asserting_string>asserting_string</a></td> <td>typing</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#boolean>boolean</a></td> <td>conversion</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#float>float</a></td> <td>conversion</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#fmtnum>fmtnum</a></td> <td>conversion</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#hexfmt>hexfmt</a></td> <td>conversion</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#int>int</a></td> <td>conversion</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#string>string</a></td> <td>conversion</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#typeof>typeof</a></td> <td>conversion</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#depth>depth</a></td> <td>maps</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#haskey>haskey</a></td> <td>maps</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#joink>joink</a></td> <td>maps</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#joinkv>joinkv</a></td> <td>maps</td> <td>3</td>
+</tr>
+<tr>
+<td><a href=#joinv>joinv</a></td> <td>maps</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#leafcount>leafcount</a></td> <td>maps</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#length>length</a></td> <td>maps</td> <td>1</td>
+</tr>
+<tr>
+<td><a href=#mapdiff>mapdiff</a></td> <td>maps</td> <td>variadic</td>
+</tr>
+<tr>
+<td><a href=#mapexcept>mapexcept</a></td> <td>maps</td> <td>variadic</td>
+</tr>
+<tr>
+<td><a href=#mapselect>mapselect</a></td> <td>maps</td> <td>variadic</td>
+</tr>
+<tr>
+<td><a href=#mapsum>mapsum</a></td> <td>maps</td> <td>variadic</td>
+</tr>
+<tr>
+<td><a href=#splitkv>splitkv</a></td> <td>maps</td> <td>3</td>
+</tr>
+<tr>
+<td><a href=#splitkvx>splitkvx</a></td> <td>maps</td> <td>3</td>
+</tr>
+<tr>
+<td><a href=#splitnv>splitnv</a></td> <td>maps</td> <td>2</td>
+</tr>
+<tr>
+<td><a href=#splitnvx>splitnvx</a></td> <td>maps</td> <td>2</td>
+</tr>
+</table>
 
 </div>
 <!-- ================================================================ -->
