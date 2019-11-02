@@ -2513,6 +2513,7 @@ md_atom_or_fcn(A) ::= md_regexi(B). {
 md_atom_or_fcn(A) ::= md_nonindexed_local_variable(B). {
 	A = B;
 }
+
 md_atom_or_fcn(A) ::= md_indexed_local_variable(B). {
 	A = B;
 }
@@ -2520,12 +2521,49 @@ md_atom_or_fcn(A) ::= md_indexed_local_variable(B). {
 md_nonindexed_local_variable(A) ::= MD_TOKEN_NON_SIGIL_NAME(B). {
 	A = mlr_dsl_ast_node_alloc(B->text, MD_AST_NODE_TYPE_NONINDEXED_LOCAL_VARIABLE);
 }
+
 md_indexed_local_variable(A) ::= md_nonindexed_local_variable(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
 	A = mlr_dsl_ast_node_alloc_unary(B->text, MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE, C);
 	mlr_dsl_ast_node_free(B);
 }
 md_indexed_local_variable(A) ::= md_indexed_local_variable(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
 	A = mlr_dsl_ast_node_append_arg(B, C);
+}
+
+
+md_atom_or_fcn(A) ::= md_indexed_function_call(B). {
+	A = B;
+}
+
+// Indexed function calls:
+// * First child node is function call with argument list.
+// * Second child node is list of indexing expressions.
+//
+// Example: 'foo(1,2,3)[4][5]' parses to AST
+//
+// text="foo", type=INDEXED_FUNCTION_CALLSITE:
+//     text="foo", type=FUNCTION_CALLSITE:
+//         text="1", type=NUMERIC_LITERAL.
+//         text="2", type=NUMERIC_LITERAL.
+//         text="3", type=NUMERIC_LITERAL.
+//     text="indexing", type=MD_AST_NODE_TYPE_INDEXED_FUNCTION_INDEX_LIST:
+//         text="4", type=NUMERIC_LITERAL.
+//         text="5", type=NUMERIC_LITERAL.
+md_indexed_function_call(A) ::= md_fcn_or_subr_call(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
+	A = mlr_dsl_ast_node_alloc_binary(
+		B->text,
+		MD_AST_NODE_TYPE_INDEXED_FUNCTION_CALLSITE,
+		B,
+		mlr_dsl_ast_node_alloc_unary(
+			"indexing",
+			MD_AST_NODE_TYPE_INDEXED_FUNCTION_INDEX_LIST,
+			C
+		)
+	);
+}
+md_indexed_function_call(A) ::= md_indexed_function_call(B) MD_TOKEN_LEFT_BRACKET md_rhs(C) MD_TOKEN_RIGHT_BRACKET. {
+	// Append to second child node which is list of indexing expressions.
+	A = mlr_dsl_ast_node_append_arg_to_second_child(B, C);
 }
 
 md_string(A) ::= MD_TOKEN_STRING(B). {

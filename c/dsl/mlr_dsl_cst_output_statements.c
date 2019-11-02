@@ -700,6 +700,8 @@ mlr_dsl_cst_statement_t* alloc_emit(
 		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(
 			pkeylist_node, pcst->pfmgr, type_inferencing, context_flags);
 
+	// xxx indexed function callsite -- ?
+
 	} else if (pkeylist_node->type == MD_AST_NODE_TYPE_MAP_LITERAL) {
 		pstate->precord_emitter = record_emitter_from_ephemeral_map;
 		pstate->prhs_xevaluator = rxval_evaluator_alloc_from_ast(

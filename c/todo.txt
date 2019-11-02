@@ -1,6 +1,9 @@
 ================================================================
 BUGFIXES
 
+! fix ifc not at top level !
+* segv on over-indexed local var stored from function retval ...
+
 * follow-on for pre-existing unset/typed-overlay issue
 
 ================================================================

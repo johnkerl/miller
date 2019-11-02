@@ -50,6 +50,15 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_nonindexed_local_variable(
 rxval_evaluator_t* rxval_evaluator_alloc_from_indexed_local_variable(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 
+rxval_evaluator_t* rxval_evaluator_alloc_from_indexed_function_call(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
+// Srec assignments have output that is rval not rxval (scalar, not map).  But for
+// indexed function calls we have a function which produces rxval, indexed down by a
+// keylist, to produce an rval as a final result. This needs special handling.
+rval_evaluator_t* rval_evaluator_alloc_from_indexed_function_call(
+	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
+
 rxval_evaluator_t* rxval_evaluator_alloc_from_oosvar_keylist(
 	mlr_dsl_ast_node_t* past, fmgr_t* pfmgr, int type_inferencing, int context_flags);
 

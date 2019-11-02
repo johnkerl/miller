@@ -31,6 +31,7 @@ mlr_dsl_cst_statement_t* alloc_srec_assignment(mlr_dsl_cst_t* pcst, mlr_dsl_ast_
 	MLR_INTERNAL_CODING_ERROR_IF(plhs_node->pchildren != NULL);
 
 	pstate->srec_lhs_field_name = plhs_node->text;
+
 	pstate->prhs_evaluator = rval_evaluator_alloc_from_ast(prhs_node, pcst->pfmgr, type_inferencing, context_flags);
 
 	return mlr_dsl_cst_statement_valloc(

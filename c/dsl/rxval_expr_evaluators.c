@@ -40,6 +40,11 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 			pnode, pfmgr, type_inferencing, context_flags);
 		break;
 
+	case MD_AST_NODE_TYPE_INDEXED_FUNCTION_CALLSITE:
+		return rxval_evaluator_alloc_from_indexed_function_call(
+			pnode, pfmgr, type_inferencing, context_flags);
+		break;
+
 	case MD_AST_NODE_TYPE_OOSVAR_KEYLIST:
 		return rxval_evaluator_alloc_from_oosvar_keylist(
 			pnode, pfmgr, type_inferencing, context_flags);
@@ -65,6 +70,52 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmg
 		return rxval_evaluator_alloc_wrapping_rval(pnode, pfmgr, type_inferencing, context_flags);
 		break;
 	}
+}
+
+// ----------------------------------------------------------------
+// Srec assignments have output that is rval not rxval (scalar, not map).  But for
+// indexed function calls we have a function which produces rxval, indexed down by a
+// keylist, to produce an rval as a final result. This needs special handling.
+// Here we invoke the rxval evaluator, then unbox it and return the resulting rval.
+
+typedef struct _rval_evaluator_indexed_function_call_state_t {
+	rxval_evaluator_t* prxval_evaluator;
+} rval_evaluator_indexed_function_call_state_t;
+
+static mv_t rval_evaluator_indexed_function_call_func(void* pvstate, variables_t* pvars) {
+	rval_evaluator_indexed_function_call_state_t* pstate = pvstate;
+
+	rxval_evaluator_t* prxval_evaluator = pstate->prxval_evaluator;
+	boxed_xval_t boxed_xval = prxval_evaluator->pprocess_func(prxval_evaluator->pvstate, pvars);
+	if (boxed_xval.xval.is_terminal) {
+		return boxed_xval.xval.terminal_mlrval;
+	} else {
+		return mv_absent();
+	}
+
+}
+static void rval_evaluator_indexed_function_call_free(rval_evaluator_t* pevaluator) {
+	rval_evaluator_indexed_function_call_state_t* pstate = pevaluator->pvstate;
+	pstate->prxval_evaluator->pfree_func(pstate->prxval_evaluator);
+	free(pstate);
+	free(pevaluator);
+}
+rval_evaluator_t* rval_evaluator_alloc_from_indexed_function_call(
+	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
+{
+	rval_evaluator_indexed_function_call_state_t* pstate = mlr_malloc_or_die(
+		sizeof(rval_evaluator_indexed_function_call_state_t)
+	);
+	rval_evaluator_t* pevaluator = mlr_malloc_or_die(sizeof(rval_evaluator_t));
+
+	pstate->prxval_evaluator = rxval_evaluator_alloc_from_indexed_function_call(
+		pnode, pfmgr, type_inferencing, context_flags);
+
+	pevaluator->pprocess_func = rval_evaluator_indexed_function_call_func;
+	pevaluator->pfree_func    = rval_evaluator_indexed_function_call_free;
+
+	pevaluator->pvstate = pstate;
+	return pevaluator;
 }
 
 // ================================================================
@@ -364,6 +415,109 @@ rxval_evaluator_t* rxval_evaluator_alloc_from_indexed_local_variable(
 	prxval_evaluator->pvstate       = pstate;
 	prxval_evaluator->pprocess_func = rxval_evaluator_from_indexed_local_variable_func;
 	prxval_evaluator->pfree_func    = rxval_evaluator_from_indexed_local_variable_free;
+
+	return prxval_evaluator;
+}
+
+// ================================================================
+typedef struct _rxval_evaluator_from_indexed_function_call_state_t {
+	rxval_evaluator_t* pfunction_call_evaluator;
+	sllv_t* pkeylist_evaluators;
+} rxval_evaluator_from_indexed_function_call_state_t;
+
+static boxed_xval_t rxval_evaluator_from_indexed_function_call_func(void* pvstate, variables_t* pvars) {
+	rxval_evaluator_from_indexed_function_call_state_t* pstate = pvstate;
+
+	// This is for things like $b = splitnvx($a, ":")[1].
+	// * First we evaluate the function call -- the splitnvx($a, ":") part.
+	// * Second we evaluate the index/indices -- [1] part.
+	// * Third we index function-call return value by the indices.
+
+	// Evaluate the function call:
+	rxval_evaluator_t* pfunction_call_evaluator = pstate->pfunction_call_evaluator;
+	boxed_xval_t function_call_output = pfunction_call_evaluator->pprocess_func(
+		pfunction_call_evaluator->pvstate, pvars);
+
+	// Non-indexable if not a map.
+	if (function_call_output.xval.is_terminal) {
+		mv_free(&function_call_output.xval.terminal_mlrval);
+		return (boxed_xval_t) {
+			.xval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
+			.is_ephemeral = TRUE,
+		};
+	}
+
+	// Evaluate the indices:
+	int all_non_null_or_error = TRUE;
+	sllmv_t* pmvkeys = evaluate_list(pstate->pkeylist_evaluators, pvars, &all_non_null_or_error);
+
+	if (!all_non_null_or_error) {
+		mlhmmv_xvalue_free(&function_call_output.xval);
+		sllmv_free(pmvkeys);
+		return (boxed_xval_t) {
+			.xval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
+			.is_ephemeral = TRUE,
+		};
+	}
+
+	// Index the function-call return value by the indices:
+	int lookup_error_reason_unused = FALSE;
+	mlhmmv_xvalue_t* pxval = mlhmmv_level_look_up_and_ref_xvalue(
+		function_call_output.xval.pnext_level, pmvkeys, &lookup_error_reason_unused);
+
+	if (pxval == NULL) {
+		mlhmmv_xvalue_free(&function_call_output.xval);
+		sllmv_free(pmvkeys);
+		return (boxed_xval_t) {
+			.xval = mlhmmv_xvalue_wrap_terminal(mv_absent()),
+			.is_ephemeral = FALSE,
+		};
+	} else {
+		// xxx copy out little bit, free full retval
+		// mlhmmv_xvalue_free(&function_call_output.xval);
+		sllmv_free(pmvkeys);
+		return (boxed_xval_t) {
+			.xval = *pxval,
+			.is_ephemeral = FALSE,
+		};
+	}
+}
+
+static void rxval_evaluator_from_indexed_function_call_free(rxval_evaluator_t* prxval_evaluator) {
+	rxval_evaluator_from_indexed_function_call_state_t* pstate = prxval_evaluator->pvstate;
+	for (sllve_t* pe = pstate->pkeylist_evaluators->phead; pe != NULL; pe = pe->pnext) {
+		rval_evaluator_t* prval_evaluator = pe->pvvalue;
+		prval_evaluator->pfree_func(prval_evaluator);
+	}
+	sllv_free(pstate->pkeylist_evaluators);
+	free(pstate);
+	free(prxval_evaluator);
+}
+
+rxval_evaluator_t* rxval_evaluator_alloc_from_indexed_function_call(
+	mlr_dsl_ast_node_t* pnode, fmgr_t* pfmgr, int type_inferencing, int context_flags)
+{
+	rxval_evaluator_from_indexed_function_call_state_t* pstate = mlr_malloc_or_die(
+		sizeof(rxval_evaluator_from_indexed_function_call_state_t));
+
+	// Example: 'foo(1,2,3)[4][5]' parses to AST
+	//   text="foo", type=INDEXED_FUNCTION_CALLSITE:
+	//       text="foo", type=FUNCTION_CALLSITE:
+	//           text="1", type=NUMERIC_LITERAL.
+	//           text="2", type=NUMERIC_LITERAL.
+	//           text="3", type=NUMERIC_LITERAL.
+	//       text="indexing", type=MD_AST_NODE_TYPE_INDEXED_FUNCTION_INDEX_LIST:
+	//           text="4", type=NUMERIC_LITERAL.
+	//           text="5", type=NUMERIC_LITERAL.
+	pstate->pfunction_call_evaluator = fmgr_xalloc_provisional_from_operator_or_function_call(
+		pfmgr, pnode->pchildren->phead->pvvalue, type_inferencing, context_flags);
+	pstate->pkeylist_evaluators = allocate_keylist_evaluators_from_ast_node(
+		pnode->pchildren->phead->pnext->pvvalue, pfmgr, type_inferencing, context_flags);
+
+	rxval_evaluator_t* prxval_evaluator = mlr_malloc_or_die(sizeof(rxval_evaluator_t));
+	prxval_evaluator->pvstate       = pstate;
+	prxval_evaluator->pprocess_func = rxval_evaluator_from_indexed_function_call_func;
+	prxval_evaluator->pfree_func    = rxval_evaluator_from_indexed_function_call_free;
 
 	return prxval_evaluator;
 }

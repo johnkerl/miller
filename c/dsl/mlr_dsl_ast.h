@@ -14,6 +14,8 @@ typedef enum _mlr_dsl_ast_node_type_t {
 	MD_AST_NODE_TYPE_FUNC_DEF,
 	MD_AST_NODE_TYPE_SUBR_DEF,
 	MD_AST_NODE_TYPE_FUNCTION_CALLSITE,
+	MD_AST_NODE_TYPE_INDEXED_FUNCTION_CALLSITE,
+	MD_AST_NODE_TYPE_INDEXED_FUNCTION_INDEX_LIST,
 	MD_AST_NODE_TYPE_SUBR_CALLSITE,
 	MD_AST_NODE_TYPE_UNTYPED_LOCAL_DEFINITION,
 	MD_AST_NODE_TYPE_NUMERIC_LOCAL_DEFINITION,
@@ -159,6 +161,7 @@ mlr_dsl_ast_node_t* mlr_dsl_ast_tree_copy(mlr_dsl_ast_node_t* pother);
 // bottom-up DSL parsing.
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_prepend_arg(mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb);
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_append_arg(mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb);
+mlr_dsl_ast_node_t* mlr_dsl_ast_node_append_arg_to_second_child(mlr_dsl_ast_node_t* pa, mlr_dsl_ast_node_t* pb);
 mlr_dsl_ast_node_t* mlr_dsl_ast_node_set_function_name(mlr_dsl_ast_node_t* pa, char* name);
 
 void mlr_dsl_ast_node_replace_text(mlr_dsl_ast_node_t* pa, char* text);

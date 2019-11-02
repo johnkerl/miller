@@ -8,6 +8,7 @@
 #include "lib/mtrand.h"
 #include "mapping/mapper.h"
 #include "dsl/rval_evaluators.h"
+#include "dsl/rxval_evaluators.h" // For indexed-function-call feature
 #include "dsl/function_manager.h"
 #include "dsl/context_flags.h"
 
@@ -115,6 +116,9 @@ rval_evaluator_t* rval_evaluator_alloc_from_ast(mlr_dsl_ast_node_t* pnode, fmgr_
 
 	} else if (pnode->type == MD_AST_NODE_TYPE_INDEXED_LOCAL_VARIABLE) {
 		return rval_evaluator_alloc_from_local_map_keylist(pnode, pfmgr, type_inferencing, context_flags);
+
+	} else if (pnode->type == MD_AST_NODE_TYPE_INDEXED_FUNCTION_CALLSITE) {
+		return rval_evaluator_alloc_from_indexed_function_call(pnode, pfmgr, type_inferencing, context_flags);
 
 	//  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 	} else if (pnode->type == MD_AST_NODE_TYPE_ENV) {
