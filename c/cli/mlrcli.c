@@ -1526,6 +1526,10 @@ int cli_handle_reader_options(char** argv, int argc, int *pargi, cli_reader_opts
 		preader_opts->use_implicit_csv_header = TRUE;
 		argi += 1;
 
+	} else if (streq(argv[argi], "--no-implicit-csv-header")) {
+		preader_opts->use_implicit_csv_header = FALSE;
+		argi += 1;
+
 	} else if (streq(argv[argi], "--allow-ragged-csv-input") || streq(argv[argi], "--ragged")) {
 		preader_opts->allow_ragged_csv_input = TRUE;
 		argi += 1;
