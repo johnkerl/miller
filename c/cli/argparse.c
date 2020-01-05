@@ -124,7 +124,7 @@ int ap_parse_aux(ap_state_t* pstate, char* verb, int* pargi, int argc, char** ar
 	int ok = TRUE;
 
 	while (argi < argc) {
-		if (argv[argi][0] != '-') {
+		if (argv[argi][0] != '-' && argv[argi][0] != '+') {
 			break;
 		}
 		if (streq(argv[argi], "-h") || streq(argv[argi], "--help")) {
