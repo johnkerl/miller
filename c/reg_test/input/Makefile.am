@@ -40,6 +40,7 @@ EXTRA_DIST=	\
 		double-ps.dkvp \
 		e.csv \
 		e.pprint \
+		embedded-ips.xtab \
 		env-assign.sh \
 		env-var.dkvp \
 		escapes.json \

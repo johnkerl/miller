@@ -48193,6 +48193,20 @@ sum@@@@3
 
 
 ================================================================
+EMBEDDED IPS FOR XTAB
+
+mlr --xtab --mmap cat ./reg_test/input/embedded-ips.xtab
+a 1
+b 2
+c 3 4 5
+
+mlr --xtab --no-mmap cat ./reg_test/input/embedded-ips.xtab
+a 1
+b 2
+c 3 4 5
+
+
+================================================================
 MULTI-CHARACTER IRS FOR PPRINT
 
 mlr --pprint --irs crlf --ifs / --ofs @ cut -x -f b ./reg_test/input/dots.pprint-crlf

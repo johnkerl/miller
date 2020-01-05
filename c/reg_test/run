@@ -5871,6 +5871,12 @@ run_mlr --mmap --xtab --ips . --ops @ cut -x -f b $indir/dots.xtab
 run_mlr --xtab --ips ": " --ops '@@@@' put '$sum=int($a+$b)' $indir/multi-ips.dkvp
 
 # ----------------------------------------------------------------
+announce EMBEDDED IPS FOR XTAB
+
+run_mlr --xtab --mmap    cat $indir/embedded-ips.xtab
+run_mlr --xtab --no-mmap cat $indir/embedded-ips.xtab
+
+# ----------------------------------------------------------------
 announce MULTI-CHARACTER IRS FOR PPRINT
 
 run_mlr --pprint --irs crlf --ifs / --ofs @ cut -x -f b $indir/dots.pprint-crlf

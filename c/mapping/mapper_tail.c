@@ -45,6 +45,7 @@ mapper_setup_t mapper_tail_setup = {
 // ----------------------------------------------------------------
 static void mapper_tail_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "Usage: %s %s [options]\n", argv0, verb);
+	// xxx on-line help here for +n. Also what happens with +m -n ...
 	fprintf(o, "-n {count}    Tail count to print; default 10\n");
 	fprintf(o, "-g {a,b,c}    Optional group-by-field names for tail counts\n");
 	fprintf(o, "Passes through the last n records, optionally by category.\n");
@@ -53,7 +54,7 @@ static void mapper_tail_usage(FILE* o, char* argv0, char* verb) {
 static mapper_t* mapper_tail_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* __)
 {
-	// xxx force one or the other ...
+	// xxx force one or the other ... ? or nah?
 	int tail_start = 0;
 	int tail_count = 10;
 	slls_t* pgroup_by_field_names = slls_alloc();
@@ -102,13 +103,9 @@ static void mapper_tail_free(mapper_t* pmapper, context_t* _) {
 	if (pstate->pgroup_by_field_names != NULL)
 		slls_free(pstate->pgroup_by_field_names);
 
-	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
-	for (lhmslve_t* pa = pstate->precord_counts_by_group->phead; pa != NULL; pa = pa->pnext) {
-		unsigned long long* precord_count_for_group = pa->pvvalue;
-		free(precord_count_for_group);
-	}
 	lhmslv_free(pstate->precord_counts_by_group);
 
+	// lhmslv_free will free the hashmap keys; we need to free the void-star hashmap values.
 	for (lhmslve_t* pa = pstate->precord_lists_by_group->phead; pa != NULL; pa = pa->pnext) {
 		sllv_t* precord_list_for_group = pa->pvvalue;
 		// outrecs were freed by caller of mapper_tail_process. Here, just free
@@ -130,30 +127,23 @@ static sllv_t* mapper_tail_process_from_start(lrec_t* pinrec, context_t* pctx, v
 		slls_t* pgroup_by_field_values = mlr_reference_selected_values_from_record(pinrec,
 			pstate->pgroup_by_field_names);
 		if (pgroup_by_field_values != NULL) {
+			unsigned long long* precord_count_for_group = lhmslv_get(pstate->precord_counts_by_group,
+				pgroup_by_field_values);
+			if (precord_count_for_group == NULL) {
+				precord_count_for_group = mlr_malloc_or_die(sizeof(unsigned long long));
+				*precord_count_for_group = 0LL;
+				lhmslv_put(pstate->precord_counts_by_group, slls_copy(pgroup_by_field_values),
+					precord_count_for_group, FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
+			}
+			slls_free(pgroup_by_field_values);
+			(*precord_count_for_group)++;
 
-			// xxx temp hack
-			if (pctx->nr >= pstate->tail_start) {
-				return sllv_single(pinrec);
-			} else {
+			if (*precord_count_for_group < pstate->tail_start) {
 				lrec_free(pinrec);
 				return NULL;
+			} else {
+				return sllv_single(pinrec);
 			}
-
-			// xxx under construction! does not yet handle tail +n with -g !!!
-
-//			sllv_t* precord_list_for_group = lhmslv_get(pstate->precord_lists_by_group, pgroup_by_field_values);
-//			if (precord_list_for_group == NULL) {
-//				precord_list_for_group = sllv_alloc();
-//				lhmslv_put(pstate->precord_lists_by_group, slls_copy(pgroup_by_field_values),
-//					precord_list_for_group, FREE_ENTRY_KEY);
-//			}
-//			slls_free(pgroup_by_field_values);
-//			if (precord_list_for_group->length >= pstate->tail_count) {
-//				lrec_t* porec = sllv_pop(precord_list_for_group);
-//				lrec_free(porec);
-//			}
-//			sllv_append(precord_list_for_group, pinrec);
-
 		} else {
 			lrec_free(pinrec);
 		}

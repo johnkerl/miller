@@ -188,11 +188,13 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state
 		char* key   = line;
 		char* value = "";
 		char* p;
+		int saw_ips_in_field = FALSE;
 
 		// Construct one field
 		int saw_eol = FALSE;
 		for (p = line; p < phandle->eof && *p; ) {
 			if (*p == ifs) {
+				saw_ips_in_field = FALSE;
 				*p = 0;
 
 				if (pstate->do_auto_line_term) {
@@ -207,7 +209,8 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_single_ips(file_reader_mmap_state
 				phandle->sol = p+1;
 				saw_eol = TRUE;
 				break;
-			} else if (*p == ips) {
+			} else if (!saw_ips_in_field && *p == ips) {
+				saw_ips_in_field = TRUE;
 				key = line;
 				*p = 0;
 
@@ -304,11 +307,13 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_
 		char* key   = line;
 		char* value = "";
 		char* p;
+		int saw_ips_in_field = FALSE;
 
 		// Construct one field
 		int saw_eol = FALSE;
 		for (p = line; p < phandle->eof && *p; ) {
 			if (*p == ifs) {
+				saw_ips_in_field = FALSE;
 				*p = 0;
 
 				if (pstate->do_auto_line_term) {
@@ -323,7 +328,8 @@ static lrec_t* lrec_parse_mmap_xtab_single_ifs_multi_ips(file_reader_mmap_state_
 				phandle->sol = p+1;
 				saw_eol = TRUE;
 				break;
-			} else if (streqn(p, ips, ipslen)) {
+			} else if (!saw_ips_in_field && streqn(p, ips, ipslen)) {
+				saw_ips_in_field = TRUE;
 				key = line;
 				*p = 0;
 
@@ -389,16 +395,19 @@ static lrec_t* lrec_parse_mmap_xtab_multi_ifs_single_ips(file_reader_mmap_state_
 		char* key   = line;
 		char* value = "";
 		char* p;
+		int saw_ips_in_field = FALSE;
 
 		// Construct one field
 		int saw_eol = FALSE;
 		for (p = line; p < phandle->eof && *p; ) {
 			if (streqn(p, ifs, ifslen)) {
+				saw_ips_in_field = FALSE;
 				*p = 0;
 				phandle->sol = p + ifslen;
 				saw_eol = TRUE;
 				break;
-			} else if (*p == ips) {
+			} else if (!saw_ips_in_field && *p == ips) {
+				saw_ips_in_field = TRUE;
 				key = line;
 				*p = 0;
 
@@ -466,16 +475,19 @@ static lrec_t* lrec_parse_mmap_xtab_multi_ifs_multi_ips(file_reader_mmap_state_t
 		char* key   = line;
 		char* value = "";
 		char* p;
+		int saw_ips_in_field = FALSE;
 
 		// Construct one field
 		int saw_eol = FALSE;
 		for (p = line; p < phandle->eof && *p; ) {
 			if (streqn(p, ifs, ifslen)) {
+				saw_ips_in_field = FALSE;
 				*p = 0;
 				phandle->sol = p + ifslen;
 				saw_eol = TRUE;
 				break;
-			} else if (streqn(p, ips, ipslen)) {
+			} else if (!saw_ips_in_field && streqn(p, ips, ipslen)) {
+				saw_ips_in_field = TRUE;
 				key = line;
 				*p = 0;
 
