@@ -26,75 +26,7 @@ var pageTracker = _gat._getTracker("UA-15651652-1");
 pageTracker._trackPageview();
 } catch(err) {}
 </script>
-
 <!-- ================================================================ -->
-<script type="text/javascript">
-
-  function vis_expand_all_navbar_sections() {
-    vis_expand_all_with_prefix('navbar_section_toggle_');
-  }
-  function vis_collapse_all_navbar_sections() {
-    vis_collapse_all_with_prefix('navbar_section_toggle_');
-  }
-
-  function vis_expand_all_body_sections() {
-    vis_expand_all_with_prefix('body_section_toggle_');
-  }
-  function vis_collapse_all_body_sections() {
-    vis_collapse_all_with_prefix('body_section_toggle_');
-  }
-
-  function vis_expand_all_with_prefix(prefix) {
-    var divs = document.getElementsByTagName('div');
-    for(var i = 0; i < divs.length; i++) {
-      const div = divs[i];
-      if (div.id.startsWith(prefix)) {
-        vis_expand_div(div);
-      }
-    }
-  }
-  function vis_collapse_all_with_prefix(prefix) {
-    var divs = document.getElementsByTagName('div');
-    for(var i = 0; i < divs.length; i++){
-      const div = divs[i];
-      if (div.id.startsWith(prefix)) {
-        vis_collapse_div(div);
-      }
-    }
-  }
-
-  function vis_toggle_by_name(divName) {
-    vis_toggle_div(document.getElementById(divName));
-  }
-  function vis_expand_by_name(divName) {
-    vis_expand_div(document.getElementById(divName));
-  }
-  function vis_collapse_by_name(divName) {
-    vis_collapse_div(document.getElementById(divName));
-  }
-
-  function vis_toggle_div(div) {
-    if (div != null) {
-      var state = div.style.display;
-      if (state == 'block') {
-        div.style.display = 'none';
-      } else {
-        div.style.display = 'block';
-      }
-    }
-  }
-  function vis_expand_div(div) {
-    if (div != null) {
-      div.style.display = 'block';
-    }
-  }
-  function vis_collapse_div(div) {
-    if (div != null) {
-      div.style.display = 'none';
-    }
-  }
-
-</script>
 
 <body bgcolor="#ffffff">
 
@@ -108,7 +40,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_overview');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_overview');"
   href="javascript:;"
   >
     Overview
@@ -116,7 +48,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_using');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_using');"
   href="javascript:;"
   >
     Using
@@ -124,7 +56,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_reference');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_reference');"
   href="javascript:;"
   >
     Reference
@@ -132,7 +64,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:bold;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_background');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_background');"
   href="javascript:;"
   >
     Background
@@ -140,7 +72,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_repository');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_repository');"
   href="javascript:;"
   >
     Repository
@@ -200,11 +132,11 @@ pageTracker._trackPageview();
 <p/>
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <a id="Why_not_C?"/><h1>Why not C?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_why_not_c');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_why_not_c');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_why_not_c" style="display: block">
 
 <p/>C lacks many of the features found in modern, high-level languages such as
@@ -227,7 +159,7 @@ any case.
 
 </div>
 <a id="C_vs._Go,_D,_Rust,_etc.;_C_is_fast"/><h1>C vs. Go, D, Rust, etc.; C is fast</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_c_is_fast');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_c_is_fast');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_c_is_fast" style="display: block">
 
 <p/>I love Go (<a href="http://golang.org">https://golang.org</a>): I think
@@ -251,7 +183,7 @@ on a single host or split across multiple hosts.
 
 </div>
 <a id="C_is_ubiquitous"/><h1>C is ubiquitous</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_c_is_ubiquitous');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_c_is_ubiquitous');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_c_is_ubiquitous" style="display: block">
 
 <p/>Every Unix-like system has a C compiler (or is an <code>apt-get</code> or
@@ -260,7 +192,7 @@ of Miller.
 
 </div>
 <a id="C_is_old-school"/><h1>C is old-school</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_c_is_old_school');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_c_is_old_school');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_c_is_old_school" style="display: block">
 
 <p/>This alone is not enough reason to program in C, but since I find myself
@@ -274,7 +206,7 @@ comments; enough said.)
 
 </div>
 <a id="C_vs._C++"/><h1>C vs. C++</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_c_vs_cpp');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_c_vs_cpp');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_c_vs_cpp" style="display: block">
 
 I have a strong personal distaste for C++: its syntax is an ugly layer over the
@@ -430,6 +362,24 @@ reader_t* reader_csv_alloc(...) {
 <a href="https://github.com/johnkerl/miller/tree/master/c/containers">https://github.com/johnkerl/miller/tree/master/c/containers</a>.
 
 </div>
+
+<!-- ================================================================ -->
+<script type="text/javascript" src="js/jko-toggler.js"></script>
+<!-- wtf -->
+<script type="text/javascript">
+  // Put this at the bottom of the page since its constructor scans the
+  // document's div tags to find the toggleables.
+  const navbarToggler = new JKOToggler(
+    "navbar_section_toggle_",
+    'maroon',
+    'maroon',
+  );
+  const bodyToggler = new JKOToggler(
+    "body_section_toggle_",
+    'maroon',
+    'maroon',
+  );
+</script>
 
 </body>
 </html>

@@ -1,12 +1,12 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <!-- ================================================================ -->
 <h1>Randomly selecting words from a list</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_generating_random_words');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_generating_random_words');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_generating_random_words" style="display: block">
 
 <p/> Given this <a href="data/english-words.txt">word list</a>, first take a
@@ -46,7 +46,7 @@ coinmate
 </div>
 <!-- ================================================================ -->
 <h1>Randomly generating jabberwocky words</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_jabberwocky');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_jabberwocky');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_jabberwocky" style="display: block">
 
 <p/> These are simple <i>n</i>-grams as described
@@ -87,7 +87,7 @@ suggestional
 </div>
 <!-- ================================================================ -->
 <h1>Program timing</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_program_timing');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_program_timing');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_program_timing" style="display: block">
 
 This admittedly artificial example demonstrates using Miller time and stats
@@ -100,7 +100,7 @@ POKI_INCLUDE_ESCAPED(data/timing-example.txt)HERE
 </div>
 <!-- ================================================================ -->
 <h1>Computing interquartile ranges</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_iqr');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_iqr');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_iqr" style="display: block">
 
 <p> For one or more specified field names, simply compute p25 and p75, then write the IQR as the difference of p75 and p25:
@@ -114,7 +114,7 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/iqrn.sh)HERE
 </div>
 <!-- ================================================================ -->
 <h1>Computing weighted means</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_weighted_mean');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_weighted_mean');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_weighted_mean" style="display: block">
 
 <p> This might be more elegantly implemented as an option within the <code>stats1</code> verb. Meanwhile, it&rsquo;s
@@ -125,7 +125,7 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/weighted-mean.sh)HERE
 </div>
 <!-- ================================================================ -->
 <h1>Generating random numbers from various distributions</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_generating_random_variables');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_generating_random_variables');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_generating_random_variables" style="display: block">
 
 <p/>Here we can chain together a few simple building blocks:
@@ -152,7 +152,7 @@ POKI_RUN_COMMAND{{sh expo-sample.sh}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>Sieve of Eratosthenes</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_sieve');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_sieve');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_sieve" style="display: block">
 
 <p/> The <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">Sieve_of_Eratosthenes</a>
@@ -170,7 +170,7 @@ POKI_RUN_COMMAND{{mlr -n put -f programs/sieve.mlr}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>Mandelbrot-set generator</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_mand');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_mand');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_mand" style="display: block">
 
 <p/> The <a href="http://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot

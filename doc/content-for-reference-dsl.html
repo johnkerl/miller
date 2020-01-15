@@ -1,12 +1,12 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <!-- ================================================================ -->
 <h1>Overview</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_overview" style="display: block">
 
 <p/> Here&rsquo;s comparison of verbs and <code>put</code>/<code>filter</code> DSL expressions:
@@ -80,7 +80,7 @@ statement.
 </div>
 <!-- ================================================================ -->
 <h1>Syntax</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_syntax');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_syntax');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_syntax" style="display: block">
 
 <!-- ================================================================ -->
@@ -167,7 +167,7 @@ POKI_CARDIFY{{mlr put 'if ($x == 1) { }' # This no-op is syntactically acceptabl
 </div>
 <!-- ================================================================ -->
 <h1>Variables</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_variables');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_variables');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_variables" style="display: block">
 
 <p/>Miller has the following kinds of variables:
@@ -667,7 +667,7 @@ POKI_RUN_COMMAND{{mlr --help-all-keywords}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>Operator precedence</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_operator_precedence');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_operator_precedence');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_operator_precedence" style="display: block">
 
 <p/>Operators are listed in order of decreasing precedence, highest first.
@@ -700,7 +700,7 @@ binary+ binary- .      left to right
 </div>
 <!-- ================================================================ -->
 <h1>Operator and function semantics</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_operator_and_function_semantics');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_operator_and_function_semantics');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_operator_and_function_semantics" style="display: block">
 
 <ul>
@@ -729,7 +729,7 @@ C.
 </div>
 <!-- ================================================================ -->
 <h1>Control structures</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_control_structures');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_control_structures');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_control_structures" style="display: block">
 
 <!-- ================================================================ -->
@@ -953,7 +953,7 @@ input records.
 </div>
 <!-- ================================================================ -->
 <h1>Output statements</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_output_statements');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_output_statements');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_output_statements" style="display: block">
 
 <p/>You can <b>output</b> variable-values or expressions in <b>five ways</b>:
@@ -1200,7 +1200,7 @@ POKI_RUN_COMMAND{{mlr --from data/small --opprint put -q '@sum[$a][$b] += $x; @c
 </div>
 <!-- ================================================================ -->
 <h1>Unset statements</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_unset_statements');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_unset_statements');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_unset_statements" style="display: block">
 
 <p/>You can clear a map key by assigning the empty string as its value: <code>$x=""</code> or <code>@x=""</code>.
@@ -1222,7 +1222,7 @@ variables which have been defined up to that point.
 </div>
 <!-- ================================================================ -->
 <h1>Filter statements</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_filter_statements');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_filter_statements');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_filter_statements" style="display: block">
 
 <p/> You can use <code>filter</code> within <code>put</code>. In fact, the
@@ -1240,7 +1240,7 @@ POKI_RUN_COMMAND{{mlr put '$z = $x * $y; filter $z > 0.3' data/small}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>Built-in functions for filter and put, summary</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_built_in_functions_summary');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_built_in_functions_summary');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_built_in_functions_summary" style="display: block">
 
 POKI_RUN_CONTENT_GENERATOR(mk-func-table.rb)HERE
@@ -1248,7 +1248,7 @@ POKI_RUN_CONTENT_GENERATOR(mk-func-table.rb)HERE
 </div>
 <!-- ================================================================ -->
 <h1>Built-in functions for filter and put</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_built_in_functions');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_built_in_functions');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_built_in_functions" style="display: block">
 
 <p/>Each function takes a specific number of arguments, as shown below, except
@@ -1267,7 +1267,7 @@ POKI_RUN_CONTENT_GENERATOR(mk-func-h2s.sh)HERE
 </div>
 <!-- ================================================================ -->
 <h1>User-defined functions and subroutines</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_user_defined_functions');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_user_defined_functions');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_user_defined_functions" style="display: block">
 
 <p/> As of Miller 5.0.0 you can define your own functions, as well as subroutines.
@@ -1366,7 +1366,7 @@ files</a> for information on the use of <code>-f</code> and <code>-e</code> flag
 </div>
 <!-- ================================================================ -->
 <h1>Errors and transparency</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_transparency');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_transparency');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_transparency" style="display: block">
 
 <p/>As soon as you have a programming language, you start having the problem
@@ -1427,7 +1427,7 @@ find that the more type-specification, the better.
 </div>
 <!-- ================================================================ -->
 <h1>A note on the complexity of Miller&rsquo;s expression language</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_a_note_on_complexity');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_a_note_on_complexity');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_a_note_on_complexity" style="display: block">
 
 <p/> One of Miller&rsquo;s strengths is its brevity: it&rsquo;s much quicker

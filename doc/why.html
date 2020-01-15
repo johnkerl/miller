@@ -26,75 +26,7 @@ var pageTracker = _gat._getTracker("UA-15651652-1");
 pageTracker._trackPageview();
 } catch(err) {}
 </script>
-
 <!-- ================================================================ -->
-<script type="text/javascript">
-
-  function vis_expand_all_navbar_sections() {
-    vis_expand_all_with_prefix('navbar_section_toggle_');
-  }
-  function vis_collapse_all_navbar_sections() {
-    vis_collapse_all_with_prefix('navbar_section_toggle_');
-  }
-
-  function vis_expand_all_body_sections() {
-    vis_expand_all_with_prefix('body_section_toggle_');
-  }
-  function vis_collapse_all_body_sections() {
-    vis_collapse_all_with_prefix('body_section_toggle_');
-  }
-
-  function vis_expand_all_with_prefix(prefix) {
-    var divs = document.getElementsByTagName('div');
-    for(var i = 0; i < divs.length; i++) {
-      const div = divs[i];
-      if (div.id.startsWith(prefix)) {
-        vis_expand_div(div);
-      }
-    }
-  }
-  function vis_collapse_all_with_prefix(prefix) {
-    var divs = document.getElementsByTagName('div');
-    for(var i = 0; i < divs.length; i++){
-      const div = divs[i];
-      if (div.id.startsWith(prefix)) {
-        vis_collapse_div(div);
-      }
-    }
-  }
-
-  function vis_toggle_by_name(divName) {
-    vis_toggle_div(document.getElementById(divName));
-  }
-  function vis_expand_by_name(divName) {
-    vis_expand_div(document.getElementById(divName));
-  }
-  function vis_collapse_by_name(divName) {
-    vis_collapse_div(document.getElementById(divName));
-  }
-
-  function vis_toggle_div(div) {
-    if (div != null) {
-      var state = div.style.display;
-      if (state == 'block') {
-        div.style.display = 'none';
-      } else {
-        div.style.display = 'block';
-      }
-    }
-  }
-  function vis_expand_div(div) {
-    if (div != null) {
-      div.style.display = 'block';
-    }
-  }
-  function vis_collapse_div(div) {
-    if (div != null) {
-      div.style.display = 'none';
-    }
-  }
-
-</script>
 
 <body bgcolor="#ffffff">
 
@@ -108,7 +40,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_overview');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_overview');"
   href="javascript:;"
   >
     Overview
@@ -116,7 +48,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_using');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_using');"
   href="javascript:;"
   >
     Using
@@ -124,7 +56,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_reference');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_reference');"
   href="javascript:;"
   >
     Reference
@@ -132,7 +64,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:bold;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_background');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_background');"
   href="javascript:;"
   >
     Background
@@ -140,7 +72,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_repository');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_repository');"
   href="javascript:;"
   >
     Repository
@@ -198,14 +130,14 @@ pageTracker._trackPageview();
 <p/>
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <p/> Someone asked me the other day about design, tradeoffs, thought process,
 why I felt it necessary to build Miller, etc. Here are some answers.
 
 <a id="Who_is_Miller_for?"/><h1>Who is Miller for?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_who_is_miller_for');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_who_is_miller_for');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_who_is_miller_for" style="display: block">
 
 <p/> For background, I&rsquo;m a software engineer, with a heavy devops bent
@@ -239,7 +171,7 @@ it&rsquo;s for?
 
 </div>
 <a id="What_was_Miller_created_to_do?"/><h1>What was Miller created to do?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_what_was_miller_created_to_do');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_what_was_miller_created_to_do');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_what_was_miller_created_to_do" style="display: block">
 
 <p/> First: there are tools like <code>xsv</code> which handles CSV marvelously and
@@ -317,7 +249,7 @@ a niche in the world (people use it) but it also fills a niche in my life.
 
 </div>
 <a id="Tradeoffs"/><h1>Tradeoffs</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_tradeoffs');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_tradeoffs');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_tradeoffs" style="display: block">
 
 <p/> Miller is command-line-only by design. People who want a graphical user
@@ -360,7 +292,7 @@ type-checking.
 
 </div>
 <a id="Related_tools"/><h1>Related tools</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_related_tools');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_related_tools');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_related_tools" style="display: block">
 
 <p/>Here&rsquo;s a comprehensive list:
@@ -369,7 +301,7 @@ It doesn&rsquo;t mention <a href="https://github.com/turicas/rows">rows</a> so h
 
 </div>
 <a id="Moving_forward"/><h1>Moving forward</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_moving_forward');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_moving_forward');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_moving_forward" style="display: block">
 
 <p/> I originally aimed Miller at people who already know what
@@ -383,6 +315,24 @@ to the existing language-reference kinds of stuff.  And continuing to seek out
 input from people who use Miller on where to go next.
 
 </div>
+
+<!-- ================================================================ -->
+<script type="text/javascript" src="js/jko-toggler.js"></script>
+<!-- wtf -->
+<script type="text/javascript">
+  // Put this at the bottom of the page since its constructor scans the
+  // document's div tags to find the toggleables.
+  const navbarToggler = new JKOToggler(
+    "navbar_section_toggle_",
+    'maroon',
+    'maroon',
+  );
+  const bodyToggler = new JKOToggler(
+    "body_section_toggle_",
+    'maroon',
+    'maroon',
+  );
+</script>
 
 </body>
 </html>

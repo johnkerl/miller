@@ -26,75 +26,7 @@ var pageTracker = _gat._getTracker("UA-15651652-1");
 pageTracker._trackPageview();
 } catch(err) {}
 </script>
-
 <!-- ================================================================ -->
-<script type="text/javascript">
-
-  function vis_expand_all_navbar_sections() {
-    vis_expand_all_with_prefix('navbar_section_toggle_');
-  }
-  function vis_collapse_all_navbar_sections() {
-    vis_collapse_all_with_prefix('navbar_section_toggle_');
-  }
-
-  function vis_expand_all_body_sections() {
-    vis_expand_all_with_prefix('body_section_toggle_');
-  }
-  function vis_collapse_all_body_sections() {
-    vis_collapse_all_with_prefix('body_section_toggle_');
-  }
-
-  function vis_expand_all_with_prefix(prefix) {
-    var divs = document.getElementsByTagName('div');
-    for(var i = 0; i < divs.length; i++) {
-      const div = divs[i];
-      if (div.id.startsWith(prefix)) {
-        vis_expand_div(div);
-      }
-    }
-  }
-  function vis_collapse_all_with_prefix(prefix) {
-    var divs = document.getElementsByTagName('div');
-    for(var i = 0; i < divs.length; i++){
-      const div = divs[i];
-      if (div.id.startsWith(prefix)) {
-        vis_collapse_div(div);
-      }
-    }
-  }
-
-  function vis_toggle_by_name(divName) {
-    vis_toggle_div(document.getElementById(divName));
-  }
-  function vis_expand_by_name(divName) {
-    vis_expand_div(document.getElementById(divName));
-  }
-  function vis_collapse_by_name(divName) {
-    vis_collapse_div(document.getElementById(divName));
-  }
-
-  function vis_toggle_div(div) {
-    if (div != null) {
-      var state = div.style.display;
-      if (state == 'block') {
-        div.style.display = 'none';
-      } else {
-        div.style.display = 'block';
-      }
-    }
-  }
-  function vis_expand_div(div) {
-    if (div != null) {
-      div.style.display = 'block';
-    }
-  }
-  function vis_collapse_div(div) {
-    if (div != null) {
-      div.style.display = 'none';
-    }
-  }
-
-</script>
 
 <body bgcolor="#ffffff">
 
@@ -108,7 +40,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_overview');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_overview');"
   href="javascript:;"
   >
     Overview
@@ -116,7 +48,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:bold;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_using');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_using');"
   href="javascript:;"
   >
     Using
@@ -124,7 +56,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_reference');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_reference');"
   href="javascript:;"
   >
     Reference
@@ -132,7 +64,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_background');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_background');"
   href="javascript:;"
   >
     Background
@@ -140,7 +72,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_repository');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_repository');"
   href="javascript:;"
   >
     Repository
@@ -201,12 +133,12 @@ pageTracker._trackPageview();
 <p/>
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <!-- ================================================================ -->
 <a id="Randomly_selecting_words_from_a_list"/><h1>Randomly selecting words from a list</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_generating_random_words');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_generating_random_words');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_generating_random_words" style="display: block">
 
 <p/> Given this <a href="data/english-words.txt">word list</a>, first take a
@@ -246,7 +178,7 @@ coinmate
 </div>
 <!-- ================================================================ -->
 <a id="Randomly_generating_jabberwocky_words"/><h1>Randomly generating jabberwocky words</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_jabberwocky');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_jabberwocky');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_jabberwocky" style="display: block">
 
 <p/> These are simple <i>n</i>-grams as described
@@ -287,7 +219,7 @@ suggestional
 </div>
 <!-- ================================================================ -->
 <a id="Program_timing"/><h1>Program timing</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_program_timing');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_program_timing');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_program_timing" style="display: block">
 
 This admittedly artificial example demonstrates using Miller time and stats
@@ -332,7 +264,7 @@ t_delta_max  5.388259888e-05
 </div>
 <!-- ================================================================ -->
 <a id="Computing_interquartile_ranges"/><h1>Computing interquartile ranges</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_iqr');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_iqr');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_iqr" style="display: block">
 
 <p> For one or more specified field names, simply compute p25 and p75, then write the IQR as the difference of p75 and p25:
@@ -378,7 +310,7 @@ y_iqr 0.511866
 </div>
 <!-- ================================================================ -->
 <a id="Computing_weighted_means"/><h1>Computing weighted means</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_weighted_mean');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_weighted_mean');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_weighted_mean" style="display: block">
 
 <p> This might be more elegantly implemented as an option within the <code>stats1</code> verb. Meanwhile, it&rsquo;s
@@ -423,7 +355,7 @@ a=hat,wmean=4925.533162,mean=4967.743946
 </div>
 <!-- ================================================================ -->
 <a id="Generating_random_numbers_from_various_distributions"/><h1>Generating random numbers from various distributions</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_generating_random_variables');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_generating_random_variables');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_generating_random_variables" style="display: block">
 
 <p/>Here we can chain together a few simple building blocks:
@@ -540,7 +472,7 @@ bin_lo   bin_hi   u_count                        s_count                        
 </div>
 <!-- ================================================================ -->
 <a id="Sieve_of_Eratosthenes"/><h1>Sieve of Eratosthenes</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_sieve');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_sieve');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_sieve" style="display: block">
 
 <p/> The <a href="http://en.wikipedia.org/wiki/Sieve_of_Eratosthenes">Sieve_of_Eratosthenes</a>
@@ -627,7 +559,7 @@ $ mlr -n put -f programs/sieve.mlr
 </div>
 <!-- ================================================================ -->
 <a id="Mandelbrot-set_generator"/><h1>Mandelbrot-set generator</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_mand');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_mand');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_mand" style="display: block">
 
 <p/> The <a href="http://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot
@@ -828,6 +760,24 @@ echo "rcorn=-1.755350,icorn=+0.014230,side=0.000020,maxits=10000,iheight=$iheigh
 </center>
 
 </div>
+
+<!-- ================================================================ -->
+<script type="text/javascript" src="js/jko-toggler.js"></script>
+<!-- wtf -->
+<script type="text/javascript">
+  // Put this at the bottom of the page since its constructor scans the
+  // document's div tags to find the toggleables.
+  const navbarToggler = new JKOToggler(
+    "navbar_section_toggle_",
+    'maroon',
+    'maroon',
+  );
+  const bodyToggler = new JKOToggler(
+    "body_section_toggle_",
+    'maroon',
+    'maroon',
+  );
+</script>
 
 </body>
 </html>

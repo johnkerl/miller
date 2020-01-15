@@ -26,75 +26,7 @@ var pageTracker = _gat._getTracker("UA-15651652-1");
 pageTracker._trackPageview();
 } catch(err) {}
 </script>
-
 <!-- ================================================================ -->
-<script type="text/javascript">
-
-  function vis_expand_all_navbar_sections() {
-    vis_expand_all_with_prefix('navbar_section_toggle_');
-  }
-  function vis_collapse_all_navbar_sections() {
-    vis_collapse_all_with_prefix('navbar_section_toggle_');
-  }
-
-  function vis_expand_all_body_sections() {
-    vis_expand_all_with_prefix('body_section_toggle_');
-  }
-  function vis_collapse_all_body_sections() {
-    vis_collapse_all_with_prefix('body_section_toggle_');
-  }
-
-  function vis_expand_all_with_prefix(prefix) {
-    var divs = document.getElementsByTagName('div');
-    for(var i = 0; i < divs.length; i++) {
-      const div = divs[i];
-      if (div.id.startsWith(prefix)) {
-        vis_expand_div(div);
-      }
-    }
-  }
-  function vis_collapse_all_with_prefix(prefix) {
-    var divs = document.getElementsByTagName('div');
-    for(var i = 0; i < divs.length; i++){
-      const div = divs[i];
-      if (div.id.startsWith(prefix)) {
-        vis_collapse_div(div);
-      }
-    }
-  }
-
-  function vis_toggle_by_name(divName) {
-    vis_toggle_div(document.getElementById(divName));
-  }
-  function vis_expand_by_name(divName) {
-    vis_expand_div(document.getElementById(divName));
-  }
-  function vis_collapse_by_name(divName) {
-    vis_collapse_div(document.getElementById(divName));
-  }
-
-  function vis_toggle_div(div) {
-    if (div != null) {
-      var state = div.style.display;
-      if (state == 'block') {
-        div.style.display = 'none';
-      } else {
-        div.style.display = 'block';
-      }
-    }
-  }
-  function vis_expand_div(div) {
-    if (div != null) {
-      div.style.display = 'block';
-    }
-  }
-  function vis_collapse_div(div) {
-    if (div != null) {
-      div.style.display = 'none';
-    }
-  }
-
-</script>
 
 <body bgcolor="#ffffff">
 
@@ -108,7 +40,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_overview');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_overview');"
   href="javascript:;"
   >
     Overview
@@ -116,7 +48,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_using');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_using');"
   href="javascript:;"
   >
     Using
@@ -124,7 +56,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:bold;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_reference');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_reference');"
   href="javascript:;"
   >
     Reference
@@ -132,7 +64,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_background');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_background');"
   href="javascript:;"
   >
     Background
@@ -140,7 +72,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_repository');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_repository');"
   href="javascript:;"
   >
     Repository
@@ -215,11 +147,11 @@ pageTracker._trackPageview();
 <p/>
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <a id="Command_overview"/><h1>Command overview</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_overview" style="display: block">
 
 <p>
@@ -324,7 +256,7 @@ mlr sort -f hostname,uptime *.dat
 </div>
 <!-- ================================================================ -->
 <a id="I/O_options"/><h1>I/O options</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_io_options');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_io_options');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_io_options" style="display: block">
 
 <!-- ================================================================ -->
@@ -555,7 +487,7 @@ x=0xffff,y=0xff,z=0xfeff01
 <!-- ================================================================ -->
 </div>
 <a id="Data_transformations_(verbs)"/><h1>Data transformations (verbs)</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_data_transformations');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_data_transformations');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_data_transformations" style="display: block">
 
 <p/> Please see <a href="reference-verbs.html">the separate page here</a>.
@@ -563,7 +495,7 @@ x=0xffff,y=0xff,z=0xfeff01
 <!-- ================================================================ -->
 </div>
 <a id="Expression_language_for_filter_and_put"/><h1>Expression language for filter and put</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_dsl_ref');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_dsl_ref');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_dsl_ref" style="display: block">
 
 <p/> Please see <a href="reference-dsl.html">the separate page here</a>.
@@ -571,7 +503,7 @@ x=0xffff,y=0xff,z=0xfeff01
 <!-- ================================================================ -->
 </div>
 <a id="then-chaining"/><h1>then-chaining</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_then_chaining');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_then_chaining');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_then_chaining" style="display: block">
 
 <p/>
@@ -642,7 +574,7 @@ pipeline stage.
 <!-- ================================================================ -->
 </div>
 <a id="Auxiliary_commands"/><h1>Auxiliary commands</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_auxents');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_auxents');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_auxents" style="display: block">
 
 <p/> There are a few nearly-standalone programs which have nothing to do with the rest of Miller, do not
@@ -784,7 +716,7 @@ orange,123.45
 <!-- ================================================================ -->
 </div>
 <a id="Data_types"/><h1>Data types</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_data_types');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_data_types');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_data_types" style="display: block">
 
 <p/> Miller&rsquo;s input and output are all string-oriented: there is (as of
@@ -842,7 +774,7 @@ integer as well as float input.
 <!-- ================================================================ -->
 </div>
 <a id="Null_data:_empty_and_absent"/><h1>Null data: empty and absent</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_null_data');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_null_data');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_null_data" style="display: block">
 
 <p/> One of Miller&rsquo;s key features is its support for <b>heterogeneous</b>
@@ -1089,7 +1021,7 @@ bool   | error  error  error  error  error  error  error
 <!-- ================================================================ -->
 </div>
 <a id="String_literals"/><h1>String literals</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_string_literals');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_string_literals');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_string_literals" style="display: block">
 
 <p/>
@@ -1124,7 +1056,7 @@ system <code>sed</code> command.
 
 </div>
 <a id="Regular_expressions"/><h1>Regular expressions</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_regular_expressions');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_regular_expressions');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_regular_expressions" style="display: block">
 
 <p/>Miller lets you use regular expressions (of type POSIX.2) in the following contexts:
@@ -1252,7 +1184,7 @@ followed by an unrelated <code>5</code>.
 <!-- ================================================================ -->
 </div>
 <a id="Arithmetic"/><h1>Arithmetic</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_arithmetic');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_arithmetic');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_arithmetic" style="display: block">
 
 <a id="Input_scanning"/><h2>Input scanning</h2>
@@ -1342,7 +1274,7 @@ pythonic</a>:
 </div>
 <!-- ================================================================ -->
 <a id="On-line_help"/><h1>On-line help</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_online_help');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_online_help');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_online_help" style="display: block">
 
 <p/>Examples:<p/>
@@ -1761,6 +1693,24 @@ which is the same as:
 <p/>
 
 </div>
+
+<!-- ================================================================ -->
+<script type="text/javascript" src="js/jko-toggler.js"></script>
+<!-- wtf -->
+<script type="text/javascript">
+  // Put this at the bottom of the page since its constructor scans the
+  // document's div tags to find the toggleables.
+  const navbarToggler = new JKOToggler(
+    "navbar_section_toggle_",
+    'maroon',
+    'maroon',
+  );
+  const bodyToggler = new JKOToggler(
+    "body_section_toggle_",
+    'maroon',
+    'maroon',
+  );
+</script>
 
 </body>
 </html>

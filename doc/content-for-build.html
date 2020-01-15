@@ -1,11 +1,11 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <h1>Miller license</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_miller_license');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_miller_license');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_miller_license" style="display: block">
 
 <p/>Two-clause BSD license <a href="https://github.com/johnkerl/miller/blob/master/LICENSE.txt">
@@ -13,7 +13,7 @@ https://github.com/johnkerl/miller/blob/master/LICENSE.txt</a>.
 
 </div>
 <h1>Prebuilt executables</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_prebuilt_executables');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_prebuilt_executables');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_prebuilt_executables" style="display: block">
 
 <h2>Via package managers</h2>
@@ -60,7 +60,7 @@ artifact associated with the release.
 
 </div>
 <h1>Building from source</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_building_from_source');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_building_from_source');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_building_from_source" style="display: block">
 
 <h2>From release tarball using autoconfig</h2>
@@ -212,7 +212,7 @@ C:\&gt; set PATH=%PATH%;\mbin
 
 </div>
 <h1>In case of problems</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_in_case_of_problems');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_in_case_of_problems');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_in_case_of_problems" style="display: block">
 
 <p/> If you have any build errors, feel free to contact me at <a
@@ -223,7 +223,7 @@ https://github.com/johnkerl/miller/issues</a>.
 
 </div>
 <h1>Dependencies</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_dependencies');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_dependencies');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_dependencies" style="display: block">
 
 <h2>Required external dependencies</h2>
@@ -272,7 +272,7 @@ copyright</a>.
 
 </div>
 <h1>Creating a new release: for developers</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_creating_a_new_release');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_creating_a_new_release');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_creating_a_new_release" style="display: block">
 
 <p/>At present I&rsquo;m the primary developer so this is just my checklist for making new releases.
@@ -368,7 +368,7 @@ git push -u origin miller-3.4.0
 
 </div>
 <h1>Misc. development notes</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_misc_devel_notes');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_misc_devel_notes');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_misc_devel_notes" style="display: block">
 
 <p/>I use terminal width 120 and tabwidth 4.

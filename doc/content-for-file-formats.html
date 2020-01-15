@@ -1,11 +1,11 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <h1>Overview</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_overview" style="display: block">
 
 <p/>Miller handles name-indexed data using several formats: some you probably
@@ -15,14 +15,14 @@ you the option of including comments within your data.
 
 </div>
 <h1>Examples</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_examples');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_examples');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_examples" style="display: block">
 
 POKI_RUN_COMMAND{{mlr --usage-data-format-examples}}HERE
 
 </div>
 <h1>CSV/TSV/ASV/USV/etc.</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_csv_tsv_etc');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_csv_tsv_etc');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_csv_tsv_etc" style="display: block">
 
 <p/>
@@ -97,7 +97,7 @@ e.g. CR-LF vs. LF, or tab instead of comma for TSV, and so on.
 
 </div>
 <h1>DKVP: Key-value pairs</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_dkvp');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_dkvp');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_dkvp" style="display: block">
 
 <p/>
@@ -141,7 +141,7 @@ the default equals-sign and comma.
 
 </div>
 <h1>NIDX: Index-numbered (toolkit style)</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_nidx');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_nidx');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_nidx" style="display: block">
 
 With <code>--inidx --ifs ' ' --repifs</code>, Miller splits lines on whitespace and
@@ -174,7 +174,7 @@ POKI_RUN_COMMAND{{mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt}}HERE
 
 </div>
 <h1>Tabular JSON</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_json');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_json');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_json" style="display: block">
 
 <p/>JSON is a format which supports arbitrarily deep nesting of
@@ -276,7 +276,7 @@ present) handle JSON files in <code>tail -f</code> contexts.
 
 </div>
 <h1>PPRINT: Pretty-printed tabular</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_pprint');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_pprint');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_pprint" style="display: block">
 
 <p/>
@@ -307,7 +307,7 @@ POKI_RUN_COMMAND{{mlr --opprint --barred cat data/small}}HERE
 
 </div>
 <h1>XTAB: Vertical tabular</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_xtab');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_xtab');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_xtab" style="display: block">
 
 <p/>This is perhaps most useful for looking a very wide and/or multi-column
@@ -325,7 +325,7 @@ POKI_INCLUDE_ESCAPED(data/system-file-ojson-example.txt)HERE
 
 </div>
 <h1>Markdown tabular</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_markdown_tabular');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_markdown_tabular');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_markdown_tabular" style="display: block">
 
 <p/>Markdown format looks like this:
@@ -341,7 +341,7 @@ which renders like this when dropped into various web tools (e.g. github comment
 
 </div>
 <h1>Data-conversion keystroke-savers</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_x2y');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_x2y');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_x2y" style="display: block">
 
 <p/>While you can do format conversion using <code>mlr --icsv --ojson cat myfile.csv</code>,
@@ -354,7 +354,7 @@ POKI_RUN_COMMAND{{mlr --usage-format-conversion-keystroke-saver-options}}HERE
 
 </div>
 <h1>Autodetect of line endings</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_autodetect_line_endings');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_autodetect_line_endings');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_autodetect_line_endings" style="display: block">
 
 <p/> Default line endings (<code>--irs</code> and <code>--ors</code>) are <code>'auto'</code>
@@ -387,7 +387,7 @@ more information about record/field/pair separators.
 
 </div>
 <h1>Comments in data</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_comments_in_data');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_comments_in_data');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_comments_in_data" style="display: block">
 
 <p/>You can include comments within your data files, and either have them ignored, or passed directly

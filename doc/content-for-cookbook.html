@@ -1,12 +1,12 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <!-- ================================================================ -->
 <h1>Headerless CSV on input or output</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_headerless_csv');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_headerless_csv');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_headerless_csv" style="display: block">
 
 <p/>Sometimes we get CSV files which lack a header. For example:
@@ -39,7 +39,7 @@ POKI_RUN_COMMAND{{mlr --inidx --ifs comma --oxtab cut -f 1,3 data/headerless.csv
 <!-- ================================================================ -->
 </div>
 <h1>Doing multiple joins</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_multiple_joins');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_multiple_joins');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_multiple_joins" style="display: block">
 
 <p/>Suppose we have the following data:
@@ -58,7 +58,7 @@ POKI_RUN_COMMAND{{mlr --icsv --opprint join -f multi-join/name-lookup.csv -j id 
 <!-- ================================================================ -->
 </div>
 <h1>Bulk rename of fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_bulk_rename');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_bulk_rename');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_bulk_rename" style="display: block">
 
 <p/>Suppose you want to replace spaces with underscores in your column names:
@@ -81,7 +81,7 @@ POKI_RUN_COMMAND{{mlr --icsv --opprint put -f data/bulk-rename-for-loop.mlr data
 <!-- ================================================================ -->
 </div>
 <h1>Search-and-replace over all fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_search_and_replace_over_all_fields');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_search_and_replace_over_all_fields');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_search_and_replace_over_all_fields" style="display: block">
 
 <p/> How to do <code>$name=gsub($name, "old", "new")</code> for all fields?
@@ -94,7 +94,7 @@ POKI_RUN_COMMAND{{mlr --csv put -f data/sar.mlr data/sar.csv}}HERE
 </div>
 <!-- ================================================================ -->
 <h1>Full field renames and reassigns</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_full_renames_reassigns');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_full_renames_reassigns');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_full_renames_reassigns" style="display: block">
 
 <p/>Using Miller 5.0.0&rsquo;s map literals and assigning to <code>$*</code>, you can fully generalize
@@ -108,7 +108,7 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/full-reorg.sh)HERE
 <!-- ================================================================ -->
 </div>
 <h1>Numbering and renumbering records</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_renumbering_records');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_renumbering_records');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_renumbering_records" style="display: block">
 
 <p/> The <code>awk</code>-like built-in variable <code>NR</code> is incremented for each input record:
@@ -134,7 +134,7 @@ POKI_RUN_COMMAND{{mlr filter '$a == "wye"' then put 'begin {@n = 1} $n = @n; @n 
 <!-- ================================================================ -->
 </div>
 <h1>Options for dealing with duplicate rows</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_dedupe');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_dedupe');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_dedupe" style="display: block">
 
 <p/> If your data has records appearing multiple times, you can use
@@ -150,7 +150,7 @@ href="reference-verbs.html#head">mlr head</a>.
 <!-- ================================================================ -->
 </div>
 <h1>Data-cleaning examples</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_data_cleaning_examples');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_data_cleaning_examples');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_data_cleaning_examples" style="display: block">
 
 <p/> Here are some ways to use the type-checking options as described in
@@ -182,7 +182,7 @@ POKI_RUN_COMMAND_TOLERATING_ERROR{{mlr --csv put '$reachable = asserting_string(
 </div>
 <!-- ================================================================ -->
 <h1>Splitting nested fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_splitting_nested');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_splitting_nested');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_splitting_nested" style="display: block">
 
 <p/> Suppose you have a TSV file like this:
@@ -213,7 +213,7 @@ POKI_RUN_COMMAND{{mlr --from data/nested.tsv --tsv put -q 'o=splitnv($b, ":"); f
 </div>
 <!-- ================================================================ -->
 <h1>Showing differences between successive queries</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_successive_query_deltas');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_successive_query_deltas');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_successive_query_deltas" style="display: block">
 
 <p/> Suppose you have a database query which you run at one point in time, producing the output on the
@@ -251,7 +251,7 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/previous-to-current.sh)HERE
 </div>
 <!-- ================================================================ -->
 <h1>Finding missing dates</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_finding_missing_dates');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_finding_missing_dates');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_finding_missing_dates" style="display: block">
 
 <p/>Suppose you have some date-stamped data which may (or may not) be missing entries for one or more dates:
@@ -278,7 +278,7 @@ POKI_RUN_COMMAND{{mlr cat -n then filter '$n >= 1115 && $n <= 1125' data/miss-da
 </div>
 <!-- ================================================================ -->
 <h1>Two-pass algorithms</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_two_pass_algorithms');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_two_pass_algorithms');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_two_pass_algorithms" style="display: block">
 
 <p/>Miller is a streaming record processor; commands are performed once per
@@ -324,7 +324,7 @@ POKI_RUN_COMMAND{{mlr --itsv --opprint put -q -f data/maxrows.mlr data/maxrows.t
 <!-- ================================================================ -->
 </div>
 <h1>Rectangularizing data</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_rectangularizing_data');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_rectangularizing_data');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_rectangularizing_data" style="display: block">
 
 <p/>Suppose you have a method (in whatever language) which is printing things of the form
@@ -359,7 +359,7 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/rect.sh)HERE
 <!-- ================================================================ -->
 </div>
 <h1>Regularizing ragged CSV</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_rectangularizing_ragged_csv');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_rectangularizing_ragged_csv');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_rectangularizing_ragged_csv" style="display: block">
 
 <p/>Miller handles compliant CSV: in particular, it&rsquo;s an error if the
@@ -379,7 +379,7 @@ POKI_INCLUDE_AND_RUN_ESCAPED(data/ragged-csv-2.sh)HERE
 <!-- ================================================================ -->
 </div>
 <h1>Feature-counting</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_feature_counting');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_feature_counting');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_feature_counting" style="display: block">
 
 <p/>Suppose you have some heterogeneous data like this:
@@ -400,7 +400,7 @@ POKI_RUN_COMMAND{{mlr --ijson --opprint put -q -f data/feature-count.mlr data/fe
 <!-- ================================================================ -->
 </div>
 <h1>Unsparsing</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_unsparsing');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_unsparsing');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_unsparsing" style="display: block">
 
 <p/> The previous section discussed how to fill out missing data fields within
@@ -432,7 +432,7 @@ POKI_RUN_COMMAND{{mlr --ijson --opprint put -q -f data/unsparsify.mlr data/spars
 </div>
 <!-- ================================================================ -->
 <h1>Parsing log-file output</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_parsing_log_file_output');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_parsing_log_file_output');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_parsing_log_file_output" style="display: block">
 
 <p/>This, of course, depends highly on what&rsquo;s in your log files. But, as
@@ -447,7 +447,7 @@ POKI_CARDIFY(grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repi
 </div>
 <!-- ================================================================ -->
 <h1>Memoization with out-of-stream variables</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_memoization_with_oosvars');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_memoization_with_oosvars');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_memoization_with_oosvars" style="display: block">
 
 <p/> The recursive function for the Fibonacci sequence is famous for its computational complexity.

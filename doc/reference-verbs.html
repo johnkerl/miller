@@ -26,75 +26,7 @@ var pageTracker = _gat._getTracker("UA-15651652-1");
 pageTracker._trackPageview();
 } catch(err) {}
 </script>
-
 <!-- ================================================================ -->
-<script type="text/javascript">
-
-  function vis_expand_all_navbar_sections() {
-    vis_expand_all_with_prefix('navbar_section_toggle_');
-  }
-  function vis_collapse_all_navbar_sections() {
-    vis_collapse_all_with_prefix('navbar_section_toggle_');
-  }
-
-  function vis_expand_all_body_sections() {
-    vis_expand_all_with_prefix('body_section_toggle_');
-  }
-  function vis_collapse_all_body_sections() {
-    vis_collapse_all_with_prefix('body_section_toggle_');
-  }
-
-  function vis_expand_all_with_prefix(prefix) {
-    var divs = document.getElementsByTagName('div');
-    for(var i = 0; i < divs.length; i++) {
-      const div = divs[i];
-      if (div.id.startsWith(prefix)) {
-        vis_expand_div(div);
-      }
-    }
-  }
-  function vis_collapse_all_with_prefix(prefix) {
-    var divs = document.getElementsByTagName('div');
-    for(var i = 0; i < divs.length; i++){
-      const div = divs[i];
-      if (div.id.startsWith(prefix)) {
-        vis_collapse_div(div);
-      }
-    }
-  }
-
-  function vis_toggle_by_name(divName) {
-    vis_toggle_div(document.getElementById(divName));
-  }
-  function vis_expand_by_name(divName) {
-    vis_expand_div(document.getElementById(divName));
-  }
-  function vis_collapse_by_name(divName) {
-    vis_collapse_div(document.getElementById(divName));
-  }
-
-  function vis_toggle_div(div) {
-    if (div != null) {
-      var state = div.style.display;
-      if (state == 'block') {
-        div.style.display = 'none';
-      } else {
-        div.style.display = 'block';
-      }
-    }
-  }
-  function vis_expand_div(div) {
-    if (div != null) {
-      div.style.display = 'block';
-    }
-  }
-  function vis_collapse_div(div) {
-    if (div != null) {
-      div.style.display = 'none';
-    }
-  }
-
-</script>
 
 <body bgcolor="#ffffff">
 
@@ -108,7 +40,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_overview');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_overview');"
   href="javascript:;"
   >
     Overview
@@ -116,7 +48,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_using');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_using');"
   href="javascript:;"
   >
     Using
@@ -124,7 +56,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:bold;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_reference');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_reference');"
   href="javascript:;"
   >
     Reference
@@ -132,7 +64,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_background');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_background');"
   href="javascript:;"
   >
     Background
@@ -140,7 +72,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_repository');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_repository');"
   href="javascript:;"
   >
     Repository
@@ -246,12 +178,12 @@ pageTracker._trackPageview();
 <p/>
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <!-- ================================================================ -->
 <a id="Overview"/><h1>Overview</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_overview" style="display: block">
 
 <p/>
@@ -313,7 +245,7 @@ a=wye,x_sum=0.777892
 </div>
 <!-- ================================================================ -->
 <a id="altkv"/><h1>altkv</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_bar');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_bar');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_bar" style="display: block">
 
 <p/> Map list of values to alternating key/value pairs.
@@ -348,7 +280,7 @@ a=b,c=d,e=f,4=g
 </div>
 <!-- ================================================================ -->
 <a id="bar"/><h1>bar</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_bar');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_bar');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_bar" style="display: block">
 
 <p/> Cheesy bar-charting.
@@ -433,7 +365,7 @@ wye pan 5 [0.204603]**************************..............[0.75868] [0.134189]
 </div>
 <!-- ================================================================ -->
 <a id="bootstrap"/><h1>bootstrap</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_bootstrap');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_bootstrap');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_bootstrap" style="display: block">
 
 <p/>
@@ -497,7 +429,7 @@ orange 0.468014 292
 </div>
 <!-- ================================================================ -->
 <a id="cat"/><h1>cat</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_cat');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_cat');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_cat" style="display: block">
 
 <p/> Most useful for format conversions (see
@@ -623,7 +555,7 @@ n a   b   i x                   y
 </div>
 <!-- ================================================================ -->
 <a id="check"/><h1>check</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_check');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_check');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_check" style="display: block">
 
 <p/>
@@ -640,7 +572,7 @@ Useful for doing a well-formatted check on input data.
 </div>
 <!-- ================================================================ -->
 <a id="clean-whitespace"/><h1>clean-whitespace</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_clean_whitespace');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_clean_whitespace');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_clean_whitespace" style="display: block">
 
 <p/>
@@ -715,7 +647,7 @@ $ mlr --icsv --ojson clean-whitespace data/clean-whitespace.csv
 </div>
 <!-- ================================================================ -->
 <a id="count-distinct"/><h1>count-distinct</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_count_distinct');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_count_distinct');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_count_distinct" style="display: block">
 
 <p/>
@@ -836,7 +768,7 @@ count=25
 </div>
 <!-- ================================================================ -->
 <a id="count-similar"/><h1>count-similar</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_count_similar');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_count_similar');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_count_similar" style="display: block">
 
 <p/>
@@ -943,7 +875,7 @@ zee pan 19 0.43144132839222604 0.8442204830496998   5
 </div>
 <!-- ================================================================ -->
 <a id="cut"/><h1>cut</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_cut');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_cut');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_cut" style="display: block">
 
 <p/>
@@ -1021,7 +953,7 @@ b=2,c=3,a=1
 </div>
 <!-- ================================================================ -->
 <a id="decimate"/><h1>decimate</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_decimate');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_decimate');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_decimate" style="display: block">
 
 <p/>
@@ -1043,7 +975,7 @@ Passes through one of every n records, optionally by category.
 </div>
 <!-- ================================================================ -->
 <a id="fill-down"/><h1>fill-down</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_fill_down');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_fill_down');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_fill_down" style="display: block">
 
 <p/>
@@ -1098,7 +1030,7 @@ a,b,c
 </div>
 <!-- ================================================================ -->
 <a id="filter"/><h1>filter</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_filter');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_filter');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_filter" style="display: block">
 
 <p/>
@@ -1191,7 +1123,7 @@ language for <code>mlr filter</code>.
 </div>
 <!-- ================================================================ -->
 <a id="format-values"/><h1>format-values</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_format_values');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_format_values');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_format_values" style="display: block">
 
 <p/>
@@ -1287,7 +1219,7 @@ XwyeX XpanX 5.000000e+00 5.732889e-01 8.636245e-01
 </div>
 <!-- ================================================================ -->
 <a id="fraction"/><h1>fraction</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_decimate');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_decimate');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_decimate" style="display: block">
 
 <p/>
@@ -1483,7 +1415,7 @@ male   orange 448  100
 </div>
 <!-- ================================================================ -->
 <a id="grep"/><h1>grep</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_grep');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_grep');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_grep" style="display: block">
 
 <p/>
@@ -1513,7 +1445,7 @@ features of system grep, you can do
 </div>
 <!-- ================================================================ -->
 <a id="group-by"/><h1>group-by</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_group_by');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_group_by');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_group_by" style="display: block">
 
 <p/>
@@ -1578,7 +1510,7 @@ to you.
 </div>
 <!-- ================================================================ -->
 <a id="group-like"/><h1>group-like</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_group_like');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_group_like');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_group_like" style="display: block">
 
 <p/>
@@ -1630,7 +1562,7 @@ record_count resource
 </div>
 <!-- ================================================================ -->
 <a id="having-fields"/><h1>having-fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_having_fields');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_having_fields');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_having_fields" style="display: block">
 
 <p/>
@@ -1699,7 +1631,7 @@ resource=/some/other/path,loadsec=0.97,ok=false
 </div>
 <!-- ================================================================ -->
 <a id="head"/><h1>head</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_head');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_head');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_head" style="display: block">
 
 <p/>
@@ -1752,7 +1684,7 @@ wye hat 24 0.7286126830627567  0.19441962592638418
 </div>
 <!-- ================================================================ -->
 <a id="histogram"/><h1>histogram</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_histogram');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_histogram');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_histogram" style="display: block">
 
 <p/>
@@ -1820,7 +1752,7 @@ my_bin_lo my_bin_hi my_x_count my_x2_count my_x3_count
 </div>
 <!-- ================================================================ -->
 <a id="join"/><h1>join</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_join');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_join');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_join" style="display: block">
 
 <p/>
@@ -2045,7 +1977,7 @@ left_a left_b left_c right_a right_b right_c
 </div>
 <!-- ================================================================ -->
 <a id="label"/><h1>label</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_label');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_label');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_label" style="display: block">
 
 <p/>
@@ -2140,7 +2072,7 @@ Carol 45  present
 </div>
 <!-- ================================================================ -->
 <a id="least-frequent"/><h1>least-frequent</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_least_frequent');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_least_frequent');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_least_frequent" style="display: block">
 
 <p/>
@@ -2219,7 +2151,7 @@ See also <a href="#most-frequent">most-frequent</a>.
 </div>
 <!-- ================================================================ -->
 <a id="merge-fields"/><h1>merge-fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_merge_fields');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_merge_fields');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_merge_fields" style="display: block">
 
 <p/>
@@ -2317,7 +2249,7 @@ a_in a_out b_in b_out a_sum b_sum
 </div>
 <!-- ================================================================ -->
 <a id="most-frequent"/><h1>most-frequent</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_most_frequent');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_most_frequent');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_most_frequent" style="display: block">
 
 <p/>
@@ -2396,7 +2328,7 @@ See also <a href="#least-frequent">least-frequent</a>.
 </div>
 <!-- ================================================================ -->
 <a id="nest"/><h1>nest</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_nest');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_nest');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_nest" style="display: block">
 
 <p/>
@@ -2457,7 +2389,7 @@ See also mlr reshape.
 </div>
 <!-- ================================================================ -->
 <a id="nothing"/><h1>nothing</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_nothing');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_nothing');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_nothing" style="display: block">
 
 <p/>
@@ -2474,7 +2406,7 @@ produced other output.
 </div>
 <!-- ================================================================ -->
 <a id="put"/><h1>put</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_put');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_put');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_put" style="display: block">
 
 <p/>
@@ -2580,7 +2512,7 @@ language for <code>mlr put</code>.
 </div>
 <!-- ================================================================ -->
 <a id="regularize"/><h1>regularize</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_regularize');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_regularize');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_regularize" style="display: block">
 
 <p/>
@@ -2606,7 +2538,7 @@ same order: <code>mlr regularize</code> helps clean that up.
 </div>
 <!-- ================================================================ -->
 <a id="remove-empty-columns"/><h1>remove-empty-columns</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_remove_empty_columns');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_remove_empty_columns');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_remove_empty_columns" style="display: block">
 
 <p/>
@@ -2649,7 +2581,7 @@ all records before writing any.
 </div>
 <!-- ================================================================ -->
 <a id="rename"/><h1>rename</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_rename');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_rename');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_rename" style="display: block">
 
 <p/>
@@ -2749,7 +2681,7 @@ See also <a href="#label"><code>label</code></a>.
 </div>
 <!-- ================================================================ -->
 <a id="reorder"/><h1>reorder</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_reorder');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_reorder');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_reorder" style="display: block">
 
 <p/>
@@ -2818,7 +2750,7 @@ wye 0.5732889198020006  0.8636244699032729  5 pan
 </div>
 <!-- ================================================================ -->
 <a id="repeat"/><h1>repeat</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_repeat');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_repeat');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_repeat" style="display: block">
 
 <p/>
@@ -2895,7 +2827,7 @@ p10,p50,p90</code>, etc.
 </div>
 <!-- ================================================================ -->
 <a id="reshape"/><h1>reshape</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_reshape');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_reshape');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_reshape" style="display: block">
 
 <p/>
@@ -2964,7 +2896,7 @@ See also mlr nest.
 </div>
 <!-- ================================================================ -->
 <a id="sample"/><h1>sample</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_sample');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_sample');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_sample" style="display: block">
 
 <p/>
@@ -3044,7 +2976,7 @@ sampling, which works in the streaming case, is <code>mlr filter 'urand() &amp;
 </div>
 <!-- ================================================================ -->
 <a id="sec2gmt"/><h1>sec2gmt</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_seg2gmt');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_seg2gmt');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_seg2gmt" style="display: block">
 
 <p/>
@@ -3067,7 +2999,7 @@ Options:
 </div>
 <!-- ================================================================ -->
 <a id="sec2gmtdate"/><h1>sec2gmtdate</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_seg2gmtdate');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_seg2gmtdate');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_seg2gmtdate" style="display: block">
 
 <p/>
@@ -3088,7 +3020,7 @@ is the same as
 </div>
 <!-- ================================================================ -->
 <a id="seqgen"/><h1>seqgen</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_seqgen');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_seqgen');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_seqgen" style="display: block">
 
 <p/>
@@ -3156,7 +3088,7 @@ i=20
 </div>
 <!-- ================================================================ -->
 <a id="shuffle"/><h1>shuffle</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_shuffle');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_shuffle');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_shuffle" style="display: block">
 
 <p/>
@@ -3174,7 +3106,7 @@ See also mlr bootstrap and mlr sample.
 </div>
 <!-- ================================================================ -->
 <a id="skip-trivial-records"/><h1>skip-trivial-records</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_skip_trivial_records');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_skip_trivial_records');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_skip_trivial_records" style="display: block">
 
 <p/>
@@ -3217,7 +3149,7 @@ a,b,c
 </div>
 <!-- ================================================================ -->
 <a id="sort"/><h1>sort</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_sort');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_sort');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_sort" style="display: block">
 
 <p/>
@@ -3342,7 +3274,7 @@ a=3
 </div>
 <!-- ================================================================ -->
 <a id="stats1"/><h1>stats1</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_stats1');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_stats1');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_stats1" style="display: block">
 
 <p/>
@@ -3490,7 +3422,7 @@ circle   red
 </div>
 <!-- ================================================================ -->
 <a id="stats2"/><h1>stats2</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_stats2');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_stats2');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_stats2" style="display: block">
 
 <p/>
@@ -3668,7 +3600,7 @@ donesec                 25.108529
 </div>
 <!-- ================================================================ -->
 <a id="step"/><h1>step</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_step');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_step');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_step" style="display: block">
 
 <p/>
@@ -3836,7 +3768,7 @@ $ each 10 uptime | mlr -p step -a delta -f 11
 </div>
 <!-- ================================================================ -->
 <a id="tac"/><h1>tac</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_tac');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_tac');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_tac" style="display: block">
 
 <p/>
@@ -3904,7 +3836,7 @@ a b c filename
 </div>
 <!-- ================================================================ -->
 <a id="tail"/><h1>tail</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_tail');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_tail');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_tail" style="display: block">
 
 <p/>
@@ -3951,7 +3883,7 @@ yellow circle   1    99994 0.764950884927175  0.25284227383991364 0.499698785395
 </div>
 <!-- ================================================================ -->
 <a id="tee"/><h1>tee</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_tee');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_tee');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_tee" style="display: block">
 
 <p/>
@@ -3976,7 +3908,7 @@ is written in JSON format.
 </div>
 <!-- ================================================================ -->
 <a id="top"/><h1>top</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_top');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_top');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_top" style="display: block">
 
 <p/>
@@ -4053,7 +3985,7 @@ zee 2       0.999438
 </div>
 <!-- ================================================================ -->
 <a id="uniq"/><h1>uniq</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_uniq');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_uniq');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_uniq" style="display: block">
 
 <p/>
@@ -4316,7 +4248,7 @@ count color  shape    flag
 </div>
 <!-- ================================================================ -->
 <a id="unsparsify"/><h1>unsparsify</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_unsparsify');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_unsparsify');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_unsparsify" style="display: block">
 
 <p/>
@@ -4389,6 +4321,24 @@ missing missing 1       missing missing 2
 <p/>
 
 </div>
+
+<!-- ================================================================ -->
+<script type="text/javascript" src="js/jko-toggler.js"></script>
+<!-- wtf -->
+<script type="text/javascript">
+  // Put this at the bottom of the page since its constructor scans the
+  // document's div tags to find the toggleables.
+  const navbarToggler = new JKOToggler(
+    "navbar_section_toggle_",
+    'maroon',
+    'maroon',
+  );
+  const bodyToggler = new JKOToggler(
+    "body_section_toggle_",
+    'maroon',
+    'maroon',
+  );
+</script>
 
 </body>
 </html>

@@ -1,11 +1,11 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <h1>CSV-file examples</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_csv_file_examples');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_csv_file_examples');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_csv_file_examples" style="display: block">
 
 <p/><boldmaroon> Sample CSV data file: </boldmaroon>
@@ -86,7 +86,7 @@ POKI_RUN_COMMAND{{mlr --icsv --opprint --from example.csv stats1 -a count,min,me
 
 </div>
 <h1>Choices for printing to files</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_printing_to_files');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.togglebodyToggler.toggle('body_section_toggle_printing_to_files');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_printing_to_files" style="display: block">
 
 <p/>Often we want to print output <boldmaroon>to the screen</boldmaroon>. Miller does this by default, as we&rsquo;ve
@@ -180,7 +180,7 @@ POKI_RUN_COMMAND{{cat triangle.csv}}HERE
 
 </div>
 <h1>Other-format examples</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_other_format_examples');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_other_format_examples');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_other_format_examples" style="display: block">
 
 <p/>What&rsquo;s a CSV file, really? It&rsquo;s an array of rows, or
@@ -238,7 +238,7 @@ different output format.
 
 </div>
 <h1>SQL-output examples</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_sql_output_examples');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_sql_output_examples');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_sql_output_examples" style="display: block">
 
 <p/>I like to produce SQL-query output with header-column and tab delimiter:
@@ -354,7 +354,7 @@ flags.
 
 </div>
 <h1>SQL-input examples</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_sql_input_examples');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_sql_input_examples');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_sql_input_examples" style="display: block">
 
 <p/> One use of NIDX (value-only, no keys) format is for loading up SQL tables.
@@ -493,7 +493,7 @@ eks zee 357
 
 </div>
 <h1>Log-processing examples</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_log_processing_examples');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_log_processing_examples');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_log_processing_examples" style="display: block">
 
 <p/>Another of my favorite use-cases for Miller is doing ad-hoc processing of
@@ -530,7 +530,7 @@ POKI_RUN_COMMAND{{mlr --opprint group-like then sec2gmt time log.txt}}HERE
 
 </div>
 <h1>More</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_more');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_more');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_more" style="display: block">
 
 <p/>Please see the <a href="reference.html">reference</a> for complete

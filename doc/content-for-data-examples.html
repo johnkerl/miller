@@ -1,11 +1,11 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <h1>flins data</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_flins');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_flins');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_flins" style="display: block">
 
 <p/> The <a href="data/flins.csv">flins.csv</a> file is some sample data
@@ -27,7 +27,7 @@ POKI_RUN_COMMAND{{mlr --from data/flins.csv --icsv --opprint stats2 -a corr,linr
 
 </div>
 <h1>Color/shape data</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_color_shape');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_color_shape');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_color_shape" style="display: block">
 
 <p/> The <a href="data/colored-shapes.dkvp">colored-shapes.dkvp</a> file is some sample data produced by the

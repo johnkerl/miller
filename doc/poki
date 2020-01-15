@@ -165,7 +165,7 @@ def generate_navbar(overall_config, section_config, page_config, output_html_nam
     output_handle.puts("<button");
     output_handle.puts("  style=\"font-weight:#{font_weight};font-size:100%;color:maroon;border:0\"");
     output_handle.puts("  padding=0");
-    output_handle.puts("  onclick=\"vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_#{other_section_internal_name}');\"");
+    output_handle.puts("  onclick=\"navbarToggler.expandUniquely('navbar_section_toggle_#{other_section_internal_name}');\"");
     output_handle.puts("  href=\"javascript:;\"");
     output_handle.puts("  >");
     output_handle.puts("    #{other_section_external_name}");

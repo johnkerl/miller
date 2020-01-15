@@ -1,11 +1,11 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <h1>No output at all</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_no_output_at_all');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_no_output_at_all');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_no_output_at_all" style="display: block">
 
 <p/>Try <code>od -xcv</code> and/or <code>cat -e</code> on your file to check for non-printable characters.
@@ -17,7 +17,7 @@ line-ending-autodetect feature was introduced, please see
 
 </div>
 <h1>Fields not selected</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_fields_not_selected');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="cbodyToggler.toggle('body_section_toggle_fields_not_selected');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_fields_not_selected" style="display: block">
 
 <p/>Check the field-separators of the data, e.g. with the command-line
@@ -31,14 +31,14 @@ case: <code>mlr --fs tab {remaining arguments ...}</code>.
 
 </div>
 <h1>Diagnosing delimiter specifications</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_diagnosing_delimiter_specifications');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_diagnosing_delimiter_specifications');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_diagnosing_delimiter_specifications" style="display: block">
 
 POKI_INCLUDE_ESCAPED(data/delimiter-examples.txt)HERE
 
 </div>
 <h1>How do I suppress numeric conversion?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_examine_then_chaining');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_examine_then_chaining');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_suppress_numeric_conversion" style="display: block">
 
 <p/><b>TL;DR use put -S</b>.
@@ -98,7 +98,7 @@ POKI_RUN_COMMAND{{mlr --pprint put -S '$copy = $value; $type = typeof($value)' d
 
 </div>
 <h1>How do I examine then-chaining?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_examine_then_chaining');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_examine_then_chaining');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_examine_then_chaining" style="display: block">
 
 <p/>Then-chaining found in Miller is intended to function the same as Unix
@@ -127,7 +127,7 @@ POKI_RUN_COMMAND{{mlr --csv count-distinct -f Status,Payment_Type data/then-exam
 
 </div>
 <h1>I assigned $9 and it&rsquo;s not 9th</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_9_not_9th');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_9_not_9th');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_9_not_9th" style="display: block">
 
 <p/> Miller records are ordered lists of key-value pairs. For NIDX format, DKVP
@@ -147,7 +147,7 @@ POKI_RUN_COMMAND{{echo x,y,z | mlr --csv --implicit-csv-header reorder -f 3,1,2}
 
 </div>
 <h1>How can I filter by date?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_date_filtering');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_date_filtering');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_date_filtering" style="display: block">
 
 <p/> Given input like
@@ -168,7 +168,7 @@ See also <a href="https://github.com/johnkerl/miller/issues/208">https://github.
 
 </div>
 <h1>How can I handle commas-as-data in various formats?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_comma_handling');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_comma_handling');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_comma_handling" style="display: block">
 
 <p/> <a href="file-formats.html#CSV/TSV/ASV/USV/etc.">CSV</a> handles this well and by design:
@@ -204,7 +204,7 @@ POKI_RUN_COMMAND{{mlr --icsv --odkvp --ofs '\001'  cat commas.csv | cat -v}}HERE
 
 </div>
 <h1>How can I handle field names with special symbols in them?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_field_names_with_special_symbols');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_field_names_with_special_symbols');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_field_names_with_special_symbols" style="display: block">
 
 <p/>Simply surround the field names with curly braces:
@@ -213,7 +213,7 @@ POKI_RUN_COMMAND{{echo 'x.a=3,y:b=4,z/c=5' | mlr put '${product.all} = ${x.a} * 
 
 </div>
 <h1>How to escape '?' in regexes?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_escape_in_regex');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_escape_in_regex');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_escape_in_regex" style="display: block">
 
 <p/> One way is to use square brackets; an alternative is to use simple
@@ -227,7 +227,7 @@ POKI_RUN_COMMAND{{mlr --oxtab put '$c = ssub($a, "?"," ...")' data/question.dat}
 
 </div>
 <h1>How can I put single-quotes into strings?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_single_quotes_in_strings');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_single_quotes_in_strings');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_single_quotes_in_strings" style="display: block">
 
 <p/> This is a little tricky due to the shell&rsquo;s handling of quotes. For simplicity, let&rsquo;s first put
@@ -264,7 +264,7 @@ all concatenated together.
 
 </div>
 <h1>Why doesn&rsquo;t mlr cut put fields in the order I want?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_cut_out_of_order');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_cut_out_of_order');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_cut_out_of_order" style="display: block">
 
 <p/>Example: columns <code>x,i,a</code> were requested but they appear here in the order <code>a,i,x</code>:
@@ -282,7 +282,7 @@ POKI_RUN_COMMAND{{mlr cut -o -f x,i,a data/small}}HERE
 
 </div>
 <h1>NR is not consecutive after then-chaining</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_NR_not_consecutive_after_then');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_NR_not_consecutive_after_then');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_NR_not_consecutive_after_then" style="display: block">
 
 <p/> Given this input data:
@@ -310,7 +310,7 @@ POKI_RUN_COMMAND{{mlr filter '$x > 0.5' then cat -n data/small}}HERE
 
 </div>
 <h1>Why am I not seeing all possible joins occur?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_not_all_possible_joins');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_not_all_possible_joins');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_not_all_possible_joins" style="display: block">
 
 <p/><b>This section describes behavior before Miller 5.1.0. As of 5.1.0, <code>-u</code> is the default.</b>
@@ -344,7 +344,7 @@ right file.
 
 </div>
 <h1>How to rectangularize after joins with unpaired?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_rectangularize_after_join');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_rectangularize_after_join');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_rectangularize_after_join" style="display: block">
 
 <p/> Suppose you have the following two data files:
@@ -370,7 +370,7 @@ POKI_RUN_COMMAND{{mlr --csv join --ul -j id -f data/color-codes.csv then unspars
 
 </div>
 <h1>What about XML or JSON file formats?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_xml_or_json');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_xml_or_json');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_xml_or_json" style="display: block">
 
 <p/>Miller handles <boldmaroon>tabular data</boldmaroon>, which is a list of

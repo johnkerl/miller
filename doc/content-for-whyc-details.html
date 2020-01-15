@@ -1,11 +1,11 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <h1>Overview</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_timings');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_timings');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_timings" style="display: block">
 
 <p/>This section contains details substantiating the discussion at POKI_PUT_LINK_FOR_PAGE(whyc.html)HERE.
@@ -25,14 +25,14 @@ in 2015, for purposes of creating this page.
 
 </div>
 <h1>Timings</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_timings');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_timings');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_timings" style="display: block">
 
 POKI_INCLUDE_ESCAPED(../perf/timings.txt)HERE
 
 </div>
 <h1>Discussion</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_discussion');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_discussion');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_discussion" style="display: block">
 
 <ul>
@@ -66,7 +66,7 @@ faster in that language. That was a gamble I did not take.
 
 </div>
 <h1>Source code</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_source_code');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_source_code');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_source_code" style="display: block">
 
 <h2>C cat using fgets</h2>
@@ -101,14 +101,14 @@ POKI_INCLUDE_ESCAPED(../perf/cutnim.nim)HERE
 
 </div>
 <h1>Makefile</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_makefile');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_makefile');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_makefile" style="display: block">
 
 POKI_INCLUDE_ESCAPED(../perf/Makefile.no-autoconfig)HERE
 
 </div>
 <h1>Compiler versions</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_versions');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_versions');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_versions" style="display: block">
 
 <p/>
@@ -143,7 +143,7 @@ active boot switches: -d:release
 
 </div>
 <h1>Hardware</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_hardware');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_hardware');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_hardware" style="display: block">
 
 <p/>

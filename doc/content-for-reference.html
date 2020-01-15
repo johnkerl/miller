@@ -1,11 +1,11 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <h1>Command overview</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_overview');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_overview" style="display: block">
 
 <p>
@@ -102,7 +102,7 @@ POKI_INCLUDE_ESCAPED(data/subcommand-example.txt)HERE
 </div>
 <!-- ================================================================ -->
 <h1>I/O options</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_io_options');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_io_options');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_io_options" style="display: block">
 
 <!-- ================================================================ -->
@@ -282,7 +282,7 @@ POKI_RUN_COMMAND{{echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'}}HERE
 <!-- ================================================================ -->
 </div>
 <h1>Data transformations (verbs)</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_data_transformations');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_data_transformations');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_data_transformations" style="display: block">
 
 <p/> Please see <a href="reference-verbs.html">the separate page here</a>.
@@ -290,7 +290,7 @@ POKI_RUN_COMMAND{{echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'}}HERE
 <!-- ================================================================ -->
 </div>
 <h1>Expression language for filter and put</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_dsl_ref');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_dsl_ref');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_dsl_ref" style="display: block">
 
 <p/> Please see <a href="reference-dsl.html">the separate page here</a>.
@@ -298,7 +298,7 @@ POKI_RUN_COMMAND{{echo 'x=0xffff,y=0xff' | mlr put '$z=hexfmt($x*$y)'}}HERE
 <!-- ================================================================ -->
 </div>
 <h1>then-chaining</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_then_chaining');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_then_chaining');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_then_chaining" style="display: block">
 
 <p/>
@@ -336,7 +336,7 @@ pipeline stage.
 <!-- ================================================================ -->
 </div>
 <h1>Auxiliary commands</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_auxents');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_auxents');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_auxents" style="display: block">
 
 <p/> There are a few nearly-standalone programs which have nothing to do with the rest of Miller, do not
@@ -360,7 +360,7 @@ POKI_RUN_COMMAND{{mlr hex -r data/budget.csv | sed 's/20/2a/g' | mlr unhex}}HERE
 <!-- ================================================================ -->
 </div>
 <h1>Data types</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_data_types');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_data_types');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_data_types" style="display: block">
 
 <p/> Miller&rsquo;s input and output are all string-oriented: there is (as of
@@ -418,7 +418,7 @@ integer as well as float input.
 <!-- ================================================================ -->
 </div>
 <h1>Null data: empty and absent</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_null_data');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_null_data');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_null_data" style="display: block">
 
 <p/> One of Miller&rsquo;s key features is its support for <b>heterogeneous</b>
@@ -542,7 +542,7 @@ POKI_RUN_COMMAND{{mlr --print-type-arithmetic-info}}HERE
 <!-- ================================================================ -->
 </div>
 <h1>String literals</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_string_literals');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_string_literals');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_string_literals" style="display: block">
 
 <p/>
@@ -577,7 +577,7 @@ system <code>sed</code> command.
 
 </div>
 <h1>Regular expressions</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_regular_expressions');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_regular_expressions');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_regular_expressions" style="display: block">
 
 <p/>Miller lets you use regular expressions (of type POSIX.2) in the following contexts:
@@ -688,7 +688,7 @@ followed by an unrelated <code>5</code>.
 <!-- ================================================================ -->
 </div>
 <h1>Arithmetic</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_arithmetic');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_arithmetic');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_arithmetic" style="display: block">
 
 <h2>Input scanning</h2>
@@ -778,7 +778,7 @@ pythonic</a>:
 </div>
 <!-- ================================================================ -->
 <h1>On-line help</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_online_help');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_online_help');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_online_help" style="display: block">
 
 <p/>Examples:<p/>

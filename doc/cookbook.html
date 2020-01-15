@@ -26,75 +26,7 @@ var pageTracker = _gat._getTracker("UA-15651652-1");
 pageTracker._trackPageview();
 } catch(err) {}
 </script>
-
 <!-- ================================================================ -->
-<script type="text/javascript">
-
-  function vis_expand_all_navbar_sections() {
-    vis_expand_all_with_prefix('navbar_section_toggle_');
-  }
-  function vis_collapse_all_navbar_sections() {
-    vis_collapse_all_with_prefix('navbar_section_toggle_');
-  }
-
-  function vis_expand_all_body_sections() {
-    vis_expand_all_with_prefix('body_section_toggle_');
-  }
-  function vis_collapse_all_body_sections() {
-    vis_collapse_all_with_prefix('body_section_toggle_');
-  }
-
-  function vis_expand_all_with_prefix(prefix) {
-    var divs = document.getElementsByTagName('div');
-    for(var i = 0; i < divs.length; i++) {
-      const div = divs[i];
-      if (div.id.startsWith(prefix)) {
-        vis_expand_div(div);
-      }
-    }
-  }
-  function vis_collapse_all_with_prefix(prefix) {
-    var divs = document.getElementsByTagName('div');
-    for(var i = 0; i < divs.length; i++){
-      const div = divs[i];
-      if (div.id.startsWith(prefix)) {
-        vis_collapse_div(div);
-      }
-    }
-  }
-
-  function vis_toggle_by_name(divName) {
-    vis_toggle_div(document.getElementById(divName));
-  }
-  function vis_expand_by_name(divName) {
-    vis_expand_div(document.getElementById(divName));
-  }
-  function vis_collapse_by_name(divName) {
-    vis_collapse_div(document.getElementById(divName));
-  }
-
-  function vis_toggle_div(div) {
-    if (div != null) {
-      var state = div.style.display;
-      if (state == 'block') {
-        div.style.display = 'none';
-      } else {
-        div.style.display = 'block';
-      }
-    }
-  }
-  function vis_expand_div(div) {
-    if (div != null) {
-      div.style.display = 'block';
-    }
-  }
-  function vis_collapse_div(div) {
-    if (div != null) {
-      div.style.display = 'none';
-    }
-  }
-
-</script>
 
 <body bgcolor="#ffffff">
 
@@ -108,7 +40,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_overview');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_overview');"
   href="javascript:;"
   >
     Overview
@@ -116,7 +48,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:bold;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_using');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_using');"
   href="javascript:;"
   >
     Using
@@ -124,7 +56,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_reference');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_reference');"
   href="javascript:;"
   >
     Reference
@@ -132,7 +64,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_background');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_background');"
   href="javascript:;"
   >
     Background
@@ -140,7 +72,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_repository');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_repository');"
   href="javascript:;"
   >
     Repository
@@ -214,12 +146,12 @@ pageTracker._trackPageview();
 <p/>
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <!-- ================================================================ -->
 <a id="Headerless_CSV_on_input_or_output"/><h1>Headerless CSV on input or output</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_headerless_csv');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_headerless_csv');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_headerless_csv" style="display: block">
 
 <p/>Sometimes we get CSV files which lack a header. For example:
@@ -324,7 +256,7 @@ $ mlr --inidx --ifs comma --oxtab cut -f 1,3 data/headerless.csv
 <!-- ================================================================ -->
 </div>
 <a id="Doing_multiple_joins"/><h1>Doing multiple joins</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_multiple_joins');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_multiple_joins');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_multiple_joins" style="display: block">
 
 <p/>Suppose we have the following data:
@@ -393,7 +325,7 @@ id status   name  task
 <!-- ================================================================ -->
 </div>
 <a id="Bulk_rename_of_fields"/><h1>Bulk rename of fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_bulk_rename');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_bulk_rename');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_bulk_rename" style="display: block">
 
 <p/>Suppose you want to replace spaces with underscores in your column names:
@@ -467,7 +399,7 @@ a_b_c def  g_h_i
 <!-- ================================================================ -->
 </div>
 <a id="Search-and-replace_over_all_fields"/><h1>Search-and-replace over all fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_search_and_replace_over_all_fields');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_search_and_replace_over_all_fields');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_search_and_replace_over_all_fields" style="display: block">
 
 <p/> How to do <code>$name=gsub($name, "old", "new")</code> for all fields?
@@ -507,7 +439,7 @@ ovXr,thX,lazy dogs
 </div>
 <!-- ================================================================ -->
 <a id="Full_field_renames_and_reassigns"/><h1>Full field renames and reassigns</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_full_renames_reassigns');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_full_renames_reassigns');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_full_renames_reassigns" style="display: block">
 
 <p/>Using Miller 5.0.0&rsquo;s map literals and assigning to <code>$*</code>, you can fully generalize
@@ -557,7 +489,7 @@ z=0.573289,KEYFIELD=wye,i=15,b=pan,y=0.573289,x=0.863624
 <!-- ================================================================ -->
 </div>
 <a id="Numbering_and_renumbering_records"/><h1>Numbering and renumbering records</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_renumbering_records');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_renumbering_records');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_renumbering_records" style="display: block">
 
 <p/> The <code>awk</code>-like built-in variable <code>NR</code> is incremented for each input record:
@@ -629,7 +561,7 @@ a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729,n=2
 <!-- ================================================================ -->
 </div>
 <a id="Options_for_dealing_with_duplicate_rows"/><h1>Options for dealing with duplicate rows</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_dedupe');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_dedupe');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_dedupe" style="display: block">
 
 <p/> If your data has records appearing multiple times, you can use
@@ -645,7 +577,7 @@ href="reference-verbs.html#head">mlr head</a>.
 <!-- ================================================================ -->
 </div>
 <a id="Data-cleaning_examples"/><h1>Data-cleaning examples</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_data_cleaning_examples');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_data_cleaning_examples');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_data_cleaning_examples" style="display: block">
 
 <p/> Here are some ways to use the type-checking options as described in
@@ -744,7 +676,7 @@ fred,true
 </div>
 <!-- ================================================================ -->
 <a id="Splitting_nested_fields"/><h1>Splitting nested fields</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_splitting_nested');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_splitting_nested');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_splitting_nested" style="display: block">
 
 <p/> Suppose you have a TSV file like this:
@@ -848,7 +780,7 @@ s	w
 </div>
 <!-- ================================================================ -->
 <a id="Showing_differences_between_successive_queries"/><h1>Showing differences between successive queries</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_successive_query_deltas');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_successive_query_deltas');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_successive_query_deltas" style="display: block">
 
 <p/> Suppose you have a database query which you run at one point in time, producing the output on the
@@ -958,7 +890,7 @@ purple 12             0             -12
 </div>
 <!-- ================================================================ -->
 <a id="Finding_missing_dates"/><h1>Finding missing dates</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_finding_missing_dates');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_finding_missing_dates');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_finding_missing_dates" style="display: block">
 
 <p/>Suppose you have some date-stamped data which may (or may not) be missing entries for one or more dates:
@@ -1074,7 +1006,7 @@ n=1125,1=2015-04-05,2=182528
 </div>
 <!-- ================================================================ -->
 <a id="Two-pass_algorithms"/><h1>Two-pass algorithms</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_two_pass_algorithms');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_two_pass_algorithms');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_two_pass_algorithms" style="display: block">
 
 <p/>Miller is a streaming record processor; commands are performed once per
@@ -1244,7 +1176,7 @@ green  purple 5 0.203577
 <!-- ================================================================ -->
 </div>
 <a id="Rectangularizing_data"/><h1>Rectangularizing data</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_rectangularizing_data');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_rectangularizing_data');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_rectangularizing_data" style="display: block">
 
 <p/>Suppose you have a method (in whatever language) which is printing things of the form
@@ -1355,7 +1287,7 @@ outer=3,middle=31,inner1=313,inner2=314
 <!-- ================================================================ -->
 </div>
 <a id="Regularizing_ragged_CSV"/><h1>Regularizing ragged CSV</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_rectangularizing_ragged_csv');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_rectangularizing_ragged_csv');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_rectangularizing_ragged_csv" style="display: block">
 
 <p/>Miller handles compliant CSV: in particular, it&rsquo;s an error if the
@@ -1417,7 +1349,7 @@ a,b,c
 <!-- ================================================================ -->
 </div>
 <a id="Feature-counting"/><h1>Feature-counting</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_feature_counting');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_feature_counting');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_feature_counting" style="display: block">
 
 <p/>Suppose you have some heterogeneous data like this:
@@ -1516,7 +1448,7 @@ uid2    0.083333
 <!-- ================================================================ -->
 </div>
 <a id="Unsparsing"/><h1>Unsparsing</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_unsparsing');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_unsparsing');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_unsparsing" style="display: block">
 
 <p/> The previous section discussed how to fill out missing data fields within
@@ -1622,7 +1554,7 @@ a b v u x w
 </div>
 <!-- ================================================================ -->
 <a id="Parsing_log-file_output"/><h1>Parsing log-file output</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_parsing_log_file_output');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_parsing_log_file_output');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_parsing_log_file_output" style="display: block">
 
 <p/>This, of course, depends highly on what&rsquo;s in your log files. But, as
@@ -1649,7 +1581,7 @@ grep 'various sorts' *.log | sed 's/.*} //' | mlr --fs space --repifs --oxtab st
 </div>
 <!-- ================================================================ -->
 <a id="Memoization_with_out-of-stream_variables"/><h1>Memoization with out-of-stream variables</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_memoization_with_oosvars');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_memoization_with_oosvars');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_memoization_with_oosvars" style="display: block">
 
 <p/> The recursive function for the Fibonacci sequence is famous for its computational complexity.
@@ -1782,6 +1714,24 @@ i  o      fcount seconds_delta
 </pre></div>
 
 </div>
+
+<!-- ================================================================ -->
+<script type="text/javascript" src="js/jko-toggler.js"></script>
+<!-- wtf -->
+<script type="text/javascript">
+  // Put this at the bottom of the page since its constructor scans the
+  // document's div tags to find the toggleables.
+  const navbarToggler = new JKOToggler(
+    "navbar_section_toggle_",
+    'maroon',
+    'maroon',
+  );
+  const bodyToggler = new JKOToggler(
+    "body_section_toggle_",
+    'maroon',
+    'maroon',
+  );
+</script>
 
 </body>
 </html>

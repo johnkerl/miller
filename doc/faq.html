@@ -26,75 +26,7 @@ var pageTracker = _gat._getTracker("UA-15651652-1");
 pageTracker._trackPageview();
 } catch(err) {}
 </script>
-
 <!-- ================================================================ -->
-<script type="text/javascript">
-
-  function vis_expand_all_navbar_sections() {
-    vis_expand_all_with_prefix('navbar_section_toggle_');
-  }
-  function vis_collapse_all_navbar_sections() {
-    vis_collapse_all_with_prefix('navbar_section_toggle_');
-  }
-
-  function vis_expand_all_body_sections() {
-    vis_expand_all_with_prefix('body_section_toggle_');
-  }
-  function vis_collapse_all_body_sections() {
-    vis_collapse_all_with_prefix('body_section_toggle_');
-  }
-
-  function vis_expand_all_with_prefix(prefix) {
-    var divs = document.getElementsByTagName('div');
-    for(var i = 0; i < divs.length; i++) {
-      const div = divs[i];
-      if (div.id.startsWith(prefix)) {
-        vis_expand_div(div);
-      }
-    }
-  }
-  function vis_collapse_all_with_prefix(prefix) {
-    var divs = document.getElementsByTagName('div');
-    for(var i = 0; i < divs.length; i++){
-      const div = divs[i];
-      if (div.id.startsWith(prefix)) {
-        vis_collapse_div(div);
-      }
-    }
-  }
-
-  function vis_toggle_by_name(divName) {
-    vis_toggle_div(document.getElementById(divName));
-  }
-  function vis_expand_by_name(divName) {
-    vis_expand_div(document.getElementById(divName));
-  }
-  function vis_collapse_by_name(divName) {
-    vis_collapse_div(document.getElementById(divName));
-  }
-
-  function vis_toggle_div(div) {
-    if (div != null) {
-      var state = div.style.display;
-      if (state == 'block') {
-        div.style.display = 'none';
-      } else {
-        div.style.display = 'block';
-      }
-    }
-  }
-  function vis_expand_div(div) {
-    if (div != null) {
-      div.style.display = 'block';
-    }
-  }
-  function vis_collapse_div(div) {
-    if (div != null) {
-      div.style.display = 'none';
-    }
-  }
-
-</script>
 
 <body bgcolor="#ffffff">
 
@@ -108,7 +40,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_overview');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_overview');"
   href="javascript:;"
   >
     Overview
@@ -116,7 +48,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:bold;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_using');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_using');"
   href="javascript:;"
   >
     Using
@@ -124,7 +56,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_reference');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_reference');"
   href="javascript:;"
   >
     Reference
@@ -132,7 +64,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_background');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_background');"
   href="javascript:;"
   >
     Background
@@ -140,7 +72,7 @@ pageTracker._trackPageview();
 <button
   style="font-weight:normal;font-size:100%;color:maroon;border:0"
   padding=0
-  onclick="vis_collapse_all_navbar_sections(); vis_toggle_by_name('navbar_section_toggle_repository');"
+  onclick="navbarToggler.expandUniquely('navbar_section_toggle_repository');"
   href="javascript:;"
   >
     Repository
@@ -209,11 +141,11 @@ pageTracker._trackPageview();
 <p/>
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <a id="No_output_at_all"/><h1>No output at all</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_no_output_at_all');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_no_output_at_all');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_no_output_at_all" style="display: block">
 
 <p/>Try <code>od -xcv</code> and/or <code>cat -e</code> on your file to check for non-printable characters.
@@ -225,7 +157,7 @@ line-ending-autodetect feature was introduced, please see
 
 </div>
 <a id="Fields_not_selected"/><h1>Fields not selected</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_fields_not_selected');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="cbodyToggler.toggle('body_section_toggle_fields_not_selected');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_fields_not_selected" style="display: block">
 
 <p/>Check the field-separators of the data, e.g. with the command-line
@@ -239,7 +171,7 @@ case: <code>mlr --fs tab {remaining arguments ...}</code>.
 
 </div>
 <a id="Diagnosing_delimiter_specifications"/><h1>Diagnosing delimiter specifications</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_diagnosing_delimiter_specifications');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_diagnosing_delimiter_specifications');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_diagnosing_delimiter_specifications" style="display: block">
 
 <p/>
@@ -308,7 +240,7 @@ masterdata_colourcode_2;Czarny;Negru
 
 </div>
 <a id="How_do_I_suppress_numeric_conversion?"/><h1>How do I suppress numeric conversion?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_examine_then_chaining');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_examine_then_chaining');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_suppress_numeric_conversion" style="display: block">
 
 <p/><b>TL;DR use put -S</b>.
@@ -441,7 +373,7 @@ value  copy   type
 
 </div>
 <a id="How_do_I_examine_then-chaining?"/><h1>How do I examine then-chaining?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_examine_then_chaining');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_examine_then_chaining');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_examine_then_chaining" style="display: block">
 
 <p/>Then-chaining found in Miller is intended to function the same as Unix
@@ -515,7 +447,7 @@ paid    debit        1
 
 </div>
 <a id="I_assigned_$9_and_it&rsquo;s_not_9th"/><h1>I assigned $9 and it&rsquo;s not 9th</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_9_not_9th');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_9_not_9th');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_9_not_9th" style="display: block">
 
 <p/> Miller records are ordered lists of key-value pairs. For NIDX format, DKVP
@@ -586,7 +518,7 @@ z,x,y
 
 </div>
 <a id="How_can_I_filter_by_date?"/><h1>How can I filter by date?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_date_filtering');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_date_filtering');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_date_filtering" style="display: block">
 
 <p/> Given input like
@@ -625,7 +557,7 @@ See also <a href="https://github.com/johnkerl/miller/issues/208">https://github.
 
 </div>
 <a id="How_can_I_handle_commas-as-data_in_various_formats?"/><h1>How can I handle commas-as-data in various formats?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_comma_handling');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_comma_handling');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_comma_handling" style="display: block">
 
 <p/> <a href="file-formats.html#CSV/TSV/ASV/USV/etc.">CSV</a> handles this well and by design:
@@ -713,7 +645,7 @@ Name=Khavari, Darius^ARole=tester
 
 </div>
 <a id="How_can_I_handle_field_names_with_special_symbols_in_them?"/><h1>How can I handle field names with special symbols in them?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_field_names_with_special_symbols');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_field_names_with_special_symbols');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_field_names_with_special_symbols" style="display: block">
 
 <p/>Simply surround the field names with curly braces:
@@ -729,7 +661,7 @@ x.a=3,y:b=4,z/c=5,product.all=60
 
 </div>
 <a id="How_to_escape_'?'_in_regexes?"/><h1>How to escape '?' in regexes?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_escape_in_regex');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_escape_in_regex');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_escape_in_regex" style="display: block">
 
 <p/> One way is to use square brackets; an alternative is to use simple
@@ -768,7 +700,7 @@ c is it ...
 
 </div>
 <a id="How_can_I_put_single-quotes_into_strings?"/><h1>How can I put single-quotes into strings?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_single_quotes_in_strings');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_single_quotes_in_strings');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_single_quotes_in_strings" style="display: block">
 
 <p/> This is a little tricky due to the shell&rsquo;s handling of quotes. For simplicity, let&rsquo;s first put
@@ -825,7 +757,7 @@ all concatenated together.
 
 </div>
 <a id="Why_doesn&rsquo;t_mlr_cut_put_fields_in_the_order_I_want?"/><h1>Why doesn&rsquo;t mlr cut put fields in the order I want?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_cut_out_of_order');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_cut_out_of_order');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_cut_out_of_order" style="display: block">
 
 <p/>Example: columns <code>x,i,a</code> were requested but they appear here in the order <code>a,i,x</code>:
@@ -876,7 +808,7 @@ x=0.5732889198020006,i=5,a=wye
 
 </div>
 <a id="NR_is_not_consecutive_after_then-chaining"/><h1>NR is not consecutive after then-chaining</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_NR_not_consecutive_after_then');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_NR_not_consecutive_after_then');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_NR_not_consecutive_after_then" style="display: block">
 
 <p/> Given this input data:
@@ -957,7 +889,7 @@ n=2,a=wye,b=pan,i=5,x=0.5732889198020006,y=0.8636244699032729
 
 </div>
 <a id="Why_am_I_not_seeing_all_possible_joins_occur?"/><h1>Why am I not seeing all possible joins occur?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_not_all_possible_joins');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_not_all_possible_joins');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_not_all_possible_joins" style="display: block">
 
 <p/><b>This section describes behavior before Miller 5.1.0. As of 5.1.0, <code>-u</code> is the default.</b>
@@ -1044,7 +976,7 @@ right file.
 
 </div>
 <a id="How_to_rectangularize_after_joins_with_unpaired?"/><h1>How to rectangularize after joins with unpaired?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_rectangularize_after_join');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_rectangularize_after_join');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_rectangularize_after_join" style="display: block">
 
 <p/> Suppose you have the following two data files:
@@ -1118,7 +1050,7 @@ id,code,color
 
 </div>
 <a id="What_about_XML_or_JSON_file_formats?"/><h1>What about XML or JSON file formats?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_xml_or_json');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_xml_or_json');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_xml_or_json" style="display: block">
 
 <p/>Miller handles <boldmaroon>tabular data</boldmaroon>, which is a list of
@@ -1179,6 +1111,24 @@ tool.
 conversion.
 
 </div>
+
+<!-- ================================================================ -->
+<script type="text/javascript" src="js/jko-toggler.js"></script>
+<!-- wtf -->
+<script type="text/javascript">
+  // Put this at the bottom of the page since its constructor scans the
+  // document's div tags to find the toggleables.
+  const navbarToggler = new JKOToggler(
+    "navbar_section_toggle_",
+    'maroon',
+    'maroon',
+  );
+  const bodyToggler = new JKOToggler(
+    "body_section_toggle_",
+    'maroon',
+    'maroon',
+  );
+</script>
 
 </body>
 </html>

@@ -1,11 +1,11 @@
 POKI_PUT_TOC_HERE
 
 <p/>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_expand_all_body_sections();" href="javascript:;">Expand all sections</button>
-<button style="font-weight:bold;color:maroon;border:0" onclick="vis_collapse_all_body_sections();" href="javascript:;">Collapse all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.expandAll();" href="javascript:;">Expand all sections</button>
+<button style="font-weight:bold;color:maroon;border:0" onclick="bodyToggler.collapseAll();" href="javascript:;">Collapse all sections</button>
 
 <h1>Why not C?</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_why_not_c');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_why_not_c');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_why_not_c" style="display: block">
 
 <p/>C lacks many of the features found in modern, high-level languages such as
@@ -28,7 +28,7 @@ any case.
 
 </div>
 <h1>C vs. Go, D, Rust, etc.; C is fast</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_c_is_fast');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_c_is_fast');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_c_is_fast" style="display: block">
 
 <p/>I love Go (<a href="http://golang.org">https://golang.org</a>): I think
@@ -52,7 +52,7 @@ on a single host or split across multiple hosts.
 
 </div>
 <h1>C is ubiquitous</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_c_is_ubiquitous');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_c_is_ubiquitous');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_c_is_ubiquitous" style="display: block">
 
 <p/>Every Unix-like system has a C compiler (or is an <code>apt-get</code> or
@@ -61,7 +61,7 @@ of Miller.
 
 </div>
 <h1>C is old-school</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_c_is_old_school');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_c_is_old_school');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_c_is_old_school" style="display: block">
 
 <p/>This alone is not enough reason to program in C, but since I find myself
@@ -75,7 +75,7 @@ comments; enough said.)
 
 </div>
 <h1>C vs. C++</h1>
-<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="vis_toggle_by_name('body_section_toggle_c_vs_cpp');" href="javascript:;">Toggle section visibility</button>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_c_vs_cpp');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_c_vs_cpp" style="display: block">
 
 I have a strong personal distaste for C++: its syntax is an ugly layer over the
