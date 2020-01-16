@@ -111,7 +111,9 @@ pre {
   border: 1px solid #aaaaaa;
   border-radius: 5px;
   background: #ffffff;
+  line-height: 200%; /* for linewrap on mobile */
   padding: 3px;
+  margin: 30px 3px 30px 3px; /* for linewrap on mobile */
   text-decoration: none;
 }
 
