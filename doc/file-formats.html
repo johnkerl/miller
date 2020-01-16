@@ -37,82 +37,24 @@ pageTracker._trackPageview();
   <center><titleinbody>Miller</titleinbody></center>
   
 <!-- NAVBAR GENERATED FROM template.html BY poki -->
-<button
-  style="font-weight:bold;font-size:100%;color:maroon;border:0"
-  padding=0
-  onclick="navbarToggler.expandUniquely('navbar_section_toggle_overview');"
-  href="javascript:;"
-  >
-    Overview
-</button>
-<button
-  style="font-weight:normal;font-size:100%;color:maroon;border:0"
-  padding=0
-  onclick="navbarToggler.expandUniquely('navbar_section_toggle_using');"
-  href="javascript:;"
-  >
-    Using
-</button>
-<button
-  style="font-weight:normal;font-size:100%;color:maroon;border:0"
-  padding=0
-  onclick="navbarToggler.expandUniquely('navbar_section_toggle_reference');"
-  href="javascript:;"
-  >
-    Reference
-</button>
-<button
-  style="font-weight:normal;font-size:100%;color:maroon;border:0"
-  padding=0
-  onclick="navbarToggler.expandUniquely('navbar_section_toggle_background');"
-  href="javascript:;"
-  >
-    Background
-</button>
-<button
-  style="font-weight:normal;font-size:100%;color:maroon;border:0"
-  padding=0
-  onclick="navbarToggler.expandUniquely('navbar_section_toggle_repository');"
-  href="javascript:;"
-  >
-    Repository
-</button>
-<div id="navbar_section_toggle_overview" style="display: block;text-align: left">
+<br/>
+<a class="poki-navbar-element" href="index.html"><b>Overview</b></a>
+&nbsp;
+<a class="poki-navbar-element" href="faq.html">Using</a>
+&nbsp;
+<a class="poki-navbar-element" href="reference.html">Reference</a>
+&nbsp;
+<a class="poki-navbar-element" href="why.html">Background</a>
+&nbsp;
+<a class="poki-navbar-element" href="contact.html">Repository</a>
+&nbsp;
+<br/>
 <br/><a href="index.html">About</a>
 <br/><a href="10-min.html">10-minute intro</a>
 <br/><a href="file-formats.html"><b>File formats</b></a>
 <br/><a href="feature-comparison.html">Unix-toolkit context</a>
 <br/><a href="record-heterogeneity.html">Record-hetrogeneity</a>
 <br/><a href="internationalization.html">Internationalization</a>
-</div>
-<div id="navbar_section_toggle_using" style="display: none;text-align: left">
-<br/><a href="faq.html">FAQ</a>
-<br/><a href="data-sharing.html">Mixing with other languages</a>
-<br/><a href="cookbook.html">Cookbook part 1</a>
-<br/><a href="cookbook2.html">Cookbook part 2</a>
-<br/><a href="cookbook3.html">Cookbook part 3</a>
-<br/><a href="data-examples.html">Data-diving examples</a>
-</div>
-<div id="navbar_section_toggle_reference" style="display: none;text-align: left">
-<br/><a href="reference.html">Main reference</a>
-<br/><a href="reference-verbs.html">Verbs reference</a>
-<br/><a href="reference-dsl.html">DSL reference</a>
-<br/><a href="manpage.html">Manpage</a>
-<br/><a href="release-docs.html">Documents by release</a>
-<br/><a href="build.html">Installation</a>
-</div>
-<div id="navbar_section_toggle_background" style="display: none;text-align: left">
-<br/><a href="why.html">Why?</a>
-<br/><a href="whyc.html">Why C?</a>
-<br/><a href="whyc-details.html">Why C: details</a>
-<br/><a href="etymology.html">Why call it Miller?</a>
-<br/><a href="originality.html">How original is Miller?</a>
-<br/><a href="performance.html">Performance</a>
-</div>
-<div id="navbar_section_toggle_repository" style="display: none;text-align: left">
-<br/><a href="contact.html">Contact information</a>
-<br/><a href="https://github.com/johnkerl/miller">https://github.com/johnkerl/miller</a>
-</div>
 </div>
 
 <!-- page body -->
@@ -1041,11 +983,6 @@ orange 123.45
 <script type="text/javascript">
   // Put this at the bottom of the page since its constructor scans the
   // document's div tags to find the toggleables.
-  const navbarToggler = new JKOToggler(
-    "navbar_section_toggle_",
-    'maroon',
-    'maroon',
-  );
   const bodyToggler = new JKOToggler(
     "body_section_toggle_",
     'maroon',

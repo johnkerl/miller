@@ -99,3 +99,12 @@ pre {
   padding-left: 15px;
   padding-right: 15px;
 }
+
+.poki-navbar-element {
+  font-weight: bold;
+  color: maroon;
+  border: 1px solid #aaaaaa;
+  background: #ffffff;
+  padding: 3px;
+  text-decoration: none;
+}

@@ -10,7 +10,7 @@ class JKOToggler {
   // PUBLIC METHODS
 
   // Array of toggleable div names, without leading '#'
-  constructor(toggleableDivPrefix, buttonSelectColor, buttonDeselectColor) {
+  constructor(toggleableDivPrefix, buttonSelectFontWeight, buttonDeselectFontWeight) {
     this._allDivNames = [];
     const divs = document.querySelectorAll('div');
     for (let div of divs) {
@@ -20,8 +20,8 @@ class JKOToggler {
       }
     }
 
-    this._buttonSelectColor = buttonSelectColor;
-    this._buttonDeselectColor = buttonDeselectColor;
+    this._buttonSelectFontWeight = buttonSelectFontWeight;
+    this._buttonDeselectFontWeight = buttonDeselectFontWeight;
     this._allExpanded = false;
   }
 
@@ -113,15 +113,15 @@ class JKOToggler {
 	};
 
 	_makeButtonSelected = (button) => {
-		button.style.borderColor = this._buttonSelectColor;
-		button.style.borderWidth = 'thin';
-		button.style.borderStyle = 'solid';
+		button.style.fontWeight = 'bold';
+		//button.style.borderWidth = 'thin';
+		//button.style.borderStyle = 'solid';
 	};
 
 	_makeButtonDeselected = (button) => {
-		button.style.borderColor = this._buttonDeselectColor;
-		button.style.borderWidth = 'none';
-		button.style.borderStyle = 'none';
+		button.style.fontWeight = 'normal';
+		//button.style.borderWidth = 'none';
+		//button.style.borderStyle = 'none';
 	};
 
 //  window.onload = function() {

@@ -155,51 +155,46 @@ def generate_navbar(overall_config, section_config, page_config, output_html_nam
   template_file_name = overall_config.fetch('template_file_name')
   output_handle.puts "<!-- NAVBAR GENERATED FROM #{template_file_name} BY #{$us} -->"
 
+  output_handle.puts("<br/>");
   for other_section_config in overall_config.fetch('sections')
     other_section_internal_name = other_section_config.fetch('internal_name')
     other_section_external_name = other_section_config.fetch('external_name')
-    font_weight = 'normal'
+    bs = ''
+    be = ''
     if (other_section_internal_name == section_config.fetch('internal_name'))
-      font_weight = 'bold'
+      bs = '<b>'
+      be = '</b>'
     end
-    output_handle.puts("<button");
-    output_handle.puts("  style=\"font-weight:#{font_weight};font-size:100%;color:maroon;border:0\"");
-    output_handle.puts("  padding=0");
-    output_handle.puts("  onclick=\"navbarToggler.expandUniquely('navbar_section_toggle_#{other_section_internal_name}');\"");
-    output_handle.puts("  href=\"javascript:;\"");
-    output_handle.puts("  >");
-    output_handle.puts("    #{other_section_external_name}");
-    output_handle.puts("</button>");
+
+    other_section_pages_config = other_section_config.fetch('pages')
+    top_page_for_section = other_section_pages_config[0]
+    top_page_for_section_file_name = top_page_for_section.fetch('file_name')
+
+    # xxx needs css for no underlining ...
+    output_handle.puts("<a class=\"poki-navbar-element\" href=\"#{top_page_for_section_file_name}\">#{bs}#{other_section_external_name}#{be}</a>");
+    output_handle.puts("&nbsp;");
   end
 
-  for other_section_config in overall_config.fetch('sections')
-    other_section_internal_name = other_section_config.fetch('internal_name')
-    other_section_external_name = other_section_config.fetch('external_name')
-    display = 'none'
-    if (other_section_internal_name == section_config.fetch('internal_name'))
-      display = 'block'
-    end
-    output_handle.puts("<div id=\"navbar_section_toggle_#{other_section_internal_name}\" style=\"display: #{display};text-align: left\">")
-    for other_page_config in other_section_config.fetch('pages')
-      other_page_file_name = other_page_config['file_name'] # nullable
-      other_page_link_name = other_page_config['link'] # nullable
-      other_page_external_name = other_page_config.fetch('external_name')
+  output_handle.puts("<br/>");
 
-      if other_page_link_name != nil
-        url = other_page_link_name.sub(/^ext:/, '')
-        output_handle.puts "<br/><a href=\"#{url}\">#{other_page_link_name}</a>"
-      else
-        bs = ""
-        be = ""
-        if File.basename(output_html_name) == other_page_file_name
-          # Bold the current file in the navbar.
-          bs = "<b>"
-          be = "</b>"
-        end
-        output_handle.puts "<br/><a href=\"#{other_page_file_name}\">#{bs}#{other_page_external_name}#{be}</a>"
+  for other_page_config in section_config.fetch('pages')
+    other_page_file_name = other_page_config['file_name'] # nullable
+    other_page_link_name = other_page_config['link'] # nullable
+    other_page_external_name = other_page_config.fetch('external_name')
+
+    if other_page_link_name != nil
+      url = other_page_link_name.sub(/^ext:/, '')
+      output_handle.puts "<br/><a href=\"#{url}\">#{other_page_link_name}</a>"
+    else
+      bs = ""
+      be = ""
+      if File.basename(output_html_name) == other_page_file_name
+        # Bold the current file in the navbar.
+        bs = "<b>"
+        be = "</b>"
       end
+      output_handle.puts "<br/><a href=\"#{other_page_file_name}\">#{bs}#{other_page_external_name}#{be}</a>"
     end
-    output_handle.puts("</div>")
   end
 end
 
