@@ -37,6 +37,7 @@ h1 {
   color: maroon;
   font-size: 120%;
   border: 1px solid #aaaaaa;
+  border-radius: 5px;
   background: #e8d9bc;
   padding: 3px;
 }
@@ -46,12 +47,14 @@ h2 {
   color: maroon;
   font-size: 105%;
   border: 1px solid #aaaaaa;
+  border-radius: 5px;
   background: #ffffff;
   padding: 3px;
 }
 
 h3 {
   font-weight: bold;
+  border-radius: 5px;
   color: maroon;
   font-size: 100%;
   border-bottom: 1px solid #aaaaaa;
@@ -61,6 +64,7 @@ table {
 	color: #000000;
 	border-collapse: collapse;
 	border-color: #808080;
+  border-radius: 5px;
 }
 
 .mlrbg {
@@ -93,6 +97,7 @@ pre {
   box-shadow:0px 0px 2px 2px #C9C9C9;
   margin: 10px;
   border-color: #f1c40f;
+  border-radius: 5px;
   background: #e8d9bc;
   padding-top: 2px;
   padding-bottom: 2px;
@@ -104,6 +109,7 @@ pre {
   font-weight: bold;
   color: maroon;
   border: 1px solid #aaaaaa;
+  border-radius: 5px;
   background: #ffffff;
   padding: 3px;
   text-decoration: none;
