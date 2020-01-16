@@ -108,3 +108,8 @@ pre {
   padding: 3px;
   text-decoration: none;
 }
+
+.poki-navbar-element:hover {
+  background: #dddddd;
+}
+
