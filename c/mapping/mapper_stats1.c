@@ -544,7 +544,7 @@ static void mapper_stats1_ingest_name_value(lrec_t* pinrec, mapper_stats1_state_
 		pacc_field_to_acc_states = mlr_malloc_or_die(sizeof(acc_map_pair_t));
 		pacc_field_to_acc_states->pin  = lhmsv_alloc();
 		pacc_field_to_acc_states->pout = lhmsv_alloc();
-		lhmsv_put(pgroup_to_acc_field, value_field_name, pacc_field_to_acc_states, NO_FREE);
+		lhmsv_put(pgroup_to_acc_field, mlr_strdup_or_die(value_field_name), pacc_field_to_acc_states, FREE_ENTRY_KEY);
 	}
 	lhmsv_t* acc_field_to_acc_state_in  = pacc_field_to_acc_states->pin;
 	lhmsv_t* acc_field_to_acc_state_out = pacc_field_to_acc_states->pout;
