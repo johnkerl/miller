@@ -53,7 +53,7 @@ pageTracker._trackPageview();
 <br/><a href="10-min.html">10-minute intro</a>
 <br/><a href="file-formats.html"><b>File formats</b></a>
 <br/><a href="feature-comparison.html">Unix-toolkit context</a>
-<br/><a href="record-heterogeneity.html">Record-hetrogeneity</a>
+<br/><a href="record-heterogeneity.html">Record-heterogeneity</a>
 <br/><a href="internationalization.html">Internationalization</a>
 </div>
 
@@ -177,7 +177,7 @@ $ mlr --usage-data-format-examples
 When <code>mlr</code> is invoked with the <code>--csv</code> or <code>--csvlite</code> option,
 key names are found on the first record and values are taken from subsequent
 records.  This includes the case of CSV-formatted files.  See
-<a href="record-heterogeneity.html">Record-hetrogeneity</a> for how Miller handles
+<a href="record-heterogeneity.html">Record-heterogeneity</a> for how Miller handles
 changes of field names within a single data stream.
 
 <p/> Miller has record separator <code>RS</code> and field separator <code>FS</code>,
@@ -301,7 +301,7 @@ as <code>"dish" =&gt; "7", "egg" =&gt; "8", "3" =&gt; "flint"</code> and
 <code>dish,egg,flint</code> is parsed as <code>"1" =&gt; "dish", "2" =&gt; "egg", "3"
 =&gt; "flint"</code>.
 
-<p/> As discussed in <a href="record-heterogeneity.html">Record-hetrogeneity</a>,
+<p/> As discussed in <a href="record-heterogeneity.html">Record-heterogeneity</a>,
 Miller handles changes of field names within the same data stream. But using
 DKVP format this is particularly natural. One of my favorite use-cases for
 Miller is in application/server logs, where I log all sorts of lines such as
@@ -711,7 +711,7 @@ won&rsquo;t work on <code>tail -f</code> contexts, where Miller will be waiting 
 an end-of-file marker which never arrives; (b) pretty-print output for large
 files is constrained by available machine memory.
 
-<p/> See <a href="record-heterogeneity.html">Record-hetrogeneity</a> for how Miller
+<p/> See <a href="record-heterogeneity.html">Record-heterogeneity</a> for how Miller
 handles changes of field names within a single data stream.
 
 <p/> For output only (this isn&rsquo;t supported in the input-scanner as of 5.0.0)
