@@ -1,6 +1,6 @@
 ## Instructions to make Miller source/binary RPMs for the RPM-experienced
 
-Grab `mlr.spec` and go to town.
+Grab `miller.spec` and go to town.
 
 ## Instructions to make Miller source/binary RPMs for the RPM-inexperienced
 
@@ -16,7 +16,7 @@ cd
 mkdir ~/rpmbuild
 mkdir ~/rpmbuild/SPECS
 mkdir ~/rpmbuild/SOURCES
-cp /your/path/to/miller/clone/mlr.spec ~/rpmbuild/SPECS
+cp /your/path/to/miller/clone/miller.spec ~/rpmbuild/SPECS
 cp /your/path/to/mlr-3.3.2.tar.gz ~/rpmbuild/SOURCES
 
 cd ~/rpmbuild/SPECS
@@ -28,9 +28,9 @@ sudo yum install rpmbuild
 ```
 
 ### Linting
-If you have changed the `mlr.spec` file:
+If you have changed the `miller.spec` file:
 ```
-rpmlint mlr.spec
+rpmlint miller.spec
 ```
 You may need to do
 ```
@@ -39,14 +39,14 @@ sudo yum install rpmlint
 
 ### Build source-RPM only
 ```
-rpmbuild -bs mlr.spec
+rpmbuild -bs miller.spec
 Wrote: /your/home/dir/rpmbuild/SRPMS/mlr-3.3.2-1.el6.src.rpm
 ```
 
 ```
 rpm -qpl ../SRPMS/mlr-3.3.2-1.el6.src.rpm
 mlr-3.3.2.tar.gz
-mlr.spec
+miller.spec
 ```
 
 ```
@@ -71,7 +71,7 @@ well with pipes and can feed "tail -f".
 ### Build source and binary RPMs
 
 ```
-rpmbuild -ba mlr.spec
+rpmbuild -ba miller.spec
 ```
 
 ```
