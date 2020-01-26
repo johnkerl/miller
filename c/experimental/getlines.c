@@ -5,7 +5,6 @@
 #include "lib/mlrutil.h"
 #include "lib/mlrdatetime.h"
 #include "input/file_reader_stdio.h"
-#include "input/file_reader_mmap.h"
 #include "input/lrec_readers.h"
 #include "lib/string_builder.h"
 #include "input/byte_readers.h"
@@ -260,47 +259,6 @@ static int read_file_fgetc_psb(char* filename, int do_write) {
 }
 
 // ================================================================
-static char* read_line_mmap_psb(file_reader_mmap_state_t* ph, string_builder_t* psb, char* irs) {
-	char *p = ph->sol;
-	while (TRUE) {
-		if (p == ph->eof) {
-			ph->sol = p;
-			if (sb_is_empty(psb))
-				return NULL;
-			else
-				return sb_finish(psb);
-		} else if (*p == irs[0]) {
-			ph->sol = p+1;
-			return sb_finish(psb);
-		} else {
-			sb_append_char(psb, *p);
-			p++;
-		}
-	}
-}
-
-static int read_file_mmap_psb(char* filename, int do_write) {
-	file_reader_mmap_state_t* ph = file_reader_mmap_open(NULL, filename);
-	string_builder_t* psb = sb_alloc(STRING_BUILDER_INIT_SIZE);
-	char* irs = "\n";
-	int bc = 0;
-
-	while (TRUE) {
-		char* line = read_line_mmap_psb(ph, psb, irs);
-		if (line == NULL)
-			break;
-		if (do_write) {
-			fputs(line, stdout);
-			fputc('\n', stdout);
-		}
-		bc += strlen(line);
-	}
-	sb_free(psb);
-	file_reader_mmap_close(ph, NULL);
-	return bc;
-}
-
-// ================================================================
 #define IRS_TOKEN    11
 #define EOF_TOKEN    22
 #define IRSEOF_TOKEN 33
@@ -429,13 +387,6 @@ int main(int argc, char** argv) {
 		e = get_systime();
 		t = e - s;
 		printf("type=fgetc_psb,t=%.6lf,n=%d\n", t, bc);
-		fflush(stdout);
-
-		s = get_systime();
-		bc = read_file_mmap_psb(filename, do_write);
-		e = get_systime();
-		t = e - s;
-		printf("type=mmap_psb,t=%.6lf,n=%d\n", t, bc);
 		fflush(stdout);
 
 		s = get_systime();

@@ -215,14 +215,6 @@ OPTIONS
 
 	 -p is a keystroke-saver for --nidx --fs space --repifs
 
-	 --mmap --no-mmap --mmap-below {n} Use mmap for files whenever possible, never, or
-					 for files less than n bytes in size. Default is for
-					 files less than 4294967296 bytes in size.
-					 'Whenever possible' means always except for when reading
-					 standard input which is not mmappable. If you don't know
-					 what this means, don't worry about it -- it's a minor
-					 performance optimization.
-
 	 Examples: --csv for CSV-formatted input and output; --idkvp --opprint for
 	 DKVP-formatted input and pretty-printed output.
 
@@ -744,8 +736,6 @@ VERBS
 	 --ips {pair-separator character}
 	 --repifs
 	 --repips
-	 --mmap
-	 --no-mmap
        Please use "mlr --usage-separator-options" for information on specifying separators.
        Please see http://johnkerl.org/miller/doc/reference.html for more information
        including examples.
@@ -2298,4 +2288,4 @@ SEE ALSO
 
 
 
-				  2020-01-05			     MILLER(1)
+				  2020-01-26			     MILLER(1)
