@@ -4,7 +4,6 @@
 #include <stdio.h>
 #include "lib/context.h"
 #include "containers/lrec.h"
-#include "input/file_reader_mmap.h"
 
 struct _lrec_reader_t; // forward reference for method declarations
 

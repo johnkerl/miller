@@ -16,7 +16,7 @@
 int reference_json_objects_as_lrecs(sllv_t* precords, json_value_t* ptop_level_json, char* flatten_sep,
 	json_array_ingest_t json_array_ingest);
 
-// * The buffer is an entire JSON blob, e.g. contents from stdio read or mmap; peof-psof is the file size so peof is one
+// * The buffer is an entire JSON blob, e.g. contents from stdio read; peof-psof is the file size so peof is one
 //   byte *after* the last valid file byte.
 // * The buffer is not assumed to be null-terminated.
 // * Any lines beginning with comment_string are modified by poking space characters up to line_term.

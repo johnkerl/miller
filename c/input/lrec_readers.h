@@ -24,19 +24,6 @@ lrec_reader_t* lrec_reader_stdio_xtab_alloc(char* ifs, char* ips, int allow_repe
 lrec_reader_t* lrec_reader_stdio_json_alloc(char* input_json_flatten_separator, json_array_ingest_t json_array_ingest, char* line_term,
 	comment_handling_t comment_handling, char* comment_string);
 
-lrec_reader_t* lrec_reader_mmap_csv_alloc(char* irs, char* ifs, int use_implicit_csv_header,
-	int allow_ragged_csv_input, comment_handling_t comment_handling, char* comment_string);
-lrec_reader_t* lrec_reader_mmap_csvlite_alloc(char* irs, char* ifs, int allow_repeat_ifs, int use_implicit_csv_header,
-	int allow_ragged_csv_input, comment_handling_t comment_handling, char* comment_string);
-lrec_reader_t* lrec_reader_mmap_dkvp_alloc(char* irs, char* ifs, char* ips, int allow_repeat_ifs,
-	comment_handling_t comment_handling, char* comment_string);
-lrec_reader_t* lrec_reader_mmap_nidx_alloc(char* irs, char* ifs, int allow_repeat_ifs,
-	comment_handling_t comment_handling, char* comment_string);
-lrec_reader_t* lrec_reader_mmap_xtab_alloc(char* ifs, char* ips, int allow_repeat_ips,
-	comment_handling_t comment_handling, char* comment_string);
-lrec_reader_t* lrec_reader_mmap_json_alloc(char* input_json_flatten_separator, json_array_ingest_t json_array_ingest, char* line_term,
-	comment_handling_t comment_handling, char* comment_string);
-
 lrec_reader_t* lrec_reader_in_memory_alloc(sllv_t* precords);
 
 // ----------------------------------------------------------------

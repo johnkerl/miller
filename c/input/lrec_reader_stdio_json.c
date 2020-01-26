@@ -8,10 +8,11 @@
 // ================================================================
 
 // ================================================================
-// This has at present a lot of code duplication with lrec_reader_mmap_json.
-// This is because we read the entire input file into memory and get a pointer
-// to it, which is a lot like mmap.  At some future point we may implement a
-// streaming JSON parser at which point the two files would diverge.
+// Note: this is a non-streaming JSON reader which reads the entire input file
+// into memory and gets a pointer to it.  At some future point we may implement
+// a streaming JSON parser at which point this would change dramatically.
+//
+// See also https://github.com/johnkerl/miller/issues/99
 // ================================================================
 
 #include <stdio.h>

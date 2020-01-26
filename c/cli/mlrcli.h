@@ -37,7 +37,6 @@ typedef struct _cli_reader_opts_t {
 	int   allow_repeat_ips;
 	int   use_implicit_csv_header;
 	int   allow_ragged_csv_input;
-	int   use_mmap_for_read;
 
 	// Command for popen on input, e.g. "zcat -cf <". Can be null in which case
 	// files are read directly rather than through a pipe.
@@ -45,9 +44,6 @@ typedef struct _cli_reader_opts_t {
 
 	comment_handling_t comment_handling;
 	char* comment_string;
-
-	// https://github.com/johnkerl/miller/issues/160
-	ssize_t max_file_size_for_mmap;
 
 	// Fake internal-data-generator 'reader'
 	generator_opts_t generator_opts;

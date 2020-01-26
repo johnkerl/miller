@@ -348,10 +348,9 @@ static int lrec_reader_stdio_csv_get_fields(lrec_reader_stdio_csv_state_t* pstat
 	if (pfr_peek_char(pfr) == (char)EOF) // char defaults to unsigned on some platforms
 		return FALSE;
 
-	// Strip the UTF-8 BOM, if any. This is MUCH simpler for mmap, and for stdio on files.  For mmap
-	// we can test the first 3 bytes, then skip past them or not. For stdio on files we can fread
-	// the first 3 bytes, then rewind the fp if they're not the UTF-8 BOM. But for stdio on stdin
-	// (which is the primary reason we support stdio in Miller), we cannot rewind: stdin is not
+	// Strip the UTF-8 BOM, if any. This is MUCH simpler for mmap, and for stdio on files.  For mmap we can test the
+	// first 3 bytes, then skip past them or not. For stdio on files we can fread the first 3 bytes, then rewind the fp
+	// if they're not the UTF-8 BOM. But for stdio on stdin, we cannot rewind: stdin is not
 	// rewindable.
 	if (is_header) {
 		pfr_buffer_by(pfr, UTF8_BOM_LENGTH);

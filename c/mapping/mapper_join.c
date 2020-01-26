@@ -107,8 +107,6 @@ static void mapper_join_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  --ips {pair-separator character}\n");
 	fprintf(o, "  --repifs\n");
 	fprintf(o, "  --repips\n");
-	fprintf(o, "  --mmap\n");
-	fprintf(o, "  --no-mmap\n");
 	fprintf(o, "Please use \"%s --usage-separator-options\" for information on specifying separators.\n",
 		argv0);
 	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html for more information\n");
@@ -236,10 +234,6 @@ static mapper_t* mapper_join_parse_cli(int* pargi, int argc, char** argv,
 	}
 
 	cli_merge_reader_opts(&popts->reader_opts, pmain_reader_opts);
-
-	// popen is a stdio construct, not an mmap construct, and it can't be supported here.
-	if (popts->prepipe != NULL)
-		popts->reader_opts.use_mmap_for_read = FALSE;
 
 	if (popts->left_file_name == NULL) {
 		fprintf(stderr, "%s %s: need left file name\n", MLR_GLOBALS.bargv0, verb);

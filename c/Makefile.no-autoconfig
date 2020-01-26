@@ -81,7 +81,6 @@ TEST_BYTE_READERS_SRCS = \
   lib/string_builder.c \
   input/string_byte_reader.c \
   input/stdio_byte_reader.c \
-  input/mmap_byte_reader.c \
   unit_test/test_byte_readers.c
 
 TEST_LINE_READERS_SRCS = \
@@ -137,18 +136,12 @@ TEST_LREC_SRCS = \
   containers/sllmv.c \
   containers/mlhmmv.c \
   input/line_readers.c \
-  input/file_reader_mmap.c \
   input/file_reader_stdio.c \
   input/file_ingestor_stdio.c \
-  input/lrec_reader_mmap_csvlite.c \
   input/lrec_reader_stdio_csvlite.c \
-  input/lrec_reader_mmap_dkvp.c \
   input/lrec_reader_stdio_dkvp.c \
-  input/lrec_reader_mmap_nidx.c \
   input/lrec_reader_stdio_nidx.c \
-  input/lrec_reader_mmap_xtab.c \
   input/lrec_reader_stdio_xtab.c \
-  input/lrec_reader_mmap_json.c \
   input/lrec_reader_stdio_json.c \
   input/mlr_json_adapter.c \
   input/json_parser.c \
@@ -187,18 +180,12 @@ TEST_MULTIPLE_CONTAINERS_SRCS = \
   containers/top_keeper.c \
   containers/dheap.c \
   input/line_readers.c \
-  input/file_reader_mmap.c \
   input/file_reader_stdio.c \
   input/file_ingestor_stdio.c \
-  input/lrec_reader_mmap_csvlite.c \
   input/lrec_reader_stdio_csvlite.c \
-  input/lrec_reader_mmap_dkvp.c \
   input/lrec_reader_stdio_dkvp.c \
-  input/lrec_reader_mmap_nidx.c \
   input/lrec_reader_stdio_nidx.c \
-  input/lrec_reader_mmap_xtab.c \
   input/lrec_reader_stdio_xtab.c \
-  input/lrec_reader_mmap_json.c \
   input/lrec_reader_stdio_json.c \
   input/mlr_json_adapter.c \
   input/json_parser.c \
@@ -358,27 +345,19 @@ TEST_JOIN_BUCKET_KEEPER_SRCS = \
   containers/mixutil.c \
   containers/header_keeper.c \
   containers/join_bucket_keeper.c \
-  input/mmap_byte_reader.c \
   input/stdio_byte_reader.c \
   input/line_readers.c \
   input/lrec_reader_gen.c \
   input/lrec_reader_in_memory.c \
   input/lrec_readers.c \
-  input/lrec_reader_mmap_csv.c \
   input/lrec_reader_stdio_csv.c \
-  input/lrec_reader_mmap_csvlite.c \
   input/lrec_reader_stdio_csvlite.c \
-  input/lrec_reader_mmap_dkvp.c \
   input/lrec_reader_stdio_dkvp.c \
-  input/lrec_reader_mmap_nidx.c \
   input/lrec_reader_stdio_nidx.c \
-  input/lrec_reader_mmap_xtab.c \
   input/lrec_reader_stdio_xtab.c \
-  input/lrec_reader_mmap_json.c \
   input/lrec_reader_stdio_json.c \
   input/mlr_json_adapter.c \
   input/json_parser.c \
-  input/file_reader_mmap.c \
   input/file_reader_stdio.c \
   input/file_ingestor_stdio.c \
   input/peek_file_reader.c \
@@ -398,7 +377,6 @@ EXPERIMENTAL_READER_SRCS = \
   lib/string_array.c \
   lib/string_builder.c \
   input/stdio_byte_reader.c \
-  input/file_reader_mmap.c \
   input/line_readers.c \
   containers/parse_trie.c \
   experimental/getlines.c
@@ -492,7 +470,6 @@ unit-test: test-mlrutil test-mlrregex test-argparse test-line-readers test-byte-
 
 reg-test:
 	./reg_test/run
-	./reg_test/run --no-mmap
 
 # ----------------------------------------------------------------
 # Run this after unit-test expected output has changed, and is verified to be

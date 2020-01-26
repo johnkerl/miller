@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include "lib/mlr_globals.h"
 #include "lib/mlrutil.h"
-#include "input/file_reader_mmap.h"
 #include "input/lrec_readers.h"
 
 typedef struct _lrec_reader_gen_state_t {

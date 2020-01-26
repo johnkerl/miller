@@ -47218,71 +47218,6 @@ a=4,b=5,c=6
 
 
 ================================================================
-MMAP AT PAGE BOUNDARIES
-
-mlr --dkvp tail -n 4 ./reg_test/input/page-aligned-final-ifs.dkvp
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=
-
-mlr --dkvp tail -n 4 ./reg_test/input/page-aligned-final-irs.dkvp
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
-
-mlr --dkvp tail -n 4 ./reg_test/input/page-aligned-final-no-ifs.dkvp
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,3=z
-
-mlr --dkvp tail -n 4 ./reg_test/input/page-aligned-no-final-irs.dkvp
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=cccccccccccccccccccccccccccccccccccccccccccccccc
-x=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,y=bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,z=ccccccccccccccccccccccccccccccccccccccccccccccccc
-
-mlr --nidx tail -n 4 ./reg_test/input/page-aligned-no-final-irs.nidx
-11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
-11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
-11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
-11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,33333333333333333333333333333333333333333333
-
-mlr --csvlite tail -n 4 ./reg_test/input/page-aligned-no-final-irs.csvl
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,ccccccccccccccccccccccccccccccccccccccccccc
-11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
-11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
-11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
-11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,33333333333333333333333333333333333333333333
-
-mlr --csv --rs lf tail -n 4 ./reg_test/input/page-aligned-no-final-irs.csvl
-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,ccccccccccccccccccccccccccccccccccccccccccc
-11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
-11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
-11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,3333333333333333333333333333333333333333333
-11111111111111111111111111111111111111,22222222222222222222222222222222222222222222,33333333333333333333333333333333333333333333
-
-mlr --xtab tail -n 4 ./reg_test/input/page-aligned-no-final-eol.xtab
-aaaaaaaaaaaaaaaaaaaa 111111111111111111111
-bbbbbbbbbbbbbbbbbbbb 22222222222222222222
-cccccccccccccccccccc 33333333333333333333
-
-aaaaaaaaaaaaaaaaaaaa 111111111111111111111
-bbbbbbbbbbbbbbbbbbbb 22222222222222222222
-cccccccccccccccccccc 33333333333333333333
-
-aaaaaaaaaaaaaaaaaaaa 111111111111111111111
-bbbbbbbbbbbbbbbbbbbb 22222222222222222222
-cccccccccccccccccccc 33333333333333333333
-
-aaaaaaaaaaaaaaaaaaaa 111111111111111111111
-bbbbbbbbbbbbbbbbbbbb 22222222222222222222
-cccccccccccccccccccc 3333333333333333333333
-
-
-================================================================
 INT64 I/O
 
 mlr --oxtab put $c=$a;$d=$b;$e=hexfmt($a);$f=hexfmt($b) ./reg_test/input/int64io.dkvp
@@ -47675,54 +47610,54 @@ x,"y""yy",z
 ================================================================
 RFC-CSV
 
-mlr --mmap --csv cat ./reg_test/input/rfc-csv/simple.csv-crlf
+mlr --csv cat ./reg_test/input/rfc-csv/simple.csv-crlf
 a,b,c
 1,x,3
 4,5,6
 x,"y""yy",z
 
-mlr --mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv
+mlr --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv
 a,b,c
 1,x,3
 4,5,6
 
-mlr --mmap --csv cat ./reg_test/input/rfc-csv/narrow.csv
+mlr --csv cat ./reg_test/input/rfc-csv/narrow.csv
 a
 1
 2
 3
 4
 
-mlr --mmap --csv cat ./reg_test/input/rfc-csv/narrow-truncated.csv
+mlr --csv cat ./reg_test/input/rfc-csv/narrow-truncated.csv
 a
 1
 2
 3
 4
 
-mlr --mmap --csv cat ./reg_test/input/rfc-csv/quoted-comma.csv
+mlr --csv cat ./reg_test/input/rfc-csv/quoted-comma.csv
 a,b,c
 1,"x,3",y
 4,5,6
 
-mlr --mmap --csv cat ./reg_test/input/rfc-csv/quoted-comma-truncated.csv
+mlr --csv cat ./reg_test/input/rfc-csv/quoted-comma-truncated.csv
 a,b,c
 1,"x,3",y
 4,5,6
 
-mlr --mmap --csv cat ./reg_test/input/rfc-csv/quoted-crlf.csv
+mlr --csv cat ./reg_test/input/rfc-csv/quoted-crlf.csv
 a,b,c
 1,"x
 3",y
 4,5,6
 
-mlr --mmap --csv cat ./reg_test/input/rfc-csv/quoted-crlf-truncated.csv
+mlr --csv cat ./reg_test/input/rfc-csv/quoted-crlf-truncated.csv
 a,b,c
 1,"x
 3",y
 4,5,6
 
-mlr --mmap --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv ./reg_test/input/rfc-csv/simple.csv-crlf
+mlr --csv cat ./reg_test/input/rfc-csv/simple-truncated.csv ./reg_test/input/rfc-csv/simple.csv-crlf
 a,b,c
 1,x,3
 4,5,6
@@ -47730,7 +47665,7 @@ a,b,c
 4,5,6
 x,"y""yy",z
 
-mlr --mmap --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b ./reg_test/input/rfc-csv/modify-defaults.csv
+mlr --csv --ifs semicolon --ofs pipe --irs lf --ors lflf cut -x -f b ./reg_test/input/rfc-csv/modify-defaults.csv
 a|c
 
 1|3
@@ -47738,22 +47673,13 @@ a|c
 4|6
 
 
-mlr --mmap --csv --rs lf --quote-original cut -o -f c,b,a ./reg_test/input/quote-original.csv
+mlr --csv --rs lf --quote-original cut -o -f c,b,a ./reg_test/input/quote-original.csv
 c,b,a
 3,2,1
 6,"5",4
 "9",8,"7"
 
-mlr --mmap --icsv --oxtab cat ./reg_test/input/comma-at-eof.csv
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 
-
-mlr --no-mmap --icsv --oxtab cat ./reg_test/input/comma-at-eof.csv
+mlr --icsv --oxtab cat ./reg_test/input/comma-at-eof.csv
 a 1
 b 2
 c 3
@@ -47818,7 +47744,7 @@ c i
 ================================================================
 RAGGED NON-RFC CSV
 
-mlr --mmap --icsv --oxtab --ragged cat ./reg_test/input/ragged.csv
+mlr --icsv --oxtab --ragged cat ./reg_test/input/ragged.csv
 a 1
 b 2
 c 3
@@ -47832,35 +47758,7 @@ b 7
 c 8
 4 9
 
-mlr --no-mmap --icsv --oxtab --ragged cat ./reg_test/input/ragged.csv
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 
-
-a 6
-b 7
-c 8
-4 9
-
-mlr --mmap --icsvlite --oxtab --ragged cat ./reg_test/input/ragged.csv
-a 1
-b 2
-c 3
-
-a 4
-b 5
-c 
-
-a 6
-b 7
-c 8
-4 9
-
-mlr --no-mmap --icsvlite --oxtab --ragged cat ./reg_test/input/ragged.csv
+mlr --icsvlite --oxtab --ragged cat ./reg_test/input/ragged.csv
 a 1
 b 2
 c 3
@@ -48177,9 +48075,9 @@ i 4
 ================================================================
 MULTI-CHARACTER SEPARATORS FOR XTAB
 
-mlr --mmap --xtab --ifs crlf --ofs Z cut -x -f b ./reg_test/input/truncated.xtab-crlf
+mlr --xtab --ifs crlf --ofs Z cut -x -f b ./reg_test/input/truncated.xtab-crlf
 a 1Zc 3ZZd 4Ze 5Z
-mlr --mmap --xtab --ips . --ops @ cut -x -f b ./reg_test/input/dots.xtab
+mlr --xtab --ips . --ops @ cut -x -f b ./reg_test/input/dots.xtab
 a@1
 c@345
 
@@ -48195,12 +48093,7 @@ sum@@@@3
 ================================================================
 EMBEDDED IPS FOR XTAB
 
-mlr --xtab --mmap cat ./reg_test/input/embedded-ips.xtab
-a 1
-b 2
-c 3 4 5
-
-mlr --xtab --no-mmap cat ./reg_test/input/embedded-ips.xtab
+mlr --xtab cat ./reg_test/input/embedded-ips.xtab
 a 1
 b 2
 c 3 4 5
@@ -48374,7 +48267,7 @@ mlr --opprint --barred --right cat ./reg_test/input/abixy-het
 ================================================================
 MULTI-CHARACTER IXS SPECIFIERS
 
-mlr --oxtab --idkvp --mmap --irs lf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --idkvp --irs lf --ifs , --ips = cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
 x :0.641593543645736508/
 a :wye/
 i :0/
@@ -48395,7 +48288,7 @@ x :0.676537984365847889/
 a :zee/
 i :4/
 
-mlr --oxtab --idkvp --mmap --irs lf --ifs /, --ips =: cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
+mlr --oxtab --idkvp --irs lf --ifs /, --ips =: cut -o -f x,a,i ./reg_test/input/multi-sep.dkvp-crlf
 x 0.641593543645736508
 a wye
 i 0
@@ -49746,7 +49639,7 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 
----------------------------------------------------------------- mmap nidx
+---------------------------------------------------------------- nidx
 mlr --irs auto --ors lf --nidx --fs comma cat ./reg_test/input/line-term-lf.dkvp
 a=pan,b=pan,i=1,x=0.3467901443380824,y=0.7268028627434533
 a=eks,b=pan,i=2,x=0.7586799647899636,y=0.5221511083334797
@@ -49796,7 +49689,7 @@ a=hat,b=wye,i=9,x=0.03144187646093577,y=0.7495507603507059
 a=pan,b=wye,i=10,x=0.5026260055412137,y=0.9526183602969864
 
 
----------------------------------------------------------------- mmap csvlite
+---------------------------------------------------------------- csvlite
 mlr --irs auto --ors lf --csvlite cat ./reg_test/input/line-term-lf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
@@ -49850,7 +49743,7 @@ hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
 
----------------------------------------------------------------- mmap pprint
+---------------------------------------------------------------- pprint
 mlr --irs auto --ors lf --pprint cat ./reg_test/input/line-term-lf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
@@ -49904,7 +49797,7 @@ hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
 
----------------------------------------------------------------- mmap xtab
+---------------------------------------------------------------- xtab
 mlr --ifs auto --xtab cat ./reg_test/input/line-term-lf.xtab
 a pan
 b pan
@@ -50150,7 +50043,7 @@ x 0.5026260055412137
 y 0.9526183602969864
 
 
----------------------------------------------------------------- mmap xtab
+---------------------------------------------------------------- xtab
 mlr --ifs auto --xtab cat ./reg_test/input/line-term-lf.xtab
 a pan
 b pan
@@ -50396,7 +50289,7 @@ x 0.5026260055412137
 y 0.9526183602969864
 
 
----------------------------------------------------------------- mmap csv
+---------------------------------------------------------------- csv
 mlr --irs auto --ors lf --csv cat ./reg_test/input/line-term-lf.csv
 a,b,i,x,y
 pan,pan,1,0.3467901443380824,0.7268028627434533
@@ -50450,7 +50343,7 @@ hat,wye,9,0.03144187646093577,0.7495507603507059
 pan,wye,10,0.5026260055412137,0.9526183602969864
 
 
----------------------------------------------------------------- mmap json nowrap nostack
+---------------------------------------------------------------- json nowrap nostack
 mlr --irs auto --ors lf --json cat ./reg_test/input/line-term-lf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 { "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
@@ -50500,7 +50393,7 @@ mlr --json cat ./reg_test/input/line-term-crlf.json
 { "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 
 
----------------------------------------------------------------- mmap json yeswrap nostack
+---------------------------------------------------------------- json yeswrap nostack
 mlr --irs auto --ors lf --jlistwrap --json cat ./reg_test/input/line-term-lf-wrap.json
 [
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
@@ -50558,7 +50451,7 @@ mlr --jlistwrap --json cat ./reg_test/input/line-term-crlf-wrap.json
 ]
 
 
----------------------------------------------------------------- mmap json nowrap yesstack
+---------------------------------------------------------------- json nowrap yesstack
 mlr --irs auto --json --jvstack cat ./reg_test/input/line-term-lf.json
 {
   "a": "pan",
@@ -50848,7 +50741,7 @@ mlr --json --jvstack cat ./reg_test/input/line-term-crlf.json
 }
 
 
----------------------------------------------------------------- mmap json yeswrap yesstack
+---------------------------------------------------------------- json yeswrap yesstack
 mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ./reg_test/input/line-term-lf-wrap.json
 [
 {
@@ -51146,7 +51039,7 @@ mlr --jlistwrap --json --jvstack cat ./reg_test/input/line-term-crlf-wrap.json
 ]
 
 
----------------------------------------------------------------- mmap json nowrap nostack
+---------------------------------------------------------------- json nowrap nostack
 mlr --irs auto --ors lf --json cat ./reg_test/input/line-term-lf.json
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
 { "a": "eks", "b": "pan", "i": 2, "x": 0.7586799647899636, "y": 0.5221511083334797 }
@@ -51196,7 +51089,7 @@ mlr --json cat ./reg_test/input/line-term-crlf.json
 { "a": "pan", "b": "wye", "i": 10, "x": 0.5026260055412137, "y": 0.9526183602969864 }
 
 
----------------------------------------------------------------- mmap json yeswrap nostack
+---------------------------------------------------------------- json yeswrap nostack
 mlr --irs auto --ors lf --jlistwrap --json cat ./reg_test/input/line-term-lf-wrap.json
 [
 { "a": "pan", "b": "pan", "i": 1, "x": 0.3467901443380824, "y": 0.7268028627434533 }
@@ -51254,7 +51147,7 @@ mlr --jlistwrap --json cat ./reg_test/input/line-term-crlf-wrap.json
 ]
 
 
----------------------------------------------------------------- mmap json nowrap yesstack
+---------------------------------------------------------------- json nowrap yesstack
 mlr --irs auto --ors lf --json --jvstack cat ./reg_test/input/line-term-lf.json
 {
   "a": "pan",
@@ -51544,7 +51437,7 @@ mlr --json --jvstack cat ./reg_test/input/line-term-crlf.json
 }
 
 
----------------------------------------------------------------- mmap json yeswrap yesstack
+---------------------------------------------------------------- json yeswrap yesstack
 mlr --irs auto --ors lf --jlistwrap --json --jvstack cat ./reg_test/input/line-term-lf-wrap.json
 [
 {

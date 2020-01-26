@@ -24,14 +24,6 @@
 #endif
 
 // ----------------------------------------------------------------
-#ifdef MLR_ON_MSYS2
-#define MLR_ARCH_MMAP_ENABLED 0
-#else
-#define MLR_ARCH_MMAP_ENABLED 1
-#include <sys/mman.h>
-#endif
-
-// ----------------------------------------------------------------
 int mlr_arch_setenv(const char *name, const char *value);
 int mlr_arch_unsetenv(const char *name);
 

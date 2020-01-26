@@ -2,8 +2,6 @@ noinst_LTLIBRARIES=	libinput.la
 libinput_la_SOURCES=	\
 			byte_reader.h \
 			byte_readers.h \
-			file_reader_mmap.c \
-			file_reader_mmap.h \
 			file_reader_stdio.c \
 			file_reader_stdio.h \
 			file_ingestor_stdio.c \
@@ -17,12 +15,6 @@ libinput_la_SOURCES=	\
 			lrec_reader.h \
 			lrec_reader_gen.c \
 			lrec_reader_in_memory.c \
-			lrec_reader_mmap_csv.c \
-			lrec_reader_mmap_csvlite.c \
-			lrec_reader_mmap_dkvp.c \
-			lrec_reader_mmap_json.c \
-			lrec_reader_mmap_nidx.c \
-			lrec_reader_mmap_xtab.c \
 			lrec_reader_stdio_csv.c \
 			lrec_reader_stdio_csvlite.c \
 			lrec_reader_stdio_dkvp.c \
@@ -31,7 +23,6 @@ libinput_la_SOURCES=	\
 			lrec_reader_stdio_xtab.c \
 			lrec_readers.c \
 			lrec_readers.h \
-			mmap_byte_reader.c \
 			peek_file_reader.c \
 			peek_file_reader.h \
 			stdio_byte_reader.c \
