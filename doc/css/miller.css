@@ -106,6 +106,7 @@ pre {
 }
 
 .poki-navbar-element {
+  /* Note: the poki script will generate <b> ... </b> for current-section */
   color: maroon;
   border: 1px solid #aaaaaa;
   border-radius: 5px;
