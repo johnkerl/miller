@@ -495,7 +495,9 @@ mv_t s_s_lstrip_func(mv_t* pval1) {
 		while (isspace(*p)) {
 			p++;
 		}
-		return mv_from_string(mlr_strdup_or_die(p), FREE_ENTRY_VALUE);
+		char* retval = mlr_strdup_or_die(p);
+		mv_free(pval1);
+		return mv_from_string(retval, FREE_ENTRY_VALUE);
 	}
 }
 
