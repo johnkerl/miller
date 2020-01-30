@@ -102,5 +102,6 @@ static sllv_t* mapper_altkv_process(lrec_t* pinrec, context_t* pctx, void* pvsta
 		pe = pe->pnext;
 	}
 
+	lrec_free(pinrec);
 	return sllv_single(poutrec);
 }
