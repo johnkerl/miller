@@ -9,7 +9,7 @@ class MillerDocToggler {
   // ----------------------------------------------------------------
   // PUBLIC METHODS
 
-  // Array of toggleable div names, without leading '#'
+  // Prefix for toggleable div names, without leading '#'
   constructor(toggleableDivPrefix, buttonSelectFontWeight, buttonDeselectFontWeight) {
     this._allDivNames = [];
     const divs = document.querySelectorAll('div');
@@ -123,16 +123,6 @@ class MillerDocToggler {
     //button.style.borderWidth = 'none';
     //button.style.borderStyle = 'none';
   };
-
-//  window.onload = function() {
-//    if ('URLSearchParams' in window) {
-//      let searchParams = new URLSearchParams(window.location.search);
-//      let expanded = searchParams.get('expanded');
-//      if (expanded != null) {
-//        _expand(expanded)
-//      }
-//    }
-//  };
 
 }
 
