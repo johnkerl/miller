@@ -5,7 +5,7 @@
 
 'use strict';
 
-class JKOToggler {
+class MillerDocToggler {
   // ----------------------------------------------------------------
   // PUBLIC METHODS
 
@@ -136,4 +136,4 @@ class JKOToggler {
 
 }
 
-// module.exports = JKOToggler;
+// module.exports = MillerDocToggler;
