@@ -35,48 +35,48 @@ class MillerDocToggler {
   //   o selecting that another means collapse the old one and expand
   //     the new one.
   expandUniquely = (divName) => {
-		const eleDiv = document.getElementById(divName);
-		const button = document.getElementById(divName+"_button")
-		if (eleDiv != null) {
+    const eleDiv = document.getElementById(divName);
+    const button = document.getElementById(divName+"_button")
+    if (eleDiv != null) {
       if (this._allExpanded) {
-  			this.collapseAll();
+        this.collapseAll();
         if (button != null) {
-				  this._makeButtonSelected(button);
+          this._makeButtonSelected(button);
         }
-				eleDiv.style.display = "block";
+        eleDiv.style.display = "block";
       } else {
-			  const state = eleDiv.style.display;
-  			this.collapseAll();
-  			if (state === "block") {
-  				this._makeButtonDeselected(button);
-  				eleDiv.style.display = "none";
-  			} else {
+        const state = eleDiv.style.display;
+        this.collapseAll();
+        if (state === "block") {
+          this._makeButtonDeselected(button);
+          eleDiv.style.display = "none";
+        } else {
           if (button != null) {
-  				  this._makeButtonSelected(button);
+            this._makeButtonSelected(button);
           }
-  				eleDiv.style.display = "block";
-  			}
+          eleDiv.style.display = "block";
+        }
       }
-		}
+    }
     this._allExpanded = false;
-	};
+  };
 
-	expandAll = () => {
-		for (let divName of this._allDivNames) {
-			this._expand(divName);
-		}
+  expandAll = () => {
+    for (let divName of this._allDivNames) {
+      this._expand(divName);
+    }
     this._allExpanded = true;
-	};
+  };
 
-	collapseAll = () => {
-		for (let divName of this._allDivNames) {
-			this._collapse(divName);
-		}
+  collapseAll = () => {
+    for (let divName of this._allDivNames) {
+      this._collapse(divName);
+    }
     this._allExpanded = false;
-	}
+  }
 
   toggle = (divName) => {
-		const div = document.getElementById(divName);
+    const div = document.getElementById(divName);
     if (div != null) {
       const state = div.style.display;
       if (state == 'block') {
@@ -90,39 +90,39 @@ class MillerDocToggler {
   // ----------------------------------------------------------------
   // PRIVATE METHODS
 
-	_expand = (divName) => {
-		const eleDiv = document.getElementById(divName);
-		const button = document.getElementById(divName+"_button")
-		if (eleDiv != null) {
-			eleDiv.style.display = "block";
-		}
-		if (button != null) {
-			this._makeButtonSelected(button)
-		}
-	};
+  _expand = (divName) => {
+    const eleDiv = document.getElementById(divName);
+    const button = document.getElementById(divName+"_button")
+    if (eleDiv != null) {
+      eleDiv.style.display = "block";
+    }
+    if (button != null) {
+      this._makeButtonSelected(button)
+    }
+  };
 
-	_collapse = (divName) => {
-		const eleDiv = document.getElementById(divName);
-		const button = document.getElementById(divName+"_button")
-		if (eleDiv != null) {
-			eleDiv.style.display = "none";
-		}
-		if (button != null) {
-			this._makeButtonDeselected(button)
-		}
-	};
+  _collapse = (divName) => {
+    const eleDiv = document.getElementById(divName);
+    const button = document.getElementById(divName+"_button")
+    if (eleDiv != null) {
+      eleDiv.style.display = "none";
+    }
+    if (button != null) {
+      this._makeButtonDeselected(button)
+    }
+  };
 
-	_makeButtonSelected = (button) => {
-		button.style.fontWeight = 'bold';
-		//button.style.borderWidth = 'thin';
-		//button.style.borderStyle = 'solid';
-	};
+  _makeButtonSelected = (button) => {
+    button.style.fontWeight = 'bold';
+    //button.style.borderWidth = 'thin';
+    //button.style.borderStyle = 'solid';
+  };
 
-	_makeButtonDeselected = (button) => {
-		button.style.fontWeight = 'normal';
-		//button.style.borderWidth = 'none';
-		//button.style.borderStyle = 'none';
-	};
+  _makeButtonDeselected = (button) => {
+    button.style.fontWeight = 'normal';
+    //button.style.borderWidth = 'none';
+    //button.style.borderStyle = 'none';
+  };
 
 //  window.onload = function() {
 //    if ('URLSearchParams' in window) {
