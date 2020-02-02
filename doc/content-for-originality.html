@@ -6,7 +6,7 @@ online-analytical-processing culture. Other key participants include
 concept, Miller explicitly strives to imitate several existing tools:
 
 <p/>
-<boldmaroon>Unix toolkit</boldmaroon>: Intentional similarities as described in
+<span class="boldmaroon">Unix toolkit</span>: Intentional similarities as described in
 POKI_PUT_LINK_FOR_PAGE(feature-comparison.html)HERE.
 
 <p/>Recipes abound for command-line data analysis using the Unix toolkit. Here are just a couple of my favorites:
@@ -16,7 +16,7 @@ POKI_PUT_LINK_FOR_PAGE(feature-comparison.html)HERE.
 <li/> <a href="https://github.com/dbohdan/structured-text-tools">https://github.com/dbohdan/structured-text-tools</a>
 </ul>
 
-<p/> <boldmaroon>RecordStream</boldmaroon>: Miller owes particular inspiration
+<p/> <span class="boldmaroon">RecordStream</span>: Miller owes particular inspiration
 to <a href="https://github.com/benbernard/RecordStream">RecordStream</a>. The
 key difference is that RecordStream is a Perl-based tool for manipulating JSON
 (including requiring it to separately manipulate other formats such as CSV into
@@ -25,15 +25,15 @@ The similarities include the <code>sort</code>, <code>stats1</code> (analog of
 RecordStream&rsquo;s <code>collate</code>), and <code>delta</code> operations, as well
 as <code>filter</code> and <code>put</code>, and pretty-print formatting.
 
-<p/> <boldmaroon>stats_m</boldmaroon>: A third source of lineage is my Python
+<p/> <span class="boldmaroon">stats_m</span>: A third source of lineage is my Python
 <a href="https://github.com/johnkerl/scripts-math/tree/master/stats">stats_m</a>
 module.  This includes simple single-pass algorithms which form Miller&rsquo;s
 <code>stats1</code> and <code>stats2</code> subcommands.
 
-<p/> <boldmaroon>SQL</boldmaroon>: Fourthly, Miller&rsquo;s <code>group-by</code> command
+<p/> <span class="boldmaroon">SQL</span>: Fourthly, Miller&rsquo;s <code>group-by</code> command
 name is from SQL, as is the term <code>aggregate</code>.
 
-<p/> <boldmaroon>Added value</boldmaroon>:
+<p/> <span class="boldmaroon">Added value</span>:
 Miller&rsquo;s added values include:
 <ul>
 <li> Name-indexing, compared to the Unix toolkit&rsquo;s positional indexing.
@@ -43,17 +43,17 @@ Miller&rsquo;s added values include:
 <li> Various file formats, and on-the-fly format conversion.
 </ul>
 
-<p/><boldmaroon>jq</boldmaroon>: Miller does for name-indexed text what
+<p/><span class="boldmaroon">jq</span>: Miller does for name-indexed text what
 <a href="http://stedolan.github.io/jq/">jq</a> does for JSON. If you&rsquo;re
 not already familiar with <code>jq</code>, please <a href="http://stedolan.github.io/jq/">check it out!</a>.
 
-<p/><boldmaroon>What about similar tools?</boldmaroon>
+<p/><span class="boldmaroon">What about similar tools?</span>
 Here&rsquo;s a comprehensive list:
 <a href="https://github.com/dbohdan/structured-text-tools">https://github.com/dbohdan/structured-text-tools</a>.
 It doesn&rsquo;t mention <a href="https://github.com/turicas/rows">rows</a> so here&rsquo;s a plug for that as well.
 As it turns out, I learned about most of these after writing Miller.
 
-<p/><boldmaroon>What about DOTADIW?</boldmaroon> One of the key points of the
+<p/><span class="boldmaroon">What about DOTADIW?</span> One of the key points of the
 <a href="http://en.wikipedia.org/wiki/Unix_philosophy">Unix philosophy</a> is
 that a tool should do one thing and do it well.  Hence <code>sort</code> and
 <code>cut</code> do just one thing. Why does Miller put <code>awk</code>-like
@@ -70,7 +70,7 @@ be a tool which collects together format-aware record-stream processing into
 one place, with good reuse of Miller-internal library code for its various
 features.
 
-<p/><boldmaroon>Why not use Perl/Python/Ruby etc.?</boldmaroon> Maybe you
+<p/><span class="boldmaroon">Why not use Perl/Python/Ruby etc.?</span> Maybe you
 should. With those tools you&rsquo;ll get far more expressive power, and
 sufficiently quick turnaround time for small-to-medium-sized data.  Using
 Miller you&rsquo;ll get something less than a complete programming language,
@@ -88,8 +88,8 @@ If I&rsquo;d gotten good enough performance from the latter I&rsquo;d have done
 it without question and Miller would be far more flexible.  But C won the
 performance criteria by a landslide so we have Miller in C with a custom DSL.
 
-<p/> <boldmaroon>No, really, why one more command-line data-manipulation
-tool?</boldmaroon> I wrote Miller because I was frustrated with tools like
+<p/> <span class="boldmaroon">No, really, why one more command-line data-manipulation
+tool?</span> I wrote Miller because I was frustrated with tools like
 <code>grep</code>, <code>sed</code>, and so on being <i>line-aware</i> without being
 <i>format-aware</i>. The single most poignant example I can think of is seeing
 people grep data lines out of their CSV files and sadly losing their header

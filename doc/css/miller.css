@@ -14,10 +14,10 @@ body {
 	background-color: white;
 }
 
-maroon {
+.maroon {
   color: maroon;
 }
-boldmaroon {
+.boldmaroon {
   font-weight: bold;
   color: maroon;
 }

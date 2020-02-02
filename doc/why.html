@@ -84,15 +84,15 @@ why I felt it necessary to build Miller, etc. Here are some answers.
 
 <p/> For background, I&rsquo;m a software engineer, with a heavy devops bent
 and a non-trivial amount of data-engineering in my career.
-<boldmaroon>Initially I wrote Miller mainly for myself:</boldmaroon> I&rsquo;m
+<span class="boldmaroon">Initially I wrote Miller mainly for myself:</span> I&rsquo;m
 coder-friendly (being a coder); I&rsquo;m Github-friendly; most of my data are
 well-structured or easily structurable (TSV-formatted SQL-query output, CSV
 files, log files, JSON data structures); I care about interoperability between
 all the various formats Miller supports (I&rsquo;ve encountered them all); I do
 all my work on Linux or OSX.
 
-<p/> But now there&rsquo;s this neat little tool <boldmaroon>which seems to be
-useful for people in various disciplines</boldmaroon>. I don&rsquo;t even know
+<p/> But now there&rsquo;s this neat little tool <span class="boldmaroon">which seems to be
+useful for people in various disciplines</span>. I don&rsquo;t even know
 entirely <i>who</i>. I can click through Github starrers and read a bit about
 what they seem to do, but not everyone&rsquo;s <i>on</i> Github (or stars
 things). I&rsquo;ve gotten a lot of feature requests through Github &mdash; but
@@ -121,7 +121,7 @@ it&rsquo;s for?
 years of my career in the software industry I&rsquo;ve found myself, and
 others, doing a lot of ad-hoc things which really were fundamentally the same
 <i>except</i> for format. So the number one thing about Miller is doing common
-things while supporting <boldmaroon>multiple formats</boldmaroon>: (a) ingest a
+things while supporting <span class="boldmaroon">multiple formats</span>: (a) ingest a
 list of records where a record is a list of key-value pairs (however
 represented in the input files); (b) transform that stream of records; (c) emit
 the transformed stream &mdash; either in the same format as input, or in a
@@ -131,9 +131,9 @@ different format.
 something only for a single file format, I didn&rsquo;t want to build something
 only for one problem domain. In my work doing software engineering, devops,
 data engineering, etc. I saw a lot of commonalities and I wanted to
-<boldmaroon>solve as many problems simultaneously as possible</boldmaroon>.
+<span class="boldmaroon">solve as many problems simultaneously as possible</span>.
 
-<p/> Third: it had to be <boldmaroon>streaming</boldmaroon>. As time goes by
+<p/> Third: it had to be <span class="boldmaroon">streaming</span>. As time goes by
 and we (some of us, sometimes) have machines with tens or hundreds of GB of
 RAM, it&rsquo;s maybe less important, but I&rsquo;m unhappy with tools which
 ingest all data, then do stuff, then emit all data. One reason is to be able to
@@ -142,7 +142,7 @@ input which trickles in, e.g.  you have some process emitting data now and then
 and you can pipe it to Miller and it will emit transformed records one at a
 time.
 
-<p/> Fourth: it had to be <boldmaroon>fast</boldmaroon>. This precludes all
+<p/> Fourth: it had to be <span class="boldmaroon">fast</span>. This precludes all
 sorts of very nice things written in Ruby, for example. I love Ruby as a very
 expressive language, and I have several very useful little utility scripts
 written in Ruby. But a few years ago I ported over some of my old
@@ -154,8 +154,8 @@ in order to make it performant. I did simple experiments in several languages,
 and nothing was as fast as C, so I used C: see also <a
 href="whyc.html#C_vs._Go,_D,_Rust,_etc.;_C_is_fast">here</a>.
 
-<p/> Fifth thing: I wanted Miller to be <boldmaroon>pipe-friendly and
-interoperate with other command-line tools</boldmaroon>.  Since the basic
+<p/> Fifth thing: I wanted Miller to be <span class="boldmaroon">pipe-friendly and
+interoperate with other command-line tools</span>.  Since the basic
 paradigm is ingest records, transform records, emit records &mdash; where the
 input and output formats can be the same or different, and the transform can be
 complex, or just pass-through &mdash; this means you can use it to transform
@@ -164,17 +164,17 @@ data-cleaning/prep/formatting and do all the "real" work in R, you can. If you
 just want a little glue script between other tools you can get that. And if you
 want to do non-trivial data-reduction in Miller you can.
 
-<p/> Sixth thing: Must have <boldmaroon>comprehensive documentation and
-unit-test</boldmaroon>. Since Miller handles a lot of formats and solves a lot
+<p/> Sixth thing: Must have <span class="boldmaroon">comprehensive documentation and
+unit-test</span>. Since Miller handles a lot of formats and solves a lot
 of problems, there&rsquo;s a lot to test and a lot to keep working correctly as
 I add features or optimize. And I wanted it to be able to explain itself
 &mdash; not only through web docs like the one you&rsquo;re reading but also
 through <code>man mlr</code> and <code>mlr --help</code>, <code>mlr sort --help</code>,
 etc.
 
-<p/> Seventh thing: <boldmaroon>Must have a domain-specific
-language</boldmaroon> (DSL) <boldmaroon>but also must let you do common things
-without it</boldmaroon>. All those little verbs Miller has to help you
+<p/> Seventh thing: <span class="boldmaroon">Must have a domain-specific
+language</span> (DSL) <span class="boldmaroon">but also must let you do common things
+without it</span>. All those little verbs Miller has to help you
 <i>avoid</i> having to write for-loops are great. I use them for
 keystroke-saving: <code>mlr stats1 -a mean,stddev,min,max -f quantity</code>, for
 example, without you having to write for-loops or define accumulator variables.
@@ -183,8 +183,8 @@ you want to: <code>mlr put '$distance = $rate * $time'</code> or anything else y
 can think up. In Perl/AWK/etc.  it&rsquo;s all DSL. In xsv et al.  it&rsquo;s
 all verbs. In Miller I like having the combination.
 
-<p/> Eighth thing: It&rsquo;s an <boldmaroon>awful lot of fun to
-write</boldmaroon>. In my experience I didn&rsquo;t find any tools which do
+<p/> Eighth thing: It&rsquo;s an <span class="boldmaroon">awful lot of fun to
+write</span>. In my experience I didn&rsquo;t find any tools which do
 multi-format, streaming, efficient, multi-purpose, with DSL and non-DSL, so I
 wrote one. But I don&rsquo;t guarantee it&rsquo;s unique in the world. It fills
 a niche in the world (people use it) but it also fills a niche in my life.

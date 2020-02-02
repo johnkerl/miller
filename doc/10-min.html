@@ -81,7 +81,7 @@ pageTracker._trackPageview();
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_csv_file_examples');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_csv_file_examples" style="display: block">
 
-<p/><boldmaroon> Sample CSV data file: </boldmaroon>
+<p class="boldmaroon"> Sample CSV data file: </p>
 
 <p/>
 <div class="pokipanel">
@@ -102,7 +102,7 @@ purple,square,0,91,72.3735,8.2430
 </div>
 <p/>
 
-<p/><boldmaroon> <code>mlr cat</code> is like cat ...</boldmaroon>
+<p class="boldmaroon"><code>mlr cat</code> is like cat ...</p>
 
 <p/>
 <div class="pokipanel">
@@ -123,7 +123,7 @@ purple,square,0,91,72.3735,8.2430
 </div>
 <p/>
 
-<p/><boldmaroon>... but it can also do format conversion (here, to pretty-printed tabular format): </boldmaroon>
+<p class="boldmaroon">... but it can also do format conversion (here, to pretty-printed tabular format): </p>
 
 <p/>
 <div class="pokipanel">
@@ -144,8 +144,8 @@ purple square   0    91    72.3735  8.2430
 </div>
 <p/>
 
-<p/><boldmaroon> <code>mlr head</code> and <code>mlr tail</code> count records rather than lines. The CSV
-header is included either way:</boldmaroon>
+<p class="boldmaroon"> <code>mlr head</code> and <code>mlr tail</code> count records rather than lines. The CSV
+header is included either way:</p>
 
 <p/>
 <div class="pokipanel">
@@ -172,8 +172,8 @@ purple,square,0,91,72.3735,8.2430
 </div>
 <p/>
 
-<p/><boldmaroon> Sort primarily alphabetically on one field, then secondarily
-numerically descending on another field: </boldmaroon>
+<p class="boldmaroon"> Sort primarily alphabetically on one field, then secondarily
+numerically descending on another field: </p>
 
 <p/>
 <div class="pokipanel">
@@ -194,7 +194,7 @@ yellow triangle 1    11    43.6498  9.8870
 </div>
 <p/>
 
-<p/><boldmaroon> Use <code>cut</code> to retain only specified fields, in input-data order:</boldmaroon>
+<p class="boldmaroon"> Use <code>cut</code> to retain only specified fields, in input-data order:</p>
 
 <p/>
 <div class="pokipanel">
@@ -215,7 +215,7 @@ square   0
 </div>
 <p/>
 
-<p/><boldmaroon> Use <code>cut -o</code> to retain only specified fields, in your specified order:</boldmaroon>
+<p class="boldmaroon"> Use <code>cut -o</code> to retain only specified fields, in your specified order:</p>
 
 <p/>
 <div class="pokipanel">
@@ -236,7 +236,7 @@ flag shape
 </div>
 <p/>
 
-<p/><boldmaroon> Use <code>cut -x</code> to omit specified fields:</boldmaroon>
+<p class="boldmaroon"> Use <code>cut -x</code> to omit specified fields:</p>
 
 <p/>
 <div class="pokipanel">
@@ -257,7 +257,7 @@ purple 91    72.3735  8.2430
 </div>
 <p/>
 
-<p/><boldmaroon> Use <code>filter</code> to retain specified records:</boldmaroon>
+<p class="boldmaroon"> Use <code>filter</code> to retain specified records:</p>
 
 <p/>
 <div class="pokipanel">
@@ -282,7 +282,7 @@ red   circle 1    16    13.8103  2.9010
 </div>
 <p/>
 
-<p/><boldmaroon> Use <code>put</code> to add/replace fields which are computed from other fields:</boldmaroon>
+<p class="boldmaroon"> Use <code>put</code> to add/replace fields which are computed from other fields:</p>
 
 <p/>
 <div class="pokipanel">
@@ -303,10 +303,10 @@ purple square   0    91    72.3735  8.2430 8.779995    purple_square
 </div>
 <p/>
 
-<p/><boldmaroon> Even though Miller&rsquo;s main selling point is
+<p class="boldmaroon"> Even though Miller&rsquo;s main selling point is
 name-indexing, sometimes you really want to refer to a field name by its
 positional index. Use <code>$[[3]]</code> to access the name of field 3 or
-<code>$[[[3]]]</code> to access the value of field 3:</boldmaroon>
+<code>$[[[3]]]</code> to access the value of field 3:</p>
 
 <p/>
 <div class="pokipanel">
@@ -345,7 +345,7 @@ purple square   NEW  91    72.3735  8.2430
 </div>
 <p/>
 
-<p/><boldmaroon> JSON output:</boldmaroon>
+<p class="boldmaroon"> JSON output:</p>
 
 <p/>
 <div class="pokipanel">
@@ -365,7 +365,7 @@ $ mlr --icsv --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' ex
 </div>
 <p/>
 
-<p/><boldmaroon> JSON output with vertical-formatting flags:</boldmaroon>
+<p class="boldmaroon"> JSON output with vertical-formatting flags:</p>
 
 <p/>
 <div class="pokipanel">
@@ -393,11 +393,11 @@ $ mlr --icsv --ojson --jvstack --jlistwrap tail -n 2 example.csv
 </div>
 <p/>
 
-<p/><boldmaroon> Use <code>then</code> to pipe commands together. Also, the
+<p class="boldmaroon"> Use <code>then</code> to pipe commands together. Also, the
 <code>-g</code> option for many Miller commands is for group-by: here, <code>head -n
 1 -g shape</code> outputs the first record for each distinct value of the
 <code>shape</code> field. This means we&rsquo;re finding the record with highest
-<code>index</code> field for each distinct <code>shape</code> field:</boldmaroon>
+<code>index</code> field for each distinct <code>shape</code> field:</p>
 
 <p/>
 <div class="pokipanel">
@@ -411,9 +411,9 @@ purple triangle 0    65    80.1405  5.8240
 </div>
 <p/>
 
-<p/><boldmaroon> Statistics can be computed with or without group-by field(s). Also, the first of these two
+<p class="boldmaroon"> Statistics can be computed with or without group-by field(s). Also, the first of these two
 examples uses <code>--oxtab</code> output format which is a nice alternative to <code>--opprint</code> when you
-have lots of columns:</boldmaroon>
+have lots of columns:</p>
 
 <p/>
 <div class="pokipanel">
@@ -461,11 +461,11 @@ square   purple 1              72.373500    72.373500     72.373500
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.togglebodyToggler.toggle('body_section_toggle_printing_to_files');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_printing_to_files" style="display: block">
 
-<p/>Often we want to print output <boldmaroon>to the screen</boldmaroon>. Miller does this by default, as we&rsquo;ve
-seen in the previous examples.
+<p>Often we want to print output <span class="boldmaroon">to the screen</span>. Miller does this by default, as we&rsquo;ve
+seen in the previous examples.</p>
 
-<p/> Sometimes we want to print output to another file: <boldmaroon>just use '>
-outputfilenamegoeshere'</boldmaroon> at the end of your command:
+<p/> Sometimes we want to print output to another file: <span class="boldmaroon">just use '>
+outputfilenamegoeshere'</span> at the end of your command:</p>
 
 <table><tr><td>
 <div class="pokipanel"> <pre>
@@ -490,7 +490,7 @@ purple square   0    91    72.3735  8.2430
 </pre> </div>
 </td></tr></table>
 
-<p/> Other times we just want our files to be changed in-place: <boldmaroon>just use 'mlr -I'</boldmaroon>.
+<p/> Other times we just want our files to be changed in-place: <span class="boldmaroon">just use 'mlr -I'</span>.</p>
 
 <table><tr><td>
 <div class="pokipanel"> <pre>
@@ -538,8 +538,8 @@ mlr -I --csv cut -x -f unwanted_column_name *.csv
 
 <p/> If you like, you can first copy off your original data somewhere else, before doing in-place operations.
 
-<p/><boldmaroon> Lastly, using <code>tee</code> within <code>put</code>, you can split your input data into separate files
-per one or more field names:</boldmaroon>
+<p class="boldmaroon"> Lastly, using <code>tee</code> within <code>put</code>, you can split your input data into separate files
+per one or more field names:</p>
 
 <p/>
 <div class="pokipanel">
@@ -616,7 +616,7 @@ shape=square,flag=0,index=36
 </pre>
 </div>
 
-<p/>Data written this way are called <boldmaroon>DKVP</boldmaroon>, for <i>delimited key-value pairs</i>.
+<p>Data written this way are called <span class="boldmaroon">DKVP</span>, for <i>delimited key-value pairs</i>.</p>
 
 <p/>We&rsquo;ve also already seen other ways to write the same data:
 
@@ -640,8 +640,8 @@ shape=square,flag=0,index=36      flag  1                    "flag": 0,
 </pre>
 </div>
 
-<p/><boldmaroon>Anything we can do with CSV input data, we can do with any
-other format input data.</boldmaroon>  And you can read from one format, do any
+<p class="boldmaroon">Anything we can do with CSV input data, we can do with any
+other format input data.</p>  And you can read from one format, do any
 record-processing, and output to the same format as the input, or to a
 different output format.
 

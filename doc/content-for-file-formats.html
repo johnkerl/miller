@@ -179,7 +179,7 @@ POKI_RUN_COMMAND{{mlr --nidx --fs ' ' --repifs cut -f 2,3 data/mydata.txt}}HERE
 
 <p/>JSON is a format which supports arbitrarily deep nesting of
 &ldquo;objects&rdquo; (hashmaps) and &ldquo;arrays&rdquo; (lists), while Miller
-is a tool for handling <boldmaroon>tabular data</boldmaroon> only. This means
+is a tool for handling <span class="boldmaroon">tabular data</span> only. This means
 Miller cannot (and should not) handle arbitrary JSON. (Check out <a
 href="http://stedolan.github.io/jq/">jq</a>.)
 
@@ -187,8 +187,8 @@ href="http://stedolan.github.io/jq/">jq</a>.)
 
 <h2>Single-level JSON objects</h2>
 
-An <boldmaroon>array of single-level objects</boldmaroon> is, quite simply,
-<boldmaroon>a table:</boldmaroon>
+An <span class="boldmaroon">array of single-level objects</span> is, quite simply,
+<span class="boldmaroon">a table:</span>
 
 POKI_RUN_COMMAND{{mlr --json head -n 2 then cut -f color,shape data/json-example-1.json}}HERE
 POKI_RUN_COMMAND{{mlr --json --jvstack head -n 2 then cut -f color,u,v data/json-example-1.json}}HERE
@@ -196,7 +196,7 @@ POKI_RUN_COMMAND{{mlr --ijson --opprint stats1 -a mean,stddev,count -f u -g shap
 
 <h2>Nested JSON objects</h2>
 
-<p/>Additionally, Miller can <boldmaroon>tabularize nested objects by concatentating keys:</boldmaroon>
+<p/>Additionally, Miller can <span class="boldmaroon">tabularize nested objects by concatentating keys:</span>
 
 POKI_RUN_COMMAND{{mlr --json --jvstack head -n 2 data/json-example-2.json}}HERE
 POKI_RUN_COMMAND{{mlr --ijson --opprint head -n 4 data/json-example-2.json}}HERE
@@ -358,15 +358,15 @@ POKI_RUN_COMMAND{{mlr --usage-format-conversion-keystroke-saver-options}}HERE
 <div id="body_section_toggle_autodetect_line_endings" style="display: block">
 
 <p/> Default line endings (<code>--irs</code> and <code>--ors</code>) are <code>'auto'</code>
-which means <boldmaroon>autodetect from the input file format</boldmaroon>, as
+which means <span class="boldmaroon">autodetect from the input file format</span>, as
 long as the input file(s) have lines ending in either LF (also known as
 linefeed, <code>'\n'</code>, <code>0x0a</code>, Unix-style) or CRLF (also known as
 carriage-return/linefeed pairs, <code>'\r\n'</code>, <code>0x0d 0x0a</code>, Windows
 style).
 
-<p/> <boldmaroon>If both IRS and ORS are auto (which is the default) then LF input will
+<p/> <span class="boldmaroon">If both IRS and ORS are auto (which is the default) then LF input will
 lead to LF output and CRLF input will lead to CRLF output, regardless of the
-platform you&rsquo;re running on</boldmaroon>.
+platform you&rsquo;re running on</span>.
 
 <p/> The line-ending autodetector triggers on the first line ending detected in
 the input stream. E.g. if you specify a CRLF-terminated file on the command
