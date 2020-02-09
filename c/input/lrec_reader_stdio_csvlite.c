@@ -174,6 +174,8 @@ static lrec_t* lrec_reader_stdio_csvlite_process(void* pvstate, void* pvhandle, 
 					? split_csvlite_header_line_single_ifs(hline, pstate->ifs[0], pstate->allow_repeat_ifs)
 					: split_csvlite_header_line_multi_ifs(hline, pstate->ifs, pstate->ifslen, pstate->allow_repeat_ifs);
 				if (pheader_fields->length == 0) {
+					slls_free(pheader_fields);
+					free(hline);
 					pstate->expect_header_line_next = TRUE;
 					if (pstate->pheader_keeper != NULL) {
 						pstate->pheader_keeper = NULL;
