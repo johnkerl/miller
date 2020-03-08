@@ -366,7 +366,7 @@ static function_lookup_t FUNCTION_LOOKUP_TABLE[] = {
 		"Floating-point seconds since the epoch,\n"
 		"e.g. 1440768801.748936." },
 
-	{FUNC_CLASS_TYPING, "is_absent",      1,0, "False if field is present in input, false otherwise"},
+	{FUNC_CLASS_TYPING, "is_absent",      1,0, "False if field is present in input, true otherwise"},
 	{FUNC_CLASS_TYPING, "is_bool",        1,0, "True if field is present with boolean value. Synonymous with is_boolean."},
 	{FUNC_CLASS_TYPING, "is_boolean",     1,0, "True if field is present with boolean value. Synonymous with is_bool."},
 	{FUNC_CLASS_TYPING, "is_empty",       1,0, "True if field is present in input with empty string value, false otherwise."},
