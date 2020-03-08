@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2020-02-22
+.\"      Date: 2020-03-08
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2020-02-22" "\ \&" "\ \&"
+.TH "MILLER" "1" "2020-03-08" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -735,6 +735,12 @@ Expression-specification options:
 Since the expression pieces are simply concatenated, please be sure to use intervening
 semicolons to separate expressions.)
 
+-s name=value: Predefines out-of-stream variable @name to have value "value".
+    Thus mlr filter put -s foo=97 '$column += @foo' is like
+    mlr filter put 'begin {@foo = 97} $column += @foo'.
+    The value part is subject to type-inferencing as specified by -S/-F.
+    May be specified more than once, e.g. -s name1=value1 -s name2=value2.
+
 Tracing options:
 -v: Prints the expressions's AST (abstract syntax tree), which gives
     full transparency on the precedence and associativity rules of
@@ -1195,6 +1201,12 @@ Expression-specification options:
 (If you mix -e and -f then the expressions are evaluated in the order encountered.
 Since the expression pieces are simply concatenated, please be sure to use intervening
 semicolons to separate expressions.)
+
+-s name=value: Predefines out-of-stream variable @name to have value "value".
+    Thus mlr put put -s foo=97 '$column += @foo' is like
+    mlr put put 'begin {@foo = 97} $column += @foo'.
+    The value part is subject to type-inferencing as specified by -S/-F.
+    May be specified more than once, e.g. -s name1=value1 -s name2=value2.
 
 Tracing options:
 -v: Prints the expressions's AST (abstract syntax tree), which gives

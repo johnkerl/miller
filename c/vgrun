@@ -1,7 +1,6 @@
 #!/usr/bin/env ruby
 
-ARGV.shift
-cmd = "valgrind --leak-check=full mlrg"
+cmd = "valgrind --leak-check=full "
 #cmd = "valgrind --leak-check=full --track-origins=yes mlrg"
 ARGV.each do |arg|
     cmd += " '#{arg}'"

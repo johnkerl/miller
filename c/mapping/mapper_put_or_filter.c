@@ -213,7 +213,11 @@ static void shared_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "(If you mix -e and -f then the expressions are evaluated in the order encountered.\n");
 	fprintf(o, "Since the expression pieces are simply concatenated, please be sure to use intervening\n");
 	fprintf(o, "semicolons to separate expressions.)\n");
-	fprintf(o, "-s name=value: Predefines out-of-stream variable '@foo' to have value \"bar\".\n");
+	fprintf(o, "\n");
+	fprintf(o, "-s name=value: Predefines out-of-stream variable @name to have value \"value\".\n");
+	fprintf(o, "    Thus %s %s put -s foo=97 '$column += @foo' is like\n", argv0, verb);
+	fprintf(o, "    %s %s put 'begin {@foo = 97} $column += @foo'.\n", argv0, verb);
+	fprintf(o, "    The value part is subject to type-inferencing as specified by -S/-F.\n");
 	fprintf(o, "    May be specified more than once, e.g. -s name1=value1 -s name2=value2.\n");
 	fprintf(o, "\n");
 
@@ -507,6 +511,7 @@ static mapper_t* mapper_put_or_filter_alloc(
 		}
 		sllmv_t* pmvkeys = sllmv_single_no_free(&mvkey);
 		mlhmmv_root_put_terminal(pstate->poosvars, pmvkeys, &mvvalue);
+		sllmv_free(pmvkeys);
 	}
 
 	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
