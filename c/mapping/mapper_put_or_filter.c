@@ -4,6 +4,7 @@
 #include "cli/mlrcli.h"
 #include "containers/lrec.h"
 #include "containers/sllv.h"
+#include "containers/lhmss.h"
 #include "containers/lhmsv.h"
 #include "containers/mlhmmv.h"
 #include "parsing/mlr_dsl_wrapper.h"
@@ -16,6 +17,7 @@
 // ----------------------------------------------------------------
 typedef struct _mapper_put_or_filter_state_t {
 	char*          mlr_dsl_expression;
+	lhmss_t*       ppredefines;
 
 	mlr_dsl_ast_t* past;
 	mlr_dsl_cst_t* pcst;
@@ -58,6 +60,7 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 
 static mapper_t* mapper_put_or_filter_alloc(
 	char*              mlr_dsl_expression,
+	lhmss_t*           ppredefines,
 	int                print_ast,
 	int                trace_stack_allocation,
 	int                trace_execution,
@@ -210,6 +213,8 @@ static void shared_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "(If you mix -e and -f then the expressions are evaluated in the order encountered.\n");
 	fprintf(o, "Since the expression pieces are simply concatenated, please be sure to use intervening\n");
 	fprintf(o, "semicolons to separate expressions.)\n");
+	fprintf(o, "-s name=value: Predefines out-of-stream variable '@foo' to have value \"bar\".\n");
+	fprintf(o, "    May be specified more than once, e.g. -s name1=value1 -s name2=value2.\n");
 	fprintf(o, "\n");
 
 	fprintf(o, "Tracing options:\n");
@@ -257,18 +262,19 @@ static mapper_t* mapper_put_parse_cli(int* pargi, int argc, char** argv,
 static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	cli_reader_opts_t* _, cli_writer_opts_t* pmain_writer_opts)
 {
-	sllv_t* expression_infos         = sllv_alloc();
-	char*   mlr_dsl_expression       = NULL;
-	int     put_output_disabled      = FALSE;
-	int     do_final_filter          = FALSE;
-	int     negate_final_filter      = FALSE;
-	int     type_inferencing         = TYPE_INFER_STRING_FLOAT_INT;
-	int     print_ast                = FALSE;
-	int     trace_stack_allocation   = FALSE;
-	int     trace_parse              = FALSE;
-	int     trace_execution          = FALSE;
-	char*   oosvar_flatten_separator = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
-	int     flush_every_record       = TRUE;
+	sllv_t*  expression_infos         = sllv_alloc();
+	char*    mlr_dsl_expression       = NULL;
+	int      put_output_disabled      = FALSE;
+	int      do_final_filter          = FALSE;
+	int      negate_final_filter      = FALSE;
+	int      type_inferencing         = TYPE_INFER_STRING_FLOAT_INT;
+	int      print_ast                = FALSE;
+	int      trace_stack_allocation   = FALSE;
+	int      trace_parse              = FALSE;
+	int      trace_execution          = FALSE;
+	char*    oosvar_flatten_separator = DEFAULT_OOSVAR_FLATTEN_SEPARATOR;
+	int      flush_every_record       = TRUE;
+	lhmss_t* ppredefines              = lhmss_alloc();
 
 	cli_writer_opts_t* pwriter_opts = mlr_malloc_or_die(sizeof(cli_writer_opts_t));
 	cli_writer_opts_init(pwriter_opts);
@@ -340,6 +346,34 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 		} else if (streq(argv[argi], "-F")) {
 			type_inferencing = TYPE_INFER_STRING_FLOAT;
 			argi += 1;
+
+		} else if (streq(argv[argi], "-s")) {
+			if ((argc - argi) < 2) {
+				mapper_put_or_filter_usage(stderr, argv[0], verb);
+				return NULL;
+			}
+			char* pair = argv[argi+1];
+			char* pequal = strchr(pair, '=');
+			if (pequal == NULL) {
+				fprintf(stderr, "%s %s: -s requires '=' between name and value.\n",
+					MLR_GLOBALS.bargv0, verb);
+				fprintf(stderr, "Got \"%s\"\n", pair);
+				return NULL;
+			}
+			*pequal = 0;
+			if (*pair == 0) {
+				fprintf(stderr, "%s %s: -s requires non-empty name.\n",
+					MLR_GLOBALS.bargv0, verb);
+				return NULL;
+			}
+
+			lhmss_put(ppredefines,
+				mlr_strdup_or_die(pair),
+				mlr_strdup_or_die(pequal+1),
+				FREE_ENTRY_KEY | FREE_ENTRY_VALUE);
+
+			argi += 2;
+
 		} else if (streq(argv[argi], "--oflatsep")) {
 			if ((argc - argi) < 2) {
 				mapper_put_or_filter_usage(stderr, argv[0], verb);
@@ -411,14 +445,16 @@ static mapper_t* shared_parse_cli(int* pargi, int argc, char** argv,
 	}
 
 	*pargi = argi;
-	return mapper_put_or_filter_alloc(mlr_dsl_expression, print_ast, trace_stack_allocation, trace_execution,
+	return mapper_put_or_filter_alloc(mlr_dsl_expression, ppredefines, print_ast,
+		trace_stack_allocation, trace_execution,
 		past, put_output_disabled, do_final_filter, negate_final_filter, type_inferencing, oosvar_flatten_separator,
-			flush_every_record, pwriter_opts, pmain_writer_opts);
+		flush_every_record, pwriter_opts, pmain_writer_opts);
 }
 
 // ----------------------------------------------------------------
 static mapper_t* mapper_put_or_filter_alloc(
 	char*              mlr_dsl_expression,
+	lhmss_t*           ppredefines,
 	int                print_ast,
 	int                trace_stack_allocation,
 	int                trace_execution,
@@ -434,9 +470,10 @@ static mapper_t* mapper_put_or_filter_alloc(
 {
 	mapper_put_or_filter_state_t* pstate = mlr_malloc_or_die(sizeof(mapper_put_or_filter_state_t));
 	// Retain the string contents along with any in-pointers from the AST/CST
-	pstate->mlr_dsl_expression = mlr_dsl_expression;
-	pstate->past                     = past;
-	pstate->pcst                     = mlr_dsl_cst_alloc(past, print_ast, trace_stack_allocation,
+	pstate->mlr_dsl_expression           = mlr_dsl_expression;
+	pstate->ppredefines                  = ppredefines;
+	pstate->past                         = past;
+	pstate->pcst                         = mlr_dsl_cst_alloc(past, print_ast, trace_stack_allocation,
 		type_inferencing, flush_every_record, do_final_filter, negate_final_filter);
 	pstate->at_begin                     = TRUE;
 	pstate->put_output_disabled          = put_output_disabled;
@@ -450,6 +487,28 @@ static mapper_t* mapper_put_or_filter_alloc(
 
 	cli_merge_writer_opts(pstate->pwriter_opts, pmain_writer_opts);
 
+	// Set predefines, e.g '-s foo=bar' is like 'begin {@foo = "bar"}'.
+	for (lhmsse_t* pe = pstate->ppredefines->phead; pe != NULL; pe = pe->pnext) {
+		mv_t mvkey = mv_from_string_no_free(pe->key);
+		mv_t mvvalue;
+		switch (type_inferencing) {
+		case TYPE_INFER_STRING_ONLY:
+			mvvalue = mv_ref_type_infer_string(pe->value);
+			break;
+		case TYPE_INFER_STRING_FLOAT:
+			mvvalue = mv_ref_type_infer_string_or_float(pe->value);
+			break;
+		case TYPE_INFER_STRING_FLOAT_INT:
+			mvvalue = mv_ref_type_infer_string_or_float_or_int(pe->value);
+			break;
+		default:
+			MLR_INTERNAL_CODING_ERROR();
+			break;
+		}
+		sllmv_t* pmvkeys = sllmv_single_no_free(&mvkey);
+		mlhmmv_root_put_terminal(pstate->poosvars, pmvkeys, &mvvalue);
+	}
+
 	mapper_t* pmapper      = mlr_malloc_or_die(sizeof(mapper_t));
 	pmapper->pvstate       = (void*)pstate;
 	pmapper->pprocess_func = mapper_put_or_filter_process;
@@ -462,6 +521,7 @@ static void mapper_put_or_filter_free(mapper_t* pmapper, context_t* pctx) {
 	mapper_put_or_filter_state_t* pstate = pmapper->pvstate;
 
 	free(pstate->mlr_dsl_expression);
+	lhmss_free(pstate->ppredefines);
 	mlhmmv_root_free(pstate->poosvars);
 	local_stack_free(pstate->plocal_stack);
 	loop_stack_free(pstate->ploop_stack);
