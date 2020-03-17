@@ -35,8 +35,8 @@ make check
 %{_mandir}/man1/mlr.1*
 
 %changelog
-* Sun Jan 26 2020 John Kerl <kerl.john.r@gmail.com> - 5.6.3-1
-- 5.6.3 release
+* Mon Mar 16 2020 John Kerl <kerl.john.r@gmail.com> - 5.7.0-1
+- 5.7.0 release
 
 * Sat Sep 21 2019 John Kerl <kerl.john.r@gmail.com> - 5.6.2-1
 - 5.6.2 release
