@@ -270,7 +270,7 @@ slls_t* split_csvlite_header_line_single_ifs(char* line, char ifs, int allow_rep
 			p++;
 	}
 	char* start = p;
-	for ( ; *p; p++) {
+	for ( ; *p; ) {
 		if (*p == ifs) {
 			*p = 0;
 			p++;
@@ -280,6 +280,8 @@ slls_t* split_csvlite_header_line_single_ifs(char* line, char ifs, int allow_rep
 			}
 			slls_append_no_free(plist, start);
 			start = p;
+		} else {
+			p++;
 		}
 	}
 	if (allow_repeat_ifs && *start == 0) {
@@ -302,7 +304,7 @@ slls_t* split_csvlite_header_line_multi_ifs(char* line, char* ifs, int ifslen, i
 			p += ifslen;
 	}
 	char* start = p;
-	for ( ; *p; p++) {
+	for ( ; *p; ) {
 		if (streqn(p, ifs, ifslen)) {
 			*p = 0;
 			p += ifslen;
@@ -312,6 +314,8 @@ slls_t* split_csvlite_header_line_multi_ifs(char* line, char* ifs, int ifslen, i
 			}
 			slls_append_no_free(plist, start);
 			start = p;
+		} else {
+			p++;
 		}
 	}
 	if (allow_repeat_ifs && *start == 0) {
