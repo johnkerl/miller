@@ -171,17 +171,60 @@ static char * test_unbackslash() {
 	return 0;
 }
 
+// ----------------------------------------------------------------
+static char * test_rstrip() {
+
+	char* a = NULL;
+	mlr_rstrip(a);
+	mu_assert_lf(a == NULL);
+
+	a = mlr_strdup_or_die("");
+	mlr_rstrip(a);
+	mu_assert_lf(streq(a, ""));
+
+	a = mlr_strdup_or_die("foo");
+	mlr_rstrip(a);
+	mu_assert_lf(streq(a, "foo"));
+
+	a = mlr_strdup_or_die("\r");
+	mlr_rstrip(a);
+	mu_assert_lf(streq(a, ""));
+
+	a = mlr_strdup_or_die("\n");
+	mlr_rstrip(a);
+	mu_assert_lf(streq(a, ""));
+
+	a = mlr_strdup_or_die("\r\n");
+	mlr_rstrip(a);
+	mu_assert_lf(streq(a, ""));
+
+	a = mlr_strdup_or_die("x\r");
+	mlr_rstrip(a);
+	mu_assert_lf(streq(a, "x"));
+
+	a = mlr_strdup_or_die("x\n");
+	mlr_rstrip(a);
+	mu_assert_lf(streq(a, "x"));
+
+	a = mlr_strdup_or_die("x\r\n");
+	mlr_rstrip(a);
+	mu_assert_lf(streq(a, "x"));
+
+	return 0;
+}
+
 // ================================================================
 static char * all_tests() {
 	mu_run_test(test_canonical_mod);
 	mu_run_test(test_power_of_two_above);
 	mu_run_test(test_streq);
 	mu_run_test(test_streqn);
-	mu_run_test(test_strdup_quoted);
+mu_run_test(test_strdup_quoted);
 	mu_run_test(test_starts_or_ends_with);
 	mu_run_test(test_scanners);
 	mu_run_test(test_paste);
 	mu_run_test(test_unbackslash);
+	mu_run_test(test_rstrip);
 	return 0;
 }
 

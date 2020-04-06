@@ -485,6 +485,25 @@ char* mlr_alloc_unbackslash(char* input) {
 	return output;
 }
 
+// Destructively removes final LF, CR, or CR/LF in the string.
+void mlr_rstrip(char* s) {
+	if (s == NULL) {
+		return;
+	}
+	int len = strlen(s);
+	if (len >= 2) {
+		if (s[len-2] == '\r' && s[len-1] == '\n') {
+			s[len-2] = 0;
+			return;
+		}
+	}
+	if (len >= 1) {
+		if (s[len-1] == '\r' || s[len-1] == '\n') {
+			s[len-1] = 0;
+		}
+	}
+}
+
 // Does a strdup even if there's nothing to expand, so the caller can unconditionally
 // free what we return.
 char* mlr_alloc_double_backslash(char* input) {

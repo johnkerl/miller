@@ -140,6 +140,9 @@ int power_of_two_above(int n);
 // "\t", "\n", "\\" to single characters such as tab, newline, backslash, etc.
 char* mlr_alloc_unbackslash(char* input);
 
+// Destructively removes final LF, CR, or CR/LF in the string.
+void mlr_rstrip(char* s);
+
 // Miller DSL literals are unbackslashed: e.g. the two-character sequence "\t" is converted to a tab character, and
 // users need to type "\\t" to get a backslash followed by a t. Well and good, but the system regex library handles
 // backslashes not quite as I want. Namely, without this function,
