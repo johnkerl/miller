@@ -145,7 +145,8 @@ json_value_t * json_parse(
 	const json_char * json,
 	size_t length,
 	char * error_buf,
-	json_char** ppend_of_item);
+	json_char** ppend_of_item,
+	int *pline_number); // should be set to 0 by the caller before 1st call
 
 json_value_t * json_parse_for_unit_test(
 	const json_char * json,

@@ -43,6 +43,7 @@ typedef struct _lrec_reader_stdio_json_state_t {
 	char* detected_line_term;
 	comment_handling_t comment_handling;
 	char* comment_string;
+	int json_line_number; // for parse-error messages since we call it repeatedly
 } lrec_reader_stdio_json_state_t;
 
 static void    lrec_reader_stdio_json_free(lrec_reader_t* preader);
@@ -65,6 +66,7 @@ lrec_reader_t* lrec_reader_stdio_json_alloc(char* input_json_flatten_separator, 
 	pstate->detected_line_term           = "\n"; // xxx adapt to MLR_GLOBALS/ctx-const for Windows port
 	pstate->comment_handling             = comment_handling;
 	pstate->comment_string               = comment_string;
+	pstate->json_line_number             = 0;
 
 	if (streq(line_term, "auto")) {
 		pstate->do_auto_line_term = TRUE;
@@ -166,7 +168,8 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 	if (length > 0) {
 		while (TRUE) {
 
-			parsed_top_level_json = json_parse(item_start, length, error_buf, &item_start);
+			parsed_top_level_json = json_parse(item_start, length, error_buf, &item_start,
+				&pstate->json_line_number);
 
 			if (parsed_top_level_json == NULL) {
 				fprintf(stderr, "%s: Unable to parse JSON data: %s\n", MLR_GLOBALS.bargv0, error_buf);

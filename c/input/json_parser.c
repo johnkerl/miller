@@ -265,7 +265,8 @@ json_value_t * json_parse(
 	const json_char * json,
 	size_t length,
 	char * error_buf,
-	json_char** ppend_of_item)
+	json_char** ppend_of_item,
+	int *pline_number) // should be set to 0 by the caller before 1st call
 {
 	json_char error[JSON_ERROR_MAX];
 	const json_char * end;
@@ -303,7 +304,7 @@ json_value_t * json_parse(
 		ptop = proot = 0;
 		flags = FLAG_SEEK_VALUE;
 
-		state.cur_line = 1;
+		state.cur_line = *pline_number + 1;
 
 		for (state.ptr = json ;; ++state.ptr) {
 			json_char* pb = (json_char*)((state.ptr == end) ? NULL : state.ptr);
@@ -826,6 +827,7 @@ json_value_t * json_parse(
 		palloc = proot;
 	}
 
+	*pline_number = state.cur_line;
 	return proot;
 
 e_unknown_value:
@@ -864,6 +866,7 @@ e_failed:
 	if (!state.first_pass)
 		json_free_value(proot);
 
+	*pline_number = state.cur_line;
 	return 0;
 }
 
@@ -872,7 +875,8 @@ json_value_t * json_parse_for_unit_test(
 	json_char** ppend_of_item)
 {
 	json_char error_buf[JSON_ERROR_MAX];
-	return json_parse(json, strlen(json), error_buf, ppend_of_item);
+	int line_number = 0;
+	return json_parse(json, strlen(json), error_buf, ppend_of_item, &line_number);
 }
 
 // ----------------------------------------------------------------
