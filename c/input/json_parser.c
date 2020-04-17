@@ -459,6 +459,7 @@ json_value_t * json_parse(
 				*ppend_of_item = pb + 1;
 				break;
 
+				state.cur_col++;
 				switch (b) {
 					WHITESPACE:
 						continue;
@@ -471,6 +472,7 @@ json_value_t * json_parse(
 			}
 
 			if (flags & FLAG_SEEK_VALUE) {
+				state.cur_col++;
 				switch (b) {
 					WHITESPACE:
 						continue;
@@ -653,6 +655,7 @@ json_value_t * json_parse(
 				switch (ptop->type) {
 				case JSON_OBJECT:
 
+					state.cur_col++;
 					switch (b) {
 						WHITESPACE:
 							continue;
