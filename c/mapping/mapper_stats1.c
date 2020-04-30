@@ -110,9 +110,9 @@ static void mapper_stats1_usage(FILE* o, char* argv0, char* verb) {
 	}
 	fprintf(o, "-f {a,b,c}   Value-field names on which to compute statistics\n");
 	fprintf(o, "--fr {regex} Regex for value-field names on which to compute statistics\n");
-	fprintf(o, "             (compute statsitics on values in all field names matching regex)\n");
+	fprintf(o, "             (compute statistics on values in all field names matching regex)\n");
 	fprintf(o, "--fx {regex} Inverted regex for value-field names on which to compute statistics\n");
-	fprintf(o, "             (compute statsitics on values in all field names not matching regex)\n");
+	fprintf(o, "             (compute statistics on values in all field names not matching regex)\n");
 	fprintf(o, "-g {d,e,f}   Optional group-by-field names\n");
 	fprintf(o, "--gr {regex} Regex for optional group-by-field names\n");
 	fprintf(o, "             (group by values in field names matching regex)\n");
