@@ -7,6 +7,7 @@ libmapping_la_SOURCES=	\
 			mapper_cat.c \
 			mapper_check.c \
 			mapper_clean_whitespace.c \
+			mapper_count.c \
 			mapper_count_similar.c \
 			mapper_cut.c \
 			mapper_decimate.c \

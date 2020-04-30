@@ -10,6 +10,7 @@ extern mapper_setup_t mapper_bootstrap_setup;
 extern mapper_setup_t mapper_cat_setup;
 extern mapper_setup_t mapper_check_setup;
 extern mapper_setup_t mapper_clean_whitespace_setup;
+extern mapper_setup_t mapper_count_setup;
 extern mapper_setup_t mapper_count_distinct_setup;
 extern mapper_setup_t mapper_count_similar_setup;
 extern mapper_setup_t mapper_cut_setup;

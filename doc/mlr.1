@@ -2,12 +2,12 @@
 .\"     Title: mlr
 .\"    Author: [see the "AUTHOR" section]
 .\" Generator: ./mkman.rb
-.\"      Date: 2020-04-06
+.\"      Date: 2020-04-30
 .\"    Manual: \ \&
 .\"    Source: \ \&
 .\"  Language: English
 .\"
-.TH "MILLER" "1" "2020-04-06" "\ \&" "\ \&"
+.TH "MILLER" "1" "2020-04-30" "\ \&" "\ \&"
 .\" -----------------------------------------------------------------
 .\" * Portability definitions
 .\" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -168,12 +168,12 @@ output separator to the given value.
 .RS 0
 .\}
 .nf
- altkv bar bootstrap cat check clean-whitespace count-distinct count-similar
- cut decimate fill-down filter format-values fraction grep group-by group-like
- having-fields head histogram join label least-frequent merge-fields
- most-frequent nest nothing put regularize remove-empty-columns rename reorder
- repeat reshape sample sec2gmt sec2gmtdate seqgen shuffle skip-trivial-records
- sort stats1 stats2 step tac tail tee top uniq unsparsify
+ altkv bar bootstrap cat check clean-whitespace count count-distinct
+ count-similar cut decimate fill-down filter format-values fraction grep
+ group-by group-like having-fields head histogram join label least-frequent
+ merge-fields most-frequent nest nothing put regularize remove-empty-columns
+ rename reorder repeat reshape sample sec2gmt sec2gmtdate seqgen shuffle
+ skip-trivial-records sort stats1 stats2 step tac tail tee top uniq unsparsify
 .fi
 .if n \{\
 .RE
@@ -602,6 +602,21 @@ Options:
 -k|--keys-only    Do not touch values.
 -v|--values-only  Do not touch keys.
 It is an error to specify -k as well as -v.
+.fi
+.if n \{\
+.RE
+.SS "count"
+.if n \{\
+.RS 0
+.\}
+.nf
+Usage: mlr count [options]
+Prints number of records, optionally grouped by distinct values for specified field names.
+
+Options:
+-g {a,b,c}    Field names for distinct count.
+-n            Show only the number of distinct values. Not compatible with -u.
+-o {name}     Field name for output count. Default "count".
 .fi
 .if n \{\
 .RE

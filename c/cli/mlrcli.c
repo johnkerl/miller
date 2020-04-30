@@ -57,6 +57,7 @@ static mapper_setup_t* mapper_lookup_table[] = {
 	&mapper_cat_setup,
 	&mapper_check_setup,
 	&mapper_clean_whitespace_setup,
+	&mapper_count_setup,
 	&mapper_count_distinct_setup,
 	&mapper_count_similar_setup,
 	&mapper_cut_setup,
