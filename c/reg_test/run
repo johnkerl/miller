@@ -128,8 +128,9 @@ mlr_expect_fail() {
   echo mlr "$@" >> $outfile
   # Use path to mlr for invoking the command
   set +e
-  $path_to_mlr "$@" >> $outfile 2>&1
+  stderr_capture=$( $path_to_mlr "$@" 3>&1 1>&2 2>&3 >>$outfile )
   status=$?
+  echo "${stderr_capture}" >> $outfile
   if [ $status -ne 1 ]; then
     echo "Exit status was $status; expected 1."
     echo "Exit status was $status; expected 1." >> $outfile
