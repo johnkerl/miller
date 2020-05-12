@@ -759,7 +759,12 @@ rval_evaluator_t* rval_evaluator_alloc_from_environment(mlr_dsl_ast_node_t* pnod
 
 // ================================================================
 mv_t rval_evaluator_NF_func(void* pvstate, variables_t* pvars) {
-	return mv_from_int(pvars->pinrec->field_count);
+	if (pvars->pinrec == NULL) {
+		// E.g. in a 'begin {...}' or 'end {...}' block
+		return mv_absent();
+	} else{
+		return mv_from_int(pvars->pinrec->field_count);
+	}
 }
 static void rval_evaluator_NF_free(rval_evaluator_t* pevaluator) {
 	free(pevaluator);
