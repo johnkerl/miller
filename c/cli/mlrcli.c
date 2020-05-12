@@ -804,6 +804,8 @@ static void main_usage_data_format_options(FILE* o, char* argv0) {
 	fprintf(o, "                                  JSON (pre)processing.\n");
 	fprintf(o, "                      --jvstack   Put one key-value pair per line for JSON\n");
 	fprintf(o, "                                  output.\n");
+	fprintf(o, "                --jsonx --ojsonx  Keystroke-savers for --json --jvstack\n");
+	fprintf(o, "                --jsonx --ojsonx  and --ojson --jvstack, respectively.\n");
 	fprintf(o, "                      --jlistwrap Wrap JSON output in outermost [ ].\n");
 	fprintf(o, "                    --jknquoteint Do not quote non-string map keys in JSON output.\n");
 	fprintf(o, "                     --jvquoteall Quote map values in JSON output, even if they're\n");
@@ -1749,6 +1751,10 @@ int cli_handle_writer_options(char** argv, int argc, int *pargi, cli_writer_opts
 	} else if (streq(argv[argi], "--ojson")) {
 		pwriter_opts->ofile_fmt = "json";
 		argi += 1;
+	} else if (streq(argv[argi], "--ojsonx")) {
+		pwriter_opts->ofile_fmt = "json";
+		pwriter_opts->stack_json_output_vertically = TRUE;
+		argi += 1;
 
 	} else if (streq(argv[argi], "--onidx")) {
 		pwriter_opts->ofile_fmt = "nidx";
@@ -1907,6 +1913,11 @@ int cli_handle_reader_writer_options(char** argv, int argc, int *pargi,
 	} else if (streq(argv[argi], "--json")) {
 		preader_opts->ifile_fmt = "json";
 		pwriter_opts->ofile_fmt = "json";
+		argi += 1;
+	} else if (streq(argv[argi], "--jsonx")) {
+		preader_opts->ifile_fmt = "json";
+		pwriter_opts->ofile_fmt = "json";
+		pwriter_opts->stack_json_output_vertically = TRUE;
 		argi += 1;
 
 	} else if (streq(argv[argi], "--nidx")) {
