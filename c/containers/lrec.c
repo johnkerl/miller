@@ -512,7 +512,7 @@ void lrece_update_value(lrece_t* pe, char* new_value, int new_needs_freeing) {
 		return;
 	}
 	if (pe->free_flags & FREE_ENTRY_VALUE) {
-		free(pe->key);
+		free(pe->value);
 	}
 	pe->value = new_value;
 	if (new_needs_freeing)
