@@ -40,17 +40,17 @@ sudo yum install rpmlint
 ### Build source-RPM only
 ```
 rpmbuild -bs miller.spec
-Wrote: /your/home/dir/rpmbuild/SRPMS/mlr-3.3.2-1.el6.src.rpm
+Wrote: /your/home/dir/rpmbuild/SRPMS/miller-3.3.2-1.el6.src.rpm
 ```
 
 ```
-rpm -qpl ../SRPMS/mlr-3.3.2-1.el6.src.rpm
+rpm -qpl ../SRPMS/miller-3.3.2-1.el6.src.rpm
 mlr-3.3.2.tar.gz
 miller.spec
 ```
 
 ```
-rpm -qpi ../SRPMS/mlr-3.3.2-1.el6.src.rpm
+rpm -qpi ../SRPMS/miller-3.3.2-1.el6.src.rpm
 Name        : mlr                          Relocations: (not relocatable)
 Version     : 3.3.2                             Vendor: (none)
 Release     : 1.el6                         Build Date: Sun 07 Feb 2016 09:43:39 PM EST
@@ -75,13 +75,13 @@ rpmbuild -ba miller.spec
 ```
 
 ```
-rpm -qpl ../RPMS/x86_64//mlr-3.3.2-1.el6.x86_64.rpm
+rpm -qpl ../RPMS/x86_64//miller-3.3.2-1.el6.x86_64.rpm
 /usr/bin/mlr
 /usr/share/man/man1/mlr.1.gz
 ```
 
 ```
-sudo rpm -ivh ../RPMS/x86_64/mlr-3.3.2-1.el6.x86_64.rpm 
+sudo rpm -ivh ../RPMS/x86_64/miller-3.3.2-1.el6.x86_64.rpm 
 Preparing...                ########################################### [100%]
    1:mlr                    ########################################### [100%]
 ```
