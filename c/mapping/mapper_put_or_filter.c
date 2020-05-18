@@ -221,6 +221,7 @@ static void shared_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "    %s %s put 'begin {@foo = 97} $column += @foo'.\n", argv0, verb);
 	fprintf(o, "    The value part is subject to type-inferencing as specified by -S/-F.\n");
 	fprintf(o, "    May be specified more than once, e.g. -s name1=value1 -s name2=value2.\n");
+	fprintf(o, "    Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE\n");
 	fprintf(o, "\n");
 
 	fprintf(o, "Tracing options:\n");

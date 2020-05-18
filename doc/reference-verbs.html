@@ -70,6 +70,7 @@ pageTracker._trackPageview();
 &bull;&nbsp;<a href="#cat">cat</a><br/>
 &bull;&nbsp;<a href="#check">check</a><br/>
 &bull;&nbsp;<a href="#clean-whitespace">clean-whitespace</a><br/>
+&bull;&nbsp;<a href="#count">count</a><br/>
 &bull;&nbsp;<a href="#count-distinct">count-distinct</a><br/>
 &bull;&nbsp;<a href="#count-similar">count-similar</a><br/>
 &bull;&nbsp;<a href="#cut">cut</a><br/>
@@ -588,6 +589,82 @@ $ mlr --icsv --ojson clean-whitespace data/clean-whitespace.csv
 
 </div>
 <!-- ================================================================ -->
+<a id="count"/><h1>count</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_count');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_count" style="display: block">
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr count --help
+Usage: mlr count [options]
+Prints number of records, optionally grouped by distinct values for specified field names.
+
+Options:
+-g {a,b,c}    Field names for distinct count.
+-n            Show only the number of distinct values. Not compatible with -u.
+-o {name}     Field name for output count. Default "count".
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr count data/medium
+count=10000
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr count -g a data/medium
+a=pan,count=2081
+a=eks,count=1965
+a=wye,count=1966
+a=zee,count=2047
+a=hat,count=1941
+</pre>
+</div>
+<p/>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr count -g a,b data/medium
+a=pan,b=pan,count=427
+a=eks,b=pan,count=371
+a=wye,b=wye,count=377
+a=eks,b=wye,count=407
+a=wye,b=pan,count=392
+a=zee,b=pan,count=389
+a=eks,b=zee,count=357
+a=zee,b=wye,count=455
+a=hat,b=wye,count=423
+a=pan,b=wye,count=395
+a=zee,b=eks,count=391
+a=hat,b=zee,count=385
+a=hat,b=eks,count=389
+a=wye,b=hat,count=426
+a=pan,b=eks,count=429
+a=eks,b=eks,count=413
+a=hat,b=hat,count=381
+a=hat,b=pan,count=363
+a=zee,b=zee,count=403
+a=pan,b=hat,count=417
+a=pan,b=zee,count=413
+a=zee,b=hat,count=409
+a=wye,b=zee,count=385
+a=eks,b=hat,count=417
+a=wye,b=eks,count=386
+</pre>
+</div>
+<p/>
+
+</div>
+<!-- ================================================================ -->
 <a id="count-distinct"/><h1>count-distinct</h1>
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_count_distinct');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_count_distinct" style="display: block">
@@ -1020,6 +1097,7 @@ semicolons to separate expressions.)
     mlr filter put 'begin {@foo = 97} $column += @foo'.
     The value part is subject to type-inferencing as specified by -S/-F.
     May be specified more than once, e.g. -s name1=value1 -s name2=value2.
+    Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
 
 Tracing options:
 -v: Prints the expressions's AST (abstract syntax tree), which gives
@@ -2403,6 +2481,7 @@ semicolons to separate expressions.)
     mlr put put 'begin {@foo = 97} $column += @foo'.
     The value part is subject to type-inferencing as specified by -S/-F.
     May be specified more than once, e.g. -s name1=value1 -s name2=value2.
+    Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
 
 Tracing options:
 -v: Prints the expressions's AST (abstract syntax tree), which gives
@@ -3968,7 +4047,7 @@ Options:
 <div class="pokipanel">
 <pre>
 $ wc -l data/colored-shapes.dkvp
-10078 data/colored-shapes.dkvp
+   10078 data/colored-shapes.dkvp
 </pre>
 </div>
 <p/>
@@ -4140,7 +4219,7 @@ color=purple,shape=square,flag=0
 <div class="pokipanel">
 <pre>
 $ wc -l data/repeats.dkvp
-57 data/repeats.dkvp
+      57 data/repeats.dkvp
 </pre>
 </div>
 <p/>

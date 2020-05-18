@@ -757,6 +757,7 @@ semicolons to separate expressions.)
     mlr filter put 'begin {@foo = 97} $column += @foo'.
     The value part is subject to type-inferencing as specified by -S/-F.
     May be specified more than once, e.g. -s name1=value1 -s name2=value2.
+    Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
 
 Tracing options:
 -v: Prints the expressions's AST (abstract syntax tree), which gives
@@ -1226,6 +1227,7 @@ semicolons to separate expressions.)
     mlr put put 'begin {@foo = 97} $column += @foo'.
     The value part is subject to type-inferencing as specified by -S/-F.
     May be specified more than once, e.g. -s name1=value1 -s name2=value2.
+    Note: the value may be an environment variable, e.g. -s sequence=$SEQUENCE
 
 Tracing options:
 -v: Prints the expressions's AST (abstract syntax tree), which gives
