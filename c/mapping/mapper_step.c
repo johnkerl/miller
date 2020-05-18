@@ -146,7 +146,7 @@ static void mapper_step_usage(FILE* o, char* argv0, char* verb) {
 	fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y\n", argv0, verb);
 	fprintf(o, "  %s %s -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name\n", argv0, verb);
 	fprintf(o, "\n");
-	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference.html#filter or\n");
+	fprintf(o, "Please see http://johnkerl.org/miller/doc/reference-verbs.html#filter or\n");
 	fprintf(o, "https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average\n");
 	fprintf(o, "for more information on EWMA.\n");
 }

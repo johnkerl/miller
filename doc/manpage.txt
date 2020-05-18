@@ -598,8 +598,10 @@ VERBS
 	 '
 
        Please see http://johnkerl.org/miller/doc/reference.html for more information
-       including function list. Or "mlr -f". Please also also "mlr grep" which is
+       including function list. Or "mlr -f". Please also see "mlr grep" which is
        useful when you don't yet know which field name(s) you're looking for.
+       Please see in particular:
+	 http://www.johnkerl.org/miller/doc/reference-verbs.html#filter
 
    format-values
        Usage: mlr format-values [options]
@@ -754,7 +756,7 @@ VERBS
 	 --repifs
 	 --repips
        Please use "mlr --usage-separator-options" for information on specifying separators.
-       Please see http://johnkerl.org/miller/doc/reference.html for more information
+       Please see http://johnkerl.org/miller/doc/reference-verbs.html#join for more information
        including examples.
 
    label
@@ -981,7 +983,7 @@ VERBS
        Please see http://johnkerl.org/miller/doc/reference.html for more information
        including function list. Or "mlr -f".
        Please see in particular:
-	 http://www.johnkerl.org/miller/doc/reference.html#put
+	 http://www.johnkerl.org/miller/doc/reference-verbs.html#put
 
    regularize
        Usage: mlr regularize
@@ -1293,7 +1295,7 @@ VERBS
 	 mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y
 	 mlr step -a ewma -d 0.1,0.9 -o smooth,rough -f x,y -g group_name
 
-       Please see http://johnkerl.org/miller/doc/reference.html#filter or
+       Please see http://johnkerl.org/miller/doc/reference-verbs.html#filter or
        https://en.wikipedia.org/wiki/Moving_average#Exponential_moving_average
        for more information on EWMA.
 
@@ -2311,4 +2313,4 @@ SEE ALSO
 
 
 
-				  2020-05-12			     MILLER(1)
+				  2020-05-18			     MILLER(1)
