@@ -106,11 +106,11 @@ libmapping_la_DEPENDENCIES = ../lib/libmlr.la ../cli/libcli.la \
 	../input/libinput.la
 am_libmapping_la_OBJECTS = mapper_altkv.lo mapper_bar.lo \
 	mapper_bootstrap.lo mapper_cat.lo mapper_check.lo \
-	mapper_clean_whitespace.lo mapper_count_similar.lo \
-	mapper_cut.lo mapper_decimate.lo mapper_fill_down.lo \
-	mapper_grep.lo mapper_group_like.lo mapper_having_fields.lo \
-	mapper_head.lo mapper_histogram.lo mapper_join.lo \
-	mapper_label.lo mapper_merge_fields.lo \
+	mapper_clean_whitespace.lo mapper_count.lo \
+	mapper_count_similar.lo mapper_cut.lo mapper_decimate.lo \
+	mapper_fill_down.lo mapper_grep.lo mapper_group_like.lo \
+	mapper_having_fields.lo mapper_head.lo mapper_histogram.lo \
+	mapper_join.lo mapper_label.lo mapper_merge_fields.lo \
 	mapper_most_or_least_frequent.lo mapper_nest.lo \
 	mapper_nothing.lo mapper_format_values.lo mapper_fraction.lo \
 	mapper_put_or_filter.lo mapper_regularize.lo \
@@ -319,6 +319,7 @@ libmapping_la_SOURCES = \
 			mapper_cat.c \
 			mapper_check.c \
 			mapper_clean_whitespace.c \
+			mapper_count.c \
 			mapper_count_similar.c \
 			mapper_cut.c \
 			mapper_decimate.c \
@@ -435,6 +436,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_cat.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_check.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_clean_whitespace.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_count.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_count_similar.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_cut.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/mapper_decimate.Plo@am__quote@
