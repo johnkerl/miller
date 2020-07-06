@@ -263,7 +263,7 @@ json_value_t * json_parse(
 	size_t length,
 	char * error_buf,
 	json_char** ppend_of_item,
-	int *pline_number) // should be set to 0 by the caller before 1st call
+	long long *pline_number) // should be set to 0 by the caller before 1st call
 {
 	json_char error[JSON_ERROR_MAX];
 	const json_char * end;
@@ -884,7 +884,7 @@ json_value_t * json_parse_for_unit_test(
 	json_char** ppend_of_item)
 {
 	json_char error_buf[JSON_ERROR_MAX];
-	int line_number = 0;
+	long long line_number = 0;
 	return json_parse(json, strlen(json), error_buf, ppend_of_item, &line_number);
 }
 

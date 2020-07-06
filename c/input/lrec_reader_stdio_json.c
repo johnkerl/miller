@@ -43,7 +43,7 @@ typedef struct _lrec_reader_stdio_json_state_t {
 	char* detected_line_term;
 	comment_handling_t comment_handling;
 	char* comment_string;
-	int json_line_number; // for parse-error messages since we call it repeatedly
+	long long json_line_number; // for parse-error messages since we call it repeatedly
 } lrec_reader_stdio_json_state_t;
 
 static void    lrec_reader_stdio_json_free(lrec_reader_t* preader);
@@ -136,7 +136,7 @@ static void lrec_reader_stdio_json_sof(void* pvstate, void* pvhandle) {
 	// all exhausted.
 
 	json_char* item_start = json_input;
-	int length = phandle->eof - phandle->sof;
+	size_t length = phandle->eof - phandle->sof;
 	char* detected_line_term = NULL;
 
 	if (pstate->do_auto_line_term) {
