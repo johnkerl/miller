@@ -30,7 +30,6 @@ quick doc:
   - new UTs
 
 ================================================================
-
 * uniq:
   o UT cases x all
   o faqent w/ ref to head -n 1 -g
