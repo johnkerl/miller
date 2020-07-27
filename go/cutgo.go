@@ -56,18 +56,14 @@ func handle(fileName string, includeFields []string) (ok bool) {
 			return false
 		} else {
 
-			// 0.030s
-
 			// Line to map
+			// Note: needs to have insertion-ordering
 			mymap := make(map[string]string)
 			fields := strings.Split(line, ",");
 			for _, field := range(fields) {
 				kvps := strings.SplitN(field, "=", 2)
 				mymap[kvps[0]] = kvps[1]
 			}
-			// 0.220s
-			// delta 0.190s
-			// 27%
 
 			// Map-to-map transform
 			newmap := make(map[string]string)
@@ -77,9 +73,6 @@ func handle(fileName string, includeFields []string) (ok bool) {
 					newmap[includeField] = value
 				}
 			}
-			// 0.280s
-			// delta 0.060s
-			// 9%
 
 			// Map to string
 			outs := make([]string, len(newmap))
@@ -88,21 +81,13 @@ func handle(fileName string, includeFields []string) (ok bool) {
 				outs[i] = k + "=" + v
 				i++
 			}
-			// 0.320s
-			// delta 0.040s
-			// 6%
 
 			out := strings.Join(outs, ",")
-			// 0.330s
-			// delta 0.010s
-			// 2%
 
 			// Write to output stream
 			//fmt.Println("")
 			writer.WriteString(out)
-			// delta 0.390s
-			// 56%
-
+			writer.WriteString("\n")
 		}
 	}
 	if fileName != "-" {
