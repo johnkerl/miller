@@ -38,7 +38,7 @@ h1 {
   font-size: 120%;
   border: 1px solid #aaaaaa;
   border-radius: 5px;
-  background: #e8d9bc;
+  background: #c5b690;
   padding: 3px;
 }
 
@@ -68,7 +68,7 @@ table {
 }
 
 .mlrbg {
-  background: #e8d9bc;
+  background: #c5b690;
 }
 
 
@@ -98,7 +98,7 @@ pre {
   margin: 10px;
   border-color: #f1c40f;
   border-radius: 5px;
-  background: #e8d9bc;
+  background: #c5b690;
   padding-top: 2px;
   padding-bottom: 2px;
   padding-left: 15px;
