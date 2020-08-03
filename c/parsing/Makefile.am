@@ -44,7 +44,7 @@ EXTRA_DIST=		lempar.c mlr_dsl_lexer.l mlr_dsl_parse.y
 
 mlr_dsl_wrapper.c: mlr_dsl_lexer.h
 mlr_dsl_parse.h: mlr_dsl_parse.c
-mlr_dsl_parse.c: mlr_dsl_parse.y lempar.c lemon
+mlr_dsl_parse.c: mlr_dsl_parse.y lempar.c lemon${EXEEXT}
 	./lemon -s mlr_dsl_parse.y
 # lemon does not re-generate the file if it exists and is the same
 # this causes problems with the dependency above
