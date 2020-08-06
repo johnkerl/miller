@@ -1,9 +1,17 @@
+# What is Miller?
+
 **Miller is like awk, sed, cut, join, and sort for name-indexed data such as CSV, TSV, and tabular JSON.**
+
+# Build status
 
 [![Linux build status](https://travis-ci.org/johnkerl/miller.svg?branch=master)](https://travis-ci.org/johnkerl/miller)
 [![Windows build status](https://ci.appveyor.com/api/projects/status/github/johnkerl/miller?branch=master&svg=true)](https://ci.appveyor.com/project/johnkerl/miller)
 [![License](http://img.shields.io/badge/license-BSD2-blue.svg)](https://github.com/johnkerl/miller/blob/master/LICENSE.txt)
 [![Docs](https://img.shields.io/badge/docs-here-yellow.svg)](http://johnkerl.org/miller/doc)
+
+# Distributions
+
+There's a good chance you can get Miller on your system via `yum install miller`, `apt-get install miller`, or `brew install miller`:
 
 [![Ubuntu](https://img.shields.io/badge/distros-ubuntu-db4923.svg)](https://launchpad.net/ubuntu/+source/miller)
 [![Ubuntu 16.04 LTS](https://img.shields.io/badge/distros-ubuntu1604lts-db4923.svg)](https://launchpad.net/ubuntu/xenial/+package/miller)
@@ -17,6 +25,8 @@
 [![Arch Linux](https://img.shields.io/badge/distros-archlinux-1792d0.svg)](https://aur.archlinux.org/packages/miller-git)
 [![Homebrew/MacOSX](https://img.shields.io/badge/distros-macosxbrew-ba832b.svg)](https://github.com/Homebrew/homebrew-core/search?utf8=%E2%9C%93&q=miller)
 [![MacPorts/MacOSX](https://img.shields.io/badge/distros-macports-1376ec.svg)](https://www.macports.org/ports.php?by=name&substr=miller)
+
+# What can Miller do for me?
 
 With Miller, you get to use named fields without needing to count positional
 indices, using familiar formats such as CSV, TSV, JSON, and positionally-indexed.
@@ -55,16 +65,20 @@ $ mlr --icsv --opprint --barred \
 ```
 
 This is something the Unix toolkit always could have done, and arguably always
-should have done.  It operates on **key-value-pair data** while the familiar
+should have done.
+
+* Miller operates on **key-value-pair data** while the familiar
 Unix tools operate on integer-indexed fields: if the natural data structure for
 the latter is the array, then Miller's natural data structure is the
-insertion-ordered hash map.  This encompasses a **variety of data formats**,
+insertion-ordered hash map.
+
+* Miller handles a **variety of data formats**,
 including but not limited to the familiar **CSV**, **TSV**, and **JSON**.
-(Miller can handle **positionally-indexed data** as a special case.)
+(Miller can handle **positionally-indexed data** too!)
 
 For a few more examples please see [Miller in 10 minutes](http://johnkerl.org/miller/doc/10-min.html).
 
-Features:
+# Features
 
 * Miller is **multi-purpose**: it's useful for **data cleaning**,
 **data reduction**, **statistical reporting**, **devops**, **system
@@ -114,7 +128,7 @@ lines first
 in portable, modern C, with **zero runtime dependencies**. You can download or
 compile a single binary, `scp` it to a faraway machine, and expect it to work.
 
-Documentation links:
+# Documentation links
 
 * [**Full documentation for latest release**](http://johnkerl.org/miller/doc)
 * [Head docs](http://johnkerl.org/miller-releases/miller-head/doc/index.html) match
