@@ -125,7 +125,8 @@ match [release-specific code](https://github.com/johnkerl/miller/tags).
 * [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
 * [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 
-More examples:
+
+# More examples
 
 ```
 % mlr --csv cut -f hostname,uptime mydata.csv
