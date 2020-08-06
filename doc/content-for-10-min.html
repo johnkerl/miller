@@ -8,47 +8,53 @@ POKI_PUT_TOC_HERE
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_csv_file_examples');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_csv_file_examples" style="display: block">
 
-<p class="boldmaroon"> Sample CSV data file: </p>
+<p class="boldmaroon"> Suppose you have this CSV data file: </p>
 
 POKI_RUN_COMMAND{{cat example.csv}}HERE
 
-<p class="boldmaroon"><code>mlr cat</code> is like cat ...</p>
+<p class="boldmaroon"><code>mlr cat</code> is like cat -- it passes the data
+through unmodified ...</p>
 
 POKI_RUN_COMMAND{{mlr --csv cat example.csv}}HERE
 
-<p class="boldmaroon">... but it can also do format conversion (here, to pretty-printed tabular format): </p>
+<p class="boldmaroon">... but it can also do format conversion (here, you can pretty-print in tabular format): </p>
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint cat example.csv}}HERE
 
-<p class="boldmaroon"> <code>mlr head</code> and <code>mlr tail</code> count records rather than lines. The CSV
-header is included either way:</p>
+<p class="boldmaroon"> <code>mlr head</code> and <code>mlr tail</code> count
+records rather than lines. Whethere you&rsquo;re getting the first few records
+or the last few, the CSV header is included either way:</p>
 
 POKI_RUN_COMMAND{{mlr --csv head -n 4 example.csv}}HERE
 POKI_RUN_COMMAND{{mlr --csv tail -n 4 example.csv}}HERE
 
-<p class="boldmaroon"> Sort primarily alphabetically on one field, then secondarily
-numerically descending on another field: </p>
+<p class="boldmaroon"> You can sort primarily alphabetically on one field, then
+secondarily numerically descending on another field: </p>
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f shape -nr index example.csv}}HERE
 
-<p class="boldmaroon"> Use <code>cut</code> to retain only specified fields, in input-data order:</p>
+<p class="boldmaroon"> You can use <code>cut</code> to retain only specified fields, in the
+same order they appeared in the input data:</p>
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint cut -f flag,shape example.csv}}HERE
 
-<p class="boldmaroon"> Use <code>cut -o</code> to retain only specified fields, in your specified order:</p>
+<p class="boldmaroon"> You can also use <code>cut -o</code> to retain only
+specified fields in your preferred order:</p>
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint cut -o -f flag,shape example.csv}}HERE
 
-<p class="boldmaroon"> Use <code>cut -x</code> to omit specified fields:</p>
+<p class="boldmaroon"> You can use <code>cut -x</code> to omit fields you
+don&rsquo;t care about:</p>
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint cut -x -f flag,shape example.csv}}HERE
 
-<p class="boldmaroon"> Use <code>filter</code> to retain specified records:</p>
+<p class="boldmaroon"> You can use <code>filter</code> to keep only records you care about:</p>
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint filter '$color == "red"' example.csv}}HERE
 POKI_RUN_COMMAND{{mlr --icsv --opprint filter '$color == "red" && $flag == 1' example.csv}}HERE
 
-<p class="boldmaroon"> Use <code>put</code> to add/replace fields which are computed from other fields:</p>
+<p class="boldmaroon"> You can use <code>put</code> to create new fields which
+are computed from other fields:</p>
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint put '$ratio = $quantity / $rate; $color_shape = $color . "_" . $shape' example.csv}}HERE
 
@@ -60,29 +66,48 @@ positional index. Use <code>$[[3]]</code> to access the name of field 3 or
 POKI_RUN_COMMAND{{mlr --icsv --opprint put '$[[3]] = "NEW"' example.csv}}HERE
 POKI_RUN_COMMAND{{mlr --icsv --opprint put '$[[[3]]] = "NEW"' example.csv}}HERE
 
-<p class="boldmaroon"> JSON output:</p>
+<h1>JSON-file examples</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_json_file_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_json_file_examples" style="display: block">
+
+<p class="boldmaroon"> OK, CSV and pretty-print are fine. But Miller can also convert between
+a few other formats -- let&rsquo;s take a look at JSON output:</p>
 
 POKI_RUN_COMMAND{{mlr --icsv --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' example.csv}}HERE
 
-<p class="boldmaroon"> JSON output with vertical-formatting flags:</p>
+<p class="boldmaroon"> Or, JSON output with vertical-formatting flags:</p>
 
-POKI_RUN_COMMAND{{mlr --icsv --ojson --jvstack --jlistwrap tail -n 2 example.csv}}HERE
+POKI_RUN_COMMAND{{mlr --icsv --ojsonx tail -n 2 example.csv}}HERE
 
-<p class="boldmaroon"> Use <code>then</code> to pipe commands together. Also, the
-<code>-g</code> option for many Miller commands is for group-by: here, <code>head -n
-1 -g shape</code> outputs the first record for each distinct value of the
-<code>shape</code> field. This means we&rsquo;re finding the record with highest
-<code>index</code> field for each distinct <code>shape</code> field:</p>
+<h1>Sorts and stats</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_sort_and_stats_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_sort_and_stats_examples" style="display: block">
+
+<p class="boldmaroon"> Now suppose you want to sort the data on a given column,
+<i>and then</i> take the top few in that ordering. You can use Miller&rsquo;s
+<code>then</code> feature to pipe commands together.  </p>
+
+<p class="boldmaroon"> Here are the records with the top three <code>index</code> values: </p>
+
+POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f shape -nr index then head -n 3 example.csv}}HERE
+
+<p class="boldmaroon"> Lots of Miller commands take a <code>-g</code> option
+for group-by: here, <code>head -n 1 -g shape</code> outputs the first record
+for each distinct value of the <code>shape</code> field. This means we&rsquo;re
+finding the record with highest <code>index</code> field for each distinct
+<code>shape</code> field:</p>
 
 POKI_RUN_COMMAND{{mlr --icsv --opprint sort -f shape -nr index then head -n 1 -g shape example.csv}}HERE
 
-<p class="boldmaroon"> Statistics can be computed with or without group-by field(s). Also, the first of these two
-examples uses <code>--oxtab</code> output format which is a nice alternative to <code>--opprint</code> when you
-have lots of columns:</p>
+<p class="boldmaroon"> Statistics can be computed with or without group-by field(s)</p>
 
-POKI_RUN_COMMAND{{mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate}}HERE
 POKI_RUN_COMMAND{{mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape}}HERE
 POKI_RUN_COMMAND{{mlr --icsv --opprint --from example.csv stats1 -a count,min,mean,max -f quantity -g shape,color}}HERE
+
+<p class="boldmaroon"> If your output has a lot of columns, you can use XTAB
+format to line things up vertically for you instead: </p>
+
+POKI_RUN_COMMAND{{mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate}}HERE
 
 </div>
 <h1>Choices for printing to files</h1>

@@ -64,6 +64,8 @@ pageTracker._trackPageview();
 <div class="pokitoc">
 <center><titleinbody>10-minute intro</titleinbody></center>
 &bull;&nbsp;<a href="#CSV-file_examples">CSV-file examples</a><br/>
+&bull;&nbsp;<a href="#JSON-file_examples">JSON-file examples</a><br/>
+&bull;&nbsp;<a href="#Sorts_and_stats">Sorts and stats</a><br/>
 &bull;&nbsp;<a href="#Choices_for_printing_to_files">Choices for printing to files</a><br/>
 &bull;&nbsp;<a href="#Other-format_examples">Other-format examples</a><br/>
 &bull;&nbsp;<a href="#SQL-output_examples">SQL-output examples</a><br/>
@@ -81,7 +83,7 @@ pageTracker._trackPageview();
 <button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_csv_file_examples');" href="javascript:;">Toggle section visibility</button>
 <div id="body_section_toggle_csv_file_examples" style="display: block">
 
-<p class="boldmaroon"> Sample CSV data file: </p>
+<p class="boldmaroon"> Suppose you have this CSV data file: </p>
 
 <p/>
 <div class="pokipanel">
@@ -102,7 +104,8 @@ purple,square,0,91,72.3735,8.2430
 </div>
 <p/>
 
-<p class="boldmaroon"><code>mlr cat</code> is like cat ...</p>
+<p class="boldmaroon"><code>mlr cat</code> is like cat -- it passes the data
+through unmodified ...</p>
 
 <p/>
 <div class="pokipanel">
@@ -123,7 +126,7 @@ purple,square,0,91,72.3735,8.2430
 </div>
 <p/>
 
-<p class="boldmaroon">... but it can also do format conversion (here, to pretty-printed tabular format): </p>
+<p class="boldmaroon">... but it can also do format conversion (here, you can pretty-print in tabular format): </p>
 
 <p/>
 <div class="pokipanel">
@@ -144,8 +147,9 @@ purple square   0    91    72.3735  8.2430
 </div>
 <p/>
 
-<p class="boldmaroon"> <code>mlr head</code> and <code>mlr tail</code> count records rather than lines. The CSV
-header is included either way:</p>
+<p class="boldmaroon"> <code>mlr head</code> and <code>mlr tail</code> count
+records rather than lines. Whethere you&rsquo;re getting the first few records
+or the last few, the CSV header is included either way:</p>
 
 <p/>
 <div class="pokipanel">
@@ -172,8 +176,8 @@ purple,square,0,91,72.3735,8.2430
 </div>
 <p/>
 
-<p class="boldmaroon"> Sort primarily alphabetically on one field, then secondarily
-numerically descending on another field: </p>
+<p class="boldmaroon"> You can sort primarily alphabetically on one field, then
+secondarily numerically descending on another field: </p>
 
 <p/>
 <div class="pokipanel">
@@ -194,7 +198,8 @@ yellow triangle 1    11    43.6498  9.8870
 </div>
 <p/>
 
-<p class="boldmaroon"> Use <code>cut</code> to retain only specified fields, in input-data order:</p>
+<p class="boldmaroon"> You can use <code>cut</code> to retain only specified fields, in the
+same order they appeared in the input data:</p>
 
 <p/>
 <div class="pokipanel">
@@ -215,7 +220,8 @@ square   0
 </div>
 <p/>
 
-<p class="boldmaroon"> Use <code>cut -o</code> to retain only specified fields, in your specified order:</p>
+<p class="boldmaroon"> You can also use <code>cut -o</code> to retain only
+specified fields in your preferred order:</p>
 
 <p/>
 <div class="pokipanel">
@@ -236,7 +242,8 @@ flag shape
 </div>
 <p/>
 
-<p class="boldmaroon"> Use <code>cut -x</code> to omit specified fields:</p>
+<p class="boldmaroon"> You can use <code>cut -x</code> to omit fields you
+don&rsquo;t care about:</p>
 
 <p/>
 <div class="pokipanel">
@@ -257,7 +264,7 @@ purple 91    72.3735  8.2430
 </div>
 <p/>
 
-<p class="boldmaroon"> Use <code>filter</code> to retain specified records:</p>
+<p class="boldmaroon"> You can use <code>filter</code> to keep only records you care about:</p>
 
 <p/>
 <div class="pokipanel">
@@ -282,7 +289,8 @@ red   circle 1    16    13.8103  2.9010
 </div>
 <p/>
 
-<p class="boldmaroon"> Use <code>put</code> to add/replace fields which are computed from other fields:</p>
+<p class="boldmaroon"> You can use <code>put</code> to create new fields which
+are computed from other fields:</p>
 
 <p/>
 <div class="pokipanel">
@@ -345,7 +353,12 @@ purple square   NEW  91    72.3735  8.2430
 </div>
 <p/>
 
-<p class="boldmaroon"> JSON output:</p>
+<a id="JSON-file_examples"/><h1>JSON-file examples</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_json_file_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_json_file_examples" style="display: block">
+
+<p class="boldmaroon"> OK, CSV and pretty-print are fine. But Miller can also convert between
+a few other formats -- let&rsquo;s take a look at JSON output:</p>
 
 <p/>
 <div class="pokipanel">
@@ -365,13 +378,12 @@ $ mlr --icsv --ojson put '$ratio = $quantity/$rate; $shape = toupper($shape)' ex
 </div>
 <p/>
 
-<p class="boldmaroon"> JSON output with vertical-formatting flags:</p>
+<p class="boldmaroon"> Or, JSON output with vertical-formatting flags:</p>
 
 <p/>
 <div class="pokipanel">
 <pre>
-$ mlr --icsv --ojson --jvstack --jlistwrap tail -n 2 example.csv
-[
+$ mlr --icsv --ojsonx tail -n 2 example.csv
 {
   "color": "yellow",
   "shape": "circle",
@@ -380,7 +392,7 @@ $ mlr --icsv --ojson --jvstack --jlistwrap tail -n 2 example.csv
   "quantity": 63.5058,
   "rate": 8.3350
 }
-,{
+{
   "color": "purple",
   "shape": "square",
   "flag": 0,
@@ -388,16 +400,37 @@ $ mlr --icsv --ojson --jvstack --jlistwrap tail -n 2 example.csv
   "quantity": 72.3735,
   "rate": 8.2430
 }
-]
 </pre>
 </div>
 <p/>
 
-<p class="boldmaroon"> Use <code>then</code> to pipe commands together. Also, the
-<code>-g</code> option for many Miller commands is for group-by: here, <code>head -n
-1 -g shape</code> outputs the first record for each distinct value of the
-<code>shape</code> field. This means we&rsquo;re finding the record with highest
-<code>index</code> field for each distinct <code>shape</code> field:</p>
+<a id="Sorts_and_stats"/><h1>Sorts and stats</h1>
+<button style="font-weight:bold;color:maroon;border:0" padding=0 onclick="bodyToggler.toggle('body_section_toggle_sort_and_stats_examples');" href="javascript:;">Toggle section visibility</button>
+<div id="body_section_toggle_sort_and_stats_examples" style="display: block">
+
+<p class="boldmaroon"> Now suppose you want to sort the data on a given column,
+<i>and then</i> take the top few in that ordering. You can use Miller&rsquo;s
+<code>then</code> feature to pipe commands together.  </p>
+
+<p class="boldmaroon"> Here are the records with the top three <code>index</code> values: </p>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --opprint sort -f shape -nr index then head -n 3 example.csv
+color  shape  flag index quantity rate
+yellow circle 1    87    63.5058  8.3350
+yellow circle 1    73    63.9785  4.2370
+red    circle 1    16    13.8103  2.9010
+</pre>
+</div>
+<p/>
+
+<p class="boldmaroon"> Lots of Miller commands take a <code>-g</code> option
+for group-by: here, <code>head -n 1 -g shape</code> outputs the first record
+for each distinct value of the <code>shape</code> field. This means we&rsquo;re
+finding the record with highest <code>index</code> field for each distinct
+<code>shape</code> field:</p>
 
 <p/>
 <div class="pokipanel">
@@ -411,25 +444,8 @@ purple triangle 0    65    80.1405  5.8240
 </div>
 <p/>
 
-<p class="boldmaroon"> Statistics can be computed with or without group-by field(s). Also, the first of these two
-examples uses <code>--oxtab</code> output format which is a nice alternative to <code>--opprint</code> when you
-have lots of columns:</p>
+<p class="boldmaroon"> Statistics can be computed with or without group-by field(s)</p>
 
-<p/>
-<div class="pokipanel">
-<pre>
-$ mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
-rate_p0   0.013000
-rate_p10  2.901000
-rate_p25  4.237000
-rate_p50  8.243000
-rate_p75  8.591000
-rate_p90  9.887000
-rate_p99  9.887000
-rate_p100 9.887000
-</pre>
-</div>
-<p/>
 <p/>
 <div class="pokipanel">
 <pre>
@@ -452,6 +468,25 @@ circle   red    1              13.810300    13.810300     13.810300
 triangle purple 2              80.140500    80.684750     81.229000
 circle   yellow 2              63.505800    63.742150     63.978500
 square   purple 1              72.373500    72.373500     72.373500
+</pre>
+</div>
+<p/>
+
+<p class="boldmaroon"> If your output has a lot of columns, you can use XTAB
+format to line things up vertically for you instead: </p>
+
+<p/>
+<div class="pokipanel">
+<pre>
+$ mlr --icsv --oxtab --from example.csv stats1 -a p0,p10,p25,p50,p75,p90,p99,p100 -f rate
+rate_p0   0.013000
+rate_p10  2.901000
+rate_p25  4.237000
+rate_p50  8.243000
+rate_p75  8.591000
+rate_p90  9.887000
+rate_p99  9.887000
+rate_p100 9.887000
 </pre>
 </div>
 <p/>
