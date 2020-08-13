@@ -11,7 +11,7 @@
 
 # Distributions
 
-There's a good chance you can get Miller on your system:
+There's a good chance you can get Miller pre-built for your system:
 
 [![Ubuntu](https://img.shields.io/badge/distros-ubuntu-db4923.svg)](https://launchpad.net/ubuntu/+source/miller)
 [![Ubuntu 16.04 LTS](https://img.shields.io/badge/distros-ubuntu1604lts-db4923.svg)](https://launchpad.net/ubuntu/xenial/+package/miller)
@@ -32,6 +32,8 @@ There's a good chance you can get Miller on your system:
 |Linux|`yum install miller`<br> `apt-get install miller`|
 |Mac|`brew install miller`|
 |Windows|`choco install miller`|
+
+See also [building from source](http://johnkerl.org/miller/doc/build.html#Building_from_source).
 
 # What can Miller do for me?
 
