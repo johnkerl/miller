@@ -11,7 +11,17 @@
 
 # Distributions
 
-There's a good chance you can get Miller on your system via `yum install miller`, `apt-get install miller`, or `brew install miller`:
+There's a good chance you can get Miller on your system:
+
+Linux:
+- `yum install miller`
+- `apt-get install miller`
+
+Mac:
+- `brew install miller`
+
+Windows:
+- `choco install miller`
 
 [![Ubuntu](https://img.shields.io/badge/distros-ubuntu-db4923.svg)](https://launchpad.net/ubuntu/+source/miller)
 [![Ubuntu 16.04 LTS](https://img.shields.io/badge/distros-ubuntu1604lts-db4923.svg)](https://launchpad.net/ubuntu/xenial/+package/miller)
@@ -25,6 +35,7 @@ There's a good chance you can get Miller on your system via `yum install miller`
 [![Arch Linux](https://img.shields.io/badge/distros-archlinux-1792d0.svg)](https://aur.archlinux.org/packages/miller-git)
 [![Homebrew/MacOSX](https://img.shields.io/badge/distros-macosxbrew-ba832b.svg)](https://github.com/Homebrew/homebrew-core/search?utf8=%E2%9C%93&q=miller)
 [![MacPorts/MacOSX](https://img.shields.io/badge/distros-macports-1376ec.svg)](https://www.macports.org/ports.php?by=name&substr=miller)
+[![Chocolatey](https://img.shields.io/badge/distros-chocolatey-red.svg)](https://chocolatey.org/packages/miller)
 
 # What can Miller do for me?
 
