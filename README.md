@@ -149,33 +149,3 @@ match [release-specific code](https://github.com/johnkerl/miller/tags).
 * [Build information including dependencies](http://johnkerl.org/miller/doc/build.html)
 * [Notes about issue-labeling in the Github repo](https://github.com/johnkerl/miller/wiki/Issue-labeling)
 * [Active issues](https://github.com/johnkerl/miller/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
-
-
-# More examples
-
-```
-% mlr --csv cut -f hostname,uptime mydata.csv
-% mlr --tsv --rs lf filter '$status != "down" && $upsec >= 10000' *.tsv
-% mlr --nidx put '$sum = $7 < 0.0 ? 3.5 : $7 + 2.1*$8' *.dat
-% grep -v '^#' /etc/group | mlr --ifs : --nidx --opprint label group,pass,gid,member then sort -f group
-% mlr join -j account_id -f accounts.dat then group-by account_name balances.dat
-% mlr --json put '$attr = sub($attr, "([0-9]+)_([0-9]+)_.*", "\1:\2")' data/*.json
-% mlr stats1 -a min,mean,max,p10,p50,p90 -f flag,u,v data/*
-% mlr stats2 -a linreg-pca -f u,v -g shape data/*
-% mlr put -q '@sum[$a][$b] += $x; end {emit @sum, "a", "b"}' data/*
-% mlr --from estimates.tbl put '
-  for (k,v in $*) {
-    if (isnumeric(v) && k =~ "^[t-z].*$") {
-      $sum += v; $count += 1
-    }
-  }
-  $mean = $sum / $count # no assignment if count unset
-'
-% mlr --from infile.dat put -f analyze.mlr
-% mlr --from infile.dat put 'tee > "./taps/data-".$a."-".$b, $*'
-% mlr --from infile.dat put 'tee | "gzip > ./taps/data-".$a."-".$b.".gz", $*'
-% mlr --from infile.dat put -q '@v=$*; dump | "jq .[]"'
-% mlr --from infile.dat put  '(NR % 1000 == 0) { print > stderr, "Checkpoint ".NR}'
-```
-
-<!-- In case freshports becomes stale: https://svnweb.freebsd.org/ports/head/textproc/miller/ -->
