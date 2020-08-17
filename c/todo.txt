@@ -35,7 +35,6 @@ quick doc:
   o faqent w/ ref to head -n 1 -g
     - xxx
     - xxx
-    - xxx
 
 ! dirname/basename functions !
 
