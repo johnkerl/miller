@@ -31,8 +31,8 @@ There's a good chance you can get Miller pre-built for your system:
 
 |OS|Installation command|
 |---|---|
-|Linux|`yum install miller`<br> `apt-get install miller`|
-|Mac|`brew install miller`|
+|Linux|`yum install miller`<br/> `apt-get install miller`|
+|Mac|`brew install miller`<br/>`port install miller`|
 |Windows|`choco install miller`|
 
 See also [building from source](http://johnkerl.org/miller/doc/build.html#Building_from_source).
