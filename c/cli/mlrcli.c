@@ -2,6 +2,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "input/line_readers.h"
+
 #include "lib/mlr_arch.h"
 #include "lib/mlrutil.h"
 #include "lib/mlr_globals.h"
@@ -109,6 +111,13 @@ static mapper_setup_t* mapper_lookup_table[] = {
 static int mapper_lookup_table_length = sizeof(mapper_lookup_table) / sizeof(mapper_lookup_table[0]);
 
 // ----------------------------------------------------------------
+static void cli_load_mlrrc_or_die(cli_opts_t* popts);
+static int cli_try_load_mlrrc(cli_opts_t* popts, char* path);
+static int handle_mlrrc_line_1(cli_opts_t* popts, char* line, char* path, int lineno);
+static int handle_mlrrc_line_2(cli_opts_t* popts, char* line, char* path, int lineno);
+static int handle_mlrrc_line_3(cli_opts_t* popts, char* line, char* path, int lineno);
+static int handle_mlrrc_line_4(cli_opts_t* popts, char** argv, int argc, char* path, int lineno);
+
 static lhmss_t* get_desc_to_chars_map();
 static lhmsll_t* get_default_repeat_ifses();
 static lhmsll_t* get_default_repeat_ipses();
@@ -155,7 +164,10 @@ static int lhmsll_get_or_die(lhmsll_t* pmap, char* key);
 cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 	cli_opts_t* popts = mlr_malloc_or_die(sizeof(cli_opts_t));
 
+	// xxx --norc and emph in manpage it MUST come first
+
 	cli_opts_init(popts);
+	cli_load_mlrrc_or_die(popts);
 
 	int no_input       = FALSE;
 	int have_rand_seed = FALSE;
@@ -164,6 +176,7 @@ cli_opts_t* parse_command_line(int argc, char** argv, sllv_t** ppmapper_list) {
 	int argi = 1;
 	for (; argi < argc; /* variable increment: 1 or 2 depending on flag */) {
 
+		// xxx factor apart ...
 		if (argv[argi][0] != '-') {
 			break; // No more flag options to process
 		} else if (handle_terminal_usage(argv, argc, argi)) {
@@ -1094,6 +1107,152 @@ void cli_opts_init(cli_opts_t* popts) {
 	popts->do_in_place     = FALSE;
 }
 
+// ----------------------------------------------------------------
+// * If $MLRRC is set, use it and only it.
+// * Otherwise try first $HOME/.mlrrc and then ./.mlrrc but let them
+//   stack: e.g. $HOME/.mlrrc is lots of settings and maybe in one
+//   subdir you want to override just a setting or two.
+static void cli_load_mlrrc_or_die(cli_opts_t* popts) {
+	char* env_mlrrc = getenv("MLRRC");
+	if (env_mlrrc != NULL) {
+		if (cli_try_load_mlrrc(popts, env_mlrrc)) {
+			return;
+		}
+	}
+
+	char* env_home = getenv("HOME");
+	if (env_home != NULL) {
+		char* path = mlr_paste_2_strings(env_home, "/.mlrrc");
+		(void)cli_try_load_mlrrc(popts, path);
+		free(path);
+	}
+
+	(void)cli_try_load_mlrrc(popts, "./.mlrrc");
+}
+
+static int cli_try_load_mlrrc(cli_opts_t* popts, char* path) {
+	FILE* fp = fopen(path, "r");
+	if (fp == NULL) {
+		return FALSE;
+	}
+
+	char* line = NULL;
+	size_t linecap = 0;
+	int rc;
+	int lineno = 0;
+
+	while ((rc = getline(&line, &linecap, fp)) != -1) {
+		lineno++;
+		char* line_to_destroy = strdup(line);
+		if (!handle_mlrrc_line_1(popts, line_to_destroy, path, lineno)) {
+			fprintf(stderr, "Parse error at file \"%s\" line %d: %s\n",
+				path, lineno, line);
+			exit(1);
+		}
+		free(line_to_destroy);
+	}
+
+	fclose(fp);
+	if (line != NULL) {
+		free(line);
+	}
+
+	return TRUE;
+}
+
+// Chomps trailing CR, LF, or CR/LF; comment-strips; left-right trims.
+static int handle_mlrrc_line_1(cli_opts_t* popts, char* line, char* path, int lineno) {
+	// chomp
+	size_t len = strlen(line);
+	if (len >= 2 && line[len-2] == '\r' && line[len-1] == '\n') {
+		line[len-2] = 0;
+	} else if (len >= 1 && (line[len-1] == '\r' || line[len-1] == '\n')) {
+		line[len-1] = 0;
+	}
+
+	// comment-strip
+	char* pbang = strstr(line, "#");
+	if (pbang != NULL) {
+		*pbang = 0;
+	}
+
+	// Left-trim
+	char* start = line;
+	while (*start == ' ' || *start == '\t') {
+		start++;
+	}
+
+	// Right-trim
+	len = strlen(start);
+	char* end = &start[len-1];
+	while (end > start && (*end == ' ' || *end == '\t')) {
+		*end = 0;
+		end--;
+	}
+	if (end < start) { // line was whitespace-only
+		return TRUE;
+	} else {
+		return handle_mlrrc_line_2(popts, start, path, lineno);
+	}
+}
+
+// Prepends initial "--" if it's not already there
+static int handle_mlrrc_line_2(cli_opts_t* popts, char* line, char* path, int lineno) {
+	size_t len = strlen(line);
+
+	char* dashed_line = NULL;
+	if (len >= 2 && line[0] != '-' && line[1] != '-') {
+		dashed_line = mlr_paste_2_strings("--", line);
+	} else {
+		dashed_line = strdup(line);
+	}
+
+	int rc = handle_mlrrc_line_3(popts, dashed_line, path, lineno);
+
+	free(dashed_line);
+	return rc;
+}
+
+// Splits line into argv array
+static int handle_mlrrc_line_3(cli_opts_t* popts, char* line, char* path, int lineno) {
+	char* argv[3];
+	int argc = 0;
+	char* split = strpbrk(line, " \t");
+	if (split == NULL) {
+		argv[0] = line;
+		argv[1] = NULL;
+		argc = 1;
+	} else {
+		*split = 0;
+		char* p = split + 1;
+		while (*p == ' ' || *p == '\t') {
+			p++;
+		}
+		argv[0] = line;
+		argv[1] = p;
+		argv[2] = NULL;
+		argc = 2;
+	}
+	return handle_mlrrc_line_4(popts, argv, argc, path, lineno);
+}
+
+// xxx rm pass-thru of path & lineno
+static int handle_mlrrc_line_4(cli_opts_t* popts, char** argv, int argc, char* path, int lineno) {
+	int argi = 0;
+	if (cli_handle_reader_options(argv, argc, &argi, &popts->reader_opts)) {
+		// handled
+	} else if (cli_handle_writer_options(argv, argc, &argi, &popts->writer_opts)) {
+		// handled
+	} else if (cli_handle_reader_writer_options(argv, argc, &argi, &popts->reader_opts, &popts->writer_opts)) {
+		// handled
+	} else {
+		return FALSE;
+	}
+
+	return TRUE;
+}
+
+// ----------------------------------------------------------------
 void cli_reader_opts_init(cli_reader_opts_t* preader_opts) {
 	preader_opts->ifile_fmt                      = NULL;
 	preader_opts->irs                            = NULL;
